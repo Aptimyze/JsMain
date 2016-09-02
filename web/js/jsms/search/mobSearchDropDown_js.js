@@ -129,18 +129,6 @@
 		
 		DropDown.prototype.StopDD=function()
 		{
-                        if(this.type == 'location'){
-                                var ele = $("#search_"+this.type.toUpperCase()).find("div[data]");
-                                var LocationData = $(ele).attr("data");
-                                LocationData = LocationData.split(",");
-                                if(jQuery.inArray("51",LocationData) === -1){
-                                        $("#search_LOCATION_CITIES").addClass("dn");
-                                }else{
-                                        $("#search_LOCATION_CITIES").removeClass("dn");
-                                }
-                        }
-                        var ele = $("#search_"+this.type.toUpperCase()).find("div[data]");
-                        var LocationData = $(ele).attr("data");
 			var ele = this;
 			stopTouchEvents();
 			$(this.DD_OPTION).unbind(clickEventType);
@@ -913,7 +901,7 @@ function UpdateSection(output)
 			else if(type == "location")
 				mylabel = "Any Country";
 			else if(type == "location_cities")
-				mylabel = "Any State/ City";
+				mylabel = "Any State/City";
                         else if(type == "manglik" || type == "occupation" || type == "education")
 				mylabel = "Doesn't Matter";
 			$(element).find("span[data]").html("");
@@ -940,6 +928,9 @@ function UpdateSection(output)
 		$(element).find("span.label").html(labelArr.join(", "));
 	$(element).attr("value",valueArr.join(","));
 	$(element).attr("data",valueArr.join(","));
+        if(type=="location"){
+                updateLocationCities(type);   
+           }
 	var typeArray = ["lheight","lage","lincome"];
 			
 	if($.inArray(type,typeArray)!= -1)
@@ -961,6 +952,21 @@ function UpdateSection(output)
 		}
 	}
 		
+}
+function updateLocationCities(type){
+        var ele = $("#search_"+type.toUpperCase()).find("div[data]");
+        var LocationData = $(ele).attr("data");
+        LocationData = LocationData.split(",");
+        if(jQuery.inArray("51",LocationData) === -1){
+                $("#search_LOCATION_CITIES").addClass("dn");
+                var element = $("#search_LOCATION_CITIES").find("div[data]");
+                $(element).find("span.label").html("Any State/City");
+                $(element).find("span[data]").html("");
+                $(element).attr("value","");
+                $(element).attr("data","");
+        }else{
+                $("#search_LOCATION_CITIES").removeClass("dn");
+        }
 }
 function UpdateSectionWithDependant(output)
 {

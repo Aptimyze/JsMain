@@ -2506,6 +2506,7 @@ class TopSearchBandPopulate
                         
                         if($tempCountry){
                                 $countryArr = array();
+                                $tempCountry = array_unique($tempCountry);
                                 foreach($tempCountry as $country){
                                         $countryArr[] = FieldMap::getFieldLabel("country",$country);
                                 }
