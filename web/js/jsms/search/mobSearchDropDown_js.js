@@ -27,6 +27,9 @@
 			this.persid="#perspective";
 			this.pcontid="#pcontainer";
 			this.myOptionData="";
+                        if($(element).attr("id") == "search_LOCATION_CITIES"){
+                                updateLocationCities("location");
+                        }
 			$(element).bind("click",function(){	
 				ele.GetStaticData();
 				ele.type=$(element).attr('dshow').toLowerCase();
