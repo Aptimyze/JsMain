@@ -479,7 +479,7 @@ class billing_SERVICES extends TABLE
 
     public function getPreviousExpiryDetails($profileid, $rights, $mainCheck){
         try{
-            if ($mainCheck) {
+            if ($mainCheck == 'Y') {
                 $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' ORDER BY ID DESC";
             } else {
                 $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC";
@@ -489,7 +489,11 @@ class billing_SERVICES extends TABLE
             $resSelectDetail->execute();
             if ($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
                 if ($row['CNT'] >= 2 ) {
-                    $sql1 = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+                    if ($mainCheck == 'Y') {
+                        $sql1 = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+                    } else {
+                        $sql1 = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+                    }
                     $resSelectDetail1 = $this->db->prepare($sql1);
                     $resSelectDetail1->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                     $resSelectDetail1->execute();
