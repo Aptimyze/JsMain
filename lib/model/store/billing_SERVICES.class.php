@@ -477,9 +477,13 @@ class billing_SERVICES extends TABLE
         }
     }
 
-    public function getPreviousExpiryDetails($profileid, $rights){
+    public function getPreviousExpiryDetails($profileid, $rights, $mainCheck){
         try{
-            $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC";
+            if ($mainCheck) {
+                $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' ORDER BY ID DESC";
+            } else {
+                $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC";
+            }
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $resSelectDetail->execute();

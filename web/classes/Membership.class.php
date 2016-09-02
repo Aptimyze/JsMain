@@ -926,7 +926,11 @@ class Membership
         if(strstr($this->serviceid, 'NCP') && strstr($row['SERVICEID'], 'C')){
             $rights_str .= ",N";
         }
-        $pExpiry = $billingServObj->getPreviousExpiryDetails($this->profileid, $rights_str);
+        if(strstr($row['SERVICEID'], 'C') || strstr($row['SERVICEID'], 'P')) { // Main Service Check
+            $pExpiry = $billingServObj->getPreviousExpiryDetails($this->profileid, $rights_str, 'Y');
+        } else {
+            $pExpiry = $billingServObj->getPreviousExpiryDetails($this->profileid, $rights_str);
+        }
         if ($pExpiry) {
             list($yy, $mm, $dd) = @explode("-", $pExpiry["EXPIRY_DT"]);
             if ($yy == '2099' && $mm == '01') { // previous expiry is 2099 i.e. already unlimited running
