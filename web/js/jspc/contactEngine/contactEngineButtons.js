@@ -511,7 +511,9 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 								onTotalScrollBack:function(){if(requestObj.allMessageLoaded)return;$("#msgHistoryLoader").css('visibility','visible');requestObj.request();}
 							}});
     tempScroller.mCustomScrollbar('scrollTo','bottom',{scrollInertia:0});                                                
-
+    }
+    
+    }
 $( "#backToMessage" ).click(function() {
 	$("#messageWindow").addClass('disp-none');
 	$("#messageWindow").html("");
@@ -522,8 +524,8 @@ $( "#backToMessage" ).click(function() {
 });
   cECommonBinding();
   cECloseBinding(); 
-  }
-  }
+  
+  
 }
   
 Button.prototype.makePostDataForAjax= function(profileChecksum) {
