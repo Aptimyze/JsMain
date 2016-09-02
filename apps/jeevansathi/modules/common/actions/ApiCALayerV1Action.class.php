@@ -59,8 +59,8 @@ class ApiCALayerV1Action extends sfActions
 
                 }
 		$this->m_arrOut=$layerData;
-                $this->m_arrOut['nameofuser']=$nameOfUser;
-                $this->m_arrOut['nameprivacy']=$namePrivacy;
+                $this->m_arrOut['nameofuser']=$nameOfUser ? $nameOfUser : NULL;
+                $this->m_arrOut['nameprivacy']=$namePrivacy ? $namePrivacy : NULL;
 	    }
 		//Api Response Object
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
