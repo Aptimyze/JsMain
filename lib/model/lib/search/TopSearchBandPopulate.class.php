@@ -1178,7 +1178,7 @@ class TopSearchBandPopulate
 	public function populateCityCountryJSMS()
 	{
 		$i=0;
-		foreach(TopSearchBandConfig::$countriesApp as $k=>$v)
+		foreach(TopSearchBandConfig::$countries as $k=>$v)
 		{
 			$output[$i]["VALUE"] = (string) $v;
 			
