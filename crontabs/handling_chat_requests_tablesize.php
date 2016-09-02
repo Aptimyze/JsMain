@@ -12,6 +12,13 @@ $curtable="CHAT_REQUESTS";
 $newtable="$curtable"."_NEW";
 $deltable="DELETED_$curtable";
 $temptable="$curtable"."_TEMP";
+
+$to = "nitesh.s@jeevansathi.com";
+$from = "info@jeevansathi.com";
+$subject = "Drop table";
+$msgBody = "Drop table in crontabs/handling_chat_requests_tablesize.php";
+send_email($to,$msgBody,$subject,$from);
+
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbM) or die(mysql_error($dbM));
 mysql_query("Drop table  IF EXISTS $dbname.$newtable",$dbDDL) or die(mysql_error($dbDDL));
 mysql_query("create table $dbname.$newtable like $dbname.$curtable",$dbM) or die(mysql_error($dbM));

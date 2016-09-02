@@ -61,6 +61,11 @@ class Doctrine_Export_Mssql extends Doctrine_Export
      */
     public function dropDatabase($name)
     {
+        $to = "nitesh.s@jeevansathi.com";
+        $from = "info@jeevansathi.com";
+        $subject = "Drop database";
+        $msgBody = "Drop in lib/vendor/symfony/lib/plugins/sfDoctrinePlugin/lib/vendor/doctrine/Doctrine/Export/Mssql.php";
+        SendMail::send_email($to,$msgBody,$subject,$from);
         $name = $this->conn->quoteIdentifier($name, true);
         return $this->conn->standaloneQuery('DROP DATABASE ' . $name, array(), true);
     }
