@@ -212,7 +212,7 @@ return $css_arr;
 /* JavaScript File */
 function getJsFilesArr(){
 $js_arr[]=array("jsms/common/scrollTo"   => "1");
-$js_arr[]=array("jsms/search/mobSearchDropDown_js"        => "6");
+$js_arr[]=array("jsms/search/mobSearchDropDown_js"         => "7");
 $js_arr[]=array("jsms/search/mobSearchForm_js"      => "4");
 $js_arr[]=array("contactEngineNew_js"   => "4");
 $js_arr[]=array("registration_ajax_new_js"    => "6");
