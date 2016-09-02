@@ -632,17 +632,28 @@ class MembershipMailer {
     */
     public function sendExclusiveServiceIIMailer($profileDetails){
         $mailId = '1808';
+        //print_r($profileDetails);die;
         foreach ($profileDetails["usernameListArr"] as $key => $username) {
-            $otherProfileObj = new Operator;
-            $otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
-            $otherPid = $otherProfileObj->getPROFILEID();
-            unset($otherProfileObj);
-            if($otherPid){
-                $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
+            if($username){
+                $otherProfileObj = new Operator;
+                $otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
+                $otherPid = $otherProfileObj->getPROFILEID();
+                unset($otherProfileObj);
+                if($otherPid){
+                    $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
+                }
+                else{
+                    unset($profileDetails["usernameListArr"][$key]);
+                }
+            }
+            else{
+                unset($profileDetails["usernameListArr"][$key]);
             }
         }
+        //print_r($profileDetails);die("222");
         if($profilePageLinkArr && is_array($profilePageLinkArr)){
             $profileDetails["USERNAMELIST"] = $profilePageLinkArr;
+            print_r($profileDetails);die;
             //$this->sendServiceActivationMail($mailId, $profileDetails);
         } 
         print_r($profileDetails);die;
