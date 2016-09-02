@@ -14,10 +14,24 @@ if($status!='200')
                 }
         }
 }
-function sendPresenceRequest()
+$serverUrlArray = array("http://192.168.120.67:8290","http://192.168.120.75:8290");
+foreach($serverUrlArray as $k=>$v){
+        $status = sendPresenceRequest($v);
+        if($status!='200'){
+                $status = sendPresenceRequest($v);
+                if($status!=200)
+                {
+                        mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com","Error in presence api @".$v,"Please check");
+                }
+        }       
+}
+function sendPresenceRequest($url)
 {
         $url = JsConstants::$communicationServiceUrl."/communication/v1/presence?pfids=9061321";
-        $res = CommonUtility::sendCurlPostRequest($url,'',1);
+        if($url){
+                $url = $url."/communication/v1/presence?pfids=9061321"; 
+        }
+        $res = CommonUtility::sendCurlPostRequest($url,'',2);
         $res = (array) json_decode($res);
         $res = (array) $res["header"];
         $status = $res["status"];
