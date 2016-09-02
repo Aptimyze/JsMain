@@ -754,7 +754,7 @@ EditApp = function(){
       fieldDivDom.append($("<p />",errorLabelAttr));
 	if(fieldObject.key=="NAME")
 	{
-	var nameSettingDOM = '            <div id="hoverDiv" class="disp_ib pos-abs r0 mr5 cursp"><span id="showText" class="colrGrey fontlig f12 showToAll disp_ib">Show to All</span><i id="settingsIcon"></i> <ul id="optionDrop" class="optionDrop pos-abs disp-none" data-toSave="displayName"> <li class="selected" id="showYes">Show my name to all </li> <li id="showNo">Don\'t show my name<br></li>  </ul> </div>';
+	var nameSettingDOM = '            <div id="hoverDiv" class="disp_ib pos-abs r0 mr5 cursp"><span id="showText" class="colrGrey fontlig f12 showToAll disp_ib">Show to All</span><i id="settingsIcon"></i> <ul id="optionDrop" class="optionDrop pos-abs disp-none" data-toSave="displayName"> <li class="selected" id="showYes">Show my name to all </li> <li id="showNo">Don\'t show my name<br> ( You will not be able to see names of other members ) </li>  </ul> </div>';
 	fieldDivDom.append(nameSettingDOM);
 	}
       
@@ -6154,13 +6154,17 @@ $('.js-previewAlbum').click(function(){
                                         $(this).removeClass("selected");
                                 });
                                 $(this).addClass("selected");
-				$("#showText").html($(this).html());
 				if($(this).attr("id") == "showYes")
 				{
 					var value = "Y";
+					var text = "Show to All";
 				}
 				else
+				{
 					var value = "N";
+					var text = "Don't Show";
+				}
+				$("#showText").html(text);
 				storeFieldChangeValue(fieldObject,value);
 				$("#optionDrop").removeClass("optionDrop");
 				setTimeout(function(){ $("#optionDrop").addClass("optionDrop");}, 500);
@@ -6173,13 +6177,14 @@ $('.js-previewAlbum').click(function(){
 		{
 			var show = "#showYes";
 			var hide = "#showNo";
+			var text = "Show to All";
 		}
 		else
 		{
 			var show = "#showNo";
 			var hide = "#showYes";
+			var text = "Don't Show";
 		}
-		var text = $(show).html();
 		$(hide).removeClass("selected");
 		$(show).addClass("selected");
 		$("#showText").html(text);
