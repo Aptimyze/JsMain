@@ -33,7 +33,7 @@
                                 <input type="radio" id='CALPrivacyShow2' name="optionSelect" value="dontShow" ~if $namePrivacy eq 'N'`checked=""~/if`><i></i> Don’t show my name
                             </div>
                         </div>
-                        <div id='CALPrivacyInfo' class="disp-none f12 mt15 color11 txtc">You will also not be able to see names of other members</div>
+                        <div id='CALPrivacyInfo' class="~if $namePrivacy neq 'N'`disp-none~/if` f12 mt15 color11 txtc">You will also not be able to see names of other members.</div>
                         <button id='CALButtonB2'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink">~$button1Text`</button>
                     </div>
                     <div class="padWidget f13 colrGrey txtc">We will NEVER show your name to other users without your explicit consent </div>
