@@ -705,3 +705,12 @@ function callAfterDppChange()
 		setSearchCacheLocalStorageData(loggedInJspcUser,'lastDppChangedActionTimestamp',now);
 	}
 }
+
+function showCustomCommonError(msg,timeInMs)
+{
+    
+            $("#commonError #js-commonErrorMsg").text(msg);
+            $("#commonError").slideDown("slow");
+        setTimeout('$("#commonError").slideUp("slow")',timeInMs);
+
+}
