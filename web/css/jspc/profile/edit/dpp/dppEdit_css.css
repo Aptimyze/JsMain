@@ -64,15 +64,9 @@ input::-ms-clear {
      display:none;
 }
 
-@media (max-width: 1024px){
  .edpos1{top: -20px;left: -297px;}	
  .edpop1 {background-position: -49px -247px;width: 9px;height: 15px;left: 286px;top: 11px;}	
 	
-}
-@media (min-width: 1280px){
-	.edpos1{top:-20px; left:93px;}
-	.edpop1{background-position:-37px -247px; width:9px; height:15px; left:-8px; top:11px}
-}
 
 /* fix rtl for demo */
     .chosen-rtl .chosen-drop {

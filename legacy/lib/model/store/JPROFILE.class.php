@@ -1524,6 +1524,7 @@ public function duplicateEmail($email)
                 }
 
 	}
+
 	//This function executes a select query on join of jprofile and incentives.name_of_user to fetch PROFILEID,EMAIL,USERNAME for the profiles that match the criteria
 	public function getDataForLegal($nameArr,$age,$addressArr,$email)
 	{		
@@ -1624,6 +1625,6 @@ public function duplicateEmail($email)
 		{
             throw new jsException($ex);
         }
-	}
+}
 }
 ?>

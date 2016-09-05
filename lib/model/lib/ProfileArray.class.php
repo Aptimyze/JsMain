@@ -57,8 +57,8 @@ class ProfileArray{
     {
       foreach($profileIdArray as $key=>$pid)
       {
-        $this->profileArr[$key] = Profile::getInstance($connection,$pid);
-        $this->profileArr[$key]->setDetail($pid,$fields);
+	$this->profileArr[$key] = Profile::getInstance($connection,$pid);
+	$this->profileArr[$key]->setDetail($pid,$fields);
       }
     }
     return $this->profileArr;

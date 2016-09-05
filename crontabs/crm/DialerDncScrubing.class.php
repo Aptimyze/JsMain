@@ -71,17 +71,13 @@ class DialerDncScrubing
 	}
         function start_opt_in_profiles_forSalesCampaign($campaign_name,$phoneNo,$leadId)
         {
-                $squery1 = "SELECT easycode,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND Dial_Status='9' and PHONE_NO1='$phoneNo' and Lead_id='$leadId'";
+		$squery1 = "SELECT easycode FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND Dial_Status='9' and PHONE_NO1='$phoneNo' and Lead_id='$leadId'";
                 $sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logerror($squery1,$this->db_dialer);
                 while($srow1 = mssql_fetch_array($sresult1))
                 {
                         $ecode = $srow1["easycode"];
-			$alloted = $srow1['AGENT'];
                         if($ecode){
-				if($alloted)
-					$dialStatus =2;
-				else
-					$dialStatus =1;
+				$dialStatus =1;
                                 $query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus,DNC_Status='' WHERE easycode='$ecode'";
                                 mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
 
