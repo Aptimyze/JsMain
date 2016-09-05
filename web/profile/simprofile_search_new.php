@@ -28,9 +28,7 @@ else
 	global $all_previous_rec_str;
 
 	$db=connect_db4();
-	$ddl=connect_ddl();
 	$db1=connect_db();
-	
 
 	//set of profile contacted by looged in user or he accepts the profile.
 	$sql="SELECT SQL_CACHE RECEIVER AS CONTACT_HISTORY FROM newjs.CONTACTS_SEARCH_NEW WHERE SENDER = '$contactedby'"; 
@@ -110,8 +108,8 @@ else
 			/** Calculating score of B' contact history profiles.This score will be used to compute final receiver score **/
 			$sql="CREATE TEMPORARY TABLE REC_HISTORY_SCORE(DISPLAY_PID int(11) unsigned, CNT float(4) unsigned , INDEX (DISPLAY_PID) )";
 			$res=mysql_query_decide($sql,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate","","",$db);
-			disable_keys("REC_HISTORY_SCORE",$ddl);
-			enable_keys("REC_HISTORY",$ddl);
+			disable_keys("REC_HISTORY_SCORE",$db);
+			enable_keys("REC_HISTORY",$db);
 			//enable_keys("COMMON_HISTORY",$db);
 
 			$sql="INSERT INTO newjs.REC_HISTORY_SCORE(DISPLAY_PID,CNT)(SELECT a.DISPLAY_PID , (b.CNT/($sen_history_cnt + a.CNT - b.CNT)) as SCORE FROM REC_HISTORY a , COMMON_HISTORY b WHERE a.DISPLAY_PID=b.DISPLAY_PID )";
