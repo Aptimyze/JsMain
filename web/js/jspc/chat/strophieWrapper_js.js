@@ -179,8 +179,8 @@ var strophieWrapper = {
     onRosterUpdate: function (iq) {
         //strophieWrapper.Roster = strophieWrapper.Roster.filter(function(n){ return n != undefined }); 
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
-        //console.log("onRosterUpdate");
-        //console.log(iq);
+       // console.log("onRosterUpdate");
+       // console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
@@ -233,11 +233,12 @@ var strophieWrapper = {
                     }
                     strophieWrapper.Roster[user_id] = rosterObj;
                     if (subscription == "to") {
-                        //console.log("subcribing");
+                       // console.log("subcribing");
                         strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
                     }
                     setTimeout(function () {
-                        strophieWrapper.sendPresence();
+//console.log("sent self presence");                        
+strophieWrapper.sendPresence();
                     }, 5000);
                 }
             }
@@ -350,8 +351,8 @@ var strophieWrapper = {
     },
     //executed after presence has been fetched
     onPresenceReceived: function (presence) {
-        //console.log("onPresenceReceived from- ",$(presence).attr('from'));
-        //console.log(presence);
+       // console.log("onPresenceReceived from- ",$(presence).attr('from'));
+       // console.log(presence);
         var presence_type = $(presence).attr('type'),
             chat_status = "offline"; // unavailable, subscribed, etc...
         var from = $(presence).attr('from'),
@@ -375,9 +376,16 @@ var strophieWrapper = {
             //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
             //strophieWrapper.stropheLoggerPC(from);
             if (presence_type != 'error') {
+//console.log("authorizing",presence_type);
 	            //strophieWrapper.stropheLoggerPC(presence);
 	            //strophieWrapper.authorize(from.split("/")[0]);
-	            strophieWrapper.authorize(from);
+	//            strophieWrapper.authorize(from);
+
+	if(presence_type == "subscribe"){
+//console.log("sent presence again");
+strophieWrapper.authorize(from);
+strophieWrapper.sendPresence();
+}
 	            strophieWrapper.updatePresence(user_id, chat_status);
         	}
             //strophieWrapper.stropheLoggerPC("end of onPresenceReceived for " + user_id + "---" + chat_status);
