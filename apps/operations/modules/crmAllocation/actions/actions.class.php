@@ -906,12 +906,10 @@ class crmAllocationActions extends sfActions
 				//check if profile has active JS sxclusive membership
 				$billingObj = new billing_SERVICE_STATUS("newjs_slave");
 				$exclusiveMemDetails = $billingObj->getActiveJsExclusiveServiceID($pid);
-				//print_r($exclusiveMemDetails);die;
 				unset($billingObj);
 				if($exclusiveMemDetails){
 					$profileDetails["usernameListArr"] = explode("||", $profileUsernameListParsed);
 					unset($profileUsernameListParsed);
-					//$profileDetails["USERNAME"] = $profileObj->getUSERNAME();
             		$profileDetails["PROFILEID"] = $pid;
             		$profileDetails["EMAIL"] = $exclusiveEmail;
             		$nameDBObj = new incentive_NAME_OF_USER("newjs_slave");
@@ -935,7 +933,7 @@ class crmAllocationActions extends sfActions
 				    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
 				    }
 				    else{
-				    	//no valid list of username for link
+				    	//no valid list of username for hyperlink
 				    	$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_USERNAME_LIST");
 				    }
 				}
