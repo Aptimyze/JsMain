@@ -54,6 +54,18 @@ class ApiRequestCallbackV1Action extends sfActions
             $channel = $arrRequest['channel'];
             $callbackSource = $arrRequest['callbackSource'];
             $rcbResponse = $arrRequest['rcbResponse'];
+            $orgTZ = date_default_timezone_get();
+            date_default_timezone_set("Asia/Calcutta");
+            if(empty($date) || !isset($date)) {
+                $date = date("Y-m-d", strtotime('+1 day', time()));
+            }
+            if(empty($startTime) || !isset($startTime)) {
+                $startTime = "09:00:00";
+            }
+            if(empty($endTime) || !isset($endTime)) {
+                $endTime = "21:00:00";
+            }
+            date_default_timezone_set($orgTZ);
             // assigning respose data with recieved params and returning to sender
             $responseData['phone_autofill'] = $phone;
             $responseData['email_autofill'] = $email;
