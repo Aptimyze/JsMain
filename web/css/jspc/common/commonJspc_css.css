@@ -2177,7 +2177,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f2f3', end
 }
 .custom-checkbox-login.selected{background-position:-39px -33px}
 .navBarZ{
-    z-index: 5;
+    z-index: 6;
 }
 .overlayZ{
     z-index: 8;

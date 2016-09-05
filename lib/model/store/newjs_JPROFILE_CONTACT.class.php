@@ -76,6 +76,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 			}
 			*/
 			$resSelectDetail->execute();
+      $this->logFunctionCalling(__FUNCTION__);
 			while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC))
 			{
                                 if($indexProfileId == 1){
@@ -97,6 +98,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
         {
 			try 
 			{
+        $this->logFunctionCalling(__FUNCTION__);
                                 //Memcache to be moved to library - JSM-938
                                 $memObject=JsMemcache::getInstance();
                                 if($memObject->get("JPROFILE_CONTACT_".$pid)){
@@ -148,6 +150,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
                                 $prep->bindValue(":ALT_MOBILE",$altMobile,PDO::PARAM_INT);
                                 $prep->execute();
                         }
+                        $this->logFunctionCalling(__FUNCTION__);
                 }catch(PDOException $e)
                 {
                         throw new jsException($e);
@@ -195,6 +198,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 						$resEditContact->execute();
 					}
 				}
+        $this->logFunctionCalling(__FUNCTION__);
 				return true;
 			}catch(PDOException $e)
 				{
@@ -241,7 +245,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
                                         $res[$i]['TYPE']="ALTERNATE";
 					$i++;
                                 }
-
+                                $this->logFunctionCalling(__FUNCTION__);
                         }
                         else
                                 throw new jsException("No phone number as Input paramter");
@@ -255,5 +259,13 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
                         throw new jsException($e);
                 }
         }
+        
+    private function logFunctionCalling($funName)
+    {
+      $key = __CLASS__.'_'.date('Y-m-d');
+      JsMemcache::getInstance()->hIncrBy($key, $funName);
+      
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+    }
 }
 ?>

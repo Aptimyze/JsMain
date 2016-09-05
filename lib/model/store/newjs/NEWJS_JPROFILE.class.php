@@ -323,7 +323,7 @@ class NEWJS_JPROFILE extends TABLE
                 foreach ($numberArray as $k => $num) {
                     if ($k != 0)
                         $valueArrayM['PHONE_MOB'] .= ", ";
-                    $valueArrayM['PHONE_MOB'] .= "'" . $num . "', '0" . $num . "', '" . $isd . $num . "', '+" . $isd . $num . "', '0" . $isd . $num . "'";
+                    $valueArrayM['PHONE_MOB'] .= "'" . $num . "'";
                 }
             }
             if ($valueArrayM) {
@@ -860,9 +860,11 @@ class NEWJS_JPROFILE extends TABLE
         if ($this->dbName == "newjs_masterRep")
             $this->setConnection("newjs_master");
         try {
-            $sql = "update JPROFILE set ACTIVATED=PREACTIVATED where PROFILEID=:PROFILEID";
+            $now = date('Y-m-d');
+            $sql = "update JPROFILE set ACTIVATED=PREACTIVATED, ACTIVATE_ON=:ACT_ON where PROFILEID=:PROFILEID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $prep->bindValue(":ACT_ON", $now, PDO::PARAM_STR);
             //$prep->bindValue(":PRIVACY", $privacy, PDO::PARAM_STR);
             $prep->execute();
         } catch (PDOException $e) {
@@ -1647,7 +1649,7 @@ $time->sub(date_interval_create_from_date_string($lastLoginWithIn));
 
         try{
             $sql =  <<<SQL
-            SELECT *
+            SELECT PROFILEID
             FROM  newjs.`JPROFILE`
             WHERE LAST_LOGIN_DT  >=  :LAST_LOGIN_DT
             AND activatedKey=1

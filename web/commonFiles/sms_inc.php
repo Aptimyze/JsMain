@@ -11,6 +11,8 @@ if(!$_SERVER["DOCUMENT_ROOT"])
 	$_SERVER["DOCUMENT_ROOT"] = JsConstants::$docRoot;
 include_once(JsConstants::$docRoot."/ivr/jsivrFunctions.php");
 
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 function mobile_correct_format($mobile)
 //This function convert the given mobile number into proper format of 12 digit mobile no.
 {
@@ -523,7 +525,7 @@ function insertValues($guidArr,$receiver,$messageType)
                 if($receiver[$id]!='')
                 {
                 $sql1="INSERT INTO MIS.MOB_VERIFY(GUID,PROFILEID,MOBILE_NO,DATE_OF_ENTRY,MESSAGE_TYPE) VALUES('$guid','$id','$receiver[$id]','$date','$messageType')";
-                $res1 = mysql_query($sql1,$dbM) or die(mysql_error($dbM));
+                $res1 = mysql_query($sql1,$dbM) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error($dbM)));
                 }
         }
 }
@@ -600,14 +602,14 @@ die;
 
                 $str="'".implode("','",$v)."'";
                 $sql2="UPDATE MIS.MOB_VERIFY SET INVALID='$invalid',DATE_OF_VERIF='$date' WHERE GUID IN ($str)";
-                $res2 = mysql_query($sql2,$dbM) or die(mysql_error($dbM));
+                $res2 = mysql_query($sql2,$dbM) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error($dbM)));
         }
 
         foreach($reasonCodeArr as $k=>$v)
         {
                 $str="'".implode("','",$v)."'";
                 $sql2="UPDATE MIS.MOB_VERIFY SET REASONCODE='$k' WHERE GUID IN ($str)";
-                mysql_query($sql2,$dbM) or die(mysql_error($dbM));
+                mysql_query($sql2,$dbM) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error($dbM)));
         }
 
 }

@@ -24,6 +24,13 @@ function connect_db()
 	return $db;
 }
 
+function connect_ddl()
+{
+        $db = db_set_active("masterDDL",MysqlDbConstants::$masterDDL[HOST].":".MysqlDbConstants::$masterDDL[PORT],MysqlDbConstants::$masterDDL[USER],MysqlDbConstants::$masterDDL[PASS]) or die("Can't connect to Database".mysql_error());
+        mysql_select_db_js("jsadmin",$db);         // connection string
+        return $db;
+}
+
 function connect_rep()
 {
         $db = db_set_active("masterRep",MysqlDbConstants::$masterRep[HOST].":".MysqlDbConstants::$masterRep[PORT],MysqlDbConstants::$masterRep[USER],MysqlDbConstants::$masterRep[PASS]) or die("Can't connect to Database".mysql_error());

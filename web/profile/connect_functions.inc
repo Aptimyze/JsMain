@@ -1,5 +1,7 @@
 <?php
 
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(!function_exists("filter_page_redirection"))
@@ -3567,6 +3569,7 @@ if(!function_exists('logError'))
 {
         function logError($message,$query="",$critical="exit", $sendmailto="NO",$server="",$database="")
         {
+        		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
                 global $smarty, $checksum,$sql,$ajax_error,$isMobile;
 
                 //if(mysql_error_js() && $sendmailto!="YES")
@@ -9133,6 +9136,7 @@ function stat_name($PROFILEID,$username)
 
 function send_chat_request_email($profileid,$gmail,$username)
 {
+return;
 		global $smarty;
         $mypid=$profileid;
         $email=$gmail;

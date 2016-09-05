@@ -286,12 +286,15 @@ class inboxActions extends sfActions
   }
 
 public function executePerformV2(sfWebRequest $request)
-  {
+  {    
+  	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'in inbox api v2 '. $request->getParameter("infoTypeId") ); 
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$inputValidateObj = ValidateInputFactory::getModuleObject('inbox'); //added for contact center
 		$inputValidateObj->validateRequestInboxData($request);
 		$output = $inputValidateObj->getResponse();
-		
+
+
+
 		if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
 			/** caching **/

@@ -78,4 +78,11 @@
 <!--end:helpwidget-->
 <script> var showExpandMode = "~$showExpandMode`";
          var hideHelpMenu = "~$hideHelpMenu`";
+        
+        if(typeof(hideHelpMenu)=="undefined"){
+            hideHelpMenu = "false";
+        } 
+        if(hideHelpMenu == "true"){
+            $("#js-helpWidget").addClass('disp-none');
+        }
 </script>

@@ -10,7 +10,7 @@ $start = @date('H:i:s');
 
 $dir ="/home/developer/jsdialer";
 include_once($dir.'/plugins/predis-1.1/autoload.php');
-$ifSingleRedis ='tcp://172.10.18.65:6380';
+$ifSingleRedis ='tcp://172.10.18.75:6380';
 
 // Redis Data fetch 
 $client = new Predis\Client($ifSingleRedis);
@@ -52,7 +52,7 @@ for($r=0;$r<count($pro_array);$r++)
 
 //Compute users who tried to pay in last one hour
 $pro_array2 = array();
-$sql2= "SELECT PROFILEID FROM billing.PAYMENT_HITS WHERE ENTRY_DT>DATE_SUB(now(),INTERVAL 1 HOUR) AND PROFILEID !=0";
+$sql2= "SELECT PROFILEID FROM billing.PAYMENT_HITS WHERE ENTRY_DT>DATE_SUB(now(),INTERVAL 1 HOUR) AND PAGE=2";
 $res2=mysql_query($sql2,$db_js) or die($sql2.mysql_error($db_js));
 while($myrow2 = mysql_fetch_array($res2))
 {

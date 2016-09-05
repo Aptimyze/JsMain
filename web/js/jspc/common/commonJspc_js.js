@@ -51,6 +51,15 @@ $(document).ready(function (e) {
             $("#SearchProId").focus();
         } else callApiForProfile();
     });
+    
+    $('.js-gnbsearchLists').bind("click keypress", function () {
+				
+				var data = $(this).attr("data");
+				var url = '/search/'+data;
+				url =  getUrlForHeaderCaching(url);
+				window.location.href = url;
+        
+    });
 });
 
 function closeOverlayOnClick() {
@@ -376,14 +385,14 @@ function setBellCountHTML(data) {
                 $("#totalBellCount").text("9+");
             }
         }
-        /*if (parseInt(data.NEW_MATCHES)) {
+        if (parseInt(data.NEW_MATCHES)) {
             $("#justJoinedCountParent").css('display', 'block');
             if (data.NEW_MATCHES < 10) {
                 $("#justJoinedCount").text(data.NEW_MATCHES);
             } else {
                 $("#justJoinedCount").text("9+");
             }
-        }*/
+        }
         if (parseInt(data.MESSAGE_NEW)) {
             $("#messagesCountParent").css('display', 'block');
             if (data.MESSAGE_NEW < 10) {
@@ -416,15 +425,15 @@ function setBellCountHTML(data) {
                 $("#membersAcceptedMeCount").text("9+");
             }
         }
-        /*if (parseInt(data.DAILY_MATCHES_NEW)) {
+        if (parseInt(data.DAILY_MATCHES_NEW)) {
             $("#membersDailyMatchesCountParent").css('display', 'block');
             if (data.DAILY_MATCHES_NEW < 10) {
                 $("#membersDailyMatchesCount").text(data.DAILY_MATCHES_NEW);
             } else {
                 $("#membersDailyMatchesCount").text("9+");
             }
-        }*/
-        if (parseInt(data.FILTERED_NEW)) {
+        }
+	if (parseInt(data.FILTERED_NEW)) {
             $("#membersFilteredInterestCountParent").css('display', 'block');
             if (data.FILTERED_NEW < 10) {
                 $("#FilteredInterstsCount").text(data.FILTERED_NEW);
@@ -591,11 +600,108 @@ function sendAjaxHtmlDisplay(ajaxConfig, fun) {
     jQuery.myObj.ajax(ajaxConfig);
 }
 
-function logOutCheck(param, upgradeFromTopNavBar) {
-    if (top.logOut) top.logOut();
-    if (top.profileId) {
-        if (upgradeFromTopNavBar != 1 || upgradeFromTopNavBar === "undefined") param = param + "&profileId=" + top.profileId;
+function logOutCheck(param,upgradeFromTopNavBar){
+    if(top.logOut)
+       top.logOut(); 
+    
+    if(top.profileId) 
+    {
+        if(upgradeFromTopNavBar!=1 || upgradeFromTopNavBar==="undefined")
+            param=param+"&profileId="+top.profileId;
+    } 
+    top.location.href=param; 
+    return true; 
+}
+
+function isStorageExist()
+{
+    var bVal = true;
+    if(typeof(Storage)=='undefined')
+        bVal = false;
+
+    try{
+        localStorage.setItem('testLS',"true");
+        localStorage.getItem('testLS');
+        localStorage.removeItem('testLS');
+    }catch(e)
+    {
+        bVal = false;
     }
-    top.location.href = param;
-    return true;
+    return bVal;
+}
+
+var timeToCache = 3600; // Time in seconds
+
+function getSearchCacheLocalStorageData(profileid,label)
+{
+	profileSearchCacheData = localStorage.getItem(profileid);
+	return jQuery.parseJSON(profileSearchCacheData);
+}
+
+function setSearchCacheLocalStorageData(profileid,label,value)
+{
+	var current = {};
+	profileSearchCacheData = localStorage.getItem(profileid);
+	if(profileSearchCacheData!=null)
+	{
+		current = jQuery.parseJSON(profileSearchCacheData);
+	}
+	if(label)
+		current[label]=value;
+	localStorage.setItem(profileid, JSON.stringify(current));
+}
+
+
+function getUrlForHeaderCaching($url)
+{
+	var now = $.now();
+	if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser!="")
+	{
+		var data = getSearchCacheLocalStorageData(loggedInJspcUser);
+		var lastDppHeaderCaching = null;
+		var lastDppChangedActionTimestamp = null;
+		var lastContactActionTimestamp = null;
+		if(data)
+		{
+			lastDppHeaderCaching = data['dppHeaderCaching'];
+			lastDppChangedActionTimestamp = data['lastDppChangedActionTimestamp'];
+			lastContactActionTimestamp = data['lastContactActionTimestamp'];
+		}
+		if(lastDppHeaderCaching!=null)
+		{
+			timestamp = lastDppHeaderCaching;
+			var seconds =  (now - lastDppHeaderCaching)/1000;
+			if(seconds>timeToCache)
+				timestamp = now;
+			if(lastDppChangedActionTimestamp>timestamp)
+				timestamp = lastDppChangedActionTimestamp;
+			if(lastContactActionTimestamp>timestamp)
+				timestamp = lastContactActionTimestamp;
+		}
+		else
+			timestamp = now;
+		setSearchCacheLocalStorageData(loggedInJspcUser,'dppHeaderCaching',timestamp);
+	
+		if($url.indexOf('?')!='-1')
+			 return $url +"&useHeaderCaching=1&timestamp="+timestamp;
+		else
+			return $url+"?useHeaderCaching=1&timestamp="+timestamp;	
+	}
+	return $url;
+}
+function callAfterContact()
+{
+	var now = $.now();
+	if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser!="")
+	{
+		setSearchCacheLocalStorageData(loggedInJspcUser,'lastContactActionTimestamp',now);
+	}
+}
+function callAfterDppChange()
+{
+	var now = $.now();
+	if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser!="")
+	{
+		setSearchCacheLocalStorageData(loggedInJspcUser,'lastDppChangedActionTimestamp',now);
+	}
 }

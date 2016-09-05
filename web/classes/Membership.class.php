@@ -664,6 +664,8 @@ class Membership
             $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
             $subject = "Bill with discount of {$discPerc}% offered by {$execName}; Final Bill Amount: {$finAmt}";
             $msg = "Bill Details ({$serName})";
+            $msg .= "Username : {$this->username} \n";
+            $msg .= "Billid : {$this->billid} \n";
             SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
         }
         /**
@@ -690,6 +692,8 @@ class Membership
         if(empty($this->device) || $this->device == ''){
             $this->device = 'desktop';
         }
+        $billingDropSrcObj = new billing_DROPOFF_SOURCE_TRACKING();
+        $billingDropSrcObj->deleteSourceTracking($this->profileid, $this->device);
     }
 
     function generateInvoiceNo(){
@@ -1711,7 +1715,7 @@ class Membership
 
     function getSpecialDiscount($profile) {
         $today = date('Y-m-d');
-        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT('newjs_slave');
+        $billingVarDiscObj = new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $row = $billingVarDiscObj->getDiscountDetails($profile);
         if ($row['DISCOUNT']) {
             $data['DISCOUNT'] = $row['DISCOUNT'];

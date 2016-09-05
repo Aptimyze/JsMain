@@ -852,6 +852,26 @@ class SearchUtility
                                         }
                                 }
                         }
+			elseif($request->getParameter("partnermatches")=='1')
+                        {
+                                if($type=='set')
+                                {
+                                        JsMemcache::getInstance()->set("cachedPMS$pid",serialize($statusArr));
+                                        JsMemcache::getInstance()->set("cachedPMR$pid",serialize($resultArr));
+                                        return 1;
+                                }
+                                elseif($type=='get')
+                                {
+                                        $statusArr = JsMemcache::getInstance()->get("cachedPMS$pid");
+                                        $resultArr = JsMemcache::getInstance()->get("cachedPMR$pid");
+                                        if($statusArr && $resultArr)
+                                        {
+                                                $cachedArr["statusArr"] = unserialize($statusArr);
+                                                $cachedArr["resultArr"] = unserialize($resultArr);
+                                                return $cachedArr;
+                                        }
+                                }
+                        }
 			elseif($request->getParameter("verifiedMatches")=='1')
                         {
                                 if($type=='set')
@@ -879,6 +899,8 @@ class SearchUtility
 				JsMemcache::getInstance()->set("cachedJJR$pid","");
 				JsMemcache::getInstance()->set("cachedVMS$pid","");
                                 JsMemcache::getInstance()->set("cachedVMR$pid","");
+				JsMemcache::getInstance()->set("cachedPMS$pid","");
+                                JsMemcache::getInstance()->set("cachedPMR$pid","");
 			}	
                 }
                 return 0;

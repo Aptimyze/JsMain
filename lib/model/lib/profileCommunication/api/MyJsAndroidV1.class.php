@@ -9,6 +9,7 @@ class MyJsAndroidV1 extends MyJsMobileAppV1
 {
 	static public function init()
         {
+        	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class MyJsAndroidV1 for android ");
 		self::$informationTupleFields= Array(
 			"INTEREST_RECEIVED"=>Array("PROFILECHECKSUM","OCCUPATION","AGE", "HEIGHT", "RELIGION","CASTE","MTONGUE","INCOME","ThumbailUrl","EDUCATION"),
 			"VISITORS"=>Array("PROFILECHECKSUM","ThumbailUrl"),

@@ -3,6 +3,7 @@
 This class includes functions for sending mail, sms and notifications.
 */
 include_once(JsConstants::$cronDocRoot."/crontabs/connect.inc");
+
 class ProcessHandler
 {
   /**
@@ -143,6 +144,24 @@ class ProcessHandler
 
     }
 
+ }
+
+ public function insertChatMessage($type,$body)
+ {
+     switch($type)
+     {
+         case "PUSH":
+             $sender = $body["from"];
+             $receiver = $body["to"];
+             $communicationType = $body["communicationType"];
+             $message = $body["message"];
+             $chatId = $body["chatid"];
+             $ip = $body["ip"];
+             $date = $body["date"];
+             $js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatId,$ip,$date);
+             $js_communication->storeCommunication();
+             break;
+     }
  }
  public function updateSeen($type,$body)
  {

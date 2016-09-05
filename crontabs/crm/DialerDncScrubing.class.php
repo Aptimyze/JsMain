@@ -46,7 +46,7 @@ class DialerDncScrubing
 	}
 	function start_opt_in_profiles($campaign_name,$opt_in_profile,$dateTime='')
 	{
-		$squery1 = "SELECT easycode,PROFILEID FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID ='$opt_in_profile'";
+		$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID ='$opt_in_profile'";
                 if($dateTime)
                         $squery1 .=" and Login_Timestamp>='$dateTime'";
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logerror($squery1,$this->db_dialer);
@@ -54,8 +54,14 @@ class DialerDncScrubing
 		{
 			$ecode = $srow1["easycode"];
 			$proid = $srow1["PROFILEID"];
+			$alloted = $srow1['AGENT'];
 			if($ecode){
-				$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1' WHERE easycode='$ecode'";
+	                        if($alloted)
+	                                $dialStatus ='2';
+	                        else
+	                                $dialStatus ='1';
+
+				$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus,DNC_Status='' WHERE easycode='$ecode'";
 				mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
 
 				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo,','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
@@ -65,13 +71,14 @@ class DialerDncScrubing
 	}
         function start_opt_in_profiles_forSalesCampaign($campaign_name,$phoneNo,$leadId)
         {
-                $squery1 = "SELECT easycode FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND Dial_Status='9' and PHONE_NO1='$phoneNo' and Lead_id='$leadId'";
+		$squery1 = "SELECT easycode FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND Dial_Status='9' and PHONE_NO1='$phoneNo' and Lead_id='$leadId'";
                 $sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logerror($squery1,$this->db_dialer);
                 while($srow1 = mssql_fetch_array($sresult1))
                 {
                         $ecode = $srow1["easycode"];
                         if($ecode){
-                                $query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1' WHERE easycode='$ecode'";
+				$dialStatus =1;
+                                $query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus,DNC_Status='' WHERE easycode='$ecode'";
                                 mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
 
                                 $log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
