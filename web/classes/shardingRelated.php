@@ -43,9 +43,9 @@ $ddlShardUser[2]= 'shard3DDL';
 function getActiveServerName($activeServerId,$master_or_slave='master')
 {
         global $activeServers;
+        global $ddlShardUser;
         global $slave_activeServers;
         global $shardSlave112;
-
         if($master_or_slave=='master')
                 return $activeServers[$activeServerId];
         elseif($master_or_slave=='slave112')
