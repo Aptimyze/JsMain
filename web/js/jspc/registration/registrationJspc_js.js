@@ -2360,6 +2360,8 @@ function clearUgDegree(){
   
 })();
     $(document).ready(function(e) {
+	if(pageId=="JSPCR1")
+	{
 	inputData['displayname']="Y";
         $(".optionDrop li").each(function(index, element) {
             $(this).on("click",function(){
@@ -2371,11 +2373,14 @@ function clearUgDegree(){
                                         $("#showText").html("Show to All");
                                 }
                                 else {
-                                        $("#showText").html("Don<92>t show my name");
+                                        $("#showText").html("Don't show my name");
                                 }
 				var displayNameVal = $(this).attr('data-fieldVal');
 				inputData['displayname']=displayNameVal;
+				$("#optionDrop").removeClass("optionDrop");
+				setTimeout(function(){ $("#optionDrop").addClass("optionDrop");}, 500);
                         });
         });
+    }
     });
 

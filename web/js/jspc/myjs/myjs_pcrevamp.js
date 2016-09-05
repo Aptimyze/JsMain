@@ -73,12 +73,20 @@ this.maxCount=maxCountArray[this.name];
 this.innerHtml=containerBarObj.getInnerHtml();
 }
 component.prototype.request = function() {
-         //ele = this
-
+        //ele = this
+	if(this.name=='JUSTJOINED' || this.name=='VERIFIEDMATCHES')
+	{
+        	var myLurl =  getUrlForHeaderCaching(urlArray[this.name]);
+	}
+	else
+	{
+	        var myLurl =  urlArray[this.name];
+	}
          $.myObj.ajax({
-          type: "POST",
+          type: "GET",
           dataType: "json",
-          url: urlArray[this.name],
+	  cache: true,
+          url: myLurl,
           context: this,
           success: function(response,data) {
 				data.data = response;
@@ -261,7 +269,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 	}
 	dailyMatches.prototype.noResultCase = function() {
 		bellCountStatus++;
-		//createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
+		createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
 		noResultFaceCard(this);		
 	}
 
@@ -290,7 +298,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 	}
 	justJoinedMatches.prototype.noResultCase = function() {
 		bellCountStatus++;
-		//createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
+		createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 		noResultFaceCard(this);		
 				
 	}
@@ -377,7 +385,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 		noShortCards(this);
 }
 
-  //DESRIED PARTNER MATCHES
+  //DESIRED PARTNER MATCHES
   var desiredPartnerMatches = function() {
     this.name = "DESIREDPARTNERMATCHES";
     this.containerName = this.name+"_Container";
@@ -462,18 +470,19 @@ var CALayerShow=$("#CALayerShow").val();
 if(typeof(CALayerShow)=='undefined' ||  !CALayerShow) return;
 if(CALayerShow!='0')
   {
-
+      
     var layer=$("#CALayerShow").val();
     var url="/static/criticalActionLayerDisplay";
  var ajaxData={'layerId':layer};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
-
-
 ajaxConfig.success=function(response){
 $('body').prepend(response);
-  showLayerCommon('criticalAction-layer'); 
-  $('.js-overlay').unbind('click');
+  showLayerCommon('criticalAction-layer');
+  if(CALayerShow==9) 
+      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
+  else
+    $('.js-overlay').unbind('click');
 }
 
 $.myObj.ajax(ajaxConfig);
@@ -654,7 +663,6 @@ else {
 
    $('#videoCloseID').bind('click', function(e)
   {
-    console.log("jhsgcbjk");
     videoLinkRequest(profileid);
   });
 
@@ -765,3 +773,55 @@ else {
 }
 }
 });
+// cal scripts
+var buttonClicked=0;
+    function validateUserName(name){
+        if(!name)return false;
+        
+        var arr=name.split('');
+        if(/^[a-zA-Z' .]*$/.test(name) == false)return false;
+        return true;
+        
+    }
+    function criticalLayerButtonsAction(clickAction,button) {
+
+
+                if(buttonClicked)return;    
+                buttonClicked=1;
+                var layerId= $("#CriticalActionlayerId").val();
+                
+                    var newNameOfUser='',namePrivacy='';
+                    if(layerId==9 && button=='B1')
+                    {   
+                        
+                        newNameOfUser = ($("#nameInpCAL").val()).trim();
+                        if(!validateUserName(newNameOfUser))
+                        {
+                            $("#CALNameErr").show();buttonClicked=0;
+                            return;
+                        }
+                        namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
+                        
+                      }
+                    if(clickAction=="close" || clickAction=='RCB') {
+                    var URL="/common/criticalActionLayerTracking";
+                    $.ajax({
+                        url: URL,
+                        type: "POST",
+                        data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
+                    });
+
+                    closeCurrentLayerCommon();
+                    if(clickAction=='RCB')
+                    {
+                        toggleRequestCallBackOverlay(1, 'RCB_CAL');
+                        $('.js-dd ul li[value="M"]').trigger('click');
+                    }
+                
+                }
+                else {
+                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                }
+                
+        }
+

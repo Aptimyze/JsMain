@@ -10,6 +10,8 @@ class RegularMatchalertMailerTask extends sfBaseTask
     private $smarty;
     private $mailerName = "MATCHALERT";
     private $limit = 1000;
+    const NTDPP_COUNT = 16;
+    const TDPP_COUNT = 10;
   
   protected function configure()
   {
@@ -56,18 +58,18 @@ EOF;
 		$mailerLinks = $mailerServiceObj->getLinks();
 		$this->smarty->assign('mailerLinks',$mailerLinks);
 		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
-		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
+		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true);
 		foreach($receivers as $sno=>$values)
 		{
 			$pid = $values["RECEIVER"];
 			$sno = $values["SNO"];
 			$data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);
-			if(is_array($data))
+      if(is_array($data))
 			{
                                 $stypeMatch = $this->getStype($values["LOGIC_USED"]);
 				//Common Parameters required in mailer links
 				$data["stypeMatch"] =$stypeMatch."&clicksource=".$clicksource;
-				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"]);
+				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"],$pid);
 				$data["body"]=$subjectAndBody["body"];
 				$data["showDpp"]=$subjectAndBody["showDpp"];
 				$data["surveyLink"]=$subjectAndBody["surveyLink"];
@@ -75,11 +77,12 @@ EOF;
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
-				$flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid);
+        $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid);
 				
 			}
 			else
 				$flag = "I"; // Invalid users given in database
+                        
 			$mailerServiceObj->updateSentForUsers($sno,$flag);
 			unset($subject);
 			unset($mailSent);
@@ -112,9 +115,11 @@ EOF;
   This function is to get subject of the mail required as per business
   *@param $name : name of the receiver of the mail
   *@param $count : number of users sent in mail
+  *@param $logic : Logic used
+  *@param $profileId : Receiver profile Id
   *@return $subject : subject of the mail
   */
-  protected function getSubjectAndBody($firstUser,$count,$logic)
+  protected function getSubjectAndBody($firstUser,$count,$logic,$profileId)
   {
 	$subject = array();
 	$today = date("d M");
@@ -130,13 +135,14 @@ EOF;
 	{
 		case "3": //NT-NT case
 			$subject["subject"]= $count." Desired Partner".$matchStr." for today | $today";
-			$subject["body"]="You may send interest to".$these." ".$count.strtolower($matchStr)." based on your Desired Partner Profile.";
+                        $subject["body"]=$this->getDppContent($count, $profileId, self::NTDPP_COUNT,$logic);
+                        
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
 			break;
-		case "2":// T-NT case
+		case "2":// T-NT case 
                         $subject["subject"]= $count." Desired Partner".$matchStr." for today | $today"; 
-			$subject["body"]="You may send interest to".$these." ".$count.strtolower($matchStr)." based on your Desired Partner Profile.";
+                        $subject["body"]=$this->getDppContent($count, $profileId, self::TDPP_COUNT,$logic);
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
                         break;
@@ -150,8 +156,31 @@ EOF;
 			 throw  new Exception("No logic send in subjectAndBody() in RegularMatchAlerts task");
 			
 	}
-	
 	return $subject;
+  }
+  /**
+   * 
+   * @param type $count mailer count
+   * @param type $profileId profileId
+   * @param type $valToMatch actual limit for DPP mailer
+   * @return type string - mail body
+   */
+  public function getDppContent($count,$profileId,$valToMatch,$logicLevel){
+        $MatchAlerts = new MatchAlerts();
+        $LogCount = $MatchAlerts->getProfilesCountOfLogicLevel($profileId,$logicLevel);
+        $totalCountData = TwoWayBasedDppAlerts::checkForDppProfile($profileId);
+        if($LogCount > $count && !empty($totalCountData) && $totalCountData["CNT"] !=0 ){
+                $outOf = "$count out of ".$totalCountData["CNT"]." profiles";
+        }else{
+                $outOf = $count;
+                if($count==1){
+                        $outOf .= " profile";
+                }else{
+                        $outOf .= " profiles";
+                }
+        }
+        $subject="Shown below are $outOf added to your account today, based on your Desired Partner Profile. You may send interest to them.";
+        return $subject;
   }
 
 }

@@ -37,6 +37,7 @@ class TupleService
     private $loginProfileObj;
     private $PEOPLE_WHO_VIEWED_MY_CONTACTS=Array();
     private $INTEREST_RECEIVED_FILTER = Array();
+    private $FEATURED_PROFILE_TUPLE =  Array();
 	// Function to initalize logic array which have logic id and corresponding fields mapping
 	static public function initLogics()
 	{
@@ -64,7 +65,8 @@ class TupleService
 					"YOURINFO",
 					"SCREENING",
                                         "COMPANY_NAME",
-                                        "ANCESTRAL_ORIGIN"
+                                        "ANCESTRAL_ORIGIN",
+                                        "EMAIL"
 					
 				),
 				"LOGIC" => Array(
@@ -189,10 +191,13 @@ class TupleService
 		calling the setters of various fields*/
 		if (is_array($profileObjArray)){
                    	foreach ($profileObjArray as $infoType => $profilesInfoTypeBasedValues) {
+                   		
 				if (is_array($profilesInfoTypeBasedValues))
 					foreach ($profilesInfoTypeBasedValues as $profileId => $profileValues) {
+						
 						$tupleObject = $this->getTupleObject($infoType, $profileId);
                                                 foreach($this->profileDetailsArray as $key=>$tp) {
+
 						if ($profileId==($tp->getPROFILEID()))
 	                                                $tupleObject->setprofileObject($this->profileDetailsArray[$key]);
 						}
@@ -212,6 +217,7 @@ class TupleService
 					}
                         }
 			}
+
 	}
         
         public function getlocationWithNativeCity($tupleObject){
@@ -338,6 +344,11 @@ class TupleService
 		return $this->INTEREST_RECEIVED_FILTER;
 	}
 	
+	public function getFEATURED_PROFILE_TUPLE()
+	{
+		return $this->FEATURED_PROFILE_TUPLE;
+	}
+
 	/*This function will return particular tuple object from the requested infotype array and given profileid
 	 *@param  infotype : information type array defined in this service
 	 *@param profileId : profileid to identify the tuple object
@@ -369,7 +380,7 @@ class TupleService
 		if(!empty($profileIds))
 		{
 			$nameOfUserObj = new NameOfUser();
-			$showNameData = $nameOfUserObj->showNameToProfiles($this->getLoginProfileObj()->getPROFILEID(),$profileIds,$this->getLoginProfileObj()->getSUBSCRIPTION());
+			$showNameData = $nameOfUserObj->showNameToProfiles($this->getLoginProfileObj(),$this->profileDetailsArray);
 			foreach($showNameData as $k=>$v)
 			{
 				if($v['SHOW']==true)
@@ -844,6 +855,7 @@ else {
 				$result[$profileid]["ENTRY_DT"]        = $profileObj->getENTRY_DT();
 				$result[$profileid]["SUBSCRIPTION"]    = $profileObj->getSUBSCRIPTION();
 				$result[$profileid]["LAST_LOGIN_DT"]    = $profileObj->getLAST_LOGIN_DT();
+				$result[$profileid]["EMAIL"]    = $profileObj->getEMAIL();
                                 if(Flag::isFlagSet("company_name",$profileObj->getSCREENING()))
                                         $result[$profileid]["COMPANY_NAME"]          = $profileObj->getCOMPANY_NAME();
                                 else

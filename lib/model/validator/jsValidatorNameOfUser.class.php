@@ -51,7 +51,7 @@ class jsValidatorNameOfUser extends sfValidatorBase
      $nameOfUser=trim(strtolower($value));
         if(!$nameOfUser)
         {
-                throw new sfValidatorError($this,ErrorHelp::$ERR_REQUIRED[name_of_user], array('value' => $nameOfUser));
+		return true;
         }
           if(!preg_match(self::NAME_REGEX,$nameOfUser))
           {

@@ -383,7 +383,7 @@ input:-ms-input-placeholder
             width: 338px;
             list-style-type: none;
             margin-top: 12px;
-            left: -5px;
+	    right:-4px;
         }
 
         .optionDrop li {
@@ -410,11 +410,12 @@ input:-ms-input-placeholder
             display: block;
         }
 
-        #settingsIcon {
+#settingsIcon {
             width: 25px;
             height: 21px;
-            background-image: url(icon.png);
+            background-image: url(IMG_URL/images/jspc/commonimg/iconSpriteNameSetting.png);
             background-repeat: no-repeat;
+                        background-position:-32px -30px;
         }
 
         .wid77p {

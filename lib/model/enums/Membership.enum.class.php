@@ -56,7 +56,8 @@ class VariableParams
 		'1804' => 'VD',
 		'1797' => 'JS_EXCLUSIVE_FEEDBACK',
 		'1795' => 'MEMBERSHIP_PROMOTIONAL',
-		'1835' => 'NEW_MEMBERSHIP_PAYMENT'
+		'1835' => 'NEW_MEMBERSHIP_PAYMENT',
+		'1836' => 'MEM_EXPIRY_CONTACTS_VIEWED'
 	);
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(

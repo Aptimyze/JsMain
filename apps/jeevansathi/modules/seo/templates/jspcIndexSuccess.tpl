@@ -172,7 +172,7 @@
                                             ~/foreach`
                                         </ul>
                                         <!--end:listing-->
-                                        ~if $page_source eq 'N' && $levelObj->getBrideURL() && $leftCnt gt 11`
+                                        ~if $page_source eq 'N' && $levelObj->getBrideURL()`
                                         <p class="f15 fontlig txtr pt15"><a href="~$levelObj->getBrideURL()`" class="color11">View More ~$levelObj->getH1Tag()` Brides</a></p>
                                         ~/if`
                                     </div>
@@ -201,7 +201,7 @@
                                             ~/foreach`
                                         </ul>
                                         <!--end:listing-->
-                                        ~if $page_source eq 'N' && $levelObj->getGroomURL() && $rightCnt gt 11`
+                                        ~if $page_source eq 'N' && $levelObj->getGroomURL()`
                                         <p class="f15 fontlig txtr pt15"><a href="~$levelObj->getGroomURL()`" class="color11">View More ~$levelObj->getH1Tag()` Grooms</a></p>
                                         ~/if`
                                     </div>

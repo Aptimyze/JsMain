@@ -8,22 +8,32 @@ class newjs_ValidNameList extends TABLE{
          * @param $dbName - Database to which the connection would be made
          */
 
-        public function __construct($dbname="")
+        public function __construct($dbname="",$gender)
         {
 			parent::__construct($dbname);
+			if(!$gender ||!in_array($gender,array("M","F")))
+				throw new jsException("", "gender not provided in names table");
+			$this->tableName = "newjs.ValidNameList_".$gender;
         }
 
-        public function haveName($name)
+        public function haveName($nameArr)
         {
             try
             {
-                $sql="SELECT * from newjs.ValidNameList where NAME=:NAME";
+		if(!count($nameArr))
+			return false;
+		foreach($nameArr as $k=>$v)
+			$queryArr[]=":NAME".$k;
+		$queryStr = implode(",",$queryArr);
+                $sql="SELECT * from ".$this->tableName." where NAME IN (".$queryStr.")";
                 $resSelectDetail = $this->db->prepare($sql);
-		$resSelectDetail->bindValue(":NAME", $name);
+		foreach($nameArr as $k=>$v)
+			$resSelectDetail->bindValue(":NAME".$k, $v);
                 $resSelectDetail->execute();
-		if($rowSelectDetail=$resSelectDetail->fetch(PDO::FETCH_ASSOC))
-			return true;
-		return false;
+		$return=0;
+		while($rowSelectDetail=$resSelectDetail->fetch(PDO::FETCH_ASSOC))
+			$return++;
+		return $return;
             }
             catch(Exception $e)
             {

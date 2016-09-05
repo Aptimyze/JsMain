@@ -11,6 +11,7 @@ class RequestHandlerConfig
         "insertChromeId"=>array("v1"=>"insertChromeIdV1"),
         "getNotification"=>array("v1"=>"getNotificationV1"),
         "updateNotificationSetting"=>array("v1"=>"updateNotificationSettingV1"),
+        "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
         "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1")),
 	"search"=>array(
 		"partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
@@ -98,6 +99,19 @@ class RequestHandlerConfig
     "help"=>array(
         "helpQuery"=>array("v1"=>"SubmitQueryV1"),
         "publicQuestions"=>array("v1"=>"GetPublicQuestionsV1")
+        ),
+    "chat"=>array(
+        "authenticateChatSession"=>array("v1"=>"authenticateChatSessionV1"),
+        "chatUserAuthentication"=>array("v1"=>"chatUserAuthenticationV1"),
+        "fetchCredentials"=>array("v1"=>"fetchCredentialsV1"),
+        "fetchVCard"=>array("v1"=>"fetchVCardV1"),
+	"getRoasterData"=>array("v1"=>"getRosterDataV1"),
+	"getDppData"=>array("v1"=>"getDppDataV1"),
+	"getProfileData"=>array("v1"=>"getProfileDataV1"),
+	"sendEOI"=>array("v1"=>"sendEOIV1"),
+        "selfName"=>array("v1"=>"SelfNameV1"),
+	"pushChat"=>array("v1"=>"pushChat"),
+	"popChat"=>array("v1"=>"popChat")
         )
 );
 

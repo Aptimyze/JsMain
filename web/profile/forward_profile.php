@@ -42,8 +42,7 @@ $profileObj->getDetail("","","USERNAME,EMAIL");
                                
 
 connect_db();
-$profileid=explode('i',$profilechecksum);
-$profileid=intval($profileid[1]);
+$profileid=JsCommon::getProfileFromChecksum($profilechecksum);
 $lang=$_COOKIE["JS_LANG"];
 $VIEWPROFILE_IMAGE_URL="http://ser4.jeevansathi.com/profile";
 if ($crmback == "admin")
@@ -86,12 +85,13 @@ if($_POST['isJson']){
 	$name=$finalData["name"];
 	$femail[0]=$finalData["femail[]"];
 	$profilechecksum=$finalData["profilechecksum"];
+	$profileid=JsCommon::getProfileFromChecksum($profilechecksum);
 	$ajax_error=$finalData["ajax_error"];
 	$invitation=$finalData["invitation"];
 	$send=$finalData["send"];
 	$message=$finalData["message"];
 	$username=$finalData["username"];
-	$profileid=$data['PROFILEID'];
+	$profileid_sender=$data['PROFILEID'];
 }
 if($send)
 {
@@ -168,12 +168,15 @@ if($send)
                 showProfileError();
 
         $myrow=mysql_fetch_array($result);
-        
 	if($data["GENDER"]==$myrow["GENDER"])                 
 		$samegender=1;
 		$myrow["PHOTO_DISPLAY"];
 		
 		$havephoto=$myrow["PHOTO_DISPLAY"];
+		if(!$havephoto)
+		{
+			$havephoto = 'A';
+		}
 		$image_file=return_image_file($myrow["PHOTO_DISPLAY"],$myrow["GENDER"]);
                 if(SymfonyPictureFunctions::haveScreenedMainPhoto($profileid) || $main_photo_is_screened)	//Symfony Photo Modification
                 {
@@ -247,9 +250,16 @@ if($send)
 		}
 		$smarty->assign("message",htmlspecialchars(stripslashes($message),ENT_QUOTES));
 		$smarty->assign("username",$username);
+		$height = FieldMap::getFieldLabel("height",$myrow["HEIGHT"]);
+		$occupation = FieldMap::getFieldLabel("occupation",$myrow["OCCUPATION"]);
+		$city = FieldMap::getFieldLabel("city_india",$myrow["CITY_RES"]);
+		$country = FieldMap::getFieldLabel("country",$myrow["COUNTRY_RES"]);
+		$smarty->assign("COUNTRY_RES",$country);
+		$smarty->assign("CITY_RES",$city);
+		$smarty->assign("OCCUPATION",$occupation);
+		$smarty->assign("HEIGHT",$height);
 		//$msg=$smarty->fetch("forward2friend.htm");
 		$msg=$smarty->fetch("mail_to_friend.htm");
-
 		for($i=0;$i<count($femail);$i++)
 		{
 			if($femail[$i])

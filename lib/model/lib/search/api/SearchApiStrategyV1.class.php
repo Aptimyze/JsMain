@@ -119,6 +119,8 @@ class SearchApiStrategyV1
                 $params['searchCat'] = $this->searchCat;
                 $params['loggedInProfileObj'] = $loggedInProfileObj;
                 $params['noOfResults'] = $this->responseObj->getTotalResults();
+                $params['result_count'] = $this->output['result_count'];
+                $params['pageSubHeading'] = $this->output['pageSubHeading'];
                 $outputArray = $this->SearchChannelObj->setRequestParameters($params);
                 $this->output = array_merge($this->output,$outputArray);
 		return $this->output;
@@ -160,6 +162,17 @@ class SearchApiStrategyV1
 			$newjsMatchLogicObj = new newjs_MATCH_LOGIC(SearchConfig::getSearchDb());
 			$this->output["matchAlertsLogic"] = $newjsMatchLogicObj->getPresentLogic($loggedInProfileObj->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
 		}
+		// For kundli alerts message changes as per horoscope uploaded condition
+        if(($this->output["searchBasedParam"]=='kundlialerts' || $this->searchCat=='kundlialerts')&& $cnt==0)
+        {   
+         	$params["horoscope"] = "withoutHoro";  	
+
+           	//The same check has been applied on apps/jeevansathi/modules/profile/templates/_jspcViewProfile/_jspcViewProfileAstroSection.tpl
+           	if($loggedInProfileObj->getBTIME()!="" && $loggedInProfileObj->getCITY_BIRTH()!="" && $loggedInProfileObj->getCOUNTRY_BIRTH()!="")
+           	{
+           		$params["horoscope"] = "withHoro";
+           	}
+        }
 		$params["matLogic"]= $this->output["matchAlertsLogic"];
 		$this->output["pageTitle"] = SearchTitleAndTextEnums::getTitle($params);
 		$this->output["result_count"] = SearchTitleAndTextEnums::getHeading($params);
@@ -398,11 +411,10 @@ class SearchApiStrategyV1
                                                 }
 						elseif($fieldName=="name_of_user")
 						{
-							if(is_array($nameData)&& $nameData[0]['DISPLAY']=="Y" && $nameData[0]['NAME']!='')
+							if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
 							{
 								$name = $nameOfUserObj->getNameStr($value,$loggedInProfileObj->getSUBSCRIPTION());
 							}
-print_r($name);die;
 							$this->output[$profileKey][$i][$fieldName]=$name;
 						}
                                                 else
@@ -438,7 +450,7 @@ print_r($name);die;
                                                   $userloggedin=1;
                                             }
                                                 $params = array("SHORTLIST"=>$bookm,
-                                                "PAGE"=>array("stype"=>$this->output["stype"]),
+						"PAGE"=>array("stype"=>($this->output[$profileKey][$i]["stype"])?$this->output[$profileKey][$i]["stype"]:$this->output["stype"]),
                                                 "PHOTO"=>$this->output[$profileKey][$i]["photo"],
                                                 "USERNAME"=>$this->output[$profileKey][$i]["username"],
                                                 "GENDER"=>$gender,

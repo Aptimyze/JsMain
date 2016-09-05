@@ -20,7 +20,7 @@
  * This page retrieves the cached page from cache using the provided token
  */
 
- 
+
 if (!defined('ClickTale_Root'))
 {
 	$pathinfo = pathinfo(__FILE__);
@@ -31,6 +31,9 @@ require_once(ClickTale_Root."/ClickTale.inc.php");
 require_once(ClickTale_Root."/ClickTale.CacheFactory.php");
 require_once(ClickTale_Root."/ClickTale.Settings.php");
 require_once(ClickTale_Root."/ClickTale.Logger.php");
+
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 
 @$token = $_GET["t"];
 if ($token != "CacheTest" && ClickTale_IsAllowedIp() == false)
@@ -51,7 +54,7 @@ catch (Exception $ex)
 {
 	ClickTale_Logger::Write($ex->getMessage());
 	header("HTTP/1.0 500 ".$ex->getMessage());
-	die($ex->getMessage());
+	LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, $ex);
 }
 
 $config = ClickTale_Settings::Instance()->getCacheProviderConfig();

@@ -10,6 +10,13 @@ include_once('/usr/local/scripts/config/environmentFunctions.php');
 if(file_exists($configPath.$branch.'/JsConstants.class.php'))
 	include_once(JsConstants::$docRoot."/commonFiles/FetchIP.php");
 
+
+if(array_key_exists("useHeaderCaching",$_GET) && $_GET["useHeaderCaching"]==1)
+{
+       $offset=60*60*1;//time to be cached:1 hrs
+       header("Cache-Control: public,max-age=$offset,s-maxage=$offset");
+}
+
 /** cron azkaban **/
 if(php_sapi_name() === 'cli')
         register_shutdown_function('shutdown');

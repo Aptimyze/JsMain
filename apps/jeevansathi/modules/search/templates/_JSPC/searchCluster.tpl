@@ -86,7 +86,7 @@
 	<div class="srpbg2 mt13">
 		<div class="srpboxp1">
 			<div id="srpNoClusterHeading" class="f17 fontlig color11 txtc pb15">{heading}</div>
-			<div class="srpbdim1 mauto bg5 srpbrad1 disp-tbl txtc">
+			<div class="srpbdim1 mauto bg5 srpbrad1 txtc {js-hideCircle}">
 				<div id="srpNoClusterCount" class="disp-cell vmid fontthin f50 colrw">{totalCount}</div>
 			</div>
 			<div id="srpNoClusterMessage" class="pt20 txtc fontlig color2 f15 lh22">

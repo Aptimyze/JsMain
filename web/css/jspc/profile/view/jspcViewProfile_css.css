@@ -390,10 +390,11 @@ pre {
   color:#999;
 }
         .quesIcon {
-            background-image: url(file:///C|/wamp/www/JSPC/Matches/ques.png);
+            background-image: url(IMG_URL/images/jspc/commonimg/iconSpriteNameSetting.png);
             height: 23px;
             width: 20px;
             background-repeat: no-repeat;
+	    background-position:-5px -30px;
         }
                 .blueColor {
             color: #34495E
@@ -408,10 +409,12 @@ pre {
     list-style-type: none;
 }
         .fixWidthOverflow {
-        width: 100px;
+        max-width: 185px;
     display: inline-block;
     overflow: hidden;
-    text-overflow: ellipsis;}
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    }
         .vertSuper{    vertical-align: super}
         .hoverDiv:hover {
             display: block;
@@ -542,3 +545,7 @@ pre {
             border-width: 9px;
             margin-top: -9px;
         }
+
+        .mt26 {margin-top: 26px}
+        .wd300 {width: 300px}
+        .wd200{width:200px}
