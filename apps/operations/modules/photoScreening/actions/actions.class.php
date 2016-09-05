@@ -143,6 +143,7 @@ class photoScreeningActions extends sfActions {
                                //$profileAllotedObj->reNewProfileForPreprocess($profileDetails["profileData"]["PROFILEID"]);
                                 $photoDataObj->skipProfile($profileDetails["profileData"]["PROFILEID"],"","Skipped for refresh issue",0,1);
                                 $this->redirect(JsConstants::$siteUrl."/operations.php/photoScreening/screen?name=".$name."&cid=".$this->cid."&source=".$this->source);
+
                         }
                         
                          if(PictureFunctions::IfUsePhotoDistributed($profileDetails["profileData"]["PROFILEID"]))
