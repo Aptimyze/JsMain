@@ -135,7 +135,7 @@ EOF;
                                     
                                     //profiles registered 7 days before
                                      $verifiedProfilesDate = date('Y-m-d h:m:s', strtotime('-'.$this->verifyActiveDays.' days'));
-                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,$verifiedProfilesDate);
+                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,'',$verifiedProfilesDate);
                                      $resultArr = $partnerMatchesArr;
                                      $dppLoop++; 
                                 }

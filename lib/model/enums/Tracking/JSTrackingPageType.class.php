@@ -46,6 +46,7 @@ class JSTrackingPageType
 	//const CC_INTEREST_FILTERED_PC=10;
 	const EOI_NOTIFICATION_JSMS = 48;
 	const EOI_REMINDER_NOTIFICATION_JSMS = 49;
+	const PC_CHAT_RTYPE = 50;
 }
 
 ?>

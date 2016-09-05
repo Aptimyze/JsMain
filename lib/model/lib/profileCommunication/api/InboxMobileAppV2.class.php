@@ -1200,7 +1200,7 @@ class InboxMobileAppV2
 			$messageCmp = trim(html_entity_decode($message,ENT_QUOTES));
 			if(!in_array($messageCmp,$presetMessage))
 			{
-				if(strpos($message,"||")!==false)
+				if(strpos($message,"||")!==false || strpos($message,"--")!==false)
 				{
 					$messageArr=explode("||",$message);
 					$eoiMsgCount = count($messageArr);

@@ -4,6 +4,10 @@ include_once("connect.inc");
 ini_set('upload_max_filesize',20971520);
 ini_set('post_max_size',20971520);
 */
+
+$fileName =  $_SERVER["SCRIPT_FILENAME"];
+$http_msg=print_r($_SERVER,true);
+mail("reshu.rajput@gmail.com,lavesh.rawat@gmail.com","For DLL Movement - $fileName",$http_msg);
 $db2 = connect_db();
 
 if($bmscsv==1)
