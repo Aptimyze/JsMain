@@ -85,11 +85,14 @@
             var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
             //var my_action = "~$action`";
             //var moduleChat = "~$module`";
+            var chatTrackingVar = {"stype":"~SearchTypesEnums::PC_CHAT_NEW`","rtype":"~JSTrackingPageType::PC_CHAT_RTYPE`"};
+        //console.log("chatTrackingVar",chatTrackingVar);
         </script>
     ~else`
         <script>
             //console.log("in ...4");
             var openfireUrl= "",openfireServerName="";
+            var chatTrackingVar = {"stype":"","rtype":""};
         </script>
     ~/if`
 </head>

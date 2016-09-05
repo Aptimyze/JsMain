@@ -33,29 +33,29 @@ chatConfig.Params = {
     //tracking params for contact engine actions
     trackingParams: {
         "ACCEPT": {
-            "responseTracking": 8
+            "responseTracking": chatTrackingVar["rtype"]
         },
         "DECLINE": {
-            "responseTracking": 8
+            "responseTracking": chatTrackingVar["rtype"]
         },
         "INITIATE": {
-            "stype": "WV"
+            "stype": chatTrackingVar["stype"]
         },
         "BLOCK": {},
         "UNBLOCK": {}
     },
     categoryTrackingParams: {
         "intrec": {
-            "responseTracking": 8
+            "responseTracking": chatTrackingVar["rtype"]
         },
         "dpp": {
-            "stype": "WV"
+            "stype": chatTrackingVar["stype"]
         },
         "intsent": {
-            "stype": "WV"
+            "stype": chatTrackingVar["stype"]
         },
         "shortlist": {
-            "stype": "WV"
+            "stype": chatTrackingVar["stype"]
         },
         "acceptance": {},
         "mysearch":{}
@@ -69,7 +69,7 @@ chatConfig.Params = {
     preAcceptChat: {
         "apiUrl": "/api/v1/chat/sendEOI",
         "extraParams": {
-            "stype": "WV",
+            "stype": chatTrackingVar["stype"],
             "pageSource": "chat",
             "channel": 'pc'
         }
@@ -141,7 +141,7 @@ chatConfig.Params = {
                 "iconid": "090",
                 "primary": "true",
                 "secondary": null,
-                "params": "responseTracking=8",
+                "params": "responseTracking="+chatTrackingVar["rtype"],
                 "enable": true,
                 "id": "ACCEPT"
             }, {
@@ -150,7 +150,7 @@ chatConfig.Params = {
                 "iconid": "089",
                 "primary": "true",
                 "secondary": null,
-                "params": "responseTracking=8",
+                "params": "responseTracking="+chatTrackingVar["rtype"],
                 "enable": true,
                 "id": "DECLINE"
             }],
@@ -160,7 +160,7 @@ chatConfig.Params = {
                 "iconid": "001",
                 "primary": "true",
                 "secondary": "true",
-                "params": "stype=WV",
+                "params": "stype="+chatTrackingVar["stype"],
                 "enable": true,
                 "id": "INITIATE"
             }],
@@ -170,7 +170,7 @@ chatConfig.Params = {
                 "iconid": "005",
                 "primary": "true",
                 "secondary": "true",
-                "params": "stype=WV",
+                "params": "stype="+chatTrackingVar["stype"],
                 "enable": true,
                 "id": "CANCEL"
             }],
@@ -180,7 +180,7 @@ chatConfig.Params = {
                 "iconid": "001",
                 "primary": "true",
                 "secondary": "true",
-                "params": "stype=WV",
+                "params": "stype="+chatTrackingVar["stype"],
                 "enable": true,
                 "id": "INITIATE"
             }],
