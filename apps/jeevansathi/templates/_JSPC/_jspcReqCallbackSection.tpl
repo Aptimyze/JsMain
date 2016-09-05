@@ -243,7 +243,7 @@
                         $("#headerReqQueryError,#headerReqEmailError,#headerReqMobError").hide();
                     });
                 } else {
-                    $.post("/common/requestCallBack",{'email':email.trim(),'phone':phNo.trim(),'query_type':'P','device':'desktop','channel':'JSPC','callbackSource':secsecCallbackSource},function(response){
+                    $.post("/common/requestCallBack",{'email':email.trim(),'phone':phNo.trim(),'query_type':'P','device':'desktop','channel':'JSPC','callbackSource':secsecCallbackSource,'date':date,'startTime':startTime,'endTime':endTime},function(response){
                         if(response == "Y") {
                             $("#headerReqCallBackMessage").text('We shall call you at the earliest');
                         } else {
@@ -571,7 +571,7 @@
                         $("#footerReqMobError").hide();
                     });
                 } else {
-                    $.post("/common/requestCallBack",{'email':email.trim(),'phone':phNo.trim(),'query_type':'P','device':'desktop','channel':'JSPC','callbackSource':secCallbackSource},function(response){
+                    $.post("/common/requestCallBack",{'email':email.trim(),'phone':phNo.trim(),'query_type':'P','device':'desktop','channel':'JSPC','callbackSource':secCallbackSource,'date':date,'startTime':startTime,'endTime':endTime},function(response){
                         if(response == "Y") {
                             $("#footerReqCallBackMessage").text('We shall call you at the earliest');
                         } else {
