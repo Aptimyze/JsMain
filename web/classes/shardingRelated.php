@@ -29,6 +29,10 @@ $shardSlave112[0]='112Slave_shard1';// 3309
 $shardSlave112[1]='112Slave_shard2'; // 3306
 $shardSlave112[2]='112Slave_shard3'; // 3307
 
+$ddlShardUser[0]= 'shard1DDL';
+$ddlShardUser[1]= 'shard2DDL';
+$ddlShardUser[2]= 'shard3DDL';
+
 /**
 * This function is used to map serverId to ServerName. Server name is required for connection.
 * @param string $master_or_slave master or slave(mis/cron) database to select
@@ -40,12 +44,16 @@ function getActiveServerName($activeServerId,$master_or_slave='master')
 {
         global $activeServers;
         global $slave_activeServers;
-	global $shardSlave112;
+        global $shardSlave112;
 
         if($master_or_slave=='master')
                 return $activeServers[$activeServerId];
-	elseif($master_or_slave=='slave112')
-		return $shardSlave112[$activeServerId];
+        elseif($master_or_slave=='slave112')
+                return $shardSlave112[$activeServerId];
+        elseif($master_or_slave=='masterDDL')
+                return 'masterDDL';
+        elseif($master_or_slave=='shardDDL')
+                return $ddlShardUser[$activeServerId];
         else
                 return $slave_activeServers[$activeServerId];
 }

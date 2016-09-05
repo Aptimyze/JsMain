@@ -396,7 +396,7 @@ class AgentBucketHandler
                 $disp_order_arr=$agentAllocDetailsObj->fetchDispositionOrder();
                 $tot_disp=count($disp_order_arr);
                 $executives=$agentAllocDetailsObj->fetchExecutives($processObj);
-                $tempAllocBucketObj=new TEMP_ALLOCATION_BUCKET();
+                $tempAllocBucketObj=new TEMP_ALLOCATION_BUCKET('newjs_masterDDL');
 		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
                 $tempAllocBucketObj->truncate();
 		for($i=0;$i<count($executives);$i++)
