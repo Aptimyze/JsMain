@@ -1182,7 +1182,8 @@ class csvGenerationHandler
 					$country        =FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
 					$leadId =$campaignName.$leadIdSuffix;
 					$source =$campaignName;
-                                        $csvDateTime =$processObj->getStartDate();
+                                        //$csvDateTime =$processObj->getStartDate();
+					$csvDateTime =$processObj->getEndDate();
                                         if($profileid>0)
                                                 $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$csvDateTime,$username,$country,$source);
                                          $rcbInDialerLog =new incentive_RCB_LOG();

@@ -69,7 +69,8 @@ class billing_EXC_CALLBACK extends TABLE {
     {
         try{
             $profileidArr =array();
-            $sql ="select distinct PROFILEID from billing.EXC_CALLBACK where ENTRY_DT>=:START_DT AND ENTRY_DT<:END_DT AND SERVICEID NOT LIKE 'X%' ORDER BY ENTRY_DT DESC";
+            //$sql ="select distinct PROFILEID from billing.EXC_CALLBACK where ENTRY_DT>=:START_DT AND ENTRY_DT<:END_DT AND SERVICEID NOT LIKE 'X%' ORDER BY ENTRY_DT DESC";
+	    $sql ="select distinct PROFILEID from billing.EXC_CALLBACK where PREFERRED_START_TIME>:START_DT AND PREFERRED_START_TIME<=:END_DT AND SERVICEID NOT LIKE 'X%' ORDER BY ENTRY_DT DESC";	
             $row = $this->db->prepare($sql);
             $row->bindValue(":START_DT",$startDt, PDO::PARAM_STR);
             $row->bindValue(":END_DT",$endDt, PDO::PARAM_STR);
@@ -116,7 +117,8 @@ class billing_EXC_CALLBACK extends TABLE {
     {
         try{
             $profileidArr =array();
-            $sql ="select distinct PROFILEID from billing.EXC_CALLBACK where ENTRY_DT>=:START_DT AND ENTRY_DT<:END_DT AND SERVICEID LIKE 'X%' ORDER BY ENTRY_DT DESC";
+            //$sql ="select distinct PROFILEID from billing.EXC_CALLBACK where ENTRY_DT>=:START_DT AND ENTRY_DT<:END_DT AND SERVICEID LIKE 'X%' ORDER BY ENTRY_DT DESC";
+	    $sql ="select distinct PROFILEID from billing.EXC_CALLBACK where PREFERRED_START_TIME>:START_DT AND PREFERRED_START_TIME<=:END_DT AND SERVICEID LIKE 'X%' ORDER BY ENTRY_DT DESC";
             $row = $this->db->prepare($sql);
             $row->bindValue(":START_DT",$startDt, PDO::PARAM_STR);
             $row->bindValue(":END_DT",$endDt, PDO::PARAM_STR);
