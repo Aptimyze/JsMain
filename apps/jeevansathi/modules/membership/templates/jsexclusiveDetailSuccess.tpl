@@ -17,7 +17,7 @@
                     <div class="rcb_fl">
                         <a href="~if $loggedIn`/myjs/jspcPerform~else`/~/if`">
                             <img src="/images/membership-img/logo.png" alt="jeevansathi"/>
-                        </a> 
+                        </a>
                     </div>
                     <div class="rcb_fl rcb_padb">|</div>
                     <div class="rcb_fl">JS Exclusive</div>
@@ -168,11 +168,11 @@
                     <!--start:button-->
                     <div class="txtc rcb_pt45">
                         <div style="overflow:hidden;position: relative;" class="rcb_btn">
-                        ~if $loggedIn`
+                            ~if $loggedIn`
                             <div id="buyNowBtn" class="rcb_bg1 rcb_btn f16 fontlig rcb_pada rcb_cursp rcb_colr1 fontreg pinkRipple hoverPink"> Buy Now </div>
-                        ~else`
+                            ~else`
                             <div id="loginJsExclusive" class="loginLayerJspc rcb_bg1 rcb_btn f16 fontlig rcb_pada rcb_cursp rcb_colr1 pinkRipple hoverPink"> Login To Continue </div>
-                        ~/if`
+                            ~/if`
                         </div>
                     </div>
                     <!--end:button-->
@@ -206,7 +206,7 @@
                                             <dd>
                                             <ul>
                                                 ~foreach from=$dropDownDayArr key=k item=dd`
-                                                <li>~$dd`</li>
+                                                <li id="~$k`">~$dd`</li>
                                                 ~/foreach`
                                             </ul>
                                             </dd>
@@ -228,7 +228,7 @@
                                             <dd>
                                             <ul>
                                                 ~foreach from=$dropDownTimeArr1 key=k item=tt`
-                                                <li>~$tt`</li>
+                                                <li id="~$k`">~$tt`</li>
                                                 ~/foreach`
                                             </ul>
                                             </dd>
@@ -239,7 +239,7 @@
                                         <dd>
                                         <ul>
                                             ~foreach from=$dropDownTimeArr2 key=k item=tt`
-                                            <li>~$tt`</li>
+                                            <li id="~$k`">~$tt`</li>
                                             ~/foreach`
                                         </ul>
                                         </dd>
@@ -264,7 +264,7 @@
                         <!--start:button-->
                         <div class="txtc rcb_pt45">
                             <div style="overflow:hidden;position: relative;" class="rcb_btn">
-                            <div id="placeRequestBtn" class="rcb_bg1 rcb_btn f16 fontlig rcb_pada rcb_cursp pinkRipple hoverPink"> Place Request </div>
+                                <div id="placeRequestBtn" class="rcb_bg1 rcb_btn f16 fontlig rcb_pada rcb_cursp pinkRipple hoverPink"> Place Request </div>
                             </div>
                         </div>
                         ~/if`
@@ -291,7 +291,7 @@
                 return false;
             }
         }
-        $(document).ready(function(){
+        $(document).ready(function () {
             var profileid = "~$profileid`";
             eraseCookie('selectedVas');
             eraseCookie('mainMemDur');
@@ -299,94 +299,93 @@
             eraseCookie('paymentMode');
             eraseCookie('cardType');
             eraseCookie('couponID');
-            function getValFLi(){
-              var getdata = $('.dropdown dd ul').find('li:first').map(function(){
-              return $(this).text();
-            }).get();
-            return getdata;
-            } 
-            $("dt").click(function() {
+
+            function getValFLi() {
+                var getdata = $('.dropdown dd ul').find('li:first').map(function () {
+                    return $(this).text();
+                }).get();
+                return getdata;
+            }
+            $("dt").click(function () {
                 var N_id = $(this).parent().attr('id');
-                $("dd ul").css('display','none');
-                $("#"+N_id+" dd ul").toggle();
+                $("dd ul").css('display', 'none');
+                $("#" + N_id + " dd ul").toggle();
             });
-            $("dd ul li").click(function() {
-                        var text = $(this).html();
+            $("dd ul li").click(function () {
+                var text = $(this).html();
                 var text1 = $(this).text();
                 var P_id = $(this).parent().parent().parent().attr('id');
-                        $("#"+P_id+" dt span").html(text);
-                        $("#"+P_id+" dd ul").css('display','none');
-                        $("#d"+P_id+"").val(text);
-                    });
-                
-            
-            function intialize(){
+                $("#" + P_id + " dt span").html(text);
+                $("#" + P_id + " dd ul").css('display', 'none');
+                $("#d" + P_id + "").val($(this).attr('id'));
+            });
+
+            function intialize() {
                 var value = getValFLi();
-                $.each( value, function( i, val ) {
-                    if(i == 2) {
-                    val = "9 PM";
+                $.each(value, function (i, val) {
+                    if (i == 2) {
+                        val = "9 PM";
                     }
-                    $("#dropDown"+i+" dt span").html(val);
-                    $("#ddropDown"+i).val(val);
+                    $("#dropDown" + i + " dt span").html(val);
+                    $("#ddropDown" + i).val(val);
                 });
             }
-            $(document).bind('click', function(e) {
+            $(document).bind('click', function (e) {
                 var $clicked = $(e.target);
-                if (! $clicked.parents().hasClass("dropdown"))
-                {
+                if (!$clicked.parents().hasClass("dropdown")) {
                     $(".dropdown dd ul").hide();
                 }
             });
             intialize();
             var selectedService = $(".mem_select:first").attr('id');
-            if(checkEmptyOrNull(selectedService)){
+            if (checkEmptyOrNull(selectedService)) {
                 $("#jsSelectd").val(selectedService);
             }
             $(".mem_select:first").removeClass('rcb_bg2').addClass('rcb_bg1');
-            $(".mem_select").click(function(e){
-            $(".mem_select").each(function(){
-                if($(this).hasClass('rcb_bg1')){
-                $(this).removeClass('rcb_bg1').addClass('rcb_bg2');
+            $(".mem_select").click(function (e) {
+                $(".mem_select").each(function () {
+                    if ($(this).hasClass('rcb_bg1')) {
+                        $(this).removeClass('rcb_bg1').addClass('rcb_bg2');
+                    }
+                });
+                if ($(this).hasClass('rcb_bg2')) {
+                    $(this).removeClass('rcb_bg2').addClass('rcb_bg1');
+                } else {
+                    $(this).removeClass('rcb_bg1').addClass('rcb_bg2');
+                }
+                selectedService = $(this).attr('id');
+                if (checkEmptyOrNull(selectedService)) {
+                    $("#jsSelectd").val(selectedService);
                 }
             });
-            if($(this).hasClass('rcb_bg2')){
-                $(this).removeClass('rcb_bg2').addClass('rcb_bg1');
-            } else {
-                $(this).removeClass('rcb_bg1').addClass('rcb_bg2');
-            }
-            selectedService = $(this).attr('id');
-            if(checkEmptyOrNull(selectedService)){
-                $("#jsSelectd").val(selectedService);
-            }
+            $("#buyNowBtn").click(function (e) {
+                e.preventDefault();
+                if (profileid != undefined && profileid != null && profileid != 0) {
+                    createCookie('mainMem', 'X');
+                    createCookie('mainMemDur', selectedService.replace('X', ''));
+                    window.location.href = "~sfConfig::get('app_site_url')`/membership/jspc?displayPage=3&mainMem=X&mainMemDur=" + selectedService.replace('X', '');
+                }
             });
-            $("#buyNowBtn").click(function(e){
-            e.preventDefault();
-            if(profileid != undefined && profileid != null && profileid != 0) {
-                createCookie('mainMem','X');
-                createCookie('mainMemDur',selectedService.replace('X',''));
-                window.location.href = "~sfConfig::get('app_site_url')`/membership/jspc?displayPage=3&mainMem=X&mainMemDur="+selectedService.replace('X','');
-            }
-            });
-            $("#placeRequestBtn").click(function(e){
-            e.preventDefault();
-            var intRegex = /^\d+$/;
-            var str = $("#mobileInput").val();
-            var len = $("#mobileInput").val().length;
-            if(len == 10 && intRegex.test(str)) {
-                $("#placeRequestForm").submit();
-            } else {
-                $("#mobileInput").addClass("errorBorder");
-            }
+            $("#placeRequestBtn").click(function (e) {
+                e.preventDefault();
+                var intRegex = /^\d+$/;
+                var str = $("#mobileInput").val();
+                var len = $("#mobileInput").val().length;
+                if (len == 10 && intRegex.test(str)) {
+                    $("#placeRequestForm").submit();
+                } else {
+                    $("#mobileInput").addClass("errorBorder");
+                }
             });
             $('#request').click(function () {
-            $('html, body').animate({
-                scrollTop: $(document).height()
-            }, 1000);
-            return false;
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 1000);
+                return false;
             });
             var callRequest = "~$callRequest`";
-            if(callRequest) {
-                $('html, body').scrollTop( $(document).height() );
+            if (callRequest) {
+                $('html, body').scrollTop($(document).height());
             }
         });
     </script>

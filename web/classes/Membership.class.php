@@ -663,7 +663,9 @@ class Membership
             $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
             $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
             $subject = "Bill with discount of {$discPerc}% offered by {$execName}; Final Bill Amount: {$finAmt}";
-            $msg = "Bill Details ({$serName})";
+            $msg = "Bill Details ({$serName})\n";
+            $msg .= "Username : {$this->username} \n";
+            $msg .= "Billid : {$this->billid} \n";
             SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
         }
         /**

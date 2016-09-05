@@ -1,5 +1,8 @@
 ~assign var=module value= $sf_request->getParameter('module')`
 ~assign var=action value= $sf_request->getParameter('action')`
+~assign var=dropDownDayArr value= CommonFunction::getRCBDayDropDown()`
+~assign var=dropDownTimeArr1 value= CommonFunction::getRCBStartTimeDropDown()`
+~assign var=dropDownTimeArr2 value= CommonFunction::getRCBEndTimeDropDown()`
 ~if $subsection eq 'header'`
 <!--start:callback form-->
 <div id="headerRequestCallbackLogout" class="pos-abs z5" style="display:none">
@@ -15,6 +18,71 @@
                     <input type="text" class="fullwid brdr-0 f17 color11 fontlig whiteout" placeholder="Mobile number" value=""/>
                 </div>
                 <div id="headerReqMobError" style="color:red;display:none" class="f14 pt8">Please provide a valid Phone Number</div>
+                <div id="rcbHeaderDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15">
+                    <!--start:date-->
+                    <div class="rcb_fl wid35">
+                        <div class="clearfix">
+                            <div class="f16 rcb_lh40 rcb_fl pr10">Date</div>
+                            <div class="rcb_fl">
+                                <div class="rcb_fl">
+                                    <div class="wid88">
+                                        <!--start:drop down UI-->
+                                        <dl id="dropDown0" class="rcbdropdown">
+                                            <dt><span></span></dt>
+                                            <dd>
+                                            <ul>
+                                                ~foreach from=$dropDownDayArr key=k item=dd`
+                                                <li id="~$k`">~$dd`</li>
+                                                ~/foreach`
+                                            </ul>
+                                            </dd>
+                                        </dl>
+                                        <!--end:drop down UI-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end:date-->
+                    <!--start:time-->
+                    <div class="rcb_fl wid65">
+                        <div class="clearfix">
+                            <div class="f16 rcb_lh40 rcb_fl pr10">Time</div>
+                            <div class="rcb_fl">
+                                <div class="rcb_fl">
+                                    <div class="wid88 rcb_fl">
+                                        <dl id="dropDown1" class="rcbdropdown">
+                                            <dt><span></span></dt>
+                                            <dd>
+                                            <ul>
+                                                ~foreach from=$dropDownTimeArr1 key=k item=tt`
+                                                <li id="~$k`">~$tt`</li>
+                                                ~/foreach`
+                                            </ul>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="wid88 rcb_fl rcb_m2">  <dl id="dropDown2" class="rcbdropdown">
+                                        <dt><span></span></dt>
+                                        <dd>
+                                        <ul>
+                                            ~foreach from=$dropDownTimeArr2 key=k item=tt`
+                                            <li id="~$k`">~$tt`</li>
+                                            ~/foreach`
+                                        </ul>
+                                        </dd>
+                                    </dl> </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end:time-->
+                    <input id="rcbHeaderdropDown0" type="hidden" name="dropDownDaySelected" value=""/>
+                    <input id="rcbHeaderdropDown1" type="hidden" name="dropDownTimeStartSelected" value=""/>
+                    <input id="rcbHeaderdropDown2" type="hidden" name="dropDownTimeEndSelected" value=""/>
+                </div>
+                <div id="headerReqTimeError" style="color:red;display:none" class="f14 pt8">Please select valid Time Duration</div>
                 <div class="pt20">
                     <div class="reqCalbck-bdr12 colr2 f17 pb5 pt10 cursp pos-rel js-drop" id="headerDatefld"> <span class="headerDatefld-val f15 fontlig js-fill">~if $module neq 'membership'`What type of query do you have ?~else`Questions regarding Jeevansathi Membership Plans~/if`</span>
                         <div class="pos-abs reqCalbck-leftcorner_trianle1 reqCalbck-pos6 z2"></div>
@@ -48,6 +116,47 @@
 </div>
 <!--end:callback form-->
 <script type="text/javascript">
+    function getValFLi() {
+        var getdata = $('#rcbHeaderDrop .rcbdropdown dd ul').find('li:first').map(function () {
+            return $(this).text();
+        }).get();
+        return getdata;
+    }
+
+    $("#rcbHeaderDrop dt").click(function () {
+        var N_id = $(this).parent().attr('id');
+        $("dd ul").css('display', 'none');
+        $("#" + N_id + " dd ul").toggle();
+    });
+
+    $("#rcbHeaderDrop dd ul li").click(function () {
+        var text = $(this).html();
+        var text1 = $(this).text();
+        var P_id = $(this).parent().parent().parent().attr('id');
+        $("#" + P_id + " dt span").html(text);
+        $("#" + P_id + " dd ul").css('display', 'none');
+        $("#rcbHeader" + P_id + "").val($(this).attr('id'));
+    });
+
+    function intialize() {
+        var value = getValFLi();
+        $.each(value, function (i, val) {
+            if (i == 2) {
+                val = "9 PM";
+            }
+            $("#rcbHeaderDrop #dropDown" + i + " dt span").html(val);
+            $("#rcbHeaderDrop #rcbHeaderdropDown" + i).val($("#rcbHeaderDrop #dropDown"+i+" dd ul li:eq(0)").attr('id'));
+        });
+    }
+    $(document).bind('click', function (e) {
+        var $clicked = $(e.target);
+        if (!$clicked.parents().hasClass("rcbdropdown")) {
+            $("#rcbHeaderDrop .rcbdropdown dd ul").hide();
+        }
+    });
+
+    intialize();
+    
     var loginData = new Array();
     
     ~assign var=loggedIn value= $sf_request->getAttribute('login')`
@@ -121,9 +230,13 @@
             var phNo = $("#headerReqMob input").val();
             var email = $("#headerReqEmail input").val().toLowerCase();
             var secSelectedid = $("#headerDatefld ul li.active").attr('secSelectedid');
-            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q') {
+            var date = $("#rcbHeaderdropDown0").val();
+            var startTime = $("#rcbHeaderdropDown1").val();
+            var endTime = $("#rcbHeaderdropDown2").val();
+            var t1 = Date.parse(date+" "+startTime), t2 = Date.parse(date+" "+endTime);
+            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q' && (t2-t1 > 0)) {
                 if(secSelectedid == 'M') {
-                    $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':secsecCallbackSource},function(response){
+                    $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':secsecCallbackSource,'date':date,'startTime':startTime,'endTime':endTime},function(response){
                         $("#headerReqCallBackMessage").text(response);
                         $("#headerRequestCallbackLogout").hide();
                         $("#headerRequestCallbackLogin").show();
@@ -150,6 +263,9 @@
                 }
                 if(secSelectedid == "Q"){
                     $("#headerReqQueryError").show();
+                }
+                if(t2-t1 <= 0) {
+                    $("#headerReqTimeError").show();
                 }
             }
         });
@@ -227,6 +343,71 @@
                     <input type="text" class="fullwid brdr-0 f17 color11 fontlig whiteout" placeholder="Mobile number" value=""/>
                 </div>
                 <div id="footerReqMobError" style="color:red;display:none" class="f14 pt8">Please provide a valid Phone Number</div>
+                <div id="rcbFooterDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15">
+                    <!--start:date-->
+                    <div class="rcb_fl wid35">
+                        <div class="clearfix">
+                            <div class="f16 rcb_lh40 rcb_fl pr10">Date</div>
+                            <div class="rcb_fl">
+                                <div class="rcb_fl">
+                                    <div class="wid88">
+                                        <!--start:drop down UI-->
+                                        <dl id="dropDown0" class="rcbdropdown">
+                                            <dt><span></span></dt>
+                                            <dd>
+                                            <ul>
+                                                ~foreach from=$dropDownDayArr key=k item=dd`
+                                                <li>~$dd`</li>
+                                                ~/foreach`
+                                            </ul>
+                                            </dd>
+                                        </dl>
+                                        <!--end:drop down UI-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end:date-->
+                    <!--start:time-->
+                    <div class="rcb_fl wid65">
+                        <div class="clearfix">
+                            <div class="f16 rcb_lh40 rcb_fl pr10">Time</div>
+                            <div class="rcb_fl">
+                                <div class="rcb_fl">
+                                    <div class="wid88 rcb_fl">
+                                        <dl id="dropDown1" class="rcbdropdown">
+                                            <dt><span></span></dt>
+                                            <dd>
+                                            <ul>
+                                                ~foreach from=$dropDownTimeArr1 key=k item=tt`
+                                                <li>~$tt`</li>
+                                                ~/foreach`
+                                            </ul>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="wid88 rcb_fl rcb_m2">  <dl id="dropDown2" class="rcbdropdown">
+                                        <dt><span></span></dt>
+                                        <dd>
+                                        <ul>
+                                            ~foreach from=$dropDownTimeArr2 key=k item=tt`
+                                            <li>~$tt`</li>
+                                            ~/foreach`
+                                        </ul>
+                                        </dd>
+                                    </dl> </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end:time-->
+                    <input id="rcbFooterdropDown0" type="hidden" name="dropDownDaySelected" value=""/>
+                    <input id="rcbFooterdropDown1" type="hidden" name="dropDownTimeStartSelected" value=""/>
+                    <input id="rcbFooterdropDown2" type="hidden" name="dropDownTimeEndSelected" value=""/>
+                </div>
+                <div id="footerReqTimeError" style="color:red;display:none" class="f14 pt8">Please select valid Time Duration</div>
                 <div class="pt20">
                     <div class="reqCalbck-bdr12 colr2 f17 pb5 pt10 cursp pos-rel js-drop" id="footerDatefld"> <span class="footerDatefld-val f15 fontlig js-fill">~if $module neq 'membership'`What type of query do you have ?~else`Questions regarding Jeevansathi Membership Plans~/if`</span>
                         <div class="pos-abs reqCalbck-leftcorner_trianle1 reqCalbck-pos6 z2"></div>
@@ -260,6 +441,47 @@
 </div>
 <!--end:callback form-->
 <script type="text/javascript">
+    function getValFLi() {
+        var getdata = $('#rcbFooterDrop .rcbdropdown dd ul').find('li:first').map(function () {
+            return $(this).text();
+        }).get();
+        return getdata;
+    }
+
+    $("#rcbFooterDrop dt").click(function () {
+        var N_id = $(this).parent().attr('id');
+        $("dd ul").css('display', 'none');
+        $("#" + N_id + " dd ul").toggle();
+    });
+
+    $("#rcbFooterDrop dd ul li").click(function () {
+        var text = $(this).html();
+        var text1 = $(this).text();
+        var P_id = $(this).parent().parent().parent().attr('id');
+        $("#" + P_id + " dt span").html(text);
+        $("#" + P_id + " dd ul").css('display', 'none');
+        $("#rcbFooter" + P_id + "").val($(this).attr('id'));
+    });
+
+    function intialize() {
+        var value = getValFLi();
+        $.each(value, function (i, val) {
+            if (i == 2) {
+                val = "9 PM";
+            }
+            $("#rcbFooterDrop #dropDown" + i + " dt span").html(val);
+            $("#rcbFooterDrop #rcbFooterdropDown" + i).val($("#rcbFooterDrop #dropDown"+i+" dd ul li:eq(0)").attr('id'));
+        });
+    }
+    $(document).bind('click', function (e) {
+        var $clicked = $(e.target);
+        if (!$clicked.parents().hasClass("rcbdropdown")) {
+            $("#rcbFooterDrop .rcbdropdown dd ul").hide();
+        }
+    });
+
+    intialize();
+
     var loginData = new Array();
     
     ~assign var=loggedIn value= $sf_request->getAttribute('login')`
@@ -334,9 +556,13 @@
             var phNo = $("#footerReqMob input").val();
             var email = $("#footerReqEmail input").val().toLowerCase();
             var secSelectedid = $("#footerDatefld ul li.active").attr('secSelectedid');
-            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q') {
+            var date = $("#rcbFooterdropDown0").val();
+            var startTime = $("#rcbFooterdropDown1").val();
+            var endTime = $("#rcbFooterdropDown2").val();
+            var t1 = Date.parse(date+" "+startTime), t2 = Date.parse(date+" "+endTime);
+            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q' && (t2-t1 > 0)) {
                 if(secSelectedid == 'M') {
-                    $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':secCallbackSource},function(response){
+                    $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':secCallbackSource,'date':date,'startTime':startTime,'endTime':endTime},function(response){
                         $("#footerReqCallBackMessage").text(response);
                         $("#footerRequestCallbackLogout").hide();
                         $("#footerRequestCallbackLogin").show();
@@ -366,6 +592,9 @@
                 if(secSelectedid == "Q"){
                     $("#footerReqQueryError").show();
                 }
+                if(t2-t1 <= 0) {
+                    $("#footerReqTimeError").show();   
+                }
             }
         });
 
@@ -379,7 +608,7 @@
         });
 
         $("#footerRequestCallbackLogout,#footerRequestCallbackLogin").css('left','215px');
-        $("#footerRequestCallbackLogout").css('top','-295px');
+        $("#footerRequestCallbackLogout").css('top','-360px');
         $("#footerRequestCallbackLogin").css('top','-135px');
 
         $(document).keyup(function(e) {
