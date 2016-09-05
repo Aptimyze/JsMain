@@ -7,7 +7,10 @@ include "connect.inc";
                 *       Description     :       This function will find all the mailers who are in 'mdi' state
                 **/
                                                                                                  
-                                                                                                 
+$fileName =  $_SERVER["SCRIPT_FILENAME"];
+$http_msg=print_r($_SERVER,true);
+mail("reshu.rajput@gmail.com,lavesh.rawat@gmail.com","For DLL Movement - $fileName",$http_msg);
+                                                                                         
 function get_valid_mailers($mailer_id)
 {
         global $smarty;
