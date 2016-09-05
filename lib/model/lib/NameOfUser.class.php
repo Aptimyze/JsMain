@@ -50,13 +50,20 @@ class NameOfUser
                         $finalData[$v['PROFILEID']]=$v;
                 }
         }
-       // print_r($finalData);die;
+       //print_r($finalData);die;
 	return $finalData;
     }
     public function insertName($profileid,$name,$display)
     {
 	$name_pdo = new incentive_NAME_OF_USER();
-	$name_pdo->insertNameInfo($profileid,$name,$display);  
+	$name_pdo->insertNameInfo($profileid,$name,$display); 
+        $pData = $this->getNameFromCache($profileid);
+        if($name == ''){
+                $name = $pData[$profileid]["NAME"];
+        }
+        if($display == ''){
+                $display = $pData[$profileid]["DISPLAY"];
+        }
         $this->setNameInCache($profileid,array("NAME"=>$name,"DISPLAY"=>$display,"PROFILEID"=>$profileid));
     }
     public function filterName($name)

@@ -1,4 +1,4 @@
-<?php
+        <?php
 /**
  * DetailedViewApi.class.php
  */
@@ -252,6 +252,8 @@ class DetailedViewApi
                 if(is_array($name) && $name[$objProfile->getPROFILEID()]['SHOW']=="1" && $name[$objProfile->getPROFILEID()]['NAME']!='')
                 {
                         $this->m_arrOut['name_of_user'] = $nameOfUserObj->getNameStr($name[$objProfile->getPROFILEID()]['NAME'],$this->m_actionObject->loginProfile->getSUBSCRIPTION());
+                }else{
+                        $this->m_arrOut['name_of_user'] = null;
                 }
                 unset($nameOfUserObj);
                 
