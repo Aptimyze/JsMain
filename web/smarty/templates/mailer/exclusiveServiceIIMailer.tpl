@@ -8,7 +8,7 @@
   </head>
   <body>
     <table border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" style="border:1px solid #dcdcdc; max-width:575px; text-align:left" align="center">
-      <tr>
+      <!--tr>
         <td>
           <table width="100%" border="0" cellspacing="0" cellpadding="0" height="52">
             <tr>
@@ -27,7 +27,7 @@
             </tr>
           </table>
         </td>
-      </tr>
+      </tr-->
       <tr>
         <td width="575">
           <table width="100%" border="0" cellspacing="0" cellpadding="0" style="">
@@ -43,23 +43,13 @@
               <td width="531">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;">
                   <tr>
-                    <td valign="top">Dear ~$USERNAME`,</td>
+                    <td valign="top">Dear ~$SELF_NAME`,</td>
                   </tr>
                   <tr>
                     <td valign="top" height="12"></td>
                   </tr>
                   <tr>
-                    <td style="color:#000000;">Response Booster (~$SERVICE_DURATION` ~if $SERVICE_DURATION eq 1` month~else` months~/if`) service has been activated on your profile. 
-                    </td>
-                  </tr>
-                  <tr>
-                    <td valign="top"><br /><font color="#000000">Every day, we will be sending up to 25 Interests on your behalf to members who match your Desired Partner Profile, while you sit back and relax.</font></td>
-                  </tr>
-                  <tr>
-                    <td colspan="2" height="12"></td>
-                  </tr>
-                  <tr>
-                    <td style="color:#000000;">All you need to do is
+                    <td style="color:#000000;">I have shortlisted the following profiles for you. Please go through them and suggest accordingly.
                     </td>
                   </tr>
                   <tr>
@@ -68,39 +58,12 @@
                         <tr>
                           <td colspan="2" height="12"></td>
                         </tr>
-                        <tr>
-                          <td width="24" valign="top"><strong>1.</strong>
-                          </td>
-                          <td width="528" style="font-size:12px; color:#000000; line-height:normal;"> Edit and review your <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)MY_DPP:profileid=~$PROFILEID`(/LINK)">Desired Partner Profile</a>.
-                          </td>
-                        </tr>
-                        
-                        <tr>
-                          <td valign="top"><strong>2.</strong>
-                          </td>
-                          <td style="font-size:12px; color:#000000; line-height:normal;"> Visit the “Acceptances” listing under Inbox and see who has accepted interests which we have sent on your behalf.
+                        ~foreach from=$USERNAMELIST key=k item=v name=viewProfileLinkLoop`
+                        <tr> 
+                          <td width="528" style="font-size:12px; color:#000000; line-height:normal;"><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="~$v`">~$k`</a>
                           </td>
                         </tr>
-                        
-                        <tr>
-                          <td valign="top"><strong>3.</strong>
-                          </td>
-                          <td style="font-size:12px; color:#000000; line-height:normal;"> Visit the “Interests sent” listing under Inbox to view the profiles to whom your interest was sent.
-                          </td>
-                        </tr>
-                        
-                        <tr>
-                          <td valign="top"><strong>4.</strong>
-                          </td>
-                          <td style="font-size:12px; color:#000000; line-height:normal;"> Feel free to “Send reminders” to profiles that have not responded yet and also “Cancel” Interests of profiles that you do not like.
-                          </td>
-                        </tr>
-                        <tr>
-                          <td valign="top"><strong>5.</strong>
-                          </td>
-                          <td style="font-size:12px; color:#000000; line-height:normal;"> In case you wish to distinguish between interests we have sent on your behalf and interests sent by you, you can do so by viewing the ‘Communication History’ on that person’s profile.
-                          </td>
-                        </tr>
+                        ~/foreach`
                       </table>
                     </td>
                   </tr>
@@ -116,26 +79,13 @@
               <td>
                 <table style="font-family:Arial" border="0" cellpadding="0" cellspacing="0" width="100%">
                   <tr>
-                    <td style="font-size:12px;" valign="top" height="45">Your desired partner profile will be reviewed by our team and in case we have any suggestions we will call you within 48 hours. We will help you set your criteria so that you have a wide variety of matching profiles to choose from.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3" height="12"></td>
-                  </tr>
-                  <tr>
-                    <td style="font-size:12px;" valign="top" height="45">If you have any concerns/questions, do <strong>call us at 18004196299 (toll free in India)</strong>.
-                    </td>
-                  </tr>
-                  <tr>
                     <td>
                       <table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#000000; -webkit-text-size-adjust: none;" width="100%" border="0" cellpadding="0" cellspacing="0">
                         <tbody>
                           <tr>
-                            <td style="font-size:12px; padding-bottom:10px;" valign="top">Wishing you success in your search</td>
-                          </tr>
-                          <tr>
                             <td style="font-size:12px; padding-bottom:10px;" valign="top">Warm Regards,<br>
-                              <b style="color:#c4161c;">Jeevansathi<span style="font-size:1px;"> </span><font color="#00000">.com Team</font></b>
+                              <b style="color:#c4161c;"></b>~$AGENT_NAME`<br>
+                              <b style="color:#c4161c;"></b>~$AGENT_PHONE`
                             </td>
                           </tr>
                         </tbody>
@@ -152,8 +102,6 @@
       <tr>
         <td height="15"></td>
       </tr>
-      
-    ~include_partial("global/mailerfooter",[mailerLinks=>$mailerLinks])`
     </table>
   </body>
 </html>

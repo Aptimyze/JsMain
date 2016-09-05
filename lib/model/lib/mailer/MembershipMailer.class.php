@@ -368,21 +368,6 @@ class MembershipMailer {
         $smsSentProfileIDArr = $filterObj->getFilterdProfiles($profileArray,$smsDate);
         return $smsSentProfileIDArr;
     }
-    
-    //commented as general func "sendServiceActivationMail" used in its place
-    /*function sendWeTalkForYouUsageMail($mailId, $profileDetails){
-        $username = $profileDetails["USERNAME"];
-        $profileid = $profileDetails["PROFILEID"];
-        $mailerServiceObj = new MailerService();
-        sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerfooter");
-        $mailerLinks = $mailerServiceObj->getLinks();
-        $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailId);
-        $emailTpl = $email_sender->setProfileId($profileid);
-        $smartyObj = $emailTpl->getSmarty();         
-        $smartyObj->assign("mailerLinks",$mailerLinks);
-        $smartyObj->assign("USERNAME",$username);
-        $email_sender->send();
-    }*/
    
     // function to send VD Mailer	
     function sendVdMailer($mailId, $profileid, $discount, $expiryDate, $vdDisplayText, $instanceID){
@@ -631,7 +616,7 @@ class MembershipMailer {
     * @params: $profileDetails
     */
     public function sendExclusiveServiceIIMailer($profileDetails){
-        $mailId = '1808';
+        $mailId = '1837';
         //print_r($profileDetails);die;
         foreach ($profileDetails["usernameListArr"] as $key => $username) {
             if($username){
@@ -650,13 +635,12 @@ class MembershipMailer {
                 unset($profileDetails["usernameListArr"][$key]);
             }
         }
-        //print_r($profileDetails);die("222");
         if($profilePageLinkArr && is_array($profilePageLinkArr)){
             $profileDetails["USERNAMELIST"] = $profilePageLinkArr;
-            print_r($profileDetails);die;
-            //$this->sendServiceActivationMail($mailId, $profileDetails);
-        } 
-        print_r($profileDetails);die;
+            $profileDetails["CURR_MAIL_DATE"] = date("d-M-Y");
+            //print_r($profileDetails);die;
+            $this->sendServiceActivationMail($mailId, $profileDetails);
+        }
     }
 
 }

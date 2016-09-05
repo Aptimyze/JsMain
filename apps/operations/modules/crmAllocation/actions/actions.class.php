@@ -868,8 +868,8 @@ class crmAllocationActions extends sfActions
     */
     public function executeExclusiveServicingII(sfWebRequest $request)
     {
-    	$this->agentName = $request->getParameter("name");
-    	$this->cid = $request->getParameter("cid");
+    	//$this->agentName = $request->getParameter("name");
+    	//$this->cid = $request->getParameter("cid");
     	
     	//show error message for invalid username
 		if($request->getParameter("ERROR")=="INVALID_EXCLUSIVE_CUSTOMER")
@@ -911,9 +911,22 @@ class crmAllocationActions extends sfActions
 				if($exclusiveMemDetails){
 					$profileDetails["usernameListArr"] = explode("||", $profileUsernameListParsed);
 					unset($profileUsernameListParsed);
-					$profileDetails["USERNAME"] = $profileObj->getUSERNAME();
+					//$profileDetails["USERNAME"] = $profileObj->getUSERNAME();
             		$profileDetails["PROFILEID"] = $pid;
             		$profileDetails["EMAIL"] = $exclusiveEmail;
+            		$nameDBObj = new incentive_NAME_OF_USER("newjs_slave");
+            		$profileDetails["SELF_NAME"] = $nameDBObj->getName($pid);
+            		unset($nameDBObj);
+            		if(!$profileDetails["SELF_NAME"]){
+            			$profileDetails["SELF_NAME"] = $profileObj->getUSERNAME();
+            		}
+            		$profileDetails["AGENT_NAME"] = $request->getParameter("name");
+            		$jsadminObj = new jsadmin_PSWRDS("newjs_slave");
+            		$agentDetails = $jsadminObj->getArray($profileDetails["AGENT_NAME"],"USERNAME","PHONE");
+            		$profileDetails["AGENT_PHONE"] = $agentDetails[0]["PHONE"];
+            		unset($jsadminObj);
+            		unset($agentDetails);
+            		//print_r($profileDetails);die;
             		$memMailerObj = new MembershipMailer();
             		$memMailerObj->sendExclusiveServiceIIMailer($profileDetails);
             		unset($memMailerObj);
