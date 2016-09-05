@@ -842,11 +842,11 @@ class FieldForm extends sfForm
     elseif($table == 'NameUser')
     {
         $nameObj= new NameOfUser;
-        $nameData = $nameObj->getNameData($this->loginProfile->getPROFILEID());
+        $nameData = $nameObj->getNameData($this->loggedInObj->getPROFILEID());
         $arrResult = array();
         $arrResult['NAME'] = null;
         if(!empty($nameData))
-        $arrResult['NAME'] = $nameData[$this->loginProfile->getPROFILEID()]["NAME"];
+                $arrResult['NAME'] = $nameData[$this->loggedInObj->getPROFILEID()]["NAME"];
         
        //if($orgiValue['NAME'])
        foreach ($paramArray as $key => $value) {
