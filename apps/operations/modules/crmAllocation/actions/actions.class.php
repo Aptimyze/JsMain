@@ -928,10 +928,16 @@ class crmAllocationActions extends sfActions
             		unset($agentDetails);
             		//print_r($profileDetails);die;
             		$memMailerObj = new MembershipMailer();
-            		$memMailerObj->sendExclusiveServiceIIMailer($profileDetails);
+            		$mailSent = $memMailerObj->sendExclusiveServiceIIMailer($profileDetails);
             		unset($memMailerObj);
-					//successful entry case
-			    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
+            		if($mailSent){
+						//successful entry case
+				    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
+				    }
+				    else{
+				    	//no valid list of username for link
+				    	$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_USERNAME_LIST");
+				    }
 				}
 				else{
 					$invalidCustomer = 1;

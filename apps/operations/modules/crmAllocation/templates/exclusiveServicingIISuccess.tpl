@@ -40,7 +40,7 @@
 			<td class="label" width=50%>Username of profiles <font style="color:red">*</font>
 			</td>
 			<td class="fieldsnew" align="center">
-				<div class="brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;" id="profileUsernameList" class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Enter username list separated by newline" value="~$profileUsernameList`" name="profileUsernameList"></textarea></div>
+				<div class="brdrbtm_new fullwid btm0 pos-abs bg-white"><textarea cols="23" style="width: 220px;height:123px;" id="profileUsernameList" class="inputText lh20 brdr-0 padall-10 colorGrey hgt18 fontlig" placeholder="Enter username list separated by newline" value="~$profileUsernameList`" name="profileUsernameList"></textarea></div>
 			</td>		
 		</tr>
 		<tr height="10"><input type="hidden" id='profileUsernameListParsed' name="profileUsernameListParsed" value="~$profileUsernameListParsed`" ></tr>

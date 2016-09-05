@@ -614,33 +614,37 @@ class MembershipMailer {
     /*sendExclusiveServiceIIMailer
     * function to send exclusive servicing phase II mailer
     * @params: $profileDetails
+    * @return :$mailSent(1/0)
     */
     public function sendExclusiveServiceIIMailer($profileDetails){
         $mailId = '1837';
-        //print_r($profileDetails);die;
-        foreach ($profileDetails["usernameListArr"] as $key => $username) {
-            if($username){
-                $otherProfileObj = new Operator;
-                $otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
-                $otherPid = $otherProfileObj->getPROFILEID();
-                unset($otherProfileObj);
-                if($otherPid){
-                    $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
+        $mailSent = 0;
+        if(is_array($profileDetails) && is_array($profileDetails["usernameListArr"])){
+            foreach ($profileDetails["usernameListArr"] as $key => $username) {
+                if($username){
+                    $otherProfileObj = new Operator;
+                    $otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
+                    $otherPid = $otherProfileObj->getPROFILEID();
+                    unset($otherProfileObj);
+                    if($otherPid){
+                        $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
+                    }
+                    else{
+                        unset($profileDetails["usernameListArr"][$key]);
+                    }
                 }
                 else{
                     unset($profileDetails["usernameListArr"][$key]);
                 }
             }
-            else{
-                unset($profileDetails["usernameListArr"][$key]);
-            }
         }
-        if($profilePageLinkArr && is_array($profilePageLinkArr)){
+        if($profilePageLinkArr && is_array($profilePageLinkArr) && count($profilePageLinkArr)>0){
             $profileDetails["USERNAMELIST"] = $profilePageLinkArr;
             $profileDetails["CURR_MAIL_DATE"] = date("d-M-Y");
-            //print_r($profileDetails);die;
+            $mailSent = 1;
             $this->sendServiceActivationMail($mailId, $profileDetails);
         }
+        return $mailSent;
     }
 
 }
