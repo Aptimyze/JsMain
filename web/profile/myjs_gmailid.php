@@ -113,7 +113,7 @@ $activated='X';
 			$sql_bot_entry="insert ignore into bot_jeevansathi.user_info(`gmail_ID`,`on_off_flag`,`show_in_search`,`profileID`,`jeevansathi_ID`) values('$Email',0,1,'$profileid','$username')";
 			mysql_query_decide($sql_bot_entry) or logError($sql);
 
-			send_chat_request_email($profileid,$Email,$username);
+			//send_chat_request_email($profileid,$Email,$username);
 
 		}
 		$msg = print_r($_SERVER,true);

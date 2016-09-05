@@ -79,9 +79,14 @@ EOF;
 				if($module == "PICTURE" && $whichImage=="OriginalPicUrl")
                                 {
 				       	$type = array("archive"=>1);
-					$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
+								$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
 				}
-                                else
+				elseif($module == "PICTURE_DELETED")
+                                {
+				       	$type = array("archive"=>1);
+								$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
+				}
+        else
 				{
 					$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onImageServer;
 					$type="";
@@ -173,7 +178,6 @@ EOF;
 	{
 		$whichImage = IMAGE_SERVER_IMAGE_TYPE_ENUM::getImageType($dataArr["IMAGE_TYPE"],$dataArr["MODULE_NAME"]);
 		$paramArr[$whichImage] = $url;
-
 		if($paramArr && is_array($paramArr) && $dataArr["MODULE_ID"])
 		{
 			$modObj = UpdateModuleTableFactory::getModuleObject($module);
