@@ -310,9 +310,11 @@ function intialize() {
     $.each(value, function (i, val) {
         if (i == 2) {
             val = "9 PM";
+            $("#rcbSideMenuDrop #rcbSideMenudropDown" + i).val($("#rcbSideMenuDrop #dropDown" + i + " dd ul li:last").attr('id'));
+        } else {
+            $("#rcbSideMenuDrop #rcbSideMenudropDown" + i).val($("#rcbSideMenuDrop #dropDown" + i + " dd ul li:first").attr('id'));
         }
         $("#rcbSideMenuDrop #dropDown" + i + " dt span").html(val);
-        $("#rcbSideMenuDrop #rcbSideMenudropDown" + i).val($("#rcbSideMenuDrop #dropDown" + i + " dd ul li:eq(0)").attr('id'));
     });
 }
 $(document).bind('click', function (e) {

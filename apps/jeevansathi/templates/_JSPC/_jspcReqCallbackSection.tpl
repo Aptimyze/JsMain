@@ -18,7 +18,7 @@
                     <input type="text" class="fullwid brdr-0 f17 color11 fontlig whiteout" placeholder="Mobile number" value=""/>
                 </div>
                 <div id="headerReqMobError" style="color:red;display:none" class="f14 pt8">Please provide a valid Phone Number</div>
-                <div id="rcbHeaderDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15">
+                <div id="rcbHeaderDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15 pl18">
                     <!--start:date-->
                     <div class="rcb_fl wid35">
                         <div class="clearfix">
@@ -45,9 +45,9 @@
                     </div>
                     <!--end:date-->
                     <!--start:time-->
-                    <div class="rcb_fl wid65">
+                    <div class="rcb_fl wid60 pl13">
                         <div class="clearfix">
-                            <div class="f16 rcb_lh40 rcb_fl pr10">Time</div>
+                            <div class="f16 rcb_lh40 rcb_fl pr10">Schedule Time</div>
                             <div class="rcb_fl">
                                 <div class="rcb_fl">
                                     <div class="wid88 rcb_fl">
@@ -62,7 +62,7 @@
                                             </dd>
                                         </dl>
                                     </div>
-                                    <div class="wid88 rcb_fl rcb_m2">  <dl id="dropDown2" class="rcbdropdown">
+                                    <div class="disp-none wid88 rcb_fl rcb_m2">  <dl id="dropDown2" class="rcbdropdown">
                                         <dt><span></span></dt>
                                         <dd>
                                         <ul>
@@ -143,9 +143,11 @@
         $.each(value, function (i, val) {
             if (i == 2) {
                 val = "9 PM";
+                $("#rcbHeaderDrop #rcbHeaderdropDown" + i).val($("#rcbHeaderDrop #dropDown"+i+" dd ul li:last").attr('id'));
+            } else {
+                $("#rcbHeaderDrop #rcbHeaderdropDown" + i).val($("#rcbHeaderDrop #dropDown"+i+" dd ul li:first").attr('id'));
             }
             $("#rcbHeaderDrop #dropDown" + i + " dt span").html(val);
-            $("#rcbHeaderDrop #rcbHeaderdropDown" + i).val($("#rcbHeaderDrop #dropDown"+i+" dd ul li:eq(0)").attr('id'));
         });
     }
     $(document).bind('click', function (e) {
@@ -343,7 +345,7 @@
                     <input type="text" class="fullwid brdr-0 f17 color11 fontlig whiteout" placeholder="Mobile number" value=""/>
                 </div>
                 <div id="footerReqMobError" style="color:red;display:none" class="f14 pt8">Please provide a valid Phone Number</div>
-                <div id="rcbFooterDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15">
+                <div id="rcbFooterDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15 pl18">
                     <!--start:date-->
                     <div class="rcb_fl wid35">
                         <div class="clearfix">
@@ -370,9 +372,9 @@
                     </div>
                     <!--end:date-->
                     <!--start:time-->
-                    <div class="rcb_fl wid65">
+                    <div class="rcb_fl wid60 pl13">
                         <div class="clearfix">
-                            <div class="f16 rcb_lh40 rcb_fl pr10">Time</div>
+                            <div class="f16 rcb_lh40 rcb_fl pr10">Schedule Time</div>
                             <div class="rcb_fl">
                                 <div class="rcb_fl">
                                     <div class="wid88 rcb_fl">
@@ -387,7 +389,7 @@
                                             </dd>
                                         </dl>
                                     </div>
-                                    <div class="wid88 rcb_fl rcb_m2">  <dl id="dropDown2" class="rcbdropdown">
+                                    <div class="disp-none wid88 rcb_fl rcb_m2">  <dl id="dropDown2" class="rcbdropdown">
                                         <dt><span></span></dt>
                                         <dd>
                                         <ul>
@@ -468,9 +470,11 @@
         $.each(value, function (i, val) {
             if (i == 2) {
                 val = "9 PM";
+                $("#rcbFooterDrop #rcbFooterdropDown" + i).val($("#rcbFooterDrop #dropDown"+i+" dd ul li:last").attr('id'));
+            } else {
+                $("#rcbFooterDrop #rcbFooterdropDown" + i).val($("#rcbFooterDrop #dropDown"+i+" dd ul li:first").attr('id'));
             }
             $("#rcbFooterDrop #dropDown" + i + " dt span").html(val);
-            $("#rcbFooterDrop #rcbFooterdropDown" + i).val($("#rcbFooterDrop #dropDown"+i+" dd ul li:eq(0)").attr('id'));
         });
     }
     $(document).bind('click', function (e) {

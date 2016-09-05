@@ -25,7 +25,7 @@
                 </div>
                 <span id="phoneError" class="errorPad dspN fontlig"> </span>
                 <!--end:mobile no-->
-                <div id="rcbSideMenuDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15">
+                <div id="rcbSideMenuDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15 pl18">
                     <!--start:date-->
                     <div class="rcb_fl wid35">
                         <div class="clearfix">
@@ -52,9 +52,9 @@
                     </div>
                     <!--end:date-->
                     <!--start:time-->
-                    <div class="rcb_fl wid65">
+                    <div class="rcb_fl wid60 pl13">
                         <div class="clearfix">
-                            <div class="f16 rcb_lh40 rcb_fl pr10">Time</div>
+                            <div class="f16 rcb_lh40 rcb_fl pr10">Schedule Time</div>
                             <div class="rcb_fl">
                                 <div class="rcb_fl">
                                     <div class="wid88 rcb_fl">
@@ -69,7 +69,7 @@
                                             </dd>
                                         </dl>
                                     </div>
-                                    <div class="wid88 rcb_fl rcb_m2">  <dl id="dropDown2" class="rcbdropdown">
+                                    <div class="disp-none wid88 rcb_fl rcb_m2">  <dl id="dropDown2" class="rcbdropdown">
                                         <dt><span></span></dt>
                                         <dd>
                                         <ul>

@@ -1098,7 +1098,7 @@ class membershipActions extends sfActions
                 $this->username = $Username;
                 $msgContent     = "Membership Plans";
                 $subject        = "$Username is interested in $msgContent";
-                $msgBody        = "<html><body>$Username is interested in knowing more about $msgContent. Please contact at $email, $contact_str as requested on $date between timings $startTime -- $endTime</body></html>";
+                $msgBody        = "<html><body>$Username is interested in knowing more about $msgContent. Please contact at $email, $contact_str as requested on $date @ $startTime</body></html>";
                 $emailSend      = $memHandlerObj->checkEmailSendForDay($this->profileid, $email);
                 if (!$emailSend) {
                     if ($this->profileid) {
@@ -1139,7 +1139,7 @@ class membershipActions extends sfActions
                         } else {
                             $subject = "Lead for JS Exclusive";
                             $msgBody = "JS Exclusive";
-                            $msgBody = "<html><body>Someone is interested in knowing more about $msgBody. Please contact at " . $email . " or " . $phoneNo . " as requested on $date between timings $startTime -- $endTime.</body></html>";
+                            $msgBody = "<html><body>Someone is interested in knowing more about $msgBody. Please contact at " . $email . " or " . $phoneNo . " as requested on $date @ $startTime.</body></html>";
                         }
                         $memHandlerObj->addCallBack($phoneNo, $email, $jsSelectd, 0, $this->device, $this->channel, $this->callbackSource, $this->date, $this->startTime, $this->endTime);
                     }
@@ -1178,7 +1178,7 @@ class membershipActions extends sfActions
                         $msgBody = "<html><body>A callback request has been placed for explaining JS Exclusive service. Details below:</br>Username: " . $Username . "</br>Contact Number: " . $request->getPostParameter('mobNumber') . "</br>Date to call: " . $request->getPostParameter('dropDownDaySelected') . "</br>Time to call: From " . $request->getPostParameter('dropDownTimeStartSelected') . " To " . $request->getPostParameter('dropDownTimeEndSelected') . "</br></body></html>";
                     } else {
                         $subject = "$Username is interested in $msgContent";
-                        $msgBody = "<html><body>$Username is interested in knowing more about $msgContent. Please contact at $email, $contact_str as requested on $date between timings $startTime -- $endTime</body></html>";
+                        $msgBody = "<html><body>$Username is interested in knowing more about $msgContent. Please contact at $email, $contact_str as requested on $date @ $startTime</body></html>";
                     }
                     if ($execCallbackType == 'JS_EXC') {
                         $jsSelectd = $request->getParameter('jsSelectd');
