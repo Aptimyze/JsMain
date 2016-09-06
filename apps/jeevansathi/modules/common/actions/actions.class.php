@@ -493,6 +493,8 @@ class commonActions extends sfActions
             $date           = $arrRequest['date'];
             $startTime      = $arrRequest['startTime'];
             $endTime        = $arrRequest['endTime'];
+	    $reqTime	    = date('g:i A',strtotime($startTime));
+	
             if (in_array($query, $arrValidQuery)) {
                 if ($query == "P") {
                 //Send Email
@@ -501,7 +503,7 @@ class commonActions extends sfActions
                     $from = "info@jeevansathi.com"; //To Do Aliase Jeevansathi Support  Reply-to $email
 
                     $subject = "$email" . $userName . "has requested a callback for assistance with his/her account";
-                    $msgBody = "<html><body>Dear Support Team,<br> $email" . $userName . "has requested a callback from the support team for resolution of a service related issue. Please contact at $email,or $phone as requested on $date @ $startTime<br> Regards<br> Team Jeevansathi</body></html>";
+                    $msgBody = "<html><body>Dear Support Team,<br> $email" . $userName . "has requested a callback from the support team for resolution of a service related issue. Please contact at $email,or $phone as requested on $date at $reqTime <br> Regards<br> Team Jeevansathi</body></html>";
 
                     SendMail::send_email($to, $msgBody, $subject, $from, "", "", "", "", "", "", "1", $email, "Jeevansathi Support");
                 } else if ($query == "M") {
@@ -530,7 +532,7 @@ class commonActions extends sfActions
                         $userName = "Someone";
                     }
 
-                    $msgBody = "<html><body>$userName is interested in knowing more about Membership Plans. Please contact at " . $email . " or " . $phone . " as requested on $date @ $startTime</body></html>";
+                    $msgBody = "<html><body>$userName is interested in knowing more about Membership Plans. Please contact at " . $email . " or " . $phone . " as requested on $date at $reqTime </body></html>";
                     SendMail::send_email($to, $msgBody, $subject, $from);
                 }
 

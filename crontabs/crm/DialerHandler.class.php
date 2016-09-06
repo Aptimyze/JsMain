@@ -266,13 +266,13 @@ class DialerHandler
 		else
 			return "ignore";
 	}
-        public function getProfilesForCampaign($tableName, $csvEntryDate='',$campaignName='',$startDt='',$endDt='')
+        public function getProfilesForCampaign($tableName, $csvEntryDate='',$campaignName='',$startDt='',$endDt='',$ID='')
         {
 		$tableName =trim($tableName);
 		if($campaignName=='OB_JS_PAID')
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate'";
 		elseif($campaignName=='OB_JS_RCB')
-			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE>'$startDt' ORDER BY ID";
+			$sql ="SELECT * FROM incentive.$tableName WHERE ID>'$ID' ORDER BY ID";
 		else
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
                 $res = mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
@@ -314,7 +314,7 @@ class DialerHandler
 		}
 		else if($campaignName=='OB_JS_RCB'){
 			unset($fieldNameArr['EXPIRY_DT']);
-			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY');
+			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY','ID'=>'ID');
 			$fieldNameArr =array_merge($fieldNameArr,$fieldNameArr1);	
 		}
 		if($campaignName=='OB_JS_PAID')
@@ -387,11 +387,24 @@ class DialerHandler
                         $date =$row['DATE'];
                 return $date;
 	}
+        public function getLastHandledID($processId)
+        {
+                $sql="SELECT HANDLED_ID from incentive.LAST_HANDLED_DATE WHERE SOURCE_ID='$processId'";
+                $res =mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
+                if($row = mysql_fetch_assoc($res))
+                        $id =$row['HANDLED_ID'];
+                return $id;
+        }
 	public function updateLastHandledDate($processId, $dateSet)
 	{
 		$sql="update incentive.LAST_HANDLED_DATE SET DATE='$dateSet' WHERE SOURCE_ID='$processId'";
 		mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
 	}
+        public function updateLastHandledID($processId, $id)
+        {
+                $sql="update incentive.LAST_HANDLED_DATE SET HANDLED_ID='$id' WHERE SOURCE_ID='$processId'";
+                mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
+        }
         public function fetchIST($time)
         {
                 $ISTtime=strftime("%Y-%m-%d %H:%M",strtotime("$time + 10 hours 30 minutes"));
