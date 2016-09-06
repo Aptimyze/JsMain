@@ -150,11 +150,12 @@ print_r($returnArr);die;
 		$nameArr = explode(" ",$othername);
 		foreach($nameArr as $k=>$v)
 		{
-			if(strlen($v)>2)
-			{
-				$finalName = ucfirst($v);
-				break;
-			}
+                        $namePartWithOutSpecialChar= preg_replace('/[.]/', '', $v);
+                        if(strlen($namePartWithOutSpecialChar)>2)
+                        {
+                                $finalName = ucfirst($v);
+                                break;
+                        }
 		}
 		if($finalName=='')
 		{
