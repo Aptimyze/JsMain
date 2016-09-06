@@ -708,7 +708,8 @@ function callAfterDppChange()
 
 function showCustomCommonError(msg,timeInMs)
 {
-    
+        if(typeof(msg)=='undefined') msg='Something went wrong. Please try again after some time.';
+        if(typeof(timeInMs)=='undefined') timeInMs=1500;
             $("#commonError #js-commonErrorMsg").text(msg);
             $("#commonError").slideDown("slow");
         setTimeout('$("#commonError").slideUp("slow")',timeInMs);
