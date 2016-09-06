@@ -623,6 +623,8 @@ class MembershipMailer {
         $mailId = '1837';
         $mailSent = 0;
         if(is_array($profileDetails) && is_array($profileDetails["usernameListArr"])){
+            $stype = SearchTypesEnums::EXCLUSIVE_SERVICE2_MAILER_STYPE;
+            $rtype = JSTrackingPageType::EXCLUSIVE_SERVICE2_MAILER_RTYPE;
             foreach ($profileDetails["usernameListArr"] as $key => $username) {
                 if($username){
                     //validate profile in username list
@@ -632,7 +634,7 @@ class MembershipMailer {
                     unset($otherProfileObj);
                     //map profileid to view profile links
                     if($otherPid){
-                        $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
+                        $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=".$stype."&responseTracking=".$rtype;
                     }
                 }
             }
