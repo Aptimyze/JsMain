@@ -131,7 +131,8 @@ class ApiRequestCallbackV1Action extends sfActions
                             $subject = "Callback Request for Membership Plans";
                             $userName= "Someone";
                         }
-                        $msgBody = "<html><body>$userName is interested in knowing more about Membership Plans. Please contact at ".$email." or ".$phone." as requested on $date @ $startTime</body></html>";
+                        $reqTime =date('g:i A',strtotime($startTime));
+                        $msgBody = "<html><body>$userName is interested in knowing more about Membership Plans. Please contact at ".$email." or ".$phone." as requested on $date @ $reqTime</body></html>";
                         SendMail::send_email($to,$msgBody,$subject,$from);
                     }
                     //Update RCB Status if form is submit(optional)

@@ -493,7 +493,7 @@ class commonActions extends sfActions
             $date           = $arrRequest['date'];
             $startTime      = $arrRequest['startTime'];
             $endTime        = $arrRequest['endTime'];
-	    $reqTime	    = date('g:i A',strtotime($startTime));
+	        $reqTime	    = date('g:i A',strtotime($startTime));
 	
             if (in_array($query, $arrValidQuery)) {
                 if ($query == "P") {
