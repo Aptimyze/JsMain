@@ -38,7 +38,7 @@ class ChatLibrary
 		$url = JsConstants::$communicationServiceUrl."/communication/v1/presence"; 
 		if($profileIdStr)
 			$url.= "?pfids=$profileIdStr"; 
-		$out = CommonUtility::sendCurlPostRequest($url,'',2);
+		$out = CommonUtility::sendCurlPostRequest($url,'',5);
 		$out1 = (array)json_decode($out);
 		$arr = $out1["data"];
 		return $arr;
@@ -65,13 +65,8 @@ class ChatLibrary
 		if(JsConstants::$jsChatFlag=='1')
 		{
 			$arr = self::getPresenceOfIds();
-
-			/** limiting to searchable data*/
-			$profileIdStr = implode(",",$arr);
-			$userOnline = new USERPLANE_USERS('');
-			$onlineUsers.= $userOnline->getNew($profileIdStr,$key,$SearchParamtersObj);
-			return $onlineUsers;
-			/** limiting to searchable data*/
+                        $profileIdStr = implode(" ",$arr);
+                        return $profileIdStr;
 		}
 		else
 		{
