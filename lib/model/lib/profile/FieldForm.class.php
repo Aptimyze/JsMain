@@ -439,10 +439,10 @@ class FieldForm extends sfForm
 			
 			//NAME OF USER (INCENTIVE TABLE)
 
-			if(count($incentiveUsernameArr) && $this->checkForChange($incentiveUsernameArr,'NameUser') &&($incentiveUsernameArr['NAME']!=''||$incentiveUsernameArr['DISPLAY']!=''))
+			if(count($incentiveUsernameArr) && $this->checkForChange($incentiveUsernameArr,'NameUser'))
 			{
 				$nameOfUserObj = new NameOfUser();
-				$nameOfUserObj->insertName($profileid,$incentiveUsernameArr[NAME],$incentiveUsernameArr[DISPLAY]);
+				$nameOfUserObj->updateName($profileid,$incentiveUsernameArr);
 			}
 			//incomplete users 
 			$now = date("Y-m-d H:i:s");
@@ -844,9 +844,8 @@ class FieldForm extends sfForm
         $nameObj= new NameOfUser;
         $nameData = $nameObj->getNameData($this->loggedInObj->getPROFILEID());
         $arrResult = array();
-        $arrResult['NAME'] = null;
         if(!empty($nameData))
-                $arrResult['NAME'] = $nameData[$this->loggedInObj->getPROFILEID()]["NAME"];
+                $arrResult = $nameData[$this->loggedInObj->getPROFILEID()];
         
        //if($orgiValue['NAME'])
        foreach ($paramArray as $key => $value) {

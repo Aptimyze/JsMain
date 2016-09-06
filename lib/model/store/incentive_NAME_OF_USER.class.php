@@ -226,6 +226,41 @@ d in the result
                         throw new jsException($e);
                 }
         }
-		
+        public function updateNameInfo($profileid,$arr)
+        {
+                try
+                {
+                                if(!$profileid)
+                                        throw new jsException("","data missing in insertNameInfo function profileid:".$profileid.",name:".$name.",display:".$display);
+                                        foreach($arr as $k=>$v)
+                                        {
+                                                if($k=="NAME")
+                                                        $changeName = true;
+                                                if($k=="DISPLAY" && $v!="")
+                                                        $changeDisplay = true;
+                                        }
+                                        if(!$changeName &&!$changeDisplay)
+                                                return true;
+                                        $sqlUpdateName="Update incentive.NAME_OF_USER SET ";
+                                        if($changeName)
+                                                $sqlUpdateName.= " NAME=:NAME ";
+                                        if($changeName && $changeDisplay)
+                                                $sqlUpdateName.=" , ";
+                                        if($changeDisplay)
+                                                $sqlUpdateName.= " DISPLAY=:DISPLAY ";
+                                        $sqlUpdateName.=" where PROFILEID=:PROFILEID";
+                                        $resUpdateName = $this->db->prepare($sqlUpdateName);
+                                        $resUpdateName->bindValue(":PROFILEID", $profileid);
+                                        if($changeName)
+                                                $resUpdateName->bindValue(":NAME", $arr['NAME']);
+                                        if($display)
+                                                $resUpdateName->bindValue(":DISPLAY", $arr['DISPLAY']);
+                                        $resUpdateName->execute();
+                }
+                catch(Exception $e)
+                {
+                        throw new jsException($e);
+                }
+        }		
 }
 ?>

@@ -66,6 +66,13 @@ class NameOfUser
         }
         $this->setNameInCache($profileid,array("NAME"=>$name,"DISPLAY"=>$display,"PROFILEID"=>$profileid));
     }
+    public function updateName($profileid,$arr)
+    {
+        $name_pdo = new incentive_NAME_OF_USER();
+        $name_pdo->updateNameInfo($profileid,$arr);
+        $this->removeNameFromCache($profileid);
+    }
+
     public function filterName($name)
     {
 	return $name;
