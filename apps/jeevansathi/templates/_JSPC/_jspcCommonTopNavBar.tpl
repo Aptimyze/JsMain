@@ -275,7 +275,7 @@ window.onload=function(){
                                         ~/if`
                                     </div>
                                 </li>
-                                <li><div class="topnavp1 txtc"><a class="disp_b cursp" onclick="javascript:logOutCheck('/static/logoutPage?fromSignout=1'); return true;">Sign out</a></div></li>
+                                <li><div class="topnavp1 txtc"><a class="disp_b cursp" onclick="javascript:logOutCheck('/static/logoutPage?fromSignout=1'); return true;" id="jspcChatout">Sign out</a></div></li>
                             </ul>
                             <!--end:submenu-->
                         </li>

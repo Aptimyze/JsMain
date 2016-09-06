@@ -91,4 +91,5 @@ class ContactModuleInputValidate extends ValidationHandler
 		if(preg_match("/^([a-zA-Z])+$/",$value))
 			return true;
 	}
+	
 }
