@@ -367,7 +367,7 @@
                                             <dd>
                                             <ul>
                                                 ~foreach from=$dropDownDayArr key=k item=dd`
-                                                <li>~$dd`</li>
+                                                <li id="~$k`">~$dd`</li>
                                                 ~/foreach`
                                             </ul>
                                             </dd>
@@ -391,7 +391,7 @@
                                             <dd>
                                             <ul>
                                                 ~foreach from=$dropDownTimeArr1 key=k item=tt`
-                                                <li>~$tt`</li>
+                                                <li id="~$k`">~$tt`</li>
                                                 ~/foreach`
                                             </ul>
                                             </dd>
@@ -402,7 +402,7 @@
                                         <dd>
                                         <ul>
                                             ~foreach from=$dropDownTimeArr2 key=k item=tt`
-                                            <li>~$tt`</li>
+                                            <li id="~$k`">~$tt`</li>
                                             ~/foreach`
                                         </ul>
                                         </dd>

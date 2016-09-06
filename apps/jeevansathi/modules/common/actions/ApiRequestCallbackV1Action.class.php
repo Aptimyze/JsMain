@@ -102,7 +102,7 @@ class ApiRequestCallbackV1Action extends sfActions
                 } elseif (!in_array($channel, $arrValidChannel)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $responseData['status'] = 'invalidChannel';
-                } elseif ($currentTime < strtotime($date." ".$startTime)) { // Validating Time
+                } elseif ($currentTime > strtotime($date." ".$startTime)) { // Validating Time                    
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $responseData['status'] = 'invalidTime';
                 } elseif (in_array($query, $arrValidQuery)) { // Validating Query Type

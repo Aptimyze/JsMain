@@ -186,6 +186,8 @@ function requestCallBackCall() {
     if (t2 - t1 <= 0 || t1 < now) {
         $("#sideMenuReqTimeError").show();
         validate = false;
+    } else {
+        $("#sideMenuReqTimeError").hide();
     }
     if (!validate) {
         return false;
