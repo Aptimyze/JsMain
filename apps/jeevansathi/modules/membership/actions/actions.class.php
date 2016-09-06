@@ -1043,12 +1043,22 @@ class membershipActions extends sfActions
         
         $orgTZ = date_default_timezone_get();
         date_default_timezone_set("Asia/Calcutta");
-        
+        $currentTime = time();
+        $cutoffTimeEnd = strtotime(date("Y-m-d 21:00:00"));
+        $cutoffTimeStart = strtotime(date("Y-m-d 09:00:00"));            
         if(empty($this->date) || !isset($this->date)) {
-            $this->date = date("Y-m-d", strtotime('+1 day', time()));
+            if ($currentTime < $cutoffTimeEnd) {
+                $this->date = date("Y-m-d", time());
+            } else {
+                $this->date = date("Y-m-d", strtotime('+1 day', time()));
+            }
         }
         if(empty($this->startTime) || !isset($this->startTime)) {
-            $this->startTime = "09:00:00";
+            if (($cutoffTimeStart < $currentTime) && ($currentTime < $cutoffTimeEnd)) { 
+                $this->startTime = date("H:i:s", time());
+            } else {
+                $this->startTime = "09:00:00";
+            }
         }
         if(empty($this->endTime) || !isset($this->endTime)) {
             $this->endTime = "21:00:00";

@@ -56,11 +56,22 @@ class ApiRequestCallbackV1Action extends sfActions
             $rcbResponse = $arrRequest['rcbResponse'];
             $orgTZ = date_default_timezone_get();
             date_default_timezone_set("Asia/Calcutta");
+            $currentTime = time();
+            $cutoffTimeEnd = strtotime(date("Y-m-d 21:00:00"));
+            $cutoffTimeStart = strtotime(date("Y-m-d 09:00:00"));            
             if(empty($date) || !isset($date)) {
-                $date = date("Y-m-d", strtotime('+1 day', time()));
+                if ($currentTime < $cutoffTimeEnd) {
+                    $date = date("Y-m-d", time());
+                } else {
+                    $date = date("Y-m-d", strtotime('+1 day', time()));
+                }
             }
             if(empty($startTime) || !isset($startTime)) {
-                $startTime = "09:00:00";
+                if (($cutoffTimeStart < $currentTime) && ($currentTime < $cutoffTimeEnd)) { 
+                    $startTime = date("H:i:s", time());
+                } else {
+                    $startTime = "09:00:00";
+                }
             }
             if(empty($endTime) || !isset($endTime)) {
                 $endTime = "21:00:00";
