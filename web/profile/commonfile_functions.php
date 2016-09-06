@@ -452,7 +452,7 @@ $js_arr[]=array("jsms/angular/registration/lib/angular-touch_min"  => "1");
 $js_arr[]=array("jsms/angular/registration/scripts/app"     => "4");
 $js_arr[]=array("jsms/angular/registration/scripts/controllers"               => "15");
 $js_arr[]=array("jsms/angular/registration/scripts/services"    => "3");
-$js_arr[]=array("jsms/angular/registration/scripts/directives"         => "11");
+$js_arr[]=array("jsms/angular/registration/scripts/directives"          => "12");
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                 => "19");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"        => "8");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"         => "10");
