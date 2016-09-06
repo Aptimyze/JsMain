@@ -1055,7 +1055,7 @@ class membershipActions extends sfActions
         }
         if(empty($this->startTime) || !isset($this->startTime)) {
             if (($cutoffTimeStart < $currentTime) && ($currentTime < $cutoffTimeEnd)) { 
-                $this->startTime = date("H:i:s", time());
+                $this->startTime = date("H:i:s", time()+3600);
             } else {
                 $this->startTime = "09:00:00";
             }

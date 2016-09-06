@@ -58,7 +58,7 @@ class ApiRequestCallbackV1Action extends sfActions
             date_default_timezone_set("Asia/Calcutta");
             $currentTime = time();
             $cutoffTimeEnd = strtotime(date("Y-m-d 21:00:00"));
-            $cutoffTimeStart = strtotime(date("Y-m-d 09:00:00"));            
+            $cutoffTimeStart = strtotime(date("Y-m-d 09:00:00"));
             if(empty($date) || !isset($date)) {
                 if ($currentTime < $cutoffTimeEnd) {
                     $date = date("Y-m-d", time());
@@ -68,7 +68,7 @@ class ApiRequestCallbackV1Action extends sfActions
             }
             if(empty($startTime) || !isset($startTime)) {
                 if (($cutoffTimeStart < $currentTime) && ($currentTime < $cutoffTimeEnd)) { 
-                    $startTime = date("H:i:s", time());
+                    $startTime = date("H:i:s", time()+3600);
                 } else {
                     $startTime = "09:00:00";
                 }
@@ -102,6 +102,9 @@ class ApiRequestCallbackV1Action extends sfActions
                 } elseif (!in_array($channel, $arrValidChannel)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $responseData['status'] = 'invalidChannel';
+                } elseif ($currentTime < strtotime($date." ".$startTime)) { // Validating Time
+                    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $responseData['status'] = 'invalidTime';
                 } elseif (in_array($query, $arrValidQuery)) { // Validating Query Type
                     if ($query == "P") {
                         //Send Email

@@ -170,7 +170,8 @@ function requestCallBackCall() {
         startTime = $("#rcbSideMenudropDown1").val(),
         endTime = $("#rcbSideMenudropDown2").val();
     var t1 = Date.parse(date + " " + startTime),
-        t2 = Date.parse(date + " " + endTime);
+        t2 = Date.parse(date + " " + endTime),
+        now = Date.parse(new Date());
     if ($('#rcbResponse').length) {
         var rcbResponse = $('#rcbResponse').attr("value");
     }
@@ -182,7 +183,7 @@ function requestCallBackCall() {
         $("#querryError").html("Please select a type of query");
         $("#querryError").removeClass("dspN");
     }
-    if (t2 - t1 <= 0) {
+    if (t2 - t1 <= 0 || t1 < now) {
         $("#sideMenuReqTimeError").show();
         validate = false;
     }

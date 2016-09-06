@@ -4,6 +4,14 @@
 ~assign var=dropDownTimeArr1 value= CommonFunction::getRCBStartTimeDropDown()`
 ~assign var=dropDownTimeArr2 value= CommonFunction::getRCBEndTimeDropDown()`
 ~if $subsection eq 'header'`
+<style type="text/css">
+.wid35 {
+    width:35%;
+}
+.wid60 {
+    width:65%;
+}
+</style>
 <!--start:callback form-->
 <div id="headerRequestCallbackLogout" class="pos-abs z5" style="display:none">
     <i class="reqCalbck-sprite pos-abs reqCalbck-cross2 cursp reqCalbck-pos12" id="headerRequestCallbackLogoutCloseBtn"></i>
@@ -18,11 +26,11 @@
                     <input type="text" class="fullwid brdr-0 f17 color11 fontlig whiteout" placeholder="Mobile number" value=""/>
                 </div>
                 <div id="headerReqMobError" style="color:red;display:none" class="f14 pt8">Please provide a valid Phone Number</div>
-                <div id="rcbHeaderDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15 pl18">
+                <div id="rcbHeaderDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15 pl3">
                     <!--start:date-->
                     <div class="rcb_fl wid35">
                         <div class="clearfix">
-                            <div class="f16 rcb_lh40 rcb_fl pr10">Date</div>
+                            <div class="f16 rcb_lh40 rcb_fl pr5">Date</div>
                             <div class="rcb_fl">
                                 <div class="rcb_fl">
                                     <div class="wid88">
@@ -45,9 +53,9 @@
                     </div>
                     <!--end:date-->
                     <!--start:time-->
-                    <div class="rcb_fl wid60 pl13">
+                    <div class="rcb_fl wid60 pl4">
                         <div class="clearfix">
-                            <div class="f16 rcb_lh40 rcb_fl pr10">Schedule Time</div>
+                            <div class="f16 rcb_lh40 rcb_fl pr5">Schedule Time(IST)</div>
                             <div class="rcb_fl">
                                 <div class="rcb_fl">
                                     <div class="wid88 rcb_fl">
@@ -235,8 +243,8 @@
             var date = $("#rcbHeaderdropDown0").val();
             var startTime = $("#rcbHeaderdropDown1").val();
             var endTime = $("#rcbHeaderdropDown2").val();
-            var t1 = Date.parse(date+" "+startTime), t2 = Date.parse(date+" "+endTime);
-            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q' && (t2-t1 > 0)) {
+            var t1 = Date.parse(date+" "+startTime), t2 = Date.parse(date+" "+endTime), now = Date.parse(new Date());
+            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q' && (t2-t1 > 0 && t1 > now)) {
                 if(secSelectedid == 'M') {
                     $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':secsecCallbackSource,'date':date,'startTime':startTime,'endTime':endTime},function(response){
                         $("#headerReqCallBackMessage").text(response);
@@ -266,7 +274,7 @@
                 if(secSelectedid == "Q"){
                     $("#headerReqQueryError").show();
                 }
-                if(t2-t1 <= 0) {
+                if(t2-t1 <= 0 || t1 < now) {
                     $("#headerReqTimeError").show();
                 }
             }
@@ -345,11 +353,11 @@
                     <input type="text" class="fullwid brdr-0 f17 color11 fontlig whiteout" placeholder="Mobile number" value=""/>
                 </div>
                 <div id="footerReqMobError" style="color:red;display:none" class="f14 pt8">Please provide a valid Phone Number</div>
-                <div id="rcbFooterDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15 pl18">
+                <div id="rcbFooterDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15 pl3">
                     <!--start:date-->
                     <div class="rcb_fl wid35">
                         <div class="clearfix">
-                            <div class="f16 rcb_lh40 rcb_fl pr10">Date</div>
+                            <div class="f16 rcb_lh40 rcb_fl pr5">Date</div>
                             <div class="rcb_fl">
                                 <div class="rcb_fl">
                                     <div class="wid88">
@@ -372,9 +380,9 @@
                     </div>
                     <!--end:date-->
                     <!--start:time-->
-                    <div class="rcb_fl wid60 pl13">
+                    <div class="rcb_fl wid60 pl4">
                         <div class="clearfix">
-                            <div class="f16 rcb_lh40 rcb_fl pr10">Schedule Time</div>
+                            <div class="f16 rcb_lh40 rcb_fl pr5">Schedule Time(IST)</div>
                             <div class="rcb_fl">
                                 <div class="rcb_fl">
                                     <div class="wid88 rcb_fl">
@@ -563,8 +571,8 @@
             var date = $("#rcbFooterdropDown0").val();
             var startTime = $("#rcbFooterdropDown1").val();
             var endTime = $("#rcbFooterdropDown2").val();
-            var t1 = Date.parse(date+" "+startTime), t2 = Date.parse(date+" "+endTime);
-            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q' && (t2-t1 > 0)) {
+            var t1 = Date.parse(date+" "+startTime), t2 = Date.parse(date+" "+endTime), now = Date.parse(new Date());
+            if((regExIndian.test(phNo) || regExInternational.test(phNo) || regExIndianLandline.test(phNo)) && regExEmail.test(email) && secSelectedid != 'Q' && (t2-t1 > 0 && t1 > now)) {
                 if(secSelectedid == 'M') {
                     $.post("/membership/addCallBck",{'phNo':phNo.trim(),'email':email.trim(),'jsSelectd':'P3','execCallbackType':'JS_ALL','tabVal':1,'device':'desktop','channel':'JSPC','callbackSource':secCallbackSource,'date':date,'startTime':startTime,'endTime':endTime},function(response){
                         $("#footerReqCallBackMessage").text(response);
@@ -596,7 +604,7 @@
                 if(secSelectedid == "Q"){
                     $("#footerReqQueryError").show();
                 }
-                if(t2-t1 <= 0) {
+                if(t2-t1 <= 0 || t1 < now) {
                     $("#footerReqTimeError").show();   
                 }
             }

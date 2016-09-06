@@ -129,7 +129,7 @@
             <div class="bg1" id="ContHead">
                 <div class="rv2_pad1 txtc">
                     <div class="posrel white">
-                        <div class="f19 fontthin" id="topHeading">Schedule Time</div>
+                        <div class="f19 fontthin" id="topHeading">Schedule Time(IST)</div>
                         <div class="posabs rv2_pos2 backOnCard"><i class="mainsp arow2"></i></div>
                     </div>
                 </div>
@@ -436,6 +436,8 @@ function submitRequest(){
                 ShowTopDownError(["Invalid Channel"]);
             } else if (data.status == 'invalidQueryType') {
                 ShowTopDownError(["Please select a Query"]);
+            } else if (data.status == 'invalidTime') {
+                ShowTopDownError(["Please select a valid Time"]);
             } else if (data.status == 'success') {
                 $("#nextDiv").removeClass("dispnone");
                 $("#successMsg").text(data.successMsg);
