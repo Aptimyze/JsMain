@@ -13,7 +13,7 @@
 $flag_using_php5=1;
 include_once("connect.inc");
 
-$db = connect_db();
+$db = connect_ddl();
 //$db_slave = connect_slave();
 
 $todayDate =date("Y-m-d");

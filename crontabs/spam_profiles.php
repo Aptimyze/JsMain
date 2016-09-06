@@ -9,6 +9,11 @@ Created By  : Sadaf Alam
 Created On  : 7 Jan 2007
 ****************************************************************************************************************************/
 include("$_SERVER[DOCUMENT_ROOT]/profile/connect.inc");
+
+$fileName =  $_SERVER["SCRIPT_FILENAME"];
+$http_msg=print_r($_SERVER,true);
+mail("reshu.rajput@gmail.com,lavesh.rawat@gmail.com","For DLL Movement - $fileName",$http_msg);
+
 exit;
 $db=connect_db();
 exit;
