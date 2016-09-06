@@ -192,6 +192,17 @@ class Mysql
                                         $dbPasswd = MysqlDbConstants::$shard3DDL[PASS];
                                         $dbName = MysqlDbConstants::$shard3DDL[DEFAULT_DB];
                                         break;
+				case 'alertsDDL' :
+                                        $dbHost = MysqlDbConstants::$alertsDDL[HOST].":".MysqlDbConstants::$alerts[PORT];
+                                        $dbUser = MysqlDbConstants::$alertsDDL[USER];
+                                        $dbPasswd = MysqlDbConstants::$alertsDDL[PASS];
+                                        $dbName = MysqlDbConstants::$alertsDDL[DEFAULT_DB];
+				case 'viewLogDDL' :
+                                        $dbHost = MysqlDbConstants::$viewLogDDL[HOST].":".MysqlDbConstants::$viewLogDDL[PORT];
+                                        $dbUser = MysqlDbConstants::$viewLogDDL[USER];
+                                        $dbPasswd = MysqlDbConstants::$viewLogDDL[PASS];
+                                        $dbName = MysqlDbConstants::$viewLogDDL[DEFAULT_DB];
+                                        break;
 				default : 
 					$dbHost = $this->dbHost;
 					$dbUser = $this->dbUser;
