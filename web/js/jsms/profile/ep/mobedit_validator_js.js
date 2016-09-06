@@ -304,8 +304,15 @@ function validator(tabKey){
 	{
 		$("#NAME").rules("add", {
 			validate_name: true,
+                        required : true,
+                        maxlength:40,
+                        messages:
+                        {
+                              required: "Please provide Name",
+                              maxlength : "Maximum 40 characters are allowed"
+                        }
 		});
-			$("#NAME").rules("remove", "required");
+			//$("#NAME").rules("remove", "required");
 	}
 	else if(tabKey=="Appearance")
 	{
