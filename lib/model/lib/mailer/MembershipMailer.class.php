@@ -625,20 +625,16 @@ class MembershipMailer {
         if(is_array($profileDetails) && is_array($profileDetails["usernameListArr"])){
             foreach ($profileDetails["usernameListArr"] as $key => $username) {
                 if($username){
+                    //validate profile in username list
                     $otherProfileObj = new Operator;
                     $otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
                     $otherPid = $otherProfileObj->getPROFILEID();
                     unset($otherProfileObj);
+                    //map profileid to view profile links
                     if($otherPid){
                         $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
                     }
-                    /*else{
-                        unset($profileDetails["usernameListArr"][$key]);
-                    }*/
                 }
-                /*else{
-                    unset($profileDetails["usernameListArr"][$key]);
-                }*/
             }
             unset($profileDetails["usernameListArr"]);
         }

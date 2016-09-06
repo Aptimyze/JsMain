@@ -898,36 +898,39 @@ class crmAllocationActions extends sfActions
 			$profileObj = new Operator;
 			$profileObj->getDetail($exclusiveEmail,"EMAIL",'PROFILEID,USERNAME');
 			$pid = $profileObj->getPROFILEID();
-			//unset($profileObj);
 			if(!$pid){
-				$invalidCustomer = 1;
+				$invalidCustomer = 1; //invalid user
 			}
 			else{
 				//check if profile has active JS sxclusive membership
 				$billingObj = new billing_SERVICE_STATUS("newjs_slave");
 				$exclusiveMemDetails = $billingObj->getActiveJsExclusiveServiceID($pid);
 				unset($billingObj);
+				//if user has current JS Exclusive membership
 				if($exclusiveMemDetails){
-					$profileDetails["usernameListArr"] = explode("||", $profileUsernameListParsed);
+					//set profile details for mailer
+					$profileDetails = array("usernameListArr"=>explode("||", $profileUsernameListParsed),"PROFILEID"=>$pid,"EMAIL"=>$exclusiveEmail,"AGENT_NAME"=>$request->getParameter("name"));
+
 					unset($profileUsernameListParsed);
-            		$profileDetails["PROFILEID"] = $pid;
-            		$profileDetails["EMAIL"] = $exclusiveEmail;
+					//get user name or set self name to username if not exists
             		$nameDBObj = new incentive_NAME_OF_USER("newjs_slave");
             		$profileDetails["SELF_NAME"] = $nameDBObj->getName($pid);
             		unset($nameDBObj);
             		if(!$profileDetails["SELF_NAME"] || $profileDetails["SELF_NAME"]==""){
             			$profileDetails["SELF_NAME"] = $profileObj->getUSERNAME();
             		}
-            		$profileDetails["AGENT_NAME"] = $request->getParameter("name");
+            		//get agent phone number
             		$jsadminObj = new jsadmin_PSWRDS("newjs_slave");
             		$agentDetails = $jsadminObj->getArray($profileDetails["AGENT_NAME"],"USERNAME","PHONE");
             		$profileDetails["AGENT_PHONE"] = $agentDetails[0]["PHONE"];
             		unset($jsadminObj);
             		unset($agentDetails);
-            		//print_r($profileDetails);die;
+
+            		//format mailer content and send mail
             		$memMailerObj = new MembershipMailer();
             		$mailSent = $memMailerObj->sendExclusiveServiceIIMailer($profileDetails);
             		unset($memMailerObj);
+            		unset($profileDetails);
             		if($mailSent){
 						//successful entry case
 				    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
