@@ -188,7 +188,8 @@ if(!$result)
 	$flag=0;
 if($flag)
 {
+	$ddl=connect_ddl();
 	$sql="TRUNCATE TABLE MIS.new_table";
-	$result=mysql_query($sql,$db) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+	$result=mysql_query($sql,$ddl) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 }
 ?>

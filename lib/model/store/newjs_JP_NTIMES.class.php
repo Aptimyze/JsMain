@@ -35,21 +35,23 @@ class NEWJS_JP_NTIMES extends TABLE{
 			}
 		}
                 
-        public function updateProfileViews($pid)
+        public function updateProfileViews($pid,$count)
         {
 			try 
 			{
 				if($pid)
 				{ 
-					$sql="UPDATE newjs.JP_NTIMES SET NTIMES = NTIMES+1 WHERE PROFILEID=:PROFILEID";
+					$sql="UPDATE newjs.JP_NTIMES SET NTIMES = NTIMES+:COUNT WHERE PROFILEID=:PROFILEID";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
+                                        $prep->bindValue(":COUNT",$count,PDO::PARAM_INT);
 					$prep->execute();
 					if($prep->rowCount() <= 0)
 					{   
-                                            $sql2="INSERT IGNORE INTO newjs.JP_NTIMES(PROFILEID,NTIMES) VALUES(:PROFILEID,1)";
+                                            $sql2="INSERT IGNORE INTO newjs.JP_NTIMES(PROFILEID,NTIMES) VALUES(:PROFILEID,:COUNT)";
                                             $prep2=$this->db->prepare($sql2);
                                             $prep2->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
+                                            $prep2->bindValue(":COUNT",$count,PDO::PARAM_INT);
                                             $prep2->execute();
 					}
 				}	

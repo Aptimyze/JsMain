@@ -67,13 +67,23 @@ class chatActions extends sfActions
 					$response['userStatus'] = "User exists";
 					$response['hash'] = $pass;
 					$apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
+                    $type = "created";
 				} else {
 					//create user
 					$response['userStatus'] = "Added";
 					$profileImporterObj = new Chat();
 					$profileImporterObj->addNewProfile($username);
 					$apiResponseHandlerObj->setHttpArray(ChatEnum::$addedToQueue);
+                    $type="new";
 				}
+                $memcacheKey = JsMemcache::getInstance()->get($username.'_CHAT_USER');
+                if(!$memcacheKey)
+                {
+                    $chatLoggingObj = new Chat();
+                    $chatLoggingObj->storeLoggedInUserContacts($username,$type);
+                    unset($chatLoggingObj);
+                    JsMemcache::getInstance()->set($username.'_CHAT_USER',"1",36000);
+                }
 			}
 			else{
 				$response = "Logged Out Profile";

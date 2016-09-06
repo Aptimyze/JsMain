@@ -850,4 +850,8 @@ class franchiseeCommission
 {
     const FRANCHISEE = 40;
 }
+
+class SelectGatewayRedirect{
+    public static $gatewayOptions = array('default','payu','ccavenue');
+}
 ?>

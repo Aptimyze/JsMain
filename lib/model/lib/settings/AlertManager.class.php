@@ -371,7 +371,7 @@ class AlertManager
                                     
                                     // Chat Code here
                                     $userData = $jprofileObj->get($this->profileid, 'PROFILEID', "USERNAME");
-                                    send_chat_request_email($this->profileid, $this->objVars['emailadd'], $userData['USERNAME']);
+                                    //send_chat_request_email($this->profileid, $this->objVars['emailadd'], $userData['USERNAME']);
                                     $botUserInfoObj = new bot_jeevansathi_user_info();
                                     $botUserOnlineObj = new bot_jeevansathi_user_online();
                                     $botGmailObj = new bot_jeevansathi_gmail_invites();

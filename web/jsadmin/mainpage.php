@@ -60,6 +60,9 @@ if (isset($data)) //successful login
         $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/profileDocumentsUpload\">Upload Profile Verification Documents</a>";
          */
 
+	if(in_array("SupFld",$priv))
+		$linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/profileDocumentsUpload\">Upload Profile Verification Documents</a>";
+
         if (in_array('CSEXEC', $priv) || in_array('CSSUP', $priv) || in_array('LTFSUP', $priv) || in_array('TRNGOP', $priv) || in_array('OPSHD', $priv) || in_array('TRNG', $priv) || in_array('P', $priv) || in_array('MG', $priv) || in_array('SLSUP', $priv) || in_array('SLHD', $priv) || in_array('ExcFld', $priv) || in_array('SupFld', $priv) || in_array('MgrFld', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/notduplicate/index\">Mark profile pair as not duplicate</a>";
         }
@@ -766,6 +769,8 @@ if (isset($data)) //successful login
         if (in_array('SLHDO', $priv) || in_array('P', $priv) || in_array('SLHD', $priv) || in_array('MG', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/helpBackend\">Help Questions</a>";
         }
+        if(in_array("SupFld",$priv))
+                $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/profileDocumentsUpload\">Upload Profile Verification Documents</a>";
     }
 
     $smarty->assign("linkarr", $linkarr);
