@@ -33,7 +33,7 @@ class ProfileArray{
   public function getResultsBasedOnJprofileFields($valueArray="",$excludeArray="",$greaterThanArray = "",$fields="PROFILEID",$table="JPROFILE",$connection="",$lessThanArray="",$greaterThanEqualArray="",$orderBy="",$limit="")
   {
     if($table == "JPROFILE_EDUCATION")
-      $this->$table = new newjs_JPROFILE_EDUCATION($connection);
+      $this->$table = ProfileEducation::getInstance($connection);
     elseif($table == "NAME_OF_USER")
       $this->$table = new incentive_NAME_OF_USER($connection);
     elseif($table == "JPROFILE")
