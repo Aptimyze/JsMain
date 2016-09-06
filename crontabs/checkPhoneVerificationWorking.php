@@ -26,7 +26,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 			$cc='nitesh.s@jeevansathi.com';
 			$to='sunendra.gupta@jeevansathi.com';
                         $subject="OTP verification might not be working";
-                        $msg='No verification is done in (past 5 hours) till now.<br/>'.$msg.'<br/>Error '.$errorStr.'<br/>Warm Regards';
+                        $msg='No verification is done past 5 hours.<br/>'.$msg.'<br/>Error '.$errorStr.'<br/>Warm Regards';
                         send_email($to,$msg,$subject,"",$cc);
 		}
         
