@@ -35,9 +35,8 @@ class newjs_HIDDEN_DELETED_PROFILES extends TABLE
                               $sql = "DELETE FROM newjs.HIDDEN_DELETED_PROFILES WHERE LAST_UPDATED <= '".$date."'";
                         }else{
                               $sql = "TRUNCATE TABLE newjs.HIDDEN_DELETED_PROFILES";
-                        }
-            $ddl_obj = parent::__construct('newjs_masterDDL');            
-			$res = $ddl_obj->db->prepare($sql);
+                        }          
+			$res = $this->db->prepare($sql);
 			$res->execute();
 		}
 		catch(PDOException $e)
