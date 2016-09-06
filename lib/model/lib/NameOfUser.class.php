@@ -86,6 +86,9 @@ class NameOfUser
     }
     public function showNameToProfiles($selfProfileObj,$otherProfileObjArr)
     {
+        if(empty($otherProfileObjArr)){
+                return array();
+        }
 	foreach($otherProfileObjArr as $k=>$v)
 	{
 		$profileArr[]=$v->getPROFILEID();

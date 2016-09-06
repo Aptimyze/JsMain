@@ -543,13 +543,6 @@ $("document").ready(function () {
                 $(this).parent().find(".changeSetting i").removeClass("tickSelected iconSprite");
                 $(this).find("i").addClass("tickSelected iconSprite");
 		window.displayName = $(this).attr('rel');
-/*
-UserDecision.store("displayname",$(this).attr('rel'));
-fields[4].userDecision=$(this).attr('rel');
-fields[4].value="displayname";
-*/
-console.log($(this).attr('rel'));
-//                submitObj.push("DISPLAYNAME",$(this).attr('rel'));
         });
         $(document).on("click","#doneBtn",function(){
 		var showToAll = "Show to All";
