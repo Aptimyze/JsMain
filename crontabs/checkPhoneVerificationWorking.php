@@ -12,21 +12,21 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
         {
                 if(!$res[$v])
                 {
-                        $cc='esha.jain@jeevansathi.com';
-			$to='tanu.gupta@jeevansathi.com';
-                        $subject=$msg." verification might not be working";
-                        $msg='No verification is done via '.$v.' from '.$time.' till now.<br/><br/>Warm Regards';
-                        send_email($to,$msg,$subject,"",$cc);
+            //            $cc='esha.jain@jeevansathi.com';
+			//$to='tanu.gupta@jeevansathi.com';
+              //          $subject=$msg." verification might not be working";
+                        $msg='No verification is done via '.$v.' from '.$time.' till now.';
+                        //send_email($to,$msg,$subject,"",$cc);
                 }
         }
         
         $errorStr=checkOTPChannelCountryWise($time,$slave);
-       if($errorStr)
+       if($errorStr || $msg)
 		{
 			$cc='nitesh.s@jeevansathi.com';
 			$to='sunendra.gupta@jeevansathi.com';
-                        $subject=" OTP verification might not be working";
-                        $msg='No verification is done from '.$time.'(past 5 hours) till now.<br/>Error '.$errorStr.'<br/>Warm Regards';
+                        $subject="OTP verification might not be working";
+                        $msg='No verification is done in (past 5 hours) till now.<br/>'.$msg.'<br/>Error '.$errorStr.'<br/>Warm Regards';
                         send_email($to,$msg,$subject,"",$cc);
 		}
         
