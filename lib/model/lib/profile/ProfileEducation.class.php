@@ -69,12 +69,24 @@ class ProfileEducation
     }
     return self::$instance;
   }
-
+  
+  /**
+   * getProfileEducation
+   * @param type $pid
+   * @param type $from
+   * @return type
+   */
   public function getProfileEducation($pid, $from = "")
   {
     $bServedFromCache = false;
     
-    if (0 === strlen($from) && !is_array($pid) && ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $pid, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__)) {
+    //For $from== 'mailer', different handling required
+    //
+    if (0 === strlen($from) && 
+        !is_array($pid) && 
+        ProfileCacheLib::getInstance()->isCached(ProfileCacheConstants::CACHE_CRITERIA, $pid, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__)
+      ) {
+      
       $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__);
       
       if (false !== $result) {
@@ -97,10 +109,21 @@ class ProfileEducation
     
     return $result;
   }
-
+  
+  /**
+   * update
+   * @param type $pid
+   * @param type $paramArr
+   * @return type
+   */
   public function update($pid, $paramArr = array())
   {
-    return self::$objEducationMysql->update($pid, $paramArr);
+    $bResult = self::$objEducationMysql->update($pid, $paramArr);
+    if(true === $bResult) {
+      ProfileCacheLib::getInstance()->updateCache($paramArr, ProfileCacheConstants::CACHE_CRITERIA, $pid, __CLASS__);
+    }
+    
+    return $bResult;
   }
 
   /**
