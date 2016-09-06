@@ -822,7 +822,7 @@ class crmInterfaceActions extends sfActions
 	            $purchaseObj        = new BILLING_PURCHASES('newjs_slave');
 	            $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date);
 	            if ($formArr["report_format"] == "XLS") {
-	                $headerString = "EntryDt\tBillID\tReceiptID\tProfileID\tUsername\tServiceID\tStartDate\tEndDate\tCurrency\tAmount\tDeferrableFlag\r\n";
+	                $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tStart Date\tEnd Date\tCurrency\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\r\n";
 	                if($this->rawData && is_array($this->rawData))
 					{
 						foreach($this->rawData as $k=>$v)
@@ -837,7 +837,9 @@ class crmInterfaceActions extends sfActions
 							$dataString = $dataString.$v["END_DATE"]."\t";
 							$dataString = $dataString.$v["CUR_TYPE"]."\t";
 							$dataString = $dataString.$v["AMOUNT"]."\t";
-							$dataString = $dataString.$v["DEFERRABLE"]."\r\n";
+							$dataString = $dataString.$v["DEFERRABLE"]."\t";
+							$dataString = $dataString.$v["ASSD"]."\t";
+							$dataString = $dataString.$v["ASED"]."\r\n";
 						}
 					}
 					$xlData = $headerString.$dataString;
