@@ -43,6 +43,7 @@ EditApp = function(){
                               "RELATION":"Please choose who posted this profile",
                               "CITY_RES":"Please mention the City you are living in",
                               "YOURINFO":"For the benefit of your matches, please write about yourself in at least 100 letters",                       
+			      "NAME":"Please enter the name of the person for whom this profile is created",
                               "EMAIL":"Email Required",
                               "EMAIL_WRONG_FORMAT":"Invalid Format",
                               "EMAIL_INVALID_DOMAIN":"Invalid domain",
@@ -145,7 +146,7 @@ EditApp = function(){
     var isInitialized             = false;
     var notFilledText             = "Not filled in";
     //////////////////////////// Behaviour Map
-    var behaviourMap              = {"NAME":"js-onlyChar","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal"};
+    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal"};
     
     var sidesUIMap                = ["NATIVE_STATE","NATIVE_COUNTRY","T_BROTHER","T_SISTER","YOURINFO","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","PHONE_NUMBER_OWNER","ALT_MOBILE_NUMBER_OWNER","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","PINCODE","PARENT_PINCODE","SHOWADDRESS","SHOW_PARENTS_CONTACT","TIME_TO_CALL_START"];
     
@@ -3837,6 +3838,18 @@ EditApp = function(){
      * @param {type} event
      * @returns {undefined}
      */
+    onNameChange = function(nameVal,event){
+	if(nameVal=='')
+	{
+      var normalBorder ='edpbrd3';
+      var errorBorder = 'brdr-1';
+	var nameField = editAppObject[BASIC]['NAME'];
+        var fieldParentID = '#'+nameField.key.toLowerCase()+'Parent';
+        $(fieldParentID).find('.js-areaBox').addClass(errorBorder).removeClass(normalBorder);
+        $(fieldParentID).find('.js-errorLabel').removeClass(dispNone);
+        requiredFieldStore.add(nameField);
+	}
+    }
     onAboutChange = function(aboutMeVal,event){
       
       var aboutMeField = editAppObject[ABOUT]["YOURINFO"];
@@ -4490,7 +4503,9 @@ EditApp = function(){
         },0);
         
       });
-      
+      $(".js-name").on("change",function(event){
+	setTimeout(function(){onNameChange($("#name").val(),event);},0);
+	});
       //Privacy setting
       $('.js-privacySetting').on('click',function(event){
         if(event.target && event.target.tagName === "LI"){
