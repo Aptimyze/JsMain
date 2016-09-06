@@ -25,8 +25,8 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 		{
 			$cc='nitesh.s@jeevansathi.com';
 			$to='sunendra.gupta@jeevansathi.com';
-                        $subject=$msg." OTP verification might not be working";
-                        $msg='No verification is done via  from '.$time.' till now.<br/>Error'.$errorStr.'<br/>Warm Regards';
+                        $subject=" OTP verification might not be working";
+                        $msg='No verification is done from '.$time.'(past 5 hours) till now.<br/>Error'.$errorStr.'<br/>Warm Regards';
                         send_email($to,$msg,$subject,"",$cc);
 		}
         
@@ -50,6 +50,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 			while($row = mysql_fetch_array($res)){
 				$ver[$row['CHANNEL']][$row['ISD']] = $row['COUNT'];
 			}
+			$errorStr="";
 			if(count($ver))
 			{
 				$verificationChannel = array('I','A','P','MS');
@@ -57,7 +58,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 				{
 					if(!$ver[$v])
 					{
-						$errorStr.=$v." channel has no phone verfication from OTP\n";
+						$errorStr.=" ".$v." channel has no phone verfication from OTP\n";
 					}
 					else
 					{
@@ -73,9 +74,9 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 						if(!$indianFlag || !$internationalFlag)
 						{
 							if(!$indianFlag)
-								$errorStr.=$v." channel has no phone verfication from Indian number\n";
+								$errorStr.=" ".$v." channel has no phone verfication from Indian number\n";
 							if(!$internationalFlag)
-								$errorStr.=$v." channel has no phone verfication from International number\n";
+								$errorStr.=" ".$v." channel has no phone verfication from International number\n";
 						}
 						
 					}
