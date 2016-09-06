@@ -43,3 +43,23 @@ function NameOverLayerAnimation(close)
         }
 
 }
+function CalloverlayName(thisObject){
+        var selectedVal = $(thisObject).attr("rel");
+        var tickSelectedShow = "tickSelected iconSprite";
+        var tickSelectedNoShow = "";
+        if(selectedVal == 'N'){
+             tickSelectedNoShow = tickSelectedShow;
+             tickSelectedShow = '';
+        }
+        overlayNameTemplate=$("#nameSettingOverlay").html();
+        $("#nameSettingOverlay").html('');
+        overlayNameTemplate=overlayNameTemplate.replace(/\{\{tickSelectedShow\}\}/g,tickSelectedShow); 
+        overlayNameTemplate=overlayNameTemplate.replace(/\{\{tickSelectedNoShow\}\}/g,tickSelectedNoShow);
+        $("#nameSettingOverlay").append(overlayNameTemplate);
+        $("#nameSettingOverlay").removeClass('dn');
+        $("#nameSettingOverlay").css("min-height",screen.height);
+	$("#nameSettingOverlay").addClass("web_dialog_overlay");
+        $("#nameSettingOverlay").css("opacity",1);
+        $("#nameSettingOverlay").css("background","rgba(0,0,0,0.8)");
+        NameOverLayerAnimation();
+}
