@@ -3,8 +3,6 @@ function validateFormInputs()
 	var exclusiveEmail = $("#exclusiveEmail").val(),profileUsernameList = $("#profileUsernameList").val();
 	exclusiveEmail = exclusiveEmail.replace(/^\s*|\s*$/,"");
 	profileUsernameList = profileUsernameList.replace(/^\s*|\s*$/,"");
-	//console.log("ankita",typeof profileUsernameList);
-	//console.log("ankita1",profileUsernameList.replace(/^\s*|\s*$/,""));
 	if(exclusiveEmail == '' || typeof profileUsernameList == "undefined" || profileUsernameList == '')
 	{
 		//check email validation
