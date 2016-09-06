@@ -23,7 +23,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
         $errorStr=checkOTPChannelCountryWise($time,$slave);
        if($errorStr || $msg)
 		{
-			$cc='nitesh.s@jeevansathi.com,vidushi.qa@naukri.com ';
+			$cc='nitesh.s@jeevansathi.com,vidushi@naukri.com';
 			$to='sunendra.gupta@jeevansathi.com';
                         $subject="OTP verification might not be working";
                         $msg='No verification is done in past 5 hours. <br/>Error '.$errorStr.'<br/>Warm Regards';
