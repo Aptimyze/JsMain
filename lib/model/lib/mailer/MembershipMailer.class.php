@@ -396,7 +396,10 @@ class MembershipMailer {
         return $deliveryStatus;
     } 
 
-    //send RB activation mail
+    /*send service activation mail
+    * @params: $mailId, $profileDetails
+    * @return: none
+    */
     function sendServiceActivationMail($mailId, $profileDetails){
         //$username = $profileDetails["USERNAME"];
         $profileid = $profileDetails["PROFILEID"];
@@ -409,7 +412,7 @@ class MembershipMailer {
         $smartyObj->assign("mailerLinks",$mailerLinks);
         foreach ($profileDetails as $key => $value) {
             $smartyObj->assign($key,$value);
-        }
+        }  
         $email_sender->send();
     }   		
     function getContactsViewedList($profileid,$startDate,$endDate){
@@ -629,14 +632,15 @@ class MembershipMailer {
                     if($otherPid){
                         $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=A";
                     }
-                    else{
+                    /*else{
                         unset($profileDetails["usernameListArr"][$key]);
-                    }
+                    }*/
                 }
-                else{
+                /*else{
                     unset($profileDetails["usernameListArr"][$key]);
-                }
+                }*/
             }
+            unset($profileDetails["usernameListArr"]);
         }
         if($profilePageLinkArr && is_array($profilePageLinkArr) && count($profilePageLinkArr)>0){
             $profileDetails["USERNAMELIST"] = $profilePageLinkArr;

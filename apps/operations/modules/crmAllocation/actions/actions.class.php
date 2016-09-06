@@ -915,7 +915,7 @@ class crmAllocationActions extends sfActions
             		$nameDBObj = new incentive_NAME_OF_USER("newjs_slave");
             		$profileDetails["SELF_NAME"] = $nameDBObj->getName($pid);
             		unset($nameDBObj);
-            		if(!$profileDetails["SELF_NAME"]){
+            		if(!$profileDetails["SELF_NAME"] || $profileDetails["SELF_NAME"]==""){
             			$profileDetails["SELF_NAME"] = $profileObj->getUSERNAME();
             		}
             		$profileDetails["AGENT_NAME"] = $request->getParameter("name");
