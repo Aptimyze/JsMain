@@ -868,9 +868,6 @@ class crmAllocationActions extends sfActions
     */
     public function executeExclusiveServicingII(sfWebRequest $request)
     {
-    	//$this->agentName = $request->getParameter("name");
-    	//$this->cid = $request->getParameter("cid");
-    	
     	//show error message for invalid username
 		if($request->getParameter("ERROR")=="INVALID_EXCLUSIVE_CUSTOMER")
 			$this->errorMsg = "Invalid email id,no such exclusive customer exists !!!!";
