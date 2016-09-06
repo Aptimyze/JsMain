@@ -207,7 +207,7 @@ while($row=mysql_fetch_row($res))
 		{
 			$sqlNameOfUser="SELECT * FROM incentive.NAME_OF_USER WHERE PROFILEID=".$profileid;
 			$resNameOfUser = mysql_query($sqlNameOfUser, $db) or die("name query".mysql_error1($db));
-			while($rowNameOfUser = mysql_fetch_row($resNameOfUser))
+			while($rowNameOfUser = mysql_fetch_assoc($resNameOfUser))
 			{
 				if($rowNameOfUser['DISPLAY']=="Y")
 				{
