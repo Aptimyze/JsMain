@@ -629,6 +629,7 @@ class MembershipMailer {
         if(is_array($profileDetails) && is_array($profileDetails["usernameListArr"])){
             $stype = SearchTypesEnums::EXCLUSIVE_SERVICE2_MAILER_STYPE;
             $rtype = JSTrackingPageType::EXCLUSIVE_SERVICE2_MAILER_RTYPE;
+            //print_r($profileDetails["usernameListArr"]);die;
             foreach ($profileDetails["usernameListArr"] as $key => $username) {
                 if($username){
                     //validate profile in username list
