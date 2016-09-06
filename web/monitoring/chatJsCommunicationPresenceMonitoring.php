@@ -31,7 +31,7 @@ function sendPresenceRequest($url)
         if($url){
                 $url = $url."/communication/v1/presence?pfids=9061321"; 
         }
-        $res = CommonUtility::sendCurlPostRequest($url,'',2);
+        $res = CommonUtility::sendCurlPostRequest($url,'',10);
         $res = (array) json_decode($res);
         $res = (array) $res["header"];
         $status = $res["status"];

@@ -299,6 +299,7 @@ chatConfig.Params = {
         appendRetryLimit: 1000,
         checkForDefaultEoiMsg:false,    //check for default eoi msg in chat history while append
         setLastReadMsgStorage:true,
+	loginSessionTimeout:30, // session will expire after 30 days in case of no activity
         rosterDeleteChatBoxMsg:"You can no longer chat, as the other user has blocked you/declined your interest"
     }
 };
