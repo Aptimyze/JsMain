@@ -413,7 +413,11 @@ class MembershipMailer {
         foreach ($profileDetails as $key => $value) {
             $smartyObj->assign($key,$value);
         }  
-        $email_sender->send();
+        $ccList = '';
+        if($profileDetails["CC_EMAIL"]){
+            $ccList = $profileDetails["CC_EMAIL"]; //mail copy sent to this email
+        }
+        $email_sender->send('','',$ccList);
     }   		
     function getContactsViewedList($profileid,$startDate,$endDate){
 	
@@ -644,6 +648,7 @@ class MembershipMailer {
             $profileDetails["USERNAMELIST"] = $profilePageLinkArr;
             $profileDetails["CURR_MAIL_DATE"] = date("d-M-Y");
             $mailSent = 1;
+            $profileDetails["CC_EMAIL"] = $profileDetails["SENDER_EMAIL"];
             $this->sendServiceActivationMail($mailId, $profileDetails);
         }
         return $mailSent;

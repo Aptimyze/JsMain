@@ -921,8 +921,9 @@ class crmAllocationActions extends sfActions
             		}
             		//get agent phone number
             		$jsadminObj = new jsadmin_PSWRDS("newjs_slave");
-            		$agentDetails = $jsadminObj->getArray($profileDetails["AGENT_NAME"],"USERNAME","PHONE");
+            		$agentDetails = $jsadminObj->getArray($profileDetails["AGENT_NAME"],"USERNAME","PHONE,EMAIL");
             		$profileDetails["AGENT_PHONE"] = $agentDetails[0]["PHONE"];
+            		$profileDetails["SENDER_EMAIL"] = $agentDetails[0]["EMAIL"];
             		unset($jsadminObj);
             		unset($agentDetails);
 
