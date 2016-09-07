@@ -1043,7 +1043,7 @@ class membershipActions extends sfActions
         
         $orgTZ = date_default_timezone_get();
         date_default_timezone_set("Asia/Calcutta");
-        $currentTime = "2016-09-07 20:30:30";
+        $currentTime = time();
         $cutoffTimeEnd = strtotime(date("Y-m-d 21:00:00"));
         $cutoffTimeStart = strtotime(date("Y-m-d 09:00:00"));            
         if(empty($this->date) || !isset($this->date)) {
