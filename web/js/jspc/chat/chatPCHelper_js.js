@@ -608,7 +608,7 @@ function checkNewLogin(profileid) {
             eraseCookie('chatAuth');
             eraseCookie('chatEncrypt');
             createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
-            //setLogoutClickLocalStorage("unset");
+            setLogoutClickLocalStorage("unset");
             clearChatMsgFromLS();
             localStorage.removeItem('chatBoxData');
             localStorage.removeItem('lastUId');
