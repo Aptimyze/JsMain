@@ -27,7 +27,9 @@ Abstract class ApiAuthentication
 	private $inactiveMin="35";//The time in minutes to force new login, if account has been inactive used for older login functionality
 	private $expiryCookieTime=2592000;
 	private $dateTime1 ='11';
-	private $dateTime2 ='22';	
+	private $dateTime2 ='22';
+	private $expiryTime = 2592000;
+	public $mailerProfileId;
 	
 	public function __construct($request)
 	{
@@ -136,7 +138,7 @@ Abstract class ApiAuthentication
 	* check whether user is a valid user
 	* @param string authchecksum
 	*/
-	public function authenticate($authChecksum=null,$gcm=0)
+	public function authenticate($authChecksum=null,$gcm=0,$fromMailerAutologin="N")
 	{
 		//Decrypting Checksum
 		if(!$authChecksum)
@@ -144,7 +146,7 @@ Abstract class ApiAuthentication
 		if($this->isNotApp && !$authChecksum)
 			$authChecksum=$_COOKIE[AUTHCHECKSUM];
 		
-		if(!$authChecksum && $this->isNotApp)
+		if(!$authChecksum && $this->isNotApp && $fromMailerAutologin=="N")
 		{
 			$authChecksum=$this->getAuthChecksumFromAuth();
 		}
@@ -155,6 +157,11 @@ Abstract class ApiAuthentication
 		$decryptObj= new Encrypt_Decrypt();
 		$decryptedAuthChecksum=$decryptObj->decrypt($authChecksum);
 		$loginData=$this->fetchLoginData($decryptedAuthChecksum);
+		
+		if($fromMailerAutologin=="Y" && $loginData[PROFILEID]!=$this->mailerProfileId)
+		{
+			return false;
+		}
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
 			$this->loginData=$this->IsAlive($loginData,$gcm);
@@ -268,7 +275,7 @@ Abstract class ApiAuthentication
 	* track all logins in login_tracking table
 	* @param int profileid,char channel,char website version
 	*/
-	public function loginTracking($profileId,$channel,$websiteVersion)
+	public function loginTracking($profileId,$channel,$websiteVersion,$location="")
 	{
 		if(!$websiteVersion)
 		{
@@ -288,12 +295,27 @@ Abstract class ApiAuthentication
 		$loginTracking->setChannel($channel);
 		$loginTracking->setWebisteVersion($websiteVersion);
 		$request_uri=$_SERVER[REQUEST_URI];
-		$page=explode('?',$request_uri);
-		$page=$page[0];
-		$page=explode('/',$page);
-		$no=count($page);
-		$page=$page[$no-1];
-		$loginTracking->setRequestURI($page);
+		if(!$location)
+		{
+			$page=explode('?',$request_uri);
+			$page=$page[0];
+			$page=explode('/',$page);
+			$no=count($page);
+			$page=$page[$no-1];
+		}
+		else
+		{
+			$request_uri=str_replace("CMGFRMMMMJS=","pass=",$request_uri);
+			$request_uri=str_replace("&echecksum=","&autologin=",$request_uri);
+			$request_uri=str_replace("?echecksum=","?autologin=",$request_uri);
+			$request_uri=str_replace("&checksum=","&chksum=",$request_uri);
+			$request_uri=str_replace("?checksum=","?ckhsum=",$request_uri);
+			$request_uri=str_replace(urlencode($echecksum),"",$request_uri);
+			$request_uri=str_replace($echecksum,"",$request_uri);
+			$request_uri=ltrim($request_uri,"/");
+			$page=$request_uri;
+		}
+			$loginTracking->setRequestURI($page);
 		$loginTracking->loginTracking();
 	}
 	
@@ -549,7 +571,30 @@ Abstract class ApiAuthentication
 		//this change was done for earlier usernmames which have special characters in them so as to remove backslas (/) that is added to them.
 		if (md5($this->_KEY . md5($arrTmp[1]) . $this->_SUBKEY) == $arrTmp[0])
 		{
-			
+			if($fromAutoLogin=="Y")
+			{
+				$profileid=$this->getProfileFrmChecksum($arrTmp[1]);
+				if($arr[1]&& $profileid)
+				{
+					$curTime = time();
+					$timediff = $curTime-$arr[1];
+					$mailedtime = date("Y-m-d H:i:s",$autoLoginTime);
+					if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
+						$dbObj=new jsadmin_AUTO_EXPIRY("newjs_masterRep");
+					else
+						$dbObj=new jsadmin_AUTO_EXPIRY("newjs_master");
+					if($timediff > $this->expiryTime || !$dbObj->IsAlive($profileid,$mailedtime))
+					{
+						
+						return false;
+					}
+					else
+						return $arrTmp[1];
+				}
+				else
+					return false;
+			}
+            else
 				return true;
 		}
 		else
@@ -662,6 +707,17 @@ Abstract class ApiAuthentication
 			return false;
 	}
 	
+	public function getProfileFrmChecksum($checksum)
+	{
+		if($checksum)
+		{
+			$profileid=substr($checksum,33,strlen($checksum));
+			$temp_check=substr($checksum,0,32);
+			$real_check=md5($profileid);
+			if($temp_check==$real_check)
+				return $profileid;
 
+		}
+	}
 }
 ?>
