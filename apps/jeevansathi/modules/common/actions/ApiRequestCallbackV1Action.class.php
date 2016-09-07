@@ -66,6 +66,9 @@ class ApiRequestCallbackV1Action extends sfActions
                     $date = date("Y-m-d", strtotime('+1 day', time()));
                 }
             }
+            if (date("H", $currentTime) < 20) {
+                $date = date("Y-m-d", strtotime('+1 day', time()));
+            }
             if(empty($startTime) || !isset($startTime)) {
                 if (($cutoffTimeStart < $currentTime) && ($currentTime < $cutoffTimeEnd)) { 
                     $startTime = date("H:i:s", time()+3600);

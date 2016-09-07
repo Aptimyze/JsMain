@@ -1053,6 +1053,9 @@ class membershipActions extends sfActions
                 $this->date = date("Y-m-d", strtotime('+1 day', time()));
             }
         }
+        if (date("H", $currentTime) < 20) {
+            $this->date = date("Y-m-d", strtotime('+1 day', time()));
+        }
         if(empty($this->startTime) || !isset($this->startTime)) {
             if (($cutoffTimeStart < $currentTime) && ($currentTime < $cutoffTimeEnd)) { 
                 $this->startTime = date("H:i:s", time()+3600);
