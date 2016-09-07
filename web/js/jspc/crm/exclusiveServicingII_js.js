@@ -16,3 +16,6 @@ function validateFormInputs()
 		$("#profileUsernameListParsed").val(profileUsernameListParsed);
 	}
 }
+$(document).ready(function(){
+	$("textarea#profileUsernameList").attr("placeHolder","Enter username list separated by newline, e.g : \nZZTY5263\nZZYT9002");
+});
