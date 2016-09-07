@@ -88,7 +88,6 @@ class ApiIgnoreProfileV1Action extends sfActions
                                         {
                                             $ignoreArr=$ignore_Store_Obj->getCountIgnoredProfiles($profileID);
                                             $ignoreCount=$ignoreArr['CNT'];
-                                            JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
                                         
                                         }
 					$ignore_Store_Obj->undoIgnoreProfile($profileID,$ignoredProfileid);
@@ -163,7 +162,7 @@ class ApiIgnoreProfileV1Action extends sfActions
                                     if($ignoreCount>=self::IGNORED_LIMIT)
                                     {
                                         $this->m_iResponseStatus = ResponseHandlerConfig::$IGNORED_MESSAGE;
-					$this->m_arrOut=array('error'=>"BLOCK LIMIT REACHED");
+					$this->m_arrOut=array('status'=>"1",'message'=>"BLOCK LIMIT REACHED");
 					break;
                                     }   
                                         
