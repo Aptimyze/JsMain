@@ -23,6 +23,8 @@ include_once(JsConstants::$alertDocRoot."/classes/shardingRelated.php");
 include_once(JsConstants::$alertDocRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $mysqlObj = new Mysql;	
+$ddl=$mysqlObj->connect("alertsDDL");
+mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$ddl);
 $db=$mysqlObj->connect("alerts");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 
@@ -30,20 +32,20 @@ while(1)
 {
         //@mysql_ping($db);
         $sql="SELECT VALUE FROM matchalerts.STARTCRON";
-        $result=mysql_query($sql) or die(mysql_error().$sql);
+        $result=mysql_query($sql,$db) or die(mysql_error($db).$sql);
         $myrow=mysql_fetch_row($result);
         $maxId=$myrow[0];
 
         $sql="SELECT COUNT(*) FROM matchalerts.MAILER WHERE SENT=''";
-        $result=mysql_query($sql) or die(mysql_error().$sql);
+        $result=mysql_query($sql,$db) or die(mysql_error($db).$sql);
         $myrow=mysql_fetch_row($result);
         $n_count=$myrow[0];
 
         $sql="TRUNCATE TABLE matchalerts.MAILER_TEMP";
-        $result=mysql_query($sql) or die(mysql_error().$sql);
+        $result=mysql_query($sql,$ddl) or die(mysql_error($ddl).$sql);
 
         $sql="SELECT COUNT(*) FROM matchalerts.MAILER_TEMP";
-        $result=mysql_query($sql) or die(mysql_error().$sql);
+        $result=mysql_query($sql,$db) or die(mysql_error($db).$sql);
         $myrow=mysql_fetch_row($result);
         $n_count1=$myrow[0];
 
