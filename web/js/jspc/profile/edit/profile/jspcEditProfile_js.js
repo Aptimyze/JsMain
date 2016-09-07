@@ -3839,16 +3839,20 @@ EditApp = function(){
      * @returns {undefined}
      */
     onNameChange = function(nameVal,event){
-	if(nameVal=='')
-	{
+	var nameField = editAppObject[BASIC]['NAME'];
       var normalBorder ='edpbrd3';
       var errorBorder = 'brdr-1';
-	var nameField = editAppObject[BASIC]['NAME'];
         var fieldParentID = '#'+nameField.key.toLowerCase()+'Parent';
+      $(fieldParentID).find('.js-areaBox').removeClass(errorBorder).addClass(normalBorder);
+      $(fieldParentID).find('.js-errorLabel').addClass(dispNone);
+      requiredFieldStore.remove(nameField);
+	if(nameVal=='')
+	{
         $(fieldParentID).find('.js-areaBox').addClass(errorBorder).removeClass(normalBorder);
         $(fieldParentID).find('.js-errorLabel').removeClass(dispNone);
         requiredFieldStore.add(nameField);
 	}
+      storeFieldChangeValue(nameField,nameVal);
     }
     onAboutChange = function(aboutMeVal,event){
       

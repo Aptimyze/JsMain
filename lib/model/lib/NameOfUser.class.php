@@ -55,22 +55,28 @@ class NameOfUser
     }
     public function insertName($profileid,$name,$display)
     {
-	$name_pdo = new incentive_NAME_OF_USER();
-	$name_pdo->insertNameInfo($profileid,$name,$display); 
-        $pData = $this->getNameFromCache($profileid);
-        if($name == ''){
-                $name = $pData[$profileid]["NAME"];
-        }
-        if($display == ''){
-                $display = $pData[$profileid]["DISPLAY"];
-        }
-        $this->setNameInCache($profileid,array("NAME"=>$name,"DISPLAY"=>$display,"PROFILEID"=>$profileid));
+	if($profileid && ($name ||$display))
+	{
+		$name_pdo = new incentive_NAME_OF_USER();
+		$name_pdo->insertNameInfo($profileid,$name,$display); 
+		$pData = $this->getNameFromCache($profileid);
+		if($name == ''){
+			$name = $pData[$profileid]["NAME"];
+		}
+		if($display == ''){
+			$display = $pData[$profileid]["DISPLAY"];
+		}
+		$this->setNameInCache($profileid,array("NAME"=>$name,"DISPLAY"=>$display,"PROFILEID"=>$profileid));
+	}
     }
     public function updateName($profileid,$arr)
     {
-        $name_pdo = new incentive_NAME_OF_USER();
-        $name_pdo->updateNameInfo($profileid,$arr);
-        $this->removeNameFromCache($profileid);
+	if($profileid && is_array($arr))
+	{
+		$name_pdo = new incentive_NAME_OF_USER();
+		$name_pdo->updateNameInfo($profileid,$arr);
+		$this->removeNameFromCache($profileid);
+	}
     }
 
     public function filterName($name)
