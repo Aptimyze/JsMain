@@ -442,7 +442,11 @@ class FieldForm extends sfForm
 			if(count($incentiveUsernameArr) && $this->checkForChange($incentiveUsernameArr,'NameUser'))
 			{
 				$nameOfUserObj = new NameOfUser();
-				$nameOfUserObj->updateName($profileid,$incentiveUsernameArr);
+				$nameData = $nameOfUserObj->getNameData($profileid);
+				if(!empty($nameData))
+					$nameOfUserObj->updateName($profileid,$incentiveUsernameArr);
+				else
+					$nameOfUserObj->insertName($profileid,$incentiveUsernameArr['NAME'],$incentiveUsernameArr['DISPLAY']);
 			}
 			//incomplete users 
 			$now = date("Y-m-d H:i:s");

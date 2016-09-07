@@ -253,7 +253,7 @@ d in the result
                                         $resUpdateName->bindValue(":PROFILEID", $profileid);
                                         if($changeName)
                                                 $resUpdateName->bindValue(":NAME", $arr['NAME']);
-                                        if($display)
+                                        if($changeDisplay)
                                                 $resUpdateName->bindValue(":DISPLAY", $arr['DISPLAY']);
                                         $resUpdateName->execute();
                 }
