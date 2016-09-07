@@ -918,10 +918,19 @@ class crmAllocationActions extends sfActions
             		}
             		//get agent phone number
             		$jsadminObj = new jsadmin_PSWRDS("newjs_slave");
-            		$agentDetails = $jsadminObj->getArray($profileDetails["AGENT_NAME"],"USERNAME","PHONE,EMAIL");
+            		$agentDetails = $jsadminObj->getArray($profileDetails["AGENT_NAME"],"USERNAME","PHONE,EMAIL,FIRST_NAME,LAST_NAME");
             		$profileDetails["AGENT_PHONE"] = $agentDetails[0]["PHONE"];
             		$profileDetails["SENDER_EMAIL"] = $agentDetails[0]["EMAIL"];
-            		$profileDetails["SENDER_NAME"] = $profileDetails["AGENT_NAME"];
+            		if($agentDetails[0]["FIRST_NAME"] && $agentDetails[0]["FIRST_NAME"]!=""){
+            			$profileDetails["SENDER_NAME"] = $agentDetails[0]["FIRST_NAME"]." ".$agentDetails[0]["LAST_NAME"];
+            		}
+            		else{
+            			if(strpos($profileDetails["AGENT_NAME"], '.')!== false){
+            				$profileDetails["AGENT_NAME"] = substr($profileDetails["AGENT_NAME"], 0,strpos($profileDetails["AGENT_NAME"], '.'));
+            			}
+            			$profileDetails["SENDER_NAME"] = ucfirst($profileDetails["AGENT_NAME"]);
+            		}
+            		//print_r($profileDetails);die;
             		unset($jsadminObj);
             		unset($agentDetails);
 

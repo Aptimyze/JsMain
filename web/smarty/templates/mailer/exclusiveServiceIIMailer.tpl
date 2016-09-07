@@ -64,7 +64,7 @@
                         <tbody>
                           <tr>
                             <td style="font-size:12px; padding-bottom:10px;" valign="top">Warm Regards,<br>
-                              <b style="color:#c4161c;"></b>~$AGENT_NAME`<br>
+                              <b style="color:#c4161c;"></b>~$SENDER_NAME`<br>
                               <b style="color:#c4161c;"></b>~$AGENT_PHONE`
                             </td>
                           </tr>
