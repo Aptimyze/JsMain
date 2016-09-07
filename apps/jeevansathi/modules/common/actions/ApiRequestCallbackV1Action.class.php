@@ -76,6 +76,7 @@ class ApiRequestCallbackV1Action extends sfActions
             if(empty($endTime) || !isset($endTime)) {
                 $endTime = "21:00:00";
             }
+            $responseTime = strtotime($date." ".$startTime);
             date_default_timezone_set($orgTZ);
             // assigning respose data with recieved params and returning to sender
             $responseData['phone_autofill'] = $phone;
@@ -102,7 +103,7 @@ class ApiRequestCallbackV1Action extends sfActions
                 } elseif (!in_array($channel, $arrValidChannel)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $responseData['status'] = 'invalidChannel';
-                } elseif ($currentTime > strtotime($date." ".$startTime)) { // Validating Time                    
+                } elseif ($currentTime > $responseTime) { // Validating Time                    
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $responseData['status'] = 'invalidTime';
                 } elseif (in_array($query, $arrValidQuery)) { // Validating Query Type
