@@ -141,8 +141,8 @@
         var text = $(this).html();
         var text1 = $(this).text();
         var P_id = $(this).parent().parent().parent().attr('id');
-        $("#" + P_id + " dt span").html(text);
-        $("#" + P_id + " dd ul").css('display', 'none');
+        $("#rcbHeaderDrop " + "#" + P_id + " dt span").html(text);
+        $("#rcbHeaderDrop " + "#" + P_id + " dd ul").css('display', 'none');
         $("#rcbHeader" + P_id + "").val($(this).attr('id'));
         var date = $("#rcbHeaderdropDown0").val();
         var startTime = $("#rcbHeaderdropDown1").val();
@@ -479,8 +479,8 @@
         var text = $(this).html();
         var text1 = $(this).text();
         var P_id = $(this).parent().parent().parent().attr('id');
-        $("#" + P_id + " dt span").html(text);
-        $("#" + P_id + " dd ul").css('display', 'none');
+        $("#rcbFooterDrop " + "#" + P_id + " dt span").html(text);
+        $("#rcbFooterDrop " + "#" + P_id + " dd ul").css('display', 'none');
         $("#rcbFooter" + P_id + "").val($(this).attr('id'));
         var date = $("#rcbFooterdropDown0").val();
         var startTime = $("#rcbFooterdropDown1").val();
