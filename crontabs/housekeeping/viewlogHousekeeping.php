@@ -1,5 +1,6 @@
 <?php
 include_once("commonHousekeeping.php");
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 $counter=0;
 
 $table="test.VIEW_LOG_ACTIVE";

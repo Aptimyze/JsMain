@@ -1,6 +1,7 @@
 <?php
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 ini_set("max_execution_time","0");
 ini_set("memory_limit",-1);
 

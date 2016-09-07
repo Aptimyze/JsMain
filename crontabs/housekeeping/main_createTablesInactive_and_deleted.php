@@ -8,6 +8,7 @@ ini_set('log_errors_max_len',0);
 //for preventing timeout to maximum possible
 
 include_once("../../P/connect.inc");
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 $db=connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 include_once("commonHousekeeping.php");

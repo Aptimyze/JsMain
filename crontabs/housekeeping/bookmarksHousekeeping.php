@@ -1,5 +1,6 @@
 <?php
 include_once("commonHousekeeping.php");
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 $counter=0;
 
 $table="newjs.BOOKMARKS_ACTIVE";
