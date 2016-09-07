@@ -29,7 +29,7 @@ $mysqlObj=new Mysql;
 //$db2 = connect_slave();
 $LOG_PRO=array();
 
-$db=connect_db();
+$db=connect_ddl();
 mysql_query("set session wait_timeout=10000",$db);
 
 /*

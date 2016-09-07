@@ -12,6 +12,8 @@ include_once(JsConstants::$alertDocRoot."/new_matchalert/connect.inc");
 $mysqlObj = new Mysql;
 $db=$mysqlObj->connect("alerts");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
+$db_ddl=$mysqlObj->connect("alertsDDL");
+mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db_ddl);
 $db2=$mysqlObj->connect("master");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db2);
 
@@ -52,10 +54,10 @@ if($n_count==0)
 	mysql_query($sql,$db) or die(mysql_error($db).$sql);
 }
 $sql="TRUNCATE TABLE matchalerts.TRACK_TEMP_PIDS";
-$res=mysql_query($sql,$db) or die(mysql_error($db).$sql);
+$res=mysql_query($sql,$db_ddl) or die(mysql_error($db_ddl).$sql);
 
 $sql="TRUNCATE TABLE matchalerts.TRACK_TEMP_PIDS_GROUP";
-$res=mysql_query($sql,$db) or die(mysql_error($db).$sql);
+$res=mysql_query($sql,$db_ddl) or die(mysql_error($db_ddl).$sql);
 
 $today=date("Y-m-d");
 $ts = time();
@@ -122,9 +124,10 @@ while($row=mysql_fetch_array($res))
 		mysql_query($sql4,$db2) or die(mysql_error($db2).$sql4);
 	}
 }
-@mysql_ping($db);
+@mysql_ping($db_ddl);
 $sql_1="TRUNCATE TABLE matchalerts.MAILER_TEMP";
-mysql_query($sql_1,$db) or die(mysql_error($db));
+mysql_query($sql_1,$db_ddl) or die(mysql_error($db_ddl));
+@mysql_ping($db);
 
 $tableArr[1]='ZERONTvNT';
 $tableArr[2]='ZERONTvT';
@@ -202,8 +205,8 @@ foreach($results as $key1=>$val1)
 		}
 	}
 }
-@mysql_ping($db);
+@mysql_ping($db_ddl);
 $sql_1="TRUNCATE TABLE matchalerts.MAILER_TEMP";
-mysql_query($sql_1,$db) or die(mysql_error($db));
+mysql_query($sql_1,$db_ddl) or die(mysql_error($db_ddl));
 
 ?>

@@ -53,11 +53,12 @@ EOF;
 		* truncate tables 
 		*/
 		$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
-		$matchalerts_MATCHALERTS_TO_BE_SENT->truncateTable();
+		$matchalerts_MATCHALERTS_TO_BE_SENTDDL = new matchalerts_MATCHALERTS_TO_BE_SENT("alertsDDL");
+		$matchalerts_MATCHALERTS_TO_BE_SENTDDL->truncateTable();
+		$matchalerts_MAILERDDL = new matchalerts_MAILER("alertsDDL");
+		$matchalerts_MAILERDDL->truncateTable();
 
-		$matchalerts_MAILER->truncateTable();
-
-		$matchalerts_LOG_TEMP = new matchalerts_LOG_TEMP;
+		$matchalerts_LOG_TEMP = new matchalerts_LOG_TEMP("alertsDDL");
 		$matchalerts_LOG_TEMP->truncateTable();
 		/* truncate tables */
 

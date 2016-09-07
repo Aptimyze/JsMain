@@ -4,10 +4,12 @@ class PopulateTables
 {
 	private $db;
 	private $mysqlObj;
+	private $ddl;
 	
-	function __construct($db,$mysqlObj)
+	function __construct($db,$mysqlObj,$ddl)
         {
                 $this->db = $db;
+                $this->ddl = $ddl;
                 $this->mysqlObj = $mysqlObj;
         }
 
@@ -20,7 +22,7 @@ class PopulateTables
 		}
 	
 		$statement = "TRUNCATE TABLE kundli_alert.".$table_name;
-		$this->mysqlObj->executeQuery($statement,$this->db) or $this->mysqlObj->logError($statement);
+		$this->mysqlObj->executeQuery($statement,$this->ddl) or $this->mysqlObj->logError($statement);
 	}
 
 	public function populate_receiver_table($paid="")
@@ -45,7 +47,7 @@ class PopulateTables
 			$statement = "TRUNCATE TABLE kundli_alert.KUNDLI_RECEIVER_PAID_TEMP";
 		else
 			$statement = "TRUNCATE TABLE kundli_alert.KUNDLI_RECEIVER_UNPAID_TEMP";
-		$this->mysqlObj->executeQuery($statement,$this->db) or $this->mysqlObj->logError($statement);
+		$this->mysqlObj->executeQuery($statement,$this->ddl) or $this->mysqlObj->logError($statement);
 	}
 
 	public function populate_search_table($paid="")
