@@ -74,8 +74,7 @@ class MAIL_SHORTLISTED_PROFILES extends TABLE
 	                {//print_r($pid);die;
 	                	
 						$sql = "TRUNCATE TABLE MAIL.SHORTLISTED_PROFILES";
-						$ddl_obj = parent::__construct('newjs_masterDDL');
-						$res = $ddl_obj->db->prepare($sql);
+						$res = $this->db->prepare($sql);
                 		$res->execute();       
 	                }
 	                catch(PDOException $e)
