@@ -2969,7 +2969,7 @@ JsChat.prototype = {
             inside = true;
             current = $(document).scrollTop();
             $(document).scroll(function(e,d){
-                if(!$(e).hasClass('.chatMessage') && inside == true) {
+                if(!$(e).hasClass('.chatMessage') && inside == true && $('chat-box[user-id="' + userId + '"]').length != 0) {
                     $(window).scrollTop(current);
                 }
             });
