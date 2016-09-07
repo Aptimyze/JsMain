@@ -608,7 +608,7 @@ function checkNewLogin(profileid) {
             eraseCookie('chatAuth');
             eraseCookie('chatEncrypt');
             createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
-            setLogoutClickLocalStorage("unset");
+            //setLogoutClickLocalStorage("unset");
             clearChatMsgFromLS();
             localStorage.removeItem('chatBoxData');
             localStorage.removeItem('lastUId');
@@ -1093,10 +1093,9 @@ $(document).ready(function () {
         var loginStatus;
         $("#jspcChatout").on('click',function(){
             localStorage.removeItem("self_subcription");
+            $(objJsChat._logoutChat).attr("data-siteLogout","true");
             $(objJsChat._logoutChat).click();
-            //console.log("unsetting");
-            setLogoutClickLocalStorage("unset");
-             
+            //setLogoutClickLocalStorage("unset");  
         });
         
         $(window).focus(function() {
@@ -1239,14 +1238,19 @@ $(document).ready(function () {
         objJsChat.sendingTypingEvent = function (from, to, typingState) {
             strophieWrapper.typingEvent(from, to, typingState);
         }
-        objJsChat.onLogoutPreClick = function () {
-                
+        objJsChat.onLogoutPreClick = function (fromSiteLogout) {
+                //console.log("in onLogoutPreClick",fromSiteLogout);
                 objJsChat._loginStatus = 'N';
                 clearLocalStorage();
                 strophieWrapper.initialRosterFetched = false;
                 strophieWrapper.disconnect();
                 eraseCookie("chatAuth");
-                setLogoutClickLocalStorage("set");
+                if(fromSiteLogout == "true"){
+                    setLogoutClickLocalStorage("unset");
+                }
+                else{
+                    setLogoutClickLocalStorage("set");
+                }
             }
             //executed for sending chat message
         objJsChat.onSendingMessage = function (message, receivedJId, receiverProfileChecksum, contact_state) {
