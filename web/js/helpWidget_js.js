@@ -306,6 +306,17 @@ $("#rcbSideMenuDrop dd ul li").click(function () {
     $("#" + P_id + " dt span").html(text);
     $("#" + P_id + " dd ul").css('display', 'none');
     $("#rcbSideMenu" + P_id + "").val($(this).attr('id'));
+    var date = $("#rcbSideMenudropDown0").val(),
+        startTime = $("#rcbSideMenudropDown1").val(),
+        endTime = $("#rcbSideMenudropDown2").val();
+    var t1 = Date.parse(date + " " + startTime),
+        t2 = Date.parse(date + " " + endTime),
+        now = Date.parse(new Date());
+    if (t2 - t1 <= 0 || t1 < now) {
+        $("#sideMenuReqTimeError").show();
+    } else {
+        $("#sideMenuReqTimeError").hide();
+    }
 });
 
 function intialize() {
