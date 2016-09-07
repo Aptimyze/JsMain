@@ -8,13 +8,8 @@ class crmUtility
 	}
         public function getIST($dateTime='')
         {
-                if(!$dateTime)
-                        $dateTime =date("Y-m-d H:i:s");
-                $sql = "SELECT CONVERT_TZ('$dateTime','SYSTEM','right/Asia/Calcutta') as time";
-                $res = $this->db->prepare($sql);
-                $res->execute();
-                if($row = $res->fetch(PDO::FETCH_ASSOC))
-                        $dateTime = $row['time'];
+		$mainAdminObj =new incentive_MAIN_ADMIN();
+		$dateTime =$mainAdminObj->getIST($dateTime);
                 return $dateTime;
         }
 	public function fetchActiveStatus($activated,$incomplete)
