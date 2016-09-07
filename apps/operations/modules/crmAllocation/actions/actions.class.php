@@ -921,6 +921,7 @@ class crmAllocationActions extends sfActions
             		$agentDetails = $jsadminObj->getArray($profileDetails["AGENT_NAME"],"USERNAME","PHONE,EMAIL");
             		$profileDetails["AGENT_PHONE"] = $agentDetails[0]["PHONE"];
             		$profileDetails["SENDER_EMAIL"] = $agentDetails[0]["EMAIL"];
+            		$profileDetails["SENDER_NAME"] = $profileDetails["AGENT_NAME"];
             		unset($jsadminObj);
             		unset($agentDetails);
 

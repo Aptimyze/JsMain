@@ -101,7 +101,14 @@ class EmailTemplate implements MessageTemplate{
   }
 
   public function getFromName() {
-    return $this->email_type->getFromName();
+    $fromName = $this->email_type->getFromName();
+    if(strpos($fromName,'~') !== false){
+        $regex='/~\$(.*)`/';
+        preg_match($regex,$fromName,$matches);
+        $fromName=str_replace($matches[0],$this->smarty->get_template_vars($matches[1]),$fromName);
+
+    }
+    return $fromName;
   }
 
   public function getProcessedSubject(){
