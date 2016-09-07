@@ -77,6 +77,16 @@ class LoginTracking
 					$pageName=$pageName[$no-1];
 					
 					$pageStype=$_GET["stype"];
+                                        if(!$pageStype){
+                                            $pgArr=explode('&',$page[1]);
+                                            foreach ($pgArr as $key => $value) {
+                                                if(strpos($value,'stype')!==false && (strlen($value)>strlen('stype='))){$tempStr=$value;break;}
+                                            }  
+                                            if($tempStr){
+                                                $tempArr=explode('=',$tempStr);
+                                                $pageStype=$tempArr[1];
+                                            }
+                                        } 
 				}
 				else
 				{
