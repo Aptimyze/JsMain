@@ -39,6 +39,7 @@ JsChat.prototype = {
     _rosterGroups:[],
     _checkForDefaultEoiMsg:false,
     _setLastReadMsgStorage:true,
+    _chatAutoLogin:true,
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -124,6 +125,9 @@ JsChat.prototype = {
         }
         if (arguments[1][0].setLastReadMsgStorage) {
             this._setLastReadMsgStorage = arguments[1][0].setLastReadMsgStorage;
+        }
+        if (arguments[1][0].chatAutoLogin) {
+            this._chatAutoLogin = arguments[1][0].chatAutoLogin;
         }
     },
     //start:get screen height
@@ -1001,6 +1005,7 @@ JsChat.prototype = {
                         $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                         //enableClose = true;
                         $('chat-box[user-id="' + userId + '"] .nchatic_3').css('pointer-events', "none");
+                        
                         setTimeout(function () {
                             if (enableClose == true) {
                                 curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
@@ -2949,6 +2954,12 @@ JsChat.prototype = {
             */
         });
         delete that;
+        //auto login to chat on site relogin if flag true
+        if(curEle._chatAutoLogin == true && failed!= true){
+            setTimeout(function(){
+                invokePluginLoginHandler("autoChatLogin");
+            },100);
+        }
     },
     preventSiteScroll:function(userId){
         var inside = false, current;

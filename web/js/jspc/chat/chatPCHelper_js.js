@@ -485,11 +485,13 @@ function xmlToJson(xml) {
 function invokePluginLoginHandler(state) {
     if (state == "success") {
         createCookie("chatAuth", "true",chatConfig.Params[device].loginSessionTimeout);
+        setLogoutClickLocalStorage("unset");
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
             objJsChat._appendLoggedHTML();
         }
     } else if (state == "failure") {
         eraseCookie("chatAuth");
+        setLogoutClickLocalStorage("set");
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
             objJsChat.addLoginHTML(true);
             objJsChat.manageLoginLoader();
@@ -504,6 +506,14 @@ function invokePluginLoginHandler(state) {
     } else if(state == "manageLogout"){
         if(localStorage.getItem('cout') == "1"){
             $(objJsChat._logoutChat).click();
+        }
+    } else if(state == "autoChatLogin"){
+        //console.log("ankita",localStorage.getItem("logout_"+loggedInJspcUser));
+        if(localStorage.getItem("logout_"+loggedInJspcUser) != "true"){
+            //console.log("yes");
+            if($(objJsChat._loginbtnID).length != 0){
+                $(objJsChat._loginbtnID).click();
+            }
         }
     }
 }
@@ -597,13 +607,16 @@ function checkNewLogin(profileid) {
         if (existingChatEncrypt != computedChatEncrypt) {
             eraseCookie('chatAuth');
             eraseCookie('chatEncrypt');
+            setLogoutClickLocalStorage("set");
             createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
+            setLogoutClickLocalStorage("unset");
             clearChatMsgFromLS();
             localStorage.removeItem('chatBoxData');
             localStorage.removeItem('lastUId');
         }
     } else {
         createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
+        setLogoutClickLocalStorage("unset");
     }
 }
 
@@ -670,6 +683,8 @@ function checkAuthentication(timer,loginType) {
 function logoutChat() {
     strophieWrapper.disconnect();
     eraseCookie("chatAuth");
+    //console.log("setting");
+    setLogoutClickLocalStorage("set");
     removeLocalStorageForNonChatBoxProfiles();
 }
 /*invokePluginReceivedMsgHandler
@@ -1052,6 +1067,16 @@ function globalSleep(milliseconds) {
         }
     }
 }
+
+function setLogoutClickLocalStorage(key){
+    if(key == "set"){
+        localStorage.setItem("logout_"+loggedInJspcUser,"true");
+    }
+    else{
+        localStorage.removeItem("logout_"+loggedInJspcUser);
+    }
+}
+
 $(document).ready(function () {
     //console.log("Doc ready");
     if(typeof loggedInJspcUser!= "undefined")
@@ -1062,14 +1087,18 @@ $(document).ready(function () {
          * Check added as on hide profile user is deleted from openfire and if cookie is set then cant reconnect
          */
         eraseCookie("chatAuth");
+        //setLogoutClickLocalStorage("set");
+
     });
     if (showChat && (checkDiv != 0)) {
         var chatLoggedIn = readCookie('chatAuth');
         var loginStatus;
         $("#jspcChatout").on('click',function(){
-            ////console.log("Logout clicked");
             localStorage.removeItem("self_subcription");
-           $(objJsChat._logoutChat).click(); 
+            $(objJsChat._logoutChat).click();
+            //console.log("unsetting");
+            setLogoutClickLocalStorage("unset");
+             
         });
         
         $(window).focus(function() {
@@ -1119,7 +1148,8 @@ $(document).ready(function () {
             rosterDeleteChatBoxMsg:chatConfig.Params[device].rosterDeleteChatBoxMsg,
             rosterGroups:chatConfig.Params[device].rosterGroups,
             checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg,
-            setLastReadMsgStorage:chatConfig.Params[device].setLastReadMsgStorage
+            setLastReadMsgStorage:chatConfig.Params[device].setLastReadMsgStorage,
+            chatAutoLogin:chatConfig.Params[device].autoChatLogin
         });
         
         objJsChat.onEnterToChatPreClick = function () {
@@ -1218,6 +1248,7 @@ $(document).ready(function () {
                 strophieWrapper.initialRosterFetched = false;
                 strophieWrapper.disconnect();
                 eraseCookie("chatAuth");
+                setLogoutClickLocalStorage("set");
             }
             //executed for sending chat message
         objJsChat.onSendingMessage = function (message, receivedJId, receiverProfileChecksum, contact_state) {
