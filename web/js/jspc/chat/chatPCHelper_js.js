@@ -485,7 +485,7 @@ function xmlToJson(xml) {
 function invokePluginLoginHandler(state) {
     if (state == "success") {
         createCookie("chatAuth", "true",chatConfig.Params[device].loginSessionTimeout);
-        setLogoutClickLocalStorage("unset");
+        //setLogoutClickLocalStorage("unset");
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
             objJsChat._appendLoggedHTML();
         }
@@ -615,7 +615,7 @@ function checkNewLogin(profileid) {
         }
     } else {
         createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
-        setLogoutClickLocalStorage("unset");
+        //setLogoutClickLocalStorage("unset");
     }
 }
 
