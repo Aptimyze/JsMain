@@ -43,6 +43,9 @@
                           <td width="528" style="font-size:12px; color:#000000; line-height:normal;"><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="~$v`">~$k`</a>
                           </td>
                         </tr>
+                        <tr>
+                          <td colspan="2" height="7"></td>
+                        </tr>
                         ~/foreach`
                       </table>
                     </td>
@@ -52,7 +55,7 @@
               <td width="22"><img src="images/spacer.gif" width="6" height="1" vspace="0" hspace="0" align="left" /></td>
             </tr>
             <tr>
-              <td colspan="3" height="27"></td>
+              <td colspan="3" height="12"></td>
             </tr>
             <tr>
               <td></td>
