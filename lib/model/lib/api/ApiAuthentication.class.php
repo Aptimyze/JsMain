@@ -578,7 +578,7 @@ Abstract class ApiAuthentication
 				{
 					$curTime = time();
 					$timediff = $curTime-$arr[1];
-					$mailedtime = date("Y-m-d H:i:s",$autoLoginTime);
+					$mailedtime = date("Y-m-d H:i:s",$arr[1]);
 					if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
 						$dbObj=new jsadmin_AUTO_EXPIRY("newjs_masterRep");
 					else
