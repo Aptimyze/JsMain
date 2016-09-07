@@ -607,7 +607,6 @@ function checkNewLogin(profileid) {
         if (existingChatEncrypt != computedChatEncrypt) {
             eraseCookie('chatAuth');
             eraseCookie('chatEncrypt');
-            setLogoutClickLocalStorage("set");
             createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
             setLogoutClickLocalStorage("unset");
             clearChatMsgFromLS();
@@ -1087,7 +1086,6 @@ $(document).ready(function () {
          * Check added as on hide profile user is deleted from openfire and if cookie is set then cant reconnect
          */
         eraseCookie("chatAuth");
-        //setLogoutClickLocalStorage("set");
 
     });
     if (showChat && (checkDiv != 0)) {
