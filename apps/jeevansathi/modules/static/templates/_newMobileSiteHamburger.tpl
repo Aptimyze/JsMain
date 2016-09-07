@@ -1,3 +1,4 @@
+~assign var=showKundliList value= $sf_request->getParameter('showKundliList')`
 <div >
 	<div id="outerHamDiv" class="fullwid outerdiv" >
     	
@@ -100,9 +101,14 @@
                     
                     <li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">My Matches </a></li>
                     
+                     ~if $showKundliList eq '1'`
+                    <li><a href="/search/perform?kundlialerts=1" bind-slide=1 class="white">Kundli Matches</a></li>             
+                    ~/if`
+                    
                     <li><a href="/search/perform?twowaymatch=1" bind-slide=1 class="white">Mutual Matches</a></li>
                     
                     <li><a href="/search/perform?reverseDpp=1" bind-slide=1 class="white">Members Looking For Me</a></li>
+                   
                     
                     <li><a href="/profile/contacts_made_received.php?page=visitors&filter=R" bind-slide=1 class="white">Profile Visitors ~if $profileMemcacheObj->get('VISITOR_ALERT')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('VISITOR_ALERT')`</span> ~/if`</a></li>
                     
