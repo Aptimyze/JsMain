@@ -32,6 +32,14 @@ class RabbitmqHelper
     //SendMail::send_email($emailTo,$message,$subject);           
   }
 
+  public static function sendChatConsumerAlert($message)
+  {    
+    $emailTo="nitishpost@gmail.com,nsitankita@gmail.com,lavesh.rawat@gmail.com,pankaj139@gmail.com,maxspeed83@gmail.com";
+    $subject="Rabbitmq Chat php consumer error @".JsConstants::$whichMachine;
+    $message=$message.".....site->".JsConstants::$siteUrl."...@".date('d-m-Y H:i:s');
+    SendMail::send_email($emailTo,$message,$subject);           
+  }
+
   /**
    * 
    * Function for curl request to rabbitmq api($url-param)

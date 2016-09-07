@@ -9,6 +9,7 @@ class MyJsIOSV1 extends MyJsMobileAppV1
 {
 	static public function init()
         {
+        	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class MyJsIOSV1 for IOS and JSMS "); 
 		self::$informationTupleFields= Array(
 			"INTEREST_RECEIVED"=>Array("PROFILECHECKSUM","OCCUPATION","AGE", "HEIGHT", "RELIGION","CASTE","MTONGUE","INCOME","ProfilePic120Url","EDUCATION","BUTTONS","USERNAME"),
 			"VISITORS"=>Array("PROFILECHECKSUM","ThumbailUrl"),

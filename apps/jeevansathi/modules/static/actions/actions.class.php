@@ -25,6 +25,7 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
   public function executePage404(sfWebRequest $request)
   {
+  LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array('message' => $request->getUri(), 'moduleName' => '404'));
 	if(MobileCommon::isNewMobileSite())
 	{
 		if(MobileCommon::isAppWebView()){
@@ -108,7 +109,7 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#500_Internal_Server_Error_page
   public function executePage500(sfWebRequest $request)
   {
-
+  LoggingManager::getInstance(LoggingEnums::EX500)->logThis(LoggingEnums::LOG_ERROR, new Exception("500 page encountered"), array('message' => $request->getUri(), 'moduleName' => '500'));
   $request->setParameter("blockOldConnection500",1);
 	if(MobileCommon::isNewMobileSite()){
 		if(MobileCommon::isAppWebView()){
@@ -421,6 +422,14 @@ public function executeCALRedirection($request){
 			$this->fromSignout=1;
 		else
 			$this->fromSignout=0;
+		if(MobileCommon::isMobile() && $request->getParameter("homepageRedirect")){
+				$this->getResponse()->addMeta('title', "Matrimony, Marriage, Matrimonial Sites, Match Making");
+				$this->getResponse()->addMeta('description', "Most trusted Indian matrimonials website. Lakhs of verified matrimony profiles. Search by caste and community. Register now for FREE at Jeevansathi.com");
+			}
+		else{
+			$this->getResponse()->addMeta('title', "Logout - Jeevansathi");
+			$this->getResponse()->addMeta('description', "Logout - Jeevansathi");
+		}
     if(MobileCommon::isMobile())
       {
 		  $this->getResponse()->addMeta('theme-color', "#6b6b6b");
@@ -498,6 +507,7 @@ public function executeCALRedirection($request){
       $this->RELOGIN="Y";
     }
     $this->chat_hide = 1;
+    $this->logoutChat = 1;
     $request->setAttribute('loginData', '');
 	$request->setAttribute('login', false);
 	$this->setTemplate("logoutPage");
@@ -1225,15 +1235,10 @@ public function executeAppredirect(sfWebRequest $request)
   }
   private function getCountry($onlyCountry)
   {
-	  if($onlyCountry!='p_country')
-	  {
-		  $Arr[0]=FieldMap::getFieldLabel("impcountry",'',1);
-		  $Arr[1]=Array("-1"=>"--More");
-		  $Arr[2]=FieldMap::getFieldLabel("country",'',1);
-		  
-	   }
-	else
-		$Arr[0]=FieldMap::getFieldLabel("country",'',1);
+
+          $Arr[0]=FieldMap::getFieldLabel("impcountry",'',1);
+	  $Arr[1]=Array("-1"=>"--More");
+	  $Arr[2]=FieldMap::getFieldLabel("country",'',1);
 	  foreach($Arr as $key=>$val)
 		  {
 				foreach($val as $k=>$v)

@@ -130,5 +130,6 @@ class SearchTypesEnums
         const PHOTO_UPLOAD_IOS ='PUI';
         const APPLY_ONLY_CLUSTER = 'XX';
         const SaveSearchMailer = 'SSM';
+        const PC_CHAT_NEW = 'PCN';
 }
 ?>

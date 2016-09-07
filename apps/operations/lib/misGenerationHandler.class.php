@@ -220,11 +220,11 @@ class misGenerationhandler
                 }
                 public function checkProfileValidityForPayment($profileid, $allotedTo, $allotTime, $deAllocationDt, $billId, $method, $manualEntryDt='',$realDeAllocationDt) 
                 {
-                	$deAllocationTrackObj 	=new incentive_DEALLOCATION_TRACK('newjs_slave');
-                	$purchaseObj		=new BILLING_PURCHASES('newjs_slave');
-                	$crmDailyAllotObj	=new CRM_DAILY_ALLOT('newjs_slave');
-                	$manualAllotObj		=new MANUAL_ALLOT('newjs_slave');
-                	$historyObj		=new incentive_HISTORY('newjs_slave');
+                	$deAllocationTrackObj 	=new incentive_DEALLOCATION_TRACK('newjs_masterRep');
+                	$purchaseObj		=new BILLING_PURCHASES('newjs_masterRep');
+                	$crmDailyAllotObj	=new CRM_DAILY_ALLOT('newjs_masterRep');
+                	$manualAllotObj		=new MANUAL_ALLOT('newjs_masterRep');
+                	$historyObj		=new incentive_HISTORY('newjs_masterRep');
 
 			// 1. filter to check Actual De-allocation done
                 	if($method=='MANUAL_ALLOT'){
@@ -293,7 +293,7 @@ class misGenerationhandler
 	// JS premium / JS premium Outsourced filter
 	public function jsPremiumFilter($serviceId, $allotedTo)
 	{
-		$jsadPswrdsObj          =new jsadmin_PSWRDS('newjs_slave');
+		$jsadPswrdsObj          =new jsadmin_PSWRDS('newjs_masterRep');
 		$privilegeStr           =$jsadPswrdsObj->getPrivilegeForAgent($allotedTo);
 		$privilages             =explode("+",$privilegeStr);
 		if(in_array("ExcPrm",$privilages) || in_array("ExPrmO",$privilages))
@@ -665,8 +665,11 @@ class misGenerationhandler
         $date = $saleDetails["DATE"];
         $amount = $saleDetails["AMOUNT"];
         //This if checks if the agent has the basic privilage 'ExcSl'
-        if($priv){
-            if(strpos($priv, 'ExcDIb') !== false){
+        if($priv){            
+            if(strpos($priv, 'ExcWL') !== false || strpos($priv, 'SUPWL') !== false ){
+                $processWiseSale[$date]['RCB_TELE']+= $amount;
+            }
+            else if(strpos($priv, 'ExcDIb') !== false){
                 $processWiseSale[$date]['INBOUND_TELE']+= $amount;
             }
             else if(strpos($priv, 'ExcBSD') !== false || strpos($priv, 'ExcBID') !== false){

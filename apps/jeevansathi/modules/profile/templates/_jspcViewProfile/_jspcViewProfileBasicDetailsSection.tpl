@@ -62,7 +62,7 @@
                     <li class="textTru">~$apiData['about']['educationOnSummary']`</li>
                     <li class="textTru">~$apiData['about']['location']`</li>
                     <li class="textTru">~$apiData['about']['work_status']['value']`</li>
-                    <li class="textTru">~$apiData['about']['religion']`,  ~$apiData['about']['caste']`</li>
+                    <li class="textTru">~$apiData['about']['religion']` ~if $apiData['about']['caste'] != $apiData['about']['religion']` ,  ~$apiData['about']['caste']` ~/if`</li>
                     <li class="textTru">~$apiData['about']['income']`</li>
                     <li class="textTru">~$apiData['about']['mtongue']`</li>
                     <li class="textTru">~$apiData['about']['m_status']`</li>

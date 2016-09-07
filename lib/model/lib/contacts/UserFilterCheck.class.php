@@ -605,8 +605,10 @@ class UserFilterCheck
 						
 		}
 		else
-		{
-			throw new sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method));
+		{   
+			$ex = new sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $ex);
+			throw $ex;
 		}
 		
 		return $DPP_PARAMETERS;
@@ -705,8 +707,10 @@ class UserFilterCheck
 			
 		}
 		else
-		{
-			throw new sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method));
+		{		
+			$ex = new sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $ex);
+			throw $ex;
 		}
 		return $dpp_parameters;
 	}

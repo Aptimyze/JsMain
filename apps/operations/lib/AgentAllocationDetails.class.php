@@ -42,32 +42,34 @@ class AgentAllocationDetails
 		}
 		else
 		{
-			$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
 			$agents=$mainAdminObj->fetchAgentsForDisp($processObj);
 			$subMethod=$processObj->getSubMethod();
-			if($subMethod=="LIMIT_EXCEED")
+			if($subMethod=="LIMIT_EXCEED" || $subMethod=='LIMIT_EXCEED_RENEWAL')
 			{
-				$priv="%FTAFTO%";
-				$ftaftoagents1=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges($priv);
-
 				/*  Check added for ignoring Renewal Agents, as discussed with Rohan */
 				$priv1="%ExcRnw%";
 				$renewalAgents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges($priv1);
-				$ftaftoagents =array_merge($ftaftoagents1,$renewalAgents);
+				if(!is_array($renewalAgents))
+					$renewalAgents =array();
 				/* Check ended */	
 
 				$resArr1 = array();
-				for ($i = 0; $i < count($agents); $i++)
-				{
+				for ($i = 0; $i < count($agents); $i++){
 					$agent_name = explode(":",$agents[$i]);
-					if(!in_array($agent_name[0],$ftaftoagents))
-						$restofagents[]=$agent_name[0];
+					//if(!in_array($agent_name[0],$renewalAgents))
+					$Allagents[]=$agent_name[0];
 				}
-				for ($k = 0; $k < count($agents); $k++)
-				{
+				if($subMethod=='LIMIT_EXCEED_RENEWAL')
+					$restofagents =array_intersect($Allagents,$renewalAgents);
+				elseif($subMethod=='LIMIT_EXCEED')
+					$restofagents =array_diff($Allagents,$renewalAgents);
+
+				$restofagents =array_unique($restofagents);
+				$restofagents =array_values($restofagents);
+				for ($k = 0; $k < count($agents); $k++){
 					$agent_name = explode(":",$agents[$k]);
-					for ($j = 0; $j < count($restofagents); $j++)
-					{
+					for ($j = 0; $j < count($restofagents); $j++){
 						if(($restofagents[$j]== $agent_name[0]) && !in_array($agents[$k],$resArr1))
 							$resArr1[] = $agents[$k];
 					}
@@ -177,7 +179,7 @@ public function fetchProfiles($processObj)
 {	
 	if($processObj->getProcessName()=="DeAllocation")
 	{
-		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
 		$subMethod=$processObj->getSubMethod();
 		if($subMethod=="NEGATIVE_LIST")
 		{
@@ -220,9 +222,9 @@ public function fetchProfiles($processObj)
 			$startDt = $processObj->getStartDate();
 			$endDt = $processObj->getEndDate();
 			foreach($fsAgents as $key=>$val){
-				$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+				$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 				$profileList = $mainAdminObj->getAllotedProfilesWithAllotTimeForAgent($val);
-				$paymentDetailObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
+				$paymentDetailObj = new BILLING_PAYMENT_DETAIL('newjs_masterRep');
 				foreach($profileList as $profileid=>$allotDate){
 					// IF RETURN IS TRUE, WE ADD IT TO THE LIST OF PROFILES FOR FURTHER PROCESSING
 					if($paymentDetailObj->getPaidStatusForProfileInRange($profileid, $allotDate, $startDt, $endDt)){
@@ -239,12 +241,12 @@ public function fetchProfiles($processObj)
 			$startDt 	=date('Y-m-d',time()-86400)." 00:00:00";			
 			$endDate 	=date('Y-m-d H:i:s');
 			$status 	='D';	
-			$jprofileObj 	=new JPROFILE('newjs_slave');			
+			$jprofileObj 	=new JPROFILE('newjs_masterRep');			
 			$profileDetails =$jprofileObj->getProfilesForDateRange($startDt, $endDate, $status);
 			$profiles 	=array_keys($profileDetails);
 			$processObj->setUsername($profileDetails);
 		}
-        elseif($subMethod == 'DISPOSITION_BASED'){
+        	elseif($subMethod == 'DISPOSITION_BASED'){
             /*JSC-1094 
              * 1. No disposition has been marked within 2 days of allocation
                2. No 'field visit done' disposition is marked within 10 days
@@ -252,9 +254,9 @@ public function fetchProfiles($processObj)
             $profiles = array();
             $profilesFVD = array();
             $processId = $processObj->getIdAllot();
-            $agentsObj = new jsadmin_PSWRDS("newjs_slave");
+            $agentsObj = new jsadmin_PSWRDS("newjs_masterRep");
             $agents = $agentsObj->fetchAgentsWithPriviliges("%ExcFld%");
-            $lastHandledDateObj = new incentive_LAST_HANDLED_DATE("newjs_slave");
+            $lastHandledDateObj = new incentive_LAST_HANDLED_DATE("newjs_masterRep");
             $lastHandledDate = $lastHandledDateObj->getHandledDate($processId);
             $curDate = date('Y-m-d');
             $lastHandledDate = $lastHandledDate?$lastHandledDate:date('Y-m-d',  strtotime('-1 day', strtotime($curDate)));
@@ -268,7 +270,7 @@ public function fetchProfiles($processObj)
             unset($lastHandledDateObj);
             unset($lastHandledDate);
             unset($agentDeallocationObj);
-        }
+        	}
 		else
 			$profiles=$mainAdminObj->fetchProfilesForAgent($processObj);
 	}
@@ -437,18 +439,19 @@ public function fetchProfiles($processObj)
                                 if($subMethod=='FIELD_SALES_VISIT'){
                                         $widgetLogObj =new incentive_FIELD_SALES_WIDGET('newjs_masterRep');
         	                        $widgetTimeEnd =$widgetLogObj->getMaxDate();
-					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 days',strtotime($widgetTimeEnd)));
+					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($widgetTimeEnd)));
 	                                $processObj->setEndDate($widgetTimeEndSet);
                 	                $profiles =$widgetLogObj->getLastHourScheduledProfiles($screenedTimeStart,$widgetTimeEnd);
                                 }
                                 else{
                                         $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_masterRep');
 					$screenedTimeEnd =$screeningLogObj->getScreenedMaxDate();
-					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 days',strtotime($screenedTimeEnd)));
+					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($screenedTimeEnd)));
 					$processObj->setEndDate($screenedTimeEndSet);
 					$profiles =$screeningLogObj->getLastHourScreenedProfiles($screenedTimeStart,$screenedTimeEnd);
 				}
 				if(count($profiles)>0){
+					/*
 					if($subMethod != 'FIELD_SALES_VISIT'){
 						$phVerifiedProfiles =array();
 						$phVerifiedProfiles =$processObj->getPhoneVerifiedProfiles();
@@ -456,7 +459,7 @@ public function fetchProfiles($processObj)
 							$profiles =array_intersect($profiles, $phVerifiedProfiles);
 							$profiles =array_values($profiles);
 						}
-					}
+					}*/
 					// get profiles from field sales allocation log
 					$fieldSalesAllocLog =new incentive_FIELD_SALES_LOG();
 					$preDate 	=date("Y-m-d",time()-9*24*60*60);
