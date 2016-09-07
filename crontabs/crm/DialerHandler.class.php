@@ -372,7 +372,10 @@ class DialerHandler
         }
         public function getCampaignRecordsForDuration($campaignName,$startDate,$endDate='')
         {
-                $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>'$startDate'";
+		if($campaignName=='OB_JS_RCB')
+			$squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>='$startDate'";		
+		else
+	                $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>'$startDate'";
                 $sresult =mssql_query($squery,$this->db_dialer) or $this->logerror($squery,$this->db_dialer);
                 if($srow = mssql_fetch_array($sresult)){
                         $cnt =$srow['cnt'];

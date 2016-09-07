@@ -35,8 +35,8 @@ foreach($campaignArr as $key=>$campaignName)
 			$totalRecord	=count($profilesArr);
 			if($totalRecord>0){
 				foreach($profilesArr as $key=>$dataArr){
+					$startDate =$dataArr['CSV_ENTRY_DATE'];
 					$dataArr =$dialerHandlerObj->formatDataSet($campaignName,$dataArr,$startDate);		
-					//$endDate =$dataArr['CSV_ENTRY_DATE'];
 					$endID =$dataArr['ID'];
 					unset($dataArr['ID']);
 					$dialerHandlerObj->addProfileinCampaign($dataArr, $campaignName);
