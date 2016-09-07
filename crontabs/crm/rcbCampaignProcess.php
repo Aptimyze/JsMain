@@ -40,6 +40,8 @@ foreach($campaignArr as $key=>$campaignName)
 					$endID =$dataArr['ID'];
 					unset($dataArr['ID']);
 					$dialerHandlerObj->addProfileinCampaign($dataArr, $campaignName);
+					if($endID>0)
+						$dialerHandlerObj->updateLastHandledID($processId,$endID);
 					unset($dataArr);
 				}
 			}
@@ -51,8 +53,6 @@ foreach($campaignArr as $key=>$campaignName)
 			$msg	="Campaign Records:".$totalRecord."# Dialer Records Inserted:".$dialerCampaignReords;	
 			mail($to,$sub,$msg,$from);
 		}
-		if($endID>0)
-			$dialerHandlerObj->updateLastHandledID($processId,$endID);
 
 		unset($campaignRecord);
 		unset($dialerCampaignReords);
