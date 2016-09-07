@@ -2954,7 +2954,7 @@ JsChat.prototype = {
             */
         });
         delete that;
-        //auto login to chat on site relogin if flag true
+        //auto login to chat on site relogin if flag true and login authentication success
         if(curEle._chatAutoLogin == true && failed!= true){
             setTimeout(function(){
                 invokePluginLoginHandler("autoChatLogin");
