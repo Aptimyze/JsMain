@@ -84,7 +84,7 @@ function onPhoneVerifyBack(){
                
                <div class='dispnone js-NumberedLayer js-NumberedLayer2'><div class=" txtc f14 fontlig pt30 pb15">
     <p>Verification code sent to +<span id='isdDiv'></span> <span id='mainPhone'></span></p>
-    <p id='resendSMSDiv' class="pt5">Didn't receive code? <a id='resendTextId' click='sendSMSAjax()' class="color2">Resend Code</a></p>
+    <p id='resendSMSDiv' class="pt5">Didn't receive code? <a id='resendTextId' onclick='sendSMSAjax()' class="color2">Resend Code</a></p>
     </div>
 
       <div class="bg4 otpma">
