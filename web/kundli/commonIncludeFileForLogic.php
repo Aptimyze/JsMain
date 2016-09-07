@@ -23,8 +23,6 @@ $mysqlObj = new Mysql;
 
 $localdb=$mysqlObj->connect("alerts");
 mysql_query('set session wait_timeout=100000,interactive_timeout=100000,net_read_timeout=100000',$localdb);
-$localdb_ddl=$mysqlObj->connect("alertsDDL");
-mysql_query('set session wait_timeout=100000,interactive_timeout=100000,net_read_timeout=100000',$localdb_ddl);
 
 $db_fast = $localdb;
 

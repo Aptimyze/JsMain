@@ -46,7 +46,7 @@ class Individual_Mailers
 				if($format=='csv')
 				{
 					$MmmCsvService = new MmmCsvService;
-					$individual = new mmmjs_INDIVIDUAL_MAILERS("alertsDDL");
+					$individual = new mmmjs_INDIVIDUAL_MAILERS;
 					$tableName = $this->tableName($mailerId);	
 					$individual->truncateTable($tableName); // Added By Neha : To truncate table before populating.
 					$MmmCsvService->createDump($dumpData,$mailerId);

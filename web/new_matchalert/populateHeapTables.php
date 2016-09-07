@@ -16,24 +16,21 @@ $mysqlObj=new Mysql;
 
 $localdb=$mysqlObj->connect("alerts");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$localdb);
-mysql_select_db("matchalerts",$localdb) or die(mysql_error($localdb));
-$localdb_ddl=$mysqlObj->connect("alertsDDL");
-mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$localdb_ddl);
-mysql_select_db("matchalerts",$localdb_ddl) or die(mysql_error($localdb_ddl));
+mysql_select_db("matchalerts",$localdb) or die(mysql_error());
 
-setTrendsInfoOneTime($localdb,$localdb_ddl);
-setMatchesInfoOneTime($localdb,'M',1,$localdb_ddl);
-setMatchesInfoOneTime($localdb,'F',1,$localdb_ddl);
-setMatchesInfoOneTime($localdb,'M',$localdb_ddl);
-setMatchesInfoOneTime($localdb,'F',$localdb_ddl);
+setTrendsInfoOneTime($localdb);
+setMatchesInfoOneTime($localdb,'M',1);
+setMatchesInfoOneTime($localdb,'F',1);
+setMatchesInfoOneTime($localdb,'M');
+setMatchesInfoOneTime($localdb,'F');
 
-function setTrendsInfoOneTime($db,$ddl)
+function setTrendsInfoOneTime($db)
 {
 	$ctable="FEMALE_TRENDS_HEAP";
 	$table="matchalerts.TRENDS_SEARCH_FEMALE";
 
 	$sql1="TRUNCATE TABLE $ctable";
-	mysql_query($sql1,$ddl) or die(mysql_error($ddl).$sql1);
+	mysql_query($sql1,$db) or die(mysql_error($db).$sql1);
 
 	$sql1="INSERT INTO $ctable select A.PROFILEID,W_CASTE,CASTE_VALUE_PERCENTILE,W_MTONGUE,MTONGUE_VALUE_PERCENTILE,W_AGE,AGE_VALUE_PERCENTILE,W_INCOME,INCOME_VALUE_PERCENTILE,W_HEIGHT,HEIGHT_VALUE_PERCENTILE,W_EDUCATION,EDUCATION_VALUE_PERCENTILE,W_OCCUPATION,OCCUPATION_VALUE_PERCENTILE,W_CITY,CITY_VALUE_PERCENTILE,W_NRI,NRI_N_P,NRI_M_P,W_MSTATUS,MSTATUS_M_P,MSTATUS_N_P,W_MANGLIK,MANGLIK_M_P,MANGLIK_N_P,GENDER,MAX_SCORE from matchalerts.TRENDS A  JOIN $table B WHERE A.PROFILEID=B.PROFILEID";
 	mysql_query($sql1,$db) or die(mysql_error($db).$sql1);
@@ -43,13 +40,13 @@ function setTrendsInfoOneTime($db,$ddl)
 	$table="matchalerts.TRENDS_SEARCH_MALE";
 
 	$sql1="TRUNCATE TABLE $ctable";
-	mysql_query($sql1,$ddl) or die(mysql_error($ddl).$sql1);
+	mysql_query($sql1,$db) or die(mysql_error($db).$sql1);
 
 	$sql1="INSERT INTO $ctable select A.PROFILEID,W_CASTE,CASTE_VALUE_PERCENTILE,W_MTONGUE,MTONGUE_VALUE_PERCENTILE,W_AGE,AGE_VALUE_PERCENTILE,W_INCOME,INCOME_VALUE_PERCENTILE,W_HEIGHT,HEIGHT_VALUE_PERCENTILE,W_EDUCATION,EDUCATION_VALUE_PERCENTILE,W_OCCUPATION,OCCUPATION_VALUE_PERCENTILE,W_CITY,CITY_VALUE_PERCENTILE,W_NRI,NRI_N_P,NRI_M_P,W_MSTATUS,MSTATUS_M_P,MSTATUS_N_P,W_MANGLIK,MANGLIK_M_P,MANGLIK_N_P,GENDER,MAX_SCORE from matchalerts.TRENDS A  JOIN $table B WHERE A.PROFILEID=B.PROFILEID";
 	$res1=mysql_query($sql1,$db) or die(mysql_error($db));
 }
 
-function setMatchesInfoOneTime($db,$gender,$trendsmatches='',$ddl)
+function setMatchesInfoOneTime($db,$gender,$trendsmatches='')
 {	
 	/*
 	global $matchesGlobalInfoF;
@@ -84,7 +81,7 @@ function setMatchesInfoOneTime($db,$gender,$trendsmatches='',$ddl)
 	}
 
 	$sql1="TRUNCATE TABLE $ctable";
-	$res1=mysql_query($sql1,$ddl) or die(mysql_error($ddl));
+	$res1=mysql_query($sql1,$db) or die(mysql_error($db));
 
 	$sql1="INSERT INTO $ctable select A.PROFILEID,A.AGE,A.CASTE,A.MTONGUE,A.HEIGHT,A.EDU_LEVEL_NEW,A.OCCUPATION,A.CITY_RES,A.COUNTRY_RES,A.MSTATUS,A.MANGLIK,A.INCOME,A.ENTRY_DT,AGE_FILTER,RELIGION_FILTER,CASTE_FILTER,MTONGUE_FILTER,COUNTRY_RES_FILTER,MSTATUS_FILTER,INCOME_FILTER,CITY_RES_FILTER from $table B JOIN newjs.JPROFILE A WHERE A.PROFILEID=B.PROFILEID";
 	$res1=mysql_query($sql1,$db) or die(mysql_error($db).$sql1);

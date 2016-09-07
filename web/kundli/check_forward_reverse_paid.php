@@ -1,7 +1,7 @@
 <?php
 include_once(JsConstants::$alertDocRoot."/kundli/commonIncludeFileForLogic.php");
 
-$populateTablesObj = new PopulateTables($localdb,$mysqlObj,$localdb_ddl);
+$populateTablesObj = new PopulateTables($localdb,$mysqlObj);
 $populateTablesObj->truncate_table("KUNDLI_RECEIVER_PAID");
 $populateTablesObj->truncate_table("PROFILE_LOGS_PAID");
 $populateTablesObj->populate_receiver_table(1);

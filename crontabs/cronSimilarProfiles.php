@@ -20,7 +20,7 @@ ini_set('log_errors_max_len',0);
 //for preventing timeout to maximum possible
 
 
-$db=connect_db4_ddl();
+$db=connect_db();
 $debug = 0;
 mysql_select_db("viewSimilar",$db);
 
@@ -40,10 +40,10 @@ $mysqlPath=MysqlDbConstants::$mySqlPath;
 $mysqldumpPath=MysqlDbConstants::$mySqlDumpPath;
 
 
-$masterHostName = MysqlDbConstants::$masterDDL[HOST];
-$masterPort = MysqlDbConstants::$masterDDL[PORT];
-$masterUserName = MysqlDbConstants::$masterDDL[USER];
-$masterPassword = MysqlDbConstants::$masterDDL[PASS];
+$masterHostName = MysqlDbConstants::$master[HOST];
+$masterPort = MysqlDbConstants::$master[PORT];
+$masterUserName = MysqlDbConstants::$master[USER];
+$masterPassword = MysqlDbConstants::$master[PASS];
 
 $shard1HostName = MysqlDbConstants::$shard1Slave[HOST];
 $shard1Port = MysqlDbConstants::$shard1Slave[PORT];

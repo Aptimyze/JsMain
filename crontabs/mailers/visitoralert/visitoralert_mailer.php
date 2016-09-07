@@ -52,9 +52,8 @@ if($count>0)
 {
 	$sql="REPLACE INTO visitoralert.VISITOR_ALERT_RECORD (PROFILE_SENT,ALERT_SENT,SENT_DATE) VALUES ('$total','$count',now())";
 	$result=mysql_query($sql,$myDb1) or die(mysql_error($myDb1));
-	$myDb_ddl=$mysqlObj->connect("shard1DDL");
 	$sql="TRUNCATE TABLE visitoralert.MAILER_VISITORS";
-	$result=mysql_query($sql,$myDb_ddl) or die(mysql_error($myDb_ddl));
+	$result=mysql_query($sql,$myDb1) or die(mysql_error($myDb1));
 }
 
 $NEGATIVE_TREATMENT_LIST=new NEGATIVE_TREATMENT_LIST($db);

@@ -22,9 +22,9 @@ include_once(JsConstants::$alertDocRoot."/new_matchalert/matchalert_partnerprofi
 $SITE_URL=JsConstants::$siteUrl;
 
 $mysqlObj = new Mysql;
-$db=$mysqlObj->connect("alertsDDL");
+$db=$mysqlObj->connect("alerts");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
-mysql_select_db("matchalerts",$db) or die(mysql_error($db));
+mysql_select_db("matchalerts",$db) or die(mysql_error());
 if(!$php5)
 	$php5=JsConstants::$php5path; //live php5
 if(!$logerrorFilePath)

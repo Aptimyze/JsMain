@@ -18,7 +18,7 @@ include_once(JsConstants::$alertDocRoot."/commonFiles/incomeCommonFunctions.inc"
 $SITE_URL=JsConstants::$siteUrl;
 
 $mysqlObj=new Mysql;
-$db=$mysqlObj->connect("alertsDDL");
+$db=$mysqlObj->connect("alerts");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 mysql_select_db("matchalerts",$db) or die(mysql_error());
 pouplate_partnerprofile('F');

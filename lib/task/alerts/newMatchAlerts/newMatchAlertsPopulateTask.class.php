@@ -43,8 +43,7 @@ EOF;
 /**code ends*/                 
         
         $newMatchAlertReceiver = new new_matches_emails_RECEIVER();
-        $newMatchAlertReceiverDDL = new new_matches_emails_RECEIVER('alertsDDL');
-        $newMatchAlertReceiverDDL->truncateTable();
+        $newMatchAlertReceiver->truncateTable();
         
         $sortDate = date('Y-m-d H:i:s', strtotime('-6 months'));
         $entryDate = date('Y-m-d H:i:s', strtotime('-15 days'));
@@ -56,14 +55,14 @@ EOF;
         $newMatchAlertLog = new new_matches_emails_LOG();
         $newMatchAlertLog->insertFromLog_Temp();
         
-        $newMatchAlertLog_Temp = new new_matches_emails_LOG_TEMP('alertsDDL');
+        $newMatchAlertLog_Temp = new new_matches_emails_LOG_TEMP();
         $newMatchAlertLog_Temp->truncateTable();
         
         $deleteDate = MailerConfigVariables::getNoOfDays();
         $deleteDate = $deleteDate-31;
         $newMatchAlertLog->deleteEntriesBeforeDate($deleteDate);
         
-        $newMatchAlertMAILER = new new_matches_emails_MAILER('alertsDDL');
+        $newMatchAlertMAILER = new new_matches_emails_MAILER();
         $newMatchAlertMAILER->truncateTable();
         
         $trackObj = new TrackingFunctions();

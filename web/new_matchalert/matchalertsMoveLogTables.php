@@ -13,7 +13,10 @@ $mysqlObj = new Mysql;
 $db=$mysqlObj->connect("alerts");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 mysql_select_db("matchalerts",$db) or mysql_error1($db);
-
+/*
+$sql="TRUNCATE TABLE matchalerts.LOG_TEMP";
+mysql_query($sql,$db) or mysql_error1($db);
+*/
 passthru(JsConstants::$php5path." /var/www/html/symfony cron:matchAlertsReplacePartitions");
 
 function mysql_error1($db)

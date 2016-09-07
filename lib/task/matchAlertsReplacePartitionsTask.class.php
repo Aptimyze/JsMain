@@ -25,7 +25,7 @@ EOF;
 		sfContext::createInstance($this->configuration);
         $date = date("Y-m-d");
         $gap= ceil($this->getNoOfDays());
-        $matchAlertsObj = new matchalerts_LOG("alertsDDL");
+        $matchAlertsObj = new matchalerts_LOG();
         $lastActiveLogObj = new matchalerts_LAST_ACTIVE_LOG();
         //fetch latest partition number
         $lastPartitionName = intval($lastActiveLogObj->getLastActivePartition());

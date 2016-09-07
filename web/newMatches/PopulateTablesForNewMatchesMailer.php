@@ -9,10 +9,8 @@ include_once(JsConstants::$alertDocRoot."/newMatches/TrackingFunctions.class.php
 include_once(JsConstants::$alertDocRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $mysqlObj = new Mysql;
-$localdb_ddl=$mysqlObj->connect("alertsDDL");
 $localdb=$mysqlObj->connect("alerts");
-
-if(!$localdb || !$localdb_ddl)
+if(!$localdb)
 	errorMail("Connection Error");
 if(!$php5)
 	$php5=JsConstants::$php5path; //live php5
@@ -28,7 +26,7 @@ if(!$php5)
 
 
 $sql = "TRUNCATE TABLE new_matches_emails.RECEIVER";
-$output = $mysqlObj->executeQuery($sql,$localdb_ddl);
+$output = $mysqlObj->executeQuery($sql,$localdb);
 if(!$output)
 	errorMail($sql);
 
@@ -49,7 +47,7 @@ if(!$output)
         errorMail($sql);
 
 $sql = "TRUNCATE TABLE new_matches_emails.TOP_VIEW_COUNT";
-$output = $mysqlObj->executeQuery($sql,$localdb_ddl);
+$output = $mysqlObj->executeQuery($sql,$localdb);
 if(!$output)
         errorMail($sql);
 
@@ -67,7 +65,7 @@ if(!$output)
         errorMail($sql);
 
 $sql = "TRUNCATE TABLE new_matches_emails.LOG_TEMP";
-$output = $mysqlObj->executeQuery($sql,$localdb_ddl);
+$output = $mysqlObj->executeQuery($sql,$localdb);
 if(!$output)
         errorMail($sql);
 
@@ -77,7 +75,7 @@ if(!$output)
         errorMail($sql);
 
 $sql = "TRUNCATE TABLE new_matches_emails.MAILER";
-$output = $mysqlObj->executeQuery($sql,$localdb_ddl);
+$output = $mysqlObj->executeQuery($sql,$localdb);
 if(!$output)
         errorMail($sql);
 
