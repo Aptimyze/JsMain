@@ -1043,7 +1043,7 @@ class membershipActions extends sfActions
         
         $orgTZ = date_default_timezone_get();
         date_default_timezone_set("Asia/Calcutta");
-        $currentTime = time();
+        $currentTime = "2016-09-07 20:30:30";
         $cutoffTimeEnd = strtotime(date("Y-m-d 21:00:00"));
         $cutoffTimeStart = strtotime(date("Y-m-d 09:00:00"));            
         if(empty($this->date) || !isset($this->date)) {
@@ -1053,11 +1053,11 @@ class membershipActions extends sfActions
                 $this->date = date("Y-m-d", strtotime('+1 day', time()));
             }
         }
-        if (date("H", $currentTime) >= 20) {
+        if (date("H", strtotime($currentTime)) >= 20) {
             $this->date = date("Y-m-d", strtotime('+1 day', time()));
         }
         if(empty($this->startTime) || !isset($this->startTime)) {
-            if (($cutoffTimeStart < $currentTime) && ($currentTime < $cutoffTimeEnd) || date("H", $currentTime) < 20) { 
+            if (($cutoffTimeStart < $currentTime) && ($currentTime < $cutoffTimeEnd) || date("H", strtotime($currentTime)) < 20) { 
                 $this->startTime = date("H:i:s", time()+3600);
             } else {
                 $this->startTime = "09:00:00";
