@@ -46,7 +46,7 @@ class incentive_NEGATIVE_PROFILE_LIST extends TABLE
         public function getProfileDetails($typeStr)
         {
                 try{
-                        $sql = "SELECT PROFILEID,EMAIL,MOBILE,ISD,STD_CODE,LANDLINE,COMMENTS from incentive.NEGATIVE_PROFILE_LIST WHERE TYPE IN($typeStr)";
+                        $sql = "SELECT PROFILEID,EMAIL,MOBILE,ISD,STD_CODE,LANDLINE,COMMENTS,TYPE from incentive.NEGATIVE_PROFILE_LIST WHERE TYPE IN($typeStr)";
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
                         while($result=$prep->fetch(PDO::FETCH_ASSOC)){

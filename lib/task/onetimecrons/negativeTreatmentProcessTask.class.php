@@ -51,6 +51,9 @@ $this->addOptions(array(
 			$stdCode	=$dataVal['STD_CODE'];
 			$landline	=$dataVal['LANDLINE'];
 			$comment	=$dataVal['COMMENTS'];
+			$type		=$dataVal['TYPE'];
+			if(!$comment)
+				$comment=$type;
 
 			if($isd)
 				$isd    =ltrim($isd,0);
