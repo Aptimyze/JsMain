@@ -1037,10 +1037,21 @@ class membershipActions extends sfActions
         $this->device         = $request->getParameter('device');
         $this->channel        = $request->getParameter('channel');
         $this->callbackSource = $request->getParameter('callbackSource');
-        $this->date           = $request->getParameter('date') || $request->getParameter('dropDownDaySelected');
-        $this->startTime      = $request->getParameter('startTime') || $request->getParameter('dropDownTimeStartSelected');
-        $this->endTime        = $request->getParameter('endTime') || $request->getParameter('dropDownTimeEndSelected');
-
+        if ($request->getParameter('dropDownDaySelected')) {
+            $this->date = $request->getParameter('dropDownDaySelected');
+        } else {
+            $this->date = $request->getParameter('date');
+        }
+        if ($request->getParameter('dropDownTimeStartSelected')) {
+            $this->startTime = $request->getParameter('dropDownTimeStartSelected');
+        } else {
+            $this->startTime = $request->getParameter('startTime');
+        }
+        if ($request->getParameter('dropDownTimeEndSelected')) {
+            $this->endTime = $request->getParameter('dropDownTimeEndSelected');
+        } else {
+            $this->endTime = $request->getParameter('endTime');
+        }
         $orgTZ = date_default_timezone_get();
         date_default_timezone_set("Asia/Calcutta");
         $currentTime = time();
