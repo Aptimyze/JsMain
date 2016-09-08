@@ -325,9 +325,11 @@
                 $.each(value, function (i, val) {
                     if (i == 2) {
                         val = "9 PM";
+                        $("#ddropDown" + i).val($("#ddropDown" + i + " dd ul li:last").attr('id'));
+                    } else {
+                        $("#ddropDown" + i).val($("#ddropDown" + i + " dd ul li:first").attr('id'));
                     }
                     $("#dropDown" + i + " dt span").html(val);
-                    $("#ddropDown" + i).val(val);
                 });
             }
             $(document).bind('click', function (e) {

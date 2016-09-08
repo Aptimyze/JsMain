@@ -315,9 +315,6 @@ class membershipActions extends sfActions
         $endTime           = $request->getParameter('dropDownTimeEndSelected');
         $this->callRequest = $request->getParameter('callRequest');
         if ($this->callRequest == 1) {
-            print_r(array($date, $startTime, $endTime));
-            $orgTZ = date_default_timezone_get();
-            date_default_timezone_set("Asia/Calcutta");
             $this->success = 1;
             $request->setParameter('jsSelectd', $request->getParameter('jsSelectd'));
             $request->setParameter("profileid", $this->profileid);
@@ -326,16 +323,14 @@ class membershipActions extends sfActions
             $request->setParameter("device", "desktop");
             $request->setParameter("channel", "JSPC");
             $request->setParameter("callbackSource", "JS_Exclusive");
-            $request->setParameter("date", date('Y-m-d', strtotime($date)));
-            $request->setParameter("startTime", date("H:i:s", strtorime($startTime)));
-            $request->setParameter("endTime", date("H:i:s", strtorime($endTime)));
+            $request->setParameter("date", $date);
+            $request->setParameter("startTime", $startTime);
+            $request->setParameter("endTime", $endTime);
             $request->setParameter("INTERNAL", 1);
-            print_r(array(date('Y-m-d', strtotime($date)), date("H:i:s", strtorime($startTime)), date("H:i:s", strtorime($endTime))));
             ob_start();
             $data   = sfContext::getInstance()->getController()->getPresentationFor('membership', 'addCallBck');
             $output = ob_get_contents();
             ob_end_clean();
-            date_default_timezone_set($orgTZ);
         }
 
         $request->setParameter('displayPage', 1);
