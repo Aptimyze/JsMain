@@ -391,18 +391,28 @@
                 var t1 = Date.parse(date + " " + startTime),
                     t2 = Date.parse(date + " " + endTime),
                     now = Date.parse(new Date()),
-                    error = false;
+                    error1 = false, error2 = false;
                 if (t2 - t1 <= 0 || t1 < now) {
-                    error = true;
+                    error1 = true;
                 } else {
-                    error = false;
+                    error1 = false;
                 }
-                if (len == 10 && intRegex.test(str) && !error) {
+                if(len == 10 && intRegex.test(str)){
+                    error2 = true;
+                } else {
+                    error2 = false;
+                }
+                if (!error1 && !error2) {
                     $("#placeRequestForm").submit();
                     $("#timeError").hide();
+                    $("#mobileInput").removeClass("errorBorder");
                 } else {
-                    $("#timeError").show();
-                    $("#mobileInput").addClass("errorBorder");
+                    if (error1) {
+                        $("#timeError").show();    
+                    }
+                    if (error2) {
+                        $("#mobileInput").addClass("errorBorder");
+                    }
                 }
             });
             $('#request').click(function () {
