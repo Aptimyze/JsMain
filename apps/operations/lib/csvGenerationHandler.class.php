@@ -1175,8 +1175,14 @@ class csvGenerationHandler
 	                                $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId);
 				}
 				else if($processName=="renewalProcessInDialer"){
-                                        $leadId         =$campaignName.$leadIdSuffix;
 					$campaignType	=$this->getCampaignType($processName, $dataArr['MTONGUE']);
+					if($campaignType='OB_RENEWAL_MAH'){
+						$campaignName 	=$salesCampaign[$campaignType];	
+						$leadId 	=$campaignName.$leadIdSuffix;	
+					}
+					else{
+						$leadId         =$campaignName.$leadIdSuffix;
+					}
 					$salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$campaignType,$expiryDate);
 				}
 				else if($processName=="rcbCampaignInDialer"){

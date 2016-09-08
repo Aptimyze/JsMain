@@ -35,7 +35,7 @@ class crmParams
 
 	// Other Sales Campaign Tables for Processes
 	public static $salesCampaignTables		=array("failedPaymentInDialer"=>"incentive_SALES_CSV_DATA_FAILED_PAYMENT","upsellProcessInDialer"=>"incentive_SALES_CSV_DATA_UPSELL","renewalProcessInDialer"=>"incentive_SALES_CSV_DATA_RENEWAL","paidCampaignProcess"=>"incentive_SALES_CSV_DATA_PAID_CAMPAIGN","rcbCampaignInDialer"=>"incentive_SALES_CSV_DATA_RCB");
-	public static $salesCampaign			=array("failedPaymentInDialer"=>"fp","upsellProcessInDialer"=>"upsell","renewalProcessInDialer"=>"renewal","paidCampaignProcess"=>"paid","rcbCampaignInDialer"=>"rcb");
+	public static $salesCampaign			=array("failedPaymentInDialer"=>"fp","upsellProcessInDialer"=>"upsell","renewalProcessInDialer"=>"renewal","paidCampaignProcess"=>"paid","rcbCampaignInDialer"=>"rcb","OB_RENEWAL_MAH"=>"renewalMah");
 	public static $crmCsvTables                     =array("DAILY_GHARPAY"=>"incentive_GHARPAY_CSV_DATA","QA_ONLINE"=>"incentive_QA_ONLINE_CSV_DATA");
 	public static $campaignNames			=array('renewal'=>'JS_RENEWAL','renewalMah'=>'OB_RENEWAL_MAH');
 
