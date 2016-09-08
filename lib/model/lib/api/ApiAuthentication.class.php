@@ -141,6 +141,7 @@ Abstract class ApiAuthentication
 	public function authenticate($authChecksum=null,$gcm=0,$fromMailerAutologin="N")
 	{
 		//Decrypting Checksum
+            
 		if(!$authChecksum)
 			$authChecksum=sfContext::getInstance()->getRequest()->getParameter("AUTHCHECKSUM");
 		if($this->isNotApp && !$authChecksum)
@@ -164,6 +165,10 @@ Abstract class ApiAuthentication
 		}
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
+                        if(sfContext::getInstance()->getRequest()->getParameter("linkFromSMS")=='Y')
+                        {
+                            $this->logShortUrlMobileHits($loginData['PROFILEID'],$_SERVER[REQUEST_URI]);
+                        }
 			$this->loginData=$this->IsAlive($loginData,$gcm);
 			if($this->loginData)
 			{
@@ -719,5 +724,17 @@ Abstract class ApiAuthentication
 
 		}
 	}
+        
+        
+        public function logShortUrlMobileHits($profileid,$request_uri)
+        {
+	$page=explode('?',$request_uri);
+	$page=$page[0];
+	$page=explode('/',$page);
+	$no=count($page);
+	$page=$page[$no-1];
+        (new MIS_ShortUrlLog())->insertEntry($profileid,$page); 
+        }
+
 }
 ?>

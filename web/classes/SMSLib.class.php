@@ -16,7 +16,7 @@ class SMSLib{
         var $countryDetail=array();
 	var $smsType;
 	var $dbMaster;
-
+        private $receiverDetails;
         function __construct ($smsType="") {
                 $this->path = JsConstants::$docRoot;
 		if(strstr($_SERVER["PHP_SELF"],"operations.php") || strstr($_SERVER["PHP_SELF"],"operations_dev.php") || strstr($_SERVER["PHP_SELF"],"symfony_index.php") || !function_exists('connect_db')){
@@ -43,7 +43,7 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 		$this->smsType = $smsType;
         }
 	public function getShortURL($longURL, $profileid='',$email='',$withoutLogin='',$appendUrl='') {
-
+                $longURL=str_replace('CMGFRMMMMJS=mobile','linkFromSMS=Y' , $longURL);
 		include_once($this->path . "/classes/ShortURL.class.php");
 		if(!$withoutLogin)
 		{
@@ -51,7 +51,10 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 			$protect = new protect();
 			$checksum = md5($profileid) . "i" . $profileid;
 			$echecksum = $protect->js_encrypt($checksum);
-			$longURL = $longURL . "&echecksum=" . $echecksum . "&checksum=" . $checksum;
+                        $authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
+                        $loginArray=$authenticationLoginObj->setCrmAdminAuthchecksum($checksum,$this->receiverDetails);
+			$authchecksum=$loginArray['AUTHCHECKSUM'];
+                        $longURL = $longURL . "&AUTHCHECKSUM=" . $authchecksum . "&checksum=" . $checksum;
 		}
 
 		$shortURL = new ShortURL();
@@ -104,13 +107,15 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 
 	//Returns sms token value
 	public function getTokenValue($messageToken, $tokenValue=array()) {
-		if(!isset($tokenValue["DATA_TYPE"])){	
+                if(!isset($tokenValue["DATA_TYPE"])){
+                        if(!$this->receiverDetails)$this->receiverDetails=$tokenValue;
 			$messageValue = $tokenValue;
 			$messageValue["RECEIVER"]["USERNAME"] = $tokenValue["USERNAME"] ; 
 			$messageValue["RECEIVER"]["PROFILEID"] = $tokenValue["PROFILEID"] ; 
 			$messageValue["RECEIVER"]["EMAIL"] = $tokenValue["EMAIL"]; 
 		}
 		else{
+                        if(!$this->receiverDetails)$this->receiverDetails=$tokenValue['RECEIVER'];                    
 			$messageValue = $tokenValue["DATA"];
 			$messageValue["RECEIVER"]["USERNAME"] = $tokenValue["RECEIVER"]["USERNAME"];
 			$messageValue["RECEIVER"]["PROFILEID"] = $tokenValue["RECEIVER"]["PROFILEID"];
