@@ -39,6 +39,7 @@ JsChat.prototype = {
     _rosterGroups:[],
     _checkForDefaultEoiMsg:false,
     _setLastReadMsgStorage:true,
+    _chatAutoLogin:true,
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -124,6 +125,9 @@ JsChat.prototype = {
         }
         if (arguments[1][0].setLastReadMsgStorage) {
             this._setLastReadMsgStorage = arguments[1][0].setLastReadMsgStorage;
+        }
+        if (arguments[1][0].chatAutoLogin) {
+            this._chatAutoLogin = arguments[1][0].chatAutoLogin;
         }
     },
     //start:get screen height
@@ -276,7 +280,7 @@ JsChat.prototype = {
         var lengthReq = 14;
         var stringName = this._selfName;
         var trimmedString = stringName.length > lengthReq ? stringName.substring(0, lengthReq - 3) + "..." : stringName;
-        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
+        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp" data-siteLogout="false">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
 	$('body').on('click', function(event) {
             if(($(event.target).parent().attr('id') != "undefined" && $(event.target).parent().attr('id') != 'js-chattopH') &&
@@ -302,7 +306,8 @@ JsChat.prototype = {
         $(curEleRef._logoutChat).click(function () {
             if (curEleRef.onLogoutPreClick && typeof (curEleRef.onLogoutPreClick) == "function") {
                 //that._chatLoggerPlugin("in if");
-                curEleRef.onLogoutPreClick();
+                var fromSiteLogout = $(curEleRef._logoutChat).attr("data-siteLogout");
+                curEleRef.onLogoutPreClick(fromSiteLogout);
             }
             curEleRef.logOutChat();
         });
@@ -1001,6 +1006,7 @@ JsChat.prototype = {
                         $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                         //enableClose = true;
                         $('chat-box[user-id="' + userId + '"] .nchatic_3').css('pointer-events', "none");
+                        
                         setTimeout(function () {
                             if (enableClose == true) {
                                 curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
@@ -2949,6 +2955,12 @@ JsChat.prototype = {
             */
         });
         delete that;
+        //auto login to chat on site relogin if flag true and login authentication success
+        if(curEle._chatAutoLogin == true && failed!= true){
+            setTimeout(function(){
+                invokePluginLoginHandler("autoChatLogin");
+            },100);
+        }
     },
     preventSiteScroll:function(userId){
         var inside = false, current;
@@ -2957,7 +2969,7 @@ JsChat.prototype = {
             inside = true;
             current = $(document).scrollTop();
             $(document).scroll(function(e,d){
-                if(!$(e).hasClass('.chatMessage') && inside == true) {
+                if(!$(e).hasClass('.chatMessage') && inside == true && $('chat-box[user-id="' + userId + '"]').length != 0) {
                     $(window).scrollTop(current);
                 }
             });

@@ -40,7 +40,7 @@ class NEWJS_JPROFILE_EDUCATION extends TABLE{
 					$prep->bindValue(":v$k", $v, PDO::PARAM_INT);
 					$prep->execute();
           
-          $this->logFunctionCalling(__FUNCTION__);
+          $this->logFunctionCalling(__FUNCTION__.$from);
 
 					if (is_array($pid)){
 						$resultArray=array();

@@ -523,7 +523,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
       }
     }
   });
-params = {};
+//params = {};
 }
 
 

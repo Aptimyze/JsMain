@@ -35,9 +35,11 @@ EOF;
     
         //creating featured profile store object
         $featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
+        $featuredProfileDDLObj = new FEATURED_PROFILE_MAILER("newjs_masterDDL");
 
         //Truncate table Data       
-        $featuredProfileObj->truncateFeaturedProfileData();
+        $featuredProfileDDLObj->truncateFeaturedProfileData();
+        unset($featuredProfileDDLObj);
 
         //last login date should not be more than 1 month back
         $lastLoginDate = date('Y-m-d', strtotime(featuredProfileMailerEnum::$lastLoginDateCriteria));
