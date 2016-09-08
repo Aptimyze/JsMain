@@ -315,6 +315,9 @@ class membershipActions extends sfActions
         $endTime           = $request->getParameter('dropDownTimeEndSelected');
         $this->callRequest = $request->getParameter('callRequest');
         if ($this->callRequest == 1) {
+            print_r(array($date, $startTime, $endTime));
+            $orgTZ = date_default_timezone_get();
+            date_default_timezone_set("Asia/Calcutta");
             $this->success = 1;
             $request->setParameter('jsSelectd', $request->getParameter('jsSelectd'));
             $request->setParameter("profileid", $this->profileid);
@@ -323,14 +326,16 @@ class membershipActions extends sfActions
             $request->setParameter("device", "desktop");
             $request->setParameter("channel", "JSPC");
             $request->setParameter("callbackSource", "JS_Exclusive");
-            $request->setParameter("date", $date);
-            $request->setParameter("startTime", $startTime);
-            $request->setParameter("endTime", $endTime);
+            $request->setParameter("date", date('Y-m-d', strtotime($date)));
+            $request->setParameter("startTime", date("H:i:s", strtorime($startTime)));
+            $request->setParameter("endTime", date("H:i:s", strtorime($endTime)));
             $request->setParameter("INTERNAL", 1);
+            print_r(array(date('Y-m-d', strtotime($date)), date("H:i:s", strtorime($startTime)), date("H:i:s", strtorime($endTime))));
             ob_start();
             $data   = sfContext::getInstance()->getController()->getPresentationFor('membership', 'addCallBck');
             $output = ob_get_contents();
             ob_end_clean();
+            date_default_timezone_set($orgTZ);
         }
 
         $request->setParameter('displayPage', 1);
@@ -1037,21 +1042,10 @@ class membershipActions extends sfActions
         $this->device         = $request->getParameter('device');
         $this->channel        = $request->getParameter('channel');
         $this->callbackSource = $request->getParameter('callbackSource');
-        if ($request->getParameter('dropDownDaySelected')) {
-            $this->date = $request->getParameter('dropDownDaySelected');
-        } else {
-            $this->date = $request->getParameter('date');
-        }
-        if ($request->getParameter('dropDownTimeStartSelected')) {
-            $this->startTime = $request->getParameter('dropDownTimeStartSelected');
-        } else {
-            $this->startTime = $request->getParameter('startTime');
-        }
-        if ($request->getParameter('dropDownTimeEndSelected')) {
-            $this->endTime = $request->getParameter('dropDownTimeEndSelected');
-        } else {
-            $this->endTime = $request->getParameter('endTime');
-        }
+        $this->date           = $request->getParameter('date');
+        $this->startTime      = $request->getParameter('startTime');
+        $this->endTime        = $request->getParameter('endTime');
+        
         $orgTZ = date_default_timezone_get();
         date_default_timezone_set("Asia/Calcutta");
         $currentTime = time();
@@ -1077,8 +1071,8 @@ class membershipActions extends sfActions
         if(empty($this->endTime) || !isset($this->endTime)) {
             $this->endTime = "21:00:00";
         }
-	$reqDate =$this->date;
-	$reqTime =date('g:i A',strtotime($this->startTime));
+    	$reqDate =$this->date;
+    	$reqTime =date('g:i A',strtotime($this->startTime));
 
         date_default_timezone_set($orgTZ);
         
