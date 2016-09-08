@@ -319,9 +319,9 @@ class membershipActions extends sfActions
             $orgTZ = date_default_timezone_get();
             $t1 = $date." ".$startTime;
             $t1 = $date." ".$endTime;
-            $date = new DateTime($t1, new DateTimeZone('EST'));
-            $startTime = new DateTime($t1, new DateTimeZone('EST'));            
-            $endTime = new DateTime($t2, new DateTimeZone('EST'));
+            $date = new DateTime($t1, new DateTimeZone('EST5EDT'));
+            $startTime = new DateTime($t1, new DateTimeZone('EST5EDT'));            
+            $endTime = new DateTime($t2, new DateTimeZone('EST5EDT'));
             $date->setTimezone(new DateTimeZone('Asia/Calcutta'));
             $startTime->setTimezone(new DateTimeZone('Asia/Calcutta'));
             $endTime->setTimezone(new DateTimeZone('Asia/Calcutta'));
