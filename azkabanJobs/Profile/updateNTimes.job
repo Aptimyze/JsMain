@@ -1,0 +1,4 @@
+type=command
+command=${php5} -q ${docRoot}/symfony profile:updateNTimes
+retries=2
+retry.backoff=10000

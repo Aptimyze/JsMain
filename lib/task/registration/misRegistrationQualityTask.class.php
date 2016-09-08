@@ -23,8 +23,17 @@ EOF;
   protected function execute($arguments = array(), $options = array()) {
     error_reporting(0);
     $preDefArray = array('total_reg' => 0, 'F' => 0, 'FMV' => 0, 'FMVCC' => 0, 'M' => 0, 'MMV' => 0, 'MMVCC' => 0, 'screened_SIC' => 0);
-    
+    $flag = 1;
     $jprofileObj = new JPROFILE('newjs_slave');
+    while($flag)
+    {
+      $entryDt = $jprofileObj->getLatestEntryDate();
+      if($entryDt["ENTRY_DT"] == date("Y-m-d"))
+      {
+        $flag = 0;
+      }
+      sleep(60);
+    }
     $registerDate = date('Y-m-d', strtotime('- ' . $this->screenDate . ' day')) . " 00:00:00";
     $profiles = $jprofileObj->getProfileQualityRegistationData($registerDate);
     

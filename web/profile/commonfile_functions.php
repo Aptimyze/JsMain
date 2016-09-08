@@ -598,7 +598,7 @@ $js_arr[]=array("jsms/utility/offlineTracking_js"   => "1");
 $js_arr[]=array("jsms/common/disableRightClick_js"    => "2");
 $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
-$js_arr[]=array("jspc/chat/chatCommonConfig_js"          => "8");
+$js_arr[]=array("jspc/chat/chatCommonConfig_js"         => "9");
 $js_arr[]=array("jspc/chat/chatPCHelper_js"               => "14");
 $js_arr[]=array("jspc/chat/chatPlugin_js"              => "12");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"            => "13");

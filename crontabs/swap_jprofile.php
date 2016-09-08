@@ -29,7 +29,7 @@ $mysqlObj=new Mysql;
 //$db2 = connect_slave();
 $LOG_PRO=array();
 
-$db=connect_db();
+$db=connect_ddl();
 mysql_query("set session wait_timeout=10000",$db);
 
 /*
@@ -141,11 +141,6 @@ $timeval = date("YmdH0000",$last_time);
 $sql="truncate table SWAP";
 
 mysql_query($sql,$db) or die("1 ".mysql_error1($db));
-
-/*
-$sql="alter table SWAP disable keys";
-mysql_query($sql,$db) or die("2 ".mysql_error1($db));
-*/
 
 // take the profiles from SWAP_JPROFILE1. This table could contain records older than the previous hour also if the script did not execute properly last time around. This ensures that all updates to JPROFILE are eventually reflected in search tables  even if the script misbehaves.
 											
@@ -387,11 +382,6 @@ if($row["C"]>30000)
 $sql_points="select GENDER,HAVEPHOTO,SUBSCRIPTION,LAST_LOGIN_DT,PROFILEID,ENTRY_DT,PHOTODATE,INCOME,RELIGION,HOROSCOPE FROM SWAP";
 $result_points=mysql_query($sql_points,$db) or die("9 ".mysql_error1($db));
 $today=date("Y-m-d");
-
-/*
-$sql="alter table SWAP enable keys";
-mysql_query($sql,$db) or die("10 ".mysql_error1($db));
-*/
 
 while($myrow=mysql_fetch_array($result_points))
 {
