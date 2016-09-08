@@ -3839,6 +3839,7 @@ EditApp = function(){
      * @returns {undefined}
      */
     onNameChange = function(nameVal,event){
+	nameVal=$.trim(nameVal);
 	var nameField = editAppObject[BASIC]['NAME'];
       var normalBorder ='edpbrd3';
       var errorBorder = 'brdr-1';
