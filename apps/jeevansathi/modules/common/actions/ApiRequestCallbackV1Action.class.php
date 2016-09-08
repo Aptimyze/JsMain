@@ -47,20 +47,53 @@ class ApiRequestCallbackV1Action extends sfActions
             $email = strtolower($arrRequest['email']);
             $phone = $arrRequest['phone'];
             $query = $arrRequest['query_type'];
+            $date = $arrRequest['date'];
+            $startTime = str_replace("_", ":", $arrRequest['startTime']);
+            $endTime = str_replace("_", ":", $arrRequest['endTime']);
             $device = $arrRequest['device'];
             $channel = $arrRequest['channel'];
             $callbackSource = $arrRequest['callbackSource'];
             $rcbResponse = $arrRequest['rcbResponse'];
+            $orgTZ = date_default_timezone_get();
+            date_default_timezone_set("Asia/Calcutta");
+            $currentTime = time();
+            $cutoffTimeEnd = strtotime(date("Y-m-d 21:00:00"));
+            $cutoffTimeStart = strtotime(date("Y-m-d 09:00:00"));
+            if(empty($date) || !isset($date)) {
+                if ($currentTime < $cutoffTimeEnd) {
+                    $date = date("Y-m-d", time());
+                } else {
+                    $date = date("Y-m-d", strtotime('+1 day', time()));
+                }
+            }
+            if (date("H", strtotime($currentTime)) >= 20) {
+                $date = date("Y-m-d", strtotime('+1 day', time()));
+            }
+            if(empty($startTime) || !isset($startTime)) {
+                if (($cutoffTimeStart < $currentTime) && ($currentTime < $cutoffTimeEnd) || (date("H", strtotime($currentTime)) < 20 && date("H", strtotime($currentTime)) >= 9)) { 
+                    $startTime = date("H:i:s", time()+3600);
+                } else {
+                    $startTime = "09:00:00";
+                }
+            }
+            if(empty($endTime) || !isset($endTime)) {
+                $endTime = "21:00:00";
+            }
+            $responseTime = strtotime($date." ".$startTime);
+            date_default_timezone_set($orgTZ);
             // assigning respose data with recieved params and returning to sender
             $responseData['phone_autofill'] = $phone;
             $responseData['email_autofill'] = $email;
             $responseData['query_type'] = $query;
+            $responseData['date'] = $date;
+            $responseData['startTime'] = $startTime;
+            $responseData['endTime'] = $endTime;
             $responseData['device'] = $device;
             $responseData['channel'] = $channel;
             $responseData['callbackSource'] = $callbackSource;
             $responseData['rcbResponse'] = $rcbResponse;
+            if (!empty($email) && !empty($phone) && !empty($query) && !empty($device) && !empty($channel) && !empty($callbackSource) && !empty($date) && !empty($startTime) && !empty($endTime)) {
             // end assignment
-            if (!empty($email) && !empty($phone) && !empty($query) && !empty($device) && !empty($channel) && !empty($callbackSource)) {
                 if (!CommonUtility::validateEmail($email)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $responseData['status'] = 'invalidEmail';
@@ -73,19 +106,22 @@ class ApiRequestCallbackV1Action extends sfActions
                 } elseif (!in_array($channel, $arrValidChannel)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $responseData['status'] = 'invalidChannel';
+                } elseif ($currentTime > $responseTime) { // Validating Time                    
+                    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $responseData['status'] = 'invalidTime';
                 } elseif (in_array($query, $arrValidQuery)) { // Validating Query Type
                     if ($query == "P") {
                         //Send Email
                         $to = "services@jeevansathi.com";
                         $from = "info@jeevansathi.com";//To Do Aliase Jeevansathi Support  Reply-to $email
                         $subject = "$email(".$userName.") has requested a callback for assistance with his/her account";
-                        $msgBody = "<html><body>Dear Support Team,<br> $email(".$userName.") has requested a callback from the support team for resolution of a service related issue. Please contact at $email,or $phone.<br> Regards<br> Team Jeevansathi</body></html>";
+                        $msgBody = "<html><body>Dear Support Team,<br> $email(".$userName.") has requested a callback from the support team for resolution of a service related issue. Please contact at $email,or $phone as requested on $date @ $startTime<br> Regards<br> Team Jeevansathi</body></html>";
                         SendMail::send_email($to,$msgBody,$subject,$from,"","","","","","","1",$email,"Jeevansathi Support");
                     } 
                     else if ($query == "M") { //Do membership
                         $objExecCallBack = new billing_EXC_CALLBACK;
                         $memHandlerObj = new MembershipHandler();
-                        $objExecCallBack->addRecord($iProfileId,$phone,$email,$device,$channel,$callbackSource);
+                        $objExecCallBack->addRecord($iProfileId,$phone,$email,$device,$channel,$callbackSource,$date,$startTime,$endTime);
                         unset($objExecCallBack);
                         $from = "webmaster@jeevansathi.com";
                         $to   = "inbound@jeevansathi.com";
@@ -102,7 +138,8 @@ class ApiRequestCallbackV1Action extends sfActions
                             $subject = "Callback Request for Membership Plans";
                             $userName= "Someone";
                         }
-                        $msgBody = "<html><body>$userName is interested in knowing more about Membership Plans. Please contact at ".$email." or ".$phone.".</body></html>";
+                        $reqTime =date('g:i A',strtotime($startTime));
+                        $msgBody = "<html><body>$userName is interested in knowing more about Membership Plans. Please contact at ".$email." or ".$phone." as requested on $date @ $reqTime</body></html>";
                         SendMail::send_email($to,$msgBody,$subject,$from);
                     }
                     //Update RCB Status if form is submit(optional)
