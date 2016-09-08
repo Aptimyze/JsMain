@@ -89,7 +89,7 @@ class billing_EXC_CALLBACK extends TABLE {
 
     public function insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd, $profileid='', $device=NULL, $channel=NULL, $callbackSource=NULL, $date, $startTime, $endTime)
     {
-        $date = DATE("Y-m-d H:i:s");
+        $date = date("Y-m-d");
         $startDtTime = $date." ".$startTime;
         $endDtTime = $date." ".$endTime;
         try{

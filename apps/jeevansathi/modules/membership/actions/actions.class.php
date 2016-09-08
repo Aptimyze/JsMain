@@ -316,19 +316,6 @@ class membershipActions extends sfActions
         $this->callRequest = $request->getParameter('callRequest');
         if ($this->callRequest == 1) {
             $this->success = 1;
-            $orgTZ = date_default_timezone_get();
-            $t1 = $date." ".$startTime;
-            $t1 = $date." ".$endTime;
-            $date = new DateTime($t1, new DateTimeZone('EST5EDT'));
-            $startTime = new DateTime($t1, new DateTimeZone('EST5EDT'));            
-            $endTime = new DateTime($t2, new DateTimeZone('EST5EDT'));
-            $date->setTimezone(new DateTimeZone('Asia/Calcutta'));
-            $startTime->setTimezone(new DateTimeZone('Asia/Calcutta'));
-            $endTime->setTimezone(new DateTimeZone('Asia/Calcutta'));
-            $date = $date->format("Y-m-d");
-            $startTime = $startTime->format("H:i:s");
-            $endTime = $endTime->format("H:i:s");
-            date_default_timezone_set($orgTZ);
             $request->setParameter('jsSelectd', $request->getParameter('jsSelectd'));
             $request->setParameter("profileid", $this->profileid);
             $request->setParameter("tabVal", "1");
