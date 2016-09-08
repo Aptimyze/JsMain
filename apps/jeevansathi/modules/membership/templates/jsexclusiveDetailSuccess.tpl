@@ -325,9 +325,9 @@
                 $.each(value, function (i, val) {
                     if (i == 2) {
                         val = "9 PM";
-                        $("#ddropDown" + i).val($("#ddropDown" + i + " dd ul li:last").attr('id'));
+                        $("#ddropDown" + i).val($("#dropDown" + i + " dd ul li:last").attr('id'));
                     } else {
-                        $("#ddropDown" + i).val($("#ddropDown" + i + " dd ul li:first").attr('id'));
+                        $("#ddropDown" + i).val($("#dropDown" + i + " dd ul li:first").attr('id'));
                     }
                     $("#dropDown" + i + " dt span").html(val);
                 });
