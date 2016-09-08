@@ -396,7 +396,7 @@ class NEWJS_JPROFILE extends TABLE
                     }
                 }
             }
-            
+        
             $sqlSelectDetail = "SELECT $fields FROM newjs.JPROFILE WHERE ";
             $count = 1;
             if (is_array($valueArray)) {
@@ -1693,6 +1693,21 @@ SQL;
 
         $key .= '::'.date('H');
         JsMemcache::getInstance()->incrCount($key);
+    }
+
+    //This function is used to fetch the latest entry date in JPROFILE so as to check in MIS whether there is a lag in slave.
+    public function getLatestEntryDate()
+    {
+        try
+        {
+            $sql = "SELECT date(ENTRY_DT) as ENTRY_DT FROM newjs.JPROFILE order by PROFILEID DESC Limit 1";
+            $pdoStatement = $this->db->prepare($sql);
+            $pdoStatement->execute();
+            return $pdoStatement->fetch(PDO::FETCH_ASSOC);
+        }
+        catch (Exception $ex) {
+            throw new jsException($ex);
+        }
     }
     
 }
