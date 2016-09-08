@@ -7,17 +7,17 @@ class DialerHandler
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
         }
-	public function getRenewalEligibleProfiles($x)
+	public function getRenewalEligibleProfiles($x,$campaign_name)
 	{
-		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
+		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N' AND CAMPAIGN_TYPE='$campaign_name'";
 		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$eligible_array[] = $row["PROFILEID"];
 		return $eligible_array;
 	}
-	public function getRenewalInEligibleProfiles($x)
+	public function getRenewalInEligibleProfiles($x,$campaign_name)
 	{
-		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
+		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N' AND CAMPAIGN_TYPE='$campaign_name'";
 		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$ignore_array[] = $row["PROFILEID"];
@@ -273,6 +273,8 @@ class DialerHandler
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate'";
 		elseif($campaignName=='OB_JS_RCB')
 			$sql ="SELECT * FROM incentive.$tableName WHERE ID>'$ID' ORDER BY ID";
+		elseif($campaignName=='JS_RENEWAL' || $campaignName=='OB_RENEWAL_MAH')
+			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' AND CAMPAIGN_TYPE='$campaignName' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
 		else
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
                 $res = mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
@@ -302,7 +304,7 @@ class DialerHandler
         }
         public function formatDataSet($campaignName, $dataArr,$csvEntryDate)
         {
-		if($campaignName=='JS_RENEWAL')
+		if($campaignName=='JS_RENEWAL' || $campaignName=='OB_RENEWAL_MAH')
 			$discountField ='DISCOUNT_PERCENT';
 		else
 			$discountField ='VD_PERCENT';
