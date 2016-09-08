@@ -217,7 +217,8 @@ EOF;
 		
 		// if script completes successfully send mail
                 SendMail::send_email("ankitshukla125@gmail.com","$todaysSentContacts Auto Contacts sent out for $alreadySentCount users","Auto Contacts cron completed");
-                $tempProfileRecords->delete();
+                $ApProfileInfoLogDDL = new ASSISTED_PRODUCT_AP_PROFILE_INFO_LOG('newjs_masterDDL');
+                $ApProfileInfoLogDDL->delete();
 		echo "EOI's sent for ".$alreadySentCount." Profiles";
 		
 		
