@@ -68,7 +68,12 @@ class WebAuthentication extends ApiAuthentication
 			$this->loginData=$dbJprofile->get($profileid,"PROFILEID",$paramArr);
 			$this->RecentUserEntry();
 			$this->insert_into_login_history($this->loginData["PROFILEID"]);
-			$this->loginTracking($this->loginData[PROFILEID],"M",'',$loc);			
+                        
+                        if(sfContext::getInstance()->getRequest()->getParameter("linkFromSMS")=='Y') // for autologin from sms 
+                            $channel='S';
+                        else 
+                            $channel='M';
+			$this->loginTracking($this->loginData[PROFILEID],$channel,'',$loc);			
 			$this->loginData[AUTHCHECKSUM]=$this->encryptAppendTime($this->createAuthChecksum());
 			$this->removeLoginCookies();
 			$this->setcookies($this->loginData,'','');
