@@ -223,6 +223,9 @@ function formatTrackingString($trackingString)
 			case JSTrackingPageType::FILTERED_INTEREST_IOS:
 				$formattedString.="JS IOS:Filtered Ios Interest";
 				break;
+			case JSTrackingPageType::EXCLUSIVE_SERVICE2_MAILER_RTYPE:
+				$formattedString.="JS Exclusive Servicing II Mailer";
+				break;
 		}
 	}
 	return $formattedString;
