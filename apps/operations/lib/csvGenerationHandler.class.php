@@ -1176,7 +1176,7 @@ class csvGenerationHandler
 				}
 				else if($processName=="renewalProcessInDialer"){
 					$campaignType	=$this->getCampaignType($processName, $dataArr['MTONGUE']);
-					if($campaignType='OB_RENEWAL_MAH'){
+					if($campaignType=='OB_RENEWAL_MAH'){
 						$campaignName 	=$salesCampaign[$campaignType];	
 						$leadId 	=$campaignName.$leadIdSuffix;	
 					}
@@ -1627,7 +1627,7 @@ class csvGenerationHandler
 
 		$renewalSouthCommunity 	=crmParams::$renewalSouthCommunity;
 		$campaignNames		=crmParams::$campaignNames;	
-	
+
 		if($processName=='renewalProcessInDialer'){
 			if(in_array($mtongue, $renewalSouthCommunity))	
 				$campaignType =$campaignNames['renewalMah'];

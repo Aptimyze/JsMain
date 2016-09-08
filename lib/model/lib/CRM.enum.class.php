@@ -20,7 +20,7 @@ class csvFields
 class crmParams
 {
 	// Sales Regular Process
-	public static $renewalSouthCommunity		=array(12,20);
+	public static $renewalSouthCommunity		=array(12,20,34);
 	public static $southIndianCommunity    		=array(3,25,16,31,17,35,2,18,1,37);
         public static $salesRegularConsiderCommunity	=array(4,5,9,20,21,22,23,24,12,29,32,34,19);
 	public static $salesRegularIgnoreCommunity 	=array(3,16,17,31,4,5,9,20,21,22,23,24,12,29,32,34);
