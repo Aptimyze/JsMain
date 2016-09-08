@@ -23,10 +23,10 @@
         {
 
                             $newUrl='';
-                            $page=explode('?',$url);
-                            $page=$page[0];
+                            $pageArr=explode('?',$url);
+                            $page=$pageArr[0];
                             $newUrl.=($page.'?');
-                            $page2=$page[1];
+                            $page2=$pageArr[1];
                             $pgArr=explode('&',$page2);
                             foreach ($pgArr as $key => $value) 
                             {

@@ -297,7 +297,7 @@ Abstract class ApiAuthentication
 		$request_uri=$_SERVER[REQUEST_URI];
 		if(!$location)
 		{
-			$page=explode('?',$request_uri);
+			$page=explode('?',$location);
 			$page=$page[0];
 			$page=explode('/',$page);
 			$no=count($page);

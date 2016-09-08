@@ -22,24 +22,19 @@ class WebAuthentication extends ApiAuthentication
 	{
 		$_COOKIE[AUTHCHECKSUM] = "";
 	}
-	public function setCrmAdminAuthchecksum($checksum,$loginData)
+	public function setCrmAdminAuthchecksum($checksum)
 	{
             
 		$epid_arr=explode("i",$checksum);
-        $profileid=$epid_arr[1];
+                $profileid=$epid_arr[1];
        
-        if($loginData['PROFILEID']) // HERE WE EXPECT ALL THE NECESSARY DATA FIELDS .. TO KNOW THE SAME REFER TO $this->createAuthChecksum() 
-            $this->loginData=$loginData;
-        else 
-        {
+   
                 $dbJprofile=new JPROFILE();
 			
 		$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL';
 			
 		$this->loginData=$dbJprofile->get($profileid,"PROFILEID",$paramArr);
-		
-        }
-                $this->loginData[AUTHCHECKSUM]=$this->encryptAppendTime($this->createAuthChecksum());
+		$this->loginData[AUTHCHECKSUM]=$this->encryptAppendTime($this->createAuthChecksum());
 		$this->removeLoginCookies();
 		$this->setcookies($this->loginData,'','');
 		return $this->loginData;
@@ -69,7 +64,7 @@ class WebAuthentication extends ApiAuthentication
 			$this->RecentUserEntry();
 			$this->insert_into_login_history($this->loginData["PROFILEID"]);
                         
-                        if(sfContext::getInstance()->getRequest()->getParameter("linkFromSMS")=='Y') // for autologin from sms 
+                        if(strpos($loc,"linkFromSMS")!==false) // for autologin from sms 
                             $channel='S';
                         else 
                             $channel='M';
