@@ -193,6 +193,7 @@
                     <div id="successMsg" class="rcb_pt25 f16 rcb_opa60 txtc">Our Advisor will get back to you as per the date and time you have specified
                     </div>
                     ~else`
+                    <div id="timeError" style="color:red;display:none" class="f14 mt26 txtc">Please select valid Time Duration</div>
                     <div class="rcbfield rcb_pt40">
                         <!--start:date-->
                         <div class="rcb_fl rcb_pl120">
@@ -318,6 +319,17 @@
                 $("#" + P_id + " dt span").html(text);
                 $("#" + P_id + " dd ul").css('display', 'none');
                 $("#d" + P_id + "").val($(this).attr('id'));
+                var date = $("#ddropDown0").val(),
+                    startTime = $("#ddropDown1").val(),
+                    endTime = $("#ddropDown2").val();
+                var t1 = Date.parse(date + " " + startTime),
+                    t2 = Date.parse(date + " " + endTime),
+                    now = Date.parse(new Date());
+                if (t2 - t1 <= 0 || t1 < now) {
+                    $("#timeError").show();
+                } else {
+                    $("#timeError").hide();
+                }
             });
 
             function intialize() {
@@ -373,9 +385,23 @@
                 var intRegex = /^\d+$/;
                 var str = $("#mobileInput").val();
                 var len = $("#mobileInput").val().length;
-                if (len == 10 && intRegex.test(str)) {
-                    $("#placeRequestForm").submit();
+                var date = $("#ddropDown0").val(),
+                    startTime = $("#ddropDown1").val(),
+                    endTime = $("#ddropDown2").val();
+                var t1 = Date.parse(date + " " + startTime),
+                    t2 = Date.parse(date + " " + endTime),
+                    now = Date.parse(new Date()),
+                    error = false;
+                if (t2 - t1 <= 0 || t1 < now) {
+                    error = true;
                 } else {
+                    error = false;
+                }
+                if (len == 10 && intRegex.test(str) && !error) {
+                    $("#placeRequestForm").submit();
+                    $("#timeError").hide();
+                } else {
+                    $("#timeError").show();
                     $("#mobileInput").addClass("errorBorder");
                 }
             });
