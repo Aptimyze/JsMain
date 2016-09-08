@@ -398,9 +398,9 @@
                     error1 = false;
                 }
                 if(len == 10 && intRegex.test(str)){
-                    error2 = true;
-                } else {
                     error2 = false;
+                } else {
+                    error2 = true;
                 }
                 if (!error1 && !error2) {
                     $("#placeRequestForm").submit();
