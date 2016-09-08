@@ -294,10 +294,11 @@ Abstract class ApiAuthentication
 		$loginTracking= LoginTracking::getInstance($profileId);
 		$loginTracking->setChannel($channel);
 		$loginTracking->setWebisteVersion($websiteVersion);
-		$request_uri=$_SERVER[REQUEST_URI];
+		
 		if(!$location)
 		{
-			$page=explode('?',$location);
+			$request_uri=$_SERVER[REQUEST_URI];
+			$page=explode('?',$request_uri);
 			$page=$page[0];
 			$page=explode('/',$page);
 			$no=count($page);
@@ -305,6 +306,7 @@ Abstract class ApiAuthentication
 		}
 		else
 		{
+			$request_uri=$location;
 			$request_uri=str_replace("CMGFRMMMMJS=","pass=",$request_uri);
 			$request_uri=str_replace("&echecksum=","&autologin=",$request_uri);
 			$request_uri=str_replace("?echecksum=","?autologin=",$request_uri);
