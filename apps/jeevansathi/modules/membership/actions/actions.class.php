@@ -1037,10 +1037,10 @@ class membershipActions extends sfActions
         $this->device         = $request->getParameter('device');
         $this->channel        = $request->getParameter('channel');
         $this->callbackSource = $request->getParameter('callbackSource');
-        $this->date           = $request->getParameter('date');
-        $this->startTime      = $request->getParameter('startTime');
-        $this->endTime        = $request->getParameter('endTime');
-        
+        $this->date           = $request->getParameter('date') || $request->getParameter('dropDownDaySelected');
+        $this->startTime      = $request->getParameter('startTime') || $request->getParameter('dropDownTimeStartSelected');
+        $this->endTime        = $request->getParameter('endTime') || $request->getParameter('dropDownTimeEndSelected');
+
         $orgTZ = date_default_timezone_get();
         date_default_timezone_set("Asia/Calcutta");
         $currentTime = time();
@@ -1150,7 +1150,7 @@ class membershipActions extends sfActions
                         if (!MobileCommon::isNewMobileSite() && $request->getPostParameter('callRequest') == 1) {
                             $phoneNo = $request->getPostParameter('mobNumber');
                             $subject = "Callback request for JS Exclusive";
-                            $msgBody = "<html><body>A callback request has been placed for explaining JS Exclusive service. Details below:</br>Username: Unregistered</br>Contact Number: " . $request->getPostParameter('mobNumber') . "</br>Date to call: " . $request->getPostParameter('dropDownDaySelected') . "</br>Time to call: From " . $request->getPostParameter('dropDownTimeStartSelected') . " To " . $request->getPostParameter('dropDownTimeEndSelected') . "</br></body></html>";
+                            $msgBody = "<html><body>A callback request has been placed for explaining JS Exclusive service. Details below:</br>Username: Unregistered</br>Contact Number: " . $request->getPostParameter('mobNumber') . "</br>Date to call: " . $this->date . "</br>Time to call: From " . $this->startTime . " To " . $this->endTime . "</br></body></html>";
                         } else {
                             $subject = "Lead for JS Exclusive";
                             $msgBody = "JS Exclusive";
@@ -1190,7 +1190,7 @@ class membershipActions extends sfActions
 
                     if (!MobileCommon::isNewMobileSite() && $request->getPostParameter('callRequest') == 1) {
                         $subject = "Callback request for JS Exclusive";
-                        $msgBody = "<html><body>A callback request has been placed for explaining JS Exclusive service. Details below:</br>Username: " . $Username . "</br>Contact Number: " . $request->getPostParameter('mobNumber') . "</br>Date to call: " . $request->getPostParameter('dropDownDaySelected') . "</br>Time to call: From " . $request->getPostParameter('dropDownTimeStartSelected') . " To " . $request->getPostParameter('dropDownTimeEndSelected') . "</br></body></html>";
+                        $msgBody = "<html><body>A callback request has been placed for explaining JS Exclusive service. Details below:</br>Username: " . $Username . "</br>Contact Number: " . $request->getPostParameter('mobNumber') . "</br>Date to call: " . $this->date . "</br>Time to call: From " . $this->startTime . " To " . $this->endTime . "</br></body></html>";
                     } else {
                         $subject = "$Username is interested in $msgContent";
                         $msgBody = "<html><body>$Username is interested in knowing more about $msgContent. Please contact at $email, $contact_str as requested on $reqDate at $reqTime.</body></html>";
