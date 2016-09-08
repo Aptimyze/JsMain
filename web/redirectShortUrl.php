@@ -39,7 +39,7 @@
                                     $newUrl.=($value.'&');
                             }  
                             
-                            if(!$tempArr['echecksum'])return $url;
+                            if(!$tempArr['echecksum'] || !$tempArr['checksum'])return $url;
                             $echecksum=$tempArr['echecksum'];
                             $checksum=$tempArr['checksum'];
                             
