@@ -7,6 +7,7 @@ class mmmjs_INDIVIDUAL_MAILERS extends TABLE
 {
 	public function __construct($dbname="matchalerts_slave_localhost")
 	{
+		$dbname = $dbname?$dbname:"matchalerts_slave_localhost";
 		parent::__construct($dbname);
 	}
 
