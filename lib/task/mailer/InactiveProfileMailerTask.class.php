@@ -11,7 +11,7 @@
 {
 	private $profilemail=array();
 	private $OneTimeInterval = '360';
-	private $Interval = '90';
+	private $Interval = '85';
 	private $Interval1 = '15';
 	private $chunk = '100';
 	protected function configure()
@@ -54,7 +54,7 @@ EOF;
 			            		$IncompleteMasterobj->InsertStatusAlert($value,$this->Interval);
 			            	}
 			            }
-			           		$this->Interval=$this->Interval+30;
+			        /*   		$this->Interval=$this->Interval+30;
 
 			           		$profilemail2=$IncompleteSlaveobj->ProfilesInactivated($this->Interval);
 			           		 $profileMailArray=array_chunk($profilemail2, $this->chunk);
@@ -77,6 +77,7 @@ EOF;
 			            		$IncompleteMasterobj->InsertStatusAlert($value,$this->Interval);
 			            	}
 			           }
+			           */
 			           		$profilemail4=$IncompleteSlaveobj->ProfilesInactivated($this->Interval1);
 			           		 $profileMailArray=array_chunk($profilemail4, $this->chunk);
 			           		unset($profilemail4);
