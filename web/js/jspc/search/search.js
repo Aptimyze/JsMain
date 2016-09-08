@@ -506,6 +506,13 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
                            showCommonLoader();
                     },
 		    success: function(response) {
+                        if(response.responseStatusCode==1)
+                        {
+                        hideCommonLoader();
+			showCustomCommonError(response.responseMessage,5000);
+                        return;
+                        }
+			callAfterContact();
                         hideCommonLoader();
 			if(response.status==1 && blockOrUnblock==1){
 			    blockProfileOnSRP(srpTuple,profileCheckSum,usernameOfProfile);
@@ -665,6 +672,10 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
 		postParams = postParams+="&newTagJustJoinDate="+newTagJustJoinDate;
 	if(listType=='cc')
 		postParams = postParams+"&ContactCenterDesktop=1";
+
+	//alert(postParams.indexOf('partnermatches'));
+	if(postParams.indexOf('partnermatches')!='-1' || postParams.indexOf('matchalerts')!='-1' || postParams.indexOf('justJoined')!='-1' || postParams.indexOf('kundlialerts')!='-1' || postParams.indexOf('twowaymatch')!='-1' || postParams.indexOf('reverseDpp')!='-1' || postParams.indexOf('verifiedMatches')!='-1' || postParams.indexOf('reverseDpp')!='-1')
+		url =  getUrlForHeaderCaching(url);
 	/*
         if(postParams.search("sort_logic")==-1 && postParams.search("currentPage")==-1 && pageOfResult!==null)
                 postParams = postParams+"&currentPage="+pageOfResult;
@@ -674,6 +685,7 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
                 url: url,
 		dataType: 'json',
 		type: 'GET',
+                cache: true,
 		data: postParams,
 		timeout: 60000,
 		beforeSend: function( xhr ) {
@@ -901,6 +913,7 @@ $("body").delegate('.changeListingLogic','click', function() {
                           
                     },
 		    success: function(response) {
+												callAfterDppChange();
                         $(".changeListingLogic"+response.successMessage.matchAlertLogic).attr("checked","checked");
                         if(response.successMessage.matchAlertLogic==Coded){
                             var idOfElement = "listingLogic"+Coded;

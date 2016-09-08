@@ -43,7 +43,8 @@ class RequestHandlerConfig
         "coverphoto"=>array("v1"=>"CoverPhotoV1"),
         "horoscope"=>array("v1"=>"HoroscopeV1"),
         "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),
-        "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1")),
+        "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1"),
+      "cache"=>array("v1"=>"ApiProfileCacheV1","v2"=>"ApiProfileCacheV1","v3"=>"ApiProfileCacheV1")),
     "settings"=>array(
 		"alertManager"=>array("v1"=>"AlertManagerV1","v2"=>"","v3"=>"AlertManagerV1"),
     	"deleteProfile"=>array("v1"=>"DeleteProfileV1","v2"=>"","v3"=>"DeleteProfileV1")),
@@ -61,6 +62,7 @@ class RequestHandlerConfig
 		"deletePhoto"=>array("v1"=>"SelfPhotoFunctionalityV1","v2"=>"","v3"=>"SelfPhotoFunctionalityV1"),
 		"setProfilePhoto"=>array("v1"=>"SelfPhotoFunctionalityV1","v2"=>"","v3"=>"SelfPhotoFunctionalityV1"), 
 		"getProfilePhoto"=>array("v1"=>"GetProfilePicV1","v2"=>"","v3"=>""), 
+		"getMultiUserPhoto"=>array("v1"=>"GetMultiUserPhotoV1","v2"=>"","v3"=>""), 
 		"saveCroppedProfilePic"=>array("v1"=>"SelfPhotoFunctionalityV1","v2"=>"","v3"=>"SelfPhotoFunctionalityV1"),
 		"changePhotoPrivacy"=>array("v1"=>"changePhotoPrivacyV1","v2"=>"","v3"=>"changePhotoPrivacyV1"),		
 		"getAlbum"=>array("v1"=>"GetAlbumV1","v2"=>"","v3"=>"GetAlbumV1"),
@@ -99,6 +101,19 @@ class RequestHandlerConfig
     "help"=>array(
         "helpQuery"=>array("v1"=>"SubmitQueryV1"),
         "publicQuestions"=>array("v1"=>"GetPublicQuestionsV1")
+        ),
+    "chat"=>array(
+        "authenticateChatSession"=>array("v1"=>"authenticateChatSessionV1"),
+        "chatUserAuthentication"=>array("v1"=>"chatUserAuthenticationV1"),
+        "fetchCredentials"=>array("v1"=>"fetchCredentialsV1"),
+        "fetchVCard"=>array("v1"=>"fetchVCardV1"),
+	"getRoasterData"=>array("v1"=>"getRosterDataV1"),
+	"getDppData"=>array("v1"=>"getDppDataV1"),
+	"getProfileData"=>array("v1"=>"getProfileDataV1"),
+	"sendEOI"=>array("v1"=>"sendEOIV1"),
+        "selfName"=>array("v1"=>"SelfNameV1"),
+	"pushChat"=>array("v1"=>"pushChat"),
+	"popChat"=>array("v1"=>"popChat")
         )
 );
 

@@ -7,18 +7,18 @@ class DialerHandler
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
         }
-	public function getRenewalEligibleProfiles($x)
+	public function getRenewalEligibleProfiles($x,$campaign_name)
 	{
-		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
-		$res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N' AND CAMPAIGN_TYPE='$campaign_name'";
+		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$eligible_array[] = $row["PROFILEID"];
 		return $eligible_array;
 	}
-	public function getRenewalInEligibleProfiles($x)
+	public function getRenewalInEligibleProfiles($x,$campaign_name)
 	{
-		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
-		$res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N' AND CAMPAIGN_TYPE='$campaign_name'";
+		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$ignore_array[] = $row["PROFILEID"];
 		return $ignore_array;
@@ -29,7 +29,7 @@ class DialerHandler
 		$profileid_str = @implode(",",$profiles_array);
 		if($profileid_str){
 			$sql_vd="select PROFILEID,DISCOUNT from billing.RENEWAL_DISCOUNT WHERE PROFILEID IN ($profileid_str)";
-			$res_vd = mysql_query($sql_vd,$this->db_js) or die("$sql_vd".mysql_error($this->db_js));
+			$res_vd = mysql_query($sql_vd,$this->db_js_157) or die("$sql_vd".mysql_error($this->db_js));
 			while($row_vd = mysql_fetch_array($res_vd)){
 				$pid = $row_vd["PROFILEID"];
 				$vd_profiles[$pid] = $row_vd["DISCOUNT"];
@@ -239,18 +239,19 @@ class DialerHandler
 		}
 
 		//INITIAL PRIORITY UPDATE 
-	        $priority='';
-        	if($alloted_to=='')
-	        {
-        	        if($score>=81 && $score<=100)
-                	        $priority='2';
-	                elseif($score>=41 && $score<=80)
-        	                $priority='1';
-                	else
-                        	$priority='0';
-	        }
-        	else
-                	$priority='0';
+		$priority=0;
+		if($score>=81 && $score<=100)
+			$priority='5';
+		elseif($score>=61 && $score<=80)
+			$priority='4';
+		elseif($score>=41 && $score<=60)
+			$priority='3';
+		elseif($score>=21 and $score<=40)
+			$priority='2';
+		elseif($score>=11 and $score<=20)
+			$priority='1';
+		elseif($score>=1 and $score<=10)
+			$priority='0';
 		
 		if($priority!=$dialer_data['initialPriority']){
 			$update_str[] 	="old_priority='$priority'";
@@ -265,13 +266,15 @@ class DialerHandler
 		else
 			return "ignore";
 	}
-        public function getProfilesForCampaign($tableName, $csvEntryDate='',$campaignName='',$startDt='',$endDt='')
+        public function getProfilesForCampaign($tableName, $csvEntryDate='',$campaignName='',$startDt='',$endDt='',$ID='')
         {
 		$tableName =trim($tableName);
 		if($campaignName=='OB_JS_PAID')
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate'";
 		elseif($campaignName=='OB_JS_RCB')
-			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE>'$startDt'";
+			$sql ="SELECT * FROM incentive.$tableName WHERE ID>'$ID' ORDER BY ID";
+		elseif($campaignName=='JS_RENEWAL' || $campaignName=='OB_RENEWAL_MAH')
+			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' AND CAMPAIGN_TYPE='$campaignName' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
 		else
 			$sql ="SELECT * FROM incentive.$tableName WHERE CSV_ENTRY_DATE='$csvEntryDate' ORDER BY PRIORITY DESC,ANALYTIC_SCORE DESC,LAST_LOGIN_DATE DESC";
                 $res = mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
@@ -301,7 +304,7 @@ class DialerHandler
         }
         public function formatDataSet($campaignName, $dataArr,$csvEntryDate)
         {
-		if($campaignName=='JS_RENEWAL')
+		if($campaignName=='JS_RENEWAL' || $campaignName=='OB_RENEWAL_MAH')
 			$discountField ='DISCOUNT_PERCENT';
 		else
 			$discountField ='VD_PERCENT';
@@ -313,7 +316,7 @@ class DialerHandler
 		}
 		else if($campaignName=='OB_JS_RCB'){
 			unset($fieldNameArr['EXPIRY_DT']);
-			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY');
+			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY','ID'=>'ID');
 			$fieldNameArr =array_merge($fieldNameArr,$fieldNameArr1);	
 		}
 		if($campaignName=='OB_JS_PAID')
@@ -371,7 +374,10 @@ class DialerHandler
         }
         public function getCampaignRecordsForDuration($campaignName,$startDate,$endDate='')
         {
-                $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>'$startDate'";
+		if($campaignName=='OB_JS_RCB')
+			$squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>='$startDate'";		
+		else
+	                $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>'$startDate'";
                 $sresult =mssql_query($squery,$this->db_dialer) or $this->logerror($squery,$this->db_dialer);
                 if($srow = mssql_fetch_array($sresult)){
                         $cnt =$srow['cnt'];
@@ -386,11 +392,24 @@ class DialerHandler
                         $date =$row['DATE'];
                 return $date;
 	}
+        public function getLastHandledID($processId)
+        {
+                $sql="SELECT HANDLED_ID from incentive.LAST_HANDLED_DATE WHERE SOURCE_ID='$processId'";
+                $res =mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
+                if($row = mysql_fetch_assoc($res))
+                        $id =$row['HANDLED_ID'];
+                return $id;
+        }
 	public function updateLastHandledDate($processId, $dateSet)
 	{
 		$sql="update incentive.LAST_HANDLED_DATE SET DATE='$dateSet' WHERE SOURCE_ID='$processId'";
 		mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
 	}
+        public function updateLastHandledID($processId, $id)
+        {
+                $sql="update incentive.LAST_HANDLED_DATE SET HANDLED_ID='$id' WHERE SOURCE_ID='$processId'";
+                mysql_query($sql,$this->db_master) or die("$sql".mysql_error($this->db_master));
+        }
         public function fetchIST($time)
         {
                 $ISTtime=strftime("%Y-%m-%d %H:%M",strtotime("$time + 10 hours 30 minutes"));

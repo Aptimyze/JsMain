@@ -21,7 +21,7 @@ class ProfileCacheConstants
     const ACTIVATED_KEY = 'activatedKey';
     const PROFILE_LOG_PATH = 'ProfileCache';
     const COMMAND_LINE = 'cli';
-    const CACHE_EXPIRE_TIME = 3600;
+    const CACHE_EXPIRE_TIME = 86400;
     const CACHE_MAX_ATTEMPT_COUNT = 3;
     //Acceptable or Relevant Fields which will be allowed as a subkeys in Hash
     //public static $arrHashSubKeys = array('USERNAME', 'AGE', 'CITY_RES', 'COUNTRY_RES', 'CAST', 'RELIGION');

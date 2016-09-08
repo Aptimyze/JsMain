@@ -13,7 +13,7 @@ class VariableDiscount
     */
     public function getDiscDetails($profileid)
     {
-        $vdObj = new billing_VARIABLE_DISCOUNT;
+        $vdObj = new billing_VARIABLE_DISCOUNT();
         $output = $vdObj->getDiscountDetails($profileid);
         unset($vdObj);
         return $output;
@@ -21,7 +21,7 @@ class VariableDiscount
     
     public function getSlabForProfile($profileid)
     {
-        $variableObj = new newjs_ANALYTICS_VARIABLE_DISCOUNT;
+        $variableObj = new newjs_ANALYTICS_VARIABLE_DISCOUNT();
         $output = $variableObj->getSlabForProfile($profileid);
         return $output;
     }
@@ -50,7 +50,7 @@ class VariableDiscount
 	public function getAllDiscountWithService($profileid)
 	{
 		$discountNewArr =array();
-		$vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_slave');
+		$vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_masterRep');
 		$discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
 		if(count($discountDetails)>0){
                 	foreach($discountDetails as $key=>$val){
@@ -88,7 +88,7 @@ class VariableDiscount
     // get VD Discount Labels 
     public function getPreviousVdLogDetails($profileid)
     {
-	$vdLogObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG('newjs_slave');
+	$vdLogObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG('newjs_masterRep');
         $vdLogDetailsArr =$vdLogObj->getDiscountDetails($profileid);
         $lastVdExpiryDate =$vdLogDetailsArr[0]['EDATE'];
 	if($lastVdExpiryDate){
@@ -127,7 +127,7 @@ class VariableDiscount
 	if(!is_array($durationArr)){
 		$durationArr =$this->getActiveDurations();
 	}
-        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_slave');
+        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION('newjs_masterRep');
         $discountDetails =$vdOfferDurationObj->getDiscountDetailsForProfile($profileid);
 	if(is_array($discountDetails)){
         foreach($discountDetails as $key=>$val){
@@ -150,12 +150,12 @@ class VariableDiscount
     }
 
     public function getVdProfilesForMailer(){
-    	$vdObj =new billing_VARIABLE_DISCOUNT('newjs_slave');
+    	$vdObj =new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $profilesArr =$vdObj->getVdProfilesForMailer();
         return $profilesArr;
     }
     public function getVDProfilesActivatedForDate($profileStr,$startDate=''){
-        $vdObj =new billing_VARIABLE_DISCOUNT('newjs_slave');
+        $vdObj =new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $profilesArr =$vdObj->getDiscount($profileStr,$startDate);
         return $profilesArr;
     }
@@ -187,7 +187,7 @@ class VariableDiscount
     
     public function getCashDiscountDispText($profileid='',$caseType)
     {
-		$cashDiscountOfferObj 	=new billing_DISCOUNT_OFFER('newjs_slave');
+		$cashDiscountOfferObj 	=new billing_DISCOUNT_OFFER('newjs_masterRep');
         $flatDiscount           =$cashDiscountOfferObj->checkFlatDiscount();
         //$discountLimitText      =VariableParams::$discountLimitText;
 		$discountTextVal        =$this->getDiscountCaseTypeText($caseType, $flatDiscount);
@@ -208,7 +208,7 @@ class VariableDiscount
        */ 
     public function activateVDForProfile($profileid,$discountDetails,$serviceArr,$sendMail=false,$sendSMS=false)
     {
-        $vdObj1 = new billing_VARIABLE_DISCOUNT('newjs_slave');
+        $vdObj1 = new billing_VARIABLE_DISCOUNT('newjs_masterRep');
         $SENT_MAIL = 'Y';  //$SENT_MAIL = 'Y' specifies no mail to be sent
         $SENT_SMS = 'Y'; //$SENT_SMS = 'Y' specifies no sms to be sent
         if($sendMail==true)
@@ -296,7 +296,7 @@ class VariableDiscount
     
     public function generateVDImpactReport()
     {
-        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_slave");
+        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_masterRep");
         $vdData = $variableDiscountObj->getVDProfilesEndingYesterday();
         //$vdData = $variableDiscountObj->getVariableDiscountProfilesEndingYesterday();
         if(count($vdData) > 150000)
@@ -370,6 +370,7 @@ class VariableDiscount
         $profileArr =array();
         $vdDurationArr =uploadVD::$vdDurationArr;
         $variable ='disc';
+	$todayDate =date("Y-m-d");
 
         $count = $VDTempObj->getCountOfRecords($entryDate);
         for($i=0;$i<$count;$i+=$limit)
@@ -380,6 +381,10 @@ class VariableDiscount
             {
                 $pid =$details['PROFILEID'];
                 if($pid){
+
+		    $startDate  =$details['SDATE'];	
+		    if(strtotime($todayDate) != strtotime($startDate))
+			continue;		
 		    $isPaid =$this->checkPaidProfile($pid);	
 		    if($isPaid)
 			continue; 	
@@ -423,7 +428,7 @@ class VariableDiscount
     }
     public function populateRemainingRecordsFromVDTemp($entryDate,$sendAlert=false)
     {
-        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_slave');
+        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterRep');
         $VDDuartionObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $VDObj = new billing_VARIABLE_DISCOUNT();
         $profileArr =array();
@@ -507,7 +512,7 @@ class VariableDiscount
     // Check Paid Condition
     public function checkPaidProfile($profileid)
     {
-        $jprofileObj = new JPROFILE('newjs_slave');
+        $jprofileObj = new JPROFILE('newjs_masterRep');
 	$subscription =$jprofileObj->getProfileSubscription($profileid);	
         if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
 		$paid =true;
@@ -524,7 +529,7 @@ class VariableDiscount
         	$durationsArr =unserialize($memCacheObject->get($keyMain));
         }
 	 else{
-        	$serviceObj = new billing_SERVICES('newjs_slave'); 
+        	$serviceObj = new billing_SERVICES('newjs_masterRep'); 
 		$durationsArr =$serviceObj->getOnlineActiveDurations();
 		foreach($durationsArr as $key=>$val){
 			if($val=='1188'){
@@ -543,7 +548,7 @@ class VariableDiscount
         if(!is_array($durationArr)){
                 $durationArr =$this->getActiveDurations();
         }
-        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH('newjs_slave');
+        $vdOfferDurationObj =new billing_VARIABLE_DISCOUNT_DURATION_POOL_TECH('newjs_masterRep');
         $discountDetails =$vdOfferDurationObj->getDiscountArr($profileid);
         if(is_array($discountDetails)){
         foreach($discountDetails as $key=>$val){
@@ -565,7 +570,7 @@ class VariableDiscount
         {
                 $vdClusterObj   =new billing_VD_CLUSTER();
                 $clusterDetails =$vdClusterObj->getClusterDetails();
-                $fields         ='PROFILEID,GENDER,AGE';
+                $fields         ='PROFILEID,GENDER,AGE,SUBSCRIPTION';
                 $jprofileData   =array();
 		$profileArray	=array();
 
@@ -622,6 +627,10 @@ class VariableDiscount
 				$profileid      =$val['PROFILEID'];
 				$gender         =$val['GENDER'];
 				$age            =$val['AGE'];
+				$subscription   =$val['SUBSCRIPTION'];
+
+				if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
+					continue;
 				if(($gender=='M' && $age<23) || ($gender=='F' && $age<20))
 					continue;
 				if($analyticScore){
@@ -629,6 +638,10 @@ class VariableDiscount
 					if(!$eligible)
 						continue;
 				}
+				$isRenewal =$this->isProfileRenewable($profileid);
+                                if($isRenewal && ($isRenewal!=1)){
+	                                continue;
+                                }
 				$profileArr[] =$profileid;
 			}
 			//print_r($profileArr);
@@ -689,7 +702,32 @@ class VariableDiscount
                         $uploadTempObj->addVDRecordsInUploadTemp($profileid,$startDate,$endDate,$discount,$services);
                 }}
         }
- 
+	function isProfileRenewable($profileid) {
+		$purchasesObj = new BILLING_PURCHASES('newjs_local111');
+		$serviceStatusObj = new BILLING_SERVICE_STATUS('newjs_local111');
+
+		$myrow = $purchasesObj->getPurchaseCount($profileid);
+		if ($myrow['COUNT'] > 0) {
+		    $row = $serviceStatusObj->getLastActiveServiceDetails($profileid);
+		    if ($row['EXPIRY_DT']) {
+			if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
+			    return 1;
+			}
+			else {
+			    if ($row['DIFF'] > - 11 && $row['DIFF'] < 30) {
+				list($yy, $mm, $dd) = explode('-', $row["EXPIRY_DT"]);
+				$ts = mktime(0, 0, 0, $mm, $dd + 10, $yy);
+				$expiry_date = date("j-M-Y", $ts);
+				return $expiry_date;
+			    }
+			    else if ($row['DIFF'] > - 11) return 1;
+			    else return 0;
+			}
+		    }
+		    else return 0;
+		}
+		else return 0;
+	}
 
 }
 ?>

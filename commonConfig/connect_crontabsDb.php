@@ -6,6 +6,13 @@ function connect_db()
         return $db;
 }
 
+function connect_ddl()
+{
+        $db=@mysql_connect(MysqlDbConstants::$masterDDL[HOST].":".MysqlDbConstants::$masterDDL[PORT],MysqlDbConstants::$masterDDL[USER],MysqlDbConstants::$masterDDL[PASS]) or die("master connection failed");//changed
+        @mysql_select_db("newjs",$db);
+        return $db;
+}
+
 function connect_slave()
 {
        

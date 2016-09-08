@@ -196,3 +196,6 @@ padding: 10px 15px ;
   overflow-x: none;
 }
 .vpro_lineHeight{line-height:1.5}
+.wspace{
+    white-space: normal !important;
+}

@@ -484,7 +484,7 @@ class ProfileInformationModuleMap
 		"MY_MESSAGE"=>Array( 
 			"ID"=> "4",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "100000",
+			"COUNT"=> "10",
 			"TUPLE"=> "MYJS_MESSAGE_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",

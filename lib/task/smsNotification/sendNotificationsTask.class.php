@@ -34,7 +34,7 @@ $this->addOptions(array(
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
         $this->notificationKey = $arguments["notificationKey"]; // NEW / EDIT
-	$this->scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS('newjs_slave');
+	$this->scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS('newjs_masterRep');
 	$this->scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 	$maxIdData = $this->scheduledAppNotificationObj->getArray("","","","max(ID) as maxId");
 	$this->maxId = $maxIdData[0][maxId];

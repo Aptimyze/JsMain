@@ -34,18 +34,39 @@ function compute_opt_in_array($db_js,$dnc_array)
         }
         return $opt_in_profiles;
 }
-
+function compute_eligible_in_array($db_js,$dnc_array,$renewal='')
+{
+        $eligible_profiles = array();
+        $profileid_str = implode(",",$dnc_array);
+        if($profileid_str!='')
+        {
+		if($renewal)
+			$table ='incentive.RENEWAL_IN_DIALER';
+		else
+			$table ='incentive.IN_DIALER';
+		$sql_vd="select PROFILEID from ".$table." WHERE PROFILEID IN ($profileid_str) AND ELIGIBLE!='N'";	
+                $res_vd = mysql_query($sql_vd,$db_js) or die("$sql_vd".mysql_error($db_js));
+                while($row_vd = mysql_fetch_array($res_vd))
+                        $eligible_profiles[] = $row_vd["PROFILEID"];
+        }
+        return $eligible_profiles;
+}
 function start_opt_in_profiles($campaign_name,$opt_in_profile,$db_dialer,$db_js_157)
 {
-	$squery1 = "SELECT easycode,PROFILEID FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID ='$opt_in_profile'";
+	$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID ='$opt_in_profile'";
         $sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
         while($srow1 = mssql_fetch_array($sresult1))
         {
                 $ecode = $srow1["easycode"];
                 $proid = $srow1["PROFILEID"];
+		$alloted = $srow1['AGENT'];
 		if($ecode!='')
 		{
-			$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1' WHERE easycode='$ecode'";
+			if($alloted)
+				$dialStatus ='2';
+			else
+				$dialStatus ='1';
+			$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus,DNC_Status='' WHERE easycode='$ecode'";
 			mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer);
 
 			$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
@@ -81,10 +102,12 @@ function logerror($sql="",$db="",$ms)
 $msg = "Start time #".@date('H:i:s');
 $dnc_array = compute_dnc_array($db_dialer,'MAH_JSNEW');
 $opt_in_array = compute_opt_in_array($db_js,$dnc_array);
-for($i=0;$i<count($opt_in_array);$i++)
-	start_opt_in_profiles('MAH_JSNEW',$opt_in_array[$i],$db_dialer,$db_js_157);
+$opt_in_array1 = compute_eligible_in_array($db_js,$opt_in_array);
+for($i=0;$i<count($opt_in_array1);$i++)
+	start_opt_in_profiles('MAH_JSNEW',$opt_in_array1[$i],$db_dialer,$db_js_157);
 unset($dnc_array);
 unset($opt_in_array);
+unset($opt_in_array1);
 $msg.="End time :".@date('H:i:s');
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 $sub="Dialer updates for MAH_JSNEW opt-in done.";
@@ -96,10 +119,12 @@ mail($to,$sub,$msg,$from);
 $msg = "Start time #".@date('H:i:s');
 $dnc_array = compute_dnc_array($db_dialer,'JS_NCRNEW');
 $opt_in_array = compute_opt_in_array($db_js,$dnc_array);
-for($i=0;$i<count($opt_in_array);$i++)
-	start_opt_in_profiles('JS_NCRNEW',$opt_in_array[$i],$db_dialer,$db_js_157);
+$opt_in_array1 = compute_eligible_in_array($db_js,$opt_in_array);
+for($i=0;$i<count($opt_in_array1);$i++)
+	start_opt_in_profiles('JS_NCRNEW',$opt_in_array1[$i],$db_dialer,$db_js_157);
 unset($dnc_array);
 unset($opt_in_array);
+unset($opt_in_array1);
 $msg.="End time :".@date('H:i:s');
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 $sub="Dialer updates for JS_NCRNEW opt-in done.";
@@ -111,14 +136,33 @@ mail($to,$sub,$msg,$from);
 $msg = "Start time #".@date('H:i:s');
 $dnc_array = compute_dnc_array($db_dialer,'JS_RENEWAL');
 $opt_in_array = compute_opt_in_array($db_js,$dnc_array);
-for($i=0;$i<count($opt_in_array);$i++)
-        start_opt_in_profiles('JS_RENEWAL',$opt_in_array[$i],$db_dialer,$db_js_157);
+$opt_in_array1 = compute_eligible_in_array($db_js,$opt_in_array,'1');
+for($i=0;$i<count($opt_in_array1);$i++)
+        start_opt_in_profiles('JS_RENEWAL',$opt_in_array1[$i],$db_dialer,$db_js_157);
 unset($dnc_array);
 unset($opt_in_array);
+unset($opt_in_array1);
 $msg.="End time :".@date('H:i:s');
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 $sub="Dialer updates for RENEWAL opt-in done.";
 $from="From:vibhor.garg@jeevansathi.com";
 mail($to,$sub,$msg,$from);
+
+// Renewal-Mah OPT-IN Check
+$msg = "Start time #".@date('H:i:s');
+$dnc_array = compute_dnc_array($db_dialer,'OB_RENEWAL_MAH');
+$opt_in_array = compute_opt_in_array($db_js,$dnc_array);
+$opt_in_array1 = compute_eligible_in_array($db_js,$opt_in_array,'1');
+for($i=0;$i<count($opt_in_array1);$i++)
+        start_opt_in_profiles('OB_RENEWAL_MAH',$opt_in_array1[$i],$db_dialer,$db_js_157);
+unset($dnc_array);
+unset($opt_in_array);
+unset($opt_in_array1);
+$msg.="End time :".@date('H:i:s');
+$to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
+$sub="Dialer updates for RENEWAL-MAH opt-in done.";
+$from="From:vibhor.garg@jeevansathi.com";
+mail($to,$sub,$msg,$from);
+
 
 ?>

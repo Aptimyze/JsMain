@@ -182,5 +182,37 @@ class PictureModuleInputValidate extends ValidationHandler
 		else 
 			$this->response = $resp; 
 	} 
+
+        public function validateGetMultiUserPhotoV1Action($request)
+        {
+		$pid =  $request->getParameter("pid");
+                $photoType =  $request->getParameter("photoType");
+
+		if(!$request->getParameter("photoType"))
+		{
+			$errorString = "picture/validation/PictureModuleInputValidate.class.php(1) : validateGetMultiUserPhotoV1Action($pid) ($photoType)";
+			ValidationHandler::getValidationHandler("",$errorString);
+			$resp = ResponseHandlerConfig::$POST_PARAM_INVALID;
+		}
+		else
+		{
+			$photoType =  $request->getParameter("photoType");
+			$photoTypeArr = explode(",",$photoType);
+                        foreach($photoTypeArr as $k=>$v)
+			{	
+				if(!in_array($v,ProfilePicturesTypeEnum::$PICTURE_SIZES_FIELDS))
+				{
+					$errorString = "picture/validation/PictureModuleInputValidate.class.php(2) : validateGetMultiUserPhotoV1Action($pid) ($photoType)";
+					ValidationHandler::getValidationHandler("",$errorString);
+					$resp = ResponseHandlerConfig::$POST_PARAM_INVALID;
+				}
+			}
+		}
+
+		if(!$resp)
+                        $this->response = ResponseHandlerConfig::$SUCCESS;
+                else
+                        $this->response = $resp;
+	}
 }
 ?>

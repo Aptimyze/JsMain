@@ -1346,7 +1346,7 @@ class detailedAction extends sfAction
         $this->arrOutDisplay =  $objDetailedDisplay->getResponse();
         $arrOutDisplay["buttonDetails"] = null;
          
-        $arrPass = array('stype'=>$this->STYPE,"responseTracking"=>$this->responseTracking,'page_source'=>"VDP",'isIgnored'=>$this->arrOutDisplay['page_info']['is_ignored'],'isBookmarked'=>$this->BOOKMARKED);
+        $arrPass = array('stype'=>$this->STYPE,"responseTracking"=>$this->responseTracking,'page_source'=>"VDP",'isIgnored'=>$this->arrOutDisplay['page_info']['is_ignored'],'isBookmarked'=>$this->BOOKMARKED,'PHOTO'=>$this->arrOutDisplay['pic']);
         $arrPass["USERNAME"]= $this->profile->getUSERNAME();
         $arrPass["OTHER_PROFILEID"] = $this->profile->getPROFILEID();
 
@@ -1354,7 +1354,7 @@ class detailedAction extends sfAction
 		{//print_r("arrOutDisplay['pic']['url']");die;
 				$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
 
-				$this->arrOutDisplay["button_details"] = $buttonObj->getButtonArray(array('PHOTO'=>$arrOutDisplay['pic']['url'],"IGNORED"=>$this->IGNORED));
+				$this->arrOutDisplay["button_details"] = $buttonObj->getButtonArray(array('PHOTO'=>$this->arrOutDisplay['pic']['url'],"IGNORED"=>$this->IGNORED));
 		}
 		else
 		{

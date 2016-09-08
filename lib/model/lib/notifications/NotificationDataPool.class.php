@@ -49,7 +49,7 @@ class NotificationDataPool
     public function getAgentInstantNotificationsPool($browserProfilesArr)
     {
 		$profileDetails = $this->getProfilesData(array($browserProfilesArr["OTHER"]),"JPROFILE"); 
-		$agentDetails = $this->getAgentsData(array($browserProfilesArr["SELF"]),"jsadmin_PSWRDS","newjs_slave");
+		$agentDetails = $this->getAgentsData(array($browserProfilesArr["SELF"]),"jsadmin_PSWRDS","newjs_masterRep");
 
 		if($profileDetails && $agentDetails)
 		{
@@ -98,7 +98,7 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_slave");
+            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
         }
         unset($otherProfiles);
         $counter = 0;
@@ -178,7 +178,7 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
                         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_slave");
+            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
                         }
         unset($otherProfiles);
         $counter = 0;
@@ -330,7 +330,7 @@ class NotificationDataPool
         // filter last 7days logged-in app profiles
         if(is_array($profilesNewArr))
         {
-            $loginTrackingObj = new MIS_LOGIN_TRACKING('newjs_slave');
+            $loginTrackingObj = new MIS_LOGIN_TRACKING('newjs_local111');
             $profilesNewStr   = @implode(",",$profilesNewArr);
             $profilesArr      = $loginTrackingObj->getLast7DaysLoginProfiles($profilesNewStr);
         }

@@ -102,13 +102,13 @@ class ProfileCacheLib
         //If array count is zero then record is not cached
         if(0 === count($this->getFromLocalCache($key))) {
             unset($this->arrRecords[intval($key)]);
-            $this->logThis(LoggingEnums::LOG_INFO, "Cache Mis for Criteria {$criteria} : {$key}");
+            $this->logThis(LoggingEnums::LOG_INFO, "Cache Miss from first point for Criteria {$criteria} : {$key}");
             return false;
         }
 
         //Check all fields specified in param fields is present in cache also, right now we are assuming all fields are cached together
         if (false === $this->checkFieldsAvailability($key, $fields)) {
-            $this->logThis(LoggingEnums::LOG_INFO, "Cache Mis due to fields {$criteria} : {$key} and {$fields}");
+            $this->logThis(LoggingEnums::LOG_INFO, "Cache Miss due to fields {$criteria} : {$key} and {$fields}");
             return false;
         }
 
@@ -230,6 +230,7 @@ class ProfileCacheLib
         }
 
         $arrData = $this->getFromLocalCache($key);
+        
         if ($arrExtraWhereClause) {
             $this->processArrayWhereClause($arrData,$arrExtraWhereClause);
         }
@@ -295,6 +296,7 @@ class ProfileCacheLib
     private function storeInLocalCache($key)
     {
         $stTime = $this->createNewTime();
+
         $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
         $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
     }
@@ -388,6 +390,7 @@ class ProfileCacheLib
         if(!is_array($arrFields)) {
             return false;
         }
+        $this->logThis(LoggingEnums::LOG_INFO, "Setting local cache for key : {$key}");
         foreach($arrFields as $col => $val) {
             $this->arrRecords[intval($key)][$col] = $val;
         }
@@ -537,13 +540,15 @@ class ProfileCacheLib
      */
     public function removeCache($Var)
     {
+        $status = true;
         if (is_array($Var)) {
             foreach($Var as $k => $iProfileID) {
-                $this->purge($iProfileID);
+              $status = $status && $this->purge($iProfileID);
             }
         } else {
-            $this->purge($Var);
+            $status = $this->purge($Var);
         }
+        return $status;
     }
 
     /**
@@ -598,6 +603,43 @@ class ProfileCacheLib
 
         $key .= '::'.date('H');
         JsMemcache::getInstance()->incrCount($key);
+    }
+    
+    /**
+     * This function will be used to check profile data
+     * @param type $iProfileId
+     * @param type $fields
+     * @return type
+     */
+    public function checkProfileData($iProfileId,$fields="")
+    {
+      $data = JsMemcache::getInstance()->getHashAllValue(ProfileCacheConstants::PROFILE_CACHE_PREFIX.$iProfileId);
+      $allowedFields = explode(",", $fields);
+      $bAllFields = false;
+      if(count($allowedFields) && in_array('ALL',$allowedFields)){
+        $bAllFields = true;
+      }
+      $arrOut = array();
+      if(0 === count($data)) {
+        $arrOut['msg'] = "Redis data does not exist for profileid : {$iProfileId}";
+      }
+      
+      $len = count($data);
+      if($len){
+        $arrOut['msg'] = "No of columns exist for profileid: {$iProfileId} is {$len}";
+      }
+      
+      if (false === $bAllFields && $len) {
+        foreach ($allowedFields as $key) {
+          if(strlen($key))
+            $arrOut[$key] = $data[$key];
+        }
+      }
+      else if($len){
+        $arrOut = $data;
+      }
+
+    return $arrOut;
     }
 }
 ?>
