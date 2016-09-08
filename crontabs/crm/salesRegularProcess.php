@@ -3,6 +3,7 @@
 * FILE NAME   	: salesRegularProcess.php 
 * DESCRIPTION 	: 
 *********************************************************************************************/
+ini_set('max_execution_time',0);
 $to     ="manoj.rana@naukri.com";
 $from   ="From:JeevansathiCrm@jeevansathi.com";
 
@@ -25,13 +26,13 @@ $campaignTableArr       =array('JS_NCRNEW'=>array('SALES_CSV_DATA_NOIDA','SALES_
 
 /* Test Configuration */
 //$csvEntryDate ='2016-03-30';
-
 foreach($campaignArr as $key=>$campaignName)
 {
 	$status =0;
 	$status =$dialerHandlerObj->getCampaignStatus($campaignName,$csvEntryDate);
 	if(!$status){
 
+		@mysql_ping($db_master);
 		$tableArr	=$campaignTableArr[$campaignName];
 		foreach($tableArr as $key=>$tableName){
 			$profilesArr    =$dialerHandlerObj->getProfilesForCampaign($tableName, $csvEntryDate,$campaignName);

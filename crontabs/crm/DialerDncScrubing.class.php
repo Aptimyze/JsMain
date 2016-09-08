@@ -9,7 +9,7 @@ class DialerDncScrubing
 	public function compute_dnc_array($campaign_name, $dateTime='')
 	{
 		$dnc_array = array();
-		$squery1 = "SELECT PROFILEID FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND Dial_Status='9'";
+		$squery1 = "SELECT PROFILEID FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE Dial_Status='9'";
 		if($dateTime) 
 			$squery1 .=" and Login_Timestamp>='$dateTime'";
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logerror($squery1,$this->db_dialer);
@@ -19,7 +19,7 @@ class DialerDncScrubing
 	}
         public function compute_dnc_array_forSalesCampaign($campaign_name, $leadId)
         {
-		$squery1 ="SELECT distinct(PHONE_NO1) as PHONE_NO  FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND Dial_Status='9' and Lead_id='$leadId'";
+		$squery1 ="SELECT distinct(PHONE_NO1) as PHONE_NO  FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE Dial_Status='9' and Lead_id='$leadId'";
         	$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logerror($squery1,$this->db_dialer);
         	while($srow1 = mssql_fetch_array($sresult1))
         	{
@@ -46,7 +46,7 @@ class DialerDncScrubing
 	}
 	function start_opt_in_profiles($campaign_name,$opt_in_profile,$dateTime='')
 	{
-		$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID ='$opt_in_profile'";
+		$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
                 if($dateTime)
                         $squery1 .=" and Login_Timestamp>='$dateTime'";
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logerror($squery1,$this->db_dialer);

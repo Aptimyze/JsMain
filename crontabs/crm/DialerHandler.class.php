@@ -115,7 +115,7 @@ class DialerHandler
 			$updateArr =array();
 			if(in_array($proid,$ignore_array)){
 				if($srow1["Dial_Status"]!=9)
-					$updateArr[] ='Dial_Status=0';
+					$updateArr[] ="Dial_Status=0,DNC_Status=''";
 
 				if(array_key_exists($proid,$discount_profiles))
 					$vdDiscount = $discount_profiles[$proid];
@@ -217,8 +217,11 @@ class DialerHandler
 
 		if($alloted_to!=$dialer_data['allocated'])
 		{
-			if($alloted_to)
-				$update_str[]="easy.dbo.ct_$campaign_name.AGENT='$alloted_to',Dial_Status='2'";
+			if($alloted_to){
+				$update_str[]="easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
+				if($dialer_data["dial_status"]!='9')
+					$update_str[]="Dial_Status='2',DNC_Status=''";
+			}
 			else{
 				$query_ph1 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 				mssql_query($query_ph1,$this->db_dialer) or $this->logerror($query_ph1,$this->db_dialer);
@@ -228,14 +231,14 @@ class DialerHandler
 
 				$update_str[] ="easy.dbo.ct_$campaign_name.AGENT=''";
 				if($dialer_data["dial_status"]!='9')
-					$update_str[] ="Dial_Status='1'";
+					$update_str[] ="Dial_Status='1',DNC_Status=''";
 			}
 		}
 		elseif($dialer_data['allocated']!='' && $dialer_data['dial_status']!='2' && $dialer_data["dial_status"]!='9'){
-			$update_str[] ="Dial_Status='2'";
+			$update_str[] ="Dial_Status='2',DNC_Status=''";
 		}
 		elseif(!$alloted_to && $dialer_data['dial_status']!='1' && $dialer_data["dial_status"]!='9'){
-			$update_str[] ="Dial_Status='1'";
+			$update_str[] ="Dial_Status='1',DNC_Status=''";
 		}
 
 		//INITIAL PRIORITY UPDATE 
