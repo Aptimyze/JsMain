@@ -34,13 +34,16 @@
                         <span class="disp_ib f24">
                          ~$apiData['about']['username']`
                        </span>
-<span class="verified">
-<i class="quesIcon"></i>
-<span class="hoverDiv">
-<div class="f14 fontreg blueColor">~$dontShowNameReason`
-</div>
-</span>
-</span>
+
+			~if $loginProfileId`
+				<span class="verified">
+					<i class="quesIcon"></i>
+					<span class="hoverDiv">
+						<div class="f14 fontreg blueColor">~$dontShowNameReason`
+						</div>
+					</span>
+				</span>
+			~/if`
                        ~/if`
               			</div>		             
 		               
