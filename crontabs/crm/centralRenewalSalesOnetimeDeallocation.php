@@ -11,7 +11,7 @@ $todayDate 	=date("Y-m-d H:i:s");
 $processName 	='HOTFIX-JSC-1856';
 $deAllocatedBy	='SYSTEM';
 
-$sql ="SELECT USERNAME from jsadmin.PSWRDS where (PRIVILAGE LIKE '%ExcFP%' OR PRIVILAGE LIKE '%ExcDIb%')";
+$sql ="SELECT USERNAME from jsadmin.PSWRDS where (PRIVILAGE LIKE '%ExcBSD%' OR PRIVILAGE LIKE '%ExcFSD%')";
 $res = mysql_query($sql) or logError($sql);
 while($row = mysql_fetch_array($res))
 {
@@ -24,7 +24,7 @@ while($row = mysql_fetch_array($res))
 	        $allotedTo      =$rowMain['ALLOTED_TO'];
 	        $allotTime      =$rowMain['ALLOT_TIME'];
 	
-		$sqlP ="SELECT PROFILEID FROM billing.SERVICE_STATUS WHERE (SERVEFOR LIKE '%F%' OR SERVEFOR='X') AND ACTIVE IN('Y') AND PROFILEID='$profileid' AND EXPIRY_DT>='$dateSet'";
+		$sqlP ="SELECT PROFILEID FROM billing.SERVICE_STATUS WHERE (SERVEFOR LIKE '%F%' OR SERVEFOR LIKE '%X%') AND ACTIVE IN('Y') AND PROFILEID='$profileid' AND EXPIRY_DT>='$dateSet'";
 		$resP=mysql_query($sqlP) or logError($sqlP);
 		$rowP=mysql_fetch_array($resP);
 		$pid =$rowP['PROFILEID'];
@@ -49,6 +49,8 @@ while($row = mysql_fetch_array($res))
 				// MAIN_ADMIN
        	                       $sql5 ="delete from incentive.MAIN_ADMIN where PROFILEID='$profileid'";
        	                       mysql_query($sql5) or logError($sql5);
+
+				echo "\n".$profileid;
 			}
 		}
 	}			
