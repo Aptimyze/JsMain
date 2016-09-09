@@ -95,6 +95,14 @@ class ProfileEducation
       }
     }
     
+    if(strlen($from) && is_array($pid)) {
+      $result = ProfileCacheLib::getInstance()->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $pid,"PROFILEID,PG_COLLEGE,PG_DEGREE,UG_DEGREE,OTHER_UG_DEGREE,OTHER_PG_DEGREE,SCHOOL,COLLEGE,OTHER_UG_COLLEGE,OTHER_PG_COLLEGE,SCREENING,EDU_LEVEL_NEW",__CLASS__);
+      if ($result && false !== $result) {
+        $bServedFromCache = true;
+        $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+      }
+    }
+    
     if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
       return $result;
     }
@@ -107,6 +115,9 @@ class ProfileEducation
       ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
     }
     
+    if(is_array($pid)){
+      ProfileCacheLib::getInstance()->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result);
+    }
     return $result;
   }
   
