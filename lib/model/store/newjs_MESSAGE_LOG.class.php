@@ -616,7 +616,7 @@ public function updateMessageLogDetails($msgCommObj)
 				$str = substr($str, 0, -1);
 				$str = $str.")";
 				$strS = " RECEIVER ".$str." AND SENDER ".$str;
-				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE, MESSAGE FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
+				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE, MESSAGE,MESSAGES.ID FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
 				$prep=$this->db->prepare($sql);
 				foreach($bindArr as $k=>$v)
 					$prep->bindValue($k,$v);
@@ -635,6 +635,50 @@ public function updateMessageLogDetails($msgCommObj)
 			}
 			return $output;
 		}
+
+	public function getEOIMessagesForChat($receiverProfiles,$senderProfiles)
+	{
+		try{
+			if(!is_array($receiverProfiles) && !is_array($senderProfiles))
+			{
+				throw new jsException("","profile id is not specified in function getEOIMessages of newjs_MESSAGE_LOG.class.php");
+			}
+			$count = 1;
+			$str = " IN (";
+			foreach($senderProfiles as $key1=>$value1)
+			{
+				$str = $str.":VALUE".$count.",";
+				$bindArr["VALUE".$count] = $value1;
+				$count++;
+			}
+			foreach($receiverProfiles as $key1=>$value1)
+			{
+				$str = $str.":VALUE".$count.",";
+				$bindArr["VALUE".$count] = $value1;
+				$count++;
+			}
+			$str = substr($str, 0, -1);
+			$str = $str.")";
+			$strS = " RECEIVER ".$str." AND SENDER ".$str;
+			$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE, MESSAGE,MESSAGE_LOG.ID FROM  newjs.`MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS."  AND TYPE = 'I' ORDER BY SENDER,DATE ASC LIMIT 1";
+			$prep=$this->db->prepare($sql);
+			foreach($bindArr as $k=>$v)
+				$prep->bindValue($k,$v);
+			$prep->execute();
+
+			while($row = $prep->fetch(PDO::FETCH_ASSOC))
+			{
+				$output[] = $row;
+			}
+			//print_r($output); die;
+
+		}
+		catch (PDOException $e)
+		{
+			throw new jsException($e);
+		}
+		return $output;
+	}
 		
 		public function getMessageListing($condition,$skipArray)
 		{
@@ -1585,5 +1629,46 @@ return $result;
 				throw new jsException($e);
 			}
 	}
+	
+	public function getMessageHistoryPagination($viewer,$viewed,$limit="",$msgId="")
+		{
+			try
+			{
+				if(!$viewer && !$viewed)
+				{
+					throw new jsException("","profile ids are not specified in  funcion getMessageHistory OF newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					if($limit)
+						$limitStr= " limit :limit ";
+					else
+						$limitStr="";
+						
+					if($msgId)	
+						$paginationStr=" AND MESSAGE_LOG.ID<:MSG_ID ";
+					else
+						$paginationStr="";
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE,MESSAGE_LOG.ID FROM  `MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))AND IS_MSG =  'Y' AND TYPE = 'R' ".$paginationStr." ORDER BY DATE Desc ".$limitStr;
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					if($msgId)
+						$prep->bindValue(":MSG_ID",$msgId,PDO::PARAM_INT);
+					if($limit)
+						$prep->bindValue(":limit",$limit,PDO::PARAM_INT);
+					$prep->execute();
+					while($row = $prep->fetch(PDO::FETCH_ASSOC))
+					{
+						$output[] = $row;
+					}
+				}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $output;
+		}
 }
 	?>

@@ -1,5 +1,7 @@
-<?php
 
+<?php
+/*
 class SelectGatewayRedirect{
     const setDefaultGatewayRedirect = "default";
 }
+*/

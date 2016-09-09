@@ -1,4 +1,4 @@
-var getaTop;
+var getaTop,commLayerPageIndex=1,commHistoryFullLoaded=0,commHistoryLoading=0,commHistoryDivCount=1;
 var kundliResponseArr = {"F":"You cannot request horoscope as you don’t match this profile's filters","G":"You cannot request horoscope to a person of the same gender"};
 
 $(function(){
@@ -33,7 +33,7 @@ $(function(){
 			 leftPos = $el.position().left;
 			 var z = $el.parent();
         	 newWidth = (Math.floor(z[0].getBoundingClientRect().width));
-			 console.log(newWidth);
+			 
 			 moveline(newWidth,leftPos);
 			 
 	  });	
@@ -469,10 +469,14 @@ $('#reportAbuseCross').bind('click',closeReportAbuseLayer);
 
 /* this function is used for showing commmunication layer on the viewprofile page*/
 function showCommunicationLayer(resp) {
+var lastId;
 var layerObj=$("#commHistoryOverlay-layer");
 var commDiv=layerObj.find('#commDiv');
 var newHtml="";
 var historyResponse=resp.history;
+var firstId="commDiv"+commHistoryDivCount;
+if(resp.nextPage=='false')
+    commHistoryFullLoaded = 1; 
 layerObj.find('.otherProfilePic').attr('src',resp.viewed);
 layerObj.find(".js-usernameCC").html(resp.label);
 
@@ -486,9 +490,12 @@ else {
 	layerObj.find('#commHistory').removeClass('disp-none');
 	layerObj.find('#commHistoryAbsent').addClass('disp-none');
 
-for(i=historyResponse.length-1;i>=0;i--)
+for(i=0;i<historyResponse.length;i++)
 {
 var tempDiv=commDiv.clone();
+
+lastId="commDiv"+commHistoryDivCount++;
+tempDiv.attr('id',lastId);
 tempDiv.removeClass('disp-none');
 tempDiv.find('.js-commHeading').html(historyResponse[i].header);	
 tempDiv.find('.js-commTime').html(historyResponse[i].time);	
@@ -507,15 +514,26 @@ tempDiv.find('.js-profilePic').attr('src',resp.viewed);
 tempDiv.addClass('setl');
 
 }
-
-newHtml+=tempDiv.outerHtml();
+newHtml=tempDiv.outerHtml()+newHtml;
 }
-layerObj.find('#mainDiv').html(newHtml);
+layerObj.find('#mainDiv').prepend(newHtml);
+layerObj.find("#commHistoryLoader").css('visibility','hidden');
 }
-
+if(commLayerPageIndex>2){layerObj.find("#commLayerScroller").mCustomScrollbar('scrollTo',$("#"+firstId),{scrollInertia:0});}
+commHistoryLoading=0;
+if(commLayerPageIndex==2)
 $('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#commHistoryOverlay-layer').fadeIn(300,"linear",function(){
-	$(this).find(".cEcontent").mCustomScrollbar();
-
+	
+        $(this).find("#commLayerScroller").mCustomScrollbar({
+                                                        advanced:{updateOnSelectorChange:true},
+							callbacks:{
+                                                                onTotalScrollBackOffset:200,
+								onTotalScrollBack:function(){if(commHistoryFullLoaded || commHistoryLoading) return;$("#commHistoryLoader").css('visibility','visible');communicationLayerAjax();}
+							}
+				});
+        $(this).find("#commLayerScroller").mCustomScrollbar('scrollTo','bottom',{scrollInertia:0});
+        
+                                
 })}); 
 
 closeCommLayer=function() {
@@ -531,14 +549,15 @@ $('.js-overlay').bind('click',closeCommLayer);
 layerObj.find('.closeCommLayer').bind('click',closeCommLayer);
 }
 
-function communicationLayerAjax(){
+function communicationLayerAjax(initialise){
 var profileChecksum=ProCheckSum;
 if(!profileChecksum) return;
-showCommonLoader();
+commHistoryLoading=1;
+    if(typeof initialise !='undefined' && initialise==1){$("#commHistoryOverlay-layer").find('#mainDiv').html('');commLayerPageIndex=1;commHistoryFullLoaded=0;commHistoryLoading=0;commHistoryDivCount=1;showCommonLoader();}
           ajaxConfig= {};
           ajaxConfig.type= "POST";
           ajaxConfig.dataType="json";
-          ajaxConfig.url='/contacts/CommunicationHistoryV1';
+          ajaxConfig.url='/contacts/CommunicationHistoryV1?pageNo='+(commLayerPageIndex++);
           ajaxConfig.data={'profilechecksum':profileChecksum};
           ajaxConfig.context= this;
           ajaxConfig.success=function(response) {

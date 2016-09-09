@@ -43,7 +43,8 @@ class RequestHandlerConfig
         "coverphoto"=>array("v1"=>"CoverPhotoV1"),
         "horoscope"=>array("v1"=>"HoroscopeV1"),
         "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),
-        "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1")),
+        "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1"),
+      "cache"=>array("v1"=>"ApiProfileCacheV1","v2"=>"ApiProfileCacheV1","v3"=>"ApiProfileCacheV1")),
     "settings"=>array(
 		"alertManager"=>array("v1"=>"AlertManagerV1","v2"=>"","v3"=>"AlertManagerV1"),
     	"deleteProfile"=>array("v1"=>"DeleteProfileV1","v2"=>"","v3"=>"DeleteProfileV1")),
@@ -61,11 +62,12 @@ class RequestHandlerConfig
 		"deletePhoto"=>array("v1"=>"SelfPhotoFunctionalityV1","v2"=>"","v3"=>"SelfPhotoFunctionalityV1"),
 		"setProfilePhoto"=>array("v1"=>"SelfPhotoFunctionalityV1","v2"=>"","v3"=>"SelfPhotoFunctionalityV1"), 
 		"getProfilePhoto"=>array("v1"=>"GetProfilePicV1","v2"=>"","v3"=>""), 
+		"getMultiUserPhoto"=>array("v1"=>"GetMultiUserPhotoV1","v2"=>"","v3"=>""), 
 		"saveCroppedProfilePic"=>array("v1"=>"SelfPhotoFunctionalityV1","v2"=>"","v3"=>"SelfPhotoFunctionalityV1"),
 		"changePhotoPrivacy"=>array("v1"=>"changePhotoPrivacyV1","v2"=>"","v3"=>"changePhotoPrivacyV1"),		
 		"getAlbum"=>array("v1"=>"GetAlbumV1","v2"=>"","v3"=>"GetAlbumV1"),
 		"import"=>array("v1"=>"","v2"=>"","v3"=>"import"),
-		"importFb"=>array("v1"=>"","v2"=>"","v3"=>"importFbV1"),
+		"importFb"=>array("v1"=>"importFbV1","v2"=>"","v3"=>"importFbV1"),
 		"MobPhotoTracking"=>array("v1"=>"MobPhotoTrackingV1","v2"=>"","v3"=>"MobPhotoTrackingV1")),
 	"register"=>array(
 				"page1"=>array("v1"=>"page1v1","v2"=>"","v3"=>"page1v1"),

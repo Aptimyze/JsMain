@@ -8,7 +8,7 @@
 */
 
 include "connect.inc";
-$db=connect_db();
+$db=connect_ddl();
 
 $sql="TRUNCATE newjs.PHONE_VERIFY_CODE";
 mysql_query($sql) or logError("Error while truncate table newjs.PHONE_VERIFY_CODE:-",$sql);

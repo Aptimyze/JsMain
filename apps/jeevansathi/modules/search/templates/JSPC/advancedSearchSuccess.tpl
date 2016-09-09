@@ -382,7 +382,7 @@
                         <div class="advwid1 mauto f14 mb3" id="advtitleErr"></div>
                          <div class="advbdr3 advbr1 advwid1 mauto">
                          	<div class="advp3" id="advSearchProIdBox">
-                         		<input type="text" value="" placeholder="Profile ID" id="advSearchProId" maxlength="15" class="fullwid lh30 brdr-0 outw heightie"/>
+                         		<input type="text" value="" placeholder="Profile ID" id="advSearchProId" maxlength="20" class="fullwid lh30 brdr-0 outw heightie"/>
                             </div>
                          </div>
                     </li>

@@ -191,7 +191,7 @@ class SearchCommonFunctions
 	/**
 	* This section will show the dpp matches.
 	*/
-	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$verifiedProfilesDate = '')
+	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '')
 	{
                 $searchEngine = 'solr';
                 $outputFormat = 'array';
@@ -229,6 +229,8 @@ class SearchCommonFunctions
                 else
                     $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts);
                 $responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,$currentPage,'',$loggedInProfileObj);
+		if($completeResponse)
+			return $responseObj;
 		$arr['PIDS'] = $responseObj->getsearchResultsPidArr();
 		$arr['CNT']  = $responseObj->getTotalResults();
                 if($clustersToShow)

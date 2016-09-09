@@ -1,11 +1,7 @@
 <?php
 class jsException extends PDOException{
         public function __construct($exceptionObj = "", $message = null, $trace=0, $code=0) {
-        if ( $exceptionObj && $code === 0 )
-        {
-			$code = $exceptionObj->getCode();
-        }
-
+        
 		if($message){
 			$this->message = $message;
 			parent::__construct(self::getCustomMessage($this, $trace),$code);			
@@ -20,6 +16,10 @@ class jsException extends PDOException{
 		}
 		self::checkCE();
 		// code for exception object. 
+    if ( $exceptionObj && $code === 0 )
+    {
+      $code = $exceptionObj->getCode();
+    }
 		if ( $exceptionObj != "")
 		{
 			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$exceptionObj,array('message' => $message));

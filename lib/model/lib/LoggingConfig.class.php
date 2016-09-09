@@ -17,7 +17,7 @@
 		private $arrConfig = array(
 			// 'logging' => 1, logging is on for this module
 			LoggingEnums::JSADMIN => array(
-				LoggingEnums::LOGGING => false,
+				LoggingEnums::LOGGING => true,
 				LoggingEnums::LEVEL => LoggingEnums::LOG_DEBUG,
 				LoggingEnums::DIRECTORY => true,
 				LoggingEnums::STACKTRACE => false,
@@ -52,13 +52,19 @@
 				LoggingEnums::SERVER_PARAM => false
 				),
 			LoggingEnums::HOMEPAGE => array(
-				LoggingEnums::LOGGING => false,
+				LoggingEnums::LOGGING => true,
 				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
 				LoggingEnums::DIRECTORY => false,
 				LoggingEnums::STACKTRACE => false,
 				LoggingEnums::SERVER_PARAM => false
 				),
-
+			LoggingEnums::_VAR => array(
+				LoggingEnums::LOGGING => true,
+				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
+				LoggingEnums::DIRECTORY => true,
+				LoggingEnums::STACKTRACE => true,
+				LoggingEnums::SERVER_PARAM => false
+				),
 			);
 
 		/**
@@ -69,7 +75,7 @@
 		/**
 		* __destruct
 		*/
-		private function __destruct() 
+		public function __destruct() 
 		{
 			self::$instance = null;
 		}

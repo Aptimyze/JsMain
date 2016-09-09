@@ -66,7 +66,7 @@ class NotificationSender
        	$appVersionAnd =$appVersion['AND'];
        	$appVersionIos =$appVersion['IOS'];
 
-	$registrationIdObj = new MOBILE_API_REGISTRATION_ID('newjs_slave');
+	$registrationIdObj = new MOBILE_API_REGISTRATION_ID('newjs_masterRep');
 	$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');
 	if(is_array($registrationIdData))
 	{

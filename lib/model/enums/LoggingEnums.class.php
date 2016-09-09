@@ -10,7 +10,7 @@
 
 class LoggingEnums
 {   
-    const MASTER_FLAG = false;
+    const MASTER_FLAG = true;
     const LOG_LEVEL = 0;
     const LOG_INFO = 2;
     const LOG_DEBUG = 1;
@@ -65,4 +65,5 @@ class LoggingEnums
     const SEO = 'seo';
     const MYJS = 'myjs';
     const HOMEPAGE = 'homepage';
+    const _VAR = 'var';
 }
