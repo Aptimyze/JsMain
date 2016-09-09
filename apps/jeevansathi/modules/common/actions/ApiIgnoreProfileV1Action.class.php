@@ -84,7 +84,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 				case self::UNBLOCK :
 				{
                                          $ignoreCount=JsMemcache::getInstance()->get('IGNORED_COUNT_'.$profileID);
-                                         if(is_null($ignoreCount))
+                                         if(is_null($ignoreCount)|| $ignoreCount===false)
                                         {
                                             $ignoreArr=$ignore_Store_Obj->getCountIgnoredProfiles($profileID);
                                             $ignoreCount=$ignoreArr['CNT'];
@@ -151,7 +151,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 				{
                                     
                                     $ignoreCount=JsMemcache::getInstance()->get('IGNORED_COUNT_'.$profileID);
-                                    if(is_null($ignoreCount))
+                                    if(is_null($ignoreCount) || $ignoreCount===false)
                                     {
                                         $ignoreArr=$ignore_Store_Obj->getCountIgnoredProfiles($profileID);
                                         $ignoreCount=$ignoreArr['CNT'];
