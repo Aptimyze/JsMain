@@ -40,6 +40,7 @@ JsChat.prototype = {
     _checkForDefaultEoiMsg:false,
     _setLastReadMsgStorage:true,
     _chatAutoLogin:true,
+    _categoryTrackingParams:{},
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -128,6 +129,9 @@ JsChat.prototype = {
         }
         if (arguments[1][0].chatAutoLogin) {
             this._chatAutoLogin = arguments[1][0].chatAutoLogin;
+        }
+        if (arguments[1][0].categoryTrackingParams) {
+            this._categoryTrackingParams = arguments[1][0].categoryTrackingParams;
         }
     },
     //start:get screen height
@@ -1947,7 +1951,7 @@ JsChat.prototype = {
         $('chat-box[user-id="' + userId + '"] #txtArea').on("keyup", function () {
             curElem._textAreaAdjust(this);
         });
-        $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("downBarPic");
+        $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("js-chatBoxPic downBarPic cursp");
         $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html() + '<div class="onlineStatus f11 opa50 mt4"></div></div><div class="iconBar cursp fr padallf_2 disp_ib"><i class="nchatspr nchatic_3"><div class="pos-abs fullBlockTitle disp-none tneg20 bg-white f13 brderinp pad510">Block</div></i><i class="nchatspr nchatic_2 ml10 mr10"><div class="pos-abs fullMinTitle disp-none tneg20_2 bg-white f13 brderinp pad510">Minimize</div></i><i class="nchatspr nchatic_1 mr10"><div class="pos-abs fullCloseTitle disp-none tneg20_3 bg-white f13 brderinp pad510">Close</div></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div></div>');
         curElem._bindInnerHtml(userId, status);
     },
@@ -1962,9 +1966,32 @@ JsChat.prototype = {
         this._bindMinimize($('chat-box[user-id="' + userId + '"] .nchatic_2'));
         this._bindClose($('chat-box[user-id="' + userId + '"] .nchatic_1'));
         this._bindBlock($('chat-box[user-id="' + userId + '"] .nchatic_3'), userId);
+        curElem._bindChatPoxPicClick(userId);
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
     },
+    //bind click action on chat box pic click
+    _bindChatPoxPicClick: function(userId){
+        var curElem = this,chatBoxElem= $('chat-box[user-id="' + userId + '"]');
+        chatBoxElem.find('.js-chatBoxPic').bind("click",function(event){
+            event.preventDefault();
+            var profilechecksum = chatBoxElem.attr("data-checks"),
+            groupID = chatBoxElem.attr("group-id"),
+            trackingParamsStr = '';
+            if(typeof groupID != "undefined" && groupID && typeof curElem._categoryTrackingParams[groupID]!= "undefined"){  
+                var trackingParams = curElem._categoryTrackingParams[chatBoxElem.attr("group-id")];
+                if (trackingParams) {
+                    $.each(trackingParams, function (key, val) {
+                        trackingParamsStr += '&' + key + '=' + val;
+                    });
+                }
+            }
+            if(typeof profilechecksum!= "undefined" && profilechecksum){
+                window.location.href = "/profile/viewprofile.php?profilechecksum="+profilechecksum+"&"+trackingParamsStr;
+            }
+        });
+    },
+
     _scrollToBottom: function (userId,type) {
         //console.log("type in _scrollToBottom",type);
         if(type == undefined) {
