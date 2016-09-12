@@ -131,5 +131,6 @@ class SearchTypesEnums
         const APPLY_ONLY_CLUSTER = 'XX';
         const SaveSearchMailer = 'SSM';
         const PC_CHAT_NEW = 'PCN';
+        const kundliAlertMailer = "KAM";
 }
 ?>
