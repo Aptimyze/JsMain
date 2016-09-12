@@ -68,4 +68,10 @@ CREATE TABLE  `LAST_ACTIVE_LOG1` (
  `DATE` DATE NOT NULL
 ) ENGINE = MYISAM DEFAULT CHARSET = latin1
 
+
+INSERT INTO  `LAST_ACTIVE_LOG1` (  `NO` ,  `DATE` ) 
+VALUES (
+'2',  '<<DATE WHEN GOES LIVE>>' 
+);
+-- date in YYYY-MM-DD format
 -- there has to be an insert query in last_active_log1. check with Reshu
