@@ -1987,7 +1987,7 @@ JsChat.prototype = {
                 }
             }
             if(typeof profilechecksum!= "undefined" && profilechecksum){
-                window.location.href = "/profile/viewprofile.php?profilechecksum="+profilechecksum+"&"+trackingParamsStr;
+                window.location.href = "/profile/viewprofile.php?profilechecksum="+profilechecksum+trackingParamsStr;
             }
         });
     },
