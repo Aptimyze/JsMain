@@ -587,6 +587,7 @@ class Membership
     }
     
     function makePaid($skipBill = false) {
+        $this->checkIfDiscountExceeds();
         if($skipBill == true){
             $this->setGenerateBillParams();
         } else {
@@ -596,6 +597,51 @@ class Membership
         $this->setServiceActivation();
         $this->populatePurchaseDetail();
         $this->updateJprofileSubscription();
+    }
+
+    function checkIfDiscountExceeds() {
+        $memHandlerObj = new MembershipHandler();
+        $userObj = new memUser($this->profileid);
+        $ordrDeviceObj = new billing_ORDERS_DEVICE();
+        $servObj = new Services();
+        $couponCode = $ordrDeviceObj->checkAppliedCoupon($this->orderid,$this->orderid_part1);
+        $device = $ordrDeviceObj->getOrderDevice($this->orderid,$this->orderid_part1);
+        $mainMembership = array_shift(@explode(",", $this->serviceid));
+        if (strstr($mainMembership, 'C') || strstr($mainMembership, 'P') || strstr($mainMembership, 'ES') || strstr($mainMembership, 'X') || strstr($mainMembership, 'NCP')) {
+        } else {
+            $mainMembership = null;
+        }
+        $allMemberships = $this->serviceid;
+        $festCondition = false;
+        // Fetch all variables regarding discount for current user
+        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $this->getUserDiscountDetailsArray($userObj, "L");
+        if ($fest == 1 && strstr($mainMembership, 'X') != false && !empty($mainMembership)) {
+            $festOffrLookup = new billing_FESTIVE_OFFER_LOOKUP();
+            $actualServiceid = $festOffrLookup->fetchReverseOfferedServiceId($mainMembership);
+            if ($actualServiceid != $mainMembership) {
+                $festCondition = true;
+            }
+        }
+        if(empty($device) || $device == ''){
+            $device = 'desktop';
+        }
+        if((!empty($couponCode) && $couponCode != '') || $festCondition){
+            // Dont handle coupon code and when extra duration is offered in festive extra duration case
+        } else {
+            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $device);
+            if ($total > $this->amount) {
+                $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
+                $actDisc = $iniAmt - $total;
+                $siteDisc = $iniAmt - $this->amount;
+                $actDiscPerc = round($actDisc/$iniAmt, 2)*100;
+                $siteDiscPerc = round($siteDisc/$iniAmt, 2)*100;
+                $netOffTax = round($this->amount*billingVariables::NET_OFF_TAX_RATE,2);
+                $msg = "{$this->username} has been given a discount greater than visible on site <br>Actual Discount Given : {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$siteDisc}, {$siteDiscPerc}%<br>Billing Amount : {$this->curtype} {$this->amount}, Net-off Tax : {$netOffTax}";
+                if (JsConstants::$whichMachine == 'prod') {
+                    SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
+                }
+            }
+        }
     }
 
     function setGenerateBillParams(){
