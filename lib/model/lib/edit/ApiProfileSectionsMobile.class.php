@@ -474,7 +474,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 //			$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Groom's Name"  ,$name,"",$this->getApiScreeningField("NAME"),$this->text);
 //		else
 //			$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Bride's Name"  ,$name,"",$this->getApiScreeningField("NAME"),$this->text);
-		$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Name",$nameData[$this->profile->getPROFILEID()]["NAME"],"",$this->getApiScreeningField("NAME"),$this->text,"","","","",1,$settingData);
+		$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Full Name",$nameData[$this->profile->getPROFILEID()]["NAME"],"",$this->getApiScreeningField("NAME"),$this->text,"","","","",1,$settingData);
 		//country
 		$value=$this->profile->getCOUNTRY_RES();
 		$label=$this->profile->getDecoratedCountry();
