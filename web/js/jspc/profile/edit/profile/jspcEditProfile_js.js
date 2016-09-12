@@ -43,7 +43,7 @@ EditApp = function(){
                               "RELATION":"Please choose who posted this profile",
                               "CITY_RES":"Please mention the City you are living in",
                               "YOURINFO":"For the benefit of your matches, please write about yourself in at least 100 letters",                       
-			      "NAME":"Please enter the name of the person for whom this profile is created",
+			      "NAME":"Please provide a valid Full Name",
                               "EMAIL":"Email Required",
                               "EMAIL_WRONG_FORMAT":"Invalid Format",
                               "EMAIL_INVALID_DOMAIN":"Invalid domain",
@@ -3847,11 +3847,16 @@ EditApp = function(){
       $(fieldParentID).find('.js-areaBox').removeClass(errorBorder).addClass(normalBorder);
       $(fieldParentID).find('.js-errorLabel').addClass(dispNone);
       requiredFieldStore.remove(nameField);
-	if(nameVal=='')
+      
+        var name_of_user=nameVal;
+        name_of_user = name_of_user.replace(/\.|\,|\'|dr|ms|mr|miss/gi, " ");
+        name_of_user = name_of_user.replace(/\s+/gi, " ");
+        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+	if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user)))
 	{
-        $(fieldParentID).find('.js-areaBox').addClass(errorBorder).removeClass(normalBorder);
-        $(fieldParentID).find('.js-errorLabel').removeClass(dispNone);
-        requiredFieldStore.add(nameField);
+                $(fieldParentID).find('.js-areaBox').addClass(errorBorder).removeClass(normalBorder);
+                $(fieldParentID).find('.js-errorLabel').removeClass(dispNone);
+                requiredFieldStore.add(nameField);
 	}
       storeFieldChangeValue(nameField,nameVal);
     }

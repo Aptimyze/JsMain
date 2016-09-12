@@ -9,7 +9,8 @@ class NameOfUser
     private $cacheLifeTime = 14400; // 4 hours
     /**
      */
-     
+    public $removeWordsFree = array('mr', 'ms', 'dr', 'miss');
+    public $removeWordsPaid = array('mr', 'ms', 'miss');
     /**
      * Private construct so nobody else can instance it
      *
@@ -151,31 +152,37 @@ print_r($returnArr);die;
 */
 	return $returnArr;
     }
+    public function getFullNameArray($name,$replacingWordsArray){
+        $replaceBy   = array("");
+        $name = preg_replace('/[.]/', ' ', $name);
+        $name = str_replace($replacingWordsArray, $replaceBy, $name);
+        $name = trim(preg_replace('!\s+!', ' ', $name));
+        $fullName = explode(" ",ucwords($name));
+        return $fullName;
+    }
     public function getNameStr($othername,$selfsubscription)
     {
         $othername = strtolower($othername);
 	if($selfsubscription!='')
 	{
-		$finalName = ucwords($othername);
+		$remove = $this->removeWordsPaid;
+                $fullName = $this->getFullNameArray($othername,$remove);
 	}
 	else
 	{
-		$nameArr = explode(" ",$othername);
+                $remove = $this->removeWordsFree;
+                $nameArr = $this->getFullNameArray($othername,$remove);
+                $count = count($nameArr);
 		foreach($nameArr as $k=>$v)
 		{
-                        $namePartWithOutSpecialChar= preg_replace('/[.]/', '', $v);
-                        if(strlen($namePartWithOutSpecialChar)>2)
-                        {
-                                $finalName = ucfirst($v);
-                                break;
-                        }
-		}
-		if($finalName=='')
-		{
-			$finalName = ucfirst($v);
+                        if($count == ($k+1))
+                                $fullName[] = $v;
+                        else
+                                $fullName[] = substr($v,0,1);
 		}
 	}
-	return $finalName;
+        //echo "\n\n SUBS== ".$selfsubscription."==".$othername."------".implode(' ',$fullName);
+	return implode(' ',$fullName);
     }
     public function setNameInCache($profileId,$nameData){
             $memObject=JsMemcache::getInstance();

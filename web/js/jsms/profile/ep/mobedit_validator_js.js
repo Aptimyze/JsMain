@@ -85,6 +85,19 @@ jQuery.validator.addMethod("validate_name", function (value, element){
 			else			
 				return true;	
 },"Please provide a valid Name");
+
+jQuery.validator.addMethod("validate_custom_name", function (value, element){
+			var name_of_user=value;
+                        var name = name_of_user.replace(/\.|\,|\'|dr|ms|mr|miss/gi, " ");
+                        name = name.replace(/\s+/gi, " ");
+			var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+			if($.trim(name)!= "" && !allowed_chars.test(trim(name)))
+			{
+				return false;
+			}
+			else			
+				return true;	
+},"Please provide a valid Full Name");
 jQuery.validator.addMethod("MobileNumberVerify", function(value,element) {
         return (checkMobile(0));
         });
@@ -303,16 +316,15 @@ function validator(tabKey){
 	else if(tabKey=="BasicDetails")
 	{
 		$("#NAME").rules("add", {
-			validate_name: true,
+			validate_custom_name: true,
                         required : true,
                         maxlength:40,
                         messages:
                         {
-                              required: "Please provide Name",
+                              required: "Please provide a valid Full Name",
                               maxlength : "Maximum 40 characters are allowed"
                         }
 		});
-			//$("#NAME").rules("remove", "required");
 	}
 	else if(tabKey=="Appearance")
 	{
