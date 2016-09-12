@@ -3850,7 +3850,7 @@ EditApp = function(){
       
         var name_of_user=nameVal;
         name_of_user = name_of_user.replace(/\.|\,|\'|dr|ms|mr|miss/gi, " ");
-        name_of_user = name_of_user.replace(/\s+/gi, " ");
+        name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
         var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
         if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user))){
                 setError(nameField,"Please provide a valid Full Name",1);
