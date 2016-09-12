@@ -898,6 +898,16 @@ class incentive_MAIN_ADMIN extends TABLE {
                 throw new jsException($ex);
             }
         }
-
+        public function getIST($dateTime='')
+        {
+                if(!$dateTime)
+                        $dateTime =date("Y-m-d H:i:s");
+                $sql = "SELECT CONVERT_TZ('$dateTime','SYSTEM','right/Asia/Calcutta') as time";
+                $res = $this->db->prepare($sql);
+                $res->execute();
+                if($row = $res->fetch(PDO::FETCH_ASSOC))
+                        $dateTime = $row['time'];
+                return $dateTime;
+        }
 }
 ?>

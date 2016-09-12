@@ -5,15 +5,16 @@ class incentive_RENEWAL_IN_DIALER extends TABLE{
     {
         parent::__construct($dbname);
     }
-    public function insertProfile($profileid,$priority)
+    public function insertProfile($profileid,$priority,$campaignType)
     {
         try
         {
             $now=date('Y-m-d',time());
-            $sql = "INSERT IGNORE INTO incentive.RENEWAL_IN_DIALER (PROFILEID,PRIORITY,ENTRY_DATE) VALUES(:PROFILEID,:PRIORITY,:ENTRY_DATE)";
+            $sql = "INSERT IGNORE INTO incentive.RENEWAL_IN_DIALER (PROFILEID,PRIORITY,CAMPAIGN_TYPE,ENTRY_DATE) VALUES(:PROFILEID,:PRIORITY,:CAMPAIGN_TYPE,:ENTRY_DATE)";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_STR);
             $prep->bindValue(":PRIORITY",$priority,PDO::PARAM_INT);
+	    $prep->bindValue(":CAMPAIGN_TYPE",$campaignType,PDO::PARAM_STR);	
             $prep->bindValue(":ENTRY_DATE",$now,PDO::PARAM_STR);
             $prep->execute();
         }catch (Exception $ex)

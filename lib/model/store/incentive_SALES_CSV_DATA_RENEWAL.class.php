@@ -6,12 +6,12 @@ class incentive_SALES_CSV_DATA_RENEWAL extends TABLE
       		parent::__construct($dbname);
    	}
 
-	public function insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$allotedTo,$discount,$lastLoginDt,$phone1,$phone2,$havePhoto,$birthDt,$mstatus,$everPaid,$gender,$relation,$leadId,$expiryDate)
+	public function insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$allotedTo,$discount,$lastLoginDt,$phone1,$phone2,$havePhoto,$birthDt,$mstatus,$everPaid,$gender,$relation,$leadId,$campaignType,$expiryDate)
 	{
 		try
 		{
 			$csvDate=date("Y-m-d",time());
-			$sql= "INSERT IGNORE INTO incentive.SALES_CSV_DATA_RENEWAL(PROFILEID,PRIORITY,ANALYTIC_SCORE,OLD_PRIORITY,DIAL_STATUS,AGENT,DISCOUNT_PERCENT,LAST_LOGIN_DATE,PHONE_NO1,PHONE_NO2,PHOTO,DOB,MSTATUS,EVER_PAID,GENDER,POSTEDBY,EXPIRY_DT,PHONE_NO3,PHONE_NO4,LEAD_ID,CSV_ENTRY_DATE) VALUES(:PROFILEID,:PRIORITY,:ANALYTIC_SCORE,:OLD_PRIORITY,:DIAL_STATUS,:AGENT,:DISCOUNT_PERCENT,:LAST_LOGIN_DATE,:PHONE_NO1,:PHONE_NO2,:PHOTO,:DOB,:MSTATUS,:EVER_PAID,:GENDER,:POSTEDBY,:EXPIRY_DT,:PHONE_NO3,:PHONE_NO4,:LEAD_ID,:CSV_ENTRY_DATE)";
+			$sql= "INSERT IGNORE INTO incentive.SALES_CSV_DATA_RENEWAL(PROFILEID,PRIORITY,ANALYTIC_SCORE,OLD_PRIORITY,DIAL_STATUS,AGENT,DISCOUNT_PERCENT,LAST_LOGIN_DATE,PHONE_NO1,PHONE_NO2,PHOTO,DOB,MSTATUS,EVER_PAID,GENDER,POSTEDBY,EXPIRY_DT,PHONE_NO3,PHONE_NO4,LEAD_ID,CAMPAIGN_TYPE,CSV_ENTRY_DATE) VALUES(:PROFILEID,:PRIORITY,:ANALYTIC_SCORE,:OLD_PRIORITY,:DIAL_STATUS,:AGENT,:DISCOUNT_PERCENT,:LAST_LOGIN_DATE,:PHONE_NO1,:PHONE_NO2,:PHOTO,:DOB,:MSTATUS,:EVER_PAID,:GENDER,:POSTEDBY,:EXPIRY_DT,:PHONE_NO3,:PHONE_NO4,:LEAD_ID,:CAMPAIGN_TYPE,:CSV_ENTRY_DATE)";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$prep->bindValue(":PRIORITY",$dialerPriority,PDO::PARAM_INT);
@@ -33,6 +33,7 @@ class incentive_SALES_CSV_DATA_RENEWAL extends TABLE
 			$prep->bindValue(":PHONE_NO3",$phone1,PDO::PARAM_STR);
                         $prep->bindValue(":PHONE_NO4",$phone2,PDO::PARAM_STR);
                         $prep->bindValue(":LEAD_ID",$leadId,PDO::PARAM_STR);
+			$prep->bindValue(":CAMPAIGN_TYPE",$campaignType,PDO::PARAM_STR);
                         $prep->bindValue(":CSV_ENTRY_DATE",$csvDate,PDO::PARAM_STR);
 
 			$prep->execute();

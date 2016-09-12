@@ -5,7 +5,7 @@ chdir(dirname(__FILE__));
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect.inc");
 include_once("housekeepingConfig.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
-
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 $db=connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 $dbSlave=connect_slave();
@@ -36,6 +36,12 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 
 	//PHOTO REQUEST
 	if($devTesting){
+		$to = "nitesh.s@jeevansathi.com";
+		$from = "info@jeevansathi.com";
+		$subject = "Drop table";
+		$msgBody = "Drop table in crontabs/housekeeping/oneTimeCreateArchiveTables.php";
+		send_email($to,$msgBody,$subject,$from);
+	
 		$sql_drop_photoArchive="DROP TABLE IF EXISTS newjs.PHOTO_REQUEST_ARCHIVE";
 		$res=mysql_query($sql_drop_photoArchive,$dbM) or die(mysql_error($dbM).$sql_drop_photoArchive);
 	}

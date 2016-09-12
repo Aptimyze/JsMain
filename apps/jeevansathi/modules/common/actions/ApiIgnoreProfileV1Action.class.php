@@ -14,7 +14,8 @@ class ApiIgnoreProfileV1Action extends sfActions
 	const UNBLOCK 			= 0;
 	const BLOCK 			= 1;
 	const STATUS			= 2;
-	const IGNOREDMESSAGE    ="This profile will be removed from your search results and other lists. This profile will not be able to contact you any further.";
+	const IGNORED_LIMIT			= 4000;
+        const IGNOREDMESSAGE    ="This profile will be removed from your search results and other lists. This profile will not be able to contact you any further.";
 	private $m_iResponseStatus;
 	private $loginProfile;
 	private $ignoreProfile;
@@ -82,9 +83,18 @@ class ApiIgnoreProfileV1Action extends sfActions
 			{
 				case self::UNBLOCK :
 				{
+                                         $ignoreCount=JsMemcache::getInstance()->get('IGNORED_COUNT_'.$profileID);
+                                         if(is_null($ignoreCount)|| $ignoreCount===false)
+                                        {
+                                            $ignoreArr=$ignore_Store_Obj->getCountIgnoredProfiles($profileID);
+                                            $ignoreCount=$ignoreArr['CNT'];
+                                        
+                                        }
 					$ignore_Store_Obj->undoIgnoreProfile($profileID,$ignoredProfileid);
 					JsMemcache::getInstance()->remove($profileID);
 					JsMemcache::getInstance()->remove($ignoredProfileid);
+                                        $ignoreCount--;
+					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
 					$page["source"] = $request->getParameter("pageSource");
 					$buttonObj = new ButtonResponse($this->loginProfile,$this->ignoreProfile,$page);
 					$button = $buttonObj->getButtonArray();
@@ -139,10 +149,29 @@ class ApiIgnoreProfileV1Action extends sfActions
 				}
 				case self::BLOCK :
 				{
-					$ignore_Store_Obj->ignoreProfile($profileID,$ignoredProfileid);
+                                    
+                                    $ignoreCount=JsMemcache::getInstance()->get('IGNORED_COUNT_'.$profileID);
+                                    if(is_null($ignoreCount) || $ignoreCount===false)
+                                    {
+                                        $ignoreArr=$ignore_Store_Obj->getCountIgnoredProfiles($profileID);
+                                        $ignoreCount=$ignoreArr['CNT'];
+                                        JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
+                                        
+                                    }
+                                    
+                                    if($ignoreCount>=self::IGNORED_LIMIT)
+                                    {
+                                        $this->m_iResponseStatus = ResponseHandlerConfig::$IGNORED_MESSAGE;
+					$this->m_arrOut=array('status'=>"1",'message'=>"BLOCK LIMIT REACHED");
+					break;
+                                    }   
+                                        
+                                        $ignore_Store_Obj->ignoreProfile($profileID,$ignoredProfileid);
 					JsMemcache::getInstance()->remove($profileID);
 					JsMemcache::getInstance()->remove($ignoredProfileid);
-					
+                                        $ignoreCount++;
+					JsMemcache::getInstance()->set('IGNORED_COUNT_'.$profileID,$ignoreCount);    
+                                        
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					$button["buttons"]["primary"][] = ButtonResponseJSMS::getIgnoreButton("","" , 1, 1);
 					$button["buttons"]["other"] = null;

@@ -683,9 +683,9 @@ function getUrlForHeaderCaching($url)
 		setSearchCacheLocalStorageData(loggedInJspcUser,'dppHeaderCaching',timestamp);
 	
 		if($url.indexOf('?')!='-1')
-			 return $url +"&useHeaderCaching=1&timestamp="+timestamp;
+			 return $url +"&useHeaderCaching=0&timestamp="+timestamp;
 		else
-			return $url+"?useHeaderCaching=1&timestamp="+timestamp;	
+			return $url+"?useHeaderCaching=0&timestamp="+timestamp;	
 	}
 	return $url;
 }
@@ -704,4 +704,14 @@ function callAfterDppChange()
 	{
 		setSearchCacheLocalStorageData(loggedInJspcUser,'lastDppChangedActionTimestamp',now);
 	}
+}
+
+function showCustomCommonError(msg,timeInMs)
+{
+        if(typeof(msg)=='undefined') msg='Something went wrong. Please try again after some time.';
+        if(typeof(timeInMs)=='undefined') timeInMs=1500;
+            $("#commonError #js-commonErrorMsg").text(msg);
+            $("#commonError").slideDown("slow");
+        setTimeout('$("#commonError").slideUp("slow")',timeInMs);
+
 }

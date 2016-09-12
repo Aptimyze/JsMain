@@ -201,6 +201,7 @@ class SearchUtility
 				$cluster=$cluster."_DOL";
 			$clusterVal = $request->getParameter("appClusterVal");
 			if($cluster == "MANGLIK" && $clusterVal != 'ALL'){ // check for cluster only search for not adding dont know to 'not manglik'
+                            if($clusterVal!='')
 					$clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;
 			}
       if($cluster=='MATCHALERTS_DATE_CLUSTER' && $clusterVal==NULL)

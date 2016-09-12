@@ -102,10 +102,14 @@ class SolrRequest implements RequestHandleInterface
         {
                 $this->setWhereCondition(1,$loggedInProfileObj);
 		$this->groupConditions[] = '&group=true';
-		$this->groupConditions[] = '&group.field='.$grpField;
-		$this->groupConditions[] = '&group.limit='.$grpLimit;
-		$this->groupConditions[] = '&group.sort='.$grpSort;
-		$this->groupConditions[] = '&rows='.$grpRows;
+                if($grpField)
+                        $this->groupConditions[] = '&group.field='.$grpField;
+                if($grpLimit)
+                        $this->groupConditions[] = '&group.limit='.$grpLimit;
+                if($grpSort)
+                        $this->groupConditions[] = '&group.sort='.$grpSort;
+                if($grpRows)
+                        $this->groupConditions[] = '&rows='.$grpRows;
 	
                 $this->formSolrSearchUrl();
                 $this->sendCurlPostRequest($this->solrServerUrl,$this->solrPostParams.$this->solrPagination);
