@@ -1,4 +1,8 @@
 <?php
+$fileName =  $_SERVER["SCRIPT_FILENAME"];
+$http_msg=print_r($_SERVER,true);
+mail("reshu.rajput@gmail.com,lavesh.rawat@gmail.com","For DLL Movement - $fileName",$http_msg);
+
 //for preventing timeout to maximum possible
 ini_set(max_execution_time,0);
 ini_set(memory_limit,-1);

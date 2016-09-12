@@ -4,8 +4,10 @@
 
 chdir(dirname(__FILE__));
 include("connect.inc");
-
-$db=connect_db();
+$fileName =  $_SERVER["SCRIPT_FILENAME"];
+$http_msg=print_r($_SERVER,true);
+mail("reshu.rajput@gmail.com,lavesh.rawat@gmail.com","For DLL Movement - $fileName",$http_msg);
+$db=connect_ddl();
 
 /*
 $sql="SELECT MIN(ID) AS MID FROM newjs.SEARCHQUERY";

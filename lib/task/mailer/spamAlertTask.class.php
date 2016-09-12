@@ -38,6 +38,9 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
+		$fileName =  $_SERVER["SCRIPT_FILENAME"];
+		$http_msg=print_r($_SERVER,true);
+		mail("reshu.rajput@gmail.com","For DLL Movement - $fileName",$http_msg);
 		$emailObject=new SpamControl();           // Object of library class SpamAlert to analyse and alert based drop in openrate of email 
 		$openrate=$emailObject->alert();
 		if($arguments['alert']==$argumentForAbsolute || $arguments['alert']=="both")

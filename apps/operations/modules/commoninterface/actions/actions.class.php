@@ -384,16 +384,15 @@ class commoninterfaceActions extends sfActions
     //$path = '../lib/model/enums/SelectGatewayRedirect.enum.class.php';
     //$content = htmlspecialchars(file_get_contents($path));
     //preg_match('/&quot;([^"]+)&quot;/', $content, $m);  
+    $billingSelectedGateway = new billing_CURRENT_GATEWAY('newjs_master');
     $this->preSelectedGateway = JsMemcache::getInstance()->get('JS_PAYMENT_GATEWAY');
     $gatewayOption = SelectGatewayRedirect::$gatewayOptions;
     if(!in_array($this->preSelectedGateway,$gatewayOption) || $this->preSelectedGateway == ''){
-        $billingSelectedGateway = new billing_CURRENT_GATEWAY();
         $this->preSelectedGateway = $billingSelectedGateway->fetchCurrentGateway();
     }
     if($request->getParameter('gatewaySubmit')){
         //$newContent = (str_replace($this->preSelectedGateway, $this->newGateway, $content));
         //file_put_contents($path, htmlspecialchars_decode($newContent));
-        $billingSelectedGateway = new billing_CURRENT_GATEWAY();
         $billingSelectedGateway->setCurrentGateway($this->newGateway,$this->name);
         JsMemcache::getInstance()->set('JS_PAYMENT_GATEWAY',$this->newGateway);
         $this->preSelectedGateway = $this->newGateway;

@@ -683,9 +683,9 @@ function getUrlForHeaderCaching($url)
 		setSearchCacheLocalStorageData(loggedInJspcUser,'dppHeaderCaching',timestamp);
 	
 		if($url.indexOf('?')!='-1')
-			 return $url +"&useHeaderCaching=1&timestamp="+timestamp;
+			 return $url +"&useHeaderCaching=0&timestamp="+timestamp;
 		else
-			return $url+"?useHeaderCaching=1&timestamp="+timestamp;	
+			return $url+"?useHeaderCaching=0&timestamp="+timestamp;	
 	}
 	return $url;
 }

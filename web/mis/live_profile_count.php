@@ -10,7 +10,7 @@
 ************************************************************************************************************************/
 include_once("connect.inc");
 include_once("../jsadmin/time1.php");
-$db=connect_misdb();
+$db=connect_rep();
 
 if(authenticated($cid) || $JSIndicator==1)
 {

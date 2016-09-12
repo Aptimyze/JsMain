@@ -14,7 +14,7 @@ $db_dialer = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or 
 function compute_dnc_array($db_dialer,$campaign_name)
 {
 	$dnc_array = array();
-	$squery1 = "SELECT PROFILEID FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND Dial_Status='9'";
+	$squery1 = "SELECT PROFILEID FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE Dial_Status='9'";
         $sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
 	while($srow1 = mssql_fetch_array($sresult1))
 		$dnc_array[] = $srow1["PROFILEID"];
@@ -53,7 +53,7 @@ function compute_eligible_in_array($db_js,$dnc_array,$renewal='')
 }
 function start_opt_in_profiles($campaign_name,$opt_in_profile,$db_dialer,$db_js_157)
 {
-	$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID ='$opt_in_profile'";
+	$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
         $sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
         while($srow1 = mssql_fetch_array($sresult1))
         {
