@@ -63,7 +63,6 @@ class misGenerationhandler
 			foreach($profiles as $key=>$dataArr)
 			{
 				$profileid	=$dataArr['PROFILEID'];
-			
 				// filter for Allocation Validity for Payment
                 			$allocationVaildity =$crmDailyAllotObj->getValidAllocationForPayment($profileid,$dataArr['ENTRY_DT']);	
                 			if(!$allocationVaildity)
@@ -560,7 +559,7 @@ class misGenerationhandler
     {
         //Basic condition to record the sale: Agent should have privilage EXcSl
         $jsAdminPswrdsObj=new jsadmin_PSWRDS("newjs_slave");
-        $agentsPriv = $jsAdminPswrdsObj->getPrivilegesForSalesTarget();
+        $agentsPriv = $jsAdminPswrdsObj->getPrivilegesForSalesTargetWithLastLogin();
         unset($jsAdminPswrdsObj);
         //Get sale within last month from incentive.MONTHLY_INCENTIVE_ELIGIBILITY
         //****Comment from here after 2nd March,2016****
@@ -585,6 +584,14 @@ class misGenerationhandler
         $curDate = date('Y-m-d');
         $stDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)))." 00:00:00";
         $endDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)))." 23:59:59";
+        if(date('d') == '01'){
+            $monthStDate = new DateTime("first day of last month");
+        }
+        else{
+            $monthStDate = new DateTime("first day of this month");
+        }
+        $monthStDate = $monthStDate->format('Y-m-d')." 00:00:00";
+        
         
         $incetiveMonthlyIncentiveElgObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY("newjs_slave");
         $sales = $incetiveMonthlyIncentiveElgObj->getSalesWithinDates($stDate, $endDate);
@@ -597,13 +604,18 @@ class misGenerationhandler
             $saleDetails["AMOUNT"] = $amountWithTax*($netOfTaxFactor);
             $saleDetails["DATE"] = date('Y-m-d', strtotime($val["ENTRY_DT"]));
             //Add the sale amount to its respective process
-            $processWiseSale = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails["AGENT"]],$processWiseSale);
+            unset($loginWithinRange);
+            $loginWithinRange = $this->checkDateWithinRange($agentsPriv[$saleDetails["AGENT"]]['LAST_LOGIN_DT'], $monthStDate, $endDate);
+            unset($loginWithinRange);
+            list($processWiseSale, $headCountArr) = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails["AGENT"]],$processWiseSale,$headCountArr,$loginWithinRange);
             //If the case of SPLIT_AGENT, add to the process of split agent
             if($val['SPLIT_AGENT']){
                 $saleDetails["AGENT"] = $val['SPLIT_AGENT'];
                 $amountWithTax = ($val['AMOUNT'] - $val['APPLE_COMMISSION'])*($val['SPLIT_SHARE']/100);
                 $saleDetails["AMOUNT"] = $amountWithTax*($netOfTaxFactor);
-                $processWiseSale = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails['AGENT']],$processWiseSale);
+                $loginWithinRange = $this->checkDateWithinRange($agentsPriv[$saleDetails["AGENT"]]['LAST_LOGIN_DT'], $monthStDate, $endDate);
+                list($processWiseSale, $headCountArr) = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails['AGENT']],$processWiseSale,$headCountArr,$loginWithinRange);
+                unset($loginWithinRange);
             }
         }
         //Get all the sales done within last month
@@ -646,6 +658,21 @@ class misGenerationhandler
             }
             $salesProcessObj->insert($paramsArr);
         }
+        
+        unset($paramsArr);
+        $insertArr['MONTH_YR'] = date("M",strtotime($monthStDate))."-".date("Y",strtotime($monthStDate));
+        $salesProcessHeadCountObj = new incentive_SALES_PROCESS_WISE_TRACKING_HEAD_COUNT();
+        $currentHeadCount = $salesProcessHeadCountObj->getData($insertArr);
+        $insertArr['MONTH_YR'] = date("M",strtotime($monthStDate))."-".date("Y",strtotime($monthStDate));
+        foreach($headCountArr as $key=>$val){
+            $insertArr[$key] = (count($val) >= $currentHeadCount[$key])?$val:$currentHeadCount[$key];
+        }
+        foreach(crmParams::$processNames as $processKey => $processVal){
+            if(!$insertArr[$processKey])
+                $insertArr[$processKey] = 0;
+        }
+        $salesProcessHeadCountObj->insert($insertArr);
+        
         unset($incetiveMonthlyIncentiveElgObj);
         unset($sales);
         unset($incentiveSaleBillIdsArr);
@@ -660,35 +687,61 @@ class misGenerationhandler
         unset($paramsArr);
     }
 
-    public function addAmountToProcess($saleDetails,$priv,$processWiseSale)
+    public function addAmountToProcess($saleDetails,$privilageDetails,$processWiseSale,$headCountArr,$loginWithinRange=false)
     {
         $date = $saleDetails["DATE"];
         $amount = $saleDetails["AMOUNT"];
+        $priv = $privilageDetails['PRIVILAGE'];
+        $lastLoginDt = $privilageDetails['LAST_LOGIN_DT'];
         //This if checks if the agent has the basic privilage 'ExcSl'
         if($priv){            
             if(strpos($priv, 'ExcWL') !== false || strpos($priv, 'SUPWL') !== false ){
                 $processWiseSale[$date]['RCB_TELE']+= $amount;
+                if($loginWithinRange){
+                    $headCountArr['RCB_TELE'][$privilageDetails['USERNAME']]=1;
+                }
             }
             else if(strpos($priv, 'ExcDIb') !== false){
                 $processWiseSale[$date]['INBOUND_TELE']+= $amount;
+                if($loginWithinRange){
+                    $headCountArr['INBOUND_TELE'][$privilageDetails['USERNAME']]=1;
+                }
             }
             else if(strpos($priv, 'ExcBSD') !== false || strpos($priv, 'ExcBID') !== false){
                 $processWiseSale[$date]['CENTER_SALES']+= $amount;
+                if($loginWithinRange){
+                    $headCountArr['CENTER_SALES'][$privilageDetails['USERNAME']]=1;
+                }
             }
             else if(strpos($priv, 'ExcFP') !== false){
                 $processWiseSale[$date]['FP_TELE']+= $amount;
+                if($loginWithinRange){
+                    $headCountArr['FP_TELE'][$privilageDetails['USERNAME']]=1;
+                }
             }
             else if(strpos($priv, 'ExcRnw') !== false){
                 $processWiseSale[$date]['CENTRAL_RENEW_TELE']+= $amount;
+                if($loginWithinRange){
+                    $headCountArr['CENTRAL_RENEW_TELE'][$privilageDetails['USERNAME']]=1;
+                }
             }
             else if(strpos($priv, 'ExcFld') !== false){
                 $processWiseSale[$date]['FIELD_SALES']+= $amount;
+                if($loginWithinRange){
+                    $headCountArr['FIELD_SALES'][$privilageDetails['USERNAME']]=1;
+                }
             }
             else if(strpos($priv, 'ExcFSD') !== false || strpos($priv, 'ExcFID') !== false){
                 $processWiseSale[$date]['FRANCHISEE_SALES']+= $amount;
+                if($loginWithinRange){
+                    $headCountArr['FRANCHISEE_SALES'][$privilageDetails['USERNAME']]=1;
+                }
             }
             else if(strpos($priv, 'ExcDOb') !== false || strpos($priv, 'ExcPrm') !== false || strpos($priv, 'PreNri') !== false){
                 $processWiseSale[$date]['OUTBOUND_TELE']+= $amount;
+                if($loginWithinRange){
+                    $headCountArr['OUTBOUND_TELE'][$privilageDetails['USERNAME']]=1;
+                }
             }
             else{
                 $processWiseSale[$date]['UNASSISTED_SALES']+= $amount;
@@ -697,7 +750,11 @@ class misGenerationhandler
         else{
             $processWiseSale[$date]['UNASSISTED_SALES']+= $amount;
         }
-        return $processWiseSale;
+        return array(
+            $processWiseSale,
+            $headCountArr
+        );
+        //return $processWiseSale;
     }
     
     public function bakeDataForSalesProcessMIS($data)
@@ -709,6 +766,15 @@ class misGenerationhandler
             }
         }
         return $result;
+    }
+    
+    public function checkDateWithinRange($dt, $rangeSt, $rangeEnd){
+        if($rangeSt<=$dt && $dt<=$rangeEnd){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }
 ?>
