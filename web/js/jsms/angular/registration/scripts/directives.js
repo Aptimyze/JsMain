@@ -484,7 +484,7 @@
             if (typeof $scope.validationType != "undefined" && 
             $scope.validationType == "nameField") {
               // Check if value has changes
-              var regex = /[^a-zA-Z'. ]+/g;
+              var regex = /[^a-zA-Z'., ]+/g;
               var value = newValue;
               value = value.trim().replace(regex,"");
 
