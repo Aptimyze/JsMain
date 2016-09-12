@@ -226,8 +226,12 @@ function SaveSub(json,attr)
 	if(validatorFormId){
 		isValid=$("#"+validatorFormId).valid();
 	}
+	if(validatorFormId=="BasicDetails")
+	{
+		isValidStateCity = StateCityRequired(key);
+	}
 		
-	if(isValid){
+	if(isValid && isValidStateCity){
 		var whereToSubmit=submitObj.has_value();
 		if(whereToSubmit)
 		{

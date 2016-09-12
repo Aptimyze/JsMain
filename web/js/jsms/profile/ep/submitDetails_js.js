@@ -64,7 +64,7 @@ var saveDetail=(function(){
           async: true,
           data: {editFieldArr : editFieldArr},
           success: function(result) {               
-				if(CommonErrorHandling(result))
+				if(CommonErrorHandling(result)||((result.hasOwnProperty("responseStatusCode") && result.responseStatusCode==1 && result.error[0].indexOf("country")!=-1)))
 				{
 					if(result.hasOwnProperty("error") && result.error)
                                         {
