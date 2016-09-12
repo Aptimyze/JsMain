@@ -964,4 +964,31 @@ class crmInterfaceActions extends sfActions
             $this->detailedView = 1;
         }
     }
+
+    public function executeChangeActiveServicesInterface(sfWebRequest $request)
+    {
+        $this->cid          = $request->getParameter('cid');
+        $this->name         = $request->getParameter('name');
+        $billingServObj     = new billing_SERVICES();
+        // LIMIT SERVICES TO SHOW IN THIS INTERFACE
+        $servArr = array('P','C','NCP','X','T','R','A','I');
+        if ($request->getParameter('submit')) {
+        	$params = $request->getParameterHolder()->getAll();
+        	unset($params['submit'],$params['name'],$params['cid'],$params['module'],$params['action'],$params['authFailure']);
+        	foreach ($params as $key=>$val) {
+        		if ($val == 'Y') {
+        			$activate[] = $key;
+        		} else {
+        			$deactivate[] = $key;
+        		}
+        	}
+        	$activate = "'" . implode("','", $activate) . "'";
+        	$deactivate = "'" . implode("','", $deactivate) . "'";
+        	$billingServObj->changeServiceActivations($activate, 'Y');
+        	$billingServObj->changeServiceActivations($deactivate, 'N');
+        	$memHandlerObject = new MembershipHandler();
+        	$memHandlerObject->flushMemcacheForMembership();
+        }
+        $this->servDet = $billingServObj->getServicesForActivationInterface($servArr);
+    }
 }
