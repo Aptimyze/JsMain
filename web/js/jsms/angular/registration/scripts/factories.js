@@ -204,7 +204,7 @@
       {"label":"Horoscope match is necessary? (optional)","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"horoscope_match","userDecision":"","dindex":"3","storeKey":"horoscope_match","tapName":"Horoscope match is necessary?","dependant_tapName":"","required":"false"}
 			],
 		"s5": [
-      {"label":"Name","value":"","show":"true","screenName":"s5","hamburgermenu":"0","userDecision":"","dindex":"0","storeKey":"name_of_user","inputType":"text","hint":notFilled,"required":"true"},
+      {"label":"Full Name","value":"","show":"true","screenName":"s5","hamburgermenu":"0","userDecision":"","dindex":"0","storeKey":"name_of_user","inputType":"text","hint":notFilled,"required":"true"},
 			{"label":"Email ID","value":"","show":"true","screenName":"s5","inputType":"email","hint":notFilled,"storeKey":"email","errorLabel":"","dindex":"1","errClass":"","isAutoCorrected":"false"},
 			{"label":"Password","value":"","show":"true","screenName":"s5","inputType":"password","hint":notFilled,"helpText":"Show","storeKey":"password","errorLabel":"","dindex":"2","errClass":""},
 			{"label":"Phone Number","value":"","show":"true","screenName":"s5","inputType":"number","hint":notFilled,"storeKey":"phone_mob","errorLabel":"","dindex":"3","isdVal":91,"isdHint":notFilledISD,'isdMaxlength':'4','maxLength':'10','maxNriLength':'14',"errClass":""},
@@ -1215,13 +1215,21 @@
 			var fields      =Gui.getRegFields(screenName);
                         var name       =fields[index].value;
 			var nameError = '';
-			if(name=='')
-				nameError =Constants.getErrorMsg('NAME_REQUIRED');
-			if(!nameError)
+			var name_of_user;
+		        name_of_user = name.replace(/\.|\,|\'|dr|ms|mr|miss/gi, " ");
+		        name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+		        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+		        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user)))
 			{
-				var namePattern =factory.namePattern(name);
-				if(!namePattern)
-					nameError =Constants.getErrorMsg('NAME_INVALID');
+				nameError= "Please provide a valid Full Name";
+        		}
+			else
+			{
+				var nameArr = name_of_user.split(" ");
+				if(nameArr.length<2)
+				{
+					nameError = "Please provide your first name along with surname, not just the first name";
+				}
 			}
 			if(nameError){
 				fields[index].errorLabel =nameError;
@@ -1233,13 +1241,6 @@
 				fields[index].errClass='';
 			return true;
 		}
-                factory.namePattern =function(name)
-                {
-                        if(!name_regex.test(name))
-                                return false;
-                        else
-                                return true;
-                }
 		factory.validateEmail = function(index,screenName)
 		{
                         var fields      =Gui.getRegFields(screenName);
