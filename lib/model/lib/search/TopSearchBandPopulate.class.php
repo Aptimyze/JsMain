@@ -19,7 +19,7 @@ class TopSearchBandPopulate
 	private $selectedCaste;
 	private $selectedReligion;
 	private $selectedMtongue;
-	private $selectedCity_Country;
+       private $selectedCity_Country;
 	private $selectedHavePhoto;
 	private $bigBand;
 	private $dataArray;
@@ -33,6 +33,7 @@ class TopSearchBandPopulate
 	private $selectedManglik;
 	private $selectedOccupationJSMS;
 	private $selectedEducationJSMS;
+	private $isNewApp = 0;
 
 	/**
 	*Constructor to set the class variables
@@ -44,6 +45,9 @@ class TopSearchBandPopulate
 	*/
 	public function __construct($parameters='')
 	{
+                if(array_key_exists("app54",$parameters) && $parameters["app54"] == 1)
+                       $this->isNewApp = 1;
+                        
 		if(is_array($parameters) && $parameters["forClusters"]=='1')
 			return;
 
@@ -220,21 +224,33 @@ class TopSearchBandPopulate
 		if($param["MTONGUE"])
 			$this->selectedMtongue = $param["MTONGUE"];
 			
-		if($parameters && is_array($parameters) && array_key_exists("SETMULTIPLE",$parameters))
+		if($parameters && is_array($parameters) && (array_key_exists("SETMULTIPLE",$parameters) || $this->isNewApp == 1))
                 {
 									
-										
-                        if($param["CITY_INDIA"])
-                                $this->selectedCity_Country = $param["CITY_INDIA"].",".$param["COUNTRY_RES"];
-                        elseif($param["CITY_RES"])
-                                $this->selectedCity_Country = $param["CITY_RES"].",".$param["COUNTRY_RES"];
-                        elseif($param["STATE"])
-                                $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
-                        else
-														$this->selectedCity_Country = $param["COUNTRY_RES"];
-                        if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
-                                $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
-                        $this->selectedCity_Country = trim($this->selectedCity_Country,",");
+                        if($this->isNewApp == 1){
+                                if($param["CITY_INDIA"])
+                                        $this->selectedCity_Country = $param["CITY_INDIA"].",".$param["COUNTRY_RES"];
+                                elseif($param["CITY_RES"])
+                                        $this->selectedCity_Country = $param["CITY_RES"].",".$param["COUNTRY_RES"];
+                                elseif($param["STATE"])
+                                        $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
+                                else
+                                        $this->selectedCity_Country = $param["COUNTRY_RES"];
+                                
+                                $this->selectedCity_Country = trim($this->selectedCity_Country,",");
+                        }else{
+                                if($param["CITY_INDIA"])
+                                        $this->selectedCity_Country = $param["CITY_INDIA"].",".$param["COUNTRY_RES"];
+                                elseif($param["CITY_RES"])
+                                        $this->selectedCity_Country = $param["CITY_RES"].",".$param["COUNTRY_RES"];
+                                elseif($param["STATE"])
+                                        $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
+                                else
+                                        $this->selectedCity_Country = $param["COUNTRY_RES"];
+                                if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
+                                        $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
+                                $this->selectedCity_Country = trim($this->selectedCity_Country,",");
+                        }
                 }
 		else
 		{
@@ -2142,7 +2158,7 @@ class TopSearchBandPopulate
 			$output["lincome"] = TopSearchBandConfig::$minDefaultIncome;
 		if($output["lincome"]=="0")
 			$output["lincome_label"]="Rs. 0";
-		else
+		else 
 			$output["lincome_label"] = FieldMap::getFieldLabel("lincome",$this->selectedLincome);
 
 		/** caste/religion */
@@ -2157,7 +2173,19 @@ class TopSearchBandPopulate
 			{
 				$output["caste"] = $this->selectedCaste;
 				$output["caste_label"] = FieldMap::getFieldLabel("caste",$this->selectedCaste);
-			}
+			}else{
+                                $output["caste"] = $this->selectedCaste;
+                                $castes = explode(",",$this->selectedCaste);
+                                foreach($castes as $caste){
+                                        $output["caste_label"][] = FieldMap::getFieldLabel("caste",$caste);
+                                }
+                                if($this->isNewApp == 1){
+                                        $output["caste_label"] = implode(",",$output["caste_label"]);
+                                }else{
+                                        $output["caste_label"] = $output["caste_label"][0];  
+                                        $output["caste"] = $castes[0];  
+                                }
+                        }
 			$casteObj = new RevampCasteFunctions();
 			$output["religion"] = $casteObj->getParentIfSingle($this->selectedCaste);
 			if($output["religion"])
@@ -2222,32 +2250,78 @@ class TopSearchBandPopulate
 		{
 			$output["location"] = NULL;
 			$output["location_label"] =NULL;
+                        
+			$output["location_cities"] = NULL;
+			$output["location_cities_label"] =NULL;
 			
 			if(strpos($this->selectedCity_Country,",")>0)
 			{
-				$delhiNcr = implode(",",FieldMap::getFieldLabel("delhiNcrCities",1,1));
-				if(self::if_two_string_contains_same_values($this->selectedCity_Country,TopSearchBandConfig::$mumbaiRegion))
+                                $this->selectedCity_Country = explode(",",$this->selectedCity_Country);
+				if(count(array_intersect(explode(',',TopSearchBandConfig::$mumbaiRegion),$this->selectedCity_Country)) == sizeOf(explode(',',TopSearchBandConfig::$mumbaiRegion)))
 				{
-					$output["location"] = $this->selectedCity_Country;
-					$output["location_label"] = TopSearchBandConfig::$mumbaiRegionLabel;
+					$output["location_cities"][] = TopSearchBandConfig::$mumbaiRegion;
+                                        $this->selectedCity_Country = array_diff($this->selectedCity_Country,explode(',',TopSearchBandConfig::$mumbaiRegion));
+					$output["location_cities_label"][] = TopSearchBandConfig::$mumbaiRegionLabel;
 				}
-				elseif(self::if_two_string_contains_same_values($this->selectedCity_Country,$delhiNcr))
+				elseif(count(array_intersect(FieldMap::getFieldLabel("delhiNcrCities",1,1),$this->selectedCity_Country)) == sizeOf(FieldMap::getFieldLabel("delhiNcrCities",1,1)))
 				{
-					$output["location"] = $this->selectedCity_Country;
-					$output["location_label"] = TopSearchBandConfig::$ncrLabel;	
+					$output["location_cities"][] = implode(',',FieldMap::getFieldLabel("delhiNcrCities",1,1));
+					$output["location_cities_label"][] = TopSearchBandConfig::$ncrLabel;	
+                                        $this->selectedCity_Country = array_diff($this->selectedCity_Country,FieldMap::getFieldLabel("delhiNcrCities",1,1));
 				}
+                                foreach($this->selectedCity_Country as $v){
+                                        if(is_numeric($v)){
+                                                $tempField ="country";
+                                                $output["location"][] = $v;
+                                                $output["location_label"][] = FieldMap::getFieldLabel($tempField,$v);
+                                        }else{
+                                                if(ctype_alpha($v)){
+                                                        $tempField ="state_india";
+                                                }else{
+                                                        $tempField ="city_india";
+                                                }
+                                                $output["location_cities"][] = $v;
+                                                $output["location_cities_label"][] = FieldMap::getFieldLabel($tempField,$v);
+                                        }
+                                }                                
+                                if($this->isNewApp == 1){
+                                        $output["location"] = implode(',',$output["location"]);
+                                        $output["location_label"] = implode(',',$output["location_label"]);
+                                        $output["location_cities"] = implode(',',$output["location_cities"]);
+                                        $output["location_cities_label"] = implode(',',$output["location_cities_label"]);
+                                }else{
+                                        if(!empty($output["location_cities"])){
+                                                $output["location"] = $output["location_cities"][0];
+                                                $output["location_label"] = $output["location_cities_label"][0];
+                                        }else{
+                                                $output["location"] = $output["location"][0];
+                                                $output["location_label"] = $output["location_label"][0];
+                                        }
+                                }
 			}
 		}
 		else
 		{
-			if(is_numeric($this->selectedCity_Country))
+			if(is_numeric($this->selectedCity_Country)){
 				$tempField ="country";
-			else
+                                $output["location"] = $this->selectedCity_Country;
+                                $output["location_label"] = FieldMap::getFieldLabel($tempField,$this->selectedCity_Country);
+                                if(!$output["location_label"])
+                                        $output["location"] = NULL;
+                        }else{
 				$tempField ="city_india";
-			$output["location"] = $this->selectedCity_Country;
-			$output["location_label"] = FieldMap::getFieldLabel($tempField,$this->selectedCity_Country);
-			if(!$output["location_label"])
-				$output["location"] = NULL;
+                                if($this->isNewApp == 1){
+                                        $output["location_cities"] = $this->selectedCity_Country;
+                                        $output["location_cities_label"] = FieldMap::getFieldLabel($tempField,$this->selectedCity_Country);
+                                        if(!$output["location_cities_label"])
+                                                $output["location_cities"] = NULL;
+                                }else{
+                                        $output["location"] = $this->selectedCity_Country;
+                                        $output["location_label"] = FieldMap::getFieldLabel($tempField,$this->selectedCity_Country);
+                                        if(!$output["location_label"])
+                                                $output["location"] = NULL;    
+                                }
+                        }
 		}
 
 		$output["photo"] = $this->selectedHavePhoto?$this->selectedHavePhoto:NULL;
