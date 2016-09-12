@@ -86,18 +86,28 @@ jQuery.validator.addMethod("validate_name", function (value, element){
 				return true;	
 },"Please provide a valid Name");
 
+var nameError = {"noSpace":"Please provide your first name along with surname, not just the first name","invalidChars":"Please provide a valid Full Name"};
+var telNumberErrorNo = '';
 jQuery.validator.addMethod("validate_custom_name", function (value, element){
 			var name_of_user=value;
                         var name = name_of_user.replace(/\.|\,|\'|dr|ms|mr|miss/gi, " ");
                         name = name.replace(/\s+/gi, " ");
-			var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+                        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
 			if($.trim(name)!= "" && !allowed_chars.test(trim(name)))
 			{
-				return false;
+                                telNumberErrorNo =  "invalidChars";
+                                return false;
 			}
-			else			
-				return true;	
-},"Please provide a valid Full Name");
+			else{	
+                                var nameArr = name.split(" ");
+                                if(nameArr.length<2){
+                                        telNumberErrorNo =  "noSpace";
+                                        return false;
+                                }else{
+                                        return true;
+                                }
+                        }
+},function(){return nameError[telNumberErrorNo];});
 jQuery.validator.addMethod("MobileNumberVerify", function(value,element) {
         return (checkMobile(0));
         });

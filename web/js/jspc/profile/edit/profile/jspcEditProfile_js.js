@@ -3852,12 +3852,16 @@ EditApp = function(){
         name_of_user = name_of_user.replace(/\.|\,|\'|dr|ms|mr|miss/gi, " ");
         name_of_user = name_of_user.replace(/\s+/gi, " ");
         var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
-	if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user)))
-	{
-                $(fieldParentID).find('.js-areaBox').addClass(errorBorder).removeClass(normalBorder);
-                $(fieldParentID).find('.js-errorLabel').removeClass(dispNone);
-                requiredFieldStore.add(nameField);
-	}
+        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user))){
+                setError(nameField,"Please provide a valid Full Name",1);
+        }else{
+                var nameArr = name_of_user.split(" ");
+                if(nameArr.length<2){
+                        setError(nameField,"Please provide your first name along with surname, not just the first name",1);
+                }else{
+                     unsetError(nameField);   
+                }
+        }
       storeFieldChangeValue(nameField,nameVal);
     }
     onAboutChange = function(aboutMeVal,event){
