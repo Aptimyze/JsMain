@@ -547,9 +547,9 @@ class SearchApiStrategyV1
                                         $value='Y';
                                 break;
 			case "timetext":
-				if($this->searchCat == 'justJoinedMatches' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $this->searchCat == 'matchalerts' || $this->searchCat == 'kundlialerts' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::contactViewAttempt)
+				if($this->searchCat == 'justJoinedMatches' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $this->searchCat == 'matchalerts' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::contactViewAttempt)
 				{
-					if($this->searchCat == 'matchalerts' || $this->searchCat == 'kundlialerts')
+					if($this->searchCat == 'matchalerts')
 					{
                                                 $value = CommonUtility::convertDateToDay($infoArr['SENT_DATE']);
                                                 if(stripos($value,'today') === false){

@@ -75,7 +75,8 @@ function showProfilePage(url){
 function updateHistory(tupleNo)
 {
 	if (window.location.href.indexOf('profile/viewprofile.php')==-1 && window.location.href.indexOf('saveLayer')==-1){
-		var addMoreParams = 'searchId='+firstResponse.searchid+'&currentPage=1';
+		var sbPar = removeNull(firstResponse.searchBasedParam);
+		var addMoreParams = 'searchId='+firstResponse.searchid+'&currentPage=1&searchBasedParam='+sbPar;
 		if(viewSimilar==1)
 			addMoreParams += '&profilechecksum='+viewedProfilechecksum+'&'+NAVIGATOR;
 		if(fmBack==1)
@@ -260,9 +261,11 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 
 function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 {
-
-		if(typeof contactTracking == 'undefined')
-			contactTracking="&stype="+stypeKey;
+		
+	
+	contactTracking="&stype="+tupleStype;
+			
+	//console.log(contactTracking);
 		if(totalNoOfResults=='')
 		{
 			if(contactCenter==1)
@@ -335,7 +338,7 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 						<span class="f12 white padl10">\
 							{userloginstatus}\
 						</span>\
-						<span class="f12 white padr10">\
+						<span class="f12 white fr fontrobbold">\
 							{gunascore}\
 						</span>\
 				</div>\
@@ -501,7 +504,7 @@ function albumcheck(count,idd,profilechecksum,IsProfilefiltered,tupleStype,total
 	if(typeof IsProfilefiltered == 'undefined')
 		var IsProfilefiltered = 0;
 	if(typeof contactTracking == 'undefined')
-		contactTracking="&stype="+stypeKey;
+		contactTracking="&stype="+tupleStype;
 	
 	if(IsProfilefiltered==1)
 		$("#album"+idd).attr("href", "/profile/viewprofile.php?total_rec="+totalNoOfResults+"&profilechecksum="+profilechecksum+contactTracking+"&tupleId="+idd+"&"+NAVIGATOR+"&"+"offset="+(idd-1)+"&similarOf="+viewedProfilechecksum+"");
@@ -883,7 +886,7 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 	else
 		val1.photo.label=0;
 	if(val1.gunascore!=null)
-		gunascore="Guna "+val1.gunascore+"/36";
+		gunascore=val1.gunascore+"/36";
 	else
 		gunascore=null;
 	if(typeof val1.religion=='undefined')
