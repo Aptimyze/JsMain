@@ -25,6 +25,9 @@ class ApiRequestCallbackV1Action extends sfActions
             $phone = $loginData["PHONE_MOB"];
             $email = $loginData["EMAIL"];
         }
+        $dayDropDown = CommonFunction::getRCBDayDropDown();
+        $startTimeDropDown = CommonFunction::getRCBStartTimeDropDown();
+        $endTimeDropDown = CommonFunction::getRCBEndTimeDropDown();
         // Base response with pre-filled data for layout
         $responseData = array('title'=>'Request Call Back',
         		'top_placeholder'=>'We will call you at the earliest after you submit the request',
@@ -34,6 +37,10 @@ class ApiRequestCallbackV1Action extends sfActions
                 'email_autofill'=>$email,
                 'query_question'=>"What type of query do you have?",
                 'query_options'=>$query_options,
+                'date_text'=>'Date',
+                'date_option'=>$dayDropDown,
+                'startTime_text'=>'Schedule Time(IST)',
+                'startTime_option'=>$startTimeDropDown,
                 'submit_placeholder'=>"Submit Request");
         // Request Parameter Holder
         $arrRequest = $request->getParameterHolder()->getAll();
