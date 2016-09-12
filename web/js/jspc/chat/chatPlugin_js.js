@@ -2516,7 +2516,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin($('#'+param1+'_hover').length);
         //this._chatLoggerPlugin("in hoverBoxStr");
         //this._chatLoggerPlugin(pCheckSum);
-        var trackingParams = chatConfig.Params.categoryTrackingParams[group],
+        var trackingParams = _this._categoryTrackingParams[group],
             trackingParamsStr = '';
         if (typeof trackingParams != "undefined") {
             $.each(trackingParams, function (key, val) {
