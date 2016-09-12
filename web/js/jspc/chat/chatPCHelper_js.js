@@ -975,6 +975,13 @@ function contactActionCall(contactParams) {
                         "action": action
                     });*/
                 }
+                else if(response["responseStatusCode"] == "1" && action=='BLOCK')
+                {
+                    hideCommonLoader();
+                    showCustomCommonError(response.responseMessage,5000);
+                    return;
+                    
+                }
                 else{
                     checkForSiteLoggedOutMode(response);
                 }

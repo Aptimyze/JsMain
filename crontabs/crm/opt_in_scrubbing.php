@@ -148,4 +148,21 @@ $sub="Dialer updates for RENEWAL opt-in done.";
 $from="From:vibhor.garg@jeevansathi.com";
 mail($to,$sub,$msg,$from);
 
+// Renewal-Mah OPT-IN Check
+$msg = "Start time #".@date('H:i:s');
+$dnc_array = compute_dnc_array($db_dialer,'OB_RENEWAL_MAH');
+$opt_in_array = compute_opt_in_array($db_js,$dnc_array);
+$opt_in_array1 = compute_eligible_in_array($db_js,$opt_in_array,'1');
+for($i=0;$i<count($opt_in_array1);$i++)
+        start_opt_in_profiles('OB_RENEWAL_MAH',$opt_in_array1[$i],$db_dialer,$db_js_157);
+unset($dnc_array);
+unset($opt_in_array);
+unset($opt_in_array1);
+$msg.="End time :".@date('H:i:s');
+$to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
+$sub="Dialer updates for RENEWAL-MAH opt-in done.";
+$from="From:vibhor.garg@jeevansathi.com";
+mail($to,$sub,$msg,$from);
+
+
 ?>

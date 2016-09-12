@@ -34,5 +34,6 @@ class TopSearchBandConfig
 	public static $allHindiLabel = "All Hindi";
 	public static $searchFormDataLogicalChangeLatest = "2015-03-29 00:00:00";
 	public static $religionAllCasteMapping = array("1"=>"14","2"=>"149","4"=>"154","3"=>"2","9"=>"173");
+        public static $topCities = array('DE00','MH04','KA02','AP03','MH08','TN02','WB05');
 }
 ?>
