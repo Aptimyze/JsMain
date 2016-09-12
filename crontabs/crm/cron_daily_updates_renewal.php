@@ -18,29 +18,34 @@ $db_dialer = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or 
 $campaign_name = 'JS_RENEWAL';
 $start_from=0;
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_157, $db_dialer); 
+$campaign_nameArr =array("JS_RENEWAL","OB_RENEWAL_MAH");
 
-/*Stop non-eligible profiles*/
-echo "/Part-1/"."\n";
-for($i=$start_from;$i<10;$i++)
+foreach($campaign_nameArr as $key=>$campaign_name)
 {
-	$ignore_array = $dialerHandlerObj->getRenewalInEligibleProfiles($i);
-	$rd_array = $dialerHandlerObj->getRenewalDiscountArray($ignore_array);
-        $dialerHandlerObj->stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$rd_array);
-	echo "DONE$i"."\n";
+	/*Stop non-eligible profiles*/
+	echo "/Part-1/"."\n";
+	for($i=$start_from;$i<10;$i++)
+	{
+		$ignore_array = $dialerHandlerObj->getRenewalInEligibleProfiles($i,$campaign_name);
+		$rd_array = $dialerHandlerObj->getRenewalDiscountArray($ignore_array);
+	        $dialerHandlerObj->stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$rd_array);
+		echo "DONE$i"."\n";
+	}
+
+	/*Update data of eligible profiles*/
+	echo "/Part-2/"."\n";
+	for($i=$start_from;$i<10;$i++)
+	{
+		$eligible_array = $dialerHandlerObj->getRenewalEligibleProfiles($i,$campaign_name);
+		$rd_array = $dialerHandlerObj->getRenewalDiscountArray($eligible_array);
+		$allotedArray =$dialerHandlerObj->getAllotedProfiles($eligible_array);
+		$scoreArray = $dialerHandlerObj->getScoreArray($eligible_array);
+		$paidProfiles =$dialerHandlerObj->getPaidProfilesArray($eligible_array);
+	        $dialerHandlerObj->update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$rd_array,$allotedArray,$scoreArray, $paidProfiles);
+		echo "DONE$i"."\n";
+	}
 }
 
-/*Update data of eligible profiles*/
-echo "/Part-2/"."\n";
-for($i=$start_from;$i<10;$i++)
-{
-	$eligible_array = $dialerHandlerObj->getRenewalEligibleProfiles($i);
-	$rd_array = $dialerHandlerObj->getRenewalDiscountArray($eligible_array);
-	$allotedArray =$dialerHandlerObj->getAllotedProfiles($eligible_array);
-	$scoreArray = $dialerHandlerObj->getScoreArray($eligible_array);
-	$paidProfiles =$dialerHandlerObj->getPaidProfilesArray($eligible_array);
-        $dialerHandlerObj->update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$rd_array,$allotedArray,$scoreArray, $paidProfiles);
-	echo "DONE$i"."\n";
-}
 echo "\n";
 echo $msg.="End time :".@date('H:i:s');
 $to="manoj.rana@naukri.com";

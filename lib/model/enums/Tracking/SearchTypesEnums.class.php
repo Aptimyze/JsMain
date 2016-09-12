@@ -132,5 +132,6 @@ class SearchTypesEnums
         const SaveSearchMailer = 'SSM';
         const PC_CHAT_NEW = 'PCN';
         const kundliAlertMailer = "KAM";
+        const EXCLUSIVE_SERVICE2_MAILER_STYPE = 'ES2M';
 }
 ?>

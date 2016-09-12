@@ -9,7 +9,7 @@ class BILLING_PAYMENT_DETAIL extends TABLE
     public function modeDetails($pid) {
         try {
             if ($pid) {
-                $sql = "SELECT BILLID,MODE,CD_NUM,CD_DT,CD_CITY,BANK,IPADD,STATUS,ENTRY_DT FROM billing.PAYMENT_DETAIL WHERE PROFILEID = :PROFILEID ";
+                $sql = "SELECT BILLID,MODE,CD_NUM,CD_DT,CD_CITY,BANK,IPADD,STATUS,CONVERT_TZ(ENTRY_DT,'SYSTEM','right/Asia/Calcutta') as ENTRY_DT FROM billing.PAYMENT_DETAIL WHERE PROFILEID = :PROFILEID ";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
                 $prep->execute();
