@@ -2861,7 +2861,7 @@ JsChat.prototype = {
 					$("#"+elem["userId"]+"_"+elem["group"]).click();	
 				}
 				if($('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "open") {
-					$('chat-box[user-id="' + elem["userId"] + '"] .chatBoxBar').click();
+					$('chat-box[user-id="' + elem["userId"] + '"] .js-chatBoxTop').click();
 				}
 				if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
                     var chatBrowser = navigator.userAgent;
