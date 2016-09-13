@@ -39,7 +39,7 @@ class feedbackActions extends sfActions
 	{
 	   	$startDate=$request->getParameter('RAStartDate');
 	   	$endDate=$request->getParameter('RAEndDate');
-	   	$reportAbuseOb = new REPORT_ABUSE_LOG();
+	   	$reportAbuseOb = new REPORT_ABUSE_LOG('newjs_slave');
 		  $reportArray = $reportAbuseOb->getReportAbuseLog($startDate,$endDate);
 		  foreach ($reportArray as $key => $value) 
       {
@@ -50,10 +50,12 @@ class feedbackActions extends sfActions
 
     if(is_array($profileArray))
     {
-		  $profileDetails=(new JPROFILE())->getProfileSelectedDetails($profileArray,"PROFILEID,EMAIL,USERNAME");
-      foreach ($reportArray as $key => $value) 
-      {
+        $profileDetails=(new JPROFILE('newjs_slave'))->getProfileSelectedDetails($profileArray,"PROFILEID,EMAIL,USERNAME");
+        $countArray= (new REPORT_ABUSE_LOG('newjs_slave'))->getReportAbuseCount($profileArray);
+        foreach ($reportArray as $key => $value) 
+        {
 			$tempArray['reportee_id']=$profileDetails[$value['REPORTEE']]['USERNAME'];
+			$tempArray['count']=$countArray[$value['REPORTEE']];
      		$tempArray['reporter_id']=$profileDetails[$value['REPORTER']]['USERNAME'];;
       		$tempArray['reason']=$value['REASON'];
       		$tempArray['timestamp']=$value['DATE'];
