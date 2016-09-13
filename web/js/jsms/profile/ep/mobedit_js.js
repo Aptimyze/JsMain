@@ -300,7 +300,12 @@ function UpdateOverlayLayer(attr)
                        temp=temp.replace(/wid94p/g,"wid60p"); 
                        temp=temp.replace(/\{\{displaySettingsLabel\}\}/g,key[i]["settingData"]['display_string']); 
                        temp=temp.replace(/\{\{displaySettingsValue\}\}/g,key[i]["settingData"]['displayValue']); 
-                       temp=temp.replace(/\{\{ONCLICK_EVENT\}\}/g,key[i]["settingData"]['callbackoverlay']+'(this);'); 
+                       temp=temp.replace(/\{\{ONCLICK_EVENT\}\}/g,key[i]["settingData"]['callbackoverlay']+'(this);');
+                       
+                        if(key[i]["key"] == "NAME" && (key[i]["settingData"]['displayValue'] == "" || key[i]["settingData"]['displayValue'] == null || key[i]["settingData"]['displayValue'] == "null")){
+                               submitObj.push("DISPLAYNAME","Y");
+                               $("#showAll").attr('rel',"Y");
+                        }
                 }
                 temp=temp.replace(/\{\{displaySettings\}\}/g,classShowSettings); 
 		var notfilled="";
