@@ -3350,6 +3350,8 @@ EditApp = function(){
       if(sectionId == BASIC){
         var eduField = editAppObject[BASIC]["EDU_LEVEL_NEW"+"_"+BASIC];
         onHighestEducationChange(eduField.value,eduField.key);
+	var displayNameField = editAppObject[BASIC]["DISPLAYNAME"];
+	showDisplayNameSettingFirstTime(displayNameField);
       }
       delete editedFields[sectionId];
       requiredFieldStore.removeAll(sectionId);
@@ -6203,7 +6205,7 @@ $('.js-previewAlbum').click(function(){
 	}
 	function showDisplayNameSettingFirstTime(fieldObject)
 	{
-		if(fieldObject.value=="Y")
+		if(fieldObject.value!="N")
 		{
 			var show = "#showYes";
 			var hide = "#showNo";

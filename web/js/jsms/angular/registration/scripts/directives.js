@@ -484,13 +484,13 @@
             if (typeof $scope.validationType != "undefined" && 
             $scope.validationType == "nameField") {
               // Check if value has changes
-              var regex = /[^a-zA-Z'., ]+/g;
-              var value = newValue;
-              value = value.trim().replace(regex,"");
+//              var regex = /[^a-zA-Z'., ]+/g;
+  //            var value = newValue;
+    //          value = value.trim().replace(regex,"");
 
-              if(value.trim() != newValue.trim()){
-                $scope.info.value = value;
-              }
+      //        if(value.trim() != newValue.trim()){
+        //        $scope.info.value = value;
+         //     }
             }
             
             // Do anything you like here

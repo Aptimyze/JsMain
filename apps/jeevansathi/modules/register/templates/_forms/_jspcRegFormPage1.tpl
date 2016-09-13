@@ -106,7 +106,7 @@
       <div class="fullwid pos_rel clearfix">
         <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" tabindex="0" id="name_box">
           <label class="lblreg pos_abs js-name js-list pos1_lbl1 required" id="name_label" data-attr="name">Full Name</label>
-	  <input autocomplete="off" class="js-tBox reg_wid2 fl brdr-0 f15 fontlig wid77p fl" id="name_value" maxlength="40" data-type="text" type="text" data-toSave="name_of_user" data-required=true data-characters-only="1" data-validate=true tabindex="-1" data-fieldtype="name" />
+	  <input autocomplete="off" class="js-tBox reg_wid2 fl brdr-0 f15 fontlig wid77p fl" id="name_value" maxlength="40" data-type="text" type="text" data-toSave="name_of_user" data-required=true  data-validate=true tabindex="-1" data-fieldtype="name" />
 	    <div id="hoverDiv" class="disp_ib pos-abs r0 mt12 mr5 cursp"><span id="showText" class="colrGrey fontlig f12 showToAll">Show to All</span><i id="settingsIcon"></i>
 		<ul id="optionDrop" class="optionDrop pos-abs disp-none" data-toSave="displayName">
 		    <li class="selected" id="showYes" data-fieldVal='Y'>Show my name to all
