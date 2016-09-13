@@ -54,8 +54,11 @@ class WebAuthentication extends ApiAuthentication
 			$epid_arr=explode("i",$checksum);
 			$profileid=$epid_arr[1];
 			$this->mailerProfileId=$profileid;
-		if(!$this->authenticate(null,0,'Y')){
-			
+			//if(!$this->authenticate(null,0,'Y')){
+			//print_r(sfContext::getInstance()->getRequest()->getAttribute("profileid"));die;
+			//echo ['profileid'];die;
+			if(sfContext::getInstance()->getRequest()->getAttribute('profileid')!=$this->mailerProfileId){
+			//echo "ASD";die;
 			$dbJprofile=new JPROFILE();
 				
 			$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL';

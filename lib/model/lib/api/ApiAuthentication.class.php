@@ -158,10 +158,7 @@ Abstract class ApiAuthentication
 		$decryptedAuthChecksum=$decryptObj->decrypt($authChecksum);
 		$loginData=$this->fetchLoginData($decryptedAuthChecksum);
 		
-		if($fromMailerAutologin=="Y" && $loginData[PROFILEID]!=$this->mailerProfileId)
-		{
-			return false;
-		}
+		
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
                     	$this->loginData=$this->IsAlive($loginData,$gcm);
@@ -297,7 +294,12 @@ Abstract class ApiAuthentication
 		
 		if(!$location)
 		{
-			$request_uri=$_SERVER[REQUEST_URI];
+			if(sfContext::getInstance()->getRequest()->getParameter('link_id') && strpos($_SERVER[REQUEST_URI],"/e/")!==false){
+				$link=LinkFactory::getLink(sfContext::getInstance()->getRequest()->getParameter('link_id'));
+				$request_uri=$link->getLinkAddress();
+			}
+			else
+				$request_uri=$_SERVER[REQUEST_URI];
 			$page=explode('?',$request_uri);
 			$page=$page[0];
 			$page=explode('/',$page);
@@ -306,7 +308,8 @@ Abstract class ApiAuthentication
 		}
 		else
 		{
-			$request_uri=$location;
+			if($location)
+				$request_uri=$location;			
 			$request_uri=str_replace("CMGFRMMMMJS=","pass=",$request_uri);
 			$request_uri=str_replace("&echecksum=","&autologin=",$request_uri);
 			$request_uri=str_replace("?echecksum=","?autologin=",$request_uri);
