@@ -606,13 +606,13 @@ class misGenerationhandler
             //Add the sale amount to its respective process
             unset($loginWithinRange);
             $loginWithinRange = $this->checkDateWithinRange($agentsPriv[$saleDetails["AGENT"]]['LAST_LOGIN_DT'], $monthStDate, $endDate);
-            unset($loginWithinRange);
             list($processWiseSale, $headCountArr) = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails["AGENT"]],$processWiseSale,$headCountArr,$loginWithinRange);
             //If the case of SPLIT_AGENT, add to the process of split agent
             if($val['SPLIT_AGENT']){
                 $saleDetails["AGENT"] = $val['SPLIT_AGENT'];
                 $amountWithTax = ($val['AMOUNT'] - $val['APPLE_COMMISSION'])*($val['SPLIT_SHARE']/100);
                 $saleDetails["AMOUNT"] = $amountWithTax*($netOfTaxFactor);
+                unset($loginWithinRange);
                 $loginWithinRange = $this->checkDateWithinRange($agentsPriv[$saleDetails["AGENT"]]['LAST_LOGIN_DT'], $monthStDate, $endDate);
                 list($processWiseSale, $headCountArr) = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails['AGENT']],$processWiseSale,$headCountArr,$loginWithinRange);
                 unset($loginWithinRange);
@@ -665,11 +665,12 @@ class misGenerationhandler
         $currentHeadCount = $salesProcessHeadCountObj->getData($insertArr);
         $insertArr['MONTH_YR'] = date("M",strtotime($monthStDate))."-".date("Y",strtotime($monthStDate));
         foreach($headCountArr as $key=>$val){
-            $insertArr[$key] = (count($val) >= $currentHeadCount[$key])?$val:$currentHeadCount[$key];
+            $insertArr[$key] = (count($val) >= $currentHeadCount[$insertArr['MONTH_YR']][$key])?count($val):$currentHeadCount[$insertArr['MONTH_YR']][$key];
         }
         foreach(crmParams::$processNames as $processKey => $processVal){
-            if(!$insertArr[$processKey])
-                $insertArr[$processKey] = 0;
+            if(!$insertArr[$processKey]){
+                $insertArr[$processKey] = $currentHeadCount[$insertArr['MONTH_YR']][$processKey]?$currentHeadCount[$insertArr['MONTH_YR']][$processKey]:0;
+            }
         }
         $salesProcessHeadCountObj->insert($insertArr);
         
