@@ -315,6 +315,15 @@ class FieldForm extends sfForm
 				if($screen_flag!=$this->loggedInObj->getSCREENING())
 					$jprofileFieldArr['SCREENING']=$screen_flag;
 			  }
+			  if(array_key_exists("ANCESTRAL_ORIGIN",$jprofileFieldArr))
+			  {
+				if($jprofileFieldArr["ANCESTRAL_ORIGIN"]=="")
+					$screen_flag = Flag::setFlag("ANCESTRAL_ORIGIN", $screen_flag);
+				else
+					$screen_flag = Flag::removeFlag("ANCESTRAL_ORIGIN", $screen_flag);
+			  }
+			  if($screen_flag!=$this->loggedInObj->getSCREENING())
+				$jprofileFieldArr['SCREENING']=$screen_flag;
 
 			//Logging array for edit profiles
 				$editLogArr=array();
