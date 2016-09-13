@@ -90,7 +90,8 @@ var nameError = {"noSpace":"Please provide your first name along with surname, n
 var telNumberErrorNo = '';
 jQuery.validator.addMethod("validate_custom_name", function (value, element){
 			var name_of_user=value;
-                        var name = name_of_user.replace(/\.|\,|\'|dr|ms|mr|miss/gi, " ");
+                        var name = name_of_user.replace(/\.|dr|ms|mr|miss/gi, " ");
+                        name = name.replace(/\,|\'/gi, "");
                         name = trim(name.replace(/\s+/gi, " "));
                         var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
 			if($.trim(name)!= "" && !allowed_chars.test(trim(name)))
