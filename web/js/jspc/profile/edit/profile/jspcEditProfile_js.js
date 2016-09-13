@@ -6203,7 +6203,7 @@ $('.js-previewAlbum').click(function(){
 	}
 	function showDisplayNameSettingFirstTime(fieldObject)
 	{
-		if(fieldObject.value=="Y")
+		if(fieldObject.value!="N")
 		{
 			var show = "#showYes";
 			var hide = "#showNo";
