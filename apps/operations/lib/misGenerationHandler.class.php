@@ -584,14 +584,11 @@ class misGenerationhandler
         $curDate = date('Y-m-d');
         $stDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)))." 00:00:00";
         $endDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)))." 23:59:59";
-        if(date('d') == '01'){
-            $monthStDate = new DateTime("first day of last month");
+        foreach ($agentsPriv as $username => $details){
+            unset($loginWithinRange);
+            $loginWithinRange = $this->checkDateWithinRange($details['LAST_LOGIN_DT'], $stDate, $endDate);
+            list($pws, $headCountArr) = $this->addAmountToProcess('',$details,$pws,$headCountArr,$loginWithinRange);
         }
-        else{
-            $monthStDate = new DateTime("first day of this month");
-        }
-        $monthStDate = $monthStDate->format('Y-m-d')." 00:00:00";
-        
         
         $incetiveMonthlyIncentiveElgObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY("newjs_slave");
         $sales = $incetiveMonthlyIncentiveElgObj->getSalesWithinDates($stDate, $endDate);
@@ -605,16 +602,16 @@ class misGenerationhandler
             $saleDetails["DATE"] = date('Y-m-d', strtotime($val["ENTRY_DT"]));
             //Add the sale amount to its respective process
             unset($loginWithinRange);
-            $loginWithinRange = $this->checkDateWithinRange($agentsPriv[$saleDetails["AGENT"]]['LAST_LOGIN_DT'], $monthStDate, $endDate);
-            list($processWiseSale, $headCountArr) = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails["AGENT"]],$processWiseSale,$headCountArr,$loginWithinRange);
+            $loginWithinRange = $this->checkDateWithinRange($agentsPriv[$saleDetails["AGENT"]]['LAST_LOGIN_DT'], $stDate, $endDate);
+            list($processWiseSale, $hc) = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails["AGENT"]],$processWiseSale,$hc,$loginWithinRange);
             //If the case of SPLIT_AGENT, add to the process of split agent
             if($val['SPLIT_AGENT']){
                 $saleDetails["AGENT"] = $val['SPLIT_AGENT'];
                 $amountWithTax = ($val['AMOUNT'] - $val['APPLE_COMMISSION'])*($val['SPLIT_SHARE']/100);
                 $saleDetails["AMOUNT"] = $amountWithTax*($netOfTaxFactor);
                 unset($loginWithinRange);
-                $loginWithinRange = $this->checkDateWithinRange($agentsPriv[$saleDetails["AGENT"]]['LAST_LOGIN_DT'], $monthStDate, $endDate);
-                list($processWiseSale, $headCountArr) = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails['AGENT']],$processWiseSale,$headCountArr,$loginWithinRange);
+                $loginWithinRange = $this->checkDateWithinRange($agentsPriv[$saleDetails["AGENT"]]['LAST_LOGIN_DT'], $stDate, $endDate);
+                list($processWiseSale, $hc) = $this->addAmountToProcess($saleDetails,$agentsPriv[$saleDetails['AGENT']],$processWiseSale,$hc,$loginWithinRange);
                 unset($loginWithinRange);
             }
         }
@@ -660,13 +657,14 @@ class misGenerationhandler
         }
         
         unset($paramsArr);
-        $insertArr['MONTH_YR'] = date("M",strtotime($monthStDate))."-".date("Y",strtotime($monthStDate));
+        $insertArr['MONTH_YR'] = date("M",strtotime($stDate))."-".date("Y",strtotime($stDate));
         $salesProcessHeadCountObj = new incentive_SALES_PROCESS_WISE_TRACKING_HEAD_COUNT();
         $currentHeadCount = $salesProcessHeadCountObj->getData($insertArr);
-        $insertArr['MONTH_YR'] = date("M",strtotime($monthStDate))."-".date("Y",strtotime($monthStDate));
+        $insertArr['MONTH_YR'] = date("M",strtotime($stDate))."-".date("Y",strtotime($stDate));
         foreach($headCountArr as $key=>$val){
-            $insertArr[$key] = (count($val) >= $currentHeadCount[$insertArr['MONTH_YR']][$key])?count($val):$currentHeadCount[$insertArr['MONTH_YR']][$key];
+            $insertArr[$key] = ($val >= $currentHeadCount[$insertArr['MONTH_YR']][$key])?$val:$currentHeadCount[$insertArr['MONTH_YR']][$key];
         }
+        
         foreach(crmParams::$processNames as $processKey => $processVal){
             if(!$insertArr[$processKey]){
                 $insertArr[$processKey] = $currentHeadCount[$insertArr['MONTH_YR']][$processKey]?$currentHeadCount[$insertArr['MONTH_YR']][$processKey]:0;
@@ -690,58 +688,59 @@ class misGenerationhandler
 
     public function addAmountToProcess($saleDetails,$privilageDetails,$processWiseSale,$headCountArr,$loginWithinRange=false)
     {
-        $date = $saleDetails["DATE"];
-        $amount = $saleDetails["AMOUNT"];
+        if($saleDetails){
+            $date = $saleDetails["DATE"];
+            $amount = $saleDetails["AMOUNT"];
+        }
         $priv = $privilageDetails['PRIVILAGE'];
-        $lastLoginDt = $privilageDetails['LAST_LOGIN_DT'];
         //This if checks if the agent has the basic privilage 'ExcSl'
         if($priv){            
             if(strpos($priv, 'ExcWL') !== false || strpos($priv, 'SUPWL') !== false ){
                 $processWiseSale[$date]['RCB_TELE']+= $amount;
                 if($loginWithinRange){
-                    $headCountArr['RCB_TELE'][$privilageDetails['USERNAME']]=1;
+                    $headCountArr['RCB_TELE']++;
                 }
             }
             else if(strpos($priv, 'ExcDIb') !== false){
                 $processWiseSale[$date]['INBOUND_TELE']+= $amount;
                 if($loginWithinRange){
-                    $headCountArr['INBOUND_TELE'][$privilageDetails['USERNAME']]=1;
+                    $headCountArr['INBOUND_TELE']++;
                 }
             }
             else if(strpos($priv, 'ExcBSD') !== false || strpos($priv, 'ExcBID') !== false){
                 $processWiseSale[$date]['CENTER_SALES']+= $amount;
                 if($loginWithinRange){
-                    $headCountArr['CENTER_SALES'][$privilageDetails['USERNAME']]=1;
+                    $headCountArr['CENTER_SALES']++;
                 }
             }
             else if(strpos($priv, 'ExcFP') !== false){
                 $processWiseSale[$date]['FP_TELE']+= $amount;
                 if($loginWithinRange){
-                    $headCountArr['FP_TELE'][$privilageDetails['USERNAME']]=1;
+                    $headCountArr['FP_TELE']++;
                 }
             }
             else if(strpos($priv, 'ExcRnw') !== false){
                 $processWiseSale[$date]['CENTRAL_RENEW_TELE']+= $amount;
                 if($loginWithinRange){
-                    $headCountArr['CENTRAL_RENEW_TELE'][$privilageDetails['USERNAME']]=1;
+                    $headCountArr['CENTRAL_RENEW_TELE']++;
                 }
             }
             else if(strpos($priv, 'ExcFld') !== false){
                 $processWiseSale[$date]['FIELD_SALES']+= $amount;
                 if($loginWithinRange){
-                    $headCountArr['FIELD_SALES'][$privilageDetails['USERNAME']]=1;
+                    $headCountArr['FIELD_SALES']++;
                 }
             }
             else if(strpos($priv, 'ExcFSD') !== false || strpos($priv, 'ExcFID') !== false){
                 $processWiseSale[$date]['FRANCHISEE_SALES']+= $amount;
                 if($loginWithinRange){
-                    $headCountArr['FRANCHISEE_SALES'][$privilageDetails['USERNAME']]=1;
+                    $headCountArr['FRANCHISEE_SALES']++;
                 }
             }
             else if(strpos($priv, 'ExcDOb') !== false || strpos($priv, 'ExcPrm') !== false || strpos($priv, 'PreNri') !== false){
                 $processWiseSale[$date]['OUTBOUND_TELE']+= $amount;
                 if($loginWithinRange){
-                    $headCountArr['OUTBOUND_TELE'][$privilageDetails['USERNAME']]=1;
+                    $headCountArr['OUTBOUND_TELE']++;
                 }
             }
             else{
