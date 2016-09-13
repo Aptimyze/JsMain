@@ -1033,7 +1033,11 @@ function getGunaScore(response)
 	{		
 		if(profileLength == 0)
 		{
-			if(searchResponse.page_index < searchResponse.paginationArray.length)
+			if(typeof searchResponse.paginationArray ==="undefined")
+			{
+				// Do nothing
+			}
+			else if(typeof searchResponse.paginationArray !=="undefined" && searchResponse.page_index < searchResponse.paginationArray.length)
 			{
 					loadPage(parseInt(searchResponse.page_index) + 1);
 			}

@@ -251,7 +251,8 @@ class SearchTitleAndTextEnums
 			if($params["SearchType"] == 'kundlialerts')
 			{
 				$horoscope = $params["horoscope"];
-				return self::$MESSAGE_0RESULT_MAPPING["V1"]["PC"]["kundlialerts"][$horoscope];
+				
+				return self::$MESSAGE_0RESULT_MAPPING["V1"][$params["Channel"]]["kundlialerts"][$horoscope];
 			}
 			return self::getValue("MESSAGE_0RESULT_MAPPING",$params);
 		}
