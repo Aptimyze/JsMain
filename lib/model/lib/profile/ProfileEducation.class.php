@@ -104,6 +104,7 @@ class ProfileEducation
     }
     
     if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+        $this->logCacheConsumeCount(__CLASS__);
       return $result;
     }
     
@@ -169,6 +170,13 @@ class ProfileEducation
     return self::$objEducationMysql->getEducationData($educationCodes, $codeFlag);
   }
   
+  private function logCacheConsumeCount($funName)
+  {
+    $key = 'cacheConsumption'.'_'.date('Y-m-d');
+    JsMemcache::getInstance()->hIncrBy($key, $funName);
+    
+    JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+  }
 }
 
 ?>

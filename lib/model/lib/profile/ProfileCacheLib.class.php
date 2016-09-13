@@ -309,7 +309,7 @@ class ProfileCacheLib
         //TODO: If $arrFields is not an array, handle this case  
         $array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
         if(count(array_diff(array_unique($arrFields),$array))){
-          throw new jsException("","Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
+          //throw new jsException("","Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
         }
         return $array;
     }
