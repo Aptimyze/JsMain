@@ -335,5 +335,22 @@ class BILLING_PAYMENT_DETAIL extends TABLE
             throw new jsException($e);
         }
     }
+
+    public function fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr) {
+        try {
+            $billidStr = implode(",", $billidArr);
+            $count = count($billidArr);
+            $sql = "SELECT if(TYPE='DOL',AMOUNT*DOL_CONV_RATE,AMOUNT) AS AMOUNT, BILLID FROM billing.PAYMENT_DETAIL WHERE BILLID IN ($billidStr)";
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output += $result['AMOUNT']*(1-billingVariables::NET_OFF_TAX_RATE);
+            }
+            return round($output/$count,2);
+        }
+        catch(PDOException $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

@@ -2428,4 +2428,121 @@ class crmMisActions extends sfActions
 			}
 		}
 	}
+
+    public function executeRCBSalesConversionExecutiveMIS(sfWebRequest $request)
+    {
+        $this->cid         = $request->getParameter('cid');
+        $this->name        = $request->getParameter('name');
+        $this->startMonthDate = "01";
+        $this->todayDate      = date("d");
+        $this->todayMonth     = date("m");
+        $this->todayYear      = date("Y");
+        $this->rangeYear      = date("Y");
+        $this->dateArr        = GetDateArrays::getDayArray();
+        $this->monthArr       = GetDateArrays::getMonthArray();
+        $this->yearArr        = array();
+        $dateArr              = GetDateArrays::generateDateDataForRange('2004', ($this->todayYear));
+        foreach (array_keys($dateArr) as $key => $value) {
+            $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
+        }
+        if ($request->getParameter("submit")) {
+            if ($request->getParameter("submit")) //If form is submitted
+            {
+                $formArr = $request->getParameterHolder()->getAll();
+
+                if ($formArr["range_format"] == "MY") //If month and year is selected
+                {
+                    $start_date        = $formArr["yearValue"] . "-" . $formArr["monthValue"] . "-01";
+                    $end_date          = $formArr["yearValue"] . "-" . $formArr["monthValue"] . "-" . date("t", strtotime($start_date));
+                    $this->displayDate = date("F Y", strtotime($start_date));
+                } else //If date ranges are selected
+                {
+                    $formArr["date1_dateLists_month_list"]++;
+                    $formArr["date2_dateLists_month_list"]++;
+                    $start_date        = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+                    $end_date          = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+                    $start_date        = date("Y-m-d", strtotime($start_date));
+                    $end_date          = date("Y-m-d", strtotime($end_date));
+                    $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+                }
+                if ($start_date > $end_date) {
+                    $this->errorMsg = "Invalid Date Selected";
+                }
+            } else //If Jump is clicked
+            {
+                $end_date          = date("Y-m-d");
+                $start_date        = date("Y-m") . "-01";
+                $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+            }
+            if (!$this->errorMsg) //If no error message then submit the page
+            {
+                $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+                $billExcClbkObj = new billing_EXC_CALLBACK('newjs_slave');
+                $billPurObj = new BILLING_PURCHASES('newjs_slave');
+                $billPayDetObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
+                $manualAllotObj = new MANUAL_ALLOT('newjs_slave');
+                // Fetch RCB Agents (both webmaster leads and premium)
+                $agents1 = $jsadminPswrdsObj->fetchAgentsWithPriviliges('%ExcWL%');
+                $agents2 = $jsadminPswrdsObj->fetchAgentsWithPriviliges('%ExcPrm%');
+                if (!empty($agents1) && !empty($agents2)) {
+                	$agents = array_unique(array_merge($agents1, $agents2));
+                } else if (empty($agents1)) {
+                	$agents = $agents2;
+                } else if (empty($agents2)) {
+                	$agents = $agents1;
+                } else {
+                	$agents = null;
+                }
+                if (!empty($agents)) {
+	                foreach ($agents as $key=>$agent) {
+	                    $profiles[$agent] = $manualAllotObj->getAgentAllotedProfileArrayforRCBCallSource($agent,$start_date,$end_date);
+	                }
+	            }
+                $this->misData = array();
+                if (is_array($profiles) && !empty($profiles)) {
+                    foreach ($profiles as $key=>$val) {
+                        $this->misData[$key]['count'] = count($val);
+                        $this->misData[$key]['paid'] = 0;
+                        $this->misData[$key]['revenue'] = 0;
+                        if (is_array($val) && !empty($val)) {
+                            foreach ($val as $kk=>$vv) {
+                                if ($billidArr = $billPurObj->checkIfProfilePaidWithin15Days($vv['PROFILEID'], $vv['ALLOT_TIME'])) {
+                                    $this->misData[$key]['paid']++;
+                                    $this->misData[$key]['revenue'] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr);
+                                }
+                            }
+                        }
+                    }
+                }
+                if($formArr["report_format"]=="XLS")
+                {   
+                	if($formArr["range_format"]=="MY"){
+                                $string .= "For_".$monthArr[$formArr["monthValue"]]."-".$formArr["yearValue"];
+                        } else {
+                                $string .= $start_date."_to_".$end_date;
+                        }
+                        $headerString = "Executive\tNo. of RCB Allocations\tUsers who paid within 15 days\tTicket Size(Net of TAX) in RS\r\n";
+                        if($this->misData && is_array($this->misData))
+						{
+							foreach($this->misData as $k=>$v)
+							{
+								$dataString = $dataString.$k."\t";
+								$dataString = $dataString.$v["count"]."\t";
+								$dataString = $dataString.$v["paid"]."\t";
+								$dataString = $dataString.$v["revenue"]."\r\n";
+							}
+						}
+						$xlData = $headerString.$dataString;
+		                header("Content-Type: application/vnd.ms-excel");
+		                header("Content-Disposition: attachment; filename=RCB_Sales_Conversion_Executive_MIS.xls");
+		                header("Pragma: no-cache");
+		                header("Expires: 0");
+		                echo $xlData;
+                        die;
+                } else {
+                	$this->setTemplate('RCBSalesConversionExecutiveMISScreen1');
+                }
+            }
+        }
+    }
 }

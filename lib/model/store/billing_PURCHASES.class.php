@@ -600,6 +600,25 @@ class BILLING_PURCHASES extends TABLE{
         {
             throw new jsException($e);
         }
-    }   
+    }  
+
+    public function checkIfProfilePaidWithin15Days($profileid, $startDt) {
+        try {
+            $endDt = date("Y-m-d", strtotime($startDt)+(15*24*60*60)-1);
+            $sql = "SELECT BILLID FROM billing.PURCHASES WHERE PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:END_DATE AND STATUS='DONE'";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $output[] = $result['BILLID'];
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>
