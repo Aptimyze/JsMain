@@ -66,4 +66,5 @@ class LoggingEnums
     const MYJS = 'myjs';
     const HOMEPAGE = 'homepage';
     const _VAR = 'var';
+    const REQUEST_URI = 'REQUEST_URI';
 }
