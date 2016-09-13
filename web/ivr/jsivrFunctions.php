@@ -784,13 +784,13 @@ return $returnArray;
 			        $arr=array('PHONE_MOB'=>$isd.$phone_num);
 					$smsViewer = new InstantSMS("PHONE_UNVERIFY",$profileid,$arr,'');
 					$smsViewer->send();
-					$emailSender = new EmailSender(MailerGroup::TOP8, 1838);
-					$tpl = $emailSender->setProfileId($profileid);
-					$tpl->getSmarty()->assign("phone_num", '+'.$isd.$phone_num);
-					$subject = "We were unable to reach you.Kindly authenticate your contact details";
-					$tpl->setSubject($subject);
-					$emailSender->send();
 			}
+			$emailSender = new EmailSender(MailerGroup::TOP8, 1838);
+			$tpl = $emailSender->setProfileId($profileid);
+			$tpl->getSmarty()->assign("phone_num", '+'.$isd.$phone_num);
+			$subject = "We were unable to reach you. Kindly authenticate your contact details.";
+			$tpl->setSubject($subject);
+			$emailSender->send();
 			//$sql ="insert into jsadmin.PHONE_UNVERIFIED_LOG (`PROFILEID`,`ENTRY_DT`) VALUES('$profileid',now())";
 			//mysql_query_decide($sql) or logError("Could not insert profile details in PHONE_UNVERIFIED_LOG in deleted case",$sql);
 
