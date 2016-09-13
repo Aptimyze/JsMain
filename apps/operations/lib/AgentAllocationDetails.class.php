@@ -1428,7 +1428,7 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 	}
 	if(count($profileidIdArr)>0){
 		$profileStr =implode(",",$profileidIdArr);
-		$everPaidProfileArr =$purchasesObj->isPaidEver($profileStr);
+		$everPaidProfileArr =array_keys($purchasesObj->isPaidEver($profileStr));
 	}
 	// everPaid
 

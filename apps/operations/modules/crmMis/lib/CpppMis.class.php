@@ -17,7 +17,9 @@ class CpppMis
 	public function fetchDataForMIS()
 	{
 		$jprofileObj = new JPROFILE('newjs_slave');
-		$srcWiseProfileArr = $jprofileObj->fetchSourceWiseProfiles($this->start_dt, $this->end_dt);
+		list($srcWiseProfileArr,$regDtArr) = $jprofileObj->fetchSourceWiseProfiles($this->start_dt, $this->end_dt);
+        //print_r($srcWiseProfileArr);
+        //print_r($regDtArr);
 		unset($jprofileObj);
 
 		foreach ($srcWiseProfileArr as $src => $profileArr) 
@@ -35,8 +37,8 @@ class CpppMis
 
 			$purchasesObj = new BILLING_PURCHASES('newjs_slave');
 			$profileStr = implode(',', $profileArr);
-			$profileArr = $purchasesObj->isPaidEver($profileStr, $this->start_dt);
-
+            $everPaidArr = $purchasesObj->isPaidEver($profileStr, $this->start_dt);
+            $profileArr = array_keys($everPaidArr);
 			foreach($profileArr as $pid)
 			{
 				$data = $purchasesObj->fetchAmountPaid($pid);
@@ -45,6 +47,15 @@ class CpppMis
 					$srcWiseDataArr[$srcGrp]['PAID_MEM']++;
 					$srcWiseDataArr[$srcGrp]['TRANS'] += $data['CNT'];
 					$srcWiseDataArr[$srcGrp]['AMT_PAID'] += $data['AMT'];
+                    $newDt = date('Y-m-d', strtotime($regDtArr[$pid]));
+                    $paidTill30Dt = date('Y-m-d', strtotime('30 day',  strtotime($newDt)))." 23:59:59";
+                    $paidTill90Dt = date('Y-m-d', strtotime('90 day',  strtotime($newDt)))." 23:59:59";
+                    if($everPaidArr[$pid]<=$paidTill30Dt){
+                        $srcWiseDataArr[$srcGrp]['PAID30']++;
+                    }
+                    else if($everPaidArr[$pid]<=$paidTill90Dt){
+                        $srcWiseDataArr[$srcGrp]['PAID90']++;
+                    }
 				}
 			}
 		}
@@ -65,7 +76,8 @@ class CpppMis
 			$totalArr['PAID_MEM'] += $srcWiseDataArr[$srcGrp]['PAID_MEM'];
 			$totalArr['TRANS'] += $srcWiseDataArr[$srcGrp]['TRANS'];
 			$totalArr['AMT_PAID'] += $srcWiseDataArr[$srcGrp]['AMT_PAID'];
-
+            $totalArr['PAID30'] += $srcWiseDataArr[$srcGrp]['PAID30'];
+            $totalArr['PAID90'] += $srcWiseDataArr[$srcGrp]['PAID90'];
 			if($totalArr['TRANS'] > 0)
 				$totalArr['AVG_AMT_PAID'] = round($totalArr['AMT_PAID']/$totalArr['TRANS']);
 		}

@@ -707,16 +707,18 @@ class NEWJS_JPROFILE extends TABLE
     public function fetchSourceWiseProfiles($start_dt, $end_dt)
     {
         try {
-            $sql = "SELECT PROFILEID, SOURCE FROM newjs.JPROFILE WHERE ENTRY_DT >= :START_DATE AND ENTRY_DT <= :END_DATE";
+            $sql = "SELECT PROFILEID, SOURCE, ENTRY_DT FROM newjs.JPROFILE WHERE ENTRY_DT >= :START_DATE AND ENTRY_DT <= :END_DATE";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":START_DATE", $start_dt, PDO::PARAM_STR);
             $prep->bindValue(":END_DATE", $end_dt, PDO::PARAM_STR);
             $prep->execute();
             while ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
-                if ($row['SOURCE'])
+                if ($row['SOURCE']){
                     $res[$row['SOURCE']][] = $row['PROFILEID'];
+                    $entryDtArr[$row['PROFILEID']] = $row['ENTRY_DT'];
+                }
             }
-            return $res;
+            return array($res,$entryDtArr);
         } catch (PDOException $e) {
             throw new jsException($e);
         }

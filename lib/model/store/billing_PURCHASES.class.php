@@ -302,7 +302,7 @@ class BILLING_PURCHASES extends TABLE{
     {
         try
         {
-            $sql="SELECT PROFILEID FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
+            $sql="SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
             if($start_dt)
                 $sql .=" AND ENTRY_DT >= :START_DT";
             $prep=$this->db->prepare($sql);
@@ -311,7 +311,7 @@ class BILLING_PURCHASES extends TABLE{
             $prep->execute();
             while($row = $prep->fetch(PDO::FETCH_ASSOC))
             {
-                $res[] = $row['PROFILEID'];
+                $res[$row['PROFILEID']] = $row['ENTRY_DT'];
             }
             return $res;
         }
