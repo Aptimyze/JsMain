@@ -304,8 +304,9 @@ class chatActions extends sfActions
 			foreach ($arr as $k => $v) {
 				$cArr[$i]["PROFILEID"] = $v["id"];
 				$cArr[$i]["USERNAME"] = $v["USERNAME"];
-				$cArr[$i]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($pid);
+				$cArr[$i]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($v["id"]);
 				$i++;
+
 				/*
 				$photoObj = $photosArr[$pid];
 				if ($photoObj) {
