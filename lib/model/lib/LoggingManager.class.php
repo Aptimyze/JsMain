@@ -292,6 +292,7 @@ class LoggingManager
 				$logData[LoggingEnums::LOG_EXCEPTION] = $exception->getTrace();
 			}
 		}
+		$logData[LoggingEnums::REQUEST_URI] = $_SERVER['REQUEST_URI'];
 		return $logData;
 	}
 
