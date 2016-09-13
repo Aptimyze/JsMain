@@ -3283,6 +3283,9 @@ EditApp = function(){
         delete editedFields[sectionId];
         return ;
       }
+      var displayNameObj = editAppObject[BASIC]["DISPLAYNAME"];
+      if(sectionId== BASIC && !editFieldArr.hasOwnProperty('DISPLAYNAME') && displayNameObj.value=='')
+		editFieldArr['DISPLAYNAME']="Y";
       //Okay!, Now lets store it
       if(typeof showLoader != "undefined" && showLoader === false){
       }else{
@@ -3292,6 +3295,7 @@ EditApp = function(){
       $.each(editFieldArr, function(key, value)
       {
             editData.append('editFieldArr['+key+']', value);
+
       });
       var eData = {};
       eData.editFieldArr = editFieldArr;
