@@ -52,6 +52,7 @@ class CpppMis
                     $paidTill90Dt = date('Y-m-d', strtotime('90 day',  strtotime($newDt)))." 23:59:59";
                     if($everPaidArr[$pid]<=$paidTill30Dt){
                         $srcWiseDataArr[$srcGrp]['PAID30']++;
+                        $srcWiseDataArr[$srcGrp]['PAID90']++;
                     }
                     else if($everPaidArr[$pid]<=$paidTill90Dt){
                         $srcWiseDataArr[$srcGrp]['PAID90']++;
@@ -86,8 +87,8 @@ class CpppMis
 
 	public function createExcelFormatOutput($srcWiseDataArr, $totalArr, $header, $displayDate)
 	{
-		$header .= "\n\nSource\tNo_of_Registrations\tNo_of_Paid_Members\tAverage_Amount_Paid(net_of_tax)\n";
-
+		$header .= "\n\nSource\tNo_of_Registrations\tNo_of_Paid_Members\tAverage_Amount_Paid(net_of_tax)\t30_Day_Conversion\t90_Day_Conversion\n";
+        
 		foreach($srcWiseDataArr as $srcGrp => $data)
 		{
 			$message .= $srcGrp."\t";
@@ -97,15 +98,23 @@ class CpppMis
 				$message .= $data['PAID_MEM']."\t";
 			if($data['AVG_AMT_PAID'])
 				$message .= $data['AVG_AMT_PAID']."\t";
+            if($data['PAID30'])
+				$message .= $data['PAID30']."\t";
+            if($data['PAID90'])
+				$message .= $data['PAID90']."\t";
 			$message .= "\n";
 		} 
-		$message .= "GRAND TOTAL\t";
+		$message .= "GRAND_TOTAL\t";
 		if($totalArr['REG'])
 			$message .= $totalArr['REG']."\t";
 		if($totalArr['PAID_MEM'])
 			$message .= $totalArr['PAID_MEM']."\t";
 		if($totalArr['AVG_AMT_PAID'])
 			$message .= $totalArr['AVG_AMT_PAID']."\t";
+        if($totalArr['PAID30'])
+			$message .= $totalArr['PAID30']."\t";
+        if($totalArr['PAID90'])
+			$message .= $totalArr['PAID90']."\t";
 
 		header("Content-Type: application/vnd.ms-excel");
 		header("Content-Disposition: attachment; filename=CPPP_MIS_".$displayDate.".xls");
