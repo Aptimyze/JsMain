@@ -694,6 +694,7 @@ class ProfileCacheLib
       foreach($arrData as $key=>$value)
       {
         if(false === $this->isDataExistInCache($value)) {
+          $this->logThis(LoggingEnums::LOG_INFO, "Cache does not exist for {$key}");
           return false;
         }
       }
