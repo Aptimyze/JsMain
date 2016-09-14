@@ -157,6 +157,7 @@ Abstract class ApiAuthentication
 		$loginData=$this->fetchLoginData($decryptedAuthChecksum);
 		if($loginData["FROM_BACKEND"])
 		{
+			$this->trackLogin=false;
 			if($this->stopBackendUser()){
 				$this->removeLoginCookies();
 				return false;
@@ -675,7 +676,7 @@ Abstract class ApiAuthentication
 	}
 	
 	public function stopBackendUser()
-	{
+	{	
 		if(strpos($_SERVER["REQUEST_URI"],"/profile/dpp?fromBackend=1")!==false ||  strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/dppsubmit")!==false  || strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/filtersubmit")!==false )
 			return 	false;
 		else
