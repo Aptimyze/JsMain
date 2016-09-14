@@ -494,6 +494,7 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["title2"]='Received';
 					$response2["infotypeid2"]=1;
 					$response2["url"]="/profile/contacts_made_received.php?page=eoi&filter=R";
+					$response2['subheading'] = InboxEnums::getInboxSubHeading($response2);
 					 break;  
 					// later modified the data sent as we have to update the seen status of the receiver in the contacts table and also eoi viewed log
 					case 'INTEREST_RECEIVED':
