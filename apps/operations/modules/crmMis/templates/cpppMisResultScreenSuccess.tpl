@@ -34,8 +34,8 @@
             <td width=4% align=center style="background-color:LightSteelBlue">No. of Registrations</td>
             <td width=4% align=center style="background-color:LightSteelBlue">No. of Paid Members</td>
             <td width=4% align=center style="background-color:LightSteelBlue">Average Amount Paid(net of tax)</td>
-            <td width=4% align=center style="background-color:LightSteelBlue">30 Day Conversion</td>
-            <td width=4% align=center style="background-color:LightSteelBlue">90 Day Conversion</td>
+            <td width=4% align=center style="background-color:LightSteelBlue">30-day sales conversion (%)</td>
+            <td width=4% align=center style="background-color:LightSteelBlue">90-day sales conversion (%)</td>
         </tr>
        ~foreach from=$srcWiseDataArr key=src item=ss`
         <tr class=formhead>
@@ -57,12 +57,12 @@
             </b></td>
             <td width=4% align=center><b>
                 ~if ~$srcWiseDataArr[$src]['PAID30']``
-                    ~$srcWiseDataArr[$src]['PAID30']`
+                    ~$srcWiseDataArr[$src]['PAID30PER']`
                 ~/if`
             </b></td>
             <td width=4% align=center><b>
                 ~if ~$srcWiseDataArr[$src]['PAID90']``
-                    ~$srcWiseDataArr[$src]['PAID90']`
+                    ~$srcWiseDataArr[$src]['PAID90PER']`
                 ~/if`
             </b></td>
         </tr>
@@ -86,12 +86,12 @@
             </b></td>
             <td width=4% align=center><b>
                 ~if ~$totalArr['PAID30']``
-                    ~$totalArr['PAID30']`
+                    ~$totalArr['PAID30PER']`
                 ~/if`
             </b></td>
             <td width=4% align=center><b>
                 ~if ~$totalArr['PAID90']``
-                    ~$totalArr['PAID90']`
+                    ~$totalArr['PAID90PER']`
                 ~/if`
             </b></td>
        </tr>
