@@ -2480,6 +2480,7 @@ class crmMisActions extends sfActions
             {
                 $billServStatObj = new BILLING_SERVICE_STATUS('newjs_slave');
                 $billPurObj = new BILLING_PURCHASES('newjs_slave');
+                $billPayDetObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
                 $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRange($start_date, $end_date);
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
@@ -2492,7 +2493,13 @@ class crmMisActions extends sfActions
                 	$misData[$pd['EXPIRY_DT']]['renewE30E'][$pd['BILLID']] = $e30eCnt;
                 	$misData[$pd['EXPIRY_DT']]['renewEE10'][$pd['BILLID']] = $ee10Cnt;
                 	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
-                	unset($e30Cnt, $e30eCnt, $ee10Cnt, $e10Cnt, $e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr);
+                	$allBillids = array_unique(array_merge($e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr));
+                	if (!empty($allBillids)){
+                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr();
+                	} else {
+                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = 0;
+                	}
+                	unset($e30Cnt, $e30eCnt, $ee10Cnt, $e10Cnt, $e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr, $allBillids);
                 }
                 // Set data for view 
                 $this->misData = array();
@@ -2503,17 +2510,20 @@ class crmMisActions extends sfActions
                 		$this->misData[date("j/M/y", $i)]['renewE30E'] = array_sum($misData[date("Y-m-d", $i)]['renewE30E']);
                 		$this->misData[date("j/M/y", $i)]['renewEE10'] = array_sum($misData[date("Y-m-d", $i)]['renewEE10']);
                 		$this->misData[date("j/M/y", $i)]['renewE10'] = array_sum($misData[date("Y-m-d", $i)]['renewE10']);
+                		$this->misData[date("j/M/y", $i)]['totalRev'] = array_sum($misData[date("Y-m-d", $i)]['totalRev']);
                 	} else {
                 		$this->misData[date("j/M/y", $i)]['expiry'] = 0;
                 		$this->misData[date("j/M/y", $i)]['renewE30'] = 0;
                 		$this->misData[date("j/M/y", $i)]['renewE30E'] = 0;
                 		$this->misData[date("j/M/y", $i)]['renewEE10'] = 0;
                 		$this->misData[date("j/M/y", $i)]['renewE10'] = 0;
+                		$this->misData[date("j/M/y", $i)]['totalRev'] = 0;
                 	}
                 }
                 foreach ($this->misData as $key=>&$val) {
                 	$val['tsrc'] = $val['renewE30'] + $val['renewE30E'] + $val['renewEE10'] + $val['renewE10'];
                 	$val['convPerc'] = round($val['tsrc']/$val['expiry'], 2)*100;
+                	$val['totalRev'] = $val['totalRev'];
                 }
                 $this->totData = array();
                 foreach ($this->misData as $key=>$val) {
@@ -2524,6 +2534,7 @@ class crmMisActions extends sfActions
                 	$this->totData['renewE10'] += $val['renewE10'];
                 	$this->totData['tsrc'] += $val['tsrc'];
                 	$this->totData['convPerc'] += $val['convPerc'];
+                	$this->totData['totalRev'] += $val['totalRev'];
                 }
                 
                 if($formArr["report_format"]=="XLS")

@@ -590,7 +590,7 @@ class BILLING_PURCHASES extends TABLE{
             $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
             $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
             $prep->execute();
-            while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC))
             {
                 $profiles[] = $result;
             }
@@ -613,7 +613,8 @@ class BILLING_PURCHASES extends TABLE{
             $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
             $prep->bindValue(":EXPIRY_DT",$endDt,PDO::PARAM_STR);
             $prep->execute();
-            if ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
             {
                 $res[] = $row['BILLID'];
             }
@@ -637,7 +638,8 @@ class BILLING_PURCHASES extends TABLE{
             $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
             $prep->bindValue(":EXPIRY_DT",$expiryDt,PDO::PARAM_STR);
             $prep->execute();
-            if ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
             {
                 $res[] = $row['BILLID'];
             }
@@ -661,7 +663,8 @@ class BILLING_PURCHASES extends TABLE{
             $prep->bindValue(":EXPIRY_DT",$expiryDt,PDO::PARAM_STR);
             $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
             $prep->execute();
-            if ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
             {
                 $res[] = $row['BILLID'];
             }
@@ -684,6 +687,7 @@ class BILLING_PURCHASES extends TABLE{
             $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
             $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
             $prep->execute();
+            $res = array();
             while ($row=$prep->fetch(PDO::FETCH_ASSOC))
             {
                 $res[] = $row['BILLID'];

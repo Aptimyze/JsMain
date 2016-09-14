@@ -78,12 +78,12 @@
 		~/foreach`
 		<td align=center>~$totData.convPerc`</td>
 	</tr>
-	<tr style="background-color:LightSteelGreen">
+	<tr style="background-color:lightGray">
 		<td align=center class=formhead>Total Revenue from renewed subscriptions</td>
 		~foreach from=$misData key=k item=v`		
-			<td align=center>~$k`</td>
+			<td align=center>~$v.totalRev`</td>
 		~/foreach`
-		<td align=center>Total</td>
+		<td align=center>~$totData.totalRev`</td>
 	</tr>
 </table>
 <br />
