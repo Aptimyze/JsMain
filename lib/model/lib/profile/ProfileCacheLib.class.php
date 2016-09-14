@@ -305,6 +305,8 @@ class ProfileCacheLib
             $arrFields = ProfileCacheConstants::$arrHashSubKeys;
         } else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) {
             $arrFields = explode(',',$arrFields);
+            foreach($arrFields as $k=>$v)
+                $arrFields[$k] = trim($v);
         }
         //TODO: If $arrFields is not an array, handle this case  
         $array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
@@ -353,6 +355,8 @@ class ProfileCacheLib
           $arrFields = $fields;
           if(is_string($fields)) {
               $arrFields = explode(",", $fields);
+              foreach($arrFields as $k=>$v)
+                $arrFields[$k] = trim($v);
           }
           foreach ($arrFields as $szColName) {
               if(!in_array($szColName, $arrAllowableFields)) {
