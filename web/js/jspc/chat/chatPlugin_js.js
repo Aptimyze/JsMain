@@ -946,7 +946,7 @@ JsChat.prototype = {
                 if(typeof data[key] != "undefined"){
                     runID = data[key]["rosterDetails"]["jid"].split("@")[0];
                     localStorage.removeItem("listingPic_"+runID);
-                    console.log("nitishparam1");
+                    console.log("nitish",param1);
                     if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
                         //this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
                         var that = this;
