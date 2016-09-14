@@ -63,5 +63,62 @@ public function updateAsVerified($submittee){
                 }
     }
 
+        public function getReportInvalidLog($startDate,$endDate)
+    {
+        try     
+        {   
+            $sql = "SELECT * from jsadmin.REPORT_INVALID_PHONE WHERE DATE(`SUBMIT_DATE`) BETWEEN :STARTDATE AND :ENDDATE ORDER BY `SUBMIT_DATE` DESC";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":STARTDATE",$startDate,PDO::PARAM_STR);
+            $prep->bindValue(":ENDDATE",$endDate,PDO::PARAM_STR);
+            $prep->execute();
+            while($row=$prep->fetch(PDO::FETCH_ASSOC))
+            $result[]=$row;
+        //print_r($result);
+        //die(x);
+        return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
+
+
+
+    public function getReportInvalidCount($profileArray , $days)
+    {
+        try     
+        {   
+                        if(!is_array($profileArray))
+                            throw new jsException("","profileArray IS not array or blank");
+                        $pdoStr="";
+                        foreach($profileArray as $k=>$v)
+                        {
+
+                                                    $pdoStr.=":v".$k.",";
+                                                    
+                        }
+                        $pdoStr = substr($pdoStr, 0, -1);
+
+                        $sql = "SELECT SUBMITTEE,count(*) AS CNT from jsadmin.REPORT_INVALID_PHONE WHERE SUBMIT_DATE > ( CURDATE() - INTERVAL ".$days." DAY )  AND SUBMITTEE IN ($pdoStr) GROUP BY SUBMITTEE"; 
+                        $prep = $this->db->prepare($sql);
+                        foreach($profileArray as $k=>$v)
+                            $prep->bindValue(":v".$k,$v,PDO::PARAM_INT);
+                        $prep->execute();
+                        while($row=$prep->fetch(PDO::FETCH_ASSOC))
+                            $result[$row['SUBMITTEE']]=$row['CNT'];
+                        return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
+
+
+
 }
-?>
+?>    
