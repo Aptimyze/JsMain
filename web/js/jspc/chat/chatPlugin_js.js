@@ -939,15 +939,14 @@ JsChat.prototype = {
         //this._chatLoggerPlugin('remove element 11');
         var elem = this;
         //removeCall1 if user is removed from backend
-        if(param1 == 'delete_node'){
-            localStorage.removeItem("listingPic_"+runID);
-        }
         if (param1 == 'removeCall1' || param1 == 'delete_node') {
             //this._chatLoggerPlugin("calllign _removeFromListing");
             for (var key in data) {
                 var runID = '';
                 if(typeof data[key] != "undefined"){
                     runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                    localStorage.removeItem("listingPic_"+runID);
+                    console.log("nitishparam1");
                     if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
                         //this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
                         var that = this;
