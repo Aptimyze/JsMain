@@ -601,5 +601,30 @@ class BILLING_PURCHASES extends TABLE{
             throw new jsException($e);
         }
     }   
+
+    public function getRenewedProfilesDetailsInE30($profileid, $billid, $expiryDt)
+    {
+        try
+        {
+            $endDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry - 30 days
+            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:EXPIRY_DT";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":EXPIRY_DT",$$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            if ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res = $row['CNT'];
+            } else {
+                $res = 0;
+            }
+            return $res;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }
 ?>
