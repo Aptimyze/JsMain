@@ -275,8 +275,7 @@ strophieWrapper.sendPresence();
     subscribe: function (jid, nick, message) {
         if (strophieWrapper.getCurrentConnStatus()) {
             var pres = $pres({
-                to: jid,
-                type: "subscribe"
+                to: jid
             });
             if (message && message !== "") {
                 pres.c("status").t(message).up();
