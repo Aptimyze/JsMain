@@ -2521,12 +2521,14 @@ class crmMisActions extends sfActions
                     }
                     foreach ($profilesVisited as $agent=>$profileid) {
                     	foreach ($profileid as $kk=>$billidArr1) {
-                        	$this->misData[$agent]['paid']++;
-                            $this->misData[$agent]['revenue'] += $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr1);
+                        	$this->misData[$agent]['paid'] += count($billidArr1);
+                        	if (!empty($billidArr1)) {
+                            	$this->misData[$agent]['revenue'] += $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr1);
+                        	}
                         }
                     }
                     foreach ($this->misData as $kkk=>$vvv) {
-                    	$this->misData[$kkk]['revenue'] = $this->misData[$kkk]['revenue']/$this->misData[$kkk]['count'];
+                    	$this->misData[$kkk]['revenue'] = round($this->misData[$kkk]['revenue']/$this->misData[$kkk]['paid'], 2);
                     }
                 }
                 if($formArr["report_format"]=="XLS")
