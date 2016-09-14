@@ -639,5 +639,30 @@ class PICTURE_NEW extends TABLE
 			 throw new jsException($e);
 		}
 	}
+
+	public function getPicUrlArr($tableName,$lowerLimit,$upperLimit)
+	{
+		try
+		{
+			$sql = " SELECT P.PROFILEID,P.PICTUREID,P.ORDERING,P.PICFORMAT,P.MainPicUrl,P.OriginalPicUrl,P.ProfilePic120Url,
+						P.ProfilePic235Url,P.ProfilePicUrl,P.ProfilePic450Url,
+						P.MobileAppPicUrl,P.Thumbail96Url,P.ThumbailUrl,P.SearchPicUrl FROM newjs.PICTURE_NEW AS P JOIN newjs.".$tableName." as S  ON S.PROFILEID = P.PROFILEID WHERE S.HAVEPHOTO = 'Y' LIMIT :LOWERLIMIT, :UPPERLIMIT";
+			$prep=$this->db->prepare($sql);
+            //$prep->bindParam(":TABLENAME", $tableName, PDO::PARAM_STR);
+            $prep->bindParam(":LOWERLIMIT", $lowerLimit, PDO::PARAM_INT);
+            $prep->bindParam(":UPPERLIMIT", $upperLimit, PDO::PARAM_INT);
+            $prep->execute();
+            while($row = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+            	$detailArr[] = $row;
+            }
+	        return $detailArr;
+		}
+		catch(PDOException $e)
+		{
+			/** echo the sql statement and error message **/
+			 throw new jsException($e);
+		}
+	}
 }
 ?>
