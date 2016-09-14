@@ -2229,11 +2229,14 @@ class crmMisActions extends sfActions
         {
             $this->dateType = $request->getParameter('dateRange');
             $salesProcessObj = new incentive_SALES_PROCESS_WISE_TRACKING("newjs_slave");
+            $salesProcessHeadCountObj = new incentive_SALES_PROCESS_WISE_TRACKING_HEAD_COUNT("newjs_slave");
             $this->processArray = crmParams::$processNames;
             $misGenerationHandlerObj = new misGenerationhandler();
             if($this->dateType == 'D'){
                 $this->selectedMonth = $request->getParameter('dateWiseMonth');
                 $this->selectedYear = $request->getParameter('dateWiseYear');
+                $paramsArr['MONTH_YR'] = $this->monthArr[$this->selectedMonth]."-".$this->selectedYear;
+                $this->headCountArr = $salesProcessHeadCountObj->getData($paramsArr)[$paramsArr['MONTH_YR']];
                 $stDate = $this->selectedYear."-".$this->selectedMonth."-"."01";
                 if($stDate > date('Y-m-d')){
                     $this->error = "Date selection wrong";
