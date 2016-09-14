@@ -1235,15 +1235,10 @@ public function executeAppredirect(sfWebRequest $request)
   }
   private function getCountry($onlyCountry)
   {
-	  if($onlyCountry!='p_country')
-	  {
-		  $Arr[0]=FieldMap::getFieldLabel("impcountry",'',1);
-		  $Arr[1]=Array("-1"=>"--More");
-		  $Arr[2]=FieldMap::getFieldLabel("country",'',1);
-		  
-	   }
-	else
-		$Arr[0]=FieldMap::getFieldLabel("country",'',1);
+
+          $Arr[0]=FieldMap::getFieldLabel("impcountry",'',1);
+	  $Arr[1]=Array("-1"=>"--More");
+	  $Arr[2]=FieldMap::getFieldLabel("country",'',1);
 	  foreach($Arr as $key=>$val)
 		  {
 				foreach($val as $k=>$v)

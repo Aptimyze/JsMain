@@ -94,27 +94,27 @@ chatConfig.Params = {
             "tab1": {
                 "tab_name": "Online Matches",
                 "groups": [
-                    /*{
+                    {
                         "id": "dpp",
                         "group_name": "Desired Partner Matches",
                         "show_group_name": true,
-                        "hide_offline_users": true
-                    },*/
+                        "hide_offline_users": false
+                    },
                     {
                         "id": "intsent",
                         "group_name": "Interest Sent",
                         "show_group_name": true,
-                        "hide_offline_users": true
+                        "hide_offline_users": false
                     }, {
                         "id": "intrec",
                         "group_name": "Interest Received",
                         "show_group_name": true,
-                        "hide_offline_users": true
+                        "hide_offline_users": false
                     }, {
                         "id": "shortlist",
                         "group_name": "Shortlisted Members",
                         "show_group_name": true,
-                        "hide_offline_users": true
+                        "hide_offline_users": false
                     },{
                         "id":"mysearch",
                         "group_name":"Search Results",
@@ -299,8 +299,9 @@ chatConfig.Params = {
         appendRetryLimit: 1000,
         checkForDefaultEoiMsg:false,    //check for default eoi msg in chat history while append
         setLastReadMsgStorage:true,
-	loginSessionTimeout:30, // session will expire after 30 days in case of no activity
+	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
+        autoChatLogin:true,  //auto-login to chat on site login
         rosterDeleteChatBoxMsg:"You can no longer chat, as the other user has blocked you/declined your interest"
     }
 };
-chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
+chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];

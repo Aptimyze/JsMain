@@ -245,7 +245,7 @@ class EmailSender{
     }
   } // end of _bulkSetTemplates
 
-  public function send($to="", $partialList=''){
+  public function send($to="", $partialList='',$ccList=''){
 
     $replyToEnabled = null;
     $replyToAddress = null;
@@ -297,7 +297,7 @@ class EmailSender{
       if(empty($this->emailAttachmentType)){
       	$this->emailAttachmentType= '';
       }
-      if($canSend && !$do_not_send && SendMail::send_email($to, $message, $subject, $from, '', '', $this->emailAttachment, $this->emailAttachmentType, $this->emailAttachmentName, '', "1", $replyToAddress,$from_name)) {
+      if($canSend && !$do_not_send && SendMail::send_email($to, $message, $subject, $from,$ccList, '', $this->emailAttachment, $this->emailAttachmentType, $this->emailAttachmentName, '', "1", $replyToAddress,$from_name)) {
         return true;
       }
       else {

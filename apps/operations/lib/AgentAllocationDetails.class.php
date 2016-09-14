@@ -1478,9 +1478,12 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='')
 {
         $execCallbackObj      =new billing_EXC_CALLBACK();
+	$crmUtilityObj        =new crmUtility();
 	if($subMethod!='RCB_WEBMASTER_LEADS'){
 		$startDt        =date("Y-m-d H:i:s", time()-2*60*60);
         	$endDt          =date("Y-m-d H:i:s", time());
+                $startDt        =$crmUtilityObj->getIST($startDt);
+                $endDt          =$crmUtilityObj->getIST($endDt);
 	}
         if($subMethod == "WEBMASTER_LEADS_EXCLUSIVE"){
             $profiles = $execCallbackObj->getWebmasterLeadsForExclusive($startDt, $endDt);

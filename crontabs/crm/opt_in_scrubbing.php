@@ -14,7 +14,7 @@ $db_dialer = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or 
 function compute_dnc_array($db_dialer,$campaign_name)
 {
 	$dnc_array = array();
-	$squery1 = "SELECT PROFILEID FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND Dial_Status='9'";
+	$squery1 = "SELECT PROFILEID FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE Dial_Status='9'";
         $sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
 	while($srow1 = mssql_fetch_array($sresult1))
 		$dnc_array[] = $srow1["PROFILEID"];
@@ -53,7 +53,7 @@ function compute_eligible_in_array($db_js,$dnc_array,$renewal='')
 }
 function start_opt_in_profiles($campaign_name,$opt_in_profile,$db_dialer,$db_js_157)
 {
-	$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID ='$opt_in_profile'";
+	$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
         $sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
         while($srow1 = mssql_fetch_array($sresult1))
         {
@@ -147,5 +147,22 @@ $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 $sub="Dialer updates for RENEWAL opt-in done.";
 $from="From:vibhor.garg@jeevansathi.com";
 mail($to,$sub,$msg,$from);
+
+// Renewal-Mah OPT-IN Check
+$msg = "Start time #".@date('H:i:s');
+$dnc_array = compute_dnc_array($db_dialer,'OB_RENEWAL_MAH');
+$opt_in_array = compute_opt_in_array($db_js,$dnc_array);
+$opt_in_array1 = compute_eligible_in_array($db_js,$opt_in_array,'1');
+for($i=0;$i<count($opt_in_array1);$i++)
+        start_opt_in_profiles('OB_RENEWAL_MAH',$opt_in_array1[$i],$db_dialer,$db_js_157);
+unset($dnc_array);
+unset($opt_in_array);
+unset($opt_in_array1);
+$msg.="End time :".@date('H:i:s');
+$to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
+$sub="Dialer updates for RENEWAL-MAH opt-in done.";
+$from="From:vibhor.garg@jeevansathi.com";
+mail($to,$sub,$msg,$from);
+
 
 ?>

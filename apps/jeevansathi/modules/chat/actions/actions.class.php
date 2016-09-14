@@ -179,20 +179,27 @@ class chatActions extends sfActions
 	{
 		$profileid = $request->getParameter("profileid");
 		$type = $request->getParameter("type");
-		$limit = $request->getParameter("limit");
-		$profileObj = new Profile("",$profileid);
-		$profileObj->getDetail($profileid, "PROFILEID", "USERNAME");
-		$getRosterDataObj = new GetRosterData($profileid);
-		$getData["profiles"] = $getRosterDataObj->getRosterDataByType($type, $limit);
-		$getData["count"] = count($getData["profiles"]);
-		$getData["USERNAME"] = $profileObj->getUSERNAME();
-		$getData["PROFILECHECKSUM"] = JsCommon::createChecksumForProfile($profileid);
-		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
-		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		if($type=='DPP')
+		{
+			$this->forward("chat","getDppDataV1");
+		}
+		else	
+		{
+			$limit = $request->getParameter("limit");
+			$profileObj = new Profile("",$profileid);
+			$profileObj->getDetail($profileid, "PROFILEID", "USERNAME");
+			$getRosterDataObj = new GetRosterData($profileid);
+			$getData["profiles"] = $getRosterDataObj->getRosterDataByType($type, $limit);
+			$getData["count"] = count($getData["profiles"]);
+			$getData["USERNAME"] = $profileObj->getUSERNAME();
+			$getData["PROFILECHECKSUM"] = JsCommon::createChecksumForProfile($profileid);
+			$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
-		$apiResponseHandlerObj->setResponseBody($getData);
-		$apiResponseHandlerObj->generateResponse();
-		die;
+			$apiResponseHandlerObj->setResponseBody($getData);
+			$apiResponseHandlerObj->generateResponse();
+			die;
+		}
 	}
 
 	public function executeGetProfileDataV1(sfwebrequest $request)
@@ -263,12 +270,14 @@ class chatActions extends sfActions
 		$dontShowFilteredProfiles = $request->getParameter("dontShowFilteredProfiles");
 
 		/***/
+		/*
 		if (!$photoType)
 			$photoType = 'MainPicUrl';
+		*/
 		if (!$dontShowFilteredProfiles)
 			$dontShowFilteredProfiles = 1;
 		if (!$limit)
-			$limit = 10;
+			$limit = 50;
 		if (!$currentPage)
 			$currentPage = 1;
 		$completeResponse = 1;
@@ -282,6 +291,7 @@ class chatActions extends sfActions
 		$obj = $partnerObj->getMyDppMatches(sort, $profileObj, $limit, $currentPage, $paramArr, $removeMatchAlerts, $dontShowFilteredProfiles, $twoWayMatches, $clustersToShow, $results_orAnd_cluster, $notInProfiles, $completeResponse);
 		$arr = $obj->getResultsArr();
 		if ($arr) {
+			/*
 			$pidArr["PROFILEID"] = implode(",", $obj->getSearchResultsPidArr());
 			$profileObj = LoggedInProfile::getInstance('newjs_master');
 			$multipleProfileObj = new ProfileArray();
@@ -289,10 +299,15 @@ class chatActions extends sfActions
 			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
 			$multiplePictureObj = new PictureArray($profileDetails);
 			$photosArr = $multiplePictureObj->getProfilePhoto();
+			*/
+			$i=0;
 			foreach ($arr as $k => $v) {
-				$pid = $v["id"];
-				$cArr[$pid]["USERNAME"] = $v["USERNAME"];
-				$cArr[$pid]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($pid);
+				$cArr[$i]["PROFILEID"] = $v["id"];
+				$cArr[$i]["USERNAME"] = $v["USERNAME"];
+				$cArr[$i]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($v["id"]);
+				$i++;
+
+				/*
 				$photoObj = $photosArr[$pid];
 				if ($photoObj) {
 					eval('$temp =$photoObj->get' . $photoType . '();');
@@ -301,7 +316,7 @@ class chatActions extends sfActions
 				} else {
 					$cArr[$pid]["PHOTO"] = NULL;
 				}
-
+				*/
 			}
 		}
 		$getData["profiles"] = $cArr;
