@@ -2499,19 +2499,34 @@ class crmMisActions extends sfActions
 	                }
 	            }
                 $this->misData = array();
+                $profilesVisited = array();
                 if (is_array($profiles) && !empty($profiles)) {
                     foreach ($profiles as $key=>$val) {
                         $this->misData[$key]['count'] = count($val);
                         $this->misData[$key]['paid'] = 0;
                         $this->misData[$key]['revenue'] = 0;
+                        if (empty($profilesVisited[$key])) {
+                    		$profilesVisited[$key] = array();
+                    	}
                         if (is_array($val) && !empty($val)) {
                             foreach ($val as $kk=>$vv) {
+                            	if (empty($profilesVisited[$key][$vv['PROFILEID']])) {
+                            		$profilesVisited[$key][$vv['PROFILEID']] = array();
+                            	}
                                 if ($billidArr = $billPurObj->checkIfProfilePaidWithin15Days($vv['PROFILEID'], $vv['ALLOT_TIME'])) {
-                                    $this->misData[$key]['paid']++;
-                                    $this->misData[$key]['revenue'] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr);
+                                	$profilesVisited[$key][$vv['PROFILEID']] = array_unique(array_merge($billidArr,$profilesVisited[$key][$vv['PROFILEID']]));
                                 }
                             }
                         }
+                    }
+                    foreach ($profilesVisited as $agent=>$profileid) {
+                    	foreach ($profileid as $kk=>$billidArr1) {
+                        	$this->misData[$agent]['paid']++;
+                            $this->misData[$agent]['revenue'] += $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($billidArr1);
+                        }
+                    }
+                    foreach ($this->misData as $kkk=>$vvv) {
+                    	$this->misData[$kkk]['revenue'] = $this->misData[$kkk]['revenue']/$this->misData[$kkk]['count'];
                     }
                 }
                 if($formArr["report_format"]=="XLS")
