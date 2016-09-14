@@ -2467,8 +2467,8 @@ class crmMisActions extends sfActions
                 }
                 if ($start_date > $end_date) {
                     $this->errorMsg = "Invalid Date Selected";
-                } elseif (ceil((strtotime($end_date) - strtotime($start_date))/(24*60*60))>=30 && $formArr["range_format"] != "MY") {
-                    $this->errorMsg = "More than 30 days selected in range";
+                } elseif (ceil((strtotime($end_date) - strtotime($start_date))/(24*60*60))>31 && $formArr["range_format"] != "MY") {
+                    $this->errorMsg = "More than 31 days selected in range";
                 }
             } else //If Jump is clicked
             {
@@ -2481,13 +2481,21 @@ class crmMisActions extends sfActions
                 $billServStatObj = new BILLING_SERVICE_STATUS('newjs_slave');
                 $billPurObj = new BILLING_PURCHASES('newjs_slave');
                 $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRange($start_date, $end_date);
-                $this->misData = array();
+                $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
-                	$this->misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
-                	$e30Cnt = $billPurObj->getRenewedProfilesDetailsInE30($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
-                	$this->misData[$pd['EXPIRY_DT']]['renewE30'][$pd['BILLID']] = $e30Cnt;
+                	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
+                	$e30Cnt = $billPurObj->getRenewedProfilesCountInE30($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
+                	$e30eCnt = $billPurObj->getRenewedProfilesCountInE30E($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
+                	$ee10Cnt = $billPurObj->getRenewedProfilesCountInEE10($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
+                	$e10Cnt = $billPurObj->getRenewedProfilesCountInE10($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
+                	$misData[$pd['EXPIRY_DT']]['renewE30'][$pd['BILLID']] = $e30Cnt;
+                	$misData[$pd['EXPIRY_DT']]['renewE30E'][$pd['BILLID']] = $e30eCnt;
+                	$misData[$pd['EXPIRY_DT']]['renewEE10'][$pd['BILLID']] = $ee10Cnt;
+                	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
                 }
-                print_r($this->misData); die;
+                // Set data for view 
+                $this->misData = array();
+                
                 if($formArr["report_format"]=="XLS")
                 {   
                 	if($formArr["range_format"]=="MY"){

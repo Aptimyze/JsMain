@@ -602,16 +602,93 @@ class BILLING_PURCHASES extends TABLE{
         }
     }   
 
-    public function getRenewedProfilesDetailsInE30($profileid, $billid, $expiryDt)
+    public function getRenewedProfilesCountInE30($profileid, $billid, $expiryDt)
     {
         try
         {
             $endDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry - 30 days
-            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:EXPIRY_DT";
+            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT<:EXPIRY_DT";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
             $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
-            $prep->bindValue(":EXPIRY_DT",$$endDt,PDO::PARAM_STR);
+            $prep->bindValue(":EXPIRY_DT",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            if ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res = $row['CNT'];
+            } else {
+                $res = 0;
+            }
+            return $res;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function getRenewedProfilesCountInE30E($profileid, $billid, $expiryDt)
+    {
+        try
+        {
+            $startDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry - 30 days <-> expiry
+            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:EXPIRY_DT";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
+            $prep->bindValue(":EXPIRY_DT",$expiryDt,PDO::PARAM_STR);
+            $prep->execute();
+            if ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res = $row['CNT'];
+            } else {
+                $res = 0;
+            }
+            return $res;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function getRenewedProfilesCountInEE10($profileid, $billid, $expiryDt)
+    {
+        try
+        {
+            $endDt = date("Y-m-d", strtotime($expiryDt)+10*24*60*60); // expiry <-> expiry + 10 days
+            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:EXPIRY_DT AND ENTRY_DT<=:END_DATE";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":EXPIRY_DT",$expiryDt,PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            if ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res = $row['CNT'];
+            } else {
+                $res = 0;
+            }
+            return $res;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function getRenewedProfilesCountInE10($profileid, $billid, $expiryDt)
+    {
+        try
+        {
+            $startDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry + 10 days
+            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:START_DATE";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
             $prep->execute();
             if ($row=$prep->fetch(PDO::FETCH_ASSOC))
             {
