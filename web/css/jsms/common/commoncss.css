@@ -1115,3 +1115,4 @@ transform:  translateX(100%) rotateY(0deg) !important;
 .scrollhid{
     overflow: hidden;
 }
+.vbtm{	vertical-align:bottom;}

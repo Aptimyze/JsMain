@@ -66,7 +66,7 @@ $(document).ready(function() {
 
       <div class="fl padlr_1" style="width:75%;">
 
-          <div><a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$NAVIGATOR`"><span class="fontreg f14 color7">
+          <div><a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$NAVIGATOR`"><span class="fontreg f14 color7 textTru wid48p dispibl vbtm">
                                 ~if $tupleInfo.name_of_user neq '' && $tupleInfo.name_of_user neq null` 
                                         ~$tupleInfo.name_of_user`
                                 ~else` 
