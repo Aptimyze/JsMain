@@ -810,6 +810,22 @@ self::$ContactCenterMYJS=Array(
 			"ICONS"=> "",
 			"BUTTONS"=> "",
 			"TRACKING"=> "",
+		),
+            "FILTERED_INTEREST"=>Array( 
+			"ID"=> "12",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "20",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Filtered Interests",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "responseTracking=52",
 		)
 
 		); 

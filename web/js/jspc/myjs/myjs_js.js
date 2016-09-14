@@ -134,7 +134,6 @@ function postActionError(profileChecksum,type)
 
 function postActionMyjs(profileChecksum,URL,div,type,tracking)
 {
-
   try{
 	var data = {};
 	var ifid = 1;

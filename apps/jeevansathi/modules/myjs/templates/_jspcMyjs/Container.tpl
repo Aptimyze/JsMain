@@ -25,6 +25,31 @@
 </div>
 <!--end:engagement container section-->
 
+<div id="filteredInterestContainer" class="disp-none">
+<div id="{{div_id}}">
+<div class="clearfix fontlig" id="Intr_show">
+<div class="fullwid scrollhid">
+<div id="disp_{{list_id}}" class="pos-rel li-slide1">
+<ul id ="js-{{list_id}}" class="myjs-fulwid hor_list clearfix boxslide myjslist3 pos-rel">
+{{INNER_HTML}}
+</ul>
+</div>
+</div>
+<div class="clr"></div>
+<div class="pt25">
+<div class="pos-rel clearfix fontlig">
+<div id="seeAllId_FILTEREDINTEREST" class="pos-abs wid100 txtc myjs-pos8"><a href="/inbox/12/1" class="color12">See All {{SEE_ALL_TOTAL}}</a></div>
+<div class="fr myjs-wid8 clearfix opa50">
+<div id='panelCounter_FILTEREDINTEREST' class="fl color12 pt5 disp-none"><span id="slideCurrent{{type}}">1 </span> of <span id="slideTotal{{type}}">{{TOTAL_NUM}}</span> </div>
+<div id='arrowKeys_FILTEREDINTEREST' class="fr opa50"> <a id="prv-{{list_id}}" class="sprite2 myjs-ic7 disp_ib"></a> <a id="nxt-{{list_id}}" class="sprite2 myjs-ic8 disp_ib myjs-m3"></a> </div>
+</div>
+</div>
+</div>
+
+</div>
+<!--end:content for Interest received-->
+</div>
+</div>
 
 <!--container for photoRequest-->
 <!--start:content for request-->
