@@ -409,7 +409,7 @@ pre {
     list-style-type: none;
 }
         .fixWidthOverflow {
-        max-width: 185px;
+        max-width: 200px;
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -441,7 +441,7 @@ pre {
         .hoverDiv {
             position: absolute;
             top: 6px;
-                left: 184px;
+                left: 160px;
             width: 125px;
             padding: 14px;
             background-color: white;
@@ -468,8 +468,8 @@ pre {
         }
                 .hoverDiv3 {
             position: absolute;
-            top: 6px;
-                left: 255px;
+            top: -22px;
+                left: 33px;
             width: 125px;
             padding: 14px;
             background-color: white;

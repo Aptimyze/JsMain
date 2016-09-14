@@ -24,34 +24,56 @@
                 <div class="clearfix prfbr1 pb2">
 
 
-                  <div class="clearfix fontlig color11">
-		               
-              			<div class="fl f24 wd300">
-                       ~if $nameOfUser`
-              				<span class="disp_ib textTru fixWidthOverflow">~$nameOfUser`</span>
-                       <span class="f15 vertSuper">(~$apiData['about']['username']`)</span>
-                        ~else`
-                        <span class="disp_ib f24">
-                         ~$apiData['about']['username']`
-                       </span>
-
-			~if $loginProfileId`
-				<span class="verified">
-					<i class="quesIcon"></i>
-					<span class="hoverDiv">
-						<div class="f14 fontreg blueColor">~$dontShowNameReason`
-						</div>
-					</span>
-				</span>
-			~/if`
+                                <div class="fl fontlig color11 fullwid">
+			       ~if $nameOfUser`	
+					<span class="disp_ib fixWidthOverflow f24">~$nameOfUser`</span>
+				       <span class="f15 vertSuper">(~$apiData['about']['username']`)</span>
+				~else`
+					<span class="disp_ib f24">
+					 ~$apiData['about']['username']`
+				       </span>
+                        ~if $loginProfileId`
+                                <span class="verified">
+                                        <i class="quesIcon"></i>
+                                        <span class="hoverDiv">
+                                                <div class="f14 fontreg blueColor">~$dontShowNameReason`
+                                                </div>
+                                        </span>
+                                </span>
+                        ~/if`
                        ~/if`
-              			</div>		             
-		               
-              			<div class="fr f12 opa50 pl10 mt10">~$apiData['about']['last_active']`</div>
-    		           
+                 ~if $apiData['about']['verification_value'] neq "0"`
+                                    <span class="verified3" style="position:relative;">
 
-                    </div>
+                                    	<i class="verIcon js-verificationPage "></i>
 
+                                    	<span class="hoverDiv3 js-verificationPage">
+
+                                    		<div class="f14 fontreg blueColor">Verified by visit</div>
+                       ~if $apiData['about']['verification_value'] neq "1"`
+                                   			<div class="f12 pt10 fontreg lightgrey ">Documents provided:</div>
+                                    		<ul id="appendDocs" class="f12 fontreg lightgrey ">
+							~assign var=docCount value=$apiData['about']['verification_value_arr']|@count-1`
+							~foreach from=$apiData['about']['verification_value_arr'] item=val key=k`
+								~if $k neq $docCount`
+								<li>~$val`,</li>
+								~else`
+								<li>~$val`</li>
+								~/if`
+							~/foreach`
+                                    		</ul>
+			~/if`
+
+                                    		<a href="/static/agentinfo" class="f11 fontreg blueColor z999 cursp pt10 verKnowMore">Know More</a>
+
+                                    	</span>
+
+                                    </span>
+		~/if`
+
+
+
+                                    <span class="disp_ib fr f12 opa50 pl10 mt10">~$apiData['about']['last_active']`</span></div>
 
 
               </div>
@@ -70,27 +92,8 @@
                     <li class="textTru">~$apiData['about']['have_child']`</li>
                     ~/if`
                   </ul> 
-                ~if $apiData['about']['verification_value'] neq "0"`
-                <div class="pt10 fontlig">
-                  <a href="/static/agentinfo">
-                    <div class="f15 colr2 clearfix"> <i class="fl icons prfic7"></i>
-                      <div class="fl pt1">Verified by visit</div>
-                    </div>
-                      ~if $apiData['about']['verification_value'] neq "1"`
-                    <div class="color11 opa70 f12 pt5"> Documents provided: ~$apiData['about']['verification_value']` </div>
-                    ~/if`
-                  </a>
                 </div>
-                ~/if`
-                ~if $apiData['about']['verification_value'] eq "0"`
-                <div class="pt10 fontlig">
-                  <div class="f15 colr2 clearfix">
-                    <div class="fl pt1"></div>
-                  </div>
-                </div>
-                ~/if`
-                </div>
-                  <div class="mt26"> 
+                  <div class="pt10"> 
 
                                           <span class="disp_ib pos-rel communicationToolTip">
                     ~if !$loginProfileId`
