@@ -1125,6 +1125,7 @@ class csvGenerationHandler
         	                $campaignName           =$salesCampaign[$processName];
 				$tablesName     	=$salesCampaignTables[$processName];
 				$salesCsvDataObj	=new $tablesName;
+				$callTimeArr		=$processObj->getProfiles();
 			}
 			$method			=$processObj->getMethod();
 			$leadIdSuffix           =$processObj->getLeadIdSuffix();		
@@ -1187,12 +1188,13 @@ class csvGenerationHandler
 				}
 				else if($processName=="rcbCampaignInDialer"){
 					$country        =FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
+					$callTime	=$callTimeArr[$profileid];
 					$leadId =$campaignName.$leadIdSuffix;
 					$source =$campaignName;
                                         //$csvDateTime =$processObj->getStartDate();
 					$csvDateTime =$processObj->getEndDate();
                                         if($profileid>0)
-                                                $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$csvDateTime,$username,$country,$source);
+                                                $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$csvDateTime,$username,$country,$source,$callTime);
                                          $rcbInDialerLog =new incentive_RCB_LOG();
                                          $rcbInDialerLog->insertData($profileid, $csvDateTime);
 				}

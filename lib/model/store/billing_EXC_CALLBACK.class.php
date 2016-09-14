@@ -86,7 +86,27 @@ class billing_EXC_CALLBACK extends TABLE {
             throw new jsException($e);
         }
     }
-
+    public function getRcbLeads($startDt,$endDt)
+    {
+        try{
+            $profileidArr =array();
+            $sql ="select distinct PROFILEID,PREFERRED_START_TIME_IST from billing.EXC_CALLBACK where PREFERRED_START_TIME_IST>:START_DT AND PREFERRED_START_TIME_IST<=:END_DT AND SERVICEID NOT LIKE 'X%' ORDER BY ENTRY_DT DESC";
+            $row = $this->db->prepare($sql);
+            $row->bindValue(":START_DT",$startDt, PDO::PARAM_STR);
+            $row->bindValue(":END_DT",$endDt, PDO::PARAM_STR);
+            $row->execute();
+            while($result=$row->fetch(PDO::FETCH_ASSOC)){
+                if($result['PROFILEID']>0){
+                        $profileidArr['PROFILEID'] =$result;
+		}
+            }
+            return $profileidArr;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
     public function insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd, $profileid='', $device=NULL, $channel=NULL, $callbackSource=NULL, $date, $startTime, $endTime)
     {
         $date = date("Y-m-d");
