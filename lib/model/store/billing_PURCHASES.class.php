@@ -602,12 +602,12 @@ class BILLING_PURCHASES extends TABLE{
         }
     }   
 
-    public function getRenewedProfilesCountInE30($profileid, $billid, $expiryDt)
+    public function getRenewedProfilesBillidInE30($profileid, $billid, $expiryDt)
     {
         try
         {
             $endDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry - 30 days
-            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT<:EXPIRY_DT";
+            $sql="SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT<:EXPIRY_DT";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
             $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
@@ -615,11 +615,9 @@ class BILLING_PURCHASES extends TABLE{
             $prep->execute();
             if ($row=$prep->fetch(PDO::FETCH_ASSOC))
             {
-                $res = $row['CNT'];
-            } else {
-                $res = 0;
+                $res[] = $row['BILLID'];
             }
-            return $res;
+            return array(count($res), $res);
         }
         catch(Exception $e)
         {
@@ -627,12 +625,12 @@ class BILLING_PURCHASES extends TABLE{
         }
     }
 
-    public function getRenewedProfilesCountInE30E($profileid, $billid, $expiryDt)
+    public function getRenewedProfilesBillidInE30E($profileid, $billid, $expiryDt)
     {
         try
         {
             $startDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry - 30 days <-> expiry
-            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:EXPIRY_DT";
+            $sql="SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:EXPIRY_DT";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
             $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
@@ -641,11 +639,9 @@ class BILLING_PURCHASES extends TABLE{
             $prep->execute();
             if ($row=$prep->fetch(PDO::FETCH_ASSOC))
             {
-                $res = $row['CNT'];
-            } else {
-                $res = 0;
+                $res[] = $row['BILLID'];
             }
-            return $res;
+            return array(count($res), $res);
         }
         catch(Exception $e)
         {
@@ -653,12 +649,12 @@ class BILLING_PURCHASES extends TABLE{
         }
     }
 
-    public function getRenewedProfilesCountInEE10($profileid, $billid, $expiryDt)
+    public function getRenewedProfilesBillidInEE10($profileid, $billid, $expiryDt)
     {
         try
         {
             $endDt = date("Y-m-d", strtotime($expiryDt)+10*24*60*60); // expiry <-> expiry + 10 days
-            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:EXPIRY_DT AND ENTRY_DT<=:END_DATE";
+            $sql="SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:EXPIRY_DT AND ENTRY_DT<=:END_DATE";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
             $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
@@ -667,11 +663,9 @@ class BILLING_PURCHASES extends TABLE{
             $prep->execute();
             if ($row=$prep->fetch(PDO::FETCH_ASSOC))
             {
-                $res = $row['CNT'];
-            } else {
-                $res = 0;
+                $res[] = $row['BILLID'];
             }
-            return $res;
+            return array(count($res), $res);
         }
         catch(Exception $e)
         {
@@ -679,24 +673,22 @@ class BILLING_PURCHASES extends TABLE{
         }
     }
 
-    public function getRenewedProfilesCountInE10($profileid, $billid, $expiryDt)
+    public function getRenewedProfilesBillidInE10($profileid, $billid, $expiryDt)
     {
         try
         {
             $startDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry + 10 days
-            $sql="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:START_DATE";
+            $sql="SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:START_DATE";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
             $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
             $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
             $prep->execute();
-            if ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
             {
-                $res = $row['CNT'];
-            } else {
-                $res = 0;
-            }
-            return $res;
+                $res[] = $row['BILLID'];
+            } 
+            return array(count($res), $res);
         }
         catch(Exception $e)
         {

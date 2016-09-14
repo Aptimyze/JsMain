@@ -2484,17 +2484,47 @@ class crmMisActions extends sfActions
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
                 	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
-                	$e30Cnt = $billPurObj->getRenewedProfilesCountInE30($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
-                	$e30eCnt = $billPurObj->getRenewedProfilesCountInE30E($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
-                	$ee10Cnt = $billPurObj->getRenewedProfilesCountInEE10($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
-                	$e10Cnt = $billPurObj->getRenewedProfilesCountInE10($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($ee10Cnt, $ee10billidArr) = $billPurObj->getRenewedProfilesBillidInEE10($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($e10Cnt, $e10billidArr) = $billPurObj->getRenewedProfilesBillidInE10($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
                 	$misData[$pd['EXPIRY_DT']]['renewE30'][$pd['BILLID']] = $e30Cnt;
                 	$misData[$pd['EXPIRY_DT']]['renewE30E'][$pd['BILLID']] = $e30eCnt;
                 	$misData[$pd['EXPIRY_DT']]['renewEE10'][$pd['BILLID']] = $ee10Cnt;
                 	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
+                	unset($e30Cnt, $e30eCnt, $ee10Cnt, $e10Cnt, $e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr);
                 }
                 // Set data for view 
                 $this->misData = array();
+                for($i = strtotime($start_date); $i <= strtotime($end_date); $i += 86400) {
+                	if ($misData[date("Y-m-d", $i)]) {
+                		$this->misData[date("j/M/y", $i)]['expiry'] = count($misData[date("Y-m-d", $i)]['expiry']);
+                		$this->misData[date("j/M/y", $i)]['renewE30'] = array_sum($misData[date("Y-m-d", $i)]['renewE30']);
+                		$this->misData[date("j/M/y", $i)]['renewE30E'] = array_sum($misData[date("Y-m-d", $i)]['renewE30E']);
+                		$this->misData[date("j/M/y", $i)]['renewEE10'] = array_sum($misData[date("Y-m-d", $i)]['renewEE10']);
+                		$this->misData[date("j/M/y", $i)]['renewE10'] = array_sum($misData[date("Y-m-d", $i)]['renewE10']);
+                	} else {
+                		$this->misData[date("j/M/y", $i)]['expiry'] = 0;
+                		$this->misData[date("j/M/y", $i)]['renewE30'] = 0;
+                		$this->misData[date("j/M/y", $i)]['renewE30E'] = 0;
+                		$this->misData[date("j/M/y", $i)]['renewEE10'] = 0;
+                		$this->misData[date("j/M/y", $i)]['renewE10'] = 0;
+                	}
+                }
+                foreach ($this->misData as $key=>&$val) {
+                	$val['tsrc'] = $val['renewE30'] + $val['renewE30E'] + $val['renewEE10'] + $val['renewE10'];
+                	$val['convPerc'] = round($val['tsrc']/$val['expiry'], 2)*100;
+                }
+                $this->totData = array();
+                foreach ($this->misData as $key=>$val) {
+                	$this->totData['expiry'] += $val['expiry'];
+                	$this->totData['renewE30'] += $val['renewE30'];
+                	$this->totData['renewE30E'] += $val['renewE30E'];
+                	$this->totData['renewEE10'] += $val['renewEE10'];
+                	$this->totData['renewE10'] += $val['renewE10'];
+                	$this->totData['tsrc'] += $val['tsrc'];
+                	$this->totData['convPerc'] += $val['convPerc'];
+                }
                 
                 if($formArr["report_format"]=="XLS")
                 {   
@@ -2522,7 +2552,7 @@ class crmMisActions extends sfActions
 		                echo $xlData;
                         die;
                 } else {
-                	$this->setTemplate('RenewalConversionMISScreen1');
+                	$this->setTemplate('renewalConversionMISScreen1');
                 }
             }
         }

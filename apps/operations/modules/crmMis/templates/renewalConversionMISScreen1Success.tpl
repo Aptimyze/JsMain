@@ -23,20 +23,68 @@
 <br />
 <table width=100%>
 	<tr class=formhead style="background-color:LightSteelBlue">
-		<td width=4% align=center>Executive</td>
-		<td width=4% align=center>No. of RCB Allocation</td>
-		<td width=4% align=center>Users who paid within 15 days</td>
-		<td width=4% align=center>Ticket Size(Net of TAX) in RS</td>
+		<td align=center>Metric</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$k`</td>
+		~/foreach`
+		<td align=center>Total</td>
 	</tr>
-
-	~foreach from=$misData key=k item=v`
 	<tr style="background-color:lightyellow">
-		<td align=center width=4%>~$k`</td>
-		<td align=center width=4%>~$v.count`</td>
-		<td align=center width=4%>~$v.paid`</td>
-		<td align=center width=4%>~$v.revenue`</td>
+		<td align=center class=formhead>Number of subscriptions expiring</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$v.expiry`</td>
+		~/foreach`
+		<td align=center>~$totData.expiry`</td>
 	</tr>
-	~/foreach`
+	<tr style="background-color:lightyellow">
+		<td align=center class=formhead>Number of subscriptions renewed before E-30</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$v.renewE30`</td>
+		~/foreach`
+		<td align=center>~$totData.renewE30`</td>
+	</tr>
+	<tr style="background-color:lightyellow">
+		<td align=center class=formhead>Number of subscriptions renewed on [E-30, E]</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$v.renewE30E`</td>
+		~/foreach`
+		<td align=center>~$totData.renewE30E`</td>
+	</tr>
+	<tr style="background-color:lightyellow">
+		<td align=center class=formhead>Number of subscriptions renewed on ]E, E+10]</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$v.renewEE10`</td>
+		~/foreach`
+		<td align=center>~$totData.renewEE10`</td>
+	</tr>
+	<tr style="background-color:lightyellow">
+		<td align=center class=formhead>Number of subscriptions renewed after E+10</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$v.renewE10`</td>
+		~/foreach`
+		<td align=center>~$totData.renewE10`</td>
+	</tr>
+	<tr style="background-color:lightyellow">
+		<td align=center class=formhead>Total subscriptions renewed as of current date</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$v.tsrc`</td>
+		~/foreach`
+		<td align=center>~$totData.tsrc`</td>
+	</tr>
+	<tr style="background-color:lightyellow">
+		<td align=center class=formhead>Conversion %</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$v.convPerc`</td>
+		~/foreach`
+		<td align=center>~$totData.convPerc`</td>
+	</tr>
+	<tr style="background-color:LightSteelGreen">
+		<td align=center class=formhead>Total Revenue from renewed subscriptions</td>
+		~foreach from=$misData key=k item=v`		
+			<td align=center>~$k`</td>
+		~/foreach`
+		<td align=center>Total</td>
+	</tr>
 </table>
 <br />
 </html>
