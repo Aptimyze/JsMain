@@ -46,11 +46,11 @@
 		</td>
         </tr>-->
 ~if $set_filter or $isAlloted`
-        <!--<tr class=fieldsnew>
+       <tr class=fieldsnew>
                 <td align=center>
 		<a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/editDppInterface?profileChecksum=~$checksum`&cid=~$cid`" target="_blank"><font size='2'>Click here to set filter for this user</font></a><br>
 		</td>
-	<tr>-->
+	<tr>
 ~/if`
 	<!-- ADDED  -->
 	<!--
