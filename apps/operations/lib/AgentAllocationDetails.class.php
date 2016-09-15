@@ -487,7 +487,7 @@ public function fetchProfiles($processObj)
                 $subMethod      =$processObj->getSubMethod();
                 $startDt        =$processObj->getStartDate();
                 $endDt          =$processObj->getEndDate();
-                $profiles      	=$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt);
+                $profiles      	=$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt, $processObj);
 		if(count($profiles)>0){
 			$obj =new incentive_MAIN_ADMIN();
 			$profilesAllocated =$obj->getProfilesDetails($profiles);
@@ -529,7 +529,6 @@ public function fetchProfiles($processObj)
 				$profiles[] =$dataSet;	
 			}	
 		}
-		//print_r($profiles);die;
 	}
 	return $profiles;
 }
@@ -1475,7 +1474,7 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 	return $profilesFinalArr;
 }
 
-public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='')
+public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='',$processObj='')
 {
         $execCallbackObj      =new billing_EXC_CALLBACK();
 	$crmUtilityObj        =new crmUtility();
@@ -1486,10 +1485,16 @@ public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', 
                 $endDt          =$crmUtilityObj->getIST($endDt);
 	}
         if($subMethod == "WEBMASTER_LEADS_EXCLUSIVE"){
-            $profiles = $execCallbackObj->getWebmasterLeadsForExclusive($startDt, $endDt);
+            $profiles =$execCallbackObj->getWebmasterLeadsForExclusive($startDt, $endDt);
         }
+        elseif($subMethod == "RCB_WEBMASTER_LEADS"){
+            $profilesNew 	=$execCallbackObj->getRcbLeads($startDt, $endDt);
+	    $profilesFinalArr 	=array_keys($profilesNew);
+	    $processObj->setProfiles($profilesNew); 		
+	    return $profilesFinalArr;	
+	}
         else{
-            $profiles       =$execCallbackObj->getWebmasterLeads($startDt, $endDt);
+            $profiles =$execCallbackObj->getWebmasterLeads($startDt, $endDt);
         }
 	for($i=0; $i<count($profiles); $i++){
                 $profileid      =$profiles[$i]['PROFILEID'];
