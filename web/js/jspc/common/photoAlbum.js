@@ -98,14 +98,17 @@ try
         if( ($('#login-layer').length ==0) )
         {
             var target = $(event.target).first();
+
+            console.log(target);
             if( (target.attr('id') == 'commonOverlay') &&  $('#photoLayerMain').css('display') =='block'   )
             {
                  closePhotoAlbum();
             }
-            else if( target.hasClass( "js-albumoutlayer" ) == true )
+            else if( target.hasClass( "js-albumoutlayer" ) == true || (target.hasClass( "js-albumopenlayer2" )) || (target.attr('id') == 'photoAlbumCaption') ||  (target.attr('id') == 'photoAlbumUsername'))
             {
                 closePhotoAlbum();
-            }    
+            } 
+
         }
 
         

@@ -5,7 +5,7 @@
 <div id="photoLayerMain" class="disp-none"> 
   <!--start:photo container-->
   <div class="pos_fix srppos7 fullwid layersZ">
-    <div class="pos-rel">
+    <div class="pos-rel js-albumopenlayer2">
     	<!--start:photo container-->
         <div class="mainwid hgt512 container txtc" id="photoContainer">
           
