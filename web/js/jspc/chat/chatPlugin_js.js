@@ -2126,13 +2126,29 @@ JsChat.prototype = {
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
                 appendMsg = false; //as this msg already exists in history
-                $(".profileIcon[id^='" + userId + "']")[0].click();
-                setTimeout(function(){
-                    if ($(".js-minpanel").length != 0) {
-                        appendMsg = true;
-                        $('chat-box[user-id="' + userId + '"] .nchatic_2').click();
+                var checkInterval = 0;
+                var chatBoxOpenInterval = setInterval(function(){
+                    //console.log("checking",$(".profileIcon[id^='" + userId + "']"));
+                    if($(".profileIcon[id^='" + userId + "']").length == 1){
+                        $(".profileIcon[id^='" + userId + "']")[0].click();
+                        setTimeout(function(){
+                            if ($(".js-minpanel").length != 0) {
+                                appendMsg = true;
+                                $('chat-box[user-id="' + userId + '"] .nchatic_2').click();
+                            }
+                        },500);
+                        //console.log("clear interval");
+                        clearInterval(chatBoxOpenInterval);
                     }
-                },50);
+                    else{
+                        checkInterval = checkInterval+1;
+                        if(checkInterval == 10){
+                            clearInterval(chatBoxOpenInterval);
+                        }
+                    }    
+                },500);
+                    
+                
 
             }
             if(typeof msg_type != "undefined" && msg_type == "accept"){
