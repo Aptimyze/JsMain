@@ -7,17 +7,17 @@ class DialerHandler
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
         }
-	public function getRenewalEligibleProfiles($x,$campaign_name)
+	public function getRenewalEligibleProfiles($x,$campaign_name='')
 	{
-		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N' AND CAMPAIGN_TYPE='$campaign_name'";
+		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
 		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$eligible_array[] = $row["PROFILEID"];
 		return $eligible_array;
 	}
-	public function getRenewalInEligibleProfiles($x,$campaign_name)
+	public function getRenewalInEligibleProfiles($x,$campaign_name='')
 	{
-		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N' AND CAMPAIGN_TYPE='$campaign_name'";
+		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
 		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$ignore_array[] = $row["PROFILEID"];
