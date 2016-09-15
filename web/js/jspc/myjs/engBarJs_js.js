@@ -416,8 +416,8 @@ try{
             break;
         innerHtml=innerHtml+this.innerHtml;
         innerHtml=innerHtml.replace(/\{\{list_id\}\}/g,profiles[i]["profilechecksum"]+'_'+this.name);
-        innerHtml=innerHtml.replace(/\{\{ACCEPT_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['ACCEPT']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','accept','"+tracking+"')");
-        innerHtml=innerHtml.replace(/\{\{DECLINE_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['DECLINE']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','decline','"+tracking+"')");
+        innerHtml=innerHtml.replace(/\{\{ACCEPT_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['ACCEPT']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','accept','"+tracking+"','Y')");
+        innerHtml=innerHtml.replace(/\{\{DECLINE_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['DECLINE']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','decline','"+tracking+"','Y')");
         innerHtml=innerHtml.replace(/\{\{PROFILE_FACE_CARD_ID\}\}/g,profiles[i]["profilechecksum"]+"_id");
         innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,profiles[i]['album_count']);
         
@@ -445,6 +445,7 @@ try{
     innerHtml=innerHtml+this.getCards(interestsCount,showViewAll);
 		this.containerHtml=this.containerHtml.replace(/\{\{TOTAL_NUM\}\}/gi,totalPanels);  
 		this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
+                $("#totalFilteredInterestReceived").text(totalCount);
     if (!totalCount){
     temp2= $(this.containerHtml.trim());
     temp2.find("#seeAllId_FILTEREDINTEREST").addClass('disp-none');
@@ -465,11 +466,12 @@ try{
 		$("#nxt-"+this.list).addClass('cursp').click(function(){
 		  myjsSlider("nxt-"+listName);
 		});
-
-	}
-	    topSliderInt('init');
+                topSliderInt('init');
 	    removeOtherDiv();
 	    photo_init();
+
+	}
+	    
 }
 catch(e){
   console.log('getting error '+e+' in function post of interestReceived object');
@@ -488,7 +490,7 @@ filteredInterest.prototype.noResultCase = function() {
 			this.containerHtml=this.containerHtml.replace('boxslide','');
 		}
 		else{
-		this.innerHtml=this.getCards(0,0,new Array(),0);
+		this.innerHtml=this.getCards(0,0);
 		} 
 
 		this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,this.innerHtml);
@@ -499,7 +501,8 @@ filteredInterest.prototype.noResultCase = function() {
 		$("#engagementContainer").after(this.containerHtml);
 		$("#engagementContainer").addClass("disp-none");
 		if(this.error){$("#js-FILTEREDINTEREST_List").css('width','100%');}
-			    topSliderInt('init');
+                $("#arrowKeys_FILTEREDINTEREST").hide();
+
 
 }
 
@@ -512,18 +515,19 @@ filteredInterest.prototype.noResultCase = function() {
       viewAllCard=viewAllCard.replace(/myjs-dim9/g,'myjs-dim11');
       viewAllCard=viewAllCard.replace(/\{\{disp-none\}\}/g,'');
       viewAllCard=viewAllCard.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
-     	tempDiv=$('<li style="padding-top:0px;"></li>');
+     	var tempDiv=$('<li style="padding-top:0px;"></li>');
 		tempDiv.append(viewAllCard);
 			
       html+=tempDiv.outerHtml();
       return html;
 		}
-		var remainder=interestsCount%4;
+                
 		if (interestsCount==0){
-			tempDiv=$('<li></li>');
-			tempDiv.append($("#noInterestsCard").outerHtml());
-			html+=tempDiv.outerHtml();
-			return html;
+			var tempDiv=$("#noFaceCard").html();
+			tempDiv=tempDiv.replace(/\{\{ID\}\}/g,'FilteredNoTuple');
+			tempDiv=tempDiv.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Interests received by you which don't match your filter criteria will appear here");
+			tempDiv=tempDiv.replace(/\{\{display\}\}/g,"disp-none");
+                        return tempDiv;
 		}
                 return "";
 	}
@@ -580,8 +584,8 @@ try{
         }
 				innerHtml=innerHtml+this.innerHtml;
         innerHtml=innerHtml.replace(/\{\{list_id\}\}/g,profiles[i]["profilechecksum"]+'_'+this.name);
-        innerHtml=innerHtml.replace(/\{\{ACCEPT_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['ACCEPT']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','accept','"+tracking+"')");
-        innerHtml=innerHtml.replace(/\{\{DECLINE_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['DECLINE']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','decline','"+tracking+"')");
+        innerHtml=innerHtml.replace(/\{\{ACCEPT_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['ACCEPT']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','accept','"+tracking+"','N')");
+        innerHtml=innerHtml.replace(/\{\{DECLINE_LINK\}\}/g,"postActionMyjs('"+profiles[i]["profilechecksum"]+"','"+postActionsUrlArray['DECLINE']+"','" +profiles[i]["profilechecksum"]+"_"+this.name+"','decline','"+tracking+"','N')");
 				innerHtml=innerHtml.replace(/\{\{PROFILE_FACE_CARD_ID\}\}/g,profiles[i]["profilechecksum"]+"_id");
 			  innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,profiles[i]['album_count']);
         

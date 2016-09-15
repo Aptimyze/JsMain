@@ -132,7 +132,7 @@ function postActionError(profileChecksum,type)
         $("#"+profileChecksum+"_BlankMsg_"+typeDiv).addClass("disp-none");
 }	
 
-function postActionMyjs(profileChecksum,URL,div,type,tracking)
+function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 {
   try{
 	var data = {};
@@ -234,6 +234,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking)
 	            		$("#"+div).find("div.intdisp").html("Accepted");
                   $("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
 	            		$("#"+div).find("div.intdisp").removeClass("intdisp");
+                                
 	            	}
 	            	else if(type=="decline")
 	            	{
@@ -258,7 +259,26 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking)
                     $( "#ACCEPTANCE_RESPONSE_"+tracking).addClass("txtc");
                   }
                 }
-	            }
+                
+                if(type=='decline' || type=='accept')
+                    {
+                        
+                    if(typeof filtered!='undefined' && filtered=='Y'){
+                        var filCount=$("#totalFilteredInterestReceived").html();
+                        filCount--;
+                        $("#totalFilteredInterestReceived").text(filCount);
+                        $("#seeAllFilteredCount").text(filCount);
+                    }
+                    if(typeof filtered!='undefined' && filtered=='N'){
+                        var intCount=$("#totalInterestReceived").html();
+                        intCount--;
+                        $("#totalInterestReceived").text(intCount);
+                        $("#seeAllIntCount").text(intCount);
+                    }
+
+                            
+                    }
+	       }
             }
             catch(e){
               console.log('getting error '+e+' in function success of postActionMyjs')
