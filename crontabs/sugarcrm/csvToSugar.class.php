@@ -26,7 +26,7 @@ class csvToSugar
 		if($rowCount!=0)
 		{
 
-	    		$decodedLine = mb_convert_encoding ($row, "UTF-8", mb_detect_encoding($row));
+	    		$decodedLine = mb_convert_encoding ($row, "UTF-8", "UTF-16BE");
 	    		$rowArr = str_getcsv($decodedLine,"\t");
 			if(count($rowArr)<=1)
 				$rowArr = str_getcsv($row);
@@ -42,19 +42,23 @@ class csvToSugar
 				$rowArr = str_getcsv($row);
 			foreach ($rowArr as $key=>$value) 
 			{
-				$decodedLine = mb_convert_encoding ($value, "UTF-8", mb_detect_encoding($value));
+				$decodedLine = mb_convert_encoding ($value, "UTF-8", "UTF-16BE");
 				$fieldsArr= str_getcsv($decodedLine,"\t");
 				$this->fieldsArr[] = $fieldsArr[0];
 			}
+			$this->setIndexes();
+			if($this->emailIndex=='' && $this->phoneIndex=='')
+			{
+				foreach ($rowArr as $key=>$value) 
+				{
+					$decodedLine = mb_convert_encoding ($value, "UTF-8", "UTF-16LE");
+					$fieldsArr= str_getcsv($decodedLine,"\t");
+					$this->fieldsArr[] = $fieldsArr[0];
+				}
+				$this->setIndexes();
+			}
 		}
 		$rowCount++;
-	}
-	foreach($this->fieldsArr as $k=>$v)
-	{
-		if($v=="email")
-			$this->emailIndex = $k;
-		if($v=="phone_number")
-			$this->phoneIndex = $k;
 	}
 	if(is_array($this->csvArr))
 	{
@@ -64,7 +68,16 @@ class csvToSugar
 		fclose($file);
 	}
   }
-
+  public function setIndexes()
+  {
+	foreach($this->fieldsArr as $k=>$v)
+	{
+		if($v=="email")
+			$this->emailIndex = $k;
+		if($v=="phone_number")
+			$this->phoneIndex = $k;
+	}
+  }
   public function manipulatePhone($phone)
   {
 	$phone = preg_replace("/[^0-9]/","",$phone);
