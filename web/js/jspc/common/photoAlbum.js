@@ -94,14 +94,21 @@ try
     },
     closeAlbumLayerOne: function(event){
 
-        var target = $(event.target).first();
-        if((target.hasClass( "js-openAlbum" ) != true) && (target.hasClass( "js-previewAlbum" ) != true))
+        //check if the click originated for login layer
+        if( ($('#login-layer').length ==0) )
         {
-            if( (target.attr('id')!= 'photoAlbumPrev') && (target.attr('id')!= 'photoAlbumNext') &&  (target.attr('id')!= 'photoAlbumClose') && (event.target.nodeName != 'IMG') && (target.attr('id')!= 'Albumnexticon')   && (target.attr('id')!= 'Albumprevicon') )
+            var target = $(event.target).first();
+            if( (target.attr('id') == 'commonOverlay') &&  $('#photoLayerMain').css('display') =='block'   )
             {
-               closePhotoAlbum();
+                 closePhotoAlbum();
             }
+            else if( target.hasClass( "js-albumoutlayer" ) == true )
+            {
+                closePhotoAlbum();
+            }    
         }
+
+        
     }
     
 
@@ -196,12 +203,10 @@ function LeftAdjustment(direction){
         var toLeft = leftHere+(loop-1)*990;
         if(loop<totalImg)
         {
-            console.log('loop started');
             $("#photo"+loop).animate({left: toLeft});
         }
         else if(loop==totalImg)
         {
-            console.log('loop ended');
             $("#photo"+loop).animate({left: toLeft},"normal",function(){progress=0;});
         }
     }
@@ -237,7 +242,7 @@ function openPhotoAlbum(username,profilechecksum,AlbumCount,hasAlbum){
         var imageInsert='';
         var loop=1;
         for(loop=1;loop<=AlbumCount;loop++){
-            imageInsert += "<div class='albumPhotoImage' id='photo"+loop+"' data-count='"+loop+"' style='min-width: 990px; position: absolute;'> <div class='disp-tbl fullwid txtc'><div class='disp-cell vmid' style='height:512px'> <img src='/images/jspc/commonimg/loader.gif' oncontextmenu='return false;' onmousedown='return false;' style='max-width:990px;max-height:512px;'/></div></div></div>";
+            imageInsert += "<div class='albumPhotoImage' id='photo"+loop+"' data-count='"+loop+"' style='min-width: 990px; position: absolute;'> <div class='disp-tbl fullwid txtc'><div class='disp-cell vmid js-albumoutlayer' style='height:512px'> <img src='/images/jspc/commonimg/loader.gif' oncontextmenu='return false;' onmousedown='return false;' style='max-width:990px;max-height:512px;'/></div></div></div>";
         }
         $("#photoContainer").append(imageInsert);
         $('#photoContainer').find('#photo1').addClass('currentImgS');
