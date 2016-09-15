@@ -26,7 +26,7 @@ class registerMisActions extends sfActions {
       $commonUtilObj = new CommonUtility();
       $commonUtilObj->avoidPageRefresh("QUALITY_REGISTRATION", $name);
       $this->range_format = $formArr['range_format'];
-      $params = array('range_format' => $formArr["range_format"], 'source_names' => $formArr['source_names']);
+      $params = array('range_format' => $formArr["range_format"], 'source_names' => $formArr['source_names'],'source_cities'=>$formArr['source_cities']);
       if ($formArr["range_format"] == "Y") {      //If year is selected
         $start_date = $formArr['yearValue'] . "-04-01";
         $end_date = ($formArr['yearValue']+1) . "-03-31";
@@ -118,14 +118,22 @@ class registerMisActions extends sfActions {
         } else {
           $sourceGroups = array();
         }
-        
+        $this->selectedCities = "";
+        if(!empty($params["source_cities"])){
+                $cities_arr=array();
+                foreach($params["source_cities"] as $selCity){
+                        $cities_arr[] = FieldMap::getFieldLabel("city_india",$selCity);
+                }
+                $this->selectedCities = implode(",",$cities_arr);
+        }
         if ($formArr['report_format'] == 'CSV') {
-          $this->createCSVFormatOutput($sourceGroups, $registrationData['source_dates'], $this->columnDates, $this->displayDate, $this->range_format);
+          $this->createCSVFormatOutput($sourceGroups, $registrationData['source_dates'], $this->columnDates, $this->displayDate, $this->range_format,$this->selectedCities);
         }
         $this->sgroupData = $sourceGroups;
         $this->dates_count = $registrationData['source_dates'];
         $this->setTemplate('qualityRegistrationResultScreen');
       }else{
+        $this->source_cities = $this->setSourceCities();
         $this->startMonthDate = "01";
         $this->todayDate = date("d");
         $this->todayMonth = date("m");
@@ -140,7 +148,8 @@ class registerMisActions extends sfActions {
           $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
         }
       }
-    } else {               // for selection screen
+    } else {// for selection screen
+      $this->source_cities = $this->setSourceCities();
       $this->startMonthDate = "01";
       $this->todayDate = date("d");
       $this->todayMonth = date("m");
@@ -156,7 +165,24 @@ class registerMisActions extends sfActions {
       }
     }
   }
-
+ public function setSourceCities(){
+      $sourceCities = FieldMap::getFieldLabel("qualityMis_top_cities","",1);
+      $cityIndia = FieldMap::getFieldLabel("city_india","",1);
+      $topCity = array();
+      $topCites = array();
+      $source_cities = array();
+      foreach($cityIndia as $cityCode=>$city){
+              if(!in_array($cityCode, $sourceCities) && !ctype_alpha($cityCode)){
+                     $source_cities[$cityCode] = $city;
+              }elseif(in_array($cityCode, $sourceCities)){
+                      $topCity[$cityCode] = $city;
+              }
+      }
+      foreach($sourceCities as $orderedCity){
+              $topCites[$orderedCity] = $topCity[$orderedCity];
+      }
+      return array_merge($topCites,$source_cities);
+ }
   // Create CSV for Mis
   /**
    * This function generates csv file
@@ -166,10 +192,16 @@ class registerMisActions extends sfActions {
    * @param string $displayMsg message to be diaplayed on the top i.ee either date range or year value
    * @param string $range_format selected range format year 'Y' or month 'm'
    */
-  public function createCSVFormatOutput($sgroupData, $dates_count, $columnDates, $displayMsg,$range_format) {
+  public function createCSVFormatOutput($sgroupData, $dates_count, $columnDates, $displayMsg,$range_format,$selectedCities) {
     $csvData = 'Quality Registration MIS' . "\n";
+    if($selectedCities != ""){
+              $selectedCities = str_replace(",", ' | ', $selectedCities);
+      }
     if($range_format == 'Y'){
       $csvData .= 'For the Year of '.$displayMsg . "\n";
+      if($selectedCities != ""){
+              $csvData .= 'Cities:,'.$selectedCities . "\n";
+      }
       $csvData .= 'Day,';
       foreach($columnDates as $Date){
         if($Date>12){
@@ -181,6 +213,9 @@ class registerMisActions extends sfActions {
       $csvData = rtrim($csvData, ',');
     }else{
       $csvData .= $displayMsg . "\n";
+      if($selectedCities != ""){
+              $csvData .= 'Cities:,'.$selectedCities . "\n";
+      }
       $csvData .= 'Day,';
       $csvData .= implode(',', $columnDates);
     }

@@ -95,9 +95,22 @@
 			       Select SourceGroup
 			</font></td>
 			<td class="fieldsnew">
-        <select multiple name ='source_names[]' size=15>
+        <select multiple name ='source_names[]' size=15 style='min-width: 255px'>
           ~foreach from=$sources item=src`
             <option value="~$src.GROUPNAME`">~$src.GROUPNAME`</option>
+          ~/foreach`
+        </select>
+			</td>
+		</tr>
+		<tr></tr>
+		<tr align="center">
+			<td class="label"><font size=2>
+			       Select Cities
+			</font></td>
+			<td class="fieldsnew">
+        <select multiple name ='source_cities[]' size=15 style='min-width: 255px'>
+          ~foreach from=$source_cities key=k item=src_city`
+            <option value="~$k`">~$src_city`</option>
           ~/foreach`
         </select>
 			</td>
