@@ -3,7 +3,7 @@ ini_set("max_execution_time",0);
 ini_set("memory_limit","128M");
 class misRegistrationQualityTask extends sfBaseTask
 {
-  protected $screenDate =50;
+  protected $screenDate =3;
   protected $registrationArray = array();
   protected $CC = array(10,33,19,7,27,30,34,14,28,20,36,12,6,13); // core community
   protected $SIC = array(31,16,17,3,25); // south indian community
