@@ -20,7 +20,8 @@ class ResponseHandlerConfig
 	public static $FAILURE = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'1');
 	public static $SERVICE_UNAVAILABLE = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'1');
 	public static $HTTP_CODE_MESSAGE_NOT_SET = array("message"=>"HTTP code and message not set","statusCode"=>'1');
-	public static $LOGOUT_PROFILE = array("message"=>"Please login to continue","statusCode"=>'9');
+        public static $IGNORED_MESSAGE = array("message"=>"You have reached the maximum block/ignore limit per user on Jeevansathi. Please unblock some profiles to further use this functionality","statusCode"=>'1');
+        public static $LOGOUT_PROFILE = array("message"=>"Please login to continue","statusCode"=>'9');
 	
 	//Authentication Variables:
 	public static $INVALID_URL = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'3');

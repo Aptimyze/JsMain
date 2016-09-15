@@ -13,7 +13,7 @@
 	<td class="formhead" valign="middle" colspan="2" align="center" >Logout Data</td>
 	</tr>
 <br>
-	<TR class="formhead" valign="middle" colspan="2" align="center"><TH>IP Address</TH><TH>Time</TH>
+	<TR class="formhead" valign="middle" colspan="2" align="center"><TH>IP Address</TH><TH>Time (IST)</TH>
 	~foreach $logoutArr as $kk`
 
 	<TR>

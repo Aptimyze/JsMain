@@ -1,5 +1,6 @@
 <?php
 include_once("commonHousekeeping.php");
+include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 $counter=0;
 
 $table="newjs.HOROSCOPE_REQUEST_ACTIVE";
@@ -8,6 +9,13 @@ $inactiveRecordTable="newjs.INACTIVE_RECORDS_6MONTHS";//make this as inactive re
 $deletedRecordTable="newjs.DELETED_PROFILES";
 
 $time_ini = microtime_float();
+
+$to = "nitesh.s@jeevansathi.com";
+$from = "info@jeevansathi.com";
+$subject = "Alter table";
+$msgBody = "Alter table in crontabs/housekeeping/horoscopeHousekeeping.php";
+send_email($to,$msgBody,$subject,$from);
+
 $sql="ALTER TABLE $table DISABLE KEYS";
 echo $sql."\n";
 mysql_query($sql,$db) or die(mysql_error($db).$sql);

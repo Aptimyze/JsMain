@@ -119,10 +119,10 @@
     <!--start:error layer-->
 <div class="pos_fix fullwid z7" style="background-color:#fdfdfd; display:none;" id="commonError">
     <div class="container errwid2 pt10 pb10">
-        <div class="fl">
+        <div class="disp_ib pos-rel" style='margin:10px 0px 10px 30px;'>
             <i class="sprite2 erric1"></i>
         </div>
-        <div class="fl f20 fontlig color11 pt10 pl20" id="js-commonErrorMsg">
+        <div class="f20 fontlig color11 vtop disp_ib pos-rel" style='margin:13px; width:680px;' id="js-commonErrorMsg">
         Something went wrong. Please try again after some time.
         </div>
     </div>

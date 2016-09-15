@@ -43,7 +43,7 @@ class LoggingEnums
     const CLIENT_IP = "clientIP";
     const STATUS_CODE = "statusCode";
     const API_VERSION = "apiVersion";
-    const MESSAGE = "message";
+    const MESSAGE = "LogMessage";
     const CHANNEL_NAME = "channelName";
     const ACTION_NAME = "actionName";
     const MODULE_NAME = "moduleName";
@@ -66,4 +66,5 @@ class LoggingEnums
     const MYJS = 'myjs';
     const HOMEPAGE = 'homepage';
     const _VAR = 'var';
+    const REQUEST_URI = 'REQUEST_URI';
 }

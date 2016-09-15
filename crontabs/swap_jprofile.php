@@ -109,7 +109,7 @@ if($idArr && is_array($idArr))
 unset($idArr);
 //This section ends
 
-$sql="DELETE FROM SWAP_JPROFILE1 WHERE PROFILEID IN (4676516,4676543,4676566,4676712,4676726,4676882,4676898,4676900,4676958,4677049)";
+$sql="DELETE FROM SWAP_JPROFILE1 WHERE PROFILEID IN (136580,4676516,4676543,4676566,4676712,4676726,4676882,4676898,4676900,4676958,4677049)";
 mysql_query($sql,$db) or die("02".mysql_error1($db));
 
 $NEGATIVE_TREATMENT_LIST=new NEGATIVE_TREATMENT_LIST($db);
@@ -341,7 +341,7 @@ unset($deletePidArr);
 /*optimiztaion 2*/
 mysql_free_result($result);
 
-$sql="delete from SWAP where (ACTIVATED <>'Y' or PRIVACY='C' or LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 5 MONTH))";
+$sql="delete from SWAP where (ACTIVATED <>'Y' or PRIVACY='C' or LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 3 MONTH))";
 mysql_query($sql,$db) or die("8 ".mysql_error1($db));
 /*
 $sql = "SELECT count(*) AS C FROM SWAP";

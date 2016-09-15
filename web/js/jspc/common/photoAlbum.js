@@ -168,12 +168,9 @@ function ajaxCallForAlbum(username,profilechecksum){
                 if(result.albumUrls==null){
 		closePhotoAlbum();
                     //alert("No Album Pc Exists "+result.responseMessage);
-		var errorMsg = 	$("#js-commonErrorMsg").html();
-		$("#js-commonErrorMsg").html(noPhotoErrorMsg);
-		$("#commonError").slideDown("slow");
-		setTimeout('$("#commonError").slideUp("slow")',1500);
-		setTimeout(function(errorMsg){$("#js-commonErrorMsg").html(errorMsg);},4000,errorMsg);
-                }
+                showCustomCommonError(noPhotoErrorMsg,1500);
+
+		}
                 else{
                     totalImg = result.albumUrls.length;
                     currentView=1;
@@ -193,8 +190,8 @@ function loadImage(idOfDiv,Image){
     $(idOfDiv).attr('src', Image)
                     .on('load', function() {
                         if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
-				$("#commonError").slideDown("slow");
-				setTimeout('$("#commonError").slideUp("slow")',1500);
+                            showCustomCommonError("Something went wrong. Please try again after some time.",1500);
+
                         } else {
                         }
                     });

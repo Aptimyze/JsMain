@@ -772,6 +772,10 @@ if (isset($data)) //successful login
         }
         if(in_array("SupFld",$priv))
                 $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/profileDocumentsUpload\">Upload Profile Verification Documents</a>";
+        //exclusive servicing phase II platform
+        if (in_array('ExPmSr', $priv) || in_array('SupPmS', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/exclusiveServicingII\">Send profiles to customer</a>";
+        }
     }
 
     $smarty->assign("linkarr", $linkarr);

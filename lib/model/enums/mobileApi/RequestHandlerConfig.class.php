@@ -67,7 +67,7 @@ class RequestHandlerConfig
 		"changePhotoPrivacy"=>array("v1"=>"changePhotoPrivacyV1","v2"=>"","v3"=>"changePhotoPrivacyV1"),		
 		"getAlbum"=>array("v1"=>"GetAlbumV1","v2"=>"","v3"=>"GetAlbumV1"),
 		"import"=>array("v1"=>"","v2"=>"","v3"=>"import"),
-		"importFb"=>array("v1"=>"","v2"=>"","v3"=>"importFbV1"),
+		"importFb"=>array("v1"=>"importFbV1","v2"=>"","v3"=>"importFbV1"),
 		"MobPhotoTracking"=>array("v1"=>"MobPhotoTrackingV1","v2"=>"","v3"=>"MobPhotoTrackingV1")),
 	"register"=>array(
 				"page1"=>array("v1"=>"page1v1","v2"=>"","v3"=>"page1v1"),
