@@ -1188,7 +1188,7 @@ class csvGenerationHandler
 				}
 				else if($processName=="rcbCampaignInDialer"){
 					$country        =FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
-					$callTime	=$callTimeArr[$profileid];
+					$callTime	=$callTimeArr[$profileid]['PREFERRED_START_TIME_IST'];
 					$leadId =$campaignName.$leadIdSuffix;
 					$source =$campaignName;
                                         //$csvDateTime =$processObj->getStartDate();

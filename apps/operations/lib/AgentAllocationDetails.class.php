@@ -529,7 +529,6 @@ public function fetchProfiles($processObj)
 				$profiles[] =$dataSet;	
 			}	
 		}
-		//print_r($profiles);die;
 	}
 	return $profiles;
 }
@@ -1489,10 +1488,10 @@ public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', 
             $profiles =$execCallbackObj->getWebmasterLeadsForExclusive($startDt, $endDt);
         }
         elseif($subMethod == "RCB_WEBMASTER_LEADS"){
-            $profilesNew =$execCallbackObj->getRcbLeads($startDt, $endDt);
-	    $profiles =array_keys($profilesNew);
+            $profilesNew 	=$execCallbackObj->getRcbLeads($startDt, $endDt);
+	    $profilesFinalArr 	=array_keys($profilesNew);
 	    $processObj->setProfiles($profilesNew); 		
-	    return $profiles;	
+	    return $profilesFinalArr;	
 	}
         else{
             $profiles =$execCallbackObj->getWebmasterLeads($startDt, $endDt);
