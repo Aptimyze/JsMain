@@ -10,6 +10,7 @@ class checkPhotoUrlTask extends sfBaseTask
 	{
 		$this->addArguments(array(
 		new sfCommandArgument('tableName', sfCommandArgument::REQUIRED, 'tableName'),
+        new sfCommandArgument('maxCount', sfCommandArgument::REQUIRED, 'maxCount'),
 		));
         $this->addOptions(array(
             new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
@@ -21,7 +22,7 @@ class checkPhotoUrlTask extends sfBaseTask
 	    $this->detailedDescription = <<<EOF
 	   This task will fetch pic url's from search_male and search_female JOIN *     picture_new, convert it into complete url and then check according to curl request response whether the data is correct or not. Also, in case thumbailUrl is not present or is incorrect, it is created and updated.
 	   Call it with:
-	   [php symfony oneTimeCron:checkPhotoUrl tableName|[INFO]]
+	   [php symfony oneTimeCron:checkPhotoUrl tableName maxCount|[INFO]]
 EOF;
 	}
 	protected function execute($arguments = array(), $options = array())
@@ -29,8 +30,7 @@ EOF;
         // if (!sfContext::hasInstance())
         //     sfContext::createInstance($this->configuration);
         $tableName = $arguments["tableName"];
-        $maxCount = 500000; // get count by count(*) query on tableName ??
-
+        $maxCount = $arguments["maxCount"];  //The max count provided should ideally be greater than the limit
         $limit = 10000;
         $offset  = 0;
         $incrementValue = 10000;
@@ -115,11 +115,7 @@ EOF;
                     {
                         $this->checkPicDetails($k1,$profileId,$pictureId,$ordering,"I",$mainPicUrl,$picFormat);
                         break;
-                    }
-                    else
-                    {
-                        echo(" Correct respone\n");
-                    }
+                    }                    
                 }
             }
         }        
@@ -128,17 +124,17 @@ EOF;
     //This function checks if a given url is of ThumbailUrl type and if it is Blank or incorrect, a new url is created and updated. For others, a database entry marking the fact that the data is incorrect is placed.
     public function checkPicDetails($urlType,$profileId,$pictureId,$ordering,$reason,$mainPicUrl,$picFormat)
     {
-        if($urlType == "ThumbailUrl")
-        {
-            $urlType = "thumbnail";
-            $this->createThumbnailUrl($urlType,$profileId,$pictureId,$mainPicUrl,$reason,$picFormat);
-        }
-        else
-        {
+        // if($urlType == "ThumbailUrl")
+        // {
+        //     $urlType = "thumbnail";
+        //     $this->createThumbnailUrl($urlType,$profileId,$pictureId,$mainPicUrl,$reason,$picFormat);
+        // }
+        //else
+        //{
             $incorrectPicDetailObj = new PICTURE_INCORRECT_PICTURE_DATA("newjs_masterRep");
             $incorrectPicDetailObj->insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason);
             unset($incorrectPicDetailObj);
-        }
+        //}
     }
 
     //This functions creates ThumbailUrl and updates in on the database

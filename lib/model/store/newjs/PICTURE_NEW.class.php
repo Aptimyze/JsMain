@@ -640,6 +640,7 @@ class PICTURE_NEW extends TABLE
 		}
 	}
 
+	//This function is made to be used in a one time cron named checkPhotoUrlTask.class.php
 	public function getPicUrlArr($tableName,$lowerLimit,$upperLimit)
 	{
 		try
@@ -648,7 +649,6 @@ class PICTURE_NEW extends TABLE
 						P.ProfilePic235Url,P.ProfilePicUrl,P.ProfilePic450Url,
 						P.MobileAppPicUrl,P.Thumbail96Url,P.ThumbailUrl,P.SearchPicUrl FROM newjs.PICTURE_NEW AS P JOIN newjs.".$tableName." as S  ON S.PROFILEID = P.PROFILEID WHERE S.HAVEPHOTO = 'Y' LIMIT :LOWERLIMIT, :UPPERLIMIT";
 			$prep=$this->db->prepare($sql);
-            //$prep->bindParam(":TABLENAME", $tableName, PDO::PARAM_STR);
             $prep->bindParam(":LOWERLIMIT", $lowerLimit, PDO::PARAM_INT);
             $prep->bindParam(":UPPERLIMIT", $upperLimit, PDO::PARAM_INT);
             $prep->execute();

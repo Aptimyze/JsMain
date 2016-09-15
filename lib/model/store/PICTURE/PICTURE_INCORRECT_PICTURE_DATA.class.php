@@ -8,9 +8,7 @@ class PICTURE_INCORRECT_PICTURE_DATA extends TABLE
 	}
 
 	public function insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason)
-	{echo($profileId);
-		echo("\n\n".$pictureId);
-		echo($reason);
+	{
 		try
 		{
 			$sql = "INSERT IGNORE into PICTURE.INCORRECT_PICTURE_DATA VALUES (:PICTUREID,:PROFILEID,:ORDERING,:REASON)";
