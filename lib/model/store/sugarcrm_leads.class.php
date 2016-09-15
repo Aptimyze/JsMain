@@ -240,30 +240,6 @@ class sugarcrm_leads extends TABLE{
         	}
         	return $profiles;
 	}
-	public function getLeadsWithEmails($emailStr)
-	{
-                try
-                {
-			$emailArr = explode(",",$emailStr);
-			foreach($emailArr as $k=>$v)
-				$qArr[]=":EMAIL".$k;
-			$qStr = implode(",",$qArr);
-                        $sql = "SELECT last_name FROM sugarcrm.leads where last_name IN (".$qStr.");";
-                        $prep = $this->db->prepare($sql);
-			foreach($emailArr as $k=>$v)
-				$prep->bindValue(":EMAIL".$k,$v,PDO::PARAM_STR);
-                        $prep->execute();
-                        while($res=$prep->fetch(PDO::FETCH_ASSOC))
-                        {
-                                        $matchEmailArr[] =$res['last_name'];
-                        }
-                }
-                catch(Exception $e)
-                {
-                    throw new jsException($e);
-                }
-                return $matchEmailArr;
-	}
 	public function getLeadsWithPhone($phoneStr)
 	{
                 try

@@ -51,6 +51,29 @@ class sugarcrm_email_addresses extends TABLE
         }
         return $email_address;
     }
-
+        public function getLeadsWithEmails($emailStr)
+        {
+                try
+                {
+                        $emailArr = explode(",",$emailStr);
+                        foreach($emailArr as $k=>$v)
+                                $qArr[]=":EMAIL".$k;
+                        $qStr = implode(",",$qArr);
+                        $sql = "SELECT email_address FROM sugarcrm.email_addresses where email_address IN (".$qStr.");";
+                        $prep = $this->db->prepare($sql);
+                        foreach($emailArr as $k=>$v)
+                                $prep->bindValue(":EMAIL".$k,$v,PDO::PARAM_STR);
+                        $prep->execute();
+                        while($res=$prep->fetch(PDO::FETCH_ASSOC))
+                        {
+                                        $matchEmailArr[] =$res['email_address'];
+                        }
+                }
+                catch(Exception $e)
+                {
+                    throw new jsException($e);
+                }
+                return $matchEmailArr;
+        }
 }
 ?>

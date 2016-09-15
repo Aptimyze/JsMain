@@ -26,8 +26,10 @@ class csvToSugar
 		if($rowCount!=0)
 		{
 
-	    		$decodedLine = mb_convert_encoding ($row, "UTF-8", "UTF-16BE");
+	    		$decodedLine = mb_convert_encoding ($row, "UTF-8", mb_detect_encoding($row));
 	    		$rowArr = str_getcsv($decodedLine,"\t");
+			if(count($rowArr)<=1)
+				$rowArr = str_getcsv($row);
 			foreach ($rowArr as $key=>$value) 
 			{
 			  	$this->csvArr[$rowCount-1][] = $value;
@@ -36,9 +38,11 @@ class csvToSugar
 		else
 		{
 	    		$rowArr = str_getcsv($row,"\t");
+			if(count($rowArr)<=1)
+				$rowArr = str_getcsv($row);
 			foreach ($rowArr as $key=>$value) 
 			{
-				$decodedLine = mb_convert_encoding ($value, "UTF-8", "UTF-16BE");
+				$decodedLine = mb_convert_encoding ($value, "UTF-8", mb_detect_encoding($value));
 				$fieldsArr= str_getcsv($decodedLine,"\t");
 				$this->fieldsArr[] = $fieldsArr[0];
 			}
@@ -150,11 +154,16 @@ class csvToSugar
   }
   public function filterLeads($field)
   {
-	$sugarLeadsObj = new sugarcrm_leads;
 	if($field=="EMAIL")
+	{
+		$sugarLeadsObj = new sugarcrm_email_addresses;
 		$matchedField = $sugarLeadsObj->getLeadsWithEmails($this->fieldStr);
+	}
 	else if($field=="PHONE_MOB")
+	{
+		$sugarLeadsObj = new sugarcrm_leads;
 		$matchedField = $sugarLeadsObj->getLeadsWithPhone($this->fieldStr);
+	}
 	$this->unsetCsvArrFields($matchedField);
   }
   public function createLeadData()
@@ -206,7 +215,7 @@ class csvToSugar
 	{
 		foreach($this->leadDataArr as $k=>$v)
 		{
-			if($v['email'])
+			if($v['email'] && !in_array($v['email'],$emailArr))
 			{
 				$v['opt_in_c']='1';
 				$v['status']='13';
