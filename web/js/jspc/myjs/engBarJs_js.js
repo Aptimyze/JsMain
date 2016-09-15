@@ -411,7 +411,8 @@ try{
         	this.noResultCase(); return ;
         }
 		else {
-                    	for (i = 0; i < noOfRes && interestsCount<20; i++) {
+                    for (i = 0; i < noOfRes && interestsCount<20; i++) 
+                       {
           if(++interestsCount==20 && showViewAll==1)
             break;
         innerHtml=innerHtml+this.innerHtml;
@@ -422,30 +423,30 @@ try{
         innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,profiles[i]['album_count']);
         
         if(profiles[i]['album_count']=='0')
-        innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,'disp-none'); 
+            innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,'disp-none'); 
         else 
-        innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,''); 
+            innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,''); 
 
         innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+profiles[i]["profilepic450url"]+"'");
-				innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
+        innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,profiles[i]["edu_level_new"]);
         innerHtml=innerHtml.replace(/\{\{ONLINE_STR\}\}/g,profiles[i]["userloginstatus"]);
-				innerHtml=innerHtml.replace(/\{\{OCCUPATION\}\}/g,profiles[i]["occupation"]);
-				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(interestsCount)+"&contact_id="+this.data.contact_id);
+        innerHtml=innerHtml.replace(/\{\{OCCUPATION\}\}/g,profiles[i]["occupation"]);
+        innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,'/profile/viewprofile.php?profilechecksum='+profiles[i]["profilechecksum"]+"&"+this.data.tracking+"&total_rec="+this.data.total+"&actual_offset="+(interestsCount)+"&contact_id="+this.data.contact_id);
         innerHtml=innerHtml.replace(/\{\{LOCATION\}\}/g,profiles[i]["location"]);
-				innerHtml=innerHtml.replace(/\{\{INCOME\}\}/g,profiles[i]["income"]);
-				var caste = profiles[i]["caste"].split(':');
-          innerHtml=innerHtml.replace(/\{\{CASTE\}\}/g,caste[caste.length-1]);
-				innerHtml=innerHtml.replace(/\{\{AGE\}\}/g,profiles[i]["age"]);
-				innerHtml=innerHtml.replace(/\{\{HEIGHT\}\}/g,profiles[i]["height"]);
-				innerHtml=innerHtml.replace(/\{\{RELIGION\}\}/g,profiles[i]["religion"]);
-				innerHtml=innerHtml.replace(/\{\{MTONGUE\}\}/g,profiles[i]["mtongue"]);
+        innerHtml=innerHtml.replace(/\{\{INCOME\}\}/g,profiles[i]["income"]);
+        var caste = profiles[i]["caste"].split(':');
+        innerHtml=innerHtml.replace(/\{\{CASTE\}\}/g,caste[caste.length-1]);
+        innerHtml=innerHtml.replace(/\{\{AGE\}\}/g,profiles[i]["age"]);
+        innerHtml=innerHtml.replace(/\{\{HEIGHT\}\}/g,profiles[i]["height"]);
+        innerHtml=innerHtml.replace(/\{\{RELIGION\}\}/g,profiles[i]["religion"]);
+        innerHtml=innerHtml.replace(/\{\{MTONGUE\}\}/g,profiles[i]["mtongue"]);
 			}
     var totalPanels = Math.ceil(interestsCount/4);
 		}
     innerHtml=innerHtml+this.getCards(interestsCount,showViewAll);
-		this.containerHtml=this.containerHtml.replace(/\{\{TOTAL_NUM\}\}/gi,totalPanels);  
-		this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
-                $("#totalFilteredInterestReceived").text(totalCount);
+    this.containerHtml=this.containerHtml.replace(/\{\{TOTAL_NUM\}\}/gi,totalPanels);  
+    this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
+    $("#totalFilteredInterestReceived").text(totalCount);
     if (!totalCount){
     temp2= $(this.containerHtml.trim());
     temp2.find("#seeAllId_FILTEREDINTEREST").addClass('disp-none');
@@ -456,22 +457,26 @@ try{
 		$("#engagementContainer").addClass("disp-none");
 
     
-	if (totalPanels>=2){
+	if (totalPanels>=2)
+        {
 		listName=this.list;
 		$("#panelCounter_FILTEREDINTEREST").removeClass('disp-none');
 		$("#arrowKeys_FILTEREDINTEREST").removeClass('opa50');
 		$("#prv-"+this.list).addClass('cursp').bind(clickEventType,function(){
 			myjsSlider("prv-"+listName);
 		});
-		$("#nxt-"+this.list).addClass('cursp').click(function(){
+		$("#nxt-"+this.list).addClass('cursp').click(function()
+                {
 		  myjsSlider("nxt-"+listName);
 		});
-                topSliderInt('init');
+
+	}
+            
+            topSliderInt('init');
 	    removeOtherDiv();
 	    photo_init();
 
-	}
-	    
+            
 }
 catch(e){
   console.log('getting error '+e+' in function post of interestReceived object');
@@ -483,27 +488,22 @@ catch(e){
 
 
 filteredInterest.prototype.noResultCase = function() {
-		if(this.error){
-			this.emptyInnerHtml=this.emptyInnerHtml.replace('disp-none',"");
+		this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{ID\}\}/g,"Error"+this.name);
+		if(this.error)
 			this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Failed to Load");
-			this.innerHtml=this.emptyInnerHtml;
-			this.containerHtml=this.containerHtml.replace('boxslide','');
-		}
-		else{
-		this.innerHtml=this.getCards(0,0);
-		} 
-
-		this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,this.innerHtml);
+		else
+			this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Interests received by you which don't match your filter criteria will appear here");
+		this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,'');
 		this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_TOTAL\}\}/g,'');
-    temp2=$(this.containerHtml.trim());
-    temp2.find("#seeAllId_FILTEREDINTEREST").addClass('disp-none');
-    this.containerHtml=temp2.outerHtml();
 		$("#engagementContainer").after(this.containerHtml);
-		$("#engagementContainer").addClass("disp-none");
-		if(this.error){$("#js-FILTEREDINTEREST_List").css('width','100%');}
-                $("#arrowKeys_FILTEREDINTEREST").hide();
-
-
+		$("#engagementContainer").addClass("disp-none")
+		$("#disp_"+this.list).after(this.emptyInnerHtml);
+		$("#disp_"+this.list).remove();
+		if(!this.error)
+                    $("#Error"+this.name).remove();
+		$("#seeAll_"+this.list).remove();
+		$("#panelCounter_message").remove();
+		$("#arrowKeys_"+this.name).remove();
 }
 
 
@@ -522,13 +522,6 @@ filteredInterest.prototype.noResultCase = function() {
       return html;
 		}
                 
-		if (interestsCount==0){
-			var tempDiv=$("#noFaceCard").html();
-			tempDiv=tempDiv.replace(/\{\{ID\}\}/g,'FilteredNoTuple');
-			tempDiv=tempDiv.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Interests received by you which don't match your filter criteria will appear here");
-			tempDiv=tempDiv.replace(/\{\{display\}\}/g,"disp-none");
-                        return tempDiv;
-		}
                 return "";
 	}
 

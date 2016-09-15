@@ -38,7 +38,7 @@
 <div class="clr"></div>
 <div class="pt25">
 <div class="pos-rel clearfix fontlig">
-    <div id="seeAllId_FILTEREDINTEREST" class="pos-abs wid100 txtc myjs-pos8"><a href="/inbox/12/1" class="color12">See All <span id='seeAllFilteredCount'>{{SEE_ALL_TOTAL}}</span></a></div>
+    <div id="seeAll_FILTEREDINTEREST_List" class="pos-abs wid100 txtc myjs-pos8"><a href="/inbox/12/1" class="color12">See All <span id='seeAllFilteredCount'>{{SEE_ALL_TOTAL}}</span></a></div>
 <div class="fr myjs-wid8 clearfix opa50">
 <div id='panelCounter_FILTEREDINTEREST' class="fl color12 pt5 disp-none"><span id="slideCurrent{{type}}">1 </span> of <span id="slideTotal{{type}}">{{TOTAL_NUM}}</span> </div>
 <div id='arrowKeys_FILTEREDINTEREST' class="fr opa50"> <a id="prv-{{list_id}}" class="sprite2 myjs-ic7 disp_ib"></a> <a id="nxt-{{list_id}}" class="sprite2 myjs-ic8 disp_ib myjs-m3"></a> </div>
