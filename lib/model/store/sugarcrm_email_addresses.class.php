@@ -24,5 +24,33 @@ class sugarcrm_email_addresses extends TABLE
         }
         return $email_address;
     }
+
+    public function getEmailAddressLeadId($email_address_id_arr)
+    {
+        try{
+                        foreach($email_address_id_arr as $k=>$v)
+                        {
+                                $queryArr[]=":EMAIL_ID".$k;
+                        }
+			$queryStr = implode(",",$queryArr);
+                        $sql = "SELECT R.bean_id as leadId FROM sugarcrm.email_addresses E JOIN sugarcrm.email_addr_bean_rel R ON E.id=R.email_address_id where E.email_address IN (".$queryStr.")";
+                    $prep = $this->db->prepare($sql);
+			
+		foreach($email_address_id_arr as $k=>$v)
+		{
+                    $prep->bindValue(":EMAIL_ID".$k,$v,PDO::PARAM_STR);
+		}
+                    $prep->execute();
+                    while($res=$prep->fetch(PDO::FETCH_ASSOC))
+			$leadIdArr[] = $res['leadId'];
+		return $leadIdArr;
+        }
+
+        catch(Exception $e){
+                throw new jsException($e);
+        }
+        return $email_address;
+    }
+
 }
 ?>
