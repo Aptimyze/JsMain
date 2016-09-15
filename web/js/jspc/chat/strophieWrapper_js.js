@@ -233,7 +233,7 @@ var strophieWrapper = {
                     }
                     strophieWrapper.Roster[user_id] = rosterObj;
                     if (subscription == "to") {
-                       // console.log("subcribing");
+                       //console.log("subcribing");
                         strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
                     }
                     setTimeout(function () {
@@ -275,7 +275,8 @@ strophieWrapper.sendPresence();
     subscribe: function (jid, nick, message) {
         if (strophieWrapper.getCurrentConnStatus()) {
             var pres = $pres({
-                to: jid
+                to: jid,
+                type:"subscribe"
             });
             if (message && message !== "") {
                 pres.c("status").t(message).up();
