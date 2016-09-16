@@ -75,7 +75,9 @@ class feedbackActions extends sfActions
 			unset($tempArray);
 			# code...
 		  }
-    
+      ob_end_clean();
+      if(sizeof($resultArr) == 0 )
+          die;
       echo json_encode($resultArr);
                         return sfView::NONE;
                         die;
@@ -87,12 +89,13 @@ class feedbackActions extends sfActions
       $startDate=$request->getParameter('RAStartDate');
       $endDate=$request->getParameter('RAEndDate');
       $resultArr=(new feedbackReports())->getReportInvalidLog($startDate,$endDate);
-              if(sizeof($resultArr) == 0 )
-                die;
-               echo json_encode($resultArr);
-                        return sfView::NONE;
-                         die;
-                
+      ob_end_clean();
+      if(sizeof($resultArr) == 0 )
+          die;
+      echo json_encode($resultArr);
+      return sfView::NONE;
+      die;
+
   }
 
 
