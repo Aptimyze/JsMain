@@ -775,15 +775,26 @@ else {
 });
 // cal scripts
 var buttonClicked=0;
-    function validateUserName(name){
-        if(!name)return false;
-        
-        var arr=name.split('');
-        if(/^[a-zA-Z' .]*$/.test(name) == false)return false;
-        return true;
-        
-    }
-    function criticalLayerButtonsAction(clickAction,button) {
+
+        function validateUserName(name){
+        var name_of_user=name;
+        name_of_user = name_of_user.replace(/\.|dr|ms|mr|miss/gi, " ");
+        name_of_user = name_of_user.replace(/\,|\'/gi, "");
+        name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user))){
+                return "Please provide a valid Full Name";
+        }else{
+                var nameArr = name_of_user.split(" ");
+                if(nameArr.length<2){
+                      return "Please provide your first name along with surname, not just the first name";
+                }else{
+                     return true;
+                }
+        }
+       return true;
+     
+    }    function criticalLayerButtonsAction(clickAction,button) {
 
 
                 if(buttonClicked)return;    
@@ -793,11 +804,14 @@ var buttonClicked=0;
                     var newNameOfUser='',namePrivacy='';
                     if(layerId==9 && button=='B1')
                     {   
-                        
                         newNameOfUser = ($("#nameInpCAL").val()).trim();
-                        if(!validateUserName(newNameOfUser))
+                        validation=validateUserName(newNameOfUser);
+                        if(validation!==true)
                         {
-                            $("#CALNameErr").show();buttonClicked=0;
+                            
+                            $("#CALNameErr").text(validation);
+                            $("#CALNameErr").show();
+                            buttonClicked=0;
                             return;
                         }
                         namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';

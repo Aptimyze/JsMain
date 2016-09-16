@@ -8,12 +8,23 @@ $(document).ready(function() {
 } )
     var CALButtonClicked=0;
     
-        function validateUserName(name){
-        if(!name)return false;
-        
-        var arr=name.split('');
-        if(/^[a-zA-Z' .]*$/.test(name) == false)return false;
-        return true;
+        function validateUserName(name){        
+        var name_of_user=name;
+        name_of_user = name_of_user.replace(/\.|dr|ms|mr|miss/gi, " ");
+        name_of_user = name_of_user.replace(/\,|\'/gi, "");
+        name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user))){
+                return "Please provide a valid Full Name";
+        }else{
+                var nameArr = name_of_user.split(" ");
+                if(nameArr.length<2){
+                      return "Please provide your first name along with surname, not just the first name";
+                }else{
+                     return true;
+                }
+        }
+       return true;
      
     }
     function criticalLayerButtonsAction(clickAction,button) {
@@ -25,10 +36,10 @@ $(document).ready(function() {
                     {   
                         var newNameOfUser='',privacyShowName='';
                         newNameOfUser = ($("#nameInpCAL").val()).trim();
-                        
-                        if(!validateUserName(newNameOfUser))
+                        var validation=validateUserName(newNameOfUser)
+                        if(validation!==true)
                         {
-                            showError();
+                            showError(validation);
                             CALButtonClicked=0;
                             return;
                         }
@@ -46,8 +57,10 @@ $(document).ready(function() {
             $(id1).css('background-color','#d9475c');
             $(id2).css('background-color','#C6C6C6');
         }
-        function showError()
+        function showError(msg)
         {
+                
+              $( "#validation_error" ).text(msg);
               $( "#validation_error" ).slideDown( "slow", function() {}).delay( 800 );
               $( "#validation_error" ).slideUp( "slow", function() {});
 
