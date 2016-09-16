@@ -2437,11 +2437,11 @@ class crmMisActions extends sfActions
         $this->todayDate      = date("d");
         $this->todayMonth     = date("m");
         $this->todayYear      = date("Y");
-        $this->rangeYear      = date("Y");
+        $this->rangeYear      = date("Y")+1;
         $this->dateArr        = GetDateArrays::getDayArray();
         $this->monthArr       = GetDateArrays::getMonthArray();
         $this->yearArr        = array();
-        $dateArr              = GetDateArrays::generateDateDataForRange('2004', ($this->todayYear));
+        $dateArr              = GetDateArrays::generateDateDataForRange('2004', ($this->todayYear)+1);
         foreach (array_keys($dateArr) as $key => $value) {
             $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
         }
