@@ -15,7 +15,6 @@ public static function getReportInvalidLog($startDate,$endDate){
       }
       $j=0;
       $profileArrayForUniqueSubmitees = array();
-//print_r($reportArray);die;
       for($i=0;$i<sizeof($reportArray);$i++) {
         if(!isset($profileArrayForUniqueSubmitees[$reportArray[$i]['SUBMITTEE']]))
          $profileArrayForUniqueSubmitees[$reportArray[$i]['SUBMITTEE']] = $reportArray[$i];
@@ -41,7 +40,8 @@ public static function getReportInvalidLog($startDate,$endDate){
     if(is_array($profileArray))
     { 
 
-     $profileDetails=(new JPROFILE('newjs_slave'))->getProfileSelectedDetails($profileArray,"PROFILEID,EMAIL,USERNAME");
+     $profileDetails=(new JPROFILE('newjs_slave'))->getProfileSelectedDetails($profileArray,"PROFILEID,EMAIL,USERNAME,PHONE_MOB,PHONE_WITH_STD");
+     //var_dump($profileDetails);die;
       foreach ($reportArray as $key => $value) 
       { 
       $tempArray['submitee_id']=$profileDetails[$value['SUBMITTEE']]['USERNAME'];
@@ -49,6 +49,13 @@ public static function getReportInvalidLog($startDate,$endDate){
       $tempArray['submiter_id']=$profileDetails[$value['SUBMITTER']]['USERNAME'];
       $tempArray['comments']=$value['COMMENTS'];
       $tempArray['timestamp']=$value['SUBMIT_DATE'];
+      if($value['PHONE'] == 'Y')
+      $tempArray['phone_number'] = $profileDetails[$value['SUBMITTEE']]['PHONE_WITH_STD'];
+    elseif ($value['PHONE'] == 'N') {
+      $tempArray['phone_number'] = $profileDetails[$value['SUBMITTEE']]['PHONE_MOB'];
+      # code...
+    }
+
       $tempArray['submiter_email']=$profileDetails[$value['SUBMITTER']]['EMAIL'];
       $tempArray['submitee_email']=$profileDetails[$value['SUBMITTEE']]['EMAIL'];
       $resultArr[]=$tempArray;      
@@ -56,7 +63,6 @@ public static function getReportInvalidLog($startDate,$endDate){
       # code...
       }
     }
-
 
 return $resultArr;
 
