@@ -40,8 +40,8 @@ EOF;
 		//$start_dt = date("Y-m-d", time() - 60 * 60 * 24)." 00:00:00";
 		//$end_dt = date("Y-m-d", time() - 60 * 60 * 24)." 23:59:59";
 
-                $start_dt = date("Y-m-d H:i:s", time() - 60 * 60 * 28);
-		$end_dt = date("Y-m-d H:i:s", time() - 60 * 60 * 3);
+                $start_dt = date("Y-m-d H:i:s", time() - 60 * 60 * 27);
+		$end_dt = date("Y-m-d H:i:s", time() - 60 * 60 * 2);
 
 		$processObj->setStartDate($start_dt);
 		$processObj->setEndDate($end_dt);

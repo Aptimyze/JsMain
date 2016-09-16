@@ -2534,7 +2534,7 @@ public function fetchPincodesOfCities($cities)
     	{
                 $billingSerStatusObj    =new BILLING_SERVICE_STATUS('newjs_slave');
                 $startDate              =date("Y-m-d", time()-9*86400);
-                $endDate                =date("Y-m-d", time()+29*86400);
+                $endDate                =date("Y-m-d", time()+14*86400);
                 $profiles               =$billingSerStatusObj->getRenewalProfilesForDates($startDate,$endDate);
                 foreach($profiles as $key=>$data){
                         $profileid =$data['PROFILEID'];
