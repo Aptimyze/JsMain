@@ -46,7 +46,7 @@ class dppAction extends sfAction {
 		$this->profileId = $this->loginProfile->getPROFILEID();
 		$this->casteLabel = JsCommon::getCasteLabel($this->loginProfile);
 
-    if($request->getParameter("fromBackend")){
+    if($request->getParameter("allowLoginfromBackend")){
 				$this->fromBackend=1;
 				$this->cid=$request->getParameter("fromBackend");
 				

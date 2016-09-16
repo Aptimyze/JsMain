@@ -186,7 +186,7 @@ public function getSendersPending($profileids)
 			if($seperator == 'spaceSeperator')
 				$result.= $row["PID"]." ";
 			else
-				$result[]=$row['SENDER'];
+				$result[]=$row['PID'];
 		}
 		return $result;
 	}

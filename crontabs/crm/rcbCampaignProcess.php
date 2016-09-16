@@ -53,7 +53,7 @@ foreach($campaignArr as $key=>$campaignName)
 			$msg	="Campaign Records:".$totalRecord."# Dialer Records Inserted:".$dialerCampaignReords;	
 			mail($to,$sub,$msg,$from);
 		}
-
+		unset($startDate);
 		unset($campaignRecord);
 		unset($dialerCampaignReords);
 }

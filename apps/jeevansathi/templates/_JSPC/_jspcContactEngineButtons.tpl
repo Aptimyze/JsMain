@@ -20,7 +20,7 @@
                   </div>
 
                   <div id='commHistoryAbsent' class="f13 reportInv1 txtc">
-                        <p class="color11 f13 txtl pl75">Thank you for helping us. We will look into this and remove this number if found invalid.</p>            
+                        <p class="color11 f13 txtl pl75">Thank you for helping us.If our team finds this number invalid we will remove this number and credit you with a contact as compensation.</p>
                     </div>
                     </div>
                     </div>
