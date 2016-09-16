@@ -274,9 +274,6 @@ class Initiate extends ContactEvent{
       $this->handleMessage();
       $isFiltered = $this->_makeEntryInContactsOnce();
 
-      $viewedEntryDate = $this->viewed->getENTRY_DT();
-      $now = date("Y-m-d");
-      $dateDiff = (JSstrToTime($now) - JSstrToTime($viewedEntryDate)) / 86400;
 if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED && $this->contactHandler->getPageSource()!="AP") {
   
     try
