@@ -52,13 +52,11 @@ EOF;
       }
       
       if (!array_key_exists($sourceGroupId, $this->registrationArray[$regKey])) {
-              if (!array_key_exists($cityRES, $this->registrationArray[$regKey][$sourceGroupId])) {
-                $this->registrationArray[$regKey][$sourceGroupId][$cityRES] = $preDefArray;
-                $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['date'] = date('Y-m-d', strtotime($profile['ENTRY_DT']));
-              }
-      }else if (!array_key_exists($cityRES, $this->registrationArray[$regKey][$sourceGroupId])) {
-                $this->registrationArray[$regKey][$sourceGroupId][$cityRES] = $preDefArray;
-                $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['date'] = date('Y-m-d', strtotime($profile['ENTRY_DT']));
+              $this->registrationArray[$regKey][$sourceGroupId] =array();
+      }
+      if (!array_key_exists($cityRES, $this->registrationArray[$regKey][$sourceGroupId])) {
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES] = $preDefArray;
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['date'] = date('Y-m-d', strtotime($profile['ENTRY_DT']));
       }
       
       $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['total_reg'] ++;
