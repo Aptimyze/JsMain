@@ -201,7 +201,7 @@ class NEWJS_CONTACTS_ONCE extends TABLE
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":PROFILEID1",$receiver,PDO::PARAM_INT);
 			$res->execute();
-			while($row = $res->fetch(PDO::FETCH_ASSOC))
+			if($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
 				$output = $row;
 			}
@@ -210,7 +210,7 @@ class NEWJS_CONTACTS_ONCE extends TABLE
 		{
 		   throw new jsException($e);
 		}
-		return $output;
+		return $output['CNT'];
 
     }
 

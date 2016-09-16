@@ -312,8 +312,8 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
       } catch (Exception $e) {
         throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
       }
-
-      if ($dateDiff <= 30 && !$isFiltered && $this->contactHandler->getPageSource()!='AP') { // Instant mailer
+      $sentMailsToday=$this->_contactsOnceObj->getCountOfSentMailsToday($this->viewed->getPROFILEID());
+      if (!$isFiltered && $this->contactHandler->getPageSource()!='AP' && $sentMailsToday<5) { // Instant mailer
         $this->sendMail();
       }
       if($dateDiff <=1 ) { //Instant SMS
