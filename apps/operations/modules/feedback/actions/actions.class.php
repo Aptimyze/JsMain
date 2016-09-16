@@ -88,30 +88,24 @@ class feedbackActions extends sfActions
       $endDate=$request->getParameter('RAEndDate');
       $reportInvalidOb = new JSADMIN_REPORT_INVALID_PHONE();
       $reportArray = $reportInvalidOb->getReportInvalidLog($startDate,$endDate);
-
       foreach ($reportArray as $key => $value) 
       {
          $profileArray[]=$value['SUBMITTEE'];
          $profileArray[]=$value['SUBMITTER'];
 
       }
-      $obForUniqueSubmitees = new JSADMIN_REPORT_INVALID_PHONE();
-      $resultForUniqueSubmitees = $obForUniqueSubmitees->getUniqieSubmitees($startDate,$endDate);
-   
-      foreach ($resultForUniqueSubmitees as $key => $value) 
-      {
-         $profileArrayForUniqueSubmitees[]=$value['SUBMITTEE'];
-      # code...
+      $j=0;
+      $profileArrayForUniqueSubmitees = array();
+
+      for($i=0;$i<sizeof($reportArray);$i++) {
+      if(!in_array($reportArray[$i]['SUBMITTEE'],$profileArrayForUniqueSubmitees)) { 
+         $profileArrayForUniqueSubmitees[$j] = $reportArray[$i]['SUBMITTEE'];
+         $lastDateForProfileIds[$profileArrayForUniqueSubmitees[$j]] = $reportArray[$i]['SUBMIT_DATE'];
+         $j++;
+       }
       }
 
-
-      for($i=0;$i<sizeof($profileArrayForUniqueSubmitees);$i++)
-      {
-        $reportArrayforUniqueSubmitees = $obForUniqueSubmitees->getLatestDate($startDate,$endDate,$profileArrayForUniqueSubmitees[$i]);
-        $lastDateForProfileIds[$profileArrayForUniqueSubmitees[$i]] = $reportArrayforUniqueSubmitees["sbDate"];
-      }
      
-   
       $countArray = array();
 
       for($i=0;$i<sizeof($profileArrayForUniqueSubmitees);$i++)
@@ -144,6 +138,8 @@ class feedbackActions extends sfActions
       # code...
       }
     }
+              if(sizeof($resultArr) == 0 )
+                die;
                echo json_encode($resultArr);
                         return sfView::NONE;
                          die;

@@ -116,47 +116,6 @@ public function updateAsVerified($submittee){
     
     }
 
-       public function getUniqieSubmitees($startDate,$endDate)
-    {
-        try     
-        {   
-            $sql = "SELECT distinct SUBMITTEE from jsadmin.REPORT_INVALID_PHONE WHERE DATE(`SUBMIT_DATE`) BETWEEN :STARTDATE AND :ENDDATE ORDER BY `SUBMIT_DATE` DESC";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":STARTDATE",$startDate,PDO::PARAM_STR);
-            $prep->bindValue(":ENDDATE",$endDate,PDO::PARAM_STR);
-            $prep->execute();
-            while($row=$prep->fetch(PDO::FETCH_ASSOC))
-            $result[]=$row;
-        return $result;
-        }
-        catch(Exception $e)
-        {
-            throw new jsException($e);
-        }
-    
-    }
-
-
-  public function getLatestDate($startDate,$endDate,$profileId)
-    {
-        try     
-        {   
-            $sql = "SELECT max(SUBMIT_DATE) as sbDate from jsadmin.REPORT_INVALID_PHONE WHERE DATE(`SUBMIT_DATE`) BETWEEN :STARTDATE AND :ENDDATE AND SUBMITTEE=".$profileId ;
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":STARTDATE",$startDate,PDO::PARAM_STR);
-            $prep->bindValue(":ENDDATE",$endDate,PDO::PARAM_STR);
-            $prep->execute();
-            $result=$prep->fetch(PDO::FETCH_ASSOC);
-        return $result;
-        }
-        catch(Exception $e)
-        {
-            throw new jsException($e);
-        }
-    
-    }
-
-
 
 }
 ?>    
