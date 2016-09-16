@@ -40,6 +40,7 @@ JsChat.prototype = {
     _checkForDefaultEoiMsg:false,
     _setLastReadMsgStorage:true,
     _chatAutoLogin:true,
+    _groupBasedConfig:{},
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -128,6 +129,9 @@ JsChat.prototype = {
         }
         if (arguments[1][0].chatAutoLogin) {
             this._chatAutoLogin = arguments[1][0].chatAutoLogin;
+        }
+        if (arguments[1][0].groupBasedConfig) {
+            this._groupBasedConfig = arguments[1][0].groupBasedConfig;
         }
     },
     //start:get screen height
@@ -1036,7 +1040,7 @@ JsChat.prototype = {
                                         if($('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length != 0){
                                             $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                                         }
-                                        
+                                        curElem._reActivateChatBoxAfterUnblock(userId);
                                         curElem._enableChatTextArea($('chat-box[user-id="' + userId + '"]').attr("data-contact"),userId,getMembershipStatus());
                                         $('chat-box[user-id="' + userId + '"] .nchatic_3').css('pointer-events', "auto");
                                     } else {
@@ -1059,6 +1063,19 @@ JsChat.prototype = {
                 }
             }
         });
+    },
+    //reactivate chat box contact engine action buttons after unblock in case user does not come again in list
+    _reActivateChatBoxAfterUnblock:function(userId){
+        var curElem = this;
+        setTimeout(function(){
+            var group = $('chat-box[user-id="' + userId + '"]').attr("group-id");
+            if(typeof group!= "undefined" && curElem._groupBasedConfig[group]["reListCreationAfterUnblock"]==false){
+                if($('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated")=="false" && $('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0){
+                    //console.log("enabling chat div");
+                    curElem._setChatBoxInnerDiv(userId, $('chat-box[user-id="' + userId + '"]').attr("data-contact"));
+                }
+            }
+        },5000);
     },
     _bindUnblock: function (userId) {},
     onSendingMessage: null,
@@ -1531,6 +1548,7 @@ JsChat.prototype = {
     _setChatBoxInnerDiv: function (userId, chatBoxType,operation) {
         //this._chatLoggerPlugin();
         //this._chatLoggerPlugin("in _setChatBoxInnerDiv");
+        
         var curElem = this,
             that = this,
             new_contact_state = chatBoxType,
@@ -1576,6 +1594,7 @@ JsChat.prototype = {
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
             $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="initiateText" class="color5 pos-rel txtc fullwid nchatm85 mb20">Initiating chat will also send your interest</div>');
             $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function () {
+                //console.log("clicked sent interest");
                 if (typeof curElem.onChatBoxContactButtonsClick == "function") {
                     response = curElem.onChatBoxContactButtonsClick({
                         "receiverID": userId,

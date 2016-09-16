@@ -284,6 +284,26 @@ chatConfig.Params = {
                 "checkForPaidInitiation":true
             }
         },
+        groupBasedConfig:{
+            "dpp":{
+                "reListCreationAfterUnblock":false //whether user comes again in list after unblock
+            },
+            "shortlist":{
+                "reListCreationAfterUnblock":false
+            },
+            "acceptance":{
+                "reListCreationAfterUnblock":true
+            },
+            "mysearch":{
+                "reListCreationAfterUnblock":false
+            },
+            "intsent":{
+                "reListCreationAfterUnblock":true
+            },
+            "intrec":{
+                "reListCreationAfterUnblock":true
+            }
+        },
         //max count of nodes limit per group
         groupWiseNodesLimit: {
             "dpp": 50,
