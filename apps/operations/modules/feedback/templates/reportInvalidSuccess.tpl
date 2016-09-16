@@ -1,7 +1,7 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporteeEmail'></td><td class='RAreporter'></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td><td class='SUCount'></td></tr>";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporteeEmail'></td><td class='RAreporter'></td><td class='RAreporterEmail'></td><td class='RAcomments'></td><td class='RADate'></td><td class='SUCount'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
@@ -10,7 +10,7 @@
 		tempHtml.find('.RAreporter').text(rowJson.submiter_id);
 		tempHtml.find('.RAreporterEmail').text(rowJson.submiter_email);
 		tempHtml.find('.RAcategory').text(rowJson.reason);
-		tempHtml.find('.RAOther').text(rowJson.comments);
+		tempHtml.find('.RAcomments').text(rowJson.comments);
 		tempHtml.find('.RADate').text(rowJson.timestamp);
 		tempHtml.find('.SUCount').text(rowJson.count);
 		return tempHtml;
@@ -165,8 +165,7 @@
 <td>SUBMITEE EMAIL</td>
 <td>SUBMITER</td>
 <td>SUBMITER EMAIL</td>
-<td>CATEGORY</td>
-<td>OTHER REASON</td>
+<td>COMMENTS</td>
 <td>DATE</td>
 <td>COUNT IN LAST 90 DAYS</td>
 </tr>

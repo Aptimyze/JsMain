@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * feedback actions.
  *
@@ -14,7 +15,7 @@ class feedbackActions extends sfActions
    *
    */
   public function preExecute()
-  {
+  { 
 	  $request=sfContext::getInstance()->getRequest();     
       $this->cid=$request->getParameter("cid");
       $this->user=JsOpsCommon::getcidname($this->cid);
@@ -82,27 +83,53 @@ class feedbackActions extends sfActions
 	}
 }
   public function executeReportInvalidLog(sfWebRequest $request)
-  { 
+  {
       $startDate=$request->getParameter('RAStartDate');
       $endDate=$request->getParameter('RAEndDate');
       $reportInvalidOb = new JSADMIN_REPORT_INVALID_PHONE();
       $reportArray = $reportInvalidOb->getReportInvalidLog($startDate,$endDate);
-  
+
       foreach ($reportArray as $key => $value) 
       {
          $profileArray[]=$value['SUBMITTEE'];
          $profileArray[]=$value['SUBMITTER'];
+
+      }
+      $obForUniqueSubmitees = new JSADMIN_REPORT_INVALID_PHONE();
+      $resultForUniqueSubmitees = $obForUniqueSubmitees->getUniqieSubmitees($startDate,$endDate);
+   
+      foreach ($resultForUniqueSubmitees as $key => $value) 
+      {
+         $profileArrayForUniqueSubmitees[]=$value['SUBMITTEE'];
       # code...
       }
-  
+
+
+      for($i=0;$i<sizeof($profileArrayForUniqueSubmitees);$i++)
+      {
+        $reportArrayforUniqueSubmitees = $obForUniqueSubmitees->getLatestDate($startDate,$endDate,$profileArrayForUniqueSubmitees[$i]);
+        $lastDateForProfileIds[$profileArrayForUniqueSubmitees[$i]] = $reportArrayforUniqueSubmitees["sbDate"];
+      }
+     
+   
+      $countArray = array();
+
+      for($i=0;$i<sizeof($profileArrayForUniqueSubmitees);$i++)
+      { 
+         $timeOfMarking = ($lastDateForProfileIds[$profileArrayForUniqueSubmitees[$i]]);
+         $date = new DateTime($timeOfMarking);
+         $date->sub(new DateInterval('P90D')); //get the date which was 90 days ago
+         $lastDateToCheck = $date->format('Y-m-d H:i:s');
+         $profileId = $profileArrayForUniqueSubmitees[$i];
+         $countLast90Days= (new JSADMIN_REPORT_INVALID_PHONE('newjs_slave'))->getReportInvalidCount($profileId,$timeOfMarking,$lastDateToCheck);
+         $countArray[$profileId] = $countLast90Days;
+
+      }
 
     if(is_array($profileArray))
     { 
-      $daysForCount = 90;
-      $countArray= (new JSADMIN_REPORT_INVALID_PHONE('newjs_slave'))->getReportInvalidCount($profileArray,$daysForCount);
-//die("no");
-      $profileDetails=(new JPROFILE())->getProfileSelectedDetails($profileArray,"PROFILEID,EMAIL,USERNAME");
 
+     $profileDetails=(new JPROFILE('newjs_slave'))->getProfileSelectedDetails($profileArray,"PROFILEID,EMAIL,USERNAME");
       foreach ($reportArray as $key => $value) 
       { 
       $tempArray['submitee_id']=$profileDetails[$value['SUBMITTEE']]['USERNAME'];
@@ -110,7 +137,6 @@ class feedbackActions extends sfActions
       $tempArray['submiter_id']=$profileDetails[$value['SUBMITTER']]['USERNAME'];
       $tempArray['comments']=$value['COMMENTS'];
       $tempArray['timestamp']=$value['SUBMIT_DATE'];
-      $tempArray['comments']=$value['OTHER_REASON'];
       $tempArray['submiter_email']=$profileDetails[$value['SUBMITTER']]['EMAIL'];
       $tempArray['submitee_email']=$profileDetails[$value['SUBMITTEE']]['EMAIL'];
       $resultArr[]=$tempArray;      
@@ -118,11 +144,9 @@ class feedbackActions extends sfActions
       # code...
       }
     }
-     // print_r($resultArr);
-      //die("correctly done");
-        echo json_encode($resultArr);
+               echo json_encode($resultArr);
                         return sfView::NONE;
-                        die;
+                         die;
                 
   }
 
