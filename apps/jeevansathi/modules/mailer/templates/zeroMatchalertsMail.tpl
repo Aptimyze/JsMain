@@ -2,9 +2,6 @@
 <body>
     <table border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" style="border:1px solid #dcdcdc; max-width:650px; text-align:left" align="center">
         <tr>
-            <td colspan="3"><img src="~JsConstants::$ser2Url`/mailer/openRate?checksum=~$data.RECEIVER.PROFILECHECKSUM`&logic_used=~$data.logic`&sent_date=~$data.OpenTracking.sentDate`&freq=~$data.OpenTracking.frequency`&email=~$data.OpenTracking.emailType`&stype=~$data.stypeMatch`" width="0" height="0" vspace="0" hspace="0" align="left"></td>
-        </tr>
-        <tr>
             <td style="border-bottom:1px solid #ededed">
 			~include_partial("global/mailer_sub_header",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,mailerLinks=>$mailerLinks])`
             </td>
@@ -50,20 +47,6 @@
                         <td width="22"><img src="~sfConfig::get('app_img_url')`/images/symfonyMailer/spacer.gif" width="6" height="1" vspace="0" hspace="0" align="left" /></td>
                     </tr>
                     <tr>
-                        <td colspan="3" height="10"></td>
-                    </tr>
-                    ~if $data.COUNT gt 1 || $data.MEMBERSHIP.vd`
-                    <tr>
-                        <td colspan="3" align="center">
-                            ~if $data.MEMBERSHIP.vd`
-				 ~include_partial("global/mailerVD",[vd=>$data.MEMBERSHIP.vd,commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,profilechecksum=>$data.RECEIVER.PROFILECHECKSUM,tracking=>$data.MEMBERSHIP.tracking,mailerLinks=>$mailerLinks])`
-                            ~elseif $data.APP.ANDROID.ICON eq 1`
-	                            ~include_partial("global/mailerAndroidApp",[mailerLinks=>$mailerLinks,data=>$data.APP])`
-                            ~/if`
-                        </td>
-                    </tr>
-                    ~/if`
-                    <tr>
                         <td colspan="3" height="27"></td>
                     </tr>
                     <tr>
@@ -94,5 +77,4 @@
             </td>
         </tr>
     </table>
-    <img src="~sfConfig::get('app_site_url')`/track.php?MAILER_ID=~$instanceID`" style="display:none !important;overflow:hidden;line-height:0"></img>
 </body>

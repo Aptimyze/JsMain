@@ -13,10 +13,10 @@ class LowDppMatchesCheck
 	@param - profileid value, skipped type
 	@return - count
 	*/
-	public function getProfilesWithInformLimitReached($date)
+	public function getProfilesWithInformLimitReached($date,$totalScripts,$currentScript)
 	{
 		$lowMatchesCheckObj = new matchalerts_LowDppMatchalertsCheck();
-                $profilesArr = $lowMatchesCheckObj->getProfilesWithInformLimitReached($date,$this->informTimes);
+                $profilesArr = $lowMatchesCheckObj->getProfilesWithInformLimitReached($date,$totalScripts,$currentScript,$this->informTimes);
                
                 return $profilesArr;
 	}
@@ -52,6 +52,17 @@ class LowDppMatchesCheck
                 $lowMatchesCheckObj = new matchalerts_LowDppMatchalertsCheck();
                 $profilesArr = $lowMatchesCheckObj->getProfilesWithZeroMatches($totalScript,$currentScript,date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . "-1 day" )));
                 return $profilesArr;
+                
+        }
+        
+        /*
+        This function checks for low results and inserts rows accordingly
+        @param -  profileid,date,totalResults
+        */
+	public function updateSent($profileid,$sent)
+	{
+                $lowMatchesCheckObj = new matchalerts_LowDppMatchalertsCheck();
+                $profilesArr = $lowMatchesCheckObj->updateSent($profileid,$sent);
                 
         }
 }

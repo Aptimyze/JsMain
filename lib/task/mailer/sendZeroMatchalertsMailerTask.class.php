@@ -43,6 +43,7 @@ EOF;
         $lowMatchesCheckObj = new LowDppMatchesCheck();
         $profilesZeroMatches = $lowMatchesCheckObj->getProfilesWithZeroMatches($totalScript,$currentScript);
         
+        if(is_array($profilesZeroMatches))
         foreach($profilesZeroMatches as $key=>$val){
             $profileObj = LoggedInProfile::getInstance('',$val);
             $profileObj->getDetail('','','*');
@@ -70,7 +71,8 @@ EOF;
             
             $mailerServiceObj->loadPartials();
             $msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
-            $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$val);
+            $status = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$val);
+            $lowMatchesCheckObj->updateSent($val,$status);
         }
   }
 

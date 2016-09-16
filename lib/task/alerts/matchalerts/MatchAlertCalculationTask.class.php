@@ -43,7 +43,7 @@ EOF;
                 $profilesWithLimitReached=array();
                 $lowMatchesCheckObj = new LowDppMatchesCheck();
                 $dateToCheck= date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . "-1 month" ) );
-                $profilesWithLimitReached = $lowMatchesCheckObj->getProfilesWithInformLimitReached($dateToCheck);
+                $profilesWithLimitReached = $lowMatchesCheckObj->getProfilesWithInformLimitReached($dateToCheck,$totalScripts,$currentScript);
                 
 
 		$flag=1;
@@ -54,7 +54,7 @@ EOF;
 			*/
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
-                        //$arr = array(7043932=>1);
+                        //$arr = array(7043932=>1,144111=>1);
 			if(is_array($arr))
 			{
 				foreach($arr as $profileid=>$v)
