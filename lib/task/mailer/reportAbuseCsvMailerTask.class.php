@@ -26,6 +26,16 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
+
+    $this->executeCSVforReportInvalid();
+    $this->executeCSVforReportAbuse();
+
+           
+  }
+
+private function executeCSVforReportAbuse()
+  {
+
    //This is the function which is executed when csv for report abuse is required.
     $yesterdayDate=date('Y-m-d',strtotime("-1 day"));
     $reportArray=(new REPORT_ABUSE_LOG)->getReportAbuseLog($yesterdayDate,$yesterdayDate);
@@ -50,12 +60,8 @@ EOF;
     }
   
     SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Report Abuse Summary for $yesterdayDate","noreply@jeevansathi.com",'','',$data,'','reportAbuse_'.$yesterdayDate.".csv");
-    $this->executeCSVforReportInvalid();
-    
-           
-  }
- 
-protected function executeCSVforReportInvalid($arguments = array(), $options = array())
+ }
+private function executeCSVforReportInvalid()
   {
     //This is the function which is executed when csv for Mark Invalid is required.
     $yesterdayDate=date('Y-m-d',strtotime("-1 day"));
@@ -63,51 +69,16 @@ protected function executeCSVforReportInvalid($arguments = array(), $options = a
     $data="SUBMITEE,SUBMITER,SUBMITEE_EMAIL,SUBMITER_EMAIL,COMMENTS,DATE,COUNT_IN_LAST_90_DAYS\r\n";
 
      $startDate=$yesterdayDate;
-      $endDate=$yesterdayDate;
-      $reportInvalidOb = new JSADMIN_REPORT_INVALID_PHONE();
-      $reportArray = $reportInvalidOb->getReportInvalidLog($startDate,$endDate);
-      foreach ($reportArray as $key => $value) 
-      {
-         $profileArray[]=$value['SUBMITTEE'];
-         $profileArray[]=$value['SUBMITTER'];
-
-      }
-      $j=0;
-      $resultForUniqueSubmitees = array();
-   
-      for($i=0;$i<sizeof($reportArray);$i++) {
-      if(!in_array($reportArray[$i]['SUBMITTEE'],$profileArrayForUniqueSubmitees)) { 
-         $profileArrayForUniqueSubmitees[$j] = $reportArray[$i]['SUBMITTEE'];
-         $lastDateForProfileIds[$profileArrayForUniqueSubmitees[$j]] = $reportArray[$i]['SUBMIT_DATE'];
-         $j++;
-       }
-      }     
-      $countArray = array();
-
-      for($i=0;$i<sizeof($profileArrayForUniqueSubmitees);$i++)
-      { 
-         $timeOfMarking = ($lastDateForProfileIds[$profileArrayForUniqueSubmitees[$i]]);
-         $date = new DateTime($timeOfMarking);
-         $date->sub(new DateInterval('P90D')); //get the date which was 90 days ago
-         $lastDateToCheck = $date->format('Y-m-d H:i:s');
-         $profileId = $profileArrayForUniqueSubmitees[$i];
-         $countLast90Days= (new JSADMIN_REPORT_INVALID_PHONE('newjs_slave'))->getReportInvalidCount($profileId,$timeOfMarking,$lastDateToCheck);
-         $countArray[$profileId] = $countLast90Days;
-
-      }
+     $endDate=$yesterdayDate;
+      $reportArray= (new feedbackReports())->getReportInvalidLog($startDate,$endDate);
      
-    if(is_array($profileArray))
-    { 
 
-     $profileDetails=(new JPROFILE('newjs_slave'))->getProfileSelectedDetails($profileArray,"PROFILEID,EMAIL,USERNAME");
       foreach ($reportArray as $key => $value) 
       { 
-      $data.="\r\n".$profileDetails[$value['SUBMITTEE']]['USERNAME'].",".$profileDetails[$value['SUBMITTER']]['USERNAME'].','.$profileDetails[$value['SUBMITTEE']]['EMAIL'].','.$profileDetails[$value['SUBMITTER']]['EMAIL'].','.$value['COMMENTS'].','.$value['SUBMIT_DATE'].','.$countArray[$value['SUBMITTEE']];
+      $data.="\r\n".$value['submitee_id'].",".$value['submiter_id'].','.$value['submitee_email'].','.$value['submiter_email'].','.$value['comments'].','.$value['timestamp'].','.$value['count'];
       # code...
       }
-    }
-  
-    SendMail::send_email('ayush.sethi@jeevansathi.com',"Please find the attached CSV file.","Report Abuse Summary for $yesterdayDate","noreply@jeevansathi.com",'','',$data,'','MarkInvalid_'.$yesterdayDate.".csv");
+    SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Report Invalid Summary for $yesterdayDate","noreply@jeevansathi.com",'','',$data,'','MarkPhoneInvalid_'.$yesterdayDate.".csv");
            
   }
  
