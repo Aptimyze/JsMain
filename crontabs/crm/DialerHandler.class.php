@@ -90,7 +90,7 @@ class DialerHandler
         {
                 $profileid_str = @implode(",",$profiles_array);
                 if($profileid_str){
-                        $sql = "SELECT PROFILEID,MAX(EXPIRY_DT) EXPIRY_DT from billing.SERVICE_STATUS WHERE PROFILEID IN ($profileid_str) group by PROFILEID";
+                        $sql = "SELECT PROFILEID,MAX(EXPIRY_DT) EXPIRY_DT from billing.SERVICE_STATUS WHERE PROFILEID IN ($profileid_str) AND SERVEFOR LIKE '%F%' group by PROFILEID";
                         $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
                         while($row = mysql_fetch_array($res)){
                                 $pid = $row["PROFILEID"];
@@ -103,7 +103,7 @@ class DialerHandler
         }
 	public function stop_non_eligible_profiles($campaign_name,$x,$ignore_array,$discount_profiles)
 	{
-		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,DISCOUNT_PERCENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID%10=$x";
+		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,DISCOUNT_PERCENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID%10=$x";
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logerror($squery1,$this->db_dialer);
 		while($srow1 = mssql_fetch_array($sresult1))
 		{
