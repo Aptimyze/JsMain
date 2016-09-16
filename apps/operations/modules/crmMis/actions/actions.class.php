@@ -2485,17 +2485,17 @@ class crmMisActions extends sfActions
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
                 	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
-                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
-                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
-                	list($ee10Cnt, $ee10billidArr) = $billPurObj->getRenewedProfilesBillidInEE10($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
-                	list($e10Cnt, $e10billidArr) = $billPurObj->getRenewedProfilesBillidInE10($profileid, $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($ee10Cnt, $ee10billidArr) = $billPurObj->getRenewedProfilesBillidInEE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($e10Cnt, $e10billidArr) = $billPurObj->getRenewedProfilesBillidInE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
                 	$misData[$pd['EXPIRY_DT']]['renewE30'][$pd['BILLID']] = $e30Cnt;
                 	$misData[$pd['EXPIRY_DT']]['renewE30E'][$pd['BILLID']] = $e30eCnt;
                 	$misData[$pd['EXPIRY_DT']]['renewEE10'][$pd['BILLID']] = $ee10Cnt;
                 	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
                 	$allBillids = array_unique(array_merge($e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr));
                 	if (!empty($allBillids)){
-                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr();
+                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($allBillids);
                 	} else {
                 		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = 0;
                 	}
@@ -2533,35 +2533,41 @@ class crmMisActions extends sfActions
                 	$this->totData['renewEE10'] += $val['renewEE10'];
                 	$this->totData['renewE10'] += $val['renewE10'];
                 	$this->totData['tsrc'] += $val['tsrc'];
-                	$this->totData['convPerc'] += $val['convPerc'];
                 	$this->totData['totalRev'] += $val['totalRev'];
                 }
+                $this->totData['convPerc'] = round($this->totData['tsrc']/$this->totData['expiry'], 2)*100;
                 
                 if($formArr["report_format"]=="XLS")
                 {   
-                	if($formArr["range_format"]=="MY"){
-                                $string .= "For_".$monthArr[$formArr["monthValue"]]."-".$formArr["yearValue"];
-                        } else {
-                                $string .= $start_date."_to_".$end_date;
+            		if($formArr["range_format"]=="MY"){
+                            $string .= "For_".$monthArr[$formArr["monthValue"]]."-".$formArr["yearValue"];
+                    } else {
+                            $string .= $start_date."_to_".$end_date;
+                    }
+                    $columns = array('expiry'=>'Number of subscriptions expiring','renewE30'=>'Number of subscriptions renewed before E-30','renewE30E'=>'Number of subscriptions renewed on [E-30 - E]','renewEE10'=>'Number of subscriptions renewed on ]E - E+10]','renewE10'=>'Number of subscriptions renewed after E+10','tsrc'=>'Total subscriptions renewed as of current date','convPerc'=>'Conversion %','totalRev'=>'Total Revenue from renewed subscriptions');
+                    if($this->misData && is_array($this->misData))
+					{
+						$headerString = "Metric\t";
+                        foreach ($this->misData as $key=>$val) {
+                        	$headerString .= "{$key}\t";	
                         }
-                        $headerString = "Executive\tNo. of RCB Allocations\tUsers who paid within 15 days\tTicket Size(Net of TAX) in RS\r\n";
-                        if($this->misData && is_array($this->misData))
-						{
-							foreach($this->misData as $k=>$v)
-							{
-								$dataString = $dataString.$k."\t";
-								$dataString = $dataString.$v["count"]."\t";
-								$dataString = $dataString.$v["paid"]."\t";
-								$dataString = $dataString.$v["revenue"]."\r\n";
+                        $headerString .= "Total\r\n";
+                        $dates = array_keys($this->misData);
+                        foreach ($columns as $key=>$name) {
+                        	$dataString = $dataString.$name."\t";
+							foreach ($dates as $k=>$date) {
+								$dataString = $dataString.$this->misData[$date][$key]."\t";
 							}
+							$dataString = $dataString.$this->totData[$key]."\r\n";
 						}
-						$xlData = $headerString.$dataString;
-		                header("Content-Type: application/vnd.ms-excel");
-		                header("Content-Disposition: attachment; filename=RCB_Sales_Conversion_Executive_MIS.xls");
-		                header("Pragma: no-cache");
-		                header("Expires: 0");
-		                echo $xlData;
-                        die;
+					}
+					$xlData = $headerString.$dataString;
+	                header("Content-Type: application/vnd.ms-excel");
+	                header("Content-Disposition: attachment; filename=Renewal_Conversion_MIS.xls");
+	                header("Pragma: no-cache");
+	                header("Expires: 0");
+	                echo $xlData;
+                    die;
                 } else {
                 	$this->setTemplate('renewalConversionMISScreen1');
                 }
