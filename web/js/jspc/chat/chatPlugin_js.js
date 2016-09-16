@@ -1107,6 +1107,7 @@ JsChat.prototype = {
     },
     //sending chat
     _bindSendChat: function (userId) {
+        console.log("_bindSendChat");
         var _this = this,
             that = this,
             messageId,
@@ -1171,8 +1172,12 @@ JsChat.prototype = {
                         if (_this.onSendingMessage && typeof (_this.onSendingMessage) == "function") {
                             var groupId = $('chat-box[user-id="' + userId + '"]').attr("group-id");
                             var profileChecksum = $(".chatlist li[id='" + userId + "_" + groupId + "']").attr("data-checks");
+                            if($(".chatlist li[id='" + userId + "_" + groupId + "']").length == 0){
+                                profileChecksum = $('chat-box[user-id="' + userId + '"]').attr("data-checks");
+                            }
                             var msgSendOutput = _this.onSendingMessage(text, $('chat-box[user-id="' + userId + '"]').attr("data-jid"), profileChecksum, $('chat-box[user-id="' + userId + '"]').attr("data-contact"));
-                            //console.log("got response");
+                            //console.log("got response",msgSendOutput);
+                            
                             messageId = msgSendOutput["msg_id"];
                             //that._chatLoggerPlugin("handling output of onSendingMessage in plugin");
                             if (messageId) {
