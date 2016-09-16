@@ -1,0 +1,8 @@
+use matchalerts;
+
+CREATE TABLE `LOW_DPP_MATCHALERTS_CHECK` (
+ `ID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+ `PROFILEID` int(11) NOT NULL,
+ `DATE` datetime NOT NULL,
+ PRIMARY KEY (`ID`)
+);

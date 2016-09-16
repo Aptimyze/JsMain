@@ -1,10 +1,5 @@
 ~include_partial("global/mailerheader")`
 <body>
-		 <table align="center" style="font-size: 11px;">
-        <tr>
-            <td>Please add ~$mailerName` to your address book to ensure delivery of this mail into your inbox</td>
-        </tr>
-     </table>
     <table border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" style="border:1px solid #dcdcdc; max-width:650px; text-align:left" align="center">
         <tr>
             <td colspan="3"><img src="~JsConstants::$ser2Url`/mailer/openRate?checksum=~$data.RECEIVER.PROFILECHECKSUM`&logic_used=~$data.logic`&sent_date=~$data.OpenTracking.sentDate`&freq=~$data.OpenTracking.frequency`&email=~$data.OpenTracking.emailType`&stype=~$data.stypeMatch`" width="0" height="0" vspace="0" hspace="0" align="left"></td>
@@ -35,9 +30,6 @@
                                         <table border="0" cellspacing="0" cellpadding="0" style="max-width:540px;font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;" align="left">
                                             <tr>
                                                 <td width="540">~$data.body`
-                                                ~if $data.bodyNote neq null`
-                                                   <div style="padding-top: 5px;"> ~$data.bodyNote`</div>    
-                                                ~/if`
                                                 ~if $data.showDpp eq 1`
                                                         <div><div style="padding-top: 5px;"><a href="~$mailerLinks['MY_DPP']`~$data.commonParamaters`?From_Mail=Y&EditWhatNew=FocusDpp&stype=~$data.stypeMatch`&logic_used=~$data.logic`" target="_blank" style="text-decoration:none; color:#0f529d; display:inline-block;" title="Edit Desired Partner Profile">Edit Desired Partner Profile</a></div></div>
                                                 ~/if`
@@ -69,97 +61,6 @@
 	                            ~include_partial("global/mailerAndroidApp",[mailerLinks=>$mailerLinks,data=>$data.APP])`
                             ~/if`
                         </td>
-                    </tr>
-                    ~/if`
-                    <tr>
-                        <td colspan="3" height="10"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                        	~include_partial("global/mailerSurvey",[surveyLink=>$data.surveyLink])`
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" height="10"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                        	~include_partial("global/mailerTupleContent",[users=>$data.USERS,logic=>$data.logic,commonParameters=>$data.commonParamaters,stypeMatch=>$data.stypeMatch,count=>$data.COUNT,mailerLinks=>$mailerLinks])`
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" height="10"></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            	<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="text-align:left;">
-                                	<tr>
-                                    		<td>
-                                        		<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                            		<tr>
-                                                	<td height="10" style="border-top:1px solid #eae9e9"><img src="~sfConfig::get('app_img_url')`/images/symfonyMailer/spacer.gif" width="6" height="10" vspace="0" hspace="0" align="left" /></td>
-                                            		</tr>
-                                        		</table>
-                                    		</td>
-                                	</tr>
-                                    <tr>
-                                    <td>
-                                    <!--FeedBack section :Start-->
-                                     ~include_partial("global/mailerFeedback",[commonParamaters=>$data.commonParamaters,stype=>$data.stypeMatch,profilechecksum=>$data.RECEIVER.PROFILECHECKSUM,mailerLinks=>$mailerLinks,mailSentDate=>$data.mailSentDate])`
-                                    </td>
-                                    </tr>
-                                    <!--FeedBack section :End-->
-                            ~if $data.GifFlag eq 1`
-                            <tr>
-                                <td>~include_partial("global/primaryMailGif")`</td>
-                            </tr><br>
-                            ~else`
-
-                        	~if $data.MEMBERSHIP.membership eq 0 || ( $data.MEMBERSHIP.membership eq 1 && $data.MEMBERSHIP.renew.RENEW eq 1)`
-                                	<tr>
-                                    		<td style="padding-left:10px;">
-                                        	~include_partial("global/mailerUpgrade",[vd=>$data.MEMBERSHIP.vd,membership=>$data.MEMBERSHIP.membership,renew=>$data.MEMBERSHIP.renew,commonParameters=>$data.commonParamaters,receiverProfilechecksum=>$data.RECEIVER.PROFILECHECKSUM,stypeMatch=>$data.stypeMatch,discount=>$data.MEMBERSHIP.tracking,mailerLinks=>$mailerLinks])`
-                                    		</td>
-                                	</tr>
-                                	<tr>
-                                    		<td>
-                                        	<table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
-                                            	<tr>
-                                                <td height="10" style="border-bottom:1px solid #eae9e9"><img src="~sfConfig::get('app_img_url')`/images/symfonyMailer/spacer.gif" width="6" height="10" vspace="0" hspace="0" align="left" /></td>
-                                            	</tr>
-                                        	</table>
-                                    		</td>
-                                	</tr>
-                                ~/if`
-                                ~/if`
-                            	</table>
-                        </td>
-                        <td></td>
-                    </tr>
-                    ~if $data.DPP neq NULL`
-                        <tr>
-                            <td></td>
-                            <td>
-                                <table border="0" cellpadding="0" cellspacing="0" align="left" style="font-family:Arial; font-size:12px; color:#000000;" width="100%">
-                                    <tr>
-                                        <td height="39" valign="bottom">
-                                            Looking for more relevant matches? <a href="~$mailerLinks['MY_DPP']`~$data.commonParamaters`?From_Mail=Y&EditWhatNew=FocusDpp&stype=~$data.stypeMatch`&logic_used=~$data.logic`" target="_blank" style="text-decoration:none; color:#0f529d; display:inline-block;">See/Edit your desired partner profile</a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td></td>
-                        </tr>
-                    <tr>
-                        <td colspan="3" height="6"></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                                ~include_partial("global/mailerDpp",[DPP=>$data.DPP])`
-                        </td>
-                        <td></td>
                     </tr>
                     ~/if`
                     <tr>
