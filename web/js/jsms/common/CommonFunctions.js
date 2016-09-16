@@ -430,7 +430,7 @@ function ShowTopDownError(jsonError,timeToHide)
             }
         },10);
 	setTimeout(function(){$(".errClass").removeClass("showErr");
-		setTimeout(function(){$(".errClass").remove();},timeToHide);
+		setTimeout(function(){$(".errClass").remove();},100);
 		startTouchEvents(1);
 		},timeToHide);
 	
