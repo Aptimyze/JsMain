@@ -61,7 +61,7 @@ $(document).ready(function() {
         {
                 
               $( "#validation_error" ).text(msg);
-              $( "#validation_error" ).slideDown( "slow", function() {}).delay( 800 );
+              $( "#validation_error" ).slideDown( "slow", function() {}).delay( 3000 );
               $( "#validation_error" ).slideUp( "slow", function() {});
 
 
