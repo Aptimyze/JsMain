@@ -272,8 +272,9 @@ class Initiate extends ContactEvent{
 
       $this->contactHandler->setElement(CONTACT_ELEMENTS::STATUS,"I");
       $this->handleMessage();
+      $this->_contactsOnceObj = new NEWJS_CONTACTS_ONCE();
       $sentMailsToday=$this->_contactsOnceObj->getCountOfSentMailsToday($this->viewed->getPROFILEID());
-      if($sentMailsToday['CNT']<5)
+      if($sentMailsToday<5)
           $this->_sendMail='Y';
       else
           $this->_sendMail='N';
@@ -318,7 +319,7 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
       } catch (Exception $e) {
         throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
       }
-      
+
       if (!$isFiltered && $this->contactHandler->getPageSource()!='AP' && $this->_sendMail=='Y') { // Instant mailer
         $this->sendMail();
       }
@@ -545,7 +546,6 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
    */
   private function _makeEntryInContactsOnce() {
 
-    $this->_contactsOnceObj = new NEWJS_CONTACTS_ONCE();
 
     if ($this->_contactsOnceObj) {
     $presetMessage = PresetMessage::getPresentMessage($this->viewer,CONTACTHANDLER::INITIATED);
