@@ -46,8 +46,8 @@
     <div class="edwid1 mauto">
         <div class="pt28 pb20 fontlig wid90p txtc">
             <div class="wid77p disp_ib txtl">
-                <div class="f18">Recieve matches based on the history of your interests and acceptances</div>
-                <div class="f14 pt10 color6">These matches may not fully fulfil your Desired Partner Preference.</div>
+                <div class="f18">Also send me matches outside my Desired Partner Profile</div>
+                <div class="f14 pt10 color6">If this is 'ON', you may receive recommendations based on your activity which can be outside your Desired Partner Profile</div>
             </div>
             <div class="fr">
                 <div class="pos-rel fr clearfix outerbox mrneg35">
