@@ -34,7 +34,8 @@ EOF;
       }
       sleep(60);
     }
-    $registerDate = date('Y-m-d', strtotime('- ' . $this->screenDate . ' day')) . " 00:00:00";
+      $registerDate = date('Y-m-d', strtotime('- ' . $this->screenDate . ' day')) . " 00:00:00";
+    //$registerDate ="2016-06-01 00:00:00";
     $profiles = $jprofileObj->getProfileQualityRegistationData($registerDate);
     
     foreach ($profiles as $profile) {
@@ -44,21 +45,30 @@ EOF;
       } else {
         $sourceGroupId = $profile["SOURCE"];
       }
-      if (!array_key_exists($sourceGroupId, $this->registrationArray[$regKey])) {
-        $this->registrationArray[$regKey][$sourceGroupId] = $preDefArray;
-        $this->registrationArray[$regKey][$sourceGroupId]['date'] = date('Y-m-d', strtotime($profile['ENTRY_DT']));
+      if ($profile['SOURCECITY'] == '' || is_null($profile['SOURCECITY'])) {
+        $cityRES = 'BlankCITY';
+      } else {
+        $cityRES = $profile["SOURCECITY"];
       }
       
-      $this->registrationArray[$regKey][$sourceGroupId]['total_reg'] ++;
+      if (!array_key_exists($sourceGroupId, $this->registrationArray[$regKey])) {
+              $this->registrationArray[$regKey][$sourceGroupId] =array();
+      }
+      if (!array_key_exists($cityRES, $this->registrationArray[$regKey][$sourceGroupId])) {
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES] = $preDefArray;
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['date'] = date('Y-m-d', strtotime($profile['ENTRY_DT']));
+      }
+      
+      $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['total_reg'] ++;
       if (in_array($profile['MTONGUE'], $this->SIC)){
-        $this->registrationArray[$regKey][$sourceGroupId]['screened_SIC'] ++;
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['screened_SIC'] ++;
       }
       if (($profile['GENDER'] == 'F' && $profile['AGE'] >= 22) || ($profile['GENDER'] == 'M' && $profile['AGE'] >= 26)) {
-        $this->registrationArray[$regKey][$sourceGroupId][$profile['GENDER']] ++;
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER']] ++;
         $mobVerified = $this->verifyMobile($profile['MV']);
         if($mobVerified == 1){
-          $this->registrationArray[$regKey][$sourceGroupId][$profile['GENDER'].'MV'] ++;
-          $this->registrationArray[$regKey][$sourceGroupId][$profile['GENDER'].'MVCC'] += $this->verifyCC($profile['MTONGUE']);
+          $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER'].'MV'] ++;
+          $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER'].'MVCC'] += $this->verifyCC($profile['MTONGUE']);
         }
       }
     }

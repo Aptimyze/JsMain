@@ -10003,6 +10003,9 @@ $arr["Non-Graduate"]["Trade School"] = "24";
 $arr["Non-Graduate"]["Diploma"] = "9";
 $arr["Others"]["Other"] = "22";
 break;
+        case "qualityMis_top_cities":
+                $arr = array("DE00","MH04","KA02","MH08","WB05","AP03","UP19","GU01","HA03","PH00","RA07","MH05","TN02","PU07","MP08","MP02","BI06","UP18","UP12","UP47","UP30","GU10","UP03","UP01","GU04","UK05","HA02","PU01","PU10","OR01");
+                break;
 default:
 
 				break;
