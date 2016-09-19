@@ -97,6 +97,12 @@ class EditDetails{
 			if(MobileCommon::isApp()){
 				$myProfileArr["ScreeningMessage"]="under screening";
 				$myProfileArr["c_care"]="18004196299";
+                                $newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+                                $cnt_logic = $newjsMatchLogicObj->getPresentLogic($actionObj->loginProfile->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
+                                if($cnt_logic>0)
+                                        $myProfileArr["toggleMatchalert"] = "dpp";
+                                else
+                                        $myProfileArr["toggleMatchalert"] = "new";
 			}
 
                 //To get complete your profile Links on page save
