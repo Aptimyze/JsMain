@@ -161,6 +161,7 @@ class ApiRequestCallbackV1Action extends sfActions
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
                     $responseData['status'] = 'success';
                     $responseData['successMsg'] = 'We shall call you at the earliest';
+                    $apiResponseHandlerObj->setResponseBody($responseData);
                 } else {
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $apiResponseHandlerObj->setResponseBody("Please enter a valid Query Type");
@@ -174,9 +175,9 @@ class ApiRequestCallbackV1Action extends sfActions
         } else {
             $responseData['status'] = 'ready';
             $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+            $apiResponseHandlerObj->setResponseBody($responseData);
         }
         // Sending API Response
-        $apiResponseHandlerObj->setResponseBody($responseData);
         $apiResponseHandlerObj->generateResponse();
         if($internal == 1){
         	return sfView::NONE;
