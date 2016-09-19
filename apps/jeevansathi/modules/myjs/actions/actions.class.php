@@ -317,12 +317,16 @@ class myjsActions extends sfActions
   
 		$this->FTUdata = array();
 		$this->FTUdata['gender'] = $this->loginProfile->getDecoratedGender();
-		$this->FTUdata['DOB'] = $this->loginProfile->getDTOFBIRTH();
 		$this->FTUdata['maritalStatus'] = $this->loginProfile->getDecoratedMaritalStatus();
 		$this->FTUdata['religion'] = $this->loginProfile->getDecoratedRELIGION();
-		print_r($this->FTUdata);die;
+		$dateOfBirth = $this->loginProfile->getDTOFBIRTH();
+		$dob=date_create($dateOfBirth);
+		$dob = explode("/",date_format($dob,"d/M/Y"));
+		$this->FTUdata['DOB']['day'] = $dob[0];
+		$this->FTUdata['DOB']['month'] = $dob[1];
+		$this->FTUdata['DOB']['year'] = $dob[2];
+	//	$this->tempArr=$this->FTUdata;
 
-//		die(z);
 
 // Data for Important Field Section in FTU template ends
 

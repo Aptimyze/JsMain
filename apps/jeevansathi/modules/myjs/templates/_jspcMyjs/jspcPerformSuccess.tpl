@@ -105,7 +105,7 @@
                 </div>
             </div>
 </header>
-<div class="bg-4">~if $showFtu eq 1`~include_partial("myjs/jspcMyjs/FTU" ,['profilePic'=>$profilePic,'username'=>$username,'photoUrl'=>$photoUrl,'schedule_visit_widget'=>$schedule_visit_widget,'profileid'=>$profileid,'scheduleVisitCount'=>$scheduleVisitCount,'nameOfUser'=>$nameOfUser])`~else`
+<div class="bg-4">~if $showFtu eq 1`~include_partial("myjs/jspcMyjs/FTU" ,['profilePic'=>$profilePic,'username'=>$username,'photoUrl'=>$photoUrl,'schedule_visit_widget'=>$schedule_visit_widget,'profileid'=>$profileid,'scheduleVisitCount'=>$scheduleVisitCount,'nameOfUser'=>$nameOfUser,'FTUdata'=>$FTUdata])`~else`
     <div id="js-engBarMain" class="mainwid container pb40">
         <div class="myjs-bg2">
             <ul class="hor_list myjstab clearfix myjs-bdr4 tabs">

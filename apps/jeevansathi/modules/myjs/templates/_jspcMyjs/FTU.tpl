@@ -43,7 +43,22 @@
                     </div>                
                 </div>
                 ~/if`
-                <!--end:upload photo-->
+                     <!--end:upload photo-->
+                   <!--start:show important sections-->
+                  <div>
+                  <div class="pt30 pb40 pr6 pl6 myjs-bdr7">
+                      <p class="f22">Important Fields</p>
+                    <p style="margin-bottom:36px;" class="f17 pt15">Gender &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;:&nbsp;~$FTUdata['gender']` </p>
+                     <p style="margin-bottom:36px;" class="f17 pt15">Date of Birth &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;:&nbsp;~$FTUdata['DOB']['day']`&nbsp;~$FTUdata['DOB']['month']`&nbsp;~$FTUdata['DOB']['year']` </p>
+                      <p style="margin-bottom:36px;" class="f17 pt15">Marital Status &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;:&nbsp;~$FTUdata['maritalStatus']`</p>
+                       <p style="margin-bottom:36px;" class="f17 pt15">Religion Marital Status &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;:&nbsp;~$FTUdata['religion']`</p>
+                       <p style="margin-bottom:36px;" class="f17 pt15">Please make correction NOW if you think you have wrongly filled these fields</p>
+                       <a class="colrw" href="/profile/dpp"><div class="pos-rel myjs-wid21 scrollhid"><button class="bg_pink brdr-0 myjs-wid21 pinkRipple hoverPink  txtc colrw lh50 f17 fontreg cursp">Edit Basic Details</button></div></a>
+                    </div>                
+                </div>
+
+                <!--end: show important sections-->
+           
                 <!--start:manage filters-->
                 <div>
                 	<div class="pt30 pb40 pr6 pl6 myjs-bdr7">
@@ -52,7 +67,7 @@
                        <a class="colrw" href="/profile/dpp"><div class="pos-rel myjs-wid21 scrollhid"><button class="bg_pink brdr-0 myjs-wid21 pinkRipple hoverPink  txtc colrw lh50 f17 fontreg cursp">Set my Filters</button></div></a>
                     </div>                
                 </div>
-                <!--end:manage filters-->
+               <!--end:manage filters-->
               
                 <!--start:Privacy-->
                 <div>
