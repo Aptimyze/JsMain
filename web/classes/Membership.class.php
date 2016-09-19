@@ -635,7 +635,7 @@ class Membership
                 $siteDisc = $iniAmt - $this->amount;
                 $actDiscPerc = round($actDisc/$iniAmt, 2)*100;
                 $siteDiscPerc = round($siteDisc/$iniAmt, 2)*100;
-                $netOffTax = round($this->amount*billingVariables::NET_OFF_TAX_RATE,2);
+                $netOffTax = round($this->amount*(1-billingVariables::NET_OFF_TAX_RATE),2);
                 $msg = "{$this->username} has been given a discount greater than visible on site <br>Actual Discount Given : {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$siteDisc}, {$siteDiscPerc}%<br>Billing Amount : {$this->curtype} {$this->amount}, Net-off Tax : {$netOffTax}";
                 if (JsConstants::$whichMachine == 'prod') {
                     SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
