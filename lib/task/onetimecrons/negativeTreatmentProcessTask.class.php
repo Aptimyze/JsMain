@@ -34,7 +34,7 @@ $this->addOptions(array(
                 sfContext::createInstance($this->configuration);
 		/*$notificationKey = $arguments["notificationKey"];*/
 
-		$negativeTreatmentObj   =new negativeTreatment();
+		//$negativeTreatmentObj   =new negativeTreatment();
 		// get All profiles
 
 		$typeArr =array('Abusive Chat with other members','Criminal','Detective','Escorts','Fraud','Massage Parlor','Spammer');
@@ -44,6 +44,8 @@ $this->addOptions(array(
 		$dataArr =$negativeProfileObj->getProfileDetails($typeStr);				
 
 		foreach($dataArr as $key=>$dataVal){
+
+			$negativeTreatmentObj   =new negativeTreatment();
 			$profileid	=$dataVal['PROFILEID'];
 			$email		=$dataVal['EMAIL'];
 			$isd		=$dataVal['ISD'];
@@ -79,6 +81,7 @@ $this->addOptions(array(
 			if($landlineNum){
 				$negativeTreatmentObj->addToNegative('PHONE_NUM',$landlineNum,$comment);
 			}
+			unset($negativeTreatmentObj);
 		}
   }
 }
