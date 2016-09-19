@@ -159,21 +159,24 @@ class LinkClass {
                         else
 				$url.=$append."checksum=$checksum&stype=$stype";
 			$_SERVER['REQUEST_URI']=$url;
+			if($checksum){
+				$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
+				if($authenticationLoginObj->decrypt($echecksum,"Y")==$checksum)
+				{
+					$authenticationLoginObj->setAutologinAuthchecksum($checksum,$loc);
+				}
+				else
+				{
+					$authenticationLoginObj->removeCookies();
+				}
+			}
 		}
 		$site_url=sfConfig::get('app_site_url');
 	    $loc=$site_url."/".$url;
 	    $append=strpos($loc,'?')?"&":"?";
 	    $loc.=$append.'from_mailer=1';
 	    
-	    $authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
-		if($authenticationLoginObj->decrypt($echecksum,"Y")==$checksum)
-		{
-			$authenticationLoginObj->setAutologinAuthchecksum($checksum,$loc);
-		}
-		else
-		{
-			$authenticationLoginObj->removeCookies();
-		}
+	    
 		
 		
 	//	echo "<script>document.location='$loc';</script>";
