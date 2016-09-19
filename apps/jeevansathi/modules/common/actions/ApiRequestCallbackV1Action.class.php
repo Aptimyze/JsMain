@@ -103,18 +103,23 @@ class ApiRequestCallbackV1Action extends sfActions
             // end assignment
                 if (!CommonUtility::validateEmail($email)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseBody("Please enter a valid Email");
                     $responseData['status'] = 'invalidEmail';
                 } elseif (!CommonUtility::validatePhoneNo($phone)) { // Validating Phone No
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseBody("Please enter a valid Phone No.");
                     $responseData['status'] = 'invalidPhoneNo';
                 } elseif (!in_array($device, $arrValidDevice)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseBody("Invalid Device selected");
                     $responseData['status'] = 'invalidDevice';
                 } elseif (!in_array($channel, $arrValidChannel)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseBody("Invalid Channel selected");
                     $responseData['status'] = 'invalidChannel';
                 } elseif ($currentTime > $responseTime) { // Validating Time                    
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseBody("Please select a valid date/time i.e. after current time");
                     $responseData['status'] = 'invalidTime';
                 } elseif (in_array($query, $arrValidQuery)) { // Validating Query Type
                     if ($query == "P") {
@@ -158,10 +163,12 @@ class ApiRequestCallbackV1Action extends sfActions
                     $responseData['successMsg'] = 'We shall call you at the earliest';
                 } else {
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseBody("Please enter a valid Query Type");
                     $responseData['status'] = 'invalidQueryType';
                 }
             } else {
                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                $apiResponseHandlerObj->setResponseBody("Missing Parameters");
                 $responseData['status'] = 'missingParameters';
             }
         } else {
