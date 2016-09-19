@@ -767,6 +767,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
   $("#iddf1").css("margin-top",$("#searchHeader").height()+"px");
   if(nextAvail!='false')
 	{ 	
+		
 		$(".initialLoader").remove();
 		$("div.loaderBottomDiv").remove();
 		{
@@ -776,6 +777,23 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 				if(parseInt($(".tupleOuterDiv").length)<=(_SEARCH_RESULTS_PER_PAGE)){ 
 					var height = ($(window).height()-20)/2;
 					$("div.loaderBottomDiv").css("margin-top",height+"px");
+				}
+				if(response.searchBasedParam == 'kundlialerts')
+				{
+					var profileLength = 0;
+					if('profiles' in response && Array.isArray(response.profiles))
+					{
+						
+						profileLength = response.profiles.length;
+					}
+					if(profileLength == 0)
+					{
+							if(typeof response.paginationArray !=="undefined" && response.page_index < response.paginationArray.length)
+							{
+								loadsNextResult(parseInt(response.page_index) + 1);
+							}
+							
+					}
 				}
 			}
 		}
@@ -1077,6 +1095,5 @@ function referHandling(searchId,referer)
 		sessionStorage.setItem("searchId"+searchId,referer);
                 refererValue=referer;
         }
-        console.log(refererValue);
-	return refererValue;
+   return refererValue;
 }
