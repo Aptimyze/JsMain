@@ -36,5 +36,49 @@ class newjs_OLDEMAIL extends TABLE
             throw new jsException($e);
         }
     }
+        public function getEmailList($profiles)
+        {
+                try{
+                        foreach($profiles as $k=>$p){
+                                if($str!='')
+                                        $str.=",";
+                                $str.=":PROFILEID".$k;
+                        }
+                        $sql = "SELECT DISTINCT(OLD_EMAIL) EMAIL FROM newjs.OLDEMAIL WHERE PROFILEID IN (".$str.")";
+                        $prep=$this->db->prepare($sql);
+                        foreach($profiles as $k=>$p)
+                                $prep->bindValue(":PROFILEID".$k,$p,PDO::PARAM_STR);
+                        $prep->execute();
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
+                                $dataArr[]=$result['EMAIL'];
+                        return $dataArr;
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+        }
+        public function getEmailProfiles($emailArr)
+        {
+                try{
+                        foreach($emailArr as $k=>$p){
+                                if($str!='')
+                                        $str.=",";
+                                $str.=":OLD_EMAIL".$k;
+                        }
+                        $sql = "SELECT DISTINCT(PROFILEID) FROM newjs.OLDEMAIL WHERE OLD_EMAIL IN (".$str.")";
+			$prep=$this->db->prepare($sql);
+                        foreach($emailArr as $k=>$p)
+                                $prep->bindValue(":OLD_EMAIL".$k,$p,PDO::PARAM_STR);
+                        $prep->execute();
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
+                                $dataArr[]=$result['PROFILEID'];
+                        return $dataArr;
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+        }
+
+
 }
 ?>	
