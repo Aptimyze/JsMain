@@ -302,7 +302,7 @@ class BILLING_PURCHASES extends TABLE{
     {
         try
         {
-            $sql="SELECT PROFILEID FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
+            $sql="SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
             if($start_dt)
                 $sql .=" AND ENTRY_DT >= :START_DT";
             $prep=$this->db->prepare($sql);
@@ -311,7 +311,7 @@ class BILLING_PURCHASES extends TABLE{
             $prep->execute();
             while($row = $prep->fetch(PDO::FETCH_ASSOC))
             {
-                $res[] = $row['PROFILEID'];
+                $res[$row['PROFILEID']] = $row['ENTRY_DT'];
             }
             return $res;
         }
@@ -600,6 +600,25 @@ class BILLING_PURCHASES extends TABLE{
         {
             throw new jsException($e);
         }
-    }   
+    }  
+
+    public function checkIfProfilePaidWithin15Days($profileid, $startDt) {
+        try {
+            $endDt = date("Y-m-d", strtotime($startDt)+(15*24*60*60)-1);
+            $sql = "SELECT BILLID FROM billing.PURCHASES WHERE PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:END_DATE AND STATUS='DONE'";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $output[] = $result['BILLID'];
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>
