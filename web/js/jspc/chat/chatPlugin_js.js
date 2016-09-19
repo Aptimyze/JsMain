@@ -953,7 +953,7 @@ JsChat.prototype = {
                     if(param1 == 'delete_node'){
                         localStorage.removeItem("listingPic_"+runID);
                     }
-                    console.log("nitish",param1);
+                    //console.log("nitish",param1);
                     if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
                         //this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
                         var that = this;
