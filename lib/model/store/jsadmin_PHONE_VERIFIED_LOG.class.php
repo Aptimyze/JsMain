@@ -187,6 +187,49 @@ public function insertEntry($profileid,$phoneType,$phoneNum,$msg,$opUsername){
                         throw new jsException($e);
                 }
     }
+        public function getVerifiedPhoneNumbers($profiles)
+        {
+                try{
+                        foreach($profiles as $k=>$p){
+                                if($str!='')
+                                        $str.=",";
+                                $str.=":PROFILEID".$k;
+                        }
+                        $sql = "SELECT DISTINCT(PHONE_NUM) FROM  jsadmin.PHONE_VERIFIED_LOG WHERE PROFILEID IN (".$str.")";
+                        $prep=$this->db->prepare($sql);
+                        foreach($profiles as $k=>$p)
+                                $prep->bindValue(":PROFILEID".$k,$p,PDO::PARAM_STR);
+                        $prep->execute();
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
+                                $dataArr[]=$result['PHONE_NUM'];
+                        return $dataArr;
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+        }
+        public function getVerifiedProfiles($phoneNumber)
+        {
+                try{
+                        foreach($phoneNumber as $k=>$p){
+                                if($str!='')
+                                        $str.=",";
+                                $str.=":PHONE_NUM".$k;
+                        }
+                        $sql = "SELECT DISTINCT(PROFILEID) FROM  jsadmin.PHONE_VERIFIED_LOG WHERE PHONE_NUM IN (".$str.")";
+                        $prep=$this->db->prepare($sql);
+                        foreach($phoneNumber as $k=>$p)
+                                $prep->bindValue(":PHONE_NUM".$k,$p,PDO::PARAM_STR);
+                        $prep->execute();
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
+                                $dataArr[]=$result['PROFILEID'];
+                        return $dataArr;
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+        }
+
 
 
 
