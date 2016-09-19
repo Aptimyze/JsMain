@@ -680,7 +680,7 @@ class BILLING_PURCHASES extends TABLE{
     {
         try
         {
-            $startDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry + 10 days
+            $startDt = date("Y-m-d", strtotime($expiryDt)+10*24*60*60); // expiry + 10 days
             $sql="SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:START_DATE";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
