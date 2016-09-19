@@ -119,7 +119,7 @@ class ApiRequestCallbackV1Action extends sfActions
                     $responseData['status'] = 'invalidChannel';
                 } elseif ($currentTime > $responseTime) { // Validating Time                    
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-                    $apiResponseHandlerObj->setResponseMessage("Please select a valid date/time i.e. after current time");
+                    $apiResponseHandlerObj->setResponseMessage("Please select a valid Date/Time");
                     $responseData['status'] = 'invalidTime';
                 } elseif (in_array($query, $arrValidQuery)) { // Validating Query Type
                     if ($query == "P") {
