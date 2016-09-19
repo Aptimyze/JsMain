@@ -172,7 +172,7 @@
                 <table width="100%" border="0" cellspacing="0" cellpadding="2">
                 <tr> 
                 <td class=mediumblack height="2"> 
-                <div align="center"><span class="class3"><a href="http://www.naukri.com"><br>
+                <div align="center"><span class="class3"><a href="https://www.naukri.com"><br>
                 Naukri.com</a> |<a href="~$SITE_URL`/profile/faqs.php?checksum=~$CHECKSUM`"> FAQs </a>| <a href="~$SITE_URL`/profile/feedback.php?checksum=~$CHECKSUM`">Feedback</a> | <a href="#">Disclaimer</a> | <a href="~$SITE_URL`/profile/site_map.php?checksum=~$CHECKSUM`">Site Map</a> | <a href="~$SITE_URL`/profile/contact.php?checksum=~$CHECKSUM`">Contact Us</a></span><br>
                 <br>
                 Copyright &copy; 2004, JeevanSathi Internet Services. 
