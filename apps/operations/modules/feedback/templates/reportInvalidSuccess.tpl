@@ -1,7 +1,7 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporter'></td><td class='RAcomments'></td><td class='RADate'></td><td class='SUNumberMarked'></td><td class='SUCount'></td></tr>";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporter'></td><td class='RADate'></td><td class='SUNumberMarked'><td class='RAcomments'></td></td><td class='SUCount'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
@@ -161,9 +161,9 @@
 <td></td>
 <td>SUBMITEE</td>
 <td>SUBMITER</td>
-<td>COMMENTS</td>
 <td>DATE</td>
 <td>CONTACT_NUMBER_MARKED</td>
+<td style="width : 400px">COMMENTS</td>
 <td>COUNT IN LAST 90 DAYS</td>
 </tr>
 
