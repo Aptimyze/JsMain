@@ -903,6 +903,8 @@ function sendReminder(result, action, index){
     // paid profile condition
     showWriteMessageOverlay();
     $("#writeMessageTxtId").val('');
+    if(result.actiondetails.lastsent)
+      $("#writeMessageTxtId").val(result.actiondetails.lastsent);
     $("#presetMessageId").show();
     $("#writeMsgDisplayId").show();
     $("#writeMsgDisplayId").html('');
