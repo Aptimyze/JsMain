@@ -244,6 +244,8 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
+
+
 	
 		if (empty($this->profilePic))
 			$this->profilePic="N";
@@ -310,7 +312,21 @@ class myjsActions extends sfActions
 		$currentTime=time();
 		$registrationTime = strtotime($entryDate);
 		$this->engagementCount=array();
-		$this->showFtu = 0;
+
+// Data required for Important Field Section in FTU template
+  
+		$this->FTUdata = array();
+		$this->FTUdata['gender'] = $this->loginProfile->getDecoratedGender();
+		$this->FTUdata['DOB'] = $this->loginProfile->getDTOFBIRTH();
+		$this->FTUdata['maritalStatus'] = $this->loginProfile->getDecoratedMaritalStatus();
+		$this->FTUdata['religion'] = $this->loginProfile->getDecoratedRELIGION();
+		print_r($this->FTUdata);die;
+
+//		die(z);
+
+// Data for Important Field Section in FTU template ends
+
+		$this->showFtu = 1;
 		if(($currentTime - $registrationTime)/(3600)<24){
 			$this->engagementCount= BellCounts::getFTUCountDetails($this->profileid); 
 			if($this->engagementCount["TOTAL"] == 0){
