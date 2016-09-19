@@ -108,8 +108,8 @@ class JPROFILE
         $fields = $this->getRelevantFields($fields);
         $bServedFromCache = false;
         $this->totalQueryCount();
-        if (ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields)) {
-            $result = ProfileCacheLib::getInstance()->get($criteria, $value, $fields, $extraWhereClause);
+        if (ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields, __CLASS__)) {
+            $result = ProfileCacheLib::getInstance()->get($criteria, $value, $fields, __CLASS__, $extraWhereClause);
             //When processing extraWhereClause results could be false,
             //so for that case also we are going to query mysql
             if (false !== $result) {
@@ -156,7 +156,7 @@ class JPROFILE
         $bResult = self::$objProfileMysql->updateRecord($paramArr,$value,$criteria,$extraWhereCnd);
 
         if(true === $bResult) {
-            ProfileCacheLib::getInstance()->updateCache($paramArr, $criteria, $value, $extraWhereCnd);
+            ProfileCacheLib::getInstance()->updateCache($paramArr, $criteria, $value, __CLASS__, $extraWhereCnd);
         }
 
         //If Criteria is not PROFILEID then remove data from cache.

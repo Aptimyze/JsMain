@@ -658,20 +658,36 @@ JsChat.prototype = {
 	ifChatListingIsCreated = 1;
     },
     //add photo in tuple div of listing
-    _addListingPhoto: function (photoObj) {
-        //console.log("in _addListingPhoto");
-        if (typeof photoObj != "undefined" && typeof Object.keys(photoObj.profiles) != "undefined") {
-            $.each(Object.keys(photoObj.profiles), function (index, element) {
-                if (photoObj.profiles[element].PHOTO.ProfilePic120Url) {
-                    $(".chatlist img[id*='pic_" + element + "_']").attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
-                    //console.log(element);
-                    if($('chat-box[user-id="' + element + '"]').length !=0) {
-                        //console.log("adding for---"+element);
-                        $("#pic_"+element).attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
+    _addListingPhoto: function (photoObj,type) {
+        if(type == "api") {
+            if (typeof photoObj != "undefined" && typeof Object.keys(photoObj.profiles) != "undefined") {
+                $.each(Object.keys(photoObj.profiles), function (index, element) {
+                    if (photoObj.profiles[element].PHOTO.ProfilePic120Url) {
+                        $(".chatlist img[id*='pic_" + element + "_']").attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
+                        if($('chat-box[user-id="' + element + '"]').length !=0) {
+                            $("#pic_"+element).attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
+                        }
                     }
+                });
+            }
+        } else if(type == "local") {
+            var photoURL = "";
+            $.each(photoObj, function(index, elem){
+                if(localStorage.getItem("listingPic_"+elem)) {
+                    photoURL = localStorage.getItem("listingPic_"+elem).split("#")[0];
+                    if(photoURL != "undefined" && photoURL) {
+                        $(".chatlist img[id*='pic_" + elem + "_']").attr("src", photoURL);
+                        if($('chat-box[user-id="' + elem + '"]').length !=0) {
+                            $("#pic_"+elem).attr("src", photoURL);
+                        }
+                    }
+                   
                 }
+                
             });
+            
         }
+        
     },
     _removeHiddenNode: function(userId){
         var curElem = this;
@@ -927,12 +943,17 @@ JsChat.prototype = {
         //this._chatLoggerPlugin('remove element 11');
         var elem = this;
         //removeCall1 if user is removed from backend
+        
         if (param1 == 'removeCall1' || param1 == 'delete_node') {
             //this._chatLoggerPlugin("calllign _removeFromListing");
             for (var key in data) {
                 var runID = '';
                 if(typeof data[key] != "undefined"){
                     runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                    if(param1 == 'delete_node'){
+                        localStorage.removeItem("listingPic_"+runID);
+                    }
+                    console.log("nitish",param1);
                     if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
                         //this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
                         var that = this;

@@ -321,7 +321,8 @@ chatConfig.Params = {
         setLastReadMsgStorage:true,
 	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
         autoChatLogin:true,  //auto-login to chat on site login
-        rosterDeleteChatBoxMsg:"You can no longer chat, as the other user has blocked you/declined your interest"
+        rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
+        clearListingCacheTimeout:3600000 //TIme in milliseconds
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
