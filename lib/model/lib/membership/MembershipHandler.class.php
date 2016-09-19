@@ -411,7 +411,7 @@ class MembershipHandler
     public function getSpecialDiscountForAllDurationsPreviously($profileid)
     {
         $vdodObj = new VariableDiscount();
-        $discount = $vdodObj->getPreviousVdLogDetails($profileid);
+        $discount = $vdodObj->getPreviousVdLogDetails($profileid, true);
         return $discount;
     }
 
@@ -767,7 +767,8 @@ class MembershipHandler
     public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3)
     {
         if ($userObj->getProfileid()) {
-            $profileObj = LoggedInProfile::getInstance();
+            $profileObj = LoggedInProfile::getInstance('newjs_slave', $userObj->getProfileid());
+            $profileObj->getDetail();
             if ($profileObj->getPROFILEID()) {
                 $activatedStatus = $profileObj->getACTIVATED();
                 $screeningStatus = $activatedStatus;
@@ -777,7 +778,6 @@ class MembershipHandler
                 $discountType    = $discountTypeArr['TYPE'];
             }
         }
-
         if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
             $discountActive  = '1';
             $discntId        = $this->discountOfferID;
@@ -1155,12 +1155,6 @@ class MembershipHandler
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {
                     $discPerc = $renewalPercent;
-                    // Check for previous Day discount, if yes, get max of discount
-                    if ($previousCheck == true) {
-                        $renDiscLog = new billing_RENEWAL_DISCOUNT_LOG();
-                        $renDisc = $this->fetchRenewalDiscountForProfileAndDate($profileid, date("Y-m-d", $expThreshold));
-                        $discPerc = max($discPerc, $renDisc);
-                    }
                 } else if ($specialActive == 1) {
                     $vdDiscArr = $this->getSpecialDiscountForAllDurations($profileid);
                     $vdDisc    = $vdDiscArr[$mainMem];
@@ -1170,22 +1164,6 @@ class MembershipHandler
                         $discPerc = $vdDisc[$mainMemDur];
                     } else {
                         $discPerc = 0;
-                    }
-                    // Check for previous Day discount, if yes, get max of discount
-                    if ($previousCheck == true) {
-                        $vdDiscArr = $this->getSpecialDiscountForAllDurationsPreviously($profileid);
-                        $lastExp = $vdDiscArr['EDATE'];
-                        if ($expThreshold >= strtotime($lastExp)) {
-                            $vdDisc    = $vdDiscArr['DISCOUNT'][$mainMem];
-                            if (in_array($mainMemDur, array_keys($vdDisc))) {
-                                $discPerc1 = $vdDisc[$mainMemDur];
-                            } else if ($fest == 1) {
-                                $discPerc1 = $vdDisc[$mainMemDur];
-                            } else {
-                                $discPerc1 = 0;
-                            }
-                        }
-                        $discPerc = max($discPerc, $discPerc1);
                     }
                 } else if ($discountActive == 1) {
                     $discPerc = $this->getDiscountOffer($mainMembership);
@@ -1202,6 +1180,28 @@ class MembershipHandler
                 if ($fest == 1 && $mainMem == "X" && $specialActive != 1 && $renewalActive != 1) {
                     $discPerc = 0;
                 }
+            }
+            // Check for previous Day discount, if yes, get max of discount
+            if ($previousCheck == true && $discPerc == 0) {
+                $renDiscLog = new billing_RENEWAL_DISCOUNT_LOG();
+                $renDisc = $renDiscLog->fetchRenewalDiscountForProfileAndDate($profileid, date("Y-m-d", $expThreshold));
+                $discPerc = max($discPerc, $renDisc);
+            }
+            // Force VD Check  
+            if ($previousCheck == true && $discPerc == 0) {
+                $vdDiscArr = $this->getSpecialDiscountForAllDurationsPreviously($profileid);
+                $lastExp = $vdDiscArr['EDATE'];
+                if ($expThreshold >= strtotime($lastExp)) {
+                    $vdDisc    = $vdDiscArr['DISCOUNT'][$mainMem];
+                    if (in_array($mainMemDur, array_keys($vdDisc))) {
+                        $discPerc1 = $vdDisc[$mainMemDur];
+                    } else if ($fest == 1) {
+                        $discPerc1 = $vdDisc[$mainMemDur];
+                    } else {
+                        $discPerc1 = 0;
+                    }
+                }
+                $discPerc = max($discPerc, $discPerc1);
             }
             $mems = explode(",", $allMemberships);
         } else if (isset($vasImpression) && !empty($vasImpression)) {

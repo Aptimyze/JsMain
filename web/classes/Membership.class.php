@@ -602,6 +602,10 @@ class Membership
     function checkIfDiscountExceeds() {
         $memHandlerObj = new MembershipHandler();
         $userObj = new memUser($this->profileid);
+        list($ipAddress1, $currency1) = $memHandlerObj->getUserIPandCurrency($this->profileid);
+        $userObj->setIpAddress($ipAddress1);
+        $userObj->setCurrency($currency1);
+        $userObj->setMemStatus();
         $ordrDeviceObj = new billing_ORDERS_DEVICE();
         $servObj = new Services();
         $couponCode = $ordrDeviceObj->checkAppliedCoupon($this->orderid,$this->orderid_part1);
@@ -614,7 +618,7 @@ class Membership
         $allMemberships = $this->serviceid;
         $festCondition = false;
         // Fetch all variables regarding discount for current user
-        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $this->getUserDiscountDetailsArray($userObj, "L");
+        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L");
         if ($fest == 1 && strstr($mainMembership, 'X') != false && !empty($mainMembership)) {
             $festOffrLookup = new billing_FESTIVE_OFFER_LOOKUP();
             $actualServiceid = $festOffrLookup->fetchReverseOfferedServiceId($mainMembership);
@@ -629,14 +633,14 @@ class Membership
             // Dont handle coupon code and when extra duration is offered in festive extra duration case
         } else {
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $device, $couponCode, null, null, null, true);
-            if ($this->amount > $total) {
-                $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
-                $actDisc = $iniAmt - $total;
-                $siteDisc = $iniAmt - $this->amount;
+            if ($total > $this->amount) {
+                $iniAmt = $servObj->getTotalPrice($this->serviceid, $this->curtype);
+                $actDisc = $iniAmt - $this->amount;
+                $siteDisc = $iniAmt - $total;
                 $actDiscPerc = round($actDisc/$iniAmt, 2)*100;
                 $siteDiscPerc = round($siteDisc/$iniAmt, 2)*100;
                 $netOffTax = round($this->amount*(1-billingVariables::NET_OFF_TAX_RATE),2);
-                $msg = "{$this->username} has been given a discount greater than visible on site <br>Actual Discount Given : {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$siteDisc}, {$siteDiscPerc}%<br>Billing Amount : {$this->curtype} {$this->amount}, Net-off Tax : {$netOffTax}";
+                $msg = "'{$this->username}' has been given a discount greater than visible on site <br>Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br><br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
                 if (JsConstants::$whichMachine == 'prod') {
                     SendMail::send_email('avneet.bindra@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
                 }
