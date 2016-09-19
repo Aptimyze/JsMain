@@ -556,7 +556,7 @@ public static function insertConsentMessageFlag($profileid) {
 			{
 				$ARR = $cityArr;
 			}
-                        $nativePlaceObj = new NEWJS_NATIVE_PLACE();
+                        $nativePlaceObj = ProfileNativePlace::getInstance();
                         $nativeData = $nativePlaceObj->getNativeData($profile->getPROFILEID());
                         $nativeState = $nativeData['NATIVE_STATE'];
                         $nativeCity = $nativeData['NATIVE_CITY'];

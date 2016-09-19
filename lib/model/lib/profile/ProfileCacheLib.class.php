@@ -300,6 +300,8 @@ class ProfileCacheLib
             $arrFields = ProfileCacheConstants::$arrJProfileColumns;
           } else if(false !== stristr($storeName, "EDUCATION")) {
             $arrFields = ProfileCacheConstants::$arrJProfile_EducationColumns;
+          } else if(false !== stristr($storeName, "NATIVE")) {
+            $arrFields = ProfileCacheConstants::$arrNativePlaceColumns;
           }
         } else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) {
             $arrFields = ProfileCacheConstants::$arrHashSubKeys;
