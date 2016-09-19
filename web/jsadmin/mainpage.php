@@ -123,7 +123,7 @@ if (isset($data)) //successful login
 
         if (in_array('P', $priv) || in_array('IJS', $priv) || in_array('SJS', $priv) || in_array('TSJS', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/switch_match_alert_algo.php?name=$user&cid=$cid\">Switch Match Alert Algorithm</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/invalid_phone_status.php?name=$user&cid=$cid\">Mark Valid/Invalid Phone Numbers</a>";
+            $linkarr[] = "<a href=\"$SITE_URL//operations.php/feedback/reportInvalid?name=$user&cid=$cid\">Mark Valid/Invalid Phone Numbers</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/allot_contact.php?name=$user&cid=$cid\"> Allot contacts View to Paid members. </a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/check_profiles_score.php?cid=$cid\">Check forward and reverse score for two profiles</a>";
         } elseif (in_array('QC', $priv)) {

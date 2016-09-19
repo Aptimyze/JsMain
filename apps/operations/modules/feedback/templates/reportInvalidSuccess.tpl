@@ -1,18 +1,17 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporteeEmail'></td><td class='RAreporter'></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td><td class='RACount'></td></tr>";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporter'></td><td class='RADate'></td><td class='SUNumberMarked'><td class='RAcomments'></td></td><td class='SUCount'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
-		tempHtml.find('.RAreportee').text(rowJson.reportee_id);
-		tempHtml.find('.RAreporteeEmail').text(rowJson.reportee_email);
-		tempHtml.find('.RAreporter').text(rowJson.reporter_id);
-		tempHtml.find('.RAreporterEmail').text(rowJson.reporter_email);
+		tempHtml.find('.RAreportee').text(rowJson.submitee_id);
+		tempHtml.find('.RAreporter').text(rowJson.submiter_id);
 		tempHtml.find('.RAcategory').text(rowJson.reason);
-		tempHtml.find('.RAOther').text(rowJson.comments);
+		tempHtml.find('.RAcomments').text(rowJson.comments);
 		tempHtml.find('.RADate').text(rowJson.timestamp);
-		tempHtml.find('.RACount').text(rowJson.count);
+		tempHtml.find('.SUCount').text(rowJson.count);
+		tempHtml.find('.SUNumberMarked').text(rowJson.phone_number);
 		return tempHtml;
 
 	}
@@ -76,7 +75,7 @@
 
 		$("#timePeriodText").text('Selected Time Period '+startDate+' To '+ endDate);
 		$.ajax({
-			'url':'/operations.php/feedback/reportAbuseLog',
+			'url':'/operations.php/feedback/reportInvalidLog',
 			'data':{'RAStartDate':startDate,'RAEndDate':endDate},
 			success:function(response)
 			{ 
@@ -84,8 +83,7 @@
 				try
 				{	
 					var mainDiv=$("#RAMainTable");
-					mainDiv.find('.RARowHtml').remove();
-					if(!response){
+					mainDiv.find('.RARowHtml').remove();console.log(response);					if(!response){
 							$("#dateError3").show();
 							return;
 
@@ -93,7 +91,6 @@
 					var jObject=JSON.parse(response);
 					if(response)
 					{
-						
 						for(i=0;i<jObject.length;i++)
 						{
 							htmlString=getRowHtml(jObject[i]);
@@ -130,7 +127,7 @@
 
 <!--<body bgcolor='#ADDFFF'>-->
 
-<p align="center"><b>Welcome to Report Abuse History Page<i> Kindly Enter Date Range Below and Press Submit</b></i></p>
+<p align="center"><b>Welcome to Report Invalid History Page<i> Kindly Enter Date Range Below and Press Submit</b></i></p>
 </br>
 <table width= "714" align="center" bgcolor="" border="0" style="width:614px; height:126px">
 <tr>
@@ -162,15 +159,12 @@
 </tr>
 <tr style="background-color: lightyellow;" class="label" align="center">
 <td></td>
-<td>REPORTEE</td>
-<td>REPORTEE EMAIL</td>
-<td>REPORTER</td>
-<td>REPORTER EMAIL</td>
-<td>CATEGORY</td>
-<td>OTHER REASON</td>
+<td>SUBMITEE</td>
+<td>SUBMITER</td>
 <td>DATE</td>
-<td>COUNT</td>
-
+<td>CONTACT_NUMBER_MARKED</td>
+<td style="width : 400px">COMMENTS</td>
+<td>COUNT IN LAST 90 DAYS</td>
 </tr>
 
 </table>
