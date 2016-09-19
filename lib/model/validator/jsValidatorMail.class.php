@@ -84,7 +84,7 @@ class jsValidatorMail extends sfValidatorBase
               throw new sfValidatorError($this, 'err_email_del', array('value' => $value, 'err_email_del' => $this->getOption('err_email_del')));
     }
 	$this->_trackDuplicateEmail($value,'N');
-    $negativeProfileListObj = new incentive_NEGATIVE_PROFILE_LIST;
+    $negativeProfileListObj = new incentive_NEGATIVE_LIST;
     $negativeEmail = $negativeProfileListObj->checkEmailOrPhone("EMAIL",$value);
     if($negativeEmail)
     {
