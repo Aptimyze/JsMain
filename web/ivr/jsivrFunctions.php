@@ -606,7 +606,7 @@ return $returnArray;
 	}
 	// function update the phone status for the profile depending upon the verification status
 	// for landline phone = [std+landline]
-	function phoneUpdateProcess($profileid,$phone_num='',$phoneType='',$actionStatus="",$message="",$username='',$isd)
+	function phoneUpdateProcess($profileid,$phone_num='',$phoneType='',$actionStatus="",$message="",$username='',$isd='')
 	{
 		if(!trim($profileid))
 			return false;
