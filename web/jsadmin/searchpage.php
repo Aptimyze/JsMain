@@ -107,7 +107,14 @@ if(authenticated($cid))
 					 $del_scr="y";
 					//if($myrow_del['USER']!='')
 	                                //{
+                                        $sql_negative = "select PROFILEID from incentive.NEGATIVE_LIST where PROFILEID = $Profileid";
+                                        $result_negaive=mysql_query_decide($sql_negative) or die("$sql_negative".mysql_error_js());
+                                        if(mysql_num_rows($result_negaive)!=0){
+                                            $stat_user="Deleted due to Negative Treatment";
+                                        }
+                                        else{
         	                                $stat_user="Deleted by ".$myrow_del['USER'];
+                                        }
                 	                //}
                         	        if($myrow_del["RETRIEVED_BY"]!='')
                                 	{
