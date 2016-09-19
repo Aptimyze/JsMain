@@ -6,7 +6,7 @@
 ini_set('memory_limit','256M');
 class updateNTimesTask extends sfBaseTask
 {
-  private $measurePerformance = true;
+  private $measurePerformance = false;
   protected function configure() {
     $this->namespace = 'profile';
     $this->name = 'updateNTimes';

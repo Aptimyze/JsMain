@@ -43,7 +43,7 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 		$this->smsType = $smsType;
         }
 	public function getShortURL($longURL, $profileid='',$email='',$withoutLogin='',$appendUrl='') {
-                $longURL=str_replace('CMGFRMMMMJS=mobile','linkFromSMS=Y' , $longURL);
+               // $longURL=str_replace('CMGFRMMMMJS=mobile','linkFromSMS=Y' , $longURL);
                 include_once($this->path . "/classes/ShortURL.class.php");
 		if(!$withoutLogin)
 		{

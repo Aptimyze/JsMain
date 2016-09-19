@@ -157,8 +157,14 @@ Abstract class ApiAuthentication
 		$decryptObj= new Encrypt_Decrypt();
 		$decryptedAuthChecksum=$decryptObj->decrypt($authChecksum);
 		$loginData=$this->fetchLoginData($decryptedAuthChecksum);
-		
-		
+		if($loginData["FROM_BACKEND"])
+		{
+			$this->trackLogin=false;
+			if($this->stopBackendUser()){
+				$this->removeLoginCookies();
+				return false;
+			}
+		}		
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
                     	$this->loginData=$this->IsAlive($loginData,$gcm);
@@ -652,7 +658,7 @@ Abstract class ApiAuthentication
      /*
 	**** @function: createAuthChecksum
 	*/ 
-	public function createAuthChecksum($time="")
+	public function createAuthChecksum($time="",$backendCheck)
 	{
 		$checksum=md5($this->loginData["PROFILEID"])."i".$this->loginData["PROFILEID"];
 		$authchecksum="ID=".$this->js_encrypt($checksum);
@@ -665,6 +671,9 @@ Abstract class ApiAuthentication
 		$authchecksum.=":IN=".$this->loginData["INCOMPLETE"];
 		$authchecksum.=":DOB=".$this->loginData["DTOFBIRTH"];
 		$authchecksum.=":HP=".$this->loginData["HAVEPHOTO"];
+		if($backendCheck)
+			$authchecksum.=":BK=backend";
+		
 		if($time){
 			$t1=time()-$time;
 			$authchecksum.=":TM=".$t1;
@@ -694,6 +703,7 @@ Abstract class ApiAuthentication
 			$data["DTOFBIRTH"]=$temp['DOB'];
 						$data["HAVEPHOTO"]=$temp['HP'];
 			$data["TIME"]=$temp[TM];
+			$data["FROM_BACKEND"]=$temp['BK'];
 			return $data;
 		}
 		return null;
@@ -712,6 +722,16 @@ Abstract class ApiAuthentication
 			return false;
 	}
 	
+	public function stopBackendUser()
+	{	
+		if(strpos($_SERVER["REQUEST_URI"],"/profile/dpp?fromBackend=1")!==false ||  strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/dppsubmit")!==false  || strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/filtersubmit")!==false )
+			return 	false;
+		else
+			return true;
+			
+		
+	}
+	
 	public function getProfileFrmChecksum($checksum)
 	{
 		if($checksum)
@@ -724,7 +744,5 @@ Abstract class ApiAuthentication
 
 		}
 	}
-        
-
 }
 ?>
