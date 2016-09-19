@@ -136,6 +136,24 @@
 </div>
 </div>
 
+<div id="dppMatchalertToggle" class="dn">
+<div class="fullwid brdr1 bwhite">
+<div class="pad1">
+<div class="pad2">
+<div class="fl wwrap fontlig f14 color3">
+<div class="fl wwrap fontlig color3">
+<div class="f13 wid76p dispibl">Recieve matches based on the history of your interests and acceptances
+<div class="f12 color4 pt10">These matches may not fully fulfil your Desired Partner Preference.</div>
+</div>
+    <div id="toggleButton" class="fr dispibl filter-onoff-new ~if $toggleMatchalerts eq 'dpp'` filter-off ~else` filter-on ~/if`" onclick="toggleDppMatchalerts();"></div>
+</div>
+</div>
+<div class="clr"></div>
+</div>
+</div>
+</div>
+</div>    
+
 <script>
 	showLoader();	
 		var renderPage=new mobEditPage;
