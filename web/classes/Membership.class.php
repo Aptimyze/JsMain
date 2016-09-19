@@ -628,8 +628,8 @@ class Membership
         if((!empty($couponCode) && $couponCode != '') || $festCondition){
             // Dont handle coupon code and when extra duration is offered in festive extra duration case
         } else {
-            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $device);
-            if ($total > $this->amount) {
+            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $device, $couponCode, null, null, null, true);
+            if ($this->amount > $total) {
                 $iniAmt = $servicesObj->getTotalPrice($this->serviceid);
                 $actDisc = $iniAmt - $total;
                 $siteDisc = $iniAmt - $this->amount;
@@ -638,7 +638,7 @@ class Membership
                 $netOffTax = round($this->amount*(1-billingVariables::NET_OFF_TAX_RATE),2);
                 $msg = "{$this->username} has been given a discount greater than visible on site <br>Actual Discount Given : {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$siteDisc}, {$siteDiscPerc}%<br>Billing Amount : {$this->curtype} {$this->amount}, Net-off Tax : {$netOffTax}";
                 if (JsConstants::$whichMachine == 'prod') {
-                    SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
+                    SendMail::send_email('avneet.bindra@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
                 }
             }
         }
