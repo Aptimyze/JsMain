@@ -197,7 +197,7 @@ class NEWJS_CONTACTS_ONCE extends TABLE
 			throw new jsException("","receiver is not specified in getContactsDetails() OF newjs_MESSAGE_LOG.class.php");               
 		try{    
                         $todayDate=date('Y-m-d');
-			$sql = "SELECT cnt(*) as CNT FROM newjs.CONTACTS_ONCE WHERE RECEIVER = :PROFILEID1 AND DATE(`TIME`)='$todayDate' AND SENT='Y'";
+			$sql = "SELECT count(*) as CNT FROM newjs.CONTACTS_ONCE WHERE RECEIVER = :PROFILEID1 AND DATE(`TIME`)='$todayDate' AND SENT='Y'";
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":PROFILEID1",$receiver,PDO::PARAM_INT);
 			$res->execute();
