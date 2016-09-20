@@ -38,17 +38,19 @@
 				3) To add more services contact tech team
 			</div>
 			<br>
+			~foreach from=$servDet key=k item=v`
+			<div align="center" style="margin: 0px auto; padding: 20px 30px; width: 45%; font-size: 21px; color: rgb(255, 255, 255); background-color: firebrick;" width="50%">~$servArr.$k`</div>
 			<table width=50% align=center>
 				<tr class=formhead style="background-color:LightSteelBlue" height="25">
 					<td width=~$durPerc`% align=center>Service Name - Duration</td>
 					<td width=~$durPerc`% align=center>Show Online Flag</td>
 				</tr>
-				~foreach from=$servDet key=k item=v`
+				~foreach from=$v key=kk item=vv`
 				<tr height="50">
-					<td align=center style="background-color:lightblue;font-size:18px;">~$v.NAME`</td>
+					<td align=center style="background-color:lightblue;font-size:18px;">~$vv.NAME`</td>
 					<td align=center style="background-color:lightblue">
-						<input class="serviceDisc" type="radio" name="~$v.SERVICEID`" value="Y" ~if $v.SHOW_ONLINE eq 'Y'` checked ~/if` style="text-align:center;font-size:16px;"> Show
-						<input class="serviceDisc" type="radio" name="~$v.SERVICEID`" value="N" ~if $v.SHOW_ONLINE neq 'Y'` checked ~/if` style="text-align:center;font-size:16px;"> Hide
+						<input class="serviceDisc" type="radio" name="~$vv.SERVICEID`" value="Y" ~if $vv.SHOW_ONLINE eq 'Y'` checked ~/if` style="text-align:center;font-size:16px;"> Show
+						<input class="serviceDisc" type="radio" name="~$vv.SERVICEID`" value="N" ~if $vv.SHOW_ONLINE neq 'Y'` checked ~/if` style="text-align:center;font-size:16px;"> Hide
 					</td>
 				</tr>
 				~/foreach`
@@ -60,6 +62,7 @@
 				<input type="hidden" name="cid" value="~$cid`">
 			</div>
 			<br><br>
+			~/foreach`
 		</form>
 	</body>
 </html>
