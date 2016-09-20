@@ -47,7 +47,7 @@
 					*`
 					<div class="img-container">
 						<script>
-						var startTime = new Date().getTime();
+						/*var startTime = new Date().getTime();
 						function doneLoading() {
 						    var loadtime = new Date().getTime() - startTime;
 						    var src = $("#cropperPic").attr("src");
@@ -67,9 +67,10 @@
 											}
 										})
 								    
-							};    
+							};
+						*/    
 						</script>
-						<img src="~$uploadUrl`~$photoArr['profilePic']['OriginalProfilePicUrl']`" alt="Picture" id="cropperPic" onload="doneLoading()">
+						<img src="~$uploadUrl`~$photoArr['profilePic']['OriginalProfilePicUrl']`" alt="Picture" id="cropperPic">
 					</div>
 					<!--lavesh-->
 				</div>                
