@@ -109,7 +109,7 @@ class IgnoredProfileCacheLib
         //To check if key exists
         $keyExists = JsMemcache::getInstance()->keyExist($key);
         if($keyExists == 0)
-        {echo("@");die;
+        {
         	return ignoredProfileCacheConstants::NO_KEY;
         }
 
