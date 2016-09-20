@@ -99,7 +99,6 @@ try
         {
             var target = $(event.target).first();
 
-            console.log(target);
             if( (target.attr('id') == 'commonOverlay') &&  $('#photoLayerMain').css('display') =='block'   )
             {
                  closePhotoAlbum();
