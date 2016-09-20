@@ -32,14 +32,20 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
         mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbSlavearr[$myDbSlaveName]);
         $result=$mysqlObj->executeQuery($sql,$myDbSlavearr[$myDbSlaveName]);
         $profileidStr = $mysqlObj->fetchArray($result)['PROFILEID'];
-	while($myrow=$mysqlObj->fetchArray($result))
-		$profileidStr.=','.$myrow['PROFILEID'];
         
-        
-        $sql2 = "UPDATE newjs.JPARTNER SET CHILDREN = '' WHERE PROFILEID IN ($profileidStr)";
+        $c=0;
         $myDbName=getActiveServerName($activeServerId);
         $myDbarr[$myDbName]=$mysqlObj->connect("$myDbName");
         mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbarr[$myDbName]);
-        $mysqlObj->executeQuery($sql2,$myDbarr[$myDbName]) or die(mysql_error($myDbarr[$myDbName]));
+	while($myrow=$mysqlObj->fetchArray($result)){                
+            $profileidStr.=','.$myrow['PROFILEID'];
+            if($c==5000){
+                $sql2 = "UPDATE newjs.JPARTNER SET CHILDREN = '' WHERE PROFILEID IN ($profileidStr)";
+                $mysqlObj->executeQuery($sql2,$myDbarr[$myDbName]) or die(mysql_error($myDbarr[$myDbName]));
+                $c=0;
+                $profileidStr=$mysqlObj->fetchArray($result)['PROFILEID'];
+            }
+            $c++;
+        }
 }
 ?>
