@@ -233,6 +233,7 @@ class csvToSugar
 				$v['opt_in_c']='1';
 				$v['status']='13';
 				$v['disposition_c']='24';
+				$v['js_source_c']='fb_leads';
 				jscreate_lead($v);
 				$emailArr[] = $v['email'];
 			}
