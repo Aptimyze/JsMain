@@ -98,23 +98,23 @@ chatConfig.Params = {
                         "id": "dpp",
                         "group_name": "Desired Partner Matches",
                         "show_group_name": true,
-                        "hide_offline_users": false
+                        "hide_offline_users": true
                     },
                     {
                         "id": "intsent",
                         "group_name": "Interest Sent",
                         "show_group_name": true,
-                        "hide_offline_users": false
+                        "hide_offline_users": true
                     }, {
                         "id": "intrec",
                         "group_name": "Interest Received",
                         "show_group_name": true,
-                        "hide_offline_users": false
+                        "hide_offline_users": true
                     }, {
                         "id": "shortlist",
                         "group_name": "Shortlisted Members",
                         "show_group_name": true,
-                        "hide_offline_users": false
+                        "hide_offline_users": true
                     },{
                         "id":"mysearch",
                         "group_name":"Search Results",
@@ -284,6 +284,26 @@ chatConfig.Params = {
                 "checkForPaidInitiation":true
             }
         },
+        groupBasedConfig:{
+            "dpp":{
+                "reListCreationAfterUnblock":false //whether user comes again in list after unblock
+            },
+            "shortlist":{
+                "reListCreationAfterUnblock":false
+            },
+            "acceptance":{
+                "reListCreationAfterUnblock":true
+            },
+            "mysearch":{
+                "reListCreationAfterUnblock":false
+            },
+            "intsent":{
+                "reListCreationAfterUnblock":true
+            },
+            "intrec":{
+                "reListCreationAfterUnblock":true
+            }
+        },
         //max count of nodes limit per group
         groupWiseNodesLimit: {
             "dpp": 50,
@@ -301,7 +321,8 @@ chatConfig.Params = {
         setLastReadMsgStorage:true,
 	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
         autoChatLogin:true,  //auto-login to chat on site login
-        rosterDeleteChatBoxMsg:"You can no longer chat, as the other user has blocked you/declined your interest"
+        rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
+        clearListingCacheTimeout:3600000 //TIme in milliseconds
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];

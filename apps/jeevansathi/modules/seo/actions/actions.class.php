@@ -264,7 +264,7 @@ class seoActions extends sfActions
         if (MobileCommon::isMobile()) {
             $this->forward("static", "page404");
         }
-        LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array('message' => $request->getUri(), 'moduleName' => '404'));
+        LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array(LoggingEnums::MESSAGE => $request->getUri(), LoggingEnums::MODULE_NAME => LoggingEnums::EX404));
     }
     
     function TopSearchBandFields() {

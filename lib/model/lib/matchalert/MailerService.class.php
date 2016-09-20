@@ -624,7 +624,7 @@ class MailerService
   	}
         public function getEducationDetails($pid)
 	{
-                $educationObj = new NEWJS_JPROFILE_EDUCATION();
+                $educationObj = ProfileEducation::getInstance();
                 $Education = $educationObj->getProfileEducation($pid,$from="mailer");
                 $edu=$this->getEducationDisplay($Education);
                 $eduDisplay="";
@@ -636,7 +636,7 @@ class MailerService
 public function getMultipleEducationDetails($profileIdArray)
 	{
 		if(!is_array($profileIdArray)) return false;
-                $educationObj = new NEWJS_JPROFILE_EDUCATION();
+                $educationObj = ProfileEducation::getInstance();
                 $EducationArray = $educationObj->getProfileEducation($profileIdArray,'mailer');
                 foreach($EducationArray as $k=>$Education)
                 {

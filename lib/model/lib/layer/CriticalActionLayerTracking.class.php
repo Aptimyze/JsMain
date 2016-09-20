@@ -246,7 +246,7 @@ return 0;
 
   case in_array($highestDegree, explode(',',$fieldArray['g'])):
   
-    $jprofileEduObj=new newjs_JPROFILE_EDUCATION();
+    $jprofileEduObj= ProfileEducation::getInstance();
     $education=$jprofileEduObj->getProfileEducation($profileObj->getPROFILEID());
     if(!$education['UG_DEGREE'] )
       return true;
@@ -256,7 +256,7 @@ return 0;
 
   case (in_array($highestDegree, explode(',',$fieldArray['pg'])) || in_array($highestDegree, explode(',',$fieldArray['phd']))): 
     
-    $jprofileEduObj=new newjs_JPROFILE_EDUCATION();
+    $jprofileEduObj= ProfileEducation::getInstance();
     $education=$jprofileEduObj->getProfileEducation($profileObj->getPROFILEID());
     if(!$education['UG_DEGREE'] || !$education['PG_DEGREE'] )
       return true;

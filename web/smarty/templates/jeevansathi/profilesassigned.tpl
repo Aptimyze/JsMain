@@ -16,11 +16,11 @@
     <td valign="bottom" width="45%" bgcolor="#EFEFEF">
       <table width="70%" border="0" cellspacing="0" cellpadding="3" align="right" class="tops">
         <tr valign="middle">
-          <td align="center" width="70"><a href="http://www.naukri.com/" class="tops">Home</a></td>
+          <td align="center" width="70"><a href="https://www.naukri.com/" class="tops">Home</a></td>
           <td width="4"><img src="images/verttop.gif" width="5" height="15"></td>
-          <td valign="middle" align="center" width="72"><a href="http://www.naukri.com/infoedge/naukhome.htm" class="tops" target="_blank">About Us</a></td>
+          <td valign="middle" align="center" width="72"><a href="https://www.naukri.com/infoedge/naukhome.htm" class="tops" target="_blank">About Us</a></td>
           <td width="5"><img src="images/verttop.gif" width="5" height="15"></td>
-          <td align="center" width="78"><a href="http://www.naukri.com/contact/" class="tops" target="_blank">Contact
+          <td align="center" width="78"><a href="https://www.naukri.com/contact/" class="tops" target="_blank">Contact
             Us</a></td>
         </tr>
       </table>
@@ -32,7 +32,7 @@
 </table>
 
 <map name="Map">
-  <area shape="rect" coords="473,296,661,345" href="http://www.naukri.com" alt="Home" title="Home">
+  <area shape="rect" coords="473,296,661,345" href="https://www.naukri.com" alt="Home" title="Home">
 </map>
 
 <table width=100% cellspacing="1" cellpadding='0' ALIGN="CENTER" >
@@ -59,13 +59,13 @@
   </tr>
   <tr>
     <td valign="middle" bgcolor="#EFEFEF" align="center" height="18" class="bottom">
-      <a href="http://www.naukri.com/infoedge/naukhome.htm" class="bottom" target="_blank">About
-      Us</a> - <a href="http://www.naukri.com/infoedge/clients/clients.htm" class="bottom" target="_blank">Our
-      Clients</a> - <a href="http://www.naukri.com/infoedge/pageview.htm" class="bottom" target="_blank">
-      Check Hits</a> - <a href="http://www.naukri.com/infoedge/naukri.htm" class="bottom" target="_blank">
-      Disclaimer</a> - <a href="http://www.naukri.com/faq" class="bottom" target="_blank">
-      F.A.Q's</a> - <a href="http://www.naukri.com" class="bottom"> Home</a> -
-      <a href="http://www.naukri.com/contact/" class="bottom" target="_blank">Contact
+      <a href="https://www.naukri.com/infoedge/naukhome.htm" class="bottom" target="_blank">About
+      Us</a> - <a href="https://www.naukri.com/infoedge/clients/clients.htm" class="bottom" target="_blank">Our
+      Clients</a> - <a href="https://www.naukri.com/infoedge/pageview.htm" class="bottom" target="_blank">
+      Check Hits</a> - <a href="https://www.naukri.com/infoedge/naukri.htm" class="bottom" target="_blank">
+      Disclaimer</a> - <a href="https://www.naukri.com/faq" class="bottom" target="_blank">
+      F.A.Q's</a> - <a href="https://www.naukri.com" class="bottom"> Home</a> -
+      <a href="https://www.naukri.com/contact/" class="bottom" target="_blank">Contact
       Us</a></td>
   </tr>  
 </table>
