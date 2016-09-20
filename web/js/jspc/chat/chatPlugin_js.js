@@ -1093,6 +1093,7 @@ JsChat.prototype = {
             if(typeof group!= "undefined" && curElem._groupBasedConfig[group]["reListCreationAfterUnblock"]==false){
                 if($('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated")=="false" && $('chat-box[user-id="' + userId + '"] #rosterDeleteMsg_'+ userId + '').length == 0){
                     //console.log("enabling chat div");
+                    $('chat-box[user-id="' + userId + '"]').attr("data-nodeMigrated","true");
                     curElem._setChatBoxInnerDiv(userId, $('chat-box[user-id="' + userId + '"]').attr("data-contact"));
                 }
             }
