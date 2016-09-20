@@ -181,6 +181,7 @@ class chatActions extends sfActions
 		$type = $request->getParameter("type");
 		if($type=='DPP')
 		{
+			
 			$this->forward("chat","getDppDataV1");
 		}
 		else	
@@ -282,13 +283,14 @@ class chatActions extends sfActions
 			$currentPage = 1;
 		$completeResponse = 1;
 		/***/
+		$dontShowShortlisted = 1; // Set to 0 if shorlisted need to be shown
 
 		$profileObj = LoggedInProfile::getInstance('', $profileid);
 		$profileObj->getDetail('', '', '*');
 		$partnerObj = new SearchCommonFunctions();
 
 
-		$obj = $partnerObj->getMyDppMatches(sort, $profileObj, $limit, $currentPage, $paramArr, $removeMatchAlerts, $dontShowFilteredProfiles, $twoWayMatches, $clustersToShow, $results_orAnd_cluster, $notInProfiles, $completeResponse);
+		$obj = $partnerObj->getMyDppMatches(sort, $profileObj, $limit, $currentPage, $paramArr, $removeMatchAlerts, $dontShowFilteredProfiles, $twoWayMatches, $clustersToShow, $results_orAnd_cluster, $notInProfiles, $completeResponse,'',$dontShowShortlisted);
 		$arr = $obj->getResultsArr();
 		if ($arr) {
 			/*

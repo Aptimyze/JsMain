@@ -191,7 +191,7 @@ class SearchCommonFunctions
 	/**
 	* This section will show the dpp matches.
 	*/
-	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '')
+	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '',$removeShortlisted='')
 	{
                 $searchEngine = 'solr';
                 $outputFormat = 'array';
@@ -224,11 +224,19 @@ class SearchCommonFunctions
                 $SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
 		$SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
 		$SearchUtilityObj =  new SearchUtility;
-                if($notInProfiles)
-                   $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts,$notInProfiles);
-                else
-                    $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts);
-                $responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,$currentPage,'',$loggedInProfileObj);
+		if($removeShortlisted)
+		{
+				$shortlistObj							= new Bookmarks("newjs_masterRep");
+				$condition["WHERE"]["IN"]["BOOKMARKER"] = $loggedInProfileObj->getPROFILEID();
+				$notInProfiles = implode(array_keys($shortlistObj->getBookmarkedProfile($loggedInProfileObj->getPROFILEID(),$condition))," ");
+				unset($shortlistObj);
+		}
+	
+		if($notInProfiles)
+			 $SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts,$notInProfiles);
+		else
+				$SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts,$removeMatchAlerts);
+		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,$currentPage,'',$loggedInProfileObj);
 		if($completeResponse)
 			return $responseObj;
 		$arr['PIDS'] = $responseObj->getsearchResultsPidArr();
