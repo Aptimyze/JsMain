@@ -373,7 +373,7 @@ strophieWrapper.sendPresence();
                 }
             }
         }
-        console.log("RECEIVED presence for "+from+"-"+chat_status);
+        //console.log("RECEIVED presence for "+from+"-"+chat_status);
         if (strophieWrapper.isItSelfUser(user_id) == false) {
             //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
             //strophieWrapper.stropheLoggerPC(from);
