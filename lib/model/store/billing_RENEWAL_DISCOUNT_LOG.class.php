@@ -42,7 +42,7 @@ class billing_RENEWAL_DISCOUNT_LOG extends TABLE
         {
             $sql  = "SELECT DISCOUNT FROM billing.RENEWAL_DISCOUNT_LOG WHERE START_DT<=:CALC_DATE AND EXPIRY_DT>=:CALC_DATE";
             $prep = $this->db->prepare($sql);
-            $prep->bindValue(":CALC_DATE", $start, PDO::PARAM_STR);
+            $prep->bindValue(":CALC_DATE", $date, PDO::PARAM_STR);
             $prep->execute();
             if ($row = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $discount = $row['DISCOUNT'];
