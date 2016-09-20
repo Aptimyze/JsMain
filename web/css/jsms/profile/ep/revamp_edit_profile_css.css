@@ -47,3 +47,6 @@ input[type=number]::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance:textfield;
 }
+
+.filter-onoff-new
+{ background-image: url(IMG_URL/images/jsms/commonImg/on-off.png); background-repeat: no-repeat}

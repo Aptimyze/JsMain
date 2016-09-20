@@ -228,6 +228,13 @@ class dppAction extends sfAction {
 		 $this->dropDownData = $this->getDropDowns($request);
      $this->casteDropDown = json_encode($this->getCasteValues(),true);
      
+     $newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+    $cnt_logic = $newjsMatchLogicObj->getPresentLogic($this->loginProfile->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
+    if($cnt_logic>0)
+            $this->toggleMatchalerts = "dpp";
+    else
+            $this->toggleMatchalerts = "new";
+     
      if(isset($this->fromReg)){
       $name_pdo = new incentive_NAME_OF_USER();
       $this->name        = $name_pdo->getName($this->profileId);
