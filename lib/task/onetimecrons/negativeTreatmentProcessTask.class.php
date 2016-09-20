@@ -32,16 +32,17 @@ $this->addOptions(array(
         ini_set('memory_limit',-1);
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
-		/*$notificationKey = $arguments["notificationKey"];*/
 
-		//$negativeTreatmentObj   =new negativeTreatment();
-		// get All profiles
-
+		$id1 ='';
+		$id2 ='';
 		$typeArr =array('Abusive Chat with other members','Criminal','Detective','Escorts','Fraud','Massage Parlor','Spammer');
 		$typeStr ="'".implode("','",$typeArr)."'";
-
+		$pidArr =array();
+		$phoneArr =array();
+		$emailArr =array();	
+	
 		$negativeProfileObj =new incentive_NEGATIVE_PROFILE_LIST('newjs_slave');
-		$dataArr =$negativeProfileObj->getProfileDetails($typeStr);				
+		$dataArr =$negativeProfileObj->getProfileDetails($typeStr,$id1,$id2);				
 
 		foreach($dataArr as $key=>$dataVal){
 
@@ -56,7 +57,7 @@ $this->addOptions(array(
 			$type		=$dataVal['TYPE'];
 			if(!$comment)
 				$comment=$type;
-
+			
 			if($isd)
 				$isd    =ltrim($isd,0);
 			if($stdCode)
@@ -65,22 +66,33 @@ $this->addOptions(array(
 				$mobile    	=ltrim($mobile,0);
 				$phoneNum       =$isd.$mobile;
 			}
+			/*
 			if($landline){
 				$landline    	=ltrim($landline,0);
 				$landlineNum	=$isd.$stdCode.$landline;
-			}
-			if($profileid){		
-				$negativeTreatmentObj->addToNegative('PROFILEID',$profileid,$comment);
+			}*/
+			if($profileid){
+				if(!in_array($profileid, $pidArr)){
+					$negativeTreatmentObj->addToNegative('PROFILEID',$profileid,$comment);
+					$pidArr[] =$profileid;
+				}
 			}
 			if($email){
-				$negativeTreatmentObj->addToNegative('EMAIL',$email,$comment);
+				if(!in_array($email, $emailArr)){
+					$negativeTreatmentObj->addToNegative('EMAIL',$email,$comment);
+					$emailArr[] =$email;
+				}
 			}
 			if($phoneNum){
-				$negativeTreatmentObj->addToNegative('PHONE_NUM',$phoneNum,$comment);
+				if(!in_array($phoneNum, $phoneArr)){
+					$negativeTreatmentObj->addToNegative('PHONE_NUM',$phoneNum,$comment);
+					$phoneArr[] =$phoneNum;
+				}
 			}
+			/*
 			if($landlineNum){
 				$negativeTreatmentObj->addToNegative('PHONE_NUM',$landlineNum,$comment);
-			}
+			}*/
 			unset($negativeTreatmentObj);
 		}
   }

@@ -177,12 +177,18 @@ class negativeTreatment{
 
 		// Delete the profile	
 		if(is_array($this->profileArr)){
+			$jProfileObj    =$this->jprofileEmailObj;
 			$DeleteProfileObj =new DeleteProfile();
                         $delete_reason ='Other reasons';
                         $specify_reason ='Negative List';
 			foreach($this->profileArr as $key=>$profileid){
-                                $DeleteProfileObj->delete_profile($profileid,$delete_reason,$specify_reason,$username);
-                                $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
+                		$jProfile 	=$jProfileObj->get($profileid,"PROFILEID",'PROFILEID,ACTIVATED');
+                		$profileid      =$jProfile['PROFILEID'];
+				$activated 	=$jProfile['ACTIVATED'];
+				if($profileid && $activated!='D'){
+	                                $DeleteProfileObj->delete_profile($profileid,$delete_reason,$specify_reason);
+	                                $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
+				}
                         }
 		}
 
