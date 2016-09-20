@@ -97,7 +97,7 @@ class kundli_alert_LOG extends TABLE
 
         			foreach($finalArr as $user=>$userId)
         			{        			
-        				if($user!="SENT" && $i<=16 && in_array($user,kundliMatchAlertMailerEnums::$userArray))
+        				if($user!="SENT" && $i<=16 && in_array($user,kundliMatchAlertMailerEnums::$userArray) && $userId != 0)
         				{
         					$sql .= "(:RECEIVERID,:USER".$i.",:DATE), ";
         				}
