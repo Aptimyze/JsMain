@@ -1616,9 +1616,11 @@ JsChat.prototype = {
         //this._chatLoggerPlugin(curElem);
         switch (chatBoxType) {
         case curElem._contactStatusMapping["pg_interest_pending"]["key"]:
-            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs color5 mt10 wid70p txtc"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="canShowBlock sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+            if($('chat-box[user-id="' + userId + '"] .sendInterest').length == 0){
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="sendInterest cursp sendDiv pos-abs color5 mt10 wid70p txtc"><i class="nchatspr nchatic_6 "></i><span class="vertTexBtm"> Send Interest</span></div><div id="sentDiv" class="canShowBlock sendDiv disp-none pos-abs wid140 color5"><i class="nchatspr nchatic_7 "></i><span class="vertTexBtm">Interest sent</span></div>');
+            }
             //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-            if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length == 0)
+            if($('chat-box[user-id="' + userId + '"] #chat_freeMemMsg_'+userId).length == 0 && $('chat-box[user-id="' + userId + '"] #initiateText').length == 0)
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="initiateText" class="color5 pos-rel txtc fullwid nchatm85 mb20">Initiating chat will also send your interest</div>');
             $('chat-box[user-id="' + userId + '"] #sendInt').on("click", function () {
                 //console.log("clicked sent interest");
