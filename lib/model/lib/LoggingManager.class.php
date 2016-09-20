@@ -454,6 +454,8 @@ class LoggingManager
 					$apiWebHandler = ApiRequestHandler::getInstance($request);
 					$details = $apiWebHandler->getModuleAndActionName($request);
 					$moduleName = $details['moduleName'].'_'.$moduleName;
+				} elseif($moduleName == "e") {
+					$moduleName = "AutoLogin";
 				}
 			}
 			else
