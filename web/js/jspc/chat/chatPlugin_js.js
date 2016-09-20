@@ -1097,7 +1097,7 @@ JsChat.prototype = {
                     curElem._setChatBoxInnerDiv(userId, $('chat-box[user-id="' + userId + '"]').attr("data-contact"));
                 }
             }
-        },5000);
+        },4000);
     },
     _bindUnblock: function (userId) {},
     onSendingMessage: null,
