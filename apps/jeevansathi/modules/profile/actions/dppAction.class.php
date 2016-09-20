@@ -229,11 +229,11 @@ class dppAction extends sfAction {
      $this->casteDropDown = json_encode($this->getCasteValues(),true);
      
      $newjsMatchLogicObj = new newjs_MATCH_LOGIC();
-    $cnt_logic = $newjsMatchLogicObj->getPresentLogic($this->loginProfile->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
+    $cnt_logic = $newjsMatchLogicObj->getPresentLogic($this->loginProfile->getPROFILEID(),MailerConfigVariables::$newMatchAlertLogic);
     if($cnt_logic>0)
-            $this->toggleMatchalerts = "dpp";
-    else
             $this->toggleMatchalerts = "new";
+    else
+            $this->toggleMatchalerts = "dpp";
      
      if(isset($this->fromReg)){
       $name_pdo = new incentive_NAME_OF_USER();
