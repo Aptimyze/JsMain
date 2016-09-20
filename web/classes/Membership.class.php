@@ -1087,7 +1087,7 @@ class Membership
         if ($fest == 1 && !in_array($mainMembership, $excludeMains) && !empty($mainMembership)) {
             $festOffrLookup = new billing_FESTIVE_OFFER_LOOKUP();
             $actualServiceid = $festOffrLookup->fetchReverseOfferedServiceId($mainMembership);
-            if ($actualServiceid != $mainMembership) {
+            if ($actualServiceid != $mainMembership && !empty($actualServiceid)) {
                 $festCondition = true;
             }
         }
