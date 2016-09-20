@@ -78,7 +78,7 @@ class ApiIgnoreProfileV1Action extends sfActions
            $request->isMethod('POST')
           )
 		{
-			$ignore_Store_Obj = new NEWJS_IGNORE;
+			$ignore_Store_Obj = new IgnoredProfiles("newjs_master");
 			switch($arrParameter['action'])
 			{
 				case self::UNBLOCK :
@@ -86,10 +86,12 @@ class ApiIgnoreProfileV1Action extends sfActions
                                          $ignoreCount=JsMemcache::getInstance()->get('IGNORED_COUNT_'.$profileID);
                                          if(is_null($ignoreCount)|| $ignoreCount===false)
                                         {
+                                            //changed to library call
                                             $ignoreArr=$ignore_Store_Obj->getCountIgnoredProfiles($profileID);
                                             $ignoreCount=$ignoreArr['CNT'];
                                         
                                         }
+                    //changed to library call
 					$ignore_Store_Obj->undoIgnoreProfile($profileID,$ignoredProfileid);
 					JsMemcache::getInstance()->remove($profileID);
 					JsMemcache::getInstance()->remove($ignoredProfileid);
@@ -111,7 +113,8 @@ class ApiIgnoreProfileV1Action extends sfActions
 						$this->m_arrOut["buttondetails"] = $button;
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					$this->m_arrOut=array_merge($this->m_arrOut,array('status'=>"0",'message'=>null,'button_after_action'=>$button));
-					$isIgnored = $ignore_Store_Obj->isIgnored($ignoredProfileid,$profileID);
+					//changed to library call
+					$isIgnored = $ignore_Store_Obj->ifIgnored($ignoredProfileid,$profileID);
 
 					if(!$isIgnored) {
 						$this->contactObj = new Contacts($this->loginProfile, $this->ignoreProfile);
@@ -217,7 +220,7 @@ class ApiIgnoreProfileV1Action extends sfActions
 				}
 				case self::STATUS : 
 				{
-					$bStatus = ($ignore_Store_Obj->isIgnored($profileID,$ignoredProfileid))?1:0;
+					$bStatus = ($ignore_Store_Obj->ifIgnored($profileID,$ignoredProfileid))?1:0;
 					$this->m_iResponseStatus = ResponseHandlerConfig::$SUCCESS;
 					$this->m_arrOut=array('status'=>"$bStatus");
 					break;
