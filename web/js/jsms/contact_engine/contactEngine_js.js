@@ -1055,8 +1055,6 @@ function initiateContact(result,action, index){
     $("#writeMessageTxtId").val('');
     if(result.actiondetails.lastsent)
       $("#writeMessageTxtId").val(result.actiondetails.lastsent);
-
-
     $("#presetMessageId").show();
     $("#presetMessageTxtId").html('Interest sent. You may send a personalized message with the interest.');
     $("#writeMsgDisplayId").html('');
