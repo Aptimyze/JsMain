@@ -6,7 +6,7 @@ class billing_EXC_CALLBACK extends TABLE {
         parent::__construct($dbname);
     }
 
-    public function addRecord($profileid='',$phoneNo='',$email='', $device=NULL, $channel=NULL, $callbackSource=NULL, $date, $startTime, $endTime)
+    public function addRecord($profileid='',$phoneNo='',$email='', $device=NULL, $channel=NULL, $callbackSource=NULL, $date, $startTime, $endTime, $serviceid='')
     {
         try
         {
@@ -21,12 +21,13 @@ class billing_EXC_CALLBACK extends TABLE {
             $startDtTime = $date." ".$startTime;
             $endDtTime = $date." ".$endTime;
             
-            $sql="INSERT INTO billing.EXC_CALLBACK(PROFILEID,EMAIL,PHONE_NUMBER,ENTRY_DT,DEVICE,CHANNEL,CALLBACK_SOURCE,PREFERRED_START_TIME_IST,PREFERRED_END_TIME_IST) VALUES(:PROFILEID,:EMAIL,:PHONE_NUMBER,:ENTRY_DT,:DEVICE,:CHANNEL,:CALLBACK_SOURCE,:PREFERRED_START_TIME_IST,:PREFERRED_END_TIME_IST)";
+            $sql="INSERT INTO billing.EXC_CALLBACK(PROFILEID,EMAIL,PHONE_NUMBER,ENTRY_DT,SERVICEID,DEVICE,CHANNEL,CALLBACK_SOURCE,PREFERRED_START_TIME_IST,PREFERRED_END_TIME_IST) VALUES(:PROFILEID,:EMAIL,:PHONE_NUMBER,:ENTRY_DT,:SERVICEID,:DEVICE,:CHANNEL,:CALLBACK_SOURCE,:PREFERRED_START_TIME_IST,:PREFERRED_END_TIME_IST)";
             $row = $this->db->prepare($sql);
             $row->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $row->bindValue(":EMAIL",$email, PDO::PARAM_STR);
             $row->bindValue(":PHONE_NUMBER",$phoneNo, PDO::PARAM_INT);
             $row->bindValue(":ENTRY_DT",$entryDt, PDO::PARAM_STR);
+            $row->bindValue(":SERVICEID",$serviceid, PDO::PARAM_STR);
             $row->bindValue(":DEVICE",$device, PDO::PARAM_STR);
             $row->bindValue(":CHANNEL",$channel, PDO::PARAM_STR);
             $row->bindValue(":CALLBACK_SOURCE",$callbackSource, PDO::PARAM_STR);
