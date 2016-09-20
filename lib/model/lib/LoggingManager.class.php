@@ -463,6 +463,10 @@ class LoggingManager
 					$exceptionLiesIn = $exception->getTrace()[0]['file'];
 					$arrExplodedPath = explode('/', $exceptionLiesIn);
 					$moduleName = $arrExplodedPath[count($arrExplodedPath)-2];
+					if($moduleName == "profile")
+					{
+						$moduleName = "inbox";
+					}
 				}
 			}
 		}
