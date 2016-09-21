@@ -200,8 +200,11 @@ public function insertEntry($profileid,$phoneType,$phoneNum,$msg,$opUsername){
                         foreach($profiles as $k=>$p)
                                 $prep->bindValue(":PROFILEID".$k,$p,PDO::PARAM_STR);
                         $prep->execute();
-                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
-                                $dataArr[]=$result['PHONE_NUM'];
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+				$phone =$result['PHONE_NUM'];
+				if($phone)
+	                                $dataArr[]=$phone;
+			}
                         return $dataArr;
                 }
                 catch(PDOException $e){
@@ -221,8 +224,11 @@ public function insertEntry($profileid,$phoneType,$phoneNum,$msg,$opUsername){
                         foreach($phoneNumber as $k=>$p)
                                 $prep->bindValue(":PHONE_NUM".$k,$p,PDO::PARAM_STR);
                         $prep->execute();
-                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
-                                $dataArr[]=$result['PROFILEID'];
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+				$pid =$result['PROFILEID'];
+				if($pid)
+	                                $dataArr[]=$pid;
+			}
                         return $dataArr;
                 }
                 catch(PDOException $e){

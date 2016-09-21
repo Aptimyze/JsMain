@@ -49,8 +49,11 @@ class newjs_OLDEMAIL extends TABLE
                         foreach($profiles as $k=>$p)
                                 $prep->bindValue(":PROFILEID".$k,$p,PDO::PARAM_STR);
                         $prep->execute();
-                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
-                                $dataArr[]=$result['EMAIL'];
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+				$email =$result['EMAIL'];
+				if($email)
+	                                $dataArr[]=$email;
+			}
                         return $dataArr;
                 }
                 catch(PDOException $e){
@@ -70,8 +73,11 @@ class newjs_OLDEMAIL extends TABLE
                         foreach($emailArr as $k=>$p)
                                 $prep->bindValue(":OLD_EMAIL".$k,$p,PDO::PARAM_STR);
                         $prep->execute();
-                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
-                                $dataArr[]=$result['PROFILEID'];
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+				$pid =$result['PROFILEID'];
+				if($pid)
+	                                $dataArr[]=$pid;
+			}
                         return $dataArr;
                 }
                 catch(PDOException $e){
