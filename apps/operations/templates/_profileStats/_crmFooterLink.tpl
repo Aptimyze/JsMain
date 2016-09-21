@@ -35,7 +35,7 @@
 		</td>
 	</tr>
 ~/if`
-	<!--<tr class=fieldsnew>
+	<tr class=fieldsnew>
                 <td align=center>
 		<a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/editDppInterface?profileChecksum=~$checksum`&cid=~$cid`" target="_blank"><font size='2'>Edit desired partner profile for this user</font></a><br>
 		</td>
@@ -44,7 +44,7 @@
                 <td align=center>
 		<a href="~sfConfig::get('app_site_url')`/search/partnermatches?checksum=~$checksum`&echecksum=~$echecksum`&profileChecksum=~$checksum`" target="_blank"><font size='2'>View Your Partner Matches</font></a><br>
 		</td>
-        </tr>-->
+        </tr>
 ~if $set_filter or $isAlloted`
        <tr class=fieldsnew>
                 <td align=center>
