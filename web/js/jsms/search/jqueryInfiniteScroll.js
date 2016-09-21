@@ -126,14 +126,20 @@ function triggerLoader(type,loadPageToLoadId,idToLoad)
 					loadsNextResult(callPage,'','Prev');
 				}
 			}
+			if(firstResponse.searchBasedParam == 'kundlialerts' && type=='Next' && $(document).height() <= $(window).height())
+				loadsNextResult();
+			else if(firstResponse.searchBasedParam == 'kundlialerts' && type=='Prev')
+				loadsNextResult('',idToLoad);
+			
 		}
 		else if(triggerPoint <=_TRIGGER_POINT_BOTTOM || type=='Next') /* 1st priority is to load below results */
 		{
 			
 			if(reachedEnd==0)
-				loadsNextResult();
+				loadsNextResult();	
 		}
 	}
+	
 }
 
 /**
@@ -601,6 +607,7 @@ function generateParams(page)
 */
 function loadsNextResult(forcePage,idToJump,ifPrePend)
 { 
+	
 	var url = '/api/v1/search/perform';
 	
 	if(contactCenter==1)
@@ -629,12 +636,18 @@ function loadsNextResult(forcePage,idToJump,ifPrePend)
         dataType: 'json',
 		type: 'GET', data: searchResultsPostParams1,
 		timeout: 60000,
+		beforeSend : function( xhr ) {
+						if(firstResponse.searchBasedParam == 'kundlialerts')
+							isLoading = true;
+        },
 		success: function(response) 
 		{ 	
 			if(!CommonErrorHandling(response))
 				return;
 			if(response.responseStatusCode=='0')
+			{
 				dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple);
+			}
 			else{
 				var d = new Date();
 				if($('.loaderTopDiv:visible').length>0)
@@ -675,7 +688,17 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 	var tuplesOfOnePage='';
 	var arr1 = {};
 	var defaultImage = response.defaultImage;
-
+	if(response.searchBasedParam == 'kundlialerts')
+	{
+					profileLength = 0;
+					if('profiles' in response && Array.isArray(response.profiles))
+					{
+						
+						profileLength = response.profiles.length;
+					}
+						
+	}
+				
 	/** reading json **/
 	$.each(response, function( key, val ) {
 
@@ -778,23 +801,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 					var height = ($(window).height()-20)/2;
 					$("div.loaderBottomDiv").css("margin-top",height+"px");
 				}
-				if(response.searchBasedParam == 'kundlialerts')
-				{
-					var profileLength = 0;
-					if('profiles' in response && Array.isArray(response.profiles))
-					{
-						
-						profileLength = response.profiles.length;
-					}
-					if(profileLength == 0)
-					{
-							if(typeof response.paginationArray !=="undefined" && response.page_index < response.paginationArray.length)
-							{
-								loadsNextResult(parseInt(response.page_index) + 1);
-							}
-							
-					}
-				}
+				
 			}
 		}
 	}
@@ -1037,6 +1044,9 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 				$('body, html').scrollTop(0);
 			}
 			loadPrevTuple=0;
+			if(firstResponse.searchBasedParam == 'kundlialerts' && typeof profileLength != 'undefined' && profileLength<3)
+				triggerLoader('Next');
+			else
 			triggerLoader();
 
 			var scrollTopPositioning = $(window).scrollTop();
