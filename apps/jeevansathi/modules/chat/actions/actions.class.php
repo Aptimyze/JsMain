@@ -297,7 +297,7 @@ class chatActions extends sfActions
 			if ($arr) {
 				
 				foreach ($arr as $k => $v) {
-					if($i>$limit)
+					if($i>=$limit)
 						break;
 					$cArr[$i]["PROFILEID"] = $v["id"];
 					$cArr[$i]["USERNAME"] = $v["USERNAME"];
