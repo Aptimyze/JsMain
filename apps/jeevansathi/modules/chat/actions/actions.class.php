@@ -284,41 +284,27 @@ class chatActions extends sfActions
 		$completeResponse = 1;
 		/***/
 		$dontShowShortlisted = 1; // Set to 0 if shorlisted need to be shown
-
+		
 		$profileObj = LoggedInProfile::getInstance('', $profileid);
 		$profileObj->getDetail('', '', '*');
 		$partnerObj = new SearchCommonFunctions();
-
-
-		$obj = $partnerObj->getMyDppMatches(sort, $profileObj, $limit, $currentPage, $paramArr, $removeMatchAlerts, $dontShowFilteredProfiles, $twoWayMatches, $clustersToShow, $results_orAnd_cluster, $notInProfiles, $completeResponse,'',$dontShowShortlisted);
-		$arr = $obj->getResultsArr();
-		if ($arr) {
-			/*
-			$pidArr["PROFILEID"] = implode(",", $obj->getSearchResultsPidArr());
-			$profileObj = LoggedInProfile::getInstance('newjs_master');
-			$multipleProfileObj = new ProfileArray();
-
-			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
-			$multiplePictureObj = new PictureArray($profileDetails);
-			$photosArr = $multiplePictureObj->getProfilePhoto();
-			*/
-			$i=0;
-			foreach ($arr as $k => $v) {
-				$cArr[$i]["PROFILEID"] = $v["id"];
-				$cArr[$i]["USERNAME"] = $v["USERNAME"];
-				$cArr[$i]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($v["id"]);
-				$i++;
-
-				/*
-				$photoObj = $photosArr[$pid];
-				if ($photoObj) {
-					eval('$temp =$photoObj->get' . $photoType . '();');
-					$cArr[$pid]["PHOTO"] = $temp;
-					unset($temp);
-				} else {
-					$cArr[$pid]["PHOTO"] = NULL;
+		$i=0;
+		for($j=1;$j>=0;$j--)
+		{
+			$showOnlineOnly = $j; // Show which are online only
+			$obj = $partnerObj->getMyDppMatches(sort, $profileObj, $limit, $currentPage, $paramArr, $removeMatchAlerts, $dontShowFilteredProfiles, $twoWayMatches, $clustersToShow, $results_orAnd_cluster, $notInProfiles, $completeResponse,'',$dontShowShortlisted,$showOnlineOnly);
+			$arr = $obj->getResultsArr();
+			if ($arr) {
+				
+				foreach ($arr as $k => $v) {
+					if($i>$limit)
+						break;
+					$cArr[$i]["PROFILEID"] = $v["id"];
+					$cArr[$i]["USERNAME"] = $v["USERNAME"];
+					$cArr[$i]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($v["id"]);
+					$i++;
+	
 				}
-				*/
 			}
 		}
 		$getData["profiles"] = $cArr;
