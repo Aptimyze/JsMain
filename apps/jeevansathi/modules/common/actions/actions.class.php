@@ -677,8 +677,27 @@ class commonActions extends sfActions
             $newName=$request->getParameter('newNameOfUser');
             
             if($namePrivacy=='Y' || $namePrivacy=='N')
-            (new NameOfUser())->insertName($loginData['PROFILEID'], $newName, $namePrivacy);
-            
+            {
+                    $loggedInProfile=LoggedInProfile::getInstance();
+                    $nameOfUserObj = new NameOfUser();
+                    $newName=$nameOfUserObj->filterName($newName);
+                    $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($newName,  $loggedInProfile->getGENDER());
+                    if($isNameAutoScreened)
+                    {
+                            $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$loggedInProfile->getSCREENING());
+                    }
+                    $profileid=$loggedInProfile->getPROFILEID();
+                    JPROFILE::getInstance()->edit($jprofileFieldArr,$profileid,'PROFILEID');
+                    $nameData = $nameOfUserObj->getNameData($profileid );
+                               if(!empty($nameData))
+                               {
+                                        $nameArr=array('NAME'=>$newName,'DISPLAY'=>$namePrivacy);
+                                       $nameOfUserObj->updateName($profileid,$nameArr);
+                               }
+                               else
+                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
+                    
+            }
             
         }
  		CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button);
