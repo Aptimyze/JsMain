@@ -197,7 +197,7 @@ class JsForm extends sfForm
 	  }
 	  if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$profileid;
-			$nativePlaceObj = new NEWJS_NATIVE_PLACE;
+			$nativePlaceObj = ProfileNativePlace::getInstance();
 			if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 			{
 				unset($nativePlaceArr[PROFILEID]);
