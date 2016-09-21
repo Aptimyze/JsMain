@@ -54,6 +54,7 @@ class postCancelInterestv1Action extends sfAction
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(false);
 			$apiObj->generateResponse();
 		}
 		else
