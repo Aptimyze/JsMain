@@ -18,6 +18,95 @@ class registerMisActions extends sfActions {
     // $this->forward('default', 'module');
   }
 
+  public function executeCommunitywiseRegistration(sfWebRequest $request)
+  {
+     $formArr = $request->getParameterHolder()->getAll();
+    $name = $request->getAttribute('name');
+    $this->cid = $formArr['cid'];
+    if ($formArr['submit']) 
+    {
+       // $commonUtilObj = new CommonUtility();
+      // $commonUtilObj->avoidPageRefresh("QUALITY_REGISTRATION", $name);
+      $this->range_format = $formArr['range_format'];
+      $params = array('range_format' => $formArr["range_format"], 'source_names' => $formArr['source_names'],'source_cities'=>$formArr['source_cities']);
+      if ($formArr["range_format"] == "Y") {      //If year is selected
+        $start_date = $formArr['yearValue'] . "-04-01";
+        $end_date = ($formArr['yearValue']+1) . "-03-31";
+        $this->columnDates = RegistrationMisEnums::$columnDates;
+        $this->displayDate = $formArr['yearValue'];
+      } else {
+        $formArr["date1_dateLists_month_list"] ++;
+        $formArr["date2_dateLists_month_list"] ++;
+
+  if(strlen($formArr["date1_dateLists_day_list"])==1)
+                $formArr["date1_dateLists_day_list"] = "0".$formArr["date1_dateLists_day_list"];
+        if(strlen($formArr["date2_dateLists_day_list"])==1)
+                $formArr["date2_dateLists_day_list"] = "0".$formArr["date2_dateLists_day_list"];
+  if(strlen($formArr["date1_dateLists_month_list"])==1)
+                $formArr["date1_dateLists_month_list"] = "0".$formArr["date1_dateLists_month_list"];
+        if(strlen($formArr["date2_dateLists_month_list"])==1)
+                $formArr["date2_dateLists_month_list"] = "0".$formArr["date2_dateLists_month_list"];
+
+        $start_date = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+        $end_date = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+        $this->verifyDates($start_date,$end_date);
+        $this->columnDates = $this->GetDays($start_date, $end_date);
+        $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+      }
+      if($this->errorMsg == ''){
+        $regQualityObj = new REGISTRATION_QUALITY('newjs_masterRep');
+        $params['start_date'] = $start_date;
+        $params['end_date'] = $end_date;
+        $this->registrationData = $regQualityObj->getRegisrationData($params); 
+
+        if ($formArr['report_format'] == 'CSV') {
+          $this->createCSVFormatCommunitywise($this->registrationData);
+        }
+        $this->setTemplate('communitywiseRegistration');
+      }
+      else
+      {
+        $this->communitywiseRegistration = true;
+        $this->source_cities = $this->setSourceCities();
+        $this->startMonthDate = "01";
+        $this->todayDate = date("d");
+        $this->todayMonth = date("m");
+        $this->todayYear = date("Y");
+        $this->rangeYear = date("Y");
+        $this->dateArr = GetDateArrays::getDayArray();
+        $this->yearArr = array();
+        $sourceObj = new MIS_SOURCE('newjs_slave');
+        $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
+        $dateArr = GetDateArrays::generateDateDataForRange('2014', ($this->todayYear));
+        foreach (array_keys($dateArr) as $key => $value) {
+          $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
+        }
+        $this->setTemplate('qualityRegistration');
+      }
+    }
+    else
+    {
+
+      $this->communitywiseRegistration = true;
+      // echo "Hello from total registration.";
+      $this->source_cities = $this->setSourceCities();
+      $this->startMonthDate = "01";
+      $this->todayDate = date("d");
+      $this->todayMonth = date("m");
+      $this->todayYear = date("Y");
+      $this->rangeYear = date("Y");
+      $this->dateArr = GetDateArrays::getDayArray();
+      $this->yearArr = array();
+      $sourceObj = new MIS_SOURCE('newjs_slave');
+      $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
+      $dateArr = GetDateArrays::generateDateDataForRange('2014', ($this->todayYear));
+      foreach (array_keys($dateArr) as $key => $value) {
+        $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
+      }
+      $this->setTemplate('qualityRegistration');
+    }
+  }
+
   public function executeQualityRegistration(sfWebRequest $request) {
     $formArr = $request->getParameterHolder()->getAll();
     $name = $request->getAttribute('name');
@@ -309,6 +398,38 @@ class registerMisActions extends sfActions {
     die;
   }
 
+
+
+
+  // create csv files for community wise registeration
+
+  public function createCSVFormatCommunitywise($registrationData)
+  {
+      // var_dump($registrationData);
+      $csvData = 'communitywise Registration MIS' . "\n";
+      $csvData = $csvData.$this->displayDate."\n";
+      $csvData = $csvData."Date".","."City".","."Source Category".","."Community".","."Total Registerations".","."Quality Registerations". "\n";
+      header("Content-Type: application/vnd.csv");
+      header("Content-Disposition: attachment; filename=Communitywise_Registration_Mis.csv");
+      header("Pragma: no-cache");
+      header("Expires: 0");
+
+      foreach ($registrationData['source_data'] as $key => $data) {
+        $row = "";
+        if ($data['SCREENED_SIC'] != 0 && $data['SCREENED_SIC'] != null)
+            $row = $row.$data['REG_DATE'].",".FieldMap::getFieldLabel("city_india",$data['SOURCECITY']).",".$data['SOURCEID'] .","."SI" .",".$data['SCREENED_SIC'] .","."0"."\n";
+ 
+         if ($data['OTHERS_COMMUNITY'] != 0 && $data['OTHERS_COMMUNITY'] != null)
+                    $row = $row.$data['REG_DATE'].",".FieldMap::getFieldLabel("city_india",$data['SOURCECITY']).",".$data['SOURCEID'] .","."Others" .",".$data['OTHERS_COMMUNITY'] .","."0"."\n"; 
+                  
+         if (($data['M26MVCC'] != 0 && $data['M26MVCC'] != null) || ($data['F22MVCC'] != 0 && $data['F22MVCC'] != null))
+                    $row = $row.$data['REG_DATE'].",".FieldMap::getFieldLabel("city_india",$data['SOURCECITY']).",".$data['SOURCEID'] .","."CC" .",".($data['M26'] + $data['F22']).",".($data['M26MVCC'] + $data['F22MVCC'])."\n";
+        $csvData = $csvData.$row ;
+      }
+      echo $csvData;
+      die;
+
+  }
   /*
    * Get number of days between 2 dates
    * @param date $sStartDate start date

@@ -26,7 +26,11 @@
 	        <td valign="top" width="40%" align="center"><img src="~sfConfig::get('app_img_url')`/profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
 	</tr>
 </table>
-        <form name="form1" action="~sfConfig::get('app_site_url')`/operations.php/registerMis/qualityRegistration?cid=~$cid`" method="post">
+		~if $communitywiseRegistration`
+        	<form name="form1" action="~sfConfig::get('app_site_url')`/operations.php/registerMis/communitywiseRegistration?cid=~$cid`" method="post">
+        ~else`
+        	<form name="form1" action="~sfConfig::get('app_site_url')`/operations.php/registerMis/qualityRegistration?cid=~$cid`" method="post">
+		~/if`
         <input type="hidden" name="cid" value="~$cid`">
 
 	<table border="0" align="center" width="60%" cellpadding="4" cellspacing="4" border="0">
@@ -37,7 +41,11 @@
 	</tr>
 	<tr></tr>
 	<tr class="formhead" align="center">
+	~if $communitywiseRegistration`
+		<td colspan="2" style="background-color:lightblue"><font size=3>Communitywise Registration MIS</font></td>
+	~else`
 		<td colspan="2" style="background-color:lightblue"><font size=3>Registration Quality MIS</font></td>
+	~/if`
 	</tr>
 	<tr></tr>
 	</table>
