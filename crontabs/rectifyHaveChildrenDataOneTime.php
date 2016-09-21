@@ -27,7 +27,7 @@ $mysqlObj=new Mysql;
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {
         $sql="SELECT PROFILEID FROM newjs.JPARTNER where (CHILDREN IS NOT NULL AND CHILDREN!='') AND (PARTNER_MSTATUS='N' OR PARTNER_MSTATUS='')";
-        $myDbSlaveName=getActiveServerName($activeServerId,"slave112");
+        $myDbSlaveName=getActiveServerName($activeServerId,"slave");
         $myDbSlavearr[$myDbSlaveName]=$mysqlObj->connect("$myDbSlaveName");
         mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbSlavearr[$myDbSlaveName]);
         $result=$mysqlObj->executeQuery($sql,$myDbSlavearr[$myDbSlaveName]);
