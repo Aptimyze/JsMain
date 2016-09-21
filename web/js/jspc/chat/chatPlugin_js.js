@@ -1670,97 +1670,100 @@ JsChat.prototype = {
         case curElem._contactStatusMapping["pg_acceptance_pending"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sendInt,#restrictMessgTxt,#initiateText,#chatBoxErr").remove();
             if($('chat-box[user-id="' + userId + '"] .chatMessage #acceptDeclineDiv').length ==0) {
-                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10 notSendInterestDiv">The member wants to chat</div><div id="acceptDeclineDiv" class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt1">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc notSendInterestDiv">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5 declineSent notSendInterestDiv canShowBlock">Interest Declined, you can\'t chat with this user anymore</div>');
+                $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="sendInt" class="pos-rel wid90p txtc colorGrey padall-10 notSendInterestDiv">The member wants to chat</div><div id="acceptDeclineDiv" class="pos-rel fullwid txtc colorGrey mt20"><div id="accept" class="acceptInterest padall-10 color5 disp_ib cursp">Accept</div><div id="decline" class="acceptInterest padall-10 color5 disp_ib cursp">Decline</div></div><div id="acceptTxt" class="pos-rel fullwid txtc color5 mt1">Accept interest to continue chat</div><div id="sentDiv" class="fullwid pos-rel disp-none mt10 color5 txtc notSendInterestDiv">Interest Accepted continue chat</div><div id="declineDiv" class="sendDiv txtc disp-none pos-abs wid80p mt10 color5 declineSent notSendInterestDiv canShowBlock">Interest Declined, you can\'t chat with this user anymore</div>').promise().done(function(){
+                    //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
+                    $('chat-box[user-id="' + userId + '"] #accept').on("click", function () {
+                        if (typeof curElem.onChatBoxContactButtonsClick == "function") {
+                            response = curElem.onChatBoxContactButtonsClick({
+                                "receiverID": userId,
+                                "checkSum": checkSum,
+                                "trackingParams": chatConfig.Params["trackingParams"]["ACCEPT"],
+                                "buttonType": "ACCEPT",
+                                "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
+                                "nick": nick
+                            });
+                            if (response != false) {
+                                if (response.responseMessage != "Successful") {
+                                    //curElem._chatLoggerPlugin($(this));
+                                    $(this).html(response.responseMessage);
+                                    $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#chatBoxErr").remove();
+                                } else if (response.buttondetails || response.buttondetails.button) {
+                                    if (response.actiondetails.errmsglabel) {
+                                        $(this).html(response.actiondetails.errmsglabel);
+                                        $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                    } else {
+                                        $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
+                                        $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#acceptDeclineDiv").remove();
+                                        //$(this).remove();
+                                        new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
+                                        //TODO: fire query for accepting request
+                                        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                                        $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
+                                        $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["Acceptance"]);
+                                        //console.log("334");
+                                        curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
+                                        
+                                        
+                                    }
+                                    //console.log("123");
+                                    setTimeout(function(){
+                                        //console.log("bhgxgs");
+                                        curElem._scrollToBottom(userId,"noAnimate");
+                                    },1000);
+                                } else {
+                                    $(this).html(response.actiondetails.errmsglabel);
+                                    $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
+                                }
+                            } else {
+                                $(this).html("Something went wrong.");
+                                $(this).closest(".chatMessage").find("#sendInt, #acceptTxt, #decline").remove();
+                            }
+                        }
+                    });
+                    $('chat-box[user-id="' + userId + '"] #decline').on("click", function () {
+                        if (typeof curElem.onChatBoxContactButtonsClick == "function") {
+                            response = curElem.onChatBoxContactButtonsClick({
+                                "receiverID": userId,
+                                "checkSum": checkSum,
+                                "trackingParams": chatConfig.Params["trackingParams"]["DECLINE"],
+                                "buttonType": "DECLINE",
+                                "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
+                                "nick": nick
+                            });
+                            if (response != false) {
+                                if (response.responseMessage != "Successful") {
+                                    //curElem._chatLoggerPlugin($(this));
+                                    $(this).html(response.responseMessage);
+                                    $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt,#chatBoxErr").remove();
+                                } else if (response.buttondetails || response.buttondetails.button) {
+                                    if (response.actiondetails.errmsglabel) {
+                                        $(this).html(response.actiondetails.errmsglabel);
+                                        $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
+                                    } else {
+                                        $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
+                                        $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#accept,#acceptDeclineDiv").remove();
+                                        //$(this).remove();
+                                        new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
+                                        //TODO: fire query for accepting request
+                                        $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
+                                        $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
+                                        $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["none_applicable"]);
+                                        curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
+                                    }
+                                } else {
+                                    $(this).html(response.actiondetails.errmsglabel);
+                                    $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
+                                }
+                            } else {
+                                $(this).html("Something went wrong.");
+                                $(this).closest(".chatMessage").find("#sendInt, #acceptTxt").remove();
+                            }
+                        }
+                    });
+
+                });
             }
-            //$('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
-            $('chat-box[user-id="' + userId + '"] #accept').on("click", function () {
-                if (typeof curElem.onChatBoxContactButtonsClick == "function") {
-                    response = curElem.onChatBoxContactButtonsClick({
-                        "receiverID": userId,
-                        "checkSum": checkSum,
-                        "trackingParams": chatConfig.Params["trackingParams"]["ACCEPT"],
-                        "buttonType": "ACCEPT",
-                        "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                        "nick": nick
-                    });
-                    if (response != false) {
-                        if (response.responseMessage != "Successful") {
-                            //curElem._chatLoggerPlugin($(this));
-                            $(this).html(response.responseMessage);
-                            $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#chatBoxErr").remove();
-                        } else if (response.buttondetails || response.buttondetails.button) {
-                            if (response.actiondetails.errmsglabel) {
-                                $(this).html(response.actiondetails.errmsglabel);
-                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                            } else {
-                                $(this).closest(".chatMessage").find("#sentDiv").removeClass("disp-none");
-                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#acceptDeclineDiv").remove();
-                                //$(this).remove();
-                                new_contact_state = curElem._contactStatusMapping["both_accepted"]["key"];
-                                //TODO: fire query for accepting request
-                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                                $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
-                                $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["Acceptance"]);
-                                //console.log("334");
-                                curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
-                                
-                                
-                            }
-                            //console.log("123");
-                            setTimeout(function(){
-                                //console.log("bhgxgs");
-                                curElem._scrollToBottom(userId,"noAnimate");
-                            },1000);
-                        } else {
-                            $(this).html(response.actiondetails.errmsglabel);
-                            $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt").remove();
-                        }
-                    } else {
-                        $(this).html("Something went wrong.");
-                        $(this).closest(".chatMessage").find("#sendInt, #acceptTxt, #decline").remove();
-                    }
-                }
-            });
-            $('chat-box[user-id="' + userId + '"] #decline').on("click", function () {
-                if (typeof curElem.onChatBoxContactButtonsClick == "function") {
-                    response = curElem.onChatBoxContactButtonsClick({
-                        "receiverID": userId,
-                        "checkSum": checkSum,
-                        "trackingParams": chatConfig.Params["trackingParams"]["DECLINE"],
-                        "buttonType": "DECLINE",
-                        "receiverJID": $('chat-box[user-id="' + userId + '"]').attr("data-jid"),
-                        "nick": nick
-                    });
-                    if (response != false) {
-                        if (response.responseMessage != "Successful") {
-                            //curElem._chatLoggerPlugin($(this));
-                            $(this).html(response.responseMessage);
-                            $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt,#chatBoxErr").remove();
-                        } else if (response.buttondetails || response.buttondetails.button) {
-                            if (response.actiondetails.errmsglabel) {
-                                $(this).html(response.actiondetails.errmsglabel);
-                                $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
-                            } else {
-                                $(this).closest(".chatMessage").find("#declineDiv").removeClass("disp-none");
-                                $(this).closest(".chatMessage").find("#sendInt, #decline, #acceptTxt,#accept,#acceptDeclineDiv").remove();
-                                //$(this).remove();
-                                new_contact_state = curElem._contactStatusMapping["pg_interest_declined"]["key"];
-                                //TODO: fire query for accepting request
-                                $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", false);
-                                $('chat-box[user-id="' + userId + '"]').attr("data-contact", new_contact_state);
-                                $('chat-box[user-id="' + userId + '"]').attr("group-id", chatConfig.Params.categoryNames["none_applicable"]);
-                                curElem._enableChatTextArea(new_contact_state, userId, getMembershipStatus());
-                            }
-                        } else {
-                            $(this).html(response.actiondetails.errmsglabel);
-                            $(this).closest(".chatMessage").find("#sendInt, #accept, #acceptTxt").remove();
-                        }
-                    } else {
-                        $(this).html("Something went wrong.");
-                        $(this).closest(".chatMessage").find("#sendInt, #acceptTxt").remove();
-                    }
-                }
-            });
+            
             break;
         case curElem._contactStatusMapping["pog_interest_accepted"]["key"]:
             $('chat-box[user-id="' + userId + '"] .chatMessage').find("#sentDiv,#restrictMessgTxt,#acceptDeclineDiv,#accept,#acceptTxt").remove();
