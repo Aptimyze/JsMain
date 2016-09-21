@@ -7,17 +7,17 @@ class DialerHandler
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
         }
-	public function getRenewalEligibleProfiles($x,$campaign_name)
+	public function getRenewalEligibleProfiles($x,$campaign_name='')
 	{
-		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N' AND CAMPAIGN_TYPE='$campaign_name'";
+		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
 		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$eligible_array[] = $row["PROFILEID"];
 		return $eligible_array;
 	}
-	public function getRenewalInEligibleProfiles($x,$campaign_name)
+	public function getRenewalInEligibleProfiles($x,$campaign_name='')
 	{
-		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N' AND CAMPAIGN_TYPE='$campaign_name'";
+		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
 		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$ignore_array[] = $row["PROFILEID"];
@@ -90,7 +90,7 @@ class DialerHandler
         {
                 $profileid_str = @implode(",",$profiles_array);
                 if($profileid_str){
-                        $sql = "SELECT PROFILEID,MAX(EXPIRY_DT) EXPIRY_DT from billing.SERVICE_STATUS WHERE PROFILEID IN ($profileid_str) group by PROFILEID";
+                        $sql = "SELECT PROFILEID,MAX(EXPIRY_DT) EXPIRY_DT from billing.SERVICE_STATUS WHERE PROFILEID IN ($profileid_str) AND SERVEFOR LIKE '%F%' group by PROFILEID";
                         $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
                         while($row = mysql_fetch_array($res)){
                                 $pid = $row["PROFILEID"];
@@ -103,7 +103,7 @@ class DialerHandler
         }
 	public function stop_non_eligible_profiles($campaign_name,$x,$ignore_array,$discount_profiles)
 	{
-		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,DISCOUNT_PERCENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID%10=$x";
+		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,DISCOUNT_PERCENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID%10=$x";
 		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logerror($squery1,$this->db_dialer);
 		while($srow1 = mssql_fetch_array($sresult1))
 		{
@@ -319,7 +319,7 @@ class DialerHandler
 		}
 		else if($campaignName=='OB_JS_RCB'){
 			unset($fieldNameArr['EXPIRY_DT']);
-			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY','ID'=>'ID');
+			$fieldNameArr1 =array('USERNAME'=>'USERNAME','COUNTRY'=>'COUNTRY','ID'=>'ID','PREFERRED_TIME_IST'=>'PREFERRED_TIME_IST');
 			$fieldNameArr =array_merge($fieldNameArr,$fieldNameArr1);	
 		}
 		if($campaignName=='OB_JS_PAID')

@@ -182,7 +182,9 @@ class viewSimilarProfileAction extends sfActions
                       $feedURL = JsConstants::$vspMaleUrl;
                     else
                       $feedURL = JsConstants::$vspFemaleUrl;
-                    $postParams = json_encode(array("PROFILEID"=>$this->loggedInProfileid,"PROFILEID_POG"=>$this->Profile->getPROFILEID()));
+                    $profileListObj = new IgnoredContactedProfiles();
+                    $ignoredContactedProfiles = $profileListObj->getProfileList($this->loginProfile->getPROFILEID(),'');
+                    $postParams = json_encode(array("PROFILEID"=>$this->loggedInProfileid,"PROFILEID_POG"=>$this->Profile->getPROFILEID(),'removeProfiles'=>$ignoredContactedProfiles));
                     $profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams,$requestTimeout);
                     if($profilesList === false){
                         $date = date("Y-m-d");

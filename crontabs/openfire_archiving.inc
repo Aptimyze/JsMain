@@ -49,6 +49,7 @@ function one_time(){
 	global $db;
 	global $tables;
 	$minconversionId=calc_conversationID(true);
+	$dbDDL = connect_ddl();
 	foreach($tables as $table){
 	$backupTableName=$table."backup";
 	log_openfire("CREATE TABLE empty$table LIKE $table");
@@ -70,7 +71,7 @@ foreach ($tables as $table){
 	log_openfire(mysql_error());
 }
 log_openfire("DROP INDEX entMsgArchive_con_idx ON ofMessageArchivebackup");
-mysql_query("DROP INDEX entMsgArchive_con_idx ON ofMessageArchivebackup",$db);
+mysql_query("DROP INDEX entMsgArchive_con_idx ON ofMessageArchivebackup",$dbDDL);
 log_openfire(mysql_error());
 }
 function log_openfire($message)

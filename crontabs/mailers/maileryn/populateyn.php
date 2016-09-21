@@ -11,16 +11,18 @@ function populateyn($mailer_id)
 	global $mysqlObj;
 	global $noOfActiveServers;
 	global $slave_activeServers;
+    
+	$db_ddl = connect_ddl();
 
 	$mysqlObj =new Mysql;
 	mysql_query('set session wait_timeout=50000,interactive_timeout=50000,net_read_timeout=50000',$db);
 
 	$sql11="TRUNCATE TABLE MAILERYN";
-	$result11=mysql_query($sql11,$db) or logerror1("at truncate MAILER of populateyn",$sql11);	
+	$result11=mysql_query($sql11,$db_ddl) or logerror1("at truncate MAILER of populateyn",$sql11);	
  
         $emailsum2="EMAILSUM2".$mailer_id;
         $sql="TRUNCATE TABLE `$emailsum2`";
-	mysql_query($sql,$db);
+	mysql_query($sql,$db_ddl);
 
 	// insert the No. of times each guy has contacted and the contact is open
 	//Sharding of CONTACTS done by Sadaf
