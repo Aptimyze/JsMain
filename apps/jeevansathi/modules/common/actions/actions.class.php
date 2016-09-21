@@ -682,13 +682,24 @@ class commonActions extends sfActions
                     $nameOfUserObj = new NameOfUser();
                     $newName=$nameOfUserObj->filterName($newName);
                     $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($newName,  $loggedInProfile->getGENDER());
+                    $screening=$loggedInProfile->getSCREENING();
+                    $profileid=$loggedInProfile->getPROFILEID();
                     if($isNameAutoScreened)
                     {
-                            $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$loggedInProfile->getSCREENING());
+                            $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$screening);
                     }
-                    $profileid=$loggedInProfile->getPROFILEID();
-                    JPROFILE::getInstance()->edit($jprofileFieldArr,$profileid,'PROFILEID');
-                    $nameData = $nameOfUserObj->getNameData($profileid );
+                    
+                    if(!$newName || !$isNameAutoScreened)
+                    {
+                             $jprofileFieldArr['SCREENING'] = Flag::removeFlag($FLAGID="name", $screening);
+                    }
+                    if($jprofileFieldArr['SCREENING'] && $jprofileFieldArr['SCREENING']!=$screening)
+                    {
+                        
+                        JPROFILE::getInstance()->edit($jprofileFieldArr,$profileid,'PROFILEID');
+                    }
+                    
+                    $nameData = $nameOfUserObj->getNameData($profileid );//print_r($nameData);die;
                                if(!empty($nameData))
                                {
                                         $nameArr=array('NAME'=>$newName,'DISPLAY'=>$namePrivacy);
