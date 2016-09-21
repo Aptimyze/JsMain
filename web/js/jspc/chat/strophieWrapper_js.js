@@ -179,8 +179,8 @@ var strophieWrapper = {
     onRosterUpdate: function (iq) {
         //strophieWrapper.Roster = strophieWrapper.Roster.filter(function(n){ return n != undefined }); 
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
-       console.log("onRosterUpdate");
-        console.log(iq);
+       //console.log("onRosterUpdate");
+        //console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
@@ -215,7 +215,7 @@ var strophieWrapper = {
                     //strophieWrapper.stropheLoggerPC(subscription);
                     //console.log("add node case");
                     if (typeof strophieWrapper.Roster[user_id] == "undefined" || typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["subscription"]=="undefined") {
-                        console.log("adding new1");
+                        //console.log("adding new1");
                         invokePluginManagelisting(nodeArr, "add_node", user_id);
                     } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
                         var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
@@ -229,7 +229,7 @@ var strophieWrapper = {
                             }
                             //strophieWrapper.stropheLoggerPC("adding node");
                             //strophieWrapper.stropheLoggerPC(nodeArr);
-                            console.log("adding new 2");
+                            //console.log("adding new 2");
                             invokePluginManagelisting(nodeArr, "add_node", user_id);
                         }
                     }
@@ -353,8 +353,8 @@ strophieWrapper.sendPresence();
     },
     //executed after presence has been fetched
     onPresenceReceived: function (presence) {
-       console.log("onPresenceReceived from- ",$(presence).attr('from'));
-       console.log(presence);
+       //console.log("onPresenceReceived from- ",$(presence).attr('from'));
+       //console.log(presence);
         var presence_type = $(presence).attr('type'),
             chat_status = "offline"; // unavailable, subscribed, etc...
         var from = $(presence).attr('from'),
@@ -373,7 +373,7 @@ strophieWrapper.sendPresence();
                 }
             }
         }
-        console.log("RECEIVED presence for "+from+"-"+chat_status);
+        //console.log("RECEIVED presence for "+from+"-"+chat_status);
         if (strophieWrapper.isItSelfUser(user_id) == false) {
             //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
             //strophieWrapper.stropheLoggerPC(from);
