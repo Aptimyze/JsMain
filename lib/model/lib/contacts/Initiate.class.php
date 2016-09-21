@@ -323,6 +323,10 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
       if (!$isFiltered && $this->contactHandler->getPageSource()!='AP' && $this->_sendMail=='Y') { // Instant mailer
         $this->sendMail();
       }
+      
+       $viewedEntryDate = $this->viewed->getENTRY_DT();
+       $now = date("Y-m-d");
+       $dateDiff = (JSstrToTime($now) - JSstrToTime($viewedEntryDate)) / 86400;
       if($dateDiff <=1 ) { //Instant SMS
           include_once(JsConstants::$docRoot. "/profile/InstantSMS.php");
           $sms= new InstantSMS("INSTANT_EOI",$this->viewed->getPROFILEID(),array(),$this->viewer->getPROFILEID());
