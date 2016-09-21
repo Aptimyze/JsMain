@@ -90,7 +90,7 @@ class DialerHandler
         {
                 $profileid_str = @implode(",",$profiles_array);
                 if($profileid_str){
-                        $sql = "SELECT PROFILEID,MAX(EXPIRY_DT) EXPIRY_DT from billing.SERVICE_STATUS WHERE PROFILEID IN ($profileid_str) AND SERVEFOR LIKE '%F%' group by PROFILEID";
+                        $sql = "SELECT PROFILEID,MAX(EXPIRY_DT) EXPIRY_DT from billing.SERVICE_STATUS WHERE PROFILEID IN ($profileid_str) AND SERVEFOR LIKE '%F%' AND ACTIVE IN('Y','E') group by PROFILEID";
                         $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
                         while($row = mysql_fetch_array($res)){
                                 $pid = $row["PROFILEID"];

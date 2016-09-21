@@ -289,7 +289,7 @@ class SearchSort
         //this function returns values for state,city,nativestate,nativeCity
         protected function setCityStateToBeMatched($loggedInObj){
             $profileId = $loggedInObj->getPROFILEID();
-            $nativePlaceObj = new NEWJS_NATIVE_PLACE("newjs_masterRep");
+            $nativePlaceObj = ProfileNativePlace::getInstance("newjs_masterRep");
             $nativeData = $nativePlaceObj->getNativeData($profileId);
             $nativeState = $nativeData['NATIVE_STATE'];
             $nativeCity = $nativeData['NATIVE_CITY'];
