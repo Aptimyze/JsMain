@@ -466,6 +466,10 @@ class LoggingManager
 					$arrExplodedPath = explode('/', $exceptionLiesIn);
 					$moduleName = $arrExplodedPath[count($arrExplodedPath)-2];
 				}
+				if($moduleName == "profile")
+				{
+					$moduleName = "inbox";
+				}
 			}
 		}
 		else
