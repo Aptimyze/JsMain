@@ -47,5 +47,7 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
             }
             $c++;
         }
+        $sql2 = "UPDATE newjs.JPARTNER SET CHILDREN = '' WHERE PROFILEID IN ($profileidStr)";
+        $mysqlObj->executeQuery($sql2,$myDbarr[$myDbName]) or die(mysql_error($myDbarr[$myDbName]));
 }
 ?>
