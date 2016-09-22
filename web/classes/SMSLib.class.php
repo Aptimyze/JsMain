@@ -300,8 +300,10 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 			case "PHTOUPNO":
 				return $messageValue["PHOTO_UPLOAD_COUNT"];
 
-			case "URL_MYJS":
-				return $this->getShortURL($this->SITE_URL."?",$messageValue["RECEIVER"]["PROFILEID"],$messageValue["EMAIL"]);
+			case "URL_EDIT_PHONE":
+				$longURL = $this->SITE_URL."/profile/viewprofile.php?ownview=1";
+				$appendUrl='#Contact';
+				return $this->getShortURL ($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["EMAIL"],'',$appendUrl);
 				case "URL_FAMILY":
 				$longURL = $this->SITE_URL."/profile/viewprofile.php?ownview=1";
 				$appendUrl='#Family';
