@@ -313,13 +313,14 @@ class myjsActions extends sfActions
 		$registrationTime = strtotime($entryDate);
 		$this->engagementCount=array();
 
-
-
+//Flag to compute data for important section for FTU page
+		$this->computeImportantSection = 0;
 		$this->showFtu = 0;
 		if(($currentTime - $registrationTime)/(3600)<24){
 			$this->engagementCount= BellCounts::getFTUCountDetails($this->profileid); 
 			if($this->engagementCount["TOTAL"] == 0){
-	// Data for Important Field Section in FTU template starts				 
+	// Data for Important Field Section in FTU template starts	
+		if($this->computeImportantSection == 1){			 
 		$this->FTUdata = array();
 		$this->FTUdata['gender'] = $this->loginProfile->getDecoratedGender();
 		$this->FTUdata['maritalStatus'] = $this->loginProfile->getDecoratedMaritalStatus();
@@ -331,6 +332,7 @@ class myjsActions extends sfActions
 		$this->FTUdata['DOB']['month'] = $dob[1];
 		$this->FTUdata['DOB']['year'] = $dob[2];
     // Data for Important Field Section in FTU template ends
+	}
 				$this->showFtu = 1;
 			}
 		}
