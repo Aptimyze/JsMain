@@ -781,7 +781,8 @@ var buttonClicked=0;
 
         function validateUserName(name){
         var name_of_user=name;
-        name_of_user = name_of_user.replace(/\.|dr|ms|mr|miss/gi, " ");
+        name_of_user = name_of_user.replace(/\./gi, " ");
+        name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
         name_of_user = name_of_user.replace(/\,|\'/gi, "");
         name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
         var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;

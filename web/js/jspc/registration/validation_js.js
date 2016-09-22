@@ -958,7 +958,8 @@ return pincodeValidator;
       {
         var name = this.getValue("name").replace(/\s{2,}/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 	inputData[this.inputFieldElement[0].formKey]=name;
-        name_of_user = name.replace(/\.|dr|ms|mr|miss/gi, " ");
+        name_of_user = name_of_user.replace(/\./gi, " ");
+        name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
         name_of_user = name_of_user.replace(/\,|\'/gi, "");
         name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
         var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
