@@ -58,6 +58,6 @@ class jsValidatorNameOfUser extends sfValidatorBase
                 throw new sfValidatorError($this,ErrorHelp::$ERR_STRING[nameOfUser], array('value' => $value));
                   return 1;
           }
-    return $nameOfUser;
+    return trim($value);
   }
 }

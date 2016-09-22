@@ -1217,7 +1217,7 @@
 			var nameError = '';
 			var name_of_user;
 
-			name_of_user = name_of_user.replace(/\./gi, " ");
+			name_of_user = name.replace(/\./gi, " ");
 			name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
 			name_of_user = name_of_user.replace(/\,|\'/gi, "");
 			name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
