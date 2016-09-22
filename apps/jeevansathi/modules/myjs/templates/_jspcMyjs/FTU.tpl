@@ -41,7 +41,7 @@
                          ~/if`
                         <!--end:edit basic--> 
                         <!--start:upload photo-->
-                ~if $profilePic eq "Y"`
+                ~if $profilePic eq "N"`
                 <div class="pt30 pb40 pr6 pl6 myjs-bdr7">
                   <p class="f22">Upload your photos</p>
                   <p class="f17 pt15">Profile with photos get 8 times more responses</p>
