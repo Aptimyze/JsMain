@@ -14,7 +14,7 @@ class ApiResponseHandler
 	private $imageCopyServer = null;
 	private $phoneDetails = null;
 	private $cache_flag=true;
-	private $cache_interval=60000; //in milisecond
+	private $cache_interval=60000; //in milisecond should be integer always 
 	private $resetCache=false;
 	//Constructor
 	private function __construct()
