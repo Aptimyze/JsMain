@@ -13,7 +13,7 @@ class InstantSMS {
 	private $errorMessage = "Due to a temporary problem your request could not be processed. Please try after a couple of minutes";
 	private $unverified_key = array("REGISTER_RESPONSE" ,"PHONE_UNVERIFY");
 	private $customCriteria=0;
-	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP");
+	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP", "PHONE_UNVERIFY");
 	private $eoiSMSLimit = 2;
 	private $otherProfileRequired = array("INSTANT_EOI","ACCEPTANCE_VIEWED","ACCEPTANCE_VIEWER","VIEWED_CONTACT_SMS","HOROSCOPE_REQUEST");
 	private $kycCity = array("DE00", "UP25", "UP06", "RA07", "UP47", "UP12");
@@ -72,6 +72,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 	private function isWhitelistedProfile() {
 
 		if($this->smsKey=='OTP') return true;
+		if($this->smsKey=='PHONE_UNVERIFY') return true;
 
 		if(!$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"]))
 			return false;
