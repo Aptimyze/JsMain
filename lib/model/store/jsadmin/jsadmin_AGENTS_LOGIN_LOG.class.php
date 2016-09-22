@@ -15,10 +15,10 @@ class jsadmin_AGENTS_LOGIN_LOG extends TABLE{
         try{
             if($username){
                 $todaysDt = date('Y-m-d', strtotime('570 minute', strtotime(date('Y-m-d H:i:s'))));
-                $sql = "INSERT INTO jsadmin.AGENTS_LOGIN_LOG (USERNAME,ENTRY_DT) VALUES (:USERNAME,:ENTRY_DT)";
+                $sql = "INSERT INTO jsadmin.AGENTS_LOGIN_LOG (USERNAME,ENTRY_DT_IST) VALUES (:USERNAME,:ENTRY_DT_IST)";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":USERNAME",$username,PDO::PARAM_STR);
-                $prep->bindValue(":ENTRY_DT",$todaysDt,PDO::PARAM_STR);
+                $prep->bindValue(":ENTRY_DT_IST",$todaysDt,PDO::PARAM_STR);
                 $prep->execute();
             }
         } catch (Exception $ex) {
@@ -29,9 +29,9 @@ class jsadmin_AGENTS_LOGIN_LOG extends TABLE{
     public function fetchLoggedInAgentForDate($checkLogDate){
         try{
             if($checkLogDate){
-                $sql = "SELECT distinct USERNAME FROM jsadmin.AGENTS_LOGIN_LOG WHERE ENTRY_DT = :ENTRY_DT";
+                $sql = "SELECT distinct USERNAME FROM jsadmin.AGENTS_LOGIN_LOG WHERE ENTRY_DT_IST = :ENTRY_DT_IST";
                 $prep = $this->db->prepare($sql);
-                $prep->bindValue(":ENTRY_DT",$checkLogDate,PDO::PARAM_STR);
+                $prep->bindValue(":ENTRY_DT_IST",$checkLogDate,PDO::PARAM_STR);
                 $prep->execute();
                 while($row = $prep->fetch(PDO::FETCH_ASSOC)){
                     $result[] = $row['USERNAME'];
@@ -46,9 +46,9 @@ class jsadmin_AGENTS_LOGIN_LOG extends TABLE{
     public function deleteLogBeforeDate($deleteBeforeDate){
         try{
             if($deleteBeforeDate){
-                $sql = "DELETE FROM jsadmin.AGENTS_LOGIN_LOG WHERE ENTRY_DT < :ENTRY_DT";
+                $sql = "DELETE FROM jsadmin.AGENTS_LOGIN_LOG WHERE ENTRY_DT_IST < :ENTRY_DT_IST";
                 $prep = $this->db->prepare($sql);
-                $prep->bindValue(":ENTRY_DT",$deleteBeforeDate,PDO::PARAM_STR);
+                $prep->bindValue(":ENTRY_DT_IST",$deleteBeforeDate,PDO::PARAM_STR);
                 $prep->execute();
             }
         } catch (Exception $ex) {
