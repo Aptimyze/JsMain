@@ -499,13 +499,16 @@ class commonActions extends sfActions
                 if ($query == "P") {
                 //Send Email
                     $to = "services@jeevansathi.com";
-
+                    
                     $from = "info@jeevansathi.com"; //To Do Aliase Jeevansathi Support  Reply-to $email
 
                     $subject = "$email" . $userName . "has requested a callback for assistance with his/her account";
                     $msgBody = "<html><body>Dear Support Team,<br> $email" . $userName . "has requested a callback from the support team for resolution of a service related issue. Please contact at $email,or $phone as requested on $date at $reqTime <br> Regards<br> Team Jeevansathi</body></html>";
-
+                    
                     SendMail::send_email($to, $msgBody, $subject, $from, "", "", "", "", "", "", "1", $email, "Jeevansathi Support");
+                    $objExecCallBack = new billing_EXC_CALLBACK;
+                    $objExecCallBack->addRecord($iProfileId, $phone, $email, $device, $channel, $callbackSource, $date, $startTime, $endTime,"JP");
+                    unset($objExecCallBack);
                 } else if ($query == "M") {
                 //Do membership
 

@@ -919,7 +919,9 @@ public function executeAppredirect(sfWebRequest $request)
 		$output=$this->getField("bodytype");
 		if($k=="p_mstatus")
 		$output=$this->getField("mstatus");
-		if($k=="parent_city_same")
+		if($k=="p_havechild")
+                    $output=$this->getField("children");
+                if($k=="parent_city_same")
 		{
 		$output=$this->getField("live_with_parents");
 		}

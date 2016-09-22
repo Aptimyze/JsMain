@@ -157,10 +157,10 @@ class MembershipAPIResponseHandler {
                 unset($this->curActServices[$key]);
             }
             if (($key = array_search("P", $this->curActServices)) !== false) {
-		unset($this->allMainMem['P']['P2']);
+		        unset($this->allMainMem['P']['P2']);
             }
             if (($key = array_search("C", $this->curActServices)) !== false) {
-		unset($this->allMainMem['C']['C2']);
+		        unset($this->allMainMem['C']['C2']);
             }
         }
 

@@ -714,7 +714,13 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$DppBasicArr["BasicDetails"][OnClick][]= $this->getApiFormatArray("P_AGE","Age",$szAge,$szAgeVal,$this->getApiScreeningField("PARTNER_AGE"),$this->dropdown,'','','dppAge');
 		//Marital Status
 		$szMStatus = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_MSTATUS());
-		$DppBasicArr["BasicDetails"][OnClick][]= $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"),$this->dropdown,'',1);
+		$DppBasicArr["BasicDetails"][OnClick][]= $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"),$this->dropdown,'',1,'dppMstatus');
+                //Have Children
+                $showHaveChild=1;
+                if($jpartnerObj->getPARTNER_MSTATUS()=="'N'" || $jpartnerObj->getPARTNER_MSTATUS()=="")
+                    $showHaveChild=0;
+		$szChildren = $this->getDecorateDPP_Response($jpartnerObj->getCHILDREN());
+		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_HAVECHILD","Have Children",trim($jpartnerObj->getDecoratedCHILDREN()),$szChildren,$this->getApiScreeningField("CHILDREN"),$this->dropdown,'',1,'',!$showHaveChild);
 		//Country
 		$szCountry = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_COUNTRYRES());
 		

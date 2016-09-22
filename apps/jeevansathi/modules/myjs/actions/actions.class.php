@@ -246,6 +246,8 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
+
+
 	
 		if (empty($this->profilePic))
 			$this->profilePic="N";
@@ -312,10 +314,27 @@ class myjsActions extends sfActions
 		$currentTime=time();
 		$registrationTime = strtotime($entryDate);
 		$this->engagementCount=array();
+
+//Flag to compute data for important section for FTU page
+		$this->computeImportantSection = 0;
 		$this->showFtu = 0;
 		if(($currentTime - $registrationTime)/(3600)<24){
 			$this->engagementCount= BellCounts::getFTUCountDetails($this->profileid); 
 			if($this->engagementCount["TOTAL"] == 0){
+	// Data for Important Field Section in FTU template starts	
+		if($this->computeImportantSection == 1){			 
+		$this->FTUdata = array();
+		$this->FTUdata['gender'] = $this->loginProfile->getDecoratedGender();
+		$this->FTUdata['maritalStatus'] = $this->loginProfile->getDecoratedMaritalStatus();
+		$this->FTUdata['religion'] = $this->loginProfile->getDecoratedRELIGION();
+		$dateOfBirth = $this->loginProfile->getDTOFBIRTH();
+		$dob=date_create($dateOfBirth);
+		$dob = explode("/",date_format($dob,"d/M/Y"));
+		$this->FTUdata['DOB']['day'] = $dob[0];
+		$this->FTUdata['DOB']['month'] = $dob[1];
+		$this->FTUdata['DOB']['year'] = $dob[2];
+    // Data for Important Field Section in FTU template ends
+	}
 				$this->showFtu = 1;
 			}
 		}
