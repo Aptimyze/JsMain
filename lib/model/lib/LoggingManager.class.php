@@ -293,6 +293,7 @@ class LoggingManager
 			}
 		}
 		$logData[LoggingEnums::REQUEST_URI] = $_SERVER['REQUEST_URI'];
+		$logData[LoggingEnums::DOMAIN] = $_SERVER['HTTP_HOST'];
 		return $logData;
 	}
 
