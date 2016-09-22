@@ -25,6 +25,9 @@ class ApiRequestCallbackV1Action extends sfActions
             $phone = $loginData["PHONE_MOB"];
             $email = $loginData["EMAIL"];
         }
+        $dayDropDown = CommonFunction::getRCBDayDropDown();
+        $startTimeDropDown = CommonFunction::getRCBStartTimeDropDown();
+        $endTimeDropDown = CommonFunction::getRCBEndTimeDropDown();
         // Base response with pre-filled data for layout
         $responseData = array('title'=>'Request Call Back',
         		'top_placeholder'=>'We will call you at the earliest after you submit the request',
@@ -34,6 +37,10 @@ class ApiRequestCallbackV1Action extends sfActions
                 'email_autofill'=>$email,
                 'query_question'=>"What type of query do you have?",
                 'query_options'=>$query_options,
+                'date_text'=>'Date',
+                'date_option'=>$dayDropDown,
+                'startTime_text'=>'Schedule Time(IST)',
+                'startTime_option'=>$startTimeDropDown,
                 'submit_placeholder'=>"Submit Request");
         // Request Parameter Holder
         $arrRequest = $request->getParameterHolder()->getAll();
@@ -96,18 +103,23 @@ class ApiRequestCallbackV1Action extends sfActions
             // end assignment
                 if (!CommonUtility::validateEmail($email)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseMessage("Please enter a valid Email");
                     $responseData['status'] = 'invalidEmail';
                 } elseif (!CommonUtility::validatePhoneNo($phone)) { // Validating Phone No
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseMessage("Please enter a valid Phone No.");
                     $responseData['status'] = 'invalidPhoneNo';
                 } elseif (!in_array($device, $arrValidDevice)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseMessage("Invalid Device selected");
                     $responseData['status'] = 'invalidDevice';
                 } elseif (!in_array($channel, $arrValidChannel)) { // Validating Email
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseMessage("Invalid Channel selected");
                     $responseData['status'] = 'invalidChannel';
                 } elseif ($currentTime > $responseTime) { // Validating Time                    
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseMessage("Please select a valid Date/Time");
                     $responseData['status'] = 'invalidTime';
                 } elseif (in_array($query, $arrValidQuery)) { // Validating Query Type
                     if ($query == "P") {
@@ -154,10 +166,12 @@ class ApiRequestCallbackV1Action extends sfActions
                     $responseData['successMsg'] = 'We shall call you at the earliest';
                 } else {
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseMessage("Please enter a valid Query Type");
                     $responseData['status'] = 'invalidQueryType';
                 }
             } else {
                 $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                $apiResponseHandlerObj->setResponseMessage("Missing Parameters");
                 $responseData['status'] = 'missingParameters';
             }
         } else {

@@ -85,7 +85,7 @@
 				{	
 					var mainDiv=$("#RAMainTable");
 					mainDiv.find('.RARowHtml').remove();
-					if(response=='null'){
+					if(!response){
 							$("#dateError3").show();
 							return;
 

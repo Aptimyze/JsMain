@@ -56,6 +56,9 @@ class SearchTypesEnums
         const iOSJustJoinedMatches = 'IU';
 	const MatchAlerts = '25';
 	const KundliAlerts = '32';
+	const KundliAlertsAndroid = 'KA';
+	const KundliAlertsIOS = 'KI';
+	const KundliAlertsJSMS = 'KM';
 	const WapMatchAlertsCC = 'WM';
         const iOSMatchAlertsCC = 'IM';
         const AppMatchAlertsCC = 'AM';
@@ -128,6 +131,7 @@ class SearchTypesEnums
         const APPLY_ONLY_CLUSTER = 'XX';
         const SaveSearchMailer = 'SSM';
         const PC_CHAT_NEW = 'PCN';
+        const kundliAlertMailer = "KAM";
         const EXCLUSIVE_SERVICE2_MAILER_STYPE = 'ES2M';
 }
 ?>

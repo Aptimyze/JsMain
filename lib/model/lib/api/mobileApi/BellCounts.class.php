@@ -94,6 +94,12 @@ class BellCounts
 				if(!$countDetails["FILTERED_NEW"]){
 					$countDetails["FILTERED_NEW"] = 0;
 				}
+                                
+                                $countDetails["FILTERED"] = $profileMemcacheObj->get("FILTERED");
+				if(!$countDetails["FILTERED"]){
+					$countDetails["FILTERED"] = 0;
+				}
+
 				return $countDetails;
         	}
         }
