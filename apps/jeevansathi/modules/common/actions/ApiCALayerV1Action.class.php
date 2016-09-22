@@ -50,7 +50,17 @@ class ApiCALayerV1Action extends sfActions
 			
 		}
 		$layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
+                if($layerToShow==9)
+                {
+                    $profileId=$this->loginProfile->getPROFILEID();
+                    $nameData=(new NameOfUser())->getNameData($profileId);
+                    $nameOfUser=$nameData[$profileId]['NAME'];
+                    $namePrivacy=$nameData[$profileId]['DISPLAY'];
+
+                }
 		$this->m_arrOut=$layerData;
+                $this->m_arrOut['NAME_OF_USER']=$nameOfUser ? $nameOfUser : NULL;
+                $this->m_arrOut['NAME_PRIVACY']=$namePrivacy ? $namePrivacy : NULL;
 	    }
 		//Api Response Object
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();

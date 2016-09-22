@@ -222,7 +222,18 @@ return 0;
                           $show=1;
                       }
                     
-                    break;            
+                    break;  
+                    
+                    case '9': 
+                      
+                      if(!MobileCommon::isApp())
+                      {
+                      $nameArr=(new NameOfUser())->getNameData($profileid);
+                      if(!is_array($nameArr[$profileid]) || !$nameArr[$profileid]['DISPLAY'] || !$nameArr[$profileid]['NAME'])
+                          $show=1;
+                      }
+                    
+                    break;  
 
           default : return false;
         }

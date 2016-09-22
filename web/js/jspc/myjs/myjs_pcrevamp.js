@@ -387,7 +387,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 		noShortCards(this);
 }
 
-  //DESRIED PARTNER MATCHES
+  //DESIRED PARTNER MATCHES
   var desiredPartnerMatches = function() {
     this.name = "DESIREDPARTNERMATCHES";
     this.containerName = this.name+"_Container";
@@ -472,18 +472,19 @@ var CALayerShow=$("#CALayerShow").val();
 if(typeof(CALayerShow)=='undefined' ||  !CALayerShow) return;
 if(CALayerShow!='0')
   {
-
+      
     var layer=$("#CALayerShow").val();
     var url="/static/criticalActionLayerDisplay";
  var ajaxData={'layerId':layer};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
-
-
 ajaxConfig.success=function(response){
 $('body').prepend(response);
-  showLayerCommon('criticalAction-layer'); 
-  $('.js-overlay').unbind('click');
+  showLayerCommon('criticalAction-layer');
+  if(CALayerShow==9) 
+      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
+  else
+    $('.js-overlay').unbind('click');
 }
 
 $.myObj.ajax(ajaxConfig);
@@ -664,7 +665,6 @@ else {
 
    $('#videoCloseID').bind('click', function(e)
   {
-    console.log("jhsgcbjk");
     videoLinkRequest(profileid);
   });
 
@@ -776,3 +776,70 @@ else {
 }
 }
 });
+// cal scripts
+var buttonClicked=0;
+
+        function validateUserName(name){
+        var name_of_user=name;
+        name_of_user = name_of_user.replace(/\./gi, " ");
+        name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
+        name_of_user = name_of_user.replace(/\,|\'/gi, "");
+        name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user))){
+                return "Please provide a valid Full Name";
+        }else{
+                var nameArr = name_of_user.split(" ");
+                if(nameArr.length<2){
+                      return "Please provide your first name along with surname, not just the first name";
+                }else{
+                     return true;
+                }
+        }
+       return true;
+     
+    }    function criticalLayerButtonsAction(clickAction,button) {
+
+
+                if(buttonClicked)return;    
+                buttonClicked=1;
+                var layerId= $("#CriticalActionlayerId").val();
+                
+                    var newNameOfUser='',namePrivacy='';
+                    if(layerId==9 && button=='B1')
+                    {   
+                        newNameOfUser = ($("#nameInpCAL").val()).trim();
+                        validation=validateUserName(newNameOfUser);
+                        if(validation!==true)
+                        {
+                            
+                            $("#CALNameErr").text(validation);
+                            $("#CALNameErr").show();
+                            buttonClicked=0;
+                            return;
+                        }
+                        namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
+                        
+                      }
+                    if(clickAction=="close" || clickAction=='RCB') {
+                    var URL="/common/criticalActionLayerTracking";
+                    $.ajax({
+                        url: URL,
+                        type: "POST",
+                        data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
+                    });
+
+                    closeCurrentLayerCommon();
+                    if(clickAction=='RCB')
+                    {
+                        toggleRequestCallBackOverlay(1, 'RCB_CAL');
+                        $('.js-dd ul li[value="M"]').trigger('click');
+                    }
+                
+                }
+                else {
+                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                }
+                
+        }
+
