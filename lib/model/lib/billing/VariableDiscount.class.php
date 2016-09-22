@@ -86,7 +86,7 @@ class VariableDiscount
 	return $discountStr;
     }
     // get VD Discount Labels 
-    public function getPreviousVdLogDetails($profileid)
+    public function getPreviousVdLogDetails($profileid, $raw = null)
     {
 	$vdLogObj =new billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG('newjs_masterRep');
         $vdLogDetailsArr =$vdLogObj->getDiscountDetails($profileid);
@@ -101,7 +101,11 @@ class VariableDiscount
 			$discountNewArr[$service] =$discountArr;
 			unset($discountArr);
 		}
-		$discountStr =$this->getDiscountWithMemType('',$discountNewArr);
+        if (empty($raw)) {
+	       $discountStr =$this->getDiscountWithMemType('',$discountNewArr);
+        } else {
+            $discountStr = $discountNewArr;
+        }
 	}	
 	return array("EDATE"=>$lastVdExpiryDate,"DISCOUNT"=>$discountStr);	
 
