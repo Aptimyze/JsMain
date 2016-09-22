@@ -14,7 +14,7 @@ class jsadmin_AGENTS_LOGIN_LOG extends TABLE{
     public function insert($username){
         try{
             if($username){
-                $todaysDt = date('Y-m-d');
+                $todaysDt = date('Y-m-d', strtotime('570 minute', strtotime(date('Y-m-d H:i:s'))));
                 $sql = "INSERT INTO jsadmin.AGENTS_LOGIN_LOG (USERNAME,ENTRY_DT) VALUES (:USERNAME,:ENTRY_DT)";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":USERNAME",$username,PDO::PARAM_STR);
