@@ -785,7 +785,7 @@ return $returnArray;
 					$smsViewer = new InstantSMS("PHONE_UNVERIFY",$profileid,$arr,'');
 					$smsViewer->send();
 			}
-			$emailSender = new EmailSender(MailerGroup::TOP8, 1838);
+			$emailSender = new EmailSender(MailerGroup::PHONE_UNVERIFY, 1838);
 			$tpl = $emailSender->setProfileId($profileid);
 			$tpl->getSmarty()->assign("phone_num", '+'.$isd.$phone_num);
 			$subject = "We were unable to reach you. Kindly authenticate your contact details.";
