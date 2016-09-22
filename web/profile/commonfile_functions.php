@@ -157,7 +157,7 @@ $css_arr[]=array("jspc/registration/registrationJspc_css"   => "1");
 $css_arr[]=array("jspc/common/commonJspc_css"           => "10");
 $css_arr[]=array("jspc/myjs/myjs"           => "9");
 $css_arr[]=array("jspc/common/fontsJspc_css"   => "1");
-$css_arr[]=array("jspc/common/headerFooterJspc_css"       => "5");
+$css_arr[]=array("jspc/common/headerFooterJspc_css"        => "6");
 $css_arr[]=array("jspc/search/scrollbar"      => "1");
 $css_arr[]=array("jspc/search/srpcss"          => "6");
 $css_arr[]=array("jspc/search/jslider"      => "1");
