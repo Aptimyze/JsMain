@@ -1181,14 +1181,16 @@ class MembershipHandler
                     $discPerc = 0;
                 }
             }
+            $renPrevFlag = false;
             // Check for previous Day discount, if yes, get max of discount
-            if ($previousCheck == true && $discPerc == 0) {
+            if ($previousCheck == true) {
                 $renDiscLog = new billing_RENEWAL_DISCOUNT_LOG();
                 $renDisc = $renDiscLog->fetchRenewalDiscountForProfileAndDate($profileid, date("Y-m-d", $expThreshold));
                 $discPerc = max($discPerc, $renDisc);
+                $renPrevFlag = true;
             }
             // Force VD Check  
-            if ($previousCheck == true && $discPerc == 0) {
+            if ($previousCheck == true && !$renPrevFlag) {
                 $vdDiscArr = $this->getSpecialDiscountForAllDurationsPreviously($profileid);
                 $lastExp = $vdDiscArr['EDATE'];
                 if ($expThreshold >= strtotime($lastExp)) {
