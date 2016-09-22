@@ -27,10 +27,7 @@ foreach($serverUrlArray as $k=>$v){
 }
 function sendPresenceRequest($url)
 {
-        $url = JsConstants::$communicationServiceUrl."/communication/v1/presence?pfids=9061321";
-        if($url){
-                $url = $url."/communication/v1/presence?pfids=9061321"; 
-        }
+        $url = JsConstants::$communicationServiceUrl."/profile/v1/presence?pfids=9061321";
         $res = CommonUtility::sendCurlPostRequest($url,'',10);
         $res = (array) json_decode($res);
         $res = (array) $res["header"];
