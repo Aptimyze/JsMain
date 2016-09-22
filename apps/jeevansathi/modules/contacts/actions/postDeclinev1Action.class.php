@@ -52,7 +52,7 @@ class postDeclinev1Action extends sfAction
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
-			$apiObj->setResetCache(false);
+			$apiObj->setResetCache(true);
 			$apiObj->generateResponse();
 		}
 		else

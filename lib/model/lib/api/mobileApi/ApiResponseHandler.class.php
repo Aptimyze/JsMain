@@ -15,7 +15,7 @@ class ApiResponseHandler
 	private $phoneDetails = null;
 	private $cache_flag=true;
 	private $cache_interval=60000; //in milisecond
-	private $resetCache=true;
+	private $resetCache=false;
 	//Constructor
 	private function __construct()
 	{
