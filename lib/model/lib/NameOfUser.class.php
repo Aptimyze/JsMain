@@ -9,8 +9,16 @@ class NameOfUser
     private $cacheLifeTime = 14400; // 4 hours
     /**
      */
-    public $removeWordsFree = array('mr', 'ms', 'dr', 'miss');
-    public $removeWordsPaid = array('mr', 'ms', 'miss');
+    public $removeWordsFree = array(
+					'/^mr\s/', '/^ms\s/', '/^dr\s/', '/^miss\s/',
+					'/\smr$/', '/\sms$/', '/\sdr$/', '/\smiss$/',
+					'/\smr\s/', '/\sms\s/', '/\sdr\s/', '/\smiss\s/',
+					);
+    public $removeWordsPaid = array(
+					'/^mr\s/', '/^ms\s/', '/^miss\s/',
+					'/\smr$/', '/\sms$/', '/\smiss$/',
+					'/\smr\s/', '/\sms\s/','/\smiss\s/',
+					);
     /**
      * Private construct so nobody else can instance it
      *
@@ -153,9 +161,9 @@ print_r($returnArr);die;
 	return $returnArr;
     }
     public function getFullNameArray($name,$replacingWordsArray){
-        $replaceBy   = array("");
+        $replaceBy   = " ";
         $name = preg_replace('/[.]/', ' ', $name);
-        $name = str_replace($replacingWordsArray, $replaceBy, $name);
+	$name = preg_replace($replacingWordsArray, $replaceBy, $name);
         $name = trim(preg_replace('!\s+!', ' ', $name));
         $fullName = explode(" ",ucwords($name));
         return $fullName;
