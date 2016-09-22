@@ -592,7 +592,6 @@ class misGenerationhandler
         foreach ($agentsLoggedIn as $key => $username){
             //unset($loginWithinRange);
             //$loginWithinRange = $this->checkDateWithinRange($details['LAST_LOGIN_DT'], $stDate, $endDate);
-            print_r($agentsPriv[$username]);
             list($pws, $headCountArr) = $this->addAmountToProcess('',$agentsPriv[$username],$pws,$headCountArr,true);
         }
         
