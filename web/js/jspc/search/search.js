@@ -1037,7 +1037,7 @@ function getGunaScore(response)
 			{
 				// Do nothing
 			}
-			else if(typeof searchResponse.paginationArray !=="undefined" && searchResponse.page_index < searchResponse.paginationArray.length)
+			else if(typeof searchResponse.paginationArray !=="undefined" && searchResponse.page_index < searchResponse.paginationArray[searchResponse.paginationArray.length -1 ])
 			{
 					loadPage(parseInt(searchResponse.page_index) + 1);
 			}
