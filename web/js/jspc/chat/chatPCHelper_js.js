@@ -1183,7 +1183,8 @@ $(document).ready(function () {
             rosterGroups:chatConfig.Params[device].rosterGroups,
             checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg,
             setLastReadMsgStorage:chatConfig.Params[device].setLastReadMsgStorage,
-            chatAutoLogin:chatConfig.Params[device].autoChatLogin
+            chatAutoLogin:chatConfig.Params[device].autoChatLogin,
+            categoryTrackingParams:chatConfig.Params.categoryTrackingParams
         });
         
         objJsChat.onEnterToChatPreClick = function () {
