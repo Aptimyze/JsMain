@@ -277,7 +277,7 @@ class LoggingManager
 
 		if ( $statusCode != "")
 		{
-			$logData[LoggingEnums::STATUS_CODE] = $statusCode;
+			$logData[LoggingEnums::STATUS_CODE] = strval($statusCode);
 		} 
 
 		if ( $message != "")
@@ -292,6 +292,7 @@ class LoggingManager
 				$logData[LoggingEnums::LOG_EXCEPTION] = $exception->getTrace();
 			}
 		}
+		$logData[LoggingEnums::REQUEST_URI] = $_SERVER['REQUEST_URI'];
 		return $logData;
 	}
 
@@ -332,7 +333,7 @@ class LoggingManager
 		{
 			$statusCode = $logArray[LoggingEnums::STATUS_CODE];
 		}
-		return strval($statusCode);
+		return $statusCode;
 	}
 
 	/**

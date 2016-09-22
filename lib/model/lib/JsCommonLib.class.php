@@ -1103,7 +1103,19 @@ public static function insertConsentMessageFlag($profileid) {
             }
             return $cityString;
         }
+        
+        /**
+         * Function to log Function Calling in Redis
+         * @param type $className
+         * @param type $funName
+         */
+        public static function logFunctionCalling($className, $funName)
+        {
+            $key = $className.'_'.date('Y-m-d');
+            JsMemcache::getInstance()->hIncrBy($key, $funName);
 
+            JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+        }
 
 
 }

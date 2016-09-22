@@ -59,6 +59,9 @@
             ~else`
             <tr class=formhead style="background-color:LightSteelBlue">
                 <td align=center style="background-color:LightSalmon">Process</td>
+                ~if $headCountArr`
+                    <td align=center >HC</td>
+                ~/if`
                 ~foreach from=$labelArr key=k item=val`
                     <td align=center>~$val`</td>
                 ~/foreach`
@@ -67,6 +70,9 @@
             ~foreach from=$data key=k item=v`
             <tr class=formhead>
                 <td align=center>~$processArray[$k]`</td>
+                ~if $headCountArr`
+                    <td align=center>~$headCountArr[$k]`</td>
+                ~/if`
                     ~foreach from=$v key=kk item=val`
                         <td align=center style="font-weight: normal">~if $val`~$val`~else`0~/if`</td>
                     ~/foreach`

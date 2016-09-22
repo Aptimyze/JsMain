@@ -35,6 +35,8 @@ class MAILER_COMMON_ENUM
                 self::$mailerSenders["UPLOADED_PHOTO"]["ALIAS"]="Jeevansathi Contacts";
                 self::$mailerSenders["FEATURED_PROFILE"]["SENDER"]="membership@jeevansathi.com";
                 self::$mailerSenders["FEATURED_PROFILE"]["ALIAS"]="Jeevansathi Membership";
+                self::$mailerSenders["ZERO_MATCHALERT"]["SENDER"]="info@jeevansathi.com";
+                self::$mailerSenders["ZERO_MATCHALERT"]["ALIAS"]="Jeevansathi Info";
                 self::$template["MATCHALERT"]="matchalert";
 		self::$template["NEW_MATCHES"]="newmatches";
 		self::$template["VISITORALERT"]= "visitoralert";
@@ -42,6 +44,7 @@ class MAILER_COMMON_ENUM
                 self::$template["UPLOADED_PHOTO"]="requestedPhotoUploaded";
                 self::$template["SAVED_SEARCH"]="savedSearch";
                 self::$template["FEATURED_PROFILE"]= "featuredProfile";
+                self::$template["ZERO_MATCHALERT"]="zeroMatchalertsMail";
 		self::$membershipTracking["MATCHALERT"]= array('vdGetDiscount'=>'VDMA1','vdPercent'=>'VDMA2','upgrade'=>'MA2','renew'=>'MA2RO','renewPercent'=>'MA2RC');
 		self::$membershipTracking["NEW_MATCHES"]= array('vdGetDiscount'=>'VDNP1','vdPercent'=>'VDNP2','upgrade'=>'NP2','renew'=>'NP2RO','renewPercent'=>'NP2RC');
                 self::$membershipTracking["VISITORALERT"] = array('vdGetDiscount'=>'VDVA1','vdPercent'=>'VDVA2','upgrade'=>'VA2','renew'=>'VA2R','renewPercent'=>'VA2RC');

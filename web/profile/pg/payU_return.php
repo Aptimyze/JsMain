@@ -7,16 +7,17 @@ include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Membership.class.php");
 $serObj = new Services;
 $membershipObj = new Membership;
 
-$checksum = $udf1;
-$returnCurrency = $udf2;
+// Checksum is split into 4 chunks of 20 characters
+$checksum = $udf1.$udf2.$udf3.$udf4;
+$returnCurrency = $udf5;
+
+if ($data = authenticated($checksum)) {
+    $profileid = $data["PROFILEID"];
+}
 
 if (MobileCommon::isMobile()) {
     include_once ($_SERVER['DOCUMENT_ROOT'] . "/profile/common_functions.inc");
     assignHamburgerSmartyVariables($profileid);
-}
-
-if ($data = authenticated($checksum)) {
-    $profileid = $data["PROFILEID"];
 }
 
 if($returnCurrency == "RS"){
@@ -58,7 +59,7 @@ $memHandlerObj = new MembershipHandler();
 $userData = $memHandlerObj->getUserData($profileid);
 $billingPaymentStatusLogObj = new billing_PAYMENT_STATUS_LOG();
 $membershipObj->log_payment_status($Order_Id, $ret_status, 'PAYU', $status);
-$hashText = "$salt|$status|||||||||$returnCurrency|$checksum|$email|$firstname|$productinfo|$amount|$Order_Id|$merchantID";
+$hashText = "$salt|$status||||||$udf5|$udf4|$udf3|$udf2|$udf1|$email|$firstname|$productinfo|$amount|$Order_Id|$merchantID";
 $reverseHash = hash("sha512", $hashText);
 
 $dup = false;

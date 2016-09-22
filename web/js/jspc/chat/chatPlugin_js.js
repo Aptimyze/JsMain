@@ -39,6 +39,8 @@ JsChat.prototype = {
     _rosterGroups:[],
     _checkForDefaultEoiMsg:false,
     _setLastReadMsgStorage:true,
+    _chatAutoLogin:true,
+    _categoryTrackingParams:{},
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -124,6 +126,12 @@ JsChat.prototype = {
         }
         if (arguments[1][0].setLastReadMsgStorage) {
             this._setLastReadMsgStorage = arguments[1][0].setLastReadMsgStorage;
+        }
+        if (arguments[1][0].chatAutoLogin) {
+            this._chatAutoLogin = arguments[1][0].chatAutoLogin;
+        }
+        if (arguments[1][0].categoryTrackingParams) {
+            this._categoryTrackingParams = arguments[1][0].categoryTrackingParams;
         }
     },
     //start:get screen height
@@ -276,7 +284,7 @@ JsChat.prototype = {
         var lengthReq = 14;
         var stringName = this._selfName;
         var trimmedString = stringName.length > lengthReq ? stringName.substring(0, lengthReq - 3) + "..." : stringName;
-        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
+        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel nchathgt1"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp" data-siteLogout="false">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
 	$('body').on('click', function(event) {
             if(($(event.target).parent().attr('id') != "undefined" && $(event.target).parent().attr('id') != 'js-chattopH') &&
@@ -302,7 +310,8 @@ JsChat.prototype = {
         $(curEleRef._logoutChat).click(function () {
             if (curEleRef.onLogoutPreClick && typeof (curEleRef.onLogoutPreClick) == "function") {
                 //that._chatLoggerPlugin("in if");
-                curEleRef.onLogoutPreClick();
+                var fromSiteLogout = $(curEleRef._logoutChat).attr("data-siteLogout");
+                curEleRef.onLogoutPreClick(fromSiteLogout);
             }
             curEleRef.logOutChat();
         });
@@ -649,20 +658,36 @@ JsChat.prototype = {
 	ifChatListingIsCreated = 1;
     },
     //add photo in tuple div of listing
-    _addListingPhoto: function (photoObj) {
-        //console.log("in _addListingPhoto");
-        if (typeof photoObj != "undefined" && typeof Object.keys(photoObj.profiles) != "undefined") {
-            $.each(Object.keys(photoObj.profiles), function (index, element) {
-                if (photoObj.profiles[element].PHOTO.ProfilePic120Url) {
-                    $(".chatlist img[id*='pic_" + element + "_']").attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
-                    //console.log(element);
-                    if($('chat-box[user-id="' + element + '"]').length !=0) {
-                        //console.log("adding for---"+element);
-                        $("#pic_"+element).attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
+    _addListingPhoto: function (photoObj,type) {
+        if(type == "api") {
+            if (typeof photoObj != "undefined" && typeof Object.keys(photoObj.profiles) != "undefined") {
+                $.each(Object.keys(photoObj.profiles), function (index, element) {
+                    if (photoObj.profiles[element].PHOTO.ProfilePic120Url) {
+                        $(".chatlist img[id*='pic_" + element + "_']").attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
+                        if($('chat-box[user-id="' + element + '"]').length !=0) {
+                            $("#pic_"+element).attr("src", photoObj.profiles[element].PHOTO.ProfilePic120Url);
+                        }
                     }
+                });
+            }
+        } else if(type == "local") {
+            var photoURL = "";
+            $.each(photoObj, function(index, elem){
+                if(localStorage.getItem("listingPic_"+elem)) {
+                    photoURL = localStorage.getItem("listingPic_"+elem).split("#")[0];
+                    if(photoURL != "undefined" && photoURL) {
+                        $(".chatlist img[id*='pic_" + elem + "_']").attr("src", photoURL);
+                        if($('chat-box[user-id="' + elem + '"]').length !=0) {
+                            $("#pic_"+elem).attr("src", photoURL);
+                        }
+                    }
+                   
                 }
+                
             });
+            
         }
+        
     },
     _removeHiddenNode: function(userId){
         var curElem = this;
@@ -754,6 +779,8 @@ JsChat.prototype = {
                     elem.find(".pinkBubble2").show();
                 }
                 elem.find(".chatBoxBar").addClass("cursp");
+                elem.find(".js-viewProfileBind").removeClass("js-viewProfileBind");
+                elem.find(".chatBoxBar").addClass("js-minimizedChatBox");
                 elem.find(".downBarPic").addClass("downBarPicMin");
                 elem.find(".downBarUserName").addClass("downBarUserNameMin");
                 if (type != "min") {
@@ -788,6 +815,7 @@ JsChat.prototype = {
             elem.find(".pinkBubble2").hide();
             elem.find(".pinkBubble2 span").html("0");
             elem.find(".chatBoxBar").removeClass("cursp");
+            elem.find(".chatBoxBar").removeClass("js-minimizedChatBox");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
             //console.log("type in _scrollUp",type);
@@ -858,27 +886,31 @@ JsChat.prototype = {
     _bindMaximize: function (elem, userId) {
         var curElem = this;
         $(elem).off("click").on("click", function () {
-            curElem._scrollDown($(".extraPopup"), "retain_extra");
-            setTimeout(function () {
-                $(".extraChats").css("padding-top", "0px");
-            }, 100);
-            curElem._scrollUp($('chat-box[user-id="' + userId + '"]'), "297px");
-            curElem._changeLocalStorage("stateChange",userId,"","open");
-            var bubbleData = [];
-            if(localStorage.getItem("bubbleData")) {
-                bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
-            }
-            var indexToBeRemoved;
-            $.each(bubbleData, function(index, elem){
-                if(elem.userId == userId) {
-                    indexToBeRemoved = index;
-                }
-            });
-            if(indexToBeRemoved != undefined) {
-                bubbleData.splice(indexToBeRemoved,1);
-            }
-            localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
-        });
+            //console.log("clicked",userId);
+			if(elem.hasClass('js-minimizedChatBox')){
+				//console.log("clicked to open");
+		        curElem._scrollDown($(".extraPopup"), "retain_extra");
+		        setTimeout(function () {
+		            $(".extraChats").css("padding-top", "0px");
+		        }, 100);
+		        curElem._scrollUp($('chat-box[user-id="' + userId + '"]'), "297px");
+		        curElem._changeLocalStorage("stateChange",userId,"","open");
+		        var bubbleData = [];
+		        if(localStorage.getItem("bubbleData")) {
+		            bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+		        }
+		        var indexToBeRemoved;
+		        $.each(bubbleData, function(index, elem){
+		            if(elem.userId == userId) {
+		                indexToBeRemoved = index;
+		            }
+		        });
+		        if(indexToBeRemoved != undefined) {
+		            bubbleData.splice(indexToBeRemoved,1);
+		        }
+		        localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+		}      
+  	});
 
     },
     //bind clicking close icon
@@ -918,12 +950,17 @@ JsChat.prototype = {
         //this._chatLoggerPlugin('remove element 11');
         var elem = this;
         //removeCall1 if user is removed from backend
+        
         if (param1 == 'removeCall1' || param1 == 'delete_node') {
             //this._chatLoggerPlugin("calllign _removeFromListing");
             for (var key in data) {
                 var runID = '';
                 if(typeof data[key] != "undefined"){
                     runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                    if(param1 == 'delete_node'){
+                        localStorage.removeItem("listingPic_"+runID);
+                    }
+                    console.log("nitish",param1);
                     if (typeof data[key]["rosterDetails"]["groups"] != "undefined") {
                         //this._chatLoggerPlugin(data[key]["rosterDetails"]["groups"]);
                         var that = this;
@@ -1001,6 +1038,7 @@ JsChat.prototype = {
                         $('chat-box[user-id="' + userId + '"] textarea').prop("disabled", true);
                         //enableClose = true;
                         $('chat-box[user-id="' + userId + '"] .nchatic_3').css('pointer-events', "none");
+                        
                         setTimeout(function () {
                             if (enableClose == true) {
                                 curElem._scrollDown($('chat-box[user-id="' + userId + '"]'), "remove");
@@ -1348,7 +1386,8 @@ JsChat.prototype = {
     _addDataExtraPopup: function (data) {
         var userShowName = "",curElem = this;
         if($('chat-box[user-id="'+data+'"] .downBarUserName').length != 0) {
-            userShowName = $('chat-box[user-id="'+data+'"] .downBarUserName').html().split("<div")[0];
+            //userShowName = $('chat-box[user-id="'+data+'"] .downBarUserName').html().split("<div")[0];
+            userShowName = $('chat-box[user-id="'+data+'"] .js-chatBoxTopName').html();
         }
         else{
             var output = curElem.checkForNodePresence(data);
@@ -1941,8 +1980,8 @@ JsChat.prototype = {
         $('chat-box[user-id="' + userId + '"] #txtArea').on("keyup", function () {
             curElem._textAreaAdjust(this);
         });
-        $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("downBarPic");
-        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig">' + $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html() + '<div class="onlineStatus f11 opa50 mt4"></div></div><div class="iconBar cursp fr padallf_2 disp_ib"><i class="nchatspr nchatic_3"><div class="pos-abs fullBlockTitle disp-none tneg20 bg-white f13 brderinp pad510">Block</div></i><i class="nchatspr nchatic_2 ml10 mr10"><div class="pos-abs fullMinTitle disp-none tneg20_2 bg-white f13 brderinp pad510">Minimize</div></i><i class="nchatspr nchatic_1 mr10"><div class="pos-abs fullCloseTitle disp-none tneg20_3 bg-white f13 brderinp pad510">Close</div></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div></div>');
+        $('chat-box[user-id="' + userId + '"] #pic_' + userId).addClass("js-viewProfileBind downBarPic cursp");
+        $('chat-box[user-id="' + userId + '"] .chatBoxBar').append('<div class="downBarText fullhgt"><div class="downBarUserName disp_ib pos-rel f14 colrw wid44p fontlig"><div class="js-viewProfileBind cursp js-chatBoxTopName">' + $(".chatlist li[id='" + userId + "_" + groupId + "'] div").html() + '</div><div class="onlineStatus f11 opa50 mt4"></div></div><div class="iconBar cursp fr padallf_2 disp_ib"><i class="nchatspr nchatic_3"><div class="pos-abs fullBlockTitle disp-none tneg20 bg-white f13 brderinp pad510">Block</div></i><i class="nchatspr nchatic_2 ml10 mr10"><div class="pos-abs fullMinTitle disp-none tneg20_2 bg-white f13 brderinp pad510">Minimize</div></i><i class="nchatspr nchatic_1 mr10"><div class="pos-abs fullCloseTitle disp-none tneg20_3 bg-white f13 brderinp pad510">Close</div></i></div><div class="pinkBubble2 fr vertM scir disp_ib padall-10 m11"><span class="noOfMessg f13 pos-abs">0</span></div></div>');
         curElem._bindInnerHtml(userId, status);
     },
     //binding innerDiv after creating chatbox
@@ -1956,9 +1995,36 @@ JsChat.prototype = {
         this._bindMinimize($('chat-box[user-id="' + userId + '"] .nchatic_2'));
         this._bindClose($('chat-box[user-id="' + userId + '"] .nchatic_1'));
         this._bindBlock($('chat-box[user-id="' + userId + '"] .nchatic_3'), userId);
+        curElem._bindChatPoxPicClick(userId);
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
     },
+    //bind click action on chat box pic click
+    _bindChatPoxPicClick: function(userId){
+        var curElem = this,chatBoxElem= $('chat-box[user-id="' + userId + '"]');
+        chatBoxElem.on("click",".js-viewProfileBind",function(event){
+			if(chatBoxElem.hasClass('js-minimizedChatBox') === false){
+                //console.log("clicked to view profile");
+		        event.preventDefault();
+		        var profilechecksum = chatBoxElem.attr("data-checks"),
+		        groupID = chatBoxElem.attr("group-id"),
+		        trackingParamsStr = '';
+		        if(typeof groupID != "undefined" && groupID && typeof curElem._categoryTrackingParams[groupID]!= "undefined"){  
+		            var trackingParams = curElem._categoryTrackingParams[chatBoxElem.attr("group-id")];
+		            if (trackingParams) {
+		                $.each(trackingParams, function (key, val) {
+		                    trackingParamsStr += '&' + key + '=' + val;
+		                });
+		            }
+		        }
+		        if(typeof profilechecksum!= "undefined" && profilechecksum){
+		            //console.log("view profile");
+		            window.location.href = "/profile/viewprofile.php?profilechecksum="+profilechecksum+trackingParamsStr;
+		        }
+			}
+        });
+    },
+
     _scrollToBottom: function (userId,type) {
         //console.log("type in _scrollToBottom",type);
         if(type == undefined) {
@@ -1989,7 +2055,8 @@ JsChat.prototype = {
         var curElem = this;
         if ($('chat-box[user-id="' + other_id + '"]').length != 0) { 
             if(curElem._checkForDefaultEoiMsg == true){
-                other_username =  $('chat-box[user-id="' + other_id + '"] .downBarUserName').html();    
+                //other_username =  $('chat-box[user-id="' + other_id + '"] .downBarUserName').html(); 
+                other_username =  $('chat-box[user-id="' + other_id + '"] .js-chatBoxTopName').html();    
                 defaultEoiSentMsg = "Jeevansathi member with profile id "+ self_username +" likes your profile. Please 'Accept' to show that you like this profile.";
                 defaultEoiRecMsg = "Jeevansathi member with profile id "+ other_username +" likes your profile. Please 'Accept' to show that you like this profile.";
             }
@@ -2481,7 +2548,7 @@ JsChat.prototype = {
         //this._chatLoggerPlugin($('#'+param1+'_hover').length);
         //this._chatLoggerPlugin("in hoverBoxStr");
         //this._chatLoggerPlugin(pCheckSum);
-        var trackingParams = chatConfig.Params.categoryTrackingParams[group],
+        var trackingParams = _this._categoryTrackingParams[group],
             trackingParamsStr = '';
         if (typeof trackingParams != "undefined") {
             $.each(trackingParams, function (key, val) {
@@ -2949,6 +3016,12 @@ JsChat.prototype = {
             */
         });
         delete that;
+        //auto login to chat on site relogin if flag true and login authentication success
+        if(curEle._chatAutoLogin == true && failed!= true){
+            setTimeout(function(){
+                invokePluginLoginHandler("autoChatLogin");
+            },100);
+        }
     },
     preventSiteScroll:function(userId){
         var inside = false, current;
@@ -2957,7 +3030,7 @@ JsChat.prototype = {
             inside = true;
             current = $(document).scrollTop();
             $(document).scroll(function(e,d){
-                if(!$(e).hasClass('.chatMessage') && inside == true) {
+                if(!$(e).hasClass('.chatMessage') && inside == true && $('chat-box[user-id="' + userId + '"]').length != 0) {
                     $(window).scrollTop(current);
                 }
             });

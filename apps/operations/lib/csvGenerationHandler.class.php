@@ -42,7 +42,7 @@ class csvGenerationHandler
 							$salesCsvData->removeProfiles($csvEntryDate);
 			}
 			// truncate regular sales temp table
-			$saleCsvTempObj =new incentive_SALES_CSV_DATA_TEMP();
+			$saleCsvTempObj =new incentive_SALES_CSV_DATA_TEMP('newjs_masterDDL');
 			$saleCsvTempObj->truncate();	
 		}
 		elseif($processName=="SALES_REGISTRATION")
@@ -52,7 +52,7 @@ class csvGenerationHandler
 						$salesRegCsvData->removeProfiles($csvEntryDate);
 	
 			// truncate registration sales temp table
-			$saleCsvTempObj =new incentive_SALES_REGISTRATION_CSV_DATA_TEMP();
+			$saleCsvTempObj =new incentive_SALES_REGISTRATION_CSV_DATA_TEMP('newjs_masterDDL');
 			$saleCsvTempObj->truncate();
 		}
 		elseif($processName=="SUGARCRM_LTF")
@@ -164,7 +164,7 @@ class csvGenerationHandler
 			if($processName=='paidCampaignProcess'){
 				$fields .=",YOURINFO,FAMILYINFO,FATHER_INFO,SPOUSE,SIBLING_INFO,JOB_INFO";	
 			}
-			$jprofileObj  	=new JPROFILE('newjs_masterRep');
+			$jprofileObj  		=new JPROFILE('newjs_masterRep');
 			$AgentDetailsObj   	=new AgentAllocationDetails();
                         $mainAdminPoolObj       =new incentive_MAIN_ADMIN_POOL('newjs_masterRep');	
 
@@ -1125,6 +1125,7 @@ class csvGenerationHandler
         	                $campaignName           =$salesCampaign[$processName];
 				$tablesName     	=$salesCampaignTables[$processName];
 				$salesCsvDataObj	=new $tablesName;
+				$callTimeArr		=$processObj->getProfiles();
 			}
 			$method			=$processObj->getMethod();
 			$leadIdSuffix           =$processObj->getLeadIdSuffix();		
@@ -1175,16 +1176,25 @@ class csvGenerationHandler
 	                                $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId);
 				}
 				else if($processName=="renewalProcessInDialer"){
-                                        $leadId         =$campaignName.$leadIdSuffix;
-					$salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$expiryDate);
+					$campaignType	=$this->getCampaignType($processName, $dataArr['MTONGUE']);
+					if($campaignType=='OB_RENEWAL_MAH'){
+						$campaignName 	=$salesCampaign[$campaignType];	
+						$leadId 	=$campaignName.$leadIdSuffix;	
+					}
+					else{
+						$leadId         =$campaignName.$leadIdSuffix;
+					}
+					$salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$campaignType,$expiryDate);
 				}
 				else if($processName=="rcbCampaignInDialer"){
 					$country        =FieldMap::getFieldLabel('country',$dataArr['COUNTRY_RES']);
+					$callTime	=$callTimeArr[$profileid]['PREFERRED_START_TIME_IST'];
 					$leadId =$campaignName.$leadIdSuffix;
 					$source =$campaignName;
-                                        $csvDateTime =$processObj->getStartDate();
+                                        //$csvDateTime =$processObj->getStartDate();
+					$csvDateTime =$processObj->getEndDate();
                                         if($profileid>0)
-                                                $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$csvDateTime,$username,$country,$source);
+                                                $salesCsvDataObj->insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$dataArr['ALLOTED_TO'],$vdDiscount,$dataArr['LAST_LOGIN_DT'],$dataArr['PHONE1'],$dataArr['PHONE2'],$havePhoto,$dataArr['DTOFBIRTH'],$mstatus,$everPaid,$gender,$relation,$leadId,$csvDateTime,$username,$country,$source,$callTime);
                                          $rcbInDialerLog =new incentive_RCB_LOG();
                                          $rcbInDialerLog->insertData($profileid, $csvDateTime);
 				}
@@ -1236,7 +1246,7 @@ class csvGenerationHandler
 				}
 				elseif($processName=="renewalProcessInDialer"){
 					$renewalInDialerObj =new incentive_RENEWAL_IN_DIALER(); 	
-					$renewalInDialerObj->insertProfile($profileid,$dialerPriority);
+					$renewalInDialerObj->insertProfile($profileid,$dialerPriority,$campaignType);
 				}
 				unset($salesCsvDataObj);
 				unset($salesCsvDataTempObj);
@@ -1615,6 +1625,19 @@ class csvGenerationHandler
 		$largeFileObj =new incentive_LARGE_FILE('newjs_masterRep');	
 		$resultArr =$largeFileObj->getLargeFileData();
 		return $resultArr;	
+	}
+	public function getCampaignType($processName,$mtongue){
+
+		$renewalSouthCommunity 	=crmParams::$renewalSouthCommunity;
+		$campaignNames		=crmParams::$campaignNames;	
+
+		if($processName=='renewalProcessInDialer'){
+			if(in_array($mtongue, $renewalSouthCommunity))	
+				$campaignType =$campaignNames['renewalMah'];
+			else
+				$campaignType =$campaignNames['renewal'];
+		}
+		return $campaignType;
 	}
 	public function getCampaignName($profileid,$username,$mtongue,$city,$isd,$country)
 	{
