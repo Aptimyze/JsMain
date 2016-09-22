@@ -1187,14 +1187,16 @@ class MembershipHandler
                 $renDiscLog = new billing_RENEWAL_DISCOUNT_LOG();
                 $renDisc = $renDiscLog->fetchRenewalDiscountForProfileAndDate($profileid, date("Y-m-d", $expThreshold));
                 $discPerc = max($discPerc, $renDisc);
-                $renPrevFlag = true;
+                if ($renDisc) {
+                    $renPrevFlag = true;
+                }
             }
             // Force VD Check  
             if ($previousCheck == true && !$renPrevFlag) {
                 $vdDiscArr = $this->getSpecialDiscountForAllDurationsPreviously($profileid);
                 $lastExp = $vdDiscArr['EDATE'];
                 if ($expThreshold >= strtotime($lastExp)) {
-                    $vdDisc    = $vdDiscArr['DISCOUNT'][$mainMem];
+                    $vdDisc = $vdDiscArr['DISCOUNT'][$mainMem];
                     if (in_array($mainMemDur, array_keys($vdDisc))) {
                         $discPerc1 = $vdDisc[$mainMemDur];
                     } else if ($fest == 1) {
