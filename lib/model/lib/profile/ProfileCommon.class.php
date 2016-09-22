@@ -734,7 +734,10 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			$actObj->profilechecksum=$jc->profilechecksum;
 			$actObj->SHOW_NEXT_PREV=$jc->SHOW_NEXT_PREV;
 			$actObj->other_params=$jc->other_params;
-			if($actObj->stype != SearchTypesEnums::KundliAlerts)
+			// Array of Kundli matches stype as profile next prev not required
+			$KundliStypeArray = array(SearchTypesEnums::KundliAlerts,SearchTypesEnums::KundliAlertsAndroid,SearchTypesEnums::KundliAlertsIOS,SearchTypesEnums::KundliAlertsJSMS);
+			
+			if(!in_array($actObj->stype,$KundliStypeArray))
 			{
 				$actObj->SHOW_PREV=$jc->SHOW_PREV;
 				$actObj->SHOW_NEXT=$jc->SHOW_NEXT;

@@ -219,6 +219,7 @@ class SearchApiDisplay
 		//user's detail fields to be displayed in the search tuple: username, age, height, etc
 		$fieldStr = SearchConfig::$searchDisplayFields;
 		$fieldsArr = explode(",",$fieldStr);
+		
 		if(is_array($this->searchResultsData))
 		{
 			$offsetVal=1;
@@ -323,6 +324,7 @@ class SearchApiDisplay
 				}
 				
 				$this->finalResultsArray[$pid]['HOROSCOPE']=$this->searchResultsData[$key]['HOROSCOPE'];
+				$this->finalResultsArray[$pid]['GUNASCORE']=array_key_exists("GUNASCORE",$this->searchResultsData[$key])?$this->searchResultsData[$key]['GUNASCORE']:"";
 				if($this->finalResultsArray[$pid]['HOROSCOPE'] == 'Y')
 				{
 					$iconsSize += 30;
@@ -585,6 +587,7 @@ class SearchApiDisplay
 		}
 
 		//getting search results
+	
 		$this->profileids1 = $SearchResponseObj->getSearchResultsPidArr();
 		$this->searchResultsData1 = $SearchResponseObj->getResultsArr();
 
