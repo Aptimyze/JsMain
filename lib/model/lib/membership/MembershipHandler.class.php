@@ -1195,7 +1195,7 @@ class MembershipHandler
             if ($previousCheck == true && !$renPrevFlag) {
                 $vdDiscArr = $this->getSpecialDiscountForAllDurationsPreviously($profileid);
                 $lastExp = $vdDiscArr['EDATE'];
-                if ($expThreshold >= strtotime($lastExp)) {
+                if (strtotime($lastExp) >= $expThreshold) {
                     $vdDisc = $vdDiscArr['DISCOUNT'][$mainMem];
                     if (in_array($mainMemDur, array_keys($vdDisc))) {
                         $discPerc1 = $vdDisc[$mainMemDur];
