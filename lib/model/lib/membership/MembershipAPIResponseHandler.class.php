@@ -144,7 +144,7 @@ class MembershipAPIResponseHandler {
         }
         
         list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device);
-        $this->curActServices = $this->memHandlerObj->getActiveServices();
+        $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {
             if (($key = array_search("ESP", $this->curActServices)) !== false) {

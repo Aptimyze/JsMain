@@ -111,7 +111,7 @@ applePaymentsLoggingMisSuccess:
 RCBSalesConversionExecutiveMISSuccess:
   metas:
     title:        RCB Sales Conversion Executive MIS
-
+  
   stylesheets:    [jquery_dateLists]
 
   javascripts:    [jquery_dateLists]
@@ -120,6 +120,22 @@ RCBSalesConversionExecutiveMISScreen1Success:
   metas:
     title:        RCB Sales Conversion Executive MIS
 
-  stylesheets:    []
+  stylesheets:    [jquery_dateLists]
 
-  javascripts:    []
+  javascripts:    [jquery_dateLists]
+
+renewalConversionMISSuccess:
+  metas:
+    title:        Renewal Conversion MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+renewalConversionMISScreen1Success:
+  metas:
+    title:        Renewal Conversion MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]

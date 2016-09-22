@@ -79,6 +79,15 @@ private static $featuredProfileCount= 1;
                  return SearchTypesEnums::VERIFIED_MATCHES_ANDROID;
         }
         
+        
+        /**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches()
+        {
+                 return SearchTypesEnums::KundliAlertsAndroid;
+        }
+        
         /**
         * get No of results for srp page
         */

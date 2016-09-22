@@ -28,7 +28,7 @@ class MembershipHandler
 
         $memCacheObject = JsMemcache::getInstance();
 
-        $servicesObj = new billing_SERVICES('newjs_slave');
+        $servicesObj = new billing_SERVICES('newjs_master');
 
         if ($membership == "MAIN") {
             $key_main = $device . "_MAIN_MEMBERSHIP";

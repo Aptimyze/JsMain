@@ -35,7 +35,8 @@ foreach($campaignArr as $key=>$campaignName)
 			$totalRecord	=count($profilesArr);
 			if($totalRecord>0){
 				foreach($profilesArr as $key=>$dataArr){
-					$startDate =$dataArr['CSV_ENTRY_DATE'];
+					if(!isset($startDate))
+						$startDate =$dataArr['CSV_ENTRY_DATE'];
 					$dataArr =$dialerHandlerObj->formatDataSet($campaignName,$dataArr,$startDate);		
 					$endID =$dataArr['ID'];
 					unset($dataArr['ID']);
@@ -47,7 +48,8 @@ foreach($campaignArr as $key=>$campaignName)
 			}
 			unset($profilesArr);
 		}
-		$dialerCampaignReords =$dialerHandlerObj->getCampaignRecordsForDuration($campaignName, $startDate );
+		if(isset($startDate))
+			$dialerCampaignReords =$dialerHandlerObj->getCampaignRecordsForDuration($campaignName, $startDate );
 		if($totalRecord !=$dialerCampaignReords){
 			$sub	="FAILED: Dialer insert for $campaignName";
 			$msg	="Campaign Records:".$totalRecord."# Dialer Records Inserted:".$dialerCampaignReords;	

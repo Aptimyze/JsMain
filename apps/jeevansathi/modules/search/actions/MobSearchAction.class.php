@@ -30,6 +30,9 @@ class MobSearchAction extends sfActions
 		if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("verifiedMatches")==1  || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches')) || $request->getParameter("dashboard")==1) && $isLogout==1)
 		        $this->forward("static","logoutPage");
                 $this->szNavType = 'SR';
+                
+               
+								
                 if($request->getParameter("twowaymatch")==1){
 			$this->searchBasedParam = 'twowaymatch';
                 }
@@ -85,9 +88,13 @@ class MobSearchAction extends sfActions
 		//Setting cookie for search id
 		$searchId = $ResponseArr["searchid"];
 		setcookie("JSSearchId", $searchId, time() + 86400, "/"); // 86400 = 1 day
-		
+		if(($request->hasParameter('kundlialerts') && $request->getParameter("kundlialerts") == 1) || $ResponseArr["searchBasedParam"]=="kundlialerts" ){
+					
+									$this->szNavType = $this->stypeName;
+		}
+	
                 //Navigator
-                $currentPage=1;
+                $currentPage=1;                
                 $this->NAVIGATOR = navigation($this->szNavType,$searchId.":".$currentPage,'','Symfony');
                 
 		if(is_array($ResponseArr) && $ResponseArr["no_of_results"]==0)
