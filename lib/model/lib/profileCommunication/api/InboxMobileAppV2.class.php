@@ -532,6 +532,7 @@ class InboxMobileAppV2
 				"SEEN",
 				"edu_level_new",
 				"ProfilePic120Url",
+                                "ProfilePic450Url",
 				"userloginstatus",
 				"MSTATUS",
 				"VERIFICATION_SEAL",
@@ -1123,6 +1124,7 @@ class InboxMobileAppV2
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MyJsMatchAlertSection,
                                 "SHORTLIST"=>"stype=".SearchTypesEnums::MYJS_SHORTLIST_PC."&responseTracking=".JSTrackingPageType::MYJS_SHORTLIST_PC,
                                 "PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
+                                "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_MYJS_JSPC,
                                 //"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
@@ -1229,6 +1231,26 @@ class InboxMobileAppV2
 			$messageCmp = trim(html_entity_decode($message,ENT_QUOTES));
 			if(!in_array($messageCmp,$presetMessage))
 			{
+				if(strpos($message,"||")!==false || strpos($message,"--")!==false)
+				{
+					$messageArr=explode("||",$message);
+					$eoiMsgCount = count($messageArr);
+					$i=0;
+					
+					for($j=0;$j<$eoiMsgCount;$j++)
+					{
+						$splitmessage = explode("--",$messageArr[$j]);
+						if($i==0)
+							$eoiMessages=$splitmessage[0];
+						else
+							$eoiMessages.="\n".$splitmessage[0];
+						$i++;							
+					}
+					if($eoiMessages)
+						$message=$eoiMessages;
+					else
+						$message="";
+				}
 				$message= nl2br($message);
 				$message =addslashes(htmlspecialchars_decode($message));
 			}

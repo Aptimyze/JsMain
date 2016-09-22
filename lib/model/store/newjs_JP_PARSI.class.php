@@ -22,6 +22,7 @@ class NEWJS_JP_PARSI extends TABLE{
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
 					$prep->execute();
+          $this->logFunctionCalling(__FUNCTION__);
 					if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					{
 						return $result;
@@ -67,12 +68,19 @@ class NEWJS_JP_PARSI extends TABLE{
 						$resEditReligion->bindValue(":PROFILEID", $pid);
 						$resEditReligion->execute();
 					}
+          $this->logFunctionCalling(__FUNCTION__);
 					return true;
 				}catch(PDOException $e)
 					{
 						throw new jsException($e);
 					}
 		}
-		
+    private function logFunctionCalling($funName)
+    {
+      $key = __CLASS__.'_'.date('Y-m-d');
+      JsMemcache::getInstance()->hIncrBy($key, $funName);
+      
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+    }
 }
 ?>

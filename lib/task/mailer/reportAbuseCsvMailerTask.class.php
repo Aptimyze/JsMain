@@ -26,6 +26,17 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
+
+    $this->executeCSVforReportInvalid();
+    $this->executeCSVforReportAbuse();
+
+           
+  }
+
+private function executeCSVforReportAbuse()
+  {
+
+   //This is the function which is executed when csv for report abuse is required.
     $yesterdayDate=date('Y-m-d',strtotime("-1 day"));
     $reportArray=(new REPORT_ABUSE_LOG)->getReportAbuseLog($yesterdayDate,$yesterdayDate);
     $data="REPORTEE,REPORTER,REPORTEE_EMAIL,REPORTER_EMAIL,REASON,OTHER_REASON,DATE\r\n";
@@ -49,8 +60,30 @@ EOF;
     }
   
     SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Report Abuse Summary for $yesterdayDate","noreply@jeevansathi.com",'','',$data,'','reportAbuse_'.$yesterdayDate.".csv");
-           
+ }
+private function executeCSVforReportInvalid()
+  {
+    //This is the function which is executed when csv for Mark Invalid is required.
+    $yesterdayDate=date('Y-m-d',strtotime("-1 day"));
+    $reportArray=(new JSADMIN_REPORT_INVALID_PHONE())->getReportInvalidLog($yesterdayDate,$yesterdayDate);
+    $data="SUBMITEE,SUBMITER,COMMENTS,DATE,CONTACT_NUMBER_MARKED,COUNT_IN_LAST_90_DAYS\r\n";
+
+     $startDate=$yesterdayDate;
+     $endDate=$yesterdayDate;
+      $reportArray= (new feedbackReports())->getReportInvalidLog($startDate,$endDate);
+     
+
+      foreach ($reportArray as $key => $value) 
+      { 
+      $data.="\r\n".$value['submitee_id'].",".$value['submiter_id'].','.$value['comments'].','.$value['timestamp'].','.$value['phone_number'].','.$value['count'];
+      # code...
+      }
+    SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Report Invalid Summary for $yesterdayDate","noreply@jeevansathi.com",'','',$data,'','MarkPhoneInvalid_'.$yesterdayDate.".csv");
+          
   }
  
+
+
+
 
 }

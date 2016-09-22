@@ -1,7 +1,8 @@
 <?php
 	//Below Mail function added for data_changes release
-	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com","profile/awaiting_decline_cluster.php called","profile/awaiting_decline_cluster.php called");
-	
+	$fileName =  $_SERVER["SCRIPT_FILENAME"];
+	$http_msg=print_r($_SERVER,true);
+	mail("reshu.rajput@gmail.com,lavesh.rawat@gmail.com","For DLL Movement - $fileName",$http_msg);
 	//to zip the file before sending it
         $zipIt = 0;
         if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))

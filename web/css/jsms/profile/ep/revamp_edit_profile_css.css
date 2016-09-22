@@ -64,3 +64,5 @@ input[type=number] {
 .topLeft50{top:50%;left:50%;position:absolute;transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);-ms-transform::translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);}
 .padd1015{padding:10px 15px}
 .f10{font-size:10px}
+.filter-onoff-new
+{ background-image: url(IMG_URL/images/jsms/commonImg/on-off.png); background-repeat: no-repeat}

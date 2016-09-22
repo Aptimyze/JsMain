@@ -804,7 +804,7 @@ class BILLING_SERVICE_STATUS extends TABLE {
     {
         try
         {
-            $sql  = "UPDATE billing.SERVICE_STATUS SET ACTIVE=:STATUS WHERE BILLID=:BILLID AND SERVICEID=:SERVICEID";
+            $sql  = "UPDATE billing.SERVICE_STATUS SET ACTIVE=:STATUS, ACTIVATED='Y' WHERE BILLID=:BILLID AND SERVICEID=:SERVICEID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":STATUS", $status, PDO::PARAM_STR);
             $prep->bindValue(":SERVICEID", $serviceid, PDO::PARAM_STR);
@@ -845,6 +845,27 @@ class BILLING_SERVICE_STATUS extends TABLE {
             }
             return implode(",",$output);
         } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getRenewalProfilesDetailsInRange($startDt, $endDt)
+    {
+        try
+        {
+            $sql="SELECT BILLID, PROFILEID, EXPIRY_DT FROM billing.SERVICE_STATUS WHERE SERVEFOR LIKE '%F%' AND ACTIVE = 'Y' AND EXPIRY_DT>=:START_DATE AND EXPIRY_DT<=:END_DATE ORDER BY EXPIRY_DT, PROFILEID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            while($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[] = $row;
+            }
+            return $res;
+        }
+        catch(Exception $e)
+        {
             throw new jsException($e);
         }
     }

@@ -202,10 +202,9 @@ if (authenticated($cid)) {
 							*/
 							else {
 								$str.= $NAME[$i] . " = '" . addslashes(stripslashes($_POST[$NAME[$i]])) . "' ,";
-								$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($_POST[$NAME[$i]]));
+								$arrProfileUpdateParams[$NAME[$i]] = $_POST[$NAME[$i]];
 							}
 						}
-						
 						if ($NAME[$i] == "YOURINFO") {
 							if(strlen($_POST[$NAME[$i]])<100){
 								
@@ -233,7 +232,7 @@ if (authenticated($cid)) {
 					}
 						
 				}
-			}
+			}		
 				if ($_POST['PHONE_FLAG'] == "I") phoneUpdateProcess($pid, '', '', 'I', 'OPS', $user);
 				if ($fullname) $str_name = "NAME=" . "'" . addslashes(stripslashes($_POST[$fullname])) . "'";
 				if ($str_name) $count_screen = count($NAME) + 1;
@@ -336,7 +335,6 @@ if (authenticated($cid)) {
         $objUpdate = JProfileUpdateLib::getInstance();
         //JPROFILE Columns
         $arrProfileUpdateParams['SCREENING']= $screen;
-        
 				if ($str_edu) {         
 					//$sql_ed = "UPDATE newjs.JPROFILE_EDUCATION set $str_edu where PROFILEID=$pid";
 					//mysql_query_decide($sql_ed) or die("$sql_ed" . mysql_error_js()."at line 278");
@@ -403,6 +401,8 @@ if (authenticated($cid)) {
           else {
             $updateFTOState = 0;
           }
+					$addInUserCreation = 1; //Adding entry in chat user
+
 					//Adding entry to bot_jeevansathi.MAIL_INVITE table if email of gmail
 					//Required to give them gmail chat invite
 					//if(strstr($to_notify,'@gmail.com') && $service_mes=='S')
@@ -440,6 +440,7 @@ if (authenticated($cid)) {
           $action = FTOStateUpdateReason::SCREEN;
           $profileObj->getPROFILE_STATE()->updateFTOState($profileObj,$action);
         }
+
 				//Log modified values
 				$log_name = $name;
 				$log_val = array();
@@ -996,8 +997,8 @@ if (authenticated($cid)) {
 			$social_new_fields['FAV_VAC_DEST']['LABEL'] = 'Favourite Vacation Destination';
 			//defining allowed continuous number's limit.
 			$allowed_cont_num_len = 6;
-			if ($val == "new") $item = array("GENDER", "MSTATUS", "DTOFBIRTH", "PHOTO_DISPLAY");
-			else $item = array("GENDER", "PHOTO_DISPLAY");
+			if ($val == "new") $item = array("GENDER", "MSTATUS", "DTOFBIRTH");
+			else $item = array("GENDER");
 			foreach ($social_new_fields as $key => $value) {
 				if (!isFlagSet($key, $screen)) {
 					switch ($value['TBL']) {

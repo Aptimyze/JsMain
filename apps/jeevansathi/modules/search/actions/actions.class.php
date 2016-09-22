@@ -1554,7 +1554,7 @@ class searchActions extends sfActions
 						$noCasteMapping = 1;
 						$hideFeatureProfile = 1;
 					}
-					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1)
+					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1 || $request->getParameter("searchBasedParam") == "matchalerts")
 					{
 						$noRelaxation = 1;
 						$noCasteMapping = 1;

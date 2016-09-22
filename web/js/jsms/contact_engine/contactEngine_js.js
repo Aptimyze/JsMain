@@ -15,6 +15,7 @@ var profile_index = {};
 var writeMessageAction = false;
 var cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'ot_sprtie ot_bell','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};
 var mainHeight;
+var msgWindowMSGID='',msgWindowCHATID='',msgWindowPageIndex=1,paramsForMsgWindow,indexForMsgWindow,msgWindowOn=0,MsgWindowLoading=0;
 function bgSetting() 
 {
   dim = getDim();
@@ -249,7 +250,7 @@ function setWindowParams(username, imageUrl, index){
         var send_hgt =$('#parentFootId').outerHeight();
         var com_total = com_headHgt + send_hgt;
         com_msgHgt1 = vhgt - com_total;
-        $('.message_con').css({'height':com_msgHgt1,'overflow':'auto'});
+        $('.message_con').css({'height':com_msgHgt1,'overflow-y':'auto','overflow-x':'hidden'});
 
         var tabIdExist= $("#tabHeader").length;
         if(tabIdExist){
@@ -325,12 +326,14 @@ function bindPrimeButtonClick(index)
 	{
     	$( "#Prime_"+index).bind( "click", function(){
           params["actionName"] =$("#primeAction"+index).val();
+          
        		if(params["actionName"]=="PHOTO_UPLOAD")
 				window.location = actionUrl[params["actionName"]];
 			else{
 				params["profilechecksum"] =$("#buttonInput"+index).val();
 				//$("#Prime_"+index).unbind( "click");
-				performAction(params["actionName"], params, index,true);
+				performAction(params["actionName"], params, index,true,1);
+                                
 			}
 		});
     $( "#Prime_"+index+"_1").bind( "click", function(){
@@ -341,7 +344,7 @@ function bindPrimeButtonClick(index)
       else{
         params["profilechecksum"] =$("#buttonInput"+index+"_1").val();
         //$("#Prime_"+index).unbind( "click");
-        performAction(params["actionName"], params, index,true);
+        performAction(params["actionName"], params, index,true,1);
       }
       
     });
@@ -372,7 +375,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 					params["profilechecksum"] =$("#buttonInput"+index).val();
 					params["actionName"] = actionDetail[action];
 					$('#'+action+"_"+index).unbind( "click");
-					performAction(action, params, index,false);
+					performAction(action, params, index,false,1);
 					return false;
 				});
 		}
@@ -402,8 +405,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 						var paramstr = buttonDetailsOthers[iButton['IGNORE']].params;
 						profile_index[index]['IGNORE'] = paramstr.split('=')[1];
 					}
-					else 
-						profile_index[index]['IGNORE'] = (profile_index[index]['IGNORE']==1)?"0":"1";
+					 
 
           var paramsArr = {
             blockArr: {
@@ -423,11 +425,11 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
   } 
 }
 
-function performAction(action, params, index,isPrime)
+function performAction(action, tempParams, index,isPrime,fromButton)
 {
 	if((writeMessageAction=="INITIATE" || writeMessageAction=="REMINDER")&&action=="MESSAGE"){
 		aUrl="/api/v1/contacts/MessageHandle";
-		params['actionName']            ="MessageHandle";
+		tempParams['actionName']            ="MessageHandle";
 	}
 	else{
 		aUrl = actionUrl[action];
@@ -447,16 +449,29 @@ function performAction(action, params, index,isPrime)
         aUrl +="&pageSource="+contactEngineChannel;
   postParams='';
      dim='';
+     if(action=='WRITE_MESSAGE'){
+         paramsForMsgWindow=tempParams;
+         indexForMsgWindow=index;
+         tempParams['pagination']=1;
+         if((typeof fromButton !='undefined')  && fromButton==1) 
+         {
+             msgWindowMSGID='';
+             msgWindowCHATID='';
+             msgWindowOn=0;
+             
+         }
+         else msgWindowOn=1; 
+         tempParams['MSGID']=msgWindowMSGID;tempParams['CHATID']=msgWindowCHATID;}
      if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")) {
-         params["responseTracking"]=responseTrackingno;
+         tempParams["responseTracking"]=responseTrackingno;
          
     $("#eoituple_"+index+" .contactLoader").css("display","block");
     
 }
     else if(action=="INITIATE_MYJS")
     {
-                params["fromJSMS_MYJS"]='1';
-                params["stype"]='WMM';
+                tempParams["fromJSMS_MYJS"]='1';
+                tempParams["stype"]='WMM';
         
          $("#matchAlerttuple_"+index+" .contactLoader").css("display","block");
         
@@ -464,7 +479,7 @@ function performAction(action, params, index,isPrime)
       else
 	{
 		loaderTop();
-		if(isPrime && action!="MESSAGE")
+		if(isPrime && action!="MESSAGE" && action!="WRITE_MESSAGE" )
 		{
 			dim = getDim();
 			//scrollOff();
@@ -479,7 +494,7 @@ function performAction(action, params, index,isPrime)
             
     url: aUrl,
     type: "POST",
-    data: params,
+    data: tempParams,
     //crossDomain: true,
     success: function(result){
                     if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS") || (action=="INITIATE_MYJS"))
@@ -500,13 +515,14 @@ function performAction(action, params, index,isPrime)
 			startTouchEvents();
 		}
                     if(CommonErrorHandling(result,'?regMsg=Y')) //CE means contact engine
-      {
+      {                     
+                            
                             if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action); 
                             else afterAction(result,action,index);
       }
     }
   });
-params = {};
+//params = {};
 }
 
 
@@ -769,8 +785,30 @@ function declineInterest(result,action, index){
 				handleSwipe('swipeleft','left','','','');
 	}
 }
+
+
 function writeMessage(result, action, index){
-               if ($("#lastMsgId_"+index).length) $("#lastMsgId_"+index).css("font-weight",'300').css('font-family','Roboto');
+    var msgWindowHeight;
+    msgWindowMSGID=typeof result['MSGID'] !='undefined' ? result['MSGID'] : '' ;
+    msgWindowCHATID=typeof result['CHATID'] !='undefined' ? result['CHATID'] : '' ;
+    $("#msgId").unbind('scroll');
+    if(result.hasNext==true)
+    {
+        $("#msgId").scroll(function()
+        {
+            
+
+            if($(this).scrollTop()==0)
+            {
+            if(MsgWindowLoading)return;
+            MsgWindowLoading=1;
+            var tempParams=paramsForMsgWindow;
+            var tempIndex=indexForMsgWindow;
+                performAction("WRITE_MESSAGE", tempParams, tempIndex,false,0);
+            }
+        });
+    }
+  if ($("#lastMsgId_"+index).length) $("#lastMsgId_"+index).css("font-weight",'300').css('font-family','Roboto');
   $("#writeMessageTxtId").val('');
   $("#writeMsgDisplayId").html("");
   $("#updateMsgId").val(index);
@@ -783,6 +821,7 @@ function writeMessage(result, action, index){
 
   $("#"+writeMessageOverlayId).show();
   if(result.cansend=='true'){
+      
     var toggleSet;
     var toggleChk;
     $("#presetMessageId").show();
@@ -792,34 +831,40 @@ function writeMessage(result, action, index){
           $("#comm_footerMsg").show();
     setTextAreaHgt();
     var msgLoopStr ="<div class='fontlig f16 white com_pad1' id='presetMessageDispId'><span id='presetMessageTxtId'></span><span class='dispbl f12 color1 pt5 white' id='presetMessageStatusId'></span></div>";
-    $("#presetMessageId").html(msgLoopStr);
+ //   $("#presetMessageId").html(msgLoopStr);
 
     if(messageObjArr){
       $.each(messageObjArr, function(objVal,objLabel){ 
+         var tempDiv=$('<div>').append(msgLoopStr);
         var message   =nl2br(objLabel.message);
         var timeTxt =objLabel.timeTxt;      
         var myMsg =objLabel.mymessage;  
         if(myMsg=='true'){
-          $("#presetMessageDispId").addClass('txtr com_pad_l').removeClass('txtl_10p'); 
-          $("#presetMessageStatusId").addClass('txtr com_pad_l');
+          tempDiv.find("#presetMessageDispId").addClass('txtr com_pad_l').removeClass('txtl_10p'); 
+          tempDiv.find("#presetMessageStatusId").addClass('txtr com_pad_l');
           toggleSet =true;
         }
         else{
-          $("#presetMessageDispId").removeClass('txtr com_pad_l').addClass('txtl_10p');
-          $("#presetMessageStatusId").removeClass('txtr com_pad_l');
+          tempDiv.find("#presetMessageDispId").removeClass('txtr com_pad_l').addClass('txtl_10p');
+          tempDiv.find("#presetMessageStatusId").removeClass('txtr com_pad_l');
           toggleSet =false;
         }
         if((toggleChk!=toggleSet) && tempStr)
-          $("#presetMessageDispId").addClass('brdr4');
+          tempDiv.find("#presetMessageDispId").addClass('brdr4');
         toggleChk =toggleSet;
 
-        $("#presetMessageTxtId").html(message);
-        $("#presetMessageStatusId").html(timeTxt);
-        var tempStr =$("#presetMessageId").html();
+        tempDiv.find("#presetMessageTxtId").html(message);
+        tempDiv.find("#presetMessageStatusId").html(timeTxt);
+        var tempStr =tempDiv.html(); 
         htmlArr.push(tempStr);
       });
       var messageStr=htmlArr.join("");
-      $("#presetMessageId").html(messageStr);
+      var JObject=$("#presetMessageId").eq(0);
+      var JObject2=$("#msgId").eq(0);
+      if(msgWindowOn==0)JObject.html('');
+      msgWindowHeight=JObject2.prop('scrollHeight');
+      JObject.prepend(messageStr);
+      JObject2.scrollTop(JObject2.prop('scrollHeight')-msgWindowHeight);
       $('#setMsgHght').css('height','45px');
     }
     else{
@@ -845,7 +890,7 @@ function writeMessage(result, action, index){
         }
   setTimeout(function(){$("#setMsgHght").attr("tabindex",-1).css('outline',0).focus();}, 0);
   //$("#writeMessageTxtId").focus();
-
+MsgWindowLoading=0;
 }
 function sendReminder(result, action, index){
   bgSetting();
@@ -865,7 +910,7 @@ function sendReminder(result, action, index){
     $("#comm_footerMem").hide();
     $("#comm_footerMsg").show();
     setWindowParams(result.actiondetails.headerlabel, result.actiondetails.headerthumbnailurl.url, index);
-    postParams +=result.actiondetails.writemsgbutton.params
+    postParams +=result.actiondetails.writemsgbutton.params;
         }
         /*else if(result.actiondetails.errmsglabel){
     // condition for error message
@@ -1245,6 +1290,9 @@ function ignore(result,action,index){
     hideForHide();
     layerClose();
         }
+    profile_index[index]['IGNORE'] = (profile_index[index]['IGNORE']==1)?"0":"1";
+        
+        
 }
 function showCommonOverlay()
 {
@@ -1279,7 +1327,7 @@ function open3DotLayer(buttonDetails,index)
   			child.eq(i).children("i").attr("class",cssMap[iconidd]);
   		}
           	else if(profile_index[index] && profile_index[index]['IGNORE'] && buttonDetails.buttons[buttonId].action == 'IGNORE') {
-  			var labell = (profile_index[index]['IGNORE'] == 1) ? 'Unblock':'Block';
+  			var labell = (profile_index[index]['IGNORE'] == 0) ? 'Unblock':'Block';
   			child.eq(i).children("#otherlabel"+i).html(labell);
   			child.eq(i).children("i").attr("class",cssMap[buttonDetails.buttons[buttonId].iconid]);
   		}

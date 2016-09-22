@@ -60,6 +60,9 @@ if (isset($data)) //successful login
         $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/profileDocumentsUpload\">Upload Profile Verification Documents</a>";
          */
 
+	if(in_array("SupFld",$priv))
+		$linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/profileDocumentsUpload\">Upload Profile Verification Documents</a>";
+
         if (in_array('CSEXEC', $priv) || in_array('CSSUP', $priv) || in_array('LTFSUP', $priv) || in_array('TRNGOP', $priv) || in_array('OPSHD', $priv) || in_array('TRNG', $priv) || in_array('P', $priv) || in_array('MG', $priv) || in_array('SLSUP', $priv) || in_array('SLHD', $priv) || in_array('ExcFld', $priv) || in_array('SupFld', $priv) || in_array('MgrFld', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/notduplicate/index\">Mark profile pair as not duplicate</a>";
         }
@@ -84,6 +87,7 @@ if (isset($data)) //successful login
         }
         if (in_array('CRMTEC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/billingManagementInterface?user=$name&cid=$cid\">Billing Management Interface</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/changeActiveServicesInterface?user=$name&cid=$cid\">Change Active Services Interface</a>";
         }
         if (in_array('MBU', $priv) || in_array('BU', $priv) || in_array('BA', $priv)) //Misc-Revenue billing entry operator
         {
@@ -102,6 +106,7 @@ if (isset($data)) //successful login
         //    if(in_array('MA',$priv)||in_array("MC",$priv)||in_array("CSEXEC",$priv)||in_array("CSSUP",$priv)||in_array("LTFSUP",$priv)||in_array("LTFHD",$priv)||in_array("SLSUP",$priv)||in_array("SLHD",$priv)||in_array("SLMGR",$priv)||in_array("SLSMGR",$priv)||in_array("SLHDO",$priv)||in_array("AUTLOG",$priv) || in_array("SupFld",$priv) || in_array("MgrFld",$priv) || in_array("PA",$priv))
         if (in_array("LTFHD", $priv) || in_array("SLSUP", $priv) || in_array("SLHD", $priv) || in_array("SLHDO", $priv) || in_array("AUTLOG", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/commoninterface/generateAutologinLink\">Generate Autologin</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php//sugarcrm/csvToSugar\">Upload Sugarcrm CSV</a>";
         }
         if (in_array('ANT', $priv)) {
             //$linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/uploadVD\">Upload variable special discount data</a>";
@@ -119,7 +124,7 @@ if (isset($data)) //successful login
 
         if (in_array('P', $priv) || in_array('IJS', $priv) || in_array('SJS', $priv) || in_array('TSJS', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/switch_match_alert_algo.php?name=$user&cid=$cid\">Switch Match Alert Algorithm</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/invalid_phone_status.php?name=$user&cid=$cid\">Mark Valid/Invalid Phone Numbers</a>";
+            $linkarr[] = "<a href=\"$SITE_URL//operations.php/feedback/reportInvalid?name=$user&cid=$cid\">Mark Valid/Invalid Phone Numbers</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/allot_contact.php?name=$user&cid=$cid\"> Allot contacts View to Paid members. </a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/check_profiles_score.php?cid=$cid\">Check forward and reverse score for two profiles</a>";
         } elseif (in_array('QC', $priv)) {
@@ -309,6 +314,7 @@ if (isset($data)) //successful login
         }
         if (in_array('CRMTEC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/billingManagementInterface?user=$name&cid=$cid\">Billing Management Interface</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/changeActiveServicesInterface?user=$name&cid=$cid\">Change Active Services Interface</a>";
         }
         if (in_array('MBU', $priv)) //Misc-Revenue billing entry operator
         {
@@ -765,6 +771,12 @@ if (isset($data)) //successful login
 
         if (in_array('SLHDO', $priv) || in_array('P', $priv) || in_array('SLHD', $priv) || in_array('MG', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/helpBackend\">Help Questions</a>";
+        }
+        if(in_array("SupFld",$priv))
+                $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/profileDocumentsUpload\">Upload Profile Verification Documents</a>";
+        //exclusive servicing phase II platform
+        if (in_array('ExPmSr', $priv) || in_array('SupPmS', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/exclusiveServicingII\">Send profiles to customer</a>";
         }
     }
 

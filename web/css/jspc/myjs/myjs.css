@@ -111,7 +111,7 @@ flex-flow: row wrap;
 justify-content: center;
 }
 ul.myjstab li{width:25%;color:#34495e;font-family:"Roboto", "sans-serif";font-weight:300; font-size:13px;position: relative;
-z-index: 1;
+/*z-index: 1;*/
 display: block;
 margin: 0;
 text-align: center;
@@ -354,14 +354,14 @@ textarea{
 
 
 /*css for help screens*/
-.LWpos1{top:31px; right:166px;width:280px}
+.LWpos1{top:36px; right:287px;width:280px}
 .LWpos2{top: -29px;left: -90px;}
-.LWpos3{top:31px; right:606px;width:280px}
+.LWpos3{top:35px; right:717px;width:280px}
 .LWpos3_1{top: -45px;left: -118px;}
-.LWpos4 {top: 242px;left: 162px;width: 280px;}
+.LWpos4 {top: 213px;left: 29px;width: 280px;}
 .LWpos4_1{   top: -235px;left: 264px;}
 .MyJsHelpScreen{z-index: 9;}
-.LWpos5 {    top: 31px;    right: 251px;    width: 280px;}
+.LWpos5 {    top: 36px;    right: 374px;    width: 280px;}
 
 /*For notification layer*/
 .hgt100 {
@@ -383,6 +383,7 @@ box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);}
 .margin_new18 {
     margin: 18px 0px;
 }
+
 /*CAL CSS*/
 
 .modal2 {
@@ -458,3 +459,9 @@ box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);}
             background-image: url(/images/jspc/commonimg/iconSprite.png);
             background-position: -1px -2px;
         }
+
+.bubble_overlay{
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.65);
+}
+

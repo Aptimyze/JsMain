@@ -88,10 +88,13 @@ class AuthFilter extends sfFilter {
 				if($request->getParameter("FROM_GCM")==1)
 						$gcm=1;
 				
-				if($request->getParameter("crmback")=="admin")
+				if($request->getParameter("crmback")=="admin" || $request->getParameter("allowLoginfromBackend")==1)
 				{
 					$authenticationLoginObj->setTrackLogin(false);
-					$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"));					
+					if($request->getParameter("allowLoginfromBackend"))
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"Y");	
+					else
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"N");
 				}
 				else
 					$data=$authenticationLoginObj->authenticate(null,$gcm);
@@ -262,6 +265,7 @@ class AuthFilter extends sfFilter {
 				else
 					$request->setAttribute('subscriptionHeader',"1");
 				
+				//$request->setAttribute('subscription',$data[SUBSCRIPTION]);
 				$request->setAttribute('checksum', $data[CHECKSUM]);
 				$request->setAttribute('profilechecksum', (md5($data["PROFILEID"]) . "i" . $data["PROFILEID"]));
 				$request->setAttribute('username', $data[USERNAME]);

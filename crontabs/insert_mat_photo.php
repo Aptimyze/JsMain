@@ -4,7 +4,9 @@
 
 ini_set("max_execution_time","0");
 include("connect.inc");
-
+$fileName =  $_SERVER["SCRIPT_FILENAME"];
+$http_msg=print_r($_SERVER,true);
+mail("reshu.rajput@gmail.com,lavesh.rawat@gmail.com","For DLL Movement - $fileName",$http_msg);
 $db1=connect_db();
 $db2=connect_slave();
 

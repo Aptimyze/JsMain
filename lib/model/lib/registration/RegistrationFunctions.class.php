@@ -201,7 +201,7 @@ class RegistrationFunctions
      * UpdateFilter
      * @param type $partnerField
      */
-    public function UpdateFilter($partnerField) 
+    public static function UpdateFilter($partnerField) 
     {
       $arrFilter = array();
       if ($partnerField->partnerObj->getPARTNER_MSTATUS()) {

@@ -9,11 +9,7 @@
 
 ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
     <!--start:help widget-->
-    ~if $module eq 'help'`
-        ~include_component('common', 'helpWidget', ['hideHelpMenu'=>'true'])`
-    ~else`
-        ~include_component('common', 'helpWidget')`
-    ~/if`
+    ~include_component('common', 'helpWidget', ['hideHelpMenu'=>'true'])`
     <!--end:help widget-->
 ~/if`
 <!--start:banner-->
@@ -156,7 +152,7 @@
                             <div class="basic">
                                 <ul>
                                     <li class="pl17"><a href="http://www.99acres.com" target="_blank" title="99acres.com"><i class="headfootsprtie acre"></i></a></li>
-                                    <li class="pl17"><a href="http://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
+                                    <li class="pl17"><a href="https://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
                                     <li class="pl17"><a href="http://www.naukrigulf.com" target="_blank" title="naukrigulf"><i class="headfootsprtie ng"></i></a></li>
                                     <li class="pl30"><a href="http://www.shiksha.com" target="_blank" title="shiksha"><i class="headfootsprtie shiksha"></i></a></li>
                                 </ul>

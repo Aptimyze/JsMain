@@ -22,7 +22,7 @@ class jsException extends PDOException{
     }
 		if ( $exceptionObj != "")
 		{
-			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$exceptionObj,array('message' => $message));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$exceptionObj,array(LoggingEnums::MESSAGE => $message));
 		}
 		else
 		{

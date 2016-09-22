@@ -399,7 +399,7 @@ class TupleService
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION("newjs_masterRep");
+			$jprofArrObj                = ProfileEducation::getInstance("newjs_masterRep");
 			$profileDetailsArray = $jprofArrObj->getProfileEducation($profileIds,'mailer');
 				
 			foreach($profileDetailsArray as $k=>$row)

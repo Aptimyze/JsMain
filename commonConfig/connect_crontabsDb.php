@@ -6,6 +6,13 @@ function connect_db()
         return $db;
 }
 
+function connect_ddl()
+{
+        $db=@mysql_connect(MysqlDbConstants::$masterDDL[HOST].":".MysqlDbConstants::$masterDDL[PORT],MysqlDbConstants::$masterDDL[USER],MysqlDbConstants::$masterDDL[PASS]) or die("master connection failed");//changed
+        @mysql_select_db("newjs",$db);
+        return $db;
+}
+
 function connect_slave()
 {
        
@@ -68,6 +75,12 @@ function connect_db4()
 	$db_viewSimilar = mysql_connect(MysqlDbConstants::$viewSimilar[HOST].":".MysqlDbConstants::$viewSimilar[PORT],MysqlDbConstants::$viewSimilar[USER],MysqlDbConstants::$viewSimilar[PASS]) or die("Unable to connect to viewSimilar server");
         return $db_viewSimilar;
 }
+function connect_db4_ddl()
+{
+        $db_viewSimilar = mysql_connect(MysqlDbConstants::$viewSimilarDDL[HOST].":".MysqlDbConstants::$viewSimilarDDL[PORT],MysqlDbConstants::$viewSimilarDDL[USER],MysqlDbConstants::$viewSimilarDDL[PASS]) or die("Unable to connect to viewSimilar server");
+        return $db_viewSimilar;
+}
+
 
 // product Slave for master 
 function connect_slave111()

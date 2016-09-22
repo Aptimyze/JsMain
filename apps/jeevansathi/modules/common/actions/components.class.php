@@ -52,10 +52,6 @@ class commonComponents extends sfComponents{
         $moduleName = sfContext::getInstance()->getModuleName();
         
         $this->showExpandMode = 0;
-        // if(stripos($scriptname,'mainmenu.php')!==false || stripos($scriptname,'membership')!==false || stripos($moduleName,'membership')!==false)
-        // {
-        //    $this->showExpandMode = 1; 
-        // }
         
         $this->mobileNumber = CommonConstants::HELP_NUMBER_INR;
         if($bIsNRI != "RS")

@@ -45,29 +45,31 @@ class AgentAllocationDetails
 			$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
 			$agents=$mainAdminObj->fetchAgentsForDisp($processObj);
 			$subMethod=$processObj->getSubMethod();
-			if($subMethod=="LIMIT_EXCEED")
+			if($subMethod=="LIMIT_EXCEED" || $subMethod=='LIMIT_EXCEED_RENEWAL')
 			{
-				$priv="%FTAFTO%";
-				$ftaftoagents1=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges($priv);
-
 				/*  Check added for ignoring Renewal Agents, as discussed with Rohan */
 				$priv1="%ExcRnw%";
 				$renewalAgents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges($priv1);
-				$ftaftoagents =array_merge($ftaftoagents1,$renewalAgents);
+				if(!is_array($renewalAgents))
+					$renewalAgents =array();
 				/* Check ended */	
 
 				$resArr1 = array();
-				for ($i = 0; $i < count($agents); $i++)
-				{
+				for ($i = 0; $i < count($agents); $i++){
 					$agent_name = explode(":",$agents[$i]);
-					if(!in_array($agent_name[0],$ftaftoagents))
-						$restofagents[]=$agent_name[0];
+					//if(!in_array($agent_name[0],$renewalAgents))
+					$Allagents[]=$agent_name[0];
 				}
-				for ($k = 0; $k < count($agents); $k++)
-				{
+				if($subMethod=='LIMIT_EXCEED_RENEWAL')
+					$restofagents =array_intersect($Allagents,$renewalAgents);
+				elseif($subMethod=='LIMIT_EXCEED')
+					$restofagents =array_diff($Allagents,$renewalAgents);
+
+				$restofagents =array_unique($restofagents);
+				$restofagents =array_values($restofagents);
+				for ($k = 0; $k < count($agents); $k++){
 					$agent_name = explode(":",$agents[$k]);
-					for ($j = 0; $j < count($restofagents); $j++)
-					{
+					for ($j = 0; $j < count($restofagents); $j++){
 						if(($restofagents[$j]== $agent_name[0]) && !in_array($agents[$k],$resArr1))
 							$resArr1[] = $agents[$k];
 					}
@@ -244,7 +246,7 @@ public function fetchProfiles($processObj)
 			$profiles 	=array_keys($profileDetails);
 			$processObj->setUsername($profileDetails);
 		}
-        elseif($subMethod == 'DISPOSITION_BASED'){
+        	elseif($subMethod == 'DISPOSITION_BASED'){
             /*JSC-1094 
              * 1. No disposition has been marked within 2 days of allocation
                2. No 'field visit done' disposition is marked within 10 days
@@ -268,7 +270,7 @@ public function fetchProfiles($processObj)
             unset($lastHandledDateObj);
             unset($lastHandledDate);
             unset($agentDeallocationObj);
-        }
+        	}
 		else
 			$profiles=$mainAdminObj->fetchProfilesForAgent($processObj);
 	}
@@ -485,7 +487,7 @@ public function fetchProfiles($processObj)
                 $subMethod      =$processObj->getSubMethod();
                 $startDt        =$processObj->getStartDate();
                 $endDt          =$processObj->getEndDate();
-                $profiles      	=$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt);
+                $profiles      	=$this->fetchWebmasterLeadsEligibleProfiles($subMethod, $startDt, $endDt, $processObj);
 		if(count($profiles)>0){
 			$obj =new incentive_MAIN_ADMIN();
 			$profilesAllocated =$obj->getProfilesDetails($profiles);
@@ -527,7 +529,6 @@ public function fetchProfiles($processObj)
 				$profiles[] =$dataSet;	
 			}	
 		}
-		//print_r($profiles);die;
 	}
 	return $profiles;
 }
@@ -1426,7 +1427,7 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 	}
 	if(count($profileidIdArr)>0){
 		$profileStr =implode(",",$profileidIdArr);
-		$everPaidProfileArr =$purchasesObj->isPaidEver($profileStr);
+		$everPaidProfileArr =array_keys($purchasesObj->isPaidEver($profileStr));
 	}
 	// everPaid
 
@@ -1473,18 +1474,27 @@ public function fetchNewFailedPaymentEligibleProfiles($processName='',$startDt='
 	return $profilesFinalArr;
 }
 
-public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='')
+public function fetchWebmasterLeadsEligibleProfiles($subMethod='', $startDt='', $endDt='',$processObj='')
 {
         $execCallbackObj      =new billing_EXC_CALLBACK();
+	$crmUtilityObj        =new crmUtility();
 	if($subMethod!='RCB_WEBMASTER_LEADS'){
 		$startDt        =date("Y-m-d H:i:s", time()-2*60*60);
         	$endDt          =date("Y-m-d H:i:s", time());
+                $startDt        =$crmUtilityObj->getIST($startDt);
+                $endDt          =$crmUtilityObj->getIST($endDt);
 	}
         if($subMethod == "WEBMASTER_LEADS_EXCLUSIVE"){
-            $profiles = $execCallbackObj->getWebmasterLeadsForExclusive($startDt, $endDt);
+            $profiles =$execCallbackObj->getWebmasterLeadsForExclusive($startDt, $endDt);
         }
+        elseif($subMethod == "RCB_WEBMASTER_LEADS"){
+            $profilesNew 	=$execCallbackObj->getRcbLeads($startDt, $endDt);
+	    $profilesFinalArr 	=array_keys($profilesNew);
+	    $processObj->setProfiles($profilesNew); 		
+	    return $profilesFinalArr;	
+	}
         else{
-            $profiles       =$execCallbackObj->getWebmasterLeads($startDt, $endDt);
+            $profiles =$execCallbackObj->getWebmasterLeads($startDt, $endDt);
         }
 	for($i=0; $i<count($profiles); $i++){
                 $profileid      =$profiles[$i]['PROFILEID'];
@@ -2529,7 +2539,7 @@ public function fetchPincodesOfCities($cities)
     	{
                 $billingSerStatusObj    =new BILLING_SERVICE_STATUS('newjs_slave');
                 $startDate              =date("Y-m-d", time()-9*86400);
-                $endDate                =date("Y-m-d", time()+29*86400);
+                $endDate                =date("Y-m-d", time()+15*86400);
                 $profiles               =$billingSerStatusObj->getRenewalProfilesForDates($startDate,$endDate);
                 foreach($profiles as $key=>$data){
                         $profileid =$data['PROFILEID'];
