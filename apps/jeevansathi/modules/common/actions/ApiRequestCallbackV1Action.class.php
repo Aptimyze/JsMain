@@ -129,6 +129,9 @@ class ApiRequestCallbackV1Action extends sfActions
                         $subject = "$email(".$userName.") has requested a callback for assistance with his/her account";
                         $msgBody = "<html><body>Dear Support Team,<br> $email(".$userName.") has requested a callback from the support team for resolution of a service related issue. Please contact at $email,or $phone as requested on $date @ $startTime<br> Regards<br> Team Jeevansathi</body></html>";
                         SendMail::send_email($to,$msgBody,$subject,$from,"","","","","","","1",$email,"Jeevansathi Support");
+                        $objExecCallBack = new billing_EXC_CALLBACK;
+                        $objExecCallBack->addRecord($iProfileId,$phone,$email,$device,$channel,$callbackSource,$date,$startTime,$endTime,"JP");
+                        unset($objExecCallBack);
                     } 
                     else if ($query == "M") { //Do membership
                         $objExecCallBack = new billing_EXC_CALLBACK;
