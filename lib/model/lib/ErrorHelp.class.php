@@ -2,8 +2,9 @@
 class ErrorHelp{
 	    public static $ERR_EMAIL=array(1=>array('id'=>'err_email_del',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),2=>array('id'=>'err_email_duplicate',"msg"=>"Duplicate"),3=>array('id'=>'err_email_req',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),4=>array('id'=>'err_email_revoke','msg'=>"This Email is banned due to terms of use violation"),
 				);
-	    public static $ERR_NAME_OF_USER=array(1=>array('id'=>'err_name_str',"msg"=>"Please enter characters only"),2=>array('id'=>'err_e',"msg"=>"Duplicate"),3=>array('id'=>'err_email_req',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),
+	    public static $ERR_NAME_OF_USER=array(1=>array('id'=>'err_name_str',"msg"=>"Please enter characters only"),2=>array('id'=>'err_e',"msg"=>"Duplicate"),3=>array('id'=>'err_email_req',"msg"=>"Provide your email in proper format, e.g. raj1984@gmail.com"),4=>array('id'=>'err_invalid_name',"msg"=>"Please provide a valid name"),
 				);
+	    public static $ERR_STRING=array(1=>array('id'=>'nameOfUser',"msg"=>"Please provide a valid name"));
 		public static $ERR_MESSENGER_ID=array(1=>array('id'=>'err_messenger_invalid',"msg"=>"Word not allowed. Please provide a valid messenger ID."),2=>array('id'=>'err_messenger_min',"msg"=>"Messenger ID should be at least 4 characters long."),3=>array('id'=>'err_messenger_pattern',"msg"=>"Please provide a valid messenger ID."),4=>array('id'=>'err_messenger_alpha',"msg"=>"At least one alphabet should be present in messenger ID."));
 		
 		public static $ERR_MESSENGER_CHANNEL=array(1=>array('id'=>'err_messenger_req',"msg"=>"Please provide type of messenger - GTalk, Yahoo ..etc."));

@@ -16,7 +16,7 @@
  
 class jsValidatorNameOfUser extends sfValidatorBase
 {
-	CONST NAME_REGEX = '/^[a-zA-Z\s\.\']*$/';
+	CONST NAME_REGEX = '/^[a-zA-Z\s\.\'\,]*$/';
   /**
    * Configures the current validator.
    *
@@ -40,6 +40,10 @@ class jsValidatorNameOfUser extends sfValidatorBase
   protected function configure($options = array(), $messages = array())
   {
         $this->addOption('nameOfUser');
+        foreach(ErrorHelp::getErrorArrayByField('NAME_OF_USER') as $key=>$msg)
+        {
+                $this->addMessage($key, $msg);
+        }
   }
 
   /**
@@ -55,7 +59,7 @@ class jsValidatorNameOfUser extends sfValidatorBase
         }
           if(!preg_match(self::NAME_REGEX,$nameOfUser))
           {
-                throw new sfValidatorError($this,ErrorHelp::$ERR_STRING[nameOfUser], array('value' => $value));
+                throw new sfValidatorError($this, 'err_invalid_name', array('value' => $value, 'err_invalid_name' => $this->getOption('err_invalid_name')));
                   return 1;
           }
     return trim($value);
