@@ -1403,4 +1403,5 @@ public static $IMP_CASTE_ARR=array(
 "19"=>"Hindu: Arya Vysya","283"=>"Hindu: Balija","21"=>"Hindu: Balija Naidu","25"=>"Hindu: Brahmin","73"=>"Hindu: Kamma","75"=>"Hindu: Kapu","195"=>"Hindu: Mala","102"=>"Hindu: Naidu","108"=>"Hindu: Padmashali","119"=>"Hindu: Reddy","146"=>"Hindu: Yadav/Yadava"));
 
 
+public static $TRENDS_FIELDS = "CASTE_VALUE_PERCENTILE, MTONGUE_VALUE_PERCENTILE, EDUCATION_VALUE_PERCENTILE, OCCUPATION_VALUE_PERCENTILE, CITY_VALUE_PERCENTILE, ";
 }
