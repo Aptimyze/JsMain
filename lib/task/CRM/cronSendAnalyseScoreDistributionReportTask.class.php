@@ -42,13 +42,25 @@ EOF;
         }
         $modelArr = array("E","N");
         //get data of score distribution
-        $scroreDBObj = new incentive_SCORE_UPDATE_LOG_NEW_MODEL("newjs_slave");
+        $start = 0; $end = 100; $increment=10;
+        $scoreDBObj = new test_ANALYTICS_SCORE_POOL("newjs_slave");
         foreach ($modelArr as $key => $value) {
-            $data[$value] = $scroreDBObj->getScoreDistribution(date("Y-m-d 00:00:00"),date("Y-m-d 23:59:59"),array("start"=>0,"end"=>100,"increment"=>10),$value);
-            print_r($data);die("ncn c");
+            for($i=$start; $i<=$end; $i+=$increment){
+                $data[$value][$i."-".($i+$increment)]=0;
+            }
+            $scoringData = $scoreDBObj->getScoreDistribution($value);
+            foreach($scoringData as $index => $details){
+                if($details['SCORE']){
+                    $scoreDiv = $details['SCORE']/10;
+                    $data[$value][($scoreDiv*10)."-".(($scoreDiv+1)*10)]++;
+                }
+                else{
+                    $data[$value]["NO_SCORE"]++;
+                }
+            }
         }
-        unset($scroreDBObj);
-        print_r($data);die;
+        unset($scoreDBObj);
+        print_r($data);
 
         if($data && is_array($data)){
             //convert data into csv format
