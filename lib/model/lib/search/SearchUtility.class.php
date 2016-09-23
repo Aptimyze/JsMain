@@ -20,7 +20,7 @@ class SearchUtility
 	* @param profile to ignore is passed in the url (optional)
 	* @param noAwaitingContacts exclude awaiting contacts.
 	*/
-	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '')
+	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '',$showOnlineArr='')
 	{
 		//print_r($SearchParamtersObj);die;
 		if($profileFromUrl)
@@ -118,7 +118,7 @@ class SearchUtility
 						//if($week || $SearchParamtersObj->getNEWSEARCH_CLUSTERING() || ($_GET["moreLinkCluster"] && in_array($_GET["moreLinkCluster"],array('OCCUPATION','EDU_LEVEL_NEW'))))
 						//{
 							//$MatchAlerts = new MatchAlerts();
-							//$matArr1 = $MatchAlerts->getProfilesWithOutSorting($pid,$week);
+							//$matArr1 = $MatchAlerts->getProfilesWithOutSortishowOnlineArrng($pid,$week);
 						//}
 						//else
 							//$matArr1 = $SearchParamtersObj->getAlertsDateConditionArr();
@@ -170,6 +170,10 @@ class SearchUtility
 						$SearchParamtersObj->setIgnoreProfiles($SearchParamtersObj->getIgnoreProfiles()." ".$hideArr);
 					else
 						$SearchParamtersObj->setIgnoreProfiles($hideArr);
+				}
+				if($showOnlineArr)
+				{
+					$showArr.= " ".$showOnlineArr;
 				}
 				if($showArr)
 				{

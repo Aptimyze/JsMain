@@ -26,14 +26,14 @@ class csvToSugar
 		if($rowCount!=0)
 		{
 
-	    		$decodedLine = mb_convert_encoding ($row, "UTF-8", "UTF-16BE");
 	    		$rowArr = str_getcsv($decodedLine,"\t");
 			if(count($rowArr)<=1)
 				$rowArr = str_getcsv($row);
-			foreach ($rowArr as $key=>$value) 
-			{
-			  	$this->csvArr[$rowCount-1][] = $value;
-			}
+                        foreach ($rowArr as $key=>$value)
+                        {
+                                $decodedWord = mb_convert_encoding ($value, "UTF-8", "UTF-16BE");
+                                $this->csvArr[$rowCount-1][] = $decodedWord;
+                        }
 		}
 		else
 		{
@@ -187,6 +187,8 @@ class csvToSugar
 	$cityArr = array_flip($cityArr);
 	foreach($this->csvArr as $k=>$v)
 	{
+                if($v[$this->emailIndex]=='')
+                        continue;
 		foreach($this->fieldsArr as $key=>$value)
 		{
 			switch($value)
@@ -204,8 +206,11 @@ class csvToSugar
 						$this->leadDataArr[$k]['city_c']=$cityArr[$city];
 					break;
 				case "date_of_birth":
-					$dob = date('Y-m-d', strtotime($v[$key]));
-					$this->leadDataArr[$k]['date_birth_c']=$dob;
+					if($v[$key])
+					{
+						$dob = date('Y-m-d', strtotime($v[$key]));
+						$this->leadDataArr[$k]['date_birth_c']=$dob;
+					}
 					break;
 				case "gender":
 					$genderCsv = strtolower(trim($v[$key]));
@@ -233,6 +238,7 @@ class csvToSugar
 				$v['opt_in_c']='1';
 				$v['status']='13';
 				$v['disposition_c']='24';
+				$v['js_source_c']='fb_leads';
 				jscreate_lead($v);
 				$emailArr[] = $v['email'];
 			}

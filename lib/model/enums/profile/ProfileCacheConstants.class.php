@@ -23,6 +23,7 @@ class ProfileCacheConstants
     const COMMAND_LINE = 'cli';
     const CACHE_EXPIRE_TIME = 86400;
     const CACHE_MAX_ATTEMPT_COUNT = 3;
+    const NOT_FILLED = "-NF-";
     //Acceptable or Relevant Fields which will be allowed as a subkeys in Hash
     //public static $arrHashSubKeys = array('USERNAME', 'AGE', 'CITY_RES', 'COUNTRY_RES', 'CAST', 'RELIGION');
 
@@ -178,6 +179,10 @@ class ProfileCacheConstants
                                         "COLLEGE",
                                         "OTHER_UG_COLLEGE",
                                         "OTHER_PG_COLLEGE",
+                                        //Native Place
+                                        "NATIVE_COUNTRY",
+                                        "NATIVE_STATE",
+                                        "NATIVE_CITY",
                                     );
     
     public static $arrJProfileColumns = array(
@@ -335,6 +340,13 @@ class ProfileCacheConstants
                                         "COLLEGE",
                                         "OTHER_UG_COLLEGE",
                                         "OTHER_PG_COLLEGE",
+                                    );
+    
+    public static $arrNativePlaceColumns = array(
+                                        "PROFILEID",
+                                        "NATIVE_COUNTRY",
+                                        "NATIVE_STATE",
+                                        "NATIVE_CITY",
                                     );
 }
 ?>

@@ -133,7 +133,7 @@ class JProfile_NativePlace
 		
 		if($this->m_iProfileID && is_numeric($this->m_iProfileID))
 		{
-			$storeObj = new NEWJS_NATIVE_PLACE;
+			$storeObj = ProfileNativePlace::getInstance();
 			$arrResult = $storeObj->getRecord($this->m_iProfileID);
 
 			if($arrResult === null)
@@ -449,7 +449,7 @@ class JProfile_NativePlace
 		}
 		
 		$nativePlaceArr = array('PROFILEID'=>$iProfileID,'NATIVE_COUNTRY'=>$szCountry,'NATIVE_STATE'=>$szState,'NATIVE_CITY'=>$szCity );
-		$nativePlaceObj = new NEWJS_NATIVE_PLACE;
+		$nativePlaceObj = ProfileNativePlace::getInstance();
 		
 		if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 		{

@@ -86,6 +86,7 @@ class NEWJS_NATIVE_PLACE extends TABLE
 			
 			$pdoStatement->execute();
       $this->logFunctionCalling(__FUNCTION__);
+            return true;
 		}
 		catch(Exception $e)
 		{

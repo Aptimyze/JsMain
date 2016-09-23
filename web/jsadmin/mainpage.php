@@ -680,7 +680,8 @@ if (isset($data)) //successful login
         if (in_array('NEGLST', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/crm/negativeProfileSearch.php?cid=$cid\">Negative Individual/ Company</a>";
         }
-
+        if(in_array('NEGLST',$priv))
+	        $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeTreatment?cid=$cid\">Delete and Mark profiles in Negative List</a>";
         if (in_array('MG', $priv) || in_array('P', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/go_to_large_file.php?name=$user&cid=$cid\">Configure Large File</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/show_IM.php?cid=$cid\">Show/Hide Incentive Multiplier</a>";

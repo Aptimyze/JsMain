@@ -879,7 +879,7 @@ else {
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_NATIVE_PLACE("newjs_masterRep");
+			$jprofArrObj                = ProfileNativePlace::getInstance("newjs_masterRep");
                          if(!is_array($profileIds)){
                             $profileIds = array($profileIds);
                         }

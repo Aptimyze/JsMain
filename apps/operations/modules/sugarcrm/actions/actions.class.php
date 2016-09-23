@@ -31,7 +31,7 @@ class sugarcrmActions extends sfActions
 			move_uploaded_file($tempName,$name);
 		$currentPath= getcwd();
                 chdir(JsConstants::$docRoot."/../crontabs/sugarcrm/");
-                $command = PHP_BINDIR."/php csvToSugar.class.php ".$name;
+                $command = JsConstants::$php5path." csvToSugar.class.php ".$name;
                 exec($command);
                 chdir($currentPath);
 		$this->message = "UPLOADED";

@@ -170,7 +170,7 @@ class FieldForm extends sfForm
     if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$this->loggedInObj->getPROFILEID();
 						
-      $nativePlaceObj = new NEWJS_NATIVE_PLACE;
+      $nativePlaceObj = ProfileNativePlace::getInstance();
       $this->checkForChange($nativePlaceArr,'NativePlace');
       if ($nativePlaceObj->InsertRecord($nativePlaceArr) === 0) {
         unset($nativePlaceArr[PROFILEID]);
