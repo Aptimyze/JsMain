@@ -47,56 +47,65 @@ EOF;
         foreach ($modelArr as $key => $value) {
             for($i=$start; $i<=$end; $i+=$increment){
                 $data[$value][$i."-".($i+$increment)]=0;
+                $data[$value]["NO_SCORE"] = 0;
             }
             $scoringData = $scoreDBObj->getScoreDistribution($value);
+            $totalCountWithoutNull = 0;
             foreach($scoringData as $index => $details){
                 if($details['SCORE']){
                     $scoreDiv = $details['SCORE']/10;
                     $data[$value][($scoreDiv*10)."-".(($scoreDiv+1)*10)]++;
+                    $totalCountWithoutNull++;
                 }
                 else{
                     $data[$value]["NO_SCORE"]++;
                 }
             }
+            //echo $totalCountWithoutNull."++++"."\n";
+            $data[$value]['TOTAL COUNT'] = $totalCountWithoutNull;
         }
         unset($scoreDBObj);
-        print_r($data);
+        ////print_r($data);die;
 
         if($data && is_array($data)){
             //convert data into csv format
             $fileName = "ScoreDistribution_".date('d-M-Y').".csv";
             $file_path = JsConstants::$docRoot."/uploads/".$fileName;
-            $fp = fopen($file_path, "w") or print_r("Cannot Open");
+            $fp = fopen($file_path, "w") or //print_r("Cannot Open");
             fputcsv($fp, array('MODEL','SCORE','PROFILE COUNT','PROFILES %'));
-            $profileCountWithoutNullScore = array();
+            ////print_r($data);die;
             foreach($data as $key=>$model) {
-                $profileCountWithoutNullScore[$model] = 0;
-                foreach ($model as $key => $val) {
-                    $profileCountWithoutNullScore[$model] += $val['PROFILE COUNT'];
+                foreach ($model as $range => $val) {
+                    $csvData = array();
+                    if($range != "TOTAL COUNT"){
+                        $csvData['MODEL'] = $key;
+                        $csvData['SCORE'] = $range;
+                        $csvData['PROFILE COUNT'] = $val;
+                        if($data[$key]['TOTAL COUNT'] == 0 || $val == 0){
+                          $csvData['PROFILES %'] = 0;  
+                        }
+                        else{
+                            $csvData['PROFILES %'] = ($val / $data[$key]['TOTAL COUNT']) * 100;
+                        }
+                    }
+                  
+                    //print_r($csvData);
+
+                    //fputcsv($fp, $csvData);
                 } 
             }
-            if(is_array($profileCountWithoutNullScore)){
-                foreach($data as $key=>$model) {
-                    foreach ($model as $key => $val) {
-                        $val['PROFILES %'] = ($val['PROFILE COUNT'] / $profileCountWithoutNullScore[$model]) * 100;
-                        fputcsv($fp, $val);
-                    } 
-                }
-                $csvAttachment = file_get_contents($file_path);
-                print_r($csvAttachment);die;
+            $csvAttachment = file_get_contents($file_path);
+            ////print_r($csvAttachment);die;
 
-                //send csv as mail
-                //$to = "rohan.mathur@jeevansathi.com";
-                $cc = "vibhor.garg@jeevansathi.com,ankita.g@jeevansathi.com";
-                $to = "nsitankita@gmail.com";
-                $message = "Please find attached excel sheet containing requested data";
-                $subject = "Analysis score distribution report";
-                SendMail::send_email($to, $message, $subject, 'js-sums@jeevansathi.com', $cc, '', $csvAttachment, "application/vnd.ms-excel", $fileName, '', '', '', '');
-                unset($csvAttachment);
-            }
-            else{
-                CRMAlertManager::sendMailAlert("Total profile count for score distribution calculated is 0,please check in cronSendAnalyseScoreDistributionReport","AgentNotifications");
-            }
+            //send csv as mail
+            //$to = "rohan.mathur@jeevansathi.com";
+            $cc = "vibhor.garg@jeevansathi.com,ankita.g@jeevansathi.com";
+            $to = "nsitankita@gmail.com";
+            $message = "Please find attached excel sheet containing requested data";
+            $subject = "Analysis score distribution report";
+            SendMail::send_email($to, $message, $subject, 'js-sums@jeevansathi.com', $cc, '', $csvAttachment, "application/vnd.ms-excel", $fileName, '', '', '', '');
+            unset($csvAttachment);
+        
         }
         else{
             CRMAlertManager::sendMailAlert("Sql query to retrieve score distribution returned null,please check in cronSendAnalyseScoreDistributionReport","AgentNotifications");
