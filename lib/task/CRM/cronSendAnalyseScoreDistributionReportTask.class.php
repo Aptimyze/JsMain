@@ -46,8 +46,9 @@ EOF;
         $scoreDBObj = new test_ANALYTICS_SCORE_POOL("newjs_slave");
         foreach ($modelArr as $key => $value) {
             for($i=$start; $i<=$end; $i+=$increment){
-                $data[$value][$i."-".($i+$increment)]=0;
                 $data[$value]["NO_SCORE"] = 0;
+                $data[$value][$i."-".($i+$increment)]=0;
+                
             }
             $scoringData = $scoreDBObj->getScoreDistribution($value);
             $totalCountWithoutNull = 0;
@@ -73,6 +74,7 @@ EOF;
             $file_path = JsConstants::$docRoot."/uploads/".$fileName;
             $fp = fopen($file_path, "w") or //print_r("Cannot Open");
             fputcsv($fp, array('MODEL','SCORE','PROFILE COUNT','PROFILES %'));
+
             ////print_r($data);die;
             foreach($data as $key=>$model) {
                 foreach ($model as $range => $val) {
@@ -91,7 +93,7 @@ EOF;
                   
                     //print_r($csvData);
 
-                    //fputcsv($fp, $csvData);
+                    fputcsv($fp, $csvData);
                 } 
             }
             $csvAttachment = file_get_contents($file_path);
