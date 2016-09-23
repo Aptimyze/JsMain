@@ -135,6 +135,10 @@ class EOIData
 			$profileid=$profileObj->getPROFILEID();
 			$PHONE_MOB=$profileObj->getPHONE_MOB();
 			$EMAIL=$profileObj->getEMAIL();
+			if(strpos($EMAIL,"_deleted") !== false)
+			{
+				$EMAIL = substr($EMAIL,0,strpos($EMAIL,"_deleted"));
+			}
 			$PHONE_RES=$profileObj->getPHONE_RES();
 			$CONTACT=$profileObj->getCONTACT();
 			foreach($result as $key=>$val)
