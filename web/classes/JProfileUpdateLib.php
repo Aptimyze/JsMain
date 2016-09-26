@@ -92,7 +92,7 @@ class JProfileUpdateLib
     $this->objProfileHobbyStore = new NEWJS_HOBBIES($dbname);
     $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
     $this->objProfileChristianStore = new NEWJS_JP_CHRISTIAN($dbname);
-    $this->objProfileAstroDetailsStore = new NEWJS_ASTRO($dbname);
+    $this->objProfileAstroDetailsStore = new ProfileAstro($dbname);
     $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
     $this->objProfileAlertStore = new newjs_JPROFILE_ALERTS($dbname);
 

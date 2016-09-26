@@ -61,7 +61,7 @@ class ProfileReplaceLib
     {
         $this->currentDBName = $dbname;
         $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
-        $this->objProfileAstroDetailsStore = new NEWJS_ASTRO($dbname);
+        $this->objProfileAstroDetailsStore = new ProfileAstro($dbname);
         $this->objProfileHoroscopeStore = new newjs_HOROSCOPE($dbname);
         $this->objProfileHoroscopeCompatibilityStore = new NEWJS_HOROSCOPE_COMPATIBILITY($dbname);
     }

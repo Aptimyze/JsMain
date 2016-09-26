@@ -880,7 +880,7 @@ class ProfileCompletionScore extends AbstractProfileCompletionScore
 		$objHoroscope2 = new NEWJS_HOROSCOPE_FOR_SCREEN;
 		$iCount2 = $objHoroscope2->getHoroscopeIfNotDeleted($iProfileID);
 		
-		$objHoroscope3 = new NEWJS_ASTRO;
+		$objHoroscope3 = new ProfileAstro();
 		$iCount3 = $objHoroscope3->getIfAstroDetailsPresent($iProfileID);
 		$arrRes = $objHoroscope3->getAstroDetails(array($iProfileID),'');
 		
