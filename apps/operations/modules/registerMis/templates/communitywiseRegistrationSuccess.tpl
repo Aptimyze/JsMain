@@ -18,7 +18,7 @@
     <td colspan="2" style="background-color:lightblue"><font size=3><a href="communitywiseRegistration?cid=~$cid`">Main Page</a></font></td>
   </tr>
   <tr class="formhead" align="center">
-          <td colspan="2" style="background-color:lightblue"><font size=3>Community wise registration</font></td>
+          <td colspan="2" style="background-color:lightblue"><font size=3>City/Community/Source wise Quality Registration</font></td>
   </tr>
   <tr class="formhead" align="center">
           <td colspan="2" style="background-color:PeachPuff"><font size=2>For the ~if $range_format eq 'Y'`year of~else`period~/if` ~$displayDate`</font></td>

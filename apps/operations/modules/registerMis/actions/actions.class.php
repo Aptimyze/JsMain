@@ -33,9 +33,9 @@ class registerMisActions extends sfActions {
     if ($formArr['submit']) 
     {
       $commonUtilObj = new CommonUtility();
-      $commonUtilObj->avoidPageRefresh("QUALITY_REGISTRATION", $name);
+      $commonUtilObj->avoidPageRefresh("COMMUNITY_REGISTRATION", $name);
       $this->range_format = $formArr['range_format'];
-      $params = array('range_format' => $formArr["range_format"], 'source_names' => $formArr['source_names'],'source_cities'=>$formArr['source_cities']);
+      $params = array('range_format' => $formArr["range_format"]);
       if ($formArr["range_format"] == "Y") {      //If year is selected
         $start_date = $formArr['yearValue'] . "-04-01";
         $end_date = ($formArr['yearValue']+1) . "-03-31";
@@ -133,7 +133,7 @@ class registerMisActions extends sfActions {
       else
       {
         $this->communitywiseRegistration = true;
-        $this->source_cities = $this->setSourceCities();
+        // $this->source_cities = $this->setSourceCities();
         $this->startMonthDate = "01";
         $this->todayDate = date("d");
         $this->todayMonth = date("m");
@@ -141,8 +141,8 @@ class registerMisActions extends sfActions {
         $this->rangeYear = date("Y");
         $this->dateArr = GetDateArrays::getDayArray();
         $this->yearArr = array();
-        $sourceObj = new MIS_SOURCE('newjs_slave');
-        $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
+        // $sourceObj = new MIS_SOURCE('newjs_slave');
+        // $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
         $dateArr = GetDateArrays::generateDateDataForRange('2015', ($this->todayYear));
         foreach (array_keys($dateArr) as $key => $value) {
           $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
@@ -154,7 +154,7 @@ class registerMisActions extends sfActions {
     {
 
       $this->communitywiseRegistration = true;
-      $this->source_cities = $this->setSourceCities();
+      // $this->source_cities = $this->setSourceCities();
       $this->startMonthDate = "01";
       $this->todayDate = date("d");
       $this->todayMonth = date("m");
@@ -162,8 +162,8 @@ class registerMisActions extends sfActions {
       $this->rangeYear = date("Y");
       $this->dateArr = GetDateArrays::getDayArray();
       $this->yearArr = array();
-      $sourceObj = new MIS_SOURCE('newjs_slave');
-      $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
+      // $sourceObj = new MIS_SOURCE('newjs_slave');
+      // $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
       $dateArr = GetDateArrays::generateDateDataForRange('2015', ($this->todayYear));
       foreach (array_keys($dateArr) as $key => $value) {
         $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);

@@ -42,7 +42,7 @@
 	<tr></tr>
 	<tr class="formhead" align="center">
 	~if $communitywiseRegistration`
-		<td colspan="2" style="background-color:lightblue"><font size=3>Communitywise Registration MIS</font></td>
+		<td colspan="2" style="background-color:lightblue"><font size=3>City/Community/Source wise Quality Registration</font></td>
 	~else`
 		<td colspan="2" style="background-color:lightblue"><font size=3>Registration Quality MIS</font></td>
 	~/if`
