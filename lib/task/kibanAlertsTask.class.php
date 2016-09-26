@@ -17,9 +17,18 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		$date = ;
-		$urlToHit = "10.10.18.66:9200/filebeat-"."2016.09.22"."/_search";
+		$currdate = date('Y.m.d');
+		var_dump($currdate);
+		$urlToHit = "10.10.18.66:9200/filebeat-".$currdate."/_search";
 		$params = [
+			"query"=> [
+				"range" => [
+					"@timestamp" => [
+						"gt" => "now-1h",
+						"lt" => "now"
+					]
+				]
+			],
 			'aggs' => [
 				'modules' => [
 					'terms' => [
@@ -36,6 +45,13 @@ EOF;
 		{
 		    $arrModules[$module['key']] = $module['doc_count']; 
 		}
-		var_dump($arrModules['500']);
+		// var_dump($arrModules['500']);
+		foreach ($arrModules as $key => $value) {
+			echo $key.$value;
+			if($value > 50)
+			{
+				// fire alert
+			}
+		}
 	}
 }
