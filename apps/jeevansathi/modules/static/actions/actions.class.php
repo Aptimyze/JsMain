@@ -347,6 +347,14 @@ class staticActions extends sfActions
    * also it is called for tracking when user hits any of the button*/
   public function executeCriticalActionLayerDisplay(sfWebRequest $request) {
     $layerToShow = $request->getParameter("layerId");
+    if($layerToShow==9)
+    {
+           $profileId=LoggedInProfile::getInstance()->getPROFILEID();
+           $nameData=(new NameOfUser())->getNameData($profileId);
+           $this->nameOfUser=$nameData[$profileId]['NAME'];
+           $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
+
+    }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
@@ -913,7 +921,9 @@ public function executeAppredirect(sfWebRequest $request)
 		$output=$this->getField("bodytype");
 		if($k=="p_mstatus")
 		$output=$this->getField("mstatus");
-		if($k=="parent_city_same")
+		if($k=="p_havechild")
+                    $output=$this->getField("children");
+                if($k=="parent_city_same")
 		{
 		$output=$this->getField("live_with_parents");
 		}

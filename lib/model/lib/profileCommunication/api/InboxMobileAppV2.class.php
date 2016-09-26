@@ -68,7 +68,8 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+				"NAME_OF_USER",
 				),
 			"ACCEPTANCES_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
@@ -96,7 +97,8 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+				"NAME_OF_USER",
 				),
 			"INTEREST_SENT"=>Array(
 				"PROFILECHECKSUM",
@@ -125,7 +127,8 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 			"ACCEPTANCES_SENT"=>Array(
 				"PROFILECHECKSUM",
@@ -151,7 +154,8 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 			"MATCH_ALERT"=>Array(
 				"PROFILECHECKSUM",
@@ -181,7 +185,8 @@ class InboxMobileAppV2
                                 "PG_COLLEGE",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -210,7 +215,8 @@ class InboxMobileAppV2
                                 "PG_COLLEGE",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -239,7 +245,8 @@ class InboxMobileAppV2
                                 "PG_COLLEGE",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				"NOT_INTERESTED"=>Array(
 				"PROFILECHECKSUM",
@@ -265,7 +272,8 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
                                 "NOT_INTERESTED_BY_ME"=>Array(
                                 "PROFILECHECKSUM",
@@ -290,7 +298,8 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
                                 ),
 
 				"PHOTO_REQUEST_RECEIVED"=>Array(
@@ -316,7 +325,9 @@ class InboxMobileAppV2
                                                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				),
 				"PHOTO_REQUEST_SENT"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -340,7 +351,9 @@ class InboxMobileAppV2
                                                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				),
 				"HOROSCOPE_REQUEST_RECEIVED"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -364,7 +377,9 @@ class InboxMobileAppV2
                                                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				),
 				"HOROSCOPE_REQUEST_SENT"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -388,7 +403,9 @@ class InboxMobileAppV2
                                                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				),
 				"INTRO_CALLS"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -466,7 +483,9 @@ class InboxMobileAppV2
                                                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				),
 				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -491,7 +510,8 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 	"FILTERED_INTEREST" => Array(
             	"PROFILECHECKSUM",
@@ -512,13 +532,16 @@ class InboxMobileAppV2
 				"SEEN",
 				"edu_level_new",
 				"ProfilePic120Url",
+                                "ProfilePic450Url",
 				"userloginstatus",
 				"MSTATUS",
 				"VERIFICATION_SEAL",
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				),
 	/*"MY_MESSAGE" => Array( //wrong, please use below
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -554,7 +577,9 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				),
 	"MY_MESSAGE" => Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -585,7 +610,9 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				),
 	"MY_MESSAGE_RECEIVED" => Array(
 					"PROFILECHECKSUM",
 					"USERNAME",
@@ -601,7 +628,9 @@ class InboxMobileAppV2
                                         "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"),
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				),
 			"INTEREST_RECEIVED_FILTER"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -628,7 +657,8 @@ class InboxMobileAppV2
                                 "VERIFICATION_STATUS",
                                 "NATIVE_CITY",
                                 "NATIVE_STATE",
-                                "ANCESTRAL_ORIGIN"
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				)
 			);
 		self::$informationTypeFields     = Array(
@@ -1094,6 +1124,7 @@ class InboxMobileAppV2
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MyJsMatchAlertSection,
                                 "SHORTLIST"=>"stype=".SearchTypesEnums::MYJS_SHORTLIST_PC."&responseTracking=".JSTrackingPageType::MYJS_SHORTLIST_PC,
                                 "PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
+                                "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_MYJS_JSPC,
                                 //"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,

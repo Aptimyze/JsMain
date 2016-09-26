@@ -1,4 +1,4 @@
-<?
+<?php
 //This class defines constants' values used in rabbitmq files.
 
 class MessageQueues
@@ -61,6 +61,7 @@ class MessageQueues
   public static $SCHEDULED_NOTIFICATION_QUEUE6 = "SCHEDULED_NOTIFICATION_QUEUE6"; //Queue for sending scheduled notification data from notification queue 6 to GCM
   public static $DELAYED_NOTIFICATION_EXCHANGE = array("NAME"=>"DelayedNotificationExchange","TYPE"=>"direct","DURABLE"=>true);
   public static $INSTANT_NOTIFICATION_EXCHANGE = array("NAME"=>"InstantNotificationExchange","TYPE"=>"fanout","DURABLE"=>true);
+  public static $NOTIFICATION_LOG_EXCHANGE     = array("NAME"=>"NotificationLogExchange","TYPE"=>"direct","DURABLE"=>true);
   public static $scheduledNotificationBindingKeyArr=array("SCHEDULED_NOTIFICATION_QUEUE1" => "JS_NOTIFICATION1",
       "SCHEDULED_NOTIFICATION_QUEUE2" => "JS_NOTIFICATION2",
       "SCHEDULED_NOTIFICATION_QUEUE3" => "JS_NOTIFICATION3",
@@ -78,6 +79,7 @@ class MessageQueues
   public static $notificationDelayMultiplier = 3600; //1 hr multiple delay
   public static $notificationQueueExpiryTime = 7; //queue will expire if unused for 7 hrs,not used currently
   public static $INSTANT_NOTIFICATION_QUEUE = "INSTANT_NOTIFICATION_QUEUE"; //Queue for sending instant notification data from notification queue to GCM
+  public static $NOTIFICATION_LOG_QUEUE = "NOTIFICATION_LOG_QUEUE";	
   
   public static $notificationArr = array("JUST_JOIN" => "JS_NOTIFICATION1", "PENDING_EOI" => "JS_NOTIFICATION2", "MEM_EXPIRE_A5" => "JS_NOTIFICATION3", "MEM_EXPIRE_A10" => "JS_NOTIFICATION3", "MEM_EXPIRE_A15" => "JS_NOTIFICATION3", "MEM_EXPIRE_B1" => "JS_NOTIFICATION3", "MEM_EXPIRE_B5" => "JS_NOTIFICATION3",  "AGENT_ONLINE_PROFILE"=>"JS_INSTANT_NOTIFICATION","AGENT_FP_PROFILE"=>"JS_INSTANT_NOTIFICATION", "PROFILE_VISITOR" => "JS_INSTANT_NOTIFICATION","EOI"=>"JS_INSTANT_NOTIFICATION","MESSAGE_RECEIVED"=>"JS_INSTANT_NOTIFICATION","EOI_REMINDER"=>"JS_INSTANT_NOTIFICATION","MATCHALERT"=>"JS_NOTIFICATION4","MEM_DISCOUNT"=>"JS_NOTIFICATION4","FILTERED_EOI"=>"JS_NOTIFICATION5","ATN"=>"JS_NOTIFICATION3","ETN"=>"JS_NOTIFICATION3","CONTACT_VIEWS"=>"JS_NOTIFICATION3","CONTACTS_VIEWED_BY"=>"JS_NOTIFICATION2","VD"=>"JS_NOTIFICATION2","MEM_DISCOUNT"=>"JS_NOTIFICATION6");
 

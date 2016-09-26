@@ -903,6 +903,8 @@ function sendReminder(result, action, index){
     // paid profile condition
     showWriteMessageOverlay();
     $("#writeMessageTxtId").val('');
+    if(result.actiondetails.lastsent)
+      $("#writeMessageTxtId").val(result.actiondetails.lastsent);
     $("#presetMessageId").show();
     $("#writeMsgDisplayId").show();
     $("#writeMsgDisplayId").html('');
@@ -1051,6 +1053,8 @@ function initiateContact(result,action, index){
     writeMessageAction = "INITIATE";
     showWriteMessageOverlay();
     $("#writeMessageTxtId").val('');
+    if(result.actiondetails.lastsent)
+      $("#writeMessageTxtId").val(result.actiondetails.lastsent);
     $("#presetMessageId").show();
     $("#presetMessageTxtId").html('Interest sent. You may send a personalized message with the interest.');
     $("#writeMsgDisplayId").html('');

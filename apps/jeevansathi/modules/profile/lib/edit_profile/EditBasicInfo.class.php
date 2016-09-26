@@ -33,9 +33,12 @@ class EditBasicInfo extends EditProfileComponent {
 		}
 	}
 	public function display() {
-		
-		$db= new incentive_NAME_OF_USER;
-		$this->action->NAME=$db->getName($this->loginProfile->getPROFILEID());
+		$nameObj= new NameOfUser;
+                $nameData = $nameObj->getNameData($this->loginProfile->getPROFILEID());
+                $this->action->NAME = null;
+                if(!empty($nameData))
+                $this->action->NAME = $nameData[$this->loginProfile->getPROFILEID()]["NAME"];
+
 		$this->action->GENDER = $this->loginProfile->getGENDER();
 		$this->action->ID_PROOF_NO = $this->loginProfile->getID_PROOF_NO();
 		$dob = explode("-", $this->loginProfile->getDTOFBIRTH());

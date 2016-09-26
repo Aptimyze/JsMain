@@ -43,6 +43,7 @@ EditApp = function(){
                               "RELATION":"Please choose who posted this profile",
                               "CITY_RES":"Please mention the City you are living in",
                               "YOURINFO":"For the benefit of your matches, please write about yourself in at least 100 letters",                       
+			      "NAME":"Please provide a valid Full Name",
                               "EMAIL":"Email Required",
                               "EMAIL_WRONG_FORMAT":"Invalid Format",
                               "EMAIL_INVALID_DOMAIN":"Invalid domain",
@@ -70,7 +71,7 @@ EditApp = function(){
     var CONTACT           = "contact";
     var VERIFICATION      = "verification";
     
-    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","CITY_RES","INCOME","RELATION"];
+    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
     var familySectionArray = ["PROFILE_HANDLER_NAME","MOTHER_OCC","FAMILY_BACK","T_SISTER","T_BROTHER","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","FAMILY_STATUS","FAMILY_INCOME","FAMILY_TYPE","FAMILY_VALUES","NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","ANCESTRAL_ORIGIN","PARENT_CITY_SAME"];
@@ -108,6 +109,8 @@ EditApp = function(){
     
     var OPEN_TEXT_TYPE            = "O";
     var openTextTypeFields        = ["NAME","FAV_BOOK","FAV_FOOD","FAV_MOVIE","FAV_VAC_DEST","FAV_TVSHOW","WEIGHT","PROFILE_HANDLER_NAME","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","DIOCESE","ANCESTRAL_ORIGIN","SCHOOL","COLLEGE","PG_COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","COMPANY_NAME","EMAIL","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","PINCODE","PARENT_PINCODE"];
+    var UNCOOKED_TYPE		  = "U";
+    var unCookedFields = ['DISPLAYNAME'];
     var autoSuggestFields         = ["SUBCASTE","GOTHRA","GOTHRA_MATERNAL","SCHOOL","COLLEGE","PG_COLLEGE","COMPANY_NAME"]; 
     
     var BOX_TYPE                  = "B";
@@ -143,7 +146,7 @@ EditApp = function(){
     var isInitialized             = false;
     var notFilledText             = "Not filled in";
     //////////////////////////// Behaviour Map
-    var behaviourMap              = {"NAME":"js-onlyChar","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal"};
+    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal"};
     
     var sidesUIMap                = ["NATIVE_STATE","NATIVE_COUNTRY","T_BROTHER","T_SISTER","YOURINFO","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","PHONE_NUMBER_OWNER","ALT_MOBILE_NUMBER_OWNER","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","PINCODE","PARENT_PINCODE","SHOWADDRESS","SHOW_PARENTS_CONTACT","TIME_TO_CALL_START"];
     
@@ -314,7 +317,10 @@ EditApp = function(){
               if((field.value === null || field.value.length === 0) && field.isUnderScreen ){
                 field.isUnderScreen = false;
               }
-
+	      if(unCookedFields.indexOf(field.key)!== -1)
+	      {
+			field.type = UNCOOKED_TYPE;
+              }
               if(openTextTypeFields.indexOf(field.key) !== -1){
                 field.type          = OPEN_TEXT_TYPE;/*Open Text Type*/
               }
@@ -678,8 +684,11 @@ EditApp = function(){
       var parentAttr    = {class:"clearfix pt30",id:fieldObject.key.toLowerCase()+'Parent'};
       var labelAttr     = {class:"fl pt11 edpcolr3"};
       var fieldDivAttr  = {class:"fl edpbrd3 lh40 edpwid3 edpbrad1 pos-rel"}
-      var inputAttr     = {class:"f15 color11 fontlig wid94p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"}
-      var errorLabelAttr = {class:"pos-abs js-errorLabel errorChosenTop f13 colr5 disp-none"}
+      if(fieldObject.key=="NAME")
+      	var inputAttr     = {class:"f15 color11 fontlig wid70p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
+      else
+      	var inputAttr     = {class:"f15 color11 fontlig wid94p",type:"text",value:fieldObject.decValue,placeholder:notFilledText,id:fieldObject.key.toLowerCase(),autocomplete:"off"};
+      var errorLabelAttr = {class:"pos-abs js-errorLabel errorChosenTop f13 colr5 disp-none"};
       if(debugInfo){
         var underScreenAttr = {class:"f13 pos-abs js-undSecMsg",text:"Under screening"};
       }
@@ -744,6 +753,11 @@ EditApp = function(){
       }
       
       fieldDivDom.append($("<p />",errorLabelAttr));
+	if(fieldObject.key=="NAME")
+	{
+	var nameSettingDOM = '            <div id="hoverDiv" class="disp_ib pos-abs r0 mr5 cursp"><span id="showText" class="colrGrey fontlig f12 showToAll disp_ib">Show to All</span><i id="settingsIcon"></i> <ul id="optionDrop" class="optionDrop pos-abs disp-none" data-toSave="displayName"> <li class="selected" id="showYes">Show my name to all </li> <li id="showNo">Don\'t show my name<br> ( You will not be able to see names of other members ) </li>  </ul> </div>';
+	fieldDivDom.append(nameSettingDOM);
+	}
       
       //Add underscreening in debug case only
       if(debugInfo){
@@ -763,7 +777,6 @@ EditApp = function(){
       parentDiv.append(fieldDivDom);
       
       domElement.append(parentDiv);
-      
       //Bind Common Event Handling
       if(autoSuggestFields.indexOf(fieldObject.key) === -1){//NOrmal Open Text Fields
         bindOpenTextCommonEvents(fieldObject);
@@ -2710,6 +2723,11 @@ EditApp = function(){
           )
         {
           cookOpenTextField(editSectionFormDOM,fieldObject);
+	if(fieldObject.key=="NAME")
+	{
+		showDisplayNameSettingFirstTime(editAppObject[BASIC]["DISPLAYNAME"]);
+		onDisplayNameChange(editAppObject[BASIC]["DISPLAYNAME"]);
+	}
         }
         if( fieldObject.type === FILE_TYPE)
         {
@@ -3223,7 +3241,6 @@ EditApp = function(){
           }
         }
       }
-      
       //Check Time to Call Field
       if( editFieldArr.hasOwnProperty('TIME_TO_CALL_START') || editFieldArr.hasOwnProperty('TIME_TO_CALL_END') ){
         var timeToCallField = editAppObject[CONTACT]['TIME_TO_CALL_START'];
@@ -3266,6 +3283,9 @@ EditApp = function(){
         delete editedFields[sectionId];
         return ;
       }
+      var displayNameObj = editAppObject[BASIC]["DISPLAYNAME"];
+      if(sectionId== BASIC && !editFieldArr.hasOwnProperty('DISPLAYNAME') && displayNameObj.value=='')
+		editFieldArr['DISPLAYNAME']="Y";
       //Okay!, Now lets store it
       if(typeof showLoader != "undefined" && showLoader === false){
       }else{
@@ -3275,6 +3295,7 @@ EditApp = function(){
       $.each(editFieldArr, function(key, value)
       {
             editData.append('editFieldArr['+key+']', value);
+
       });
       var eData = {};
       eData.editFieldArr = editFieldArr;
@@ -3333,6 +3354,8 @@ EditApp = function(){
       if(sectionId == BASIC){
         var eduField = editAppObject[BASIC]["EDU_LEVEL_NEW"+"_"+BASIC];
         onHighestEducationChange(eduField.value,eduField.key);
+	var displayNameField = editAppObject[BASIC]["DISPLAYNAME"];
+	showDisplayNameSettingFirstTime(displayNameField);
       }
       delete editedFields[sectionId];
       requiredFieldStore.removeAll(sectionId);
@@ -3821,6 +3844,34 @@ EditApp = function(){
      * @param {type} event
      * @returns {undefined}
      */
+    onNameChange = function(nameVal,event){
+	nameVal=$.trim(nameVal);
+	var nameField = editAppObject[BASIC]['NAME'];
+      var normalBorder ='edpbrd3';
+      var errorBorder = 'brdr-1';
+        var fieldParentID = '#'+nameField.key.toLowerCase()+'Parent';
+      $(fieldParentID).find('.js-areaBox').removeClass(errorBorder).addClass(normalBorder);
+      $(fieldParentID).find('.js-errorLabel').addClass(dispNone);
+      requiredFieldStore.remove(nameField);
+      
+        var name_of_user=nameVal;
+        name_of_user = name_of_user.replace(/\./gi, " ");
+        name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
+        name_of_user = name_of_user.replace(/\,|\'/gi, "");
+        name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user))){
+                setError(nameField,"Please provide a valid Full Name",1);
+        }else{
+                var nameArr = name_of_user.split(" ");
+                if(nameArr.length<2){
+                        setError(nameField,"Please provide your first name along with surname, not just the first name",1);
+                }else{
+                     unsetError(nameField);   
+                }
+        }
+      storeFieldChangeValue(nameField,nameVal);
+    }
     onAboutChange = function(aboutMeVal,event){
       
       var aboutMeField = editAppObject[ABOUT]["YOURINFO"];
@@ -4474,7 +4525,9 @@ EditApp = function(){
         },0);
         
       });
-      
+      $(".js-name").on("change",function(event){
+	setTimeout(function(){onNameChange($("#name").val(),event);},0);
+	});
       //Privacy setting
       $('.js-privacySetting').on('click',function(event){
         if(event.target && event.target.tagName === "LI"){
@@ -6139,3 +6192,45 @@ $('.js-previewAlbum').click(function(){
     openPhotoAlbum(username,profilechecksum,albumCount);
 
 })
+    function onDisplayNameChange(fieldObject){
+        $(".optionDrop li").each(function(index, element) {
+            $(this).on("click",function(){
+                                $(".optionDrop li").each(function(index, element) {
+                                        $(this).removeClass("selected");
+                                });
+                                $(this).addClass("selected");
+				if($(this).attr("id") == "showYes")
+				{
+					var value = "Y";
+					var text = "Show to All";
+				}
+				else
+				{
+					var value = "N";
+					var text = "Don't Show";
+				}
+				$("#showText").html(text);
+				storeFieldChangeValue(fieldObject,value);
+				$("#optionDrop").removeClass("optionDrop");
+				setTimeout(function(){ $("#optionDrop").addClass("optionDrop");}, 500);
+                        });
+        });
+	}
+	function showDisplayNameSettingFirstTime(fieldObject)
+	{
+		if(fieldObject.value!="N")
+		{
+			var show = "#showYes";
+			var hide = "#showNo";
+			var text = "Show to All";
+		}
+		else
+		{
+			var show = "#showNo";
+			var hide = "#showYes";
+			var text = "Don't Show";
+		}
+		$(hide).removeClass("selected");
+		$(show).addClass("selected");
+		$("#showText").html(text);
+	}

@@ -77,7 +77,7 @@ class Tuple {
 		public $NATIVE_CITY;
 		public $NATIVE_STATE;
         public $EMAIL;
-
+        public $GUNA;
     //Getters and setter of all the base class as well as child class fields
         
         public function getprofileObject() {
@@ -162,7 +162,9 @@ class Tuple {
         else
             return 0;
     }
-        
+    public function getGUNA() {
+        return $this->GUNA;
+    }
         public function setprofileObject($x) {
         $this->profileObject=$x;
     }
@@ -352,7 +354,12 @@ public function getPIC_ID($x="") {
     public function setIS_ALBUM($x) {
         $this->IS_ALBUM = $x;
     }
-
+    public function setNAME_OF_USER($x) {
+	$this->NAME_OF_USER = $x;
+    }
+    public function getNAME_OF_USER() {
+	return $this->NAME_OF_USER;
+    }
     public function getIS_ALBUM_TEXT() {
         return $this->IS_ALBUM_TEXT;
     }
@@ -446,6 +453,10 @@ public function getPIC_ID($x="") {
     public function setEMAIL($string)
     {
         $this->EMAIL = $string;
+    }
+    public function setGUNA($x)
+    {
+        $this->GUNA = $x;
     }
 	public function getsubscription_icon()
 	{

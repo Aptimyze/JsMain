@@ -44,7 +44,23 @@
     <div class="overlaywhite disp-none js-loaderShow"></div>
     <div class="overlayload disp-none js-loaderShow js-loaderDiv"><img src="~sfConfig::get('app_img_url')`/images/jspc/commonimg/loader.gif"></div>
     <div class="edwid1 mauto">
-      <div class="pt28 pb20 txtc fontlig f22 ">Desired Partner Profile </div>
+        <div class="pt28 pb20 fontlig wid90p txtc">
+            <div class="wid77p disp_ib txtl">
+                <div class="f18">Also send me matches outside my Desired Partner Profile</div>
+                <div class="f14 pt10 color6">If this is 'ON', you may receive recommendations based on your activity which can be outside your Desired Partner Profile</div>
+            </div>
+            <div class="fr">
+                <div class="pos-rel fr clearfix outerbox mrneg35">
+                <input type="checkbox" name="new_matches_mail" id="new_matches_mail" class="vishid settingInp" value="1">
+                <div class="pos-abs fullwid clearfix z2 setpos1">
+                    <div id="unchk_dpp" class="fl selNotif cursp setdim1"></div>
+                    <div id="chk_dpp" class="fr selNotif cursp setdim1"></div>
+                </div>
+                <div id="boxDiv" class="box pos-abs setpos2 ~if $toggleMatchalerts eq 'dpp'`~else` move ~/if`"> </div>
+                </div>
+            </div>
+        </div>
+      <div class="pt28 pb20 txtc fontlig f22 edbrd1">Desired Partner Profile </div>
           <div class="pt10 pb20 txtc fontlig f16">The criteria you mention here determines the ‘Desired Partner Matches’ you see. So please review this information carefully. 
 Moreover, Filters determine whose Interests/Calls you want to receive.</div>
         <!--<p class="color5 f15 txtc pb30 js-apMes~if isset($existingData['ap_screen_msg'])`~else` disp-none~/if`">~if isset($existingData['ap_screen_msg'])`~$existingData['ap_screen_msg']`~/if`</p>-->

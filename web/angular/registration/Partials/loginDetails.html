@@ -1,3 +1,19 @@
+<div id="nameSettingOverlay" class="dn overlay">
+        <div class="wid90p bg4 topLeft50">
+                <div class="padd1015 f15 fontlig brdr15">Name Privacy Setting</div>
+        <div id="showName" class="changeSetting padd22 hgt75 fontlig brdr15" rel="Y">
+                <div class="pt8 f15">Show my name to all</div>
+            <i class="fr iconTick tickSelected iconSprite js-showYes"></i>
+        </div>
+        <div id="dontShowName" class="changeSetting padd22 hgt75 fontlig brdr15" rel="N">
+                <div class="f15">Don't show my name</div>
+            <i class="fr iconTick js-showNo"></i>
+                <div class="f13 fl pt6">You will not be able to see names of other members</div>
+        </div>
+        <div id="doneBtn" class="padd1015 color2 fullwid txtc f15" value="Y">Done</div>
+        </div>
+</div>
+
 <div style="height:{{MaxHeight+'px'}}" id="perspective" resize>
   <div class="fullwid bg4" ng-class=""> 
     <!--start:div-->
@@ -6,7 +22,7 @@
     
 	<form name='regForm' novalidate> 
 		<div class="scrollContent" style="height:{{fieldsHeight+'px'}}" >
-      <div reg-text-field enable-next-btn="enableNextBtn" data='field_name' ng-show='field_name.show' on-next='enableNextBtn' validation-type="nameField" ></div>
+      <div reg-name-field enable-next-btn="enableNextBtn" data='field_name' ng-show='field_name.show' on-next='enableNextBtn' validation-type="nameField" ></div>
 			<div reg-email-field enable-next-btn="enableNextBtn" data='field_email' ng-show='field_email.show'></div>
 			<div reg-pwd-field enable-next-btn="enableNextBtn" data='field_pwd' ng-show='field_pwd.show'></div> 
 			<div reg-phone-field  enable-next-btn="enableNextBtn" data='field_phone' ng-show='field_phone.show' on-next='myNext' ></div>	
