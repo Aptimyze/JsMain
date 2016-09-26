@@ -671,6 +671,7 @@ Abstract class ApiAuthentication
 		$authchecksum.=":IN=".$this->loginData["INCOMPLETE"];
 		$authchecksum.=":DOB=".$this->loginData["DTOFBIRTH"];
 		$authchecksum.=":HP=".$this->loginData["HAVEPHOTO"];
+		$authchecksum.=":SC=".HandlingCommonReqDatabaseId::getId();
 		if($backendCheck)
 			$authchecksum.=":BK=backend";
 		
@@ -704,6 +705,7 @@ Abstract class ApiAuthentication
 						$data["HAVEPHOTO"]=$temp['HP'];
 			$data["TIME"]=$temp[TM];
 			$data["FROM_BACKEND"]=$temp['BK'];
+			$data["SQL_CONNECTION"]=$temp['SC'];
 			return $data;
 		}
 		return null;
