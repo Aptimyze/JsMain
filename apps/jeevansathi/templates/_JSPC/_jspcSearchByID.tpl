@@ -9,7 +9,7 @@
                 <div class="mt20">
                     <form action="">
                      	<div class="clearfix wid92p brderinp layerp2" id="SearchProIdBox">
-                        	<input type="text" class="bgnone f15 grey6 brdr-0 fl fullwid" placeholder="Enter Profile ID" id="SearchProId" maxlength="15">
+                        	<input type="text" class="bgnone f15 grey6 brdr-0 fl fullwid" placeholder="Enter Profile ID" id="SearchProId" maxlength="20">
                         </div> 
                         <div class="f15 colr2 pt10">e.g. ZXZ12345, YSW23456, etc.</div> 
                         <div class="mt30 scrollhid pos_rel">

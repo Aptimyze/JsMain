@@ -156,7 +156,7 @@ class crmInterfaceActions extends sfActions
 						$selectedDateArr = array();
 						foreach($formArr['selectedDateArr'] as $k => $dd) {
 							
-							$selectedDateArr[$k] = date('Y-m-d', strtotime('-1 day', strtotime($dd)));
+							$selectedDateArr[$k] = date('Y-m-d', strtotime($dd));
 						}
 						$vdSmsLogObj->insertVdSmsSchedule($selectedDateArr, $formArr['frequency']);
 						$this->successMsg = "Updated successfully ...";			
@@ -242,7 +242,7 @@ class crmInterfaceActions extends sfActions
 		$this->durPerc = floor(100/(count($this->serviceDurations)+1));
 		// Check if Discount Offer is active
 		$discountOfferLogObj=new billing_DISCOUNT_OFFER_LOG();
-		$billDiscOffrObj = new billing_DISCOUNT_OFFER();
+		$billDiscOffrObj = new billing_DISCOUNT_OFFER('newjs_masterDDL');
 		$discountOfferID = $discountOfferLogObj->checkDiscountOffer();
 		if($discountOfferID){
 			$this->successMsg = "Discount offer is Currently Active";
@@ -587,8 +587,8 @@ class crmInterfaceActions extends sfActions
         $this->cid      =$request->getParameter('cid');
         $this->name     =$request->getParameter('name');
         $testDiscountLookupObj = new test_DISCOUNT_LOOKUP_UPLOAD('newjs_local111');
-        $discountLookupObj = new billing_DISCOUNT_LOOKUP();
-        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP();
+        $discountLookupObj = new billing_DISCOUNT_LOOKUP('newjs_masterDDL');
+        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP('newjs_masterDDL');
         
         $records = $testDiscountLookupObj->getRecords();
         if($records)
@@ -793,4 +793,214 @@ class crmInterfaceActions extends sfActions
         }
     }
 
+    public function executeFinanceDataInterface(sfWebRequest $request)
+	{
+	    $this->cid  = $request->getParameter('cid');
+	    $this->name = $request->getParameter('name');
+	    $this->rangeYear = date("Y", time());
+	    $this->showInitial = 1;
+        if ($request->getParameter("submit"))
+        {
+            $formArr = $request->getParameterHolder()->getAll();
+            $formArr["date1_dateLists_month_list"]++;
+            $formArr["date2_dateLists_month_list"]++;
+            $start_date        = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+            $end_date          = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+            $start_date        = date("Y-m-d", strtotime($start_date));
+            $end_date          = date("Y-m-d", strtotime($end_date));
+            $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+            if ($start_date > $end_date) {
+                $this->errorMsg = "Invalid Date Selected";
+            }
+            if (!$this->errorMsg) //If no error message then submit the page
+	        {
+	            $this->range_format = $formArr["range_format"];
+	            $this->start_date   = $start_date." 00:00:00";
+	            $this->end_date     = $end_date." 23:59:59";
+	            $this->showInitial  = 0;
+	            $this->showData     = 1;
+	            $purchaseObj        = new BILLING_PURCHASES('newjs_slave');
+	            $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date);
+	            if ($formArr["report_format"] == "XLS") {
+	                $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tStart Date\tEnd Date\tCurrency\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\r\n";
+	                if($this->rawData && is_array($this->rawData))
+					{
+						foreach($this->rawData as $k=>$v)
+						{
+							$dataString = $dataString.$v["ENTRY_DT"]."\t";
+							$dataString = $dataString.$v["BILLID"]."\t";
+							$dataString = $dataString.$v["RECEIPTID"]."\t";
+							$dataString = $dataString.$v["PROFILEID"]."\t";
+							$dataString = $dataString.$v["USERNAME"]."\t";
+							$dataString = $dataString.$v["SERVICEID"]."\t";
+							$dataString = $dataString.$v["START_DATE"]."\t";
+							$dataString = $dataString.$v["END_DATE"]."\t";
+							$dataString = $dataString.$v["CUR_TYPE"]."\t";
+							$dataString = $dataString.$v["AMOUNT"]."\t";
+							$dataString = $dataString.$v["DEFERRABLE"]."\t";
+							$dataString = $dataString.$v["ASSD"]."\t";
+							$dataString = $dataString.$v["ASED"]."\r\n";
+						}
+					}
+					$xlData = $headerString.$dataString;
+					$string .= $start_date . "_to_" . $end_date;
+	                header("Content-Type: application/vnd.ms-excel");
+	                header("Content-Disposition: attachment; filename=FinanceData_" . $string . ".xls");
+	                header("Pragma: no-cache");
+	                header("Expires: 0");
+	                echo $xlData;
+	                die;
+	            }
+	        }
+        }
+	}
+
+    public function executeBillingManagementInterface(sfWebRequest $request)
+    {
+        $this->cid                 = $request->getParameter('cid');
+        $this->name                = $request->getParameter('name');
+        $agentAllocationDetailsObj = new AgentAllocationDetails();
+        $priv                      = $agentAllocationDetailsObj->getprivilage($this->cid);
+        $priv                      = explode('+', $priv);
+        if (in_array('CRMTEC', $priv)) {
+            $this->showOptions = 1;
+        }
+    }
+
+    public function executeServiceDateChangeInterface(sfWebRequest $request)
+    {
+        $this->cid          = $request->getParameter('cid');
+        $this->name         = $request->getParameter('name');
+        $billingPurDetObj   = new billing_PURCHASE_DETAIL();
+        $billingServStatObj = new BILLING_SERVICE_STATUS();
+        $this->billid       = $request->getParameter('billid');
+        $this->serviceid    = $request->getParameter('serviceid');
+        $this->rangeYear    = '2099';
+        $this->startYear    = date('Y')-1;
+
+        if ($request->getParameter('submitBillid')) {
+            $this->purDet     = $billingPurDetObj->getAllDetailsForBillidArr(array($this->billid));
+            $this->serStatDet = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+            if (!empty($this->purDet) && !empty($this->serStatDet)) {
+                $this->detailedView = 1;
+            } else {
+                $this->error    = 1;
+                $this->errorMsg = "Billid invalid or data corrupted, please change manually";
+            }
+        }
+
+        if ($request->getParameter("submitServiceid")) //If form is submitted
+        {
+            $formArr = $request->getParameterHolder()->getAll();
+            $formArr["date1_dateLists_month_list"]++;
+            $formArr["date2_dateLists_month_list"]++;
+            $start_date        = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+            $end_date          = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+            $start_date        = date("Y-m-d", strtotime($start_date));
+            $end_date          = date("Y-m-d", strtotime($end_date));
+            $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+            if ($start_date > $end_date) {
+                $this->error    = 1;
+                $this->errorMsg = "Invalid Date Selected";
+            } else {
+                $billingPurDetObj->updateActivationDates($this->billid, $this->serviceid, $start_date, $end_date);
+                $billingServStatObj->updateActivationDates($this->billid, $this->serviceid, $start_date, $end_date);
+                $this->profileid = $billingServStatObj->getProfileidForBillid($this->billid);
+                $memCacheObject  = JsMemcache::getInstance();
+                if ($memCacheObject) {
+                    $memCacheObject->remove($this->profileid . '_MEM_NAME');
+                    $memCacheObject->remove($this->profileid . "_MEM_OCB_MESSAGE_API17");
+                    $memCacheObject->remove($this->profileid . "_MEM_HAMB_MESSAGE");
+                    $memCacheObject->remove($this->profileid . "_MEM_SUBSTATUS_ARRAY");
+                }
+                $this->purDet       = $billingPurDetObj->getAllDetailsForBillidArr(array($this->billid));
+                $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+                $this->detailedView = 1;
+            }
+        }
+    }
+
+    public function executeServiceActivationChangeInterface(sfWebRequest $request)
+    {
+        $this->cid          = $request->getParameter('cid');
+        $this->name         = $request->getParameter('name');
+        $billingPurDetObj   = new billing_PURCHASE_DETAIL();
+        $billingServStatObj = new BILLING_SERVICE_STATUS();
+        $jprofileObj        = new JPROFILE();
+        $this->billid       = $request->getParameter('billid');
+        $this->serviceid    = $request->getParameter('serviceid');
+
+        if ($request->getParameter('submitBillid')) {
+            $this->profileid = $billingServStatObj->getProfileidForBillid($this->billid);
+            $this->jprofileDet     = $jprofileObj->get($this->profileid, 'PROFILEID', 'USERNAME, PROFILEID, SUBSCRIPTION');
+            $this->serStatDet = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+            if (!empty($this->jprofileDet) && !empty($this->serStatDet)) {
+                $this->detailedView = 1;
+            } else {
+                $this->error    = 1;
+                $this->errorMsg = "Billid invalid or data corrupted, please change manually";
+            }
+        }
+
+        if ($request->getParameter("submitServiceid")) //If form is submitted
+        {
+            $serviceStatus = $request->getParameter('serviceStatus');
+            $billingServStatObj->updateActiveStatusForBillidAndServiceid($this->billid, $this->serviceid, $serviceStatus);
+            $this->profileid = $billingServStatObj->getProfileidForBillid($this->billid);
+            $subscription = $billingServStatObj->getActiveServeFor($this->profileid);
+            if(empty($subscription)){
+                $subscription = '';
+            }
+            $jprofileObj->edit(array('SUBSCRIPTION'=>$subscription), $this->profileid, 'PROFILEID');
+            $memCacheObject  = JsMemcache::getInstance();
+            if ($memCacheObject) {
+                $memCacheObject->remove($this->profileid . '_MEM_NAME');
+                $memCacheObject->remove($this->profileid . "_MEM_OCB_MESSAGE_API17");
+                $memCacheObject->remove($this->profileid . "_MEM_HAMB_MESSAGE");
+                $memCacheObject->remove($this->profileid . "_MEM_SUBSTATUS_ARRAY");
+            }
+            $this->jprofileDet       = $jprofileObj->get($this->profileid, 'PROFILEID', 'USERNAME, PROFILEID, SUBSCRIPTION');
+            $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+            $this->detailedView = 1;
+        }
+    }
+
+    public function executeChangeActiveServicesInterface(sfWebRequest $request)
+    {
+        $this->cid          = $request->getParameter('cid');
+        $this->name         = $request->getParameter('name');
+        $billingServObj     = new billing_SERVICES();
+        $memHandlerObject = new MembershipHandler();
+        // LIMIT SERVICES TO SHOW IN THIS INTERFACE
+        $this->servArr = array('P'=>'eRishta','C'=>'eValue','NCP'=>'eAdvantage','X'=>'JS Exclusive','T'=>'Response Booster','R'=>'Featured Profile','A'=>'Astro Compatibility','I'=>'We Talk For You');
+        if ($request->getParameter('submit')) {
+        	$params = $request->getParameterHolder()->getAll();
+        	unset($params['submit'],$params['name'],$params['cid'],$params['module'],$params['action'],$params['authFailure']);
+        	foreach ($params as $key=>$val) {
+        		if ($val == 'Y') {
+        			$activate[] = $key;
+        		} else {
+        			$deactivate[] = $key;
+        		}
+        	}
+        	$activate = "'" . implode("','", $activate) . "'";
+        	$deactivate = "'" . implode("','", $deactivate) . "'";
+        	$billingServObj->changeServiceActivations($activate, 'Y');
+        	$billingServObj->changeServiceActivations($deactivate, 'N');
+        	$memHandlerObject->flushMemcacheForMembership();
+        }
+        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr));
+        $newServDet = array();
+        $skipArr = array('C1','C1W','C2W','P1','P1W','P2W','NCP1','T1','A1','I10','R1','X1');
+        foreach ($this->servDet as $sid=>$arr) {
+        	$realID = $memHandlerObject->retrieveCorrectMemID($sid);
+        	if (!in_array($sid, $skipArr)) {
+        		$newServDet[$realID][$sid] = $arr;
+        	}
+        }
+        foreach ($this->servArr as $key=>$val) {
+        	$servDet[$key] = $newServDet[$key] ;
+        }
+        $this->servDet = $servDet;
+    }
 }

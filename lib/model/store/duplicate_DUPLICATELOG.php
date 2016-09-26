@@ -232,6 +232,22 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
 }
 
 
+ public function deleteProbableDuplicates()
+        {
+            try {
+
+
+                $sql="delete  from duplicates.DUPLICATE_PROFILE_LOG where IS_DUPLICATE='PROBABLE'";
+                $prep = $this->db->prepare($sql);
+                $prep->execute();
+             
+                }
+                catch (Exception $e) {
+            jsCacheWrapperException::logThis($e);
+                }
+
+                return true;
+        }
     //Three function for innodb transactions
     public function startTransaction()
     {

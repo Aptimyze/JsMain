@@ -100,8 +100,10 @@ class homepageActions extends sfActions
 			$this->redirectToRegister("source=$this->source");
 			die;
 		}
-		if(MobileCommon::isNewMobileSite() && !$data[PROFILEID])
-		MobileCommon::gotoModuleUrl("static","logoutPage");
+		if(MobileCommon::isNewMobileSite() && !$data[PROFILEID]){
+			$request->setParameter("homepageRedirect",1);
+			MobileCommon::gotoModuleUrl("static","logoutPage");
+	}
 
 	else
 	{

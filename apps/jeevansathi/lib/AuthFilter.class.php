@@ -11,7 +11,6 @@
  */
 class AuthFilter extends sfFilter {
 	public function execute($filterChain) {
-		
 	$context = $this->getContext();
 		$request = $context->getRequest();
 
@@ -89,10 +88,13 @@ class AuthFilter extends sfFilter {
 				if($request->getParameter("FROM_GCM")==1)
 						$gcm=1;
 				
-				if($request->getParameter("crmback")=="admin")
+				if($request->getParameter("crmback")=="admin" || $request->getParameter("allowLoginfromBackend")==1)
 				{
 					$authenticationLoginObj->setTrackLogin(false);
-					$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"));					
+					if($request->getParameter("allowLoginfromBackend"))
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"Y");	
+					else
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"N");
 				}
 				else
 					$data=$authenticationLoginObj->authenticate(null,$gcm);
@@ -156,7 +158,7 @@ class AuthFilter extends sfFilter {
 						{
 							$request->setParameter("incompleteUser",1);
 							if(MobileCommon::isNewMobileSite()){
-								$context->getController()->forward("register","newJsmsReg");
+								$context->getController()->forward("register","newJsmsReg",0);
                                                                 die;
                                                         }
                                                         elseif(MobileCommon::isDesktop()){
@@ -188,13 +190,13 @@ class AuthFilter extends sfFilter {
 									die;
 								}
 								elseif(MobileCommon::isNewMobileSite()){
-									$context->getController()->forward("phone","jsmsDisplay");
+									$context->getController()->forward("phone","jsmsDisplay",0);
 									die;
 								}
 								else{
 									if($_GET["crmback"]!="admin"){
 
-										$context->getController()->forward("phone","phoneVerificationPcDisplay");
+										$context->getController()->forward("phone","phoneVerificationPcDisplay",0);
 									}
 									die;
 								}
@@ -202,7 +204,7 @@ class AuthFilter extends sfFilter {
 							
 							if($showConsentMsg=="Y" && MobileCommon::isNewMobileSite())
 							{
-								$context->getController()->forward("phone","consentMessage");
+								$context->getController()->forward("phone","consentMessage",0);
 								die;
 							}
 
@@ -263,6 +265,7 @@ class AuthFilter extends sfFilter {
 				else
 					$request->setAttribute('subscriptionHeader',"1");
 				
+				//$request->setAttribute('subscription',$data[SUBSCRIPTION]);
 				$request->setAttribute('checksum', $data[CHECKSUM]);
 				$request->setAttribute('profilechecksum', (md5($data["PROFILEID"]) . "i" . $data["PROFILEID"]));
 				$request->setAttribute('username', $data[USERNAME]);
@@ -283,12 +286,35 @@ class AuthFilter extends sfFilter {
 				if ($enable_login !== 'off') {
 					if (!$data[PROFILEID] && $context->getResponse()->getStatusCode() == '200') {
 						//$protect_obj->TimedOut(); //Displays timeout page
-						if (sfConfig::get('mod_' . $request->getParameter('module') . '_' . $request->getParameter('action') . '_enable_login_layer') == 'on') $context->getController()->forward("static", "loginLayer"); //Login layer
-						else $context->getController()->forward("static", "logoutPage"); //Logout page
+						if (sfConfig::get('mod_' . $request->getParameter('module') . '_' . $request->getParameter('action') . '_enable_login_layer') == 'on') $context->getController()->forward("static", "loginLayer",0); //Login layer
+						else $context->getController()->forward("static", "logoutPage",0); //Logout page
 					//	throw new sfStopException();
 					die;
 					}
 				}
+            
+            
+
+               		//$request->setAttribute('UNIQUE_REQUEST_SUB_ID',uniqid());
+
+            
+               $headers = getallheaders();
+            
+	            
+	            if (false === isset($headers[LoggingEnums::RAJX])) {
+	            	$out = LoggingManager::getInstance()->getUniqueId();
+	            	$request->setAttribute(LoggingEnums::RIFT,$out); 
+
+	            }
+	            else
+	            {   	            	
+	            	LoggingManager::getInstance()->setUniqueId($headers[LoggingEnums::RAJX]);
+	            	$request->setAttribute(LoggingEnums::RIFT,$headers[LoggingEnums::RAJX]);
+	            	$request->setAttribute(LoggingEnums::AJXRSI,uniqid());
+
+	            	
+	            }
+	          	                        
 			}
 			else
 			{

@@ -155,6 +155,23 @@ function dppCaste(json,realJson,indexPos)
 	$("#P_CASTE").addClass("color3o").removeClass("color2");
 	UpdateSection.call(this,json,realJson,indexPos);
 }
+function dppMstatus(json,realJson,indexPos)
+{
+        showHaveChild=0;
+        var arr=new Array();
+        $.each(json["p_mstatus"],function(key,value){
+		arr[i]=value;
+		if(arr[i]!='N')
+                    showHaveChild=1;
+	});
+        if(showHaveChild)
+            $("#P_HAVECHILD_TOP").removeClass('dn');
+        else{
+            $("#P_HAVECHILD_TOP").addClass('dn');
+            CommonOverlayEditUpdate("","p_havechild");
+        }
+	UpdateSection.call(this,json,realJson,indexPos);
+}
 function updateTimeToCall(json,realJson,indexPos)
 {
 	//console.log("time to call");

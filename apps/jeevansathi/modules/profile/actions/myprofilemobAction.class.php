@@ -44,7 +44,13 @@ class myprofilemobAction extends sfAction
 		
 		//Action Templates Variables
 		$this->GENDER = $this->loginProfile->getGENDER();
-		$this->USERNAME = $this->loginProfile->getUSERNAME();		
+		$this->USERNAME = $this->loginProfile->getUSERNAME();
+                $newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+                $cnt_logic = $newjsMatchLogicObj->getPresentLogic($this->loginProfile->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
+                if($cnt_logic>0)
+                        $this->toggleMatchalerts = "dpp";
+                else
+                        $this->toggleMatchalerts = "new";
 		
 		$this->output=$output;
 		//print_r($this->output);die;

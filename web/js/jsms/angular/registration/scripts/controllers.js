@@ -719,6 +719,9 @@ console.log(stateField.userDecision);
 				var email	=$scope.field_email.value;
 				var phone	=$scope.field_phone.value;
 				var isd 	=$scope.field_phone.isdVal;
+				var name	=$scope.field_name.value;
+				if(typeof name === "undefined")
+					name=1;
 				if(typeof email === "undefined")
 					email =1;
 				if(typeof pwd === "undefined")
@@ -728,7 +731,7 @@ console.log(stateField.userDecision);
 				if(typeof isd === "undefined")
 					isd =1;
 
-				if(email && pwd && phone && isd)
+				if(email && pwd && phone && isd && name)
 	                        	$scope.bNextEnable = true;
 				else
 					$scope.bNextEnable = false;	

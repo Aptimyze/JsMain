@@ -283,7 +283,6 @@ function UpdateOverlayLayer(attr)
 	//console.log(json[arr[0]][arr[1]]["OnClick"]);
 	var arr=attr.split(",");
 	var key=json[arr[0]][arr[1]]["OnClick"];
-	
 	var tabName=json[arr[0]][arr[1]]["outerSectionName"];
 	if(arr[0]=="Contact")
 		tabName="Contact Details";
@@ -299,6 +298,20 @@ function UpdateOverlayLayer(attr)
                 temp=temp.replace(/CboxArrow/g,"CboxArrow"+key[i]["key"]);
                 temp=temp.replace(/CboxDiv/g,"CboxDiv"+key[i]["key"]);
                 temp=temp.replace(/cOuter/g,"cOuter"+key[i]["key"]); 
+                var classShowSettings = "dn";
+                if(key[i]["showSettings"] == 1){
+                       classShowSettings = "" ;
+                       temp=temp.replace(/wid94p/g,"wid60p"); 
+                       temp=temp.replace(/\{\{displaySettingsLabel\}\}/g,key[i]["settingData"]['display_string']); 
+                       temp=temp.replace(/\{\{displaySettingsValue\}\}/g,key[i]["settingData"]['displayValue']); 
+                       temp=temp.replace(/\{\{ONCLICK_EVENT\}\}/g,key[i]["settingData"]['callbackoverlay']+'(this);');
+                       
+                        if(key[i]["key"] == "NAME" && (key[i]["settingData"]['displayValue'] == "" || key[i]["settingData"]['displayValue'] == null || key[i]["settingData"]['displayValue'] == "null")){
+                               submitObj.push("DISPLAYNAME","Y");
+                               $("#showAll").attr('rel',"Y");
+                        }
+                }
+                temp=temp.replace(/\{\{displaySettings\}\}/g,classShowSettings); 
 		var notfilled="";
 		var labelval=key[i]["label_val"];
 		

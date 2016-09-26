@@ -152,8 +152,11 @@ class inboxActions extends sfActions
 						}
 						else
 						{
+							$contactRObj=new EoiViewLog();
+							$contactRObj->setEoiViewedForAReceiver($pid,'N');
 							$contactsObj = new ContactsRecords();
 							$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
+                                                        
 						}
 						$profileMemcacheObj->update("AWAITING_RESPONSE_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
@@ -228,8 +231,11 @@ class inboxActions extends sfActions
                                                 }
                                                 else
                                                 {
+													 $contactRObj=new EoiViewLog();
+                                                        $contactRObj->setEoiViewedForAReceiver($pid,'Y');
 							$contactsObj = new ContactsRecords();
 							$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
+                                                       
                                                 }
 						$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
@@ -280,12 +286,15 @@ class inboxActions extends sfActions
   }
 
 public function executePerformV2(sfWebRequest $request)
-  {
+  {    
+  	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'in inbox api v2 '. $request->getParameter("infoTypeId") ); 
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$inputValidateObj = ValidateInputFactory::getModuleObject('inbox'); //added for contact center
 		$inputValidateObj->validateRequestInboxData($request);
 		$output = $inputValidateObj->getResponse();
-		
+
+
+
 		if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
 			/** caching **/
@@ -485,8 +494,9 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["title2"]='Received';
 					$response2["infotypeid2"]=1;
 					$response2["url"]="/profile/contacts_made_received.php?page=eoi&filter=R";
+					$response2['subheading'] = InboxEnums::getInboxSubHeading($response2);
 					 break;  
-					
+					// later modified the data sent as we have to update the seen status of the receiver in the contacts table and also eoi viewed log
 					case 'INTEREST_RECEIVED':
 					case 'INTEREST_RECEIVED_FILTER':
 					$response2["subtitle"]='Received '.$response2['total'];
@@ -510,8 +520,11 @@ public function executePerformV2(sfWebRequest $request)
                                                 }
                                                 else
                                                 {
+													 $contactRObj=new EoiViewLog();
+                                                        $contactRObj->setEoiViewedForAReceiver($pid,'N');
 							$contactsObj = new ContactsRecords();
 							$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
+                                                       
 						}
 						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
@@ -654,8 +667,11 @@ public function executePerformV2(sfWebRequest $request)
 							}
 							else
 							{
+								 $contactRObj=new EoiViewLog();
+                                                                $contactRObj->setEoiViewedForAReceiver($pid,'Y');
 								$contactsObj = new ContactsRecords();
 								$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
+                                                               
 							}
 							$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
 							$profileMemcacheObj->updateMemcache();

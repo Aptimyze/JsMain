@@ -11,20 +11,20 @@ class gunaScore
 		 * and accordingly fetches and returns the gunaScoreArr  
 		 */
 
-        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender)
+        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender,$haveProfileArr='')
         {	$parentValueArr = gunaScoreConstants::$parentValues;
         	$searchIdArr = array();
         	$profilechecksumArr = explode(",",$profilechecksumArr);
         	//To convert profilechecksum to profileId array
         	foreach($profilechecksumArr as $val)
         	{
-        		$profileid = JsCommon::getProfileFromChecksum($val);
+        		$profileid = ($haveProfileArr=='1')?$val:JsCommon::getProfileFromChecksum($val);
         		$searchIdArr[] = $profileid;
         		$flipIdArr[$val] = $profileid;
         	}
         	//FlippedSearchIdArr used to map gunaScore to profilechecksum
         	$this->flippedSearchIdArr = array_flip($flipIdArr);
-        
+					
         	$parent = $this->getParent($caste);
         	if(in_array($parent, $parentValueArr))
         	{
@@ -120,6 +120,7 @@ class gunaScore
         //This is a third party vendor call where a curl request is made to fetch guna scores corresponding to the data supplied which is then converted into desired form and returned in $gunaData
         public function thirdPartyVendorCall($logged_astro_details,$compstring)
         {	
+					$gunaData = array();
         	$compstring = implode(",",$compstring);
         	$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?".$logged_astro_details."&".$compstring;
         	$fresult = CommonUtility::sendCurlGetRequest($url,4000);

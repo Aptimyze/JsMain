@@ -89,12 +89,14 @@ public static function insertConsentMessageFlag($profileid) {
         		
        			$loggedInProfileObj=LoggedInProfile::getInstance();
                	if(!$loggedInProfileObj->getPROFILEID()) $loggedInProfileObj->getDetail($profileid,'','*');
-                if ($primaryNum=$loggedInProfileObj->getPHONE_MOB())
+               	$primaryNum=$loggedInProfileObj->getPHONE_MOB();
+                if ($primaryNum)
                 {
+					$isd=$loggedInProfileObj->getISD();
                 	$jprofileObj=new JPROFILE();
-                	$resultArray=$jprofileObj->checkPhone(array($primaryNum));
+                	$resultArray=$jprofileObj->checkPhone(array($primaryNum),$isd);
                 	$selfProfileId=$loggedInProfileObj->getPROFILEID();
-                	$isd=$loggedInProfileObj->getISD();
+                	
 
                 	foreach ($resultArray as $key => $value) 
                 	{
@@ -554,7 +556,7 @@ public static function insertConsentMessageFlag($profileid) {
 			{
 				$ARR = $cityArr;
 			}
-                        $nativePlaceObj = new NEWJS_NATIVE_PLACE();
+                        $nativePlaceObj = ProfileNativePlace::getInstance();
                         $nativeData = $nativePlaceObj->getNativeData($profile->getPROFILEID());
                         $nativeState = $nativeData['NATIVE_STATE'];
                         $nativeCity = $nativeData['NATIVE_CITY'];
@@ -690,11 +692,20 @@ public static function insertConsentMessageFlag($profileid) {
 	{
 		if($profile)
 		{
-			$onlineObj=new USERPLANE_USERS();
-			if($onlineObj->isOnline($profile)==true)
+			if(JsConstants::$jsChatFlag=='1')
+	                {
+				$arr = ChatLibrary::getPresenceOfIds($profile);
+				if(is_array($arr) && count($arr)>0)
+					return true;
+        	        }
+                	else
 			{
-				return true;
-			}	
+				$onlineObj=new USERPLANE_USERS();
+				if($onlineObj->isOnline($profile)==true)
+				{
+					return true;
+				}	
+			}
 		}
 		else
 			throw new JSException("online status of user userplane: Profileid missing.");
@@ -1092,7 +1103,19 @@ public static function insertConsentMessageFlag($profileid) {
             }
             return $cityString;
         }
+        
+        /**
+         * Function to log Function Calling in Redis
+         * @param type $className
+         * @param type $funName
+         */
+        public static function logFunctionCalling($className, $funName)
+        {
+            $key = $className.'_'.date('Y-m-d');
+            JsMemcache::getInstance()->hIncrBy($key, $funName);
 
+            JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+        }
 
 
 }

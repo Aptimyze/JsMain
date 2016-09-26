@@ -309,13 +309,15 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//your info
 		$basicArr[]=$this->getApiFormatArray("YOURINFO","About Me"  ,$this->profile->getDecoratedYourInfo(),$this->profile->getYOURINFO(),$this->getApiScreeningField("YOURINFO"));
 		//username
-		$dbNameOfUser=new incentive_NAME_OF_USER();
-		$name=$dbNameOfUser->getNAME($this->profile->getPROFILEID());
+		$NameOfUser=new NameOfUser;
+		$nameData=$NameOfUser->getNameData($this->profile->getPROFILEID());
 //		if($this->profile->getGENDER()=="M")
 //			$basicArr[]=$this->getApiFormatArray("NAME","Groom's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
 //		else
 //			$basicArr[]=$this->getApiFormatArray("NAME","Bride's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
-		$basicArr[]=$this->getApiFormatArray("NAME","Name"  ,$name,$name,$this->getApiScreeningField("NAME"));
+		$name = $nameData[$this->profile->getPROFILEID()]['NAME'];
+		$basicArr[]=$this->getApiFormatArray("NAME","Full Name"  ,$name,$name,$this->getApiScreeningField("NAME"));
+		$basicArr[]=$this->getApiFormatArray("DISPLAYNAME","DISPLAYNAME",'',$nameData[$this->profile->getPROFILEID()]['DISPLAY'],'','Y');
 		//gender
 		$basicArr[]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),"N");
 		
@@ -474,7 +476,10 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$arrOut[] = $this->getApiFormatArray("P_AGE","Age",$szAge,$szAgeVal,$this->getApiScreeningField("PARTNER_AGE"));
 		//Marital Status
 		$szMStatus = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_MSTATUS());
-		$arrOut[] = $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"));     
+		$arrOut[] = $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"));
+                //Have Children
+		$szChildren = $this->getDecorateDPP_Response($jpartnerObj->getCHILDREN());
+		$arrOut[] = $this->getApiFormatArray("P_HAVECHILD","Have Children",trim($jpartnerObj->getDecoratedCHILDREN()),$szChildren,$this->getApiScreeningField("CHILDREN"));
 		//Country
 		$szCountry = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_COUNTRYRES());
 		$arrOut[] = $this->getApiFormatArray("P_COUNTRY","Country",trim($jpartnerObj->getDecoratedPARTNER_COUNTRYRES()),$szCountry,$this->getApiScreeningField("PARTNER_COUNTRYRES"));

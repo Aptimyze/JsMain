@@ -506,6 +506,13 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
                            showCommonLoader();
                     },
 		    success: function(response) {
+                        if(response.responseStatusCode==1)
+                        {
+                        hideCommonLoader();
+			showCustomCommonError(response.responseMessage,5000);
+                        return;
+                        }
+			callAfterContact();
                         hideCommonLoader();
 			if(response.status==1 && blockOrUnblock==1){
 			    blockProfileOnSRP(srpTuple,profileCheckSum,usernameOfProfile);
@@ -515,13 +522,13 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
 			 }
 			 else{
 			     //alert(response.responseMessage);
-				console.log("error2");// LATER
+				//console.log("error2");// LATER
 			 }
 
 		    },
 		    error: function(xhr) {
 		      //alert("error");
-			console.log("error3");// LATER
+			//console.log("error3");// LATER
 		    }
 		  });
 	}
@@ -665,6 +672,10 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
 		postParams = postParams+="&newTagJustJoinDate="+newTagJustJoinDate;
 	if(listType=='cc')
 		postParams = postParams+"&ContactCenterDesktop=1";
+
+	//alert(postParams.indexOf('partnermatches'));
+	if(postParams.indexOf('partnermatches')!='-1' || postParams.indexOf('matchalerts')!='-1' || postParams.indexOf('justJoined')!='-1' || postParams.indexOf('kundlialerts')!='-1' || postParams.indexOf('twowaymatch')!='-1' || postParams.indexOf('reverseDpp')!='-1' || postParams.indexOf('verifiedMatches')!='-1' || postParams.indexOf('reverseDpp')!='-1')
+		url =  getUrlForHeaderCaching(url);
 	/*
         if(postParams.search("sort_logic")==-1 && postParams.search("currentPage")==-1 && pageOfResult!==null)
                 postParams = postParams+"&currentPage="+pageOfResult;
@@ -674,6 +685,7 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
                 url: url,
 		dataType: 'json',
 		type: 'GET',
+                cache: true,
 		data: postParams,
 		timeout: 60000,
 		beforeSend: function( xhr ) {
@@ -901,6 +913,7 @@ $("body").delegate('.changeListingLogic','click', function() {
                           
                     },
 		    success: function(response) {
+												callAfterDppChange();
                         $(".changeListingLogic"+response.successMessage.matchAlertLogic).attr("checked","checked");
                         if(response.successMessage.matchAlertLogic==Coded){
                             var idOfElement = "listingLogic"+Coded;
@@ -913,7 +926,7 @@ $("body").delegate('.changeListingLogic','click', function() {
                         setTimeout(function(){ $(".popsrp2").css("display",""); }, 3000);
 		    },
 		    error: function(xhr) {
-			console.log("error5");// LATER
+			//console.log("error5");// LATER
 		      //alert("error");
 		    }
 		  });	
@@ -981,7 +994,7 @@ function getGunaScore(response)
 	var searchResponse = response;
 	var profileLength = 0;
 	var featureProfileLength = 0;
-
+	var gunaScoreArr = new Array();
 	//Length of profiles array in response
 	if('profiles' in searchResponse && Array.isArray(searchResponse.profiles))
 	{
@@ -1000,6 +1013,10 @@ function getGunaScore(response)
 			$.each(val, function(key1, val1)
 			{
 				profilechecksumArr.push(val1.profilechecksum);
+				var obj = {};
+				obj[val1.profilechecksum] = val1.gunascore;
+				gunaScoreArr.push(obj);
+			
 			});
 		}
 		if(key  == 'featuredProfiles' && val!==null){
@@ -1012,105 +1029,64 @@ function getGunaScore(response)
 	profChecksumCheckArr = profilechecksumArr;
 	//The profileChecksumArr contains profilechecksum of both profiles and featured profiles on a particular page
 	profilechecksumArr = profilechecksumArr.join(",");
-	$.myObj.ajax({
-		showError: false, 
-		method: "POST",
-		url : '/api/v1/search/gunaScore?profilechecksumArr='+profilechecksumArr+'&diffGender='+diffGender,
-		data : ({dataType:"json"}),
-		async: (searchBasedParam == 'kundlialerts') ? false : true,
-		timeout:20000,
-		success:function(response){
-			gunaScoreArr = response.gunaScores;
-			if(Array.isArray(gunaScoreArr))
+	if(searchBasedParam == 'kundlialerts')
+	{		
+		if(profileLength == 0)
+		{
+			if(typeof searchResponse.paginationArray ==="undefined")
 			{
-				if(searchBasedParam == 'kundlialerts')
-				{
-					$.each(profChecksumCheckArr, function(index, value){
-						var flag = false;
-						$.each(gunaScoreArr, function(key,val){	
-							$.each(val, function(profchecksum,gunaScore){
-								if(value === profchecksum)
-								{
-									flag = true;
-								}
-							});	
-						});
-						if(flag == false)
-						{
-							deleteChecksumArr.push(value);
-						}
-					});
-					
-
-
-					$.each(gunaScoreArr, function(key,val){	
-						$.each(val, function(profchecksum,gunaScore){
-							if(gunaScore <= searchResponse.minAcceptedGunaScore)
-							{
-								deleteChecksumArr.push(profchecksum);
-							}
-						});	
-					});
-
-					if(profileLength != 0)
-					{
-						kundliAlertListingHandling(searchResponse,profileLength,'profiles',deleteChecksumArr);
-					}
-								
-					if((searchResponse.profiles.length == 0))
-					{
-						if(searchResponse.page_index < searchResponse.paginationArray.length)
-						{
-								loadPage(parseInt(searchResponse.page_index) + 1);
-						}
-						else
-						{
-							setTimeout(function(){
-							$("#zeroPageHeading").html(searchResponse.result_count);
-							$("#zeroPageMsg").html(searchResponse.DefaultZeroMsg);
-							$("#js-searchContainer").hide();
-							$("#zeroResultSection").show();
-						}, 0.1);
-						}
-
-						
-						
-					}
-				
+				// Do nothing
+			}
+			else if(typeof searchResponse.paginationArray !=="undefined" && searchResponse.page_index < searchResponse.paginationArray[searchResponse.paginationArray.length -1 ])
+			{
+					loadPage(parseInt(searchResponse.page_index) + 1);
+			}
+			else
+			{
 					setTimeout(function(){
-						setGunaScoreOnListing(gunaScoreArr);
-					}, 100);
-				}
-				else
-				{
-					setGunaScoreOnListing(gunaScoreArr);
-				}	
+					$("#zeroPageHeading").html(searchResponse.result_count);
+					$("#zeroPageMsg").html(searchResponse.DefaultZeroMsg);
+					$("#js-searchContainer").hide();
+					$("#zeroResultSection").show();
+				}, 0.1);
 			}
 		}
-	});
-
-}
-
-//This function is used to delete profiles from profiles array whose guna is less than a mininum accepted value
-function kundliAlertListingHandling(searchResponse,length,profileType,deleteChecksumArr)
-{
-	while(length)
-	{
-		length--;
-		if(jQuery.inArray(searchResponse[profileType][length].profilechecksum, deleteChecksumArr) !== -1)
-		{	
-			searchResponse[profileType].splice(length,1);
+		else
+		{
+			setTimeout(function(){
+						setGunaScoreOnListing(gunaScoreArr);
+					}, 100);
 		}
-
+	}
+	else
+	{	
+		$.myObj.ajax({
+			showError: false, 
+			method: "POST",
+			url : '/api/v1/search/gunaScore?profilechecksumArr='+profilechecksumArr+'&diffGender='+diffGender,
+			data : ({dataType:"json"}),
+			async: true,
+			timeout:20000,
+			success:function(response){
+				gunaScoreArr=null;
+				gunaScoreArr = response.gunaScores;
+				setGunaScoreOnListing(gunaScoreArr);
+			}
+		});
 	}
 }
+
 
 //This function sets the Guna score on search tuples corresponnding to their id's
 function setGunaScoreOnListing(gunaScoreArr)
 {
-	$.each(gunaScoreArr, function(key,val){	
-		$.each(val, function(profchecksum,gunaScore){
-			$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
-		});	
-	});
+	if(Array.isArray(gunaScoreArr))
+	{
+			$.each(gunaScoreArr, function(key,val){	
+				$.each(val, function(profchecksum,gunaScore){
+					$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
+				});	
+			});
+	}
 }
+

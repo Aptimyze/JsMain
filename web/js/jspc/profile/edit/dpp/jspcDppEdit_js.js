@@ -285,6 +285,15 @@ if(typeof(openSection) != "undefined" && openSection !=""){
 $("#loadLate").css('visibility','visible');
 if(isBrowserIE() === false)
   $(".js-txtarea").attr('placeholder','What are you looking into a partner?');
+  
+    $("#unchk_dpp").on("click",function(){
+        $("#boxDiv").removeClass("move");
+        sendAjaxForToggleMatchalertLogic("dpp");
+    });
+    $("#chk_dpp").on("click",function(){
+        $("#boxDiv").addClass("move");
+        sendAjaxForToggleMatchalertLogic("history");
+    });
 });
 
 //click on more to show full prefilled text data
@@ -302,6 +311,20 @@ $(function(){
     
 });
 
+
+function sendAjaxForToggleMatchalertLogic(setValue)
+{
+    $.ajax({
+          url: "/api/v1/search/matchAlertToggleLogic",
+          dataType: 'json',
+          method: "POST",
+          cache: true,
+          async: true,
+          data:{logic:setValue},
+          success: function(result) {
+	  }
+    });
+}
 
 //to auto fill data in multiselect type fields on click of edit button in a particular section
 function fillValuesInChosen(sectionId){
@@ -370,7 +393,7 @@ function fillTextAreaValues(sectionId){
 
 //to save fields in a particular section with api call
 function saveSectionsFields(sectionId){
- 
+  callAfterDppChange();
   var editFieldArr = {};
   $('.'+sectionId+" .prehide").each(function(){  
   });
@@ -515,7 +538,7 @@ function onCountry(values){
 function onMarital(values){
   
   
-  if(values instanceof Array !== false && 
+  if((values instanceof Array !== false || (values != '' && values != null)) && 
      (values.length > 1 || values.indexOf("N") === -1)
     ){
     showHideField(hasChildrenField,true);

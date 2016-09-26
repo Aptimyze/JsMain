@@ -35,7 +35,7 @@ mysql_query('set session wait_timeout=50000',$shDb);
 //Pool set of today
 $pro_arrLogin =array();
 $last_15day = date("Y-m-d",time()-15*86400);
-$sql = "SELECT DISTINCT(PROFILEID) FROM LOGIN_HISTORY WHERE LOGIN_DT>='$last_15day' AND PROFILEID%3=2";
+$sql = "SELECT DISTINCT(PROFILEID) FROM LOGIN_HISTORY WHERE LOGIN_DT>='$last_15day' AND PROFILEID%9=8";
 $res = mysql_query_decide($sql,$shDb) or die($sql.mysql_error($shDb));
 while($row = mysql_fetch_array($res))
 	$pro_arrLogin[] = $row['PROFILEID'];
@@ -146,7 +146,7 @@ for($t=0;$t<count($ptype_arr);$t++)
 				if($ptype=="Z")
 					$score=0;
 				else
-                                {
+                                {	
                                         $scorevars = new Scoring_ab($profileid,$myDb,$shDb,$parameter,$ptype,$globalParamsObj);
                                         foreach($scorevars->newmodel as $key=>$val){
                                                 if(!$val)
@@ -154,11 +154,11 @@ for($t=0;$t<count($ptype_arr);$t++)
                                                 $scorevars->newmodel[$key] =$val;
                                         }
                                         $newmodelJson=json_encode($scorevars->newmodel,true);
-					$flag = "";
+                                        $flag = "";
                                         if($ptype=="C")
                                         {
                                                 $flag = "RENHIT";
-                                                $response = sendPostData("http://10.10.18.111:2211/jsScore",$newmodelJson);
+                                                $response = sendPostData("http://172.10.18.111:2211/jsScore",$newmodelJson);
                                         }
                                         else
                                         {
@@ -170,7 +170,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                         $score1 = json_decode($response,true);
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
-                                                $hit_log1 =$profileid;
+                                                $hit_log1 =$profileid."#".$newmodelJson;
                                                 $fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
                                                 passthru("echo '$hit_log1' >>/tmp/$fileName1");
 					}	
@@ -178,7 +178,7 @@ for($t=0;$t<count($ptype_arr);$t++)
                                                 $score1 =round($score1,0);
 					}
                                         // temporary_logging   
-                                        $hit_log = $flag."#".$profileid."#".$score1;
+                                        $hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
                                         $fileName ="score_hit_log".$date.".txt";
                                         passthru("echo '$hit_log' >>/tmp/$fileName");
                                 }

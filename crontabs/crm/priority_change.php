@@ -10,7 +10,7 @@ $start = @date('H:i:s');
 
 $dir ="/home/developer/jsdialer";
 include_once($dir.'/plugins/predis-1.1/autoload.php');
-$ifSingleRedis ='tcp://172.10.18.65:6380';
+$ifSingleRedis ='tcp://172.10.18.75:6380';
 
 // Redis Data fetch 
 $client = new Predis\Client($ifSingleRedis);
@@ -52,7 +52,7 @@ for($r=0;$r<count($pro_array);$r++)
 
 //Compute users who tried to pay in last one hour
 $pro_array2 = array();
-$sql2= "SELECT PROFILEID FROM billing.PAYMENT_HITS WHERE ENTRY_DT>DATE_SUB(now(),INTERVAL 1 HOUR) AND PROFILEID !=0";
+$sql2= "SELECT PROFILEID FROM billing.PAYMENT_HITS WHERE ENTRY_DT>DATE_SUB(now(),INTERVAL 1 HOUR) AND PAGE=2";
 $res2=mysql_query($sql2,$db_js) or die($sql2.mysql_error($db_js));
 while($myrow2 = mysql_fetch_array($res2))
 {
@@ -144,7 +144,7 @@ if(count($camp_array)>0)
                                         	$query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
 					else
 						$query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
-					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1' FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
+					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1',DNC_Status='' FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
 					$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
 					$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','M_A1')";
 				}
@@ -155,7 +155,7 @@ if(count($camp_array)>0)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
                                         else
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
-					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='2' FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='1'";
+					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='2',DNC_Status='' FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='1'";
 					$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
 					$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','2',now(),'P','$campaign_name','M_A0')";
 				}
@@ -175,7 +175,7 @@ if(count($camp_array)>0)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
                                         else
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
-					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1',LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
+					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1',DNC_Status='',LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
 					$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
 					$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','O_A1')";
 				}
@@ -201,7 +201,7 @@ if(count($camp_array)>0)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
                                         else
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
-					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1',LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
+					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1',DNC_Status='',LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
 					$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
 					$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','O_A0')";
 				}
@@ -258,7 +258,7 @@ if(count($camp_array)>0)
 					if($allocated)
 					{
 						$ds = 1;
-						$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='2' WHERE easycode='$ecode' and Dial_Status='1'";
+						$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='2',DNC_Status='' WHERE easycode='$ecode' and Dial_Status='1'";
 						mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer,1);
 						$query = "UPDATE easy.dbo.ph_contact SET priority = '$opriority' WHERE code='$ecode'";
 						mssql_query($query,$db_dialer) or logerror($query,$db_dialer,1);
@@ -298,7 +298,7 @@ if(count($camp_array)>0)
 				if($opriority>=0 && !in_array($profileid,$online_array) && $opriority!=$npriority)
 				{
 					$cnt3++;
-					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1' WHERE easycode='$ecode' and Dial_Status='2'";
+					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1',DNC_Status='' WHERE easycode='$ecode' and Dial_Status='2'";
 					mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer,1);
 					$query = "UPDATE easy.dbo.ph_contact SET priority = '$opriority' WHERE code='$ecode'";
 					mssql_query($query,$db_dialer) or logerror($query,$db_dialer,1);

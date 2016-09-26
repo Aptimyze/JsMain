@@ -122,7 +122,7 @@ class viewSimilarProfileAction extends sfActions
 		else
 		{
 			$this->Profile=new Profile("newjs_masterRep");
-			$this->Profile->getDetail($contactedProfileId,"PROFILEID");
+			$this->Profile->getDetail($contactedProfileId,"PROFILEID","*");
 			if($this->Profile->getUSERNAME()!=$contactedUsername)
 			{
 				ValidationHandler::getValidationHandler("","contact Id in view_similar_profile page is not correct as there is a mismatch in username and profile username:".$contact."not equals".$contactedUsername,"Y");
@@ -176,13 +176,23 @@ class viewSimilarProfileAction extends sfActions
 		$searchEngine = 'solr';
 		$outputFormat = 'array';
                 
+                $requestTimeout = 300;
                 if(JsConstants::$vspServer == 'live' && in_array($loggedinMod,$modResult)){
                     if($this->loginProfile->getGENDER() == 'M')
                       $feedURL = JsConstants::$vspMaleUrl;
                     else
                       $feedURL = JsConstants::$vspFemaleUrl;
-                    $postParams = json_encode(array("PROFILEID"=>$this->loggedInProfileid,"PROFILEID_POG"=>$this->Profile->getPROFILEID()));
-                    $profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams);
+                    $profileListObj = new IgnoredContactedProfiles();
+                    $ignoredContactedProfiles = $profileListObj->getProfileList($this->loginProfile->getPROFILEID(),'');
+                    $postParams = json_encode(array("PROFILEID"=>$this->loggedInProfileid,"PROFILEID_POG"=>$this->Profile->getPROFILEID(),'removeProfiles'=>$ignoredContactedProfiles));
+                    $profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams,$requestTimeout);
+                    if($profilesList === false){
+                        $date = date("Y-m-d");
+                        $file = fopen(sfConfig::get("sf_upload_dir")."/SearchLogs/vspTimedout_".$date.".txt","a");
+                        $stringToWrite = $this->loginProfile->getPROFILEID().",".$this->Profile->getPROFILEID().",".date("H:i:s",time());
+                        fwrite($file,$stringToWrite."\n");
+                        fclose($file);
+                    }
                     if($profilesList == "Error"){
                         $profileidsort='';
                         $this->similarPageShow=0;
@@ -312,7 +322,7 @@ class viewSimilarProfileAction extends sfActions
 		if(MobileCommon::isDesktop())
 		{
 			$vspObj = new ViewSimilarProfile();
-			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype);
+			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype,$this->loginProfile);
 			$this->defaultImage = $transformedResponse["defaultImage"];
 			$this->firstResponse = json_encode($transformedResponse);
 			

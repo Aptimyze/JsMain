@@ -41,8 +41,6 @@ class desktopView extends DetailedViewApi
     $this->m_arrOut['posted_name'] = $this->m_objProfile->getDecoratedPersonHandlingProfile();
     $this->m_arrOut['religion'] = $this->m_objProfile->getDecoratedReligion();
     $this->m_arrOut['income'] = $this->m_objProfile->getDecoratedIncomeLevel();
-    if( $this->m_objProfile->getMSTATUS() != "N")
-        $this->m_arrOut['have_child'] =  ApiViewConstants::$hasChildren[$this->m_objProfile->getHAVECHILD()];
     $this->m_arrOut['documents_provided'] = $this->m_objProfile->getDecoratedID_PROOF_TYP();
     $subscription = $this->getMembershipType();
     $this->m_arrOut['subscription_icon'] = $this->getFormattedSubscription($subscription);
@@ -677,6 +675,7 @@ class desktopView extends DetailedViewApi
 
       }
       $this->m_arrOut["verification_value"] = $this->verificationSeal;
+      $this->m_arrOut["verification_value_arr"] = array_unique($displaySeal);
 
     if($this->bResponseForEditView){
       $objEducation = $objProfile->getEducationDetail();

@@ -983,12 +983,24 @@ return pincodeValidator;
       {
         var name = this.getValue("name").replace(/\s{2,}/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 	inputData[this.inputFieldElement[0].formKey]=name;
-        nameValidator.prototype.parent.validate.call(this,name);
-        if(this.error)
-                return false;
-//check if the name entered has only alphabetic characters in it
-	if(name.length!=0 && !name_regex.test(name))
-		this.error=arrErors['NAME_ERROR'];
+        name_of_user = name.replace(/\./gi, " ");
+        name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
+        name_of_user = name_of_user.replace(/\,|\'/gi, "");
+        name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user)))
+	{
+                this.error = "Please provide a valid Full Name";
+		return false;
+        }
+	else
+	{
+                var nameArr = name_of_user.split(" ");
+                if(nameArr.length<2){
+                        this.error = "Please provide your first name along with surname, not just the first name";
+			return false;
+                }
+        }
         return true;
       }
    return nameValidator;

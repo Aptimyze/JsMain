@@ -1,228 +1,215 @@
 <html>
-<head>
-   <title>Jeevansathi.com - MIS</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link rel="stylesheet" href="jeevansathi.css" type="text/css">
-<style>
-DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
-</style>
-
-</head>
-<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<br><br>
-~if $flag eq '1'`
- <table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
-        <tr class="formhead" width="100%"><td align="center" colspan=14><a href="month_record_acc.php?checksum=~$checksum`">MAIN PAGE</a></td></tr>
-        <tr class="formhead">
-        <td colspan=100% align="center">RESULTS</td>
-        </tr>
-        <tr class="formhead">
-        <td colspan=100% align="center">&nbsp;~if $day` Day - ~/if`Month - Year : ~if $day`~$day`-~/if`~$month`-~$year`  to ~if $day2` Day - ~/if`Month - Year : ~if $day2`~$day2`-~/if`~$month2`-~$year2`</td>
-        </tr>
-        ~if $wtype eq 'E'`<tr class="formhead">
-        <td colspan=100% align="center">&nbsp;~$group`  ~$exec` </td>
-        </tr>
-	~/if`
-        </tr>
-        <tr class="formhead">
-        <td colspan=100% align="center">Total Amonut &nbsp;~$total_paid` &nbsp;(RS)</td>
-        </tr>
-	<tr class="fieldsnew">
-                <td align="center">
-                        <font color="red">
-                                Transaction Number is the number depending on mode of payment (eg: if MODE is EB_CASH, then TRANSACTION NUMBER is Easy Bill Reference ID)
-                        </font>
-                </td>
-        </tr>
+	<head>
+		<title>Jeevansathi.com - MIS</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link rel="stylesheet" href="jeevansathi.css" type="text/css">
+		<style>
+		DIV {position: relative; top: 45px; right:25px; color:yellow; visibility:hidden}
+		</style>
+	</head>
+	<body bgcolor="#ffffff" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+		<br><br>
+		~if $flag eq '1'`
+		<table width="100%" align="center" border=0 cellspacing=4 cellpadding=5>
+			<tr class="formhead" width="100%"><td align="center" colspan=14><a href="month_record_acc.php?checksum=~$checksum`">MAIN PAGE</a></td></tr>
+			<tr class="formhead">
+				<td colspan=100% align="center">RESULTS</td>
+			</tr>
+			<tr class="formhead">
+				<td colspan=100% align="center">&nbsp;~if $day` Day - ~/if`Month - Year : ~if $day`~$day`-~/if`~$month`-~$year`  to ~if $day2` Day - ~/if`Month - Year : ~if $day2`~$day2`-~/if`~$month2`-~$year2`</td>
+			</tr>
+			~if $wtype eq 'E'`<tr class="formhead">
+				<td colspan=100% align="center">&nbsp;~$group`  ~$exec` </td>
+			</tr>
+			~/if`
+		</tr>
+		<tr class="formhead">
+			<td colspan=100% align="center">Total Amonut &nbsp;~$total_paid` &nbsp;(RS)</td>
+		</tr>
+		<tr class="fieldsnew">
+			<td align="center">
+				<font color="red">
+				Transaction Number is the number depending on mode of payment (eg: if MODE is EB_CASH, then TRANSACTION NUMBER is Easy Bill Reference ID)
+				</font>
+			</td>
+		</tr>
 	</table>
-        <br>
-
-<table width=100% align=center>
-<tr class=label>
-	<td align="center" width=60 >&nbsp;Date</td>
-	<td align="center"   width=80>&nbsp;Name</td>
-	<td align="center" width=100>&nbsp;Bill No.</td>
-	<td align="center" width=50>&nbsp;Receipt No.</td>
-~if ($MODE neq 'CHEQUE'||$MODE eq 'GHAR_PAY_CHEQUE') && $MODE neq 'DD'`
-	<td align="center" width=77 >&nbsp;Mode</td>
-~/if`
-
-	<td align="center"   width=50>&nbsp;Cheque/DD No.</td>
-~if $MODE eq 'CHEQUE' || $MODE eq 'DD' || $MODE eq 'GHAR_PAY_CHEQUE'`
-	<td align="center"   width=120>&nbsp;Cheque/DD Date</td>
-	<td align="center"   width=117>&nbsp;Cheque/DD City</td>
-	<td align="center"   width=200>&nbsp;Cheque Bank</td>
-~/if`
-	<td align="center" width=53 >&nbsp;Amount</td>
-	<td align="center" width=50>&nbsp;Center</td>
-	<td align="center" width=50>&nbsp;Deposit-Branch</td>
-	<td align="center" width=50>&nbsp;Entry-By</td>
-	<td align="center" width=50>&nbsp;Transaction Number</td>
-</tr>
-</table>
-~section name=sec loop=$arr`
-<table width=100% align=center>
-<tr class=fieldsnew>
-	<td align=center width=50 >&nbsp;~$arr[sec].entry_dt`</td>
-	<td align=center   width=80>&nbsp;~$arr[sec].username`</td>
-	<td align=center width=100>&nbsp;~$arr[sec].billid`</td>
-	<td align=center width=50>&nbsp;~$arr[sec].receiptid`</td>
-
-~if ($MODE neq 'CHEQUE'||$MODE eq 'GHAR_PAY_CHEQUE') && $MODE neq 'DD'`
-<td align="center" width=77 >&nbsp;~$arr[sec].mode`</td>
-~/if`
-
-	<td align="center"   width=50>&nbsp;~$arr[sec].cd_num`</td>
-~if $MODE eq 'CHEQUE' || $MODE eq 'DD' || $MODE eq 'GHAR_PAY_CHEQUE'`
-	<td align="center"   width=120>&nbsp;~$arr[sec].cd_dt`</td>
-	<td align="center"   width=117>&nbsp;~$arr[sec].cd_city`</td>
-	<td align="center"   width=200>&nbsp;~$arr[sec].bank`</td>
-~/if`
-	<td align="center" width=53 >&nbsp;~$arr[sec].type`.~$arr[sec].amt_paid`</td>
-	<td align="center" width=50>&nbsp;~$arr[sec].center`</td>
-	<td align="center" width=50>&nbsp;~$arr[sec].deposit_branch`</td>
-	<td align="center" width=50>&nbsp;~$arr[sec].entryby`</td>
-	<td align="center" width=50>&nbsp;~$arr[sec].transaction_number`</td>
-</tr>
-</table>
-~/section`
-<br>
-~else`
-<h4><center> Please don't give a range more than one month</center></h4>
+	<br>
+	<table width=100% align=center>
+		<tr class=label>
+			<td align="center" style="width:100px;">&nbsp;Date</td>
+			<td align="center" style="width:100px;">&nbsp;Name</td>
+			<td align="center" style="width:100px;">&nbsp;Bill No.</td>
+			<td align="center" style="width:100px;">&nbsp;Receipt No.</td>
+			~if ($MODE neq 'CHEQUE'||$MODE eq 'GHAR_PAY_CHEQUE') && $MODE neq 'DD'`
+			<td align="center" style="width:100px;">&nbsp;Mode</td>
+			~/if`
+			<td align="center" style="width:100px;">&nbsp;Cheque/DD No.</td>
+			~if $MODE eq 'CHEQUE' || $MODE eq 'DD' || $MODE eq 'GHAR_PAY_CHEQUE'`
+			<td align="center" style="width:100px;">&nbsp;Cheque/DD Date</td>
+			<td align="center" style="width:100px;">&nbsp;Cheque/DD City</td>
+			<td align="center" style="width:100px;">&nbsp;Cheque Bank</td>
+			~/if`
+			<td align="center" style="width:100px;">&nbsp;Amount</td>
+			<td align="center" style="width:100px;">&nbsp;Center</td>
+			<td align="center" style="width:100px;">&nbsp;Deposit-Branch</td>
+			<td align="center" style="width:100px;">&nbsp;Entry-By</td>
+			<td align="center" style="width:100px;">&nbsp;Transaction Number</td>
+		</tr>
+		~section name=sec loop=$arr`
+		<tr class=fieldsnew>
+			<td align=center style="width:100px;">&nbsp;~$arr[sec].entry_dt`</td>
+			<td align=center style="width:100px;">&nbsp;~$arr[sec].username`</td>
+			<td align=center style="width:100px;">&nbsp;~$arr[sec].billid`</td>
+			<td align=center style="width:100px;">&nbsp;~$arr[sec].receiptid`</td>
+			~if ($MODE neq 'CHEQUE'||$MODE eq 'GHAR_PAY_CHEQUE') && $MODE neq 'DD'`
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].mode`</td>
+			~/if`
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].cd_num`</td>
+			~if $MODE eq 'CHEQUE' || $MODE eq 'DD' || $MODE eq 'GHAR_PAY_CHEQUE'`
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].cd_dt`</td>
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].cd_city`</td>
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].bank`</td>
+			~/if`
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].type`.~$arr[sec].amt_paid`</td>
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].center`</td>
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].deposit_branch`</td>
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].entryby`</td>
+			<td align="center" style="width:100px;">&nbsp;~$arr[sec].transaction_number`</td>
+		</tr>
+		~/section`
+	</table>
+	<br>
+	~else`
+	<h4><center> Please don't give a range more than one month</center></h4>
 	<form method=post action="month_record_acc.php">
-	<table width=80% border=0 align="center" cellpadding=5>
-	<tr>
-	<td>&nbsp;
-		<select name="date_wise">
-			<option value="entry_dt">Entry Date</option>
-			<option value="deposit_dt">Deposit Date</option>
-		</select>
-	</td>
-	<td>
-		FROM&nbsp;
-		<select name="day">
-		~section name=dd loop=$ddarr`
-			<option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
-		~/section`
-		</select>
-		<select name="month">
-		~section name=mon loop=$mmarr`
-			<option value=~$mmarr[mon]` ~if $cur_month eq $mmarr[mon]` selected ~/if`>~$mmarr[mon]`</option>
-		~/section`
-		</select> - 
-		<select name="year">
-		~section name=yr loop=$yyarr`
-			<option value=~$yyarr[yr]` ~if $cur_year eq $yyarr[yr]` selected ~/if`>~$yyarr[yr]`</option>
-		~/section`
-		</select>
-	</td>
-        <td colspan=2>TO&nbsp;
-		<select name="day2">
-		~section name=dd loop=$ddarr`
-			<option value=~$ddarr[dd]` ~if $cur_day eq $ddarr[dd]` selected ~/if`>~$ddarr[dd]`</option>
-		~/section`
-		</select>
-		<select name="month2">
-		~section name=mon loop=$mmarr`
-			<option value=~$mmarr[mon]` ~if $cur_month eq $mmarr[mon]` selected ~/if`>~$mmarr[mon]`</option>
-		~/section`
-		</select> -
-		<select name="year2">
-		~section name=yr loop=$yyarr`
-			<option value=~$yyarr[yr]` ~if $cur_year eq $yyarr[yr]` selected ~/if`>~$yyarr[yr]`</option>
-		~/section`
-		</select>
-        </td>
-	</tr>
-	</table>
-	<table width=80% border=0 align="center" cellpadding=5>
-	<tr>
-	<td><br>&nbsp; Select Payment-Mode <br></td>
-	<td><br>
-	<select name="mode">
-                <option value="CHEQUE">Cheque</option>
-		<option value="GHAR_PAY_CHEQUE">Ghar Pay Cheque</option>
-                <option value="CASH">Cash</option>
-		<option value="GHAR_PAY_CASH">Ghar Pay Cash</option>
-                <option value="DD">Demand/Draft</option>
-		<option value="CCOFFLINE">CCOFFLINE</option>
-                <option value="ONLINE">Online</option>
-		<option value="BANK_TRSFR_CHQ">Bank Transfer Cheque</option>
-		<option value="BANK_TRSFR_CASH">Bank Transfer Cash</option>
-		<option value="BANK_TRSFR_ONLINE">Bank Transfer Online</option>
-		<option value="BLUEDART_COD">BlueDart Cash on Delivery</option>
-		<option value="EB_CASH">Easy Bill Cash</option>
-		<option value="EB_CHEQUE">Easy Bill Cheque</option>
-		<option value="ALL_CASH">All Cash</option>
-		<option value="ALL_CHEQUE">All Cheque</option>
-		<option value="ALL_ONLINE">All Online</option>
-		<option value="IVR">IVR</option>
-		<option value="TT">TT</option>
-                <option value="">All</option>
-        </select>
-	<br></td>
-	</tr>
-
-	<tr>
-        <td><br>&nbsp; Select Status-Mode  <br></td>
-        <td><br>
-        <select name="mode2">
-                <option value="DONE">Done</option>
-                <option value="REFUND">Refund</option>
-                <option value="ACTUAL">Actual</option>
-        </select>
-        <br></td>
-        </tr>
-	
-	
-	<tr>
-	<td><br>&nbsp; Select Branch 
-<br></td>
-	<td><br>
-	<select name="branch">
-              ~if $VIEWALL eq 'Y'` <option value="">All</option>~/if`
-		~section name=sec loop=$brancharr`
-                <option value="~$brancharr[sec]`">~$brancharr[sec]`</option>
-		~/section`
-        </select>
-	<br></td>
-	<td><br>&nbsp; Branch type<br></td>
-        <td><br>
-        <select name="BRANCH_TYPE">
-                <option value="DEPOSIT_BRANCH" selected>Deposit Branch</option>
-        </select>
-        <br></td>
-
-	</tr>
-	<tr>
-
-	<tr>
-        <td><br>&nbsp; Select Executive<br></td>
-        <td><br>
-        <select name="exec">
-		~if $VIEWALL eq 'Y'` <option value="">All</option>~/if`
-                ~section name=sec loop=$usernamearr`
-                <option value="~$usernamearr[sec]`">~$usernamearr[sec]`</option>
-                ~/section`
-        </select>
-        <br></td>
-       	<td><br>&nbsp; Group By<br></td>
-        <td><br>
-        <select name="group">
-                <option value="WALKIN" >Walk in</option>
-                <option value="ENTRYBY" selected>Entry By</option>
-                <option value="ALLOTED_TO">Alloted To</option>
-        </select>
-        <br></td>
-
-	 </tr>
-        
-	<tr>
-	<input type="hidden" name="checksum" value=~$checksum`>
-	<td align=center><br><input type="submit" name="CMDGo" value="     Go     "></td>
-	</tr>
-	</table>
-	</form>
-~/if`
-</body>
+		<table width=80% border=0 align="center" cellpadding=5>
+			<tr>
+				<td>&nbsp;
+					<select name="date_wise">
+						<option value="entry_dt">Entry Date</option>
+						<option value="deposit_dt">Deposit Date</option>
+					</select>
+				</td>
+				<td>
+					FROM&nbsp;
+					<select name="day">
+						~section name=dd loop=$ddarr`
+						<option value=~$ddarr[dd]`>~$ddarr[dd]`</option>
+						~/section`
+					</select>
+					<select name="month">
+						~section name=mon loop=$mmarr`
+						<option value=~$mmarr[mon]` ~if $cur_month eq $mmarr[mon]` selected ~/if`>~$mmarr[mon]`</option>
+						~/section`
+					</select> -
+					<select name="year">
+						~section name=yr loop=$yyarr`
+						<option value=~$yyarr[yr]` ~if $cur_year eq $yyarr[yr]` selected ~/if`>~$yyarr[yr]`</option>
+						~/section`
+					</select>
+				</td>
+				<td colspan=2>TO&nbsp;
+					<select name="day2">
+						~section name=dd loop=$ddarr`
+						<option value=~$ddarr[dd]` ~if $cur_day eq $ddarr[dd]` selected ~/if`>~$ddarr[dd]`</option>
+						~/section`
+					</select>
+					<select name="month2">
+						~section name=mon loop=$mmarr`
+						<option value=~$mmarr[mon]` ~if $cur_month eq $mmarr[mon]` selected ~/if`>~$mmarr[mon]`</option>
+						~/section`
+					</select> -
+					<select name="year2">
+						~section name=yr loop=$yyarr`
+						<option value=~$yyarr[yr]` ~if $cur_year eq $yyarr[yr]` selected ~/if`>~$yyarr[yr]`</option>
+						~/section`
+					</select>
+				</td>
+			</tr>
+		</table>
+		<table width=80% border=0 align="center" cellpadding=5>
+			<tr>
+				<td><br>&nbsp; Select Payment-Mode <br></td>
+				<td><br>
+					<select name="mode">
+						<option value="CHEQUE">Cheque</option>
+						<option value="GHAR_PAY_CHEQUE">Ghar Pay Cheque</option>
+						<option value="CASH">Cash</option>
+						<option value="GHAR_PAY_CASH">Ghar Pay Cash</option>
+						<option value="DD">Demand/Draft</option>
+						<option value="CCOFFLINE">CCOFFLINE</option>
+						<option value="ONLINE">Online</option>
+						<option value="BANK_TRSFR_CHQ">Bank Transfer Cheque</option>
+						<option value="BANK_TRSFR_CASH">Bank Transfer Cash</option>
+						<option value="BANK_TRSFR_ONLINE">Bank Transfer Online</option>
+						<option value="BLUEDART_COD">BlueDart Cash on Delivery</option>
+						<option value="EB_CASH">Easy Bill Cash</option>
+						<option value="EB_CHEQUE">Easy Bill Cheque</option>
+						<option value="ALL_CASH">All Cash</option>
+						<option value="ALL_CHEQUE">All Cheque</option>
+						<option value="ALL_ONLINE">All Online</option>
+						<option value="IVR">IVR</option>
+						<option value="TT">TT</option>
+						<option value="">All</option>
+					</select>
+				<br></td>
+			</tr>
+			<tr>
+				<td><br>&nbsp; Select Status-Mode  <br></td>
+				<td><br>
+					<select name="mode2">
+						<option value="DONE">Done</option>
+						<option value="REFUND">Refund</option>
+						<option value="ACTUAL">Actual</option>
+					</select>
+				<br></td>
+			</tr>
+			<tr>
+				<td><br>&nbsp; Select Branch
+				<br></td>
+				<td><br>
+					<select name="branch">
+						~if $VIEWALL eq 'Y'` <option value="">All</option>~/if`
+						~section name=sec loop=$brancharr`
+						<option value="~$brancharr[sec]`">~$brancharr[sec]`</option>
+						~/section`
+					</select>
+				<br></td>
+				<td><br>&nbsp; Branch type<br></td>
+				<td><br>
+					<select name="BRANCH_TYPE">
+						<option value="DEPOSIT_BRANCH" selected>Deposit Branch</option>
+					</select>
+				<br></td>
+			</tr>
+			<tr>
+				<tr>
+					<td><br>&nbsp; Select Executive<br></td>
+					<td><br>
+						<select name="exec">
+							~if $VIEWALL eq 'Y'` <option value="">All</option>~/if`
+							~section name=sec loop=$usernamearr`
+							<option value="~$usernamearr[sec]`">~$usernamearr[sec]`</option>
+							~/section`
+						</select>
+					<br></td>
+					<td><br>&nbsp; Group By<br></td>
+					<td><br>
+						<select name="group">
+							<option value="WALKIN" >Walk in</option>
+							<option value="ENTRYBY" selected>Entry By</option>
+							<option value="ALLOTED_TO">Alloted To</option>
+						</select>
+					<br></td>
+				</tr>
+				
+				<tr>
+					<input type="hidden" name="checksum" value=~$checksum`>
+					<td align=center><br><input type="submit" name="CMDGo" value="     Go     "></td>
+				</tr>
+			</table>
+		</form>
+		~/if`
+	</body>
 </html>

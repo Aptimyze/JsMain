@@ -492,14 +492,14 @@
                 <i class="newSprt newSprt_3">
                 </i>
                 <div class="fullwid txtc pt10 f16 fontlig">
-                    View phone numbers of the members
+                    View contact details of the members
                 </div>
             </div>
             <div class="disp_ib memPadNew">
                 <i class="newSprt newSprt_4">
                 </i>
                 <div class="fullwid txtc pt10 f16 fontlig">
-                    Show your phone numbers to other members
+                    Show your contact details to other members
                 </div>
             </div>
             <div class="fr cursp pt10 f16 fontlig" id="scrollTop">
@@ -703,12 +703,12 @@
         });
         $("#knowMore").on("click", function () {
             $("html, body").animate({
-                scrollTop: $("#whyPaidDiv").prop('scrollHeight') + 650
+                scrollTop: $("#whyPaidDiv").prop('scrollHeight') + 800
             }, 1000);
         });
         $("#landJSExc").on("click", function () {
             $("html, body").animate({
-                scrollTop: $("#jsExclusiveDiv").prop('scrollHeight') + 300
+                scrollTop: $("#jsExclusiveDiv").prop('scrollHeight') + 360
             }, 1000);
         });
     });

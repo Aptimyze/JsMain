@@ -68,7 +68,7 @@ EOF;
                                 CommonUtility::sendCurlGetRequest($url);   
                         }
                             
-			$deletedHiddenProfilesObj = new newjs_HIDDEN_DELETED_PROFILES();
+			$deletedHiddenProfilesObj = new newjs_HIDDEN_DELETED_PROFILES('newjs_masterDDL');
                         $profilesArr = $deletedHiddenProfilesObj->getProfiles();
                         if($profilesArr)
 			{

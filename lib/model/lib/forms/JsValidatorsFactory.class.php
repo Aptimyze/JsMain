@@ -91,6 +91,9 @@ class JsValidatorsFactory {
 			break;
 		case 'password':
 			return new jsValidatorPassword(array('min_length'=>8,'email'=>@$form_values['email']),array('required' => $defaultMsg));
+		case 'name_of_user':
+			return new jsValidatorNameOfUser(array('required'=>true,'nameOfUser'=>@$form_values['name_of_user']));
+			break;
 		case 'pin':
 		{
 			return new jsValidatorPincode(array('required'=>false,'city'=>$form_values['city_res']));		

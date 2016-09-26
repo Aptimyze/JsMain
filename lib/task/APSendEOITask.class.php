@@ -6,6 +6,7 @@
  * @package    jeevansathi
  * @author     Hemant Agrawal
  */
+ini_set('memory_limit','256M');
 class APSendEOITask extends sfBaseTask
 {
 	private $errorMsg;
@@ -134,7 +135,7 @@ EOF;
                                     
                                     //profiles registered 7 days before
                                      $verifiedProfilesDate = date('Y-m-d h:m:s', strtotime('-'.$this->verifyActiveDays.' days'));
-                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,$verifiedProfilesDate);
+                                     $partnerMatchesArr = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$this->removeFilteredProfiles,$searchMutualMatches,'','',$notInProfiles,'',$verifiedProfilesDate);
                                      $resultArr = $partnerMatchesArr;
                                      $dppLoop++; 
                                 }
@@ -216,7 +217,8 @@ EOF;
 		
 		// if script completes successfully send mail
                 SendMail::send_email("ankitshukla125@gmail.com","$todaysSentContacts Auto Contacts sent out for $alreadySentCount users","Auto Contacts cron completed");
-                $tempProfileRecords->delete();
+                $ApProfileInfoLogDDL = new ASSISTED_PRODUCT_AP_PROFILE_INFO_LOG('newjs_masterDDL');
+                $ApProfileInfoLogDDL->delete();
 		echo "EOI's sent for ".$alreadySentCount." Profiles";
 		
 		

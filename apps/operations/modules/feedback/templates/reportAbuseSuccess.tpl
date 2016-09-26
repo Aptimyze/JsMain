@@ -1,7 +1,7 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporteeEmail'></td><td class='RAreporter'></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td></tr>";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='RAreportee'></td><td class='RAreporteeEmail'></td><td class='RAreporter'></td><td class='RAreporterEmail'></td><td class='RAcategory'></td><td class='RAOther'></td><td class='RADate'></td><td class='RACount'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
@@ -12,6 +12,7 @@
 		tempHtml.find('.RAcategory').text(rowJson.reason);
 		tempHtml.find('.RAOther').text(rowJson.comments);
 		tempHtml.find('.RADate').text(rowJson.timestamp);
+		tempHtml.find('.RACount').text(rowJson.count);
 		return tempHtml;
 
 	}
@@ -84,7 +85,7 @@
 				{	
 					var mainDiv=$("#RAMainTable");
 					mainDiv.find('.RARowHtml').remove();
-					if(response=='null'){
+					if(!response){
 							$("#dateError3").show();
 							return;
 
@@ -168,6 +169,8 @@
 <td>CATEGORY</td>
 <td>OTHER REASON</td>
 <td>DATE</td>
+<td>COUNT</td>
+
 </tr>
 
 </table>

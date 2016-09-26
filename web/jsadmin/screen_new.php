@@ -30,6 +30,9 @@ global $FLAGS_VAL;
 $dbObj = new newjs_OBSCENE_WORDS();
 global $obscene;
 $obscene = $dbObj->getObsceneWord();
+
+$nameOfUserObj = new NameOfUser;
+
 if (authenticated($cid)) {
 	$user = getname($cid);
 	//Memcache functionality added by Vibhor for avoiding users to refresh the page using F5
@@ -199,10 +202,9 @@ if (authenticated($cid)) {
 							*/
 							else {
 								$str.= $NAME[$i] . " = '" . addslashes(stripslashes($_POST[$NAME[$i]])) . "' ,";
-								$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($_POST[$NAME[$i]]));
+								$arrProfileUpdateParams[$NAME[$i]] = $_POST[$NAME[$i]];
 							}
 						}
-						
 						if ($NAME[$i] == "YOURINFO") {
 							if(strlen($_POST[$NAME[$i]])<100){
 								
@@ -230,7 +232,7 @@ if (authenticated($cid)) {
 					}
 						
 				}
-			}
+			}		
 				if ($_POST['PHONE_FLAG'] == "I") phoneUpdateProcess($pid, '', '', 'I', 'OPS', $user);
 				if ($fullname) $str_name = "NAME=" . "'" . addslashes(stripslashes($_POST[$fullname])) . "'";
 				if ($str_name) $count_screen = count($NAME) + 1;
@@ -333,7 +335,6 @@ if (authenticated($cid)) {
         $objUpdate = JProfileUpdateLib::getInstance();
         //JPROFILE Columns
         $arrProfileUpdateParams['SCREENING']= $screen;
-        
 				if ($str_edu) {         
 					//$sql_ed = "UPDATE newjs.JPROFILE_EDUCATION set $str_edu where PROFILEID=$pid";
 					//mysql_query_decide($sql_ed) or die("$sql_ed" . mysql_error_js()."at line 278");
@@ -372,6 +373,7 @@ if (authenticated($cid)) {
 				if ($fullname) {
 					$fname = addslashes(stripslashes($_POST[$fullname]));
 					$sql_name = "UPDATE incentive.NAME_OF_USER set NAME='$fname' where PROFILEID=$pid";
+                                        $nameOfUserObj->removeNameFromCache($pid);
 					mysql_query_decide($sql_name) or die("$sql_name" . mysql_error_js());
 				}
         if ($verify_email) {
@@ -399,6 +401,8 @@ if (authenticated($cid)) {
           else {
             $updateFTOState = 0;
           }
+					$addInUserCreation = 1; //Adding entry in chat user
+
 					//Adding entry to bot_jeevansathi.MAIL_INVITE table if email of gmail
 					//Required to give them gmail chat invite
 					//if(strstr($to_notify,'@gmail.com') && $service_mes=='S')
@@ -436,6 +440,7 @@ if (authenticated($cid)) {
           $action = FTOStateUpdateReason::SCREEN;
           $profileObj->getPROFILE_STATE()->updateFTOState($profileObj,$action);
         }
+
 				//Log modified values
 				$log_name = $name;
 				$log_val = array();
@@ -992,8 +997,8 @@ if (authenticated($cid)) {
 			$social_new_fields['FAV_VAC_DEST']['LABEL'] = 'Favourite Vacation Destination';
 			//defining allowed continuous number's limit.
 			$allowed_cont_num_len = 6;
-			if ($val == "new") $item = array("GENDER", "MSTATUS", "DTOFBIRTH", "PHOTO_DISPLAY");
-			else $item = array("GENDER", "PHOTO_DISPLAY");
+			if ($val == "new") $item = array("GENDER", "MSTATUS", "DTOFBIRTH");
+			else $item = array("GENDER");
 			foreach ($social_new_fields as $key => $value) {
 				if (!isFlagSet($key, $screen)) {
 					switch ($value['TBL']) {

@@ -77,8 +77,15 @@ class CancelAccept extends ContactEvent{
     $this->contactHandler->getContactObj()->setSEEN(Contacts::NOTSEEN);
     $this->contactHandler->getContactObj()->updateContact();
     $this->handleMessage();
+    //Remove from acceptance roster
+    $producerObj=new Producer();
+    if($producerObj->getRabbitMQServerConnected())
+    {
+      $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'CANCEL', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID()),"username"=>$this->contactHandler->getViewed()->getUSERNAME()))), 'redeliveryCount' => 0);
+      $producerObj->sendMessage($chatData);
+    }
 
-    //    $this->updateContactSeen();//
+    //    $this->updateContactSeen();
     $this->sendMail();
   }
   /**

@@ -62,6 +62,7 @@ class JsConstants
 	public static $alertSymfonyRoot   = '/var/www/htmlrevamp/ser6/branches/milestoneConfig';
 	public static $userHome           = '/home/developer';
 	public static $alertServerEnable  = 1;
+	public static $stopOnPeakLoad     = 1;
         
         /* Vsp URL */
 	public static $vspMaleUrl           = 'http://maleapi.analytics.resdex.com:9000/ecpRecommendations_live';
@@ -159,6 +160,11 @@ class JsConstants
         public static $redisCluster = ['tcp://172.10.18.61:7000','tcp://172.10.18.62:7000','tcp://172.10.18.63:7000','tcp://172.10.18.64:7000','tcp://172.10.18.65:7000','tcp://172.10.18.64:7005'];
         public static $redisSentinel = ['tcp://172.10.18.65:26379', 'tcp://172.10.18.64:26379','tcp://172.10.18.70:26379'];
         public static $ifSingleRedis = 'tcp://172.10.18.65:6379';
+        
+    /***openfire config for chat**/
+    public static $openfireConfig = array('HOST'=>'localhost','WSPORT'=>'7070','SERVER_NAME'=>'localhost');
+    public static $openfireConfigInternal = array('HOST'=>'localhost','PORT'=>'9090','SERVER_NAME'=>'localhost');
+    public static $openfireRestAPIKey = "MhXPRu3f4Aw07EbR";
 		/*public static $ifSingleRedis = array(
 		'scheme'   => 'tcp',
 		'host'     => '127.0.0.1',
@@ -169,7 +175,7 @@ class JsConstants
 	 public static $usePhotoDistributed = 0;
   public static $photoServerName='JSPIC1';
 	public static $photoServerShardingEnums = array("JSPIC1","JSPIC2","JSPIC3");
-
-	
 	public static $communicationRep = true;
+    public static $jsChatFlag = 1; //1=enable chat, 0=disable chat
+        public static $communicationServiceUrl = "http://192.168.120.70:8290";
 }

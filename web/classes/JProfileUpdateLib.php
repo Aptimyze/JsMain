@@ -87,7 +87,7 @@ class JProfileUpdateLib
   {
     $this->currentDBName = $dbname;
     $this->objJProfileStore = new JPROFILE($dbname);
-    $this->objProfileEducationStore = new NEWJS_JPROFILE_EDUCATION($dbname);
+    $this->objProfileEducationStore = ProfileEducation::getInstance($dbname);
     $this->objProfileContactStore = new NEWJS_JPROFILE_CONTACT($dbname);
     $this->objProfileHobbyStore = new NEWJS_HOBBIES($dbname);
     $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
@@ -146,7 +146,7 @@ class JProfileUpdateLib
     if(self::$instance->currentDBName !== $dbname) {
       self::$instance->currentDBName = $dbname;
       self::$instance->objJProfileStore->setConnection($dbname);
-      self::$instance->objProfileEducationStore->setConnection($dbname);
+      self::$instance->objProfileEducationStore = ProfileEducation::getInstance($dbname);
       self::$instance->objProfileContactStore->setConnection($dbname);
       self::$instance->objProfileHobbyStore->setConnection($dbname);
       self::$instance->objProfileNTimesStore->setConnection($dbname);
@@ -426,6 +426,66 @@ class JProfileUpdateLib
   {
     try {
       return $this->objProfileAlertStore->update($iProfileID,$szKey,$szValue);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * Function to remove Cache of specified profileid or array of profileid
+   * @param $Var
+   * @return bool
+   */
+  public function removeCache($Var)
+  {
+    try {
+      ProfileCacheLib::getInstance()->removeCache($Var);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**	
+   * @param $iProfileID
+   * @return bool|void
+   */
+  public function deactiveSingleProfile($iProfileID)
+  {
+    try {
+      return $this->objJProfileStore->Deactive($iProfileID);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * @param $privacy
+   * @param $profileid
+   * @param $dayinterval
+   * @return bool|void
+   */
+  public function updateHideJPROFILE($privacy, $profileid, $dayinterval)
+  {
+    try {
+      return $this->objJProfileStore->updateHide($privacy, $profileid, $dayinterval);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * @param $privacy
+   * @param $profileid
+   * @return bool|void
+   */
+  public function updateUnHideJPROFILE($privacy, $profileid)
+  {
+    try {
+      return $this->objJProfileStore->updateUnHide($privacy, $profileid);
     } catch (Exception $ex) {
       jsCacheWrapperException::logThis($ex);
       return false;

@@ -349,7 +349,10 @@ function ccTupleResultMapping(val,profileIDNo,viewProfilePageParams) {
 			personalizedmessage=readMore(personalizedmessage,profileIDNo)
 			
 		}
-			
+                
+		if(val.name_of_user!='' && val.name_of_user!=null)
+			val.username = val.name_of_user;
+                
 		var mapping = {
 				'{ccTupleImage}': removeNull(val.profilepic120url),
 				'{ccTupleIDNo}': removeNull(profileIDNo), 
@@ -442,7 +445,16 @@ function ccTupleInnerContentResultMapping(val,profileIDNo) {
 		}
 		else
 		{		
-				var casteStr = (val.caste).substr((val.caste).indexOf(":") + 1);
+			var casteStr;	
+			if(val.caste == val.religion)
+			{
+				casteStr = ''; 
+			}
+			else
+			{
+				casteStr = (val.caste).substr((val.caste).indexOf(":") + 1);
+				casteStr = ", "+casteStr;
+			}
 				
 				//for dev environment only
 				if(val.income =="undefined" || val.income == null)
@@ -672,6 +684,7 @@ function showCCLoader(type)
 	else
 	{
 		$('#ccResultsLoaderTop').hide();
+		setTimeout(function(){hidePersonalisedMessage();},100);
 	}
 }
 
@@ -862,24 +875,30 @@ $(document).ready(function() {
 			window.location.href = vspRedirectUrl;
 		});
 
-			$(".js-hideDetail").each(function(index, element) {
-				data = $(element).html();
-				if(data != ""){
-					if(data.match(emailReg) != null){
-						matchedStr = data.match(emailReg);
-						$.each(matchedStr, function(index, value){
-							data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Email visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
-						});
-						$(element).html(data);
-					}
-					if(data.match(phoneReg) != null){
-						matchedStr = data.match(phoneReg);
-						$.each(matchedStr, function(index, value){
-							data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Phone number visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
-						});
-						$(element).html(data);
-					}
-				}
-        	});
+			hidePersonalisedMessage();
 	});
 
+function hidePersonalisedMessage()
+{
+	$(".js-hideDetail").each(function(index, element) {
+		data = $(element).html();
+		if(data != ""){
+			if(data.match(emailReg) != null){
+				matchedStr = data.match(emailReg);
+				$.each(matchedStr, function(index, value){
+					data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Email visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+				});
+				$(element).html(data);
+			}
+			if(data.match(phoneReg) != null){
+				matchedStr = data.match(phoneReg);
+				$.each(matchedStr, function(index, value){
+					data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Phone number visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+				});
+				$(element).html(data);
+			}
+		}
+	});
+
+
+}

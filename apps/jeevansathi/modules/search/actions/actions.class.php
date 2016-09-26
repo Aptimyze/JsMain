@@ -1554,7 +1554,7 @@ class searchActions extends sfActions
 						$noCasteMapping = 1;
 						$hideFeatureProfile = 1;
 					}
-					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1)
+					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1 || $request->getParameter("searchBasedParam") == "matchalerts")
 					{
 						$noRelaxation = 1;
 						$noCasteMapping = 1;
@@ -1569,7 +1569,10 @@ class searchActions extends sfActions
 					}
 					if($request->getParameter("kundlialerts") == 1 || $request->getParameter("searchBasedParam")=='kundlialerts'){
 						$results_orAnd_cluster = "onlyResults";
+						$noRelaxation = 1;
+						$noCasteMapping = 1;
 					}
+					
 					/** Auto Relaxation Section
 					* increasing search results by changing some search paramters
 					*/
@@ -1627,7 +1630,7 @@ class searchActions extends sfActions
 				{
 					$this->searchId = $this->logAndCacheSearchResults($loggedInProfileObj,$SearchParamtersObj,$beforeFeaturedResonseObj,$noCache);
 				}
-																
+							
 				if($request->getParameter("showFeaturedProfiles") && $request->getParameter("showFeaturedProfiles")>0)
 								$responseObj = $this->SearchChannelObj->showFeaturedProfile($featuredProfile,$currentPageFeatured,$loggedInProfileObj,$SearchParamtersObj,$responseObj,$SearchServiceObj,$request->getParameter("showFeaturedProfiles"),$this->searchId,$this);
 				/* Format Clusters as Required */
@@ -1651,6 +1654,7 @@ class searchActions extends sfActions
 				$this->paginationArr = CommonUtility::pagination($currentPage,$responseObj->getTotalResults(),$SearchParamtersObj);
 				$this->currentPage = $currentPage;
 				$this->noOfResults = $responseObj->getTotalResults();
+				
 				$this->noOfPages = max($this->paginationArr);
                                 if(!$relaxCriteria)
                                         $relaxCriteria="";
@@ -1658,7 +1662,7 @@ class searchActions extends sfActions
                                 
                                 $SearchApiStrategy = SearchApiStrategyFactory::getApiStrategy('V1',$responseObj,$results_orAnd_cluster);
                                 $resultArr = $SearchApiStrategy->convertResponseToApiFormat($loggedInProfileObj,$this->searchClustersArray,$this->searchId,$SearchParamtersObj,$this->relaxedResults,$this->moreProfiles,$this->casteSuggestMessage,$currentPage,$this->noOfPages,$request,$relaxCriteria);
-			
+				
 				if($resultArr["no_of_results"]==0)
 				{
                                         $statusArr = $this->SearchChannelObj->searchZeroResultMessage();

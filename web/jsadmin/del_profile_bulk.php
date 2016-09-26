@@ -16,7 +16,7 @@ $data=authenticated($cid);
 if($data)
 {
 $name=getname($cid);
-$db=connect_db();
+$db=connect_ddl();
 if($send)
 {
 	$cnt++;
@@ -121,6 +121,8 @@ elseif($confirm)
 	        	if($producerObj->getRabbitMQServerConnected())
 				{
 					$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profile)), 'redeliveryCount'=>0 );
+					$producerObj->sendMessage($sendMailData);
+					$sendMailData = array('process' =>'USER_DELETE','data' => ($profile), 'redeliveryCount'=>0 );
 					$producerObj->sendMessage($sendMailData);
 				}
 				else

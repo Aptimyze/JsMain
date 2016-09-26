@@ -260,10 +260,13 @@ class seoActions extends sfActions
     
     public function execute404(sfWebRequest $request) {
         //JsCommon::SeoFooter($this);
+         $specificDomain = explode('/',$request->getUri());
+    $segregateCode = $specificDomain[3]; 
         sfContext::getInstance()->getResponse()->setStatusCode(404, 'Not Found');
         if (MobileCommon::isMobile()) {
             $this->forward("static", "page404");
         }
+        LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array(LoggingEnums::MESSAGE => $request->getUri(), LoggingEnums::MODULE_NAME => LoggingEnums::EX404."_".$segregateCode));
     }
     
     function TopSearchBandFields() {

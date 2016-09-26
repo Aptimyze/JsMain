@@ -112,14 +112,14 @@ window.onload=function(){
                         <li tabindex="1"><a id="homepageLink" href="~if $loggedIn`/myjs/jspcPerform~else`/~/if`">HOME</a></li>
                         <li tabindex="1" class="ml13"> <a class="drop" href="/search/index">MATCHES</a>
                             <ul class="menushadowGNB">
-                                <li><a class="disp_b" href="/search/matchalerts"> Match Alerts</a></li>
-                                <li><a class="disp_b" href="/search/partnermatches">Desired Partner Matches</a></li>
-                                <li><a class="disp_b" href="/search/justjoined">Just Joined Matches</a></li>
-                                <li><a class="disp_b" href="/search/verifiedMatches">Matches verified by Visit</a></li>
-                                <li><a class="disp_b" href="/search/twoway">Mutual Matches</a></li>
-                                <li><a class="disp_b" href="/search/reverseDpp">People Looking for me</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="matchalerts"> Match Alerts</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="partnermatches">Desired Partner Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="justjoined">Just Joined Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="verifiedMatches">Matches verified by Visit</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="twoway">Mutual Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="reverseDpp">People Looking for me</a></li>
                                 ~if $showKundliList eq '1'`
-                                <li><a class="disp_b" href="/search/kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted members</a></li>
                                 <li><a class="disp_b" href="/search/visitors">Recent Profile Visitors</a></li>
@@ -164,7 +164,7 @@ window.onload=function(){
                             <!--end:number-->
                             <!--start:submenu-->
                             <ul class="submenu topnavbg pos-abs navbell menushadowGNB navBarZ">
-                           <!--     <li>
+                                <li>
                                     <a href="/search/justjoined">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Just Joined Matches</div>
@@ -175,7 +175,31 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>-->
+                                </li>
+                                <li>
+                                    <a href="/inbox/4/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl">Messages</div>
+                                        <div class="fr">
+                                            <div id="messagesCountParent" class="disp-tbl  txtc" style="display:none">
+                                                <div id="messagesCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/inbox/9/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl">Photo Requests</div>
+                                        <div class="fr">
+                                            <div id="photoRequestsCountParent" class="disp-tbl countBell txtc" style="display:none">
+                                                <div id="photoRequestsCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="/inbox/1/1">
                                     <div class="clearfix topnavp1">
@@ -199,32 +223,8 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="/inbox/4/1">
-                                    <div class="clearfix topnavp1">
-                                        <div class="fl">Messages</div>
-                                        <div class="fr">
-                                            <div id="messagesCountParent" class="disp-tbl  txtc" style="display:none">
-                                                <div id="messagesCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/inbox/9/1">
-                                    <div class="clearfix topnavp1">
-                                        <div class="fl">Photo Requests</div>
-                                        <div class="fr">
-                                            <div id="photoRequestsCountParent" class="disp-tbl  txtc" style="display:none">
-                                                <div id="photoRequestsCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </a>
                                 </li>                                
-                              <!--  <li>
+                                <li>
                                     <a href="/search/matchalerts">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Match Alerts</div>
@@ -235,7 +235,7 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>-->
+                                </li>
 				 <li>
                                     <a href="/inbox/12/1">
                                     <div class="clearfix topnavp1">
@@ -275,7 +275,7 @@ window.onload=function(){
                                         ~/if`
                                     </div>
                                 </li>
-                                <li><div class="topnavp1 txtc"><a class="disp_b cursp" onclick="javascript:logOutCheck('/static/logoutPage?fromSignout=1'); return true;">Sign out</a></div></li>
+                                <li><div class="topnavp1 txtc"><a class="disp_b cursp" onclick="javascript:logOutCheck('/static/logoutPage?fromSignout=1'); return true;" id="jspcChatout">Sign out</a></div></li>
                             </ul>
                             <!--end:submenu-->
                         </li>

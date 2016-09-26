@@ -16,6 +16,8 @@ class changePhotoPrivacyV1Action extends sfActions
 		$profileid = $loggedInProfileObj->getPROFILEID();
 		$json = $request->getParameter("json");
 		$photoDisplay = $request->getParameter("photo_display");		
+		if(!in_array($photoDisplay,array("A","C")))
+			$photoDisplay = "A";
 		if($json == 1)
 		{
 			if($profileid){

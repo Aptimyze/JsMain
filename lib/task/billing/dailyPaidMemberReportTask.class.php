@@ -99,6 +99,7 @@ EOF;
 	        	foreach($purArr as $key=>&$val){
 	        		if($v['BILLID'] == $val['BILLID']){
 	        			$v['SERVICES'] = $val['SERVICEID'];
+	        			$v['Paid earlier'] = $billPurObj->fetchPaymentCount($v['PROFILEID'],$v['BILLID']);
 	        			$services = @explode(",",$val['SERVICEID']);
 	        			foreach($services as $temp=>$sid)
 	        			if(!in_array($sid, $serviceIdArr)){
@@ -163,6 +164,7 @@ EOF;
 	        			} else {
 	        				$finalArr[$incrementID]['DPP_SETTINGS'] = "No";
 	        			}
+	        			$finalArr[$incrementID]['Paid earlier'] = $v['Paid earlier'];
 
 	        			unset($status, $incrementID);
 	        		}
@@ -175,7 +177,7 @@ EOF;
 		unlink($filename);
 		$csvData = fopen("$filename", "w") or print_r("Cannot Open");
 
-		fputcsv($csvData, array('Username','Age','Gender','City','Community','Channel','Payment Date','Service Activation Date (EST)','Membership Name','Net Amount','Discount %','Acceptances','DPP Settings'));
+		fputcsv($csvData, array('Username','Age','Gender','City','Community','Channel','Payment Date','Service Activation Date (EST)','Membership Name','Net Amount','Discount %','Acceptances','DPP Settings','Paid earlier'));
 		foreach($finalArr as $key=>&$val) {
 		    fputcsv($csvData, $val);
 		}
@@ -183,11 +185,11 @@ EOF;
 		fclose($csvData);
 
 		$csvAttachment = file_get_contents($filename);
-
+		//print_r($csvAttachment);
 		$to = "jsprod@jeevansathi.com";
 		$cc = "avneet.bindra@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 		$from = "js-sums@jeevansathi.com";
-		$subject = "Daily Mailer Report";
+		$subject = "Daily Payments Report";
 		$msgBody = "PFA attached CSV report containing data, Note : For Pack Services like e-Advantage/e-Sathi discount percentages may be slightly incorrect !";
 
         SendMail::send_email($to, $msgBody, $subject, $from, $cc, '', $csvAttachment, '', 'dailyMailerReport.csv');

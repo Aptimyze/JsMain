@@ -121,6 +121,15 @@ var verificationDocumentsList;
   else val1.photo.label = 0;
   if (typeof val1.religion == 'undefined') val1.religion = '';
 
+  //adding code for caste
+  if(val1.caste == val1.religion)
+  {
+    val1.caste = "";
+  }
+  else
+  {
+    val1.caste = ", "+val1.caste;
+  }
   var isNewProfile = (val1.seen == "N") ? " new" : "";
   if(val1.filter_reason!="")
       var toShowFilterReason = "";
@@ -154,6 +163,11 @@ var verificationDocumentsList;
                 val1.username = val1.username.substring(0, val1.username.length - 4);
                 val1.username += "****";
         }
+	else
+	{
+		if(val1.name_of_user!='' && val1.name_of_user!=null)
+			val1.username = val1.name_of_user;
+	}
   var collegeTxt = "";
   var a = [];
   var pgCol = '';

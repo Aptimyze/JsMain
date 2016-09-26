@@ -123,6 +123,11 @@ if(authenticated($cid))
 				{
 					$del_scr="N";	
 				}
+                $sql_negative = "select PROFILEID from incentive.NEGATIVE_LIST where PROFILEID = $Profileid";
+                $result_negaive=mysql_query_decide($sql_negative) or die("$sql_negative".mysql_error_js());
+                if(mysql_num_rows($result_negaive)!=0){
+                    $negativeListcheck = 1;
+                }
 				$sqljs="select DEACTIVE_DATE,PROFILEID from newjs.JSARCHIVED where PROFILEID='$myrow[PROFILEID]' and STATUS ='Y'";
 				$resjs=mysql_query_decide($sqljs) or die("$sql_del".mysql_error_js());
 				if($jsarch=mysql_fetch_array($resjs))
@@ -145,7 +150,8 @@ if(authenticated($cid))
 						  "timeofdel"=>$myrow_del['TIME'],
 						  "Verify_Email"=>$Verify_Email,
 						  "source"=>$source,
-						  "marked_del"=>$marked_del 
+						  "marked_del"=>$marked_del,
+                          "negativeListcheck"=>$negativeListcheck
 						);
 			$i++;
 			

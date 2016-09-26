@@ -19,7 +19,9 @@
 			"PINCODE_ERROR_1":"Provide a valid pincode",
 			"PINCODE_ERROR_2":"Provide a pincode",
 			"EMAIL_REQUIRED":"Provide an email.",
+			"NAME_REQUIRED":"Provide the name of user for whom account is being created",
 			"EMAIL_INVALID":"Provide a valid email.",
+			"NAME_INVALID":"Provide a valid name.",
 			"EMAIL_INVALID_DOMAIN":"Provide a valid email.",
 			"EMAIL_EXIST":"An account with this Email already exists",
 			"PASSWORD_REQUIRED":"Provide a password",
@@ -203,10 +205,12 @@
       {"label":"Horoscope match is necessary? (optional)","value":notFilled,"show":"true","screenName":"s4","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","depValue":"","dshow":"horoscope_match","userDecision":"","dindex":"3","storeKey":"horoscope_match","tapName":"Horoscope match is necessary?","dependant_tapName":"","required":"false"}
 			],
 		"s5": [
-      {"label":"Name (optional)","value":"","show":"true","screenName":"s5","hamburgermenu":"0","userDecision":"","dindex":"0","storeKey":"name_of_user","inputType":"text","hint":notFilled,"required":"false"},
+      {"label":"Full Name","value":"","show":"true","screenName":"s5","hamburgermenu":"0","userDecision":"","dindex":"0","storeKey":"name_of_user","inputType":"text","hint":notFilled,"required":"true"},
 			{"label":"Email ID","value":"","show":"true","screenName":"s5","inputType":"email","hint":notFilled,"storeKey":"email","errorLabel":"","dindex":"1","errClass":"","isAutoCorrected":"false"},
 			{"label":"Password","value":"","show":"true","screenName":"s5","inputType":"password","hint":notFilled,"helpText":"Show","storeKey":"password","errorLabel":"","dindex":"2","errClass":""},
-			{"label":"Phone Number","value":"","show":"true","screenName":"s5","inputType":"number","hint":notFilled,"storeKey":"phone_mob","errorLabel":"","dindex":"3","isdVal":91,"isdHint":notFilledISD,'isdMaxlength':'4','maxLength':'10','maxNriLength':'14',"errClass":""}
+			{"label":"Phone Number","value":"","show":"true","screenName":"s5","inputType":"number","hint":notFilled,"storeKey":"phone_mob","errorLabel":"","dindex":"3","isdVal":91,"isdHint":notFilledISD,'isdMaxlength':'4','maxLength':'10','maxNriLength':'14',"errClass":""},
+			{"screenName":"s5","storeKey":"displayname","dindex":4
+			}
 			],
 		"s6": [	{"label":"Email ID","value":"","show":"true","screenName":"s6","storeKey":"yourinfo",'errorLabel':"","hint":"Introduce yourself. Write about your values, beliefs/goals, aspirations/interests and hobbies.","userDecision":""}],
         "s9": [
@@ -988,6 +992,7 @@
 			'reg[occupation]':'',
 			'reg[income]':'',
 			'reg[email]':'',
+			'reg[displayname]':'',
 			'reg[password]':'',
 			'reg[phone_mob][isd]':'',
 			'reg[phone_mob][mobile]':'',
@@ -1073,14 +1078,13 @@
 			{
 				var outputPageData = {};
 				var allowedScreen = ['s1','s2','s3','s4','s5'];
-        var allowedFieldName = ['gender','degree_pg','degree_ug'];
+        var allowedFieldName = ['gender','degree_pg','degree_ug','displayname'];
 				for(var i=0;i<allowedScreen.length;i++)
 				{
 					if(Gui.isRegFieldInitialized() === false)
 						Gui.initRegFields(allowedScreen[i]);
 					var fields = Gui.getRegFields(allowedScreen[i]);
 					var optFields = Gui.getRegOptionalFields(allowedScreen[i]);
-					
 					angular.forEach(fields,function(field,key){
 						if (field.show || allowedFieldName.indexOf(field.storeKey) !== -1)
 						{
@@ -1191,11 +1195,12 @@
 		return factory;
 	});
 	
-	app.factory ('Validate',function(Gui,Constants){
+	app.factory ('Validate',function($window,Gui,Constants,UserDecision){
 		var invalidPasswords = new Array("jeevansathi","matrimony","password","marriage","12345678","123456789","1234567890");
 		var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
 		var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
 	        var isd_regex = /^[+]?[0-9]+$/;
+	        var name_regex = /^[A-z ]+$/;
 	        var isdCodes = ["0", "91","+91"];
 		// auto correct email array
 		var corrections =Constants.getEmailCorrections();
@@ -1206,6 +1211,7 @@
             Gui.cleanErrorLabel(screenName);
             var fields 	= Gui.getRegFields(screenName);
 			var screenName 	=fields[0].screenName;
+			var nameIndex	=fields[0].dindex;
 			var emailIndex	=fields[1].dindex;
 			var passIndex  	=fields[2].dindex;			
 			var phoneIndex  =fields[3].dindex;
@@ -1214,16 +1220,57 @@
 			var mobileISD	=fields[phoneIndex].isdVal;
 			fields[phoneIndex].userDecision=mobileISD+','+mobile;
 			
+			var nameValid 	=factory.validateName(nameIndex, screenName);
 			var emailValid 	=factory.validateEmail(emailIndex, screenName);
 			var pwdValid 	=factory.validatePassword(passIndex,screenName);
 			var phoneValid 	=factory.validatePhone(phoneIndex,screenName);
-			
-			if(emailValid && pwdValid && phoneValid){			
+			if(nameValid && emailValid && pwdValid && phoneValid){			
 				Gui.cleanErrorLabel(screenName);
+			if(screenName=="s5")
+			{
+				UserDecision.store("displayname",$window.displayName);
+				fields[4].userDecision=$window.displayName;
+				fields[4].value=$window.displayName;
+			}
 				return true;
 			}
 			return false;
         	}
+		factory.validateName = function(index,screenName)
+		{
+			var fields      =Gui.getRegFields(screenName);
+                        var name       =fields[index].value;
+			var nameError = '';
+			var name_of_user;
+
+			name_of_user = name.replace(/\./gi, " ");
+			name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
+			name_of_user = name_of_user.replace(/\,|\'/gi, "");
+			name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+
+		        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+		        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user)))
+			{
+				nameError= "Please provide a valid Full Name";
+        		}
+			else
+			{
+				var nameArr = name_of_user.split(" ");
+				if(nameArr.length<2)
+				{
+					nameError = "Please provide your first name along with surname, not just the first name";
+				}
+			}
+			if(nameError){
+				fields[index].errorLabel =nameError;
+				if(name)
+					fields[index].errClass=regErr;
+				return;
+			}
+			else
+				fields[index].errClass='';
+			return true;
+		}
 		factory.validateEmail = function(index,screenName)
 		{
                         var fields      =Gui.getRegFields(screenName);
@@ -1311,6 +1358,7 @@
             {
                 fields[index].value =email;
                 fields[index].isAutoCorrected = "true";
+                fields[index].userDecision=fields[index].value;
             }
             
         	return;

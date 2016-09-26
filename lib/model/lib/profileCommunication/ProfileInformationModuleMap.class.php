@@ -315,7 +315,7 @@ class ProfileInformationModuleMap
 			"APP_TYPE"=> "IOS",
 			"VERSION"=> "1",
 			"SORT_ORDER"=> "3",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "SIZE_120",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
@@ -484,7 +484,7 @@ class ProfileInformationModuleMap
 		"MY_MESSAGE"=>Array( 
 			"ID"=> "4",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "100000",
+			"COUNT"=> "10",
 			"TUPLE"=> "MYJS_MESSAGE_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -810,6 +810,22 @@ self::$ContactCenterMYJS=Array(
 			"ICONS"=> "",
 			"BUTTONS"=> "",
 			"TRACKING"=> "",
+		),
+            "FILTERED_INTEREST"=>Array( 
+			"ID"=> "12",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "20",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Filtered Interests",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "responseTracking=52",
 		)
 
 		); 

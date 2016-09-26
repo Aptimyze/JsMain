@@ -1,4 +1,5 @@
 var clickEventType="click", cssBrowserAnimProperty=null;
+
 function topSliderInt(param){
 	if(param=="init")
 	{	
@@ -131,9 +132,8 @@ function postActionError(profileChecksum,type)
         $("#"+profileChecksum+"_BlankMsg_"+typeDiv).addClass("disp-none");
 }	
 
-function postActionMyjs(profileChecksum,URL,div,type,tracking)
+function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 {
-
   try{
 	var data = {};
 	var ifid = 1;
@@ -225,6 +225,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking)
             	else{
 	            	if(type=="interest")
 	            	{
+				callAfterContact();
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
 	            		$("#"+div).find("div.sendintr").removeClass("myjs-block sendintr").addClass("myjs-block-after");
 	            	}
@@ -233,6 +234,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking)
 	            		$("#"+div).find("div.intdisp").html("Accepted");
                   $("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
 	            		$("#"+div).find("div.intdisp").removeClass("intdisp");
+                                
 	            	}
 	            	else if(type=="decline")
 	            	{
@@ -257,7 +259,26 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking)
                     $( "#ACCEPTANCE_RESPONSE_"+tracking).addClass("txtc");
                   }
                 }
-	            }
+                
+                if(type=='decline' || type=='accept')
+                    {
+                        
+                    if(typeof filtered!='undefined' && filtered=='Y'){
+                        var filCount=$("#totalFilteredInterestReceived").html();
+                        filCount--;
+                        $("#totalFilteredInterestReceived").text(filCount);
+                        $("#seeAllFilteredCount").text(filCount);
+                    }
+                    if(typeof filtered!='undefined' && filtered=='N'){
+                        var intCount=$("#totalInterestReceived").html();
+                        intCount--;
+                        $("#totalInterestReceived").text(intCount);
+                        $("#seeAllIntCount").text(intCount);
+                    }
+
+                            
+                    }
+	       }
             }
             catch(e){
               console.log('getting error '+e+' in function success of postActionMyjs')
@@ -599,9 +620,9 @@ function generateFaceCard(Object)
 				$("#dailyMatchesCountTotal").html(totalCount);
 				$("#dailyMatchesCountBar").removeClass("disp-none");
 				$("#dailyMatchesCountBar > .disp-tbl").addClass("bounceIn animated");
-				//setBellCountHTML(newEngagementArray);
+				setBellCountHTML(newEngagementArray);
 				bellCountStatus++;
-				//createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);				
+				createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);				
 			}
 			else if(Object.name=="JUSTJOINED")
 			{
@@ -609,9 +630,9 @@ function generateFaceCard(Object)
 				$("#justJoinedCountTotal").html(totalCount);
 				$("#justJoinedCountBar").removeClass("disp-none");
 				$("#justJoinedCountBar > .disp-tbl").addClass("bounceIn animated");
-				//setBellCountHTML(newEngagementArray);
+				setBellCountHTML(newEngagementArray);
 				bellCountStatus++;
-				//createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
+				createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 			}
 		
 			
