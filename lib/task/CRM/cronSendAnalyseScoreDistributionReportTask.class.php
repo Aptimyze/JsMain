@@ -70,7 +70,7 @@ EOF;
 
         if($data && is_array($data)){
             //convert data into csv format
-            $fileName = "ScoreDistribution_".date('d-M-Y').".csv";
+            $fileName = "ScoreDistribution.csv";
             $file_path = JsConstants::$docRoot."/uploads/".$fileName;
             $fp = fopen($file_path, "w") or //print_r("Cannot Open");
             fputcsv($fp, array('MODEL','SCORE','PROFILE COUNT','PROFILES %'));
@@ -105,7 +105,7 @@ EOF;
             $to = "nsitankita@gmail.com";
             $message = "Please find attached excel sheet containing requested data";
             $subject = "Analysis score distribution report";
-            SendMail::send_email($to, $message, $subject, 'js-sums@jeevansathi.com', $cc, '', $csvAttachment, "application/vnd.ms-excel", $fileName, '', '', '', '');
+            SendMail::send_email($to, $message, $subject, 'js-sums@jeevansathi.com', $cc, '', $csvAttachment, "application/vnd.ms-excel", "ScoreDistribution_".date('d-M-Y').".csv", '', '', '', '');
             unset($csvAttachment);
         
         }
