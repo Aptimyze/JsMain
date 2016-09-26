@@ -405,7 +405,7 @@ $js_arr[]=array("pixel_js"    => "2");
 $js_arr[]=array("mouseClickTracking_js"  => "2");
 $js_arr[]=array("jsms/profile/ep/mobedit_js"          => "9");
 $js_arr[]=array("jsms/common/disableScroll_js"  => "1");
-$js_arr[]=array("jsms/profile/ep/mobeditview_js"        => "9");
+$js_arr[]=array("jsms/profile/ep/mobeditview_js"         => "10");
 $js_arr[]=array("jsms/utility/sessionStorage_js"    => "3");
 $js_arr[]=array("jsms/profile/ep/submitDetails_js"    => "4");
 $js_arr[]=array("jsms/profile/ep/hamburger_js"        => "8");
