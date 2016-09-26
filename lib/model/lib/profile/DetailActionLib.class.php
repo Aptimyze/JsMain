@@ -106,15 +106,19 @@ class DetailActionLib
                         $producerObj = new Producer();
 			//Privacy is not C for login user 
 			if($privacy!='C' && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
-			{
-                                $triggerOrNot = "inTrigger";
-				//$vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+			{       
+                                if($producerObj->getRabbitMQServerConnected())
+                                    $triggerOrNot = "inTrigger";
+                                else
+                                    $vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 			}
-                        else
+                        elseif($producerObj->getRabbitMQServerConnected())
                             $triggerOrNot="notInTrigger";
                         
-                        $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$actionObject->loginProfile->getPROFILEID(),VIEWED=>$actionObject->profile->getPROFILEID())), 'redeliveryCount'=>0 );
-                        $producerObj->sendMessage($queueData);
+                        if($producerObj->getRabbitMQServerConnected()){
+                            $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$actionObject->loginProfile->getPROFILEID(),VIEWED=>$actionObject->profile->getPROFILEID())), 'redeliveryCount'=>0 );
+                            $producerObj->sendMessage($queueData);
+                        }
 			//$vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////
