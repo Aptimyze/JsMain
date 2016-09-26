@@ -133,8 +133,22 @@ class notificationActions extends sfActions
                 $respObj->generateResponse();
                 die;
 	}
+	/*
 	$registationIdObj = new MOBILE_API_REGISTRATION_ID();
-	$registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
+	$registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);*/
+
+	/* Rabbit MQ */
+	$producerObj = new JsNotificationProduce();
+	if($producerObj->getRabbitMQServerConnected()){
+		$dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion,"osVersion"=>$currentOSversion,"brand"=>$deviceBrand,"model"=>$deviceModel);
+		$msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
+		$producerObj->sendMessage($msgdata);
+	}
+        else{
+		$registationIdObj = new MOBILE_API_REGISTRATION_ID();
+		$registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
+        }
+
 	$respObj = ApiResponseHandler::getInstance();
         if($profileid)
         {

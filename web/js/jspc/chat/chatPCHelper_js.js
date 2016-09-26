@@ -1184,6 +1184,7 @@ $(document).ready(function () {
             checkForDefaultEoiMsg:chatConfig.Params[device].checkForDefaultEoiMsg,
             setLastReadMsgStorage:chatConfig.Params[device].setLastReadMsgStorage,
             chatAutoLogin:chatConfig.Params[device].autoChatLogin,
+            categoryTrackingParams:chatConfig.Params.categoryTrackingParams,
             groupBasedConfig:chatConfig.Params[device].groupBasedConfig
         });
         

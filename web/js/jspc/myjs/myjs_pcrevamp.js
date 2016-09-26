@@ -13,16 +13,16 @@ var MyjsRequestCounter=0;
 */
 
 var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1","DAILYMATCHES":"/api/v2/inbox/perform?infoTypeId=7&pageNo=1&myjs=1&caching=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1	","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount",
-"VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1"};
+"VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1"};
 
-var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20};
+var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20};
 
 var noResultMessagesArray={
 	"JUSTJOINED":"People matching your desired partner profile who have joined in last one week will appear here","DESIREDPARTNERMATCHES":"We are finding the matches who recently joined us. It might take a while","DAILYMATCHES":"We are finding the best recommendations for you. It may take a while.","VISITORS":"People who visited your profile will appear here","SHORTLIST":"People you shortlist will appear here",'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":"People who have requested your photo will appear here.","COUNTS":5,"VERIFIEDMATCHES":"People matching your desired partner profile and are <a href='/static/agentinfo' class='fontreg colr5'>verified by visit</a> will appear here"
 };
 
 var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/profile/contacts_made_received.php?page=visitors&filter=R","SHORTLIST":"/profile/contacts_made_received.php?page=favorite&filter=M","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/profile/contacts_made_received.php?&page=photo&filter=R",
-"VERIFIEDMATCHES":"/search/verifiedMatches"};
+"VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1"};
 
 
 var postActionsUrlArray ={"INITIATE":"/api/v2/contacts/postEOI","ACCEPT":"/api/v2/contacts/postAccept","DECLINE":"/api/v2/contacts/postNotInterested","WRITE_MESSAGE":"/api/v2/contacts/postWriteMessage","VIEWCONTACT":"/api/v2/contacts/contactDetails"};
@@ -57,7 +57,9 @@ component.prototype.pre = function() {
    var containerBarObj =new MessageBar('justJoinedTab');
  else if(this.name=="INTERESTRECEIVED")
   var containerBarObj =new interestReceivedBar();
- else if(this.name=="VERIFIEDMATCHES")
+else if(this.name=="FILTEREDINTEREST")
+  var containerBarObj =new filteredInterestBar();  
+else if(this.name=="VERIFIEDMATCHES")
   var containerBarObj =new verifiedMatchesBar();
 this.containerHtml=containerBarObj.getContainerHtml();
 this.viewAllInnerHtml=containerBarObj.getViewAllInnerHtml();
@@ -385,7 +387,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
 		noShortCards(this);
 }
 
-  //DESRIED PARTNER MATCHES
+  //DESIRED PARTNER MATCHES
   var desiredPartnerMatches = function() {
     this.name = "DESIREDPARTNERMATCHES";
     this.containerName = this.name+"_Container";
@@ -423,8 +425,8 @@ $( document ).ajaxSend(function( event,request, settings ) {
   engagementCounts.prototype.post =function(){
     $("#totalMessagesReceived").html(this.data.MESSAGE);
     $("#totalAcceptsReceived").html(this.data.ACC_ME);
-    $("#totalRequestsReceived").html(this.data.PHOTO_REQUEST);
     $("#totalInterestReceived").html(this.data.AWAITING_RESPONSE);
+    $("#totalFilteredInterestReceived").html(this.data.FILTERED);
 
     if(this.data.AWAITING_RESPONSE_NEW!='0'){
      $("#interetReceivedCount").html(this.data.AWAITING_RESPONSE_NEW);
@@ -450,13 +452,13 @@ $( document ).ajaxSend(function( event,request, settings ) {
    else{
     $("#totalMessagesReceived").removeClass("disp-none");
    }
-   if(this.data.PHOTO_REQUEST_NEW!='0'){
-     $("#requestCountNew").html(this.data.PHOTO_REQUEST_NEW);
-     $("#requestCountNew").removeClass("disp-none");
-     $("#requestCountNew").addClass("disp-cell bounceIn animated");
+   if(this.data.FILTERED_NEW!='0'){
+     $("#filteredInterestCount").html(this.data.FILTERED_NEW);
+     $("#filteredInterestCount").removeClass("disp-none");
+     $("#filteredInterestCount").addClass("disp-cell bounceIn animated");
    }
    else{
-    $("#totalRequestsReceived").removeClass("disp-none");
+    $("#totalFilteredInterestReceived").removeClass("disp-none");
    }
    bellCountStatus++;
    createTotalBellCounts(parseInt(this.data.PHOTO_REQUEST_NEW) +this.data.MESSAGE_NEW+this.data.ACC_ME_NEW+this.data.AWAITING_RESPONSE_NEW + this.data.FILTERED_NEW);
@@ -470,18 +472,19 @@ var CALayerShow=$("#CALayerShow").val();
 if(typeof(CALayerShow)=='undefined' ||  !CALayerShow) return;
 if(CALayerShow!='0')
   {
-
+      
     var layer=$("#CALayerShow").val();
     var url="/static/criticalActionLayerDisplay";
  var ajaxData={'layerId':layer};
  var ajaxConfig={'data':ajaxData,'url':url,'dataType':'html'};
 
-
-
 ajaxConfig.success=function(response){
 $('body').prepend(response);
-  showLayerCommon('criticalAction-layer'); 
-  $('.js-overlay').unbind('click');
+  showLayerCommon('criticalAction-layer');
+  if(CALayerShow==9) 
+      $('.js-overlay').bind('click',function(){$(this).unbind();criticalLayerButtonsAction('close','B2');closeCurrentLayerCommon();});
+  else
+    $('.js-overlay').unbind('click');
 }
 
 $.myObj.ajax(ajaxConfig);
@@ -662,7 +665,6 @@ else {
 
    $('#videoCloseID').bind('click', function(e)
   {
-    console.log("jhsgcbjk");
     videoLinkRequest(profileid);
   });
 
@@ -705,7 +707,7 @@ else {
 		var interests = new interestReceived();
 		var mess = new messages();
 		var accept = new acceptance();		
-		var photoReq = new photoRequest();		
+		var filteredInterests = new filteredInterest();		
 		
 		
    
@@ -715,23 +717,18 @@ else {
 		currentTab = -1;
 		currentPanelEngagement = -1;
 		var called = [];
-		$("#requestEngagementHead").bind(clickEventType,function(){
-      $("#totalRequestsReceived").removeClass('disp-none');
-			$("#requestCountNew").addClass("disp-none").removeClass("disp-cell");
-			engagementClickHanding(photoReq,3);
-		});
 	$('#MsgEngagementHead').bind("click",function() 
 	{
  $("#totalMessagesReceived").removeClass('disp-none');
 		$("#messagesCountNew").addClass("disp-none").removeClass("disp-cell");
-    engagementClickHanding(mess,2);
+    engagementClickHanding(mess,3);
 	  });
   
     $('#acceptanceEngagementHead').bind("click",function() 
   {
     $("#totalAcceptsReceived").removeClass('disp-none');
 	  $("#allAcceptanceCount").addClass("disp-none").removeClass("disp-cell");
-    engagementClickHanding(accept,1);
+    engagementClickHanding(accept,2);
     });
 	 $('#interestEngagementHead').bind("click",function() 
 	{
@@ -739,8 +736,14 @@ else {
 		$("#interetReceivedCount").addClass("disp-none").removeClass("disp-cell");
 		engagementClickHanding(interests,0);
 	  });
+    	 $('#filteredInterestHead').bind("click",function() 
+	{
+    $("#totalFilteredInterestReceived").removeClass('disp-none');
+		$("#filteredInterestCount").addClass("disp-none").removeClass("disp-cell");
+		engagementClickHanding(filteredInterests,1);
+	  });      
    var engagementClickHanding = function (ele, currentTabId) {
-    if(currentTabId=='0') var height='360px';
+    if(currentTabId=='0' || currentTabId=='1') var height='360px';
       else var height='350px';      
     if(currentTab == -1)
     {
@@ -773,3 +776,70 @@ else {
 }
 }
 });
+// cal scripts
+var buttonClicked=0;
+
+        function validateUserName(name){
+        var name_of_user=name;
+        name_of_user = name_of_user.replace(/\./gi, " ");
+        name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
+        name_of_user = name_of_user.replace(/\,|\'/gi, "");
+        name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user))){
+                return "Please provide a valid Full Name";
+        }else{
+                var nameArr = name_of_user.split(" ");
+                if(nameArr.length<2){
+                      return "Please provide your first name along with surname, not just the first name";
+                }else{
+                     return true;
+                }
+        }
+       return true;
+     
+    }    function criticalLayerButtonsAction(clickAction,button) {
+
+
+                if(buttonClicked)return;    
+                buttonClicked=1;
+                var layerId= $("#CriticalActionlayerId").val();
+                
+                    var newNameOfUser='',namePrivacy='';
+                    if(layerId==9 && button=='B1')
+                    {   
+                        newNameOfUser = ($("#nameInpCAL").val()).trim();
+                        validation=validateUserName(newNameOfUser);
+                        if(validation!==true)
+                        {
+                            
+                            $("#CALNameErr").text(validation);
+                            $("#CALNameErr").show();
+                            buttonClicked=0;
+                            return;
+                        }
+                        namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
+                        
+                      }
+                    if(clickAction=="close" || clickAction=='RCB') {
+                    var URL="/common/criticalActionLayerTracking";
+                    $.ajax({
+                        url: URL,
+                        type: "POST",
+                        data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
+                    });
+
+                    closeCurrentLayerCommon();
+                    if(clickAction=='RCB')
+                    {
+                        toggleRequestCallBackOverlay(1, 'RCB_CAL');
+                        $('.js-dd ul li[value="M"]').trigger('click');
+                    }
+                
+                }
+                else {
+                window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
+                }
+                
+        }
+

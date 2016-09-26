@@ -499,13 +499,16 @@ class commonActions extends sfActions
                 if ($query == "P") {
                 //Send Email
                     $to = "services@jeevansathi.com";
-
+                    
                     $from = "info@jeevansathi.com"; //To Do Aliase Jeevansathi Support  Reply-to $email
 
                     $subject = "$email" . $userName . "has requested a callback for assistance with his/her account";
                     $msgBody = "<html><body>Dear Support Team,<br> $email" . $userName . "has requested a callback from the support team for resolution of a service related issue. Please contact at $email,or $phone as requested on $date at $reqTime <br> Regards<br> Team Jeevansathi</body></html>";
-
+                    
                     SendMail::send_email($to, $msgBody, $subject, $from, "", "", "", "", "", "", "1", $email, "Jeevansathi Support");
+                    $objExecCallBack = new billing_EXC_CALLBACK;
+                    $objExecCallBack->addRecord($iProfileId, $phone, $email, $device, $channel, $callbackSource, $date, $startTime, $endTime,"JP");
+                    unset($objExecCallBack);
                 } else if ($query == "M") {
                 //Do membership
 
@@ -626,10 +629,52 @@ class commonActions extends sfActions
         $loginData = $request->getAttribute("loginData");
         if (!$loginData['PROFILEID']) {
             return;
-        } else if ($request->getParameter("button") && ($request->getParameter("layerR") || $request->getParameter("layerId"))) {
-            $layerToShow = $request->getParameter("layerR") ? $request->getParameter("layerR") : $request->getParameter("layerId");
-            CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'], $layerToShow, $request->getParameter("button"));
+        }     else if($request->getParameter("button") && ($request->getParameter("layerR") || $request->getParameter("layerId"))) {
+        $button=$request->getParameter("button");
+    	$layerToShow=$request->getParameter("layerR") ? $request->getParameter("layerR") : $request->getParameter("layerId"); 
+        
+        if($layerToShow==9 && $button=='B1'){
+            
+            $namePrivacy=$request->getParameter('namePrivacy');
+            $newName=$request->getParameter('newNameOfUser');
+            
+            if($namePrivacy=='Y' || $namePrivacy=='N')
+            {
+                    $loggedInProfile=LoggedInProfile::getInstance();
+                    $nameOfUserObj = new NameOfUser();
+                    $newName=$nameOfUserObj->filterName($newName);
+                    $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($newName,  $loggedInProfile->getGENDER());
+                    $screening=$loggedInProfile->getSCREENING();
+                    $profileid=$loggedInProfile->getPROFILEID();
+                    if($isNameAutoScreened)
+                    {
+                            $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$screening);
+                    }
+                    
+                    if(!$newName || !$isNameAutoScreened)
+                    {
+                             $jprofileFieldArr['SCREENING'] = Flag::removeFlag($FLAGID="name", $screening);
+                    }
+                    if($jprofileFieldArr['SCREENING'] && $jprofileFieldArr['SCREENING']!=$screening)
+                    {
+                        
+                        JPROFILE::getInstance()->edit($jprofileFieldArr,$profileid,'PROFILEID');
+                    }
+                    
+                    $nameData = $nameOfUserObj->getNameData($profileid );//print_r($nameData);die;
+                               if(!empty($nameData))
+                               {
+                                        $nameArr=array('NAME'=>$newName,'DISPLAY'=>$namePrivacy);
+                                       $nameOfUserObj->updateName($profileid,$nameArr);
+                               }
+                               else
+                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
+                    
+            }
+            
         }
+ 		CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button);
+}
 
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -641,19 +686,22 @@ class commonActions extends sfActions
     public function executeCALJSMS($request)
     {
 
-        $calObject = $request->getAttribute('calObject');
-        if (!$calObject) {
-            sfContext::getInstance()->getController()->redirect('/');
+        $calObject=$request->getAttribute('calObject');
+        if (!$calObject) sfContext::getInstance()->getController()->redirect('/');
+        $this->calObject=$calObject;
+        $this->gender=$request->getAttribute('gender');
+        if($calObject['LAYERID']==9)
+        {
+            $profileId=LoggedInProfile::getInstance()->getPROFILEID();
+            $nameData=(new NameOfUser())->getNameData($profileId);
+            $this->nameOfUser=$nameData[$profileId]['NAME'];
+            $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
         }
-
-        $this->calObject = $calObject;
-        $this->gender    = $request->getAttribute('gender');
-        if ($calObject['LAYERID'] == 1) {
-            $this->showPhoto = '1';
-        } else {
-            $this->showPhoto = '0';
-        }
-
+                
+		if($calObject['LAYERID']==1)
+			$this->showPhoto='1';
+		else
+			$this->showPhoto='0';
         $this->setTemplate('CALJSMS');
 
     }
