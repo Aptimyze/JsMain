@@ -43,14 +43,14 @@ EOF;
         $modelArr = array("E","N");
         //get data of score distribution
         $start = 0; $end = 100; $increment=10;
-        $scoreDBObj = new test_ANALYTICS_SCORE_POOL("newjs_slave");
+        $scoreDBObj = new incentive_SCORE_UPDATE_LOG_NEW_MODEL("newjs_slave");
         foreach ($modelArr as $key => $value) {
             for($i=$start; $i<=$end; $i+=$increment){
                 $data[$value]["NO_SCORE"] = 0;
                 $data[$value][$i."-".($i+$increment)]=0;
                 
             }
-            $scoringData = $scoreDBObj->getScoreDistribution($value);
+            $scoringData = $scoreDBObj->getScoreDistribution(date("Y-m-d 00:00:00"),date("Y-m-d 23:59:59"),$value);
             $totalCountWithoutNull = 0;
             foreach($scoringData as $index => $details){
                 if($details['SCORE']){
