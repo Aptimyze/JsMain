@@ -1,4 +1,4 @@
-<?
+<?php
 //This class defines constants' values used in rabbitmq files.
 
 class MessageQueues
