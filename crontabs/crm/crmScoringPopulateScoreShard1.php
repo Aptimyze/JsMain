@@ -84,7 +84,7 @@ for($t=0;$t<count($modelType_arr);$t++)
                                 {
                                         if($score1!='NULL'){
                                         $sql_up = "update incentive.MAIN_ADMIN_POOL set ANALYTIC_SCORE='$score',CUTOFF_DT=now() where PROFILEID='$profileid'";
-                                        //mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));
+                                        mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));
                                         updateScoreLog($profileid, $score, $modelType);
                                         }
                                 }
@@ -112,9 +112,9 @@ function updateScoreLog($profileid, $score, $modelType) {
 	elseif($modelType=='E')
 		$model = 'EVER_PAID';
 
-	//global $maDb;
+	global $maDb;
 	$sql_up = "INSERT INTO incentive.`SCORE_UPDATE_LOG_NEW_MODEL` VALUES ('',  '".$profileid."',  '".$score."', '".$model."',  NOW())";
-	//mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));	
+	mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));	
 
 	global $myDb;
 	$sql_up = "UPDATE test.ANALYTIC_SCORE_POOL SET SCORE='$score' WHERE PROFILEID='$profileid' AND MODEL='$modelType'";

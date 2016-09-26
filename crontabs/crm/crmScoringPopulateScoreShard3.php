@@ -11,7 +11,7 @@ mail($to,$sub,$msg,$from);
 ini_set('memory_limit', '300M');
 
 //DB Connection
-//$maDb = mysql_connect("master.js.jsb9.net","privUser","Pr!vU3er!") or die("Unable to connect to js server at ".$start);
+$maDb = mysql_connect("master.js.jsb9.net","privUser","Pr!vU3er!") or die("Unable to connect to js server at ".$start);
 $myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
 $shDb3 = mysql_connect("productshard2slave.js.jsb9.net:3307","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
 mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$myDb);
@@ -84,7 +84,7 @@ for($t=0;$t<count($modelType_arr);$t++)
                                 {
                                         if($score1!='NULL'){
                                         $sql_up = "update incentive.MAIN_ADMIN_POOL set ANALYTIC_SCORE='$score',CUTOFF_DT=now() where PROFILEID='$profileid'";
-                                        //mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));
+                                        mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));
                                         updateScoreLog($profileid, $score, $modelType);
                                         }
                                 }
@@ -112,9 +112,9 @@ function updateScoreLog($profileid, $score, $modelType) {
 	elseif($modelType=='E')
 		$model = 'EVER_PAID';
 
-	//global $maDb;
+	global $maDb;
 	$sql_up = "INSERT INTO incentive.`SCORE_UPDATE_LOG_NEW_MODEL` VALUES ('',  '".$profileid."',  '".$score."', '".$model."',  NOW())";
-	//mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));	
+	mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));	
 
 	global $myDb;
 	$sql_up = "UPDATE test.ANALYTIC_SCORE_POOL SET SCORE='$score' WHERE PROFILEID='$profileid' AND MODEL='$modelType'";
