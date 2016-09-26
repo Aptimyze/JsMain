@@ -17,7 +17,8 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		$urlToHit = "10.10.18.66:9200/filebeat-2016.09.22/_search";
+		$date = ;
+		$urlToHit = "10.10.18.66:9200/filebeat-"."2016.09.22"."/_search";
 		$params = [
 			'aggs' => [
 				'modules' => [
