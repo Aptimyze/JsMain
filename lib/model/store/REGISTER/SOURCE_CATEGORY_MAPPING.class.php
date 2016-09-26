@@ -23,19 +23,10 @@ class SOURCE_CATEGORY_MAPPING extends TABLE
 		$this->db->rollback();
 	}
   public function getSourceCategory(){
-   
     $sql = "SELECT * FROM REGISTER.SOURCE_CATEGORY_MAPPING";
-    
     $prep=$this->db->prepare($sql);	
-    
-    if(isset($filters['start_date']))
-      $prep->bindValue(":START_DATE",$filters['start_date'],PDO::PARAM_STR);
-    if(isset($filters['end_date']))
-      $prep->bindValue(":END_DATE",$filters['end_date'],PDO::PARAM_STR);
-
     $prep->execute();
     $res=$prep->fetchAll();
-
     return $res;
   }
 }
