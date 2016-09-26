@@ -41,6 +41,7 @@ class MessageQueues
   CONST CRONCONSUMER_STARTCOMMAND = "symfony cron:cronConsumeQueueMessage"; //Command to start cron:cronConsumeQueueMessageTask
   CONST CRONCHAT_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeChatMessage"; //Command to start cron:cronConsumeChatMessage
   CONST CRONNOTIFICATION_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsQueueMessage"; //Command to start cron:cronConsumeNotificationsQueueMessageTask
+  CONST CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsLogQueueMessage";
   CONST FALLBACK_STATUS= true;   //If true, second server is used to handle fallback otherwise only one server is in use.
   CONST REDELIVERY_LIMIT = 3; //This limit is used to set the redelivery limit of messages at the consumer end.
   CONST AGENT_NOTIFICATIONSQUEUE = "AgentsNotificationsQueue"; //Queue for storing agent notifications(notify for FP online users to agents)
