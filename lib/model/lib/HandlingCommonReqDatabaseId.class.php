@@ -22,11 +22,21 @@ Class HandlingCommonReqDatabaseId
 				setcookie('CommonReqDatabaseId',$reqId,time() + 10000000000, "/");
 			}
 			*/
+			$authChecksum=sfContext::getInstance()->getRequest()->getParameter("AUTHCHECKSUM");
+			if(!$authChecksum)
+				$authChecksum=$_COOKIE[AUTHCHECKSUM];
 			$decryptObj= new Encrypt_Decrypt();
 			$decryptedAuthChecksum=$decryptObj->decrypt($authChecksum);
 			$obj = AuthenticationFactory::getAuthenicationObj(null);
 			$loginData=$obj->fetchLoginData($decryptedAuthChecksum);
-			$reqId = $loginData["SQL_CONNECTION"];
+			$pid = $loginData["PROFILEID"];
+			if($pid)
+			{
+				if($pid%4<2)
+					$reqId = 1;
+				else
+					$reqId = 2;
+			}
 			if(!$reqId)
 				$reqId = rand(1,2);
 		}
