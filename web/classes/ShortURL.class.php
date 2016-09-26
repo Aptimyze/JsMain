@@ -38,6 +38,7 @@ class ShortURL {
 	public function __construct()
 	{
 		include_once $_SERVER["DOCUMENT_ROOT"]."/classes/Mysql.class.php";
+		include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 		$mysql= new Mysql;
 		$this->db=$mysql->connect();
 	}
@@ -130,11 +131,12 @@ class ShortURL {
 		else if ($receivedMonth == $Month && $receivedDate <= $Date) $validURL = 1;
 
 		try {
-			if ($M1 != $actual_M1) throw new jsException("","Mismatching in M1 bit : URL has been changed " . $M1 . " " . $actual_M1);
-			if ($D1 != $actual_D1) throw new jsException("","Mismatching in the D1 bit : URL has been changed ");
+			if ($M1 != $actual_M1) throw new Exception("Mismatching in M1 bit : URL has been changed " . $M1 . " " . $actual_M1);
+			if ($D1 != $actual_D1) throw new Exception("Mismatching in the D1 bit : URL has been changed ");
 
-			if ($validURL == 0) throw new jsException("","Expired ShortURL : {$url}");
+			if ($validURL == 0) throw new Exception("Expired ShortURL : {$url}");
 		} catch (Exception $e) {
+			LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, $e, array('moduleName' => 'ShortURL'));
 			return false;
 		}
 		

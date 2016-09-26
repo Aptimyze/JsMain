@@ -25,7 +25,9 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
   public function executePage404(sfWebRequest $request)
   {
-  LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array(LoggingEnums::MESSAGE => $request->getUri(), LoggingEnums::MODULE_NAME => LoggingEnums::EX404));
+    $specificDomain = explode('/',$request->getUri());
+    $segregateCode = $specificDomain[3];  
+  LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array(LoggingEnums::MESSAGE => $request->getUri(), LoggingEnums::MODULE_NAME => LoggingEnums::EX404."_".$segregateCode));
 	if(MobileCommon::isNewMobileSite())
 	{
 		if(MobileCommon::isAppWebView()){
@@ -345,6 +347,14 @@ class staticActions extends sfActions
    * also it is called for tracking when user hits any of the button*/
   public function executeCriticalActionLayerDisplay(sfWebRequest $request) {
     $layerToShow = $request->getParameter("layerId");
+    if($layerToShow==9)
+    {
+           $profileId=LoggedInProfile::getInstance()->getPROFILEID();
+           $nameData=(new NameOfUser())->getNameData($profileId);
+           $this->nameOfUser=$nameData[$profileId]['NAME'];
+           $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
+
+    }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];

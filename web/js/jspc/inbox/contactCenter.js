@@ -349,7 +349,10 @@ function ccTupleResultMapping(val,profileIDNo,viewProfilePageParams) {
 			personalizedmessage=readMore(personalizedmessage,profileIDNo)
 			
 		}
-			
+                
+		if(val.name_of_user!='' && val.name_of_user!=null)
+			val.username = val.name_of_user;
+                
 		var mapping = {
 				'{ccTupleImage}': removeNull(val.profilepic120url),
 				'{ccTupleIDNo}': removeNull(profileIDNo), 

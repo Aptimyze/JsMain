@@ -675,6 +675,7 @@ class desktopView extends DetailedViewApi
 
       }
       $this->m_arrOut["verification_value"] = $this->verificationSeal;
+      $this->m_arrOut["verification_value_arr"] = array_unique($displaySeal);
 
     if($this->bResponseForEditView){
       $objEducation = $objProfile->getEducationDetail();
