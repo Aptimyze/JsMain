@@ -5,7 +5,7 @@ class REGISTRATION_QUALITY extends TABLE
   public function __construct($dbname="")
   {
           parent::__construct($dbname);
-          $this->fields = "`REG_DATE` , `SOURCEID`, `SOURCECITY` , `TOTAL_REG` , `F22` , `F22MV` , `F22MVCC` , `M26` , `M26MV` , `M26MVCC` , `SCREENED_SIC` , `OTHERS_COMMUNITY`";
+          $this->fields = "`REG_DATE` , `SOURCEID`, `SOURCECITY` , `TOTAL_REG` , `F22` , `F22MV` , `F22MVCC` , `M26` , `M26MV` , `M26MVCC` , `SCREENED_SIC` , `SCREENED_CC` , `OTHERS_COMMUNITY`";
   }
 
 	//Three function for innodb transactions
@@ -30,7 +30,7 @@ class REGISTRATION_QUALITY extends TABLE
                     $param = array();
                     $countReg = count($regDateData);
                     for($i = 1;$i<=$countReg;$i++){
-                      $param[] = "(:REG_DATE_".$i.", :SOURCEID_".$i.", :SOURCECITY_".$i.", :TOTAL_REG_".$i.", :F22_".$i.", :F22MV_".$i.", :F22MVCC_".$i.", :M26_".$i.", :M26MV_".$i.", :M26MVCC_".$i.", :SCREENED_SIC_".$i.",:OTHERS_COMMUNITY_".$i.")";
+                      $param[] = "(:REG_DATE_".$i.", :SOURCEID_".$i.", :SOURCECITY_".$i.", :TOTAL_REG_".$i.", :F22_".$i.", :F22MV_".$i.", :F22MVCC_".$i.", :M26_".$i.", :M26MV_".$i.", :M26MVCC_".$i.", :SCREENED_SIC_".$i.", :SCREENED_CC_".$i.",:OTHERS_COMMUNITY_".$i.")";
                     }
                     $paramStr = implode(",",$param);
                     $sql = $sql.$paramStr;
@@ -48,6 +48,7 @@ class REGISTRATION_QUALITY extends TABLE
                       $res->bindValue(":M26MV_".$i, $regData['MMV'], PDO::PARAM_INT);
                       $res->bindValue(":M26MVCC_".$i, $regData['MMVCC'], PDO::PARAM_INT);
                       $res->bindValue(":SCREENED_SIC_".$i, $regData['screened_SIC'], PDO::PARAM_INT);
+                      $res->bindValue(":SCREENED_CC_".$i, $regData['SCREENED_CC'], PDO::PARAM_INT);
                       $res->bindValue(":OTHERS_COMMUNITY_".$i, $regData['OTHERS_COMMUNITY'], PDO::PARAM_INT);
                       $i++;
                     }

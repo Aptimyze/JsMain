@@ -6,8 +6,8 @@
 	<script type="text/javascript">
     $(function () {
         var count = 0;
-        $('#date1').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2014", yearEnd: "~$rangeYear`"});
-        $('#date2').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2014", yearEnd: "~$rangeYear`"});
+        $('#date1').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2015", yearEnd: "~$rangeYear`"});
+        $('#date2').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2015", yearEnd: "~$rangeYear`"});
         $('#date1_dateLists_day_list option:selected').prop('selected', false);
         $('#date1_dateLists_day_list').on('click', function(){
         	count = 1;
@@ -85,6 +85,10 @@
 				<input id="date2" type="text" value="">
 			</td>
 		</tr>
+
+
+~if !$communitywiseRegistration`
+
 		<tr align="center">
 			<td class="label">
 				<input type="radio" name="range_format" value="Y" />
@@ -124,6 +128,7 @@
 			</td>
 		</tr>
 		<tr></tr>
+	~/if`
 		<tr align="center">
 			<td class="label"><font size=2>
 			       Select Report Format

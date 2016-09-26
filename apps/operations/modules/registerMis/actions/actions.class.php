@@ -18,15 +18,22 @@ class registerMisActions extends sfActions {
     // $this->forward('default', 'module');
   }
 
+  /**
+   * Executes communitywise action
+   *
+   * @param sfRequest $request A request object
+   */
+
   public function executeCommunitywiseRegistration(sfWebRequest $request)
   {
-     $formArr = $request->getParameterHolder()->getAll();
+    $preDefArray = array('screened_SIC' => 0,'SCREENED_CC' => 0,'OTHERS_COMMUNITY' => 0,'M26MVCC' => 0,'F22MVCC' => 0);
+    $formArr = $request->getParameterHolder()->getAll();
     $name = $request->getAttribute('name');
     $this->cid = $formArr['cid'];
     if ($formArr['submit']) 
     {
-       // $commonUtilObj = new CommonUtility();
-      // $commonUtilObj->avoidPageRefresh("QUALITY_REGISTRATION", $name);
+      $commonUtilObj = new CommonUtility();
+      $commonUtilObj->avoidPageRefresh("QUALITY_REGISTRATION", $name);
       $this->range_format = $formArr['range_format'];
       $params = array('range_format' => $formArr["range_format"], 'source_names' => $formArr['source_names'],'source_cities'=>$formArr['source_cities']);
       if ($formArr["range_format"] == "Y") {      //If year is selected
@@ -58,10 +65,69 @@ class registerMisActions extends sfActions {
         $params['start_date'] = $start_date;
         $params['end_date'] = $end_date;
         $this->registrationData = $regQualityObj->getRegisrationData($params); 
+        $sourceCategoryMapping = new SOURCE_CATEGORY_MAPPING('newjs_masterRep');
+       
+        $sourceCategory = ($sourceCategoryMapping->getSourceCategory());
 
-        if ($formArr['report_format'] == 'CSV') {
-          $this->createCSVFormatCommunitywise($this->registrationData);
+        $this->sourceCategoryKey = array();
+
+        foreach ($sourceCategory as $value) {
+          if ( $value['SOURCE_GROUP'] != '' && $value['SOURCE_GROUP'] != NULL)
+          {
+            $this->sourceCategoryKey[$value['SOURCE_GROUP']] = $value['SOURCE_CATEGORY'];
+          }
+          else 
+          {
+            $this->sourceCategoryKey[$value['SOURCE_ID']] = $value['SOURCE_CATEGORY'];
+          }
         }
+      
+
+        $this->dateRegistrationData = array();
+        $preValue = array();
+        foreach ($this->registrationData['source_data'] as $value) {
+          
+          if (!array_key_exists($value['REG_DATE'],$this->dateRegistrationData))
+          {
+            $this->dateRegistrationData[$value['REG_DATE']] = array();
+          }
+          if(array_key_exists($value['GROUPNAME'],$this->sourceCategoryKey )){
+             $value['GROUPNAME'] = $this->sourceCategoryKey[$value['GROUPNAME']];
+          }
+          else if(array_key_exists($value['SOURCEID'],$this->sourceCategoryKey )){
+              $value['GROUPNAME'] = $this->sourceCategoryKey[$value['SOURCEID']];
+          }else{
+              $value['GROUPNAME'] = "Direct PC";
+          }
+          if (!array_key_exists($value['GROUPNAME'],$this->dateRegistrationData[$value['REG_DATE']]))
+          {
+            $this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']] = array();
+          }
+          if(!$value['SOURCECITY'])
+            $value['SOURCECITY'] = "BlankCITY";
+
+          if($value['SOURCECITY'] != "BlankCITY")
+          {
+            $value['SOURCECITY'] = FieldMap::getFieldLabel("city_india",$value['SOURCECITY']);
+            if(!$value['SOURCECITY'])
+              $value['SOURCECITY'] = "BlankCITY";
+          }
+
+          if (!array_key_exists($value['SOURCECITY'],$this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']]))
+          {
+            $this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']][$value['SOURCECITY']] = $preDefArray;
+          }
+          $this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']][$value['SOURCECITY']]['screened_SIC'] += $value['SCREENED_SIC'];
+          $this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']][$value['SOURCECITY']]['screened_CC'] += $value['SCREENED_CC'];
+          $this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']][$value['SOURCECITY']]['OTHERS_COMMUNITY'] += $value['OTHERS_COMMUNITY'];
+          $this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']][$value['SOURCECITY']]['M26MVCC'] += $value['M26MVCC'];
+          $this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']][$value['SOURCECITY']]['F22MVCC'] += $value['F22MVCC'];
+        }
+        krsort($this->dateRegistrationData);
+        if ($formArr['report_format'] == 'CSV') {
+          $this->createCSVFormatCommunitywise($this->dateRegistrationData);
+        }
+
         $this->setTemplate('communitywiseRegistration');
       }
       else
@@ -77,7 +143,7 @@ class registerMisActions extends sfActions {
         $this->yearArr = array();
         $sourceObj = new MIS_SOURCE('newjs_slave');
         $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
-        $dateArr = GetDateArrays::generateDateDataForRange('2014', ($this->todayYear));
+        $dateArr = GetDateArrays::generateDateDataForRange('2015', ($this->todayYear));
         foreach (array_keys($dateArr) as $key => $value) {
           $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
         }
@@ -88,7 +154,6 @@ class registerMisActions extends sfActions {
     {
 
       $this->communitywiseRegistration = true;
-      // echo "Hello from total registration.";
       $this->source_cities = $this->setSourceCities();
       $this->startMonthDate = "01";
       $this->todayDate = date("d");
@@ -99,7 +164,7 @@ class registerMisActions extends sfActions {
       $this->yearArr = array();
       $sourceObj = new MIS_SOURCE('newjs_slave');
       $this->sources = $sourceObj->getSourceList(); // get source names for dropdown
-      $dateArr = GetDateArrays::generateDateDataForRange('2014', ($this->todayYear));
+      $dateArr = GetDateArrays::generateDateDataForRange('2015', ($this->todayYear));
       foreach (array_keys($dateArr) as $key => $value) {
         $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
       }
@@ -405,7 +470,6 @@ class registerMisActions extends sfActions {
 
   public function createCSVFormatCommunitywise($registrationData)
   {
-      // var_dump($registrationData);
       $csvData = 'communitywise Registration MIS' . "\n";
       $csvData = $csvData.$this->displayDate."\n";
       $csvData = $csvData."Date".","."City".","."Source Category".","."Community".","."Total Registerations".","."Quality Registerations". "\n";
@@ -414,17 +478,24 @@ class registerMisActions extends sfActions {
       header("Pragma: no-cache");
       header("Expires: 0");
 
-      foreach ($registrationData['source_data'] as $key => $data) {
-        $row = "";
-        if ($data['SCREENED_SIC'] != 0 && $data['SCREENED_SIC'] != null)
-            $row = $row.$data['REG_DATE'].",".FieldMap::getFieldLabel("city_india",$data['SOURCECITY']).",".$data['SOURCEID'] .","."SI" .",".$data['SCREENED_SIC'] .","."0"."\n";
- 
-         if ($data['OTHERS_COMMUNITY'] != 0 && $data['OTHERS_COMMUNITY'] != null)
-                    $row = $row.$data['REG_DATE'].",".FieldMap::getFieldLabel("city_india",$data['SOURCECITY']).",".$data['SOURCEID'] .","."Others" .",".$data['OTHERS_COMMUNITY'] .","."0"."\n"; 
-                  
-         if (($data['M26MVCC'] != 0 && $data['M26MVCC'] != null) || ($data['F22MVCC'] != 0 && $data['F22MVCC'] != null))
-                    $row = $row.$data['REG_DATE'].",".FieldMap::getFieldLabel("city_india",$data['SOURCECITY']).",".$data['SOURCEID'] .","."CC" .",".($data['M26'] + $data['F22']).",".($data['M26MVCC'] + $data['F22MVCC'])."\n";
-        $csvData = $csvData.$row ;
+      foreach ($registrationData as $date => $data_date )
+       {
+        foreach ($data_date as $source => $data_source)
+        {
+          foreach ($data_source as $city => $data_city)
+          {
+            $row = "";
+            if ($data_city['screened_CC'] != 0)
+              $row = $date.",".$city.",".$source.",CC,".$data_city['screened_CC'].",".($data_city['M26MVCC'] + $data_city['F22MVCC'])."\n";
+            if ($data_city['screened_SIC'] != 0)
+              $row = $date.",".$city.",".$source.",SIC,".$data_city['screened_SIC'].",0"."\n";
+
+            if ($data_city['OTHERS_COMMUNITY'] != 0)
+              $row = $date.",".$city.",".$source.",Others,".$data_city['OTHERS_COMMUNITY'].",0"."\n";
+            
+            $csvData = $csvData.$row ;
+          }
+        }
       }
       echo $csvData;
       die;
@@ -596,7 +667,7 @@ class registerMisActions extends sfActions {
       $this->rangeYear = date("Y");
       $this->dateArr = GetDateArrays::getDayArray();
       $this->yearArr = array();
-      $dateArr = GetDateArrays::generateDateDataForRange('2016', ($this->todayYear));
+      $dateArr = GetDateArrays::generateDateDataForRange('2015', ($this->todayYear));
       foreach (array_keys($dateArr) as $key => $value) {
         $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
 	}

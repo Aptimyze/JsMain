@@ -22,7 +22,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array()) {
     error_reporting(0);
-    $preDefArray = array('total_reg' => 0, 'F' => 0, 'FMV' => 0, 'FMVCC' => 0, 'M' => 0, 'MMV' => 0, 'MMVCC' => 0, 'screened_SIC' => 0,'OTHERS_COMMUNITY' => 0);
+    $preDefArray = array('total_reg' => 0, 'F' => 0, 'FMV' => 0, 'FMVCC' => 0, 'M' => 0, 'MMV' => 0, 'MMVCC' => 0, 'screened_SIC' => 0,'SCREENED_CC' => 0,'OTHERS_COMMUNITY' => 0);
     $flag = 1;
     $jprofileObj = new JPROFILE('newjs_slave');
     while($flag)
@@ -67,6 +67,7 @@ EOF;
         $is_other_community = false;
       }
       $ccStatus = $this->verifyCC($profile['MTONGUE']);
+
       if (($profile['GENDER'] == 'F' && $profile['AGE'] >= 22) || ($profile['GENDER'] == 'M' && $profile['AGE'] >= 26)) {
         $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER']] ++;
         $mobVerified = $this->verifyMobile($profile['MV']);
@@ -77,6 +78,7 @@ EOF;
       }
       if($ccStatus == 1){
             $is_other_community = false;
+            $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['SCREENED_CC'] += $ccStatus;
       }
       
       if ( $is_other_community )
@@ -84,6 +86,7 @@ EOF;
           $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['OTHERS_COMMUNITY'] ++;
       }
       }
+      //print_r($this->registrationArray);die;
     $regQualityObj = new REGISTRATION_QUALITY();
     $regQualityObj->insertQualityRegistration($this->registrationArray);
     $this->logSection('data inserted');

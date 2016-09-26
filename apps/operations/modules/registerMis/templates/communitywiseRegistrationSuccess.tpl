@@ -39,87 +39,80 @@
 	  <td width='40px' align=center>Total Registeration</td>
 	  <td width='40px' align=center>Quality Registeration</td>
 	</tr>
+	
+  ~foreach from=$dateRegistrationData item=data_date key=date`
+          ~foreach from=$data_date item=data_source key=source`
+            ~foreach from=$data_source item=data_city key=city`
+                  
+                  ~if $data_city['screened_CC'] != 0`
+                    <tr  style='background-color:#DCE6F2'>
+                        <td width="40px" align=center>
+                          ~$date`
+                        </td>
+                         <td width="40px" align=center>
+                          ~$city`
+                         </td>
+                         <td width="40px" align=center>
+                          ~$source`
+                          </td>
+                         <td width="40px" align=center>
+                          CC
+                         </td>
+                         <td width="40px" align=center>
+                          ~$data_city['screened_CC']`
+                         </td>
+                         <td width="40px" align=center>
+                          ~$data_city['M26MVCC'] + $data_city['F22MVCC']`
+                          </td>
+                    </tr>
+                  ~/if`
+                  ~if $data_city['screened_SIC'] neq 0`
+                    <tr  style='background-color:#DCE6F2'>
+                        <td width="40px" align=center>
+                          ~$date`
+                        </td>
+                         <td width="40px" align=center>
+                          ~$city`
+                         </td>
+                         <td width="40px" align=center>
+                          ~$source`
+                          </td>
+                         <td width="40px" align=center>
+                          SIC
+                         </td>
+                         <td width="40px" align=center>
+                          ~$data_city['screened_SIC']`
+                         </td>
+                         <td width="40px" align=center>
+                          0
+                          </td>
+                    </tr>
+                  ~/if`
 
-	~foreach from=$registrationData['source_data'] item=data key=k`
-          ~if $data['SCREENED_SIC'] != 0 && $data['SCREENED_SIC'] != null`
-          <tr  style='background-color:#DCE6F2'>
-          	<td width="40px" align=center>
-          		~$data['REG_DATE']`
-          	</td>
-
-          	<td width="40px" align=center>
-          		~FieldMap::getFieldLabel("city_india",$data['SOURCECITY'])`
-          	</td>
-          	<td width="40px" align=center>
-          		~$data['SOURCEID']`
-          	</td>
-
-          	<td width="40px" align=center>
-          		SI
-          	</td>
-          	
-          	<td width="40px" align=center>
-          		~$data['SCREENED_SIC']`
-          	</td>
-          	
-          	<td width="40px" align=center>
-          		0
-          	</td>
-          </tr>
-          ~/if`
-
-           ~if $data['OTHERS_COMMUNITY'] != 0 && $data['OTHERS_COMMUNITY'] != null`
-          <tr  style='background-color:#DCE6F2'>
-          	<td width="40px" align=center>
-          		~$data['REG_DATE']`
-          	</td>
-
-          	<td width="40px" align=center>
-          		~FieldMap::getFieldLabel("city_india",$data['SOURCECITY'])`
-          	</td>
-          	<td width="40px" align=center>
-          		~$data['SOURCEID']`
-          	</td>
-
-          	<td width="40px" align=center>
-          		Others
-          	</td>
-          	
-          	<td width="40px" align=center>
-          		~$data['OTHERS_COMMUNITY']`
-          	</td>
-          	
-          	<td width="40px" align=center>
-          		0
-          	</td>
-          </tr>
-          ~/if`
-
-          ~if ($data['M26MVCC'] != 0 && $data['M26MVCC'] != null) || ($data['F22MVCC'] != 0 && $data['F22MVCC'] != null)`
-          <tr  style='background-color:#DCE6F2'>
-          	<td width="40px" align=center>
-          		~$data['REG_DATE']`
-          	</td>
-
-          	<td width="40px" align=center>
-          		~FieldMap::getFieldLabel("city_india",$data['SOURCECITY'])`
-          	</td>
-          	<td width="40px" align=center>
-          		~$data['SOURCEID']`
-          	</td>
-
-          	<td width="40px" align=center>
-          		CC
-          	</td>
-          	
-          	<td width="40px" align=center>
-          		~$data['M26'] + $data['F22']`
-          	</td>
-          	<td width="40px" align=center>
-          		~$data['M26MVCC'] + $data['F22MVCC']`
-          	</td>
-          </tr>
-          ~/if`
+                    ~if $data_city['OTHERS_COMMUNITY'] != 0`
+                    <tr  style='background-color:#DCE6F2'>
+                        <td width="40px" align=center>
+                          ~$date`
+                        </td>
+                         <td width="40px" align=center>
+                          ~$city`
+                         </td>
+                         <td width="40px" align=center>
+                          ~$source`
+                          </td>
+                         <td width="40px" align=center>
+                          Others
+                         </td>
+                         <td width="40px" align=center>
+                          ~$data_city['OTHERS_COMMUNITY']`
+                         </td>
+                         <td width="40px" align=center>
+                          0
+                          </td>
+                    </tr>
+                  ~/if`
+            ~/foreach`
+          ~/foreach`
     ~/foreach`
 </table>
 </body>
