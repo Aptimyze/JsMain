@@ -370,7 +370,7 @@ function common_assign($data)
 			}
 			else
 			{
-				$naObj = new NEWJS_ASTRO;
+				$naObj = new ProfileAstro();
 				if($naObj->getIfAstroDetailsPresent($data["PROFILEID"]))
 				{
 					if(JsConstants::$alertServerEnable) {

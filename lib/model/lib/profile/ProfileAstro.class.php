@@ -83,7 +83,40 @@ class ProfileAstro
      */
     public function getAstros($pid)
     {
-        return self::$objAstroDetailMysql->getAstros($pid);
+        $bServedFromCache = false;
+      //  $this->totalQueryCount();
+        $fields='COUNTRY_BIRTH,CITY_BIRTH,PROFILEID';
+        if (ProfileCacheLib::getInstance()->isCached('PROFILEID', $pid,$fields , __CLASS__)) {
+            $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);var_dump($result);die;
+            //When processing extraWhereClause results could be false,
+            //so for that case also we are going to query mysql
+            if (false !== $result) {
+                $bServedFromCache = true;
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+            }
+        }
+
+        if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+            LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO,"Consuming from cache for criteria: {$criteria} : {$value}");
+        //    $this->logCacheConsumption();
+            return $result;
+        }
+die('ppppp');
+        //Get Records from Mysql
+        $result = self::$objAstroDetailMysql->getAstros($pid);
+        //TODO : Request to Cache this Record, on demand
+        if(is_array($result) && $criteria == "PROFILEID") {
+          $result['PROFILEID'] = $value;
+        }
+        if ( is_array($result) && 
+         isset($result['PROFILEID']) &&
+         false === ProfileCacheLib::getInstance()->isCommandLineScript()
+    ) {
+            ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
+        }
+
+        return $result;
+         
     }
     
     /**
@@ -94,7 +127,13 @@ class ProfileAstro
      */
     public function update($pid, $paramArr = array())
     {
-        return self::$objAstroDetailMysql->update($pid, $paramArr);
+        
+    $bResult = self::$objAstroDetailMysql->update($pid, $paramArr);
+    if(true === $bResult) {
+      ProfileCacheLib::getInstance()->updateCache($paramArr, ProfileCacheConstants::CACHE_CRITERIA, $pid, __CLASS__);
+    }
+    
+    return $bResult;
     }
     
     /**
@@ -147,7 +186,15 @@ class ProfileAstro
      */
     public function updateType($type,$pid)
     {
-        return self::$objAstroDetailMysql->updateType($type,$pid);
+
+
+    $bResult = self::$objAstroDetailMysql->updateType($type,$pid);
+    if(true === $bResult) {
+      ProfileCacheLib::getInstance()->updateCache(array('TYPE'=>$type), ProfileCacheConstants::CACHE_CRITERIA, $pid, __CLASS__);
+    }
+    
+    return $bResult;
+         
     }
     
     /**
@@ -168,7 +215,12 @@ class ProfileAstro
      */
     public function updateRecord($iProfileID, $arrRecordData)
     {
-        return self::$objAstroDetailMysql->updateRecord($iProfileID, $arrRecordData);
+    $bResult = self::$objAstroDetailMysql->updateRecord($iProfileID, $arrRecordData);
+    if(true === $bResult) {
+      ProfileCacheLib::getInstance()->updateCache($arrRecordData, ProfileCacheConstants::CACHE_CRITERIA, $iProfileID, __CLASS__);
+    }
+    
+    return $bResult;
     }
     
     /**
