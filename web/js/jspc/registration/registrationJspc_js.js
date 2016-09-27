@@ -1992,7 +1992,7 @@ $(document).ready(function () {
       inputData["_csrf_token"] = $("#registrationData__csrf_token").val();
       if(inputData.hasOwnProperty('state_res')){
           if(inputData['city_res'] == '0')
-              inputData['city_res'] = inputData['state_res']+'00';
+              inputData['city_res'] = inputData['state_res']+'OT';
           delete inputData['state_res'];
       }
           
