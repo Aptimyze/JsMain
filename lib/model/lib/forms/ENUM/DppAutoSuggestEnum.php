@@ -1404,4 +1404,10 @@ public static $IMP_CASTE_ARR=array(
 
 
 public static $TRENDS_FIELDS = "CASTE_VALUE_PERCENTILE, MTONGUE_VALUE_PERCENTILE, EDUCATION_VALUE_PERCENTILE, OCCUPATION_VALUE_PERCENTILE, CITY_VALUE_PERCENTILE, ";
+public static $NO_OF_DPP_SUGGESTIONS = 10; //change to 5
+public static $mumbaiRegion = array("MH04","MH12","MH28","MH29");
+public static $delhiNCRCities = array("DE00","UP25","HA03","HA02","UP12","UP47","UP48",);
+public static $eduGrouping = "education_grouping_mapping_to_edu_level_new";
+public static $occupationGrouping = "occupation_grouping_mapping_to_occupation";
 }
+
