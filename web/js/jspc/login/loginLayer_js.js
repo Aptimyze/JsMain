@@ -89,11 +89,58 @@ function LoginValidation()
 		}
 }
 function validateEmail(email) {
-    var x = email;
+    var x = $.trim(email);
     var re = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
-    return re.test(email);
+    return re.test(x);
     }
     
+function validateMobile(mobile) {
+	var str = $.trim(mobile);
+	// removes leading zeros
+	str = str.replace(/^0+/, '');
+	if(str.indexOf('-') > -1)
+	{
+		var result = str.split("-");
+		// remove leading zeros from number
+		result[1] = result[1].replace(/^0+/, '');
+		str = result.join("-");
+	}
+
+	if(str.indexOf('+') > -1)
+	{
+		var result = str.split("+");
+		// remove leading zeros from isd
+		result[1] = result[1].replace(/^0+/, '');
+		str = result.join("+");
+	}
+	var re = /^((\+)?[0-9]*(-)?)?[0-9]{10,}$/i;
+	var isd = '';
+	var phone = '';
+	var data = new Array();
+	if(re.test(str))
+	{
+		// remove + and -
+		str = str.split('+').join('');
+		str = str.split('-').join('');
+		phone = str.slice(-10);
+		if(str.length == 10)
+		{
+			isd = '91';
+		}
+		else
+		{
+			isd = str.slice(0, str.length - 10);
+		}
+		data['flag'] = 1;
+		data['phone'] = phone;
+		data['isd'] = isd;
+	}
+	else
+	{
+		data['flag'] = 0;
+	}
+	return data;
+}
 function validateCaptcha()
 {
 	 if($("#blueText").html()=="Slide to Verify" &&  $('#captchaDiv').is(':visible'))
@@ -500,7 +547,7 @@ function postForgotEmailLayer()
 					});
 				}
 				else{
-					$("#forgotPasswordErr").html("Provide a valid email address").addClass("visb");
+					$("#forgotPasswordErr").html("Provide a valid email address or phone no.").addClass("visb");
 					$("#userEmailBox").addClass("brderred");
 					 setTimeout(function(){
 						 $("#forgotPasswordErr").removeClass("visb");
