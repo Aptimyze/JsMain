@@ -135,9 +135,9 @@ EOF;
             //print_r($csvAttachment);die;
 
             //send csv as mail
-            //$to = "rohan.mathur@jeevansathi.com";
+            $to = "rohan.mathur@jeevansathi.com";
             $cc = "vibhor.garg@jeevansathi.com,ankita.g@jeevansathi.com";
-            $to = "nsitankita@gmail.com";
+            //$to = "nsitankita@gmail.com";
             $message = "Please find attached excel sheet containing requested data";
             $subject = "Analysis score distribution report";
             SendMail::send_email($to, $message, $subject, 'js-sums@jeevansathi.com', $cc, '', $csvAttachment, "application/vnd.ms-excel", "ScoreDistribution_".date('d-M-Y').".csv", '', '', '', '');
