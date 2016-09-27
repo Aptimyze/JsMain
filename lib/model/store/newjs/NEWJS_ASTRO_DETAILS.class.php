@@ -228,5 +228,39 @@ class NEWJS_ASTRO extends TABLE {
             throw new jsException($e);
         }
     }
+    
+    /**
+     * 
+     * @param type $iProfileID
+     * @param type $arrRecordData
+     * @return boolean
+     * @throws jsException
+     */
+    public function replaceRecord($iProfileID, $arrRecordData) {
+		try {
+			$keys = "PROFILEID,";
+			$values = ":PROFILEID ,";
+			foreach ($arrRecordData as $key => $value) {
+				$keys.= $key . ",";
+				$values.= ":" . $key . ",";
+			}
+			$keys = substr($keys, 0, -1);
+			$values = substr($values, 0, -1);
+			$sql = "REPLACE INTO newjs.ASTRO_DETAILS ($keys) VALUES ($values)";
+			$res = $this->db->prepare($sql);
+
+			foreach ($arrRecordData as $key => $val) {
+				$res->bindValue(":" . $key, $val);
+			}
+
+			$res->bindValue(":PROFILEID", $iProfileID);
+			$res->execute();
+            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+			return true;
+		}
+		catch(PDOException $e) {
+			throw new jsException($e);
+		}
+	}
 }
 ?>

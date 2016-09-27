@@ -123,10 +123,10 @@ class ProfileReplaceLib
      * @param $arrParams
      * @return bool
      */
-    public function replaceASTRO_DETAILS($iProfileID,$arrParams=array())
+    public function replaceASTRO_DETAILS($iProfileID,$arrParams)
     {
         try{
-            $this->objProfileAstroDetailsStore->update($iProfileID,$arrParams);
+            $this->objProfileAstroDetailsStore->replaceRecord($iProfileID,$arrParams);
         } catch (Exception $ex) {
             jsCacheWrapperException::logThis($ex);
             return false;

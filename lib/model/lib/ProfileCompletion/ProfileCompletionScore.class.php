@@ -882,7 +882,6 @@ class ProfileCompletionScore extends AbstractProfileCompletionScore
 		
 		$objHoroscope3 = new NEWJS_ASTRO;
 		$iCount3 = $objHoroscope3->getIfAstroDetailsPresent($iProfileID);
-		$arrRes = $objHoroscope3->getAstroDetails(array($iProfileID),'');
 		
 		if($iCount1 || $iCount2 || $iCount3)
 			return true;
