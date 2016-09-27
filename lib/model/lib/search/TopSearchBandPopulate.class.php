@@ -2186,21 +2186,48 @@ class TopSearchBandPopulate
                                         $output["caste"] = $castes[0];  
                                 }
                         }
-			$casteObj = new RevampCasteFunctions();
-			$output["religion"] = $casteObj->getParentIfSingle($this->selectedCaste);
-			if($output["religion"])
-				$output["religion_label"] =FieldMap::getFieldLabel("religion",$output["religion"]);
-			else
-				$output["religion_label"] =NULL;
+                        if($this->isNewApp == 1){
+                                $casteObj = new RevampCasteFunctions();
+                                $castes = explode(",",$this->selectedCaste);
+                                foreach($castes as $caste){
+                                        $religion = $casteObj->getParentIfSingle($caste);
+                                        if($religion && !in_array($religion,$output["religion"])){
+                                                $output["religion"][] = $religion;
+                                                $output["religion_label"][] = FieldMap::getFieldLabel("religion",$religion);
+                                        }
+                                }
+                                $output["religion"] = implode(',',$output["religion"]);
+                                $output["religion_label"] =implode(',',$output["religion_label"]); 
+                        }else{
+                                $casteObj = new RevampCasteFunctions();
+                                $output["religion"] = $casteObj->getParentIfSingle($this->selectedCaste);
+                                if($output["religion"])
+                                        $output["religion_label"] =FieldMap::getFieldLabel("religion",$output["religion"]);
+                                else
+                                        $output["religion_label"] =NULL;
+                        }
 		}
 		if(!$output["religion"])
 		{
-			if($this->selectedReligion=="" || strpos($this->selectedReligion,",")>0)
+                        
+			if($this->selectedReligion=="")
 			{
 				$output["religion"]=NULL;
 				$output["religion_label"] =NULL;
-			}
-			else
+			}elseif(strpos($this->selectedReligion,",")>0){
+                                if($this->isNewApp == 1){
+                                        $religions = explode(',',$this->selectedReligion);
+                                        foreach($religions as $religion){
+                                                $output["religion"][] = $religion;
+                                                $output["religion_label"][] =FieldMap::getFieldLabel("religion",$religion); 
+                                        }
+                                        $output["religion"] = implode(',',$output["religion"]);
+                                        $output["religion_label"] =implode(',',$output["religion_label"]); 
+                                }else{
+                                        $output["religion"]=NULL;
+                                        $output["religion_label"] =NULL;
+                                }
+                        }else
 			{
 				$output["religion"] = $this->selectedReligion;
 				$output["religion_label"] =FieldMap::getFieldLabel("religion",$this->selectedReligion);
@@ -2220,22 +2247,40 @@ class TopSearchBandPopulate
 			if(strpos($this->selectedMtongue,",")>0)
 			{
 				$mstatusArr = FieldMap::getFieldLabel('mtongue_region','',1);
+                                $forlabelArr = array();
+                                $oMtongue = $this->selectedMtongue;
 				foreach($mstatusArr as $k=>$v)
 				{
-					if(self::if_two_string_contains_same_values($v,$this->selectedMtongue))
+                                        if(count(array_intersect(explode(',',$v),explode(',',$this->selectedMtongue))) == sizeOf(explode(',',$v))){
 						$forLabel=$k;	
+                                                $forlabelArr[] = $k;
+                                                $oMtongue = array_diff(explode(',',$oMtongue),explode(',',$v));
+                                        }
 				}
-				if($forLabel)
+				if($forLabel || $forlabelArr)
 				{
-					$mstatusArr = FieldMap::getFieldLabel('mtongue_region_label','',1);
-					$output["mtongue"] = $this->selectedMtongue;
-					if($forLabel>0 && $forLabel<5)
-						$output["mtongue_label"] = "All ".$mstatusArr[$forLabel];
-					elseif($forLabel==0)
-						$output["mtongue_label"] = $mstatusArr[$forLabel];
-					elseif($forLabel==5)
-						$output["mtongue_label"] = TopSearchBandConfig::$allHindiLabel;
+                                        $mstatusArr = FieldMap::getFieldLabel('mtongue_region_label','',1);
+                                        $output["mtongue"] = explode(',',$this->selectedMtongue);
+                                        foreach($forlabelArr as $forlabelAr){
+                                                if($forlabelAr>0 && $forlabelAr<5)
+                                                        $output["mtongue_label"][] = "All ".$mstatusArr[$forlabelAr];
+                                                elseif($forlabelAr==0)
+                                                        $output["mtongue_label"][] = $mstatusArr[$forlabelAr];
+                                                elseif($forlabelAr==5)
+                                                        $output["mtongue_label"][] = TopSearchBandConfig::$allHindiLabel;
+                                        }
 				}
+                                if($this->isNewApp == 1){
+                                        foreach($oMtongue as $mt){
+                                                $output["mtongue"][] = $mt;
+                                                $output["mtongue_label"][] =FieldMap::getFieldLabel("community",$mt); 
+                                        }
+                                        $output["mtongue"] = implode(',',$output["mtongue"]);
+                                        $output["mtongue_label"] =implode(',',$output["mtongue_label"]); 
+                                }else{
+                                        $output["mtongue"] = $output["mtongue"][0];
+                                        $output["mtongue_label"] = $output["mtongue_label"][0];
+                                }
 			}
 		}
 		else
