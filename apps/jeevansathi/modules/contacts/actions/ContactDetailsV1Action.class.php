@@ -76,7 +76,6 @@ class ContactDetailsV1Action extends sfAction
 		$memHandlerObj = new MembershipHandler();
 		$data2 = $memHandlerObj->fetchHamburgerMessage($request);
 		$MembershipMessage = $data2['hamburger_message']['top']; 
-		$plan = CommonFunction::getMembershipName($this->contactEngineObj->contactHandler->getViewed()->getPROFILEID());
 		if ($priArr[0]["CONTACT_DETAIL"]["VISIBILITY"] == "Y" && !$this->contactEngineObj->errorHandlerObj->getErrorMessage()) {
 			$responseArray                       = $this->getContactDetailsInArray($this->contactEngineObj);
 			$source=CommonFunction::getViewContactDetailFlag($this->contactEngineObj->contactHandler);
@@ -103,7 +102,7 @@ class ContactDetailsV1Action extends sfAction
 					if(MobileCommon::isApp()=="A" && $this->contactEngineObj->getComponent()->contactDetailsObj->getEvalueLimitUser()==CONTACT_ELEMENTS::EVALUE_PCS)
 					{
 						unset($responseArray);					
-						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$plan." plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
+						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue/eAdvantage plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
 							$responseArray["headerLabel"]            = "Complete your profile";
 							$responseArray["errMsgIconId"]           = "21";
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
