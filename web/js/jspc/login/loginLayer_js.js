@@ -461,7 +461,15 @@ function postForgotEmailLayer()
 			var email=$("#userEmail").val();
 			if(email)
 			{
-				if(validateEmail(email))
+				var flag = validateEmail(email);
+				if(!flag)
+				{
+					var data = validateMobile(email);
+					flag = data['flag'];
+					phone = data['phone'];
+					isd = data['isd'];
+				}
+				if(flag)
 				{       
 					showCommonLoader("#forgotPasswordContainer");
 					 $.ajax({
