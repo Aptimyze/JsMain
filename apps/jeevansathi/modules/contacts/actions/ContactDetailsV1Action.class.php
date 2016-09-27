@@ -116,7 +116,7 @@ class ContactDetailsV1Action extends sfAction
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
 						$responseArray["footerbutton"]["text"] = $MembershipMessage;
-						$responseArray["contactdetailmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has an ".$plan." plan and has made contact details visible. Upgrade to eValue to make your phone/email visible to all matching profiles";
+						$responseArray["contactdetailmsg"] = $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue plan and has made contact details visible. Upgrade to eValue to make your phone/email visible to all matching profiles";
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'Y');
 						
 					}
