@@ -1,6 +1,6 @@
 <?php
 include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-$mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104","9810300513");
+$mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104","9810300513","9868673709");
 include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 $status = sendPresenceRequest();
 if($status!='200')

@@ -14,6 +14,7 @@ ini_set('memory_limit', '300M');
 $maDb = mysql_connect("master.js.jsb9.net","privUser","Pr!vU3er!") or die("Unable to connect to js server at ".$start);
 $myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
 $shDb3 = mysql_connect("productshard2slave.js.jsb9.net:3307","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$maDb);
 mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$myDb);
 mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$shDb3);
 

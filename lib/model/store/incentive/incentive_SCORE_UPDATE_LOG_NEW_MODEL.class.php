@@ -9,7 +9,7 @@ class incentive_SCORE_UPDATE_LOG_NEW_MODEL extends TABLE{
     *get score distribution
     *@param : $startDt,$endDt,$model
     */
-    public function getScoreDistribution($startDt,$endDt,$model)
+    public function getScoreDistribution($model,$startDt,$endDt)
     {
         try{
             $sql = "SELECT * from incentive.SCORE_UPDATE_LOG_NEW_MODEL WHERE MODEL = :MODEL AND ENTRY_DT BETWEEN :START_ENTRY_DT AND :END_ENTRY_DT";
