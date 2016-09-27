@@ -40,7 +40,8 @@ EOF;
         if (!sfContext::hasInstance()) {
             sfContext::createInstance($this->configuration);
         }
-        $useScoreLogTable = true;
+        $useScoreLogTable = false;
+        $modelMapping = array("E"=>"EVER_PAID","R"=>"RENEWAL","N"=>"NEVER_PAID");
         if($useScoreLogTable == true){
             $modelArr = array("EVER_PAID","NEVER_PAID","RENEWAL");
             $scoreDBObj = new incentive_SCORE_UPDATE_LOG_NEW_MODEL("newjs_slave");
@@ -49,7 +50,7 @@ EOF;
         }
         else{
             $modelArr = array("E","N","R");
-            $scoreDBObj = new test_ANALYTICS_SCORE_POOL("newjs_slave");
+            $scoreDBObj = new test_ANALYTICS_SCORE_POOL("newjs_local111");
             $startDt = "";
             $endDt = "";
         }
@@ -100,10 +101,20 @@ EOF;
 
             //print_r($data);die;
             foreach($data as $key=>$model) {
+                if(($key == "EVER_PAID"|| $key == "E")){
+                    fputcsv($fp, array('SCORE','PROFILE COUNT','PROFILES %'));
+                }
+                if($useScoreLogTable == false){
+                    $modelName = $modelMapping[$key];
+                }
+                else{
+                    $modelName = $key;
+                }
+                fputcsv($fp, array('-----',$modelName,'-------'));
                 foreach ($model as $range => $val) {
                     $csvData = array();
                     if($range != "TOTAL COUNT"){
-                        $csvData['MODEL'] = $key;
+                        //$csvData['MODEL'] = $key;
                         $csvData['SCORE'] = $range;
                         $csvData['PROFILE COUNT'] = $val;
                         if($data[$key]['TOTAL COUNT'] == 0 || $val == 0){
@@ -115,9 +126,8 @@ EOF;
                     }
                   
                     //print_r($csvData);
-                    if(($key == "EVER_PAID"|| $key == "E") && $range=="NO_SCORE"){
-                        fputcsv($fp, array('MODEL','SCORE','PROFILE COUNT','PROFILES %'));
-                    }
+
+                    
                    fputcsv($fp, $csvData);
                 } 
             }
