@@ -18,13 +18,18 @@ EOF;
 	protected function execute($arguments = array(), $options = array())
 	{
 		$currdate = date('Y.m.d');
-		var_dump($currdate);
-		$urlToHit = "10.10.18.66:9200/filebeat-".$currdate."/_search";
+		$elkServer = '10.10.18.66';
+		$elkPort = '9200';
+		$indexName = 'filebeat-'.$currdate;
+		$query = '_search';
+		$interval = "1h";
+		$threshold = 50;
+		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 		$params = [
 			"query"=> [
 				"range" => [
 					"@timestamp" => [
-						"gt" => "now-1h",
+						"gt" => "now-".$interval,
 						"lt" => "now"
 					]
 				]
@@ -45,13 +50,25 @@ EOF;
 		{
 		    $arrModules[$module['key']] = $module['doc_count']; 
 		}
-		// var_dump($arrModules['500']);
-		foreach ($arrModules as $key => $value) {
-			echo $key.$value;
-			if($value > 50)
+		// $to = "jsissues@jeevansathi.com";
+		$to = "nikhil.mittal@jeevansathi.com";
+		$from = "nikhil.mittal@jeevansathi.com";
+
+		$msg = '';
+		$kibanaUrl = "http://10.10.18.66:5601/app/kibana#/dashboard/Common-Dash";
+		$subject = "Kibana Module Alert";
+		foreach ($arrModules as $key => $value)
+		{
+			if($value > $threshold)
 			{
-				// fire alert
+				$msg .= $key." has encountered ".$value." errors.\n";
 			}
 		}
+		if($msg != '')
+		{
+			$msg = "In the interval of ".$interval." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
+		}
+
+		SendMail::send_email($to,$msg,$subject,$from,'','','','','','','','nikhil.mittal@jeevansathi.com');
 	}
 }
