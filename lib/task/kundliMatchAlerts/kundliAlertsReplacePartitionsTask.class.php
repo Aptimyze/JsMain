@@ -34,7 +34,6 @@ EOF;
 
         //fetch latest partition number
         $lastPartitionName = intval($lastActiveLogObj->getLastActivePartition());
-        echo($lastPartitionName);die;
         //get Last Partition Range
         $lastPartitionRange = intval($kundliAlertsObj->getLatestPartitionRange('p'.$lastPartitionName));     echo($lastPartitionRange);die;   
         if($gap >= ($lastPartitionRange-1)){
