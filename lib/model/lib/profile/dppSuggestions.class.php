@@ -44,7 +44,7 @@ class dppSuggestions
 				//print_R($suggestedValueArr);die;
 				if(is_array($suggestedValueArr))
 				{
-					$valueArr = $this->getRemainingSuggestionValues($suggestedValueArr,$type,count($valueArr["data"]),$valueArr);	
+					$valueArr = $this->getRemainingSuggestionValues($suggestedValueArr,$type,count($valueArr["data"]),$valueArr,$valArr);	
 				}
 			}
 										
@@ -158,7 +158,7 @@ class dppSuggestions
 		return $suggestedValue;
 	}
 
-	public function getRemainingSuggestionValues($suggestedValueArr,$type,$valueArrDataCount,$valueArr)
+	public function getRemainingSuggestionValues($suggestedValueArr,$type,$valueArrDataCount,$valueArr,$valArr)
 	{
 		$type = strtolower($type);
 		if($type == "mtongue")
@@ -190,7 +190,7 @@ class dppSuggestions
 		{
 			if($remainingCount != 0)
 			{
-				if(!array_key_exists($fieldId, $valueArr["data"]))
+				if(!array_key_exists($fieldId, $valueArr["data"]) && !in_array($fieldId,$valArr))
 				{
 					$valueArr["data"][$fieldId] =  FieldMap::getFieldlabel($type,$fieldId,'');
 				}
@@ -251,14 +251,14 @@ class dppSuggestions
 			{
 				if(array_key_exists($groupingKey, $GroupingArr))
 				{
-					$ValArr = $GroupingArr[$groupingKey];
+					$ValArr1 = $GroupingArr[$groupingKey];
 				}
-						//print_r($eduValArr);die;
+						//print_r($ValArr1);die;
 						//echo($type);
 						//print_R($valueArr["data"]);die;
-				foreach($ValArr as $k=>$v)
+				foreach($ValArr1 as $k=>$v)
 				{
-					if(!array_key_exists($v, $valueArr["data"]) && $remainingCount >0)
+					if(!array_key_exists($v, $valueArr["data"]) && $remainingCount >0 && !in_array($v,$valArr))
 					{
 						$valueArr["data"][$v] =  FieldMap::getFieldlabel(strtolower($type),$v,'');
 						$remainingCount--;
@@ -276,23 +276,19 @@ class dppSuggestions
 
 	public function getTrendsArr($profileId,$percentileFields)
 	{
-		// $pidKey = $profileId."_dpp";
-		// $resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($pidKey);
-		// if($resultArr == "noKey" || $resultArr == false)
-		// {
-		// 	$NEWJS_IGNOREObj = new newjs_IGNORE_PROFILE($this->dbname);
-		// 	$resultArr = $NEWJS_IGNOREObj->listIgnoredProfile($pid,$seperator);
-		// 	$this->addDataToFile("new");
-		// 	IgnoredProfileCacheLib::getInstance()->storeDataInCache($pidKey,$resultArr);
-		// 	return $resultArr;
-		// }
-		// else
-		// {        		
-		// 	return $resultArr;        		
-		// }
-		$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
-		$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
-		return $trendsArr;
+		$pidKey = $profileId."_dpp";
+		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);
+		if($trendsArr == "noKey" || $trendsArr == false)
+		{
+			$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
+			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
+			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
+			return $trendsArr;
+		}
+		else
+		{        		
+			return $trendsArr;        		
+		}
 	}
 }
 ?>
