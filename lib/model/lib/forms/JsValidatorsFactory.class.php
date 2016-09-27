@@ -42,7 +42,7 @@ class JsValidatorsFactory {
 				$stateArr = array_keys(FieldMap::getFieldLabel("state_india",'',1));
 				foreach($stateArr as $x=>$y)
 				{
-					$choices[]=$y."00";
+					$choices[]=$y."OT";
 				}
 				$stateArr = array_keys(FieldMap::getFieldLabel("city_usa",'',1));
 				foreach($stateArr as $x=>$y)

@@ -29,7 +29,7 @@ class ApiEditSubmitV1Action extends sfActions
 		$this->editFieldNameArr=$request->getParameter('editFieldArr');
 		if($this->editFieldNameArr['STATE_RES'] && $this->editFieldNameArr['CITY_RES']=="0")
 		{
-			$this->editFieldNameArr['CITY_RES']=  $this->editFieldNameArr['STATE_RES'] ."00";
+			$this->editFieldNameArr['CITY_RES']=  $this->editFieldNameArr['STATE_RES'] ."OT";
 		}
 		unset($this->editFieldNameArr['STATE_RES']);
                 if(!empty($_FILES)){

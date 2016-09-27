@@ -27,7 +27,7 @@ class newJsmsPage1Action extends sfAction
 		$newsource		= $trackParams['newsource'];
 		if($reg_params['city_res']==0 && $reg_params['country_res']==51)
 		{
-			$reg_params['city_res']=$reg_params['state_res']."00";
+			$reg_params['city_res']=$reg_params['state_res']."OT";
 		}
 		unset($reg_params['state_res']);
 		$request->setParameter('reg',$reg_params);

@@ -490,7 +490,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$value='';
 		if($this->profile->getCITY_RES())
 		{
-			if(substr($this->profile->getCITY_RES(),2,2)=="00")
+			if(substr($this->profile->getCITY_RES(),2)=="OT")
 				$city = "0";
 			else
 				$city = $this->profile->getCITY_RES();
