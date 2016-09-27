@@ -102,7 +102,7 @@ EOF;
             //print_r($data);die;
             foreach($data as $key=>$model) {
                 if(($key == "EVER_PAID"|| $key == "E")){
-                    fputcsv($fp, array('SCORE','PROFILE COUNT','PROFILES %'));
+                    fputcsv($fp, array('SCORE','PROFILE COUNT'));
                 }
                 if($useScoreLogTable == false){
                     $modelName = $modelMapping[$key];
@@ -117,12 +117,12 @@ EOF;
                         //$csvData['MODEL'] = $key;
                         $csvData['SCORE'] = $range;
                         $csvData['PROFILE COUNT'] = $val;
-                        if($data[$key]['TOTAL COUNT'] == 0 || $val == 0){
+                        /*if($data[$key]['TOTAL COUNT'] == 0 || $val == 0){
                           $csvData['PROFILES %'] = "0 %";  
                         }
                         else{
                             $csvData['PROFILES %'] = round((($val / $data[$key]['TOTAL COUNT']) * 100),2)." %";
-                        }
+                        }*/
                     }
                   
                     //print_r($csvData);
@@ -135,9 +135,9 @@ EOF;
             //print_r($csvAttachment);die;
 
             //send csv as mail
-            //$to = "rohan.mathur@jeevansathi.com";
+            $to = "rohan.mathur@jeevansathi.com";
             $cc = "vibhor.garg@jeevansathi.com,ankita.g@jeevansathi.com";
-            $to = "nsitankita@gmail.com";
+            //$to = "nsitankita@gmail.com";
             $message = "Please find attached excel sheet containing requested data";
             $subject = "Analysis score distribution report";
             SendMail::send_email($to, $message, $subject, 'js-sums@jeevansathi.com', $cc, '', $csvAttachment, "application/vnd.ms-excel", "ScoreDistribution_".date('d-M-Y').".csv", '', '', '', '');
