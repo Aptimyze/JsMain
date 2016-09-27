@@ -2,14 +2,12 @@
 
 class dppSuggestions
 {
+	//This function fetches dppSuggestion values to be shown and returns it to the calling function
 	public function getDppSuggestions($trendsArr,$type,$valArr)
 	{
-		//print_R($valArr);die;
 		$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 		$trendVal = $this->getTrendsValues($percentileArr);		
-		//print_R($trendVal);die;
 		$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);
-		//print_R($valueArr);die;
 		if(count($valueArr["data"])<10)	// add in constants and change to 10		
 		{
 			if($type == "CITY")
@@ -33,7 +31,6 @@ class dppSuggestions
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
 				$valueArr["type"] = $type;
-				//print_r($valueArr);die;
 			}
 			else
 			{
@@ -41,7 +38,6 @@ class dppSuggestions
 				{
 					$suggestedValueArr[$v2] = $this->getDppSuggestionsForFilledValues($type,$v2);
 				}
-				//print_R($suggestedValueArr);die;
 				if(is_array($suggestedValueArr))
 				{
 					$valueArr = $this->getRemainingSuggestionValues($suggestedValueArr,$type,count($valueArr["data"]),$valueArr,$valArr);	
@@ -81,6 +77,7 @@ class dppSuggestions
 		return $valueArr;
 	}
 
+	//This function uses the array in $trendsArr and converts in into the desired key=>value paired Array
 	public function getTrendsValues($val)
 	{
 		$tempArray=explode("|",$val);
@@ -96,6 +93,7 @@ class dppSuggestions
 		return $resultTrend;
 	}
 
+	//This function takes the trendsArr for each $type and gets the trends data to be sent as apiResponse
 	public function getDppSuggestionsFromTrends($trendsArr,$type,$valArr)
 	{
 		$count = 0;
@@ -118,6 +116,8 @@ class dppSuggestions
 
 
 	}
+
+	//This function gets the value for the $key specified for the given $type
 	public function getFieldMapValueForTrends($key,$type)
 	{
 		$type = strtolower($type);
@@ -144,6 +144,7 @@ class dppSuggestions
 		return $returnValue;
 	}
 
+	//this functions calls the dppAutoSuggestValue function to get the suggested Values corresponding to each input value based on the key and type
 	public function getDppSuggestionsForFilledValues($type,$fieldValue)
 	{		
 		$dppData = DppAutoSuggestEnum::$FIELD_ID_ARRAY;		
@@ -158,6 +159,7 @@ class dppSuggestions
 		return $suggestedValue;
 	}
 
+	//For the suggestedValueArr formed, frequency distribution is calculated and sorted array is then picked to fill in the remaining values.
 	public function getRemainingSuggestionValues($suggestedValueArr,$type,$valueArrDataCount,$valueArr,$valArr)
 	{
 		$type = strtolower($type);
@@ -165,6 +167,8 @@ class dppSuggestions
 		{
 			$type = "community";
 		}
+
+		//frequency distribution calculation
 		foreach($suggestedValueArr as $fieldId =>$vArr)
 		{
 			foreach($vArr as $k3=>$v3)
@@ -205,6 +209,7 @@ class dppSuggestions
 		return $valueArr;	
 	}
 
+	//This functions finds dppSuggestions values for Education and Occupation depending on the frequency distribution of groupings that the input values belong to
 	public function getSuggestionsFromGroupings($valueArr,$type,$valArr)
 	{	
 		$SuggestionArr = array();
@@ -221,6 +226,7 @@ class dppSuggestions
 			$GroupingArr[$groupingKey] = explode(",",$stringVal);
 		}
 
+		//to find the frequency distribution of grouping array based on the input values sent
 		foreach($valArr as $k1=>$v1)
 		{
 			foreach($GroupingArr as $groupingKey=>$vArr)
@@ -242,9 +248,9 @@ class dppSuggestions
 			}
 		}
 		arsort($SuggestionArr);
-				//print_R($educationSuggestionArr);die;
 		$remainingCount = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS - count($valueArr["data"]);
-				//echo($remainingCount);die;
+		
+		//This loop is on sorted grouping array based on which values corresponding each grouping are fetched and evaluated
 		foreach($SuggestionArr as $groupingKey=>$freqDistribution)
 		{
 			if($remainingCount != 0)
@@ -253,9 +259,6 @@ class dppSuggestions
 				{
 					$ValArr1 = $GroupingArr[$groupingKey];
 				}
-						//print_r($ValArr1);die;
-						//echo($type);
-						//print_R($valueArr["data"]);die;
 				foreach($ValArr1 as $k=>$v)
 				{
 					if(!array_key_exists($v, $valueArr["data"]) && $remainingCount >0 && !in_array($v,$valArr))
@@ -274,6 +277,7 @@ class dppSuggestions
 		return $valueArr;
 	}
 
+	//This function checks redis if a value exists corresponding to the key specified or else sends a query to fetch trendsArr
 	public function getTrendsArr($profileId,$percentileFields)
 	{
 		$pidKey = $profileId."_dpp";

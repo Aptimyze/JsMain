@@ -24,15 +24,12 @@ class dppSuggestionsV1Action extends sfActions
 		$profileId = $this->loggedInProfileObj->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
 		
+		//Trends arr is fetched from twoWayMatches.Trends table
 		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields);
-		//---- write redis code---
-		$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
-		$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
 		//print_R($trendsArr);die;
-				//JsMemcache::getInstance()->remove($profileId,$trendsArr);
+				
 		$data = $request->getParameter("Param");
 		$decodedData = json_decode($data);
-		//print_R($decodedData);die;
 		foreach($decodedData as $key=>$val)
 		{
 			foreach($val as $key1=>$val1)
@@ -45,24 +42,19 @@ class dppSuggestionsV1Action extends sfActions
 								
 			}
 		}		
-		print_r($finalArr);die;
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiResponseHandlerObj->setResponseBody(json_encode($finalArr));
-			$apiResponseHandlerObj->generateResponse();
 		}
 		else
 		{
-			//write failure code
+			$errorArr["ERROR"] = "Something went wrong";
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+			$apiResponseHandlerObj->setResponseBody($errorArr);
 		}
-
-		// if(!$request->getParameter('profilechecksum'))
-		// {
-		// 	$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-		// 	$apiResponseHandlerObj->generateResponse();
-		// 	die;
-		// }
+		//print_R($finalArr);die;
+		$apiResponseHandlerObj->generateResponse();
 		return sfView::NONE;
 	}	
 }
