@@ -102,7 +102,7 @@ EOF;
             //print_r($data);die;
             foreach($data as $key=>$model) {
                 if(($key == "EVER_PAID"|| $key == "E")){
-                    fputcsv($fp, array('SCORE','PROFILE COUNT','PROFILES %'));
+                    fputcsv($fp, array('SCORE','PROFILE COUNT'));
                 }
                 if($useScoreLogTable == false){
                     $modelName = $modelMapping[$key];
@@ -117,12 +117,12 @@ EOF;
                         //$csvData['MODEL'] = $key;
                         $csvData['SCORE'] = $range;
                         $csvData['PROFILE COUNT'] = $val;
-                        if($data[$key]['TOTAL COUNT'] == 0 || $val == 0){
+                        /*if($data[$key]['TOTAL COUNT'] == 0 || $val == 0){
                           $csvData['PROFILES %'] = "0 %";  
                         }
                         else{
                             $csvData['PROFILES %'] = round((($val / $data[$key]['TOTAL COUNT']) * 100),2)." %";
-                        }
+                        }*/
                     }
                   
                     //print_r($csvData);
