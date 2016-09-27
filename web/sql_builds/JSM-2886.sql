@@ -177,3 +177,8 @@ INSERT INTO `SOURCE_CATEGORY_MAPPING` VALUES ('', 'm_c_hindi', 'Rest_ MobileSEM'
 INSERT INTO `SOURCE_CATEGORY_MAPPING` VALUES ('', 'm_commu', 'Rest_ MobileSEM');
 INSERT INTO `SOURCE_CATEGORY_MAPPING` VALUES ('', 'M_COMP59', 'Rest_ MobileSEM');
 INSERT INTO `SOURCE_CATEGORY_MAPPING` VALUES ('', 'mobile_JS_Exclusive', 'Rest_ MobileSEM');
+
+
+USE MIS;
+
+INSERT INTO `MIS_MAINPAGE` VALUES (116, 'City/Community/Source wise Quality Registration', '/operations.php/registerMis/communitywiseRegistration?cid=$cid', NULL, 'P+MG', 'Y', '');
