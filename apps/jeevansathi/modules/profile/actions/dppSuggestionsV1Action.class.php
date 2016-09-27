@@ -26,8 +26,6 @@ class dppSuggestionsV1Action extends sfActions
 		
 		//Trends arr is fetched from twoWayMatches.Trends table
 		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields);
-		//print_R($trendsArr);die;
-				
 		$data = $request->getParameter("Param");
 		$decodedData = json_decode($data);
 		foreach($decodedData as $key=>$val)
@@ -41,7 +39,7 @@ class dppSuggestionsV1Action extends sfActions
 				}
 								
 			}
-		}		
+		}	
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -53,7 +51,6 @@ class dppSuggestionsV1Action extends sfActions
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiResponseHandlerObj->setResponseBody($errorArr);
 		}
-		//print_R($finalArr);die;
 		$apiResponseHandlerObj->generateResponse();
 		return sfView::NONE;
 	}	
