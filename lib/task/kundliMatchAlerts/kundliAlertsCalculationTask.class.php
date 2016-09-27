@@ -52,9 +52,13 @@ EOF;
 
                        //This call fetches the data that is stored in the log table so that they can be put in the NOT IN array in solr search
                        $deDupingArray = $kundliLogObj->getDeDupedProfiles($profileId,$requiredDate);
-
+                       $spaceSeperatedDeDupingString = "";
                        //array is imploded since space seperated string is to be sent in NOT IN array
-                       $spaceSeperatedDeDupingString = implode(" ", $deDupingArray);
+                       if(is_array($deDupingArray))
+                       {
+                            $spaceSeperatedDeDupingString = implode(" ", $deDupingArray);
+                       }
+                       
                        
                        $loggedInProfileObj = LoggedInProfile::getInstance();
                        $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
