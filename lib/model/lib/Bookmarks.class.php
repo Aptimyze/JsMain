@@ -46,7 +46,7 @@ class Bookmarks
 	{
 		$bookmarkObj = new NEWJS_BOOKMARKS($this->dbname);
 		$bookmarks = $bookmarkObj->removeBookmark($bookmarker, $bookmarkee);
-		return $bookmarks;
+        return $bookmarks;
 	}
 }
 ?>

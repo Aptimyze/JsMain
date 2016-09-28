@@ -613,6 +613,23 @@ function logOutCheck(param,upgradeFromTopNavBar){
     return true; 
 }
 
+function isStorageExist()
+{
+    var bVal = true;
+    if(typeof(Storage)=='undefined')
+        bVal = false;
+
+    try{
+        localStorage.setItem('testLS',"true");
+        localStorage.getItem('testLS');
+        localStorage.removeItem('testLS');
+    }catch(e)
+    {
+        bVal = false;
+    }
+    return bVal;
+}
+
 var timeToCache = 3600; // Time in seconds
 
 function getSearchCacheLocalStorageData(profileid,label)
@@ -666,9 +683,9 @@ function getUrlForHeaderCaching($url)
 		setSearchCacheLocalStorageData(loggedInJspcUser,'dppHeaderCaching',timestamp);
 	
 		if($url.indexOf('?')!='-1')
-			 return $url +"&useHeaderCaching=1&timestamp="+timestamp;
+			 return $url +"&useHeaderCaching=0&timestamp="+timestamp;
 		else
-			return $url+"?useHeaderCaching=1&timestamp="+timestamp;	
+			return $url+"?useHeaderCaching=0&timestamp="+timestamp;	
 	}
 	return $url;
 }
@@ -689,6 +706,12 @@ function callAfterDppChange()
 	}
 }
 
+function showCustomCommonError(msg,timeInMs)
+{
+        if(typeof(msg)=='undefined') msg='Something went wrong. Please try again after some time.';
+        if(typeof(timeInMs)=='undefined') timeInMs=1500;
+            $("#commonError #js-commonErrorMsg").text(msg);
+            $("#commonError").slideDown("slow");
+        setTimeout('$("#commonError").slideUp("slow")',timeInMs);
 
-
-
+}

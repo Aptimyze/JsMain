@@ -56,8 +56,11 @@ class WriteMessagev1Action extends sfAction
 						//print_r($msgDetailsArr);die;
 						if(count($chatDetailsArr))
 						{
-							$messageDetailsArr=array_merge($msgDetailsArr,$chatDetailsArr);
-							//print_r($messageDetailsArr);die;
+								if(count($msgDetailsArr))
+										$messageDetailsArr=array_merge($msgDetailsArr,$chatDetailsArr);
+								else
+										$messageDetailsArr=$chatDetailsArr;
+								//print_r($messageDetailsArr);die;
 						}
 						else
 							$messageDetailsArr=$msgDetailsArr;
@@ -97,6 +100,8 @@ class WriteMessagev1Action extends sfAction
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(true);
+			
 			$apiObj->generateResponse();
 		}
 		else

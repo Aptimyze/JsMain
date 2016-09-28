@@ -47,8 +47,8 @@ resetPasswordSuccess:
   layout: jspcLayout
 
 CALJSMSSuccess:
-  stylesheets: [-*,jsms/common/commoncss]
-  javascripts: [-*]
+  stylesheets: [-*,jsms/common/commoncss,jsms/myjs/CALJSMS_css]
+  javascripts: [-*,jsms/myjs/CALJSMS_js]
   layout: jsmsMobLayout
 
 _notificationLayerJSPC:

@@ -141,17 +141,19 @@
         ~else if $showData eq 1`
         <table width=100%>
             <tr class=formhead style="background-color:LightSteelBlue; line-height: 20px; font-size: 15px;">
-                <td align=center>Entry Dt</td>
-                <td align=center>Bill ID</td>
-                <td align=center>Receipt ID</td>
+                <td align=center>Entry Date</td>
+                <td align=center>Billid</td>
+                <td align=center>Receiptis</td>
                 <td align=center>Profileid</td>
                 <td align=center>Username</td>
-                <td align=center>Service ID</td>
+                <td align=center>Serviceid</td>
                 <td align=center>Start Date</td>
                 <td align=center>End Date</td>
                 <td align=center>Currency</td>
                 <td align=center>Amount</td>
                 <td align=center>Deferrable Flag</td>
+                <td align=center>ASSD(Actual Service Start Date)</td>
+                <td align=center>ASED(Actual Service End Date)</td>
             </tr>
             ~foreach from=$rawData item=profileArr`
             <tr style="background-color:Moccasin">
@@ -166,6 +168,8 @@
                 <td align=center><font color="#000">~$profileArr.CUR_TYPE`</font></td>
                 <td align=center><font color="#000">~$profileArr.AMOUNT`</font></td>
                 <td align=center><font color="#000">~$profileArr.DEFERRABLE`</font></td>
+                <td align=center><font color="#000">~$profileArr.ASSD`</font></td>
+                <td align=center><font color="#000">~$profileArr.ASED`</font></td>
             </tr>
             ~/foreach`
         </table>

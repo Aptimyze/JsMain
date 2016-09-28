@@ -78,6 +78,13 @@ class SearchJSIOS extends SearchJS
                  return SearchTypesEnums::VERIFIED_MATCHES_IOS;
         }
 
+				/**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches()
+        {
+                 return SearchTypesEnums::KundliAlertsIOS;
+        }
         
          /**
         * get No of results for srp page

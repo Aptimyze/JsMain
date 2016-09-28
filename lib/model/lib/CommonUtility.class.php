@@ -776,6 +776,24 @@ die;
 		return $result;
 	}
 
+	/*checkChatPanelCondition
+	* check whether to show chat panel or not acc to module
+	* @inputs: $loggedIn,$module
+	* @return: $showChat
+	*/
+	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
+		$chatNotAvailModuleArr = ["membership","register","phone","social","settings"];
+        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404"];
+		$showChat = 1;
+		if(!$loggedIn){
+			$showChat = 0;
+        }
+		else if(in_array($module, $chatNotAvailModuleArr) || in_array($action, $chatNotAvailActioneArr) || $activated != 'Y'){
+			$showChat = 0;
+		}
+		return $showChat;
+	}
+
 
 
 
@@ -787,7 +805,7 @@ die;
 		if(!$timeout)
 			$timeout = 5;
 		$result = null;
-		if($type!="POST")
+		if($type=="GET")
 		{
 			$response = CommonUtility::sendCurlGetRequest($url,$timeout);
 		}

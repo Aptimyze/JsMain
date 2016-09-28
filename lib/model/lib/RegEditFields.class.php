@@ -2197,7 +2197,20 @@ break;
 					$field->setBlankLabel("");
 					$field->setTableName("JPROFILE:HOROSCOPE_MATCH");
 					$page_obj->setField(91,"","",$field);
-          break;
+
+                                        $field=new Field(133);
+                                        $field->setName("DISPLAYNAME");
+                                        $field->setFieldType("dropdown");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setDependentField("");
+                                        $field->setLabel("");
+                                        $field->setBlankValue("");
+                                        $field->setBlankLabel("");
+                                        $field->setTableName("NAME_OF_USER:DISPLAY");
+                                        $page_obj->setField(133,"","",$field);
+                                        break;
+
+
 case "APP2":
 					$page_obj=new PageFields("APP2");
 

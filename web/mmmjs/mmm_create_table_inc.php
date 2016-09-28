@@ -1,5 +1,10 @@
 <?php
 
+$fileName =  $_SERVER["SCRIPT_FILENAME"];
+$http_msg=print_r($_SERVER,true);
+mail("reshu.rajput@gmail.com,lavesh.rawat@gmail.com","For DLL Movement - $fileName",$http_msg);
+
+
 /**
 *	Filename	:	mmm_create_table_inc.php
 *	Included	:	connect.inc

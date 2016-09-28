@@ -89,6 +89,8 @@ class JsForm extends sfForm
 							$nativePlaceArr['NATIVE_CITY']='';
 							$nativePlaceArr['NATIVE_STATE']='';
 						}
+				  case "NAME_OF_USER":
+						$nameOfUserArr[$column_name]=trim($value);
 					  break;
 			  }
 			  
@@ -141,6 +143,16 @@ class JsForm extends sfForm
 				  $rel =  FieldMap::getFieldLabel('religion',$jprofileFieldArr[RELIGION] );
 				  $jprofileFieldArr[CASTE] = array_search($rel,FieldMap::getFieldLabel('caste',1,1));
 			  }
+			if(is_array($nameOfUserArr) && array_key_exists("NAME",$nameOfUserArr) && $nameOfUserArr['NAME'])
+			{
+			      $nameOfUserObj = new NameOfUser();
+			      $nameOfUserArr['NAME']=$nameOfUserObj->filterName($nameOfUserArr['NAME']);
+			      $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($nameOfUserArr['NAME'],$jprofileFieldArr['GENDER']);
+				if($isNameAutoScreened)
+				{
+					$jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$jprofileFieldArr['SCREENING']);
+				}
+			}
 			  $id=$loggedInObj->insert($jprofileFieldArr);
 		  }else{
 		  	  //Update screening flag
@@ -197,12 +209,19 @@ class JsForm extends sfForm
 	  }
 	  if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$profileid;
-			$nativePlaceObj = new NEWJS_NATIVE_PLACE;
+			$nativePlaceObj = ProfileNativePlace::getInstance();
 			if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 			{
 				unset($nativePlaceArr[PROFILEID]);
 				$nativePlaceObj->UpdateRecord($profileid,$nativePlaceArr);
 			}
+	  }
+          if(count($nameOfUserArr)&&($nameOfUserArr['NAME']!=''||$nameOfUserArr['DISPLAY']!=''))
+	  {
+		$nameOfUserObj = new NameOfUser();
+		if(!array_key_exists("DISPLAY",$nameOfUserArr))
+			$nameOfUserArr['DISPLAY']="";
+		$nameOfUserObj->insertName($id,$nameOfUserArr['NAME'],$nameOfUserArr['DISPLAY']);
 	  }
 	  return $id;
 	}

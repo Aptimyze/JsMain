@@ -20,7 +20,8 @@ class ResponseHandlerConfig
 	public static $FAILURE = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'1');
 	public static $SERVICE_UNAVAILABLE = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'1');
 	public static $HTTP_CODE_MESSAGE_NOT_SET = array("message"=>"HTTP code and message not set","statusCode"=>'1');
-	public static $LOGOUT_PROFILE = array("message"=>"Please login to continue","statusCode"=>'9');
+        public static $IGNORED_MESSAGE = array("message"=>"You have reached the maximum block/ignore limit per user on Jeevansathi. Please unblock some profiles to further use this functionality","statusCode"=>'1');
+        public static $LOGOUT_PROFILE = array("message"=>"Please login to continue","statusCode"=>'9');
 	
 	//Authentication Variables:
 	public static $INVALID_URL = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'3');
@@ -90,7 +91,7 @@ class ResponseHandlerConfig
 	public static $PHONE_INVALID = array("message"=>"Provide a valid mobile number","statusCode"=>"1");
 	public static $PHONE_INVALID_INPUT = array("message"=>"Provide a valid phone number","statusCode"=>"1");
 	public static $DISPLAY_PHONE_SCREEN =  array("message"=>"Display phone screen","statusCode"=>'8');
-	
+	public static $PHONE_JUNK = array("message"=>"Phone number banned due to terms of use violation","statusCode"=>"1");	
 	//incomplete
 	public static $INCOMPLETE_USER =  array("message"=>"incomplete Profile","statusCode"=>'7');
 	public static $APP_DOWN =  array("message"=>"Site temporarily down","statusCode"=>'45');

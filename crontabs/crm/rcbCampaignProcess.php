@@ -23,34 +23,39 @@ $campaignTableArr       =array('OB_JS_RCB'=>array('SALES_CSV_DATA_RCB'));
 foreach($campaignArr as $key=>$campaignName)
 {
 		$processId	=$campaignIdArr[$campaignName];
-		$startDate 	=$dialerHandlerObj->getLastHandledDate($processId);
-                if($startDate=='0000-00-00 00:00:00')
-                        break;
+		$startID 	=$dialerHandlerObj->getLastHandledID($processId);
+                /*if($startDate=='0000-00-00 00:00:00')
+                        break;*/
+		if(!$startID)
+			break;
 
 		$tableArr	=$campaignTableArr[$campaignName];
 		foreach($tableArr as $key=>$tableName){
-			$profilesArr    =$dialerHandlerObj->getProfilesForCampaign($tableName,'',$campaignName, $startDate);
+			$profilesArr    =$dialerHandlerObj->getProfilesForCampaign($tableName,'',$campaignName, '','',$startID);
 			$totalRecord	=count($profilesArr);
 			if($totalRecord>0){
 				foreach($profilesArr as $key=>$dataArr){
+					if(!isset($startDate))
+						$startDate =$dataArr['CSV_ENTRY_DATE'];
 					$dataArr =$dialerHandlerObj->formatDataSet($campaignName,$dataArr,$startDate);		
-					$endDate =$dataArr['CSV_ENTRY_DATE'];
+					$endID =$dataArr['ID'];
+					unset($dataArr['ID']);
 					$dialerHandlerObj->addProfileinCampaign($dataArr, $campaignName);
+					if($endID>0)
+						$dialerHandlerObj->updateLastHandledID($processId,$endID);
 					unset($dataArr);
 				}
 			}
 			unset($profilesArr);
 		}
-		$dialerCampaignReords =$dialerHandlerObj->getCampaignRecordsForDuration($campaignName, $startDate );
+		if(isset($startDate))
+			$dialerCampaignReords =$dialerHandlerObj->getCampaignRecordsForDuration($campaignName, $startDate );
 		if($totalRecord !=$dialerCampaignReords){
 			$sub	="FAILED: Dialer insert for $campaignName";
 			$msg	="Campaign Records:".$totalRecord."# Dialer Records Inserted:".$dialerCampaignReords;	
 			mail($to,$sub,$msg,$from);
 		}
-		if($endDate=='0000-00-00 00:00:00' || !$endDate){}
-		else	
-			$dialerHandlerObj->updateLastHandledDate($processId,$endDate);
-
+		unset($startDate);
 		unset($campaignRecord);
 		unset($dialerCampaignReords);
 }

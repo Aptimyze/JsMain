@@ -44,7 +44,7 @@ class chatActions extends sfActions
 				//$pass = EncryptPassword::generatePassword("test".$username);
 				//$pass = "test".$username;
 
-				$url = JsConstants::$openfireConfig['HOST'] . ":" . JsConstants::$openfireConfig['PORT'] . "/plugins/restapi/v1/users/" . $username;
+				$url = JsConstants::$openfireConfigInternal['HOST'] . ":" . JsConstants::$openfireConfigInternal['PORT'] . "/plugins/restapi/v1/users/" . $username;
 				//$url = "http://localhost:9090/plugins/restapi/v1/users/".$username;
 				$ch = curl_init();
 				curl_setopt($ch, CURLOPT_URL, $url);
@@ -61,18 +61,29 @@ class chatActions extends sfActions
 				$curlResult = curl_exec($ch);
 				curl_close($ch);
 				$result = json_decode($curlResult, true);
+				$response["fc"] = $result;
 				if ($result['username'] && !is_array($result["properties"])) {
 					//User exists
 					$response['userStatus'] = "User exists";
 					$response['hash'] = $pass;
 					$apiResponseHandlerObj->setHttpArray(ChatEnum::$userExists);
+                    $type = "created";
 				} else {
 					//create user
 					$response['userStatus'] = "Added";
 					$profileImporterObj = new Chat();
 					$profileImporterObj->addNewProfile($username);
 					$apiResponseHandlerObj->setHttpArray(ChatEnum::$addedToQueue);
+                    $type="new";
 				}
+                $memcacheKey = JsMemcache::getInstance()->get($username.'_CHAT_USER');
+                if(!$memcacheKey)
+                {
+                    $chatLoggingObj = new Chat();
+                    $chatLoggingObj->storeLoggedInUserContacts($username,$type);
+                    unset($chatLoggingObj);
+                    JsMemcache::getInstance()->set($username.'_CHAT_USER',"1",36000);
+                }
 			}
 			else{
 				$response = "Logged Out Profile";
@@ -168,20 +179,28 @@ class chatActions extends sfActions
 	{
 		$profileid = $request->getParameter("profileid");
 		$type = $request->getParameter("type");
-		$limit = $request->getParameter("limit");
-		$profileObj = new Profile("",$profileid);
-		$profileObj->getDetail($profileid, "PROFILEID", "USERNAME");
-		$getRosterDataObj = new GetRosterData($profileid);
-		$getData["profiles"] = $getRosterDataObj->getRosterDataByType($type, $limit);
-		$getData["count"] = count($getData["profiles"]);
-		$getData["USERNAME"] = $profileObj->getUSERNAME();
-		$getData["PROFILECHECKSUM"] = JsCommon::createChecksumForProfile($profileid);
-		$apiResponseHandlerObj = ApiResponseHandler::getInstance();
-		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		if($type=='DPP')
+		{
+			
+			$this->forward("chat","getDppDataV1");
+		}
+		else	
+		{
+			$limit = $request->getParameter("limit");
+			$profileObj = new Profile("",$profileid);
+			$profileObj->getDetail($profileid, "PROFILEID", "USERNAME");
+			$getRosterDataObj = new GetRosterData($profileid);
+			$getData["profiles"] = $getRosterDataObj->getRosterDataByType($type, $limit);
+			$getData["count"] = count($getData["profiles"]);
+			$getData["USERNAME"] = $profileObj->getUSERNAME();
+			$getData["PROFILECHECKSUM"] = JsCommon::createChecksumForProfile($profileid);
+			$apiResponseHandlerObj = ApiResponseHandler::getInstance();
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
-		$apiResponseHandlerObj->setResponseBody($getData);
-		$apiResponseHandlerObj->generateResponse();
-		die;
+			$apiResponseHandlerObj->setResponseBody($getData);
+			$apiResponseHandlerObj->generateResponse();
+			die;
+		}
 	}
 
 	public function executeGetProfileDataV1(sfwebrequest $request)
@@ -199,7 +218,7 @@ class chatActions extends sfActions
 			//Photo logic
 			$pidArr["PROFILEID"] = $profileid;
 			//$photoType = 'MainPicUrl';
-            $photoType = 'ProfilePic120Url';
+            $photoType = 'ProfilePic235Url';
 			$profileObj = LoggedInProfile::getInstance('newjs_master', $loginData["PROFILEID"]);
 			$multipleProfileObj = new ProfileArray();
 			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
@@ -252,45 +271,40 @@ class chatActions extends sfActions
 		$dontShowFilteredProfiles = $request->getParameter("dontShowFilteredProfiles");
 
 		/***/
+		/*
 		if (!$photoType)
 			$photoType = 'MainPicUrl';
+		*/
 		if (!$dontShowFilteredProfiles)
 			$dontShowFilteredProfiles = 1;
 		if (!$limit)
-			$limit = 10;
+			$limit = 50;
 		if (!$currentPage)
 			$currentPage = 1;
 		$completeResponse = 1;
 		/***/
-
+		$dontShowShortlisted = 1; // Set to 0 if shorlisted need to be shown
+		
 		$profileObj = LoggedInProfile::getInstance('', $profileid);
 		$profileObj->getDetail('', '', '*');
 		$partnerObj = new SearchCommonFunctions();
-
-
-		$obj = $partnerObj->getMyDppMatches(sort, $profileObj, $limit, $currentPage, $paramArr, $removeMatchAlerts, $dontShowFilteredProfiles, $twoWayMatches, $clustersToShow, $results_orAnd_cluster, $notInProfiles, $completeResponse);
-		$arr = $obj->getResultsArr();
-		if ($arr) {
-			$pidArr["PROFILEID"] = implode(",", $obj->getSearchResultsPidArr());
-			$profileObj = LoggedInProfile::getInstance('newjs_master');
-			$multipleProfileObj = new ProfileArray();
-
-			$profileDetails = $multipleProfileObj->getResultsBasedOnJprofileFields($pidArr);
-			$multiplePictureObj = new PictureArray($profileDetails);
-			$photosArr = $multiplePictureObj->getProfilePhoto();
-			foreach ($arr as $k => $v) {
-				$pid = $v["id"];
-				$cArr[$pid]["USERNAME"] = $v["USERNAME"];
-				$cArr[$pid]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($pid);
-				$photoObj = $photosArr[$pid];
-				if ($photoObj) {
-					eval('$temp =$photoObj->get' . $photoType . '();');
-					$cArr[$pid]["PHOTO"] = $temp;
-					unset($temp);
-				} else {
-					$cArr[$pid]["PHOTO"] = NULL;
+		$i=0;
+		for($j=1;$j>=0;$j--)
+		{
+			$showOnlineOnly = $j; // Show which are online only
+			$obj = $partnerObj->getMyDppMatches(sort, $profileObj, $limit, $currentPage, $paramArr, $removeMatchAlerts, $dontShowFilteredProfiles, $twoWayMatches, $clustersToShow, $results_orAnd_cluster, $notInProfiles, $completeResponse,'',$dontShowShortlisted,$showOnlineOnly);
+			$arr = $obj->getResultsArr();
+			if ($arr) {
+				
+				foreach ($arr as $k => $v) {
+					if($i>=$limit)
+						break;
+					$cArr[$i]["PROFILEID"] = $v["id"];
+					$cArr[$i]["USERNAME"] = $v["USERNAME"];
+					$cArr[$i]["PROFILECHECKSUM"] = jsAuthentication::jsEncryptProfilechecksum($v["id"]);
+					$i++;
+	
 				}
-
 			}
 		}
 		$getData["profiles"] = $cArr;
@@ -311,47 +325,61 @@ class chatActions extends sfActions
 			if ($this->userProfile) {
 				$this->Profile = new Profile();
 				$profileid = JsCommon::getProfileFromChecksum($this->userProfile);
+				$date = date("Y-m-d H:i:s");
+				$ip = FetchClientIP();
+				$chatid = $request->getParameter('chat_id');
+				$chatMessage = $request->getParameter('chatMessage')."--".$date."--".$ip."--".$chatid;
 				$this->Profile->getDetail($profileid, "PROFILEID");
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
+				$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
+				$privilegeArray = $this->contactHandlerObj->getPrivilegeObj()->getPrivilegeArray();
 				if ($this->contactObj->getTYPE() == ContactHandler::INITIATED && $this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
-					$messageLogObj = new messageLog();
-					$message = $messageLogObj->getEOIMessages($this->loginProfile->getPROFILEID(), array($profileid));
-					$msgText = $message[0]["MESSAGE"];
-					$forCount = explode("||",$msgText);
-					$count = count($forCount);
-					if($count>=3)
+					if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
 					{
 						$response["cansend"] = false;
 						$response['sent'] = false;
-						$response["errorMsg"] = "You can send more messages if user replies";
+						$response["errorMsg"] = "Only paid members can start chat";
 					}
-					else{
-						$msgText = $msgText."||".$request->getParameter('chatMessage');
-						$_GET["messageid"] = $message[0]["ID"];
-						sfContext::getInstance()->getRequest()->setParameter("messageid",$message[0]["ID"]);
-						$_GET["chatMessage"] = $msgText;
-						$messageCommunication = new MessageCommunication('',$this->loginProfile->getPROFILEID());
-						$messageCommunication->insertMessage();
-						$count++;
-						if($count<3)
-						{
-							$response["cansend"] = true;
-						}
-						else
-						{
+					else {
+						$messageLogObj = new messageLog();
+						$message = $messageLogObj->getEOIMessagesForChat($this->loginProfile->getPROFILEID(), array($profileid));
+						$msgText = $message[0]["MESSAGE"];
+						$forCount = explode("||", $msgText);
+						$count = count($forCount);
+						if ($count >= 3) {
 							$response["cansend"] = false;
+							$response['sent'] = false;
 							$response["errorMsg"] = "You can send more messages if user replies";
+						} else {
+							if ($msgText)
+								$msgText = $msgText . "||" . $chatMessage;
+							else {
+								$msgText = $chatMessage;
+							}
+							$_GET["messageid"] = $message[0]["ID"];
+							sfContext::getInstance()->getRequest()->setParameter("messageid", $message[0]["ID"]);
+							$_GET["chatMessage"] = $msgText;
+							$messageCommunication = new MessageCommunication('', $this->loginProfile->getPROFILEID());
+							$messageCommunication->insertMessage();
+							$count++;
+							if ($count < 3) {
+								$response["cansend"] = true;
+							} else {
+								$response["cansend"] = false;
+								$response["errorMsg"] = "You can send more messages if user replies";
+							}
+							$response['sent'] = true;
+							$response["messageid"] = $message[0]["ID"];
 						}
-						$response['sent'] = true;
-						$response["messageid"] = $message[0]["ID"];
 					}
-
 				}
 				else {
 					ob_start();
 					$request->setParameter('INTERNAL', 1);
 					$request->setParameter("actionName","postEOI");
 					$request->setParameter("moduleName","contacts");
+					$request->setParameter('chatMessage',$chatMessage);
+					$request->setParameter("setFirstEoiMsgFlag",true);
 					$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
 					$output = ob_get_contents();
 					ob_end_clean();

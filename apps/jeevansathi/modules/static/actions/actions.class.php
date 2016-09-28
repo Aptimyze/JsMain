@@ -25,7 +25,9 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#404_Error_page
   public function executePage404(sfWebRequest $request)
   {
-  LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array('message' => $request->getUri(), 'moduleName' => '404'));
+    $specificDomain = explode('/',$request->getUri());
+    $segregateCode = $specificDomain[3];  
+  LoggingManager::getInstance(LoggingEnums::EX404)->logThis(LoggingEnums::LOG_ERROR, new Exception("404 page encountered"), array(LoggingEnums::MESSAGE => $request->getUri(), LoggingEnums::MODULE_NAME => LoggingEnums::EX404."_".$segregateCode));
 	if(MobileCommon::isNewMobileSite())
 	{
 		if(MobileCommon::isAppWebView()){
@@ -109,7 +111,7 @@ class staticActions extends sfActions
   //Find more information in http://devjs.infoedge.com/mediawiki/index.php/Social_Project#500_Internal_Server_Error_page
   public function executePage500(sfWebRequest $request)
   {
-  LoggingManager::getInstance(LoggingEnums::EX500)->logThis(LoggingEnums::LOG_ERROR, new Exception("500 page encountered"), array('message' => $request->getUri(), 'moduleName' => '500'));
+  LoggingManager::getInstance(LoggingEnums::EX500)->logThis(LoggingEnums::LOG_ERROR, new Exception("500 page encountered"), array(LoggingEnums::MESSAGE => $request->getUri(), LoggingEnums::MODULE_NAME => LoggingEnums::EX500));
   $request->setParameter("blockOldConnection500",1);
 	if(MobileCommon::isNewMobileSite()){
 		if(MobileCommon::isAppWebView()){
@@ -345,6 +347,14 @@ class staticActions extends sfActions
    * also it is called for tracking when user hits any of the button*/
   public function executeCriticalActionLayerDisplay(sfWebRequest $request) {
     $layerToShow = $request->getParameter("layerId");
+    if($layerToShow==9)
+    {
+           $profileId=LoggedInProfile::getInstance()->getPROFILEID();
+           $nameData=(new NameOfUser())->getNameData($profileId);
+           $this->nameOfUser=$nameData[$profileId]['NAME'];
+           $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
+
+    }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
@@ -507,6 +517,7 @@ public function executeCALRedirection($request){
       $this->RELOGIN="Y";
     }
     $this->chat_hide = 1;
+    $this->logoutChat = 1;
     $request->setAttribute('loginData', '');
 	$request->setAttribute('login', false);
 	$this->setTemplate("logoutPage");
@@ -910,7 +921,9 @@ public function executeAppredirect(sfWebRequest $request)
 		$output=$this->getField("bodytype");
 		if($k=="p_mstatus")
 		$output=$this->getField("mstatus");
-		if($k=="parent_city_same")
+		if($k=="p_havechild")
+                    $output=$this->getField("children");
+                if($k=="parent_city_same")
 		{
 		$output=$this->getField("live_with_parents");
 		}
@@ -1234,15 +1247,10 @@ public function executeAppredirect(sfWebRequest $request)
   }
   private function getCountry($onlyCountry)
   {
-	  if($onlyCountry!='p_country')
-	  {
-		  $Arr[0]=FieldMap::getFieldLabel("impcountry",'',1);
-		  $Arr[1]=Array("-1"=>"--More");
-		  $Arr[2]=FieldMap::getFieldLabel("country",'',1);
-		  
-	   }
-	else
-		$Arr[0]=FieldMap::getFieldLabel("country",'',1);
+
+          $Arr[0]=FieldMap::getFieldLabel("impcountry",'',1);
+	  $Arr[1]=Array("-1"=>"--More");
+	  $Arr[2]=FieldMap::getFieldLabel("country",'',1);
 	  foreach($Arr as $key=>$val)
 		  {
 				foreach($val as $k=>$v)

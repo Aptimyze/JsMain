@@ -17,7 +17,7 @@
 		<div class="f12 color1">Marital Status</div>
 		<div class="fontlig pb15" id="vpro_dpp_marital_status">~$arrData.dpp_marital_status`</div>
 	~/if`
-        ~if isset($arrData.dpp_have_child)`
+        ~if isset($arrData.dpp_have_child) && $arrData.dpp_marital_status!='Never Married' && $arrData.dpp_marital_status!=''`
 		<div class="f12 color1">Have Children</div>
 		<div class="fontlig pb15" id="vpro_dpp_marital_status">~$arrData.dpp_have_child`</div>
 	~/if`

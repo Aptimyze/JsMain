@@ -85,7 +85,7 @@ class CancelAccept extends ContactEvent{
       $producerObj->sendMessage($chatData);
     }
 
-    //    $this->updateContactSeen();//
+    //    $this->updateContactSeen();
     $this->sendMail();
   }
   /**

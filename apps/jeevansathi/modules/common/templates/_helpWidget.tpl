@@ -1,3 +1,6 @@
+~assign var=dropDownDayArr value= CommonFunction::getRCBDayDropDown()`
+~assign var=dropDownTimeArr1 value= CommonFunction::getRCBStartTimeDropDown()`
+~assign var=dropDownTimeArr2 value= CommonFunction::getRCBEndTimeDropDown()`
 <!--start:overlay-->
 <div class="js-requestCallBackOverlay dspN fontlig">
     <div class="overlay"></div>
@@ -22,6 +25,71 @@
                 </div>
                 <span id="phoneError" class="errorPad dspN fontlig"> </span>
                 <!--end:mobile no-->
+                <div id="rcbSideMenuDrop" class="rcbfield rcb_pt17 color2 fontlig clearfix reqCalbck-bdr12 pb15 pl3">
+                    <!--start:date-->
+                    <div class="rcb_fl wid35">
+                        <div class="clearfix">
+                            <div class="f16 rcb_lh40 rcb_fl pr5">Date</div>
+                            <div class="rcb_fl">
+                                <div class="rcb_fl">
+                                    <div class="wid88">
+                                        <!--start:drop down UI-->
+                                        <dl id="dropDown0" class="rcbdropdown">
+                                            <dt><span></span></dt>
+                                            <dd>
+                                            <ul>
+                                                ~foreach from=$dropDownDayArr key=k item=dd`
+                                                <li id="~$k`" class="cursp">~$dd`</li>
+                                                ~/foreach`
+                                            </ul>
+                                            </dd>
+                                        </dl>
+                                        <!--end:drop down UI-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end:date-->
+                    <!--start:time-->
+                    <div class="rcb_fl wid60 pl4">
+                        <div class="clearfix">
+                            <div class="f16 rcb_lh40 rcb_fl pr5">Schedule Time(IST)</div>
+                            <div class="rcb_fl">
+                                <div class="rcb_fl">
+                                    <div class="wid88 rcb_fl">
+                                        <dl id="dropDown1" class="rcbdropdown">
+                                            <dt><span></span></dt>
+                                            <dd>
+                                            <ul>
+                                                ~foreach from=$dropDownTimeArr1 key=k item=tt`
+                                                <li id="~$k`" class="cursp">~$tt`</li>
+                                                ~/foreach`
+                                            </ul>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="disp-none wid88 rcb_fl rcb_m2">  <dl id="dropDown2" class="rcbdropdown">
+                                        <dt><span></span></dt>
+                                        <dd>
+                                        <ul>
+                                            ~foreach from=$dropDownTimeArr2 key=k item=tt`
+                                            <li id="~$k`" class="cursp">~$tt`</li>
+                                            ~/foreach`
+                                        </ul>
+                                        </dd>
+                                    </dl> </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end:time-->
+                    <input id="rcbSideMenudropDown0" type="hidden" name="dropDownDaySelected" value=""/>
+                    <input id="rcbSideMenudropDown1" type="hidden" name="dropDownTimeStartSelected" value=""/>
+                    <input id="rcbSideMenudropDown2" type="hidden" name="dropDownTimeEndSelected" value=""/>
+                </div>
+                <div id="sideMenuReqTimeError" style="color:red;display:none" class="f14 pt8">Please select valid Time Duration</div>
                 <!--start:product-->
                 <div class="formpadt1 fontlig">
                     <dl id="sample4" class="dropdown">
@@ -43,7 +111,7 @@
                 <!--start:button-->
                 <div class="formpadt1">
                     <div style="overflow: hidden;position: relative;">
-                    <button type="submit" id="sidebarReqCallbackBtn" tabindex="4" class="cursp pinkRipple hoverPink bg_pink">Submit Request</button>
+                        <button type="submit" id="sidebarReqCallbackBtn" tabindex="4" class="cursp pinkRipple hoverPink bg_pink">Submit Request</button>
                     </div>
                 </div>
                 <!--end:button-->
@@ -70,12 +138,19 @@
                 <div class="fl color11 f14 pl10">Request callback</div>
             </a> </div>
             <div class="clearfix optwidg f14"> <a href="/contactus/index?fromSideLink=1"> <i class="Widgicon Widicon3 fl"></i>
-            <div class="fl pl10 f14">Live Help</div>
+                <div class="fl pl10 f14">Live Help</div>
             </a> </div>
         </div>
     </div>
 </div>
 <!--end:helpwidget-->
 <script> var showExpandMode = "~$showExpandMode`";
-         var hideHelpMenu = "~$hideHelpMenu`";
+var hideHelpMenu = "~$hideHelpMenu`";
+
+if(typeof(hideHelpMenu)=="undefined"){
+hideHelpMenu = "false";
+}
+if(hideHelpMenu == "true"){
+$("#js-helpWidget").addClass('disp-none');
+}
 </script>

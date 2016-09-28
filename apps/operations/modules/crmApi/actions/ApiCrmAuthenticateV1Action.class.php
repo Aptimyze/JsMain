@@ -34,6 +34,9 @@ class ApiCrmAuthenticateV1Action extends sfActions
 				}
 				else	
 				{
+                    
+                    $loginLogObj = new jsadmin_AGENTS_LOGIN_LOG();
+                    $loginLogObj->insert($loginCredentials['USERNAME']);
 					if($result[AUTHCHECKSUM])
 						$apiObj->setAuthChecksum($result[AUTHCHECKSUM]);
 					//register for fso app notifications if android app

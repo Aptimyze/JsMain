@@ -60,5 +60,16 @@ class FormatNotification
     	$msgdata = array('process' => $queueName, 'data' => array('type' => $type, 'body' => $dataArray), 'redeliveryCount' => 0);
 		return $msgdata;
     }
+    public static function formatLogData($dataArray,$table)
+    {
+        if($table =='REGISTRATION_ID'){
+            $type = $table;
+        }
+	$queueName ='JS_NOTIFICATION_LOG';
+        $msgdata = array('process' => $queueName, 'data' => array('type' => $type, 'body' => $dataArray), 'redeliveryCount' => 0);
+        return $msgdata;
+    }
+    
+
 }
 ?>

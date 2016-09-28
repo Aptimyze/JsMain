@@ -47,3 +47,22 @@ input[type=number]::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance:textfield;
 }
+
+.iconImg2{height:18px;width:18px; background-repeat: no-repeat; background-position: -6px -34px; }
+.iconSprite{background-image: url(IMG_URL/images/jsms/profile/viewProfile/iconSprite.png);}
+.iconTick {    
+        height: 15px;
+        width: 18px;
+        background-repeat: no-repeat;
+        position: absolute;
+        right: 32px;
+        margin-top: -11px;
+ }
+.tickSelected{background-position: -6px -63px;}
+.vTop{vertical-align:top;}
+.padr5{padding-right:5px}
+.topLeft50{top:50%;left:50%;position:absolute;transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);-ms-transform::translate(-50%,-50%);-moz-transform:translate(-50%,-50%);-o-transform:translate(-50%,-50%);}
+.padd1015{padding:10px 15px}
+.f10{font-size:10px}
+.filter-onoff-new
+{ background-image: url(IMG_URL/images/jsms/commonImg/on-off.png); background-repeat: no-repeat}

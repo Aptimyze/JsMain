@@ -113,6 +113,14 @@ class LoggingManager
 			$className =  __CLASS__;
 			self::$instance = new $className;
 		}
+		if ($basePath == null)
+		{
+			self::$instance->flexDir = false;
+		}
+		else
+		{
+			self::$instance->flexDir = true;
+		}
 		self::$instance->szLogPath = $basePath;
 		return self::$instance;
 	}
@@ -221,7 +229,7 @@ class LoggingManager
 		$uniqueSubId = $this->getLogUniqueSubId($logArray);
 		$statusCode = $this->getLogStatusCode($exception,$logArray);
 		$typeOfError = $this->getLogTypeOfError($exception,$logArray);
-		$headers = getallheaders();
+		//$headers = getallheaders();
 		$logData = array();
 
 		if ( $time != "")
@@ -269,7 +277,7 @@ class LoggingManager
 
 		if ( $statusCode != "")
 		{
-			$logData[LoggingEnums::STATUS_CODE] = $statusCode;
+			$logData[LoggingEnums::STATUS_CODE] = strval($statusCode);
 		} 
 
 		if ( $message != "")
@@ -279,8 +287,13 @@ class LoggingManager
 
 		if($this->canWriteTrace($this->moduleName))
 		{
-			$logData[LoggingEnums::LOG_EXCEPTION] = $exception;
+			if ( $exception instanceof Exception)
+			{
+				$logData[LoggingEnums::LOG_EXCEPTION] = $exception->getTrace();
+			}
 		}
+		$logData[LoggingEnums::REQUEST_URI] = $_SERVER['REQUEST_URI'];
+		$logData[LoggingEnums::DOMAIN] = $_SERVER['HTTP_HOST'];
 		return $logData;
 	}
 
@@ -435,15 +448,28 @@ class LoggingManager
 		{
 			if ( $isSymfony )
 			{
-				$moduleName = sfContext::getInstance()->getRequest()->getParameter("module");
+				$request = sfContext::getInstance()->getRequest();
+				$moduleName = $request->getParameter("module");
+				if($moduleName == "api")
+				{
+					$apiWebHandler = ApiRequestHandler::getInstance($request);
+					$details = $apiWebHandler->getModuleAndActionName($request);
+					$moduleName = $details['moduleName'].'_'.$moduleName;
+				} elseif($moduleName == "e") {
+					$moduleName = "AutoLogin";
+				}
 			}
 			else
 			{
 				if ( $exception instanceof Exception)
 				{
 					$exceptionLiesIn = $exception->getTrace()[0]['file'];
-					$module_action = str_replace(JsConstants::$docRoot, "", $exceptionLiesIn);
-					$moduleName = explode('/', $module_action)[1];
+					$arrExplodedPath = explode('/', $exceptionLiesIn);
+					$moduleName = $arrExplodedPath[count($arrExplodedPath)-2];
+				}
+				if($moduleName == "profile")
+				{
+					$moduleName = "inbox";
 				}
 			}
 		}
@@ -462,20 +488,27 @@ class LoggingManager
 	 */
 	private function getLogActionName($isSymfony = true,$exception = null,$logArray = array())
 	{
+		$actionName = "";
 		if ( !isset($logArray[LoggingEnums::ACTION_NAME]))
 		{
 			if ( $isSymfony )
 			{
-				$actionName = sfContext::getInstance()->getRequest()->getParameter("action");;
+				$request = sfContext::getInstance()->getRequest();
+				$actionName = $request->getParameter("action");
+				if($actionName == "apiRequest")
+				{
+					$apiWebHandler = ApiRequestHandler::getInstance($request);
+					$details = $apiWebHandler->getModuleAndActionName($request);
+					$actionName = $details['actionName'];
+				}
 			}
 			else
 			{
-				$actionName = "";
 				if ( $exception instanceof Exception)
 				{
 					$exceptionLiesIn = $exception->getTrace()[0]['file'];
-					$module_action = str_replace(JsConstants::$docRoot, "", $exceptionLiesIn);
-					$actionName = explode('/', $module_action)[2];
+					$arrExplodedPath = explode('/', $exceptionLiesIn);
+					$actionName = $arrExplodedPath[count($arrExplodedPath)-1];
 				}
 			}
 		}
@@ -552,10 +585,6 @@ class LoggingManager
 		if($this->szLogPath == null)
 		{
 			$this->szLogPath = $this->moduleName;
-		}
-		else
-		{
-			$this->flexDir = true;
 		}
 		// check if config is on, if yes then check if module can log
 		$toLog = (LoggingEnums::CONFIG_ON ? LoggingConfig::getInstance()->logStatus($this->moduleName) : true);

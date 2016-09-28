@@ -104,7 +104,14 @@ class detailedAction extends sfAction
     if (MobileCommon::isDesktop() && $this->loginData[PROFILEID]) {
        $this->onlineStatus();
     }
-
+	$nameOfUserObj = new NameOfUser();
+	$showNameData = $nameOfUserObj->showNameToProfiles($this->loginProfile,array($this->profile));
+	if($showNameData[$this->profile->getPROFILEID()]['SHOW']==true)
+	{
+		$this->nameOfUser = $showNameData[$this->profile->getPROFILEID()]['NAME'];
+	}
+	else
+		$this->dontShowNameReason = $showNameData[$this->profile->getPROFILEID()]['REASON'];
     //Assings variables required in template, handling legacy.
 		$this->smartyAssign();
 
@@ -1346,7 +1353,7 @@ class detailedAction extends sfAction
         $this->arrOutDisplay =  $objDetailedDisplay->getResponse();
         $arrOutDisplay["buttonDetails"] = null;
          
-        $arrPass = array('stype'=>$this->STYPE,"responseTracking"=>$this->responseTracking,'page_source'=>"VDP",'isIgnored'=>$this->arrOutDisplay['page_info']['is_ignored'],'isBookmarked'=>$this->BOOKMARKED);
+        $arrPass = array('stype'=>$this->STYPE,"responseTracking"=>$this->responseTracking,'page_source'=>"VDP",'isIgnored'=>$this->arrOutDisplay['page_info']['is_ignored'],'isBookmarked'=>$this->BOOKMARKED,'PHOTO'=>$this->arrOutDisplay['pic']);
         $arrPass["USERNAME"]= $this->profile->getUSERNAME();
         $arrPass["OTHER_PROFILEID"] = $this->profile->getPROFILEID();
 
@@ -1354,7 +1361,7 @@ class detailedAction extends sfAction
 		{//print_r("arrOutDisplay['pic']['url']");die;
 				$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
 
-				$this->arrOutDisplay["button_details"] = $buttonObj->getButtonArray(array('PHOTO'=>$arrOutDisplay['pic']['url'],"IGNORED"=>$this->IGNORED));
+				$this->arrOutDisplay["button_details"] = $buttonObj->getButtonArray(array('PHOTO'=>$this->arrOutDisplay['pic']['url'],"IGNORED"=>$this->IGNORED));
 		}
 		else
 		{

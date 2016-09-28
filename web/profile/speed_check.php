@@ -1,4 +1,9 @@
 <?php
+$fileName =  $_SERVER["SCRIPT_FILENAME"];
+$http_msg=print_r($_SERVER,true);
+mail("reshu.rajput@gmail.com,lavesh.rawat@gmail.com","For DLL Movement - $fileName",$http_msg);
+
+
 //ini_set('max_execution_time','0');
 include_once("connect.inc");
 $db=connect_db4();

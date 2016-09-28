@@ -87,7 +87,7 @@ class JProfileUpdateLib
   {
     $this->currentDBName = $dbname;
     $this->objJProfileStore = new JPROFILE($dbname);
-    $this->objProfileEducationStore = new NEWJS_JPROFILE_EDUCATION($dbname);
+    $this->objProfileEducationStore = ProfileEducation::getInstance($dbname);
     $this->objProfileContactStore = new NEWJS_JPROFILE_CONTACT($dbname);
     $this->objProfileHobbyStore = new NEWJS_HOBBIES($dbname);
     $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
@@ -146,7 +146,7 @@ class JProfileUpdateLib
     if(self::$instance->currentDBName !== $dbname) {
       self::$instance->currentDBName = $dbname;
       self::$instance->objJProfileStore->setConnection($dbname);
-      self::$instance->objProfileEducationStore->setConnection($dbname);
+      self::$instance->objProfileEducationStore = ProfileEducation::getInstance($dbname);
       self::$instance->objProfileContactStore->setConnection($dbname);
       self::$instance->objProfileHobbyStore->setConnection($dbname);
       self::$instance->objProfileNTimesStore->setConnection($dbname);

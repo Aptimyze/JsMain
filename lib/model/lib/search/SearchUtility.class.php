@@ -20,7 +20,7 @@ class SearchUtility
 	* @param profile to ignore is passed in the url (optional)
 	* @param noAwaitingContacts exclude awaiting contacts.
 	*/
-	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '')
+	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '',$showOnlineArr='')
 	{
 		//print_r($SearchParamtersObj);die;
 		if($profileFromUrl)
@@ -118,7 +118,7 @@ class SearchUtility
 						//if($week || $SearchParamtersObj->getNEWSEARCH_CLUSTERING() || ($_GET["moreLinkCluster"] && in_array($_GET["moreLinkCluster"],array('OCCUPATION','EDU_LEVEL_NEW'))))
 						//{
 							//$MatchAlerts = new MatchAlerts();
-							//$matArr1 = $MatchAlerts->getProfilesWithOutSorting($pid,$week);
+							//$matArr1 = $MatchAlerts->getProfilesWithOutSortishowOnlineArrng($pid,$week);
 						//}
 						//else
 							//$matArr1 = $SearchParamtersObj->getAlertsDateConditionArr();
@@ -171,6 +171,10 @@ class SearchUtility
 					else
 						$SearchParamtersObj->setIgnoreProfiles($hideArr);
 				}
+				if($showOnlineArr)
+				{
+					$showArr.= " ".$showOnlineArr;
+				}
 				if($showArr)
 				{
 					if($SearchParamtersObj->getProfilesToShow())
@@ -201,6 +205,7 @@ class SearchUtility
 				$cluster=$cluster."_DOL";
 			$clusterVal = $request->getParameter("appClusterVal");
 			if($cluster == "MANGLIK" && $clusterVal != 'ALL'){ // check for cluster only search for not adding dont know to 'not manglik'
+                            if($clusterVal!='')
 					$clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;
 			}
       if($cluster=='MATCHALERTS_DATE_CLUSTER' && $clusterVal==NULL)
@@ -852,6 +857,26 @@ class SearchUtility
                                         }
                                 }
                         }
+			elseif($request->getParameter("partnermatches")=='1')
+                        {
+                                if($type=='set')
+                                {
+                                        JsMemcache::getInstance()->set("cachedPMS$pid",serialize($statusArr));
+                                        JsMemcache::getInstance()->set("cachedPMR$pid",serialize($resultArr));
+                                        return 1;
+                                }
+                                elseif($type=='get')
+                                {
+                                        $statusArr = JsMemcache::getInstance()->get("cachedPMS$pid");
+                                        $resultArr = JsMemcache::getInstance()->get("cachedPMR$pid");
+                                        if($statusArr && $resultArr)
+                                        {
+                                                $cachedArr["statusArr"] = unserialize($statusArr);
+                                                $cachedArr["resultArr"] = unserialize($resultArr);
+                                                return $cachedArr;
+                                        }
+                                }
+                        }
 			elseif($request->getParameter("verifiedMatches")=='1')
                         {
                                 if($type=='set')
@@ -879,6 +904,8 @@ class SearchUtility
 				JsMemcache::getInstance()->set("cachedJJR$pid","");
 				JsMemcache::getInstance()->set("cachedVMS$pid","");
                                 JsMemcache::getInstance()->set("cachedVMR$pid","");
+				JsMemcache::getInstance()->set("cachedPMS$pid","");
+                                JsMemcache::getInstance()->set("cachedPMR$pid","");
 			}	
                 }
                 return 0;

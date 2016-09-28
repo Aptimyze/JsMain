@@ -89,7 +89,7 @@ function dataForSearchTuple(val,keyOfProfileType,resp) {
   
   if(resp.page_index!=1){
       $("#featuredListing").hide();
-        var featuredCount = val.length;
+        
   }else{
       $("#featuredListing").show();
   }
