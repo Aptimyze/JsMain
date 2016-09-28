@@ -296,6 +296,16 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 			$time_to_call_label="";
 			$time_to_call_value="";
 		}
+                
+                //Mobile Privacy Settings
+                $contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
+
+                //Landline Privacy Settings
+                $contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
+
+                //Alt Number Privacy Settings
+                $contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$extendedContactArray['SHOWALT_MOBILE'],$extendedContactArray['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
+    
 		$contactArr[]=$this->getApiFormatArray("TIME_TO_CALL_START","Suitable Time to Call" ,$time_to_call_label,$time_to_call_value,$this->getApiScreeningField("TIME_TO_CALL_START"));
 		
 		return $contactArr;
