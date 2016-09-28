@@ -134,16 +134,21 @@ EOF;
         // }
         // elseif($urlType == "OriginalPicUrl" && $originalPicUrl != "")
         // {
-        //     $originalPicUrl = str_replace("CL/","AR/",$originalPicUrl);
-        //     $paramArr = array("OriginalPicUrl"=>$originalPicUrl);
-        //     $picObj = new PICTURE_NEW("newjs_masterRep");
-        //     $picObj->edit($paramArr,$pictureId,$profileId);
+        //     if(strpos($originalPicUrl, "CL/") !== false)
+        //     {
+        //         $originalPicUrl = str_replace("CL/","AR/",$originalPicUrl);
+        //         $paramArr = array("OriginalPicUrl"=>$originalPicUrl);
+        //         $picObj = new PICTURE_NEW("newjs_masterRep");
+        //         $picObj->edit($paramArr,$pictureId,$profileId);
+        //     }
+        //     else
+        //     {
+        //         $this->insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason);
+        //     }
         // }
         //else
         //{
-            $incorrectPicDetailObj = new PICTURE_INCORRECT_PICTURE_DATA("newjs_masterRep");
-            $incorrectPicDetailObj->insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason);
-            unset($incorrectPicDetailObj);
+            $this->insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason);
         //}
     }
 
@@ -197,5 +202,12 @@ EOF;
         //to insert row in ImageServerLog
         $imageServer=new ImageServerLog;
         $result=$imageServer->insertBulk("PICTURE",$pictureId,"ThumbailUrl","N");
+    }
+
+    public function insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason)
+    {
+       $incorrectPicDetailObj = new PICTURE_INCORRECT_PICTURE_DATA("newjs_masterRep");
+       $incorrectPicDetailObj->insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason);
+       unset($incorrectPicDetailObj);
     }
 }
