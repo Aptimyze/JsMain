@@ -13,6 +13,11 @@ class PixelCodeHandler
   /*
    * Declaring Memeber Varibales
    */
+   private $southMtongue = array("16",//Kannada
+				"17",//Malyalam
+				"3",//Telugu
+				"31",//Tamil
+				);
    private $new_cityarr = array(	"UP01",//agra
 				"GU01",//Ahmedabad
 				"MH30",//Ahmednagar
@@ -422,6 +427,13 @@ class PixelCodeHandler
                         }
                         else
                                 return false;
+			break;
+		case "NON_SOUTH_MTONGUE":
+			$mtongue = $this->profileObj->getMTONGUE();
+			if(in_array($mtongue,$this->southMtongue))
+				return false;
+			return true;
+			break;
 		}
 
 	}
