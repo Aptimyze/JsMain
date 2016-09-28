@@ -18,19 +18,35 @@ class ProcessHandler
     $senderid=$body['senderid'];
     $receiverid=$body['receiverid'];
     $message = $body['message'];
-    $senderObj = new Profile('',$senderid);   
-    $senderObj->getDetail("","","*");
-    $receiverObj = new Profile('',$receiverid);
-    $receiverObj->getDetail("","","*");
     switch($type)
     {
-      case 'CANCELCONTACT' :  ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
+      case 'CANCELCONTACT' :  $senderObj = new Profile('',$senderid);   
+                              $senderObj->getDetail("","","*");
+                              $receiverObj = new Profile('',$receiverid);
+                              $receiverObj->getDetail("","","*");
+
+                              ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
                               break;
-      case 'ACCEPTCONTACT' :  ContactMailer::sendAcceptanceMailer($receiverObj,$senderObj);  
+      case 'ACCEPTCONTACT' :  $senderObj = new Profile('',$senderid);   
+                              $senderObj->getDetail("","","*");
+                              $receiverObj = new Profile('',$receiverid);
+                              $receiverObj->getDetail("","","*");
+                              ContactMailer::sendAcceptanceMailer($receiverObj,$senderObj);  
                               break;
-      case 'DECLINECONTACT':  ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
+      case 'DECLINECONTACT':  $senderObj = new Profile('',$senderid);   
+                              $senderObj->getDetail("","","*");
+                              $receiverObj = new Profile('',$receiverid);
+                              $receiverObj->getDetail("","","*");
+                              ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
                               break;
-      case 'MESSAGE'       :  ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
+      case 'INITIATECONTACT': $viewedSubscriptionStatus=$body['viewedSubscriptionStatus'];
+                              ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus); 
+                              break;
+      case 'MESSAGE'       :  $senderObj = new Profile('',$senderid);   
+                              $senderObj->getDetail("","","*");
+                              $receiverObj = new Profile('',$receiverid);
+                              $receiverObj->getDetail("","","*");
+                              ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
                               break;
     }
 	}

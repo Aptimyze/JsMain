@@ -343,9 +343,19 @@ if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED 
   public function sendMail() {
 
     $viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
+    $producerObj=new Producer();
+    if($producerObj->getRabbitMQServerConnected())
+      {
+        $sender = $this->contactHandler->getViewer();
+        $receiver = $this->contactHandler->getViewed();
+        $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'INITIATECONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus ) ), 'redeliveryCount'=>0 );
+        $producerObj->sendMessage($sendMailData);
+    }
+    else
+    {
 
     ContactMailer::InstantEOIMailer($this->viewed->getPROFILEID(), $this->viewer->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
-
+    }
     //Update in CONTACTS_ONCE
     
              $this->_contactsOnceObj->insert(
