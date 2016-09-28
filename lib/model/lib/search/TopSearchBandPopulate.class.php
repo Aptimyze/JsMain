@@ -230,13 +230,13 @@ class TopSearchBandPopulate
 									
                         if($this->isNewApp == 1){
                                 if($param["CITY_INDIA"])
-                                        $this->selectedCity_Country = $param["CITY_INDIA"].",".$param["COUNTRY_RES"];
-                                elseif($param["CITY_RES"])
-                                        $this->selectedCity_Country = $param["CITY_RES"].",".$param["COUNTRY_RES"];
-                                elseif($param["STATE"])
-                                        $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
-                                else
-                                        $this->selectedCity_Country = $param["COUNTRY_RES"];
+                                        $this->selectedCity_Country .= $param["CITY_INDIA"].",";
+                                if($param["CITY_RES"])
+                                        $this->selectedCity_Country .= $param["CITY_RES"].",";
+                                if($param["STATE"])
+                                        $this->selectedCity_Country .= $param["STATE"].",";
+                                
+                                $this->selectedCity_Country .= $param["COUNTRY_RES"];
                                 
                                 $this->selectedCity_Country = trim($this->selectedCity_Country,",");
                         }else{
@@ -2306,6 +2306,7 @@ class TopSearchBandPopulate
 			if(strpos($this->selectedCity_Country,",")>0)
 			{
                                 $this->selectedCity_Country = explode(",",$this->selectedCity_Country);
+                                $this->selectedCity_Country = array_unique($this->selectedCity_Country);
 				if(count(array_intersect(explode(',',TopSearchBandConfig::$mumbaiRegion),$this->selectedCity_Country)) == sizeOf(explode(',',TopSearchBandConfig::$mumbaiRegion)))
 				{
 					$output["location_cities"][] = TopSearchBandConfig::$mumbaiRegion;
@@ -2318,6 +2319,20 @@ class TopSearchBandPopulate
 					$output["location_cities_label"][] = TopSearchBandConfig::$ncrLabel;	
                                         $this->selectedCity_Country = array_diff($this->selectedCity_Country,FieldMap::getFieldLabel("delhiNcrCities",1,1));
 				}
+                                foreach($this->selectedCity_Country as $s){
+                                        if(ctype_alpha($s)){
+                                                $cities = FieldMap::getFieldLabel("state_CITY",$s).",".$s."000";
+                                                $stateCities = explode(",",$cities);
+                                                $selectedValues = array_intersect($this->selectedCity_Country,$stateCities);
+                                                if(count($stateCities) == count(array_unique($selectedValues))){
+                                                     $this->selectedCity_Country = array_diff($this->selectedCity_Country,$stateCities);
+                                                }else{
+                                                        if($selectedValues && ($key = array_search($s, $this->selectedCity_Country)) !== false) {
+                                                                unset($this->selectedCity_Country[$key]);
+                                                        }
+                                                }
+                                        }
+                                }
                                 foreach($this->selectedCity_Country as $v){
                                         if(is_numeric($v)){
                                                 $tempField ="country";
