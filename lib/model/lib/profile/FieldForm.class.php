@@ -318,10 +318,6 @@ class FieldForm extends sfForm
                                                 $screen_flag = Flag::removeFlag($FLAGID="name", $screen_flag);
                                       }
                                 }
-        
-				if($screen_flag!=$this->loggedInObj->getSCREENING())
-					$jprofileFieldArr['SCREENING']=$screen_flag;
-			  }
 			  if(array_key_exists("ANCESTRAL_ORIGIN",$jprofileFieldArr))
 			  {
 				if($jprofileFieldArr["ANCESTRAL_ORIGIN"]=="")
