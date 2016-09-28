@@ -2173,7 +2173,7 @@ class TopSearchBandPopulate
 			if(strpos($this->selectedCaste,",")=='')
 			{
 				$output["caste"] = $this->selectedCaste;
-				$output["caste_label"] = FieldMap::getFieldLabel("caste",$this->selectedCaste);
+				$output["caste_label"] = trim(ltrim(strstr(FieldMap::getFieldLabel("caste",$this->selectedCaste),":"),":"));
 			}else{
                                 $output["caste"] = $this->selectedCaste;
                                 $castes = explode(",",$this->selectedCaste);
