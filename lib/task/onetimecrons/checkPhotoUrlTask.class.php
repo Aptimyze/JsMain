@@ -134,9 +134,11 @@ EOF;
         // }
         // elseif($urlType == "OriginalPicUrl" && $originalPicUrl != "")
         // {
-        //     if(strpos($originalPicUrl, "CL/") !== false)
+        //     $checkUrl = substr($originalPicUrl,0,3);
+
+        //     if($checkUrl ==  IMAGE_SERVER_ENUM::$cloudUrl)
         //     {
-        //         $originalPicUrl = str_replace("CL/","AR/",$originalPicUrl);
+        //         $originalPicUrl = str_replace(IMAGE_SERVER_ENUM::$cloudUrl,IMAGE_SERVER_ENUM::$cloudArchiveUrl,$originalPicUrl);
         //         $paramArr = array("OriginalPicUrl"=>$originalPicUrl);
         //         $picObj = new PICTURE_NEW("newjs_masterRep");
         //         $picObj->edit($paramArr,$pictureId,$profileId);
