@@ -549,7 +549,7 @@ function postForgotEmailLayer()
 					});
 				}
 				else{
-					$("#forgotPasswordErr").html("Provide a valid email address or phone no.").addClass("visb");
+					$("#forgotPasswordErr").html("Provide a valid email address or phone number").addClass("visb");
 					$("#userEmailBox").addClass("brderred");
 					 setTimeout(function(){
 						 $("#forgotPasswordErr").removeClass("visb");
@@ -559,7 +559,7 @@ function postForgotEmailLayer()
 			}
 			else
 			{
-				$("#forgotPasswordErr").html("Provide your email address or phone no.").addClass("visb");
+				$("#forgotPasswordErr").html("Provide your email address or phone number").addClass("visb");
 				$("#userEmailBox").addClass("brderred");
 				 setTimeout(function(){
 					 $("#forgotPasswordErr").removeClass("visb");

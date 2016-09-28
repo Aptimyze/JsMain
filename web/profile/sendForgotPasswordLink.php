@@ -3,7 +3,7 @@ function sendForgotPasswordLink($myrow)
 {
 
         global $smarty;
-        var_dump($myrow);die;
+        // var_dump($myrow);die;
         if(!$myrow['EMAIL'] ||!$myrow['PROFILEID']||!$myrow['ACTIVATED'])
         {
                 if(!$profileid&& !$myrow['PROFILEID'])

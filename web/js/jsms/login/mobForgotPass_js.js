@@ -44,10 +44,10 @@ $("#sendLink").bind(clickEventType,function(){
                                  });
                          }
              else
-                 ShowTopDownError(["Provide a valid email address or phone no."]);
+                 ShowTopDownError(["Provide a valid email address or phone number"]);
     }
     else
-        ShowTopDownError(["Provide your email address or phone no."]);
+        ShowTopDownError(["Provide your email address or phone number"]);
 });
 function validateEmail(email) {
     var x = $.trim(email);

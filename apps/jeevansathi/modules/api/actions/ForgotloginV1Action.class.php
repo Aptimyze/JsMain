@@ -53,7 +53,8 @@ class ForgotloginV1Action extends sfActions
 				}
 				else
 				{
-					// no profiles found
+					// no profile found
+					$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_ERR);
 				}
 			}
 			$data['SmsCount'] = $SmsCount;
