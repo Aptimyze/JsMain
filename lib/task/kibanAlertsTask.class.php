@@ -51,8 +51,8 @@ EOF;
 		    $arrModules[$module['key']] = $module['doc_count']; 
 		}
 		// $to = "jsissues@jeevansathi.com";
-		$to = "nikhil.mittal@jeevansathi.com";
-		$from = "nikhil.mittal@jeevansathi.com";
+		$to = "jsissues@jeevansathi.com";
+		$from = "jsissues@jeevansathi.com";
 
 		$msg = '';
 		$kibanaUrl = "http://10.10.18.66:5601/app/kibana#/dashboard/Common-Dash";
