@@ -43,11 +43,13 @@ $this->addOptions(array(
                     $deleteArray[] = $value['PROFILEID'];
                     $notificationDataPoolObj = new NotificationDataPool();
                     $stDate = $value['SCHEDULED_DATE'];
+                    //$stDate = date('Y-m-d H:i:s', strtotime('-2 sec',  strtotime($stDate))); 
                     $endDate = date('Y-m-d H:i:s');
                     $interestRecData = $notificationDataPoolObj->getInterestReceivedForDuration($value['PROFILEID'], $stDate, $endDate);
                     if($interestRecData['COUNT']){
                         //get notification data for each profile
                         $notificationDetails = $instantNotObj->fetchNotificationData($interestRecData['SELF'],$interestRecData['OTHER_PROFILEID'],$interestRecData['COUNT']);
+                        //print_r($notificationDetails);
                         //send digest notification
                         if($notificationDetails)
                             $instantNotObj->sendNotification($interestRecData['SELF'],$interestRecData['OTHER_PROFILEID'],$notificationDetails);
