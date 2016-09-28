@@ -8,7 +8,7 @@ class dppSuggestions
 		$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 		$trendVal = $this->getTrendsValues($percentileArr);		
 		$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);
-		if(count($valueArr["data"])<DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
+		if(is_array($valueArr) && count($valueArr["data"])< DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
 		{
 			if($type == "CITY")
 			{		
@@ -84,11 +84,14 @@ class dppSuggestions
 		$count = count($tempArray);
 		unset($tempArray[0]);
 		unset($tempArray[$count-1]);
-		foreach($tempArray as $value)
+		if(is_array($tempArray))
 		{
-			list($value,$trend)=explode("#",$value);
-			$resultTrend[$value]=$trend;
+			foreach($tempArray as $value)
+			{
+				list($value,$trend)=explode("#",$value);
+				$resultTrend[$value]=$trend;
 
+			}
 		}
 		return $resultTrend;
 	}
@@ -99,7 +102,7 @@ class dppSuggestions
 		$count = 0;
 		foreach($trendsArr as $k1=>$v1)
 		{
-			if($count < 5)
+			if($count < DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
 			{
 				if(!in_array($k1,$valArr) && $type != "CITY")
 				{
@@ -206,9 +209,8 @@ class dppSuggestions
 				if(!array_key_exists($fieldId, $valueArr["data"]) && !in_array($fieldId,$valArr))
 				{
 					$valueArr["data"][$fieldId] =  FieldMap::getFieldlabel($type,$fieldId,'');
-				}
-
-				$remainingCount--;
+					$remainingCount--;
+				}				
 			}									
 			else
 			{
@@ -286,12 +288,13 @@ class dppSuggestions
 	}
 
 	//This function checks redis if a value exists corresponding to the key specified or else sends a query to fetch trendsArr
-	public function getTrendsArr($profileId,$percentileFields,$trendsObj)
+	public function getTrendsArr($profileId,$percentileFields)
 	{
-		$pidKey = $profileId."_dpp";
+		$pidKey = $profileId."_dppSuggestions";
 		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);
 		if($trendsArr == "noKey" || $trendsArr == false)
 		{
+			$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
 			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
 			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
 			return $trendsArr;

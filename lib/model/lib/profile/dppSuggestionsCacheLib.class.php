@@ -46,7 +46,7 @@ class dppSuggestionsCacheLib
 
     public function getHashValueForKey($pidKey)
     {
-        $keyExists = JsMemcache::getInstance()->keyExist($key);
+        $keyExists = JsMemcache::getInstance()->keyExist($pidKey);
         if($keyExists == 0)
         {
             return "noKey";
