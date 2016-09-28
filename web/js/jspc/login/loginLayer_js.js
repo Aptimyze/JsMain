@@ -508,14 +508,15 @@ function postForgotEmailLayer()
 			var email=$("#userEmail").val();
 			if(email)
 			{
-				var flag = validateEmail(email);
+				var flag = validateEmail(email)?'E':false;
 				if(!flag)
 				{
 					var data = validateMobile(email);
-					flag = data['flag'];
+					flag = data['flag']?'M':false;
 					phone = data['phone'];
 					isd = data['isd'];
 				}
+				// console.log(flag);
 				if(flag)
 				{       
 					showCommonLoader("#forgotPasswordContainer");
@@ -525,7 +526,7 @@ function postForgotEmailLayer()
 						 datatype:'json',
 						 cache: true,
 						 async:false,
-						 data:{email:email.trim()},
+						 data:{'email':email.trim(), 'flag':flag, 'phone':phone, 'isd':isd},
 						 success: function(result){
 							 if(result.responseStatusCode==0)
 							 {
