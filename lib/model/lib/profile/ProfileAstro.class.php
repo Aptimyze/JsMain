@@ -87,7 +87,7 @@ class ProfileAstro
       //  $this->totalQueryCount();
         $fields='COUNTRY_BIRTH,CITY_BIRTH,PROFILEID';
         if (ProfileCacheLib::getInstance()->isCached('PROFILEID', $pid,$fields , __CLASS__)) {
-            $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);var_dump($result);die;
+            $result = ProfileCacheLib::getInstance()->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
             //When processing extraWhereClause results could be false,
             //so for that case also we are going to query mysql
             if (false !== $result) {
@@ -101,7 +101,6 @@ class ProfileAstro
         //    $this->logCacheConsumption();
             return $result;
         }
-die('ppppp');
         //Get Records from Mysql
         $result = self::$objAstroDetailMysql->getAstros($pid);
         //TODO : Request to Cache this Record, on demand
