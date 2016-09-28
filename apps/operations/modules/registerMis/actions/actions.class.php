@@ -77,11 +77,11 @@ class registerMisActions extends sfActions {
         foreach ($sourceCategory as $value) {
           if ( $value['SOURCE_GROUP'] != '' && $value['SOURCE_GROUP'] != NULL)
           {
-            $this->sourceCategoryKey[$value['SOURCE_GROUP']] = $value['SOURCE_CATEGORY'];
+            $this->sourceCategoryKey[$value['SOURCE_GROUP']] = strtolower($value['SOURCE_CATEGORY']);
           }
           else 
           {
-            $this->sourceCategoryKey[$value['SOURCE_ID']] = $value['SOURCE_CATEGORY'];
+            $this->sourceCategoryKey[$value['SOURCE_ID']] = strtolower($value['SOURCE_CATEGORY']);
           }
         }
       
@@ -94,10 +94,10 @@ class registerMisActions extends sfActions {
           {
             $this->dateRegistrationData[$value['REG_DATE']] = array();
           }
-          if(array_key_exists($value['GROUPNAME'],$this->sourceCategoryKey )){
+          if(array_key_exists(strtolower($value['GROUPNAME']),$this->sourceCategoryKey )){
              $value['GROUPNAME'] = $this->sourceCategoryKey[$value['GROUPNAME']];
           }
-          else if(array_key_exists($value['SOURCEID'],$this->sourceCategoryKey )){
+          else if(array_key_exists(strtolower($value['SOURCEID']),$this->sourceCategoryKey )){
               $value['GROUPNAME'] = $this->sourceCategoryKey[$value['SOURCEID']];
           }else{
               $value['GROUPNAME'] = "Direct PC";
