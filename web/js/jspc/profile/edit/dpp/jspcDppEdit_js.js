@@ -1035,7 +1035,7 @@ var _parentCatogary = [{
                 response = JSON.parse(JSON.parse(result)[0]);
                 appendSuggestionList(response);
               } else {
-                console.log("error");
+                showCustomCommonError("Something went wrong. Please try again after some time.",1500);
               }             
             },
             error:function(result){

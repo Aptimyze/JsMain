@@ -23,9 +23,11 @@ class dppSuggestionsV1Action extends sfActions
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
 		$profileId = $this->loggedInProfileObj->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
+		$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
 		
 		//Trends arr is fetched from twoWayMatches.Trends table
-		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields);
+		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields,$trendsObj);
+		unset($trendsObj);
 		$data = $request->getParameter("Param");
 		$decodedData = json_decode($data);
 		foreach($decodedData as $key=>$val)
@@ -36,10 +38,9 @@ class dppSuggestionsV1Action extends sfActions
 				if($key1 == "data")
 				{											
 					$finalArr[] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1);
-				}
-								
+				}					
 			}
-		}	
+		}
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

@@ -8,10 +8,10 @@ class dppSuggestions
 		$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 		$trendVal = $this->getTrendsValues($percentileArr);		
 		$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);
-		if(count($valueArr["data"])<10)	// add in constants and change to 10		
+		if(count($valueArr["data"])<DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
 		{
 			if($type == "CITY")
-			{
+			{		
 				foreach($valArr as $key=>$value)
 				{
 					if(in_array($value,DppAutoSuggestEnum::$delhiNCRCities))
@@ -101,10 +101,20 @@ class dppSuggestions
 		{
 			if($count < 5)
 			{
-				if(!in_array($k1,$valArr))
+				if(!in_array($k1,$valArr) && $type != "CITY")
 				{
 					$valueArr["data"][$k1] = $this->getFieldMapValueForTrends($k1,$type);
 					$count++;
+				}
+				elseif(!in_array($k1,$valArr))
+				{
+					$this->stateIndiaArr = FieldMap::getFieldLabel("state_india",'',1);
+					$this->cityIndiaArr = FieldMap::getFieldLabel("city_india",'',1);
+					if(array_key_exists($k1, $this->stateIndiaArr) || array_key_exists($k1, $this->cityIndiaArr))
+					{
+						$valueArr["data"][$k1] = $this->getFieldMapValueForTrends($k1,$type);
+						$count++;
+					}
 				}
 			}
 			else
@@ -131,14 +141,13 @@ class dppSuggestions
 		}
 		else
 		{
-			$stateIndiaArr = FieldMap::getFieldLabel("state_india",'',1);
-			if(array_key_exists($key, $stateIndiaArr))
+			if(array_key_exists($key, $this->stateIndiaArr))
 			{
-				$returnValue = $stateIndiaArr[$key];
+				$returnValue = $this->stateIndiaArr[$key];
 			}
-			else
+			elseif(array_key_exists($key, $this->cityIndiaArr))
 			{
-				$returnValue = FieldMap::getFieldlabel($type,$key,'');
+				$returnValue = $this->cityIndiaArr[$key];
 			}
 		}
 		return $returnValue;
@@ -273,18 +282,16 @@ class dppSuggestions
 				break;
 			}
 		}
-
 		return $valueArr;
 	}
 
 	//This function checks redis if a value exists corresponding to the key specified or else sends a query to fetch trendsArr
-	public function getTrendsArr($profileId,$percentileFields)
+	public function getTrendsArr($profileId,$percentileFields,$trendsObj)
 	{
 		$pidKey = $profileId."_dpp";
 		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);
 		if($trendsArr == "noKey" || $trendsArr == false)
 		{
-			$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
 			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
 			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
 			return $trendsArr;
@@ -294,5 +301,6 @@ class dppSuggestions
 			return $trendsArr;        		
 		}
 	}
+
 }
 ?>
