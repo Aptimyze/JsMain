@@ -60,8 +60,14 @@ class FreePrivilege extends Privilege
 					$message = null;
 				}
 			}
-			if($this->privilegeArray[0]['COMMUNICATION']['MESSAGE']=='P')
-				$this->privilegeArray[0]['COMMUNICATION']['MESSAGE']='N';
+			if($this->privilegeArray[0]['COMMUNICATION']['MESSAGE']=='P'){
+				
+				$dbObj = new newjs_CHAT_LOG($dbName);
+				if($dbObj->getChatCount($contactHandler->getViewer()->getPROFILEID(),$contactHandler->getViewed()->getPROFILEID()))
+					$this->privilegeArray[0]['COMMUNICATION']['MESSAGE']='Y';
+				else
+					$this->privilegeArray[0]['COMMUNICATION']['MESSAGE']='N';
+			}
 		}
 	}
 	
