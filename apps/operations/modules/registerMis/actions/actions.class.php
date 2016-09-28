@@ -29,6 +29,9 @@ class registerMisActions extends sfActions {
     $preDefArray = array('screened_SIC' => 0,'SCREENED_CC' => 0,'OTHERS_COMMUNITY' => 0,'M26MVCC' => 0,'F22MVCC' => 0);
     $formArr = $request->getParameterHolder()->getAll();
     $name = $request->getAttribute('name');
+
+    $qualityMis_top_cities = FieldMap::getFieldLabel("qualityMis_top_cities","",1);
+
     $this->cid = $formArr['cid'];
     if ($formArr['submit']) 
     {
@@ -104,13 +107,16 @@ class registerMisActions extends sfActions {
             $this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']] = array();
           }
           if(!$value['SOURCECITY'])
-            $value['SOURCECITY'] = "BlankCITY";
+            $value['SOURCECITY'] = "Others";
 
-          if($value['SOURCECITY'] != "BlankCITY")
+          if($value['SOURCECITY'] != "Others")
           {
-            $value['SOURCECITY'] = FieldMap::getFieldLabel("city_india",$value['SOURCECITY']);
+            if ( in_array($value['SOURCECITY'], $qualityMis_top_cities))
+              $value['SOURCECITY'] = FieldMap::getFieldLabel("city_india",$value['SOURCECITY']);
+            else
+              $value['SOURCECITY'] = "Others";
             if(!$value['SOURCECITY'])
-              $value['SOURCECITY'] = "BlankCITY";
+              $value['SOURCECITY'] = "Others";
           }
 
           if (!array_key_exists($value['SOURCECITY'],$this->dateRegistrationData[$value['REG_DATE']][$value['GROUPNAME']]))
