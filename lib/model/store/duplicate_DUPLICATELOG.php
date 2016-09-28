@@ -36,7 +36,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                          }
                 }
                 catch (Exception $e) {
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
 
                 return $return;
@@ -59,7 +59,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 }
 		catch(Exception $e)
 		{
-			throw new jsException($e);
+			jsCacheWrapperException::logThis($e);
 		}
 		return $return;
 	}
@@ -81,7 +81,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
              	}
                 catch (Exception $e) 
 		{
-	        	throw new jsException($e);
+	        	jsCacheWrapperException::logThis($e);
                 }
                 return $return;
 	}
@@ -101,11 +101,52 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 }
                 catch (Exception $e)
                 {
-                        throw new jsException($e);
+                        jsCacheWrapperException::logThis($e);
                 }
                 return $return;
         }
 
+        public function fetchResultForAPair($profile1,$profile2)
+        {
+                try
+                {
+                        $sql="select * from DUPLICATE_PROFILE_LOG where PROFILE1 IN (:PROFILE1,:PROFILE2) AND PROFILE2 IN (:PROFILE1,:PROFILE2) ORDER BY ENTRY_DATE DESC LIMIT 1";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":PROFILE1",$profile1,PDO::PARAM_INT);
+                        $prep->bindValue(":PROFILE2",$profile2,PDO::PARAM_INT);
+                        $prep->execute();
+
+                        if($result = $prep->fetch(PDO::FETCH_ASSOC))
+                            return $result;
+                
+                }
+                catch (Exception $e)
+                {
+                        jsCacheWrapperException::logThis($e);
+                }
+        }
+        
+        public function fetchLogForAProfile($profileId){
+            try
+                {
+                        $sql="select * from DUPLICATE_PROFILE_LOG where PROFILE1=:PROFILEID OR PROFILE2=:PROFILEID";
+                        $prep = $this->db->prepare($sql);
+                        $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
+                        $prep->execute();
+
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
+                                $resultArr[]=$result;
+                        
+                        return $resultArr;
+                
+                }
+                catch (Exception $e)
+                {
+                        jsCacheWrapperException::logThis($e);
+                }
+            
+        }
+        
         public function insertDuplicateProfileLog(RawDuplicate $rawDuplicateObj)
         {
         try {
@@ -128,7 +169,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
                 catch (Exception $e) {
 					//var_dump($e);
 					//$prep->errorInfo()[2];
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
         }
         public function updateGroupID($group1,$group2)
@@ -143,7 +184,7 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
             
                 }
                 catch (Exception $e) {
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
         }
         public function updateProfileGroupID($group1,$profile1,$profile2)
@@ -161,9 +202,67 @@ class DUPLICATE_PROFILE_LOG extends TABLE {
             
                 }
                 catch (Exception $e) {
-            throw new jsException($e);
+            jsCacheWrapperException::logThis($e);
                 }
         }
+
+
+        public function fetchConfirmedDuplicates($limit,$offset)
+        {
+        try {
+
+            $sql = "SELECT PROFILE1, PROFILE2 from duplicates.DUPLICATE_PROFILE_LOG where IS_DUPLICATE='YES' ORDER BY ENTRY_DATE DESC LIMIT $limit OFFSET $offset ";
+            
+            $prep = $this->db->prepare($sql);
+            
+            $prep->execute();
+            
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC))
+                        {
+                                $finalR[]=$result;
+                        }
+                    
+            return $finalR;
+            } 
+        catch (Exception $e) 
+                {
+                jsCacheWrapperException::logThis($e);
+                }
+        
 }
 
+
+ public function deleteProbableDuplicates()
+        {
+            try {
+
+
+                $sql="delete  from duplicates.DUPLICATE_PROFILE_LOG where IS_DUPLICATE='PROBABLE'";
+                $prep = $this->db->prepare($sql);
+                $prep->execute();
+             
+                }
+                catch (Exception $e) {
+            jsCacheWrapperException::logThis($e);
+                }
+
+                return true;
+        }
+    //Three function for innodb transactions
+    public function startTransaction()
+    {
+        $this->db->beginTransaction();
+    }
+    public function commitTransaction()
+    {
+        $this->db->commit();
+    }
+
+    public function rollbackTransaction()
+    {
+        $this->db->rollback();
+    }
+    //Three function for innodb transactions
+
+}
 ?>

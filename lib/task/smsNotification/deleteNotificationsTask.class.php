@@ -29,7 +29,7 @@ $this->addOptions(array(
                 sfContext::createInstance($this->configuration);
                 if($dontTruncate=='')
                 {
-                        $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
+                        $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS('newjs_masterDDL');
                         $scheduledAppNotificationsObj->truncate();
                 }
   }

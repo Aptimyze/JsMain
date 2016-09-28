@@ -1151,8 +1151,8 @@ class Profile{
 			return $astroDetails;
 		if($astroDetails[CITY_BIRTH])
 		{
-				$cityOfBirth = $astro_details['CITY_BIRTH'];
-				$countryOfBirth=$astro_details['COUNTRY_BIRTH'];
+				$cityOfBirth = $astroDetails['CITY_BIRTH'];
+				$countryOfBirth=$astroDetails['COUNTRY_BIRTH'];
 		}
 		else{
 				$countryOfBirth=$this->DecoratedBirthCountry;
@@ -1502,13 +1502,13 @@ class Profile{
          *
          * Returns education detail array of profile
          */
-        public function getEducationDetail($valuesOnly="")
+        public function getEducationDetail($valuesOnly="",$dbname="")
         {
 			if($this->HAVE_JEDUCATION=='Y'){
 				//If already fetched then return the fetched object
 				//otherwise fetch education details
 				if(! $this->education_other instanceof ProfileComponent){
-				$pe=new NEWJS_JPROFILE_EDUCATION();
+				$pe = ProfileEducation::getInstance($dbname);
 				$education_arr=$pe->getProfileEducation($this->PROFILEID);
 				if($valuesOnly)
 					return $education_arr;
@@ -1600,6 +1600,8 @@ class Profile{
 		 */
 			foreach($res as $field=>$value){
 				$this->$field=$value;
+				if(in_array($field,ProfileEnums::$saveBlankIfZeroForFields) &&$value=="0")
+					$this->$field='';
 			}
 		}
 		return $res;

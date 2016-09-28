@@ -23,7 +23,7 @@ else
 	    $checksum = $cid;
 }
 if(!$_GET['name'] && !$_POST['name'])
-	$name = $_COOKIE["CRM_NOTIFICATION_AGENT"];
+	$name = preg_replace('/[^A-Za-z0-9\. -_]/', '', $_COOKIE["CRM_NOTIFICATION_AGENT"]);
 $ip = FetchClientIP();
 
 function unsetLoginCookies()

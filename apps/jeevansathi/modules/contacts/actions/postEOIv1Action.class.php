@@ -39,7 +39,7 @@ class postEOIv1Action extends sfAction
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","I");
 					$this->contactHandlerObj->setElement("STYPE",$this->getParameter($request,"stype"));
@@ -56,6 +56,7 @@ class postEOIv1Action extends sfAction
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(true);
 			$apiObj->generateResponse();
 		}
 		else
@@ -94,6 +95,7 @@ class postEOIv1Action extends sfAction
 		
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
+		
 		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
 		if($this->contactEngineObj->messageId)
 		{
@@ -105,7 +107,7 @@ class postEOIv1Action extends sfAction
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
-
+				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
 			}
 			if($this->getParameter($request,"page_source") == "VDP")
 			{
@@ -195,9 +197,13 @@ class postEOIv1Action extends sfAction
 				{
 				if(strpos($request->getParameter("newActions"), "MEMBERSHIP")!== false )
 					{
+						$memHandlerObj = new MembershipHandler();
+						$data2 = $memHandlerObj->fetchHamburgerMessage($request);
+						$MembershipMessage = $data2['hamburger_message']['top']; 
 						$responseArray["footerbutton"]["label"]  = "Buy paid membership";
 						$responseArray["footerbutton"]["value"] = "";
 						$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+						$responseArray["footerbutton"]["text"] = $MembershipMessage;
 					}
 					else
 					{

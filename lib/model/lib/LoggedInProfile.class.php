@@ -116,7 +116,7 @@ class LoggedInProfile extends Profile{
 		 * */
 		public function editEducation($paramArr)
 		{
-			$eduObj=new NEWJS_JPROFILE_EDUCATION();
+			$eduObj=  ProfileEducation::getInstance();
 			$eduObj->update($this->PROFILEID,$paramArr);
 		}
 		/**

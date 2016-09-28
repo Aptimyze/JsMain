@@ -3,9 +3,7 @@ include_once(JsConstants::$docRoot."/mis/connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 $db=connect_misdb();
-$db2=connect_master();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
-mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db2);
 $data=authenticated($checksum);
 
 if(isset($data)|| $JSIndicator)
@@ -224,6 +222,9 @@ function formatTrackingString($trackingString)
 				break;
 			case JSTrackingPageType::FILTERED_INTEREST_IOS:
 				$formattedString.="JS IOS:Filtered Ios Interest";
+				break;
+			case JSTrackingPageType::EXCLUSIVE_SERVICE2_MAILER_RTYPE:
+				$formattedString.="JS Exclusive Servicing II Mailer";
 				break;
 		}
 	}

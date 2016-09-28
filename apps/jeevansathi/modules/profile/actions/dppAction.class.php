@@ -46,7 +46,7 @@ class dppAction extends sfAction {
 		$this->profileId = $this->loginProfile->getPROFILEID();
 		$this->casteLabel = JsCommon::getCasteLabel($this->loginProfile);
 
-    if($request->getParameter("fromBackend")){
+    if($request->getParameter("allowLoginfromBackend")){
 				$this->fromBackend=1;
 				$this->cid=$request->getParameter("fromBackend");
 				
@@ -225,9 +225,15 @@ class dppAction extends sfAction {
 			                 }  							
                                          
                  }
-	
 		 $this->dropDownData = $this->getDropDowns($request);
      $this->casteDropDown = json_encode($this->getCasteValues(),true);
+     
+     $newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+    $cnt_logic = $newjsMatchLogicObj->getPresentLogic($this->loginProfile->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
+    if($cnt_logic>0)
+            $this->toggleMatchalerts = "dpp";
+    else
+            $this->toggleMatchalerts = "new";
      
      if(isset($this->fromReg)){
       $name_pdo = new incentive_NAME_OF_USER();

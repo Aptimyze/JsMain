@@ -20,57 +20,13 @@
                   </div>
 
                   <div id='commHistoryAbsent' class="f13 reportInv1 txtc">
-                        <p class="color11 f13 txtl pl75">Thank you for helping us. We will look into this and remove this number if found invalid.</p>            
+                        <p class="color11 f13 txtl pl75">Thank you for helping us.If our team finds this number invalid we will remove this number and credit you with a contact as compensation.</p>
                     </div>
                     </div>
                     </div>
                     </div>
                     </div>
 
-
-<div id='commHistoryOverlay-layer' class="pos_fix layersZ setshare disp-none">
-      <div class="prfwid16 fontlig">
-        <div class="prfbg6">
-                <!--start:div-->          
-              <div class="">
-                <div class="clearfix shrp1">
-                    <div class="prfrad prfdim8 prfbr6 fl"> <img src="" border="0" class="otherProfilePic prfdim13 prfrad prfm2"> </div>
-                      <div class=" fl ml10 prfbr7 pb10 f13 color11 wid80p pt16">
-                       <span class='js-usernameCC'></span><span class='pl10 pr10'>-</span><span class="colr2">Communication History</span>
-                      </div>
-                      <i class="sprite2 sendcross2 cursp pos-abs cepos4 closeCommLayer"></i>
-                  </div>
-
-                  <div id='commHistoryAbsent' class="f13 comhisp1 txtc">
-                      <p class="color5 f22">No Communication history</p>
-                        <p class="color2 f13 pt15">Send an interest to connect with <span class='js-usernameCC'></span></p>            
-                    </div>
-
-                     <!--start:form-->
-                    <div id='commHistory' class="f13 comhp1">
-                          <div class="cEcontent mCustomScrollbar">                        
-                            <ul id='mainDiv' class="listnone comhis fontlig color11">
-                              <li id='commDiv' class="commDiv disp-none clearfix">
-                                  <div class="prfwid18 prfm2" style='margin-top:0px;'><img src="" border="0" class="js-profilePic prfdim14 prfrad vtop"></div>
-                                    <div class="pl10 prfwid19">
-                                      <p class="f15 js-commHeading"></p>
-                                        <p class="js-commMessage disp-none pt7 color2 f13"></p>
-                                        <p class="js-commTime pt10 f12 color12"></p>
-                                    </div>
-                                </li>
-                                      
-                                                         
-                            </ul>
-                            </div>
-                       
-                    </div>
-                    <!--end:form-->
-              </div>        
-            <!--end:div-->
-               
-            </div>    
-      </div>  
-     </div>
 
 <div class='disp-none'>
 

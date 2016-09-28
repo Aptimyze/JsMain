@@ -5,8 +5,8 @@
 include("connect.inc");
 connect_db();
 
-//$sql="select PROFILEID from SEARCH_MALE where LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 5 MONTH)";
-$sql="select PROFILEID from SEARCH_MALE where SORT_DT < DATE_SUB(CURDATE(), INTERVAL 5 MONTH)";
+$sql="select PROFILEID from SEARCH_MALE where LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
+//$sql="select PROFILEID from SEARCH_MALE where SORT_DT < DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
 $result=mysql_query($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql);
 while($myrow=mysql_fetch_array($result))
 {
@@ -28,8 +28,8 @@ if(is_array($deletePidArr))
 unset($deletePidArr);
 mysql_free_result($result);
 
-//$sql="select PROFILEID from SEARCH_FEMALE where LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 5 MONTH)";
-$sql="select PROFILEID from SEARCH_FEMALE where SORT_DT < DATE_SUB(CURDATE(), INTERVAL 5 MONTH)";
+$sql="select PROFILEID from SEARCH_FEMALE where LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
+//$sql="select PROFILEID from SEARCH_FEMALE where SORT_DT < DATE_SUB(CURDATE(), INTERVAL 3 MONTH)";
 $result=mysql_query($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql);
 while($myrow=mysql_fetch_array($result))
 {

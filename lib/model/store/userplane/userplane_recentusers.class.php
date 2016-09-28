@@ -8,7 +8,7 @@ class userplane_recentusers extends TABLE{
          * @param $dbName - Database to which the connection would be made
          */
 
-        public function __construct($dbname="")
+        public function __construct($dbname="newjs_masterRep")
         {
 			parent::__construct($dbname);
         }

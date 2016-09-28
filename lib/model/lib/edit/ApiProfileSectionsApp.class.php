@@ -15,7 +15,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$this->profile = $profile;
 		$dbHobbies = new NEWJS_HOBBIES();
 		$this->Hobbies=$dbHobbies->getUserHobbiesApi($this->profile->getPROFILEID());
-		$this->isEdit=$isEdit;
+                $this->isEdit=$isEdit;
 		$this->underScreening="under Screening";
 		$this->setApiScreeningFields();
 	}
@@ -309,13 +309,15 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//your info
 		$basicArr[]=$this->getApiFormatArray("YOURINFO","About Me"  ,$this->profile->getDecoratedYourInfo(),$this->profile->getYOURINFO(),$this->getApiScreeningField("YOURINFO"));
 		//username
-		$dbNameOfUser=new incentive_NAME_OF_USER();
-		$name=$dbNameOfUser->getNAME($this->profile->getPROFILEID());
+		$NameOfUser=new NameOfUser;
+		$nameData=$NameOfUser->getNameData($this->profile->getPROFILEID());
 //		if($this->profile->getGENDER()=="M")
 //			$basicArr[]=$this->getApiFormatArray("NAME","Groom's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
 //		else
 //			$basicArr[]=$this->getApiFormatArray("NAME","Bride's Name"  ,$name,"",$this->getApiScreeningField("NAME"));
-		$basicArr[]=$this->getApiFormatArray("NAME","Name"  ,$name,$name,$this->getApiScreeningField("NAME"));
+		$name = $nameData[$this->profile->getPROFILEID()]['NAME'];
+		$basicArr[]=$this->getApiFormatArray("NAME","Full Name"  ,$name,$name,$this->getApiScreeningField("NAME"));
+		$basicArr[]=$this->getApiFormatArray("DISPLAYNAME","DISPLAYNAME",'',$nameData[$this->profile->getPROFILEID()]['DISPLAY'],'','Y');
 		//gender
 		$basicArr[]=$this->getApiFormatArray("GENDER","Gender",$this->profile->getDecoratedGender(),$this->profile->getGender(),$this->getApiScreeningField("GENDER"),"N");
 		
@@ -474,13 +476,17 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$arrOut[] = $this->getApiFormatArray("P_AGE","Age",$szAge,$szAgeVal,$this->getApiScreeningField("PARTNER_AGE"));
 		//Marital Status
 		$szMStatus = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_MSTATUS());
-		$arrOut[] = $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"));     
+		$arrOut[] = $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"));
+                //Have Children
+		$szChildren = $this->getDecorateDPP_Response($jpartnerObj->getCHILDREN());
+		$arrOut[] = $this->getApiFormatArray("P_HAVECHILD","Have Children",trim($jpartnerObj->getDecoratedCHILDREN()),$szChildren,$this->getApiScreeningField("CHILDREN"));
 		//Country
 		$szCountry = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_COUNTRYRES());
 		$arrOut[] = $this->getApiFormatArray("P_COUNTRY","Country",trim($jpartnerObj->getDecoratedPARTNER_COUNTRYRES()),$szCountry,$this->getApiScreeningField("PARTNER_COUNTRYRES"));
-		//City
+		//State/City
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
-		$arrOut[] = $this->getApiFormatArray("P_CITY","City",trim($jpartnerObj->getDecoratedPARTNER_CITYRES()),$szCity,$this->getApiScreeningField("PARTNER_CITYRES"));
+		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
+		$arrOut[] = $this->handleStateCityData($szState,$szCity);
 		return $arrOut;
 	}
 
@@ -849,6 +855,39 @@ class ApiProfileSectionsApp extends ApiProfileSections {
     
     protected function addSunSign(&$astro,$AstroKundali){
      //Not exist for APP
+    }
+
+    /** @function
+	 * @returns state and city array
+	 * @param $stateVal String
+	 * @param $cityVal String
+	 * */
+    public function handleStateCityData($stateVal,$cityVal)
+    {	$jpartnerObj=$this->profile->getJpartner();
+    	if($stateVal == "DM" && $cityVal == "DM")
+    	{
+    		$szStateCity = "DM";
+    		$stateCityNames = "Doesn't Matter";
+    	}
+    	elseif($stateVal == "DM")
+    	{
+    		$szStateCity = $cityVal;
+    		$stateCityNames = trim($jpartnerObj->getDecoratedPARTNER_CITYRES());
+    	}
+    	elseif($cityVal == "DM")
+    	{
+    		$szStateCity = $stateVal;
+    		$stateCityNames = trim($jpartnerObj->getDecoratedSTATE());	
+    	}
+    	else
+    	{
+    		$szStateCity = $stateVal.",".$cityVal;
+    		$stateNames = trim($jpartnerObj->getDecoratedSTATE(),',');
+    		$cityNames = trim($jpartnerObj->getDecoratedPARTNER_CITYRES(),',');
+    		$stateCityNames = $stateNames.",".$cityNames;
+    	}
+    	$stateCityArr = $this->getApiFormatArray("P_CITY","City/State",$stateCityNames,$szStateCity,$this->getApiScreeningField("PARTNER_CITYRES"));
+    	return($stateCityArr);
     }
     
 }

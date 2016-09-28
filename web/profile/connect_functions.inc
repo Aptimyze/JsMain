@@ -1,6 +1,9 @@
 <?php
-include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
 
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
+include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(!function_exists("filter_page_redirection"))
 {
 	function filter_page_redirection($profileid)
@@ -223,14 +226,16 @@ function get_dup_overall_cnt($profileid)
 	$profArray=array();
 	if($profileid)
 	{
-		$mysqlObj=new Mysql;
-
-		$myDbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
-		$myDb=$mysqlObj->connect("$myDbName");
-		$sql="select RECEIVER, DATEDIFF(now(),`DATE`) as `TIME` from newjs.MESSAGE_LOG where SENDER='$profileid' and `TYPE`='I' order by `DATE` DESC";
-		$res=$mysqlObj->executeQuery($sql,$myDb);
+//		$mysqlObj=new Mysql;
+		$senderShard=JsDbSharding::getShardNo($profileid);
+		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($senderShard);
+		//$myDbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
+		//$myDb=$mysqlObj->connect("$myDbName");
+		$res=$dbMessageLogObj->getMessagesBasedOnType($profileid,"I");
+		//$sql="select RECEIVER, DATEDIFF(now(),`DATE`) as `TIME` from newjs.MESSAGE_LOG where SENDER='$profileid' and `TYPE`='I' order by `DATE` DESC";
+		//$res=$mysqlObj->executeQuery($sql,$myDb);
 			
-		while($row=mysql_fetch_assoc($res))
+		foreach($res as $key=>$row)
 		{
 			if($row['TIME']<=$dup_live_diff)
 				$profArray[$row[RECEIVER]]=1;
@@ -3564,6 +3569,7 @@ if(!function_exists('logError'))
 {
         function logError($message,$query="",$critical="exit", $sendmailto="NO",$server="",$database="")
         {
+        		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
                 global $smarty, $checksum,$sql,$ajax_error,$isMobile;
 
                 //if(mysql_error_js() && $sendmailto!="YES")
@@ -5872,24 +5878,24 @@ function get_variables_for_3d_old($profileid,$neglect_cookies='')
 					setcookie('JS_'.$get_values[$k],$myrow_get_value[$get_values[$k]],0,"/",$domain);
 			}
 			if(!(in_array('CASTE',$get_values)) && !$neglect_cookies)
-				$my_caste=$_COOKIE["JS_CASTE"];
+				$my_caste=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_CASTE"]);
 			if(!(in_array('MTONGUE',$get_values)) && !$neglect_cookies)
-				$my_mtongue=$_COOKIE["JS_MTONGUE"];
+				$my_mtongue=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_MTONGUE"]);
 			if(!(in_array('INCOME',$get_values)) && !$neglect_cookies)
-				$my_income=$_COOKIE["JS_INCOME"];
+				$my_income=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_INCOME"]);
 			if(!(in_array('RELIGION',$get_values)) && !$neglect_cookies)
-				$my_religion=$_COOKIE["JS_RELIGION"];
+				$my_religion=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_RELIGION"]);;
 			if(!(in_array('AGE',$get_values)) && !$neglect_cookies)
-				$my_age=$_COOKIE["JS_AGE"];
+				$my_age=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_AGE"]);
 		}
 	}
 	else
 	{
-		$my_caste=$_COOKIE["JS_CASTE"];
-		$my_mtongue=$_COOKIE["JS_MTONGUE"];
-		$my_income=$_COOKIE["JS_INCOME"];
-		$my_religion=$_COOKIE["JS_RELIGION"];
-		$my_age=$_COOKIE["JS_AGE"];
+		$my_caste=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_CASTE"]);
+		$my_mtongue=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_MTONGUE"]);
+		$my_income=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_INCOME"]);
+		$my_religion=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_RELIGION"]);
+		$my_age=preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE["JS_AGE"]);
 	}
 	$arr_3d['CASTE']=$my_caste;
 	$arr_3d['MTONGUE']=$my_mtongue;
@@ -7430,6 +7436,7 @@ function check_astro_details($profileid,$show_horoscope="abc")
 				$profileid_str.="'".$profileid_arr[$i]."',";
 		}
 		$profileid_str=substr($profileid_str,0,strlen($profileid_str)-1);
+		$profileid_str = implode(",",array_diff(explode(",",$profileid_str), [0]));
 		if($profileid_str)
 		{
 			$sql_ast_det="SELECT PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL FROM newjs.ASTRO_DETAILS WHERE PROFILEID IN ($profileid_str)";
@@ -8525,8 +8532,6 @@ function updatememcache($array_to_merge,$profileid,$not_mand=0)
 				}
 			}
 			$str_merge=rtrim($str_merge,",");
-			$sql="update newjs.CONTACTS_STATUS set $str_merge where PROFILEID=$profileid";
-			mysql_query_decide($sql) or logError2($sql);
 			if($memcacheObj)
 				$memcacheObj->releaselock($lock);
 			return 1;
@@ -8566,8 +8571,7 @@ function updatememcache($array_to_merge,$profileid,$not_mand=0)
 				$$lowerkey=$val;
 				
 			}
-			$sql_ins = "REPLACE INTO CONTACTS_STATUS (PROFILEID, OPEN_CONTACTS, ACC_BY_ME, ACC_ME,NOT_REP,DEC_ME,DEC_BY_ME,PHOTO_REQUESTS,HOROSCOPE_REQUESTS,SAVE_SEARCH,EXPIRY_DT,NEW_MES,LAST_30_OPEN_CONTACTS,LAST_30_90_OPEN_CONTACTS,TODAY_INI_BY_ME,WEEK_INI_BY_ME,MONTH_INI_BY_ME,TOTAL_CONTACTS_MADE) VALUES('$profileid', '$open_contacts','$acc_by_me','$acc_me','$not_rep','$dec_me','$dec_by_me','','','$save_search','$expiry_dt','','','','$today_ini_by_me','$week_ini_by_me','$month_ini_by_me','$total_contacts_made')";
-			mysql_query_optimizer($sql_ins) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ins,"ShowErrTemplate");
+			
 		}
 			
 		$eventObj->updateMemcache();	
@@ -8677,6 +8681,7 @@ function delete_profile($profileid,$delete_reason='',$specify_reason='')
         mysql_query_decide($sql_del) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_jp,"ShowErrTemplate");
 
         $sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID='$profileid'";
+		JProfileUpdateLib::getInstance()->removeCache($profileid);
         mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	
 	if($delete_reason=="I found my match on Jeevansathi.com")
@@ -9131,6 +9136,7 @@ function stat_name($PROFILEID,$username)
 
 function send_chat_request_email($profileid,$gmail,$username)
 {
+return;
 		global $smarty;
         $mypid=$profileid;
         $email=$gmail;

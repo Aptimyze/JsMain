@@ -5,7 +5,7 @@
 class CriticalActionLayerTracking
 {
 
-  const ANALYTIC_SCORE_THRESHOLD=90;
+  const ANALYTIC_SCORE_THRESHOLD=70;
   const RCB_LAYER_REF_DATE='2011-01-01';
 
   /* this function will select entries for today
@@ -30,8 +30,8 @@ class CriticalActionLayerTracking
      $your_date = strtotime(self::RCB_LAYER_REF_DATE);
      $datediff = $now - $your_date;
      $dayDiff=floor($datediff/(60*60*24));  
-     $remainder=$dayDiff=$dayDiff%10;
-     if($remainder==$profileId%10)return true;
+     $remainder=$dayDiff=$dayDiff%5;
+     if($remainder==$profileId%5)return true;
      else return false;
   }
 
@@ -78,7 +78,6 @@ class CriticalActionLayerTracking
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
-
     /* make sure no layer opens before one day */
     if(is_array($getTotalLayers))
     {
@@ -95,7 +94,7 @@ class CriticalActionLayerTracking
 
     }
 
-
+  
         //default condition for minimum time difference between layers
             /* make sure no layer opens before one day */
 
@@ -109,7 +108,7 @@ class CriticalActionLayerTracking
         }
 // in the order of priority
         for ($i=1;;$i++)
-        {
+        { 
 
       $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
       if (!$layer) 
@@ -166,9 +165,17 @@ return 0;
                     $show=1;
                     break;
           case '6': 
-                  if(!MobileCommon::isApp())
+                  if(MobileCommon::isApp()!='I')
                     {
-                      
+                          $loginData = $request->getAttribute('loginData');
+                          $birthdate = new DateTime($loginData['DTOFBIRTH']);
+                          $today   = new DateTime('today');
+                          $age = $birthdate->diff($today)->y;
+                          $gender = $loginData['GENDER'];
+                          //print_r($age." is age anfd gendere is ".$gender);
+                          //die;
+                      if(!($gender == 'M' && $age >= 24) && !($gender == 'F' && $age >=22) )break;
+
                       $loggedInUser=LoggedInProfile::getInstance();
                       if(self::satisfiesDateCondition($profileid) &&  !CommonFunction::isPaid($loggedInUser->getSUBSCRIPTION()))
                       {
@@ -188,8 +195,7 @@ return 0;
                     
                     break;
 
-          case '7': if(!MobileCommon::isAndroidApp())
-                      {  
+          case '7': 
                       
                       $entryDate=$profileObj->getENTRY_DT();
                       if((time()-strtotime($entryDate))>7*24*60*60)
@@ -204,9 +210,31 @@ return 0;
                           if((time()-$lastInterest)>15*24*60*60) $show=1;
                         }
                       }
-                    }
+                    
                     break;            
-                              
+
+                    case '8': 
+                      
+                      if(!MobileCommon::isApp())
+                      {
+                      $negativeObj=new INCENTIVE_NEGATIVE_TREATMENT_LIST();
+                      if($negativeObj->isFtoDuplicate($profileid))
+                          $show=1;
+                      }
+                    
+                    break;  
+                    
+                    case '9': 
+                      
+                      if(!MobileCommon::isApp())
+                      {
+                      $nameArr=(new NameOfUser())->getNameData($profileid);
+                      if(!is_array($nameArr[$profileid]) || !$nameArr[$profileid]['DISPLAY'] || !$nameArr[$profileid]['NAME'])
+                          $show=1;
+                      }
+                    
+                    break;  
+
           default : return false;
         }
         /*check if this layer is to be displayed
@@ -236,7 +264,7 @@ return 0;
 
   case in_array($highestDegree, explode(',',$fieldArray['g'])):
   
-    $jprofileEduObj=new newjs_JPROFILE_EDUCATION();
+    $jprofileEduObj= ProfileEducation::getInstance();
     $education=$jprofileEduObj->getProfileEducation($profileObj->getPROFILEID());
     if(!$education['UG_DEGREE'] )
       return true;
@@ -246,7 +274,7 @@ return 0;
 
   case (in_array($highestDegree, explode(',',$fieldArray['pg'])) || in_array($highestDegree, explode(',',$fieldArray['phd']))): 
     
-    $jprofileEduObj=new newjs_JPROFILE_EDUCATION();
+    $jprofileEduObj= ProfileEducation::getInstance();
     $education=$jprofileEduObj->getProfileEducation($profileObj->getPROFILEID());
     if(!$education['UG_DEGREE'] || !$education['PG_DEGREE'] )
       return true;

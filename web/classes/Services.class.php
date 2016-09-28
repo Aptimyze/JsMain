@@ -6,8 +6,8 @@
  */
 
 if (JsConstants::$whichMachine != 'matchAlert') {
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/billing/comfunc_sums.php");
-	include_once ($_SERVER["DOCUMENT_ROOT"] . "/P/pg/functions.php");
+	include_once (JsConstants::$docRoot . "/billing/comfunc_sums.php");
+	include_once (JsConstants::$docRoot . "/P/pg/functions.php");
 }
 
 class Services
@@ -159,7 +159,7 @@ class Services
 
         if(!empty($serviceid)){
 			$serviceid = "'".$serviceid."'";
-			$billingServicesObj = new billing_SERVICES();
+			$billingServicesObj = new billing_SERVICES('newjs_slave');
 			$allServiceDetails = $billingServicesObj->fetchAllServiceDetails($serviceid);
         }
         $price = 0;
@@ -300,7 +300,7 @@ class Services
         $serviceid_arr = @explode(",", $serviceid);
         $serviceid_str = "'".@implode("','", $serviceid_arr)."'";
         
-        $billingServicesObj = new billing_SERVICES();
+        $billingServicesObj = new billing_SERVICES('newjs_slave');
         $serviceDetails = $billingServicesObj->fetchAllServiceDetails($serviceid_str);
         foreach($serviceid_arr as $key=>$val){
         	foreach($serviceDetails as $kk=>$vv){
@@ -398,12 +398,12 @@ class Services
             if ($fest) {
                 $festiveDiscountPercent = $festiveDetailsArr[$serviceid]['DISCOUNT_PERCENT'];
                 if ($festiveDiscountPercent > 0) {
-                	$services[$serviceid]['FESTIVE_PRICE'] = round($services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100) , 2);
+                	$services[$serviceid]['FESTIVE_PRICE'] = $services[$serviceid]['PRICE'] - round(($services[$serviceid]['PRICE'] * $festiveDiscountPercent) / 100, 2);
                 }
             }
             
             $discountSrvc = $cashDiscountArr[$serviceid];
-            $services[$serviceid]['DISCOUNT_PRICE'] = round($services[$serviceid]['PRICE'] - ceil(($services[$serviceid]['PRICE'] * $discountSrvc) / 100), 2);
+            $services[$serviceid]['DISCOUNT_PRICE'] = $services[$serviceid]['PRICE'] - round(($services[$serviceid]['PRICE'] * $discountSrvc) / 100, 2);
             
             $services[$serviceid]['DURATION'] = $componentsDurArr[$serviceid];
             unset($festiveDuration);
@@ -420,7 +420,7 @@ class Services
                 $memHandlerObj = new MembershipHandler();
                 $renew_discount_rate = $memHandlerObj->getVariableRenewalDiscount($profileid);
             }
-            return ceil(($renew_discount_rate / 100) * $service_price);
+            return round(($renew_discount_rate / 100) * $service_price, 2);
         } 
         else if ($discount_type == 6) {
         	// when having internal call within this file

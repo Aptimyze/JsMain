@@ -1,6 +1,9 @@
-var hideDays = 7;
+var hideDays = 7,deleteReasonSelected=0, offerConsent=0;
+
 $(document).ready(function() {
-$( "#sevenDayHide").bind('click',function() {
+bindOfferConsentBox();
+
+  $( "#sevenDayHide").bind('click',function() {
   hideDays = 7;
   $("#sevenDayHide").addClass("setactive").removeClass("setbtn1");
   $("#tenDayHide").removeClass("setactive").addClass("setbtn1");
@@ -31,46 +34,72 @@ $('#mainContainerID').bind('click', function(e)
 });
 $("#delOptionID").bind('click', function()
 {
-  $("specifiedID").addClass("disp-none");
-  $("#specifyReasonID").addClass("disp-none");
-  $("#specifyLinkID").addClass("disp-none");
-  $("#specifyOtherReasonID").addClass("disp-none");
-  $("#specifyOtherReason2ID").addClass("disp-none");
-  $("#deleteOptionListID").show();
+    $("#deleteOptionListID").show();
 });
 
 $(".sltOption").bind('click', function()
 {
+  
+  deleteReasonSelected=1;
+  $('.reasonDivCommon').hide();
   var optionVal=$(this).html();
   $('#delOptionSetID').html(optionVal);
-  if(optionVal=="I found my match elsewhere")
+  if($(this).hasClass('sltOption2') )
   {
+    offerConsent=1;
+    $('input[name="js-offerConsentCheckBox"]').closest('li').addClass("selected");
+    $("#offerCheckBox").show();
     $("#DeleteTextID").html("Delete my Profile");
-    $("#specifiedID").removeClass("disp-none");
-    $("#specifyReasonID").removeClass("disp-none");
+    $("#specifiedID").show();
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+    $("#specifyLinkID").show();
   }
-  else if(optionVal=="I am unhappy about services")
-  {
+  else if ($(this).hasClass('sltOption3')){
+    $('input[name="js-offerConsentCheckBox"]').closest('li').addClass("selected");
+    offerConsent=1;
     $("#DeleteTextID").html("Delete my Profile");
-    $("#specifiedID").removeClass("disp-none");
-    $("#specifyOtherReasonID").removeClass("disp-none");
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+    $("#offerCheckBox").show();
+    $("#specifiedID").show();
+    $("#specifyReasonID").show();
+  
+
   }
-  else if(optionVal=="I found my match from other website")
-  {
+
+  else if ($(this).hasClass('sltOption4')){
+    offerConsent=0;
     $("#DeleteTextID").html("Delete my Profile");
-    $("#specifiedID").removeClass("disp-none");
-    $("#specifyLinkID").removeClass("disp-none");
+    $("#offerCheckBox").hide();
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+
+    $("#specifiedID").show();
+    $("#specifyOtherReasonID").show();
   }
-  else if(optionVal=="I found my match on Jeevansathi.com")
+
+  else if ($(this).hasClass('sltOption5'))
   {
+    offerConsent=0;
+    $("#DeleteTextID").html("Delete my Profile");
+    $("#offerCheckBox").hide();
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+
+    $("#specifiedID").show();
+    $("#specifyOtherReason2ID").show();
+  }
+
+  else if($(this).hasClass('sltOption1'))
+  {
+    $('input[name="js-offerConsentCheckBox"]').closest('li').addClass("selected");
+    offerConsent=1;
+    $("#offerCheckBox").show();
     $("#DeleteTextID").html("Submit");
-    $("#specifiedID").addClass("disp-none");
-  }
-  else
-  {
-    $("#DeleteTextID").html("Delete my Profile");
-    $("#specifiedID").removeClass("disp-none");
-    $("#specifyOtherReason2ID").removeClass("disp-none");
+    $("#deleteReasonPrompt").hide();
+    $("#deleteReasonBox").removeClass('errbrd');
+    $("#specifiedID").hide();
   }
   $("#deleteOptionListID").hide();
 });
@@ -83,20 +112,51 @@ $('#HideID').bind("click",function()
     var password = $('#HidePassID').val(); 
     var hideAction=ajaxPassword(profilechecksum,password,'1');
     $('#HidePassID').val('');
-    });
+  });
 
 
 $('#DeleteID').bind("click",function() 
   {
-     $("#passID").addClass("vishid");
-     $("#passBorderID").removeClass("errbrd");
+    if(!deleteReasonSelected)
+    {
+      $("#deleteReasonPrompt").show();
+      $("#deleteReasonBox").addClass("errbrd");
+      return;
+    }
+    $("#passID").addClass("vishid");
+    $("#passBorderID").removeClass("errbrd");
     var password = $('#DeletePassID').val(); 
     var hideAction=ajaxPassword(profilechecksum,password);
     $('#DeletePassID').val('');
-    });
+  });
 
 });
 
+
+function bindOfferConsentBox(){
+
+  var element=$('input[name="js-offerConsentCheckBox"]');
+    //element.wrap("<span class='custom-checkbox'></span>");
+    element.parent().addClass('custom-checkbox');
+      
+        element.closest('li').addClass("selected");
+      
+    element.click(function() {
+      var liElement=$(this).closest('li');
+      if(liElement.hasClass('selected')){
+        offerConsent=0;
+        liElement.removeClass('selected');
+
+      }
+      else{ 
+        offerConsent=1;
+        liElement.addClass("selected");
+      }
+    });
+
+offerConsent=1;
+
+}
 function ajaxHide(hideDelete)
 {
   $.ajax(
@@ -169,21 +229,8 @@ function ajaxPassword(checksum,pswrd,hideAction)
                         }
                         else
                             {
-                             
-                              var optionVal=$('#delOptionSetID').html();
-                              if(optionVal=="I am unhappy about services")
-                                specifyReason=$('#specifyOtherReasonID').val();
-                              else if(optionVal=="I found my match from other website")
-                                specifyReason=$('#specifyLinkID').val();
-                              else if(optionVal=="I found my match elsewhere")
-                                specifyReason=$('#specifyReasonID').val();
-                              else if(optionVal=="Other reasons")
-                                specifyReason=$('#specifyOtherReason2ID').val();
-                              else
-                                specifyReason="";
-                              //console.log(optionVal);
-                              //console.log(specifyReason);
-                              ajaxDelete(optionVal,specifyReason);
+							showLayerCommon('deleteConfirmation-layer');
+                              
                             }
                           }
                           else
@@ -210,6 +257,7 @@ function ajaxPassword(checksum,pswrd,hideAction)
 
 function ajaxDelete(optionVal,specifyReason)
 {
+
  //console.log(specifyReason);
   $.ajax(
                 {   
@@ -218,16 +266,39 @@ function ajaxDelete(optionVal,specifyReason)
                       $("#deletePartID").addClass("settings-blur");
                        },              
                         url: '/settings/jspcSettings?hideDelete=1',
-                        data: "deleteReason="+optionVal+"&specifyReason="+specifyReason+"&option=Delete",
+                        data: "deleteReason="+optionVal+"&specifyReason="+specifyReason+"&option=Delete&offerConsent="+(offerConsent?'Y':'N'),
                         //timeout: 5000,
                         success: function(response) 
                         {
 
                           if(response=="success redirect")
-                          window.location.href= "/successStory/layer/?from_delete_profile=1";
+                          window.location.href= "/successStory/layer/?from_delete_profile=1&offerConsent="+(offerConsent?'Y':'N');
                         else
                           window.location.href= "/static/logoutPage";
                         }
                         
                       });
+}
+
+function deleteConfirmation(action)
+{
+		if(action=="Y"){
+		var optionVal=$('#delOptionSetID').html();
+                              if(optionVal=="I am unhappy about services")
+                                specifyReason=$('#specifyOtherReasonID').val();
+                              else if(optionVal=="I found my match from other website")
+                                specifyReason=$('#specifyLinkID').val();
+                              else if(optionVal=="I found my match elsewhere")
+                                specifyReason=$('#specifyReasonID').val();
+                              else if(optionVal=="Other reasons")
+                                specifyReason=$('#specifyOtherReason2ID').val();
+                              else
+                                specifyReason="";
+                              //console.log(optionVal);
+                              //console.log(specifyReason);
+                              closeCurrentLayerCommon();
+                              ajaxDelete(optionVal,specifyReason);
+		}
+		else
+			closeCurrentLayerCommon();
 }

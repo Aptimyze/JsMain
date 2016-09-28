@@ -5,7 +5,7 @@
 <div class="bg-white" >
 	<a href ={{DETAILED_PROFILE_LINK}}>
 	<div id={{PROFILE_FACE_CARD_ID}} class="pos-rel">
-  <div class="pos-abs myjs-pos10 cursp  {{albumHide}}">
+  <div class="pos-abs fontlig myjs-pos10 cursp  {{albumHide}}">
 <div class="disp-tbl opaclr1 myjs-br3 colrw txtc" style="height:30px;width:30px;">
 <div class="vmid disp-cell disp-none js-albumCount">{{js-AlbumCount}}</div>
 </div>
@@ -248,7 +248,7 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
 	<div id="head{{ID}}" class="myjs-bg3 fullwid">
       <div style='padding:30px 25px;'>
                 <div class=" disp-tbl mauto">
-					<div id="{{ID}}" class="disp-cell"><i class="sprite2 myjs-erric"></i></div>
+					<div id="{{ID}}" class="disp-cell"><i class="sprite2 myjs-erric {{display}}"></i></div>
 					<div class="disp-cell vmid pl10 f22 fontlig color14">{{NO_PROFILE_TEXT}}</div>
 				</div>
       </div>

@@ -241,6 +241,14 @@ class page1Action extends sfAction {
 						if ('C' == $secondary_source) {
 							RegistrationCommunicate::sendEmailAfterRegistrationIncomplete($this->loginProfile);
 						}
+
+
+						// email for verification
+						$emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loginProfile->getPROFILEID(),$this->loginProfile->getEMAIL());
+					(new emailVerification())->sendVerificationMail($this->loginProfile->getPROFILEID(),$emailUID);
+							////////
+                    
+
 						//Lead conversion update
 						RegistrationMisc::updateLeadConversion($this->loginProfile->getEMAIL(),$this->leadid);
 

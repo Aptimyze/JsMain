@@ -39,7 +39,12 @@ class FormatNotification
     /*notification formater for push notifications for new architecture */
     public static function formatPushNotification($details,$channel)
     {
-    	if(in_array("CRM_AND", $channel)==false)
+	if($channel == 'ALL' || $channel == 'AND')
+	{
+	    $dataArray = array("PROFILEID"=>$details["PROFILEID"],"MESSAGE"=>$details['MESSAGE'],'LANDING_SCREEN'=>$details['LANDING_SCREEN'],'PRIORITY'=>$details['PRIORITY'],"COLLAPSE_STATUS"=>$details['COLLAPSE_STATUS'],"TITLE"=>$details['TITLE'],"COUNT"=>$details['COUNT'],"SENT"=>$details['SENT'],"PHOTO_URL"=>$details['PHOTO_URL'],'NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'MSG_ID'=>$details['MSG_ID'],"TTL"=>$details["TTL"],"OS_TYPE"=>$details['OS_TYPE']);
+            $type = "APP_NOTIFICATION";
+	}
+    	elseif(in_array("CRM_AND", $channel)==false)
     	{
             $dataArray = array("REG_ID"=>array($details["REG_ID"]),"NOTIFICATION_KEY"=>$details["NOTIFICATION_KEY"],"MSG_ID"=>$details["MSG_ID"]);
             $type = "BROWSER_NOTIFICATION";
@@ -49,8 +54,22 @@ class FormatNotification
     		$dataArray = array("REG_ID"=>array($details["REG_ID"]),"MESSAGE"=>$details['MESSAGE'],'LANDING_ID'=>$details['LANDING_ID'],'PROFILE_CHECKSUM'=>$details['PROFILE_CHECKSUM'],"COLLAPSE_STATUS"=>$details['TAG'],"TITLE"=>$details['TITLE'],"ICON"=>$details['ICON'],"USERNAME"=>$details['USERNAME'],'NOTIFICATION_KEY'=>$details['NOTIFICATION_KEY'],'MSG_ID'=>$details['MSG_ID'],"TTL"=>$details["TTL"]);
             $type = "FSOAPP_NOTIFICATION";
         }
-    	$msgdata = array('process' => MessageQueues::$notificationArr[$details['NOTIFICATION_KEY']], 'data' => array('type' => $type, 'body' => $dataArray), 'redeliveryCount' => 0);
+	$queueName = MessageQueues::$notificationArr[$details['NOTIFICATION_KEY']];
+	if($queueName == '')
+		$queueName = 'JS_NOTIFICATION6';
+    	$msgdata = array('process' => $queueName, 'data' => array('type' => $type, 'body' => $dataArray), 'redeliveryCount' => 0);
 		return $msgdata;
     }
+    public static function formatLogData($dataArray,$table)
+    {
+        if($table =='REGISTRATION_ID'){
+            $type = $table;
+        }
+	$queueName ='JS_NOTIFICATION_LOG';
+        $msgdata = array('process' => $queueName, 'data' => array('type' => $type, 'body' => $dataArray), 'redeliveryCount' => 0);
+        return $msgdata;
+    }
+    
+
 }
 ?>

@@ -6,8 +6,7 @@ include_once ("../profile/pg/functions.php");
  // included for dollar conversion rate
 include_once ("connect.inc");
 
-$db = connect_misdb();
-$db2 = connect_master();
+$db = connect_rep();
 
 $data = authenticated($checksum);
 if (isset($data) || $JSIndicator) {

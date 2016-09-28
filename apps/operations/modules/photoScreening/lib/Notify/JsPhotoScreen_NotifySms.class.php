@@ -41,7 +41,7 @@ class JsPhotoScreen_NotifySms
 	{
 		if(!$iProfileID || !strlen($szMsgType))
 		{
-			throw new jsException("","ProfileID is null or msgtype is null in JsPhotoScreen_NotifySms");
+			//throw new jsException("","ProfileID is null or msgtype is null in JsPhotoScreen_NotifySms");
 		}
 		
 		$this->m_objSms = new SendSms;

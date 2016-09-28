@@ -1004,15 +1004,10 @@ class searchActions extends sfActions
 				$mapped[] = 'COUNTRY_RES';
 			}
 
-			if(($state || $city_india) && !$SearchParamtersObj->getCITY_RES())
+			if($city_india && !$SearchParamtersObj->getCITY_RES())
 			{
 				$mapped[] = 'CITY_RES';
 				$append='';
-				if($state)
-				{
-					$city_res = $state;
-					$append.=",";
-				}
 				if($city_india)
 					$city_res.=$append.$city_india;
 				$SearchParamtersObj->setCITY_RES($city_res);
@@ -1040,19 +1035,26 @@ class searchActions extends sfActions
 					}
 				}
 			}
+                        
+                        //setting state and city from memcache which user has selected
+                        $memObject=JsMemcache::getInstance();
+                        if($stateToSet = $memObject->get('stateToSet-'.$searchId))
+                            $SearchParamtersObj->setSTATE($stateToSet,'',1);
+                        if($cityToSet = $memObject->get('cityToSet-'.$searchId))
+                            $SearchParamtersObj->setCITY_RES($cityToSet,'',1);
 			/* mapping groups to individual values*/
 			
-			if(strstr($loggedInProfileObj->getSUBSCRIPTION(),"T"))
+			/*if(strstr($loggedInProfileObj->getSUBSCRIPTION(),"T"))
 			{
 				$apObj = new SaveDppForAP;
 				$success = $apObj->SaveDppFromSearch($SearchParamtersObj,$loggedInProfileObj->getPROFILEID());
 				unset($apObj);
 			}
 			else
-			{			
+			{*/			
 				$UserSavedSearches = new PartnerProfile($loggedInProfileObj);
 				$success = $UserSavedSearches->saveSearchAsDpp($SearchParamtersObj,$mapped);
-			}
+			//}
 			if(MobileCommon::isDesktop())
 			{
 				if($success)
@@ -1221,6 +1223,8 @@ class searchActions extends sfActions
 			$searchResultscache = new SearchResultscache;
 			if(is_array($responseObj->getSearchResultsPidArr()) && is_array($responseObj->getFeturedProfileArr()))
                         	$searchPidArr = array_diff($responseObj->getSearchResultsPidArr(),$responseObj->getFeturedProfileArr());
+			else
+                                $searchPidArr = $responseObj->getSearchResultsPidArr();
 			$searchResultscache->add($searchId,$responseObj->getUrlToSave(),$searchPidArr);	
 		}
 		return $searchId;
@@ -1403,7 +1407,7 @@ class searchActions extends sfActions
 		$inputValidateObj = ValidateInputFactory::getModuleObject('search');
 		$inputValidateObj->validateAppSearchForm($request);
 		$resp = $inputValidateObj->getResponse();
-                $featuredProfile=1;
+    $featuredProfile=1;
 		//print_r($request->getParameterHolder()->getAll());
 
 	
@@ -1550,7 +1554,7 @@ class searchActions extends sfActions
 						$noCasteMapping = 1;
 						$hideFeatureProfile = 1;
 					}
-					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1)
+					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1 || $request->getParameter("searchBasedParam") == "matchalerts")
 					{
 						$noRelaxation = 1;
 						$noCasteMapping = 1;
@@ -1563,9 +1567,12 @@ class searchActions extends sfActions
 			
 						}
 					}
-                                        if($request->getParameter("contactViewAttempts") == 1 || $request->getParameter("searchBasedParam")=='contactViewAttempts'){
-                                          $results_orAnd_cluster = "onlyResults";
-                                        }
+					if($request->getParameter("kundlialerts") == 1 || $request->getParameter("searchBasedParam")=='kundlialerts'){
+						$results_orAnd_cluster = "onlyResults";
+						$noRelaxation = 1;
+						$noCasteMapping = 1;
+					}
+					
 					/** Auto Relaxation Section
 					* increasing search results by changing some search paramters
 					*/
@@ -1613,9 +1620,9 @@ class searchActions extends sfActions
                                         $currentPageFeatured=1;
                                 else
                                         $currentPageFeatured = $currentPage;
-
-				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("searchBasedParam")=='justJoinedMatches' || $request->getParameter("matchalerts")==1 || $request->getParameter("searchBasedParam")=='matchalerts' || $request->getParameter("searchBasedParam")=='verifiedMatches' || $request->getParameter("searchBasedParam")=='contactViewAttempts' || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1)
-					;
+       
+				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("matchalerts")==1 || $request->getParameter("verifiedMatches")==1 || $request->getParameter("kundlialerts")==1 || $request->getParameter("contactViewAttempts")==1 || in_array($request->getParameter("searchBasedParam"),array('justJoinedMatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches')))
+				;
 				else
 					$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
 				
@@ -1623,7 +1630,7 @@ class searchActions extends sfActions
 				{
 					$this->searchId = $this->logAndCacheSearchResults($loggedInProfileObj,$SearchParamtersObj,$beforeFeaturedResonseObj,$noCache);
 				}
-																
+							
 				if($request->getParameter("showFeaturedProfiles") && $request->getParameter("showFeaturedProfiles")>0)
 								$responseObj = $this->SearchChannelObj->showFeaturedProfile($featuredProfile,$currentPageFeatured,$loggedInProfileObj,$SearchParamtersObj,$responseObj,$SearchServiceObj,$request->getParameter("showFeaturedProfiles"),$this->searchId,$this);
 				/* Format Clusters as Required */
@@ -1647,6 +1654,7 @@ class searchActions extends sfActions
 				$this->paginationArr = CommonUtility::pagination($currentPage,$responseObj->getTotalResults(),$SearchParamtersObj);
 				$this->currentPage = $currentPage;
 				$this->noOfResults = $responseObj->getTotalResults();
+				
 				$this->noOfPages = max($this->paginationArr);
                                 if(!$relaxCriteria)
                                         $relaxCriteria="";
@@ -1654,7 +1662,7 @@ class searchActions extends sfActions
                                 
                                 $SearchApiStrategy = SearchApiStrategyFactory::getApiStrategy('V1',$responseObj,$results_orAnd_cluster);
                                 $resultArr = $SearchApiStrategy->convertResponseToApiFormat($loggedInProfileObj,$this->searchClustersArray,$this->searchId,$SearchParamtersObj,$this->relaxedResults,$this->moreProfiles,$this->casteSuggestMessage,$currentPage,$this->noOfPages,$request,$relaxCriteria);
-			
+				
 				if($resultArr["no_of_results"]==0)
 				{
                                         $statusArr = $this->SearchChannelObj->searchZeroResultMessage();
@@ -1664,19 +1672,25 @@ class searchActions extends sfActions
 					$resultArr["paginationArray"]= $this->paginationArr; 
 					$statusArr = $inputValidateObj->getResponse();
 				}
+
 			}
 			
 			/** caching **/
 			$ifApiCached = SearchUtility::cachedSearchApi('set',$request,'',$statusArr,$resultArr);
+
 			/** caching **/
+
+			$resultArr["searchIdForNavigation"]= $this->searchId;
+
 		}
 		else
 		{
 			//validation are logged in search validation.
 			$statusArr = $resp;
 		}   
-                
-                unset($inputValidateObj);
+
+
+        		unset($inputValidateObj);
                 $respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray($statusArr);//print_r($resultArr);die;
                 $respObj->setResponseBody($resultArr);

@@ -61,13 +61,25 @@ function updateJprofile_PartnerDeatils($jpartnerObj,$profileid,$SAVE_DESIRED_PAR
 	if(mysql_affected_rows_js()>0)
 		$flag_sort=1;
 
-	//user has updated partner profile.
-	if($flag_sort || $jpartnerObj->partnerProfileUpdated)
-		$extra_sql1=" , SORT_DT=now() ";	
-	//user has updated partner profile.
+	$spouseInfo = addslashes(stripslashes($Spouse));
+	$updateParams = array('SPOUSE'=>$spouseInfo,'SCREENING'=>$curflag,'WIFE_WORKING'=>$wife_working,'MARRIED_WORKING'=>$married_working);
 
-	$sql_1 = "UPDATE newjs.JPROFILE SET SPOUSE='".addslashes(stripslashes($Spouse))."',SCREENING='$curflag',WIFE_WORKING='$wife_working',MARRIED_WORKING='$married_working'".$extra_sql1." WHERE PROFILEID='$profileid'";
-	mysql_query_decide($sql_1) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_1,"ShowErrTemplate");
+	//user has updated partner profile.
+	if($flag_sort || $jpartnerObj->partnerProfileUpdated){
+		$extra_sql1=" , SORT_DT=now() ";
+		$updateParams['SORT_DT'] = date('Y-m-d h:i:s');
+	}
+
+	//user has updated partner profile.
+	include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+	$objUpdate = JProfileUpdateLib::getInstance();
+	$result = $objUpdate->editJPROFILE($updateParams,$profileid,'PROFILEID');
+	if(false === $result) {
+		$sql_1 = "UPDATE newjs.JPROFILE SET SPOUSE='".addslashes(stripslashes($Spouse))."',SCREENING='$curflag',WIFE_WORKING='$wife_working',MARRIED_WORKING='$married_working'".$extra_sql1." WHERE PROFILEID='$profileid'";
+		logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_1,"ShowErrTemplate");
+	}
+//	$sql_1 = "UPDATE newjs.JPROFILE SET SPOUSE='".addslashes(stripslashes($Spouse))."',SCREENING='$curflag',WIFE_WORKING='$wife_working',MARRIED_WORKING='$married_working'".$extra_sql1." WHERE PROFILEID='$profileid'";
+//	mysql_query_decide($sql_1) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_1,"ShowErrTemplate");
 }
 
 //top save matchalert
@@ -1058,7 +1070,7 @@ function check_filter($jpartnerObj,$mysqlObj,$myDb,$profileid='',$filter='')
 	$db=connect_db();	
 
 	$sql1= "SELECT SOURCE FROM newjs.JPROFILE WHERE  activatedKey=1 and PROFILEID='$profileid'";
-        $res1= mysql_query_decide($sql1) or die(logErrror($ERROR_STRING,$sql1,"ShowErrTemplate"));
+        $res1= mysql_query_decide($sql1) or die(logError($ERROR_STRING,$sql1,"ShowErrTemplate"));
         $row1= mysql_fetch_assoc($res1);
         $source=$row1["SOURCE"];
 

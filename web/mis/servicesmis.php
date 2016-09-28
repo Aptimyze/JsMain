@@ -3,8 +3,7 @@ include_once("connect.inc");
 include_once("../profile/pg/functions.php");
 include("../profile/arrays.php");
 
-$db=connect_misdb();
-$db2=connect_master();
+$db=connect_rep();
 
 if(authenticated($cid))
 {
@@ -282,7 +281,7 @@ if(authenticated($cid))
 		// $reportPeriod = Month-wise/Date-wise
 
 		// slave connection
-		$myDb=connect_737();
+		$myDb=connect_misdb();
 		mysql_query('set session wait_timeout=50000',$myDb);
 
 		if($reportPeriod=='D')

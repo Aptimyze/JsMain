@@ -34,7 +34,7 @@
 '25'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'COMPLETE_PROFILE','URL'=>'P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=incompletProfile&mailer=1','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '26'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'COMPLETE_PROFILE_LIFESTYLE','URL'=>'P/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=LifeStyle','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '27'=>array('APP_SCREEN_ID'=>'a7','LINK_NAME'=>'PROFILE_VISITORS','URL'=>'profile/contacts_made_received.php','OTHER_GET_PARAMS'=>'page=visitors&filter=R','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-'28'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PROFILE_DELETION_URL','URL'=>'profile/hide_delete_revamp.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'28'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'PROFILE_DELETION_URL','URL'=>'settings/jspcSettings?hideDelete=1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '29'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'FAQS_LAYER','URL'=>'profile/faqs_layer.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '30'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'KYC_PAGE','URL'=>'/static/agentinfo','OTHER_GET_PARAMS'=>'source=M','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '31'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'HELP_EMAILID','URL'=>'help@jeevansathi.com','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'Y'),
@@ -68,8 +68,11 @@
 '60'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'HOROSCOPE_REQUEST_PAGE','URL'=>'profile/contacts_made_received.php','OTHER_GET_PARAMS'=>'page=horoscope&filter=R','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 
 '61'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'SHORTLISTED','URL'=>'search/shortlisted','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-
-
+'62'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'BASIC_DETAILS','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=Basic','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'63'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'SAVED_SEARCH','URL'=>'search/perform','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'64'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'EMAIL_VER_SUCCESS','URL'=>'static/verifyEmail','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'65'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'MATCHALERT_FEEDBACK','URL'=>'/mailer/feedbackMatchAlertMailer','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'66'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'KUNDLI_ALERTS','URL'=>'/search/kundlialerts','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 );
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
@@ -133,8 +136,11 @@ private static $linkNameArray=array(
 'REQUEST_HOROSCOPE'=>'59',
 'HOROSCOPE_REQUEST_PAGE'=>'60',
 'SHORTLISTED'=>'61',
-
-
+'BASIC_DETAILS'=>'62',
+'SAVED_SEARCH'=>'63',
+'EMAIL_VER_SUCCESS'=>'64',
+'MATCHALERT_FEEDBACK'=>'65',
+'KUNDLI_ALERTS'=>'66',
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),
@@ -282,6 +288,8 @@ private static $variableArray=array(
 'HOROSCOPE_REQUEST_PAGE'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'100','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'horoscope page link'),
 
 'SHORTLISTED'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
+'BASIC_DETAILS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'about basic details layer on my profile page'),
+'EMAIL_VER_SUCCESS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Email Verification'),
 
 
 );

@@ -448,8 +448,8 @@ class billing_SERVICES extends TABLE
     }
     public function getServiceDetailsArr($fields='') {
         try {
-	    if(!$fields)
-		$fields ="*";
+            if(!$fields)
+                $fields ="*";
             $sql = "SELECT SQL_CACHE $fields from billing.SERVICES";
             $resSelectDetail = $this->db->prepare($sql);
             $resSelectDetail->execute();
@@ -459,6 +459,84 @@ class billing_SERVICES extends TABLE
             return $output;
         }
         catch(Exception $e) {
+            throw new jsException($e);
+        }
+    }
+    public function getOnlineActiveDurations() {
+        try {
+            $sql = "SELECT distinct DURATION from billing.SERVICES WHERE SHOW_ONLINE='Y' AND ACTIVE='Y' AND ADDON!='Y' AND SERVICEID!='P1'";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+            while($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                $output[$row['DURATION']] = $row['DURATION'];
+            }
+            return $output;
+        }
+        catch(Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getPreviousExpiryDetails($profileid, $rights, $mainCheck){
+        try{
+            if ($mainCheck == 'Y') {
+                $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' ORDER BY ID DESC";
+            } else {
+                $sql = "SELECT COUNT(*) as CNT FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC";
+            }
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $resSelectDetail->execute();
+            if ($row = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){
+                if ($row['CNT'] >= 2 ) {
+                    if ($mainCheck == 'Y') {
+                        $sql1 = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+                    } else {
+                        $sql1 = "SELECT EXPIRY_DT, SERVICEID, BILLID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVEFOR LIKE '%$rights%' AND ACTIVE='Y' ORDER BY ID DESC LIMIT 1,1";
+                    }
+                    $resSelectDetail1 = $this->db->prepare($sql1);
+                    $resSelectDetail1->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+                    $resSelectDetail1->execute();
+                    if ($rowSelectDetail1 = $resSelectDetail1->fetch(PDO::FETCH_ASSOC)) {
+                        $previous_expiry = $rowSelectDetail1;
+                    }   
+                }
+            }
+        } catch(Exception $e) {
+            throw new jsException($e);
+        }
+        return $previous_expiry;
+    }
+
+    public function getServicesForActivationInterface($servArr) {
+        try {
+            $sql = "SELECT SERVICEID, NAME, SHOW_ONLINE FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
+            foreach ($servArr as $key=>$val) {
+                $sqlArr[] = "SERVICEID LIKE '{$val}%'";
+            }
+            $sql .= implode(" OR ", $sqlArr);
+            $sql .= ") ORDER BY SERVICEID ASC";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+            while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+                $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function changeServiceActivations($servStr, $status) {
+        try {
+            if($status == 'Y'){
+                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='Y' WHERE SERVICEID IN ($servStr)";
+            } else {
+                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='N' WHERE SERVICEID IN ($servStr)";
+            }
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+        } catch (Exception $e) {
             throw new jsException($e);
         }
     }

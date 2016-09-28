@@ -82,11 +82,6 @@ class desktopRegister1 extends registrationBaseClass {
       
       $jprofileDefaultData = $this->getJprofileDefaultData();
       $this->id = $this->form->updateData('', $jprofileDefaultData);
-      if($name = trim($this->arrFormValues['name_of_user']))
-      {
-        $name_pdo = new incentive_NAME_OF_USER();
-        $name_pdo->insertName($this->id, $name);
-      }
     }
   }
 /*
@@ -128,6 +123,13 @@ class desktopRegister1 extends registrationBaseClass {
     RegistrationMisc::insertInIncompleteProfileAndNames($this->loginProfile);
 
     RegistrationFunctions::unsetCampaignCookies($this->request->getParameter("domain"));
+
+// email for verification
+          $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loginProfile->getPROFILEID(),$this->loginProfile->getEMAIL());
+          
+          (new emailVerification())->sendVerificationMail($this->id,$emailUID);
+          ////////
+                    
 
     if ('C' == $this->pageVar['secondary_source'])
       RegistrationCommunicate::sendEmailAfterRegistrationIncomplete($this->loginProfile);

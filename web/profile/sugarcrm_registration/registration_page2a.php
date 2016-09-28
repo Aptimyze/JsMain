@@ -1,4 +1,5 @@
 <?php
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 //to zip the file before sending it
 $zipIt = 0;
 if (strstr($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip'))
@@ -120,25 +121,7 @@ if($page2asubmit)
                                 $process="auto_registration";
 			$about_yourself=mysql_real_escape_string(stripslashes($about_yourself));
 			update_about_yourself($about_yourself,$profileid,$db,$record_id,'sugarcrm.leads','sugarcrm.leads_cstm',$process);
-/*			$length=strlen($about_yourself);
-				if($length <= '99')
-				{
-					$sql_page2="UPDATE newjs.JPROFILE SET YOURINFO='$about_yourself',INCOMPLETE='Y' WHERE PROFILEID=$profileid";
-					mysql_query_decide($sql_page2) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_page2,"ShowErrTemplate");
-				}
-				elseif($length >= '100')
-				{
-					$sql_page2="UPDATE newjs.JPROFILE SET YOURINFO='$about_yourself',INCOMPLETE='N' WHERE PROFILEID=$profileid";
-					mysql_query_decide($sql_page2) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_page2,"ShowErrTemplate");
-				}
-				$sql = "UPDATE MIS.REG_COUNT SET PAGE2='Y' WHERE PROFILEID='$profileid'";
-				mysql_query_decide($sql) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");
-			
 
-			$sql_upd_jp = "UPDATE newjs.JPROFILE SET ";
-			$sql_pg="UPDATE MIS.REG_LEAD SET INCOMPLETE='N' WHERE EMAIL='$email'";
-			mysql_query_decide($sql_pg) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_pg,"ShowErrTemplate");
- */
 			// Under Screening Mailer attached to the first page
 			$msg =$smarty->fetch('Under_Screening.html');
 	//		send_email($email,$msg,"Welcome to Jeevansathi.com","register@jeevansathi.com","","","","","","Y");
@@ -237,9 +220,9 @@ include_once(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 			}
 			/* SMS Code for sending sms to users */
 			
-			include_once "$root_path1/profile/InstantSMS.php";
-			 $sms = new InstantSMS("REGISTER_CONFIRM", $profileid);
-			 $sms->send();
+			//include_once "$root_path1/profile/InstantSMS.php";
+			// $sms = new InstantSMS("REGISTER_CONFIRM", $profileid);
+			 //$sms->send();
     
 			/* Ends Here of SMS code */
 

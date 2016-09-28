@@ -104,7 +104,7 @@ function stop_non_eligible_profiles($campaign_name,$x,$ignore_array,$db_dialer,$
 		if(in_array($proid,$ignore_array))
 		{
 			if($srow1["Dial_Status"]!='0' && $srow1["Dial_Status"]!='9' && $srow1["Dial_Status"]!='3')
-				$updateStr ='Dial_Status=0';
+				$updateStr ="Dial_Status=0,DNC_Status=''";
 			if(array_key_exists($proid,$vd_profiles))
                                 $vdDiscount = $vd_profiles[$proid];
                         else
@@ -230,8 +230,8 @@ function data_comparision($dialer_data,$campaign_name,$ecode,$db_dialer,$vd_prof
 				$update_str.="easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
 			else
 				$update_str.=",easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
-			if($dialStatus!=3)
-				$update_str.=",Dial_Status='2'";
+			if($dialStatus!=3 && $dialStatus!=9)
+				$update_str.=",Dial_Status='2',DNC_Status=''";
 		}
 		else
 		{
@@ -245,62 +245,51 @@ function data_comparision($dialer_data,$campaign_name,$ecode,$db_dialer,$vd_prof
                         else
                                 $update_str.=",easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
 			if($dialStatus!='9' && $dialStatus!=3 && $loggedinWithin15days[$profileid])
-                                $update_str.=",Dial_Status='1'";
-			elseif(!$loggedinWithin15days[$profileid] && $dialStatus!=3)
+                                $update_str.=",Dial_Status='1',DNC_Status=''";
+			elseif(!$loggedinWithin15days[$profileid] && $dialStatus!=3 && $dialStatus!=9)
                         {       
                                 if($update_str=='')
-                                        $update_str.="Dial_Status='0'";
+                                        $update_str.="Dial_Status='0',DNC_Status=''";
                                 else
-                                        $update_str.=",Dial_Status='0'";
+                                        $update_str.=",Dial_Status='0',DNC_Status=''";
                         }
 		}
 	}
 	elseif($dialer_data['allocated']!='' && $dialStatus!='2' && $dialStatus!='9' && $dialStatus!=3)
 	{
 		if($update_str=='')
-                	$update_str.="Dial_Status='2'";
+                	$update_str.="Dial_Status='2',DNC_Status=''";
                 else
-                	$update_str.=",Dial_Status='2'";
+                	$update_str.=",Dial_Status='2',DNC_Status=''";
 	}
 	elseif($dialStatus!='1' && $dialStatus!='9' && $dialStatus!=3 && $loggedinWithin15days[$profileid])
 	{
 		if($update_str=='')
-                        $update_str.="Dial_Status='1'";
+                        $update_str.="Dial_Status='1',DNC_Status=''";
                 else
-                        $update_str.=",Dial_Status='1'";
+                        $update_str.=",Dial_Status='1',DNC_Status=''";
 	}
-	elseif(!$loggedinWithin15days[$profileid] && $dialStatus!=3)
+	elseif(!$loggedinWithin15days[$profileid] && $dialStatus!=3 && $dialStatus!=9)
         {
                 if($update_str=='')
-                        $update_str.="Dial_Status='0'";
+                        $update_str.="Dial_Status='0',DNC_Status=''";
                 else
-                        $update_str.=",Dial_Status='0'";
+                        $update_str.=",Dial_Status='0',DNC_Status=''";
         }
 
 	//INITIAL PRIORITY UPDATE 
 	$priority='';
-        if($alloted_to=='' && $vd_percent && $score>=1 && $score<=100)
-                $priority='6';
-        elseif( $alloted_to=='' && !$vd_percent)
-        {
-                if($score>=81 && $score<=100)
-                        $priority='5';
-                elseif($score>=61 && $score<=80)
-                        $priority='4';
-                elseif($score>=41 && $score<=60)
-                        $priority='3';
-                elseif($score>=21 and $score<=40)
+	if($alloted_to=='')
+	{
+		if($score>=81 && $score<=100)
                         $priority='2';
-                elseif($score>=11 and $score<=20)
+                elseif($score>=41 && $score<=80)
                         $priority='1';
-                elseif($score>=1 and $score<=10)
-                        $priority='0';
-        }
-        elseif($alloted_to !='')
-        {
-                if($score>=1 && $score <=100)
-                        $priority='0';
-        }
+		else
+			$priority='0';
+	}
+	else
+		$priority='0';
         if($priority!=$dialer_data['initialPriority'] && $priority!='')
         {
 		if($update_str=='')

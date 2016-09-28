@@ -46,7 +46,7 @@
 	<div class="pad1">
 		<div class="rem_pad1">
 			<div class="fl wid20p"> <i id ="hamburgerIcon" class="mainsp baricon " hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i> </div>
-                        <div class="fl wid60p txtc color5  fontthin f19">Home</div>
+                        <div id='myJsHeadingId' class="fl wid60p txtc color5  fontthin f19">Home</div>
                                                 <div class="fr">
 				<div class="fullwid">
 					<div class="fl padr15 posrel">
@@ -132,6 +132,20 @@
 		~if $apiData.BELL_COUNT.ACC_ME_NEW>0`
 		<div class="fr wid8p">
 			<div class="bg7 brdr50p white f12 wid25 hgt25 pt4 txtc">~$apiData.BELL_COUNT.ACC_ME_NEW`</div>
+		</div>
+		~/if`
+		<div class="clr"></div>
+	</div>
+                </a>
+           
+           <a href="~$SITE_URL`/inbox/12/1">
+	<div class="fullwid fontthin f14 color3 pad18 brdr1">
+		<div class="fl wid92p">
+			<div class="fullwid txtc">Filtered Interests</div>
+		</div>
+		~if $apiData.BELL_COUNT.FILTERED_NEW>0`
+		<div class="fr wid8p">
+			<div class="bg7 brdr50p white f12 wid25 hgt25 pt4 txtc">~$apiData.BELL_COUNT.FILTERED_NEW`</div>
 		</div>
 		~/if`
 		<div class="clr"></div>

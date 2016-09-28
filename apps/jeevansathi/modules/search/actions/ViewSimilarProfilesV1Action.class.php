@@ -34,7 +34,7 @@ class ViewSimilarProfilesV1Action extends sfActions {
                         if ($resp["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"]) {
                                 $viewedProfileChecksum = $request->getParameter('profilechecksum');
                                 $viewedProfileID = JsCommon::getProfileFromChecksum($viewedProfileChecksum);
-                                $this->Profile = new Profile("newjs_bmsSlave");
+                                $this->Profile = new Profile("newjs_masterRep");
                                 $this->Profile->getDetail($viewedProfileID, "PROFILEID");
                                 $viewedGender = $this->Profile->getGENDER();
                                 //$viewSimilarProfileObj = new ViewSimilarPageProfiles($loggedInProfileObj, $this->Profile);
@@ -46,7 +46,9 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                         $feedURL = JsConstants::$vspMaleUrl;
                                       else
                                         $feedURL = JsConstants::$vspFemaleUrl;
-                                      $postParams = json_encode(array("PROFILEID"=>$pid,"PROFILEID_POG"=>$viewedProfileID));
+                                      $profileListObj = new IgnoredContactedProfiles();
+                                      $ignoredContactedProfiles = $profileListObj->getProfileList($this->loginProfile->getPROFILEID(),'');
+                                      $postParams = json_encode(array("PROFILEID"=>$pid,"PROFILEID_POG"=>$viewedProfileID,'removeProfiles'=>$ignoredContactedProfiles));
                                       $profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams);
                                       if($profilesList == "Error") {
                                           $respObj = ApiResponseHandler::getInstance();

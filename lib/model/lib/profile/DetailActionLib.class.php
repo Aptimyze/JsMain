@@ -103,13 +103,23 @@ class DetailActionLib
 			
 			$privacy=$actionObject->loginProfile->getPRIVACY();
 			$vlt=new VIEW_LOG_TRIGGER();
+                        $producerObj = new Producer();
 			//Privacy is not C for login user 
 			if($privacy!='C' && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
-			{
-				$vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+			{       
+                                if($producerObj->getRabbitMQServerConnected())
+                                    $triggerOrNot = "inTrigger";
+                                else
+                                    $vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 			}
-
-			$vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+                        elseif($producerObj->getRabbitMQServerConnected())
+                            $triggerOrNot="notInTrigger";
+                        
+                        if($producerObj->getRabbitMQServerConnected()){
+                            $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$actionObject->loginProfile->getPROFILEID(),VIEWED=>$actionObject->profile->getPROFILEID())), 'redeliveryCount'=>0 );
+                            $producerObj->sendMessage($queueData);
+                        }
+			//$vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////
 	}
@@ -131,12 +141,20 @@ class DetailActionLib
 	 */
 	public static function Update_ViewCount(&$refProfileObj)
 	{
+                if($refProfileObj->getGENDER()=='M')
+                    $queueName = 'nTimesMaleQueue';
+                else
+                    $queueName = 'nTimesFemaleQueue';
+                $memcacheObj = JsMemcache::getInstance();
+                $memcacheObj->lpush($queueName,$refProfileObj->getPROFILEID());
+                /*
 		include(sfConfig::get("sf_web_dir")."/profile/ntimes_function.php");
 		
 		if($refProfileObj->getPROFILEID()){
                     $jpNtimesObj = new NEWJS_JP_NTIMES();
                     $jpNtimesObj->updateProfileViews($refProfileObj->getPROFILEID());
                 }
+                */
 	}
 	
 	/**
@@ -398,8 +416,12 @@ class DetailActionLib
 				switch($currentFlag)
 				{
 					case ContactHandler::INITIATED:
-						if($who==ContactHandler::RECEIVER)
-							$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+						if($who==ContactHandler::RECEIVER){
+							if($actionObject->contactEngineObj->contactHandler->getContactObj()->getFILTERED() =="Y")
+								$profileMemcacheServiceViewerObj->update("FILTERED_NEW",-1);
+							else
+								$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+						}
 						break;
 					case ContactHandler::ACCEPT:
 						if($who==ContactHandler::SENDER)
@@ -493,7 +515,7 @@ class DetailActionLib
 			$myDb = $mysqlObj->connect("$myDbName");
 		}
 		$jpartnerObj = new JPartnerDecorated;
-		if (in_array("T", explode(",", $actionObject->loginProfile->getSUBSCRIPTION()))) {
+		/*if (in_array("T", explode(",", $actionObject->loginProfile->getSUBSCRIPTION()))) {
 			$myDb_ap = $mysqlObj->connect("Assisted_Product");
 			$APeditID = sfContext::getInstance()->getRequest()->getParameter("APeditID");
 			$partnerWhrCond = " AND CREATED_BY='ONLINE'";
@@ -531,7 +553,7 @@ class DetailActionLib
 				$jpartnerObj = new JPartnerDecorated("Assisted_Product.AP_DPP_FILTER_ARCHIVE");
 			}
 			$jpartnerObj->setPartnerDetails(sfContext::getInstance()->getRequest()->getParameter("matchPointPID"), $myDb_ap, $mysqlObj, "*", $partnerWhrCond);
-		} else
+		} else*/
 		//If dpp is getting edited by non assisted user
 		$jpartnerObj->setPartnerDetails($profileId, $myDb, $mysqlObj);
 		return $jpartnerObj;

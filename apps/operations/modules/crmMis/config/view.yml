@@ -107,3 +107,35 @@ applePaymentsLoggingMisSuccess:
     title:        Apple Payments Logging Interface
   stylesheets:    []
   javascripts:    []
+
+RCBSalesConversionExecutiveMISSuccess:
+  metas:
+    title:        RCB Sales Conversion Executive MIS
+  
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+RCBSalesConversionExecutiveMISScreen1Success: 
+  metas:
+    title:        RCB Sales Conversion Executive MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+renewalConversionMISSuccess:
+  metas:
+    title:        Renewal Conversion MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+renewalConversionMISScreen1Success:
+  metas:
+    title:        Renewal Conversion MIS
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]

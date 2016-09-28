@@ -21,7 +21,7 @@ class PhotoFaceDetection
 			$faceDetectionSizes = ProfilePicturesTypeEnum::$PICTURE_SIZES[$pictureType];
 			return array_merge($faceDetectionSizes,self::$FACE_DETECTION_SIZE_CONST[$pictureType]);
 		}
-		 throw new Exception("Invalid picture Type Enum is requested in PhotoFaceDetection.class.php");
+		 throw new jsException('',"Invalid picture Type Enum is requested in PhotoFaceDetection.class.php");
 			
 	}
 						

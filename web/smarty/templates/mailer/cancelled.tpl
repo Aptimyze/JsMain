@@ -18,7 +18,7 @@
         </tr>
   <tr>
     <td width="10"></td>
-    <td width="562"><img src="~$IMG_URL`/images/mailer/declineMailer/jsLogo.gif" width="213" height="56" vspace="0" hspace="0" align="left" border="0" alt="Jeevansathi.com" />
+    <td width="562"><img src="~$IMG_URL`/images/jspc/commonimg/logo1.png" width="213" height="56" vspace="0" hspace="0" align="left" border="0" alt="Jeevansathi.com" />
       <table border="0" cellpadding="0" cellspacing="0" align="right">
         <tr>
           <td width="184" height="56"><font style="font-size:10px;" color="#474646">Call us at <var>{{TOLLNO:profileid=~$profileid`}}</var> (Toll free), or<br />

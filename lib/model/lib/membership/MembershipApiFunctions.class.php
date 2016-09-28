@@ -196,7 +196,7 @@ class MembershipApiFunctions
             if ($mainMem == "E") {
                 $mainMem = "ESP";
             }
-            $remainingServices = array_splice($memArray, -1, 1);
+            $remainingServices = array_splice($memArray, 1);
             $apiObj->mainMembership = $mainMem . $mainMemDur;
             $apiObj->vasImpression = implode(",", $remainingServices);
             foreach ($remainingServices as $key => $val) {
@@ -233,7 +233,7 @@ class MembershipApiFunctions
                         else {
                             $discountCartPrice+= 0;
                         }
-                        $totalCartPrice+= $price - $price * ($discPerc / 100);
+                        $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                     }
                 }
             } 
@@ -251,7 +251,7 @@ class MembershipApiFunctions
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         } 
         else {
@@ -273,7 +273,7 @@ class MembershipApiFunctions
                     else {
                         $discountCartPrice+= 0;
                     }
-                    $totalCartPrice+= $price - $price * ($discPerc / 100);
+                    $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
                 }
             } 
             else {
@@ -290,7 +290,7 @@ class MembershipApiFunctions
                 else {
                     $discountCartPrice+= 0;
                 }
-                $totalCartPrice+= $price - $price * ($discPerc / 100);
+                $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         }
         
@@ -599,13 +599,13 @@ class MembershipApiFunctions
 	                     'label' => 'Call us now for more details',
 	                     'labelLink' => 'tel:180030106299',
 	                     'linkText' => 'Request Callback',
-	                     'params' => 'processCallback=1&INTERNAL=1&execCallbackType=JS_EXC&tabVal=1profileid=' . $apiObj->profileid . "&device=" . $apiObj->device
+	                     'params' => 'processCallback=1&INTERNAL=1&execCallbackType=JS_EXC&tabVal=1&profileid=' . $apiObj->profileid . "&device=" . $apiObj->device . "&channel=" . $apiObj->channel . "&callbackSource=" . $apiObj->callbackSource
 	                 );
             	 } else {
             		$requestCallback = array(
 	                    'label' => 'Need more details?',
 	                    'linkText' => 'Request Callback',
-	                    'params' => 'processCallback=1&INTERNAL=1&execCallbackType=JS_EXC&tabVal=1profileid=' . $apiObj->profileid . "&device=" . $apiObj->device
+	                    'params' => 'processCallback=1&INTERNAL=1&execCallbackType=JS_EXC&tabVal=1&profileid=' . $apiObj->profileid . "&device=" . $apiObj->device . "&channel=" . $apiObj->channel . "&callbackSource=" . $apiObj->callbackSource
 	                );
             	}
             } 
@@ -717,25 +717,25 @@ class MembershipApiFunctions
                     foreach ($value as $kk => $vv) {
                         if ($vv == 1) {
                             $benefits[$kk] = $benefitMsg[$kk];
-                            if ($memID == "ESP" || $memID == "NCP" && $getSupport) {
-                                foreach (VariableParams::$newApiVasNamesAndDescription as $id => $desc) {
-                                    if ($benefits[$kk] == $desc['name']) {
-                                        if ($apiObj->device == "iOS_app") {
-                                            unset($benefits[$kk]);
-                                            $supportingText[] = array(
-                                                'name' => $desc['name'],
-                                                'desc' => $desc['description']
-                                            );
-                                        } 
-                                        else {
-                                            $supportingText[$desc['name']] = $desc['description'];
-                                        }
-                                    }
-                                }
-                            }
                         } 
                         else if ($apiObj->device == 'desktop' && $vv == 0) {
                             $benefitsExcluded[] = $benefitMsg[$kk];
+                        }
+                        if ($getSupport) {
+                            foreach (VariableParams::$newApiVasNamesAndDescription as $id => $desc) {
+                                if ($benefits[$kk] == $desc['name'] || in_array($desc['name'], $benefitsExcluded)) {
+                                    if ($apiObj->device == "iOS_app") {
+                                        unset($benefits[$kk]);
+                                        $supportingText[] = array(
+                                            'name' => $desc['name'],
+                                            'desc' => $desc['description']
+                                        );
+                                    } 
+                                    else {
+                                        $supportingText[$desc['name']] = $desc['description'];
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -970,7 +970,7 @@ class MembershipApiFunctions
                 $arr = VariableParams::$eValuePlusAddOns;
             }
             foreach ($arr as $key => $val) {
-                if ($apiObj->mainMemDur == '1188') {
+                if ($apiObj->mainMemDur == '1188' || $apiObj->mainMemDur == 'L') {
                     $dur = '12';
                 } 
                 else {

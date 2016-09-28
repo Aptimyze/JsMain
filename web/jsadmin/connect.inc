@@ -4,7 +4,10 @@ if ($smarty_flag != 'n')
 
 include_once("handleCrmLogin.php");
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 $TOUT = 14400;
 
 if($_SERVER['DOCUMENT_ROOT'])
@@ -1124,6 +1127,7 @@ if(!function_exists("logError"))
 {
 function logError($message,$query="",$critical="exit", $sendmailto="NO")
 {
+	LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
 	global $db, $smarty, $checksum;
         ob_start();
         var_dump($_SERVER);
@@ -1712,11 +1716,16 @@ if(!function_exists("populate_day_month_year"))
 
 function update_astro_dob($pid,$mod_dob)
 {
-        $sql_ast_upd = "UPDATE newjs.ASTRO_DETAILS SET DTOFBIRTH='$mod_dob' WHERE PROFILEID='$pid'";
-        mysql_query_decide($sql_ast_upd) or die($sql_ast_upd.mysql_error_js());
+        $objUpdate = JProfileUpdateLib::getInstance();
+        $result = $objUpdate->updateASTRO_DETAILS($pid, array('DTOFBIRTH' => $mod_dob));
+        if(false === $result) {
+            die('Issue while updating updating Astro Details at line 1718.');
+        }
+//        $sql_ast_upd = "UPDATE newjs.ASTRO_DETAILS SET DTOFBIRTH='$mod_dob' WHERE PROFILEID='$pid'";
+//        mysql_query_decide($sql_ast_upd) or die($sql_ast_upd.mysql_error_js());
 
-        if(mysql_affected_rows_js() > 0)
-                mail("sriram.viswanathan@jeevansathi.com","Astro DOB changed","Dob of $pid changed to $mod_dob");
+       // if(mysql_affected_rows_js() > 0)
+               // mail("kunal.verma@jeevansathi.com","Astro DOB changed through connect.inc","Dob of $pid changed to $mod_dob");
 }
 function comp_info($profile,$redirect=1)
 {

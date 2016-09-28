@@ -113,9 +113,9 @@ function after_login(response)
 			address_url=window.location.href.substr(window.location.href.indexOf("redirectUri=")+12);
 		if(response==0)
 		if( window.top.location.pathname=="/static/logoutPage" || window.top.location.pathname=="/jsmb/login_home.php")
-			window.top.location.href = "/profile/intermediate.php?parentUrl=/myjs/jspcPerform";
+			window.top.location.href = "/myjs/jspcPerform";
 		else
-			window.top.location.href = "/profile/intermediate.php?parentUrl="+address_url;
+			window.top.location.href = address_url;
 	}
 
 function onFrameLoginResponseReceived(message)
@@ -129,7 +129,7 @@ function onFrameLoginResponseReceived(message)
 				response= message.data.body;
 		if(response==1)
 		{
-		  if(document.cookie.indexOf("loginAttempt")!=-1 && captchaShow!=1)
+		  if(document.cookie.indexOf("loginAttemptNew")!=-1 && captchaShow!=1)
 		  {
 			  createCaptcha("logoutPage");
 				captchaShow=1;

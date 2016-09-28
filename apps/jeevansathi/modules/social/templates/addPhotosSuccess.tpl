@@ -31,6 +31,7 @@
     <!--end:div--> 
     <!--start:div-->
     <div class="bg-white fontlig"> 
+~include_partial("social/addPhotos/_privacy",[])`
       <!--start:div one-->
 ~if $havePhoto neq 'Y' && $havePhoto neq 'U'`
 ~include_partial("social/addPhotos/_avoid",[])`
@@ -64,7 +65,6 @@
       <!--start:div two-->
 ~include_partial("social/addPhotos/_photoDisplay",[])`
       <!--end:div two--> 
-~include_partial("social/addPhotos/_privacy",[])`
       <!--start:div four-->
       <div class="pubg7 pt20 pb20 txtc">
       	<p class="fontreg f17 pucolor3">Having trouble in upload?</p>
@@ -85,6 +85,7 @@
 $(document).ready(function() {
 	slider();
 });
+var imageCopyServer = "~$imageCopyServer`";
 var profileId = ~$loggedInProfileId`;
 var photoDisplay = "~$PHOTODISPLAY|decodevar`";
 var photosDetails =jQuery.makeArray(~$urlsJson|decodevar`);

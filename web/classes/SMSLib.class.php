@@ -13,6 +13,7 @@ class SMSLib{
         var $occupationDetail=array();
         var $heightDetail=array();
         var $cityDetail=array();
+        var $countryDetail=array();
 	var $smsType;
 	var $dbMaster;
 
@@ -37,12 +38,13 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 			$this->occupationDetail = $OCCUPATION_DROP;
 			$this->heightDetail = $HEIGHT_DROP;
 			$this->cityDetail = $CITY_INDIA_DROP;
+			$this->countryDetail = $COUNTRY_DROP;
 		//}
 		$this->smsType = $smsType;
         }
 	public function getShortURL($longURL, $profileid='',$email='',$withoutLogin='',$appendUrl='') {
-
-		include_once($this->path . "/classes/ShortURL.class.php");
+               // $longURL=str_replace('CMGFRMMMMJS=mobile','linkFromSMS=Y' , $longURL);
+                include_once($this->path . "/classes/ShortURL.class.php");
 		if(!$withoutLogin)
 		{
 			include_once($this->path . "/classes/authentication.class.php");
@@ -94,7 +96,8 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 			"SANAME"=>array("maxlength"=>"13"),
 			"COMPANY_NAME"=>array("maxlength"=>12),
 			"OTHER_EMAIL"=>array("maxlength"=>"40"),		// added by Palash
-			"PHONE_ISD_COMMA"=>array("maxlength"=>"17")    //      ,,
+			"PHONE_ISD_COMMA"=>array("maxlength"=>"17"),    //      ,,
+			"COUNTRY_RES"=>array("maxlength"=>"10")         //added by nitesh
                 );
                 return $varArr[$variable];
         }
@@ -235,8 +238,17 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 
 			case "CITY_RES":
 				$city_res=$this->getVariables("CITY_RES");
-				$CITY_RES= $this->cityDetail[$messageValue["CITY_RES"]];		
-				return strlen($CITY_RES)<=$city_res["maxlength"] ? $CITY_RES : substr($CITY_RES,0,$city_res["maxlength"]-2)."..";
+				$CITY_RES= $this->cityDetail[$messageValue["CITY_RES"]];
+				if($CITY_RES)		
+					return strlen($CITY_RES)<=$city_res["maxlength"] ? $CITY_RES : substr($CITY_RES,0,$city_res["maxlength"]-2)."..";
+				else
+				{
+					$country_res=$this->getVariables("COUNTRY_RES");
+					$COUNTRY_RES= $this->countryDetail[$messageValue["COUNTRY_RES"]];
+					if($COUNTRY_RES)		
+						return strlen($COUNTRY_RES)<=$country_res["maxlength"] ? $COUNTRY_RES : substr($COUNTRY_RES,0,$country_res["maxlength"]-2)."..";
+					
+				}
 		
 			case "TOLLNO":
 				return "18004196299";
@@ -288,11 +300,17 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 			case "PHTOUPNO":
 				return $messageValue["PHOTO_UPLOAD_COUNT"];
 
+			case "URL_EDIT_PHONE":
+				$longURL = $this->SITE_URL."/profile/viewprofile.php?ownview=1";
+				$appendUrl='#Contact';
+				return $this->getShortURL ($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["EMAIL"],'',$appendUrl);
 				case "URL_FAMILY":
 				$longURL = $this->SITE_URL."/profile/viewprofile.php?ownview=1";
 				$appendUrl='#Family';
 				return $this->getShortURL ($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["EMAIL"],'',$appendUrl);
-
+				case "PHOTO_UPLOAD_URL":
+				$longURL = $this->SITE_URL."/social/addPhotos?noUseVar=1";
+				return $this->getShortURL ($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["EMAIL"]);
 				case "URL_EDUCATION":
 				$longURL = $this->SITE_URL."/profile/viewprofile.php?ownview=1";
 				$appendUrl='#Education';
@@ -503,6 +521,7 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
             } else $mob='';
             	return $mob;
             
+                
             case "ISD_PHONE_MOB":
             	if ($messageValue["ISD_PHONE_MOB"]){
             	$mob=$messageValue["ISD_PHONE_MOB"];
@@ -547,6 +566,8 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 				return "https://www.surveymonkey.com/r/NRZ7S8C";
 			case "SURVEY_SMS_90":
 				return "https://www.surveymonkey.com/r/NTHDX6K";
+			case "ISD_MOB":
+				return $messageValue['PHONE_MOB'];
 			default:
 				return "";
 		}

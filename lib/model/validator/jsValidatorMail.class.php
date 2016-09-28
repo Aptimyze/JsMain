@@ -61,7 +61,6 @@ class jsValidatorMail extends sfValidatorBase
   {
 	$email = (string) $value;
     $value = trim($email);
-    
     $activatedFlag = $this->_dupProfileEmail($value);
     
     if ($this->_emailValidation($value))
@@ -78,9 +77,19 @@ class jsValidatorMail extends sfValidatorBase
     if ($this->_emailDeleted($value,$activatedFlag))
     {
 	  $this->_trackDuplicateEmail($value,'Y',1);
-      throw new sfValidatorError($this, 'err_email_del', array('value' => $value, 'err_email_del' => $this->getOption('err_email_del')));
+          //modify old email
+          $deletedEmailModify = new RegistrationFunctions();
+          $affectedRows = $deletedEmailModify->deletedEmailModify($value);
+          if($affectedRows == 0)
+              throw new sfValidatorError($this, 'err_email_del', array('value' => $value, 'err_email_del' => $this->getOption('err_email_del')));
     }
 	$this->_trackDuplicateEmail($value,'N');
+    $negativeProfileListObj = new incentive_NEGATIVE_LIST;
+    $negativeEmail = $negativeProfileListObj->checkEmailOrPhone("EMAIL",$value);
+    if($negativeEmail)
+    {
+	throw new sfValidatorError($this, 'err_email_revoke', array('value' => $value));
+    }
     return $value;
   }
   

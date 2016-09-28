@@ -27,6 +27,7 @@ class MyJs implements Module
          */
         public function getConfiguration($module)
         {
+        	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class Myjs getConfiguration hit ");
                 $configObj            = new ProfileInformationModuleMap();
 		if((MobileCommon::isApp() == "I")||(MobileCommon::isNewMobileSite()))
 			$this->configurations = $configObj->getConfiguration($module,'',"IOS");
@@ -180,6 +181,8 @@ class MyJs implements Module
 	*/
         public function getDisplay($infoTypeNav = null,$params = null)
         {
+        	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class Myjs getDisplay hit ");
+
                 $fields       = Array();
                 $profiles     = Array();
                 $tupleService = new TupleService();
@@ -247,6 +250,13 @@ class MyJs implements Module
                                                 $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
                                             }
                                                 else $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
+                                        }
+                                        //Cache the data
+                                        $arrAllowedType = array('INTEREST_RECEIVED','VISITORS','MATCH_ALERT');
+                                        if(in_array($infoType, $arrAllowedType))  
+                                        {
+                                          $szCackeKey = $this->profileObj->getPROFILEID().'_'.$infoType;
+                                          JsMemcache::getInstance()->set($szCackeKey,serialize($infoTypeObj[$infoType]),1800); 
                                         }
 					unset($skipArrayTemp);
 					if(is_array($infoTypeObj[$infoType]))
@@ -326,7 +336,7 @@ class MyJs implements Module
 					}
 					$this->completeProfilesInfo[$infoType]["ID"]             = $config["ID"];
 					$this->completeProfilesInfo[$infoType]["VIEW_ALL_LINK"]  = $config["VIEW_ALL_LINK"];
-					$this->completeProfilesInfo[$infoType]["TRACKING"]  	 = $config["TRACKING"];
+                    $this->completeProfilesInfo[$infoType]["TRACKING"]       = (MobileCommon::isApp()=='A') ? $config["TRACKING"] : $this->getTracking($infoType);
 					$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = $countObj[$infoType . "_ALL"];
 					$this->completeProfilesInfo[$infoType]["NEW_COUNT"]      = $countObj[$infoType];
 					$this->completeProfilesInfo[$infoType]["TITLE"]          = $config["TITLE"];
@@ -356,6 +366,7 @@ class MyJs implements Module
 							$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
 						$this->completeProfilesInfo[$infoType]["NAVIGATION_INDEX"] = $this->getNavigationArray($this->completeProfilesInfo[$infoType]["CURRENT_NAV"], $countToConsider, $config["COUNT"]);
 					}
+          $this->completeProfilesInfo[$infoType]["CONTACT_ID"] = $this->profileObj->getPROFILEID().'_'.$infoType ;
 				}
                         }
                         unset($infoTypeObj);
@@ -370,6 +381,7 @@ class MyJs implements Module
          */
         public function getSkipProfiles($infoType)
 	{
+		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class MyJs skipProfiles hit ");
 		switch ($infoType) 
 		{
 			case 'HOROSCOPE_REQUEST_RECEIVED':
@@ -475,6 +487,8 @@ class MyJs implements Module
                         $limitStart = 0;
                 }
                 $condition = "$limitStart , $limit";
+                if($infoType == "INTEREST_RECEIVED")
+                	$condition = $limit;
 		return $condition;
 	}
 
@@ -569,6 +583,30 @@ class MyJs implements Module
                 }
                 return $navigationArray;
         }
+
+    private function getTracking($listing){
+		if(MobileCommon::isNewMobileSite())
+		{
+			$trackingMap=array(
+                                "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_JSMS,
+                                "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_JSMS,
+                                "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_JSMS,
+                                
+                               );
+		}
+		elseif(MobileCommon::isApp()=='I')
+                        $trackingMap=array(
+                                "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_IOS,
+                                "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_IOS,
+                                "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_IOS,
+                                );
+
+		return $trackingMap[$listing];
+	}
+
+
+
+
         
 }
 ?>

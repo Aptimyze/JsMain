@@ -1156,7 +1156,48 @@ case 'ID_PROOF_NO':
 					$field->setConstraintClass("string");
 					$field->setTableName("JPROFILE:ID_PROOF_NO");
 				break;
-                
+case 'ID_PROOF_TYPE':
+                    $field=new Field('','ID_PROOF_TYPE');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("proof_type");
+					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_TYPE");
+				break;
+case 'ID_PROOF_VAL':
+                    $field=new Field('','ID_PROOF_VAL');
+					$field->setFieldType("text");
+					$field->setConstraintClass("proof_val");
+					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_VAL");
+				break;
+case 'ADDR_PROOF_TYPE':
+                    $field=new Field('','ADDR_PROOF_TYPE');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("proof_type");
+					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_TYPE");
+				break;
+case 'ADDR_PROOF_VAL':
+                    $field=new Field('','ADDR_PROOF_VAL');
+					$field->setFieldType("text");
+					$field->setConstraintClass("proof_val");
+					$field->setTableName("VERIFICATION_DOCUMENT:PROOF_VAL");
+                                break;
+case 'P_STATE':
+					$field=new Field('','P_STATE');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("partner_state");
+					$field->setTableName("JPARTNER:STATE");
+				break;
+case 'CITY_INDIA':
+					$field=new Field('','CITY_INDIA');
+					$field->setFieldType("dropdown");
+					$field->setConstraintClass("partner_city_india");
+					$field->setTableName("JPARTNER:CITY_INDIA");
+				break;
+case "DISPLAYNAME":
+					$field=new Field('','DISPLAYNAME');
+					$field->setFieldType("dropdown");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setTableName("NAME_OF_USER:DISPLAY");
+				break;
 }
 
 				return($field);

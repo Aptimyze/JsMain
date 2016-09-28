@@ -43,8 +43,8 @@ class postCancelInterestv1Action extends sfAction
 							$this->tobetype = ContactHandler::CANCEL_CONTACT;
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,$this->tobetype,ContactHandler::POST);
-					$this->contactHandlerObj->setElement("STATUS","E");
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile));
+					$this->contactHandlerObj->setElement("STATUS",$this->tobetype);
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");		
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
 					$responseArray           = $this->getContactArray();
@@ -54,6 +54,7 @@ class postCancelInterestv1Action extends sfAction
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(true);
 			$apiObj->generateResponse();
 		}
 		else
@@ -75,7 +76,7 @@ class postCancelInterestv1Action extends sfAction
 		$responseButtonArray = array();
 		if($this->contactEngineObj->messageId)
 		{
-			$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::CANCEL_CONTACT);
+			$responseButtonArray = $buttonObj->getAfterActionButton($this->tobetype);
 		}
 		else
 		{

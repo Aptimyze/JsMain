@@ -1,4 +1,4 @@
-<?php
+        <?php
 /**
  * DetailedViewApi.class.php
  */
@@ -223,7 +223,9 @@ class DetailedViewApi
 		elseif($this->getMembershipType() == 'eadvantage')
 		{
 			$this->m_arrOut['subscription_text'] = mainMem::EADVANTAGE_LABEL;
-		}
+		}else{
+                        $this->m_arrOut['subscription_text'] = '';
+                }
 	}
 
 	
@@ -244,7 +246,17 @@ class DetailedViewApi
 		$this->m_arrOut['occupation'] = $objProfile->getDecoratedOccupation();
                 $this->m_arrOut['education'] = $objProfile->getDecoratedEducation();
 		$this->m_arrOut['educationOnSummary'] = $this->getAllEducationFields();
-		
+                
+		$nameOfUserObj = new NameOfUser;
+                $name = $nameOfUserObj->showNameToProfiles($this->m_actionObject->loginProfile, array($objProfile));
+                if(is_array($name) && $name[$objProfile->getPROFILEID()]['SHOW']=="1" && $name[$objProfile->getPROFILEID()]['NAME']!='')
+                {
+                        $this->m_arrOut['name_of_user'] = $nameOfUserObj->getNameStr($name[$objProfile->getPROFILEID()]['NAME'],$this->m_actionObject->loginProfile->getSUBSCRIPTION());
+                }else{
+                        $this->m_arrOut['name_of_user'] = null;
+                }
+                unset($nameOfUserObj);
+                
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
@@ -274,6 +286,8 @@ class DetailedViewApi
 		
         $this->m_arrOut['gender'] = $objProfile->getDecoratedGender();
 		$this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();
+                if( $objProfile->getMSTATUS() != "N")
+                    $this->m_arrOut['have_child']  = ApiViewConstants::$hasChildren[$objProfile->getHAVECHILD()];
 	}
 	
 	/**
@@ -295,7 +309,6 @@ class DetailedViewApi
 			$szAboutMyEdu = null;
 			
 		$this->m_arrOut['myedu'] = $szAboutMyEdu;
-		
 		//PG Degree
 		$objEducation = $this->m_objProfile->getEducationDetail();
 		
@@ -346,7 +359,7 @@ class DetailedViewApi
 		}
 		
 		$this->m_arrOut['post_grad'] = $arrPGOut;
-		
+		$NonGradDegree = 0;
 		//UG Degree and Colg name
 		$arrUGOut = array('deg'=>null,'name'=>null);
 		if(in_array($iHighestDegree,$arrUG_Group) || in_array($iHighestDegree,$arrPG_Group))
@@ -368,10 +381,13 @@ class DetailedViewApi
 		else
 		{
 			$arrUGOut = null;
+			$NonGradDegree = 1;
 		}
-				
+                
+                $this->m_arrOut['college'] = $objProfile->getCOLLEGE();
+                $this->m_arrOut['pg_college'] = $objProfile->getPG_COLLEGE();
 		$this->m_arrOut['under_grad'] = $arrUGOut;
-		
+		$this->m_arrOut['non_grad'] = $NonGradDegree;
 		//School
 		$this->m_arrOut['school'] = null;
 		if($objEducation->SCHOOL != $objEducation->nullValueMarker)
@@ -424,7 +440,7 @@ class DetailedViewApi
 			$arrWorkInfo = null;
 			
 		$this->m_arrOut['work_status'] = $arrWorkInfo;
-		
+		$this->m_arrOut['company_name'] = $objProfile->getCOMPANY_NAME() ?"Works at ".$objProfile->getCOMPANY_NAME():"";
 		//Earnings
 		$this->m_arrOut['earning'] = null;
 		if(($szInc_Lvl = $objProfile->getDecoratedIncomeLevel()) != ApiViewConstants::getNullValueMarker())
@@ -1012,6 +1028,11 @@ class DetailedViewApi
 				$this->m_arrOut[strtolower($key)] = $value;
 			}
 		}
+                //have children
+                if($jPartnerObj->getPARTNER_MSTATUS() != "'N'"){
+                    if($jPartnerObj->getDecoratedCHILDREN())
+                        $this->m_arrOut['dpp_have_child'] = $jPartnerObj->getDecoratedCHILDREN();
+                }
 		//Small Community Labels for DPP Mtongue
         if($this->m_arrOut['dpp_mtongue'] && strlen($jPartnerObj->getPARTNER_MTONGUE()))
         {

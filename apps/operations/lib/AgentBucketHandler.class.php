@@ -9,9 +9,13 @@ class AgentBucketHandler
                 $method=$processObj->getMethod();
                 if($subMethod=="LIMIT_EXCEED")
                 {
-                        $processObj->setLimit(150);
+                        $processObj->setLimit(125);
                         $msg=$this->deAllocateDisp($processObj,$agentAllocDetailsObj,$agentDeAllocObj);
                 }
+		elseif($subMethod=="LIMIT_EXCEED_RENEWAL"){
+                        $processObj->setLimit(125);
+                        $msg=$this->deAllocateDisp($processObj,$agentAllocDetailsObj,$agentDeAllocObj);
+		}
 		elseif($subMethod=="RELEASE_PROFILE")
 			$msg=$this->removeProfiles($processObj,$agentAllocDetailsObj,$agentDeAllocObj);
 		elseif($method=="FTA_FTO"||$subMethod=="UPSELL" || $method == "REALLOCATION")
@@ -324,8 +328,8 @@ class AgentBucketHandler
 		$deletedProfiles=array();
 		$subMethod=$processObj->getSubMethod();
 		$profilesForDeletion=array();
-		$serviceStatusObj=new BILLING_SERVICE_STATUS();
-		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_slave');
+		$serviceStatusObj=new BILLING_SERVICE_STATUS('newjs_masterRep');
+		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
 		if($subMethod=="SALES_OTHERS" || $subMethod=="NEGATIVE_LIST")
 		{
 			for($i=0;$i<count($profiles);$i++)
@@ -392,8 +396,8 @@ class AgentBucketHandler
                 $disp_order_arr=$agentAllocDetailsObj->fetchDispositionOrder();
                 $tot_disp=count($disp_order_arr);
                 $executives=$agentAllocDetailsObj->fetchExecutives($processObj);
-                $tempAllocBucketObj=new TEMP_ALLOCATION_BUCKET();
-		$mainAdminObj=new incentive_MAIN_ADMIN();
+                $tempAllocBucketObj=new TEMP_ALLOCATION_BUCKET('newjs_masterDDL');
+		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
                 $tempAllocBucketObj->truncate();
 		for($i=0;$i<count($executives);$i++)
                 {
@@ -402,16 +406,20 @@ class AgentBucketHandler
                         $processObj->setUsername($exe);
                         $profiles=$agentAllocDetailsObj->fetchProfiles($processObj);
 			$profiles=$agentAllocDetailsObj->fetchHistoryOfProfiles($profiles);
-                        //$processObj->setProfiles($profiles);
 			for($h=0;$h<count($profiles);$h++)
                         {
-				$profileid=$profiles[$h]["PROFILEID"];
-				$profilesDetails=$jprofileObj->get($profileid,"PROFILEID","SUBSCRIPTION");
-                                $subscription=$profilesDetails['SUBSCRIPTION'];
-                                if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
-                                                continue;
-                                else
-                               		$profilesForInsertion[]=$profiles[$h];
+				if($subMethod=='LIMIT_EXCEED_RENEWAL'){
+					$profilesForInsertion[]=$profiles[$h];
+				}
+				else{
+					$profileid=$profiles[$h]["PROFILEID"];
+					$profilesDetails=$jprofileObj->get($profileid,"PROFILEID","SUBSCRIPTION");
+                                	$subscription=$profilesDetails['SUBSCRIPTION'];
+                                	if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
+                                	                continue;
+                                	else
+                               			$profilesForInsertion[]=$profiles[$h];
+				}	
                         }
 			$processObj->setProfiles($profilesForInsertion);
                         $agentDeAllocObj->insertProfilesTemp($processObj);
@@ -459,7 +467,7 @@ class AgentBucketHandler
 		$deallocTrackObj=new incentive_DEALLOCATION_TRACK();
 		$crmDailyAllotObj=new CRM_DAILY_ALLOT();
 		$crmDailyAllotTrackObj =new CRM_DAILY_ALLOT_TRACK();
-		$pswrdsObj =new jsadmin_PSWRDS('newjs_slave'); 
+		$pswrdsObj =new jsadmin_PSWRDS('newjs_masterRep'); 
 		$realDeAllocationDt =date('Y-m-d H:i:s',time());
 
 		if($subMethod=="NO_LONGER_WORKING")

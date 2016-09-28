@@ -49,7 +49,7 @@ class NotificationDataPool
     public function getAgentInstantNotificationsPool($browserProfilesArr)
     {
 		$profileDetails = $this->getProfilesData(array($browserProfilesArr["OTHER"]),"JPROFILE"); 
-		$agentDetails = $this->getAgentsData(array($browserProfilesArr["SELF"]),"jsadmin_PSWRDS","newjs_slave");
+		$agentDetails = $this->getAgentsData(array($browserProfilesArr["SELF"]),"jsadmin_PSWRDS","newjs_masterRep");
 
 		if($profileDetails && $agentDetails)
 		{
@@ -98,7 +98,7 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_slave");
+            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
         }
         unset($otherProfiles);
         $counter = 0;
@@ -149,6 +149,7 @@ class NotificationDataPool
             $condition["WHERE"]["IN"]["COUNT"]    = 1;
             $condition["WHERE"]["NOT_IN"]["FILTERED"]    = 'Y';
             $condition["LIMIT"] = "0,10";//safe in case if some of the profiles are not valid and their data is not present in sms_temp_table
+	    $condition["ORDER"]			  ='TIME';			
             $cntArr = $contactRecordsObj->getContactsCount(array("RECEIVER"=>$profileid,"TYPE"=>ContactHandler::INITIATED,"COUNT"=>1),"FILTERED",1);
             if(is_array($cntArr))
             {
@@ -177,7 +178,7 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
                         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_slave");
+            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
                         }
         unset($otherProfiles);
         $counter = 0;
@@ -242,26 +243,43 @@ class NotificationDataPool
     */
     public function getProfileInstantNotificationData($notificationKey,$profilesArr,$details,$message="")
     {
-        switch($notificationKey)
+        foreach($profilesArr as $k=>$v)
         {
-            case "EOI" :
-            case "MESSAGE_RECEIVED" :
-            case "EOI_REMINDER":
-                        foreach($profilesArr as $k=>$v)
-                        {
-                            if($k=="OTHER")
-                                $dataAccumulated[0][$k][0] = $details[$v];
-                            else
-                                $dataAccumulated[0][$k] = $details[$v]; 
-                        }
-                        $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        break;
-                        
+            if($k=="OTHER")
+                $dataAccumulated[0][$k][0] = $details[$v];
+            else
+                $dataAccumulated[0][$k] = $details[$v]; 
         }
+        $dataAccumulated[0]['COUNT'] = "SINGLE";           
+        
         if($message)
             $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
 
         $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
+        unset($profilesArr);
+        unset($details);
+        return $dataAccumulated;
+    }
+
+    /*function to get notification data pool for digest notifications
+    @inputs: $notificationKey,$profilesArr,$details,$count=""
+    @output : $dataAccumulated
+    */
+    public function getProfileDigestNotificationData($notificationKey,$profilesArr,$details,$count="")
+    {
+        foreach($profilesArr as $k=>$v)
+        {
+            if($k=="OTHER")
+                $dataAccumulated[0][$k][0] = $details[$v];
+            else
+                $dataAccumulated[0][$k] = $details[$v]; 
+        }
+        $dataAccumulated[0]['COUNT'] = "MULTIPLE";
+        
+        if($count)
+            $dataAccumulated[0]['EOI_COUNT'] = $count;
+        if($profilesArr["OTHER"])
+            $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
         unset($profilesArr);
         unset($details);
         return $dataAccumulated;
@@ -312,7 +330,7 @@ class NotificationDataPool
         // filter last 7days logged-in app profiles
         if(is_array($profilesNewArr))
         {
-            $loginTrackingObj = new MIS_LOGIN_TRACKING('newjs_slave');
+            $loginTrackingObj = new MIS_LOGIN_TRACKING('newjs_local111');
             $profilesNewStr   = @implode(",",$profilesNewArr);
             $profilesArr      = $loginTrackingObj->getLast7DaysLoginProfiles($profilesNewStr);
         }
@@ -340,6 +358,37 @@ class NotificationDataPool
         return $applicableProfiles;
     return false;
   }
-
+  
+  
+    public function getNotificationImage($icon, $iconProfileid){
+        if($icon == 'P' && $iconProfileid){
+            $profile=new Profile();
+            $profile->getDetail($iconProfileid,"PROFILEID");
+            $profilePic = $profile->getHAVEPHOTO();
+            if (empty($profilePic) || $profilePic == 'U')
+                $profilePic="N";
+            if($profilePic!="N"){
+                $pictureServiceObj=new PictureService($profile);
+                $profilePicObj = $pictureServiceObj->getProfilePic();
+                if($profilePicObj){
+                    $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$this->gender);
+                    if($photoArray[label] != '')
+                       $icon = 'D';
+                    else
+                       $icon = $photoArray['url'];
+                }
+                else{
+                    $icon = 'D';
+                }
+            }
+            else{
+                $icon = 'D';
+            }
+        }
+        else{
+            $icon = 'D';
+        }
+        return $icon;
+    }
 }
 ?>

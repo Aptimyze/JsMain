@@ -1,7 +1,8 @@
 <?php
 include_once("connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
-require_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(authenticated($cid))
 {
 	$pid = stripslashes($pid);
@@ -36,13 +37,35 @@ if(authenticated($cid))
 					$preactivated=$row_sel['PREACTIVATED'];
 				}
 				//added by sriram.
-				$sql_act = "SELECT USERNAME,ACTIVATED,SUBSCRIPTION,MSTATUS  FROM newjs.JPROFILE WHERE PROFILEID='$pid'";
+				$sql_act = "SELECT USERNAME,ACTIVATED,SUBSCRIPTION,MSTATUS,HAVEPHOTO  FROM newjs.JPROFILE WHERE PROFILEID='$pid'";
 				$res_act = mysql_query_decide($sql_act) or die(mysql_error_js());
 				$row_act = mysql_fetch_array($res_act);
 				//added by sriram.
-
-			 	$sql="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID in ($pid)";
-        	                mysql_query_decide($sql) or die("$sql".mysql_error_js());
+				if($row_act['HAVEPHOTO']=="U" || $row_act['HAVEPHOTO']=="Y")
+				{
+					$profileObj = new LoggedInProfile('',$pid);
+					$profileObj->getDetail('', '', '*');
+					$pictureServiceObj = new PictureService($profileObj);
+					$PICTURE_FOR_SCREEN_NEW = new NonScreenedPicture();
+					$whereCondition["PROFILEID"] = $pid;
+					$pics=$PICTURE_FOR_SCREEN_NEW->get($whereCondition);
+					if(is_array($pics))
+					{
+						foreach($pics as $k=>$v)
+						{
+							if($k==0)
+								continue;
+							$pictureid = $v['PICTUREID'];
+							$pictureServiceObj->deletePhoto($pictureid,$pid);
+						}
+						$pictureServiceObj->deletePhoto($pics[0]['PICTUREID'],$pid);
+					}
+				}		
+				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+				$jprofileUpdateObj->updateJProfileForArchive($pid);
+						
+			 	//$sql="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID in ($pid)";
+        	      //          mysql_query_decide($sql) or die("$sql".mysql_error_js());
 	
 				$sql="UPDATE jsadmin.MARK_DELETE SET STATUS='D', DATE='$now' WHERE PROFILEID IN ($pid)";
 				mysql_query_decide($sql) or die("$sql".mysql_error_js());
@@ -162,9 +185,20 @@ if(authenticated($cid))
 				//added by sriram to prevent the query being run several times on page reload.
 			if($row_act['ACTIVATED']!='D')
 			{
-				$path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $pid > /dev/null &";
-				$cmd = "/usr/bin/php -q ".$path;
-				passthru($cmd);
+				$producerObj=new Producer();
+	        	if($producerObj->getRabbitMQServerConnected())
+				{
+					$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$pid)), 'redeliveryCount'=>0 );
+					$producerObj->sendMessage($sendMailData);
+					$sendMailData = array('process' =>'USER_DELETE','data' => ($pid), 'redeliveryCount'=>0 );
+					$producerObj->sendMessage($sendMailData);
+				}
+				else
+				{
+					$path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $pid > /dev/null &";
+					$cmd = "/usr/bin/php -q ".$path;
+					passthru($cmd);
+				}
 	
 				//if user is a paid member, then send a mail to anil rawat.
 				if($row_act["SUBSCRIPTION"])

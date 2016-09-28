@@ -8,11 +8,43 @@
         </div>
 		<div class="myjs-bg2 fullwid fontlig color11">
         	<div class="myjs-p12">
-            	<!--start:upload photo-->
+            	                <!--start:edit basic-->
+                               ~if $computeImportantSection eq 1`
+                        <div>
+                            <div class="pt30 pb40 pr6 pl6 myjs-bdr7">
+                                <p class="f22">Important Fields</p>
+                                <div class="f17 pt15">Jeevansathi will allow editing of below mentioned fields only once in 30 days of registration, you filled these details : </div>
+                                <ul id="basicList" class="f17 pt15 basicList">
+                                            <li>
+                                            <div class="wid122 disp_ib">Gender</div>:
+                                        <div id="basicGender" class="disp_ib fontreg">~$FTUdata['gender']`</div>
+                                    </li>
+                                    <li>
+                                            <div class="wid122 disp_ib">Date of Birth</div>:
+                                        <div id="basicDob" class="disp_ib fontreg">~$FTUdata['DOB']['day']`&nbsp;~$FTUdata['DOB']['month']`&nbsp;~$FTUdata['DOB']['year']`</div>
+                                    </li>
+                                    <li>
+                                            <div class="wid122 disp_ib">Marital Status</div>:
+                                        <div id="basicStatus" class="disp_ib fontreg">~$FTUdata['maritalStatus']`</div>
+                                    </li>
+                                    <li>
+                                            <div class="wid122 disp_ib">Religion</div>:
+                                        <div id="basicReligion" class="disp_ib fontreg">~$FTUdata['religion']`</div>
+                                    </li>
+                                </ul>
+                                <div class="f17 pt15 mb36">Please make correction NOW if you think you have wrongly filled these details</div> 
+                                <a class="colrw" href="/profile/dpp">
+                                    <div class="pos-rel myjs-wid21 scrollhid"><button class="bg_pink brdr-0 myjs-wid21 pinkRipple hoverPink  txtc colrw lh50 f17 fontreg cursp">Edit Basic Details</button></div>
+                                </a>
+                            </div>
+                        </div>
+                         ~/if`
+                        <!--end:edit basic--> 
+                        <!--start:upload photo-->
                 ~if $profilePic eq "N"`
-                <div class="pr6 pl6 pb40 myjs-bdr7">
-                	<p class="f22">Upload your photos</p>
-                	<p class="f17 pt15">Profile with photos get 8 times more responses</p>
+                <div class="pt30 pb40 pr6 pl6 myjs-bdr7">
+                  <p class="f22">Upload your photos</p>
+                  <p class="f17 pt15">Profile with photos get 8 times more responses</p>
                     <div class="clearfix pt30">
                         <div class="fl wid25p">
                             <img style="width:220px" src="~$photoUrl`">
@@ -25,7 +57,7 @@
                                         <div class="disp-cell vmid txtc myjs-bg6 wid20p">
                                             <div class="sprite2 myjs-ic9 mauto"></div>
                                         </div>
-                                        <div class="disp-cell vmid wid80p txtc f20 fontrobbold colrw">My computer</div>                                	
+                                        <div class="disp-cell vmid wid80p txtc f20 fontrobbold colrw">My computer</div>                                 
                                     </div></a>
                                 </li>
                                 <li class="cursp ml30">
@@ -33,7 +65,7 @@
                                         <div class="disp-cell vmid txtc myjs-bg8 wid20p">
                                             <div class="sprite2 myjs-ic10 mauto"></div>
                                         </div>
-                                        <div class="disp-cell vmid wid80p txtc f20 fontrobbold colrw">facebook</div>                                	
+                                        <div class="disp-cell vmid wid80p txtc f20 fontrobbold colrw">facebook</div>                                  
                                     </div></a>
                                 </li>
                             </ul>
@@ -44,6 +76,7 @@
                 </div>
                 ~/if`
                 <!--end:upload photo-->
+
                 <!--start:manage filters-->
                 <div>
                 	<div class="pt30 pb40 pr6 pl6 myjs-bdr7">
@@ -52,7 +85,7 @@
                        <a class="colrw" href="/profile/dpp"><div class="pos-rel myjs-wid21 scrollhid"><button class="bg_pink brdr-0 myjs-wid21 pinkRipple hoverPink  txtc colrw lh50 f17 fontreg cursp">Set my Filters</button></div></a>
                     </div>                
                 </div>
-                <!--end:manage filters-->
+               <!--end:manage filters-->
               
                 <!--start:Privacy-->
                 <div>
@@ -88,6 +121,7 @@
                 </div>
                
                 
+            </div>
             </div>
             <!--start:article-->
     <article id="DESIREDPARTNERMATCHES"> 

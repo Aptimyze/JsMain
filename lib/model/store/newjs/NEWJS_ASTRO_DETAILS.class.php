@@ -15,6 +15,7 @@ class NEWJS_ASTRO extends TABLE {
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
                 $prep->execute();
+                JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
                 if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                     return $result;
                 }
@@ -41,6 +42,7 @@ class NEWJS_ASTRO extends TABLE {
             foreach ($paramArr as $key => $val) $resEditHobby->bindValue(":" . $key, $val);
             $resEditHobby->bindValue(":PROFILEID", $pid);
             $resEditHobby->execute();
+            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
             return true;
         }
         catch(PDOException $e) {
@@ -58,6 +60,7 @@ class NEWJS_ASTRO extends TABLE {
             $res = $this->db->prepare($sql);
             $res->bindValue(":PROFILEID", $profileid,PDO::PARAM_INT);
             $res->execute();
+            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
             return true;
         }
         catch(PDOException $e) {
@@ -84,6 +87,7 @@ class NEWJS_ASTRO extends TABLE {
             	$res->bindValue(":PROFILEID" . $key, $pid, PDO::PARAM_INT);
         	}
         	$res->execute();
+            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
         	while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
 	   	if(!$setWithProfileId)
             		$astroArr[] = $result;
@@ -108,6 +112,7 @@ class NEWJS_ASTRO extends TABLE {
         if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
             return $result['COUNT'];
         }
+        JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
         return 0;
     }
     //It Also checks in screening
@@ -118,6 +123,7 @@ class NEWJS_ASTRO extends TABLE {
             $res = $this->db->prepare($sql);
             $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $res->execute();
+            JsCommon::logFunctionCalling('newjs_HOROSCOPE', __FUNCTION__);
             if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
                 if ($result['COUNT']) $horo_present = true;
             }
@@ -126,6 +132,7 @@ class NEWJS_ASTRO extends TABLE {
                 $res = $this->db->prepare($sql);
                 $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                 $res->execute();
+                JsCommon::logFunctionCalling('NEWJS_HOROSCOPE_FOR_SCREEN', __FUNCTION__);
                 if ($result = $res->fetch(PDO::FETCH_ASSOC)) if ($result['COUNT']) $horo_present = true;
             }
         } else $horo_present = true;
@@ -142,6 +149,7 @@ class NEWJS_ASTRO extends TABLE {
 		                $res->bindValue(":pid", $pid, PDO::PARAM_INT);
 		                $res->bindValue(":type", $type, PDO::PARAM_STR);
 				$res->execute();
+                JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			}
 		}
 		catch(PDOException $e) {
@@ -149,5 +157,76 @@ class NEWJS_ASTRO extends TABLE {
         	}
 		
 	}
+        /*
+         * this function deletes entry for a given profileid
+         */
+    public function deleteEntry($pid)
+	{
+		try{
+
+			if($pid)
+			{
+				$sql="delete from newjs.ASTRO_DETAILS WHERE PROFILEID=:pid";
+				$res = $this->db->prepare($sql);
+		                $res->bindValue(":pid", $pid, PDO::PARAM_INT);
+				$res->execute();
+                JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+			}
+		}
+		catch(PDOException $e) {
+			throw new jsException($e);
+        	}
+		
+	}
+
+    /**
+     * updateRecord
+     * @param $iProfileID
+     * @param $arrRecordData
+     */
+    public function updateRecord($iProfileID, $arrRecordData) {
+        if(!is_numeric(intval($iProfileID)) || !$iProfileID)
+        {
+            throw new jsException("","iProfileID is not numeric in UpdateRecord OF NEWJS_ASTRO_DETAILS.class.php");
+        }
+
+        if(!is_array($arrRecordData))
+            throw new jsException("","Array is not passed in UpdateRecord OF NEWJS_ASTRO_DETAILS.class.php");
+
+        if(isset($arrRecordData['PROFILEID']) && strlen($arrRecordData['PROFILEID'])>0)
+            throw new jsException("","Trying to update PROFILEID in  in UpdateRecord OF NEWJS_ASTRO_DETAILS.class.php");
+
+        try
+        {
+            $arrFields = array();
+            foreach($arrRecordData as $key=>$val)
+            {
+                $columnName = strtoupper($key);
+
+                $arrFields[] = "$columnName = ?";
+            }
+            $szFields = implode(",",$arrFields);
+
+            $sql = "UPDATE newjs.ASTRO_DETAILS SET $szFields WHERE PROFILEID = ?";
+            $pdoStatement = $this->db->prepare($sql);
+
+            //Bind Value
+            $count =0;
+            foreach ($arrRecordData as $k => $value)
+            {
+                ++$count;
+                $pdoStatement->bindValue(($count), $value);
+            }
+            ++$count;
+            $pdoStatement->bindValue($count,$iProfileID);
+
+            $pdoStatement->execute();
+            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

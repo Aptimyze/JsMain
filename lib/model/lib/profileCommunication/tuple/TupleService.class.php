@@ -37,6 +37,7 @@ class TupleService
     private $loginProfileObj;
     private $PEOPLE_WHO_VIEWED_MY_CONTACTS=Array();
     private $INTEREST_RECEIVED_FILTER = Array();
+    private $FEATURED_PROFILE_TUPLE =  Array();
 	// Function to initalize logic array which have logic id and corresponding fields mapping
 	static public function initLogics()
 	{
@@ -62,7 +63,10 @@ class TupleService
 					"ENTRY_DT",
 					"LAST_LOGIN_DT",
 					"YOURINFO",
-					"SCREENING"
+					"SCREENING",
+                                        "COMPANY_NAME",
+                                        "ANCESTRAL_ORIGIN",
+                                        "EMAIL"
 					
 				),
 				"LOGIC" => Array(
@@ -85,7 +89,7 @@ class TupleService
 				)
 			),
 			"EDUCATION_LOGIC" => Array(
-				"FIELDS" => Array(),
+				"FIELDS" => Array("COLLEGE","UG_COLLEGE"),
 				"LOGIC" => Array(
 					"edu_level_new"
 				)
@@ -118,7 +122,15 @@ class TupleService
 				"LOGIC" => Array(
 					"INTEREST_VIEWED_DATE"
 				)
-			)
+			),
+                        "NATIVE_LOGIC" => Array(
+				"FIELDS" => Array("NATIVE_CITY","NATIVE_STATE"),
+				"LOGIC" => Array()
+			),
+			"NAME_LOGIC" =>Array(
+				"FIELDS" => Array("NAME_OF_USER","DISPLAY_NAME"),
+				"LOGIC" =>Array()
+			),
 			
 		);
 	}
@@ -167,23 +179,25 @@ class TupleService
 		foreach (self::$logics as $logic => $value) {
 			if (count(array_intersect($fields, $value["FIELDS"])) > 0 || count(array_intersect($fields, $value["LOGIC"])) > 0) {
 				$typeFunction = "execute" . $logic;
-			
 				if($logic == "MY_MESSAGE_LOGIC")
 					$profileInfoObjArray[$logic] = $this->$typeFunction($profileObjArray["MY_MESSAGE"]);
 				else
 					$profileInfoObjArray[$logic] = $this->$typeFunction($profileIds);
 			}
 		}
-	
+                //echo '<pre>';print_R($profileInfoObjArray);
 		       // print_r(this->$p)
               	/*This loop will retrieve all the information from the arrays of different logics and will assign to the tuple object
 		calling the setters of various fields*/
 		if (is_array($profileObjArray)){
                    	foreach ($profileObjArray as $infoType => $profilesInfoTypeBasedValues) {
+                   		
 				if (is_array($profilesInfoTypeBasedValues))
 					foreach ($profilesInfoTypeBasedValues as $profileId => $profileValues) {
+						
 						$tupleObject = $this->getTupleObject($infoType, $profileId);
                                                 foreach($this->profileDetailsArray as $key=>$tp) {
+
 						if ($profileId==($tp->getPROFILEID()))
 	                                                $tupleObject->setprofileObject($this->profileDetailsArray[$key]);
 						}
@@ -193,6 +207,7 @@ class TupleService
 									eval('$tupleObject->set' . $logicKey . '($logicValue);');
 								}
 						}
+                                                $this->getlocationWithNativeCity($tupleObject);
 						/*Setters of Messages, icons and buttons are called for all the tuple objects*/
 						$this->setMessages($tupleObject);
 						$this->setDisplayString($tupleObject);
@@ -202,7 +217,28 @@ class TupleService
 					}
                         }
 			}
+
 	}
+        
+        public function getlocationWithNativeCity($tupleObject){
+                $nativeLabel = '';
+               
+                $citySubstr = substr($tupleObject->CITY_ID, 0,2);
+                if($tupleObject->NATIVE_CITY)
+                        $nativeLabel = $tupleObject->NATIVE_CITY;
+                elseif($tupleObject->NATIVE_STATE && ($citySubstr != $tupleObject->NATIVE_STATE_ID || $tupleObject->ANCESTRAL_ORIGIN != '')){
+                        $nativeState = $tupleObject->NATIVE_STATE;
+                        if($tupleObject->ANCESTRAL_ORIGIN){
+                             $nativeLabel = $tupleObject->ANCESTRAL_ORIGIN.', ';   
+                        }
+                        $nativeLabel .= $nativeState;
+                }
+
+                if($nativeLabel != $tupleObject->CITY && $nativeLabel != ''){
+                        $nativeLabel = $tupleObject->CITY.' & '.$nativeLabel;
+                        $tupleObject->setCITY($nativeLabel);
+                }
+        }
 	//Getters of all the information type arrays declared in this service
 	public function getINTEREST_RECEIVED()
 	{
@@ -308,6 +344,11 @@ class TupleService
 		return $this->INTEREST_RECEIVED_FILTER;
 	}
 	
+	public function getFEATURED_PROFILE_TUPLE()
+	{
+		return $this->FEATURED_PROFILE_TUPLE;
+	}
+
 	/*This function will return particular tuple object from the requested infotype array and given profileid
 	 *@param  infotype : information type array defined in this service
 	 *@param profileId : profileid to identify the tuple object
@@ -328,13 +369,28 @@ class TupleService
 		{
 			$profArrObj                = new ProfileArray();
 			$profileIdArr["PROFILEID"] = implode(",", $profileIds);
-			$this->profileDetailsArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',', self::$logics["PROFILE_LOGIC"]["FIELDS"]),'JPROFILE',"newjs_bmsSlave"); 
+			$this->profileDetailsArray = $profArrObj->getResultsBasedOnJprofileFields($profileIdArr, '', '', implode(',', self::$logics["PROFILE_LOGIC"]["FIELDS"]),'JPROFILE',"newjs_masterRep"); 
 			$profilesArray             = $this->getProfileLogiceResultArray();
                        return $profilesArray;
 		}
 		return null;
 	}
-	
+	public function executeNAME_LOGIC($profileIds)
+	{
+		if(!empty($profileIds))
+		{
+			$nameOfUserObj = new NameOfUser();
+			$showNameData = $nameOfUserObj->showNameToProfiles($this->getLoginProfileObj(),$this->profileDetailsArray);
+			foreach($showNameData as $k=>$v)
+			{
+				if($v['SHOW']==true)
+					$profileArray[$k]['NAME_OF_USER']=$v['NAME'];
+				else
+					$profileArray[$k]['NAME_OF_USER']='';
+			}
+		}
+		return $profileArray;
+	}
 	/* Various logic implementations defined in initLogics for respective fields
 	/*@param profileIds : array of profile ids to find the fields
 	/*@return profilesArray : array of profiles with complete information retrieved from this logic
@@ -343,7 +399,7 @@ class TupleService
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION();
+			$jprofArrObj                = ProfileEducation::getInstance("newjs_masterRep");
 			$profileDetailsArray = $jprofArrObj->getProfileEducation($profileIds,'mailer');
 				
 			foreach($profileDetailsArray as $k=>$row)
@@ -359,9 +415,18 @@ class TupleService
 								$edu[]=FieldMap::getFieldLabel('education',$row["UG_DEGREE"]);
 				if($row["OTHER_PG_DEGREE"] && Flag::isFlagSet("other_pg_degree", $row["SCREENING"]))
 								$edu[]=substr($row["OTHER_UG_DEGREE"],0,30);
+				if($row["COLLEGE"] && Flag::isFlagSet("college", $row["SCREENING"])){
+								$result[$row["PROFILEID"]]["COLLEGE"]=$row["COLLEGE"];
+                                }else{
+                                      $result[$row["PROFILEID"]]["COLLEGE"] = '';  
+                                }
+				if($row["PG_COLLEGE"] && Flag::isFlagSet("pg_college", $row["SCREENING"])){
+								$result[$row["PROFILEID"]]["PG_COLLEGE"]=$row["PG_COLLEGE"];
+                                }else{
+                                        $result[$row["PROFILEID"]]["PG_COLLEGE"] = '';
+                                }
 				$result[$row["PROFILEID"]]["edu_level_new"]= $edu?implode(", ",array_unique($edu)):"";
 			}
-		
 		      return $result;
 		}
 		
@@ -466,7 +531,7 @@ else {
 		// Setting Mobile App Pic size for all the pictureids
 		if(MobileCommon::isMobile() && is_array($pictureIdsArray))
 		{
-			$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_bmsSlave");
+			$pictureSizeObj = new PICTURE_MobAppPicSize("newjs_masterRep");
 	    $pictureSize = $pictureSizeObj->getPictureSize($pictureIdsArray); 
 	    foreach($pictureIdsArray as $profileId=>$value)
 			{
@@ -770,6 +835,7 @@ else {
 				else*/
 					$result[$profileid]["USERNAME"] = $profileObj->getUSERNAME();
 				$result[$profileid]["CITY"]     = $profileObj->getDecoratedCity();
+				$result[$profileid]["CITY_ID"]     = $profileObj->getCITY_RES();
 				if (!$result[$profileid]["CITY"])
 					$result[$profileid]["CITY"] = $profileObj->getDecoratedCountry();
 				$result[$profileid]["OCCUPATION"]      = $profileObj->getDecoratedOccupation();
@@ -789,14 +855,50 @@ else {
 				$result[$profileid]["ENTRY_DT"]        = $profileObj->getENTRY_DT();
 				$result[$profileid]["SUBSCRIPTION"]    = $profileObj->getSUBSCRIPTION();
 				$result[$profileid]["LAST_LOGIN_DT"]    = $profileObj->getLAST_LOGIN_DT();
+				$result[$profileid]["EMAIL"]    = $profileObj->getEMAIL();
+                                if(Flag::isFlagSet("company_name",$profileObj->getSCREENING()))
+                                        $result[$profileid]["COMPANY_NAME"]          = $profileObj->getCOMPANY_NAME();
+                                else
+                                        $result[$profileid]["COMPANY_NAME"]          = "";
+                                
 				if(Flag::isFlagSet("yourinfo",$profileObj->getSCREENING()))
 					$result[$profileid]["YOURINFO"]    = $profileObj->getYOURINFO();
 				$result[$profileid]["PROFILECHECKSUM"] = JsAuthentication::jsEncryptProfilechecksum($profileid);
+                                
+                                if(Flag::isFlagSet("ancestral_origin", $profileObj->getSCREENING()))
+                                        $result[$profileid]["ANCESTRAL_ORIGIN"]          = $profileObj->getDecoratedAncestralOrigin();
+                                else
+                                        $result[$profileid]["ANCESTRAL_ORIGIN"]          = "";
 			}
 			return $result;
 		}
 		return NULL;
 		
+	}
+        public function executeNATIVE_LOGIC($profileIds)
+	{
+		if(!empty($profileIds))
+		{
+			$jprofArrObj                = ProfileNativePlace::getInstance("newjs_masterRep");
+                         if(!is_array($profileIds)){
+                            $profileIds = array($profileIds);
+                        }
+                        
+                        $profileDetailsArray        = $jprofArrObj->getNativeDataForMultipleProfiles($profileIds);
+                        if(!empty($profileDetailsArray)){
+                                foreach($profileDetailsArray as $profileData){
+                                        if($profileData["NATIVE_CITY"])
+                                                $result[$profileData["PROFILEID"]]["NATIVE_CITY"]=FieldMap::getFieldLabel('city',$profileData["NATIVE_CITY"]);
+                                        if($profileData["NATIVE_STATE"]){
+                                                $result[$profileData["PROFILEID"]]["NATIVE_STATE"]=FieldMap::getFieldLabel('state_india',$profileData["NATIVE_STATE"]);
+                                                $result[$profileData["PROFILEID"]]["NATIVE_STATE_ID"]=$profileData["NATIVE_STATE"];
+                                        }
+                                }
+                        }
+		      return $result;
+		}
+		
+		return null;
 	}
 	public function setLoginProfile($profileid)
 	{

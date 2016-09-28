@@ -6,10 +6,11 @@
 *********************************************************************************************/
 
 //Open connection at JSDB
-$db_master 	= mysql_connect("master.js.jsb9.net","user","CLDLRTa9") or die("Unable to connect to js server at ".$start);
+$db_master 	= mysql_connect("master.js.jsb9.net","privUser","Pr!vU3er!") or die("Unable to connect to js server at ".$start);
 $db_js 		= mysql_connect("ser2.jeevansathi.jsb9.net","user_dialer","DIALlerr") or die("Unable to connect to js server at ".$start);
 //Connection at DialerDB
 $db_dialer 	= mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or die("Unable to connect to dialer server");
+mysql_query("set session wait_timeout=600",$db_master);
 
 $campaignArr	=array('IB_Sales','IB_Service');
 $startDt 	=date("Y-m-d",time()-24*60*60)." 00:00:00";

@@ -10,7 +10,7 @@ class connectionThresholdTask extends sfBaseTask
   /**
     * @var const EMAIL_TO comma separated email ids
   */
-  const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com";
+  const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com";
   private $SMS_TO = array('9650350387','9818424749');
   const FROM_ID = "JSSRVR";
   const PROFILE_ID = "144111";
@@ -107,7 +107,7 @@ EOF;
      * This function trigger email
      */
     private function notify(){
-	$dt = date("Y-m-d");
+	$dt = date("Y-m-d H:i:s");
         $serverMessage = "Hi,<br/><br/>"."Please find below the server details exceeding threshold.".$this->mailMessage;
         SendMail::send_email(self::EMAIL_TO, $serverMessage,"Servers exceeding threshold - $dt"); 
     }

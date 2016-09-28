@@ -570,5 +570,108 @@ class CommonFunction
                 }
                 return trim($returnStr,',');
         }
+  
+  /**
+   * convertUpdateStrToArray : A utility Function
+   * Convert string in any of following formats
+   *  a) AGE=\"N\", MSTATUS=\"N\", RELIGION=\"N\", COUNTRY_RES=\"N\"
+   *  b) AGE='N', MSTATUS='N', RELIGION='N', COUNTRY_RES='N'
+   *  
+   * to array in which column name are key and value is value specified in string 
+   * i.e.
+   *    array( "AGE"=>'N',"MSTATUS"=>'N', "RELIGION"=>'N', "COUNTRY_RES"='N');
+   * @param type $uptStr
+   * @return array
+   */
+  public static function convertUpdateStrToArray($uptStr)
+  {
+    if(0===strlen($uptStr)) {
+      return array();
+    }
+    
+    $arrayColumns = explode(",",$uptStr);
+    $arrOut = array();
+    $lastToken = '';
+    foreach($arrayColumns as $params) {
+      $arrTokens = explode("=",$params);
+      if(count($arrTokens) === 1) {
+        $arrOut[$lastToken] .= $params;
+        continue;
+      }
+      $szVal = $arrTokens[1];
+      $szVal = str_replace(array('\'','"',"\\"), "", $szVal);
+      $arrOut[trim($arrTokens[0])] = trim($szVal);
+      $lastToken = trim($arrTokens[0]);
+    }
+    return $arrOut;
+  }
+
+  	public static function getMembershipName($profileid){
+  		if ($profileid) {
+	  		$memHandlerObj = new MembershipHandler();
+			$membershipStatus = $memHandlerObj->getRealMembershipName($profileid);
+		} else {
+			$membershipStatus = 'Free';
+		}
+		return $membershipStatus;
+  	}
+
+  	public static function getRCBDayDropDown()
+    {
+        $orgTZ = date_default_timezone_get();
+        date_default_timezone_set("Asia/Calcutta");
+
+        $server_day = date('j M');
+        if (date('H') >= 21) {
+            $server_day = date('j M', strtotime('+1 day', strtotime($server_day)));
+        }
+
+        $next_1         = date('j M', strtotime('+1 day', strtotime($server_day)));
+        $next_2         = date('j M', strtotime('+2 day', strtotime($server_day)));
+        $dropDownDayArr = array(
+            date("Y-m-d", strtotime($server_day))=>$server_day,
+            date("Y-m-d", strtotime($next_1))=>$next_1,
+            date("Y-m-d", strtotime($next_2))=>$next_2,
+        );
+        
+        date_default_timezone_set($orgTZ);
+        return $dropDownDayArr;
+    }
+
+    public static function getRCBStartTimeDropDown() {
+    	$dropDownTimeArr1 = array(
+            "09:00:00"=>"9 AM",
+            "10:00:00"=>"10 AM",
+            "11:00:00"=>"11 AM",
+            "12:00:00"=>"12 PM",
+            "13:00:00"=>"1 PM",
+            "14:00:00"=>"2 PM",
+            "15:00:00"=>"3 PM",
+            "16:00:00"=>"4 PM",
+            "17:00:00"=>"5 PM",
+            "18:00:00"=>"6 PM",
+            "19:00:00"=>"7 PM",
+            "20:00:00"=>"8 PM",
+        );
+        return $dropDownTimeArr1;
+    }
+
+    public static function getRCBEndTimeDropDown() {
+    	$dropDownTimeArr2 = array(
+            "10:00:00"=>"10 AM",
+            "11:00:00"=>"11 AM",
+            "12:00:00"=>"12 PM",
+            "13:00:00"=>"1 PM",
+            "14:00:00"=>"2 PM",
+            "15:00:00"=>"3 PM",
+            "16:00:00"=>"4 PM",
+            "17:00:00"=>"5 PM",
+            "18:00:00"=>"6 PM",
+            "19:00:00"=>"7 PM",
+            "20:00:00"=>"8 PM",
+            "21:00:00"=>"9 PM",
+        );
+        return $dropDownTimeArr2;
+    }
 }
 ?>

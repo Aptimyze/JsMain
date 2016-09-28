@@ -1,6 +1,11 @@
 /**
 * This file is contactCenter.js for loading contact center tuples
 */
+
+var emailReg = /([\w\_]+@([\w]+\.)+[\w]{2,4})/g;
+var phoneReg = /([0-9]{10,}|[0-9]{3}-[0-9]{6,}|[0-9]{4}-[0-9]{6,}|[0-9]{4}-[0-9]{3}-[0-9]{4,}|[0-9]{3}-[0-9]{3}-[0-9]{4,}|[0-9]{3}\s[0-9]{3}\s[0-9]{4,}|[0-9]{4}\s[0-9]{3}\s[0-9]{4,}|[0-9]{3}\s[0-9]{3}\s[0-9]{3}\s[0-9]{3,}|[0-9]{4}\s[0-9]{6,}|[0-9]{3}\s[0-9]{7,})/g;
+var matchedStr,data,newData;
+
 /** 
 * This function will set horizontal line below active horizontal tab
 * 
@@ -271,7 +276,8 @@ if(typeof response.searchid!="undefined")
       $("#callUser").off("click");
       $("#callUser").on("click", function () {
         $('<input>').attr({type: 'hidden',id:'rcbResponse', name: 'rcbResponse',value:'Y'}).appendTo('#Widget');
-        $(".js-openRequestCallBack").click();
+        toggleRequestCallBackOverlay(1, 'Accepted_Members_List');
+        //$(".js-openRequestCallBack").click();
       });
       
       //On Not Now Button
@@ -284,7 +290,7 @@ if(typeof response.searchid!="undefined")
           url: url,
           cache: false,
           timeout: 5000, 
-          data: {rcbResponse:'N'},
+          data: {rcbResponse:'N','device':'desktop','channel':'JSPC','callbackSource':'Accepted_Members_List'},
           success:function(result){
             $("#callDiv1").remove();
             $("<div class='rel_c js-rcbMessage' id='callDiv2'><div class='ccp11 pb20 fontlig color11'><div class='mainBrdr2'><div class='f14 fontlig'>Never mind. You still can reach out to us later whenever you want. We will remind you about this after two weeks.</div></div></div></div>").insertAfter("#outerCCTupleDiv3");        
@@ -343,7 +349,10 @@ function ccTupleResultMapping(val,profileIDNo,viewProfilePageParams) {
 			personalizedmessage=readMore(personalizedmessage,profileIDNo)
 			
 		}
-			
+                
+		if(val.name_of_user!='' && val.name_of_user!=null)
+			val.username = val.name_of_user;
+                
 		var mapping = {
 				'{ccTupleImage}': removeNull(val.profilepic120url),
 				'{ccTupleIDNo}': removeNull(profileIDNo), 
@@ -436,7 +445,16 @@ function ccTupleInnerContentResultMapping(val,profileIDNo) {
 		}
 		else
 		{		
-				var casteStr = (val.caste).substr((val.caste).indexOf(":") + 1);
+			var casteStr;	
+			if(val.caste == val.religion)
+			{
+				casteStr = ''; 
+			}
+			else
+			{
+				casteStr = (val.caste).substr((val.caste).indexOf(":") + 1);
+				casteStr = ", "+casteStr;
+			}
 				
 				//for dev environment only
 				if(val.income =="undefined" || val.income == null)
@@ -666,6 +684,7 @@ function showCCLoader(type)
 	else
 	{
 		$('#ccResultsLoaderTop').hide();
+		setTimeout(function(){hidePersonalisedMessage();},100);
 	}
 }
 
@@ -855,5 +874,31 @@ $(document).ready(function() {
 			var vspRedirectUrl = "/search/viewSimilarProfile?profilechecksum="+profilechecksum+"&stype="+stype+"&SIM_USERNAME="+username+"&contactedProfileDetails="+showContactedUsernameDetails;
 			window.location.href = vspRedirectUrl;
 		});
+
+			hidePersonalisedMessage();
 	});
 
+function hidePersonalisedMessage()
+{
+	$(".js-hideDetail").each(function(index, element) {
+		data = $(element).html();
+		if(data != ""){
+			if(data.match(emailReg) != null){
+				matchedStr = data.match(emailReg);
+				$.each(matchedStr, function(index, value){
+					data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Email visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+				});
+				$(element).html(data);
+			}
+			if(data.match(phoneReg) != null){
+				matchedStr = data.match(phoneReg);
+				$.each(matchedStr, function(index, value){
+					data = data.replace(value, "<span class='f13 fontreg color11 showText'>&lt;Phone number visible on accept&gt;</span><span class='disp-none hiddenStr'>"+value+"</span>");
+				});
+				$(element).html(data);
+			}
+		}
+	});
+
+
+}

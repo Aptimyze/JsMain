@@ -139,6 +139,28 @@ class PHONE_VERIFIED_LOG extends TABLE{
                         throw new jsException($e);
                 }
         }
+        public function getLogForOtherNumberVerified($profileId,$number,$startDate,$endDate)
+        {
+                try
+                {       
+
+                        $sql = "SELECT * FROM jsadmin.PHONE_VERIFIED_LOG WHERE PROFILEID!=:PROFILEID AND PHONE_NUM=:PHONE_NUM AND ENTRY_DT BETWEEN :STARTDATE AND :ENDDATE ";
+                        $prep=$this->db->prepare($sql);
+                        $prep->bindValue(":PHONE_NUM",$number,PDO::PARAM_STR);
+                        $prep->bindValue(":STARTDATE",$startDate,PDO::PARAM_STR);
+                        $prep->bindValue(":ENDDATE",$endDate,PDO::PARAM_STR);
+                        $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_STR);
+                        $prep->execute();
+                        
+                        if($result = $prep->fetchAll(PDO::FETCH_ASSOC))
+                        return $result;
+                }
+                catch(PDOException $e)
+                {
+                        jsCacheWrapperException::logThis($e);
+                }
+        }
+
 
 public function insertEntry($profileid,$phoneType,$phoneNum,$msg,$opUsername){
                
@@ -157,6 +179,7 @@ public function insertEntry($profileid,$phoneType,$phoneNum,$msg,$opUsername){
                     $res->bindValue(":PHONETYPE", $phoneType, PDO::PARAM_STR);            
                     $res->bindValue(":TIME", (new DateTime)->format('Y-m-j H:i:s'), PDO::PARAM_STR);            
                     $res->execute();
+                    return $this->db->lastInsertId();
                 }
                 catch(PDOException $e)
                 {
@@ -164,6 +187,55 @@ public function insertEntry($profileid,$phoneType,$phoneNum,$msg,$opUsername){
                         throw new jsException($e);
                 }
     }
+        public function getVerifiedPhoneNumbers($profiles)
+        {
+                try{
+                        foreach($profiles as $k=>$p){
+                                if($str!='')
+                                        $str.=",";
+                                $str.=":PROFILEID".$k;
+                        }
+                        $sql = "SELECT DISTINCT(PHONE_NUM) FROM  jsadmin.PHONE_VERIFIED_LOG WHERE PROFILEID IN (".$str.")";
+                        $prep=$this->db->prepare($sql);
+                        foreach($profiles as $k=>$p)
+                                $prep->bindValue(":PROFILEID".$k,$p,PDO::PARAM_STR);
+                        $prep->execute();
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+				$phone =$result['PHONE_NUM'];
+				if($phone)
+	                                $dataArr[]=$phone;
+			}
+                        return $dataArr;
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+        }
+        public function getVerifiedProfiles($phoneNumber)
+        {
+                try{
+                        foreach($phoneNumber as $k=>$p){
+                                if($str!='')
+                                        $str.=",";
+                                $str.=":PHONE_NUM".$k;
+                        }
+                        $sql = "SELECT DISTINCT(PROFILEID) FROM  jsadmin.PHONE_VERIFIED_LOG WHERE PHONE_NUM IN (".$str.")";
+                        $prep=$this->db->prepare($sql);
+                        foreach($phoneNumber as $k=>$p)
+                                $prep->bindValue(":PHONE_NUM".$k,$p,PDO::PARAM_STR);
+                        $prep->execute();
+                        while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+				$pid =$result['PROFILEID'];
+				if($pid)
+	                                $dataArr[]=$pid;
+			}
+                        return $dataArr;
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+        }
+
 
 
 

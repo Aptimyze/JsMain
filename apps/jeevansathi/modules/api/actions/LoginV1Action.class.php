@@ -43,7 +43,9 @@ class LoginV1Action extends sfActions
         	//print_r($count);die;
         	if($count>2)
         	{
-        		setcookie('loginAttempt','1',time()+86400000,"/");
+        		//setcookie('loginAttempt','1',time()+86400000,"/");
+        		if(!$request->getcookie('loginAttemptNew'))
+					setcookie("loginAttemptNew", '1', time() + 86400,"/");
         		if($captcha!=1)
         		{
         			if(MobileCommon::isDesktop())
@@ -150,8 +152,9 @@ class LoginV1Action extends sfActions
 	else
 	{
 		if($result[ACTIVATED]=='D'){
-			$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_DELETED);
+			$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_ACCESS);
 			//ValidationHandler::getValidationHandler("","Profile with this email address has been deleted");
+			$this->trackDeleteProfileAttempts($email);
 		}
 		else if($result[PROFILEID] && $result[GENDER]=="")
 		{
@@ -209,4 +212,26 @@ class LoginV1Action extends sfActions
 	} 
 	die;
     }
+
+	/**
+	 * trackDeleteProfileAttempts
+	 * To track the attempts of those profiles who marked delete
+	 * @param $email
+	 */
+	private function trackDeleteProfileAttempts($email)
+	{
+		$channel = 'Desktop';
+		if(MobileCommon::isAndroidApp()) {
+			$channel = 'Android';
+		} else if(MobileCommon::isIOSApp()) {
+			$channel = 'Ios';
+		} else if(MobileCommon::isOldMobileSite()) {
+			$channel = 'MS';
+		}  else if(MobileCommon::isNewMobileSite()) {
+			$channel = 'NewMS';
+		}
+		$trackObj = new REGISTER_TRACK_REUSAGE_EMAIL_DELETED();
+		$trackObj->insert($email,$channel,'LOGIN');
+		unset($trackObj);
+	}
 }

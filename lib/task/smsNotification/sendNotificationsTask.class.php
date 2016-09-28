@@ -34,7 +34,8 @@ $this->addOptions(array(
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
         $this->notificationKey = $arguments["notificationKey"]; // NEW / EDIT
-	$this->scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
+	$this->scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS('newjs_masterRep');
+	$this->scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 	$maxIdData = $this->scheduledAppNotificationObj->getArray("","","","max(ID) as maxId");
 	$this->maxId = $maxIdData[0][maxId];
 	$this->notificationSenderObj = new NotificationSender;
@@ -47,13 +48,12 @@ $this->addOptions(array(
 			foreach($details as $k=>$v)
 			{
 				$profileDetails[$v['PROFILEID']]=$v;
-				$profileDetails[$v['PROFILEID']]['PHOTO_URL']="D";
 				$idArr[] = $v['ID'];
 			}
 			
 			//filter profiles based on notification count
 			if(in_array($this->notificationKey,NotificationEnums::$scheduledNotificationPriorityArr))
-				$filteredProfileDetails = $this->notificationSenderObj->filterProfilesBasedOnNotificationCount($profileDetails,$this->notificationKey);
+				$filteredProfileDetails = $this->notificationSenderObj->filterProfilesBasedOnNotificationCountNew($profileDetails,$this->notificationKey);
 			else
 				$filteredProfileDetails = $profileDetails;
 			unset($profileDetails);
@@ -72,7 +72,7 @@ $this->addOptions(array(
   {
 	$this->notificationSenderObj->sendNotifications($profileDetails);
 	if(is_array($idArr))
-		$this->scheduledAppNotificationObj->updateSent($idArr,$this->notificationKey,NotificationEnums::$PENDING);
+		$this->scheduledAppNotificationUpdateSentObj->updateSent($idArr,$this->notificationKey,NotificationEnums::$PENDING);
   }
   
   private function getDetails()

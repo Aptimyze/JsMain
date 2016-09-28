@@ -22,6 +22,7 @@ include ("../profile/functions.inc");
 include ("../billing/comfunc_sums.php");
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/authentication.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 $protect_obj = new protect;
 global $screen_time;
@@ -29,6 +30,9 @@ global $FLAGS_VAL;
 $dbObj = new newjs_OBSCENE_WORDS();
 global $obscene;
 $obscene = $dbObj->getObsceneWord();
+
+$nameOfUserObj = new NameOfUser;
+
 if (authenticated($cid)) {
 	$user = getname($cid);
 	//Memcache functionality added by Vibhor for avoiding users to refresh the page using F5
@@ -110,6 +114,7 @@ if (authenticated($cid)) {
 						}
 					}
 					if ($fullname != "") $screen = setFlag("NAME", $screen);
+					$arrProfileUpdateParams = array();
 					for ($i = 0;$i < count($NAME);$i++) {
 						if ($NAME[$i] == "EMAIL") {
 							$email = addslashes(stripslashes($_POST[$NAME[$i]]));
@@ -120,12 +125,16 @@ if (authenticated($cid)) {
 								$email = 'abc' . $pid . "@jsxyz.com";
 								$str.= $NAME[$i] . " = '$email',";
 								$verify_email = 'Y';
+								$arrProfileUpdateParams[$NAME[$i]] = $email;
 							} else {
 								$email = addslashes(stripslashes($_POST[$NAME[$i]]));
 								if (checkemail($email)) {
 									header("Location: $SITE_URL/jsadmin/screen_new.php?cid=$cid&email_err=1&email_filled=$email&email_profileid=$pid&val=$val");
 									die;
-								} else $str.= $NAME[$i] . " = '" . addslashes(stripslashes($_POST[$NAME[$i]])) . "' ,";
+								} else {
+									$str.= $NAME[$i] . " = '" . addslashes(stripslashes($_POST[$NAME[$i]])) . "' ,";
+									$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($_POST[$NAME[$i]]));
+								}
 							}
 						} else {
 							if ($NAME[$i] == "DTOFBIRTH") {
@@ -145,10 +154,13 @@ if (authenticated($cid)) {
 											$subject = "Change of Date of Birth";
 											$mail_msg = "Dear $username,\nThis is with reference to the Date of Birth selected by you in the registration form. The one selected by you from the drop down values and the one mentioned as a text does not match. We are taking the date of birth mentioned as text as correct and are making the change in the date of birth field. Please write back to us with the exact date of birth if it is incorrect within three days of receiving this mail.\n\nWishing you success in your search.\n\nRegards,\nTeam Jeevansathi";
 											//send_email($to_notify,nl2br($mail_msg),$subject,"","","ankit.aggarwal@jeevansathi.com","","text/html");
-											$str.= "AGE = '" . getAge($DTOFBIRTH) . "' , ";
+											$iAge = getAge($DTOFBIRTH);
+											$str.= "AGE = '" . $iAge . "' , ";
 											update_astro_dob($pid, $DTOFBIRTH);
+											$arrProfileUpdateParams["AGE"] = $iAge;
 										}
 										$str.= $NAME[$i] . " = '" . addslashes(stripslashes($DTOFBIRTH)) . "' ,";
+										$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($DTOFBIRTH));
 									}
 								}
 							} elseif ($NAME[$i] == "GENDER") {
@@ -161,6 +173,7 @@ if (authenticated($cid)) {
 									$do_gender_related_changes = 1;
 								}
 								$str.= $NAME[$i] . " = '" . addslashes(stripslashes($_POST[$NAME[$i]])) . "' ,";
+								$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($_POST[$NAME[$i]]));
 							} elseif ($NAME[$i] == "USERNAME") {
 								if ($gen_new) {
 									$Username = username_gen();
@@ -168,13 +181,17 @@ if (authenticated($cid)) {
 									$gen_new = 0;
 									makes_username_changes($pid, $Username);
 									$str.= $NAME[$i] . " = '" . addslashes(stripslashes($Username)) . "' ,";
+									$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($Username));
 								}
 							} elseif ($NAME[$i] == "MSTATUS") {
 								$mstatus = addslashes(stripslashes($_POST[$NAME[$i]]));
 								if ($mstatus == '') {
 									header("Location: $SITE_URL/jsadmin/screen_new.php?cid=$cid&mstatus_err=1&email_profileid=$pid&val=$val");
 									die;
-								} else $str.= $NAME[$i] . " = '" . addslashes(stripslashes($mstatus)) . "' ,";
+								} else {
+									$str .= $NAME[$i] . " = '" . addslashes(stripslashes($mstatus)) . "' ,";
+									$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($mstatus));
+								}
 							}
 							/*
 							                 elseif($NAME[$i]=="PHONE_RES")
@@ -185,9 +202,9 @@ if (authenticated($cid)) {
 							*/
 							else {
 								$str.= $NAME[$i] . " = '" . addslashes(stripslashes($_POST[$NAME[$i]])) . "' ,";
+								$arrProfileUpdateParams[$NAME[$i]] = $_POST[$NAME[$i]];
 							}
 						}
-						
 						if ($NAME[$i] == "YOURINFO") {
 							if(strlen($_POST[$NAME[$i]])<100){
 								
@@ -215,7 +232,7 @@ if (authenticated($cid)) {
 					}
 						
 				}
-			}
+			}		
 				if ($_POST['PHONE_FLAG'] == "I") phoneUpdateProcess($pid, '', '', 'I', 'OPS', $user);
 				if ($fullname) $str_name = "NAME=" . "'" . addslashes(stripslashes($_POST[$fullname])) . "'";
 				if ($str_name) $count_screen = count($NAME) + 1;
@@ -239,9 +256,11 @@ if (authenticated($cid)) {
 						}
 					}
 					$count_screen = $count_screen + count($NAME_EDU);
+					$arrEducationUpdateParams = array();
 					foreach ($NAME_EDU as $value) {
 						$str_edu.= $value . " = '" . addslashes(stripslashes($_POST[$value])) . "' ,";
 						$screen = setFlag($value, $screen);
+						$arrEducationUpdateParams[$value] = addslashes(stripslashes($_POST[$value]));
 					}
 					$str_edu = rtrim($str_edu, ",");
 				}
@@ -257,9 +276,11 @@ if (authenticated($cid)) {
 						}
 					}
 					$count_screen = $count_screen + count($NAME_CONTACT);
+					$arrContactUpdateParams = array();
 					foreach ($NAME_CONTACT as $value) {
 						$str_contact.= $value . " = '" . addslashes(stripslashes($_POST[$value])) . "' ,";
 						$screen = setFlag($value, $screen);
+						$arrContactUpdateParams[$value] = addslashes(stripslashes($_POST[$value]));
 					}
 					$str_contact = rtrim($str_contact, ",");
 				}
@@ -275,9 +296,11 @@ if (authenticated($cid)) {
 						}
 					}
 					$count_screen = $count_screen + count($NAME_HOB);
+					$arrHobbyUpdateParams = array();
 					foreach ($NAME_HOB as $value) {
 						$str_hob.= $value . " = '" . addslashes(stripslashes($_POST[$value])) . "' ,";
 						$screen = setFlag($value, $screen);
+						$arrHobbyUpdateParams[$value] = addslashes(stripslashes($_POST[$value]));
 					}
 					$str_hob = rtrim($str_hob, ",");
 				}
@@ -306,44 +329,80 @@ if (authenticated($cid)) {
 						mysql_query_decide($sqlbill) or die("$sqlbill" . mysql_error_js());
 					}
 				}
-				if ($str) $sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
-				else $sql = " UPDATE newjs.JPROFILE set SCREENING='$screen'";
-				if ($str_edu) {
-					$sql_ed = "UPDATE newjs.JPROFILE_EDUCATION set $str_edu where PROFILEID=$pid";
-					mysql_query_decide($sql_ed) or die("$sql_ed" . mysql_error_js()."at line 278");
+//				if ($str) $sql = " UPDATE newjs.JPROFILE set $str, SCREENING='$screen'";
+//				else $sql = " UPDATE newjs.JPROFILE set SCREENING='$screen'";
+        
+        $objUpdate = JProfileUpdateLib::getInstance();
+        //JPROFILE Columns
+        $arrProfileUpdateParams['SCREENING']= $screen;
+				if ($str_edu) {         
+					//$sql_ed = "UPDATE newjs.JPROFILE_EDUCATION set $str_edu where PROFILEID=$pid";
+					//mysql_query_decide($sql_ed) or die("$sql_ed" . mysql_error_js()."at line 278");
+          $result = $objUpdate->updateJPROFILE_EDUCATION($pid,$arrEducationUpdateParams);
+          if(false === $result) {
+            die('Mysql error while updating JPROFILE_EDUCATION at line 328');
+          }
+          unset($arrEducationUpdateParams);
 				}
 				if ($str_contact) {
           
           $memObject=new UserMemcache;
           $memObject->delete("JPROFILE_CONTACT_".$profileid);
           unset($memObject);
-					$sql_contact = "UPDATE newjs.JPROFILE_CONTACT set $str_contact where PROFILEID=$pid";
-					mysql_query_decide($sql_contact) or die("$sql_contact" . mysql_error_js()."at line 282");
+					//$sql_contact = "UPDATE newjs.JPROFILE_CONTACT set $str_contact where PROFILEID=$pid";
+          //mysql_query_decide($sql_contact) or die("$sql_contact" . mysql_error_js()."at line 282");
+          
+          $result = $objUpdate->updateJPROFILE_CONTACT($pid,$arrContactUpdateParams);
+          if(false === $result) {
+            die('Mysql error while updating JPROFILE_CONTACT at line 342');
+          }
+          unset($arrContactUpdateParams);
 				}
+        
 				if ($str_hob) {
-					$sql_hob = "UPDATE newjs.JHOBBY set $str_hob where PROFILEID=$pid";
-					mysql_query_decide($sql_hob) or die("$sql_hob" . mysql_error_js()."at line 286");
+//					$sql_hob = "UPDATE newjs.JHOBBY set $str_hob where PROFILEID=$pid";
+//					mysql_query_decide($sql_hob) or die("$sql_hob" . mysql_error_js()."at line 286");
+          
+          $result = $objUpdate->updateJHOBBY($pid,$arrHobbyUpdateParams);
+          if(false === $result) {
+            die('Mysql error while updating JHOBBY at line 357');
+          }
+          unset($arrHobbyUpdateParams);
 				}
+        
 				if ($fullname) {
 					$fname = addslashes(stripslashes($_POST[$fullname]));
 					$sql_name = "UPDATE incentive.NAME_OF_USER set NAME='$fname' where PROFILEID=$pid";
+                                        $nameOfUserObj->removeNameFromCache($pid);
 					mysql_query_decide($sql_name) or die("$sql_name" . mysql_error_js());
 				}
-				if ($verify_email) $sql.= ", VERIFY_EMAIL='$verify_email'";
+        if ($verify_email) {
+          //$sql.= ", VERIFY_EMAIL='$verify_email'";
+          $arrProfileUpdateParams['VERIFY_EMAIL'] = $verify_email;
+        }
 				if ($INCOMPLETE != "")
 				{
-					$sql.= ",SCREENING=0,PREACTIVATED='$activated',ACTIVATED='N' , INCOMPLETE='Y'";
+					//$sql.= ",SCREENING=0,PREACTIVATED='$activated',ACTIVATED='N' , INCOMPLETE='Y'";
+          $arrProfileUpdateParams['SCREENING'] = 0;
+          $arrProfileUpdateParams['PREACTIVATED'] = $activated;
+          $arrProfileUpdateParams['ACTIVATED'] = 'N';
+          $arrProfileUpdateParams['INCOMPLETE'] = 'Y';
+          
 					$sql_incomplete = "insert ignore into MIS.INCOMPLETE_SCREENING(`PROFILEID`,`DATE`) values($pid,now())";
 					mysql_query_decide($sql_incomplete) or die("$sql_incomplete" . mysql_error_js());
 				}
 				else if ($activated == 'U' || ($activated == 'H' && ($preactivated == 'U' || $preactivated == 'N'))) {
-					$sql.= ", PREACTIVATED='$activated',ACTIVATED='Y'";
+					//$sql.= ", PREACTIVATED='$activated',ACTIVATED='Y'";
+          $arrProfileUpdateParams['PREACTIVATED'] = $activated;
+          $arrProfileUpdateParams['ACTIVATED'] = 'Y';
           if ($val == "new") {
             $updateFTOState = 1;
           }
           else {
             $updateFTOState = 0;
           }
+					$addInUserCreation = 1; //Adding entry in chat user
+
 					//Adding entry to bot_jeevansathi.MAIL_INVITE table if email of gmail
 					//Required to give them gmail chat invite
 					//if(strstr($to_notify,'@gmail.com') && $service_mes=='S')
@@ -361,9 +420,13 @@ if (authenticated($cid)) {
 				 $sql.= "ACTIVATED = 'N' AND INCOMPLETE ='Y' ";*/
 				/*else
 				 $sql.= "ACTIVATED = 'Y' ";*/
-				$sql.= " where PROFILEID = '$pid' and activatedKey=1 ";
-				mysql_query_decide($sql) or die("$sql" . mysql_error_js());
-
+				//$sql.= " where PROFILEID = '$pid' and activatedKey=1 ";
+				//mysql_query_decide($sql) or die("$sql" . mysql_error_js());
+        //Update JPROFILE Store
+        $result = $objUpdate->editJPROFILE($arrProfileUpdateParams,$pid,'PROFILEID','activatedKey=1');
+        if(false === $result) {
+          die('Mysql error while updating JPROFILE at line 385');
+        }
 				/* duplication_fields_insertion() call inserted by Reshu Rajput, here "invalid_dup_fields" is any dummy string
                                 * to be passed to use the older version of the function with least modifications
                                 * This call is made to do the insertion in duplicates_check_fields table when new account is there
@@ -377,6 +440,7 @@ if (authenticated($cid)) {
           $action = FTOStateUpdateReason::SCREEN;
           $profileObj->getPROFILE_STATE()->updateFTOState($profileObj,$action);
         }
+
 				//Log modified values
 				$log_name = $name;
 				$log_val = array();
@@ -558,7 +622,7 @@ if (authenticated($cid)) {
 			$smarty->assign("myprofilechecksum", $myprofilechecksum);
 			$checksum = $protect_obj->js_encrypt($myprofilechecksum, $to);
 			$smarty->assign("CHECKSUM", $checksum);
-			
+		
 			if ($val == 'edit') {
 				
 				$cScoreObject = ProfileCompletionFactory::getInstance(null,null,$pid);
@@ -566,6 +630,7 @@ if (authenticated($cid)) {
 				$arrMsgDetails= $cScoreObject->GetIncompleteDetails();
 				$arrLinkDetails = array(
 				'ME'=>"ABOUT_ME",
+                                'BASIC'=>"BASIC_DETAILS",
 				'CAREER'=>"EDU_OCC",
 				'RELIGION'=>"PROFILE_RELIGION",
 				'ASTRO'=>"UPLOAD_HOROSCOPE",
@@ -715,8 +780,9 @@ if (authenticated($cid)) {
 							mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
 							if (mysql_affected_rows_js()) {
 								if ($val == "new") {
-									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
-									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+//									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
+//									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                    markProfileUnderScreening($profileid);
 								}
 								$stop = 1;
 								break;
@@ -741,8 +807,9 @@ if (authenticated($cid)) {
 						mysql_query_decide($sql_i) or die("$sql_i" . mysql_error_js());
 						if (mysql_affected_rows_js()) {
 							if ($val == "new") {
-								$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
-								mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+//								$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
+//								mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                markProfileUnderScreening($profileid);
 							}
 							$stop = 1;
 							break;
@@ -766,8 +833,9 @@ if (authenticated($cid)) {
 							mysql_query_decide($sql_i) or die("$sql_i" . mysql_error_js());
 							if (mysql_affected_rows_js()) {
 								if ($val == "new") {
-									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
-									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+//									$sql_u = "UPDATE newjs.JPROFILE SET ACTIVATED='U' WHERE PROFILEID='$profileid'";
+//									mysql_query_decide($sql_u) or die("$sql_u" . mysql_error_js());
+                  markProfileUnderScreening($profileid);
 								}
 								$stop = 1;
 								break;
@@ -929,8 +997,8 @@ if (authenticated($cid)) {
 			$social_new_fields['FAV_VAC_DEST']['LABEL'] = 'Favourite Vacation Destination';
 			//defining allowed continuous number's limit.
 			$allowed_cont_num_len = 6;
-			if ($val == "new") $item = array("GENDER", "MSTATUS", "DTOFBIRTH", "PHOTO_DISPLAY");
-			else $item = array("GENDER", "PHOTO_DISPLAY");
+			if ($val == "new") $item = array("GENDER", "MSTATUS", "DTOFBIRTH");
+			else $item = array("GENDER");
 			foreach ($social_new_fields as $key => $value) {
 				if (!isFlagSet($key, $screen)) {
 					switch ($value['TBL']) {
@@ -1374,5 +1442,18 @@ function getAge($newDob) {
    		$resultstr=implode(',',array_values($result));
    		return $resultstr;
 	}
-
+  
+  /**
+   * markProfileUnderScreening
+   * @param type $iProfileID
+   */
+  function markProfileUnderScreening($iProfileID)
+  {
+    $objUpdate = JProfileUpdateLib::getInstance();
+    $arrFields = array('ACTIVATED'=>'U');
+    $result = $objUpdate->editJPROFILE($arrFields,$iProfileID,"PROFILEID");
+    if(false === $result) {
+      die('Mysql error while marking profile under screening at line 1410');
+    }
+  }
 ?>

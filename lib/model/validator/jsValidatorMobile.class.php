@@ -69,6 +69,19 @@ class jsValidatorMobile extends sfValidatorBase
         $isdkeys=@array_keys(FieldMap::getFieldLabel("isdcode",'',1));
         if(!in_array($isdval,$isdkeys))
        	throw new sfValidatorError($this,'err_isd_code', array('value' => $value));
+	if($value['mobile']!='')
+	{       
+                if($value['isd'])
+                    $valueToCheck = $value['isd'].$value['mobile'];
+                else
+                    $valueToCheck = $value['mobile'];
+		$negativeProfileListObj = new incentive_NEGATIVE_LIST;
+		$negativeMobile = $negativeProfileListObj->checkEmailOrPhone("PHONE_NUM",$valueToCheck);
+		if($negativeMobile)
+		{
+			throw new sfValidatorError($this, 'err_phone_revoke', array('value' => $value['mobile']));
+		}
+	}
 
 	return $value;
   }

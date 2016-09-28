@@ -61,6 +61,10 @@ class FieldForm extends sfForm
 	  $bExecuteNative_PlaceUpdate = false;
 	  $this->formValues=$this->getValues();
 	  foreach($this->formValues as $field_name=>$value){
+		if(in_array($field_name,ProfileEnums::$saveBlankIfZeroForFields) && $value=="0")
+		{
+			$value = "";
+		}
 		 // if($value!==null){
 		  $field_name=strtoupper($field_name);
 		  $field_obj=$this->fieldObjArr[$field_name];
@@ -73,7 +77,7 @@ class FieldForm extends sfForm
 			  //Normal case - only one column to be updated for one form field
 			  $column_name=$column_name_arr[0];
 			  switch($table_name){
-				 case "JPROFILE":
+				case "JPROFILE":
 					if(array_key_exists($column_name,$this->lengthArr)  && $value)
 					{
 						$value=htmlentities($value);
@@ -87,43 +91,46 @@ class FieldForm extends sfForm
 						$bExecuteNative_PlaceUpdate = true;
 					}
 					 break;
-				 case  "JPROFILE_EDUCATION":
+				case  "JPROFILE_EDUCATION":
 					 $jprofileEducationArr[$column_name]=$value;
 					 break;
-				  case "JPROFILE_CONTACT":
+				case "JPROFILE_CONTACT":
 					  $jprofileContactArr[$column_name]=$value;
 					  break;
-				  case "JHOBBY":
+				case "JHOBBY":
 					if($column_name=="HOBBY")
 						$hobbyArr[$column_name][$field_name]=$value;
 					else
 					  $hobbyArr[$column_name]=$value;
 					  break;
-				  case "JP_CHRISTIAN":
+				case "JP_CHRISTIAN":
 						 $jpChristArr[$column_name]=$value;
 					  break;
-					case "JP_MUSLIM":
-						 $jpMuslimArr[$column_name]=$value;
-					  break;
-					 case "JP_SIKH":
-						 $jpSikhArr[$column_name]=$value;
-					  break;
-					  case "JP_PARSI":
-						 $jpParsiArr[$column_name]=$value;
-					  break;
-					   case "JP_JAIN":
-						 $jpJainArr[$column_name]=$value;
-					  break;
-					 case "NAME_OF_USER":
-						 $incentiveUsernameArr[$column_name]=$value;
-					  break;
-           case "NATIVE_PLACE":
+                                case "JP_MUSLIM":
+                                         $jpMuslimArr[$column_name]=$value;
+                                  break;
+                                case "JP_SIKH":
+                                         $jpSikhArr[$column_name]=$value;
+                                  break;
+                                case "JP_PARSI":
+                                         $jpParsiArr[$column_name]=$value;
+                                  break;
+                                case "JP_JAIN":
+                                         $jpJainArr[$column_name]=$value;
+                                  break;
+                                case "NAME_OF_USER":
+                                         $incentiveUsernameArr[$column_name]=trim($value);
+                                  break;
+                                case "NATIVE_PLACE":
 						$nativePlaceArr[$column_name] = $value;
 						if($column_name=="NATIVE_COUNTRY"&&$value!='51')
 						{
 							$nativePlaceArr['NATIVE_CITY']='';
 							$nativePlaceArr['NATIVE_STATE']='';
 						}
+					  break;
+                                case "VERIFICATION_DOCUMENT":
+						$verificationArr[$field_name] = $value;
 					  break;
 			  }
 			  //Need to ask ?
@@ -159,17 +166,17 @@ class FieldForm extends sfForm
 				  }
 		  }
 	  }
-	  
 		//Native Place Update
     if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$this->loggedInObj->getPROFILEID();
 						
-      $nativePlaceObj = new NEWJS_NATIVE_PLACE;
+      $nativePlaceObj = ProfileNativePlace::getInstance();
       $this->checkForChange($nativePlaceArr,'NativePlace');
       if ($nativePlaceObj->InsertRecord($nativePlaceArr) === 0) {
         unset($nativePlaceArr[PROFILEID]);
         $nativePlaceObj->UpdateRecord($this->loggedInObj->getPROFILEID(), $nativePlaceArr);
       }
+                        
 
       //Log this update
       $nativePlaceArr['PROFILEID'] = $this->loggedInObj->getPROFILEID();
@@ -177,6 +184,10 @@ class FieldForm extends sfForm
       $nativePlaceObj = new JProfile_NativePlace($this->loggedInObj);
       $nativePlaceObj->LogUpdate($nativePlaceArr);
 	  }
+          if(count($verificationArr)){
+                $serviceObj = new ProfileDocumentVerificationByUserService();
+                $serviceObj->performDbInsert($this->loggedInObj->getPROFILEID(), $verificationArr);
+          }
 //		if($bExecuteNative_PlaceUpdate)
 //		{
 //			$objNativePlace = new JProfile_NativePlace;
@@ -284,26 +295,32 @@ class FieldForm extends sfForm
             }
 					}
 				}
+			  }
+                                if($bSet_NativePlaceBit)
+                                {
+                                        $jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL
+                                        $screen_flag = Flag::setFlag("ANCESTRAL_ORIGIN", $screen_flag);
+                                }
+                                if(count($incentiveUsernameArr) && array_key_exists("NAME",$incentiveUsernameArr))
+                                {
+                                     if($incentiveUsernameArr['NAME'])
+                                     {
+                                      $nameOfUserObj = new NameOfUser();
+                                      $nameOfUserArr['NAME']=$nameOfUserObj->filterName($incentiveUsernameArr['NAME']);
+                                      $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($incentiveUsernameArr['NAME'],$this->loggedInObj->getGENDER());
+                                        if($isNameAutoScreened)
+                                        {
+                                                $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$screen_flag);
+                                        }
+                                      }
+                                      if(!$incentiveUsernameArr['NAME'] || !$isNameAutoScreened)
+                                      {
+                                                $screen_flag = Flag::removeFlag($FLAGID="name", $screen_flag);
+                                      }
+                                }
         
-				if($bSet_NativePlaceBit)
-				{
-					$jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL
-					$screen_flag = Flag::setFlag("ANCESTRAL_ORIGIN", $screen_flag);
-				}	
-				
-				if(count($incentiveUsernameArr))
-				{
-					foreach($incentiveUsernameArr as $field=>$value){
-						if($value){
-							if(in_array(strtolower($field),$flag_arr)){
-								$screen_flag = Flag::removeFlag($field, $screen_flag);
-							}
-						}
-					}
-				}
 				if($screen_flag!=$this->loggedInObj->getSCREENING())
 					$jprofileFieldArr['SCREENING']=$screen_flag;
-			  }
 
 			//Logging array for edit profiles
 				$editLogArr=array();
@@ -421,10 +438,15 @@ class FieldForm extends sfForm
 			
 			
 			//NAME OF USER (INCENTIVE TABLE)
+
 			if(count($incentiveUsernameArr) && $this->checkForChange($incentiveUsernameArr,'NameUser'))
 			{
-				$dbIncentive=new incentive_NAME_OF_USER();
-				$dbIncentive->insertName($profileid,$incentiveUsernameArr[NAME]);
+				$nameOfUserObj = new NameOfUser();
+				$nameData = $nameOfUserObj->getNameData($profileid);
+				if(!empty($nameData))
+					$nameOfUserObj->updateName($profileid,$incentiveUsernameArr);
+				else
+					$nameOfUserObj->insertName($profileid,$incentiveUsernameArr['NAME'],$incentiveUsernameArr['DISPLAY']);
 			}
 			//incomplete users 
 			$now = date("Y-m-d H:i:s");
@@ -540,10 +562,17 @@ class FieldForm extends sfForm
 					$autoExObj->replace($profileid,'E',date("Y-m-d H:i:s"));
 					//end
 					insert_in_old_email($profileid, $this->loggedInObj->getEMAIL());
+					
+					$jprofileFieldArr['VERIFY_EMAIL']='N';
+					$this->emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($profileid,$jprofileFieldArr['EMAIL']);
+
 				}
 				$this->checkForChange($jprofileFieldArr);
 				//update in jprofile
 				$this->loggedInObj->edit($jprofileFieldArr);
+				if($this->emailUID)
+				(new emailVerification())->sendVerificationMail($profileid,$this->emailUID);
+					
 				
 			}
 			
@@ -816,9 +845,12 @@ class FieldForm extends sfForm
     }
     elseif($table == 'NameUser')
     {
-       $storeObj = new incentive_NAME_OF_USER;
-       $arrResult = array();
-       $arrResult['NAME'] = $storeObj->getName($this->loggedInObj->getPROFILEID());
+        $nameObj= new NameOfUser;
+        $nameData = $nameObj->getNameData($this->loggedInObj->getPROFILEID());
+        $arrResult = array();
+        if(!empty($nameData))
+                $arrResult = $nameData[$this->loggedInObj->getPROFILEID()];
+        
        //if($orgiValue['NAME'])
        foreach ($paramArray as $key => $value) {
         $orig_value = $arrResult[$key];
@@ -828,7 +860,7 @@ class FieldForm extends sfForm
           $oriValueArr[$key] = $orig_value;
 				}
 			}
-      unset($storeObj);
+      unset($nameObj);
     }
 		else
 		{

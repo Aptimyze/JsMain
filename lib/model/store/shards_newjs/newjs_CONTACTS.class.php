@@ -186,7 +186,7 @@ public function getSendersPending($profileids)
 			if($seperator == 'spaceSeperator')
 				$result.= $row["PID"]." ";
 			else
-				$result[]=$row['SENDER'];
+				$result[]=$row['PID'];
 		}
 		return $result;
 	}
@@ -714,7 +714,7 @@ public function getSendersPending($profileids)
 				$sql = $sql.$str;
 			}
 			if($cnt)
-				$sql.=" AND COUNT=:COUNT ";
+			$sql.=" AND COUNT=:COUNT ";
 			$res=$this->db->prepare($sql);
 			$res->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
 			if($cnt)
@@ -1052,14 +1052,27 @@ public function getSendersPending($profileids)
         public function updateContactSeen($profileid,$type)
         {
         	try{
-        		if($type == ContactHandler::INITIATED)
+        		if($type == ContactHandler::INITIATED){
         			$SENDER_RECEIVER = "RECEIVER";
-        		elseif($type == ContactHandler::ACCEPT)
+        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED !='Y'" ;
+				}
+        		elseif($type == ContactHandler::ACCEPT){
         			$SENDER_RECEIVER = "SENDER";
-        		$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE";
+        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE";
+				}
+        		elseif($type == ContactHandler::FILTERED){
+					$SENDER_RECEIVER = "RECEIVER";
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED='Y'";
+				}					
+        		
         		$prep = $this->db->prepare($sql);
         		$prep->bindValue("PROFILEID",$profileid, PDO::PARAM_INT);
-        		$prep->bindValue("TYPE",$type,PDO::PARAM_STR);
+        		
+        		if($type == ContactHandler::FILTERED)
+					$prep->bindValue("TYPE",ContactHandler::INITIATED,PDO::PARAM_STR);
+				else
+					$prep->bindValue("TYPE",$type,PDO::PARAM_STR);
+					
         		$prep->execute();
         	}
         	catch(Execption $e){

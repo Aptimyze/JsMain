@@ -52,7 +52,7 @@ class MatchAlertsSearch extends SearchParamters
 	public function getSearchCriteria()
 	{
 		$this->setSEARCH_TYPE($this->stype);
-		$MatchAlerts = new MatchAlerts;
+		$MatchAlerts = new MatchAlerts();
 		$arr = $MatchAlerts->getProfilesWithOutSorting($this->pid);
 		$this->alertsDateConditionArr = $arr;
 		if($arr)
@@ -80,7 +80,7 @@ class MatchAlertsSearch extends SearchParamters
       return ;
     }
     
-    $obj = new seach_MATCH_ALERT_LAST_VISIT;
+    $obj = new seach_MATCH_ALERT_LAST_VISIT(SearchConfig::getSearchDb());
     $obj->ins($this->pid);
     $this->lastVistedTime = date("Y-m-d h:i:s");
     unset($obj);

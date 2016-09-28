@@ -48,7 +48,11 @@ class InboxMobileAppV1
 				"edu_level_new",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 			"ACCEPTANCES_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
@@ -69,7 +73,11 @@ class InboxMobileAppV1
 				"edu_level_new",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 			"INTEREST_SENT"=>Array(
 				"PROFILECHECKSUM",
@@ -91,7 +99,11 @@ class InboxMobileAppV1
 				"VERIFICATION_SEAL",
         "VERIFICATION_STATUS",
         "INTEREST_VIEWED_DATE",
-				"SEEN"
+				"SEEN",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
         ),
 			"ACCEPTANCES_SENT"=>Array(
 				"PROFILECHECKSUM",
@@ -111,7 +123,11 @@ class InboxMobileAppV1
 				"edu_level_new",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 			"MATCH_ALERT"=>Array(
 				"PROFILECHECKSUM",
@@ -132,7 +148,11 @@ class InboxMobileAppV1
 				"userloginstatus",
 				"IS_BOOKMARKED",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
                                 ),
 				"VISITORS"=>Array(
 				"PROFILECHECKSUM",
@@ -151,7 +171,11 @@ class InboxMobileAppV1
 				"edu_level_new",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				"SHORTLIST"=>Array(
 				"PROFILECHECKSUM",
@@ -170,7 +194,11 @@ class InboxMobileAppV1
 				"edu_level_new",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				"NOT_INTERESTED"=>Array(
 				"PROFILECHECKSUM",
@@ -190,7 +218,11 @@ class InboxMobileAppV1
 				"edu_level_new",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
                                 "NOT_INTERESTED_BY_ME"=>Array(
                                 "PROFILECHECKSUM",
@@ -209,7 +241,11 @@ class InboxMobileAppV1
                                 "edu_level_new",
                                 "userloginstatus",
                                 "VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
                                 ),
 				"PHOTO_REQUEST_RECEIVED"=>Array(
 				"PROFILECHECKSUM",
@@ -224,7 +260,8 @@ class InboxMobileAppV1
 				"ThumbailUrl",
 				"tuple_title_field",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"),
+                                "VERIFICATION_STATUS",
+                                "NAME_OF_USER",),
 				"MY_MESSAGE" => Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -233,7 +270,11 @@ class InboxMobileAppV1
 				"TIME",
 				"ThumbailUrl",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				
 				"CONTACTS_VIEWED"=>Array(
@@ -253,7 +294,11 @@ class InboxMobileAppV1
                                 "edu_level_new",
                                 "userloginstatus",
                                 "VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"),
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",),
 				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>Array(
                                 "PROFILECHECKSUM",
                                 "USERNAME",
@@ -272,7 +317,11 @@ class InboxMobileAppV1
                                 "edu_level_new",
                                 "userloginstatus",
                                 "VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"),
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",),
 
 				"FILTERED_INTEREST"=>Array(
 				"PROFILECHECKSUM",
@@ -293,7 +342,11 @@ class InboxMobileAppV1
 				"edu_level_new",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				),
 				"IGNORED_PROFILES" => Array(
             	"PROFILECHECKSUM",
@@ -315,7 +368,11 @@ class InboxMobileAppV1
 				"edu_level_new",
 				"userloginstatus",
 				"VERIFICATION_SEAL",
-                                "VERIFICATION_STATUS"),
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",),
 			);
 		self::$informationTypeFields     = Array(
 				"NEW_COUNT",
@@ -434,6 +491,7 @@ class InboxMobileAppV1
 					if (!$profile[$count]["thumbailurl"])
 						$profile[$count]["thumbailurl"]=PictureFunctions::getNoPhotoJSMS($tupleObj->getGENDER());					
 				}
+                                //$profile[$count]["location"] .= $this->getlocationWithNativeCity($profile[$count]);
 				if($infoKey=="SHORTLIST" || $infoKey == "NOT_INTERESTED" || $infoKey == "NOT_INTERESTED_BY_ME" || $infoKey == "PEOPLE_WHO_VIEWED_MY_CONTACTS" )
 				{
 					
@@ -517,12 +575,11 @@ class InboxMobileAppV1
 		else
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"];
 		$finalResponse["infotype"] = $infoKey;
-		if($infoKey!="MY_MESSAGE")
-		{
-			$finalResponse["currentPage"] = $displayObj[$infoKey]["CURRENT_NAV"];
-			$finalResponse["newCount"] = $displayObj[$infoKey]["NEW_COUNT"]?$displayObj[$infoKey]["NEW_COUNT"]:'0';
-			$finalResponse["nextPossible"] = $displayObj[$infoKey]["SHOW_NEXT"]?"true":"false";
-		}
+		
+		$finalResponse["currentPage"] = $displayObj[$infoKey]["CURRENT_NAV"];
+		$finalResponse["newCount"] = $displayObj[$infoKey]["NEW_COUNT"]?$displayObj[$infoKey]["NEW_COUNT"]:'0';
+		$finalResponse["nextPossible"] = $displayObj[$infoKey]["SHOW_NEXT"]?"true":"false";
+		
 		$finalResponse["contact_id"] = $displayObj[$infoKey]["contact_id"];
 		$temp= $displayObj[$infoKey]['VIEW_ALL_COUNT']?$displayObj[$infoKey]['VIEW_ALL_COUNT']:"0";	
 		$finalResponse["total"]="$temp";
@@ -589,11 +646,6 @@ class InboxMobileAppV1
 			}
 			return $text;
 		}
-                
-                
-        
-         
-           
                 
 }
 ?>

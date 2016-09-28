@@ -41,8 +41,6 @@ class desktopView extends DetailedViewApi
     $this->m_arrOut['posted_name'] = $this->m_objProfile->getDecoratedPersonHandlingProfile();
     $this->m_arrOut['religion'] = $this->m_objProfile->getDecoratedReligion();
     $this->m_arrOut['income'] = $this->m_objProfile->getDecoratedIncomeLevel();
-    if( $this->m_objProfile->getMSTATUS() != "N")
-        $this->m_arrOut['have_child'] =  ApiViewConstants::$hasChildren[$this->m_objProfile->getHAVECHILD()];
     $this->m_arrOut['documents_provided'] = $this->m_objProfile->getDecoratedID_PROOF_TYP();
     $subscription = $this->getMembershipType();
     $this->m_arrOut['subscription_icon'] = $this->getFormattedSubscription($subscription);
@@ -191,6 +189,11 @@ class desktopView extends DetailedViewApi
        $this->m_arrOut['dpp_mtongue'] = strip_tags($this->m_arrOut['dpp_mtongue']);
        $this->m_arrOut['dpp_occupation'] = strip_tags($this->m_arrOut['dpp_occupation']);
        $this->m_arrOut['dpp_have_children'] = $jPartnerObj->getDecoratedCHILDREN();
+       $state = $jPartnerObj->getDecoratedSTATE();
+       if($state && $this->m_arrOut['dpp_city'])
+           $this->m_arrOut['dpp_city'] = $state.','.$this->m_arrOut['dpp_city'];
+       elseif($state)
+           $this->m_arrOut['dpp_city'] = $state;
        if($jPartnerObj->getDecoratedNHANDICAPPED())
    $this->m_arrOut['dpp_natureHandi']= $jPartnerObj->getDecoratedNHANDICAPPED(); 
   }
@@ -672,6 +675,7 @@ class desktopView extends DetailedViewApi
 
       }
       $this->m_arrOut["verification_value"] = $this->verificationSeal;
+      $this->m_arrOut["verification_value_arr"] = array_unique($displaySeal);
 
     if($this->bResponseForEditView){
       $objEducation = $objProfile->getEducationDetail();
@@ -1052,6 +1056,14 @@ class desktopView extends DetailedViewApi
      $this->m_arrOut['my_verification_id'] = ApiViewConstants::getNullValueMarker();
     if($objProfile->getID_PROOF_TYP() && $objProfile->getID_PROOF_TYP()!=ApiViewConstants::getNullValueMarker() && $objProfile->getID_PROOF_NO() && $objProfile->getID_PROOF_NO()!=ApiViewConstants::getNullValueMarker()){
       $this->m_arrOut['my_verification_id'] = $objProfile->getDecoratedID_PROOF_TYP() .' - ' . $objProfile->getID_PROOF_NO();
+    }
+    if($this->bResponseForEditView){
+        $verifyDocsObj = new ProfileDocumentVerificationByUserService();
+        $this->Docs = $verifyDocsObj->getDocumentsList($objProfile->getPROFILEID()); 
+        if($this->Docs){
+            $this->m_arrOut['addr_proof_type'] = $verifyDocsObj->getDecoratedProof('addr_proof_type', $this->Docs['ADDR']['PROOF_TYPE']);
+            $this->m_arrOut['id_proof_type'] = $verifyDocsObj->getDecoratedProof('id_proof_type', $this->Docs['ID']['PROOF_TYPE']);
+        }
     }
   }
   

@@ -9,7 +9,7 @@
 
 ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
     <!--start:help widget-->
-    ~include_component('common', 'helpWidget')`
+    ~include_component('common', 'helpWidget', ['hideHelpMenu'=>'true'])`
     <!--end:help widget-->
 ~/if`
 <!--start:banner-->
@@ -152,7 +152,7 @@
                             <div class="basic">
                                 <ul>
                                     <li class="pl17"><a href="http://www.99acres.com" target="_blank" title="99acres.com"><i class="headfootsprtie acre"></i></a></li>
-                                    <li class="pl17"><a href="http://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
+                                    <li class="pl17"><a href="https://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
                                     <li class="pl17"><a href="http://www.naukrigulf.com" target="_blank" title="naukrigulf"><i class="headfootsprtie ng"></i></a></li>
                                     <li class="pl30"><a href="http://www.shiksha.com" target="_blank" title="shiksha"><i class="headfootsprtie shiksha"></i></a></li>
                                 </ul>
@@ -188,13 +188,17 @@
 <!--end:footer-->
 <script type="text/javascript">
     $(window).load(function(){
-        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay'`
+        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index')`
             ~if $profileid`
                 var udObj = '~CommonUtility::getFreshDeskDetails($profileid)`';
                 var userDetails = $.parseJSON(udObj);
                 populateFreshDeskGlobal(userDetails['username'], userDetails['email']);
-                ~if $module eq 'membership'`
+                ~if $module eq 'membership' || $fromSideLink eq '1'`
                     popupFreshDeskGlobal(userDetails['username'], userDetails['email']);
+                ~/if`
+            ~else`
+                ~if $fromSideLink eq '1'`
+                    popupFreshDeskGlobal("", "");
                 ~/if`
             ~/if`
         ~/if`
@@ -204,7 +208,28 @@
         ~/if`
     });
 </script>
-~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay'`
+<!-- Begin Inspectlet Embed Code -->
+<script type="text/javascript" id="inspectletjs" > 
+window.__insp = window.__insp || [];
+__insp.push(['wid', 1937430883]);
+(function () {
+    function ldinsp() {
+        if (typeof window.__inspld != "undefined") return;
+        window.__inspld = 1;
+        var insp = document.createElement('script');
+        insp.type = 'text/javascript';
+        insp.async = true;
+        insp.id = "inspsync";
+        insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(insp, x);
+    };
+    setTimeout(ldinsp, 500);
+    document.readyState != "complete" ? (window.attachEvent ? window.attachEvent('onload', ldinsp) : window.addEventListener('load', ldinsp, false)) : ldinsp();
+})(); 
+</script>
+<!-- End Inspectlet Embed Code -->
+~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index')`
     ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
         ~include_partial('global/freshDesk')`
     ~/if`

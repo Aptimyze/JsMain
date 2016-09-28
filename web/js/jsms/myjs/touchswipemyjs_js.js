@@ -34,7 +34,7 @@
             ob._maxindex=ob._tupleIndex-ob._lmHidden;
             el.css("width", (transformX * (ob._tupleIndex+1) + 10) + "px");
             addIndex();
-if (ob._objId==7) bindSlider();
+            bindSlider();
         }
 
 
@@ -339,7 +339,7 @@ function loadnew(page_no, eleObj) {
                         y.find(".tuple_education").html(rsp[eleObj._mapString]['tuples'][i]["education"]);
                         y.find(".tuple_income").html(rsp[eleObj._mapString]['tuples'][i]["income"]);
                         y.find(".proChecksum").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
-                        y.find("#detailedProfileRedirect").attr('href','/profile/viewprofile.php?profilechecksum='+rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]+'&'+rsp[eleObj._mapString]['tracking']);
+                        y.find("#detailedProfileRedirect").attr('href','/profile/viewprofile.php?profilechecksum='+rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]+'&'+rsp[eleObj._mapString]['tracking']+"&total_rec="+rsp[eleObj._mapString]['view_all_count']+"&actual_offset="+(i+1)+"&contact_id="+rsp[eleObj._mapString]['contact_id']);
                         
                        //
                     }

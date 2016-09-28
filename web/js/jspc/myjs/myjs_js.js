@@ -1,4 +1,5 @@
 var clickEventType="click", cssBrowserAnimProperty=null;
+
 function topSliderInt(param){
 	if(param=="init")
 	{	
@@ -131,9 +132,8 @@ function postActionError(profileChecksum,type)
         $("#"+profileChecksum+"_BlankMsg_"+typeDiv).addClass("disp-none");
 }	
 
-function postActionMyjs(profileChecksum,URL,div,type,tracking)
+function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 {
-
   try{
 	var data = {};
 	var ifid = 1;
@@ -225,6 +225,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking)
             	else{
 	            	if(type=="interest")
 	            	{
+				callAfterContact();
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
 	            		$("#"+div).find("div.sendintr").removeClass("myjs-block sendintr").addClass("myjs-block-after");
 	            	}
@@ -233,6 +234,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking)
 	            		$("#"+div).find("div.intdisp").html("Accepted");
                   $("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
 	            		$("#"+div).find("div.intdisp").removeClass("intdisp");
+                                
 	            	}
 	            	else if(type=="decline")
 	            	{
@@ -257,7 +259,26 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking)
                     $( "#ACCEPTANCE_RESPONSE_"+tracking).addClass("txtc");
                   }
                 }
-	            }
+                
+                if(type=='decline' || type=='accept')
+                    {
+                        
+                    if(typeof filtered!='undefined' && filtered=='Y'){
+                        var filCount=$("#totalFilteredInterestReceived").html();
+                        filCount--;
+                        $("#totalFilteredInterestReceived").text(filCount);
+                        $("#seeAllFilteredCount").text(filCount);
+                    }
+                    if(typeof filtered!='undefined' && filtered=='N'){
+                        var intCount=$("#totalInterestReceived").html();
+                        intCount--;
+                        $("#totalInterestReceived").text(intCount);
+                        $("#seeAllIntCount").text(intCount);
+                    }
+
+                            
+                    }
+	       }
             }
             catch(e){
               console.log('getting error '+e+' in function success of postActionMyjs')
@@ -642,7 +663,7 @@ function generateShortCards(Object)
         for (i = 0; i < count; i++) {
          innerHtml=innerHtml+Object.innerHtml;
          innerHtml=innerHtml.replace(/\{\{PROFILE_SMALL_CARD1_ID\}\}/g,Object.data.profiles[i]["profilechecksum"]+Object.name+"_id");
-         innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+"&"+tracking);
+         innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+"&"+tracking+"&total_rec="+Object.data.total+"&actual_offset="+(i+1)+"&contact_id="+Object.data.contact_id);
          innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+Object.data.profiles[i]["profilepic120url"]+"'");
        }
        if(remainingCount!=0)

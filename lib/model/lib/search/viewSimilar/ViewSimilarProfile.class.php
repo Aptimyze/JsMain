@@ -209,7 +209,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
         }
 
         function getSimilarProfilesFromSearch($loggedIn, $viewed, $viewedGender, $includeCaste, $includeAwaitingContacts, $suggAlgoNoOfResults, $viewer = '') {
-                $profileObj = Profile::getInstance("newjs_bmsSlave", $viewed);
+                $profileObj = Profile::getInstance("newjs_masterRep", $viewed);
                 $row = $profileObj->getDetail($viewed, "PROFILEID","*");
                 
                 if ($row) {
@@ -431,13 +431,15 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
          * @param - vspArray,$contactedUsername,$similarPageShow,$userGender
          * @return - new array
          */
-        public function transformVSPResponseForPC($vspArray,$contactedUsername,$similarPageShow,$userGender,$stype='V')
+        public function transformVSPResponseForPC($vspArray,$contactedUsername,$similarPageShow,$userGender,$stype='V',$loggedInProfileObj)
         {
             if($userGender=="She")
                 $gender = 'F';
             else
                 $gender = 'M';
             $key = 0;
+            $nameOfUserObj = new NameOfUser;
+            $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());
             foreach($vspArray as $profileid=>$detailsArray)
             {
                 //$key = $detailsArray["OFFSET"]-1;
@@ -451,11 +453,28 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         $jspcVSPArray["profiles"][$key][$searchField]= PictureFunctions::mapUrlToMessageInfoArr($detailsArray[$vspField],ViewSimilarProfile::$defaultPicSize["PC"],$detailsArray["PHOTO_REQUESTED"],$gender);
                     else if($searchField == "subscription_icon")
                     {
-  			            $searchApiObj = new SearchApiStrategyV1();
+  			$searchApiObj = new SearchApiStrategyV1();
                         $jspcVSPArray["profiles"][$key][$searchField]= $searchApiObj->handlingSpecialCasesForSearch($searchField,$detailsArray[$vspField],$detailsArray["PHOTO_REQUESTED"],$gender);                        
                         unset($searchApiObj);
                     }  
-                    else
+                    else if($searchField == "name_of_user")
+                    {
+  			if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
+                        {
+                                $name = $nameOfUserObj->getNameStr($detailsArray[$vspField],$loggedInProfileObj->getSUBSCRIPTION());
+                        }
+
+                        $jspcVSPArray["profiles"][$key][$searchField]=$name;
+                    }  
+                    elseif(in_array($searchField,array("pg_college","college","company_name")))
+                    {
+                         if($detailsArray[$vspField]!= ''){
+                              $searchApiObj = new SearchApiStrategyV1();
+                              $jspcVSPArray["profiles"][$key][$searchField]= $detailsArray[$vspField];      
+                         }else{
+                              $jspcVSPArray["profiles"][$key][$searchField]= '';       
+                         }
+                    }else
                         $jspcVSPArray["profiles"][$key][$searchField] = $detailsArray[$vspField];
                 }
                 $params = array("SHORTLIST"=>$detailsArray["BOOKMARKED"],

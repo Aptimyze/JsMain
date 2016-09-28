@@ -59,10 +59,20 @@ class ShowProfileStatsAction extends sfActions
 	$crmUtilityObj          =new crmUtility();
         $privilege              =$agentAllocDetailsObj->getprivilage($this->cid);
 	$this->linkArr          =$crmUtilityObj->fetchPrivilegeLinks($privilege);
+	$privArr		=explode("+",$privilege);
+
+	$show_score=0;
+	$an_show_score=0;	
+	if(in_array('OPS',$privArr)||in_array('OPM',$privArr)||in_array('OSM',$privArr)||in_array('OFSM',$privArr))
+		$show_score=1;
+	if(in_array('SLHD',$privArr))
+		$an_show_score=1;
 
         // Profile Stats
         $showCrmStatsObj                =new ShowProfileStats($this->loginProfile);
         $this->detailedProfileStatsData =$showCrmStatsObj->getDetailedProfileStats();
+	$this->detailedProfileStatsData['show_score'] 	=$show_score;
+	$this->detailedProfileStatsData['an_show_score']=$an_show_score;
 
         $this->mainProfileStatsData     =$showCrmStatsObj->geMainProfileStats($this->profileDetailArr);
 
@@ -74,6 +84,16 @@ class ShowProfileStatsAction extends sfActions
 	$allotedAgent =$this->mainProfileStatsData['ALLOTED_AGENT'];
 	if($allotedAgent==$agentName)
 		$this->isAlloted =1;
+
+	//JSC-1684
+	if(in_array('FPSUP',$privArr)||in_array('INBSUP',$privArr)||in_array('LTFHD',$privArr)||in_array('LTFSUP',$privArr)||in_array('MgrFld',$privArr)||in_array('SLHD',$privArr)||in_array('SLHDO',$privArr)||in_array('SLMGR',$privArr)||in_array('SLMNTR',$privArr)||in_array('SLSMGR',$privArr)||in_array('SLSUP',$privArr)||in_array('SupFld',$privArr)||in_array('SUPPRM',$privArr)||in_array('OPR',$privArr))
+                $this->online_payment=1;
+	else
+		$this->online_payment=0;
+	if(in_array('FPSUP',$privArr)||in_array('INBSUP',$privArr)||in_array('LTFHD',$privArr)||in_array('LTFSUP',$privArr)||in_array('MgrFld',$privArr)||in_array('SLHD',$privArr)||in_array('SLHDO',$privArr)||in_array('SLMGR',$privArr)||in_array('SLMNTR',$privArr)||in_array('SLSMGR',$privArr)||in_array('SLSUP',$privArr)||in_array('SupFld',$privArr)||in_array('SUPPRM',$privArr)||in_array('ExPmSr',$privArr)||in_array('CSEXEC',$privArr))
+                $this->set_filter=1;
+	else
+		$this->set_filter=0;
   }
 
   //This function alters the $myProfileArr to a desired form

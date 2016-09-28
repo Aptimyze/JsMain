@@ -21,6 +21,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
+	ini_set('memory_limit',-1);
         sfContext::createInstance($this->configuration);
         $processObj	=new PROCESS();
 	$csvHandler	=new csvGenerationHandler();

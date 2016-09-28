@@ -91,6 +91,9 @@ class CancelContact extends ContactEvent{
         $receiver = $this->contactHandler->getViewed();
         $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'CANCELCONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID() ) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
+	//Remove from contact roster
+      $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'CANCELCONTACT', 'body' => array('sender' => array('profileid'=>$this->contactHandler->getViewer()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewer()->getPROFILEID()),'username'=>$this->contactHandler->getViewer()->getUSERNAME()), 'receiver' => array('profileid'=>$this->contactHandler->getViewed()->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->contactHandler->getViewed()->getPROFILEID()),"username"=>$this->contactHandler->getViewed()->getUSERNAME()))), 'redeliveryCount' => 0);
+      $producerObj->sendMessage($chatData);
     }
     else
     {
@@ -137,7 +140,10 @@ class CancelContact extends ContactEvent{
         $profileMemcacheServiceViewerObj->update("TOTAL_CONTACTS_MADE",-1);
         $profileMemcacheServiceViewerObj->update("DEC_BY_ME",1);
         $profileMemcacheServiceViewerObj->update("NOT_REP",-1);
-        $profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE",-1);
+        if($this->contactHandler->getContactObj()->getFILTERED() === Contacts::FILTERED)
+			$profileMemcacheServiceViewedObj->update("FILTERED_NEW",-1);
+        else        
+			$profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE",-1);
         if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
 		$profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE_NEW",-1);
         $profileMemcacheServiceViewedObj->update("DEC_ME",1);

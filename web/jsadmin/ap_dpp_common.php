@@ -2,6 +2,7 @@
 
 include_once(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 include_once(JsConstants::$docRoot."/commonFiles/incomeCommonFunctions.inc");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
 function createDPP($parameters,$profileid,$createdBy,$role,$newDPPStatus='',$currentDPPId='',$currentDPPStatus='',$newCurrentDPPStatus='',$currentDPPOnline='',$currentDPPCreatedBy='',$comments='',$online='',$seVersion='')
 {
@@ -21,7 +22,7 @@ function createDPP($parameters,$profileid,$createdBy,$role,$newDPPStatus='',$cur
 		$online='';
 	elseif($currentDPPOnline)
 		$online='Y';	
-	$sql="INSERT INTO Assisted_Product.AP_DPP_FILTER_ARCHIVE(GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,NHANDICAPPED,AGE_FILTER,MSTATUS_FILTER,RELIGION_FILTER,CASTE_FILTER,COUNTRY_RES_FILTER,CITY_RES_FILTER,MTONGUE_FILTER,INCOME_FILTER,DATE,CREATED_BY,ROLE,ONLINE,STATUS,COMMENTS,PROFILEID,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL) VALUES(\"$parameters[GENDER]\",\"$parameters[CHILDREN]\",\"$parameters[LAGE]\",\"$parameters[HAGE]\",\"$parameters[LHEIGHT]\",\"$parameters[HHEIGHT]\",\"$parameters[HANDICAPPED]\",\"$parameters[CASTE_MTONGUE]\",\"$parameters[PARTNER_BTYPE]\",\"$parameters[PARTNER_CASTE]\",\"$parameters[PARTNER_CITYRES]\",\"$parameters[PARTNER_COUNTRYRES]\",\"$parameters[PARTNER_DIET]\",\"$parameters[PARTNER_DRINK]\",\"$parameters[PARTNER_ELEVEL_NEW]\",\"$parameters[PARTNER_INCOME]\",\"$parameters[PARTNER_MANGLIK]\",\"$parameters[PARTNER_MSTATUS]\",\"$parameters[PARTNER_MTONGUE]\",\"$parameters[PARTNER_NRI_COSMO]\",\"$parameters[PARTNER_OCC]\",\"$parameters[PARTNER_RELATION]\",\"$parameters[PARTNER_RES_STATUS]\",\"$parameters[PARTNER_SMOKE]\",\"$parameters[PARTNER_COMP]\",\"$parameters[PARTNER_RELIGION]\",\"$parameters[PARTNER_NAKSHATRA]\",\"$parameters[NHANDICAPPED]\",\"$parameters[AGE_FILTER]\",\"$parameters[MSTATUS_FILTER]\",\"$parameters[RELIGION_FILTER]\",\"$parameters[CASTE_FILTER]\",\"$parameters[COUNTRY_RES_FILTER]\",\"$parameters[CITY_RES_FILTER]\",\"$parameters[MTONGUE_FILTER]\",\"$parameters[INCOME_FILTER]\",NOW(),'$createdBy','$role','$online','$newDPPStatus','$comments','$profileid',\"$parameters[LINCOME]\",\"$parameters[HINCOME]\",\"$parameters[LINCOME_DOL]\",\"$parameters[HINCOME_DOL]\")";
+	$sql="INSERT INTO Assisted_Product.AP_DPP_FILTER_ARCHIVE(GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,STATE,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,NHANDICAPPED,AGE_FILTER,MSTATUS_FILTER,RELIGION_FILTER,CASTE_FILTER,COUNTRY_RES_FILTER,CITY_RES_FILTER,MTONGUE_FILTER,INCOME_FILTER,DATE,CREATED_BY,ROLE,ONLINE,STATUS,COMMENTS,PROFILEID,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL) VALUES(\"$parameters[GENDER]\",\"$parameters[CHILDREN]\",\"$parameters[LAGE]\",\"$parameters[HAGE]\",\"$parameters[LHEIGHT]\",\"$parameters[HHEIGHT]\",\"$parameters[HANDICAPPED]\",\"$parameters[CASTE_MTONGUE]\",\"$parameters[PARTNER_BTYPE]\",\"$parameters[PARTNER_CASTE]\",\"$parameters[PARTNER_CITYRES]\",\"$parameters[STATE]\",\"$parameters[PARTNER_COUNTRYRES]\",\"$parameters[PARTNER_DIET]\",\"$parameters[PARTNER_DRINK]\",\"$parameters[PARTNER_ELEVEL_NEW]\",\"$parameters[PARTNER_INCOME]\",\"$parameters[PARTNER_MANGLIK]\",\"$parameters[PARTNER_MSTATUS]\",\"$parameters[PARTNER_MTONGUE]\",\"$parameters[PARTNER_NRI_COSMO]\",\"$parameters[PARTNER_OCC]\",\"$parameters[PARTNER_RELATION]\",\"$parameters[PARTNER_RES_STATUS]\",\"$parameters[PARTNER_SMOKE]\",\"$parameters[PARTNER_COMP]\",\"$parameters[PARTNER_RELIGION]\",\"$parameters[PARTNER_NAKSHATRA]\",\"$parameters[NHANDICAPPED]\",\"$parameters[AGE_FILTER]\",\"$parameters[MSTATUS_FILTER]\",\"$parameters[RELIGION_FILTER]\",\"$parameters[CASTE_FILTER]\",\"$parameters[COUNTRY_RES_FILTER]\",\"$parameters[CITY_RES_FILTER]\",\"$parameters[MTONGUE_FILTER]\",\"$parameters[INCOME_FILTER]\",NOW(),'$createdBy','$role','$online','$newDPPStatus','$comments','$profileid',\"$parameters[LINCOME]\",\"$parameters[HINCOME]\",\"$parameters[LINCOME_DOL]\",\"$parameters[HINCOME_DOL]\")";
 	mysql_query_decide($sql) or die("Error while inserting DPP   ".mysql_error_js());
 
 	$newDPPId=mysql_insert_id_js();
@@ -109,6 +110,7 @@ function fetchDPPHistory($profileid,$operator='',$showEdited='')
 			$DPPHistory[$lastIndex]["PARTNER_CASTE"]=$row["PARTNER_CASTE"];
 			$DPPHistory[$lastIndex]["PARTNER_COUNTRYRES"]=$row["PARTNER_COUNTRYRES"];
 			$DPPHistory[$lastIndex]["PARTNER_CITYRES"]=$row["PARTNER_CITYRES"];
+                        $DPPHistory[$lastIndex]["STATE"]=$row["STATE"];
 			$DPPHistory[$lastIndex]["PARTNER_DRINK"]=$row["PARTNER_DRINK"];
 			$DPPHistory[$lastIndex]["PARTNER_DIET"]=$row["PARTNER_DIET"];
 			$DPPHistory[$lastIndex]["PARTNER_ELEVEL_NEW"]=$row["PARTNER_ELEVEL_NEW"];
@@ -168,6 +170,7 @@ function fetchDPPHistory($profileid,$operator='',$showEdited='')
 				"PARTNER_BTYPE"=>$jpartnerObj->getPARTNER_BTYPE(),
 				"PARTNER_CASTE"=>$jpartnerObj->getPARTNER_CASTE(),
 				"PARTNER_CITYRES"=>$jpartnerObj->getPARTNER_CITYRES(),
+                                "STATE"=>$jpartnerObj->getSTATE(),
 				"PARTNER_COUNTRYRES"=>$jpartnerObj->getPARTNER_COUNTRYRES(),
 				"PARTNER_DIET"=>$jpartnerObj->getPARTNER_DIET(),
 				"PARTNER_DRINK"=>$jpartnerObj->getPARTNER_DIET(),
@@ -493,15 +496,37 @@ include(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			$PARTNER_CITYRES=display_format($value["PARTNER_CITYRES"]);
 			if(is_array($PARTNER_CITYRES))
 			{
-				$str=implode("','",$PARTNER_CITYRES);
-				$sql="select SQL_CACHE LABEL from newjs.CITY_NEW where VALUE in ('$str')";
-				$dropresult=mysql_query_decide($sql) or die("Error while fetching city name   ".mysql_error_js());
-				while($droprow=mysql_fetch_array($dropresult))
+				$cityLabelArr = FieldMap::getFieldLabel("city_india",'',1);
+				foreach($PARTNER_CITYRES as $key=>$val)
 				{
-					$partner_city_str.=$droprow["LABEL"] . ", ";
+					$partner_city_str.=$cityLabelArr[$val] . ", ";
 				}
-				mysql_free_result($dropresult);
 				$partner_city_str=substr($partner_city_str,0,strlen($partner_city_str)-2);
+				//$partner["CITYRES"]=$partner_city_str;
+			}
+			$STATE = display_format($value["STATE"]);
+			if(is_array($STATE))
+			{
+                                $stateLabelArr = FieldMap::getFieldLabel("state_india",'',1);
+				foreach($STATE as $key=>$val)
+				{
+					$partner_state_str.=$stateLabelArr[$val] . ", ";
+				}
+				$partner_state_str=substr($partner_state_str,0,strlen($partner_state_str)-2);
+			}
+			if($partner_state_str!="")
+			{
+				if($partner_city_str!="")
+				{
+					$partner["CITYRES"] = $partner_state_str.", ".$partner_city_str;
+				}
+				else
+				{
+					$partner["CITYRES"] = $partner_state_str;
+				}
+			}
+			else
+			{
 				$partner["CITYRES"]=$partner_city_str;
 			}
 			if($partner["CITYRES"])
@@ -562,6 +587,7 @@ include(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 			unset($manglik_data1);
 			unset($partner_city_str);
 			unset($PARTNER_CITYRES);
+			unset($partner_state_str);
 		}
 		$smarty->assign("displayDPP",$displayDPP);
 	}
@@ -636,15 +662,21 @@ function makeDPPLive($profileid,$dppID,$madeLiveBy,$dppCreatedBy,$online,$presen
 	
 	$mysqlObj=new Mysql;
 	$jpartnerObj=new Jpartner;
-
+	
 	$dbName=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
 	$myDb=$mysqlObj->connect("$dbName");
-	$sql="UPDATE newjs.JPARTNER SET CHILDREN=\"$row[CHILDREN]\",LAGE=\"$row[LAGE]\",HAGE=\"$row[HAGE]\",LHEIGHT=\"$row[LHEIGHT]\",HHEIGHT=\"$row[HHEIGHT]\",HANDICAPPED=\"$row[HANDICAPPED]\",PARTNER_BTYPE=\"$row[PARTNER_BTYPE]\",PARTNER_CASTE=\"$row[PARTNER_CASTE]\",PARTNER_CITYRES=\"$row[PARTNER_CITYRES]\",PARTNER_COUNTRYRES=\"$row[PARTNER_COUNTRYRES]\",PARTNER_DIET=\"$row[PARTNER_DIET]\",PARTNER_DRINK=\"$row[PARTNER_DRINK]\",PARTNER_ELEVEL_NEW=\"$row[PARTNER_ELEVEL_NEW]\",PARTNER_INCOME=\"$row[PARTNER_INCOME]\",PARTNER_MANGLIK=\"$row[PARTNER_MANGLIK]\",PARTNER_MSTATUS=\"$row[PARTNER_MSTATUS]\",PARTNER_MTONGUE=\"$row[PARTNER_MTONGUE]\",PARTNER_NRI_COSMO=\"$row[PARTNER_NRI_COSMO]\",PARTNER_OCC=\"$row[PARTNER_OCC]\",PARTNER_RELATION=\"$row[PARTNER_RELATION]\",PARTNER_RES_STATUS=\"$row[PARTNER_RES_STATUS]\",PARTNER_SMOKE=\"$row[PARTNER_SMOKE]\",PARTNER_COMP=\"$row[PARTNER_COMP]\",PARTNER_RELIGION=\"$row[PARTNER_RELIGION]\",PARTNER_NAKSHATRA=\"$row[PARTNER_NAKSHATRA]\",NHANDICAPPED=\"$row[NHANDICAPPED]\",DATE=NOW(),DPP='E',LINCOME=\"$row[LINCOME]\",HINCOME=\"$row[HINCOME]\",LINCOME_DOL=\"$row[LINCOME_DOL]\",HINCOME_DOL=\"$row[HINCOME_DOL]\" WHERE PROFILEID='$profileid'";
+	$jpartnerObj->setPartnerDetails($profileid,$myDb,$mysqlObj);
+	$sql="UPDATE newjs.JPARTNER SET CHILDREN=\"$row[CHILDREN]\",LAGE=\"$row[LAGE]\",HAGE=\"$row[HAGE]\",LHEIGHT=\"$row[LHEIGHT]\",HHEIGHT=\"$row[HHEIGHT]\",HANDICAPPED=\"$row[HANDICAPPED]\",PARTNER_BTYPE=\"$row[PARTNER_BTYPE]\",PARTNER_CASTE=\"$row[PARTNER_CASTE]\",PARTNER_CITYRES=\"$row[PARTNER_CITYRES]\",STATE=\"$row[STATE]\",PARTNER_COUNTRYRES=\"$row[PARTNER_COUNTRYRES]\",PARTNER_DIET=\"$row[PARTNER_DIET]\",PARTNER_DRINK=\"$row[PARTNER_DRINK]\",PARTNER_ELEVEL_NEW=\"$row[PARTNER_ELEVEL_NEW]\",PARTNER_INCOME=\"$row[PARTNER_INCOME]\",PARTNER_MANGLIK=\"$row[PARTNER_MANGLIK]\",PARTNER_MSTATUS=\"$row[PARTNER_MSTATUS]\",PARTNER_MTONGUE=\"$row[PARTNER_MTONGUE]\",PARTNER_NRI_COSMO=\"$row[PARTNER_NRI_COSMO]\",PARTNER_OCC=\"$row[PARTNER_OCC]\",PARTNER_RELATION=\"$row[PARTNER_RELATION]\",PARTNER_RES_STATUS=\"$row[PARTNER_RES_STATUS]\",PARTNER_SMOKE=\"$row[PARTNER_SMOKE]\",PARTNER_COMP=\"$row[PARTNER_COMP]\",PARTNER_RELIGION=\"$row[PARTNER_RELIGION]\",PARTNER_NAKSHATRA=\"$row[PARTNER_NAKSHATRA]\",NHANDICAPPED=\"$row[NHANDICAPPED]\",DATE=NOW(),DPP='E',LINCOME=\"$row[LINCOME]\",HINCOME=\"$row[HINCOME]\",LINCOME_DOL=\"$row[LINCOME_DOL]\",HINCOME_DOL=\"$row[HINCOME_DOL]\" WHERE PROFILEID='$profileid'";
 	$res=$mysqlObj->executeQuery($sql,$myDb);
 	if($mysqlObj->affectedRows()==0)
 	{
-		$sql="INSERT IGNORE INTO newjs.JPARTNER(PROFILEID,GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,DPP,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,NHANDICAPPED,DATE,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL) VALUES('$profileid','$row[GENDER]','$row[CHILDREN]','$row[LAGE]','$row[HAGE]','$row[LHEIGHT]','$row[HHEIGHT]',\"$row[HANDICAPPED]\",'E',\"$row[CASTE_MTONGUE]\",\"$row[PARTNER_BTYPE]\",\"$row[PARTNER_CASTE]\",\"$row[PARTNER_CITYRES]\",\"$row[PARTNER_COUNTRYRES]\",\"$row[PARTNER_DIET]\",\"$row[PARTNER_DRINK]\",\"$row[PARTNER_ELEVEL_NEW]\",\"$row[PARTNER_INCOME]\",\"$row[PARTNER_MANGLIK]\",\"$row[PARTNER_MSTATUS]\",\"$row[PARTNER_MTONGUE]\",\"$row[PARTNER_NRI_COSMO]\",\"$row[PARTNER_OCC]\",\"$row[PARTNER_RELATION]\",\"$row[PARTNER_RES_STATUS]\",\"$row[PARTNER_SMOKE]\",\"$row[PARTNER_COMP]\",\"$row[PARTNER_RELIGION]\",\"$row[PARTNER_NAKSHATRA]\",\"$row[NHANDICAPPED]\",NOW(),\"$row[LINCOME]\",\"$row[HINCOME]\",\"$row[LINCOME_DOL]\",\"$row[HINCOME_DOL]\")";
+		$sql="INSERT IGNORE INTO newjs.JPARTNER(PROFILEID,GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,DPP,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,STATE,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,NHANDICAPPED,DATE,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL) VALUES('$profileid','$row[GENDER]','$row[CHILDREN]','$row[LAGE]','$row[HAGE]','$row[LHEIGHT]','$row[HHEIGHT]',\"$row[HANDICAPPED]\",'E',\"$row[CASTE_MTONGUE]\",\"$row[PARTNER_BTYPE]\",\"$row[PARTNER_CASTE]\",\"$row[PARTNER_CITYRES]\",\"$row[STATE]\",\"$row[PARTNER_COUNTRYRES]\",\"$row[PARTNER_DIET]\",\"$row[PARTNER_DRINK]\",\"$row[PARTNER_ELEVEL_NEW]\",\"$row[PARTNER_INCOME]\",\"$row[PARTNER_MANGLIK]\",\"$row[PARTNER_MSTATUS]\",\"$row[PARTNER_MTONGUE]\",\"$row[PARTNER_NRI_COSMO]\",\"$row[PARTNER_OCC]\",\"$row[PARTNER_RELATION]\",\"$row[PARTNER_RES_STATUS]\",\"$row[PARTNER_SMOKE]\",\"$row[PARTNER_COMP]\",\"$row[PARTNER_RELIGION]\",\"$row[PARTNER_NAKSHATRA]\",\"$row[NHANDICAPPED]\",NOW(),\"$row[LINCOME]\",\"$row[HINCOME]\",\"$row[LINCOME_DOL]\",\"$row[HINCOME_DOL]\")";
 		$mysqlObj->executeQuery($sql,$myDb);
+	}
+	else
+	{
+		$jpartnerEditLog = new JpartnerEditLog();
+		$jpartnerEditLog->logAPDppEdit($jpartnerObj,$row);
 	}
 	$sql="UPDATE newjs.FILTERS SET AGE='$row[AGE_FILTER]',CASTE='$row[CASTE_FILTER]',MTONGUE='$row[MTONGUE_FILTER]',RELIGION='$row[RELIGION_FILTER]',INCOME='$row[INCOME_FILTER]',CITY_RES='$row[CITY_RES_FILTER]',COUNTRY_RES='$row[COUNTRY_RES_FILTER]',MSTATUS='$row[MSTATUS_FILTER]' WHERE PROFILEID='$profileid'";
 	$res=mysql_query_decide($sql) or die("Error while updating filters   ".mysql_error_js());
@@ -683,7 +715,7 @@ function getNumberOfTempDPPMatches($profile,$name)
 
 function createTempDPP($parameters)
 {
-	$sql="REPLACE INTO Assisted_Product.AP_TEMP_DPP(GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,NHANDICAPPED,AGE_FILTER,MSTATUS_FILTER,RELIGION_FILTER,CASTE_FILTER,COUNTRY_RES_FILTER,CITY_RES_FILTER,MTONGUE_FILTER,INCOME_FILTER,DATE,CREATED_BY,PROFILEID,ACTED_ON_ID,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL) VALUES(\"$parameters[GENDER]\",\"$parameters[CHILDREN]\",\"$parameters[LAGE]\",\"$parameters[HAGE]\",\"$parameters[LHEIGHT]\",\"$parameters[HHEIGHT]\",\"$parameters[HANDICAPPED]\",\"$parameters[CASTE_MTONGUE]\",\"$parameters[PARTNER_BTYPE]\",\"$parameters[PARTNER_CASTE]\",\"$parameters[PARTNER_CITYRES]\",\"$parameters[PARTNER_COUNTRYRES]\",\"$parameters[PARTNER_DIET]\",\"$parameters[PARTNER_DRINK]\",\"$parameters[PARTNER_ELEVEL_NEW]\",\"$parameters[PARTNER_INCOME]\",\"$parameters[PARTNER_MANGLIK]\",\"$parameters[PARTNER_MSTATUS]\",\"$parameters[PARTNER_MTONGUE]\",\"$parameters[PARTNER_NRI_COSMO]\",\"$parameters[PARTNER_OCC]\",\"$parameters[PARTNER_RELATION]\",\"$parameters[PARTNER_RES_STATUS]\",\"$parameters[PARTNER_SMOKE]\",\"$parameters[PARTNER_COMP]\",\"$parameters[PARTNER_RELIGION]\",\"$parameters[PARTNER_NAKSHATRA]\",\"$parameters[NHANDICAPPED]\",\"$parameters[AGE_FILTER]\",\"$parameters[MSTATUS_FILTER]\",\"$parameters[RELIGION_FILTER]\",\"$parameters[CASTE_FILTER]\",\"$parameters[COUNTRY_RES_FILTER]\",\"$parameters[CITY_RES_FILTER]\",\"$parameters[MTONGUE_FILTER]\",\"$parameters[INCOME_FILTER]\",NOW(),'$parameters[CREATED_BY]','$parameters[PROFILEID]','$parameters[ACTED_ON_ID]',\"$parameters[LINCOME]\",\"$parameters[HINCOME]\",\"$parameters[LINCOME_DOL]\",\"$parameters[HINCOME_DOL]\")";
+	$sql="REPLACE INTO Assisted_Product.AP_TEMP_DPP(GENDER,CHILDREN,LAGE,HAGE,LHEIGHT,HHEIGHT,HANDICAPPED,CASTE_MTONGUE,PARTNER_BTYPE,PARTNER_CASTE,PARTNER_CITYRES,STATE,PARTNER_COUNTRYRES,PARTNER_DIET,PARTNER_DRINK,PARTNER_ELEVEL_NEW,PARTNER_INCOME,PARTNER_MANGLIK,PARTNER_MSTATUS,PARTNER_MTONGUE,PARTNER_NRI_COSMO,PARTNER_OCC,PARTNER_RELATION,PARTNER_RES_STATUS,PARTNER_SMOKE,PARTNER_COMP,PARTNER_RELIGION,PARTNER_NAKSHATRA,NHANDICAPPED,AGE_FILTER,MSTATUS_FILTER,RELIGION_FILTER,CASTE_FILTER,COUNTRY_RES_FILTER,CITY_RES_FILTER,MTONGUE_FILTER,INCOME_FILTER,DATE,CREATED_BY,PROFILEID,ACTED_ON_ID,LINCOME,HINCOME,LINCOME_DOL,HINCOME_DOL) VALUES(\"$parameters[GENDER]\",\"$parameters[CHILDREN]\",\"$parameters[LAGE]\",\"$parameters[HAGE]\",\"$parameters[LHEIGHT]\",\"$parameters[HHEIGHT]\",\"$parameters[HANDICAPPED]\",\"$parameters[CASTE_MTONGUE]\",\"$parameters[PARTNER_BTYPE]\",\"$parameters[PARTNER_CASTE]\",\"$parameters[PARTNER_CITYRES]\",\"$parameters[STATE]\",\"$parameters[PARTNER_COUNTRYRES]\",\"$parameters[PARTNER_DIET]\",\"$parameters[PARTNER_DRINK]\",\"$parameters[PARTNER_ELEVEL_NEW]\",\"$parameters[PARTNER_INCOME]\",\"$parameters[PARTNER_MANGLIK]\",\"$parameters[PARTNER_MSTATUS]\",\"$parameters[PARTNER_MTONGUE]\",\"$parameters[PARTNER_NRI_COSMO]\",\"$parameters[PARTNER_OCC]\",\"$parameters[PARTNER_RELATION]\",\"$parameters[PARTNER_RES_STATUS]\",\"$parameters[PARTNER_SMOKE]\",\"$parameters[PARTNER_COMP]\",\"$parameters[PARTNER_RELIGION]\",\"$parameters[PARTNER_NAKSHATRA]\",\"$parameters[NHANDICAPPED]\",\"$parameters[AGE_FILTER]\",\"$parameters[MSTATUS_FILTER]\",\"$parameters[RELIGION_FILTER]\",\"$parameters[CASTE_FILTER]\",\"$parameters[COUNTRY_RES_FILTER]\",\"$parameters[CITY_RES_FILTER]\",\"$parameters[MTONGUE_FILTER]\",\"$parameters[INCOME_FILTER]\",NOW(),'$parameters[CREATED_BY]','$parameters[PROFILEID]','$parameters[ACTED_ON_ID]',\"$parameters[LINCOME]\",\"$parameters[HINCOME]\",\"$parameters[LINCOME_DOL]\",\"$parameters[HINCOME_DOL]\")";
 	mysql_query_decide($sql) or die("Error while creating temp dpp  ".mysql_error_js());
 }
 ?>

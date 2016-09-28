@@ -73,7 +73,7 @@ class detailedAction extends sfAction
 		$this->loginData=$data=$request->getAttribute("loginData");
 		//Contains logined Profile information;
 		$this->loginProfile=LoggedInProfile::getInstance();
-		$this->profile=Profile::getInstance("newjs_bmsSlave");
+		$this->profile=Profile::getInstance("newjs_masterRep");
 		$this->isMobile=MobileCommon::isMobile("JS_MOBILE");
 		//Assinging smarty variable
 		$this->smarty=$smarty;
@@ -104,7 +104,14 @@ class detailedAction extends sfAction
     if (MobileCommon::isDesktop() && $this->loginData[PROFILEID]) {
        $this->onlineStatus();
     }
-
+	$nameOfUserObj = new NameOfUser();
+	$showNameData = $nameOfUserObj->showNameToProfiles($this->loginProfile,array($this->profile));
+	if($showNameData[$this->profile->getPROFILEID()]['SHOW']==true)
+	{
+		$this->nameOfUser = $showNameData[$this->profile->getPROFILEID()]['NAME'];
+	}
+	else
+		$this->dontShowNameReason = $showNameData[$this->profile->getPROFILEID()]['REASON'];
     //Assings variables required in template, handling legacy.
 		$this->smartyAssign();
 
@@ -115,9 +122,8 @@ class detailedAction extends sfAction
     //Showing contact engine
     if (MobileCommon::isOldMobileSite()) {
       $this->horoscopeAvailable(); 
-      $this->showContactEngine();
-    }	
-		
+    }
+	 $this->showContactEngine();
 		//appPromotion
 		if($request->getParameter("from_mailer"))
 			$this->from_mailer=1;
@@ -926,8 +932,12 @@ class detailedAction extends sfAction
 				switch($currentFlag)
 				{
 					case ContactHandler::INITIATED:
-						if($who==ContactHandler::RECEIVER)
-							$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+						if($who==ContactHandler::RECEIVER){
+							if($this->contactEngineObj->contactHandler->getContactObj()->getFILTERED() =="Y")
+								$profileMemcacheServiceViewerObj->update("FILTERED_NEW",-1);
+							else
+								$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+						}
 						break;
 					case ContactHandler::ACCEPT:
 						if($who==ContactHandler::SENDER)
@@ -1343,7 +1353,7 @@ class detailedAction extends sfAction
         $this->arrOutDisplay =  $objDetailedDisplay->getResponse();
         $arrOutDisplay["buttonDetails"] = null;
          
-        $arrPass = array('stype'=>$this->STYPE,"responseTracking"=>$this->responseTracking,'page_source'=>"VDP",'isIgnored'=>$this->arrOutDisplay['page_info']['is_ignored'],'isBookmarked'=>$this->BOOKMARKED);
+        $arrPass = array('stype'=>$this->STYPE,"responseTracking"=>$this->responseTracking,'page_source'=>"VDP",'isIgnored'=>$this->arrOutDisplay['page_info']['is_ignored'],'isBookmarked'=>$this->BOOKMARKED,'PHOTO'=>$this->arrOutDisplay['pic']);
         $arrPass["USERNAME"]= $this->profile->getUSERNAME();
         $arrPass["OTHER_PROFILEID"] = $this->profile->getPROFILEID();
 
@@ -1351,7 +1361,7 @@ class detailedAction extends sfAction
 		{//print_r("arrOutDisplay['pic']['url']");die;
 				$buttonObj = new ButtonResponse($this->loginProfile,$this->profile,$arrPass);
 
-				$this->arrOutDisplay["button_details"] = $buttonObj->getButtonArray(array('PHOTO'=>$arrOutDisplay['pic']['url'],"IGNORED"=>$this->IGNORED));
+				$this->arrOutDisplay["button_details"] = $buttonObj->getButtonArray(array('PHOTO'=>$this->arrOutDisplay['pic']['url'],"IGNORED"=>$this->IGNORED));
 		}
 		else
 		{

@@ -20,7 +20,7 @@ class SearchUtility
 	* @param profile to ignore is passed in the url (optional)
 	* @param noAwaitingContacts exclude awaiting contacts.
 	*/
-	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '')
+	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '',$showOnlineArr='')
 	{
 		//print_r($SearchParamtersObj);die;
 		if($profileFromUrl)
@@ -35,7 +35,7 @@ class SearchUtility
 			$pid = $loggedInProfileObj->getPROFILEID();
 			if(get_class($SearchParamtersObj) == "FeaturedProfile")
 			{
-				$fplObj = new NEWJS_FEATURED_PROFILE_LOG;
+				$fplObj = new NEWJS_FEATURED_PROFILE_LOG(SearchConfig::getSearchDb());
 				$profiles = $fplObj->getProfilesToIgnore($pid,$seperator);
 				if($profiles)
 				{
@@ -51,7 +51,7 @@ class SearchUtility
 				if($pid)
 				{
 					/* ignored profiles two way */
-					$IgnoredProfilesObj = new IgnoredProfiles;
+					$IgnoredProfilesObj = new IgnoredProfiles();
 					$hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid,$seperator);
 
 					/* contacted profiles */
@@ -61,7 +61,7 @@ class SearchUtility
 					/** matchAlerts Profile **/
 					if($removeMatchAlerts)
 					{
-						$matchalerts_LOG = new matchalerts_LOG;
+						$matchalerts_LOG = new matchalerts_LOG();
 						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
 					}
 				}
@@ -69,7 +69,7 @@ class SearchUtility
 				if($SearchParamtersObj->getONLINE()==SearchConfig::$onlineSearchFlag)
 				/* For Online search  */
 				{
-					$ChatLibraryObj = new ChatLibrary;
+					$ChatLibraryObj = new ChatLibrary(SearchConfig::getSearchDb());
 					$tempArr = $ChatLibraryObj->findOnlineProfiles($seperator,$SearchParamtersObj);
 					$SearchParamtersObj->setOnlineProfiles($tempArr);
 					unset($tempArr);
@@ -105,6 +105,7 @@ class SearchUtility
 
 					if($SearchParamtersObj->getMATCHALERTS_DATE_CLUSTER())
 					{
+						
 						$week= $SearchParamtersObj->getMATCHALERTS_DATE_CLUSTER();
 						if($week=='All')
 							$week='';
@@ -114,13 +115,22 @@ class SearchUtility
 							rsort($weekArr);
 							$week = $weekArr[0];
 						}
-						if($week || $SearchParamtersObj->getNEWSEARCH_CLUSTERING() || ($_GET["moreLinkCluster"] && in_array($_GET["moreLinkCluster"],array('OCCUPATION','EDU_LEVEL_NEW'))))
-						{
-							$MatchAlerts = new MatchAlerts;
+						//if($week || $SearchParamtersObj->getNEWSEARCH_CLUSTERING() || ($_GET["moreLinkCluster"] && in_array($_GET["moreLinkCluster"],array('OCCUPATION','EDU_LEVEL_NEW'))))
+						//{
+							//$MatchAlerts = new MatchAlerts();
+							//$matArr1 = $MatchAlerts->getProfilesWithOutSortishowOnlineArrng($pid,$week);
+						//}
+						//else
+							//$matArr1 = $SearchParamtersObj->getAlertsDateConditionArr();
+							
+						//if($week=='')
+						//	$matArr1 = $SearchParamtersObj->getAlertsDateConditionArr();
+						//else{
+								$MatchAlerts = new MatchAlerts();
 							$matArr1 = $MatchAlerts->getProfilesWithOutSorting($pid,$week);
-						}
-						else
-							$matArr1 = $SearchParamtersObj->getAlertsDateConditionArr();
+						//}
+							
+							
 					}
 					else
 						$matArr1 = KundliAlerts::getProfilesWithOutSorting($pid);
@@ -161,6 +171,10 @@ class SearchUtility
 					else
 						$SearchParamtersObj->setIgnoreProfiles($hideArr);
 				}
+				if($showOnlineArr)
+				{
+					$showArr.= " ".$showOnlineArr;
+				}
 				if($showArr)
 				{
 					if($SearchParamtersObj->getProfilesToShow())
@@ -190,9 +204,12 @@ class SearchUtility
 			if($request->getParameter("dollar")==1)
 				$cluster=$cluster."_DOL";
 			$clusterVal = $request->getParameter("appClusterVal");
-                        if($cluster == "MANGLIK" && $clusterVal != 'ALL'){ // check for cluster only search for not adding dont know to 'not manglik'
-                            $clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;
-                        }
+			if($cluster == "MANGLIK" && $clusterVal != 'ALL'){ // check for cluster only search for not adding dont know to 'not manglik'
+                            if($clusterVal!='')
+					$clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;
+			}
+      if($cluster=='MATCHALERTS_DATE_CLUSTER' && $clusterVal==NULL)
+				$clusterVal = 'ALL';
 			if(MobileCommon::isApp()=='A')
 				$searchParamsSetter['SEARCH_TYPE']= SearchTypesEnums::AppClusters;
 			elseif(MobileCommon::isApp()=='I')
@@ -840,6 +857,26 @@ class SearchUtility
                                         }
                                 }
                         }
+			elseif($request->getParameter("partnermatches")=='1')
+                        {
+                                if($type=='set')
+                                {
+                                        JsMemcache::getInstance()->set("cachedPMS$pid",serialize($statusArr));
+                                        JsMemcache::getInstance()->set("cachedPMR$pid",serialize($resultArr));
+                                        return 1;
+                                }
+                                elseif($type=='get')
+                                {
+                                        $statusArr = JsMemcache::getInstance()->get("cachedPMS$pid");
+                                        $resultArr = JsMemcache::getInstance()->get("cachedPMR$pid");
+                                        if($statusArr && $resultArr)
+                                        {
+                                                $cachedArr["statusArr"] = unserialize($statusArr);
+                                                $cachedArr["resultArr"] = unserialize($resultArr);
+                                                return $cachedArr;
+                                        }
+                                }
+                        }
 			elseif($request->getParameter("verifiedMatches")=='1')
                         {
                                 if($type=='set')
@@ -867,6 +904,8 @@ class SearchUtility
 				JsMemcache::getInstance()->set("cachedJJR$pid","");
 				JsMemcache::getInstance()->set("cachedVMS$pid","");
                                 JsMemcache::getInstance()->set("cachedVMR$pid","");
+				JsMemcache::getInstance()->set("cachedPMS$pid","");
+                                JsMemcache::getInstance()->set("cachedPMR$pid","");
 			}	
                 }
                 return 0;

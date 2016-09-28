@@ -25,7 +25,11 @@ class DeleteProfileV1Action extends sfActions
 	                }
 
 		$delete_reason=$request->getParameter("deleteReason");
-	     $specify_reason=$request->getParameter("specifyReason");
+	    $specify_reason=$request->getParameter("specifyReason");
+	    $offerConsent=$request->getParameter("offerConsent");
+            if($offerConsent=='Y')
+            	(new NEWJS_OFFER_CONSENT())->insertConsent($profileid);
+	     
 	     switch ($delete_reason) {
 	     	case '1':
 	     		$delete_reason = "I found my match on Jeevansathi.com";

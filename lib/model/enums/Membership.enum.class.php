@@ -28,6 +28,25 @@ class billingVariables
     //const NET_OFF_TAX_RATE = "0.12664";
     const SERVICE_TAX_CONTENT = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
 }
+
+class memDiscountTypes 
+{
+    public static $discountArr = array('1' => 'Renewal Discount',
+        2 => 'General Discount',
+        3 => 'Complementary Discount',
+        4 => 'Referral Discount',
+        5 => 'Variable Discount',
+        6 => 'Festive Discount',
+        7 => 'Renewal + Festive Discount',
+        8 => 'Voucher Code Discount',
+        9 => 'Variable + Festive Discount',
+        10 => 'Backend Discount Link',
+        11 => 'Cash Discount',
+        12 => 'No Discount',
+        14 => 'Coupon Code Discount'
+    );
+}
+
 class VariableParams
 {
 	public static $membershipMailerArr =array(
@@ -36,7 +55,9 @@ class VariableParams
 		'1786'=> 'REGISTRATION_BASED',
 		'1804' => 'VD',
 		'1797' => 'JS_EXCLUSIVE_FEEDBACK',
-		'1795' => 'MEMBERSHIP_PROMOTIONAL'
+		'1795' => 'MEMBERSHIP_PROMOTIONAL',
+		'1835' => 'NEW_MEMBERSHIP_PAYMENT',
+		'1836' => 'MEM_EXPIRY_CONTACTS_VIEWED'
 	);
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(
@@ -84,7 +105,7 @@ class VariableParams
     );
     public static $mainMostpopularSrvc = "P,C,NCP,ESP";
     public static $matriProfilePriceRS = "550";
-    public static $matriProfilePriceDOL = "39.99";
+    public static $matriProfilePriceDOL = "12.99";
     public static $paymentOptions = array(
         "card" => "Credit Card",
         "card2" => "Credit Card",
@@ -131,6 +152,7 @@ class VariableParams
         "Send/Receive Interests",
         "Instantly see Phone/Email",
         "Initiate Messages and Chat",
+        "Priority Customer service",
         "Show your Phone/Email to other members",
         "Four additional services"
     );
@@ -138,20 +160,23 @@ class VariableParams
         "P" => array(
             0,
             1,
-            2
+            2,
+            3
         ) ,
         "C" => array(
             0,
             1,
             2,
-            3
+            3,
+            4
         ) ,
         "ESP" => array(
             0,
             1,
             2,
             3,
-            4
+            4,
+            5
         )
     );
     public static $memTabContent = array(
@@ -376,6 +401,7 @@ class VariableParams
     public static $apiPageOnePerMembershipBenefits = array(
         'Instantly see Phone/Email of members',
         'Initiate Chat and Send Messages',
+        'Priority Customer service',
         'Publish your contacts to other members',
         'Response Booster',
         'Astro Compatibility',
@@ -385,6 +411,7 @@ class VariableParams
     );
     public static $apiPageOnePerMembershipBenefitsVisibility = array(
         "P" => array(
+            1,
             1,
             1,
             0,
@@ -399,12 +426,14 @@ class VariableParams
             1,
             1,
             1,
+            1,
             0,
             0,
             0,
             0
         ) ,
         "ESP" => array(
+            1,
             1,
             1,
             1,
@@ -417,6 +446,7 @@ class VariableParams
         "X" => array(
             1,
             1,
+            1,
             0,
             0,
             0,
@@ -427,7 +457,8 @@ class VariableParams
         "NCP" => array(
             1,
             1,
-            0,
+            1,
+            1,
             1,
             0,
             0,
@@ -438,14 +469,20 @@ class VariableParams
     public static $newApiPageOneBenefits = array(
         "Send Personalized Messages & Chat",
         "View contacts of members you like",
+        "Priority Customer service",
         "Make your contacts visible to others",
         "Response Booster",
-        "Featured Profile"
+        "Featured Profile",
+        "Astro Compatibility",
+        "We Talk For You"
     );
     public static $newApiPageOneBenefitsVisibility = array(
         "P" => array(
             1,
             1,
+            1,
+            0,
+            0,
             0,
             0,
             0
@@ -454,10 +491,16 @@ class VariableParams
             1,
             1,
             1,
+            1,
+            0,
+            0,
             0,
             0
         ) ,
         "ESP" => array(
+            1,
+            1,
+            1,
             1,
             1,
             1,
@@ -469,12 +512,28 @@ class VariableParams
             1,
             1,
             1,
-            1
+            1,
+            1,
+            0,
+            0
+        ) ,
+        "D" => array(
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0
         ) ,
         "FREE" => array(
             1,
             1,
+            0,
             1,
+            0,
+            0,
             0,
             0
         )
@@ -485,7 +544,8 @@ class VariableParams
         "Your advisor interacts with you to know your expectations",
         "Then utilizes his expertise to shortlist potential matches for you",
         "Connects with you to find the most suitable matches for you",
-        "Introduces you to the chosen matches & arranges meetings"
+        "Introduces you to the chosen matches & arranges meetings",
+        "Priority Customer service"
     );
     public static $DOL_CONV_RATE = 60;
     
@@ -704,17 +764,19 @@ class paymentOption
 
 class gatewayConstants
 {
-    public static $CCAvenueLiveDolMerchantId = "jsdollar5615";
-    public static $CCAvenueLiveDolSalt = "6cwghcvrmo2091w2uxnxeerde9xj7nle";
-    public static $CCAvenueLiveDolURL = 'https://world.ccavenue.com/servlet/ccw.CCAvenueController';
+    public static $CCAvenueLiveDolMerchantId = "63430";
+    public static $CCAvenueLiveDolSalt = "7C1F2325E7B5E8B39C36C2D3BF6D25E3";
+    public static $CCAvenueLiveDolURL = 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
+    public static $CCAvenueLiveDolAccessCode = "AVDD04CD91AO78DDOA";
     
     public static $CCAvenueLiveRsMerchantId = "M_anyana_1395";
     public static $CCAvenueLiveRsSalt = "a5qdxwe59g5af94qphru8hjubw1t9o6u";
     public static $CCAvenueLiveRsURL = "https://www.ccavenue.com/shopzone/cc_details.jsp";
     
-    public static $CCAvenueTestDolMerchantId = "jsdollar5615";
-    public static $CCAvenueTestDolSalt = "6cwghcvrmo2091w2uxnxeerde9xj7nle";
-    public static $CCAvenueTestDolURL = 'https://world.ccavenue.com/servlet/ccw.CCAvenueController';
+    public static $CCAvenueTestDolMerchantId = "63430";
+    public static $CCAvenueTestDolSalt = "7C1F2325E7B5E8B39C36C2D3BF6D25E3";
+    public static $CCAvenueTestDolURL = 'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
+    public static $CCAvenueTestDolAccessCode = "AVDD04CD91AO78DDOA";
     
     public static $CCAvenueTestRsMerchantId = "M_anyana_1395";
     public static $CCAvenueTestRsSalt = "a5qdxwe59g5af94qphru8hjubw1t9o6u";
@@ -731,8 +793,8 @@ class gatewayConstants
     public static $PayUTestDolMerchantId = "U0TVwL";
     public static $PayUTestDolSalt = "pvDO157G";
     
-    public static $PayUTestRsMerchantId = "dCBTMi";
-    public static $PayUTestRsSalt = "j2lZUnbX";
+    public static $PayUTestRsMerchantId = "gtKFFx";
+    public static $PayUTestRsSalt = "eCwWELxi";
     
     public static $PayUTestGatewayURL = 'https://test.payu.in/_payment';
     public static $PayULiveGatewayURL = 'https://secure.payu.in/_payment';
@@ -787,5 +849,9 @@ class gatewayConstants
 class franchiseeCommission
 {
     const FRANCHISEE = 40;
+}
+
+class SelectGatewayRedirect{
+    public static $gatewayOptions = array('default','payu','ccavenue');
 }
 ?>

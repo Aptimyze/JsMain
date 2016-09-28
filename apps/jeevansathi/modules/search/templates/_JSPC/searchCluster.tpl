@@ -36,7 +36,7 @@
 	<!--start:slider box-->
         <div class="srpbg1 color11 clusterView cursp">
 			<div class="showedu srppad8 disp-tbl">
-				<div class="disp-cell vmid"><i class="fl sprite2 srpimg1"></i></div>
+				<div class="disp-cell vmid"><i id="{clusterName}" class="fl sprite2 srpimg1"></i></div>
 				<div class="disp-cell vmid f13 uppercase bold pl15 srpwid6">{clusterName}</div>
 			</div>
         </div>
@@ -86,7 +86,7 @@
 	<div class="srpbg2 mt13">
 		<div class="srpboxp1">
 			<div id="srpNoClusterHeading" class="f17 fontlig color11 txtc pb15">{heading}</div>
-			<div class="srpbdim1 mauto bg5 srpbrad1 disp-tbl txtc">
+			<div class="srpbdim1 mauto bg5 srpbrad1 txtc {js-hideCircle}">
 				<div id="srpNoClusterCount" class="disp-cell vmid fontthin f50 colrw">{totalCount}</div>
 			</div>
 			<div id="srpNoClusterMessage" class="pt20 txtc fontlig color2 f15 lh22">

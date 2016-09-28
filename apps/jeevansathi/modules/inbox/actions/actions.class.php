@@ -134,11 +134,30 @@ class inboxActions extends sfActions
 			switch($infoTypeId)
 			{
 				case "1":
-					$contactsObj = new ContactsRecords();
 					$currentCount =  $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 					if($currentCount)
 					{
-						$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
+						if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+						{
+							$producerObj=new Producer();
+							if($producerObj->getRabbitMQServerConnected())
+							{
+								$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED)), 'redeliveryCount'=>0 );
+								$producerObj->sendMessage($updateSeenData);
+							}
+							else
+							{
+								$this->sendMail();
+							}
+						}
+						else
+						{
+							$contactRObj=new EoiViewLog();
+							$contactRObj->setEoiViewedForAReceiver($pid,'N');
+							$contactsObj = new ContactsRecords();
+							$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
+                                                        
+						}
 						$profileMemcacheObj->update("AWAITING_RESPONSE_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
 					}
@@ -146,18 +165,79 @@ class inboxActions extends sfActions
 				case "9":
 					$photoRCurrentCount=$profileMemcacheObj->get("PHOTO_REQUEST_NEW");
 					if ($photoRCurrentCount!='0'){
-						Inbox::setAllPhotoRequestsSeen($pid);
+                                                if(JsConstants::$updateSeenQueueConfig['PHOTO_REQUEST'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'PHOTO_REQUEST','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+							Inbox::setAllPhotoRequestsSeen($pid);
+						}
 						$profileMemcacheObj->update("PHOTO_REQUEST_NEW",-$photoRCurrentCount);
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
 				case "2":
-					$contactsObj = new ContactsRecords();
 					$currentCount =  $profileMemcacheObj->get("ACC_ME_NEW");
 					if($currentCount)
 					{
-						$contactsObj->makeAllContactSeen($pid,ContactHandler::ACCEPT);
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::ACCEPT)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+							$contactsObj = new ContactsRecords();
+							$contactsObj->makeAllContactSeen($pid,ContactHandler::ACCEPT);
+                                                }
 						$profileMemcacheObj->update("ACC_ME_NEW",-$currentCount);
+						$profileMemcacheObj->updateMemcache();
+					}
+					break;
+				case "12":
+					$currentCount =  $profileMemcacheObj->get("FILTERED_NEW");
+					if($currentCount)
+					{
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+													 $contactRObj=new EoiViewLog();
+                                                        $contactRObj->setEoiViewedForAReceiver($pid,'Y');
+							$contactsObj = new ContactsRecords();
+							$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
+                                                       
+                                                }
+						$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
@@ -165,7 +245,23 @@ class inboxActions extends sfActions
 					$currentCount =  $profileMemcacheObj->get("MESSAGE_NEW");
 					if($currentCount)
 					{
-						MessageLog::makeAllMessagesSeen($pid);
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_MESSAGES'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_MESSAGES','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+							MessageLog::makeAllMessagesSeen($pid);
+						}
 						$profileMemcacheObj->update("MESSAGE_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
 					}
@@ -190,12 +286,15 @@ class inboxActions extends sfActions
   }
 
 public function executePerformV2(sfWebRequest $request)
-  {
+  {    
+  	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'in inbox api v2 '. $request->getParameter("infoTypeId") ); 
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$inputValidateObj = ValidateInputFactory::getModuleObject('inbox'); //added for contact center
 		$inputValidateObj->validateRequestInboxData($request);
 		$output = $inputValidateObj->getResponse();
-		
+
+
+
 		if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
 			/** caching **/
@@ -356,8 +455,24 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["url"]="/profile/contacts_made_received.php?page=accept&filter=M";
 					//if(MobileCommon::isDesktop()==false)
 					{
-						$contactsObj = new ContactsRecords();
-						$contactsObj->makeAllContactSeen($pid,ContactHandler::ACCEPT);
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::ACCEPT)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+							$contactsObj = new ContactsRecords();
+							$contactsObj->makeAllContactSeen($pid,ContactHandler::ACCEPT);
+						}
 						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("ACC_ME_NEW");
 						if($currentCount)
@@ -379,8 +494,9 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["title2"]='Received';
 					$response2["infotypeid2"]=1;
 					$response2["url"]="/profile/contacts_made_received.php?page=eoi&filter=R";
+					$response2['subheading'] = InboxEnums::getInboxSubHeading($response2);
 					 break;  
-					
+					// later modified the data sent as we have to update the seen status of the receiver in the contacts table and also eoi viewed log
 					case 'INTEREST_RECEIVED':
 					case 'INTEREST_RECEIVED_FILTER':
 					$response2["subtitle"]='Received '.$response2['total'];
@@ -389,8 +505,27 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["url"]="/profile/contacts_made_received.php?page=eoi&filter=M";
 					//if(MobileCommon::isDesktop()==false)
 					{
-						$contactsObj = new ContactsRecords();
-						$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+													 $contactRObj=new EoiViewLog();
+                                                        $contactRObj->setEoiViewedForAReceiver($pid,'N');
+							$contactsObj = new ContactsRecords();
+							$contactsObj->makeAllContactSeen($pid,ContactHandler::INITIATED);
+                                                       
+						}
 						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 						if($currentCount)
@@ -428,7 +563,23 @@ public function executePerformV2(sfWebRequest $request)
 							$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 							$photoRCurrentCount=$profileMemcacheObj->get("PHOTO_REQUEST_NEW");
 							if ($photoRCurrentCount!='0'){
-								Inbox::setAllPhotoRequestsSeen($pid);
+								if(JsConstants::$updateSeenQueueConfig['PHOTO_REQUEST'])
+								{
+									$producerObj=new Producer();
+									if($producerObj->getRabbitMQServerConnected())
+									{
+										$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'PHOTO_REQUEST','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+										$producerObj->sendMessage($updateSeenData);
+									}
+									else
+									{
+								              $this->sendMail();
+									}
+								}
+								else
+								{
+									Inbox::setAllPhotoRequestsSeen($pid);
+								}
 								$profileMemcacheObj->update("PHOTO_REQUEST_NEW",-$photoRCurrentCount);
 								$profileMemcacheObj->updateMemcache();
 							}
@@ -447,7 +598,23 @@ public function executePerformV2(sfWebRequest $request)
 							$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 							$horoscopeRCurrentCount=$profileMemcacheObj->get("HOROSCOPE_NEW");
 							if ($horoscopeRCurrentCount!='0'){
-								Inbox::setAllHoroscopeRequestsSeen($pid);
+                                                                if(JsConstants::$updateSeenQueueConfig['HOROSCOPE_REQUEST'])
+                                                                {
+                                                                        $producerObj=new Producer();
+                                                                        if($producerObj->getRabbitMQServerConnected())
+                                                                        {
+                                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'HOROSCOPE_REQUEST','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+                                                                                $producerObj->sendMessage($updateSeenData);
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                              $this->sendMail();
+                                                                        }
+                                                                }
+                                                                else
+                                                                {
+									Inbox::setAllHoroscopeRequestsSeen($pid);
+								}
 								$profileMemcacheObj->update("HOROSCOPE_NEW",-$horoscopeRCurrentCount);
 								$profileMemcacheObj->updateMemcache();
 							}
@@ -481,6 +648,34 @@ public function executePerformV2(sfWebRequest $request)
 					case 'FILTERED_INTEREST': 
 					$response2["subtitle"]='Filtered Interests '.$response2['total'];
 					$response2["title2"]=null;
+						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
+						$currentCount =  $profileMemcacheObj->get("FILTERED_NEW");
+						if($currentCount)
+						{
+							if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+							{
+								$producerObj=new Producer();
+								if($producerObj->getRabbitMQServerConnected())
+								{
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED)), 'redeliveryCount'=>0 );
+									$producerObj->sendMessage($updateSeenData);
+								}
+								else
+								{
+							              $this->sendMail();
+								}
+							}
+							else
+							{
+								 $contactRObj=new EoiViewLog();
+                                                                $contactRObj->setEoiViewedForAReceiver($pid,'Y');
+								$contactsObj = new ContactsRecords();
+								$contactsObj->makeAllContactSeen($pid,ContactHandler::FILTERED);
+                                                               
+							}
+							$profileMemcacheObj->update("FILTERED_NEW",-$currentCount);
+							$profileMemcacheObj->updateMemcache();
+						}
 					break;
 
 					case 'PEOPLE_WHO_VIEWED_MY_CONTACTS': 
@@ -491,7 +686,23 @@ public function executePerformV2(sfWebRequest $request)
 					case "MY_MESSAGE_RECEIVED":
 					//if(MobileCommon::isDesktop()==false)
 					{
-						MessageLog::makeAllMessagesSeen($pid);
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_MESSAGES'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_MESSAGES','body'=>array('profileid'=>$pid)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+							MessageLog::makeAllMessagesSeen($pid);
+						}
 						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("MESSAGE_NEW");
 						if($currentCount)
@@ -511,7 +722,7 @@ public function executePerformV2(sfWebRequest $request)
                                         $response2["headingTotalCount"]=count($response2['profiles']);
                                         $response2["loggedin_subscription"] = '';
                                         if(CommonFunction::getMainMembership($profileObj->getSUBSCRIPTION()) == mainMem::EVALUE){
-                                                $response2["loggedin_subscription"]=  mainMem::ERISHTA_LABEL;
+                                                $response2["loggedin_subscription"]=  mainMem::EVALUE_LABEL;
                                         }elseif(CommonFunction::getMainMembership($profileObj->getSUBSCRIPTION()) == mainMem::EADVANTAGE){
                                                 $response2["loggedin_subscription"]=  mainMem::EADVANTAGE_LABEL;
                                         }
@@ -696,5 +907,10 @@ public function executePerformV2(sfWebRequest $request)
       $profileCacheObj->unsetKey("MATCHALERT");
       $request->setAttribute("resetMatchAlertCount",1);
     }
+  }
+  private function sendMail()
+  {
+	$http_msg=print_r($_SERVER,true);
+	mail("eshajain88@gmail.com,lavesh.rawat@gmail.com","rabbit mq server issue","rabbit mq server issue");
   }
 }

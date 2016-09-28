@@ -47,7 +47,7 @@ class DuplicateProfileScreen
    * @access public
    */
   public function fetchCountScreenedProfiles($st_date,$end_date,$flag) {
-	  $logObj=new DUPLICATE_PROFILE_LOG();
+	  $logObj=new DUPLICATE_PROFILE_LOG('newjs_slave');
           if($flag == 'DUP_pair')
           {
                 $cnt_arr = $logObj->fetchCountDuplicateProfileLog($st_date,$end_date,'EXECUTIVE');
@@ -218,14 +218,13 @@ class DuplicateProfileScreen
 
         include_once(sfConfig::get("sf_web_dir")."/classes/shardingRelated.php");
         include_once(sfConfig::get("sf_web_dir")."/classes/Mysql.class.php");
-        $mysql=new Mysql;
-        $myDbName=getProfileDatabaseConnectionName($pid);
-        $myDb=$mysql->connect("$myDbName");
-
-        $archiveInfoObj         =new ARCHIVE_FOR_DUPLICATE();
+        $pidShard=JsDbSharding::getShardNo($pid);
+		$dbMessageLogObj=new NEWJS_MESSAGE_LOG($pidShard,'newjs_slave');
+        
+        $archiveInfoObj         =new ARCHIVE_FOR_DUPLICATE('newjs_slave');
         $contactArchiveInfo     =$archiveInfoObj->getContactsArchive($pid,$paramArr);
         $alternateNumInfo       =$archiveInfoObj->getAlternatePhone($pid);
-        $contactIpInfo          =$archiveInfoObj->getContactIP($pid,$myDb,$mysql);
+        $contactIpInfo          =$dbMessageLogObj->getContactIP($pid);
         $paymentIpInfo          =$archiveInfoObj->getPaymentIP($pid);
 	$userNameInfo           =$archiveInfoObj->getNameOfUser($pid);
         $archiveInfo            =array("CONTACT"=>$contactArchiveInfo,"ALTERNATE_NUM"=>$alternateNumInfo,"CONTACT_IP"=>$contactIpInfo,"PAYMENT_IP"=>$paymentIpInfo,"USERNAME"=>$userNameInfo);

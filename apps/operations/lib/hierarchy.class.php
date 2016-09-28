@@ -32,7 +32,7 @@ class hierarchy
 
         public function getAllReporters()
         {
-                $jsadminPswrdsObj = new jsadmin_PSWRDS();
+                $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_masterRep');
                 $info = $jsadminPswrdsObj->get_All_EmpID_Name_HeadID();
                 $empnameArr = $info[0];
                 $headidArr = $info[1];
@@ -125,7 +125,7 @@ class hierarchy
 
 	public function getHierarchy($usernames)
 	{
-		$jsadminPswrdsObj = new jsadmin_PSWRDS();
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
 		$this->headid_arr = $jsadminPswrdsObj->get_Emp_Head_Id_Array($usernames);
 		$this->empname_arr = $jsadminPswrdsObj->get_Emp_Name_Array($usernames);
 		asort($this->empname_arr);

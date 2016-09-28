@@ -7,7 +7,7 @@
 */
 class SendHoroscopeRequestTask extends sfBaseTask
 {
-  const HOROSCOPEMAILID = 1830;
+  const HOROSCOPEMAILID = 1833;
   private $shardsArray = array(0,1,2);
   private $noOfDays = 1;
   private $emailSenderObj;

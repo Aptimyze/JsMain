@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 This php script checks if RabbitMQ is working, checks memory consumption (memory alarm and/or disk alarm are raised if memory/disk consumption is more than the specified limit),
 number of active consumer instances and sends alert if queues have number of messages more than N(a pre specified limit). Consumer instance is run if there are queued messages 
@@ -83,9 +83,19 @@ EOF;
             $str="\nRabbitmq Error Alert: Number of unacknowledged messages pending in {$queue_data->name} is  {$queue_data->messages_unacknowledged} on first server. Restarting the consumers";
             exec("ps aux | grep \"".MessageQueues::CRONCONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $out);
             exec("ps aux | grep \"".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $notificationConsumerOut);
-         
+            exec("ps aux | grep \"".MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $deleteRetrieveConsumerOut);
+            exec("ps aux | grep \"".MessageQueues::UPDATESEEN_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $updateSeenConsumerOut);
+            exec("ps aux | grep \"".MessageQueues::PROFILE_CACHE_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $profileCacheConsumerOut);
+            exec("ps aux | grep \"".MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $viewLogConsumerCount);
             if(!empty($out) && is_array($out))
               foreach ($out as $key => $value) 
+              {
+                $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count1 >0)
+                  exec("kill -9 ".$value);
+              }
+              if(!empty($deleteRetrieveConsumerOut) && is_array($deleteRetrieveConsumerOut))
+              foreach ($deleteRetrieveConsumerOut as $key => $value) 
               {
                 $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
                 if($count1 >0)
@@ -98,10 +108,49 @@ EOF;
                 if($count2 >0)
                   exec("kill -9 ".$value);
               }
+            if(!empty($updateSeenConsumerOut) && is_array($updateSeenConsumerOut))
+              foreach ($updateSeenConsumerOut as $key => $value)
+              {
+                $count2 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count2 >0)
+                  exec("kill -9 ".$value);
+              }
+
+            if(!empty($profileCacheConsumerOut) && is_array($profileCacheConsumerOut)) {
+              foreach ($profileCacheConsumerOut as $key => $value)
+              {
+                $count2 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count2 >0)
+                  exec("kill -9 ".$value);
+              }
+            }
+            
+            if(!empty($viewLogConsumerCount) && is_array($viewLogConsumerCount)) {
+              foreach ($viewLogConsumerCount as $key => $value)
+              {
+                $count2 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count2 >0)
+                  exec("kill -9 ".$value);
+              }
+            }
+
+
             for($i=1;$i<=MessageQueues::CONSUMERCOUNT ;$i++)
               passthru(JsConstants::$php5path." ".MessageQueues::CRONCONSUMER_STARTCOMMAND." > /dev/null &"); 
             for($i=1;$i<=MessageQueues::NOTIFICATIONCONSUMERCOUNT ;$i++)
-              passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &"); 
+              passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &");
+              for($i=1;$i<=MessageQueues::CONSUMER_COUNT_SINGLE ;$i++)
+              passthru(JsConstants::$php5path." ".MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND." > /dev/null &");  
+              for($i=1;$i<=MessageQueues::UPDATE_SEEN_CONSUMER_COUNT ;$i++)
+              passthru(JsConstants::$php5path." ".MessageQueues::UPDATESEEN_STARTCOMMAND." > /dev/null &");
+
+            for($i=1;$i<=MessageQueues::PROFILE_CACHE_CONSUMER_COUNT ;$i++) {
+              passthru(JsConstants::$php5path." ".MessageQueues::PROFILE_CACHE_STARTCOMMAND." > /dev/null &");
+            }
+            for($i=1;$i<=MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT ;$i++) {
+              passthru(JsConstants::$php5path." ".MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND." > /dev/null &");
+            }
+
             RabbitmqHelper::sendAlert($str,"default");
           }
         }
@@ -210,7 +259,10 @@ EOF;
 
     //restart inactive notification consumer for queues bound to InstantNotificationExchange exchange
     $this->restartInactiveConsumer(MessageQueues::NOTIFICATIONCONSUMERCOUNT,MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND,"browserNotification");
-
+    $this->restartInactiveConsumer(MessageQueues::CONSUMER_COUNT_SINGLE,MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND,"DeleteRetrieve");
+    $this->restartInactiveConsumer(MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,MessageQueues::UPDATESEEN_STARTCOMMAND,"UpdateSeen");
+    $this->restartInactiveConsumer(MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,MessageQueues::PROFILE_CACHE_STARTCOMMAND,"ProfileCache Queue");
+    $this->restartInactiveConsumer(MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND);
     //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
     if(MessageQueues::FALLBACK_STATUS==true)
     {
@@ -219,7 +271,16 @@ EOF;
         $consumerObj=new Consumer('SECOND_SERVER',$messageCount);
         $consumerObj->receiveMessage(); 
         $notificationConsumerObj=new JsNotificationsConsume('SECOND_SERVER',$messageCount);
-        $notificationConsumerObj->receiveMessage();   
+        $notificationConsumerObj->receiveMessage();
+        $delRetrieveConsumerObj=new deleteRetrieveConsumer('SECOND_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $delRetrieveConsumerObj->receiveMessage();   
+        $updateSeenConsumerObj=new updateSeenConsumer('SECOND_SERVER',$messageCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $updateSeenConsumerObj->receiveMessage();
+        $profileCacheConsumerObj = new ProfileCacheConsumer('SECOND_SERVER', $messageCount);
+        $profileCacheConsumerObj->receiveMessage();
+        $updateViewLogConsumerObj = new updateViewLogConsumer('SECOND_SERVER', $messageCount);
+        $updateViewLogConsumerObj->receiveMessage();
+        unset($profileCacheConsumerObj);
       }
     }    
   }

@@ -86,10 +86,20 @@ The JS Team</div></td>
 		$AP_MissedServiceLog->Update($profileid);
 		$AP_CallHistory->UpdateDeleteProfile($profileid);
 		//$newDeletedProfileObj->Insert($profileid);
-		$path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $profileid > /dev/null &";
-                $cmd = JsConstants::$php5path." -q ".$path;
-                passthru($cmd);
-
+		$producerObj=new Producer();
+		if($producerObj->getRabbitMQServerConnected())
+		{
+			$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profileid)), 'redeliveryCount'=>0 );
+			$producerObj->sendMessage($sendMailData);
+			$sendMailData = array('process' =>'USER_DELETE','data' => ($profileid), 'redeliveryCount'=>0 );
+			$producerObj->sendMessage($sendMailData);
+		}
+		else
+		{
+			$path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $profileid > /dev/null &";
+            $cmd = JsConstants::$php5path." -q ".$path;
+            passthru($cmd);
+		}
 	}
 
 	public function callDeleteCronBasedOnId($profileid,$background='Y')

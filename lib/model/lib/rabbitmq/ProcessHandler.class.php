@@ -3,6 +3,7 @@
 This class includes functions for sending mail, sms and notifications.
 */
 include_once(JsConstants::$cronDocRoot."/crontabs/connect.inc");
+
 class ProcessHandler
 {
   /**
@@ -121,5 +122,122 @@ class ProcessHandler
         }
     }
   }
-}
+
+  
+  /**
+   * 
+   * Function to delete/retrieve user
+   * 
+   * @access public
+   * @param $type,$body
+   */
+  public function deleteRetrieveProfileId($type,$body)
+  {
+    switch($type)
+    {
+      case "RETRIEVE" : 
+                      passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/retrieveprofile_bg.php " . $body['profileId'] . " > /dev/null");  
+                      break;
+      case "DELETING" :
+                      passthru(JsConstants::$php5path." $_SERVER[DOCUMENT_ROOT]/profile/deleteprofile_bg.php " . $body['profileId'] . " > /dev/null");
+                      break;
+
+    }
+
+ }
+
+ public function insertChatMessage($type,$body)
+ {
+     switch($type)
+     {
+         case "PUSH":
+             $sender = $body["from"];
+             $receiver = $body["to"];
+             $communicationType = $body["communicationType"];
+             $message = $body["message"];
+             $chatId = $body["chatid"];
+             $ip = $body["ip"];
+             $date = $body["date"];
+             $js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatId,$ip,$date);
+             $js_communication->storeCommunication();
+             break;
+     }
+ }
+ public function updateSeen($type,$body)
+ {
+
+	if($body['contactType']==ContactHandler::FILTERED)
+        {
+                $contactRObj=new EoiViewLog();
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'Y');
+        }
+
+        if($body['contactType']==ContactHandler::INITIATED)
+        {
+                $contactRObj=new EoiViewLog();
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'N');
+        }
+
+	switch($type)
+	{
+		case "ALL_CONTACTS":
+			$contactsObj = new ContactsRecords();
+			$contactsObj->makeAllContactSeen($body['profileid'],$body['contactType']);
+			break;
+		case "ALL_MESSAGES":
+			MessageLog::makeAllMessagesSeen($body['profileid']);
+			break;
+		case "PHOTO_REQUEST":
+			Inbox::setAllPhotoRequestsSeen($body['profileid']);
+			break;
+		case "HOROSCOPE_REQUEST":
+			Inbox::setAllHoroscopeRequestsSeen($body['profileid']);
+			break;
+	}
+        
+ }
+
+ /**
+ * HandleProfileCacheQueue
+ * @param $process
+ * @param $body
+ */
+ public function HandleProfileCacheQueue($process, $body)
+ {
+     try{
+         $key = $body['PROFILEID'];
+         if(0 === strlen($key)) {
+             return ;
+         }
+         $key = ProfileCacheConstants::PROFILE_CACHE_PREFIX . $key;
+         JsMemcache::getInstance()->delete($key, true);
+     } catch (Exception $ex) {
+         //Requeue the data
+         $reSendData = array('process' =>$process,'data'=>array('type' => '','body'=>$body), 'redeliveryCount'=> 0);
+         $producerObj=new Producer();
+         $producerObj->sendMessage($reSendData);
+     }
+
+ }
+
+  public function logDuplicate($phone,$profileId)
+ {
+	$profileObj=new Profile();
+        $profileObj->getDetail($profileId, 'PROFILEID',"*");
+        
+        Duplicate::logIfDuplicate($profileObj,$phone);
+ }
+ 
+public function updateViewLogTable($body,$type)
+ {
+        $viewer = $body["VIEWER"];
+        $viewed = $body["VIEWED"];
+	$viewLogObj=new VIEW_LOG_TRIGGER();
+        if($type == "inTrigger")
+            $viewLogObj->updateViewTrigger($viewer,$viewed);
+        
+        $viewLogObj->updateViewLog($viewer,$viewed);
+ }
+ 
+ }
 ?>

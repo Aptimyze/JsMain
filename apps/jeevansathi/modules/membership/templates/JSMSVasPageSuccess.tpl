@@ -237,6 +237,9 @@
 		$("#continueBtn, #nextButton").click(function(){
 			callRedirectManager();
 		});
+		if(readCookie('backState') == "changePlan"){
+			$("#pageBack").hide();	
+		}
 		$("#pageBack").click(function(e){
 			if(readCookie('backState') != "changePlan"){
 				eraseCookie('backState');
@@ -253,7 +256,7 @@
 		var email = "~$data.userDetails.EMAIL`";
 		setTimeout(function(){
 			autoPopupFreshdesk(username,email);
-		}, 60000);
+		}, 90000);
 	});
 </script>
 ~/if`

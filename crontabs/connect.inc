@@ -2,6 +2,7 @@
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
 include_once("/usr/local/scripts/connect_crontabsDb.php");
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 //Added By lavesh
 if($flag_using_php5)
 {
@@ -64,11 +65,13 @@ if(!function_exists('mysql_error_js'))
         {
                 global $active_db,$db;
 		if($active_db!="")
-			return mysql_error($active_db);
+			$errorMessage = mysql_error($active_db);
                 elseif($db)
-                        return mysql_error($db);
+                        $errorMessage = mysql_error($db);
                 else    
-                        return mysql_error();
+                        $errorMessage = mysql_error();
+        LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorMessage));
+        return $errorMessage;
         }
 }
 

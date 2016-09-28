@@ -7,7 +7,7 @@
 <tr>
 <td></td>
 <td colspan="2">
-<img src="~$IMG_URL`/images/mailer/header_footer/incomp_jsLogo.gif" width="210" height="65" vspace="0" hspace="0" align="left" border="0" alt="Jeevansathi.com">
+<img src="~$IMG_URL`/images/jspc/commonimg/logo1.png" width="210" height="65" vspace="0" hspace="0" align="left" border="0" alt="Jeevansathi.com">
 <table border="0" cellpadding="0" cellspacing="0" align="right" width="240">
 <tbody><tr>
 <td width="184" height="65" style="font-family:Arial; font-size:12px; color:#474646; padding-right:6px;">

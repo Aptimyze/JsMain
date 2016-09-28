@@ -21,7 +21,8 @@ class InstantAppNotification
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='')
   {
 	$notificationSentCount = $this->getNotificationSentCount($selfProfile);
-	if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) || $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey]>$notificationSentCount)
+	$notificationlimit = $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey];
+	if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) || $notificationlimit>$notificationSentCount)
 	{
 		if($selfProfile)
 		{
@@ -55,7 +56,9 @@ class InstantAppNotification
                           	}
                           	if($thumbNail)
 					$profileDetails[$selfProfile]['PHOTO_URL']=$thumbNail;
-                          	else  
+                          	elseif($notificationData['PHOTO_URL']!='')
+					$profileDetails[$selfProfile]['PHOTO_URL'] =$notificationData['PHOTO_URL'];
+				else  
 					$profileDetails[$selfProfile]['PHOTO_URL']="D";
 
 				if($notificationData['OTHER_PROFILE_CHECKSUM'])
@@ -78,6 +81,18 @@ class InstantAppNotification
 				}
 				$notificationSenderObj->sendNotifications($profileDetails);
 			}
+		}
+	}
+	else if($notificationSentCount>=$notificationlimit)
+	{
+		//check if this notification is eligible for digest notification
+		$digestMappingkey = NotificationEnums::$digestNotificationKeys[$this->notificationKey];
+		if($digestMappingkey)
+		{
+			//schedule digest notification
+			$digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
+			$digestNotObj->insertDigestNotification($selfProfile,$otherProfile,$digestMappingkey);
+			unset($digestNotObj);
 		}
 	}
   }

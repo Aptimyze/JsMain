@@ -1,4 +1,8 @@
 <?php
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 class protect
 {
 	/***
@@ -33,6 +37,8 @@ class protect
         private $AUTHCHECKSUM="AUTHCHECKSUM";
 	public $allowDeactive="";
 	public $allowUsernameLogin=false;	
+        private $dateTime1 ='11';
+        private $dateTime2 ='22';
 	/*
 	**** @function: Class Constructor
 	**** @include: the class configuration file: Mysql.class.php
@@ -432,7 +438,7 @@ class protect
                         //die;
                         $request_uri=$_SERVER['REQUEST_URI'];
                         //print_r("request_uri is >>>>".$request_uri);
-                        $fileslist=array("login.php","intermediate.php","login_redirect.php","jsChat.php","social/import","register/","sugarcrm","autoSug");
+                        $fileslist=array("login.php","login_redirect.php","social/import","register/","sugarcrm","autoSug");
 
                         $iftrue=true;
                         foreach($fileslist as $key=>$val)
@@ -442,10 +448,10 @@ class protect
                                         $iftrue=false;
 
                         }
-                        if($iftrue && !$isMobile){
+                        /*if($iftrue && !$isMobile){
                                         header("Location:".$SITE_URL."/profile/intermediate.php?parentUrl=".$request_uri);
                                         exit;
-                                }
+                                }*/
                         //}
                 }
 
@@ -857,8 +863,10 @@ class protect
 
                         }
                 }
-		$sql="update JPROFILE set LAST_LOGIN_DT=now(),SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>SORT_DT,DATE_SUB(NOW(),INTERVAL 7 DAY),SORT_DT) where PROFILEID='" . $profileid . "'";
-                $mysql->executeQuery($sql,$db);
+                $jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
+                $jprofileUpdateObj->updateJProfileLoginSortDate($profileid);
+		//$sql="update JPROFILE set LAST_LOGIN_DT=now(),SORT_DT=if(DATE_SUB(NOW(),INTERVAL 7 DAY)>SORT_DT,DATE_SUB(NOW(),INTERVAL 7 DAY),SORT_DT) where PROFILEID='" . $profileid . "'";
+          //      $mysql->executeQuery($sql,$db);
 		}
 	}
 
@@ -1291,7 +1299,7 @@ class protect
             $mailedtime = date("Y-m-d H:i:s",$autoLoginTime);
             $db = connect_db();
             $sql = "select count(*) CNT from jsadmin.AUTO_EXPIRY WHERE PROFILEID = '$profileid' AND DATE > '$mailedtime'";
-            $result = mysql_query($sql,$db) or die(mysql_error($result));
+            $result = mysql_query($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error($result)));
             $row = mysql_fetch_assoc($result);   
             
         	if($timediff > $this->expiryTime || $row['CNT']) //30*24*60*60 seconds or email or password changed after mail sent.
@@ -1318,9 +1326,20 @@ class protect
 			}
                         if($allow)
                         {
+				/*
 				$time=date("Y-m-d G:i:s");
                                 $sql="replace into userplane.recentusers(userID,lastTimeOnline) values('$pid','$time')";
-                                $mysql->executeQuery($sql,$db);
+                                $mysql->executeQuery($sql,$db);*/
+
+	                        // Add Online-User
+	                        $dateTime =date("H");
+	                        $redisOnline =true;
+	                        if(($dateTime>=$this->dateTime1) && ($dateTime<$this->dateTime2))
+	                                $redisOnline =false;
+				if($redisOnline){
+	                        	$jsCommonObj =new JsCommon();
+	                        	$jsCommonObj->setOnlineUser($pid);
+				}
                         }
                 }
                 
@@ -1331,10 +1350,21 @@ class protect
 	{
 		if(is_numeric($pid))
                 {
+			/*
                         $mysql= new Mysql;
                         $db=$mysql->connect();
                         $sql="delete from  userplane.recentusers where userID='$pid'";
-                        $mysql->executeQuery($sql,$db);
+                        $mysql->executeQuery($sql,$db);*/
+
+                        // Remove Online-User
+                        $dateTime =date("H");
+                        $redisOnline =true;
+                        if(($dateTime>$this->dateTime1) && ($dateTime<$this->dateTime2))
+                                $redisOnline =false;
+			if($redisOnline){
+	                        $jsCommonObj =new JsCommon();
+	                        $jsCommonObj->removeOnlineUser($pid);
+			}
                 }
 	}
 

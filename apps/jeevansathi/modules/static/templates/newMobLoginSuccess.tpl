@@ -12,7 +12,7 @@
 			<!--start:logo-->
 			<div class="lgin_pad1">
 				<div class="fl HamiconLogin"> <i id ="hamburgerIcon" class="mainsp baricon " hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i> </div>
-				<img class ="loginLogo" src="~$IMG_URL`/images/mrevamp/logo.png" border="0">
+				<img class ="loginLogo" src="~$IMG_URL`/images/jsms/commonImg/mainLogoNew.png" border="0">
 			</div>
 			<!--end:logo-->
 			~if $showRegisterMsg eq 'Y'`

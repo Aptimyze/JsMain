@@ -31,7 +31,7 @@ EOF;
         $todayDate =date("Y-m-d");
         //************** Variable discount cleanup process Starts *************
         
-        $vdBackupOneDayObj = new billing_VARIABLE_DISCOUNT_BACKUP_1DAY();
+        $vdBackupOneDayObj = new billing_VARIABLE_DISCOUNT_BACKUP_1DAY('newjs_masterDDL');
         
         $vdBackupOneDayObj->truncate();
         $vdBackupOneDayObj->insertDataFromVariableDiscount();
@@ -41,6 +41,7 @@ EOF;
         $vdImpactObj->generateVDImpactReport();
         
         $vdObj = new billing_VARIABLE_DISCOUNT();
+        //$vdObjSelSlave = new billing_VARIABLE_DISCOUNT('newjs_slave');
         
         // Only edate check is added to include current available discounts and future discounts
         /* Future discounts : those discounts whose start date is greater than todays date */
@@ -49,7 +50,11 @@ EOF;
         $vdLogObj = new billing_VARIABLE_DISCOUNT_LOG();
         $vdLogObj->insertDataFromVariableDiscountBackup1Day($todayDate);
         
+        //$toBeDeletedProfiles = $vdObjSelSlave->selectToBeDeletedProfilesWhoseVariableDiscountIsEndingYesterday();
+        //$newjsTempSMSDetObj = new newjs_TEMP_SMS_DETAIL();
+        //$newjsTempSMSDetObj->deletePreviousVdEntries($toBeDeletedProfiles);
         $vdObj->deleteVariableDiscountEndingYesterday();
+
         
         // Maintain records from VARIABLE_DISCOUNT_OFFER_DURATION for the expired discounts in VARIABLE_DISCOUNT_OFFER_DURATION_LOG
         $vdOfferDurationLogObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG();
@@ -59,6 +64,9 @@ EOF;
         // Delete records from VARIABLE_DISCOUNT_OFFER_DURATION for the expired discounts
         $vdOfferDurationObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $vdOfferDurationObj->deleteExpiredDiscount($todayDate);
+
+	$vdDiscountTemp =new billing_VARIABLE_DISCOUNT_TEMP();
+	$vdDiscountTemp->deleteExpiredMiniVdDiscount($todayDate);	
         
         unset($vdBackupOneDayObj);
         unset($vdObj);

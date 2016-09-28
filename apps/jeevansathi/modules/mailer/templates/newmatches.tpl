@@ -96,6 +96,11 @@
                                         		</table>
                                     		</td>
                                 	</tr>
+                                    ~if $data.GifFlag eq 1`
+                                    <tr>
+                                        <td>~include_partial("global/primaryMailGif")`</td>
+                                    </tr><br>
+                                    ~else`
                         	~if $data.MEMBERSHIP.membership eq 0 || ( $data.MEMBERSHIP.membership eq 1 && $data.MEMBERSHIP.renew.RENEW eq 1)`
                                 	<tr>
                                     		<td style="padding-left:10px;">
@@ -112,6 +117,7 @@
                                     		</td>
                                 	</tr>
                        		 ~/if`
+                             ~/if`
                             	</table>
                         </td>
                         <td></td>

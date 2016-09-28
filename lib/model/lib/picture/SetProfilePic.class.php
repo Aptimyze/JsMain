@@ -188,7 +188,10 @@ class SetProfilePic extends PictureService
 			if($k=="TITLE" && $this->newPicObj->getUNSCREENED_TITLE()){
 				eval('$updateArray['.'"'.$v.'"'.']=$this->newPicObj->getUNSCREENED_TITLE();');
       }else
+      {
 				eval('$updateArray['.'"'.$v.'"'.']=$this->newPicObj->get'.$v.'(1);');
+				$updateArray[$v] = PictureFunctions::getPictureServerUrl($updateArray[$v]);
+			}
 		}
 		return $updateArray;
 	}

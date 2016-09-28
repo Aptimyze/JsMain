@@ -46,7 +46,7 @@ class CONTACT_ELEMENTS
 	const CALL_DIRECTLY_TRACKING="D";
 	const ACCEPTANCE_TRACKING="A";
 	const EVALUE_TRACKING="E";
-	const EVALUE_LIMIT=10;
+	const EVALUE_LIMIT=15;
 	const EVALUE_SHOW=1;
 	const EVALUE_STOP=2;
 	const EVALUE_PCS=4;
@@ -55,7 +55,7 @@ class CONTACT_ELEMENTS
 	const PCS_CHECK_VALUE=60;
 	//new constant for shoing contacts Alloted Message
 	const MIN_CONTACT_ALLOTED=10000;
-	
+	const PAGINATION_LIMIT=21;
 	
   /**
    * 

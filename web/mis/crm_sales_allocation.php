@@ -5,11 +5,9 @@ include_once("user_hierarchy.php");
 ini_set("memory_limit","16M");
 ini_set("max_execution_time","0");
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid))
 {
-	mysql_close($db2);	
 	$name =getname($cid);
 	$privilege=explode("+",getprivilage($cid));
 	if(in_array("TRNG",$privilege) || in_array("P",$privilege) || in_array("MG",$privilege))

@@ -11,8 +11,11 @@ class ApiResponseHandler
 	private static $apiResponseHandlerObj = null;
 	private $authChecksum;
 	private $hamburgerDetails = null;
+	private $imageCopyServer = null;
 	private $phoneDetails = null;
-
+	private $cache_flag=false;
+	private $cache_interval=60000; //in milisecond should be integer always 
+	private $resetCache=false;
 	//Constructor
 	private function __construct()
 	{
@@ -35,6 +38,14 @@ class ApiResponseHandler
 	public function getUpgradeDetails(){return $this->upgradeDetails;}
 	public function setPhoneDetails($phoneDetails){$this->phoneDetails = $phoneDetails;}
 	public function getPhoneDetails(){return $this->phoneDetails;}
+	public function getImageCopyServer(){return $this->imageCopyServer;}
+	public function setImageCopyServer($pid)
+	{
+		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
+	}
+	
+	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
+	public function getResetCache(){return $this->resetCache;}
 	public function setHttpArray($httpArray)
 	{
 		if(is_array($httpArray))
@@ -97,6 +108,12 @@ class ApiResponseHandler
 		$output["responseMessage"] = $this->responseMessage;
 		$output["AUTHCHECKSUM"]=$this->authChecksum;
 		$output["hamburgerDetails"]=$this->hamburgerDetails;
+		$output["imageCopyServer"]=$this->imageCopyServer;
+		$output["imageCopyServer"]=$this->imageCopyServer;
+		$output["cache_flag"]=$this->cache_flag;
+		$output["cache_interval"]=$this->cache_interval;
+		$output["resetCache"]=$this->resetCache;
+
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
 			if(isset($this->upgradeDetails[forceupgrade_message]))

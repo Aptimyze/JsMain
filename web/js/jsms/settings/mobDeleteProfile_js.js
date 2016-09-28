@@ -1,4 +1,5 @@
 var checksum;
+
 $(document).ready(function(){
   $("#deleteButtonID").bind('click',function() {
     var delete_reason=$("#DeleteReasonID").val();
@@ -21,12 +22,8 @@ function ajaxPassword(checksum,pswrd)
     {
       if(response=="true")
       {
-        if(successFlow == 1){
-          url = "/successStory/jsmsInputStory";
-          parent.location.href = url;
-        } else {
-          ajaxDelete(delete_reason,delete_option);
-        }
+          $("#deleteConfirmation-Layer").removeClass("dn").css('height',$(window).height());
+          $("#deleteProfilePasswordPage").addClass('dn');
       }
       else
       {
@@ -40,9 +37,12 @@ function ajaxPassword(checksum,pswrd)
 
 function ajaxDelete(specifyReason,deleteReason)
 {
+            
+  if(sessionStorage.getItem('offerConsent')) offerConsent='Y';
+  else offerConsent='N';
   $.ajax({                 
     url: '/api/v1/settings/deleteProfile',
-    data: {"deleteReason":deleteReason,"specifyReason":specifyReason},
+    data: {"deleteReason":deleteReason,"specifyReason":specifyReason,'offerConsent':offerConsent},
     success: function(response) 
     {
       if(response.output=="Deleted Successfully"){
@@ -56,4 +56,23 @@ function ajaxDelete(specifyReason,deleteReason)
       }
     }
   });
+}
+
+function deleteConfirmation(action)
+{
+	if(action=="Y"){
+		if($("#offerConsentCB").is(":checked"))
+				sessionStorage.setItem('offerConsent',1);
+			  else 
+				sessionStorage.setItem('offerConsent',0);
+
+			if(successFlow == 1){
+			  url = "/successStory/jsmsInputStory";
+			  parent.location.href = url;
+			} else {
+			  ajaxDelete(delete_reason,delete_option);
+			}
+	}
+	else
+		window.location.href=action;
 }

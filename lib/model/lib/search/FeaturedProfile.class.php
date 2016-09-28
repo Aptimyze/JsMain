@@ -9,7 +9,8 @@ class FeaturedProfile extends MembersLookingForMe
 	private $avoidRevereseCriteria;
 	private $logoutScore = 1;
 	private $loginScore = 5;
-
+        private $lastLoginForFeatured = 15;
+        private $dbname;
 	public function getFEATURE_PROFILE(){return $this->FEATURE_PROFILE;}
         public function setFEATURE_PROFILE($x){$this->FEATURE_PROFILE = $x;}
 
@@ -21,6 +22,7 @@ class FeaturedProfile extends MembersLookingForMe
 		if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
 			$this->loggedInProfileObj = $loggedInProfileObj;
 		parent::__construct($this->loggedInProfileObj);
+                $this->dbname = searchConfig::getSearchDb();
 	}
 
 	/**
@@ -54,6 +56,10 @@ class FeaturedProfile extends MembersLookingForMe
 			$this->setIgnoreProfiles($SearchParamtersObj->getIgnoreProfiles());
 		if($SearchParamtersObj->getProfilesToShow())
 			$this->setProfilesToShow($SearchParamtersObj->getProfilesToShow());
+                
+                $this->setLLAST_LOGIN_DT(date('Y-m-d h:m:s',  strtotime('-'.$this->lastLoginForFeatured.' days')));
+                $this->setHLAST_LOGIN_DT(date('Y-m-d h:m:s'));
+                $this->setRangeParams(SearchConfig::$searchRangeParameters.",".SearchConfig::$membersLookingForMeRangeParameters.",".SearchConfig::$featuredProfileParams);
 
 		if($this->loggedInProfileObj)
 		{
@@ -80,12 +86,12 @@ class FeaturedProfile extends MembersLookingForMe
 			}
 			else
 			{
-				$fpcObj = new NEWJS_FEATURED_PROFILE_CACHE;
+				$fpcObj = new NEWJS_FEATURED_PROFILE_CACHE($this->dbname);
 				$fpcObj->insert($sid,$idArr);
 				unset($fpcObj);
 			}
 
-			$fplObj = new NEWJS_FEATURED_PROFILE_LIST;
+			$fplObj = new NEWJS_FEATURED_PROFILE_LIST($this->dbname);
 			if($this->loggedInProfileObj)
 				$score = $this->loginScore;
 			else
@@ -95,7 +101,7 @@ class FeaturedProfile extends MembersLookingForMe
 
 			if($this->loggedInProfileObj)
 			{
-				$fplObj = new NEWJS_FEATURED_PROFILE_LOG;
+				$fplObj = new NEWJS_FEATURED_PROFILE_LOG($this->dbname);
 				$fplObj->insertRecord($this->loggedInProfileObj->getPROFILEID(),$idArr[0]);
 				unset($fplObj);
 			}
@@ -116,7 +122,7 @@ class FeaturedProfile extends MembersLookingForMe
                         }
                         else
 			{
-				$fpcObj = new NEWJS_FEATURED_PROFILE_CACHE;
+				$fpcObj = new NEWJS_FEATURED_PROFILE_CACHE($this->dbname);
 				$profiles = $fpcObj->fetch($searchId);
 				unset($fpcObj);
 			}
@@ -164,7 +170,7 @@ class FeaturedProfile extends MembersLookingForMe
 
 				if($outputId)
 				{
-					$fplObj = new NEWJS_FEATURED_PROFILE_LIST;
+					$fplObj = new NEWJS_FEATURED_PROFILE_LIST($this->dbname);
 					if($this->loggedInProfileObj)
 						$fplObj->insertRecord($outputId,$this->loginScore);
 					else
@@ -173,7 +179,7 @@ class FeaturedProfile extends MembersLookingForMe
 
 					if($this->loggedInProfileObj)
 					{
-						$fplObj = new NEWJS_FEATURED_PROFILE_LOG;
+						$fplObj = new NEWJS_FEATURED_PROFILE_LOG($this->dbname);
 						$fplObj->insertRecord($this->loggedInProfileObj->getPROFILEID(),$outputId);
 						unset($fplObj);
 					}
