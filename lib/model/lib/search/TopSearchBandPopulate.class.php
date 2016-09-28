@@ -2178,7 +2178,7 @@ class TopSearchBandPopulate
                                 $output["caste"] = $this->selectedCaste;
                                 $castes = explode(",",$this->selectedCaste);
                                 foreach($castes as $caste){
-                                        $output["caste_label"][] = FieldMap::getFieldLabel("caste",$caste);
+                                        $output["caste_label"][] = trim(ltrim(strstr(FieldMap::getFieldLabel("caste",$caste),":"),":"));
                                 }
                                 if($this->isNewApp == 1){
                                         $output["caste_label"] = implode(",",$output["caste_label"]);
