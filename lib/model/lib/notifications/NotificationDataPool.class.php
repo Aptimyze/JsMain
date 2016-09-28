@@ -390,5 +390,27 @@ class NotificationDataPool
         }
         return $icon;
     }
+    
+    public function getInterestReceivedForDuration($profileid, $stDate, $endDate){
+        $loggedInDb = JsDbSharding::getShardNo($profileid,'');
+		$contactsLoggedInObj = new newjs_CONTACTS($loggedInDb);
+        $data = $contactsLoggedInObj->getInterestReceivedDataForDuration($profileid, $stDate, $endDate);
+        //Remove blocked profiles. Those that have been blocked by the sender
+        $ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
+		$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
+        if($ignoredProfiles){
+            foreach($ignoredProfiles as $key => $val){
+                unset($data['SENDER'][$val]);
+            }
+        }
+        if($data['SENDER']){
+            $tempArray = $data['SENDER'];
+            end($tempArray);
+            $data['OTHER_PROFILEID'] = key($tempArray);
+        }
+        $data['COUNT'] = count($data['SENDER']);
+        unset($tempArray);
+        return $data;
+    }
 }
 ?>
