@@ -10,7 +10,7 @@ class SearchLogger extends SearchParamters
 	private $ID;
 	private $dbname;
 	private $pid;
-        private $LastSearchRequiredFor = Array(SearchTypesEnums::Advance,SearchTypesEnums::MobileSearchBand,SearchTypesEnums::Quick,SearchTypesEnums::App);
+        private $LastSearchRequiredFor = Array(SearchTypesEnums::Advance,SearchTypesEnums::MobileSearchBand,SearchTypesEnums::Quick,SearchTypesEnums::App,SearchTypesEnums::iOS);
 
         public function __construct($loggedInProfileObj='')
         {
