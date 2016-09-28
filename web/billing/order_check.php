@@ -13,7 +13,7 @@ if($Order_Id)
 	$id_arr=explode("-",$Order_Id);
 	$id=$id_arr[1];
 	$sql=" select PROFILEID from  billing.ORDERS where ID=$id";
-	$result=mysql_query_decide($sql) or die('Failure,Go back & try again');
+	$result=mysql_query_decide($sql) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception('Failure,Go back & try again'));
 	$myrow_1 = mysql_fetch_array($result);
 	if($myrow_1['PROFILEID'] > 0)
 	{
@@ -22,7 +22,7 @@ if($Order_Id)
 		$ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
 		$pid=$myrow_1['PROFILEID'];
 		$sql1="SELECT COUNT(*) AS CNT FROM billing.PURCHASES WHERE PROFILEID='$pid' AND ORDERID='$id'";
-		$res1=mysql_query_decide($sql1) or die('Failure,Go back & try again');
+		$res1=mysql_query_decide($sql1) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception('Failure,Go back & try again'));
 		$row1=mysql_fetch_assoc($res1);
 		
 		//ret should work for voucher code working

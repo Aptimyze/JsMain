@@ -46,7 +46,7 @@
                     <li class="textTru">{edu_level_new}</li>
                     <li class="textTru">{location}</li>
                     <li class="textTru">{occupation}</li>
-                    <li class="textTru">{religion}, {caste}</li>
+                    <li class="textTru">{religion}{caste}</li>
                     <li class="textTru">{income}</li>
                     <li class="textTru">{mtongue}</li>
                     <li class="textTru">{mstatus}</li>

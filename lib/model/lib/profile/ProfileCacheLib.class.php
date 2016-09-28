@@ -102,13 +102,13 @@ class ProfileCacheLib
         //If array count is zero then record is not cached
         if(0 === count($this->getFromLocalCache($key))) {
             unset($this->arrRecords[intval($key)]);
-            $this->logThis(LoggingEnums::LOG_INFO, "Cache Mis for Criteria {$criteria} : {$key}");
+            $this->logThis(LoggingEnums::LOG_INFO, "Cache Miss from first point for Criteria {$criteria} : {$key}");
             return false;
         }
 
         //Check all fields specified in param fields is present in cache also, right now we are assuming all fields are cached together
         if (false === $this->checkFieldsAvailability($key, $fields)) {
-            $this->logThis(LoggingEnums::LOG_INFO, "Cache Mis due to fields {$criteria} : {$key} and {$fields}");
+            $this->logThis(LoggingEnums::LOG_INFO, "Cache Miss due to fields {$criteria} : {$key} and {$fields}");
             return false;
         }
 
@@ -140,12 +140,13 @@ class ProfileCacheLib
             return false;
         }
 
-        //Set Hash Object
-        $stTime = $this->createNewTime();
-        JsMemcache::getInstance()->setHashObject($szKey, $arrParams, ProfileCacheConstants::CACHE_EXPIRE_TIME);
-        $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
-        //TODO : Update Local Cache also
-        $this->updateInLocalCache($key, $arrParams);
+        //Store in Cache
+        $this->storeInCache($szKey, $arrParams);
+        
+	//Update Local Cache also
+        if (false === $this->isCommandLineScript()) {
+            $this->updateInLocalCache($key, $arrParams);
+        }
         return true;
     }
 
@@ -164,8 +165,8 @@ class ProfileCacheLib
 
         $bUpdateFromMysql = false;
         if(false === $this->isCached($szCriteria, $key, array_keys($paramArr), true)) {
-            //TODO : Need to handle this case
-            $bUpdateFromMysql = true;
+            //If Cache does not exist then do not set cache
+            return false;
         }
 
         //Now Process extraWhereCnd
@@ -174,6 +175,7 @@ class ProfileCacheLib
         }
 
         if ($bUpdateFromMysql) {
+            $this->logThis(LoggingEnums::LOG_DEBUG, "Updating from myql: Criteria: {$szCriteria} , Value: {$key} & extraWhereCnd : {$extraWhereCnd}");
             $result = $this->cacheFromMysql($szCriteria, $key, $extraWhereCnd);
         } else {
             $result = $this->cacheThis($szCriteria, $key, $paramArr);
@@ -223,11 +225,12 @@ class ProfileCacheLib
         }
 
         if ($this->isCommandLineScript()) {
-            //TODO : throw exception of command line usages from command line script
+            //Throw exception of command line usages from command line script
             return false;
         }
 
         $arrData = $this->getFromLocalCache($key);
+        
         if ($arrExtraWhereClause) {
             $this->processArrayWhereClause($arrData,$arrExtraWhereClause);
         }
@@ -293,6 +296,7 @@ class ProfileCacheLib
     private function storeInLocalCache($key)
     {
         $stTime = $this->createNewTime();
+
         $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
         $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
     }
@@ -349,7 +353,7 @@ class ProfileCacheLib
     private function checkFieldsAvailability($key, $fields)
     {
         $arrAllowableFields = $this->getRelevantFields($fields);
-
+        $arrFields = $arrAllowableFields;
         if ($fields == ProfileCacheConstants::ALL_FIELDS_SYM &&
             count($this->getFromLocalCache($key))  !== count($arrAllowableFields)
         ) {
@@ -361,6 +365,14 @@ class ProfileCacheLib
             }
             foreach ($arrFields as $szColName) {
                 if(!in_array($szColName, $arrAllowableFields)) {
+                    return false;
+                }
+            }
+        }
+
+        if (isset($this->arrRecords[intval($key)])) {
+            foreach ($arrFields as $szColName) {
+                if(!array_key_exists($szColName, $this->arrRecords[intval($key)])) {
                     return false;
                 }
             }
@@ -378,6 +390,7 @@ class ProfileCacheLib
         if(!is_array($arrFields)) {
             return false;
         }
+        $this->logThis(LoggingEnums::LOG_INFO, "Setting local cache for key : {$key}");
         foreach($arrFields as $col => $val) {
             $this->arrRecords[intval($key)][$col] = $val;
         }
@@ -480,9 +493,114 @@ class ProfileCacheLib
     /**
      * @return bool
      */
-    private function isCommandLineScript()
+    public function isCommandLineScript()
     {
         return (php_sapi_name() === ProfileCacheConstants::COMMAND_LINE);
+    }
+
+    /**
+     * @param $szKey
+     * @param $arrParams
+     * @return bool
+     */
+    public function storeInCache($szKey, $arrParams)
+    {
+        //Set Hash Object
+        $stTime = $this->createNewTime();
+        $bSuccess = false;
+        $iTryCount = 0;
+        do {
+            try{
+                JsMemcache::getInstance()->setHashObject($szKey, $arrParams, ProfileCacheConstants::CACHE_EXPIRE_TIME,true);
+                $bSuccess = true;
+            } catch (Exception $ex) {
+                $bSuccess = false;
+                ++$iTryCount;
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache failed while setting up in cache,Retrying again and its count : {$iTryCount}");
+            }
+            //If Attempt Count Reached to Max Attempt Count
+            if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Update failed, Adding in MQ for key : {$szKey}");
+
+                //Add into MQ
+                $producerObj = new Producer();
+                $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
+                $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
+                $producerObj->sendMessage($queueData);
+
+            }
+        } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
+        $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
+
+        return $bSuccess;
+    }
+
+    /**
+     * @param $Var
+     */
+    public function removeCache($Var)
+    {
+        if (is_array($Var)) {
+            foreach($Var as $k => $iProfileID) {
+                $this->purge($iProfileID);
+            }
+        } else {
+            $this->purge($Var);
+        }
+    }
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    private function purge($key)
+    {
+        if(isset($this->arrRecords[intval($key)])){
+            unset($this->arrRecords[intval($key)]);
+        }
+
+        $szKey = ProfileCacheConstants::PROFILE_CACHE_PREFIX.$key;
+
+        $stTime = $this->createNewTime();
+        $bSuccess = false;
+        $iTryCount = 0;
+        do {
+            try{
+                JsMemcache::getInstance()->delete($szKey,true);
+                $this->logDelCount();
+                $bSuccess = true;
+            } catch (Exception $ex) {
+                $bSuccess = false;
+                ++$iTryCount;
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Purge Failed,Retrying again and its count : {$iTryCount}");
+            }
+            //If Attempt Count Reached to Max Attempt Count
+            if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Purge Failed, Adding in MQ for key : {$szKey}");
+
+                //Add into MQ
+                $producerObj = new Producer();
+                $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
+                $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
+                $producerObj->sendMessage($queueData);
+
+            }
+        } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
+        $this->calculateResourceUsages($stTime,'Delete : '," for key {$key}");
+
+        return $bSuccess;
+    }
+
+    /**
+     * Function to count number of delete calls
+     */
+    private function logDelCount()
+    {
+        $key = 'cacheDeleteCount'.date('Y-m-d');
+        JsMemcache::getInstance()->incrCount($key);
+
+        $key .= '::'.date('H');
+        JsMemcache::getInstance()->incrCount($key);
     }
 }
 ?>

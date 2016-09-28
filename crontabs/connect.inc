@@ -64,11 +64,13 @@ if(!function_exists('mysql_error_js'))
         {
                 global $active_db,$db;
 		if($active_db!="")
-			return mysql_error($active_db);
+			$errorMessage = mysql_error($active_db);
                 elseif($db)
-                        return mysql_error($db);
+                        $errorMessage = mysql_error($db);
                 else    
-                        return mysql_error();
+                        $errorMessage = mysql_error();
+        LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorMessage));
+        return $errorMessage;
         }
 }
 

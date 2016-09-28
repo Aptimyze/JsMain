@@ -62,6 +62,13 @@ class MessageLog
 		$messageArray = $messageLogObj->getMessageHistory($viewer,$viewed);
 		return $messageArray;
 	}
+	public function getMessageHistoryPagination($viewer,$viewed,$limit="",$msgId="")
+	{
+		$dbName = JsDbSharding::getShardNo($viewer);
+		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
+		$messageArray = $messageLogObj->getMessageHistoryPagination($viewer,$viewed,$limit,$msgId);
+		return $messageArray;
+	}
 	public function markMessageSeen($viewer,$viewed)
 	{
 		$dbName = JsDbSharding::getShardNo($viewer);
