@@ -28,9 +28,11 @@ class ForgotloginV1Action extends sfActions
 		else
 		{
 			$dbJprofile= new JPROFILE();
+			$SmsObj = new newjs_SMS_DETAIL();
 			if(!$flag || $flag == 'E')
 			{
 				$data=$dbJprofile->get($email,"EMAIL","USERNAME,EMAIL,ACTIVATED,PROFILEID");
+				$SmsCount =$SmsObj->getCount("FORGOT_PASSWORD", $data['PROFILEID']);
 			}
 			else if($flag == 'M')
 			{
@@ -38,20 +40,23 @@ class ForgotloginV1Action extends sfActions
 				$isd = $request->getParameter("isd");
 				$arr=array('PHONE_MOB'=>"'$phone'",'ISD'=>"'$isd'");
 				$excludeArr=array('ACTIVATED'=>"'D'");
-				$data=$dbJprofile->getArray($arr,$excludeArr,'',"EMAIL,USERNAME,EMAIL,ACTIVATED,PROFILEID");
-				var_dump($arr);
-				var_dump($data);
-				// die;
+				$data=$dbJprofile->getArray($arr,$excludeArr,'',"USERNAME,EMAIL,ACTIVATED,PROFILEID");
 				if(count($data) == 1)
 				{
-					$x = newjs_SMS_DETAIL()->getCount("FORGOT_PASSWORD", $data[0]['PROFILEID'], $isd.$phone);
 					//  1 unique profile found
-					include_once(sfConfig::get("sf_web_dir")."/profile/sendForgotPasswordLink.php");
-					sendForgotPasswordLink($data);
-					$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_SUCCESS);
+					$data = $data[0];
+					$SmsCount =$SmsObj->getCount("FORGOT_PASSWORD", $data['PROFILEID']);
 				}
-
+				elseif(count($data) > 1)
+				{
+					$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_PHONE_ERR);
+				}
+				else
+				{
+					// no profiles found
+				}
 			}
+			$data['SmsCount'] = $SmsCount;
 			if($data[EMAIL])
 			{
 				if($data[ACTIVATED]!='D')

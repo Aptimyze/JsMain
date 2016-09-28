@@ -12,6 +12,8 @@ $("#sendLink").bind(clickEventType,function(){
    if(email)
    {
         var flag = validateEmail(email)?'E':false;
+        var phone = null;
+        var isd = null;
         if(!flag)
         {
             var data = validateMobile(email);
@@ -42,10 +44,10 @@ $("#sendLink").bind(clickEventType,function(){
                                  });
                          }
              else
-                 ShowTopDownError(["Provide a valid email address"]);
+                 ShowTopDownError(["Provide a valid email address or phone no."]);
     }
     else
-        ShowTopDownError(["Provide your email address"]);
+        ShowTopDownError(["Provide your email address or phone no."]);
 });
 function validateEmail(email) {
     var x = $.trim(email);

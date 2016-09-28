@@ -509,6 +509,8 @@ function postForgotEmailLayer()
 			if(email)
 			{
 				var flag = validateEmail(email)?'E':false;
+				var phone = null;
+				var isd = null;
 				if(!flag)
 				{
 					var data = validateMobile(email);
@@ -516,7 +518,6 @@ function postForgotEmailLayer()
 					phone = data['phone'];
 					isd = data['isd'];
 				}
-				// console.log(flag);
 				if(flag)
 				{       
 					showCommonLoader("#forgotPasswordContainer");
@@ -558,7 +559,7 @@ function postForgotEmailLayer()
 			}
 			else
 			{
-				$("#forgotPasswordErr").html("Provide your email address").addClass("visb");
+				$("#forgotPasswordErr").html("Provide your email address or phone no.").addClass("visb");
 				$("#userEmailBox").addClass("brderred");
 				 setTimeout(function(){
 					 $("#forgotPasswordErr").removeClass("visb");
