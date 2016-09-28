@@ -2277,7 +2277,7 @@ class TopSearchBandPopulate
                                         }
                                         foreach($oMtongue as $mt){
                                                 $output["mtongue"][] = $mt;
-                                                $output["mtongue_label"][] =FieldMap::getFieldLabel("community",$mt); 
+                                                $output["mtongue_label"][] =FieldMap::getFieldLabel("community_small",$mt); 
                                         }
                                         $output["mtongue"] = implode(',',$output["mtongue"]);
                                         $output["mtongue_label"] =implode(',',$output["mtongue_label"]); 
@@ -2290,7 +2290,7 @@ class TopSearchBandPopulate
 		else
 		{
 			$output["mtongue"] = $this->selectedMtongue;
-			$output["mtongue_label"] = FieldMap::getFieldLabel("community",$this->selectedMtongue);
+			$output["mtongue_label"] = FieldMap::getFieldLabel("community_small",$this->selectedMtongue);
 			if(!$output["mtongue_label"])
 				$output["mtongue"] = NULL;
 		}
