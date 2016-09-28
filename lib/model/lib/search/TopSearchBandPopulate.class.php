@@ -61,6 +61,7 @@ class TopSearchBandPopulate
 			$loggedInProfileObj->getDetail("","","GENDER,HAVEPHOTO");
 				
 		}
+                
                 if(!$parameters["SEARCHID"] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID())    //LOGGEDIN and no SEARCHID -> show JPARTNER data
                 {
 			
@@ -2271,6 +2272,9 @@ class TopSearchBandPopulate
                                         }
 				}
                                 if($this->isNewApp == 1){
+                                        if(!is_array($oMtongue)){
+                                                $oMtongue = explode(',',$oMtongue);
+                                        }
                                         foreach($oMtongue as $mt){
                                                 $output["mtongue"][] = $mt;
                                                 $output["mtongue_label"][] =FieldMap::getFieldLabel("community",$mt); 
