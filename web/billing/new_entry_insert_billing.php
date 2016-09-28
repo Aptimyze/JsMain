@@ -280,7 +280,7 @@ if(authenticated($cid))
 			$discount_msg .= "\r\n\r\nSale by: ".$walkin;
 			$discount_msg .= "\r\nEntry by: ".$user;
 			
-			mail($to,$subject,$discount_msg,$header);
+			//mail($to,$subject,$discount_msg,$header);
 		}
 
 		if($source=="A")
