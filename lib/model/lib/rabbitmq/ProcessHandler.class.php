@@ -27,18 +27,14 @@ class ProcessHandler
     {
       case 'CANCELCONTACT' :  ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
                               break;
-      case 'ACCEPTCONTACT' :  
-                              ContactMailer::sendAcceptanceMailer($receiverObj,$senderObj);  
+      case 'ACCEPTCONTACT' :  ContactMailer::sendAcceptanceMailer($receiverObj,$senderObj);  
                               break;
-      case 'DECLINECONTACT':  
-                              ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
+      case 'DECLINECONTACT':  ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
                               break;
-      case 'INITIATECONTACT': 
-                              $viewedSubscriptionStatus=$body['viewedSubscriptionStatus'];
+      case 'INITIATECONTACT': $viewedSubscriptionStatus=$body['viewedSubscriptionStatus'];
                               ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus); 
                               break;
-      case 'MESSAGE'       :  
-                              ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
+      case 'MESSAGE'       :  ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
                               break;
     }
 	}
