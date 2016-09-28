@@ -103,11 +103,14 @@ class QuickSearchBand extends SearchParamters
                                 if(empty($json1Arr)){
                                      $json1Arr = explode(',',$json1);
                                 }
-                                
                                 if(is_array($json1Arr))
                                 {
                                         $tempStr = implode(",",$json1Arr);
                                         $searchParamsSetter['CASTE'] = $tempStr;
+                                }else{
+                                    $json1Arr = explode(',',$json1Arr);
+                                    $json1Arr = implode(',',$json1Arr);
+                                    $searchParamsSetter['CASTE'] = $json1Arr;    
                                 }
 			}
 		}
