@@ -88,5 +88,27 @@ class MIS_SOURCE extends TABLE {
     return false;
   }
 
+   /**
+     * @param $sourceGroup - array consisting of source group names.
+     * @return results Array consisting of source ids 
+     * @exception jsException 
+     */
+        public function getSourceID($sourceGroup)
+        {
+            try 
+            {
+              
+              $sql = "SELECT `SourceID` FROM MIS.`SOURCE` where `GROUPNAME` =:sourceGroup";
+              $prep = $this->db->prepare($sql);
+              $prep->bindParam(":sourceGroup", $sourceGroup, PDO::PARAM_STR);
+              $prep->execute();
+
+              $result=$prep->fetchAll(PDO::FETCH_COLUMN, 0);
+          }
+          catch(Exception $e){
+            throw new jsException($e);
+        }
+        return $result;
+    }
 }
 ?>
