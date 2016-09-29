@@ -2618,7 +2618,7 @@ class crmMisActions extends sfActions
                 $billServStatObj = new BILLING_SERVICE_STATUS('newjs_slave');
                 $billPurObj = new BILLING_PURCHASES('newjs_slave');
                 $billPayDetObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
-                $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRange($start_date, $end_date);
+                $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRangeWithoutActiveCheck($start_date, $end_date);
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
                 	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
