@@ -196,7 +196,7 @@ class IgnoredProfileCacheLib
 	//This function fetches specific values from cache based on the condition specified.
     public function getSpecificValuesFromCache($viewerKey,$profileIdArr)
     {
-    	$keyExists = JsMemcache::getInstance()->keyExist($viewerKey);
+        $keyExists = JsMemcache::getInstance()->keyExist($viewerKey);
     	if($keyExists == 1)
     	{
     		$response = JsMemcache::getInstance()->getSpecificValuesFromCache($viewerKey,$profileIdArr);

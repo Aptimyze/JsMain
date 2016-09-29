@@ -70,7 +70,7 @@ class IgnoredProfiles
 	{
 		$this->addDataToFile("old");
 		$viewerKey = $viewer."_byMe";
-		if($profileIdStr == '')
+		if($profileIdStr == '0')
 		{
 			$resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($viewerKey);
 		}
@@ -84,6 +84,10 @@ class IgnoredProfiles
 		{
 			$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
 			$ignProfile = $ignObj->getIgnoredProfiles($profileIdStr,$viewer,$key);
+			if($profileIdStr == 0 && $key =="")
+			{
+				IgnoredProfileCacheLib::getInstance()->storeDataInCache($viewerKey,$ignProfile);
+			}
 			$this->addDataToFile("new");
 			return $ignProfile;
 		}
@@ -91,26 +95,16 @@ class IgnoredProfiles
 		{
 			return $resultArr;
 		}
-		
 	}
 
 	//This function is left as it is since it is better off being in sql rather than in Redis
 	public function getIgnoredProfile($profileid,$condition='',$skipArray='')
 	{
 		$this->addDataToFile("old");
-		if(is_array($skipArray))
-		{
-			$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
-			$ignoredProfile = $ignObj->getIgnoredProfilesList($profileid,$condition,$skipArray);
-			$this->addDataToFile("new");
-			return $ignoredProfile;
-		}
-		else
-		{
-			$pidKey = $profileid."_byMe";
-			$resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($pidKey);
-			return $resultArr;
-		}
+		$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
+		$ignoredProfile = $ignObj->getIgnoredProfilesList($profileid,$condition,$skipArray);
+		$this->addDataToFile("new");
+		return $ignoredProfile;
 	}
 
 	public function ifIgnored($profileid,$otherProfileId)
