@@ -156,6 +156,7 @@ class NEWJS_ASTRO extends TABLE {
 		                $res->bindValue(":pid", $pid, PDO::PARAM_INT);
 				$res->execute();
                 JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+                return true;
 			}
 		}
 		catch(PDOException $e) {

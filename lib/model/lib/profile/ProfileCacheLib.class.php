@@ -923,7 +923,7 @@ class ProfileCacheLib
      * @param type $storeName
      * @param type $fields
      */
-    public function removeFieldsFromCache($key, $storeName, $fields = "*")
+    public function removeFieldsFromCache($key, $storeName, $fields = ProfileCacheConstants::ALL_FIELDS_SYM)
     {
         
     }

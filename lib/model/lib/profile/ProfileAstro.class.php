@@ -281,7 +281,11 @@ class ProfileAstro
      */
     public function deleteEntry($pid)
     {
-        return self::$objAstroDetailMysql->deleteEntry($pid);
+        $bResult = self::$objAstroDetailMysql->deleteEntry($pid);
+        if(true === $bResult) {
+            ProfileCacheLib::getInstance()->removeFieldsFromCache($pid, __CLASS__);
+        }
+        return $bResult;
     }
     
     /**
@@ -316,6 +320,7 @@ class ProfileAstro
         
         return $bResult;
     }
+    
     /**
      * 
      * @param type $funName
