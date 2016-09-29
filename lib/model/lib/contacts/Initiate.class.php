@@ -255,7 +255,7 @@ class Initiate extends ContactEvent{
       }
                 $requestTimeOut = 300;
     //curl for analytics team by Nitesh for Lavesh team
-    if(JsConstants::$vspServer == 'live'){
+    /*if(JsConstants::$vspServer == 'live'){
       $feedURL = JsConstants::$postEoiUrl;
       $postParams = json_encode(array("PROFILEID"=>$this->contactHandler->getViewer()->getPROFILEID(),"PROFILEID_POG"=>$this->contactHandler->getViewed()->getPROFILEID(),'ACTION'=>'I'));
       $profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams,$requestTimeOut);
@@ -266,7 +266,7 @@ class Initiate extends ContactEvent{
                             fwrite($file,$stringToWrite."\n");
                             fclose($file);
                         }
-    }
+    }*/
 
       $this->_searchContactFlowTracking();
 
