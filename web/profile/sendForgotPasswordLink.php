@@ -32,6 +32,6 @@ function sendForgotPasswordLink($myrow)
         {
         	include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
         	$sms = new InstantSMS("FORGOT_PASSWORD", $myrow["PROFILEID"]);
-        	$sms->send();
+                $sms->send('OTP');
         }
 }
