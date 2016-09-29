@@ -1074,6 +1074,10 @@ if($k=="state_res")
 		{
 			$output = $this->getJsmsNativeState();
 		}
+    if($k=="jspc_state")
+		{
+			$output = $this->getJspcState();
+		}
     if($k=="native_country_jsms")
 		{
 			$output = $this->getJsmsNativeCountry();
@@ -1831,6 +1835,17 @@ if($k=="state_res")
     $arr=FieldMap::getFieldLabel("state_india",'',1);
     $Arr[0][] = array("0"=>"Select");
     $Arr[0][] = array("NI"=>"Outside India");
+	  foreach($arr as $key=>$val)
+			$Arr[0][]=array($key=>$val);
+	  return $Arr;   
+  }
+  
+  /**
+   * 
+   * @return type
+   */
+  private function getJspcState(){
+    $arr=FieldMap::getFieldLabel("state_india",'',1);
 	  foreach($arr as $key=>$val)
 			$Arr[0][]=array($key=>$val);
 	  return $Arr;   
