@@ -22,14 +22,16 @@ EOF;
 		$elkPort = '9200';
 		$indexName = 'filebeat-'.$currdate;
 		$query = '_search';
-		$interval = "1h";
+		// in hours
+		$interval = 1;
+		$intervalString = '-'.$interval.' hour';
 		$threshold = 50;
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 		$params = [
 			"query"=> [
 				"range" => [
 					"@timestamp" => [
-						"gt" => "now-".$interval,
+						"gt" => "now-".$interval."h",
 						"lt" => "now"
 					]
 				]
@@ -51,11 +53,17 @@ EOF;
 		    $arrModules[$module['key']] = $module['doc_count']; 
 		}
 		// $to = "jsissues@jeevansathi.com";
-		$to = "jsissues@jeevansathi.com";
-		$from = "jsissues@jeevansathi.com";
+		$to = "nikhil.mittal@jeevansathi.com";
+		$from = "nikhil.mittal@jeevansathi.com";
 
 		$msg = '';
 		$kibanaUrl = "http://10.10.18.66:5601/app/kibana#/dashboard/Common-Dash";
+
+		$time = time() + (1*60*60);
+		$testUrl = "http://10.10.18.66:5601/app/kibana#/dashboard/Common-Dash?_g=(time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
+
+		// time:(from:'2016-09-29T06:30:00.000Z',mode:absolute,to:'2016-09-29T09:29:59.999Z')
+
 		$subject = "Kibana Module Alert";
 		foreach ($arrModules as $key => $value)
 		{
@@ -66,9 +74,9 @@ EOF;
 		}
 		if($msg != '')
 		{
-			$msg = "In the interval of ".$interval." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
+			$msg = "In the interval of ".$interval." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$testUrl;
 		}
-
+		echo $testUrl;
 		SendMail::send_email($to,$msg,$subject,$from,'','','','','','','','nikhil.mittal@jeevansathi.com');
 	}
 }
