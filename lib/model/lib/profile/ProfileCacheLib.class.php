@@ -246,7 +246,21 @@ class ProfileCacheLib
 
         $arrFields = $this->getRelevantFields($fields, $storeName);
         $arrOut = array();
-
+        
+        //Check for Not-Filled Case
+        if(strlen($storeName)) {
+            $arrColumns = $this->getColumnArr($storeName);
+            foreach ($arrColumns as $col) {
+                if(isset($this->arrRecords[intval($key)][$col]) && 
+                $this->arrRecords[intval($key)][$col] === ProfileCacheConstants::NOT_FILLED) {
+                    $iProfileID = $arrData['PROFILEID'];
+                    $arrData = array_fill_keys($arrFields, ProfileCacheConstants::NOT_FILLED);
+                    $arrData['PROFILEID'] = $iProfileID;
+                    break;
+                }
+            }
+        }
+        
         foreach ($arrFields as $k) {
             $indexKey = $k;
             
@@ -396,10 +410,15 @@ class ProfileCacheLib
         }
         
         //Check for Not-Filled Case
-//        if($bIsStoreNameExist) {
-//            $arrColumns = $this->getColumnArr($storeName);
-//            in_array()
-//        }
+        if($bIsStoreNameExist) {
+            $arrColumns = $this->getColumnArr($storeName);
+            foreach ($arrColumns as $col) {
+                if(isset($this->arrRecords[intval($key)][$col]) && 
+                $this->arrRecords[intval($key)][$col] === ProfileCacheConstants::NOT_FILLED) {
+                    return true;
+                }
+            }
+        }
         
         if (isset($this->arrRecords[intval($key)])) {
             foreach ($arrFields as $szColName) {

@@ -140,22 +140,7 @@ class NEWJS_ASTRO extends TABLE {
     }
     public function updateType($type,$pid)
 	{
-		try{
-
-			if($type && $pid)
-			{
-				$sql="update newjs.ASTRO_DETAILS set TYPE=:type WHERE PROFILEID=:pid";
-				$res = $this->db->prepare($sql);
-		                $res->bindValue(":pid", $pid, PDO::PARAM_INT);
-		                $res->bindValue(":type", $type, PDO::PARAM_STR);
-				$res->execute();
-                JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
-			}
-		}
-		catch(PDOException $e) {
-			throw new jsException($e);
-        	}
-		
+		return $this->updateRecord($pid,array('TYPE'=>$type));
 	}
         /*
          * this function deletes entry for a given profileid

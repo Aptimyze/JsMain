@@ -87,7 +87,7 @@ class page3Action extends sfAction {
 				RegistrationMisc::logServerSideValidationErrors("DP3",$this->form);
             }
         } else {
-            $astro_pdo = new ProfileAstro();
+            $astro_pdo = ProfileAstro::getInstance();
             $astro_pdo->insertInAstroPullingDetails($this->loginData["PROFILEID"]);
 
             if (trim($request->getParameter('groupname'))) {

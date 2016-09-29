@@ -213,7 +213,8 @@ class ProfileCacheConstants
                                         "VENUS_RETRO_COMBUST",
                                         "SATURN_RETRO_COMBUST",
                                         "VARA",
-                                        "MASA",    
+                                        "MASA",
+                                        "HAVE_ASTRO",
                                     );
     
     public static $arrJProfileColumns = array(
@@ -413,6 +414,7 @@ class ProfileCacheConstants
                                         "SATURN_RETRO_COMBUST",
                                         "VARA",
                                         "MASA",
+                                        HAVE_ASTRO
                                     );
     public static $arrDuplicateFieldsMap = array(
                                         //'BTIME',
