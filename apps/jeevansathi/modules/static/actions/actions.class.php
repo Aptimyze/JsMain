@@ -1068,7 +1068,7 @@ public function executeAppredirect(sfWebRequest $request)
     }
 if($k=="state_res")
 {
-			$output = $this->getJsmsNativeState();
+			$output = $this->getJspcState();
 }
     if($k=="native_state_jsms")
 		{
