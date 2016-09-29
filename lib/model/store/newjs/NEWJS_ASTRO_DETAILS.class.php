@@ -192,10 +192,10 @@ class NEWJS_ASTRO extends TABLE {
 
         if(!is_array($arrRecordData))
             throw new jsException("","Array is not passed in UpdateRecord OF NEWJS_ASTRO_DETAILS.class.php");
-
-        if(isset($arrRecordData['PROFILEID']) && strlen($arrRecordData['PROFILEID'])>0)
-            throw new jsException("","Trying to update PROFILEID in  in UpdateRecord OF NEWJS_ASTRO_DETAILS.class.php");
-
+        
+        if($arrRecordData['PROFILEID'] && $arrRecordData['PROFILEID'] == $iProfileID)
+            unset($arrRecordData['PROFILEID']);
+        
         try
         {
             $arrFields = array();
@@ -222,6 +222,7 @@ class NEWJS_ASTRO extends TABLE {
 
             $pdoStatement->execute();
             JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            return true;
         }
         catch(Exception $e)
         {

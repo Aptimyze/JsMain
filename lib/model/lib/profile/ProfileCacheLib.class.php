@@ -123,7 +123,7 @@ class ProfileCacheLib
      * @param $arrParams
      * @return bool
      */
-    public function cacheThis($szCriteria, $key, $arrParams)
+    public function cacheThis($szCriteria, $key, $arrParams, $storeName="")
     {
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
@@ -140,7 +140,10 @@ class ProfileCacheLib
         if (0 === count($arrParams)) {
             return false;
         }
-
+        
+        //Add Duplicate Fields Suffix
+        $arrParams = $this->addDuplicateSuffix($arrParams, $storeName);
+        
         //Store in Cache
         $this->storeInCache($szKey, $arrParams);
         
@@ -180,7 +183,7 @@ class ProfileCacheLib
             $this->logThis(LoggingEnums::LOG_DEBUG, "Updating from myql: Criteria: {$szCriteria} , Value: {$key} & extraWhereCnd : {$extraWhereCnd}");
             $result = $this->cacheFromMysql($szCriteria, $key, $extraWhereCnd);
         } else {
-            $result = $this->cacheThis($szCriteria, $key, $paramArr);
+            $result = $this->cacheThis($szCriteria, $key, $paramArr, $storeName);
         }
 
         return $result;
@@ -191,7 +194,7 @@ class ProfileCacheLib
      * @param $paramArr
      * @return bool
      */
-    public function insertInCache($iProfileID, $paramArr)
+    public function insertInCache($iProfileID, $paramArr, $storeName="")
     {
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
@@ -202,7 +205,7 @@ class ProfileCacheLib
             $paramArr[ProfileCacheConstants::ACTIVATED_KEY] = 1;
         }
 
-        return $this->cacheThis(ProfileCacheConstants::CACHE_HASH_KEY, $iProfileID, $paramArr);
+        return $this->cacheThis(ProfileCacheConstants::CACHE_HASH_KEY, $iProfileID, $paramArr, $storeName);
     }
 
     /**
@@ -245,7 +248,14 @@ class ProfileCacheLib
         $arrOut = array();
 
         foreach ($arrFields as $k) {
-            $arrOut[$k] = $arrData[$k];
+            $indexKey = $k;
+            
+            $isDuplicateField = stripos($k, ProfileCacheConstants::DUPLICATE_FIELD_DELIMITER);
+            if(false !== $isDuplicateField) {
+                $indexKey = substr($k, 0, $isDuplicateField);
+            }
+            
+            $arrOut[$indexKey] = $arrData[$k];
         }
 
         return $arrOut;
@@ -295,14 +305,11 @@ class ProfileCacheLib
      */
     private function getRelevantFields($arrFields, $storeName="")
     {
+        $bStoreNameExist = strlen($storeName) ? true : false;
+        $storeSuffix = $this->getStoreSuffix($storeName);
+        
         if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM && strlen($storeName)) {
-          if($storeName == "JPROFILE") {
-            $arrFields = ProfileCacheConstants::$arrJProfileColumns;
-          } else if(false !== stristr($storeName, "EDUCATION")) {
-            $arrFields = ProfileCacheConstants::$arrJProfile_EducationColumns;
-          } else if(false !== stristr($storeName, "NATIVE")) {
-            $arrFields = ProfileCacheConstants::$arrNativePlaceColumns;
-          }
+          $arrFields = $this->getColumnArr($storeName);
         } else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) {
             $arrFields = ProfileCacheConstants::$arrHashSubKeys;
         } else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) {
@@ -312,9 +319,22 @@ class ProfileCacheLib
         }
         //TODO: If $arrFields is not an array, handle this case  
         $array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
+        $array = array_unique($array);
         if(count(array_diff(array_unique($arrFields),$array))){
           $this->logThis(LoggingEnums::LOG_ERROR, "Relevant Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
           //throw new jsException("","Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
+        }
+        
+        //Check for duplicate fields
+        if(false === is_null($storeSuffix)) {
+            foreach($array as $key => $val)
+            {
+                if( in_array($val, ProfileCacheConstants::$arrDuplicateFieldsMap) && $bStoreNameExist) {
+                    $newVal = $val.ProfileCacheConstants::DUPLICATE_FIELD_DELIMITER.$storeSuffix;
+                    unset($array[$key]);
+                    $array[$key] = $newVal;
+                }
+            }
         }
         return $array;
     }
@@ -348,10 +368,12 @@ class ProfileCacheLib
     {
         $arrAllowableFields = $this->getRelevantFields($fields, $storeName);
         $arrFields = $arrAllowableFields;
+        $suffix = $this->getStoreSuffix($storeName);
+        $bIsStoreNameExist = (0 === strlen($storeName)) ? false : true;
         
         if ($fields == ProfileCacheConstants::ALL_FIELDS_SYM &&
             count($this->getFromLocalCache($key))  !== count($arrAllowableFields) &&
-            0 === strlen($storeName)
+            false === $bIsStoreNameExist
         ) {
             return false;
         } else if ($fields !== ProfileCacheConstants::ALL_FIELDS_SYM) {
@@ -362,14 +384,30 @@ class ProfileCacheLib
                 $arrFields[$k] = trim($v);
           }
           foreach ($arrFields as $szColName) {
+              $isDuplicateField = in_array($szColName, ProfileCacheConstants::$arrDuplicateFieldsMap);              
+              if($suffix && false !== $isDuplicateField) {
+                  $szColName = $szColName.ProfileCacheConstants::DUPLICATE_FIELD_DELIMITER.$suffix;
+              }
+              
               if(!in_array($szColName, $arrAllowableFields)) {
                   return false;
               }
           }
         }
-
+        
+        //Check for Not-Filled Case
+//        if($bIsStoreNameExist) {
+//            $arrColumns = $this->getColumnArr($storeName);
+//            in_array()
+//        }
+        
         if (isset($this->arrRecords[intval($key)])) {
             foreach ($arrFields as $szColName) {
+                $isDuplicateField = in_array($szColName, ProfileCacheConstants::$arrDuplicateFieldsMap); 
+                if($suffix && false !== $isDuplicateField) {
+                    $szColName = $szColName.ProfileCacheConstants::DUPLICATE_FIELD_DELIMITER.$suffix;
+                }
+              
                 if(!array_key_exists($szColName, $this->arrRecords[intval($key)])) {
                     return false;
                 }
@@ -670,6 +708,13 @@ class ProfileCacheLib
           return false;
         }
         
+        //Remove Duplicate Suffix
+        if(is_array($arrResponse) && count($arrResponse)) {
+            foreach($arrResponse as $key=>$val) {
+                $arrResponse[$key] = $this->removeDuplicateSuffix($val, $storeName);
+            }
+        }
+        
         //TODO : Handle Exception Cases  
         return array_values($arrResponse);
     }
@@ -679,12 +724,13 @@ class ProfileCacheLib
      * @param type $szCriteria
      * @param type $arrResponse
      */
-    public function cacheForMultiple($szCriteria, $arrResponse)
+    public function cacheForMultiple($szCriteria, $arrResponse, $storeName="")
     {
-      foreach($arrResponse as $key=>$rowData){
-        $arrData[ProfileCacheConstants::PROFILE_CACHE_PREFIX.$rowData[$szCriteria]] = $rowData;
-        unset($arrResponse[$key]);
-      }
+        foreach($arrResponse as $key=>$rowData){
+            $rowData = $this->addDuplicateSuffix($rowData, $storeName);
+            $arrData[ProfileCacheConstants::PROFILE_CACHE_PREFIX.$rowData[$szCriteria]] = $rowData;
+            unset($arrResponse[$key]);
+        }
       
       $this->storeForMultipleProfileInCache($arrData);
       //TODO : Handle Exception Cases
@@ -700,6 +746,10 @@ class ProfileCacheLib
     { 
       foreach($arrData as $key=>$value)
       {
+        if(in_array(ProfileCacheConstants::NOT_FILLED, $value)) {
+            unset($arrData[$key]);
+            continue;
+        }
         if(false === $this->isDataExistInCache($value)) {
           $this->logThis(LoggingEnums::LOG_INFO, "Cache does not exist for {$key}");
           return false;
@@ -715,7 +765,7 @@ class ProfileCacheLib
      */
     private function isDataExistInCache($arr)
     {
-      foreach($arr as $k=>$v){
+      foreach($arr as $k=>$v){      
         if(is_null($v)) return false;
       }
       return true;
@@ -757,6 +807,95 @@ class ProfileCacheLib
         $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
 
         return $bSuccess;
+    }
+    
+    /**
+     * 
+     * @param type $arrParams
+     * @param type $storeName
+     */
+    private function addDuplicateSuffix($arrParams, $storeName)
+    {
+        if(0 === strlen($storeName)) {
+            return $arrParams;
+        }
+        
+        $suffixName = $this->getStoreSuffix($storeName);
+                       
+        if(is_null($suffixName)) {
+            return $arrParams;
+        }
+        
+        foreach ($arrParams as $key=>$val) {
+            if(in_array($key, ProfileCacheConstants::$arrDuplicateFieldsMap)) {
+                unset($arrParams[$key]);
+                $newKey = $key.ProfileCacheConstants::DUPLICATE_FIELD_DELIMITER.$suffixName;
+                $arrParams[$newKey] = $val;
+            }
+        }
+        return $arrParams;
+    }
+    
+    /**
+     * 
+     * @param type $arrParams
+     * @param type $storeName
+     */
+    private function removeDuplicateSuffix($arrParams, $storeName)
+    {
+        if(0 === strlen($storeName)) {
+            return $arrParams;
+        }
+        
+        $suffixName = $this->getStoreSuffix($storeName);
+                       
+        if(is_null($suffixName)) {
+            return $arrParams;
+        }
+        
+        foreach ($arrParams as $key=>$val) {           
+            
+            $isDuplicateField = stripos($key, ProfileCacheConstants::DUPLICATE_FIELD_DELIMITER);
+            if(false !== $isDuplicateField) {
+                $newKey = substr($key, 0, $isDuplicateField);
+                $arrParams[$newKey] = $val;
+                unset($arrParams[$key]);
+            }
+        }
+        return $arrParams;
+    }
+    
+    /**
+     * 
+     * @param type $storeName
+     * @return string
+     */
+    private function getStoreSuffix($storeName)
+    {
+        $suffixName = null;
+        if(false !== stristr($storeName, "ASTRO")) {
+            $suffixName = "ASTRO";
+        }
+        return $suffixName;
+    }
+    
+    /**
+     * 
+     * @param type $storeName
+     * @return type
+     */
+    private function getColumnArr($storeName)
+    {
+        if($storeName == "JPROFILE") {
+            $arrFields = ProfileCacheConstants::$arrJProfileColumns;
+        } else if(false !== stristr($storeName, "EDUCATION")) {
+            $arrFields = ProfileCacheConstants::$arrJProfile_EducationColumns;
+        } else if(false !== stristr($storeName, "NATIVE")) {
+            $arrFields = ProfileCacheConstants::$arrNativePlaceColumns;
+        } else if(false !== stristr($storeName, "ASTRO")) {
+            $arrFields = ProfileCacheConstants::$arrAstroDetailsColumns;
+        }
+        return $arrFields;
     }
 }
 ?>

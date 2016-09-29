@@ -24,9 +24,8 @@ class ProfileCacheConstants
     const CACHE_EXPIRE_TIME = 86400;
     const CACHE_MAX_ATTEMPT_COUNT = 3;
     const NOT_FILLED = "-NF-";
-    //Acceptable or Relevant Fields which will be allowed as a subkeys in Hash
-    //public static $arrHashSubKeys = array('USERNAME', 'AGE', 'CITY_RES', 'COUNTRY_RES', 'CAST', 'RELIGION');
-
+    const DUPLICATE_FIELD_DELIMITER = "-d-";
+    
     public static $arrHashSubKeys = array(
                                         "PROFILEID",
                                         "USERNAME",
@@ -414,6 +413,10 @@ class ProfileCacheConstants
                                         "SATURN_RETRO_COMBUST",
                                         "VARA",
                                         "MASA",
+                                    );
+    public static $arrDuplicateFieldsMap = array(
+                                        //'BTIME',
+                                        'COUNTRY_BIRTH',
                                     );
 }
 ?>
