@@ -366,7 +366,7 @@ private function orderFamilyCity($addUsa='')
 			$returnArr[$k][0][]=array($kx=>$vx);
 		}
                 if($addUsa)
-                    $returnArr[$k][0][] = array('0'=>'Other');
+                    $returnArr[$k][0][] = array('0'=>'Others');
 	}
         if($addUsa){
             $returnArr['128'] = $this->getCityValuesForInUsa('',1)[0]['United States'];
