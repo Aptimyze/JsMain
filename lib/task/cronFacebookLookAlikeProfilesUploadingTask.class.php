@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Description of cronFacebookLookAlikeProfilesUploadingTask
  * cron for uploading mobile number and email ids to facebook
@@ -8,9 +9,12 @@
  */
 class cronFacebookLookAlikeProfilesUploadingTask extends sfBaseTask
 {
+  
 
+  
     protected function configure()
     {
+
         $this->namespace           = 'cron';
         $this->name                = 'cronFacebookLookAlikeProfilesUploading';
         $this->briefDescription    = 'Cron to upload data to the facebook api.';
@@ -24,9 +28,142 @@ EOF;
     }
     
     protected function execute($arguments = array(), $options = array()){
+        include_once(sfConfig::get('sf_lib_dir') . '/vendor/facebook-ads-php-sdk/facebook/php-ads-sdk/src/FacebookAds/Api.php');
+        include_once(sfConfig::get('sf_lib_dir') . '/vendor/facebook-ads-php-sdk/autoload.php');
+
+
         if(!sfContext::hasInstance())
-            sfContext::createInstance($this->configuration);
-         $coreCommunity = array(10,33,19,7,27,30,34,14,28,20,36,12,6,13);
+        sfContext::createInstance($this->configuration);
+
+
+
+        $this->access_token = "EAAWcsBunOAMBALwwhJx5kr6S6IxIaqkv6SV9dq4vi3MUp93jXM02yAN2LBAGIbfRpI5YAaXKmzT0ZBIpfEUh0ZAYCy6WZCNXqWaPsBcIIXua3FpR3zDhLdKBsjzqkAMCOxj7nk3tAATpBAkdsPbcFG39Hn3EWCTTXiFXLhrzk08ZB8q46f3T";
+        $this->app_id = "1579655075674115";
+        $this->app_secret = "2da4dc7ebdef63857945d926f3fd1644";
+        // should begin with "act_" (eg: $this->account_id = 'act_1234567890';)
+        $this->account_id = "act_106359619828994";
+        // Configurations - End
+
+        if (is_null($this->access_token) || is_null($this->app_id) || is_null($this->app_secret)) {
+          throw new \Exception(
+            'You must set your access token, app id and app secret before executing'
+          );
+        }
+        else
+        {
+            echo "fine.";
+        }
+        if (is_null($this->account_id)) {
+          throw new \Exception(
+            'You must set your account id before executing');
+        }
+        else
+        {
+            echo "fine.";
+        }
+
+        FacebookAds\Api::init($this->app_id, $this->app_secret, $this->access_token);
+
+
+        //getting data for profile exclusion
+        $this->loadLookAlike();
+            // $this->getInclusionData();
+            // $this->getExclusionData();
+
+    }
+
+    private function loadLookAlike()
+    {
+
+
+        // Create a custom audience object, setting the parent to be the account id
+        $this->audience = new FacebookAds\Object\CustomAudience(null, $this->account_id);
+        $this->audience->setData(array(
+          FacebookAds\Object\Fields\CustomAudienceFields::NAME => 'Jeevansathi Test Data',
+          FacebookAds\Object\Fields\CustomAudienceFields::DESCRIPTION => 'Adding some people',
+          FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\ CustomAudienceSubtypes::CUSTOM,
+
+          // FacebookAds\Object\Fields\CustomAudienceFields::ORIGIN_AUDIENCE_ID => "23842510783050637",
+          // FacebookAds\Object\Fields\CustomAudienceFields::LOOKALIKE_SPEC => array(
+          //   'type' => 'similarity',
+          //   'country' => 'IN',
+          // )
+
+
+        ));
+
+
+
+        // // Create the audience
+        $this->audience->create();
+
+        echo "Audience ID: " . $this->audience->id."\n";
+
+        $emails = array(
+            'scottai911@hotmail.com',
+            'sharynau613@hotmail.com',
+            'roxannaqw807@hotmail.com',
+            'shellygs489@hotmail.com',
+            'shastada040@hotmail.com',
+            'shawnkn615@hotmail.com',
+            'rosetteqr685@hotmail.com',
+            'pearlenedq409@hotmail.com',
+            'shelbydv770@hotmail.com',
+            'shanellebj021@hotmail.com',
+            'shantahn850@hotmail.com',
+            'samathauv659@hotmail.com',
+            'seanhj402@hotmail.com',
+
+        );
+
+        echo "Adding users.";
+
+        $this->audience->addUsers($emails,(FacebookAds\Object\Values\CustomAudienceTypes::EMAIL));
+        echo "Reading users.";
+        $this->audience->read(array(FacebookAds\Object\Fields\CustomAudienceFields::APPROXIMATE_COUNT));
+        echo "Estimated Size:"
+          . $this->audience->{FacebookAds\Object\Fields\CustomAudienceFields::APPROXIMATE_COUNT}."\n";
+    }
+    private function getExclusionData()
+    {
+        $emailExclusion = array();
+        $mobileExclusion = array();
+        $profileObj = new JPROFILE();
+
+        $valueArray['activatedKey'] = '1';
+        $valueArray['MOB_STATUS']="Y";
+
+        $lastLoginLimit = date('Y-m-d', strtotime("-365 days"));
+
+        $greaterThanArray["LAST_LOGIN_DT"] = $lastLoginLimit;
+
+        $fields="EMAIL,PHONE_MOB";
+
+
+        $result = $profileObj->getArray($valueArray, "", $greaterThanArray, $fields ,  "", "", "", "", "", "","","");
+
+        print_r($result);
+        
+
+        if ( !empty($result))
+        {
+           foreach ($result as $key => $data) 
+           {
+                $emailExclusion[]=$data['EMAIL'];
+                $mobileExclusion[]=$data['PHONE_MOB'];
+            }
+        }
+        
+        print_r($emailExclusion);
+        echo "phone number is:\n";
+        print_r($mobileExclusion);
+        echo "\n";
+       
+    }   
+
+    private function getInclusionData()
+    {
+        $coreCommunity = array(10,33,19,7,27,30,34,14,28,20,36,12,6,13);
 
         // getting data for profile inclusion for look alike data
         
@@ -76,7 +213,7 @@ EOF;
 
                 $result = $profileObj->getArray($valueArray, $excludeArray, $greaterThanArray, $fields ,  "", "", "", "", "", "","",$qualityProfileQuery);
 
-                print_r($result);
+                // print_r($result);
                 
 
                 if ( !empty($result))
@@ -88,14 +225,12 @@ EOF;
                     }
                 }
             }
-            // break;
         }
         
-        // print_r($emailInclusion);
-        echo "phone number is:\n";
+        print_r($emailInclusion);
         print_r($mobileInclusion);
-        echo "\n";
-    }
-    
+
+}
+
 }
 
