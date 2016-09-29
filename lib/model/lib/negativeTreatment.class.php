@@ -37,7 +37,13 @@ class negativeTreatment
 
     public function addProfileToNegative($profileidArr, $type = '')
     {
+        // print "Original Profile Arr ---  ";
+        // print_r($profileidArr);
+        // print "End Original Profile Arr ---  ";
+        // print "Modified Profile Arr ---  ";
         $profileidArr = $this->returnFilteredProfilesAfterDummyExclusion($profileidArr);
+        // print_r($profileidArr);
+        // print "End Modified Profile Arr ---  ";
         $this->cnt++;
         //echo "Main Profile List: ";
         if ($type && is_array($profileidArr)) {
@@ -46,7 +52,7 @@ class negativeTreatment
                 $this->profileNegArrForEmail[] = $profileid;
             }
         }
-        //print_r($profileidArr);
+        //// print_r($profileidArr);
 
         // Phone Number handling
         if (count($profileidArr) > 0) {
@@ -95,49 +101,56 @@ class negativeTreatment
 
     public function addPhoneToNegative($phoneNumberArr)
     {
-        // get compherensive list of phone numbers for profiles
-        $fullDetPhoneNumberArr = $this->phoneLogObj->getVerifiedProfilesAndPhone($phoneNumberArr);
-        $profileArr            = array();
-        $profileFilteredArr    = array();
-        $profileDummyArr       = array();
-        $tempPhoneArr          = array();
-        $phoneArr              = array();
-        foreach ($fullDetPhoneNumberArr as $key => $val) {
-            // Make list of all profiles retrieved above
-            $profileArr[] = $val['PROFILEID'];
-            // Make mapping of profiles corresponding to numbers
-            $tempPhoneArr[$val['PHONE_NUM']][] = $val['PROFILEID'];
-        }
-        unset($key, $val);
-        $profileArr = array_filter(array_unique($profileArr));
-        // Filter profiles from the above list to exclude dummy profiles
-        $profileFilteredArr = $this->returnFilteredProfilesAfterDummyExclusion($profileArr);
-        $profileDummyArr    = array_diff($profileArr, $profileFilteredArr);
-        $tempPhoneArr2      = $tempPhoneArr;
-        // Now remove all the phone numbers corresponding to the dummy marked profiles
-        foreach ($profileDummyArr as $key => $val) {
-            foreach ($tempPhoneArr as $phone => $proArr) {
-                if (in_array($val, $proArr)) {
-                    unset($tempPhoneArr2[$phone]);
+        // print "Original Phone Arr ---  ";
+        // print_r($phoneNumberArr);
+        // print "End Original Phone Arr ---  ";
+
+        if (!empty($phoneNumberArr) && is_array($phoneNumberArr)) {
+            // get compherensive list of phone numbers for profiles
+            $fullDetPhoneNumberArr = $this->phoneLogObj->getVerifiedProfilesAndPhone($phoneNumberArr);
+            $profileArr            = array();
+            $profileFilteredArr    = array();
+            $profileDummyArr       = array();
+            $tempPhoneArr          = array();
+            $phoneArr              = array();
+            foreach ($fullDetPhoneNumberArr as $key => $val) {
+                // Make list of all profiles retrieved above
+                $profileArr[] = $val['PROFILEID'];
+                // Make mapping of profiles corresponding to numbers
+                $tempPhoneArr[$val['PHONE_NUM']][] = $val['PROFILEID'];
+            }
+            unset($key, $val);
+            $profileArr = array_filter(array_unique($profileArr));
+            // Filter profiles from the above list to exclude dummy profiles
+            $profileFilteredArr = $this->returnFilteredProfilesAfterDummyExclusion($profileArr);
+            $profileDummyArr    = array_diff($profileArr, $profileFilteredArr);
+            $tempPhoneArr2      = $tempPhoneArr;
+            // Now remove all the phone numbers corresponding to the dummy marked profiles
+            foreach ($profileDummyArr as $key => $val) {
+                foreach ($tempPhoneArr as $phone => $proArr) {
+                    if (in_array($val, $proArr)) {
+                        unset($tempPhoneArr2[$phone]);
+                    }
                 }
             }
-        }
-        unset($key, $val);
-        // Now we have only phone numbers corresponsing to non-dummy Profiles
-        if (is_array($tempPhoneArr2)) {
-            foreach ($tempPhoneArr2 as $key => $pArr) {
-                foreach ($pArr as $k => $v) {
-                    $phoneArr[] = $v;
+            unset($key, $val);
+            // Now we have only phone numbers corresponsing to non-dummy Profiles
+            if (is_array($tempPhoneArr2)) {
+                foreach ($tempPhoneArr2 as $key => $pArr) {
+                    $phoneArr[] = $key;
                 }
             }
+            // Finally replace the incoming array with this new one !
+            $phoneNumberArr = $phoneArr;
+            // print "Modified Phone Arr ---  ";
+            // print_r($phoneNumberArr);
+            // print "End Modified Phone Arr ---  ";
+            unset($key, $val, $k, $v, $fullDetPhoneNumberArr, $profileArr, $profileDummyArr, $profileFilteredArr, $tempPhoneArr, $tempPhoneArr2, $phoneArr);
         }
-        // Finally replace the incoming array with this new one !
-        $phoneNumberArr = $phoneArr;
-        unset($key, $val, $k, $v, $fullDetPhoneNumberArr, $profileArr, $profileDummyArr, $profileFilteredArr, $tempPhoneArr, $tempPhoneArr2, $phoneArr);
 
         // Add phone number to negative
         /*echo "Phone Number List: ";
-        print_r($phoneNumberArr);*/
+        // print_r($phoneNumberArr);*/
         if (is_array($phoneNumberArr)) {
             foreach ($phoneNumberArr as $key => $phoneValue) {
                 $this->phoneNegArr[] = $phoneValue;
@@ -155,7 +168,7 @@ class negativeTreatment
             }
 
             /*echo "Profiles for Phone: ";
-            print_r($profileArrNew);*/
+            // print_r($profileArrNew);*/
             if (is_array($profileArrNew)) {
                 foreach ($profileArrNew as $key => $pid) {
                     $this->profileNegArrForPhone[] = $pid;
@@ -166,58 +179,65 @@ class negativeTreatment
     }
     public function addEmailToNegative($emailArr)
     {
-        // get compherensive list of email numbers for profiles
-        $fullDetEmailArr    = $this->oldEmailObj->getEmailProfilesAndEmail($emailArr);
-        $profileArr         = array();
-        $profileFilteredArr = array();
-        $tempEmailArr       = array();
-        $emailArr2          = array();
-        foreach ($fullDetEmailArr as $key => $val) {
-            // Make list of all profiles retrieved above
-            $profileArr[] = $val['PROFILEID'];
-            // Make mapping of profiles corresponding to emails
-            $tempEmailArr[$val['OLD_EMAIL']][] = $val['PROFILEID'];
-            $eArr[]                            = $val['OLD_EMAIL'];
-        }
-        unset($key, $val);
-        // MERGING
-        if (is_array($eArr)) {
-            $emailArr = array_merge(array_unique($eArr), $emailArr);
-        }
-        $valueArray['EMAIL'] = "'" . implode("','", $emailArr) . "'";
-        $jprofileArr1        = $this->jprofileEmailObj->getArray($valueArray, '', '', 'PROFILEID,EMAIL');
-        foreach ($jprofileArr1 as $key => $val) {
-            $tempEmailArr[$val['EMAIL']][] = $val['PROFILEID'];
-        }
-        $profileArr = array_filter(array_unique($profileArr));
-        // Filter profiles from the above list to exclude dummy profiles
-        $profileFilteredArr = $this->returnFilteredProfilesAfterDummyExclusion($profileArr);
-        $profileDummyArr    = array_diff($profileArr, $profileFilteredArr);
-        $tempEmailArr2      = $tempEmailArr;
-        // Now remove all the emails corresponding to the dummy profiles
-        foreach ($profileDummyArr as $key => $val) {
-            foreach ($tempEmailArr as $email => $proArr) {
-                if (in_array($val, $proArr)) {
-                    unset($tempEmailArr2[$email]);
+        // print "Original Email Arr ---  ";
+        // print_r($emailArr);
+        // print "End Original Email Arr ---  ";
+
+        if (!empty($emailArr) && is_array($emailArr)) {
+            // get compherensive list of email numbers for profiles
+            $fullDetEmailArr    = $this->oldEmailObj->getEmailProfilesAndEmail($emailArr);
+            $profileArr         = array();
+            $profileFilteredArr = array();
+            $tempEmailArr       = array();
+            $emailArr2          = array();
+            foreach ($fullDetEmailArr as $key => $val) {
+                // Make list of all profiles retrieved above
+                $profileArr[] = $val['PROFILEID'];
+                // Make mapping of profiles corresponding to emails
+                $tempEmailArr[$val['OLD_EMAIL']][] = $val['PROFILEID'];
+                $eArr[]                            = $val['OLD_EMAIL'];
+            }
+            unset($key, $val);
+            // MERGING
+            if (is_array($eArr)) {
+                $emailArr = array_merge(array_unique($eArr), $emailArr);
+            }
+            $valueArray['EMAIL'] = "'" . implode("','", $emailArr) . "'";
+            $jprofileArr1        = $this->jprofileEmailObj->getArray($valueArray, '', '', 'PROFILEID,EMAIL');
+            foreach ($jprofileArr1 as $key => $val) {
+                $tempEmailArr[$val['EMAIL']][] = $val['PROFILEID'];
+            }
+            $profileArr = array_filter(array_unique($profileArr));
+            // Filter profiles from the above list to exclude dummy profiles
+            $profileFilteredArr = $this->returnFilteredProfilesAfterDummyExclusion($profileArr);
+            $profileDummyArr    = array_diff($profileArr, $profileFilteredArr);
+            $tempEmailArr2      = $tempEmailArr;
+            // Now remove all the emails corresponding to the dummy profiles
+            foreach ($profileDummyArr as $key => $val) {
+                foreach ($tempEmailArr as $email => $proArr) {
+                    if (in_array($val, $proArr)) {
+                        unset($tempEmailArr2[$email]);
+                    }
                 }
             }
-        }
-        unset($key, $val, $email, $proArr);
-        // Now we have only phone numbers corresponsing to non-dummy Profiles
-        if (is_array($tempEmailArr2)) {
-            foreach ($tempEmailArr2 as $key => $pArr) {
-                foreach ($pArr as $k => $v) {
-                    $emailArr2[] = $v;
+            unset($key, $val, $email, $proArr);
+            // Now we have only phone numbers corresponsing to non-dummy Profiles
+            if (is_array($tempEmailArr2)) {
+                foreach ($tempEmailArr2 as $key => $pArr) {
+                    $emailArr2[] = $key;
                 }
             }
+            // Finally replace the incoming array with this new one !
+            $emailArr = $emailArr2;
+            // print "Modified Email Arr ---  ";
+            // print_r($emailArr);
+            // print "End Modified Email Arr ---  ";
+            unset($key, $val, $k, $v, $fullDetEmailArr, $profileArr, $profileFilteredArr, $profileDummyArr, $tempEmailArr, $tempEmailArr2, $emailArr2);
         }
-        // Finally replace the incoming array with this new one !
-        $emailArr = $emailArr2;
-        unset($key, $val, $k, $v, $fullDetEmailArr, $profileArr, $profileFilteredArr, $profileDummyArr, $tempEmailArr, $tempEmailArr2, $emailArr2);
 
         // Add email to negative list
         /*echo "Email list: ";
-        print_r($emailArr);*/
+        // print_r($emailArr);*/
         foreach ($emailArr as $key => $emailVal) {
             $this->emailNegArr[] = $emailVal;
         }
@@ -251,7 +271,7 @@ class negativeTreatment
                 $profileArrNew = array_diff($profileArr, $this->profileNegArrForEmail);
             }
             /*echo "Profiles for Email:";
-            print_r($profileArrNew);*/
+            // print_r($profileArrNew);*/
             if (is_array($profileArrNew)) {
                 foreach ($profileArrNew as $key => $pid) {
                     $this->profileNegArrForEmail[] = $pid;
