@@ -4,7 +4,7 @@ This php script is run to create object of rabbitmq Notifications Consumer class
 the receiveMessage function to let the consumer receive notification messages on first server.
 */
 
-class cronConsumeNotificationsQueueMessageTask extends sfBaseTask
+class cronConsumeNotificationsLogQueueMessageTask extends sfBaseTask
 {
   /**
    * 
@@ -16,11 +16,11 @@ class cronConsumeNotificationsQueueMessageTask extends sfBaseTask
   protected function configure()
   {
     $this->namespace           = 'cron';
-    $this->name                = 'cronConsumeNotificationsQueueMessage';
+    $this->name                = 'cronConsumeNotificationsLogQueueMessage';
     $this->briefDescription    = 'Initialises instance of rabbitmq consumer class to retrieve messages on first server';
     $this->detailedDescription = <<<EOF
-     The [cronConsumeNotificationsQueueMessage|INFO] calls receiveMessage function of consumer class through its instance to retrieve messages on first server:
-     [php symfony cron:cronConsumeNotificationsQueueMessage] 
+     The [cronConsumeNotificationsLogQueueMessage|INFO] calls receiveMessage function of consumer class through its instance to retrieve messages on first server:
+     [php symfony cron:cronConsumeNotificationsLogQueueMessage] 
 EOF;
     $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi')
@@ -38,8 +38,10 @@ EOF;
   {
     if (!sfContext::hasInstance())
       sfContext::createInstance($this->configuration);
-    $consumerObj=new JsNotificationsConsume('FIRST_SERVER',0);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
-    $consumerObj->receiveMessage(); 
+
+    // Notification Logging Consume
+    $consumerLogObj=new JsNotificationsLogConsume('FIRST_SERVER',0);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+    $consumerLogObj->receiveMessage();
 
   }
 }

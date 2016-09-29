@@ -125,6 +125,7 @@ class Producer
 
 			$this->channel->queue_declare(MQ::DUPLICATE_LOG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::PROFILE_CACHE_Q_DELETE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+                        $this->channel->queue_declare(MQ::VIEW_LOG, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
@@ -216,6 +217,9 @@ class Producer
 				case MQ::PROCESS_PROFILE_CACHE_DELETE:
           $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::PROFILE_CACHE_Q_DELETE,MQ::MANDATORY,MQ::IMMEDIATE);
 					break;
+                                case "ViewLogQueue":
+                                        $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::VIEW_LOG,MQ::MANDATORY,MQ::IMMEDIATE);
+                                        break;
 
 			}
 		} catch (Exception $exception) {

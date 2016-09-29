@@ -46,6 +46,12 @@ EOF;
     {
       passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &");
     }
-	}
+
+    // Notification Log consumer
+    passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND." > /dev/null &");
+
+  }
+
+
 }
 ?>
