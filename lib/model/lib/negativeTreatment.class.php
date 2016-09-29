@@ -54,7 +54,6 @@ class negativeTreatment
             unset($phoneArrNew);
             $phoneArr = $this->phoneLogObj->getVerifiedPhoneNumbers($profileidArr);
             if (is_array($phoneArr)) {
-                $phoneArr    = $this->returnFilteredProfilesAfterDummyExclusion($phoneArr);
                 $phoneArrNew = array_diff($phoneArr, $this->phoneNegArr);
             }
 
@@ -87,7 +86,6 @@ class negativeTreatment
             if (is_array($emailArr)) {
                 $emailArr = array_unique($emailArr);
             }
-            $emailArr    = $this->returnFilteredProfilesAfterDummyExclusion($emailArr);
             $emailArrNew = array_diff($emailArr, $this->emailNegArr);
             if (is_array($emailArrNew)) {
                 $this->addEmailToNegative($emailArrNew);

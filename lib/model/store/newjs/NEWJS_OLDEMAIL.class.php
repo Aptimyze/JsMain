@@ -113,7 +113,7 @@ class newjs_OLDEMAIL extends TABLE
 
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $dataArr[] = $pid;
+                $dataArr[] = $result;
             }
             return $dataArr;
         } catch (PDOException $e) {
