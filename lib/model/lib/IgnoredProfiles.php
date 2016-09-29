@@ -109,7 +109,6 @@ class IgnoredProfiles
 		{
 			$pidKey = $profileid."_byMe";
 			$resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($pidKey);
-			$this->addDataToFile("new");
 			return $resultArr;
 		}
 	}
@@ -126,12 +125,10 @@ class IgnoredProfiles
 		 }
 		 elseif($response == 1)
 		 {
-		 	$this->addDataToFile("new");
 		 	return true;
 		 }
 		 else
 		 {
-		 	$this->addDataToFile("new");
 		 	return false;
 		 }
 	}
@@ -148,7 +145,6 @@ class IgnoredProfiles
 		}
 		else
 		{
-			$this->addDataToFile("new");
 			return $response;
 		}
 	}

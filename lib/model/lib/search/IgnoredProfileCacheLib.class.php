@@ -103,7 +103,7 @@ class IgnoredProfileCacheLib
     //This function takes the key and checks if the key exists and then accordingly fetches and returns the value array
     public function getSetsAllValue($key)
     {
-    	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {echo("!");die;
+    	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
            return false;
         }
         //To check if key exists
@@ -120,7 +120,7 @@ class IgnoredProfileCacheLib
     //This function stores data in the redis cache 
     public function storeDataInCache($key,$arr)
     {
-    	if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+    	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
     	$resultArr = JsMemcache::getInstance()->storeDataInCacheByPipeline($key,$arr);    	
@@ -131,7 +131,7 @@ class IgnoredProfileCacheLib
     //This function removes an ignoredProfileId from three different keys. (profileId_all,profileId_byMe,ignoredProfileId_all)
     public function deleteDataFromCache($profileid,$ignoredProfileid)
     {
-    	if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+    	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
     	$pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
@@ -145,7 +145,7 @@ class IgnoredProfileCacheLib
     //This function adds an ignoredProfileId to three different keys. (profileId_all,profileId_byMe,ignoredProfileId_all)
     public function addDataToCache($profileid,$ignoredProfileid)
     {
-    	if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+    	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
     	$pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
@@ -159,7 +159,7 @@ class IgnoredProfileCacheLib
     //This function checks if a particular value exists in the redis corresponding to a given key and accordingly returns the boolean response
     public function checkIfDataExists($profileid,$ignoredProfileid)
     {
-    	if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+    	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
     	$pidKey = $profileid.ignoredProfileCacheConstants::BYME_DATA;
@@ -177,7 +177,7 @@ class IgnoredProfileCacheLib
 
     public function getCountFromCache($profileID)
     {
-    	if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+    	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
     	$pidKey = $profileid.ignoredProfileCacheConstants::BYME_DATA;
