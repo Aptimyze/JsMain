@@ -20,8 +20,11 @@ class ForgotloginV1Action extends sfActions
 		$responseData = array();
 		$email=$request->getParameter("email");
 		$flag=$request->getParameter("flag");
+		$phone = $request->getParameter("phone");
+		$isd = $request->getParameter("isd");
 		$apiObj=ApiResponseHandler::getInstance();
-		if(!$email)
+		// EMAIL validations
+		if(!validate($email, $flag, $isd, $phone))
 		{
 			$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_ERR);
 		}
@@ -37,8 +40,6 @@ class ForgotloginV1Action extends sfActions
 			}
 			else if($flag == 'M')
 			{
-				$phone = $request->getParameter("phone");
-				$isd = $request->getParameter("isd");
 				$arr=array('PHONE_MOB'=>"'$phone'",'ISD'=>"'$isd'");
 				$excludeArr=array('ACTIVATED'=>"'D'");
 				$data=$dbJprofile->getArray($arr,$excludeArr,'',"USERNAME,EMAIL,ACTIVATED,PROFILEID");
@@ -75,5 +76,27 @@ class ForgotloginV1Action extends sfActions
 		}
 			$apiObj->generateResponse();
 		die;
+	}
+
+	public function validate($email, $flag, $isd, $phone)
+	{
+		$email = trim($email);
+		$regex = "/^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})/";
+		if($email == '')
+		{
+			return false;
+		}
+		else if(!$flag || $flag == 'E')
+		{
+			return preg_match($regex, $email);
+		}
+		else if($flag == 'M')
+		{
+			$mobile = $isd.$phone;
+			$regex = "/^[0-9]{10,}/";
+			return preg_match($regex, $mobile) && (strlen($phone) == 10);
+		}
+		else
+			return false;
 	}
 }

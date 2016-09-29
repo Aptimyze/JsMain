@@ -119,17 +119,23 @@ function validateMobile(mobile) {
 	var data = new Array();
 	if(re.test(str))
 	{
-		// remove + and -
 		str = str.split('+').join('');
-		str = str.split('-').join('');
-		phone = str.slice(-10);
-		if(str.length == 10)
+		if(str.indexOf('-') > -1)
 		{
-			isd = '91';
+			isd = str.slice(0, str.indexOf('-'));
+			phone = str.slice(str.indexOf('-')+1, str.length);
 		}
 		else
 		{
-			isd = str.slice(0, str.length - 10);
+			phone = str.slice(-10);
+			if(str.length == 10)
+			{
+				isd = '91';
+			}
+			else
+			{
+				isd = str.slice(0, str.length - 10);
+			}
 		}
 		data['flag'] = 1;
 		data['phone'] = phone;
