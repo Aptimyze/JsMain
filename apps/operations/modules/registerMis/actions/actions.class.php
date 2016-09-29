@@ -77,13 +77,15 @@ class registerMisActions extends sfActions {
         foreach ($sourceCategory as $value) {
           if ( $value['SOURCE_GROUP'] != '' && $value['SOURCE_GROUP'] != NULL)
           {
-            $this->sourceCategoryKey[$value['SOURCE_GROUP']] = $value['SOURCE_CATEGORY'];
+            $this->sourceCategoryKey[$value['SOURCE_GROUP']] = ($value['SOURCE_CATEGORY']);
           }
           else 
           {
-            $this->sourceCategoryKey[$value['SOURCE_ID']] = $value['SOURCE_CATEGORY'];
+            $this->sourceCategoryKey[$value['SOURCE_ID']] = ($value['SOURCE_CATEGORY']);
           }
         }
+
+        $this->sourceCategoryKey = array_change_key_case($this->sourceCategoryKey, CASE_LOWER);
       
 
         $this->dateRegistrationData = array();
@@ -94,11 +96,11 @@ class registerMisActions extends sfActions {
           {
             $this->dateRegistrationData[$value['REG_DATE']] = array();
           }
-          if(array_key_exists(strtolower($value['GROUPNAME']),strtolower($this->sourceCategoryKey) )){
-             $value['GROUPNAME'] = $this->sourceCategoryKey[$value['GROUPNAME']];
+          if(array_key_exists(strtolower($value['GROUPNAME']),$this->sourceCategoryKey )){
+             $value['GROUPNAME'] = $this->sourceCategoryKey[strtolower($value['GROUPNAME'])];
           }
-          else if(array_key_exists(strtolower($value['SOURCEID']),strtolower($this->sourceCategoryKey) )){
-              $value['GROUPNAME'] = $this->sourceCategoryKey[$value['SOURCEID']];
+          else if(array_key_exists(strtolower($value['SOURCEID']),$this->sourceCategoryKey )){
+              $value['GROUPNAME'] = $this->sourceCategoryKey[strtolower($value['SOURCEID'])];
           }else{
               $value['GROUPNAME'] = "Direct PC";
           }
