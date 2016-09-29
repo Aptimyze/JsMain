@@ -916,5 +916,16 @@ class ProfileCacheLib
         }
         return $arrFields;
     }
+    
+    /**
+     * removeFieldsFromCache
+     * @param type $key
+     * @param type $storeName
+     * @param type $fields
+     */
+    public function removeFieldsFromCache($key, $storeName, $fields = "*")
+    {
+        
+    }
 }
 ?>
