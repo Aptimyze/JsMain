@@ -101,7 +101,7 @@ class ProfileAstro
         }
 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-            $this->logCacheConsumption();
+            $this->logCacheConsumeCount(__CLASS__);
             return $result;
         }
 
@@ -239,7 +239,7 @@ class ProfileAstro
         }
 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-            $this->logCacheConsumption();
+            $this->logCacheConsumeCount(__CLASS__);
             return $result;
         }
         
@@ -320,7 +320,7 @@ class ProfileAstro
      * 
      * @param type $funName
      */
-    private function logCacheConsumption($funName)
+    private function logCacheConsumeCount($funName)
     {
         $key = 'cacheConsumption' . '_' . date('Y-m-d');
         JsMemcache::getInstance()->hIncrBy($key, $funName);
