@@ -26,11 +26,11 @@ class MembershipMailer {
 		$email_sender->setAttachmentName($attachmentName);
 		$email_sender->setAttachmentType('application/vnd.ms-excel');
 	}
-        if($mailid == '1836'){
-            $email_sender->send('','','rupali.srivastava@jeevansathi.com');
-        } else {
+        // if($mailid == '1836'){
+        //     $email_sender->send('','','rupali.srivastava@jeevansathi.com');
+        // } else {
             $email_sender->send();
-        }
+        // }
         $deliveryStatus =$email_sender->getEmailDeliveryStatus();
         return $deliveryStatus;
 
