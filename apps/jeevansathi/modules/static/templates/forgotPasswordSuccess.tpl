@@ -10,7 +10,7 @@
   <form onsubmit="return false">
   <!--start:div-->
   <div class="pad5 frm_ele">
-      <textarea id="useremail" name="in_field" class="fullwid r_f1 fontthin color20" placeholder="Enter your registered Email ID"></textarea>
+      <textarea id="useremail" name="in_field" class="fullwid r_f1 fontthin color20" placeholder="Enter your registered Email ID or Primary Mobile Number"></textarea>
   </div>  
   <!--end:div-->
   <!--start:button-->

@@ -14,6 +14,7 @@ class InstantSMS {
 	private $unverified_key = array("REGISTER_RESPONSE" ,"PHONE_UNVERIFY");
 	private $customCriteria=0;
 	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP", "PHONE_UNVERIFY");
+	private $sendToInternational = array("FORGOT_PASSWORD");
 	private $eoiSMSLimit = 2;
 	private $otherProfileRequired = array("INSTANT_EOI","ACCEPTANCE_VIEWED","ACCEPTANCE_VIEWER","VIEWED_CONTACT_SMS","HOROSCOPE_REQUEST");
 	private $kycCity = array("DE00", "UP25", "UP06", "RA07", "UP47", "UP12");
@@ -73,8 +74,8 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 		if($this->smsKey=='OTP') return true;
 		if($this->smsKey=='PHONE_UNVERIFY') return true;
-
-		if(!$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"]))
+		$sendToInt = in_array($this->smsKey, $sendToInternational);
+		if(!$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"], $sendToInt))
 			return false;
 		switch ($this->smsKey) {
 			
@@ -262,7 +263,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
         {
 			$message = addslashes($message);
             
-                $sql = "INSERT INTO newjs.SMS_DETAIL(PROFILEID, SMS_TYPE, SMS_KEY, MESSAGE, PHONE_MOB, ADD_DATE,SENT) VALUES ('$this->profileid', 'I', '$this->smsKey', '$message', '".$this->profileDetails["PHONE_MOB"]."', now(),'$sent')";
+                $sql = "INSERT INTO newjs.SMS_DETAIL(PROFILEID, SMS_TYPE, SMS_KEY, MESSAGE, PHONE_MOB, ADD_DATE,SENT) VALUES ('$this->profileid', 'I', '$this->smsKey', '$message', '".$this->profileDetails['ISD'].$this->profileDetails["PHONE_MOB"]."', now(),'$sent')";
                 mysql_query($sql,$this->SMSLib->dbMaster) or logError($this->errorMessage,$sql,"ShowErrTemplate");
         }
 
