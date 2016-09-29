@@ -972,10 +972,24 @@ EditApp = function(){
       
       var optionString = "";
       var hideTheField = false;
-      
-      if(fieldObject.key=="STATE_RES"){
-          if(editAppObject[BASIC]['COUNTRY_RES'].value!='51')
+      if(fieldObject.key=="CITY_RES"){
+          var countryVal = editAppObject[BASIC]['COUNTRY_RES'].value;
+          var stateVal = editAppObject[BASIC]['STATE_RES'].value;
+          if(countryVal=='51' && stateVal){
+              var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[stateVal];
+              optionString = prepareOptionDropDown(dataCity,fieldObject);
+          }
+          else if(countryVal=='128'){
+              var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[countryVal];
+              optionString = prepareOptionDropDown(dataCity,fieldObject);
+          }
+          else
+              hideTheField = true;
+      }
+      else if(fieldObject.key=="STATE_RES"){
+          if(editAppObject[BASIC]['COUNTRY_RES'].value!='51'){
             hideTheField = true;
+          }
           else
             optionString = prepareOptionDropDown(data,fieldObject);
       }
@@ -4768,7 +4782,17 @@ EditApp = function(){
           
         var fieldObject = editAppObject[sectionId][fieldKey];
         
-        if(typeof fieldObject == "undefined"){
+        if(fieldObject.key=="CITY_RES"){
+          var countryVal = editAppObject[BASIC]['COUNTRY_RES'].value;
+          if(countryVal!='51' || (countryVal!='128'))
+              continue;
+        }
+        else if(fieldObject.key=="STATE_RES"){
+          if(editAppObject[BASIC]['COUNTRY_RES'].value!='51'){
+            continue;
+          }
+        }
+        else if(typeof fieldObject == "undefined"){
           if(debugInfo)
             console.log("i : " + i);
           continue;
@@ -4867,7 +4891,25 @@ EditApp = function(){
           data = getDependantData(fieldObject,data);
           var hideField = false;
           var optionString = "";
-          if(typeof data == "undefined"){
+          if(fieldObject.key=="CITY_RES"){
+            var countryVal = editAppObject[BASIC]['COUNTRY_RES'].value;
+            var stateVal = editAppObject[BASIC]['STATE_RES'].value;
+            alert(stateVal);
+            if(countryVal=='51' && stateVal){
+              var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[stateVal];
+              optionString = prepareOptionDropDown(dataCity,fieldObject);
+            }
+            else if(countryVal=='128'){
+                var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[countryVal];
+                optionString = prepareOptionDropDown(dataCity,fieldObject);
+            }
+          }
+          else if(fieldObject.key=="STATE_RES"){
+            if(editAppObject[BASIC]['COUNTRY_RES'].value=='51'){
+                optionString = prepareOptionDropDown(data,fieldObject);
+            }
+          }
+          else if(typeof data == "undefined"){
             hideField = true;
           }
           else{
