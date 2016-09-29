@@ -8,12 +8,20 @@
 class IgnoredProfiles
 {
         protected $dbname = "";
+        private $measurePerformance = true;
         /**
          * Constructor to set DB
          * @param type $dbname
          */
-        public function __construct() {
+        public function __construct($dbName = '') {
+        	if (!$dbName)
+        	{
                 $this->dbname = searchConfig::getSearchDb();
+        	}
+        	else
+        	{
+        		$this->dbname = $dbname;
+        	}      
         }
         /**
         *  This function list the two way ignored profile ie.
@@ -22,46 +30,151 @@ class IgnoredProfiles
         */
         public function listIgnoredProfile($pid,$seperator='')
         {
-		$NEWJS_IGNOREObj = new newjs_IGNORE_PROFILE($this->dbname);
-		return $NEWJS_IGNOREObj->listIgnoredProfile($pid,$seperator);
+        	$this->addDataToFile("old");
+        	//changed pidKey and made call to ignoredProfileCacheLib
+        	$pidKey = $pid."_all";
+        	$resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($pidKey);
+        	if($resultArr == "noKey" || $resultArr == false)
+        	{
+        		$NEWJS_IGNOREObj = new newjs_IGNORE_PROFILE($this->dbname);
+				$resultArr = $NEWJS_IGNOREObj->listIgnoredProfile($pid,$seperator);
+				$this->addDataToFile("new");
+				IgnoredProfileCacheLib::getInstance()->storeDataInCache($pidKey,$resultArr);
+        		return $resultArr;
+        	}
+        	else
+        	{        		
+        		return $resultArr;        		
+        	}
         }
 
-	public function ignoreProfile($profileid, $ignoredProfileid)
-	{
-		$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
-		$ignObj->ignoreProfile($profileid,$ignoredProfileid);
-		
-		JsMemcache::getInstance()->remove($profileid);
-		JsMemcache::getInstance()->remove($ignoredProfileid);
-		
-	}
+        public function ignoreProfile($profileid, $ignoredProfileid)
+        {
+        	$this->addDataToFile("old");
+        	$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
+        	$ignObj->ignoreProfile($profileid,$ignoredProfileid);
+        	$this->addDataToFile("new");
+        	IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$ignoredProfileid);
+        }
 
 	public function undoIgnoreProfile($profileid, $ignoredProfileid)
 	{
+		$this->addDataToFile("old");
 		$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
 		$ignObj->undoIgnoreProfile($profileid,$ignoredProfileid);
-		JsMemcache::getInstance()->remove($profileid);
-		JsMemcache::getInstance()->remove($ignoredProfileid);
-		
+		$this->addDataToFile("new");
+		IgnoredProfileCacheLib::getInstance()->deleteDataFromCache($profileid,$ignoredProfileid);
 	}
 
 	public function ifProfilesIgnored($profileIdStr, $viewer, $key='')
 	{
-		$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
-		$ignProfile = $ignObj->getIgnoredProfiles($profileIdStr,$viewer,$key);
-		return $ignProfile;
+		$this->addDataToFile("old");
+		$viewerKey = $viewer."_byMe";
+		if($profileIdStr == '')
+		{
+			$resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($viewerKey);
+		}
+		else
+		{
+			//considering that it is a comma seperated string 
+			$profileIdArr = explode(',', $profileIdStr);
+			$resultArr = IgnoredProfileCacheLib::getInstance()->getSpecificValuesFromCache($viewerKey,$profileIdArr);
+		}
+		if($resultArr == "noKey")
+		{
+			$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
+			$ignProfile = $ignObj->getIgnoredProfiles($profileIdStr,$viewer,$key);
+			$this->addDataToFile("new");
+			return $ignProfile;
+		}
+		else
+		{
+			return $resultArr;
+		}
+		
 	}
+
+	//This function is left as it is since it is better off being in sql rather than in Redis
 	public function getIgnoredProfile($profileid,$condition='',$skipArray='')
 	{
-		$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
-		$ignoredProfile = $ignObj->getIgnoredProfilesList($profileid,$condition,$skipArray);
-		return $ignoredProfile;
+		$this->addDataToFile("old");
+		if(is_array($skipArray))
+		{
+			$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
+			$ignoredProfile = $ignObj->getIgnoredProfilesList($profileid,$condition,$skipArray);
+			$this->addDataToFile("new");
+			return $ignoredProfile;
+		}
+		else
+		{
+			$pidKey = $profileid."_byMe";
+			$resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($pidKey);
+			return $resultArr;
+		}
 	}
 
 	public function ifIgnored($profileid,$otherProfileId)
 	{
-		$ignoreObj = new newjs_IGNORE_PROFILE($this->dbname);
-		return $ignoreObj->isIgnored($profileid,$otherProfileId);
+		 $this->addDataToFile("old");
+		 $response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($profileid,$ignoredProfileid);
+		 if($response == "noKey" || $response == false)
+		 {
+		 	$ignoreObj = new newjs_IGNORE_PROFILE($this->dbname);
+		 	$this->addDataToFile("new");
+			return $ignoreObj->isIgnored($profileid,$otherProfileId);
+		 }
+		 elseif($response == 1)
+		 {
+		 	return true;
+		 }
+		 else
+		 {
+		 	return false;
+		 }
+	}
+ 		//check in case redis is off 
+	public function getCountIgnoredProfiles($profileID)
+	{
+		$this->addDataToFile("old");
+		$response = IgnoredProfileCacheLib::getInstance()->getCountFromCache($profileID);
+		if($response == "noKey" || $response == false)
+		{
+			$ignoreObj = new newjs_IGNORE_PROFILE($this->dbname);
+			$this->addDataToFile("new");
+			return $ignoreObj->getCountIgnoredProfiles($profileID);
+		}
+		else
+		{
+			return $response;
+		}
+	}
+
+	public function addDataToFile($param)
+	{
+		if($this->measurePerformance)
+		{
+			if($param == "new")
+			{
+				$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ignoredProfilesCount_NEW_".date('Y-m-d').".txt";
+			}
+			else if($param == "old")
+			{
+				$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/ignoredProfilesCount_OLD_".date('Y-m-d').".txt";
+			}
+			$file = fopen($fileName,"a+");
+			$contents = fread($file,filesize($fileName));
+			if($contents == 0)
+			{
+				ftruncate($file, 0);
+				fwrite($file,"1");
+			}
+			else
+			{
+				$contents = $contents+1;
+				ftruncate($file, 0);
+				fwrite($file,$contents);
+			}
+		}
 	}
 }
 ?>

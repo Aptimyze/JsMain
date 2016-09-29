@@ -880,8 +880,8 @@ class detailedAction extends sfAction
 			$bookmark= new NEWJS_BOOKMARKS();
 			if($bookmark->isBookmarked($sender,$receiver))
 				$this->BOOKMARKED=1;
-			$ignore=new newjs_IGNORE_PROFILE();
-			if($ignore->isIgnored($sender,$receiver))
+			$ignore=new IgnoredProfiles("newjs_master");
+			if($ignore->ifIgnored($sender,$receiver))
 					$this->IGNORED=1;
 		}
 	}
