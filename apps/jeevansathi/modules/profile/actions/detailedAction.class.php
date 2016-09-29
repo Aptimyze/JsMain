@@ -104,7 +104,14 @@ class detailedAction extends sfAction
     if (MobileCommon::isDesktop() && $this->loginData[PROFILEID]) {
        $this->onlineStatus();
     }
-
+	$nameOfUserObj = new NameOfUser();
+	$showNameData = $nameOfUserObj->showNameToProfiles($this->loginProfile,array($this->profile));
+	if($showNameData[$this->profile->getPROFILEID()]['SHOW']==true)
+	{
+		$this->nameOfUser = $showNameData[$this->profile->getPROFILEID()]['NAME'];
+	}
+	else
+		$this->dontShowNameReason = $showNameData[$this->profile->getPROFILEID()]['REASON'];
     //Assings variables required in template, handling legacy.
 		$this->smartyAssign();
 

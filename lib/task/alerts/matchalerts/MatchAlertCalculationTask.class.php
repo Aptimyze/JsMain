@@ -8,6 +8,8 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $limitNtRec = 16;
 	private $limitTRec = 10;
         private $minDppIntersectionCnt = 50;
+        private $idealTrendsResultsNo=10;
+        private $idealNonTrendsResultsNo=16;
         
 	protected function configure()
   	{
@@ -37,6 +39,12 @@ EOF;
                 ini_set('memory_limit','512M');
                 $totalScripts = $arguments["totalScripts"]; // total no of scripts
                 $currentScript = $arguments["currentScript"]; // current script number
+                
+                $profilesWithLimitReached=array();
+                $lowMatchesCheckObj = new LowDppMatchesCheck();
+                $dateToCheck= date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . "-1 month" ) );
+                $profilesWithLimitReached = $lowMatchesCheckObj->getProfilesWithInformLimitReached($dateToCheck,$totalScripts,$currentScript);
+                
 
 		$flag=1;
 
@@ -46,7 +54,7 @@ EOF;
 			*/
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
-                        //$arr = array(7043932=>1);
+                        //$arr = array(7043932=>1,144111=>1);
 			if(is_array($arr))
 			{
 				foreach($arr as $profileid=>$v)
@@ -74,6 +82,8 @@ EOF;
 							*/
                                                         $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT);
 							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt);
+                                                        if($totalResults == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
+                                                               $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
                                                         $profileId = $loggedInProfileObj->getPROFILEID();
                                                         $isProfileEligible = logAndFetchProfilesForZeroMatches::checkIfProfileIsEligible($profileId);
                                                         if($totalResults >= $this->minDppIntersectionCnt && $isProfileEligible)
@@ -96,8 +106,11 @@ EOF;
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
+                                                        $includeDppCnt = 1;
 							$StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$strategyReceiversNT);
-							$StrategyReceiversNT->getMatches();
+							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt);
+                                                        if($totalResults == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
+                                                                $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
 						}	
 					}
 				}

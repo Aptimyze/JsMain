@@ -561,6 +561,7 @@ class misGenerationhandler
         $jsAdminPswrdsObj=new jsadmin_PSWRDS("newjs_slave");
         $agentsPriv = $jsAdminPswrdsObj->getPrivilegesForSalesTargetWithLastLogin();
         unset($jsAdminPswrdsObj);
+        
         //Get sale within last month from incentive.MONTHLY_INCENTIVE_ELIGIBILITY
         //****Comment from here after 2nd March,2016****
         /*
@@ -584,11 +585,23 @@ class misGenerationhandler
         $curDate = date('Y-m-d');
         $stDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)))." 00:00:00";
         $endDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)))." 23:59:59";
+        
+        $checkLogDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)));                
+        $agentLoginLogObj = new jsadmin_AGENTS_LOGIN_LOG("newjs_slave");
+        $agentsLoggedIn = $agentLoginLogObj->fetchLoggedInAgentForDate($checkLogDate);
+        foreach ($agentsLoggedIn as $key => $username){
+            //unset($loginWithinRange);
+            //$loginWithinRange = $this->checkDateWithinRange($details['LAST_LOGIN_DT'], $stDate, $endDate);
+            list($pws, $headCountArr) = $this->addAmountToProcess('',$agentsPriv[$username],$pws,$headCountArr,true);
+        }
+        
+        /*
         foreach ($agentsPriv as $username => $details){
             unset($loginWithinRange);
             $loginWithinRange = $this->checkDateWithinRange($details['LAST_LOGIN_DT'], $stDate, $endDate);
             list($pws, $headCountArr) = $this->addAmountToProcess('',$details,$pws,$headCountArr,$loginWithinRange);
         }
+        */
         
         $incetiveMonthlyIncentiveElgObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY("newjs_slave");
         $sales = $incetiveMonthlyIncentiveElgObj->getSalesWithinDates($stDate, $endDate);
@@ -692,6 +705,10 @@ class misGenerationhandler
             $date = $saleDetails["DATE"];
             $amount = $saleDetails["AMOUNT"];
         }
+        else{
+            $date = date('Y-m-d');
+            $amount = 0;
+        }
         $priv = $privilageDetails['PRIVILAGE'];
         //This if checks if the agent has the basic privilage 'ExcSl'
         if($priv){            
@@ -775,6 +792,11 @@ class misGenerationhandler
         else{
             return false;
         }
+    }
+    
+    public function removeEntriesFromAgentsLoginLog($deleteBeforeDate){
+        $agentsLoginLogObj = new jsadmin_AGENTS_LOGIN_LOG();
+        $agentsLoginLogObj->deleteLogBeforeDate($deleteBeforeDate);
     }
 }
 ?>

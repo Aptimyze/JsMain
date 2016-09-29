@@ -40,6 +40,7 @@ EOF;
       sfContext::createInstance($this->configuration);
     $consumerObj=new JsNotificationsConsume('FIRST_SERVER',0);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
     $consumerObj->receiveMessage(); 
+
   }
 }
 ?>

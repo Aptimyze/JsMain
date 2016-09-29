@@ -227,5 +227,17 @@ class ProcessHandler
         
         Duplicate::logIfDuplicate($profileObj,$phone);
  }
-}
+ 
+public function updateViewLogTable($body,$type)
+ {
+        $viewer = $body["VIEWER"];
+        $viewed = $body["VIEWED"];
+	$viewLogObj=new VIEW_LOG_TRIGGER();
+        if($type == "inTrigger")
+            $viewLogObj->updateViewTrigger($viewer,$viewed);
+        
+        $viewLogObj->updateViewLog($viewer,$viewed);
+ }
+ 
+ }
 ?>
