@@ -819,6 +819,7 @@ public function executeAppredirect(sfWebRequest $request)
                                                 $outData[128][]=array($i=>array($k=>$v));
                                         $i++;
                                 }
+			    $outData['128'][][0] = array('0'=>'Others');
 			}
 		  }
 		  echo json_encode($outData);
@@ -839,6 +840,7 @@ public function executeAppredirect(sfWebRequest $request)
 						$output[128][]=array($i=>array($k=>$v));
 					$i++;
 				}
+			    $output['128'][][0] = array('0'=>'Others');
 			}
 			if($k=="family_income")
 			{
@@ -1668,14 +1670,14 @@ if($k=="state_res")
 		{
 			$returnArr[$k][0][]=array($kx=>$vx);
 		}
-                    $returnArr[$k][0][] = array('0'=>'Other');
+                    $returnArr[$k][0][] = array('0'=>'Others');
 	}
             $cityUsa = FieldMap::getFieldLabel("city_usa",'',1);
         foreach($cityUsa as $k=>$v)
 	{
 			$usCity[0][]=array($k=>$v);
 	}
-            $usCity['128'][0][] = array('0'=>'Other');
+            $usCity['128'][0][] = array('0'=>'Others');
             $returnArr['128'] = $usCity;
 	return $returnArr;		
   }
