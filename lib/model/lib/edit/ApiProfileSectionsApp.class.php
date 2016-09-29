@@ -304,7 +304,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
                 $contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
 
                 //Alt Number Privacy Settings
-                $contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$extendedContactArray['SHOWALT_MOBILE'],$extendedContactArray['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
+                $contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
     
 		$contactArr[]=$this->getApiFormatArray("TIME_TO_CALL_START","Suitable Time to Call" ,$time_to_call_label,$time_to_call_value,$this->getApiScreeningField("TIME_TO_CALL_START"));
 		
