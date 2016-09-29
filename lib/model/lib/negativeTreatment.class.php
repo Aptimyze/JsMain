@@ -178,7 +178,6 @@ class negativeTreatment
             // Make list of all profiles retrieved above
             $profileArr[] = $val['PROFILEID'];
             // Make mapping of profiles corresponding to emails
-            // $tempEmailArr[$val['PROFILEID']][] = $val['OLD_EMAIL'];
             $tempEmailArr[$val['OLD_EMAIL']][] = $val['PROFILEID'];
             $eArr[]                            = $val['OLD_EMAIL'];
         }
