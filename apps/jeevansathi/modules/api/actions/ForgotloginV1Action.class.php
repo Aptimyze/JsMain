@@ -29,6 +29,7 @@ class ForgotloginV1Action extends sfActions
 		{
 			$dbJprofile= new JPROFILE();
 			$SmsObj = new newjs_SMS_DETAIL();
+			$MultipleProfilesPerPhone = 0;
 			if(!$flag || $flag == 'E')
 			{
 				$data=$dbJprofile->get($email,"EMAIL","USERNAME,EMAIL,ACTIVATED,PROFILEID");
@@ -49,12 +50,7 @@ class ForgotloginV1Action extends sfActions
 				}
 				elseif(count($data) > 1)
 				{
-					$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_PHONE_ERR);
-				}
-				else
-				{
-					// no profile found
-					$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_ERR);
+					$MultipleProfilesPerPhone = 1;
 				}
 			}
 			$data['SmsCount'] = $SmsCount;
@@ -68,6 +64,10 @@ class ForgotloginV1Action extends sfActions
 				}
 				else
 					$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_DELETED);
+			}
+			elseif ($MultipleProfilesPerPhone)
+			{
+				$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_PHONE_ERR);
 			}
 			else
 				$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_ERR);
