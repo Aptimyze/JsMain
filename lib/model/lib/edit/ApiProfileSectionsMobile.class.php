@@ -498,7 +498,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 			$value= $city;
 			$label = FieldMap::getFieldLabel("city",$city);
 		}
-		if(($this->profile->getCOUNTRY_RES()=="51" && ($stateValue!='0' && $stateValue!='' && $stateValue!=0)) || $this->profile->getCOUNTRY_RES()=="128")
+		if(($this->profile->getCOUNTRY_RES()=="51" && ($stateValue!='0' && $stateValue!='')) || $this->profile->getCOUNTRY_RES()=="128")
 			$hiddenCity = false;
 		else
 			$hiddenCity = true;
