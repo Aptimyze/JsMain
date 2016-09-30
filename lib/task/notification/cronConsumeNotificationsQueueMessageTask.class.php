@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 This php script is run to create object of rabbitmq Notifications Consumer class and call 
 the receiveMessage function to let the consumer receive notification messages on first server.
