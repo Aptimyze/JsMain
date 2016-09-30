@@ -3523,10 +3523,11 @@ EditApp = function(){
           updateFieldUI(stateFieldObject,data);
           showHideField(stateFieldObject,"show",true);
           requiredFieldStore.remove(stateFieldObject);
-          requiredFieldStore.add(stateFieldObject);
-          if($("#state_res").val()!='' && $("#state_res").val()!=null && typeof($("#state_res").val()!='')!="undefined"){console.log($("#state_res").val());
+          if($("#state_res").val()!='' && $("#state_res").val()!=null && typeof($("#state_res").val()!='')!="undefined"){
               showHideField(cityFieldObject,"show",true);
           }
+          else
+              showHideField(cityFieldObject,"hide",true);
         }
       }
       
