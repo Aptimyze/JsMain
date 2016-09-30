@@ -108,7 +108,7 @@ class kundli_alert_LOG extends TABLE
         			$pdoStatement = $this->db->prepare($sql);
         			foreach($finalArr as $user=>$userId)
         			{        			
-        				if($user!="SENT" && $count<=16 && in_array($user,kundliMatchAlertMailerEnums::$userArray))
+        				if($user!="SENT" && $count<=16 && in_array($user,kundliMatchAlertMailerEnums::$userArray) && $userId != 0)
         				{
         					$pdoStatement->bindValue(":USER".$count, $userId, PDO::PARAM_INT);
         				}

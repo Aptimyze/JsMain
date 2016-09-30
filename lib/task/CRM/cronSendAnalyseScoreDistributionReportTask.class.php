@@ -40,7 +40,8 @@ EOF;
         if (!sfContext::hasInstance()) {
             sfContext::createInstance($this->configuration);
         }
-        $useScoreLogTable = true;
+        $useScoreLogTable = false;
+        $modelMapping = array("E"=>"EVER_PAID","R"=>"RENEWAL","N"=>"NEVER_PAID");
         if($useScoreLogTable == true){
             $modelArr = array("EVER_PAID","NEVER_PAID","RENEWAL");
             $scoreDBObj = new incentive_SCORE_UPDATE_LOG_NEW_MODEL("newjs_slave");
@@ -49,7 +50,7 @@ EOF;
         }
         else{
             $modelArr = array("E","N","R");
-            $scoreDBObj = new test_ANALYTICS_SCORE_POOL("newjs_slave");
+            $scoreDBObj = new test_ANALYTICS_SCORE_POOL("newjs_local111");
             $startDt = "";
             $endDt = "";
         }
@@ -100,24 +101,33 @@ EOF;
 
             //print_r($data);die;
             foreach($data as $key=>$model) {
+                if(($key == "EVER_PAID"|| $key == "E")){
+                    fputcsv($fp, array('SCORE','PROFILE COUNT'));
+                }
+                if($useScoreLogTable == false){
+                    $modelName = $modelMapping[$key];
+                }
+                else{
+                    $modelName = $key;
+                }
+                fputcsv($fp, array('-----',$modelName,'-------'));
                 foreach ($model as $range => $val) {
                     $csvData = array();
                     if($range != "TOTAL COUNT"){
-                        $csvData['MODEL'] = $key;
+                        //$csvData['MODEL'] = $key;
                         $csvData['SCORE'] = $range;
                         $csvData['PROFILE COUNT'] = $val;
-                        if($data[$key]['TOTAL COUNT'] == 0 || $val == 0){
+                        /*if($data[$key]['TOTAL COUNT'] == 0 || $val == 0){
                           $csvData['PROFILES %'] = "0 %";  
                         }
                         else{
                             $csvData['PROFILES %'] = round((($val / $data[$key]['TOTAL COUNT']) * 100),2)." %";
-                        }
+                        }*/
                     }
                   
                     //print_r($csvData);
-                    if(($key == "EVER_PAID"|| $key == "E") && $range=="NO_SCORE"){
-                        fputcsv($fp, array('MODEL','SCORE','PROFILE COUNT','PROFILES %'));
-                    }
+
+                    
                    fputcsv($fp, $csvData);
                 } 
             }
@@ -125,9 +135,9 @@ EOF;
             //print_r($csvAttachment);die;
 
             //send csv as mail
-            //$to = "rohan.mathur@jeevansathi.com";
-            $cc = "vibhor.garg@jeevansathi.com,ankita.g@jeevansathi.com";
-            $to = "nsitankita@gmail.com";
+            $to = "rohan.mathur@jeevansathi.com";
+            $cc = "vibhor.garg@jeevansathi.com,ankita.g@jeevansathi.com,manoj.rana@naukri.com";
+            //$to = "nsitankita@gmail.com";
             $message = "Please find attached excel sheet containing requested data";
             $subject = "Analysis score distribution report";
             SendMail::send_email($to, $message, $subject, 'js-sums@jeevansathi.com', $cc, '', $csvAttachment, "application/vnd.ms-excel", "ScoreDistribution_".date('d-M-Y').".csv", '', '', '', '');

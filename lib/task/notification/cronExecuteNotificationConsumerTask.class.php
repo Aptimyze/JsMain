@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 This php script reads no. of instances of rabbitmq JsNotificationsConsume from MessageQueues.enum.class.php to be run and executes that many instances of cron:cronConsumeNotificationsQueueMessage.
 */
