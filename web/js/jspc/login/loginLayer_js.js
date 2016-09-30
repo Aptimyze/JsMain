@@ -127,15 +127,8 @@ function validateMobile(mobile) {
 		}
 		else
 		{
-			phone = str.slice(-10);
-			if(str.length == 10)
-			{
-				isd = '91';
-			}
-			else
-			{
-				isd = str.slice(0, str.length - 10);
-			}
+			isd = '';
+			phone = str;
 		}
 		data['flag'] = 1;
 		data['phone'] = phone;
@@ -456,6 +449,7 @@ function forgotBindings(fromLayer)
                          $('#forgotPasswordLayer').removeClass("disp-none");
                     });
                     $('.js-overlay').bind("click",function(){
+                    	$("#sendLinkForgot").unbind('click');
 					 $('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
 						$('#forgotPasswordLayer').remove();
@@ -468,6 +462,7 @@ function forgotBindings(fromLayer)
 			 $('.js-overlay').fadeIn(200, "linear");
 			 $('#forgotPasswordLayer').removeClass("disp-none").attr("style","block");
 			 $('.js-overlay').bind("click",function(){
+			 		$("#sendLinkForgot").unbind('click');
 					 $('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
 					});
@@ -479,6 +474,7 @@ function forgotBindings(fromLayer)
 		if(fromLayer==1)
 		{
 			$('#closeForgotLogin').click(function() {
+				$("#sendLinkForgot").unbind('click');
 				$('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 					$('.js-overlay').fadeOut(300, "linear");
 					$('#forgotPasswordLayer').remove();
@@ -489,6 +485,7 @@ function forgotBindings(fromLayer)
 		else
 		{
 			$('#closeForgotLogin').click(function() {
+				$("#sendLinkForgot").unbind('click');
 				$('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 					$('.js-overlay').fadeOut(300, "linear");
 					$('#forgotPasswordLayer').addClass("disp-none");
@@ -510,7 +507,7 @@ function postForgotEmailLayer()
 		   }
 		});
 		$("#sendLinkForgot").click(function(){
-			$("#sendLinkForgot").unbind();
+			
 			var email=$("#userEmail").val();
 			if(email)
 			{
@@ -539,6 +536,7 @@ function postForgotEmailLayer()
 							 {
 								 $("#ForgotPasswordMessage").html("Link to reset your password has been sent to your registered Email Id and Mobile Number. The link will be valid for next 24 hours.");
 								 $("#forgotPasswordForm").addClass("disp-none");
+								 $("#sendLinkForgot").unbind('click');
 							 }
 							 else
 							 {

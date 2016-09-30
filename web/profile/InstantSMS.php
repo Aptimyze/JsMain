@@ -74,7 +74,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 		if($this->smsKey=='OTP') return true;
 		if($this->smsKey=='PHONE_UNVERIFY') return true;
-		$sendToInt = in_array($this->smsKey, $sendToInternational);
+		$sendToInt = in_array($this->smsKey, $this->sendToInternational);
 		if(!$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"], $sendToInt))
 			return false;
 		switch ($this->smsKey) {

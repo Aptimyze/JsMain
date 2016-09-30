@@ -24,7 +24,7 @@ class ForgotloginV1Action extends sfActions
 		$isd = $request->getParameter("isd");
 		$apiObj=ApiResponseHandler::getInstance();
 		// EMAIL validations
-		if(!validate($email, $flag, $isd, $phone))
+		if(!$this->validate($email, $flag, $isd, $phone))
 		{
 			$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_ERR);
 		}
@@ -33,6 +33,7 @@ class ForgotloginV1Action extends sfActions
 			$dbJprofile= new JPROFILE();
 			$SmsObj = new newjs_SMS_DETAIL();
 			$MultipleProfilesPerPhone = 0;
+			$SingleProfileFound = 0;
 			if(!$flag || $flag == 'E')
 			{
 				$data=$dbJprofile->get($email,"EMAIL","USERNAME,EMAIL,ACTIVATED,PROFILEID");
@@ -40,21 +41,37 @@ class ForgotloginV1Action extends sfActions
 			}
 			else if($flag == 'M')
 			{
-				$arr=array('PHONE_MOB'=>"'$phone'",'ISD'=>"'$isd'");
-				$excludeArr=array('ACTIVATED'=>"'D'");
-				$data=$dbJprofile->getArray($arr,$excludeArr,'',"USERNAME,EMAIL,ACTIVATED,PROFILEID");
-				if(count($data) == 1)
-				{
-					//  1 unique profile found
-					$data = $data[0];
-					$SmsCount =$SmsObj->getCount("FORGOT_PASSWORD", $data['PROFILEID']);
-				}
-				elseif(count($data) > 1)
-				{
-					$MultipleProfilesPerPhone = 1;
+				for ($i=10; $i > 6 && !($MultipleProfilesPerPhone || $SingleProfileFound); $i--) 
+				{ 
+				
+					$phone_mob= substr($phone, -$i);
+					$arr=array('PHONE_MOB'=>"'$phone_mob'");
+					$excludeArr=array('ACTIVATED'=>"'D'");
+					$data=$dbJprofile->getArray($arr,$excludeArr,'',"USERNAME,EMAIL,ACTIVATED,PROFILEID");
+					if(count($data) == 1)
+					{
+						//  1 unique profile found
+						$data = $data[0];
+						$SmsCount =$SmsObj->getCount("FORGOT_PASSWORD", $data['PROFILEID']);
+						$SingleProfileFound = 1;
+					}
+					elseif(count($data) > 1)
+					{
+						$MultipleProfilesPerPhone = 1;
+					}
+				
 				}
 			}
 			$data['SmsCount'] = $SmsCount;
+			if($flag == 'M')
+			{
+				if ($MultipleProfilesPerPhone)
+				{
+					$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_PHONE_ERR);
+					$apiObj->generateResponse();
+					die;
+				}
+			}
 			if($data[EMAIL])
 			{
 				if($data[ACTIVATED]!='D')
@@ -66,18 +83,15 @@ class ForgotloginV1Action extends sfActions
 				else
 					$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_DELETED);
 			}
-			elseif ($MultipleProfilesPerPhone)
-			{
-				$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_PHONE_ERR);
-			}
 			else
+			{
 				$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_ERR);
+			}
 			
 		}
 			$apiObj->generateResponse();
 		die;
 	}
-
 	public function validate($email, $flag, $isd, $phone)
 	{
 		$email = trim($email);
@@ -94,7 +108,7 @@ class ForgotloginV1Action extends sfActions
 		{
 			$mobile = $isd.$phone;
 			$regex = "/^[0-9]{10,}/";
-			return preg_match($regex, $mobile) && (strlen($phone) == 10);
+			return preg_match($regex, $mobile);
 		}
 		else
 			return false;
