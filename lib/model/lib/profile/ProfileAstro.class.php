@@ -263,6 +263,10 @@ class ProfileAstro
      */
     public function getIfHoroPresent($profileid)
     {
+        if($this->getIfAstroDetailsPresent($profileid)){
+            return true;
+        }
+        
         return self::$objAstroDetailMysql->getIfHoroPresent($profileid);
     }
     

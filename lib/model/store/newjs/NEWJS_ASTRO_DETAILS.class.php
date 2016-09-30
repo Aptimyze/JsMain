@@ -118,24 +118,23 @@ class NEWJS_ASTRO extends TABLE {
     //It Also checks in screening
     public function getIfHoroPresent($profileid) {
         $horo_present = false;
-        if (!$this->getIfAstroDetailsPresent($profileid)) {
-            $sql = "SELECT COUNT(*) AS COUNT FROM newjs.HOROSCOPE WHERE PROFILEID = :PROFILEID";
+        $sql = "SELECT COUNT(*) AS COUNT FROM newjs.HOROSCOPE WHERE PROFILEID = :PROFILEID";
+        $res = $this->db->prepare($sql);
+        $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+        $res->execute();
+        JsCommon::logFunctionCalling('newjs_HOROSCOPE', __FUNCTION__);
+        if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
+            if ($result['COUNT']) $horo_present = true;
+        }
+        
+        if (!$horo_present) {
+            $sql = "SELECT COUNT(*) AS COUNT FROM newjs.HOROSCOPE_FOR_SCREEN WHERE PROFILEID = :PROFILEID";
             $res = $this->db->prepare($sql);
             $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $res->execute();
-            JsCommon::logFunctionCalling('newjs_HOROSCOPE', __FUNCTION__);
-            if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
-                if ($result['COUNT']) $horo_present = true;
-            }
-            if (!$horo_present) {
-                $sql = "SELECT COUNT(*) AS COUNT FROM newjs.HOROSCOPE_FOR_SCREEN WHERE PROFILEID = :PROFILEID";
-                $res = $this->db->prepare($sql);
-                $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-                $res->execute();
-                JsCommon::logFunctionCalling('NEWJS_HOROSCOPE_FOR_SCREEN', __FUNCTION__);
-                if ($result = $res->fetch(PDO::FETCH_ASSOC)) if ($result['COUNT']) $horo_present = true;
-            }
-        } else $horo_present = true;
+            JsCommon::logFunctionCalling('NEWJS_HOROSCOPE_FOR_SCREEN', __FUNCTION__);
+            if ($result = $res->fetch(PDO::FETCH_ASSOC)) if ($result['COUNT']) $horo_present = true;
+        }
         return $horo_present;
     }
     public function updateType($type,$pid)
