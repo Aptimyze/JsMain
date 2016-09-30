@@ -206,6 +206,7 @@ class negativeTreatment
             $jprofileArr1        = $this->jprofileEmailObj->getArray($valueArray, '', '', 'PROFILEID,EMAIL');
             foreach ($jprofileArr1 as $key => $val) {
                 $tempEmailArr[$val['EMAIL']][] = $val['PROFILEID'];
+                $profileArr[] = $val['PROFILEID'];
             }
             $profileArr = array_filter(array_unique($profileArr));
             // Filter profiles from the above list to exclude dummy profiles
