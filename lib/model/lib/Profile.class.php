@@ -1144,7 +1144,7 @@ class Profile{
 	 */
 	public function getAstroKundali($onlyValues="")
 	{
-		$astro=new ProfileAstro();
+		$astro= ProfileAstro::getInstance();
 
 		$astroDetails=$astro->getAstros($this->PROFILEID);
 		if($onlyValues)

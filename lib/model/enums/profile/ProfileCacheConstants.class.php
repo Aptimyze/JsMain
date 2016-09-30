@@ -419,6 +419,7 @@ class ProfileCacheConstants
     public static $arrDuplicateFieldsMap = array(
                                         //'BTIME',
                                         'COUNTRY_BIRTH',
+                                        'SHOW_HOROSCOPE',
                                     );
 }
 ?>

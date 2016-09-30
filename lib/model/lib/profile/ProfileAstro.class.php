@@ -93,6 +93,9 @@ class ProfileAstro
             if (false !== $result) {
                 $bServedFromCache = true;
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                if(strlen($result['CITY_BIRTH'])) {
+                    $result['CITY_BIRTH'] = substr($result['CITY_BIRTH'], 0, 50);
+                }
             }
             
             if($result && in_array(ProfileCacheConstants::NOT_FILLED, $result)){

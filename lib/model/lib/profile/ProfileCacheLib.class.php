@@ -334,6 +334,7 @@ class ProfileCacheLib
         //TODO: If $arrFields is not an array, handle this case  
         $array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
         $array = array_unique($array);
+        
         if(count(array_diff(array_unique($arrFields),$array))){
           $this->logThis(LoggingEnums::LOG_ERROR, "Relevant Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
           //throw new jsException("","Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
@@ -823,7 +824,7 @@ class ProfileCacheLib
                 }
             }
         } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
-        $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
+        $this->calculateResourceUsages($stTime,'MUlti-Set : '," for key {$key}");
 
         return $bSuccess;
     }
@@ -925,7 +926,55 @@ class ProfileCacheLib
      */
     public function removeFieldsFromCache($key, $storeName, $fields = ProfileCacheConstants::ALL_FIELDS_SYM)
     {
+        //Prepend Prefix on key
+        $szKey = $this->getDecoratedKey($key);
         
+        //Get Columns to delete
+        if($fields === ProfileCacheConstants::ALL_FIELDS_SYM) {
+            $arrColumns = $this->getColumnArr($storeName);
+        } else {
+            $arrColumns = $this->getRelevantFields($fields, $storeName);
+        }
+        
+        return $this->deleteSubFields($szKey, $arrColumns);
+    }
+    
+    /**
+     * 
+     * @param type $szKey
+     * @param type $arrFields
+     * @return boolean
+     */
+    private function deleteSubFields($szKey, $arrFields)
+    {
+        //Set Hash Object
+        $stTime = $this->createNewTime();
+        $bSuccess = false;
+        $iTryCount = 0;
+        do {
+            try{
+                $result = JsMemcache::getInstance()->hdel($szKey, $arrFields, true);
+                $bSuccess =  true;
+            } catch (Exception $ex) {
+                $bSuccess = false;
+                ++$iTryCount;
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache failed while deleting Sub fields from cache,Retrying again and its count : {$iTryCount}");
+            }
+            //If Attempt Count Reached to Max Attempt Count
+            if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache HDEL failed, Adding in MQ for key : {$szKey}");
+
+                //Add into MQ
+                $producerObj = new Producer();
+                
+                $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
+                $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
+                $producerObj->sendMessage($queueData);
+            }
+        } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
+        $this->calculateResourceUsages($stTime,'HDEL : '," for key {$key}");
+        
+        return $bSuccess;
     }
 }
 ?>
