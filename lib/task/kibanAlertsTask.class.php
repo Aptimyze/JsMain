@@ -15,6 +15,35 @@ Call it with:
 EOF;
 	}
 
+	public function sendCurlPostRequest($urlToHit,$postParams,$timeout='',$headerArr="")
+    {
+        if(!$timeout)
+	        $timeout = 10000;
+        $ch = curl_init($urlToHit);
+		if($headerArr)
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+		else
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+		if($postParams)
+	                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		if($postParams)
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postParams);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $timeout);
+		curl_setopt($ch,CURLOPT_NOSIGNAL,1);
+		curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout*10);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $output = curl_exec($ch);
+        if(!$output)
+        {
+        	var_dump(curl_error($ch));
+        	var_dump(curl_errno($ch));
+        	die;
+        	return curl_errno($ch);
+        }
+	    return $output;
+    }
+
 	protected function execute($arguments = array(), $options = array())
 	{
 		$currdate = date('Y.m.d');
@@ -48,34 +77,37 @@ EOF;
 				]
 			]
 		];
-		$response = CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
-		$arrResponse = json_decode($response, true);
-		$arrModules = array();
-		foreach($arrResponse['aggregations']['modules']['buckets'] as $module) 
+		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
+		// timeout checks needs to be done
+		var_dump($response);
+		if($response)
 		{
-		    $arrModules[$module['key']] = $module['doc_count']; 
-		}
-		// $to = "jsissues@jeevansathi.com";
-		$to = "nikhil.mittal@jeevansathi.com";
-		$from = "nikhil.mittal@jeevansathi.com";
-
-		$msg = '';
-		$kibanaUrl = "http://10.10.18.66:5601/app/kibana#/dashboard/Common-Dash";
-		$testUrl = $elkServer.":".$kibanaPort."/app/kibana#/dashboard/".$dashboard."?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
-
-		$subject = "Kibana Module Alert";
-		foreach ($arrModules as $key => $value)
-		{
-			if($value > $threshold)
+			$arrResponse = json_decode($response, true);
+			$arrModules = array();
+			foreach($arrResponse['aggregations']['modules']['buckets'] as $module) 
 			{
-				$msg .= $key." has encountered ".$value." errors.\n";
+			    $arrModules[$module['key']] = $module['doc_count']; 
 			}
+			$to = "jsissues@jeevansathi.com";
+			$from = "jsissues@jeevansathi.com";
+
+			$msg = '';
+			$kibanaUrl = $elkServer.":".$kibanaPort."/app/kibana#/dashboard/".$dashboard."?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
+
+			$subject = "Kibana Module Alert";
+			foreach ($arrModules as $key => $value)
+			{
+				if($value > $threshold)
+				{
+					$msg .= $key." has encountered ".$value." errors.\n";
+				}
+			}
+			if($msg != '')
+			{
+				$msg = "In the interval of ".$interval." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
+			}
+			// SendMail::send_email($to,$msg,$subject,$from,'','','','','','','','nikhil.mittal@jeevansathi.com');
+			fromSendMail::send_email($to,$msg,$subject,$from,'','','','','','','','nikhil.mittal@jeevansathi.com');
 		}
-		if($msg != '')
-		{
-			$msg = "In the interval of ".$interval." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$testUrl;
-		}
-		echo $testUrl;
-		// SendMail::send_email($to,$msg,$subject,$from,'','','','','','','','nikhil.mittal@jeevansathi.com');
 	}
 }
