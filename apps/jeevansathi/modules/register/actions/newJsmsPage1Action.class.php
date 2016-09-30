@@ -25,7 +25,7 @@ class newJsmsPage1Action extends sfAction
 		$tieup_source           = $trackParams['tieup_source'];
 		$this->domain		= $trackParams['domain'];
 		$newsource		= $trackParams['newsource'];
-		if($reg_params['city_res']==0 && $reg_params['country_res']==51)
+		if($reg_params['city_res']=='0' && $reg_params['country_res']==51)
 		{
 			$reg_params['city_res']=$reg_params['state_res']."OT";
 		}
