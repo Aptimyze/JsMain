@@ -11,26 +11,19 @@ class dppSuggestions
 		if(is_array($valueArr) && count($valueArr["data"])< DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
 		{
 			if($type == "CITY")
-			{		
+			{	
 				foreach($valArr as $key=>$value)
 				{
-					if(in_array($value,DppAutoSuggestEnum::$delhiNCRCities))
+					$cityData = $this->getNCRMumbaiCity($value);
+					if($cityData)
 					{
-						$ncrKey = implode(',',DppAutoSuggestEnum::$delhiNCRCities);
-						$valueArr["data"][$ncrKey] = "Delhi NCR";
-					}
-					if(in_array($value,DppAutoSuggestEnum::$mumbaiRegion))
-					{
-						$mumbaiRegionKey = implode(',',DppAutoSuggestEnum::$mumbaiRegion);
-						$valueArr["data"][$mumbaiRegionKey] = "Mumbai Region";
-					}
+						$valueArr['data'][$cityData['KEY']]=$cityData['VALUE'];
+					}					
 				}
-				$valueArr["type"] = $type;
 			}
 			elseif ($type == "EDUCATION" || $type == "OCCUPATION")
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
-				$valueArr["type"] = $type;
 			}
 			else
 			{
@@ -44,34 +37,6 @@ class dppSuggestions
 				}
 			}
 										
-		}
-
-
-		$valueArr["type"] = $type;
-		return $valueArr;
-	}
-
-		public function getRelatedDppValues($type)
-	{
-		$dppData = DppAutoSuggestEnum::$FIELD_ID_ARRAY;
-		foreach($dppData as $key=>$value)
-		{
-			if($value == $type)
-			{
-				$suggestedValue = DppAutoSuggestValue::getAutoSuggestValue($type,$key,$this->loggedInProfileObj);
-			}
-		}
-		$suggestedValue = trim($suggestedValue,"'");			
-		$suggestedArr = explode("','",$suggestedValue);
-		$type = strtolower($type);
-		if($type == "mtongue")
-		{
-			$type = "community";
-		}
-
-		foreach($suggestedArr as $key=>$val)
-		{
-			$valueArr["data"][$val] = FieldMap::getFieldlabel($type,$val,''); 
 		}
 		$valueArr["type"] = $type;
 		return $valueArr;
@@ -111,8 +76,8 @@ class dppSuggestions
 				}
 				elseif(!in_array($k1,$valArr))
 				{
-					$this->stateIndiaArr = FieldMap::getFieldLabel("state_india",'',1);
-					$this->cityIndiaArr = FieldMap::getFieldLabel("city_india",'',1);
+					$this->stateIndiaArr = $this->getFieldMapLabels("state_india",'',1);//FieldMap::getFieldLabel("state_india",'',1);
+					$this->cityIndiaArr = $this->getFieldMapLabels("city_india",'',1);//FieldMap::getFieldLabel("city_india",'',1);
 					if(array_key_exists($k1, $this->stateIndiaArr) || array_key_exists($k1, $this->cityIndiaArr))
 					{
 						$valueArr["data"][$k1] = $this->getFieldMapValueForTrends($k1,$type);
@@ -133,14 +98,10 @@ class dppSuggestions
 	//This function gets the value for the $key specified for the given $type
 	public function getFieldMapValueForTrends($key,$type)
 	{
-		$type = strtolower($type);
-		if($type == "mtongue")
-		{
-			$type = "community";
-		}
+		$type = $this->getType($type);
 		if($type != "city")
 		{
-			$returnValue = FieldMap::getFieldlabel($type,$key,'');
+			$returnValue = $this->getFieldMapLabels($type,$key,'');//FieldMap::getFieldlabel($type,$key,'');
 		}
 		else
 		{
@@ -158,13 +119,13 @@ class dppSuggestions
 
 	//this functions calls the dppAutoSuggestValue function to get the suggested Values corresponding to each input value based on the key and type
 	public function getDppSuggestionsForFilledValues($type,$fieldValue)
-	{		
+	{
 		$dppData = DppAutoSuggestEnum::$FIELD_ID_ARRAY;		
 		foreach($dppData as $key=>$value)
 		{
 			if($value == $type)
 			{
-				$suggestedValue = DppAutoSuggestValue::getDppSuggestionsForFilledValues($type,$key,$fieldValue);
+				$suggestedValue = $this->getValueFromDppAutoSuggestValue($type,$key,$fieldValue); //DppAutoSuggestValue::getDppSuggestionsForFilledValues($type,$key,$fieldValue);
 			}
 		}
 		$suggestedValue = explode("','",trim($suggestedValue,"'"));
@@ -174,13 +135,127 @@ class dppSuggestions
 	//For the suggestedValueArr formed, frequency distribution is calculated and sorted array is then picked to fill in the remaining values.
 	public function getRemainingSuggestionValues($suggestedValueArr,$type,$valueArrDataCount,$valueArr,$valArr)
 	{
-		$type = strtolower($type);
-		if($type == "mtongue")
-		{
-			$type = "community";
-		}
-
+		$type = $this->getType($type);
 		//frequency distribution calculation
+		$suggestedValueCountArr = $this->getFrequencyDistributedArrForCasteMtongue($suggestedValueArr);
+		$suggestedValueCountArr = $this->getSortedSuggestionArr($suggestedValueCountArr);
+		$remainingCount = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS - $valueArrDataCount;
+		foreach($suggestedValueCountArr as $fieldId=>$freqDistribution)
+		{
+			if($remainingCount != 0)
+			{
+				if(!array_key_exists($fieldId, $valueArr["data"]) && !in_array($fieldId,$valArr))
+				{
+					$valueArr["data"][$fieldId] =  $this->getFieldMapLabels($type,$fieldId,'');//FieldMap::getFieldlabel($type,$fieldId,'');
+					$remainingCount--;
+				}				
+			}									
+			else
+			{
+				break;
+			}
+		}
+		return $valueArr;	
+	}
+
+	//This functions finds dppSuggestions values for Education and Occupation depending on the frequency distribution of groupings that the input values belong to
+	public function getSuggestionsFromGroupings($valueArr,$type,$valArr)
+	{	
+		$SuggestionArr = array();
+		$GroupingArr = $this->getGroupingArr($type);
+		//to find the frequency distribution of grouping array based on the input values sent
+		$suggestionArr = $this->getFrequencyDistributedArr($valArr,$GroupingArr);
+		$suggestionArr = $this->getSortedSuggestionArr($suggestionArr);
+		$remainingCount = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS - count($valueArr["data"]);
+		$valueArr = $this->fillRemainingValuesInEduOccValueArr($remainingCount,$suggestionArr,$valueArr,$valArr,$GroupingArr,$type);	
+		return $valueArr;
+	}
+
+	//This function checks redis if a value exists corresponding to the key specified or else sends a query to fetch trendsArr
+	public function getTrendsArr($profileId,$percentileFields,$trendsObj)
+	{
+		$pidKey = $profileId."_dppSuggestions";
+		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);
+		if($trendsArr == "noKey" || $trendsArr == false)
+		{
+			
+			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
+			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
+			return $trendsArr;
+		}
+		else
+		{        		
+			return $trendsArr;        		
+		}
+	}
+
+	//This function gets labels from FieldMapLib depending on $labels,$value,$returnArr
+	public function getFieldMapLabels($label,$value,$returnArr='')
+	{
+		return FieldMap::getFieldlabel($label,$value,$returnArr);
+	}
+
+	//This function calls function of dppAutoSuggestValue to getDppSuggestion values
+	public function getValueFromDppAutoSuggestValue($type,$key,$fieldValue)
+	{
+		return DppAutoSuggestValue::getDppSuggestionsForFilledValues($type,$key,$fieldValue);
+	}
+
+	//This function is used to get frequency distribution array
+	public function getFrequencyDistributedArr($valArr,$GroupingArr)
+	{
+		$suggestionArr = array();
+		foreach($valArr as $k1=>$v1)
+		{
+			foreach($GroupingArr as $groupingKey=>$vArr)
+			{
+				foreach($vArr as $k2=>$v2)
+				{
+					if($v1 == $v2)
+					{
+						if(array_key_exists($groupingKey, $suggestionArr))
+						{
+							$suggestionArr[$groupingKey]++;
+						}
+						else
+						{
+							$suggestionArr[$groupingKey]=1;
+						}
+					}
+				}
+			}
+		}
+		return $suggestionArr;
+	}	
+
+	// This function sorts the array
+	public function getSortedSuggestionArr($suggestionArr)
+	{
+		arsort($suggestionArr);
+		return $suggestionArr;
+	}
+
+	//This function checks if mumbai region or delhi region value exists in $value and accordingly puts value in $value
+	public function getNCRMumbaiCity($value)
+	{
+		if(in_array($value,DppAutoSuggestEnum::$delhiNCRCities))
+		{
+			$key = implode(',',DppAutoSuggestEnum::$delhiNCRCities);
+			$city['VALUE'] = "Delhi NCR";
+			$city['KEY']=$key;
+		}
+		if(in_array($value,DppAutoSuggestEnum::$mumbaiRegion))
+		{
+			$key = implode(',',DppAutoSuggestEnum::$mumbaiRegion);
+			$city['VALUE'] = "Mumbai Region";
+			$city['KEY']=$key;
+		}
+		return $city;
+	}
+
+	//This function gets Frequency Distribution for Caste and Mtongue
+	public function getFrequencyDistributedArrForCasteMtongue($suggestedValueArr)
+	{
 		foreach($suggestedValueArr as $fieldId =>$vArr)
 		{
 			foreach($vArr as $k3=>$v3)
@@ -199,68 +274,12 @@ class dppSuggestions
 				
 			}
 		}
-		arsort($suggestedValueCountArr);
-		$remainingCount = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS - $valueArrDataCount;
-
-		foreach($suggestedValueCountArr as $fieldId=>$freqDistribution)
-		{
-			if($remainingCount != 0)
-			{
-				if(!array_key_exists($fieldId, $valueArr["data"]) && !in_array($fieldId,$valArr))
-				{
-					$valueArr["data"][$fieldId] =  FieldMap::getFieldlabel($type,$fieldId,'');
-					$remainingCount--;
-				}				
-			}									
-			else
-			{
-				break;
-			}
-		}
-		return $valueArr;	
+		return $suggestedValueCountArr;
 	}
 
-	//This functions finds dppSuggestions values for Education and Occupation depending on the frequency distribution of groupings that the input values belong to
-	public function getSuggestionsFromGroupings($valueArr,$type,$valArr)
-	{	
-		$SuggestionArr = array();
-		if($type == "EDUCATION")
-		{
-			$GroupingArr  = FieldMap::getFieldlabel(DppAutoSuggestEnum::$eduGrouping,'',1);
-		}
-		if($type == "OCCUPATION")
-		{
-			$GroupingArr  = FieldMap::getFieldlabel(DppAutoSuggestEnum::$occupationGrouping,'',1);
-		}
-		foreach($GroupingArr as $groupingKey => $stringVal)
-		{
-			$GroupingArr[$groupingKey] = explode(",",$stringVal);
-		}
-
-		//to find the frequency distribution of grouping array based on the input values sent
-		foreach($valArr as $k1=>$v1)
-		{
-			foreach($GroupingArr as $groupingKey=>$vArr)
-			{
-				foreach($vArr as $k2=>$v2)
-				{
-					if($v1 == $v2)
-					{
-						if(array_key_exists($groupingKey, $SuggestionArr))
-						{
-							$SuggestionArr[$groupingKey]++;
-						}
-						else
-						{
-							$SuggestionArr[$groupingKey]=1;
-						}
-					}
-				}
-			}
-		}
-		arsort($SuggestionArr);
-		$remainingCount = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS - count($valueArr["data"]);
-		
+	// This function fills remaining values in Education and occupation section of value array
+	public function fillRemainingValuesInEduOccValueArr($remainingCount,$SuggestionArr,$valueArr,$valArr,$GroupingArr,$type)
+	{
 		//This loop is on sorted grouping array based on which values corresponding each grouping are fetched and evaluated
 		foreach($SuggestionArr as $groupingKey=>$freqDistribution)
 		{
@@ -270,11 +289,12 @@ class dppSuggestions
 				{
 					$ValArr1 = $GroupingArr[$groupingKey];
 				}
+
 				foreach($ValArr1 as $k=>$v)
 				{
-					if(!array_key_exists($v, $valueArr["data"]) && $remainingCount >0 && !in_array($v,$valArr))
+					if(!array_key_exists($v, $valueArr["data"]) && !in_array($v,$valArr) && $remainingCount >0)
 					{
-						$valueArr["data"][$v] =  FieldMap::getFieldlabel(strtolower($type),$v,'');
+						$valueArr["data"][$v] =  $this->getFieldMapLabels(strtolower($type),$v,'');//FieldMap::getFieldlabel(strtolower($type),$v,'');
 						$remainingCount--;
 					}
 				}						
@@ -287,23 +307,32 @@ class dppSuggestions
 		return $valueArr;
 	}
 
-	//This function checks redis if a value exists corresponding to the key specified or else sends a query to fetch trendsArr
-	public function getTrendsArr($profileId,$percentileFields)
+	public function getType($type)
 	{
-		$pidKey = $profileId."_dppSuggestions";
-		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);
-		if($trendsArr == "noKey" || $trendsArr == false)
+		$type = strtolower($type);
+		if($type == "mtongue")
 		{
-			$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
-			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
-			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
-			return $trendsArr;
+			$type = "community";
 		}
-		else
-		{        		
-			return $trendsArr;        		
-		}
+		return $type;
 	}
 
+	public function getGroupingArr($type)
+	{
+		if($type == "EDUCATION")
+		{
+			$GroupingArr  = $this->getFieldMapLabels(DppAutoSuggestEnum::$eduGrouping,'',1);//FieldMap::getFieldlabel(DppAutoSuggestEnum::$eduGrouping,'',1);
+		}
+		if($type == "OCCUPATION")
+		{
+			$GroupingArr  = $this->getFieldMapLabels(DppAutoSuggestEnum::$occupationGrouping,'',1);//FieldMap::getFieldlabel(DppAutoSuggestEnum::$occupationGrouping,'',1);
+		}
+		foreach($GroupingArr as $groupingKey => $stringVal)
+		{
+			$GroupingArr[$groupingKey] = explode(",",$stringVal);
+		}
+
+		return $GroupingArr;
+	}
 }
 ?>
