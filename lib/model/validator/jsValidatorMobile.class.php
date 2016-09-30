@@ -79,6 +79,7 @@ class jsValidatorMobile extends sfValidatorBase
 		$negativeMobile = $negativeProfileListObj->checkEmailOrPhone("PHONE_NUM",$valueToCheck);
 		if($negativeMobile)
 		{
+			file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/loggingIgnoredEmailAndPhone.txt",$valueToCheck."\t".date("Y-m-d H:i:s")."\n",FILE_APPEND);
 			throw new sfValidatorError($this, 'err_phone_revoke', array('value' => $value['mobile']));
 		}
 	}

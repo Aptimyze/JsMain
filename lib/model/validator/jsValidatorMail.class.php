@@ -88,7 +88,8 @@ class jsValidatorMail extends sfValidatorBase
     $negativeEmail = $negativeProfileListObj->checkEmailOrPhone("EMAIL",$value);
     if($negativeEmail)
     {
-	throw new sfValidatorError($this, 'err_email_revoke', array('value' => $value));
+      file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/loggingIgnoredEmailAndPhone.txt",$value."\t".date("Y-m-d H:i:s")."\n",FILE_APPEND);
+	    throw new sfValidatorError($this, 'err_email_revoke', array('value' => $value));
     }
     return $value;
   }
