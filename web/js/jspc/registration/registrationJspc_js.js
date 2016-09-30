@@ -1433,8 +1433,8 @@ var padding = 31;
                 $("#stateReg").val("");
                 $("#stateRegOther").val("");
                 inputData["state_res"] = "";
-                regField["stateReg"].showDrop = 0;
                 regField["stateReg"].selected = "";
+                $("#stateReg-gridUl").find(".activeopt").removeClass("activeopt");
             }
           }
           else
