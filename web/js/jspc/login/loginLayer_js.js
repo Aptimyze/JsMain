@@ -534,7 +534,7 @@ function postForgotEmailLayer()
 						 success: function(result){
 							 if(result.responseStatusCode==0)
 							 {
-								 $("#ForgotPasswordMessage").html("Link to reset your password has been sent to your registered Email Id and Mobile Number. The link will be valid for next 24 hours.");
+								 $("#ForgotPasswordMessage").html(result.responseMessage);
 								 $("#forgotPasswordForm").addClass("disp-none");
 								 $("#sendLinkForgot").unbind('click');
 							 }
