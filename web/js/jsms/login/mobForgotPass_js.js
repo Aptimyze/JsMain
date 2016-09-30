@@ -21,7 +21,6 @@ $("#sendLink").bind(clickEventType,function(){
             phone = data['phone'];
             isd = data['isd'];
         }
-        // console.log(flag);
                         if(flag)
                          {       
 
@@ -53,7 +52,7 @@ function validateEmail(email) {
     var x = $.trim(email);
     var re = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
     return re.test(x);
-    }
+}
 
 function validateMobile(mobile) {
     var str = $.trim(mobile);
@@ -74,7 +73,7 @@ function validateMobile(mobile) {
         result[1] = result[1].replace(/^0+/, '');
         str = result.join("+");
     }
-    var re = /^((\+)?[0-9]*(-)?)?[0-9]{10,}$/i;
+    var re = /^((\+)?[0-9]*(-)?)?[0-9]{7,}$/i;
     var isd = '';
     var phone = '';
     var data = new Array();

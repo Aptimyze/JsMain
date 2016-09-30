@@ -113,7 +113,7 @@ function validateMobile(mobile) {
 		result[1] = result[1].replace(/^0+/, '');
 		str = result.join("+");
 	}
-	var re = /^((\+)?[0-9]*(-)?)?[0-9]{10,}$/i;
+	var re = /^((\+)?[0-9]*(-)?)?[0-9]{7,}$/i;
 	var isd = '';
 	var phone = '';
 	var data = new Array();
@@ -545,7 +545,7 @@ function postForgotEmailLayer()
 								 setTimeout(function(){
 									 $("#forgotPasswordErr").removeClass("visb");
 									$("#userEmailBox").removeClass("brderred");
-								},3000);
+								},5000);
 							 }
 							 hideCommonLoader();
 							  return;

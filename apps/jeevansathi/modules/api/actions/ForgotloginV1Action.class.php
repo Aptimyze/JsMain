@@ -107,7 +107,7 @@ class ForgotloginV1Action extends sfActions
 		else if($flag == 'M')
 		{
 			$mobile = $isd.$phone;
-			$regex = "/^[0-9]{10,}/";
+			$regex = "/^[0-9]{7,}/";
 			return preg_match($regex, $mobile);
 		}
 		else
