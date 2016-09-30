@@ -437,7 +437,7 @@ var removeCity = false;
 	    removeState = true;
 	    removeCity = true;
 	}
-	if(json['country_res'].hasOwnProperty("India")&& realJson.OnClick[2].value=='')
+	if(json['country_res'].hasOwnProperty("India")&& (realJson.OnClick[2].label_val=='Not filled in'||realJson.OnClick[2].value==''))
 	{
 		removeCity=true;
 	}
