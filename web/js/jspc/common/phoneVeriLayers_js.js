@@ -164,7 +164,60 @@ else {
 
 }
 
+function showCommonOtpLayer(_isdDiv,_mobileNumDiv,_editButton,_landLine){
+landLineFlag=_landLine?_landLine:'';
+editButton=_editButton?_editButton:'';
+updatedIsd=$("#"+_isdDiv).attr('saved');
+updatedNum=$("#"+_mobileNumDiv).attr('saved');
+phoneType=$("#"+_mobileNumDiv).attr('phonetype');
+isdDiv=_isdDiv;
+mobileNumDiv=_mobileNumDiv;
 
+var isd=$("#"+isdDiv).val();
+var mobileNum=$("#"+mobileNumDiv).val();
+
+		if (isd)
+		isd=isd.trim();
+
+		if(mobileNum)
+		mobileNum=mobileNum.trim();
+	if(isd.indexOf('+')==0) isdNew=isd.substring(1);
+	else isdNew=isd;
+	isdNew = isdNew.replace(/^0+/, '');
+
+valid=validateNum(mobileNum,isdNew);
+	if (valid!='pass' && !landLineFlag){
+ 	 $("#phoneVerifyErr").html(valid).show(); //only for phone page... 
+ 	 return;
+	}
+
+if (updatedIsd==isdNew && updatedNum==mobileNum){
+	//showVerifyLayer();return;
+
+	if(landLineFlag) 
+	{
+	showVerifyLayer();
+	return;
+	}
+$("#phoneVerifyErr").hide();
+var ajaxData={'phoneType':phoneType,'PCLayer':'Y'};
+var ajaxConfig={};
+ajaxConfig.data=ajaxData;
+ajaxConfig.type='POST';
+ajaxConfig.url='/common/sendOtpSMS';
+sendAjaxHtmlDisplay(ajaxConfig,afterOtpLayer);
+}
+else {
+	$("#phoneVerifyErr").hide();
+ 	sendSaveRequest(mobileNum,isdNew);
+ 
+
+}
+
+ 	
+
+
+}
 
 function showVerifyLayer(){
 NProgress.configure({ parent: '#forNProgress',trickle:false,minimum:0});

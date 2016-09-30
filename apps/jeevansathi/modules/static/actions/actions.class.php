@@ -305,10 +305,20 @@ class staticActions extends sfActions
         public function executePassCheck(sfWebRequest $request) {
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
+            $this->phoneNum =  $pObj->getPHONE_MOB();
             $this->deleteReason=$request->getParameter("delete_reason");
             $this->deleteOption=$request->getParameter("delete_option");
             $this->successFlow=$request->getParameter("successFlow");
         }
+
+         public function executebringLayerOnMobile(sfWebRequest $request) {
+            $loginData = $request->getAttribute("loginData");
+            $pObj = LoggedInProfile::getInstance();
+            $this->deleteReason=$request->getParameter("delete_reason");
+            $this->deleteOption=$request->getParameter("delete_option");
+            $this->successFlow=$request->getParameter("successFlow");
+        }
+
         public function executeSettings(sfWebRequest $request){
             
             $loginData = $request->getAttribute("loginData");

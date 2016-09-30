@@ -3,8 +3,9 @@
   <div id="deleteProfilePasswordPage"> 
     <!--start:top-->
     <div id="overlayHead" class="bg1 txtc pad15">
+  
       <div class="posrel lh30">
-        <div class="fontthin f20 white">Your Password</div>
+        <div class="fontthin f20 white">Your Password</div>   
         ~if $deleteOption neq '1'`
         <a href="/static/deleteReason?delete_option=~$deleteOption`"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
         ~else`
@@ -14,19 +15,25 @@
     </div>
     <!--end:top--> 
     <!--start:option-->
+
+      <div id = "showDuringOTP" class='js-NumberedLayer'>
     <div class="bg4 f16 fontlig color13"> 
    		
         <!--start:input field-->
         <div style="padding:20%">
         	<input id="passValueID" type="password" placeholder="Enter Password" class="f20 fontthin color11 fullwid txtc">        
         </div>
+        </div>
         <!--end:input field-->
+         <!--start:OTP field-->
+
+        <!--end:OTP field-->
         <!--start:submit button-->
         <div id="foot" class="posfix fullwid bg7 btmo">
 			<input type="submit" id="passCheckID" class="fullwid dispbl lh50 txtc f16 white" value="Delete My Profile">
 		</div>
         <!--end:submit button-->
-      
+       <div style="    text-align: center;    padding-top: 10px;"><a id="otpProfileDeletionJSMS" class="fontlig white f14 pb10 color16" style="color : #d9475c;margin:;" value="Delete Using OTP"> Delete Using One Time Code</a>
     </div>
 ~if ($deleteOption eq '1') || ($deleteOption eq '2') || ($deleteOption eq '3')`
     <div id="offerCheckBox" class="disp-none" style="padding: 25px 10% 0px 10%;">       
@@ -35,6 +42,8 @@
       </div>
     <div class="fontlig pl20 f15 grey5  mt20 pr10" style="margin-left: 20px;">I authorize Jeevansathi to send Emails containing attractive offers related to the wedding</div>
     </div>
+    </div>
+   
 ~/if`    
     <!--end:option--> 
    
@@ -66,3 +75,59 @@
     var delete_option='~$deleteOption`';
     var successFlow='~$successFlow`';
     </script>
+
+<div id='otpWrongCodeLayer' class="otplayer dispnone">
+    <div class="otpcenter cssLayerFix bg4 fontlig f18">
+        <div class="txtc pt40">
+            <i class="mainsp otpic1"></i>
+        </div>
+        <p class="color3 txtc pt10">OTP Verification Failed</p>
+        <p class="color4 txtc pt10 pb30">Make sure you entered correct code.</p>
+        <div class="otpbr2 txtc otplh60">
+            <div id='js-okIncorrectOtp'  onclick='$("#otpWrongCodeLayer").hide();bringSuccessLayerOnMobile();
+            return true;' class="f19 otpcolr2 fontthin">Ok</div>
+        </div>
+    </div>
+</div>
+
+
+                    <!--start:div-->
+        <div id = "bringSuccessLayerOnMobile"  style="overflow:auto;display:none;">
+               
+               <div id ="putPasswordLayer" class='dispnone js-NumberedLayer js-NumberedLayer2'><div class=" txtc f14 fontlig pt30 pb15">
+    <p>Profile Deletion code sent to + ~$phoneNum` <span id='isdDiv'></span> <span id='mainPhone'></span></p>
+    <p id='resendSMSDiv' class="pt5">Didn't receive code? <a id='resendTextId' onclick='' class="color2">Resend Code</a></p>
+    </div>
+
+      <div class="bg4 otpma">
+    
+            <div class="pt20 pb20 otpwid1">
+           
+            <input id='matchOtpText' type ="tel" placeholder="Enter Code" class="f19 fontlig  fullwid txtc">
+           
+            </div>
+   
+            </div>
+            <div id="buttonForCode" class="pt20">
+                                <a id="mainBottomButton2" class=" js-NumberedLayer2 bg7  white lh30 fullwid dispbl txtc lh50 f19 fontlig">Delete Using OTP</a>
+                        </div>
+           
+            </div>  
+
+
+              
+                    <!--end:div-->
+
+          <div id ="attemptsOver" style='height:100%' class="bg4 otpma js-NumberedLayer js-NumberedLayer3 dispnone">
+              
+                  <div class="txtc optp5 f18 fontlig">
+                      <i class="mainsp otpic1 js-noTrials dispnone"></i>
+                      <p class="otpcolr1 pt20 js-noTrials dispnone"><strong>Oops! Incorrect code.</strong></p>
+                      <p class="color13 otpp6 lh25">You have reached maximum number of attempts for Verification code. You can also <strong id='missedCallOption'>verify by giving us a missed call to <a id="call2" class='color2'></a></strong>.</p>
+                  
+                  </div>
+
+
+             
+            </div>
+        </div>
