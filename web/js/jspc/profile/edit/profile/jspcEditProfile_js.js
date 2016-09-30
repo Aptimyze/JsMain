@@ -975,7 +975,7 @@ EditApp = function(){
       if(fieldObject.key=="CITY_RES"){
           var countryVal = editAppObject[BASIC]['COUNTRY_RES'].value;
           var stateVal = editAppObject[BASIC]['STATE_RES'].value;
-          if(countryVal=='51' && stateVal){
+          if(countryVal=='51' && stateVal && stateVal!=0){
               var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[stateVal];
               optionString = prepareOptionDropDown(dataCity,fieldObject);
           }
@@ -990,8 +990,11 @@ EditApp = function(){
           if(editAppObject[BASIC]['COUNTRY_RES'].value!='51'){
             hideTheField = true;
           }
-          else
+          else{
             optionString = prepareOptionDropDown(data,fieldObject);
+            var stateFieldObject     = editAppObject[BASIC]["STATE_RES"];
+            requiredFieldStore.add(stateFieldObject);
+          }
       }
       else if(typeof data != "undefined"){
         optionString = prepareOptionDropDown(data,fieldObject);
