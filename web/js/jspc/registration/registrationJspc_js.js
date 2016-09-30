@@ -1414,7 +1414,8 @@ var padding = 31;
                 ele1.putValuesInList(regField['cityReg'], arrayfamilyCity);
                 $("#cityReg-gridDropdown_set").hide();
           }
-          if(ele1.name == "countryReg" && inputData[ele1.formKey] == '128'){
+          if(ele1.name == "countryReg"){
+            if(inputData[ele1.formKey] == '128'){
               regField["cityReg"].fieldElement.attr("data-alpha", "4");
               $("#cityReg-inputBox_set").val("");
                 $("#cityReg").val("");
@@ -1426,6 +1427,15 @@ var padding = 31;
                 arrayfamilyCity = dataArray['cityReg'][inputData['country_res']];
                 ele1.putValuesInList(regField['cityReg'], arrayfamilyCity);
                 $("#cityReg-gridDropdown_set").hide();
+            }
+            if(inputData[ele1.formKey] != '51'){
+                $("#stateReg-inputBox_set").val("");
+                $("#stateReg").val("");
+                $("#stateRegOther").val("");
+                inputData["state_res"] = "";
+                regField["stateReg"].showDrop = 0;
+                regField["stateReg"].selected = "";
+            }
           }
           else
               ele1.fieldElement.removeAttr("data-alpha");
