@@ -267,8 +267,8 @@ class ProfileDataActions extends sfActions
 					if(strpos($val,"_deleted") !== false)
 					{
 						$val = substr($val,0,strpos($val,"_deleted"));
-						$deleteRemovedEmail = $val;
 					}
+					$deleteRemovedEmail = $val;
 			}
 			if(!$val)
 				$val="Not present";
