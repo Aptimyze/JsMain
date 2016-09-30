@@ -15,7 +15,7 @@
   <!--end:div-->
   <!--start:button-->
   <div class="posfix btmo fullwid bg7">
-      <a id="sendLink" class="dispbl lh50 txtc white">Email Link To Reset</a>
+      <a id="sendLink" class="dispbl lh50 txtc white">Email/Sms Link To Reset</a>
   </div>
   <!--end:button-->
   </form>
