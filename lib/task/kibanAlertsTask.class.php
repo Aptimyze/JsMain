@@ -20,12 +20,15 @@ EOF;
 		$currdate = date('Y.m.d');
 		$elkServer = '10.10.18.66';
 		$elkPort = '9200';
+		$kibanaPort = '5601';
 		$indexName = 'filebeat-'.$currdate;
 		$query = '_search';
 		// in hours
 		$interval = 1;
 		$intervalString = '-'.$interval.' hour';
 		$threshold = 50;
+		$timeout = 5000;
+		$dashboard = 'Common-Dash';
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 		$params = [
 			"query"=> [
@@ -45,7 +48,7 @@ EOF;
 				]
 			]
 		];
-		$response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
+		$response = CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
 		$arrResponse = json_decode($response, true);
 		$arrModules = array();
 		foreach($arrResponse['aggregations']['modules']['buckets'] as $module) 
@@ -58,11 +61,7 @@ EOF;
 
 		$msg = '';
 		$kibanaUrl = "http://10.10.18.66:5601/app/kibana#/dashboard/Common-Dash";
-
-		$time = time() + (1*60*60);
-		$testUrl = "http://10.10.18.66:5601/app/kibana#/dashboard/Common-Dash?_g=(time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
-
-		// time:(from:'2016-09-29T06:30:00.000Z',mode:absolute,to:'2016-09-29T09:29:59.999Z')
+		$testUrl = $elkServer.":".$kibanaPort."/app/kibana#/dashboard/".$dashboard."?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
 
 		$subject = "Kibana Module Alert";
 		foreach ($arrModules as $key => $value)
@@ -77,6 +76,6 @@ EOF;
 			$msg = "In the interval of ".$interval." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$testUrl;
 		}
 		echo $testUrl;
-		SendMail::send_email($to,$msg,$subject,$from,'','','','','','','','nikhil.mittal@jeevansathi.com');
+		// SendMail::send_email($to,$msg,$subject,$from,'','','','','','','','nikhil.mittal@jeevansathi.com');
 	}
 }
