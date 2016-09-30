@@ -1673,12 +1673,31 @@ if($k=="state_res")
                     $returnArr[$k][0][] = array('0'=>'Others');
 	}
             $cityUsa = FieldMap::getFieldLabel("city_usa",'',1);
-        foreach($cityUsa as $k=>$v)
-	{
-			$usCity[0][]=array($k=>$v);
-	}
-            $usCity['128'][0][] = array('0'=>'Others');
-            $returnArr['128'] = $usCity;
+            $Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
+            $Arr[128][0]["0"] = "Others" ;
+            $i=0;
+            $arrAlpha = array();
+            $sym = "";
+            $bStartAplha = false;
+            foreach($Arr[128] as $key=>$val)
+            {
+                foreach($val as $k=>$v){
+                    $sym = strtoupper(substr($v, 0,1));
+                    if(!in_array($sym, $arrAlpha)){
+                        $arrAlpha[] = $sym;
+                        $returnArr[128][]=array($i=>array("-1"=>$sym));  
+                        $i++; 
+                    }
+
+                    if($v === "Others"){
+                        $returnArr[128][]=array($i=>array("-1"=>""));
+                        ++$i;
+                    }
+
+                    $returnArr[128][]=array($i=>array($k=>$v));
+                }
+                $i++;		
+            }
 	return $returnArr;		
   }
   

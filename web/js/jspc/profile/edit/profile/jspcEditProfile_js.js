@@ -3574,7 +3574,7 @@ EditApp = function(){
     onCityChange = function(cityVal){
         var stateFieldObject     = editAppObject[BASIC]["STATE_RES"];
         requiredFieldStore.remove(stateFieldObject);
-        if(cityVal=="0")
+        if(cityVal=="0" && $("#state_res").val())
             editedFields[BASIC]["CITY_RES"]=$("#state_res").val()+"OT";
     }
     
