@@ -17,7 +17,8 @@ $( "#otpProfileDeletionJSMS").bind('click',function() {
   showCommonOtpLayer(1);
  });
 $( "#resendTextId").bind('click',function() {
-showCommonOtpLayer(0);
+        $("#otpResendingLayer").show();
+        showCommonOtpLayer(0);
  });
 
 $( "#mainBottomButton2").bind('click',function() {
@@ -110,10 +111,14 @@ ajaxConfig.url='/common/SendOtpSMS';
 
 ajaxConfig.success=function(response) 
 {
-        
+        $("#otpResendingLayer").hide();
         if(showLayer == 1)
         bringSuccessLayerOnMobile(response);
-        if(response.SMSLimitOver =='Y') $("#resendTextId").hide();
+        if(response.SMSLimitOver =='Y') 
+        {
+            
+            $("#resendTextId").hide();
+        }
       
 }
 $.ajax(ajaxConfig);

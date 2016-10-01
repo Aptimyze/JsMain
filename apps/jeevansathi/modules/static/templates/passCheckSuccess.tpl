@@ -90,6 +90,16 @@
     </div>
 </div>
 
+<div id='otpResendingLayer' class="otplayer dispnone">
+    <div class="otpcenter cssLayerFix bg4 fontlig f18">
+        <div class="txtc pt40">
+            <img src="/images/jsms/commonImg/loader_card.gif">
+        </div>
+        <p class="color3 txtc pt40">Resending Verification Code</p>
+        <p class="color4 txtc pt15 optp4">Wait for a moment while we send the code.</p>
+        
+    </div>
+</div>
 
                     <!--start:div-->
         <div id = "bringSuccessLayerOnMobile" class='js-NumberedLayer'  style="overflow:auto;display:none;">
@@ -144,3 +154,4 @@
 
              
             </div>
+                    
