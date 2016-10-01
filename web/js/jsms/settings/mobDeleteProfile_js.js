@@ -18,6 +18,7 @@ $( "#otpProfileDeletionJSMS").bind('click',function() {
  });
 $( "#resendTextId").bind('click',function() {
         $("#otpResendingLayer").show();
+        cssLayerFix(); 
         showCommonOtpLayer(0);
  });
 
