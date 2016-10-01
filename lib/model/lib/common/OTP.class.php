@@ -114,7 +114,7 @@ private function sendMessage($OTP)
 				return 'C';
 			else if ($this->checkForExpiration())
 				return 'N';
-			else if($this->otpRow['OTP']==$enteredOtp) 
+			else if($this->otpRow['OTP']===$enteredOtp) 
 			{	
 			 	$this->clearEntry();
 			 	return 'Y';
