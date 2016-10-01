@@ -192,3 +192,10 @@ function displayOTPError()
   cssLayerFix(); 
 
 }
+
+function showOTPFailedLayer(){
+    
+    $('.js-NumberedLayer').hide();
+    
+    $('.js-NumberedLayer3').show();
+}

@@ -33,7 +33,7 @@
 			<input type="submit" id="passCheckID" class="fullwid dispbl lh50 txtc f16 white" value="Delete My Profile">
 		</div>
         <!--end:submit button-->
-       <div style="    text-align: center;    padding-top: 10px;"><a id="otpProfileDeletionJSMS" class="fontlig white f14 pb10 color16" style="color : #d9475c;margin:;" value="Delete Using OTP"> Delete Using One Time Code</a>
+       <div style="text-align: center;padding-top: 10px;"><a id="otpProfileDeletionJSMS" class="fontlig white f14 pb10 color16" style="color : #d9475c;" value="Delete Using OTP"> Delete Using One Time Code</a>
     </div>
 ~if ($deleteOption eq '1') || ($deleteOption eq '2') || ($deleteOption eq '3')`
     <div id="offerCheckBox" class="disp-none" style="padding: 25px 10% 0px 10%;">       
@@ -125,10 +125,16 @@
                     <!--end:div-->
 
           <div id ="attemptsOver" style='height:100%' class="bg4 otpma js-NumberedLayer js-NumberedLayer3 dispnone">
-              
+                    <div id="overlayHead" class="bg1 txtc pad15">
+
+                        <div class="posrel lh30">
+                        <div class="fontthin f20 white">Delete Using OTP</div>
+                        <a onclick="$('.js-NumberedLayer').hide();$('#showDuringOTP').show();"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+                        </div>
+                    </div>
                   <div class="txtc optp5 f18 fontlig">
                       <i class="mainsp otpic1 js-noTrials dispnone"></i>
-                      <p class="otpcolr1 pt20 js-noTrials dispnone"><strong>Oops! Incorrect code.</strong></p>
+                      <p id='oopsDiv' class="otpcolr1 pt20 js-noTrials dispnone"><strong>Oops! Incorrect code.</strong></p>
                       <p class="color13 otpp6 lh25">You have reached maximum number of attempts for Verification code. You can also <strong id='missedCallOption'>verify by giving us a missed call to <a id="call2" class='color2'></a></strong>.</p>
                   
                   </div>
