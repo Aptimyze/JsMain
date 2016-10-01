@@ -124,7 +124,9 @@
               
                     <!--end:div-->
 
-          <div id ="attemptsOver" style='height:100%' class="bg4 otpma js-NumberedLayer js-NumberedLayer3 dispnone">
+         
+        </div>
+                     <div id ="attemptsOver" style='height:100%' class="bg4 otpma js-NumberedLayer js-NumberedLayer3 dispnone">
                     <div id="overlayHead" class="bg1 txtc pad15">
 
                         <div class="posrel lh30">
@@ -133,13 +135,12 @@
                         </div>
                     </div>
                   <div class="txtc optp5 f18 fontlig">
-                      <i class="mainsp otpic1 js-noTrials dispnone"></i>
-                      <p id='oopsDiv' class="otpcolr1 pt20 js-noTrials dispnone"><strong>Oops! Incorrect code.</strong></p>
-                      <p class="color13 otpp6 lh25">You have reached maximum number of attempts for Verification code. You can also <strong id='missedCallOption'>verify by giving us a missed call to <a id="call2" class='color2'></a></strong>.</p>
+                      <i class="mainsp otpic1 js-noTrials"></i>
+                      <p id='oopsDiv' class="otpcolr1 pt20 js-noTrials"><strong>Oops! Incorrect code.</strong></p>
+                      <p class="color13 otpp6 lh25">You have reached maximum number of attempts for Verification code.</p>
                   
                   </div>
 
 
              
             </div>
-        </div>

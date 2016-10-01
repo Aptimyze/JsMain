@@ -110,16 +110,11 @@ ajaxConfig.url='/common/SendOtpSMS';
 
 ajaxConfig.success=function(response) 
 {
-        if(response.trialsOver!='Y')
-      {
+        
         if(showLayer == 1)
         bringSuccessLayerOnMobile(response);
         if(response.SMSLimitOver =='Y') $("#resendTextId").hide();
-      }
-        else 
-        {
-        bringFailureLayerOnMobile();
-        }
+      
 }
 $.ajax(ajaxConfig);
 }
@@ -153,7 +148,7 @@ $.ajax({
                     }
                   else if(response.trialsOver=='Y') 
                     {
-
+                      $("#otpProfileDeletionJSMS").hide();  
                       showOTPFailedLayer();
                       trialsOver='Y';
 
