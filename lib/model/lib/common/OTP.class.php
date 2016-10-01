@@ -122,7 +122,7 @@ private function sendMessage($OTP)
 			else 
 			{
 				$otpObject->incrementTrialCount($this->otpRow['ID']); 
-				if($this->otpRow['TRIAL_COUNT']==(OTPENUMS::$deleteProfileOTP['trialLimit'])) 
+				if($this->otpRow['TRIAL_COUNT']==(OTPENUMS::$deleteProfileOTP['trialLimit']-1)) 
 					return 'C';
 				else
 					return 'N';
