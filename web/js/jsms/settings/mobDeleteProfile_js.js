@@ -150,10 +150,12 @@ $.ajax({
                   {
                   if(response.trialsOver=='N')
                     {
+                    $("#oopsDiv").show();    
                     displayOTPError();
                     }
                   else if(response.trialsOver=='Y') 
                     {
+                      $("#oopsDiv").hide();    
                       $("#otpProfileDeletionJSMS").hide();  
                       showOTPFailedLayer();
                       trialsOver='Y';
