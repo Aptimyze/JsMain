@@ -170,16 +170,12 @@ function bringSuccessLayerOnMobile()
 {
 
   $('.js-NumberedLayer').hide();
-  $("#bringSuccessLayerOnMobile").show('slow');
+  $("#bringSuccessLayerOnMobile").show();
 }
 
 function bringFailureLayerOnMobile()
 { 
   $('.js-NumberedLayer').hide();
-  $("#offerCheckBox").hide();
-  $("#putPasswordLayer").hide();
-  $("#buttonForCode").hide();
-  $("#bringSuccessLayerOnMobile").hide();
    $("#attemptsOver").show();
 
 

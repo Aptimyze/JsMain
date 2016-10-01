@@ -306,6 +306,7 @@ class staticActions extends sfActions
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
             $this->phoneNum =  $pObj->getPHONE_MOB();
+            $this->isd =  $pObj->getISD();
             $this->deleteReason=$request->getParameter("delete_reason");
             $this->deleteOption=$request->getParameter("delete_option");
             $this->successFlow=$request->getParameter("successFlow");

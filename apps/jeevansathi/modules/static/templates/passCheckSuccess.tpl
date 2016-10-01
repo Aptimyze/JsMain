@@ -1,23 +1,23 @@
 <div id="mainContent">
   <div class="loader" id="pageloader"></div>
   <div id="deleteProfilePasswordPage"> 
-    <!--start:top-->
-    <div id="overlayHead" class="bg1 txtc pad15">
   
-      <div class="posrel lh30">
-        <div class="fontthin f20 white">Your Password</div>   
-        ~if $deleteOption neq '1'`
-        <a href="/static/deleteReason?delete_option=~$deleteOption`"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
-        ~else`
-         <a href="/static/deleteOption"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
-         ~/if`
-       </div>
-    </div>
-    <!--end:top--> 
     <!--start:option-->
 
       <div id = "showDuringOTP" class='js-NumberedLayer'>
-    <div class="bg4 f16 fontlig color13"> 
+		<div id="overlayHead" class="bg1 txtc pad15">
+ 
+		      <div class="posrel lh30">
+        		<div class="fontthin f20 white">Your Password</div>
+        		~if $deleteOption neq '1'`
+        		<a href="/static/deleteReason?delete_option=~$deleteOption`"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+        		~else`
+         		<a href="/static/deleteOption"><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+         		~/if`
+       		</div>
+    		</div>
+ 
+   <div class="bg4 f16 fontlig color13"> 
    		
         <!--start:input field-->
         <div style="padding:20%">
@@ -84,7 +84,7 @@
         <p class="color3 txtc pt10">OTP Verification Failed</p>
         <p class="color4 txtc pt10 pb30">Make sure you entered correct code.</p>
         <div class="otpbr2 txtc otplh60">
-            <div id='js-okIncorrectOtp'  onclick='$("#otpWrongCodeLayer").hide();bringSuccessLayerOnMobile();
+            <div id='js-okIncorrectOtp'  onclick='$("#otpWrongCodeLayer").hide();
             return true;' class="f19 otpcolr2 fontthin">Ok</div>
         </div>
     </div>
@@ -92,11 +92,17 @@
 
 
                     <!--start:div-->
-        <div id = "bringSuccessLayerOnMobile"  style="overflow:auto;display:none;">
-               
-               <div id ="putPasswordLayer" class='dispnone js-NumberedLayer js-NumberedLayer2'><div class=" txtc f14 fontlig pt30 pb15">
-    <p>Profile Deletion code sent to + ~$phoneNum` <span id='isdDiv'></span> <span id='mainPhone'></span></p>
-    <p id='resendSMSDiv' class="pt5">Didn't receive code? <a id='resendTextId' onclick='' class="color2">Resend Code</a></p>
+        <div id = "bringSuccessLayerOnMobile" class='js-NumberedLayer'  style="overflow:auto;display:none;">
+		<div id="overlayHead" class="bg1 txtc pad15">
+
+			<div class="posrel lh30">
+				<div class="fontthin f20 white">Delete Using OTP</div>
+				<a onclick='$("#bringSuccessLayerOnMobile").hide();$("#showDuringOTP").show();'><i class="mainsp posabs set_arow1 set_pos1"></i></a>
+			</div>
+		</div>               
+               <div id ="putPasswordLayer" class='js-NumberedLayer2'><div class=" txtc f14 fontlig pt30 pb15">
+    <p>Profile Deletion code sent to +~$isd`-~$phoneNum` <span id='isdDiv'></span> <span id='mainPhone'></span></p>
+    <p id='resendSMSDiv' class="pt5">Didn't receive code? <a id='resendTextId'  class="color2">Resend Code</a></p>
     </div>
 
       <div class="bg4 otpma">
