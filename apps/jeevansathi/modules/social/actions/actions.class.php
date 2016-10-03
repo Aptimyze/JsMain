@@ -690,10 +690,11 @@ class socialActions extends sfActions
 			/** if mediacdn cross domain policy comes **/
                         if(strstr($this->mainPicUrl,JsConstants::$cloudUrl))
                         {
+				$timeMainPic = time();
                                 $pictureObj = new NonScreenedPicture();
-                                $origPic = JsConstants::$docRoot."/uploads/canvasPic/$this->profilePicPictureId"."-".time().".jpg";
+                                $origPic = JsConstants::$docRoot."/uploads/canvasPic/$this->profilePicPictureId"."-".$timeMainPic.".jpg";
                                 copy($this->mainPicUrl,$origPic);
-                                $this->mainPicUrl = JsConstants::$siteUrl."/uploads/canvasPic/$this->profilePicPictureId"."-".time().".jpg";
+                                $this->mainPicUrl = JsConstants::$siteUrl."/uploads/canvasPic/$this->profilePicPictureId"."-".$timeMainPic.".jpg";
                         }
                         /** if mediacdn cross domain policy comes **/
 		}
@@ -749,13 +750,13 @@ class socialActions extends sfActions
 	if(!$profilechecksum)
 	{  
 		$loggedInProfile = LoggedInProfile::getInstance('newjs_master');
-        	$loggedInProfile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
-        	$requestedProfileid=$loggedInProfile->getPROFILEID();
-	        $ProfileObj=$loggedInProfile;
-	        if(!$ProfileObj)
+		if(!$loggedInProfile || $loggedInProfile->getPROFILEID()=='')
 	        {
 			$this->forward('static','LogoutPage');
 		}
+        	$loggedInProfile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
+        	$requestedProfileid=$loggedInProfile->getPROFILEID();
+	        $ProfileObj=$loggedInProfile;
 	}
 	else
 	{

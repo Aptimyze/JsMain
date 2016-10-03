@@ -186,7 +186,7 @@ public function getSendersPending($profileids)
 			if($seperator == 'spaceSeperator')
 				$result.= $row["PID"]." ";
 			else
-				$result[]=$row['SENDER'];
+				$result[]=$row['PID'];
 		}
 		return $result;
 	}
@@ -1078,6 +1078,29 @@ public function getSendersPending($profileids)
         	catch(Execption $e){
         		throw new jsException($e);
         	}
+        }
+        
+        public function getInterestReceivedDataForDuration($profileid, $stTime, $endTime){
+            try{
+                $ignoredStr = '';
+                $sql = "SELECT * from newjs.CONTACTS WHERE RECEIVER = :RECEIVER AND TYPE = 'I' AND TIME >= :START_TIME AND TIME <= :END_TIME ORDER BY TIME ASC";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":RECEIVER",$profileid,PDO::PARAM_INT);
+                $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
+                $prep->bindValue(":END_TIME",$endTime,PDO::PARAM_STR);
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                    $result['SENDER'][$row['SENDER']] = 1;
+                    $result['SELF'] = $profileid;
+                    $ignoredStr.=$row['SENDER'].",";
+                }
+                if($ignoredStr){
+                    $result['IGNORED_STRING'] = rtrim($ignoredStr, ",");
+                }
+                return $result;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
         }
 			
 }

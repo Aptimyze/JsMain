@@ -39,8 +39,7 @@ class editDppInterfaceAction extends sfActions {
 						$checksum = md5($this->profile->getPROFILEID()) . "i" . $this->profile->getPROFILEID();
 						$echecksum = $protect->js_encrypt($checksum);
 						$this->profileid = $this->profile->getPROFILEID();
-						$this->autologinUrl = JsConstants::$siteUrl . "/profile/dpp?fromBackend=1&echecksum=" . $echecksum . "&checksum=" . $checksum."&cid=".$this->cid;
-						
+						$this->autologinUrl="http://www.jeevansathi.com/profile/dpp?allowLoginfromBackend=1&profileChecksum=" . $profileChecksum . "&checksum=" . $checksum."&cid=".$this->cid;
 						$this->redirect($this->autologinUrl);
 				}	
 }

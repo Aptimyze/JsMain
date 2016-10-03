@@ -85,7 +85,7 @@
           <p class="f13 edpcolr1 txtc pt20">You can set Photo Privacy</p>
           ~if $arrOutDisplay['pic']['pic_count'] neq "0"`
           
-          <div class="fl pos-rel imgSize photoClick js-previewAlbum cursp" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`"><p class="f13 colr5 txtc pt10 pl47 txtl">Preview Album</p></div>
+          <div class="pos-rel pt10 pl47"><p class="f13 colr5 txtc txtl  photoClick js-previewAlbum disp_ib  cursp" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`">Preview Album</p></div>
           ~/if`
         </div>
         <!--end:upload div--> 
@@ -139,7 +139,7 @@
                         <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections" data-section-id="basic">Edit</a> </div>
                     </div>
                     <div class="pl30 prflist1 fontlig js-basicView">
-                      <p class="f24 pt25 fontlig" id="nameLabelParent"><span class="edpcolr2" >Name</span> - 
+                      <p class="f24 pt25 fontlig" id="nameLabelParent"><span class="edpcolr2" >Full Name</span> - 
                         ~if isset($arrOutDisplay.about.name) and $arrOutDisplay.about.name neq $notFilledInText`
                           <span class="color11" id='nameView'>
                             ~$name`

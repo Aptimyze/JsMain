@@ -299,6 +299,15 @@ if(typeof(openSection) != "undefined" && openSection !=""){
 $("#loadLate").css('visibility','visible');
 if(isBrowserIE() === false)
   $(".js-txtarea").attr('placeholder','What are you looking into a partner?');
+  
+    $("#unchk_dpp").on("click",function(){
+        $("#boxDiv").removeClass("move");
+        sendAjaxForToggleMatchalertLogic("dpp");
+    });
+    $("#chk_dpp").on("click",function(){
+        $("#boxDiv").addClass("move");
+        sendAjaxForToggleMatchalertLogic("history");
+    });
 });
 
 //click on more to show full prefilled text data
@@ -316,6 +325,20 @@ $(function(){
     
 });
 
+
+function sendAjaxForToggleMatchalertLogic(setValue)
+{
+    $.ajax({
+          url: "/api/v1/search/matchAlertToggleLogic",
+          dataType: 'json',
+          method: "POST",
+          cache: true,
+          async: true,
+          data:{logic:setValue},
+          success: function(result) {
+	  }
+    });
+}
 
 //to auto fill data in multiselect type fields on click of edit button in a particular section
 function fillValuesInChosen(sectionId){

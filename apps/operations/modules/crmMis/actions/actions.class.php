@@ -2432,7 +2432,7 @@ class crmMisActions extends sfActions
 		}
 	}
 
-    public function executeRCBSalesConversionExecutiveMIS(sfWebRequest $request)
+	public function executeRCBSalesConversionExecutiveMIS(sfWebRequest $request)
     {
         $this->cid         = $request->getParameter('cid');
         $this->name        = $request->getParameter('name');
@@ -2561,6 +2561,154 @@ class crmMisActions extends sfActions
                         die;
                 } else {
                 	$this->setTemplate('RCBSalesConversionExecutiveMISScreen1');
+                }
+            }
+        }
+    }
+
+    public function executeRenewalConversionMIS(sfWebRequest $request)
+    {
+        $this->cid         = $request->getParameter('cid');
+        $this->name        = $request->getParameter('name');
+        $this->startMonthDate = "01";
+        $this->todayDate      = date("d");
+        $this->todayMonth     = date("m");
+        $this->todayYear      = date("Y");
+        $this->rangeYear      = date("Y")+1;
+        $this->dateArr        = GetDateArrays::getDayArray();
+        $this->monthArr       = GetDateArrays::getMonthArray();
+        $this->yearArr        = array();
+        $dateArr              = GetDateArrays::generateDateDataForRange('2004', ($this->todayYear)+1);
+        foreach (array_keys($dateArr) as $key => $value) {
+            $this->yearArr[] = array('NAME' => $value, 'VALUE' => $value);
+        }
+        if ($request->getParameter("submit")) {
+            if ($request->getParameter("submit")) //If form is submitted
+            {
+                $formArr = $request->getParameterHolder()->getAll();
+
+                if ($formArr["range_format"] == "MY") //If month and year is selected
+                {
+                    $start_date        = $formArr["yearValue"] . "-" . $formArr["monthValue"] . "-01";
+                    $end_date          = $formArr["yearValue"] . "-" . $formArr["monthValue"] . "-" . date("t", strtotime($start_date));
+                    $this->displayDate = date("F Y", strtotime($start_date));
+                } else //If date ranges are selected
+                {
+                    $formArr["date1_dateLists_month_list"]++;
+                    $formArr["date2_dateLists_month_list"]++;
+                    $start_date        = $formArr["date1_dateLists_year_list"] . "-" . $formArr["date1_dateLists_month_list"] . "-" . $formArr["date1_dateLists_day_list"];
+                    $end_date          = $formArr["date2_dateLists_year_list"] . "-" . $formArr["date2_dateLists_month_list"] . "-" . $formArr["date2_dateLists_day_list"];
+                    $start_date        = date("Y-m-d", strtotime($start_date));
+                    $end_date          = date("Y-m-d", strtotime($end_date));
+                    $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+                }
+                if ($start_date > $end_date) {
+                    $this->errorMsg = "Invalid Date Selected";
+                } elseif (ceil((strtotime($end_date) - strtotime($start_date))/(24*60*60))>31 && $formArr["range_format"] != "MY") {
+                    $this->errorMsg = "More than 31 days selected in range";
+                }
+            } else //If Jump is clicked
+            {
+                $end_date          = date("Y-m-d");
+                $start_date        = date("Y-m") . "-01";
+                $this->displayDate = date("jS F Y", strtotime($start_date)) . " To " . date("jS F Y", strtotime($end_date));
+            }
+            if (!$this->errorMsg) //If no error message then submit the page
+            {
+                $billServStatObj = new BILLING_SERVICE_STATUS('newjs_slave');
+                $billPurObj = new BILLING_PURCHASES('newjs_slave');
+                $billPayDetObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
+                $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRangeWithoutActiveCheck($start_date, $end_date);
+                $misData = array();
+                foreach ($expiryProfiles as $key=>$pd) {
+                	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
+                	list($e30Cnt, $e30BillidArr) = $billPurObj->getRenewedProfilesBillidInE30($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($e30eCnt, $e30ebillidArr) = $billPurObj->getRenewedProfilesBillidInE30E($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($ee10Cnt, $ee10billidArr) = $billPurObj->getRenewedProfilesBillidInEE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+                	list($e10Cnt, $e10billidArr) = $billPurObj->getRenewedProfilesBillidInE10($pd['PROFILEID'], $pd['BILLID'], $pd['EXPIRY_DT']);
+                	$misData[$pd['EXPIRY_DT']]['renewE30'][$pd['BILLID']] = $e30Cnt;
+                	$misData[$pd['EXPIRY_DT']]['renewE30E'][$pd['BILLID']] = $e30eCnt;
+                	$misData[$pd['EXPIRY_DT']]['renewEE10'][$pd['BILLID']] = $ee10Cnt;
+                	$misData[$pd['EXPIRY_DT']]['renewE10'][$pd['BILLID']] = $e10Cnt;
+                	$allBillids = array_unique(array_merge($e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr));
+                	if (!empty($allBillids)){
+                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = $billPayDetObj->fetchAverageTicketSizeNexOfTaxForBillidArr($allBillids);
+                	} else {
+                		$misData[$pd['EXPIRY_DT']]['totalRev'][$pd['BILLID']] = 0;
+                	}
+                	unset($e30Cnt, $e30eCnt, $ee10Cnt, $e10Cnt, $e30BillidArr, $e30ebillidArr, $e10billidArr, $ee10billidArr, $allBillids);
+                }
+                // Set data for view 
+                $this->misData = array();
+                for($i = strtotime($start_date); $i <= strtotime($end_date); $i += 86400) {
+                	if ($misData[date("Y-m-d", $i)]) {
+                		$this->misData[date("j/M/y", $i)]['expiry'] = count($misData[date("Y-m-d", $i)]['expiry']);
+                		$this->misData[date("j/M/y", $i)]['renewE30'] = array_sum($misData[date("Y-m-d", $i)]['renewE30']);
+                		$this->misData[date("j/M/y", $i)]['renewE30E'] = array_sum($misData[date("Y-m-d", $i)]['renewE30E']);
+                		$this->misData[date("j/M/y", $i)]['renewEE10'] = array_sum($misData[date("Y-m-d", $i)]['renewEE10']);
+                		$this->misData[date("j/M/y", $i)]['renewE10'] = array_sum($misData[date("Y-m-d", $i)]['renewE10']);
+                		$this->misData[date("j/M/y", $i)]['totalRev'] = array_sum($misData[date("Y-m-d", $i)]['totalRev']);
+                	} else {
+                		$this->misData[date("j/M/y", $i)]['expiry'] = 0;
+                		$this->misData[date("j/M/y", $i)]['renewE30'] = 0;
+                		$this->misData[date("j/M/y", $i)]['renewE30E'] = 0;
+                		$this->misData[date("j/M/y", $i)]['renewEE10'] = 0;
+                		$this->misData[date("j/M/y", $i)]['renewE10'] = 0;
+                		$this->misData[date("j/M/y", $i)]['totalRev'] = 0;
+                	}
+                	$this->misData[date("j/M/y", $i)]['trsc'] = 0;
+                	$this->misData[date("j/M/y", $i)]['convPerc'] = 0;
+                }
+                foreach ($this->misData as $key=>$val) {
+                	$this->misData[$key]['tsrc'] = $val['renewE30'] + $val['renewE30E'] + $val['renewEE10'] + $val['renewE10'];
+                	$this->misData[$key]['convPerc'] = round($this->misData[$key]['tsrc']/$val['expiry'], 2)*100;
+                	$this->misData[$key]['totalRev'] = $val['totalRev'];
+                }
+                $this->totData = array();
+                foreach ($this->misData as $key=>$val) {
+                	$this->totData['expiry'] += $val['expiry'];
+                	$this->totData['renewE30'] += $val['renewE30'];
+                	$this->totData['renewE30E'] += $val['renewE30E'];
+                	$this->totData['renewEE10'] += $val['renewEE10'];
+                	$this->totData['renewE10'] += $val['renewE10'];
+                	$this->totData['tsrc'] += $val['tsrc'];
+                	$this->totData['totalRev'] += $val['totalRev'];
+                }
+                $this->totData['convPerc'] = round($this->totData['tsrc']/$this->totData['expiry'], 2)*100;
+                
+                if($formArr["report_format"]=="XLS")
+                {   
+            		if($formArr["range_format"]=="MY"){
+                            $string .= "For_".$monthArr[$formArr["monthValue"]]."-".$formArr["yearValue"];
+                    } else {
+                            $string .= $start_date."_to_".$end_date;
+                    }
+                    $columns = array('expiry'=>'Number of subscriptions expiring','renewE30'=>'Number of subscriptions renewed before E-30','renewE30E'=>'Number of subscriptions renewed on [E-30 - E]','renewEE10'=>'Number of subscriptions renewed on ]E - E+10]','renewE10'=>'Number of subscriptions renewed after E+10','tsrc'=>'Total subscriptions renewed as of current date','convPerc'=>'Conversion %','totalRev'=>'Total Revenue from renewed subscriptions');
+                    if($this->misData && is_array($this->misData))
+					{
+						$headerString = "Metric\t";
+                        foreach ($this->misData as $key=>$val) {
+                        	$headerString .= "{$key}\t";	
+                        }
+                        $headerString .= "Total\r\n";
+                        $dates = array_keys($this->misData);
+                        foreach ($columns as $key=>$name) {
+                        	$dataString = $dataString.$name."\t";
+							foreach ($dates as $k=>$date) {
+								$dataString = $dataString.$this->misData[$date][$key]."\t";
+							}
+							$dataString = $dataString.$this->totData[$key]."\r\n";
+						}
+					}
+					$xlData = $headerString.$dataString;
+	                header("Content-Type: application/vnd.ms-excel");
+	                header("Content-Disposition: attachment; filename=Renewal_Conversion_MIS.xls");
+	                header("Pragma: no-cache");
+	                header("Expires: 0");
+	                echo $xlData;
+                    die;
+                } else {
+                	$this->setTemplate('renewalConversionMISScreen1');
                 }
             }
         }

@@ -105,3 +105,18 @@ input::-ms-clear {
     .wid134{width:134px}
     .wid345{width:345px}
     .mlneg7{margin-left: -7px}
+
+.mrneg35
+{margin-right: -33px;}
+.outerbox
+{ width: 87px; height: 50px; background-color: #b9b9b9; padding: 2px; border-radius: 50px; }
+.setpos1
+{ top: 0; }
+.setdim1
+{ width: 44px; height: 50px; }
+.box
+{ width: 50px; height: 50px; border-radius: 50px; background: url(IMG_URL/images/jspc/commonimg/checkimg1.png) no-repeat -53px 0px; -webkit-transform: translate(0, 0); -webkit-transition: -webkit-transform 500ms; transform: translate(0, 0); transition: transform 500ms, background-color 1s; will-change: transform; }
+.setpos2
+{ top: 2px; }
+.box.move
+{ -webkit-transform: translate(36px, 0); transform: translate(36px, 0); background: url(IMG_URL/images/jspc/commonimg/checkimg1.png) no-repeat 1px -1px; }

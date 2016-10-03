@@ -21,7 +21,7 @@ class billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG extends TABLE{
     public function getDiscountDetails($profileid)
     {
         try{
-            $sql="SELECT * FROM billing.VARIABLE_DISCOUNT_OFFER_DURATION_LOG WHERE PROFILEID=:PROFILEID ORDER BY EDATE DESC LIMIT 5";
+            $sql="SELECT * FROM billing.VARIABLE_DISCOUNT_OFFER_DURATION_LOG WHERE PROFILEID=:PROFILEID GROUP BY SERVICE, EDATE ORDER BY EDATE DESC LIMIT 5";
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->execute();
@@ -30,7 +30,7 @@ class billing_VARIABLE_DISCOUNT_OFFER_DURATION_LOG extends TABLE{
         }
         catch(PDOException $e){
             throw new jsException($e);
-	}
+	    }
         return $output;
     }
 

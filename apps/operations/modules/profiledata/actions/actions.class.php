@@ -249,6 +249,7 @@ class ProfileDataActions extends sfActions
 	
 	public function executeProfileLog(sfWebRequest $request)
 	{
+
 		// Get Profile Data
 		$nameObj = new incentive_NAME_OF_USER();
 		$this->nameofuser = $nameObj->getName($this->profileid);	
@@ -261,11 +262,18 @@ class ProfileDataActions extends sfActions
 				$val=FieldMap::getFieldLabel("city_india", $val);
 			else if($key == 'COUNTRY_RES')
 				$val=FieldMap::getFieldLabel("country", $val);
+			else if($key == "EMAIL")
+			{
+					if(strpos($val,"_deleted") !== false)
+					{
+						$val = substr($val,0,strpos($val,"_deleted"));
+					}
+					$deleteRemovedEmail = $val;
+			}
 			if(!$val)
 				$val="Not present";
 			$this->profileDetailArr[$key] = $val;
 		}
-		
 		$profObj1 = new ProfileInfo1();
 		$deletedProfileArr = $profObj1->profileDelete($this->profileid);
 		$this->deletedArr = $deletedProfileArr[0];
@@ -274,9 +282,10 @@ class ProfileDataActions extends sfActions
 		//Get Duplicate profiles
 		$dupObj = new ProfileDuplicates($this->profile);
 		$this->duplicateArr = $dupObj->duplicateProfiles();
+
 //		var_dump($this->profile->getJpartner());die;
 		$profObj1->setPageInformation($this,$this->profile);
-		
+		$this->EMAIL=$deleteRemovedEmail;
 		//Getting partner details of viewer
 		$jpartnerObj=$profObj1->getDpp($this->profile->getPROFILEID());
 		$dbObj = new NEWJS_JPROFILE_CONTACT("newjs_slave");
@@ -286,7 +295,6 @@ class ProfileDataActions extends sfActions
 		//Getting loginned profile desired partner data and setting object as well.
 		$this->profile->setJpartner($jpartnerObj);
 		//var_dump($this->profile->getJpartner()->getDecoratedLAGE());die;
-	
 	}
 	
 	public function executeEOILog(sfWebRequest $request)

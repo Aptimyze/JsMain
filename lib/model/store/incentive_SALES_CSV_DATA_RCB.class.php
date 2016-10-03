@@ -6,12 +6,12 @@ class incentive_SALES_CSV_DATA_RCB extends TABLE
       		parent::__construct($dbname);
    	}
 
-	public function insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$allotedTo,$vdDiscount,$lastLoginDt,$phone1,$phone2,$havePhoto,$birthDt,$mstatus,$everPaid,$gender,$relation,$leadId,$csvDate,$username,$country,$source)
+	public function insertProfile($profileid,$dialerPriority,$score,$dialerDialStatus,$allotedTo,$vdDiscount,$lastLoginDt,$phone1,$phone2,$havePhoto,$birthDt,$mstatus,$everPaid,$gender,$relation,$leadId,$csvDate,$username,$country,$source,$callTime)
 	{
 		try
 		{
 			//$csvDate=date("Y-m-d H:i:s",time());
-			$sql= "INSERT IGNORE INTO incentive.SALES_CSV_DATA_RCB(PROFILEID,PRIORITY,ANALYTIC_SCORE,OLD_PRIORITY,DIAL_STATUS,SOURCE,AGENT,VD_PERCENT,LAST_LOGIN_DATE,PHONE_NO1,PHONE_NO2,PHOTO,DOB,MSTATUS,EVER_PAID,GENDER,POSTEDBY,PHONE_NO3,PHONE_NO4,USERNAME,COUNTRY,LEAD_ID,CSV_ENTRY_DATE) VALUES(:PROFILEID,:PRIORITY,:ANALYTIC_SCORE,:OLD_PRIORITY,:DIAL_STATUS,:SOURCE,:AGENT,:VD_PERCENT,:LAST_LOGIN_DATE,:PHONE_NO1,:PHONE_NO2,:PHOTO,:DOB,:MSTATUS,:EVER_PAID,:GENDER,:POSTEDBY,:PHONE_NO3,:PHONE_NO4,:USERNAME,:COUNTRY,:LEAD_ID,:CSV_ENTRY_DATE)";
+			$sql= "INSERT IGNORE INTO incentive.SALES_CSV_DATA_RCB(PROFILEID,PRIORITY,ANALYTIC_SCORE,OLD_PRIORITY,DIAL_STATUS,SOURCE,AGENT,VD_PERCENT,LAST_LOGIN_DATE,PHONE_NO1,PHONE_NO2,PHOTO,DOB,MSTATUS,EVER_PAID,GENDER,POSTEDBY,PHONE_NO3,PHONE_NO4,USERNAME,COUNTRY,PREFERRED_TIME_IST,LEAD_ID,CSV_ENTRY_DATE) VALUES(:PROFILEID,:PRIORITY,:ANALYTIC_SCORE,:OLD_PRIORITY,:DIAL_STATUS,:SOURCE,:AGENT,:VD_PERCENT,:LAST_LOGIN_DATE,:PHONE_NO1,:PHONE_NO2,:PHOTO,:DOB,:MSTATUS,:EVER_PAID,:GENDER,:POSTEDBY,:PHONE_NO3,:PHONE_NO4,:USERNAME,:COUNTRY,:PREFERRED_TIME_IST,:LEAD_ID,:CSV_ENTRY_DATE)";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$prep->bindValue(":PRIORITY",$dialerPriority,PDO::PARAM_INT);
@@ -38,6 +38,7 @@ class incentive_SALES_CSV_DATA_RCB extends TABLE
 
                         $prep->bindValue(":LEAD_ID",$leadId,PDO::PARAM_STR);
                         $prep->bindValue(":CSV_ENTRY_DATE",$csvDate,PDO::PARAM_STR);
+			$prep->bindValue(":PREFERRED_TIME_IST",$callTime,PDO::PARAM_STR);
 		
 			$prep->execute();
 		}

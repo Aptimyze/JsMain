@@ -43,8 +43,8 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 		$this->smsType = $smsType;
         }
 	public function getShortURL($longURL, $profileid='',$email='',$withoutLogin='',$appendUrl='') {
-
-		include_once($this->path . "/classes/ShortURL.class.php");
+               // $longURL=str_replace('CMGFRMMMMJS=mobile','linkFromSMS=Y' , $longURL);
+                include_once($this->path . "/classes/ShortURL.class.php");
 		if(!$withoutLogin)
 		{
 			include_once($this->path . "/classes/authentication.class.php");
@@ -300,6 +300,10 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 			case "PHTOUPNO":
 				return $messageValue["PHOTO_UPLOAD_COUNT"];
 
+			case "URL_EDIT_PHONE":
+				$longURL = $this->SITE_URL."/profile/viewprofile.php?ownview=1";
+				$appendUrl='#Contact';
+				return $this->getShortURL ($longURL, $messageValue["RECEIVER"]["PROFILEID"],$messageValue["EMAIL"],'',$appendUrl);
 				case "URL_FAMILY":
 				$longURL = $this->SITE_URL."/profile/viewprofile.php?ownview=1";
 				$appendUrl='#Family';
@@ -562,6 +566,8 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 				return "https://www.surveymonkey.com/r/NRZ7S8C";
 			case "SURVEY_SMS_90":
 				return "https://www.surveymonkey.com/r/NTHDX6K";
+			case "ISD_MOB":
+				return $messageValue['PHONE_MOB'];
 			default:
 				return "";
 		}
