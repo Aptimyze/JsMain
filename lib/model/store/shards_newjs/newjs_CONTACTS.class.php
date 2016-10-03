@@ -380,7 +380,10 @@ public function getSendersPending($profileids)
 			$prep->bindValue(":COUNT", $contactObj->getCOUNT(), PDO::PARAM_INT);
 			$prep->bindValue(":TYPE",$contactObj->getTYPE(),PDO::PARAM_STR);
 			$prep->bindValue(":TIME",$contactObj->getTIME(),PDO::PARAM_STR);
-			$prep->bindValue(":MSG_DEL",$contactObj->getMSG_DEL(),PDO::PARAM_STR);
+			if($contactObj->getPageSource()=="AP")
+				$prep->bindValue(":MSG_DEL","Y",PDO::PARAM_STR);
+			else
+				$prep->bindValue(":MSG_DEL","N",PDO::PARAM_STR);
 			$prep->bindValue(":SEEN",$contactObj->getSEEN(),PDO::PARAM_STR);
 			$prep->bindValue(":FILTERED",$contactObj->getFILTERED(),PDO::PARAM_STR);
 			$prep->bindValue(":FOLDER",$contactObj->getFOLDER(),PDO::PARAM_STR);

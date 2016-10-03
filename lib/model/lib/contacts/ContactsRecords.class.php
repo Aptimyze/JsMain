@@ -508,7 +508,10 @@ class ContactsRecords
 		$data['COUNT'] = $contactObj->getCOUNT();
 		$data['TYPE'] = $contactObj->getTYPE();
 		$data['TIME'] = $contactObj->getTIME();
-		$data['MSG_DEL'] = $contactObj->getMSG_DEL();
+		if($contactObj->getPageSource()=="AP")
+			$data['MSG_DEL'] = "Y";
+		else
+			$data['MSG_DEL'] = "N";
 		$data['SEEN'] = $contactObj->getSEEN();
 		$data['FILTERED'] = $contactObj->getFILTERED();
 		$data['FOLDER'] = $contactObj->getFOLDER();
