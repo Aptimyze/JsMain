@@ -164,7 +164,7 @@ class DialerHandler
 
 				}
 				if($jp_condition_arr1){
-					$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=6";
+					$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=5";
 					mssql_query($query2,$this->db_dialer) or $this->logerror($query2,$this->db_dialer);
 					$ustr1 = str_replace("'","",$jp_condition_arr1);
 					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE')";
@@ -177,7 +177,7 @@ class DialerHandler
 				if(!$row_chk["AGENT"]){
 					$query_ph2 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 					mssql_query($query_ph2,$this->db_dialer) or $this->logerror($query_ph2,$this->db_dialer);
-					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE')";
+					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE2')";
 					mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
 				}
 			}
@@ -226,7 +226,7 @@ class DialerHandler
 				$query_ph1 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 				mssql_query($query_ph1,$this->db_dialer) or $this->logerror($query_ph1,$this->db_dialer);
 
-				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE')";
+				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE1')";
 				mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
 
 				$update_str[] ="easy.dbo.ct_$campaign_name.AGENT=''";
