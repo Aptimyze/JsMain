@@ -166,7 +166,7 @@
                                         <!--start:left-->
                                         <div class="fl color11 fontlig wid64p">
                                             <p class="f28">Get Astro compatibility</p>        
-                                            <p id="textMem" class="f15 pt15 lh22">You can view a detailed report of your compatibility with XYZ1234 with Astro compatability add-on along with your membership.</p>
+                                            <p id="textMem" class="f15 pt15 lh22">You can view a detailed report of your compatibility with XYZ1234 with Astro compatibility add-on along with your membership.</p>
                                         </div>    
                                         <!--end:left-->
                                         <!--start:right-->
