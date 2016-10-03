@@ -58,10 +58,10 @@ class ProfileEducation
       $dbName = "newjs_master";
     if (isset(self::$instance)) {
             //If different instance is required
-            if ($dbName != self::$instance->$connectionName) {
+            if ($dbName != self::$instance->connectionName) {
                 $class = __CLASS__;
                 self::$instance = new $class($dbName);
-                self::$instance->$connectionName = $dbName;
+                self::$instance->connectionName = $dbName;
             }
         }
         else {
