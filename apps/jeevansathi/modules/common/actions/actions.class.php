@@ -795,7 +795,8 @@ class commonActions extends sfActions
     $loginData=$request->getAttribute('loginData');
     $verificationObj=new OTP($loggedInProfileObj,$phoneType,OTPENUMS::$deleteProfileOTP);
     $response=$verificationObj->sendOtpSMS();
-     $this->phoneNum =$verificationObj->getPhone();
+     $this->phoneNum =$verificationObj->getPhoneWithoutIsd();
+     $this->isd = $verificationObj->getIsd();
     $this->phoneType =$verificationObj->getPhoneType();
     if($response['trialsOver']=='Y')
         $response['trialsOverMessage']=PhoneApiFunctions::$OTPTrialsOverMsg;

@@ -38,7 +38,7 @@ $("#resendOtpLink").bind('click',resendOtpLink);
     <div class="color11">
               <!--start:div-->
         <div class="phnvwid3 mauto pt40 pb27 fontlig">
-          <p class=" f17  txtc lh26  ">OTP has been sent to + ~$phoneNum`<span class="fontreg" id='js-isdOTP' ></span> <span id='js-MainNumOTP' class="fontreg"></span>.</p><p id='js-SMSResendDiv' class="txtc ~if $smsResend eq 'N'`disp-none~/if`" >Didn't receive code?&nbsp;<a id='resendOtpLink' class="color5 cursp fontreg f17">Resend Code</a><img id='resendOtpGif' class='disp-none' src="/images/jspc/commonimg/loader.gif"></p>
+          <p class=" f17  txtc lh26  ">OTP has been sent to +~$isd` ~$phoneNum`<span class="fontreg" id='js-isdOTP' ></span> <span id='js-MainNumOTP' class="fontreg"></span></p><p id='js-SMSResendDiv' class="txtc ~if $smsResend eq 'N'`disp-none~/if`" >Didn't receive code?&nbsp;<a id='resendOtpLink' class="color5 cursp fontreg f17">Resend Code</a><img id='resendOtpGif' class='disp-none' src="/images/jspc/commonimg/loader.gif"></p>
           <p class="f13 txtc pt15">
         </p><div id='OTPOuterInput' style="margin:1px 0px 0px 0px;" class="phnvbdr1 bg-white phnvp8">
                  <div class="fullwid clearfix">

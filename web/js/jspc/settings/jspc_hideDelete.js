@@ -401,5 +401,7 @@ $("#closeButtonOtp").show().unbind().bind('click',function(){closeCurrentLayerCo
 var ajaxConfig={};
 ajaxConfig.type='POST';
 ajaxConfig.url='/common/desktopOtpFailedLayer';
-sendAjaxHtmlDisplay(ajaxConfig,afterOtpFailedLayer)
+sendAjaxHtmlDisplay(ajaxConfig);
 }
+
+
