@@ -421,5 +421,12 @@ class ProfileCacheConstants
                                         'COUNTRY_BIRTH',
                                         'SHOW_HOROSCOPE',
                                     );
+    public static $arrCommonFieldsMap = array(
+                                        'PROFILEID',
+                                        'DTOFBIRTH',
+                                        'CITY_BIRTH',
+                                        'BTIME',
+        
+    );
 }
 ?>
