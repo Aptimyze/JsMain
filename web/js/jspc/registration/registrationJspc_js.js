@@ -2001,7 +2001,7 @@ $(document).ready(function () {
 //        inputData["record_id"]=$("#reg_record_id").val();
       inputData["_csrf_token"] = $("#registrationData__csrf_token").val();
       if(inputData.hasOwnProperty('state_res')){
-          if(inputData['city_res'] == '0')
+          if(inputData['city_res'] == '0' && inputData['country_res']=='51')
               inputData['city_res'] = inputData['state_res']+'OT';
           delete inputData['state_res'];
       }
