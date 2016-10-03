@@ -639,6 +639,7 @@ function checkNewLogin(profileid) {
             createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
             setLogoutClickLocalStorage("unset");
             clearChatMsgFromLS();
+            localStorage.removeItem('tabState');
             localStorage.removeItem('chatBoxData');
             localStorage.removeItem('lastUId');
         }
@@ -869,11 +870,11 @@ function clearChatMsgFromLS(){
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','bubbleData'];
+    var removeArr = ['userImg','bubbleData','chatBoxData','tabState'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
-    localStorage.removeItem('chatBoxData');
+    //localStorage.removeItem('chatBoxData');
     localStorage.removeItem('lastUId');
     clearChatMsgFromLS();
 }

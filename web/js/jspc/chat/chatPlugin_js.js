@@ -42,6 +42,7 @@ JsChat.prototype = {
     _chatAutoLogin:true,
     _categoryTrackingParams:{},
     _groupBasedConfig:{},
+    _defaultActiveTab:"tab1",
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -162,16 +163,32 @@ JsChat.prototype = {
     //start:maximize html
     _maximizeChatPanel: function () {
         var curEle = this;
-        //this._chatLoggerPlugin('in max');
-        //this._chatLoggerPlugin($(this._maxChatBarOut));
-        $("chat-box").each(function (index, element) {
+        /*$("chat-box").each(function (index, element) {
             if ($(this).attr("pos-state") == "open") {
                 curEle._scrollUp($(this), "297px","noAnimate",true);
             }
+        });*/
+        var data = [];
+        if(localStorage.getItem("chatBoxData")) {
+            data = JSON.parse(localStorage.getItem("chatBoxData"));
+        }
+
+        $.each(data, function(index,elem){
+            console.log("data",data);
+            if($('chat-box[user-id="' + elem["userId"] + '"]').length == 0){
+                $("#"+elem["userId"]+"_"+elem["group"]).click();    
+            }
+            if($('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "open" || elem["state"] == "") {
+                $('chat-box[user-id="' + elem["userId"] + '"] .chatBoxBar').click();
+            }
+            if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
+                $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
+            }
         });
+        curEle._changeLocalStorage("chatStateChange","","","max");
+        //curEle._changeLocalStorage("chatBubbleStateChange","","","0");
         $(this._maxChatBarOut).remove();
         if (this._checkWidth()) {
-            //this._chatLoggerPlugin('screen size less than 1024');
             $(this._parendID).fadeIn('slow');
         } else {
             $("body").css('width','80%');
@@ -219,6 +236,7 @@ JsChat.prototype = {
         $("chat-box").each(function (index, element) {
             curEle._scrollDown($(this), "min");
         });
+        curEle._changeLocalStorage("chatStateChange","","","min");
         $(curEle._chatBottomPanelID).hide();
         if (curEle._checkWidth()) {
             $(curEle._parendID).fadeOut('slow', function () {
@@ -239,13 +257,30 @@ JsChat.prototype = {
         });
     },
     //start:chat tabs click
-    _chatTabs: function (param) {
+    _chatTabs: function (param,type) {
+        var curElem = this;
         if($('#' + param).hasClass("active") == false) {
+            curElem._changeLocalStorage("tabStateChange","","",param);
+            /*if(param == "tab1") {
+                curElem._changeLocalStorage("tabStateChange","","","online");
+            }
+            else if(param == "tab2") {
+                curElem._changeLocalStorage("tabStateChange","","","accepted");
+            }*/
             $('ul.nchattab1 li').removeClass('active cursd');
             $('#' + param).addClass('active cursd');
-            $('.js-htab').fadeOut('slow').promise().done(function () {
+            if(type == "noAnimate") {
+                $('.js-htab').hide();
+                $('.show' + param).show();  
+            }
+            else {
+                $('.js-htab').fadeOut('slow').promise().done(function() {
+                    $('.show' + param).fadeIn('slow')
+                }); 
+            }
+            /*$('.js-htab').fadeOut('slow').promise().done(function () {
                 $('.show' + param).fadeIn('slow')
-            });
+            });*/
         }
     },
     onLogoutPreClick: null,
@@ -387,8 +422,13 @@ JsChat.prototype = {
         TabsOpt += '</div>';
         $(this._listingPanelID).append(TabsOpt);
         $(this._tabclass).click(function () {
-            curEle._chatTabs($(this).attr('id'));
-        })
+            curEle._chatTabs($(this).attr('id'),"");
+        });
+        if(localStorage.getItem("tabState") == undefined) {
+            curEle._changeLocalStorage("tabStateChange","","",curEle._defaultActiveTab);    
+        } else { 
+            curEle._chatTabs(localStorage.getItem("tabState"),"noAnimate");
+        }
     },
     noResultError: function () {
         var dataLength;
@@ -787,9 +827,9 @@ JsChat.prototype = {
                 elem.find(".chatBoxBar").addClass("js-minimizedChatBox");
                 elem.find(".downBarPic").addClass("downBarPicMin");
                 elem.find(".downBarUserName").addClass("downBarUserNameMin");
-                if (type != "min") {
+                /*if (type != "min") { //manvi1
                     $(elem).attr("pos-state", "close");
-                }
+                }*/
             });
         }
     },
@@ -835,7 +875,7 @@ JsChat.prototype = {
                 }
             }
             
-            $(elem).attr("pos-state", "open");
+            // $(elem).attr("pos-state", "open"); manvi1
         });
         if(typeof notRead == "undefined" || notRead == false){
             
@@ -1140,7 +1180,7 @@ JsChat.prototype = {
     },
     //sending chat
     _bindSendChat: function (userId) {
-        console.log("_bindSendChat");
+        //console.log("_bindSendChat");
         var _this = this,
             that = this,
             messageId,
@@ -1435,7 +1475,7 @@ JsChat.prototype = {
 
     //append chat box on page
     _appendChatBox: function (userId, status, jid, pcheckSum, groupId,hisStatus) {
-        var strHtm = '<chat-box group-id="' + groupId + '" pos-state="open" data-nodeMigrated="false" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum+'"';
+        var strHtm = '<chat-box group-id="' + groupId + '" data-nodeMigrated="false" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum+'"';
         if(hisStatus == "noHis"){
             strHtm += 'his-status="not"';
         }
@@ -2890,6 +2930,22 @@ JsChat.prototype = {
                 reAdd = false;
             }
         }
+        else if(type == "chatStateChange"){
+            var chatState = "";
+            if(localStorage.getItem("chatStateData")) {
+                chatState = localStorage.getItem("chatStateData");
+            }
+            chatState = newState;
+            localStorage.setItem("chatStateData",chatState);
+        }
+        else if(type == "tabStateChange") {
+            var tabState = "";
+            if(localStorage.getItem("tabState")) {
+                tabState = localStorage.getItem("tabState");
+            }
+            tabState = newState;
+            localStorage.setItem("tabState",tabState);
+        } 
         if(reAdd == true){
             localStorage.setItem("chatBoxData", JSON.stringify(data));
         }
@@ -2898,7 +2954,7 @@ JsChat.prototype = {
     _updateChatStructure:function(type) {
 		//console.log("inside update function",type);
        // console.log("In updateCHatstructure");
-		var data = [];
+		var data = [],curEle = this;
 		var currentUserId = [];
 		var localId = [],pageId = [];
 		if(localStorage.getItem("chatBoxData")) {
@@ -2997,18 +3053,15 @@ JsChat.prototype = {
 				});
 			}
 		}
-        var bubbleData = [];
+        var bubbleData = [],chatBoxData=[];
         if(localStorage.getItem("bubbleData")) {
             bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+            chatBoxData = JSON.parse(localStorage.getItem("chatBoxData"));
         }
-        //console.log(bubbleData);
-        //console.log(bubbleData);
         setTimeout(function() {
             $.each(bubbleData, function(index,elem) {
-                //confirm manvi
-                //console.log($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state"));
-                if($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state") != "open"){
-                    //console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
+                if($('chat-box[user-id="'+elem.userId+'"] .chatBoxBar img').hasClass("downBarPicMin")){
+                    console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
                     $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
                     if(elem.bCount != 0){
                         $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2').show();
@@ -3019,7 +3072,34 @@ JsChat.prototype = {
                     $('#extra_'+elem.userId+' .pinkBubble').show();
                 }
             });
+            
         }, 2000);
+        var chatStatus = "";
+        if(localStorage.getItem("chatStateData")) {
+            chatStatus = localStorage.getItem("chatStateData");
+        } else {
+            localStorage.setItem("chatStateData","max");
+        }
+        if(chatStatus == "min"){
+            $(".js-minChatBarIn").click();
+        } else if(chatStatus == "max" && $(".js-minpanel").length !=0){
+            $(".js-minpanel").click();
+        } 
+        //console.log("local",localStorage.getItem("tabState"));
+        var tabStatus = "";
+        if(localStorage.getItem("tabState")) {
+            chatStatus = localStorage.getItem("tabState");
+        } else {
+            localStorage.setItem("tabState",curEle._defaultActiveTab);
+        }
+        curEle._chatTabs(chatStatus,"noAnimate");
+        /*if(chatStatus == "accepted"){
+            //$("#tab2").click();
+            curEle._chatTabs("tab2","noAnimate");
+        } else if(chatStatus == "online") {
+            //$("#tab1").click();
+            curEle._chatTabs("tab1","noAnimate");
+        }*/
 		localStorage.setItem("lastUId",$(".tabUId").attr("id"));
 	},    
     
@@ -3122,12 +3202,21 @@ JsChat.prototype = {
                 _this._maximizeChatPanel();
             });
         } else {
-            $('body').css('width', '80%');
-            $(this._parendID).addClass('wid20p').css('height', this._getHeight());
-            //handle postion of next prev buttons on view profile
-            if(my_action && (my_action=="detailed" || my_action == "noprofile")){
-                _this.handleNextPrevButtons("makeCloser");
-            }
+            if(localStorage.getItem("chatStateData") == "min"){
+                $(this._parendID).css('display', 'none');
+                $(this._parendID).addClass('chatw5').css('height', this._getHeight());
+                this.minimizedPanelHTML();
+                $(this._minPanelId).click(function () {
+                    _this._maximizeChatPanel();
+                });
+            } else {
+                $('body').css('width', '80%');
+                $(this._parendID).addClass('wid20p').css('height', this._getHeight());
+                //handle postion of next prev buttons on view profile
+                if(my_action && (my_action=="detailed" || my_action == "noprofile")){
+                    _this.handleNextPrevButtons("makeCloser");
+                }     
+            }   
         }
         if (this.checkLoginStatus()) {
             //this._chatLoggerPlugin("checking login status");
