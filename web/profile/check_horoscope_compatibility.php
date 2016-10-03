@@ -5,9 +5,7 @@
 
         include_once("connect.inc");
 		include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
-                require_once JsConstants::$docRoot."/../lib/vendor/dompdf/autoload.inc.php";
                 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
-                use Dompdf\Dompdf;
         $db=connect_db();
 	//Added by Vibhor for Astro Service of Offline Module
 	if(!$via_ofm)
@@ -147,23 +145,15 @@
                                     else{
                                         $urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$row['USERNAME'].":".$astrodata_other['MOON_DEGREES_FULL'].":".$astrodata_other['MARS_DEGREES_FULL'].":".$astrodata_other['VENUS_DEGREES_FULL'].":".$astrodata_other['LAGNA_DEGREES_FULL'].":".$astrodata['MOON_DEGREES_FULL'].":".$astrodata['MARS_DEGREES_FULL'].":".$astrodata['VENUS_DEGREES_FULL'].":".$astrodata['LAGNA_DEGREES_FULL'].":".$data['USERNAME'];
                                     }
-                                    $stringToReplace = "<iframe src="+$urlToVedic+" alt=\"LOADING HOROSCOPE COMPATIBILITY\" height=800 width=\"100%\" frameborder=0></iframe>";
                                     $html= CommonUtility::sendCurlGetRequest($urlToVedic);
-                                    echo $html;
-                                    file_put_contents("/var/www/html/js1/web/uploads/SearchLogs/astroHtml.html", $html);
-                                    die;
+				    $file=PdfCreation::PdfFile($urlToVedic);
                                     
-                                    $dompdf = new DOMPDF();
-                                    $dompdf->load_html($html);
-                                    $dompdf->set_paper('a4', 'portrait');
-                                    $dompdf->render();
-                                    $output = $dompdf->output();
                                     $email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1839);
                                     $emailTpl = $email_sender->setProfileId($data['PROFILEID']);
                                     $smartyObj = $emailTpl->getSmarty();
                                     $smartyObj->assign('otherUsername',$row['USERNAME']);
                                     $smartyObj->assign('otherProfile',$profileid_other);
-                                    $email_sender->setAttachment($output);
+                                    $email_sender->setAttachment($file);
                                     $email_sender->setAttachmentName("astroCompatibility.pdf");
                                     $email_sender->setAttachmentType('application/pdf');
                                     $email_sender->send();
