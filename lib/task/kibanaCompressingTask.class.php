@@ -32,17 +32,18 @@ EOF;
       for($i=0 ; $i <=24 ; $i++)
       {
         $currdate = date('Y.m.d');
+        $date = strtotime(date("Y.m.d", strtotime("-3 day")));
         $elkServer = '10.10.18.66';
         $elkPort = '9200';
-        $indexName = 'filebeat-'.$currdate;
+        $indexName = 'filebeat-'.$date;
         $query = '_search';
         $urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
         $params = [
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-48-".$i,
-                        "gt" => "now-48-".$i+1
+                        "lt" => "now-48h",
+                        "gt" => "now-72h"
                     ]
                 ]
             ],
@@ -57,18 +58,19 @@ EOF;
         ];
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        $arrModules = array();
+        $arrChannels = array();
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrModules[$module['key']] = $module['doc_count'];
+            $arrChannels[$module['key']] = $module['doc_count'];
         }
+        print_r($arrChannels); die;
 
          $params = [
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-48-".$i,
-                        "gt" => "now-48-".$i+1
+                        "lt" => "now-48h",
+                        "gt" => "now-72h"
                     ]
                 ]
             ],
@@ -83,10 +85,10 @@ EOF;
         ];
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        $arrModules = array();
+        $arrDomain = array();
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrModules[$module['key']] = $module['doc_count'];
+            $arrDomain[$module['key']] = $module['doc_count'];
         }
 
 
@@ -111,10 +113,10 @@ EOF;
         ];
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        $arrModules = array();
+        $TypeOfError = array();
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrModules[$module['key']] = $module['doc_count'];
+            $TypeOfError[$module['key']] = $module['doc_count'];
         }
 
 
@@ -138,10 +140,10 @@ EOF;
         ];
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        $arrModules = array();
+        $arrHostname = array();
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrModules[$module['key']] = $module['doc_count'];
+            $arrHostname[$module['key']] = $module['doc_count'];
         }
 
          $params = [
@@ -164,10 +166,10 @@ EOF;
         ];
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        $arrModules = array();
+        $arrmoduleName = array();
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrModules[$module['key']] = $module['doc_count'];
+            $arrmoduleName[$module['key']] = $module['doc_count'];
         }
 
          $params = [
@@ -190,10 +192,10 @@ EOF;
         ];
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        $arrModules = array();
+        $arrLogType = array();
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrModules[$module['key']] = $module['doc_count'];
+            $arrLogType[$module['key']] = $module['doc_count'];
         }
          $params = [
             "query"=> [
@@ -215,10 +217,10 @@ EOF;
         ];
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        $arrModules = array();
+        $arrApiVersion = array();
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrModules[$module['key']] = $module['doc_count'];
+            $arrApiVersion[$module['key']] = $module['doc_count'];
         }
          $params = [
             "query"=> [
@@ -240,10 +242,10 @@ EOF;
         ];
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        $arrModules = array();
+        $arrActionName = array();
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrModules[$module['key']] = $module['doc_count'];
+            $arrActionName[$module['key']] = $module['doc_count'];
         }
 
          $params = [
@@ -266,10 +268,10 @@ EOF;
         ];
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        $arrModules = array();
+        $arrrequestURI = array();
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrModules[$module['key']] = $module['doc_count'];
+            $arrrequestURI[$module['key']] = $module['doc_count'];
         }
 
       }
