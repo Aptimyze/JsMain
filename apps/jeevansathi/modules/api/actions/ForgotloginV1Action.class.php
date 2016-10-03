@@ -114,7 +114,10 @@ class ForgotloginV1Action extends sfActions
 		}
 		else 
 		{
-			$email = ltrim(preg_replace("/[^0-9]/","",$email),0); // remove everything except numbers
+			if(strpos($email, '+')==0)
+				$email=substr($email, 1);
+			$email=$this->replaceFirstOccurence('-','',$email);
+			$email = ltrim($email,'0');
 			$regex = "/^[0-9]{7,}/";
 			if(preg_match($regex, $email)){
 				$this->flag='M';
@@ -125,4 +128,15 @@ class ForgotloginV1Action extends sfActions
 		
 			return false;
 	}
+
+public function replaceFirstOccurence($needle, $replace, $haystack){
+
+$pos = strpos($haystack, $needle);
+if ($pos !== false) {
+    $newstring = substr_replace($haystack, $replace, $pos, strlen($needle));
+    return $newstring;
+}
+return $haystack;
+}
+
 }
