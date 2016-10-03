@@ -16,7 +16,7 @@ public function __construct($profileObject='',$phoneType,$otp_settings)
 	public function sendOtpSMS() 
 	{   
 
-    $otpObject=new NEWJS_COMMON_OTP();
+    $otpObject=new sms_COMMON_OTP();
 	$this->otpRow=$otpObject->getOTPRecord($this->profileObject->getPROFILEID(),$this->phone,$this->otpSettings);
 
 	if($this->otpRow)
@@ -92,10 +92,9 @@ private function sendMessage($OTP)
     include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
   	$arr=array('PHONE_MOB'=>$this->getPhone(),'OTP'=>"$OTP");
 	$smsViewer = new InstantSMS($this->otpSettings['SMSType'],$this->profileObject->getPROFILEID(),$arr,'');
-
     $smsViewer->send("OTP");
 
-    $otpObject=new NEWJS_COMMON_OTP();
+    $otpObject=new sms_COMMON_OTP();
 
 	$otpObject->incrementSmsCount($this->otpRow['ID']);
 }
@@ -103,7 +102,7 @@ private function sendMessage($OTP)
 	public function matchOtp($enteredOtp) 
 	{    
     
-    	$otpObject=new NEWJS_COMMON_OTP();
+    	$otpObject=new sms_COMMON_OTP();
 		$this->otpRow=$otpObject->getOTPRecord($this->profileObject->getPROFILEID(),$this->phone,$this->otpSettings);
 
 		if($this->otpRow)
@@ -153,7 +152,7 @@ private function checkForTrials()
 
 private function checkForExpiration()
 {
-	$otpObject=new NEWJS_COMMON_OTP();	
+	$otpObject=new sms_COMMON_OTP();	
 	if((time() - strtotime($this->otpRow['DATE'])) >= $this->otpSettings['Duration'])
 	{
 			return true;
@@ -163,7 +162,7 @@ private function checkForExpiration()
 
 private function clearEntry()
 {
-	$otpObject=new NEWJS_COMMON_OTP();	
+	$otpObject=new sms_COMMON_OTP();	
 	$newRow=$otpObject->deleteOTPRow($this->otpRow['ID']);
     	
 }
