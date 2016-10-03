@@ -1,6 +1,6 @@
 <?php
 include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-$mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104","9810300513","9868673709");
+$mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104",/*"9810300513",*/"9868673709");
 include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 $mqQueuesArr = array("profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat");
 $msgLimitPerQueue = 1000;
@@ -16,14 +16,14 @@ if($status!='200')
                 }
         }
 }
-$serverUrlArray = array("http://192.168.120.67:8290","http://192.168.120.75:8290");
+$serverUrlArray = array("http://10.10.18.67:8290","http://10.10.18.75:8290");
 foreach($serverUrlArray as $k=>$v){
         $status = sendPresenceRequest($v);
         if($status!='200'){
                 $status = sendPresenceRequest($v);
                 if($status!=200)
                 {
-                        mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Error in presence api @".$v,"Please check");
+                        mail ("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Error in presence api @".$v,"Please check");
                 }
         }       
 }
@@ -47,7 +47,7 @@ function checkForQueueOverflow($queueArr,$msgLimitPerQueue,$queueResponse){
         if($overflowQueueArr && count($overflowQueueArr)>0){
                 $queueStr = implode(",", $overflowQueueArr);
                 //var_dump($queueStr);die;
-                mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$queueStr);
+                mail ("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$queueStr);
         }
 }
 function checkRabbitmqQueueMsgCount($serverid){
