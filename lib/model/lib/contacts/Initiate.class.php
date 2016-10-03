@@ -221,6 +221,37 @@ class Initiate extends ContactEvent{
       $this->_addContactHitLimit();
 
       $this->contactHandler->getContactObj()->setType("I");
+      
+    if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED && $this->contactHandler->getPageSource()!="AP") {
+  
+        try
+        {
+                $instantNotificationObj = new InstantAppNotification("EOI");
+                $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
+        }
+        catch(Exception $e)
+        {
+          throw new jsException($e);
+        }
+        try
+        {
+          //send instant JSPC/JSMS notification
+          $producerObj = new Producer();
+          if($producerObj->getRabbitMQServerConnected())
+          {
+            $notificationData = array("notificationKey"=>"EOI","selfUserId" => $this->contactHandler->getViewed()->getPROFILEID(),"otherUserId" => $this->contactHandler->getViewer()->getPROFILEID()); 
+            $producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
+          }
+          unset($producerObj);
+        }
+        catch (Exception $e) {
+          throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+        }
+    }
+      
+      
+      
+      
 
       if($this->contactHandler->getContactType()==ContactHandler::CANCEL_CONTACT) {
         $this->contactHandler->getContactObj()->updateContact();
@@ -281,32 +312,7 @@ class Initiate extends ContactEvent{
           
       $isFiltered = $this->_makeEntryInContactsOnce();
 
-if ($this->contactHandler->getContactObj()->getFILTERED() != Contacts::FILTERED && $this->contactHandler->getPageSource()!="AP") {
-  
-    try
-    {
-            $instantNotificationObj = new InstantAppNotification("EOI");
-            $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
-    }
-    catch(Exception $e)
-    {
-      throw new jsException($e);
-    }
-    try
-    {
-      //send instant JSPC/JSMS notification
-      $producerObj = new Producer();
-      if($producerObj->getRabbitMQServerConnected())
-      {
-        $notificationData = array("notificationKey"=>"EOI","selfUserId" => $this->contactHandler->getViewed()->getPROFILEID(),"otherUserId" => $this->contactHandler->getViewer()->getPROFILEID()); 
-        $producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
-      }
-      unset($producerObj);
-    }
-    catch (Exception $e) {
-      throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
-    }
-}
+
       try {
         //send instant JSPC/JSMS notification
         $producerObj = new Producer();
