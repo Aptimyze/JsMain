@@ -25,7 +25,7 @@ class ProfileAstro
      * @var instance of NEWJS_PROFILE|null
      */
     private static $objAstroDetailMysql = null;
-
+    
     /**
      * @fn __construct
      * @brief Constructor function
@@ -64,14 +64,16 @@ class ProfileAstro
             $dbName = "newjs_master";
         if (isset(self::$instance)) {
             //If different instance is required
-            if ($dbName != self::$instance->dbName) {
+            if ($dbName != self::$instance->$connectionName) {
                 $class = __CLASS__;
                 self::$instance = new $class($dbName);
+                self::$instance->$connectionName = $dbName;
             }
         }
         else {
             $class = __CLASS__;
             self::$instance = new $class($dbName);
+            self::$instance->connectionName = $dbName;
         }
         return self::$instance;
     }
@@ -187,6 +189,13 @@ class ProfileAstro
         
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             $this->logCacheConsumeCount(__CLASS__);
+            if($setWithProfileId) {
+                $arrOut = array();
+                foreach($result as $k=>$val) {
+                    $arrOut[$val['PROFILEID']] = $val;
+                }
+                $result = $arrOut;
+            }
             return $result;
         }
         
