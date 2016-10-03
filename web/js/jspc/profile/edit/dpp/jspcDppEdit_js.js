@@ -1051,51 +1051,56 @@ var _parentCatogary = [{
       var type = "",dataPresent;
       $.each(response, function(index, elem) {
         type = elem.type.toLowerCase();
-        if (Object.keys(elem.data).length != 0) {
-          if ($("#suggest_" + type).length == 0) {
-            $('<div class="edwid2 fl ml193 pt10 suggestMain" id="suggest_' + type + '"><div class="fontlig f12 wid134 disp_ib color11 mr10 vtop">Suggested (click to add)</div><div class="disp_ib suggestParentBox wid345 disp_none vtop"><div id="loader_' + type + '"><img src="/images/jspc/commonimg/dppLoader.gif"></div><div class="suggestBoxList"></div></div></div>').insertAfter("#dpp-p_" + type + "Parent #multiselect");
-          }
-          $("#suggest_" + type + " .suggestBoxList").html("");
-          $.each(Object.keys(elem.data), function(index2, elem2) {
-            dataPresent = false;
-            if($("#dpp-p_" + type).val() != null) {
-              $.each($("#dpp-p_" + type).val(), function(index3,elem3){
-                if(elem3 == elem2) {
-                  dataPresent = true;
-                }
-              });
+        if(elem.data) {
+            if (Object.keys(elem.data).length != 0) {
+            if ($("#suggest_" + type).length == 0) {
+              $('<div class="edwid2 fl ml193 pt10 suggestMain" id="suggest_' + type + '"><div class="fontlig f12 wid134 disp_ib color11 mr10 vtop">Suggested (click to add)</div><div class="disp_ib suggestParentBox wid345 disp_none vtop"><div id="loader_' + type + '"><img src="/images/jspc/commonimg/dppLoader.gif"></div><div class="suggestBoxList"></div></div></div>').insertAfter("#dpp-p_" + type + "Parent #multiselect");
             }
-            if (dataPresent == false && $("#dpp-p_"+type+" option[value='"+elem2+"']").length != 0) {
-              $("#suggest_" + type + " .suggestBoxList").append('<div class="fontlig f14 disp_ib color11 cursp suggestBox" index-val="' + elem2 + '">' + $("#dpp-p_"+type+" option[value='"+elem2+"']").html() + '</div>');
-            }
-          });
-          
-          //binding click on each suggestion
-          if($("#suggest_" + type + " .suggestBoxList div").length != 0) {
-            $(".suggestBox").each(function(index, element) {
-              $(element).off("click").on("click", function() {
-                var newVal = $(this).attr("index-val"),
-                parentText = $(this).closest(".suggestMain").attr("id").split("suggest_")[1],
-                currentValArr = $("#dpp-p_" + parentText).val(),
-                htmlStr = $(this).html(),parentSection = $("#dpp-p_"+parentText).closest(".js-editId").attr("data-sectionid");
-                if(currentValArr != undefined) {
-                  currentValArr.push(newVal);
-                } else {
-                  currentValArr = newVal;
-                }
-                $("#dpp-p_" + parentText).val(currentValArr).trigger("chosen:updated");
-                $(this).remove();
-                changeSuggestion(htmlStr, "add"); 
-                dppApp.set("p_"+parentText,$("#dpp-p_" + parentText).val());
-                dppApp.setForSave(parentSection,"p_"+parentText,$("#dpp-p_" + parentText).val());
-              });
+            $("#suggest_" + type + " .suggestBoxList").html("");
+            $.each(Object.keys(elem.data), function(index2, elem2) {
+              dataPresent = false;
+              if($("#dpp-p_" + type).val() != null) {
+                $.each($("#dpp-p_" + type).val(), function(index3,elem3){
+                  if(elem3 == elem2) {
+                    dataPresent = true;
+                  }
+                });
+              }
+              if (dataPresent == false && $("#dpp-p_"+type+" option[value='"+elem2+"']").length != 0) {
+                $("#suggest_" + type + " .suggestBoxList").append('<div class="fontlig f14 disp_ib color11 cursp suggestBox" index-val="' + elem2 + '">' + $("#dpp-p_"+type+" option[value='"+elem2+"']").html() + '</div>');
+              }
             });
-          } else if($("#suggest_" + type + " .suggestBoxList div").length == 0) {
+            
+            //binding click on each suggestion
+            if($("#suggest_" + type + " .suggestBoxList div").length != 0) {
+              $(".suggestBox").each(function(index, element) {
+                $(element).off("click").on("click", function() {
+                  var newVal = $(this).attr("index-val"),
+                  parentText = $(this).closest(".suggestMain").attr("id").split("suggest_")[1],
+                  currentValArr = $("#dpp-p_" + parentText).val(),
+                  htmlStr = $(this).html(),parentSection = $("#dpp-p_"+parentText).closest(".js-editId").attr("data-sectionid");
+                  if(currentValArr != undefined) {
+                    currentValArr.push(newVal);
+                  } else {
+                    currentValArr = newVal;
+                  }
+                  $("#dpp-p_" + parentText).val(currentValArr).trigger("chosen:updated");
+                  $(this).remove();
+                  changeSuggestion(htmlStr, "add"); 
+                  dppApp.set("p_"+parentText,$("#dpp-p_" + parentText).val());
+                  dppApp.setForSave(parentSection,"p_"+parentText,$("#dpp-p_" + parentText).val());
+                });
+              });
+            } else if($("#suggest_" + type + " .suggestBoxList div").length == 0) {
+              $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+            }
+          } else {
             $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
-          }
+          } 
         } else {
-          $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
-        }
+            $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+          } 
+        
         $("#loader_" + type).addClass("disp-none");
       });
 
