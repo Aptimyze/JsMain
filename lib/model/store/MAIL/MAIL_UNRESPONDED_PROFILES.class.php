@@ -1,6 +1,6 @@
 
 <?php
-class MAIL_SHORTLISTED_PROFILES extends TABLE
+class MAIL_UNRESPONDED_CONTACTS extends TABLE
 {
         public function __construct($dbname="")
         {
@@ -17,7 +17,7 @@ class MAIL_SHORTLISTED_PROFILES extends TABLE
 	                {//print_r($pid);die;
 
 
-							$sql = "INSERT IGNORE INTO  MAIL.SHORTLISTED_PROFILES (RECEIVER,USERS,COUNTS,DATE) VALUES(:PROFILEID,:USERSENDER,:COUNT,now())";
+							$sql = "INSERT IGNORE INTO  MAIL.UNRESPONDED_CONTACTS (RECEIVER,USERS,COUNTS,DATE) VALUES(:PROFILEID,:USERSENDER,:COUNT,now())";
 							$res = $this->db->prepare($sql);
 				            $res->bindValue(":PROFILEID", $info['profileId'], PDO::PARAM_INT);
 				            $res->bindValue(":USERSENDER",implode(',',$info['users']), PDO::PARAM_STR);
@@ -35,7 +35,7 @@ class MAIL_SHORTLISTED_PROFILES extends TABLE
 	                try
 	                {//print_r($pid);die;
 	                	
-						$sql = "UPDATE MAIL.SHORTLISTED_PROFILES SET SENT=:STATUS WHERE RECEIVER=:PROFILEID";
+						$sql = "UPDATE MAIL.UNRESPONDED_CONTACTS SET SENT=:STATUS WHERE RECEIVER=:PROFILEID";
 						$res = $this->db->prepare($sql);
 			            $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
 			            $res->bindValue(":STATUS", $mailStatus, PDO::PARAM_INT);
@@ -50,7 +50,7 @@ class MAIL_SHORTLISTED_PROFILES extends TABLE
 	        {
 	                try
 	                {
-							$sql = "SELECT ID,RECEIVER,USERS,COUNTS,DATE FROM MAIL.SHORTLISTED_PROFILES WHERE SENT IS NULL AND RECEIVER%:totalScript=:currentScript";
+							$sql = "SELECT ID,RECEIVER,USERS,COUNTS,DATE FROM MAIL.UNRESPONDED_CONTACTS WHERE SENT IS NULL AND RECEIVER%:totalScript=:currentScript";
 							$res = $this->db->prepare($sql);
 				           // $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
 							$res->bindValue(":currentScript", $currentScript, PDO::PARAM_INT);
@@ -74,7 +74,7 @@ class MAIL_SHORTLISTED_PROFILES extends TABLE
 	                try
 	                {//print_r($pid);die;
 	                	
-						$sql = "TRUNCATE TABLE MAIL.SHORTLISTED_PROFILES";
+						$sql = "TRUNCATE TABLE MAIL.UNRESPONDED_CONTACTS";
 						$res = $this->db->prepare($sql);
                 		$res->execute();       
 	                }
@@ -87,7 +87,7 @@ class MAIL_SHORTLISTED_PROFILES extends TABLE
 	public function getMailCountForRange()
     	{           
                 try{    
-                        $sql = "SELECT count(1) as cnt,SENT FROM MAIL.SHORTLISTED_PROFILES group by SENT";
+                        $sql = "SELECT count(1) as cnt,SENT FROM MAIL.UNRESPONDED_CONTACTS group by SENT";
                         $res=$this->db->prepare($sql);
                         $res->execute();
 			$total = 0;

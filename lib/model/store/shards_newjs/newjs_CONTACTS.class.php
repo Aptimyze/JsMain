@@ -1080,23 +1080,20 @@ public function getSendersPending($profileids)
         	}
         }
         
-        public function getInterestReceivedDataForDuration($profileid, $stTime, $endTime){
+        public function getInterestSentForDuration($stTime, $endTime,$remainderArray){
             try{
-                $ignoredStr = '';
-                $sql = "SELECT * from newjs.CONTACTS WHERE RECEIVER = :RECEIVER AND TYPE = 'I' AND TIME >= :START_TIME AND TIME <= :END_TIME ORDER BY TIME ASC";
+                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME ORDER BY `TIME` DESC AND SENDER % :DIVISOR = :REMAINDER ";
                 $prep = $this->db->prepare($sql);
-                $prep->bindValue(":RECEIVER",$profileid,PDO::PARAM_INT);
                 $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
-                $prep->bindValue(":END_TIME",$endTime,PDO::PARAM_STR);
+                $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
+                $prep->bindValue(":DIVISOR",$remainderArray['DIVISOR'],PDO::PARAM_INT);
+                $prep->bindValue(":REMAINDER",$remainderArray['REMAINDER'],PDO::PARAM_INT);
                 $prep->execute();
-                while($row = $prep->fetch(PDO::FETCH_ASSOC)){
-                    $result['SENDER'][$row['SENDER']] = 1;
-                    $result['SELF'] = $profileid;
-                    $ignoredStr.=$row['SENDER'].",";
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $result[]=$row;                
                 }
-                if($ignoredStr){
-                    $result['IGNORED_STRING'] = rtrim($ignoredStr, ",");
-                }
+                
                 return $result;
             } catch (Exception $ex) {
                 throw new jsException($ex);
