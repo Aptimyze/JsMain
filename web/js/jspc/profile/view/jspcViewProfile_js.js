@@ -240,23 +240,25 @@ function closeWeTalkForYou(){
               showCommonLoader();
               if($(this).hasClass('js-astroCompMem')){
                   $("#buttonMem").html("Get Astro Compatibility");
-                  $("#textMem").html("You can view a detailed report of your compatibility with viewedProfileUsername by subscribing to our Astro compatibility addon");
+                  $("#textMem").html("You can view a detailed report of your compatibility with" +viewedProfileUsername+" by subscribing to our Astro compatibility addon");
                   $("#buttonMem").attr("href","/membership/jspc");
               }
               else{
-//                  $.ajax({
-//                    method: "POST",
-//                    url : "/profile/check_horoscope_compatibility.php?profilechecksum="+ProCheckSum+"&sendMail=1",
-//                    async:true,
-//                    timeout:20000,
-//                    success:function(response){
-//                    }
-//                  });
                   $("#buttonMem").html("Upgrade Membership");
                   $("#buttonMem").attr("href","/membership/jspc");
               }
               $('.js-overlay').fadeIn(200,"linear",function(){ $('#astroComp').fadeIn(200,"linear")});  
               hideCommonLoader();
+      });
+      $(".js-astroMem").click(function(){
+          $.ajax({
+                    method: "POST",
+                    url : "/profile/check_horoscope_compatibility.php?profilechecksum="+ProCheckSum+"&sendMail=1",
+                    async:true,
+                    timeout:20000,
+                    success:function(response){
+                    }
+           });
       });
 });
 function moveline(widthParam, leftParam){	
