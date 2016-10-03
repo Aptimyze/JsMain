@@ -258,10 +258,10 @@ class DialerHandler
 		
 		if($priority!=$dialer_data['initialPriority']){
 			$update_str[] 	="old_priority='$priority'";
-			$update_strPri 	="*priority='$priority'";
 		}
 		if(count($update_str)>0){
 			$update_str1 =@implode(",",$update_str);
+			$update_strPri  ="*priority='$priority'";
 			$update_str1 =$update_str1.$update_strPri;
 			unset($update_str);
 			return $update_str1;

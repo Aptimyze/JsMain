@@ -297,11 +297,13 @@ function data_comparision($dialer_data,$campaign_name,$ecode,$db_dialer,$vd_prof
                         $update_str.="old_priority='$priority'";
                 else
                         $update_str.=",old_priority='$priority'";
-		$update_str.="*priority='$priority'";
+		//$update_str.="*priority='$priority'";
         }
 
-	if($update_str!='')
+	if($update_str!=''){
+		$update_str.="*priority='$priority'";
                 return $update_str;
+	}
         else
                 return "ignore";
 }
