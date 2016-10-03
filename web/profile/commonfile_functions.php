@@ -495,7 +495,7 @@ $js_arr[]=array("jsms/search/viewSimilarMax"     => "4");
 $js_arr[]=array("helpWidget_js"                    => "19");
 $js_arr[]=array("advance_search"   => "1");
 $js_arr[]=array("jsms/search/overlayLayerJsms"      => "3");
-$js_arr[]=array("jsms/search/savesearch_js"     => "2");
+$js_arr[]=array("jsms/search/savesearch_js"     => "333");
 $js_arr[]=array("sugar/sugar_registration_page1_new_js"     => "3");
 $js_arr[]=array("app_promo"      => "3");
 $js_arr[]=array("sugar/registration_page1_new"     => "3");
