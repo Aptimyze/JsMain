@@ -17,7 +17,7 @@ class Horoscope
 	}
 
 	public function ifHoroscopePresent($profileId) {
-		$astroObj = new NEWJS_ASTRO();
+		$astroObj = ProfileAstro::getInstance();
 		$result = $astroObj->getIfAstroDetailsPresent($profileId);
 		if($result == 1)
 			return 'Y';
@@ -46,7 +46,7 @@ class Horoscope
 
 	public function getMultipleAstroDetails($profileObjArray)
 	{	
-		$astroObj = new NEWJS_ASTRO();
+		$astroObj = ProfileAstro::getInstance();
 		$fields = "PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL";
 		foreach($profileObjArray as $key=>$profileObj)
 		{

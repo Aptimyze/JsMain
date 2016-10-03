@@ -111,7 +111,7 @@ class gunaScore
         public function getAstroDetailsForIds($profileId,$searchIdArr)
         {
         	$searchIdArr[]=$profileId;
-        	$newjsAstroObj = new NEWJS_ASTRO(SearchConfig::getSearchDb());
+        	$newjsAstroObj = ProfileAstro::getInstance(SearchConfig::getSearchDb());
 			$astroData=$newjsAstroObj->getAstroDetails($searchIdArr,"PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL",1);
 			unset($newjsAstroObj);
 			return $astroData;

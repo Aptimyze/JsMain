@@ -1294,6 +1294,9 @@ class DetailedViewApi
 			$this->m_arrOut['is_ignored'] = "1";
 		}
                 $this->m_arrOut['show_ecp'] = 'true';
+        
+        //AstroApiParam for third party
+        $this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
 	}
 	
 	protected function DecorateOpenTextField($szInput)
@@ -1402,5 +1405,17 @@ class DetailedViewApi
 				return 'Y';
       }
       return 'N';
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getGunaApiParams()
+    {
+        $loginProfile = $this->m_actionObject->loginProfile;
+        $otherProfile = $this->m_objProfile;
+        
+        return ProfileCommon::getGunaApiParams($loginProfile, $otherProfile);
     }
 }

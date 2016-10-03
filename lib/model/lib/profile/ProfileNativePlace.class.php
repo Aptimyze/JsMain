@@ -30,7 +30,7 @@ class ProfileNativePlace
      * @brief Constructor function
      * @param $dbName - Database to which the connection would be made
      */
-    public function __construct($dbname = "")
+    private function __construct($dbname = "")
     {
         self::$objNativePlaceMysql = new NEWJS_NATIVE_PLACE($dbname);
     }
@@ -187,6 +187,9 @@ class ProfileNativePlace
                 }
             }
             $result = array_values($result);
+            if(0 === count($result)) {
+                $result = null;
+            }
         }
         
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {

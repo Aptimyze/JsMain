@@ -1177,7 +1177,7 @@ class detailedAction extends sfAction
 				$mtongue = $this->loginProfile->getMTONGUE();
 
 				//section to update TYPE in newjs.ASTRO_DETAILS when the user has switched from System generated horoscope to uploaded horoscope or the other way round
-				$asObj=new NEWJS_ASTRO;
+				$asObj= ProfileAstro::getInstance();
 				
 				if($type)	
 				{

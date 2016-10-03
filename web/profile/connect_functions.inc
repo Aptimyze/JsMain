@@ -370,7 +370,7 @@ function common_assign($data)
 			}
 			else
 			{
-				$naObj = new NEWJS_ASTRO;
+				$naObj = ProfileAstro::getInstance();
 				if($naObj->getIfAstroDetailsPresent($data["PROFILEID"]))
 				{
 					if(JsConstants::$alertServerEnable) {
@@ -7491,10 +7491,12 @@ function check_astro_details($profileid,$show_horoscope="abc")
 	else
 	if($show_horoscope == 'Y')
 	{
-		$sql_ast_det = "SELECT COUNT(*) AS COUNT FROM newjs.ASTRO_DETAILS WHERE PROFILEID = '$profileid'";
-		$res_ast_det = mysql_query_optimizer($sql_ast_det) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ast_det,"ShowErrTemplate");
-		$row_ast_det = mysql_fetch_array($res_ast_det);
-		if($row_ast_det['COUNT'] > 0)
+        $astroLib = ProfileAstro::getInstance();
+        $result = $astroLib->getIfAstroDetailsPresent($profileid);
+//		$sql_ast_det = "SELECT COUNT(*) AS COUNT FROM newjs.ASTRO_DETAILS WHERE PROFILEID = '$profileid'";
+//		$res_ast_det = mysql_query_optimizer($sql_ast_det) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ast_det,"ShowErrTemplate");
+//		$row_ast_det = mysql_fetch_array($res_ast_det);
+		if(intval($result) > 0)
 			return true;
 		else
 		{

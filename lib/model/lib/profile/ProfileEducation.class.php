@@ -31,7 +31,7 @@ class ProfileEducation
    * @brief Constructor function
    * @param $dbName - Database to which the connection would be made
    */
-  public function __construct($dbname = "") 
+  private function __construct($dbname = "") 
   {
     self::$objEducationMysql = new NEWJS_JPROFILE_EDUCATION($dbname);
   }
