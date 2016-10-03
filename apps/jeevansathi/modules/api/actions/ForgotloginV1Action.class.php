@@ -114,7 +114,7 @@ class ForgotloginV1Action extends sfActions
 		}
 		else 
 		{
-			if(strpos($email, '+')==0)
+			if(strpos($email, '+')===0)
 				$email=substr($email, 1);
 			$email=$this->replaceFirstOccurence('-','',$email);
 			$email = ltrim($email,'0');
