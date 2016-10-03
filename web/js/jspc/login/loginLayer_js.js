@@ -432,7 +432,7 @@ function forgotPasswordBinding(fromLayer)
 	
 	$('#forgotPasswordLoginLayer').click(function() {
 		
-		$("#ForgotPasswordMessage").html("Enter your registered email of Jeevansathi to receive an Email and SMS with the link to reset your password.");
+		$("#ForgotPasswordMessage").html("Enter your registered email or phone number of Jeevansathi to receive an Email and SMS with the link to reset your password.");
 		$("#forgotPasswordForm").removeClass("disp-none");
 		
 		$('#closeForgotLogin').unbind();

@@ -24,7 +24,7 @@
 			<div class="layerp1">
 			<div class="f17 grey5" id="titleErr">Forgot Password</div>
 			<div class="mt10">
-			<div id="ForgotPasswordMessage" class="f15 colr2 pt10">The link has been either accessed once or it has been more than 72 hours since you requested for it. In case you are trying to reset your password again, request for a new link below.</div>
+			<div id="ForgotPasswordMessage" class="f15 colr2 pt10">The link has been either accessed once or it has been more than 24 hours since you requested for it. In case you are trying to reset your password again, request for a new link below.</div>
 			<div id="forgotPasswordErr" class="f15 colr5 pt10 txtc vishid">Please enter vaild Email Id or Phone number</div>
 			<div class="mt10"></div>
 			<form id="forgotPasswordForm" action="">
