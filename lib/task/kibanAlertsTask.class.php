@@ -25,7 +25,11 @@ EOF;
 		$query = '_search';
 		// in hours
 		$interval = 1;
-		$intervalString = '-'.$interval.' hour';
+		// Time diff between kibana visualization and server time(in hours).
+		$timeDiff = 4;
+		$intervalString = '- '.$interval.' hour';
+		// $intervalStringStart = '+'.($timeDiff - $interval).' hour';
+		// $intervalStringEnd = '+'.$timeDiff.' hour';
 		$threshold = 50;
 		$timeout = 5000;
 		$dashboard = 'Common-Dash';
@@ -55,6 +59,7 @@ EOF;
 		// timeout checks needs to be done
 		if($response)
 		{
+			date_default_timezone_set('UTC');
 			$arrResponse = json_decode($response, true);
 			$arrModules = array();
 			foreach($arrResponse['aggregations']['modules']['buckets'] as $module) 
