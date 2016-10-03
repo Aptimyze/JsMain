@@ -972,6 +972,7 @@ var _parentCatogary = [{
     //change suggestion on adding or deleting chosen option
     function changeSuggestion(elem, state) {
       var type = "",typeElem, typeDataArray = [];
+      elem= elem.split("<em>").join("").split("</em>").join("");
       setTimeout(function() {
         if (state == "add") {
           $(".search-choice").each(function(index, element) {
