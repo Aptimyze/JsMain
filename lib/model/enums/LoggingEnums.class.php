@@ -68,4 +68,5 @@ class LoggingEnums
     const _VAR = 'var';
     const REQUEST_URI = 'REQUEST_URI';
     const DOMAIN = 'Domain';
+    const REFERER = 'Referer';
 }
