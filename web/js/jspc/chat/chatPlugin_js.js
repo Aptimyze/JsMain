@@ -260,6 +260,7 @@ JsChat.prototype = {
     _chatTabs: function (param,type) {
         var curElem = this;
         if($('#' + param).hasClass("active") == false) {
+            //console.log("param",param);
             curElem._changeLocalStorage("tabStateChange","","",param);
             /*if(param == "tab1") {
                 curElem._changeLocalStorage("tabStateChange","","","online");
@@ -427,6 +428,7 @@ JsChat.prototype = {
         if(localStorage.getItem("tabState") == undefined) {
             curEle._changeLocalStorage("tabStateChange","","",curEle._defaultActiveTab);    
         } else { 
+            //console.log("tabstate",localStorage.getItem("tabState"));
             curEle._chatTabs(localStorage.getItem("tabState"),"noAnimate");
         }
     },
@@ -560,6 +562,7 @@ JsChat.prototype = {
                 statusArr[runID] = status;
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     var that = this;
+                    //console.log("ankita",data[key]["rosterDetails"]["groups"]);
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         //that._chatLoggerPlugin("groups " + val);
                         var List = '',
@@ -2943,8 +2946,12 @@ JsChat.prototype = {
             if(localStorage.getItem("tabState")) {
                 tabState = localStorage.getItem("tabState");
             }
-            tabState = newState;
-            localStorage.setItem("tabState",tabState);
+            if(newState.indexOf("tab") != -1) {
+                tabState = newState;
+                localStorage.setItem("tabState",tabState);
+            } else {
+                localStorage.setItem("tabState",thisElem._defaultActiveTab);
+            }
         } 
         if(reAdd == true){
             localStorage.setItem("chatBoxData", JSON.stringify(data));
