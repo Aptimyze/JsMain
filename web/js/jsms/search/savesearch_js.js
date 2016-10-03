@@ -178,18 +178,18 @@ function saveSearch(){
                     if(message.errorMsg.search("limit")!=-1)
                         saveSearchListing();
                     else
-                        ShowTopDownError([""+message.errorMsg+""],300);
+                        ShowTopDownError([""+message.errorMsg+""],3000);
                 }
                 else if(message.successMsg){
                     closeOpenLayer();
-                    ShowTopDownError([""+message.successMsg+""],300);
+                    ShowTopDownError([""+message.successMsg+""],3000);
                 }
 
             }
         });
     }
     else{ 
-        ShowTopDownError(["Search name is required."],300);
+        ShowTopDownError(["Search name is required."],3000);
     }
 }
 function deleteSavedSearch(key,searchId){
@@ -219,7 +219,7 @@ function saveSearchContinue(){
             success: function (result, status, xResponse) {
                 var message = result.saveDetails;
                 if(typeof message=="undefined")
-                    ShowTopDownError(["Something Went wrong."],300);
+                    ShowTopDownError(["Something Went wrong."],3000);
                 if(typeof message.successMsg!="undefined")
                 {
                     closeOpenLayer();
@@ -234,9 +234,9 @@ function saveSearchContinue(){
 
                 }
                 else if(typeof message.errorMsg!=undefined)
-                    ShowTopDownError([""+message.errorMsg+""],300);
+                    ShowTopDownError([""+message.errorMsg+""],3000);
                 else
-                    ShowTopDownError(["Something Went wrong."],300);
+                    ShowTopDownError(["Something Went wrong."],3000);
             }
         });
     }

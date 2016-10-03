@@ -135,12 +135,13 @@ public function phoneUpdateProcess($message)
                                                         }
                                                         else
                                                         {
+                                                        	Duplicate::logIfDuplicate($this->profileObject,$this->phone);	
                                                               $this->sendMail();
                                                         }
                                                 }
                                                 else
                                                 {
-							Duplicate::logIfDuplicate($this->profileObject,$this->phone);
+											Duplicate::logIfDuplicate($this->profileObject,$this->phone);
                                                 }
 
 			            
