@@ -34,8 +34,9 @@ $("#sendLink").bind(clickEventType,function(){
                                      success: function(result){
                                          if(result.responseStatusCode==0)
                                          {
-                                             document.location.href="/static/forgotPassword?success=1";
-                                             return;
+                                                message=result.responseMessage;
+                                                document.location.href="/static/forgotPassword?success=1&message="+message;
+                                                return;
                                          }
                                          else
                                              ShowTopDownError([result.responseMessage]);
