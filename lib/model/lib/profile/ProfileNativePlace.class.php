@@ -18,7 +18,7 @@ class ProfileNativePlace
      * @var Static Instance of this class
      */
     private static $instance;
-
+    
     /**
      * Object of Store class
      * @var instance of NEWJS_PROFILE|null
@@ -63,14 +63,16 @@ class ProfileNativePlace
             $dbName = "newjs_master";
         if (isset(self::$instance)) {
             //If different instance is required
-            if ($dbName != self::$instance->dbName) {
+            if ($dbName != self::$instance->connectionName) {
                 $class = __CLASS__;
                 self::$instance = new $class($dbName);
+                self::$instance->connectionName = $dbName;
             }
         }
         else {
             $class = __CLASS__;
             self::$instance = new $class($dbName);
+            self::$instance->connectionName = $dbName;
         }
         return self::$instance;
     }
@@ -175,21 +177,18 @@ class ProfileNativePlace
         
         $result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $profileidArray,"PROFILEID,NATIVE_COUNTRY,NATIVE_STATE,NATIVE_CITY",__CLASS__);
         
-        if ($result && false !== $result) {
+        if (is_array($result) && false !== $result) {
             $bServedFromCache = true;
             $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
         }
         
-        if($result && count($result)) {
+        if(is_array($result) && count($result)) {
             foreach($result as $k=>$v){
                 if($v[NATIVE_COUNTRY] === ProfileCacheConstants::NOT_FILLED) {
                     unset($result[$k]);
                 }
             }
             $result = array_values($result);
-            if(0 === count($result)) {
-                $result = null;
-            }
         }
         
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
