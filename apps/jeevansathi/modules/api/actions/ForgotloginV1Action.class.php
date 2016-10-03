@@ -19,12 +19,11 @@ class ForgotloginV1Action extends sfActions
 	{	
 		$responseData = array();
 		$email=$request->getParameter("email");
-		$flag=$request->getParameter("flag");
-		$phone = $request->getParameter("phone");
-		$isd = $request->getParameter("isd");
+		$email = trim($email);
+
 		$apiObj=ApiResponseHandler::getInstance();
 		// EMAIL validations
-		if(!$this->validate($email, $flag, $isd, $phone))
+		if(!$this->validate($email))
 		{
 			$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_ERR);
 		}
@@ -34,17 +33,17 @@ class ForgotloginV1Action extends sfActions
 			$SmsObj = new newjs_SMS_DETAIL();
 			$MultipleProfilesPerPhone = 0;
 			$SingleProfileFound = 0;
-			if(!$flag || $flag == 'E')
+			if($this->flag == 'E')
 			{
-				$data=$dbJprofile->get($email,"EMAIL","USERNAME,EMAIL,ACTIVATED,PROFILEID,MOB_STATUS");
+				$data=$dbJprofile->get($this->finalString,"EMAIL","USERNAME,EMAIL,ACTIVATED,PROFILEID,MOB_STATUS");
 				$SmsCount =$SmsObj->getCount("FORGOT_PASSWORD", $data['PROFILEID']);
 			}
-			else if($flag == 'M')
+			else if($this->flag == 'M')
 			{
 				for ($i=10; $i > 6 && !($MultipleProfilesPerPhone || $SingleProfileFound); $i--) 
 				{ 
 				
-					$phone_mob= substr($phone, -$i);
+					$phone_mob= substr($this->finalString, -$i);
 					$arr=array('PHONE_MOB'=>"'$phone_mob'");
 					$excludeArr=array('ACTIVATED'=>"'D'");
 					$data=$dbJprofile->getArray($arr,$excludeArr,'',"USERNAME,EMAIL,ACTIVATED,PROFILEID,MOB_STATUS");
@@ -63,7 +62,7 @@ class ForgotloginV1Action extends sfActions
 				}
 			}
 			$data['SmsCount'] = $SmsCount;
-			if($flag == 'M')
+			if($this->flag == 'M')
 			{
 				if ($MultipleProfilesPerPhone)
 				{
@@ -99,25 +98,31 @@ class ForgotloginV1Action extends sfActions
 			$apiObj->generateResponse();
 		die;
 	}
-	public function validate($email, $flag, $isd, $phone)
+	public function validate($email)
 	{
-		$email = trim($email);
+		
 		$regex = "/^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})/";
 		if($email == '')
 		{
 			return false;
 		}
-		else if(!$flag || $flag == 'E')
+		else if(preg_match($regex, $email))
 		{
-			return preg_match($regex, $email);
+			$this->flag='E';
+			$this->finalString=$email;
+			return true;
 		}
-		else if($flag == 'M')
+		else 
 		{
-			$mobile = $isd.$phone;
+			$email = ltrim(preg_replace("/[^0-9]/","",$email),0); // remove everything except numbers
 			$regex = "/^[0-9]{7,}/";
-			return preg_match($regex, $mobile);
+			if(preg_match($regex, $email)){
+				$this->flag='M';
+				$this->finalString=$email;
+				return true;
+			}
 		}
-		else
+		
 			return false;
 	}
 }
