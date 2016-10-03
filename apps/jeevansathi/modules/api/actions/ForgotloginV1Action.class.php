@@ -77,7 +77,7 @@ class ForgotloginV1Action extends sfActions
 				{
 					include_once(sfConfig::get("sf_web_dir")."/profile/sendForgotPasswordLink.php");
 					sendForgotPasswordLink($data);
-					if($data['SmsCount'] > 5 || $data['MOB_STATUS']!='Y')
+					if($data['SmsCount'] >= 5 || $data['MOB_STATUS']!='Y')
 					{
 						$apiObj->setHttpArray(ResponseHandlerConfig::$FLOGIN_EMAIL_SMSLIMIT_SUCCESS);
 					}
