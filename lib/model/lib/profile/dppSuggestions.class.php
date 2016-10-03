@@ -5,10 +5,13 @@ class dppSuggestions
 	//This function fetches dppSuggestion values to be shown and returns it to the calling function
 	public function getDppSuggestions($trendsArr,$type,$valArr)
 	{
-		$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
-		$trendVal = $this->getTrendsValues($percentileArr);		
-		$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);
-		if(is_array($valueArr) && count($valueArr["data"])< DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
+		if(is_array($trendsArr))
+		{
+			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
+			$trendVal = $this->getTrendsValues($percentileArr);	
+			$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);
+		}
+		if(count($valueArr["data"])< DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
 		{
 			if($type == "CITY")
 			{	
@@ -180,7 +183,7 @@ class dppSuggestions
 		{
 			
 			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
-			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
+			//dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
 			return $trendsArr;
 		}
 		else
@@ -255,7 +258,7 @@ class dppSuggestions
 
 	//This function gets Frequency Distribution for Caste and Mtongue
 	public function getFrequencyDistributedArrForCasteMtongue($suggestedValueArr)
-	{
+	{	
 		foreach($suggestedValueArr as $fieldId =>$vArr)
 		{
 			foreach($vArr as $k3=>$v3)
