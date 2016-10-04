@@ -16,41 +16,6 @@
 		*/
 		private $arrConfig = array(
 			// 'logging' => 1, logging is on for this module
-			LoggingEnums::JSADMIN => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_DEBUG,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
-			LoggingEnums::SEO => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_DEBUG,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
-			LoggingEnums::EX500 => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
-			LoggingEnums::EX404 => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
-			LoggingEnums::MYJS => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
-				LoggingEnums::DIRECTORY => false,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
 			LoggingEnums::HOMEPAGE => array(
 				LoggingEnums::LOGGING => true,
 				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
@@ -58,11 +23,12 @@
 				LoggingEnums::STACKTRACE => false,
 				LoggingEnums::SERVER_PARAM => false
 				),
-			LoggingEnums::_VAR => array(
+			);
+			LoggingEnums::STATIC_MODULE => array(
 				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => true,
+				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
+				LoggingEnums::DIRECTORY => false,
+				LoggingEnums::STACKTRACE => false,
 				LoggingEnums::SERVER_PARAM => false
 				),
 			);
