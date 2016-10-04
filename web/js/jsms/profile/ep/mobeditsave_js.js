@@ -469,14 +469,14 @@ var removeCity = false;
 	else
 	{
 	    $('#CITY_RES_TOP').removeClass('dn');
-	    var cityVal =realJson.OnClick[3].value;
-	    if(cityVal)
-		CommonOverlayEditUpdate(cityVal,"CITY_RES");
-	    else
-	    {
+	if(!json['country_res'].hasOwnProperty(realJson.OnClick[1].label_val))
+	{
+		CommonOverlayEditUpdate('',"CITY_RES");
+		UpdateSection.call($('#CITY_RES_TOP'),{'city_res':''},realJson,pos);
+		$("#CITY_RES").html(NOT_FILLED_IN).attr("value","");
 		$("#CITY_RES").addClass("color2").removeClass("color3o");
 		$("#CITY_RESlabel").addClass("color2").removeClass("color3");
-	    }
+	}
 	}
 	
   }

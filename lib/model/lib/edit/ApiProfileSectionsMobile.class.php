@@ -489,7 +489,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$basicArr[basic][OnClick][] =$this->getApiFormatArray("STATE_RES","State Living in" ,$stateLabel,$stateValue,$this->getApiScreeningField("CITY_RES"),$this->dropdown,"","","UpdateStateSection",$hidden);
 		$value='';
 		$label='';
-		if($this->profile->getCITY_RES())
+		if($this->profile->getCITY_RES()!='')
 		{
 			if(substr($this->profile->getCITY_RES(),2)=="OT")
 				$city = "0";
