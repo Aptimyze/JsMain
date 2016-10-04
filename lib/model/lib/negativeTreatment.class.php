@@ -319,8 +319,8 @@ class negativeTreatment
                 $profileid = $jProfile['PROFILEID'];
                 $activated = $jProfile['ACTIVATED'];
                 if ($profileid && $activated != 'D') {
-                    $DeleteProfileObj->delete_profile($profileid, $delete_reason, $specify_reason);
-                    $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
+                    // $DeleteProfileObj->delete_profile($profileid, $delete_reason, $specify_reason);
+                    // $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
                 }
             }
         }
