@@ -109,7 +109,7 @@ html[xmlns] .clearfix { display: block;}
         	Reset your Password
         </div>
         <div class="fs16 fpnew_clr1">
-       The link has been either accessed once or it has been more than 72 hours since you requested for it. In case you are trying to reset your password again, request for a new link below.
+       The link has been either accessed once or it has been more than 24 hours since you requested for it. In case you are trying to reset your password again, request for a new link below.
         </div>
         <div class="fpnew_bg1 lh23 pad11left mar20top">
 		Enter your registered email of Jeevansathi to receive an Email & SMS with the link to reset your password
