@@ -25,11 +25,7 @@ EOF;
 		$query = '_search';
 		// in hours
 		$interval = 1;
-		// Time diff between kibana visualization and server time(in hours).
-		$timeDiff = 4;
 		$intervalString = '- '.$interval.' hour';
-		// $intervalStringStart = '+'.($timeDiff - $interval).' hour';
-		// $intervalStringEnd = '+'.$timeDiff.' hour';
 		$threshold = 50;
 		$timeout = 5000;
 		$dashboard = 'Common-Dash';
