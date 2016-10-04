@@ -145,7 +145,6 @@
                                     else{
                                         $urlToVedic="http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_CompatibilityReport_Matchstro.dll?CompareTwoPeople_And_GenerateReport?".$row['USERNAME'].":".$astrodata_other['MOON_DEGREES_FULL'].":".$astrodata_other['MARS_DEGREES_FULL'].":".$astrodata_other['VENUS_DEGREES_FULL'].":".$astrodata_other['LAGNA_DEGREES_FULL'].":".$astrodata['MOON_DEGREES_FULL'].":".$astrodata['MARS_DEGREES_FULL'].":".$astrodata['VENUS_DEGREES_FULL'].":".$astrodata['LAGNA_DEGREES_FULL'].":".$data['USERNAME'];
                                     }
-                                    $html= CommonUtility::sendCurlGetRequest($urlToVedic);
 				    $file=PdfCreation::PdfFile($urlToVedic);
                                     
                                     $email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1839);
