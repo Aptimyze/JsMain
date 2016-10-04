@@ -33,8 +33,10 @@
 			<input type="submit" id="passCheckID" class="fullwid dispbl lh50 txtc f16 white" value="Delete My Profile">
 		</div>
         <!--end:submit button-->
-       <div style="text-align: center;padding-top: 10px;"><a id="otpProfileDeletionJSMS" class="fontlig white f14 pb10 color16" style="color : #d9475c;" value="Delete Using OTP"> Delete Using One Time Code</a>
+        ~if $showOTP`
+       <div style="text-align: center;padding-top: 10px;"><a id="otpProfileDeletionJSMS" class="fontlig white f14 pb10 color16" style="color : #d9475c;"> Delete Using One Time Code</a>
     </div>
+    ~/if`
 ~if ($deleteOption eq '1') || ($deleteOption eq '2') || ($deleteOption eq '3')`
     <div id="offerCheckBox" class="disp-none" style="padding: 25px 10% 0px 10%;">       
       <div class="fl">
