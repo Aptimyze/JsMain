@@ -93,7 +93,7 @@ class homepageActions extends sfActions
 	// log referer
 	if(isset($_SERVER['HTTP_REFERER']))
 	{
-		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,,array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
 	}
 	/***********Mobile (To be integrated)****************/
 	if($mobile_view || ($is_mob && ($request->getParameter("desktop")!='Y' && $request->getcookie('NEWJS_DESKTOP')!='Y')))
