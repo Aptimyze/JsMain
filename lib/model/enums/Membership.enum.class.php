@@ -647,25 +647,26 @@ class paymentOption
         "card3" => array(
             "ic_id" => "",
             "name" => "VISA"
-        ) ,
-        "card4" => array(
-            "ic_id" => "",
-            "name" => "Diners Club"
-        ) ,
-        "card5" => array(
-            "ic_id" => "",
-            "name" => "UCB"
-        ) ,
-        "card6" => array(
-            "ic_id" => "",
-            "name" => "RuPay"
-        )
+        ) 
+        // ,
+        // "card4" => array(
+        //     "ic_id" => "",
+        //     "name" => "Diners Club"
+        // ) ,
+        // "card5" => array(
+        //     "ic_id" => "",
+        //     "name" => "UCB"
+        // ) ,
+        // "card6" => array(
+        //     "ic_id" => "",
+        //     "name" => "RuPay"
+        // )
     );
     public static $dbCardType = array(
-        "card1" => array(
-            "ic_id" => "",
-            "name" => "American Express"
-        ) ,
+        // "card1" => array(
+        //     "ic_id" => "",
+        //     "name" => "American Express"
+        // ) ,
         "card2" => array(
             "ic_id" => "",
             "name" => "MasterCard"

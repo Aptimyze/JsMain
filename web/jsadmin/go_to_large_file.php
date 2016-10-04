@@ -1,7 +1,7 @@
 <?php
 
 include_once("connect.inc");
-$db=connect_db();
+$db=connect_ddl();
 if(authenticated($cid))
 {
 	$name = getname($cid);
@@ -43,12 +43,12 @@ if(authenticated($cid))
                                 $sql="RENAME TABLE incentive.RENEWAL_IN_DIALER TO incentive.RENEWAL_IN_DIALER_$activation_time";
                                 mysql_query($sql,$db) or die("$sql".mysql_error($db));
 
-                                $sql="CREATE TABLE incentive.RENEWAL_IN_DIALER (PROFILEID int(11) NOT NULL,ELIGIBLE char(2) NOT NULL DEFAULT 'Y', PRIORITY tinyint(2) DEFAULT NULL, ENTRY_DATE date DEFAULT '0000-00-00', PRIMARY KEY (PROFILEID))";
+                                $sql="CREATE TABLE incentive.RENEWAL_IN_DIALER (PROFILEID int(11) NOT NULL,ELIGIBLE char(2) NOT NULL DEFAULT 'Y', PRIORITY tinyint(2) DEFAULT NULL, CAMPAIGN_TYPE char(30) DEFAULT '',ENTRY_DATE date DEFAULT '0000-00-00', PRIMARY KEY (PROFILEID))";
                                 mysql_query($sql,$db) or die("$sql".mysql_error($db));
                         }
                         else
                         {
-                                $sql="CREATE TABLE incentive.RENEWAL_IN_DIALER (PROFILEID int(11) NOT NULL,ELIGIBLE char(2) NOT NULL DEFAULT 'Y', PRIORITY tinyint(2) DEFAULT NULL, ENTRY_DATE date DEFAULT '0000-00-00', PRIMARY KEY (PROFILEID))";
+                                $sql="CREATE TABLE incentive.RENEWAL_IN_DIALER (PROFILEID int(11) NOT NULL,ELIGIBLE char(2) NOT NULL DEFAULT 'Y', PRIORITY tinyint(2) DEFAULT NULL, CAMPAIGN_TYPE char(30) DEFAULT '',ENTRY_DATE date DEFAULT '0000-00-00', PRIMARY KEY (PROFILEID))";
                                 mysql_query($sql,$db) or die("$sql".mysql_error($db));
                         }
 			//End

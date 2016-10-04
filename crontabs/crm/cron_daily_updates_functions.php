@@ -103,8 +103,9 @@ function stop_non_eligible_profiles($campaign_name,$x,$ignore_array,$db_dialer,$
 		$updateStr='';
 		if(in_array($proid,$ignore_array))
 		{
-			if($srow1["Dial_Status"]!='0' && $srow1["Dial_Status"]!='9' && $srow1["Dial_Status"]!='3')
-				$updateStr ="Dial_Status=0,DNC_Status=''";
+			//if($srow1["Dial_Status"]!='0' && $srow1["Dial_Status"]!='9' && $srow1["Dial_Status"]!='3')
+			if($srow1["Dial_Status"]!='9' && $srow1["Dial_Status"]!='3')
+				$updateStr ="Dial_Status=0";
 			if(array_key_exists($proid,$vd_profiles))
                                 $vdDiscount = $vd_profiles[$proid];
                         else
@@ -177,7 +178,7 @@ function update_data_of_eligible_profiles($campaign_name,$x,$eligible_array,$db_
 			{
 				$query_ph2 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 				mssql_query($query_ph2,$db_dialer) or logerror($query_ph2,$db_dialer);
-				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE')";
+				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE2')";
                                 mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
 			}
 		}
@@ -231,13 +232,13 @@ function data_comparision($dialer_data,$campaign_name,$ecode,$db_dialer,$vd_prof
 			else
 				$update_str.=",easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
 			if($dialStatus!=3 && $dialStatus!=9)
-				$update_str.=",Dial_Status='2',DNC_Status=''";
+				$update_str.=",Dial_Status='2'";
 		}
 		else
 		{
 			$query_ph1 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
                         mssql_query($query_ph1,$db_dialer) or logerror($query_ph1,$db_dialer);
-			$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE')";
+			$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE1')";
                         mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
 
 			if($update_str=='')
@@ -245,36 +246,36 @@ function data_comparision($dialer_data,$campaign_name,$ecode,$db_dialer,$vd_prof
                         else
                                 $update_str.=",easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
 			if($dialStatus!='9' && $dialStatus!=3 && $loggedinWithin15days[$profileid])
-                                $update_str.=",Dial_Status='1',DNC_Status=''";
+                                $update_str.=",Dial_Status='1'";
 			elseif(!$loggedinWithin15days[$profileid] && $dialStatus!=3 && $dialStatus!=9)
                         {       
                                 if($update_str=='')
-                                        $update_str.="Dial_Status='0',DNC_Status=''";
+                                        $update_str.="Dial_Status='0'";
                                 else
-                                        $update_str.=",Dial_Status='0',DNC_Status=''";
+                                        $update_str.=",Dial_Status='0'";
                         }
 		}
 	}
 	elseif($dialer_data['allocated']!='' && $dialStatus!='2' && $dialStatus!='9' && $dialStatus!=3)
 	{
 		if($update_str=='')
-                	$update_str.="Dial_Status='2',DNC_Status=''";
+                	$update_str.="Dial_Status='2'";
                 else
-                	$update_str.=",Dial_Status='2',DNC_Status=''";
+                	$update_str.=",Dial_Status='2'";
 	}
 	elseif($dialStatus!='1' && $dialStatus!='9' && $dialStatus!=3 && $loggedinWithin15days[$profileid])
 	{
 		if($update_str=='')
-                        $update_str.="Dial_Status='1',DNC_Status=''";
+                        $update_str.="Dial_Status='1'";
                 else
-                        $update_str.=",Dial_Status='1',DNC_Status=''";
+                        $update_str.=",Dial_Status='1'";
 	}
 	elseif(!$loggedinWithin15days[$profileid] && $dialStatus!=3 && $dialStatus!=9)
         {
                 if($update_str=='')
-                        $update_str.="Dial_Status='0',DNC_Status=''";
+                        $update_str.="Dial_Status='0'";
                 else
-                        $update_str.=",Dial_Status='0',DNC_Status=''";
+                        $update_str.=",Dial_Status='0'";
         }
 
 	//INITIAL PRIORITY UPDATE 
@@ -296,11 +297,13 @@ function data_comparision($dialer_data,$campaign_name,$ecode,$db_dialer,$vd_prof
                         $update_str.="old_priority='$priority'";
                 else
                         $update_str.=",old_priority='$priority'";
-		$update_str.="*priority='$priority'";
+		//$update_str.="*priority='$priority'";
         }
 
-	if($update_str!='')
+	if($update_str!=''){
+		$update_str.="*priority='$priority'";
                 return $update_str;
+	}
         else
                 return "ignore";
 }

@@ -2618,7 +2618,7 @@ class crmMisActions extends sfActions
                 $billServStatObj = new BILLING_SERVICE_STATUS('newjs_slave');
                 $billPurObj = new BILLING_PURCHASES('newjs_slave');
                 $billPayDetObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
-                $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRange($start_date, $end_date);
+                $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRangeWithoutActiveCheck($start_date, $end_date);
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
                 	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
@@ -2656,11 +2656,13 @@ class crmMisActions extends sfActions
                 		$this->misData[date("j/M/y", $i)]['renewE10'] = 0;
                 		$this->misData[date("j/M/y", $i)]['totalRev'] = 0;
                 	}
+                	$this->misData[date("j/M/y", $i)]['trsc'] = 0;
+                	$this->misData[date("j/M/y", $i)]['convPerc'] = 0;
                 }
-                foreach ($this->misData as $key=>&$val) {
-                	$val['tsrc'] = $val['renewE30'] + $val['renewE30E'] + $val['renewEE10'] + $val['renewE10'];
-                	$val['convPerc'] = round($val['tsrc']/$val['expiry'], 2)*100;
-                	$val['totalRev'] = $val['totalRev'];
+                foreach ($this->misData as $key=>$val) {
+                	$this->misData[$key]['tsrc'] = $val['renewE30'] + $val['renewE30E'] + $val['renewEE10'] + $val['renewE10'];
+                	$this->misData[$key]['convPerc'] = round($this->misData[$key]['tsrc']/$val['expiry'], 2)*100;
+                	$this->misData[$key]['totalRev'] = $val['totalRev'];
                 }
                 $this->totData = array();
                 foreach ($this->misData as $key=>$val) {

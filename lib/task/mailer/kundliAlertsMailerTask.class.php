@@ -4,7 +4,6 @@
  *created on : 07 Sept 2016 
  */
 
-ini_set("max_execution_time",-1);
 class kundliAlertsMailerTask extends sfBaseTask
 {
 	private $smarty;

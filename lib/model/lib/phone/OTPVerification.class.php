@@ -76,7 +76,7 @@ private function sendMessage($OTP)
 {
     include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
 	$message=phoneEnums::$OTPMessage;
-  	$arr=array('PHONE_MOB'=>$this->getPhone(),'OTP'=>"$OTP");
+	$arr=array('PHONE_MOB'=>$this->getPhoneWithoutIsd(),'ISD'=>$this->getIsd(),'OTP'=>"$OTP");
 	$smsViewer = new InstantSMS("OTP",$this->profileObject->getPROFILEID(),$arr,'');
     $smsViewer->send("OTP");
 

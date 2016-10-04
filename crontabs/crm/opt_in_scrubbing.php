@@ -66,7 +66,7 @@ function start_opt_in_profiles($campaign_name,$opt_in_profile,$db_dialer,$db_js_
 				$dialStatus ='2';
 			else
 				$dialStatus ='1';
-			$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus,DNC_Status='' WHERE easycode='$ecode'";
+			$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus WHERE easycode='$ecode'";
 			mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer);
 
 			$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
