@@ -17,12 +17,12 @@ class MAIL_UNRESPONDED_CONTACTS extends TABLE
 	                {//print_r($pid);die;
 
 
-							$sql = "INSERT IGNORE INTO  MAIL.UNRESPONDED_CONTACTS (RECEIVER,USERS,COUNTS,DATE) VALUES(:PROFILEID,:USERSENDER,:COUNT,now())";
-							$res = $this->db->prepare($sql);
-				            $res->bindValue(":PROFILEID", $info['profileId'], PDO::PARAM_INT);
-				            $res->bindValue(":USERSENDER",implode(',',$info['users']), PDO::PARAM_STR);
-				            $res->bindValue(":COUNT", count($info['users']), PDO::PARAM_INT);
-	                		$res->execute();    
+                                            $sql = "INSERT IGNORE INTO  MAIL.UNRESPONDED_CONTACTS (RECEIVER,USERS,COUNTS,DATE) VALUES(:PROFILEID,:USERSENDER,:COUNT,now())";
+                                            $res = $this->db->prepare($sql);
+				            $res->bindValue(":PROFILEID", $info['sendersProfileId'], PDO::PARAM_INT);
+				            $res->bindValue(":USERSENDER",implode(',',$info['recieversProfileId']), PDO::PARAM_STR);
+				            $res->bindValue(":COUNT", count($info['recieversProfileId']), PDO::PARAM_INT);
+                                            $res->execute();    
 	                }
 	                catch(PDOException $e)
 	                {

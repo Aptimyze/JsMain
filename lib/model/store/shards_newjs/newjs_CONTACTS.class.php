@@ -1085,18 +1085,20 @@ public function getSendersPending($profileids)
         
         public function getInterestSentForDuration($stTime, $endTime,$remainderArray){
             try{
-                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME ORDER BY `TIME` DESC AND SENDER % :DIVISOR = :REMAINDER ";
+            	
+                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM ORDER BY `TIME` DESC  ";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
-                $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
-                $prep->bindValue(":DIVISOR",$remainderArray['DIVISOR'],PDO::PARAM_INT);
-                $prep->bindValue(":REMAINDER",$remainderArray['REMAINDER'],PDO::PARAM_INT);
+                $prep->bindValue(":END_TIME",$endTime,PDO::PARAM_STR);
+                $prep->bindValue(":DIVISOR",$remainderArray['divisor'],PDO::PARAM_INT);
+       
+                $prep->bindValue(":REMAINDER",$remainderArray['remainder'],PDO::PARAM_INT);               
+                $prep->bindValue(":SHARDREM",$remainderArray['shardRemainder'],PDO::PARAM_INT);               
                 $prep->execute();
                 while($row = $prep->fetch(PDO::FETCH_ASSOC))
                 {
                     $result[]=$row;                
                 }
-                
                 return $result;
             } catch (Exception $ex) {
                 throw new jsException($ex);
