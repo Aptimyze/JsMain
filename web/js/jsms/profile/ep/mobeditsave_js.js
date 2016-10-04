@@ -458,12 +458,12 @@ var removeCity = false;
 	    if(stateVal)
 		CommonOverlayEditUpdate(stateVal,"STATE_RES");
 	}
-	var pos = $('#CITY_RES_TOP').attr('dindexpos');
-	CommonOverlayEditUpdate("","CITY_RES");
-	UpdateSection.call($('#CITY_RES_TOP'),{'city_res':''},realJson,pos);
-	$("#CITY_RES").html(NOT_FILLED_IN).attr("value","");
 	if(removeCity)
 	{
+		var pos = $('#CITY_RES_TOP').attr('dindexpos');
+		CommonOverlayEditUpdate("","CITY_RES");
+		UpdateSection.call($('#CITY_RES_TOP'),{'city_res':''},realJson,pos);
+		$("#CITY_RES").html(NOT_FILLED_IN).attr("value","");
 	    $('#CITY_RES_TOP').addClass('dn');
 	}
 	else
@@ -495,13 +495,16 @@ function UpdateStateSection(json,realJson,indexPos)
   if (realJson.OnClick[1].value=="51" && json.hasOwnProperty('state_res'))
   {
 	$('#CITY_RES_TOP').removeClass('dn');
-	CommonOverlayEditUpdate("","CITY_RES");
-	var pos = $('#CITY_RES_TOP').attr('dindexpos');
-	UpdateSection.call($('#CITY_RES_TOP'),{'city_res':''},realJson,pos);
-	$("#CITY_RES").html(NOT_FILLED_IN).attr("value","");
-	$("#CITY_RES_TOP").find("wid94p").addClass("notfilled");
-	$("#CITY_RES").addClass("color2").removeClass("color3o color3");
-	$("#CITY_RESlabel").addClass("color2").removeClass("color3");
+	if(!json['state_res'].hasOwnProperty(realJson.OnClick[2].label_val))
+	{
+		CommonOverlayEditUpdate("","CITY_RES");
+		var pos = $('#CITY_RES_TOP').attr('dindexpos');
+		UpdateSection.call($('#CITY_RES_TOP'),{'city_res':''},realJson,pos);
+		$("#CITY_RES").html(NOT_FILLED_IN).attr("value","");
+		$("#CITY_RES_TOP").find("wid94p").addClass("notfilled");
+		$("#CITY_RES").addClass("color2").removeClass("color3o color3");
+		$("#CITY_RESlabel").addClass("color2").removeClass("color3");
+	}
   }
   else
   {
