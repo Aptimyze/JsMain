@@ -124,6 +124,13 @@ $(function(){
           $('div[data-sectionid = "'+sectionId+'"] .suggestMain').each(function(index, element) {
             $(this).remove();
           });
+         /* setTimeout(function(){
+            if($('div[data-sectionid = "'+sectionId+'"] .suggestMain').length != 0){
+              $('div[data-sectionid = "'+sectionId+'"] .suggestMain').each(function(index, element) {
+                $(this).remove();
+              }); 
+            }
+          },500);*/
 
           //to show reg save button when all edit sections have been saved
           hideRegSaveButton--;
@@ -1013,7 +1020,12 @@ var _parentCatogary = [{
             typeDataArray = $("#dpp-p_" + type).val();
           }
         }
+        
+        if(type == "religion" && $("#dpp-p_caste").val()==null) {
+          $("#suggest_caste .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+        }
         if (typeDataArray.length != 0) {
+          $("#dpp-p_"+type+"Parent").parent().find(".js-saveBtn").attr('disabled','disabled');
           $("#loader_" + type).removeClass("disp-none");
           $("#suggest_" + type + " .suggestBoxList").html("");
           var obj = [{
@@ -1055,6 +1067,7 @@ var _parentCatogary = [{
             cache: false,
             timeout: 5000,
             success: function(result) {
+              $("#dpp-p_"+finalObj[0].type.toLowerCase()+"Parent").parent().find(".js-saveBtn").removeAttr('disabled');
               if(result && result != "" && JSON.parse(result)[0] && JSON.parse(result).responseMessage == "Successful") {
                 response = JSON.parse(JSON.parse(result)[0]);
                 appendSuggestionList(response);
@@ -1063,6 +1076,7 @@ var _parentCatogary = [{
               }             
             },
             error:function(result){
+              $("#dpp-p_"+finalObj[0].type.toLowerCase()+"Parent").parent().find(".js-saveBtn").removeAttr('disabled');
               showCustomCommonError("Something went wrong. Please try again after some time.",1500);
             }
           });
