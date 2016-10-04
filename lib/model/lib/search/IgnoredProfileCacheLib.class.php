@@ -162,9 +162,9 @@ class IgnoredProfileCacheLib
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-    	$pidKey = $profileid.ignoredProfileCacheConstants::BYME_DATA;
+    	$pidKey = $profileid.ignoredProfileCacheConstants::ALL_DATA;
     	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);
-    	if($keyExists == 1)
+        if($keyExists == 1)
     	{
     		$response = JsMemcache::getInstance()->checkDataInCache($pidKey,$ignoredProfileid);
     		return $response;

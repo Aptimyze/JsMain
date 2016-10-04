@@ -110,7 +110,7 @@ class IgnoredProfiles
 	public function ifIgnored($profileid,$otherProfileId)
 	{
 		 $this->addDataToFile("old");
-		 $response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($profileid,$ignoredProfileid);
+		 $response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($profileid,$otherProfileId);
 		 if($response == "noKey" || $response == false)
 		 {
 		 	$ignoreObj = new newjs_IGNORE_PROFILE($this->dbname);
