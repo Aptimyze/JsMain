@@ -65,6 +65,17 @@ $(function(){
                     $('.'+getfieldID+' .prehide').fadeIn(200,"linear");
                     $('.'+getfieldID+' label').addClass("labelpadding");
             });
+
+                    //Dpp suggestions: start
+                    var editCatogary = getfieldID.split("edit")[1];
+                    if(editCatogary == "edu"){
+                      editCatogary = "education";
+                    }
+                    if(editCatogary == "basic" || editCatogary == "religion" || editCatogary == "education" && typeof(changeCatogarySuggestion) ==  "function") {
+                      changeCatogarySuggestion(editCatogary);
+                    }
+             //Dpp suggestions : end
+
             //fill default values into chosen multiselect
 	          fillValuesInChosen(getfieldID);
       
@@ -110,6 +121,16 @@ $(function(){
         //bind click on save button
         $(".js-saveBtn").bind("click",function(){
           var sectionId = $(this).attr('id').split("-")[1];
+          $('div[data-sectionid = "'+sectionId+'"] .suggestMain').each(function(index, element) {
+            $(this).remove();
+          });
+         /* setTimeout(function(){
+            if($('div[data-sectionid = "'+sectionId+'"] .suggestMain').length != 0){
+              $('div[data-sectionid = "'+sectionId+'"] .suggestMain').each(function(index, element) {
+                $(this).remove();
+              }); 
+            }
+          },500);*/
 
           //to show reg save button when all edit sections have been saved
           hideRegSaveButton--;
@@ -965,3 +986,187 @@ function handleBack() {
   historyStoreObj.push(onBrowserBack, "#dpp");
   
 };
+
+var _dppType = ["city", "caste", "mtongue", "education", "occupation"];
+var _parentCatogary = [{
+  "parent": "basic",
+  "sub": ["city"]
+}, {
+  "parent": "religion",
+  "sub": ["caste", "mtongue"]
+}, {
+  "parent": "education",
+  "sub": ["education", "occupation"]
+}],queryInput = [];
+
+    //change suggestion on adding or deleting chosen option
+    function changeSuggestion(elem, state) {
+      var type = "",typeElem, typeDataArray = [];
+      elem= elem.split("<em>").join("").split("</em>").join("");
+      setTimeout(function() {
+        if (state == "add") {
+          $(".search-choice").each(function(index, element) {
+            if ($(this).find("span").html() == elem) {
+              typeElem = $(this).closest(".pt20");
+              type = $(this).closest(".pt20").attr("id").split("_")[1].split("Parent")[0];
+              if (_dppType.indexOf(type) != -1) {
+                typeDataArray = $("#dpp-p_" + type).val();
+              }
+            }
+          });
+        } else if (state == "remove") {
+          var type = elem.split("_")[1].split("Parent")[0];
+          if (_dppType.indexOf(type) != -1 && $("#dpp-p_" + type).val() != undefined ) {
+            typeDataArray = $("#dpp-p_" + type).val();
+          }
+        }
+        
+        if(type == "religion" && $("#dpp-p_caste").val()==null) {
+          $("#suggest_caste .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+        }
+        if (typeDataArray.length != 0) {
+          $("#dpp-p_"+type+"Parent").parent().find(".js-saveBtn").attr('disabled','disabled');
+          $("#loader_" + type).removeClass("disp-none");
+          $("#suggest_" + type + " .suggestBoxList").html("");
+          var obj = [{
+            "type": type.toUpperCase(),
+            "data": typeDataArray
+          }];
+          $.each(obj, function(index, elem) {
+            queryInput.push(elem);
+          });
+          getApiResponse();
+        }
+      }, 30);
+}
+
+        //has to changed with actual data + putting a lag of 500ms
+        function getApiResponse() {
+          var finalObj = [],
+          temp, dataPresent, response = [],url="",str="";
+      //time lag for multiple select
+      setTimeout(function() {
+        if (queryInput.length != 0) {
+          for (var i = 0; i <= queryInput.length; i++) {
+            temp = queryInput.pop();
+            dataPresent = false;
+            $.each(finalObj, function(index2, elem2) {
+              if (elem2.type == temp.type) {
+                dataPresent = true;
+              }
+            });
+            if (dataPresent == false) {
+              finalObj.push(temp);
+            }
+          }
+          str = JSON.stringify(finalObj).split('"').join('%22');
+          url = "/api/v1/profile/dppSuggestions?Param="+str;
+          $.ajax({
+            type: "POST",
+            url: url,
+            cache: false,
+            timeout: 5000,
+            success: function(result) {
+              $("#dpp-p_"+finalObj[0].type.toLowerCase()+"Parent").parent().find(".js-saveBtn").removeAttr('disabled');
+              if(result && result != "" && JSON.parse(result)[0] && JSON.parse(result).responseMessage == "Successful") {
+                response = JSON.parse(JSON.parse(result)[0]);
+                appendSuggestionList(response);
+              } else {
+                showCustomCommonError("Something went wrong. Please try again after some time.",1500);
+              }             
+            },
+            error:function(result){
+              $("#dpp-p_"+finalObj[0].type.toLowerCase()+"Parent").parent().find(".js-saveBtn").removeAttr('disabled');
+              showCustomCommonError("Something went wrong. Please try again after some time.",1500);
+            }
+          });
+        }
+      }, 500);
+
+}
+    // append API response in suggestion
+    function appendSuggestionList(response) {
+      var type = "",dataPresent;
+      $.each(response, function(index, elem) {
+        type = elem.type.toLowerCase();
+        if(elem.data) {
+            if (Object.keys(elem.data).length != 0) {
+            if ($("#suggest_" + type).length == 0) {
+              $('<div class="edwid2 fl ml193 pt10 suggestMain" id="suggest_' + type + '"><div class="fontlig f12 wid134 disp_ib color11 mr10 vtop">Suggested (click to add)</div><div class="disp_ib suggestParentBox wid345 disp_none vtop"><div id="loader_' + type + '"><img src="IMG_URL/images/jspc/commonimg/dppLoader.gif"></div><div class="suggestBoxList"></div></div></div>').insertAfter("#dpp-p_" + type + "Parent #multiselect");
+            }
+            $("#suggest_" + type + " .suggestBoxList").html("");
+            $.each(Object.keys(elem.data), function(index2, elem2) {
+              dataPresent = false;
+              if($("#dpp-p_" + type).val() != null) {
+                $.each($("#dpp-p_" + type).val(), function(index3,elem3){
+                  if(elem3 == elem2) {
+                    dataPresent = true;
+                  }
+                });
+              }
+              if (dataPresent == false && $("#dpp-p_"+type+" option[value='"+elem2+"']").length != 0) {
+                $("#suggest_" + type + " .suggestBoxList").append('<div class="fontlig f14 disp_ib color11 cursp suggestBox" index-val="' + elem2 + '">' + $("#dpp-p_"+type+" option[value='"+elem2+"']").html() + '</div>');
+              }
+            });
+            
+            //binding click on each suggestion
+            if($("#suggest_" + type + " .suggestBoxList div").length != 0) {
+              $(".suggestBox").each(function(index, element) {
+                $(element).off("click").on("click", function() {
+                  var newVal = $(this).attr("index-val"),
+                  parentText = $(this).closest(".suggestMain").attr("id").split("suggest_")[1],
+                  currentValArr = $("#dpp-p_" + parentText).val(),
+                  htmlStr = $(this).html(),parentSection = $("#dpp-p_"+parentText).closest(".js-editId").attr("data-sectionid");
+                  if(currentValArr != undefined) {
+                    currentValArr.push(newVal);
+                  } else {
+                    currentValArr = newVal;
+                  }
+                  $("#dpp-p_" + parentText).val(currentValArr).trigger("chosen:updated");
+                  $(this).remove();
+                  changeSuggestion(htmlStr, "add"); 
+                  dppApp.set("p_"+parentText,$("#dpp-p_" + parentText).val());
+                  dppApp.setForSave(parentSection,"p_"+parentText,$("#dpp-p_" + parentText).val());
+                });
+              });
+            } else if($("#suggest_" + type + " .suggestBoxList div").length == 0) {
+              $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+            }
+          } else {
+            $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+          } 
+        } else {
+            $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+          } 
+        
+        $("#loader_" + type).addClass("disp-none");
+      });
+
+}
+    //when a user click on edit button of a parent catogary
+    function changeCatogarySuggestion(type) {
+      setTimeout(function() {
+        var obj, typeDataArray;
+        $.each(_parentCatogary, function(index, elem) {
+          if (elem.parent == type) {
+            obj = [];
+            $.each(elem.sub, function(index2, elem2) {
+              typeDataArray = $("#dpp-p_" + elem2).val();
+              if(typeDataArray != null) {
+                obj.push({
+                  "type": elem2.toUpperCase(),
+                  "data": typeDataArray
+                });  
+              }
+            });
+            if(obj){
+              $.each(obj, function(index, elem) {
+                queryInput.push(elem);
+              });
+              getApiResponse();  
+            }
+          }
+        });
+      }, 30);
+    }
+
