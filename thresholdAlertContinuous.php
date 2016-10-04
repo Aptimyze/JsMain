@@ -9,8 +9,8 @@ $param = 'url=%2Findex.jsp&login=true&username='.$username.'&password='.$passwor
 $fetchPagePath = $domain.'index.jsp';
 $savePagePath = '/home/developer/download.html';
 $searchPattern = ') used';
-$alertThreshold = 90;
-$sleepTimeout = 10;
+$alertThreshold = 85;
+$sleepTimeout = 1;
 $environment = "prod";
 $cookieFile = 'cookie.txt';
 
@@ -27,7 +27,7 @@ $alertThreshold = 1;
 $sleepTimeout = 1;
 $environment = "dev";
 $cookieFile = 'cookie.txt';
-*/
+ */
 function saveFile(){
     global $loginUrl, $param, $fetchPagePath, $savePagePath;
     $ch = curl_init();
@@ -109,22 +109,25 @@ function clearCache(){
     curl_setopt($ch, CURLOPT_COOKIEJAR, $cookieFile);
     //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookieFile);
     $data = curl_exec($ch);
-    print_r($data);
+    //print_r($data);
     curl_close($ch);
 }
 
 function sendMail($usagePercentage){
-	global $domain, $environment;
+	global $domain, $environment,$sleepTimeout;
 	if($environment == "prod"){
 
-		//mail("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Openfire memory usage on ".$domain." after 30sec @ ".$usagePercentage."%","Please check");
+	     //mail("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Openfire memory usage on ".$domain." after ".($sleepTimeout*3)."sec @ ".$usagePercentage."%","Please check");
 	    mail("nitishpost@gmail.com","Openfire memory usage on ".$domain."@ ".$usagePercentage."%","Please check");
 	}
 	elseif($environment == "dev"){
 		print_r("\n***Done***\n");
 	}
 }
-saveFile();
-checkFile(0);
+while(1){
+    sleep(3);
+    saveFile();
+    checkFile(0);
+}
 
 ?>
