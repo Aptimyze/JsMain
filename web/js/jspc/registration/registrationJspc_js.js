@@ -1419,6 +1419,7 @@ var padding = 31;
               regField["cityReg"].fieldElement.attr("data-alpha", "4");
               $("#cityReg-inputBox_set").val("");
                 $("#cityReg").val("");
+                $("#cityReg_value").val("");
                 $("#cityRegOther").val("");
                 inputData["city_res"] = "";
                 regField["cityReg"].showDrop = 0;
@@ -1598,9 +1599,9 @@ var padding = 31;
               }
               else{
                   $("#cityReg_selector").addClass("disp-none");
-                  $("cityReg_value").val("");
-                  $("cityReg-inputBox_set").html("");
-                  $("cityReg-list_set").find(".activeopt").removeClass("activeopt");
+                  $("#cityReg_value").val("");
+                  $("#cityReg-inputBox_set").html("");
+                  $("#cityReg-list_set").find(".activeopt").removeClass("activeopt");
                   inputData["city_res"] = "";
                   regField["cityReg"].shown = 1;
                   regField["cityReg"].showInput = 1;

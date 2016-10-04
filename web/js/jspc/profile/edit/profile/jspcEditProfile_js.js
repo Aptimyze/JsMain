@@ -3404,6 +3404,7 @@ EditApp = function(){
       }
       else if(showOrHide == "hide"){
         $(fieldParentId).addClass(dispNone);
+        $(fieldParentId+" .js-errorLabel:not(.disp-none)").addClass(dispNone);
       }
       //Clear Data and Update Store         
       if(typeof updateStore != "undefined" && updateStore == true){
@@ -3518,11 +3519,11 @@ EditApp = function(){
             showHideField(stateFieldObject,"hide",true);
             requiredFieldStore.remove(stateFieldObject);
         }
-        if(countryVal == '51'){
+        else if(countryVal == '51'){
           var data = JSON.parse(getDataFromStaticTables(stateFieldObject.key));        
           updateFieldUI(stateFieldObject,data);
           showHideField(stateFieldObject,"show",true);
-          requiredFieldStore.remove(stateFieldObject);
+          requiredFieldStore.add(stateFieldObject);
           if($("#state_res").val()!='' && $("#state_res").val()!=null && typeof($("#state_res").val()!='')!="undefined"){
               showHideField(cityFieldObject,"show",true);
           }
@@ -4898,7 +4899,6 @@ EditApp = function(){
           if(fieldObject.key=="CITY_RES"){
             var countryVal = editAppObject[BASIC]['COUNTRY_RES'].value;
             var stateVal = editAppObject[BASIC]['STATE_RES'].value;
-            alert(stateVal);
             if(countryVal=='51' && stateVal){
               var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[stateVal];
               optionString = prepareOptionDropDown(dataCity,fieldObject);
