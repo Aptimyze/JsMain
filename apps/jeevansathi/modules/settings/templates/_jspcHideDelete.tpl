@@ -98,7 +98,7 @@
                 </div>
                 
                 <!--end:field 3--> 
-          ~if $showOTP`
+          ~if $showOTP eq 'Y'`
    <a  id ="otpProfileDeletion"  class="setwid10 mauto pt20 pos-rel disp_b txtc color5 cursp">Delete Using OTP</a>
           ~/if`
 
