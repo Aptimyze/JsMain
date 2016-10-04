@@ -75,7 +75,7 @@ EOF;
 			}
 			if($msg != '')
 			{
-				$msg = "In the interval of ".$interval." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
+				$msg = "In the interval of ".$interval." hour with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
 			}
 		}
 		else
