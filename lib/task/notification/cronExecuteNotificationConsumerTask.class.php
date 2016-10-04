@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 This php script reads no. of instances of rabbitmq JsNotificationsConsume from MessageQueues.enum.class.php to be run and executes that many instances of cron:cronConsumeNotificationsQueueMessage.
 */
@@ -46,6 +46,12 @@ EOF;
     {
       passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &");
     }
-	}
+
+    // Notification Log consumer
+    passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND." > /dev/null &");
+
+  }
+
+
 }
 ?>

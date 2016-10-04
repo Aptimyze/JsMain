@@ -4,7 +4,6 @@
  *created on : 24 June 2016 
  */
 
-ini_set("max_execution_time",-1);
 class savedSearchesMailerTask extends sfBaseTask
 {
 	private $smarty;

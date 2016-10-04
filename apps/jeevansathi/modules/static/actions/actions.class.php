@@ -259,7 +259,10 @@ class staticActions extends sfActions
 			die;
 		}
             if($request->getParameter("success")==1)
-                $this->setTemplate("resetLinkSent");
+            {
+              $this->message = $request->getParameter("message"); 
+              $this->setTemplate("resetLinkSent");
+            }
         }
         public function executeResetPass(sfWebRequest $request) 
          {

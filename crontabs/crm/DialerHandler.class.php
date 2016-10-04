@@ -115,7 +115,7 @@ class DialerHandler
 			$updateArr =array();
 			if(in_array($proid,$ignore_array)){
 				if($srow1["Dial_Status"]!=9)
-					$updateArr[] ="Dial_Status=0,DNC_Status=''";
+					$updateArr[] ="Dial_Status=0";
 
 				if(array_key_exists($proid,$discount_profiles))
 					$vdDiscount = $discount_profiles[$proid];
@@ -164,7 +164,7 @@ class DialerHandler
 
 				}
 				if($jp_condition_arr1){
-					$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=6";
+					$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=5";
 					mssql_query($query2,$this->db_dialer) or $this->logerror($query2,$this->db_dialer);
 					$ustr1 = str_replace("'","",$jp_condition_arr1);
 					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE')";
@@ -177,7 +177,7 @@ class DialerHandler
 				if(!$row_chk["AGENT"]){
 					$query_ph2 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 					mssql_query($query_ph2,$this->db_dialer) or $this->logerror($query_ph2,$this->db_dialer);
-					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE')";
+					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE2')";
 					mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
 				}
 			}
@@ -220,25 +220,25 @@ class DialerHandler
 			if($alloted_to){
 				$update_str[]="easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
 				if($dialer_data["dial_status"]!='9')
-					$update_str[]="Dial_Status='2',DNC_Status=''";
+					$update_str[]="Dial_Status='2'";
 			}
 			else{
 				$query_ph1 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 				mssql_query($query_ph1,$this->db_dialer) or $this->logerror($query_ph1,$this->db_dialer);
 
-				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE')";
+				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE1')";
 				mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
 
 				$update_str[] ="easy.dbo.ct_$campaign_name.AGENT=''";
 				if($dialer_data["dial_status"]!='9')
-					$update_str[] ="Dial_Status='1',DNC_Status=''";
+					$update_str[] ="Dial_Status='1'";
 			}
 		}
 		elseif($dialer_data['allocated']!='' && $dialer_data['dial_status']!='2' && $dialer_data["dial_status"]!='9'){
-			$update_str[] ="Dial_Status='2',DNC_Status=''";
+			$update_str[] ="Dial_Status='2'";
 		}
 		elseif(!$alloted_to && $dialer_data['dial_status']!='1' && $dialer_data["dial_status"]!='9'){
-			$update_str[] ="Dial_Status='1',DNC_Status=''";
+			$update_str[] ="Dial_Status='1'";
 		}
 
 		//INITIAL PRIORITY UPDATE 
@@ -258,10 +258,10 @@ class DialerHandler
 		
 		if($priority!=$dialer_data['initialPriority']){
 			$update_str[] 	="old_priority='$priority'";
-			$update_strPri 	="*priority='$priority'";
 		}
 		if(count($update_str)>0){
 			$update_str1 =@implode(",",$update_str);
+			$update_strPri  ="*priority='$priority'";
 			$update_str1 =$update_str1.$update_strPri;
 			unset($update_str);
 			return $update_str1;
