@@ -551,3 +551,13 @@ pre {
         .mt26 {margin-top: 26px}
         .wd300 {width: 300px}
         .wd200{width:200px}
+
+        #smplH{width:950px; height:70%;z-index:9; background-color:#e8e6e6}
+	.smplHp20{padding:20px}
+	#smplH .p50{padding:30px 50px}
+	#smplH .closeHoroSam {top: -19px;right: -74px;}
+	.content{
+	overflow: auto;
+	position: relative;	
+	-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
+        }
