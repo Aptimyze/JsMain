@@ -25,7 +25,7 @@ EOF;
 		$query = '_search';
 		// in hours
 		$interval = 1;
-		$intervalString = '- '.$interval.' hour';
+		$intervalString = '-'.$interval.' hour';
 		$threshold = 50;
 		$timeout = 5000;
 		$dashboard = 'Common-Dash';
@@ -62,8 +62,7 @@ EOF;
 			{
 			    $arrModules[$module['key']] = $module['doc_count']; 
 			}
-			// $to = "jsissues@jeevansathi.com";
-			$to = "nikhil.mittal@jeevansathi.com";
+			$to = "jsissues@jeevansathi.com";
 
 			$kibanaUrl = 'http://'.$elkServer.":".$kibanaPort."/app/kibana#/dashboard/".$dashboard."?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
 
