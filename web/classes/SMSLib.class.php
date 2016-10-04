@@ -573,13 +573,13 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 		}
 	}		
 
-	function getMobileCorrectFormat($mobile,$isd=""){
+	function getMobileCorrectFormat($mobile,$isd="",$sendToInt=false){
 include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
                 $mobile = getMobileCorrectFormat($mobile);
                 if(checkMobilePhone($mobile))
                 {
 			if($isd){
-				if($isd==91) return $mobile;
+				if($isd==91 || $sendToInt) return $mobile;
 				else return false;
 			}
 			else
