@@ -576,7 +576,7 @@ class SMSLib
             case "OTP":
                 //return "test";
                 return $messageValue["OTP"];
-            //added case for sending sms to user in case an entry goes into bounce mails
+                //added case for sending sms to user in case an entry goes into bounce mails
             case "EDIT_CONTACT_ON_BOUNCE":
                 $longURL = $this->SITE_URL . "/profile/viewprofile.php?" . $messageValue["RECEIVER"]["USERNAME"] . "&CMGFRMMMMJS=mobile&ownview=1";
                 return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"], '', "#Contact");
@@ -592,13 +592,13 @@ class SMSLib
         }
     }
 
-    public function getMobileCorrectFormat($mobile, $isd = "")
+    public function getMobileCorrectFormat($mobile, $isd = "", $sendToInt = false)
     {
         include_once JsConstants::$docRoot . "/commonFiles/sms_inc.php";
         $mobile = getMobileCorrectFormat($mobile);
         if (checkMobilePhone($mobile)) {
             if ($isd) {
-                if ($isd == 91) {
+                if ($isd == 91 || $sendToInt) {
                     return $mobile;
                 } else {
                     return false;
@@ -635,7 +635,7 @@ class SMSLib
         }
 
         $msg = $commentText . 'Mysql Error occured:<br/><br/>' . $error . '<br/><br/> while executing the query: <br/><br/> ' . $msg_sql . '<br/><br/>Warm Regards';
-//echo $msg."\n\n\n";
+            //echo $msg."\n\n\n";
         send_email($to, $msg, $subject, "", $cc);
     }
 

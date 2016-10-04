@@ -26,7 +26,7 @@ EOF;
         if (!sfContext::hasInstance()) {
             sfContext::createInstance($this->configuration);
         }
-        $curDate         = date("2016-12-01", time());
+        $curDate         = date("Y-m-d", time());
         $billPurObj      = new BILLING_PURCHASES('newjs_slave');
         $billServStatObj = new BILLING_SERVICE_STATUS('newjs_slave');
         $profileArr1     = $billPurObj->fetchTFNSMSProfiles($curDate); // P+15, P+45
