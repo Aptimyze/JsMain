@@ -30,6 +30,20 @@
 				LoggingEnums::STACKTRACE => false,
 				LoggingEnums::SERVER_PARAM => false
 				),
+			LoggingEnums::EX500 => array(
+               LoggingEnums::LOGGING => true,
+               LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
+               LoggingEnums::DIRECTORY => true,
+               LoggingEnums::STACKTRACE => false,
+               LoggingEnums::SERVER_PARAM => false
+               ),
+           LoggingEnums::EX404 => array(
+               LoggingEnums::LOGGING => true,
+               LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
+               LoggingEnums::DIRECTORY => true,
+               LoggingEnums::STACKTRACE => false,
+               LoggingEnums::SERVER_PARAM => false
+               ),
 			);
 
 		/**
