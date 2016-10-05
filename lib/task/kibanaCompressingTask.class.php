@@ -29,10 +29,10 @@ EOF;
     {
 
 
-      for($i=48 ; $i <72 ; $i++)
+      for($i=1 ; $i <=20 ; $i++)
       {
         $currdate = date('Y.m.d');
-        $date = (date("Y.m.d", strtotime("-2 day")));
+        $date = (date("Y.m.d", strtotime("-".$i."day")));
         $elkServer = '10.10.18.66';
         $elkPort = '9200';
         $indexName = 'filebeat-'.$date;
@@ -42,8 +42,8 @@ EOF;
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-".$i."h",
-                        "gt" => "now-".($i+1)."h"
+                        "lt" => "now-".$i."d",
+                        "gt" => "now-".($i+1)."d"
                     ]
                 ]
             ],
@@ -273,13 +273,11 @@ EOF;
         {
             $arrrequestURI[$module['key']] = $module['doc_count'];
         }
-        print_r($arrChannels);print("///////////////////////");
         print_r();print("///////////////////////");
         print_r();print("///////////////////////");
         print_r();print("///////////////////////");
         print_r();print("///////////////////////");
-        print_r();print("///////////////////////");
-        
+
       }
     }
   }
