@@ -3069,6 +3069,7 @@ JsChat.prototype = {
             chatBoxData = JSON.parse(localStorage.getItem("chatBoxData"));
         }
         setTimeout(function() {
+            var totalCount = 0;
             $.each(bubbleData, function(index,elem) {
                 if($('chat-box[user-id="'+elem.userId+'"] .chatBoxBar img').hasClass("downBarPicMin")){
                     console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
@@ -3081,7 +3082,18 @@ JsChat.prototype = {
                     $('#extra_'+elem.userId+' .pinkBubble span').html(elem.bCount);
                     $('#extra_'+elem.userId+' .pinkBubble').show();
                 }
+                if(elem.bCount != 0){
+                    totalCount++;
+                }
             });
+            if(totalCount != 0){
+                if ($('.showcountmin').hasClass('vishid')) {
+                    $('.countVal').html(totalCount);
+                    $('.showcountmin').toggleClass('vishid');
+                } else {
+                    $('.countVal').html(totalCount);
+                }
+            }
             
         }, 2000);
         var chatStatus = "";
