@@ -48,10 +48,10 @@
                         <td width="20" height="25"></td>
                     </tr>
             <tr>
-                        <td width="20"></td>
+                        <td width="20" height="50"></td>
                         <td>
                 Give them one more reason to accept you, reaffirming your interest by sending a reminder from the Sent Interests page.
-            </td>
+            </td> <br><br>
 
                         <td width="20"></td>
                     </tr>
@@ -65,7 +65,7 @@
                 </td>
         </tr>
                  <tr>
-                        <td width="20" ><a style="font-family:Arial; font-size:12px; line-height:25px;margin-left: 50%; width:100%; float:left" target="_blank" href="(LINK)INTEREST:profileid=~$profileid`(/LINK)">View All</a></td>
+                        <td width="20" ><a style="font-family:Arial; font-size:12px; line-height:25px;margin-left: 50%; width:100%; float:left" target="_blank" href="(LINK)INTEREST:profileid=~$profileid`(/LINK)">View All Profiles</a></td>
                         <td>
                 
 
