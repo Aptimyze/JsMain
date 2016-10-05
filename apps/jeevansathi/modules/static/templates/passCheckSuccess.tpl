@@ -33,7 +33,7 @@
 			<input type="submit" id="passCheckID" class="fullwid dispbl lh50 txtc f16 white" value="Delete My Profile">
 		</div>
         <!--end:submit button-->
-        ~if $showOTP`
+        ~if $showOTP eq 'Y'`
        <div style="text-align: center;padding-top: 10px;"><a id="otpProfileDeletionJSMS" class="fontlig white f14 pb10 color16" style="color : #d9475c;"> Delete Using One Time Code</a>
     </div>
     ~/if`
@@ -105,13 +105,15 @@
 
                     <!--start:div-->
         <div id = "bringSuccessLayerOnMobile" class='js-NumberedLayer'  style="overflow:auto;display:none;">
+
 		<div id="overlayHead" class="bg1 txtc pad15">
 
 			<div class="posrel lh30">
 				<div class="fontthin f20 white">Delete Using OTP</div>
 				<a onclick='$("#bringSuccessLayerOnMobile").hide();$("#showDuringOTP").show();'><i class="mainsp posabs set_arow1 set_pos1"></i></a>
 			</div>
-		</div>               
+		</div>    
+          
                <div id ="putPasswordLayer" class='js-NumberedLayer2'><div class=" txtc f14 fontlig pt30 pb15">
     <p>Profile Deletion code sent to +~$isd`-~$phoneNum` <span id='isdDiv'></span> <span id='mainPhone'></span></p>
     <p id='resendSMSDiv' class="pt5">Didn't receive code? <a id='resendTextId'  class="color2">Resend Code</a></p>
@@ -148,7 +150,7 @@
                     </div>
                   <div class="txtc optp5 f18 fontlig">
                       <i class="mainsp otpic1 js-noTrials"></i>
-                      <p id='oopsDiv' class="otpcolr1 pt20 js-noTrials"><strong>Oops! Incorrect code.</strong></p>
+                      <p id='oopsDiv' class="otpcolr1 pt20 js-noTrials"><strong>Oops! You have exhausted all your trials !.</strong></p>
                       <p class="color13 otpp6 lh25">You have reached maximum number of attempts for Verification code.</p>
                   
                   </div>
