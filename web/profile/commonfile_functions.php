@@ -508,7 +508,7 @@ $js_arr[]=array("jspc/myjs/myjs_pcrevamp"                      => "23");
 $js_arr[]=array("jspc/myjs/engBarJs_js"              => "14");
 $js_arr[]=array("jspc/common/nano"     => "2");
 $js_arr[]=array("jspc/common/commonJspc_js"                          => "27");
-$js_arr[]=array("jspc/registration/registrationJspc_js"                 => "20");
+$js_arr[]=array("jspc/registration/registrationJspc_js"                  => "21");
 $js_arr[]=array("jspc/registration/validation_js"         => "15");
 $js_arr[]=array("jspc/search/hslider"    => "1");
 $js_arr[]=array("jspc/search/jquery_1_9_0_min"    => "1");
