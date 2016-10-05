@@ -52,10 +52,13 @@ EOF;
                 $profileArr[] = $val;
             }
         }
-        $profileArr = @array_filter(array_unique($profileArr));
-        if (is_array($profileArr) && !empty($profileArr)) {
-            foreach ($profileArr as $key => $val) {
-                CommonUtility::sendPlusTrackInstantSMS("MEM_TFN_SMS", $val['PROFILEID']);
+        foreach ($profileArr as $key=>$val) {
+            $profile[] = $val['PROFILEID'];
+        }
+        $profile = @array_filter(array_unique($profile));
+        if (is_array($profile) && !empty($profile)) {
+            foreach ($profile as $key => $val) {
+                CommonUtility::sendPlusTrackInstantSMS("MEM_TFN_SMS", $val);
             }
         }
     }
