@@ -29,7 +29,7 @@ foreach($campaignArr as $campaignName=>$campaign)
 
 		// End information
 	       
-		$squery = "INSERT into test.DAILY_DIALER_REPORT_LOG (`CAMPAIGN_NAME`,`ACTIVE_DATA_POINTS`,`TOTAL_DIAL`,`UNIQUE_DIAL`,`HANDLED_CALL`,`MAX_CONNECTED_SCORE`,`MIN_CONNECTED_SCORE`,`EXECUTIVE_TOOK_CALL`,`AVG_TALK_TIME`,`ENTRY_DT`) VALUES ('$campaignName','$activeData','$TotalDial','$UniqueDial','$HandledCall','$MaxConnectedScore','$MinConnectedScore','$TotExecTookCall','$AvgTalkTime',now())";
+		$squery = "INSERT into js_crm.DAILY_DIALER_REPORT_LOG (`CAMPAIGN_NAME`,`ACTIVE_DATA_POINTS`,`TOTAL_DIAL`,`UNIQUE_DIAL`,`HANDLED_CALL`,`MAX_CONNECTED_SCORE`,`MIN_CONNECTED_SCORE`,`EXECUTIVE_TOOK_CALL`,`AVG_TALK_TIME`,`ENTRY_DT`) VALUES ('$campaignName','$activeData','$TotalDial','$UniqueDial','$HandledCall','$MaxConnectedScore','$MinConnectedScore','$TotExecTookCall','$AvgTalkTime',now())";
 		$sresult = mysql_query($squery,$db_js_111) or die($squery.mysql_error($db_js_111));
 
 		$dataArr[] =array("CAMPAIGN_NAME"=>"$campaignName","ACTIVE_DATA_POINTS"=>"$activeData","TOTAL_DIAL"=>"$TotalDial","UNIQUE_DIAL"=>"$UniqueDial","HANDLED_CALL"=>"$HandledCall","MAX_CONNECTED_SCORE"=>"$MaxConnectedScore","MIN_CONNECTED_SCORE"=>"$MinConnectedScore","EXECUTIVE_TOOK_CALL"=>"$TotExecTookCall","AVG_TALK_TIME"=>"$AvgTalkTime");

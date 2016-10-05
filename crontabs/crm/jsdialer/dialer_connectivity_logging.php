@@ -95,7 +95,7 @@ if(count($camp_array)>0)
 						 $termination_status = '';
 					}
 	       
-					$squery3 = "INSERT ignore into test.DIALER_CONNECTIVITY_LOG (PROFILEID,LOG_DATE,CAMPAIGN,OFFLINE_PRIORITY,ONLINE_PRIORITY,PRIORTIZATION_TIME,TERMINATION_STATUS,DIAL_TIME,SCORE) VALUES ('$profileid','$today','$campaign_name','$offline_priority','$online_priority','$priortization_time','$termination_status','$require_dial_time','$analytic_score')";
+					$squery3 = "INSERT ignore into js_crm.DIALER_CONNECTIVITY_LOG (PROFILEID,LOG_DATE,CAMPAIGN,OFFLINE_PRIORITY,ONLINE_PRIORITY,PRIORTIZATION_TIME,TERMINATION_STATUS,DIAL_TIME,SCORE) VALUES ('$profileid','$today','$campaign_name','$offline_priority','$online_priority','$priortization_time','$termination_status','$require_dial_time','$analytic_score')";
 					$sresult3 = mysql_query($squery3,$db_js) or die($squery3.mysql_error($db_js));
 				}
 			}

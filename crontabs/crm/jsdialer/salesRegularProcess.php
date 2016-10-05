@@ -4,6 +4,8 @@
 * DESCRIPTION 	: 
 *********************************************************************************************/
 ini_set('max_execution_time',0);
+ini_set('memory_limit',-1);
+
 $to     ="manoj.rana@naukri.com";
 $from   ="From:JeevansathiCrm@jeevansathi.com";
 
@@ -12,7 +14,10 @@ $db_js = mysql_connect("ser2.jeevansathi.jsb9.net","user_dialer","DIALlerr") or 
 $db_master = mysql_connect("master.js.jsb9.net","user","CLDLRTa9") or die("Unable to connect to js server at ".$start);
 $db_js_111 = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to local server");
 $db_dialer = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or die("Unable to connect to dialer server");
-mysql_query("set session wait_timeout=600",$db_master);
+
+mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js);
+mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_master);
+mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
 include("DialerHandler.class.php");
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer,$db_master);
@@ -25,7 +30,7 @@ $campaignTableArr       =array('JS_NCRNEW'=>array('SALES_CSV_DATA_NOIDA','SALES_
 /* Config array End */
 
 /* Test Configuration */
-//$csvEntryDate ='2016-03-30';
+//$csvEntryDate ='2016-09-29';
 foreach($campaignArr as $key=>$campaignName)
 {
 	$status =0;
@@ -52,14 +57,12 @@ foreach($campaignArr as $key=>$campaignName)
 		if($campaignRecord == $dialerCampaignReords){
 			$status=1;
 			$statusMsg ='Success';
+			$dialerHandlerObj->setCampaignStatus($campaignName,$csvEntryDate,$status);
 		}
 		else{
-			$status=0;
 			$statusMsg='Failure';
 		}
-		$dialerHandlerObj->setCampaignStatus($campaignName,$csvEntryDate,$status);
-
-		// Mailer	
+		// Mailer system 	
 		$sub	="$statusMsg: Dialer insert for $campaignName-Campaign Done";
 		$msg	="Campaign Records:".$campaignRecord."# Dialer Records:".$dialerCampaignReords;	
 		mail($to,$sub,$msg,$from);

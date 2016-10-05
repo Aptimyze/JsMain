@@ -24,7 +24,7 @@ if($profileStr!=''){
 	deleteProfiles($db_master,$profileStr);
 
 	foreach($profilesArr as $key=>$profileid){	
-		$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaignName','DIAL_STATUS=0',now(),'$action')";
+		$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaignName','DIAL_STATUS=0',now(),'$action')";
         	mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
 	}
 }
