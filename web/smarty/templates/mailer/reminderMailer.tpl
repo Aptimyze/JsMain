@@ -65,9 +65,9 @@
                 </td>
         </tr>
                  <tr>
-                        <td width="20" ></td>
+                        <td width="20" ><a style="font-family:Arial; font-size:12px; line-height:25px;margin-left: 50%; width:100%; float:left" target="_blank" href="(LINK)INTEREST:profileid=~$profileid`(/LINK)">View All</a></td>
                         <td>
-                <a style="font-family:Arial; font-size:12px; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)INTEREST:profileid=~$profileid`(/LINK)">View All</a>
+                
 
             </td>
 
