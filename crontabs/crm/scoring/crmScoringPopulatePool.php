@@ -12,7 +12,7 @@ ini_set('memory_limit', '300M');
 $myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
 
 // Truncate Table
-$sqlTrunc ="Truncate table test.ANALYTIC_SCORE_POOL";
+$sqlTrunc ="Truncate table js_crm.ANALYTIC_SCORE_POOL";
 mysql_query($sqlTrunc,$myDb) or die($sqlTrunc.mysql_error($myDb));
 
 //Pool set of last 15 days logins
@@ -103,7 +103,7 @@ for($t=0;$t<count($modelType_arr);$t++)
                         $profileid = $modelArr[$j];
                         if($profileid)
 			{
-				$sql_up = "INSERT INTO test.ANALYTIC_SCORE_POOL (PROFILEID,MODEL) VALUES ('".$profileid."', '".$modelType."')";
+				$sql_up = "INSERT INTO js_crm.ANALYTIC_SCORE_POOL (PROFILEID,MODEL) VALUES ('".$profileid."', '".$modelType."')";
 				mysql_query($sql_up,$myDb) or die($sql_up.mysql_error($myDb)); 
 			}
 		}

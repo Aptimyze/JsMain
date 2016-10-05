@@ -26,7 +26,7 @@ for($t=0;$t<count($modelType_arr);$t++)
 {
 	$modelArr = array();
         $modelType = $modelType_arr[$t];
-	$sql = "SELECT DISTINCT(PROFILEID) FROM test.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%3=2";
+	$sql = "SELECT DISTINCT(PROFILEID) FROM js_crm.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%3=2";
 	$res = mysql_query($sql,$myDb) or die($sql.mysql_error($myDb));
 	while($row = mysql_fetch_array($res))
         	$modelArr[] = $row['PROFILEID'];
@@ -118,7 +118,7 @@ function updateScoreLog($profileid, $score, $modelType) {
 	mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));	
 
 	global $myDb;
-	$sql_up = "UPDATE test.ANALYTIC_SCORE_POOL SET SCORE='$score' WHERE PROFILEID='$profileid' AND MODEL='$modelType'";
+	$sql_up = "UPDATE js_crm.ANALYTIC_SCORE_POOL SET SCORE='$score' WHERE PROFILEID='$profileid' AND MODEL='$modelType'";
         mysql_query($sql_up,$myDb) or die($sql_up.mysql_error($myDb));
 }
 
