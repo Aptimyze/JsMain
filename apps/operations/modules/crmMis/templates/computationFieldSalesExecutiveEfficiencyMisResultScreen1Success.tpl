@@ -3,7 +3,7 @@
    <title>Jeevansathi.com - MIS</title>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
     ~if $computing eq true`
-    <meta http-equiv="refresh" content="5">
+    <meta http-equiv="refresh" content="30">
     ~/if`
 </head>
 <body>
