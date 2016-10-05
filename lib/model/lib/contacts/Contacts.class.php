@@ -200,6 +200,28 @@ class Contacts {
 	 * @return void
 	 * @access public
 	 */
+	public function setPageSource($pageSource)
+	{
+			$this->pageSource = $pageSource;
+		
+	}
+	/**
+	 * returns the type of contact between Sender and Reciever.
+	 * @return string
+	 * @access public
+	 */
+	public function getPageSource()
+	{
+		return $this->pageSource;
+	}
+	/**
+	 *
+	 * @param datetime TIME
+	 * @return void
+	 * @access public
+	 */
+
+
 	public function setTIME($TIME)
 	{
 		$this->TIME = $TIME;
