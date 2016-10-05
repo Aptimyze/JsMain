@@ -2126,7 +2126,7 @@ JsChat.prototype = {
             }, 1000);   
         } else if(type == "noAnimate") {
             setTimeout(function () {
-                if(document.getElementById("chatMessage_"+userId).length){
+                if(document.getElementById("chatMessage_"+userId).length != undefined){
                     var len = document.getElementById("chatMessage_"+userId).scrollHeight;
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
                         scrollTop: len
@@ -3089,7 +3089,7 @@ JsChat.prototype = {
             var totalCount = 0;
             $.each(bubbleData, function(index,elem) {
                 if($('chat-box[user-id="'+elem.userId+'"] .chatBoxBar img').hasClass("downBarPicMin")){
-                    console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
+                    //console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
                     $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
                     if(elem.bCount != 0){
                         $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2').show();
