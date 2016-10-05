@@ -18,14 +18,14 @@
 			// 'logging' => 1, logging is on for this module
 			LoggingEnums::HOMEPAGE => array(
 				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
+				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
 				LoggingEnums::DIRECTORY => false,
 				LoggingEnums::STACKTRACE => false,
 				LoggingEnums::SERVER_PARAM => false
 				),
 			LoggingEnums::STATIC_MODULE => array(
 				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
+				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
 				LoggingEnums::DIRECTORY => false,
 				LoggingEnums::STACKTRACE => false,
 				LoggingEnums::SERVER_PARAM => false

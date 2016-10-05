@@ -17,7 +17,7 @@ class LoggingEnums
     const LOG_ERROR = 0;
     const SERVER_FLAG = false;
     // 1 for Enabling config of modules, 0 for not
-    const CONFIG_ON = false;
+    const CONFIG_ON = true;
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = false;
     const LOG_TRACE = false;
