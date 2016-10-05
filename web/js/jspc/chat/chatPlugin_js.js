@@ -3249,7 +3249,7 @@ JsChat.prototype = {
                     console.log("manvi",$("chat-box"));
                     $("chat-box").each(function (index, element) {
                         console.log("element",element);
-                        curEle._scrollDown($(this), "min");
+                        _this._scrollDown($(this), "min");
                     });
                 },2000);
                 $(this._minPanelId).click(function () {
