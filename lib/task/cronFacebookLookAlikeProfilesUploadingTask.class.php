@@ -126,23 +126,10 @@ EOF;
 
             $this->audience = new FacebookAds\Object\CustomAudience(null, $this->account_id);
 
-
             $this->getInclusionData();
 
-
-            $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->emailInclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
-            
-
-            $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->mobileInclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
-            
             $this->getExclusionData();
 
-
-
-            $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->emailExclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
-            
-
-            $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->mobileExclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
         } 
         catch (Exception $e) 
         {
@@ -175,40 +162,40 @@ EOF;
      * @param array $data             email or mobile array
      * @param enum $dataType         FacebookAds\Object\Values\CustomAudienceTypes::EMAIL or FacebookAds\Object\Values\CustomAudienceTypes::PHONE
      */
-    private function removeUsersCustomAudience($customAudienceId,$data,$dataType)
-    {
-        try 
-        {
-            $this->audience->id = $customAudienceId;
-            $this->audience->removeUsers($data,$dataType);
-        } 
-        catch (Exception $e) 
-        {
-            throw new jsException($e);
-        }
-    }
+    // private function removeUsersCustomAudience($customAudienceId,$data,$dataType)
+    // {
+    //     try 
+    //     {
+    //         $this->audience->id = $customAudienceId;
+    //         $this->audience->removeUsers($data,$dataType);
+    //     } 
+    //     catch (Exception $e) 
+    //     {
+    //         throw new jsException($e);
+    //     }
+    // }
 
     /**
      * create a custom audience.
      * @param  string $name        Name of the custom audience to be created.
      * @param  string $description The description of the custom audience created.
      */
-    private function createCustomAudience($name,$description)
-    {
+    // private function createCustomAudience($name,$description)
+    // {
             
-        try {    
-        $this->audience->setData(array(
-              FacebookAds\Object\Fields\CustomAudienceFields::NAME => $name,
-              FacebookAds\Object\Fields\CustomAudienceFields::DESCRIPTION => $description,
-              FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\CustomAudienceSubtypes::CUSTOM,
-            ));
-        $this->audience->create();
-        } 
-        catch (Exception $e) 
-        {
-            throw new jsException($e);
-        }
-    }
+    //     try {    
+    //     $this->audience->setData(array(
+    //           FacebookAds\Object\Fields\CustomAudienceFields::NAME => $name,
+    //           FacebookAds\Object\Fields\CustomAudienceFields::DESCRIPTION => $description,
+    //           FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\CustomAudienceSubtypes::CUSTOM,
+    //         ));
+    //     $this->audience->create();
+    //     } 
+    //     catch (Exception $e) 
+    //     {
+    //         throw new jsException($e);
+    //     }
+    // }
     /**
      * creates look alike audience
      * @param  string $originAudienceId the custom audience Id from which the look alike audience is to created.
@@ -216,28 +203,28 @@ EOF;
      * @param  string $description      the description of the look alike audience created
      * @param  string $country          IN for india, US for us
      */
-    private function createLookAlike($originAudienceId,$name,$description,$country = 'IN')
-    {
-       try 
-       {
-            $this->audience->setData(array(
-            FacebookAds\Object\Fields\CustomAudienceFields::NAME => $name,
-            FacebookAds\Object\Fields\CustomAudienceFields::DESCRIPTION => $description,
-            FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\CustomAudienceSubtypes::LOOKALIKE,
+    // private function createLookAlike($originAudienceId,$name,$description,$country = 'IN')
+    // {
+    //    try 
+    //    {
+    //         $this->audience->setData(array(
+    //         FacebookAds\Object\Fields\CustomAudienceFields::NAME => $name,
+    //         FacebookAds\Object\Fields\CustomAudienceFields::DESCRIPTION => $description,
+    //         FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\CustomAudienceSubtypes::LOOKALIKE,
 
-            FacebookAds\Object\Fields\CustomAudienceFields::ORIGIN_AUDIENCE_ID => $originAudienceId,
-            FacebookAds\Object\Fields\CustomAudienceFields::LOOKALIKE_SPEC => array(
-                'type' => 'similarity',
-                'country' => $country,
-              )
-            ));
-            $this->audience->create();
-       } 
-       catch (Exception $e)
-        {
-           throw new jsException($e);
-       }
-    }
+    //         FacebookAds\Object\Fields\CustomAudienceFields::ORIGIN_AUDIENCE_ID => $originAudienceId,
+    //         FacebookAds\Object\Fields\CustomAudienceFields::LOOKALIKE_SPEC => array(
+    //             'type' => 'similarity',
+    //             'country' => $country,
+    //           )
+    //         ));
+    //         $this->audience->create();
+    //    } 
+    //    catch (Exception $e)
+    //     {
+    //        throw new jsException($e);
+    //    }
+    // }
 
     /**
      * get exlusion data from look alike audience
@@ -248,25 +235,27 @@ EOF;
         {
             $profileObj = new JPROFILE();
 
-            $start_joined_date  = date('2000-1-1 00:00:00');
+            $start_joined_date  = date('2000-01-01 00:00:00');
         
             $last_joined_date = date('Y-m-d h:m:s',strtotime('+365 days', strtotime($start_joined_date)));
+
+            $valueArray['MOB_STATUS']="Y";
+
+            $lastLoginLimit = date('Y-m-d', strtotime("-365 days"));
+
+            $greaterThanArray["LAST_LOGIN_DT"] = $lastLoginLimit;
             
-            while ( $last_joined_date <= date('Y-m-d h:m:s'))
+            $fields="EMAIL,PHONE_MOB";
+
+            $today =  date('Y-m-d h:m:s');
+            
+            while ( $last_joined_date <= $today )
             {
                 $last_joined_date  = date('Y-m-d h:m:s',strtotime('+365 days', strtotime($start_joined_date)));
-
-                $valueArray['MOB_STATUS']="Y";
-
-                $lastLoginLimit = date('Y-m-d', strtotime("-365 days"));
-
-                $greaterThanArray["LAST_LOGIN_DT"] = $lastLoginLimit;
                
                 $greaterThanArray["ENTRY_DT"] = $start_joined_date;
                 
                 $lessThanArray["ENTRY_DT"] = $last_joined_date;
-
-                $fields="EMAIL,PHONE_MOB";
 
 
                 $result = $profileObj->getArray($valueArray, "", $greaterThanArray, $fields ,  $lessThanArray, "", "", "", "", "","","");
@@ -280,6 +269,17 @@ EOF;
                         $this->emailExclusion[]=$data['EMAIL'];
                         $this->mobileExclusion[]=$data['PHONE_MOB'];
                     }
+
+
+
+                    $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->emailExclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
+            
+
+                    $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->mobileExclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
+
+                    $this->emailExclusion = array();
+                    $this->mobileExclusion = array();
+
                 }
                 
                 $start_joined_date = $last_joined_date;
@@ -305,7 +305,26 @@ EOF;
 
             $profileObj = new JPROFILE();
            
-            // echo "I am in source group.";
+            $valueArray['activatedKey'] = '1';
+            // mobile should be verified.
+            $valueArray['MOB_STATUS']="Y";
+
+            //member should of core community
+            $valueArray['MTONGUE']=implode(",", $this->coreCommunity);
+
+            //the last login must be greater than 150 days before
+          
+            $lastLoginLimit = date('Y-m-d', strtotime("-150 days"));
+
+            $greaterThanArray["LAST_LOGIN_DT"] = $lastLoginLimit;
+
+            //shouldn't be deleted
+            $excludeArray["ACTIVATED"] = "'D'";
+
+            $fields="EMAIL,PHONE_MOB";
+
+            $qualityProfileQuery = "((`GENDER` = 'M' AND `AGE` >= 26) ||  (`GENDER` = 'F' AND `AGE` >= 22))";
+
 
             foreach ($this->sourceGroupArray as $sourceGroup) { 
 
@@ -315,27 +334,9 @@ EOF;
 
                 if ( !empty($arraySourceId))
                 {
-                    // echo $this->sourceGroupArray[$i];
-                    $valueArray['activatedKey'] = '1';
-                    $valueArray['SOURCE'] = implode(",", $arraySourceId);
                     
-                    // mobile should be verified.
-                    $valueArray['MOB_STATUS']="Y";
+                    $valueArray['SOURCE'] = implode(",", $arraySourceId);
 
-                    //member should of core community
-                    $valueArray['MTONGUE']=implode(",", $this->coreCommunity);
-
-                    //the last login must be greater than 150 days before
-                  
-                    $lastLoginLimit = date('Y-m-d', strtotime("-150 days"));
-
-                    $greaterThanArray["LAST_LOGIN_DT"] = $lastLoginLimit;
-
-                    //shouldn't be deleted
-                    $excludeArray["ACTIVATED"] = "'D'";
-
-                    $fields="EMAIL,PHONE_MOB";
-                    $qualityProfileQuery = "((`GENDER` = 'M' AND `AGE` >= 26) ||  (`GENDER` = 'F' AND `AGE` >= 22))";
 
                     $result = $profileObj->getArray($valueArray, $excludeArray, $greaterThanArray, $fields ,  "", "", "", "", "", "","",$qualityProfileQuery);
 
@@ -343,11 +344,22 @@ EOF;
                     if ( !empty($result))
                     {
                        foreach ($result as $key => $data) 
-                       {
+                        {
                             $this->emailInclusion[]=$data['EMAIL'];
                             $this->mobileInclusion[]=$data['PHONE_MOB'];
                         }
+
+                        $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->emailInclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
+            
+
+                        $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->mobileInclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
+
+                        $this->emailInclusion = array();
+                        $this->mobileInclusion = array();
+                      
                     }
+
+
                 }
             }
         
