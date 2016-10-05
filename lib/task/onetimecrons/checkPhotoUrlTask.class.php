@@ -134,7 +134,7 @@ EOF;
         }
         elseif($urlType == "OriginalPicUrl" && $originalPicUrl != "")
         {
-            $checkUrl = substr($originalPicUrl,0,3);
+            $checkUrl = substr($originalPicUrl,0,2);
 
             if($checkUrl ==  IMAGE_SERVER_ENUM::$cloudUrl)
             {
