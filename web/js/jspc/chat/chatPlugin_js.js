@@ -3249,7 +3249,7 @@ JsChat.prototype = {
                     $("chat-box").each(function (index, element) {
                         curEle._scrollDown($(this), "min");
                     });
-                },500);
+                },1000);
                 $(this._minPanelId).click(function () {
                     _this._maximizeChatPanel();
                 });
