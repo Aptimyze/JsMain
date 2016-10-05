@@ -2126,7 +2126,7 @@ JsChat.prototype = {
             }, 1000);   
         } else if(type == "noAnimate") {
             setTimeout(function () {
-                if(document.getElementById("chatMessage_"+userId).length != undefined){
+                if(document.getElementById("chatMessage_"+userId) != null){
                     var len = document.getElementById("chatMessage_"+userId).scrollHeight;
                     $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
                         scrollTop: len
