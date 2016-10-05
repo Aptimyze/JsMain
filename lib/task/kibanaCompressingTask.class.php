@@ -29,10 +29,10 @@ EOF;
     {
 
 
-      for($i=0 ; $i <=24 ; $i++)
+      for($i=48 ; $i <72 ; $i++)
       {
         $currdate = date('Y.m.d');
-        $date = strtotime(date("Y.m.d", strtotime("-3 day")));
+        $date = (date("Y.m.d", strtotime("-1 day")));
         $elkServer = '10.10.18.66';
         $elkPort = '9200';
         $indexName = 'filebeat-'.$date;
@@ -42,8 +42,8 @@ EOF;
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-48h",
-                        "gt" => "now-72h"
+                        "lt" => "now-".$i."h",
+                        "gt" => "now-".($i+1)."h"
                     ]
                 ]
             ],
