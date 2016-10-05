@@ -194,12 +194,21 @@ class staticActions extends sfActions
 		{
 			//echo "<script>$.colorbox.close();document.location.href='".$this->nextAction."';</script>";
 		}
+    // log referer
+    if(isset($_SERVER['HTTP_REFERER']))
+    {
+      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+    }
 	}
         public function executeNewMobLogin(sfWebRequest $request)
         { 
         	//$loginFailedObj = new LOGIN_FAILED1;
         	//$count=
-        	
+        	// check
+          if(isset($_SERVER['HTTP_REFERER']))
+          {
+            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+          }
 			$this->forward("static","LogoutPage");
         }
 
@@ -419,6 +428,11 @@ public function executeCALRedirection($request){
 			$authenticationLoginObj->logout($loginData[PROFILEID]);
 			
 		}
+    // log referer
+    if(isset($_SERVER['HTTP_REFERER']))
+    {
+      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+    }
     if(MobileCommon::isMobile() || MobileCommon::isDesktop()==true)  
     {
        //For JPSC/JSMS, disable notifications
