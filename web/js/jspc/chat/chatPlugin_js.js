@@ -174,7 +174,7 @@ JsChat.prototype = {
         }
 
         $.each(data, function(index,elem){
-            console.log("data",data);
+            //console.log("data",data);
             if($('chat-box[user-id="' + elem["userId"] + '"]').length == 0){
                 $("#"+elem["userId"]+"_"+elem["group"]).click();    
             }
@@ -3211,7 +3211,7 @@ JsChat.prototype = {
         } else {
             if(localStorage.getItem("chatStateData") == "min"){
                 $(this._parendID).css('display', 'none');
-                $(this._parendID).addClass('chatw5').css('height', this._getHeight());
+                $(this._parendID).addClass('wid20p').css('height', this._getHeight());
                 this.minimizedPanelHTML();
                 $(this._minPanelId).click(function () {
                     _this._maximizeChatPanel();
