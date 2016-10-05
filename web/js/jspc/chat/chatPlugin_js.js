@@ -3246,7 +3246,7 @@ JsChat.prototype = {
                 $(this._parendID).addClass('wid20p').css('height', this._getHeight());
                 this.minimizedPanelHTML();
                 setTimeout(function(){
-                    console.log("manvi",$("chat-box"));
+                    //console.log("manvi",$("chat-box"));
                     $("chat-box").each(function (index, element) {
                         console.log("element",element);
                         _this._scrollDown($(this), "min");
