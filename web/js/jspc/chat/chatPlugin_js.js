@@ -3245,6 +3245,11 @@ JsChat.prototype = {
                 $(this._parendID).css('display', 'none');
                 $(this._parendID).addClass('wid20p').css('height', this._getHeight());
                 this.minimizedPanelHTML();
+                setTimeout(function(){
+                    $("chat-box").each(function (index, element) {
+                        curEle._scrollDown($(this), "min");
+                    });
+                },500);
                 $(this._minPanelId).click(function () {
                     _this._maximizeChatPanel();
                 });
