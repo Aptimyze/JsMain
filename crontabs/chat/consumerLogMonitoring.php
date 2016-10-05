@@ -1,14 +1,14 @@
 <?php
 	$domain = "http://10.10.18.67:9090/";
-	$logFilePath = array("USER_CREATE_Log"=>"/data/projects/logs/JsRosterConsumer_USER_CREATE.log",
-						 "USER_DELETE_Log"=>"/data/projects/logs/JsRosterConsumer_USER_DELETE.log",
-						 "SHORTLIST_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_SHORTLIST_ROSTER.log",
-						 "DPP_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_DPP_ROSTER.log",
-						 "INT_REC_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_INT_REC_ROSTER.log",
-						 "INT_SENT_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_INT_SENT_ROSTER.log",
-						 "ACCEPTANCE_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_ACCEPTANCE_ROSTER.log",
-						 "ROSTER_UPDATOR_Log"=>"/data/projects/logs/JsRosterConsumer_ROSTER_UPDATOR.log",
-						 "ACCEPTANCE_SENT_Log"=>"/data/projects/logs/JsRosterConsumer_ACCEPTANCE_SENT.log");
+	$logFilePath = array("USER_CREATE_Log"=>"/data/projects/logs/JsRosterConsumer_1.log",
+						 "USER_DELETE_Log"=>"/data/projects/logs/JsRosterConsumer_2.log",
+						 "SHORTLIST_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_3.log",
+						 "DPP_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_4log",
+						 "INT_REC_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_5.log",
+						 "INT_SENT_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_6.log",
+						 "ACCEPTANCE_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_7.log",
+						 "ROSTER_UPDATOR_Log"=>"/data/projects/logs/JsRosterConsumer_8.log",
+						 "ACCEPTANCE_SENT_Log"=>"/data/projects/logs/JsRosterConsumer_9.log");
 
 	$consumerMapping = array(
 							$logFilePath["USER_CREATE_Log"]=>array(array(
@@ -87,7 +87,8 @@
 	}
 
 	function sendMailAlert($subject){
-		mail("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com",$subject,"Please check");
+		//mail("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com",$subject,"Please check");
+		mail("lavesh.rawat@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com",$subject,"Please check, restarting consumers as well");
 		//mail("nitishpost@gmail.com",$subject,"Please check");
 	}
 ?>
