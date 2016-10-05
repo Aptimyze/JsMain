@@ -51,12 +51,12 @@ function getActiveServerName($activeServerId,$master_or_slave='master')
 	global $ddlShardSlaveUser;
         global $slave_activeServers;
         global $shardSlave112;
-        if($master_or_slave=='masterDDL')
-                 return 'masterDDL';
-        else if($master_or_slave=='master')
+        if($master_or_slave=='master')
                 return $activeServers[$activeServerId];
         elseif($master_or_slave=='slave112')
                 return $shardSlave112[$activeServerId];
+        elseif($master_or_slave=='masterDDL')
+                return 'masterDDL';
 	elseif($master_or_slave=='alertsDDL')
                 return 'alertsDDL';
 	elseif($master_or_slave=='viewLogDDL')
