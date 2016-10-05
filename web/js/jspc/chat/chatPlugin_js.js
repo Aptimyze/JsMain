@@ -3246,10 +3246,12 @@ JsChat.prototype = {
                 $(this._parendID).addClass('wid20p').css('height', this._getHeight());
                 this.minimizedPanelHTML();
                 setTimeout(function(){
+                    console.log("manvi",$("chat-box"));
                     $("chat-box").each(function (index, element) {
+                        console.log("element",element);
                         curEle._scrollDown($(this), "min");
                     });
-                },1000);
+                },2000);
                 $(this._minPanelId).click(function () {
                     _this._maximizeChatPanel();
                 });
