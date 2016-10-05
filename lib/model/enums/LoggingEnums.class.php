@@ -65,7 +65,7 @@ class LoggingEnums
     const SEO = 'seo';
     const MYJS = 'myjs';
     const HOMEPAGE = 'homepage';
-    const STATIC_MODULE = 'STATIC';
+    const STATIC_MODULE = 'static';
     const REQUEST_URI = 'REQUEST_URI';
     const DOMAIN = 'Domain';
     const REFERER = 'Referer';
