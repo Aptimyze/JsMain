@@ -8,7 +8,9 @@
 						 "INT_SENT_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_6.log",
 						 "ACCEPTANCE_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_7.log",
 						 "ROSTER_UPDATOR_Log"=>"/data/projects/logs/JsRosterConsumer_8.log",
-						 "ACCEPTANCE_SENT_Log"=>"/data/projects/logs/JsRosterConsumer_9.log");
+						 "ACCEPTANCE_SENT_Log"=>"/data/projects/logs/JsRosterConsumer_9.log",
+						 "MESSAGE_Log"=>"/projects/logs/JsMessagingConsumer.log"
+						 );
 
 	$consumerMapping = array(
 							$logFilePath["USER_CREATE_Log"]=>array(array(
@@ -46,6 +48,10 @@
 							$logFilePath["ACCEPTANCE_SENT_Log"]=>array(array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
 								"consumerPath"=>"java -Dspring.profiles.active=9 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
+							),
+							$logFilePath["MESSAGE_Log"]=>array(array(
+								"consumerGrep"=>"/home/developer/projects/JsMessagingConsumer/jsmessagingconsumer-0.1.0.jar",
+								"consumerPath"=>"java -jar -Dspring.profiles.active=live jsmessagingconsumer-0.1.0.jar &"),
 							)
 						);
 	//print_r($consumerMapping);
