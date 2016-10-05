@@ -150,7 +150,7 @@
                     </div>
                   <div class="txtc optp5 f18 fontlig">
                       <i class="mainsp otpic1 js-noTrials"></i>
-                      <p id='oopsDiv' class="otpcolr1 pt20 js-noTrials"><strong>Oops! You have exhausted all your trials !.</strong></p>
+                      <p id='oopsDiv' class="otpcolr1 pt20 js-noTrials"><strong>Oops! You have exhausted all your trials !</strong></p>
                       <p class="color13 otpp6 lh25">You have reached maximum number of attempts for Verification code.</p>
                   
                   </div>
