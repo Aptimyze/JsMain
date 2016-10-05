@@ -1429,14 +1429,13 @@ var padding = 31;
                 ele1.putValuesInList(regField['cityReg'], arrayfamilyCity);
                 $("#cityReg-gridDropdown_set").hide();
             }
-            if(inputData[ele1.formKey] != '51'){
                 $("#stateReg-inputBox_set").val("");
                 $("#stateReg").val("");
                 $("#stateRegOther").val("");
+                $("#stateReg_value").val("");
                 inputData["state_res"] = "";
                 regField["stateReg"].selected = "";
                 $("#stateReg-gridUl").find(".activeopt").removeClass("activeopt");
-            }
           }
           else
               ele1.fieldElement.removeAttr("data-alpha");
