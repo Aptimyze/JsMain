@@ -32,7 +32,7 @@ EOF;
       for($i=48 ; $i <72 ; $i++)
       {
         $currdate = date('Y.m.d');
-        $date = (date("Y.m.d", strtotime("-1 day")));
+        $date = (date("Y.m.d", strtotime("-2 day")));
         $elkServer = '10.10.18.66';
         $elkPort = '9200';
         $indexName = 'filebeat-'.$date;
@@ -63,7 +63,7 @@ EOF;
         {
             $arrChannels[$module['key']] = $module['doc_count'];
         }
-        print_r($arrChannels); die;
+        
 
          $params = [
             "query"=> [
@@ -273,7 +273,13 @@ EOF;
         {
             $arrrequestURI[$module['key']] = $module['doc_count'];
         }
-
+        print_r($arrChannels);print("///////////////////////");
+        print_r();print("///////////////////////");
+        print_r();print("///////////////////////");
+        print_r();print("///////////////////////");
+        print_r();print("///////////////////////");
+        print_r();print("///////////////////////");
+        
       }
     }
   }
