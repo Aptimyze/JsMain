@@ -45,6 +45,5 @@ class MailerGroup{
   const HOROSCOPE_REQUEST = 35;
   const PHONE_UNVERIFY=43;
   const REMINDER_MAILER=22;
-
-  
+  const ASTRO_COMPATIBILTY = 27;
 }
