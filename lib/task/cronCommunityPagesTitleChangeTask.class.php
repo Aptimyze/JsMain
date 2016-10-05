@@ -26,7 +26,7 @@ EOF;
         $communityPagesMappingObjMaster = new NEWJS_COMMUNITY_PAGES_MAPPING("newjs_masterDDL");
         $communityPagesMappingObjSlave = new NEWJS_COMMUNITY_PAGES_MAPPING("newjs_slave");
         
-        //Create backup table before performing title change;
+        //Create backup table before performing title changes;
         $communityPagesObjMaster->createBackupTable();
         $communityPagesMappingObjMaster->createBackupTable();
         
