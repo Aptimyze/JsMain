@@ -3,7 +3,7 @@
 	$logFilePath = array("USER_CREATE_Log"=>"/data/projects/logs/JsRosterConsumer_1.log",
 						 "USER_DELETE_Log"=>"/data/projects/logs/JsRosterConsumer_2.log",
 						 "SHORTLIST_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_3.log",
-						 "DPP_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_4log",
+						 "DPP_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_4.log",
 						 "INT_REC_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_5.log",
 						 "INT_SENT_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_6.log",
 						 "ACCEPTANCE_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_7.log",
