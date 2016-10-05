@@ -180,6 +180,9 @@ JsChat.prototype = {
             }
             if($('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "open" || elem["state"] == "") {
                 $('chat-box[user-id="' + elem["userId"] + '"] .chatBoxBar').click();
+                setTimeout(function(){
+                    curEle._scrollToBottom(elem["userId"],"noAnimate");
+                },50);
             }
             if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
                 $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
