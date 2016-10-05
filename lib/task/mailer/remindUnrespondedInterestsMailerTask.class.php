@@ -45,37 +45,38 @@ EOF;
 	            echo "CHUNK = ".$chunk."\n\n";
 	            $resultArray=array();
 	            
-	           	$startTime =mktime(0, 0, 0, date("m"), date("d")-50, date("Y"));
-	           	$endTime =mktime(0, 0, 0, date("m"), date("d")-2, date("Y"));
-	            $stDate = date('Y-m-d H:i:s',$startTime);
-				$enDate = date('Y-m-d H:i:s',$endTime);
-				if($chunk % 3 !=0)
-				{
-                                    SendMail::send_email("palash.chordia@jeevansathi.com,nitesh.sethi@jeevansathi.com,ayush.sethi@jeevansathi.com",
-                                            "Wrong no of chunks is passed (should be a multiple of 3) in remindUnrespondedInterestsMailerTask.class.php",'Wrong parameters passed in remindUnrespondedInterestsMailerTask');
-                                        echo "No of Chunks should be a multiple of 3 !!!!! \n";
-					die;
-				}
-						
+	           	$startTime =mktime(0, 0, 0, date("m"), date("d")-13, date("Y"));
+	           	$endTime =mktime(0, 0, 0, date("m"), date("d")-6, date("Y"));
+        	        $stDate = date('Y-m-d H:i:s',$startTime);
+                        $enDate = date('Y-m-d H:i:s',$endTime);
                         $mailerEntryObject = new MAIL_UNRESPONDED_CONTACTS('newjs_master');
 	          	for($i=0;$i<$chunk;$i++)
 				{
-					echo "MEMORY USAGE At the start of loop: ".memory_get_usage() . "\n";
-					$dbObShard = JsDbSharding::getShardNo($i);
+					
+                            
+                                        echo "MEMORY USAGE At the start of loop: ".memory_get_usage() . "\n";
+                                    	echo "MEMORY USAGE At the step 0 of loop: ".memory_get_usage() . "\n";
+					for($j=3;$j<6;$j++)
+                                        {	
+                                        unset($row);
+                                        unset($arranged);
+                                        unset($jprofileArray);
+                                        unset($jprofileArray2);
+                                        unset($profileString);
+                                        $dbObShard = JsDbSharding::getShardNo($i);
 					$dbOb=new newjs_CONTACTS($dbObShard);
-                                        $shardRemainder = $i%3;
-						$remainderArray=array('divisor'=>$chunk,'remainder'=>$i,'shardRemainder' => $shardRemainder);
-						$row=$dbOb->getInterestSentForDuration($stDate,$enDate,$remainderArray);
-						
-						echo "MEMORY USAGE At the step 0 of loop: ".memory_get_usage() . "\n";
-						$arranged = array();
+                                        $shardRemainder = $j%3;
+                                        $remainderArray=array('divisor'=>$chunk,'remainder'=>$i,'shardRemainder' => $shardRemainder);
+                                        $row=$dbOb->getInterestSentForDuration($stDate,$enDate,$remainderArray);
+                                        if(!is_array($row))continue;
+                                        $arranged = array();
 						foreach ($row as $key => $value) {
 			
 								$arranged[$value['SENDER']][]=$value['RECEIVER'];
-									$profileArray[]=$value['RECEIVER'];
-
+                                                                $profileString.= ($value['RECEIVER'].",");
+                                                                unset($row[$key]);
 						}
-						$profileString=implode(',', array_unique($profileArray));
+                                                $profileString=substr($profileString,0,-1);
 						$paramArray=array('PROFILEID'=>$profileString);
 						$jprofileArray= JPROFILE::getInstance()->getArray($paramArray);
                                                 foreach ($jprofileArray as $key => $value) {
@@ -83,7 +84,7 @@ EOF;
                                                         $jprofileArray2[$value['PROFILEID']]='Y';
                                                     
                                                 }
-                                                
+                                                if(!is_array($jprofileArray2))continue;
                                                 echo "Got the Interests Sent array for chunk ".$i."\n\n";
 						$row=null;
 						unset($row);
@@ -104,6 +105,7 @@ EOF;
 						$arranged=null;
 						unset($arranged);
 						echo "MEMORY USAGE At the end of loop: ".memory_get_usage() . "\n";
+                                        }
 				}
 	}
 
