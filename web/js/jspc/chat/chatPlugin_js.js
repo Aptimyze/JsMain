@@ -183,6 +183,21 @@ JsChat.prototype = {
                 setTimeout(function(){
                     curEle._scrollToBottom(elem["userId"],"noAnimate");
                 },50);
+                var bubbleData = [];
+                if(localStorage.getItem("bubbleData")) {
+                    bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                }
+                var indexToBeRemoved;
+                $.each(bubbleData, function(index2, elem2){
+                    if(elem2.userId == elem["userId"]) {
+                        indexToBeRemoved = index2;
+                    }
+                });
+                if(indexToBeRemoved != undefined) {
+                    bubbleData.splice(indexToBeRemoved,1);
+                }
+                localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+        
             }
             if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
                 $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
