@@ -33,7 +33,7 @@ EOF;
         $profileArr2     = $billServStatObj->fetchTFNSMSProfiles($curDate); // E-32
         $billidArr       = array();
         $profileArr      = array();
-        if (is_array($profileArr1)) {
+        if (is_array($profileArr1) && !empty($profileArr1)) {
             foreach ($profileArr1 as $key => $val) {
                 if (strstr($val['SERVICEID'], 'W') === false) {
                     $billidArr[] = $val['BILLID'];
@@ -47,13 +47,13 @@ EOF;
             $profileArr = $billServStatObj->filterActiveProfilesFromBillidArr($billIdArr);
             unset($key, $val);
         }
-        if (is_array($profileArr2)) {
+        if (is_array($profileArr2) && !empty($profileArr2)) {
             foreach ($profileArr2 as $key => $val) {
                 $profileArr[] = $val;
             }
-            $profileArr = @array_unique($profileArr);
         }
-        if (is_array($profileArr)) {
+        $profileArr = @array_filter(array_unique($profileArr));
+        if (is_array($profileArr) && !empty($profileArr)) {
             foreach ($profileArr as $key => $val) {
                 CommonUtility::sendPlusTrackInstantSMS("MEM_TFN_SMS", $val['PROFILEID']);
             }
