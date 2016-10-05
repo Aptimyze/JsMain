@@ -1581,7 +1581,7 @@ class crmMisActions extends sfActions
 				//$memKeySet='';
 			      	if($memKeySet == 'C')
 			      	{
-					echo "1";
+					//echo "1";
 					$this->computing = true;
 					$this->setTemplate('computationFieldSalesExecutiveEfficiencyMisResultScreen1');
 				}
@@ -1642,7 +1642,7 @@ class crmMisActions extends sfActions
 				}
 			      	elseif($memKeySet == '')
       				{
-					echo "3";
+					//echo "3";
 				        $this->computing = true;
 				        $memcacheObj->set("$this->memcacheKey","C");
 				        $memcacheObj->set("MIS_FS_PARAMS_KEY",$params);
