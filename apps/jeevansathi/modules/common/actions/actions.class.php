@@ -798,7 +798,6 @@ class commonActions extends sfActions
     }
 
 
-    $loginData=$request->getAttribute('loginData');
     $verificationObj=new OTP($loggedInProfileObj,$phoneType,OTPENUMS::$deleteProfileOTP);
     $response=$verificationObj->sendOtpSMS();
      $this->phoneNum =$verificationObj->getPhoneWithoutIsd();
@@ -831,10 +830,9 @@ class commonActions extends sfActions
         }
   }
 
-public function executeMatchOtp($enteredOtp) 
+public function executeMatchOtp(sfWebRequest $request) 
     {    
         $context = $this->getContext();
-        $request = $context->getRequest();
         $respObj = ApiResponseHandler::getInstance();
     $phoneType=$request->getParameter('phoneType');
     $enteredOtp=$request->getParameter('enteredOtp');

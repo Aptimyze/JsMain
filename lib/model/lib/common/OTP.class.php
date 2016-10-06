@@ -134,25 +134,18 @@ private function sendMessage($OTP)
 
 private function checkForTrials() 
 	{    
-	if($this->otpRow)
-	{ 
 		
-		if($this->otpRow['TRIAL_COUNT'] >= OTPENUMS::$deleteProfileOTP['trialLimit'])
+		if($this->otpRow && $this->otpRow['TRIAL_COUNT'] >= OTPENUMS::$deleteProfileOTP['trialLimit'])
 		{
 			return false;
 
 		}
-
-		
-	}
-
 	return true;
 	
 	}
 
 private function checkForExpiration()
 {
-	$otpObject=new sms_COMMON_OTP();	
 	if((time() - strtotime($this->otpRow['DATE'])) >= $this->otpSettings['Duration'])
 	{
 			return true;

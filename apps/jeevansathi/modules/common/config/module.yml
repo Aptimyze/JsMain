@@ -28,4 +28,8 @@ all:
    enable_login:  off
   ApiRequestCallbackV1:
    enable_login:  off
+  MatchOtp:
+   enable_login:  off
+  SendOtpSMS:
+   enable_login:  off
 
