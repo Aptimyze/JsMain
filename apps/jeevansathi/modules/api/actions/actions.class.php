@@ -76,7 +76,7 @@ class apiActions extends sfActions
 
 		// Code added to update app device details (app version/os version/device model)
 		if($forwardingArray["moduleName"]=='myjs'){
-			NotificationFunctions::updateVersionDetails($request);
+			//NotificationFunctions::updateVersionDetails($request);
 		}// Code ends
 		$this->forward($forwardingArray["moduleName"],$forwardingArray["actionName"]);
 	}

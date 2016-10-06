@@ -55,14 +55,14 @@ EOF;
 		// timeout checks needs to be done
 		if($response)
 		{
+			date_default_timezone_set('UTC');
 			$arrResponse = json_decode($response, true);
 			$arrModules = array();
 			foreach($arrResponse['aggregations']['modules']['buckets'] as $module) 
 			{
 			    $arrModules[$module['key']] = $module['doc_count']; 
 			}
-			// $to = "jsissues@jeevansathi.com";
-			$to = "nikhil.mittal@jeevansathi.com";
+			$to = "jsissues@jeevansathi.com";
 
 			$kibanaUrl = 'http://'.$elkServer.":".$kibanaPort."/app/kibana#/dashboard/".$dashboard."?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
 
@@ -75,7 +75,7 @@ EOF;
 			}
 			if($msg != '')
 			{
-				$msg = "In the interval of ".$interval." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
+				$msg = "In the interval of ".$interval." hour with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
 			}
 		}
 		else

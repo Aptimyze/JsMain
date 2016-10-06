@@ -27,6 +27,11 @@ class ApiEditSubmitV1Action extends sfActions
 		//Get symfony form object related to Edit Fields coming.
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->editFieldNameArr=$request->getParameter('editFieldArr');
+		if($this->editFieldNameArr['STATE_RES'] && $this->editFieldNameArr['CITY_RES']=="0")
+		{
+			$this->editFieldNameArr['CITY_RES']=  $this->editFieldNameArr['STATE_RES'] ."OT";
+		}
+		unset($this->editFieldNameArr['STATE_RES']);
                 if(!empty($_FILES)){
                         foreach($_FILES as $f1){
                                 foreach($f1 as $fKey=>$fVal){
