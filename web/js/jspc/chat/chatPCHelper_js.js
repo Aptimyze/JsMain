@@ -871,7 +871,7 @@ function clearChatMsgFromLS(){
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','bubbleData','chatBoxData','tabState'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });

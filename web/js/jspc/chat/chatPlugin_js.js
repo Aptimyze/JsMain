@@ -184,8 +184,8 @@ JsChat.prototype = {
                     curEle._scrollToBottom(elem["userId"],"noAnimate");
                 },50);
                 var bubbleData = [];
-                if(localStorage.getItem("bubbleData")) {
-                    bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                if(localStorage.getItem("bubbleData_new")) {
+                    bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
                 }
                 var indexToBeRemoved;
                 $.each(bubbleData, function(index2, elem2){
@@ -196,7 +196,7 @@ JsChat.prototype = {
                 if(indexToBeRemoved != undefined) {
                     bubbleData.splice(indexToBeRemoved,1);
                 }
-                localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+                localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
         
             }
             if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
@@ -961,8 +961,8 @@ JsChat.prototype = {
 		        curElem._scrollUp($('chat-box[user-id="' + userId + '"]'), "297px");
 		        curElem._changeLocalStorage("stateChange",userId,"","open");
 		        var bubbleData = [];
-		        if(localStorage.getItem("bubbleData")) {
-		            bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+		        if(localStorage.getItem("bubbleData_new")) {
+		            bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
 		        }
 		        var indexToBeRemoved;
 		        $.each(bubbleData, function(index, elem){
@@ -973,7 +973,7 @@ JsChat.prototype = {
 		        if(indexToBeRemoved != undefined) {
 		            bubbleData.splice(indexToBeRemoved,1);
 		        }
-		        localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+		        localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
 		}      
   	});
 
@@ -1432,8 +1432,8 @@ JsChat.prototype = {
                     curElem._bindExtraPopupUserClose($("#extra_" + data + " .nchatic_4"));
                 }
                 var bubbleData = [];
-                if(localStorage.getItem("bubbleData")) {
-                    bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                if(localStorage.getItem("bubbleData_new")) {
+                    bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
                 }
                 var indexToBeRemoved;
                 $.each(bubbleData, function(index, elem){
@@ -1444,7 +1444,7 @@ JsChat.prototype = {
                 if(indexToBeRemoved != undefined) {
                     bubbleData.splice(indexToBeRemoved,1);
                 }
-                localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+                localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
             } else {
                 $(this).next().click();
             }
@@ -2091,7 +2091,7 @@ JsChat.prototype = {
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
         if($(curElem._minPanelId).length !=0){
-            console.log("11111 apend");
+            //console.log("11111 apend");
             curElem._scrollDown($('chat-box[user-id="' + userId + '"]'),"min");
         
         }
@@ -2343,8 +2343,8 @@ JsChat.prototype = {
                         $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
                         //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
                         var bubbleData = [];
-                        if(localStorage.getItem("bubbleData")) {
-                            bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                        if(localStorage.getItem("bubbleData_new")) {
+                            bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
                         }
                         var dataPresent = false;
                         $.each(bubbleData, function(index, elem){
@@ -2357,7 +2357,7 @@ JsChat.prototype = {
                             var obj = {userId:userId,bCount:val};
                             bubbleData.push(obj);
                         }
-                        localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+                        localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
                     } else {
                         if($('#extra_'+userId).length == 0){
                             //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received")
@@ -2371,8 +2371,8 @@ JsChat.prototype = {
                         $("#extra_" + userId + " .pinkBubble span").html(val);
                         $("#extra_" + userId + " .pinkBubble").show();
                          var bubbleData = [];
-                            if(localStorage.getItem("bubbleData")) {
-                                bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                            if(localStorage.getItem("bubbleData_new")) {
+                                bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
                             }
                             var dataPresent = false;
                             $.each(bubbleData, function(index, elem){
@@ -2385,7 +2385,7 @@ JsChat.prototype = {
                                 var obj = {userId:userId,bCount:val};
                                 bubbleData.push(obj);
                             }
-                            localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+                            localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
                     }
                     //change count of online matches panel
                     if ($(".js-minpanel").length != 0) {
@@ -3086,8 +3086,8 @@ JsChat.prototype = {
 			}
 		}
         var bubbleData = [],chatBoxData=[];
-        if(localStorage.getItem("bubbleData")) {
-            bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+        if(localStorage.getItem("bubbleData_new")) {
+            bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
             chatBoxData = JSON.parse(localStorage.getItem("chatBoxData"));
         }
         setTimeout(function() {
