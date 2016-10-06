@@ -1,14 +1,6 @@
 <div id='js-OTPFailedLayerId' class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white" >
 <i id="closeButtonOtp" style='z-index:10;' class="sprite2 close pos_fix closepos cursp disp-none"></i>
 <div class="phnvp4 f17 fontreg color11 phnvbdr4"> Delete Using OTP </div>
-
-<script type="text/javascript">
-var tollFree_NRI='~CommonConstants::HELP_NUMBER_NRI`';
-var tollFree_INR='~CommonConstants::HELP_NUMBER_INR`';
-</script>
-
-
-
    <!--start:layer 1-->
     <div class="color11">
               <!--start:div-->

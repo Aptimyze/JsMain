@@ -3,8 +3,6 @@
 <div class="phnvp4 f17 fontreg color11 phnvbdr4"> Phone Verification </div>
 
 <script type="text/javascript">
-var tollFree_NRI='~CommonConstants::HELP_NUMBER_NRI`';
-var tollFree_INR='~CommonConstants::HELP_NUMBER_INR`';
 var resendOtpLink=function(){
 $("#resendOtpLink").unbind('click');
   $("#resendOtpLink").html('Sending');
