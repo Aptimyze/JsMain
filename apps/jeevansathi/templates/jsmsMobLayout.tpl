@@ -38,11 +38,10 @@
     ~include_title`
     ~include_canurl`
     ~use helper = SfMinify`
-  ~if $sf_request->getParameter('loginData')`
-
-     ~minify_get_mobile('css','','1')`
+    ~minify_get_mobile('css','','1')`
     ~minify_include_stylesheets()`
-~minify_get_mobile('js','','1')`
+  ~if $sf_request->getParameter('loginData')`
+  ~minify_get_mobile('js','','1')`
     ~minify_include_javascripts()`
 
   ~/if`
@@ -168,8 +167,6 @@ window._fbq.push(['track', 'PixelInitialized', {}]);
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
 <!-- Pixel Fire Code ends here-->
 ~if $sf_request->getParameter('loginData') eq ''` 
-    ~minify_get_mobile('css','','1')`
-    ~minify_include_stylesheets()`
     ~minify_get_mobile('js','','1')`
     ~minify_include_javascripts()`
 ~/if`
