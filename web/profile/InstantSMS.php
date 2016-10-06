@@ -9,7 +9,7 @@ class InstantSMS {
 	private $otherProfileDetails = array();
 	private $smsSettings = array();
 	private $varArray = array();
-	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP");
+	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP");
 	private $errorMessage = "Due to a temporary problem your request could not be processed. Please try after a couple of minutes";
 	private $unverified_key = array("REGISTER_RESPONSE" ,"PHONE_UNVERIFY");
 	private $customCriteria=0;
@@ -268,35 +268,33 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
             
                 $sql = "INSERT INTO newjs.SMS_DETAIL(PROFILEID, SMS_TYPE, SMS_KEY, MESSAGE, PHONE_MOB, ADD_DATE,SENT) VALUES ('$this->profileid', 'I', '$this->smsKey', '$message', '".$this->profileDetails['ISD'].$this->profileDetails["PHONE_MOB"]."', now(),'$sent')";
                 mysql_query($sql,$this->SMSLib->dbMaster) or logError($this->errorMessage,$sql,"ShowErrTemplate");
+    }
+
+    // GET SMS Message
+    public function getSmsMessage()
+    {
+        $message = '';
+        $this->setProfileDetails();
+        $message = $this->getMessage();
+        $message = $this->getActualMessage($message);
+        return $message;
+    }
+    //Send sms
+    public function send($acc = "transaction")
+    {
+        $message = $this->getSMS();
+        if ($message) {
+            include_once $this->SMSLib->path . "/classes/SmsVendorFactory.class.php";
+            $sent = "N";
+
+            if (in_array($this->smsKey, $this->smsTypeIgnoreTimeRange) || $this->SMSLib->inSmsSendTimeRange()) {
+                $sent         = "Y";
+                $smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
+                $xmlResponse  = $smsVendorObj->generateXml($this->profileid, $this->profileDetails['ISD'] . $this->profileDetails["PHONE_MOB"], $message, $this->smsSettings["SEND_TIME"]);
+                $smsVendorObj->send($xmlResponse, $acc);
+            }
+            //Insert in sms log
+            $this->insertInSmsLog($message, $sent);
         }
-
-	// GET SMS Message
-        public function getSmsMessage() {
-		$message ='';
-                $this->setProfileDetails();
-                $message = $this->getMessage();
-                $message = $this->getActualMessage($message);
-                return $message;
-        }
-	//Send sms
-	public function send($acc="transaction"){
-		$message = $this->getSMS();
-		        	if($message){
-			include_once($this->SMSLib->path . "/classes/SmsVendorFactory.class.php");
-			$sent = "N";
-//echo "\n\nPROFILEID:".$this->profileid." ,PHONE_NUMBER:".$this->profileDetails["PHONE_MOB"]." ,MESSAGE:".$message." ,SEND_TIME:".$this->smsSettings["SEND_TIME"]."\n";
-//die;
-			if(in_array($this->smsKey,$this->smsTypeIgnoreTimeRange) || $this->SMSLib->inSmsSendTimeRange()){
-				$sent = "Y";
-				$smsVendorObj = SmsVendorFactory::getSmsVendor("air2web");
-				$xmlResponse = $smsVendorObj->generateXml($this->profileid,$this->profileDetails['ISD'].$this->profileDetails["PHONE_MOB"],$message,$this->smsSettings["SEND_TIME"]);
-				$smsVendorObj->send($xmlResponse,$acc);
-			}
-
-			//Insert in sms log
-			$this->insertInSmsLog($message,$sent);
-		}
-	}
-}	
-
-?>
+    }
+}

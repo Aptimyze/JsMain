@@ -260,7 +260,15 @@ class DetailedViewApi
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
-			$szLocation=$objProfile->getDecoratedCity();
+		{
+			if(substr($objProfile->getCITY_RES(),2)=="OT")
+		        {
+				$stateLabel = FieldMap::getFieldLabel("state_india",substr($objProfile->getCITY_RES(),0,2));
+				$szLocation = $stateLabel."-"."Others";
+			}
+			else
+				$szLocation=$objProfile->getDecoratedCity();
+		}
 		else
 			$szLocation = $objProfile->getDecoratedCountry();
 		$this->m_arrOut['location'] = $szLocation;

@@ -65,7 +65,7 @@ var saveDetail=(function(){
           data: {editFieldArr : editFieldArr},
           success: function(result) {
 
-				if(CommonErrorHandling(result)||(result.hasOwnProperty("responseStatusCode") && result.responseStatusCode==1 && result.error[0].indexOf("banned")!=-1))
+				if(CommonErrorHandling(result)||(result.hasOwnProperty("responseStatusCode") && result.responseStatusCode==1 && (result.error[0].indexOf("banned")!=-1 || result.error[0].indexOf("country")!=-1)))
 				{
 					if(result.hasOwnProperty("error") && result.error)
                                         {

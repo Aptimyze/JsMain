@@ -25,6 +25,12 @@ class newJsmsPage1Action extends sfAction
 		$tieup_source           = $trackParams['tieup_source'];
 		$this->domain		= $trackParams['domain'];
 		$newsource		= $trackParams['newsource'];
+		if($reg_params['city_res']=='0' && $reg_params['country_res']==51)
+		{
+			$reg_params['city_res']=$reg_params['state_res']."OT";
+		}
+		unset($reg_params['state_res']);
+		$request->setParameter('reg',$reg_params);
 
 		$apiObj=ApiResponseHandler::getInstance();
 			
@@ -34,8 +40,7 @@ class newJsmsPage1Action extends sfAction
 		
 		if(!$this->source)
 			$this->source=$reg_params['source'];
-		
-		if($reg_params['country_res']!=51){
+		if($reg_params['country_res']!=51 && $reg_params['country_res']!=128){
 				unset($this->form['city_res']);
 		}
 		$this->form->bind($reg_params);

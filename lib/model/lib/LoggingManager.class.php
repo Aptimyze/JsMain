@@ -294,6 +294,10 @@ class LoggingManager
 		}
 		$logData[LoggingEnums::REQUEST_URI] = $_SERVER['REQUEST_URI'];
 		$logData[LoggingEnums::DOMAIN] = $_SERVER['HTTP_HOST'];
+		if(isset($logArray[LoggingEnums::REFERER]))
+		{
+			$logData[LoggingEnums::REFERER] = $logArray[LoggingEnums::REFERER];
+		}
 		return $logData;
 	}
 
