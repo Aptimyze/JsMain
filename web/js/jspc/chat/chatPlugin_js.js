@@ -2456,6 +2456,7 @@ JsChat.prototype = {
                 noOfInputs++;
            }
         });
+        
         if ($('.showcountmin').hasClass('vishid')) {
             //this._chatLoggerPlugin('no exist');
             //noOfInputs = 5;
@@ -3103,12 +3104,10 @@ JsChat.prototype = {
                     totalCount++;
                 }
             });
-            if(totalCount != 0){
+            if(totalCount > 0){
+                $('.countVal').html(totalCount);
                 if ($('.showcountmin').hasClass('vishid')) {
-                    $('.countVal').html(totalCount);
-                    $('.showcountmin').toggleClass('vishid');
-                } else {
-                    $('.countVal').html(totalCount);
+                    $('.showcountmin').removeClass('vishid');
                 }
             }
             
