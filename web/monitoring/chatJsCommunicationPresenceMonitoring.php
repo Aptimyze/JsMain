@@ -38,7 +38,7 @@ function checkForQueueOverflow($queueArr,$msgLimitPerQueue,$queueResponse){
                         $queue_data=$arr;
                         if(in_array($queue_data->name, $queueArr) && $queue_data->messages_ready>$msgLimitPerQueue)
                         {
-                                $overflowQueueArr[] = $queue_data->name;
+                                $overflowQueueArr[] = $queue_data->name."(".$queue_data->messages_ready.")";
                         }
                 }
         }
