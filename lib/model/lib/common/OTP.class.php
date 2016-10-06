@@ -90,7 +90,7 @@ public function __construct($profileObject='',$phoneType,$otp_settings)
 private function sendMessage($OTP)
 {	
     include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
-  	$arr=array('PHONE_MOB'=>$this->getPhone(),'OTP'=>"$OTP");
+  	$arr=array('PHONE_MOB'=>$this->getPhoneWithoutIsd(),'OTP'=>"$OTP");
 	$smsViewer = new InstantSMS($this->otpSettings['SMSType'],$this->profileObject->getPROFILEID(),$arr,'');
     $smsViewer->send("OTP");
 
