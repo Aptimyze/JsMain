@@ -119,6 +119,15 @@ jQuery.validator.addMethod("MobileNumberVerify", function(value,element) {
 jQuery.validator.addMethod("MobileNumber", function(value,element) {
 	return ((value=='' && $('#PHONE_RES').val().length>0) || checkMobile(0));
 	});
+function StateCityRequired(json){
+	if(json[1].value=="51" && json[2].value=='')
+		jsonError[jsonError.length]="Provide a valid state";
+	else if((json[1].value=="51" && json[2].value!='' && json[3].value=='')|| json[1].value=="128" && json[3].value=='')
+		jsonError[jsonError.length]="Provide a valid city";
+	else
+		return true;
+	return false;	
+}
 // mobile or landline number should be there
 jQuery.validator.addMethod("landlineOrMobileNumber", function(value,element) {
 	if(($('#PHONE_MOB').val()=="" && $('#PHONE_RES').val()==""))
