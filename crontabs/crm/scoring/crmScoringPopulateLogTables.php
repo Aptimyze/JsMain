@@ -1,4 +1,5 @@
 <?php
+include("/home/developer/scoring/MysqlDbConstants.class.php");
 
 //Sent mail for daily tracking
 $msg="\nPopulate Log Tables # Start Time=".date("Y-m-d H:i:s");
@@ -9,7 +10,8 @@ mail($to,$sub,$msg,$from);
 ini_set('memory_limit', '300M');
 
 //DB Connection
-$myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+//$myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+$myDb = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to js server".$start);
 
 //Delete entries from MESSAGE_LOG tables for 31st day
 $lim_31_dt = date("Y-m-d", time() - 31 * 86400);
@@ -35,7 +37,8 @@ $sqllm = "SELECT SENDER,RECEIVER,TYPE,DATE FROM newjs.MESSAGE_LOG WHERE DATE >= 
 $sqlle = "SELECT * FROM newjs.EOI_VIEWED_LOG WHERE DATE >= '$lim_1_dt 00:00:00' AND DATE <= '$lim_1_dt 23:59:59'";
 
 //Shard1
-$shDb1 = mysql_connect("productshard2slave.js.jsb9.net:3309","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+//$shDb1 = mysql_connect("productshard2slave.js.jsb9.net:3309","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+$shDb1 = mysql_connect(MysqlDbConstants::$shard1Slave112['HOST'],MysqlDbConstants::$shard1Slave112['USER'],MysqlDbConstants::$shard1Slave112['PASS']) or die("Unable to connect to js server".$start);
 $resl = mysql_query($sqllm, $shDb1) or die($sqllm . mysql_error($shDb1));
 while ($rowml2 = mysql_fetch_array($resl)) 
 {
@@ -50,7 +53,8 @@ mysql_query($sq1,$myDb) or die($sq1.mysql_error($myDb));
 }
 
 //Shard2
-$shDb2 = mysql_connect("productshard2slave.js.jsb9.net:3306","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+//$shDb2 = mysql_connect("productshard2slave.js.jsb9.net:3306","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+$shDb2 = mysql_connect(MysqlDbConstants::$shard2Slave112['HOST'],MysqlDbConstants::$shard2Slave112['USER'],MysqlDbConstants::$shard2Slave112['PASS']) or die("Unable to connect to js server".$start);
 $resl = mysql_query($sqllm, $shDb2) or die($sqllm . mysql_error($shDb2));
 while ($rowml2 = mysql_fetch_array($resl)) 
 {
@@ -65,7 +69,8 @@ mysql_query($sq2,$myDb) or die($sq2.mysql_error($myDb));
 }
 
 //Shard 3
-$shDb3 = mysql_connect("productshard2slave.js.jsb9.net:3307","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+//$shDb3 = mysql_connect("productshard2slave.js.jsb9.net:3307","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+$shDb3 = mysql_connect(MysqlDbConstants::$shard3Slave112['HOST'],MysqlDbConstants::$shard3Slave112['USER'],MysqlDbConstants::$shard3Slave112['PASS']) or die("Unable to connect to js server".$start);
 $resl = mysql_query($sqllm, $shDb3) or die($sqllm . mysql_error($shDb3));
 while ($rowml2 = mysql_fetch_array($resl))
 {

@@ -1,5 +1,6 @@
 <?php
 
+include("/home/developer/scoring/MysqlDbConstants.class.php");
 include("Scoring.class.php");
 
 //Sent mail for daily tracking
@@ -11,9 +12,13 @@ mail($to,$sub,$msg,$from);
 ini_set('memory_limit', '300M');
 
 //DB Connection
-$maDb = mysql_connect("master.js.jsb9.net","privUser","Pr!vU3er!") or die("Unable to connect to js server at ".$start);
-$myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
-$shDb2 = mysql_connect("productshard2slave.js.jsb9.net:3306","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+//$maDb = mysql_connect("master.js.jsb9.net","privUser","Pr!vU3er!") or die("Unable to connect to js server at ".$start);
+//$myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+//$shDb2 = mysql_connect("productshard2slave.js.jsb9.net:3306","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+$maDb = mysql_connect(MysqlDbConstants::$master1['HOST'],MysqlDbConstants::$master1['USER'],MysqlDbConstants::$master1['PASS']) or die("Unable to connect to js server".$start);
+$myDb = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to js server".$start);
+$shDb2 = mysql_connect(MysqlDbConstants::$shard2Slave112['HOST'],MysqlDbConstants::$shard2Slave112['USER'],MysqlDbConstants::$shard2Slave112['PASS']) or die("Unable to connect to js server".$start);
+
 mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$maDb);
 mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$myDb);
 mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$shDb2);

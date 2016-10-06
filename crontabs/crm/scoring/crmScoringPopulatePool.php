@@ -1,4 +1,5 @@
 <?php
+include("/home/developer/scoring/MysqlDbConstants.class.php");
 
 //Sent mail for daily tracking
 $msg="\nPopulate Pool # Start Time=".date("Y-m-d H:i:s");
@@ -9,7 +10,8 @@ mail($to,$sub,$msg,$from);
 ini_set('memory_limit', '300M');
 
 //DB Connection
-$myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+//$myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+$myDb = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to js server".$start);
 
 // Truncate Table
 $sqlTrunc ="Truncate table js_crm.ANALYTIC_SCORE_POOL";
