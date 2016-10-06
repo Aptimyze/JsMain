@@ -130,6 +130,10 @@ class IgnoredProfileCacheLib
                 $valArr[] = $ignoredProfiles; 
             }
         }
+        else if($extraParameter == "2")
+        {
+            $valArr = $arr;
+        }
         else
         {
             $arr = trim($arr," ");
@@ -148,6 +152,11 @@ class IgnoredProfileCacheLib
         }
     	$pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
     	$pidKey2 =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
+        $pidKey3 = $ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
+        if(JsMemcache::getInstance()->keyExist($pidKey3))
+        {
+            JsMemcache::getInstance()->deleteSpecificDataFromCache($pidKey3,$profileid);   
+        }
     	JsMemcache::getInstance()->deleteSpecificDataFromCache($pidKey1,$ignoredProfileid);
     	JsMemcache::getInstance()->deleteSpecificDataFromCache($pidKey2,$ignoredProfileid);
     }
@@ -160,6 +169,11 @@ class IgnoredProfileCacheLib
         }
     	$pidKey1 = $profileid.ignoredProfileCacheConstants::ALL_DATA;
     	$pidKey2 =  $profileid.ignoredProfileCacheConstants::BYME_DATA;
+        $pidKey3 = $ignoredProfileid.ignoredProfileCacheConstants::ALL_DATA;
+        if(JsMemcache::getInstance()->keyExist($pidKey3))
+        {
+            JsMemcache::getInstance()->addDataToCache($pidKey3,$profileid);   
+        }
     	JsMemcache::getInstance()->addDataToCache($pidKey1,$ignoredProfileid);
     	JsMemcache::getInstance()->addDataToCache($pidKey2,$ignoredProfileid);
     }

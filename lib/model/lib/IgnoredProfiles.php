@@ -38,8 +38,16 @@ class IgnoredProfiles
         	{
         		$NEWJS_IGNOREObj = new newjs_IGNORE_PROFILE($this->dbname);
 				$resultArr = $NEWJS_IGNOREObj->listIgnoredProfile($pid,$seperator);
+				if(is_array($resultArr))
+				{
+					IgnoredProfileCacheLib::getInstance()->storeDataInCache($pidKey,$resultArr,'2');
+				}
+				else
+				{
+					IgnoredProfileCacheLib::getInstance()->storeDataInCache($pidKey,$resultArr,'');
+				}
 				$this->addDataToFile("new");
-				IgnoredProfileCacheLib::getInstance()->storeDataInCache($pidKey,$resultArr);
+				
         		return $resultArr;
         	}
         	else
