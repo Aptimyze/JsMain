@@ -23,7 +23,7 @@ class ApiCALayerV1Action extends sfActions
 	{
 
 
-		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In ApiCALayer");
+		// LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "In ApiCALayer");
 
 		$loginData=$request->getAttribute("loginData");
 

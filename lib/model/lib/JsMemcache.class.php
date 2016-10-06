@@ -623,5 +623,23 @@ class JsMemcache extends sfMemcacheCache{
 			}
 		}
   }
+
+  public function keyExist($key)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				return $this->client->exists($key);
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
 }
 ?>

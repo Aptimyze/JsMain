@@ -61,7 +61,7 @@ class DialerDncScrubing
 	                        else
 	                                $dialStatus ='1';
 
-				$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus,DNC_Status='' WHERE easycode='$ecode'";
+				$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus WHERE easycode='$ecode'";
 				mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
 
 				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo,','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
@@ -78,7 +78,7 @@ class DialerDncScrubing
                         $ecode = $srow1["easycode"];
                         if($ecode){
 				$dialStatus =1;
-                                $query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus,DNC_Status='' WHERE easycode='$ecode'";
+                                $query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus WHERE easycode='$ecode'";
                                 mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
 
                                 $log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";

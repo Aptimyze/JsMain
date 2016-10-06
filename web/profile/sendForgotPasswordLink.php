@@ -28,7 +28,10 @@ function sendForgotPasswordLink($myrow)
 	$emailTpl = $email_sender->setProfileId($myrow[PROFILEID]);
 	$emailTpl->getSmarty()->assign("forgotPasswordUrl",$forgotPasswordUrl);
 	$email_sender->send($myrow[EMAIL]);
-	include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
-	$sms = new InstantSMS("FORGOT_PASSWORD", $myrow["PROFILEID"]);
-	$sms->send();
+        if($myrow['SmsCount'] < 5)
+        {
+        	include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
+        	$sms = new InstantSMS("FORGOT_PASSWORD", $myrow["PROFILEID"]);
+                $sms->send('OTP');
+        }
 }

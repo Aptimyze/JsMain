@@ -89,11 +89,57 @@ function LoginValidation()
 		}
 }
 function validateEmail(email) {
-    var x = email;
+    var x = $.trim(email);
     var re = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
-    return re.test(email);
+    return re.test(x);
     }
     
+function validateMobile(mobile) {
+	var str = $.trim(mobile);
+	// removes leading zeros
+	str = str.replace(/^0+/, '');
+	if(str.indexOf('-') > -1)
+	{
+		var result = str.split("-");
+		// remove leading zeros from number
+		result[1] = result[1].replace(/^0+/, '');
+		str = result.join("-");
+	}
+
+	if(str.indexOf('+') > -1)
+	{
+		var result = str.split("+");
+		// remove leading zeros from isd
+		result[1] = result[1].replace(/^0+/, '');
+		str = result.join("+");
+	}
+	var re = /^((\+)?[0-9]*(-)?)?[0-9]{7,}$/i;
+	var isd = '';
+	var phone = '';
+	var data = new Array();
+	if(re.test(str))
+	{
+		str = str.split('+').join('');
+		if(str.indexOf('-') > -1)
+		{
+			isd = str.slice(0, str.indexOf('-'));
+			phone = str.slice(str.indexOf('-')+1, str.length);
+		}
+		else
+		{
+			isd = '';
+			phone = str;
+		}
+		data['flag'] = 1;
+		data['phone'] = phone;
+		data['isd'] = isd;
+	}
+	else
+	{
+		data['flag'] = 0;
+	}
+	return data;
+}
 function validateCaptcha()
 {
 	 if($("#blueText").html()=="Slide to Verify" &&  $('#captchaDiv').is(':visible'))
@@ -386,7 +432,7 @@ function forgotPasswordBinding(fromLayer)
 	
 	$('#forgotPasswordLoginLayer').click(function() {
 		
-		$("#ForgotPasswordMessage").html("Enter your registered email of Jeevansathi to receive an Email and SMS with the link to reset your password.");
+		$("#ForgotPasswordMessage").html("Enter your registered email or phone number of Jeevansathi to receive an Email and SMS with the link to reset your password.");
 		$("#forgotPasswordForm").removeClass("disp-none");
 		
 		$('#closeForgotLogin').unbind();
@@ -403,6 +449,7 @@ function forgotBindings(fromLayer)
                          $('#forgotPasswordLayer').removeClass("disp-none");
                     });
                     $('.js-overlay').bind("click",function(){
+                    	$("#sendLinkForgot").unbind('click');
 					 $('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
 						$('#forgotPasswordLayer').remove();
@@ -415,6 +462,7 @@ function forgotBindings(fromLayer)
 			 $('.js-overlay').fadeIn(200, "linear");
 			 $('#forgotPasswordLayer').removeClass("disp-none").attr("style","block");
 			 $('.js-overlay').bind("click",function(){
+			 		$("#sendLinkForgot").unbind('click');
 					 $('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
 					});
@@ -426,6 +474,7 @@ function forgotBindings(fromLayer)
 		if(fromLayer==1)
 		{
 			$('#closeForgotLogin').click(function() {
+				$("#sendLinkForgot").unbind('click');
 				$('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 					$('.js-overlay').fadeOut(300, "linear");
 					$('#forgotPasswordLayer').remove();
@@ -436,6 +485,7 @@ function forgotBindings(fromLayer)
 		else
 		{
 			$('#closeForgotLogin').click(function() {
+				$("#sendLinkForgot").unbind('click');
 				$('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 					$('.js-overlay').fadeOut(300, "linear");
 					$('#forgotPasswordLayer').addClass("disp-none");
@@ -457,11 +507,21 @@ function postForgotEmailLayer()
 		   }
 		});
 		$("#sendLinkForgot").click(function(){
-			$("#sendLinkForgot").unbind();
+			
 			var email=$("#userEmail").val();
 			if(email)
 			{
-				if(validateEmail(email))
+				var flag = validateEmail(email)?'E':false;
+				var phone = null;
+				var isd = null;
+				if(!flag)
+				{
+					var data = validateMobile(email);
+					flag = data['flag']?'M':false;
+					phone = data['phone'];
+					isd = data['isd'];
+				}
+				if(flag)
 				{       
 					showCommonLoader("#forgotPasswordContainer");
 					 $.ajax({
@@ -470,12 +530,13 @@ function postForgotEmailLayer()
 						 datatype:'json',
 						 cache: true,
 						 async:false,
-						 data:{email:email.trim()},
+						 data:{'email':email.trim(), 'flag':flag, 'phone':phone, 'isd':isd},
 						 success: function(result){
 							 if(result.responseStatusCode==0)
 							 {
-								 $("#ForgotPasswordMessage").html("Link to reset your password has been sent to your registered Email Id and Mobile Number. The link will be valid for next 24 hours.");
+								 $("#ForgotPasswordMessage").html(result.responseMessage);
 								 $("#forgotPasswordForm").addClass("disp-none");
+								 $("#sendLinkForgot").unbind('click');
 							 }
 							 else
 							 {
@@ -484,7 +545,7 @@ function postForgotEmailLayer()
 								 setTimeout(function(){
 									 $("#forgotPasswordErr").removeClass("visb");
 									$("#userEmailBox").removeClass("brderred");
-								},3000);
+								},5000);
 							 }
 							 hideCommonLoader();
 							  return;
@@ -492,7 +553,7 @@ function postForgotEmailLayer()
 					});
 				}
 				else{
-					$("#forgotPasswordErr").html("Provide a valid email address").addClass("visb");
+					$("#forgotPasswordErr").html("Provide a valid email address or phone number").addClass("visb");
 					$("#userEmailBox").addClass("brderred");
 					 setTimeout(function(){
 						 $("#forgotPasswordErr").removeClass("visb");
@@ -502,7 +563,7 @@ function postForgotEmailLayer()
 			}
 			else
 			{
-				$("#forgotPasswordErr").html("Provide your email address").addClass("visb");
+				$("#forgotPasswordErr").html("Provide your email address or phone number").addClass("visb");
 				$("#userEmailBox").addClass("brderred");
 				 setTimeout(function(){
 					 $("#forgotPasswordErr").removeClass("visb");

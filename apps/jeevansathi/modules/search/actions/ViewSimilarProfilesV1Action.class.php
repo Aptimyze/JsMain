@@ -41,13 +41,16 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                 //View Similar Profile Object to set Search Criteria
                                 $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
                                 if($pid){
-                                    if(JsConstants::$vspServer == 'live' && !MobileCommon::isDesktop()){
+                                    $modVal = 9;
+                                    $loggedinMod = $loggedInProfileObj->getPROFILEID()%$modVal;
+                                    $modResult =  array(1);
+                                    if(JsConstants::$vspServer == 'live' && !MobileCommon::isDesktop() && in_array($loggedinMod,$modResult)){
                                       if($viewerGender == 'M')
                                         $feedURL = JsConstants::$vspMaleUrl;
                                       else
                                         $feedURL = JsConstants::$vspFemaleUrl;
                                       $profileListObj = new IgnoredContactedProfiles();
-                                      $ignoredContactedProfiles = $profileListObj->getProfileList($this->loginProfile->getPROFILEID(),'');
+                                      $ignoredContactedProfiles = $profileListObj->getProfileList($loggedInProfileObj->getPROFILEID(),'');
                                       $postParams = json_encode(array("PROFILEID"=>$pid,"PROFILEID_POG"=>$viewedProfileID,'removeProfiles'=>$ignoredContactedProfiles));
                                       $profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams);
                                       if($profilesList == "Error") {

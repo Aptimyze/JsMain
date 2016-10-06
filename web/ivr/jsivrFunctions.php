@@ -781,7 +781,7 @@ return $returnArray;
 			if($phoneType!='L')
 			{
 			        include_once "../profile/InstantSMS.php";
-			        $arr=array('PHONE_MOB'=>'+'.$isd.$phone_num);
+			        $arr=array('PHONE_MOB'=>$phone_num, 'ISD'=>$isd);
 					$smsViewer = new InstantSMS("PHONE_UNVERIFY",$profileid,$arr,'');
 					$smsViewer->send();
 			}

@@ -153,9 +153,9 @@ class viewSimilarProfileAction extends sfActions
 		}                
 		//View Similar Profile Object to set Search Criteria
 		$viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile);
-                $modVal = 10;
+                $modVal = 9;
                 $loggedinMod = $this->loginProfile->getPROFILEID()%$modVal;
-                $modResult =  array(1,2);
+                $modResult =  array(1);
                 if(JsConstants::$vspServer != 'live' || !in_array($loggedinMod,$modResult)){
                     $viewSimilarProfileObj->getViewSimilarCriteria();
                     if($viewSimilarProfileObj->getProfilesToShow() && $viewSimilarProfileObj->getProfilesToShow()!=='9999999999')
