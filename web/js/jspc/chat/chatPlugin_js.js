@@ -2456,16 +2456,15 @@ JsChat.prototype = {
                 noOfInputs++;
            }
         });
-        
-        if ($('.showcountmin').hasClass('vishid')) {
-            //this._chatLoggerPlugin('no exist');
-            //noOfInputs = 5;
+        if(noOfInputs != 0){
             $('.countVal').html(noOfInputs);
-            $('.showcountmin').toggleClass('vishid');
+            if ($('.showcountmin').hasClass('vishid')) {
+                $('.showcountmin').removeClass('vishid');
+            } 
         } else {
-            //noOfInputs = 15;
-            $('.countVal').html(noOfInputs);
+            $('.showcountmin').addClass('vishid');  
         }
+        
         return noOfInputs;
     },
     //handle typing status of message
@@ -3104,11 +3103,14 @@ JsChat.prototype = {
                     totalCount++;
                 }
             });
-            if(totalCount > 0){
+            if(totalCount != 0){
                 $('.countVal').html(totalCount);
                 if ($('.showcountmin').hasClass('vishid')) {
                     $('.showcountmin').removeClass('vishid');
                 }
+            }
+            else{
+                $('.showcountmin').addClass('vishid'); 
             }
             
         }, 2000);
