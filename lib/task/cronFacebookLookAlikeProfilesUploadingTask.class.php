@@ -30,7 +30,7 @@ EOF;
     protected function execute($arguments = array(), $options = array()){
         include_once(sfConfig::get('sf_lib_dir') . '/vendor/facebook-ads-php-sdk/facebook/php-ads-sdk/src/FacebookAds/Api.php');
         include_once(sfConfig::get('sf_lib_dir') . '/vendor/facebook-ads-php-sdk/autoload.php');
-
+        ini_set('memory_limit','1024M');
 
         if(!sfContext::hasInstance())
         sfContext::createInstance($this->configuration);
