@@ -3113,7 +3113,7 @@ JsChat.prototype = {
                 $('.showcountmin').addClass('vishid'); 
             }
             
-        }, 2000);
+        }, 3000);
         var chatStatus = "";
         if(localStorage.getItem("chatStateData")) {
             chatStatus = localStorage.getItem("chatStateData");
