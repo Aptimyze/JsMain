@@ -106,7 +106,7 @@ class ForgotloginV1Action extends sfActions
 		{
 			return false;
 		}
-		else if(preg_match($regex, $email))
+		else if(filter_var($email, FILTER_VALIDATE_EMAIL))
 		{
 			$this->flag='E';
 			$this->finalString=$email;
