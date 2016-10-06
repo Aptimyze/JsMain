@@ -52,7 +52,10 @@ class IgnoredProfiles
         	}
         	else
         	{
-        		$resultArr = implode(" ",$resultArr);
+        		if($seperator == "spaceSeperator")
+        		{
+        			$resultArr = implode(" ",$resultArr);
+        		}        		
         		return $resultArr;        		
         	}
         }
