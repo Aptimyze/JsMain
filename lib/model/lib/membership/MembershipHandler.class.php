@@ -1590,7 +1590,9 @@ class MembershipHandler
         }
 
         $from = "js-sums@jeevansathi.com";
-        SendMail::send_email($to, $msgBody, $subject, $from);
+        if (JsConstants::$whichMachine == 'prod') {
+            SendMail::send_email($to, $msgBody, $subject, $from);
+        }
     }
 
     public function oldJSMSsetSubcriptionExp($userObj, $memHandlerObj, $obj)
