@@ -123,7 +123,7 @@
     
             <div class="pt20 pb20 otpwid1">
            
-            <input id='matchOtpText' type ="tel" placeholder="Enter Code" class="f19 fontlig  fullwid txtc">
+            <input id='matchOtpText' type ="tel" placeholder="Enter Code" autocomplete="off" class="f19 fontlig  fullwid txtc">
            
             </div>
    

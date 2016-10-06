@@ -43,7 +43,7 @@ $("#resendOtpLink").bind('click',resendOtpLink);
         </p><div id='OTPOuterInput' style="margin:1px 0px 0px 0px;" class="phnvbdr1 bg-white phnvp8">
                  <div class="fullwid clearfix">
                     <div class="fl lh30 fullwid">
-                       <input id='matchOtpText' type="text" placeholder="Enter Code" class="bgnone brdr-0 pl10 fontreg phnvpout f17 color11 ">
+                       <input id='matchOtpText' type="text" autocomplete="off" placeholder="Enter Code" class="bgnone brdr-0 pl10 fontreg phnvpout f17 color11 ">
                        <span id='OTPIncorrectSpan' class="disp-none fr color5 fontreg f14">Incorrect</span>
                     </div>
                  </div>
