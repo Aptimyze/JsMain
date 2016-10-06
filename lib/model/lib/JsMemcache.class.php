@@ -770,12 +770,12 @@ class JsMemcache extends sfMemcacheCache{
   				foreach($profileIdArr as $k=>$value) {
   					$pipe->sismember($viewerKey,$value);
   				}
-  				$resultArr = $pipe->execute();
+  				$resultArr = $pipe->execute();	
   				foreach($resultArr as $key=>$val)
   				{
   					if($val == 1)
   					{
-  						$finalArr[] = $profileIdArr[$key];
+  						$finalArr[$profileIdArr[$key]] = 1;
   					}
   				}
   				return $finalArr;

@@ -43,7 +43,8 @@ class IgnoredProfiles
         		return $resultArr;
         	}
         	else
-        	{        		
+        	{
+        		$resultArr = implode(" ",$resultArr);
         		return $resultArr;        		
         	}
         }
@@ -54,6 +55,7 @@ class IgnoredProfiles
         	$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
         	$ignObj->ignoreProfile($profileid,$ignoredProfileid);
         	$this->addDataToFile("new");
+        	$returnVal = $this->ifProfilesIgnored('0',$profileid,1);
         	IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$ignoredProfileid);
         }
 
@@ -63,6 +65,7 @@ class IgnoredProfiles
 		$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
 		$ignObj->undoIgnoreProfile($profileid,$ignoredProfileid);
 		$this->addDataToFile("new");
+		$returnVal = $this->ifProfilesIgnored('0',$profileid,1);
 		IgnoredProfileCacheLib::getInstance()->deleteDataFromCache($profileid,$ignoredProfileid);
 	}
 
@@ -72,7 +75,18 @@ class IgnoredProfiles
 		$viewerKey = $viewer."_byMe";
 		if($profileIdStr == '0')
 		{
-			$resultArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($viewerKey);
+			$resArr = IgnoredProfileCacheLib::getInstance()->getSetsAllValue($viewerKey);
+			if(is_array($resArr))
+			{
+				foreach($resArr as $k=>$ignoredProfiles)
+				{
+					$resultArr[$ignoredProfiles] = 1; 
+				}
+			}
+			else
+			{
+				$resultArr = $resArr;
+			}
 		}
 		else
 		{
@@ -80,13 +94,14 @@ class IgnoredProfiles
 			$profileIdArr = explode(',', $profileIdStr);
 			$resultArr = IgnoredProfileCacheLib::getInstance()->getSpecificValuesFromCache($viewerKey,$profileIdArr);
 		}
-		if($resultArr == "noKey")
+
+		if($resultArr == "noKey" || $resultArr == false)
 		{
 			$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
 			$ignProfile = $ignObj->getIgnoredProfiles($profileIdStr,$viewer,$key);
-			if($profileIdStr == 0 && $key =="")
+			if($profileIdStr == 0)
 			{
-				IgnoredProfileCacheLib::getInstance()->storeDataInCache($viewerKey,$ignProfile);
+				IgnoredProfileCacheLib::getInstance()->storeDataInCache($viewerKey,$ignProfile,"1");
 			}
 			$this->addDataToFile("new");
 			return $ignProfile;
@@ -126,7 +141,7 @@ class IgnoredProfiles
 		 	return false;
 		 }
 	}
- 		//check in case redis is off 
+ 		//COUNT
 	public function getCountIgnoredProfiles($profileID)
 	{
 		$this->addDataToFile("old");
@@ -139,7 +154,8 @@ class IgnoredProfiles
 		}
 		else
 		{
-			return $response;
+			$responseArr["CNT"] = $response;
+			return $responseArr;
 		}
 	}
 
