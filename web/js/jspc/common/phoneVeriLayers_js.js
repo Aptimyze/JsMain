@@ -159,12 +159,7 @@ else {
 
 }
 
- 	
-
-
 }
-
-
 
 function showVerifyLayer(){
 NProgress.configure({ parent: '#forNProgress',trickle:false,minimum:0});
