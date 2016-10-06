@@ -2090,6 +2090,11 @@ JsChat.prototype = {
         curElem._bindChatPoxPicClick(userId);
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
+        if($(curElem._minPanelId).length !=0){
+            console.log("11111 apend");
+            curElem._scrollDown($('chat-box[user-id="' + userId + '"]'),"min");
+        
+        }
     },
     //bind click action on chat box pic click
     _bindChatPoxPicClick: function(userId){
@@ -3113,7 +3118,7 @@ JsChat.prototype = {
                 $('.showcountmin').addClass('vishid'); 
             }
             
-        }, 3000);
+        }, 2000);
         var chatStatus = "";
         if(localStorage.getItem("chatStateData")) {
             chatStatus = localStorage.getItem("chatStateData");
