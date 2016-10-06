@@ -1297,6 +1297,9 @@ class DetailedViewApi
         
         //AstroApiParam for third party
         $this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
+        if(false !== is_null($this->m_arrOut['guna_api_parmas'])) {
+            $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+        }
 	}
 	
 	protected function DecorateOpenTextField($szInput)
