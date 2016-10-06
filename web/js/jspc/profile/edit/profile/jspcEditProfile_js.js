@@ -992,8 +992,10 @@ EditApp = function(){
           }
           else{
             optionString = prepareOptionDropDown(data,fieldObject);
-            var stateFieldObject     = editAppObject[BASIC]["STATE_RES"];
-            requiredFieldStore.add(stateFieldObject);
+            if(editAppObject[BASIC]['STATE_RES'].value=='0'){
+                var stateFieldObject     = editAppObject[BASIC]["STATE_RES"];
+                requiredFieldStore.add(stateFieldObject);
+            }
           }
       }
       else if(typeof data != "undefined"){
