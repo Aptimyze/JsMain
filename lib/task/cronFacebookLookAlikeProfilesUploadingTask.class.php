@@ -338,7 +338,7 @@ EOF;
             $greaterThanArray["LAST_LOGIN_DT"] = $lastLoginLimit;
 
             //shouldn't be deleted
-            $excludeArray["ACTIVATED"] = "'D'";
+            $valueArray["ACTIVATED"] = "'Y','H'";
 
             $fields="EMAIL,PHONE_MOB";
 
@@ -370,7 +370,7 @@ EOF;
                             $this->mobileInclusion[]=$data['PHONE_MOB'];
                         }
 
-                        
+
                         $totalInclusionEmail += count($this->emailInclusion);
                         
                         $totalInclusionMobile += count($this->mobileInclusion);
@@ -379,7 +379,7 @@ EOF;
                         echo "\n";
                         print_r("mobileInclusion: ".count($this->mobileInclusion));
                         echo "\n";
-                        
+
                         $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->emailInclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
             
 
