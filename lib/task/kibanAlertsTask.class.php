@@ -33,39 +33,52 @@ EOF;
 		$from = "jsissues@jeevansathi.com";
 		$subject = "Kibana Module Alert";
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
+
 		$params = [
 			"query"=> [
-				"range" => [
-					"@timestamp" => [
-						"gt" => "now-".$interval."h",
-						"lt" => "now"
-					]
-				]
+			    "match" => ["logType"=>"Error"]
 			],
-			'aggs' => [
-				'modules' => [
-					'terms' => [
-						'field' => 'moduleName',
-						'size' => 1000
-					]
-				]
+
+			"aggs"=> [
+			"filtered"=> [
+			  "filter"=> [
+			    "bool"=> [
+			      "must"=> [
+			        [
+			          "range"=> [
+			            "@timestamp"=> [
+			              "gt"=> "now-".$interval."h",
+			              "lt"=> "now"
+			            ]
+			          ]
+			        ]
+			      ]
+			    ]
+			  ],
+			  "aggs"=> [
+			    "modules"=>
+			    [
+			        "terms"=>
+			        [ "field" => "moduleName" ,  "size" => 1000 ]
+			    ]
+			  ]
+			]
 			]
 		];
+
 		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
-		// timeout checks needs to be done
 		if($response)
 		{
 			date_default_timezone_set('UTC');
 			$arrResponse = json_decode($response, true);
 			$arrModules = array();
-			foreach($arrResponse['aggregations']['modules']['buckets'] as $module) 
+			foreach($arrResponse['aggregations']['filtered']['modules']['buckets'] as $module)
 			{
 			    $arrModules[$module['key']] = $module['doc_count']; 
 			}
 			$to = "jsissues@jeevansathi.com";
 
 			$kibanaUrl = 'http://'.$elkServer.":".$kibanaPort."/app/kibana#/dashboard/".$dashboard."?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
-
 			foreach ($arrModules as $key => $value)
 			{
 				if($value > $threshold)
