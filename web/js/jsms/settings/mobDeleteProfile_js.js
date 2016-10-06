@@ -115,6 +115,12 @@ ajaxConfig.success=function(response)
         $("#otpResendingLayer").hide();
         if(showLayer == 1)
         bringSuccessLayerOnMobile(response);
+      if(response.trialsOver == 'Y')
+      {
+        showOTPFailedLayer();
+        return;
+
+      }
         if(response.SMSLimitOver =='Y') 
         {
             
@@ -143,6 +149,7 @@ $.ajax({
                         { 
                   if(response.matched=='true')
                   { //what to
+                   $(".js-NumberedLayer").hide(); 
                   $("#deleteConfirmation-Layer").removeClass("dn").css('height',$(window).height());
                   $("#deleteProfilePasswordPage").addClass('dn');
                   }
