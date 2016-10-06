@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <table style="max-width:600px; min-width:240px; border:1px solid #dcdcdc;" border="0" cellspacing="0" cellpadding="0" align="center">
+    <table style="max-width:650px; min-width:240px; border:1px solid #dcdcdc;" border="0" cellspacing="0" cellpadding="0" align="center">
     <tr>
 <td colspan="4" style="font-size: 11px !important; font-family: Arial; color: black; padding-top: 10px;">
 ~$PREHEADER`
