@@ -1,16 +1,37 @@
 <?php
 class DialerHandler
 {
-        public function __construct($db_js, $db_js_157, $db_dialer,$db_master=''){
+        public function __construct($db_js, $db_js_111, $db_dialer,$db_master=''){
 		$this->db_js 		=$db_js;
-		$this->db_js_157 	=$db_js_157;
+		$this->db_js_111 	=$db_js_111;
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
+        }
+        public function getCampaignEligibilityStatus($campaign_name,$eligibleType='')
+        {
+		$entryDt =date("Y-m-d");
+		$dataArr =array();
+                $sql = "SELECT * FROM js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS WHERE CAMPAIGN='$campaign_name' AND ENTRY_DT='$entryDt'";
+		if($eligibleType)
+			$sql .=" AND ELIGIBLE_TYPE='$eligibleType'";
+                $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js_111));
+                while($row = mysql_fetch_array($res)){
+			$campaign 	=$row['CAMPAIGN'];
+			$eligibleType 	=$row['ELIGIBLE_TYPE'];
+			$step		=$row['STEP_COMPLETED'];
+			$dataArr[$campaign][$eligibleType] =$step;
+		}
+                return $dataArr;
+        }
+        public function updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i)
+        {
+                $sql = "REPLACE INTO js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS(`CAMPAIGN`,`ELIGIBLE_TYPE`,`STEP_COMPLETED`,`ENTRY_DT`) VALUES('$campaign_name','$eligibleType','$i',now())";
+                $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js_111));
         }
 	public function getRenewalEligibleProfiles($x,$campaign_name='')
 	{
 		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
-		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
+		$res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$eligible_array[] = $row["PROFILEID"];
 		return $eligible_array;
@@ -18,7 +39,7 @@ class DialerHandler
 	public function getRenewalInEligibleProfiles($x,$campaign_name='')
 	{
 		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
-		$res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js));
+		$res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$ignore_array[] = $row["PROFILEID"];
 		return $ignore_array;
@@ -29,7 +50,7 @@ class DialerHandler
 		$profileid_str = @implode(",",$profiles_array);
 		if($profileid_str){
 			$sql_vd="select PROFILEID,DISCOUNT from billing.RENEWAL_DISCOUNT WHERE PROFILEID IN ($profileid_str)";
-			$res_vd = mysql_query($sql_vd,$this->db_js_157) or die("$sql_vd".mysql_error($this->db_js));
+			$res_vd = mysql_query($sql_vd,$this->db_js_111) or die("$sql_vd".mysql_error($this->db_js));
 			while($row_vd = mysql_fetch_array($res_vd)){
 				$pid = $row_vd["PROFILEID"];
 				$vd_profiles[$pid] = $row_vd["DISCOUNT"];
@@ -127,8 +148,8 @@ class DialerHandler
 					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET $updateStr WHERE easycode='$ecode'";
 					mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
 
-					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$updateStr',now(),'STOP')";
-					mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
+					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$updateStr',now(),'STOP')";
+					mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 				}
 			}
 		}
@@ -159,16 +180,16 @@ class DialerHandler
 					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET $jp_condition_arr0 WHERE easycode='$ecode'";
 					mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
 					$ustr = str_replace("'","",$jp_condition_arr0);
-					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr',now(),'UPDATE')";
-					mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
+					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr',now(),'UPDATE')";
+					mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 
 				}
 				if($jp_condition_arr1){
 					$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=5";
 					mssql_query($query2,$this->db_dialer) or $this->logerror($query2,$this->db_dialer);
 					$ustr1 = str_replace("'","",$jp_condition_arr1);
-					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE')";
-					mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
+					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE')";
+					mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 				}
 
 				$sql_chk="select AGENT from easy.dbo.ct_$campaign_name where easycode='$ecode'";
@@ -177,8 +198,8 @@ class DialerHandler
 				if(!$row_chk["AGENT"]){
 					$query_ph2 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 					mssql_query($query_ph2,$this->db_dialer) or $this->logerror($query_ph2,$this->db_dialer);
-					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE2')";
-					mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
+					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE2')";
+					mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 				}
 			}
 			unset($dialer_data);
@@ -226,8 +247,8 @@ class DialerHandler
 				$query_ph1 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 				mssql_query($query_ph1,$this->db_dialer) or $this->logerror($query_ph1,$this->db_dialer);
 
-				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE1')";
-				mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
+				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE1')";
+				mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 
 				$update_str[] ="easy.dbo.ct_$campaign_name.AGENT=''";
 				if($dialer_data["dial_status"]!='9')
@@ -421,7 +442,7 @@ class DialerHandler
         public function getLeadIdSuffix()
         {
                 $sql = "select LEAD_ID_SUFFIX from incentive.LARGE_FILE ORDER BY ENTRY_DT DESC LIMIT 1";
-                $res = mysql_query($sql,$this->db_js_157) or die("$sql".mysql_error($this->db_js_157));
+                $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js_111));
                 if($row = mysql_fetch_array($res))
                         $leadIdSuffix = $row["LEAD_ID_SUFFIX"];
                 return $leadIdSuffix;

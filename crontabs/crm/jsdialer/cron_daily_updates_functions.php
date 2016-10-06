@@ -124,7 +124,7 @@ function stop_non_eligible_profiles($campaign_name,$x,$ignore_array,$db_dialer,$
 				$query1 = "UPDATE easy.dbo.ct_$campaign_name SET $updateStr WHERE easycode='$ecode'";
 				mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer);
 
-				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$updateStr',now(),'STOP')";
+				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$updateStr',now(),'STOP')";
 				mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
 			}
 		}
@@ -155,7 +155,7 @@ function update_data_of_eligible_profiles($campaign_name,$x,$eligible_array,$db_
                         	$query1 = "UPDATE easy.dbo.ct_$campaign_name SET $jp_condition_arr[0] WHERE easycode='$ecode'";
                                 mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer);
 				$ustr = str_replace("'","",$jp_condition_arr[0]);
-				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr',now(),'UPDATE')";
+				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr',now(),'UPDATE')";
 	                        mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
 
 			}
@@ -166,7 +166,7 @@ function update_data_of_eligible_profiles($campaign_name,$x,$eligible_array,$db_
 					$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr[1] WHERE code='$ecode' AND priority <=6";
                         	        mssql_query($query2,$db_dialer) or logerror($query2,$db_dialer);
 					$ustr1 = str_replace("'","",$jp_condition_arr[1]);
-					$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE')";
+					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE')";
 	                               	mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
                         	}
 			}
@@ -178,7 +178,7 @@ function update_data_of_eligible_profiles($campaign_name,$x,$eligible_array,$db_
 			{
 				$query_ph2 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 				mssql_query($query_ph2,$db_dialer) or logerror($query_ph2,$db_dialer);
-				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE2')";
+				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE2')";
                                 mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
 			}
 		}
@@ -238,7 +238,7 @@ function data_comparision($dialer_data,$campaign_name,$ecode,$db_dialer,$vd_prof
 		{
 			$query_ph1 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
                         mssql_query($query_ph1,$db_dialer) or logerror($query_ph1,$db_dialer);
-			$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE1')";
+			$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE1')";
                         mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
 
 			if($update_str=='')

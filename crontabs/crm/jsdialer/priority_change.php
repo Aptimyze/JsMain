@@ -6,6 +6,7 @@
 * MODIFIED DATE : 12 Apr, 2016
 * MADE BY     	: VIBHOR GARG
 *********************************************************************************************/
+include("MysqlDbConstants.class.php");
 $start = @date('H:i:s');
 
 $dir ="/home/developer/jsdialer";
@@ -18,25 +19,25 @@ $pro_array =$online_array = $client->zRange('online_user', 0, -1);
 //print_r($pro_array);die;
 
 //Open connection at JSDB
-$db_js = mysql_connect("ser2.jeevansathi.jsb9.net","user_dialer","DIALlerr") or die("Unable to connect to js server at".$start);
-$db_js_157 = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+$db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
+$db_js_157 = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
 
 //Remove profiles who are online but already priortized
 $last_pro_array = array();
 if($start != '00:00:00')
 {
-	$sql11= "SELECT userID FROM test.last_recentusers";
+	$sql11= "SELECT userID FROM js_crm.last_recentusers";
 	$res11=	mysql_query($sql11,$db_js_157) or die($sql11.mysql_error($db_js_157));
 	while($myrow1 = mysql_fetch_array($res11))
         	$last_pro_array[] = $myrow1["userID"];
 }
 
-$sql12= "TRUNCATE test.last_recentusers";
+$sql12= "TRUNCATE js_crm.last_recentusers";
 $res12=	mysql_query($sql12,$db_js_157) or die($sql12.mysql_error($db_js_157));
 
 for($r=0;$r<count($pro_array);$r++)
 {
-	$sql13= "INSERT IGNORE INTO test.last_recentusers VALUES ($pro_array[$r])";
+	$sql13= "INSERT IGNORE INTO js_crm.last_recentusers VALUES ($pro_array[$r])";
 	$res13=	mysql_query($sql13,$db_js_157) or die($sql13.mysql_error($db_js_157));
 }
 
@@ -53,7 +54,7 @@ while($myrow2 = mysql_fetch_array($res2))
 
 for($d=0;$d<count($pro_array2);$d++)
 {
-        $sql13= "INSERT IGNORE INTO test.last_recentusers VALUES ($pro_array2[$d])";
+        $sql13= "INSERT IGNORE INTO js_crm.last_recentusers VALUES ($pro_array2[$d])";
         $res13= mysql_query($sql13,$db_js_157) or die($sql13.mysql_error($db_js_157));
 }
 
@@ -82,7 +83,7 @@ if(count($camp_array)>0)
 		$campaign_name = $camp_array[$i];
 		
 		//Connection at DialerDB
-		$db_dialer = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or die("Unable to connect to dialer server");
+		$db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
 		//Part-1 : Priortization
 		$cnt1=0;
@@ -136,7 +137,7 @@ if(count($camp_array)>0)
 						$query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
 					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1' FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
 					$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
-					$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','M_A1')";
+					$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','M_A1')";
 				}
 				else
 				{
@@ -147,7 +148,7 @@ if(count($camp_array)>0)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
 					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='2' FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='1'";
 					$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
-					$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','2',now(),'P','$campaign_name','M_A0')";
+					$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','2',now(),'P','$campaign_name','M_A0')";
 				}
 			}
 			else
@@ -167,7 +168,7 @@ if(count($camp_array)>0)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
 					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1',LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
 					$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
-					$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','O_A1')";
+					$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','O_A1')";
 				}
 				else
 				{
@@ -193,7 +194,7 @@ if(count($camp_array)>0)
                                                 $query2 = "UPDATE easy.dbo.ct_$campaign_name SET LAST_LOGIN_DATE=getdate(),lastonlinepriority='$npriority',lastpriortizationt=getdate() FROM easy.dbo.ct_$campaign_name where easycode='$ecode'";
 					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status='1',LAST_LOGIN_DATE=getdate() FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and code='$ecode' and priority!='10' and Dial_Status='2'";
 					$query = "UPDATE easy.dbo.ph_contact SET priority = '$npriority' WHERE code='$ecode' AND status=0 and priority!='10'";
-					$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','O_A0')";
+					$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$npriority','1',now(),'P','$campaign_name','O_A0')";
 				}
 			}
 			if(!$ignore)
@@ -260,9 +261,9 @@ if(count($camp_array)>0)
 					}
 					$dep_array[] = $profileid;
 					if($ds)
-						$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$opriority','2',now(),'D','$campaign_name','PO_A1')";
+						$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$opriority','2',now(),'D','$campaign_name','PO_A1')";
 					else
-						$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$opriority','',now(),'D','$campaign_name','PO_A0')";
+						$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$opriority','',now(),'D','$campaign_name','PO_A0')";
 					mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
                         	}
 			}
@@ -294,7 +295,7 @@ if(count($camp_array)>0)
 					mssql_query($query,$db_dialer) or logerror($query,$db_dialer,1);
 					if(!in_array($profileid,$dep_array))
 					{
-						$log_query = "INSERT into test.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$opriority','1',now(),'D','$campaign_name','PM_A01')";
+						$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,TYPE) VALUES ('$profileid','$opriority','1',now(),'D','$campaign_name','PM_A01')";
 	                                        mysql_query($log_query,$db_js_157) or die($log_query.mysql_error($db_js_157));
 					}
                         	}

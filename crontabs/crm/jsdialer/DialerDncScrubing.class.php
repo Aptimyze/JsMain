@@ -1,9 +1,9 @@
 <?php
 class DialerDncScrubing 
 {
-        public function __construct($db_js, $db_js_157, $db_dialer){
+        public function __construct($db_js, $db_js_111, $db_dialer){
                 $this->db_js            =$db_js;
-                $this->db_js_157        =$db_js_157;
+                $this->db_js_111        =$db_js_111;
                 $this->db_dialer        =$db_dialer;
         }
 	public function compute_dnc_array($campaign_name, $dateTime='')
@@ -64,8 +64,8 @@ class DialerDncScrubing
 				$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus WHERE easycode='$ecode'";
 				mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
 
-				$log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo,','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
-				mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
+				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo,','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
+				mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 			}
 		}
 	}
@@ -81,8 +81,8 @@ class DialerDncScrubing
                                 $query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus WHERE easycode='$ecode'";
                                 mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
 
-                                $log_query = "INSERT into test.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
-                                mysql_query($log_query,$this->db_js_157) or die($log_query.mysql_error($this->db_js_157));
+                                $log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
+                                mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
                         }
                 }
         }
