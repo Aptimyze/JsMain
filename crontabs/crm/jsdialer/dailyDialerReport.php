@@ -4,12 +4,14 @@
 * DESCRIPTION   : Capture sales campaign details  
 * MADE BY       : MANOJ RANA 
 *********************************************************************************************/
+include("MysqlDbConstants.class.php");
 
 //Open connection at JSDB
-$db_master      = mysql_connect("master.js.jsb9.net","user","CLDLRTa9") or die("Unable to connect to js server");
-$db_js          = mysql_connect("ser2.jeevansathi.jsb9.net","user_dialer","DIALlerr") or die("Unable to connect to js server");
-$db_dialer      = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or die("Unable to connect to dialer server");
-$db_js_111	= mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server");
+$db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
+$db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$master['USER'],MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
+$db_js_111 = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
+$db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
+
 
 include("DialerHandler.class.php");
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer,$db_master);

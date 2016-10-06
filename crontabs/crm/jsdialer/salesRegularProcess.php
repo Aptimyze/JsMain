@@ -3,6 +3,9 @@
 * FILE NAME   	: salesRegularProcess.php 
 * DESCRIPTION 	: 
 *********************************************************************************************/
+include("MysqlDbConstants.class.php");
+include("DialerHandler.class.php");
+
 ini_set('max_execution_time',0);
 ini_set('memory_limit',-1);
 
@@ -10,16 +13,15 @@ $to     ="manoj.rana@naukri.com";
 $from   ="From:JeevansathiCrm@jeevansathi.com";
 
 //Connection at JSDB
-$db_js = mysql_connect("ser2.jeevansathi.jsb9.net","user_dialer","DIALlerr") or die("Unable to connect to vario server");
-$db_master = mysql_connect("master.js.jsb9.net","user","CLDLRTa9") or die("Unable to connect to js server at ".$start);
-$db_js_111 = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to local server");
-$db_dialer = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or die("Unable to connect to dialer server");
+$db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
+$db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$master['USER'],MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
+$db_js_111 = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
+$db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js);
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_master);
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
-include("DialerHandler.class.php");
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer,$db_master);
 $csvEntryDate =date("Y-m-d",time()-9.5*60*60);
 

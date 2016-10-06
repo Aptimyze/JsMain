@@ -6,6 +6,7 @@
 * MODIFIED DATE : 12 Apr, 2016
 * MADE BY     	: VIBHOR GARG
 *********************************************************************************************/
+include("MysqlDbConstants.class.php");
 $start = @date('H:i:s');
 
 $dir ="/home/developer/jsdialer";
@@ -18,8 +19,8 @@ $pro_array =$online_array = $client->zRange('online_user', 0, -1);
 //print_r($pro_array);die;
 
 //Open connection at JSDB
-$db_js = mysql_connect("ser2.jeevansathi.jsb9.net","user_dialer","DIALlerr") or die("Unable to connect to js server at".$start);
-$db_js_157 = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
+$db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
+$db_js_157 = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
 
 //Remove profiles who are online but already priortized
 $last_pro_array = array();
@@ -82,7 +83,7 @@ if(count($camp_array)>0)
 		$campaign_name = $camp_array[$i];
 		
 		//Connection at DialerDB
-		$db_dialer = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or die("Unable to connect to dialer server");
+		$db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
 		//Part-1 : Priortization
 		$cnt1=0;

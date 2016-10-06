@@ -1,12 +1,11 @@
 <?php
-$suffix = '070116';
-$termination_status_labels = array("1"=>'Handled' ,"2"=>'Busy',"3"=>'Machine' ,"4"=>'No Answer' ,"5"=>'Nuisance' ,"6"=>'Abandoned' ,"7"=>'Rejected' ,"8"=>'Invalid Number' ,"9"=>'Overflow' ,"10"=>'Trunk line overflow',"11"=>'RONA' ,"12"=>'Modem answer' ,"13"=>'Fax answer' ,"14"=>'Discarded');
-
 //Open connection at JSDB
-$db_js = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server");
+$db_js = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
+$db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
-//Connection at DialerDB
-$db_dialer = mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or die("Unable to connect to dialer server");
+
+$suffix = '041016';
+$termination_status_labels = array("1"=>'Handled' ,"2"=>'Busy',"3"=>'Machine' ,"4"=>'No Answer' ,"5"=>'Nuisance' ,"6"=>'Abandoned' ,"7"=>'Rejected' ,"8"=>'Invalid Number' ,"9"=>'Overflow' ,"10"=>'Trunk line overflow',"11"=>'RONA' ,"12"=>'Modem answer' ,"13"=>'Fax answer' ,"14"=>'Discarded');
 
 //Compute all the active campaigns
 $sqlc= "SELECT CAMPAIGN FROM incentive.CAMPAIGN WHERE ACTIVE = 'Y' AND CAMPAIGN!='PUNE_JS'";

@@ -4,11 +4,12 @@
 * DESCRIPTION 	: Capture inbound sales campaign details for call connecting 
 * MADE BY     	: MANOJ RANA 
 *********************************************************************************************/
+include("MysqlDbConstants.class.php");
 
 //Open connection at JSDB
-$db_master 	= mysql_connect("master.js.jsb9.net","user","CLDLRTa9") or die("Unable to connect to js server at ".$start);
-//Connection at DialerDB
-$db_dialer 	= mssql_connect("dialer.infoedge.com","online","jeev@nsathi@123") or die("Unable to connect to dialer server");
+$db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$master['USER'],MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
+$db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
+
 mysql_query("set session wait_timeout=600",$db_master);
 
 $campaignArr	=array('IB_Sales'=>'ct_IB_Sales','IB_SupSale'=>'ct_IB_SupSales','IB_Service'=>'ct_IB_Service','IB_SupService'=>'ct_IB_SupService','IB_PaidService'=>'ct_IB_PaidService','IB_SupPaidservice'=>'ct_IB_SupPaidS');
