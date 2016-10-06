@@ -3251,7 +3251,7 @@ JsChat.prototype = {
                         console.log("element",element);
                         _this._scrollDown($(this), "min");
                     });
-                },2000);
+                },1000);
                 $(this._minPanelId).click(function () {
                     _this._maximizeChatPanel();
                 });
