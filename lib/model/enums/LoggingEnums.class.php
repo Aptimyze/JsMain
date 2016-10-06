@@ -17,7 +17,7 @@ class LoggingEnums
     const LOG_ERROR = 0;
     const SERVER_FLAG = false;
     // 1 for Enabling config of modules, 0 for not
-    const CONFIG_ON = false;
+    const CONFIG_ON = true;
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = false;
     const LOG_TRACE = false;
@@ -65,7 +65,8 @@ class LoggingEnums
     const SEO = 'seo';
     const MYJS = 'myjs';
     const HOMEPAGE = 'homepage';
-    const _VAR = 'var';
+    const STATIC_MODULE = 'static';
     const REQUEST_URI = 'REQUEST_URI';
     const DOMAIN = 'Domain';
+    const REFERER = 'Referer';
 }
