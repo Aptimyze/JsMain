@@ -750,13 +750,13 @@ class socialActions extends sfActions
 	if(!$profilechecksum)
 	{  
 		$loggedInProfile = LoggedInProfile::getInstance('newjs_master');
-        	$loggedInProfile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
-        	$requestedProfileid=$loggedInProfile->getPROFILEID();
-	        $ProfileObj=$loggedInProfile;
-	        if(!$ProfileObj)
+		if(!$loggedInProfile || $loggedInProfile->getPROFILEID()=='')
 	        {
 			$this->forward('static','LogoutPage');
 		}
+        	$loggedInProfile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
+        	$requestedProfileid=$loggedInProfile->getPROFILEID();
+	        $ProfileObj=$loggedInProfile;
 	}
 	else
 	{

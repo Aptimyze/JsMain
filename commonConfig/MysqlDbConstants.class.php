@@ -49,7 +49,6 @@ class MysqlDbConstants
 
 	/* alerts(match-alerts/mmm/kundli)*/
 	public static $alerts         = array('HOST'=>'172.16.3.185', 'USER'=>'alerts', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs','SOCKET'=>'');
-	public static $alertsMMM      = array('HOST'=>'172.16.3.185', 'USER'=>'alerts', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs','SOCKET'=>'');
 	
 	/* 99 Acres*/
 	public static $BMS_99      = array('HOST'=>'10.208.65.98', 'USER'=>'user', 'PASS'=>'CLDLRTa9', 'PORT'=>'3306' , 'DEFAULT_DB'=>'');

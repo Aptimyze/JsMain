@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 This php script checks if RabbitMQ is working, checks memory consumption (memory alarm and/or disk alarm are raised if memory/disk consumption is more than the specified limit),
 number of active consumer instances and sends alert if queues have number of messages more than N(a pre specified limit). Consumer instance is run if there are queued messages 
@@ -86,6 +86,7 @@ EOF;
             exec("ps aux | grep \"".MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $deleteRetrieveConsumerOut);
             exec("ps aux | grep \"".MessageQueues::UPDATESEEN_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $updateSeenConsumerOut);
             exec("ps aux | grep \"".MessageQueues::PROFILE_CACHE_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $profileCacheConsumerOut);
+            exec("ps aux | grep \"".MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $viewLogConsumerCount);
             if(!empty($out) && is_array($out))
               foreach ($out as $key => $value) 
               {
@@ -123,6 +124,15 @@ EOF;
                   exec("kill -9 ".$value);
               }
             }
+            
+            if(!empty($viewLogConsumerCount) && is_array($viewLogConsumerCount)) {
+              foreach ($viewLogConsumerCount as $key => $value)
+              {
+                $count2 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count2 >0)
+                  exec("kill -9 ".$value);
+              }
+            }
 
 
             for($i=1;$i<=MessageQueues::CONSUMERCOUNT ;$i++)
@@ -136,6 +146,9 @@ EOF;
 
             for($i=1;$i<=MessageQueues::PROFILE_CACHE_CONSUMER_COUNT ;$i++) {
               passthru(JsConstants::$php5path." ".MessageQueues::PROFILE_CACHE_STARTCOMMAND." > /dev/null &");
+            }
+            for($i=1;$i<=MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT ;$i++) {
+              passthru(JsConstants::$php5path." ".MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND." > /dev/null &");
             }
 
             RabbitmqHelper::sendAlert($str,"default");
@@ -249,6 +262,7 @@ EOF;
     $this->restartInactiveConsumer(MessageQueues::CONSUMER_COUNT_SINGLE,MessageQueues::CRONDELETERETRIEVE_STARTCOMMAND,"DeleteRetrieve");
     $this->restartInactiveConsumer(MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,MessageQueues::UPDATESEEN_STARTCOMMAND,"UpdateSeen");
     $this->restartInactiveConsumer(MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,MessageQueues::PROFILE_CACHE_STARTCOMMAND,"ProfileCache Queue");
+    $this->restartInactiveConsumer(MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND);
     //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
     if(MessageQueues::FALLBACK_STATUS==true)
     {
@@ -264,6 +278,8 @@ EOF;
         $updateSeenConsumerObj->receiveMessage();
         $profileCacheConsumerObj = new ProfileCacheConsumer('SECOND_SERVER', $messageCount);
         $profileCacheConsumerObj->receiveMessage();
+        $updateViewLogConsumerObj = new updateViewLogConsumer('SECOND_SERVER', $messageCount);
+        $updateViewLogConsumerObj->receiveMessage();
         unset($profileCacheConsumerObj);
       }
     }    

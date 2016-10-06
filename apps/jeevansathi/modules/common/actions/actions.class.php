@@ -504,8 +504,9 @@ class commonActions extends sfActions
 
                     $subject = "$email" . $userName . "has requested a callback for assistance with his/her account";
                     $msgBody = "<html><body>Dear Support Team,<br> $email" . $userName . "has requested a callback from the support team for resolution of a service related issue. Please contact at $email,or $phone as requested on $date at $reqTime <br> Regards<br> Team Jeevansathi</body></html>";
-                    
-                    SendMail::send_email($to, $msgBody, $subject, $from, "", "", "", "", "", "", "1", $email, "Jeevansathi Support");
+                    if (JsConstants::$whichMachine == 'prod') {
+                        SendMail::send_email($to, $msgBody, $subject, $from, "", "", "", "", "", "", "1", $email, "Jeevansathi Support");
+                    }
                     $objExecCallBack = new billing_EXC_CALLBACK;
                     $objExecCallBack->addRecord($iProfileId, $phone, $email, $device, $channel, $callbackSource, $date, $startTime, $endTime,"JP");
                     unset($objExecCallBack);
@@ -536,7 +537,9 @@ class commonActions extends sfActions
                     }
 
                     $msgBody = "<html><body>$userName is interested in knowing more about Membership Plans. Please contact at " . $email . " or " . $phone . " as requested on $date at $reqTime </body></html>";
-                    SendMail::send_email($to, $msgBody, $subject, $from);
+                    if (JsConstants::$whichMachine == 'prod') {
+                        SendMail::send_email($to, $msgBody, $subject, $from);
+                    }
                 }
 
                 //Update RCB Status if form is submit
@@ -643,25 +646,28 @@ class commonActions extends sfActions
                     $loggedInProfile=LoggedInProfile::getInstance();
                     $nameOfUserObj = new NameOfUser();
                     $newName=$nameOfUserObj->filterName($newName);
-                    $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($newName,  $loggedInProfile->getGENDER());
                     $screening=$loggedInProfile->getSCREENING();
                     $profileid=$loggedInProfile->getPROFILEID();
+                    $nameData = $nameOfUserObj->getNameData($profileid );
+		  if((!is_array($nameData)&& $newName) || $nameData[$profileid]['NAME']!=$newName)
+		  {
+                    $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($newName,  $loggedInProfile->getGENDER());
                     if($isNameAutoScreened)
                     {
                             $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$screening);
                     }
                     
-                    if(!$newName || !$isNameAutoScreened)
+                    else
                     {
                              $jprofileFieldArr['SCREENING'] = Flag::removeFlag($FLAGID="name", $screening);
                     }
-                    if($jprofileFieldArr['SCREENING'] && $jprofileFieldArr['SCREENING']!=$screening)
+                    if(array_key_exists("SCREENING",$jprofileFieldArr) && $jprofileFieldArr['SCREENING']!=$screening)
                     {
                         
                         JPROFILE::getInstance()->edit($jprofileFieldArr,$profileid,'PROFILEID');
                     }
+		  }
                     
-                    $nameData = $nameOfUserObj->getNameData($profileid );//print_r($nameData);die;
                                if(!empty($nameData))
                                {
                                         $nameArr=array('NAME'=>$newName,'DISPLAY'=>$namePrivacy);
@@ -767,5 +773,125 @@ class commonActions extends sfActions
         $apiResponseHandlerObj->generateResponse();
         die;
     }
+
+
+    public function executeSendOtpSMS(sfWebRequest $request)
+  {  
+
+    $phoneType=$request->getParameter('phoneType');
+    $respObj = ApiResponseHandler::getInstance();
+    
+    if($phoneType!='A' && $phoneType!='M' && $phoneType!='L')
+    {
+    $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+    $respObj->generateResponse();
+    die;
+    }
+
+    $loggedInProfileObj=LoggedInProfile::getInstance();
+   
+    if(!$loggedInProfileObj->getPROFILEID())
+    {
+        $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
+        $respObj->generateResponse();
+        die;
+    }
+
+
+    $verificationObj=new OTP($loggedInProfileObj,$phoneType,OTPENUMS::$deleteProfileOTP);
+    $response=$verificationObj->sendOtpSMS();
+     $this->phoneNum =$verificationObj->getPhoneWithoutIsd();
+     $this->isd = $verificationObj->getIsd();
+    $this->phoneType =$verificationObj->getPhoneType();
+    if($response['trialsOver']=='Y')
+        $response['trialsOverMessage']=PhoneApiFunctions::$OTPTrialsOverMsg;
+    $response['serviceTimeText']=PhoneApiFunctions::$serviceTimeText;
+    
+
+        if($request->getParameter('PCLayer')=='Y'){
+            $this->response=$response;
+            if($response['SMSLimitOver']=='Y')
+                $this->smsResend='N';
+            else $this->smsResend='Y';
+
+            if($response['trialsOver']=='Y') 
+                $this->setTemplate('desktopCommonOTPFailed');
+            else 
+                $this->setTemplate('desktopCommonOTP');
+        
+        }
+
+        else {
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+
+        }
+  }
+
+public function executeMatchOtp(sfWebRequest $request) 
+    {    
+        $context = $this->getContext();
+        $respObj = ApiResponseHandler::getInstance();
+    $phoneType=$request->getParameter('phoneType');
+    $enteredOtp=$request->getParameter('enteredOtp');
+    if($phoneType!='A' && $phoneType!='M' && $phoneType!='L')
+    {
+    $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+    $respObj->generateResponse();
+    die;
+    }
+
+    $loggedInProfileObj=LoggedInProfile::getInstance();
+
+    if(!$loggedInProfileObj->getPROFILEID())
+    {
+        $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
+        $respObj->generateResponse();
+        die;
+    }
+    
+    $verificationObj=new OTP($loggedInProfileObj,$phoneType,OTPENUMS::$deleteProfileOTP);
+    
+    switch ($verificationObj->matchOtp($enteredOtp))
+    {
+        case 'Y':   
+        $response['matched']='true';
+        $response['trialsOver']='N';
+        break;
+
+        case 'N':
+        $response['matched']='false';
+        $response['trialsOver']='N';
+        break;
+
+        case 'C':
+        $response['matched']='false';
+        $response['trialsOver']='Y';
+        $response['trialsOverMessage']=PhoneApiFunctions::$OTPTrialsOverMsg;
+
+        break;
+
+        default:
+        $response['matched']='false';
+        $response['trialsOver']='N';
+        break;      
+    }
+        $response['serviceTimeText']=PhoneApiFunctions::$serviceTimeText;
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+        
+    }
+
+
+public function executeDesktopOtpFailedLayer(sfWebRequest $request)
+  {
+
+            $this->setTemplate('desktopCommonOTPFailed');
+        
+ }
 
 }

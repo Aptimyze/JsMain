@@ -111,13 +111,14 @@ class billing_EXC_CALLBACK extends TABLE {
     }
     public function insertCallbackWithSelectedService($phoneNo, $email, $jsSelectd, $profileid='', $device=NULL, $channel=NULL, $callbackSource=NULL, $date, $startTime, $endTime)
     {
+        $dateNow = date("Y-m-d H:i:s");
         $date = date("Y-m-d");
         $startDtTime = $date." ".$startTime;
         $endDtTime = $date." ".$endTime;
         try{
             $sql ="INSERT INTO billing.EXC_CALLBACK (PHONE_NUMBER,EMAIL,ENTRY_DT,SERVICEID,PROFILEID,DEVICE,CHANNEL,CALLBACK_SOURCE,PREFERRED_START_TIME_IST,PREFERRED_END_TIME_IST) VALUES (:PHONE_NUMBER,:EMAIL,:ENTRY_DT,:JSSEL,:PROFILEID,:DEVICE,:CHANNEL,:CALLBACK_SOURCE,:PREFERRED_START_TIME_IST,:PREFERRED_END_TIME_IST)";
             $row = $this->db->prepare($sql);
-            $row->bindValue(":ENTRY_DT",$date, PDO::PARAM_STR);
+            $row->bindValue(":ENTRY_DT",$dateNow, PDO::PARAM_STR);
             $row->bindValue(":EMAIL",$email, PDO::PARAM_STR);
             $row->bindValue(":JSSEL",$jsSelectd, PDO::PARAM_STR);
             $row->bindValue(":PHONE_NUMBER",$phoneNo, PDO::PARAM_STR);

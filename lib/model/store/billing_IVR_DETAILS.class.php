@@ -7,7 +7,7 @@ class billing_IVR_DETAILS extends TABLE{
         parent::__construct($dbname);
     }
 
-    public function updateEasyBill($billid, $billby, $refid)
+    public function updateIvrDetails($billid, $billby, $refid)
     {
         try
         {

@@ -228,6 +228,7 @@ function bindSectionClick() {
     $(".viewBtn").each(function(index, element) {
         $(this).on("click", function() {
             that = $(this);
+            window.scrollTo(0,0);
             $.each(catogaries, function(index, value) {
                 if ((that).prev().text() == value) {
                     selectedCat = value;

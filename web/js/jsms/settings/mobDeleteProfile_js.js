@@ -11,7 +11,31 @@ $(document).ready(function(){
     var pswrd = $('#passValueID').val();
     ajaxPassword(checksum,pswrd);
   });
+
+
+$( "#otpProfileDeletionJSMS").bind('click',function() {
+  showCommonOtpLayer(1);
+ });
+$( "#resendTextId").bind('click',function() {
+        $("#otpResendingLayer").show();
+        cssLayerFix(); 
+        showCommonOtpLayer(0);
+ });
+
+$( "#mainBottomButton2").bind('click',function() {
+  sendMatchOtpAjax();
+ });
+
 });
+
+
+function cssLayerFix() {
+  $(".cssLayerFix").each(function(){
+      $(this).css('margin-left','-'+$(this).width()/2+'px')
+      .css('margin-top','-'+$(this).height()/2+'px');});
+    
+}
+
 
 function ajaxPassword(checksum,pswrd)
 {
@@ -75,4 +99,113 @@ function deleteConfirmation(action)
 	}
 	else
 		window.location.href=action;
+}
+
+
+function showCommonOtpLayer(showLayer){
+
+var ajaxData={'phoneType':'M'};
+var ajaxConfig={};
+ajaxConfig.data=ajaxData;
+ajaxConfig.type='POST';
+ajaxConfig.url='/common/SendOtpSMS';
+
+ajaxConfig.success=function(response) 
+{
+        $("#otpResendingLayer").hide();
+        if(showLayer == 1)
+        bringSuccessLayerOnMobile(response);
+      if(response.trialsOver == 'Y')
+      {
+        showOTPFailedLayer();
+        return;
+
+      }
+        if(response.SMSLimitOver =='Y') 
+        {
+            
+            $("#resendTextId").hide();
+        }
+      
+}
+$.ajax(ajaxConfig);
+}
+
+
+function sendMatchOtpAjax() {
+var OTP=$("#matchOtpText").val();
+if(!OTP)
+{
+  displayOTPError();return;
+}
+
+var ajaxData={'enteredOtp':OTP,'phoneType':'M'};
+$.ajax({
+                                url:'/common/matchOtp',
+                                dataType: 'json',
+                                data: ajaxData,
+                                type: "POST",
+                                  success: function(response) 
+                        { 
+                  if(response.matched=='true')
+                  { //what to
+                   $(".js-NumberedLayer").hide(); 
+                  $("#deleteConfirmation-Layer").removeClass("dn").css('height',$(window).height());
+                  $("#deleteProfilePasswordPage").addClass('dn');
+                  }
+                  else if(response.matched=='false')
+                  {
+                  if(response.trialsOver=='N')
+                    {
+                    $("#oopsDiv").show();    
+                    displayOTPError();
+                    }
+                  else if(response.trialsOver=='Y') 
+                    {
+                      $("#oopsDiv").hide();    
+                      $("#otpProfileDeletionJSMS").hide();  
+                      showOTPFailedLayer();
+                      trialsOver='Y';
+
+                    }
+
+                  }
+            }
+  }); 
+}
+
+
+
+function bringSuccessLayerOnMobile()
+{
+
+  $('.js-NumberedLayer').hide();
+  $("#bringSuccessLayerOnMobile").show();
+}
+
+function bringFailureLayerOnMobile()
+{ 
+  $('.js-NumberedLayer').hide();
+   $("#attemptsOver").show();
+
+
+}
+
+function displayOTPError()
+{
+//$('.js-NumberedLayer').hide();
+  //$("#offerCheckBox").hide();
+  //$("#putPasswordLayer").show();
+  //$("#buttonForCode").hide();
+   //$("#bringSuccessLayerOnMobile").hide();
+  $("#otpWrongCodeLayer").show();  
+  cssLayerFix(); 
+
+}
+
+function showOTPFailedLayer(){
+    
+    $('.js-NumberedLayer').hide();
+    
+    $('.js-NumberedLayer3').show();
 }

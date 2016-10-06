@@ -60,12 +60,15 @@ class settingsActions extends sfActions
 
     	if($request->getParameter("hideDelete"))
     	{
-    		if(MobileCommon::isNewMobileSite())
+
+            if(MobileCommon::isNewMobileSite())
     		{
     			$url=JsConstants::$siteUrl.'/static/deleteOption';
 				header('Location: '.$url);
 				exit;
     		}
+            $phoneMob = $loggedInProfileObj->getPHONE_MOB();
+            $this->showOTP = $phoneMob ? 'Y' : 'N';
     		$option=$request->getParameter("option");
     		//$request=$this->getRequest();
     		//$this->loginData=$data=$request->getAttribute("loginData");

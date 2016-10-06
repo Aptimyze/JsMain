@@ -392,6 +392,9 @@ function formatJsonOutput(result)
 	delete(result.responseMessage);
 	delete(result.responseStatusCode);
         delete(result.imageCopyServer);
+        delete(result.cache_flag);
+        delete(result.cache_interval);
+        delete(result.resetCache);
 	return result;
 }
 

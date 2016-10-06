@@ -194,12 +194,21 @@ class staticActions extends sfActions
 		{
 			//echo "<script>$.colorbox.close();document.location.href='".$this->nextAction."';</script>";
 		}
+    // log referer
+    if(isset($_SERVER['HTTP_REFERER']))
+    {
+      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+    }
 	}
         public function executeNewMobLogin(sfWebRequest $request)
         { 
         	//$loginFailedObj = new LOGIN_FAILED1;
         	//$count=
-        	
+        	// check
+          if(isset($_SERVER['HTTP_REFERER']))
+          {
+            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+          }
 			$this->forward("static","LogoutPage");
         }
 
@@ -259,7 +268,10 @@ class staticActions extends sfActions
 			die;
 		}
             if($request->getParameter("success")==1)
-                $this->setTemplate("resetLinkSent");
+            {
+              $this->message = $request->getParameter("message"); 
+              $this->setTemplate("resetLinkSent");
+            }
         }
         public function executeResetPass(sfWebRequest $request) 
          {
@@ -305,10 +317,14 @@ class staticActions extends sfActions
         public function executePassCheck(sfWebRequest $request) {
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
+            $this->phoneNum =  $pObj->getPHONE_MOB();
+            $this->showOTP = $this->phoneNum ? 'Y' : 'N';
+            $this->isd =  $pObj->getISD();
             $this->deleteReason=$request->getParameter("delete_reason");
             $this->deleteOption=$request->getParameter("delete_option");
             $this->successFlow=$request->getParameter("successFlow");
         }
+        
         public function executeSettings(sfWebRequest $request){
             
             $loginData = $request->getAttribute("loginData");
@@ -419,6 +435,11 @@ public function executeCALRedirection($request){
 			$authenticationLoginObj->logout($loginData[PROFILEID]);
 			
 		}
+    // log referer
+    if(isset($_SERVER['HTTP_REFERER']))
+    {
+      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+    }
     if(MobileCommon::isMobile() || MobileCommon::isDesktop()==true)  
     {
        //For JPSC/JSMS, disable notifications
@@ -806,12 +827,42 @@ public function executeAppredirect(sfWebRequest $request)
 				$mergedArr = array_merge($optionalArr,$outData[$val][0]);
 				$outData[$val][0]=$mergedArr;
 			}
+			if($val=="reg_city_jspc")
+			{
+				$output = $outData;
+				unset($outData);
+				$outData[51]=$output;
+                                $Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
+                                $i=0;
+                                foreach($Arr[128] as $key=>$val)
+                                {
+                                        foreach($val as $k=>$v)
+                                                $outData[128][]=array($i=>array($k=>$v));
+                                        $i++;
+                                }
+			    $outData['128'][][0] = array('0'=>'Others');
+			}
 		  }
 		  echo json_encode($outData);
 	  }
 	  else if($k)
 	  {
-		  $output = $this->getFieldMapData($k);
+			$output = $this->getFieldMapData($k);
+			if($k=="reg_city_jspc")
+			{
+				$outData = $output;
+				unset($output);
+				$output[51]=$outData;
+				$Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
+				$i=0;
+				foreach($Arr[128] as $key=>$val)
+				{
+					foreach($val as $k=>$v)
+						$output[128][]=array($i=>array($k=>$v));
+					$i++;
+				}
+			    $output['128'][][0] = array('0'=>'Others');
+			}
 			if($k=="family_income")
 			{
                                 $optionalArr[0] = array("0"=>array("0"=>"Select"));
@@ -1038,9 +1089,17 @@ public function executeAppredirect(sfWebRequest $request)
     if(strstr($k,"stdcodes")){
       $output = $this->getSTDCode();
     }
+if($k=="state_res")
+{
+			$output = $this->getJspcState();
+}
     if($k=="native_state_jsms")
 		{
 			$output = $this->getJsmsNativeState();
+		}
+    if($k=="jspc_state")
+		{
+			$output = $this->getJspcState();
 		}
     if($k=="native_country_jsms")
 		{
@@ -1608,86 +1667,59 @@ public function executeAppredirect(sfWebRequest $request)
   }
  
   private function getJspcCity_Edit(){
-    $tempArray=FieldMap::getFieldLabel("topindia_city",'',1);
-	  
-	  $state = FieldMap::getFieldLabel("state_india",'',1);
-	  $Arr[51][0]=Array();
-	  $cityIndia=FieldMap::getFieldLabel("city_india",'',1);
-	  foreach($state as $key=>$value)
-	  {
-		  unset($cityIndia[$key]);
-	  }
-    
-	  $Arr[51][2]=$cityIndia;
-	  unset($state);
-	  if(!$partnerCity)
-	  {
-		  foreach($tempArray as $key=>$val)
-		  {
-			  $temp=explode(",",$val);
-			  foreach($temp as $key=>$val)
-				$topIndia[$val]=$cityIndia[$val];
-			  
-		  }
-		  $Arr[51][0] = array_merge($topIndia,array('-1'=>'startAlpha'));
-	  }
-	  else
-	  {
-		  unset($Arr);
-		  $Arr[51][0]=$cityIndia;
-	  }
-	  $Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
-    $Arr[128][0]["0"] = "Others" ;
-	  $i=0;
-	  $arrAlpha = array();
-    $sym = "";
-    $bStartAplha = false;
-	  foreach($Arr[51] as $key=>$val)
-	  {
-      
-			foreach($val as $k=>$v){
-        if($v == "startAlpha"){
-          $bStartAplha = true;
-          continue;
-        }
-        $sym = strtoupper(substr($v, 0,1));
-        if($bStartAplha && !in_array($sym, $arrAlpha)){
-          $arrAlpha[] = $sym;
-          $output[51][]=array($i=>array("-1"=>$sym));  
-          $i++; 
-        }
-        if($v === "Others"){
-          $output[51][]=array($i=>array("-1"=>""));
-          ++$i;
-        }
-				$output[51][]=array($i=>array($k=>$v));
-      }  
-		$i++;		
-	  }
-    
-    $arrAlpha = array();
-    $sym = "";
-    $bStartAplha = false;
-	 foreach($Arr[128] as $key=>$val)
-	  {
-			foreach($val as $k=>$v){
-        $sym = strtoupper(substr($v, 0,1));
-        if(!in_array($sym, $arrAlpha)){
-          $arrAlpha[] = $sym;
-          $output[128][]=array($i=>array("-1"=>$sym));  
-          $i++; 
-        }
-        
-        if($v === "Others"){
-          $output[128][]=array($i=>array("-1"=>""));
-          ++$i;
-        }
-				
-        $output[128][]=array($i=>array($k=>$v));
-      }
-		$i++;		
-	  } 
-	  return $output;		
+    $arrCity=FieldMap::getFieldLabel("city_india",'',1);
+
+                ksort($arrCity);
+                $arrFinalOut = array();
+                foreach($arrCity as $key=>$val)
+                {
+                        if(strlen($key)===2)
+                        {
+				asort($arrFinalOut[$currentKey]);
+                                $currentKey = $key;
+                                $arrFinalOut[$currentKey] = array();
+                        }
+                        else
+                        {
+                                $arrFinalOut[$currentKey][$key] = $val;
+                        }
+                }
+		asort($arrFinalOut[$currentKey]);
+	foreach($arrFinalOut as $k=>$v)
+	{
+		foreach($v as $kx=>$vx)
+		{
+			$returnArr[$k][0][]=array($kx=>$vx);
+		}
+                    $returnArr[$k][0][] = array('0'=>'Others');
+	}
+            $cityUsa = FieldMap::getFieldLabel("city_usa",'',1);
+            $Arr[128][0]=FieldMap::getFieldLabel("city_usa",'',1);
+            $Arr[128][0]["0"] = "Others" ;
+            $i=0;
+            $arrAlpha = array();
+            $sym = "";
+            $bStartAplha = false;
+            foreach($Arr[128] as $key=>$val)
+            {
+                foreach($val as $k=>$v){
+                    $sym = strtoupper(substr($v, 0,1));
+                    if(!in_array($sym, $arrAlpha)){
+                        $arrAlpha[] = $sym;
+                        $returnArr[128][]=array($i=>array("-1"=>$sym));  
+                        $i++; 
+                    }
+
+                    if($v === "Others"){
+                        $returnArr[128][]=array($i=>array("-1"=>""));
+                        ++$i;
+                    }
+
+                    $returnArr[128][]=array($i=>array($k=>$v));
+                }
+                $i++;		
+            }
+	return $returnArr;		
   }
   
   
@@ -1845,6 +1877,17 @@ public function executeAppredirect(sfWebRequest $request)
     $arr=FieldMap::getFieldLabel("state_india",'',1);
     $Arr[0][] = array("0"=>"Select");
     $Arr[0][] = array("NI"=>"Outside India");
+	  foreach($arr as $key=>$val)
+			$Arr[0][]=array($key=>$val);
+	  return $Arr;   
+  }
+  
+  /**
+   * 
+   * @return type
+   */
+  private function getJspcState(){
+    $arr=FieldMap::getFieldLabel("state_india",'',1);
 	  foreach($arr as $key=>$val)
 			$Arr[0][]=array($key=>$val);
 	  return $Arr;   

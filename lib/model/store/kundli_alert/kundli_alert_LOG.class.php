@@ -14,7 +14,7 @@ class kundli_alert_LOG extends TABLE
 		/*
                 $sql = "SELECT PARTITION_DESCRIPTION FROM INFORMATION_SCHEMA.PARTITIONS WHERE TABLE_NAME =  'LOG' AND PARTITION_NAME =  :lastPartition";
 		*/
-		$sql = "SELECT MAX(PARTITION_DESCRIPTION) AS PARTITION_DESCRIPTION FROM information_schema.PARTITIONS WHERE TABLE_SCHEMA = 'kundli_alert' AND TABLE_NAME = 'LOG'";
+		$sql = "SELECT MAX(PARTITION_DESCRIPTION) AS PARTITION_DESCRIPTION FROM information_schema.PARTITIONS WHERE TABLE_SCHEMA = 'kundli_alert' AND TABLE_NAME = 'LOG_NEW'";
                 $prep = $this->db->prepare($sql);
 		/*
                 $prep->bindValue(":lastPartition", $lastPartitionName, PDO::PARAM_STR);
@@ -39,7 +39,7 @@ class kundli_alert_LOG extends TABLE
           	//delete the oldest partition
             try
             {
-            	$sql = "ALTER TABLE kundli_alert.LOG DROP PARTITION $dropPartitionName";
+            	$sql = "ALTER TABLE kundli_alert.LOG_NEW DROP PARTITION $dropPartitionName";
             	echo $sql."\n";
             	$prep = $this->db->prepare($sql);
             	$prep->execute();   
@@ -52,7 +52,7 @@ class kundli_alert_LOG extends TABLE
           //create a new partition with range added by 15
           try
           {
-          	$sql = "ALTER TABLE kundli_alert.LOG ADD PARTITION (PARTITION $createPartitionName VALUES LESS THAN (:RANGE))";
+          	$sql = "ALTER TABLE kundli_alert.LOG_NEW ADD PARTITION (PARTITION $createPartitionName VALUES LESS THAN (:RANGE))";
           	echo $sql."\n";
           	$prep = $this->db->prepare($sql);
           	$prep->bindValue(":RANGE", $newPartitionRange, PDO::PARAM_INT);
@@ -68,7 +68,7 @@ class kundli_alert_LOG extends TABLE
         {
         	try
         	{
-        		$sql = "SELECT USER FROM kundli_alert.LOG WHERE RECEIVER = :PROFILEID AND DATE > :REQUIREDDATE";
+        		$sql = "SELECT USER FROM kundli_alert.LOG_NEW WHERE RECEIVER = :PROFILEID AND DATE > :REQUIREDDATE";
         		$prep = $this->db->prepare($sql);
           		$prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
                 $prep->bindValue(":REQUIREDDATE", $requiredDate, PDO::PARAM_INT);
@@ -93,7 +93,7 @@ class kundli_alert_LOG extends TABLE
         		$count=1;
         		try
         		{    		
-        			$sql.= "INSERT ignore INTO kundli_alert.LOG (RECEIVER,USER,DATE) VALUES ";
+        			$sql.= "INSERT ignore INTO kundli_alert.LOG_NEW (RECEIVER,USER,DATE) VALUES ";
 
         			foreach($finalArr as $user=>$userId)
         			{        			
@@ -108,7 +108,7 @@ class kundli_alert_LOG extends TABLE
         			$pdoStatement = $this->db->prepare($sql);
         			foreach($finalArr as $user=>$userId)
         			{        			
-        				if($user!="SENT" && $count<=16 && in_array($user,kundliMatchAlertMailerEnums::$userArray))
+        				if($user!="SENT" && $count<=16 && in_array($user,kundliMatchAlertMailerEnums::$userArray) && $userId != 0)
         				{
         					$pdoStatement->bindValue(":USER".$count, $userId, PDO::PARAM_INT);
         				}

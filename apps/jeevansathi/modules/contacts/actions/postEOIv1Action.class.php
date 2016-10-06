@@ -226,9 +226,9 @@ class postEOIv1Action extends sfAction
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{
-				$responseArray["errmsglabel"] = "Your profile is currently being screened by our screening team. Your interest would be delivered only after your profile is screened";
+				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-				$responseArray["headerlabel"] = "Profile is Underscreening";
+				$responseArray["headerlabel"] = "Profile Under Screening";
 			}
 			elseif($errorArr["DECLINED"] == 2)
 			{
