@@ -478,13 +478,31 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//country
 		$value=$this->profile->getCOUNTRY_RES();
 		$label=$this->profile->getDecoratedCountry();
-		if($this->profile->getCITY_RES())
-		{
-			$value=$value.",".$this->profile->getCITY_RES();
-			$label=$label."-".$this->profile->getDecoratedCity();
-		}
 		
-		$basicArr[basic][OnClick][] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$label,$value,$this->getApiScreeningField("COUNTRY_RES"),$this->dropdown,"CITY_RES","","UpdateCountryCitySection");
+		$basicArr[basic][OnClick][] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$label,$value,$this->getApiScreeningField("COUNTRY_RES"),$this->dropdown,"","","UpdateCountrySection");
+		$stateValue = substr($this->profile->getCITY_RES(),0,2);
+        $stateLabel = FieldMap::getFieldLabel("state_india",$stateValue);
+		if($this->profile->getCOUNTRY_RES()=="51")
+			$hidden = false;
+		else
+			$hidden=true;
+		$basicArr[basic][OnClick][] =$this->getApiFormatArray("STATE_RES","State Living in" ,$stateLabel,$stateValue,$this->getApiScreeningField("CITY_RES"),$this->dropdown,"","","UpdateStateSection",$hidden);
+		$value='';
+		$label='';
+		if($this->profile->getCITY_RES()!='')
+		{
+			if(substr($this->profile->getCITY_RES(),2)=="OT")
+				$city = "0";
+			else
+				$city = $this->profile->getCITY_RES();
+			$value= $city;
+			$label = FieldMap::getFieldLabel("city",$city);
+		}
+		if(($this->profile->getCOUNTRY_RES()=="51" && ($stateValue!='0' && $stateValue!='')) || $this->profile->getCOUNTRY_RES()=="128")
+			$hiddenCity = false;
+		else
+			$hiddenCity = true;
+		$basicArr[basic][OnClick][] =$this->getApiFormatArray("CITY_RES","City Living in" ,$label,$value,$this->getApiScreeningField("CITY_RES"),$this->dropdown,'','',"UpdateCitySection",$hiddenCity);
 		
 		//city
 		//$basicArr[basic][OnClick][] =$this->getApiFormatArray("CITY_RES","City Living in" ,$this->profile->getDecoratedCity(),$this->profile->getCITY_RES(),$this->getApiScreeningField("CITY_RES"),$this->dropdown,"CITY_RES");
