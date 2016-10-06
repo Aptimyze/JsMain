@@ -921,7 +921,7 @@ class Membership
             else {
                 $deferrable = 'Y';
             }
-
+            unset($deferrable);
 
             $paramsPDStr = "BILLID,SERVICEID,CUR_TYPE,PRICE,DISCOUNT,NET_AMOUNT,START_DATE,END_DATE,SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SHARE,PROFILEID,STATUS,DEFERRABLE";
             $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
