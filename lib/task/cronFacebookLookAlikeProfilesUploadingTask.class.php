@@ -50,37 +50,37 @@ EOF;
          * facebook access token, must have ads_management previleges
          * @var string
          */     
-        $this->access_token = "EAAWcsBunOAMBALwwhJx5kr6S6IxIaqkv6SV9dq4vi3MUp93jXM02yAN2LBAGIbfRpI5YAaXKmzT0ZBIpfEUh0ZAYCy6WZCNXqWaPsBcIIXua3FpR3zDhLdKBsjzqkAMCOxj7nk3tAATpBAkdsPbcFG39Hn3EWCTTXiFXLhrzk08ZB8q46f3T";
+        $this->access_token = "EAALjaF5TfOcBAF2eu2QXga8nYeIZCGioDnBcUftzI7rIm5GaZAnufvnOyjexUHxjhA7jizopE56eCGfNSnZCEMOXdBFU7IxA7ljZCEIdSY3X00MPyVHUgQ6FtmveRMHZCrYKH9KLHlPbSMPts742o3oQbZB3PP5sBAA8BZCZCu2h2wZDZD";
 
         /**
          * app id 
          * @var string
          */
-        $this->app_id = "1579655075674115";
+        $this->app_id = "812987352055015";
         
         /**
          * app secret
          * @var string
          */
-        $this->app_secret = "2da4dc7ebdef63857945d926f3fd1644";
+        $this->app_secret = "7047cf9aca2e61aa836dad6651998eb8";
         
         /**
          * App ad account id.
          * @var string
          */
-        $this->account_id = "act_106359619828994";
+        $this->account_id = "act_1380817025529770";
         
         /**
          * the custom audience id created at facebook
          * @var string
          */
-        $this->includeCustomAudienceId = "23842511013090637";
+        $this->includeCustomAudienceId = "6064728917480";
 
         /**
          * the look alike id, created from given custom audience.
          * @var string
          */
-        $this->excludeCustomAudienceId = "23842511021870637";
+        $this->excludeCustomAudienceId = "6064728923280";
 
 
         /**
@@ -129,6 +129,9 @@ EOF;
             $this->getInclusionData();
 
             $this->getExclusionData();
+
+            // $this->createCustomAudience("Include Test","CustomAudience for testing the code.");
+            // $this->createCustomAudience("Exclude Test","CustomAudience for testing the code.");
 
         } 
         catch (Exception $e) 
@@ -180,22 +183,22 @@ EOF;
      * @param  string $name        Name of the custom audience to be created.
      * @param  string $description The description of the custom audience created.
      */
-    // private function createCustomAudience($name,$description)
-    // {
+    private function createCustomAudience($name,$description)
+    {
             
-    //     try {    
-    //     $this->audience->setData(array(
-    //           FacebookAds\Object\Fields\CustomAudienceFields::NAME => $name,
-    //           FacebookAds\Object\Fields\CustomAudienceFields::DESCRIPTION => $description,
-    //           FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\CustomAudienceSubtypes::CUSTOM,
-    //         ));
-    //     $this->audience->create();
-    //     } 
-    //     catch (Exception $e) 
-    //     {
-    //         throw new jsException($e);
-    //     }
-    // }
+        try {    
+        $this->audience->setData(array(
+              FacebookAds\Object\Fields\CustomAudienceFields::NAME => $name,
+              FacebookAds\Object\Fields\CustomAudienceFields::DESCRIPTION => $description,
+              FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\CustomAudienceSubtypes::CUSTOM,
+            ));
+        $this->audience->create();
+        } 
+        catch (Exception $e) 
+        {
+            throw new jsException($e);
+        }
+    }
     /**
      * creates look alike audience
      * @param  string $originAudienceId the custom audience Id from which the look alike audience is to created.
@@ -233,7 +236,7 @@ EOF;
     {
         try 
         {
-            $profileObj = new JPROFILE();
+            $profileObj = new JPROFILE("newjs_slave");
 
             $start_joined_date  = date('2000-01-01 00:00:00');
         
@@ -248,6 +251,9 @@ EOF;
             $fields="EMAIL,PHONE_MOB";
 
             $today =  date('Y-m-d h:m:s');
+
+            $totalExclusionEmail = 0;
+            $totalExclusionEmail = 0;
             
             while ( $last_joined_date <= $today )
             {
@@ -270,7 +276,14 @@ EOF;
                         $this->mobileExclusion[]=$data['PHONE_MOB'];
                     }
 
-
+                    $totalExclusionEmail += count($this->emailExclusion);
+                        
+                    $totalExclusionMobile += count($this->mobileExclusion);
+                        
+                    print_r("emailExclusion: ".count($this->emailExclusion));
+                    echo "\n";
+                    print_r("mobileExclusion: ".count($this->mobileExclusion));
+                    echo "\n";
 
                     $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->emailExclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
             
@@ -285,6 +298,12 @@ EOF;
                 $start_joined_date = $last_joined_date;
                 
             }
+
+            echo "Total exclusion email: ".$totalExclusionEmail;
+            echo "\n";
+            echo "Total exclusion mobile: ".$totalExclusionMobile;
+            echo "\n";
+
         }
         catch (Exception $e) 
         {
@@ -301,9 +320,9 @@ EOF;
         try 
         {
                         
-            $misSource= new MIS_SOURCE();
+            $misSource= new MIS_SOURCE("newjs_slave");
 
-            $profileObj = new JPROFILE();
+            $profileObj = new JPROFILE("newjs_slave");
            
             $valueArray['activatedKey'] = '1';
             // mobile should be verified.
@@ -325,6 +344,8 @@ EOF;
 
             $qualityProfileQuery = "((`GENDER` = 'M' AND `AGE` >= 26) ||  (`GENDER` = 'F' AND `AGE` >= 22))";
 
+            $totalInclusionEmail = 0;
+            $totalInclusionMobile = 0;
 
             foreach ($this->sourceGroupArray as $sourceGroup) { 
 
@@ -349,6 +370,16 @@ EOF;
                             $this->mobileInclusion[]=$data['PHONE_MOB'];
                         }
 
+                        
+                        $totalInclusionEmail += count($this->emailInclusion);
+                        
+                        $totalInclusionMobile += count($this->mobileInclusion);
+                        
+                        print_r("emailInclusion: ".count($this->emailInclusion));
+                        echo "\n";
+                        print_r("mobileInclusion: ".count($this->mobileInclusion));
+                        echo "\n";
+                        
                         $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->emailInclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
             
 
@@ -359,10 +390,13 @@ EOF;
                       
                     }
 
-
                 }
             }
-        
+            echo "\n";
+            echo "Total inclusion email: ".$totalInclusionEmail;
+            echo "\n";
+            echo "Total inclusion mobile: ".$totalInclusionMobile;
+
         } 
         catch (Exception $e) 
         {
