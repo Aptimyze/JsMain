@@ -128,7 +128,9 @@ class ApiRequestCallbackV1Action extends sfActions
                         $from = "info@jeevansathi.com";//To Do Aliase Jeevansathi Support  Reply-to $email
                         $subject = "$email(".$userName.") has requested a callback for assistance with his/her account";
                         $msgBody = "<html><body>Dear Support Team,<br> $email(".$userName.") has requested a callback from the support team for resolution of a service related issue. Please contact at $email,or $phone as requested on $date @ $startTime<br> Regards<br> Team Jeevansathi</body></html>";
-                        SendMail::send_email($to,$msgBody,$subject,$from,"","","","","","","1",$email,"Jeevansathi Support");
+                        if (JsConstants::$whichMachine == 'prod') {
+                            SendMail::send_email($to,$msgBody,$subject,$from,"","","","","","","1",$email,"Jeevansathi Support");
+                        }
                         $objExecCallBack = new billing_EXC_CALLBACK;
                         $objExecCallBack->addRecord($iProfileId,$phone,$email,$device,$channel,$callbackSource,$date,$startTime,$endTime,"JP");
                         unset($objExecCallBack);
@@ -155,7 +157,9 @@ class ApiRequestCallbackV1Action extends sfActions
                         }
                         $reqTime =date('g:i A',strtotime($startTime));
                         $msgBody = "<html><body>$userName is interested in knowing more about Membership Plans. Please contact at ".$email." or ".$phone." as requested on $date @ $reqTime</body></html>";
-                        SendMail::send_email($to,$msgBody,$subject,$from);
+                        if (JsConstants::$whichMachine == 'prod') {
+                            SendMail::send_email($to,$msgBody,$subject,$from);
+                        }
                     }
                     //Update RCB Status if form is submit(optional)
                     if (isset($rcbResponse) && $rcbResponse) {

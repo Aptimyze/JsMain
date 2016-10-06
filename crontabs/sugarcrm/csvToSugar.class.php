@@ -26,7 +26,7 @@ class csvToSugar
 		if($rowCount!=0)
 		{
 
-	    		$rowArr = str_getcsv($decodedLine,"\t");
+	    		$rowArr = str_getcsv($row,"\t");
 			if(count($rowArr)<=1)
 				$rowArr = str_getcsv($row);
                         foreach ($rowArr as $key=>$value)

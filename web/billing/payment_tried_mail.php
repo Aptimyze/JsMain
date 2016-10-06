@@ -13,7 +13,7 @@ include_once(JsConstants::$docRoot.'/crm/func_sky.php');
 //finding date (two days before the current date)
 $two_days_before = mktime(0,0,0,date('m'),date('d')-2,date('Y'));
 $old_date = date('Y-m-d',$two_days_before);
-
+$db = connect_ddl();
 $today = date('Y-m-d');
 $serObj = new Services;
 $subject = "Unsuccessful Payment? Ensure Success Now!";

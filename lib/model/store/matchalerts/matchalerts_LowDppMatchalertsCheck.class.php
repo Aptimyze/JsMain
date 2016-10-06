@@ -65,7 +65,7 @@ class matchalerts_LowDppMatchalertsCheck extends TABLE
          */
         public function getProfilesWithZeroMatches($totalScript,$currentScript,$date){
             try{
-                $sql="SELECT DISTINCT(PROFILEID) FROM matchalerts.LOW_DPP_MATCHALERTS_CHECK WHERE PROFILEID%:TOTAL_SCRIPT=:CURRENT_SCRIPT AND DATE>:DATE AND SENT='N'";
+                $sql="SELECT DISTINCT(PROFILEID) FROM matchalerts.LOW_DPP_MATCHALERTS_CHECK WHERE PROFILEID%:TOTAL_SCRIPT=:CURRENT_SCRIPT AND DATE>:DATE AND SENT='N' limit 5000";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":TOTAL_SCRIPT", $totalScript, PDO::PARAM_INT);
                 $prep->bindValue(":CURRENT_SCRIPT", $currentScript, PDO::PARAM_INT);

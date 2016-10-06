@@ -25,7 +25,7 @@ EOF;
 		sfContext::createInstance($this->configuration);
         $date = date("Y-m-d");        
         $gap= ceil($this->getNoOfDays());
-
+        
         //kundli_alert.LOG table contains logs for data in kundli_alert
         $kundliAlertsObj = new kundli_alert_LOG();
 
@@ -34,9 +34,8 @@ EOF;
 
         //fetch latest partition number
         $lastPartitionName = intval($lastActiveLogObj->getLastActivePartition());
-        echo($lastPartitionName);die;
         //get Last Partition Range
-        $lastPartitionRange = intval($kundliAlertsObj->getLatestPartitionRange('p'.$lastPartitionName));     echo($lastPartitionRange);die;   
+        $lastPartitionRange = intval($kundliAlertsObj->getLatestPartitionRange('p'.$lastPartitionName));
         if($gap >= ($lastPartitionRange-1)){
             //drop and create partition
             $kundliAlertsObj->replacePartitions('p'.($lastPartitionName-3),'p'.($lastPartitionName+1),$lastPartitionRange+30);

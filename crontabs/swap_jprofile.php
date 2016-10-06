@@ -208,7 +208,7 @@ while($row=mysql_fetch_row($res))
 			{
 				if($rowNameOfUser['DISPLAY']=="Y")
 				{
-					$sqlNameUpdate = "UPDATE `SWAP` SET NAME_OF_USER = '".$rowNameOfUser['NAME']."' WHERE PROFILEID=".$profileid;
+					$sqlNameUpdate = "UPDATE `SWAP` SET NAME_OF_USER = '".mysql_real_escape_string($rowNameOfUser['NAME'])."' WHERE PROFILEID=".$profileid;
 					mysql_query($sqlNameUpdate,$db) or die("name query2".mysql_error1($db));
 				}
 			}
