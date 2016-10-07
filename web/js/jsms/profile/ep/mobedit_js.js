@@ -223,6 +223,7 @@ function SaveSub(json,attr)
 	var tabKey=json[arr[0]][arr[1]]["outerSectionKey"];
 	var isValid=true;
 	var updatedJson="";
+	var isValidStateCity;
 	if(validatorFormId){
 		isValid=$("#"+validatorFormId).valid();
 	}
@@ -230,6 +231,8 @@ function SaveSub(json,attr)
 	{
 		isValidStateCity = StateCityRequired(key);
 	}
+	else
+		isValidStateCity = true;
 		
 	if(isValid && isValidStateCity){
 		var whereToSubmit=submitObj.has_value();
