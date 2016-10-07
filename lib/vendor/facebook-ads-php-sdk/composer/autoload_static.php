@@ -7,25 +7,24 @@ namespace Composer\Autoload;
 class ComposerStaticInit8e6cb1db46baaf6145a1d53efc8ef72b
 {
     public static $prefixLengthsPsr4 = array (
-        'F' => 
+        'F' =>
         array (
             'FacebookAds\\' => 12,
         ),
     );
 
-    public static $prefixDirsPsr4 = array (
-        'FacebookAds\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/facebook/php-ads-sdk/src/FacebookAds',
-        ),
-    );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit8e6cb1db46baaf6145a1d53efc8ef72b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8e6cb1db46baaf6145a1d53efc8ef72b::$prefixDirsPsr4;
+            $loader->prefixDirsPsr4 = array (
+        'FacebookAds\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/facebook/php-ads-sdk/src/FacebookAds',
+        ),
+    );
 
-        }, null, ClassLoader::class);
+        }, null, get_class(new ClassLoader));
     }
 }
