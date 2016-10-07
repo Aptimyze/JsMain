@@ -22,7 +22,7 @@ $(function(){
            //$("#headerimg1").height($(window).height());
            $(document).ready(function(){
 			RemovePresetColor();
-            $(".loginLogo").attr("src","IMG_URL/images/jsms/commonImg/mainLogo2.png");
+            $(".loginLogo").attr("src","IMG_URL/images/jsms/commonImg/mainLogoNew.png");
             //src="~$IMG_URL`/images/jsms/commonImg/mainLogoNew.png" 
             setTimeout(function(){ 
                 $("body").append("<div class='icons1 uicon dn'></div> <div class='mainsp baricon dn'></div>");

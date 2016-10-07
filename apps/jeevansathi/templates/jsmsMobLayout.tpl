@@ -40,7 +40,7 @@
     ~use helper = SfMinify`
     ~minify_get_mobile('css','','1')`
     ~minify_include_stylesheets()`
-  ~if $sf_request->getParameter('loginData')`
+  ~if $sf_request->getAttribute('loginData') neq ''`
   ~minify_get_mobile('js','','1')`
     ~minify_include_javascripts()`
 
@@ -124,7 +124,7 @@ var domainCode={};
         ~/if`
 	</div>
   <!--Palash-->
-  ~if $sf_request->getParameter('loginData')`
+  ~if $sf_request->getAttribute('loginData') neq ''`
   ~minify_include_javascripts('bottom')`
   ~/if`
   <div class="urldiv dn" id="urldiv" ></div>  
@@ -166,7 +166,7 @@ window._fbq.push(['track', 'PixelInitialized', {}]);
 </script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
 <!-- Pixel Fire Code ends here-->
-~if $sf_request->getParameter('loginData') eq ''` 
+~if $sf_request->getAttribute('loginData') eq ''` 
     ~minify_get_mobile('js','','1')`
     ~minify_include_javascripts()`
 ~/if`
