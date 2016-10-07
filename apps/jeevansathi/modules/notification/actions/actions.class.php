@@ -117,6 +117,13 @@ class notificationActions extends sfActions
   }
   public function executePollV1(sfRequest $request)
   {
+	if(date("H")>='11' && date("H")<='15')
+	{
+		$notificationData['notifications'] = '';
+	        $notificationData['alarmTime']= '';
+		echo json_encode($notificationData);die;
+	}
+
 	$currentOSversion	=$request->getParameter('CURRENT_VERSION');
 	$apiappVersion		=intval($request->getParameter('API_APP_VERSION'));
         $deviceBrand 		=$request->getParameter('DEVICE_BRAND');
