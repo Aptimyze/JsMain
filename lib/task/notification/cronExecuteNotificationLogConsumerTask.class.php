@@ -1,9 +1,9 @@
 <?php
 /*
-This php script reads no. of instances of rabbitmq JsNotificationsConsume from MessageQueues.enum.class.php to be run and executes that many instances of cron:cronConsumeNotificationsQueueMessage.
+This php script reads no. of instances of rabbitmq JsNotificationsLogConsume from MessageQueues.enum.class.php to be run and executes that many instances of cron:cronConsumeNotificationsQueueMessage.
 */
 
-class cronExecuteNotificationConsumerTask extends sfBaseTask
+class cronExecuteNotificationLogConsumerTask extends sfBaseTask
 {
   /**
    * 
@@ -15,11 +15,11 @@ class cronExecuteNotificationConsumerTask extends sfBaseTask
   protected function configure()
   {
     $this->namespace           = 'cron';
-    $this->name                = 'cronExecuteNotificationConsumer';
+    $this->name                = 'cronExecuteNotificationLogConsumerTask';
     $this->briefDescription    = 'reads no. of instances of rabbitmq JsNotificationsConsume from MessageQueues.enum.class.php to be run and executes that many instances of cronConsumeNotificationsQueueMessage.';
     $this->detailedDescription = <<<EOF
-     The [cronexecuteConsumer|INFO] reads no. of instances of rabbitmq JsNotificationsConsume from MessageQueues.enum.class.php to be run and executes that many instances of cronConsumeNotificationsQueueMessage:
-     [php symfony cron:cronExecuteNotificationConsumer] 
+     The [cronexecuteConsumer|INFO] reads no. of instances of rabbitmq JsNotificationsLogConsume from MessageQueues.enum.class.php to be run and executes that many instances of cronConsumeNotificationsLogQueueMessage:
+     [php symfony cron:cronExecuteNotificationLogConsumer] 
 EOF;
     $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi')
@@ -37,12 +37,12 @@ EOF;
   {
     if (!sfContext::hasInstance())
     sfContext::createInstance($this->configuration);
-    
-    $instancesNum=MessageQueues::NOTIFICATIONCONSUMERCOUNT;
-    for($i=1;$i<=$instancesNum;$i++)
-    {
-      passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &");
+
+    $loginstancesNum=MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT;
+    for($i=1;$i<=$loginstancesNum;$i++){
+      passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND." > /dev/null &");
     }
+
   }
 
 
