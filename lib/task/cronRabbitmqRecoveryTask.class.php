@@ -87,6 +87,7 @@ EOF;
             exec("ps aux | grep \"".MessageQueues::UPDATESEEN_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $updateSeenConsumerOut);
             exec("ps aux | grep \"".MessageQueues::PROFILE_CACHE_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $profileCacheConsumerOut);
             exec("ps aux | grep \"".MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $viewLogConsumerCount);
+            exec("ps aux | grep \"".MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND."\" | grep -v grep | awk '{ print $2 }'", $notificationLogConsumerCount);
             if(!empty($out) && is_array($out))
               foreach ($out as $key => $value) 
               {
@@ -133,6 +134,14 @@ EOF;
                   exec("kill -9 ".$value);
               }
             }
+            if(!empty($notificationLogConsumerCount) && is_array($notificationLogConsumerCount)) {
+              foreach ($notificationLogConsumerCount as $key => $value)
+              {
+                $count2 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count2 >0)
+                  exec("kill -9 ".$value);
+              }
+            }
 
 
             for($i=1;$i<=MessageQueues::CONSUMERCOUNT ;$i++)
@@ -149,6 +158,9 @@ EOF;
             }
             for($i=1;$i<=MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT ;$i++) {
               passthru(JsConstants::$php5path." ".MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND." > /dev/null &");
+            }
+            for($i=1;$i<=MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT ;$i++) {
+              passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND." > /dev/null &");
             }
 
             RabbitmqHelper::sendAlert($str,"default");
@@ -263,6 +275,7 @@ EOF;
     $this->restartInactiveConsumer(MessageQueues::UPDATE_SEEN_CONSUMER_COUNT,MessageQueues::UPDATESEEN_STARTCOMMAND,"UpdateSeen");
     $this->restartInactiveConsumer(MessageQueues::PROFILE_CACHE_CONSUMER_COUNT,MessageQueues::PROFILE_CACHE_STARTCOMMAND,"ProfileCache Queue");
     $this->restartInactiveConsumer(MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND);
+    $this->restartInactiveConsumer(MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT,MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND);
     //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
     if(MessageQueues::FALLBACK_STATUS==true)
     {
@@ -281,6 +294,8 @@ EOF;
         $updateViewLogConsumerObj = new updateViewLogConsumer('SECOND_SERVER', $messageCount);
         $updateViewLogConsumerObj->receiveMessage();
         unset($profileCacheConsumerObj);
+        $notificationLogConsumerObj = new JsNotificationsLogConsume('SECOND_SERVER', $messageCount);
+        $notificationLogConsumerObj->receiveMessage();
       }
     }    
   }
