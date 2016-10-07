@@ -590,7 +590,7 @@ $js_arr[]=array("customReg_js"  => "2");
 $js_arr[]=array("jspc/common/jquery_mousewheel" => "1");
 $js_arr[]=array("jspc/bounceMail/bounceMailDetection_js" => "1");
 $js_arr[]=array("jspc/contactus/sw"   => "3");
-$js_arr[]=array("jsms/settings/mobDeleteProfile_js"         => "11");
+$js_arr[]=array("jsms/settings/mobDeleteProfile_js"          => "12");
 $js_arr[]=array("commonExpiration_js"  => "2");
 $js_arr[]=array("sw"      => "4");
 $js_arr[]=array("main"      => "4");
