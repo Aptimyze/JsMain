@@ -137,7 +137,7 @@ public function makeEntryInMailerTable($arranged,$mailerEntryObject)
 	
 	foreach ($arranged as $key => $value) 
 	{
-		$currentRow=array_slice(array_values($value), 0,9);
+		$currentRow=array_slice($value, 0,10);
 		$writeArray['sendersProfileId']=$key;
 		$writeArray['recieversProfileId']=$currentRow;
 		$mailerEntryObject->makeEntry($writeArray);
