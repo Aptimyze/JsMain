@@ -13,7 +13,7 @@ if(MobileCommon::isDesktop() || MobileCommon::isNewMobileSite())
 {
     if(isset($_SERVER['HTTP_REFERER']))
     {
-        LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+        LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER'], LoggingEnums::LOG_REFERER => LoggingEnums::CONFIG_INFO_VA, LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
     }
 }
 if(MobileCommon::isDesktop())
