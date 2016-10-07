@@ -123,8 +123,7 @@ ajaxConfig.success=function(response)
       }
         if(response.SMSLimitOver =='Y') 
         {
-            
-            $("#resendTextId").hide();
+            $("#hideOnTrialsOver").hide();
         }
       
 }
