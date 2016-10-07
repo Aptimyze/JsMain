@@ -802,6 +802,10 @@ class commonActions extends sfActions
     $response=$verificationObj->sendOtpSMS();
      $this->phoneNum =$verificationObj->getPhoneWithoutIsd();
      $this->isd = $verificationObj->getIsd();
+     if($this->isd == 91)
+     $this->contactHelp = CommonConstants::HELP_NUMBER_INR;
+     else
+     $this->contactHelp =  CommonConstants::HELP_NUMBER_NRI;    
     $this->phoneType =$verificationObj->getPhoneType();
     if($response['trialsOver']=='Y')
         $response['trialsOverMessage']=PhoneApiFunctions::$OTPTrialsOverMsg;

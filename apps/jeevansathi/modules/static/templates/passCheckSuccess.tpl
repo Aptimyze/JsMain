@@ -116,7 +116,8 @@
           
                <div id ="putPasswordLayer" class='js-NumberedLayer2'><div class=" txtc f14 fontlig pt30 pb15">
     <p>Profile Deletion code sent to +~$isd`-~$phoneNum` <span id='isdDiv'></span> <span id='mainPhone'></span></p>
-    <p id='resendSMSDiv' class="pt5">Didn't receive code? <a id='resendTextId'  class="color2">Resend Code</a></p>
+    <div id = "hideOnTrialsOver">
+    <p id='resendSMSDiv' class="pt5">Didn't receive code? <a id='resendTextId'  class="color2">Resend Code</a></p> </div>
     </div>
 
       <div class="bg4 otpma">
