@@ -53,7 +53,7 @@ $("#resendOtpLink").bind('click',resendOtpLink);
   
         </div>
   
-        <div class="phnvbdr5 fontlig f13 opa60 txtc lh40">For assistance, contact customer care at <span id='js-TFNumberOTP'></span> or <a id='js-EmailOTP'  href="" target="_blank">help@jeevansathi.com</a>
+        <div class="phnvbdr5 fontlig f13 opa60 txtc lh40">For assistance, contact customer care at ~$contactHelp` or <a id='js-EmailOTP'  href="" target="_blank">help@jeevansathi.com</a>
         
         </div>
 
