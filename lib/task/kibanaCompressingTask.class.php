@@ -41,7 +41,7 @@ EOF;
         $query = '_search';
         $urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
         $ltHour = $hoursNow + 1;
-        /*
+        
         $params = [
             "query"=> [
                 "range" => [
@@ -67,8 +67,8 @@ EOF;
         {
             $arrChannels[$module['key']] = $module['doc_count'];
         }
-            */
-        print_r($params);
+            
+        
          $params = [
             "query"=> [
                 "range" => [
@@ -93,8 +93,7 @@ EOF;
         {
             $arrDomain[$module['key']] = $module['doc_count'];
         }
-        print_r($params);
-        print_r($arrDomain); die;
+
 
          $params = [
             "query"=> [
@@ -135,7 +134,7 @@ EOF;
             'aggs' => [
                 'modules' => [
                     'terms' => [
-                        'field' => 'hostname',
+                        'field' => 'beat.name',
                         'size' => 1000
                     ]
                 ]
