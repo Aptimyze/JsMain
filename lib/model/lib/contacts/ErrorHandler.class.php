@@ -304,6 +304,23 @@ class ErrorHandler
 			
 			if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
 			{
+				if($this->checkPaid())
+				{
+				if($this->interestNotSent())
+				{	
+				$error = Messages::PAID_FILTERED_INTEREST_NOT_SENT;
+				$this->setErrorMessage($error);
+				return false;
+				}
+				else
+				{
+				$error = Messages::PAID_FILTERED_INTEREST_SENT;
+				$this->setErrorMessage($error);
+				return false;
+				}
+
+				}
+
 				$error = Messages::FILTERED;
 				$this->setErrorMessage($error);
 				return false;
@@ -856,5 +873,22 @@ class ErrorHandler
 			$error = Messages::getMessage(Messages::IGNORED_MESSAGE,array("USERNAME"=>$this->contactHandlerObj->getViewer()->getUSERNAME()));
 		return $error;
 	}
-	
+
+	private function checkPaid()
+	{
+		if($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getPaymentStates()->isPAID())
+		return true;
+	 	return false;
+	}
+
+	private function interestNotSent()
+	{
+		if($this->contactHandlerObj->getContactObj()->getCOUNT() == 0)
+		return true;
+		return false;
+	}	
+
+
+
+
 }
