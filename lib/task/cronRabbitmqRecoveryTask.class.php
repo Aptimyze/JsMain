@@ -264,7 +264,7 @@ EOF;
     
     if(MessageQueues::FALLBACK_STATUS==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
     {
-      echo "111";die;
+      //echo "111";die;
       $messageCount=$this->callRabbitmqServerApi("SECOND_SERVER");
     }
     
