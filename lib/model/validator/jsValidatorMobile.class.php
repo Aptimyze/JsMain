@@ -107,7 +107,7 @@ class jsValidatorMobile extends sfValidatorBase
 				if(count($detailArr)>=2)
 				{
 					$dummyUserObj = new jsadmin_PremiumUsers;
-					$dummyCount = $dummyUserObj->countDummy($this->profileId,$detailArr);
+					$dummyCount = $dummyUserObj->countDummy($detailArr);
 					unset($dummyUserObj);
 					if((count($detailArr)-$dummyCount)>=2)
 					{
@@ -131,7 +131,7 @@ class jsValidatorMobile extends sfValidatorBase
   	$lastLoginDate = date('Y-m-d', strtotime("-1 year"));
   	$valueArray = array("activatedKey"=>1,"MOB_STATUS"=>"Y","INCOMPLETE"=>"N","PHONE_MOB"=>$mobile,"ISD"=>$isd);
   	$greaterThanArray = array("LAST_LOGIN_DT"=>$lastLoginDate);
-  	$excludeArray  = array("ACTIVATED"=>"'D'");
+  	$excludeArray  = array("ACTIVATED"=>"'D'","PROFILEID"=>$this->profileId);
   	$detailArr = $jprofileObj->getArray($valueArray,$excludeArray,$greaterThanArray,'PROFILEID','','','','','','','','');
   	unset($jprofileObj);
   	return $detailArr;

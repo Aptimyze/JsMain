@@ -55,7 +55,7 @@ class jsadmin_PremiumUsers extends TABLE
                 }
 	}
 	
-	public function countDummy($pid,$detailArr)
+	public function countDummy($detailArr)
 	{
 		try
 		{
