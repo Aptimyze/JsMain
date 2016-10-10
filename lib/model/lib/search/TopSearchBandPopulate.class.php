@@ -434,6 +434,9 @@ class TopSearchBandPopulate
 			$this->dataArray["caste"] = $this->populateCasteJSMS();
 			$this->dataArray["location"] = $this->populateCityCountryJSMS();
 			$this->dataArray["location_cities"] = $this->populateCitiesJSMS();
+                        if(!MobileCommon::isNewMobileSite()){
+                           $this->dataArray["location"] = array_merge($this->dataArray["location"],$this->dataArray["location_cities"]);
+                       }
 			$this->dataArray["income"] = $this->populateIncome(1,1);
 			$this->dataArray["income_dol"] = $this->populateIncomeDollar();
 			$this->dataArray["manglik"] = $this->populateManglik();
