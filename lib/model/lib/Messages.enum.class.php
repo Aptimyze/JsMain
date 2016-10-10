@@ -122,6 +122,11 @@ class Messages
   const PC_PHOTO_REQ = "{{GENDER}} requested for your photo {{TIME}}.";
   const PC_HOROSCOPE_REQ = "{{GENDER}} requested for your horoscope {{TIME}}.";
   const PC_VISITORS = "{{GENDER}} visited your profile {{TIME}}.";
+
+  // New Messages added for Filtered Paid Members . 
+
+  const PAID_FILTERED_INTEREST_NOT_SENT = "However, you can send an interest, and when your interest is accepted, their contact details will be made visible to you.";  
+  const PAID_FILTERED_INTEREST_SENT = "Their contact details will be visible when your interest is accepted.";
   
   public static $contactEngineCalled;
   /**
@@ -903,7 +908,7 @@ class Messages
    */	
   public static function getFreeOverAllLimitMessage($message)
   {
-    $button = Messages::getBuyPaidMembershipButton();
+    $button = Messages::getBuyrMembershipButton();
     return Messages::getMessage($message,array("BUTTON"=>"$button"));
   }
   public static function getScreeningDetailsMessage()
