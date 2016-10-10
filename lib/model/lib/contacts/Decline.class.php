@@ -172,8 +172,11 @@ class Decline extends ContactEvent{
 	public function sendMail(){
 		$receiver = $this->contactHandler->getViewed();
 		$sender = $this->contactHandler->getViewer();
+    if($this->contactHandler->getContactObj()->getMSG_DEL() != 'Y'){
 		ContactMailer::sendDeclineMail($receiver,$sender);
 		return true;
+  }
+  return false;
 	}
 
 }
