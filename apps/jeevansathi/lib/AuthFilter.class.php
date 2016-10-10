@@ -69,10 +69,10 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(!strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum"))
-					JsCommon::oldIncludes(true);
-				else
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto"))
 					JsCommon::oldIncludes(false);
+				else
+					JsCommon::oldIncludes(true);
 			}
 				$protect_obj = new protect;
 				$request->setAttribute("protect_obj",$protect_obj);

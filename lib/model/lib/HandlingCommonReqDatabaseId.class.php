@@ -68,8 +68,9 @@ Class HandlingCommonReqDatabaseId
 	*/
 	public static function mapIdToServer($name="")
 	{
-		if(!strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum"))	
+		if(!strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") && !strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto"))
 			return $name;
+
 		$id = self::getId();
 		switch($id)
 		{
