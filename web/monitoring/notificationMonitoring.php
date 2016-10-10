@@ -7,7 +7,7 @@ $urlArray = array(JsConstants::$siteUrl."/api/v1/notification/poll?".$authChecks
 //$url = JsConstants::$siteUrl."/api/v1/notification/poll?".$authChecksum;
 
 while(1){
-    sleep(120);
+    sleep(180);
     foreach($urlArray as $kk => $vv){
         $status1 = sendPresenceRequest($vv);
         if(!array_key_exists("notifications", $status1))

@@ -63,6 +63,7 @@ class JsConstants
 	public static $userHome           = '/home/developer';
 	public static $alertServerEnable  = 1;
 	public static $stopOnPeakLoad     = 1;
+	public static $notificationStop	  = 0;
         
         /* Vsp URL */
 	public static $vspMaleUrl           = 'http://maleapi.analytics.resdex.com:9000/ecpRecommendations_live';

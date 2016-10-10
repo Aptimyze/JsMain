@@ -3,8 +3,8 @@
 
 class MessageQueues
 {
-  CONST CONSUMERCOUNT = 4;  //Number of instances of Consumer class run at a time.
-  CONST NOTIFICATIONCONSUMERCOUNT = 5;  //Number of instances of JsNotificationsConsume class run at a time.
+  CONST CONSUMERCOUNT = 3;  //Number of instances of Consumer class run at a time.
+  CONST NOTIFICATIONCONSUMERCOUNT = 3;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST MAILQUEUE = "MailQueue";  //Queue for storing mails
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
   CONST CONTACTCACHEINITIATE = "ContactCacheInitiate"; //Queue for sending data to webservice to create cache
@@ -16,7 +16,7 @@ class MessageQueues
   CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
-  CONST NOTIFICATION_LOG_CONSUMER_COUNT = 5; //count of notification log consumer instances
+  CONST NOTIFICATION_LOG_CONSUMER_COUNT = 2; //count of notification log consumer instances
   CONST INVALIDATECACHE = "invalidateCache";
   CONST CHAT_MESSAGE = "chatMessage";
   CONST VIEW_LOG = "ViewLogQueue";
