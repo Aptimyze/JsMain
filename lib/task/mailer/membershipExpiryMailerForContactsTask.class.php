@@ -55,7 +55,7 @@ EOF;
 		unset($getProfileList);
 
 		$mailId 	='1836';
-		$attachmentName ='Jeevansathi-Contacts.xls';
+		$attachmentName ='Jeevansathi-Contacts.csv';
 		$mmObj 		=new MembershipMailer();
 		$memExpInsObj 	=new billing_MEM_EXPIRY_CONTACTS_LOG();
 		$header 	=array("USERNAME"=>"Profile ID","VIEWED_DATE"=>"Contact viewed on","MOBILE"=>"Mobile Number","LANDLINE"=>"Landline Number","ALT"=>"Alternate Number","EMAIL"=>"Email ID");

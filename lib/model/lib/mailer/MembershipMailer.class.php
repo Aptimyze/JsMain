@@ -24,7 +24,7 @@ class MembershipMailer {
 	if($attachment){	
 		$email_sender->setAttachment($attachment);
 		$email_sender->setAttachmentName($attachmentName);
-		$email_sender->setAttachmentType('application/vnd.ms-excel');
+		$email_sender->setAttachmentType('application/octet-stream');
 	}
         // if($mailid == '1836'){
         //     $email_sender->send('','','rupali.srivastava@jeevansathi.com');
