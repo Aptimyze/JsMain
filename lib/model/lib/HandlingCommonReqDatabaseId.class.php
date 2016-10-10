@@ -68,6 +68,8 @@ Class HandlingCommonReqDatabaseId
 	*/
 	public static function mapIdToServer($name="")
 	{
+		if(!strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum"))	
+			return $name;
 		$id = self::getId();
 		switch($id)
 		{
