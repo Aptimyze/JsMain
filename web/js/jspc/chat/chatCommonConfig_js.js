@@ -320,9 +320,10 @@ chatConfig.Params = {
         checkForDefaultEoiMsg:false,    //check for default eoi msg in chat history while append
         setLastReadMsgStorage:true,
 	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
-        autoChatLogin:true,  //auto-login to chat on site login
+        autoChatLogin:((hideUnimportantFeatureAtPeakLoad == "1") ? false : true),  //auto-login to chat on site login
         rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
         clearListingCacheTimeout:86400000 //TIme in milliseconds(1 day)
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
+//console.log("autoChatLogin",chatConfig.Params.pc.autoChatLogin);
