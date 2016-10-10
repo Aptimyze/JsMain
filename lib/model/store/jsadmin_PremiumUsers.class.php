@@ -55,6 +55,36 @@ class jsadmin_PremiumUsers extends TABLE
                 }
 	}
 	
+	public function countDummy($pid,$detailArr)
+	{
+		try
+		{
+			$sql = "SELECT COUNT(*) as CNT from jsadmin.PremiumUsers where DID IN (";
+			$inCondition = "";
+			foreach($detailArr as $k =>$varr)
+			{
+				$inCondition .=":DID".$k.", "; 
+			}
+			$inCondition = rtrim($inCondition,", ").")";
+			$sql = $sql.$inCondition;
+			$prep = $this->db->prepare($sql);
+			foreach($detailArr as $k =>$varr)
+			{
+				$prep->bindValue(":DID".$k,$varr["PROFILEID"],PDO::PARAM_INT);
+			}
+			$prep->execute();
+
+			if($result = $prep->fetch(PDO::FETCH_ASSOC))
+			{
+				$count = $result["CNT"];
+				return $count;
+			}
+		}
+		catch(Exception $e)
+		{
+			throw new jsException($e);
+		}
+	}
 
 }
 ?>

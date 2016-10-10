@@ -5541,7 +5541,9 @@ EditApp = function(){
       if(fieldServerError == "This Phone is banned due to terms of use violation"){
         fieldServerError = "Phone no. Banned";
       }
-      
+      if(fieldServerError == "There are already two other profiles active on Jeevansathi with the same phone number."){
+        fieldServerError = "Exists in 2 other profiles";
+      }
       return fieldServerError;
     }
     
