@@ -40,7 +40,7 @@ JsChat.prototype = {
     _rosterGroups:[],
     _checkForDefaultEoiMsg:false,
     _setLastReadMsgStorage:true,
-    _chatAutoLogin:true,
+    _chatAutoLogin:false,
     _categoryTrackingParams:{},
     _groupBasedConfig:{},
 
@@ -3066,6 +3066,7 @@ JsChat.prototype = {
         delete that;
         //auto login to chat on site relogin if flag true and login authentication success
         if(curEle._chatAutoLogin == true && failed!= true){
+            //console.log("clicked");
             setTimeout(function(){
                 invokePluginLoginHandler("autoChatLogin");
             },100);

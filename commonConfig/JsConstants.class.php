@@ -64,6 +64,8 @@ class JsConstants
 	public static $alertServerEnable  = 1;
 	public static $stopOnPeakLoad     = 1;
 	public static $notificationStop	  = 0;
+	//if set to 1, hides unimportant features at time of peak load on site
+	public static $hideUnimportantFeatureAtPeakLoad     = 0;
         
         /* Vsp URL */
 	public static $vspMaleUrl           = 'http://maleapi.analytics.resdex.com:9000/ecpRecommendations_live';
