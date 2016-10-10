@@ -614,5 +614,28 @@ class PictureFunctions
 		}
 		return NULL;
 	}
+        /**
+         * 
+         * @param type $viewedProfileId
+         * @param type $photoDisplayArray
+         * @param type $photoType
+         * @param type $loggedInprofileId
+         * @param type $perform
+         * @param type $value
+         */
+        public static function photoUrlCachingForChat($viewedProfileId,$photoDisplayArray = array(),$photoType,$loggedInprofileId = '',$perform,$value = ""){
+                
+                if( ($value!='' || $perform=='remove') && $loggedInprofileId != '' && array_key_exists($viewedProfileId, $photoDisplayArray)){
+                        $key = $photoType."_".$loggedInprofileId."_".$viewedProfileId;
+                }else{
+                        $key = $photoType."_".$viewedProfileId;
+                }
+		//echo $key."<br>\n"  ;
+                if($perform == 'set'){
+                        JsMemcache::getInstance()->set($key,$value,3600);
+                }elseif($perform == 'remove'){
+                        JsMemcache::getInstance()->remove($key);
+                }
+        }
 }
 ?>
