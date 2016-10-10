@@ -434,9 +434,6 @@ class TopSearchBandPopulate
 			$this->dataArray["caste"] = $this->populateCasteJSMS();
 			$this->dataArray["location"] = $this->populateCityCountryJSMS();
 			$this->dataArray["location_cities"] = $this->populateCitiesJSMS();
-                        if(!MobileCommon::isNewMobileSite()){
-                           $this->dataArray["location"] = array_merge($this->dataArray["location"],$this->dataArray["location_cities"]);
-                       }
 			$this->dataArray["income"] = $this->populateIncome(1,1);
 			$this->dataArray["income_dol"] = $this->populateIncomeDollar();
 			$this->dataArray["manglik"] = $this->populateManglik();
@@ -447,7 +444,41 @@ class TopSearchBandPopulate
 
 		return $this->dataArray;
 	}
+        
+        /**
+	This function is used to generate the data arrays for the top search band (used for app)
+	* @access public
+	* @see JsMemcache
+	* @return Array $this->dataArray
+	*/
+	public function generateDataArrayPC()
+	{
+		if(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_PC"))
+                {
+                        $this->dataArray = unserialize(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_PC"));
+                }
+		else
+		{
+			$this->dataArray["age"] = $this->populateAge(1,null,1);
+			$this->dataArray["height"] = $this->populateHeight(1,1);
+			$this->dataArray["gender"] = $this->populateGender(1);
+			$this->dataArray["mstatus"] = $this->populateMstatus(1,1);
+			$this->dataArray["mtongue"] = $this->populateMtongueMobile();
+			$this->dataArray["religion"] = $this->populateReligionJSMS();
+			$this->dataArray["caste"] = $this->populateCasteJSMS();
+			$this->dataArray["location"] = $this->populateCityCountryJSMS();
+			$location_cities = $this->populateCitiesJSMS();
+                        $this->dataArray["location"] = array_merge($this->dataArray["location"],$location_cities);
+			$this->dataArray["income"] = $this->populateIncome(1,1);
+			$this->dataArray["income_dol"] = $this->populateIncomeDollar();
+			$this->dataArray["manglik"] = $this->populateManglik();
+			$this->dataArray["occupation"] = $this->populateOccupationForJSMS();
+			$this->dataArray["education"] = $this->populateEducationForJSMS();
+			JsMemcache::getInstance()->set("TOP_SEARCH_BAND_CONTENT_PC",serialize($this->dataArray));
+		}
 
+		return $this->dataArray;
+	}
 	/**
 	*This function is used to populate age data for top search band
 	* @access public

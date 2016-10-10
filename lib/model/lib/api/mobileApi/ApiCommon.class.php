@@ -531,9 +531,13 @@ class ApiCommon
                                         	$output[$k]["uptime"] = $tableInfo[$maxTimeField];
 					$parameters["forClusters"] = $forClusters;
 					$topSearchBandObj = new TopSearchBandPopulate($parameters);
-					if($needMobileFormat)
-						$dataArray = $topSearchBandObj->generateDataArrayMobile();
-					else
+					if($needMobileFormat){
+                                                if(MobileCommon::isDesktop()){
+                                                        $dataArray = $topSearchBandObj->generateDataArrayPC();
+                                                }else{
+                                                        $dataArray = $topSearchBandObj->generateDataArrayMobile();
+                                                }
+                                        }else
 						$dataArray = $topSearchBandObj->generateDataArrayApp();
 					unset($topSearchBandObj);
 					$output[$k]["data"] = $dataArray;
