@@ -29,18 +29,19 @@ EOF;
       $dirPath = '/home/ayush/Desktop/logsForCompress';
 
       $hoursNow = $arguments[hours];
-
+      $hoursNow = 240;
       for($i=3 ; $i <= $arguments[hours] ; $i++)
       {
         $hoursNow = $i;
         $date = new DateTime(date("Y-m-d", strtotime('-'.$hoursNow.' hours')));
         $date = $date->format('Y.m.d');
-        $elkServer = 'localhost';
+        $elkServer = '10.10.18.66';
         $elkPort = '9200';
         $indexName = 'filebeat-*';
         $query = '_search';
         $urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
         $ltHour = $hoursNow + 1;
+        /*
         $params = [
             "query"=> [
                 "range" => [
@@ -66,13 +67,14 @@ EOF;
         {
             $arrChannels[$module['key']] = $module['doc_count'];
         }
-
+            */
+        print_r($params);
          $params = [
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-{$ltHour}h",
-                        "gt" => "now-{$hoursNow}h"                                        ]
+                        "gte" => "now-{$ltHour}h",
+                        "lte" => "now-{$hoursNow}h"                                        ]
                 ]
             ],
             'aggs' => [
@@ -91,15 +93,15 @@ EOF;
         {
             $arrDomain[$module['key']] = $module['doc_count'];
         }
-
-
+        print_r($params);
+        print_r($arrDomain); die;
 
          $params = [
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                       "lt" => "now-{$ltHour}h",
-                        "gt" => "now-{$hoursNow}h"                    
+                       "gte" => "now-{$ltHour}h",
+                        "lte" => "now-{$hoursNow}h"                    
                     ]
                 ]
             ],
@@ -125,8 +127,8 @@ EOF;
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                  "lt" => "now-{$ltHour}h",
-                        "gt" => "now-{$hoursNow}h"                    
+                  "gte" => "now-{$ltHour}h",
+                        "lte" => "now-{$hoursNow}h"                    
                     ]
                 ]
             ],
@@ -153,8 +155,8 @@ EOF;
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-{$ltHour}h",
-                        "gt" => "now-{$hoursNow}h"                    
+                        "gte" => "now-{$ltHour}h",
+                        "lte" => "now-{$hoursNow}h"                    
                     ]
                 ]
             ],
@@ -180,8 +182,8 @@ EOF;
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-{$ltHour}h",
-                        "gt" => "now-{$hoursNow}h"                    
+                        "gte" => "now-{$ltHour}h",
+                        "lte" => "now-{$hoursNow}h"                    
                     ]
                 ]
             ],
@@ -208,8 +210,8 @@ EOF;
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-{$ltHour}h",
-                        "gt" => "now-{$hoursNow}h"                    
+                        "gte" => "now-{$ltHour}h",
+                        "lte" => "now-{$hoursNow}h"                    
                     ]
                 ]
             ],
@@ -236,8 +238,8 @@ EOF;
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-{$ltHour}h",
-                        "gt" => "now-{$hoursNow}h"                    
+                        "gte" => "now-{$ltHour}h",
+                        "lte" => "now-{$hoursNow}h"                    
                     ]
                 ]
             ],
@@ -263,8 +265,8 @@ EOF;
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "lt" => "now-{$ltHour}h",
-                        "gt" => "now-{$hoursNow}h"                    
+                        "gte" => "now-{$ltHour}h",
+                        "lte" => "now-{$hoursNow}h"                    
                     ]
                 ]
             ],
