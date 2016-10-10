@@ -548,7 +548,7 @@ class MembershipMailer {
     public function getCsvData($data, $dataHeader)
     {
         $retval  = "";
-        $filepath = "/var/www/html/mobile/web/uploads/csv_files/";
+        $filepath = "/var/www/html/web/uploads/csv_files/";
         $filename = $filepath."tempCsvDataMemMailerContent.csv";
         unlink($filename);
         $csvData = fopen("$filename", "w") or print_r("Cannot Open");

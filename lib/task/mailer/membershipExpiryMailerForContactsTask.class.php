@@ -28,7 +28,7 @@ EOF;
         ini_set('memory_limit', -1);
 
         // Get profiles
-        $todayDate        = date("2017-01-03");
+        $todayDate        = date("Y-m-d");
         $expiryDate1      = date("Y-m-d", strtotime("$todayDate -3 days"));
         $expiryDate2      = date("Y-m-d", strtotime("$todayDate -1 days"));
         $endDate          = $expiryDate2 . " 23:59:59";
