@@ -69,7 +69,7 @@ EOF;
 				if($dataSet){
 					$attachment	=$mmObj->getExcelData($dataSet,$header);	
 					$deliveryStatus	=$mmObj->sendMembershipMailer($mailId, $profileid,$dataArr,$attachment,$attachmentName);
-					$memExpInsObj->add($profileid);		;
+					$memExpInsObj->add($profileid);
 					//print_r($attachment);
 				}
 				unset($dataArr);
