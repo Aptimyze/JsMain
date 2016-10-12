@@ -58,7 +58,7 @@ class EditOnFtoContactConfirmation{
 			$result[]='PEO';
 		//Horoscopre Details Related
 	    if($this->_profile->getRELIGION()==Religion::HINDU||$this->_profile->getRELIGION()==Religion::JAIN){
-		$horo_db=new NEWJS_ASTRO();
+		$horo_db= ProfileAstro::getInstance();
 		if($horo_db->getIfHoroPresent($this->_profile->getPROFILEID()) || ($this->_profile->getBTIME() && $this->_profile->getCITY_BIRTH() && $this->_profile->getCOUNTRY_BIRTH()))
 			$horo_yes=true;
 		if(!$horo_yes)
