@@ -14,11 +14,11 @@ class jsValidatorMobile extends sfValidatorBase
   protected function doClean($value)
   {
     $source = $_SERVER['HTTP_REFERER'];
-    if(strpos($source,"viewprofile") !== $false)
+    if(strpos($source,"viewprofile") !== false)
     {
       $source = "EDIT";
     }
-    elseif(strpos($source,"registration") !== $false)
+    elseif(strpos($source,"registration") !== false)
     {
       $source = "REG";
     }
@@ -102,7 +102,7 @@ class jsValidatorMobile extends sfValidatorBase
 			//check not to be implied for alternate mobile number
 			if($this->getOption('altMobile')!=1)
 			{	
-				$detailArr = $this->getDetailArr($value['mobile'],$value['isd']);
+				$detailArr = $this->getDetailArr($value['mobile'],$value['isd'],$source);
         		//if count of profiles is greater than 2. check if profile is dummy and accordingly show error
 				if(count($detailArr)>=2)
 				{
@@ -125,13 +125,21 @@ class jsValidatorMobile extends sfValidatorBase
 	  return in_array($value, array(null,''), true);
   }
 
-  public function getDetailArr($mobile,$isd)
+  public function getDetailArr($mobile,$isd,$source)
   {
   	$jprofileObj = JPROFILE::getInstance('newjs_slave');
   	$lastLoginDate = date('Y-m-d', strtotime("-1 year"));
   	$valueArray = array("activatedKey"=>1,"MOB_STATUS"=>"Y","INCOMPLETE"=>"N","PHONE_MOB"=>$mobile,"ISD"=>$isd);
   	$greaterThanArray = array("LAST_LOGIN_DT"=>$lastLoginDate);
   	$excludeArray  = array("ACTIVATED"=>"'D'","PROFILEID"=>$this->profileId);
+  	if($source == "REG")
+  	{
+  		$excludeArray  = array("ACTIVATED"=>"'D'");
+  	}
+  	else
+  	{
+  		$excludeArray  = array("ACTIVATED"=>"'D'","PROFILEID"=>$this->profileId);
+  	}	
   	$detailArr = $jprofileObj->getArray($valueArray,$excludeArray,$greaterThanArray,'PROFILEID','','','','','','','','');
   	unset($jprofileObj);
   	return $detailArr;
