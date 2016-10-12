@@ -414,59 +414,6 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
                         	<p class="f15 color11">Profile managed by ~$arrOutDisplay['about']['profile_posted']`</p>
                             <p class="f13 prfcolr2">Last updated on ~$arrOutDisplay['about']['last_mod']`</p>
                         </div>
-                        <div class="fr btmicon">
-                        	<ul class="clearfix">
-                            	<li class="pos-rel">
-                              ~if !$loginProfile->getPROFILEID()`
-                                	<i class="sprite2 prfic29 cursp loginLayerJspc"></i>
-                                  ~else`
-                                  <i class="sprite2 prfic29 cursp share js-action"></i>
-                                  ~/if`
-                                    <!--start:tooltip-->
-                                    <div class="tooltip1">
-                                    	<div class="boxtip colrw fontlig prfp8 wd70">
-                                        	Share Profile
-                                        </div>                                    
-                                    </div>
-                                    <!--end:tooltip-->
-                                </li>                 ~if $arrOutDisplay['page_info']['is_ignored']`
-                                <li id="IGNORE-~$arrOutDisplay['page_info']['profilechecksum']`-VDP-IGNORE" class="pos-rel cEIgnoreDetailProfile" data="&ignore=0">
-								~else`
-									<li id="IGNORE-~$arrOutDisplay['page_info']['profilechecksum']`-VDP-IGNORE" class="pos-rel ~if $loginProfile->getPROFILEID()`cEIgnoreDetailProfile~/if`" data="&ignore=1">
-								~/if`
-                                  ~if !$loginProfile->getPROFILEID()`
-                                  <i class="sprite2 prfic31 cursp loginLayerJspc"></i>
-                                  ~else`
-                                  <i class="sprite2 prfic31 cursp ignore "></i>
-                                  ~/if`
-                                     <!--start:ignore profile-->
-                                    <div class="tooltip1">
-                                      <div id="ignoreProfileToolTip" class="boxtip txtc colrw fontlig prfp8">
-                                      ~if $arrOutDisplay['page_info']['is_ignored']`
-                                          Unblock Profile 
-                                       ~else`
-									                   	Block Profile
-                                       ~/if` 
-                                        </div>                                    
-                                    </div>
-                                    <!--end:ignore profile-->
-                                </li>
-                                <li class="pos-rel">
-                                    ~if !$loginProfile->getPROFILEID()`
-                                	<i class="sprite2 prfic32 cursp loginLayerJspc"></i>
-                                    ~else`
-                                    <i class="sprite2 prfic32 cursp report js-action"></i>
-                                    ~/if`
-                                     <!--start:tooltip-->
-                                    <div class="tooltip1">
-                                    	<div class="boxtip colrw fontlig prfp8 wd74">
-                                        	Report Profile 
-                                        </div>                                    
-                                    </div>
-                                    <!--end:tooltip-->
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>              
               </div>              
