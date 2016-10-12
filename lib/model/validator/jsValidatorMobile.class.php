@@ -102,7 +102,7 @@ class jsValidatorMobile extends sfValidatorBase
 			//check not to be implied for alternate mobile number
 			if($this->getOption('altMobile')!=1)
 			{	
-				$detailArr = $this->getDetailArr($value['mobile'],$value['isd'],$source);
+				$detailArr = $this->getDetailArr($value['mobile'],$value['isd']);
         		//if count of profiles is greater than 2. check if profile is dummy and accordingly show error
 				if(count($detailArr)>=2)
 				{
@@ -125,20 +125,19 @@ class jsValidatorMobile extends sfValidatorBase
 	  return in_array($value, array(null,''), true);
   }
 
-  public function getDetailArr($mobile,$isd,$source)
+  public function getDetailArr($mobile,$isd)
   {
   	$jprofileObj = JPROFILE::getInstance('newjs_slave');
   	$lastLoginDate = date('Y-m-d', strtotime("-1 year"));
   	$valueArray = array("activatedKey"=>1,"MOB_STATUS"=>"Y","INCOMPLETE"=>"N","PHONE_MOB"=>$mobile,"ISD"=>$isd);
   	$greaterThanArray = array("LAST_LOGIN_DT"=>$lastLoginDate);
-  	$excludeArray  = array("ACTIVATED"=>"'D'","PROFILEID"=>$this->profileId);
-  	if($source == "REG")
+  	if($this->profileId)
   	{
-  		$excludeArray  = array("ACTIVATED"=>"'D'");
+  		$excludeArray  = array("ACTIVATED"=>"'D'","PROFILEID"=>$this->profileId);
   	}
   	else
   	{
-  		$excludeArray  = array("ACTIVATED"=>"'D'","PROFILEID"=>$this->profileId);
+  		$excludeArray  = array("ACTIVATED"=>"'D'");
   	}	
   	$detailArr = $jprofileObj->getArray($valueArray,$excludeArray,$greaterThanArray,'PROFILEID','','','','','','','','');
   	unset($jprofileObj);
