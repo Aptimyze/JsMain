@@ -236,7 +236,7 @@ class AuthFilter extends sfFilter {
                                         }
 					else
 					{
-						$naObj = new NEWJS_ASTRO;
+						$naObj = ProfileAstro::getInstance();
                                                 if($naObj->getIfAstroDetailsPresent($data["PROFILEID"]))
 						{
 							if(JsConstants::$alertServerEnable) {
