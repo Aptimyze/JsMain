@@ -68,9 +68,11 @@ class ResponseHandlerConfig
 
 	/*********************Forgot Password ends here*****/
 	//public static $FLOGIN_EMAIL_NOTPRESENT=array("message"=>"Email doesnot exist","statusCode"=>'2');
-	public static $FLOGIN_EMAIL_ERR=array("message"=>"The email address provided by you is not in our records","statusCode"=>"1");
+	public static $FLOGIN_EMAIL_ERR=array("message"=>"The email address or phone number provided by you is not in our records","statusCode"=>"1");
 	public static $FLOGIN_EMAIL_DELETED=array("message"=>"Profile with this email address has been deleted - please contact customer care.","statusCode"=>"1");
 	public static $FLOGIN_EMAIL_SUCCESS=array("message"=>"Link to reset your password has been sent to your registered Email Id and Mobile Number. The link will be valid for next 24 hours.","statusCode"=>"0");
+	public static $FLOGIN_EMAIL_SMSLIMIT_SUCCESS=array("message"=>"Link to reset your password has been sent to your registered Email Id. The link will be valid for next 24 hours.","statusCode"=>"0");
+	public static $FLOGIN_PHONE_ERR=array("message"=>"There are multiple profiles against this phone number, please enter Email Address of account or contact customer care.","statusCode"=>"1");
 	
 	/********************Forgot password ends here******/
 	//Only For Logging purpose
