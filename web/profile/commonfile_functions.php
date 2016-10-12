@@ -404,7 +404,7 @@ $js_arr[]=array("view_similar_profile_js"    => "2");
 $js_arr[]=array("assisted_product"   => "1");
 $js_arr[]=array("pixel_js"    => "2");
 $js_arr[]=array("mouseClickTracking_js"  => "2");
-$js_arr[]=array("jsms/profile/ep/mobedit_js"              => "15");
+$js_arr[]=array("jsms/profile/ep/mobedit_js"               => "16");
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"             => "4");
 $js_arr[]=array("jsms/common/disableScroll_js"  => "1");
 $js_arr[]=array("jsms/profile/ep/mobeditview_js"                => "17");
