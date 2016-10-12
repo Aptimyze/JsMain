@@ -1,14 +1,16 @@
 <script>
     var captchaShow=~$captchaDiv`;
 </script>
-   	<div class="mauto layerbg wid520">
-    	<div class="layerp3">
-        	<div id="LoginMessage" class="f17 grey5">Login to continue..</div>
-        	<div id="LoginErrMessage" class="f17 errcolr disp-none">Invalid e-mail ID or password. Please try again!</div>
-            <div id="LoginErrMessage2" class="f17 errcolr disp-none">Please slide to verify</div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <div class="mauto layerbg wid520">
+        <div class="layerp3">
+            <div id="LoginMessage" class="f17 grey5">Login to continue..</div>
+            <div id="LoginErrMessage" class="f17 errcolr disp-none">Invalid e-mail ID or password. Please try again!</div>
+            <div id="CaptchaErrMessage" class="f17 errcolr disp-none">Something went wrong. Please try again!</div>
+            <div id="LoginErrMessage2" class="f17 errcolr disp-none">New Captcha message here</div>
             <div class="mt20">
-            	<form id="homePageLogin" method="post" target="iframe_login" onsubmit="return LoginValidation()">
-                	<div id="EmailContainer" class="clearfix wid92p brderinp layerp2 ">
+                <form id="homePageLogin" method="post" target="iframe_login" onsubmit="return LoginValidation()">
+                    <div id="EmailContainer" class="clearfix wid92p brderinp layerp2 ">
                        <input type="text" class="bgnone f15 grey6 brdr-0 fl wid70p" placeholder="Email ID" value="" id="email" name="email">
                        <span id="emailErr" class="errcolr f15 fr hgt18 vishid"></span>
                     </div>

@@ -142,13 +142,13 @@ function validateMobile(mobile) {
 }
 function validateCaptcha()
 {
-	 if($("#blueText").html()=="Slide to Verify" &&  $('#captchaDiv').is(':visible'))
-    {
-      $("#LoginMessage").hide();
-      $("#LoginErrMessage").addClass("disp-none");
-      $("#LoginErrMessage2").removeClass("disp-none");
-      return false;
-    }
+	 // if($("#blueText").html()=="Slide to Verify" &&  $('#captchaDiv').is(':visible'))
+  //   {
+  //     $("#LoginMessage").hide();
+  //     $("#LoginErrMessage").addClass("disp-none");
+  //     $("#LoginErrMessage2").removeClass("disp-none");
+  //     return false;
+  //   }
     return true;
 }
 
@@ -182,7 +182,7 @@ function onFrameLoginResponseReceived(message)
 				hideCommonLoader();
 				$("#LoginMessage").addClass("disp-none");
 				$("#LoginErrMessage").addClass("disp-none");
-			  $("#LoginErrMessage2").removeClass("disp-none");
+			  // $("#LoginErrMessage2").removeClass("disp-none");
 			  hideCommonLoader();
 				removeCaptcha();
 				if($("#commonOverlay").is(':visible')){
@@ -208,7 +208,7 @@ function onFrameLoginResponseReceived(message)
         hideCommonLoader();
   			$("#LoginErrMessage").removeClass("disp-none");
   			$("#LoginMessage").addClass("disp-none");
-  			$("#LoginErrMessage2").addClass("disp-none");
+  			// $("#LoginErrMessage2").addClass("disp-none");
   			$("#EmailContainer").addClass("brderred");
   			$("#PasswordContainer").addClass("brderred");
   			setTimeout(function(){
@@ -218,6 +218,22 @@ function onFrameLoginResponseReceived(message)
   				$("#PasswordContainer").removeClass("brderred");
   				},3000);
       }
+		}
+		else if(response == 2)
+		{
+			hideCommonLoader();
+			$("#CaptchaErrMessage").removeClass("disp-none");
+  			$("#LoginErrMessage").addClass("disp-none");
+  			$("#LoginMessage").addClass("disp-none");
+  			// $("#LoginErrMessage2").addClass("disp-none");
+  			$("#EmailContainer").addClass("brderred");
+  			$("#PasswordContainer").addClass("brderred");
+  			setTimeout(function(){
+  				$("#emailErr").removeClass("visb");
+  				$("#EmailContainer").removeClass("brderred");
+  				$("#passwordErr").removeClass("visb");
+  				$("#PasswordContainer").removeClass("brderred");
+  				},3000);
 		}
 		else
 		{
@@ -575,24 +591,24 @@ function postForgotEmailLayer()
 
 function createCaptcha(fromLoggedOut){
 	
-	var captchaDiv='<div id="captchaDiv" class="captcha" style=" width: 434px;">                                    <div class="slideCap" id="slideCap">                                        <div class="blueTxt" id="blueText">Slide to Verify</div>                                    </div>                                    <div id="textSlide" style="color: #888;z-index:9999; text-align:center; padding-top: 18px;">Slide to Verify</div>                                    <div class="handle" style="background-position: 10px 10px;background-image:url(/images/jsms/commonImg/nextIcon.png);background-repeat: no-repeat;"></div>                                </div>';
+	var captchaDiv = '<div class="g-recaptcha" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
 	if(fromLoggedOut)
 	{
 		if(typeof(parent.LoggedoutPage)!==undefined)
 		{
 			 parent.$('#afterCaptcha').before(captchaDiv);
-			  parent.$("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
+			  // parent.$("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
 		}
 		else
 		{
 		   $('#afterCaptcha').before(captchaDiv);
-		  $("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
+		  // $("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
 		}
 	}
 	else
 	{
 		$('#afterCaptcha').before(captchaDiv);
-		$("#newLoginLayerJspc").find('.captcha').slideToCAPTCHA('captcha');
+		// $("#newLoginLayerJspc").find('.captcha').slideToCAPTCHA('captcha');
 	}
 	
 	
@@ -600,110 +616,110 @@ function createCaptcha(fromLoggedOut){
 
 function removeCaptcha()
 {
-  $('.captcha').each(function(index, element) {
+  $('.g-recaptcha').each(function(index, element) {
       $(element).remove();});
 }
 
-(function($) {
-    $.fn.slideToCAPTCHA = function(options) {
-        options = $.extend({
-            handle: '.handle',
-            cursor: 'move',
-            direction: 'x', //x or y
-            customValidation: false,
-            completedText: 'Done!'
-        }, options);
-        var $handle = this.find(options.handle),
-            $slide = this,
-            handleOWidth,
-            xPos,
-            yPos,
-            slideXPos,
-            slideWidth,
-            slideOWidth,
-            $activeHandle,
-			slipStart,
-            mousePressed = false,
-            sliderCompleted = false;
-			startSlider();
-			$handle.css('cursor', options.cursor).on('mousedown', function(e) {
-                slideOn(e);
-            }).on('mouseup', function(e) {
-				resetSlider();
-            }).on('mouseleave', function(e) {
-				if(mousePressed == true) {
-					resetSlider();  
-				}
-            });
-        function startSlider() {
-            $slide.addClass('slide-to-captcha');
-            $handle.addClass('slide-to-captcha-handle');
-            handleOWidth = $handle.outerWidth();
-            slideWidth = $slide.width();
-            slideOWidth = $slide.outerWidth();
-        }
-        function slideOn(e) {
-            mousePressed = true;
-            $activeHandle = $handle.addClass('active-handle');
-            xPos = $handle.offset().left + handleOWidth - e.pageX;
-            slideXPos = $slide.offset().left + ((slideOWidth - slideWidth) / 2);
-			slipStart = $handle.offset().left;
-            $activeHandle.on('mousemove', function(e) {
-                if (mousePressed == true) {
-                    slideMove(e);
-                }
-            });
-            e.preventDefault();
-        }
-        function slideMove(e) {
-            var handleXPos = e.pageX + xPos - handleOWidth;
-			var width = $handle.offset().left - slipStart;
-            if (handleXPos > slideXPos && handleXPos < slideXPos + slideWidth - handleOWidth) {
-                if ($handle.hasClass('active-handle')) {
-					$handle.offset({
-                        left: handleXPos
-                    });
-				$slide.find("#slideCap").css("width",width);
-				if(width >= 151) {
-					$slide.find("#blueText").show();  
-				}
-				else if(handleXPos < 151) {
-					$slide.find("#blueText").hide();
-					}
-                }
-            } else {
-                if (handleXPos <= slideXPos === false) {
-                    sliderComplete();
-                }
-                $activeHandle.mouseup();
-            }
-        }
-        function sliderComplete() {
-            sliderCompleted = true;
-			$handle.css("background-image","url('/images/jsms/commonImg/completed.png')");
-			$handle.css("background-position","0px -2px");
-			$handle.css("margin","0px");
-			$handle.css("border","1px solid #c0c0c0");
-            $activeHandle.offset({
-                left: slideXPos + slideWidth - handleOWidth
-            });
-            $activeHandle.off();
-            resetSlider();
-            $slide.addClass('valid');
-			$slide.find('#blueText').html('Verified');
-			$('LoginErrMessage2').hide();
-			$slide.find("#slideCap").css("width","377px");
-        }
-        function resetSlider() {
-            mousePressed = false;
-            if (sliderCompleted == false) {
-                $activeHandle.offset({
-                    left: slideXPos+1
-                });
-			$slide.find("#blueText").hide();
-            $activeHandle.removeClass('active-handle');
-			$slide.find("#slideCap").css("width","0");
-            }
-        }
-    }
-})(jQuery);
+// (function($) {
+//     $.fn.slideToCAPTCHA = function(options) {
+//         options = $.extend({
+//             handle: '.handle',
+//             cursor: 'move',
+//             direction: 'x', //x or y
+//             customValidation: false,
+//             completedText: 'Done!'
+//         }, options);
+//         var $handle = this.find(options.handle),
+//             $slide = this,
+//             handleOWidth,
+//             xPos,
+//             yPos,
+//             slideXPos,
+//             slideWidth,
+//             slideOWidth,
+//             $activeHandle,
+// 			slipStart,
+//             mousePressed = false,
+//             sliderCompleted = false;
+// 			startSlider();
+// 			$handle.css('cursor', options.cursor).on('mousedown', function(e) {
+//                 slideOn(e);
+//             }).on('mouseup', function(e) {
+// 				resetSlider();
+//             }).on('mouseleave', function(e) {
+// 				if(mousePressed == true) {
+// 					resetSlider();  
+// 				}
+//             });
+//         function startSlider() {
+//             $slide.addClass('slide-to-captcha');
+//             $handle.addClass('slide-to-captcha-handle');
+//             handleOWidth = $handle.outerWidth();
+//             slideWidth = $slide.width();
+//             slideOWidth = $slide.outerWidth();
+//         }
+//         function slideOn(e) {
+//             mousePressed = true;
+//             $activeHandle = $handle.addClass('active-handle');
+//             xPos = $handle.offset().left + handleOWidth - e.pageX;
+//             slideXPos = $slide.offset().left + ((slideOWidth - slideWidth) / 2);
+// 			slipStart = $handle.offset().left;
+//             $activeHandle.on('mousemove', function(e) {
+//                 if (mousePressed == true) {
+//                     slideMove(e);
+//                 }
+//             });
+//             e.preventDefault();
+//         }
+//         function slideMove(e) {
+//             var handleXPos = e.pageX + xPos - handleOWidth;
+// 			var width = $handle.offset().left - slipStart;
+//             if (handleXPos > slideXPos && handleXPos < slideXPos + slideWidth - handleOWidth) {
+//                 if ($handle.hasClass('active-handle')) {
+// 					$handle.offset({
+//                         left: handleXPos
+//                     });
+// 				$slide.find("#slideCap").css("width",width);
+// 				if(width >= 151) {
+// 					$slide.find("#blueText").show();  
+// 				}
+// 				else if(handleXPos < 151) {
+// 					$slide.find("#blueText").hide();
+// 					}
+//                 }
+//             } else {
+//                 if (handleXPos <= slideXPos === false) {
+//                     sliderComplete();
+//                 }
+//                 $activeHandle.mouseup();
+//             }
+//         }
+//         function sliderComplete() {
+//             sliderCompleted = true;
+// 			$handle.css("background-image","url('/images/jsms/commonImg/completed.png')");
+// 			$handle.css("background-position","0px -2px");
+// 			$handle.css("margin","0px");
+// 			$handle.css("border","1px solid #c0c0c0");
+//             $activeHandle.offset({
+//                 left: slideXPos + slideWidth - handleOWidth
+//             });
+//             $activeHandle.off();
+//             resetSlider();
+//             $slide.addClass('valid');
+// 			$slide.find('#blueText').html('Verified');
+// 			$('LoginErrMessage2').hide();
+// 			$slide.find("#slideCap").css("width","377px");
+//         }
+//         function resetSlider() {
+//             mousePressed = false;
+//             if (sliderCompleted == false) {
+//                 $activeHandle.offset({
+//                     left: slideXPos+1
+//                 });
+// 			$slide.find("#blueText").hide();
+//             $activeHandle.removeClass('active-handle');
+// 			$slide.find("#slideCap").css("width","0");
+//             }
+//         }
+//     }
+// })(jQuery);

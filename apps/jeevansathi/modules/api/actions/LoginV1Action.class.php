@@ -79,6 +79,48 @@ class LoginV1Action extends sfActions
 					}
         			//return 0;
         		}
+        		elseif($captcha == 1)
+        		{
+        			$g_recaptcha_response = $request->getParameter("g-recaptcha-response");
+					$secret = "6LdOuQgUAAAAACiOWGeJXz3pDTEuF2T5ZaRTWo4_";
+					$remoteip = $_SERVER['REMOTE_ADDR'];
+					$postParams = array('secret' => $secret, 'response' => $g_recaptcha_response);
+
+					$urlToHit = "https://www.google.com/recaptcha/api/siteverify";
+					$response = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+					$response = json_decode($response, true);
+					// print_r($response);
+					// var_dump($response['success']);
+					// $x = (MobileCommon::isDesktop() && !$response['success']);
+					// $flag = array('desk' => MobileCommon::isDesktop(), 'success' => $response['success'], 'x' => $x);
+					// print_r($flag);
+					// die('Y');
+
+	        			if(MobileCommon::isDesktop() && !$response['success'])
+	        			{
+	        				$szToUrl = JsConstants::$siteUrl;
+							if($_SERVER['HTTPS'] && strlen($_SERVER['HTTPS']) && $_GET['fmPwdReset'])
+							{
+								$szToUrl = JsConstants::$ssl_siteUrl;
+							}
+							$js_function = " <script>	var message = \"\";
+							if(window.addEventListener)	
+								message ={\"body\":\"2\"};
+							else
+								message = \"2\";
+
+							if (typeof parent.postMessage != \"undefined\") {
+								parent.postMessage(message, \"$szToUrl\");
+							} else {
+								window.name = message; //FOR IE7/IE6
+								window.location.href = '$szToUrl';
+							}
+							</script> ";
+							
+							echo $js_function;
+							die;
+	        			}
+        		}
         	}
 	}
 	if(MobileCommon::isNewMobileSite() || MobileCommon::isDesktop())
