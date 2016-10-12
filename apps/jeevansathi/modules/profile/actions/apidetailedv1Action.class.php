@@ -272,8 +272,12 @@ class apidetailedv1Action extends sfAction
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORE"=>$this->IGNORED));
 			else
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
+
 		}
 		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
+		if (JsConstants::$hideUnimportantFeatureAtPeakLoad == 1) {
+			$out['show_gunascore'] = "n";
+		}
 		return $out;
 	}
 

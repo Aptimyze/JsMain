@@ -23,7 +23,7 @@ foreach($serverUrlArray as $k=>$v){
                 $status = sendPresenceRequest($v);
                 if($status!=200)
                 {
-                        mail ("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Error in presence api @".$v,"Please check");
+                        mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Error in presence api @".$v,"Please check");
                 }
         }       
 }
@@ -38,7 +38,7 @@ function checkForQueueOverflow($queueArr,$msgLimitPerQueue,$queueResponse){
                         $queue_data=$arr;
                         if(in_array($queue_data->name, $queueArr) && $queue_data->messages_ready>$msgLimitPerQueue)
                         {
-                                $overflowQueueArr[] = $queue_data->name;
+                                $overflowQueueArr[] = $queue_data->name."(".$queue_data->messages_ready.")";
                         }
                 }
         }
@@ -47,7 +47,7 @@ function checkForQueueOverflow($queueArr,$msgLimitPerQueue,$queueResponse){
         if($overflowQueueArr && count($overflowQueueArr)>0){
                 $queueStr = implode(",", $overflowQueueArr);
                 //var_dump($queueStr);die;
-                mail ("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$queueStr);
+                mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$queueStr);
         }
 }
 function checkRabbitmqQueueMsgCount($serverid){

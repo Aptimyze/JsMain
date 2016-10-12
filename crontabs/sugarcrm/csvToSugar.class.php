@@ -248,6 +248,9 @@ class csvToSugar
 		$leadsObj = new sugarcrm_leads;
 		$campaign_id = "a97e7b56-c809-291a-57eb-57d90bf41daa";//id for FB_Leads_2016 campaign
 		$leadsObj->updateLeadCampaign($leadIdArr,$campaign_id);
+		$leadsCstmObj = new sugarcrm_leads_cstm; 
+		$sourceid = '12';
+		$leadsCstmObj->updateLeadSource($leadIdArr,$sourceid);
 	}
   }
 }
