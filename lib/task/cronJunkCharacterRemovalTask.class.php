@@ -2,6 +2,8 @@
 
 class cronJunkCharacterRemovalTask extends sfBaseTask
 {
+    CONST MAIL_ID = "1841";
+
     protected function configure()
     {
         $this->namespace           = 'cron';
@@ -20,6 +22,28 @@ EOF;
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
         $memcacheObj = JsMemcache::getInstance();
+
+        $profileId = "99409509";
+
+// sending emails from here:
+// 
+        $email_sender = new EmailSender(MailerGroup::JUNK_REMOVAL, self::MAIL_ID);
+        $emailTpl = $email_sender->setProfileId($profileId);
+        $smartyObj = $emailTpl->getSmarty();
+        
+            //get username for this profile id
+        $jProfileObj= JPROFILE::getInstance();
+        $uName= $jProfileObj->getUsername($profileId);
+        $email= $jProfileObj->getEmailFromProfileId($profileId)['EMAIL'];
+        $smartyObj->assign("username",$uName);
+        $smartyObj->assign("email",$email);        
+        
+        //send email
+        $email_sender->send();
+        die();
+
+
+
 
         $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
         $number0fRedisQueues = ceil(60 / $redisQueueInterval);
