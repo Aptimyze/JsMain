@@ -31,6 +31,11 @@
                 <div class="p4" id="searchQuesList">
                     <table class="quesTable2">
                     </table>
+                    <div class="mt56"></div>
+                    <div class="mt100 mb30 disp-none" id="postSubmitDiv">
+                        <div class="fontreg f20 colr_grey_new txtc">We have taken your request, we will get back to you soon</div>
+                        <div id="goBack" class="fontlig f20 color5 cursp pt10 txtc">Go Back Home</div>
+                    </div>
                     <div id="formDiv" parent="searchQuesList">
                         <div class="fullwid txtc f20 colr2 pt25">
                             <div id="postQuery" class="postQueryBtn disp_ib cursp fontreg color5">Post your query</div>
