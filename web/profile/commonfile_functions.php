@@ -182,7 +182,7 @@ $css_arr[]=array("jspc/photoUpload/main"    => "1");
 $css_arr[]=array("jspc/inbox/contactCenter"      => "3");
 $css_arr[]=array("jspc/success_story/successStory"    => "1");
 $css_arr[]=array("jspc/contactus/contactus_css"    => "1");
-$css_arr[]=array("jspc/profile/view/jspcViewProfile_css"                => "14");
+$css_arr[]=array("jspc/profile/view/jspcViewProfile_css"                 => "15");
 $css_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_css"        => "8");
 $css_arr[]=array("jspc/search/advancedSearch"      => "3");
 $css_arr[]=array("jspc/faq/feedback"    => "1");
