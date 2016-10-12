@@ -45,7 +45,7 @@ $(document).ready(function (e) {
         $(this).find("i").toggleClass("chosen-container-active");
         $(".dropOption").toggleClass("disp-none");
     });
-    $("#goBack").on("click", function () {
+    $(".goBack").on("click", function () {
         location.reload();
     });
     //posting form
