@@ -19,96 +19,94 @@ EOF;
     protected function execute($arguments = array(), $options = array()){
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
-    
         $memcacheObj = JsMemcache::getInstance();
 
-        $profileId = $memcacheObj->get("shahjahan");
-        // echo "the shahjahan key has value: " .;
-        // 
-        $jprofileObj = new Jprofile;
-        $profileData = $jprofileObj->getArray(array("PROFILEID" => $profileId), "", "", "YOURINFO,FAMILYINFO,EDUCATION,JOB_INFO,SPOUSE");
+        $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
+        $number0fRedisQueues = ceil(60 / $redisQueueInterval);
+        $key = "ScreeningIDs_";
+        $newTime = strtotime('-30 minutes');
+        $minute = date('i', $newTime);
+        $startIndex = floor($minute/$redisQueueInterval);
+        $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
 
-        $about = $this->removeJunkAbout($profileData[0]['YOURINFO']);
+        $lengthOfQueue = $memcacheObj->getLengthOfQueue($key);
+        
+        //use pipeline  for multiple pops
+        $pipeline = $memcacheObj->pipeline();
 
-        $familyInfo = $profileData[0]['FAMILYINFO'];
-        $education = $profileData[0]['EDUCATION'];
-        $jobInfo = $profileData[0]['JOB_INFO'];
-        $spouse = $profileData[0]['SPOUSE'];
+        for($i=0;$i<$lengthOfQueue;$i++)
+            $pipeline->RPOP($key);
 
-        if ( !$this->removeJunkOpenFields($about))
+        $profileLists = $pipeline->execute();
+
+        if ( !empty($profileLists))
         {
-            $about = '';
+            foreach ($profileLists as $profileId) 
+            {
+                $jProfileObj = new Jprofile;
+                $profileData = $jProfileObj->getArray(array("PROFILEID" => $profileId), "", "", "YOURINFO,FAMILYINFO,EDUCATION,JOB_INFO,SPOUSE");
+
+
+                $junkCharacterRemovalLib = new JunkCharacterRemovalLib();   
+
+
+                $about = $junkCharacterRemovalLib->removeJunkCharacters('about',$profileData[0]['YOURINFO']);
+
+                $familyInfo = $profileData[0]['FAMILYINFO'];
+                $education = $profileData[0]['EDUCATION'];
+                $jobInfo = $profileData[0]['JOB_INFO'];
+                $spouse = $profileData[0]['SPOUSE'];
+
+                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$about))
+                {
+                    $about = '';
+                }
+
+                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$familyInfo))
+                {
+                    $familyInfo = '';   
+                }
+
+                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$education))
+                {
+                    $education = '';   
+                }
+
+                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$jobInfo))
+                {
+                    $jobInfo = '';   
+                }
+
+                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$spouse))
+                {
+                    $spouse = '';
+                }
+
+                $paramArr['YOURINFO'] = $about;
+                $paramArr['FAMILYINFO'] = $familyInfo;
+                $paramArr['EDUCATION'] = $education;
+                $paramArr['SPOUSE'] = $spouse;
+                $paramArr['JOB_INFO'] = $jobInfo;
+
+                $jProfileObj->edit($paramArr,$profileId,'PROFILEID');
+
+                if ( strlen($about) < 100 )
+                {
+                    $jProfileObj->updateIncompleteProfileStatus(array($profileId));       
+                }
+
+                echo "finally. \n about: ".$about
+                                  ."\n familyInfo: ".$familyInfo
+                                  ."\n education: ".$education
+                                  ."\n jobInfo: ".$jobInfo
+                                  ."\n spouse: ".$spouse
+
+                ;
+            }
         }
-
-        if ( !$this->removeJunkOpenFields($familyInfo))
-        {
-            $familyInfo = '';   
-        }
-
-        if ( !$this->removeJunkOpenFields($education))
-        {
-            $education = '';   
-        }
-
-        if ( !$this->removeJunkOpenFields($jobInfo))
-        {
-            $jobInfo = '';   
-        }
-
-        if ( !$this->removeJunkOpenFields($spouse))
-        {
-            $spouse = '';
-        }
-
-        if ( strlen($about) < 100 )
-        {
-            echo "Mark this profile incomplete.";
-        }
-
-        echo "finally. \n about: ".$about
-                          ."\n familyInfo: ".$familyInfo
-                          ."\n education: ".$education
-                          ."\n jobInfo: ".$jobInfo
-                          ."\n spouse: ".$spouse
-
-        ;
-
-
     }
 
-    // public function replaceMultipleOccurances($originalMessage,$valueToBeReplaced,$minimumCountToBeReplaced,$valueByWhichReplaced,$minimumCountByWhichReplaced)
-    // {       
-    //     return preg_replace("/[".$valueToBeReplaced."]{".$minimumCountToBeReplaced.",}/,".$valueByWhichReplaced.",".$originalMessage);
-    // }
-    public function removeJunkAbout($about)
-    {
-        echo "About is: ".$about;
-        echo "\n";
-        // // remove spaces
-        // $about = preg_replace("/\s+/"," ",$about);
-        // // multiple dots to 3 dots.
-        $about =  preg_replace('/[.]{4,}/','...',$about);
-        //replace any special occurences with one
-        // $re = '';
-
-        $about = preg_replace('/([^\w.])\1+/','$1',$about);
-
-        echo "Replaced about me is: ".$about;
-        return $about;
-    }
-
-    public function removeJunkOpenFields($text)
-    {
-        echo "Junk fields are: ".$text;
-        echo "\n";
-        // if no spaces
-        $five_unique = count( array_unique( str_split( preg_replace('/[^a-z]/i','',$text)))) > 5 ? 1 : 0;
-        $space_vowels = preg_match('/(?=.*\s+)(?=.*[aeiou]+)/i',$text); 
-
-        // echo "five_unique ".$five_unique;
-        // echo "space_vowels ".$space_vowels;
-
-        return $five_unique && $space_vowels;
-    }
+   
+   
 }
 

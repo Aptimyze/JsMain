@@ -70,6 +70,21 @@ class commonActions extends sfActions
                 break;
 
             case 'success':
+                $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+                $profileId          = $loggedInProfileObj->getPROFILEID();
+                $memcacheObj = JsMemcache::getInstance();
+
+                $minute = date("i");
+                
+                $key = "ScreeningIDs_";
+
+                $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
+
+                $startIndex = floor($minute/$redisQueueInterval);
+                
+                $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
+                
+                $memcacheObj->lpush($key,$profileId);
                 $this->setTemplate("successLayer");
                 break;
         }
