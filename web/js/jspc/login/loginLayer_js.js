@@ -336,7 +336,7 @@ function LoginBinding()
                           if(typeof(LoggedoutPage)!="undefined")
                       {  
                         if(LoggedoutPage){
-                        removeCaptcha();
+                        // removeCaptcha();
                         createCaptcha("logoutPage");
                         }
                       }
