@@ -39,6 +39,7 @@ class settingsActions extends sfActions
     					if($privacyValue=="")
     						$privacyValue="A";
     					$privacyObj->UpdatePrivacy($request->getParameter("privacy"),$profileid);
+                                        PictureFunctions::photoUrlCachingForChat($profileid, array(), "ProfilePic120Url",'', "remove");
     					//$loggedInProfileObj->edit()
     					$privacyArray[0]=$request->getParameter("privacy");
     					$privacyArray[1]=$privacyValue;
