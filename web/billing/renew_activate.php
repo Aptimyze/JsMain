@@ -21,7 +21,10 @@ while ($row = mysql_fetch_array($res)) {
 }
 $profileids_arr_n = array_unique($profileids_arr1);
 $profileids_arr   = array_values($profileids_arr_n);
-
+$billServStatObj = new BILLING_SERVICE_STATUS();
+$billServObj = new billing_SERVICES('newjs_slave');
+$memHandlerObj = new MembershipHandler();
+print_r($profileids_arr); die;
 if ($profileids_arr) {
     for ($i = 0; $i < count($profileids_arr); $i++) {
         $profile = $profileids_arr[$i];
@@ -69,6 +72,20 @@ if ($profileids_arr) {
             $memCacheObject->remove($profile . "_MEM_OCB_MESSAGE_API17");
             $memCacheObject->remove($profile . "_MEM_HAMB_MESSAGE");
             $memCacheObject->remove($profile . "_MEM_SUBSTATUS_ARRAY");
+        }
+
+        // Code to sent service renewal SMS
+        if (strstr($servefor_str, 'F') !== false) { // Main Membership got activated
+            $servAct = $billServStatObj->getLastActiveServiceDetails($profile);
+            $serviceID = $servAct['SERVICEID'];
+            $servName = $billServObj->getServiceName($serviceID);
+            $profileObj = LoggedInProfile::getInstance('newjs_slave',$profile);
+            $username = $profileObj->getUSERNAME();
+            $phoneMob = $profileObj->getPHONE_MOB();
+            $msg = "Dear User, {$servName} has been activated on your profile {$username}.";
+            if ($phoneMob) {
+                $memHandlerObj->sendInstantSMS($profile, 9711458230, $msg);
+            }
         }
         unset($offline_bill);
 
