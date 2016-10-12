@@ -1105,7 +1105,7 @@ function ToggleMore(keyName)
                                     keyName="Desired Partner";
 				if(keys=="Details")
                                 {
-                                    if(values["basic"]["OnClick"][2]["label_val"]==="Male")
+                                    if(values["basic"]["OnClick"][4]["label_val"]==="Male")
                                         keyName="Groom's Details";
                                     else
                                         keyName="Bride's Details";
