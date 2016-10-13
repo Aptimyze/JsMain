@@ -51,6 +51,7 @@ class ErrorHandler
 	const EOI_ACTION_TYPE="ContactHandler::ACCEPT,ContactHandler::CANCEL,ContactHandler::DECLINE,ContactHandler::CANCELINITIATED,ContactHandler::SEND_REMINDER,ContactHandler::INITIATED,ContactHandler::COMMUNICATION";
 	const EOI_CONTACT_LIMIT = 'EOI_CONTACT_LIMIT';
 	const PROFILE_HIDDEN ='PROFILE_HIDDEN';
+	const PROFILE_VIEWED_HIDDEN ='PROFILE_VIEWED_HIDDEN';
 	const PROFILE_IGNORE = "PROFILE_IGNORE";
 	
 	const USERNAME='USERNAME';
@@ -203,6 +204,17 @@ class ErrorHandler
 			$this->setErrorType(ErrorHandler::PROFILE_IGNORE,ErrorHandler::ERROR_FOUND);
 			return false;
 		}
+
+		else if($this->contactHandlerObj->getViewed()->getActivated() == 'H')
+		{
+
+			$POGID = $this->contactHandlerObj->getViewed()->getUSERNAME();
+			$error = Messages::getMessage(Messages::HIDDEN_ERROR,array('POGID'=> $POGID));
+			$this->setErrorMessage($error);
+			$this->setErrorType(ErrorHandler::PROFILE_VIEWED_HIDDEN,ErrorHandler::ERROR_FOUND);
+			return false;
+		}
+
 		//0. Privilege error	
 		$error = $this->checkPrivilegeError();
 		if($error)
