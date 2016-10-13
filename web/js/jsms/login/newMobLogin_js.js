@@ -208,15 +208,11 @@ $(window).load(function()
 
 function createCaptcha(){
 	
-	var captchaDiv='<div class="g-recaptcha" data-sitekey="6Lf8DQkUAAAAAJvn8gnlzbKK1CQcQYR8KjLEGbRM"></div>';
-	//setTimeout(function(){
-        console.log("before");
+	var captchaDiv='<script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha pad20" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
+        if($(".g-recaptcha").length !=0){
+            removeCaptcha();
+        }
         $('#afterCaptcha').before(captchaDiv);
-console.log("after");
-  //  },4000);
-	
-	 // $('.captcha').slideToCAPTCHA();
-	
 	
 }
 function removeCaptcha()

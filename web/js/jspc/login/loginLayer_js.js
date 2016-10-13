@@ -591,7 +591,10 @@ function postForgotEmailLayer()
 
 function createCaptcha(fromLoggedOut){
 	
-	var captchaDiv = '<div class="g-recaptcha" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
+	var captchaDiv='<script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
+	if($(".g-recaptcha").length !=0){
+            removeCaptcha();
+    }
 	if(fromLoggedOut)
 	{
 		if(typeof(parent.LoggedoutPage)!==undefined)

@@ -49,7 +49,7 @@ You need to be a Registered Member<br />to connect with this user</div>
 				<div class="clr"></div>           
 			</div>
 			<!--end:password--> 
-			<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+			
 
 
 

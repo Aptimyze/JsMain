@@ -1,7 +1,6 @@
 <script>
     var captchaShow=~$captchaDiv`;
 </script>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <div class="mauto layerbg wid520">
         <div class="layerp3">
             <div id="LoginMessage" class="f17 grey5">Login to continue..</div>
