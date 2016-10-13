@@ -880,8 +880,8 @@ class detailedAction extends sfAction
 			$bookmark= new NEWJS_BOOKMARKS();
 			if($bookmark->isBookmarked($sender,$receiver))
 				$this->BOOKMARKED=1;
-			$ignore=new newjs_IGNORE_PROFILE();
-			if($ignore->isIgnored($sender,$receiver))
+			$ignore=new IgnoredProfiles("newjs_master");
+			if($ignore->ifIgnored($sender,$receiver))
 					$this->IGNORED=1;
 		}
 	}
@@ -1177,7 +1177,7 @@ class detailedAction extends sfAction
 				$mtongue = $this->loginProfile->getMTONGUE();
 
 				//section to update TYPE in newjs.ASTRO_DETAILS when the user has switched from System generated horoscope to uploaded horoscope or the other way round
-				$asObj=new NEWJS_ASTRO;
+				$asObj= ProfileAstro::getInstance();
 				
 				if($type)	
 				{

@@ -136,6 +136,11 @@ class JsNotificationsLogConsume
 	$registationIdObj = new MOBILE_API_REGISTRATION_ID();
 	$registationIdObj->updateVersion($body['regid'],$body['appVersion'],$body['osVersion'],$body['brand'],$body['model']);
       }     
+      elseif($type == 'LOCAL_NOTIFICATION_LOG')
+      {
+	$localLogObj = new MOBILE_API_LOCAL_NOTIFICATION_LOG();
+	$localLogObj->insert($body['profileid'],$body['notificationKey'],$body['messageId'],$body['status'],$body['alarmTime'],$body['osType']);
+      }
 
     }
     catch (Exception $exception) 

@@ -163,14 +163,14 @@ EOF;
     sfContext::createInstance($this->configuration);
     $this->callRabbitmqServerApi("FIRST_SERVER",$queuesArr);
     
-    if(MessageQueues::FALLBACK_STATUS==true)
+    if(MessageQueues::FALLBACK_STATUS==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
     {
       $messageCount=$this->callRabbitmqServerApi("SECOND_SERVER",$queuesArr);
     }
     
     $this->restartInactiveConsumer(MessageQueues::CHAT_CONSUMER_COUNT,MessageQueues::CRONCHAT_CONSUMER_STARTCOMMAND,"default");
     //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
-    if(MessageQueues::FALLBACK_STATUS==true)
+    if(MessageQueues::FALLBACK_STATUS==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
     {
       if($messageCount > 0)
       { 

@@ -37,19 +37,12 @@ EOF;
   {
     if (!sfContext::hasInstance())
     sfContext::createInstance($this->configuration);
-    /*JsMemcache::getInstance()->set("mqMemoryAlarmFIRST_SERVER",false);
-    JsMemcache::getInstance()->set("mqMemoryAlarmSECOND_SERVER",false);
-    JsMemcache::getInstance()->set("mqDiskAlarmFIRST_SERVER",false);
-    JsMemcache::getInstance()->set("mqDiskAlarmSECOND_SERVER",false);*/
+    
     $instancesNum=MessageQueues::NOTIFICATIONCONSUMERCOUNT;
     for($i=1;$i<=$instancesNum;$i++)
     {
       passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_CONSUMER_STARTCOMMAND." > /dev/null &");
     }
-
-    // Notification Log consumer
-    passthru(JsConstants::$php5path." ".MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND." > /dev/null &");
-
   }
 
 

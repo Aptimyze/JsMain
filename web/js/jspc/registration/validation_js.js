@@ -31,6 +31,7 @@ var arrErors = {
         "SECT_REQUIRED":"Please provide a Sect",
 	"COUNTRY_REQUIRED":"Please mention the Country you are living in",
   "COUNTRYREG_REQUIRED":"Please mention the Country you are living in",
+  "STATEREG_REQUIRED":"Please mention the State you are living in",
 	"MTONGUE_REQUIRED":"Please provide a Mother Tongue",
 	"ABOUTME_ERROR":"To appear in search results, please write about yourself in atleast 100 letters",
 	"HDEGREE_REQUIRED":"Please provide a degree",
@@ -690,6 +691,30 @@ return pincodeValidator;
    return countryRegValidator;
    })();
    this.countryRegValidator=countryRegValidator;
+ }).call(this);
+  // inherted class from validator for state
+(function() {
+    var stateRegValidator = (function () {
+      //inheriting form base class
+      inheritsFrom(stateRegValidator,validator);
+      //constructor
+      function stateRegValidator(fieldElement) {
+      stateRegValidator.prototype.parent.constructor.call(this,fieldElement);
+      }
+      stateRegValidator.prototype.validate = function()
+      {
+        var state = this.getValue("stateReg");
+        stateRegValidator.prototype.parent.validate.call(this,state);
+        if(this.error)
+        {
+            this.error=arrErors["STATEREG_REQUIRED"];
+            return false;
+        }
+        return true;
+      }
+   return stateRegValidator;
+   })();
+   this.stateRegValidator=stateRegValidator;
  }).call(this);
  
   // inherted class from validator for country

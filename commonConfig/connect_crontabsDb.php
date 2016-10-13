@@ -42,6 +42,13 @@ function connect_211()
 	return $db;
 }
 
+function connect_viewLogDDL()
+{
+        $db = mysql_connect(MysqlDbConstants::$viewLogDDL[HOST].":".MysqlDbConstants::$viewLogDDL[PORT],MysqlDbConstants::$viewLogDDL[USER],MysqlDbConstants::$viewLogDDL[PASS]) or die("211 DDL connection failed");
+        mysql_select_db("newjs",$db);               // connection string
+        return $db;
+}
+
 //function added by Vibhor for tracking bounce emails
 function connect_bouncelog()
 {
