@@ -21,13 +21,13 @@ class notificationActions extends sfActions
   }
   public function executeUpdateNotificationStatusV1(sfWebRequest $request)
   {
-        $notificationStop =JsConstants::$notificationStop;
+        /*$notificationStop =JsConstants::$notificationStop;
         if($notificationStop){
 		$respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
                 $respObj->generateResponse();
                 die;
-        }
+        }*/
 	$respObj = ApiResponseHandler::getInstance();
 	$notificationStatus = $request->getParameter('notificationStatus');
 	$loginData =$request->getAttribute("loginData");
@@ -43,13 +43,13 @@ class notificationActions extends sfActions
   }
   public function executeRegistrationIdInsertV1(sfRequest $request)
   {
-        $notificationStop =JsConstants::$notificationStop;
+        /*$notificationStop =JsConstants::$notificationStop;
         if($notificationStop){
 		$respObj = ApiResponseHandler::getInstance();
 		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
                 $respObj->generateResponse();
                 die;
-        }
+        }*/
 	$respObj = ApiResponseHandler::getInstance();
         $registrationid = $request->getParameter('registrationid');
 	$deviceBrand = $request->getParameter('DEVICE_BRAND');
