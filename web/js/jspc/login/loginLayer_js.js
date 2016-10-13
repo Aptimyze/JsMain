@@ -591,10 +591,16 @@ function postForgotEmailLayer()
 
 function createCaptcha(fromLoggedOut){
 	
-	var captchaDiv='<script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
+	// var captchaDiv='<script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
 	if($(".g-recaptcha").length !=0){
             removeCaptcha();
     }
+    $("#afterCaptcha").before('<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div></div>').promise().done(function() {
+            setTimeout(function() {
+                $(".loaderSmallIcon2").remove();
+                $(".g-recaptcha").removeClass("dn");
+            }, 1000);               
+    });
 	if(fromLoggedOut)
 	{
 		if(typeof(parent.LoggedoutPage)!==undefined)

@@ -75,26 +75,26 @@ class LoginV1Action extends sfActions
 					else{
 						$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_ACCESS);
 						$apiObj->generateResponse();
+						die($apiObj->generateResponse());
 						die;
 					}
         			//return 0;
         		}
         		elseif($captcha == 1)
         		{
+        			print_r($request->getParameterHolder()->getAll());die;
         			$g_recaptcha_response = $request->getParameter("g-recaptcha-response");
 					$secret = "6LdOuQgUAAAAACiOWGeJXz3pDTEuF2T5ZaRTWo4_";
 					$remoteip = $_SERVER['REMOTE_ADDR'];
 					$postParams = array('secret' => $secret, 'response' => $g_recaptcha_response);
-
+					print_r($postParams);
 					$urlToHit = "https://www.google.com/recaptcha/api/siteverify";
 					$response = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
 					$response = json_decode($response, true);
-					// print_r($response);
-					// var_dump($response['success']);
-					// $x = (MobileCommon::isDesktop() && !$response['success']);
-					// $flag = array('desk' => MobileCommon::isDesktop(), 'success' => $response['success'], 'x' => $x);
-					// print_r($flag);
-					// die('Y');
+					print_r($response);
+					var_dump($response['success']);
+					$x = (MobileCommon::isDesktop() && !$response['success']);
+					die('Y');
 
 	        			if(MobileCommon::isDesktop() && !$response['success'])
 	        			{

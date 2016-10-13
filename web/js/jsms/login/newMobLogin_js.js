@@ -61,7 +61,7 @@ $("#loginButton").bind(clickEventType,function(){
 									  {
 										
 										captchaShow=1;
-										ShowTopDownError(["Please slide to verify"]);
+										// ShowTopDownError(["Please slide to verify"]);
 										return 0;
 									  }
 								  }
@@ -207,12 +207,18 @@ $(window).load(function()
 
 
 function createCaptcha(){
-	
-	var captchaDiv='<script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha pad20" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
+
+	// var captchaDiv='<script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha pad20" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
         if($(".g-recaptcha").length !=0){
             removeCaptcha();
         }
-        $('#afterCaptcha').before(captchaDiv);
+        // $('#afterCaptcha').before(captchaDiv);
+        $("#afterCaptcha").before('<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div></div>').promise().done(function() {
+            setTimeout(function() {
+                $(".loaderSmallIcon2").remove();
+                $(".g-recaptcha").removeClass("dn");
+            }, 1000);               
+      });
 	
 }
 function removeCaptcha()
