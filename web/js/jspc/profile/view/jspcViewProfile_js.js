@@ -149,7 +149,8 @@ $(function(){
         if($(".js-checkMatch").length ==0)
             $(".js-hideMatch").hide();
         $(".content").mCustomScrollbar();
-        displayViewSimilarProfiles();
+        if(hideUnimportantFeatureAtPeakLoad != '1')
+            displayViewSimilarProfiles();
 
         //function calling for report abuse layer
 		customOptionButton('report_profile');

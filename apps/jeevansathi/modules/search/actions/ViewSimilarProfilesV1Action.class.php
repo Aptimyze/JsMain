@@ -41,7 +41,7 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                 //View Similar Profile Object to set Search Criteria
                                 $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
                                 if($pid){
-                                    $modVal = 10;
+                                    $modVal = 9;
                                     $loggedinMod = $loggedInProfileObj->getPROFILEID()%$modVal;
                                     $modResult =  array(1);
                                     if(JsConstants::$vspServer == 'live' && !MobileCommon::isDesktop() && in_array($loggedinMod,$modResult)){
