@@ -3,6 +3,7 @@
 class cronJunkCharacterRemovalTask extends sfBaseTask
 {
     CONST MAIL_ID = "1841";
+    CONST TRUE_INCOMPLETE = 'Y'; 
 
     protected function configure()
     {
@@ -21,34 +22,11 @@ EOF;
     protected function execute($arguments = array(), $options = array()){
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
+
         $memcacheObj = JsMemcache::getInstance();
-
-        $profileId = "99409509";
-
-// sending emails from here:
-// 
-        $email_sender = new EmailSender(MailerGroup::JUNK_REMOVAL, self::MAIL_ID);
-        $emailTpl = $email_sender->setProfileId($profileId);
-        $smartyObj = $emailTpl->getSmarty();
-        
-            //get username for this profile id
-        $jProfileObj= JPROFILE::getInstance();
-        $uName= $jProfileObj->getUsername($profileId);
-        $email= $jProfileObj->getEmailFromProfileId($profileId)['EMAIL'];
-        $smartyObj->assign("username",$uName);
-        $smartyObj->assign("email",$email);        
-        
-        //send email
-        $email_sender->send();
-        die();
-
-
-
-
         $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
-        $number0fRedisQueues = ceil(60 / $redisQueueInterval);
-        $key = "ScreeningIDs_";
-        $newTime = strtotime('-30 minutes');
+        $key = JunkCharacterEnums::JUNK_CHARACTER_KEY;
+        $newTime = strtotime(JunkCharacterEnums::TIME_DIFFERENCE_PROFILE_SCREENING);
         $minute = date('i', $newTime);
         $startIndex = floor($minute/$redisQueueInterval);
         $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
@@ -63,74 +41,103 @@ EOF;
 
         $profileLists = $pipeline->execute();
 
+
         if ( !empty($profileLists))
         {
             foreach ($profileLists as $profileId) 
             {
                 $jProfileObj = new Jprofile;
-                $profileData = $jProfileObj->getArray(array("PROFILEID" => $profileId), "", "", "YOURINFO,FAMILYINFO,EDUCATION,JOB_INFO,SPOUSE");
+                $profileData = $jProfileObj->getArray(array("PROFILEID" => $profileId), "", "", "YOURINFO,FAMILYINFO,EDUCATION,JOB_INFO,SPOUSE,INCOMPLETE");
 
 
-                $junkCharacterRemovalLib = new JunkCharacterRemovalLib();   
-
-
-                $about = $junkCharacterRemovalLib->removeJunkCharacters('about',$profileData[0]['YOURINFO']);
-
-                $familyInfo = $profileData[0]['FAMILYINFO'];
-                $education = $profileData[0]['EDUCATION'];
-                $jobInfo = $profileData[0]['JOB_INFO'];
-                $spouse = $profileData[0]['SPOUSE'];
-
-                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$about))
+                if ( $profileData[0]['INCOMPLETE'] != self::TRUE_INCOMPLETE)
                 {
-                    $about = '';
+
+                    $flagChangeMade = 0;
+                    $junkCharacterRemovalLib = new JunkCharacterRemovalLib();   
+
+                    $about = $junkCharacterRemovalLib->removeJunkCharacters('about',$profileData[0]['YOURINFO']);
+
+                    if ( strcmp($about,$profileData[0]['YOURINFO']) != 0 )
+                    {
+                        $paramArr['YOURINFO'] = $about;
+                        $flagChangeMade = 1;
+                    }
+
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$about))
+                    {
+                        $about = '';
+                        $paramArr['YOURINFO'] = $about;
+                        $flagChangeMade = 1;
+                    }
+
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['FAMILYINFO']))
+                    {
+                        $paramArr['FAMILYINFO'] = '';
+                        $flagChangeMade = 1;
+                    }
+
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['EDUCATION']))
+                    {
+                        $paramArr['EDUCATION'] = '';
+                        $flagChangeMade = 1;
+                    }
+
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['JOB_INFO']))
+                    {
+                        $paramArr['JOB_INFO'] = '';
+                        $flagChangeMade = 1;
+                    }
+
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['SPOUSE']))
+                    {
+                        $paramArr['SPOUSE'] = '';
+                        $flagChangeMade = 1;
+                    }
+
+                    if ( $flagChangeMade)
+                    {
+                        $jProfileObj->edit($paramArr,$profileId,'PROFILEID');
+                    }
+
+                    if ( strlen($about) < 100 )
+                    {
+                        $actionTaken = "modified";
+                        $jProfileObj->updateIncompleteProfileStatus(array($profileId));
+
+                        if ( strlen($about) == 0 )
+                        {
+                            $actionTaken = "removed";  
+                        }
+                        $this->sendJunkCharacterMail($profileId,$actionTaken);   
+                    }
                 }
-
-                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$familyInfo))
-                {
-                    $familyInfo = '';   
-                }
-
-                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$education))
-                {
-                    $education = '';   
-                }
-
-                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$jobInfo))
-                {
-                    $jobInfo = '';   
-                }
-
-                if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields',$spouse))
-                {
-                    $spouse = '';
-                }
-
-                $paramArr['YOURINFO'] = $about;
-                $paramArr['FAMILYINFO'] = $familyInfo;
-                $paramArr['EDUCATION'] = $education;
-                $paramArr['SPOUSE'] = $spouse;
-                $paramArr['JOB_INFO'] = $jobInfo;
-
-                $jProfileObj->edit($paramArr,$profileId,'PROFILEID');
-
-                if ( strlen($about) < 100 )
-                {
-                    $jProfileObj->updateIncompleteProfileStatus(array($profileId));       
-                }
-
-                echo "finally. \n about: ".$about
-                                  ."\n familyInfo: ".$familyInfo
-                                  ."\n education: ".$education
-                                  ."\n jobInfo: ".$jobInfo
-                                  ."\n spouse: ".$spouse
-
-                ;
             }
         }
-    }
 
-   
-   
+    }
+    
+    /**
+     * sends email if about me becomes less than 100.
+     * @param  string $profileId   
+     * @param  string $actionTaken modified or removed
+     */
+    private function sendJunkCharacterMail($profileId,$actionTaken)
+    {
+
+        $email_sender = new EmailSender(MailerGroup::JUNK_REMOVAL, self::MAIL_ID);
+        $emailTpl = $email_sender->setProfileId($profileId);
+        $smartyObj = $emailTpl->getSmarty();
+        
+        $jProfileObj= JPROFILE::getInstance();
+        $uName= $jProfileObj->getUsername($profileId);
+        $email= $jProfileObj->getEmailFromProfileId($profileId)['EMAIL'];
+
+        $smartyObj->assign("profileid",$profileId);
+        $smartyObj->assign("username",$uName);
+        $smartyObj->assign("email",$email);        
+        $smartyObj->assign("actionTaken",$actionTaken);
+        $email_sender->send();
+    }
 }
 
