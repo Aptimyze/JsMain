@@ -443,6 +443,9 @@ function requestListingPhoto(apiParams) {
             }
         }
     });
+    if(apiParams["initialList"] == true && newApiParamsPid.length == 0){
+        manageListingPhotoReqFlag("reset");
+    }
     var newApiParams;
     if(newApiParamsPid.length != 0) {
         newApiParams = {"pid":newApiParamsPid.toString(),"photoType":apiParams.photoType,"type":apiParams["initialList"]};
