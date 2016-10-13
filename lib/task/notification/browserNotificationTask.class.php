@@ -41,6 +41,12 @@ EOF;
             $otherUserId = $arguments["otherUserId"]; //comma separated list of other profileids(whose data is used in notification)
             $message = $arguments["message"]; //For any other detail which needs to be passed as parameter
         }
+
+        $notificationStop =JsConstants::$notificationStop;
+        if($notificationStop && $notificationType=='SCHEDULED'){
+                die('successfulDie');
+        }
+
         if($otherUserId)
             $otherUserId = explode(",", $otherUserId);
         $processObj = new BrowserNotificationProcess();
