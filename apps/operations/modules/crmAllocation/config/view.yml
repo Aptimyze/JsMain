@@ -3,3 +3,9 @@ getExclusiveMembersSuccess:
     title:        Exclusive Customer Service Onboarding
   stylesheets:    [jspc/crm/loader_css]
   javascripts:    [jspc/crm/exclusiveMemAllocation_js@bottom,jspc/crm/loader_js@bottom]                         
+
+exclusiveServicingIISuccess:
+  metas:
+    title:        Exclusive Servicing Platform II
+  stylesheets:    []
+  javascripts:    [jspc/crm/exclusiveServicingII_js@bottom] 

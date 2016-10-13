@@ -4,7 +4,7 @@ class matchalerts_LOG extends TABLE
 {
 	public function __construct($dbname="")
 	{
-			$dbname = "matchalerts_slave";
+			$dbname = $dbname?$dbname:"matchalerts_slave";
 			parent::__construct($dbname);
 	}
 	public function getMatchAlertCount($profileId, $skippedProfile = '', $limit = '')

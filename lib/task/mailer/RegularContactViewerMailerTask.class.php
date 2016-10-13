@@ -63,7 +63,7 @@ EOF;
 	$temp=new DateTime();
 	$day=$temp->format('d'); 
 	$month=substr($temp->format('F'),0,3); 
-	$mailtrackObj=new MAIL_contactViewers('newjs_master');
+	$mailtrackObj=new MAIL_contactViewers('newjs_masterDDL');
 	$mailtrackObj->EmptyMailerCV();
 	if(is_array($this->receiversData))
 	{	
@@ -359,7 +359,7 @@ public function getUsersListToSend($profileObj,$filterGenderFlag=false)
 
   	public function getEducationDetails($pid)
 	{
-                $educationObj = new NEWJS_JPROFILE_EDUCATION();
+                $educationObj = ProfileEducation::getInstance();
                 $Education = $educationObj->getProfileEducation($pid,$from="mailer");
                 $edu=$this->getEducationDisplay($Education);
                 $eduDisplay="";

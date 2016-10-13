@@ -46,6 +46,30 @@
 					<!--img src="../SRP/images/srch_image1.jpg" style="width:268px; height:400px"/-->
 					*`
 					<div class="img-container">
+						<script>
+						/*var startTime = new Date().getTime();
+						function doneLoading() {
+						    var loadtime = new Date().getTime() - startTime;
+						    var src = $("#cropperPic").attr("src");
+						    var url = '/operations.php/photoScreening/trackProcessPicUpload?loadtime='+loadtime+'&url='+src;
+						    $.ajax(
+										{	
+											url: url,
+									    type: 'GET',
+											timeout: 60000,
+											success: function(response) 
+											{ 	
+												
+											},
+											error: function(xhr) 
+											{
+												
+											}
+										})
+								    
+							};
+						*/    
+						</script>
 						<img src="~$uploadUrl`~$photoArr['profilePic']['OriginalProfilePicUrl']`" alt="Picture" id="cropperPic">
 					</div>
 					<!--lavesh-->

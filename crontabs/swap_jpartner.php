@@ -30,6 +30,9 @@ $LOG_PRO=array();
 $db=connect_db();
 mysql_query("set session wait_timeout=1000",$db);
 
+$dbDDL=connect_ddl();
+mysql_query("set session wait_timeout=10000",$dbDDL);
+
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {
         $myDbName=getActiveServerName($activeServerId);
@@ -37,8 +40,16 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 	mysql_query("set session wait_timeout=10000",$myDb[$myDbName]);
 }
 
+for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
+{
+        $myDbName=getActiveServerName($activeServerId,'shardDDL');
+        $myDbDDL[$myDbName]=$mysqlObj->connect("$myDbName");
+	mysql_query("set session wait_timeout=10000",$myDbDDL[$myDbName]);
+}
+
+
 //Populate SWAP_JPARTNER from SWAP_JPARTNER of shards
-foreach($myDb as $k=>$v)
+foreach($myDbDDL as $k=>$v)
 {
 	$sql = "lock tables SWAP_JPARTNER WRITE";
 	mysql_query($sql,$v) or die("populate-01".mysql_error1($v));
@@ -68,19 +79,19 @@ foreach($myDb as $k=>$v)
 
 // lock table SWAP_JPARTNER so that the JPARTNER trigger does not insert new records untill the lock is released
 $sql="lock tables SWAP_JPARTNER WRITE, SWAP_JPARTNER1 WRITE";
-mysql_query($sql,$db) or die("01".mysql_error1($db));
+mysql_query($sql,$dbDDL) or die("01".mysql_error1($db));
 
 // insert SWAP_JPARTNER records to SWAP_JPARTNER1
 $sql="INSERT IGNORE INTO SWAP_JPARTNER1 SELECT * FROM SWAP_JPARTNER";
-mysql_query($sql,$db) or die("02".mysql_error1($db));
+mysql_query($sql,$dbDDL) or die("02".mysql_error1($db));
 
 // empty SWAP_JPARTNER
 $sql="DELETE FROM SWAP_JPARTNER";
-mysql_query($sql,$db) or die("03".mysql_error1($db));
+mysql_query($sql,$dbDDL) or die("03".mysql_error1($db));
 
 // release lock
 $sql="UNLOCK TABLES";
-mysql_query($sql,$db) or die("04".mysql_error1($db));
+mysql_query($sql,$dbDDL) or die("04".mysql_error1($db));
 
 $timeval = time();
 $timeval1 = $timeval;
@@ -91,12 +102,11 @@ $row=mysql_fetch_array($res);
 $last_time=$row['LAST_TIME'];
 $timeval = date("YmdH0000",$last_time);
 
-
 $sql="truncate table SWAP_REV";
-mysql_query($sql,$db) or die("1 ".mysql_error1($db));
+mysql_query($sql,$dbDDL) or die("1 ".mysql_error1($dbDDL));
 
 $sql="alter table SWAP_REV disable keys";
-mysql_query($sql,$db) or die("2 ".mysql_error1($db));
+mysql_query($sql,$dbDDL) or die("2 ".mysql_error1($dbDDL));
 
 $sql="SELECT J.PROFILEID FROM SWAP_JPARTNER1 AS J INNER JOIN SEARCH_MALE AS M ON J.PROFILEID=M.PROFILEID";
 $res=mysql_query($sql,$db) or die("3 ".mysql_error1($db));
@@ -121,7 +131,7 @@ mysql_free_result($res);
 
 
 $sql="alter table SWAP_REV enable keys";
-mysql_query($sql,$db) or die("10 ".mysql_error1($db));
+mysql_query($sql,$dbDDL) or die("10 ".mysql_error1($dbDDL));
 
 $sql="select PROFILEID from SWAP_REV where GENDER='M'";
 $result=mysql_query($sql,$db) or die("12 ".mysql_error1($db));
@@ -213,15 +223,14 @@ while($myrow=mysql_fetch_array($result))
 mysql_free_result($result);
 
 $sql="truncate table SWAP_REV";
-
-mysql_query($sql,$db) or die("16 ".mysql_error1($db));
+mysql_query($sql,$dbDDL) or die("16 ".mysql_error1($dbDDL));
 
 $sql="INSERT INTO SWAP_LOG_REV (LAST_TIME) VALUES('$timeval1')";
 mysql_query($sql,$db) or die("17".mysql_error1($db));
 
 // script has executed successfully. Truncate table SWAP_JPARTNER1
 $sql="truncate table SWAP_JPARTNER1";
-mysql_query($sql,$db) or die("18".mysql_error1($db));
+mysql_query($sql,$dbDDL) or die("18".mysql_error1($dbDDL));
 
 $currentTime = date("H");
 

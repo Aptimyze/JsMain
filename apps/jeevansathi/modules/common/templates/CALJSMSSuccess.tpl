@@ -1,31 +1,10 @@
 <script>
-$(document).ready(function() {
-	$('body').css('background-color','#09090b');
-} )
-    function criticalLayerButtonsAction(clickAction,button) {
-    			$("#CALButton"+button).attr('onclick','');
-                var layerId= $("#CriticalActionlayerId").val();
-                                   window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
-                               
-        }
-            
+    var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
 </script>
-<style>
-.pad18Incomplete{padding:5% 0 8% 0;}
-
- @media (min-width: 280px) {
- 	.image_incomplete{ width:80px; height:80px; margin-top: 4px; margin-left: 4px; z-index:3; position:relative; border-radius:100%;}
- }
-@media (min-width: 321px) {
-.image_incomplete{ width:80px; height:80px;  z-index:3;  border-radius:100%; }
-}
-
-.pdt15{
-	padding-top:15%;
-	}
-</style>
 
 <input type="hidden" id="CriticalActionlayerId" value="~$calObject.LAYERID`">
+
+~if $calObject.LAYERID !=9`
 <div style="background-color: #09090b;">
   <div  class="posrel pad18Incomplete">
 
@@ -59,3 +38,27 @@ $(document).ready(function() {
   ~/if`
   
   </div>
+  
+  ~else`
+      <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid name.</div>
+
+      <div class="darkBackgrnd">
+	<div class="fontlig">
+    	<div class="pad_new app_clrw f20 txtc">Provide Your Name</div>
+        <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div>
+		<input id='nameInpCAL' value='~$nameOfUser`' type="text" class="bg4 lh60 fontthin mt30 f24 fullwid txtc" placeholder="Your name here">
+        <div class="pt10 f15 fontlig fullwid txtc colr8A">This field will be screened</div>
+        <div class="mt30 pad_new2 hgt90">
+            <div id='CALPrivacy1' onclick="switchColors('#CALPrivacy1','#CALPrivacy2');$('#hideShowText').hide();namePrivacy='Y';" type="submit" class="dispibl f14 txtc fontlig wid49p brdrRad2 ~if $namePrivacy neq 'N'`bg7~else`bgBtnGrey~/if` lh40 app_clrw">Show my name to all</div>
+            <div id='CALPrivacy2' onclick="switchColors('#CALPrivacy2','#CALPrivacy1');$('#hideShowText').show();namePrivacy='N';" type="submit" class="dispibl f14 txtc fontlig wid49p brdrRad2 ~if $namePrivacy neq 'N'`bgBtnGrey~else`bg7~/if` lh40 app_clrw mlNeg2">Don't show my name</div>
+            <div id="hideShowText" ~if $namePrivacy neq 'N'`style="display:none"~/if` class="pt10 f15 fontlig fullwid txtc colr8A">You will not be able to see names of other members.</div>
+        </div>
+        <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw pt35p">~$calObject.BUTTON2`</div>
+        <div onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1');" type="submit" id="submitName" class="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">~$calObject.BUTTON1`</div>
+    </div>
+	
+</div>
+      
+      ~/if`
+
+    

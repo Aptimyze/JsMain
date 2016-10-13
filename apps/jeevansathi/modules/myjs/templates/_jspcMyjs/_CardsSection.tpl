@@ -248,7 +248,7 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
 	<div id="head{{ID}}" class="myjs-bg3 fullwid">
       <div style='padding:30px 25px;'>
                 <div class=" disp-tbl mauto">
-					<div id="{{ID}}" class="disp-cell"><i class="sprite2 myjs-erric"></i></div>
+					<div id="{{ID}}" class="disp-cell"><i class="sprite2 myjs-erric {{display}}"></i></div>
 					<div class="disp-cell vmid pl10 f22 fontlig color14">{{NO_PROFILE_TEXT}}</div>
 				</div>
       </div>

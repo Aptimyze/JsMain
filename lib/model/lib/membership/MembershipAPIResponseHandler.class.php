@@ -54,8 +54,10 @@ class MembershipAPIResponseHandler {
         }
         
         $this->allMemberships = $request->getParameter('allMemberships');
-        $this->mainMembership = $request->getParameter('mainMembership');
-        $this->vasImpression = $request->getParameter('vasImpression');
+	$this->mainMembership = preg_replace('/[^A-Za-z0-9\. -_]/', '', $request->getParameter('mainMembership'));
+        //$this->mainMembership = $request->getParameter('mainMembership');
+	$this->vasImpression =  preg_replace('/[^A-Za-z0-9\. -_]/', '', $request->getParameter('vasImpression'));
+        //$this->vasImpression = $request->getParameter('vasImpression');
         $this->backDisc = $request->getParameter('backDisc');
         $this->backTot = $request->getParameter('backTot');
         $this->processPayment = $request->getParameter('processPayment');
@@ -144,7 +146,7 @@ class MembershipAPIResponseHandler {
         }
         
         list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device);
-        $this->curActServices = $this->memHandlerObj->getActiveServices();
+        $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {
             if (($key = array_search("ESP", $this->curActServices)) !== false) {
@@ -157,10 +159,10 @@ class MembershipAPIResponseHandler {
                 unset($this->curActServices[$key]);
             }
             if (($key = array_search("P", $this->curActServices)) !== false) {
-		unset($this->allMainMem['P']['P2']);
+		        unset($this->allMainMem['P']['P2']);
             }
             if (($key = array_search("C", $this->curActServices)) !== false) {
-		unset($this->allMainMem['C']['C2']);
+		        unset($this->allMainMem['C']['C2']);
             }
         }
 

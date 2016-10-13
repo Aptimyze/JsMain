@@ -606,7 +606,7 @@ return $returnArray;
 	}
 	// function update the phone status for the profile depending upon the verification status
 	// for landline phone = [std+landline]
-	function phoneUpdateProcess($profileid,$phone_num='',$phoneType='',$actionStatus="",$message="",$username='')
+	function phoneUpdateProcess($profileid,$phone_num='',$phoneType='',$actionStatus="",$message="",$username='',$isd='')
 	{
 		if(!trim($profileid))
 			return false;
@@ -778,10 +778,19 @@ return $returnArray;
 			}
 			$action = FTOStateUpdateReason::NUMBER_UNVERIFY;
 			SymfonyFTOFunctions::updateFTOState($profileid,$action);
-                        include_once "../profile/InstantSMS.php";
-                        $sms= new InstantSMS("PHONE_UNVERIFY",$profileid);
-                        $sms->send();
-		
+			if($phoneType!='L')
+			{
+			        include_once "../profile/InstantSMS.php";
+			        $arr=array('PHONE_MOB'=>$phone_num, 'ISD'=>$isd);
+					$smsViewer = new InstantSMS("PHONE_UNVERIFY",$profileid,$arr,'');
+					$smsViewer->send();
+			}
+			$emailSender = new EmailSender(MailerGroup::PHONE_UNVERIFY, 1838);
+			$tpl = $emailSender->setProfileId($profileid);
+			$tpl->getSmarty()->assign("phone_num", '+'.$isd.$phone_num);
+			$subject = "We were unable to reach you. Kindly authenticate your contact details.";
+			$tpl->setSubject($subject);
+			$emailSender->send();
 			//$sql ="insert into jsadmin.PHONE_UNVERIFIED_LOG (`PROFILEID`,`ENTRY_DT`) VALUES('$profileid',now())";
 			//mysql_query_decide($sql) or logError("Could not insert profile details in PHONE_UNVERIFIED_LOG in deleted case",$sql);
 

@@ -17,7 +17,7 @@ class SearchApiStrategyV1
 	private $searchCat;
 	private $version;
 	private $channel;
-	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON');
+	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER');
         private $profileInfoMappingArr = array("subscription"=>"subscription_icon","decorated_city_res"=>"decorated_location","contact_status"=>"eoi_label","verify_activated_dt"=>"timetext","new_flag"=>"seen","VERIFICATION_SEAL"=>"verification_seal");
 
 	const caste_relaxation_text1  = 'To get $casteMappingCnt more matching profiles, include castes $casteMappingCastes';
@@ -351,10 +351,8 @@ class SearchApiStrategyV1
                 }
                 $profilesArr["profiles"] = $resultsArray;
                 $profilesArr["featuredProfiles"] = $featuredProfileArrNew;
-								
-								
-            
-               
+		$nameOfUserObj = new NameOfUser;
+		$nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());	
 		foreach($profilesArr as $profileKey=>$profileVal){
                         $gender = $loggedInProfileObj->getGENDER()=="M"?"F":"M";
                         $decoratedMappingSearchDisplay = SearchConfig::decoratedMappingSearchDisplay();
@@ -411,6 +409,14 @@ class SearchApiStrategyV1
                                                         //if($i<3){$value="";}else{$value=64;}  // Testing Purpose
                                                         $this->output[$profileKey][$i][$fieldName] = ucwords($searchDisplayObj->checkFilterReasons($value));
                                                 }
+						elseif($fieldName=="name_of_user")
+						{
+							if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
+							{
+								$name = $nameOfUserObj->getNameStr($value,$loggedInProfileObj->getSUBSCRIPTION());
+							}
+							$this->output[$profileKey][$i][$fieldName]=$name;
+						}
                                                 else
                                                 {
 							if($fieldName=='stype' && $value=='')
@@ -547,9 +553,9 @@ class SearchApiStrategyV1
                                         $value='Y';
                                 break;
 			case "timetext":
-				if($this->searchCat == 'justJoinedMatches' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $this->searchCat == 'matchalerts' || $this->searchCat == 'kundlialerts' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::contactViewAttempt)
+				if($this->searchCat == 'justJoinedMatches' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $this->searchCat == 'matchalerts' || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::contactViewAttempt)
 				{
-					if($this->searchCat == 'matchalerts' || $this->searchCat == 'kundlialerts')
+					if($this->searchCat == 'matchalerts')
 					{
                                                 $value = CommonUtility::convertDateToDay($infoArr['SENT_DATE']);
                                                 if(stripos($value,'today') === false){

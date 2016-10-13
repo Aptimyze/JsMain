@@ -31,7 +31,7 @@ EOF;
         $todayDate =date("Y-m-d");
         //************** Variable discount cleanup process Starts *************
         
-        $vdBackupOneDayObj = new billing_VARIABLE_DISCOUNT_BACKUP_1DAY();
+        $vdBackupOneDayObj = new billing_VARIABLE_DISCOUNT_BACKUP_1DAY('newjs_masterDDL');
         
         $vdBackupOneDayObj->truncate();
         $vdBackupOneDayObj->insertDataFromVariableDiscount();

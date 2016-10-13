@@ -1,4 +1,4 @@
-<?php
+        <?php
 /**
  * DetailedViewApi.class.php
  */
@@ -246,11 +246,29 @@ class DetailedViewApi
 		$this->m_arrOut['occupation'] = $objProfile->getDecoratedOccupation();
                 $this->m_arrOut['education'] = $objProfile->getDecoratedEducation();
 		$this->m_arrOut['educationOnSummary'] = $this->getAllEducationFields();
-		
+                
+		$nameOfUserObj = new NameOfUser;
+                $name = $nameOfUserObj->showNameToProfiles($this->m_actionObject->loginProfile, array($objProfile));
+                if(is_array($name) && $name[$objProfile->getPROFILEID()]['SHOW']=="1" && $name[$objProfile->getPROFILEID()]['NAME']!='')
+                {
+                        $this->m_arrOut['name_of_user'] = $nameOfUserObj->getNameStr($name[$objProfile->getPROFILEID()]['NAME'],$this->m_actionObject->loginProfile->getSUBSCRIPTION());
+                }else{
+                        $this->m_arrOut['name_of_user'] = null;
+                }
+                unset($nameOfUserObj);
+                
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
-			$szLocation=$objProfile->getDecoratedCity();
+		{
+			if(substr($objProfile->getCITY_RES(),2)=="OT")
+		        {
+				$stateLabel = FieldMap::getFieldLabel("state_india",substr($objProfile->getCITY_RES(),0,2));
+				$szLocation = $stateLabel."-"."Others";
+			}
+			else
+				$szLocation=$objProfile->getDecoratedCity();
+		}
 		else
 			$szLocation = $objProfile->getDecoratedCountry();
 		$this->m_arrOut['location'] = $szLocation;
@@ -276,6 +294,8 @@ class DetailedViewApi
 		
         $this->m_arrOut['gender'] = $objProfile->getDecoratedGender();
 		$this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();
+                if( $objProfile->getMSTATUS() != "N")
+                    $this->m_arrOut['have_child']  = ApiViewConstants::$hasChildren[$objProfile->getHAVECHILD()];
 	}
 	
 	/**
@@ -1016,6 +1036,11 @@ class DetailedViewApi
 				$this->m_arrOut[strtolower($key)] = $value;
 			}
 		}
+                //have children
+                if($jPartnerObj->getPARTNER_MSTATUS() != "'N'"){
+                    if($jPartnerObj->getDecoratedCHILDREN())
+                        $this->m_arrOut['dpp_have_child'] = $jPartnerObj->getDecoratedCHILDREN();
+                }
 		//Small Community Labels for DPP Mtongue
         if($this->m_arrOut['dpp_mtongue'] && strlen($jPartnerObj->getPARTNER_MTONGUE()))
         {

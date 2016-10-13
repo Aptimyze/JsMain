@@ -69,7 +69,10 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				JsCommon::oldIncludes(true);
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto"))
+					JsCommon::oldIncludes(false);
+				else
+					JsCommon::oldIncludes(true);
 			}
 				$protect_obj = new protect;
 				$request->setAttribute("protect_obj",$protect_obj);
@@ -88,10 +91,13 @@ class AuthFilter extends sfFilter {
 				if($request->getParameter("FROM_GCM")==1)
 						$gcm=1;
 				
-				if($request->getParameter("crmback")=="admin")
+				if($request->getParameter("crmback")=="admin" || $request->getParameter("allowLoginfromBackend")==1)
 				{
 					$authenticationLoginObj->setTrackLogin(false);
-					$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"));					
+					if($request->getParameter("allowLoginfromBackend"))
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"Y");	
+					else
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"N");
 				}
 				else
 					$data=$authenticationLoginObj->authenticate(null,$gcm);

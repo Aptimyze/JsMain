@@ -33,19 +33,33 @@ $this->addOptions(array(
         {
             $digestNotObj = new MOBILE_API_DIGEST_NOTIFICATIONS("newjs_slave");
             //get profileids eligible for this digest notification
-            $data = $digestNotObj->getRows("*",$notificationKey); 
+            $data = $digestNotObj->getRows("*",$notificationKey);
             if(is_array($data))
             {
                 $instantNotObj = new DigestNotification($notificationKey);
                 foreach ($data as $key => $value) 
                 {
-                    //get notification data for each profile
-                    $notificationDetails = $instantNotObj->fetchNotificationData($value['PROFILEID'],$value['OTHER_PROFILEID'],$value['COUNT']);
-                    //print_r($notificationDetails);die;
-                    //send digest notification
-                    if($notificationDetails)
-                        $instantNotObj->sendNotification($value['PROFILEID'],$value['OTHER_PROFILEID'],$notificationDetails);
+                    unset($interestRecData);
+                    $deleteArray[] = $value['PROFILEID'];
+                    $notificationDataPoolObj = new NotificationDataPool();
+                    $stDate = $value['SCHEDULED_DATE'];
+                    //$stDate = date('Y-m-d H:i:s', strtotime('-2 sec',  strtotime($stDate))); 
+                    $endDate = date('Y-m-d H:i:s');
+                    $interestRecData = $notificationDataPoolObj->getInterestReceivedForDuration($value['PROFILEID'], $stDate, $endDate);
+                    if($interestRecData['COUNT']){
+                        //get notification data for each profile
+                        $notificationDetails = $instantNotObj->fetchNotificationData($interestRecData['SELF'],$interestRecData['OTHER_PROFILEID'],$interestRecData['COUNT']);
+                        //print_r($notificationDetails);
+                        //send digest notification
+                        if($notificationDetails)
+                            $instantNotObj->sendNotification($interestRecData['SELF'],$interestRecData['OTHER_PROFILEID'],$notificationDetails);
+                    }
                 }
+                $deleteStr = implode(',', $deleteArray);
+                $digestNotMasterObj = new MOBILE_API_DIGEST_NOTIFICATIONS();
+                $digestNotMasterObj->removeEntriesHavingProfiles($deleteStr);
+                unset($deleteArray);
+                unset($deleteStr);
                 unset($instantNotObj);
             }
             unset($digestNotObj);

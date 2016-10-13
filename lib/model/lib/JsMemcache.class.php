@@ -546,5 +546,246 @@ class JsMemcache extends sfMemcacheCache{
 			}
 		}
   }
+  
+  /**
+   * getMultiHashFieldsByPipleline
+   * @param type $arrKey
+   * @param type $arrFields
+   * @return type
+   */
+  public function getMultipleHashFieldsByPipleline($arrKey, $arrFields)
+  {
+    if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try{
+				          $pipe = $this->client->pipeline();
+				          foreach($arrKey as $key) {
+				            $pipe->hmget($key, $arrFields);
+				          }
+				          $arrResponse = $pipe->execute();
+				          //Decorating Response same as a Mysql Response
+				          $count = 0;
+				          $arrOut = array();
+		
+				          foreach($arrKey as $key){
+	
+				            $arrOut[$key] = $arrResponse[$count];
+				            unset($arrResponse[$count++]);
+				            $iItr = 0;
+				            foreach($arrFields as $k=>$v){
+				              $arrOut[$key][$v] = $arrOut[$key][$iItr];
+				              unset($arrOut[$key][$iItr++]);
+				            }
+				          }
+          
+				          return $arrOut;
+				}
+				catch (Exception $e)
+				{
+					jsException::log("HG-redisClusters getMultiHashFieldsByPipleline".$e->getMessage());
+				}
+			}
+		}
+  }
+  
+  /**
+   * 
+   * @param type $arrHashes
+   * @param type $expiryTime
+   * @param type $throwException
+   * @return type
+   */
+  public function setMultipleHashByPipleline($arrHashes, $expiryTime=3600,$throwException = false)
+  {
+    if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try{
+				          $pipe = $this->client->pipeline();
+				          foreach($arrHashes as $key=>$value) {
+				        	  $pipe->hmset($key, $value);
+					          $pipe->expire($key, $expiryTime);
+				          }
+				          $arrResponse = $pipe->execute();
+          
+				          return $arrResponse;
+				}
+				catch (Exception $e)
+				{
+				        if($throwException){
+				            throw $e;
+					}
+					jsException::log("HG-redisClusters setMultipleHashByPipleline".$e->getMessage());
+				}
+			}
+		}
+  }
+
+  public function getSetsAllValue($key)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				return $this->client->smembers($key); //Gets all members (values) for the given key
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+
+  //This function uses pipeline to save all values in arr corresponding to the given key in the redis
+  public function storeDataInCacheByPipeline($key,$arr)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				$pipe = $this->client->pipeline();
+
+  				foreach($arr as $k=>$value) {
+  					$pipe->sadd($key,$value); //adds $value to $key
+  				}
+  				$resultArr = $pipe->execute();
+  				return $resultArr;
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+
+  public function deleteSpecificDataFromCache($key,$value)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				return $this->client->srem($key,$value);
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+
+  public function addDataToCache($key,$value)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				return $this->client->sadd($key,$value);
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+
+  public function checkDataInCache($key,$value)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				return $this->client->sismember($key,$value);
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+
+  public function getCountFromCache($pidKey)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				return $this->client->scard($pidKey);
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+
+  public function keyExist($key)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				return $this->client->exists($key);
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+
+  public function getSpecificValuesFromCache($viewerKey,$profileIdArr)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				$pipe = $this->client->pipeline();
+
+  				foreach($profileIdArr as $k=>$value) {
+  					$pipe->sismember($viewerKey,$value);
+  				}
+  				$resultArr = $pipe->execute();	
+  				foreach($resultArr as $key=>$val)
+  				{
+  					if($val == 1)
+  					{
+  						$finalArr[$profileIdArr[$key]] = 1;
+  					}
+  				}
+  				return $finalArr;
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
 }
 ?>

@@ -45,6 +45,7 @@ if(authenticated($cid))
 				$phone_num_mob	=$row['PHONE_MOB'];
 				$phone_num_res	=$row['STD']."-".$row['PHONE_RES'];
 				$phone_num_alt	=$row['ALT_MOBILE'];
+				$isd = $profileObj->getISD();
 				if($rcheck=="valid")
 				{
 					// Residence phone number is marked in verified state
@@ -58,7 +59,7 @@ if(authenticated($cid))
 					// Residence phone number is marked in Unverified state (when received  Invalid status by OPS)
 					$actionStatus ='D';
 					$phoneType ='L';
-					phoneUpdateProcess($profileid,$phone_num_res,$phoneType,$actionStatus,$message,$name);
+					phoneUpdateProcess($profileid,$phone_num_res,$phoneType,$actionStatus,$message,$name,$isd);
 					//markInvalidProfile($row['PROFILEID'],'R');	
 				}
 				if($mcheck=="valid")
@@ -74,7 +75,7 @@ if(authenticated($cid))
 					// Mobile number is marked in Unverified state (when received  Invalid status by OPS)
 					$actionStatus ='D';
 					$phoneType ='M';
-					phoneUpdateProcess($profileid,$phone_num_mob,$phoneType,$actionStatus,$message,$name);
+					phoneUpdateProcess($profileid,$phone_num_mob,$phoneType,$actionStatus,$message,$name,$isd);
                                 }
 //trac 745 start
 				if($acheck=="valid")
@@ -90,7 +91,7 @@ if(authenticated($cid))
 					// Alternate number is marked in Unverified state (when received  Invalid status by OPS)
 					$actionStatus ='D';
 					$phoneType ='A';
-					phoneUpdateProcess($profileid,$phone_num_alt,$phoneType,$actionStatus,$message,$name);//updates status in JPROFILE_CONTACTS table in newjs
+					phoneUpdateProcess($profileid,$phone_num_alt,$phoneType,$actionStatus,$message,$name,$isd);//updates status in JPROFILE_CONTACTS table in newjs
                       }//trac 745 ends
                                 
 				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 

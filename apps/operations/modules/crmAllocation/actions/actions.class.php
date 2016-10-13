@@ -863,4 +863,112 @@ class crmAllocationActions extends sfActions
     die();
   }
 
+    /*exclusive service phase 2 form action
+    *@param : $request 
+    */
+    public function executeExclusiveServicingII(sfWebRequest $request)
+    {
+    	//show error message for invalid username
+		if($request->getParameter("ERROR")=="INVALID_EXCLUSIVE_CUSTOMER")
+			$this->errorMsg = "Invalid email id,no such exclusive customer exists !!!!";
+		if($request->getParameter("ERROR")=="INVALID_USERNAME_LIST")
+			$this->errorMsg = "Please enter valid list of usernames !!!!";
+		if($request->getParameter("SUCCESS")=="REQUEST_PROCESSED")
+			$this->successMsg = "Mail has been sent successfully."; 
+
+    }
+
+    /*executes exclusive servicing form II request
+    * @param : $request
+    */
+    public function executeProcessExclusiveServicingIISubmit(sfWebRequest $request){
+    	$inputArr = $request->getParameterHolder()->getAll();
+        $exclusiveEmail = trim($inputArr["exclusiveEmail"]);
+        $profileUsernameListParsed = $inputArr["profileUsernameListParsed"];
+    	$invalidCustomer = 0;
+    	if($exclusiveEmail) 
+		{
+			if($profileUsernameListParsed==""){
+				$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_USERNAME_LIST");
+			}
+			//validate profile
+			$profileObj = new Operator;
+			$profileObj->getDetail($exclusiveEmail,"EMAIL",'PROFILEID,USERNAME');
+			$pid = $profileObj->getPROFILEID();
+			if(!$pid){
+				$invalidCustomer = 1; //invalid user
+			}
+			else{
+				//check if profile has active JS sxclusive membership
+				$billingObj = new billing_SERVICE_STATUS("newjs_slave");
+				$exclusiveMemDetails = $billingObj->getActiveJsExclusiveServiceID($pid);
+				unset($billingObj);
+				//if user has current JS Exclusive membership
+				if($exclusiveMemDetails){
+					//set profile details for mailer
+					$profileDetails = array("usernameListArr"=>explode("||", $profileUsernameListParsed),"PROFILEID"=>$pid,"EMAIL"=>$exclusiveEmail,"AGENT_NAME"=>$request->getParameter("name"));
+
+					unset($profileUsernameListParsed);
+					//get user name or set self name to username if not exists
+            		$nameDBObj = new incentive_NAME_OF_USER("newjs_slave");
+            		$profileDetails["SELF_NAME"] = $nameDBObj->getName($pid);
+            		unset($nameDBObj);
+            		if(!$profileDetails["SELF_NAME"] || $profileDetails["SELF_NAME"]==""){
+            			$profileDetails["SELF_NAME"] = $profileObj->getUSERNAME();
+            		}
+            		//get agent phone number
+            		$jsadminObj = new jsadmin_PSWRDS("newjs_slave");
+            		$agentDetails = $jsadminObj->getArray($profileDetails["AGENT_NAME"],"USERNAME","PHONE,EMAIL,FIRST_NAME,LAST_NAME");
+            		$profileDetails["AGENT_PHONE"] = $agentDetails[0]["PHONE"];
+            		$profileDetails["SENDER_EMAIL"] = $agentDetails[0]["EMAIL"];
+            		if($agentDetails[0]["FIRST_NAME"] && $agentDetails[0]["FIRST_NAME"]!=""){
+            			$profileDetails["SENDER_NAME"] = $agentDetails[0]["FIRST_NAME"]." ".$agentDetails[0]["LAST_NAME"];
+            		}
+            		else{
+            			if(strpos($profileDetails["AGENT_NAME"], '.')!== false){
+            				$profileDetails["AGENT_NAME"] = substr($profileDetails["AGENT_NAME"], 0,strpos($profileDetails["AGENT_NAME"], '.'));
+            			}
+            			$profileDetails["SENDER_NAME"] = ucfirst($profileDetails["AGENT_NAME"]);
+            		}
+            		//print_r($profileDetails);die;
+            		unset($jsadminObj);
+            		unset($agentDetails);
+
+            		//format mailer content and send mail
+            		$memMailerObj = new MembershipMailer();
+            		$mailSent = $memMailerObj->sendExclusiveServiceIIMailer($profileDetails);
+            		unset($memMailerObj);
+            		unset($profileDetails);
+            		if($mailSent){
+						//successful entry case
+				    	$this->forwardTo("crmAllocation","exclusiveServicingII?SUCCESS=REQUEST_PROCESSED");
+				    }
+				    else{
+				    	//no valid list of username for hyperlink
+				    	$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_USERNAME_LIST");
+				    }
+				}
+				else{
+					$invalidCustomer = 1;
+			    }
+			    unset($profileObj);
+		    }
+		}
+		else{
+			$invalidCustomer = 1;
+		}
+		if($invalidCustomer == 1){
+			$this->forwardTo("crmAllocation","exclusiveServicingII?ERROR=INVALID_EXCLUSIVE_CUSTOMER");
+		}
+	}
+
+    /*forwards the request to given module action
+      * @param : $module,$action
+      */
+	public function forwardTo($module,$action)
+	{
+		$url="/operations.php/$module/$action";
+		$this->redirect($url);
+	}
+
 }

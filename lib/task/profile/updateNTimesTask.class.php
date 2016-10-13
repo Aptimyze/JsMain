@@ -3,10 +3,10 @@
 /* this class creates a file with data in it to be displayed on the critical 
  * action layers by fetching it from the table
  */
-ini_set('memory_limit','256M');
+ini_set('memory_limit','512M');
 class updateNTimesTask extends sfBaseTask
 {
-  private $measurePerformance = true;
+  private $measurePerformance = false;
   protected function configure() {
     $this->namespace = 'profile';
     $this->name = 'updateNTimes';
@@ -34,7 +34,7 @@ EOF;
         
         //use pipeline  for multiple pops
         $pipeline = $memcacheObj->pipeline();
-        
+        echo $lengthOfQueue;
         for($i=0;$i<$lengthOfQueue;$i++)
             $pipeline->RPOP($val);
         //execute pipeline

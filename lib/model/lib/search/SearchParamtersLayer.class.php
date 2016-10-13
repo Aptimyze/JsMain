@@ -137,6 +137,8 @@ class SearchParamtersLayer
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('verifiedMatches',$loggedInProfileObj);
 			  elseif($ContactViewAttempts)
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('ContactViewAttempts',$loggedInProfileObj);
+				elseif($kundlialerts)
+					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('KundliAlertsSearch',$loggedInProfileObj);
 				else
 					$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('searchId',$loggedInProfileObj);
 				$SearchParamtersObj->getSearchCriteria($searchId);

@@ -1401,6 +1401,44 @@ var padding = 31;
               }
             }
           }
+          if(ele1.name == "stateReg"){
+                regField["cityReg"].fieldElement.removeAttr("data-alpha");
+                $("#cityReg-inputBox_set").val("");
+                $("#cityReg").val("");
+                $("#cityRegOther").val("");
+                inputData["city_res"] = "";
+                regField["cityReg"].showDrop = 0;
+                regField["cityReg"].selected = "";
+                $("#cityReg_selector").removeClass("disp-none");
+                arrayfamilyCity = dataArray['cityReg'][inputData['state_res']][0];
+                ele1.putValuesInList(regField['cityReg'], arrayfamilyCity);
+                $("#cityReg-gridDropdown_set").hide();
+          }
+          if(ele1.name == "countryReg"){
+            if(inputData[ele1.formKey] == '128'){
+              regField["cityReg"].fieldElement.attr("data-alpha", "4");
+              $("#cityReg-inputBox_set").val("");
+                $("#cityReg").val("");
+                $("#cityReg_value").val("");
+                $("#cityRegOther").val("");
+                inputData["city_res"] = "";
+                regField["cityReg"].showDrop = 0;
+                regField["cityReg"].selected = "";
+                $("#cityReg_selector").removeClass("disp-none");
+                arrayfamilyCity = dataArray['cityReg'][inputData['country_res']];
+                ele1.putValuesInList(regField['cityReg'], arrayfamilyCity);
+                $("#cityReg-gridDropdown_set").hide();
+            }
+                $("#stateReg-inputBox_set").val("");
+                $("#stateReg").val("");
+                $("#stateRegOther").val("");
+                $("#stateReg_value").val("");
+                inputData["state_res"] = "";
+                regField["stateReg"].selected = "";
+                $("#stateReg-gridUl").find(".activeopt").removeClass("activeopt");
+          }
+          else
+              ele1.fieldElement.removeAttr("data-alpha");
           if (ele1.name == "familyCity")
           {
             if (inputData['native_city'] != "0")
@@ -1538,6 +1576,36 @@ var padding = 31;
             regField["horoscopeMatch"].shown = 1;
             regField["horoscopeMatch"].showInput = 1;
             regField["horoscopeMatch"].chosenValue = "";
+          }
+          if (ele1.name == "countryReg" && regField["countryReg"]) {
+              if(regField["countryReg"].selected == "India"){
+                $("#stateReg_selector").removeClass("disp-none");
+                $("#stateReg-list_set").show();
+              }
+              else {
+                  $("#stateReg_selector").addClass("disp-none");
+                  $("stateReg_value").val("");
+                  $("stateReg-inputBox_set").html("");
+                  $("stateReg-list_set").find(".activeopt").removeClass("activeopt");
+                  inputData["state_res"] = "";
+                  regField["stateReg"].shown = 1;
+                  regField["stateReg"].showInput = 1;
+                  regField["stateReg"].chosenValue = "";
+              }
+              if(regField["countryReg"].selected == "United States"){
+                $("#cityReg_selector").removeClass("disp-none");
+                $("#cityReg-list_set").show(); 
+              }
+              else{
+                  $("#cityReg_selector").addClass("disp-none");
+                  $("#cityReg_value").val("");
+                  $("#cityReg-inputBox_set").html("");
+                  $("#cityReg-list_set").find(".activeopt").removeClass("activeopt");
+                  inputData["city_res"] = "";
+                  regField["cityReg"].shown = 1;
+                  regField["cityReg"].showInput = 1;
+                  regField["cityReg"].chosenValue = "";
+              }
           }
           if (ele1.name == "mtongue" && regField["caste"] && regField["religion"].selected == "Hindu") {
             regField["caste"].putValuesInList(regField["caste"], dataArray["caste"][0]);
@@ -1932,6 +2000,12 @@ $(document).ready(function () {
       inputData["source"] = $("#reg_source").val();
 //        inputData["record_id"]=$("#reg_record_id").val();
       inputData["_csrf_token"] = $("#registrationData__csrf_token").val();
+      if(inputData.hasOwnProperty('state_res')){
+          if(inputData['city_res'] == '0' && inputData['country_res']=='51')
+              inputData['city_res'] = inputData['state_res']+'OT';
+          delete inputData['state_res'];
+      }
+          
       $.ajax({
         url: "/register/regPage",
         type: "POST",
@@ -2252,6 +2326,7 @@ function clearUgDegree(){
     $("#ugCollege-inputBox_set").val('');
     $("#otherUgDegree_value").val('');
 }
+
   
 //for handling body click on IE . For closing of dropdowns on click of body
 (function () {
@@ -2359,3 +2434,28 @@ function clearUgDegree(){
     historyStoreObj.push(onBrowserBack, "#register");
   
 })();
+    $(document).ready(function(e) {
+	if(pageId=="JSPCR1")
+	{
+	inputData['displayname']="Y";
+        $(".optionDrop li").each(function(index, element) {
+            $(this).on("click",function(){
+                                $(".optionDrop li").each(function(index, element) {
+                                        $(this).removeClass("selected");
+                                });
+                                $(this).addClass("selected");
+                                if($(this).attr("id") == "showYes") {
+                                        $("#showText").html("Show to All");
+                                }
+                                else {
+                                        $("#showText").html("Don't show my name");
+                                }
+				var displayNameVal = $(this).attr('data-fieldVal');
+				inputData['displayname']=displayNameVal;
+				$("#optionDrop").removeClass("optionDrop");
+				setTimeout(function(){ $("#optionDrop").addClass("optionDrop");}, 500);
+                        });
+        });
+    }
+    });
+

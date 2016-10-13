@@ -15,7 +15,9 @@ $flag_using_php5=1;
 include "connect.inc";
 
 $db=connect_db();
+$ddl=connect_ddl();
 mysql_query("set session wait_timeout=1000",$db);
+mysql_query("set session wait_timeout=1000",$ddl);
 $backtime=mktime(0,0,0,date("m"),date("d")-1,date("Y")); // To get the time for previous days
 $backdate=date("Y-m-d",$backtime);
 
@@ -25,7 +27,7 @@ $dayoftheweek = date( "w", $yesterdayTimestamp);
 //echo $dayoftheweek1 = date( "Y-m-d", $yesterdayTimestamp);die;
 
 $sql="TRUNCATE TABLE MIS.TRACK_CONTACTSEARCH_FLOW_TEMP";
-mysql_query($sql,$db) or die("$sql".mysql_error());
+mysql_query($sql,$ddl) or die("$sql".mysql_error($ddl));
 
 for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 {
@@ -67,10 +69,10 @@ while($row=mysql_fetch_array($result))
 }
 
 $sql="TRUNCATE TABLE MIS.TRACK_CONTACTSEARCH_FLOW_TEMP";
-mysql_query($sql,$db) or die("$sql".mysql_error());
+mysql_query($sql,$ddl) or die("$sql".mysql_error($ddl));
 
 $sqlThreshhold="SELECT SUM( COUNT ) AS CNT ,TYPE FROM  MIS.TRACK_CONTACTSEARCH_FLOW WHERE DATE ='$backdate' group by TYPE";
-$resultThreshhold=mysql_query($sqlThreshhold,$db) or die("$sqlThreshhold".mysql_error());
+$resultThreshhold=mysql_query($sqlThreshhold,$db) or die("$sqlThreshhold".mysql_error($db));
 while($row=mysql_fetch_array($resultThreshhold))
 {
         $count=$row['CNT'];

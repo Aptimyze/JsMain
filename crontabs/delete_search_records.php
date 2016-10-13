@@ -5,7 +5,7 @@
 
 include("connect.inc");
 
-$db=connect_db();
+$db=connect_ddl();
 
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 logTime();

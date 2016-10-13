@@ -43,4 +43,6 @@ class MailerGroup{
   const SHORTLISTED = 42;
   const DPP_REVIEW = 27;
   const HOROSCOPE_REQUEST = 35;
+  const PHONE_UNVERIFY=43;
+  const ASTRO_COMPATIBILTY = 27;
 }

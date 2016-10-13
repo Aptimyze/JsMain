@@ -66,7 +66,12 @@ $(document).ready(function() {
 
       <div class="fl padlr_1" style="width:75%;">
 
-          <div><a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$NAVIGATOR`"><span class="fontreg f14 color7">~$tupleInfo.username`</span></a><span class="f11 color4 fontlig padl5" id="timeTextId_~$id`"> ~$tupleInfo.timetext`</span><span class="f11 color2 fontreg padl5 fr">~$tupleInfo.subscription_icon`</span></div>
+          <div><a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$NAVIGATOR`"><span class="fontreg f14 color7 textTru wid40p dispibl vbtm">
+                                ~if $tupleInfo.name_of_user neq '' && $tupleInfo.name_of_user neq null` 
+                                        ~$tupleInfo.name_of_user`
+                                ~else` 
+                                        ~$tupleInfo.username`
+                                ~/if`</span></a><span class="f11 color4 fontlig padl5" id="timeTextId_~$id`"> ~$tupleInfo.timetext`</span><span class="f11 color2 fontreg padl5 fr">~$tupleInfo.subscription_icon`</span></div>
 
         <div class="f13 color3 fontlig" id="Prime_~$id`">
             <input type="hidden" id="buttonInput~$id`" value="~$tupleInfo.profilechecksum`">

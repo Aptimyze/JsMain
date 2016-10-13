@@ -23,6 +23,11 @@
   <tr class="formhead" align="center">
           <td colspan="2" style="background-color:PeachPuff"><font size=2>For the ~if $range_format eq 'Y'`year of~else`period~/if` ~$displayDate`</font></td>
   </tr>
+  ~if $selectedCities neq ''`
+        <tr class="formhead" align="center">
+                <td colspan="2" style="background-color:PeachPuff"><font size=2>Cities: ~$selectedCities`</font></td>
+        </tr>
+  ~/if`
 </table>
 
 <table width='100%' align=center style="table-layout: fixed;">

@@ -67,11 +67,15 @@ class JeevansathiGatewayManager
         $apiObj->surl     = JsConstants::$siteUrl . "/profile/pg/payU_return.php";
         $apiObj->furl     = JsConstants::$siteUrl . "/profile/pg/payU_return.php";
         $apiObj->curl     = JsConstants::$siteUrl . "/profile/pg/payU_return.php";
-        $apiObj->udf1     = $apiParams->checksum;
-        $apiObj->udf2     = $apiParams->currency;
+        $checksumSplit     = str_split($apiParams->checksum, 20);
+        $apiObj->udf1     = $checksumSplit[0];
+        $apiObj->udf2     = $checksumSplit[1];
+        $apiObj->udf3     = $checksumSplit[2];
+        $apiObj->udf4     = $checksumSplit[3];
+        $apiObj->udf5     = $apiParams->currency;
         $apiObj->device   = $apiParams->device;
 
-        $hashText     = "{$apiObj->key}|{$apiObj->txnid}|{$apiObj->amount}|{$apiObj->productinfo}|{$apiObj->firstname}|{$apiObj->email}|{$apiParams->checksum}|{$apiParams->currency}|||||||||{$apiObj->salt}";
+        $hashText     = "{$apiObj->key}|{$apiObj->txnid}|{$apiObj->amount}|{$apiObj->productinfo}|{$apiObj->firstname}|{$apiObj->email}|{$checksumSplit[0]}|{$checksumSplit[1]}|{$checksumSplit[2]}|{$checksumSplit[3]}|{$apiParams->currency}||||||{$apiObj->salt}";
         $apiObj->hash = hash("sha512", $hashText);
         $paymentArray = paymentOption::$paymentMode;
         if ($apiParams->paymentMode == "CR") {

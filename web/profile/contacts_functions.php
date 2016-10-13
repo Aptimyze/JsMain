@@ -330,7 +330,10 @@ function insertIntoContacts($sender_profileid,$receiver_profileid,$type,$time,$c
                                         $tempDb1=$affectedDb[1];
                                         $sql_del="DELETE FROM CONTACTS WHERE CONTACTID=$generated_contact_id";
                                         $mysqlObj->executeQuery($sql_del,$tempDb1) or ($query_died==1);
-                                        $mysqlObj->logError($sql_update,"",$tempDb);
+                                        if($query_died){
+											$show_query_logerror=1;
+											//$mysqlObj->logError($sql_update,"",$tempDb);
+										}
                                 }
                         }
 
@@ -344,7 +347,10 @@ function insertIntoContacts($sender_profileid,$receiver_profileid,$type,$time,$c
                                         $tempDb1=$affectedDb[0];
                                         $sql_del="DELETE FROM CONTACTS WHERE CONTACTID=$generated_contact_id";
                                         $mysqlObj->executeQuery($sql_del,$tempDb1) or ($query_died==1);
-                                        $mysqlObj->logError($sql_update,"",$tempDb);
+                                        if($query_died){
+											$show_query_logerror=1;
+											//$mysqlObj->logError($sql_update,"",$tempDb);
+										}
                                 }
                         }
 

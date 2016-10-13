@@ -78,7 +78,6 @@ class CriticalActionLayerTracking
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
-
     /* make sure no layer opens before one day */
     if(is_array($getTotalLayers))
     {
@@ -95,7 +94,7 @@ class CriticalActionLayerTracking
 
     }
 
-
+  
         //default condition for minimum time difference between layers
             /* make sure no layer opens before one day */
 
@@ -109,7 +108,7 @@ class CriticalActionLayerTracking
         }
 // in the order of priority
         for ($i=1;;$i++)
-        {
+        { 
 
       $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);
       if (!$layer) 
@@ -168,7 +167,15 @@ return 0;
           case '6': 
                   if(MobileCommon::isApp()!='I')
                     {
-                      
+                          $loginData = $request->getAttribute('loginData');
+                          $birthdate = new DateTime($loginData['DTOFBIRTH']);
+                          $today   = new DateTime('today');
+                          $age = $birthdate->diff($today)->y;
+                          $gender = $loginData['GENDER'];
+                          //print_r($age." is age anfd gendere is ".$gender);
+                          //die;
+                      if(!($gender == 'M' && $age >= 24) && !($gender == 'F' && $age >=22) )break;
+
                       $loggedInUser=LoggedInProfile::getInstance();
                       if(self::satisfiesDateCondition($profileid) &&  !CommonFunction::isPaid($loggedInUser->getSUBSCRIPTION()))
                       {
@@ -215,7 +222,19 @@ return 0;
                           $show=1;
                       }
                     
-                    break;            
+                    break;  
+                    
+                    case '9': 
+                      $appVersion=$request->getParameter('API_APP_VERSION');
+                      $isApp=MobileCommon::isApp();
+                      if(!$isApp || ($isApp=='A' && $appVersion>=63) || ($isApp=='I' && $appVersion>=3.0) )
+                      {
+                      $nameArr=(new NameOfUser())->getNameData($profileid);
+                      if(!is_array($nameArr[$profileid]) || !$nameArr[$profileid]['DISPLAY'] || !$nameArr[$profileid]['NAME'])
+                          $show=1;
+                      }
+                    
+                    break;  
 
           default : return false;
         }
@@ -246,7 +265,7 @@ return 0;
 
   case in_array($highestDegree, explode(',',$fieldArray['g'])):
   
-    $jprofileEduObj=new newjs_JPROFILE_EDUCATION();
+    $jprofileEduObj= ProfileEducation::getInstance();
     $education=$jprofileEduObj->getProfileEducation($profileObj->getPROFILEID());
     if(!$education['UG_DEGREE'] )
       return true;
@@ -256,7 +275,7 @@ return 0;
 
   case (in_array($highestDegree, explode(',',$fieldArray['pg'])) || in_array($highestDegree, explode(',',$fieldArray['phd']))): 
     
-    $jprofileEduObj=new newjs_JPROFILE_EDUCATION();
+    $jprofileEduObj= ProfileEducation::getInstance();
     $education=$jprofileEduObj->getProfileEducation($profileObj->getPROFILEID());
     if(!$education['UG_DEGREE'] || !$education['PG_DEGREE'] )
       return true;

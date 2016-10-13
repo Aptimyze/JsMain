@@ -556,7 +556,7 @@ public static function insertConsentMessageFlag($profileid) {
 			{
 				$ARR = $cityArr;
 			}
-                        $nativePlaceObj = new NEWJS_NATIVE_PLACE();
+                        $nativePlaceObj = ProfileNativePlace::getInstance();
                         $nativeData = $nativePlaceObj->getNativeData($profile->getPROFILEID());
                         $nativeState = $nativeData['NATIVE_STATE'];
                         $nativeCity = $nativeData['NATIVE_CITY'];
@@ -1103,7 +1103,19 @@ public static function insertConsentMessageFlag($profileid) {
             }
             return $cityString;
         }
+        
+        /**
+         * Function to log Function Calling in Redis
+         * @param type $className
+         * @param type $funName
+         */
+        public static function logFunctionCalling($className, $funName)
+        {
+            $key = $className.'_'.date('Y-m-d');
+            JsMemcache::getInstance()->hIncrBy($key, $funName);
 
+            JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+        }
 
 
 }

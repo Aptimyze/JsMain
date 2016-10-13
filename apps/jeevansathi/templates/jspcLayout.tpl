@@ -72,7 +72,8 @@
         var my_action = "~$action`";
         var moduleChat = "~$module`";
         var self_subcription = "~$subscription`";
-        
+        var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
+        //console.log("ank",hideUnimportantFeatureAtPeakLoad);
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
         //console.log("ankita_localstorage",localStorage.getItem("self_subcription"));
@@ -85,11 +86,14 @@
             var openfireServerName = "~JsConstants::$openfireConfig['SERVER_NAME']`";
             //var my_action = "~$action`";
             //var moduleChat = "~$module`";
+            var chatTrackingVar = {"stype":"~SearchTypesEnums::PC_CHAT_NEW`","rtype":"~JSTrackingPageType::PC_CHAT_RTYPE`"};
+        //console.log("chatTrackingVar",chatTrackingVar);
         </script>
     ~else`
         <script>
             //console.log("in ...4");
             var openfireUrl= "",openfireServerName="";
+            var chatTrackingVar = {"stype":"","rtype":""};
         </script>
     ~/if`
 </head>
@@ -116,10 +120,10 @@
     <!--start:error layer-->
 <div class="pos_fix fullwid z7" style="background-color:#fdfdfd; display:none;" id="commonError">
     <div class="container errwid2 pt10 pb10">
-        <div class="fl">
+        <div class="disp_ib pos-rel" style='margin:10px 0px 10px 30px;'>
             <i class="sprite2 erric1"></i>
         </div>
-        <div class="fl f20 fontlig color11 pt10 pl20" id="js-commonErrorMsg">
+        <div class="f20 fontlig color11 vtop disp_ib pos-rel" style='margin:13px; width:680px;' id="js-commonErrorMsg">
         Something went wrong. Please try again after some time.
         </div>
     </div>

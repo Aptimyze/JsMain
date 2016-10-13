@@ -179,7 +179,7 @@
 			Gui.setSlideDir('left');
 			$scope.slideDir = Gui.getSlideDir();
             
-            var pinCodeField = $scope.fields[4];
+            var pinCodeField = $scope.fields[6];
             var timeOut = 1;
             if(pinCodeField.show)
             {
@@ -208,7 +208,16 @@
 			if(indexPos == '3')/*Country*/
 			{
 				var countryField = $scope.fields[3];
-                $scope.initPinCodeWidget();
+				$scope.initStateWidget();
+				$scope.initCityWidget();
+			}
+			if(indexPos=='4')
+			{
+				$scope.initCityWidget();
+			}
+			if(indexPos=='5')
+			{
+				$scope.initPinCodeWidget();
 			}
 			if(!error)
     		{
@@ -265,20 +274,49 @@
 		$scope.initPinCodeWidget = function()
 		{
 			var countryField = $scope.fields[3];
-			var pinCodeField = $scope.fields[4];
+			var cityField = $scope.fields[5];
+			var pinCodeField = $scope.fields[6];
 			var optFields = Gui.getRegOptionalFields($scope.screenName);
 			var allowedCity = ['DE00','MH04','MH08'];
 			pinCodeField.show=true;
 		
-			if(parseInt(countryField.userDecision) != 51 || allowedCity.indexOf(optFields[countryField.optIndex].userDecision) === -1)
+			if(parseInt(countryField.userDecision) != 51 || allowedCity.indexOf(cityField.userDecision) === -1)
 			{
 				pinCodeField.show=false;
 			}
 		}
+		$scope.initStateWidget = function()
+		{
+			var countryField = $scope.fields[3];
+			var stateField = $scope.fields[4];
+			if(parseInt(countryField.userDecision)==51)
+			{
+				stateField.show=true;
+			}
+			else
+			{
+				stateField.show=false;
+			}
+		}
+		$scope.initCityWidget = function()
+		{
+			var countryField = $scope.fields[3];
+			var stateField = $scope.fields[4];
+			var cityField = $scope.fields[5];
+console.log(stateField.userDecision);
+                        if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
+                        {
+                                cityField.show=true;
+                        }
+                        else
+                        {
+                                cityField.show=false;
+                        }
+		}
 		$scope.checkPinCode = function()
 		{					
 			var error = 0;
-			var pinCodeField = $scope.fields[4];
+			var pinCodeField = $scope.fields[6];
 			if(!Validate.validatePinCode($scope.screenName))
 			{
 				error = 1;
@@ -310,11 +348,13 @@
 		$scope.onPinHover =function()
 		{
 			var notFilled = "Not Filled In";
-			var pinCodeField = $scope.fields[4];
+			var pinCodeField = $scope.fields[6];
 			var countryField = $scope.fields[3];
 			var hieghtField = $scope.fields[2];
 			var dobField = $scope.fields[1];
 			var genderField = $scope.fields[0];
+			var stateField = $scope.fields[4];
+			var cityField = $scope.fields[5];
 			
 			if(genderField.value && genderField.value.length && genderField.value !== notFilled && 
 			dobField.value && dobField.value.length && dobField.value !== notFilled && 
@@ -330,6 +370,8 @@
         }
         //TrackParams.trackClientInfo($scope.screenName);
 		$scope.initPinCodeWidget();
+		$scope.initStateWidget();
+		$scope.initCityWidget();
 		$scope.initGenderWidget();
 		$scope.enableNextBtn();
 	});
@@ -677,6 +719,9 @@
 				var email	=$scope.field_email.value;
 				var phone	=$scope.field_phone.value;
 				var isd 	=$scope.field_phone.isdVal;
+				var name	=$scope.field_name.value;
+				if(typeof name === "undefined")
+					name=1;
 				if(typeof email === "undefined")
 					email =1;
 				if(typeof pwd === "undefined")
@@ -686,7 +731,7 @@
 				if(typeof isd === "undefined")
 					isd =1;
 
-				if(email && pwd && phone && isd)
+				if(email && pwd && phone && isd && name)
 	                        	$scope.bNextEnable = true;
 				else
 					$scope.bNextEnable = false;	

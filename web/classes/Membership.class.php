@@ -55,6 +55,7 @@ class Membership
     private $membership;
     private $orderid_part1;
     private $device;
+    private $checkCoupon;
 
     //payment detail insertion variables.
     private $billid;
@@ -587,15 +588,28 @@ class Membership
     }
     
     function makePaid($skipBill = false) {
+        $userObjTemp = $this->getTempUserObj();
         if($skipBill == true){
             $this->setGenerateBillParams();
         } else {
             $this->generateBill();
         }
+        $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
         $this->setServiceActivation();
         $this->populatePurchaseDetail();
         $this->updateJprofileSubscription();
+        $this->checkIfDiscountExceeds($userObjTemp);
+    }
+
+    function getTempUserObj() {
+        $memHandlerObj = new MembershipHandler();
+        $userObj = new memUser($this->profileid);
+        list($ipAddress1, $currency1) = $memHandlerObj->getUserIPandCurrency($this->profileid);
+        $userObj->setIpAddress($ipAddress1);
+        $userObj->setCurrency($currency1);
+        $userObj->setMemStatus();
+        return $userObj;
     }
 
     function setGenerateBillParams(){
@@ -664,20 +678,24 @@ class Membership
             $execEmail = $jsadminPswrdsObj->getEmail($supervisor);
             $subject = "Bill with discount of {$discPerc}% offered by {$execName}; Final Bill Amount: {$finAmt}";
             $msg = "Bill Details ({$serName})";
+            $msg .= "Username : {$this->username} \n";
+            $msg .= "Billid : {$this->billid} \n";
             SendMail::send_email($execEmail,$msg,$subject,$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
         }
         /**
          * End Code
          */
-        
+    }
+
+    function getDeviceAndCheckCouponCodeAndDropoffTracking() {
         try {
             $ordrDeviceObj = new billing_ORDERS_DEVICE();
             $ordrDeviceObj->updateBillingDetails($this->orderid,$this->orderid_part1,$this->billid);
-            $checkCoupon = $ordrDeviceObj->checkAppliedCoupon($this->orderid,$this->orderid_part1);
+            $this->checkCoupon = $ordrDeviceObj->checkAppliedCoupon($this->orderid,$this->orderid_part1);
             $this->device = $ordrDeviceObj->getOrderDevice($this->orderid,$this->orderid_part1);
-            if(!empty($checkCoupon) && $checkCoupon != ''){
+            if(!empty($this->checkCoupon) && $this->checkCoupon != ''){
                 $couponOffrObj = new billing_COUPON_OFFER();
-                $couponOffrObj->updateCouponCount($checkCoupon);
+                $couponOffrObj->updateCouponCount($this->checkCoupon);
                 unset($couponOffrObj);
             }
         }
@@ -690,6 +708,7 @@ class Membership
         if(empty($this->device) || $this->device == ''){
             $this->device = 'desktop';
         }
+
         $billingDropSrcObj = new billing_DROPOFF_SOURCE_TRACKING();
         $billingDropSrcObj->deleteSourceTracking($this->profileid, $this->device);
     }
@@ -874,7 +893,9 @@ class Membership
         $billingServStatObj = new BILLING_SERVICE_STATUS();
         $billingDetails = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
         $billingPurDetObj = new billing_PURCHASE_DETAIL();
+
         foreach ($billingDetails as $key=>$row) {
+            list($actual_start_date, $actual_end_date) = $this->calculateASSD_ASEDLogic($row);
             $price = $amount[$row['SERVICEID']];
             $net_price = $amount_net[$row['SERVICEID']];
             $discount = $price - $net_price;
@@ -900,16 +921,92 @@ class Membership
             else {
                 $deferrable = 'Y';
             }
-
+            unset($deferrable);
 
             $paramsPDStr = "BILLID,SERVICEID,CUR_TYPE,PRICE,DISCOUNT,NET_AMOUNT,START_DATE,END_DATE,SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SHARE,PROFILEID,STATUS,DEFERRABLE";
-            $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$start_date','$end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
+            $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
             $billingPurDetObj->genericPurchaseDetailInsert($paramsPDStr, $valuesPDStr);
             unset($paramsPDStr);
             unset($valuesPDStr);
 
             $billingPurDetObj->updateDiscountForBillid($discount, $this->billid, $row['SERVICEID']);
         }
+    }
+
+    function calculateASSD_ASEDLogic($row) {
+        $billingServStatObj = new BILLING_SERVICE_STATUS();
+        $billingPurDetObj = new billing_PURCHASE_DETAIL();
+        $billingServObj = new billing_SERVICES();
+        $serviceObj = new Services;
+        $constantYears = 1;
+        // ASSD / ASED logic start
+        $duration = $serviceObj->getDuration($row['SERVICEID']);
+        $rights_str = @implode(",", $serviceObj->getRights($row['SERVICEID']));
+        if(strstr($this->serviceid, 'NCP') && strstr($row['SERVICEID'], 'C')){
+            $rights_str .= ",N";
+        }
+        if(strstr($row['SERVICEID'], 'C') || strstr($row['SERVICEID'], 'P')) { // Main Service Check
+            $pExpiry = $billingServObj->getPreviousExpiryDetails($this->profileid, $rights_str, 'Y');
+        } else {
+            $pExpiry = $billingServObj->getPreviousExpiryDetails($this->profileid, $rights_str);
+        }
+        if ($pExpiry) {
+            list($yy, $mm, $dd) = @explode("-", $pExpiry["EXPIRY_DT"]);
+            if ($yy == '2099' && $mm == '01') { // previous expiry is 2099 i.e. already unlimited running
+                if ($duration == '35640') { // current is also unlimited duration
+                    $actual_start_date = date("Y-m-d", time());
+                    $actual_end_date = date("Y-m-d", time()+($constantYears*(365*24*60*60)));
+                } 
+                else // current is not unlimited duration 
+                {
+                    $actual_start_date = date("Y-m-d", time()); 
+                    $actual_end_date = date("Y-m-d", time()+($duration*(24*60*60))); 
+                }
+            } 
+            else if ($yy >= '2099')  // Case when another membership is already bought after unlimited plan
+            {
+                $serviceDates = $billingPurDetObj->selectActualDates($pExpiry['BILLID'], $pExpiry['SERVICEID']);
+                $actual_start_date = $serviceDates['SUBSCRIPTION_END_DATE'];
+                if ($duration == '35640') { // current is unlimited duration
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(365*24*60*60)));
+                } 
+                else // current is not unlimited duration 
+                {
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($duration*(24*60*60)));
+                }
+            }
+            else // previous expiry is not unlimited plan
+            {
+                if ($duration == '35640') { // current is unlimited duration
+                    $actual_start_date = $row['ACTIVATED_ON'];
+                    if ($actual_start_date == '0000-00-00') {
+                        $actual_start_date = $row['ACTIVATE_ON'];
+                    }
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($constantYears*(365*24*60*60)));
+                } 
+                else // current is not unlimited duration
+                {    // Here we pick the SUBSCRIPTION_END_DATE of previous service with similar rights
+                     // and use that as SUBSCRIPTION_START_DATE for next service
+                     // instead of referring to SERVICE_STATUS TABLE
+                    $serviceDates = $billingPurDetObj->selectActualDates($pExpiry['BILLID'], $pExpiry['SERVICEID']);
+                    $actual_start_date = $serviceDates['SUBSCRIPTION_END_DATE'];
+                    if ($actual_start_date == '0000-00-00') {
+                        $actual_start_date = $row['ACTIVATE_ON'];
+                    }
+                    $actual_end_date = date("Y-m-d", strtotime($actual_start_date)+($duration*(24*60*60)));
+                }
+            }
+        } 
+        else // no previous membership with current subscription rights
+        {
+            $actual_start_date = $row['ACTIVATED_ON'];
+            if ($actual_start_date == '0000-00-00') {
+                $actual_start_date = $row['ACTIVATE_ON'];
+            }
+            $actual_end_date = $row['EXPIRY_DT'];
+        }
+        // ASSD / ASED logic end
+        return array($actual_start_date, $actual_end_date);
     }
     
     function updateJprofileSubscription() {
@@ -971,7 +1068,47 @@ class Membership
         $memCacheObject->remove($this->profileid . "_MEM_OCB_MESSAGE_API17");
         $memCacheObject->remove($this->profileid . "_MEM_HAMB_MESSAGE");
         $memCacheObject->remove($this->profileid . "_MEM_SUBSTATUS_ARRAY");
-    }   
+    }
+
+    function checkIfDiscountExceeds($userObj) {
+        $memHandlerObj = new MembershipHandler();
+        $serviceObj  = new billing_SERVICES();
+        $servObj = new Services();
+        $mainMembership = array_shift(@explode(",", $this->serviceid));
+        if (strstr($mainMembership, 'C') || strstr($mainMembership, 'P') || strstr($mainMembership, 'ES') || strstr($mainMembership, 'X') || strstr($mainMembership, 'NCP')) {
+        } else {
+            $mainMembership = null;
+        }
+        $allMemberships = $this->serviceid;
+        $festCondition = false;
+        $fest = $servObj->getFestive();
+        // Fetch all variables regarding discount for current user
+        $excludeMains = array('PL','P12','CL','C12','ESPL','ESP12','NCPL','NCP12','XL','X12');
+        if ($fest == 1 && !in_array($mainMembership, $excludeMains) && !empty($mainMembership)) {
+            $festOffrLookup = new billing_FESTIVE_OFFER_LOOKUP();
+            $actualServiceid = $festOffrLookup->fetchReverseOfferedServiceId($mainMembership);
+            if ($actualServiceid != $mainMembership && !empty($actualServiceid)) {
+                $festCondition = true;
+            }
+        }
+        if((!empty($this->checkCoupon) && $this->checkCoupon != '') || $festCondition){
+            // Dont handle coupon code and when extra duration is offered in festive extra duration case
+        } else {
+            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $this->device, $this->checkCoupon, null, null, null, true);
+            if ($total > $this->amount) {
+                $iniAmt = $servObj->getTotalPrice($this->serviceid, $this->curtype);
+                $actDisc = $iniAmt - $this->amount;
+                $siteDisc = $iniAmt - $total;
+                $actDiscPerc = round($actDisc/$iniAmt, 2)*100;
+                $siteDiscPerc = round($siteDisc/$iniAmt, 2)*100;
+                $netOffTax = round($this->amount*(1-billingVariables::NET_OFF_TAX_RATE),2);
+                $msg = "'{$this->username}' has been given a discount greater than visible on site <br>Actual Discount Given : {$this->curtype} {$actDisc}, {$actDiscPerc}%<br>Discount Offered on Site : {$this->curtype} {$siteDisc}, {$siteDiscPerc}%<br>Final Billing Amount : {$this->curtype} {$this->amount}/-<br>Net-off Tax : {$this->curtype} {$netOffTax}/-<br><br>Note : <br>Discounts are inclusive of previous day discounts if applicable for the username mentioned above<br>Max of current vs previous day discount is taken as final discount offered on site !";
+                if (JsConstants::$whichMachine == 'prod') {
+                    SendMail::send_email('rohan.mathur@jeevansathi.com',$msg,"Discount Exceeding Site Discount : {$this->username}",$from="js-sums@jeevansathi.com",$cc="avneet.bindra@jeevansathi.com");
+                }
+            }
+        }
+    }
     
     function addExclusiveMemberEntry()
     {
@@ -1413,6 +1550,18 @@ class Membership
         } 
         else $servicecost = convert($servicecostvalue_rs) . " only";
         
+        // Display nothing if start or end date is greater than 2099
+        foreach ($ser as $key=>&$val) {
+            list($dd,$mm,$yy) = explode("-", $val['S_DATE']);
+            list($dd1,$mm1,$yy1) = explode("-", $val['E_DATE']);
+            if ($yy >= '2099') {
+                $val['S_DATE'] = "-";
+            }
+            if ($yy1 >= '2099') {
+                $val['E_DATE'] = "-";
+            }
+        }
+
         // Service cost net with tax
         $smarty->assign("servicecostvalue", $servicecostvalue);
         $smarty->assign("servicecostvalue_rs", $servicecostvalue_rs);

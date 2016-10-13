@@ -32,7 +32,7 @@ EOF;
 	{
 		if(!sfContext::hasInstance())
 	        sfContext::createInstance($this->configuration);
-	    $mailerEOIFilterObj = new MAIL_FilterEOI("newjs_master");
+	    $mailerEOIFilterObj = new MAIL_FilterEOI("newjs_masterDDL");
 	    $mailerEOIFilterObj->EmptyFilterEOI();
 	    for($serverId=0;$serverId<$this->noOfActiveServers;$serverId++){
 	            $dbName = JsDbSharding::getShardNo($serverId,true);

@@ -57,6 +57,20 @@ class jsValidatorLandline extends sfValidatorBase
 	$arr=explode('+',$value['isd']);
 	$value['isd']=$arr[1];
 	$value['std'] = ltrim($value['std'],'0');
+        if($value['landline']!='')
+	{       
+                $valueWithStd = $value['std'].$value['landline'];
+                if($value['isd'])
+                    $valueToCheck = $value['isd'].$valueWithStd;
+                else
+                    $valueToCheck = $valueWithStd;
+		$negativeProfileListObj = new incentive_NEGATIVE_LIST;
+		$negativeMobile = $negativeProfileListObj->checkEmailOrPhone("PHONE_NUM",$valueToCheck);
+		if($negativeMobile)
+		{
+			throw new sfValidatorError($this, 'err_landline_revoke', array('value' => $value['mobile']));
+		}
+	}
     return $value;
   }
 }

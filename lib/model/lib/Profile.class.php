@@ -1508,7 +1508,7 @@ class Profile{
 				//If already fetched then return the fetched object
 				//otherwise fetch education details
 				if(! $this->education_other instanceof ProfileComponent){
-				$pe=new NEWJS_JPROFILE_EDUCATION($dbname);
+				$pe = ProfileEducation::getInstance($dbname);
 				$education_arr=$pe->getProfileEducation($this->PROFILEID);
 				if($valuesOnly)
 					return $education_arr;

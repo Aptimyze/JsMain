@@ -120,6 +120,8 @@ class phoneActions extends sfActions
 			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_BLANK);
 		elseif($number!="" && ($numberValid=phoneKnowlarity::checkMobileNumber($number,'','',$isd))=="N")
 			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID);
+		elseif((new incentive_NEGATIVE_LIST())->checkEmailOrPhone("PHONE_NUM",$isd.$number))
+                         $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_JUNK);
 		else
 		{
 			$profileObj = LoggedInProfile::getInstance('newjs_master');

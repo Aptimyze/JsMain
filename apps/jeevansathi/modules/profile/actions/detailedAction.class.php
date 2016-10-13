@@ -104,7 +104,14 @@ class detailedAction extends sfAction
     if (MobileCommon::isDesktop() && $this->loginData[PROFILEID]) {
        $this->onlineStatus();
     }
-
+	$nameOfUserObj = new NameOfUser();
+	$showNameData = $nameOfUserObj->showNameToProfiles($this->loginProfile,array($this->profile));
+	if($showNameData[$this->profile->getPROFILEID()]['SHOW']==true)
+	{
+		$this->nameOfUser = $showNameData[$this->profile->getPROFILEID()]['NAME'];
+	}
+	else
+		$this->dontShowNameReason = $showNameData[$this->profile->getPROFILEID()]['REASON'];
     //Assings variables required in template, handling legacy.
 		$this->smartyAssign();
 
@@ -873,8 +880,8 @@ class detailedAction extends sfAction
 			$bookmark= new NEWJS_BOOKMARKS();
 			if($bookmark->isBookmarked($sender,$receiver))
 				$this->BOOKMARKED=1;
-			$ignore=new newjs_IGNORE_PROFILE();
-			if($ignore->isIgnored($sender,$receiver))
+			$ignore=new IgnoredProfiles("newjs_master");
+			if($ignore->ifIgnored($sender,$receiver))
 					$this->IGNORED=1;
 		}
 	}

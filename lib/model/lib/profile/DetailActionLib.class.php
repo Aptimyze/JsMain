@@ -103,13 +103,23 @@ class DetailActionLib
 			
 			$privacy=$actionObject->loginProfile->getPRIVACY();
 			$vlt=new VIEW_LOG_TRIGGER();
+                        $producerObj = new Producer();
 			//Privacy is not C for login user 
 			if($privacy!='C' && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
-			{
-				$vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+			{       
+                                if($producerObj->getRabbitMQServerConnected())
+                                    $triggerOrNot = "inTrigger";
+                                else
+                                    $vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 			}
-
-			$vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+                        elseif($producerObj->getRabbitMQServerConnected())
+                            $triggerOrNot="notInTrigger";
+                        
+                        if($producerObj->getRabbitMQServerConnected()){
+                            $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$actionObject->loginProfile->getPROFILEID(),VIEWED=>$actionObject->profile->getPROFILEID())), 'redeliveryCount'=>0 );
+                            $producerObj->sendMessage($queueData);
+                        }
+			//$vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////
 	}
@@ -279,12 +289,12 @@ class DetailActionLib
 			}
 			else
 			{
-				$ignore=new newjs_IGNORE_PROFILE();
-				if($ignore->isIgnored($sender,$receiver))
+				$ignore=new IgnoredProfiles();
+				if($ignore->ifIgnored($sender,$receiver))
 				{
 				        $actionObject->IGNORED=1;
 			        }
-			        if(!isset($actionObject->IGNORED) && $ignore->isIgnored($receiver,$sender))
+			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender))
                 	        {
 					$actionObject->IGNORED=2;
 	      		        }

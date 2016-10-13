@@ -38,6 +38,7 @@ class NEWJS_NATIVE_PLACE extends TABLE
 				$pdoStatement->bindValue(($count), $value);
 			}
 			$pdoStatement->execute();
+      $this->logFunctionCalling(__FUNCTION__);
 			return $pdoStatement->rowCount();
 		}
 		catch(Exception $e)
@@ -84,6 +85,8 @@ class NEWJS_NATIVE_PLACE extends TABLE
 			$pdoStatement->bindValue($count,$iProfileID);
 			
 			$pdoStatement->execute();
+      $this->logFunctionCalling(__FUNCTION__);
+            return true;
 		}
 		catch(Exception $e)
 		{
@@ -110,6 +113,7 @@ class NEWJS_NATIVE_PLACE extends TABLE
 			$pdoStatement->execute();
 			
 			$arrResult = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+      $this->logFunctionCalling(__FUNCTION__);
 			return $arrResult[0];
 		}
 		catch(Exception $e)
@@ -126,6 +130,7 @@ class NEWJS_NATIVE_PLACE extends TABLE
 		$pdoStatement->bindValue(":PROFILEID",$profileid);
 		$pdoStatement->execute();
 		$arrResult = $pdoStatement->fetchAll(PDO::FETCH_ASSOC);
+    $this->logFunctionCalling(__FUNCTION__);
 		return $arrResult[0];
 	}
 	catch(Exception $e)
@@ -154,6 +159,7 @@ class NEWJS_NATIVE_PLACE extends TABLE
                 {
                         $resultArray[]=$result;
                 }
+                $this->logFunctionCalling(__FUNCTION__);
                 return $resultArray;
 	}
 	catch(Exception $e)
@@ -161,5 +167,12 @@ class NEWJS_NATIVE_PLACE extends TABLE
 		throw new jsException($e);
 	}
    }
+   private function logFunctionCalling($funName)
+    {
+      $key = __CLASS__.'_'.date('Y-m-d');
+      JsMemcache::getInstance()->hIncrBy($key, $funName);
+      
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+    }
 }
 ?>

@@ -98,8 +98,7 @@ EOF;
                         catch(jsException $e)
                         {   
                             $updateArr[$value["SEARCH_ID"]]["SENT"] = "I";
-                            $savedSearchObj->updateUserMailerData($updateArr);
-                            SendMail::send_email("sanyam1204@gmail.com,reshu.rajput@jeevansathi.com","error in savedSearchCalculation for searchId:".$values["SEARCH_ID"],"savedSearch:savedSearchCalculation");
+                            $savedSearchObj->updateUserMailerData($updateArr);                    
                         } 
                     }
                     

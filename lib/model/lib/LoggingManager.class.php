@@ -277,7 +277,7 @@ class LoggingManager
 
 		if ( $statusCode != "")
 		{
-			$logData[LoggingEnums::STATUS_CODE] = $statusCode;
+			$logData[LoggingEnums::STATUS_CODE] = strval($statusCode);
 		} 
 
 		if ( $message != "")
@@ -291,6 +291,12 @@ class LoggingManager
 			{
 				$logData[LoggingEnums::LOG_EXCEPTION] = $exception->getTrace();
 			}
+		}
+		$logData[LoggingEnums::REQUEST_URI] = $_SERVER['REQUEST_URI'];
+		$logData[LoggingEnums::DOMAIN] = $_SERVER['HTTP_HOST'];
+		if(isset($logArray[LoggingEnums::REFERER]))
+		{
+			$logData[LoggingEnums::REFERER] = $logArray[LoggingEnums::REFERER];
 		}
 		return $logData;
 	}
@@ -332,7 +338,7 @@ class LoggingManager
 		{
 			$statusCode = $logArray[LoggingEnums::STATUS_CODE];
 		}
-		return strval($statusCode);
+		return $statusCode;
 	}
 
 	/**
@@ -446,7 +452,16 @@ class LoggingManager
 		{
 			if ( $isSymfony )
 			{
-				$moduleName = sfContext::getInstance()->getRequest()->getParameter("module");
+				$request = sfContext::getInstance()->getRequest();
+				$moduleName = $request->getParameter("module");
+				if($moduleName == "api")
+				{
+					$apiWebHandler = ApiRequestHandler::getInstance($request);
+					$details = $apiWebHandler->getModuleAndActionName($request);
+					$moduleName = $details['moduleName'].'_'.$moduleName;
+				} elseif($moduleName == "e") {
+					$moduleName = "AutoLogin";
+				}
 			}
 			else
 			{
@@ -455,6 +470,10 @@ class LoggingManager
 					$exceptionLiesIn = $exception->getTrace()[0]['file'];
 					$arrExplodedPath = explode('/', $exceptionLiesIn);
 					$moduleName = $arrExplodedPath[count($arrExplodedPath)-2];
+				}
+				if($moduleName == "profile")
+				{
+					$moduleName = "inbox";
 				}
 			}
 		}
@@ -478,7 +497,14 @@ class LoggingManager
 		{
 			if ( $isSymfony )
 			{
-				$actionName = sfContext::getInstance()->getRequest()->getParameter("action");;
+				$request = sfContext::getInstance()->getRequest();
+				$actionName = $request->getParameter("action");
+				if($actionName == "apiRequest")
+				{
+					$apiWebHandler = ApiRequestHandler::getInstance($request);
+					$details = $apiWebHandler->getModuleAndActionName($request);
+					$actionName = $details['actionName'];
+				}
 			}
 			else
 			{

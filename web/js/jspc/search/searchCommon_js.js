@@ -163,6 +163,11 @@ var verificationDocumentsList;
                 val1.username = val1.username.substring(0, val1.username.length - 4);
                 val1.username += "****";
         }
+	else
+	{
+		if(val1.name_of_user!='' && val1.name_of_user!=null)
+			val1.username = val1.name_of_user;
+	}
   var collegeTxt = "";
   var a = [];
   var pgCol = '';

@@ -201,7 +201,7 @@ class RegistrationFunctions
      * UpdateFilter
      * @param type $partnerField
      */
-    public function UpdateFilter($partnerField) 
+    public static function UpdateFilter($partnerField) 
     {
       $arrFilter = array();
       if ($partnerField->partnerObj->getPARTNER_MSTATUS()) {
@@ -242,8 +242,15 @@ class RegistrationFunctions
                 $completeFields["horoscopeMatch"] = $loginProfileObj->getHOROSCOPE_MATCH();
                 $country_res=$loginProfileObj->getCOUNTRY_RES();
                 $completeFields["countryReg"] = $country_res;
-                if($country_res==51 || $country_res==128)
-                  $completeFields["cityReg"] = $loginProfileObj->getCITY_RES();
+                if($country_res==51 || $country_res==128){
+                    if($country_res==51 && $loginProfileObj->getCITY_RES()!="0")
+                        $completeFields["stateReg"] = substr($loginProfileObj->getCITY_RES(),0,2);
+                    if(substr($loginProfileObj->getCITY_RES(),2)=="OT")
+                        $city = "0";
+                    else
+                        $city = $loginProfileObj->getCITY_RES();
+                    $completeFields["cityReg"] = $city;
+                }
             }
             if($pageId == "JSPCR3"){
                 $completeFields["occupation"] = $loginProfileObj->getOCCUPATION();

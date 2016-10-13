@@ -50,4 +50,7 @@ if($msg)
 
 	$mobile         = "9711304800";
 	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        
+	$mobile         = "9650350387";
+	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 }

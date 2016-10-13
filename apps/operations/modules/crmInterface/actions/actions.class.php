@@ -242,7 +242,7 @@ class crmInterfaceActions extends sfActions
 		$this->durPerc = floor(100/(count($this->serviceDurations)+1));
 		// Check if Discount Offer is active
 		$discountOfferLogObj=new billing_DISCOUNT_OFFER_LOG();
-		$billDiscOffrObj = new billing_DISCOUNT_OFFER();
+		$billDiscOffrObj = new billing_DISCOUNT_OFFER('newjs_masterDDL');
 		$discountOfferID = $discountOfferLogObj->checkDiscountOffer();
 		if($discountOfferID){
 			$this->successMsg = "Discount offer is Currently Active";
@@ -587,8 +587,8 @@ class crmInterfaceActions extends sfActions
         $this->cid      =$request->getParameter('cid');
         $this->name     =$request->getParameter('name');
         $testDiscountLookupObj = new test_DISCOUNT_LOOKUP_UPLOAD('newjs_local111');
-        $discountLookupObj = new billing_DISCOUNT_LOOKUP();
-        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP();
+        $discountLookupObj = new billing_DISCOUNT_LOOKUP('newjs_masterDDL');
+        $discountLookupBackupObj = new billing_DISCOUNT_LOOKUP_BACKUP('newjs_masterDDL');
         
         $records = $testDiscountLookupObj->getRecords();
         if($records)
@@ -822,7 +822,7 @@ class crmInterfaceActions extends sfActions
 	            $purchaseObj        = new BILLING_PURCHASES('newjs_slave');
 	            $this->rawData      = $purchaseObj->fetchFinanceData($this->start_date, $this->end_date);
 	            if ($formArr["report_format"] == "XLS") {
-	                $headerString = "EntryDt\tBillID\tReceiptID\tProfileID\tUsername\tServiceID\tStartDate\tEndDate\tCurrency\tAmount\tDeferrableFlag\r\n";
+	                $headerString = "Entry Date\tBillid\tReceiptid\tProfileid\tUsername\tServiceid\tStart Date\tEnd Date\tCurrency\tAmount\tDeferrable Flag\tASSD(Actual Service Start Date)\tASED(Actual Service End Date)\r\n";
 	                if($this->rawData && is_array($this->rawData))
 					{
 						foreach($this->rawData as $k=>$v)
@@ -837,7 +837,9 @@ class crmInterfaceActions extends sfActions
 							$dataString = $dataString.$v["END_DATE"]."\t";
 							$dataString = $dataString.$v["CUR_TYPE"]."\t";
 							$dataString = $dataString.$v["AMOUNT"]."\t";
-							$dataString = $dataString.$v["DEFERRABLE"]."\r\n";
+							$dataString = $dataString.$v["DEFERRABLE"]."\t";
+							$dataString = $dataString.$v["ASSD"]."\t";
+							$dataString = $dataString.$v["ASED"]."\r\n";
 						}
 					}
 					$xlData = $headerString.$dataString;
@@ -961,5 +963,44 @@ class crmInterfaceActions extends sfActions
             $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
             $this->detailedView = 1;
         }
+    }
+
+    public function executeChangeActiveServicesInterface(sfWebRequest $request)
+    {
+        $this->cid          = $request->getParameter('cid');
+        $this->name         = $request->getParameter('name');
+        $billingServObj     = new billing_SERVICES();
+        $memHandlerObject = new MembershipHandler();
+        // LIMIT SERVICES TO SHOW IN THIS INTERFACE
+        $this->servArr = array('P'=>'eRishta','C'=>'eValue','NCP'=>'eAdvantage','X'=>'JS Exclusive','T'=>'Response Booster','R'=>'Featured Profile','A'=>'Astro Compatibility','I'=>'We Talk For You');
+        if ($request->getParameter('submit')) {
+        	$params = $request->getParameterHolder()->getAll();
+        	unset($params['submit'],$params['name'],$params['cid'],$params['module'],$params['action'],$params['authFailure']);
+        	foreach ($params as $key=>$val) {
+        		if ($val == 'Y') {
+        			$activate[] = $key;
+        		} else {
+        			$deactivate[] = $key;
+        		}
+        	}
+        	$activate = "'" . implode("','", $activate) . "'";
+        	$deactivate = "'" . implode("','", $deactivate) . "'";
+        	$billingServObj->changeServiceActivations($activate, 'Y');
+        	$billingServObj->changeServiceActivations($deactivate, 'N');
+        	$memHandlerObject->flushMemcacheForMembership();
+        }
+        $this->servDet = $billingServObj->getServicesForActivationInterface(array_keys($this->servArr));
+        $newServDet = array();
+        $skipArr = array('C1','C1W','C2W','P1','P1W','P2W','NCP1','T1','A1','I10','R1','X1');
+        foreach ($this->servDet as $sid=>$arr) {
+        	$realID = $memHandlerObject->retrieveCorrectMemID($sid);
+        	if (!in_array($sid, $skipArr)) {
+        		$newServDet[$realID][$sid] = $arr;
+        	}
+        }
+        foreach ($this->servArr as $key=>$val) {
+        	$servDet[$key] = $newServDet[$key] ;
+        }
+        $this->servDet = $servDet;
     }
 }

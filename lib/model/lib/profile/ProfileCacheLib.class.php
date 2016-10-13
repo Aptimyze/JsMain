@@ -68,9 +68,11 @@ class ProfileCacheLib
      * @param $criteria
      * @param $key
      * @param $fields
+     * @param $storeName
+     * @param $fromUpdate
      * @return bool
      */
-    public function isCached($criteria, $key, $fields,$fromUpdate=false)
+    public function isCached($criteria, $key, $fields, $storeName="", $fromUpdate=false)
     {
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
            return false;
@@ -92,7 +94,7 @@ class ProfileCacheLib
             return true;
         }
 
-        if (isset($this->arrRecords[intval($key)]) && $this->checkFieldsAvailability($key, $fields)) {
+        if (isset($this->arrRecords[intval($key)]) && $this->checkFieldsAvailability($key, $fields, $storeName)) {
             return true;
         }
 
@@ -107,8 +109,8 @@ class ProfileCacheLib
         }
 
         //Check all fields specified in param fields is present in cache also, right now we are assuming all fields are cached together
-        if (false === $this->checkFieldsAvailability($key, $fields)) {
-            $this->logThis(LoggingEnums::LOG_INFO, "Cache Miss due to fields {$criteria} : {$key} and {$fields}");
+        if (false === $this->checkFieldsAvailability($key, $fields, $storeName)) {
+            $this->logThis(LoggingEnums::LOG_INFO, "Cache Mis due to fields {$criteria} : {$key} and {$fields}");
             return false;
         }
 
@@ -134,7 +136,6 @@ class ProfileCacheLib
 
         //Prepend Prefix on key
         $szKey = $this->getDecoratedKey($key);
-        $arrParams = $this->getRelevantParams($arrParams);
 
         if (0 === count($arrParams)) {
             return false;
@@ -153,18 +154,19 @@ class ProfileCacheLib
     /**
      * @param $paramArr
      * @param $szCriteria
-     * @param $key
+     * @param string|integer $key KEY of the Cache
+     * @param string $storeName Name of the store
      * @param $extraWhereCnd
      * @return bool|void
      */
-    public function updateCache($paramArr, $szCriteria, $key, $extraWhereCnd = "")
+    public function updateCache($paramArr, $szCriteria, $key, $storeName="", $extraWhereCnd = "")
     {
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
 
         $bUpdateFromMysql = false;
-        if(false === $this->isCached($szCriteria, $key, array_keys($paramArr), true)) {
+        if(false === $this->isCached($szCriteria, $key, array_keys($paramArr), $storeName, true)) {
             //If Cache does not exist then do not set cache
             return false;
         }
@@ -210,7 +212,7 @@ class ProfileCacheLib
      * @param null $arrExtraWhereClause
      * @return array|bool
      */
-    public function get($szCriteria, $key, $fields, $arrExtraWhereClause = null)
+    public function get($szCriteria, $key, $fields, $storeName="", $arrExtraWhereClause = null)
     {
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
@@ -220,7 +222,7 @@ class ProfileCacheLib
            return false;
         }
 
-        if (false === $this->isCached($szCriteria, $key, $fields)) {
+        if (false === $this->isCached($szCriteria, $key, $fields, $storeName)) {
             return false;
         }
 
@@ -230,7 +232,6 @@ class ProfileCacheLib
         }
 
         $arrData = $this->getFromLocalCache($key);
-        
         if ($arrExtraWhereClause) {
             $this->processArrayWhereClause($arrData,$arrExtraWhereClause);
         }
@@ -240,34 +241,13 @@ class ProfileCacheLib
             return false;
         }
 
-        $arrFields = $this->getRelevantFields($fields);
+        $arrFields = $this->getRelevantFields($fields, $storeName);
         $arrOut = array();
 
         foreach ($arrFields as $k) {
             $arrOut[$k] = $arrData[$k];
         }
 
-        return $arrOut;
-    }
-
-    /**
-     * getRelevantParams
-     *
-     * @param $arrResult
-     * @return array
-     */
-    private function getRelevantParams($arrResult)
-    {
-        return $arrResult;
-
-        $arrOut = array();
-        $arrAllowedHashKeys = ProfileCacheConstants::$arrHashSubKeys;
-
-        foreach ($arrAllowedHashKeys as $key) {
-            if (isset($arrResult[$key])) {
-                $arrOut[$key] = $arrResult[$key];
-            }
-        }
         return $arrOut;
     }
 
@@ -296,7 +276,6 @@ class ProfileCacheLib
     private function storeInLocalCache($key)
     {
         $stTime = $this->createNewTime();
-
         $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
         $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
     }
@@ -314,15 +293,30 @@ class ProfileCacheLib
      * @param $arrFields
      * @return array
      */
-    private function getRelevantFields($arrFields)
+    private function getRelevantFields($arrFields, $storeName="")
     {
-        if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) {
+        if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM && strlen($storeName)) {
+          if($storeName == "JPROFILE") {
+            $arrFields = ProfileCacheConstants::$arrJProfileColumns;
+          } else if(false !== stristr($storeName, "EDUCATION")) {
+            $arrFields = ProfileCacheConstants::$arrJProfile_EducationColumns;
+          } else if(false !== stristr($storeName, "NATIVE")) {
+            $arrFields = ProfileCacheConstants::$arrNativePlaceColumns;
+          }
+        } else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) {
             $arrFields = ProfileCacheConstants::$arrHashSubKeys;
         } else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) {
             $arrFields = explode(',',$arrFields);
+            foreach($arrFields as $k=>$v)
+                $arrFields[$k] = trim($v);
         }
         //TODO: If $arrFields is not an array, handle this case  
-        return array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
+        $array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
+        if(count(array_diff(array_unique($arrFields),$array))){
+          $this->logThis(LoggingEnums::LOG_ERROR, "Relevant Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
+          //throw new jsException("","Field in not present in cache : ".print_r(array_diff(array_unique($arrFields),$array),true));
+        }
+        return $array;
     }
 
     /**
@@ -350,24 +344,28 @@ class ProfileCacheLib
      * @param $fields
      * @return bool
      */
-    private function checkFieldsAvailability($key, $fields)
+    private function checkFieldsAvailability($key, $fields, $storeName="")
     {
-        $arrAllowableFields = $this->getRelevantFields($fields);
+        $arrAllowableFields = $this->getRelevantFields($fields, $storeName);
         $arrFields = $arrAllowableFields;
+        
         if ($fields == ProfileCacheConstants::ALL_FIELDS_SYM &&
-            count($this->getFromLocalCache($key))  !== count($arrAllowableFields)
+            count($this->getFromLocalCache($key))  !== count($arrAllowableFields) &&
+            0 === strlen($storeName)
         ) {
             return false;
         } else if ($fields !== ProfileCacheConstants::ALL_FIELDS_SYM) {
-            $arrFields = $fields;
-            if(is_string($fields)) {
-                $arrFields = explode(",", $fields);
-            }
-            foreach ($arrFields as $szColName) {
-                if(!in_array($szColName, $arrAllowableFields)) {
-                    return false;
-                }
-            }
+          $arrFields = $fields;
+          if(is_string($fields)) {
+              $arrFields = explode(",", $fields);
+              foreach($arrFields as $k=>$v)
+                $arrFields[$k] = trim($v);
+          }
+          foreach ($arrFields as $szColName) {
+              if(!in_array($szColName, $arrAllowableFields)) {
+                  return false;
+              }
+          }
         }
 
         if (isset($this->arrRecords[intval($key)])) {
@@ -503,7 +501,7 @@ class ProfileCacheLib
      * @param $arrParams
      * @return bool
      */
-    public function storeInCache($szKey, $arrParams)
+    private function storeInCache($szKey, $arrParams)
     {
         //Set Hash Object
         $stTime = $this->createNewTime();
@@ -527,7 +525,6 @@ class ProfileCacheLib
                 $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
                 $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
                 $producerObj->sendMessage($queueData);
-
             }
         } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
         $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
@@ -639,7 +636,127 @@ class ProfileCacheLib
         $arrOut = $data;
       }
 
-    return $arrOut;
+      return $arrOut;
+    }
+    
+    /**
+     * getForMultipleKeys
+     * @param type $criteria
+     * @param type $key
+     * @param type $fields
+     * @param type $storeName
+     */
+    public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="")
+    {
+      if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+           return false;
+        }
+   
+        if(false === $this->validateCriteria($criteria)) {
+            return false;
+        }
+        
+        //Get Relevant Fields
+        $arrFields = $this->getRelevantFields($fields, $storeName);
+        
+        //Get Decorated keys
+        $arrDecoratedKeys = array_map(array("ProfileCacheLib","getDecoratedKey"), $arrKey);
+        
+        //Get Records from Cache
+        $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
+        
+        //Check data
+        if(false === $this->checkMulipleDataAvailability($arrResponse, $arrFields)) {
+          return false;
+        }
+        
+        //TODO : Handle Exception Cases  
+        return array_values($arrResponse);
+    }
+    
+    /**
+     * 
+     * @param type $szCriteria
+     * @param type $arrResponse
+     */
+    public function cacheForMultiple($szCriteria, $arrResponse)
+    {
+      foreach($arrResponse as $key=>$rowData){
+        $arrData[ProfileCacheConstants::PROFILE_CACHE_PREFIX.$rowData[$szCriteria]] = $rowData;
+        unset($arrResponse[$key]);
+      }
+      
+      $this->storeForMultipleProfileInCache($arrData);
+      //TODO : Handle Exception Cases
+    }
+    
+    /**
+     * 
+     * @param type $arrData
+     * @param type $arrFields
+     * @return boolean
+     */
+    private function checkMulipleDataAvailability(&$arrData, $arrFields)
+    { 
+      foreach($arrData as $key=>$value)
+      {
+        if(false === $this->isDataExistInCache($value)) {
+          $this->logThis(LoggingEnums::LOG_INFO, "Cache does not exist for {$key}");
+          return false;
+        }
+      }
+      return true;
+    }
+    
+    /**
+     * isDataExistInCache
+     * @param type $arr
+     * @return boolean
+     */
+    private function isDataExistInCache($arr)
+    {
+      foreach($arr as $k=>$v){
+        if(is_null($v)) return false;
+      }
+      return true;
+    }
+    
+    /**
+     * 
+     * @param type $arrData
+     * @return boolean
+     */
+    private function storeForMultipleProfileInCache($arrData)
+    {
+      //Set Hash Object
+        $stTime = $this->createNewTime();
+        $bSuccess = false;
+        $iTryCount = 0;
+        do {
+            try{
+                $arrResult = JsMemcache::getInstance()->setMultipleHashByPipleline($arrData, ProfileCacheConstants::CACHE_EXPIRE_TIME, true);
+                $bSuccess = true;
+            } catch (Exception $ex) {
+                $bSuccess = false;
+                ++$iTryCount;
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache failed while setting up in cache,Retrying again and its count : {$iTryCount}");
+            }
+            //If Attempt Count Reached to Max Attempt Count
+            if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
+                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Update failed, Adding in MQ for key : {$szKey}");
+
+                //Add into MQ
+                $producerObj = new Producer();
+                foreach($arrData as $szKey=>$value) {
+                    $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
+                    $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
+                    $producerObj->sendMessage($queueData);
+                }
+            }
+        } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
+        $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
+
+        return $bSuccess;
     }
 }
 ?>

@@ -11,7 +11,8 @@ if (isset($data)) //successful login
     } else {
         $name = $username = getname($cid);
     }
-
+    $name = preg_replace('/[^A-Za-z0-9\. -_]/', '', $name);	
+    $username = preg_replace('/[^A-Za-z0-9\. -_]/', '', $username);
     $center = getcenter_for_walkin($name);
 
     if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'http://crm.jeevansathi.com') {
@@ -87,6 +88,7 @@ if (isset($data)) //successful login
         }
         if (in_array('CRMTEC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/billingManagementInterface?user=$name&cid=$cid\">Billing Management Interface</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/changeActiveServicesInterface?user=$name&cid=$cid\">Change Active Services Interface</a>";
         }
         if (in_array('MBU', $priv) || in_array('BU', $priv) || in_array('BA', $priv)) //Misc-Revenue billing entry operator
         {
@@ -106,6 +108,10 @@ if (isset($data)) //successful login
         if (in_array("LTFHD", $priv) || in_array("SLSUP", $priv) || in_array("SLHD", $priv) || in_array("SLHDO", $priv) || in_array("AUTLOG", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/commoninterface/generateAutologinLink\">Generate Autologin</a>";
         }
+	if(in_array("LTFSUP",$priv)|| in_array("MG",$priv)||in_array("P",$priv))
+	{
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php//sugarcrm/csvToSugar\">Upload Sugarcrm CSV</a>";
+	}
         if (in_array('ANT', $priv)) {
             //$linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/uploadVD\">Upload variable special discount data</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/upload_offer_discount.php?name=$user&cid=$cid\">Upload Offer Discount csv</a>";
@@ -122,11 +128,11 @@ if (isset($data)) //successful login
 
         if (in_array('P', $priv) || in_array('IJS', $priv) || in_array('SJS', $priv) || in_array('TSJS', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/switch_match_alert_algo.php?name=$user&cid=$cid\">Switch Match Alert Algorithm</a>";
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/invalid_phone_status.php?name=$user&cid=$cid\">Mark Valid/Invalid Phone Numbers</a>";
+            $linkarr[] = "<a href=\"$SITE_URL//operations.php/feedback/reportInvalid?name=$user&cid=$cid\">Invalid Reported Contacts</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/allot_contact.php?name=$user&cid=$cid\"> Allot contacts View to Paid members. </a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/check_profiles_score.php?cid=$cid\">Check forward and reverse score for two profiles</a>";
         } elseif (in_array('QC', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/invalid_phone_status.php?name=$user&cid=$cid\">Mark Valid/Invalid Phone Numbers </a>";
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/invalid_phone_status.php?name=$user&cid=$cid\">Invalid Reported Contacts </a>";
         }
         if (in_array('DA', $priv))
         //$linkarr[]="<a href=\"$SITE_URL/jsadmin/change_festive.php?user=$name&cid=$cid\">Activate/Deactivate Festive offer</a>";
@@ -166,7 +172,7 @@ if (isset($data)) //successful login
             // $linkarr[]="<a href=# onClick=\"window.open('$SITE_URL/jsadmin/duplicate_verify_user.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Override Duplicate Phone Numbers</a>";
         }
         if (in_array('VRFYPH', $priv)) {
-            $linkarr[] = "<a href=# onClick=\"window.open('$SITE_URL/jsadmin/offline_verify_user.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Verify Users</a>";
+            $linkarr[] = "<a href=# onClick=\"window.open('$SITE_URL/jsadmin/offline_verify_user.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Verify/Unverify Users</a>";
         }
         if ($timein) {
             $date = date("Y-m-d");
@@ -312,6 +318,7 @@ if (isset($data)) //successful login
         }
         if (in_array('CRMTEC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/billingManagementInterface?user=$name&cid=$cid\">Billing Management Interface</a>";
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/changeActiveServicesInterface?user=$name&cid=$cid\">Change Active Services Interface</a>";
         }
         if (in_array('MBU', $priv)) //Misc-Revenue billing entry operator
         {
@@ -677,7 +684,8 @@ if (isset($data)) //successful login
         if (in_array('NEGLST', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/crm/negativeProfileSearch.php?cid=$cid\">Negative Individual/ Company</a>";
         }
-
+        if(in_array('NEGLST',$priv))
+	        $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeTreatment?cid=$cid\">Delete and Mark profiles in Negative List</a>";
         if (in_array('MG', $priv) || in_array('P', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/go_to_large_file.php?name=$user&cid=$cid\">Configure Large File</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/show_IM.php?cid=$cid\">Show/Hide Incentive Multiplier</a>";
@@ -768,6 +776,12 @@ if (isset($data)) //successful login
 
         if (in_array('SLHDO', $priv) || in_array('P', $priv) || in_array('SLHD', $priv) || in_array('MG', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/helpBackend\">Help Questions</a>";
+        }
+        if(in_array("SupFld",$priv))
+                $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/profileDocumentsUpload\">Upload Profile Verification Documents</a>";
+        //exclusive servicing phase II platform
+        if (in_array('ExPmSr', $priv) || in_array('SupPmS', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/exclusiveServicingII\">Send profiles to customer</a>";
         }
     }
 

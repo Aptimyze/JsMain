@@ -110,5 +110,25 @@ class billing_PURCHASE_DETAIL extends TABLE
             throw new jsException($e);
         }
     }
+
+    public function selectActualDates($billid, $serviceid)
+    {
+        try
+        {
+            $sql="SELECT SUBSCRIPTION_START_DATE, SUBSCRIPTION_END_DATE FROM billing.PURCHASE_DETAIL WHERE BILLID=:BILLID AND SERVICEID=:SERVICEID ORDER BY SID DESC LIMIT 1;";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":SERVICEID",$serviceid,PDO::PARAM_STR);   
+            $prep->execute();
+            if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output = $result;
+            }
+            return $output;
+        }
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

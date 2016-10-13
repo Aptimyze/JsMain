@@ -40,7 +40,7 @@ $this->addOptions(array(
 	date_default_timezone_set("Asia/Calcutta");
                 if($matchalert=='')
                 {
-                        $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
+                        $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS('newjs_masterDDL');
                         $scheduledAppNotificationsObj->truncate();
                 }
                 $this->notificationObj = new AppNotification;

@@ -112,14 +112,14 @@ window.onload=function(){
                         <li tabindex="1"><a id="homepageLink" href="~if $loggedIn`/myjs/jspcPerform~else`/~/if`">HOME</a></li>
                         <li tabindex="1" class="ml13"> <a class="drop" href="/search/index">MATCHES</a>
                             <ul class="menushadowGNB">
-                                <li><a class="disp_b js-gnbsearchLists" data="matchalerts"> Match Alerts</a></li>
-                                <li><a class="disp_b js-gnbsearchLists" data="partnermatches">Desired Partner Matches</a></li>
-                                <li><a class="disp_b js-gnbsearchLists" data="justjoined">Just Joined Matches</a></li>
-                                <li><a class="disp_b js-gnbsearchLists" data="verifiedMatches">Matches verified by Visit</a></li>
-                                <li><a class="disp_b js-gnbsearchLists" data="twoway">Mutual Matches</a></li>
-                                <li><a class="disp_b js-gnbsearchLists" data="reverseDpp">People Looking for me</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="matchalerts"> Match Alerts</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="partnermatches">Desired Partner Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="justjoined">Just Joined Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="verifiedMatches">Matches verified by Visit</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="twoway">Mutual Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="reverseDpp">People Looking for me</a></li>
                                 ~if $showKundliList eq '1'`
-                                <li><a class="disp_b js-gnbsearchLists" data="kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted members</a></li>
                                 <li><a class="disp_b" href="/search/visitors">Recent Profile Visitors</a></li>

@@ -76,7 +76,7 @@ var google_remarketing_only = true;
 <div class="fl" style="width:350px; padding:10px;">
 <div class="fl" >
 <span class="fl">A </span>
-<a href="http://www.naukri.com"><span class="nkri_lgo sprte fl" style="margin:0px;"></span></a>
+<a href="https://www.naukri.com"><span class="nkri_lgo sprte fl" style="margin:0px;"></span></a>
 <span class="fl">&nbsp;Group Company</span>
 </div > <br /><br />
 <div class="clr"></div>

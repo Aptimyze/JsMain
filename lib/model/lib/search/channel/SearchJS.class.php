@@ -64,6 +64,13 @@ class SearchJS implements SearchChannelInterface
                  
         }
         
+        /**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches()
+        {
+                 
+        }        
         
         /**
 	* This function will set the No. Of results for search Page

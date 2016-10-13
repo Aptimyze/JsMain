@@ -27,7 +27,7 @@ else
 	global $previous_rec_arr;
 	global $all_previous_rec_str;
 
-	$db=connect_db4();
+	$db=connect_db4_ddl();
 	$db1=connect_db();
 
 	//set of profile contacted by looged in user or he accepts the profile.

@@ -46,7 +46,7 @@ class dppAction extends sfAction {
 		$this->profileId = $this->loginProfile->getPROFILEID();
 		$this->casteLabel = JsCommon::getCasteLabel($this->loginProfile);
 
-    if($request->getParameter("fromBackend")){
+    if($request->getParameter("allowLoginfromBackend")){
 				$this->fromBackend=1;
 				$this->cid=$request->getParameter("fromBackend");
 				
@@ -228,6 +228,13 @@ class dppAction extends sfAction {
 		 $this->dropDownData = $this->getDropDowns($request);
      $this->casteDropDown = json_encode($this->getCasteValues(),true);
      
+     $newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+    $cnt_logic = $newjsMatchLogicObj->getPresentLogic($this->loginProfile->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
+    if($cnt_logic>0)
+            $this->toggleMatchalerts = "dpp";
+    else
+            $this->toggleMatchalerts = "new";
+     
      if(isset($this->fromReg)){
       $name_pdo = new incentive_NAME_OF_USER();
       $this->name        = $name_pdo->getName($this->profileId);
@@ -261,6 +268,13 @@ class dppAction extends sfAction {
 		$this->staticFields["age"] = $this->alterAgeArray();
 		$this->staticFields["height_json"] = $this->orderHeightValues();
                 $this->staticFields["p_mstatus"] = $this->updateMStatus($this->staticFields["p_mstatus"]);
+		foreach($this->staticFields as $k=>$v)
+		{
+			if($v[0][0][0]=="Select")
+			{
+				unset($this->staticFields[$k][0][0]);
+			}
+		}
 		return $this->staticFields;
 	}
 	/* This function changes the format of the array into the requried format so as to make all data 

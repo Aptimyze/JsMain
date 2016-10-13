@@ -339,11 +339,16 @@ class AgentBucketHandler
 				$subscription=$profilesDetails['SUBSCRIPTION'];
 				if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
 				{
-					$expiryDt=$serviceStatusObj->getMaxExpiryDate($profileid);
-					if(JSstrToTime($expiryDt)==JSstrToTime(date("Y-m-d",time())))
+					if($subMethod=='NEGATIVE_LIST'){
 						$profilesForDeletion[]=$profiles[$i];
-					else
-						continue;
+					}
+					else{
+						$expiryDt=$serviceStatusObj->getMaxExpiryDate($profileid);
+						if(JSstrToTime($expiryDt)==JSstrToTime(date("Y-m-d",time())))
+							$profilesForDeletion[]=$profiles[$i];
+						else
+							continue;
+					}
 				}
 				else
 					$profilesForDeletion[]=$profiles[$i];
@@ -396,7 +401,7 @@ class AgentBucketHandler
                 $disp_order_arr=$agentAllocDetailsObj->fetchDispositionOrder();
                 $tot_disp=count($disp_order_arr);
                 $executives=$agentAllocDetailsObj->fetchExecutives($processObj);
-                $tempAllocBucketObj=new TEMP_ALLOCATION_BUCKET();
+                $tempAllocBucketObj=new TEMP_ALLOCATION_BUCKET('newjs_masterDDL');
 		$mainAdminObj=new incentive_MAIN_ADMIN('newjs_masterRep');
                 $tempAllocBucketObj->truncate();
 		for($i=0;$i<count($executives);$i++)

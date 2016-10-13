@@ -42,6 +42,13 @@ function connect_211()
 	return $db;
 }
 
+function connect_viewLogDDL()
+{
+        $db = mysql_connect(MysqlDbConstants::$viewLogDDL[HOST].":".MysqlDbConstants::$viewLogDDL[PORT],MysqlDbConstants::$viewLogDDL[USER],MysqlDbConstants::$viewLogDDL[PASS]) or die("211 DDL connection failed");
+        mysql_select_db("newjs",$db);               // connection string
+        return $db;
+}
+
 //function added by Vibhor for tracking bounce emails
 function connect_bouncelog()
 {
@@ -75,6 +82,12 @@ function connect_db4()
 	$db_viewSimilar = mysql_connect(MysqlDbConstants::$viewSimilar[HOST].":".MysqlDbConstants::$viewSimilar[PORT],MysqlDbConstants::$viewSimilar[USER],MysqlDbConstants::$viewSimilar[PASS]) or die("Unable to connect to viewSimilar server");
         return $db_viewSimilar;
 }
+function connect_db4_ddl()
+{
+        $db_viewSimilar = mysql_connect(MysqlDbConstants::$viewSimilarDDL[HOST].":".MysqlDbConstants::$viewSimilarDDL[PORT],MysqlDbConstants::$viewSimilarDDL[USER],MysqlDbConstants::$viewSimilarDDL[PASS]) or die("Unable to connect to viewSimilar server");
+        return $db_viewSimilar;
+}
+
 
 // product Slave for master 
 function connect_slave111()

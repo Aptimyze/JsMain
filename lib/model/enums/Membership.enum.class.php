@@ -647,25 +647,26 @@ class paymentOption
         "card3" => array(
             "ic_id" => "",
             "name" => "VISA"
-        ) ,
-        "card4" => array(
-            "ic_id" => "",
-            "name" => "Diners Club"
-        ) ,
-        "card5" => array(
-            "ic_id" => "",
-            "name" => "UCB"
-        ) ,
-        "card6" => array(
-            "ic_id" => "",
-            "name" => "RuPay"
-        )
+        ) 
+        // ,
+        // "card4" => array(
+        //     "ic_id" => "",
+        //     "name" => "Diners Club"
+        // ) ,
+        // "card5" => array(
+        //     "ic_id" => "",
+        //     "name" => "UCB"
+        // ) ,
+        // "card6" => array(
+        //     "ic_id" => "",
+        //     "name" => "RuPay"
+        // )
     );
     public static $dbCardType = array(
-        "card1" => array(
-            "ic_id" => "",
-            "name" => "American Express"
-        ) ,
+        // "card1" => array(
+        //     "ic_id" => "",
+        //     "name" => "American Express"
+        // ) ,
         "card2" => array(
             "ic_id" => "",
             "name" => "MasterCard"
@@ -793,8 +794,8 @@ class gatewayConstants
     public static $PayUTestDolMerchantId = "U0TVwL";
     public static $PayUTestDolSalt = "pvDO157G";
     
-    public static $PayUTestRsMerchantId = "dCBTMi";
-    public static $PayUTestRsSalt = "j2lZUnbX";
+    public static $PayUTestRsMerchantId = "gtKFFx";
+    public static $PayUTestRsSalt = "eCwWELxi";
     
     public static $PayUTestGatewayURL = 'https://test.payu.in/_payment';
     public static $PayULiveGatewayURL = 'https://secure.payu.in/_payment';

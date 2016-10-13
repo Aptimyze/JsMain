@@ -95,6 +95,9 @@ class ProfilePicturesTypeEnum
                                                             "ThumbailUrl"=>array("w"=>"60","h"=>"60"),
 							    "MainPicUrl"=>array("w"=>"990","h"=>"512")
                         );
+    //This array is to be used in a oneTimeCron checkPhotoUrlTask where the ordering != 0
+    public static $PICTURE_FIELD_FOR_ALBUM_PICS = array("MainPicUrl","OriginalPicUrl",
+                        "Thumbail96Url");
         
         
 }

@@ -64,9 +64,8 @@
      /** add common code **/
      if(objConfig.showError==true||typeof objConfig.showError=="undefined")
       {
-        $("#commonError").slideDown("slow");
-        setTimeout('$("#commonError").slideUp("slow")',1500);
-      }
+            showCustomCommonError("Something went wrong. Please try again after some time.",1500);
+        }
         if ( $.isFunction(objConfig.error) ) {
           objConfig.error(data, objConfig.context)   
         }

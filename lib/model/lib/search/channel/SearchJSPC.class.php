@@ -329,6 +329,15 @@ class SearchJSPC extends SearchJS
                  return SearchTypesEnums::VERIFIED_MATCHES_JSPC;
         }
         
+        
+        /**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches()
+        {
+                 return SearchTypesEnums::KundliAlerts;
+        }
+        
         function saveSearch($params){
                 $loggedInProfileObj = $params["loggedInProfileObj"];
                 $request = $params["request"];

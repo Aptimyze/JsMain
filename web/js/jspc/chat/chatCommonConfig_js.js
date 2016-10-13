@@ -33,29 +33,29 @@ chatConfig.Params = {
     //tracking params for contact engine actions
     trackingParams: {
         "ACCEPT": {
-            "responseTracking": 8
+            "responseTracking": chatTrackingVar["rtype"]
         },
         "DECLINE": {
-            "responseTracking": 8
+            "responseTracking": chatTrackingVar["rtype"]
         },
         "INITIATE": {
-            "stype": "WV"
+            "stype": chatTrackingVar["stype"]
         },
         "BLOCK": {},
         "UNBLOCK": {}
     },
     categoryTrackingParams: {
         "intrec": {
-            "responseTracking": 8
+            "responseTracking": chatTrackingVar["rtype"]
         },
         "dpp": {
-            "stype": "WV"
+            "stype": chatTrackingVar["stype"]
         },
         "intsent": {
-            "stype": "WV"
+            "stype": chatTrackingVar["stype"]
         },
         "shortlist": {
-            "stype": "WV"
+            "stype": chatTrackingVar["stype"]
         },
         "acceptance": {},
         "mysearch":{}
@@ -69,7 +69,7 @@ chatConfig.Params = {
     preAcceptChat: {
         "apiUrl": "/api/v1/chat/sendEOI",
         "extraParams": {
-            "stype": "WV",
+            "stype": chatTrackingVar["stype"],
             "pageSource": "chat",
             "channel": 'pc'
         }
@@ -94,12 +94,12 @@ chatConfig.Params = {
             "tab1": {
                 "tab_name": "Online Matches",
                 "groups": [
-                    /*{
+                    {
                         "id": "dpp",
                         "group_name": "Desired Partner Matches",
                         "show_group_name": true,
                         "hide_offline_users": true
-                    },*/
+                    },
                     {
                         "id": "intsent",
                         "group_name": "Interest Sent",
@@ -141,7 +141,7 @@ chatConfig.Params = {
                 "iconid": "090",
                 "primary": "true",
                 "secondary": null,
-                "params": "responseTracking=8",
+                "params": "responseTracking="+chatTrackingVar["rtype"],
                 "enable": true,
                 "id": "ACCEPT"
             }, {
@@ -150,7 +150,7 @@ chatConfig.Params = {
                 "iconid": "089",
                 "primary": "true",
                 "secondary": null,
-                "params": "responseTracking=8",
+                "params": "responseTracking="+chatTrackingVar["rtype"],
                 "enable": true,
                 "id": "DECLINE"
             }],
@@ -160,7 +160,7 @@ chatConfig.Params = {
                 "iconid": "001",
                 "primary": "true",
                 "secondary": "true",
-                "params": "stype=WV",
+                "params": "stype="+chatTrackingVar["stype"],
                 "enable": true,
                 "id": "INITIATE"
             }],
@@ -170,7 +170,7 @@ chatConfig.Params = {
                 "iconid": "005",
                 "primary": "true",
                 "secondary": "true",
-                "params": "stype=WV",
+                "params": "stype="+chatTrackingVar["stype"],
                 "enable": true,
                 "id": "CANCEL"
             }],
@@ -180,7 +180,7 @@ chatConfig.Params = {
                 "iconid": "001",
                 "primary": "true",
                 "secondary": "true",
-                "params": "stype=WV",
+                "params": "stype="+chatTrackingVar["stype"],
                 "enable": true,
                 "id": "INITIATE"
             }],
@@ -284,6 +284,26 @@ chatConfig.Params = {
                 "checkForPaidInitiation":true
             }
         },
+        groupBasedConfig:{
+            "dpp":{
+                "reListCreationAfterUnblock":false //whether user comes again in list after unblock
+            },
+            "shortlist":{
+                "reListCreationAfterUnblock":false
+            },
+            "acceptance":{
+                "reListCreationAfterUnblock":true
+            },
+            "mysearch":{
+                "reListCreationAfterUnblock":false
+            },
+            "intsent":{
+                "reListCreationAfterUnblock":true
+            },
+            "intrec":{
+                "reListCreationAfterUnblock":true
+            }
+        },
         //max count of nodes limit per group
         groupWiseNodesLimit: {
             "dpp": 50,
@@ -299,7 +319,11 @@ chatConfig.Params = {
         appendRetryLimit: 1000,
         checkForDefaultEoiMsg:false,    //check for default eoi msg in chat history while append
         setLastReadMsgStorage:true,
-        rosterDeleteChatBoxMsg:"You can no longer chat, as the other user has blocked you/declined your interest"
+	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
+        autoChatLogin:((hideUnimportantFeatureAtPeakLoad == "1") ? false : true),  //auto-login to chat on site login
+        rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
+        clearListingCacheTimeout:86400000 //TIme in milliseconds(1 day)
     }
 };
-chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
+chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
+//console.log("autoChatLogin",chatConfig.Params.pc.autoChatLogin);

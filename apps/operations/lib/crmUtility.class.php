@@ -6,6 +6,12 @@ class crmUtility
 	        $ISTtime=strftime("%Y-%m-%d %H:%M",JSstrToTime("$time + 10 hours 30 minutes"));
 	        return $ISTtime;
 	}
+        public function getIST($dateTime='')
+        {
+		$mainAdminObj =new incentive_MAIN_ADMIN();
+		$dateTime =$mainAdminObj->getIST($dateTime);
+                return $dateTime;
+        }
 	public function fetchActiveStatus($activated,$incomplete)
 	{
 	        $message='';

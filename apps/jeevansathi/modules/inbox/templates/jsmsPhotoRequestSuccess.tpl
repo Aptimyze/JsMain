@@ -62,7 +62,13 @@ $("#noMsgDiv").css('height',$(window).height());
     <div class="fullwid">
       <img src="~$tupleInfo.photo.url`" class="brdr_radsrp wid24p tupleImage fl"/> 
       <div class="fl padlr_1" style="width:75%;">
-        <div><span class="fontreg f14 color7">~$tupleInfo.username`</span><span class="f11 color4 fontlig padl5">~$tupleInfo.timetext`</span><span class="f11 color2 fontreg padl5 fr">~$tupleInfo.subscription_icon`</span></div>
+        <div><span class="fontreg f14 color7 textTru wid40p dispibl vbtm">
+                ~if $tupleInfo.name_of_user neq '' && $tupleInfo.name_of_user neq null` 
+                                        ~$tupleInfo.name_of_user`
+                                ~else` 
+                                        ~$tupleInfo.username`
+                                ~/if`
+                </span><span class="f11 color4 fontlig padl5">~$tupleInfo.timetext`</span><span class="f11 color2 fontreg padl5 fr">~$tupleInfo.subscription_icon`</span></div>
         <div class="f13 color3 fontlig fullwid" style="text-overflow:ellipsis; overflow-x: hidden; white-space:nowrap; ">
             ~assign var="MTONGUE" value="/"|explode:$tupleInfo.mtongue`
 	~assign var="CASTE" value=":"|explode:$tupleInfo.caste`	

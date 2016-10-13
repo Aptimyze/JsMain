@@ -302,7 +302,7 @@ class BILLING_PURCHASES extends TABLE{
     {
         try
         {
-            $sql="SELECT PROFILEID FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
+            $sql="SELECT PROFILEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS = 'DONE' AND MEMBERSHIP = 'Y' AND PROFILEID IN ($profileStr)";
             if($start_dt)
                 $sql .=" AND ENTRY_DT >= :START_DT";
             $prep=$this->db->prepare($sql);
@@ -311,7 +311,7 @@ class BILLING_PURCHASES extends TABLE{
             $prep->execute();
             while($row = $prep->fetch(PDO::FETCH_ASSOC))
             {
-                $res[] = $row['PROFILEID'];
+                $res[$row['PROFILEID']] = $row['ENTRY_DT'];
             }
             return $res;
         }
@@ -585,12 +585,12 @@ class BILLING_PURCHASES extends TABLE{
 
     public function fetchFinanceData ($startDt, $endDt) {
         try {
-            $sql = "SELECT pd.ENTRY_DT,pd.BILLID,pd.RECEIPTID,pd.PROFILEID,p.USERNAME,pur_d.SERVICEID,pur_d.START_DATE,pur_d.END_DATE,pur_d.CUR_TYPE,ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT,pur_d.DEFERRABLE FROM billing.PAYMENT_DETAIL pd,billing.PURCHASE_DETAIL pur_d,billing.PURCHASES p WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 ORDER BY BILLID ASC";
+            $sql = "SELECT pd.ENTRY_DT,pd.BILLID,pd.RECEIPTID,pd.PROFILEID,p.USERNAME,pur_d.SERVICEID,pur_d.START_DATE,pur_d.END_DATE,pur_d.CUR_TYPE,ROUND(((pd.AMOUNT*pur_d.SHARE)/100),2) AS AMOUNT,pur_d.DEFERRABLE,pur_d.SUBSCRIPTION_START_DATE AS ASSD, pur_d.SUBSCRIPTION_END_DATE AS ASED FROM billing.PAYMENT_DETAIL pd,billing.PURCHASE_DETAIL pur_d,billing.PURCHASES p WHERE p.BILLID=pd.BILLID AND p.PROFILEID=pd.PROFILEID AND pd.PROFILEID=pur_d.PROFILEID AND pd.BILLID=pur_d.BILLID AND pd.ENTRY_DT>=:START_DATE AND pd.ENTRY_DT<=:END_DATE AND pd.STATUS='DONE' AND pd.AMOUNT!=0 ORDER BY BILLID ASC";
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
             $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
             $prep->execute();
-            while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC))
             {
                 $profiles[] = $result;
             }
@@ -600,6 +600,147 @@ class BILLING_PURCHASES extends TABLE{
         {
             throw new jsException($e);
         }
+    }  
+
+    public function checkIfProfilePaidWithin15Days($profileid, $startDt) {
+        try {
+            $endDt = date("Y-m-d", strtotime($startDt)+(15*24*60*60)-1);
+            $sql = "SELECT BILLID FROM billing.PURCHASES WHERE PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:END_DATE AND STATUS='DONE'";
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $output[] = $result['BILLID'];
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
     }   
+
+    public function getRenewedProfilesBillidInE30($profileid, $billid, $expiryDt)
+    {
+        try
+        {
+            $endDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry - 30 days
+            $sql="SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT<:EXPIRY_DT";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":EXPIRY_DT",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[] = $row['BILLID'];
+            }
+            return array(count($res), $res);
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function getRenewedProfilesBillidInE30E($profileid, $billid, $expiryDt)
+    {
+        try
+        {
+            $startDt = date("Y-m-d", strtotime($expiryDt)-30*24*60*60); // expiry - 30 days <-> expiry
+            $sql="SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>=:START_DATE AND ENTRY_DT<=:EXPIRY_DT";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
+            $prep->bindValue(":EXPIRY_DT",$expiryDt,PDO::PARAM_STR);
+            $prep->execute();
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[] = $row['BILLID'];
+            }
+            return array(count($res), $res);
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function getRenewedProfilesBillidInEE10($profileid, $billid, $expiryDt)
+    {
+        try
+        {
+            $endDt = date("Y-m-d", strtotime($expiryDt)+10*24*60*60); // expiry <-> expiry + 10 days
+            $sql="SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:EXPIRY_DT AND ENTRY_DT<=:END_DATE";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":EXPIRY_DT",$expiryDt,PDO::PARAM_STR);
+            $prep->bindValue(":END_DATE",$endDt,PDO::PARAM_STR);
+            $prep->execute();
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[] = $row['BILLID'];
+            }
+            return array(count($res), $res);
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function getRenewedProfilesBillidInE10($profileid, $billid, $expiryDt)
+    {
+        try
+        {
+            $startDt = date("Y-m-d", strtotime($expiryDt)+10*24*60*60); // expiry + 10 days
+            $sql="SELECT BILLID FROM billing.PURCHASES WHERE (SERVICEID LIKE '%P%' OR SERVICEID LIKE '%C%' OR SERVICEID LIKE '%NCP%' OR SERVICEID LIKE '%ESP%' OR SERVICEID LIKE '%X%') AND BILLID>:BILLID AND PROFILEID=:PROFILEID AND ENTRY_DT>:START_DATE";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+            $prep->bindValue(":BILLID",$billid,PDO::PARAM_INT);
+            $prep->bindValue(":START_DATE",$startDt,PDO::PARAM_STR);
+            $prep->execute();
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[] = $row['BILLID'];
+            } 
+            return array(count($res), $res);
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function fetchTFNSMSProfiles($curDate)
+    {
+        try
+        {
+            $fifteenDays = date("Y-m-d", strtotime($curDate)-15*24*60*60);
+            $fortyFiveDays = date("Y-m-d", strtotime($curDate)-45*24*60*60);
+            $sql="SELECT PROFILEID, BILLID, SERVICEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND (DATE(ENTRY_DT)=:START_DATE1 OR DATE(ENTRY_DT)=:START_DATE2)";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":START_DATE1",$fifteenDays,PDO::PARAM_STR);
+            $prep->bindValue(":START_DATE2",$fortyFiveDays,PDO::PARAM_STR);
+            $prep->execute();
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[] = $row;
+            } 
+            return $res;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

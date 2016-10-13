@@ -126,7 +126,11 @@ class TupleService
                         "NATIVE_LOGIC" => Array(
 				"FIELDS" => Array("NATIVE_CITY","NATIVE_STATE"),
 				"LOGIC" => Array()
-			)
+			),
+			"NAME_LOGIC" =>Array(
+				"FIELDS" => Array("NAME_OF_USER","DISPLAY_NAME"),
+				"LOGIC" =>Array()
+			),
 			
 		);
 	}
@@ -371,7 +375,22 @@ class TupleService
 		}
 		return null;
 	}
-	
+	public function executeNAME_LOGIC($profileIds)
+	{
+		if(!empty($profileIds))
+		{
+			$nameOfUserObj = new NameOfUser();
+			$showNameData = $nameOfUserObj->showNameToProfiles($this->getLoginProfileObj(),$this->profileDetailsArray);
+			foreach($showNameData as $k=>$v)
+			{
+				if($v['SHOW']==true)
+					$profileArray[$k]['NAME_OF_USER']=$v['NAME'];
+				else
+					$profileArray[$k]['NAME_OF_USER']='';
+			}
+		}
+		return $profileArray;
+	}
 	/* Various logic implementations defined in initLogics for respective fields
 	/*@param profileIds : array of profile ids to find the fields
 	/*@return profilesArray : array of profiles with complete information retrieved from this logic
@@ -380,7 +399,7 @@ class TupleService
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION("newjs_masterRep");
+			$jprofArrObj                = ProfileEducation::getInstance("newjs_masterRep");
 			$profileDetailsArray = $jprofArrObj->getProfileEducation($profileIds,'mailer');
 				
 			foreach($profileDetailsArray as $k=>$row)
@@ -860,7 +879,7 @@ else {
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_NATIVE_PLACE("newjs_masterRep");
+			$jprofArrObj                = ProfileNativePlace::getInstance("newjs_masterRep");
                          if(!is_array($profileIds)){
                             $profileIds = array($profileIds);
                         }

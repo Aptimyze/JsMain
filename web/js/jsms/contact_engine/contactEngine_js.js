@@ -405,8 +405,7 @@ function bindActions(index, action, enableButton, buttonDetailsOthers)
 						var paramstr = buttonDetailsOthers[iButton['IGNORE']].params;
 						profile_index[index]['IGNORE'] = paramstr.split('=')[1];
 					}
-					else 
-						profile_index[index]['IGNORE'] = (profile_index[index]['IGNORE']==1)?"0":"1";
+					 
 
           var paramsArr = {
             blockArr: {
@@ -523,7 +522,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
       }
     }
   });
-params = {};
+//params = {};
 }
 
 
@@ -904,6 +903,8 @@ function sendReminder(result, action, index){
     // paid profile condition
     showWriteMessageOverlay();
     $("#writeMessageTxtId").val('');
+    if(result.actiondetails.lastsent)
+      $("#writeMessageTxtId").val(result.actiondetails.lastsent);
     $("#presetMessageId").show();
     $("#writeMsgDisplayId").show();
     $("#writeMsgDisplayId").html('');
@@ -1052,6 +1053,8 @@ function initiateContact(result,action, index){
     writeMessageAction = "INITIATE";
     showWriteMessageOverlay();
     $("#writeMessageTxtId").val('');
+    if(result.actiondetails.lastsent)
+      $("#writeMessageTxtId").val(result.actiondetails.lastsent);
     $("#presetMessageId").show();
     $("#presetMessageTxtId").html('Interest sent. You may send a personalized message with the interest.');
     $("#writeMsgDisplayId").html('');
@@ -1291,6 +1294,9 @@ function ignore(result,action,index){
     hideForHide();
     layerClose();
         }
+    profile_index[index]['IGNORE'] = (profile_index[index]['IGNORE']==1)?"0":"1";
+        
+        
 }
 function showCommonOverlay()
 {
@@ -1325,7 +1331,7 @@ function open3DotLayer(buttonDetails,index)
   			child.eq(i).children("i").attr("class",cssMap[iconidd]);
   		}
           	else if(profile_index[index] && profile_index[index]['IGNORE'] && buttonDetails.buttons[buttonId].action == 'IGNORE') {
-  			var labell = (profile_index[index]['IGNORE'] == 1) ? 'Unblock':'Block';
+  			var labell = (profile_index[index]['IGNORE'] == 0) ? 'Unblock':'Block';
   			child.eq(i).children("#otherlabel"+i).html(labell);
   			child.eq(i).children("i").attr("class",cssMap[buttonDetails.buttons[buttonId].iconid]);
   		}

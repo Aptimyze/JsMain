@@ -63,7 +63,7 @@ function updateHistory(tabName,page,searchId)
                     addMoreParams += '/'+page;
                 if(cachingParam!="")
 									addMoreParams += '?'+cachingParam;
-		if(window.location.href.indexOf('mySaveSearchId')==-1)
+		//if(window.location.href.indexOf('mySaveSearchId')==-1)
 			$.urlUpdateHistory('Search Results Page '+tabName,addMoreParams);
 	}
     if (window.location.href.indexOf('/inbox/')!=-1){

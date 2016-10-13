@@ -108,8 +108,8 @@ class JPROFILE
         $fields = $this->getRelevantFields($fields);
         $bServedFromCache = false;
         $this->totalQueryCount();
-        if (ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields)) {
-            $result = ProfileCacheLib::getInstance()->get($criteria, $value, $fields, $extraWhereClause);
+        if (ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields, __CLASS__)) {
+            $result = ProfileCacheLib::getInstance()->get($criteria, $value, $fields, __CLASS__, $extraWhereClause);
             //When processing extraWhereClause results could be false,
             //so for that case also we are going to query mysql
             if (false !== $result) {
@@ -119,7 +119,7 @@ class JPROFILE
         }
 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-            LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO,"Consuming from cache for criteria: {$criteria} : {$value}");
+            // LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO,"Consuming from cache for criteria: {$criteria} : {$value}");
             $this->logCacheConsumption();
             return $result;
         }
@@ -156,7 +156,7 @@ class JPROFILE
         $bResult = self::$objProfileMysql->updateRecord($paramArr,$value,$criteria,$extraWhereCnd);
 
         if(true === $bResult) {
-            ProfileCacheLib::getInstance()->updateCache($paramArr, $criteria, $value, $extraWhereCnd);
+            ProfileCacheLib::getInstance()->updateCache($paramArr, $criteria, $value, __CLASS__, $extraWhereCnd);
         }
 
         //If Criteria is not PROFILEID then remove data from cache.
@@ -690,6 +690,12 @@ class JPROFILE
       
       $now = time();//date('Y-m-d H:i:s').':'.uniqid();
       JsMemcache::getInstance()->zAdd('JPROFILE_GET_ARRAY', $now, $Var);
+    }
+
+    //This function is used to fetch the latest entry date in JPROFILE so as to check in MIS whether there is a lag in slave.
+    public function getLatestEntryDate()
+    {
+        return self::$objProfileMysql->getLatestEntryDate();
     }
 }
 

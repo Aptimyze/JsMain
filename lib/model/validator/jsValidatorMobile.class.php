@@ -13,6 +13,16 @@ class jsValidatorMobile extends sfValidatorBase
   
   protected function doClean($value)
   {
+    $source = $_SERVER['HTTP_REFERER'];
+    if(strpos($source,"viewprofile") !== $false)
+    {
+      $source = "EDIT";
+    }
+    elseif(strpos($source,"registration") !== $false)
+    {
+      $source = "REG";
+    }
+
     $phone = ltrim($this->getOption('landline'),0);
     $value['mobile']=ltrim($value['mobile'],0);
 	if(!(strlen($phone)>0 && empty($value['mobile'])) && !(empty($value['mobile']) && $this->getOption('altMobile')==1))
@@ -70,11 +80,16 @@ class jsValidatorMobile extends sfValidatorBase
         if(!in_array($isdval,$isdkeys))
        	throw new sfValidatorError($this,'err_isd_code', array('value' => $value));
 	if($value['mobile']!='')
-	{
-		$negativeProfileListObj = new incentive_NEGATIVE_PROFILE_LIST;
-		$negativeMobile = $negativeProfileListObj->checkEmailOrPhone("MOBILE",$value['mobile']);
+	{       
+                if($value['isd'])
+                    $valueToCheck = $value['isd'].$value['mobile'];
+                else
+                    $valueToCheck = $value['mobile'];
+		$negativeProfileListObj = new incentive_NEGATIVE_LIST;
+		$negativeMobile = $negativeProfileListObj->checkEmailOrPhone("PHONE_NUM",$valueToCheck);
 		if($negativeMobile)
 		{
+			file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/loggingIgnoredEmailAndPhone.txt",$valueToCheck."\t".date("Y-m-d H:i:s")."\t".$source."\n",FILE_APPEND);
 			throw new sfValidatorError($this, 'err_phone_revoke', array('value' => $value['mobile']));
 		}
 	}

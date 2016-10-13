@@ -209,7 +209,7 @@ class ProfileCompletionScore extends AbstractProfileCompletionScore
 		// Get Education Details from JPROFILE_EDUCATION
 		
 		$iPercentage = 0;
-		$jsEdu = new NEWJS_JPROFILE_EDUCATION;
+		$jsEdu = ProfileEducation::getInstance();
 		$arrEducation = $jsEdu->getProfileEducation($this->m_objProfile->getPROFILEID());
 
 		$iHighestDegree = $this->m_objProfile->getEDU_LEVEL_NEW();

@@ -37,7 +37,7 @@ EOF;
                 ini_set('max_execution_time', 0);
 		if(!sfContext::hasInstance())
 	            sfContext::createInstance($this->configuration);
-	            $mailerYNObj = new MAIL_SHORTLISTED_PROFILES("newjs_master");
+	            $mailerYNObj = new MAIL_SHORTLISTED_PROFILES("newjs_masterDDL");
 	            $mailerYNObj->EmptyMailer();
 	            echo "Truncated Mailer Table\n\n";
 	            $chunk=$arguments["chunks"];
@@ -81,7 +81,7 @@ public function skipProfiles($arranged)
 	foreach ($arranged as $key => $value) 
 	{
 		$skipProfileObj     = SkipProfile::getInstance($key);
-		$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+                $skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 		if(is_array($skipProfiles))
 			$temp=array_diff($value,$skipProfiles); 
 		else

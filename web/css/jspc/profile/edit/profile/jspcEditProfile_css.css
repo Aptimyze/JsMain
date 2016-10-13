@@ -451,3 +451,78 @@ left: 60px;
 .wordWrapBreak{
   word-wrap: break-word;
 }
+        #hoverDiv {
+            padding-Bottom: 16px;
+        }
+        .mt12{margin-top:12px;}
+        .optionDrop {
+            width: 338px;
+            list-style-type: none;
+            left: -6px;
+        }
+
+        .optionDrop li {
+            font-size: 13px;
+            font-family: "Roboto", "sans-serif";
+            font-weight: 400;
+            color: #5a5a5a;
+            height: 30px;
+            background-color: white;
+            border: 1px solid #d9475c;
+            padding: 10px;
+            z-index: 9;
+            position: relative;
+	    line-height:17px;
+        }
+        .optionDrop .selected {
+            background-color: #d9475c;
+            color: white;
+        }
+
+        #hoverDiv:hover .optionDrop {
+            display: block;
+        }
+        .optionDrop:hover {
+            display: block;
+        }
+	#settingsIcon {
+            width: 25px;
+            height: 21px;
+            background-image: url(IMG_URL/images/jspc/commonimg/iconSpriteNameSetting.png);
+            background-repeat: no-repeat;
+                        background-position:-32px -30px;
+        }
+
+        .wid77p {
+            width: 77%
+        }
+
+        .r0 {
+            right: 0;
+        }
+
+        .colrGrey {
+            color: #666666;
+        }
+        .extraTxt {
+            padding: 10px 20px;
+            height: 25px;
+            width: 463px;
+            line-height: 16px;
+        }
+
+        .mr5 {
+            margin-right: 5px
+        }
+        .hgt47 {
+            height: 45px;
+        }
+
+        .colrTxt {
+            color: #5a5a5a
+        }
+
+        .showToAll {
+            vertical-align: super;
+            padding-right: 5px;
+        }

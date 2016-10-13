@@ -4,9 +4,9 @@
 */
 class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
 {
-	public function __construct()
+	public function __construct($dbname='')
 	{
-		$dbname = "matchalerts_slave";
+		$dbname = $dbname?$dbname:"matchalerts_slave";
 		parent::__construct($dbname);
 	}
 

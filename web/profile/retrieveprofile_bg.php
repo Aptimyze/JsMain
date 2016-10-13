@@ -55,6 +55,12 @@ mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 
 $sql="INSERT IGNORE INTO newjs.RETRIEVE_PROFILE_LOG(PROFILEID,DATE) VALUES('$profileid',NOW())";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
+
+if(mysql_affected_rows() == 0) {//if row already exist then replace data
+  $sql="REPLACE INTO newjs.RETRIEVE_PROFILE_LOG(PROFILEID,DATE,SHARD1,SHARD2,SHARD3,MAINDB) VALUES('$profileid',NOW(),'0','0','0','0')";  
+  mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
+}
+
 /* Deleting from DELETED_PROFILE_LOG and adding entry into RETRIVE_PROFILE_LOG(to check if cron is executing properly)*/ 
 
 
@@ -191,7 +197,14 @@ mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 
 /****** Commit ends here ******/
 
-
+//For Assisteed Product//////
+$billingObj = new BILLING_SERVICE_STATUS('newjs_slave');
+$szSubscription = $billingObj->getActiveSuscriptionString($profileid);
+if(stristr($szSubscription, 'T')) {//Its a active assisted product user 
+   $sql = "INSERT INTO Assisted_Product.AP_PROFILE_INFO(PROFILEID,SE,STATUS) VALUES('$profileid', 'default.se', 'LIVE')";
+   mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
+}
+//////////////////////////////
 /*** Update contact status table ***/
 $affectedId=array();
 $k=1;

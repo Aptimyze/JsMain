@@ -220,19 +220,19 @@
 	</tr>
 </table>
 <table width=100% align="center">
-	<!--<tr class=fieldsnew>
+	<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/editDppInterface?profileChecksum=~$profileChecksum`&cid=~$cid`" target="_blank">Edit desired partner profile for this user</a><br><br></td>
 	</tr>
-	<tr class=fieldsnew>
+	<!--<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/search/partnermatches?checksum=~$checksum`&echecksum=~$echecksum`&profileChecksum=~$profileChecksum`" target="_blank">View Your Partner Matches</a><br><br></td>
 	</tr>-->
 	<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/crm/mail_to_users.php?cid=~$cid`&profileid=~$profileid`&username=~$username`" target="_blank">Click here to send mail to this user</a><br><br></td>
 	</tr>
 ~if $set_filter or $ISALLOTED eq "Y"`
-	<!--<tr class=fieldsnew>
+	<tr class=fieldsnew>
 		<td align=center><a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/editDppInterface?profileChecksum=~$profileChecksum`&cid=~$cid`" target="_blank">Click here to set filter for this user</a><br><br></td>
-	</tr>-->
+	</tr>
 ~/if`
 ~if $online_payment or $ISALLOTED eq "Y"`
 	<tr class=fieldsnew>

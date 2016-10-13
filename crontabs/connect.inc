@@ -2,6 +2,7 @@
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
 include_once("/usr/local/scripts/connect_crontabsDb.php");
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 //Added By lavesh
 if($flag_using_php5)
 {

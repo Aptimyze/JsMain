@@ -300,7 +300,12 @@ else if(this.buttonDetails.button!=null){
 //Bottom Ignore layer on VDP 
 if(this.name=="IGNORE" && this.pageName=="VDP" )
 {
-	callAfterContact();
+    
+        if(this.data.responseStatusCode==1)
+        {
+            showCustomCommonError(this.data.responseMessage,5000);return;
+        }
+            callAfterContact();
 	if(ignoreLayerOpened==1){
 		
 		if(this.data.message!=undefined && this.data.message!=null)
@@ -511,7 +516,9 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 								onTotalScrollBack:function(){if(requestObj.allMessageLoaded)return;$("#msgHistoryLoader").css('visibility','visible');requestObj.request();}
 							}});
     tempScroller.mCustomScrollbar('scrollTo','bottom',{scrollInertia:0});                                                
-
+    }
+    
+    }
 $( "#backToMessage" ).click(function() {
 	$("#messageWindow").addClass('disp-none');
 	$("#messageWindow").html("");
@@ -522,8 +529,8 @@ $( "#backToMessage" ).click(function() {
 });
   cECommonBinding();
   cECloseBinding(); 
-  }
-  }
+  
+  
 }
   
 Button.prototype.makePostDataForAjax= function(profileChecksum) {

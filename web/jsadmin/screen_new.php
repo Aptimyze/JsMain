@@ -30,6 +30,9 @@ global $FLAGS_VAL;
 $dbObj = new newjs_OBSCENE_WORDS();
 global $obscene;
 $obscene = $dbObj->getObsceneWord();
+
+$nameOfUserObj = new NameOfUser;
+
 if (authenticated($cid)) {
 	$user = getname($cid);
 	//Memcache functionality added by Vibhor for avoiding users to refresh the page using F5
@@ -370,6 +373,7 @@ if (authenticated($cid)) {
 				if ($fullname) {
 					$fname = addslashes(stripslashes($_POST[$fullname]));
 					$sql_name = "UPDATE incentive.NAME_OF_USER set NAME='$fname' where PROFILEID=$pid";
+                                        $nameOfUserObj->removeNameFromCache($pid);
 					mysql_query_decide($sql_name) or die("$sql_name" . mysql_error_js());
 				}
         if ($verify_email) {

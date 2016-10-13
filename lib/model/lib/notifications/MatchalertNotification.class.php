@@ -9,7 +9,7 @@ public static function getCount($profileid)
 	$skipProfileObj    = SkipProfile::getInstance($profileid);
 	$skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
 	$logDate 	   = ceil(self::getLogDateFromLogicalDate()-1);
-	$matchalertLogObj  = new matchalerts_LOG('newjs_masterRep');
+	$matchalertLogObj  = new matchalerts_LOG();
 	//return $count = $matchalertLogObj->getMatchAlertProfileCount($profileid, $skipProfile,$logDate);
 	$matchalertArr 	   = $matchalertLogObj->getMatchAlertProfileForNotification($profileid, $skipProfile,$logDate);
 	//print_r($matchalertArr);

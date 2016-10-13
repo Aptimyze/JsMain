@@ -430,7 +430,7 @@ function ShowTopDownError(jsonError,timeToHide)
             }
         },10);
 	setTimeout(function(){$(".errClass").removeClass("showErr");
-		setTimeout(function(){$(".errClass").remove();},timeToHide);
+		setTimeout(function(){$(".errClass").remove();},100);
 		startTouchEvents(1);
 		},timeToHide);
 	
@@ -472,8 +472,11 @@ function CommonErrorHandling(json,toAppend)
 				ShowNextPage("/register/newJsmsReg?incompleteUser=1",0);	
 			if(json.responseStatusCode==8)
 				ShowNextPage("/phone/jsmsDisplay",0);
-			if(statusCode)
-				if($.inArray(parseInt(statusCode),[0,9,8,7])!=-1)
+			if(statusCode==1)
+                                ShowTopDownError([json.responseMessage],5000);
+
+                        if(statusCode)
+				if($.inArray(parseInt(statusCode),[1,0,9,8,7])!=-1)
 					throw new Error("Redirecting you");
             startTouchEvents(1);	
             return false;		
