@@ -20,7 +20,7 @@ class SearchUtility
 	* @param profile to ignore is passed in the url (optional)
 	* @param noAwaitingContacts exclude awaiting contacts.
 	*/
-	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '')
+	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '',$getFromCache = 0)
 	{
 		//print_r($SearchParamtersObj);die;
 		if($profileFromUrl)
@@ -48,6 +48,14 @@ class SearchUtility
 			}
 			else
 			{
+                                if($getFromCache == 1){
+                                                $memObject=JsMemcache::getInstance();
+                                                $hideArrCache = $memObject->get('SEARCH_MA_IGNOREPROFILE_'.$pid);
+                                                if(!empty($hideArrCache)){
+                                                        $SearchParamtersObj->setIgnoreProfiles($hideArrCache);
+                                                        return;
+                                                }
+                                }
 				if($pid)
 				{
 					/* ignored profiles two way */
@@ -64,6 +72,10 @@ class SearchUtility
 						$matchalerts_LOG = new matchalerts_LOG();
 						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
 					}
+                                        if($getFromCache == 1){
+                                                        $memObject=JsMemcache::getInstance();
+                                                        $memObject->set('SEARCH_MA_IGNOREPROFILE_'.$pid,$hideArr,SearchConfig::$matchAlertCacheLifetime);
+                                        }
 				}
 
 				if($SearchParamtersObj->getONLINE()==SearchConfig::$onlineSearchFlag)
