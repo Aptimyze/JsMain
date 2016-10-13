@@ -908,7 +908,7 @@ class Messages
    */	
   public static function getFreeOverAllLimitMessage($message)
   {
-    $button = Messages::getBuyrMembershipButton();
+    $button = Messages::getBuyPaidMembershipButton();
     return Messages::getMessage($message,array("BUTTON"=>"$button"));
   }
   public static function getScreeningDetailsMessage()
