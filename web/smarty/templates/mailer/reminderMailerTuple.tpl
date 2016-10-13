@@ -3,7 +3,7 @@
 <table align="left" border="0" cellspacing="0" cellpadding="0" ~if $index % 2 eq 1` style="margin-right:1px;max-width:298px; border-left:1px solid #eae9e9;" ~else` style="margin-right:1px; max-width:298px;" ~/if`>
 <tr>
     <td></td>
-    <td height="28" style="padding-left:5px;"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$userProfileId`,source=~JSTrackingPageType::EOI_MAILER`(/LINK)"><var>{{USERNAME:profileid=~$userProfileId`}}</var></a> <var>{{PAIDSTATUS:profileid=~$userProfileId`}}</var></td>
+    <td height="28"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$userProfileId`,source=~JSTrackingPageType::EOI_MAILER`(/LINK)"><var>{{USERNAME:profileid=~$userProfileId`}}</var></a> <var>{{PAIDSTATUS:profileid=~$userProfileId`}}</var></td>
     <td></td>
 </tr>
 <tr>

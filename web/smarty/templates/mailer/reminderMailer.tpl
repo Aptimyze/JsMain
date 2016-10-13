@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <table style="max-width:650px; min-width:240px; border:1px solid #dcdcdc;" border="0" cellspacing="0" cellpadding="0" align="center">
+    <table style="max-width:630px; min-width:240px; border:1px solid #dcdcdc;" border="0" cellspacing="0" cellpadding="0" align="center">
     <tr>
 <td colspan="4" style="font-size: 11px !important; font-family: Arial; color: black; padding-top: 10px;">
 ~$PREHEADER`
@@ -64,15 +64,9 @@
         ~$reminderMailerTuple`
                 </td>
         </tr>
-                 <tr>
-                        <td width="20" ><a style="font-family:Arial; font-size:12px; line-height:25px;margin-left: 50%; width:100%; float:left" target="_blank" href="(LINK)INTEREST:profileid=~$profileid`(/LINK)">View All Profiles</a></td>
-                        <td>
-                
-
-            </td>
-
-                        <td width="20" height="25"></td>
-                    </tr>
+        <tr>
+                <td align="center" height="31" style="font-size:11px;"><a style="font-family:Arial; font-size:12px; line-height:25px;width:100%; float:left" target="_blank" href="(LINK)SENT_INTEREST:profileid=~$profileid`(/LINK)">View All Profiles</a> </td>
+            </tr>
         <tr>
             <td width="600">
                 <table style=" font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -254,6 +248,7 @@
                 <td align="center" height="31" style="font-size:11px;">You have received this mail because your e-mail ID is registered with Jeevansathi.com. This is a system-generated e-mail, please don't reply to this message. The profiles sent in this mail have been posted by registered members of Jeevansathi.com. Jeevansathi.com has taken all reasonable steps to ensure that the information in this mailer is authentic. Users are advised to research bonafides of these profiles independently. To stop receiving these mails <a style="text-decoration:none;" target="_blank" href="(LINK)UNSUBSCRIBE:profileid=~$profileid`(/LINK)"><font color="#7d7b7b" face="Tahoma, Geneva, sans-serif" style="font-size:11px; text-align:center"><u>Unsubscribe</u></font></a> </td>
             </tr>
     </table>
+
     <img src="~$SITE_URL`/track.php?MAILER_ID=~$instanceID`" style="display:none !important;overflow:hidden;line-height:0"></img>
 </body>
 
