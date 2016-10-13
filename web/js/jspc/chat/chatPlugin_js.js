@@ -679,6 +679,12 @@ JsChat.prototype = {
         if (jidStr) {
             apiParams["pid"] = jidStr.slice(0, -1);
             apiParams["photoType"] = "ProfilePic120Url";
+            if(operation == "create_list"){
+                apiParams["initialList"] = true;
+            }
+            else{
+                apiParams["initialList"] = false;
+            }
             requestListingPhoto(apiParams);
         }
         if(operation == "create_list"){
