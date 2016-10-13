@@ -8,6 +8,7 @@ class phoneEnums
 	public static $OTPHoursLimit  = 24;
 	public static $OTPTrialLimit  = 5;
 	public static $OTPMessage  = "Use {OTP} as the code to verify your phone number on Jeevansathi";
+public static $OTPMessageForDeletion  = "Use {OTP} as the code to delete your profile (This message will be checked for PAT !)";
 
 }
 

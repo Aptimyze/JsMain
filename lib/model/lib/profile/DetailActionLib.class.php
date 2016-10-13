@@ -289,12 +289,12 @@ class DetailActionLib
 			}
 			else
 			{
-				$ignore=new newjs_IGNORE_PROFILE();
-				if($ignore->isIgnored($sender,$receiver))
+				$ignore=new IgnoredProfiles();
+				if($ignore->ifIgnored($sender,$receiver))
 				{
 				        $actionObject->IGNORED=1;
 			        }
-			        if(!isset($actionObject->IGNORED) && $ignore->isIgnored($receiver,$sender))
+			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender))
                 	        {
 					$actionObject->IGNORED=2;
 	      		        }

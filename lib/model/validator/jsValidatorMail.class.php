@@ -59,7 +59,16 @@ class jsValidatorMail extends sfValidatorBase
    */
   protected function doClean($value)
   {
-	$email = (string) $value;
+    $source = $_SERVER['HTTP_REFERER'];
+    if(strpos($source,"viewprofile") !== $false)
+    {
+      $source = "EDIT";
+    }
+    elseif(strpos($source,"registration") !== $false)
+    {
+      $source = "REG";
+    }
+	   $email = (string) $value;
     $value = trim($email);
     $activatedFlag = $this->_dupProfileEmail($value);
     
@@ -88,7 +97,8 @@ class jsValidatorMail extends sfValidatorBase
     $negativeEmail = $negativeProfileListObj->checkEmailOrPhone("EMAIL",$value);
     if($negativeEmail)
     {
-	throw new sfValidatorError($this, 'err_email_revoke', array('value' => $value));
+      file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/loggingIgnoredEmailAndPhone.txt",$value."\t".date("Y-m-d H:i:s")."\t".$source."\n",FILE_APPEND);
+	    throw new sfValidatorError($this, 'err_email_revoke', array('value' => $value));
     }
     return $value;
   }

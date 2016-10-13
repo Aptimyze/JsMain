@@ -61,7 +61,7 @@ class ProfileReplaceLib
     {
         $this->currentDBName = $dbname;
         $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
-        $this->objProfileAstroDetailsStore = new NEWJS_ASTRO($dbname);
+        $this->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
         $this->objProfileHoroscopeStore = new newjs_HOROSCOPE($dbname);
         $this->objProfileHoroscopeCompatibilityStore = new NEWJS_HOROSCOPE_COMPATIBILITY($dbname);
     }
@@ -109,7 +109,7 @@ class ProfileReplaceLib
         if(self::$instance->currentDBName !== $dbname) {
             self::$instance->currentDBName = $dbname;
             self::$instance->objProfileHoroscopeForScreenStore->setConnection($dbname);
-            self::$instance->objProfileAstroDetailsStore->setConnection($dbname);
+            self::$instance->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
             self::$instance->objProfileHoroscopeStore->setConnection($dbname);
             self::$instance->objProfileHoroscopeCompatibilityStore->setConnection($dbname);
         }
@@ -123,10 +123,10 @@ class ProfileReplaceLib
      * @param $arrParams
      * @return bool
      */
-    public function replaceASTRO_DETAILS($iProfileID,$arrParams=array())
+    public function replaceASTRO_DETAILS($iProfileID,$arrParams)
     {
         try{
-            $this->objProfileAstroDetailsStore->update($iProfileID,$arrParams);
+            $this->objProfileAstroDetailsStore->replaceRecord($iProfileID,$arrParams);
         } catch (Exception $ex) {
             jsCacheWrapperException::logThis($ex);
             return false;
