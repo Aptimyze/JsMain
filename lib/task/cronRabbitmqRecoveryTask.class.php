@@ -246,7 +246,7 @@ EOF;
     }
 
       //runs consumer to consume accumulated messages in queues on the second server if fallback status flag is set.
-    if(MessageQueues::FALLBACK_STATUS==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
+    /*if(MessageQueues::FALLBACK_STATUS==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
     {
       if($messageCount > 0)
       {  
@@ -266,7 +266,7 @@ EOF;
         $notificationLogConsumerObj = new JsNotificationsLogConsume('SECOND_SERVER', $msgPickCount);
         $notificationLogConsumerObj->receiveMessage();
       }
-    }   
+    }*/  
   }
 }
 ?>
