@@ -59,6 +59,8 @@ class ErrorHandler
 	const ENGINETYPE='ENGINETYPE';
 	const HISHER = 'HISHER';
 	const LIMIT = 'LIMIT';
+	const PAID_FILTERED_INTEREST_NOT_SENT = 'PAID_FILTERED_INTEREST_NOT_SENT';
+	const PAID_FILTERED_INTEREST_SENT = 'PAID_FILTERED_INTEREST_SENT';
 	/**
 	 * 
 	 * Used to initialize object of ErrorHandler class.
@@ -193,7 +195,7 @@ class ErrorHandler
 	 * 
      */	
 	function checkError()
-	{
+	{	 
 		//11. Ignored Profile
 		$error = $this->checkIgnoreProfile();
 		if($error)
@@ -299,31 +301,35 @@ class ErrorHandler
 		//6. Filtered profile
 		
 		if($this->checkProfileFiltered())
-		{	
-			$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
-			
+		{
 			if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
 			{
 				if($this->checkPaid())
-				{
-				if($this->interestNotSent())
-				{	
-				$error = Messages::PAID_FILTERED_INTEREST_NOT_SENT;
-				$this->setErrorMessage($error);
-				return false;
-				}
-				else
-				{
-				$error = Messages::PAID_FILTERED_INTEREST_SENT;
-				$this->setErrorMessage($error);
-				return false;
-				}
+				{ 	
+					$name = $this->contactHandlerObj->getViewed()->getUSERNAME();
+						if($this->interestNotSent())
+						{
+							$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
+							$error = Messages::PAID_FILTERED_INTEREST_NOT_SENT;
+							$error = str_replace("{{UNAME}}",$name, $error);
+							$this->setErrorMessage($error);
+							return false;
+						}
+						else
+						{ 
+							$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_SENT,ErrorHandler::ERROR_FOUND);
+							$error = Messages::PAID_FILTERED_INTEREST_SENT;
+							$error = str_replace("{{UNAME}}",$name, $error);
+							$this->setErrorMessage($error);
+							return false;
+						}
 
 				}
 
-				$error = Messages::FILTERED;
-				$this->setErrorMessage($error);
-				return false;
+			$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
+			$error = Messages::FILTERED;
+			$this->setErrorMessage($error);
+			return false;
 			}			
 			
 		}
@@ -560,10 +566,10 @@ class ErrorHandler
 			
 			$filterObj = UserFilterCheck::getInstance($this->contactHandlerObj->getContactObj()->getSenderObj(),$this->contactHandlerObj->getContactObj()->getReceiverObj(),$whyFlag);
 			if($filterObj->getFilteredContact($this->contactHandlerObj->getEngineType()))
-			{
+			{ 
 				return true;
 			}
-		}
+		} 
 		return false;
 	}
 	

@@ -125,8 +125,8 @@ class Messages
 
   // New Messages added for Filtered Paid Members . 
 
-  const PAID_FILTERED_INTEREST_NOT_SENT = "However, you can send an interest, and when your interest is accepted, their contact details will be made visible to you.";  
-  const PAID_FILTERED_INTEREST_SENT = "Their contact details will be visible when your interest is accepted.";
+  const PAID_FILTERED_INTEREST_NOT_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. However, you can send an interest, and when your interest is accepted, their contact details will be made visible to you.";  
+  const PAID_FILTERED_INTEREST_SENT = "You cannot directly see contact details as your profile doesn't match {{UNAME}}'s filter criteria. Their contact details will be visible when your interest is accepted.";
   
   public static $contactEngineCalled;
   /**
