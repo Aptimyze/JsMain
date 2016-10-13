@@ -181,6 +181,12 @@ class ContactDetailsV1Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 						
 				}
+				elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2) {
+					$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+					$responseArray["errmsgiconid"] = "16";
+					$responseArray["headerlabel"] = "Unsupported action";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
 				 elseif ($errorArr["FILTERED"] == 2) {
 					$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
 					$responseArray["errMsgIconId"] = "12";

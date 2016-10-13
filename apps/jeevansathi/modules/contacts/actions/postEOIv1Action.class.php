@@ -158,6 +158,12 @@ class postEOIv1Action extends sfAction
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
+			elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+			}
 			elseif($errorArr["EOI_CONTACT_LIMIT"] == 2)
 			{
 				$membershipText = " Become a paid member to send more interests";
