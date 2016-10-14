@@ -24,14 +24,14 @@ function manageListingPhotoReqFlag(key,profileid){
         }
         if(listingPhotoRequestCompleted.indexOf(","+profileid+",") == -1){
             listingPhotoRequestCompleted += profileid+",";
-            //console.log("manageListingPhotoReqFlag set",profileid);
+            console.log("manageListingPhotoReqFlag set",profileid);
             //console.log(listingPhotoRequestCompleted);
         }
        //console.log("in manageListingPhotoReqFlag",listingPhotoRequestCompleted);
        
     }
     else if(key == "reset"){
-        //console.log("manageListingPhotoReqFlag reset");
+        console.log("manageListingPhotoReqFlag reset");
         listingPhotoRequestCompleted = ",";   
     }
     else if(key == "remove"){
@@ -39,13 +39,13 @@ function manageListingPhotoReqFlag(key,profileid){
             $.each(profileid,function(index,value){
                 var replaceStr = value+",";
                 listingPhotoRequestCompleted = listingPhotoRequestCompleted.replace(replaceStr,"");
-                //console.log("manageListingPhotoReqFlag remove array",value);
+                console.log("manageListingPhotoReqFlag remove array",value);
             });
         }
         else if(profileid != undefined){
             var replaceStr = profileid+",";
             listingPhotoRequestCompleted = listingPhotoRequestCompleted.replace(replaceStr,"");
-            //console.log("manageListingPhotoReqFlag remove profile",profileid);
+            console.log("manageListingPhotoReqFlag remove profile",profileid);
         }
     }
 }
@@ -443,11 +443,11 @@ function requestListingPhoto(apiParams) {
             if(localStorage.getItem("listingPic_"+elem)) {
                 var timeStamp = localStorage.getItem("listingPic_"+elem).split("#")[1];
                 if(new Date().getTime() - timeStamp > chatConfig.Params[device].clearListingCacheTimeout){
-                    //console.log("api request gone");
+                    console.log("api request gone");
                     newApiParamsPid.push(elem);
                 } 
                 else{
-                    //console.log("localStorage used");
+                    console.log("localStorage used");
                     exsistParamPid.push(elem);
                 }
             }
@@ -456,13 +456,14 @@ function requestListingPhoto(apiParams) {
             }
         }
     });
-    if(apiParams["initialList"] == true){
-        if(newApiParamsPid.length == 0){
+    if(apiParams["initialList"] == true && exsistParamPid.length != 0){
+        /*if(newApiParamsPid.length == 0){
             manageListingPhotoReqFlag("reset");
         }
         else{
             manageListingPhotoReqFlag("remove",exsistParamPid);
-        }
+        }*/
+        manageListingPhotoReqFlag("remove",exsistParamPid);
     }
     var newApiParams;
     if(newApiParamsPid.length != 0) {
@@ -482,7 +483,6 @@ function requestListingPhoto(apiParams) {
                     //response = {"message":"Successful","statusCode":"0","profiles":{"a1":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ef65f74b4aa2107469060e6e8b6d9478?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1092\/13\/21853681-1397620904.jpeg"}},"a2":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ce41f41832224bd81f404f839f383038?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1140\/6\/22806868-1402139087.jpeg"}},"a3":{"PHOTO":{"ProfilePic120Url":"https://avatars0.githubusercontent.com/u/46974?v=3&s=96","MainPicUrl":"http:\/\/172.16.3.185\/1153\/15\/23075984-1403583209.jpeg"}},"a6":{"PHOTO":{"ProfilePic120Url":"","MainPicUrl":"http:\/\/xmppdev.jeevansathi.com\/uploads\/NonScreenedImages\/mainPic\/16\/29\/15997035ii6124c9f1a0ee0d7c209b7b81c3224e25iic4ca4238a0b923820dcc509a6f75849b.jpg"}},"a4":{"PHOTO":""}},"responseStatusCode":"0","responseMessage":"Successful","AUTHCHECKSUM":null,"hamburgerDetails":null,"phoneDetails":null};
                     $.each(response.profiles,function(index2, elem2){
                         localStorage.setItem("listingPic_"+index2,elem2.PHOTO.ProfilePic120Url+"#"+new Date().getTime());
-                        
                     });
                     objJsChat._addListingPhoto(response, "api");
                     objJsChat._addListingPhoto(exsistParamPid, "local");
@@ -492,12 +492,12 @@ function requestListingPhoto(apiParams) {
                     checkForSiteLoggedOutMode(response);
                 }
                 if(apiParams["initialList"] != undefined && apiParams["initialList"] == true){
-                    manageListingPhotoReqFlag("reset");
+                    manageListingPhotoReqFlag("remove",newApiParamsPid);
                 }
             },
             error: function (xhr) {
                 if(apiParams["initialList"] != undefined && apiParams["initialList"] == true){
-                    manageListingPhotoReqFlag("reset");
+                    manageListingPhotoReqFlag("remove",newApiParamsPid);
                 }
                 //return "error";
             }

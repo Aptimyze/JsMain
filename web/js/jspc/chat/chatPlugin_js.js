@@ -317,7 +317,10 @@ JsChat.prototype = {
         if (jidStr.length > 1) {
             apiParams["pid"] = jidStr.slice(0, -1);
             apiParams["photoType"] = "ProfilePic120Url";
-            requestListingPhoto(apiParams);
+            apiParams["initialList"] = true;
+            if(apiParams["pid"]){
+                requestListingPhoto(apiParams);
+            }
         }
     },
     onLogoutPreClick: null,
@@ -709,14 +712,16 @@ JsChat.prototype = {
         }
         if (jidStr) {
             apiParams["pid"] = jidStr.slice(0, -1);
-            apiParams["photoType"] = "ProfilePic120Url";
-            if(operation == "create_list"){
-                apiParams["initialList"] = true;
+            if(apiParams["pid"]){
+                apiParams["photoType"] = "ProfilePic120Url";
+                if(operation == "create_list"){
+                    apiParams["initialList"] = true;
+                }
+                else{
+                    apiParams["initialList"] = false;
+                }
+                requestListingPhoto(apiParams);
             }
-            else{
-                apiParams["initialList"] = false;
-            }
-            requestListingPhoto(apiParams);
         }
         if(operation == "create_list"){
             retainHiddenListing();
