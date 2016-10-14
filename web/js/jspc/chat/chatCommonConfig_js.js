@@ -61,8 +61,8 @@ chatConfig.Params = {
         "mysearch":{}
     },
     //api url for getting photo
-    photoUrl: "/api/v1/social/getMultiUserPhoto",
-    
+    //photoUrl: "/api/v1/social/getMultiUserPhoto",
+    photoUrl: multiUserPhotoUrl,
     //api url for getting self name
     selfNameUr: "/api/v1/chat/selfName",
     //api config for pre acceptance messages
