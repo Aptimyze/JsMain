@@ -208,6 +208,7 @@ function onFrameLoginResponseReceived(message)
         hideCommonLoader();
   			$("#LoginErrMessage").removeClass("disp-none");
   			$("#LoginMessage").addClass("disp-none");
+			$("#CaptchaErrMessage").addClass("disp-none");
   			// $("#LoginErrMessage2").addClass("disp-none");
   			$("#EmailContainer").addClass("brderred");
   			$("#PasswordContainer").addClass("brderred");
@@ -590,42 +591,40 @@ function postForgotEmailLayer()
 }
 
 function createCaptcha(fromLoggedOut){
-	
-	// var captchaDiv='<script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
+
+	var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div></div>';
 	if($(".g-recaptcha").length !=0){
             removeCaptcha();
     }
-    $("#afterCaptcha").before('<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div></div>').promise().done(function() {
+    $("#afterCaptcha").before(captchaDiv).promise().done(function() {
             setTimeout(function() {
                 $(".loaderSmallIcon2").remove();
                 $(".g-recaptcha").removeClass("dn");
             }, 1000);               
     });
-	if(fromLoggedOut)
-	{
-		if(typeof(parent.LoggedoutPage)!==undefined)
-		{
-			 parent.$('#afterCaptcha').before(captchaDiv);
-			  // parent.$("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
-		}
-		else
-		{
-		   $('#afterCaptcha').before(captchaDiv);
-		  // $("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
-		}
-	}
-	else
-	{
-		$('#afterCaptcha').before(captchaDiv);
-		// $("#newLoginLayerJspc").find('.captcha').slideToCAPTCHA('captcha');
-	}
-	
-	
+	// if(fromLoggedOut)
+	// {
+	// 	if(typeof(parent.LoggedoutPage)!==undefined)
+	// 	{
+	// 		 parent.$('#afterCaptcha').before(captchaDiv);
+	// 		  // parent.$("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
+	// 	}
+	// 	else
+	// 	{
+	// 	   $('#afterCaptcha').before(captchaDiv);
+	// 	  // $("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
+	// 	}
+	// }
+	// else
+	// {
+	// 	$('#afterCaptcha').before(captchaDiv);
+	// 	// $("#newLoginLayerJspc").find('.captcha').slideToCAPTCHA('captcha');
+	// }
 }
 
 function removeCaptcha()
 {
-  $('.g-recaptcha').each(function(index, element) {
+  $('.captchaDiv').each(function(index, element) {
       $(element).remove();});
 }
 
