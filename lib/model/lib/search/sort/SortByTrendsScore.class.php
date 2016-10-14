@@ -39,6 +39,9 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
         public function setSortString() {
                 $sortArray = array();
                 foreach ($this->sortArray as $field => $sortCon) {
+                        if($this->trendsForwardCriteria[$field] != ''){
+                                $field = $this->trendsForwardCriteria[$field];
+                        }
                         $totalC = count($sortCon);
                         $i = 1;
                         if (!empty($sortCon)) {
