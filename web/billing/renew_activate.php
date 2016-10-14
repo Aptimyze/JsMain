@@ -24,7 +24,8 @@ $profileids_arr   = array_values($profileids_arr_n);
 $billServStatObj = new BILLING_SERVICE_STATUS();
 $billServObj = new billing_SERVICES('newjs_slave');
 $memHandlerObj = new MembershipHandler();
-print_r($profileids_arr); die;
+$jprofileMainObj = new JPROFILE();
+
 if ($profileids_arr) {
     for ($i = 0; $i < count($profileids_arr); $i++) {
         $profile = $profileids_arr[$i];
@@ -79,9 +80,9 @@ if ($profileids_arr) {
             $servAct = $billServStatObj->getLastActiveServiceDetails($profile);
             $serviceID = $servAct['SERVICEID'];
             $servName = $billServObj->getServiceName($serviceID);
-            $profileObj = LoggedInProfile::getInstance('newjs_slave',$profile);
-            $username = $profileObj->getUSERNAME();
-            $phoneMob = $profileObj->getPHONE_MOB();
+            $details = $jprofileMainObj->get($profile,'PROFILEID', 'USERNAME, PHONE_MOB');
+            $username = $details['USERNAME'];
+            $phoneMob = $details['PHONE_MOB'];
             $msg = "Dear User, {$servName} has been activated on your profile {$username}.";
             if ($phoneMob) {
                 $memHandlerObj->sendInstantSMS($profile, 9711458230, $msg);
