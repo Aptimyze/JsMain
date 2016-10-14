@@ -456,7 +456,7 @@ function requestListingPhoto(apiParams) {
             }
         }
     });
-    if(apiParams["initialList"] == true && newApiParamsPid.length == 0){
+    if(apiParams["initialList"] == true){
         if(newApiParamsPid.length == 0){
             manageListingPhotoReqFlag("reset");
         }
