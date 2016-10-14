@@ -121,7 +121,7 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
                         return $forward_temp2;
 
                 $searchArray = array();
-                $selectedVal = explode(",", $selectedVal);
+                $selectedVal = explode(",", str_replace(" ",",",$selectedVal));
                 if ($type == 'range')
                         $selectedVal = range($selectedVal[0], $selectedVal[1]);
 
