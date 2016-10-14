@@ -13,6 +13,7 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
         private $sortString = '';
         private $trendsForwardRangeCriteria = array("AGE", "HEIGHT", "INCOME");
         private $trendsForwardCriteria = array("MTONGUE", "CASTE", "EDU_LEVEL_NEW" => "EDUCATION", "OCCUPATION", "CITY_RES" => "CITY");
+        private $trendsForwardCriteriaMapping = array("EDUCATION"=>"EDU_LEVEL_NEW", "CITY"=>"CITY_RES");
 
         /**
          * constructor class
@@ -39,8 +40,8 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
         public function setSortString() {
                 $sortArray = array();
                 foreach ($this->sortArray as $field => $sortCon) {
-                        if($this->trendsForwardCriteria[$field] != ''){
-                                $field = $this->trendsForwardCriteria[$field];
+                        if(isset($this->trendsForwardCriteriaMapping[$field])){
+                                $field = $this->trendsForwardCriteriaMapping[$field];
                         }
                         $totalC = count($sortCon);
                         $i = 1;
