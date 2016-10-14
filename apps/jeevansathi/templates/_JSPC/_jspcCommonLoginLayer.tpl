@@ -1,5 +1,6 @@
 <script>
     var captchaShow=~$captchaDiv`;
+    var site_key = "~CaptchaEnum::SITE_KEY`";
 </script>
     <div class="mauto layerbg wid520">
         <div class="layerp3">
@@ -17,6 +18,8 @@
                        <input type="password" class="bgnone f15 grey6 brdr-0 fl wid70p" placeholder="Password" value="" id="password" name="password">
                        <span id="passwordErr" class="errcolr f15 fr hgt18 vishid"></span>
                     </div>
+                    <script>
+                    </script>
 <div class = "clearfix wid92p mt10"></div>
                     
         

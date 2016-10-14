@@ -78,63 +78,62 @@ class LoginV1Action extends sfActions
 					}
         			//return 0;
         		}
-        		elseif($captcha == 1)
-        		{
-					// Get the user’s response, POST parameter when the user submits the form on site
-					if(MobileCommon::isDesktop())
-					{
-						$g_recaptcha_response = $request->getParameter("g-recaptcha-response");
-					}
-					else if(MobileCommon::isNewMobileSite())
-					{
-						$g_recaptcha_response = $request->getParameter("g_recaptcha_response");
-					}
-
-					// $g_recaptcha_response = '';
-
-					// Secret key, Used this for communication between site and Google
-					$secret = CaptchaEnum::SECRET_KEY;
-					$remoteip = $_SERVER['REMOTE_ADDR'];
-					$postParams = array('secret' => $secret, 'response' => $g_recaptcha_response);
-
-					// Need to verify the response token with reCAPTCHA using the following API to ensure the token is valid
-					$urlToHit = "https://www.google.com/recaptcha/api/siteverify";
-					$response = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
-
-					// The response is a JSON object
-					$response = json_decode($response, true);
-					if(MobileCommon::isDesktop() && !$response['success'])
-					{
-						$szToUrl = JsConstants::$siteUrl;
-						if($_SERVER['HTTPS'] && strlen($_SERVER['HTTPS']) && $_GET['fmPwdReset'])
-						{
-							$szToUrl = JsConstants::$ssl_siteUrl;
-						}
-						$js_function = " <script>	var message = \"\";
-						if(window.addEventListener)
-							message ={\"body\":\"2\"};
-						else
-							message = \"2\";
-
-						if (typeof parent.postMessage != \"undefined\") {
-							parent.postMessage(message, \"$szToUrl\");
-						} else {
-							window.name = message; //FOR IE7/IE6
-							window.location.href = '$szToUrl';
-						}
-						</script> ";
-
-						echo $js_function;
-						die;
-					}
-					else if(MobileCommon::isNewMobileSite() && !$response['success'])
-					{
-						$apiObj->setHttpArray(ResponseHandlerConfig::$CAPTCHA_UNVERIFIED);
-						$apiObj->generateResponse();
-						die;
-					}
-        		}
         	}
+
+    		if($captcha == 1)
+    		{
+				// Get the user’s response, POST parameter when the user submits the form on site
+				if(MobileCommon::isDesktop())
+				{
+					$g_recaptcha_response = $request->getParameter("g-recaptcha-response");
+				}
+				else if(MobileCommon::isNewMobileSite())
+				{
+					$g_recaptcha_response = $request->getParameter("g_recaptcha_response");
+				}
+
+				// Secret key, Used this for communication between site and Google
+				$secret = CaptchaEnum::SECRET_KEY;
+				$remoteip = $_SERVER['REMOTE_ADDR'];
+				$postParams = array('secret' => $secret, 'response' => $g_recaptcha_response);
+
+				// Need to verify the response token with reCAPTCHA using the following API to ensure the token is valid
+				$urlToHit = "https://www.google.com/recaptcha/api/siteverify";
+				$response = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+
+				// The response is a JSON object
+				$response = json_decode($response, true);
+				if(MobileCommon::isDesktop() && !$response['success'])
+				{
+					$szToUrl = JsConstants::$siteUrl;
+					if($_SERVER['HTTPS'] && strlen($_SERVER['HTTPS']) && $_GET['fmPwdReset'])
+					{
+						$szToUrl = JsConstants::$ssl_siteUrl;
+					}
+					$js_function = " <script>	var message = \"\";
+					if(window.addEventListener)
+						message ={\"body\":\"2\"};
+					else
+						message = \"2\";
+
+					if (typeof parent.postMessage != \"undefined\") {
+						parent.postMessage(message, \"$szToUrl\");
+					} else {
+						window.name = message; //FOR IE7/IE6
+						window.location.href = '$szToUrl';
+					}
+					</script> ";
+
+					echo $js_function;
+					die;
+				}
+				else if(MobileCommon::isNewMobileSite() && !$response['success'])
+				{
+					$apiObj->setHttpArray(ResponseHandlerConfig::$CAPTCHA_UNVERIFIED);
+					$apiObj->generateResponse();
+					die;
+				}
+    		}
 	}
 	if(MobileCommon::isNewMobileSite() || MobileCommon::isDesktop())
 	{

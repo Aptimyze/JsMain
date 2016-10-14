@@ -1,4 +1,6 @@
-<script>appPromoPerspective=1;</script>
+<script>appPromoPerspective=1;
+var site_key = "~CaptchaEnum::SITE_KEY`";
+</script>
 <div class="perspective" id="perspective">
 	<div class="" id="pcontainer">    
 		<div id="headerimg1" class="rel_c" style="height: 455px;">
