@@ -46,7 +46,7 @@ $("#loginButton").bind(clickEventType,function(){
                             datatype:'json',
                             cache: true,
                             async:true,
-                            data:{email:email,password:escape(pass),newMob:1,rememberme:1,captcha:captchaShow},
+                            data:{email:email,password:escape(pass),newMob:1,rememberme:1,captcha:captchaShow,g_recaptcha_response:$("#g-recaptcha-response").val()},
                             success: function(result){
 								var redirectUrl="";
 								if((typeof result) != "object")
@@ -54,7 +54,7 @@ $("#loginButton").bind(clickEventType,function(){
 								if(document.cookie.indexOf("loginAttempt")!=-1 && result.responseStatusCode!=0 && result.responseStatusCode!=8)
 								{
 									if(!is_android){
-										removeCaptcha();
+										// removeCaptcha();
 										createCaptcha();
 									
 									  if(captchaShow!=1)
@@ -207,13 +207,11 @@ $(window).load(function()
 
 
 function createCaptcha(){
-
-	// var captchaDiv='<script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha pad20" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div>';
+        var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div></div>';
         if($(".g-recaptcha").length !=0){
             removeCaptcha();
         }
-        // $('#afterCaptcha').before(captchaDiv);
-        $("#afterCaptcha").before('<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey="6LdOuQgUAAAAAHXJXnyncVB9OcZ5pGsXpx4l04t2"></div></div>').promise().done(function() {
+        $("#afterCaptcha").before(captchaDiv).promise().done(function() {
             setTimeout(function() {
                 $(".loaderSmallIcon2").remove();
                 $(".g-recaptcha").removeClass("dn");
@@ -223,7 +221,7 @@ function createCaptcha(){
 }
 function removeCaptcha()
 {
-	$(".g-recaptcha").remove();
+	$(".captchaDiv").remove();
 }
 
 
