@@ -91,7 +91,6 @@ class phoneActions extends sfActions
 
   public function executeSaveV1(sfWebRequest $request)
   {
-  	die("no");
 
   	$respObj = ApiResponseHandler::getInstance();
 
@@ -112,10 +111,19 @@ class phoneActions extends sfActions
 
 	if($phoneType == "M")
 	{ 
+
+	$editFieldArr =array();
+	$PHONE_MOB['mobile'] = $number;	
+	$PHONE_MOB['isd'] = $isd;
+	$editFieldArr["PHONE_MOB"] = $PHONE_MOB;
+	$request->setParameter("editFieldArr",$editFieldArr);
+	//var_dump($request->getParameter('editFieldArr'));
+
 	ob_start();
-	sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
-	$layerData = ob_get_contents();
-	ob_end_clean();
+	$data=sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
+//	return sfView::NONE;
+	echo $data;
+	die;
 	}
 
 	if($phoneType == 'A')
