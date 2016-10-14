@@ -1279,10 +1279,20 @@ $(document).ready(function () {
                 }
                 var auth = checkAuthentication(chatConfig.Params[device].loginRetryTimeOut,"first");
                 if (auth != "true") {
-                    
+                    console.log("123");
                     return;
                 } else {
-                   
+                    console.log("login my case");
+                    if($("#selfImgDiv img") != undefined && $("#selfImgDiv img").attr("src") != undefined){
+                        localStorage.setItem('userImg', JSON.stringify({
+                            'img': $("#selfImgDiv img").attr("src"),
+                            'user': loggedInJspcUser
+                        }));
+                    }
+                    else{
+                        var imgurl = getProfileImage();
+                        $("#selfImgDiv img").attr("src",imgurl);
+                    }
                     /*
                     initiateChatConnection();
                     objJsChat._loginStatus = 'Y';
@@ -1369,17 +1379,6 @@ $(document).ready(function () {
                 }
                 else{
                     setLogoutClickLocalStorage("set");
-                    console.log("logout my case");
-                    if($("#selfImgDiv img").attr("src") != undefined){
-                        localStorage.setItem('userImg', JSON.stringify({
-                            'img': $("#selfImgDiv img").attr("src"),
-                            'user': loggedInJspcUser
-                        }));
-                    }
-                    else{
-                        var imgurl = getProfileImage();
-                        $("#selfImgDiv img").attr("src",imgurl);
-                    }
                 }
             }
             //executed for sending chat message
