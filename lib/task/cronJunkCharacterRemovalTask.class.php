@@ -1,4 +1,7 @@
 <?php
+/**
+ * This cron identifies Junk characters entered in 'About me' and auto-mark incomplete after removing Junk characters
+ */
 
 class cronJunkCharacterRemovalTask extends sfBaseTask
 {
@@ -41,7 +44,6 @@ EOF;
 
         $profileLists = $pipeline->execute();
 
-
         if ( !empty($profileLists))
         {
             foreach ($profileLists as $profileId) 
@@ -71,30 +73,29 @@ EOF;
                         $flagChangeMade = 1;
                     }
 
-                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['FAMILYINFO']))
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['FAMILYINFO']) && (!empty($profileData[0]['FAMILYINFO'])))
                     {
                         $paramArr['FAMILYINFO'] = '';
                         $flagChangeMade = 1;
                     }
 
-                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['EDUCATION']))
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['EDUCATION']) && (!empty($profileData[0]['EDUCATION'])))
                     {
                         $paramArr['EDUCATION'] = '';
                         $flagChangeMade = 1;
                     }
 
-                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['JOB_INFO']))
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['JOB_INFO']) && (!empty($profileData[0]['JOB_INFO'])))
                     {
                         $paramArr['JOB_INFO'] = '';
                         $flagChangeMade = 1;
                     }
 
-                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['SPOUSE']))
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['SPOUSE']) && (!empty($profileData[0]['SPOUSE'])))
                     {
                         $paramArr['SPOUSE'] = '';
                         $flagChangeMade = 1;
                     }
-
                     if ( $flagChangeMade)
                     {
                         $jProfileObj->edit($paramArr,$profileId,'PROFILEID');
@@ -124,7 +125,6 @@ EOF;
      */
     private function sendJunkCharacterMail($profileId,$actionTaken)
     {
-
         $email_sender = new EmailSender(MailerGroup::JUNK_REMOVAL, self::MAIL_ID);
         $emailTpl = $email_sender->setProfileId($profileId);
         $smartyObj = $emailTpl->getSmarty();
