@@ -85,8 +85,9 @@ if ($profileids_arr) {
             $phoneMob = $details['PHONE_MOB'];
             $msg = "Dear User, {$servName} has been activated on your profile {$username}.";
             if ($phoneMob) {
-                $memHandlerObj->sendInstantSMS($profile, 9711458230, $msg);
+                $memHandlerObj->sendInstantSMS($profile, $phoneMob, $msg);
             }
+            unset($username, $phoneMob, $details, $msg, $servAct, $serviceID, $servName);
         }
         unset($offline_bill);
 
