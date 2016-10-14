@@ -8,7 +8,61 @@ var listingInputData = [],
     device = 'pc',
     loggingEnabledPC = false,
     clearTimedOut,
+    listingPhotoRequestCompleted = ",",
     localStorageExists = isStorageExist();
+
+
+/*manageListingPhotoReqFlag
+function to set/reset listing photo request 
+* @inputs:key,profileid
+*/
+function manageListingPhotoReqFlag(key,profileid){
+    if(key == "set"){
+        
+        if(listingPhotoRequestCompleted == undefined){
+            listingPhotoRequestCompleted = ",";
+        }
+        if(listingPhotoRequestCompleted.indexOf(","+profileid+",") == -1){
+            listingPhotoRequestCompleted += profileid+",";
+            console.log("manageListingPhotoReqFlag set",profileid);
+            //console.log(listingPhotoRequestCompleted);
+        }
+        console.log("in manageListingPhotoReqFlag",listingPhotoRequestCompleted);
+       
+    }
+    else if(key == "reset"){
+        console.log("manageListingPhotoReqFlag reset");
+        listingPhotoRequestCompleted = ",";   
+    }
+    else if(key == "remove"){
+        if($.isArray(profileid) == true){
+            $.each(profileid,function(index,value){
+                var replaceStr = value+",";
+                listingPhotoRequestCompleted = listingPhotoRequestCompleted.replace(replaceStr,"");
+                console.log("manageListingPhotoReqFlag remove array",value);
+            });
+        }
+        else if(profileid != undefined){
+            var replaceStr = profileid+",";
+            listingPhotoRequestCompleted = listingPhotoRequestCompleted.replace(replaceStr,"");
+            console.log("manageListingPhotoReqFlag remove profile",profileid);
+        }
+    }
+}
+
+/*isListPhotoReqValid
+function to check validity of listing photo request based on request flag
+* @inputs:profileid
+*/
+function isListPhotoReqValid(profileid){
+    var validReq = true;
+    if(listingPhotoRequestCompleted != undefined && listingPhotoRequestCompleted.indexOf(","+profileid+",") > -1){
+        validReq = false;
+    }
+    //console.log("isListPhotoReqValid",profileid,validReq);
+    //console.log(listingPhotoRequestCompleted);
+    return validReq;
+}
 /*handle chat disconnection case
  */
 function handleChatDisconnection() {
@@ -381,24 +435,39 @@ function requestListingPhoto(apiParams) {
     var pid = [];
     pid = apiParams.pid.split(",");
     $.each(pid,function(index, elem){
-        if(localStorage.getItem("listingPic_"+elem)) {
-            var timeStamp = localStorage.getItem("listingPic_"+elem).split("#")[1];
-            if(new Date().getTime() - timeStamp > chatConfig.Params[device].clearListingCacheTimeout){
-                newApiParamsPid.push(elem);
-            } 
-            else{
-                exsistParamPid.push(elem);
+        if(apiParams["initialList"] == true){
+            manageListingPhotoReqFlag("set",elem);
+        }
+        if(apiParams["initialList"]== true || isListPhotoReqValid(elem) == true){
+            console.log("normal flow");
+            if(localStorage.getItem("listingPic_"+elem)) {
+                var timeStamp = localStorage.getItem("listingPic_"+elem).split("#")[1];
+                if(new Date().getTime() - timeStamp > chatConfig.Params[device].clearListingCacheTimeout){
+                    console.log("api request gone");
+                    newApiParamsPid.push(elem);
+                } 
+                else{
+                    console.log("localStorage used");
+                    exsistParamPid.push(elem);
+                }
+            }
+            else {
+              newApiParamsPid.push(elem);
             }
         }
-        else {
-          newApiParamsPid.push(elem);
-        }
     });
+    if(apiParams["initialList"] == true){
+        if(newApiParamsPid.length == 0){
+            manageListingPhotoReqFlag("reset");
+        }
+        else{
+            manageListingPhotoReqFlag("remove",exsistParamPid);
+        }
+    }
     var newApiParams;
     if(newApiParamsPid.length != 0) {
-        newApiParams = {"pid":newApiParamsPid.toString(),"photoType":apiParams.photoType};
+        newApiParams = {"pid":newApiParamsPid.toString(),"photoType":apiParams.photoType,"type":apiParams["initialList"]};
     }
-    
     if (typeof newApiParams != "undefined" && newApiParams) {
         $.myObj.ajax({
             url: apiUrl,
@@ -413,15 +482,23 @@ function requestListingPhoto(apiParams) {
                     //response = {"message":"Successful","statusCode":"0","profiles":{"a1":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ef65f74b4aa2107469060e6e8b6d9478?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1092\/13\/21853681-1397620904.jpeg"}},"a2":{"PHOTO":{"ProfilePic120Url":"https://secure.gravatar.com/avatar/ce41f41832224bd81f404f839f383038?s=48&r=g&d=monsterid","MainPicUrl":"http:\/\/172.16.3.185\/1140\/6\/22806868-1402139087.jpeg"}},"a3":{"PHOTO":{"ProfilePic120Url":"https://avatars0.githubusercontent.com/u/46974?v=3&s=96","MainPicUrl":"http:\/\/172.16.3.185\/1153\/15\/23075984-1403583209.jpeg"}},"a6":{"PHOTO":{"ProfilePic120Url":"","MainPicUrl":"http:\/\/xmppdev.jeevansathi.com\/uploads\/NonScreenedImages\/mainPic\/16\/29\/15997035ii6124c9f1a0ee0d7c209b7b81c3224e25iic4ca4238a0b923820dcc509a6f75849b.jpg"}},"a4":{"PHOTO":""}},"responseStatusCode":"0","responseMessage":"Successful","AUTHCHECKSUM":null,"hamburgerDetails":null,"phoneDetails":null};
                     $.each(response.profiles,function(index2, elem2){
                         localStorage.setItem("listingPic_"+index2,elem2.PHOTO.ProfilePic120Url+"#"+new Date().getTime());
+                        
                     });
                     objJsChat._addListingPhoto(response, "api");
                     objJsChat._addListingPhoto(exsistParamPid, "local");
+                    //console.log("request",apiParams["initialList"]);
                 }
                 else{
                     checkForSiteLoggedOutMode(response);
                 }
+                if(apiParams["initialList"] != undefined && apiParams["initialList"] == true){
+                    manageListingPhotoReqFlag("reset");
+                }
             },
             error: function (xhr) {
+                if(apiParams["initialList"] != undefined && apiParams["initialList"] == true){
+                    manageListingPhotoReqFlag("reset");
+                }
                 //return "error";
             }
         });
@@ -1202,10 +1279,20 @@ $(document).ready(function () {
                 }
                 var auth = checkAuthentication(chatConfig.Params[device].loginRetryTimeOut,"first");
                 if (auth != "true") {
-                    
+                    console.log("123");
                     return;
                 } else {
-                   
+                    console.log("login my case");
+                    if($("#selfImgDiv img") != undefined && $("#selfImgDiv img").attr("src") != undefined){
+                        localStorage.setItem('userImg', JSON.stringify({
+                            'img': $("#selfImgDiv img").attr("src"),
+                            'user': loggedInJspcUser
+                        }));
+                    }
+                    else{
+                        var imgurl = getProfileImage();
+                        $("#selfImgDiv img").attr("src",imgurl);
+                    }
                     /*
                     initiateChatConnection();
                     objJsChat._loginStatus = 'Y';
@@ -1286,6 +1373,7 @@ $(document).ready(function () {
                 strophieWrapper.initialRosterFetched = false;
                 strophieWrapper.disconnect();
                 eraseCookie("chatAuth");
+                manageListingPhotoReqFlag("reset");
                 if(fromSiteLogout == "true"){
                     setLogoutClickLocalStorage("unset");
                 }
