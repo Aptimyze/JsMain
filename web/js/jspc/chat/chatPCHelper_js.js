@@ -30,11 +30,24 @@ function manageListingPhotoReqFlag(key,profileid){
         console.log("in manageListingPhotoReqFlag",listingPhotoRequestCompleted);
        
     }
-    else{
+    else if(key == "reset"){
         console.log("manageListingPhotoReqFlag reset");
         listingPhotoRequestCompleted = ",";   
     }
-
+    else if(key == "remove"){
+        if($.isArray(profileid) == true){
+            $.each(profileid,function(index,value){
+                var replaceStr = value+",";
+                listingPhotoRequestCompleted = listingPhotoRequestCompleted.replace(replaceStr,"");
+                console.log("manageListingPhotoReqFlag remove array",value);
+            });
+        }
+        else if(profileid != undefined){
+            var replaceStr = profileid+",";
+            listingPhotoRequestCompleted = listingPhotoRequestCompleted.replace(replaceStr,"");
+            console.log("manageListingPhotoReqFlag remove profile",profileid);
+        }
+    }
 }
 
 /*isListPhotoReqValid
@@ -444,7 +457,12 @@ function requestListingPhoto(apiParams) {
         }
     });
     if(apiParams["initialList"] == true && newApiParamsPid.length == 0){
-        manageListingPhotoReqFlag("reset");
+        if(newApiParamsPid.length == 0){
+            manageListingPhotoReqFlag("reset");
+        }
+        else{
+            manageListingPhotoReqFlag("remove",exsistParamPid);
+        }
     }
     var newApiParams;
     if(newApiParamsPid.length != 0) {
