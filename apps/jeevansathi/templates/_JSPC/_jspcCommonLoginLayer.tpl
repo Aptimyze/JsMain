@@ -6,7 +6,7 @@
             <div id="LoginMessage" class="f17 grey5">Login to continue..</div>
             <div id="LoginErrMessage" class="f17 errcolr disp-none">Invalid e-mail ID or password. Please try again!</div>
             <div id="CaptchaErrMessage" class="f17 errcolr disp-none">Something went wrong. Please try again!</div>
-            <div id="LoginErrMessage2" class="f17 errcolr disp-none">New Captcha message here</div>
+            <!-- <div id="LoginErrMessage2" class="f17 errcolr disp-none">New Captcha message here</div> -->
             <div class="mt20">
                 <form id="homePageLogin" method="post" target="iframe_login" onsubmit="return LoginValidation()">
                     <div id="EmailContainer" class="clearfix wid92p brderinp layerp2 ">

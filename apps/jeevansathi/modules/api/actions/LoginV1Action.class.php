@@ -40,8 +40,7 @@ class LoginV1Action extends sfActions
 				else
 					JsMemcache::getInstance()->set($email."_failedLogin",0);
 			}
-        	//print_r($count);die;
-        	if($count>2)
+			if($count >= 9)
         	{
         		//setcookie('loginAttempt','1',time()+86400000,"/");
         		if(!$request->getcookie('loginAttemptNew'))
@@ -94,7 +93,7 @@ class LoginV1Action extends sfActions
 					// $g_recaptcha_response = '';
 
 					// Secret key, Used this for communication between site and Google
-					$secret = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
+					$secret = CaptchaEnum::SECRET_KEY;
 					$remoteip = $_SERVER['REMOTE_ADDR'];
 					$postParams = array('secret' => $secret, 'response' => $g_recaptcha_response);
 
