@@ -4,9 +4,6 @@ var cook = readCookie('AUTHCHECKSUM');
 if(multiUserPhotoUrl.indexOf("staging") !== -1){
     multiUserPhotoUrl=multiUserPhotoUrl+"?AUTHCHECKSUM="+cook;
 }
-if(loggedInJspcUser && loggedInJspcUser == "9061321"){
-    multiUserPhotoUrl = "http://staging.jeevansathi.com/api/v1/social/getMultiUserPhoto?AUTHCHECKSUM="+cook;
-}
 chatConfig.Params = {
     categoryNames: {
         "Desired Partner Matches": "dpp",
