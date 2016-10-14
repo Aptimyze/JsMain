@@ -3166,7 +3166,7 @@ JsChat.prototype = {
     addLoginHTML: function (failed) {
         //this._chatLoggerPlugin('in addLoginHTML');
         var curEle = this;
-        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
+        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100" id="selfImgDiv"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
         var errorHTML = '';
         if (failed == true) {
             errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">' + curEle._loginFailueMsg + '</div>';
