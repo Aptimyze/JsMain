@@ -81,6 +81,7 @@ class LoginV1Action extends sfActions
         		}
         		elseif($captcha == 1)
         		{
+					// Get the user’s response, POST parameter when the user submits the form on site
 					if(MobileCommon::isDesktop())
 					{
 						$g_recaptcha_response = $request->getParameter("g-recaptcha-response");
@@ -92,12 +93,16 @@ class LoginV1Action extends sfActions
 
 					// $g_recaptcha_response = '';
 
-					// Secret key, Used this for communication between your site and Google
+					// Secret key, Used this for communication between site and Google
 					$secret = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
 					$remoteip = $_SERVER['REMOTE_ADDR'];
 					$postParams = array('secret' => $secret, 'response' => $g_recaptcha_response);
+
+					// Need to verify the response token with reCAPTCHA using the following API to ensure the token is valid
 					$urlToHit = "https://www.google.com/recaptcha/api/siteverify";
 					$response = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+
+					// The response is a JSON object
 					$response = json_decode($response, true);
 					if(MobileCommon::isDesktop() && !$response['success'])
 					{
