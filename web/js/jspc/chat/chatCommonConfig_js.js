@@ -327,3 +327,11 @@ chatConfig.Params = {
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
 //console.log("autoChatLogin",chatConfig.Params.pc.autoChatLogin);
+chatConfig.Params.pc.tab1groups = [];
+chatConfig.Params.pc.tab2groups = [];
+$(chatConfig.Params.pc.listingTabs.tab1.groups).each(function(index, val){
+    chatConfig.Params.pc.tab1groups.push(val.id);
+});
+$(chatConfig.Params.pc.listingTabs.tab2.groups).each(function(index, val){
+    chatConfig.Params.pc.tab2groups.push(val.id);
+});
