@@ -307,6 +307,7 @@ EOF;
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
         fwrite($fileResource,print_r($arrToWrite,true));
+        //fwrite($fileResource,json_encode($finalArrayToWrite));
         fwrite($fileResource, "\n");
         fclose($fileResource);
       }
