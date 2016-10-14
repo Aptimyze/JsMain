@@ -24,14 +24,14 @@ function manageListingPhotoReqFlag(key,profileid){
         }
         if(listingPhotoRequestCompleted.indexOf(","+profileid+",") == -1){
             listingPhotoRequestCompleted += profileid+",";
-            console.log("manageListingPhotoReqFlag set",profileid);
+            //console.log("manageListingPhotoReqFlag set",profileid);
             //console.log(listingPhotoRequestCompleted);
         }
-        console.log("in manageListingPhotoReqFlag",listingPhotoRequestCompleted);
+       //console.log("in manageListingPhotoReqFlag",listingPhotoRequestCompleted);
        
     }
     else if(key == "reset"){
-        console.log("manageListingPhotoReqFlag reset");
+        //console.log("manageListingPhotoReqFlag reset");
         listingPhotoRequestCompleted = ",";   
     }
     else if(key == "remove"){
@@ -39,13 +39,13 @@ function manageListingPhotoReqFlag(key,profileid){
             $.each(profileid,function(index,value){
                 var replaceStr = value+",";
                 listingPhotoRequestCompleted = listingPhotoRequestCompleted.replace(replaceStr,"");
-                console.log("manageListingPhotoReqFlag remove array",value);
+                //console.log("manageListingPhotoReqFlag remove array",value);
             });
         }
         else if(profileid != undefined){
             var replaceStr = profileid+",";
             listingPhotoRequestCompleted = listingPhotoRequestCompleted.replace(replaceStr,"");
-            console.log("manageListingPhotoReqFlag remove profile",profileid);
+            //console.log("manageListingPhotoReqFlag remove profile",profileid);
         }
     }
 }
@@ -439,15 +439,15 @@ function requestListingPhoto(apiParams) {
             manageListingPhotoReqFlag("set",elem);
         }
         if(apiParams["initialList"]== true || isListPhotoReqValid(elem) == true){
-            console.log("normal flow");
+            //console.log("normal flow");
             if(localStorage.getItem("listingPic_"+elem)) {
                 var timeStamp = localStorage.getItem("listingPic_"+elem).split("#")[1];
                 if(new Date().getTime() - timeStamp > chatConfig.Params[device].clearListingCacheTimeout){
-                    console.log("api request gone");
+                    //console.log("api request gone");
                     newApiParamsPid.push(elem);
                 } 
                 else{
-                    console.log("localStorage used");
+                    //console.log("localStorage used");
                     exsistParamPid.push(elem);
                 }
             }
@@ -1279,10 +1279,10 @@ $(document).ready(function () {
                 }
                 var auth = checkAuthentication(chatConfig.Params[device].loginRetryTimeOut,"first");
                 if (auth != "true") {
-                    console.log("123");
+                    //console.log("123");
                     return;
                 } else {
-                    console.log("login my case");
+                    //console.log("login my case");
                     if($("#selfImgDiv img") != undefined && $("#selfImgDiv img").attr("src") != undefined){
                         localStorage.setItem('userImg', JSON.stringify({
                             'img': $("#selfImgDiv img").attr("src"),
