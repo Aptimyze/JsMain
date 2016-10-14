@@ -24,12 +24,12 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 $this->rangeParams .= ",LAST_LOGIN_DT";
                 $this->setRangeParams($this->rangeParams);
                 $this->setSortParam($sort, $limit);
-                if($sort == SearchSortTypesEnums::SortByTrendsScore || $sort == SearchSortTypesEnums::FullDppWithReverseFlag){
+                if($sort == SearchSortTypesEnums::SortByTrendsScore){
                         $endDate = date("Y-m-d H:i:s", strtotime("now"));
                         $startDate = date("Y-m-d 00:00:00", strtotime($endDate) - $this->LAST_LOGGEDIN*24*3600);
                         $this->setLLAST_LOGIN_DT($startDate);
                         $this->setHLAST_LOGIN_DT($endDate);
-                }else{
+                }elseif($sort != SearchSortTypesEnums::FullDppWithReverseFlag){
                         $endDate = date("Y-m-d H:i:s", strtotime("now") - $this->LAST_LOGGEDIN*24*3600);
                         $this->setLLAST_LOGIN_DT($this->LAST_LOGGEDIN_STARTFROM);
                         $this->setHLAST_LOGIN_DT($endDate);
