@@ -3,6 +3,8 @@ var JsChat = function () {
     this._construct(this, arguments);
 };
 var lrr;
+var tab1ListingIds = [];
+var tab2ListingIds = [];
 //start:prototype
 JsChat.prototype = {
     _mainID: "#chatOpenPanel",
@@ -302,6 +304,21 @@ JsChat.prototype = {
                 $('.show' + param).fadeIn('slow')
             });*/
         }
+        
+        var apiParams = {};
+        if(localStorage && localStorage.getItem("tabState") == "tab1"){
+            jidStr = tab1ListingIds.toString()+",";
+            tab1ListingIds.length = 0;
+        }
+        else if(localStorage && localStorage.getItem("tabState") == "tab2") {
+            jidStr = tab2ListingIds.toString()+",";
+            tab2ListingIds.length = 0;
+        }
+        if (jidStr.length > 1) {
+            apiParams["pid"] = jidStr.slice(0, -1);
+            apiParams["photoType"] = "ProfilePic120Url";
+            requestListingPhoto(apiParams);
+        }
     },
     onLogoutPreClick: null,
     //start:log out from chat
@@ -584,6 +601,12 @@ JsChat.prototype = {
                     //console.log("ankita",data[key]["rosterDetails"]["groups"]);
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         //that._chatLoggerPlugin("groups " + val);
+                        if(chatConfig.Params.pc.tab1groups.indexOf(val) !== -1){
+                            tab1ListingIds.push(key);
+                        }
+                        else if (chatConfig.Params.pc.tab2groups.indexOf(val) !== -1){
+                            tab2ListingIds.push(key);
+                        }
                         var List = '',
                             fullname = data[key]["rosterDetails"]["fullname"],
                             tabShowStatus = $('div.' + val).attr('data-showuser'),
@@ -676,9 +699,23 @@ JsChat.prototype = {
         //this._chatLoggerPlugin("api");
         //this._chatLoggerPlugin(jidStr);
         var apiParams = {};
+        if(localStorage && localStorage.getItem("tabState") == "tab1"){
+            jidStr = tab1ListingIds.toString()+",";
+            tab1ListingIds.length = 0;
+        }
+        else if(localStorage && localStorage.getItem("tabState") == "tab2") {
+            jidStr = tab2ListingIds.toString()+",";
+            tab2ListingIds.length = 0;
+        }
         if (jidStr) {
             apiParams["pid"] = jidStr.slice(0, -1);
             apiParams["photoType"] = "ProfilePic120Url";
+            if(operation == "create_list"){
+                apiParams["initialList"] = true;
+            }
+            else{
+                apiParams["initialList"] = false;
+            }
             requestListingPhoto(apiParams);
         }
         if(operation == "create_list"){
@@ -3160,7 +3197,7 @@ JsChat.prototype = {
     addLoginHTML: function (failed) {
         //this._chatLoggerPlugin('in addLoginHTML');
         var curEle = this;
-        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
+        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100" id="selfImgDiv"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
         var errorHTML = '';
         if (failed == true) {
             errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">' + curEle._loginFailueMsg + '</div>';
