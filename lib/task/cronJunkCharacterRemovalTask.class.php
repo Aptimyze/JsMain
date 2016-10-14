@@ -44,6 +44,7 @@ EOF;
 
         $profileLists = $pipeline->execute();
 
+
         if ( !empty($profileLists))
         {
             foreach ($profileLists as $profileId) 

@@ -30,8 +30,11 @@
 		 */
 		private function removeJunkAbout($about)
 	    {
-	        $about =  preg_replace('/[.]{4,}/','...',$about);
-	        $about = preg_replace('/([^\w.])\1+/','$1',$about);
+	    	if (strlen($about) == mb_strlen($about, 'utf-8'))
+	        {
+	        	$about =  preg_replace('/[.]{4,}/','...',$about);
+	        	$about = preg_replace('/([^\w.])\1+/','$1',$about);
+	        }
 	        return $about;
 	    }
 
