@@ -15,7 +15,7 @@ class InformationTypeAdapter
     }
     
     public function getProfiles($condition, $skipArray,$subscription="")
-    {//print_r($skipArray); die;
+    {
 		$profilesArray = array();
 		switch ($this->infoType) {
             case "INTEREST_RECEIVED":

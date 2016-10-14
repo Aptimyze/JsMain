@@ -81,7 +81,6 @@ public function skipProfiles($arranged)
 	foreach ($arranged as $key => $value) 
 	{
 		$skipProfileObj     = SkipProfile::getInstance($key);
-                $skipConditionArray = SkipArrayCondition::$SkippedAll;
                 $skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 		if(is_array($skipProfiles))
 			$temp=array_diff($value,$skipProfiles); 

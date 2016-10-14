@@ -188,7 +188,7 @@
 <!--end:footer-->
 <script type="text/javascript">
     $(window).load(function(){
-        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index')`
+        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
             ~if $profileid`
                 var udObj = '~CommonUtility::getFreshDeskDetails($profileid)`';
                 var userDetails = $.parseJSON(udObj);
@@ -229,7 +229,7 @@ __insp.push(['wid', 1937430883]);
 })(); 
 </script>
 <!-- End Inspectlet Embed Code -->
-~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index')`
+~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
     ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
         ~include_partial('global/freshDesk')`
     ~/if`

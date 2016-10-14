@@ -522,4 +522,5 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
     var searchId = "~$searchid`";
     var selfUsername='~$loginProfile->getUSERNAME()`';
     var selfEmail='~$loginProfile->getEMAIL()`';
+    var hideUnimportantFeatureAtPeakLoad='~JsConstants::$hideUnimportantFeatureAtPeakLoad`';
 </script>

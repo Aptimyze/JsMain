@@ -16,6 +16,19 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
                         {
                                 $choices[]='0';
                         }
+			if($field->getName()=="CITY_RES")
+			{
+				$stateArr = array_keys(FieldMap::getFieldLabel("state_india",'',1));
+				foreach($stateArr as $x=>$y)
+				{
+					$choices[]=$y."OT";
+				}
+				$stateArr = array_keys(FieldMap::getFieldLabel("city_usa",'',1));
+				foreach($stateArr as $x=>$y)
+				{
+					$choices[]=$y;
+				}
+			}
 			$choiceValidator = new sfValidatorChoice(array('choices'=>$choices,'required'=>false),array('invalid'=>$errInvalid));
 		}
 		switch($const_cl){

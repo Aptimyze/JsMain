@@ -97,7 +97,7 @@ $profileObj->getDetail("","","USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,M
                         }
 
                         //GET IGNORED LIST
-                        $ignoredList = $ignoredProfileObj->ifProfilesIgnored(0,$viewer, 1);
+                        $ignoredList = $ignoredProfileObj->ifProfilesIgnored('0',$viewer, 1);
                         if (is_array($suggestedProf)) {
                                 foreach ($suggestedProf as $key => $value) {
                                         foreach ($value as $k => $v) {

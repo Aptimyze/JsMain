@@ -30,7 +30,7 @@ class JsNotificationProduce
   { 
     if(JsMemcache::getInstance()->get("mqMemoryAlarmFIRST_SERVER")==true || JsMemcache::getInstance()->get("mqDiskAlarmFIRST_SERVER")==true || $this->serverConnection('FIRST_SERVER')==false)
     {
-      if(MQ::FALLBACK_STATUS==true && $useFallbackServer==true)
+      if(MQ::FALLBACK_STATUS==true && $useFallbackServer==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
       {
         if(JsMemcache::getInstance()->get("mqMemoryAlarmSECOND_SERVER")==true || JsMemcache::getInstance()->get("mqDiskAlarmSECOND_SERVER")==true || $this->serverConnection('SECOND_SERVER')==false)
         {

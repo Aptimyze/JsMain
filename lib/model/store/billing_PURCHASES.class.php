@@ -718,5 +718,29 @@ class BILLING_PURCHASES extends TABLE{
             throw new jsException($e);
         }
     }
+
+    public function fetchTFNSMSProfiles($curDate)
+    {
+        try
+        {
+            $fifteenDays = date("Y-m-d", strtotime($curDate)-15*24*60*60);
+            $fortyFiveDays = date("Y-m-d", strtotime($curDate)-45*24*60*60);
+            $sql="SELECT PROFILEID, BILLID, SERVICEID, ENTRY_DT FROM billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND (DATE(ENTRY_DT)=:START_DATE1 OR DATE(ENTRY_DT)=:START_DATE2)";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":START_DATE1",$fifteenDays,PDO::PARAM_STR);
+            $prep->bindValue(":START_DATE2",$fortyFiveDays,PDO::PARAM_STR);
+            $prep->execute();
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[] = $row;
+            } 
+            return $res;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }
 ?>
