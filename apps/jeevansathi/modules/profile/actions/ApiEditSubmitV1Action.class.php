@@ -159,6 +159,7 @@ class ApiEditSubmitV1Action extends sfActions
 			$apiResponseHandlerObj->setResponseBody($errorArr);
 			ValidationHandler::getValidationHandler("","EditField Array is not valid");
 		}
+
 		$apiResponseHandlerObj->generateResponse();
 		die;
 	}

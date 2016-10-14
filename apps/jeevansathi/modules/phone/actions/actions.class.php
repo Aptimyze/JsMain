@@ -89,10 +89,9 @@ class phoneActions extends sfActions
 	die;
   }
 
-
   public function executeSaveV1(sfWebRequest $request)
   {
-
+  	die("no");
 
   	$respObj = ApiResponseHandler::getInstance();
 
@@ -110,7 +109,16 @@ class phoneActions extends sfActions
 		$phoneType = "A";
 	else
 		$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_INPUT);
-	if($phoneType)
+
+	if($phoneType == "M")
+	{ 
+	ob_start();
+	sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
+	$layerData = ob_get_contents();
+	ob_end_clean();
+	}
+
+	if($phoneType == 'A')
 	{
 		if($isd=='')
 			$respObj->setHttpArray(ResponseHandlerConfig::$ISD_BLANK);
@@ -126,7 +134,7 @@ class phoneActions extends sfActions
 		{
 			$profileObj = LoggedInProfile::getInstance('newjs_master');
 			$phoneVerObject=new PhoneVerification($profileObj,$phoneType);
-			$phoneVerObject->savePhone($number,'',$isd);
+			$phoneVerObject->fdf_save(fdf_document);
 			
 			$memObject=JsMemcache::getInstance();
 			$memObject->delete('showConsentMsg_'.$profileid);		
