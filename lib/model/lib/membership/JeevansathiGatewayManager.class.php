@@ -41,10 +41,14 @@ class JeevansathiGatewayManager
         $discount                     = $payment['discount'];
         $discount_type                = $payment['discount_type'];
         $ORDER                        = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYU', $discount_type, $apiParams->device, $apiParams->couponCode);
-        $nameOfUserObj                = new incentive_NAME_OF_USER();
-        $userName                     = $nameOfUserObj->getName($apiParams->profileid);
-        $apiObj->txnid                = $ORDER["ORDERID"];
-        $apiObj->amount               = (float) round($ORDER["AMOUNT"], 2);
+        if ($service_main != $apiParams->track_memberships) {
+            $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYU, Device : '{$apiParams->device}'";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com");
+        }
+        $nameOfUserObj  = new incentive_NAME_OF_USER();
+        $userName       = $nameOfUserObj->getName($apiParams->profileid);
+        $apiObj->txnid  = $ORDER["ORDERID"];
+        $apiObj->amount = (float) round($ORDER["AMOUNT"], 2);
 
         $apiObj->productinfo = "UsrID: {$apiParams->profileid}, Mem: {$apiParams->track_memberships}, Amt: {$apiObj->amount}, Discnt: {$discount}, DisntTyp: {$discount_type}";
         $userData            = $memHandlerObj->getUserData($apiParams->profileid);
@@ -67,7 +71,7 @@ class JeevansathiGatewayManager
         $apiObj->surl     = JsConstants::$siteUrl . "/profile/pg/payU_return.php";
         $apiObj->furl     = JsConstants::$siteUrl . "/profile/pg/payU_return.php";
         $apiObj->curl     = JsConstants::$siteUrl . "/profile/pg/payU_return.php";
-        $checksumSplit     = str_split($apiParams->checksum, 20);
+        $checksumSplit    = str_split($apiParams->checksum, 20);
         $apiObj->udf1     = $checksumSplit[0];
         $apiObj->udf2     = $checksumSplit[1];
         $apiObj->udf3     = $checksumSplit[2];
@@ -150,6 +154,10 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
         $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'CCAVENUE', $discount_type, $apiParams->device, $apiParams->couponCode);
+        if ($service_main != $apiParams->track_memberships) {
+            $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : CCAVENUE, Device : '{$apiParams->device}'";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com");
+        }
         $nameOfUserObj = new incentive_NAME_OF_USER();
         $userName      = $nameOfUserObj->getName($apiParams->profileid);
         if ($apiParams->currency == 'DOL') {
@@ -234,7 +242,10 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
         $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYTM', $discount_type, $apiParams->device, $apiParams->couponCode);
-
+        if ($service_main != $apiParams->track_memberships) {
+            $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYTM, Device : '{$apiParams->device}'";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com");
+        }
         $apiObj->txnid            = $ORDER["ORDERID"];
         $apiObj->INDUSTRY_TYPE_ID = $apiObj->industryType;
         $apiObj->CHANNEL_ID       = $apiObj->channelId;
@@ -295,7 +306,10 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
         $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYPAL', $discount_type, $apiParams->device, $apiParams->couponCode);
-
+        if ($service_main != $apiParams->track_memberships) {
+            $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYPAL, Device : '{$apiParams->device}'";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com");
+        }
         $apiObj->PAYPALAMOUNT  = $ORDER["AMOUNT"];
         $apiObj->PAYPALORDERID = $ORDER["ORDERID"];
         $billServObj           = new billing_SERVICES();
