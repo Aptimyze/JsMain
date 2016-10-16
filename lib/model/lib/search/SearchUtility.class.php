@@ -48,34 +48,31 @@ class SearchUtility
 			}
 			else
 			{
-                                if($getFromCache == 1){
-                                                $memObject=JsMemcache::getInstance();
-                                                $hideArrCache = $memObject->get('SEARCH_MA_IGNOREPROFILE_'.$pid);
-                                                if(!empty($hideArrCache)){
-                                                        $SearchParamtersObj->setIgnoreProfiles($hideArrCache);
-                                                        return;
-                                                }
-                                }
 				if($pid)
 				{
-					/* ignored profiles two way */
-					$IgnoredProfilesObj = new IgnoredProfiles();
-					$hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid,$seperator);
+                                        if($getFromCache == 1){
+                                                $memObject=JsMemcache::getInstance();
+                                                $hideArr = $memObject->get('SEARCH_MA_IGNOREPROFILE_'.$pid);
+                                        }
+                                        if(!$hideArr){
+                                                /* ignored profiles two way */
+                                                $IgnoredProfilesObj = new IgnoredProfiles();
+                                                $hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid,$seperator);
 
-					/* contacted profiles */
-					$Obj = new ContactsRecords;
-					$hideArr.= $Obj->getContactsList($pid,$seperator,$noAwaitingContacts);
-
+                                                /* contacted profiles */
+                                                $Obj = new ContactsRecords;
+                                                $hideArr.= $Obj->getContactsList($pid,$seperator,$noAwaitingContacts);
+                                                
+                                                if($getFromCache == 1){
+                                                       $memObject->set('SEARCH_MA_IGNOREPROFILE_'.$pid,$hideArr,SearchConfig::$matchAlertCacheLifetime);
+                                                }
+                                        }
 					/** matchAlerts Profile **/
 					if($removeMatchAlerts)
 					{
 						$matchalerts_LOG = new matchalerts_LOG();
 						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
 					}
-                                        if($getFromCache == 1){
-                                                        $memObject=JsMemcache::getInstance();
-                                                        $memObject->set('SEARCH_MA_IGNOREPROFILE_'.$pid,$hideArr,SearchConfig::$matchAlertCacheLifetime);
-                                        }
 				}
 
 				if($SearchParamtersObj->getONLINE()==SearchConfig::$onlineSearchFlag)

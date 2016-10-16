@@ -46,7 +46,7 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                 $arr = $this->getSearchResult($SearchServiceObj, $SearchUtilityObj, 1,$this->clusterToShow);
                 
                 if (is_array($arr["PIDS"]))
-                        $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $arr["PIDS"], $this->logicLevel, $this->limit, $this->limit);
+                        $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $arr["PIDS"], $this->logicLevel, $this->limit);
 
                 if($returnTotalCountWithCluster == 1){
                         return array("CNT"=>$arr['CNT'],"LOGIN_SCORE"=>$this->clusterLoginScore);

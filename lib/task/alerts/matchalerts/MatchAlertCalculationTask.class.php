@@ -7,7 +7,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $limit = 5000;
 	private $limitNtRec = 16;
 	private $limitTRec = 10;
-	const clusterRecordLimit = 20;
+	const clusterRecordLimit = 10;
         
 	protected function configure()
   	{
@@ -74,7 +74,6 @@ EOF;
                                                         $returnTotalCountWithCluster = 1;
                                                         $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
 							$totalResults = $StrategyReceiversNT->getMatches('',$returnTotalCountWithCluster);
-                                                        
                                                         if($totalResults["LOGIN_SCORE"] > self::clusterRecordLimit){
                                                                 //if dpp count is greater than 20 send dpp again(loggedin in 15 days) sort by trends score
                                                                 $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithTrendsScoreSort);
