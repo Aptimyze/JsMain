@@ -54,8 +54,10 @@ class MembershipAPIResponseHandler {
         }
         
         $this->allMemberships = $request->getParameter('allMemberships');
-        $this->mainMembership = $request->getParameter('mainMembership');
-        $this->vasImpression = $request->getParameter('vasImpression');
+	$this->mainMembership = preg_replace('/[^A-Za-z0-9\. -_]/', '', $request->getParameter('mainMembership'));
+        //$this->mainMembership = $request->getParameter('mainMembership');
+	$this->vasImpression =  preg_replace('/[^A-Za-z0-9\. -_]/', '', $request->getParameter('vasImpression'));
+        //$this->vasImpression = $request->getParameter('vasImpression');
         $this->backDisc = $request->getParameter('backDisc');
         $this->backTot = $request->getParameter('backTot');
         $this->processPayment = $request->getParameter('processPayment');
