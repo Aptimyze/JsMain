@@ -270,7 +270,7 @@ class RegistrationFunctions
             $max=0;
             if(is_array($emailArr)){
                 foreach($emailArr as $key=>$val){
-                    $lastNumber = substr($val[EMAIL],-1);
+                    $lastNumber = explode(RegistrationEnums::$emailModification,$val[EMAIL])[1];
                     if($max < $lastNumber)
                         $max=$lastNumber;
                 }

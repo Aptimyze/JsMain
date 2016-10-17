@@ -273,6 +273,9 @@ class apidetailedv1Action extends sfAction
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
 		}	
 		$out['show_gunascore'] = "y";
+		if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1){
+			$out['show_gunascore'] = "n";
+		}
 		return $out;
 	}
 

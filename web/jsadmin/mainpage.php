@@ -11,7 +11,8 @@ if (isset($data)) //successful login
     } else {
         $name = $username = getname($cid);
     }
-
+    $name = preg_replace('/[^A-Za-z0-9\. -_]/', '', $name);	
+    $username = preg_replace('/[^A-Za-z0-9\. -_]/', '', $username);
     $center = getcenter_for_walkin($name);
 
     if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'http://crm.jeevansathi.com') {

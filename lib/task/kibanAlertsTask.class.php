@@ -1,5 +1,8 @@
 <?php
-
+/*
+ *	A Symfony task which sends a alert at an interval whenever the count of
+ *  errors for modules crosses the specified threshold
+ */
 class kibanAlertsTask extends sfBaseTask
 {
 	protected function configure()
@@ -18,6 +21,7 @@ EOF;
 	protected function execute($arguments = array(), $options = array())
 	{
 		$currdate = date('Y.m.d');
+		// Server at which ElasticSearch and kibana is running
 		$elkServer = '10.10.18.66';
 		$elkPort = '9200';
 		$kibanaPort = '5601';
@@ -33,39 +37,54 @@ EOF;
 		$from = "jsissues@jeevansathi.com";
 		$subject = "Kibana Module Alert";
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
+
+		// parameters required, log type of Error and get all module counts in the specified interval
 		$params = [
 			"query"=> [
-				"range" => [
-					"@timestamp" => [
-						"gt" => "now-".$interval."h",
-						"lt" => "now"
-					]
-				]
+			    "match" => ["logType"=>"Error"]
 			],
-			'aggs' => [
-				'modules' => [
-					'terms' => [
-						'field' => 'moduleName',
-						'size' => 1000
-					]
-				]
+			"aggs"=> [
+			"filtered"=> [
+			  "filter"=> [
+			    "bool"=> [
+			      "must"=> [
+			        [
+			          "range"=> [
+			            "@timestamp"=> [
+			              "gt"=> "now-".$interval."h",
+			              "lt"=> "now"
+			            ]
+			          ]
+			        ]
+			      ]
+			    ]
+			  ],
+			  "aggs"=> [
+			    "modules"=>
+			    [
+			        "terms"=>
+			        [ "field" => "moduleName" ,  "size" => 1000 ]
+			    ]
+			  ]
+			]
 			]
 		];
+		// send curl request
 		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
-		// timeout checks needs to be done
 		if($response)
 		{
+			// Default timezone for Elastic is UTC
 			date_default_timezone_set('UTC');
 			$arrResponse = json_decode($response, true);
 			$arrModules = array();
-			foreach($arrResponse['aggregations']['modules']['buckets'] as $module) 
+			// Get module count for each module
+			foreach($arrResponse['aggregations']['filtered']['modules']['buckets'] as $module)
 			{
 			    $arrModules[$module['key']] = $module['doc_count']; 
 			}
 			$to = "jsissues@jeevansathi.com";
-
+			// Kibana Url for the dashboard in the specified interval
 			$kibanaUrl = 'http://'.$elkServer.":".$kibanaPort."/app/kibana#/dashboard/".$dashboard."?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
-
 			foreach ($arrModules as $key => $value)
 			{
 				if($value > $threshold)
@@ -80,6 +99,7 @@ EOF;
 		}
 		else
 		{
+			// ElasticSearch is unreachable
 			$to = "nikhil.mittal@jeevansathi.com";
 			$msg = 'ELK stack Unreachable.Plese look into the matter.';
 		}

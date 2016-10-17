@@ -1,7 +1,7 @@
 <?php
                                                                                                  
 include ("connect.inc");
-$cid = $_COOKIE["CRM_NOTIFICATION_AGENTID"];
+$cid = preg_replace('/[^A-Za-z0-9\. -_]/', '', $_COOKIE["CRM_NOTIFICATION_AGENTID"]);
 if($cid)
 	$lout=logout($cid);
 unsetLoginCookies();

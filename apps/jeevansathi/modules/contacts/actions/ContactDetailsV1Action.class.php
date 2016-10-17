@@ -194,6 +194,23 @@ class ContactDetailsV1Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 						
 				} 
+
+				elseif ($errorArr["PAID_FILTERED_INTEREST_NOT_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+					elseif ($errorArr["PAID_FILTERED_INTEREST_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+
+
 				elseif($errorArr["PROFILE_IGNORE"] == 2)
 				{
 					$responseArray["errmsglabel"] = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
