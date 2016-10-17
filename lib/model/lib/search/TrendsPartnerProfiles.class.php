@@ -63,6 +63,10 @@ class TrendsPartnerProfiles extends SearchParamters {
   }
 
   public function setMaritalStatus() {
+        if($this->filterArray && $this->filterArray["MSTATUS"] == 'Y'){ // if jpartner filter is set, return jpartner condition criteria
+                $mstatus = trim($this->jpartnerData[0][$this->jpartnerTrendsFieldsMapping["MSTATUS"]],"'");
+                return implode(" ",explode("','",$mstatus));
+        }
     if ($this->loggedInProfileObj->getMSTATUS() == 'N') {
       $MSTATUS = "N";
     } else {

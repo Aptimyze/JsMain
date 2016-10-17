@@ -7,6 +7,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $limit = 5000;
 	private $limitNtRec = 16;
 	private $limitTRec = 10;
+	private $limitTRecTemp = 10;
 	const clusterRecordLimit = 10;
         
 	protected function configure()
@@ -67,29 +68,38 @@ EOF;
                                                 $returnTotalCountWithCluster = 0;
 						if($trends)
 						{
+                                                        $profiles = array();
 							/*
 							* Two mails willl be sent to user if has trends
 							*/
-                                                        // DPP mailer for trends profile (loggedin in 15 days) sort by reverse dpp
-                                                        $returnTotalCountWithCluster = 1;
                                                         $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
-							$totalResults = $StrategyReceiversNT->getMatches('',$returnTotalCountWithCluster);
+							$totalResults = $StrategyReceiversNT->getMatches('',1);
+                                                        
                                                         if($totalResults["LOGIN_SCORE"] > self::clusterRecordLimit){
-                                                                //if dpp count is greater than 20 send dpp again(loggedin in 15 days) sort by trends score
                                                                 $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithTrendsScoreSort);
-                                                                $totalResults = $StrategyReceiversNT->getMatches('',$returnTotalCountWithCluster); 
-                                                        }else{
-                                                                //if dpp count is 0 or less than 20 send match alerts with trends(loggedin in 15 days), sort by trends score
-                                                                $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec,MailerConfigVariables::$TrendsLoggedinWithTrendsScoreSort);       
-                                                                $totalResults = $StrategyReceiversT->getMatches();
-                                                                if(!$totalResults){ 
-                                                                        // send DPP profiles (not loggedin in 15 days) sort by login time
-                                                                        $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppNotLoggedinWithLoginDateSort);
-                                                                        $totalResults = $StrategyReceiversNT->getMatches('',$returnTotalCountWithCluster);
-                                                                        if(!$totalResults){
-                                                                                // send Trends profiles (not loggedin in 15 days) sort by login time
-                                                                                $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec,MailerConfigVariables::$TrendsNotLoggedinWithLoginDateSort);
-                                                                                $totalResults = $StrategyReceiversT->getMatches();
+                                                                $totalResults = $StrategyReceiversNT->getMatches('',0); 
+                                                                if($totalResults["profiles"])
+                                                                        $profiles = array_merge($profiles,$totalResults["profiles"]);
+                                                        }
+                                                        
+                                                        if(count($profiles)<$this->limitTRec){
+                                                                $this->limitTRecTemp = abs($this->limitTRec - count($profiles));
+                                                                $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRecTemp,MailerConfigVariables::$TrendsLoggedinWithTrendsScoreSort);   
+                                                                $totalResults = $StrategyReceiversT->getMatches($profiles);
+                                                                if($totalResults["profiles"])
+                                                                        $profiles = array_merge($profiles,$totalResults["profiles"]);
+                                                                
+                                                                if(count($profiles)<$this->limitTRec){
+                                                                        
+                                                                        $this->limitTRecTemp = abs($this->limitTRec - count($profiles));
+                                                                        $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRecTemp,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppNotLoggedinWithLoginDateSort);                                                                                                        $totalResults = $StrategyReceiversNT->getMatches('',0,$profiles);
+                                                                        if($totalResults["profiles"])
+                                                                                $profiles = array_merge($profiles,$totalResults["profiles"]);
+                                                                        
+                                                                        if(count($profiles)<$this->limitTRec){
+                                                                                $this->limitTRecTemp = abs($this->limitTRec - count($profiles));
+                                                                                $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRecTemp,MailerConfigVariables::$TrendsNotLoggedinWithLoginDateSort);
+                                                                                $totalResults = $StrategyReceiversT->getMatches($profiles);
                                                                         }
                                                                 }
                                                         }
