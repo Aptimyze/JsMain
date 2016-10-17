@@ -3,6 +3,8 @@ var JsChat = function () {
     this._construct(this, arguments);
 };
 var lrr;
+var tab1ListingIds = [];
+var tab2ListingIds = [];
 //start:prototype
 JsChat.prototype = {
     _mainID: "#chatOpenPanel",
@@ -302,6 +304,24 @@ JsChat.prototype = {
                 $('.show' + param).fadeIn('slow')
             });*/
         }
+        
+        var apiParams = {};
+        if(localStorage && localStorage.getItem("tabState") == "tab1"){
+            jidStr = tab1ListingIds.toString()+",";
+            tab1ListingIds.length = 0;
+        }
+        else if(localStorage && localStorage.getItem("tabState") == "tab2") {
+            jidStr = tab2ListingIds.toString()+",";
+            tab2ListingIds.length = 0;
+        }
+        if (jidStr.length > 1) {
+            apiParams["pid"] = jidStr.slice(0, -1);
+            apiParams["photoType"] = "ProfilePic120Url";
+            apiParams["initialList"] = true;
+            if(apiParams["pid"]){
+                requestListingPhoto(apiParams);
+            }
+        }
     },
     onLogoutPreClick: null,
     //start:log out from chat
@@ -584,6 +604,12 @@ JsChat.prototype = {
                     //console.log("ankita",data[key]["rosterDetails"]["groups"]);
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         //that._chatLoggerPlugin("groups " + val);
+                        if(chatConfig.Params.pc.tab1groups.indexOf(val) !== -1){
+                            tab1ListingIds.push(key);
+                        }
+                        else if (chatConfig.Params.pc.tab2groups.indexOf(val) !== -1){
+                            tab2ListingIds.push(key);
+                        }
                         var List = '',
                             fullname = data[key]["rosterDetails"]["fullname"],
                             tabShowStatus = $('div.' + val).attr('data-showuser'),
@@ -676,16 +702,26 @@ JsChat.prototype = {
         //this._chatLoggerPlugin("api");
         //this._chatLoggerPlugin(jidStr);
         var apiParams = {};
+        if(localStorage && localStorage.getItem("tabState") == "tab1"){
+            jidStr = tab1ListingIds.toString()+",";
+            tab1ListingIds.length = 0;
+        }
+        else if(localStorage && localStorage.getItem("tabState") == "tab2") {
+            jidStr = tab2ListingIds.toString()+",";
+            tab2ListingIds.length = 0;
+        }
         if (jidStr) {
             apiParams["pid"] = jidStr.slice(0, -1);
-            apiParams["photoType"] = "ProfilePic120Url";
-            if(operation == "create_list"){
-                apiParams["initialList"] = true;
+            if(apiParams["pid"]){
+                apiParams["photoType"] = "ProfilePic120Url";
+                if(operation == "create_list"){
+                    apiParams["initialList"] = true;
+                }
+                else{
+                    apiParams["initialList"] = false;
+                }
+                requestListingPhoto(apiParams);
             }
-            else{
-                apiParams["initialList"] = false;
-            }
-            requestListingPhoto(apiParams);
         }
         if(operation == "create_list"){
             retainHiddenListing();
