@@ -76,7 +76,7 @@ function start_opt_in_profiles($campaign_name,$opt_in_profile,$db_dialer,$db_js_
         }
 }
 
-function logerror($sql="",$db="",$ms)
+function logerror($sql="",$db="",$ms='')
 {
         $today=@date("Y-m-d h:m:s");
         $filename="logerror.txt";
@@ -145,7 +145,7 @@ for($i=0;$i<count($opt_in_array1);$i++)
 unset($dnc_array);
 unset($opt_in_array);
 unset($opt_in_array1);
-$msg.="End time:".@date('H:i:s');
+$msg.="End time:".@date('H:i:s')."\n";
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 $sub="Dialer updates NCR-MAH-RENEWAL Campaign opt-in done.";
 $from="From:vibhor.garg@jeevansathi.com";

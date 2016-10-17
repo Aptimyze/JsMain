@@ -34,10 +34,10 @@ if($profileStr!='')
 }
 
 // mail added
-$to="manoj.rana@naukri.com";
+/*$to="manoj.rana@naukri.com";
 $sub="Dialer updates of failed payment.";
 $from="From:vibhor.garg@jeevansathi.com";
-mail($to,$sub,$profileStr,$from);
+mail($to,$sub,$profileStr,$from);*/
 
 function fetchProfiles($db_js)
 {

@@ -12,7 +12,9 @@ class MysqlDbConstants
         /* master-slave*/
         public static $master           =array('HOST'=>'master.js.jsb9.net', 'USER'=>'user', 'PASS'=>'CLDLRTa9', 'PORT'=>'3306');
         public static $misSlave         =array('HOST'=>'ser2.jeevansathi.jsb9.net', 'USER'=>'user_dialer', 'PASS'=>'DIALlerr', 'PORT'=>'3306');
-        public static $slave111         =array('HOST'=>'localhost:/tmp/mysql_06.sock', 'USER'=>'user_sel', 'PASS'=>'CLDLRTa9', 'PORT'=>'3306');
+        public static $slave111         =array('HOST'=>'productslave.js.jsb9.net', 'USER'=>'user', 'PASS'=>'CLDLRTa9', 'PORT'=>'3306');
+        public static $slave111_sel     =array('HOST'=>'localhost:/tmp/mysql_06.sock', 'USER'=>'user_sel', 'PASS'=>'CLDLRTa9', 'PORT'=>'3306');
+
         public static $shard1Slave112   =array('HOST'=>'productshard2slave.js.jsb9.net:3309', 'USER'=>'user_sel', 'PASS'=>'CLDLRTa9', 'PORT'=>'3309');
         public static $shard2Slave112   =array('HOST'=>'productshard2slave.js.jsb9.net:3306', 'USER'=>'user_sel', 'PASS'=>'CLDLRTa9', 'PORT'=>'3306');
         public static $shard3Slave112   =array('HOST'=>'productshard2slave.js.jsb9.net:3307', 'USER'=>'user_sel', 'PASS'=>'CLDLRTa9', 'PORT'=>'3307');

@@ -22,7 +22,7 @@ $eligibleType ='Y';
 $limit =10;
 
 // get Status
-$status =getCampaignEligibilityStatus($campaign_name,$eligibleType);
+$status =$dialerHandlerObj->getCampaignEligibilityStatus($campaign_name,$eligibleType);
 if(!$status)
         $status=0;
 
@@ -35,8 +35,8 @@ for($i=$start_from;$i<$limit;$i++)
 	$loggedinWithin15days 	= loginWithin15Days($eligible_array,$db_js);
 	$allotedArray 		= allotedArray($eligible_array,$db_js);
 	$scoreArray 		= scoreArray($eligible_array,$db_js);
-        update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$db_dialer,$vd_array,$loggedinWithin15days,$allotedArray,$scoreArray,$db_js_157);
-	updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+        update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$db_dialer,$vd_array,$loggedinWithin15days,$allotedArray,$scoreArray,$db_js_111);
+	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
 	echo "DONE$i"."\n";
 }
 

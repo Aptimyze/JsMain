@@ -103,8 +103,7 @@ function stop_non_eligible_profiles($campaign_name,$x,$ignore_array,$db_dialer,$
 		$updateStr='';
 		if(in_array($proid,$ignore_array))
 		{
-			//if($srow1["Dial_Status"]!='0' && $srow1["Dial_Status"]!='9' && $srow1["Dial_Status"]!='3')
-			if($srow1["Dial_Status"]!='9' && $srow1["Dial_Status"]!='3')
+			if($srow1["Dial_Status"]!='0' && $srow1["Dial_Status"]!='9' && $srow1["Dial_Status"]!='3')
 				$updateStr ="Dial_Status=0";
 			if(array_key_exists($proid,$vd_profiles))
                                 $vdDiscount = $vd_profiles[$proid];
