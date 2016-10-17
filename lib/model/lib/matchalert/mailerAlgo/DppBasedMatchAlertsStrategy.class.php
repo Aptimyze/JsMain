@@ -31,7 +31,7 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
          * This function will fetch the matches to be send in matchalerts
          * @return array 
          */
-        public function getMatches($returnTotalCount = '') {
+        public function getMatches($returnTotalCount = '',$matchesSetting='') {
                 $performMutualMatch = TwoWayBasedDppAlerts::checkForDppProfile($this->loggedInProfileObj->getPROFILEID());
 
                 if (empty($performMutualMatch)) {
@@ -49,7 +49,7 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                         $arr = $this->performDPP($this->listingCount);
                 }
                 if (is_array($arr["PIDS"]))
-                        $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $arr["PIDS"], $this->logicLevel, $this->limit, $this->listingCount);
+                        $this->logRecords($this->loggedInProfileObj->getPROFILEID(), $arr["PIDS"], $this->logicLevel, $this->limit, $this->listingCount,$matchesSetting);
                 if ($returnTotalCount)
                         return $arr['CNT'];
         }

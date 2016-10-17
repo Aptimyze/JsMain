@@ -8,7 +8,7 @@ abstract class MatchAlertsStrategy
         private $frequency = 1;
 	abstract function getMatches();
   
-        public function logRecords($receiverId,$profileIds,$logicLevel,$limit,$listCount = 0){
+        public function logRecords($receiverId,$profileIds,$logicLevel,$limit,$listCount = 0,$matchesSetting=''){
           $profileIdsForList = array();
           if($listCount != 0)
                 $profileIdsForList = array_slice($profileIds,0,$listCount); // Profile id list to be added to listings according to new logic
@@ -28,10 +28,14 @@ abstract class MatchAlertsStrategy
           
           unset($matchalertLogObj);
           unset($matchalertTempLogObj);
-
-          $matchalertMailerObj = new matchalerts_MAILER();
-          $matchalertMailerObj->insertLogRecords($receiverId, $profileIds, $logicLevel, $this->frequency);
-          unset($matchalertMailerObj);
+          
+          $day_of_week=date("w");
+          if($matchesSetting != 'U' && ($matchesSetting == 'A' || $matchesSetting == '' || in_array($day_of_week,array('1','3','5'))))
+          {
+            $matchalertMailerObj = new matchalerts_MAILER();
+            $matchalertMailerObj->insertLogRecords($receiverId, $profileIds, $logicLevel, $this->frequency);
+            unset($matchalertMailerObj);
+          }
         }
 }
 ?>
