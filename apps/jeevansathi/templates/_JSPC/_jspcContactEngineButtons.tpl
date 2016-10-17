@@ -150,7 +150,7 @@
                     </div>
                     <div class="disp-tbl fullwid">
 							<div class="disp-cell vmid txtc color11 f15" style="height:144px">
-						<p class="color11 {{VisibilityClass_Error}}">{{ErrorMsg}}</p> 
+						<p class="color11 ptm25 {{VisibilityClass_Error}}">{{ErrorMsg}}</p> 
                         <p class="color5 {{VisibilityClass_Info}}">{{InfoMsg}}</p>
                         <button id={{ACTION_ID}} class=" cursp bg_pink colrw fontreg f15 mt20 brdr-0 cep2 contactEngineIcon  {{ButtonClass}} {{VisibilityClass_Button}}" data="{{paramData}}">{{ButtonLabel}}</button>
                         <div class="colr5 pt10 ">{{ButtonLabelText}}</div>
