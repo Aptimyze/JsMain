@@ -59,8 +59,8 @@ EOF;
 			{
 				foreach($arr as $profileid=>$v)
 				{
-                                  if($v != 1)
-                                    $v = 0;
+                                  if($v["HASTRENDS"] != 1)
+                                    $v["HASTRENDS"] = 0;
 					/**
 					* update flag.
 					*/
@@ -68,8 +68,8 @@ EOF;
 
 					$loggedInProfileObj = LoggedInProfile::getInstance();
 					$loggedInProfileObj->getDetail($profileid,"PROFILEID","*");
-
-					$trends = $v;
+					$trends = $v["HASTRENDS"];
+                                        $matchesSetting = $v["PERSONAL_MATCHES"];
 					if($loggedInProfileObj->getPROFILEID())
 					{
 						if($trends)
@@ -81,7 +81,7 @@ EOF;
 							* Two mails willl be snet to user if has trends
 							*/
                                                         $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT);
-							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt);
+							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$matchesSetting);
                                                         if($totalResults == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
                                                         $profileId = $loggedInProfileObj->getPROFILEID();
@@ -89,7 +89,7 @@ EOF;
                                                         if($totalResults >= $this->minDppIntersectionCnt && $isProfileEligible)
                                                          {
                                                             $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec);   
-                                                            $toSendFromIntersection = $StrategyReceiversT->getMatches($sendIntersectionMatches);
+                                                            $toSendFromIntersection = $StrategyReceiversT->getMatches($sendIntersectionMatches,$matchesSetting);
                                                             if(!$toSendFromIntersection){
                                                                 $StrategyReceiversT->getMatches();
                                                                 logAndFetchProfilesForZeroMatches::insertEntry($profileId);
@@ -97,7 +97,7 @@ EOF;
                                                         }
                                                         else{
                                                             $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec);   
-                                                            $StrategyReceiversT->getMatches();
+                                                            $StrategyReceiversT->getMatches('',$matchesSetting);
                                                         }
                                                             
 						}
@@ -108,7 +108,7 @@ EOF;
 							*/
                                                         $includeDppCnt = 1;
 							$StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$strategyReceiversNT);
-							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt);
+							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$matchesSetting);
                                                         if($totalResults == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                 $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
 						}	

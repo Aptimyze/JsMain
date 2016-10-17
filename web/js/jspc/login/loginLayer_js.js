@@ -545,7 +545,7 @@ function postForgotEmailLayer()
 								 setTimeout(function(){
 									 $("#forgotPasswordErr").removeClass("visb");
 									$("#userEmailBox").removeClass("brderred");
-								},5000);
+								},10000);
 							 }
 							 hideCommonLoader();
 							  return;

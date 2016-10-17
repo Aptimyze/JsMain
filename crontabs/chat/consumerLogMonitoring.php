@@ -1,14 +1,16 @@
 <?php
 	$domain = "http://10.10.18.67:9090/";
-	$logFilePath = array("USER_CREATE_Log"=>"/data/projects/logs/JsRosterConsumer_USER_CREATE.log",
-						 "USER_DELETE_Log"=>"/data/projects/logs/JsRosterConsumer_USER_DELETE.log",
-						 "SHORTLIST_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_SHORTLIST_ROSTER.log",
-						 "DPP_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_DPP_ROSTER.log",
-						 "INT_REC_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_INT_REC_ROSTER.log",
-						 "INT_SENT_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_INT_SENT_ROSTER.log",
-						 "ACCEPTANCE_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_ACCEPTANCE_ROSTER.log",
-						 "ROSTER_UPDATOR_Log"=>"/data/projects/logs/JsRosterConsumer_ROSTER_UPDATOR.log",
-						 "ACCEPTANCE_SENT_Log"=>"/data/projects/logs/JsRosterConsumer_ACCEPTANCE_SENT.log");
+	$logFilePath = array("USER_CREATE_Log"=>"/data/projects/logs/JsRosterConsumer_1.log",
+						 "USER_DELETE_Log"=>"/data/projects/logs/JsRosterConsumer_2.log",
+						 "SHORTLIST_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_3.log",
+						 "DPP_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_4.log",
+						 "INT_REC_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_5.log",
+						 "INT_SENT_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_6.log",
+						 "ACCEPTANCE_ROSTER_Log"=>"/data/projects/logs/JsRosterConsumer_7.log",
+						 "ROSTER_UPDATOR_Log"=>"/data/projects/logs/JsRosterConsumer_8.log",
+						 "ACCEPTANCE_SENT_Log"=>"/data/projects/logs/JsRosterConsumer_9.log",
+						 "MESSAGE_Log"=>"/projects/logs/JsMessagingConsumer.log"
+						 );
 
 	$consumerMapping = array(
 							$logFilePath["USER_CREATE_Log"]=>array(array(
@@ -46,6 +48,10 @@
 							$logFilePath["ACCEPTANCE_SENT_Log"]=>array(array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
 								"consumerPath"=>"java -Dspring.profiles.active=9 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
+							),
+							$logFilePath["MESSAGE_Log"]=>array(array(
+								"consumerGrep"=>"/home/developer/projects/JsMessagingConsumer/jsmessagingconsumer-0.1.0.jar",
+								"consumerPath"=>"java -jar -Dspring.profiles.active=live jsmessagingconsumer-0.1.0.jar &"),
 							)
 						);
 	//print_r($consumerMapping);
@@ -87,7 +93,8 @@
 	}
 
 	function sendMailAlert($subject){
-		mail("lavesh.rawat@gmail.com/*,pankaj139@gmail.com*/,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com",$subject,"Please check");
+		//mail("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com",$subject,"Please check");
+		mail("lavesh.rawat@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com",$subject,"Please check, restarting consumers as well");
 		//mail("nitishpost@gmail.com",$subject,"Please check");
 	}
 ?>

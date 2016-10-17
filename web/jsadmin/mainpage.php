@@ -11,7 +11,8 @@ if (isset($data)) //successful login
     } else {
         $name = $username = getname($cid);
     }
-
+    $name = preg_replace('/[^A-Za-z0-9\. -_]/', '', $name);	
+    $username = preg_replace('/[^A-Za-z0-9\. -_]/', '', $username);
     $center = getcenter_for_walkin($name);
 
     if (JsConstants::$whichMachine == 'prod' && JsConstants::$siteUrl == 'http://crm.jeevansathi.com') {
@@ -127,11 +128,11 @@ if (isset($data)) //successful login
 
         if (in_array('P', $priv) || in_array('IJS', $priv) || in_array('SJS', $priv) || in_array('TSJS', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/switch_match_alert_algo.php?name=$user&cid=$cid\">Switch Match Alert Algorithm</a>";
-            $linkarr[] = "<a href=\"$SITE_URL//operations.php/feedback/reportInvalid?name=$user&cid=$cid\">Mark Valid/Invalid Phone Numbers</a>";
+            $linkarr[] = "<a href=\"$SITE_URL//operations.php/feedback/reportInvalid?name=$user&cid=$cid\">Invalid Reported Contacts</a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/allot_contact.php?name=$user&cid=$cid\"> Allot contacts View to Paid members. </a>";
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/check_profiles_score.php?cid=$cid\">Check forward and reverse score for two profiles</a>";
         } elseif (in_array('QC', $priv)) {
-            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/invalid_phone_status.php?name=$user&cid=$cid\">Mark Valid/Invalid Phone Numbers </a>";
+            $linkarr[] = "<a href=\"$SITE_URL/jsadmin/invalid_phone_status.php?name=$user&cid=$cid\">Invalid Reported Contacts </a>";
         }
         if (in_array('DA', $priv))
         //$linkarr[]="<a href=\"$SITE_URL/jsadmin/change_festive.php?user=$name&cid=$cid\">Activate/Deactivate Festive offer</a>";
@@ -171,7 +172,7 @@ if (isset($data)) //successful login
             // $linkarr[]="<a href=# onClick=\"window.open('$SITE_URL/jsadmin/duplicate_verify_user.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Override Duplicate Phone Numbers</a>";
         }
         if (in_array('VRFYPH', $priv)) {
-            $linkarr[] = "<a href=# onClick=\"window.open('$SITE_URL/jsadmin/offline_verify_user.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Verify Users</a>";
+            $linkarr[] = "<a href=# onClick=\"window.open('$SITE_URL/jsadmin/offline_verify_user.php?name=$name&cid=$cid','','fullscreen=1,resizable=1,scrollbars=1');\">Verify/Unverify Users</a>";
         }
         if ($timein) {
             $date = date("Y-m-d");

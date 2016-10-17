@@ -16,55 +16,34 @@
 		*/
 		private $arrConfig = array(
 			// 'logging' => 1, logging is on for this module
-			LoggingEnums::JSADMIN => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_DEBUG,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
-			LoggingEnums::SEO => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_DEBUG,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
-			LoggingEnums::EX500 => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
-			LoggingEnums::EX404 => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
-			LoggingEnums::MYJS => array(
+			LoggingEnums::LOG_VA_MODULE => array(
 				LoggingEnums::LOGGING => true,
 				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
 				LoggingEnums::DIRECTORY => false,
 				LoggingEnums::STACKTRACE => false,
 				LoggingEnums::SERVER_PARAM => false
 				),
-			LoggingEnums::HOMEPAGE => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_INFO,
-				LoggingEnums::DIRECTORY => false,
-				LoggingEnums::STACKTRACE => false,
-				LoggingEnums::SERVER_PARAM => false
-				),
-			LoggingEnums::_VAR => array(
-				LoggingEnums::LOGGING => true,
-				LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
-				LoggingEnums::DIRECTORY => true,
-				LoggingEnums::STACKTRACE => true,
-				LoggingEnums::SERVER_PARAM => false
-				),
+			// LoggingEnums::HOMEPAGE => array(
+			// 	LoggingEnums::LOGGING => true,
+			// 	LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
+			// 	LoggingEnums::DIRECTORY => false,
+			// 	LoggingEnums::STACKTRACE => false,
+			// 	LoggingEnums::SERVER_PARAM => false
+			// 	),
+			// LoggingEnums::STATIC_MODULE => array(
+			// 	LoggingEnums::LOGGING => true,
+			// 	LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
+			// 	LoggingEnums::DIRECTORY => false,
+			// 	LoggingEnums::STACKTRACE => false,
+			// 	LoggingEnums::SERVER_PARAM => false
+			// 	),
+			// LoggingEnums::EX500 => array(
+   //             LoggingEnums::LOGGING => true,
+   //             LoggingEnums::LEVEL => LoggingEnums::LOG_ERROR,
+   //             LoggingEnums::DIRECTORY => false,
+   //             LoggingEnums::STACKTRACE => true,
+   //             LoggingEnums::SERVER_PARAM => false
+   //             ),
 			);
 
 		/**
@@ -111,6 +90,10 @@
 			if(!array_key_exists($module, $this->arrConfig)){
 				// module not in config
 				return true;
+			}
+			if($module == LoggingEnums::LOG_VA_MODULE)
+			{
+				return $this->arrConfig[$module][LoggingEnums::LOGGING] && LoggingEnums::CONFIG_INFO_VA;
 			}
 			return $this->arrConfig[$module][LoggingEnums::LOGGING];
 		}

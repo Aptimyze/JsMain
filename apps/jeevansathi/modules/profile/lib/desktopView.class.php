@@ -71,6 +71,22 @@ class desktopView extends DetailedViewApi
         }
         $this->m_arrOut['othersHoroscope'] = $this->getHoroscopeExist();
     }
+        $subscriptionData = $this->m_actionObject->loginProfile->getSUBSCRIPTION();
+        if(!strstr($subscriptionData,'A'))
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='N';
+        else
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='Y';
+        
+        if($subscriptionData)
+            $this->m_arrOut['paidMem']='Y';
+        else
+            $this->m_arrOut['paidMem']='N';
+        
+        if ($this->m_arrOut['myHoroscope']=='Y' && $this->m_arrOut['othersHoroscope']=='Y')
+                $this->m_arrOut['NO_ASTRO']=0;
+            else
+                $this->m_arrOut['NO_ASTRO']=1;
+            
     $havePhoto=$this->m_objProfile->getHAVEPHOTO();
         if($havePhoto=='Y'){
             if($this->m_actionObject->THUMB_URL) {
@@ -803,6 +819,7 @@ class desktopView extends DetailedViewApi
                 else{
                     $HOROSCOPE = "N";
                 }
+                $this->m_arrOut['NO_ASTRO']=1;
             }
             else{
                 $HOROSCOPE = "Y";

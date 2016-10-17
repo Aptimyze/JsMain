@@ -774,4 +774,128 @@ class commonActions extends sfActions
         die;
     }
 
+
+    public function executeSendOtpSMS(sfWebRequest $request)
+  {  
+
+    $phoneType=$request->getParameter('phoneType');
+    $respObj = ApiResponseHandler::getInstance();
+    
+    if($phoneType!='A' && $phoneType!='M' && $phoneType!='L')
+    {
+    $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+    $respObj->generateResponse();
+    die;
+    }
+
+    $loggedInProfileObj=LoggedInProfile::getInstance();
+   
+    if(!$loggedInProfileObj->getPROFILEID())
+    {
+        $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
+        $respObj->generateResponse();
+        die;
+    }
+
+
+    $verificationObj=new OTP($loggedInProfileObj,$phoneType,OTPENUMS::$deleteProfileOTP);
+    $response=$verificationObj->sendOtpSMS();
+     $this->phoneNum =$verificationObj->getPhoneWithoutIsd();
+     $this->isd = $verificationObj->getIsd();
+     if($this->isd == 91)
+     $this->contactHelp = CommonConstants::HELP_NUMBER_INR;
+     else
+     $this->contactHelp =  CommonConstants::HELP_NUMBER_NRI;    
+    $this->phoneType =$verificationObj->getPhoneType();
+    if($response['trialsOver']=='Y')
+        $response['trialsOverMessage']=PhoneApiFunctions::$OTPTrialsOverMsg;
+    $response['serviceTimeText']=PhoneApiFunctions::$serviceTimeText;
+    
+
+        if($request->getParameter('PCLayer')=='Y'){
+            $this->response=$response;
+            if($response['SMSLimitOver']=='Y')
+                $this->smsResend='N';
+            else $this->smsResend='Y';
+
+            if($response['trialsOver']=='Y') 
+                $this->setTemplate('desktopCommonOTPFailed');
+            else 
+                $this->setTemplate('desktopCommonOTP');
+        
+        }
+
+        else {
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+
+        }
+  }
+
+public function executeMatchOtp(sfWebRequest $request) 
+    {    
+        $context = $this->getContext();
+        $respObj = ApiResponseHandler::getInstance();
+    $phoneType=$request->getParameter('phoneType');
+    $enteredOtp=$request->getParameter('enteredOtp');
+    if($phoneType!='A' && $phoneType!='M' && $phoneType!='L')
+    {
+    $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+    $respObj->generateResponse();
+    die;
+    }
+
+    $loggedInProfileObj=LoggedInProfile::getInstance();
+
+    if(!$loggedInProfileObj->getPROFILEID())
+    {
+        $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
+        $respObj->generateResponse();
+        die;
+    }
+    
+    $verificationObj=new OTP($loggedInProfileObj,$phoneType,OTPENUMS::$deleteProfileOTP);
+    
+    switch ($verificationObj->matchOtp($enteredOtp))
+    {
+        case 'Y':   
+        $response['matched']='true';
+        $response['trialsOver']='N';
+        break;
+
+        case 'N':
+        $response['matched']='false';
+        $response['trialsOver']='N';
+        break;
+
+        case 'C':
+        $response['matched']='false';
+        $response['trialsOver']='Y';
+        $response['trialsOverMessage']=PhoneApiFunctions::$OTPTrialsOverMsg;
+
+        break;
+
+        default:
+        $response['matched']='false';
+        $response['trialsOver']='N';
+        break;      
+    }
+        $response['serviceTimeText']=PhoneApiFunctions::$serviceTimeText;
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+        
+    }
+
+
+public function executeDesktopOtpFailedLayer(sfWebRequest $request)
+  {
+
+            $this->setTemplate('desktopCommonOTPFailed');
+        
+ }
+
 }

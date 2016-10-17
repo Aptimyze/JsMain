@@ -168,7 +168,6 @@
 							'fri':{'icon':'friicon','label':'Friend','value':'4F'},
 							};
 		var regOptionalFields = {
-		"s2" : [{"label":"City living in","value":notFilled,"show":"false","screenName":"s2","userDecision":"","dindex":"0","storeKey":"city_res",dshow:"city_res"}],
 		"s4": [{"label":"Children","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"0","storeKey":"havechild",dshow:"children"},
 			{"label":"Caste","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"1","storeKey":"caste",dshow:"reg_caste_"}],
         "s9": [{"label":"Of which married","value":notFilled,"show":"false","screenName":"s4","userDecision":"","dindex":"0","storeKey":"m_brother",dshow:"m_brother","labelPrefix":" brother(s) of which married "},
@@ -183,8 +182,10 @@
 			{"label":"Gender","value":notFilled,"show":"true","screenName":"s2","userDecision":"","dindex":"0","dshow":"gender","storeKey":"gender","errorLabel":""},
 			{"label":"Date of birth","value":notFilled,"show":"true","multiField":"1","screenName":"s2","storeKey":"dtofbirth","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"dtofbirth","userDecision":"","dindex":"1","depValue":"","errorLabel":"","tapName":"Date of birth"},
 			{"label":"Height","value":notFilled,"show":"true","screenName":"s2","storeKey":"height","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"height","userDecision":"","dindex":"2","tapName":"Height","defaultValue":"13"},
-			{"label":"Country - City living in","value":notFilled,"show":"true","storeKey":"country_res","optIndex":"0","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"city_res","dshow":"country_res","userDecision":"","dindex":"3","tapName":'Country',"dependant_tapName":"City Living In"},
-			{"label":"Area Pincode","value":"","inputType":"number","hint":"Your area pincode","show":"true","screenName":"s2","storeKey":"pincode","hamburgermenu":"0","dindex":"4","errClass":""}
+			{"label":"Country living in","value":notFilled,"show":"true","storeKey":"country_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"country_res","userDecision":"","dindex":"3","tapName":'Country',"dependant_tapName":""},
+			{"label":"State living in","value":notFilled,"show":"false","storeKey":"state_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"state_res","userDecision":"","dindex":"4","tapName":'State',"dependant_tapName":""},
+			{"label":"City living in","value":notFilled,"show":"false","storeKey":"city_res","screenName":"s2","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"reg_city_jspc","userDecision":"","dindex":"5","tapName":'City',"dependant_tapName":""},
+			{"label":"Area Pincode","value":"","inputType":"number","hint":"Your area pincode","show":"true","screenName":"s2","storeKey":"pincode","hamburgermenu":"0","dindex":"6","errClass":""}
 				],
 		"s3" : [
 			{"label":"Highest Education","value":notFilled,"show":"true","screenName":"s3","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"edu_level_new","userDecision":"","dindex":"0","storeKey":"edu_level_new","tapName":"Highest Education"},
@@ -393,7 +394,6 @@
 		{
 			var	arrDependantFields = [];
 			var iCount = 0;
-			
 			switch(field.storeKey)
 			{
 				case 'gender':
@@ -408,9 +408,12 @@
                     arrDependantFields[iCount].userDecision = "";
                     arrDependantFields[++iCount] = regFields['s9'][3];/*Family Income*/
                     Storage.storeUserData('familyIncomeDep',parseInt(field.userDecision));
-                    if(field.userDecision.indexOf('51')!=-1)/*Make optional field show as true*/
-                        regOptionalFields["s2"]['0'].show = true;
+                   // if(field.userDecision.indexOf('51')!=-1)/*Make optional field show as true*/
+                     //   regOptionalFields["s2"]['0'].show = true;
                     factory.updateISDVal(field.userDecision);
+				break;
+				case 'state_res':
+				    Storage.storeUserData('stateDep',field.userDecision);				
 				break;
 				case 'mtongue':
 					arrDependantFields[iCount] = regFields['s4'][2];/*Religion*/
@@ -651,6 +654,22 @@
 			fields[indexPos].value = factory.sanitizeString(fields[indexPos].value);
 			factory.handleDepValue(fields[indexPos]);
 			}
+			if(fields[indexPos].storeKey=="country_res")
+			{
+				fields[4].userDecision='';
+				fields[5].userDecision='';
+                                UserDecision.store("state_res",'');
+                                UserDecision.store("city_res",'');
+                                fields[4].value = "Not Filled In";
+                                fields[5].value = "Not Filled In";
+			}
+			if(fields[indexPos].storeKey=="state_res")
+                        {
+                                UserDecision.store("city_res",'');
+                                fields[5].value = "Not Filled In";
+				fields[5].userDecision='';
+                        }
+
 		}
 			
 		factory.updateMultiGuiFields = function(screenName,indexPos,output)
@@ -816,7 +835,7 @@
 
 		var fieldsStoreKey={
 			"s1":["relationship"],
-			"s2":["gender","dtofbirth_day","dtofbirth_month","dtofbirth_year","height","country_res","city_res","pincode"],
+			"s2":["gender","dtofbirth_day","dtofbirth_month","dtofbirth_year","height","state_res","country_res","city_res","pincode"],
 			"s3":["edu_level_new","pg_college","degree_pg","other_pg_degree","college","degree_ug","other_ug_degree","occupation","income"],
 			"s4":["mstatus","mtongue","religion","caste","havechild","horoscope_match"],
 			"s5":["name_of_user","email","password","phone_mob"],
@@ -855,7 +874,13 @@
 			if(key=="country_res")
 			{	
 				delete data["city_res"];
+				delete data["state_res"];
 				delete data["pincode"];
+			}
+			if(key=="state_res")
+			{
+				delete data['city_res'];
+				delete data['pincode']
 			}
 			if(key=="native_country")
 			{
@@ -956,6 +981,7 @@
 			'reg[dtofbirth][year]':'',
 			'reg[height]':'',
 			'reg[country_res]':'',
+			'reg[state_res]':'',
 			'reg[city_res]':'',
 			'reg[pincode]':'',
 			'reg[mstatus]':'',
@@ -1528,8 +1554,8 @@
 		factory.validatePinCode = function(screenName)
 		{
 			var bInValidDate = false;
-			var field = Gui.getRegFields("s2")[4];
-			var cityField = Gui.getRegOptionalFields("s2")[0];
+			var field = Gui.getRegFields("s2")[6];
+			var cityField = Gui.getRegFields("s2")[5];
 			var bValid = true;
 			field.errClass='';
 			var ArrayPincode={'DE00':{0:["1100","2013","1220","2010","1210","1245"],1:4,2:"Provide a pincode that belongs to Delhi"},"MH04":{0:["400","401","410","421","416"],1:3,2:"Provide a pincode that belongs to Mumbai"},"MH08":{0:["410","411","412","413"],1:3,2:"Provide a pincode that belongs to Pune"}};
