@@ -212,6 +212,7 @@ function onFrameLoginResponseReceived(message)
   			// $("#LoginErrMessage2").addClass("disp-none");
   			$("#EmailContainer").addClass("brderred");
   			$("#PasswordContainer").addClass("brderred");
+			createCaptcha();
   			setTimeout(function(){
   				$("#emailErr").removeClass("visb");
   				$("#EmailContainer").removeClass("brderred");
