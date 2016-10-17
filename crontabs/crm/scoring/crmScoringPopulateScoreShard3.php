@@ -1,6 +1,6 @@
 <?php
 
-include("/home/developer/scoring/MysqlDbConstants.class.php");
+include("/home/developer/jsdialer/MysqlDbConstants.class.php");
 include("Scoring.class.php");
 
 //Sent mail for daily tracking

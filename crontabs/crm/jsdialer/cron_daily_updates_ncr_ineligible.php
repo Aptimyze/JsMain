@@ -22,7 +22,7 @@ $eligibleType ='N';
 $limit =10;
 
 // get Status
-$status =getCampaignEligibilityStatus($campaign_name,$eligibleType);
+$status =$dialerHandlerObj->getCampaignEligibilityStatus($campaign_name,$eligibleType);
 if(!$status)
 	$status=0;
 
@@ -32,8 +32,8 @@ for($i=$start_from;$i<$limit;$i++)
 {
 	$ignore_array 	= compute_ignore_array($i,$db_js);
 	$vd_array 	= getVDdiscount($ignore_array,$db_js);
-        stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$db_dialer,$db_js_157,$vd_array);
-	updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+        stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$db_dialer,$db_js_111,$vd_array);
+	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
 	echo "DONE$i"."\n";
 }
 
