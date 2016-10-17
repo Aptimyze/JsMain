@@ -433,12 +433,8 @@ function requestListingPhoto(apiParams) {
     var pid = [];
     pid = Object.keys(apiParams["profiles"]);
     if(pid.length > 0){
-        //console.log("ankita",pid.length);
-        //console.log(pid);
-        //$.each(pid,function(index, elem){
         $.each(pid,function(index, elem){
             if(elem != "length"){
-                //console.log(index+"-"+elem);
                 if(apiParams["initialList"] == true){
                     manageListingPhotoReqFlag("set",elem);
                 }
