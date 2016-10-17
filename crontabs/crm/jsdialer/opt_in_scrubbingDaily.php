@@ -24,7 +24,6 @@ foreach($campaignArr as $key=>$campaignName)
 	elseif($campaignName=='UPSELL_JS')
 		$dateTime =date("Y-m-d H:i:s",time()-48*60*60);
 
-	$msg    	="Start time:".@date('H:i:s');
 	$dnc_array      =$dialerDncScrubingObj->compute_dnc_array($campaignName, $dateTime);
 	$opt_in_array   =$dialerDncScrubingObj->compute_opt_in_array($dnc_array);
 
@@ -34,13 +33,10 @@ foreach($campaignArr as $key=>$campaignName)
 	}
 	unset($dnc_array);
 	unset($opt_in_array);
-	$sub="Dialer updates for $campaignName-Campaign opt-in done";
-	$msg.="End time:".@date('H:i:s');
-	mail($to,$sub,$msg,$from);
+	$msg[] =$campaignName;
 }
 
 // OB_Sales OPT-IN Check
-$msg    	="Start time:".@date('H:i:s');
 $campaignName 	='OB_Sales';
 $leadId 	=date("Y-m-d",time()-24*60*60);  
 $dnc_phoneArray =$dialerDncScrubingObj->compute_dnc_array_forSalesCampaign($campaignName, $leadId);
@@ -63,8 +59,10 @@ for($i=0;$i<count($opt_in_array);$i++){
 unset($opt_in_array);
 unset($profileidArr);
 unset($phoneArr);
-$sub='Dialer updates for OB_Sales-Campaign opt-in done.';
-$msg.="End time:".@date('H:i:s');
+$msg[]=$campaignName;
+
+$sub='Dialer updates for FP_JS|UPSELL_JS|OB_Sales Campaign OPT-IN done';
+$msg =implode("|",$msg);
 mail($to,$sub,$msg,$from);
 
 ?>
