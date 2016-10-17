@@ -88,7 +88,7 @@ class LoginV1Action extends sfActions
 				// Secret key, Used this for communication between site and Google
 				$secret = CaptchaEnum::SECRET_KEY;
 				$remoteip = $_SERVER['REMOTE_ADDR'];
-				$postParams = array('secret' => $secret, 'response' => $g_recaptcha_response);
+				$postParams = array('secret' => $secret, 'response' => $g_recaptcha_response, 'remoteip' => $remoteip);
 
 				// Need to verify the response token with reCAPTCHA using the following API to ensure the token is valid
 				$urlToHit = CaptchaEnum::VERIFY_URL;
