@@ -17,8 +17,8 @@ function to set/reset listing photo request
 * @inputs:key,profileid
 */
 function manageListingPhotoReqFlag(key,profileid){
+    //console.log("in manageListingPhotoReqFlag",listingPhotoRequestCompleted);
     if(key == "set"){
-        
         if(listingPhotoRequestCompleted == undefined){
             listingPhotoRequestCompleted = ",";
         }
