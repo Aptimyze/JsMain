@@ -114,11 +114,12 @@ EOF;
 
                                                     }
                                                 $currentScore=$logTable->getDataForAUserReported($key2,$stDate);
-                                                $totalScore = $currentScore['RELIGION_COUNT'] + $currentScore['MSTATUS_COUNT'] + $currentScore['AGE_COUNT'];
-                                                if(!$currentScore || ($totalScore > ($currentScore['RELIGION_COUNT'] + $currentScore['MSTATUS_COUNT'] + $currentScore['AGE_COUNT'])))
+                                                $totalScore = $totalScoreArray['R'] + $totalScoreArray['M'] + $totalScoreArray['A'];
+                                                $totalCurrentScore = $currentScore['RELIGION_COUNT'] + $currentScore['MSTATUS_COUNT'] + $currentScore['AGE_COUNT'];
+                                                if($totalScore && (!$currentScore || ($totalScore > $totalCurrentScore)))
                                                     $logTable->insert($key2,$totalScoreArray);
                                                 unset($row[$key]);
-                                                }   
+                                                }
 
 
 
@@ -135,7 +136,7 @@ private function getScoreForUser($senderRow,$receiverRow,$receiverDPP)
     $score=array('R'=>0,'A'=>0,'M'=>0);
 // RELIGION CHECK
     $religionExclude=array('1','4','7','9');
-    if(!(in_array($senderRow['RELIGION'],$religionExclude ) && in_array($senderRow['RELIGION'],$religionExclude )))
+    if(!(in_array($senderRow['RELIGION'],$religionExclude ) && in_array($receiverRow['RELIGION'],$religionExclude )))
     {
         if($receiverDPP['PARTNER_RELIGION'])
         {
@@ -146,11 +147,19 @@ private function getScoreForUser($senderRow,$receiverRow,$receiverDPP)
     }
     
  // MARITAL STATUS CHECK
-    
     if($receiverDPP['PARTNER_MSTATUS'])
     {
-        
-        
+        $marriedArray=array('S','D','W','A','M');
+        $unMarriedArray=array('N');
+        if(!( (in_array($senderRow['RELIGION'],$marriedArray) && in_array($receiverRow['RELIGION'],$marriedArray))
+        || (in_array($senderRow['RELIGION'],$unMarriedArray) && in_array($receiverRow['RELIGION'],$unMarriedArray))
+           ))
+        {
+            $mStatusArray=explode(',',$receiverDPP['PARTNER_MSTATUS']);
+            if(!in_array("'".$senderRow['MSTATUS']."'", $mStatusArray))
+                    $score['M']=1;
+            
+        }     
         
     }
     // AGE DIFFERENCE CHECK

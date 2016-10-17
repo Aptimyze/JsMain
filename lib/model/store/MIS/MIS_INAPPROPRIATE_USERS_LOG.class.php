@@ -26,7 +26,7 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
    * on any of the two buttons on each partcular day based on type of the layer
    * @param profile id,layer which has been opened,button which is clicked
    */
-  public function insert($profileid,$scoreArray,$date)
+  public function insert($profileid,$scoreArray)
   {
     try {
       $date= date("Y-m-d");
