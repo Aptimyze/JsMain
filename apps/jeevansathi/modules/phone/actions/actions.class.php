@@ -142,7 +142,7 @@ class phoneActions extends sfActions
 		{
 			$profileObj = LoggedInProfile::getInstance('newjs_master');
 			$phoneVerObject=new PhoneVerification($profileObj,$phoneType);
-			$phoneVerObject->fdf_save(fdf_document);
+			$phoneVerObject->savePhone($number,'',$isd);
 			
 			$memObject=JsMemcache::getInstance();
 			$memObject->delete('showConsentMsg_'.$profileid);		
