@@ -18,6 +18,8 @@ class LoggingEnums
     const SERVER_FLAG = false;
     // 1 for Enabling config of modules, 0 for not
     const CONFIG_ON = true;
+    // Info For VA, on for referer in logs
+    const CONFIG_INFO_VA = true;
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = false;
     const LOG_TRACE = false;
@@ -69,4 +71,6 @@ class LoggingEnums
     const REQUEST_URI = 'REQUEST_URI';
     const DOMAIN = 'Domain';
     const REFERER = 'Referer';
+    const LOG_REFERER = 'Log_Referer';
+    const LOG_VA_MODULE = 'VA_Info';
 }

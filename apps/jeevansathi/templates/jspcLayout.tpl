@@ -72,7 +72,8 @@
         var my_action = "~$action`";
         var moduleChat = "~$module`";
         var self_subcription = "~$subscription`";
-        
+        var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
+        //console.log("ank",hideUnimportantFeatureAtPeakLoad);
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
         //console.log("ankita_localstorage",localStorage.getItem("self_subcription"));

@@ -193,7 +193,8 @@ function login ($id, $pass)
                         $ret["USER"]=$myrow["USER"];
                                 
 			//$ret = TRUE;
-			setLoginCookies($ret["ID"],$_COOKIE["CRM_NOTIFICATION_AGENT"]);
+			$cna = preg_replace('/[^A-Za-z0-9\. -_]/', '', $_COOKIE["CRM_NOTIFICATION_AGENT"]);
+			setLoginCookies($ret["ID"],$cna);
 		}
 		else
 		{
