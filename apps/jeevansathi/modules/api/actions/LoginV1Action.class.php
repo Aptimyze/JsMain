@@ -83,14 +83,7 @@ class LoginV1Action extends sfActions
     		if($captcha == 1)
     		{
 				// Get the user’s response, POST parameter when the user submits the form on site
-				if(MobileCommon::isDesktop())
-				{
-					$g_recaptcha_response = $request->getParameter("g-recaptcha-response");
-				}
-				else if(MobileCommon::isNewMobileSite())
-				{
-					$g_recaptcha_response = $request->getParameter("g_recaptcha_response");
-				}
+				$g_recaptcha_response = $request->getParameter("g_recaptcha_response");
 
 				// Secret key, Used this for communication between site and Google
 				$secret = CaptchaEnum::SECRET_KEY;
@@ -98,7 +91,7 @@ class LoginV1Action extends sfActions
 				$postParams = array('secret' => $secret, 'response' => $g_recaptcha_response);
 
 				// Need to verify the response token with reCAPTCHA using the following API to ensure the token is valid
-				$urlToHit = "https://www.google.com/recaptcha/api/siteverify";
+				$urlToHit = CaptchaEnum::VERIFY_URL;
 				$response = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
 
 				// The response is a JSON object

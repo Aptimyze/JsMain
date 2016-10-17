@@ -12,7 +12,7 @@ function LoginValidation()
 		{				
 			if(validateEmail(email) && validateCaptcha())
 			{
-				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val();
+				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val()+"&g_recaptcha_response="+$("#g-recaptcha-response").val();
 				$("#homePageLogin").attr('action',loginUrl);
 				if(typeof(LoggedoutPage)!="undefined")
 				{ 	
