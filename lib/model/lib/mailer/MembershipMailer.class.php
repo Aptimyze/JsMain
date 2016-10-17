@@ -24,7 +24,7 @@ class MembershipMailer {
 	if($attachment){	
 		$email_sender->setAttachment($attachment);
 		$email_sender->setAttachmentName($attachmentName);
-		$email_sender->setAttachmentType('application/vnd.ms-excel');
+		$email_sender->setAttachmentType('application/octet-stream');
 	}
         // if($mailid == '1836'){
         //     $email_sender->send('','','rupali.srivastava@jeevansathi.com');
@@ -544,6 +544,26 @@ class MembershipMailer {
                 }
         }
         return $retval;
+    }
+    public function getCsvData($data, $dataHeader)
+    {
+        $retval  = "";
+        $filepath = "/var/www/html/web/uploads/csv_files/";
+        $filename = $filepath."tempCsvDataMemMailerContent.csv";
+        unlink($filename);
+        $csvData = fopen("$filename", "w") or print_r("Cannot Open");
+        fputcsv($csvData, array_values($dataHeader));
+        foreach($dataHeader as $key=>$val) {
+            $blankRow[] = "";
+        }
+        fputcsv($csvData, array_values($blankRow));
+        foreach ($data as $key => &$val) {
+            fputcsv($csvData, array_values($val));
+        }
+        fclose($csvData);
+        $csvAttachment = file_get_contents($filename);
+        unlink($filename);
+        return $csvAttachment;
     }
     public function sendWelcomeMailerToPaidUser($mailid, $profileid, $attachment, $services){
 

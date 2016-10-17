@@ -1706,6 +1706,7 @@ class searchActions extends sfActions
 	*/
 	public function executePopulateDefaultValuesV1(sfWebRequest $request)
 	{
+                $app54 = $request->getParameter("app54");
                 $inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
                 $inputValidateObj = ValidateInputFactory::getModuleObject('search');
                 $inputValidateObj->validatePopulateDefaultValues($request);
@@ -1716,7 +1717,13 @@ class searchActions extends sfActions
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 			if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
 			{
-				$TopSearchBandPopulate =  new TopSearchBandPopulate($parameters);
+                                
+                                if(isset($app54) && $app54 == 1){
+                                        $parameters["SETMULTIPLE"] = 'Y';
+                                        $parameters["app54"] = 1;
+                                }
+				
+                                $TopSearchBandPopulate =  new TopSearchBandPopulate($parameters);
 				$resultArr = $TopSearchBandPopulate->populateSelectedValuesForApp();
 			}
 		}

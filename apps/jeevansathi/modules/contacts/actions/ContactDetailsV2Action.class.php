@@ -41,6 +41,8 @@ class ContactDetailsV2Action extends sfAction
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile, $this->Profile, "INFO", $this->contactObj, 'CONTACT_DETAIL', ContactHandler::PRE);
 					$this->contactEngineObj  = ContactFactory::event($this->contactHandlerObj);
 					$responseArray           = $this->getContactDetailsArray($request);
+					
+
 				}
 			}
 		}
@@ -242,7 +244,7 @@ class ContactDetailsV2Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 
 				}
-				 elseif ($errorArr["FILTERED"] == 2) {
+				 elseif ($errorArr["FILTERED"] == 2) { 
 					$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
 					$responseArray["errMsgIconId"] = "12";
 					$responseArray["headerLabel"]  = "Filtered Member";
@@ -300,7 +302,23 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["headerLabel"]  = "Profile not available";
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 
-				} else {
+				}
+
+				elseif ($errorArr["PAID_FILTERED_INTEREST_NOT_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+					elseif ($errorArr["PAID_FILTERED_INTEREST_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+				 else {
 
 					$responseArray["contactdetailmsg"]       = "Become a paid member to view <br> contact details";
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
