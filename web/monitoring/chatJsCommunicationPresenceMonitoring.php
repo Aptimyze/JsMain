@@ -4,6 +4,7 @@ $mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104",/*"
 include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 $mqQueuesArr = array("profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat");
 $msgLimitPerQueue = 5000;
+$queuesWithExtraLimit = array("roster-created-dpp"=>40000);
 $status = sendPresenceRequest();
 if($status!='200')
 {
@@ -30,18 +31,25 @@ foreach($serverUrlArray as $k=>$v){
 //get data about rabbitmq queues
 $queueResponse = checkRabbitmqQueueMsgCount("FIRST_SERVER");
 //check overflow in queues and send alert in case of overflow
-checkForQueueOverflow($mqQueuesArr,$msgLimitPerQueue,$queueResponse);
+checkForQueueOverflow($mqQueuesArr,$queueResponse);
 
-function checkForQueueOverflow($queueArr,$msgLimitPerQueue,$queueResponse){
+function checkForQueueOverflow($queueArr,$queueResponse){
+        global $msgLimitPerQueue,$queuesWithExtraLimit;
         if(is_array($queueResponse)){
                 foreach($queueResponse as $arr){
                         $queue_data=$arr;
+                        $msgLimit = $msgLimitPerQueue;
+                        if($queuesWithExtraLimit[$queue_data->name]){
+                                $msgLimit = $queuesWithExtraLimit[$queue_data->name];
+                        }
+                        //echo $queue_data->name."---".$msgLimit."\n";
                         if(in_array($queue_data->name, $queueArr) && $queue_data->messages_ready>$msgLimitPerQueue)
                         {
                                 $overflowQueueArr[] = $queue_data->name."(".$queue_data->messages_ready.")";
                         }
                 }
         }
+        //die;
         unset($queueResponse);
         //print_r($overflowQueueArr);die;
         if($overflowQueueArr && count($overflowQueueArr)>0){
