@@ -111,7 +111,6 @@ class phoneActions extends sfActions
 
 	if($phoneType == "M")
 	{ 
-
 	$editFieldArr =array();
 	$PHONE_MOB['mobile'] = $number;	
 	$PHONE_MOB['isd'] = $isd;
@@ -120,8 +119,15 @@ class phoneActions extends sfActions
 	//var_dump($request->getParameter('editFieldArr'));
 
 	ob_start();
-	$data=sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
-	return sfView::NONE;
+	sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
+    $data = ob_get_contents();
+    ob_end_clean();	
+    $data = json_decode($data);
+    if($data->responseStatusCode != 0)
+    {
+	$data->responseMessage=$data->error[0];
+	}
+	$data = json_encode($data);
 	echo $data;
 	die;
 	}
@@ -152,9 +158,10 @@ class phoneActions extends sfActions
 			$response[DIAL_NUMBER] =$knowlarityObj->getVirtualNumber();
 			$respObj->setResponseBody($response);
 		}
+			$respObj->generateResponse();
+			die;
 	}
-	$respObj->generateResponse();
-	die;
+
   }
   public function executeVerifiedV1(sfWebRequest $request)
   {

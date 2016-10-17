@@ -161,7 +161,8 @@ class ApiEditSubmitV1Action extends sfActions
 		}
 
 		$apiResponseHandlerObj->generateResponse();
-		die;
+		return sfView::NONE;
+		
 	}
   
   private function bakeDesktopResponse(){
