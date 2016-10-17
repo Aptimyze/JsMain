@@ -199,17 +199,15 @@ class ErrorHandler
 		$error = $this->checkIgnoreProfile();
 		if($error)
 		{	
-			
+
 			$this->setErrorMessage($error);
 			$this->setErrorType(ErrorHandler::PROFILE_IGNORE,ErrorHandler::ERROR_FOUND);
 			return false;
 		}
 
-		else if($this->contactHandlerObj->getViewed()->getActivated() == 'H')
+		$error = $this->checkViewedHiddenProfile();
+		if($error)
 		{
-
-			$POGID = $this->contactHandlerObj->getViewed()->getUSERNAME();
-			$error = Messages::getMessage(Messages::HIDDEN_ERROR,array('POGID'=> $POGID));
 			$this->setErrorMessage($error);
 			$this->setErrorType(ErrorHandler::PROFILE_VIEWED_HIDDEN,ErrorHandler::ERROR_FOUND);
 			return false;
@@ -458,6 +456,23 @@ class ErrorHandler
 		return $error;
 	}
 	
+	/**
+	 * Check if the viewed profile is hidden and set error message.
+	 * @return string
+	 * @uses $contactHandlerObj
+	 * @uses $errorTypeArr
+	 */
+	function checkViewedHiddenProfile()
+	{
+		$error = '';
+		if($this->contactHandlerObj->getViewed()->getActivated() == 'H')
+		{
+			$POGID = $this->contactHandlerObj->getViewed()->getUSERNAME();
+			$error = Messages::getMessage(Messages::HIDDEN_ERROR,array('POGID'=> $POGID));
+		}
+		return $error;
+	}
+
 	/**
 	 * Check if the profile is incomplete and set the error message
 	 * @return string 
