@@ -121,12 +121,12 @@ class phoneActions extends sfActions
 
 	ob_start();
 	$data=sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
-//	return sfView::NONE;
+	return sfView::NONE;
 	echo $data;
 	die;
 	}
 
-	if($phoneType == 'A')
+	else if($phoneType == 'A')
 	{
 		if($isd=='')
 			$respObj->setHttpArray(ResponseHandlerConfig::$ISD_BLANK);
