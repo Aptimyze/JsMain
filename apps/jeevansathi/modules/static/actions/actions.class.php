@@ -197,7 +197,7 @@ class staticActions extends sfActions
     // log referer
     if(isset($_SERVER['HTTP_REFERER']))
     {
-      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER'], LoggingEnums::LOG_REFERER => LoggingEnums::CONFIG_INFO_VA, LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
     }
 	}
         public function executeNewMobLogin(sfWebRequest $request)
@@ -207,7 +207,7 @@ class staticActions extends sfActions
         	// check
           if(isset($_SERVER['HTTP_REFERER']))
           {
-            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+            LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER'], LoggingEnums::LOG_REFERER => LoggingEnums::CONFIG_INFO_VA, LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
           }
 			$this->forward("static","LogoutPage");
         }
@@ -438,7 +438,7 @@ public function executeCALRedirection($request){
     // log referer
     if(isset($_SERVER['HTTP_REFERER']))
     {
-      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER']));
+      LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER'], LoggingEnums::LOG_REFERER => LoggingEnums::CONFIG_INFO_VA, LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
     }
     if(MobileCommon::isMobile() || MobileCommon::isDesktop()==true)  
     {

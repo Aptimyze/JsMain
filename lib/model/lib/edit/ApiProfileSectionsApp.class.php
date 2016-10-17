@@ -296,6 +296,16 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 			$time_to_call_label="";
 			$time_to_call_value="";
 		}
+                
+                //Mobile Privacy Settings
+                $contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
+
+                //Landline Privacy Settings
+                $contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
+
+                //Alt Number Privacy Settings
+                $contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->profile->getExtendedContacts("onlyValues")['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
+    
 		$contactArr[]=$this->getApiFormatArray("TIME_TO_CALL_START","Suitable Time to Call" ,$time_to_call_label,$time_to_call_value,$this->getApiScreeningField("TIME_TO_CALL_START"));
 		
 		return $contactArr;
@@ -851,6 +861,12 @@ class ApiProfileSectionsApp extends ApiProfileSections {
       $nativePlaceObj->getInfo();		
 		//native or Family based out of
       $basicArr[] =$this->getApiFormatArray("ANCESTRAL_ORIGIN","Family based out of" ,$nativePlaceObj->getDecorated_ViewField(),$this->profile->getANCESTRAL_ORIGIN(),$this->getApiScreeningField("ANCESTRAL_ORIGIN"));
+    $szNativeState = FieldMap::getFieldLabel("state_india", $nativePlaceObj->getNativeState());
+    $szNativeCity = FieldMap::getFieldLabel("city", $nativePlaceObj->getNativeCity());
+    $szNativeCountry = FieldMap::getFieldLabel("country", $nativePlaceObj->getNativeCountry());
+    $basicArr[] =$this->getApiFormatArray("NATIVE_STATE","Family based out of" ,$szNativeState,$nativePlaceObj->getNativeState(),$this->getApiScreeningField("NATIVE_STATE"));
+    $basicArr[] =$this->getApiFormatArray("NATIVE_CITY","Select City" ,$szNativeCity,$nativePlaceObj->getNativeCity(),$this->getApiScreeningField("NATIVE_CITY"));
+    $basicArr[] =$this->getApiFormatArray("NATIVE_COUNTRY","Family based out of" ,$szNativeCountry,$nativePlaceObj->getNativeCountry(),$this->getApiScreeningField("NATIVE_COUNTRY"));
     }
     
     protected function addSunSign(&$astro,$AstroKundali){

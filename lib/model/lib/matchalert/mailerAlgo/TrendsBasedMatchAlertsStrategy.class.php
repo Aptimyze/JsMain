@@ -22,7 +22,7 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 	* This function set Trends Criteria and creates a search Service and Search Service object to fetch result
 	* @return type array of user profile Ids
 	*/
-	public function getMatches($intersection = '')
+	public function getMatches($intersection = '',$matchesSetting='')
 	{
                 if($intersection){
                     $this->TrendsProfileObj = new TrendsIntersectionDppProfiles($this->loggedInProfileObj);
@@ -44,7 +44,7 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
                 else
                     $pids =  $this->getSearchResult($SearchServiceObj,$SearchUtilityObj);
                 if(is_array($pids))
-                	$this->logRecords($this->loggedInProfileObj->getPROFILEID(), $pids, MailerConfigVariables::$strategyReceiversTVsT,$this->limit);
+                	$this->logRecords($this->loggedInProfileObj->getPROFILEID(), $pids, MailerConfigVariables::$strategyReceiversTVsT,$this->limit,'',$matchesSetting);
                 if($intersection)
                     return $totalCount;
 	}
