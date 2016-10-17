@@ -41,13 +41,10 @@ EOF;
 	            if(!$chunk)$chunk=1;
 	            echo "CHUNK = ".$chunk."\n\n";
 	            $resultArray=array();
-	            $dbOb=new NEWJS_BOOKMARKS("newjs_slave");
-	            	$startTime =mktime(0, 0, 0, date("m"), date("d")-7, date("Y"));
-	           	$endTime =mktime(0, 0, 0, date("m"), date("d"), date("Y"));
-        	        $stDate = date('Y-m-d H:i:s',$startTime);
-                        $enDate = date('Y-m-d H:i:s',$endTime);
-
-	    $mailerEntryObject = new MAIL_SHORTLISTED_PROFILES("newjs_master");
+	            $logTable=new MIS_INAPPROPRIATE_USERS_LOG("newjs_slave");
+                    $stDate=date('Y-m-d',strtotime('-7 days'));
+                    $enDate=date('Y-m-d',strtotime('-0 days'));
+                    $mailerEntryObject = new MAIL_SHORTLISTED_PROFILES("newjs_master");
 	          	for($i=0;$i<$chunk;$i++)
 				{
 					
@@ -56,38 +53,41 @@ EOF;
                                     	echo "MEMORY USAGE At the step 0 of loop: ".memory_get_usage() . "\n";
 					for($j=3;$j<6;$j++)
                                         {	
-                                        unset($row);
-                                        unset($arranged);
-                                        unset($jprofileArray);
-                                        unset($profileString);
-                                        unset($jpartnerArray);
-                                        unset($jpartResultArray);
-                                        
-                                        $jpartResultArray =array();
-                                        $dbObShard = JsDbSharding::getShardNo($j);
-					$dbOb=new newjs_CONTACTS($dbObShard);
-                                        $shardRemainder = $j%3;
-                                        $remainderArray=array('divisor'=>$chunk,'remainder'=>$i,'shardRemainder' => $shardRemainder);
-                                        $row=$dbOb->getInterestSentForDuration($stDate,$enDate,$remainderArray,'',"SENDER,RECEIVER");
-                                        if(!is_array($row))continue;
-                                        $arranged = array();
-                                        
-						foreach ($row as $key => $value) {
+                                            unset($row);
+                                            unset($arranged);
+                                            unset($jprofileArray);
+                                            unset($profileString);
+                                            unset($jpartnerArray);
+                                            unset($jpartResultArray);
+
+                                            $jpartResultArray =array();
+                                            $dbObShard = JsDbSharding::getShardNo($j);
+                                            $dbOb=new newjs_CONTACTS($dbObShard);
+                                            $shardRemainder = $j%3;
+                                            $remainderArray=array('divisor'=>$chunk,'remainder'=>$i,'shardRemainder' => $shardRemainder);
+                                            $row=$dbOb->getInterestSentForDuration($stDate,$enDate,$remainderArray,'',"SENDER,RECEIVER");
+                                            if(!is_array($row))continue;
+                                            $arranged = array();
+
+                                            foreach ($row as $key => $value) 
+                                                {
                                                     $arranged[$value['SENDER']][]=$value['RECEIVER'];
                                                     $profileString.= ($value['RECEIVER'].",".$value['SENDER'].",");
                                                     $jpartnerArray[]=$value['RECEIVER'];
                                                     unset($row[$key]);
-						}
-                                                $profileString=substr($profileString,0,-1);
-						$paramArray=array('PROFILEID'=>$profileString);
-						$jprofileArray = JPROFILE::getInstance()->getArray($paramArray,'','',"RELIGION,MSTATUS,AGE,PROFILEID");
+                                                }
 
-                                                foreach ($jprofileArray as $key => $value) {
+                                            $profileString=substr($profileString,0,-1);
+                                            $paramArray=array('PROFILEID'=>$profileString);
+                                            $jprofileArray = JPROFILE::getInstance()->getArray($paramArray,'','',"RELIGION,MSTATUS,AGE,PROFILEID");
+
+                                            foreach ($jprofileArray as $key => $value) 
+                                                {
                                                     $jprofileArray2[$value['PROFILEID']]=$value;
                                                     unset($jprofileArray[$key]);
                                                 }
 
-                                                for($shard=3;$shard<6;$shard++)
+                                            for($shard=3;$shard<6;$shard++)
                                                 {
                                                 $dbObShard = JsDbSharding::getShardNo($shard);
                                                 unset($jpartnerOb);
@@ -97,33 +97,34 @@ EOF;
                                                     $jpartResultArray = $jpartResultArray + $tempArray;
                                                 unset($tempArray);
                                                 }
-                                                
-                                                
-                                                foreach ($arranged as $key2 => $value2) {
-                                                    $totalScore=0;
-                                                    foreach ($value2 as $key3 => $value3) {
-                                                        $totalScore=$totalScore + $this->getScoreForUser($jprofileArray2[$key2], $jprofileArray2[$value3],$jpartResultArray[$value3]);
+
+
+                                            foreach ($arranged as $key2 => $value2) 
+                                                {
+                                                unset($totalScoreArray);
+                                                $totalScore=0;
+                                                $totalScoreArray=array();
+                                                foreach ($value2 as $key3 => $value3) 
+                                                    {
+                                                        unset($tempScore);
+                                                        $tempScore=$this->getScoreForUser($jprofileArray2[$key2], $jprofileArray2[$value3],$jpartResultArray[$value3]);
+                                                        $totalScoreArray['R']=$totalScoreArray['R'] + $tempScore['R'];
+                                                        $totalScoreArray['A']=$totalScoreArray['A'] + $tempScore['A'];
+                                                        $totalScoreArray['M']=$totalScoreArray['M'] + $tempScore['M'];
+
                                                     }
-                                                    $profileString.= ($value2['RECEIVER'].",");
-                                                    unset($row[$key]);
-						}   
+                                                $currentScore=$logTable->getDataForAUserReported($key2,$stDate);
+                                                $totalScore = $currentScore['RELIGION_COUNT'] + $currentScore['MSTATUS_COUNT'] + $currentScore['AGE_COUNT'];
+                                                if(!$currentScore || ($totalScore > ($currentScore['RELIGION_COUNT'] + $currentScore['MSTATUS_COUNT'] + $currentScore['AGE_COUNT'])))
+                                                    $logTable->insert($key2,$totalScoreArray);
+                                                unset($row[$key]);
+                                                }   
 
-                                                
 
-                                                echo "Got the Interests Sent array for chunk ".$i."\n\n";
-						$row=null;
-						unset($row);
-						
+
+ 						
 						echo "MEMORY USAGE At the step 1 of loop: ".memory_get_usage() . "\n";
                                                 						
-                                                $arranged=$this->skipProfiles($arranged);
-						echo "MEMORY USAGE At the step 2 of loop: ".memory_get_usage() . "\n";
-						echo "Statred entry in Mailer Table for chunk ".$i."\n\n";
-						
-						$this->makeEntryInMailerTable($arranged,$mailerEntryObject);
-						$arranged=null;
-						unset($arranged);
-						echo "MEMORY USAGE At the end of loop: ".memory_get_usage() . "\n";
                                         }
 				}
 
@@ -131,8 +132,7 @@ EOF;
   }
 private function getScoreForUser($senderRow,$receiverRow,$receiverDPP)
   {
-    $score=0;
-print_r($senderRow);print_r($receiverRow);print_r($receiverDPP);die;
+    $score=array('R'=>0,'A'=>0,'M'=>0);
 // RELIGION CHECK
     $religionExclude=array('1','4','7','9');
     if(!(in_array($senderRow['RELIGION'],$religionExclude ) && in_array($senderRow['RELIGION'],$religionExclude )))
@@ -140,9 +140,8 @@ print_r($senderRow);print_r($receiverRow);print_r($receiverDPP);die;
         if($receiverDPP['PARTNER_RELIGION'])
         {
             $relArray=explode(',',$receiverDPP['PARTNER_RELIGION']);
-        
-        if(!in_array($receiverRow['RELIGION'],$relArray))
-                $score++;
+            if(!in_array("'".$senderRow['RELIGION']."'",$relArray))
+                $score['R']=1;
         }        
     }
     
@@ -158,13 +157,12 @@ print_r($senderRow);print_r($receiverRow);print_r($receiverDPP);die;
     
     if($senderRow['AGE']<35 || $receiverRow['AGE']<35)
     {
-        
         $ageDiff = $senderRow['AGE'] - $receiverRow['AGE'];
         if($ageDiff<0)$ageDiff=$ageDiff*(-1);
-        if($ageDiff>=10 && $senderRow['AGE']<$receiverDPP['LAGE'] && $senderRow['AGE']>$receiverDPP['HAGE'])
-                    $score++;
+        if($ageDiff>=10 && ($senderRow['AGE']<$receiverDPP['LAGE'] || $senderRow['AGE']>$receiverDPP['HAGE']))
+                    $score['A']=1;
     }
-    
+    return $score;
   }
 private function executeCSVforReportAbuse()
   {
