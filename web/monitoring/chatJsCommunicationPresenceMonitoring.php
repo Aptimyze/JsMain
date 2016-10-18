@@ -4,7 +4,7 @@ $mobileNumberArr = array("9910244159","9650879575","9818424749","8989931104",/*"
 include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 $mqQueuesArr = array("profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat");
 $msgLimitPerQueue = 5000;
-$queuesWithExtraLimit = array("roster-created-dpp"=>40000);
+$queuesWithExtraLimit = array("roster-created-dpp"=>10000);
 $status = sendPresenceRequest();
 if($status!='200')
 {
