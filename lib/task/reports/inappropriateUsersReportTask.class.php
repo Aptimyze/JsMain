@@ -69,7 +69,6 @@ EOF;
                                                     $jpartnerArray[]=$value['RECEIVER'];
                                                     unset($row[$key]);
                                                 }
-
                                             $profileString=substr($profileString,0,-1);
                                             $paramArray=array('PROFILEID'=>$profileString);
                                             $jprofileArray = JPROFILE::getInstance()->getArray($paramArray,'','',"RELIGION,MSTATUS,AGE,PROFILEID,USERNAME");
@@ -107,13 +106,16 @@ EOF;
                                                         $totalScoreArray['M']=$totalScoreArray['M'] + $tempScore['M'];
 
                                                     }
-                                                $currentScore=$logTable->getDataForAUserReported($key2,$stDate);
                                                 $totalScore = $totalScoreArray['R'] + $totalScoreArray['M'] + $totalScoreArray['A'];
-                                                $totalCurrentScore = $currentScore['TOTAL_SCORE'] ;
-                                                if($totalScore && (!$currentScore || ($totalScore > $totalCurrentScore)))
-                                                {
-                                                    $totalScoreArray['USERNAME']=$jprofileArray2[$key2]['USERNAME'];
-                                                    $totalScoreDBArray[$key2]=$totalScoreArray;
+                                                if($totalScore)
+                                                {   
+                                                    $currentScore=$logTable->getDataForAUserReported($key2,$stDate);
+                                                    $totalCurrentScore = $currentScore['TOTAL_SCORE'] ;
+                                                    if(!$currentScore || ($totalScore > $totalCurrentScore))
+                                                    {
+                                                        $totalScoreArray['USERNAME']=$jprofileArray2[$key2]['USERNAME'];
+                                                        $totalScoreDBArray[$key2]=$totalScoreArray;
+                                                    }
                                                 }
                                                 unset($arranged[$key2]);
                                                 }
@@ -129,7 +131,6 @@ EOF;
                                                 						
                                         }
 				}
-                                
                                                 foreach ($totalScoreDBArray as $key4 => $value4) {
                                                     $logTable->insert($key4,$value4);
                                                 }
@@ -200,7 +201,6 @@ private function getScoreForUser($senderRow,$receiverRow,$receiverDPP)
        $data.="\r\n".$profileDetails[$value['PROFILEID']]['USERNAME'].','.$value['RELIGION_COUNT'].','.$value['MSTATUS_COUNT'].','.$value['AGE_COUNT'].','.$totalScore;
        }
      }
-     
        SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Report Abuse Summary for $yesterdayDate","noreply@jeevansathi.com",'','',$data,'','reportAbuse_'.$yesterdayDate.".csv");
    }
 
