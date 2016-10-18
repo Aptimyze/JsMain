@@ -80,6 +80,9 @@ if ($profileids_arr) {
             $servAct = $billServStatObj->getLastActiveServiceDetails($profile);
             $serviceID = $servAct['SERVICEID'];
             $servName = $billServObj->getServiceName($serviceID);
+            if (strstr($servefor_str, 'N') !== false) {
+                $servName = str_replace('e-Value', 'eAdvantage', $servName);
+            }
             $details = $jprofileMainObj->get($profile,'PROFILEID', 'USERNAME, PHONE_MOB');
             $username = $details['USERNAME'];
             $phoneMob = $details['PHONE_MOB'];
