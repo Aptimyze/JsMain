@@ -46,98 +46,129 @@ EOF;
          */
         $this->coreCommunity = array(10,33,19,7,27,30,34,14,28,20,36,12,6,13);
 
-        /**
-         * facebook access token, must have ads_management previleges
-         * @var string
-         */     
-        $this->access_token = "EAALjaF5TfOcBAF2eu2QXga8nYeIZCGioDnBcUftzI7rIm5GaZAnufvnOyjexUHxjhA7jizopE56eCGfNSnZCEMOXdBFU7IxA7ljZCEIdSY3X00MPyVHUgQ6FtmveRMHZCrYKH9KLHlPbSMPts742o3oQbZB3PP5sBAA8BZCZCu2h2wZDZD";
+        $androidAppRequirements = array(
+                'access_token' => "EAAIUo67ZBFGEBAPW8o3LLSd2FCsSDhZBH87PZCKrQrQu22mFhhIT1pBFqQllWaNGRegQQ8dRyl0QWHFdCwZAOSZARTxZCKxMqeivC03CGLtMaweR0yffSMLB38nIhtDA1LNXdZBY8gUIcc74qoEeW4eZA1g48Smkb1o7eh4H0B8OAwZDZD",
+                'app_id' => "585643394866339",
+                'app_secret' => "775d11b4ebb8dc803ff439cb59fc292a",
+                'account_id' => "act_1383924095217677",
+                'includeCustomAudienceId' => "6052303237798",
+                'excludeCustomAudienceId' => "6052303264198",
+                 );
 
-        /**
-         * app id 
-         * @var string
-         */
-        $this->app_id = "812987352055015";
         
-        /**
-         * app secret
-         * @var string
-         */
-        $this->app_secret = "7047cf9aca2e61aa836dad6651998eb8";
-        
-        /**
-         * App ad account id.
-         * @var string
-         */
-        $this->account_id = "act_1380817025529770";
-        
-        /**
-         * the custom audience id created at facebook
-         * @var string
-         */
-        $this->includeCustomAudienceId = "6064728917480";
-
-        /**
-         * the look alike id, created from given custom audience.
-         * @var string
-         */
-        $this->excludeCustomAudienceId = "6064728923280";
+        $iosAppRequirements = array(
+                'access_token' => "EAALjaF5TfOcBAF2eu2QXga8nYeIZCGioDnBcUftzI7rIm5GaZAnufvnOyjexUHxjhA7jizopE56eCGfNSnZCEMOXdBFU7IxA7ljZCEIdSY3X00MPyVHUgQ6FtmveRMHZCrYKH9KLHlPbSMPts742o3oQbZB3PP5sBAA8BZCZCu2h2wZDZD",
+                'app_id' => "812987352055015",
+                'app_secret' => "7047cf9aca2e61aa836dad6651998eb8",
+                'account_id' => "act_1380817025529770",
+                'includeCustomAudienceId' => "6064728917480",
+                'excludeCustomAudienceId' => "6064728923280",
+                 );
 
 
-        /**
-         * contains email list to be excluded in look alike array.
-         * @var array
-         */
-        $this->emailExclusion = array();
-        
-        /**
-         * contains mobile list to be excluded in look alike array
-         * @var array
-         */
-        $this->mobileExclusion = array();
+        $requirements = array();
 
-        /**
-         * contains email list to be included for creation of custom audience
-         * @var array
-         */
-        $this->emailInclusion = array();
+        $requirements[] = $androidAppRequirements;
+        $requirements[] = $iosAppRequirements;
 
-        /**
-         * create email list to be included for creation of custom audience.
-         * @var array
-         */
-        $this->mobileInclusion = array();
+        foreach ($requirements as $requirement) {
 
 
+            /**
+             * facebook access token, must have ads_management previleges
+             * @var string
+             */     
+            $this->access_token = $requirement['access_token'];
 
-        if (is_null($this->access_token) || is_null($this->app_id) || is_null($this->app_secret) ) {
-          throw new \Exception(
-            'You must set your access token, app id and app secret before executing'
-          );
+            /**
+             * app id 
+             * @var string
+             */
+            $this->app_id = $requirement['app_id'];
+            
+            /**
+             * app secret
+             * @var string
+             */
+            $this->app_secret = $requirement['app_secret'];
+            
+            /**
+             * App ad account id.
+             * @var string
+             */
+            $this->account_id = $requirement['account_id'];
+            
+            /**
+             * the custom audience id created at facebook
+             * @var string
+             */
+            $this->includeCustomAudienceId = $requirement['includeCustomAudienceId'];
+
+            /**
+             * the look alike id, created from given custom audience.
+             * @var string
+             */
+            $this->excludeCustomAudienceId = $requirement['excludeCustomAudienceId'];
+
+
+            /**
+             * contains email list to be excluded in look alike array.
+             * @var array
+             */
+            $this->emailExclusion = array();
+            
+            /**
+             * contains mobile list to be excluded in look alike array
+             * @var array
+             */
+            $this->mobileExclusion = array();
+
+            /**
+             * contains email list to be included for creation of custom audience
+             * @var array
+             */
+            $this->emailInclusion = array();
+
+            /**
+             * create email list to be included for creation of custom audience.
+             * @var array
+             */
+            $this->mobileInclusion = array();
+
+
+
+            if (is_null($this->access_token) || is_null($this->app_id) || is_null($this->app_secret) ) {
+              throw new \Exception(
+                'You must set your access token, app id and app secret before executing'
+              );
+            }
+
+            // if (is_null($this->account_id) || is_null($this->excludeCustomAudienceId) || is_null($this->includeCustomAudienceId)) {
+            //   throw new \Exception(
+            //     'You must set your account id, custom audience idss before executing');
+            // }
+
+            try 
+            {
+                FacebookAds\Api::init($this->app_id, $this->app_secret, $this->access_token);
+
+                $this->audience = new FacebookAds\Object\CustomAudience(null, $this->account_id);
+
+                $this->getInclusionData();
+
+                $this->getExclusionData();
+                // $this->createLookAlike($this->includeCustomAudienceId,"Look alike for 1383924095217677 with audience id 6052303237798","",$country = 'IN');
+                // $this->createCustomAudience("Include Test Account act_1383924095217677","CustomAudience for testing the code.");
+                // $this->createCustomAudience("Exclude Test Account act_1383924095217677","CustomAudience for testing the code.");
+
+            } 
+            catch (Exception $e) 
+            {
+                throw new jsException($e);
+            }
+            
         }
 
-        if (is_null($this->account_id) || is_null($this->excludeCustomAudienceId) || is_null($this->includeCustomAudienceId)) {
-          throw new \Exception(
-            'You must set your account id, custom audience idss before executing');
-        }
-
-        try 
-        {
-            FacebookAds\Api::init($this->app_id, $this->app_secret, $this->access_token);
-
-            $this->audience = new FacebookAds\Object\CustomAudience(null, $this->account_id);
-
-            $this->getInclusionData();
-
-            $this->getExclusionData();
-
-            // $this->createCustomAudience("Include Test","CustomAudience for testing the code.");
-            // $this->createCustomAudience("Exclude Test","CustomAudience for testing the code.");
-
-        } 
-        catch (Exception $e) 
-        {
-            throw new jsException($e);
-        }
        
     }
 
@@ -193,6 +224,7 @@ EOF;
               FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\CustomAudienceSubtypes::CUSTOM,
             ));
         $this->audience->create();
+        echo "Created id: ".$this->audience->id;
         } 
         catch (Exception $e) 
         {
@@ -206,28 +238,29 @@ EOF;
      * @param  string $description      the description of the look alike audience created
      * @param  string $country          IN for india, US for us
      */
-    // private function createLookAlike($originAudienceId,$name,$description,$country = 'IN')
-    // {
-    //    try 
-    //    {
-    //         $this->audience->setData(array(
-    //         FacebookAds\Object\Fields\CustomAudienceFields::NAME => $name,
-    //         FacebookAds\Object\Fields\CustomAudienceFields::DESCRIPTION => $description,
-    //         FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\CustomAudienceSubtypes::LOOKALIKE,
+    private function createLookAlike($originAudienceId,$name,$description,$country = 'IN')
+    {
+       try 
+       {
+            $this->audience->setData(array(
+            FacebookAds\Object\Fields\CustomAudienceFields::NAME => $name,
+            FacebookAds\Object\Fields\CustomAudienceFields::DESCRIPTION => $description,
+            FacebookAds\Object\Fields\CustomAudienceFields::SUBTYPE => FacebookAds\Object\Values\CustomAudienceSubtypes::LOOKALIKE,
 
-    //         FacebookAds\Object\Fields\CustomAudienceFields::ORIGIN_AUDIENCE_ID => $originAudienceId,
-    //         FacebookAds\Object\Fields\CustomAudienceFields::LOOKALIKE_SPEC => array(
-    //             'type' => 'similarity',
-    //             'country' => $country,
-    //           )
-    //         ));
-    //         $this->audience->create();
-    //    } 
-    //    catch (Exception $e)
-    //     {
-    //        throw new jsException($e);
-    //    }
-    // }
+            FacebookAds\Object\Fields\CustomAudienceFields::ORIGIN_AUDIENCE_ID => $originAudienceId,
+            FacebookAds\Object\Fields\CustomAudienceFields::LOOKALIKE_SPEC => array(
+                'type' => 'similarity',
+                'country' => $country,
+              )
+            ));
+            $this->audience->create();
+            echo "the id is: " .$this->audience->id;
+       } 
+       catch (Exception $e)
+        {
+           throw new jsException($e);
+       }
+    }
 
     /**
      * get exlusion data from look alike audience
@@ -238,7 +271,7 @@ EOF;
         {
             $profileObj = new JPROFILE("newjs_slave");
 
-            $start_joined_date  = date('2000-01-01 00:00:00');
+            $start_joined_date  = date('1999-01-01 00:00:00');
         
             $last_joined_date = date('Y-m-d h:m:s',strtotime('+365 days', strtotime($start_joined_date)));
 
@@ -404,4 +437,3 @@ EOF;
         }
     }
 }
-
