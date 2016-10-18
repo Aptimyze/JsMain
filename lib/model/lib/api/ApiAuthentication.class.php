@@ -211,7 +211,7 @@ Abstract class ApiAuthentication
 			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_master");
 		$loggedInProfileObj->getDetail($loginData[PROFILEID],"","*");
 		//If any changes Found then logout user
-		if($loggedInProfileObj->getGENDER()!=$loginData[GENDER] || $loggedInProfileObj->getACTIVATED()=="D"|| $loggedInProfileObj->getDTOFBIRTH()!=$loginData[DTOFBIRTH] ||$loggedInProfileObj->getINCOMPLETE()!=$loginData[INCOMPLETE])
+		if($loggedInProfileObj->getGENDER()!=$loginData[GENDER] || $loggedInProfileObj->getACTIVATED()=="D"|| $loggedInProfileObj->getDTOFBIRTH()!=$loginData[DTOFBIRTH])
 		{
 			ValidationHandler::getValidationHandler("","mismatch in important fields of Profile in mobile authenication");
 			return null;
