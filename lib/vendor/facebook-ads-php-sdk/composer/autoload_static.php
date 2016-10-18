@@ -13,19 +13,18 @@ class ComposerStaticInitbfdd100637962ceaa5d8eddb61894cad
         ),
     );
 
-    public static $prefixDirsPsr4 = array (
+
+    public static function getInitializer(ClassLoader $loader)
+    {
+        return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbfdd100637962ceaa5d8eddb61894cad::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = array (
         'FacebookAds\\' => 
         array (
             0 => __DIR__ . '/..' . '/facebook/php-ads-sdk/src/FacebookAds',
         ),
     );
 
-    public static function getInitializer(ClassLoader $loader)
-    {
-        return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitbfdd100637962ceaa5d8eddb61894cad::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitbfdd100637962ceaa5d8eddb61894cad::$prefixDirsPsr4;
-
-        }, null, ClassLoader::class);
+        }, null, get_class(new ClassLoader));
     }
 }
