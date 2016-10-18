@@ -53,7 +53,8 @@ $("#loginButton").bind(clickEventType,function(){
                                     result=JSON.parse(result);
 								if(document.cookie.indexOf("loginAttempt")!=-1 && result.responseStatusCode!=0 && result.responseStatusCode!=8)
 								{
-									if(!is_android){
+//									if(!is_android){
+									
 										// removeCaptcha();
 										createCaptcha();
 									
@@ -64,7 +65,7 @@ $("#loginButton").bind(clickEventType,function(){
 										// ShowTopDownError(["Please slide to verify"]);
 										return 0;
 									  }
-								  }
+//								  }
 								}
 
                                 
