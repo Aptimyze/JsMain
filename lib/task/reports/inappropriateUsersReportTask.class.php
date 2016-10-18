@@ -201,7 +201,7 @@ private function getScoreForUser($senderRow,$receiverRow,$receiverDPP)
        $data.="\r\n".$profileDetails[$value['PROFILEID']]['USERNAME'].','.$value['RELIGION_COUNT'].','.$value['MSTATUS_COUNT'].','.$value['AGE_COUNT'].','.$totalScore;
        }
      }
-       SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Report Abuse Summary for $yesterdayDate","noreply@jeevansathi.com",'','',$data,'','reportAbuse_'.$yesterdayDate.".csv");
+       SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Inappropriate Users Summary for $todayDate","noreply@jeevansathi.com",'','',$data,'','inappropriateUsers_'.$todayDate.".csv");
    }
 
 }

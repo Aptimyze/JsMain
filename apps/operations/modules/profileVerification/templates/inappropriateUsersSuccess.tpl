@@ -69,6 +69,16 @@
 
 		return;
 		}
+                if( daydiff( parseDate( $('#startDate').val()), parseDate(getTodayDate())) <0) 
+		{
+
+		$("#RAMainTable").hide();
+		$("#dateError2").text("Please select a valid date (earlier or equal to today's Date)").show();
+		$("#dateError").hide();
+		$("#dateError3").hide();
+
+		return;
+		}
 
 		$("#RAMainTable").show();
 		$("#dateError2").hide();
