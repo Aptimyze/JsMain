@@ -315,6 +315,9 @@ if(isBrowserIE() === false)
         $("#boxDiv").addClass("move");
         sendAjaxForToggleMatchalertLogic("history");
     });
+
+
+  $(document).on("scroll", isScrolledIntoView);
 });
 
 //click on more to show full prefilled text data
@@ -332,6 +335,33 @@ $(function(){
     
 });
 
+function isScrolledIntoView()
+  {
+    var docViewTop = $(window).scrollTop();
+      var docViewBottom = docViewTop + $(window).height();
+    var elemN = $("#newdppT");
+    var elemN2 = $('#countScroll');
+    
+    var elemTop = elemN.offset().top;
+      var elemBottom = elemTop + elemN.height();
+    
+    if((elemBottom <= docViewBottom) && (elemTop >= docViewTop))
+    {
+      
+      if(elemN2.hasClass('posnd'))
+      {
+        elemN2.removeClass('posnd');
+      }
+      
+      
+    }
+    else
+    {
+      var findleft = $('#midsec').offset().left;
+      elemN2.addClass("posnd").css('left',findleft);
+      
+    }
+  }
 
 function sendAjaxForToggleMatchalertLogic(setValue)
 {
