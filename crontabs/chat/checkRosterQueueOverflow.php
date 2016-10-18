@@ -4,60 +4,39 @@
 	$mqQueuesArr = array("profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat");
 	$msgLimitPerQueue = 5000;
 	$queuesWithExtraLimit = array("roster-created-dpp"=>7000);
-
-	$queueToConsumerMap = array("profile-created-queue"=>"/var/log/javaLogs/JsRosterConsumer_1.log",
-						 "profile-deleted-queue"=>"/data/projects/logs/JsRosterConsumer_2.log",
-						 "roster-created-shortlist"=>"/data/projects/logs/JsRosterConsumer_3.log",
-						 "roster-created-dpp"=>"/data/projects/logs/JsRosterConsumer_4.log",
-						 "roster-created-intrec"=>"/data/projects/logs/JsRosterConsumer_5.log",
-						 "roster-created-intsent"=>"/data/projects/logs/JsRosterConsumer_6.log",
-						 "roster-created-acceptance"=>"/data/projects/logs/JsRosterConsumer_7.log",
-						 "roster-updated-queue"=>"/data/projects/logs/JsRosterConsumer_8.log",
-						 "roster-created-acceptance_sent"=>"/data/projects/logs/JsRosterConsumer_9.log",
-						 "chat"=>"/projects/logs/JsMessagingConsumer.log"
-						 );
+	$restartShellPath = "/home/developer/projects/JsRosterConsumer/restartChatConsumers.sh";
 
 	$consumerMapping = array(
-							$queueToConsumerMap["profile-created-queue"]=>array(array(
+							"profile-created-queue"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
-								"consumerPath"=>"java -Dspring.profiles.active=1 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
-							),
-							$queueToConsumerMap["profile-deleted-queue"]=>array(array(
+								"consumerPath"=>"java -Dspring.profiles.active=1 -jar jsrosterconsumer-0.1.0.jar"),
+							"profile-deleted-queue"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
-								"consumerPath"=>"java -Dspring.profiles.active=2 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
-							),
-							$queueToConsumerMap["roster-created-shortlist"]=>array(array(
+								"consumerPath"=>"java -Dspring.profiles.active=2 -jar jsrosterconsumer-0.1.0.jar"),
+							"roster-created-shortlist"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
-								"consumerPath"=>"java -Dspring.profiles.active=3 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
-							),
-							$queueToConsumerMap["roster-created-dpp"]=>array(array(
+								"consumerPath"=>"java -Dspring.profiles.active=3 -jar jsrosterconsumer-0.1.0.jar"),
+							"roster-created-dpp"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
-								"consumerPath"=>"java -Dspring.profiles.active=4 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
-							),
-							$queueToConsumerMap["roster-created-intrec"]=>array(array(
+								"consumerPath"=>"java -Dspring.profiles.active=4 -jar jsrosterconsumer-0.1.0.jar"),
+							"roster-created-intrec"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
-								"consumerPath"=>"java -Dspring.profiles.active=5 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
-							),
-							$queueToConsumerMap["roster-created-intsent"]=>array(array(
+								"consumerPath"=>"java -Dspring.profiles.active=5 -jar jsrosterconsumer-0.1.0.jar"),
+							"roster-created-intsent"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
-								"consumerPath"=>"java -Dspring.profiles.active=6 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
-							),
-							$queueToConsumerMap["roster-created-acceptance"]=>array(array(
+								"consumerPath"=>"java -Dspring.profiles.active=6 -jar jsrosterconsumer-0.1.0.jar"),
+							"roster-created-acceptance"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
-								"consumerPath"=>"java -Dspring.profiles.active=7 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
-							),
-							$queueToConsumerMap["roster-updated-queue"]=>array(array(
+								"consumerPath"=>"java -Dspring.profiles.active=7 -jar jsrosterconsumer-0.1.0.jar"),
+							"roster-updated-queue"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
-								"consumerPath"=>"java -Dspring.profiles.active=8 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
-							),
-							$queueToConsumerMap["roster-created-acceptance_sent"]=>array(array(
+								"consumerPath"=>"java -Dspring.profiles.active=8 -jar jsrosterconsumer-0.1.0.jar"),
+							"roster-created-acceptance_sent"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsRosterConsumer/jsrosterconsumer-0.1.0.jar",
-								"consumerPath"=>"java -Dspring.profiles.active=9 -jar jsrosterconsumer-0.1.0.jar >>/dev/null &"),
-							),
-							$queueToConsumerMap["chat"]=>array(array(
+								"consumerPath"=>"java -Dspring.profiles.active=9 -jar jsrosterconsumer-0.1.0.jar"),
+							"chat"=>array(
 								"consumerGrep"=>"/home/developer/projects/JsMessagingConsumer/jsmessagingconsumer-0.1.0.jar",
-								"consumerPath"=>"java -jar -Dspring.profiles.active=live jsmessagingconsumer-0.1.0.jar &"),
-							)
+								"consumerPath"=>"java -jar -Dspring.profiles.active=live jsmessagingconsumer-0.1.0.jar"),
 						);
 	//print_r($consumerMapping);
 	//print_r($queueToConsumerMap);
@@ -69,7 +48,7 @@
 		checkForQueueOverflow($mqQueuesArr,$queueResponse);
 
 		function checkForQueueOverflow($queueArr,$queueResponse){
-			global $msgLimitPerQueue,$queuesWithExtraLimit,$queueToConsumerMap;
+			global $msgLimitPerQueue,$queuesWithExtraLimit,$consumerMapping,$restartShellPath;
 			if(is_array($queueResponse)){
 			        foreach($queueResponse as $arr){
 			                $queue_data=$arr;
@@ -90,10 +69,12 @@
 					$mailMsg = "";
 					foreach ($overflowQueueArr as $key => $value) {
 						$mailMsg = $mailMsg.",".$key."(".$value.")";
-						restartConsumers($queueToConsumerMap[$key]);
+						killConsumers($consumerMapping[$key]);
 					}
+					//restart chat consumers
+					exec("nohup sh ".$restartShellPath." > /dev/null &");
 			        //var_dump($mailMsg);die;
-			       mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.",consumers restarted as well");
+			       mail ("lavesh.rawat@gmail.com,pankaj139@gmail.com,nsitankita@gmail.com,nitishpost@gmail.com,vibhor.garg@jeevansathi.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.".........consumers restarted as well");
 			       //mail ("nsitankita@gmail.com","Overflow in chat queues @10.10.18.62","Please check queues - ".$mailMsg.",consumers restarted as well");
 			}
 		}
@@ -113,18 +94,16 @@
 		return $response;
 	}
 
-	function restartConsumers($path){
-		global $consumerMapping;
-		foreach($consumerMapping[$path] as $key => $consumerDetails){
-			unset($processNumbers);
-			exec("ps aux | grep ".$consumerDetails["consumerGrep"]." | grep -v grep | awk '{ print $2 }'", $processNumbers);
-			if(!empty($processNumbers) && is_array($processNumbers)){
-				foreach($processNumbers as $key => $value){
-					$count = shell_exec("ps -p ".$value." | wc -l") -1;
-	                if($count >0)
-	                  exec("kill -9 ".$value);
-          		}
-			}
-		}
+	function killConsumers($consumerDetails){
+		exec("ps aux | grep '".$consumerDetails["consumerPath"]."' | grep -v grep | awk '{ print $2 }'", $processNumbers);
+		//var_dump("ps aux | grep '".$consumerDetails["consumerPath"]."' | grep -v grep | awk '{ print $2 }'");
+		//print_r($processNumbers);
+		if(!empty($processNumbers) && is_array($processNumbers)){
+			foreach($processNumbers as $key => $value){
+				$count = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count >0)
+                  exec("kill -9 ".$value);
+      		}
+		} 
 	}
 ?>
