@@ -80,5 +80,26 @@ class WebAuthentication extends ApiAuthentication
 			return $this->loginData;
 		}
 	}
+	
+	
+	public function setPaymentGatewayAuthchecksum($checksum)
+	{
+		$epid_arr=explode("i",$checksum);
+        $profileid=$epid_arr[1];
+        $dbJprofile=new JPROFILE();
+		$paramArr='PROFILEID,DTOFBIRTH,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,PASSWORD,PHONE_MOB,EMAIL';
+		if($profileid){
+			$this->loginData=$dbJprofile->get($profileid,"PROFILEID",$paramArr);
+			$this->rememberMe=true;
+			$this->loginData[AUTHCHECKSUM]=$this->encryptAppendTime($this->createAuthChecksum("",$backendCheck));
+			$this->setcookies($this->loginData,'','');
+			return $this->loginData;
+		}
+		else
+		{
+			$this->removeLoginCookies();
+			return null;
+		}
+	}
 }
 ?>
