@@ -116,6 +116,6 @@ class ResponseHandlerConfig
     public static $NO_COMMUNICATION_HISTORY = array("message"=>"No Communication History","statusCode"=>'1');
 
     // Captcha Not verified
-	public static $CAPTCHA_UNVERIFIED = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'1');
+	public static $CAPTCHA_UNVERIFIED = array("message"=>"Please click the box 'I'm not a robot'","statusCode"=>'1');
 }
 ?>
