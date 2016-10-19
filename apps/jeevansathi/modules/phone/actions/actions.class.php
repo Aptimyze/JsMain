@@ -91,7 +91,6 @@ class phoneActions extends sfActions
 
   public function executeSaveV1(sfWebRequest $request)
   {
-
   	$respObj = ApiResponseHandler::getInstance();
 
 	$number = $request->getParameter('NUMBER');
@@ -123,11 +122,16 @@ class phoneActions extends sfActions
 	sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
     $data = ob_get_contents();
     ob_end_clean();
-    $data = json_decode($data);
-    $errorArr=get_object_vars($data->error);
+	$data = json_decode($data);
+	if(!is_array($data->error))	
+	    $errorArr=get_object_vars($data->error);//print_r($data);die('0000');
+    else 
+    	$errorArr=$data->error;
+	$arrKeys=array_keys($errorArr);
+	
     if($data->responseStatusCode != 0)
     {
-	$data->responseMessage=$errorArr[PHONE_MOB];
+	$data->responseMessage=$errorArr[$arrKeys[0]];
 	}
 	$data = json_encode($data);
 	echo $data;
