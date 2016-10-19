@@ -122,11 +122,12 @@ class phoneActions extends sfActions
 	ob_start();
 	sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
     $data = ob_get_contents();
-    ob_end_clean();	
+    ob_end_clean();
     $data = json_decode($data);
+    $errorArr=get_object_vars($data->error);
     if($data->responseStatusCode != 0)
     {
-	$data->responseMessage=$data->error[0];
+	$data->responseMessage=$errorArr[PHONE_MOB];
 	}
 	$data = json_encode($data);
 	echo $data;
