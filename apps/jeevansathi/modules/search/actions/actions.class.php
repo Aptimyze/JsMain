@@ -1699,9 +1699,10 @@ class searchActions extends sfActions
 
         		unset($inputValidateObj);
                 $respObj = ApiResponseHandler::getInstance();
-                $respObj->setHttpArray($statusArr);//print_r($resultArr);die;
+                $respObj->setHttpArray($statusArr);//print_r($resultArr);
                 $respObj->setResponseBody($resultArr);
-                $respObj->generateResponse();           
+                $respObj->generateResponse();    
+                      
 		if($request->getParameter("useSfViewNone"))
 			return sfView::NONE;
 		die;

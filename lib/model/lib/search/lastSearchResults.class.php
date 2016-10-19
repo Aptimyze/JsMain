@@ -23,12 +23,11 @@ class lastSearchResults extends SearchLogger
 	
 	public function getLastSearchResultCriteria()
 	{
-		$this->getLastSearchCriteria($this->pid,SearchTypesEnums::Advance);
-		// if(!$flag)
-		// {
-		// 	$searchObj = new PartnerProfile($loggedInProfileObj);
-		// 	$searchObj->getDppCriteria();
-		// 	$flag = 1;		
-		// }
+		$output = $this->getLastSearchCriteria($this->pid,SearchTypesEnums::Advance);
+        if($output == 0)
+        {
+        	$this->setProfilesToShow("0 0");
+        }
+        $this->setSEARCH_TYPE(SearchTypesEnums::LAST_SEARCH_RESULTS);
 	}
 }
