@@ -5,6 +5,8 @@ if(multiUserPhotoUrl.indexOf("staging") !== -1){
     multiUserPhotoUrl=multiUserPhotoUrl+"?AUTHCHECKSUM="+cook;
 }
 chatConfig.Params = {
+    //array of groups for which no roster exists in openfire and polling is to be done
+    nonRosterPollingGroups:['dpp'],
     categoryNames: {
         "Desired Partner Matches": "dpp",
         "Interest Received": "intrec",
@@ -86,7 +88,8 @@ chatConfig.Params = {
             "extraParams":{
                 //"type":"CHATDPP" //later uncomment
                 "type":"DPP"
-            }
+            },
+            "pollingFreq":10000
         }
     },
     //api config for chat history

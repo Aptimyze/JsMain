@@ -11,11 +11,31 @@ var listingInputData = [],
     listingPhotoRequestCompleted = ",",
     localStorageExists = isStorageExist();
 
+/*clearNonRosterPollingInterval
+function to stop polling for non roster webservice api 
+* @inputs:type(optional)
+*/
+function clearNonRosterPollingInterval(type){
+    if(type == undefined){
+        if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
+            $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
+                clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
+            });
+        }
+    }
+    else{
+        if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
+            clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
+        }
+    }
+}
+
 /*pollForNonRosterListing
 function to poll for non roster webservice api 
 * @inputs:type
 */
 function pollForNonRosterListing(type){
+    console.log("pollForNonRosterListing",type);
     if(type == undefined || type == ""){
         type = "dpp";
     }
@@ -76,6 +96,7 @@ function pollForNonRosterListing(type){
 "debugInfo": null
 };
             console.log("pollForNonRosterListing success",response);
+            //add in listing, after non roster list has been fetched
             strophieWrapper.onNonRosterListFetched(response,type);
         },
         error: function (xhr) {
@@ -1445,6 +1466,8 @@ $(document).ready(function () {
                 clearLocalStorage();
                 strophieWrapper.initialRosterFetched = false;
                 strophieWrapper.initialNonRosterFetched = false;
+                //clear polling of non roster groups listing
+                clearNonRosterPollingInterval();
                 strophieWrapper.disconnect();
                 eraseCookie("chatAuth");
                 manageListingPhotoReqFlag("reset");

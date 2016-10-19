@@ -5,6 +5,7 @@ var strophieWrapper = {
     NonRoster: {},
     initialRosterFetched: false,
     initialNonRosterFetched: false,
+    nonRosterClearInterval:{},
     rosterDetailsKey: "rosterDetails",
     useLocalStorage: false,
     msgStates: {
@@ -163,17 +164,18 @@ var strophieWrapper = {
             handleChatDisconnection();
         }
     },
+
     //fetch roster
     getRoster: function () {
+        //kills interval polling for non roster list
+        clearNonRosterPollingInterval();
         if (strophieWrapper.getCurrentConnStatus()) {
-            //strophieWrapper.stropheLoggerPC("in getRoster");
             var iq = $iq({
                 type: 'get'
             }).c('query', {
                 xmlns: Strophe.NS.ROSTER
             });
             strophieWrapper.connectionObj.sendIQ(iq, strophieWrapper.onRosterReceived);
-            pollForNonRosterListing("dpp");
         } else {
             handleChatDisconnection();
         }
@@ -496,7 +498,24 @@ strophieWrapper.sendPresence();
         }, 1000);
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
     	//strophieWrapper.sendPresence();
+
+        //start for polling of non-roster group listings --onrosterreceived or there later
+        strophieWrapper.getNonRosterList();
+            
    	},
+
+    //fetch non roster list
+    getNonRosterList:function(){
+        $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
+            //console.log(groupId,chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
+            strophieWrapper.nonRosterClearInterval[groupId] = setInterval(function(){
+                                                                //console.log("calling");
+                                                                pollForNonRosterListing(groupId);
+                                                              },chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
+            //console.log(strophieWrapper.nonRosterClearInterval[groupId]);
+        });
+    },
+
     //executed on msg receipt
     onMessage: function (iq) {
         //strophieWrapper.stropheLoggerPC("got message");
@@ -543,6 +562,7 @@ strophieWrapper.sendPresence();
         }
         return newObj;
     },
+
     //parser for non roster object
     formatNonRosterObj: function (obj) {
         var listing_tuple_photo = "";
