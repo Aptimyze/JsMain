@@ -44,7 +44,7 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
   public function truncateTable($startDate)
   {
     try {  
-      $sql= "DELETE FROM MIS.INAPPROPRIATE_USERS_LOG WHERE DATE <= :SDATE";
+      $sql= "DELETE FROM MIS.INAPPROPRIATE_USERS_LOG WHERE DATE < :SDATE";
       $prep=$this->db->prepare($sql);
       $prep->bindValue(":SDATE",$startDate,PDO::PARAM_STR);
       $prep->execute();
