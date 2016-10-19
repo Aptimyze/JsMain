@@ -161,7 +161,11 @@ class ApiEditSubmitV1Action extends sfActions
 		}
 
 		$apiResponseHandlerObj->generateResponse();
+
+		if($request->getParameter('internally'))
 		return sfView::NONE;
+
+		die;
 		
 	}
   

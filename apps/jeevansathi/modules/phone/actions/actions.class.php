@@ -108,7 +108,7 @@ class phoneActions extends sfActions
 		$phoneType = "A";
 	else
 		$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_INPUT);
-
+	//As the new api will be only running for PC and Mobile, we are only calling it internally for phoneType 'M' . phoneType 'A' stands for android.
 	if($phoneType == "M")
 	{ 
 	$editFieldArr =array();
@@ -116,6 +116,7 @@ class phoneActions extends sfActions
 	$PHONE_MOB['isd'] = $isd;
 	$editFieldArr["PHONE_MOB"] = $PHONE_MOB;
 	$request->setParameter("editFieldArr",$editFieldArr);
+	$request->setParameter('internally',1);
 	//var_dump($request->getParameter('editFieldArr'));
 
 	ob_start();
