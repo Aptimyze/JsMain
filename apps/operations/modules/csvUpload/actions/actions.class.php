@@ -47,6 +47,7 @@ class csvUploadActions extends sfActions
 	                                $this->successful =1;
                                 	// Execution in background to send CSV Notification
                                 	$command = JsConstants::$php5path." ".JsConstants::$cronDocRoot."/symfony smsNotification:sendCsvNotifications >/dev/null &";
+					$command = preg_replace('/[^A-Za-z0-9\. -_>&]/', '', $command);
                                 	passthru($command);
 				}
                         }
