@@ -19,13 +19,13 @@ function clearNonRosterPollingInterval(type){
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
-                clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
+                clearTimedOut(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
     }
     else{
         if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
-            clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
+            clearTimedOut(strophieWrapper.nonRosterClearInterval[type]);
         }
     }
 }
@@ -104,6 +104,12 @@ function pollForNonRosterListing(type){
             //return "error";
         }
     });
+    strophieWrapper.nonRosterClearInterval[type] = setTimeout(function(){
+                                                                    //console.log("calling",type);
+                                                                    pollForNonRosterListing(type);
+                                                                },chatConfig.Params.nonRosterListingApiConfig[type]["pollingFreq"]
+                                                        );
+        
 }
 
 /*manageListingPhotoReqFlag

@@ -507,12 +507,8 @@ strophieWrapper.sendPresence();
     //fetch non roster list
     getNonRosterList:function(){
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
-            //console.log(groupId,chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
-            strophieWrapper.nonRosterClearInterval[groupId] = setInterval(function(){
-                                                                //console.log("calling");
-                                                                pollForNonRosterListing(groupId);
-                                                              },chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
-            //console.log(strophieWrapper.nonRosterClearInterval[groupId]);
+            console.log("start polling",chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
+            pollForNonRosterListing(groupId);
         });
     },
 
