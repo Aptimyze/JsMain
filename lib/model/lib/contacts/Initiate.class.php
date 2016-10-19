@@ -635,8 +635,6 @@ public function getNegativeScoreForUser()
     $receiverProfileId=$receiverRow->getPROFILEID();
     $dbObShard = JsDbSharding::getShardNo($receiverProfileId);
     $jpartnerOb = new newjs_JPARTNER($dbObShard);
-    $arrayDPP=$jpartnerOb->getDataForMultipleProfiles(array($receiverProfileId),"LAGE,HAGE,PARTNER_MSTATUS,PARTNER_RELIGION,PROFILEID");
-    $receiverDPP = $arrayDPP[$receiverProfileId];
     $score=array('R'=>0,'A'=>0,'M'=>0);
 // RELIGION CHECK
     $religionExclude=array('1','4','7','9');
