@@ -69,7 +69,7 @@ EOF;
 
 		/* populate logic */
 		$interval="6 MONTH";
-		$day_of_week=date("w");
+		/*$day_of_week=date("w");
 		if( in_array($day_of_week,array('1','3','5')))
 		{
 			$conditionNew = "PERSONAL_MATCHES in ('A','O') AND ";
@@ -77,8 +77,8 @@ EOF;
 		else
 		{
 			$conditionNew = "PERSONAL_MATCHES='A' AND ";
-		}
-		$conditionNew.= "(ACTIVATED='Y' OR ACTIVATED = 'N') AND ";
+		}*/
+		$conditionNew = "(ACTIVATED='Y' OR ACTIVATED = 'N') AND ";
 		$conditionNew .= "(((jp.ENTRY_DT >= DATE_SUB( now( ) , INTERVAL 15 DAY )) || (jp.ENTRY_DT < DATE_SUB( now( ) , INTERVAL 15 DAY )) && (jp.MOB_STATUS = 'Y' || jp.LANDL_STATUS = 'Y' || jpc.ALT_MOB_STATUS = 'Y')) && (jp.LAST_LOGIN_DT >= DATE_SUB( now( ) , INTERVAL 3 MONTH )))";
 		$matchalerts_MATCHALERTS_TO_BE_SENT->populateTables($conditionNew);
                 
