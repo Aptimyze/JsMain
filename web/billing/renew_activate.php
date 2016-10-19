@@ -21,10 +21,6 @@ while ($row = mysql_fetch_array($res)) {
 }
 $profileids_arr_n = array_unique($profileids_arr1);
 $profileids_arr   = array_values($profileids_arr_n);
-$billServStatObj = new BILLING_SERVICE_STATUS();
-$billServObj = new billing_SERVICES('newjs_slave');
-$memHandlerObj = new MembershipHandler();
-$jprofileMainObj = new JPROFILE();
 
 if ($profileids_arr) {
     for ($i = 0; $i < count($profileids_arr); $i++) {
@@ -77,23 +73,7 @@ if ($profileids_arr) {
 
         // Code to sent service renewal SMS
         if (strstr($servefor_str, 'F') !== false) { // Main Membership got activated
-            $servAct = $billServStatObj->getLastActiveServiceDetails($profile);
-            $serviceID = $servAct['SERVICEID'];
-            $servName = $billServObj->getServiceName($serviceID);
-            if (strstr($servefor_str, 'N') !== false) {
-                $servName = str_replace('e-Value', 'eAdvantage', $servName);
-            }
-            $details = $jprofileMainObj->get($profile,'PROFILEID', 'USERNAME, PHONE_MOB');
-            $username = $details['USERNAME'];
-            $phoneMob = $details['PHONE_MOB'];
-            $msg = "Dear User, {$servName} has been activated on your profile {$username}.";
-            if ($phoneMob) {
-                $memHandlerObj->sendInstantSMS($profile, $phoneMob, $msg);
-                $smsDet = new newjs_SMS_DETAIL();
-                $date = date("Y-m-d H:i:s");
-                $smsDet->insert($profile, "I", "MEM_REN_ACT_CRON", $msg, $phoneMob, $date, "Y");
-            }
-            unset($username, $phoneMob, $details, $msg, $servAct, $serviceID, $servName);
+            CommonUtility::sendPlusTrackInstantSMS('MEM_REN_ACT_CRON', $profile);
         }
         unset($offline_bill);
 
