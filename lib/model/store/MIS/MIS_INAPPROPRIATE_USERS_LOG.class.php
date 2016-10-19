@@ -46,15 +46,10 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
 	throw new jsException($e);
     }
   }
-  /*this function will return the count for no. of times a layer has been shown 
-   * in day, how many days
-   *@param- profile id,layer id for counting, count for today or total count
-   *@return- count integer
-   */
   public function getDataForADate($date)
   {
     try {  
-      $sql= "SELECT * FROM MIS.INAPPROPRIATE_USERS_LOG WHERE DATE = :DATE ORDER BY `TOTAL_SCORE` DESC";
+      $sql= "SELECT * FROM MIS.INAPPROPRIATE_USERS_LOG WHERE DATE <= :DATE GROUP BY USERNAME";
       $prep=$this->db->prepare($sql);
       $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
       $prep->execute();
@@ -67,5 +62,5 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
 	throw new jsException($e);
     }
   }
+  
 }
-

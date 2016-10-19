@@ -531,12 +531,32 @@ class profileVerificationActions extends sfActions
         public function executeInappropriateUsersReport(sfWebRequest $request)
   {
       $startDate=$request->getParameter('RAStartDate');
-      $resultArr=(new MIS_INAPPROPRIATE_USERS_LOG())->getDataForADate($startDate);
+      $resultArr=(new MIS_INAPPROPRIATE_USERS_LOG('newjs_slave'))->getDataForADate($startDate);
       
       ob_end_clean();
       if(sizeof($resultArr) == 0 )
           die;
-      echo json_encode($resultArr);
+      $i=0;
+      foreach ($resultArr as $key => $value) 
+      {
+          $resultArr2[$i]['USERNAME']=$key;
+          foreach ($value as $key2=>$value2)
+          {
+              
+          $resultArr2[$i]['R'] += ($value2['RELIGION_COUNT']);
+          $resultArr2[$i]['A'] += ($value2['AGE_COUNT']);
+          $resultArr2[$i]['M'] += ($value2['MSTATUS_COUNT']);
+          $resultArr2[$i]['T'] += ($value2['TOTAL_SCORE']);
+
+          }
+          unset($resultArr[$key]);
+      }
+      
+      foreach ($resultArr2 as $key => $value) {
+          $Tarray[]=$value['T'];
+      }
+      array_multisort($Tarray, SORT_DESC, SORT_NUMERIC, $resultArr2);
+      echo json_encode($resultArr2);
       return sfView::NONE;
       die;
 
