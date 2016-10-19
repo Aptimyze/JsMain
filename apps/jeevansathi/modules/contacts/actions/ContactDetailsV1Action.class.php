@@ -312,6 +312,16 @@ class ContactDetailsV1Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 						
 				}
+                                
+                                if($this->contactEngineObj->getComponent()->contactDetailsObj->getHiddenPhoneMsg() == "Y")
+                                {
+                                    $responseArray['errmsglabel'] = "This member has choosen to hide phone number. Only email is available but no phone number";
+                                }
+                                else
+                                {
+                                    $responseArray['errMsgLabel'] = null;
+                                }
+
 			} 
 			else {
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
