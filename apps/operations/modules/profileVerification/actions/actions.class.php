@@ -537,26 +537,11 @@ class profileVerificationActions extends sfActions
       if(sizeof($resultArr) == 0 )
           die;
       $i=0;
-      foreach ($resultArr as $key => $value) 
-      {
-          $resultArr2[$i]['USERNAME']=$key;
-          foreach ($value as $key2=>$value2)
-          {
-              
-          $resultArr2[$i]['R'] += ($value2['RELIGION_COUNT']);
-          $resultArr2[$i]['A'] += ($value2['AGE_COUNT']);
-          $resultArr2[$i]['M'] += ($value2['MSTATUS_COUNT']);
-          $resultArr2[$i]['T'] += ($value2['TOTAL_SCORE']);
-
-          }
-          unset($resultArr[$key]);
+      foreach ($resultArr as $key => $value) {
+          $Tarray[]=$value['TCOUNT'];
       }
-      
-      foreach ($resultArr2 as $key => $value) {
-          $Tarray[]=$value['T'];
-      }
-      array_multisort($Tarray, SORT_DESC, SORT_NUMERIC, $resultArr2);
-      echo json_encode($resultArr2);
+      array_multisort($Tarray, SORT_DESC, SORT_NUMERIC, $resultArr);
+      echo json_encode($resultArr);
       return sfView::NONE;
       die;
 
