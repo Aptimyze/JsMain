@@ -154,6 +154,7 @@ EOF;
 
                 $this->audience = new FacebookAds\Object\CustomAudience(null, $this->account_id);
 
+                // die("calling.");
                 $this->getInclusionData();
 
                 $this->getExclusionData();
@@ -282,11 +283,15 @@ EOF;
             $greaterThanArray["LAST_LOGIN_DT"] = $lastLoginLimit;
             
             $fields="EMAIL,PHONE_MOB";
+            
+            $fields_count="COUNT(*)";
+
+            $limitPushExclude = 5000;
 
             $today =  date('Y-m-d h:m:s');
 
             $totalExclusionEmail = 0;
-            $totalExclusionEmail = 0;
+            $totalExclusionMobile = 0;
             
             while ( $last_joined_date <= $today )
             {
@@ -297,39 +302,50 @@ EOF;
                 $lessThanArray["ENTRY_DT"] = $last_joined_date;
 
 
-                $result = $profileObj->getArray($valueArray, "", $greaterThanArray, $fields ,  $lessThanArray, "", "", "", "", "","","");
+                $totalResult = $profileObj->getArray($valueArray, "", $greaterThanArray, $fields_count ,  $lessThanArray, "", "", "", "", "","","");
 
-                            
+                $totalCount = $totalResult[0]["COUNT(*)"];
 
-                if ( !empty($result))
+                // var_dump($totalInclusionEmail)
+                $i = 0;
+
+                if ( $totalCount > 0 )
                 {
-                   foreach ($result as $key => $data) 
-                   {
-                        $this->emailExclusion[]=$data['EMAIL'];
-                        $this->mobileExclusion[]=$data['PHONE_MOB'];
-                    }
+                    do
+                    {
+                        $result = $profileObj->getArray($valueArray, "", $greaterThanArray, $fields ,  $lessThanArray, "", ($i * $limitPushExclude).",".(($i + 1) * $limitPushExclude), "", "", "","","");
 
-                    $totalExclusionEmail += count($this->emailExclusion);
-                        
-                    $totalExclusionMobile += count($this->mobileExclusion);
-                        
-                    print_r("emailExclusion: ".count($this->emailExclusion));
-                    echo "\n";
-                    print_r("mobileExclusion: ".count($this->mobileExclusion));
-                    echo "\n";
+                        if ( !empty($result))
+                        {
+                           foreach ($result as $key => $data) 
+                           {
+                                $this->emailExclusion[]=$data['EMAIL'];
+                                $this->mobileExclusion[]=$data['PHONE_MOB'];
+                            }
 
-                    $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->emailExclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
-            
+                            $totalExclusionEmail += count($this->emailExclusion);
+                                
+                            $totalExclusionMobile += count($this->mobileExclusion);
+                                
+                            print_r("emailExclusion: ".count($this->emailExclusion));
+                            echo "\n";
+                            print_r("mobileExclusion: ".count($this->mobileExclusion));
+                            echo "\n";
 
-                    $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->mobileExclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
+                            $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->emailExclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
+                    
 
-                    $this->emailExclusion = array();
-                    $this->mobileExclusion = array();
+                            $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->mobileExclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
 
+                            $this->emailExclusion = array();
+                            $this->mobileExclusion = array();
+
+                        }
+                        $i++;
+                    } while (($i * $limitPushExclude) < $totalCount);
                 }
                 
                 $start_joined_date = $last_joined_date;
-                
             }
 
             echo "Total exclusion email: ".$totalExclusionEmail;
@@ -375,6 +391,10 @@ EOF;
 
             $fields="EMAIL,PHONE_MOB";
 
+            $fields_count = "COUNT(*)";
+
+            $limitPushInclude = 5000;
+
             $qualityProfileQuery = "((`GENDER` = 'M' AND `AGE` >= 26) ||  (`GENDER` = 'F' AND `AGE` >= 22))";
 
             $totalInclusionEmail = 0;
@@ -392,37 +412,49 @@ EOF;
                     $valueArray['SOURCE'] = implode(",", $arraySourceId);
 
 
-                    $result = $profileObj->getArray($valueArray, $excludeArray, $greaterThanArray, $fields ,  "", "", "", "", "", "","",$qualityProfileQuery);
+                    $resultCount = $profileObj->getArray($valueArray, $excludeArray, $greaterThanArray, $fields_count ,  "", "", "", "", "", "","",$qualityProfileQuery);
 
-
-                    if ( !empty($result))
+                    // die(var_dump($resultCount[0]["count(*)"]));
+                    $totalCount = $resultCount[0]["COUNT(*)"];
+                    $i = 0;
+                    
+                    if ( $totalCount > 0 )
                     {
-                       foreach ($result as $key => $data) 
+                        do
                         {
-                            $this->emailInclusion[]=$data['EMAIL'];
-                            $this->mobileInclusion[]=$data['PHONE_MOB'];
-                        }
+
+                             $result = $profileObj->getArray($valueArray, $excludeArray, $greaterThanArray, $fields ,  "", "", ($i * $limitPushInclude).",".(($i + 1) * $limitPushInclude), "", "", "","",$qualityProfileQuery);
+
+                            if ( !empty($result))
+                            {
+                               foreach ($result as $key => $data) 
+                                {
+                                    $this->emailInclusion[]=$data['EMAIL'];
+                                    $this->mobileInclusion[]=$data['PHONE_MOB'];
+                                }
 
 
-                        $totalInclusionEmail += count($this->emailInclusion);
-                        
-                        $totalInclusionMobile += count($this->mobileInclusion);
-                        
-                        print_r("emailInclusion: ".count($this->emailInclusion));
-                        echo "\n";
-                        print_r("mobileInclusion: ".count($this->mobileInclusion));
-                        echo "\n";
+                                $totalInclusionEmail += count($this->emailInclusion);
+                                
+                                $totalInclusionMobile += count($this->mobileInclusion);
+                                
+                                print_r("emailInclusion: ".count($this->emailInclusion));
+                                echo "\n";
+                                print_r("mobileInclusion: ".count($this->mobileInclusion));
+                                echo "\n";
 
-                        $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->emailInclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
-            
+                                $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->emailInclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
+                    
 
-                        $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->mobileInclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
+                                $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->mobileInclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
 
-                        $this->emailInclusion = array();
-                        $this->mobileInclusion = array();
-                      
+                                $this->emailInclusion = array();
+                                $this->mobileInclusion = array();
+                              
+                            } 
+                            $i++;      
+                        } while(($i * $limitPushInclude) < $totalCount);
                     }
-
                 }
             }
             echo "\n";
