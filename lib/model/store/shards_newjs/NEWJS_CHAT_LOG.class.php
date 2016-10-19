@@ -82,7 +82,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 					else
 						$limitStr="";
 						
-					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,CHATID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.CHATID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC,ID DESC ".$limitStr;
+					$sql = "SELECT SENDER,RECEIVER, DATE, MESSAGE ,CHATID,C.ID FROM  `CHAT_LOG` AS C JOIN CHATS AS M ON ( M.ID = C.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER )) ".$whrStr." ORDER BY DATE DESC,ID DESC ".$limitStr;
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
@@ -134,6 +134,75 @@ class NEWJS_CHAT_LOG extends TABLE{
 				throw new jsException($e);
 			}
 			return $output;
-		}	
+		}
+                
+                public function getMessageListing($condition,$skipArray)
+		{
+			try{
+				if(!$condition["WHERE"]["IN"]["PROFILE"])
+				{
+					throw new jsException("","profile id is not specified in function getMessageListing of newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					if(count($skipArray)<1000 && count($skipArray)>0)
+						$skipSql=1;
+					else
+						$skipSql=0;
+					if($skipSql)
+					{
+						$count = 0;
+						$str = "NOT IN (";
+						foreach($skipArray as $key1=>$value1)
+						{
+							$str = $str.":VALUE".$count.",";
+							$bindArr["VALUE".$count] = $value1;
+							$count++;
+						}
+						$str = substr($str, 0, -1);
+						$str = $str.")";
+						$sender = " AND SENDER ".$str." ";
+						$receiver = "AND RECEIVER ".$str." ";
+					}
+					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (RECEIVER) JOIN CHATS ON ( CHAT_LOG.ID = CHATS.ID ) WHERE  `RECEIVER` =:PROFILEID".$sender." AND  `TYPE` ='R' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `CHAT_LOG` USE INDEX (SENDER) JOIN CHATS ON ( CHAT_LOG.ID = CHATS.ID ) WHERE  `SENDER` =:PROFILEID ".$receiver." AND  `TYPE` ='R' ORDER BY DATE DESC";
+					$res=$this->db->prepare($sql);
+					$res->bindValue(":PROFILEID",$condition["WHERE"]["IN"]["PROFILE"],PDO::PARAM_INT);
+					
+					if($skipSql){
+						foreach($bindArr as $k=>$v)
+						{	
+							$res->bindValue($k,$v,PDO::PARAM_INT);
+						}
+					}
+					$res->execute();
+					if(!$skipSql)
+					{
+						while($row = $res->fetch(PDO::FETCH_ASSOC))
+						{
+							if(!in_array($row["PROFILEID"],$skipArray))
+								$output[$row["PROFILEID"]][] = $row;
+						}
+					}
+					else
+					{
+						while($row = $res->fetch(PDO::FETCH_ASSOC))
+						{
+								$output[$row["PROFILEID"]][] = $row;
+						}
+					}
+					
+					 
+					if(array_key_exists("LIMIT",$condition))
+							$output= array_slice($output,0,$condition["LIMIT"],true);
+					
+					
+				}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $output;
+		}
 }
 	?>

@@ -682,7 +682,7 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["subtitle"]='Who Viewed My.. '.$response2['total'];
 					$response2["title2"]=null;
 					break;
-					case "MY_MESSAGE":
+                                        case "MY_MESSAGE":$response2["hidePaginationCount"] = 1;
 					case "MY_MESSAGE_RECEIVED":
 					//if(MobileCommon::isDesktop()==false)
 					{

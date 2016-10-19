@@ -109,6 +109,9 @@ class MessageLog
 		$dbName = JsDbSharding::getShardNo($loginProfile);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
+                $chatLogObj = new NEWJS_CHAT_LOG($dbName);
+                $profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
+                $profileArray = $this->mergeChatsAndMessages($profileArray,$profileChatArray,$condition['LIMIT']);
 		$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
 		foreach($profileArray as $profileid=>$value)
         {
@@ -162,5 +165,78 @@ class MessageLog
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageLogObj->makeAllMessagesSeen($profileid);
 	}
+        
+        private function mergeChatsAndMessages($messageArr,$chatArr,$limit){
+            $count = 0;
+            $skip = array();
+            foreach ($messageArr as $key=>$val){
+                if(in_array($key, $skip))
+                   continue;
+                  
+                if(count($chatArr)>0)
+                foreach($chatArr as $k=>$v){
+                    if($key == $k){
+                        $finalArr[$key] = $this->sortInnerArr($val,$v);
+                        break;
+                    }
+                    
+                    elseif($val[0]['DATE']>$v[0]['DATE']){
+                        $finalArr[$key] = $val;
+                        unset($messageArr[$key]);
+                        break;
+                    }
+                    
+                    else{
+                        if(array_key_exists($k, $messageArr)){
+                          $finalArr[$k] = $this->sortInnerArr($messageArr[$k],$v);
+                          $skip[] = $k; 
+                          unset($messageArr[$k]);
+                        }
+                        else
+                          $finalArr[$k] = $v;
+                        unset($chatArr[$k]);
+                    }
+                    if(count($finalArr)>=$limit)
+                        return $finalArr;
+                }
+                else{
+                    $finalArr[$key] = $val;
+                }
+            }
+            if(count($messageArr)==0 && count($finalArr) < $limit){
+                foreach ($chatArr as $key=>$val){
+                    if(count($finalArr)>=$limit)
+                        break;
+                    
+                    $finalArr[$key] = $chatArr[$val];
+                }
+            }
+            return $finalArr;
+        }
+        
+        private function sortInnerArr($messageInnerArr,$chatInnerArr){
+            foreach ($messageInnerArr as $key=>$val){
+                foreach($chatInnerArr as $k=>$v) {
+                    if($val['DATE'] > $v['DATE']){
+                        $finalInnerArr[] = $val;
+                        unset($messageInnerArr[$key]);
+                        break;
+                    }
+                    else{
+                        $finalInnerArr[] = $v;
+                        unset($chatInnerArr[$k]);
+                    }
+                }
+            }
+            if(count($messageInnerArr)>0){
+                foreach ($messageInnerArr as $key=>$val)
+                    $finalInnerArr[] = $val;
+            }
+            if(count($chatInnerArr)>0){
+                foreach ($chatInnerArr as $key=>$val)
+                    $finalInnerArr[] = $chatInnerArr[$val];
+            }
+            return $finalInnerArr;
+        }
 }
 ?>

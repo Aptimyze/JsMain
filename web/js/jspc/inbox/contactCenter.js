@@ -205,7 +205,7 @@ if(typeof response.searchid!="undefined")
                 setcontactCenterHeading(response);
 		dataForCCPagination(parseInt(response.total),parseInt(response.page_index),parseInt(response.no_of_results));
 		handleCCPagination(response);
-		if(response.total)
+		if(response.total && response.hidePaginationCount != 1)
 		{ 
 			$(".js-resultsCount").remove();
 			var countClass = "js-resultsCount";
@@ -542,7 +542,7 @@ function sendProcessCCRequest(requestParams,infoArr)
 				hideCommonLoader();
 				animationToTop();
 			}
-						
+                        
 			loadCCPageResponse(response);
 			jsLoadFlag = 1;
 			timeE = new Date().getTime();
