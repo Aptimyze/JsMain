@@ -78,6 +78,17 @@ chatConfig.Params = {
             "channel": 'pc'
         }
     },
+    //api config for non roster webservice
+    nonRosterListingApiConfig:{
+        //"apiUrl":"http://localhost:8190/listings/v1/discover", //cross domain issue later
+        "apiUrl":"http://localhost/api/v1/chat/getRoasterData", //pick dpp url from jsconstants
+        "dpp":{
+            "extraParams":{
+                //"type":"CHATDPP" //later uncomment
+                "type":"DPP"
+            }
+        }
+    },
     //api config for chat history
     chatHistoryApi: {
         "apiUrl": "/api/v1/chat/popChat",

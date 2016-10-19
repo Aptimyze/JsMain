@@ -11,6 +11,79 @@ var listingInputData = [],
     listingPhotoRequestCompleted = ",",
     localStorageExists = isStorageExist();
 
+/*pollForNonRosterListing
+function to poll for non roster webservice api 
+* @inputs:type
+*/
+function pollForNonRosterListing(type){
+    if(type == undefined || type == ""){
+        type = "dpp";
+    }
+    var postData = {};
+    postData["pageSource"] = "chat";
+    postData["channel"] = device;
+    postData["profileid"] = loggedInJspcUser; //comment later
+    if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraParams"] != "undefined") {
+        $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraParams"], function (k, v) {
+            postData[k] = v;
+        });
+    }
+    $.myObj.ajax({
+        url: chatConfig.Params.nonRosterListingApiConfig["apiUrl"],
+        dataType: 'json',
+        data: postData,
+        type: 'GET',
+        cache: false,
+        async: true,
+        beforeSend: function (xhr) {},
+        success: function (response) {
+            
+            response = {  //comment later
+"data": [{
+"profileid": "7470229",
+"username": "RTR6613",
+"profileChecksum": "7470229lr"
+},
+{
+"profileid": "5534752",
+"username": "TSV9607",
+"profileChecksum": "5534752lr"
+},
+{
+"profileid": "7868716",
+"username": "ZAZR5355",
+"profileChecksum": "7868716lr"
+},
+{
+"profileid": "8891522",
+"username": "ZZYZ9006",
+"profileChecksum": "8891522lr"
+},
+{
+"profileid": "1764127",
+"username": "YAS8573",
+"profileChecksum": "1764127lr"
+},
+{
+"profileid": "3599124",
+"username": "nokumarriage",
+"profileChecksum": "3599124lr"
+}],
+"header": {
+"status": 200,
+"errorMsg": ""
+},
+"debugInfo": null
+};
+            console.log("pollForNonRosterListing success",response);
+            strophieWrapper.onNonRosterListFetched(response,type);
+        },
+        error: function (xhr) {
+            console.log("pollForNonRosterListing error",xhr);
+            //return "error";
+        }
+    });
+}
 
 /*manageListingPhotoReqFlag
 function to set/reset listing photo request 
@@ -1371,6 +1444,7 @@ $(document).ready(function () {
                 objJsChat._loginStatus = 'N';
                 clearLocalStorage();
                 strophieWrapper.initialRosterFetched = false;
+                strophieWrapper.initialNonRosterFetched = false;
                 strophieWrapper.disconnect();
                 eraseCookie("chatAuth");
                 manageListingPhotoReqFlag("reset");
