@@ -22,6 +22,9 @@ class helpActions extends sfActions
       $this->email = $loginData["EMAIL"];
       if(MobileCommon::isNewMobileSite())
         {
+            if (strpos($_SERVER['HTTP_USER_AGENT'], 'JsAndWeb') > 1) {
+              $this->webView = 1;
+            }
             $this->setTemplate("JSMSHelp");
         }
         else

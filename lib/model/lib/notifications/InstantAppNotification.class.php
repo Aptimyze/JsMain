@@ -27,6 +27,7 @@ class InstantAppNotification
 		if($selfProfile)
 		{
 			$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey, $message);
+			// print_r($notificationDetails[0]);
 			$notificationData = $notificationDetails[0];
 			if(is_array($notificationData))
 			{

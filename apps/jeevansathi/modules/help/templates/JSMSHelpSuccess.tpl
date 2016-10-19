@@ -3,9 +3,11 @@
     <div class="perspective" id="perspective">
         <div class="" id="pcontainer">
         </div>
+        ~if $webView neq 1`
         <div id="hamburger" class="hamburgerCommon dn fullwid">	
             ~include_component('static', 'newMobileSiteHamburger')`	
         </div>
+        ~/if`
     </div>
         <!--heading:start-->
         <div id="overlayHead" class="bg1">
@@ -13,7 +15,11 @@
                 <div class="posrel">
                     <i id="backBtnSection" class="posabs mainsp arow2 lt0 dispnone"></i>
                     <i id="backBtnQues" class="posabs mainsp arow2 lt0 dispnone"></i>
+                    ~if $webView neq 1`
                     <i id="hamburgerIcon" class="mainsp baricon posabs lt0" hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i>
+                    ~else`
+                    <i id="pageBack" class="posabs mainsp arow2 lt0"></i>
+                    ~/if`
                     <div class="fontthin f20 white">Help</div>
                 </div>
             </div>
@@ -80,5 +86,9 @@ $(document).ready(function(){
     setInterval(function(){
         autoPopulateFreshdeskDetails(username,email);
     },100);
+    var webView = '~$webView`';
+    $("#pageBack").click(function(e){
+        window.location.href = "/profile/mainmenu.php";
+    });
 });
 </script>
