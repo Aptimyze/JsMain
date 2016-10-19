@@ -18,7 +18,9 @@
                     ~if $webView neq 1`
                     <i id="hamburgerIcon" class="mainsp baricon posabs lt0" hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i>
                     ~else`
-                    <i id="pageBack" class="posabs mainsp arow2 lt0"></i>
+                        ~if $andWebView eq 1`
+                            <i id="pageBack" class="posabs mainsp arow2 lt0"></i>
+                        ~/if`
                     ~/if`
                     <div class="fontthin f20 white">Help</div>
                 </div>
