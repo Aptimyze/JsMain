@@ -35,31 +35,31 @@ use FacebookAds\Enum\AbstractEnum;
  *
  */
 
-class BusinessFields extends AbstractEnum {
+class ProductCatalogPricingVariablesBatchFields extends AbstractEnum {
 
-  const CREATED_BY = 'created_by';
-  const CREATED_TIME = 'created_time';
-  const ID = 'id';
-  const LINK = 'link';
-  const NAME = 'name';
-  const PRIMARY_PAGE = 'primary_page';
-  const TIMEZONE_ID = 'timezone_id';
-  const TWO_FACTOR_TYPE = 'two_factor_type';
-  const UPDATED_BY = 'updated_by';
-  const UPDATED_TIME = 'updated_time';
+  const ERRORS = 'errors';
+  const ERRORS_TOTAL_COUNT = 'errors_total_count';
+  const HANDLE = 'handle';
+  const STATUS = 'status';
+  const FILE = 'file';
+  const PASSWORD = 'password';
+  const STANDARD = 'standard';
+  const UPDATE_ONLY = 'update_only';
+  const URL = 'url';
+  const USERNAME = 'username';
 
   public function getFieldTypes() {
     return array(
-      'created_by' => 'User',
-      'created_time' => 'datetime',
-      'id' => 'string',
-      'link' => 'string',
-      'name' => 'string',
-      'primary_page' => 'Object',
-      'timezone_id' => 'unsigned int',
-      'two_factor_type' => 'string',
-      'updated_by' => 'User',
-      'updated_time' => 'datetime',
+      'errors' => 'list<Object>',
+      'errors_total_count' => 'int',
+      'handle' => 'string',
+      'status' => 'string',
+      'file' => 'file',
+      'password' => 'string',
+      'standard' => 'Standard',
+      'update_only' => 'bool',
+      'url' => 'string',
+      'username' => 'string',
     );
   }
 }
