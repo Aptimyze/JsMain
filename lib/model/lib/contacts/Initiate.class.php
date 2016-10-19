@@ -631,7 +631,7 @@ public function getNegativeScoreForUser()
   {
     $senderRow=$this->contactHandler->getViewer();
     $receiverRow=$this->contactHandler->getViewed();
-    $receiverDpp = UserFilterCheck::getInstance($senderRow, $receiverRow)->getDppParameters();
+    $receiverDPP = UserFilterCheck::getInstance($senderRow, $receiverRow)->getDppParameters();
     $receiverProfileId=$receiverRow->getPROFILEID();
     $score=array('R'=>0,'A'=>0,'M'=>0);
 // RELIGION CHECK
