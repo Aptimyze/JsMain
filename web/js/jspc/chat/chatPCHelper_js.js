@@ -19,13 +19,13 @@ function clearNonRosterPollingInterval(type){
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
-                clearTimedOut(strophieWrapper.nonRosterClearInterval[key]);
+                clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
     }
     else{
         if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
-            clearTimedOut(strophieWrapper.nonRosterClearInterval[type]);
+            clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
         }
     }
 }
