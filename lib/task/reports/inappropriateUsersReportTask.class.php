@@ -32,9 +32,12 @@ EOF;
                 ini_set('max_execution_time', 0);
 		if(!sfContext::hasInstance())
 	         sfContext::createInstance($this->configuration);
-
+                    
                     $todayDate=date('Y-m-d',strtotime("-0 day"));
-                    $resultArr=(new MIS_INAPPROPRIATE_USERS_LOG('newjs_slave'))->getDataForADate($todayDate);
+                    $startDate=date('Y-m-d',strtotime("-7 day"));
+                    $masterDbObj=new MIS_INAPPROPRIATE_USERS_LOG();
+                    $masterDbObj->truncateTable($startDate);
+                    $resultArr=(new MIS_INAPPROPRIATE_USERS_LOG('newjs_slave'))->getDataForADate($startDate,$todayDate);
                     foreach ($resultArr as $key => $value) {
                         $Tarray[]=$value['TCOUNT'];
                     }

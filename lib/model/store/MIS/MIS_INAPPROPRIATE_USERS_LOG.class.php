@@ -24,17 +24,30 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
 	throw new jsException($e);
     }
   }
-  public function getDataForADate($date)
+  public function getDataForADate($startDate,$date)
   {
     try {  
-      $sql= "SELECT USERNAME,SUM(RELIGION_COUNT) AS RCOUNT,SUM(AGE_COUNT) AS ACOUNT,SUM(MSTATUS_COUNT) AS MCOUNT,SUM(TOTAL_SCORE) AS TCOUNT FROM MIS.INAPPROPRIATE_USERS_LOG WHERE DATE <= :DATE GROUP BY USERNAME";
+      $sql= "SELECT USERNAME,SUM(RELIGION_COUNT) AS RCOUNT,SUM(AGE_COUNT) AS ACOUNT,SUM(MSTATUS_COUNT) AS MCOUNT,SUM(TOTAL_SCORE) AS TCOUNT FROM MIS.INAPPROPRIATE_USERS_LOG WHERE DATE <= :EDATE AND DATE>=:SDATE GROUP BY USERNAME";
       $prep=$this->db->prepare($sql);
-      $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+      $prep->bindValue(":SDATE",$startDate,PDO::PARAM_STR);
+      $prep->bindValue(":EDATE",$date,PDO::PARAM_STR);
       $prep->execute();
       while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
         $records[] = $result;
       }
       return $records;
+    }
+    catch(PDOException $e){
+	throw new jsException($e);
+    }
+  }
+  public function truncateTable($startDate)
+  {
+    try {  
+      $sql= "DELETE FROM MIS.INAPPROPRIATE_USERS_LOG WHERE DATE <= :SDATE";
+      $prep=$this->db->prepare($sql);
+      $prep->bindValue(":SDATE",$startDate,PDO::PARAM_STR);
+      $prep->execute();
     }
     catch(PDOException $e){
 	throw new jsException($e);
