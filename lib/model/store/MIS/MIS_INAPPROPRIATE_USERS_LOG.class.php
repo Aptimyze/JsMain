@@ -21,7 +21,8 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
       $res1->execute();
     } 
     catch(PDOException $e){
-	throw new jsException($e);
+		jsException::nonCriticalError("lib/model/store/MIS/MIS_INAPPROPRIATE_USERS_LOG.class.php-->.$sql".$e);
+                        return '';
     }
   }
   public function getDataForADate($startDate,$date)
@@ -38,7 +39,8 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
       return $records;
     }
     catch(PDOException $e){
-	throw new jsException($e);
+		jsException::nonCriticalError("lib/model/store/MIS/MIS_INAPPROPRIATE_USERS_LOG.class.php-->.$sql".$e);
+                        return '';
     }
   }
   public function truncateTable($startDate)
@@ -50,8 +52,10 @@ class MIS_INAPPROPRIATE_USERS_LOG extends TABLE
       $prep->execute();
     }
     catch(PDOException $e){
-	throw new jsException($e);
-    }
+		jsException::nonCriticalError("lib/model/store/MIS/MIS_INAPPROPRIATE_USERS_LOG.class.php-->.$sql".$e);
+                        return '';
+
+        }
   }
   
 }
