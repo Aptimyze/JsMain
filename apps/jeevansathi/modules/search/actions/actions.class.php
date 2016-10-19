@@ -87,6 +87,14 @@ class searchActions extends sfActions
 			$request->setParameter("reverseDpp",'');
 			$this->searchBasedParam = 'partnermatches';
 		}
+		//This has been added to show last search Results
+		// elseif($request->getParameter("searchBasedParam")=='lastSearchResults' || $request->getParameter("lastSearchResults")==1)
+		// {
+		// 	$request->setParameter("lastSearchResults",'1');
+		// 	$this->searchBasedParam = 'lastSearchResults';
+		// }
+
+
 		$searchEngine = 'solr';
 		$outputFormat = 'array';
 		$searchId = $request->getParameter("searchId");
@@ -1409,7 +1417,6 @@ class searchActions extends sfActions
 		$resp = $inputValidateObj->getResponse();
     $featuredProfile=1;
 		//print_r($request->getParameterHolder()->getAll());
-
 	
 		/** Desktop loggedout case **/	
 		if(MobileCommon::isDesktop())
@@ -1417,7 +1424,7 @@ class searchActions extends sfActions
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
         	        if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID()=='')
 			{
-				if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts')) || $request->getParameter("dashboard")==1))
+				if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("lastSearchResults")==1 || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts','lastSearchResults')) || $request->getParameter("dashboard")==1))
 				{
 					$statusArr = ResponseHandlerConfig::$LOGOUT_PROFILE;
 					$respObj = ApiResponseHandler::getInstance();
@@ -1442,7 +1449,7 @@ class searchActions extends sfActions
 		}
                 elseif($resp["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
-                        $searchTypeArray = Array('twowaymatch','reverseDpp','justJoinedMatches','partnermatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches');
+                        $searchTypeArray = Array('twowaymatch','reverseDpp','justJoinedMatches','partnermatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches','lastSearchResults');
                         $searchType = $request->getParameter("searchBasedParam");
                         if(in_array($searchType,$searchTypeArray))
                         {
@@ -1498,7 +1505,7 @@ class searchActions extends sfActions
 				$statusArr = ResponseHandlerConfig::$SEARCH_EXPIRED_SEARCHID;
 			else
 			{
-				$this->stype = $SearchParamtersObj->getSEARCH_TYPE();
+				$this->stype = $SearchParamtersObj->getSEARCH_TYPE();				
 				$this->searchedGender = $SearchParamtersObj->getGENDER();
 				$this->getNoOfResultsRequired($callingSource,$SearchParamtersObj,$profileList);
 
@@ -1547,7 +1554,7 @@ class searchActions extends sfActions
 					{
 						$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);
 					}
-								
+		
 					if($SearchParamtersObj->getONLINE()==SearchConfig::$onlineSearchFlag)	
 					{
 						$noRelaxation = 1;
@@ -1694,7 +1701,7 @@ class searchActions extends sfActions
                 $respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray($statusArr);//print_r($resultArr);die;
                 $respObj->setResponseBody($resultArr);
-                $respObj->generateResponse();
+                $respObj->generateResponse();           
 		if($request->getParameter("useSfViewNone"))
 			return sfView::NONE;
 		die;

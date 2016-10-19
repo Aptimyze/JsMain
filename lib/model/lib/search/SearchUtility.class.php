@@ -102,7 +102,6 @@ class SearchUtility
 						else			
 							$alreadyInShowArr = $alreadyInShowArr1;
 					}
-
 					if($SearchParamtersObj->getMATCHALERTS_DATE_CLUSTER())
 					{
 						

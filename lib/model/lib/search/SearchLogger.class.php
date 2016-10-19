@@ -87,6 +87,7 @@ class SearchLogger extends SearchParamters
 			$paramArray["ID"]=$searchId;
 			$paramArray["PROFILEID"]=$this->pid;
                         $paramArray["SEARCH_CHANNEL"]=CommonFunction::getChannel();
+                        
                         $search_LATEST_SEARCHQUERYObj->insertOrReplace($paramArray); 
                        
 		}
@@ -151,7 +152,8 @@ class SearchLogger extends SearchParamters
                 if($stype)
                         $paramArray["SEARCH_TYPE"]=$stype;
                 $arr =  $search_LATEST_SEARCHQUERYObj->getSearchQuery($paramArray,$this->possibleSearchParamters);
-		if(is_array($arr))
+		      
+        if(is_array($arr))
                 {
                         foreach($arr as $field=>$value)
                         {
