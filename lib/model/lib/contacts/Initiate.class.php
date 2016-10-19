@@ -633,8 +633,6 @@ public function getNegativeScoreForUser()
     $receiverRow=$this->contactHandler->getViewed();
     $receiverDpp = UserFilterCheck::getInstance($senderRow, $receiverRow)->getDppParameters();
     $receiverProfileId=$receiverRow->getPROFILEID();
-    $dbObShard = JsDbSharding::getShardNo($receiverProfileId);
-    $jpartnerOb = new newjs_JPARTNER($dbObShard);
     $score=array('R'=>0,'A'=>0,'M'=>0);
 // RELIGION CHECK
     $religionExclude=array('1','4','7','9');
