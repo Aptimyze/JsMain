@@ -89,6 +89,9 @@ if ($profileids_arr) {
             $msg = "Dear User, {$servName} has been activated on your profile {$username}.";
             if ($phoneMob) {
                 $memHandlerObj->sendInstantSMS($profile, $phoneMob, $msg);
+                $smsDet = new newjs_SMS_DETAIL();
+                $date = date("Y-m-d H:i:s");
+                $smsDet->insert($profile, "I", "MEM_REN_ACT_CRON", $msg, $phoneMob, $date, "Y");
             }
             unset($username, $phoneMob, $details, $msg, $servAct, $serviceID, $servName);
         }
