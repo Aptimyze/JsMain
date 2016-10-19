@@ -640,7 +640,7 @@ public function getNegativeScoreForUser()
     $score=array('R'=>0,'A'=>0,'M'=>0);
 // RELIGION CHECK
     $religionExclude=array('1','4','7','9');
-    if(!(in_array($senderRow['RELIGION'],$religionExclude ) && in_array($receiverRow['RELIGION'],$religionExclude )))
+    if(!(in_array($senderRow->getRELIGION(),$religionExclude ) && in_array($receiverRow->getRELIGION(),$religionExclude )))
     {
         if($receiverDPP['RELIGION'])
         {
@@ -654,23 +654,26 @@ public function getNegativeScoreForUser()
     {
         $marriedArray=array('S','D','W','A','M');
         $unMarriedArray=array('N');
-        if(!( (in_array($senderRow['MSTATUS'],$marriedArray) && in_array($receiverRow['MSTATUS'],$marriedArray))
-        || (in_array($senderRow['MSTATUS'],$unMarriedArray) && in_array($receiverRow['MSTATUS'],$unMarriedArray))
+        $Rmstatus=$receiverRow->getMSTATUS();
+        $Smstatus=$senderRow->getMSTATUS();
+        if(!( (in_array($Smstatus,$marriedArray) && in_array($Rmstatus,$marriedArray))
+        || (in_array($Smstatus,$unMarriedArray) && in_array($Rmstatus,$unMarriedArray))
            ))
         {
-            if(!in_array($senderRow['MSTATUS'], $receiverDPP['MSTATUS']))
+            if(!in_array($Smstatus, $receiverDPP['MSTATUS']))
                     $score['M']=1;
             
         }     
         
     }
     // AGE DIFFERENCE CHECK
-    
-    if($receiverDPP['LAGE'] && $receiverDPP['HAGE'] && ($senderRow['AGE']<35 || $receiverRow['AGE']<35))
+    $Rage=$receiverRow->getAGE();
+    $Sage=$senderRow->getAGE();
+    if($receiverDPP['LAGE'] && $receiverDPP['HAGE'] && ($Sage<35 || $Rage<35))
     {
-        $ageDiff = $senderRow['AGE'] - $receiverRow['AGE'];
+        $ageDiff = $Sage - $Rage;
         if($ageDiff<0)$ageDiff=$ageDiff*(-1);
-        if($ageDiff>=10 && ($senderRow['AGE']<$receiverDPP['LAGE'] || $senderRow['AGE']>$receiverDPP['HAGE']))
+        if($ageDiff>=10 && ($Sage < $receiverDPP['LAGE'] || $Sage>$receiverDPP['HAGE']))
                     $score['A']=1;
     }
 
