@@ -69,14 +69,15 @@ class LoginV1Action extends sfActions
 						</script> ";
 						
 						echo $js_function;
-						die;
         			}
 					else{
 						$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_ACCESS);
 						$apiObj->generateResponse();
-						die;
 					}
         			//return 0;
+					$ip=CommonFunction::getIP();
+					$loginFailedObj->insertFailedLogin($email,$password,$_SERVER[HTTP_USER_AGENT],$ip);
+					die;
         		}
         	}
 
@@ -99,6 +100,8 @@ class LoginV1Action extends sfActions
 				if(MobileCommon::isDesktop() && !$response['success'])
 				{
 					$szToUrl = JsConstants::$siteUrl;
+					$ip=CommonFunction::getIP();
+					$loginFailedObj->insertFailedLogin($email,$password,$_SERVER[HTTP_USER_AGENT],$ip);
 					if($_SERVER['HTTPS'] && strlen($_SERVER['HTTPS']) && $_GET['fmPwdReset'])
 					{
 						$szToUrl = JsConstants::$ssl_siteUrl;
@@ -122,6 +125,8 @@ class LoginV1Action extends sfActions
 				}
 				else if(MobileCommon::isNewMobileSite() && !$response['success'])
 				{
+					$ip=CommonFunction::getIP();
+					$loginFailedObj->insertFailedLogin($email,$password,$_SERVER[HTTP_USER_AGENT],$ip);
 					$apiObj->setHttpArray(ResponseHandlerConfig::$CAPTCHA_UNVERIFIED);
 					$apiObj->generateResponse();
 					die;
