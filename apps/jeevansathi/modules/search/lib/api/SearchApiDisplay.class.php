@@ -645,7 +645,7 @@ class SearchApiDisplay
 	public function getProfilePhotoForMultipleUsers()
 	{
          $whitelistedPhotoTypes = array_keys(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR);
-	 if(!in_array($this->photoType,$whitelostedPhotoTypes))
+	 if(!in_array($this->photoType,$whitelistedPhotoTypes))
 		 SendMail::send_email("eshajain88@gmail.com,lavesh.rawat@gmail.com","apps/jeevansathi/modules/search/lib/api/SearchApiDisplay.class.php phototype not whitelisted and came as".$v,"SearchApiDisplay.class.php phototype not whitelisted");
  
 		$multiplePictureObj = new PictureArray($this->profileObjArr);

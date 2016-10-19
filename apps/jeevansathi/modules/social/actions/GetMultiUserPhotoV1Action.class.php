@@ -23,7 +23,7 @@ class GetMultiUserPhotoV1Action extends sfActions
 		$whitelistedPhotoTypes = array_keys(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR);
 		foreach($photoTypeArr as $k=>$v)
 		{
-			if(!in_array($v,$whitelostedPhotoTypes))
+			if(!in_array($v,$whitelistedPhotoTypes))
 				SendMail::send_email("eshajain88@gmail.com,lavesh.rawat@gmail.com","apps/jeevansathi/modules/social/actions/GetMultiUserPhotoV1Action.class.php phototype not whitelisted and came as".$v." for profile ".$pid,"GetMultiUserPhotoV1Action.class.php phototype not whitelisted");
 
 		}
