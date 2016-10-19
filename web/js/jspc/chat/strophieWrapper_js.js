@@ -4,7 +4,7 @@ var strophieWrapper = {
     Roster: {},
     initialRosterFetched: false,
     rosterDetailsKey: "rosterDetails",
-    useLocalStorage: false,
+    useLocalStorage: true,
     msgStates: {
         "INACTIVE": 'inactive',
         "ACTIVE": 'active',
@@ -234,6 +234,7 @@ var strophieWrapper = {
                         }
                     }
                     strophieWrapper.Roster[user_id] = rosterObj;
+                    
                     if (subscription == "to") {
                        //console.log("subcribing");
                         strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
@@ -270,6 +271,8 @@ strophieWrapper.sendPresence();
                 }
             }  
         }
+        //console.log("on roster update",user_id);
+        strophieWrapper.setRosterStorage(strophieWrapper.Roster);
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
         //return true;
     },
@@ -388,7 +391,17 @@ strophieWrapper.sendPresence();
 strophieWrapper.authorize(from);
 strophieWrapper.sendPresence();
 }
-	            strophieWrapper.updatePresence(user_id, chat_status);
+                //console.log("In onPresenceReceived",user_id,chat_status);
+                var pd = JSON.parse(getFromLocalStorage("presence_"+loggedInJspcUser));
+                var presenceData = {};
+                if(pd){
+                    presenceData = pd;
+                }
+                //console.log("****************NITISH****************");
+                presenceData[user_id] = chat_status;
+                setInLocalStorage("presence_"+loggedInJspcUser,JSON.stringify(presenceData));
+                //console.log(presenceData);
+	            //strophieWrapper.updatePresence(user_id, chat_status); //nitish commented
         	}
             //strophieWrapper.stropheLoggerPC("end of onPresenceReceived for " + user_id + "---" + chat_status);
             //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
@@ -474,8 +487,29 @@ strophieWrapper.sendPresence();
         //strophieWrapper.stropheLoggerPC("setting roster fetched flag");
         strophieWrapper.initialRosterFetched = true;
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
+        var data = strophieWrapper.getRosterStorage();
+        var lastUpdated = localStorage.getItem("clLastUpdated");
+        var d = new Date();
+        var useExisting = false;
+        if(lastUpdated){
+            var currentTime = d.getTime();
+            var timeDiff = (currentTime - lastUpdated); //Time diff in milliseconds
+            //console.log(timeDiff);
+            if(timeDiff < chatConfig.Params[device].listingRefreshTimeout){
+                console.log("Used exisiting list");
+                useExisting = true;
+            }
+        }
+        if(data && useExisting){
+            strophieWrapper.Roster = data;
+            //console.log("Used Existing listing");
+        }
+        else{
+            //console.log("Used new listing");
+            strophieWrapper.setRosterStorage(strophieWrapper.Roster);
+            localStorage.setItem("clLastUpdated",d.getTime());
+        }
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
-        strophieWrapper.setRosterStorage(strophieWrapper.Roster);
         setTimeout(function () {
           strophieWrapper.sendPresence();
         }, 1000);
@@ -563,14 +597,14 @@ strophieWrapper.sendPresence();
     //set listing data in roster
     setRosterStorage: function (rosterData) {
         if (strophieWrapper.useLocalStorage == true) {
-            localStorage.setItem('chatListing', JSON.stringify(rosterData));
+            localStorage.setItem('chatListing'+loggedInJspcUser, JSON.stringify(rosterData));
         }
     },
     //fetch roster data from localstorage
     getRosterStorage: function () {
         var data;
         if (strophieWrapper.useLocalStorage == true) {
-            data = JSON.parse(localStorage.getItem('chatListing'));
+            data = JSON.parse(localStorage.getItem('chatListing'+loggedInJspcUser));
         } else data = null;
         return data;
     },

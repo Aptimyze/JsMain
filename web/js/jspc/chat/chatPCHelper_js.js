@@ -1192,6 +1192,27 @@ function setLogoutClickLocalStorage(key){
     }
 }
 
+function getFromLocalStorage(key){
+    return localStorage.getItem(key);
+}
+
+function setInLocalStorage(key, value){
+    localStorage.setItem(key, value);
+}
+
+function updatePresenceAfterInterval(){
+    //console.log("In updatePresenceAfterInterval");
+    var presenceData = JSON.parse(getFromLocalStorage("presence_"+loggedInJspcUser));
+    if(presenceData) {
+        var rosterDetails = JSON.parse(getFromLocalStorage('chatListing'+loggedInJspcUser));
+        $.each(presenceData, function (uid, chatStatus) {
+            strophieWrapper.updatePresence(uid, chatStatus);
+            rosterDetails[uid]["rosterDetails"]["chat_status"] = chatStatus;
+        });
+        setInLocalStorage('chatListing'+loggedInJspcUser,JSON.stringify(rosterDetails));
+    }
+}
+
 $(document).ready(function () {
     //console.log("Doc ready");
     if(typeof loggedInJspcUser!= "undefined")
@@ -1464,7 +1485,9 @@ $(document).ready(function () {
             });
         }
         objJsChat.start();
-        
+        setInterval(function(){
+            updatePresenceAfterInterval();
+        },chatConfig.Params[device].listingRefreshTimeout);
     }
 
 });
