@@ -109,10 +109,11 @@ class NEWJS_ASTRO extends TABLE {
         $res = $this->db->prepare($sql);
         $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
         $res->execute();
+        JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
         if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
             return $result['COUNT'];
         }
-        JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+        
         return 0;
     }
     //It Also checks in screening

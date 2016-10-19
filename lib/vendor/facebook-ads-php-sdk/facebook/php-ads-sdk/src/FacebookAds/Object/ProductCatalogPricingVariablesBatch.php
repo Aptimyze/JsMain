@@ -22,9 +22,14 @@
  *
  */
 
-namespace FacebookAds\Object\Fields;
+namespace FacebookAds\Object;
 
-use FacebookAds\Enum\AbstractEnum;
+use FacebookAds\ApiRequest;
+use FacebookAds\Cursor;
+use FacebookAds\Http\RequestInterface;
+use FacebookAds\TypeChecker;
+use FacebookAds\Object\Fields\ProductCatalogPricingVariablesBatchFields;
+use FacebookAds\Object\Values\ProductCatalogPricingVariablesBatchStandardValues;
 
 /**
  * This class is auto-genereated.
@@ -35,31 +40,24 @@ use FacebookAds\Enum\AbstractEnum;
  *
  */
 
-class BusinessFields extends AbstractEnum {
+class ProductCatalogPricingVariablesBatch extends AbstractObject {
 
-  const CREATED_BY = 'created_by';
-  const CREATED_TIME = 'created_time';
-  const ID = 'id';
-  const LINK = 'link';
-  const NAME = 'name';
-  const PRIMARY_PAGE = 'primary_page';
-  const TIMEZONE_ID = 'timezone_id';
-  const TWO_FACTOR_TYPE = 'two_factor_type';
-  const UPDATED_BY = 'updated_by';
-  const UPDATED_TIME = 'updated_time';
-
-  public function getFieldTypes() {
-    return array(
-      'created_by' => 'User',
-      'created_time' => 'datetime',
-      'id' => 'string',
-      'link' => 'string',
-      'name' => 'string',
-      'primary_page' => 'Object',
-      'timezone_id' => 'unsigned int',
-      'two_factor_type' => 'string',
-      'updated_by' => 'User',
-      'updated_time' => 'datetime',
-    );
+  protected function getEndpoint() {
+    return 'pricing_variables_batch';
   }
+
+  /**
+   * @return ProductCatalogPricingVariablesBatchFields
+   */
+  public static function getFieldsEnum() {
+    return ProductCatalogPricingVariablesBatchFields::getInstance();
+  }
+
+  protected static function getReferencedEnums() {
+    $ref_enums = array();
+    $ref_enums['Standard'] = ProductCatalogPricingVariablesBatchStandardValues::getInstance()->getValues();
+    return $ref_enums;
+  }
+
+
 }
