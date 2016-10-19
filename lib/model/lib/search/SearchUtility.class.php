@@ -52,7 +52,7 @@ class SearchUtility
 				{
 					/* ignored profiles two way */
 					$IgnoredProfilesObj = new IgnoredProfiles();
-					$hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid,$seperator)." ";
+					$hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid,$seperator);
 
 					/* contacted profiles */
 					$Obj = new ContactsRecords;
