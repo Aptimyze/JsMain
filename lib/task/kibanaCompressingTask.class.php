@@ -67,7 +67,8 @@ EOF;
         {
             $arrChannels[$module['key']] = $module['doc_count'];
         }
-            
+            $timestamp = $date->format('MMM dd HH:mm:ss');
+            $arrChannels['@timestamp'] = [$timestamp];  
         
          $params = [
             "query"=> [
@@ -93,7 +94,8 @@ EOF;
         {
             $arrDomain[$module['key']] = $module['doc_count'];
         }
-
+        $timestamp = $date->format('Y.m.d H:i:s');
+            $arrDomain['@timestamp'] = [$timestamp];
 
          $params = [
             "query"=> [
@@ -120,7 +122,8 @@ EOF;
         {
             $TypeOfError[$module['key']] = $module['doc_count'];
         }
-
+        $timestamp = $date->format('Y.m.d H:i:s');
+            $TypeOfError['@timestamp'] = [$timestamp];
 
          $params = [
             "query"=> [
@@ -148,7 +151,8 @@ EOF;
             $arrHostname[$module['key']] = $module['doc_count'];
         }
 
-
+        $timestamp = $date->format('Y.m.d H:i:s');
+            $arrHostname['@timestamp'] = [$timestamp];
 
          $params = [
             "query"=> [
@@ -175,7 +179,8 @@ EOF;
         {
             $arrmoduleName[$module['key']] = $module['doc_count'];
         }
-
+        $timestamp = $date->format('Y.m.d H:i:s');
+            $arrmoduleName['@timestamp'] = [$timestamp];
 
          $params = [
             "query"=> [
@@ -202,7 +207,8 @@ EOF;
         {
             $arrLogType[$module['key']] = $module['doc_count'];
         }
-        
+        $timestamp = $date->format('Y.m.d H:i:s');
+            $arrLogType['@timestamp'] = [$timestamp];
              
 
          $params = [
@@ -231,7 +237,8 @@ EOF;
             $arrApiVersion[$module['key']] = $module['doc_count'];
         }
 
-           
+           $timestamp = $date->format('Y.m.d H:i:s');
+            $arrApiVersion['@timestamp'] = [$timestamp];
 
          $params = [
             "query"=> [
@@ -258,7 +265,8 @@ EOF;
         {
             $arrActionName[$module['key']] = $module['doc_count'];
         }
-       
+       $timestamp = $date->format('Y.m.d H:i:s');
+            $arrActionName['@timestamp'] = [$timestamp];
 
          $params = [
             "query"=> [
@@ -285,6 +293,8 @@ EOF;
         {
             $arrrequestURI[$module['key']] = $module['doc_count'];
         }
+        $timestamp = $date->format('Y.m.d H:i:s');
+            $arrrequestURIs['@timestamp'] = [$timestamp];
                 
 
         $finalArrayToWrite['arrChannels'] = json_encode($arrChannels);
@@ -297,8 +307,8 @@ EOF;
         $finalArrayToWrite['arrrequestURI'] = json_encode($arrrequestURI);
         $finalArrayToWrite['arrLogType'] = json_encode($arrLogType); 
 
-        $arrToWrite['DESCRIPTION'] = "This is data from now-{$hoursNow}h  to now-{$ltHour}h \n ";
-        $arrToWrite['DATA'] = $finalArrayToWrite;
+      //  $arrToWrite['DESCRIPTION'] = "This is data from now-{$hoursNow}h  to now-{$ltHour}h \n ";
+//        $arrToWrite['DATA'] = $finalArrayToWrite;
               
         if (false === is_dir($dirPath)) {
             mkdir($dirPath,0777,true);
