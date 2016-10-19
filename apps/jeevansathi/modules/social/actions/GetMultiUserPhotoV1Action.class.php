@@ -19,7 +19,14 @@ class GetMultiUserPhotoV1Action extends sfActions
 		*/
 		$pid = $request->getParameter("pid");
 		$photoType =  $request->getParameter("photoType");
+		$photoTypeArr = explode(",",$photoType);
+		$whitelistedPhotoTypes = array_keys(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR);
+		foreach($photoTypeArr as $k=>$v)
+		{
+			if(!in_array($v,$whitelostedPhotoTypes))
+				SendMail::send_email("eshajain88@gmail.com,lavesh.rawat@gmail.com","apps/jeevansathi/modules/social/actions/GetMultiUserPhotoV1Action.class.php phototype not whitelisted and came as".$v." for profile ".$pid,"GetMultiUserPhotoV1Action.class.php phototype not whitelisted");
 
+		}
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$inputValidateObj->validateGetMultiUserPhotoV1Action($request);
 		$finalArr = $inputValidateObj->getResponse();
@@ -92,7 +99,6 @@ class GetMultiUserPhotoV1Action extends sfActions
 						$profileId=0;
 					if($photoObj)
 					{
-						$photoTypeArr = explode(",",$photoType);
 						foreach($photoTypeArr as $k=>$v)
 						{
 							eval('$temp =$photoObj->get'.$v.'();');
