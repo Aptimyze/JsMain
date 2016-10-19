@@ -644,11 +644,10 @@ public function getNegativeScoreForUser()
     {
         if($receiverDPP['RELIGION'])
         {
-            if(!in_array($senderRow['RELIGION'],$receiverDPP['RELIGION']))
+            if(!in_array($senderRow->getRELIGION(),$receiverDPP['RELIGION']))
                 $score['R']=1;
         }        
     }
-    
  // MARITAL STATUS CHECK
     if($receiverDPP['MSTATUS'])
     {
