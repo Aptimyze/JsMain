@@ -783,7 +783,7 @@ die;
 	*/
 	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
 		$chatNotAvailModuleArr = ["membership","register","phone","social","settings"];
-        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404"];
+        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp"];
 		$showChat = 1;
 		if(!$loggedIn){
 			$showChat = 0;
