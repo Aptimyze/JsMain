@@ -117,7 +117,7 @@ EOF;
                         }
                         $this->sendJunkCharacterMail($profileId,$actionTaken);   
                         $instantNotificationObj = new InstantAppNotification("INCOMPLETE_SCREENING");
-                        $instantNotificationObj->sendNotification($pid);
+                        $instantNotificationObj->sendNotification($profileId);
                     }
                 }
             }
