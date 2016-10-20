@@ -19,13 +19,13 @@ function clearNonRosterPollingInterval(type){
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
-                clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
+                clearInterval(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
     }
     else{
         if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
-            clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
+            clearInterval(strophieWrapper.nonRosterClearInterval[type]);
         }
     }
 }
@@ -104,13 +104,72 @@ function pollForNonRosterListing(type){
             //return "error";
         }
     });
-    strophieWrapper.nonRosterClearInterval[type] = setTimeout(function(){
-                                                                    //console.log("calling",type);
-                                                                    pollForNonRosterListing(type);
+    strophieWrapper.nonRosterClearInterval[type] = setInterval(function(){
+                                                                    console.log("calling pollForNonRosterPresence",type);
+                                                                    pollForNonRosterPresence();
                                                                 },chatConfig.Params.nonRosterListingApiConfig[type]["pollingFreq"]
                                                         );
         
 }
+
+/*pollForNonRosterPresence
+function to poll for non roster presence api 
+* @inputs:inputParams(optional)
+*/
+function pollForNonRosterPresence(inputParams){
+    console.log("in pollForNonRosterPresence",inputParams);
+    var postData = {};
+    postData["pageSource"] = "chat";
+    postData["channel"] = device;
+    postData["profileid"] = loggedInJspcUser; //comment later
+    postData["type"] = "DPP"; //comment later
+    if (typeof inputParams != "undefined") {
+        $.each(inputParams, function (k1, v1) {
+            postData[k1] = v1;
+        });
+    }
+    if (typeof chatConfig.Params.nonRosterPresenceApiConfig["extraParams"] != "undefined") {
+        $.each(chatConfig.Params.nonRosterPresenceApiConfig["extraParams"], function (k, v) {
+            postData[k] = v;
+        });
+    }
+    $.myObj.ajax({
+        url: chatConfig.Params.nonRosterPresenceApiConfig["apiUrl"],
+        dataType: 'json',
+        data: postData,
+        type: 'GET',
+        cache: false,
+        async: true,
+        beforeSend: function (xhr) {},
+        success: function (response) {
+            
+            response = { //comment later
+            "data": ["11813265",
+                "14598357",
+                "13299313",
+                "11745423",
+                "8808156",
+                "11374719",
+                "11042397",
+                "7542972",
+                "10837691",
+                "11001692",
+                "7671854"],
+            "debugInfo": null,
+            "header": {
+            "status": 200,
+            "errorMsg": ""
+            }
+            };
+            console.log("pollForNonRosterPresence success",response);
+        },
+        error: function (xhr) {
+            console.log("pollForNonRosterPresence error",xhr);
+            //return "error";
+        }
+    });    
+}
+
 
 /*manageListingPhotoReqFlag
 function to set/reset listing photo request 
