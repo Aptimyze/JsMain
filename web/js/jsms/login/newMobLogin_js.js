@@ -62,8 +62,7 @@ $("#loginButton").bind(clickEventType,function(){
 									  {
 										
 										captchaShow=1;
-										ShowTopDownError(result.responseMessage);
-										return 0;
+                                        errorMes=result.responseMessage;
 									  }
 //								  }
 								}
@@ -197,11 +196,8 @@ $(window).load(function()
 	
 	 if(typeof(captchaShow)!="undefined")
     {
-		
-		if(!is_android){
 			if(captchaShow==1)
 				createCaptcha();
-		}
     }
 
 });
