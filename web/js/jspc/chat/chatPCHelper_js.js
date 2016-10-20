@@ -39,7 +39,7 @@ function pollForNonRosterListing(type){
     if(type == undefined || type == ""){
         type = "dpp";
     }
-    var postData = {};
+    var postData = {},outputProfileIds = [];
     postData["pageSource"] = "chat";
     postData["channel"] = device;
     postData["profileid"] = loggedInJspcUser; //comment later
@@ -95,9 +95,11 @@ function pollForNonRosterListing(type){
 },
 "debugInfo": null
 };
-            console.log("pollForNonRosterListing success",response);
-            //add in listing, after non roster list has been fetched
-            strophieWrapper.onNonRosterListFetched(response,type);
+            if(response["header"]["status"] == 200){
+                console.log("pollForNonRosterListing success",response);
+                //add in listing, after non roster list has been fetched
+                strophieWrapper.onNonRosterListFetched(response,type);
+            }
         },
         error: function (xhr) {
             console.log("pollForNonRosterListing error",xhr);
@@ -106,10 +108,41 @@ function pollForNonRosterListing(type){
     });
     strophieWrapper.nonRosterClearInterval[type] = setInterval(function(){
                                                                     console.log("calling pollForNonRosterPresence",type);
-                                                                    pollForNonRosterPresence();
+                                                                    //fetch current profileids belonging to given group
+                                                                    var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
+                                                                    pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
                                                                 },chatConfig.Params.nonRosterListingApiConfig[type]["pollingFreq"]
                                                         );
         
+}
+
+/*fetchSelectedPoolIds
+function to get selected profileids based on category and groupid 
+* @inputs:inputs
+*/
+function fetchSelectedPoolIds(inputs){
+    console.log("in fetchSelectedPoolIds",inputs);
+    var pfids = [];
+    if(inputs != undefined){
+        console.log(inputs["category"] == undefined || inputs["category"] == "nonRoster");
+        console.log(strophieWrapper.NonRoster);
+        if(inputs["category"] == undefined || inputs["category"] == "nonRoster"){
+            $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
+                console.log(nodeObj);
+                if(nodeObj[strophieWrapper.rosterDetailsKey]["groups"][0] == inputs["groupid"]){
+                    pfids.push(profileid);
+                }
+            });
+        }
+        if(inputs["category"] == undefined || inputs["category"] == "roster"){
+            $.each(strophieWrapper.Roster,function(profileid,nodeObj){
+                if(nodeObj[strophieWrapper.rosterDetailsKey]["groups"][0] == inputs["groupid"]){
+                    pfids.push(profileid);
+                }
+            });
+        }
+    }
+    return pfids;
 }
 
 /*pollForNonRosterPresence
@@ -117,8 +150,8 @@ function to poll for non roster presence api
 * @inputs:inputParams(optional)
 */
 function pollForNonRosterPresence(inputParams){
-    console.log("in pollForNonRosterPresence",inputParams);
-    var postData = {};
+    console.log("in pollForNonRosterPresence1",inputParams);
+    var postData = {},checkForPassedProfilesOnly = false;
     postData["pageSource"] = "chat";
     postData["channel"] = device;
     postData["profileid"] = loggedInJspcUser; //comment later
@@ -127,49 +160,51 @@ function pollForNonRosterPresence(inputParams){
         $.each(inputParams, function (k1, v1) {
             postData[k1] = v1;
         });
-    }
-    if (typeof chatConfig.Params.nonRosterPresenceApiConfig["extraParams"] != "undefined") {
-        $.each(chatConfig.Params.nonRosterPresenceApiConfig["extraParams"], function (k, v) {
-            postData[k] = v;
-        });
-    }
-    $.myObj.ajax({
-        url: chatConfig.Params.nonRosterPresenceApiConfig["apiUrl"],
-        dataType: 'json',
-        data: postData,
-        type: 'GET',
-        cache: false,
-        async: true,
-        beforeSend: function (xhr) {},
-        success: function (response) {
-            
-            response = { //comment later
-            "data": ["11813265",
-                "14598357",
-                "13299313",
-                "11745423",
-                "8808156",
-                "11374719",
-                "11042397",
-                "7542972",
-                "10837691",
-                "11001692",
-                "7671854"],
-            "debugInfo": null,
-            "header": {
-            "status": 200,
-            "errorMsg": ""
-            }
-            };
-            console.log("pollForNonRosterPresence success",response);
-        },
-        error: function (xhr) {
-            console.log("pollForNonRosterPresence error",xhr);
-            //return "error";
+        if(inputParams["checkForPassedProfilesOnly"] == true){
+            checkForPassedProfilesOnly = true;
         }
-    });    
+    }
+    if(checkForPassedProfilesOnly == false || inputParams["pfids"].length > 0){
+        if (typeof chatConfig.Params.nonRosterPresenceApiConfig["extraParams"] != "undefined") {
+            $.each(chatConfig.Params.nonRosterPresenceApiConfig["extraParams"], function (k, v) {
+                postData[k] = v;
+            });
+        }
+        $.myObj.ajax({
+            url: chatConfig.Params.nonRosterPresenceApiConfig["apiUrl"],
+            dataType: 'json',
+            data: postData,
+            type: 'GET',
+            cache: false,
+            async: true,
+            beforeSend: function (xhr) {},
+            success: function (response) {
+                    response = { //comment later
+                        "data": ["3599124","7868716","4121402"],
+                        "debugInfo": null,
+                        "header": {
+                        "status": 200,
+                        "errorMsg": ""
+                    }
+                };
+                if(response["header"]["status"] == 200){
+                    console.log("pollForNonRosterPresence success",response);
+                    //process presence data of non roster profiles after success
+                    onNonRosterPresenceFetched(response["data"]);
+                }
+            },
+            error: function (xhr) {
+                console.log("pollForNonRosterPresence error",xhr);
+                //return "error";
+            }
+        });  
+    }  
 }
 
+
+function onNonRosterPresenceFetched(presenceData){
+    console.log("in onNonRosterPresenceFetched",presenceData);
+}
 
 /*manageListingPhotoReqFlag
 function to set/reset listing photo request 
