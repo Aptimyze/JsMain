@@ -405,9 +405,9 @@ strophieWrapper.sendPresence();
                 //console.log("Bassi",data["1"]);
                 console.log(strophieWrapper.initialRosterFetched);
                 presenceData[user_id] = chat_status;
-                console.log("username",user_id,chat_status);
+                //console.log("username",user_id,chat_status);
                 setInLocalStorage("presence_"+loggedInJspcUser,JSON.stringify(presenceData));
-                console.log(presenceData);
+                //console.log(presenceData);
                 if(strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] == true){
                     console.log("New case");
                     strophieWrapper.updatePresence(user_id, chat_status);
@@ -498,7 +498,7 @@ strophieWrapper.sendPresence();
         //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster);
         //strophieWrapper.stropheLoggerPC("setting roster fetched flag");
         strophieWrapper.initialRosterFetched = true;
-        console.log("Initial roster set to true");
+        //console.log("Initial roster set to true");
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         var data = strophieWrapper.getRosterStorage();
         var lastUpdated = localStorage.getItem("clLastUpdated");
@@ -515,14 +515,14 @@ strophieWrapper.sendPresence();
         }
         if(data && useExisting){
             strophieWrapper.Roster = data;
-            console.log("Used Existing listing");
+            //console.log("Used Existing listing");
         }
         else{
-            console.log("Used new listing");
+            //console.log("Used new listing");
             strophieWrapper.setRosterStorage(strophieWrapper.Roster);
             localStorage.setItem("clLastUpdated",d.getTime());
         }
-        console.log(strophieWrapper.Roster);
+        //console.log(strophieWrapper.Roster);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
         setTimeout(function () {
           strophieWrapper.sendPresence();

@@ -1201,7 +1201,7 @@ function setInLocalStorage(key, value){
 }
 
 function updatePresenceAfterInterval(){
-    console.log("In updatePresenceAfterInterval");
+    //console.log("In updatePresenceAfterInterval");
     var presenceData = JSON.parse(getFromLocalStorage("presence_"+loggedInJspcUser));
     if(presenceData) {
         var rosterDetails = JSON.parse(getFromLocalStorage('chatListing'+loggedInJspcUser));
@@ -1488,7 +1488,7 @@ $(document).ready(function () {
         updatePresenceIntervalId = setInterval(function(){
             updatePresenceAfterInterval();
         },chatConfig.Params[device].listingRefreshTimeout);
-        console.log(updatePresenceIntervalId);
+        //console.log(updatePresenceIntervalId);
     }
 
 });
