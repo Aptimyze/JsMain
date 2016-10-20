@@ -34,6 +34,7 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                         $this->setLLAST_LOGIN_DT($this->LAST_LOGGEDIN_STARTFROM);
                         $this->setHLAST_LOGIN_DT($endDate);
                 }
+                $this->setShowFilteredProfiles('N');
         }
         /**
          * Function to set sort order and results count
