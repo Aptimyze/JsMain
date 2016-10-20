@@ -295,7 +295,8 @@ JsChat.prototype = {
             }
             else {
                 $('.js-htab').fadeOut('slow').promise().done(function() {
-                    $('.show' + param).fadeIn('slow')
+                    $('.show' + param).fadeIn('slow');
+                    $(curElem._scrollDivId).mCustomScrollbar("scrollTo",0,{dur:0,scrollEasing:"mcsEaseInOut"});
                 }); 
             }
             /*$('.js-htab').fadeOut('slow').promise().done(function () {
