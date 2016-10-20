@@ -204,6 +204,9 @@ search_rule_just_joined:
 search_rule11_twoway:
   url:  /search/twoway
   param: {module: search, action:perform,searchBasedParam:twowaymatch}
+search_rule11_match_of_day:
+  url:  /search/matchofday
+  param: {module: search, action:perform,searchBasedParam:matchofday}
 
 search_rule12_malerts:
   url:  /search/matchalerts

@@ -133,5 +133,8 @@ class SearchTypesEnums
         const PC_CHAT_NEW = 'PCN';
         const kundliAlertMailer = "KAM";
         const EXCLUSIVE_SERVICE2_MAILER_STYPE = 'ES2M';
+	const AndroidMatchOfDay = "AMD";
+	const IOSMatchOfDay = "IMD";
+	const MatchOfDay = "MD";
 }
 ?>

@@ -145,5 +145,12 @@ class SearchJSIOS extends SearchJS
                 }
                 return $clustersToShow;
         }
+        /**
+        * getMatchOfDay.
+        */
+        public static function getSearchTypeMatchOfDay()
+        {
+                 return SearchTypesEnums::IOSMatchOfDay;
+        }
 }
 ?>
