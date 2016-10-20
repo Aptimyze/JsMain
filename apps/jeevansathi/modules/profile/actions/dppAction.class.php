@@ -221,7 +221,6 @@ class dppAction extends sfAction {
                                          {
                                          	$this->mutualMatchCount = $vl["value"];
                                          }
-                                            
 
                                         }
 

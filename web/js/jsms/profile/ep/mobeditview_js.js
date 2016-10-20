@@ -57,11 +57,11 @@ var mobEditPage=(function(){
 
                     if ( parseInt($("#mutualMatchCountMobile").text()) > 100 )
                     {
-                      $("#mutualMatchCountMobile").addClass("colrw");
+                    	$("#mutualMatchCountMobile").css("background-color","#374a5b"); 
                     }
                     else
                     {
-                      $("#mutualMatchCountMobile").addClass("color2"); 
+                       	$("#mutualMatchCountMobile").css("background-color","#d9475c"); 
                     }
 
 				}

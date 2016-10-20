@@ -239,7 +239,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$educationValues=$this->profile->getEducationDetail("onlyValues");
 		if($educationValues instanceOf ProfileComponent)
 			unset($educationValues);
-		$education = $this->profile->getEducationDetail();
+		$education = $this->profile->getEducationDetail(1);
 		
 		//your info
 		$eduArr[EDUCATION][outerSectionName]="About My Education";
@@ -260,11 +260,11 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
 		//{
 			//if(!$isPG)
-			//$education->PG_DEGREE="N_B";
-			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education->PG_DEGREE,$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"),$this->dropdown,'','','',!$showPg);
+			//$education["PG_DEGREE"]="N_B";
+			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education["PG_DEGREE"],$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"),$this->dropdown,'','','',!$showPg);
 			//if(!$isPG)
-			//$education->PG_COLLEGE="N_B";
-			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education->PG_COLLEGE,"",$this->getApiScreeningField("PG_COLLEGE"),$this->text,'','','',!$isPG);
+			//$education["PG_COLLEGE"]="N_B";
+			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education["PG_COLLEGE"],"",$this->getApiScreeningField("PG_COLLEGE"),$this->text,'','','',!$isPG);
 		//}
 		//else
 		//{
@@ -281,16 +281,16 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 			if($this->profile->getEDU_LEVEL_NEW()==23 || $this->profile->getEDU_LEVEL_NEW()==24)
 				$isUG=0;
 			//if(!$isUG)
-			//$education->UG_DEGREE='N_B';	
-			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_UG","Graduation Degree" , $education->UG_DEGREE,$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"),$this->dropdown,"","","",!$isUG);
+			//$education["UG_DEGREE"]='N_B';	
+			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_UG","Graduation Degree" , $education["UG_DEGREE"],$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"),$this->dropdown,"","","",!$isUG);
 			//if(!$isUG)
-			//	$education->COLLEGE="N_B";
-			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("COLLEGE","Graduation College" , $education->COLLEGE,"",$this->getApiScreeningField("COLLEGE"),$this->text,'','','',!$isUG);
+			//	$education["COLLEGE"]="N_B";
+			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("COLLEGE","Graduation College" , $education["COLLEGE"],"",$this->getApiScreeningField("COLLEGE"),$this->text,'','','',!$isUG);
 		//}
 		//else
 		//{
 		//}
-		$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("SCHOOL","School Name" , $education->SCHOOL,"",$this->getApiScreeningField("SCHOOL"),$this->text);
+		$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("SCHOOL","School Name" , $education["SCHOOL"],"",$this->getApiScreeningField("SCHOOL"),$this->text);
 
 		return $eduArr;
 	}
@@ -746,8 +746,15 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		
 
 		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_COUNTRY","Country",trim($jpartnerObj->getDecoratedPARTNER_COUNTRYRES()),$szCountry,$this->getApiScreeningField("PARTNER_COUNTRYRES"),$this->dropdown,'',1,'dppCountry');
+
+		$count_matches = SearchCommonFunctions::getMyDppMatches("","",'',"",'',"","",1)["CNT"];
+
+	    if ( !isset($count_matches))
+	    {
+	      $count_matches = 0;
+	    }
 		
-		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_MATCHCOUNT","","",(string)SearchCommonFunctions::getMyDppMatches("","",'',"",'',"","",1)["CNT"],"","",'',1,"");
+		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_MATCHCOUNT","","",(string)$count_matches,"","",'',1,"");
 
 
 

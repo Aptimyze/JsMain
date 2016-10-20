@@ -295,11 +295,11 @@ $(".chosen-container .chosen-results li").addClass("chosenfloat").removeClass("c
 
 if ( parseInt($("#mutualMatchCount").text()) > 100 )
 {
-  $("#mutualMatchCount").addClass("colrw");
+  $("#mutualMatchCount").css("background-color","#374a5b"); 
 }
 else
 {
-  $("#mutualMatchCount").addClass("colr5"); 
+  $("#mutualMatchCount").css("background-color","#d9475c"); 
 }
 
 
@@ -338,7 +338,7 @@ if(isBrowserIE() === false)
   });
 
 
-
+    isScrolledIntoView();
 
   $(document).on("scroll", isScrolledIntoView);
 });
@@ -515,11 +515,11 @@ function saveSectionsFields(sectionId){
 
                     if ( parseInt($("#mutualMatchCount").text()) > 100 )
                     {
-                      $("#mutualMatchCount").addClass("colrw");
+                        $("#mutualMatchCount").css("background-color","#374a5b"); 
                     }
                     else
                     {
-                      $("#mutualMatchCount").addClass("colr5"); 
+                        $("#mutualMatchCount").css("background-color","#d9475c"); 
                     }
                  }
               }           

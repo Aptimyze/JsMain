@@ -209,7 +209,7 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
       $educationValues = (array) $educationValues;
     }
     
-		$education = $this->profile->getEducationDetail();
+		$education = $this->profile->getEducationDetail(1);
 		
 		
 		$eduArr[]=$this->getApiFormatArray("EDUCATION","About My Education" ,$this->profile->getDecoratedEducationInfo(),$this->profile->getEDUCATION(),$this->getApiScreeningField("EDUCATION"));
@@ -218,11 +218,11 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
 		//highest degree should in a pg degree
 		if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education->PG_DEGREE,$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education["PG_DEGREE"],$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
 		
-			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education->PG_COLLEGE,$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education["PG_COLLEGE"],$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
       
-      $eduArr[]=$this->getApiFormatArray("OTHER_PG_DEGREE","Other PG Degree",$education->OTHER_PG_DEGREE,$educationValues['OTHER_PG_DEGREE'],$this->getApiScreeningField("OTHER_PG_DEGREE"));
+      $eduArr[]=$this->getApiFormatArray("OTHER_PG_DEGREE","Other PG Degree",$education["OTHER_PG_DEGREE"],$educationValues['OTHER_PG_DEGREE'],$this->getApiScreeningField("OTHER_PG_DEGREE"));
 		}
 		else
 		{
@@ -233,11 +233,11 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
 		//highest degree should not be high school or trade school
 		if(!($this->profile->getEDU_LEVEL_NEW()=="23" ||$this->profile->getEDU_LEVEL_NEW()=="24"))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , $education->UG_DEGREE,$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , $education["UG_DEGREE"],$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
 		
-			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education->COLLEGE,$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education["COLLEGE"],$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
       
-      $eduArr[]=$this->getApiFormatArray("OTHER_UG_DEGREE","Other UG Degree",$education->OTHER_UG_DEGREE,$educationValues['OTHER_UG_DEGREE'],$this->getApiScreeningField("OTHER_UG_DEGREE"));
+      $eduArr[]=$this->getApiFormatArray("OTHER_UG_DEGREE","Other UG Degree",$education["OTHER_UG_DEGREE"],$educationValues['OTHER_UG_DEGREE'],$this->getApiScreeningField("OTHER_UG_DEGREE"));
 		}
 		else
 		{
@@ -245,7 +245,7 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
 			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College","","",$this->getApiScreeningField("COLLEGE"));
       $eduArr[]=$this->getApiFormatArray("OTHER_UG_DEGREE","Other UG Degree","","",$this->getApiScreeningField("OTHER_PG_DEGREE"));
 		}
-		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education->SCHOOL,$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
+		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education["SCHOOL"],$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
 
 		return $eduArr;
 	}
@@ -263,7 +263,14 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     $szHaveChild = $this->getDecorateDPP_Response($jpartnerObj->getCHILDREN());
     $szDecordateHaveChild = $this->getPartnerChildren($szHaveChild);
     $arrOut[] = $this->getApiFormatArray("P_HAVECHILD","Have Children",trim($szDecordateHaveChild),$szHaveChild,$this->getApiScreeningField("PARTNER_HAVECHILD"));
-    $arrOut[]= $this->getApiFormatArray("P_MATCHCOUNT","","",SearchCommonFunctions::getMyDppMatches("",$this->loginProfile,'',"",'',"","",1)["CNT"],"");
+    $count_matches = SearchCommonFunctions::getMyDppMatches("","",'',"",'',"","",1)["CNT"];
+
+    if ( !isset($count_matches))
+    {
+      $count_matches = 0;
+    }
+
+    $arrOut[]= $this->getApiFormatArray("P_MATCHCOUNT","","",$count_matches,"");
 
     
     return $arrOut;

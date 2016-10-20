@@ -48,7 +48,6 @@
       <div class="pt28 pb20 txtc fontlig f22 edbrd1">Desired Partner Profile </div>
           <div class="pt10 pb20 txtc fontlig f16">The criteria you mention here determines the ‘Desired Partner Matches’ you see. So please review this information carefully. 
 Moreover, Filters determine whose Interests/Calls you want to receive.</div>
-
 <!--start: new div-->
       <div id="newdppT">
           <div class="dppnbg1 fullwid txtc lh50 colrw fontlig f19 z7" id="countScroll">
