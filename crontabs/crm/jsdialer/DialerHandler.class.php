@@ -9,7 +9,7 @@ class DialerHandler
         }
         public function getCampaignEligibilityStatus($campaign_name,$eligibleType='')
         {
-		$entryDt =date("Y-m-d");
+		$entryDt =date("Y-m-d",time()-9.5*60*60);
 		$dataArr =array();
                 $sql = "SELECT * FROM js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS WHERE CAMPAIGN='$campaign_name' AND ENTRY_DT='$entryDt'";
 		if($eligibleType)
@@ -31,7 +31,7 @@ class DialerHandler
 	public function getRenewalEligibleProfiles($x,$campaign_name='')
 	{
 		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
-		$res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
+		$res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$eligible_array[] = $row["PROFILEID"];
 		return $eligible_array;
@@ -39,7 +39,7 @@ class DialerHandler
 	public function getRenewalInEligibleProfiles($x,$campaign_name='')
 	{
 		$sql = "SELECT PROFILEID FROM incentive.RENEWAL_IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
-		$res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js));
+		$res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
 		while($row = mysql_fetch_array($res))
 			$ignore_array[] = $row["PROFILEID"];
 		return $ignore_array;
@@ -50,7 +50,7 @@ class DialerHandler
 		$profileid_str = @implode(",",$profiles_array);
 		if($profileid_str){
 			$sql_vd="select PROFILEID,DISCOUNT from billing.RENEWAL_DISCOUNT WHERE PROFILEID IN ($profileid_str)";
-			$res_vd = mysql_query($sql_vd,$this->db_js_111) or die("$sql_vd".mysql_error($this->db_js));
+			$res_vd = mysql_query($sql_vd,$this->db_js) or die("$sql_vd".mysql_error($this->db_js));
 			while($row_vd = mysql_fetch_array($res_vd)){
 				$pid = $row_vd["PROFILEID"];
 				$vd_profiles[$pid] = $row_vd["DISCOUNT"];

@@ -78,6 +78,7 @@ EOF;
         curl_setopt($ch,CURLOPT_URL,$completeUrl);
         curl_setopt($ch,CURLOPT_HEADER,1);
         curl_setopt($ch,CURLOPT_NOBODY,true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_exec($ch);
         $result=curl_getinfo($ch);
         curl_close ($ch);
@@ -114,7 +115,7 @@ EOF;
                 {                    
                     $result = $this->getCurlResult($v1);
                 
-                    if($result["http_code"]!="200")
+                    if($result["http_code"]!="200" && $result["http_code"]!="304")
                     {
                         $this->checkPicDetails($k1,$profileId,$pictureId,$ordering,"I",$mainPicUrl,$originalPicUrl,$picFormat);
                         break;

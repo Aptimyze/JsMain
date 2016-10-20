@@ -18,11 +18,11 @@ $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer);
 $campaign_nameArr =array("JS_RENEWAL","OB_RENEWAL_MAH");
 $limit =10;
 
-// get Status
-$statusArr =$dialerHandlerObj->getCampaignEligibilityStatus($campaign_name);
-
 foreach($campaign_nameArr as $key=>$campaign_name)
 {
+	// get Status
+	$statusArr =$dialerHandlerObj->getCampaignEligibilityStatus($campaign_name);
+
 	/*Stop non-eligible profiles*/
 	$eligibleType ='N';
 	$status =$statusArr[$campaign_name][$eligibleType];

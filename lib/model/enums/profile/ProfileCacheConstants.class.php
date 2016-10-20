@@ -24,9 +24,8 @@ class ProfileCacheConstants
     const CACHE_EXPIRE_TIME = 86400;
     const CACHE_MAX_ATTEMPT_COUNT = 3;
     const NOT_FILLED = "-NF-";
-    //Acceptable or Relevant Fields which will be allowed as a subkeys in Hash
-    //public static $arrHashSubKeys = array('USERNAME', 'AGE', 'CITY_RES', 'COUNTRY_RES', 'CAST', 'RELIGION');
-
+    const DUPLICATE_FIELD_DELIMITER = "-d-";
+    
     public static $arrHashSubKeys = array(
                                         "PROFILEID",
                                         "USERNAME",
@@ -183,6 +182,39 @@ class ProfileCacheConstants
                                         "NATIVE_COUNTRY",
                                         "NATIVE_STATE",
                                         "NATIVE_CITY",
+                                        //Astro Details
+                                        "TYPE",
+                                        "DATE",
+                                        "HOROSCOPE_SCREENING",
+                                        "CITY_BIRTH",
+                                        "DTOFBIRTH",
+                                        "BTIME",
+                                        "SHOW_HOROSCOPE",
+                                        "COUNTRY_BIRTH",
+                                        "PLACE_BIRTH",
+                                        "LATITUDE",
+                                        "LONGITUDE",
+                                        "TIMEZONE",
+                                        "DST",
+                                        "LAGNA_DEGREES_FULL",
+                                        "SUN_DEGREES_FULL",
+                                        "MOON_DEGREES_FULL",
+                                        "MARS_DEGREES_FULL",
+                                        "MERCURY_DEGREES_FULL",
+                                        "JUPITER_DEGREES_FULL",
+                                        "VENUS_DEGREES_FULL",
+                                        "SATURN_DEGREES_FULL",
+                                        "RAHU_DEGREES_FULL",
+                                        "KETU_DEGREES_FULL",
+                                        "MOON_RETRO_COMBUST",
+                                        "MARS_RETRO_COMBUST",
+                                        "MERCURY_RETRO_COMBUST",
+                                        "JUPITER_RETRO_COMBUST",
+                                        "VENUS_RETRO_COMBUST",
+                                        "SATURN_RETRO_COMBUST",
+                                        "VARA",
+                                        "MASA",
+                                        "HAVE_ASTRO",
                                     );
     
     public static $arrJProfileColumns = array(
@@ -348,5 +380,53 @@ class ProfileCacheConstants
                                         "NATIVE_STATE",
                                         "NATIVE_CITY",
                                     );
+    
+    public static $arrAstroDetailsColumns = array(
+                                        "PROFILEID",
+                                        "TYPE",
+                                        "DATE",
+                                        "HOROSCOPE_SCREENING",
+                                        "CITY_BIRTH",
+                                        "DTOFBIRTH",
+                                        "BTIME",
+                                        "SHOW_HOROSCOPE",
+                                        "COUNTRY_BIRTH",
+                                        "PLACE_BIRTH",
+                                        "LATITUDE",
+                                        "LONGITUDE",
+                                        "TIMEZONE",
+                                        "DST",
+                                        "LAGNA_DEGREES_FULL",
+                                        "SUN_DEGREES_FULL",
+                                        "MOON_DEGREES_FULL",
+                                        "MARS_DEGREES_FULL",
+                                        "MERCURY_DEGREES_FULL",
+                                        "JUPITER_DEGREES_FULL",
+                                        "VENUS_DEGREES_FULL",
+                                        "SATURN_DEGREES_FULL",
+                                        "RAHU_DEGREES_FULL",
+                                        "KETU_DEGREES_FULL",
+                                        "MOON_RETRO_COMBUST",
+                                        "MARS_RETRO_COMBUST",
+                                        "MERCURY_RETRO_COMBUST",
+                                        "JUPITER_RETRO_COMBUST",
+                                        "VENUS_RETRO_COMBUST",
+                                        "SATURN_RETRO_COMBUST",
+                                        "VARA",
+                                        "MASA",
+                                        HAVE_ASTRO
+                                    );
+    public static $arrDuplicateFieldsMap = array(
+                                        //'BTIME',
+                                        'COUNTRY_BIRTH',
+                                        'SHOW_HOROSCOPE',
+                                    );
+    public static $arrCommonFieldsMap = array(
+                                        'PROFILEID',
+                                        'DTOFBIRTH',
+                                        'CITY_BIRTH',
+                                        'BTIME',
+        
+    );
 }
 ?>

@@ -27,6 +27,9 @@ $this->addOptions(array(
         ini_set('memory_limit',-1);
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
+	$notificationStop =JsConstants::$notificationStop;
+        if($notificationStop)
+        	die('successfulDie');
 
         $notificationKey = $arguments["notificationKey"];
         if(in_array($notificationKey,NotificationEnums::$digestNotificationKeys))

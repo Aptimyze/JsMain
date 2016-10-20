@@ -313,7 +313,7 @@ else
 {
 	echo $msg = "Not Pass : ".date("Y-m-d H:i:s")."=>".$depriortize."\n";
 }
-function logError($sql="",$db="",$ms)
+function logError($sql="",$db="",$ms='')
 {
         $today=@date("Y-m-d h:m:s");
         $filename="logerror.txt";
