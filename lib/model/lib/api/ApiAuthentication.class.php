@@ -724,7 +724,7 @@ Abstract class ApiAuthentication
 	
 	public function stopBackendUser()
 	{	
-		if(strpos($_SERVER["REQUEST_URI"],"/profile/dpp?fromBackend=1")!==false ||  strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/dppsubmit")!==false  || strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/filtersubmit")!==false || strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/dppSuggestions")!==false)
+		if(strpos($_SERVER["REQUEST_URI"],"/profile/dpp?fromBackend=1")!==false ||  strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/dppsubmit")!==false  || strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/filtersubmit")!==false || strpos($_SERVER["REQUEST_URI"],"/api/v1/profile/dppSuggestions")!==false || strpos($_SERVER["REQUEST_URI"],"/api/v1/search/matchAlertToggleLogic")!==false)
 			return 	false;
 		else
 			return true;
