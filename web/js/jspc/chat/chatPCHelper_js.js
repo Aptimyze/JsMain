@@ -529,7 +529,11 @@ function initiateChatConnection() {
     pass = '123';*/
     
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
- 
+
+    updatePresenceIntervalId = setInterval(function(){
+        updatePresenceAfterInterval();
+    },chatConfig.Params[device].listingRefreshTimeout);
+    //console.log(updatePresenceIntervalId);
 }
 /*getConnectedUserJID
  * get jid of connected user
@@ -938,8 +942,10 @@ function getProfileImage() {
 function clearChatMsgFromLS(){
     var patt1 = new RegExp("chatMsg_");
     var patt2 = new RegExp("listingPic_");
+    var patt3 = new RegExp("chatListing");
+    var patt4 = new RegExp("presence_");
     for(var key in localStorage){
-        if(patt1.test(key) || patt2.test(key)){
+        if(patt1.test(key) || patt2.test(key) || patt3.test(key) || patt4.test(key)){
             localStorage.removeItem(key);
         }
     }
@@ -948,7 +954,7 @@ function clearChatMsgFromLS(){
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
@@ -1207,7 +1213,9 @@ function updatePresenceAfterInterval(){
         var rosterDetails = JSON.parse(getFromLocalStorage('chatListing'+loggedInJspcUser));
         $.each(presenceData, function (uid, chatStatus) {
             strophieWrapper.updatePresence(uid, chatStatus);
-            rosterDetails[uid]["rosterDetails"]["chat_status"] = chatStatus;
+            if(rosterDetails[uid]) {
+                rosterDetails[uid]["rosterDetails"]["chat_status"] = chatStatus;
+            }
         });
         setInLocalStorage('chatListing'+loggedInJspcUser,JSON.stringify(rosterDetails));
     }
@@ -1391,6 +1399,7 @@ $(document).ready(function () {
                 //console.log("in onLogoutPreClick",fromSiteLogout);
                 objJsChat._loginStatus = 'N';
                 clearLocalStorage();
+                clearInterval(updatePresenceIntervalId);
                 strophieWrapper.initialRosterFetched = false;
                 strophieWrapper.disconnect();
                 eraseCookie("chatAuth");
@@ -1485,10 +1494,6 @@ $(document).ready(function () {
             });
         }
         objJsChat.start();
-        updatePresenceIntervalId = setInterval(function(){
-            updatePresenceAfterInterval();
-        },chatConfig.Params[device].listingRefreshTimeout);
-        //console.log(updatePresenceIntervalId);
     }
 
 });
