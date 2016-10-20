@@ -299,6 +299,10 @@ class ContactDetailsV1Action extends sfAction
 					VCDTracking::insertTracking($this->contactHandlerObj);
 				}
 			} elseif ($priArr[0]["CALL_DIRECT"]["ALLOWED"] == "Y") {
+				
+				if($request->getParameter("VIEWCONTACT") == 1)
+			 	{
+					
 				$this->contactHandlerObj1 = new ContactHandler($this->loginProfile, $this->Profile, "INFO", $this->contactObj, 'CALL_DIRECT', ContactHandler::POST);
 				$this->contactHandlerObj1->setElement("ALLOWED", 1);
 				$this->contactEngineObj1 = ContactFactory::event($this->contactHandlerObj1);
@@ -311,6 +315,24 @@ class ContactDetailsV1Action extends sfAction
 		            $responseArray["headerLabel"]        = $this->contactHandlerObj->getViewed()->getUSERNAME();
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 						
+					}
+				}
+				else
+				{
+					$leftAlloted                       = $this->contactEngineObj->getComponent()->contactDetailsObj->getLEFT_ALLOTED();
+					$responseArray["headerThumbnailURL"] = $thumbNail;
+                    $responseArray["headerLabel"]        = $this->contactHandlerObj->getViewed()->getUSERNAME();
+                    $responseArray["contactdetailmsg"]          = "<b>".$leftAlloted."</b> contacts left to view";
+                    $responseArray['errmsglabel'] = "<b>".$leftAlloted."</b> contacts left to view";
+                    if($this->contactEngineObj->getComponent()->contactDetailsObj->getHiddenPhoneMsg() == "Y")
+                    {
+                    	$responseArray['errmsglabel'].= "<br><br>This member has choosen to hide phone number. Only email is available but no phone number";
+                    }
+                    
+                    $responseArray["footerbutton"]["label"]  = "View Contact Details";
+					$responseArray["footerbutton"]["value"] = "";
+					$responseArray["footerbutton"]["params"] = "&VIEWCONTACT=1";
+					$responseArray["footerbutton"]["action"] = "CONTACTDETAIL";
 				}
 			} 
 			else {
