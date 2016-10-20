@@ -108,9 +108,7 @@ You need to be a Registered Member<br />to connect with this user</div>
 	var captchaShow=~$captchaDiv`;
 	var nua = navigator.userAgent;
 		var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 &&     nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
-	if(is_android){
-		captchaShow=1;
-	}
+	
 	
 	$("#calltopSearch").attr("href",hrefVal);
     enableLoader = function()
