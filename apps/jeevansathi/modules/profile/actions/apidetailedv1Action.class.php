@@ -251,13 +251,14 @@ class apidetailedv1Action extends sfAction
             }
         }
 		$out = array();
-    if(MobileCommon::isDesktop() && $request->getParameter('forViewProfile'))
-    {
-      $out =  $objDetailedDisplay->getViewProfileResponse();
-    }
-    else{
-      $out =  $objDetailedDisplay->getResponse();
-    }
+        
+        if(MobileCommon::isDesktop() && $request->getParameter('forViewProfile'))
+        {
+          $out =  $objDetailedDisplay->getViewProfileResponse();
+        }
+        else{
+          $out =  $objDetailedDisplay->getResponse();
+        }
 		
 		$this->profile->setNullValueMarker("");
 		
@@ -275,9 +276,10 @@ class apidetailedv1Action extends sfAction
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('PHOTO'=>$out['pic']['url'],"IGNORE"=>$this->IGNORED));
 			else
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
-		}	
-		$out['show_gunascore'] = "y";
-		if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1){
+
+		}
+		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
+		if (JsConstants::$hideUnimportantFeatureAtPeakLoad == 1) {
 			$out['show_gunascore'] = "n";
 		}
 		return $out;

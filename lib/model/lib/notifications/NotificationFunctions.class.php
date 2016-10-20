@@ -57,4 +57,43 @@ class NotificationFunctions
 		$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');
 		return $registrationIdData[0]['NOTIFICATION_STATUS'];
 	}
+        public static function registrationIdInsert($profileid='',$registrationid,$appVersion='',$osVersion='',$deviceBrand='',$deviceModel=''){
+        	if($profileid){
+        	        $maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME;
+        	        $alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
+        	        $alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
+        	        $alarmTime[$profileid]=alarmTimeManager::getNextTime($alarmCurrentTime,NotificationEnums::$alarmMaxTime,NotificationEnums::$alarmMinTime);
+        	        $alarmTimeObj = new MOBILE_API_ALARM_TIME;
+        	        $alarmTimeObj->replace($alarmTime);
+        	        $maxAlarmTimeObj->updateMaxAlarmTime($alarmTime[$profileid]);
+        	}
+        	NotificationFunctions::manageGcmRegistrationid($registrationid,$profileid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
+        }
+        public static function deliveryTrackingHandling($profileid,$notificationKey,$messageId='',$status='',$osType='')
+        {
+		$scheduledNotificationKey  =NotificationEnums::$scheduledNotificationKey;
+		// code execute for Scheduled Notification      
+		if(in_array("$notificationKey", $scheduledNotificationKey)){
+			$schedduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
+			if(!$messageId)
+				$schedduledAppNotificationObj->updateSent('',$notificationKey,$status,$profileid);
+			else if($messageId)
+				$schedduledAppNotificationObj->updateSuccessSent($status,$messageId);
+		}
+		if($status=='L'){
+			$notificationObj =new MOBILE_API_LOCAL_NOTIFICATION_LOG;
+			$notificationDelLogObj= new MOBILE_API_NOTIFICATION_LOG;
+		}
+		else{
+			$notificationObj =new MOBILE_API_NOTIFICATION_LOG;
+			$notificationDelLogObj= new MOBILE_API_LOCAL_NOTIFICATION_LOG;
+		}
+		if(!$messageId){
+			$notificationObj->updateSentPrev($profileid,$notificationKey,$status);
+		}
+		else if($messageId && $osType){
+			$notificationObj->updateSent($messageId,$status,$osType);
+			$notificationDelLogObj->deleteNotification($messageId,$osType);
+		}
+	}
 }

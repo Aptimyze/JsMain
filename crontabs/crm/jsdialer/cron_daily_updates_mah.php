@@ -19,11 +19,11 @@ mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer);
 $campaign_name = 'MAH_JSNEW';
-$eligibleType ='N';
 $limit =10;
 
 // get Status
-$statusArr =getCampaignEligibilityStatus($campaign_name);
+$statusArr =$dialerHandlerObj->getCampaignEligibilityStatus($campaign_name);
+$eligibleType ='N';
 $status =$statusArr[$campaign_name][$eligibleType];
 if(!$status)
         $status=0;
@@ -33,8 +33,8 @@ for($i=$status;$i<$limit;$i++)
 {
 	$ignore_array 	= compute_ignore_array($i,$db_js);
 	$vd_array 	= getVDdiscount($ignore_array,$db_js);
-        stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$db_dialer,$db_js_157,$vd_array);
-	updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+        stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$db_dialer,$db_js_111,$vd_array);
+	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
 	echo "DONE$i"."\n";
 }
 
@@ -50,8 +50,8 @@ for($i=$status;$i<$limit;$i++)
 	$loggedinWithin15days 	= loginWithin15Days($eligible_array,$db_js);
 	$allotedArray 		= allotedArray($eligible_array,$db_js);
 	$scoreArray 		= scoreArray($eligible_array,$db_js);
-        update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$db_dialer,$vd_array,$loggedinWithin15days,$allotedArray,$scoreArray,$db_js_157);
-	updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+        update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$db_dialer,$vd_array,$loggedinWithin15days,$allotedArray,$scoreArray,$db_js_111);
+	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
 	echo "DONE$i"."\n";
 }
 

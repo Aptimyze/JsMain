@@ -73,6 +73,7 @@
         var moduleChat = "~$module`";
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
+        var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
         //console.log("ank",hideUnimportantFeatureAtPeakLoad);
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
