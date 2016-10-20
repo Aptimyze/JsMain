@@ -84,6 +84,16 @@ class postAcceptv1Action extends sfAction
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Deleted Profile";
 			}
+                        elseif($errorArr["PHONE_NOT_VERIFIED"] == 2)
+			{
+				$responseArray["headerlabel"] = "Phone Verification Complusory";
+				$responseArray["errmsglabel"] = "Its is complusory to verify your number on jeevansathi.com or you will not able send expression of interest. \n\n You only have to give the missed call ";
+				$responseArray["errmsgiconid"] = IdToAppImagesMapping::PHONE_NOT_VERIFIED;
+				$responseArray["footerbutton"]["label"] = "Verify your number";
+				$responseArray["footerbutton"]["value"] = "";
+				$responseArray["footerbutton"]["action"] = "PHONEVERIFICATION";	
+			}
+
 			elseif($errorArr["PROFILE_HIDDEN"] == 2)
 			{
 				$responseArray["errmsglabel"] = "This profile is Hidden";
@@ -95,6 +105,7 @@ class postAcceptv1Action extends sfAction
 				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
 				$responseArray["errmsgiconid"] = "16";
 				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
 
 			elseif($errorArr["EOI_CONTACT_LIMIT"] == 2)
@@ -102,15 +113,6 @@ class postAcceptv1Action extends sfAction
 				$responseArray["errmsglabel"]= 'You have exceeded limit of expresssion of interest for this '.$errorArr["LIMIT"];
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Limit Exceeded";
-			}
-			elseif($errorArr["PHONE_NOT_VERIFIED"] == 2)
-			{
-				$responseArray["headerlabel"] = "Phone Verification Complusory";
-				$responseArray["errmsglabel"] = "Its is complusory to verify your number on jeevansathi.com or you will not able send expression of interest. \n\n You only have to give the missed call ";
-				$responseArray["errmsgiconid"] = IdToAppImagesMapping::PHONE_NOT_VERIFIED;
-				$responseArray["footerbutton"]["label"] = "Verify your number";
-				$responseArray["footerbutton"]["value"] = "";
-				$responseArray["footerbutton"]["action"] = "PHONEVERIFICATION";	
 			}
 			elseif($errorArr["PROFILE_IGNORE"] == 2)
 			{

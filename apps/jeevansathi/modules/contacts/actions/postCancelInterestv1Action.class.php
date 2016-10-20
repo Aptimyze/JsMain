@@ -86,6 +86,8 @@ class postCancelInterestv1Action extends sfAction
 				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
 				$responseArray["errmsgiconid"] = "16";
 				$responseArray["headerlabel"] = "Unsupported action";
+                                $responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+
 			}
 			else
 			{

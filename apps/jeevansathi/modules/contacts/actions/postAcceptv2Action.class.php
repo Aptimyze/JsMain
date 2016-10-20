@@ -116,17 +116,19 @@ class postAcceptv2Action extends sfAction
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Deleted Profile";
 			}
-                        elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
-			{
-				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
-				$responseArray["errmsgiconid"] = "16";
-				$responseArray["headerlabel"] = "Unsupported action";
-			}
 			elseif($errorArr["PROFILE_HIDDEN"] == 2)
 			{
 				$responseArray["errmsglabel"] = "This profile is Hidden";
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Hidden Profile";
+			}
+                        elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+                                $responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+
 			}
 			elseif($errorArr["EOI_CONTACT_LIMIT"] == 2)
 			{
