@@ -1,4 +1,6 @@
-<script>appPromoPerspective=1;</script>
+<script>appPromoPerspective=1;
+var site_key = "~CaptchaEnum::SITE_KEY`";
+</script>
 <div class="perspective" id="perspective">
 	<div class="" id="pcontainer">    
 		<div id="headerimg1" class="rel_c" style="height: 455px;">
@@ -57,6 +59,8 @@ You need to be a Registered Member<br />to connect with this user</div>
 				<div class="clr"></div>           
 			</div>
 			<!--end:password--> 
+			
+
 
 
 			
@@ -110,9 +114,7 @@ You need to be a Registered Member<br />to connect with this user</div>
 	var captchaShow=~$captchaDiv`;
 	var nua = navigator.userAgent;
 		var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 &&     nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
-	if(is_android){
-		captchaShow=1;
-	}
+	
 	
 	$("#calltopSearch").attr("href",hrefVal);
     enableLoader = function()
