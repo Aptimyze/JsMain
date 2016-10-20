@@ -124,15 +124,18 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
                 $selectedVal = explode(",", str_replace(" ",",",$selectedVal));
                 if ($type == 'range')
                         $selectedVal = range($selectedVal[0], $selectedVal[1]);
-
-                foreach ($selectedVal as $selected) {
-                        if (array_key_exists($selected, $forward_temp2))
-                                $searchArray[$selected] = $forward_temp2[$selected];
-                        else
-                                $searchArray[$selected] = 0;
+                if(!empty($forward_temp2)){
+                        foreach ($selectedVal as $selected) {
+                                if (array_key_exists($selected, $forward_temp2))
+                                        $searchArray[$selected] = $forward_temp2[$selected];
+                                else
+                                        $searchArray[$selected] = 0;
+                        }
+                        $searchArray = array_intersect($searchArray, $forward_temp2);
+                        return $searchArray;
+                }else{
+                        return $forward_temp2;
                 }
-                $searchArray = array_intersect($searchArray, $forward_temp2);
-                return $searchArray;
         }
 
         public function getSortString() {
