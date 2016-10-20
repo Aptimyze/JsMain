@@ -183,6 +183,7 @@ var strophieWrapper = {
         //console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
+        nodeObj["query"]["item"]["attributes"]["new"] = true;
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
         //strophieWrapper.stropheLoggerPC(rosterObj);
         var nodeArr = [],
@@ -398,9 +399,20 @@ strophieWrapper.sendPresence();
                     presenceData = pd;
                 }
                 //console.log("****************NITISH****************");
+                var data = strophieWrapper.getRosterStorage();
+                //console.log(data[user_id]);
+                //console.log("data",data);
+                //console.log("Bassi",data["1"]);
+                console.log(strophieWrapper.initialRosterFetched);
                 presenceData[user_id] = chat_status;
+                console.log("username",user_id,chat_status);
                 setInLocalStorage("presence_"+loggedInJspcUser,JSON.stringify(presenceData));
-                //console.log(presenceData);
+                console.log(presenceData);
+                if(strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] == true){
+                    console.log("New case");
+                    strophieWrapper.updatePresence(user_id, chat_status);
+                    strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] = false;
+                }
 	            //strophieWrapper.updatePresence(user_id, chat_status); //nitish commented
         	}
             //strophieWrapper.stropheLoggerPC("end of onPresenceReceived for " + user_id + "---" + chat_status);
@@ -486,6 +498,7 @@ strophieWrapper.sendPresence();
         //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster);
         //strophieWrapper.stropheLoggerPC("setting roster fetched flag");
         strophieWrapper.initialRosterFetched = true;
+        console.log("Initial roster set to true");
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         var data = strophieWrapper.getRosterStorage();
         var lastUpdated = localStorage.getItem("clLastUpdated");
@@ -502,13 +515,14 @@ strophieWrapper.sendPresence();
         }
         if(data && useExisting){
             strophieWrapper.Roster = data;
-            //console.log("Used Existing listing");
+            console.log("Used Existing listing");
         }
         else{
-            //console.log("Used new listing");
+            console.log("Used new listing");
             strophieWrapper.setRosterStorage(strophieWrapper.Roster);
             localStorage.setItem("clLastUpdated",d.getTime());
         }
+        console.log(strophieWrapper.Roster);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
         setTimeout(function () {
           strophieWrapper.sendPresence();
@@ -555,7 +569,8 @@ strophieWrapper.sendPresence();
             "profile_checksum": fullname[1],
             "listing_tuple_photo": listing_tuple_photo,
             "last_online_time": null,
-            "ask": obj["attributes"]["ask"]
+            "ask": obj["attributes"]["ask"],
+            "new": obj["attributes"]["new"]
         };
         if (typeof obj["group"] != "undefined") {
             newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["group"]["#text"]);
