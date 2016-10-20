@@ -71,7 +71,7 @@ EditApp = function(){
     var CONTACT           = "contact";
     var VERIFICATION      = "verification";
     
-    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
+    var basicSectionArray   = ["NAME","GENDER","MSTATUS","HAVECHILD","DTOFBIRTH","HEIGHT","RELIGION","MTONGUE","CASTE","SECT","EDU_LEVEL_NEW","OCCUPATION","COUNTRY_RES","STATE_RES","CITY_RES","INCOME","RELATION","DISPLAYNAME"];
     var likesSectionArray   = ["HOBBIES_HOBBY","HOBBIES_INTEREST","HOBBIES_MUSIC","HOBBIES_BOOK","FAV_BOOK","HOBBIES_DRESS","FAV_TVSHOW","HOBBIES_MOVIE","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_FOOD","FAV_VAC_DEST"];
     var lifeStyleSectionArray = ["DIET","DRINK","SMOKE","OPEN_TO_PET","OWN_HOUSE","HAVE_CAR","RES_STATUS","HOBBIES_LANGUAGE","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE","DIOCESE","BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","BTYPE","COMPLEXION","WEIGHT","BLOOD_GROUP","HIV","THALASSEMIA","HANDICAPPED","NATURE_HANDICAP"];
     var familySectionArray = ["PROFILE_HANDLER_NAME","MOTHER_OCC","FAMILY_BACK","T_SISTER","T_BROTHER","SUBCASTE","GOTHRA","GOTHRA_MATERNAL","FAMILY_STATUS","FAMILY_INCOME","FAMILY_TYPE","FAMILY_VALUES","NATIVE_COUNTRY","NATIVE_STATE","NATIVE_CITY","ANCESTRAL_ORIGIN","PARENT_CITY_SAME"];
@@ -82,7 +82,7 @@ EditApp = function(){
     var verificationSectionArray = ["ID_PROOF_TYPE","ID_PROOF_VAL", "ADDR_PROOF_TYPE", "ADDR_PROOF_VAL"];
    
     var listStaticTables    = {
-                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,mtongue,caste_jspc,sect_jspc,edu_level_new,mstatus,occupation,relationship,income,degree_pg,degree_ug',
+                                "basic" : 'height_jspc,city_res_jspc,country_res_jspc,jspc_state,mtongue,caste_jspc,sect_jspc,edu_level_new,mstatus,occupation,relationship,income,degree_pg,degree_ug',
                                 "likes" : 'hobbies_hobby,hobbies_interest,hobbies_music,hobbies_book,hobbies_dress,hobbies_sports,hobbies_cuisine,hobbies_movie',
                                 "lifestyle":"diet,drink,smoke,open_to_pet,own_house,have_car,rstatus,hobbies_language,maththab_jspc,namaz,zakat,fasting,umrah_hajj,quran,sunnah_beard,sunnah_cap,hijab,working_marriage,baptised,read_bible,offer_tithe,spreading_gospel,amritdhari,cut_hair,trim_beard,wear_turban,clean_shaven,zarathushtri,parents_zarathushtri,btype,complexion,weight,blood_group,hiv_edit,thalassemia,handicapped,nature_handicap",
                                 "family":"mother_occ,family_back,t_sister,t_brother,family_status,family_income,family_type,family_values,parent_city_same,state_india,native_country,native_city",
@@ -94,17 +94,17 @@ EditApp = function(){
     
     
     var storeTogetherFields         ={"CITY_RES":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE"} 
-    var depDataFields         = {"CITY_RES":"COUNTRY_RES","INCOME":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","CUT_HAIR":"AMRITDHARI","TRIM_BEARD":"AMRITDHARI","WEAR_TURBAN":"AMRITDHARI","CLEAN_SHAVEN":"AMRITDHARI","MATHTHAB":"CASTE","FAMILY_INCOME":"COUNTRY_RES","MOBILE_NUMBER_OWNER":"GENDER","ALT_MOBILE_NUMBER_OWNER":"GENDER","PHONE_NUMBER_OWNER":"GENDER"};
+    var depDataFields         = {"CITY_RES":"STATE_RES","INCOME":"COUNTRY_RES","CASTE":"RELIGION","SECT":"RELIGION","NATURE_HANDICAP":"HANDICAPPED","NATIVE_CITY":"NATIVE_STATE","CUT_HAIR":"AMRITDHARI","TRIM_BEARD":"AMRITDHARI","WEAR_TURBAN":"AMRITDHARI","CLEAN_SHAVEN":"AMRITDHARI","MATHTHAB":"CASTE","FAMILY_INCOME":"COUNTRY_RES","MOBILE_NUMBER_OWNER":"GENDER","ALT_MOBILE_NUMBER_OWNER":"GENDER","PHONE_NUMBER_OWNER":"GENDER"};
     var depFieldSectionID     = {"FAMILY_INCOME":BASIC,"MATHTHAB":BASIC,"INCOME":BASIC}
     
-    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type"};
+    var fieldMapList        = {"HEIGHT":"height_jspc","COUNTRY_RES":"country_res_jspc","STATE_RES":"jspc_state","CITY_RES":"city_res_jspc","RELATION":"relationship","CASTE":"caste_jspc","SECT":"sect_jspc","RES_STATUS":"rstatus","HIV":"hiv_edit","NATIVE_STATE":"state_india","NATIVE_COUNTRY":"native_country","MATHTHAB":"maththab_jspc","MARRIED_WORKING":"working_marriage", "ID_PROOF_TYPE":"id_proof_type","HAVECHILD":"children","ADDR_PROOF_TYPE":"addr_proof_type"};
     
     var maxLengthMap              = {"NAME":"40","FAV_BOOK":"300","FAV_FOOD":"300","FAV_MOVIE":"300","FAV_VAC_DEST":"300","FAV_TVSHOW":"300","ANCESTRAL_ORIGIN":"100","YOURINFO":"5000","FAMILYINFO":"1000","EDUCATION":"1000","JOB_INFO":"1000","OTHER_UG_DEGREE":"250","OTHER_PG_DEGREE":"250","COLLEGE":"150","PG_COLLEGE":"150","SCHOOL":"150","PHONE_OWNER_NAME":"40","MOBILE_OWNER_NAME":"40","ALT_MOBILE_OWNER_NAME":"40",'EMAIL':'100',"SUBCASTE":"250","GOTHRA":"250","GOTHRA_MATERNAL":"250","PROFILE_HANDLER_NAME":"40","DIOCESE":"100","PINCODE":"6","PINCODE":"6","PARENT_PINCODE":"6","WEIGHT":"3","ID_PROOF_NO":30};
     
     //Type of Fields By Default All are 'S' Type means single select
     
     var SINGLE_SELECT_TYPE        = "S";
-    var singleSelectWithSearch    = ["CASTE","COUNTRY_RES","CITY_RES","EDU_LEVEL_NEW","OCCUPATION","NATIVE_STATE","NATIVE_COUNTRY","NATIVE_CITY","DEGREE_UG","DEGREE_PG","ID_PROOF_TYPE","ADDR_PROOF_TYPE"];
+    var singleSelectWithSearch    = ["CASTE","COUNTRY_RES","STATE_RES","CITY_RES","EDU_LEVEL_NEW","OCCUPATION","NATIVE_STATE","NATIVE_COUNTRY","NATIVE_CITY","DEGREE_UG","DEGREE_PG","ID_PROOF_TYPE","ADDR_PROOF_TYPE"];
     var NON_EDITABLE_TYPE         = "N";
     
     var OPEN_TEXT_TYPE            = "O";
@@ -146,7 +146,7 @@ EditApp = function(){
     var isInitialized             = false;
     var notFilledText             = "Not filled in";
     //////////////////////////// Behaviour Map
-    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal"};
+    var behaviourMap              = {"NAME":"js-name","COUNTRY_RES":"js-country","HANDICAPPED":"js-handicapped","NATIVE_STATE":"js-nativeState","WEIGHT":"js-onlyNumber","DIOCESE":"js-onlyChar","AMRITDHARI":"js-amritdhari","NATIVE_CITY":"js-nativeCity","PROFILE_HANDLER_NAME":"js-onlyChar","EDU_LEVEL_NEW":'js-educationChange',"ANCESTRAL_ORIGIN":'js-forAbout',"FAMILYINFO":"js-forAbout","EDUCATION":"js-forAbout","JOB_INFO":"js-forAbout","YOURINFO":"js-aboutMe","OTHER_UG_DEGREE":"js-forAbout","OTHER_PG_DEGREE":"js-forAbout","FAV_BOOK":"js-forAbout","FAV_FOOD":"js-forAbout","FAV_MOVIE":"js-forAbout","FAV_VAC_DEST":"js-forAbout","FAV_TVSHOW":"js-forAbout","PHONE_OWNER_NAME":"js-onlyChar","MOBILE_OWNER_NAME":"js-onlyChar","ALT_MOBILE_OWNER_NAME":"js-onlyChar","EMAIL":"js-email","PINCODE":"js-pincode","PARENT_PINCODE":"js-pincode","ID_PROOF_TYPE":"js-proofType","ID_PROOF_NO":"js-proofTypeNo","ADDR_PROOF_TYPE":"js-addrProofType","ID_PROOF_VAL":"js-proofVal","ADDR_PROOF_VAL":"js-addrProofVal","STATE_RES":"js-state","CITY_RES":"js-city"};
     
     var sidesUIMap                = ["NATIVE_STATE","NATIVE_COUNTRY","T_BROTHER","T_SISTER","YOURINFO","PHONE_OWNER_NAME","MOBILE_OWNER_NAME","ALT_MOBILE_OWNER_NAME","MOBILE_NUMBER_OWNER","PHONE_NUMBER_OWNER","ALT_MOBILE_NUMBER_OWNER","SHOWPHONE_MOB","SHOWPHONE_RES","SHOWALT_MOBILE","PINCODE","PARENT_PINCODE","SHOWADDRESS","SHOW_PARENTS_CONTACT","TIME_TO_CALL_START"];
     
@@ -972,8 +972,33 @@ EditApp = function(){
       
       var optionString = "";
       var hideTheField = false;
-      
-      if(typeof data != "undefined"){
+      if(fieldObject.key=="CITY_RES"){
+          var countryVal = editAppObject[BASIC]['COUNTRY_RES'].value;
+          var stateVal = editAppObject[BASIC]['STATE_RES'].value;
+          if(countryVal=='51' && stateVal && stateVal!=0){
+              var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[stateVal];
+              optionString = prepareOptionDropDown(dataCity,fieldObject);
+          }
+          else if(countryVal=='128'){
+              var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[countryVal];
+              optionString = prepareOptionDropDown(dataCity,fieldObject);
+          }
+          else
+              hideTheField = true;
+      }
+      else if(fieldObject.key=="STATE_RES"){
+          if(editAppObject[BASIC]['COUNTRY_RES'].value!='51'){
+            hideTheField = true;
+          }
+          else{
+            optionString = prepareOptionDropDown(data,fieldObject);
+            if(editAppObject[BASIC]['STATE_RES'].value=='0'){
+                var stateFieldObject     = editAppObject[BASIC]["STATE_RES"];
+                requiredFieldStore.add(stateFieldObject);
+            }
+          }
+      }
+      else if(typeof data != "undefined"){
         optionString = prepareOptionDropDown(data,fieldObject);
       }
       else{
@@ -3197,7 +3222,10 @@ EditApp = function(){
       for(var fieldKey in editFieldArr){
         if( storeTogetherFields.hasOwnProperty(fieldKey) && 
             editFieldArr.hasOwnProperty(storeTogetherFields[fieldKey]) === false ){
-          editFieldArr[depDataFields[fieldKey]] = sectionObject[storeTogetherFields[fieldKey]].value;
+            if(fieldKey=="CITY_RES")
+                editFieldArr[storeTogetherFields[fieldKey]] = sectionObject[storeTogetherFields[fieldKey]].value;
+            else
+                editFieldArr[depDataFields[fieldKey]] = sectionObject[storeTogetherFields[fieldKey]].value;
         }
       }
       
@@ -3378,6 +3406,7 @@ EditApp = function(){
       }
       else if(showOrHide == "hide"){
         $(fieldParentId).addClass(dispNone);
+        $(fieldParentId+" .js-errorLabel:not(.disp-none)").addClass(dispNone);
       }
       //Clear Data and Update Store         
       if(typeof updateStore != "undefined" && updateStore == true){
@@ -3470,26 +3499,39 @@ EditApp = function(){
       var arrCountryWithCities  = ["51","128"];
       
       var cityFieldObject     = editAppObject[BASIC]["CITY_RES"];
+      var stateFieldObject     = editAppObject[BASIC]["STATE_RES"];
       var countryFieldObject  = editAppObject[BASIC]["COUNTRY_RES"];
       var incomeFieldObject   = editAppObject[BASIC]["INCOME"+'_'+BASIC];
       
       if(arrCountryWithCities.indexOf(countryVal) === -1){
         //Hide City Field
+        requiredFieldStore.remove(stateFieldObject);
         showHideField(cityFieldObject,"hide",true);
         requiredFieldStore.remove(cityFieldObject);
+        showHideField(stateFieldObject,"hide",true);
       }
       else{
-        //Show City Field
-        showHideField(cityFieldObject,"show",true);
-        
         var data = JSON.parse(getDataFromStaticTables(cityFieldObject.key));        
         updateFieldUI(cityFieldObject,data[countryVal]);
-        
         requiredFieldStore.remove(cityFieldObject);
-        if(countryVal == "51"){
-          requiredFieldStore.add(cityFieldObject);
+        requiredFieldStore.add(cityFieldObject);
+        if(countryVal == '128'){
+            //Show City Field
+            showHideField(cityFieldObject,"show",true);
+            showHideField(stateFieldObject,"hide",true);
+            requiredFieldStore.remove(stateFieldObject);
         }
-        
+        else if(countryVal == '51'){
+          var data = JSON.parse(getDataFromStaticTables(stateFieldObject.key));        
+          updateFieldUI(stateFieldObject,data);
+          showHideField(stateFieldObject,"show",true);
+          requiredFieldStore.add(stateFieldObject);
+          if($("#state_res").val()!='' && $("#state_res").val()!=null && typeof($("#state_res").val()!='')!="undefined"){
+              showHideField(cityFieldObject,"show",true);
+          }
+          else
+              showHideField(cityFieldObject,"hide",true);
+        }
       }
       
       if(countryVal != "51" && currentIncomeInRs === false ){
@@ -3507,6 +3549,40 @@ EditApp = function(){
 
       updateFieldUI(incomeFieldObject,data[dataKey]);
       requiredFieldStore.add(incomeFieldObject);
+    }
+    
+    /*
+     * onStateChange
+     * @param {type} stateVal
+     * @returns {undefined}
+     */
+    onStateChange = function(stateVal){
+        var stateFieldObject     = editAppObject[BASIC]["STATE_RES"];
+        //Show City Field
+        var cityFieldObject     = editAppObject[BASIC]["CITY_RES"];
+        showHideField(cityFieldObject,"show",true);
+        
+        var data = JSON.parse(getDataFromStaticTables(cityFieldObject.key));        
+        updateFieldUI(cityFieldObject,data[stateVal]);
+        
+        requiredFieldStore.remove(stateFieldObject);
+        
+        if(stateVal == "0"){
+            showHideField(cityFieldObject,"hide",true);
+            requiredFieldStore.remove(cityFieldObject);
+        }
+        else{
+            requiredFieldStore.add(cityFieldObject);
+        }
+            
+        
+    }
+    
+    onCityChange = function(cityVal){
+        var stateFieldObject     = editAppObject[BASIC]["STATE_RES"];
+        requiredFieldStore.remove(stateFieldObject);
+        if(cityVal=="0" && $("#state_res").val())
+            editedFields[BASIC]["CITY_RES"]=$("#state_res").val()+"OT";
     }
     
     /*
@@ -4490,6 +4566,16 @@ EditApp = function(){
         onCountryChange($('#country_res').val());
       });
       
+      //OnState Change
+      $('.js-state').on('change',function(event){
+        onStateChange($('#state_res').val());
+      });
+      
+      //OnCity Change
+      $('.js-city').on('change',function(event){
+        onCityChange($("#city_res").val());
+      });
+      
       //OnChallenged Change
       $('.js-handicapped').on('change',function(event){
         onChallengedChange($('#handicapped').val());
@@ -4703,7 +4789,17 @@ EditApp = function(){
           
         var fieldObject = editAppObject[sectionId][fieldKey];
         
-        if(typeof fieldObject == "undefined"){
+        if(fieldObject.key=="CITY_RES"){
+          var countryVal = editAppObject[BASIC]['COUNTRY_RES'].value;
+          if(countryVal!='51' || (countryVal!='128'))
+              continue;
+        }
+        else if(fieldObject.key=="STATE_RES"){
+          if(editAppObject[BASIC]['COUNTRY_RES'].value!='51'){
+            continue;
+          }
+        }
+        else if(typeof fieldObject == "undefined"){
           if(debugInfo)
             console.log("i : " + i);
           continue;
@@ -4802,7 +4898,24 @@ EditApp = function(){
           data = getDependantData(fieldObject,data);
           var hideField = false;
           var optionString = "";
-          if(typeof data == "undefined"){
+          if(fieldObject.key=="CITY_RES"){
+            var countryVal = editAppObject[BASIC]['COUNTRY_RES'].value;
+            var stateVal = editAppObject[BASIC]['STATE_RES'].value;
+            if(countryVal=='51' && stateVal){
+              var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[stateVal];
+              optionString = prepareOptionDropDown(dataCity,fieldObject);
+            }
+            else if(countryVal=='128'){
+                var dataCity = JSON.parse(getDataFromStaticTables(fieldObject.key))[countryVal];
+                optionString = prepareOptionDropDown(dataCity,fieldObject);
+            }
+          }
+          else if(fieldObject.key=="STATE_RES"){
+            if(editAppObject[BASIC]['COUNTRY_RES'].value=='51'){
+                optionString = prepareOptionDropDown(data,fieldObject);
+            }
+          }
+          else if(typeof data == "undefined"){
             hideField = true;
           }
           else{

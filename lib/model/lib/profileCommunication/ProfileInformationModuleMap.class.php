@@ -153,7 +153,7 @@ class ProfileInformationModuleMap
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
 			"SORT_ORDER"=> "3",
-			"COUNT"=> "2",
+			"COUNT"=> "20",
 			"TUPLE"=> "NO_USERNAME_TUPLE",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",

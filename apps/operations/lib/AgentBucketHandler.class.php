@@ -339,11 +339,16 @@ class AgentBucketHandler
 				$subscription=$profilesDetails['SUBSCRIPTION'];
 				if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
 				{
-					$expiryDt=$serviceStatusObj->getMaxExpiryDate($profileid);
-					if(JSstrToTime($expiryDt)==JSstrToTime(date("Y-m-d",time())))
+					if($subMethod=='NEGATIVE_LIST'){
 						$profilesForDeletion[]=$profiles[$i];
-					else
-						continue;
+					}
+					else{
+						$expiryDt=$serviceStatusObj->getMaxExpiryDate($profileid);
+						if(JSstrToTime($expiryDt)==JSstrToTime(date("Y-m-d",time())))
+							$profilesForDeletion[]=$profiles[$i];
+						else
+							continue;
+					}
 				}
 				else
 					$profilesForDeletion[]=$profiles[$i];

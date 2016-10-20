@@ -90,16 +90,6 @@ if(!function_exists('connect_slave81')){
         }
 }
 
-	function connect_mmm()
-	{
-		$db=mysql_connect(MysqlDbConstants::$alertsMMM[HOST].":".MysqlDbConstants::$alertsMMM[PORT],MysqlDbConstants::$alertsMMM[USER],MysqlDbConstants::$alertsMMM[PASS]) or die(mysql_error());
-		mysql_select_db("mmmjs",$db);
-
-		if(php_sapi_name()=="cli")
-                        mysql_query("set session wait_timeout=50000,interactive_timeout=50000,net_read_timeout=50000",$db);
-
-                return $db;
-	}
 if(!function_exists('connect_slave_ro')){
 	function connect_slave_ro()
         {

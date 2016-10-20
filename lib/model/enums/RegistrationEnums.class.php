@@ -47,7 +47,7 @@ class RegistrationEnums {
 
   public static $fieldsOnPage = array(
     "JSPCR1" => array("gender", "cpf", "dob", "month"),
-    "JSPCR2" => array("mtongue", "religion", "caste", "subcaste", "manglik","horoscopeMatch", "mstatus","mstatus_muslim", "haveChildren", "height", "cityReg", "countryReg", "pincode"),
+    "JSPCR2" => array("mtongue", "religion", "caste", "subcaste", "manglik","horoscopeMatch", "mstatus","mstatus_muslim", "haveChildren", "height", "cityReg", "countryReg", "pincode","stateReg"),
     "JSPCR3" => array("hdegree","ugDegree","pgDegree","ugCollege","pgCollege","occupation","income"),
     "JSPCR4" => array("familyType","brother","sister","fatherOccupation","motherOccupation","familyState","familyCity","country","ancestral_origin","familyinfo"),
   );

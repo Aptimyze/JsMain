@@ -102,7 +102,7 @@ class ContactDetailsV1Action extends sfAction
 					if(MobileCommon::isApp()=="A" && $this->contactEngineObj->getComponent()->contactDetailsObj->getEvalueLimitUser()==CONTACT_ELEMENTS::EVALUE_PCS)
 					{
 						unset($responseArray);					
-						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
+						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue/eAdvantage plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
 							$responseArray["headerLabel"]            = "Complete your profile";
 							$responseArray["errMsgIconId"]           = "21";
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
@@ -188,6 +188,23 @@ class ContactDetailsV1Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 						
 				} 
+
+				elseif ($errorArr["PAID_FILTERED_INTEREST_NOT_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+					elseif ($errorArr["PAID_FILTERED_INTEREST_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+
+
 				elseif($errorArr["PROFILE_IGNORE"] == 2)
 				{
 					$responseArray["errmsglabel"] = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
