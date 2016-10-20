@@ -30,7 +30,7 @@ class LoginV1Action extends sfActions
 	{
 			$captcha=$request->getParameter("captcha");
 			$loginFailedObj = new LOGIN_FAILED1;
-			if(JsMemcache::getInstance()->get($email."_failedLogin")!==null){
+			if(JsMemcache::getInstance()->get($email."_failedLogin")!==null && JsMemcache::getInstance()->get($email."_failedLogin")!==false){
 				$count=JsMemcache::getInstance()->get($email."_failedLogin");
 			}
 			else{
@@ -218,7 +218,7 @@ class LoginV1Action extends sfActions
 			$ip=CommonFunction::getIP();
 			if($email && $password){
 				$loginFailedObj->insertFailedLogin($email,$password,$_SERVER[HTTP_USER_AGENT],$ip);
-				if(JsMemcache::getInstance()->get($email."_failedLogin")!==null)
+				if(JsMemcache::getInstance()->get($email."_failedLogin")!==null && JsMemcache::getInstance()->get($email."_failedLogin")!==false)
 					JsMemcache::getInstance()->set($email."_failedLogin",JsMemcache::getInstance()->get($email."_failedLogin")+1);
 				else{
 					$count=$loginFailedObj->selectFailedLoginPerDay($email,"1");
