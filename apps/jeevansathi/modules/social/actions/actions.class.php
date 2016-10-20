@@ -1449,6 +1449,7 @@ CloseMySelf(this);</script>';
  **/
   public function executeSaveImportImages(sfWebRequest $request)
   {
+//VA whitelisting
 	SendMail::send_email("eshajain88@gmail.com,lavesh.rawat@gmail.com","executeSaveImportImages loop which was assumed not to be in use in social/actions","executeSaveImportImages called");
         $profileObj=LoggedInProfile::getInstance('newjs_master'); 
 //throw new jsException("","PROFILEID & PICTUREID IS BLANK IN get() of PICTURE_NEW.class.php");
