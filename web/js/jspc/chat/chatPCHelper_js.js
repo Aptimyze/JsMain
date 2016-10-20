@@ -192,7 +192,7 @@ function pollForNonRosterPresence(inputParams){
                 if(response["header"]["status"] == 200){
                     console.log("pollForNonRosterPresence success",response);
                     //process presence data of non roster profiles after success
-                    onNonRosterPresenceFetched(response["data"]);
+                    onNonRosterPresenceFetched(response["data"],(postData["pfids"].split(",")));
                 }
             },
             error: function (xhr) {
@@ -203,9 +203,13 @@ function pollForNonRosterPresence(inputParams){
     }  
 }
 
-
-function onNonRosterPresenceFetched(presenceData){
-    console.log("in onNonRosterPresenceFetched",presenceData);
+/*onNonRosterPresenceFetched
+function executed after non roster presence data fetch to process it 
+* @inputs:presenceData,nonRosterData
+*/
+function onNonRosterPresenceFetched(presenceData,nonRosterData){
+    console.log("in onNonRosterPresenceFetched",presenceData,nonRosterData);
+    //get intersection of both sets
 }
 
 /*manageListingPhotoReqFlag
@@ -835,7 +839,6 @@ function invokePluginManagelisting(listObject, key, user_id) {
             //update chat box content if opened
             //console.log("adding ankita4",newGroupId);
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
-            
         }
         if (key == "create_list") {
             objJsChat.noResultError();
