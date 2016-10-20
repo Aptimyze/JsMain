@@ -62,7 +62,7 @@ $("#loginButton").bind(clickEventType,function(){
 									  {
 										
 										captchaShow=1;
-										// ShowTopDownError(["Please slide to verify"]);
+										ShowTopDownError(result.responseMessage);
 										return 0;
 									  }
 //								  }
