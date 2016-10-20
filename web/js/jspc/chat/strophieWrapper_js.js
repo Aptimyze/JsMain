@@ -509,7 +509,7 @@ strophieWrapper.sendPresence();
     getNonRosterList:function(){
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
             //console.log("fetchNonRosterListing",chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
-            fetchNonRosterListing(groupId);
+            pollForNonRosterListing(groupId);
         });
     },
 

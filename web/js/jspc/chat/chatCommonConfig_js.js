@@ -89,17 +89,17 @@ chatConfig.Params = {
                 //"type":"CHATDPP" //later uncomment
                 "type":"DPP"
             },
-            "pollingFreq":10000
+            "pollingFreq":20000
         }
     },
     //api config for non roster presence api
-    nonRosterPresenceApiConfig:{
+    /*nonRosterPresenceApiConfig:{
         //"apiUrl":"http://10.10.18.67:8290/profile/v1/presence", //cross domain issue later
         "apiUrl":"http://localhost/api/v1/chat/getRoasterData", //pick dpp url from jsconstants
         "extraParams":{
             
         }
-    },
+    },*/
     //api config for chat history
     chatHistoryApi: {
         "apiUrl": "/api/v1/chat/popChat",
