@@ -325,14 +325,16 @@ class JeevansathiGatewayManager
 
     public static function reAuthenticateUser($apiObj)
     {
-        $jprofileObj    = new JPROFILE();
-        $fields         = "PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,EMAIL";
-        $valueArray     = array("PROFILEID" => $apiObj->apiParams->profileid, "activatedKey" => 1);
-        $profileDetails = $jprofileObj->getArray($valueArray, '', '', $fields, '', '', '', '', '', '', '', '');
-        unset($jprofileObj);
-        $protectObj = new protect();
-        $protectObj->logout();
-        $protectObj->postLogin($profileDetails[0]);
-        unset($protectObj);
+        $authenticationLoginObj = AuthenticationFactory::getAuthenicationObj(null);
+        $data                   = $authenticationLoginObj->setPaymentGatewayAuthchecksum($apiObj->apiParams->profileid);
+        // $jprofileObj    = new JPROFILE();
+        // $fields         = "PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,EMAIL";
+        // $valueArray     = array("PROFILEID" => $apiObj->apiParams->profileid, "activatedKey" => 1);
+        // $profileDetails = $jprofileObj->getArray($valueArray, '', '', $fields, '', '', '', '', '', '', '', '');
+        // unset($jprofileObj);
+        // $protectObj = new protect();
+        // $protectObj->logout();
+        // $protectObj->postLogin($profileDetails[0]);
+        // unset($protectObj);
     }
 }

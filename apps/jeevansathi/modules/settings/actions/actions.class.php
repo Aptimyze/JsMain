@@ -106,7 +106,7 @@ class settingsActions extends sfActions
                 	//echo"sdh";
     			$hideDays=$request->getParameter("hideDays");
     			$hideDeleteObj->UpdateHide($privacy,$profileid,$hideDays);
-                $this->hideProfile($profileid);
+                //$this->hideProfile($profileid);
     			$DeleteProfileObj->callDeleteCronBasedOnId($profileid);
                     //code cookie
     			$webAuthObj = new WebAuthentication;
