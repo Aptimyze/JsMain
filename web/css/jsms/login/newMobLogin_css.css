@@ -7,11 +7,12 @@
 	
 	
 }
+/*
 .logo{background-position: -95px -175px;
 width: 121px;
 height: 32px; border:0px solid #fff
 }
-
+*/
 .uicon{width: 21px;
 height: 16px;
 background-position: -7px -82px;}
@@ -46,7 +47,7 @@ height: 16px;}
 }
 
 
-
+/*
 .errClass{
 position: absolute;
 z-index: 10000;
@@ -72,20 +73,20 @@ animation:opac90 1s;
     0% {opacity:0}
     100% {opacity:.90}
 }
-
+*/
 /* Standard syntax */
-@keyframes opac90 {
+/*@keyframes opac90 {
     0% {opacity:0}
     100% {opacity:.90}
-}
+}*/
 /* Chrome, Safari, Opera */
-@-webkit-keyframes opac0 {
+/*@-webkit-keyframes opac0 {
     0% {opacity:.90}
     100% {opacity:0}
 }
-
+*/
 /* Standard syntax */
-@keyframes opac0 {
+/*@keyframes opac0 {
     0% {opacity:.90}
     100% {opacity:0}
 }
@@ -94,7 +95,7 @@ animation:opac90 1s;
 background-color: rgba(102, 102, 102, 1);
 }
 
-.lgin_hgt1{height:5px}
+.lgin_hgt1{height:5px}*/
 /*----- new css added for login pat ----*/
  @media (min-width: 280px) and (max-width: 320px) {
  	.lgin_pad1{padding:20px 0;}
@@ -239,3 +240,10 @@ height: 20px;
 }
 
 
+.mt5 {margin-top: 5px}
+.loaderSmallIcon{
+   width: 20px;
+   height: 20px;
+   position: absolute;
+   margin-top: -2px;
+}
