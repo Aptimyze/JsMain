@@ -293,6 +293,16 @@ $(".chosen-container").on('keyup',function(e) {
 $(".chosen-container .chosen-results li").addClass("chosenfloat").removeClass("chosenDropWid");
 });
 
+if ( parseInt($("#mutualMatchCount").text()) > 100 )
+{
+  $("#mutualMatchCount").addClass("colrw");
+}
+else
+{
+  $("#mutualMatchCount").addClass("colr5"); 
+}
+
+
 //$(".chosen-container.chosen-container-multi").on('mousedown',function(e) {
 //  $(".chosen-container .chosen-results li").removeClass("highlighted");
 //});
@@ -307,14 +317,27 @@ $("#loadLate").css('visibility','visible');
 if(isBrowserIE() === false)
   $(".js-txtarea").attr('placeholder','What are you looking into a partner?');
   
-    $("#unchk_dpp").on("click",function(){
-        $("#boxDiv").removeClass("move");
-        sendAjaxForToggleMatchalertLogic("dpp");
-    });
-    $("#chk_dpp").on("click",function(){
-        $("#boxDiv").addClass("move");
+    // $("#unchk_dpp").on("click",function(){
+    //     $("#boxDiv").removeClass("move");
+    //     sendAjaxForToggleMatchalertLogic("dpp");
+    // });
+    // $("#chk_dpp").on("click",function(){
+    //     $("#boxDiv").addClass("move");
+    //     sendAjaxForToggleMatchalertLogic("history");
+    // });
+
+
+    $('#mutualMatchCountCheckBox').click(function(){
+      if (this.checked) {
         sendAjaxForToggleMatchalertLogic("history");
-    });
+      }
+      else
+      {
+        sendAjaxForToggleMatchalertLogic("dpp");
+      }
+  });
+
+
 
 
   $(document).on("scroll", isScrolledIntoView);
@@ -485,6 +508,21 @@ function saveSectionsFields(sectionId){
                   $('.'+sectionId+' .posthide:not(.hideMore,.msgscr)').fadeIn(200,"linear");
                 });
               }
+              for (var ke in data) {
+                 if ( data[ke].key == "P_MATCHCOUNT")
+                 {
+                    $("#mutualMatchCount").text(data[ke].value);
+
+                    if ( parseInt($("#mutualMatchCount").text()) > 100 )
+                    {
+                      $("#mutualMatchCount").addClass("colrw");
+                    }
+                    else
+                    {
+                      $("#mutualMatchCount").addClass("colr5"); 
+                    }
+                 }
+              }           
             }
     });
   }

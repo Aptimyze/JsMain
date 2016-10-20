@@ -137,6 +137,17 @@
 </div>
 
 <div id="dppMatchalertToggle" class="dn">
+
+	<div class="fullwid dpbg1">
+		<div class="dpbg2 fontlig txtc">
+			<p class="f14"> The criteria below influences the matches and interests you recieve</p>
+			<p class="f16 pt10">No. of Partner Profile with below criteria - <span id="mutualMatchCountMobile"></span></p>
+
+		</div>
+	</div>
+
+
+
 <div class="fullwid brdr1 bwhite">
 <div class="pad1">
 <div class="pad2">

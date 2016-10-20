@@ -701,6 +701,8 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$basicArr["SpecialCases"][OnClick][] =$this->getApiFormatArray('THALASSEMIA',"Thalassemia" ,$this->profile->getDecoratedThalassemia(),$this->profile->getTHALASSEMIA(),$this->getApiScreeningField("THALASSEMIA"),$this->dropdown);
 
 		$basicArr["SpecialCases"][OnClick][] =$this->getApiFormatArray("HIV","HIV+",$this->profile->getDecoratedHiv(),$this->profile->getHIV(),$this->getApiScreeningField("HIV"),$this->dropdown);
+
+
 		
 		return $basicArr;
 		
@@ -742,7 +744,13 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//Country
 		$szCountry = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_COUNTRYRES());
 		
+
 		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_COUNTRY","Country",trim($jpartnerObj->getDecoratedPARTNER_COUNTRYRES()),$szCountry,$this->getApiScreeningField("PARTNER_COUNTRYRES"),$this->dropdown,'',1,'dppCountry');
+		
+		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_MATCHCOUNT","","",(string)SearchCommonFunctions::getMyDppMatches("","",'',"",'',"","",1)["CNT"],"","",'',1,"");
+
+
+
 		//City
 		if(strpos($szCountry,"51")!==false || strpos($szCountry,"128")!==false)
 			$showCity=1;

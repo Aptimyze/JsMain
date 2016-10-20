@@ -48,7 +48,25 @@ var mobEditPage=(function(){
 		{
 			result=formatJsonOutput(result);
 			
-			//console.log(result);
+			for( var k in result.Dpp.BasicDetails.OnClick )
+			{
+				if ( result.Dpp.BasicDetails.OnClick[k]['key'] == "P_MATCHCOUNT")
+				{
+					
+					$("#mutualMatchCountMobile").text(result.Dpp.BasicDetails.OnClick[k]['value']);
+
+                    if ( parseInt($("#mutualMatchCountMobile").text()) > 100 )
+                    {
+                      $("#mutualMatchCountMobile").addClass("colrw");
+                    }
+                    else
+                    {
+                      $("#mutualMatchCountMobile").addClass("color2"); 
+                    }
+
+				}
+			}
+
 			changingEditData=ele.pageJson=result;
 			originalEditData=JSON.parse(JSON.stringify(changingEditData));
 			//console.log(changingEditData);

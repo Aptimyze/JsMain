@@ -52,13 +52,13 @@ Moreover, Filters determine whose Interests/Calls you want to receive.</div>
 <!--start: new div-->
       <div id="newdppT">
           <div class="dppnbg1 fullwid txtc lh50 colrw fontlig f19 z7" id="countScroll">
-            No. of Partner Profile with below criteria - <span>18998</span>
+            No. of Partner Profile with below criteria - <span id="mutualMatchCount">~$mutualMatchCount`</span>
           </div>
       </div>
       <div class="clearfix pt20 pb20 mauto wid90p">
         <div class="fl">
           <label class="control control--checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="mutualMatchCountCheckBox"/>
               <div class="control__indicator"></div>
             </label>
         </div>
