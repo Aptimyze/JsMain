@@ -116,6 +116,8 @@ EOF;
                             $actionTaken = "removed";  
                         }
                         $this->sendJunkCharacterMail($profileId,$actionTaken);   
+                        $instantNotificationObj = new InstantAppNotification("INCOMPLETE_SCREENING");
+                        $instantNotificationObj->sendNotification($pid);
                     }
                 }
             }
