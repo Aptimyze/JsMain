@@ -182,6 +182,7 @@ function onFrameLoginResponseReceived(message)
 				hideCommonLoader();
 				$("#LoginMessage").addClass("disp-none");
 				$("#LoginErrMessage").addClass("disp-none");
+				$("#CaptchaErrMessage").removeClass("disp-none");
 			  // $("#LoginErrMessage2").removeClass("disp-none");
 			  hideCommonLoader();
 				removeCaptcha();

@@ -70,8 +70,9 @@ class LoginV1Action extends sfActions
 						
 						echo $js_function;
         			}
-					else{
-						$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_ACCESS);
+					else
+					{
+						$apiObj->setHttpArray(ResponseHandlerConfig::$CAPTCHA_UNVERIFIED);
 						$apiObj->generateResponse();
 					}
         			//return 0;
