@@ -89,11 +89,8 @@ class phoneActions extends sfActions
 	die;
   }
 
-
   public function executeSaveV1(sfWebRequest $request)
   {
-
-
   	$respObj = ApiResponseHandler::getInstance();
 
 	$number = $request->getParameter('NUMBER');
@@ -110,7 +107,38 @@ class phoneActions extends sfActions
 		$phoneType = "A";
 	else
 		$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_INPUT);
-	if($phoneType)
+	//As the new api will be only running for PC and Mobile, we are only calling it internally for phoneType 'M' . phoneType 'A' stands for android.
+	if($phoneType == "M")
+	{ 
+	$editFieldArr =array();
+	$PHONE_MOB['mobile'] = $number;	
+	$PHONE_MOB['isd'] = $isd;
+	$editFieldArr["PHONE_MOB"] = $PHONE_MOB;
+	$request->setParameter("editFieldArr",$editFieldArr);
+	$request->setParameter('internally',1);
+	//var_dump($request->getParameter('editFieldArr'));
+
+	ob_start();
+	sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditSubmitV1");
+    $data = ob_get_contents();
+    ob_end_clean();
+	$data = json_decode($data);
+	if(!is_array($data->error))	
+	    $errorArr=get_object_vars($data->error);//print_r($data);die('0000');
+    else 
+    	$errorArr=$data->error;
+	$arrKeys=array_keys($errorArr);
+	
+    if($data->responseStatusCode != 0)
+    {
+	$data->responseMessage=$errorArr[$arrKeys[0]];
+	}
+	$data = json_encode($data);
+	echo $data;
+	die;
+	}
+
+	else if($phoneType == 'A')
 	{
 		if($isd=='')
 			$respObj->setHttpArray(ResponseHandlerConfig::$ISD_BLANK);
@@ -136,9 +164,10 @@ class phoneActions extends sfActions
 			$response[DIAL_NUMBER] =$knowlarityObj->getVirtualNumber();
 			$respObj->setResponseBody($response);
 		}
+			$respObj->generateResponse();
+			die;
 	}
-	$respObj->generateResponse();
-	die;
+
   }
   public function executeVerifiedV1(sfWebRequest $request)
   {
@@ -251,7 +280,6 @@ class phoneActions extends sfActions
 
 	public function executeConsentConfirm(sfWebRequest $request)
 	{	
-		
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 		$profileid=$loggedInProfileObj->getPROFILEID();
        	JsCommon::insertConsentMessageFlag($profileid);

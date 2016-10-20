@@ -611,8 +611,13 @@ and dependencies (minified).
 								onComplete:true
 							},
 							methodOptions=$.extend(true,{},methodDefaults,options),
-							to=functions._arr.call(this,val),dur=methodOptions.scrollInertia>0 && methodOptions.scrollInertia<17 ? 17 : methodOptions.scrollInertia;
-						
+							to=functions._arr.call(this,val);
+							if(methodOptions.dur != 0){
+								dur=methodOptions.scrollInertia>0 && methodOptions.scrollInertia<17 ? 17 : methodOptions.scrollInertia;
+							} else {
+								dur = 0;
+							}
+							
 						/* translate yx values to actual scroll-to positions */
 						to[0]=functions._to.call(this,to[0],"y");
 						to[1]=functions._to.call(this,to[1],"x");

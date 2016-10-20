@@ -145,16 +145,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     //Alt Number Owner Name
     $contactArr[]=$this->getApiFormatArray("ALT_MOBILE_NUMBER_OWNER","Relationship",$extendedContactObj->ALT_MOBILE_NUMBER_OWNER,$extendedContactArray['ALT_MOBILE_NUMBER_OWNER'],$this->getApiScreeningField("ALT_MOBILE_NUMBER_OWNER"));
     
-    //Mobile Privacy Settings
-    $contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
-    
-    //Landline Privacy Settings
-    $contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
-    
-    //Alt Number Privacy Settings
-    $contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$extendedContactArray['SHOWALT_MOBILE'],$extendedContactArray['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
-    
-    
     //Contact Address
     $contactArr[]=$this->getApiFormatArray("CONTACT","Contact Address" ,$this->profile->getCONTACT(),$this->profile->getCONTACT(),$this->getApiScreeningField("CONTACT"));
     
