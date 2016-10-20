@@ -234,6 +234,8 @@ if (authenticated($cid)) {
 							
 							} 
 							$INCOMPLETE="Y";
+							$instantNotificationObj = new InstantAppNotification("INCOMPLETE_SCREENING");
+                			$instantNotificationObj->sendNotification($pid);
 						}
 					}
 						

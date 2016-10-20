@@ -171,6 +171,7 @@ public function microtime_float()
 			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
 			$poolObj = new NotificationDataPool();
 			$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message);
+			// print_r($dataAccumulated);
 			unset($poolObj);
 			break;
                   case "CSV_UPLOAD":
@@ -454,6 +455,16 @@ public function microtime_float()
             }
             unset($applicableProfiles);
         	break;
+    	case "INCOMPLETE_SCREENING":
+			// single profile should be passed here
+			$details = $this->getProfilesData(array($appProfiles['SELF']),$className="JPROFILE");
+			$counter = 0;
+			foreach($details as $key=>$val){
+				$dataAccumulated[$counter]['SELF']  = $details[$key];
+				$dataAccumulated[$counter]['COUNT'] = "SINGLE";
+			}
+			// print_r($dataAccumulated);
+			break;
 	  }
 
 	  $completeNotificationInfo = array();
@@ -463,11 +474,11 @@ public function microtime_float()
 		  foreach($dataAccumulated as $x=>$dataPerNotification)
 		  {
 			  $notificationId = NULL;
-			  $notificationId = $this->matchNotificationKeyData($notificationKey,$dataPerNotification);
-	
+			  $notificationId = $this->matchNotificationKeyData($notificationKey,$dataPerNotification);	
 			  if($notificationId)
 			  {
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
+				  // print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT')	
 				  	$completeNotificationInfo[$counter]["PHOTO_URL"] =$dataPerNotification['PHOTO_URL'];
@@ -488,6 +499,7 @@ public function microtime_float()
   public function generateNotification($notificationId, $notificationKey,$dataPerNotification)
   {
 	  $notifications = $this->getNotifications();
+	  //print_r($notifications);
 	  $variableValues = array();
 	  if(is_array($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE']) && $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'])
 		{  
@@ -517,6 +529,7 @@ public function microtime_float()
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE'] = $finalNotificationMessage;
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE_TITLE'] = $finalNotificationMessageTitle;	
 		  $completeNotificationInfo['COUNT'] = $dataPerNotification['COUNT_BELL'];
+		  // print_r($completeNotificationInfo);
 		  return $completeNotificationInfo;
 	  }
   }
