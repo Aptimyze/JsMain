@@ -266,6 +266,8 @@ Abstract class ApiAuthentication
 			$loginData["EMAIL"]=$loggedInProfileObj->getEMAIL();
 			$loginData["PHONE_MOB"]=$loggedInProfileObj->getPHONE_MOB();
             $loginData["ACTIVATED"]=$loggedInProfileObj->getACTIVATED();
+            $loginData["INCOMPLETE"]=$loggedInProfileObj->getINCOMPLETE();
+            $loginData["DTOFBIRTH"]=$loggedInProfileObj->getDTOFBIRTH();
 			return $loginData;
 		}
                 
