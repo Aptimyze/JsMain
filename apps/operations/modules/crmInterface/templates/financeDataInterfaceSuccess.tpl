@@ -124,6 +124,28 @@
                             </br>
                         </td>
                     </tr>
+                    <tr align="center">
+                        <td class="label">
+                            <font size="2">
+                                Select Report Device
+                            </font>
+                        </td>
+                        <td class="fieldsnew">
+                            <input checked="" name="device" type="radio" value="other">
+                                <font size="2">
+                                    All(Except Apple)
+                                </font>
+                            </input>
+                            <br/>
+                            <input name="device" type="radio" value="apple">
+                                <font size="2">
+                                    Apple
+                                </font>
+                            </input>
+                            <br>
+                            </br>
+                        </td>
+                    </tr>
                     <tr>
                     </tr>
                     <tr>
@@ -147,13 +169,16 @@
                 <td align=center>Profileid</td>
                 <td align=center>Username</td>
                 <td align=center>Serviceid</td>
+                <td align=center>Service Name</td>
                 <td align=center>Start Date</td>
                 <td align=center>End Date</td>
                 <td align=center>Currency</td>
+                <td align=center>List Price</td>
                 <td align=center>Amount</td>
                 <td align=center>Deferrable Flag</td>
                 <td align=center>ASSD(Actual Service Start Date)</td>
                 <td align=center>ASED(Actual Service End Date)</td>
+                <td align=center>Invoice No</td>
             </tr>
             ~foreach from=$rawData item=profileArr`
             <tr style="background-color:Moccasin">
@@ -163,13 +188,16 @@
                 <td align=center><font color="#000">~$profileArr.PROFILEID`</font></td>
                 <td align=center><font color="#000">~$profileArr.USERNAME`</font></td>
                 <td align=center><font color="#000">~$profileArr.SERVICEID`</font></td>
+                <td align=center><font color="#000">~$serviceData[$profileArr.SERVICEID]`</font></td>
                 <td align=center><font color="#000">~$profileArr.START_DATE`</font></td>
                 <td align=center><font color="#000">~$profileArr.END_DATE`</font></td>
                 <td align=center><font color="#000">~$profileArr.CUR_TYPE`</font></td>
+                <td align=center><font color="#000">~$profileArr.PRICE`</font></td>
                 <td align=center><font color="#000">~$profileArr.AMOUNT`</font></td>
                 <td align=center><font color="#000">~$profileArr.DEFERRABLE`</font></td>
                 <td align=center><font color="#000">~$profileArr.ASSD`</font></td>
                 <td align=center><font color="#000">~$profileArr.ASED`</font></td>
+                <td align=center><font color="#000">~$profileArr.INVOICE_NO`</font></td>
             </tr>
             ~/foreach`
         </table>
