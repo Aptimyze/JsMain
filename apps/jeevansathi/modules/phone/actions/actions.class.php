@@ -280,7 +280,6 @@ class phoneActions extends sfActions
 
 	public function executeConsentConfirm(sfWebRequest $request)
 	{	
-		
 		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 		$profileid=$loggedInProfileObj->getPROFILEID();
        	JsCommon::insertConsentMessageFlag($profileid);
