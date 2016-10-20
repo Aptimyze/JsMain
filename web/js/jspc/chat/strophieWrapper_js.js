@@ -452,8 +452,9 @@ strophieWrapper.sendPresence();
                         strophieWrapper.NonRoster[nodeObj["profileid"]] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[nodeObj["profileid"]], listObj);
                     }
                 }
-                console.log("converted",strophieWrapper.Roster[nodeObj["profileid"]]);
+                //console.log("converted",strophieWrapper.Roster[nodeObj["profileid"]]);
             });
+            console.log("adding",strophieWrapper.NonRoster);
             strophieWrapper.initialNonRosterFetched = true;
             invokePluginManagelisting(strophieWrapper.NonRoster, "create_list");
         }

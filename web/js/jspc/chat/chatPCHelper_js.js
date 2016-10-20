@@ -128,11 +128,9 @@ function fetchSelectedPoolIds(inputs){
     console.log("in fetchSelectedPoolIds",inputs);
     var pfids = [];
     if(inputs != undefined){
-        console.log(inputs["category"] == undefined || inputs["category"] == "nonRoster");
-        console.log(strophieWrapper.NonRoster);
         if(inputs["category"] == undefined || inputs["category"] == "nonRoster"){
             $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
-                console.log(nodeObj);
+                //console.log(nodeObj);
                 if(nodeObj[strophieWrapper.rosterDetailsKey]["groups"][0] == inputs["groupid"]){
                     pfids.push(profileid);
                 }
