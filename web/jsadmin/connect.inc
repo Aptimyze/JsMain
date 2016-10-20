@@ -18,7 +18,7 @@ if($_SERVER['DOCUMENT_ROOT'])
 	include_once($_SERVER['DOCUMENT_ROOT']."/classes/Memcache.class.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/classes/authentication.class.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/ivr/jsivrFunctions.php");
-	include_once($_SERVER['DOCUMENT_ROOT']."/../lib/model/enums/Membership.enum.class.php");
+	include_once(JsConstants::$cronDocRoot."/lib/model/enums/Membership.enum.class.php");
 }
 else
 {
@@ -31,7 +31,7 @@ else
 	include_once("$path/classes/authentication.class.php");
 	include_once("$path/ivr/jsivrFunctions.php");	
 	include_once("$path/ivr/jsivrFunctions.php");
-	include_once("$path"."../lib/model/enums/Membership.enum.class.php");	
+	include_once(JsConstants::$cronDocRoot."/lib/model/enums/Membership.enum.class.php");	
 }
 
 $TAX_RATE = billingVariables::TAX_RATE;

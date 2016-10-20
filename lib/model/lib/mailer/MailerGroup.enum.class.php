@@ -45,4 +45,5 @@ class MailerGroup{
   const HOROSCOPE_REQUEST = 35;
   const PHONE_UNVERIFY=43;
   const ASTRO_COMPATIBILTY = 27;
+  const JUNK_REMOVAL = 45;
 }
