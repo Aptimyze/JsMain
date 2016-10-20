@@ -9,7 +9,7 @@ class BellCounts
 			$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 			$bellCounts['AWAITING_RESPONSE_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW"));
 			$bellCounts['ACC_ME_NEW']=JsCommon::convert99($profileMemcacheObj->get("ACC_ME_NEW"));
-			if(!JsConstants::$stopOnPeakLoad)
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
 	            $bellCounts['MESSAGE_NEW']=0;
 	        else
 				$bellCounts['MESSAGE_NEW']=JsCommon::convert99($profileMemcacheObj->get("MESSAGE_NEW"));
@@ -40,7 +40,7 @@ class BellCounts
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 				$countDetails["INTEREST_RECEIVED"] = $profileMemcacheObj->get("AWAITING_RESPONSE");
 				$countDetails["ACCEPTED"] = $profileMemcacheObj->get("ACC_ME");
-				if(!JsConstants::$stopOnPeakLoad)
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
 					$countDetails["MESSAGE"] = 0;
 				else
 					$countDetails["MESSAGE"] = $profileMemcacheObj->get("MESSAGE");
@@ -77,7 +77,7 @@ class BellCounts
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 				$countDetails["AWAITING_RESPONSE_NEW"] = $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 				$countDetails["ACC_ME_NEW"] = $profileMemcacheObj->get("ACC_ME_NEW");
-				if(!JsConstants::$stopOnPeakLoad){
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1){
 					$countDetails["MESSAGE_NEW"] = 0;
 					$countDetails["MESSAGE"] = 0;
 				}
@@ -94,6 +94,12 @@ class BellCounts
 				if(!$countDetails["FILTERED_NEW"]){
 					$countDetails["FILTERED_NEW"] = 0;
 				}
+                                
+                                $countDetails["FILTERED"] = $profileMemcacheObj->get("FILTERED");
+				if(!$countDetails["FILTERED"]){
+					$countDetails["FILTERED"] = 0;
+				}
+
 				return $countDetails;
         	}
         }
@@ -143,7 +149,7 @@ class BellCounts
 				if(!$countDetails["ACC_ME_NEW"]){
 					$countDetails["ACC_ME_NEW"] = 0;
 				}
-				if(!JsConstants::$stopOnPeakLoad)
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
 					$countDetails["MESSAGE_NEW"] = 0;
 				else{
 					$countDetails["MESSAGE_NEW"] = $profileMemcacheObj->get("MESSAGE_NEW");

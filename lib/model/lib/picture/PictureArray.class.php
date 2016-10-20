@@ -33,11 +33,13 @@ class PictureArray
 	  * @param - $skipContacts - If this flag is set as Y, then we would consider an Accepted contact between viewer and viewed profiles
 	  * @param - $contactsBetweenViewedAndViewer - An array of contacts between the logged in profile and the profiles for which photo is to be fetched
 			Refer ContactsRecord->getContactsSent() to get the format in which the contacts array needs to be given
+
 	  * @param - $isMobile - Set this value as 'Y' for WAP site
+	  * @param - $skipPrivacyFilterArr - An array of profiles for which filters are not to be checked
 	  * @return - Array of Picture Objects of all profiles having Photos
 	**/
 
-	public function getProfilePhoto($photoType = 'N', $skipProfilePrivacy='',$viewedDppArr='',$viewerObj='',$skipContacts='',$contactsBetweenViewedAndViewer='',$isMobile='',$dbname='')
+	public function getProfilePhoto($photoType = 'N', $skipProfilePrivacy='',$viewedDppArr='',$viewerObj='',$skipContacts='',$contactsBetweenViewedAndViewer='',$isMobile='',$dbname='',$skipPrivacyFilterArr='')
 	{
                 if($dbname == ''){
                         $dbname = 'newjs_master';
@@ -90,7 +92,8 @@ class PictureArray
 			{
 				if($viewedObj->getPRIVACY() == $this->filteredPrivacy)
 				{
-					$profilesWithPrivacySet[]=$viewedObj->getPROFILEID();
+					if(!$skipPrivacyFilterArr || !in_array($viewedObj->getPROFILEID(), $skipPrivacyFilterArr))
+						$profilesWithPrivacySet[]=$viewedObj->getPROFILEID();
 				}
 			}
 			if(is_array($profilesWithPrivacySet))
@@ -127,7 +130,8 @@ class PictureArray
 			{
 				if($viewedObj->getPRIVACY() == $this->filteredPrivacy)
 				{
-					$profilesWithPrivacySet[]=$viewedObj->getPROFILEID();
+					if(!$skipPrivacyFilterArr || !in_array($viewedObj->getPROFILEID(), $skipPrivacyFilterArr))
+						$profilesWithPrivacySet[]=$viewedObj->getPROFILEID();
 				}
 			}
 		}
@@ -197,6 +201,8 @@ class PictureArray
 				}
 			}
 		}
+		//print_r($contactsBetweenViewedAndViewer);
+		//echo "---";
 
 		//Since the table newjs.PICTURE_DISPLAY_LOGIC is being used to decide whether the photo is displayed or not, I am passing 'showPhoto', so that I get all photos and then based on the table it would be decided which all would be shown.
 		/*Implementation of this condition is changed by Reshu Rajput

@@ -262,7 +262,7 @@
                     ~if $val`
                     <!--start:filter 1-->
                     <div class="pt40">
-                        <p class="color2 f20 comp2">~$val[3][0]`</p>
+                        <p class="color2 f20 comp2">~str_ireplace('Mtongue','Mother Tongue',$val[3][0])`</p>
                         <ul class="hor_list clearfix comnfil">
                             ~assign var="tab" value=0`
                             ~section name="tr1" start=0 loop=count($val[0])`

@@ -1192,7 +1192,12 @@ case 'CITY_INDIA':
 					$field->setConstraintClass("partner_city_india");
 					$field->setTableName("JPARTNER:CITY_INDIA");
 				break;
-                
+case "DISPLAYNAME":
+					$field=new Field('','DISPLAYNAME');
+					$field->setFieldType("dropdown");
+                                        $field->setConstraintClass("dropdown_not_req");
+                                        $field->setTableName("NAME_OF_USER:DISPLAY");
+				break;
 }
 
 				return($field);

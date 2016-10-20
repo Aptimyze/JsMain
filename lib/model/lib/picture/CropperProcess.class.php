@@ -22,6 +22,8 @@ class CropperProcess
                 //get pictureid for profile pic uploaded
                 $pictureServiceObj=new PictureService($this->profileObj);
                 $ProfilePicUrlObj = $pictureServiceObj->getProfilePic();
+		if($ProfilePicUrlObj)
+		{
                 $picId = $ProfilePicUrlObj->getPICTUREID();
                 unset($pictureObj);
 
@@ -75,6 +77,11 @@ class CropperProcess
 		if($ops)
 			return $filesGlobArr;
 		return $profilesUpdate;
+		}
+		else
+		{
+			file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/cropperProcess.txt",var_export($this->profileObj,true)."\n\n",FILE_APPEND);
+		}
 	}
         /*
         *This function crop source image and cut it into square

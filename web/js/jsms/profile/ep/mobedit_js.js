@@ -223,11 +223,18 @@ function SaveSub(json,attr)
 	var tabKey=json[arr[0]][arr[1]]["outerSectionKey"];
 	var isValid=true;
 	var updatedJson="";
+	var isValidStateCity;
 	if(validatorFormId){
 		isValid=$("#"+validatorFormId).valid();
 	}
+	if(validatorFormId=="BasicDetails")
+	{
+		isValidStateCity = StateCityRequired(key);
+	}
+	else
+		isValidStateCity = true;
 		
-	if(isValid){
+	if(isValid && isValidStateCity){
 		var whereToSubmit=submitObj.has_value();
 		if(whereToSubmit)
 		{
@@ -279,7 +286,6 @@ function UpdateOverlayLayer(attr)
 	//console.log(json[arr[0]][arr[1]]["OnClick"]);
 	var arr=attr.split(",");
 	var key=json[arr[0]][arr[1]]["OnClick"];
-	
 	var tabName=json[arr[0]][arr[1]]["outerSectionName"];
 	if(arr[0]=="Contact")
 		tabName="Contact Details";
@@ -295,6 +301,20 @@ function UpdateOverlayLayer(attr)
                 temp=temp.replace(/CboxArrow/g,"CboxArrow"+key[i]["key"]);
                 temp=temp.replace(/CboxDiv/g,"CboxDiv"+key[i]["key"]);
                 temp=temp.replace(/cOuter/g,"cOuter"+key[i]["key"]); 
+                var classShowSettings = "dn";
+                if(key[i]["showSettings"] == 1){
+                       classShowSettings = "" ;
+                       temp=temp.replace(/wid94p/g,"wid60p"); 
+                       temp=temp.replace(/\{\{displaySettingsLabel\}\}/g,key[i]["settingData"]['display_string']); 
+                       temp=temp.replace(/\{\{displaySettingsValue\}\}/g,key[i]["settingData"]['displayValue']); 
+                       temp=temp.replace(/\{\{ONCLICK_EVENT\}\}/g,key[i]["settingData"]['callbackoverlay']+'(this);');
+                       
+                        if(key[i]["key"] == "NAME" && (key[i]["settingData"]['displayValue'] == "" || key[i]["settingData"]['displayValue'] == null || key[i]["settingData"]['displayValue'] == "null")){
+                               submitObj.push("DISPLAYNAME","Y");
+                               $("#showAll").attr('rel',"Y");
+                        }
+                }
+                temp=temp.replace(/\{\{displaySettings\}\}/g,classShowSettings); 
 		var notfilled="";
 		var labelval=key[i]["label_val"];
 		
@@ -638,10 +658,10 @@ function showFilterOverlayer()
         filterJson.FILTER[0]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][1]["label_val"];
         filterJson.FILTER[1]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][2]["label"];
         filterJson.FILTER[1]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][2]["label_val"];
-        filterJson.FILTER[2]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][3]["label"];
-        filterJson.FILTER[2]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][3]["label_val"];
-        filterJson.FILTER[3]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label"];
-        filterJson.FILTER[3]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label_val"];
+        filterJson.FILTER[2]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label"];
+        filterJson.FILTER[2]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label_val"];
+        filterJson.FILTER[3]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][5]["label"];
+        filterJson.FILTER[3]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][5]["label_val"];
         filterJson.FILTER[4]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][0]["label"];
         filterJson.FILTER[4]["label_val"]=pageJson["Dpp"]["Religion"]["OnClick"][0]["label_val"];
         filterJson.FILTER[5]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][1]["label"];
@@ -1085,7 +1105,7 @@ function ToggleMore(keyName)
                                     keyName="Desired Partner";
 				if(keys=="Details")
                                 {
-                                    if(values["basic"]["OnClick"][2]["label_val"]==="Male")
+                                    if(values["basic"]["OnClick"][4]["label_val"]==="Male")
                                         keyName="Groom's Details";
                                     else
                                         keyName="Bride's Details";

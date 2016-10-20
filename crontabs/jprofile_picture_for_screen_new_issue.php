@@ -65,6 +65,8 @@ if(is_array($profileArray))
 	$JProfileUpdateLibObj = JProfileUpdateLib::getInstance();
 	$JProfileUpdateLibObj->updateForMutipleProfiles($params,$profileArray);
 }
+$sql10="update PICTURE_FOR_SCREEN_NEW set SCREEN_BIT='1' where ORDERING >0 and OriginalPicURl!= '' and SCREEN_BIT = '0000000'";
+$res3 = $mysqlObj->executeQuery($sql10,$dbM,'',1) or $mysqlObj->logError($sql10,1);
 
 mysql_close($dbM);
 mysql_close($dbS);

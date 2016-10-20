@@ -222,7 +222,19 @@ return 0;
                           $show=1;
                       }
                     
-                    break;            
+                    break;  
+                    
+                    case '9': 
+                      $appVersion=$request->getParameter('API_APP_VERSION');
+                      $isApp=MobileCommon::isApp();
+                      if(!$isApp || ($isApp=='A' && $appVersion>=63) || ($isApp=='I' && $appVersion>=3.0) )
+                      {
+                      $nameArr=(new NameOfUser())->getNameData($profileid);
+                      if(!is_array($nameArr[$profileid]) || !$nameArr[$profileid]['DISPLAY'] || !$nameArr[$profileid]['NAME'])
+                          $show=1;
+                      }
+                    
+                    break;  
 
           default : return false;
         }

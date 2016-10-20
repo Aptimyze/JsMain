@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * feedback actions.
  *
@@ -14,7 +15,7 @@ class feedbackActions extends sfActions
    *
    */
   public function preExecute()
-  {
+  { 
 	  $request=sfContext::getInstance()->getRequest();     
       $this->cid=$request->getParameter("cid");
       $this->user=JsOpsCommon::getcidname($this->cid);
@@ -32,11 +33,19 @@ class feedbackActions extends sfActions
   	$this->setTemplate('reportAbuse');
 
 }
+
+ public function executeReportInvalid(sfWebRequest $request)
+  {
+    $this->setTemplate('reportInvalid');
+
+}
+
 	
 
 
 	public function executeReportAbuseLog(sfWebRequest $request)
 	{
+
 	   	$startDate=$request->getParameter('RAStartDate');
 	   	$endDate=$request->getParameter('RAEndDate');
 	   	$reportAbuseOb = new REPORT_ABUSE_LOG('newjs_slave');
@@ -66,12 +75,28 @@ class feedbackActions extends sfActions
 			unset($tempArray);
 			# code...
 		  }
-    }
-        echo json_encode($resultArr);
+      ob_end_clean();
+      if(sizeof($resultArr) == 0 )
+          die;
+      echo json_encode($resultArr);
                         return sfView::NONE;
                         die;
                 
 	}
+}
+  public function executeReportInvalidLog(sfWebRequest $request)
+  {
+      $startDate=$request->getParameter('RAStartDate');
+      $endDate=$request->getParameter('RAEndDate');
+      $resultArr=(new feedbackReports())->getReportInvalidLog($startDate,$endDate);
+      ob_end_clean();
+      if(sizeof($resultArr) == 0 )
+          die;
+      echo json_encode($resultArr);
+      return sfView::NONE;
+      die;
+
+  }
 
 
 

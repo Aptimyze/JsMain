@@ -1569,7 +1569,10 @@ class searchActions extends sfActions
 					}
 					if($request->getParameter("kundlialerts") == 1 || $request->getParameter("searchBasedParam")=='kundlialerts'){
 						$results_orAnd_cluster = "onlyResults";
+						$noRelaxation = 1;
+						$noCasteMapping = 1;
 					}
+					
 					/** Auto Relaxation Section
 					* increasing search results by changing some search paramters
 					*/
@@ -1627,7 +1630,7 @@ class searchActions extends sfActions
 				{
 					$this->searchId = $this->logAndCacheSearchResults($loggedInProfileObj,$SearchParamtersObj,$beforeFeaturedResonseObj,$noCache);
 				}
-																
+							
 				if($request->getParameter("showFeaturedProfiles") && $request->getParameter("showFeaturedProfiles")>0)
 								$responseObj = $this->SearchChannelObj->showFeaturedProfile($featuredProfile,$currentPageFeatured,$loggedInProfileObj,$SearchParamtersObj,$responseObj,$SearchServiceObj,$request->getParameter("showFeaturedProfiles"),$this->searchId,$this);
 				/* Format Clusters as Required */
@@ -1651,6 +1654,7 @@ class searchActions extends sfActions
 				$this->paginationArr = CommonUtility::pagination($currentPage,$responseObj->getTotalResults(),$SearchParamtersObj);
 				$this->currentPage = $currentPage;
 				$this->noOfResults = $responseObj->getTotalResults();
+				
 				$this->noOfPages = max($this->paginationArr);
                                 if(!$relaxCriteria)
                                         $relaxCriteria="";
@@ -1658,7 +1662,7 @@ class searchActions extends sfActions
                                 
                                 $SearchApiStrategy = SearchApiStrategyFactory::getApiStrategy('V1',$responseObj,$results_orAnd_cluster);
                                 $resultArr = $SearchApiStrategy->convertResponseToApiFormat($loggedInProfileObj,$this->searchClustersArray,$this->searchId,$SearchParamtersObj,$this->relaxedResults,$this->moreProfiles,$this->casteSuggestMessage,$currentPage,$this->noOfPages,$request,$relaxCriteria);
-			
+				
 				if($resultArr["no_of_results"]==0)
 				{
                                         $statusArr = $this->SearchChannelObj->searchZeroResultMessage();
@@ -1702,6 +1706,7 @@ class searchActions extends sfActions
 	*/
 	public function executePopulateDefaultValuesV1(sfWebRequest $request)
 	{
+                $app54 = $request->getParameter("app54");
                 $inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
                 $inputValidateObj = ValidateInputFactory::getModuleObject('search');
                 $inputValidateObj->validatePopulateDefaultValues($request);
@@ -1712,7 +1717,13 @@ class searchActions extends sfActions
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 			if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
 			{
-				$TopSearchBandPopulate =  new TopSearchBandPopulate($parameters);
+                                
+                                if(isset($app54) && $app54 == 1){
+                                        $parameters["SETMULTIPLE"] = 'Y';
+                                        $parameters["app54"] = 1;
+                                }
+				
+                                $TopSearchBandPopulate =  new TopSearchBandPopulate($parameters);
 				$resultArr = $TopSearchBandPopulate->populateSelectedValuesForApp();
 			}
 		}

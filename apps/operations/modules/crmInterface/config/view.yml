@@ -71,3 +71,9 @@ serviceActivationChangeInterfaceSuccess:
     title:        Service Activation Change Interface
   stylesheets:    []
   javascripts:    [] 
+
+changeActiveServicesInterfaceSuccess:
+  metas:
+    title:        Change Active Service Interface
+  stylesheets:    []
+  javascripts:    [] 

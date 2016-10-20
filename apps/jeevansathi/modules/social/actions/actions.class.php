@@ -750,13 +750,13 @@ class socialActions extends sfActions
 	if(!$profilechecksum)
 	{  
 		$loggedInProfile = LoggedInProfile::getInstance('newjs_master');
-        	$loggedInProfile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
-        	$requestedProfileid=$loggedInProfile->getPROFILEID();
-	        $ProfileObj=$loggedInProfile;
-	        if(!$ProfileObj)
+		if(!$loggedInProfile || $loggedInProfile->getPROFILEID()=='')
 	        {
 			$this->forward('static','LogoutPage');
 		}
+        	$loggedInProfile->getDetail("","","HAVEPHOTO,PRIVACY,PHOTO_DISPLAY");
+        	$requestedProfileid=$loggedInProfile->getPROFILEID();
+	        $ProfileObj=$loggedInProfile;
 	}
 	else
 	{
@@ -1449,6 +1449,7 @@ CloseMySelf(this);</script>';
  **/
   public function executeSaveImportImages(sfWebRequest $request)
   {
+	SendMail::send_email("eshajain88@gmail.com,lavesh.rawat@gmail.com","executeSaveImportImages loop which was assumed not to be in use in social/actions","executeSaveImportImages called");
         $profileObj=LoggedInProfile::getInstance('newjs_master'); 
 //throw new jsException("","PROFILEID & PICTUREID IS BLANK IN get() of PICTURE_NEW.class.php");
 	$pid=$profileObj->getPROFILEID();

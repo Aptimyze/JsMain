@@ -59,7 +59,10 @@ class SearchJSMS extends SearchJS
 		}
 		
          
-                
+    if($ResponseArr["stype"]==self::getSearchTypeKundliMatches())
+    {
+			$actionObject->dontShowSorting=1;
+		}          
     if($ResponseArr["responseStatusCode"]==ResponseHandlerConfig::$POST_PARAM_INVALID["statusCode"] || ($ResponseArr["stype"]==SearchTypesEnums::MobileSearchBand && is_array($ResponseArr) && $ResponseArr["no_of_results"]==0))
 		{
 			
@@ -159,6 +162,14 @@ class SearchJSMS extends SearchJS
 				return SearchTypesEnums::JSMSFeatureProfile;
 			}
         
+        
+     /**
+        * getSearchTypeKundliMatches
+        */
+        public static function getSearchTypeKundliMatches()
+        {
+                 return SearchTypesEnums::KundliAlertsJSMS;
+        }
         
         	/**
 	* This function will set the channel type

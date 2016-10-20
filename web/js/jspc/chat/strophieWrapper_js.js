@@ -179,8 +179,8 @@ var strophieWrapper = {
     onRosterUpdate: function (iq) {
         //strophieWrapper.Roster = strophieWrapper.Roster.filter(function(n){ return n != undefined }); 
         //strophieWrapper.stropheLoggerPC("in onRosterPush");
-       // console.log("onRosterUpdate");
-       // console.log(iq);
+       //console.log("onRosterUpdate");
+        //console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
@@ -219,12 +219,14 @@ var strophieWrapper = {
                         invokePluginManagelisting(nodeArr, "add_node", user_id);
                     } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
                         var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
-                        if (oldGroupId && oldGroupId != rosterObj[strophieWrapper.rosterDetailsKey]["groups"][0]) {
+                        if (typeof oldGroupId == "undefined" || (oldGroupId && oldGroupId != rosterObj[strophieWrapper.rosterDetailsKey]["groups"][0])) {
                             var oldArr = [];
                             //console.log("adding new2");
                             oldArr[user_id] = strophieWrapper.Roster[user_id];
                             //strophieWrapper.stropheLoggerPC("moving node from " + oldGroupId);
-                            invokePluginManagelisting(oldArr, "delete_node", user_id);
+                            if(typeof oldGroupId != "undefined"){
+                                invokePluginManagelisting(oldArr, "delete_node", user_id);
+                            }
                             //strophieWrapper.stropheLoggerPC("adding node");
                             //strophieWrapper.stropheLoggerPC(nodeArr);
                             //console.log("adding new 2");
@@ -233,7 +235,7 @@ var strophieWrapper = {
                     }
                     strophieWrapper.Roster[user_id] = rosterObj;
                     if (subscription == "to") {
-                       // console.log("subcribing");
+                       //console.log("subcribing");
                         strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
                     }
                     setTimeout(function () {
@@ -276,7 +278,7 @@ strophieWrapper.sendPresence();
         if (strophieWrapper.getCurrentConnStatus()) {
             var pres = $pres({
                 to: jid,
-                type: "subscribe"
+                type:"subscribe"
             });
             if (message && message !== "") {
                 pres.c("status").t(message).up();
@@ -351,8 +353,8 @@ strophieWrapper.sendPresence();
     },
     //executed after presence has been fetched
     onPresenceReceived: function (presence) {
-       // console.log("onPresenceReceived from- ",$(presence).attr('from'));
-       // console.log(presence);
+       //console.log("onPresenceReceived from- ",$(presence).attr('from'));
+       //console.log(presence);
         var presence_type = $(presence).attr('type'),
             chat_status = "offline"; // unavailable, subscribed, etc...
         var from = $(presence).attr('from'),

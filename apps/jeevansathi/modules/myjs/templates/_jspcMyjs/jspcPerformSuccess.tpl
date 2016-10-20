@@ -105,16 +105,26 @@
                 </div>
             </div>
 </header>
-<div class="bg-4">~if $showFtu eq 1`~include_partial("myjs/jspcMyjs/FTU" ,['profilePic'=>$profilePic,'username'=>$username,'photoUrl'=>$photoUrl,'schedule_visit_widget'=>$schedule_visit_widget,'profileid'=>$profileid,'scheduleVisitCount'=>$scheduleVisitCount,'nameOfUser'=>$nameOfUser])`~else`
+<div class="bg-4">~if $showFtu eq 1`~include_partial("myjs/jspcMyjs/FTU" ,['profilePic'=>$profilePic,'username'=>$username,'photoUrl'=>$photoUrl,'schedule_visit_widget'=>$schedule_visit_widget,'profileid'=>$profileid,'scheduleVisitCount'=>$scheduleVisitCount,'nameOfUser'=>$nameOfUser,'FTUdata'=>$FTUdata,'computeImportantSection' =>$computeImportantSection])`~else`
     <div id="js-engBarMain" class="mainwid container pb40">
         <div class="myjs-bg2">
             <ul class="hor_list myjstab clearfix myjs-bdr4 tabs">
                 <li id="interestEngagementHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
-                            <div id="engage_interestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5">Interest Received</div>
+                            <div id="engage_interestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5">Interests Received</div>
                             <div id="totalInterestReceived" class="myjs-fsize2  vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="interetReceivedCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
+                        </div>
+                    </div>
+                </li>
+
+                <li id="filteredInterestHead">
+                    <div class="myjs-bdr3 fullwid">
+                        <div class="disp-tbl mauto">
+                            <div id="engage_filteredInterestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5">Filtered Interests</div>
+                            <div id="totalFilteredInterestReceived" class="myjs-fsize2  vmid myjs-p15 disp-none myjs-fw"></div>
+                            <div id="filteredInterestCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
                     </div>
                 </li>
@@ -127,21 +137,12 @@
                         </div>
                     </div>
                 </li>
-                <li id="MsgEngagementHead">
+                <li id="MsgEngagementHead" class="notactive">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
                             <div class="hgt25 disp-cell vmid pr5 myjs-fsize1">Messages</div>
                             <div id="totalMessagesReceived" class="myjs-fsize2 vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="messagesCountNew" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
-                        </div>
-                    </div>
-                </li>
-                <li id="requestEngagementHead" class="notactive">
-                    <div class="fullwid">
-                        <div class="disp-tbl mauto">
-                            <div class="hgt25 disp-cell vmid pr5 myjs-fsize1">Requests</div>
-                            <div id="totalRequestsReceived" class="myjs-fsize2  vmid myjs-p15 disp-none myjs-fw"></div>
-                            <div id="requestCountNew" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
                     </div>
                 </li>

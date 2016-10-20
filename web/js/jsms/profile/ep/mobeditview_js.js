@@ -100,7 +100,7 @@ var mobEditPage=(function(){
                             current="Desired Partner";
                         if(key=="Details")
                         {
-                            if(value["basic"]["OnClick"][2]["label_val"]==="Male")
+                            if(value["basic"]["OnClick"][4]["label_val"]==="Male")
                                 current="Groom's Details";
                             else
                                 current="Bride's Details";
@@ -351,6 +351,8 @@ var mobEditPage=(function(){
 		$("#DppEditSection").after(filterButton);
     var dppHint = $("#dppToolTip").html();
     $("#DppEditSection").prepend(dppHint);
+    var dppMatchalertToggle = $("#dppMatchalertToggle").html();
+    $("#DppEditSection").prepend(dppMatchalertToggle);
     //Check horoscope button exist, if yes then add functionality
     if($("#horoscopeButton").length){
       var horoscopeButton=$("#horoscopeButton").html();
@@ -390,7 +392,36 @@ function formatJsonOutput(result)
 	delete(result.responseMessage);
 	delete(result.responseStatusCode);
         delete(result.imageCopyServer);
+        delete(result.cache_flag);
+        delete(result.cache_interval);
+        delete(result.resetCache);
 	return result;
+}
+
+function sendAjaxForToggleMatchalertLogic(setValue)
+{
+    $.ajax({
+          url: "/api/v1/search/matchAlertToggleLogic",
+          dataType: 'json',
+          method: "POST",
+          cache: true,
+          async: true,
+          data:{logic:setValue},
+          success: function(result) {
+	  }
+    });
+}
+function toggleDppMatchalerts(setValue){
+            $("#toggleButton").toggleClass("filter-off").toggleClass("filter-on");
+            
+            if($("#toggleButton").hasClass("filter-on"))
+            { 
+                sendAjaxForToggleMatchalertLogic("history");
+            }
+            else
+            {  
+                sendAjaxForToggleMatchalertLogic("dpp");
+            }
 }
 
 function readMore(string,keyName)

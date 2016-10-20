@@ -460,8 +460,13 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$basicArr[YOURINFO][singleKey]=0;
 		$basicArr[YOURINFO][OnClick][]=$this->getApiFormatArray("YOURINFO","About Me"  ,$this->profile->getDecoratedYourInfo(),"",$this->getApiScreeningField("YOURINFO"),$this->textArea);
 		//username
-		$dbNameOfUser=new incentive_NAME_OF_USER();
-		$name=$dbNameOfUser->getNAME($this->profile->getPROFILEID(),$this->dropdown);
+		$nameOfUserObj = new NameOfUser;
+                $nameData = $nameOfUserObj->getNameData($this->profile->getPROFILEID());
+                $dispStr = "Show to All";
+                if($nameData[$this->profile->getPROFILEID()]["DISPLAY"] == "N"){
+                   $dispStr = "Don't Show";
+                }
+                $settingData = array("display_string"=>$dispStr,"displayValue"=>$nameData[$this->profile->getPROFILEID()]["DISPLAY"],'callbackoverlay'=>"CalloverlayName");
 		$basicArr[basic][outerSectionName]="Basic Details";
 		$basicArr[basic][outerSectionKey]="BasicDetails";
 		$basicArr[basic][singleKey]=0;
@@ -469,17 +474,35 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 //			$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Groom's Name"  ,$name,"",$this->getApiScreeningField("NAME"),$this->text);
 //		else
 //			$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Bride's Name"  ,$name,"",$this->getApiScreeningField("NAME"),$this->text);
-		$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Name"  ,$name,"",$this->getApiScreeningField("NAME"),$this->text);
+		$basicArr[basic][OnClick][]=$this->getApiFormatArray("NAME","Full Name",$nameData[$this->profile->getPROFILEID()]["NAME"],"",$this->getApiScreeningField("NAME"),$this->text,"","","","",1,$settingData);
 		//country
 		$value=$this->profile->getCOUNTRY_RES();
 		$label=$this->profile->getDecoratedCountry();
-		if($this->profile->getCITY_RES())
-		{
-			$value=$value.",".$this->profile->getCITY_RES();
-			$label=$label."-".$this->profile->getDecoratedCity();
-		}
 		
-		$basicArr[basic][OnClick][] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$label,$value,$this->getApiScreeningField("COUNTRY_RES"),$this->dropdown,"CITY_RES","","UpdateCountryCitySection");
+		$basicArr[basic][OnClick][] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$label,$value,$this->getApiScreeningField("COUNTRY_RES"),$this->dropdown,"","","UpdateCountrySection");
+		$stateValue = substr($this->profile->getCITY_RES(),0,2);
+        $stateLabel = FieldMap::getFieldLabel("state_india",$stateValue);
+		if($this->profile->getCOUNTRY_RES()=="51")
+			$hidden = false;
+		else
+			$hidden=true;
+		$basicArr[basic][OnClick][] =$this->getApiFormatArray("STATE_RES","State Living in" ,$stateLabel,$stateValue,$this->getApiScreeningField("CITY_RES"),$this->dropdown,"","","UpdateStateSection",$hidden);
+		$value='';
+		$label='';
+		if($this->profile->getCITY_RES()!='')
+		{
+			if(substr($this->profile->getCITY_RES(),2)=="OT")
+				$city = "0";
+			else
+				$city = $this->profile->getCITY_RES();
+			$value= $city;
+			$label = FieldMap::getFieldLabel("city",$city);
+		}
+		if(($this->profile->getCOUNTRY_RES()=="51" && ($stateValue!='0' && $stateValue!='')) || $this->profile->getCOUNTRY_RES()=="128")
+			$hiddenCity = false;
+		else
+			$hiddenCity = true;
+		$basicArr[basic][OnClick][] =$this->getApiFormatArray("CITY_RES","City Living in" ,$label,$value,$this->getApiScreeningField("CITY_RES"),$this->dropdown,'','',"UpdateCitySection",$hiddenCity);
 		
 		//city
 		//$basicArr[basic][OnClick][] =$this->getApiFormatArray("CITY_RES","City Living in" ,$this->profile->getDecoratedCity(),$this->profile->getCITY_RES(),$this->getApiScreeningField("CITY_RES"),$this->dropdown,"CITY_RES");
@@ -709,7 +732,13 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$DppBasicArr["BasicDetails"][OnClick][]= $this->getApiFormatArray("P_AGE","Age",$szAge,$szAgeVal,$this->getApiScreeningField("PARTNER_AGE"),$this->dropdown,'','','dppAge');
 		//Marital Status
 		$szMStatus = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_MSTATUS());
-		$DppBasicArr["BasicDetails"][OnClick][]= $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"),$this->dropdown,'',1);
+		$DppBasicArr["BasicDetails"][OnClick][]= $this->getApiFormatArray("P_MSTATUS","Marital Status",trim($jpartnerObj->getDecoratedPARTNER_MSTATUS()),$szMStatus,$this->getApiScreeningField("PARTNER_MSTATUS"),$this->dropdown,'',1,'dppMstatus');
+                //Have Children
+                $showHaveChild=1;
+                if($jpartnerObj->getPARTNER_MSTATUS()=="'N'" || $jpartnerObj->getPARTNER_MSTATUS()=="")
+                    $showHaveChild=0;
+		$szChildren = $this->getDecorateDPP_Response($jpartnerObj->getCHILDREN());
+		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_HAVECHILD","Have Children",trim($jpartnerObj->getDecoratedCHILDREN()),$szChildren,$this->getApiScreeningField("CHILDREN"),$this->dropdown,'',1,'',!$showHaveChild);
 		//Country
 		$szCountry = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_COUNTRYRES());
 		
@@ -1056,7 +1085,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * @param $screenBit int
 	 * @param $edit char
 	 * */
-	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="") {
+	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="",$showSettings="",$settingData=array()) {
 	//	$arr["sectionName"]=$sectionName;
 	//	$arr["sectionValue"]=$sectionValue;
 		$arr["key"]=$key;
@@ -1069,6 +1098,8 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$arr["multi"]=$multi;
 		$arr["callBack"]=$callBack;
 		$arr["hidden"]=$hidden;
+		$arr["showSettings"]=$showSettings;
+		$arr["settingData"]=$settingData;
 		return $arr;
 
 	}

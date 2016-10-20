@@ -153,9 +153,9 @@ class viewSimilarProfileAction extends sfActions
 		}                
 		//View Similar Profile Object to set Search Criteria
 		$viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile);
-                $modVal = 10;
+                $modVal = 9;
                 $loggedinMod = $this->loginProfile->getPROFILEID()%$modVal;
-                $modResult =  array(1,2);
+                $modResult =  array(1);
                 if(JsConstants::$vspServer != 'live' || !in_array($loggedinMod,$modResult)){
                     $viewSimilarProfileObj->getViewSimilarCriteria();
                     if($viewSimilarProfileObj->getProfilesToShow() && $viewSimilarProfileObj->getProfilesToShow()!=='9999999999')
@@ -322,7 +322,7 @@ class viewSimilarProfileAction extends sfActions
 		if(MobileCommon::isDesktop())
 		{
 			$vspObj = new ViewSimilarProfile();
-			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype);
+			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype,$this->loginProfile);
 			$this->defaultImage = $transformedResponse["defaultImage"];
 			$this->firstResponse = json_encode($transformedResponse);
 			

@@ -60,6 +60,11 @@ EOF;
 		$matchalerts_LOG_TEMP = new matchalerts_LOG_TEMP;
 		$matchalerts_LOG_TEMP->truncateTable();
 		/* truncate tables */
+                
+                //delete one month old entries
+                $beforeDate = date("Y-m-d", strtotime( date( "Y-m-d", strtotime( date("Y-m-d") ) ) . "-1 month" ) );
+                $lowMatchesCheckObj = new LowDppMatchesCheck();
+                $lowMatchesCheckObj->deleteBeforeDate($beforeDate);
 
 
 		/* populate logic */

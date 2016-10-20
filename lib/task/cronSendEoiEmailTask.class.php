@@ -117,7 +117,7 @@ $memcacheObj->set("cronSendEoi",$i);
                     /**code ends*/
 				}
                 unset($countArr);
- $contactOnceObj->delete();
+ $contactOnceObj->deleteYesterData();
     }
 
     

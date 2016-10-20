@@ -12,6 +12,8 @@ class RegularMatchalertMailerTask extends sfBaseTask
     private $limit = 1000;
     const NTDPP_COUNT = 16;
     const TDPP_COUNT = 10;
+    const NON_TRENDS_LOGIC=3;
+    const TRENDS_LOGIC=2;
   
   protected function configure()
   {
@@ -69,9 +71,19 @@ EOF;
                                 $stypeMatch = $this->getStype($values["LOGIC_USED"]);
 				//Common Parameters required in mailer links
 				$data["stypeMatch"] =$stypeMatch."&clicksource=".$clicksource;
-				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"],$pid);
-				$data["body"]=$subjectAndBody["body"];
+				$subjectAndBody= $this->getSubjectAndBody($data["USERS"][0],$data["COUNT"],$values["LOGIC_USED"],$pid);                           
+                                $data["body"]=$subjectAndBody["body"];
 				$data["showDpp"]=$subjectAndBody["showDpp"];
+                                
+                                if(($values["LOGIC_USED"] == self::NON_TRENDS_LOGIC && $data["COUNT"] < self::NTDPP_COUNT) || ($values["LOGIC_USED"] == self::TRENDS_LOGIC && $data["COUNT"] < self::TDPP_COUNT)){
+                                        if($values["LOGIC_USED"] == self::NON_TRENDS_LOGIC)
+                                            $minIdealRecords = self::NTDPP_COUNT;
+                                        elseif($values["LOGIC_USED"] == self::TRENDS_LOGIC)
+                                            $minIdealRecords = self::TDPP_COUNT;
+                                        $foundCount = $data["COUNT"];
+                                        $data["bodyNote"]="<b>Note</b>: For your best interest, we try to recommend up to $minIdealRecords members matching your Desired Partner Profile every day, but we could find only $foundCount members matching your partner preference. Please broaden your Desired Partner Profile to get more matches on a daily basis.";
+                                        $data["showDpp"]=1;
+                                }
 				$data["surveyLink"]=$subjectAndBody["surveyLink"];
         $data["mailSentDate"] = date("Y-m-d H:i:s");
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 

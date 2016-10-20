@@ -28,7 +28,7 @@ class MembershipHandler
 
         $memCacheObject = JsMemcache::getInstance();
 
-        $servicesObj = new billing_SERVICES('newjs_slave');
+        $servicesObj = new billing_SERVICES('newjs_master');
 
         if ($membership == "MAIN") {
             $key_main = $device . "_MAIN_MEMBERSHIP";
@@ -408,6 +408,13 @@ class MembershipHandler
         return $discount;
     }
 
+    public function getSpecialDiscountForAllDurationsPreviously($profileid)
+    {
+        $vdodObj = new VariableDiscount();
+        $discount = $vdodObj->getPreviousVdLogDetails($profileid, true);
+        return $discount;
+    }
+
     public function horoscopeMatch($user, $maxActivity, $regisDur, $order, $freeLatest)
     {
 
@@ -760,7 +767,8 @@ class MembershipHandler
     public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3)
     {
         if ($userObj->getProfileid()) {
-            $profileObj = LoggedInProfile::getInstance();
+            $profileObj = LoggedInProfile::getInstance('newjs_slave', $userObj->getProfileid());
+            $profileObj->getDetail();
             if ($profileObj->getPROFILEID()) {
                 $activatedStatus = $profileObj->getACTIVATED();
                 $screeningStatus = $activatedStatus;
@@ -770,7 +778,6 @@ class MembershipHandler
                 $discountType    = $discountTypeArr['TYPE'];
             }
         }
-
         if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
             $discountActive  = '1';
             $discntId        = $this->discountOfferID;
@@ -1125,7 +1132,7 @@ class MembershipHandler
         }
     }
 
-    public function setTrackingPriceAndDiscount($userObj, $profileid, $mainMembership, $allMemberships, $currency, $device = 'desktop', $couponCode, $backendRedirect = null, $profileCheckSum = null, $reqid = null)
+    public function setTrackingPriceAndDiscount($userObj, $profileid, $mainMembership, $allMemberships, $currency, $device = 'desktop', $couponCode, $backendRedirect = null, $profileCheckSum = null, $reqid = null, $previousCheck = false)
     {
         $servObj = new billing_SERVICES();
         // Get vasImpression from diff of allMemberships and mainMembership
@@ -1144,6 +1151,7 @@ class MembershipHandler
                 $mainMemDur = $tempMem[1];
             }
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $this->getUserDiscountDetailsArray($userObj, "L");
+            $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {
                     $discPerc = $renewalPercent;
@@ -1172,6 +1180,32 @@ class MembershipHandler
                 if ($fest == 1 && $mainMem == "X" && $specialActive != 1 && $renewalActive != 1) {
                     $discPerc = 0;
                 }
+            }
+            $renPrevFlag = false;
+            // Check for previous Day discount, if yes, get max of discount
+            if ($previousCheck == true) {
+                $renDiscLog = new billing_RENEWAL_DISCOUNT_LOG();
+                $renDisc = $renDiscLog->fetchRenewalDiscountForProfileAndDate($profileid, date("Y-m-d", $expThreshold));
+                $discPerc = max($discPerc, $renDisc);
+                if ($renDisc) {
+                    $renPrevFlag = true;
+                }
+            }
+            // Force VD Check  
+            if ($previousCheck == true && !$renPrevFlag) {
+                $vdDiscArr = $this->getSpecialDiscountForAllDurationsPreviously($profileid);
+                $lastExp = $vdDiscArr['EDATE'];
+                if (strtotime($lastExp) >= $expThreshold) {
+                    $vdDisc = $vdDiscArr['DISCOUNT'][$mainMem];
+                    if (in_array($mainMemDur, array_keys($vdDisc))) {
+                        $discPerc1 = $vdDisc[$mainMemDur];
+                    } else if ($fest == 1) {
+                        $discPerc1 = $vdDisc[$mainMemDur];
+                    } else {
+                        $discPerc1 = 0;
+                    }
+                }
+                $discPerc = max($discPerc, $discPerc1);
             }
             $mems = explode(",", $allMemberships);
         } else if (isset($vasImpression) && !empty($vasImpression)) {
@@ -1556,7 +1590,9 @@ class MembershipHandler
         }
 
         $from = "js-sums@jeevansathi.com";
-        SendMail::send_email($to, $msgBody, $subject, $from);
+        if (JsConstants::$whichMachine == 'prod') {
+            SendMail::send_email($to, $msgBody, $subject, $from);
+        }
     }
 
     public function oldJSMSsetSubcriptionExp($userObj, $memHandlerObj, $obj)

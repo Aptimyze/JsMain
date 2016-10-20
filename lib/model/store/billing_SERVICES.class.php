@@ -507,5 +507,38 @@ class billing_SERVICES extends TABLE
         }
         return $previous_expiry;
     }
+
+    public function getServicesForActivationInterface($servArr) {
+        try {
+            $sql = "SELECT SERVICEID, NAME, SHOW_ONLINE FROM billing.SERVICES WHERE ACTIVE='Y' AND ENABLE='Y' AND (";
+            foreach ($servArr as $key=>$val) {
+                $sqlArr[] = "SERVICEID LIKE '{$val}%'";
+            }
+            $sql .= implode(" OR ", $sqlArr);
+            $sql .= ") ORDER BY SERVICEID ASC";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+            while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+                $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail;
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function changeServiceActivations($servStr, $status) {
+        try {
+            if($status == 'Y'){
+                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='Y' WHERE SERVICEID IN ($servStr)";
+            } else {
+                $sql = "UPDATE billing.SERVICES SET SHOW_ONLINE='N' WHERE SERVICEID IN ($servStr)";
+            }
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 }
 

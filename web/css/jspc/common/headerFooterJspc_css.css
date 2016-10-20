@@ -1,3 +1,10 @@
+
+.basicList{list-style-type: none;}
+
+.mb36{margin-bottom:36px}
+
+
+
 .color-block {
     background: rgb(52, 73, 94);
     /* The Fallback */

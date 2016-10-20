@@ -63,5 +63,59 @@ public function updateAsVerified($submittee){
                 }
     }
 
+        public function getReportInvalidLog($startDate,$endDate)
+    {
+        try     
+        {   
+            $sql = "SELECT * from jsadmin.REPORT_INVALID_PHONE WHERE DATE(`SUBMIT_DATE`) BETWEEN :STARTDATE AND :ENDDATE ORDER BY `SUBMIT_DATE` DESC";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":STARTDATE",$startDate,PDO::PARAM_STR);
+            $prep->bindValue(":ENDDATE",$endDate,PDO::PARAM_STR);
+            $prep->execute();
+            while($row=$prep->fetch(PDO::FETCH_ASSOC))
+            $result[]=$row;
+        return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
+
+
+
+    public function getReportInvalidCount($profileId , $timeOfMarking , $lastDateToCheck)
+    {
+        try     
+        {   
+
+
+                        if(!($profileId) || !$timeOfMarking || !$lastDateToCheck )
+                            throw new jsException("","profileId IS not passed or blank , also check if start and end dates are mentioned");
+
+                        $sql = 'SELECT count( * ) AS CNT
+                        FROM jsadmin.REPORT_INVALID_PHONE
+                        WHERE DATE( `SUBMIT_DATE` ) <= DATE("'.$timeOfMarking.'")
+                        AND DATE( `SUBMIT_DATE` ) >= DATE( "'.$lastDateToCheck.'" )
+                        AND SUBMITTEE ='.$profileId;
+                        $prep = $this->db->prepare($sql);
+                        $prep->execute();
+
+                        if($row=$prep->fetch(PDO::FETCH_ASSOC))   
+                            $output=$row['CNT'];
+                        return $output;
+
+                       
+
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
+
+
 }
-?>
+?>    

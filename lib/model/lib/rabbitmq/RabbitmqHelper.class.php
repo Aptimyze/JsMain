@@ -82,6 +82,7 @@ class RabbitmqHelper
       $channel->exchange_declare(MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"], MQ::$DELAYED_NOTIFICATION_EXCHANGE["TYPE"], MQ::PASSIVE, MQ::$DELAYED_NOTIFICATION_EXCHANGE["DURABLE"], MQ::AUTO_DELETE);
       $channel->exchange_declare(MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"], MQ::$INSTANT_NOTIFICATION_EXCHANGE["TYPE"] , MQ::PASSIVE, MQ::$INSTANT_NOTIFICATION_EXCHANGE["DURABLE"], MQ::AUTO_DELETE);
       $channel->queue_declare(MQ::$INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
       //create queues and bind to delayed exchange for scheduled notifications
       foreach (MQ::$scheduledNotificationBindingKeyArr as $key => $value) 
       {
@@ -93,8 +94,15 @@ class RabbitmqHelper
         $channel->queue_bind(MQ::${$key}, MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],$value);
       }
       $channel->queue_bind(MQ::$INSTANT_NOTIFICATION_QUEUE, MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"]);
+
       return $channel;
     }
+    elseif($key=='notificationLog'){
+       $channel->exchange_declare(MQ::$NOTIFICATION_LOG_EXCHANGE["NAME"], MQ::$NOTIFICATION_LOG_EXCHANGE["TYPE"] , MQ::PASSIVE, MQ::$NOTIFICATION_LOG_EXCHANGE["DURABLE"], MQ::AUTO_DELETE);
+       $channel->queue_declare(MQ::$NOTIFICATION_LOG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+       $channel->queue_bind(MQ::$NOTIFICATION_LOG_QUEUE, MQ::$NOTIFICATION_LOG_EXCHANGE["NAME"]);	
+       return $channel;	
+    }		
     else
       return null;
     

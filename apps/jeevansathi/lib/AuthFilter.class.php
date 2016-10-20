@@ -69,7 +69,10 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				JsCommon::oldIncludes(true);
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto"))
+					JsCommon::oldIncludes(false);
+				else
+					JsCommon::oldIncludes(true);
 			}
 				$protect_obj = new protect;
 				$request->setAttribute("protect_obj",$protect_obj);
@@ -233,7 +236,7 @@ class AuthFilter extends sfFilter {
                                         }
 					else
 					{
-						$naObj = new NEWJS_ASTRO;
+						$naObj = ProfileAstro::getInstance();
                                                 if($naObj->getIfAstroDetailsPresent($data["PROFILEID"]))
 						{
 							if(JsConstants::$alertServerEnable) {

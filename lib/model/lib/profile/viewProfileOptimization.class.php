@@ -32,10 +32,10 @@ class viewProfileOptimization{
     }
     private function setStatus(){
         if(self::$sender){
-            $ignore=new newjs_IGNORE_PROFILE();
+            $ignore=new IgnoredProfiles("newjs_master");
             //he ignored
-            $otherIgnored = $ignore->isIgnored(self::$receiver,self::$sender);
-            if($ignore->isIgnored(self::$sender,self::$receiver)){
+            $otherIgnored = $ignore->ifIgnored(self::$receiver,self::$sender);
+            if($ignore->ifIgnored(self::$sender,self::$receiver)){
                     $ignore=1; //I Ignored
             }
             elseif($otherIgnored)

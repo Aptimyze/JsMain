@@ -153,7 +153,7 @@ class ProfileInformationModuleMap
 			"APP_TYPE"=> "ANDROID",
 			"VERSION"=> "1",
 			"SORT_ORDER"=> "3",
-			"COUNT"=> "2",
+			"COUNT"=> "20",
 			"TUPLE"=> "NO_USERNAME_TUPLE",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
@@ -810,6 +810,22 @@ self::$ContactCenterMYJS=Array(
 			"ICONS"=> "",
 			"BUTTONS"=> "",
 			"TRACKING"=> "",
+		),
+            "FILTERED_INTEREST"=>Array( 
+			"ID"=> "12",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "20",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Filtered Interests",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "responseTracking=52",
 		)
 
 		); 

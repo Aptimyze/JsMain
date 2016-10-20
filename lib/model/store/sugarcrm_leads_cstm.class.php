@@ -81,5 +81,27 @@ class sugarcrm_leads_cstm extends TABLE{
                 }
                 return $res;
         }
+        public function updateLeadSource($leadIdArr,$sourceid)
+        {
+                try
+                {
+                        foreach($leadIdArr as $k=>$v)
+                        {
+                                $queryArr[]=":LEAD_ID".$k;
+                        }
+                        $queryStr = implode(",",$queryArr);
+                        $sql = "UPDATE sugarcrm.leads_cstm c set source_c =:source_c where c.id_c IN (".$queryStr.")";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":source_c", $sourceid, PDO::PARAM_STR);
+                        foreach($leadIdArr as $k=>$v)
+                                $res->bindValue(":LEAD_ID".$k, $v, PDO::PARAM_STR);
+                        $res->execute();
+                }
+                catch(PDOException $e)
+                {
+                        /*** echo the sql statement and error message ***/
+                        throw new jsException($e);
+                }
+	}
 }
 ?>

@@ -383,7 +383,85 @@ box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);}
 .margin_new18 {
     margin: 18px 0px;
 }
+
+/*CAL CSS*/
+
+.modal2 {
+            width: 500px;
+            height: 430px;
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -17%);
+            background-color: #fff;
+            z-index: 1000099;
+        }
+
+        .colrGrey {
+            color: #848285;
+        }
+
+        .bordrBtmGrey {
+            border-bottom: 1px solid #E2E2E2;
+        }
+
+        .padWidget {
+            padding: 16px 31px;
+        }
+
+        #nameInpCAL::-webkit-input-placeholder {
+            /* Chrome/Opera/Safari */
+            color: #DBDBDB;
+        }
+
+        #nameInpCAL::-moz-placeholder {
+            /* Firefox 19+ */
+            color: #DBDBDB;
+        }
+
+        #nameInpCAL:-ms-input-placeholder {
+            /* IE 10+ */
+            color: #DBDBDB;
+        }
+
+        #nameInpCAL:-moz-placeholder {
+            /* Firefox 18- */
+            color: #DBDBDB;
+        }
+
+        #nameInpCAL {
+            border: 1px solid #3F484F
+        }
+
+        .radOption {
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .radOption input {
+            opacity: 0;
+            position: absolute;
+            width: 25px;
+            height: 25px;
+        }
+
+        .radOption i {
+            display: inline-block;
+            vertical-align: middle;
+            width: 25px;
+            height: 25px;
+            background-image: url(/images/jspc/commonimg/iconSprite.png);
+            background-position: -27px -3px;
+        }
+
+        .radOption input:checked+ i {
+            background-image: url(/images/jspc/commonimg/iconSprite.png);
+            background-position: -1px -2px;
+        }
+
 .bubble_overlay{
     position: absolute;
     background-color: rgba(0, 0, 0, 0.65);
 }
+

@@ -219,6 +219,7 @@ class SearchApiDisplay
 		//user's detail fields to be displayed in the search tuple: username, age, height, etc
 		$fieldStr = SearchConfig::$searchDisplayFields;
 		$fieldsArr = explode(",",$fieldStr);
+		
 		if(is_array($this->searchResultsData))
 		{
 			$offsetVal=1;
@@ -269,6 +270,13 @@ class SearchApiDisplay
 							$this->finalResultsArray[$pid][$fieldName]=substr($this->searchResultsData[$key][$fieldName],0,6)."..";
 						}
 						//$this->finalResultsArray[$pid][$fieldName]=substr($this->searchResultsData[$key][$fieldName],0,8)."..".$pid;
+					}
+					if($fieldName =="NAME_OF_USER")
+					{
+						$name = "";
+						$nameOfUserObj = new NameOfUser;
+						$name = $nameOfUserObj->getNameStr($this->searchResultsData[$key][$fieldName],$this->viewerObj->getSUBSCRIPTION());
+						$this->finalResultsArray[$pid][$fieldName]=$name;
 					}
 					if(strstr(SearchConfig::$searchDisplayDecoratedFields,$fieldName))
 					{
@@ -323,6 +331,7 @@ class SearchApiDisplay
 				}
 				
 				$this->finalResultsArray[$pid]['HOROSCOPE']=$this->searchResultsData[$key]['HOROSCOPE'];
+				$this->finalResultsArray[$pid]['GUNASCORE']=array_key_exists("GUNASCORE",$this->searchResultsData[$key])?$this->searchResultsData[$key]['GUNASCORE']:"";
 				if($this->finalResultsArray[$pid]['HOROSCOPE'] == 'Y')
 				{
 					$iconsSize += 30;
@@ -585,6 +594,7 @@ class SearchApiDisplay
 		}
 
 		//getting search results
+	
 		$this->profileids1 = $SearchResponseObj->getSearchResultsPidArr();
 		$this->searchResultsData1 = $SearchResponseObj->getResultsArr();
 
@@ -634,6 +644,10 @@ class SearchApiDisplay
 	**/
 	public function getProfilePhotoForMultipleUsers()
 	{
+         $whitelistedPhotoTypes = array_keys(ProfilePicturesTypeEnum::$PICTURE_UPLOAD_DIR);
+	 if(!in_array($this->photoType,$whitelistedPhotoTypes))
+		 SendMail::send_email("eshajain88@gmail.com,lavesh.rawat@gmail.com","apps/jeevansathi/modules/search/lib/api/SearchApiDisplay.class.php phototype not whitelisted and came as".$v,"SearchApiDisplay.class.php phototype not whitelisted");
+ 
 		$multiplePictureObj = new PictureArray($this->profileObjArr);
                 
 		if($this->isMobile)

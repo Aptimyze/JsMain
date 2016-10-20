@@ -1,5 +1,9 @@
 /*This file contains global chat configurable variables used in chat javascripts channel wise*/
 var chatConfig = chatConfig || {};
+var cook = readCookie('AUTHCHECKSUM');
+if(multiUserPhotoUrl.indexOf("staging") !== -1){
+    multiUserPhotoUrl=multiUserPhotoUrl+"?AUTHCHECKSUM="+cook;
+}
 chatConfig.Params = {
     categoryNames: {
         "Desired Partner Matches": "dpp",
@@ -61,8 +65,8 @@ chatConfig.Params = {
         "mysearch":{}
     },
     //api url for getting photo
-    photoUrl: "/api/v1/social/getMultiUserPhoto",
-    
+    //photoUrl: "/api/v1/social/getMultiUserPhoto",
+    photoUrl: multiUserPhotoUrl,
     //api url for getting self name
     selfNameUr: "/api/v1/chat/selfName",
     //api config for pre acceptance messages
@@ -94,12 +98,12 @@ chatConfig.Params = {
             "tab1": {
                 "tab_name": "Online Matches",
                 "groups": [
-                    /*{
+                    {
                         "id": "dpp",
                         "group_name": "Desired Partner Matches",
                         "show_group_name": true,
                         "hide_offline_users": true
-                    },*/
+                    },
                     {
                         "id": "intsent",
                         "group_name": "Interest Sent",
@@ -284,6 +288,26 @@ chatConfig.Params = {
                 "checkForPaidInitiation":true
             }
         },
+        groupBasedConfig:{
+            "dpp":{
+                "reListCreationAfterUnblock":false //whether user comes again in list after unblock
+            },
+            "shortlist":{
+                "reListCreationAfterUnblock":false
+            },
+            "acceptance":{
+                "reListCreationAfterUnblock":true
+            },
+            "mysearch":{
+                "reListCreationAfterUnblock":false
+            },
+            "intsent":{
+                "reListCreationAfterUnblock":true
+            },
+            "intrec":{
+                "reListCreationAfterUnblock":true
+            }
+        },
         //max count of nodes limit per group
         groupWiseNodesLimit: {
             "dpp": 50,
@@ -300,9 +324,18 @@ chatConfig.Params = {
         checkForDefaultEoiMsg:false,    //check for default eoi msg in chat history while append
         setLastReadMsgStorage:true,
 	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
-        autoChatLogin:true,  //auto-login to chat on site login
+        autoChatLogin:((hideUnimportantFeatureAtPeakLoad == "1") ? false : true),  //auto-login to chat on site login
         rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
-        clearListingCacheTimeout:3600000 //TIme in milliseconds
+        clearListingCacheTimeout:86400000 //TIme in milliseconds(1 day)
     }
 };
-chatConfig.Params.pc.rosterGroups = [ /*chatConfig.Params.categoryNames['Desired Partner Matches'],*/ chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
+chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
+//console.log("autoChatLogin",chatConfig.Params.pc.autoChatLogin);
+chatConfig.Params.pc.tab1groups = [];
+chatConfig.Params.pc.tab2groups = [];
+$(chatConfig.Params.pc.listingTabs.tab1.groups).each(function(index, val){
+    chatConfig.Params.pc.tab1groups.push(val.id);
+});
+$(chatConfig.Params.pc.listingTabs.tab2.groups).each(function(index, val){
+    chatConfig.Params.pc.tab2groups.push(val.id);
+});

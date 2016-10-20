@@ -24,7 +24,13 @@ EOF;
     {
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
+        
+        $todaysDate = date('Y-m-d');
+        $deleteBeforeDate = date('Y-m-d', strtotime('-7 day',  strtotime($todaysDate)));
         $misGenerationHandlerObj = new misGenerationhandler();
+        
+        $misGenerationHandlerObj->removeEntriesFromAgentsLoginLog($deleteBeforeDate);
+        
         $misGenerationHandlerObj->salesProcessWiseTracking();
         unset($misGenerationHandlerObj);
     }

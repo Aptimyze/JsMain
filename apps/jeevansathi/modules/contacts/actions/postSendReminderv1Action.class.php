@@ -16,10 +16,12 @@ class postSendReminderv1Action extends sfAction
   */
   
 	function execute($request){
+ 
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$apiObj                  = ApiResponseHandler::getInstance();
-		if ($request->getParameter("actionName")=="reminder")
-		{
+
+		if ($request->getParameter("actionName")=="reminder" || $request->getParameter("actionName")=="postSendReminder")
+		{ 	
 			$inputValidateObj->validateContactActionData($request);
 			$output = $inputValidateObj->getResponse();
 			if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
@@ -43,6 +45,7 @@ class postSendReminderv1Action extends sfAction
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","R");
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
+
 					$responseArray           = $this->getContactArray($request);
 				}
 			}
@@ -50,6 +53,7 @@ class postSendReminderv1Action extends sfAction
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(true);
 			$apiObj->generateResponse();
 		}
 		else
@@ -87,7 +91,7 @@ class postSendReminderv1Action extends sfAction
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
 		$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::REMINDER);
 		if($this->contactEngineObj->messageId)
-		{
+		{	
 			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
 				$responseArray["headerthumbnailurl"] = $thumbNail;;
@@ -96,6 +100,7 @@ class postSendReminderv1Action extends sfAction
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
+				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
 				
 
 			}
@@ -189,6 +194,7 @@ class postSendReminderv1Action extends sfAction
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
+
 		return $finalresponseArray;
 	}
 }

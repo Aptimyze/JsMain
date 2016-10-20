@@ -561,6 +561,7 @@ class misGenerationhandler
         $jsAdminPswrdsObj=new jsadmin_PSWRDS("newjs_slave");
         $agentsPriv = $jsAdminPswrdsObj->getPrivilegesForSalesTargetWithLastLogin();
         unset($jsAdminPswrdsObj);
+        
         //Get sale within last month from incentive.MONTHLY_INCENTIVE_ELIGIBILITY
         //****Comment from here after 2nd March,2016****
         /*
@@ -584,11 +585,23 @@ class misGenerationhandler
         $curDate = date('Y-m-d');
         $stDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)))." 00:00:00";
         $endDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)))." 23:59:59";
+        
+        $checkLogDate = date('Y-m-d', strtotime('-1 day',  strtotime($curDate)));                
+        $agentLoginLogObj = new jsadmin_AGENTS_LOGIN_LOG("newjs_slave");
+        $agentsLoggedIn = $agentLoginLogObj->fetchLoggedInAgentForDate($checkLogDate);
+        foreach ($agentsLoggedIn as $key => $username){
+            //unset($loginWithinRange);
+            //$loginWithinRange = $this->checkDateWithinRange($details['LAST_LOGIN_DT'], $stDate, $endDate);
+            list($pws, $headCountArr) = $this->addAmountToProcess('',$agentsPriv[$username],$pws,$headCountArr,true);
+        }
+        
+        /*
         foreach ($agentsPriv as $username => $details){
             unset($loginWithinRange);
             $loginWithinRange = $this->checkDateWithinRange($details['LAST_LOGIN_DT'], $stDate, $endDate);
             list($pws, $headCountArr) = $this->addAmountToProcess('',$details,$pws,$headCountArr,$loginWithinRange);
         }
+        */
         
         $incetiveMonthlyIncentiveElgObj = new incentive_MONTHLY_INCENTIVE_ELIGIBILITY("newjs_slave");
         $sales = $incetiveMonthlyIncentiveElgObj->getSalesWithinDates($stDate, $endDate);
@@ -692,6 +705,10 @@ class misGenerationhandler
             $date = $saleDetails["DATE"];
             $amount = $saleDetails["AMOUNT"];
         }
+        else{
+            $date = date('Y-m-d');
+            $amount = 0;
+        }
         $priv = $privilageDetails['PRIVILAGE'];
         //This if checks if the agent has the basic privilage 'ExcSl'
         if($priv){            
@@ -776,5 +793,98 @@ class misGenerationhandler
             return false;
         }
     }
+    
+    public function removeEntriesFromAgentsLoginLog($deleteBeforeDate){
+        $agentsLoginLogObj = new jsadmin_AGENTS_LOGIN_LOG();
+        $agentsLoginLogObj->deleteLogBeforeDate($deleteBeforeDate);
+    }
+
+    // Computed Data
+    public function getComputedFieldSalesExecutiveEfficiencyMis($params){
+
+	include_once(JsConstants::$cronDocRoot."/apps/operations/modules/crmMis/lib/FieldSalesExecutivePerformanceMis.class.php");
+	$start_date =$params['startDate'];
+	$end_date =$params['endDate'];
+	$this->agentName =$params['agentName'];
+
+	$hierarchyObj = new hierarchy($this->agentName);
+	$allReporters = $hierarchyObj->getAllReporters();
+	$this->hierarchyData = $hierarchyObj->getHierarchyData($allReporters);
+	unset($hierarchyObj);
+
+		$fsempObj = new FieldSalesExecutivePerformanceMis($allReporters,$start_date,$end_date);
+
+		// Background color
+		$level = 0;
+		$agentDetails = $fsempObj->getActualFieldSalesAgents();
+		foreach($this->hierarchyData as $key=>$val){
+			if($val['USERNAME'] == $this->agentName){
+				$level = $val['LEVEL'];
+			}
+		}
+		foreach($this->hierarchyData as $key=>$val){
+			if($val['LEVEL'] >= $level && $val['DIRECT_REPORTEE_STATUS'] != 1){
+				$k = array_search($val['USERNAME'], $allReporters);
+				unset($allReporters[$k]);
+			}
+		}
+		$agents = array_merge(array_keys($agentDetails), $allReporters);
+		$temp = array();
+		foreach($agents as $k=>$v){
+			if(in_array($v, $temp)){
+				unset($agents[$k]);
+			} $temp[] = $v;
+		}
+
+		$agents = $fsempObj->sortAgentsAccordingToHierarchy($this->hierarchyData, $agents);
+		$this->background_color = $fsempObj->getBackgroundColor($agents);
+		// Our Original Data Storage Arrays
+
+		$crmAllot = $fsempObj->getAgentAllotedProfileArray($agents);
+		$crmAllotTrac = $fsempObj->getAgentAllotedProfileArrayFromTrac($agents);
+		$this->agentAllotedProfileArray = $fsempObj->unionCrmData($crmAllot, $crmAllotTrac);
+		$this->agentAllotedProfileArray = $fsempObj->filterActualData($this->agentAllotedProfileArray, $agentDetails);
+		$this->allotedProfileCount = $fsempObj->getAgentAllotedProfileCount($this->agentAllotedProfileArray);
+		$this->agentAllotedProfileFreshVisitArray = $fsempObj->getAgentAllotedProfileFreshVisitArray($this->agentAllotedProfileArray, $start_date, $end_date);
+		$this->originalFreshVisitCount = $fsempObj->getFreshVisitCount($this->agentAllotedProfileFreshVisitArray);
+		$this->agentAllotedProfilePaidArray = $fsempObj->getAgentAllotedProfilePaidArray($this->agentAllotedProfileArray);
+		$this->originalPaidProfileCount = $fsempObj->getPaidProfileCount($this->agentAllotedProfilePaidArray);
+		$this->originalTotalSales = $fsempObj->getTotalSales($this->agentAllotedProfilePaidArray);
+		// Getting revised counts as per PRD(Sum of all execs + supervisor + manager)
+		$hierarchyArray = $fsempObj->getHierarchyArray($agents);
+		$this->newAllotedProfileCount = $fsempObj->getResivedCount($this->allotedProfileCount, $hierarchyArray);
+		$this->freshVisitCount = $fsempObj->getResivedCount($this->originalFreshVisitCount, $hierarchyArray);
+		$this->paidProfileCount = $fsempObj->getResivedCount($this->originalPaidProfileCount, $hierarchyArray);
+		$this->totalSales = $fsempObj->getResivedCount($this->originalTotalSales, $hierarchyArray);
+		// Finally getting out percentages and conversion rates, ticketsizes
+		$this->freshVisitPercentage = $fsempObj->getFreshVisitPercentage($this->freshVisitCount, $this->newAllotedProfileCount);
+		$this->visitPaidPercentage = $fsempObj->getVisitPaidPercentage($this->freshVisitCount, $this->paidProfileCount);
+		$this->allotedPaidPercentage = $fsempObj->getAllotedPaidPercentage($this->paidProfileCount, $this->newAllotedProfileCount);
+		$this->ticketSize = $fsempObj->getTicketSize($this->paidProfileCount, $this->totalSales);
+
+		$xlData = $fsempObj->generateDataForXLSEfficiency($agents,$this->newAllotedProfileCount, $this->freshVisitCount, $this->freshVisitPercentage, $this->paidProfileCount, $this->visitPaidPercentage, $this->allotedPaidPercentage, $this->totalSales, $this->ticketSize);
+
+		$groupData['xlData'] =$xlData;
+		$groupData['hierarchyData'] =$this->hierarchyData;
+		$groupData['background_color'] =$this->background_color;
+		$groupData['agentAllotedProfileArray'] =$this->agentAllotedProfileArray;
+		$groupData['agentAllotedProfileArray'] =$this->agentAllotedProfileArray;
+		$groupData['allotedProfileCount'] =$this->allotedProfileCount;
+		$groupData['agentAllotedProfileFreshVisitArray'] =$this->agentAllotedProfileFreshVisitArray;
+		$groupData['originalFreshVisitCount'] =$this->originalFreshVisitCount;
+		$groupData['agentAllotedProfilePaidArray'] =$this->agentAllotedProfilePaidArray;
+		$groupData['originalPaidProfileCount'] =$this->originalPaidProfileCount;
+		$groupData['originalTotalSales'] =$this->originalTotalSales;
+		$groupData['newAllotedProfileCount'] =$this->newAllotedProfileCount;
+		$groupData['freshVisitCount'] =$this->freshVisitCount;
+		$groupData['paidProfileCount'] =$this->paidProfileCount;
+		$groupData['totalSales'] =$this->totalSales;
+		$groupData['freshVisitPercentage'] =$this->freshVisitPercentage;
+		$groupData['visitPaidPercentage'] =$this->visitPaidPercentage;
+		$groupData['allotedPaidPercentage'] =$this->allotedPaidPercentage;
+		$groupData['ticketSize'] =$this->ticketSize;
+		return $groupData;
+    }
+
 }
 ?>
