@@ -507,8 +507,8 @@ strophieWrapper.sendPresence();
     //fetch non roster list
     getNonRosterList:function(){
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
-            console.log("start polling",chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
-            pollForNonRosterListing(groupId);
+            //console.log("fetchNonRosterListing",chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
+            fetchNonRosterListing(groupId);
         });
     },
 

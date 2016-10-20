@@ -30,12 +30,12 @@ function clearNonRosterPollingInterval(type){
     }
 }
 
-/*pollForNonRosterListing
-function to poll for non roster webservice api 
+/*fecthNonRosterListing
+function to call non roster webservice api 
 * @inputs:type
 */
-function pollForNonRosterListing(type){
-    console.log("pollForNonRosterListing",type);
+function fetchNonRosterListing(type){
+    console.log("fetchNonRosterListing",type);
     if(type == undefined || type == ""){
         type = "dpp";
     }
@@ -96,23 +96,27 @@ function pollForNonRosterListing(type){
 "debugInfo": null
 };
             if(response["header"]["status"] == 200){
-                console.log("pollForNonRosterListing success",response);
+                console.log("fetchNonRosterListing success",response);
                 //add in listing, after non roster list has been fetched
                 strophieWrapper.onNonRosterListFetched(response,type);
             }
         },
         error: function (xhr) {
-            console.log("pollForNonRosterListing error",xhr);
+            console.log("fetchNonRosterListing error",xhr);
             //return "error";
         }
     });
-    strophieWrapper.nonRosterClearInterval[type] = setInterval(function(){
-                                                                    console.log("calling pollForNonRosterPresence",type);
-                                                                    //fetch current profileids belonging to given group
-                                                                    var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
-                                                                },chatConfig.Params.nonRosterListingApiConfig[type]["pollingFreq"]
-                                                        );
+    //set interval for presence polling after first non roster list case
+    if(strophieWrapper.initialNonRosterFetched == false){
+        console.log("start polling presence");
+        strophieWrapper.nonRosterClearInterval[type] = setInterval(function(){
+                                                                        console.log("calling pollForNonRosterPresence",type);
+                                                                        //fetch current profileids belonging to given group
+                                                                        var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
+                                                                        pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
+                                                                    },chatConfig.Params.nonRosterListingApiConfig[type]["pollingFreq"]
+                                                            );
+    }
         
 }
 
