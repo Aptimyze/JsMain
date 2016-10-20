@@ -239,10 +239,10 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         $data["SERVICE_MAIN"] = $service_main;
         $data["ADDON_SERVICE"] = $addon_serviceid;
         
-        $service_all = $data["SERVICE_MAIN"];
+        $service_all = $service_main;
 
         if ($addon_serviceid) {
-            $service_all = $service_all . "," . $data["ADDON_SERVICE"];
+            $service_all = $service_main . "," . $addon_serviceid;
         }
         
         $price_tot = getTotalPriceAll($service_all, $curtype, $device);
@@ -265,11 +265,11 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         }
         
         $discount = round($discount, 2);
-        $service_main = ltrim(rtrim($service_main, ","),",");
+        $service_insert = ltrim(rtrim($service_all, ","),",");
         
         $billingOrderObj = new BILLING_ORDERS();
         $paramsStr = "PROFILEID, USERNAME, ORDERID, PAYMODE, SERVICEMAIN, CURTYPE,SERVEFOR, AMOUNT, ENTRY_DT, EXPIRY_DT, BILL_ADDRESS, PINCODE, BILL_COUNTRY, BILL_PHONE, BILL_EMAIL, IPADD,ADDON_SERVICEID,DISCOUNT,SET_ACTIVATE,GATEWAY, DISCOUNT_TYPE";
-        $valuesStr = "'$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_main','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type'";
+        $valuesStr = "'$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_insert','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type'";
         $insert_id = $billingOrderObj->genericOrderInsert($paramsStr, $valuesStr);
         
         $data["ORDERID"] = $ORDERID . "-" . $insert_id;
