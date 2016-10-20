@@ -77,6 +77,11 @@ class detailedAction extends sfAction
 		$this->isMobile=MobileCommon::isMobile("JS_MOBILE");
 		//Assinging smarty variable
 		$this->smarty=$smarty;
+                
+                // VA Whitelisting
+                //whiteListing of parameters
+                DetailActionLib::whiteListParams($request);
+                
 		// Do Horscope Check
 		DetailActionLib::DoHorscope_Check();
 

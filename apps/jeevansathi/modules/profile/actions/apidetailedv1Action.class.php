@@ -119,6 +119,10 @@ class apidetailedv1Action extends sfAction
 			$this->loginProfile=LoggedInProfile::getInstance();
 
 		$this->profile=$this->returnProfile();
+                
+                // VA Whitelisting
+                //whiteListing of parameters
+                DetailActionLib::whiteListParams($request);
 		
 		// Do Horscope Check
 		DetailActionLib::DoHorscope_Check();
