@@ -26,16 +26,24 @@ EOF;
     protected function execute($arguments = array(), $options = array())
     {   
       //Path of Folder which will store all Data Files.
+        $time = date("Y/m/d H:i:s"); 
+        //This is done to convert the time into epoch time system such that it can be fed into Kibana for proper pushing and fetching.
+        $out = new DateTime($time);
+        print_r($out,1);
+        $time = $out->date;
+        print_r($time,1); 
+        $time = strtotime($time);
+
       $dirPath = '/home/ayush/Desktop/logsForCompress';
 
       $hoursNow = $arguments[hours];
-      $hoursNow = 240;
-      for($i=3 ; $i <= $arguments[hours] ; $i++)
+      $hoursNow = 48;
+      for($i=0 ; $i <= $arguments[hours] ; $i++)
       {
         $hoursNow = $i;
         $date = new DateTime(date("Y-m-d", strtotime('-'.$hoursNow.' hours')));
         $date = $date->format('Y.m.d');
-        $elkServer = '10.10.18.66';
+        $elkServer = 'localhost';
         $elkPort = '9200';
         $indexName = 'filebeat-*';
         $query = '_search';
@@ -63,12 +71,20 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrChannels = array();
+        $arrChannels['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
             $arrChannels[$module['key']] = $module['doc_count'];
         }
-            $timestamp = $date->format('MMM dd HH:mm:ss');
-            $arrChannels['@timestamp'] = [$timestamp];  
+          if (false === is_dir($dirPath)) {
+            mkdir($dirPath,0777,true);
+        }
+        if(sizeof($arrChannels) > 1){
+        $filePath = $dirPath."/kibanaCompressing-".$date;
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,json_encode($arrChannels)."\n");
+        fclose($fileResource);
+              }
         
          $params = [
             "query"=> [
@@ -90,12 +106,17 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrDomain = array();
+         $arrDomain['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
             $arrDomain[$module['key']] = $module['doc_count'];
         }
-        $timestamp = $date->format('Y.m.d H:i:s');
-            $arrDomain['@timestamp'] = [$timestamp];
+        if(sizeof($arrDomain) > 1){
+        $filePath = $dirPath."/kibanaCompressing-".$date;
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,json_encode($arrDomain)."\n");
+        fclose($fileResource);
+           }
 
          $params = [
             "query"=> [
@@ -118,12 +139,18 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $TypeOfError = array();
+        $TypeOfError['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
             $TypeOfError[$module['key']] = $module['doc_count'];
         }
-        $timestamp = $date->format('Y.m.d H:i:s');
-            $TypeOfError['@timestamp'] = [$timestamp];
+ 
+        if(sizeof($TypeOfError) > 1){
+        $filePath = $dirPath."/kibanaCompressing-".$date;
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,json_encode($TypeOfError)."\n");
+        fclose($fileResource);
+           }
 
          $params = [
             "query"=> [
@@ -146,14 +173,17 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrHostname = array();
+        $arrHostname['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
             $arrHostname[$module['key']] = $module['doc_count'];
         }
-
-        $timestamp = $date->format('Y.m.d H:i:s');
-            $arrHostname['@timestamp'] = [$timestamp];
-
+        if(sizeof($arrHostname) > 1){
+        $filePath = $dirPath."/kibanaCompressing-".$date;
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,json_encode($arrHostname)."\n");
+        fclose($fileResource);
+        }
          $params = [
             "query"=> [
                 "range" => [
@@ -175,12 +205,18 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrmoduleName = array();
+        $arrmoduleName['time'] = $time;
+
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
             $arrmoduleName[$module['key']] = $module['doc_count'];
         }
-        $timestamp = $date->format('Y.m.d H:i:s');
-            $arrmoduleName['@timestamp'] = [$timestamp];
+        if(sizeof($arrmoduleName) > 1){
+        $filePath = $dirPath."/kibanaCompressing-".$date;
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,json_encode($arrmoduleName)."\n");
+        fclose($fileResource);
+        }
 
          $params = [
             "query"=> [
@@ -203,13 +239,17 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrLogType = array();
+        $arrLogType['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
             $arrLogType[$module['key']] = $module['doc_count'];
         }
-        $timestamp = $date->format('Y.m.d H:i:s');
-            $arrLogType['@timestamp'] = [$timestamp];
-             
+        if(sizeof($arrLogType) > 1){
+        $filePath = $dirPath."/kibanaCompressing-".$date;
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,json_encode($arrLogType)."\n");
+        fclose($fileResource);
+             }
 
          $params = [
             "query"=> [
@@ -232,13 +272,17 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrApiVersion = array();
+        $arrApiVersion['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
             $arrApiVersion[$module['key']] = $module['doc_count'];
         }
-
-           $timestamp = $date->format('Y.m.d H:i:s');
-            $arrApiVersion['@timestamp'] = [$timestamp];
+        if(sizeof($arrApiVersion) > 1){
+        $filePath = $dirPath."/kibanaCompressing-".$date;
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,json_encode($arrApiVersion)."\n");
+        fclose($fileResource);
+        }
 
          $params = [
             "query"=> [
@@ -261,13 +305,17 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrActionName = array();
+        $arrActionName['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
             $arrActionName[$module['key']] = $module['doc_count'];
         }
-       $timestamp = $date->format('Y.m.d H:i:s');
-            $arrActionName['@timestamp'] = [$timestamp];
-
+        if(sizeof($arrActionName) > 1){
+        $filePath = $dirPath."/kibanaCompressing-".$date;
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,json_encode($arrActionName)."\n");
+        fclose($fileResource);
+        }
          $params = [
             "query"=> [
                 "range" => [
@@ -289,37 +337,40 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrrequestURI = array();
+        $arrrequestURIs['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
             $arrrequestURI[$module['key']] = $module['doc_count'];
         }
-        $timestamp = $date->format('Y.m.d H:i:s');
-            $arrrequestURIs['@timestamp'] = [$timestamp];
-                
+        if(sizeof($arrrequestURI) > 1){
+        $filePath = $dirPath."/kibanaCompressing-".$date;
+        $fileResource = fopen($filePath,"a");
+        fwrite($fileResource,json_encode($arrrequestURI)."\n");
+        fclose($fileResource);
+        }
+   /*             
+        $finalArrayToWrite[] = ($arrChannels);
+        $finalArrayToWrite[] = ($arrDomain);
+        $finalArrayToWrite[] = ($TypeOfError);
+        $finalArrayToWrite[] = ($arrHostname);
+        $finalArrayToWrite[] = ($arrmoduleName);
+        $finalArrayToWrite[] = ($arrApiVersion);
+        $finalArrayToWrite[] = ($arrActionName);
+        $finalArrayToWrite[] = ($arrrequestURI);
+        $finalArrayToWrite[] = ($arrLogType); 
 
-        $finalArrayToWrite['arrChannels'] = json_encode($arrChannels);
-        $finalArrayToWrite['arrDomain'] = json_encode($arrDomain);
-        $finalArrayToWrite['TypeOfError'] = json_encode($TypeOfError);
-        $finalArrayToWrite['arrHostname'] = json_encode($arrHostname);
-        $finalArrayToWrite['arrmoduleName'] = json_encode($arrmoduleName);
-        $finalArrayToWrite['arrApiVersion'] = json_encode($arrApiVersion);
-        $finalArrayToWrite['arrActionName'] = json_encode($arrActionName);
-        $finalArrayToWrite['arrrequestURI'] = json_encode($arrrequestURI);
-        $finalArrayToWrite['arrLogType'] = json_encode($arrLogType); 
-
-      //  $arrToWrite['DESCRIPTION'] = "This is data from now-{$hoursNow}h  to now-{$ltHour}h \n ";
-//        $arrToWrite['DATA'] = $finalArrayToWrite;
               
         if (false === is_dir($dirPath)) {
             mkdir($dirPath,0777,true);
         }
-        
+
+
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
-        fwrite($fileResource,print_r($arrToWrite,true));
-        //fwrite($fileResource,json_encode($finalArrayToWrite));
-        fwrite($fileResource, "\n");
+        fwrite($fileResource,json_encode($finalArrayToWrite)."\n");
         fclose($fileResource);
+
+        */
       }
     }
 }

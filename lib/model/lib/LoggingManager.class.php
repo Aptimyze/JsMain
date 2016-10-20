@@ -217,7 +217,13 @@ class LoggingManager
 	 */
 	private function getLogData($exception,$isSymfony,$logArray)
 	{
-		$time = date('h:i:s');
+		$time = date("Y/m/d H:i:s"); 
+		//This is done to convert the time into epoch time system such that it can be fed into Kibana for proper pushing and fetching.
+		$out = new DateTime($time);
+		print_r($out,1);
+		$time = $out->date;
+		print_r($time,1); 
+		$time = strtotime($time);
 
 		$logId = $this->getLogId($logArray);
 		$clientIp = $this->getLogClientIP();
