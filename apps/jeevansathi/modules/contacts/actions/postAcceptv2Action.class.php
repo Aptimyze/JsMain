@@ -116,6 +116,12 @@ class postAcceptv2Action extends sfAction
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Deleted Profile";
 			}
+                        elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+			}
 			elseif($errorArr["PROFILE_HIDDEN"] == 2)
 			{
 				$responseArray["errmsglabel"] = "This profile is Hidden";
@@ -151,12 +157,6 @@ class postAcceptv2Action extends sfAction
 				$responseArray["errmsglabel"] = "Expession of interest will be delivered only when Profile is live";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Profile is Underscreening";
-			}
-			elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
-			{
-				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
-				$responseArray["errmsgiconid"] = "16";
-				$responseArray["headerlabel"] = "Unsupported action";
 			}
 			else
 			{
