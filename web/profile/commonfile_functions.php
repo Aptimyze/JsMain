@@ -572,7 +572,7 @@ $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"          => "10");
 $js_arr[]=array("jspc/contactEngine/contactEngineButtons"              => "15");
 $js_arr[]=array("jspc/search/advancedSearch"     => "2");
-$js_arr[]=array("jspc/common/jquery_mCustomScrollbar"     => "4");
+$js_arr[]=array("jspc/common/jquery_mCustomScrollbar"      => "5");
 $js_arr[]=array("jspc/success_story/jqueryFilestyle" => "1");
 $js_arr[]=array("jspc/profile/edit/profile/jspcCoverPhoto_js"  => "1");
 $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfileCompletion_js"  => "1");
