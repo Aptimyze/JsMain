@@ -24,7 +24,9 @@ class lastSearchResults extends SearchLogger
 	public function getLastSearchResultCriteria()
 	{
 		$output = $this->getLastSearchCriteria($this->pid,SearchTypesEnums::Advance);
-        if($output == 0)
+        
+		//The output is 1 in case there is an array and 0 in case no results were found. Therefore, setProfilesToShow is set to "0 0" so as to show the ZERO results message
+       	if($output == 0)
         {
         	$this->setProfilesToShow("0 0");
         }

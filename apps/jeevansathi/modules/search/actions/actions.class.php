@@ -88,11 +88,11 @@ class searchActions extends sfActions
 			$this->searchBasedParam = 'partnermatches';
 		}
 		//This has been added to show last search Results
-		// elseif($request->getParameter("searchBasedParam")=='lastSearchResults' || $request->getParameter("lastSearchResults")==1)
-		// {
-		// 	$request->setParameter("lastSearchResults",'1');
-		// 	$this->searchBasedParam = 'lastSearchResults';
-		// }
+		elseif($request->getParameter("searchBasedParam")=='lastSearchResults' || $request->getParameter("lastSearchResults")==1)
+		{
+			$request->setParameter("lastSearchResults",'1');
+			$this->searchBasedParam = 'lastSearchResults';
+		}
 
 
 		$searchEngine = 'solr';
