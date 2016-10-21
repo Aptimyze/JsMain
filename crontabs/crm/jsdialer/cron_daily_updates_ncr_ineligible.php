@@ -7,6 +7,7 @@
 include("MysqlDbConstants.class.php");
 include("cron_daily_updates_functions.php");
 include("DialerHandler.class.php");
+include('DialerLog.class.php');
 
 //Connection at JSDB
 $db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
@@ -30,9 +31,9 @@ if(!$status)
 $start_from =$status;
 for($i=$start_from;$i<$limit;$i++)
 {
-	$ignore_array 	= compute_ignore_array($i,$db_js);
-	$vd_array 	= getVDdiscount($ignore_array,$db_js);
-        stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$db_dialer,$db_js_111,$vd_array);
+	$ignore_array 	= $dialerHandlerObj->getInDialerInEligibleProfiles($i,$campaign_name);
+	$vd_array 	= $dialerHandlerObj->getVDdiscount($ignore_array);
+        $dialerHandlerObj->stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$vd_array);
 	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
 	echo "DONE$i"."\n";
 }
