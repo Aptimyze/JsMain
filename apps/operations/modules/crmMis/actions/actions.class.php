@@ -1475,7 +1475,7 @@ class crmMisActions extends sfActions
         */
         public function executeFieldSalesExecutiveEfficiencyMis(sfWebRequest $request)
         {
-		ini_set('max_execution_time',60);
+		ini_set('max_execution_time',100);
                 $pattern1 = "/^([a-z0-9])+$/";
                 $pattern2 = "/^([0-9])+$/";
                 $pattern3 = "/^([A-Z])+$/";
@@ -1557,83 +1557,62 @@ class crmMisActions extends sfActions
                                 {
                                         $ddarr = GetDateArrays::getDateArrayForTemplate($start_date,$end_date);
                                         $this->range_format = $formArr["range_format"];
+					$this->report_format =$formArr["report_format"];	
                                         $this->start_date = $start_date;
                                         $this->end_date = $end_date;
 
-                                        $hierarchyObj = new hierarchy($this->agentName);
-                                        $allReporters = $hierarchyObj->getAllReporters();
-                                        $this->hierarchyData = $hierarchyObj->getHierarchyData($allReporters);
-                                        unset($hierarchyObj);
+					// Memcache Key based on Form inputs
+					$this->dateFormat =$this->start_date."_".$this->end_date;
+				      	$memcacheObj = JsMemcache::getInstance();
+				      	$this->memcacheKey = $this->range_format."_".$this->dateFormat."_".$this->report_format;
+					if($this->agentName)
+						$this->memcacheKey .="_".$this->agentName;
+				      	$memKeySet = $memcacheObj->get($this->memcacheKey);
+					$params =array('startDate'=>$this->start_date,'endDate'=>$this->end_date,'agentName'=>$this->agentName);
+					$params['memKeySet'] = $this->memcacheKey; 	
+                                        //echo $this->memcacheKey;
+                                        //print_r($params);die;
 
                                         if($this->range_format != 'MY'){
                                                 $this->header = "For the period ".$this->displayDate;
                                         } else {
                                                 $this->header = "For the month of ".$this->displayDate;
                                         }
-
-                                        $fsempObj = new FieldSalesExecutivePerformanceMis($allReporters,$start_date,$end_date);
-
-                                        // Background color
-                                        $level = 0;
-                                        $agentDetails = $fsempObj->getActualFieldSalesAgents();
-                                        foreach($this->hierarchyData as $key=>$val){
-                                                if($val['USERNAME'] == $this->agentName){
-                                                        $level = $val['LEVEL'];
-                                                }
-                                        }
-                                        foreach($this->hierarchyData as $key=>$val){
-                                                if($val['LEVEL'] >= $level && $val['DIRECT_REPORTEE_STATUS'] != 1){
-                                                        $k = array_search($val['USERNAME'], $allReporters);
-                                                        unset($allReporters[$k]);
-                                                }
-                                        }
-                                        $agents = array_merge(array_keys($agentDetails), $allReporters);
-                                        $temp = array();
-                                        foreach($agents as $k=>$v){
-                                                if(in_array($v, $temp)){
-                                                        unset($agents[$k]);
-                                                } $temp[] = $v;
-                                        }
-                                        $agents = $fsempObj->sortAgentsAccordingToHierarchy($this->hierarchyData, $agents);
-                                        $this->background_color = $fsempObj->getBackgroundColor($agents);
-
-                                        // Our Original Data Storage Arrays
-
-                                        $crmAllot = $fsempObj->getAgentAllotedProfileArray($agents);
-                                        $crmAllotTrac = $fsempObj->getAgentAllotedProfileArrayFromTrac($agents);
-                                        $this->agentAllotedProfileArray = $fsempObj->unionCrmData($crmAllot, $crmAllotTrac);
-                                        $this->agentAllotedProfileArray = $fsempObj->filterActualData($this->agentAllotedProfileArray, $agentDetails);
-                                        // print "Profile Array Details \n";
-                                        // print_r($this->agentAllotedProfileArray);
-                                        // print PHP_EOL.PHP_EOL.PHP_EOL;
-                                        $this->allotedProfileCount = $fsempObj->getAgentAllotedProfileCount($this->agentAllotedProfileArray);
-                                        $this->agentAllotedProfileFreshVisitArray = $fsempObj->getAgentAllotedProfileFreshVisitArray($this->agentAllotedProfileArray, $start_date, $end_date);
-                                        // print "Fresh Visit Array Details \n";
-                                        // print_r($this->agentAllotedProfileFreshVisitArray);
-                                        // print PHP_EOL.PHP_EOL.PHP_EOL;
-                                        $this->originalFreshVisitCount = $fsempObj->getFreshVisitCount($this->agentAllotedProfileFreshVisitArray);
-                                        $this->agentAllotedProfilePaidArray = $fsempObj->getAgentAllotedProfilePaidArray($this->agentAllotedProfileArray);
-                                        // print "Paid Array Details \n";
-                                        // print_r($this->agentAllotedProfilePaidArray);
-                                        // print PHP_EOL.PHP_EOL.PHP_EOL;
-                                        //$this->agentAllotedMainMemPaidArray = $fsempObj->getAgentAllotedMainMemPaidArray($this->agentAllotedProfileArray);
-                                        $this->originalPaidProfileCount = $fsempObj->getPaidProfileCount($this->agentAllotedProfilePaidArray);
-                                        $this->originalTotalSales = $fsempObj->getTotalSales($this->agentAllotedProfilePaidArray);
-                                        // Getting revised counts as per PRD(Sum of all execs + supervisor + manager)
-                                        $hierarchyArray = $fsempObj->getHierarchyArray($agents);
-                                        $this->newAllotedProfileCount = $fsempObj->getResivedCount($this->allotedProfileCount, $hierarchyArray);
-                                        $this->freshVisitCount = $fsempObj->getResivedCount($this->originalFreshVisitCount, $hierarchyArray);
-                                        $this->paidProfileCount = $fsempObj->getResivedCount($this->originalPaidProfileCount, $hierarchyArray);
-                                        $this->totalSales = $fsempObj->getResivedCount($this->originalTotalSales, $hierarchyArray);
-                                        // Finally getting out percentages and conversion rates, ticketsizes
-
-                                        $this->freshVisitPercentage = $fsempObj->getFreshVisitPercentage($this->freshVisitCount, $this->newAllotedProfileCount);
-                                        $this->visitPaidPercentage = $fsempObj->getVisitPaidPercentage($this->freshVisitCount, $this->paidProfileCount);
-                                        $this->allotedPaidPercentage = $fsempObj->getAllotedPaidPercentage($this->paidProfileCount, $this->newAllotedProfileCount);
-                                        $this->ticketSize = $fsempObj->getTicketSize($this->paidProfileCount, $this->totalSales);
-
+				//$memKeySet='';
+			      	if($memKeySet == 'C')
+			      	{
+					//echo "1";
+					$this->computing = true;
+					$this->setTemplate('computationFieldSalesExecutiveEfficiencyMisResultScreen1');
+				}
+      				elseif(is_array($memKeySet))
+      				{
+					//echo "2";
+				        $this->groupData = $memKeySet;
+					//print_r($this->groupData);die;
+				        $this->computing = false;
+					$xlData                                 =$this->groupData['xlData'];
+					$this->hierarchyData 			=$this->groupData['hierarchyData'];
+					$this->background_color 		=$this->groupData['background_color'];
+                                        $this->agentAllotedProfileArray		=$this->groupData['agentAllotedProfileArray'];
+                                        $this->agentAllotedProfileArray		=$this->groupData['agentAllotedProfileArray'];
+                                        $this->allotedProfileCount		=$this->groupData['allotedProfileCount'];
+                                        $this->agentAllotedProfileFreshVisitArray=$this->groupData['agentAllotedProfileFreshVisitArray'];
+                                        $this->originalFreshVisitCount		=$this->groupData['originalFreshVisitCount'];
+                                        $this->agentAllotedProfilePaidArray	=$this->groupData['agentAllotedProfilePaidArray'];
+                                        $this->originalPaidProfileCount		=$this->groupData['originalPaidProfileCount'];
+                                        $this->originalTotalSales		=$this->groupData['originalTotalSales'];
+                                        $this->newAllotedProfileCount		=$this->groupData['newAllotedProfileCount'];
+                                        $this->freshVisitCount			=$this->groupData['freshVisitCount'];
+                                        $this->paidProfileCount			=$this->groupData['paidProfileCount'];
+                                        $this->totalSales			=$this->groupData['totalSales'];
+                                        $this->freshVisitPercentage		=$this->groupData['freshVisitPercentage'];
+                                        $this->visitPaidPercentage		=$this->groupData['visitPaidPercentage'];
+                                        $this->allotedPaidPercentage		=$this->groupData['allotedPaidPercentage'];
+                                        $this->ticketSize			=$this->groupData['ticketSize'];
                                         if($formArr["report_format"]=="XLS")
-                                                {       $monthArr =  array( '01' => 'January',
+                                        {       
+							$monthArr =  array( '01' => 'January',
                                                         '02' => 'February',
                                                         '03' => 'March',
                                                         '04' => 'April',
@@ -1645,26 +1624,38 @@ class crmMisActions extends sfActions
                                                         '10' => 'October',
                                                         '11' => 'November',
                                                         '12' => 'December',);
-                                        if($formArr["range_format"]=="MY"){
-                                                $string .= "For_".$monthArr[$formArr["monthValue"]]."-".$formArr["yearValue"];
-                                        } else {
-                                                $string .= $start_date."_to_".$end_date;
-                                        }
-                                        $xlData = $fsempObj->generateDataForXLSEfficiency($agents,$this->newAllotedProfileCount, $this->freshVisitCount, $this->freshVisitPercentage, $this->paidProfileCount, $this->visitPaidPercentage, $this->allotedPaidPercentage, $this->totalSales, $this->ticketSize);
-                                        header("Content-Type: application/vnd.ms-excel");
-                                        header("Content-Disposition: attachment; filename=Field_Sales_Executive_Efficiency_MIS_".$string.".xls");
-                                        header("Pragma: no-cache");
-                                        header("Expires: 0");
-                                        echo $xlData;
-                                        die();
-                                }
-
-                                unset($fsempObj);
-
-                                $this->setTemplate('fieldSalesExecutiveEfficiencyMisResultScreen1');
-                        }
-                }
-        }
+                                        	if($formArr["range_format"]=="MY"){
+                                        	        $string .= "For_".$monthArr[$formArr["monthValue"]]."-".$formArr["yearValue"];
+                                        	} else {
+                                        	        $string .= $start_date."_to_".$end_date;
+                                        	}
+                                        	//$xlData = $fsempObj->generateDataForXLSEfficiency($agents,$this->newAllotedProfileCount, $this->freshVisitCount, $this->freshVisitPercentage, $this->paidProfileCount, $this->visitPaidPercentage, $this->allotedPaidPercentage, $this->totalSales, $this->ticketSize);
+                                        	header("Content-Type: application/vnd.ms-excel");
+                                        	header("Content-Disposition: attachment; filename=Field_Sales_Executive_Efficiency_MIS_".$string.".xls");
+                                        	header("Pragma: no-cache");
+                                        	header("Expires: 0");
+                                        	echo $xlData;
+                                        	die();
+                                	}
+                                	unset($fsempObj);
+	                                $this->setTemplate('fieldSalesExecutiveEfficiencyMisResultScreen1');
+				}
+			      	elseif($memKeySet == '')
+      				{
+					//echo "3";
+				        $this->computing = true;
+				        $memcacheObj->set("$this->memcacheKey","C");
+				        $memcacheObj->set("MIS_FS_PARAMS_KEY",$params);
+					$params =$memcacheObj->get("MIS_FS_PARAMS_KEY");
+				        $filePath = JsConstants::$cronDocRoot."/symfony cron:cronFieldSalesExecutiveEfficiencyMis > /dev/null &";
+				        $command = JsConstants::$php5path." ".$filePath;
+					//echo $command;
+				        passthru($command);
+				        $this->setTemplate('computationFieldSalesExecutiveEfficiencyMisResultScreen1');
+      				}
+                        	}// end of -errorMsg 
+               		}
+        	}
                 else            //If Field Sales Executive Performance MIS link is clicked in mis
                 {
                         if(!preg_match($pattern1,$request->getParameter('cid')))
@@ -2618,7 +2609,7 @@ class crmMisActions extends sfActions
                 $billServStatObj = new BILLING_SERVICE_STATUS('newjs_slave');
                 $billPurObj = new BILLING_PURCHASES('newjs_slave');
                 $billPayDetObj = new BILLING_PAYMENT_DETAIL('newjs_slave');
-                $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRange($start_date, $end_date);
+                $expiryProfiles = $billServStatObj->getRenewalProfilesDetailsInRangeWithoutActiveCheck($start_date, $end_date);
                 $misData = array();
                 foreach ($expiryProfiles as $key=>$pd) {
                 	$misData[$pd['EXPIRY_DT']]['expiry'][$pd['BILLID']] = $pd['PROFILEID'];
@@ -2656,11 +2647,13 @@ class crmMisActions extends sfActions
                 		$this->misData[date("j/M/y", $i)]['renewE10'] = 0;
                 		$this->misData[date("j/M/y", $i)]['totalRev'] = 0;
                 	}
+                	$this->misData[date("j/M/y", $i)]['trsc'] = 0;
+                	$this->misData[date("j/M/y", $i)]['convPerc'] = 0;
                 }
-                foreach ($this->misData as $key=>&$val) {
-                	$val['tsrc'] = $val['renewE30'] + $val['renewE30E'] + $val['renewEE10'] + $val['renewE10'];
-                	$val['convPerc'] = round($val['tsrc']/$val['expiry'], 2)*100;
-                	$val['totalRev'] = $val['totalRev'];
+                foreach ($this->misData as $key=>$val) {
+                	$this->misData[$key]['tsrc'] = $val['renewE30'] + $val['renewE30E'] + $val['renewEE10'] + $val['renewE10'];
+                	$this->misData[$key]['convPerc'] = round($this->misData[$key]['tsrc']/$val['expiry'], 2)*100;
+                	$this->misData[$key]['totalRev'] = $val['totalRev'];
                 }
                 $this->totData = array();
                 foreach ($this->misData as $key=>$val) {

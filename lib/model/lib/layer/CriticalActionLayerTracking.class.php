@@ -225,8 +225,9 @@ return 0;
                     break;  
                     
                     case '9': 
-                      
-                      if(!MobileCommon::isApp())
+                      $appVersion=$request->getParameter('API_APP_VERSION');
+                      $isApp=MobileCommon::isApp();
+                      if(!$isApp || ($isApp=='A' && $appVersion>=63) || ($isApp=='I' && $appVersion>=3.0) )
                       {
                       $nameArr=(new NameOfUser())->getNameData($profileid);
                       if(!is_array($nameArr[$profileid]) || !$nameArr[$profileid]['DISPLAY'] || !$nameArr[$profileid]['NAME'])

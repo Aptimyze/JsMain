@@ -76,7 +76,7 @@ class FAQFeedBack
 
 				// block for blocking the reported abuse added by Palash
 
-				$ignore_Store_Obj = new NEWJS_IGNORE;
+				$ignore_Store_Obj = new IgnoredProfiles("newjs_master");
 				$ignore_Store_Obj->ignoreProfile($loginProfile->getPROFILEID(),$otherProfileId);
 				//Entry in Chat Roster
 				try {

@@ -97,7 +97,7 @@ class ProfilePicturesTypeEnum
                         );
     //This array is to be used in a oneTimeCron checkPhotoUrlTask where the ordering != 0
     public static $PICTURE_FIELD_FOR_ALBUM_PICS = array("MainPicUrl","OriginalPicUrl",
-                        "Thumbail96Url","ThumbailUrl");
+                        "Thumbail96Url");
         
         
 }

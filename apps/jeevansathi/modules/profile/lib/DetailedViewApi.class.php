@@ -260,7 +260,15 @@ class DetailedViewApi
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
-			$szLocation=$objProfile->getDecoratedCity();
+		{
+			if(substr($objProfile->getCITY_RES(),2)=="OT")
+		        {
+				$stateLabel = FieldMap::getFieldLabel("state_india",substr($objProfile->getCITY_RES(),0,2));
+				$szLocation = $stateLabel."-"."Others";
+			}
+			else
+				$szLocation=$objProfile->getDecoratedCity();
+		}
 		else
 			$szLocation = $objProfile->getDecoratedCountry();
 		$this->m_arrOut['location'] = $szLocation;
@@ -1294,6 +1302,12 @@ class DetailedViewApi
 			$this->m_arrOut['is_ignored'] = "1";
 		}
                 $this->m_arrOut['show_ecp'] = 'true';
+        
+        //AstroApiParam for third party
+        $this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
+        if(true !== is_null($this->m_arrOut['guna_api_parmas'])) {
+            $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+        }
 	}
 	
 	protected function DecorateOpenTextField($szInput)
@@ -1402,5 +1416,17 @@ class DetailedViewApi
 				return 'Y';
       }
       return 'N';
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getGunaApiParams()
+    {
+        $loginProfile = $this->m_actionObject->loginProfile;
+        $otherProfile = $this->m_objProfile;
+        
+        return ProfileCommon::getGunaApiParams($loginProfile, $otherProfile);
     }
 }

@@ -47,7 +47,25 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
 			$basicArr[]  =$this->getApiFormatArray("SECT","Sect" ,$this->profile->getDecoratedSect(),$this->profile->getSECT(),$this->getApiScreeningField("SECT"));
 		elseif($religion== Religion::CHRISTIAN || $religion==Religion::MUSLIM)
 			$basicArr[]  =$this->getApiFormatArray("SECT","Caste" ,$this->profile->getDecoratedSect(),$this->profile->getSECT(),$this->getApiScreeningField("SECT"));
+           
+                
+    //state
+        $stateVal = substr($this->profile->getCITY_RES(),0,2);
+        $basicArr[] =$this->getApiFormatArray("STATE_RES","State Living in" ,"",$stateVal,$this->getApiScreeningField("COUNTRY_RES"));
     
+    $value='';
+    if($this->profile->getCITY_RES()!='0'){
+    if($this->profile->getCITY_RES())
+    {
+            if(substr($this->profile->getCITY_RES(),2)=="OT")
+                    $city = "0";
+            else
+                    $city = $this->profile->getCITY_RES();
+            $value= $city;
+            $label = FieldMap::getFieldLabel("city",$city);
+    }
+        $basicArr[] =$this->getApiFormatArray("CITY_RES","City Living in" ,$label,$value,$this->getApiScreeningField("CITY_RES"));
+    }
     //gothra_maternal 
     if($religion==RELIGION::HINDU )
       $basicArr[] =$this->getApiFormatArray("GOTHRA_MATERNAL","Gothra (maternal)" ,$this->profile->getDecoratedGothraMaternal(),$this->profile->getGOTHRA_MATERNAL(),$this->getApiScreeningField("GOTHRA_MATERNAL"));
@@ -126,16 +144,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     
     //Alt Number Owner Name
     $contactArr[]=$this->getApiFormatArray("ALT_MOBILE_NUMBER_OWNER","Relationship",$extendedContactObj->ALT_MOBILE_NUMBER_OWNER,$extendedContactArray['ALT_MOBILE_NUMBER_OWNER'],$this->getApiScreeningField("ALT_MOBILE_NUMBER_OWNER"));
-    
-    //Mobile Privacy Settings
-    $contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
-    
-    //Landline Privacy Settings
-    $contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
-    
-    //Alt Number Privacy Settings
-    $contactArr[]=$this->getApiFormatArray("SHOWALT_MOBILE","" ,$extendedContactArray['SHOWALT_MOBILE'],$extendedContactArray['SHOWALT_MOBILE'],$this->getApiScreeningField("SHOWALT_MOBILE"));
-    
     
     //Contact Address
     $contactArr[]=$this->getApiFormatArray("CONTACT","Contact Address" ,$this->profile->getCONTACT(),$this->profile->getCONTACT(),$this->getApiScreeningField("CONTACT"));

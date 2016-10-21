@@ -848,6 +848,11 @@ input:focus {
 .pt25 {
     padding-top: 25px
 }
+.ptm25 {
+    padding-top: 25px;
+    padding-right: 48px;
+    padding-left: 48px;
+}
 
 .pt26 {
     padding-top: 26px
