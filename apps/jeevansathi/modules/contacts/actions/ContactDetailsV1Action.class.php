@@ -313,14 +313,7 @@ class ContactDetailsV1Action extends sfAction
 						
 				}
                                 
-                                if($this->contactEngineObj->getComponent()->contactDetailsObj->getHiddenPhoneMsg() == "Y")
-                                {
-                                    $responseArray['errmsglabel'] = "This member has choosen to hide phone number. Only email is available but no phone number";
-                                }
-                                else
-                                {
-                                    $responseArray['errMsgLabel'] = null;
-                                }
+                                    $responseArray['contact1_message'] = Messages::PHONE_VISIBLE_ON_ACCEPT;
 
 			} 
 			else {
