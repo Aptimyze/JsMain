@@ -3300,7 +3300,7 @@ JsChat.prototype = {
                 setTimeout(function(){
                     //console.log("manvi",$("chat-box"));
                     $("chat-box").each(function (index, element) {
-                        console.log("element",element);
+                        //console.log("element",element);
                         _this._scrollDown($(this), "min");
                     });
                 },1000);

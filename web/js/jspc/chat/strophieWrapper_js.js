@@ -403,13 +403,13 @@ strophieWrapper.sendPresence();
                 //console.log(data[user_id]);
                 //console.log("data",data);
                 //console.log("Bassi",data["1"]);
-                console.log(strophieWrapper.initialRosterFetched);
+                //console.log(strophieWrapper.initialRosterFetched);
                 presenceData[user_id] = chat_status;
                 //console.log("username",user_id,chat_status);
                 setInLocalStorage("presence_"+loggedInJspcUser,JSON.stringify(presenceData));
                 //console.log(presenceData);
                 if(strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] == true){
-                    console.log("New case");
+                    //console.log("New case");
                     strophieWrapper.updatePresence(user_id, chat_status);
                     strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] = false;
                 }
@@ -509,7 +509,7 @@ strophieWrapper.sendPresence();
             var timeDiff = (currentTime - lastUpdated); //Time diff in milliseconds
             //console.log(timeDiff);
             if(timeDiff < chatConfig.Params[device].listingRefreshTimeout){
-                console.log("Used exisiting list");
+                //console.log("Used exisiting list");
                 useExisting = true;
             }
         }
