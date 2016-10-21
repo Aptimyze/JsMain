@@ -346,6 +346,9 @@ public function executePerformV2(sfWebRequest $request)
         if ($infoType == "MATCH_ALERT") {
           $this->matchAlertCountResetLogic($profileObj);
         }
+                                if ($infoType == "VISITORS") {
+                                    $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                                }
        
 				if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
 				{

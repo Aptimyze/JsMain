@@ -193,7 +193,7 @@ class Inbox implements Module
 				if($infoTypenav["PAGE"] == "VISITORS")
 				{
 					$visitorObj = new Visitors($this->profileObj);
-					$visitors = $visitorObj->getVisitorProfile();
+					$visitors = $visitorObj->getVisitorProfile("","",$infoTypenav);
 					$countObj[$infoTypenav["PAGE"]] = count($visitors);
 				}
 				
@@ -288,6 +288,8 @@ class Inbox implements Module
 							$page = $nav;
 						}
 						$conditionArray = $this->getCondition($infoType, $page);
+                                                if($infoTypeNav["matchedOrAll"])
+                                                    $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
 					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray))
 							$data = $data+$profilesArray;

@@ -26,7 +26,7 @@ class Visitors
 	{
 		return $value["VIEWER"];
 	}
-	public function getVisitorProfile($page="",$profileCount="")
+	public function getVisitorProfile($page="",$profileCount="",$infoTypenav)
 	{
 		$skipContactedType = SkipArrayCondition::$VISITOR;
 		$skipProfileObj    = SkipProfile::getInstance($this->profile->getPROFILEID());
@@ -47,8 +47,9 @@ class Visitors
 				$fieldList                  = "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID";
 				$profileIdArr1["PROFILEID"] = implode(",", $profileIdArr);
 				$this->visitorsProfile      = $multipleProfileObj->getResultsBasedOnJprofileFields($profileIdArr1, '', '', $fieldList, "JPROFILE", "", "");
-			$this->passInVisitors();
-			
+                            if($infoTypenav["matchedOrAll"]=="M")
+                                $this->passInVisitors();
+                            
 			}
 			if (is_array($this->visitorsProfile)) {
 				if ($privacy != 'C') {
@@ -83,7 +84,7 @@ class Visitors
 		return $returnProfiles;
 	}
 	public function passInVisitors()
-	{
+	{//education,occupation,city to be added, gender to be removed
 		include_once(JsConstants::$docRoot . "/profile/connect_functions.inc");
 		include_once(JsConstants::$docRoot . "/commonFiles/connect_dd.inc");
 		$this->profile->getDetail('', '', "GENDER,INCOME,PRIVACY");

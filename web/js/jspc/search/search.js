@@ -87,6 +87,23 @@ $(document).ready(function() {
 		sendProcessSearchRequest(postParams,infoArr);	
             }
 	});
+        
+        $(".js-visitors").bind('click', function() {
+            if($(this).hasClass("cursp")){
+                var value=$(this).attr('value');
+                var sort = value=="A"?"M":"A";
+                var oppo = value=="A"?"A":"M"; 
+                $(".js-visType"+oppo).removeClass("js-sort-grey").removeClass("cursd").addClass("cursp");
+                $(".js-visType"+sort).addClass("js-sort-grey").removeClass("cursp").addClass("cursd");
+		var postParams;
+		postParams = "matchedOrAll="+value+"&pageNo=1";
+            	var infoArr = {};
+                infoArr["action"] = "stayOnPage";
+                infoArr["searchID"] = "skip";
+                infoArr["listType"] = "cc";
+		sendProcessSearchRequest(postParams,infoArr);	
+            }
+	});
 
 	$(".js-searchLists").bind('click', function() {
             searchListingAction(this);
@@ -304,10 +321,16 @@ function pageResponsePopulate(response) {
 	{
 		$("#js-searchContainer").show();
 		$("#zeroResultSection").hide();
+                console.log(response);
 		if(response.listType=='cc' || response.listType == 'noClusSearch')
 	                $("#heightRight").addClass('srpHeightRightcc').removeClass('srpHeightRight');
 		else
 	                $("#heightRight").addClass('srpHeightRight').removeClass('srpHeightRightcc');
+                    
+                if(response.infotype == "VISITORS")
+                        $("#heightRightVisitors").addClass('srpHeightRight').removeClass('disp-none');
+                else
+	                $("#heightRightVisitors").addClass('disp-none').removeClass('srpHeightRight');
 	}
 	else
 	{

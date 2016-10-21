@@ -105,7 +105,15 @@
 				~/if`
 				
 				<!-- sort -->
-
+                                
+                                ~if $loggedIn`
+					<div class="fontlig f14 relv ulinline clearfix disp-none" id="heightRightVisitors">
+						<ul class="fr">
+              <li  class="js-sort-grey js-visitors js-visTypeA cursd" value=A><span class="disp_ib srpbdr3 pr10">All Profile Visitors</span></li>
+            <li  class="cursp js-visitors js-visTypeM" value=M><span class="disp_ib pr10 pl10">Matching Visitors Only</span></li>
+						</ul>
+					</div>
+                                ~/if`
 
 				<!--start:search result-->
 				<div id="featuredListing">
