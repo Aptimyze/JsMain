@@ -35,6 +35,9 @@ EOF;
         $time = strtotime($time);
 
       $dirPath = '/home/ayush/Desktop/logsForCompress';
+                if (false === is_dir($dirPath)) {
+            mkdir($dirPath,0777,true);
+        }
 
       $hoursNow = $arguments[hours];
       $hoursNow = 48;
@@ -70,21 +73,29 @@ EOF;
 
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
+        print_r($arrResponse); die("on");
         $arrChannels = array();
-        $arrChannels['time'] = $time;
+
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
-        {
-            $arrChannels[$module['key']] = $module['doc_count'];
+        {   die("in");
+            //$arrChannels[$module['key']] = $module['doc_count'];
+            $channelName = $arrChannels[$module['key']];
+               $out = $module['doc_count']; 
+               die($out);
+            for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            { die("in here");
+                $arrChannels['time'] = $time;
+                $arrChannels['channelName'] = $channelName;
+                $filePath = $dirPath."/kibanaCompressing-".$date;
+                $fileResource = fopen($filePath,"a");
+                fwrite($fileResource,json_encode($arrChannels)."\n");
+                fclose($fileResource);
+            }
         }
-          if (false === is_dir($dirPath)) {
-            mkdir($dirPath,0777,true);
-        }
-        if(sizeof($arrChannels) > 1){
-        $filePath = $dirPath."/kibanaCompressing-".$date;
-        $fileResource = fopen($filePath,"a");
-        fwrite($fileResource,json_encode($arrChannels)."\n");
-        fclose($fileResource);
-              }
+
+        die("job done");
+
+              
         
          $params = [
             "query"=> [
@@ -349,7 +360,7 @@ EOF;
         fclose($fileResource);
         }
    /*             
-        $finalArrayToWrite[] = ($arrChannels);
+        $finalArrayToWrite['arr'] = ($arrChannels);
         $finalArrayToWrite[] = ($arrDomain);
         $finalArrayToWrite[] = ($TypeOfError);
         $finalArrayToWrite[] = ($arrHostname);
