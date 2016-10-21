@@ -34,7 +34,7 @@ function clearNonRosterPollingInterval(type){
 function to poll for non roster webservice api 
 * @inputs:type
 */
-function pollForNonRosterListing(type){
+function pollForNonRosterListing(type,i){
     console.log("pollForNonRosterListing",type);
     if(type == undefined || type == ""){
         type = "dpp";
@@ -57,7 +57,7 @@ function pollForNonRosterListing(type){
         async: true,
         beforeSend: function (xhr) {},
         success: function (response) {
-            
+            if(i%2 == 0){
             response = {  //comment later
 "data": [{
 "profileid": "7470229",
@@ -96,6 +96,37 @@ function pollForNonRosterListing(type){
 },
 "debugInfo": null
 };
+}
+else{
+         response = {  //comment later
+"data": [{
+"profileid": "7868716",
+"username": "ZAZR5355",
+"profileChecksum": "7868716lr"
+},
+{
+"profileid": "8891522",
+"username": "ZZYZ9006",
+"profileChecksum": "8891522lr"
+},
+{
+"profileid": "1764127",
+"username": "YAS8573",
+"profileChecksum": "1764127lr"
+},
+{
+"profileid": "3599124",
+"username": "nokumarriage",
+"profileChecksum": "3599124lr"
+}],
+"header": {
+"status": 200,
+"errorMsg": "",
+"pollTime":15000
+},
+"debugInfo": null
+};   
+}
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
                 pollingTime = response["header"]["pollTime"];
@@ -115,7 +146,7 @@ function pollForNonRosterListing(type){
                                                                     console.log("calling pollForNonRosterListing",type);
                                                                     //fetch current profileids belonging to given group
                                                                     //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    pollForNonRosterListing(type);
+                                                                    pollForNonRosterListing(type,i+1);
                                                                     //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
                                                             },pollingTime);
     //}
@@ -123,16 +154,37 @@ function pollForNonRosterListing(type){
 }
 
 /*processNonRosterData
-function to process non roster data 
+function to process the non roster data 
 * @inputs:response,type
 */
 function processNonRosterData(response,type){
-    console.log("in processNonRosterData");
-    if(strophieWrapper.initialNonRosterFetched == true){
-        console.log("after 1st case");
-        //remove earlier list later
+    var operation = "create_list";
+    console.log("in processNonRosterData",operation);
+    if(strophieWrapper.initialNonRosterFetched == true){ //case of list update after first time creation
+        operation = "add_node"; //or "create_list" later
+        console.log("update after non roster list creation case");
+        var newNonRoster = response["data"],oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
+        if((Object.keys(oldNonRoster)).length > 0){
+            if(chatConfig.Params.nonRosterPollingGroups.length == 1 && chatConfig.Params.nonRosterPollingGroups[type] != undefined){
+                //only dpp is non roster group case
+                offlineNonRoster = oldNonRoster;
+            }
+            else{
+                //in case there are multiple non roster groups
+                if(chatConfig.Params.nonRosterPollingGroups[type] != undefined){
+                    $.each(oldNonRoster,function(profileid,nodeObj){
+                        if((oldNonRoster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == type) && (newNonRoster.length == 0 || newNonRoster[profileid] == undefined)){
+                            offlineNonRoster[profileid] = oldNonRoster[profileid];
+                        }
+                    });
+                }
+            }
+            //mark old list as offline
+            strophieWrapper.onNonRosterPresenceUpdate("offline",offlineNonRoster);
+        }
     }
-    strophieWrapper.onNonRosterListFetched(response,type);
+    //add new list
+    strophieWrapper.onNonRosterListFetched(response,type,operation);
 }
 
 /*fetchSelectedPoolIds
@@ -222,10 +274,10 @@ function to poll for non roster presence api
 function executed after non roster presence data fetch to process it 
 * @inputs:presenceData,nonRosterData
 */
-function onNonRosterPresenceFetched(presenceData,nonRosterData){
+/*function onNonRosterPresenceFetched(presenceData,nonRosterData){
     console.log("in onNonRosterPresenceFetched",presenceData,nonRosterData);
     //get intersection of both sets
-}
+}*/
 
 /*manageListingPhotoReqFlag
 function to set/reset listing photo request 

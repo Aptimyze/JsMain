@@ -381,16 +381,16 @@ strophieWrapper.sendPresence();
             //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
             //strophieWrapper.stropheLoggerPC(from);
             if (presence_type != 'error') {
-//console.log("authorizing",presence_type);
-	            //strophieWrapper.stropheLoggerPC(presence);
-	            //strophieWrapper.authorize(from.split("/")[0]);
-	//            strophieWrapper.authorize(from);
+                //console.log("authorizing",presence_type);
+                //strophieWrapper.stropheLoggerPC(presence);
+                //strophieWrapper.authorize(from.split("/")[0]);
+                //strophieWrapper.authorize(from);
 
-	if(presence_type == "subscribe"){
-//console.log("sent presence again");
-strophieWrapper.authorize(from);
-strophieWrapper.sendPresence();
-}
+                if(presence_type == "subscribe"){
+                    //console.log("sent presence again");
+                    strophieWrapper.authorize(from);
+                    strophieWrapper.sendPresence();
+                }
 	            strophieWrapper.updatePresence(user_id, chat_status);
         	}
             //strophieWrapper.stropheLoggerPC("end of onPresenceReceived for " + user_id + "---" + chat_status);
@@ -441,7 +441,7 @@ strophieWrapper.sendPresence();
     },
 
     //executed after non-roster list has been fetched
-    onNonRosterListFetched: function(response,groupid){
+    onNonRosterListFetched: function(response,groupid,operation){
         console.log("in onNonRosterListFetched");
         if(response["data"] != undefined && response["data"].length > 0){
             $.each(response["data"],function(key,nodeObj){
@@ -456,8 +456,28 @@ strophieWrapper.sendPresence();
             });
             console.log("adding",strophieWrapper.NonRoster);
             strophieWrapper.initialNonRosterFetched = true;
-            invokePluginManagelisting(strophieWrapper.NonRoster, "create_list");
+            invokePluginManagelisting(strophieWrapper.NonRoster, operation);
         }
+    },
+
+    //executed after any non-roster list node presence has been updated
+    onNonRosterPresenceUpdate:function(status,nodeArr){
+        console.log("in onNonRosterPresenceUpdate");
+        var updatedObj = {
+            "chat_status": status
+        };
+        if (status == "online") {
+            updatedObj["last_online_time"] = new Date();
+        }
+        $.each(nodeArr,function(user_id,listObj){
+            strophieWrapper.NonRoster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[user_id], strophieWrapper.mapRosterObj(updatedObj));
+            if (strophieWrapper.initialNonRosterFetched == true) {
+                var nodeArr = [];
+                nodeArr[user_id] = strophieWrapper.NonRoster[user_id];
+                invokePluginManagelisting(nodeArr, "update_status", user_id);
+                delete strophieWrapper.NonRoster[user_id];
+            }
+        });
     },
 
     //executed after roster has been fetched
@@ -487,9 +507,6 @@ strophieWrapper.sendPresence();
                 }
             }
         });
-        //strophieWrapper.stropheLoggerPC("end of onRosterReceived");
-        //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster);
-        //strophieWrapper.stropheLoggerPC("setting roster fetched flag");
         strophieWrapper.initialRosterFetched = true;
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
@@ -500,7 +517,7 @@ strophieWrapper.sendPresence();
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
     	//strophieWrapper.sendPresence();
 
-        //start for polling of non-roster group listings --onrosterreceived or there later
+        //start for polling of non-roster group listings
         strophieWrapper.getNonRosterList();
             
    	},
