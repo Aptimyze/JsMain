@@ -129,7 +129,9 @@ else{
 }
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
-                pollingTime = response["header"]["pollTime"];
+                if(response["header"]["pollTime"] != undefined){
+                    pollingTime = response["header"]["pollTime"];
+                }
                 //add in listing, after non roster list has been fetched
                 processNonRosterData(response,type);
             }
@@ -159,19 +161,19 @@ function to process the non roster data
 */
 function processNonRosterData(response,type){
     var operation = "create_list";
-    console.log("in processNonRosterData",operation);
+    console.log("in processNonRosterData",response);
     if(strophieWrapper.initialNonRosterFetched == true){ //case of list update after first time creation
         operation = "add_node"; //or "create_list" later
         console.log("update after non roster list creation case");
         var newNonRoster = response["data"],oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
         if((Object.keys(oldNonRoster)).length > 0){
-            if(chatConfig.Params.nonRosterPollingGroups.length == 1 && chatConfig.Params.nonRosterPollingGroups[type] != undefined){
+            if(chatConfig.Params.nonRosterPollingGroups.length == 1 && chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
                 //only dpp is non roster group case
                 offlineNonRoster = oldNonRoster;
             }
             else{
                 //in case there are multiple non roster groups
-                if(chatConfig.Params.nonRosterPollingGroups[type] != undefined){
+                if(chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
                     $.each(oldNonRoster,function(profileid,nodeObj){
                         if((oldNonRoster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == type) && (newNonRoster.length == 0 || newNonRoster[profileid] == undefined)){
                             offlineNonRoster[profileid] = oldNonRoster[profileid];

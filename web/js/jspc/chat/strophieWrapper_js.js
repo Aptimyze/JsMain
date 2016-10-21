@@ -462,7 +462,7 @@ strophieWrapper.sendPresence();
 
     //executed after any non-roster list node presence has been updated
     onNonRosterPresenceUpdate:function(status,nodeArr){
-        console.log("in onNonRosterPresenceUpdate");
+        console.log("in onNonRosterPresenceUpdate - "+status,nodeArr);
         var updatedObj = {
             "chat_status": status
         };
@@ -526,7 +526,7 @@ strophieWrapper.sendPresence();
     getNonRosterList:function(){
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
             //console.log("fetchNonRosterListing",chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
-            pollForNonRosterListing(groupId);
+            pollForNonRosterListing(groupId,0);
         });
     },
 
