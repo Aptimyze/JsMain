@@ -26,22 +26,23 @@ EOF;
     protected function execute($arguments = array(), $options = array())
     {   
       //Path of Folder which will store all Data Files.
-        $time = date("Y/m/d H:i:s"); 
+        
         //This is done to convert the time into epoch time system such that it can be fed into Kibana for proper pushing and fetching.
+     /*   $time = date("Y/m/d H:i:s"); 
         $out = new DateTime($time);
         print_r($out,1);
         $time = $out->date;
         print_r($time,1); 
         $time = strtotime($time);
-
+    */
       $dirPath = '/home/ayush/Desktop/logsForCompress';
                 if (false === is_dir($dirPath)) {
             mkdir($dirPath,0777,true);
         }
 
-      $hoursNow = $arguments[hours];
+     // $hoursNow = $arguments[hours];
       $hoursNow = 48;
-      for($i=0 ; $i <= $arguments[hours] ; $i++)
+      for($i=0 ; $i <= $hoursNow ; $i++)
       {
         $hoursNow = $i;
         $date = new DateTime(date("Y-m-d", strtotime('-'.$hoursNow.' hours')));
@@ -52,6 +53,13 @@ EOF;
         $query = '_search';
         $urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
         $ltHour = $hoursNow + 1;
+
+        $time = date("Y/m/d H:i:s",strtotime('-'.$hoursNow.' hours')); 
+        $out = new DateTime($time);
+        print_r($out,1);
+        $time = $out->date;
+        print_r($time,1); 
+        $time = strtotime($time);
         
         $params = [
             "query"=> [
@@ -73,17 +81,14 @@ EOF;
 
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
-        print_r($arrResponse); die("on");
         $arrChannels = array();
-
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
-        {   die("in");
+        {  
             //$arrChannels[$module['key']] = $module['doc_count'];
-            $channelName = $arrChannels[$module['key']];
-               $out = $module['doc_count']; 
-               die($out);
+            $channelName = $module['key'];
+              // $out = $module['doc_count']; 
             for($i = 0 ; $i < $module['doc_count'] ; $i++)
-            { die("in here");
+            { 
                 $arrChannels['time'] = $time;
                 $arrChannels['channelName'] = $channelName;
                 $filePath = $dirPath."/kibanaCompressing-".$date;
@@ -92,10 +97,7 @@ EOF;
                 fclose($fileResource);
             }
         }
-
-        die("job done");
-
-              
+     
         
          $params = [
             "query"=> [
@@ -117,18 +119,31 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrDomain = array();
-         $arrDomain['time'] = $time;
+   //      $arrDomain['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrDomain[$module['key']] = $module['doc_count'];
+          //  $arrDomain[$module['key']] = $module['doc_count'];
+          //  $arrDomainName = $module['key'];
+             $domainName = $module['key'];
+              // $out = $module['doc_count']; 
+            for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            { 
+                $arrDomain['time'] = $time;
+                $arrDomain['Domain'] = $domainName;
+                $filePath = $dirPath."/kibanaCompressing-".$date;
+                $fileResource = fopen($filePath,"a");
+                fwrite($fileResource,json_encode($arrDomain)."\n");
+                fclose($fileResource);
+            }
         }
+        /*
         if(sizeof($arrDomain) > 1){
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
         fwrite($fileResource,json_encode($arrDomain)."\n");
         fclose($fileResource);
            }
-
+        */
          $params = [
             "query"=> [
                 "range" => [
@@ -150,19 +165,30 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $TypeOfError = array();
-        $TypeOfError['time'] = $time;
+        //$TypeOfError['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $TypeOfError[$module['key']] = $module['doc_count'];
+            //$TypeOfError[$module['key']] = $module['doc_count'];
+             $errorType = $module['key'];
+              // $out = $module['doc_count']; 
+            for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            { 
+                $TypeOfError['time'] = $time;
+                $TypeOfError['typeOfError'] = $errorType;
+                $filePath = $dirPath."/kibanaCompressing-".$date;
+                $fileResource = fopen($filePath,"a");
+                fwrite($fileResource,json_encode($TypeOfError)."\n");
+                fclose($fileResource);
+            }
         }
- 
+ /*
         if(sizeof($TypeOfError) > 1){
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
         fwrite($fileResource,json_encode($TypeOfError)."\n");
         fclose($fileResource);
            }
-
+*/
          $params = [
             "query"=> [
                 "range" => [
@@ -184,17 +210,33 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrHostname = array();
-        $arrHostname['time'] = $time;
+   //     $arrHostname['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrHostname[$module['key']] = $module['doc_count'];
+          //  $arrHostname[$module['key']] = $module['doc_count'];
+            $hostname = $module['key'];
+            for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            { 
+                $arrHostname['time'] = $time;
+                $arrHostname['beat.hostname'] = $hostname;
+                $filePath = $dirPath."/kibanaCompressing-".$date;
+                $fileResource = fopen($filePath,"a");
+                fwrite($fileResource,json_encode($arrHostname)."\n");
+                fclose($fileResource);
+            }
+
+
         }
+
+        /*
         if(sizeof($arrHostname) > 1){
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
         fwrite($fileResource,json_encode($arrHostname)."\n");
         fclose($fileResource);
         }
+        */
+
          $params = [
             "query"=> [
                 "range" => [
@@ -216,18 +258,30 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrmoduleName = array();
-        $arrmoduleName['time'] = $time;
+      //  $arrmoduleName['time'] = $time;
 
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrmoduleName[$module['key']] = $module['doc_count'];
+         //   $arrmoduleName[$module['key']] = $module['doc_count'];
+             $modulename = $module['key'];
+             for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            { 
+                $arrmoduleName['time'] = $time;
+                $arrmoduleName['moduleName'] = $channelName;
+                $filePath = $dirPath."/kibanaCompressing-".$date;
+                $fileResource = fopen($filePath,"a");
+                fwrite($fileResource,json_encode($arrmoduleName)."\n");
+                fclose($fileResource);
+            }
         }
+        /*
         if(sizeof($arrmoduleName) > 1){
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
         fwrite($fileResource,json_encode($arrmoduleName)."\n");
         fclose($fileResource);
         }
+        */
 
          $params = [
             "query"=> [
@@ -250,18 +304,30 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrLogType = array();
-        $arrLogType['time'] = $time;
+   //     $arrLogType['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrLogType[$module['key']] = $module['doc_count'];
+          //  $arrLogType[$module['key']] = $module['doc_count'];
+            $logType = $module['key'];
+
+             for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            { 
+                $arrLogType['time'] = $time;
+                $arrLogType['logType'] = $logType;
+                $filePath = $dirPath."/kibanaCompressing-".$date;
+                $fileResource = fopen($filePath,"a");
+                fwrite($fileResource,json_encode($arrLogType)."\n");
+                fclose($fileResource);
+            }
         }
+        /*
         if(sizeof($arrLogType) > 1){
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
         fwrite($fileResource,json_encode($arrLogType)."\n");
         fclose($fileResource);
              }
-
+        */
          $params = [
             "query"=> [
                 "range" => [
@@ -283,17 +349,29 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrApiVersion = array();
-        $arrApiVersion['time'] = $time;
+    //    $arrApiVersion['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrApiVersion[$module['key']] = $module['doc_count'];
+      //      $arrApiVersion[$module['key']] = $module['doc_count'];
+             $apiVersion = $module['key'];
+             for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            { 
+                $arrApiVersion['time'] = $time;
+                $arrApiVersion['apiVersion'] = $apiVersion;
+                $filePath = $dirPath."/kibanaCompressing-".$date;
+                $fileResource = fopen($filePath,"a");
+                fwrite($fileResource,json_encode($arrApiVersion)."\n");
+                fclose($fileResource);
+            }
         }
+        /*
         if(sizeof($arrApiVersion) > 1){
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
         fwrite($fileResource,json_encode($arrApiVersion)."\n");
         fclose($fileResource);
         }
+        */
 
          $params = [
             "query"=> [
@@ -316,17 +394,30 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrActionName = array();
-        $arrActionName['time'] = $time;
+  //      $arrActionName['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrActionName[$module['key']] = $module['doc_count'];
+    //        $arrActionName[$module['key']] = $module['doc_count'];
+            $actionName = $module['key'];
+             for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            { 
+                $arrActionName['time'] = $time;
+                $arrActionName['actionName'] = $actionName;
+                $filePath = $dirPath."/kibanaCompressing-".$date;
+                $fileResource = fopen($filePath,"a");
+                fwrite($fileResource,json_encode($arrActionName)."\n");
+                fclose($fileResource);
+            }
+
         }
+        /*
         if(sizeof($arrActionName) > 1){
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
         fwrite($fileResource,json_encode($arrActionName)."\n");
         fclose($fileResource);
         }
+        */
          $params = [
             "query"=> [
                 "range" => [
@@ -348,11 +439,22 @@ EOF;
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrrequestURI = array();
-        $arrrequestURIs['time'] = $time;
+ //       $arrrequestURIs['time'] = $time;
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {
-            $arrrequestURI[$module['key']] = $module['doc_count'];
+   //         $arrrequestURI[$module['key']] = $module['doc_count'];
+              $requestURI = $module['key'];
+             for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            { 
+                $arrrequestURI['time'] = $time;
+                $arrrequestURI['REQUEST_URI'] = $requestURI;
+                $filePath = $dirPath."/kibanaCompressing-".$date;
+                $fileResource = fopen($filePath,"a");
+                fwrite($fileResource,json_encode($arrrequestURI)."\n");
+                fclose($fileResource);
+            }
         }
+        /*
         if(sizeof($arrrequestURI) > 1){
         $filePath = $dirPath."/kibanaCompressing-".$date;
         $fileResource = fopen($filePath,"a");
