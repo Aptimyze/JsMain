@@ -70,7 +70,7 @@ class TrendsBasedMatchAlertsStrategy extends MatchAlertsStrategy
 	private function getSearchResult($SearchServiceObj,$SearchUtilityObj,$returnTotalCount='',$notInProfiles = '')
 	{
 		$SearchServiceObj->setSearchSortLogic($this->TrendsProfileObj,$this->loggedInProfileObj,"","");
-		$SearchUtilityObj->removeProfileFromSearch($this->TrendsProfileObj,'spaceSeperator',$this->loggedInProfileObj,'',"",$this->removeMatchAlerts,$notInProfiles,1);
+		$SearchUtilityObj->removeProfileFromSearch($this->TrendsProfileObj,'spaceSeperator',$this->loggedInProfileObj,'',"",$this->removeMatchAlerts,$notInProfiles,'',1);
 		$responseObj = $SearchServiceObj->performSearch($this->TrendsProfileObj,"","","",'',$this->loggedInProfileObj);
 		$PIDS = $responseObj->getsearchResultsPidArr();
                 if($returnTotalCount){
