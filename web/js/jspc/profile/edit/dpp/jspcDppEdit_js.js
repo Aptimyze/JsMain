@@ -292,8 +292,12 @@ slider();
 $(".chosen-container").on('keyup',function(e) {
 $(".chosen-container .chosen-results li").addClass("chosenfloat").removeClass("chosenDropWid");
 });
+$("#mutualMatchCount").css("padding","2px");
 
-if ( parseInt($("#mutualMatchCount").text()) > 100 )
+var value  = parseInt($("#mutualMatchCount").text().replace(",","")).toLocaleString();
+$("#mutualMatchCount").text(value);
+
+if ( parseInt($("#mutualMatchCount").text().replace(",","") ) > 100 )
 {
   $("#mutualMatchCount").css("background-color","#374a5b"); 
 }
@@ -511,9 +515,9 @@ function saveSectionsFields(sectionId){
               for (var ke in data) {
                  if ( data[ke].key == "P_MATCHCOUNT")
                  {
-                    $("#mutualMatchCount").text(data[ke].value);
+                    $("#mutualMatchCount").text((data[ke].value).toLocaleString());
 
-                    if ( parseInt($("#mutualMatchCount").text()) > 100 )
+                    if ( parseInt($("#mutualMatchCount").text().replace(",","")) > 100 )
                     {
                         $("#mutualMatchCount").css("background-color","#374a5b"); 
                     }

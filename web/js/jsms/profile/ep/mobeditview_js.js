@@ -52,12 +52,14 @@ var mobEditPage=(function(){
 			{
 				if ( result.Dpp.BasicDetails.OnClick[k]['key'] == "P_MATCHCOUNT")
 				{
-					
-					$("#mutualMatchCountMobile").text(result.Dpp.BasicDetails.OnClick[k]['value']);
+					// result.Dpp.BasicDetails.OnClick[k]['value'] = 1000;
+					$("#mutualMatchCountMobile").css("padding","2px");
 
-                    if ( parseInt($("#mutualMatchCountMobile").text()) > 100 )
+					$("#mutualMatchCountMobile").text((result.Dpp.BasicDetails.OnClick[k]['value']).toLocaleString());
+
+                    if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") )> 100 )
                     {
-                    	$("#mutualMatchCountMobile").css("background-color","#374a5b"); 
+                    	$("#mutualMatchCountMobile").css("background-color","#e3e1e2"); 
                     }
                     else
                     {
