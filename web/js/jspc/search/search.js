@@ -321,7 +321,6 @@ function pageResponsePopulate(response) {
 	{
 		$("#js-searchContainer").show();
 		$("#zeroResultSection").hide();
-                console.log(response);
 		if(response.listType=='cc' || response.listType == 'noClusSearch')
 	                $("#heightRight").addClass('srpHeightRightcc').removeClass('srpHeightRight');
 		else
