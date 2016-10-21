@@ -340,7 +340,9 @@ class Initiate extends ContactEvent{
           $sms= new InstantSMS("INSTANT_EOI",$this->viewed->getPROFILEID(),array(),$this->viewer->getPROFILEID());
           $sms->send();
       }
-      $this->getNegativeScoreForUser();
+      
+      if(!$this->optionalFlag)
+          $this->getNegativeScoreForUser();
     }
     catch (Exception $e) {
       throw new jsException($e);
