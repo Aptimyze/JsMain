@@ -324,7 +324,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
             ~/if`
            </div>
         <!--end:photo--> 
-        ~include_Partial("profile/jspcViewProfile/_jspcViewProfileBasicDetailsSection",["apiData"=>$arrOutDisplay,"finalResponse"=>$finalResponse,"loginProfileId"=>$loginProfile->getPROFILEID(),"nameOfUser"=>$nameOfUser,"dontShowNameReason"=>$dontShowNameReason])`
+        ~include_Partial("profile/jspcViewProfile/_jspcViewProfileBasicDetailsSection",["apiData"=>$arrOutDisplay,"finalResponse"=>$finalResponse,"loginProfileId"=>$loginProfile->getPROFILEID(),"nameOfUser"=>$nameOfUser,"dontShowNameReason"=>$dontShowNameReason,"SAMEGENDER"=>$SAMEGENDER])`
         
       </div>
       <!--end:photo div 1-->
@@ -522,4 +522,5 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
     var searchId = "~$searchid`";
     var selfUsername='~$loginProfile->getUSERNAME()`';
     var selfEmail='~$loginProfile->getEMAIL()`';
+    var hideUnimportantFeatureAtPeakLoad='~JsConstants::$hideUnimportantFeatureAtPeakLoad`';
 </script>

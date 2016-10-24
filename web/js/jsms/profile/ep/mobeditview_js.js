@@ -100,7 +100,7 @@ var mobEditPage=(function(){
                             current="Desired Partner";
                         if(key=="Details")
                         {
-                            if(value["basic"]["OnClick"][2]["label_val"]==="Male")
+                            if(value["basic"]["OnClick"][4]["label_val"]==="Male")
                                 current="Groom's Details";
                             else
                                 current="Bride's Details";

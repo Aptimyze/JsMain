@@ -278,11 +278,7 @@ class Initiate extends ContactEvent{
         $this->contactHandler->getContactObj()->insertContact();
         $action = FTOStateUpdateReason::EOI_SENT;
         $this->contactHandler->getViewer()->getPROFILE_STATE()->updateFTOState($this->viewer, $action);
-        if(sfContext::getInstance()->getRequest()->getParameter('fromJSMS_MYJS')==1)
-        {
-            $this->viewerMemcacheObject->update("MATCHALERT_TOTAL",-1,$this->optionalFlag);
-            $this->viewerMemcacheObject->setMATCHALERT(0);
-        }
+        
       }
                 $requestTimeOut = 300;
     //curl for analytics team by Nitesh for Lavesh team
@@ -300,7 +296,11 @@ class Initiate extends ContactEvent{
     }*/
 
       $this->_searchContactFlowTracking();
-
+      if(in_array($this->stype, array(SearchTypesEnums::MATCHALERT_MYJS_JSMS,SearchTypesEnums::MATCHALERT_MYJS_IOS,  SearchTypesEnums::AppMyJsMatchAlertSection)))
+            {
+            $this->viewerMemcacheObject->update("MATCHALERT_TOTAL",-1,$this->optionalFlag);
+            $this->viewerMemcacheObject->setMATCHALERT(0);
+            } 
       $this->contactHandler->setElement(CONTACT_ELEMENTS::STATUS,"I");
       $this->handleMessage();
       $this->_contactsOnceObj = new NEWJS_CONTACTS_ONCE();
@@ -431,8 +431,8 @@ class Initiate extends ContactEvent{
       else if($this->stype=='VO' || $this->stype=='VN')
         $this->stype='V';
     }
-    
-    $searchContactFlowTrackingObj->insert(
+            
+            $searchContactFlowTrackingObj->insert(
         $this->viewer->getPROFILEID(),
         $this->stype,
         $this->contactHandler->getContactObj()->getCONTACTID(),

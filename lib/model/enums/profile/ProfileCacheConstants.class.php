@@ -428,5 +428,12 @@ class ProfileCacheConstants
                                         //'BTIME',
                                         'PROFILEID'    
                                     );
+    public static $arrCommonFieldsMap = array(
+                                        'PROFILEID',
+                                        'DTOFBIRTH',
+                                        'CITY_BIRTH',
+                                        'BTIME',
+        
+    );
 }
 ?>

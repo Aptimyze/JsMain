@@ -168,7 +168,7 @@ class ProfileAstro
         
         $result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $profileidArray,$fields,__CLASS__);
         
-        if ($result && false !== $result) {
+        if (is_array($result) && false !== $result) {
             $bServedFromCache = true;
             $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
         }

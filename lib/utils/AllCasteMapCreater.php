@@ -4,7 +4,7 @@
 //@author Kunal
 $socialRoot=realpath(dirname(__FILE__)."/../..");
 
-$fcasteMap=fopen($socialRoot."/lib/model/lib/AllCasteMap.class.php","w");
+$fcasteMap=fopen($socialRoot."/lib/model/lib/AllCasteMap_Unused.class.php","w");
 $now=date("Y-m-d");
 include_once($socialRoot."/web/profile/connect.inc");
 fwrite($fcasteMap,"<?php\n /*
@@ -17,9 +17,11 @@ fwrite($fcasteMap,"<?php\n /*
     /*
     * Array of all caste genertaed from newjs.NEWJS_CASTE Table
     */
-		private static \$arrAllCaste=array(\n");
+		public static \$arrAllCaste=array(\n");
 	
 $db=connect_db();
+$sql="SET SESSION group_concat_max_len = 1000000;";
+$result=mysql_query_decide($sql);
 // Entries for LinkArray having Id as key and values as Name,Url,ReqAutoLogin
 $sql="SELECT SQL_CACHE VALUE, PARENT, ISALL, ISGROUP FROM newjs.CASTE ORDER BY VALUE";
 	$result=mysql_query_decide($sql);
@@ -32,7 +34,7 @@ $sql="SELECT SQL_CACHE VALUE, PARENT, ISALL, ISGROUP FROM newjs.CASTE ORDER BY V
   /*
     * Array of all caste genertaed from newjs.NEWJS_CASTE Table
     */
-		private static \$arrAllCaste_GroupByParent=array(\n");
+		public static \$arrAllCaste_GroupByParent=array(\n");
   
   // Entries for LinkArray having Id as key and values as Name,Url,ReqAutoLogin
 $sql="SELECT PARENT, GROUP_CONCAT( VALUE ) AS `GROUP`  FROM  newjs.`CASTE` GROUP BY PARENT";
@@ -46,7 +48,7 @@ $sql="SELECT PARENT, GROUP_CONCAT( VALUE ) AS `GROUP`  FROM  newjs.`CASTE` GROUP
     /*
     * Array of all caste genertaed from newjs.CASTE_GROUP_MAPPING Table
     */
-		private static \$arrAllCaste_GroupMapping=array(\n");
+		public static \$arrAllCaste_GroupMapping=array(\n");
   
    // Entries for LinkArray having Id as key and values as Name,Url,ReqAutoLogin
 $sql="SELECT GROUP_VALUE, GROUP_CONCAT(CASTE_VALUE) AS `GROUP` FROM newjs.CASTE_GROUP_MAPPING GROUP BY GROUP_VALUE ";

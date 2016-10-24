@@ -890,4 +890,51 @@ class BILLING_SERVICE_STATUS extends TABLE {
             throw new jsException($e);
         }
     }
+
+
+    public function fetchTFNSMSProfiles($curDate)
+    {
+        try
+        {
+            $thirtyTwoDays = date("Y-m-d", strtotime($curDate)+32*24*60*60);
+            $sql="SELECT PROFILEID, BILLID, SERVICEID FROM billing.SERVICE_STATUS WHERE ACTIVATED='Y' AND ACTIVE='Y' AND SERVEFOR LIKE '%F%' AND DATE(EXPIRY_DT)=:EXPIRY_DT";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":EXPIRY_DT",$thirtyTwoDays,PDO::PARAM_STR);
+            $prep->execute();
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[] = $row;
+            } 
+            return $res;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
+    public function filterActiveProfilesFromBillidArr($billIdArr)
+    {
+        if(!is_array($billIdArr) || empty($billIdArr)) {
+            return NULL;
+        }
+        try
+        {
+            $billStr = implode(",", $billIdArr);
+            $sql="SELECT DISTINCT(PROFILEID) FROM billing.SERVICE_STATUS WHERE ACTIVATED='Y' AND ACTIVE='Y' AND SERVEFOR LIKE '%F%' AND BILLID IN ($billStr)";
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+            $res = array();
+            while ($row=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[] = $row;
+            } 
+            return $res;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }

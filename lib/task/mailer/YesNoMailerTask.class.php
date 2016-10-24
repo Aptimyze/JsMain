@@ -49,9 +49,8 @@ EOF;
 	            		$profilemailchunk=$value;
 			            	$profilemailchunk=implode(',',$profilemailchunk);
 			            	$contactResult = $Contactsobj->getSendersPending($profilemailchunk);
-				            	foreach ($contactResult as $key => $value) {
-				            		
-				            		$usercode = explode(',',$value);
+			            	$contactResult = $this->skipProfiles($contactResult);
+				            	foreach ($contactResult as $key => $usercode) {
 				            		$count=count($usercode);
 				            		if(count($usercode)>10)
 				            			$usercode = array_slice($usercode, 0, 10);
@@ -65,6 +64,24 @@ EOF;
 	            }
 		}
 	
+	}
+
+	public function skipProfiles($arranged)
+	{
+		$skipConditionArray = SkipArrayCondition::$default;
+		foreach ($arranged as $key => $value) 
+		{
+			$skipProfileObj     = SkipProfile::getInstance($key);
+	        $skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+			$value = explode(',',$value);       
+			if(is_array($skipProfiles))
+				$temp=array_diff($value,$skipProfiles); 
+			else
+				$temp=$value;
+			if(count($temp)>0)
+				$result[$key]=$temp;
+		}
+		return $result;
 	}
  }
 

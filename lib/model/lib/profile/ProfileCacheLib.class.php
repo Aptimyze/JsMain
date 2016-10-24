@@ -930,11 +930,14 @@ class ProfileCacheLib
         $szKey = $this->getDecoratedKey($key);
         
         //Get Columns to delete
-        if($fields === ProfileCacheConstants::ALL_FIELDS_SYM) {
-            $arrColumns = $this->getColumnArr($storeName);
-        } else {
-            $arrColumns = $this->getRelevantFields($fields, $storeName);
+        $arrColumns = $this->getRelevantFields($fields, $storeName);
+        
+        //Remove Common Fields
+        foreach($arrColumns as $k=>$v) {
+            if(in_array($v, ProfileCacheConstants::$arrCommonFieldsMap))
+                unset($arrColumns[$k]);
         }
+
         
         return $this->deleteSubFields($szKey, $arrColumns);
     }

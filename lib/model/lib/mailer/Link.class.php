@@ -107,7 +107,7 @@ class LinkClass {
   		else
 	  		$url=JsConstants::$siteUrl.'/e/'.$app_screen_id.$this->_link_id.'/'.$mail_group;
 	  	if($EmailUID)
-			$url=$url."&EmailUID=".$EmailUID;
+			$url=$url."?EmailUID=".$EmailUID;
 	}
 	html_entity_decode($url);
   	return $url;
