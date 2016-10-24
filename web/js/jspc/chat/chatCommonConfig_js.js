@@ -82,14 +82,11 @@ chatConfig.Params = {
     },
     //api config for non roster webservice
     nonRosterListingApiConfig:{
-        //"apiUrl":"http://localhost:8190/listings/v1/discover", //cross domain issue later
-        "apiUrl":"http://localhost/api/v1/chat/getRoasterData", //pick dpp url from jsconstants
         "dpp":{
             "extraParams":{
-                //"type":"CHATDPP" //later uncomment
-                "type":"DPP"
+                "type":"CHATDPP"
             },
-            "pollingFreq":20000
+            "pollingFreq":10000
         }
     },
     //api config for non roster presence api
@@ -111,10 +108,7 @@ chatConfig.Params = {
     pc: {
         updateRosterFromFrontend: true,
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
-        //keepalive: true, //keep logged in session alive
-        //roster_groups: true, //show categories in listing
         hide_offline_users: false, //hide offline users from list
-        //use_vcards: false, //fetch vcards of users
         //tab id to tab names mapping
         listingTabs: {
             "tab1": {
@@ -352,7 +346,6 @@ chatConfig.Params = {
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
-//console.log("autoChatLogin",chatConfig.Params.pc.autoChatLogin);
 chatConfig.Params.pc.tab1groups = [];
 chatConfig.Params.pc.tab2groups = [];
 $(chatConfig.Params.pc.listingTabs.tab1.groups).each(function(index, val){
