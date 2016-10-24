@@ -63,12 +63,12 @@ function pollForNonRosterListing(type,i){
 {
 "profileid": "7470229",
 "username": "RTR6613",
-"profileChecksum": "7470229lr"
+"profileChecksum": "2d184344ffe7c652eaf30c74cc3343ffi7470229"
 },
 {
 "profileid": "5534752",
 "username": "TSV9607",
-"profileChecksum": "5534752lr"
+"profileChecksum": "c9047089e4b672c6b8f616ac92f02b5ai5534752"
 },
 {
 "profileid": "7868716",
@@ -145,7 +145,7 @@ else{
                                                                     console.log("calling pollForNonRosterListing",type);
                                                                     //fetch current profileids belonging to given group
                                                                     //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    //pollForNonRosterListing(type,i+1);
+                                                                    pollForNonRosterListing(type,i+1);
                                                                     //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
                                                             },pollingTime);
     //}
