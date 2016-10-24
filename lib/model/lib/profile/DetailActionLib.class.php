@@ -724,5 +724,49 @@ class DetailActionLib
         //Common Logic
         return self::Show_Next_Previous($actObj);
     }
+    
+    /* VA Whitelisting
+     * Common Function to whiteListParams
+     */
+    public static function whiteListParams($request)
+    {
+        $stype  = $request->getParameter("stype");
+        $sort  = $request->getParameter("Sort");
+        $contactId  = $request->getParameter("contact_id");
+        $totalRec  = $request->getParameter("total_rec");
+        $username  = $request->getParameter("username");
+        
+        if(strlen($stype)>6)
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","Stype whitelisting","STYPE :$stype:$http_msg");
+        }
+        
+        if(strlen($sort)>3)
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","Sort whitelisting","SORT :$sort:$http_msg");
+        }
+        
+        if(!is_numeric(explode("_",$contactId)[0]))
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","contact Id whitelisting","CONTACT_ID :contactId:$http_msg");
+        }
+        
+        if(!is_numeric($totalRec))
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","total records whitelisting","TOTAL_REC :$totalRec:$http_msg");
+        }
+        
+        if((strlen($username)>=3 && !preg_match('/[^a-zA-Z]/i',  substr($username,0,3))) || strlen($username)>10)
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","usrname whitelisting","USERNAME :$username:$http_msg");
+        }
+    }
+    
+    
 }
 ?>

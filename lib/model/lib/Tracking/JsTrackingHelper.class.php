@@ -12,8 +12,26 @@ class JsTrackingHelper {
 public static function getHeadTrackJs() {
     $returnData = <<<MARKUP
         <script>
-    jsb9init_first();
-    </script>
+function jsb9createCookie(name,value,min){if(min){var date=new Date();date.setTime(date.getTime()+(min*60*1000));var expires="; expires="+date.toGMTString();}
+else var expires="";document.cookie=name+"="+value+expires+"; path=/";}
+function jsb9readCookie(name){var nameEQ=name+"=";var ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i];while(c.charAt(0)==' ')c=c.substring(1,c.length);if(c.indexOf(nameEQ)==0)
+return c.substring(nameEQ.length,c.length);}
+return"-1|-1";}
+function jsb9eraseCookie(name){jsb9createCookie(name,"",-1);}
+function jsb9init_first()
+{ date=new Date(); jsb9TrackStartTime=date.getTime();jsb9TrackVal=jsb9readCookie("jsb9Track");jsb9eraseCookie("jsb9Track");jsb9recordTimes=[];}
+function jsb9init_fourth(jsServerTime,jsFlag_unload,jsFlag_load,jsUrl,optionaljsb9Key)
+{if(typeof(jsLoadFlag)=="undefined"){jsLoadFlag=0;}
+if(jsLoadFlag!=0){
+    $(document).ready(function(){if(jsLoadFlag==1){jsb9TrackTime(jsServerTime,jsFlag_unload,jsFlag_load,jsUrl,optionaljsb9Key);}
+else{jsb9recordTimes["onLoad"]=(new Date()).getTime();}});}
+else
+jsb9eraseCookie("jsb9Track");if(jsFlag_unload)
+{
+    $(window).unload(function(){jsb9onUnloadTracking();});}
+var date=new Date();jsb9TrackEndTime=date.getTime();}
+jsb9init_first();    
+</script>
 MARKUP;
     return $returnData;
 }

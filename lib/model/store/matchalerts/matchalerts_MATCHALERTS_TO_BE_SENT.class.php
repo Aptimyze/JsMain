@@ -36,7 +36,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
         {
                 try
                 {
-			$sql="INSERT IGNORE INTO matchalerts.MATCHALERTS_TO_BE_SENT(PROFILEID) SELECT jp.PROFILEID FROM newjs.JPROFILE as jp LEFT JOIN newjs.JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid WHERE ".$conditionNew;
+			$sql="INSERT IGNORE INTO matchalerts.MATCHALERTS_TO_BE_SENT(PROFILEID,PERSONAL_MATCHES) SELECT jp.PROFILEID,jp.PERSONAL_MATCHES FROM newjs.JPROFILE as jp LEFT JOIN newjs.JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid WHERE ".$conditionNew;
 			$res = $this->db->prepare($sql);
                         $res->execute();
                 }
@@ -57,7 +57,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
 		try
 		{
 			$result = NULL;
-			$sql = "SELECT PROFILEID , HASTRENDS FROM matchalerts.MATCHALERTS_TO_BE_SENT WHERE PROFILEID%:TOTAL_SCRIPT=:SCRIPT AND IS_CALCULATED=:STATUS";
+			$sql = "SELECT PROFILEID , HASTRENDS,PERSONAL_MATCHES FROM matchalerts.MATCHALERTS_TO_BE_SENT WHERE PROFILEID%:TOTAL_SCRIPT=:SCRIPT AND IS_CALCULATED=:STATUS";
 			if($limit)
                                 $sql.= " limit 0,:LIMIT";
                         $prep = $this->db->prepare($sql);
@@ -69,7 +69,8 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
                         $prep->execute();
 			while($row = $prep->fetch(PDO::FETCH_ASSOC))
 			{
-				$result[$row["PROFILEID"]] = $row["HASTRENDS"];
+				$result[$row["PROFILEID"]]["HASTRENDS"] = $row["HASTRENDS"];
+                                $result[$row["PROFILEID"]]["PERSONAL_MATCHES"] = $row["PERSONAL_MATCHES"];
 			}
 			return $result;
 		}
