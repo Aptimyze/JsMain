@@ -215,6 +215,8 @@ class ViewContacts extends ContactEvent{
 			}
 			else
 				$this->component->contactDetailsObj->setHiddenPhoneMsg("Y");
+                        
+                        
 			if($this->component->contactDetailsObj->getHiddenPhoneMsg()=="N" && $this->component->contactDetailsObj->getLEFT_ALLOTED()>CONTACT_ELEMENTS::MIN_CONTACT_ALLOTED)
 			{
 				$jsadmin_CONTACTS_ALLOTED_OBJ =new jsadmin_CONTACTS_ALLOTED();

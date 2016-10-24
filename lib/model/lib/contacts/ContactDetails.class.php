@@ -461,8 +461,6 @@ class ContactDetails {
 	 * @access public
 	 */
 	public function setEvalueLimitUser($evalueLimitUser){ $this->evalueLimitUser=$evalueLimitUser; }
-	
-	
 	/**
 	 * This function used to set the whether the paid user is viewing details of free member
 	 * @param Integer 1 or 0
@@ -730,6 +728,10 @@ class ContactDetails {
 			$this->setMOB_PHONE_NO($this->profileObj->getISD()."-".$mob_phone);
         }
         
+        $this->setSHOWPHONE_RES($this->profileObj->getSHOWPHONE_RES());
+        $this->setSHOWPHONE_MOB($this->profileObj->getSHOWPHONE_MOB());
+        $this->setSHOWALT_MOBILE($this->profileObj->getSHOWPHONE_RES());
+        
 		/*********Ends here******************/
 		
 		//Email Detail
@@ -835,6 +837,11 @@ class ContactDetails {
 			$this->setALT_MOBILE_LABEL($altMobDetail);
 			$this->setALT_MOBILE($altMob);
 		}
+                if($altArr['ALT_MOBILE'] && $altArr["ALT_MOB_STATUS"]==Messages::YES){
+                 //   if($altArr["SHOWALT_MOBILE"]=="C" || $altArr["SHOWALT_MOBILE"])
+                        //$this->setHiddenAltMobMsg(Messages::)
+                    
+                }
 		if($altArr["SHOWBLACKBERRY"] == Messages::YES && $altArr["BLACKBERRY"])
 		{
 			$this->setBlackberry($altArr["BLACKBERRY"]);
