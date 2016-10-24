@@ -760,7 +760,7 @@ class DetailActionLib
             mail("ankitshukla125@gmail.com","total records whitelisting 3","TOTAL_REC :$totalRec:$http_msg");
         }
         
-        if((strlen($username)>=3 && !preg_match('/[^a-zA-Z]/i',  substr($username,0,3))) || strlen($username)>10)
+        if((strlen($username)>=3 && !ctype_alpha(substr($username,0,3))) || strlen($username)>10)
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","usrname whitelisting 3","USERNAME :$username:$http_msg");
