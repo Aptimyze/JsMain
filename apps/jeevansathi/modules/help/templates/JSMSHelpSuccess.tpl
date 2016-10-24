@@ -35,7 +35,7 @@
                 <div id="noResultDiv" class="dispnone">
                     <div class="posrel pad16 wid70p txtc">
                         <div class="fontlig mt30 f16">No Result Found</div>
-                        <div class="color2 mt60 f16"><a class="color2" href="/help/JSMSPostQuery">Post Your Query</a></div>
+                        <div class="color2 mt60 f16"><a class="color2" href="/help/JSMSPostQuery?iosWebView=~$iosWebView`">Post Your Query</a></div>
                     </div>
                 </div>
 				<!--no result found :end-->
@@ -56,8 +56,8 @@
                         <div class="txtc pad24 f21 color2">~if $currency eq 'RS'`1-800-419-6299~else`+91-120-4393500~/if`</div>
                         <div class="txtc pad24 greyColor f13">Daily in between 9AM - 9PM (IST)</div>
                     </div>
-                    <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 wid498p" id="postQueryBtn"><a class="white" href="/help/JSMSPostQuery">Post Your Query</a></div>
-                    <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 wid50p r0" id="commReqCallbackLyr"><a class="white" href="/common/requestCallBackJSMS?callbackSource=JSMSHelpPage">Request Callback</a></div>
+                    <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 wid498p" id="postQueryBtn"><a class="white" href="/help/JSMSPostQuery?iosWebView=~$iosWebView`">Post Your Query</a></div>
+                    <div class="posfix btmo dispib bg7 white f18 fontthin txtc pad1510 mt15 wid50p r0" id="commReqCallbackLyr"><a class="white" href="/common/requestCallBackJSMS?callbackSource=JSMSHelpPage&iosWebView=~$iosWebView`">Request Callback</a></div>
                 </div>
                 <!--section listing:end-->
             </div>
