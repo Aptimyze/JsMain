@@ -101,7 +101,6 @@ class ProfileFSO
                 $result = 0;
             }
         }
-
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             $this->logCacheConsumeCount(__CLASS__);
             return $result;
