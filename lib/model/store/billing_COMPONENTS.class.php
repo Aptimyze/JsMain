@@ -224,7 +224,7 @@ class billing_COMPONENTS extends TABLE{
 
     public function getDurationRightsForServiceDetails($serviceid, $package) {
         try {
-        	if($package = "Y"){
+        	if($package == "Y"){
 	            $sql = "Select c.DURATION,c.RIGHTS from billing.SERVICES a, billing.PACK_COMPONENTS b, billing.COMPONENTS c where a.PACKID = b.PACKID AND b.COMPID = c.COMPID AND a.SERVICEID = :SERVICEID";
 	            $resSelectDetail = $this->db->prepare($sql);
 	            $resSelectDetail->bindValue(":SERVICEID", $serviceid, PDO::PARAM_STR);

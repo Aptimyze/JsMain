@@ -159,8 +159,14 @@ class ApiEditSubmitV1Action extends sfActions
 			$apiResponseHandlerObj->setResponseBody($errorArr);
 			ValidationHandler::getValidationHandler("","EditField Array is not valid");
 		}
+
 		$apiResponseHandlerObj->generateResponse();
+
+		if($request->getParameter('internally'))
+		return sfView::NONE;
+
 		die;
+		
 	}
   
   private function bakeDesktopResponse(){

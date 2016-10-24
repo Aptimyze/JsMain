@@ -181,6 +181,6 @@ class JsConstants
 	public static $communicationRep = true;
     public static $jsChatFlag = 1; //1=enable chat, 0=disable chat
         public static $communicationServiceUrl = "http://192.168.120.70:8290";
-    public static $multiUserPhotoUrl = "http://staging.jeevansathi.com/api/v1/social/getMultiUserPhoto"; //Api from staging for multi user photo being used in chat listing and self photo.
+    public static $multiUserPhotoUrl = "http://www.jeevansathi.com/api/v1/social/getMultiUserPhoto"; //Api from staging for multi user photo being used in chat listing and self photo.
     public static $chatListingWebServiceUrl = array("dpp"=>"http://www.jeevansathi.com:8190/listings/v1/discover");
 }

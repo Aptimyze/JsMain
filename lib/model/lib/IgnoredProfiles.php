@@ -55,6 +55,10 @@ class IgnoredProfiles
         		if($seperator == "spaceSeperator")
         		{
         			$resultArr = implode(" ",$resultArr);
+        			if($resultArr !="")
+        			{
+        				$resultArr.= " ";
+        			}
         		}        		
         		return $resultArr;        		
         	}

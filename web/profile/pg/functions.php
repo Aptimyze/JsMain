@@ -123,23 +123,22 @@ function getProfileDetails($profileid) {
  *    RETURNS       :    Returns string of comma seperated rights for services
  ***********************************************************************/
 function serve_for($service_main, $service_str) {
-    $service_main_details = getServiceDetails($service_main);
-    $serve_for[] = $service_main_details["RIGHTS"];
+    if (!empty($service_main)) {
+        $service_main_details = getServiceDetails($service_main);
+        $serve_for[] = $service_main_details["RIGHTS"];
+    }
     if (strlen($service_str) > 0) {
         $serve_paid = explode(",", $service_str);
         for ($i = 0; $i < count($serve_paid); $i++) {
-            $service_addon_id = $serve_paid[$i] . $service_main_details["DURATION"];
-            $service_detail = getServiceDetails($service_addon_id);
+            $service_detail = getServiceDetails($serve_paid[$i]);
             $serve_for[] = $service_detail["RIGHTS"];
-            $service_addon_id_arr[] = $service_addon_id;
-            
-            //			$serve_for[]=strtoupper(substr($serve_paid[$i],0,2));
-            
+            $addon_serviceid[] = $serve_paid[$i];
         }
     }
     if (count($serve_for) > 0) $serve_for_str[] = implode(",", $serve_for);
-    if (count($service_addon_id_arr) > 0) $serve_for_str[] = implode(",", $service_addon_id_arr);
-    return $serve_for_str;
+    $serve_for_str = implode(",", $serve_for_str);
+    $addon_serviceid = implode(",", $addon_serviceid);
+    return array($serve_for_str, $addon_serviceid);
 }
 
 /***********************************************************************
@@ -150,7 +149,8 @@ function getServiceDetails($serviceid) {
 	$billServObj = new billing_SERVICES();
 	$serviceid = implode("','",explode(",", $serviceid));
 	$myrow = $billServObj->fetchAllServiceDetails($serviceid);
-
+    $myrow = $myrow[0];
+    
     if ($myrow["PACKAGE"] == "Y") {
     	$billCompObj = new billing_COMPONENTS();
         $row = $billCompObj->getDurationRightsForServiceDetails($serviceid, $myrow['PACKAGE']);
@@ -159,12 +159,7 @@ function getServiceDetails($serviceid) {
             $rights[] = $myrow_duration["RIGHTS"];
         }
         if (count($rights) > 0) {
-            // if (strstr($serviceid, 'NCP')) {
-            //     $rights_str = "D,N," . implode(",", $rights);
-            // } 
-            // else {
-                $rights_str = implode(",", $rights);
-            // }
+            $rights_str = implode(",", $rights);
         }
         $myrow['RIGHTS'] = $rights_str;
     } 
@@ -174,8 +169,10 @@ function getServiceDetails($serviceid) {
         $myrow["DURATION"] = $myrow_duration["DURATION"];
         $myrow["RIGHTS"] = $myrow_duration["RIGHTS"];
     }
+    
     return $myrow;
 }
+
 function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
     if ($curtype == "DOL") $price_string = $device."_DOL";
     else $price_string = $device."_RS";
@@ -223,35 +220,56 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         if ($gateway != "PAYPAL" && $gateway != "CCAVENUE" && $gateway != "PAYSEAL" && $gateway != "PAYU" && $gateway != "APPLEPAY" && $gateway != "PAYTM") {
             if ($curtype == "DOL" && $gateway != "PAYSEAL") $data["AMOUNT"] = round(($data["AMOUNT"] * $DOL_CONV_RATE), 2);
              //convert USD value into INR value
-            
         }
-        $service_detail = getServiceDetails($service_main);
+        
+        $servMain = explode(",", $service_main);
+        
+        if (strstr($service_main, 'P') || strstr($service_main, 'C') || strstr($service_main, 'D') || strstr($service_main, 'X')) {
+            // Check for main membership in billed services
+            $service_main = array_shift($servMain);
+            $service_str = implode(",", $servMain);
+        } else {
+            // Only addons case
+            $service_str = $service_main;
+            $service_main = null;
+        }
+        
         list($servefor, $addon_serviceid) = serve_for($service_main, $service_str);
         
         $data["SERVICE_MAIN"] = $service_main;
         $data["ADDON_SERVICE"] = $addon_serviceid;
         
-        $service_all = $data["SERVICE_MAIN"];
-        if ($addon_serviceid) $service_all = $service_all . "," . $data["ADDON_SERVICE"];
+        $service_all = $service_main;
+
+        if ($addon_serviceid) {
+            $service_all = $service_main . "," . $addon_serviceid;
+        }
+        
         $price_tot = getTotalPriceAll($service_all, $curtype, $device);
+        
         if ($amount / $price_tot < 0.20) {
             die("Some error has occured during request generation. Try again");
         }
+        
         if ($setactivate == "Y") {
             $renew_status = getRenewStatus($profileid);
             $activate_on = $renew_status['EXPIRY_DT'];
-        } 
-        else $activate_on = date('Y-m-d');
+        } else {
+            $activate_on = date('Y-m-d');
+        }
+
         $insert_id = '';
-        if (136580 == $profileid) $data[AMOUNT] = 1;
         
-        //$discount=round($discount*(100/(100+$tax_rate)),2);
+        if (136580 == $profileid) {
+            $data[AMOUNT] = 1;
+        }
+        
         $discount = round($discount, 2);
-        $service_main = ltrim(rtrim($service_main, ","),",");
+        $service_insert = ltrim(rtrim($service_all, ","),",");
         
         $billingOrderObj = new BILLING_ORDERS();
         $paramsStr = "PROFILEID, USERNAME, ORDERID, PAYMODE, SERVICEMAIN, CURTYPE,SERVEFOR, AMOUNT, ENTRY_DT, EXPIRY_DT, BILL_ADDRESS, PINCODE, BILL_COUNTRY, BILL_PHONE, BILL_EMAIL, IPADD,ADDON_SERVICEID,DISCOUNT,SET_ACTIVATE,GATEWAY, DISCOUNT_TYPE";
-        $valuesStr = "'$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_main','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type'";
+        $valuesStr = "'$profileid', '" . addslashes($data[USERNAME]) . "', '$ORDERID', '$paymode', '$service_insert','$curtype','$servefor', '$data[AMOUNT]', NOW(), '', '" . addslashes(stripslashes($data[CONTACT])) . "', '" . addslashes(stripslashes($data[PINCODE])) . "', '" . addslashes(stripslashes($data[COUNTRY])) . "', '$data[PHONE]', '$data[EMAIL]','$ip','$addon_serviceid','$discount','$setactivate','$gateway','$discount_type'";
         $insert_id = $billingOrderObj->genericOrderInsert($paramsStr, $valuesStr);
         
         $data["ORDERID"] = $ORDERID . "-" . $insert_id;
