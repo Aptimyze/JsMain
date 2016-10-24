@@ -49,7 +49,7 @@ function pollForNonRosterListing(type,i){
         });
     }
     $.myObj.ajax({
-        url: chatConfig.Params.nonRosterListingApiConfig["apiUrl"],
+        url: dppListingWebServiceUrl,
         dataType: 'json',
         data: postData,
         type: 'GET',
@@ -59,7 +59,8 @@ function pollForNonRosterListing(type,i){
         success: function (response) {
             if(i%2 == 0){
             response = {  //comment later
-"data": [{
+"data": [
+{
 "profileid": "7470229",
 "username": "RTR6613",
 "profileChecksum": "7470229lr"
@@ -88,11 +89,12 @@ function pollForNonRosterListing(type,i){
 "profileid": "3599124",
 "username": "nokumarriage",
 "profileChecksum": "3599124lr"
-}],
+}
+],
 "header": {
 "status": 200,
 "errorMsg": "",
-"pollTime":15000
+"pollTime":10000
 },
 "debugInfo": null
 };
@@ -110,11 +112,6 @@ else{
 "profileChecksum": "8891522lr"
 },
 {
-"profileid": "1764127",
-"username": "YAS8573",
-"profileChecksum": "1764127lr"
-},
-{
 "profileid": "3599124",
 "username": "nokumarriage",
 "profileChecksum": "3599124lr"
@@ -122,7 +119,7 @@ else{
 "header": {
 "status": 200,
 "errorMsg": "",
-"pollTime":15000
+"pollTime":10000
 },
 "debugInfo": null
 };   
@@ -148,7 +145,7 @@ else{
                                                                     console.log("calling pollForNonRosterListing",type);
                                                                     //fetch current profileids belonging to given group
                                                                     //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    pollForNonRosterListing(type,i+1);
+                                                                    //pollForNonRosterListing(type,i+1);
                                                                     //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
                                                             },pollingTime);
     //}
@@ -163,7 +160,7 @@ function processNonRosterData(response,type){
     var operation = "create_list";
     console.log("in processNonRosterData",response);
     if(strophieWrapper.initialNonRosterFetched == true){ //case of list update after first time creation
-        operation = "add_node"; //or "create_list" later
+        operation = "create_list"; //or "add_node" later
         console.log("update after non roster list creation case");
         var newNonRoster = response["data"],oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
         if((Object.keys(oldNonRoster)).length > 0){
@@ -780,23 +777,7 @@ function requestListingPhoto(apiParams) {
  * @params:none
  */
 function initiateChatConnection() {
-    username = loggedInJspcUser + '@' + openfireServerName;
-    /*if(readCookie("CHATUSERNAME")=="ZZXS8902")
-        username = 'a1@localhost';
-    else if(readCookie("CHATUSERNAME")=="bassi")
-        username = '1@localhost';
-    else if(readCookie("CHATUSERNAME")=="VWZ4557")
-        username = 'a9@localhost';
-    else if(readCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';
-    else if(readCookie("CHATUSERNAME") == "ZZRS3292")
-        username = 'a13@localhost';
-    else if(readCookie("CHATUSERNAME")=="ZZVV2929")
-        username = 'a14@localhost';
-    else if(readCookie("CHATUSERNAME")=="ZZRR5723")
-        username = 'a11@localhost';
-    pass = '123';*/
-    
+    username = loggedInJspcUser + '@' + openfireServerName;    
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
  
 }
@@ -892,6 +873,8 @@ function invokePluginLoginHandler(state) {
         }
     }
 }
+
+
 /*invokePluginAddlisting
 function to add roster item or update roster item details in listing
 * @inputs:listObject,key(create_list/add_node/update_status),user_id(optional)
