@@ -521,6 +521,7 @@ strophieWrapper.sendPresence();
             //console.log("Used new listing");
             strophieWrapper.setRosterStorage(strophieWrapper.Roster);
             localStorage.setItem("clLastUpdated",d.getTime());
+            localStorage.removeItem("presence_"+loggedInJspcUser);
         }
         //console.log(strophieWrapper.Roster);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
