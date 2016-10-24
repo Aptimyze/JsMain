@@ -516,9 +516,15 @@ JsChat.prototype = {
     },
     
     //check for node presence
-    checkForNodePresence:function(userId){
-        var exists = false,curElem = this,groupID;
-        $.each(curElem._rosterGroups,function(key,groupId){
+    checkForNodePresence:function(userId,specificGroupIdArr){
+        var exists = false,curElem = this,groupID,groupListArr;
+        if(specificGroupIdArr == undefined){
+            groupListArr = curElem._rosterGroups;
+        }
+        else{
+            groupListArr = specificGroupIdArr;
+        }
+        $.each(groupListArr,function(key,groupId){
             if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
                 exists = true;
                 groupID = groupId;

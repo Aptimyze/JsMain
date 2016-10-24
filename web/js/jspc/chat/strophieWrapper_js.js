@@ -182,8 +182,8 @@ var strophieWrapper = {
     },
     //executed on new push/remove event in roster
     onRosterUpdate: function (iq) {
-       //console.log("onRosterUpdate");
-        //console.log(iq);
+       console.log("onRosterUpdate");
+        console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
@@ -354,6 +354,7 @@ strophieWrapper.sendPresence();
         }.bind(this), null, "iq", null, "enablecarbons");
         strophieWrapper.connectionObj.send(carbons_iq);
     },
+
     //executed after presence has been fetched
     onPresenceReceived: function (presence) {
        //console.log("onPresenceReceived from- ",$(presence).attr('from'));
@@ -477,17 +478,15 @@ strophieWrapper.sendPresence();
         });
     },
 
-    //executed on deletion of non roster nodes in listing
-    onNonRosterListDeletion:function(nodeArr){
-        console.log("in onNonRosterListDeletion",nodeArr);
-        $.each(nodeArr,function(user_id,listObj){
+    //executed on deletion of non roster nodes in listing - remove if not required later
+    onNonRosterListDeletion:function(nodeIdArr){
+        console.log("in onNonRosterListDeletion",nodeIdArr);
+        $.each(nodeIdArr,function(key,user_id){
             if(typeof strophieWrapper.NonRoster[user_id]!= "undefined"){
-                if (strophieWrapper.checkForGroups(strophieWrapper.NonRoster[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
-                    var inputObj = {};
-                    inputObj[user_id] = strophieWrapper.NonRoster[user_id];
-                    invokePluginManagelisting(inputObj, "delete_node", user_id);
-                    delete strophieWrapper.NonRoster[user_id];
-                }
+                var inputObj = {};
+                inputObj[user_id] = strophieWrapper.NonRoster[user_id];
+                invokePluginManagelisting(inputObj, "delete_node", user_id);
+                delete strophieWrapper.NonRoster[user_id];
             }
         });
     },

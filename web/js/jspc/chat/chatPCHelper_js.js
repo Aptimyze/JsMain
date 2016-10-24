@@ -66,19 +66,19 @@ function pollForNonRosterListing(type,i){
 "profileChecksum": "2d184344ffe7c652eaf30c74cc3343ffi7470229"
 },
 {
-"profileid": "5534752",
-"username": "TSV9607",
-"profileChecksum": "c9047089e4b672c6b8f616ac92f02b5ai5534752"
+"profileid": "8925000",
+"username": "ZZYV2509",
+"profileChecksum": "d948e45111aee5677868d6b17bec9ca7i8925000"
 },
 {
-"profileid": "7868716",
-"username": "ZAZR5355",
-"profileChecksum": "7868716lr"
+"profileid": "7415000",
+"username": "RTW1253",
+"profileChecksum": "5f42a56a1d5df485dc3dc26bafca6d52i7415000"
 },
 {
-"profileid": "8891522",
-"username": "ZZYZ9006",
-"profileChecksum": "8891522lr"
+"profileid": "8874000",
+"username": "ZZYA1475",
+"profileChecksum": "4f29b43a3c50e05531fd01132f7f1d66i8874000"
 },
 {
 "profileid": "1764127",
@@ -94,7 +94,7 @@ function pollForNonRosterListing(type,i){
 "header": {
 "status": 200,
 "errorMsg": "",
-"pollTime":10000
+"pollTime":20000
 },
 "debugInfo": null
 };
@@ -119,7 +119,7 @@ else{
 "header": {
 "status": 200,
 "errorMsg": "",
-"pollTime":10000
+"pollTime":20000
 },
 "debugInfo": null
 };   
@@ -145,7 +145,7 @@ else{
                                                                     console.log("calling pollForNonRosterListing",type);
                                                                     //fetch current profileids belonging to given group
                                                                     //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    pollForNonRosterListing(type,i+1);
+                                                                    //pollForNonRosterListing(type,i+1);
                                                                     //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
                                                             },pollingTime);
     //}
@@ -881,6 +881,16 @@ function invokePluginManagelisting(listObject, key, user_id) {
         if (key == "create_list") {
             //console.log("create_list",listObject);
             objJsChat.manageChatLoader("hide");
+        }
+        if(key == "add_node" && user_id != undefined){
+            //before adding new node in list,check presence in nonroster list to remove it first
+            var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
+            console.log("invokePluginManagelisting",checkIfExists);
+            if(checkIfExists && checkIfExists["exists"] == true){
+                var deleteIdArr = [];
+                deleteIdArr.push(user_id);
+                strophieWrapper.onNonRosterListDeletion(deleteIdArr);
+            }
         }
         objJsChat.addListingInit(listObject,key);
         if (key == "add_node") {
