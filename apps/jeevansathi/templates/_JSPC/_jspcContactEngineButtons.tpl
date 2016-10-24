@@ -129,7 +129,8 @@
  <!--start:content-->
  <div class="cep6">
 	<div class="cEcontent ceght1s mCustomScrollbar f13 ">
-  <div  class="SMSContactsDiv posabs colr5 disp-none cursp" style='right:16px;top:3px;'>SMS these details to me</div>
+   ~if LoggedInProfile::getInstance()->getISD() eq '91'`
+  <div  class="SMSContactsDiv posabs colr5 disp-none cursp" style='right:16px;top:3px;'>SMS these details to me</div> ~/if`
 		<ul id="cEViewContactListing" class="ceviewcontct fontlig">
 			<li class="clearfix">
 				<div class="fl">{{CONTACT_NAME}}</div>

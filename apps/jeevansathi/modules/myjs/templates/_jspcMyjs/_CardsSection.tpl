@@ -215,7 +215,10 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
 <div id="{{MESSAGE_RESPONSE_ID}}" class='fontlig color11 f16 pt55 disp-none'>Message has been sent.</div>
 <div id="{{contactDivId}}" class="fullwid mt26 clearfix color12 f12 fontlig myjs-brd8 disp-none">
 	<div id="{{handled_contact}}" class="fullwid clearfix pt10">
-		<div class="fl wid90p pt4"><span id="{{postedById}}" class="disp_ib"></span><span  class="SMSContactsDiv fr colr5 disp-none cursp">SMS these details to me</span></div>
+    
+		<div class="fl wid90p pt4"><span id="{{postedById}}" class="disp_ib"></span>
+      ~if LoggedInProfile::getInstance()->getISD() eq '91'`
+    <span  class="SMSContactsDiv fr colr5 disp-none cursp">SMS these details to me</span>~/if`</div> 
 		<div class="fr "><a onclick="{{POST_ACTION_VIEWCONTACT_CLOSE}}"><i class="sprite2 myjs-close2 cursp"></i></a></div>
 	</div>
 	<div id="{{phone_view_Contact}}" class="fullwid clearfix pt20">
