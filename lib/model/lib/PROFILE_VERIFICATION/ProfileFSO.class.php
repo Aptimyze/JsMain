@@ -31,7 +31,7 @@ class ProfileFSO
      * @brief Constructor function
      * @param $dbName - Database to which the connection would be made
      */
-    private function __construct($dbname = "")
+    public function __construct($dbname = "")
     {
         self::$objFSO = new PROFILE_VERIFICATION_FSO($dbname);
     }
@@ -83,7 +83,7 @@ class ProfileFSO
      * @param type $pid
      * @return type
      */
-    public function check($pid)
+    public function check($profileid)
     {
         $objProCacheLib = ProfileCacheLib::getInstance();
         $fields = 'FSO_EXISTS';
@@ -95,7 +95,6 @@ class ProfileFSO
                 $bServedFromCache = true;
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
             }
-            
             $result = $result['FSO_EXISTS'];
             $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
             if($result && in_array($result, $validNotFilled)){
@@ -127,9 +126,10 @@ class ProfileFSO
      */
     public function insert($pid)
     {
-        self::$objFSO->insert($pid,$paramArr);
+        $objProCacheLib = ProfileCacheLib::getInstance();        
+        self::$objFSO->insert($pid);
         $dummyResult['PROFILEID'] = $pid;
-        $dummyResult['HAVE_ASTRO'] = 1;
+        $dummyResult['FSO_EXISTS'] = 1;
         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
     
     }
@@ -141,12 +141,20 @@ class ProfileFSO
      */
     public function delete($profileid)
     {
+        $objProCacheLib = ProfileCacheLib::getInstance();        
         self::$objFSO->delete($profileid);
-        $dummyResult['PROFILEID'] = $pid;
-        $dummyResult['HAVE_ASTRO'] = 'N';
+        $dummyResult['PROFILEID'] = $profileid;
+        $dummyResult['FSO_EXISTS'] = 'N';
         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
 
     }
     
+  private function logCacheConsumeCount($funName)
+  {
+    $key = 'cacheConsumption'.'_'.date('Y-m-d');
+    JsMemcache::getInstance()->hIncrBy($key, $funName);
+    
+    JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+  }
 }
 ?>
