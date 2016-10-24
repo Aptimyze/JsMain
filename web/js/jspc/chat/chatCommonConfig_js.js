@@ -327,7 +327,7 @@ chatConfig.Params = {
         autoChatLogin:((hideUnimportantFeatureAtPeakLoad == "1") ? false : true),  //auto-login to chat on site login
         rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
         clearListingCacheTimeout:86400000, //TIme in milliseconds(1 day)
-        listingRefreshTimeout:30000 //Time in milliseconds
+        listingRefreshTimeout:600000 //Time in milliseconds
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
