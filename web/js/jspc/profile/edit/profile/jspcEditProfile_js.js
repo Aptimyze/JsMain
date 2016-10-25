@@ -5782,9 +5782,7 @@ function clearFileUpload(){
     input.replaceWith(input.val('').clone(true));
     $("#uploadFileName").val("");
 }
-
-function onCreateUploadHoroBtn(){
-    $("#crUpHoroBtn").on('click', function(){
+function createHoroscopeFun(){
             var horoscopeValue = EditApp.getEditAppFields('horoscope','HOROSCOPE_MATCH').value;
             if(horoscopeValue != 'Y' && horoscopeValue != 'N' ){
                 disableUploadBtn();
@@ -5802,7 +5800,9 @@ function onCreateUploadHoroBtn(){
                 $("#horoscopeDiv").addClass('disp-none');
                 showCreateHoroDiv();
             }
-    });
+    }
+function onCreateUploadHoroBtn(){
+    $("#crUpHoroBtn").on('click',createHoroscopeFun );
 }
 
 function onaddHoroscopeCloseBtn()
@@ -6131,6 +6131,8 @@ $(document).ready(function() {
     onClickOfHoroscopeOverlay();
     onClickViewHoroCloseBtn();
     onClickHoroscopeMust();
+
+    if(typeof(fromCAL)!='undefined' && fromCAL=='1')createHoroscopeFun();
 	$("body").on("click",'.js-uploadPhoto',function()
     {
             window.location="/social/addPhotos";

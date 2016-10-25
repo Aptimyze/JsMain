@@ -15,7 +15,9 @@ class myprofilemobAction extends sfAction
 	//~ public $smarty;
 	
 	public function execute($request)
-	{
+	{ 
+		if($request->getParameter('fromCAL') == 1)
+			$this->fromCAL = 1;
 		$this->groupname = $request->getParameter("groupname");
 		//Testing Variables:
 		$request->setParameter("sectionFlag","all");

@@ -4,7 +4,7 @@
   ~/if`
 <div class="perspective" id="perspective">
 	<div class="pcontainer" id="pcontainer">
-<!--start:div-->
+<!--start:div--> 
 		<!--start:div-->
 		<div class="fullwid bg1" id="topbar">
 		  <div class="pad1">
@@ -154,10 +154,12 @@
 </div>
 </div>    
 
+
 <script>
 	showLoader();	
 		var renderPage=new mobEditPage;
 		 var DualHamburger=0;
+		 var fromCAL=~if $fromCAL == 1`'1'~else`'0'~/if`;
 </script>
 </div>
 <div class="hamburger dn fullwid" id="ehamburger">

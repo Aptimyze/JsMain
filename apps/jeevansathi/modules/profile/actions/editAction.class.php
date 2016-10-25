@@ -30,6 +30,8 @@ class editAction extends sfAction {
 	 */
 	public function execute($request) {
 		//Contains login credentials
+		if($request->getParameter('fromCAL') == 1)
+			$this->fromCAL = 1;
 		global $smarty, $data;
 		$this->loginData = $data = $request->getAttribute("loginData");
 		 //Jsb9 page load time tracking edit Page Mobile
@@ -53,6 +55,7 @@ class editAction extends sfAction {
 			$this->Name .= "<br/><span class=\"green lf\" style=\"font-size:11px;\">Under screening</span>";
 		}
         /////////////////////////////// Profile Completion Score --------------------
+
 		$this->loginProfile->setNullValueMarker("");
 		
 		$cScoreObject = ProfileCompletionFactory::getInstance(null,$this->loginProfile,null);
@@ -67,7 +70,7 @@ class editAction extends sfAction {
     if(MobileCommon::isDesktop() &&  !$request->getParameter("oldjspc") && $request->getParameter("oldjspc") !== 1){
       $this->setJspcLayout();
       return;
-    }
+    } 
 		$this->USERNAME = $this->loginProfile->getUSERNAME();
 		$this->TopUsername = $this->loginProfile->getUSERNAME();
 		$len = strlen($this->TopUsername);
@@ -90,7 +93,7 @@ class editAction extends sfAction {
 		}
 		//end of rocketfuel code
 		if(MobileCommon::isMobile())
-		{	
+		{
 			//for non screened no photos case
 			$this->noScreenPhoto=$pictureServiceObj->isProfilePhotoPresent(1);
 			//Pixel code to run only when coming from mobile registration page 4 
@@ -245,7 +248,6 @@ class editAction extends sfAction {
 	}
 	
 	
-	
 	//echo $this->getLayout();
 	//echo $this->getTemplate();die;
 	}
@@ -292,6 +294,7 @@ class editAction extends sfAction {
     $this->BIRTH_DAY = $BIRTH_DAY;
     $this->BIRTH_MON = $BIRTH_MON;
     $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jspcEditProfileUrl);
+
     $this->setTemplate("_jspcEdit/jspcEditProfile");
   }
   
