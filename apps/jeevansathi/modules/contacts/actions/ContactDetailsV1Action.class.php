@@ -313,8 +313,6 @@ class ContactDetailsV1Action extends sfAction
 						
 				}
                                 
-                                    $responseArray['contact1_message'] = Messages::PHONE_VISIBLE_ON_ACCEPT;
-
 			} 
 			else {
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
