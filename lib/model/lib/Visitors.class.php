@@ -44,7 +44,7 @@ class Visitors
 			if (!empty($profileIdArr))
 			{
 				$multipleProfileObj         = new ProfileArray;
-				$fieldList                  = "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID";
+				$fieldList                  = "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID,OCCUPATION,EDU_LEVEL_NEW,CITY_RES";
 				$profileIdArr1["PROFILEID"] = implode(",", $profileIdArr);
 				$this->visitorsProfile      = $multipleProfileObj->getResultsBasedOnJprofileFields($profileIdArr1, '', '', $fieldList, "JPROFILE", "", "");
                             if($infoTypenav["matchedOrAll"]=="M")
@@ -88,83 +88,95 @@ class Visitors
 		include_once(JsConstants::$docRoot . "/profile/connect_functions.inc");
 		include_once(JsConstants::$docRoot . "/commonFiles/connect_dd.inc");
 		$this->profile->getDetail('', '', "GENDER,INCOME,PRIVACY");
-		if ($this->profile->getGENDER() == 'F') {
-			$partnetProfile = new PartnerProfile($this->profile);
-			$partnetProfile->getDppCriteria();
-			$lage = $partnetProfile->getLAGE();
-			$hage = $partnetProfile->getHAGE();
-			if (!$lage || !$hage)
-				$no_age = 1;
-			$lheight = $partnetProfile->getLHEIGHT();
-			$hheight = $partnetProfile->getHHEIGHT();
-			if (!$lheight || !$hheight)
-				$no_height = 1;
-			$manglik = explode(",", $partnetProfile->getMANGLIK());
-			$mstatus = explode(",", $partnetProfile->getMSTATUS());
-			$caste   = explode(",", $partnetProfile->getCASTE());
-			if ($caste)
-				$all_caste = get_all_caste($caste);
-			$religion   = explode(",", $partnetProfile->getRELIGION());
-			$community  = explode(",", $partnetProfile->getMTONGUE());
-			$country    = explode(",", $partnetProfile->getCOUNTRY_RES());
-			$par_income = explode(",", $partnetProfile->getINCOME());
-			if(count($par_income)>0 && $par_income[0]!="")
-			{
-				foreach($par_income as $key=>$val)
-					$act_income[]=get_income_sortby_new($val,'','F');
-					//$act_income[]=$income_arr[$val];
-			}
-			else
-				$act_income[]=get_income_sortby_new($this->profile->getINCOME(),'','F');
-			$act_income = explode(",",$act_income[0]);
-			foreach ($this->visitorsProfile as $key => $profile) {
-				$allow         = 1;
-				$oth_age       = $profile->getAGE();
-				$oth_height    = $profile->getHEIGHT();
-				$oth_manglik   = $profile->getMANGLIK();
-				$oth_mstatus   = $profile->getMSTATUS();
-				$oth_caste     = $profile->getCASTE();
-				$oth_religion  = $profile->getRELIGION();
-				$oth_community = $profile->getMTONGUE();
-				$oth_country   = $profile->getCOUNTRY_RES();
-				$oth_income    = $profile->getINCOME();
-				$oth_prof      = $profile->getPROFILEID();
-				
-				if (!($oth_age >= $lage && $oth_age <= $hage)) {
-					$allow = 0;
-				}
-				if ($allow == 1) {
-					if (!($oth_height >= $lheight && $oth_height <= $hheight))
-						$allow = 0;
-				}
-				if ($allow == 1) {
-					$allow = $this->check_in_array($mstatus, $oth_mstatus);
-				}
-				if ($allow == 1) {
-					$allow = $this->check_in_array($country, $oth_country);
-				}
-				if ($allow == 1) {
-					$allow = $this->check_in_array($all_caste, $oth_caste);
-				}
-				if ($allow == 1) {
-					$allow = $this->check_in_array($religion, $oth_religion);
-				}
-				if ($allow == 1) {
-					$allow = $this->check_in_array($community, $oth_community);
-				}
-				if ($allow == 1) {
-					$allow = $this->check_in_array($manglik, $oth_manglik);
-				}
-				if ($allow == 1)
-					if (is_array($act_income)) {
-							$allow = $this->check_in_array($act_income, $oth_income);
-				}
-				
-				if ($allow != 1) {
-					unset($this->visitorsProfile[$key]);
-				}
-			}
-		}
+                $partnetProfile = new PartnerProfile($this->profile);
+                $partnetProfile->getDppCriteria();
+                $lage = $partnetProfile->getLAGE();
+                $hage = $partnetProfile->getHAGE();
+                if (!$lage || !$hage)
+                        $no_age = 1;
+                $lheight = $partnetProfile->getLHEIGHT();
+                $hheight = $partnetProfile->getHHEIGHT();
+                if (!$lheight || !$hheight)
+                        $no_height = 1;
+                $manglik = explode(",", $partnetProfile->getMANGLIK());
+                $mstatus = explode(",", $partnetProfile->getMSTATUS());
+                $caste   = explode(",", $partnetProfile->getCASTE());
+                if ($caste)
+                        $all_caste = get_all_caste($caste);
+                $religion   = explode(",", $partnetProfile->getRELIGION());
+                $community  = explode(",", $partnetProfile->getMTONGUE());
+                $country    = explode(",", $partnetProfile->getCOUNTRY_RES());
+                $par_income = explode(",", $partnetProfile->getINCOME());
+                $city = explode(",", $partnetProfile->getCITY_RES());
+                $occupation = explode(",", $partnetProfile->getOCCUPATION());
+                $education = explode(",", $partnetProfile->getEDU_LEVEL_NEW());
+                if(count($par_income)>0 && $par_income[0]!="")
+                {
+                        foreach($par_income as $key=>$val)
+                                $act_income[]=get_income_sortby_new($val,'','F');
+                                //$act_income[]=$income_arr[$val];
+                }
+                else
+                        $act_income[]=get_income_sortby_new($this->profile->getINCOME(),'','F');
+                $act_income = explode(",",$act_income[0]);
+                foreach ($this->visitorsProfile as $key => $profile) {
+                        $allow         = 1;
+                        $oth_age       = $profile->getAGE();
+                        $oth_height    = $profile->getHEIGHT();
+                        $oth_manglik   = $profile->getMANGLIK();
+                        $oth_mstatus   = $profile->getMSTATUS();
+                        $oth_caste     = $profile->getCASTE();
+                        $oth_religion  = $profile->getRELIGION();
+                        $oth_community = $profile->getMTONGUE();
+                        $oth_country   = $profile->getCOUNTRY_RES();
+                        $oth_income    = $profile->getINCOME();
+                        $oth_prof      = $profile->getPROFILEID();
+                        $oth_edu      = $profile->getEDU_LEVEL_NEW();
+                        $oth_occ      = $profile->getOCCUPATION();
+                        $oth_city      = $profile->getCITY_RES();
+
+                        if (!($oth_age >= $lage && $oth_age <= $hage)) {
+                                $allow = 0;
+                        }
+                        if ($allow == 1) {
+                                if (!($oth_height >= $lheight && $oth_height <= $hheight))
+                                        $allow = 0;
+                        }
+                        if ($allow == 1) {
+                                $allow = $this->check_in_array($mstatus, $oth_mstatus);
+                        }
+                        if ($allow == 1) {
+                                $allow = $this->check_in_array($country, $oth_country);
+                        }
+                        if ($allow == 1) {
+                                $allow = $this->check_in_array($all_caste, $oth_caste);
+                        }
+                        if ($allow == 1) {
+                                $allow = $this->check_in_array($religion, $oth_religion);
+                        }
+                        if ($allow == 1) {
+                                $allow = $this->check_in_array($community, $oth_community);
+                        }
+                        if ($allow == 1) {
+                                $allow = $this->check_in_array($manglik, $oth_manglik);
+                        }
+                        if ($allow == 1 && $this->profile->getGENDER() == 'F')
+                                if (is_array($act_income)) {
+                                                $allow = $this->check_in_array($act_income, $oth_income);
+                        }
+                        if ($allow == 1) {
+                                $allow = $this->check_in_array($city, $oth_city);
+                        }
+                        if ($allow == 1) {
+                                $allow = $this->check_in_array($occupation, $oth_occ);
+                        }if ($allow == 1) {
+                                $allow = $this->check_in_array($education, $oth_edu);
+                        }
+                        
+                        if ($allow != 1) {
+                                unset($this->visitorsProfile[$key]);
+                        }
+                }
 	}
 	function check_in_array($array, $value)
 	{

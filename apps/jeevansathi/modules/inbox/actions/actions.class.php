@@ -640,8 +640,17 @@ public function executePerformV2(sfWebRequest $request)
 						break;
 
 					case 'VISITORS': 
-					$response2["subtitle"]='Profile Visitors '.$response2['total'];
-					$response2["title2"]=null;
+                                        if($infoTypenav["matchedOrAll"]=="" || $infoTypenav["matchedOrAll"]=="A"){
+                                            $response2["subtitle"]='All Profile Visitors '.$response2['total'];
+                                            $response2["title2"]="Matching Visitors"; 
+                                            $response2["url"]="/profile/contacts_made_received.php?page=idd1&searchId=5&currentPage=1&matchedOrAll=M";
+                                        }
+                                        else{
+                                            $response2["title2"]='All Profile Visitors';
+                                            $response2["subtitle"]="Matching Visitors ".$response2['total']; 
+                                            $response2["url"]="/profile/contacts_made_received.php?page=idd1&searchId=5&currentPage=1&matchedOrAll=A";
+                                        }
+                                        $response2["visitorAllOrMatching"]=$infoTypenav["matchedOrAll"];
 					break;
 					
 					case 'SHORTLIST': 
@@ -810,6 +819,7 @@ public function executePerformV2(sfWebRequest $request)
 				$this->title2=$ResponseArr['title2'];
 				$this->infotypeid2=$ResponseArr['infotypeid2'];
 				$this->infotype=$ResponseArr['infotype'];
+                                $this->visitorAllOrMatching = $ResponseArr['visitorAllOrMatching'];
 				$this->noresultmessage = $ResponseArr["noresultmessage"];
 				$this->_SEARCH_RESULTS_PER_PAGE = ProfileInformationModuleMap::$ContactCenterAPP[$ResponseArr['infotype']]['COUNT'];	
 				$this->heading = $ResponseArr['subtitle'];
