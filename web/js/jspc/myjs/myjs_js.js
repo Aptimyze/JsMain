@@ -539,16 +539,18 @@ function generateFaceCard(Object)
 			tracking = Object.data.tracking;
 		else
     {
-      var stype = {"DAILYMATCHES":"15","JUSTJOINED":"JJPC","DESIREDPARTNERMATCHES":"DPMP","VERIFIEDMATCHES":"VMPC"}
+      // modify for last search
+      var stype = {"DAILYMATCHES":"15","JUSTJOINED":"JJPC","DESIREDPARTNERMATCHES":"DPMP","VERIFIEDMATCHES":"VMPC","LASTSEARCH":"JJPC"}
 			tracking = "stype="+stype[Object.name];
     }
 		var innerHtml="";
 		var viewAllInnerHtml="";
 		var loopCount=0;
 		var totalCount=0;
+    // check for last search
 		if(Object.name=="DAILYMATCHES")
 			totalCount=Object.data.total;
-		if(Object.name=="JUSTJOINED" || Object.name=="DESIREDPARTNERMATCHES" || Object.name=="VERIFIEDMATCHES")
+		if(Object.name=="JUSTJOINED" || Object.name=="DESIREDPARTNERMATCHES" || Object.name=="VERIFIEDMATCHES" || Object.name=="LASTSEARCH")
 			totalCount=Object.data.no_of_results;
     if(totalCount >Object.maxCount){
 			loopCount=Object.maxCount-1;
@@ -599,7 +601,8 @@ function generateFaceCard(Object)
 			innerHtml=innerHtml+viewAllInnerHtml;
 		
 			Object.containerHtml=Object.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
-			if(Object.name=="DAILYMATCHES" || Object.name=="JUSTJOINED" || Object.name=="VERIFIEDMATCHES")
+			// check for Last search
+      if(Object.name=="DAILYMATCHES" || Object.name=="JUSTJOINED" || Object.name=="VERIFIEDMATCHES" || Object.name=="LASTSEARCH")
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,totalCount);
 			else
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,"");
@@ -753,6 +756,18 @@ function noResultFaceCard(Object)
 		$("#justJoinedCountBar").removeClass("disp-none");
 		$("#justJoinedCountBar > .disp-tbl").addClass("bounceIn animated");
 	}
+  if(Object.name=="LASTSEARCH")
+  {
+    if(Object.error)
+        $("#lastSearchCountTotal").html("--");
+    else{
+      $("#lastSearchCountTotal").html(0);
+      $("#Error"+Object.name).remove();
+    }
+    $("#lastSearchNewCircle").addClass("disp-none");
+    $("#lastSearchCountBar").removeClass("disp-none");
+    $("#lastSearchCountBar > .disp-tbl").addClass("bounceIn animated");
+  }
 }
 
 catch (e){

@@ -235,6 +235,90 @@
                     </div><i class="pos-abs sprite2 myjs-ic2 myjs-pos3 scntrl cursp" id="prv-slide3"></i> <i class="pos-abs sprite2 myjs-ic3 myjs-pos4 scntrl cursp" id="nxt-slide3"></i> </div>
             </div>
         </article>
+         <article id="LASTSEARCH">
+            <div class="pt40 clearfix fontlig">
+                <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+            </div>
+            <div class="pt15">
+                <div class="pos-rel">
+                    <div class="fullwid scrollhid">
+                        <div class="pos-rel li-slide2">
+                            <ul class="hor_list clearfix myjslist boxslide pos-rel" id="js-slide2">
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div><i class="pos-abs sprite2 myjs-ic2 myjs-pos3 scntrl cursp" id="prv-slide2"></i> <i class="pos-abs sprite2 myjs-ic3 myjs-pos4 scntrl cursp" id="nxt-slide2"></i> </div>
+            </div>
+        </article>
+         <article id="DESIREDPARTNERMATCHES" class="disp-none">
+            <div class="pt40 clearfix fontlig">
+                <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+            </div>
+            <div class="pt15">
+                <div class="pos-rel">
+                    <div class="fullwid scrollhid">
+                        <div class="pos-rel li-slide2">
+                            <ul class="hor_list clearfix myjslist boxslide pos-rel" id="js-slide2">
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                                <li>
+                                    <div class="bg-white" style="width:220px; height:320px; overflow:hidden"> </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div><i class="pos-abs sprite2 myjs-ic2 myjs-pos3 scntrl cursp" id="prv-slide2"></i> <i class="pos-abs sprite2 myjs-ic3 myjs-pos4 scntrl cursp" id="nxt-slide2"></i> </div>
+            </div>
+        </article>
         <article id="VERIFIEDMATCHES">
             <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Matches Verified by Visit <span class="fontreg colr5"></span></div>
