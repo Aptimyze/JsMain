@@ -69,14 +69,17 @@ class commoninterfaceActions extends sfActions
 		}
 		else //if valid username was entered and profileid is obtained
 		{
-			global $protect;
-			JsCommon::oldIncludes();
-			$protect = new protect();
-			$protect->logout();
+			//global $protect;
+			//JsCommon::oldIncludes();
+			//$protect = new protect();
+			//$protect->logout();
 			$checksum = md5($this->profile->getPROFILEID()) . "i" . $this->profile->getPROFILEID();
-			$echecksum = $protect->js_encrypt($checksum);
-			$this->autologinUrl = JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
-			$this->profileid = $this->profile->getPROFILEID();
+		//	$echecksum = $protect->js_encrypt($checksum);
+			$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
+			$authenticationLoginObj->setTrackLogin(false);
+			$authenticationLoginObj->setCrmAdminAuthchecksum($checksum);
+			$this->autologinUrl = JsConstants::$siteUrl;//JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
+			//$this->profileid = $this->profile->getPROFILEID();
 		}
 	}
 	$this->setTemplate('generateAutologin');

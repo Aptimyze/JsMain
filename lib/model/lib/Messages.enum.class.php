@@ -90,6 +90,7 @@ class Messages
   const OTHER_SCREENING = "This Profile is currently being Screened. Kindly view this profile after 24 hours.";
   //privilege error message starts here
   const ACTION_NOT_ALLOWED = "You cannot perform this action.";
+  const HIDDEN_ERROR = "You cannot perform this action as {{POGID}}'s profile is hidden"; 
   const DROP_DOWN = "please <a href='/profile/mem_comparison.php'>pay</a>, to avail this feature";
   const MESSAGE = "Please <a href='/profile/mem_comparison.php'>pay</a>, to avail this feature";
   const MESSAGE_BOX_VISIBILE = "please <a href='/profile/mem_comparison.php'>pay</a>, to avail this feature";
