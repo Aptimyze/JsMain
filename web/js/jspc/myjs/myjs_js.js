@@ -540,7 +540,12 @@ function generateFaceCard(Object)
 		else
     {
       // modify for last search
-      var stype = {"DAILYMATCHES":"15","JUSTJOINED":"JJPC","DESIREDPARTNERMATCHES":"DPMP","VERIFIEDMATCHES":"VMPC","LASTSEARCH":"JJPC"}
+      var stype = {"DAILYMATCHES":"15","JUSTJOINED":"JJPC","DESIREDPARTNERMATCHES":"DPMP","VERIFIEDMATCHES":"VMPC","LASTSEARCH":"LSPC"}
+      // when last search are less than 5
+      if(PageSrc == 1)
+      {
+        stype[Object.name] = "DPMPLS";
+      }
 			tracking = "stype="+stype[Object.name];
     }
 		var innerHtml="";

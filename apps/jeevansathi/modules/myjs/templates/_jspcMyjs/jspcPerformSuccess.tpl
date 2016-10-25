@@ -237,7 +237,7 @@
         </article>
          <article id="LASTSEARCH">
             <div class="pt40 clearfix fontlig">
-                <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
+                <div class="fl f22 color11">Matches <span class="fontreg colr5"></span></div>
                 <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
             </div>
             <div class="pt15">
@@ -279,7 +279,7 @@
         </article>
          <article id="DESIREDPARTNERMATCHES" class="disp-none">
             <div class="pt40 clearfix fontlig">
-                <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
+                <div class="fl f22 color11">Here are few matches for you <span class="fontreg colr5"></span></div>
                 <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
             </div>
             <div class="pt15">

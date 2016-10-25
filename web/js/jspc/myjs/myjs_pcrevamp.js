@@ -6,13 +6,14 @@ var memTimer,memTimerTime,memTimerExtraDays=0;
          
 var timeI=""; var timeE=""; var timeD="";
 var MyjsRequestCounter=0;
-
+// for last search
+var PageSrc = 0;
 /*
 *COMPONENT CLASS
 *
 */
 
-var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1","DAILYMATCHES":"/api/v2/inbox/perform?infoTypeId=7&pageNo=1&myjs=1&caching=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1	","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","LASTSEARCH":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1"};
+var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1","DAILYMATCHES":"/api/v2/inbox/perform?infoTypeId=7&pageNo=1&myjs=1&caching=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1	","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","LASTSEARCH":"/api/v1/search/perform?lastSearchResults=1&results_orAnd_cluster=onlyResults"};
 
 var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20, "LASTSEARCH":20};
 
@@ -21,7 +22,7 @@ var noResultMessagesArray={
 };
 
 var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/profile/contacts_made_received.php?page=visitors&filter=R","SHORTLIST":"/profile/contacts_made_received.php?page=favorite&filter=M","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/profile/contacts_made_received.php?&page=photo&filter=R",
-"VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1","LASTSEARCH":"/search/verifiedMatches"};
+"VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1","LASTSEARCH":"/search/lastSearchResults"};
 
 
 var postActionsUrlArray ={"INITIATE":"/api/v2/contacts/postEOI","ACCEPT":"/api/v2/contacts/postAccept","DECLINE":"/api/v2/contacts/postNotInterested","WRITE_MESSAGE":"/api/v2/contacts/postWriteMessage","VIEWCONTACT":"/api/v2/contacts/contactDetails"};
@@ -315,7 +316,6 @@ $( document ).ajaxSend(function( event,request, settings ) {
 	}
 
     // Last Search
-    //JUST JOINED MATCHES
     var lastSearchMatches = function() {
       this.name = "LASTSEARCH";
       this.containerName = this.name+"_Container";
@@ -328,9 +328,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
     lastSearchMatches.prototype = Object.create(component.prototype);
     lastSearchMatches.prototype.constructor = lastSearchMatches;
     lastSearchMatches.prototype.post = function() {
-        // TODO: needs to be modified
-        console.log(this.data);
-        if(this.data.no_of_results > 5)
+        if(this.data.no_of_results >= 5)
         {
             generateFaceCard(this);
         }
@@ -339,7 +337,8 @@ $( document ).ajaxSend(function( event,request, settings ) {
     }
     lastSearchMatches.prototype.noResultCase = function() {
         $("#LASTSEARCH").addClass("disp-none");
-         var desiredPartnersObj = new desiredPartnerMatches();
+        PageSrc = 1;
+        var desiredPartnersObj = new desiredPartnerMatches();
         desiredPartnersObj.pre();
         desiredPartnersObj.request();
     }
@@ -439,15 +438,29 @@ $( document ).ajaxSend(function( event,request, settings ) {
   desiredPartnerMatches.prototype.constructor = desiredPartnerMatches;
 
   desiredPartnerMatches.prototype.post = function() {
-	if(this.data.no_of_results>0)
-	{
-		generateFaceCard(this);
-	}
+    // FTU case
+    if(!PageSrc && this.data.no_of_results>0)
+    {
+        generateFaceCard(this);
+    }
+    // In case if DPP matches are also less than 5, listing will not be shown for non FTU users.
+    else if(PageSrc && this.data.no_of_results >= 5)
+    {
+        generateFaceCard(this);
+    }
 	else
 		this.noResultCase();
   }
   desiredPartnerMatches.prototype.noResultCase = function() {
-	  noResultFaceCard(this);	  
+      if(!PageSrc)
+      {
+        noResultFaceCard(this);
+      }
+      else
+      {
+        // Remove DPP listing for non FTU users
+        $("#DESIREDPARTNERMATCHES_Container").remove();
+      }
 	}
 
   var engagementCounts = function(){
