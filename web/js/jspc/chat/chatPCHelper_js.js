@@ -39,24 +39,34 @@ function pollForNonRosterListing(type,i){
     if(type == undefined || type == ""){
         type = "dpp";
     }
-    var postData = {},outputProfileIds = [],pollingTime = chatConfig.Params.nonRosterListingApiConfig[type]["pollingFreq"];
+    var getInputData = "",outputProfileIds = [],pollingTime = chatConfig.Params.nonRosterListingApiConfig[type]["pollingFreq"];
     //postData["pageSource"] = "chat";
     //postData["channel"] = device; //req for tracking??? later
-    postData["profileid"] = loggedInJspcUser; //comment later
-    if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraParams"] != "undefined") {
-        $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraParams"], function (k, v) {
-            postData[k] = v;
+    //postData["profileid"] = loggedInJspcUser; //comment later
+    if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
+        $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"], function (k, v) {
+            if(getInputData == ""){
+                getInputData = "?"+k+"="+v;
+            }
+            else{
+                getInputData = getInputData+"&"+k+"="+v;
+            }
         });
     }
     $.myObj.ajax({
-        url: dppListingWebServiceUrl,
+        url: (dppListingWebServiceUrl+getInputData),
         dataType: 'json',
-        data: postData,
+        //data: postData,
         type: 'GET',
         cache: false,
         async: true,
+        timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
+        headers:{
+            'JB-Profile-Identifier':loggedInJspcUser
+        },
         beforeSend: function (xhr) {},
         success: function (response) {
+            console.log("ankita");
             if(i%2 == 0){
             response = {  //comment later
 "data": [
@@ -142,10 +152,10 @@ else{
     //if(strophieWrapper.initialNonRosterFetched == false){
     //console.log("start polling presence");
     strophieWrapper.nonRosterClearInterval[type] = setTimeout(function(){
-                                                                    console.log("calling pollForNonRosterListing",type);
+                                                                    //console.log("calling pollForNonRosterListing",type);
                                                                     //fetch current profileids belonging to given group
                                                                     //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    //pollForNonRosterListing(type,i+1);
+                                                                    pollForNonRosterListing(type,i+1);
                                                                     //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
                                                             },pollingTime);
     //}

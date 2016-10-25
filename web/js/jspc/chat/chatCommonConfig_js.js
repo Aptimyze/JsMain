@@ -83,9 +83,10 @@ chatConfig.Params = {
     //api config for non roster webservice
     nonRosterListingApiConfig:{
         "dpp":{
-            "extraParams":{
+            "extraGETParams":{
                 "type":"CHATDPP"
             },
+            "timeoutTime":5000,
             "pollingFreq":10000
         }
     },
