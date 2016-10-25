@@ -275,6 +275,8 @@ class Initiate extends ContactEvent{
       else
       {
         $this->contactHandler->getContactObj()->setCount(1);
+        $pageSource=$this->contactHandler->getPageSource();
+        $this->contactHandler->getContactObj()->setPageSource($pageSource);
         $this->contactHandler->getContactObj()->insertContact();
         $action = FTOStateUpdateReason::EOI_SENT;
         $this->contactHandler->getViewer()->getPROFILE_STATE()->updateFTOState($this->viewer, $action);
