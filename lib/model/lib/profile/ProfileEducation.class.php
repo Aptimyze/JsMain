@@ -31,7 +31,7 @@ class ProfileEducation
    * @brief Constructor function
    * @param $dbName - Database to which the connection would be made
    */
-  public function __construct($dbname = "") 
+  private function __construct($dbname = "") 
   {
     self::$objEducationMysql = new NEWJS_JPROFILE_EDUCATION($dbname);
   }
@@ -57,16 +57,18 @@ class ProfileEducation
     if (!$dbName)
       $dbName = "newjs_master";
     if (isset(self::$instance)) {
-      //If different instance is required
-      if ($dbName != self::$instance->dbName) {
-        $class = __CLASS__;
-        self::$instance = new $class($dbName);
-      }
-    }
-    else {
-      $class = __CLASS__;
-      self::$instance = new $class($dbName);
-    }
+            //If different instance is required
+            if ($dbName != self::$instance->connectionName) {
+                $class = __CLASS__;
+                self::$instance = new $class($dbName);
+                self::$instance->connectionName = $dbName;
+            }
+        }
+        else {
+            $class = __CLASS__;
+            self::$instance = new $class($dbName);
+            self::$instance->connectionName = $dbName;
+        }
     return self::$instance;
   }
   

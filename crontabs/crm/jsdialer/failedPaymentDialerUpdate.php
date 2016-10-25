@@ -34,10 +34,10 @@ if($profileStr!='')
 }
 
 // mail added
-$to="manoj.rana@naukri.com";
+/*$to="manoj.rana@naukri.com";
 $sub="Dialer updates of failed payment.";
 $from="From:vibhor.garg@jeevansathi.com";
-mail($to,$sub,$profileStr,$from);
+mail($to,$sub,$profileStr,$from);*/
 
 function fetchProfiles($db_js)
 {
@@ -55,7 +55,7 @@ function deleteProfiles($db_master,$profiles)
         $res=mysql_query($sql,$db_master) or die($sql.mysql_error($db_js));
 }
 
-function logerror($sql="",$db="",$ms)
+function logerror($sql="",$db="",$ms='')
 {
         $today=@date("Y-m-d h:m:s");
         $filename="logerror.txt";

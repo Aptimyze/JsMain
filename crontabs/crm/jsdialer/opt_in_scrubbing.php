@@ -76,7 +76,7 @@ function start_opt_in_profiles($campaign_name,$opt_in_profile,$db_dialer,$db_js_
         }
 }
 
-function logerror($sql="",$db="",$ms)
+function logerror($sql="",$db="",$ms='')
 {
         $today=@date("Y-m-d h:m:s");
         $filename="logerror.txt";
@@ -109,7 +109,7 @@ for($i=0;$i<count($opt_in_array1);$i++)
 unset($dnc_array);
 unset($opt_in_array);
 unset($opt_in_array1);
-$msg.="End time:".@date('H:i:s')."\n";
+$msg.=" End time:".@date('H:i:s')."\n";
 
 // JS_NCRNEW OPT-IN Check
 $msg.= "JS_NCRNEW - Start time:".@date('H:i:s');
@@ -121,7 +121,7 @@ for($i=0;$i<count($opt_in_array1);$i++)
 unset($dnc_array);
 unset($opt_in_array);
 unset($opt_in_array1);
-$msg.="End time:".@date('H:i:s')."\n";
+$msg.=" End time:".@date('H:i:s')."\n";
 
 // Renewal OPT-IN Check
 $msg.= "JS_RENEWAL - Start time:".@date('H:i:s');
@@ -133,7 +133,7 @@ for($i=0;$i<count($opt_in_array1);$i++)
 unset($dnc_array);
 unset($opt_in_array);
 unset($opt_in_array1);
-$msg.="End time:".@date('H:i:s')."\n";
+$msg.=" End time:".@date('H:i:s')."\n";
 
 // Renewal-Mah OPT-IN Check
 $msg.= "OB_RENEWAL_MAH - Start time:".@date('H:i:s');
@@ -145,9 +145,9 @@ for($i=0;$i<count($opt_in_array1);$i++)
 unset($dnc_array);
 unset($opt_in_array);
 unset($opt_in_array1);
-$msg.="End time:".@date('H:i:s');
+$msg.=" End time:".@date('H:i:s')."\n";
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
-$sub="Dialer updates NCR-MAH-RENEWAL Campaign opt-in done.";
+$sub="Dialer updates JS_NCRNEW|MAH_JSNEW|JS_RENEWAL|OB_RENEWAL_MAH Campaign OPT-IN done.";
 $from="From:vibhor.garg@jeevansathi.com";
 mail($to,$sub,$msg,$from);
 

@@ -1420,7 +1420,9 @@ class photoScreeningService
                                                         if($picObj->getOriginalPicUrl()==$picObj->getMainPicUrl())
                                                                 $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getMainPicUrl();
                                                         else
-                                                       $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = str_replace("mediacdn.jeevansathi.com","jeevansathi.s3.amazonaws.com",$picObj->getOriginalPicUrl());
+															$pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getOriginalPicUrl();
+                                               
+                                                      // $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = str_replace("mediacdn.jeevansathi.com","jeevansathi.s3.amazonaws.com",$picObj->getOriginalPicUrl()); commented because image not displaying
                                                 }
                                                 /*
                                                 else

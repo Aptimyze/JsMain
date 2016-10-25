@@ -75,11 +75,22 @@ class postDeclinev1Action extends sfAction
 		{
 			$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::DECLINE);
 		}
+		
 		else
 		{
-			$responseArray["errmsglabel"]= "You cannot perform this action";
-			$responseArray["errmsgiconid"] = "16";
-			$responseArray["headerlabel"] = "Unsupported action";
+			$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+			if($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+			}
+			else
+			{
+				$responseArray["errmsglabel"]= "You cannot perform this action";
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+			}
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);

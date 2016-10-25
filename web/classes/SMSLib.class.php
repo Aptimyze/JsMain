@@ -101,6 +101,7 @@ class SMSLib
             "OTHER_EMAIL"     => array("maxlength" => "40"), // added by Palash
             "PHONE_ISD_COMMA" => array("maxlength" => "17"), //      ,,
             "COUNTRY_RES"     => array("maxlength" => "10"), //added by nitesh
+            "SERVNAME"        => array("maxlength" => "50"),
         );
         return $varArr[$variable];
     }
@@ -587,6 +588,10 @@ class SMSLib
                 return "https://www.surveymonkey.com/r/NTHDX6K";
             case "ISD_MOB":
                 return $messageValue['PHONE_MOB'];
+            case "SERVNAME":
+                $memHandlerObj = new MembershipHandler();
+                $servName = $memHandlerObj->getRenewCronSMSServiceName($tokenValue['PROFILEID']);
+                return $servName;
             default:
                 return "";
         }

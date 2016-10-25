@@ -54,7 +54,7 @@ function deleteProfiles($db_master,$profiles)
 }
 
 // Error logging
-function logerror($sql="",$db="",$ms)
+function logerror($sql="",$db="",$ms='')
 {
         $today=@date("Y-m-d h:m:s");
         $filename="logerror.txt";

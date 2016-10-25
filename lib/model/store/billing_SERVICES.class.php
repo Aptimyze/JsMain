@@ -540,5 +540,19 @@ class billing_SERVICES extends TABLE
             throw new jsException($e);
         }
     }
+
+    public function getFinanceDataServiceNames() {
+        try {
+            $sql = "SELECT SQL_CACHE SERVICEID, NAME FROM billing.SERVICES WHERE SERVICEID LIKE 'T%' OR SERVICEID LIKE 'R%' OR SERVICEID LIKE 'A%' OR SERVICEID LIKE 'I%' OR SERVICEID LIKE 'B%' OR SERVICEID LIKE 'P%' OR SERVICEID LIKE 'C%' OR SERVICEID LIKE 'D%' OR SERVICEID LIKE 'NCP%' OR SERVICEID LIKE 'ESP%' OR SERVICEID LIKE 'X%'";
+            $resSelectDetail = $this->db->prepare($sql);
+            $resSelectDetail->execute();
+            while ($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)) {
+                $output[$rowSelectDetail['SERVICEID']] = $rowSelectDetail['NAME'];
+            }
+            return $output;
+        } catch (Exception $e) {
+            throw new jsException($e);
+        }
+    }
 }
 

@@ -34,7 +34,7 @@ class HoroscopeV1Action extends sfAction{
     }
     
     public function updateAstroPullingRequest($profileid){
-        $astroObj = new NEWJS_ASTRO();
+        $astroObj = ProfileAstro::getInstance();
         $msg = $astroObj->insertInAstroPullingDetails($profileid);
         return $msg;
     }

@@ -8,7 +8,7 @@
 class IgnoredProfiles
 {
         protected $dbname = "";
-        private $measurePerformance = true;
+        private $measurePerformance = false;
         /**
          * Constructor to set DB
          * @param type $dbname
@@ -55,6 +55,10 @@ class IgnoredProfiles
         		if($seperator == "spaceSeperator")
         		{
         			$resultArr = implode(" ",$resultArr);
+        			if($resultArr !="")
+        			{
+        				$resultArr.= " ";
+        			}
         		}        		
         		return $resultArr;        		
         	}

@@ -12,17 +12,16 @@ var MyjsRequestCounter=0;
 *
 */
 
-var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1","DAILYMATCHES":"/api/v2/inbox/perform?infoTypeId=7&pageNo=1&myjs=1&caching=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1	","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount",
-"VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1"};
+var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1","DAILYMATCHES":"/api/v2/inbox/perform?infoTypeId=7&pageNo=1&myjs=1&caching=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1	","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","LASTSEARCH":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1"};
 
-var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20};
+var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20, "LASTSEARCH":20};
 
 var noResultMessagesArray={
-	"JUSTJOINED":"People matching your desired partner profile who have joined in last one week will appear here","DESIREDPARTNERMATCHES":"We are finding the matches who recently joined us. It might take a while","DAILYMATCHES":"We are finding the best recommendations for you. It may take a while.","VISITORS":"People who visited your profile will appear here","SHORTLIST":"People you shortlist will appear here",'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":"People who have requested your photo will appear here.","COUNTS":5,"VERIFIEDMATCHES":"People matching your desired partner profile and are <a href='/static/agentinfo' class='fontreg colr5'>verified by visit</a> will appear here"
+	"JUSTJOINED":"People matching your desired partner profile who have joined in last one week will appear here","DESIREDPARTNERMATCHES":"We are finding the matches who recently joined us. It might take a while","DAILYMATCHES":"We are finding the best recommendations for you. It may take a while.","VISITORS":"People who visited your profile will appear here","SHORTLIST":"People you shortlist will appear here",'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":"People who have requested your photo will appear here.","COUNTS":5,"VERIFIEDMATCHES":"People matching your desired partner profile and are <a href='/static/agentinfo' class='fontreg colr5'>verified by visit</a> will appear here", "LASTSEARCH":"No result message here"
 };
 
 var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/profile/contacts_made_received.php?page=visitors&filter=R","SHORTLIST":"/profile/contacts_made_received.php?page=favorite&filter=M","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/profile/contacts_made_received.php?&page=photo&filter=R",
-"VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1"};
+"VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1","LASTSEARCH":"/search/verifiedMatches"};
 
 
 var postActionsUrlArray ={"INITIATE":"/api/v2/contacts/postEOI","ACCEPT":"/api/v2/contacts/postAccept","DECLINE":"/api/v2/contacts/postNotInterested","WRITE_MESSAGE":"/api/v2/contacts/postWriteMessage","VIEWCONTACT":"/api/v2/contacts/contactDetails"};
@@ -61,6 +60,8 @@ else if(this.name=="FILTEREDINTEREST")
   var containerBarObj =new filteredInterestBar();  
 else if(this.name=="VERIFIEDMATCHES")
   var containerBarObj =new verifiedMatchesBar();
+else if(this.name=="LASTSEARCH")
+  var containerBarObj = new LastSearchBar('dailyMatchesTab');
 this.containerHtml=containerBarObj.getContainerHtml();
 this.viewAllInnerHtml=containerBarObj.getViewAllInnerHtml();
 this.emptyInnerHtml=containerBarObj.getEmptyInnerHtml();
@@ -210,6 +211,14 @@ $( document ).ajaxSend(function( event,request, settings ) {
     };
     JustJoinBar.prototype = new container();
     
+    var LastSearchBar = function(name) {
+      this.ContainerHtml = $("#largeContainer").html();
+      this.innerHtml= $("#faceCard").html();
+      this.viewAllInnerHtml=$("#viewAllCard").html();
+      this.emptyInnerHtml=$("#noFaceCard").html();
+    };
+    LastSearchBar.prototype = new container();
+
     var verifiedMatchesBar = function(name) {
       this.ContainerHtml = $("#largeContainer").html();
       this.innerHtml= $("#faceCard").html();
@@ -305,6 +314,35 @@ $( document ).ajaxSend(function( event,request, settings ) {
 				
 	}
 
+    // Last Search
+    //JUST JOINED MATCHES
+    var lastSearchMatches = function() {
+      this.name = "LASTSEARCH";
+      this.containerName = this.name+"_Container";
+      this.heading = "Based on your last Search";
+      this.headingId = this.name+"_head";
+      this.list = this.name+"_List";
+      this.error=0;
+      component.apply(this, arguments);
+    };
+    lastSearchMatches.prototype = Object.create(component.prototype);
+    lastSearchMatches.prototype.constructor = lastSearchMatches;
+    lastSearchMatches.prototype.post = function() {
+        // TODO: needs to be modified
+        console.log(this.data);
+        if(this.data.no_of_results > 5)
+        {
+            generateFaceCard(this);
+        }
+        else
+            this.noResultCase();
+    }
+    lastSearchMatches.prototype.noResultCase = function() {
+        $("#LASTSEARCH").addClass("disp-none");
+         var desiredPartnersObj = new desiredPartnerMatches();
+        desiredPartnersObj.pre();
+        desiredPartnersObj.request();
+    }
 
 	    //VERIFIED MATCHES
     var verifiedMatches = function() {
@@ -685,24 +723,28 @@ else {
 	}
 	else
 	{
-		var recentvisitors = new recentProfileVisitor();
-		recentvisitors.pre();
-		recentvisitors.request();
-		var shortlist = new shortlistProfiles();
-		shortlist.pre();
-		shortlist.request();
+		
 		var count = new engagementCounts();
 		count.pre();
 		count.request();
 		var justJoined = new justJoinedMatches();
 		justJoined.pre();
 		justJoined.request();
+        var lastSearch = new lastSearchMatches();
+        lastSearch.pre();
+        lastSearch.request();
 		var dailyMatchObj =new dailyMatches();
 		dailyMatchObj.pre();
 		dailyMatchObj.request();
 		var verifedMatchObj =new verifiedMatches();
 		verifedMatchObj.pre();
 		verifedMatchObj.request();
+        var recentvisitors = new recentProfileVisitor();
+        recentvisitors.pre();
+        recentvisitors.request();
+        var shortlist = new shortlistProfiles();
+        shortlist.pre();
+        shortlist.request();
 		
 		var interests = new interestReceived();
 		var mess = new messages();
