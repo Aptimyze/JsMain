@@ -127,7 +127,7 @@ function setBlock(blockName) {
                 $(".tuple_image").each(function(index, element) {
                     var dSource=$(this).attr("data-src");   
                     if(dSource) {
-                        $(this).attr("src",dSource);
+                        $(this).attr("src",dSource).css({'width':'110px','height':'110px'});
                 }
                    });
                 $(".contactLoader").each(function(){
