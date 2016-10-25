@@ -890,7 +890,7 @@ class ContactDetails {
 		}
        // block for setting  hidden contacts messages         
                 
-                if(!$this->contactHandlerObj->getContactType() == ContactHandler::ACCEPT && !($this->contactHandlerObj->getContactType() == ContactHandler::INITIATED && $this->contactHandlerObj->getContactInitiator() == ContactHandler::RECEIVER))
+                if(!($this->contactHandlerObj->getContactType() == ContactHandler::ACCEPT) && !($this->contactHandlerObj->getContactType() == ContactHandler::INITIATED && $this->contactHandlerObj->getContactInitiator() == ContactHandler::RECEIVER))
                     $contactedFlag=0;
                 else 
                     $contactedFlag=1;
@@ -917,7 +917,7 @@ class ContactDetails {
                     {
                         $showPhoneMob = $this->profileObj->getSHOWPHONE_MOB();
                         if($showPhoneMob=="C" && !$contactedFlag)
-                            $this->setPrimaryMobileHiddenMessage(Messages::PHONE_VISIBLE_ON_ACCEPT);
+                        $this->setPrimaryMobileHiddenMessage(Messages::PHONE_VISIBLE_ON_ACCEPT);
                         elseif($showPhoneMob=='N')
                             $this->setPrimaryMobileHiddenMessage(Messages::PHONE_HIDDEN);
                     }      
