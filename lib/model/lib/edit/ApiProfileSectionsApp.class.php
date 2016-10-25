@@ -125,6 +125,16 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$AstroKundali = $this->profile->getAstroKundali();
 		
 		$astro[]=$this->getApiFormatArray("HOROSCOPE_MATCH","Horoscope match is must?" , $this->profile->getDecoratedHoroscopeMatch(),$this->profile->getHOROSCOPE_MATCH(),$this->getApiScreeningField("HOROSCOPE_MATCH"));
+                $horoscope = new Horoscope();
+		$horoExists = $horoscope->isHoroscopeExist($this->profile);
+		if($horoExists=="Y")
+		{
+			$astro[0][HORO_BUTTON_LABEL] ="Update Horoscope"; 
+		}
+		elseif($horoExists=="N")
+		{
+			$astro[0][HORO_BUTTON_LABEL] ="Create Horoscope"; 
+		}
 		
     $this->addSunSign($astro,$AstroKundali);
     
@@ -152,7 +162,6 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$astro[]=$this->getApiFormatArray("ASTRO_COUNTRY_BIRTH","Country" , $this->profile->getDecoratedBirthCountry(),"",$this->getApiScreeningField(""));
 		
 		$astro[]=$this->getApiFormatArray("ASTRO_PLACE_BIRTH","City/Town" , $this->profile->getDecoratedBirthCity(),"",$this->getApiScreeningField(""));
-		
 		return $astro;
 	}
 	
