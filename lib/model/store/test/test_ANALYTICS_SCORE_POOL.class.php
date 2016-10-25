@@ -18,7 +18,7 @@ class test_ANALYTICS_SCORE_POOL extends TABLE {
 		parent::__construct($dbname);
     }
     
-    public function getScoreDistribution($model){
+    public function getScoreDistribution($model,$startDt="",$endDt=""){
         try{
             $sql = "SELECT * from test.ANALYTIC_SCORE_POOL WHERE MODEL = :MODEL";
             $res = $this->db->prepare($sql);

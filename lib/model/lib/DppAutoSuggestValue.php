@@ -217,5 +217,13 @@ class DppAutoSuggestValue
 
 	}
 	
-	
+
+	public static function getDppSuggestionsForFilledValues($field,$fieldId,$fieldValue)
+	{
+		$dppData = DppAutoSuggestEnum::$AUTO_SUGGEST_ARRAY;
+		if($dppData[$fieldId][$fieldValue][0])
+			return $dppData[$fieldId][$fieldValue][0];
+		else
+			return;
+	}
 }

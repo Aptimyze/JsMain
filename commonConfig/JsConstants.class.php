@@ -63,6 +63,9 @@ class JsConstants
 	public static $userHome           = '/home/developer';
 	public static $alertServerEnable  = 1;
 	public static $stopOnPeakLoad     = 1;
+	public static $notificationStop	  = 0;
+	//if set to 1, hides unimportant features at time of peak load on site
+	public static $hideUnimportantFeatureAtPeakLoad     = 0;
         
         /* Vsp URL */
 	public static $vspMaleUrl           = 'http://maleapi.analytics.resdex.com:9000/ecpRecommendations_live';
@@ -178,4 +181,5 @@ class JsConstants
 	public static $communicationRep = true;
     public static $jsChatFlag = 1; //1=enable chat, 0=disable chat
         public static $communicationServiceUrl = "http://192.168.120.70:8290";
+    public static $multiUserPhotoUrl = "http://www.jeevansathi.com/api/v1/social/getMultiUserPhoto"; //Api from staging for multi user photo being used in chat listing and self photo.
 }

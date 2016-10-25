@@ -113,7 +113,7 @@ class ContactDetailsV2Action extends sfAction
 						if(MobileCommon::isApp())
 						{
 							unset($responseArray);
-							$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
+							$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue/eAdvantage plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
 							$responseArray["headerLabel"]            = "Complete your profile";
 							$responseArray["errMsgIconId"]           = "13";
 						}
@@ -122,7 +122,7 @@ class ContactDetailsV2Action extends sfAction
 							unset($responseArray);
 							if(MobileCommon::isNewMobileSite())
 							{
-								$responseArray["errmsglabel"] 			= "<BR>".$this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue plan and has made Phone/Email visible.<br> But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.<br><br> Please add more information to your profile.";
+								$responseArray["errmsglabel"] 			= "<BR>".$this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue/eAdvantage plan and has made Phone/Email visible.<br> But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.<br><br> Please add more information to your profile.";
 								$responseArray["footerbutton"]["label"]  = "Complete Profile";
 								$responseArray["footerbutton"]["value"] = "";
 								$responseArray["footerbutton"]["action"] = "EDITPROFILE";
@@ -135,7 +135,7 @@ class ContactDetailsV2Action extends sfAction
 								$responseArray["contact4"]["action"]     = null;
 							}
 							else
-								$responseArray["errmsglabel"] 			= "<BR>".$this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue plan and has made Phone/Email visible.<br> But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.<br><br> Please add more information to your profile.<a href='/profile/viewprofile.php?ownview=1' class='colr5'> Update Profile";
+								$responseArray["errmsglabel"] 			= "<BR>".$this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue/eAdvantage plan and has made Phone/Email visible.<br> But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.<br><br> Please add more information to your profile.<a href='/profile/viewprofile.php?ownview=1' class='colr5'> Update Profile";
 						}
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 					}
@@ -242,6 +242,13 @@ class ContactDetailsV2Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 
 				}
+				elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2) {
+					$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+					$responseArray["errmsgiconid"] = "16";
+					$responseArray["headerlabel"] = "Unsupported action";
+        				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
 				 elseif ($errorArr["FILTERED"] == 2) {
 					$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
 					$responseArray["errMsgIconId"] = "12";
@@ -300,7 +307,23 @@ class ContactDetailsV2Action extends sfAction
 					$responseArray["headerLabel"]  = "Profile not available";
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 
-				} else {
+				}
+
+				elseif ($errorArr["PAID_FILTERED_INTEREST_NOT_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+					elseif ($errorArr["PAID_FILTERED_INTEREST_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+				 else {
 
 					$responseArray["contactdetailmsg"]       = "Become a paid member to view <br> contact details";
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";

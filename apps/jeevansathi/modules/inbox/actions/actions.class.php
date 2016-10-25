@@ -402,6 +402,9 @@ public function executePerformV2(sfWebRequest $request)
 				$response2["searchBasedParam"]=null;
 				$response2["searchid"]=$infoTypeId;
 				$response2["dppLinkAtEnd"]=null;
+                                if ($infoType == "MATCH_ALERT") {
+                                        $response2["dppLinkAtEnd"] = 'Go To My Matches.';
+                                }
 				$response2["sorting"]=0;
 				$response2["sortType"]=null;
 				$response2["stype"]=null;

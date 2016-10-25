@@ -103,13 +103,23 @@ class DetailActionLib
 			
 			$privacy=$actionObject->loginProfile->getPRIVACY();
 			$vlt=new VIEW_LOG_TRIGGER();
+                        $producerObj = new Producer();
 			//Privacy is not C for login user 
 			if($privacy!='C' && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
-			{
-				$vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+			{       
+                                if($producerObj->getRabbitMQServerConnected())
+                                    $triggerOrNot = "inTrigger";
+                                else
+                                    $vlt->updateViewTrigger($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 			}
-
-			$vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+                        elseif($producerObj->getRabbitMQServerConnected())
+                            $triggerOrNot="notInTrigger";
+                        
+                        if($producerObj->getRabbitMQServerConnected()){
+                            $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$actionObject->loginProfile->getPROFILEID(),VIEWED=>$actionObject->profile->getPROFILEID())), 'redeliveryCount'=>0 );
+                            $producerObj->sendMessage($queueData);
+                        }
+			//$vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////
 	}
@@ -279,12 +289,12 @@ class DetailActionLib
 			}
 			else
 			{
-				$ignore=new newjs_IGNORE_PROFILE();
-				if($ignore->isIgnored($sender,$receiver))
+				$ignore=new IgnoredProfiles();
+				if($ignore->ifIgnored($sender,$receiver))
 				{
 				        $actionObject->IGNORED=1;
 			        }
-			        if(!isset($actionObject->IGNORED) && $ignore->isIgnored($receiver,$sender))
+			        if(!isset($actionObject->IGNORED) && $ignore->ifIgnored($receiver,$sender))
                 	        {
 					$actionObject->IGNORED=2;
 	      		        }
@@ -714,5 +724,49 @@ class DetailActionLib
         //Common Logic
         return self::Show_Next_Previous($actObj);
     }
+    
+    /* VA Whitelisting
+     * Common Function to whiteListParams
+     */
+    public static function whiteListParams($request)
+    {
+        $stype  = $request->getParameter("stype");
+        $sort  = $request->getParameter("Sort");
+        $contactId  = $request->getParameter("contact_id");
+        $totalRec  = $request->getParameter("total_rec");
+        $username  = $request->getParameter("username");
+        
+        if(strlen($stype)>6)
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","Stype whitelisting","STYPE :$stype:$http_msg");
+        }
+        
+        if(strlen($sort)>3)
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","Sort whitelisting","SORT :$sort:$http_msg");
+        }
+        
+        if(!is_numeric(explode("_",$contactId)[0]))
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","contact Id whitelisting","CONTACT_ID :contactId:$http_msg");
+        }
+        
+        if(!is_numeric($totalRec))
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","total records whitelisting","TOTAL_REC :$totalRec:$http_msg");
+        }
+        
+        if((strlen($username)>=3 && !preg_match('/[^a-zA-Z]/i',  substr($username,0,3))) || strlen($username)>10)
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","usrname whitelisting","USERNAME :$username:$http_msg");
+        }
+    }
+    
+    
 }
 ?>

@@ -114,6 +114,9 @@
 .prfic48{width: 19px;height: 18px;background-position:-178px -341px;}
 .prfic49{width: 25px;height: 22px;background-position:-213px -351px;}
 .prfic50{background-position:-213px -351px;width: 25px;height: 21px;}
+.prfic51{background-position:-85px -357px;width: 23px;height: 21px;}
+.prfic52{background-position:-133px -389px;width: 23px;height: 21px;}
+
 .prfp1{/*padding:14px 30px 14px 30px*/padding-left:24px}
 .prfp2{padding:11px 30px 12px 30px}
 .prfp3{padding:20px 34px 10px 34px}
@@ -258,10 +261,24 @@ ul.documents > li{padding-top:20px}
 .pdl112{padding-left: 112px}
 .shareChild{display:none}
 .shareParent:hover .shareChild{display:block}
+.ignoreParent:hover .ignoreChild{display:block}
+.ignoreChild{display: none;}
+.reportParent:hover .reportChild{display:block}
+.reportChild{display: none;}
+.spriteIgnoreReport{background-image: url(IMG_URL/images/jspc/commonimg/blockReportSprite.png);}
 .communicationChild{display:none}
 .communicationToolTip:hover  .communicationChild{display:block}
 .boxtip3{background-color: #34495e;position: absolute;top: -25px;font-size: 12px;left: -128px;}
 .boxtip4{background-color: #34495e;position: absolute;top: -25px;font-size: 12px;left: -57px;}
+.boxtip6{background-color: #34495e;position: absolute;top: -25px;font-size: 12px;left: -57px;width: 80px;}
+
+.boxtip5 {
+    background-color: #34495e;
+    position: absolute;
+    top: -25px;
+    font-size: 12px;
+    left: -58px;
+    }
 input::-ms-clear {
      display:none;
 }
@@ -551,3 +568,13 @@ pre {
         .mt26 {margin-top: 26px}
         .wd300 {width: 300px}
         .wd200{width:200px}
+
+        #smplH{width:950px; height:70%;z-index:9; background-color:#e8e6e6}
+	.smplHp20{padding:20px}
+	#smplH .p50{padding:30px 50px}
+	#smplH .closeHoroSam {top: -19px;right: -74px;}
+	.content{
+	overflow: auto;
+	position: relative;	
+	-webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
+        }

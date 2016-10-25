@@ -76,7 +76,7 @@ public function getContactsPending($serverId)
 	{
 		try
 		{
-			$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' and FILTERED<>'Y' and TIME >= DATE_SUB(CURDATE(), INTERVAL 150 DAY) AND RECEIVER=PROFILEID AND SERVERID= :SERVERID group by RECEIVER";
+			$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' and FILTERED<>'Y' and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND RECEIVER=PROFILEID AND SERVERID= :SERVERID group by RECEIVER";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":SERVERID",$serverId,PDO::PARAM_INT);
 			$res->execute();
@@ -105,7 +105,7 @@ public function getSendersPending($profileids)
 		foreach($idArr as $k=>$v)
 			$idSqlArr[]=":v$k";
 		$idSql="(".(implode(",",$idSqlArr)).")";
-		 $sql = "SELECT RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM newjs.CONTACTS WHERE RECEIVER IN $idSql AND TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL 150 DAY) GROUP BY RECEIVER";
+		 $sql = "SELECT RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM newjs.CONTACTS WHERE RECEIVER IN $idSql AND TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) GROUP BY RECEIVER";
 			$res = $this->db->prepare($sql);
 			foreach($idArr as $k=>$v)
 				$res->bindValue(":v$k", $v, PDO::PARAM_INT);
@@ -380,7 +380,10 @@ public function getSendersPending($profileids)
 			$prep->bindValue(":COUNT", $contactObj->getCOUNT(), PDO::PARAM_INT);
 			$prep->bindValue(":TYPE",$contactObj->getTYPE(),PDO::PARAM_STR);
 			$prep->bindValue(":TIME",$contactObj->getTIME(),PDO::PARAM_STR);
-			$prep->bindValue(":MSG_DEL",$contactObj->getMSG_DEL(),PDO::PARAM_STR);
+			if($contactObj->getPageSource()=="AP")
+				$prep->bindValue(":MSG_DEL","Y",PDO::PARAM_STR);
+			else
+				$prep->bindValue(":MSG_DEL","N",PDO::PARAM_STR);
 			$prep->bindValue(":SEEN",$contactObj->getSEEN(),PDO::PARAM_STR);
 			$prep->bindValue(":FILTERED",$contactObj->getFILTERED(),PDO::PARAM_STR);
 			$prep->bindValue(":FOLDER",$contactObj->getFOLDER(),PDO::PARAM_STR);
@@ -1078,6 +1081,51 @@ public function getSendersPending($profileids)
         	catch(Execption $e){
         		throw new jsException($e);
         	}
+        }
+
+        public function getInterestReceivedDataForDuration($profileid, $stTime, $endTime){
+            try{
+                $ignoredStr = '';
+                $sql = "SELECT * from newjs.CONTACTS WHERE RECEIVER = :RECEIVER AND TYPE = 'I' AND TIME >= :START_TIME AND TIME <= :END_TIME ORDER BY TIME ASC";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":RECEIVER",$profileid,PDO::PARAM_INT);
+                $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
+                $prep->bindValue(":END_TIME",$endTime,PDO::PARAM_STR);
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC)){
+                    $result['SENDER'][$row['SENDER']] = 1;
+                    $result['SELF'] = $profileid;
+                    $ignoredStr.=$row['SENDER'].",";
+                }
+                if($ignoredStr){
+                    $result['IGNORED_STRING'] = rtrim($ignoredStr, ",");
+                }
+                return $result;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
+        
+        public function getInterestSentForDuration($stTime, $endTime,$remainderArray){
+            try{
+            	
+                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM AND `MSG_DEL`!='Y' ORDER BY `TIME` DESC  ";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
+                $prep->bindValue(":END_TIME",$endTime,PDO::PARAM_STR);
+                $prep->bindValue(":DIVISOR",$remainderArray['divisor'],PDO::PARAM_INT);
+       
+                $prep->bindValue(":REMAINDER",$remainderArray['remainder'],PDO::PARAM_INT);               
+                $prep->bindValue(":SHARDREM",$remainderArray['shardRemainder'],PDO::PARAM_INT);               
+                $prep->execute();
+                while($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $result[]=$row;                
+                }
+                return $result;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
         }
 			
 }

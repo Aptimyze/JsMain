@@ -4,45 +4,7 @@ abstract class EditProfileComponent implements EditComponent {
 	protected $action;
 	protected $changed_fields;
 	public function updateCommon() {
-		  SendMail::send_email('nikhil.dhiman@jeevansathi.com'," in updatecommon", "edit update comon", "editcommon@jeevansathi.com");
-	//Not required now 
-	/*
-		if (($UPDATE == 1) || $check_dup_email == 1) {
-			if ($crmback == "admin") {
-				$smarty->assign("cid", $cid);
-				$smarty->assign("crmback", $crmback);
-				$smarty->assign("inf_checksum", $inf_checksum);
-			}
-			$smarty->assign("FOOT", $smarty->fetch("foot.htm"));
-			$smarty->assign("SUBFOOTER", $smarty->fetch("subfooternew.htm"));
-			if ($mbureau == "bureau1") {
-				$smarty->assign("mb_username_profile", $data["USERNAME"]);
-				$smarty->assign("checksum", $data["CHECKSUM"]);
-				$smarty->assign("HEAD", $smarty->fetch("top_band.htm"));
-				$smarty->assign("LEFTPANEL", $smarty->fetch("mb_side_links.htm"));
-			} else {
-				$smarty->assign("HEAD", $smarty->fetch("headnew.htm"));
-				$smarty->assign("LEFTPANEL", $smarty->fetch("leftpanelnew.htm"));
-			}
-			//$smarty->display("regcomplete.
-			if (!$check_dup_email) {
-				//added by sriram for screening module changes.
-				$sql_screen = "SELECT SOURCE,SCREENING FROM newjs.JPROFILE WHERE PROFILEID = '$data[PROFILEID]'";
-				$res_screen = mysql_query_decide($sql_screen) or logError("1 Due to a temporary problem your request could not be processed. Please try after a couple of minutes", $sql_screen, "ShowErrTemplate");
-				$row_screen = mysql_fetch_array($res_screen);
-				//Setting screeing bit to max ,bcz operator is allowed to edit the profile without screenig
-				if ($this->loginProfile->getSOURCE() == "ofl_prof") {
-					$sql = "update JPROFILE set SCREENING=4194303 where PROFILEID=$data[PROFILEID]";
-					mysql_query_decide($sql) or logError("1 Due to a temporary problem your request could not be processed. Please try after a couple of minutes", $sql, "ShowErrTemplate");
-				} else {
-					$sql_update = "UPDATE jsadmin.MAIN_ADMIN SET SKIP_FLAG = IF(SKIP_FLAG = 'H','N',SKIP_FLAG),SCREENING_VAL = '$row_screen[SCREENING]' WHERE PROFILEID='$data[PROFILEID]'";
-					mysql_query_decide($sql_update) or logError("1 Due to a temporary problem your request could not be processed. Please try after a couple of minutes", $sql_update, "ShowErrTemplate");
-					//end of - added by sriram for screening module changes.
-					
-				}
-			}
-		}
-	*/
+		  SendMail::send_email('esha.jain@jeevansathi.com'," in updatecommon", "edit update comon", "editcommon@jeevansathi.com");
 	}
 	public function after_submit() {
         ProfileCommon::updateProfileCompletionScore($this->loginProfile->getPROFILEID());
