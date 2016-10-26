@@ -1765,7 +1765,7 @@ JsChat.prototype = {
             hisStatus = $("chat-box[user-id='" + userId + "']").attr("his-status");
         var nick;
         if (checkSum) {
-            nick = nick + "|" + checkSum;
+            nick = user_name + "|" + checkSum;
         }
         //console.log("chatBoxType"+chatBoxType);
         if (curElem._contactStatusMapping[chatBoxType]["showHistory"] == true) {

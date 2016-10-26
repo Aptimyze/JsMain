@@ -67,7 +67,7 @@ function pollForNonRosterListing(type,i){
         beforeSend: function (xhr) {},
         success: function (response) {
             console.log("ankita");
-            if(i%2 == 0){
+            /*if(i%2 == 0){
             response = {  //comment later
 "data": [
 {
@@ -133,7 +133,7 @@ else{
 },
 "debugInfo": null
 };   
-}
+}*/
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
                 if(response["header"]["pollTime"] != undefined){
