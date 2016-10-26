@@ -2893,7 +2893,7 @@ function navigation($type,$param,$username='',$symfony='')
 		}
                 if($type=="FAV")
 		{
-                        $to_show="Shortlisted Profiles";
+                        $to_show="Shortlisted Members";
 		}
                 if($type=="PHO")
 		{

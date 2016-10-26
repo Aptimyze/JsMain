@@ -261,7 +261,7 @@ window.onload=function(){
                                 <li><div class="topnavp1"><a class="disp_b" href="/profile/viewprofile.php?checksum=~$profilechecksum`&profilechecksum=~$profilechecksum`">My Profile ~if $username`(~$username`)~/if`</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/profile/dpp"> Desired Partner</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/alertManager"> Alert Manager</a></div></li>
-                                <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?visibility=1`">Privacy VIsibility</a></div></li>
+                                <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?visibility=1`">Privacy Visibility</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?hideDelete=1">Hide/Delete profile</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?changePassword=1">Change Password</a></div></li>
                                 <li>
