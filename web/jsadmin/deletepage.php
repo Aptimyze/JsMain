@@ -12,7 +12,6 @@ if(authenticated($cid))
 	{
 		//getting the reason for deleting the profile
 		$reasons = $_POST["reason"];
-		$reasons = "sasasassasasas";
 		if($reasons != "")
 		{
 			if($reasons=="Other")
@@ -29,18 +28,14 @@ if(authenticated($cid))
 			if(is_array($reason_ar))
 			{
 				$flag_deletion = 1;	
-				if($c==1 && ($FROM=='U' || $FROM=='SK'))
-				{
-					$sql_sel="SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID in ($pid)";	
-					$result_sel=mysql_query_decide($sql_sel);
-					$row_sel=mysql_fetch_assoc($result_sel);
-					$activated=$row_sel['ACTIVATED'];
-					$preactivated=$row_sel['PREACTIVATED'];
-				}
-				//added by sriram.
-				$sql_act = "SELECT USERNAME,ACTIVATED,SUBSCRIPTION,MSTATUS,HAVEPHOTO  FROM newjs.JPROFILE WHERE PROFILEID='$pid'";
+				$sql_act = "SELECT USERNAME,ACTIVATED,SUBSCRIPTION,MSTATUS,HAVEPHOTO,ACTIVATED,PREACTIVATED,EMAIL  FROM newjs.JPROFILE WHERE PROFILEID='$pid'";
 				$res_act = mysql_query_decide($sql_act) or die(mysql_error_js());
 				$row_act = mysql_fetch_array($res_act);
+				if($c==1 && ($FROM=='U' || $FROM=='SK'))
+				{
+					$activated=$row_act['ACTIVATED'];
+					$preactivated=$row_act['PREACTIVATED'];
+				}
 				//added by sriram.
 				if($row_act['HAVEPHOTO']=="U" || $row_act['HAVEPHOTO']=="Y")
 				{
@@ -226,7 +221,7 @@ if(authenticated($cid))
 	{
 		if($flag_deletion)	
 		{
-			deletemail($pid, $reason, $other,$entryby);
+			deletemail($pid, $reason, $other,$entryby,$row_act);
 		}
 		if($name)
 		{
@@ -281,15 +276,12 @@ else
 	$smarty->display("jsadmin_msg.tpl");
 }
 
-function deletemail($pid,$reason,$other,$entryby="")
+function deletemail($pid,$reason,$other,$entryby="",$row_act)
 {
 		$mailID = "1842";
-		$sql="SELECT EMAIL,USERNAME from newjs.JPROFILE where PROFILEID in ($pid)";
-		$r1=mysql_query_decide($sql); 
-		$r2=mysql_fetch_array($r1);
-		$to=$r2['EMAIL'];
-		$username=$r2['USERNAME'];
-    
+		$to=$row_act['EMAIL'];
+		$username=$row_act['USERNAME'];
+    	
 	//EMAIL_TYPE as told by Kunal
     $canSendObj= canSendFactory::initiateClass($channel=CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$to,"EMAIL_TYPE"=>"SCREEN_FAIL"),$pid);
 	$canSend = $canSendObj->canSendIt();
@@ -298,7 +290,7 @@ function deletemail($pid,$reason,$other,$entryby="")
     	$subject = "Profile deleted because of terms of use violation";
 
       	$email_sender = new EmailSender(MailerGroup::DELETE_PROFILE, $mailID);
-      	
+      	$msg = $reason;
       	$emailTpl = $email_sender->setProfileId($pid);
         $smartyObj = $emailTpl->getSmarty();
         $smartyObj->assign("username",$username);

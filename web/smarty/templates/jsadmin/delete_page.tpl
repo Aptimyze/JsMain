@@ -4,7 +4,8 @@
 <title>AdminSearch : Jeevansathi.com Matrimonial Services</title>
 <link rel="stylesheet" href="jeevansathi.css" type="text/css">
 <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="~JsConstants::$jquery`"></script>
+
 </head>
 ~include file="head.htm"`
 
