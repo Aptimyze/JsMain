@@ -159,7 +159,7 @@
 	showLoader();	
 		var renderPage=new mobEditPage;
 		 var DualHamburger=0;
-		 var fromCAL=~if $fromCAL == 1`'1'~else`'0'~/if`;
+		 var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
 		 var fromCALphoto=~if $fromCALphoto == 1`'1'~else`'0'~/if`;
 </script>
 </div>
