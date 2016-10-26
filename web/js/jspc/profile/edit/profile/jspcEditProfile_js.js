@@ -401,6 +401,9 @@ EditApp = function(){
       if(debugInfo){
         console.log(editAppObject);
       }
+      
+    if(typeof(fromCALHoro)!='undefined' && fromCALHoro=='1')createHoroscopeFun();
+
     }
     
     /*
@@ -6132,7 +6135,6 @@ $(document).ready(function() {
     onClickViewHoroCloseBtn();
     onClickHoroscopeMust();
 
-    if(typeof(fromCALHoro)!='undefined' && fromCALHoro=='1')createHoroscopeFun();
 	$("body").on("click",'.js-uploadPhoto',function()
     {
             window.location="/social/addPhotos";
@@ -6140,6 +6142,7 @@ $(document).ready(function() {
     if(EditWhatNew){
         redirectToEditSection(EditWhatNew);
     }
+
 });
 
 $(document).mousedown(function (event)
@@ -6351,3 +6354,4 @@ $('.js-previewAlbum').click(function(){
 		$(show).addClass("selected");
 		$("#showText").html(text);
 	}
+ 
