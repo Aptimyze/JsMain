@@ -259,7 +259,7 @@ return 0;
                       if(!$isApp)
                       { 
                         $horoscopeObj = new Horoscope();
-                        if($profileObj->getHOROSCOPE_MATCH() == 'Y' && $horoscopeObj->ifHoroscopePresent($profileid) == 'Y')
+                        if($profileObj->getHOROSCOPE_MATCH() == 'Y' && $horoscopeObj->ifHoroscopePresent($profileid) == 'N')
                           $show = 1;
                       }
                     
