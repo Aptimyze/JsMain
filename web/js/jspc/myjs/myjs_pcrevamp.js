@@ -740,21 +740,25 @@ else {
 		var count = new engagementCounts();
 		count.pre();
 		count.request();
-		var justJoined = new justJoinedMatches();
-		justJoined.pre();
-		justJoined.request();
-        var lastSearch = new lastSearchMatches();
-        lastSearch.pre();
-        lastSearch.request();
 		var dailyMatchObj =new dailyMatches();
 		dailyMatchObj.pre();
 		dailyMatchObj.request();
+        var justJoined = new justJoinedMatches();
+        justJoined.pre();
+        justJoined.request();
+
+        var lastSearch = new lastSearchMatches();
+        lastSearch.pre();
+        lastSearch.request();
+
 		var verifedMatchObj =new verifiedMatches();
 		verifedMatchObj.pre();
 		verifedMatchObj.request();
+
         var recentvisitors = new recentProfileVisitor();
         recentvisitors.pre();
         recentvisitors.request();
+
         var shortlist = new shortlistProfiles();
         shortlist.pre();
         shortlist.request();
