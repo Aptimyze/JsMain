@@ -327,10 +327,14 @@ function pageResponsePopulate(response) {
 		else
 	                $("#heightRight").addClass('srpHeightRight').removeClass('srpHeightRightcc');
                     
-                if(response.infotype == "VISITORS")
+                if(response.infotype == "VISITORS"){
                         $("#heightRightVisitors").addClass('srpHeightRight').removeClass('disp-none');
-                else
+                        $("#ClusterTupleStructure").addClass('srppt28');
+                }
+                else{
 	                $("#heightRightVisitors").addClass('disp-none').removeClass('srpHeightRight');
+                        $("#ClusterTupleStructure").removeClass('srppt28');
+                }
 	}
 	else
 	{
