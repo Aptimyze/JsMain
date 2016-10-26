@@ -196,8 +196,10 @@ var mobEditPage=(function(){
 }
 );
 
-	if(fromCALphoto == '1')
+	if(typeof(fromCALphoto)!='undefined' && fromCALphoto == '1')
 	{ 
+	    var newUrl=document.location.href.replace('fromCALphoto','');
+	    history.pushState('', '', newUrl);
 		$( "#"+key+"EditSection" ).height(privacyH);
 		$("#privacyoptionshow").show();
 		$("#privacyOption").hide();
@@ -371,8 +373,12 @@ var mobEditPage=(function(){
     
       $('.js-createHoroscope').on('click',onHoroscopeButtonClick);
       if(typeof(fromCALHoro)!='undefined' && fromCALHoro == '1')
-      	onHoroscopeButtonClick();
+      {
+      	var newUrl=document.location.href.replace('fromCALHoro','');
+	    history.pushState('', '', newUrl);
 
+      	onHoroscopeButtonClick();
+        }
     }
     
 	};
