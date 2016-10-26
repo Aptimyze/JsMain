@@ -569,7 +569,7 @@
   <!--end:second part--> 
 </div>
 <script type="text/javascript">
-  var fromCAL=~if $fromCAL == 1`'1'~else`'0'~/if`;
+  var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
   var senderEmail = "~$loggedInEmail`";
   var ProCheckSum = "~$arrOutDisplay["page_info"]["profilechecksum"]`";
   var profileGender = "~$arrOutDisplay["about"]["gender"]`";
