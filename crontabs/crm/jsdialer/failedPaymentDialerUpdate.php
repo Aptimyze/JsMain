@@ -9,10 +9,10 @@ include("DialerLog.class.php");
 $dialerLogObj =new DialerLog();
 
 //Open connection at JSDB
-$db_js = mysql_connect(MysqlDbConstants1::$misSlave['HOST'],MysqlDbConstants1::$misSlave['USER'],MysqlDbConstants1::$misSlave['PASS']) or die("Unable to connect to nmit server");
-$db_master = mysql_connect(MysqlDbConstants1::$master['HOST'],MysqlDbConstants1::$master['USER'],MysqlDbConstants1::$master['PASS']) or die("Unable to connect to nmit server ");
-$db_js_111 = mysql_connect(MysqlDbConstants1::$slave111['HOST'],MysqlDbConstants1::$slave111['USER'],MysqlDbConstants1::$slave111['PASS']) or die("Unable to connect to local-111 server");
-$db_dialer = mssql_connect(MysqlDbConstants1::$dialer['HOST'],MysqlDbConstants1::$dialer['USER'],MysqlDbConstants1::$dialer['PASS']) or die("Unable to connect to dialer server");
+$db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
+$db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$master['USER'],MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
+$db_js_111 = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
+$db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
 $dateTime       =date("Y-m-d H:i:s",time()-22.5*60*60);
 $campaignName	='FP_JS';
