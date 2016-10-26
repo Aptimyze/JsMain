@@ -6132,7 +6132,7 @@ $(document).ready(function() {
     onClickViewHoroCloseBtn();
     onClickHoroscopeMust();
 
-    if(typeof(fromCAL)!='undefined' && fromCAL=='1')createHoroscopeFun();
+    if(typeof(fromCALHoro)!='undefined' && fromCALHoro=='1')createHoroscopeFun();
 	$("body").on("click",'.js-uploadPhoto',function()
     {
             window.location="/social/addPhotos";
