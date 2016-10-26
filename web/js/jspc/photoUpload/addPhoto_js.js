@@ -40,7 +40,7 @@ $(document).ready(function()
 	if(typeof(fromCALphoto)!='undefined' && fromCALphoto=='1')
 	{	
 		 $('html, body').animate({
-        scrollTop: $("#forPhotoCAL").offset().top
+        scrollTop: $("#photoPrivacyDiv").offset().top
     }, 500);
 
      }
