@@ -242,8 +242,8 @@ var strophieWrapper = {
                         strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
                     }
                     setTimeout(function () {
-//console.log("sent self presence");                        
-strophieWrapper.sendPresence();
+                        //console.log("sent self presence");                        
+                        strophieWrapper.sendPresence();
                     }, 3000);
                 }
             }

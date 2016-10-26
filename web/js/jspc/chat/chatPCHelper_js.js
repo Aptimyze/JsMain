@@ -19,13 +19,13 @@ function clearNonRosterPollingInterval(type){
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
-                clearTimeOut(strophieWrapper.nonRosterClearInterval[key]);
+                clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
     }
     else{
         if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
-            clearTimeOut(strophieWrapper.nonRosterClearInterval[type]);
+            clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
         }
     }
 }
@@ -67,13 +67,13 @@ function pollForNonRosterListing(type,i){
         beforeSend: function (xhr) {},
         success: function (response) {
             console.log("ankita");
-            /*if(i%2 == 0){
+            if(i%2 == 0){
             response = {  //comment later
 "data": [
 {
-"profileid": "7470229",
-"username": "RTR6613",
-"profileChecksum": "2d184344ffe7c652eaf30c74cc3343ffi7470229"
+"profileid": "9153000",
+"username": "ZZWS0621",
+"profileChecksum": "427dfb4b146adf7285203830571fe240i9153000"
 },
 {
 "profileid": "8925000",
@@ -112,9 +112,9 @@ function pollForNonRosterListing(type,i){
 else{
          response = {  //comment later
 "data": [{
-"profileid": "7868716",
-"username": "ZAZR5355",
-"profileChecksum": "7868716lr"
+"profileid": "9153000",
+"username": "ZZWS0621",
+"profileChecksum": "427dfb4b146adf7285203830571fe240i9153000"
 },
 {
 "profileid": "8891522",
@@ -133,7 +133,7 @@ else{
 },
 "debugInfo": null
 };   
-}*/
+}
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
                 if(response["header"]["pollTime"] != undefined){
