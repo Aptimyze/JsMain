@@ -610,7 +610,7 @@ $js_arr[]=array("jspc/help/JSPCHelp_js"             => "15");
 $js_arr[]=array("jsms/help/JSMSHelp_js"     => "3");
 $js_arr[]=array("jsms/help/jsmsPostQuery_js"     => "3");
 $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"     => "3");
-$js_arr[]=array("jsms/myjs/CALJSMS_js"         => "5");
+$js_arr[]=array("jsms/myjs/CALJSMS_js"         => "6");
 $js_arr[]=array("jspc/chat/customElem"       => "4");
 $js_arr[]=array("jspc/chat/strophe_receipts"       => "4");
 $js_arr[]=array("-1.0.2/Gruntfile"    => "3");
