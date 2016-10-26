@@ -249,8 +249,10 @@ return 0;
                       
                       if(!$isApp)
                       {
-
-
+                          $memObject=  JsMemcache::getInstance();
+                          if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                                  $show=1;
+                            
                       }
                     
                     break;
