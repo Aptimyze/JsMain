@@ -544,7 +544,7 @@ function generateFaceCard(Object)
       // when last search are less than 5
       if(PageSrc == 1)
       {
-        stype[Object.name] = "DPMPLS";
+        stype[Object.name] = "DPMJP";
       }
 			tracking = "stype="+stype[Object.name];
     }
