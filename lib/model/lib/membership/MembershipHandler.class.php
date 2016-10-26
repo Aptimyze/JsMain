@@ -1950,7 +1950,7 @@ class MembershipHandler
         } else {
             $discount = $discount_calc;
         }
-        print_r(array('profileid' => $profileid, 'currency' => $currency, 'last_main_transaction_services' => implode(",", $prevServPur), 'previous_discount_amount' => $prevDiscAmt, 'previous_final_amount' => $prevTotAmt, 'previous_discount_perc' => $prevDisc, 'rd_algo_calculated_discount_prec' => $discount_calc, 'rohan_algo_calculated_discount_prec' => $discount));
+        // print_r(array('profileid' => $profileid, 'currency' => $currency, 'last_main_transaction_services' => implode(",", $prevServPur), 'previous_discount_amount' => $prevDiscAmt, 'previous_final_amount' => $prevTotAmt, 'previous_discount_perc' => $prevDisc, 'rd_algo_calculated_discount_prec' => $discount_calc, 'rohan_algo_calculated_discount_prec' => $discount));
         // End - Logic to change renewal based on previous discount
         unset($discount_calc, $currency, $prevServPur, $prevDiscAmt, $prevTotAmt, $prevDisc);
         return $discount;
