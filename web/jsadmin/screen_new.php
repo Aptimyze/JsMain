@@ -58,7 +58,7 @@ if (authenticated($cid)) {
 	}
 	
         // VA Whitelisting
-        if(!is_numeric($pid)){
+        if($pid && !is_numeric($pid)){
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","Screen_new pid whitelisting","PID :$pid:$http_msg");
         }
