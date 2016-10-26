@@ -116,6 +116,9 @@ class searchActions extends sfActions
 		if($this->searchBasedParam == 'partnermatches')
                         $noRelaxation=1;
 
+        if($this->searchBasedParam == 'lastSearchResults')
+                        $noRelaxation=1;
+
                 if($this->twowaymatch)
                 {
                         $noRelaxation = 1;
