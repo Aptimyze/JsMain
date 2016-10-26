@@ -114,11 +114,7 @@ class searchActions extends sfActions
 	        $isearchCookie = $_COOKIE["ISEARCH"];
 
 		if($this->searchBasedParam == 'partnermatches')
-                        $noRelaxation=1;
-
-        if($this->searchBasedParam == 'lastSearchResults')
-                        $noRelaxation=1;
-
+                        $noRelaxation=1;                                
                 if($this->twowaymatch)
                 {
                         $noRelaxation = 1;
@@ -415,6 +411,7 @@ class searchActions extends sfActions
 			/** Auto Relaxation Section
 			* increasing search results by changing some search paramters
 			*/
+
 	                if($noRelaxation!=1 && $responseObj->getTotalResults() < $searchResultsCountForAutoRelaxation)
         	        {
 				$this->relaxedResults = 1;
@@ -1495,8 +1492,7 @@ class searchActions extends sfActions
       //Flush Match Alert count in profile mecache service
       if($this->searchBasedParam == "matchalerts" && false === $bNoFlushMatchAlertCount) {
         $request->setAttribute("resetMatchAlertCount",1);
-      }
-			
+      }		
       if($searchId && $currentPage)
 			{
 				
@@ -1582,10 +1578,16 @@ class searchActions extends sfActions
 						$noRelaxation = 1;
 						$noCasteMapping = 1;
 					}
+					if($request->getParameter("lastSearchResults") == 1 || $request->getParameter("searchBasedParam")=='lastSearchResults')
+					{						
+						$noRelaxation = 1;
+						$noCasteMapping = 1;
+					}
 					
 					/** Auto Relaxation Section
 					* increasing search results by changing some search paramters
 					*/
+					
 					if($noRelaxation!=1 && $responseObj->getTotalResults() < $searchResultsCountForAutoRelaxation)
 					{ 
 						$this->relaxedResults = 1;
