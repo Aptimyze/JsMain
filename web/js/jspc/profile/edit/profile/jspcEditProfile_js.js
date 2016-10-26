@@ -9,7 +9,7 @@
 var retryAttempt = 0;
 var EditApp = {};
 EditApp = function(){
-  
+
   try{
     var config = {
     '.chosen-select'           : {},
