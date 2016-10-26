@@ -160,6 +160,7 @@
 		var renderPage=new mobEditPage;
 		 var DualHamburger=0;
 		 var fromCAL=~if $fromCAL == 1`'1'~else`'0'~/if`;
+		 var fromCALphoto=~if $fromCALphoto == 1`'1'~else`'0'~/if`;
 </script>
 </div>
 <div class="hamburger dn fullwid" id="ehamburger">

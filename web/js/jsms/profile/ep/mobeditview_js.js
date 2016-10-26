@@ -193,7 +193,18 @@ var mobEditPage=(function(){
 		$("#privacyOption").hide();
 		$("#topbar").hide();
 		$("#AlbumSubHead").hide();
-});
+}
+);
+
+	if(fromCALphoto == '1')
+	{ 
+		$( "#"+key+"EditSection" ).height(privacyH);
+		$("#privacyoptionshow").show();
+		$("#privacyOption").hide();
+		$("#topbar").hide();
+		$("#AlbumSubHead").hide();
+	}
+
 	$("#privacyoptionclose").click(function()
        	{
 				$( "#"+key+"EditSection" ).height(editHgt);

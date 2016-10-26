@@ -36,6 +36,15 @@ $(document).ready(function()
 		$(".js-overlay").show();
 		$(".js-cropper").show();
 	}
+
+	if(typeof(fromCALphoto)!='undefined' && fromCALphoto=='1')
+	{	
+		 $('html, body').animate({
+        scrollTop: $("#forPhotoCAL").offset().top
+    }, 500);
+
+     }
+	
 });
 
 function handleUploadType()
