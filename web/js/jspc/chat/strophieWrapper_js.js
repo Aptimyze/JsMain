@@ -182,8 +182,8 @@ var strophieWrapper = {
     },
     //executed on new push/remove event in roster
     onRosterUpdate: function (iq) {
-       console.log("onRosterUpdate");
-        console.log(iq);
+        //console.log("onRosterUpdate");
+        //console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
@@ -244,7 +244,7 @@ var strophieWrapper = {
                     setTimeout(function () {
                         //console.log("sent self presence");                        
                         strophieWrapper.sendPresence();
-                    }, 3000);
+                    }, 5000);
                 }
             }
             else if(subscription == "remove"){
@@ -603,7 +603,7 @@ var strophieWrapper = {
             }
         }
         //strophieWrapper.stropheLoggerPC("in formatRosterObj");
-        var chat_status = obj["chat_status"] || "online",
+        var chat_status = obj["chatStatus"] || "online",
             newObj = {};
         newObj[strophieWrapper.rosterDetailsKey] = {
             "jid": obj["profileid"]+"@"+openfireServerName,

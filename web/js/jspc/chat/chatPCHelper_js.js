@@ -67,7 +67,7 @@ function pollForNonRosterListing(type,i){
         beforeSend: function (xhr) {},
         success: function (response) {
             console.log("ankita");
-            if(i%2 == 0){
+            /*if(i%2 == 0){
             response = {  //comment later
 "data": [
 {
@@ -133,7 +133,7 @@ else{
 },
 "debugInfo": null
 };   
-}
+}*/
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
                 if(response["header"]["pollTime"] != undefined){
@@ -881,6 +881,25 @@ function invokePluginLoginHandler(state) {
     }
 }
 
+/*updateNonRosterListOnCEAction
+function to update non roster item in listing
+* @inputs:actionParams
+*/
+function updateNonRosterListOnCEAction(actionParams){
+    var action = actionParams["action"],
+    user_id = actionParams["user_id"];
+    if(user_id != undefined){
+        if(action == "REMOVE" || action == "BLOCK"){
+            var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
+            console.log("updateNonRosterListOnCEAction",checkIfExists);
+            if(checkIfExists && checkIfExists["exists"] == true){
+                var deleteIdArr = [];
+                deleteIdArr.push(user_id);
+                strophieWrapper.onNonRosterListDeletion(deleteIdArr);
+            }
+        }
+    }
+}
 
 /*invokePluginAddlisting
 function to add roster item or update roster item details in listing
@@ -894,13 +913,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
         }
         if(key == "add_node" && user_id != undefined){
             //before adding new node in list,check presence in nonroster list to remove it first
-            var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
-            console.log("invokePluginManagelisting",checkIfExists);
-            if(checkIfExists && checkIfExists["exists"] == true){
-                var deleteIdArr = [];
-                deleteIdArr.push(user_id);
-                strophieWrapper.onNonRosterListDeletion(deleteIdArr);
-            }
+            updateNonRosterListOnCEAction({"user_id":user_id,"action":"REMOVE"});
         }
         objJsChat.addListingInit(listObject,key);
         if (key == "add_node") {
