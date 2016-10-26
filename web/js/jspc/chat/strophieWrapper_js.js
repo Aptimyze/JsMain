@@ -244,7 +244,7 @@ var strophieWrapper = {
                     setTimeout(function () {
 //console.log("sent self presence");                        
 strophieWrapper.sendPresence();
-                    }, 5000);
+                    }, 3000);
                 }
             }
             else if(subscription == "remove"){
