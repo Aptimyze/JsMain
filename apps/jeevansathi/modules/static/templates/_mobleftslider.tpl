@@ -20,7 +20,7 @@
 			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=accept&filter=R" alt="" title=""><strong class="icon-mwam">&nbsp;</strong>People who Accepted me ~if $profileMemcacheObj->get('ACC_ME_NEW')` (~$profileMemcacheObj->get('ACC_ME_NEW')`) ~/if`</a>
 			~/if`
 				~if $profileMemcacheObj->get('BOOKMARK')`
-			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=favorite&filter=M" alt="Shortlisted members" title=""><strong class="icon-sm">&nbsp;</strong>Shortlisted Members</a>
+			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=favorite&filter=M" alt="Shortlisted Profiles" title=""><strong class="icon-sm">&nbsp;</strong>Shortlisted Profiles</a>
 			~/if`
 			~if $profileMemcacheObj->get('ACC_BY_ME')`
 			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=accept&filter=M" alt="Members I accepted" title=""><strong class="icon-mia">&nbsp;</strong>People I Accepted</a>
@@ -50,10 +50,10 @@
 		~if $profileMemcacheObj->get('MATCHALERT') || $profileMemcacheObj->get('VISITOR_ALERT')`
 			<span>My Alerts</span>
 			~if $profileMemcacheObj->get('MATCHALERT')`
-			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=matches&filter=R" alt="" title=""><strong class="icon-ma">&nbsp;</strong>Match Alerts (~$profileMemcacheObj->get('MATCHALERT')`)</a>
+			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=matches&filter=R" alt="" title=""><strong class="icon-ma">&nbsp;</strong>Daily Recommendations (~$profileMemcacheObj->get('MATCHALERT')`)</a>
 			~/if`
 			~if $profileMemcacheObj->get('VISITOR_ALERT')`
-			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=visitors&filter=R" alt="" title=""><strong class="icon-rpv">&nbsp;</strong>Recent Profile Visitors (~$profileMemcacheObj->get('VISITOR_ALERT')`)</a>
+			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=visitors&filter=R" alt="" title=""><strong class="icon-rpv">&nbsp;</strong>Profile Visitors (~$profileMemcacheObj->get('VISITOR_ALERT')`)</a>
 			~/if`
 		~/if`
 		
