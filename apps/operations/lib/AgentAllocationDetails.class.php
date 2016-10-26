@@ -439,14 +439,14 @@ public function fetchProfiles($processObj)
                                 if($subMethod=='FIELD_SALES_VISIT'){
                                         $widgetLogObj =new incentive_FIELD_SALES_WIDGET('newjs_masterRep');
         	                        $widgetTimeEnd =$widgetLogObj->getMaxDate();
-					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 hours',strtotime($widgetTimeEnd)));
+					$widgetTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($widgetTimeEnd)));
 	                                $processObj->setEndDate($widgetTimeEndSet);
                 	                $profiles =$widgetLogObj->getLastHourScheduledProfiles($screenedTimeStart,$widgetTimeEnd);
                                 }
                                 else{
                                         $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_masterRep');
 					$screenedTimeEnd =$screeningLogObj->getScreenedMaxDate();
-					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-4 hours',strtotime($screenedTimeEnd)));
+					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($screenedTimeEnd)));
 					$processObj->setEndDate($screenedTimeEndSet);
 					$profiles =$screeningLogObj->getLastHourScreenedProfiles($screenedTimeStart,$screenedTimeEnd);
 				}
@@ -695,6 +695,8 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 
 			// first time screening check
 			if($subMethod=='FIELD_SALES'){
+				$screenedTimeHandled =date('Y-m-d H:i:s');
+				$screenedTimeHandled =date('Y-m-d H:i:s', strtotime('-24 hours',strtotime($screenedTimeHandled)));
 				$lastScreenedTime=$screeningObj->lastScreenedTime($profileid,$screenedTimeHandled);	
 				if(JSstrToTime($entryDt)>=JSstrToTime($lastScreenedTime)){}
 				else
