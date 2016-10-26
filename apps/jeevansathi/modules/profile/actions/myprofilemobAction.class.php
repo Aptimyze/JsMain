@@ -16,8 +16,8 @@ class myprofilemobAction extends sfAction
 	
 	public function execute($request)
 	{ 
-		if($request->getParameter('fromCAL') == 1)
-			$this->fromCAL = 1;
+		if($request->getParameter('fromCALHoro') == 1)
+			$this->fromCALHoro = 1;
 		if($request->getParameter('fromCALphoto') == 1)
 			$this->fromCALphoto = 1;
 
