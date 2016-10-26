@@ -370,7 +370,7 @@ var mobEditPage=(function(){
       $("#KundliEditSection").after(horoscopeButton);
     
       $('.js-createHoroscope').on('click',onHoroscopeButtonClick);
-      if(typeof(fromCAL)!='undefined' && fromCAL == '1')
+      if(typeof(fromCALHoro)!='undefined' && fromCALHoro == '1')
       	onHoroscopeButtonClick();
 
     }
