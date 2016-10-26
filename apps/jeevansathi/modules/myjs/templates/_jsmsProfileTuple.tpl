@@ -9,7 +9,7 @@
                          <div class="pad16" style="overflow:hidden;height:140px;" >
                              <div style="overflow-x:hidden; height:100%;">
                         <div style="white-space: nowrap; word-wrap:normal; width:200%;" class="overflowWrap">
-                         <div class="fl"> <img class="tuple_image" style="height:20px; width:20px;" src='/images/jsms/commonImg/loader.gif' data-src="~$profileTuple.photo.url`" border="0"/> </div>
+                         <div class="fl"> <img class="tuple_image" style="height:110px; width:110px;" src=~if $gender eq 'M'`'/images/picture/120x120_f.png'~else`'/images/picture/120x120_m.png'~/if` data-src="~$profileTuple.photo.url`" border="0"/> </div>
                          <div class="fl pl_a">
                              <div class="f14 color7"> <span class="username">~$profileTuple.username`</span></div>
                             <div class="attr">
