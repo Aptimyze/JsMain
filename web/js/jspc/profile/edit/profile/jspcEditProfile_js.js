@@ -401,7 +401,7 @@ EditApp = function(){
       if(debugInfo){
         console.log(editAppObject);
       }
-      
+    // called here fof horoscope CAL so that layer is shown only after whole edit data is loaded  
     if(typeof(fromCALHoro)!='undefined' && fromCALHoro=='1')createHoroscopeFun();
 
     }
