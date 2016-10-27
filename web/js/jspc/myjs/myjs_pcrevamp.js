@@ -731,42 +731,36 @@ else {
 		desiredPartnersObj.request();
 		$("#justJoinedCountBar").removeClass("disp-none");
 		$("#dailyMatchesCountBar").removeClass("disp-none");
-		bellCountStatus++;
-		setBellCountHTML(newEngagementArray);
-		bellCountStatus++;
-		createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
-		bellCountStatus++;
-		createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 	}
 	else
 	{
-		
+		inviewCheck();
+
 		var count = new engagementCounts();
+		var dailyMatchObj =new dailyMatches();
+		var justJoined = new justJoinedMatches();
+		var lastSearch = new lastSearchMatches();
+		var verifedMatchObj =new verifiedMatches();
+		var recentvisitors = new recentProfileVisitor();
+		var shortlist = new shortlistProfiles();
+
 		count.pre();
 		count.request();
-		var dailyMatchObj =new dailyMatches();
+
 		dailyMatchObj.pre();
 		dailyMatchObj.request();
-        var justJoined = new justJoinedMatches();
-        justJoined.pre();
-        justJoined.request();
 
-        var lastSearch = new lastSearchMatches();
-        lastSearch.pre();
-        lastSearch.request();
+		justJoined.pre();
+		justJoined.request();
 
-		var verifedMatchObj =new verifiedMatches();
-		verifedMatchObj.pre();
-		verifedMatchObj.request();
-
-        var recentvisitors = new recentProfileVisitor();
-        recentvisitors.pre();
-        recentvisitors.request();
-
-        var shortlist = new shortlistProfiles();
-        shortlist.pre();
-        shortlist.request();
+		$(window).on('beforeunload', function() {
+		    $(window).scrollTop(0);
+		});
 		
+		$(window).scroll(function () {
+		 scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shortlist);
+		});
+
 		var interests = new interestReceived();
 		var mess = new messages();
 		var accept = new acceptance();		
