@@ -891,13 +891,13 @@ function setUnsetFilter(status,filterId){
     var filterTextId = filterId.split("-")[0];
     if(status == "Y"){
                   $("#"+filterId).addClass("filterset").removeClass("filter");
-                  $("#"+filterId).children().addClass("colrw").html("Filter ON");
-                  $(".js-"+filterId).html($("#"+filterTextId+"-hint").val()+" set as filter");
+                  $("#"+filterId).children().addClass("colrw").html("Strict Filter ON");
+                  $(".js-"+filterId).html($("#"+filterTextId+"-hint").val()+" set as strict filter");
                 }
                 else{
                   $("#"+filterId).removeClass("filterset").addClass("filter");  
-                  $("#"+filterId).children().removeClass("colrw").html("Filter OFF");
-                  $(".js-"+filterId).html("Setting "+$("#"+filterTextId+"-hint").val()+" as filter?");
+                  $("#"+filterId).children().removeClass("colrw").html("Strict Filter OFF");
+                  $(".js-"+filterId).html("Setting "+$("#"+filterTextId+"-hint").val()+" as strict filter?");
                 }
 }
 

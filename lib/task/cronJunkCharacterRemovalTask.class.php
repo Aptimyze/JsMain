@@ -57,7 +57,7 @@ EOF;
                 if ( $profileData[0]['INCOMPLETE'] != self::TRUE_INCOMPLETE && $profileData[0]['ACTIVATED'] != self::TRUE_ACTIVATED && $profileData[0]['ACTIVATED'] != self::UNDERSCREENING)
                 {
                     //writing in the file to keep track
-                    // file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/incompleteJunk.txt","Picked: ".$profileId."\n",FILE_APPEND);
+                    file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/incompleteJunk.txt","Picked: ".$profileId."\n",FILE_APPEND);
                     $flagChangeMade = 0;
                     $junkCharacterRemovalLib = new JunkCharacterRemovalLib();   
 
