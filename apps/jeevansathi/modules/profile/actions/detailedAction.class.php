@@ -1328,7 +1328,7 @@ class detailedAction extends sfAction
                 $this->searchId= $request->getParameter('searchid');
 		$this->finalResponse=json_encode($this->arrOutDisplay);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
-                $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];WYZ6824WYZ6824
+                $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
         //print_r($this->arrOutDisplay);
         $this->setTemplate("_jspcViewProfile/jspcViewProfile");
       }
