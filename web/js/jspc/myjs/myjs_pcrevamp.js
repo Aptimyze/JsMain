@@ -900,3 +900,40 @@ var buttonClicked=0;
                 
         }
 
+function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shortlist)
+{
+	if(!showFTU && PageSource == "MyjsPc")
+	{
+		inView = $('#'+lastSearch.name+':in-viewport').length;
+		if(inView != 0 && lastSearch.displayed == 0)
+		{
+			lastSearch.pre();
+			lastSearch.request();
+			lastSearch.displayed = 1;
+		}
+
+		inView = $('#'+verifedMatchObj.name+':in-viewport').length;
+		if(inView != 0 && verifedMatchObj.displayed == 0)
+		{
+			verifedMatchObj.pre();
+			verifedMatchObj.request();
+			verifedMatchObj.displayed = 1;
+		}
+
+		inView = $('#'+recentvisitors.name+':in-viewport').length;
+		if(inView != 0 && recentvisitors.displayed == 0)
+		{
+			recentvisitors.pre();
+			recentvisitors.request();
+			recentvisitors.displayed = 1;
+		}
+
+		inView = $('#'+shortlist.name+':in-viewport').length;
+		if(inView != 0 && shortlist.displayed == 0)
+		{
+			shortlist.pre();
+			shortlist.request();
+			shortlist.displayed = 1;
+		}
+	}
+}
