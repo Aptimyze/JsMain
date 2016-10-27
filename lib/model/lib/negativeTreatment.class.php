@@ -322,7 +322,7 @@ class negativeTreatment
                 if ($profileid && $activated != 'D') {
                     // $DeleteProfileObj->delete_profile($profileid, $delete_reason, $specify_reason);
                     $this->deleteProfilesForNegativeTreatment($profileid, $delete_reason, $specify_reason, $username);
-                    // $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
+                    $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
                 }
             }
         }
