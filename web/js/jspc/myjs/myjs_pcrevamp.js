@@ -280,8 +280,6 @@ $( document ).ajaxSend(function( event,request, settings ) {
 			this.noResultCase();
 	}
 	dailyMatches.prototype.noResultCase = function() {
-		bellCountStatus++;
-		createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
 		noResultFaceCard(this);		
 	}
 
@@ -309,8 +307,6 @@ $( document ).ajaxSend(function( event,request, settings ) {
 			this.noResultCase();
 	}
 	justJoinedMatches.prototype.noResultCase = function() {
-		bellCountStatus++;
-		createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 		noResultFaceCard(this);		
 				
 	}
@@ -515,8 +511,6 @@ $( document ).ajaxSend(function( event,request, settings ) {
    else{
     $("#totalFilteredInterestReceived").removeClass("disp-none");
    }
-   bellCountStatus++;
-   createTotalBellCounts(parseInt(this.data.PHOTO_REQUEST_NEW) +this.data.MESSAGE_NEW+this.data.ACC_ME_NEW+this.data.AWAITING_RESPONSE_NEW + this.data.FILTERED_NEW);
    setBellCountHTML(this.data);
  }
 engagementCounts.prototype.noResultCase = function() {
