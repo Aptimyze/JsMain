@@ -20,7 +20,7 @@ class helpActions extends sfActions
       $loginData=$request->getAttribute("loginData");
       $this->username = $loginData["USERNAME"];
       $this->email = $loginData["EMAIL"];
-      $ios = $request->getParameter('iosWebview');
+      $ios = $request->getParameter('iosWebView');
       if(MobileCommon::isNewMobileSite())
         {
             if ($ios == 1) {
@@ -77,5 +77,6 @@ class helpActions extends sfActions
       $loginData=$request->getAttribute("loginData");
       $this->username = $loginData["USERNAME"];
       $this->email = $loginData["EMAIL"];
+      $this->iosWebView = $request->getParameter('iosWebView');
   }
 }
