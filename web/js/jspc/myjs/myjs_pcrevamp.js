@@ -323,6 +323,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.error=0;
+      this.displayed = 0;
       component.apply(this, arguments);
     };
     lastSearchMatches.prototype = Object.create(component.prototype);
@@ -351,6 +352,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.error=0;
+      this.displayed = 0;
       component.apply(this, arguments);
     };
     verifiedMatches.prototype = Object.create(component.prototype);
@@ -377,6 +379,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.error=0;
+      this.displayed = 0;
       component.apply(this, arguments);
       
     };
@@ -403,6 +406,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.heading = "Shortlisted Profiles";
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
+      this.displayed = 0;
       component.apply(this, arguments);
 
     };
