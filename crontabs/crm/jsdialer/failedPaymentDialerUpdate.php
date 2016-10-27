@@ -81,13 +81,14 @@ function fetchProfiles($db_js)
 // Delete ineligible profiles from FP table
 function deleteProfiles($db_master,$profiles)
 {
-	$sql= "delete FROM incentive.SALES_CSV_DATA_FAILED_PAYMENT WHERE DIAL_STATUS=0 AND PROFILEID IN ($profiles)";
+	$sql= "delete FROM incentive.SALES_CSV_DATA_FAILED_PAYMENT WHERE PROFILEID IN ($profiles)";
         $res=mysql_query($sql,$db_master) or die($sql.mysql_error($db_js));
 }
 
 // Fetch allocated profiles
 function getAllocatedProfiles($profileArr,$db_js)
 {
+	$dataArr	=array();
 	$profileStr     =implode(",",$profileArr);	
         $sql= "SELECT PROFILEID FROM incentive.MAIN_ADMIN WHERE PROFILEID IN($profileStr)";
         $res=mysql_query($sql,$db_js) or die($sql.mysql_error($db_js));
@@ -100,6 +101,7 @@ function getAllocatedProfiles($profileArr,$db_js)
 // Fetch Paid profiles
 function getPaidProfiles($profileArr,$db_js,$dateTime)
 {
+	$dataArr	=array();
         $profileStr     =implode(",",$profileArr);
         $sql= "SELECT distinct PROFILEID FROM billing.PURCHASES WHERE PROFILEID IN($profileStr) AND STATUS='DONE' AND ENTRY_DT>='$dateTime' AND MEMBERSHIP='Y'";
         $res=mysql_query($sql,$db_js) or die($sql.mysql_error($db_js));
