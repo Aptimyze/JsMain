@@ -30,8 +30,6 @@ class editAction extends sfAction {
 	 */
 	public function execute($request) {
 		//Contains login credentials
-		if($request->getParameter('fromCALHoro') == 1)
-			$this->fromCALHoro = 1;
 		global $smarty, $data;
 		$this->loginData = $data = $request->getAttribute("loginData");
 		 //Jsb9 page load time tracking edit Page Mobile
@@ -64,6 +62,10 @@ class editAction extends sfAction {
 		$this->arrMsgDetails = $cScoreObject->GetIncompleteDetails($noOfMsg);
 		$this->arrLinkDetails = $cScoreObject->GetLink();
 		$this->loginProfile->setNullValueMarker("-");
+                
+                if($request->getParameter('fromCALHoro') == 1)
+			$this->fromCALHoro = 1;
+
 		///////////////////////////////
         $this->EditWhatNew = $request->getParameter("EditWhatNew");
         $this->EditWhatNew = $this->changeEditWhatNew();
@@ -92,6 +94,7 @@ class editAction extends sfAction {
 			}
 		}
 		//end of rocketfuel code
+                
 		if(MobileCommon::isMobile())
 		{
 			//for non screened no photos case
