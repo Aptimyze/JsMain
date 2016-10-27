@@ -67,13 +67,13 @@ function pollForNonRosterListing(type,i){
         beforeSend: function (xhr) {},
         success: function (response) {
             console.log("ankita");
-            /*if(i%2 == 0){
+            if(i%2 == 0){
             response = {  //comment later
 "data": [
 {
-"profileid": "9153000",
-"username": "ZZWS0621",
-"profileChecksum": "427dfb4b146adf7285203830571fe240i9153000"
+"profileid": "2865000",
+"username": "WYZ6824",
+"profileChecksum": "74cd670dc3ff8c388b823cf5c166ca84i2865000"
 },
 {
 "profileid": "8925000",
@@ -133,7 +133,7 @@ else{
 },
 "debugInfo": null
 };   
-}*/
+}
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
                 if(response["header"]["pollTime"] != undefined){
@@ -155,7 +155,7 @@ else{
                                                                     //console.log("calling pollForNonRosterListing",type);
                                                                     //fetch current profileids belonging to given group
                                                                     //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    pollForNonRosterListing(type,i+1);
+                                                                    //pollForNonRosterListing(type,i+1);
                                                                     //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
                                                             },pollingTime);
     //}
@@ -886,6 +886,7 @@ function to update non roster item in listing
 * @inputs:actionParams
 */
 function updateNonRosterListOnCEAction(actionParams){
+    console.log("updateNonRosterListOnCEAction",actionParams);
     var action = actionParams["action"],
     user_id = actionParams["user_id"];
     if(user_id != undefined){
