@@ -82,10 +82,10 @@
         <!--question answer div:start-->
 </div>
 <script>
+var AndroidPromotion=0;
 $(document).ready(function(){
     var username = "~$username`";
     var email = "~$email`";
-    var AndroidPromotion=0;
     setInterval(function(){
         autoPopulateFreshdeskDetails(username,email);
     },100);
