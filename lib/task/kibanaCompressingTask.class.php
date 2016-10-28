@@ -156,7 +156,7 @@ EOF;
             'aggs' => [
                 'modules' => [
                     'terms' => [
-                        'field' => 'TypeOfError',
+                        'field' => 'typeOfError',
                         'size' => 1000
                     ]
                 ]
@@ -218,7 +218,7 @@ EOF;
             for($i = 0 ; $i < $module['doc_count'] ; $i++)
             { 
                 $arrHostname['time'] = $time;
-                $arrHostname['beat.hostname'] = $hostname;
+                $arrHostname['beat.name'] = $hostname;
                 $filePath = $dirPath."/kibanaCompressing-".$date;
                 $fileResource = fopen($filePath,"a");
                 fwrite($fileResource,json_encode($arrHostname)."\n");
@@ -295,7 +295,7 @@ EOF;
             'aggs' => [
                 'modules' => [
                     'terms' => [
-                        'field' => 'logtype',
+                        'field' => 'logType',
                         'size' => 1000
                     ]
                 ]
@@ -340,7 +340,7 @@ EOF;
             'aggs' => [
                 'modules' => [
                     'terms' => [
-                        'field' => 'ApiVersion',
+                        'field' => 'apiVersion',
                         'size' => 1000
                     ]
                 ]
@@ -385,7 +385,7 @@ EOF;
             'aggs' => [
                 'modules' => [
                     'terms' => [
-                        'field' => 'Action Name',
+                        'field' => 'actionName',
                         'size' => 1000
                     ]
                 ]
@@ -430,7 +430,7 @@ EOF;
             'aggs' => [
                 'modules' => [
                     'terms' => [
-                        'field' => 'Request Uri',
+                        'field' => 'REQUEST_URI',
                         'size' => 1000
                     ]
                 ]
