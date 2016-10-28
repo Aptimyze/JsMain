@@ -27,9 +27,12 @@ function check_obscene_word($string_to_check)
 	$string_to_check = remove_special_characters($string_to_check,"alphabets");
 	$sql = "SELECT SQL_CACHE WORD FROM newjs.OBSCENE_WORDS";
 	$res = mysql_query_decide($sql) or  logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+
+	$string_to_check_array = explode($string_to_check," "); 
+
 	while($row = mysql_fetch_array($res))
 	{
-		if(strstr($string_to_check, $row['WORD']))
+		if(in_array($string_to_check_array, $row['WORD']))
 		{
 			return true;
 		}
@@ -87,6 +90,7 @@ function check_for_minimum_character($string_to_check)
 //retiurns string with special characters removed.
 function remove_special_characters($string,$return_what="")
 {
+	$string = preg_replace('/[^a-zA-Z0-9\']/', ' ', $string);
 	$let_go_dots = 0;
 	$string = strtolower($string);
 
