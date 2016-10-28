@@ -8,7 +8,7 @@ class cronJunkCharacterRemovalTask extends sfBaseTask
     CONST MAIL_ID = "1841";
     CONST TRUE_INCOMPLETE = 'Y'; 
     CONST TRUE_ACTIVATED = 'Y'; 
-    CONST UNDERSCREENING = 'Y'; 
+    CONST UNDERSCREENING = 'U'; 
 
     protected function configure()
     {
