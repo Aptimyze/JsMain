@@ -94,14 +94,14 @@
                 <!--start:listing2-->
                 <div class="brdr9_ham pt20">
                   <ul class="fontlig">
-                    <li class="white fb1 ham_opa fontrobbold">My Matches</li>
+                    <li class="white fb1 ham_opa fontrobbold">Desired Partner Matches</li>
                     
                     <li><a href="/search/perform?justJoinedMatches=1" bind-slide=1 class="white">Just Joined Matches ~if $profileMemcacheObj->get('JUST_JOINED_MATCHES')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('JUST_JOINED_MATCHES')`</span> ~/if`</a></li>
                     <li><a href="/search/verifiedMatches" bind-slide=1 class="white">Verified Matches </a></li>
                     
                     <li><a href="/profile/contacts_made_received.php?page=matches&filter=R" bind-slide=1 class="white">Daily Recommendations ~if $profileMemcacheObj->get('MATCHALERT_TOTAL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MATCHALERT_TOTAL')`</span> ~/if`</a></li>
                     
-                    <li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">My Matches </a></li>
+                    <li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">Desired Partner Matches </a></li>
                     
                      ~if $showKundliList eq '1'`
                     <li><a href="/search/perform?kundlialerts=1" bind-slide=1 class="white">Kundli Matches <span class ="dispibl padl10 f12 white opa50">New</span></a></li>             

@@ -2,8 +2,8 @@
 <div id="slider" class="hideslider list-menu-left">
 		
 		<a href="~sfConfig::get('app_site_url')`/search/topSearchBand?isMobile=Y" alt="Search" title="Search"><strong class="icon-search">&nbsp;</strong>Search</a>
-		<a href="~sfConfig::get('app_site_url')`/search/partnermatches" alt="My Matches" title="My Matches"><strong class="icon-matches">&nbsp;</strong>My Matches</a>
-		<a href="~sfConfig::get('app_site_url')`/profile/viewprofile.php?ownview=1" alt="Register" title="My Matches"><strong class="icon-profile">&nbsp;</strong>My Profile</a>
+		<a href="~sfConfig::get('app_site_url')`/search/partnermatches" alt="Desired Partner Matches" title="Desired Partner Matches"><strong class="icon-matches">&nbsp;</strong>Desired Partner Matches</a>
+		<a href="~sfConfig::get('app_site_url')`/profile/viewprofile.php?ownview=1" alt="Register" title="Desired Partner Matches"><strong class="icon-profile">&nbsp;</strong>My Profile</a>
 		~if $memStat eq 'F'`
 		<a href="~sfConfig::get('app_site_url')`/profile/mem_comparison.php" alt="Buy paid Membership (upgrade)" title="Buy paid Membership (upgrade)"><strong class="icon-buypaid">&nbsp;</strong>Buy paid Membership</a>
 		~else if $memStat eq 'R'`

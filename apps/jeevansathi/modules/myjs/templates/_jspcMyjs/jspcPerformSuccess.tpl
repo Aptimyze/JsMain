@@ -64,7 +64,7 @@
                                 <li><a class='colrw f14' href='~$arrLinkDetails.$KEY`'>~$VALUE`</a></li>~/foreach` </ul> ~else`
                             <div id="test" class="pt15 f12">Congratulations!</div>
                             <div id="test" class="pt10 f14">Your profile is 100% complete.</div>~/if` </div>
-                        <div class="fr pr35">
+                        <div class="fr pr30">
                             <a href="/search/matchalerts">
                                 <div id="dailyMatchesCountBar" class="fl cursp colrw fontlig pt10 pl55 disp-none">
                                     <div class="disp-tbl mauto">

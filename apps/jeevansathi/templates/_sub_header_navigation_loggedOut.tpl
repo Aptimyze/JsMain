@@ -7,7 +7,7 @@
                 <a href="~sfConfig::get('app_site_url')`/search/matchalerts" onclick="return sub_header_fn(0,'~$pageName`',6);" class="layer1 cursp">
                     	<div class="fullwidth padleft22">
                         	<div class="fl bold_gnb" id="myMatchesLoggedOut">
-                            	My Matches
+                            	Desired Partner Matches
                             </div>
                             <div class="fl droparw">
                             	<div class="droparrow1"></div>

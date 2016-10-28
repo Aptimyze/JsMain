@@ -11,7 +11,7 @@
 				~/if`
                     	<div class="fullwidth padleft22 bold_gnb">
                         	<div class="fl" id="myMatchesLoggedIn">
-                            	My Matches
+                            	Desired Partner Matches
                             </div>
                             <div class="fl droparw">
                             	<div class="droparrow1"></div>
