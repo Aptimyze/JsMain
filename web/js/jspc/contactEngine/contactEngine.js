@@ -769,7 +769,7 @@ function cEButtonActionCalling(elementObj)
 		var buttonObj=new Button(elementObj);
 		buttonObj.request();
 		if(arrID[0] == "IGNORE"){
-			console.log("ignore from view profile");
+			//console.log("ignore from view profile");
 			var chatData = elementObj.attr("data-chat");
 			if(chatData != undefined){
 				var chatSplitData = chatData.split(",");

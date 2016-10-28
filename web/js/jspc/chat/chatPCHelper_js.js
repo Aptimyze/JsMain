@@ -155,7 +155,7 @@ else{
                                                                     //console.log("calling pollForNonRosterListing",type);
                                                                     //fetch current profileids belonging to given group
                                                                     //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    //pollForNonRosterListing(type,i+1);
+                                                                    //pollForNonRosterListing(type,i+1); //uncomment later
                                                                     //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
                                                             },pollingTime);
     //}
