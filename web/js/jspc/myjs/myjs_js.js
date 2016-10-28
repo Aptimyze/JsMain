@@ -607,7 +607,7 @@ function generateFaceCard(Object)
 		
 			Object.containerHtml=Object.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
 			// check for Last search
-      if(Object.name=="DAILYMATCHES" || Object.name=="JUSTJOINED" || Object.name=="VERIFIEDMATCHES" || Object.name=="LASTSEARCH")
+      if(Object.name=="DAILYMATCHES" || Object.name=="JUSTJOINED" || Object.name=="VERIFIEDMATCHES" || Object.name=="LASTSEARCH" || Object.name=="DESIREDPARTNERMATCHES")
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,totalCount);
 			else
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,"");
