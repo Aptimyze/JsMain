@@ -315,7 +315,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
     var lastSearchMatches = function() {
       this.name = "LASTSEARCH";
       this.containerName = this.name+"_Container";
-      this.heading = "Based on your last Search";
+      this.heading = "Based on your Last Search";
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.error=0;
@@ -428,7 +428,10 @@ $( document ).ajaxSend(function( event,request, settings ) {
   var desiredPartnerMatches = function() {
     this.name = "DESIREDPARTNERMATCHES";
     this.containerName = this.name+"_Container";
+    if(showFTU)
     this.heading = "Here are a few matches for you";
+    else
+      this.heading = "Desired Partner Matches";
     this.headingId = this.name+"_head";
     this.list = this.name+"_List";
     this.error=0;
