@@ -216,7 +216,7 @@ return 0;
                     case '8': 
                       
                       $isApp=MobileCommon::isApp();
-                      if(!$isApp || ($request->getParameter('API_APP_VERSION')>71 && $isApp=='A'))
+                      if(!$isApp || ($request->getParameter('API_APP_VERSION')>72 && $isApp=='A'))
                       {
 
 		      $negativeObj=new INCENTIVE_NEGATIVE_TREATMENT_LIST();
