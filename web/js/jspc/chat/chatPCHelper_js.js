@@ -1329,7 +1329,8 @@ function contactActionCall(contactParams) {
             checkSum = contactParams["checkSum"],
             trackingParams = contactParams["trackingParams"],
             extraParams = contactParams["extraParams"],
-            nickName = contactParams["nickName"];
+            nickName = contactParams["nickName"],
+            userId = (receiverJID.split("@"))[0];
         var url = chatConfig.Params["actionUrl"][action],
             channel = device;
         
@@ -1360,6 +1361,8 @@ function contactActionCall(contactParams) {
                 response = data;
                 
                 if (response["responseStatusCode"] == "0") {
+                    //console.log("success of chat block");
+                    updateNonRosterListOnCEAction({"user_id":userId,"action":action});
                     /*updateRosterOnChatContactActions({
                         "receiverJID": receiverJID,
                         "nickName": nickName,
