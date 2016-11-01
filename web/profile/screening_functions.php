@@ -90,7 +90,13 @@ function check_for_minimum_character($string_to_check)
 //retiurns string with special characters removed.
 function remove_special_characters($string,$return_what="")
 {
-	$string = preg_replace('/[^a-zA-Z0-9\']/', ' ', $string);
+	$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$string);
+	$string_replaced_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/', ' ', $string);
+	$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
+
+	$string = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
+	$string = implode(' ',$string);
+
 	$let_go_dots = 0;
 	$string = strtolower($string);
 
@@ -121,7 +127,6 @@ function remove_special_characters($string,$return_what="")
 				$string_actual .= $string[$i];
 		}
 	}
-
 	return $string_actual;
 }
 /**********************Code Added by sriram on May 21 2007******************/
