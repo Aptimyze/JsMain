@@ -33,14 +33,16 @@ if(count($eligibleArrNew>0)){
 	foreach($eligibleArrNew as $key=>$profileid){
 		
 		$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
-		mssql_query($query1,$db_dialer); // or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
+		mssql_query($query1,$db_dialer)  or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
 
 		$deleteArr[] =$profileid;
 		addLog($profileid,$campaignName,$str,$action,$db_js_111);
 	}
-	$profileStr     =implode(",",$deleteArr);
-	deleteProfiles($db_master,$profileStr);
-	unset($deleteArr);	
+	if(is_array($deleteArr)){
+		$profileStr     =implode(",",$deleteArr);
+		deleteProfiles($db_master,$profileStr);
+		unset($deleteArr);	
+	}
 }
 
 // Stop profiles which are 12 hours old
@@ -49,7 +51,8 @@ if(is_array($inEligibleArr)){
 	$query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE Dial_Status=1 AND Login_Timestamp<'$dateTime'";
 	mssql_query($query1,$db_dialer) or $dialerLogObj->logError($query1,$campaignName,$db_dialer,1);
 
-	deleteProfiles($db_master,$profileStr);
+	if($profileStr)
+		deleteProfiles($db_master,$profileStr);
 	foreach($inEligibleArr as $key=>$profileid){
 		addLog($profileid,$campaignName,$str,$action,$db_js_111);
 	}
