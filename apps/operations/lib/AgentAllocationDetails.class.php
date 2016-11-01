@@ -289,14 +289,16 @@ public function fetchProfiles($processObj)
 		if($level==1||$level==2||$level==4||$level==5){
 			$cities=array();
 			$cities=$processObj->getProfileCities();
-			$lowerScoreLimit=31;
+			$lowerScoreLimit=70;
 		}
 		if($level==2||$level==6){
 			//$locationObj=new incentive_LOCATION('newjs_slave');	
 			//$citySelArr=$locationObj->fetchSpecialCities();
 			$citySelArr =$processObj->getSpecialCityList();
-			if(array_key_exists($city,$citySelArr))
-				$lowerScoreLimit=1;
+			if(array_key_exists($city,$citySelArr)){
+				//$lowerScoreLimit=1;
+				$lowerScoreLimit=70;	
+			}
 			if($level==6){
 				$cityNewArr=$processObj->getSpecialCities();
 				$state=$citySelArr[$city];
@@ -318,7 +320,7 @@ public function fetchProfiles($processObj)
 				$cityNewArr[$state]=$cities_str;
 				$processObj->setSpecialCities($cityNewArr);
 			}
-			$lowerScoreLimit=31;
+			$lowerScoreLimit=70;
 		}
                 if($level==-5){
 			$preAllocationTempPoolObj =new incentive_PRE_ALLOCATION_TEMP_POOL();
