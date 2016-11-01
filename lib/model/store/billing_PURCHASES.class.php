@@ -707,9 +707,8 @@ class BILLING_PURCHASES extends TABLE
                 $profileid = implode(",", $profileid);
             }
             if (!empty($profileid)) {
-                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND PROFILEID IN (:PROFILEID) GROUP BY PROFILEID ORDER BY ENTRY_DT DESC LIMIT 1";
+                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND PROFILEID IN ($profileid) GROUP BY PROFILEID ORDER BY ENTRY_DT DESC";
                 $prep = $this->db->prepare($sql);
-                $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
                 $prep->execute();
                 while ($result  = $prep->fetch(PDO::FETCH_ASSOC)) {
                     $output[$result['PROFILEID']] = $result;
