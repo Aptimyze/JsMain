@@ -305,8 +305,10 @@ class LoggingManager
 		$logData[LoggingEnums::DOMAIN] = $_SERVER['HTTP_HOST'];
 		if(isset($logArray[LoggingEnums::REFERER]))
 		{
-			if(strpos($logArray[LoggingEnums::REFERER], 'jeevansathi') !== false) {
-			    return false;
+			foreach (LoggingEnums::REFERER_IGNORE as $key => $value) {
+				if(strpos($logArray[LoggingEnums::REFERER], $value) !== false) {
+				    return false;
+				}
 			}
 
 			$logData[LoggingEnums::REFERER] = $logArray[LoggingEnums::REFERER];

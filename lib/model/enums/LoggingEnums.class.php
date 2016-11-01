@@ -34,6 +34,7 @@ class LoggingEnums
     const I = 'I';
     const MS = 'MS';
     const OMS = 'OMS';
+    const REFERER_IGNORE = array('jeevansathi.com');
     // exceptions type
     const MYSQL_EXCEPTION = "MYSQL";
     const PDO_EXCEPTION = "PDO";
