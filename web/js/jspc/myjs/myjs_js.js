@@ -578,10 +578,10 @@ function generateFaceCard(Object)
 		if(loopCount){
 		    for (i = 0; i < loopCount; i++) {
 				innerHtml=innerHtml+Object.innerHtml;
-				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+'&'+tracking+";"+GATrackingFunForPhoto);
+				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+'&'+tracking);
 				innerHtml=innerHtml.replace(/\{\{PROFILE_FACE_CARD_ID\}\}/g,Object.data.profiles[i]["profilechecksum"]+"_"+Object.name+"_id");
         innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,Object.data.profiles[i]['album_count']);
-        
+        innerHtml=innerHtml.replace(/\{\{GA_TRACKING_FOR_PHOTO_VIEW\}\}/,GATrackingFunForPhoto);
         if(Object.data.profiles[i]['album_count']=='0')
         innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,'disp-none'); 
         else 

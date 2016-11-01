@@ -3,7 +3,7 @@
 <li id='{{list_id}}' class="pos-rel">
 <div class="pos-abs fullwid myjs-block f17 myjs-pos170 fontlig txtc lh50 sendintr"> <a onClick={{POST_ACTION_1}} class="colr5 cursp fontreg">{{ACTION_1_LABEL}}</a> </div>
 <div class="bg-white" >
-	<a href ={{DETAILED_PROFILE_LINK}}>
+	<a href ={{DETAILED_PROFILE_LINK}} onClick ={{GA_TRACKING_FOR_PHOTO_VIEW}}>
 	<div id={{PROFILE_FACE_CARD_ID}} class="pos-rel">
   <div class="pos-abs fontlig myjs-pos10 cursp  {{albumHide}}">
 <div class="disp-tbl opaclr1 myjs-br3 colrw txtc" style="height:30px;width:30px;">
