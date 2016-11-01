@@ -5,6 +5,8 @@
 * MADE BY     	: MANOJ RANA 
 *********************************************************************************************/
 include("MysqlDbConstants.class.php");
+nclude("DialerLog.class.php");
+$dialerLogObj =new DialerLog();
 
 //Open connection at JSDB
 $db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$master['USER'],MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
@@ -18,7 +20,7 @@ $entryDt	=date("Y-m-d",time()-24*60*60);
 foreach($campaignArr as $campaignName=>$tableName){	
 
 	$squery1 = "select count(lead_id) as cnt from ".$tableName." where lead_id='$entryDt' and PHONE_NO1 is not null";
-	$sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
+	$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,1);
 	if($srow1 = mssql_fetch_array($sresult1))
 	{
 		$count =$srow1["cnt"];
