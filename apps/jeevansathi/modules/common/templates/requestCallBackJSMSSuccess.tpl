@@ -353,6 +353,7 @@
     <!--end:Next-->
 </div>
 <script type="text/javascript">
+var AndroidPromotion=0;
 $(function() {
     var winHeight = $(window).height(); // total height of the device
     if (winHeight <= 720){

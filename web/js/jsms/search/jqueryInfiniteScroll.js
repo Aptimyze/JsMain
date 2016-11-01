@@ -335,20 +335,17 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 		tupleStructure+='<a tupleNo="idd'+idd+'" class="searchNavigation" href="javascript:void(0)" onclick=showProfilePage("/profile/viewprofile.php?total_rec='+totalNoOfResults+'&profilechecksum='+profilechecksum+contactTracking+'&tupleId='+idd+'&searchid='+firstResponse.searchid+'&'+NAVIGATOR+showECPPage+'&'+'offset='+(idd-1)+'")>';
 		tupleStructure+='<div class="fullwid grad1 padl10 padr10" style="padding: 10px 15px 10px;">\
 				<div class="fontlig" id="username'+idd+'" style="padding-top: 30px;">\
-						<span class="f16 white fontreg textTru wid40p dispibl vbtm">\
+						<span class="f16 white fontreg textTru dispibl vbtm wid51p">\
 						{username}\
 						</span>\
-						<span class="f12 colred fontreg">\
-							{isNewProfile}\
-						</span>\
-						<span class="f12 white padl10">\
+						<span class="f12 white">\
 							{userloginstatus}\
 						</span>\
 						<span class="f12 white fr fontrobbold">\
 							{gunascore}\
 						</span>\
 				</div>\
-				<div class="fullwidth f14 fontlig white">\
+				<div class="fullwidth f14 fontreg white">\
 					<div class="clearfix">\
 						<div class="fl wid48p textTru">\
 							{age}, {height}\
@@ -916,7 +913,7 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 		gunascore=null;
 	if(typeof val1.religion=='undefined')
 		val1.religion = '';
-	var isNewProfile = (val1.seen=="N")?"New":"";
+	//var isNewProfile = (val1.seen=="N")?"New":"";
 	var subscriptionOrFeatured = val1.subscription_icon;
 	if(key=='featuredProfiles')
 		subscriptionOrFeatured = 'Featured';
@@ -938,7 +935,6 @@ function searchResultMaping(val,noPhotoDiv,val1,profileNoId,defaultImage,key){
 			'{username}':removeNull(val1.username),
 			'{userloginstatus}':removeNull(setPriority(val1.userloginstatus,val1.timetext)),
 			'{gunascore}':removeNull(gunascore),
-			'{isNewProfile}':isNewProfile,
 			'{age}':removeNull(val1.age),
 			'{height}':removeNull(val1.height),
 			'{occupation}':removeNull(val1.occupation),

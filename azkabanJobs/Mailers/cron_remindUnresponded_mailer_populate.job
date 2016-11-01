@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/symfony mailer:MAIL_REMIND_UNRESPONDED_PROFILES 30
