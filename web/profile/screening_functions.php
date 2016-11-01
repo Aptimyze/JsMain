@@ -28,11 +28,12 @@ function check_obscene_word($string_to_check)
 	$sql = "SELECT SQL_CACHE WORD FROM newjs.OBSCENE_WORDS";
 	$res = mysql_query_decide($sql) or  logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 
-	$string_to_check_array = explode($string_to_check," "); 
+	$string_to_check_array = explode(" ",$string_to_check); 
 
 	while($row = mysql_fetch_array($res))
 	{
-		if(in_array($string_to_check_array, $row['WORD']))
+		// var_dump($row['WORD']);
+		if(in_array($row['WORD'],$string_to_check_array))
 		{
 			return true;
 		}
