@@ -291,7 +291,7 @@ if(count($camp_array)>0)
 					mssql_query($query,$db_dialer) or logError($query,$campaign_name,$db_dialer,1);
 					if(!in_array($profileid,$dep_array))
 					{
-						$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,SOURCE_TYPE,ALLOTED) VALUES ('$profileid','$opriority','1',now(),'D','$campaign_name','PREVIOUS_MEMBERSHIP_VISITED','')";
+						$log_query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,SOURCE_TYPE,ALLOTED) VALUES ('$profileid','$opriority','1',now(),'D','$campaign_name','PREVIOUS_MEM_VISITED','')";
 	                                        mysql_query($log_query,$db_js_111) or die($log_query.mysql_error($db_js_111));
 					}
                         	}

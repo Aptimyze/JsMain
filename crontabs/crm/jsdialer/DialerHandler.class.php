@@ -95,7 +95,7 @@ class DialerHandler
 	        $profileid_str = implode(",",$profiles_array);
         	if($profileid_str){
 	                $sql = "SELECT PROFILEID,LAST_LOGIN_DT FROM newjs.JPROFILE WHERE PROFILEID IN ($profileid_str)";
-	                $res = mysql_query($sql,$db_js) or die("$sql".mysql_error($db_js));
+	                $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
 	                while($row = mysql_fetch_array($res)){
 	                        $pid = $row["PROFILEID"];
 	                        if(strtotime($row["LAST_LOGIN_DT"])>=strtotime(date('Y-m-d',time()-15*86400)))

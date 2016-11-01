@@ -36,7 +36,7 @@ foreach($campaignArr as $key=>$campaignName)
 			$renewal =1;
 		else
 			$renewal ='';
-		$opt_in_array1	=compute_eligible_in_array($opt_in_array, $renewal);
+		$opt_in_array1	=$dialerDncScrubingObj->compute_eligible_in_array($opt_in_array, $renewal);
 		unset($opt_in_array);
 		$opt_in_array =$opt_in_array1;
 	}

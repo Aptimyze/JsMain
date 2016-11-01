@@ -4,10 +4,9 @@
 * MADE DATE 	: 20 Mar, 2014
 * MADE BY     	: VIBHOR GARG
 *********************************************************************************************/
+//include("cron_daily_updates_functions.php");
 include("MysqlDbConstants.class.php");
-include("cron_daily_updates_functions.php");
 include("DialerHandler.class.php");
-include('DialerLog.class.php');
 
 //Connection at JSDB
 $db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
