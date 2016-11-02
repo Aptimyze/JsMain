@@ -22,7 +22,7 @@ The [CALDataHousekeeping|INFO] task is used to clear data for CALs which is no l
 
 Call it with:
 
-  [php symfony CALDataHousekeeping|INFO]
+  [php symfony cleanup:CALDataHousekeeping]
 EOF;
   }
 
@@ -32,14 +32,19 @@ EOF;
 
   $CALHousekeepingObject = new MIS_CA_LAYER_TRACK;
   //Provide Layer IDs in the arrays mentioned below 
-  $unlimitedCALArray = array(3,5,7,6,8,9,10);
-  $limitedCALArray = array(1,2,4,11,12);
-  //The duration for removing older data has been provided in months.
-  $durationForUnlimitedCAL = 3;
-  $durationForLimitedCAL = 6;
-
-  $CALHousekeepingObject->removeLimitedCAL($limitedCALArray,$durationForLimitedCAL); 
-  $CALHousekeepingObject->removeUnlimitedCAL($unlimitedCALArray,$durationForUnlimitedCAL);
+ for ($i=1;;$i++)
+ {
+ $layer = CriticalActionLayerDataDisplay::getDataValue('','LAYERID',$i);
+ if($layer)
+ {
+ if($layer['UNLIMITED'] == 'Y')
+ $beforeDate = date('Y-m-d',strtotime(-3months));
+ else
+ $beforeDate = date('Y-m-d',strtotime(-6months));
+ $CALHousekeepingObject->truncateForUserAndLayer(true,$i,$beforeDate);
+ }
+ else break;
+ }
 
   }
 }
