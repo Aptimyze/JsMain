@@ -588,24 +588,8 @@ strophieWrapper.sendPresence();
 
     //fetch non roster list
     getNonRosterList:function(){
-        var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),useExisting = false;
-        var data = strophieWrapper.getRosterStorage("non-roster");
-        if(lastUpdated){
-            var currentTime = d.getTime();
-            var timeDiff = (currentTime - lastUpdated); //Time diff in milliseconds
-            //console.log(timeDiff);
-            if(timeDiff < chatConfig.Params[device].nonRosterListingRefreshCap){
-                //console.log("Used exisiting list");
-                useExisting = true;
-            }
-        }
-        if(data && useExisting){
-            console.log("Used Existing listing");
-            strophieWrapper.NonRoster = data;
-            strophieWrapper.initialNonRosterFetched = true;
-            invokePluginManagelisting(strophieWrapper.NonRoster, "create_list");
-        }
-        else{
+        var validRe = checkForValidNonRosterRequest();
+        if(validRe == true){
             console.log("Used new listing");
             reActivateNonRosterPolling();
         }

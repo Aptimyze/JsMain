@@ -769,7 +769,7 @@ JsChat.prototype = {
             if(localStorage.getItem("lastUId")) {
                 //console.log("11");
                 if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
-                    //console.log("22 chnage");
+                    console.log("22 chnage");
                     reActivateNonRosterPolling();
                     elem._updateChatStructure("exsisting");
                 }

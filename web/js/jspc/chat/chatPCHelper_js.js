@@ -20,13 +20,13 @@ function clearNonRosterPollingInterval(type){
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
-                clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
+                clearInterval(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
     }
     else{
         if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
-            clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
+            clearInterval(strophieWrapper.nonRosterClearInterval[type]);
         }
     }
 }
@@ -46,11 +46,33 @@ function reActivateNonRosterPolling(){
     }
 }
 
+function checkForValidNonRosterRequest(){
+    var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
+    var data = strophieWrapper.getRosterStorage("non-roster");
+    if(lastUpdated){
+        var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated); //Time diff in milliseconds
+        if(timeDiff < chatConfig.Params[device].nonRosterListingRefreshCap){
+            //console.log("Used existing list");
+            valid = false;
+        }
+    }
+    if(data && valid == false){
+        console.log("Used Existing listing");
+        strophieWrapper.NonRoster = data;
+        strophieWrapper.initialNonRosterFetched = true;
+        invokePluginManagelisting(strophieWrapper.NonRoster, "create_list");
+    }
+    else{
+        valid = true;
+    }
+    return valid;
+}
+
 /*pollForNonRosterListing
 function to poll for non roster webservice api 
 * @inputs:type
 */
-function pollForNonRosterListing(type,i){
+function pollForNonRosterListing(type,count){
     console.log("pollForNonRosterListing",type);
     if(type == undefined || type == ""){
         type = "dpp";
@@ -83,7 +105,7 @@ function pollForNonRosterListing(type,i){
         beforeSend: function (xhr) {},
         success: function (response) {
             console.log("ankita");
-            if(i%2 == 0){
+            if(count%2 == 0){
             /*response = {  //comment later
 "data": [
 {
@@ -153,7 +175,7 @@ else{
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
                 if(response["header"]["pollTime"] != undefined){
-                    pollingTime = 30000;//response["header"]["pollTime"];
+                    pollingTime = 10000;//response["header"]["pollTime"];
                 }
                 localStorage.setItem("nonRosterCLUpdated",(new Date()).getTime());
                 //add in listing, after non roster list has been fetched
@@ -168,18 +190,24 @@ else{
     //set interval for presence polling after first non roster list case
     //if(strophieWrapper.initialNonRosterFetched == false){
     //console.log("start polling presence");
-    strophieWrapper.nonRosterClearInterval[type] = setTimeout(function(){
-                                                                    //console.log("calling pollForNonRosterListing",type);
-                                                                    //fetch current profileids belonging to given group
-                                                                    //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    pollForNonRosterListing(type,i+1); //uncomment later
-                                                                    //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
-                                                            },pollingTime);
+    if(count == 0){
+        strophieWrapper.nonRosterClearInterval[type] = setInterval(function(){
+                                                                        //fetch current profileids belonging to given group
+                                                                        //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
+                                                                        var validRe = checkForValidNonRosterRequest();
+                                                                        console.log("calling pollForNonRosterListing",validRe);
+                                
+                                                                        if(validRe == true){
+                                                                            pollForNonRosterListing(type,count+1); //uncomment later
+                                                                        //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
+                                                                        }
+                                                                },pollingTime);
+    }
     //}
         
 }
 
-/*processNonRosterData
+/*processNonRosterDasetTimeta
 function to process the non roster data 
 * @inputs:response,type
 */
