@@ -215,7 +215,7 @@ window.onload=function(){
                                 <li>
                                     <a href="/inbox/2/1">
                                     <div class="clearfix topnavp1">
-                                        <div class="fl">Members who Accepted me</div>
+                                        <div class="fl">Accepted Me</div>
                                         <div class="fr">
                                             <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
                                                 <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
