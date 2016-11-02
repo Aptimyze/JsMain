@@ -105,7 +105,7 @@ function pollForNonRosterListing(type,count){
         beforeSend: function (xhr) {},
         success: function (response) {
             console.log("ankita");
-            if(count%2 == 0){
+            /*if(count%2 == 0){
             /*response = {  //comment later
 "data": [
 {
@@ -145,7 +145,7 @@ function pollForNonRosterListing(type,count){
 "pollTime":20000
 },
 "debugInfo": null
-};*/
+};
 }
 else{
          response = {  //comment later
@@ -171,11 +171,11 @@ else{
 },
 "debugInfo": null
 };   
-}
+}*/
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
                 if(response["header"]["pollTime"] != undefined){
-                    pollingTime = 10000;//response["header"]["pollTime"];
+                    pollingTime = response["header"]["pollTime"];
                 }
                 localStorage.setItem("nonRosterCLUpdated",(new Date()).getTime());
                 //add in listing, after non roster list has been fetched
