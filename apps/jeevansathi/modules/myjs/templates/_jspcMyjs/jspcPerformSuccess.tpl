@@ -43,7 +43,7 @@
                                         <div class="pie pie2"></div>
                                     </div>
                                     <div class="pie" style=" z-index: 0; border-color: #879381;"> </div>
-                                    <a style='color:white;' onclick="trackJsEventGA('My JS JSPC', 'User photo',loggedInJspcGender,'')" href="~sfConfig::get('app_site_url')`/profile/viewprofile.php?ownview=1"><img src="~$photoUrl`" border="0" class="proPicMyJs" /></a>
+                                    <a style='color:white;' onclick="trackJsEventGA('My JS JSPC', 'User photo',loggedInJspcGender,'');" href="~sfConfig::get('app_site_url')`/profile/viewprofile.php?ownview=1"><img src="~$photoUrl`" border="0" class="proPicMyJs" /></a>
                                 </div>
                             </div>
                             <div id='completePercentId' class="pt3 fontrobbold colrw f17 txtc">~$iPCS`%</div>
@@ -154,7 +154,7 @@
         <article id="DAILYMATCHES">
             <div class="pt40 clearfix fontlig">
                 <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15" onclick="trackJsEventGA('My JS JSPC', 'Match Alert Section - See All',loggedInJspcGender,'')">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
@@ -196,7 +196,7 @@
         <article id="JUSTJOINED">
             <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Just Joined Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15" onclick="trackJsEventGA('My JS JSPC', 'Just Joined Section - See All',loggedInJspcGender,'')">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
@@ -238,7 +238,7 @@
          <article id="LASTSEARCH">
             <div class="pt40 clearfix fontlig">
                 <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" onclick="trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')" class="color12 icons myjs-ic1 pr15">View All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
@@ -280,7 +280,7 @@
          <article id="DESIREDPARTNERMATCHES" class="disp-none">
             <div class="pt40 clearfix fontlig">
                 <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" onclick="trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')" class="color12 icons myjs-ic1 pr15">View All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
@@ -322,7 +322,7 @@
         <article id="VERIFIEDMATCHES">
             <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Matches Verified by Visit <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15" onclick="trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - See All',loggedInJspcGender,'')">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
