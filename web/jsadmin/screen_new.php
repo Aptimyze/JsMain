@@ -1445,7 +1445,7 @@ function getAge($newDob) {
 	{
 
 		$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$message);
-		$string_replaced_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/', ' ', $message);
+		$string_replaced_special_characters = preg_replace('/[^a-zA-Z\'\s]/', ' ', $message);
 		$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
 
 		$messageArr = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
@@ -1459,7 +1459,7 @@ function getAge($newDob) {
    * @param type $iProfileID
    */
   function markProfileUnderScreening($iProfileID)
-  {
+	  {
     $objUpdate = JProfileUpdateLib::getInstance();
     $arrFields = array('ACTIVATED'=>'U');
     $result = $objUpdate->editJPROFILE($arrFields,$iProfileID,"PROFILEID");

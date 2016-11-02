@@ -92,7 +92,7 @@ function check_for_minimum_character($string_to_check)
 function remove_special_characters($string,$return_what="")
 {
 	$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$string);
-	$string_replaced_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/', ' ', $string);
+	$string_replaced_special_characters = preg_replace('/[^a-zA-Z\'\s]/', ' ', $string);
 	$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
 
 	$string = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
