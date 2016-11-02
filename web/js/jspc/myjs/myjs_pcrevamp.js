@@ -463,6 +463,13 @@ $( document ).ajaxSend(function( event,request, settings ) {
       {
         // Remove DPP listing for non FTU users
         $("#DESIREDPARTNERMATCHES_Container").remove();
+        inView = $('#'+verifedMatchObj.name+':in-viewport').length;
+        if(inView != 0 && verifedMatchObj.displayed == 0)
+        {
+          verifedMatchObj.pre();
+          verifedMatchObj.request();
+          verifedMatchObj.displayed = 1;
+        }
       }
 	}
 
@@ -737,7 +744,7 @@ else {
 		var dailyMatchObj =new dailyMatches();
 		var justJoined = new justJoinedMatches();
 		var lastSearch = new lastSearchMatches();
-		var verifedMatchObj =new verifiedMatches();
+		verifedMatchObj =new verifiedMatches();
 		var recentvisitors = new recentProfileVisitor();
 		var shortlist = new shortlistProfiles();
 
