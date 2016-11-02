@@ -131,7 +131,7 @@
                 <li id="acceptanceEngagementHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
-                            <div id="AcceptanceId" class="hgt25 disp-cell vmid myjs-fsize1 pr5">Acceptances Received</div>
+                            <div id="AcceptanceId" class="hgt25 disp-cell vmid myjs-fsize1 pr5">Accepted Me</div>
                             <div id="totalAcceptsReceived" class="myjs-fsize2 vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="allAcceptanceCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
@@ -154,7 +154,7 @@
         <article id="DAILYMATCHES">
             <div class="pt40 clearfix fontlig">
                 <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">View All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
@@ -196,7 +196,7 @@
         <article id="JUSTJOINED">
             <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Just Joined Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">View All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
@@ -238,7 +238,7 @@
         <article id="VERIFIEDMATCHES">
             <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Matches Verified by Visit <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">View All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
