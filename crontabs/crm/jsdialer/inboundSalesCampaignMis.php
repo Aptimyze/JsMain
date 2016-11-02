@@ -5,7 +5,7 @@
 * MADE BY     	: MANOJ RANA 
 *********************************************************************************************/
 include("MysqlDbConstants.class.php");
-nclude("DialerLog.class.php");
+include("DialerLog.class.php");
 $dialerLogObj =new DialerLog();
 
 //Open connection at JSDB

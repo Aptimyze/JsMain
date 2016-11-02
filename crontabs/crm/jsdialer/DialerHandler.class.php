@@ -253,7 +253,7 @@ class DialerHandler
 				if(!$row_chk["AGENT"]){
 					$query_ph2 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
 					mssql_query($query_ph2,$this->db_dialer) or $this->logError($query_ph2,$campaign_name,$this->db_dialer,1);
-					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE-AGENT_NOT_EXIST')";
+					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE-AGENT_NOT_EXI')";
 					mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 				}
 			}
