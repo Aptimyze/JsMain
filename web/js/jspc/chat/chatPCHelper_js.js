@@ -68,7 +68,7 @@ function pollForNonRosterListing(type,i){
         success: function (response) {
             console.log("ankita");
             if(i%2 == 0){
-            response = {  //comment later
+            /*response = {  //comment later
 "data": [
 {
 "profileid": "2865000",
@@ -107,7 +107,7 @@ function pollForNonRosterListing(type,i){
 "pollTime":20000
 },
 "debugInfo": null
-};
+};*/
 }
 else{
          response = {  //comment later

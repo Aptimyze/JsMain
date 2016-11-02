@@ -848,24 +848,31 @@ JsChat.prototype = {
             if (operation == "add_node" || operation == "update_status" || typeof upperLimit == "undefined" || totalNodes < upperLimit){
                 elem._removeHiddenNode(contactID);
                 var listCount = $('div.'+groupID+' ul.'+status+' li').size();
-                if(addIndex == 0 || listCount == 0){
-                    $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                if(operation == "create_list" && nodeType == "non-roster" && typeof upperLimit != "undefined" && addIndex >= upperLimit){
+                    //console.log("false",addIndex);
+                    done = false;
                 }
                 else{
-                    var insertAfterPos = elem.getNodeInsertPos(addIndex,groupID,status);
-                    //console.log("here out",insertAfterPos);
-                    if(insertAfterPos == -1){
+                    //console.log("true",addIndex);
+                    if(addIndex == 0 || listCount == 0){
                         $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                     }
                     else{
-                        $('div.' + groupID + ' ul.' + status).children(':eq('+insertAfterPos+')').after(contactHTML);
+                        var insertAfterPos = elem.getNodeInsertPos(addIndex,groupID,status);
+                        //console.log("here out",insertAfterPos);
+                        if(insertAfterPos == -1){
+                            $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                        }
+                        else{
+                            $('div.' + groupID + ' ul.' + status).children(':eq('+insertAfterPos+')').after(contactHTML);
+                        }
                     }
+                    //update status in list
+                    if(status && (operation == "update_status" || operation == "removeCall1")){
+                        $(".chatlist li[id='" + contactID + "_" + groupID + "']").attr("data-status",status);
+                    }
+                    done = true;
                 }
-                //upadte status in list
-                if(status && (operation == "update_status" || operation == "removeCall1")){
-                    $(".chatlist li[id='" + contactID + "_" + groupID + "']").attr("data-status",status);
-                }
-                done = true;
             }
             else if(totalNodes >= upperLimit && status == "online" && nodeType != "non-roster"){
                 var onlineCount = $('div.'+groupID+' ul.online li').size();
@@ -2390,6 +2397,7 @@ JsChat.prototype = {
             var appendMsg = true;
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
+                //console.log("msg from history1",uniqueId);
                 appendMsg = false; //as this msg already exists in history
                 var checkInterval = 0;
                 var chatBoxOpenInterval = setInterval(function(){
@@ -2400,6 +2408,11 @@ JsChat.prototype = {
                             if ($(".js-minpanel").length != 0) {
                                 appendMsg = true;
                                 $('chat-box[user-id="' + userId + '"] .nchatic_2').click();
+                            }
+                            else if($('#extra_'+userId).length == 0){
+                                //console.log("add here....uncomment",uniqueId);
+                                //mark this msg read on sender side
+                                curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
                             }
                         },500);
                         //console.log("clear interval");
@@ -2419,13 +2432,14 @@ JsChat.prototype = {
             if(typeof msg_type != "undefined" && msg_type == "accept"){
                 curEle._enableChatAfterPaidInitiates(userId);
             }
+            //console.log("appendMsg",appendMsg);
             if(appendMsg == true){
                 message = message.replace(/\&lt;br \/\&gt;/g, "<br />");
-                //console.log("append msg1");
-                //adding mege in chat area
+                //adding msg in chat area
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
             }
             else{
+                //console.log("marking as read",uniqueId);
                 //mark this msg read on sender side
                 curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
             }
