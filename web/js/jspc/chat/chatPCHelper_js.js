@@ -153,7 +153,7 @@ else{
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
                 if(response["header"]["pollTime"] != undefined){
-                    pollingTime = 50000;//response["header"]["pollTime"];
+                    pollingTime = 30000;//response["header"]["pollTime"];
                 }
                 localStorage.setItem("nonRosterCLUpdated",(new Date()).getTime());
                 //add in listing, after non roster list has been fetched
@@ -1242,7 +1242,7 @@ function clearChatMsgFromLS(){
     var patt1 = new RegExp("chatMsg_");
     var patt2 = new RegExp("listingPic_");
     var patt3 = new RegExp("chatListing");
-    var patt4 = new RegExp("presence_");
+    var patt4 = new RegExp("presence_"),patt5 = new RegExp("nonRosterChatListing");
     for(var key in localStorage){
         if(patt1.test(key) || patt2.test(key) || patt3.test(key) || patt4.test(key)){
             localStorage.removeItem(key);
@@ -1253,7 +1253,7 @@ function clearChatMsgFromLS(){
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated','nonRosterCLUpdated'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
