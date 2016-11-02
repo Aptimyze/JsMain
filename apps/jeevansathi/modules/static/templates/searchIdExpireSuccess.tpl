@@ -12,7 +12,7 @@
 				<form name="form1" method="post">
 					<div class="gray t14" style="padding-left:35px;line-height:28px">
 						Results have changed since last time you searched. Kindly perform your search again.
-						 <a href="#" onclick="location.href = '~sfConfig::get(app_site_url)`/search/partnermatches'" style="color:#0046C5;">Go To My Matches</a></div>
+						 <a href="#" onclick="location.href = '~sfConfig::get(app_site_url)`/search/partnermatches'" style="color:#0046C5;">Go To Desired Partner Matches</a></div>
 					</div>
 				</form>
 				<div class="sp16" style="height:100px;"></div>

@@ -64,7 +64,7 @@
                                 <li><a class='colrw f14' href='~$arrLinkDetails.$KEY`'>~$VALUE`</a></li>~/foreach` </ul> ~else`
                             <div id="test" class="pt15 f12">Congratulations!</div>
                             <div id="test" class="pt10 f14">Your profile is 100% complete.</div>~/if` </div>
-                        <div class="fr pr35">
+                        <div class="fr pr30">
                             <a href="/search/matchalerts">
                                 <div id="dailyMatchesCountBar" class="fl cursp colrw fontlig pt10 pl55 disp-none">
                                     <div class="disp-tbl mauto">
@@ -77,7 +77,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="f13 pt18">Match Alerts</div>
+                                        <div class="f13 pt18">Daily Recommendations</div>
                                     </div>
                             </a>
                             <a href="/search/justjoined">
@@ -321,7 +321,7 @@
         </article>
         <article id="VERIFIEDMATCHES">
             <div class="pt30 clearfix fontlig">
-                <div class="fl f22 color11">Matches Verified by Visit <span class="fontreg colr5"></span></div>
+                <div class="fl f22 color11">Verified Matches <span class="fontreg colr5"></span></div>
                 <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
             </div>
             <div class="pt15">
@@ -363,7 +363,7 @@
         </article>
         <div class="clearfix pt45">
             <div id="VISITORS" class="myjs-wid11 fl">
-                <p class="fontlig f22 color11">Recent Profile Visitors </p>
+                <p class="fontlig f22 color11">Profile Visitors </p>
                 <ul class="hor_list clearfix mysj-btmwid pt30 pl20">
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>

@@ -17,7 +17,7 @@
 	~/if`
 	
 	~if $profileMemcacheObj->get("MATCHALERT")`
-		<a href="~$SITE_URL`/profile/contacts_made_received.php?&page=matches&filter=R" alt="Match Alerts" title="">Match Alerts<strong class="icon-fm">~$profileMemcacheObj->get("MATCHALERT")`</strong></a>
+		<a href="~$SITE_URL`/profile/contacts_made_received.php?&page=matches&filter=R" alt="Daily Recommendations" title="">Daily Recommendations<strong class="icon-fm">~$profileMemcacheObj->get("MATCHALERT")`</strong></a>
 	~/if`
 	
 	~if $profileMemcacheObj->get("MESSAGE_NEW") || $profileMemcacheObj->get("MESSAGE")`

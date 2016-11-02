@@ -260,7 +260,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
     var dailyMatches = function() {
       this.name = "DAILYMATCHES";
       this.containerName = this.name+"_Container";
-      this.heading = "Match Alerts";
+      this.heading = "Daily Recommendations";
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.isEngagementBar=0;
@@ -344,7 +344,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
     var verifiedMatches = function() {
       this.name = "VERIFIEDMATCHES";
       this.containerName = this.name+"_Container";
-      this.heading = "Matches verified by Visit";
+      this.heading = "Verified Matches";
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.error=0;
@@ -367,11 +367,11 @@ $( document ).ajaxSend(function( event,request, settings ) {
 	}
 
 
-    //RECENT PROFILE VISITORS
+    //Profile Visitors
     var recentProfileVisitor = function() {
       this.name = "VISITORS";
       this.containerName = this.name+"_Container";
-      this.heading = "Recent Profile Visitors";
+      this.heading = "Profile Visitors";
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.error=0;
