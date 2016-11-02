@@ -238,7 +238,7 @@
          <article id="LASTSEARCH">
             <div class="pt40 clearfix fontlig">
                 <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" onclick="trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" onclick="trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')" class="color12 icons myjs-ic1 pr15">View All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
@@ -280,7 +280,7 @@
          <article id="DESIREDPARTNERMATCHES" class="disp-none">
             <div class="pt40 clearfix fontlig">
                 <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" onclick="trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" onclick="trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')" class="color12 icons myjs-ic1 pr15">View All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
