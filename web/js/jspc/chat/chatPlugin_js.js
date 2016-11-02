@@ -766,10 +766,14 @@ JsChat.prototype = {
         $(window).focus(function() {
             //console.log("tab changed");
             if(localStorage.getItem("lastUId")) {
+                //console.log("11");
                 if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
+                    //console.log("22 chnage");
+                    reActivateNonRosterPolling();
                     elem._updateChatStructure("exsisting");
                 }
             } else {
+                //console.log("33");
                 localStorage.setItem("lastUId",$(".tabUId").attr("id"));
             }    	
         });

@@ -16,6 +16,7 @@ function to stop polling for non roster webservice api
 * @inputs:type(optional)
 */
 function clearNonRosterPollingInterval(type){
+    console.log("in clearNonRosterPollingInterval");
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
@@ -27,6 +28,21 @@ function clearNonRosterPollingInterval(type){
         if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
             clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
         }
+    }
+}
+
+/*reActivateNonRosterPolling
+function to reactivate poll for non roster list 
+* @inputs:none
+*/
+function reActivateNonRosterPolling(){
+    console.log("in reActivateNonRosterPolling");
+    //kills interval polling for non roster list
+    clearNonRosterPollingInterval();
+    if (strophieWrapper.getCurrentConnStatus() == true) {
+        $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
+            pollForNonRosterListing(groupId,0);
+        });
     }
 }
 
@@ -155,7 +171,7 @@ else{
                                                                     //console.log("calling pollForNonRosterListing",type);
                                                                     //fetch current profileids belonging to given group
                                                                     //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
-                                                                    //pollForNonRosterListing(type,i+1); //uncomment later
+                                                                    pollForNonRosterListing(type,i+1); //uncomment later
                                                                     //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
                                                             },pollingTime);
     //}

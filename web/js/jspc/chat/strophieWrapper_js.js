@@ -167,8 +167,7 @@ var strophieWrapper = {
 
     //fetch roster
     getRoster: function () {
-        //kills interval polling for non roster list
-        clearNonRosterPollingInterval();
+        //clearNonRosterPollingInterval();
         if (strophieWrapper.getCurrentConnStatus()) {
             var iq = $iq({
                 type: 'get'
@@ -537,10 +536,7 @@ var strophieWrapper = {
 
     //fetch non roster list
     getNonRosterList:function(){
-        $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
-            //console.log("fetchNonRosterListing",chatConfig.Params.nonRosterListingApiConfig[groupId]["pollingFreq"]);
-            pollForNonRosterListing(groupId,0);
-        });
+        reActivateNonRosterPolling();
     },
 
     //executed on msg receipt
