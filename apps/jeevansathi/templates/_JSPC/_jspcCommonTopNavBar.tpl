@@ -112,17 +112,17 @@ window.onload=function(){
                         <li tabindex="1"><a id="homepageLink" href="~if $loggedIn`/myjs/jspcPerform~else`/~/if`">HOME</a></li>
                         <li tabindex="1" class="ml13"> <a class="drop" href="/search/index">MATCHES</a>
                             <ul class="menushadowGNB">
-                                <li><a class="disp_b js-gnbsearchLists cursp" data="matchalerts"> Match Alerts</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="matchalerts"> Daily Recommendations</a></li>
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="partnermatches">Desired Partner Matches</a></li>
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="justjoined">Just Joined Matches</a></li>
-                                <li><a class="disp_b js-gnbsearchLists cursp" data="verifiedMatches">Matches verified by Visit</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="verifiedMatches">Verified Matches</a></li>
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="twoway">Mutual Matches</a></li>
-                                <li><a class="disp_b js-gnbsearchLists cursp" data="reverseDpp">People Looking for me</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="reverseDpp">Members Looking for Me</a></li>
                                 ~if $showKundliList eq '1'`
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
-                                <li><a class="disp_b" href="/search/shortlisted">Shortlisted members</a></li>
-                                <li><a class="disp_b" href="/search/visitors">Recent Profile Visitors</a></li>
+                                <li><a class="disp_b" href="/search/shortlisted">Shortlisted Profiles</a></li>
+                                <li><a class="disp_b" href="/search/visitors">Profile Visitors</a></li>
                                 <!--
                                 ~if CommonFunction::getMainMembership($subscription) eq mainMem::EVALUE || CommonFunction::getMainMembership($subscription) eq mainMem::EADVANTAGE`
                                 ~else`
@@ -227,7 +227,7 @@ window.onload=function(){
                                 <li>
                                     <a href="/search/matchalerts">
                                     <div class="clearfix topnavp1">
-                                        <div class="fl">Match Alerts</div>
+                                        <div class="fl">Daily Recommendations</div>
                                         <div class="fr">
                                             <div id="membersDailyMatchesCountParent" class="disp-tbl  txtc" style="display:none">
                                                 <div id="membersDailyMatchesCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
@@ -259,9 +259,9 @@ window.onload=function(){
                             <!--start:submenu-->
                             <ul id="gnbPhotoMenu" class="topnavbg pos-abs submenu fontlig menushadowGNB navBarZ">
                                 <li><div class="topnavp1"><a class="disp_b" href="/profile/viewprofile.php?checksum=~$profilechecksum`&profilechecksum=~$profilechecksum`">My Profile ~if $username`(~$username`)~/if`</a></div></li>
-                                <li><div class="topnavp1"><a class="disp_b" href="/profile/dpp"> My Desired Partner</a></div></li>
+                                <li><div class="topnavp1"><a class="disp_b" href="/profile/dpp"> Desired Partner Profile</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/alertManager"> Alert Manager</a></div></li>
-                                <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?visibility=1`">Privacy Settings</a></div></li>
+                                <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?visibility=1`">Profile Visibility</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?hideDelete=1">Hide/Delete profile</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?changePassword=1">Change Password</a></div></li>
                                 <li>

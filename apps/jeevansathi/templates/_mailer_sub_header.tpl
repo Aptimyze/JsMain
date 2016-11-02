@@ -8,7 +8,7 @@
                       <tr>
                             <td align="right"><font style="font-size:12px;" color="#14428e" face="Trebuchet MS, Arial, Helvetica, sans-serif">
                                  <a href="~$mailerLinks['COMPLETE_PROFILE']`~$commonParamaters`?From_Mail=Y&stype=~$stype`" target="_blank" style="padding-right:8px; border-right:1px solid #bfbdbd; color:#14428e; text-decoration:none;line-height: 10px;display: inline-block;">My Profile</a>
-                                 <a href="~$mailerLinks['SUGGESTED_MATCHES']`~$commonParamaters`?From_Mail=Y&stype=~$stype`" target="_blank" style="padding-left:8px; color:#14428e; text-decoration:none;">My Matches</a></font>
+                                 <a href="~$mailerLinks['SUGGESTED_MATCHES']`~$commonParamaters`?From_Mail=Y&stype=~$stype`" target="_blank" style="padding-left:8px; color:#14428e; text-decoration:none;">Desired Partner Matches</a></font>
                                          </td>
                                 </tr>
                 </table>

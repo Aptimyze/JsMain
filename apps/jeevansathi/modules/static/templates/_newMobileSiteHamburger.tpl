@@ -97,11 +97,11 @@
                     <li class="white fb1 ham_opa fontrobbold">My Matches</li>
                     
                     <li><a href="/search/perform?justJoinedMatches=1" bind-slide=1 class="white">Just Joined Matches ~if $profileMemcacheObj->get('JUST_JOINED_MATCHES')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('JUST_JOINED_MATCHES')`</span> ~/if`</a></li>
-                    <li><a href="/search/verifiedMatches" bind-slide=1 class="white">Matches verified by Visit </a></li>
+                    <li><a href="/search/verifiedMatches" bind-slide=1 class="white">Verified Matches </a></li>
                     
-                    <li><a href="/profile/contacts_made_received.php?page=matches&filter=R" bind-slide=1 class="white">Match Alerts ~if $profileMemcacheObj->get('MATCHALERT_TOTAL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MATCHALERT_TOTAL')`</span> ~/if`</a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=matches&filter=R" bind-slide=1 class="white">Daily Recommendations ~if $profileMemcacheObj->get('MATCHALERT_TOTAL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MATCHALERT_TOTAL')`</span> ~/if`</a></li>
                     
-                    <li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">My Matches </a></li>
+                    <li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">Desired Partner Matches </a></li>
                     
                      ~if $showKundliList eq '1'`
                     <li><a href="/search/perform?kundlialerts=1" bind-slide=1 class="white">Kundli Matches <span class ="dispibl padl10 f12 white opa50">New</span></a></li>             
@@ -140,7 +140,7 @@
                     
 
 
-                    <li><a href="/profile/contacts_made_received.php?page=favorite" bind-slide=1 class="white">Shortlisted Members ~if $profileMemcacheObj->get('BOOKMARK')` <span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('BOOKMARK')`</span>~/if`</a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=favorite" bind-slide=1 class="white">Shortlisted Profiles ~if $profileMemcacheObj->get('BOOKMARK')` <span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('BOOKMARK')`</span>~/if`</a></li>
                     
                     <li><a href="/profile/contacts_made_received.php?page=messages" bind-slide=1 class="white">Messages</a></li>
                     <!--~if $profileMemcacheObj->get('MESSAGE_NEW')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MESSAGE_NEW')`</span> ~/if`</a></li>-->

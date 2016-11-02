@@ -6,7 +6,7 @@
     <div class="fr pt5"> <a href="~$SITE_URL`/profile/contacts_made_received.php?page=matches&filter=R" class="f14 color7 opa50 icons1 myjs_arow1">View all </a> </div>
     <div class="clr"></div>
     ~else`
-      <div class="f17 fontlig color7">Match Alerts</div>
+      <div class="f17 fontlig color7">Daily Recommendations</div>
     ~/if`
   </div>
 ~if $matchalertData.tuples neq ''`
