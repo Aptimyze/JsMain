@@ -193,7 +193,20 @@ var mobEditPage=(function(){
 		$("#privacyOption").hide();
 		$("#topbar").hide();
 		$("#AlbumSubHead").hide();
-});
+}
+);
+
+	if(typeof(fromCALphoto)!='undefined' && fromCALphoto == '1')
+	{ 
+	    var newUrl=document.location.href.replace('fromCALphoto','');
+	    history.pushState('', '', newUrl);
+		$( "#"+key+"EditSection" ).height(privacyH);
+		$("#privacyoptionshow").show();
+		$("#privacyOption").hide();
+		$("#topbar").hide();
+		$("#AlbumSubHead").hide();
+	}
+
 	$("#privacyoptionclose").click(function()
        	{
 				$( "#"+key+"EditSection" ).height(editHgt);
@@ -359,6 +372,13 @@ var mobEditPage=(function(){
       $("#KundliEditSection").after(horoscopeButton);
     
       $('.js-createHoroscope').on('click',onHoroscopeButtonClick);
+      if(typeof(fromCALHoro)!='undefined' && fromCALHoro == '1')
+      {
+      	var newUrl=document.location.href.replace('fromCALHoro','');
+	    history.pushState('', '', newUrl);
+
+      	onHoroscopeButtonClick();
+        }
     }
     
 	};
