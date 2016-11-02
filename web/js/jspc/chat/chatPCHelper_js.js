@@ -55,7 +55,7 @@ function pollForNonRosterListing(type,i){
     if(type == undefined || type == ""){
         type = "dpp";
     }
-    var getInputData = "",outputProfileIds = [],pollingTime = chatConfig.Params.nonRosterListingApiConfig[type]["pollingFreq"];
+    var getInputData = "",outputProfileIds = [],pollingTime = chatConfig.Params[device].nonRosterListingRefreshCap;
     //postData["pageSource"] = "chat";
     //postData["channel"] = device; //req for tracking??? later
     //postData["profileid"] = loggedInJspcUser; //comment later
@@ -153,8 +153,9 @@ else{
             if(response["header"]["status"] == 200){
                 console.log("fetchNonRosterListing success",response);
                 if(response["header"]["pollTime"] != undefined){
-                    pollingTime = response["header"]["pollTime"];
+                    pollingTime = 50000;//response["header"]["pollTime"];
                 }
+                localStorage.setItem("nonRosterCLUpdated",(new Date()).getTime());
                 //add in listing, after non roster list has been fetched
                 processNonRosterData(response,type);
             }

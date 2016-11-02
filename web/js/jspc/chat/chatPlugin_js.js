@@ -765,11 +765,11 @@ JsChat.prototype = {
         
         
         $(window).focus(function() {
-            //console.log("tab changed");
+            console.log("tab changed");
             if(localStorage.getItem("lastUId")) {
                 //console.log("11");
                 if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
-                    //console.log("22 chnage");
+                    console.log("22 chnage");
                     reActivateNonRosterPolling();
                     elem._updateChatStructure("exsisting");
                 }

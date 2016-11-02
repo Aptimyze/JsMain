@@ -477,6 +477,7 @@ strophieWrapper.sendPresence();
                 strophieWrapper.initialNonRosterFetched = true;
             }
             invokePluginManagelisting(strophieWrapper.NonRoster, operation);
+            strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
         }
     },
 
@@ -511,6 +512,8 @@ strophieWrapper.sendPresence();
                 inputObj[user_id] = strophieWrapper.NonRoster[user_id];
                 invokePluginManagelisting(inputObj, "delete_node", user_id);
                 delete strophieWrapper.NonRoster[user_id];
+                //update localstorage
+                strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
             }
         });
     },
@@ -585,7 +588,27 @@ strophieWrapper.sendPresence();
 
     //fetch non roster list
     getNonRosterList:function(){
-        reActivateNonRosterPolling();
+        var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),useExisting = false;
+        var data = strophieWrapper.getRosterStorage("non-roster");
+        if(lastUpdated){
+            var currentTime = d.getTime();
+            var timeDiff = (currentTime - lastUpdated); //Time diff in milliseconds
+            //console.log(timeDiff);
+            if(timeDiff < chatConfig.Params[device].nonRosterListingRefreshCap){
+                //console.log("Used exisiting list");
+                useExisting = true;
+            }
+        }
+        if(data && useExisting){
+            console.log("Used Existing listing");
+            strophieWrapper.NonRoster = data;
+            strophieWrapper.initialNonRosterFetched = true;
+            invokePluginManagelisting(strophieWrapper.NonRoster, "create_list");
+        }
+        else{
+            console.log("Used new listing");
+            reActivateNonRosterPolling();
+        }
     },
 
     //executed on msg receipt
@@ -703,16 +726,26 @@ strophieWrapper.sendPresence();
         return jid;
     },
     //set listing data in roster
-    setRosterStorage: function (rosterData) {
+    setRosterStorage: function (rosterData,listType) {
         if (strophieWrapper.useLocalStorage == true) {
-            localStorage.setItem('chatListing'+loggedInJspcUser, JSON.stringify(rosterData));
+            if(listType == "non-roster"){
+                localStorage.setItem('nonRosterChatListing'+loggedInJspcUser, JSON.stringify(rosterData));
+            }
+            else{
+                localStorage.setItem('chatListing'+loggedInJspcUser, JSON.stringify(rosterData));
+            }
         }
     },
     //fetch roster data from localstorage
-    getRosterStorage: function () {
+    getRosterStorage: function (listType) {
         var data;
         if (strophieWrapper.useLocalStorage == true) {
-            data = JSON.parse(localStorage.getItem('chatListing'+loggedInJspcUser));
+            if(listType == "non-roster"){
+                data = JSON.parse(localStorage.getItem('nonRosterChatListing'+loggedInJspcUser));
+            }
+            else{
+                data = JSON.parse(localStorage.getItem('chatListing'+loggedInJspcUser));
+            }
         } else data = null;
         return data;
     },
