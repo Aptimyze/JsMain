@@ -386,6 +386,7 @@ JsChat.prototype = {
             }
         });
         $(curEleRef._logoutChat).click(function () {
+            //console.log("Site logout clicked");
             if (curEleRef.onLogoutPreClick && typeof (curEleRef.onLogoutPreClick) == "function") {
                 //that._chatLoggerPlugin("in if");
                 var fromSiteLogout = $(curEleRef._logoutChat).attr("data-siteLogout");
@@ -775,7 +776,8 @@ JsChat.prototype = {
             } else {
                 //console.log("33");
                 localStorage.setItem("lastUId",$(".tabUId").attr("id"));
-            }    	
+            }
+            updatePresenceAfterInterval();
         });
         /*
         $(window).focus(function () {
@@ -3378,7 +3380,7 @@ JsChat.prototype = {
                 setTimeout(function(){
                     //console.log("manvi",$("chat-box"));
                     $("chat-box").each(function (index, element) {
-                        console.log("element",element);
+                        //console.log("element",element);
                         _this._scrollDown($(this), "min");
                     });
                 },1000);

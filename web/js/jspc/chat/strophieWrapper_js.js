@@ -7,7 +7,7 @@ var strophieWrapper = {
     initialNonRosterFetched: false,
     nonRosterClearInterval:{},
     rosterDetailsKey: "rosterDetails",
-    useLocalStorage: false,
+    useLocalStorage: true,
     msgStates: {
         "INACTIVE": 'inactive',
         "ACTIVE": 'active',
@@ -185,6 +185,7 @@ var strophieWrapper = {
         //console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
+        nodeObj["query"]["item"]["attributes"]["new"] = true;
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
         //strophieWrapper.stropheLoggerPC(rosterObj);
         var nodeArr = [],
@@ -236,6 +237,7 @@ var strophieWrapper = {
                         }
                     }
                     strophieWrapper.Roster[user_id] = rosterObj;
+                    
                     if (subscription == "to") {
                        //console.log("subcribing");
                         strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
@@ -272,6 +274,8 @@ var strophieWrapper = {
                 }
             }  
         }
+        //console.log("on roster update",user_id);
+        strophieWrapper.setRosterStorage(strophieWrapper.Roster);
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
         //return true;
     },
@@ -383,12 +387,33 @@ var strophieWrapper = {
                 //strophieWrapper.authorize(from.split("/")[0]);
                 //strophieWrapper.authorize(from);
 
-                if(presence_type == "subscribe"){
-                    //console.log("sent presence again");
-                    strophieWrapper.authorize(from);
-                    strophieWrapper.sendPresence();
+	if(presence_type == "subscribe"){
+//console.log("sent presence again");
+strophieWrapper.authorize(from);
+strophieWrapper.sendPresence();
+}
+                //console.log("In onPresenceReceived",user_id,chat_status);
+                var pd = JSON.parse(getFromLocalStorage("presence_"+loggedInJspcUser));
+                var presenceData = {};
+                if(pd){
+                    presenceData = pd;
                 }
-	            strophieWrapper.updatePresence(user_id, chat_status);
+                //console.log("****************NITISH****************");
+                var data = strophieWrapper.getRosterStorage();
+                //console.log(data[user_id]);
+                //console.log("data",data);
+                //console.log("Bassi",data["1"]);
+                //console.log(strophieWrapper.initialRosterFetched);
+                presenceData[user_id] = chat_status;
+                //console.log("username",user_id,chat_status);
+                setInLocalStorage("presence_"+loggedInJspcUser,JSON.stringify(presenceData));
+                //console.log(presenceData);
+                if(strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] == true){
+                    //console.log("New case");
+                    strophieWrapper.updatePresence(user_id, chat_status);
+                    strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] = false;
+                }
+	            //strophieWrapper.updatePresence(user_id, chat_status); //nitish commented
         	}
         } else {
             if (strophieWrapper.synchronize_selfPresence == true) {
@@ -520,9 +545,33 @@ var strophieWrapper = {
             }
         });
         strophieWrapper.initialRosterFetched = true;
+        //console.log("Initial roster set to true");
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
+        var data = strophieWrapper.getRosterStorage();
+        var lastUpdated = localStorage.getItem("clLastUpdated");
+        var d = new Date();
+        var useExisting = false;
+        if(lastUpdated){
+            var currentTime = d.getTime();
+            var timeDiff = (currentTime - lastUpdated); //Time diff in milliseconds
+            //console.log(timeDiff);
+            if(timeDiff < chatConfig.Params[device].listingRefreshTimeout){
+                //console.log("Used exisiting list");
+                useExisting = true;
+            }
+        }
+        if(data && useExisting){
+            strophieWrapper.Roster = data;
+            //console.log("Used Existing listing");
+        }
+        else{
+            //console.log("Used new listing");
+            strophieWrapper.setRosterStorage(strophieWrapper.Roster);
+            localStorage.setItem("clLastUpdated",d.getTime());
+            localStorage.removeItem("presence_"+loggedInJspcUser);
+        }
+        //console.log(strophieWrapper.Roster);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
-        strophieWrapper.setRosterStorage(strophieWrapper.Roster);
         setTimeout(function () {
           strophieWrapper.sendPresence();
         }, 1000);
@@ -580,7 +629,8 @@ var strophieWrapper = {
             "last_online_time": null,
             "ask": obj["attributes"]["ask"],
             "addIndex":0,
-            "nodeType":"roster"
+            "nodeType":"roster",
+            "new": obj["attributes"]["new"]
         };
         if (typeof obj["group"] != "undefined") {
             newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["group"]["#text"]);
@@ -655,14 +705,14 @@ var strophieWrapper = {
     //set listing data in roster
     setRosterStorage: function (rosterData) {
         if (strophieWrapper.useLocalStorage == true) {
-            localStorage.setItem('chatListing', JSON.stringify(rosterData));
+            localStorage.setItem('chatListing'+loggedInJspcUser, JSON.stringify(rosterData));
         }
     },
     //fetch roster data from localstorage
     getRosterStorage: function () {
         var data;
         if (strophieWrapper.useLocalStorage == true) {
-            data = JSON.parse(localStorage.getItem('chatListing'));
+            data = JSON.parse(localStorage.getItem('chatListing'+loggedInJspcUser));
         } else data = null;
         return data;
     },
