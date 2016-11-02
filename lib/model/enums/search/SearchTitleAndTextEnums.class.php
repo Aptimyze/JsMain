@@ -60,19 +60,19 @@ class SearchTitleAndTextEnums
                 
                 self::$HEADING_MAPPING["V1"]["APP"]["DEFAULT"] = "<cnt> match<es> found";
                 self::$HEADING_MAPPING["V1"]["APP"]["reverseDpp"] = "Members Lookin.. <cnt>";
-                self::$HEADING_MAPPING["V1"]["APP"]["partnermatches"] = "Desired Partner Matches (<cnt>)";
+                self::$HEADING_MAPPING["V1"]["APP"]["partnermatches"] = "Desired Partner.. (<cnt>)";
                 self::$HEADING_MAPPING["V1"]["APP"]["twowaymatch"] = "Mutual Matches <cnt>";
                 self::$HEADING_MAPPING["V1"]["APP"]["justJoinedMatches"] = "Just Joined Matches (<cnt>)";
                 self::$HEADING_MAPPING["V1"]["APP"]["verifiedMatches"] = "Verified Matches <cnt>";
-		self::$HEADING_MAPPING["V1"]["APP"]["matchalerts"] = "Daily Recommendations <cnt>";
+		self::$HEADING_MAPPING["V1"]["APP"]["matchalerts"] = "Daily Recommen.. <cnt>";
 								self::$HEADING_MAPPING["V1"]["APP"]["kundlialerts"] = "Kundli Matches";
                 self::$HEADING_MAPPING["V1"]["JSMS"]["DEFAULT"] = "<cnt> Match<es>";
                 self::$HEADING_MAPPING["V1"]["JSMS"]["reverseDpp"] = "Members Lookin.. <cnt>";
-                self::$HEADING_MAPPING["V1"]["JSMS"]["partnermatches"] = "Desired Partner Matches <cnt>";
+                self::$HEADING_MAPPING["V1"]["JSMS"]["partnermatches"] = "Desired Partner.. <cnt>";
                 self::$HEADING_MAPPING["V1"]["JSMS"]["twowaymatch"] = "Mutual Matches <cnt>";
                 self::$HEADING_MAPPING["V1"]["JSMS"]["justJoinedMatches"] = "Just Joined <cnt>";
                 self::$HEADING_MAPPING["V1"]["JSMS"]["verifiedMatches"] = "Verified Matches <cnt>";
-		self::$HEADING_MAPPING["V1"]["JSMS"]["matchalerts"] = "Daily Recommendations <cnt>";
+		        self::$HEADING_MAPPING["V1"]["JSMS"]["matchalerts"] = "Daily Recommen.. <cnt>";
 								self::$HEADING_MAPPING["V1"]["JSMS"]["kundlialerts"] = "Kundli Matches";
                 
                 

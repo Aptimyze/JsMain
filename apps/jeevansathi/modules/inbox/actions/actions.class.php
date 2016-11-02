@@ -554,7 +554,9 @@ public function executePerformV2(sfWebRequest $request)
 					break;
 					
 					case 'MATCH_ALERT': 
-					$response2["subtitle"]='Daily Recommendations '.$response2['total'];
+					$response2["subtitle"]='Daily Recommen.. '.$response2['total'];					
+					if(MobileCommon::isDesktop())
+						$response2["subtitle"]='Daily Recommendations '.$response2['total'];
 					$response2["title2"]=null;
 					break;
 					
