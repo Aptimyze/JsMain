@@ -11,7 +11,7 @@
 class LoggingEnums
 {   
     const MASTER_FLAG = true;
-    const LOG_LEVEL = 2;
+    const LOG_LEVEL = 0;
     const LOG_INFO = 2;
     const LOG_DEBUG = 1;
     const LOG_ERROR = 0;
