@@ -547,7 +547,7 @@ function generateFaceCard(Object)
 		var viewAllInnerHtml="";
 		var loopCount=0;
 
-		var totalCount=0,GATrackingFunForSubmit,GATrackingFunForPhoto;
+		var totalCount=0,GATrackingFunForSubmit='',GATrackingFunForPhoto='';
 		if(Object.name=="DAILYMATCHES"){
       GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','Match Alert Section - Send Interest',loggedInJspcGender,'')";
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','Match Alert Section - Tuple',loggedInJspcGender,'')";
