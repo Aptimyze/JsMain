@@ -106,7 +106,7 @@
 </div>
 <div id="filterButton" class ="dn">
 	<div class="fullwid bg7">
-	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Manage Filters</div>
+	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Manage Strict Filters</div>
 	</div>
  </div>
 ~if isset($horoExist)`

@@ -79,7 +79,7 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
          */
         private function getSearchResult($SearchServiceObj, $SearchUtilityObj, $returnTotalCount = '',$clustersToShow = array(),$notInProfiles = '') {
                 $SearchServiceObj->setSearchSortLogic($this->searchObj, $this->loggedInProfileObj, "", "");
-                $SearchUtilityObj->removeProfileFromSearch($this->searchObj, 'spaceSeperator', $this->loggedInProfileObj, '', "", $this->removeMatchAlerts,$notInProfiles,'',1);
+                $SearchUtilityObj->removeProfileFromSearch($this->searchObj, 'spaceSeperator', $this->loggedInProfileObj, '', 1, $this->removeMatchAlerts,$notInProfiles,'',1);
                 $responseObj = $SearchServiceObj->performSearch($this->searchObj, "", $clustersToShow, "", '', $this->loggedInProfileObj);
                 $PIDS = $responseObj->getsearchResultsPidArr();
                 if(!empty($clustersToShow)){
