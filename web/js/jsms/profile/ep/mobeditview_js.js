@@ -209,6 +209,8 @@ var mobEditPage=(function(){
 				if(value!=null)
 				$.each(value, function(k ,v)
 				{
+					if(v.outerSectionKey!="NameoftheProfileCreator")
+					{
 					
 					sliderDiv=sliderDiv.replace('EditFieldName', v.outerSectionKey+'_name');
 					sliderDiv=sliderDiv.replace('EditFieldLabelValue', v.outerSectionKey+'_value');				
@@ -336,6 +338,7 @@ var mobEditPage=(function(){
 					
 					i=2;
 					sliderDiv=originalDiv;
+  				  }
 				});
 				
 				if(st==1)
