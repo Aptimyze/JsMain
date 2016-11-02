@@ -5,6 +5,8 @@ if(multiUserPhotoUrl.indexOf("staging") !== -1){
     multiUserPhotoUrl=multiUserPhotoUrl+"?AUTHCHECKSUM="+cook;
 }
 chatConfig.Params = {
+    //array of groups for which no roster exists in openfire and polling is to be done
+    nonRosterPollingGroups:['dpp'],
     categoryNames: {
         "Desired Partner Matches": "dpp",
         "Interest Received": "intrec",
@@ -78,6 +80,24 @@ chatConfig.Params = {
             "channel": 'pc'
         }
     },
+    //api config for non roster webservice
+    nonRosterListingApiConfig:{
+        "dpp":{
+            "extraGETParams":{
+                "type":"CHATDPP"
+            },
+            "timeoutTime":5000,
+            "pollingFreq":10000
+        }
+    },
+    //api config for non roster presence api
+    /*nonRosterPresenceApiConfig:{
+        //"apiUrl":"http://10.10.18.67:8290/profile/v1/presence", //cross domain issue later
+        "apiUrl":"http://localhost/api/v1/chat/getRoasterData", //pick dpp url from jsconstants
+        "extraParams":{
+            
+        }
+    },*/
     //api config for chat history
     chatHistoryApi: {
         "apiUrl": "/api/v1/chat/popChat",
@@ -89,10 +109,7 @@ chatConfig.Params = {
     pc: {
         updateRosterFromFrontend: true,
         bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
-        //keepalive: true, //keep logged in session alive
-        //roster_groups: true, //show categories in listing
         hide_offline_users: false, //hide offline users from list
-        //use_vcards: false, //fetch vcards of users
         //tab id to tab names mapping
         listingTabs: {
             "tab1": {
@@ -330,7 +347,6 @@ chatConfig.Params = {
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
-//console.log("autoChatLogin",chatConfig.Params.pc.autoChatLogin);
 chatConfig.Params.pc.tab1groups = [];
 chatConfig.Params.pc.tab2groups = [];
 $(chatConfig.Params.pc.listingTabs.tab1.groups).each(function(index, val){

@@ -486,7 +486,7 @@ function sorting(sort,listType){
 /**Remove profile binding */
 $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', function() {
 	var srpTuple = $(this).attr("id").replace("idRemove","").replace("undoRemove","");
-	 var profileCheckSum = $(this).attr("data");
+	 var profileCheckSum = $(this).attr("data"),chatData = $(this).attr("data-chat");
 	 var usernameOfProfile = $("#idd"+srpTuple+" .usernameOfTuple").text();
 	var url = '/api/v1/common/ignoreprofile';
 	if($("#idd"+srpTuple+"removed:visible").length>0){
@@ -515,6 +515,13 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
 			callAfterContact();
                         hideCommonLoader();
 			if(response.status==1 && blockOrUnblock==1){
+				//console.log("ignore from search module");
+				if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+					if(chatData != undefined){
+						var details = chatData.split(",");
+						updateNonRosterListOnCEAction({"user_id":details[0],"action":details[1]});
+					}
+				}
 			    blockProfileOnSRP(srpTuple,profileCheckSum,usernameOfProfile);
 			}
 			else if(response.status==0 && blockOrUnblock==0){

@@ -11,6 +11,298 @@ var listingInputData = [],
     listingPhotoRequestCompleted = ",",
     localStorageExists = isStorageExist();
 
+/*clearNonRosterPollingInterval
+function to stop polling for non roster webservice api 
+* @inputs:type(optional)
+*/
+function clearNonRosterPollingInterval(type){
+    console.log("in clearNonRosterPollingInterval");
+    if(type == undefined){
+        if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
+            $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
+                clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
+            });
+        }
+    }
+    else{
+        if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
+            clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
+        }
+    }
+}
+
+/*reActivateNonRosterPolling
+function to reactivate poll for non roster list 
+* @inputs:none
+*/
+function reActivateNonRosterPolling(){
+    console.log("in reActivateNonRosterPolling");
+    //kills interval polling for non roster list
+    clearNonRosterPollingInterval();
+    if (strophieWrapper.getCurrentConnStatus() == true) {
+        $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
+            pollForNonRosterListing(groupId,0);
+        });
+    }
+}
+
+/*pollForNonRosterListing
+function to poll for non roster webservice api 
+* @inputs:type
+*/
+function pollForNonRosterListing(type,i){
+    console.log("pollForNonRosterListing",type);
+    if(type == undefined || type == ""){
+        type = "dpp";
+    }
+    var getInputData = "",outputProfileIds = [],pollingTime = chatConfig.Params.nonRosterListingApiConfig[type]["pollingFreq"];
+    //postData["pageSource"] = "chat";
+    //postData["channel"] = device; //req for tracking??? later
+    //postData["profileid"] = loggedInJspcUser; //comment later
+    if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
+        $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"], function (k, v) {
+            if(getInputData == ""){
+                getInputData = "?"+k+"="+v;
+            }
+            else{
+                getInputData = getInputData+"&"+k+"="+v;
+            }
+        });
+    }
+    $.myObj.ajax({
+        url: (dppListingWebServiceUrl+getInputData),
+        dataType: 'json',
+        //data: postData,
+        type: 'GET',
+        cache: false,
+        async: true,
+        timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
+        headers:{
+            'JB-Profile-Identifier':loggedInJspcUser
+        },
+        beforeSend: function (xhr) {},
+        success: function (response) {
+            console.log("ankita");
+            if(i%2 == 0){
+            /*response = {  //comment later
+"data": [
+{
+"profileid": "2865000",
+"username": "WYZ6824",
+"profileChecksum": "74cd670dc3ff8c388b823cf5c166ca84i2865000"
+},
+{
+"profileid": "8925000",
+"username": "ZZYV2509",
+"profileChecksum": "d948e45111aee5677868d6b17bec9ca7i8925000"
+},
+{
+"profileid": "7415000",
+"username": "RTW1253",
+"profileChecksum": "5f42a56a1d5df485dc3dc26bafca6d52i7415000"
+},
+{
+"profileid": "8874000",
+"username": "ZZYA1475",
+"profileChecksum": "4f29b43a3c50e05531fd01132f7f1d66i8874000"
+},
+{
+"profileid": "1764127",
+"username": "YAS8573",
+"profileChecksum": "1764127lr"
+},
+{
+"profileid": "3599124",
+"username": "nokumarriage",
+"profileChecksum": "3599124lr"
+}
+],
+"header": {
+"status": 200,
+"errorMsg": "",
+"pollTime":20000
+},
+"debugInfo": null
+};*/
+}
+else{
+         response = {  //comment later
+"data": [{
+"profileid": "9153000",
+"username": "ZZWS0621",
+"profileChecksum": "427dfb4b146adf7285203830571fe240i9153000"
+},
+{
+"profileid": "8891522",
+"username": "ZZYZ9006",
+"profileChecksum": "8891522lr"
+},
+{
+"profileid": "3599124",
+"username": "nokumarriage",
+"profileChecksum": "3599124lr"
+}],
+"header": {
+"status": 200,
+"errorMsg": "",
+"pollTime":20000
+},
+"debugInfo": null
+};   
+}
+            if(response["header"]["status"] == 200){
+                console.log("fetchNonRosterListing success",response);
+                if(response["header"]["pollTime"] != undefined){
+                    pollingTime = response["header"]["pollTime"];
+                }
+                //add in listing, after non roster list has been fetched
+                processNonRosterData(response,type);
+            }
+        },
+        error: function (xhr) {
+            console.log("fetchNonRosterListing error",xhr);
+            //return "error";
+        }
+    });
+    //set interval for presence polling after first non roster list case
+    //if(strophieWrapper.initialNonRosterFetched == false){
+    //console.log("start polling presence");
+    strophieWrapper.nonRosterClearInterval[type] = setTimeout(function(){
+                                                                    //console.log("calling pollForNonRosterListing",type);
+                                                                    //fetch current profileids belonging to given group
+                                                                    //var pfids = fetchSelectedPoolIds({"groupid":"dpp","category":"nonRoster"});
+                                                                    pollForNonRosterListing(type,i+1); //uncomment later
+                                                                    //pollForNonRosterPresence({"checkForPassedProfilesOnly":true,"pfids":(pfids.join(","))});
+                                                            },pollingTime);
+    //}
+        
+}
+
+/*processNonRosterData
+function to process the non roster data 
+* @inputs:response,type
+*/
+function processNonRosterData(response,type){
+    var operation = "create_list";
+    console.log("in processNonRosterData",response);
+    if(strophieWrapper.initialNonRosterFetched == true){ //case of list update after first time creation
+        operation = "create_list"; //or "add_node" later
+        console.log("update after non roster list creation case");
+        var newNonRoster = response["data"],oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
+        if((Object.keys(oldNonRoster)).length > 0){
+            if(chatConfig.Params.nonRosterPollingGroups.length == 1 && chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
+                //only dpp is non roster group case
+                offlineNonRoster = oldNonRoster;
+            }
+            else{
+                //in case there are multiple non roster groups
+                if(chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
+                    $.each(oldNonRoster,function(profileid,nodeObj){
+                        if((oldNonRoster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == type) && (newNonRoster.length == 0 || newNonRoster[profileid] == undefined)){
+                            offlineNonRoster[profileid] = oldNonRoster[profileid];
+                        }
+                    });
+                }
+            }
+            //mark old list as offline
+            strophieWrapper.onNonRosterPresenceUpdate("offline",offlineNonRoster);
+        }
+    }
+    //add new list
+    strophieWrapper.onNonRosterListFetched(response,type,operation);
+}
+
+/*fetchSelectedPoolIds
+function to get selected profileids based on category and groupid 
+* @inputs:inputs
+*/
+/*function fetchSelectedPoolIds(inputs){
+    console.log("in fetchSelectedPoolIds",inputs);
+    var pfids = [];
+    if(inputs != undefined){
+        if(inputs["category"] == undefined || inputs["category"] == "nonRoster"){
+            $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
+                //console.log(nodeObj);
+                if(nodeObj[strophieWrapper.rosterDetailsKey]["groups"][0] == inputs["groupid"]){
+                    pfids.push(profileid);
+                }
+            });
+        }
+        if(inputs["category"] == undefined || inputs["category"] == "roster"){
+            $.each(strophieWrapper.Roster,function(profileid,nodeObj){
+                if(nodeObj[strophieWrapper.rosterDetailsKey]["groups"][0] == inputs["groupid"]){
+                    pfids.push(profileid);
+                }
+            });
+        }
+    }
+    return pfids;
+}*/
+
+/*pollForNonRosterPresence
+function to poll for non roster presence api 
+* @inputs:inputParams(optional)
+*/
+/*function pollForNonRosterPresence(inputParams){
+    console.log("in pollForNonRosterPresence1",inputParams);
+    var postData = {},checkForPassedProfilesOnly = false;
+    postData["pageSource"] = "chat";
+    postData["channel"] = device;
+    postData["profileid"] = loggedInJspcUser; //comment later
+    postData["type"] = "DPP"; //comment later
+    if (typeof inputParams != "undefined") {
+        $.each(inputParams, function (k1, v1) {
+            postData[k1] = v1;
+        });
+        if(inputParams["checkForPassedProfilesOnly"] == true){
+            checkForPassedProfilesOnly = true;
+        }
+    }
+    if(checkForPassedProfilesOnly == false || inputParams["pfids"].length > 0){
+        if (typeof chatConfig.Params.nonRosterPresenceApiConfig["extraParams"] != "undefined") {
+            $.each(chatConfig.Params.nonRosterPresenceApiConfig["extraParams"], function (k, v) {
+                postData[k] = v;
+            });
+        }
+        $.myObj.ajax({
+            url: chatConfig.Params.nonRosterPresenceApiConfig["apiUrl"],
+            dataType: 'json',
+            data: postData,
+            type: 'GET',
+            cache: false,
+            async: true,
+            beforeSend: function (xhr) {},
+            success: function (response) {
+                    response = { //comment later
+                        "data": ["3599124","7868716","4121402"],
+                        "debugInfo": null,
+                        "header": {
+                        "status": 200,
+                        "errorMsg": ""
+                    }
+                };
+                if(response["header"]["status"] == 200){
+                    console.log("pollForNonRosterPresence success",response);
+                    //process presence data of non roster profiles after success
+                    onNonRosterPresenceFetched(response["data"],(postData["pfids"].split(",")));
+                }
+            },
+            error: function (xhr) {
+                console.log("pollForNonRosterPresence error",xhr);
+                //return "error";
+            }
+        });  
+    }  
+}*/
+
+/*onNonRosterPresenceFetched
+function executed after non roster presence data fetch to process it 
+* @inputs:presenceData,nonRosterData
+*/
+/*function onNonRosterPresenceFetched(presenceData,nonRosterData){
+    console.log("in onNonRosterPresenceFetched",presenceData,nonRosterData);
+    //get intersection of both sets
+}*/
 
 /*manageListingPhotoReqFlag
 function to set/reset listing photo request 
@@ -508,23 +800,7 @@ function requestListingPhoto(apiParams) {
  * @params:none
  */
 function initiateChatConnection() {
-    username = loggedInJspcUser + '@' + openfireServerName;
-    /*if(readCookie("CHATUSERNAME")=="ZZXS8902")
-        username = 'a1@localhost';
-    else if(readCookie("CHATUSERNAME")=="bassi")
-        username = '1@localhost';
-    else if(readCookie("CHATUSERNAME")=="VWZ4557")
-        username = 'a9@localhost';
-    else if(readCookie("CHATUSERNAME")=="ZZTY8164")
-        username = 'a2@localhost';
-    else if(readCookie("CHATUSERNAME") == "ZZRS3292")
-        username = 'a13@localhost';
-    else if(readCookie("CHATUSERNAME")=="ZZVV2929")
-        username = 'a14@localhost';
-    else if(readCookie("CHATUSERNAME")=="ZZRR5723")
-        username = 'a11@localhost';
-    pass = '123';*/
-    
+    username = loggedInJspcUser + '@' + openfireServerName;    
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
  
 }
@@ -620,6 +896,28 @@ function invokePluginLoginHandler(state) {
         }
     }
 }
+
+/*updateNonRosterListOnCEAction
+function to update non roster item in listing
+* @inputs:actionParams
+*/
+function updateNonRosterListOnCEAction(actionParams){
+    console.log("updateNonRosterListOnCEAction",actionParams);
+    var action = actionParams["action"],
+    user_id = actionParams["user_id"];
+    if(user_id != undefined){
+        if(action == "REMOVE" || action == "BLOCK"){
+            var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
+            console.log("updateNonRosterListOnCEAction",checkIfExists);
+            if(checkIfExists && checkIfExists["exists"] == true){
+                var deleteIdArr = [];
+                deleteIdArr.push(user_id);
+                strophieWrapper.onNonRosterListDeletion(deleteIdArr);
+            }
+        }
+    }
+}
+
 /*invokePluginAddlisting
 function to add roster item or update roster item details in listing
 * @inputs:listObject,key(create_list/add_node/update_status),user_id(optional)
@@ -630,13 +928,16 @@ function invokePluginManagelisting(listObject, key, user_id) {
             //console.log("create_list",listObject);
             objJsChat.manageChatLoader("hide");
         }
+        if(key == "add_node" && user_id != undefined){
+            //before adding new node in list,check presence in nonroster list to remove it first
+            updateNonRosterListOnCEAction({"user_id":user_id,"action":"REMOVE"});
+        }
         objJsChat.addListingInit(listObject,key);
         if (key == "add_node") {
             var newGroupId = listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
             //update chat box content if opened
             //console.log("adding ankita4",newGroupId);
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
-            
         }
         if (key == "create_list") {
             objJsChat.noResultError();
@@ -1044,7 +1345,8 @@ function contactActionCall(contactParams) {
             checkSum = contactParams["checkSum"],
             trackingParams = contactParams["trackingParams"],
             extraParams = contactParams["extraParams"],
-            nickName = contactParams["nickName"];
+            nickName = contactParams["nickName"],
+            userId = (receiverJID.split("@"))[0];
         var url = chatConfig.Params["actionUrl"][action],
             channel = device;
         
@@ -1075,6 +1377,8 @@ function contactActionCall(contactParams) {
                 response = data;
                 
                 if (response["responseStatusCode"] == "0") {
+                    //console.log("success of chat block");
+                    updateNonRosterListOnCEAction({"user_id":userId,"action":action});
                     /*updateRosterOnChatContactActions({
                         "receiverJID": receiverJID,
                         "nickName": nickName,
@@ -1368,6 +1672,9 @@ $(document).ready(function () {
                 objJsChat._loginStatus = 'N';
                 clearLocalStorage();
                 strophieWrapper.initialRosterFetched = false;
+                strophieWrapper.initialNonRosterFetched = false;
+                //clear polling of non roster groups listing
+                clearNonRosterPollingInterval();
                 strophieWrapper.disconnect();
                 eraseCookie("chatAuth");
                 manageListingPhotoReqFlag("reset");

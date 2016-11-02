@@ -2,7 +2,10 @@ var messageBinding;
 var strophieWrapper = {
     connectionObj: null,
     Roster: {},
+    NonRoster: {},
     initialRosterFetched: false,
+    initialNonRosterFetched: false,
+    nonRosterClearInterval:{},
     rosterDetailsKey: "rosterDetails",
     useLocalStorage: false,
     msgStates: {
@@ -161,10 +164,11 @@ var strophieWrapper = {
             handleChatDisconnection();
         }
     },
+
     //fetch roster
     getRoster: function () {
+        //clearNonRosterPollingInterval();
         if (strophieWrapper.getCurrentConnStatus()) {
-            //strophieWrapper.stropheLoggerPC("in getRoster");
             var iq = $iq({
                 type: 'get'
             }).c('query', {
@@ -177,9 +181,7 @@ var strophieWrapper = {
     },
     //executed on new push/remove event in roster
     onRosterUpdate: function (iq) {
-        //strophieWrapper.Roster = strophieWrapper.Roster.filter(function(n){ return n != undefined }); 
-        //strophieWrapper.stropheLoggerPC("in onRosterPush");
-       //console.log("onRosterUpdate");
+        //console.log("onRosterUpdate");
         //console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
@@ -239,8 +241,8 @@ var strophieWrapper = {
                         strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
                     }
                     setTimeout(function () {
-//console.log("sent self presence");                        
-strophieWrapper.sendPresence();
+                        //console.log("sent self presence");                        
+                        strophieWrapper.sendPresence();
                     }, 5000);
                 }
             }
@@ -351,6 +353,7 @@ strophieWrapper.sendPresence();
         }.bind(this), null, "iq", null, "enablecarbons");
         strophieWrapper.connectionObj.send(carbons_iq);
     },
+
     //executed after presence has been fetched
     onPresenceReceived: function (presence) {
        //console.log("onPresenceReceived from- ",$(presence).attr('from'));
@@ -375,23 +378,18 @@ strophieWrapper.sendPresence();
         }
         //console.log("RECEIVED presence for "+from+"-"+chat_status);
         if (strophieWrapper.isItSelfUser(user_id) == false) {
-            //strophieWrapper.stropheLoggerPC("start of onPresenceReceived for " + user_id);
-            //strophieWrapper.stropheLoggerPC(from);
             if (presence_type != 'error') {
-//console.log("authorizing",presence_type);
-	            //strophieWrapper.stropheLoggerPC(presence);
-	            //strophieWrapper.authorize(from.split("/")[0]);
-	//            strophieWrapper.authorize(from);
+                //console.log("authorizing",presence_type);
+                //strophieWrapper.authorize(from.split("/")[0]);
+                //strophieWrapper.authorize(from);
 
-	if(presence_type == "subscribe"){
-//console.log("sent presence again");
-strophieWrapper.authorize(from);
-strophieWrapper.sendPresence();
-}
+                if(presence_type == "subscribe"){
+                    //console.log("sent presence again");
+                    strophieWrapper.authorize(from);
+                    strophieWrapper.sendPresence();
+                }
 	            strophieWrapper.updatePresence(user_id, chat_status);
         	}
-            //strophieWrapper.stropheLoggerPC("end of onPresenceReceived for " + user_id + "---" + chat_status);
-            //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
         } else {
             if (strophieWrapper.synchronize_selfPresence == true) {
                 if (from != strophieWrapper.getSelfJID()) {
@@ -411,25 +409,19 @@ strophieWrapper.sendPresence();
     },
     //update chat_status of roster items
     updatePresence: function (user_id, chat_status) {
-        //strophieWrapper.stropheLoggerPC("start of updatePresence");
         var updatedObj = {
             "chat_status": chat_status
         };
         if (chat_status == "online") {
             updatedObj["last_online_time"] = new Date();
         }
+        updatedObj["addIndex"] = 0;
         strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id], strophieWrapper.mapRosterObj(updatedObj));
         if (strophieWrapper.initialRosterFetched == true) {
-            //strophieWrapper.stropheLoggerPC("change in status after initialRosterFetched done for " + user_id);
-            //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
             var nodeArr = [];
             nodeArr[user_id] = strophieWrapper.Roster[user_id];
-            //strophieWrapper.stropheLoggerPC(nodeArr);
             invokePluginManagelisting(nodeArr, "update_status", user_id);
         }
-        //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
-        //strophieWrapper.stropheLoggerPC("end of updatePresence for " + user_id);
-        //strophieWrapper.stropheLoggerPC(strophieWrapper.initialRosterFetched);
     },
     //check if this userid is self id
     isItSelfUser: function (user_id) {
@@ -439,13 +431,70 @@ strophieWrapper.sendPresence();
             return false;
         }
     },
+
+    //executed after non-roster list has been fetched or new non roster node is added
+    onNonRosterListFetched: function(response,groupid,operation){
+        console.log("in onNonRosterListFetched",response);
+        if(response["data"] != undefined && response["data"].length > 0){
+            $.each(response["data"],function(key,nodeObj){
+                nodeObj["groupid"] = groupid;
+                nodeObj["addIndex"] = key;
+                if (strophieWrapper.isItSelfUser(nodeObj["profileid"]) == false) {
+                    var listObj = strophieWrapper.formatNonRosterObj(nodeObj);
+                    if (strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && strophieWrapper.Roster[nodeObj["profileid"]] == undefined){
+                        strophieWrapper.NonRoster[nodeObj["profileid"]] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[nodeObj["profileid"]], listObj);
+                    }
+                }
+                //console.log("converted",strophieWrapper.Roster[nodeObj["profileid"]]);
+            });
+            console.log("adding",strophieWrapper.NonRoster);
+            if(operation == "create_list"){
+                strophieWrapper.initialNonRosterFetched = true;
+            }
+            invokePluginManagelisting(strophieWrapper.NonRoster, operation);
+        }
+    },
+
+    //executed after any non-roster list node presence has been updated
+    onNonRosterPresenceUpdate:function(status,nodeArr){
+        console.log("in onNonRosterPresenceUpdate - "+status,nodeArr);
+        var updatedObj = {
+            "chat_status": status
+        };
+        if (status == "online") {
+            updatedObj["last_online_time"] = new Date();
+        }
+        $.each(nodeArr,function(user_id,listObj){
+            strophieWrapper.NonRoster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[user_id], strophieWrapper.mapRosterObj(updatedObj));
+            if (strophieWrapper.initialNonRosterFetched == true) {
+                var nodeArr = [];
+                nodeArr[user_id] = strophieWrapper.NonRoster[user_id];
+                invokePluginManagelisting(nodeArr, "update_status", user_id);
+                if(status == "offline"){
+                    delete strophieWrapper.NonRoster[user_id];
+                }
+            }
+        });
+    },
+
+    //executed on deletion of non roster nodes in listing - remove if not required later
+    onNonRosterListDeletion:function(nodeIdArr){
+        console.log("in onNonRosterListDeletion",nodeIdArr);
+        $.each(nodeIdArr,function(key,user_id){
+            if(typeof strophieWrapper.NonRoster[user_id]!= "undefined"){
+                var inputObj = {};
+                inputObj[user_id] = strophieWrapper.NonRoster[user_id];
+                invokePluginManagelisting(inputObj, "delete_node", user_id);
+                delete strophieWrapper.NonRoster[user_id];
+            }
+        });
+    },
+
+
     //executed after roster has been fetched
     onRosterReceived: function (iq) {
         //console.log("in onRosterReceived");
         //console.log(iq);
-        //strophieWrapper.stropheLoggerPC("in onRosterReceived");
-        //strophieWrapper.stropheLoggerPC(iq);
-        //strophieWrapper.stropheLoggerPC(iq);
         $(iq).find("item").each(function () {
             var subscription = $(this).attr("subscription"),
                 jid = $(this).attr("jid"),
@@ -461,6 +510,7 @@ strophieWrapper.sendPresence();
                     }
                     listObj[strophieWrapper.rosterDetailsKey]["chat_status"] = status;
                     listObj[strophieWrapper.rosterDetailsKey]["last_online_time"] = last_online_time;
+                    listObj[strophieWrapper.rosterDetailsKey]["addIndex"] = 0;
                     strophieWrapper.Roster[user_id] = strophieWrapper.mergeRosterObj(strophieWrapper.Roster[user_id], listObj);
                     if (subscription == "to") {
                     	//console.log("subscribe to -"+jid);
@@ -469,9 +519,6 @@ strophieWrapper.sendPresence();
                 }
             }
         });
-        //strophieWrapper.stropheLoggerPC("end of onRosterReceived");
-        //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster);
-        //strophieWrapper.stropheLoggerPC("setting roster fetched flag");
         strophieWrapper.initialRosterFetched = true;
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
@@ -481,7 +528,17 @@ strophieWrapper.sendPresence();
         }, 1000);
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
     	//strophieWrapper.sendPresence();
+
+        //start for polling of non-roster group listings
+        strophieWrapper.getNonRosterList();
+            
    	},
+
+    //fetch non roster list
+    getNonRosterList:function(){
+        reActivateNonRosterPolling();
+    },
+
     //executed on msg receipt
     onMessage: function (iq) {
         //strophieWrapper.stropheLoggerPC("got message");
@@ -521,10 +578,45 @@ strophieWrapper.sendPresence();
             "profile_checksum": fullname[1],
             "listing_tuple_photo": listing_tuple_photo,
             "last_online_time": null,
-            "ask": obj["attributes"]["ask"]
+            "ask": obj["attributes"]["ask"],
+            "addIndex":0,
+            "nodeType":"roster"
         };
         if (typeof obj["group"] != "undefined") {
             newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["group"]["#text"]);
+        }
+        return newObj;
+    },
+
+    //parser for non roster object
+    formatNonRosterObj: function (obj) {
+        var listing_tuple_photo = "";
+        if (loggedInJspcGender) {
+            if (loggedInJspcGender == "M") {
+                listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["F"];
+            } else if (loggedInJspcGender == "F") {
+                listing_tuple_photo = chatConfig.Params[device].noPhotoUrl["listingTuple"]["M"];
+            }
+        }
+        //strophieWrapper.stropheLoggerPC("in formatRosterObj");
+        var chat_status = obj["chatStatus"] || "online",
+            newObj = {};
+        newObj[strophieWrapper.rosterDetailsKey] = {
+            "jid": obj["profileid"]+"@"+openfireServerName,
+            "chat_status": chat_status,
+            "nick": obj["username"]+"|"+obj["profileChecksum"],
+            "fullname": obj["username"],
+            "groups": [],
+            "subscription": "both",
+            "profile_checksum": obj["profileChecksum"],
+            "listing_tuple_photo": listing_tuple_photo,
+            "last_online_time": new Date(),
+            "ask": null,
+            "addIndex":obj["addIndex"],
+            "nodeType":"non-roster"
+        };
+        if (typeof obj["groupid"] != "undefined") {
+            newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["groupid"]);
         }
         return newObj;
     },
