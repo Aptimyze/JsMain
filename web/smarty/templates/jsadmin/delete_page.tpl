@@ -56,8 +56,7 @@
                 <option name="reasons" value="As per User's Request">As per User's Request</option>
                 <option name="reasons" value="Conditions for Marriage / Dowry / Financial Support/ Immigration Support">Conditions for Marriage / Dowry / Financial Support/ Immigration Support</option>
                 <option name="reasons" value="Below Age Limit">Below Age Limit</option>
-                <option name="reasons" value="Competitor Website">Competitor Website</option>
-                <option name="reasons" value="Conditions for Marriage / Dowry / Financial Support/ Immigration Support">Conditions for Marriage / Dowry / Financial Support/ Immigration Support</option>
+                <option name="reasons" value="Competitor Website">Competitor Website</option>                
                 <option name="reasons" value="Divorce Pending / Separated">Divorce Pending / Separated</option>
                 <option name="reasons" value="Duplicate Profile">Duplicate Profile</option>
                 <option name="reasons" value="Fake Profile">Fake Profile</option>
