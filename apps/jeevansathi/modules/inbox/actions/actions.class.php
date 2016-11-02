@@ -642,7 +642,7 @@ public function executePerformV2(sfWebRequest $request)
 					break;
 					
 					case 'SHORTLIST': 
-					$response2["subtitle"]='Shortlisted Mem.. '.$response2['total'];
+					$response2["subtitle"]='Shortlisted Pro.. '.$response2['total'];
 					if(MobileCommon::isDesktop())
 						$response2["subtitle"]='Shortlisted Profiles '.$response2['total'];
 					$response2["title2"]=null;

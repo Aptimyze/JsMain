@@ -94,7 +94,7 @@
                 <!--start:listing2-->
                 <div class="brdr9_ham pt20">
                   <ul class="fontlig">
-                    <li class="white fb1 ham_opa fontrobbold">Desired Partner Matches</li>
+                    <li class="white fb1 ham_opa fontrobbold">My Matches</li>
                     
                     <li><a href="/search/perform?justJoinedMatches=1" bind-slide=1 class="white">Just Joined Matches ~if $profileMemcacheObj->get('JUST_JOINED_MATCHES')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('JUST_JOINED_MATCHES')`</span> ~/if`</a></li>
                     <li><a href="/search/verifiedMatches" bind-slide=1 class="white">Verified Matches </a></li>
