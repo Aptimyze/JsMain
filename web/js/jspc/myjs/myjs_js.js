@@ -549,32 +549,27 @@ function generateFaceCard(Object)
 
 		var totalCount=0,GATrackingFunForSubmit,GATrackingFunForPhoto;
 		if(Object.name=="DAILYMATCHES"){
-			totalCount=Object.data.total;
       GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','Match Alert Section - Send Interest',loggedInJspcGender,'')";
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','Match Alert Section - Tuple',loggedInJspcGender,'')";
     }
 
     else if(Object.name=="JUSTJOINED"){
-      totalCount=Object.data.no_of_results;
       GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','Just Joined Section - Send Interest',loggedInJspcGender,'')";
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','Just Joined Section - Tuple',loggedInJspcGender,'')";
 
     }
 
     else if(Object.name=="VERIFIEDMATCHES"){
-      totalCount=Object.data.no_of_results;
       GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','Matches Verified by Visit Section - Send Interest',loggedInJspcGender,'')";
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','Matches Verified by Visit Section - Tuple',loggedInJspcGender,'')";
     }
 
 
 		else if(Object.name=="DESIREDPARTNERMATCHES" || Object.name=="LASTSEARCH"){
-			totalCount=Object.data.no_of_results;
       GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','DPP Matches/Last Search Section - Send Interest',loggedInJspcGender,'')";
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','DPP Matches/Last Search Section - Tuple',loggedInJspcGender,'')";
     }
 
-    else
       totalCount=Object.data.no_of_results;
 
 
