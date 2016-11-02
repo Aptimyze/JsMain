@@ -1443,9 +1443,12 @@ function getAge($newDob) {
 }
 	function getObsceneWords($message,$obscene)
 	{
-		$message = str_replace(str_split(',.;!?"\''), ' ', $message);
-		$message = preg_replace("/\r\n|\r|\n/",' ',$message);
-   		$messageArr = explode(" ",$message);
+
+		$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$message);
+		$string_replaced_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/', ' ', $message);
+		$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
+
+		$messageArr = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
    		$result = array_intersect($messageArr, $obscene);
    		$resultstr=implode(',',array_values($result));
    		return $resultstr;
