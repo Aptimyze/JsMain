@@ -1998,16 +1998,9 @@ class Membership
         $profileObj = LoggedInProfile::getInstance('newjs_slave',$profileid);
         $screeningStatus = $profileObj->getACTIVATED();
 
-        if ($device == "iOS_app") {
+        if ($device == "iOS_app" || $screeningStatus == "N") {
             $main_service = $mainServiceId;
             $allMembershipsNew = $mainServiceId;
-            $service_str_off = $allMemberships;
-            $discount = 0;
-            $discount_type = 12;
-            $total = $servObj->getTotalPrice($allMemberships, $type, $device);
-        } else if ($screeningStatus == "N") {
-            $main_service = $mainServiceId;
-            $allMembershipsNew = $allMemberships;
             $service_str_off = $allMemberships;
             $discount = 0;
             $discount_type = 12;

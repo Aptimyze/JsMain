@@ -1,11 +1,13 @@
 <?php
 include("MysqlDbConstants.class.php");
+include("DialerLog.class.php");
+$dialerLogObj =new DialerLog();
+$suffix = '041016';
+
 //Open connection at JSDB
 $db_js = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
 $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
-
-$suffix = '041016';
 $termination_status_labels = array("1"=>'Handled' ,"2"=>'Busy',"3"=>'Machine' ,"4"=>'No Answer' ,"5"=>'Nuisance' ,"6"=>'Abandoned' ,"7"=>'Rejected' ,"8"=>'Invalid Number' ,"9"=>'Overflow' ,"10"=>'Trunk line overflow',"11"=>'RONA' ,"12"=>'Modem answer' ,"13"=>'Fax answer' ,"14"=>'Discarded');
 
 //Compute all the active campaigns
@@ -27,14 +29,14 @@ if(count($camp_array)>0)
 
 		$squery0 = "select data_context.contact as ecode from thread with (nolock) LEFT JOIN segment  with (nolock) ON segment.thread = thread.code LEFT JOIN data_context with (nolock) ON data_context.code = thread.data_context where segment.start_time>='$today'";
                 $squery0 .= " UNION SELECT easycode as ecode FROM easy.dbo.ct_$campaign_name where Lead_Id IN ('noida$suffix','mumbai$suffix','delhi$suffix','renewal$suffix') AND lastpriortizationt>='$today'";
-		$sresult0 = mssql_query($squery0,$db_dialer) or logerror($squery0,$db_dialer);
+		$sresult0 = mssql_query($squery0,$db_dialer) or $dialerLogObj->logError($squery0,$campaign_name,$db_dialer,1);
 		while($srow0 = mssql_fetch_array($sresult0))
 		{
 			$ecode = $srow0["ecode"];
 			if($ecode)
 			{
 				$squery1 = "SELECT old_priority,lastonlinepriority,lastpriortizationt,PROFILEID,SCORE FROM easy.dbo.ct_$campaign_name where Lead_Id IN ('noida$suffix','mumbai$suffix','delhi$suffix','renewal$suffix') AND easycode=$ecode";
-				$sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
+				$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaign_name,$db_dialer,1);
 				if($srow1 = mssql_fetch_array($sresult1))
 				{
 					$profileid = $srow1["PROFILEID"];
@@ -52,7 +54,7 @@ if(count($camp_array)>0)
 					$first_dt_onORafter_priortization='0000-00-00 00:00:00';
 					$last_dt_before_priortization='0000-00-00 00:00:00';
 					$squery2 = "select call_thread.termination_status,segment.start_time from thread with (nolock) LEFT JOIN call_thread  with (nolock) ON call_thread.code = thread.code LEFT JOIN segment  with (nolock) ON segment.thread = thread.code LEFT JOIN data_context with (nolock) ON data_context.code = thread.data_context where data_context.contact=$ecode";
-					$sresult2 = mssql_query($squery2,$db_dialer) or logerror($squery2,$db_dialer);
+					$sresult2 = mssql_query($squery2,$db_dialer) or $dialerLogObj->logError($squery2,$campaign_name,$db_dialer,1);
 					while($srow2 = mssql_fetch_assoc($sresult2))
 					{
 						if($srow2["start_time"])
@@ -107,23 +109,4 @@ $sub="Dialer connectivity logging";
 $from="From:vibhor.garg@jeevansathi.com";
 mail($to,$sub,$msg,$from);
 
-function logError($sql="",$db="",$ms='')
-{
-        $today=@date("Y-m-d h:i:s",time());
-        $filename="logerror.txt";
-        if(is_writable($filename))
-        {
-                if (!$handle = fopen($filename, 'a'))
-                {
-                        echo "Cannot open file ($filename)";
-                        exit;
-                }
-                fwrite($handle,"\n\nQuery : $sql \t Error : " .mssql_get_last_message(). " \t $today");
-                fclose($handle);
-        }
-        else
-        {
-                echo "The file $filename is not writable";
-        }
-}
 ?>

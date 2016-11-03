@@ -15,10 +15,14 @@ $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$
 
 $dialerDncScrubingObj =new DialerDncScrubing($db_js, $db_js_111, $db_dialer);
 
-// Failed Payment,Upsell campaign OPT-IN Check
-$campaignArr =array('FP_JS','UPSELL_JS');
+// campaign OPT-IN Check
+$campaignArr =array('FP_JS','UPSELL_JS','JS_RENEWAL','OB_RENEWAL_MAH','MAH_JSNEW','JS_NCRNEW');
+$eligibleCampaignArr =array('JS_RENEWAL','OB_RENEWAL_MAH','MAH_JSNEW','JS_NCRNEW');
+$renewalCampaignArr =array('JS_RENEWAL','OB_RENEWAL_MAH');
+
 foreach($campaignArr as $key=>$campaignName)
 {
+	$dateTime ='';
 	if($campaignName=='FP_JS')
 		$dateTime =date("Y-m-d H:i:s",time()-26*60*60);
 	elseif($campaignName=='UPSELL_JS')
@@ -27,6 +31,16 @@ foreach($campaignArr as $key=>$campaignName)
 	$dnc_array      =$dialerDncScrubingObj->compute_dnc_array($campaignName, $dateTime);
 	$opt_in_array   =$dialerDncScrubingObj->compute_opt_in_array($dnc_array);
 
+	if(in_array("$campaignName", $eligibleCampaignArr)){
+		if(in_array("$campaignName",$renewalCampaignArr))
+			$renewal =1;
+		else
+			$renewal ='';
+		$opt_in_array1	=$dialerDncScrubingObj->compute_eligible_in_array($opt_in_array, $renewal);
+		unset($opt_in_array);
+		$opt_in_array =$opt_in_array1;
+	}
+	// common computation
 	for($i=0;$i<count($opt_in_array);$i++){
 	        $profileid =$opt_in_array[$i];
 	        $dialerDncScrubingObj->start_opt_in_profiles($campaignName,$profileid,$dateTime);
@@ -61,8 +75,8 @@ unset($profileidArr);
 unset($phoneArr);
 $msg[]=$campaignName;
 
-$sub='Dialer updates for FP_JS|UPSELL_JS|OB_Sales Campaign OPT-IN done';
-$msg =implode("|",$msg);
+$sub='Dialer updates for OPT-IN done';
+$msg =implode(" | ",$msg);
 mail($to,$sub,$msg,$from);
 
 ?>
