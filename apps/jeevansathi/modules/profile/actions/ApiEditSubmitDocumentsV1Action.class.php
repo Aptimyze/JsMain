@@ -5,8 +5,8 @@
  * ApiEditSubmitDocumentsV1
  * Controller to register a new device
  * @package    jeevansathi
- * @subpackage api
- * @author     Mohammad Shahjahan
+ * @subpackage api 
+ * @author     Md. Shahjahan
  */
 class ApiEditSubmitDocumentsV1Action extends sfActions
 { 
