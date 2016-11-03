@@ -88,6 +88,7 @@ var strophieWrapper = {
         //strophieWrapper.stropheLoggerPC("Openfire wrapper");
     },
     getCurrentConnStatus: function () {
+        console.log("getCurrentConnStatus",strophieWrapper.currentConnStatus == Strophe.Status.CONNECTED);
         return (strophieWrapper.currentConnStatus == Strophe.Status.CONNECTED);
     },
     //reconnect to openfire
@@ -462,7 +463,7 @@ strophieWrapper.sendPresence();
 
     //executed after non-roster list has been fetched or new non roster node is added
     onNonRosterListFetched: function(response,groupid,operation,source){
-        console.log("in onNonRosterListFetched",response,source);
+        console.log("in onNonRosterListFetched",source);
         var storeData = {};
         if(response != undefined){
             if(source == "localstorage"){
@@ -490,7 +491,7 @@ strophieWrapper.sendPresence();
                     //console.log("converted",strophieWrapper.Roster[nodeObj["profileid"]]);
                 });
             }
-            console.log("adding",strophieWrapper.NonRoster);
+            //console.log("adding",strophieWrapper.NonRoster);
             if(operation == "create_list"){
                 strophieWrapper.initialNonRosterFetched = true;
             }
@@ -610,7 +611,7 @@ strophieWrapper.sendPresence();
     //fetch non roster list
     getNonRosterList:function(){
         console.log("in getNonRosterList");
-        reActivateNonRosterPolling();
+        reActivateNonRosterPolling("refresh");
     },
 
     //executed on msg receipt

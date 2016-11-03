@@ -16,6 +16,7 @@
       if(typeof _rID == "undefined"){
           _rID = '';
       }
+      var oldUrl = window.location.href;
       $.ajax({
         type: objConfig.type, 
         url: objConfig.url,
@@ -40,11 +41,14 @@
 
           objConfig.complete(data, objConfig);
         }
+        //update non roster chat list
+        if($.isFunction(reActivateNonRosterPolling) && (window.location.href != oldUrl)){
+          reActivateNonRosterPolling("ajax");
+        }
       },
 
       success: function(data, textStatus, xhr) {
        /** add common code **/
-       
        if(data.responseStatusCode == 9)
        {
         var url = "";

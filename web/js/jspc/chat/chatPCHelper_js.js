@@ -20,6 +20,7 @@ function clearNonRosterPollingInterval(type){
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
+                console.log("clear",strophieWrapper.nonRosterClearInterval[key]);
                 clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
@@ -35,16 +36,17 @@ function clearNonRosterPollingInterval(type){
 function to reactivate poll for non roster list 
 * @inputs:none
 */
-function reActivateNonRosterPolling(){
-    console.log("in reActivateNonRosterPolling");
+function reActivateNonRosterPolling(source){
     //kills interval polling for non roster list
     clearNonRosterPollingInterval();
     if (strophieWrapper.getCurrentConnStatus() == true) {
+        console.log("in reActivateNonRosterPolling",source);
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
-            pollForNonRosterListing(groupId);
+            //pollForNonRosterListing(groupId);
+            clearNonRosterPollingInterval(groupId);
             strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
                                                                 pollForNonRosterListing(groupId); //uncomment later
-                                                            },500/*chatConfig.Params[device].nonRosterListingRefreshCap*/);
+                                                            },1000/*chatConfig.Params[device].nonRosterListingRefreshCap*/);
             
         });
     }
@@ -64,39 +66,7 @@ function checkForValidNonRosterRequest(groupId){
         }
     }
     if(data && valid == false){
-        /*data =  [ //comment later
-            {
-            "profileid": "2865000",
-            "username": "WYZ6824",
-            "profileChecksum": "74cd670dc3ff8c388b823cf5c166ca84i2865000"
-            },
-            {
-            "profileid": "8925000",
-            "username": "ZZYV2509",
-            "profileChecksum": "d948e45111aee5677868d6b17bec9ca7i8925000"
-            },
-            {
-            "profileid": "7415000",
-            "username": "RTW1253",
-            "profileChecksum": "5f42a56a1d5df485dc3dc26bafca6d52i7415000"
-            },
-            {
-            "profileid": "8874000",
-            "username": "ZZYA1475",
-            "profileChecksum": "4f29b43a3c50e05531fd01132f7f1d66i8874000"
-            },
-            {
-            "profileid": "1764127",
-            "username": "YAS8573",
-            "profileChecksum": "1764127lr"
-            },
-            {
-            "profileid": "3599124",
-            "username": "nokumarriage",
-            "profileChecksum": "3599124lr"
-            }
-            ];*/
-        //add in listing, after non roster list has been fetched
+        data = {"3290997":{"rosterDetails":{"jid":"3290997@localhost","chat_status":"online","nick":"aloha_2008|4656179bccedf6fffb977aa43f44fdc4i3290997","fullname":"aloha_2008","groups":["dpp"],"subscription":"both","profile_checksum":"4656179bccedf6fffb977aa43f44fdc4i3290997","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":6,"nodeType":"non-roster"}},"3997986":{"rosterDetails":{"jid":"3997986@localhost","chat_status":"online","nick":"UYZ2063|5ff5ff3d2f3217d7158d7b2e40572eafi3997986","fullname":"UYZ2063","groups":["dpp"],"subscription":"both","profile_checksum":"5ff5ff3d2f3217d7158d7b2e40572eafi3997986","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":8,"nodeType":"non-roster"}},"5054004":{"rosterDetails":{"jid":"5054004@localhost","chat_status":"online","nick":"TXT8609|1d2bc71e6adf4550e4c8b638e4e30897i5054004","fullname":"TXT8609","groups":["dpp"],"subscription":"both","profile_checksum":"1d2bc71e6adf4550e4c8b638e4e30897i5054004","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":3,"nodeType":"non-roster"}},"5385186":{"rosterDetails":{"jid":"5385186@localhost","chat_status":"online","nick":"TTA9972|a7dd65ce4a7f2d222f63a95db1685d44i5385186","fullname":"TTA9972","groups":["dpp"],"subscription":"both","profile_checksum":"a7dd65ce4a7f2d222f63a95db1685d44i5385186","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":5,"nodeType":"non-roster"}},"5545059":{"rosterDetails":{"jid":"5545059@localhost","chat_status":"online","nick":"TSU9916|92e39acb3c9c0d9e95053cd2d32db79ei5545059","fullname":"TSU9916","groups":["dpp"],"subscription":"both","profile_checksum":"92e39acb3c9c0d9e95053cd2d32db79ei5545059","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":11,"nodeType":"non-roster"}},"5669960":{"rosterDetails":{"jid":"5669960@localhost","chat_status":"online","nick":"TRR4847|01e19fbeb41aa12facb278cda6a8393ci5669960","fullname":"TRR4847","groups":["dpp"],"subscription":"both","profile_checksum":"01e19fbeb41aa12facb278cda6a8393ci5669960","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":4,"nodeType":"non-roster"}},"5714570":{"rosterDetails":{"jid":"5714570@localhost","chat_status":"online","nick":"SAX9468|ff51de7e53b2096676938ed771c41ac7i5714570","fullname":"SAX9468","groups":["dpp"],"subscription":"both","profile_checksum":"ff51de7e53b2096676938ed771c41ac7i5714570","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":15,"nodeType":"non-roster"}},"6439626":{"rosterDetails":{"jid":"6439626@localhost","chat_status":"online","nick":"STU4834|c37191df737061a131ba30f91870be0di6439626","fullname":"STU4834","groups":["dpp"],"subscription":"both","profile_checksum":"c37191df737061a131ba30f91870be0di6439626","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":21,"nodeType":"non-roster"}},"6547446":{"rosterDetails":{"jid":"6547446@localhost","chat_status":"online","nick":"SST3318|34299a817ece0d6aec2c7932f31898e8i6547446","fullname":"SST3318","groups":["dpp"],"subscription":"both","profile_checksum":"34299a817ece0d6aec2c7932f31898e8i6547446","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":22,"nodeType":"non-roster"}},"6889709":{"rosterDetails":{"jid":"6889709@localhost","chat_status":"online","nick":"RYZ5781|efec1f895fc3aee614750406a3de481di6889709","fullname":"RYZ5781","groups":["dpp"],"subscription":"both","profile_checksum":"efec1f895fc3aee614750406a3de481di6889709","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":17,"nodeType":"non-roster"}},"6933026":{"rosterDetails":{"jid":"6933026@localhost","chat_status":"online","nick":"RYV9126|1cc3378df531ec91646480ff0bcc6b75i6933026","fullname":"RYV9126","groups":["dpp"],"subscription":"both","profile_checksum":"1cc3378df531ec91646480ff0bcc6b75i6933026","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":9,"nodeType":"non-roster"}}};
         processNonRosterData(data,groupId,"localstorage");
     }
     else{
@@ -143,40 +113,39 @@ function pollForNonRosterListing(type){
             },
             beforeSend: function (xhr) {},
             success: function (response) {
-                console.log("ankita");
-                /*response = {  //comment later
-            "data": [
-            {
-            "profileid": "2865000",
-            "username": "WYZ6824",
-            "profileChecksum": "74cd670dc3ff8c388b823cf5c166ca84i2865000"
-            },
-            {
-            "profileid": "8925000",
-            "username": "ZZYV2509",
-            "profileChecksum": "d948e45111aee5677868d6b17bec9ca7i8925000"
-            },
-            {
-            "profileid": "7415000",
-            "username": "RTW1253",
-            "profileChecksum": "5f42a56a1d5df485dc3dc26bafca6d52i7415000"
-            },
-            {
-            "profileid": "8874000",
-            "username": "ZZYA1475",
-            "profileChecksum": "4f29b43a3c50e05531fd01132f7f1d66i8874000"
-            },
-            {
-            "profileid": "1764127",
-            "username": "YAS8573",
-            "profileChecksum": "1764127lr"
-            },
-            {
-            "profileid": "3599124",
-            "username": "nokumarriage",
-            "profileChecksum": "3599124lr"
-            }
-            ],
+                response = {  //comment later
+                "data": [
+                    {
+                    "profileid": "2865000",
+                    "username": "WYZ6824",
+                    "profileChecksum": "74cd670dc3ff8c388b823cf5c166ca84i2865000"
+                    },
+                    {
+                    "profileid": "8925000",
+                    "username": "ZZYV2509",
+                    "profileChecksum": "d948e45111aee5677868d6b17bec9ca7i8925000"
+                    },
+                    {
+                    "profileid": "7415000",
+                    "username": "RTW1253",
+                    "profileChecksum": "5f42a56a1d5df485dc3dc26bafca6d52i7415000"
+                    },
+                    {
+                    "profileid": "8874000",
+                    "username": "ZZYA1475",
+                    "profileChecksum": "4f29b43a3c50e05531fd01132f7f1d66i8874000"
+                    },
+                    {
+                    "profileid": "1764127",
+                    "username": "YAS8573",
+                    "profileChecksum": "1764127lr"
+                    },
+                    {
+                    "profileid": "3599124",
+                    "username": "nokumarriage",
+                    "profileChecksum": "3599124lr"
+                    }
+                ],
             "header": {
             "status": 200,
             "errorMsg": "",
@@ -185,12 +154,11 @@ function pollForNonRosterListing(type){
             "debugInfo": null
             };
         
-            }*/
                 if(response["header"]["status"] == 200){
-                    console.log("fetchNonRosterListing success",response);
+                    //console.log("fetchNonRosterListing success",response);
                     if(response["header"]["pollTime"] != undefined && response["header"]["pollTime"] > 0){
-                        chatConfig.Params[device].nonRosterListingRefreshCap = response["header"]["pollTime"];
-                        console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
+                        //chatConfig.Params[device].nonRosterListingRefreshCap = response["header"]["pollTime"];
+                        //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
                     }
                     var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
                     if(nonRosterCLUpdated == undefined){
@@ -220,7 +188,7 @@ function processNonRosterData(response,type,source){
     //if(strophieWrapper.initialNonRosterFetched == true)
     { //case of list update after first time creation
         //operation = "create_list";
-        console.log("update after non roster list creation case");
+        //console.log("update after non roster list creation case");
         var newNonRoster = response,oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
         if((Object.keys(oldNonRoster)).length > 0){
             //reCreateList = checkForNonRosterListRecreation(newNonRoster);
