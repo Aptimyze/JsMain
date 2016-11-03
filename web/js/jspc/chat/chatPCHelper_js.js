@@ -20,13 +20,13 @@ function clearNonRosterPollingInterval(type){
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
-                clearInterval(strophieWrapper.nonRosterClearInterval[key]);
+                clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
     }
     else{
         if(strophieWrapper.nonRosterClearInterval && strophieWrapper.nonRosterClearInterval[type] != undefined){
-            clearInterval(strophieWrapper.nonRosterClearInterval[type]);
+            clearTimeout(strophieWrapper.nonRosterClearInterval[type]);
         }
     }
 }
@@ -41,10 +41,11 @@ function reActivateNonRosterPolling(){
     clearNonRosterPollingInterval();
     if (strophieWrapper.getCurrentConnStatus() == true) {
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
-            pollForNonRosterListing(groupId,2);
-            strophieWrapper.nonRosterClearInterval[groupId] = setInterval(function(){
+            pollForNonRosterListing(groupId);
+            strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
                                                                 pollForNonRosterListing(groupId); //uncomment later
-                                                            },30000/*chatConfig.Params[device].nonRosterListingRefreshCap*/);
+                                                            },500/*chatConfig.Params[device].nonRosterListingRefreshCap*/);
+            
         });
     }
 }
@@ -58,7 +59,7 @@ function checkForValidNonRosterRequest(groupId){
     var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
-        if(timeDiff < 1000000/*chatConfig.Params[device].nonRosterListingRefreshCap*/){ //uncomment later
+        if(timeDiff < chatConfig.Params[device].nonRosterListingRefreshCap){ //uncomment later
             valid = false;
         }
     }
@@ -109,7 +110,7 @@ function checkForValidNonRosterRequest(groupId){
 function to poll for non roster webservice api 
 * @inputs:type
 */
-function pollForNonRosterListing(type,count){
+function pollForNonRosterListing(type){
     console.log("pollForNonRosterListing",type);
     if(type == undefined || type == ""){
         type = "dpp";
@@ -143,7 +144,6 @@ function pollForNonRosterListing(type,count){
             beforeSend: function (xhr) {},
             success: function (response) {
                 console.log("ankita");
-                if(count == undefined || count%2 == 0){
                 /*response = {  //comment later
             "data": [
             {
@@ -183,33 +183,9 @@ function pollForNonRosterListing(type,count){
             "pollTime":20000
             },
             "debugInfo": null
-            };*/
-        }
-        else{
-            /*response = {  //comment later
-            "data": [{
-            "profileid": "9153000",
-            "username": "ZZWS0621",
-            "profileChecksum": "427dfb4b146adf7285203830571fe240i9153000"
-            },
-            {
-            "profileid": "8891522",
-            "username": "ZZYZ9006",
-            "profileChecksum": "8891522lr"
-            },
-            {
-            "profileid": "3599124",
-            "username": "nokumarriage",
-            "profileChecksum": "3599124lr"
-            }],
-            "header": {
-            "status": 200,
-            "errorMsg": "",
-            "pollTime":20000
-            },
-            "debugInfo": null
-            }; */  
-        }
+            };
+        
+            }*/
                 if(response["header"]["status"] == 200){
                     console.log("fetchNonRosterListing success",response);
                     if(response["header"]["pollTime"] != undefined && response["header"]["pollTime"] > 0){

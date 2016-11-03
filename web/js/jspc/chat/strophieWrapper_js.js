@@ -171,7 +171,6 @@ var strophieWrapper = {
 
     //fetch roster
     getRoster: function () {
-        //clearNonRosterPollingInterval();
         if (strophieWrapper.getCurrentConnStatus()) {
             var iq = $iq({
                 type: 'get'
