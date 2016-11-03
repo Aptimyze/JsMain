@@ -39,16 +39,23 @@ var component = function() {
 @abstract
 */
 component.prototype.pre = function() {
-  if(this.name=="DAILYMATCHES")
+  var seeAllTrackingLink = "";
+  if(this.name=="DAILYMATCHES"){
    var containerBarObj = new dailyMatchesBar('dailyMatchesTab');
- else if(this.name=="JUSTJOINED")
+   seeAllTrackingLink = "trackJsEventGA('My JS JSPC', 'Match Alert Section - See All',loggedInJspcGender,'')";
+  }
+ else if(this.name=="JUSTJOINED"){
    var containerBarObj = new JustJoinBar('dailyMatchesTab');
+   seeAllTrackingLink = "trackJsEventGA('My JS JSPC', 'Just Joined Section - See All',loggedInJspcGender,'')";
+ }
  else if(this.name=="VISITORS")
    var containerBarObj = new recentProfileVisitorsBar('dailyMatchesTab');
  else if(this.name=="SHORTLIST")
    var containerBarObj = new shortListProfileVisitorsBar('dailyMatchesTab');
- else if(this.name=="DESIREDPARTNERMATCHES")
+ else if(this.name=="DESIREDPARTNERMATCHES"){
    var containerBarObj = new desiredPartnerMatchesBar('dailyMatchesTab');
+   seeAllTrackingLink ="trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')";
+ }
  else if(this.name=="PHOTOREQUEST")
    var containerBarObj = new photoRequestBar('photoRequestTab');
  else if(this.name=="ACCEPTANCE")
@@ -59,10 +66,14 @@ component.prototype.pre = function() {
   var containerBarObj =new interestReceivedBar();
 else if(this.name=="FILTEREDINTEREST")
   var containerBarObj =new filteredInterestBar();  
-else if(this.name=="VERIFIEDMATCHES")
+else if(this.name=="VERIFIEDMATCHES"){
   var containerBarObj =new verifiedMatchesBar();
-else if(this.name=="LASTSEARCH")
+  seeAllTrackingLink ="trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - See All',loggedInJspcGender,'')";
+}
+else if(this.name=="LASTSEARCH"){
   var containerBarObj = new LastSearchBar('dailyMatchesTab');
+  seeAllTrackingLink = "trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')";
+}
 this.containerHtml=containerBarObj.getContainerHtml();
 this.viewAllInnerHtml=containerBarObj.getViewAllInnerHtml();
 this.emptyInnerHtml=containerBarObj.getEmptyInnerHtml();
@@ -72,6 +83,7 @@ this.containerHtml=this.containerHtml.replace(/\{\{p_id\}\}/g,this.headingId);
 this.containerHtml=this.containerHtml.replace(/\{\{list_id\}\}/g,this.list);
 this.containerHtml=this.containerHtml.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
 this.containerHtml=this.containerHtml.replace(/\{\{type\}\}/g,this.list);
+this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_GA_TRACKING\}\}/g,seeAllTrackingLink);
 this.maxCount=maxCountArray[this.name];
 
 this.innerHtml=containerBarObj.getInnerHtml();

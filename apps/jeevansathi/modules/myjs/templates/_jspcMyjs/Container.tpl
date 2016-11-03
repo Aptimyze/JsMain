@@ -79,7 +79,7 @@
 <!--start:div-->
 <div id={{p_id}} class="pt40 clearfix fontlig">
 <div class="fl f22 color11">{{HEADING}}  <span class="fontreg colr5">{{COUNT}}</span></div>
-<div id="seeAll{{div_id}}" class="fr pt5 f16"><a href={{LISTING_LINK}} class="color12 icons myjs-ic1 pr15">See All</a> </div>
+<div id="seeAll{{div_id}}" class="fr pt5 f16"><a href={{LISTING_LINK}} onclick="{{SEE_ALL_GA_TRACKING}}" class="color12 icons myjs-ic1 pr15">See All</a> </div>
 </div>
 <!--end:div-->
 <!--start:slider-->

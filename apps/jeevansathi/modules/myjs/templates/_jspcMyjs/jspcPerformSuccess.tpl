@@ -43,7 +43,7 @@
                                         <div class="pie pie2"></div>
                                     </div>
                                     <div class="pie" style=" z-index: 0; border-color: #879381;"> </div>
-                                    <a style='color:white;' href="~sfConfig::get('app_site_url')`/profile/viewprofile.php?ownview=1"><img src="~$photoUrl`" border="0" class="proPicMyJs" /></a>
+                                    <a style='color:white;' onclick="trackJsEventGA('My JS JSPC', 'User photo',loggedInJspcGender,'');" href="~sfConfig::get('app_site_url')`/profile/viewprofile.php?ownview=1"><img src="~$photoUrl`" border="0" class="proPicMyJs" /></a>
                                 </div>
                             </div>
                             <div id='completePercentId' class="pt3 fontrobbold colrw f17 txtc">~$iPCS`%</div>
@@ -57,15 +57,15 @@
                                 <li class="pr10 myjs-bdr3">Plan Valid till <span class="fontrobbold">~$expirySubscription`</span></li>
                                 <li class="pl10">Contacts left to view <span class="fontrobbold">~$contactsRemaining`</span></li>
                             </ul>~/if` ~if $iPCS neq 100`
-                            <a style='color:#fff;' href='/profile/viewprofile.php?ownview=1'>
+                            <a style='color:#fff;' onclick="trackJsEventGA('My JS JSPC', 'Add profile info links',loggedInJspcGender,'')" href='/profile/viewprofile.php?ownview=1'>
                                 <div id="test" class="pt15 f13">Add details to your profile</div>
                             </a>
                             <ul class="myjsul1 pt8 clearfix opa80 colrw"> ~foreach from=$arrMsgDetails key=KEY item=VALUE`
-                                <li><a class='colrw f14' href='~$arrLinkDetails.$KEY`'>~$VALUE`</a></li>~/foreach` </ul> ~else`
+                                <li><a class='colrw f14' onclick="trackJsEventGA('My JS JSPC', 'Add profile info links',loggedInJspcGender,'')"  href='~$arrLinkDetails.$KEY`'>~$VALUE`</a></li>~/foreach` </ul> ~else`
                             <div id="test" class="pt15 f12">Congratulations!</div>
                             <div id="test" class="pt10 f14">Your profile is 100% complete.</div>~/if` </div>
-                        <div class="fr pr30">
-                            <a href="/search/matchalerts">
+                        <div class="fr pr35">
+                            <a href="/search/matchalerts" onclick="trackJsEventGA('My JS JSPC', 'Match Alerts Bubble',loggedInJspcGender,'')">
                                 <div id="dailyMatchesCountBar" class="fl cursp colrw fontlig pt10 pl55 disp-none">
                                     <div class="disp-tbl mauto">
                                         <div class="disp-cell myjs-br2 bg_pink vmid txtc imgdim2 f22 pos-rel"> <span id="dailyMatchesCountTotal">~$engagementCount.DAILY_MATCHES`</span> ~if $engagementCount.DAILY_MATCHES_NEW`
@@ -80,7 +80,7 @@
                                         <div class="f13 pt18">Daily Recommendations</div>
                                     </div>
                             </a>
-                            <a href="/search/justjoined">
+                            <a href="/search/justjoined" onclick="trackJsEventGA('My JS JSPC', 'Just Joined Bubble',loggedInJspcGender,'')" >
                                 <div id="justJoinedCountBar" class="fl colrw fontlig pt10 pl30 disp-none">
                                     <div class="disp-tbl mauto">
                                         <div class="disp-cell myjs-br2 bg_pink vmid txtc imgdim2 f22 pos-rel"><span id="justJoinedCountTotal">~$engagementCount.JUST_JOINED_MATCHES`</span> ~if $engagementCount.NEW_MATCHES`
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                     <div class="colrw fontmed pt20 pl30 pb20"> ~if $MembershipMessage['top'] neq ''`
-                        <a href='/profile/mem_comparison.php' class='colrw'> <span class="f26">~$MembershipMessage['top']`</span> <span id='memExpiryDiv' style='display:none;'><span class="disp_ib pl5 f15">|</span> <span id='memExpiryHrs' class="disp_ib f15 pl10"></span><small>H</small> <span id='memExpiryMnts' class="disp_ib pl10 f15"></span><small>M</small><span id='memExpirySec' class="disp_ib pl10 f15"></span><small>S</small></span>
+                        <a href='/profile/mem_comparison.php' onclick="trackJsEventGA('My JS JSPC', 'Offer Text',loggedInJspcGender,'')" class='colrw'> <span class="f26">~$MembershipMessage['top']`</span> <span id='memExpiryDiv' style='display:none;'><span class="disp_ib pl5 f15">|</span> <span id='memExpiryHrs' class="disp_ib f15 pl10"></span><small>H</small> <span id='memExpiryMnts' class="disp_ib pl10 f15"></span><small>M</small><span id='memExpirySec' class="disp_ib pl10 f15"></span><small>S</small></span>
                         </a> ~/if` </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                 <li id="interestEngagementHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
-                            <div id="engage_interestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5">Interests Received</div>
+                            <div id="engage_interestReceived" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Interests Received',loggedInJspcGender,'')" class="hgt25 disp-cell vmid myjs-fsize1 pr5">Interests Received</div>
                             <div id="totalInterestReceived" class="myjs-fsize2  vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="interetReceivedCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
@@ -122,7 +122,7 @@
                 <li id="filteredInterestHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
-                            <div id="engage_filteredInterestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5">Filtered Interests</div>
+                            <div id="engage_filteredInterestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Filtered Interests',loggedInJspcGender,'')" >Filtered Interests</div>
                             <div id="totalFilteredInterestReceived" class="myjs-fsize2  vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="filteredInterestCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
@@ -131,7 +131,7 @@
                 <li id="acceptanceEngagementHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
-                            <div id="AcceptanceId" class="hgt25 disp-cell vmid myjs-fsize1 pr5">Acceptances Received</div>
+                            <div id="AcceptanceId" class="hgt25 disp-cell vmid myjs-fsize1 pr5" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Acceptances Received',loggedInJspcGender,'')">Acceptances Received</div>
                             <div id="totalAcceptsReceived" class="myjs-fsize2 vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="allAcceptanceCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
@@ -140,7 +140,7 @@
                 <li id="MsgEngagementHead" class="notactive">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
-                            <div class="hgt25 disp-cell vmid pr5 myjs-fsize1">Messages</div>
+                            <div class="hgt25 disp-cell vmid pr5 myjs-fsize1" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Messages',loggedInJspcGender,'')">Messages</div>
                             <div id="totalMessagesReceived" class="myjs-fsize2 vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="messagesCountNew" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
@@ -150,7 +150,7 @@
             <div id="engagementContainerTop">
                 <div id="engagementContainer" class="disp-none"> </div>
             </div>
-        </div>
+        </div> 
         <article id="DAILYMATCHES">
             <div class="pt40 clearfix fontlig">
                 <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
@@ -365,21 +365,21 @@
             <div id="VISITORS" class="myjs-wid11 fl">
                 <p class="fontlig f22 color11">Profile Visitors </p>
                 <ul class="hor_list clearfix mysj-btmwid pt30 pl20">
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Recent Profile Visitors - Photo',loggedInJspcGender,'')"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Recent Profile Visitors - Photo',loggedInJspcGender,'')"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Recent Profile Visitors - Photo',loggedInJspcGender,'')"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Recent Profile Visitors - Photo',loggedInJspcGender,'')"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Recent Profile Visitors - +x',loggedInJspcGender,'')"></li>
                 </ul>
             </div>
             <div id="SHORTLIST" class="myjs-wid11 fr">
                 <p class="fontlig f22 color11">~$profileid` Shortlisted Profiles</p>
                 <ul class="hor_list clearfix mysj-btmwid pt30 pl20">
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
-                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>
+                    <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - +x',loggedInJspcGender,'')"></li>
                 </ul>
             </div>
         </div>
@@ -390,7 +390,7 @@
                     <p class="f18">Get Verified</p>
                     <p class="f15 pt5">In-person verification of profiles by jeevansathi team. <a href="/static/agentinfo" class="colr5">Know more about it</a></p>
                 </div>
-               <div class='pos-rel scrollhid'> <div class="fr bg_pink fontreg colrw lh46 myjs-wid21 txtc cursp" id="schedule_visit_action" onclick="scheduleVisit(); return false;">Request a Visit</div>
+               <div class='pos-rel scrollhid'> <div class="fr bg_pink fontreg colrw lh46 myjs-wid21 txtc cursp" id="schedule_visit_action" onclick="scheduleVisit();trackJsEventGA('My JS JSPC', 'Request a Visit',loggedInJspcGender,''); return false;">Request a Visit</div>
             </div> 
         </div> 
         ~/if`
