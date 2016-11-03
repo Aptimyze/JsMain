@@ -38,7 +38,7 @@ function to reactivate poll for non roster list
 */
 function reActivateNonRosterPolling(source){
     //kills interval polling for non roster list
-    clearNonRosterPollingInterval();
+    //clearNonRosterPollingInterval();
     if (strophieWrapper.getCurrentConnStatus() == true) {
         console.log("in reActivateNonRosterPolling",source);
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
@@ -46,7 +46,7 @@ function reActivateNonRosterPolling(source){
             clearNonRosterPollingInterval(groupId);
             strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
                                                                 pollForNonRosterListing(groupId); //uncomment later
-                                                            },1000/*chatConfig.Params[device].nonRosterListingRefreshCap*/);
+                                                            },500/*chatConfig.Params[device].nonRosterListingRefreshCap*/);
             
         });
     }
@@ -1471,8 +1471,10 @@ $(document).ready(function () {
             globalSleep(15000);
             //console.log("detected internet connectivity");
             chatLoggedIn = readCookie('chatAuth');
+            console.log("chatLoggedIn",chatLoggedIn);
             if (chatLoggedIn == 'true' && loginStatus == "Y") {
                 if (username && pass) {
+                    console.log("reconnect");
                     strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
                 }
             }
@@ -1664,7 +1666,6 @@ $(document).ready(function () {
                     output["cansend"] = false;
                     output["sent"] = false;
                 }
-              
                 return output;
             }
             /*objJsChat.onPostBlockCallback = function (param) {
