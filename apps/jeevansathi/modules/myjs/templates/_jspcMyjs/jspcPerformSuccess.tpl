@@ -320,6 +320,7 @@
             </div>
         </article>
         <article id="VERIFIEDMATCHES">
+            <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Verified Matches <span class="fontreg colr5"></span></div>
                 <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic11 pr15">View All</a> </div>
             </div>
