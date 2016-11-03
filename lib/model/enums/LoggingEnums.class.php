@@ -34,7 +34,7 @@ class LoggingEnums
     const I = 'I';
     const MS = 'MS';
     const OMS = 'OMS';
-    const REFERER_IGNORE = array('jeevansathi.com');
+    const REFERER_IGNORE = array('jeevansathi.com', 'google.com', 'google.co.in', 'yahoo.com', 'yahoo.co.in', 'rediffmail.com', 'rediff.com', 'bing.com', 'outlook.com', 'infoedge.com');
     // exceptions type
     const MYSQL_EXCEPTION = "MYSQL";
     const PDO_EXCEPTION = "PDO";
