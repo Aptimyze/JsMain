@@ -38,7 +38,7 @@ EOF;
 		// in hours
 		$interval = 1;
 		$intervalString = '-'.$interval.' hour';
-		$threshold = 0;
+		$threshold = 100;
 		$timeout = 5000;
 		$dashboard = 'Consumer_new_dashboard';
 		$msg = '';
