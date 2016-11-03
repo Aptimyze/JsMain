@@ -305,7 +305,7 @@ class LoggingManager
 		$logData[LoggingEnums::DOMAIN] = $_SERVER['HTTP_HOST'];
 		if(isset($logArray[LoggingEnums::REFERER]))
 		{
-			foreach (LoggingEnums::REFERER_IGNORE as $key => $value) {
+			foreach (LoggingEnums::$Referer_ignore as $key => $value) {
 				if(strpos($logArray[LoggingEnums::REFERER], $value) !== false) {
 				    return false;
 				}
