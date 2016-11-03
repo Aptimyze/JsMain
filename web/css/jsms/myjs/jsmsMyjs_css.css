@@ -106,7 +106,7 @@ height: 29px;}
   background: #ffffff;
   padding:0 4px;
 }
-
+.wid497p{width: 49.7%;}
 .myjs_f30{font-size:30px;}
 .lifestyle_2{background-position: -364px -59px; width: 27px; height: 31px;}
 
@@ -120,3 +120,7 @@ height: 29px;}
 background-image: url(IMG_URL/images/mrevamp/loginbg.jpg);    
 background-position: -200px -200px;
 }
+
+ .boxshadow_new{-webkit-box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);
+ -moz-box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);
+ box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);}

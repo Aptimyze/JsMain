@@ -125,7 +125,7 @@
                   <ul class="fontlig">
                     <li class="white fb1 ham_opa fontrobbold">My Contacts</li>
                     
-                    <li><a href="/profile/contacts_made_received.php?page=eoi&filter=R" bind-slide=1 class="white">Interests Pending ~if $profileMemcacheObj->get('AWAITING_RESPONSE')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('AWAITING_RESPONSE')`</span> ~/if`</a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=eoi&filter=R" bind-slide=1 class="white">Interests Received ~if $profileMemcacheObj->get('AWAITING_RESPONSE')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('AWAITING_RESPONSE')`</span> ~/if`</a></li>
                     
                    <!-- <li><a href="#" bind-slide=1 class="white">Filtered Interests </a></li>-->
                     <li><a href="/profile/contacts_made_received.php?page=filtered_eoi&filter=R" bind-slide=1 class="white">Filtered Interests ~if $profileMemcacheObj->get('FILTERED')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('FILTERED')`</span> ~/if`</a></li>
