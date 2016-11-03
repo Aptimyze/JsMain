@@ -34,6 +34,7 @@ class RequestHandlerConfig
     "profile"=>array(
 		"editprofile"=>array("v1"=>"ApiEditV1","v2"=>"ApiEditV1","v3"=>"ApiEditV1"),
 		"editsubmit"=>array("v1"=>"ApiEditSubmitV1","v2"=>"","v3"=>"ApiEditSubmitV1"),
+		 "editsubmitDocuments"=>array("v1"=>"ApiEditSubmitDocumentsV1","v2"=>"","v3"=>"ApiEditSubmitDocumentsV1"),
 		"filter"=>array("v1"=>"ApiEditFilterV1","v2"=>"","v3"=>"ApiEditFilterV1"),
 		"filtersubmit"=>array("v1"=>"ApiEditFilterSubmitV1","v2"=>"","v3"=>"ApiEditFilterSubmitV1"),
 		"dppsubmit"=>array("v1"=>"apieditdppv1","v2"=>"","v3"=>"apieditdppv1"),
