@@ -3,7 +3,7 @@
 
 <div class="pad1">
    <div class="fullwid pt15 pb10">
-         <div class="f17 fontlig color7">People to Respond to</div>
+         <div class="f17 fontlig color7">Interests Received</div>
    </div>
 
 <!--endt:slider div-->
