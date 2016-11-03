@@ -118,7 +118,7 @@ class postCancelInterestv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);
 		if(MobileCommon::isNewMobileSite())
 		{
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S",$this->tobetype);
+			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","C");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
 			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
             $finalresponseArray["button_after_action"]["topmsg"]=$restResponseArray["topmsg"];
