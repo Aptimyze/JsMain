@@ -114,7 +114,7 @@
                 <a href="~$SITE_URL`/profile/contacts_made_received.php?page=eoi&filter=R">
 	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
-			<div class="fullwid txtc">People to Respond to</div>
+			<div class="fullwid txtc">Interests Received</div>
 		</div>
 		~if $apiData.BELL_COUNT.AWAITING_RESPONSE_NEW>0`
 		<div class="fr wid8p">

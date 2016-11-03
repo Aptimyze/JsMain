@@ -215,7 +215,7 @@ window.onload=function(){
                                 <li>
                                     <a href="/inbox/2/1">
                                     <div class="clearfix topnavp1">
-                                        <div class="fl">Members who Accepted me</div>
+                                        <div class="fl">Accepted Me</div>
                                         <div class="fr">
                                             <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
                                                 <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
@@ -259,9 +259,9 @@ window.onload=function(){
                             <!--start:submenu-->
                             <ul id="gnbPhotoMenu" class="topnavbg pos-abs submenu fontlig menushadowGNB navBarZ">
                                 <li><div class="topnavp1"><a class="disp_b" href="/profile/viewprofile.php?checksum=~$profilechecksum`&profilechecksum=~$profilechecksum`">My Profile ~if $username`(~$username`)~/if`</a></div></li>
-                                <li><div class="topnavp1"><a class="disp_b" href="/profile/dpp"> Desired Partner</a></div></li>
+                                <li><div class="topnavp1"><a class="disp_b" href="/profile/dpp"> Desired Partner Profile</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/alertManager"> Alert Manager</a></div></li>
-                                <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?visibility=1`">Privacy Visibility</a></div></li>
+                                <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?visibility=1`">Profile Visibility</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?hideDelete=1">Hide/Delete profile</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?changePassword=1">Change Password</a></div></li>
                                 <li>

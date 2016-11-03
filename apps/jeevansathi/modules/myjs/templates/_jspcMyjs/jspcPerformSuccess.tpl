@@ -64,7 +64,7 @@
                                 <li><a class='colrw f14' onclick="trackJsEventGA('My JS JSPC', 'Add profile info links',loggedInJspcGender,'')"  href='~$arrLinkDetails.$KEY`'>~$VALUE`</a></li>~/foreach` </ul> ~else`
                             <div id="test" class="pt15 f12">Congratulations!</div>
                             <div id="test" class="pt10 f14">Your profile is 100% complete.</div>~/if` </div>
-                        <div class="fr pr35">
+                        <div class="fr pr20">
                             <a href="/search/matchalerts" onclick="trackJsEventGA('My JS JSPC', 'Match Alerts Bubble',loggedInJspcGender,'')">
                                 <div id="dailyMatchesCountBar" class="fl cursp colrw fontlig pt10 pl55 disp-none">
                                     <div class="disp-tbl mauto">
@@ -131,7 +131,7 @@
                 <li id="acceptanceEngagementHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
-                            <div id="AcceptanceId" class="hgt25 disp-cell vmid myjs-fsize1 pr5" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Acceptances Received',loggedInJspcGender,'')">Acceptances Received</div>
+                            <div id="AcceptanceId" class="hgt25 disp-cell vmid myjs-fsize1 pr5" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Acceptances Received',loggedInJspcGender,'')">Accepted Me</div>
                             <div id="totalAcceptsReceived" class="myjs-fsize2 vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="allAcceptanceCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
@@ -154,7 +154,7 @@
         <article id="DAILYMATCHES">
             <div class="pt40 clearfix fontlig">
                 <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic11 pr15">View All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
@@ -196,7 +196,7 @@
         <article id="JUSTJOINED">
             <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Just Joined Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic11 pr15">View All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
@@ -320,9 +320,8 @@
             </div>
         </article>
         <article id="VERIFIEDMATCHES">
-            <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Verified Matches <span class="fontreg colr5"></span></div>
-                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic1 pr15">See All</a> </div>
+                <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic11 pr15">View All</a> </div>
             </div>
             <div class="pt15">
                 <div class="pos-rel">
