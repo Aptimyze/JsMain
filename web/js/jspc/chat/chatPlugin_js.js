@@ -770,7 +770,7 @@ JsChat.prototype = {
                 //console.log("11");
                 if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
                     console.log("22 chnage");
-                    reActivateNonRosterPolling();
+                    reActivateNonRosterPolling(); //confirm on tabs sync later
                     elem._updateChatStructure("exsisting");
                 }
             } else {

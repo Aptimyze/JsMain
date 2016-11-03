@@ -103,20 +103,20 @@ var strophieWrapper = {
         strophieWrapper.currentConnStatus = status;
         //strophieWrapper.stropheLoggerPC("In onConnect function");
         if (status == Strophe.Status.CONNECTING) {
-            //strophieWrapper.stropheLoggerPC("Connecting");
+            console.log("Connecting");
         } else if (status == Strophe.Status.CONNFAIL) {
-            //strophieWrapper.stropheLoggerPC("CONNFAIL");
+            console.log("CONNFAIL");
             $('#connect').get(0).value = 'connect';
         } else if (status == Strophe.Status.DISCONNECTING) {
-            //strophieWrapper.stropheLoggerPC("DISCONNECTING");
+            console.log("DISCONNECTING");
         } else if (status == Strophe.Status.DISCONNECTED) {
-            //strophieWrapper.stropheLoggerPC("DISCONNECTED");
+            console.log("DISCONNECTED");
             $('#connect').get(0).value = 'connect';
         } else if (status == Strophe.Status.AUTHFAIL) {
-            //strophieWrapper.stropheLoggerPC("AUTHFAIL");
+            console.log("AUTHFAIL");
             invokePluginLoginHandler("failure");
         } else if (status == Strophe.Status.CONNECTED) {
-            //strophieWrapper.stropheLoggerPC("CONNECTED");
+            console.log("CONNECTED");
             invokePluginLoginHandler("success");
         }
     },
@@ -131,6 +131,10 @@ var strophieWrapper = {
         //fetch roster of logged in user 
         if (strophieWrapper.initialRosterFetched == false) {
             strophieWrapper.getRoster();
+        }
+        if(strophieWrapper.initialNonRosterFetched == false){
+            //start for polling of non-roster group listings
+            strophieWrapper.getNonRosterList();
         }
         //binding event for presence update in roster
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
@@ -460,8 +464,8 @@ strophieWrapper.sendPresence();
     //executed after non-roster list has been fetched or new non roster node is added
     onNonRosterListFetched: function(response,groupid,operation){
         console.log("in onNonRosterListFetched",response);
-        if(response["data"] != undefined && response["data"].length > 0){
-            $.each(response["data"],function(key,nodeObj){
+        if(response != undefined && response.length > 0){
+            $.each(response,function(key,nodeObj){
                 nodeObj["groupid"] = groupid;
                 nodeObj["addIndex"] = key;
                 if (strophieWrapper.isItSelfUser(nodeObj["profileid"]) == false) {
@@ -477,7 +481,7 @@ strophieWrapper.sendPresence();
                 strophieWrapper.initialNonRosterFetched = true;
             }
             invokePluginManagelisting(strophieWrapper.NonRoster, operation);
-            strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
+            strophieWrapper.setRosterStorage(response,"non-roster");
         }
     },
 
@@ -512,8 +516,12 @@ strophieWrapper.sendPresence();
                 inputObj[user_id] = strophieWrapper.NonRoster[user_id];
                 invokePluginManagelisting(inputObj, "delete_node", user_id);
                 delete strophieWrapper.NonRoster[user_id];
-                //update localstorage
-                strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
+                var nonRosterData = strophieWrapper.getRosterStorage("non-roster");
+                if(nonRosterData && nonRosterData[user_id]){
+                    //update localstorage
+                    delete nonRosterData[user_id];
+                    strophieWrapper.setRosterStorage(nonRosterData,"non-roster");
+                }
             }
         });
     },
@@ -580,19 +588,13 @@ strophieWrapper.sendPresence();
         }, 1000);
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
     	//strophieWrapper.sendPresence();
-
-        //start for polling of non-roster group listings
-        strophieWrapper.getNonRosterList();
             
    	},
 
     //fetch non roster list
     getNonRosterList:function(){
-        var validRe = checkForValidNonRosterRequest();
-        if(validRe == true){
-            console.log("Used new listing");
-            reActivateNonRosterPolling();
-        }
+        console.log("in getNonRosterList");
+        reActivateNonRosterPolling();
     },
 
     //executed on msg receipt
