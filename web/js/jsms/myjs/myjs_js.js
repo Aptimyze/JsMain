@@ -1,14 +1,4 @@
-var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,
-	index = 0,
-            pc_temp1 = 0,
-	pc_temp2 = 0,
-	t1 = null,
-	profileCompletionCount = 0,
-	start = 0,
-	m,windowWidth=$(window).width();
-
-    var userGender="~$apiData.gender`",siteUrl="~$SITE_URL`";
-	var tupleObject,tupleObject2, matchAlertNext=0, full_loaded = 0;
+var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2, matchAlertNext=0, full_loaded = 0;
 
 
 
@@ -131,7 +121,7 @@ function setBlock(blockName) {
                 }
                    });
                 $(".contactLoader").each(function(){
-                $(this).attr("src","/images/jsms/commonImg/loader.gif");
+                $(this).attr("src","IMG_URL/images/jsms/commonImg/loader.gif");
                 });   
 		var d = new Date();
 		var hrefVal = $("#calltopSearch").attr("href")+"&stime="+d.getTime();

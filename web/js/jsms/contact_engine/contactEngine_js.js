@@ -182,7 +182,7 @@ function hideForHide()
 }
 function layerClose()
 {
-        $("#ce_photo,imageId").attr("src",'');
+        $("#ce_photo,#imageId").attr("src",'');
   //$("#imageId").attr('src','');
   $("#contactLoader").hide();
         var current_index       =$("#selIndexId").val();
@@ -713,8 +713,8 @@ function cancelInterest(result,action, index){
     $("#"+confirmOverlayId).show();
     $("#confirmMessage0,#confirmMessage1").show();
     //$("#confirmMessage1").show();   
-                $("#confirmMessage0,#confirmMessage1").html(confirmLabelHead);
-                //$("#confirmMessage1").html(confirmLabelMsg);
+                $("#confirmMessage0").html(confirmLabelHead);
+                $("#confirmMessage1").html(confirmLabelMsg);
         }
   /*else{
     // condition for error message
@@ -735,8 +735,8 @@ function declineInterest(result,action, index){
     $("#"+confirmOverlayId).show();
     $("#confirmMessage0,#confirmMessage1").show();
     //$("#confirmMessage1").show();
-                $("#confirmMessage0,#confirmMessage1").html(confirmLabelHead);
-                //$("#confirmMessage1").html(confirmLabelMsg);
+                $("#confirmMessage0").html(confirmLabelHead);
+                $("#confirmMessage1").html(confirmLabelMsg);
         }/*else{
                 // condition for error message
                 var errorMsgLabel =result.actiondetails.errmsglabel;
@@ -1175,7 +1175,7 @@ if(result.actiondetails.bottommsg2){
     }
     if(result.actiondetails.errmsglabel)
     {
-      $("#topMsg2,landline").hide();
+      $("#topMsg2,#landline").hide();
       //$("#landline").hide();
       //$("#ViewContactPreLayerTextNoNumber").html("You will be able to see the Email Id of "+result.actiondetails.headerlabel+ "but not the phone number. This is because "+result.actiondetails.headerlabel+"'s has chosen to hide phone number.");
      $("#ViewContactPreLayerTextNoNumber").html(result.actiondetails.errmsglabel);
