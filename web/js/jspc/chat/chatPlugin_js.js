@@ -45,6 +45,7 @@ JsChat.prototype = {
     _categoryTrackingParams:{},
     _groupBasedConfig:{},
     _defaultActiveTab:"tab1",
+    _nonRosterRefreshTime:120000,
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -1406,27 +1407,6 @@ JsChat.prototype = {
                                 'ID': ''
                             };
                             
-                            
-                            /*
-                            var sjid=selfJID.split('@')[0];
-                            var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId)) || [];
-                            var newMsg = {
-                              'from':sjid,
-                              'to':userId,
-                              'msg':text
-                            };
-                            //var temp = [];
-                            oldMessages.unshift(newMsg);
-                            //newMsg.push(oldMessages);
-                            //temp.push(oldMessages);
-                            console.log(typeof oldMessages);
-                            console.log(JSON.parse(localStorage.getItem(sjid+'_'+userId)),"log");
-                            //oldMessages.push(newMsg);
-                            localStorage.setItem(sjid+'_'+userId,JSON.stringify(oldMessages));
-                            */
-                            //console.log("**************");
-                            //var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId));
-                            //console.log(oldMessages);
                             if (msgSendOutput["sent"] == false || msgSendOutput["cansend"] == false) {
                                 var error_msg = msgSendOutput['errorMsg'] || "Something went wrong";
                                 $('chat-box[user-id="' + userId + '"] #restrictMessgTxt').remove();
@@ -1469,6 +1449,13 @@ JsChat.prototype = {
                                 if (msgSendOutput["cansend"] == true) {
                                     $(curElem).prop("disabled", false);
                                 }
+                            }
+                            if(msgSendOutput["sent"] == true){
+                                var currTime = (new Date()).getTime(),lastMsgTime=localStorage.getItem(loggedInJspcUser+"_lastSentMsgTime");
+                                if(lastMsgTime == undefined || (currTime - lastMsgTime) > _this._nonRosterRefreshTime){
+                                    reActivateNonRosterPolling("chatting");
+                                }
+                                localStorage.setItem(loggedInJspcUser+"_lastSentMsgTime",currTime);
                             }
                         }
                     }, 50);
