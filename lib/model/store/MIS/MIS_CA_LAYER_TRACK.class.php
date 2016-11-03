@@ -93,5 +93,24 @@ class MIS_CA_LAYER_TRACK extends TABLE
       //throw new jsException($e);
     }
   }
+
+
+    public function truncateForUserAndLayer($profileId,$layerid)
+  {
+    try {   
+      $sql= "DELETE FROM MIS.CA_LAYER_TRACK WHERE PROFILEID = :PROFILE_ID AND LAYERID = :LAYER_ID";
+      $prep=$this->db->prepare($sql);
+      $prep->bindValue(":PROFILE_ID",$profileId,PDO::PARAM_INT);
+      $prep->bindValue(":LAYER_ID",$layerid,PDO::PARAM_INT);
+      $prep->execute();
+      }
+    
+    catch(PDOException $e)
+    {
+    jsException::nonCriticalError("lib/model/store/MIS/MIS_CA_LAYER_TRACK.class.php(3)-->.$sql".$e);
+                        return '';
+      //throw new jsException($e);
+    }
+  }
 }
 

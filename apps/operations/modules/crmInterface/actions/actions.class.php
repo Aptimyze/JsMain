@@ -137,7 +137,7 @@ class crmInterfaceActions extends sfActions
 					$this->frequencyArr = range(1, $this->frequency);
 
 					$this->dateArr = array();
-					for($i=1; $i<$this->frequency+10; $i++) {
+					for($i=0; $i<$this->frequency+10; $i++) {
 						$this->dateArr[] = date('Y-m-d', strtotime('+'.$i.' days'));
 					}
 				} 

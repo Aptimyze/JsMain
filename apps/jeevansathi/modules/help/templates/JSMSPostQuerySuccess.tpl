@@ -4,7 +4,7 @@
         <div id="overlayHead" class="bg1">
             <div class="txtc pad15">
                 <div class="posrel">
-                    <a href="/help/index"><i id="backBtn" class="posabs mainsp arow2 lt0"></i></a>
+                    <a href="/help/index?iosWebView=~$iosWebView`"><i id="backBtn" class="posabs mainsp arow2 lt0"></i></a>
                     <div class="fontthin f20 white">Post Your Query</div>
                 </div>
             </div>
@@ -35,13 +35,14 @@
         <div id="nextDiv" class="posrel fullheight fullwid dispnone">
             <div class="posrel pad23 wid70p txtc">
                 <div class="fontlig f16">We have taken your request and will get back to you soon</div>
-                <div class="color2 mt30 f16"><a class="color2" href="/help/index">Go to Home</a></div>
+                <div class="color2 mt30 f16"><a class="color2" href="/help/index?iosWebView=~$iosWebView`">Go to Home</a></div>
             </div>
         </div>
         <!--post submission div:end-->
     
 </div>
 <script>
+var AndroidPromotion=0;
 $(document).ready(function(){
     var username = "~$username`";
     var email = "~$email`";
