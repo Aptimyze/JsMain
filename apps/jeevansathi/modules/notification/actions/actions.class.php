@@ -67,15 +67,15 @@ class notificationActions extends sfActions
         $loginData =$request->getAttribute("loginData");
         $profileid =$loginData['PROFILEID'];
 	
-        $producerObj = new JsNotificationProduce();
+        /*$producerObj = new JsNotificationProduce();
         if($producerObj->getRabbitMQServerConnected()){
         	$dataSet =array('profileid'=>$profileid,'registrationid'=>$registrationid,'appVersion'=>$appVersion,'osVersion'=>$osVersion,'deviceBrand'=>$deviceBrand,'deviceModel'=>$deviceModel);
                 $msgdata = FormatNotification::formatLogData($dataSet,'','REGISTRATION_API');
                 $producerObj->sendMessage($msgdata);
         }
-	else{
+	else{*/
 		NotificationFunctions::registrationIdInsert($profileid,$registrationid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
-	}
+	//}
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         $respObj->generateResponse();
 	die;

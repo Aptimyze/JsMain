@@ -247,7 +247,7 @@ class AgentBucketHandler
 		$agentAllocDetailsObj	=new AgentAllocationDetails();	
 		$locationObj		=new incentive_LOCATION('newjs_slave');		
 		$subLocationObj		=new incentive_SUB_LOCATION('newjs_slave'); 	
-		$agentAllotedObj	=new AGENT_ALLOTED('newjs_slave');
+		$agentAllotedObj	=new AGENT_ALLOTED('newjs_masterRep');
 		$agentAllocObj          =new AgentAllocation();
 		//$newCityMapping       =array('UP47'=>'UP25','UP48'=>'UP12');	
 		$newCityMapping         =array('UP48'=>'UP12');
