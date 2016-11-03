@@ -102,7 +102,7 @@ if (isset($data)) //successful login
         if (in_array('LTFVnd', $priv) || in_array('LTFHD', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/register_lead.php?name=$username&cid=$cid\">Register a Lead</a>";
         }
-        if (in_array('P', $priv) || in_array("MG", $priv) || in_array('SLHDO', $priv) || in_array('CRMTEC', $priv)) {
+        if (in_array('CRMTEC', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/commoninterface/selectGateway\">Select Gateway Redirection</a>";
         }
 
