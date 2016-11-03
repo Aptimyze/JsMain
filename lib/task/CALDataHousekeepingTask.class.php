@@ -35,11 +35,10 @@ EOF;
 
  for ($i=1;;$i++)
  {
- $layer = CriticalActionLayerDataDisplay::getDataValue('','LAYERID',$i);
+ $layer = CriticalActionLayerDataDisplay::getDataValue($i,'','');
  if($layer)
  { 
- $layerArray = CriticalActionLayerDataDisplay::getDataValue($layer);
- if($layerArray['UNLIMITED'] == 'Y')
+ if($layer['UNLIMITED'] == 'Y')
  $beforeDate = date('Y-m-d',strtotime('-3 months'));
  else
  $beforeDate = date('Y-m-d',strtotime('-6 months'));
