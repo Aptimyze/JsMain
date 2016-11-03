@@ -6,6 +6,7 @@
 *********************************************************************************************/
 include_once("MysqlDbConstants.class.php");
 include("DialerLog.class.php");
+include('PriorityHandler.class.php');
 $dialerLogObj =new DialerLog();
 
 //Open connection at JSDB
@@ -14,19 +15,45 @@ $db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$
 $db_js_111 = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to local-111 server");
 $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
+$priorityHandlerObj =new PriorityHandler($db_js, $db_js_111, $db_dialer,$db_master);
+
 $dateTime       =date("Y-m-d H:i:s",time()-22.5*60*60);
 $campaignName	='FP_JS';
 $action		='STOP';
 $str		='Dial_Status=0';
+$npriority	=5;
+$last20MinTime	=date("Y-m-d H:i:s",time()-9.5*60*60+20*60);
+$last20MinTime	=strtotime($last20MinTime);
+
 $profilesArr 	=fetchProfiles($db_js);
 $eligibleArr	=$profilesArr['ELIGIBLE'];
 $inEligibleArr	=$profilesArr['IN_ELIGIBLE'];
+$allDataArr	=$profilesArr['ALL_DATA'];
 
 $allocatedArr	=getAllocatedProfiles($eligibleArr,$db_js);
 $paidArr	=getPaidProfiles($eligibleArr,$db_js,$dateTime);
 $eligibleArrNew	=array_merge($allocatedArr,$paidArr);
 $eligibleArrNew	=array_unique($eligibleArrNew);
 $eligibleArrNew =array_values($eligibleArrNew);
+
+// Prioritization logic
+if(count($allDataArr)>0){
+	foreach($allDataArr as $profileid=>$csvEntryDate){
+
+		$dialerData =$priorityHandlerObj->getDialerProfileForPriority($campaignName,array($profileid));
+		if(!$dialerData)
+			continue;
+
+		if(strtotime($csvEntryDate)>=$last20MinTime){
+			// Prioritize - with new priority
+			$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,$npriority);			
+		}
+		else{
+			// De-prioritize - with old priority
+			$priorityHandlerObj->dePrioritizeProfile($profileid,$campaignName,$dialerData);
+		}		
+	}
+}
 
 // Stop profiles which are paid and allocated
 if(count($eligibleArrNew>0)){
@@ -58,6 +85,8 @@ if(is_array($inEligibleArr)){
 	}
 }
 
+
+/* Functions added */
 // Add logging
 function addLog($profileid,$campaignName,$str='',$action,$db_js_111)
 {
@@ -69,16 +98,19 @@ function addLog($profileid,$campaignName,$str='',$action,$db_js_111)
 function fetchProfiles($db_js)
 {
         $profileArr =array();
-        $sql= "SELECT PROFILEID,DIAL_STATUS FROM incentive.SALES_CSV_DATA_FAILED_PAYMENT";
+        $sql= "SELECT PROFILEID,DIAL_STATUS,CSV_ENTRY_DATE FROM incentive.SALES_CSV_DATA_FAILED_PAYMENT";
         $res=mysql_query($sql,$db_js) or die($sql.mysql_error($db_js));
         while($myrow = mysql_fetch_array($res)){
 		$dialStatus =$myrow["DIAL_STATUS"];
+		$pid	    =$myrow['PROFILEID'];	   	
 		if($dialStatus)
-			$eligibleArr[] =$myrow["PROFILEID"];
+			$eligibleArr[] =$pid;
 		else
-			$inEligibleArr[] =$myrow["PROFILEID"];
+			$inEligibleArr[] =$pid;
+
+		$allDataArr[$pid] =$myrow['CSV_ENTRY_DATE'];
 	}	
-	return array("ELIGIBLE"=>$eligibleArr,"IN_ELIGIBLE"=>$inEligibleArr);
+	return array("ELIGIBLE"=>$eligibleArr,"IN_ELIGIBLE"=>$inEligibleArr,"ALL_DATA"=>$allDataArr);
 }
 
 // Delete ineligible profiles from FP table
