@@ -333,7 +333,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * @returns key value array of contact Information section of app
 	 * */
 	public function getApiContactInfo() {
-		$contactArr[]=$this->getApiFormatArray("PROFILE_HANDLER_NAME","Name of the Profile Creator" , $this->profile->getDecoratedPersonHandlingProfile(),"",$this->getApiScreeningField("PROFILE_HANDLER_NAME"),$this->text);
+		$contactArr[]=$this->getApiFormatArray("PROFILE_HANDLER_NAME","Name of the Profile Creator" , $this->profile->getDecoratedPersonHandlingProfile(),"",$this->getApiScreeningField("PROFILE_HANDLER_NAME"),$this->text,'','','',true);
 		
 		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),"",$this->getApiScreeningField("EMAIL"),$this->text);
 
