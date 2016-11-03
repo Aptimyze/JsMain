@@ -38,12 +38,15 @@ EOF;
 		// in hours
 		$interval = 1;
 		$intervalString = '-'.$interval.' hour';
+		$toInt = date('H:i:s');
+		$fromInt = date('H:i:s',strtotime($intervalString));
 		$threshold = 100;
 		$timeout = 5000;
 		$dashboard = 'Consumer_new_dashboard';
 		$msg = '';
+		$noError = 1;
 		$from = "jsissues@jeevansathi.com";
-		$subject = "Kibana Module Alert";
+		$subject = "Consumer alert";
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 
 		// parameters required, log type of Error and get all module counts in the specified interval
@@ -90,9 +93,7 @@ EOF;
 			{
 					$arrModules[$module['key']] = $module['doc_count']; 
 			}
-			// $to = "jsissues@jeevansathi.com";
-			$to = "kumar.ashok@jeevansathi.com";
-			$to = "nikhil.mittal@jeevansathi.com";
+			$to = "jsissues@jeevansathi.com";
 			// Kibana Url for the dashboard in the specified interval
 			$kibanaUrl = 'http://'.$elkServer.":".$kibanaPort."/app/kibana#/dashboard/".$dashboard."?_g=(refreshInterval:(display:Off,pause:!f,value:0),time:(from:'".date('Y-m-d')."T".date('H:i:s', strtotime($intervalString)).".000Z',mode:absolute,to:'".date('Y-m-d')."T".date('H:i:s').".000Z'))";
 			foreach ($arrModules as $key => $value)
@@ -101,10 +102,18 @@ EOF;
 				{
 					$msg .= $key." has encountered ".$value." errors.\n";
 				}
+				if ($value > 0)
+				{
+					$noError = 0;
+				}
 			}
 			if($msg != '')
 			{
-				$msg = "In the interval of ".$interval." hour with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
+				$msg = "In the interval ".$fromInt." - ".$toInt." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
+			}
+			else if($noError)
+			{
+				$msg = "In the interval ".$fromInt." - ".$toInt." , no errors were logged.\n";
 			}
 		}
 		else
