@@ -218,7 +218,7 @@
 	  		"CHALLENGED" =>"Challenged",
 	  		"NATURE_OF_HANDICAP" => "Nature of handicap"),
 	  	"DESIRED_PARTNER" => array(
-	  		"DESCRIBE_PARTNER" => "About My Desired Partner",),
+	  		"DESCRIBE_PARTNER" => "About Desired Partner",),
 	  	);	
 	  public static $fieldTypeArray = array(
 	  	"BASIC" => array(
