@@ -110,6 +110,11 @@ class testautomationActions extends sfActions
 	   if($request->getParameter("contactProfileId") && in_array($request->getParameter("contactProfileId"),$testingProfileIdsArray))
 	   {
 			$profileId=$request->getParameter("contactProfileId");
+            if(is_numeric($profileId) === false) {
+                $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                $respObj->generateResponse();
+                die;    
+            }
  			$path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $profileId > /dev/null &";
 			$cmd = JsConstants::$php5path." -q ".$path;
 			passthru($cmd);

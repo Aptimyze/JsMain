@@ -87,10 +87,21 @@ class postNotInterestedv2Action extends sfAction
 		}
 		else
 		{
-			$responseArray["errmsglabel"]= "You cannot perform this action";
-			$responseArray["errmsgiconid"] = "16";
-			$responseArray["headerlabel"] = "Unsupported action";
-			$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+			if($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
+			else
+			{
+				$responseArray["errmsglabel"]= "You cannot perform this action";
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
 		}
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = buttonResponse::buttondetailsMerge($responseButtonArray);

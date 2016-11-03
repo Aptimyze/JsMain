@@ -66,112 +66,30 @@ EOF;
                  );
 
 
-        $requirements = array();
+        $this->requirements = array();
 
-        $requirements[] = $androidAppRequirements;
-        $requirements[] = $iosAppRequirements;
+        $this->requirements[] = $androidAppRequirements;
+        $this->requirements[] = $iosAppRequirements;
+        
+        $this->emailExclusion = array();
+        $this->mobileExclusion = array();
+        
+        $this->emailInclusion = array();
+        $this->mobileInclusion = array();
 
-        foreach ($requirements as $requirement) {
-
-
-            /**
-             * facebook access token, must have ads_management previleges
-             * @var string
-             */     
-            $this->access_token = $requirement['access_token'];
-
-            /**
-             * app id 
-             * @var string
-             */
-            $this->app_id = $requirement['app_id'];
-            
-            /**
-             * app secret
-             * @var string
-             */
-            $this->app_secret = $requirement['app_secret'];
-            
-            /**
-             * App ad account id.
-             * @var string
-             */
-            $this->account_id = $requirement['account_id'];
-            
-            /**
-             * the custom audience id created at facebook
-             * @var string
-             */
-            $this->includeCustomAudienceId = $requirement['includeCustomAudienceId'];
-
-            /**
-             * the look alike id, created from given custom audience.
-             * @var string
-             */
-            $this->excludeCustomAudienceId = $requirement['excludeCustomAudienceId'];
-
-
-            /**
-             * contains email list to be excluded in look alike array.
-             * @var array
-             */
-            $this->emailExclusion = array();
-            
-            /**
-             * contains mobile list to be excluded in look alike array
-             * @var array
-             */
-            $this->mobileExclusion = array();
-
-            /**
-             * contains email list to be included for creation of custom audience
-             * @var array
-             */
-            $this->emailInclusion = array();
-
-            /**
-             * create email list to be included for creation of custom audience.
-             * @var array
-             */
-            $this->mobileInclusion = array();
-
-
-
-            if (is_null($this->access_token) || is_null($this->app_id) || is_null($this->app_secret) ) {
-              throw new \Exception(
-                'You must set your access token, app id and app secret before executing'
-              );
-            }
-
-            // if (is_null($this->account_id) || is_null($this->excludeCustomAudienceId) || is_null($this->includeCustomAudienceId)) {
-            //   throw new \Exception(
-            //     'You must set your account id, custom audience idss before executing');
-            // }
-
-            try 
-            {
-                FacebookAds\Api::init($this->app_id, $this->app_secret, $this->access_token);
-
-                $this->audience = new FacebookAds\Object\CustomAudience(null, $this->account_id);
-
-                // die("calling.");
-                $this->getInclusionData();
-
-                $this->getExclusionData();
-                // $this->createLookAlike($this->includeCustomAudienceId,"Look alike for 1383924095217677 with audience id 6052303237798","",$country = 'IN');
-                // $this->createCustomAudience("Include Test Account act_1383924095217677","CustomAudience for testing the code.");
-                // $this->createCustomAudience("Exclude Test Account act_1383924095217677","CustomAudience for testing the code.");
-
-            } 
-            catch (Exception $e) 
-            {
-                throw new jsException($e);
-            }
-            
+        try 
+        {
+            $this->getInclusionData();
+            $this->getExclusionData();
+        } 
+        catch (Exception $e) 
+        {
+            throw new jsException($e);
         }
+        
+    }
 
        
-    }
 
     /**
      * function adds users to the custom audience
@@ -313,7 +231,7 @@ EOF;
                 {
                     do
                     {
-                        $result = $profileObj->getArray($valueArray, "", $greaterThanArray, $fields ,  $lessThanArray, "", ($i * $limitPushExclude).",".(($i + 1) * $limitPushExclude), "", "", "","","");
+                        $result = $profileObj->getArray($valueArray, "", $greaterThanArray, $fields ,  $lessThanArray, "", ($i * $limitPushExclude).",".$limitPushExclude, "", "", "","","");
 
                         if ( !empty($result))
                         {
@@ -332,15 +250,56 @@ EOF;
                             print_r("mobileExclusion: ".count($this->mobileExclusion));
                             echo "\n";
 
-                            $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->emailExclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
-                    
+                            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/fbApi.txt",var_export($this->emailExclusion,true)."\n",FILE_APPEND);
+                            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/fbApi.txt",var_export($this->mobileExclusion,true)."\n\n\n\n",FILE_APPEND);
 
-                            $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->mobileExclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
+                            foreach ($this->requirements as $requirement) 
+                            {
+                                $this->access_token = $requirement['access_token'];
+
+                                $this->app_id = $requirement['app_id'];
+                                
+                                $this->app_secret = $requirement['app_secret'];
+                                
+                                $this->account_id = $requirement['account_id'];
+                                
+                                $this->includeCustomAudienceId = $requirement['includeCustomAudienceId'];
+
+                                $this->excludeCustomAudienceId = $requirement['excludeCustomAudienceId'];
+
+                                if (is_null($this->access_token) || is_null($this->app_id) || is_null($this->app_secret) ) {
+                                  throw new \Exception(
+                                    'You must set your access token, app id and app secret before executing'
+                                  );
+                                }
+
+                                if (is_null($this->account_id) || is_null($this->excludeCustomAudienceId) || is_null($this->includeCustomAudienceId)) {
+                                  throw new \Exception(
+                                    'You must set your account id, custom audience idss before executing');
+                                }
+
+                                try 
+                                {
+                                    FacebookAds\Api::init($this->app_id, $this->app_secret, $this->access_token);
+
+                                    $this->audience = new FacebookAds\Object\CustomAudience(null, $this->account_id);
+
+
+                                    $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->emailExclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
+            
+
+                                    $this->addUsersCustomAudience($this->excludeCustomAudienceId,$this->mobileExclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
+                                }
+                                catch (Exception $e) {
+                                     throw new jsException($e);
+                                }
+                            }
 
                             $this->emailExclusion = array();
                             $this->mobileExclusion = array();
 
-                        }
+                            $totalExclusionEmail = 0;
+                            $totalExclusionMobile = 0;                        }
                         $i++;
                     } while (($i * $limitPushExclude) < $totalCount);
                 }
@@ -423,7 +382,7 @@ EOF;
                         do
                         {
 
-                             $result = $profileObj->getArray($valueArray, $excludeArray, $greaterThanArray, $fields ,  "", "", ($i * $limitPushInclude).",".(($i + 1) * $limitPushInclude), "", "", "","",$qualityProfileQuery);
+                             $result = $profileObj->getArray($valueArray, $excludeArray, $greaterThanArray, $fields ,  "", "", ($i * $limitPushInclude).",".$limitPushInclude, "", "", "","",$qualityProfileQuery);
 
                             if ( !empty($result))
                             {
@@ -443,14 +402,58 @@ EOF;
                                 print_r("mobileInclusion: ".count($this->mobileInclusion));
                                 echo "\n";
 
-                                $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->emailInclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
-                    
 
-                                $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->mobileInclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
+                                file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/fbApi.txt",var_export($this->emailInclusion,true)."\n",FILE_APPEND);
+                                file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/fbApi.txt",var_export($this->mobileInclusion,true)."\n\n\n\n",FILE_APPEND);
 
-                                $this->emailInclusion = array();
-                                $this->mobileInclusion = array();
-                              
+                                foreach ($this->requirements as $requirement) 
+                                {
+
+                                    $this->access_token = $requirement['access_token'];
+
+                                    $this->app_id = $requirement['app_id'];
+                                    
+                                    $this->app_secret = $requirement['app_secret'];
+                                    
+                                    $this->account_id = $requirement['account_id'];
+                                    
+                                    $this->includeCustomAudienceId = $requirement['includeCustomAudienceId'];
+
+                                    $this->excludeCustomAudienceId = $requirement['excludeCustomAudienceId'];
+
+                                    if (is_null($this->access_token) || is_null($this->app_id) || is_null($this->app_secret) ) {
+                                      throw new \Exception(
+                                        'You must set your access token, app id and app secret before executing'
+                                      );
+                                    }
+
+                                    if (is_null($this->account_id) || is_null($this->excludeCustomAudienceId) || is_null($this->includeCustomAudienceId)) {
+                                      throw new \Exception(
+                                        'You must set your account id, custom audience idss before executing');
+                                    }
+
+                                    try 
+                                    {
+                                        FacebookAds\Api::init($this->app_id, $this->app_secret, $this->access_token);
+
+                                        $this->audience = new FacebookAds\Object\CustomAudience(null, $this->account_id);
+
+
+                                        $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->emailInclusion,FacebookAds\Object\Values\CustomAudienceTypes::EMAIL);
+            
+
+                                        $this->addUsersCustomAudience($this->includeCustomAudienceId,$this->mobileInclusion,FacebookAds\Object\Values\CustomAudienceTypes::PHONE);
+                                    }
+                                    catch (Exception $e) {
+                                         throw new jsException($e);
+                                    }
+                                }
+
+                                    $this->emailInclusion = array();
+                                    $this->mobileInclusion = array();
+
+                                    $totalInclusionEmail = 0;
+                                    $totalInclusionMobile = 0;
                             } 
                             $i++;      
                         } while(($i * $limitPushInclude) < $totalCount);
