@@ -3328,7 +3328,7 @@ EditApp = function(){
       var eData = {};
       eData.editFieldArr = editFieldArr;
       $.myObj.ajax({
-        url: sectionId == 'verification'?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
+        url: sectionId ==  'verification'?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
         type: 'POST',
         datatype: 'json',       
         cache: false,
