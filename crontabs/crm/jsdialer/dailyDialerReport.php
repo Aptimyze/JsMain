@@ -57,22 +57,4 @@ function getformattedData($dataArr)
 	}
 	return $str;
 }
-function logerror($sql="",$db="",$ms='')
-{
-	$today=@date("Y-m-d H:m:i");
-	$filename="logerror.txt";
-	if(is_writable($filename)){
-		if (!$handle = fopen($filename, 'a')){
-			echo "Cannot open file ($filename)";
-			exit;
-		}
-		if(!$ms)
-			fwrite($handle,"\n\nQUERY : $sql \t ERROR : " .mssql_get_last_message(). " \t $today");
-		else
-			fwrite($handle,"\n\nQUERY : $sql \t ERROR : " .mysql_error(). " \t $today");
-		fclose($handle);
-	}
-	else
-		echo "The file $filename is not writable";
-}
 ?>
