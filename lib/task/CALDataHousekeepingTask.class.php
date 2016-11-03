@@ -32,12 +32,14 @@ EOF;
 
   $CALHousekeepingObject = new MIS_CA_LAYER_TRACK;
   //Provide Layer IDs in the arrays mentioned below 
+
  for ($i=1;;$i++)
  {
  $layer = CriticalActionLayerDataDisplay::getDataValue('','LAYERID',$i);
  if($layer)
- {print_r($layer);die;
- if($layer['UNLIMITED'] == 'Y')
+ { 
+ $layerArray = CriticalActionLayerDataDisplay::getDataValue($layer);
+ if($layerArray['UNLIMITED'] == 'Y')
  $beforeDate = date('Y-m-d',strtotime('-3 months'));
  else
  $beforeDate = date('Y-m-d',strtotime('-6 months'));

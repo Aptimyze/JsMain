@@ -97,7 +97,7 @@ class MIS_CA_LAYER_TRACK extends TABLE
 
     public function truncateForUserAndLayer($profileId='',$layerid,$beforeDate)
   {
-    try {   print($profileId);print("\n");print($layerid);print($beforeDate);return;
+    try { 
       $sqlDate=$beforeDate ? "AND DATE(`ENTRY_DT`) < :BEFORE_DATE" : "";
       $profileSql=$profileId ? "PROFILEID = :PROFILE_ID AND" : "";
       $sql= "DELETE FROM MIS.CA_LAYER_TRACK WHERE $profileSql LAYERID = :LAYER_ID $sqlDate";
