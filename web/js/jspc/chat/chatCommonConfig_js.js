@@ -86,8 +86,7 @@ chatConfig.Params = {
             "extraGETParams":{
                 "type":"CHATDPP"
             },
-            "timeoutTime":5000,
-            "pollingFreq":10000
+            "timeoutTime":5000
         }
     },
     //api config for non roster presence api
@@ -343,8 +342,9 @@ chatConfig.Params = {
 	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
         autoChatLogin:((hideUnimportantFeatureAtPeakLoad == "1") ? false : true),  //auto-login to chat on site login
         rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
-        clearListingCacheTimeout:86400000, //TIme in milliseconds(1 day)
-        listingRefreshTimeout:600000 //Time in milliseconds
+        clearListingCacheTimeout:86400000, //Time in milliseconds(1 day)
+        listingRefreshTimeout:600000, //Time in milliseconds
+        nonRosterListingRefreshCap:10000
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
