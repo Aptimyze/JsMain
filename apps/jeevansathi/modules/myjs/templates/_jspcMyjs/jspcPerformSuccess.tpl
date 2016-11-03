@@ -153,7 +153,7 @@
         </div> 
         <article id="DAILYMATCHES">
             <div class="pt40 clearfix fontlig">
-                <div class="fl f22 color11">Daily Matches <span class="fontreg colr5"></span></div>
+                <div class="fl f22 color11">Daily Recommendations <span class="fontreg colr5"></span></div>
                 <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic11 pr15">View All</a> </div>
             </div>
             <div class="pt15">
