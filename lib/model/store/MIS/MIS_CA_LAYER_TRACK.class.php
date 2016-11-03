@@ -95,12 +95,14 @@ class MIS_CA_LAYER_TRACK extends TABLE
   }
 
 
-    public function truncateForUserAndLayer($profileId,$layerid,$beforeDate)
+    public function truncateForUserAndLayer($profileId='',$layerid,$beforeDate)
   {
-    try {   
-      $sqlDate=$beforeDate ? "AND DATE(`ENTRY_DT`)<:BEFORE_DATE" : "";
-      $sql= "DELETE FROM MIS.CA_LAYER_TRACK WHERE PROFILEID = :PROFILE_ID AND LAYERID = :LAYER_ID $beforeDate";
+    try {   print($profileId);print("\n");print($layerid);print($beforeDate);return;
+      $sqlDate=$beforeDate ? "AND DATE(`ENTRY_DT`) < :BEFORE_DATE" : "";
+      $profileSql=$profileId ? "PROFILEID = :PROFILE_ID AND" : "";
+      $sql= "DELETE FROM MIS.CA_LAYER_TRACK WHERE $profileSql LAYERID = :LAYER_ID $sqlDate";
       $prep=$this->db->prepare($sql);
+      if($profileId)
       $prep->bindValue(":PROFILE_ID",$profileId,PDO::PARAM_INT);
       $prep->bindValue(":LAYER_ID",$layerid,PDO::PARAM_INT);
       if($beforeDate)

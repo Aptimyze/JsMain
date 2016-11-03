@@ -36,12 +36,12 @@ EOF;
  {
  $layer = CriticalActionLayerDataDisplay::getDataValue('','LAYERID',$i);
  if($layer)
- {
+ {print_r($layer);die;
  if($layer['UNLIMITED'] == 'Y')
- $beforeDate = date('Y-m-d',strtotime(-3months));
+ $beforeDate = date('Y-m-d',strtotime('-3 months'));
  else
- $beforeDate = date('Y-m-d',strtotime(-6months));
- $CALHousekeepingObject->truncateForUserAndLayer(true,$i,$beforeDate);
+ $beforeDate = date('Y-m-d',strtotime('-6 months'));
+ $CALHousekeepingObject->truncateForUserAndLayer('',$i,$beforeDate);
  }
  else break;
  }
