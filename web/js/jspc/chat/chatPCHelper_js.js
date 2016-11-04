@@ -1155,9 +1155,9 @@ function clearChatMsgFromLS(){
     var patt1 = new RegExp("chatMsg_");
     var patt2 = new RegExp("listingPic_");
     var patt3 = new RegExp("chatListing");
-    var patt4 = new RegExp("presence_"),patt5 = new RegExp("nonRosterChatListing");
+    var patt4 = new RegExp("presence_"),patt5 = new RegExp("nonRosterChatListing"),patt6 = new RegExp("_sentMsgRefTime");
     for(var key in localStorage){
-        if(patt1.test(key) || patt2.test(key) || patt3.test(key) || patt4.test(key)){
+        if(patt1.test(key) || patt2.test(key) || patt3.test(key) || patt4.test(key) || patt5.test(key) || patt6.test(key)){
             localStorage.removeItem(key);
         }
     }

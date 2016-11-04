@@ -45,7 +45,7 @@ JsChat.prototype = {
     _categoryTrackingParams:{},
     _groupBasedConfig:{},
     _defaultActiveTab:"tab1",
-    _nonRosterRefreshTime:120000,
+    _sentMsgRefTime:120000,
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -1451,11 +1451,11 @@ JsChat.prototype = {
                                 }
                             }
                             if(msgSendOutput["sent"] == true){
-                                var currTime = (new Date()).getTime(),lastMsgTime=localStorage.getItem(loggedInJspcUser+"_lastSentMsgTime");
-                                if(lastMsgTime == undefined || (currTime - lastMsgTime) > _this._nonRosterRefreshTime){
+                                var currTime = (new Date()).getTime(),lastMsgTime=localStorage.getItem(loggedInJspcUser+"_sentMsgRefTime");
+                                if(lastMsgTime == undefined || (currTime - lastMsgTime) > _this._sentMsgRefTime){
                                     reActivateNonRosterPolling("chatting");
+                                    localStorage.setItem(loggedInJspcUser+"_sentMsgRefTime",currTime);
                                 }
-                                localStorage.setItem(loggedInJspcUser+"_lastSentMsgTime",currTime);
                             }
                         }
                     }, 50);
