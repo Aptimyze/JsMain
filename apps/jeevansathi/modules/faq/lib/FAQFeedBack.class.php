@@ -13,7 +13,7 @@ class FAQFeedBack
 	private $m_iTracePath;
 	private $errorReq;
 	private $webRequest;
-	const REASON_MAP=array('duplicate profile','incorrect details/photo','already married/engaged','inappropriate content','spam','looks like a fake profile','other');
+	private static $REASON_MAP=array('duplicate profile','incorrect details/photo','already married/engaged','inappropriate content','spam','looks like a fake profile','other');
 
         public function __construct($api=0)
 	{
@@ -43,7 +43,7 @@ class FAQFeedBack
                 elseif($this->webRequest->getParameter('reason_map'))
                 {
                     $reasonMap=$this->webRequest->getParameter('reason_map');
-                    $reasonMapArray=self::REASON_MAP;
+                    $reasonMapArray=self::$REASON_MAP;
                     $reasonNew=$reasonMapArray[$reasonMap];
                     if($reasonNew=='other')
                         $reasonNew=$this->webRequest->getParameter('other_reason');
