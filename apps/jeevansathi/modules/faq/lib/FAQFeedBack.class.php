@@ -33,36 +33,36 @@ class FAQFeedBack
 	private function insertReportAbuseLog(){
 
 		$reasonNew=$this->webRequest->getParameter('reason');
-                    
+                $reasonMap=$this->webRequest->getParameter('reason_map');
 		$this->otherProfile=new Profile();
-		if($this->webRequest->getParameter('profilechecksum') && $reasonNew)
+		if($this->webRequest->getParameter('profilechecksum') && ($reasonNew || $reasonMap))
 		{ 
 			$otherProfileId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
 		}
+		
+		else {
+
+                        $feed=$this->webRequest->getParameter('feed');
+                        $reason=$feed['message'];
+
+                        $pos=strpos($reason,':');
+                        $reasonNew=trim(substr($reason,$pos+1));
+
+                        $pos2=strpos($reason,'by');
+                        $arr2=split(' ',trim(substr($reason,$pos2+2)));
+                        $otherUsername=trim($arr2[0]);
+                        $this->otherProfile->getDetail($otherUsername,"USERNAME");
+                        $otherProfileId=$this->otherProfile->getPROFILEID();
+
+                }
 	
-                elseif($this->webRequest->getParameter('reason_map'))
+                if($reasonMap)
                 {
-                    $reasonMap=$this->webRequest->getParameter('reason_map');
                     $reasonMapArray=self::$REASON_MAP;
                     $reasonNew=$reasonMapArray[$reasonMap];
                     if($reasonNew=='other')
                         $reasonNew=$this->webRequest->getParameter('other_reason');
                 }
-		else{
-			
-			$feed=$this->webRequest->getParameter('feed');
-			$reason=$feed['message'];
-
-			$pos=strpos($reason,':');
-			$reasonNew=trim(substr($reason,$pos+1));
-
-			$pos2=strpos($reason,'by');
-			$arr2=split(' ',trim(substr($reason,$pos2+2)));
-			$otherUsername=trim($arr2[0]);
-			$this->otherProfile->getDetail($otherUsername,"USERNAME");
-			$otherProfileId=$this->otherProfile->getPROFILEID();
-			
-		}
 
 		$reasonsCategory=array('duplicate profile','incorrect details/photo','already married/engaged','looks like fake profile','inappropriate content','spam','looks like a fake profile');
 
