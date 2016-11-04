@@ -30,6 +30,9 @@ class ApiEditV1Action extends sfActions
 		$this->loginProfile = LoggedInProfile::getInstance();
     if($this->loginProfile->getAGE()== "")
       $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
+                $c =  $this->loginProfile;
+                $d = $request->getAttribute("profileid");
+
 		$sectionFlag = $request->getParameter("sectionFlag");
 		$apiProfileSectionObj=  ApiProfileSections::getApiProfileSectionObj($this->loginProfile);
 		$religion = $this->loginProfile->getReligion();
@@ -43,6 +46,13 @@ class ApiEditV1Action extends sfActions
 		{
 			//called EditDetails method and response stored in $ResponseOut
 			$ResponseOut = $editDetailsObj->getEditDetailsValues($this,$apiProfileSectionObj,$sectionFlag,$myProfileArr);
+                        if(MobileCommon::isApp()=="A" && $sectionFlag=="all")
+                        {
+                                if(!$myProfileArr['MyBasicInfo'][8]['value']|| $myProfileArr['MyBasicInfo'][8]['value']==NULL || $myProfileArr['MyBasicInfo'][8]['value']==''){
+                                        file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/editReligionProb.txt",var_export($myProfileArr['MyBasicInfo'][8],true)."profileid:".$this->loginProfile->getPROFILEID()."obj".var_export($c,true)."profileidattr:".$d."\n",FILE_APPEND);
+
+}
+                        }
 			$apiResponseHandlerObj->setHttpArray($ResponseOut);
 			$apiResponseHandlerObj->setResponseBody($myProfileArr);
 			$apiResponseHandlerObj->generateResponse();
