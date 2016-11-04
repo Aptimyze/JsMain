@@ -4,18 +4,8 @@ class ConsumerDeleteTask extends sfBaseTask
 {
   protected function configure()
   {
-    // // add your own arguments here
-    // $this->addArguments(array(
-    //   new sfCommandArgument('my_arg', sfCommandArgument::REQUIRED, 'My argument'),
-    // ));
-
-    // // add your own options here
-    // $this->addOptions(array(
-    //   new sfCommandOption('my_option', null, sfCommandOption::PARAMETER_REQUIRED, 'My option'),
-    // ));
-
-    $this->namespace        = 'consumer';
-    $this->name             = 'ConsumerDelete';
+    $this->namespace        = 'kibana';
+    $this->name             = 'ConsumerIndexDelete';
     $this->briefDescription = 'Delete data from the consumer index';
     $this->detailedDescription = <<<EOF
 The [ConsumerDelete|INFO] task does things.
