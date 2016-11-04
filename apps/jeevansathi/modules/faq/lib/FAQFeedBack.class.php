@@ -13,8 +13,9 @@ class FAQFeedBack
 	private $m_iTracePath;
 	private $errorReq;
 	private $webRequest;
-	
-	public function __construct($api=0)
+	const REASON_MAP=array('duplicate profile','incorrect details/photo','already married/engaged','inappropriate content','spam','looks like a fake profile','other');
+
+        public function __construct($api=0)
 	{
 		if($api)
 			$this->api=1;
@@ -32,13 +33,21 @@ class FAQFeedBack
 	private function insertReportAbuseLog(){
 
 		$reasonNew=$this->webRequest->getParameter('reason');
-
+                    
 		$this->otherProfile=new Profile();
 		if($this->webRequest->getParameter('profilechecksum') && $reasonNew)
 		{ 
 			$otherProfileId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
 		}
-		
+	
+                elseif($this->webRequest->getParameter('reason_map'))
+                {
+                    $reasonMap=$this->webRequest->getParameter('reason_map');
+                    $reasonMapArray=self::REASON_MAP;
+                    $reasonNew=$reasonMapArray[$reasonMap];
+                    if($reasonNew=='other')
+                        $reasonNew=$this->webRequest->getParameter('other_reason');
+                }
 		else{
 			
 			$feed=$this->webRequest->getParameter('feed');
