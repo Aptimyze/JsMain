@@ -390,7 +390,7 @@ you like
     <p class="clr_18"></p>
 <div class="rf" style="margin:2px 7px 0px;"><a href="#" class="b blink">Go to top <img src="~sfConfig::get(app_img_url)`/images/icon_blue_up.gif" border="0"></a></div>
     <p class="clr_18"></p>
-	<div class="lf fs18"><a href="/profile/dpp">Edit My Desired Partner Profile</a></div>
+	<div class="lf fs18"><a href="/profile/dpp">Edit Desired Partner Profile</a></div>
     <p class="clr_18"></p>
     <p class="clr_18"></p>
     <p class="clr_18"></p>

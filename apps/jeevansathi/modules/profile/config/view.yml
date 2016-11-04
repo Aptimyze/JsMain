@@ -62,7 +62,7 @@ edit_dpp_from_filterSuccess:
   javascripts:    [search_similar_js,registration_js,gadget_as_js,advance_search_js]
 dppSuccess:
   metas:
-    title:        My Desired Partner - Jeevansathi.com
+    title:        Desired Partner - Jeevansathi.com
   http_metas:
     X-UA-Compatible:    IE=8
     #description:  symfony project
@@ -114,7 +114,7 @@ jsmsViewProfileSuccess:
 #dpp Success For JSPC 
 jspcDppSuccess:
   metas:
-    title:        My Desired Partner - Jeevansathi.com
+    title:        Desired Partner - Jeevansathi.com
   http_metas:
     X-UA-Compatible:    IE=edge
   stylesheets:    [jspc/profile/edit/dpp/dppEdit_css,jspc/utility/chosen/chosen_css]

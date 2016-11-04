@@ -1,21 +1,7 @@
 //var commonUrl="/contacts";
 
-var dim='';
-var postParams;
-var photo={};
-var disablePrimary={};
-var disableOthers={};
-var actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","INITIATE_MYJS":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1"};
-var actionDetail = {'CONTACT_DETAIL':'ContactDetails',"INITIATE":"postEOI","CANCEL":"cancel","DECLINE":"decline","REMINDER":"reminder","MESSAGE":"postWriteMessage","ACCEPT":"accept","WRITE_MESSAGE":"WriteMessage"};
-var actionTemplate = {"CONTACT_DETAIL":"contactDetailOverlay","INITIATE":"buttonsOverlay","CANCEL":"confirmationOverlay","DECLINE":"confirmationOverlay","REMINDER":"writeMessageOverlay","MESSAGE":"","WRITE_MESSAGE":"writeMessageOverlay","ACCEPT":"confirmationOverlay"}
-var current_index ='';
-var params = {};
-var iButton = {};
-var profile_index = {};
-var writeMessageAction = false;
-var cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'ot_sprtie ot_bell','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};
-var mainHeight;
-var msgWindowMSGID='',msgWindowCHATID='',msgWindowPageIndex=1,paramsForMsgWindow,indexForMsgWindow,msgWindowOn=0,MsgWindowLoading=0;
+var dim='',postParams,photo={},disablePrimary={},disableOthers={},actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","INITIATE_MYJS":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1"}, actionDetail = {'CONTACT_DETAIL':'ContactDetails',"INITIATE":"postEOI","CANCEL":"cancel","DECLINE":"decline","REMINDER":"reminder","MESSAGE":"postWriteMessage","ACCEPT":"accept","WRITE_MESSAGE":"WriteMessage"},actionTemplate = {"CONTACT_DETAIL":"contactDetailOverlay","INITIATE":"buttonsOverlay","CANCEL":"confirmationOverlay","DECLINE":"confirmationOverlay","REMINDER":"writeMessageOverlay","MESSAGE":"","WRITE_MESSAGE":"writeMessageOverlay","ACCEPT":"confirmationOverlay"},current_index ='', params = {},iButton = {},profile_index = {}, writeMessageAction = false,cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'ot_sprtie ot_bell','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};
+var mainHeight, msgWindowMSGID='',msgWindowCHATID='',msgWindowPageIndex=1,paramsForMsgWindow,indexForMsgWindow,msgWindowOn=0,MsgWindowLoading=0;
 function bgSetting() 
 {
   dim = getDim();
@@ -64,8 +50,8 @@ function hideReportAbuse(){
 
 function reportAbuse(index) {
 $("#photoReportAbuse").attr("src", buttonSt.photo.url);
-$('.RAcorrectImg').hide();
-$("#commonOverlayTop").hide();
+$('.RAcorrectImg,#commonOverlayTop').hide();
+//$("#commonOverlayTop").hide();
 var mainEle=$("#reportAbuseContainer");
 mainEle.show();
 
@@ -137,8 +123,8 @@ feed.message=userName+' has been reported abuse by '+selfUsername+' with the fol
 ajaxData={'feed':feed,'CMDSubmit':'1','profilechecksum':profileChkSum,'reason':reason};
 var url='/api/v1/faq/feedbackAbuse';
 loaderTop();
-$("#contactLoader").show();
-$("#loaderOverlay").show();
+$("#contactLoader,#loaderOverlay").show();
+//$("#loaderOverlay").show();
 
 //performAction('REPORT_ABUSE',ajaxData,index)
 $.ajax({
@@ -148,9 +134,9 @@ $.ajax({
 		data: ajaxData,
 		//crossDomain: true,
 		success: function(result){
-					$("#contactLoader").hide();
-					$("#loaderOverlay").hide();
-					$("#reportAbuseContainer").hide();
+					$("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
+					//$("#loaderOverlay").hide();
+					//$("#reportAbuseContainer").hide();
                     if(CommonErrorHandling(result,'?regMsg=Y')) 
                     {
 					ShowTopDownError([result.message],5000);
@@ -196,8 +182,8 @@ function hideForHide()
 }
 function layerClose()
 {
-        $("#ce_photo").attr("src",'');
-  $("#imageId").attr('src','');
+        $("#ce_photo,#imageId").attr("src",'');
+  //$("#imageId").attr('src','');
   $("#contactLoader").hide();
         var current_index       =$("#selIndexId").val();
   setTimeout(function(){$("#primeButton_"+current_index).attr("tabindex",-1).css('outline',0).focus();}, 0);
@@ -245,17 +231,13 @@ function setWindowParams(username, imageUrl, index){
           $("#imageId").attr('src',imageUrl);
   else
     $("#imageId").attr("src", photo[index]);
-  var vhgt = $(window).height();
-        var com_headHgt =$('#comm_headerMsg').outerHeight();
-        var send_hgt =$('#parentFootId').outerHeight();
-        var com_total = com_headHgt + send_hgt;
+  var vhgt = $(window).height(), com_headHgt =$('#comm_headerMsg').outerHeight(), send_hgt =$('#parentFootId').outerHeight(), com_total = com_headHgt + send_hgt;
         com_msgHgt1 = vhgt - com_total;
         $('.message_con').css({'height':com_msgHgt1,'overflow-y':'auto','overflow-x':'hidden'});
 
         var tabIdExist= $("#tabHeader").length;
         if(tabIdExist){
-    $("#tabHeader").css('visibility','hidden');
-                $("#tabHeader").removeClass('posFixTop');
+    $("#tabHeader").css('visibility','hidden').removeClass('posFixTop');
     $(picContent).css('margin-top','0px');
   }
         var srchIdExist= $("#searchHeader").length;
@@ -589,8 +571,8 @@ function afterAction(result,action, index){
 			return;
 		}
 		else{
-			$("#topMsg2").hide();
-			$("#topMsg").hide();
+			$("#topMsg2,#topMsg").hide();
+			//$("#topMsg").hide();
 			$( "#"+index+"_3Dots" ).unbind( "click");
 			bind3DotClick(index,result.button_after_action);
 			$( "#commonOverlay").hide();
@@ -605,8 +587,7 @@ function afterAction(result,action, index){
           if($("#PrimeColor_"+index).hasClass("wid50p"))
         {
            $("#PrimeColor_"+index).remove();
-          $("#PrimeColor_"+index+"_1").removeClass("wid50p");
-          $("#PrimeColor_"+index+"_1").addClass("wid100p");
+          $("#PrimeColor_"+index+"_1").removeClass("wid50p").addClass("wid100p");
           $("#primeButton_"+index+"_1").css('color', '');
           $("#buttonInput"+index+"_1").attr('id',"buttonInput"+index);
           $("#primeButton_"+index+"_1").attr('id',"primeButton_"+index);
@@ -628,8 +609,7 @@ function afterAction(result,action, index){
         if($("#PrimeColor_"+index).hasClass("wid50p"))
         {
           $("#PrimeColor_"+index+"_1").remove();
-          $("#PrimeColor_"+index).removeClass("wid50p");
-          $("#PrimeColor_"+index).addClass("wid100p");
+          $("#PrimeColor_"+index).removeClass("wid50p").addClass("wid100p");
           $( "#primeWid_"+index ).after( '<div class="posabs srp_pos2"><a tupleNo="id'+index+'" href="#" id="'+index+'_3Dots"><i class="mainsp threedot1"></i></a></div>' );
           $( "#"+index+"_3Dots" ).unbind( "click");
           bind3DotClick(index,result.button_after_action);
@@ -680,9 +660,7 @@ function afterAction(result,action, index){
 }
 
 function bindFooterButtons(result){
-	$("#footerButton").html(result.actiondetails.footerbutton.label);
-	$("#footerButton").show();
-	$( "#footerButton" ).bind( "click", {
+	$("#footerButton").html(result.actiondetails.footerbutton.label).show().bind( "click", {
 	  action: result.actiondetails.footerbutton.action
 	}, function( event ) {
 	historyStoreObj.push(browserBackCommonOverlay,"#pushcf");
@@ -726,16 +704,15 @@ function acceptInterest(result,action,index)
 
 function cancelInterest(result,action, index){
   hideForHide();
-        var confirmLabelHead    =result.buttondetails.confirmLabelHead;
-        var confirmLabelMsg     =result.buttondetails.confirmLabelMsg;
-  showCommonOverlay();
+        var confirmLabelHead    =result.buttondetails.confirmLabelHead,confirmLabelMsg     =result.buttondetails.confirmLabelMsg;
+        showCommonOverlay();
 
     $("#closeLayer").show();
         if(confirmLabelHead){
                 var confirmOverlayId =actionTemplate[action];
     $("#"+confirmOverlayId).show();
-    $("#confirmMessage0").show();
-    $("#confirmMessage1").show();   
+    $("#confirmMessage0,#confirmMessage1").show();
+    //$("#confirmMessage1").show();   
                 $("#confirmMessage0").html(confirmLabelHead);
                 $("#confirmMessage1").html(confirmLabelMsg);
         }
@@ -748,8 +725,7 @@ function cancelInterest(result,action, index){
 }
 
 function declineInterest(result,action, index){
-        var confirmLabelHead    =result.buttondetails.confirmLabelHead;
-        var confirmLabelMsg     =result.buttondetails.confirmLabelMsg;
+        var confirmLabelHead    =result.buttondetails.confirmLabelHead,confirmLabelMsg     =result.buttondetails.confirmLabelMsg;
   hideForHide();
   showCommonOverlay();
   scrollOff();
@@ -757,8 +733,8 @@ function declineInterest(result,action, index){
         if(confirmLabelHead){
                 var confirmOverlayId =actionTemplate[action];
     $("#"+confirmOverlayId).show();
-    $("#confirmMessage0").show();
-    $("#confirmMessage1").show();
+    $("#confirmMessage0,#confirmMessage1").show();
+    //$("#confirmMessage1").show();
                 $("#confirmMessage0").html(confirmLabelHead);
                 $("#confirmMessage1").html(confirmLabelMsg);
         }/*else{
@@ -772,9 +748,7 @@ function declineInterest(result,action, index){
    
     var address_url=window.location.href;
    if(address_url.indexOf("?") >= 0){
-		var hash;
-		var pageSource='';
-		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		var hash,pageSource='', hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
 		for(var i = 0; i < hashes.length; i++)
 		{
 			hash = hashes[i].split('=');
@@ -802,8 +776,7 @@ function writeMessage(result, action, index){
             {
             if(MsgWindowLoading)return;
             MsgWindowLoading=1;
-            var tempParams=paramsForMsgWindow;
-            var tempIndex=indexForMsgWindow;
+            var tempParams=paramsForMsgWindow, tempIndex=indexForMsgWindow;
                 performAction("WRITE_MESSAGE", tempParams, tempIndex,false,0);
             }
         });
@@ -814,25 +787,21 @@ function writeMessage(result, action, index){
   $("#updateMsgId").val(index);
   bgSetting();
   $("#commonOverlay").hide();
-  var actionSel;
-        var writeMessageOverlayId =actionTemplate[action];
+  var actionSel,writeMessageOverlayId =actionTemplate[action];
   if(result.button)
      actionSel =result.button['action'];
 
   $("#"+writeMessageOverlayId).show();
   if(result.cansend=='true'){
       
-    var toggleSet;
-    var toggleChk;
+    var toggleSet,toggleChk;
     $("#presetMessageId").show();
-    var messageObjArr   =result.messages; 
-    var htmlArr   =new Array();
-          $("#comm_footerMem").hide();
+    var messageObjArr   =result.messages, htmlArr   =new Array(), msgLoopStr ="<div class='fontlig f16 white com_pad1' id='presetMessageDispId'><span id='presetMessageTxtId'></span><span class='dispbl f12 color1 pt5 white' id='presetMessageStatusId'></span></div>";
+        $("#comm_footerMem").hide();
           $("#comm_footerMsg").show();
-    setTextAreaHgt();
-    var msgLoopStr ="<div class='fontlig f16 white com_pad1' id='presetMessageDispId'><span id='presetMessageTxtId'></span><span class='dispbl f12 color1 pt5 white' id='presetMessageStatusId'></span></div>";
+    
  //   $("#presetMessageId").html(msgLoopStr);
-
+    setTextAreaHgt();
     if(messageObjArr){
       $.each(messageObjArr, function(objVal,objLabel){ 
          var tempDiv=$('<div>').append(msgLoopStr);
@@ -858,9 +827,7 @@ function writeMessage(result, action, index){
         var tempStr =tempDiv.html(); 
         htmlArr.push(tempStr);
       });
-      var messageStr=htmlArr.join("");
-      var JObject=$("#presetMessageId").eq(0);
-      var JObject2=$("#msgId").eq(0);
+      var messageStr=htmlArr.join(""),JObject=$("#presetMessageId").eq(0),JObject2=$("#msgId").eq(0);
       if(msgWindowOn==0)JObject.html('');
       msgWindowHeight=JObject2.prop('scrollHeight');
       JObject.prepend(messageStr);
@@ -884,8 +851,7 @@ function writeMessage(result, action, index){
       $("#CEmembershipMessage2").hide(); 
     $("#freeMsgId").css('top',$(window).height()/2+'px').show();
     $("#comm_footerMem").show();
-    $("#memTxtId").show();
-    $("#memTxtId").html(result.button.label);
+    $("#memTxtId").show().html(result.button.label);
     setWindowParams(result.label, result.viewed, index);
         }
   setTimeout(function(){$("#setMsgHght").attr("tabindex",-1).css('outline',0).focus();}, 0);
@@ -906,8 +872,7 @@ function sendReminder(result, action, index){
     if(result.actiondetails.lastsent)
       $("#writeMessageTxtId").val(result.actiondetails.lastsent);
     $("#presetMessageId").show();
-    $("#writeMsgDisplayId").show();
-    $("#writeMsgDisplayId").html('');
+    $("#writeMsgDisplayId").show().html('');
     $("#presetMessageTxtId").html('Reminder sent. You may send a personalized message with the reminder');
     $("#comm_footerMem").hide();
     $("#comm_footerMsg").show();
@@ -940,8 +905,8 @@ function sendMessage(result, action, index){
   //$("#comm_footerMsg").removeClass('posfix btmo');
         if(result.responseMessage=='Successful'){
                 var msgContent  =nl2br($("#writeMessageTxtId").val());
-    $("#presetMessageId").show();
-            $("#writeMsgDisplayId").show();
+    $("#presetMessageId,#writeMsgDisplayId").show();
+           // $("#writeMsgDisplayId").show();
     $("#writeMessageTxtId").val('');
 
     var htmlStr =$("<div class='txtr com_pad_l fontlig f16 white com_pad1'><div class='com_pad2 clearfix fl dispibl writeMsgDisplayTxtId' style='width:100%' ></div><div class='dispbl f12 color1 pt5 white txtr msgStatusTxt'  id='msgStatusTxt'></div></div><div style='height:1px'></div>");
@@ -962,14 +927,14 @@ function sendMessage(result, action, index){
     //    $("#writeMsgDisplayId").html(oldHtml+newHtml);
 
       if(writeMessageAction=='REMINDER' || writeMessageAction=='INITIATE'){
-        $("#parentFootId").show();
+        $("#parentFootId,#crossButId").show();
         $("#comm_footerMsg").hide();
-        $("#crossButId").show();
+        //$("#crossButId").show();
         
       }
       else{
-                                $("#parentFootId").show();
-        $("#comm_footerMsg").show();  
+                                $("#parentFootId,#comm_footerMsg").show();
+        //$("#comm_footerMsg").show();  
                                 $("#crossButId").hide();
       }
                }
@@ -1055,11 +1020,11 @@ function initiateContact(result,action, index){
     $("#writeMessageTxtId").val('');
     if(result.actiondetails.lastsent)
       $("#writeMessageTxtId").val(result.actiondetails.lastsent);
-    $("#presetMessageId").show();
+    $("#presetMessageId,#comm_footerMsg").show();
     $("#presetMessageTxtId").html('Interest sent. You may send a personalized message with the interest.');
     $("#writeMsgDisplayId").html('');
     $("#comm_footerMem").hide();
-    $("#comm_footerMsg").show();
+    //$("#comm_footerMsg").show();
     setWindowParams(result.actiondetails.headerlabel,result.actiondetails.headerthumbnailurl.url,index);
   }
   else
@@ -1086,11 +1051,11 @@ function contactDetailMessage(result,action,index)
     data: params,
     //crossDomain: true,
     success: function(response){
-      $("#contactLoader").hide();
-      $("#footerButton").hide();
-      $("#ViewContactPreLayer").hide();
-      $("#ViewContactPreLayerNoNumber").hide();
-      $("#neverMindLayer").hide();
+      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer").hide();
+      //$("#footerButton").hide();
+      //$("#ViewContactPreLayer").hide();
+      //$("#ViewContactPreLayerNoNumber").hide();
+     // $("#neverMindLayer").hide();
       $("#closeLayer").show();
       popBrowserStack();
       contactDetail(response,action, index);
@@ -1100,8 +1065,8 @@ function contactDetailMessage(result,action,index)
 
 function contactDetail(result,action, index){
 
-    $("#topMsg2").hide();
-  $("#topMsg").hide();
+    $("#topMsg2,topMsg").hide();
+  //$("#topMsg").hide();
   $("#"+actionTemplate[action]).show();
   /*if(result.footerbutton)
   {
@@ -1112,12 +1077,8 @@ function contactDetail(result,action, index){
     {
     showCommonOverlay();
     $("#buttonsOverlay").hide();
-    $("#topMsg2").show();
     $("#topMsg2").html(result.actiondetails.errmsglabel);
-    $("#mobile").show();
-    $("#mobileValBlur").show();
-    $("#landline").show();
-    $("#landlineValBlur").show();
+    $("#topMsg2, #mobile, #mobileValBlur, #landline, #landlineValBlur").show();
     if(result.actiondetails.footerbutton && result.actiondetails.footerbutton.text)$("#membershipMessageCE").text(result.actiondetails.footerbutton.text).show();else $("#membershipMessageCE").hide(); 
     }
 else
@@ -1125,16 +1086,14 @@ else
 
     if(result.actiondetails.membershipOfferMsg)$("#membershipMessageCE").text(result.actiondetails.membershipOfferMsg).show();else $("#membershipMessageCE").hide(); 
     if(result.actiondetails.contactdetailmsg){
-    $("#topMsg2").html(result.actiondetails.contactdetailmsg);
-    $("#topMsg2").show();
+    $("#topMsg2").html(result.actiondetails.contactdetailmsg).show();
   }
   else
     $("#topMsg2").hide();
     
   if(result.actiondetails.topmsg)
   {
-    $("#topMsg2").html(result.actiondetails.contactdetailmsg);
-    $("#topMsg2").show();
+    $("#topMsg2").html(result.actiondetails.contactdetailmsg).show();
   }
   else
     $("#topMsg").hide();
@@ -1150,13 +1109,12 @@ else
 
 
 if(result.actiondetails.bottommsg2){
-    $("#bottomMsg2").html(result.actiondetails.bottommsg2);
-    $("#bottomMsg2").css('display', 'inline-block');
+    $("#bottomMsg2").html(result.actiondetails.bottommsg2).css('display', 'inline-block');
   }
   
   if(result.actiondetails.contact1){
-    $("#mobileVal").hide();
-    $("#mobileValBlur").hide();
+    $("#mobileVal,#mobileValBlur").hide();
+    //$("#mobileValBlur").hide();
     $("#mobile").show();
     if(result.actiondetails.contact1.value=="blur"){ $("#mobileValBlur").show(); $("#neverMindLayer").show(); }
     else $("#mobileVal").show();
@@ -1168,8 +1126,8 @@ if(result.actiondetails.bottommsg2){
   }
         
         if(result.actiondetails.contact2){
-    $("#landlineValBlur").hide();
-                $("#landlineVal").hide();
+    $("#landlineValBlur,#landlineVal").hide();
+            // $("#landlineVal").hide();
                 $("#landline").show();
                 if(result.actiondetails.contact2.value=="blur") { $("#landlineValBlur").show(); $("#neverMindLayer").show();}
                 else $("#landlineVal").show();$("#landlineVal").html(result.actiondetails.contact2.value);
@@ -1179,8 +1137,8 @@ if(result.actiondetails.bottommsg2){
         }
     }
         if(result.actiondetails.contact3){
-    $("#alternateValBlur").hide();
-                $("#alternateVal").hide();
+    $("#alternateValBlur,#alternateVal").hide();
+               // $("#alternateVal").hide();
                 $("#alternate").show();
                 if(result.actiondetails.contact3.value=="blur"){ $("#alternateValBlur").show(); $("#neverMindLayer").show(); }
                     else $("#alternateVal").show();$("#alternateVal").html(result.actiondetails.contact3.value);
@@ -1192,8 +1150,8 @@ if(result.actiondetails.bottommsg2){
     
     }
         if(result.actiondetails.contact4){
-                $("#emailVal").hide();
-    $("#emailValBlur").hide();
+                $("#emailVal,#emailValBlur").hide();
+    //$("#emailValBlur").hide();
                 $("#email").show();
                 if(result.actiondetails.contact4.value=="blur") { $("#emailValBlur").show(); $("#neverMindLayer").show();}
                 else $("#emailVal").show();$("#emailVal").html(result.actiondetails.contact4.value);
@@ -1217,8 +1175,8 @@ if(result.actiondetails.bottommsg2){
     }
     if(result.actiondetails.errmsglabel)
     {
-      $("#topMsg2").hide();
-      $("#landline").hide();
+      $("#topMsg2,#landline").hide();
+      //$("#landline").hide();
       //$("#ViewContactPreLayerTextNoNumber").html("You will be able to see the Email Id of "+result.actiondetails.headerlabel+ "but not the phone number. This is because "+result.actiondetails.headerlabel+"'s has chosen to hide phone number.");
      $("#ViewContactPreLayerTextNoNumber").html(result.actiondetails.errmsglabel);
       $("#ViewContactPreLayerNoNumber").show();
@@ -1260,9 +1218,9 @@ function shortlist(result,action,index){
 
 function ignore(result,action,index){
         if(profile_index[index]['IGNORE'] == 1) {       // block request
-                $("#buttonsOverlay").hide();
-    $("#topMsg2").hide();
-    $("#topMsg").hide();
+                $("#buttonsOverlay,#topMsg2,#topMsg").hide();
+    //$("#topMsg2").hide();
+   // $("#topMsg").hide();
                 $("#confirmationOverlay").show();
                 $("#confirmMessage0").show().text("This profile has been moved to your Blocked Members & will no longer appear in your search results");
                 //
@@ -1278,8 +1236,8 @@ function ignore(result,action,index){
         }
       };
                         performAction("IGNORE", params, index,false);
-                        $("#confirmMessage0").hide();
-                        $("#footerButton").hide();
+                        $("#confirmMessage0,#footerButton").hide();
+                        //$("#footerButton").hide();
                 });
                 $("#footerButton").show().text("Close").click(function(){
       $("#commonOverlay").hide();
@@ -1315,8 +1273,7 @@ function open3DotLayer(buttonDetails,index)
   current_index  = index;
   getButtonIndex(buttonDetails);
   showCommonOverlay();
-  $("#topMsg").show();
-  $("#topMsg").html(buttonDetails.topmsg);
+  $("#topMsg").show().html(buttonDetails.topmsg);
   //$("#topMsg2").show();
   $("#topMsg2").html(buttonDetails.topmsg2);
   var child=$("#buttonsOverlay > .forHide");
@@ -1355,14 +1312,10 @@ function open3DotLayer(buttonDetails,index)
 
 function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
 {
-	var primeButtonLabel = {};
-	var primeButtonAction = {};
-	var primeButtonEnable = {};	
-  var primeButtonParams = {};
+	var primeButtonLabel = {}, primeButtonAction = {}, primeButtonEnable = {}, buttonCount=jsmsButtons.buttons.length, primeButtonParams = {},buttonNumber=0;
 	if(page==null)
 		page="search";
-  var buttonCount=jsmsButtons.buttons.length;
-  var buttonNumber=0;
+  
   for (var i = 0; i < buttonCount; i++) {
     if(jsmsButtons.buttons[i].primary=="true"){
     primeButtonLabel[buttonNumber] = jsmsButtons.buttons[i].label;

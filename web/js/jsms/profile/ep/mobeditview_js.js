@@ -100,10 +100,7 @@ var mobEditPage=(function(){
                             current="Desired Partner";
                         if(key=="Details")
                         {
-                            if(value["basic"]["OnClick"][4]["label_val"]==="Male")
-                                current="Groom's Details";
-                            else
-                                current="Bride's Details";
+                                current="Basic Info";
                         }
 			//sliderDiv=sliderDiv.replace('sw', key+'_info_slider');
 			sliderDiv=sliderDiv.replace(/subHeadTab/g, key+'SubHead');
@@ -222,6 +219,8 @@ var mobEditPage=(function(){
 				if(value!=null)
 				$.each(value, function(k ,v)
 				{
+					if(v.outerSectionKey!="NameoftheProfileCreator")
+					{
 					
 					sliderDiv=sliderDiv.replace('EditFieldName', v.outerSectionKey+'_name');
 					sliderDiv=sliderDiv.replace('EditFieldLabelValue', v.outerSectionKey+'_value');				
@@ -349,6 +348,7 @@ var mobEditPage=(function(){
 					
 					i=2;
 					sliderDiv=originalDiv;
+  				  }
 				});
 				
 				if(st==1)

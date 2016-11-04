@@ -239,7 +239,7 @@ return 0;
                     break;
 
                       case '10': 
-                      if(!$isApp || $isApp=='A')
+                      if(!$isApp)
                       {
                         if($profileObj->getHAVEPHOTO() == 'Y' && $profileObj->getPHOTO_DISPLAY() == 'C')
                           $show = 1;
@@ -260,7 +260,7 @@ return 0;
                     break;
 
                       case '12':               
-                      if(!$isApp || $isApp=='A')
+                      if(!$isApp)
                       { 
                         $horoscopeObj = new Horoscope();
                         if($profileObj->getHOROSCOPE_MATCH() == 'Y' && $horoscopeObj->ifHoroscopePresent($profileid) == 'N')

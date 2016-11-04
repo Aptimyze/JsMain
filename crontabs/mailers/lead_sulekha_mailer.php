@@ -104,7 +104,7 @@ function male_mailer_content($leadid,$religion,$mtongue,$age,$SITE_URL)
 	$str .="On the basis of profile details provided by you, we have searched the Jeevansathi.com database for $religion female profiles under the age of $age from $mtongue. <br><br>";
 	$str .="We are happy to inform you that we have found several female profiles that match your criteria. <br> 
 		To get the details of these profiles, please <a href='$url' target='_blank' style='text-decoration:underline; color:#006fb5;'>register with Jeevansathi.com.</a> <br> 
-		Once you register, you will get daily match alerts in your inbox. <br> 
+		Once you register, you will get daily recommendations in your inbox. <br> 
 		If you need any assistance, please do get in touch with us.<br><br>";
 	$str .="Best regards, <br>";
 	$str .="Jeevansathi.com Team<br>";
@@ -119,7 +119,7 @@ function female_mailer_content($leadid,$religion,$mtongue,$age,$SITE_URL)
         $str .="On the basis of profile details provided by you, we have searched the Jeevansathi.com database for $religion male profiles above the age of $age from $mtongue. <br><br>";
         $str .="We are happy to inform you that we have found several male profiles that match your criteria. <br> 
                 To get the details of these profiles, please <a href='$url' target='_blank' style='text-decoration:underline; color:#006fb5;'>register with Jeevansathi.com.</a> <br> 
-                Once you register, you will get daily match alerts in your inbox. <br> 
+                Once you register, you will get daily recommendations in your inbox. <br> 
                 If you need any assistance, please do get in touch with us.<br><br>";
         $str .="Best regards, <br>";
         $str .="Jeevansathi.com Team<br>";

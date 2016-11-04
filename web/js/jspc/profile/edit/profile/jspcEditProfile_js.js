@@ -2735,7 +2735,7 @@ EditApp = function(){
          
         var fieldObject = editAppObject[sectionId][fieldKey];
         
-        if(typeof fieldObject == "undefined"){
+        if(typeof fieldObject == "undefined" || fieldObject.key=="PROFILE_HANDLER_NAME"){
           if(debugInfo)
             console.log("i : " + i);
           continue;
