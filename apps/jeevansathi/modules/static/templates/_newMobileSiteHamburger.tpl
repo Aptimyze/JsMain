@@ -1,3 +1,4 @@
+
 ~assign var=showKundliList value= $sf_request->getParameter('showKundliList')`
 <div >
 	<div id="outerHamDiv" class="fullwid outerdiv" >
@@ -8,8 +9,9 @@
 			
 		<div id="mainHamDiv" class="wid76p" style="float:left;">
 		
+
 			
-			<div id="newHamlist"class="hamlist hampad1" > 
+			<div id="newHamlist" class="hamlist hampad1" > 
                 		 <!--start:top header hamburger-->
           <div id="HamMenu" class="fontlig padHamburger">
             <div class="fl fullwid pt7">

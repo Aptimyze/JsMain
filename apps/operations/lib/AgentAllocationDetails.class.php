@@ -695,6 +695,8 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 
 			// first time screening check
 			if($subMethod=='FIELD_SALES'){
+				$screenedTimeHandled =date('Y-m-d H:i:s');
+				$screenedTimeHandled =date('Y-m-d H:i:s', strtotime('-24 hours',strtotime($screenedTimeHandled)));
 				$lastScreenedTime=$screeningObj->lastScreenedTime($profileid,$screenedTimeHandled);	
 				if(JSstrToTime($entryDt)>=JSstrToTime($lastScreenedTime)){}
 				else
@@ -1944,7 +1946,7 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
         if($method=='FIELD_SALES' || $method=='PRE_ALLOCATION'){
                 if(count($profileArr)>0){
 			if($method=='FIELD_SALES')
-				$preAllocationObj =new incentive_PROFILE_ALLOCATION_TECH('newjs_slave');
+				$preAllocationObj =new incentive_PROFILE_ALLOCATION_TECH('newjs_masterRep');
 			else
                         	$preAllocationObj =new incentive_PROFILE_ALLOCATION_TECH();
                         $profileArrNew =$preAllocationObj->getAllotedProfiles($profileArr);

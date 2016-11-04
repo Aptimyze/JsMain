@@ -115,5 +115,7 @@ class ResponseHandlerConfig
     public static $ZERO_GUNA_MATCHES = array("message"=>"No Guna Score Matches","statusCode"=>'1');
     public static $NO_COMMUNICATION_HISTORY = array("message"=>"No Communication History","statusCode"=>'1');
 
+    // Captcha Not verified
+	public static $CAPTCHA_UNVERIFIED = array("message"=>"Please click the box 'I'm not a robot'","statusCode"=>'1');
 }
 ?>

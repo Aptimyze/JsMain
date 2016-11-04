@@ -168,14 +168,17 @@ class LoggingManager
 	{
 
 		$logData = $this->getLogData($exception,$isSymfony,$logArray);
-		$logData[LoggingEnums::LOG_TYPE] = $this->getLogType(LoggingEnums::LOG_ERROR);
-		if(LoggingConfig::getInstance()->debugStatus($this->moduleName) && LoggingConfig::getInstance()->serverParamStatus($this->moduleName))
+		if($logData)
 		{
-			foreach ($_SERVER as $key => $value) {
-				$logData[$key] = $value;
+			$logData[LoggingEnums::LOG_TYPE] = $this->getLogType(LoggingEnums::LOG_ERROR);
+			if(LoggingConfig::getInstance()->debugStatus($this->moduleName) && LoggingConfig::getInstance()->serverParamStatus($this->moduleName))
+			{
+				foreach ($_SERVER as $key => $value) {
+					$logData[$key] = $value;
+				}
 			}
+			$this->writeToFile(json_encode($logData));
 		}
-		$this->writeToFile(json_encode($logData));
 	}
 
 	/**
@@ -186,8 +189,11 @@ class LoggingManager
 	private function logInfo($message,$isSymfony=true,$logArray = array())
 	{
 		$logData = $this->getLogData($message,$isSymfony,$logArray);
-		$logData['logType'] = $this->getLogType(LoggingEnums::LOG_INFO);
-		$this->writeToFile(json_encode($logData));
+		if($logData)
+		{
+			$logData['logType'] = $this->getLogType(LoggingEnums::LOG_INFO);
+			$this->writeToFile(json_encode($logData));
+		}
 	}
 
 	/**
@@ -200,14 +206,17 @@ class LoggingManager
 	{
 
 		$logData = $this->getLogData($message,$isSymfony,$logArray);
-		$logData['logType'] = $this->getLogType(LoggingEnums::LOG_DEBUG);
-		if(LoggingConfig::getInstance()->serverParamStatus($this->moduleName))
+		if($logData)
 		{
-			foreach ($_SERVER as $key => $value) {
-				$logData[$key] = $value;
+			$logData['logType'] = $this->getLogType(LoggingEnums::LOG_DEBUG);
+			if(LoggingConfig::getInstance()->serverParamStatus($this->moduleName))
+			{
+				foreach ($_SERVER as $key => $value) {
+					$logData[$key] = $value;
+				}
 			}
+			$this->writeToFile(json_encode($logData));
 		}
-		$this->writeToFile(json_encode($logData));
 	}
 	/**
 	 * @return logdata.
@@ -217,7 +226,7 @@ class LoggingManager
 	 */
 	private function getLogData($exception,$isSymfony,$logArray)
 	{
-		$time = date('h:i:s');
+		$time = time();
 
 		$logId = $this->getLogId($logArray);
 		$clientIp = $this->getLogClientIP();
@@ -296,6 +305,12 @@ class LoggingManager
 		$logData[LoggingEnums::DOMAIN] = $_SERVER['HTTP_HOST'];
 		if(isset($logArray[LoggingEnums::REFERER]))
 		{
+			foreach (LoggingEnums::$Referer_ignore as $key => $value) {
+				if(strpos($logArray[LoggingEnums::REFERER], $value) !== false) {
+				    return false;
+				}
+			}
+
 			$logData[LoggingEnums::REFERER] = $logArray[LoggingEnums::REFERER];
 		}
 		return $logData;

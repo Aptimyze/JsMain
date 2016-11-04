@@ -70,6 +70,11 @@ if ($profileids_arr) {
             $memCacheObject->remove($profile . "_MEM_HAMB_MESSAGE");
             $memCacheObject->remove($profile . "_MEM_SUBSTATUS_ARRAY");
         }
+
+        // Code to sent service renewal SMS
+        if (strstr($servefor_str, 'F') !== false) { // Main Membership got activated
+            CommonUtility::sendPlusTrackInstantSMS('MEM_REN_ACT_CRON', $profile);
+        }
         unset($offline_bill);
 
     }
