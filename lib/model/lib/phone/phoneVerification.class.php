@@ -106,6 +106,31 @@ public function phoneUpdateProcess($message)
 			$row=$verifiedLogObj->getNoOfTimesVerified($profileid);
 			$noOfTimesVerified=$row['COUNT'];
 
+			/**
+			 * this condition is added for automate profile screeening.
+			 */
+
+			if($noOfTimesVerified == '0')
+			{
+                $memcacheObj = JsMemcache::getInstance();
+
+                $minute = date("i");
+                
+                
+                $key = JunkCharacterEnums::JUNK_CHARACTER_KEY;
+
+
+                $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
+
+                $startIndex = floor($minute/$redisQueueInterval);
+                
+                $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
+                
+                $memcacheObj->lpush($key,$profileid);
+
+			}
+
+
 			$this->sendMailerAfterVerification($noOfTimesVerified);
 			$this->trackingAfterVerification($noOfTimesVerified);
 
@@ -135,12 +160,13 @@ public function phoneUpdateProcess($message)
                                                         }
                                                         else
                                                         {
+                                                        	Duplicate::logIfDuplicate($this->profileObject,$this->phone);	
                                                               $this->sendMail();
                                                         }
                                                 }
                                                 else
                                                 {
-							Duplicate::logIfDuplicate($this->profileObject,$this->phone);
+											Duplicate::logIfDuplicate($this->profileObject,$this->phone);
                                                 }
 
 			            

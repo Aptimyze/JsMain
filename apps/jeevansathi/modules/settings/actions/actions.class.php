@@ -39,6 +39,7 @@ class settingsActions extends sfActions
     					if($privacyValue=="")
     						$privacyValue="A";
     					$privacyObj->UpdatePrivacy($request->getParameter("privacy"),$profileid);
+                                        PictureFunctions::photoUrlCachingForChat($profileid, array(), "ProfilePic120Url",'', "remove");
     					//$loggedInProfileObj->edit()
     					$privacyArray[0]=$request->getParameter("privacy");
     					$privacyArray[1]=$privacyValue;
@@ -60,12 +61,15 @@ class settingsActions extends sfActions
 
     	if($request->getParameter("hideDelete"))
     	{
-    		if(MobileCommon::isNewMobileSite())
+
+            if(MobileCommon::isNewMobileSite())
     		{
     			$url=JsConstants::$siteUrl.'/static/deleteOption';
 				header('Location: '.$url);
 				exit;
     		}
+            $phoneMob = $loggedInProfileObj->getPHONE_MOB();
+            $this->showOTP = $phoneMob ? 'Y' : 'N';
     		$option=$request->getParameter("option");
     		//$request=$this->getRequest();
     		//$this->loginData=$data=$request->getAttribute("loginData");
@@ -102,7 +106,7 @@ class settingsActions extends sfActions
                 	//echo"sdh";
     			$hideDays=$request->getParameter("hideDays");
     			$hideDeleteObj->UpdateHide($privacy,$profileid,$hideDays);
-                $this->hideProfile($profileid);
+                //$this->hideProfile($profileid);
     			$DeleteProfileObj->callDeleteCronBasedOnId($profileid);
                     //code cookie
     			$webAuthObj = new WebAuthentication;
@@ -210,6 +214,9 @@ public function executeAlertManager(sfWebRequest $request){
         }
         else
         {
+            if (is_numeric($iProfileID) === false) {
+                return;
+            }
             $path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $iProfileID > /dev/null &";
             $cmd = JsConstants::$php5path." -q ".$path;
             passthru($cmd);

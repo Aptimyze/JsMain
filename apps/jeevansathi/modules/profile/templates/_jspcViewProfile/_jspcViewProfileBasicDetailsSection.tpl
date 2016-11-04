@@ -1,7 +1,7 @@
         <div id="detailsContactCompleteDiv"  class="fl prfwid17 pos-rel CEParent">
             <!--start:description-->
             <div class="fl prfwid2 pos-rel ht220">
-          ~if $apiData['about']['introCallData']['OFFLINE_CALL_PROGRESS']`
+          ~if $apiData['about']['introCallData']['OFFLINE_CALL_PROGRESS'] || $apiData['button_details']['contactType'] eq 'E' || $apiData['button_details']['contactType'] eq 'D' || $apiData['button_details']['contactType'] eq 'C' || $SAMEGENDER`
           ~elseif ($apiData['about']['introCallData']['OFFLINE_ASSISTANT_ADD']||$apiData['about']['introCallData']['OFFLINE_ASSISTANT_REM']) && $apiData['about']['introCallData']['introCallDetail']['PURCHASED']`
             <!--start:we talk for you added-->  
             <div class="pos-abs" style="top:80%; right:30px;">
@@ -93,7 +93,7 @@
                     ~/if`
                   </ul> 
                 </div>
-                  <div class="pt10"> 
+                  <div class="pt20"> 
 
                                           <span class="disp_ib pos-rel communicationToolTip">
                     ~if !$loginProfileId`
@@ -110,7 +110,7 @@
                     <!--end:tooltip--> 
                   </span>
 
-                  <span class="disp_ib shareParent pos-rel pl10">
+                  <span class="disp_ib shareParent pos-rel pl15">
                   ~if !$loginProfileId`
                     <span class="disp_ib sprite2 prfic6 cursp loginLayerJspc"></span>
                   ~else`
@@ -124,6 +124,48 @@
                     </div>
                     <!--end:tooltip--> 
                   </span>
+
+                  <span class="disp_ib ignoreParent pos-rel pl15">
+                  ~if $apiData['page_info']['is_ignored']`
+                                <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" cEIgnoreDetailProfile" data="&ignore=0">
+                ~else`
+                  <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" ~if $loginProfileId`cEIgnoreDetailProfile~/if`" data="&ignore=1">
+                ~/if`
+                  ~if !$loginProfileId`
+                    <span class="disp_ib spriteIgnoreReport prfic51 cursp loginLayerJspc"></span>
+                  ~else`
+                    <span class="disp_ib spriteIgnoreReport prfic51 cursp ignore"></span> 
+                  ~/if`
+                    <!--start:tooltip-->
+                    <div class="ignoreChild">
+                      <div id="ignoreProfileToolTip" class="boxtip6 txtc colrw fontlig prfp8">
+                        ~if $apiData['page_info']['is_ignored']`
+                        Unblock Profile 
+                        ~else`
+                        Block Profile
+                        ~/if`
+                      </div>                                    
+                    </div>
+                    <!--end:tooltip--> 
+                  </span>
+                  </span>
+
+                  <span class="disp_ib reportParent pos-rel pl15">
+                  ~if !$loginProfileId`
+                    <span class="disp_ib spriteIgnoreReport prfic52 cursp loginLayerJspc"></span>
+                  ~else`
+                    <span class="disp_ib spriteIgnoreReport prfic52 cursp report js-action"></span> 
+                  ~/if`
+                    <!--start:tooltip-->
+                    <div class="reportChild">
+                      <div class="boxtip5 colrw fontlig prfp8 wd74">
+                        Report Profile
+                      </div>                                    
+                    </div>
+                    <!--end:tooltip--> 
+                  </span>
+
+
                   </div>
               </div>
             </div>

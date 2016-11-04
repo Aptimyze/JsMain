@@ -148,7 +148,9 @@ Class SearchResultscache
 										$solrServerUrl = JsConstants::$solrServerUrl1."/select";
 						else
 										$solrServerUrl = JsConstants::$solrServerUrl."/select";
-				}
+				}else{
+                                        $solrServerUrl = JsConstants::$solrServerUrl."/select";
+                                }
 				$res = CommonUtility::sendCurlPostRequest($solrServerUrl,$params);
 				$res = unserialize($res);
 				if($res['response']['docs'])

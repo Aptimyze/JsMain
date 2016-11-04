@@ -52,9 +52,13 @@ EOF;
 
                        //This call fetches the data that is stored in the log table so that they can be put in the NOT IN array in solr search
                        $deDupingArray = $kundliLogObj->getDeDupedProfiles($profileId,$requiredDate);
-
+                       $spaceSeperatedDeDupingString = "";
                        //array is imploded since space seperated string is to be sent in NOT IN array
-                       $spaceSeperatedDeDupingString = implode(" ", $deDupingArray);
+                       if(is_array($deDupingArray))
+                       {
+                            $spaceSeperatedDeDupingString = implode(" ", $deDupingArray);
+                       }
+                       
                        
                        $loggedInProfileObj = LoggedInProfile::getInstance();
                        $loggedInProfileObj->getDetail($profileId,"PROFILEID","*");
@@ -80,17 +84,23 @@ EOF;
                         $responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,$currentPage,'',$loggedInProfileObj);
                         $arr[$value["RECEIVER"]] = $responseObj->getsearchResultsPidArr();
                         $resultArr = $responseObj->getresultsArr();
-                        foreach($resultArr as $key=>$value)
+                        if(is_array($resultArr))
                         {
-                            foreach($value as $key1=>$v1)
+                            foreach($resultArr as $key=>$value)
                             {
-                                if($key1 == "GUNASCORE")
+                                if(is_array($value))
                                 {
-                                    $arr["GUNASCORE"][] = $v1;
-                                }
+                                    foreach($value as $key1=>$v1)
+                                    {
+                                        if($key1 == "GUNASCORE")
+                                        {
+                                            $arr["GUNASCORE"][] = $v1;
+                                        }
+                                    }
+                                }                                
                             }
-                            
                         }
+                        
                         //Calls function to get array in desired format
                         $finalArr = $this->getFinalArr($arr);            
                         $finalArr[$profileId]["SENT"]=kundliMatchAlertMailerEnums::$updateSent;
@@ -129,44 +139,47 @@ EOF;
     //Array received in $arr is altered in the required format
     public function getFinalArr($arr)
     {
-        foreach($arr as $key=>$val1)
+        if(is_array($arr))
         {
-            if($key != "GUNASCORE")
+            foreach($arr as $key=>$val1)
             {
-                if(count($val1)>0)
+                if($key != "GUNASCORE")
                 {
-                    foreach($this->userArray as $k1=>$v1)
+                    if(count($val1)>0)
                     {
-                        if(array_key_exists($k1, $val1))
+                        foreach($this->userArray as $k1=>$v1)
                         {
-                            $finalArr[$key][$this->userArray[$k1]] = $val1[$k1];
+                            if(array_key_exists($k1, $val1))
+                            {
+                                $finalArr[$key][$this->userArray[$k1]] = $val1[$k1];
+                            }
+                            else
+                            {
+                                $finalArr[$key][$this->userArray[$k1]] = 0;
+                            }
                         }
-                        else
+                    }
+                }
+                else
+                {
+                    if(count($val1)>0)
+                    {
+                        foreach($this->gunaUserArray as $k1=>$v1)
                         {
-                            $finalArr[$key][$this->userArray[$k1]] = 0;
+                            if(array_key_exists($k1, $val1))
+                            {
+                                $finalArr[$key][$this->gunaUserArray[$k1]] = $val1[$k1];
+                            }
+                            else
+                            {
+                                $finalArr[$key][$this->gunaUserArray[$k1]] = 0;
+                            }
                         }
                     }
                 }
             }
-            else
-            {
-                if(count($val1)>0)
-                {
-                    foreach($this->gunaUserArray as $k1=>$v1)
-                    {
-                        if(array_key_exists($k1, $val1))
-                        {
-                            $finalArr[$key][$this->gunaUserArray[$k1]] = $val1[$k1];
-                        }
-                        else
-                        {
-                            $finalArr[$key][$this->gunaUserArray[$k1]] = 0;
-                        }
-                    }
-                }
-            }
-
         }
+        
         return $finalArr;
     }
 

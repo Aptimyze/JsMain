@@ -921,7 +921,7 @@ class Membership
             else {
                 $deferrable = 'Y';
             }
-
+            unset($deferrable);
 
             $paramsPDStr = "BILLID,SERVICEID,CUR_TYPE,PRICE,DISCOUNT,NET_AMOUNT,START_DATE,END_DATE,SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SHARE,PROFILEID,STATUS,DEFERRABLE";
             $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
@@ -2045,7 +2045,8 @@ class Membership
                 $discount_type = 12;
             }
 
-            $allMembershipsNew = $allMemberships;
+            $allMembershipsNew = rtrim($allMemberships, ",");
+
             if ($fest && $mainServiceId) { // Get reverse Offer Mapping in case of festive 
                 $allMembershipsNew = $servObj->OfferMapping($allMembershipsNew);
             }
@@ -2053,6 +2054,8 @@ class Membership
             if (!$mainServiceId) {
                 $allMembershipsNew = $allMemberships;
             }
+
+            $allMembershipsNew = rtrim($allMembershipsNew, ",");
             
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid);
         }
@@ -2076,6 +2079,11 @@ class Membership
 
         if ($device == "JSAA_mobile_website") {
             $device = 'Android_app';
+        }
+
+        if ($allMembershipsNew != $allMemberships && JsConstants::$whichMachine == 'prod') {
+            $msg = "Mismatch in services sent to forOnline '{$allMemberships}' vs final sent to newOrder '{$allMembershipsNew}'<br>Profileid : '{$profileid}', Device : '{$device}'";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in forOnline function', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com");
         }
 
         $memHandlerObj->trackMembership($userObj, '', '', $service_str_off, '', $discount, $total, $paymentOptionSel, 'F', $device);

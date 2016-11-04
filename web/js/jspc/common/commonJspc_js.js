@@ -595,7 +595,8 @@ function sendAjaxHtmlDisplay(ajaxConfig, fun) {
         $('body').prepend(resp);
         showLayerCommon(resp.attr('id'));
         hideCommonLoader();
-        fun();
+        if(typeof fun=='function')
+            fun();
     };
     jQuery.myObj.ajax(ajaxConfig);
 }

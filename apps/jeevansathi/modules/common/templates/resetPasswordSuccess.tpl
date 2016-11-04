@@ -24,12 +24,12 @@
 			<div class="layerp1">
 			<div class="f17 grey5" id="titleErr">Forgot Password</div>
 			<div class="mt10">
-			<div id="ForgotPasswordMessage" class="f15 colr2 pt10">The link has been either accessed once or it has been more than 72 hours since you requested for it. In case you are trying to reset your password again, request for a new link below.</div>
-			<div id="forgotPasswordErr" class="f15 colr5 pt10 txtc vishid">Please enter vaild Email Id</div>
+			<div id="ForgotPasswordMessage" class="f15 colr2 pt10">The link has been either accessed once or it has been more than 24 hours since you requested for it. In case you are trying to reset your password again, request for a new link below.</div>
+			<div id="forgotPasswordErr" class="f15 colr5 pt10 txtc vishid">Please enter vaild Email Id or Phone number</div>
 			<div class="mt10"></div>
 			<form id="forgotPasswordForm" action="">
 			<div class="clearfix wid92p brderinp layerp2" id="userEmailBox">
-			<input type="text" class="bgnone f15 grey6 brdr-0 fl fullwid" placeholder="Registered Email Id" id="userEmail">
+			<input type="text" class="bgnone f15 grey6 brdr-0 fl fullwid" placeholder="Registered Email Id or Primary Mobile number" id="userEmail">
 			</div>
 			<div class="mt30">
 			<div class="lh63 txtc colrw f18 fullwid brdr-0 bg5 cursp"id="sendLinkForgot">Send Link</div>

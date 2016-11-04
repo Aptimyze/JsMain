@@ -207,7 +207,7 @@ class ViewContacts extends ContactEvent{
 		}
 		
 		$privArr1=ContactPrivilege::getPrivilegeArray($this->contactHandler);
-		if($privArr[0]['CONTACT_DETAIL']['VISIBILITY']!='Y' && CommonFunction::isPaid($this->contactHandler->getViewer()->getSUBSCRIPTION()) && !MobileCommon::isApp() && $privArr1[0]['CALL_DIRECT']['ALLOWED']=="Y" && $privArr1[0]['CONTACT_DETAIL']['VISIBILITY'] =="P")
+		if($privArr[0]['CONTACT_DETAIL']['VISIBILITY']!='Y' && CommonFunction::isPaid($this->contactHandler->getViewer()->getSUBSCRIPTION()) && MobileCommon::isApp()!="I" && $privArr1[0]['CALL_DIRECT']['ALLOWED']=="Y" && $privArr1[0]['CONTACT_DETAIL']['VISIBILITY'] =="P")
 		{
 			if($this->component->contactDetailsObj->getALT_MOBILE() || $this->component->contactDetailsObj->getMOB_PHONE_NO() || $this->component->contactDetailsObj->getRES_PHONE_NO())
 			{

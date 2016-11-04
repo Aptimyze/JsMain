@@ -1590,7 +1590,9 @@ class MembershipHandler
         }
 
         $from = "js-sums@jeevansathi.com";
-        SendMail::send_email($to, $msgBody, $subject, $from);
+        if (JsConstants::$whichMachine == 'prod') {
+            SendMail::send_email($to, $msgBody, $subject, $from);
+        }
     }
 
     public function oldJSMSsetSubcriptionExp($userObj, $memHandlerObj, $obj)
@@ -1908,5 +1910,17 @@ class MembershipHandler
         } else {
             return 0;
         }
+    }
+
+    public function getRenewCronSMSServiceName($profileid) {
+        $billServStatObj = new BILLING_SERVICE_STATUS();
+        $billServObj = new billing_SERVICES('newjs_slave');
+        $servAct = $billServStatObj->getLastActiveServiceDetails($profileid);
+        $serviceID = $servAct['SERVICEID'];
+        $servName = $billServObj->getServiceName($serviceID);
+        if (strstr($servAct['SERVEFOR'], 'N') !== false) {
+            $servName = str_replace('e-Value', 'eAdvantage', $servName);
+        }
+        return $servName;
     }
 }

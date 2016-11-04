@@ -149,7 +149,8 @@ $(function(){
         if($(".js-checkMatch").length ==0)
             $(".js-hideMatch").hide();
         $(".content").mCustomScrollbar();
-        displayViewSimilarProfiles();
+        if(hideUnimportantFeatureAtPeakLoad != '1')
+            displayViewSimilarProfiles();
 
         //function calling for report abuse layer
 		customOptionButton('report_profile');
@@ -235,6 +236,30 @@ function closeWeTalkForYou(){
               $('.js-overlay').fadeIn(200,"linear",function(){ $('#kundli-layer').fadeIn(200,"linear")});
           }
         });  
+      });
+      $(".js-astroCompMem,.js-freeAstroComp").click(function(){
+              showCommonLoader();
+              if($(this).hasClass('js-astroCompMem')){
+                  $("#buttonMem").html("Get Astro Compatibility");
+                  $("#textMem").html("You can view a detailed report of your compatibility with "+viewedProfileUsername+" by subscribing to our Astro compatibility addon");
+                  $("#buttonMem").attr("href","/membership/jspc");
+              }
+              else{
+                  $("#buttonMem").html("Upgrade Membership");
+                  $("#buttonMem").attr("href","/membership/jspc");
+              }
+              $('.js-overlay').fadeIn(200,"linear",function(){ $('#astroComp').fadeIn(200,"linear")});  
+              hideCommonLoader();
+      });
+      $(".js-astroMem").click(function(){
+          $.ajax({
+                    method: "POST",
+                    url : "/profile/check_horoscope_compatibility.php?profilechecksum="+ProCheckSum+"&sendMail=1",
+                    async:true,
+                    timeout:20000,
+                    success:function(response){
+                    }
+           });
       });
 });
 function moveline(widthParam, leftParam){	
@@ -407,6 +432,9 @@ function showConfirmationMessage(){
 }
 $('#cls-view-horo').click(function(){
 	$('#kundli-layer').fadeOut(300,"linear",function(){ $('.js-overlay').fadeOut(200,"linear")});
+});
+$('#cls-astroComp').click(function(){
+	$('#astroComp').fadeOut(300,"linear",function(){ $('.js-overlay').fadeOut(200,"linear")});
 });
 
 $('.js-searchTupleImage').click(function(){

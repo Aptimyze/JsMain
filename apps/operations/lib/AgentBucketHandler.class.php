@@ -247,7 +247,7 @@ class AgentBucketHandler
 		$agentAllocDetailsObj	=new AgentAllocationDetails();	
 		$locationObj		=new incentive_LOCATION('newjs_slave');		
 		$subLocationObj		=new incentive_SUB_LOCATION('newjs_slave'); 	
-		$agentAllotedObj	=new AGENT_ALLOTED('newjs_slave');
+		$agentAllotedObj	=new AGENT_ALLOTED('newjs_masterRep');
 		$agentAllocObj          =new AgentAllocation();
 		//$newCityMapping       =array('UP47'=>'UP25','UP48'=>'UP12');	
 		$newCityMapping         =array('UP48'=>'UP12');
@@ -339,11 +339,16 @@ class AgentBucketHandler
 				$subscription=$profilesDetails['SUBSCRIPTION'];
 				if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!=""))
 				{
-					$expiryDt=$serviceStatusObj->getMaxExpiryDate($profileid);
-					if(JSstrToTime($expiryDt)==JSstrToTime(date("Y-m-d",time())))
+					if($subMethod=='NEGATIVE_LIST'){
 						$profilesForDeletion[]=$profiles[$i];
-					else
-						continue;
+					}
+					else{
+						$expiryDt=$serviceStatusObj->getMaxExpiryDate($profileid);
+						if(JSstrToTime($expiryDt)==JSstrToTime(date("Y-m-d",time())))
+							$profilesForDeletion[]=$profiles[$i];
+						else
+							continue;
+					}
 				}
 				else
 					$profilesForDeletion[]=$profiles[$i];

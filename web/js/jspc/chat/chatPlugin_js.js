@@ -3,6 +3,7 @@ var JsChat = function () {
     this._construct(this, arguments);
 };
 var lrr;
+var tab1ListingIds = {},tab2ListingIds = {};
 //start:prototype
 JsChat.prototype = {
     _mainID: "#chatOpenPanel",
@@ -26,7 +27,8 @@ JsChat.prototype = {
     _listingTabs: {},
     _loginFailueMsg: "Login Failed,Try later",
     _noDataTabMsg: {
-        "tab1": "<span class='fontreg pb10 disp_b'>There are no matching members online</span> Please <a href='/profile/dpp' class='color5 cursp'>relax your partner preference</a> to see more matches.",
+        "tab1": "<span class='fontlig pb10 disp_b'>There are no shortlisted members online</span> You can find online members by clicking ‘Online Now’ link present on right, after conducting a search.",
+        //"tab1": "<span class='fontreg pb10 disp_b'>There are no matching members online</span> Please <a href='/profile/dpp' class='color5 cursp'>relax your partner preference</a> to see more matches.",
         "tab2": "You currently don’t have any accepted members, get started by sending interests or initiating chat with your matches."
     },
     _rosterDetailsKey: "rosterDetails",
@@ -39,9 +41,10 @@ JsChat.prototype = {
     _rosterGroups:[],
     _checkForDefaultEoiMsg:false,
     _setLastReadMsgStorage:true,
-    _chatAutoLogin:true,
+    _chatAutoLogin:false,
     _categoryTrackingParams:{},
     _groupBasedConfig:{},
+    _defaultActiveTab:"tab1",
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -162,16 +165,50 @@ JsChat.prototype = {
     //start:maximize html
     _maximizeChatPanel: function () {
         var curEle = this;
-        //this._chatLoggerPlugin('in max');
-        //this._chatLoggerPlugin($(this._maxChatBarOut));
-        $("chat-box").each(function (index, element) {
+        /*$("chat-box").each(function (index, element) {
             if ($(this).attr("pos-state") == "open") {
                 curEle._scrollUp($(this), "297px","noAnimate",true);
             }
+        });*/
+        var data = [];
+        if(localStorage.getItem("chatBoxData")) {
+            data = JSON.parse(localStorage.getItem("chatBoxData"));
+        }
+
+        $.each(data, function(index,elem){
+            //console.log("data",data);
+            if($('chat-box[user-id="' + elem["userId"] + '"]').length == 0){
+                $("#"+elem["userId"]+"_"+elem["group"]).click();    
+            }
+            if($('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "open" || elem["state"] == "") {
+                $('chat-box[user-id="' + elem["userId"] + '"] .chatBoxBar').click();
+                setTimeout(function(){
+                    curEle._scrollToBottom(elem["userId"],"noAnimate");
+                },50);
+                var bubbleData = [];
+                if(localStorage.getItem("bubbleData_new")) {
+                    bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
+                }
+                var indexToBeRemoved;
+                $.each(bubbleData, function(index2, elem2){
+                    if(elem2.userId == elem["userId"]) {
+                        indexToBeRemoved = index2;
+                    }
+                });
+                if(indexToBeRemoved != undefined) {
+                    bubbleData.splice(indexToBeRemoved,1);
+                }
+                localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
+        
+            }
+            if(!$('chat-box[user-id="' + elem["userId"] + '"] img').hasClass("downBarPicMin") && elem["state"] == "min") {
+                $('chat-box[user-id="' + elem["userId"] + '"] .nchatic_2').click();
+            }
         });
+        curEle._changeLocalStorage("chatStateChange","","","max");
+        //curEle._changeLocalStorage("chatBubbleStateChange","","","0");
         $(this._maxChatBarOut).remove();
         if (this._checkWidth()) {
-            //this._chatLoggerPlugin('screen size less than 1024');
             $(this._parendID).fadeIn('slow');
         } else {
             $("body").css('width','80%');
@@ -219,6 +256,7 @@ JsChat.prototype = {
         $("chat-box").each(function (index, element) {
             curEle._scrollDown($(this), "min");
         });
+        curEle._changeLocalStorage("chatStateChange","","","min");
         $(curEle._chatBottomPanelID).hide();
         if (curEle._checkWidth()) {
             $(curEle._parendID).fadeOut('slow', function () {
@@ -239,13 +277,49 @@ JsChat.prototype = {
         });
     },
     //start:chat tabs click
-    _chatTabs: function (param) {
+    _chatTabs: function (param,type) {
+        var curElem = this;
         if($('#' + param).hasClass("active") == false) {
+            //console.log("param",param);
+            curElem._changeLocalStorage("tabStateChange","","",param);
+            /*if(param == "tab1") {
+                curElem._changeLocalStorage("tabStateChange","","","online");
+            }
+            else if(param == "tab2") {
+                curElem._changeLocalStorage("tabStateChange","","","accepted");
+            }*/
             $('ul.nchattab1 li').removeClass('active cursd');
             $('#' + param).addClass('active cursd');
-            $('.js-htab').fadeOut('slow').promise().done(function () {
+            if(type == "noAnimate") {
+                $('.js-htab').hide();
+                $('.show' + param).show();  
+            }
+            else {
+                $('.js-htab').fadeOut('slow').promise().done(function() {
+                    $('.show' + param).fadeIn('slow');
+                    $(curElem._scrollDivId).mCustomScrollbar("scrollTo",0,{dur:0,scrollEasing:"mcsEaseInOut"});
+                }); 
+            }
+            /*$('.js-htab').fadeOut('slow').promise().done(function () {
                 $('.show' + param).fadeIn('slow')
-            });
+            });*/
+        }
+        
+        var apiParams = {};
+        if(localStorage && localStorage.getItem("tabState") == "tab1"){
+            apiParams["profiles"] = tab1ListingIds;
+            tab1ListingIds.length = 0;
+        }
+        else if(localStorage && localStorage.getItem("tabState") == "tab2") {
+            apiParams["profiles"] = tab2ListingIds;
+            tab2ListingIds.length = 0;
+        }
+        if (apiParams["profiles"] != undefined && Object.keys(apiParams["profiles"]).length > 1) {
+            //apiParams["pid"] = jidStr.slice(0, -1);
+            apiParams["photoType"] = "ProfilePic120Url";
+            apiParams["initialList"] = true;
+            //console.log("request2");
+            requestListingPhoto(apiParams);
         }
     },
     onLogoutPreClick: null,
@@ -387,8 +461,14 @@ JsChat.prototype = {
         TabsOpt += '</div>';
         $(this._listingPanelID).append(TabsOpt);
         $(this._tabclass).click(function () {
-            curEle._chatTabs($(this).attr('id'));
-        })
+            curEle._chatTabs($(this).attr('id'),"");
+        });
+        if(localStorage.getItem("tabState") == undefined) {
+            curEle._changeLocalStorage("tabStateChange","","",curEle._defaultActiveTab);    
+        } else { 
+            //console.log("tabstate",localStorage.getItem("tabState"));
+            curEle._chatTabs(localStorage.getItem("tabState"),"noAnimate");
+        }
     },
     noResultError: function () {
         var dataLength;
@@ -504,7 +584,7 @@ JsChat.prototype = {
     addListingInit: function (data,operation) {
         var elem = this,
             statusArr = [],
-            jidStr = "",
+            //jidStr = "",
             currentID;
         //this._chatLoggerPlugin("addListing");
         for (var key in data) {
@@ -516,12 +596,21 @@ JsChat.prototype = {
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
-                jidStr = jidStr + runID + ",";
+                //jidStr = jidStr + runID + ",";
                 statusArr[runID] = status;
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     var that = this;
+                    //console.log("ankita",data[key]["rosterDetails"]["groups"]);
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         //that._chatLoggerPlugin("groups " + val);
+                        if(chatConfig.Params.pc.tab1groups.indexOf(val) !== -1){
+                            //tab1ListingIds.push(key);
+                            tab1ListingIds[key] = {"PROFILEID":key,"GROUP":val};
+                        }
+                        else if (chatConfig.Params.pc.tab2groups.indexOf(val) !== -1){
+                            //tab2ListingIds.push(key);
+                            tab2ListingIds[key] = {"PROFILEID":key,"GROUP":val};
+                        }
                         var List = '',
                             fullname = data[key]["rosterDetails"]["fullname"],
                             tabShowStatus = $('div.' + val).attr('data-showuser'),
@@ -543,10 +632,8 @@ JsChat.prototype = {
                         List += '</li>';
                         var addNode = false;
                         if (tabShowStatus == 'false') {
-                            //that._chatLoggerPlugin(status + "2222");
                             addNode = true;
-                        } else {
-                            //that._chatLoggerPlugin(status + "1111");
+                        } else {  
                             if (status == 'online') {
                                 addNode = true;
                             }
@@ -555,8 +642,6 @@ JsChat.prototype = {
                         if (addNode == true) {
                             if ($('#' + runID + "_" + val).length == 0) {
                                 if ($('#' + runID + "_" + val).find('.nchatspr').length == 0) {
-                                    //that._chatLoggerPlugin("checking no of nodes in group " + $('div.' + val + ' ul li').size());
-                                    //that._chatLoggerPlugin("b2");
                                     var tabId = $('div.' + val).parent().attr("id");
                                     if ($("#show" + tabId + "NoResult").length != 0) {
                                         that._chatLoggerPlugin("me");
@@ -573,11 +658,7 @@ JsChat.prototype = {
                                             setTimeout(function(){
                                                $("#"+currentID+"_hover").css("visibility","hidden"); 
                                             },100);
-                                            //console.log("A",currentID);
-                                            //console.log("B",statusArr[currentID]);
-                                            //console.log("C",$(this).attr("data-jid"));
-                                            //console.log("D",$(this).attr("data-checks"));
-                                            //console.log("E",$(this).attr("id").split("_")[1]);
+                                           
                                             //setTimeout(function(){
                                                 elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
                                             //    console.log("Timeouttocreatechatbox");
@@ -611,12 +692,26 @@ JsChat.prototype = {
             global: elem
         }, elem._calltohover);
         //var APIsrc ="http://xmppdev.jeevansathi.com/api/v1/social/getMultiUserPhoto?pid=";
-        //this._chatLoggerPlugin("api");
-        //this._chatLoggerPlugin(jidStr);
         var apiParams = {};
-        if (jidStr) {
-            apiParams["pid"] = jidStr.slice(0, -1);
+        if(localStorage && localStorage.getItem("tabState") == "tab1"){
+            apiParams["profiles"] = tab1ListingIds;
+            tab1ListingIds.length = 0;
+            tab1ListingIds = {};
+        }
+        else if(localStorage && localStorage.getItem("tabState") == "tab2") {
+            apiParams["profiles"] = tab2ListingIds;
+            tab2ListingIds.length = 0;
+            tab2ListingIds = {};
+        }
+        if(apiParams["profiles"] != undefined && Object.keys(apiParams["profiles"]).length > 0){
             apiParams["photoType"] = "ProfilePic120Url";
+            if(operation == "create_list"){
+                apiParams["initialList"] = true;
+            }
+            else{
+                apiParams["initialList"] = false;
+            }
+            //console.log("request1");
             requestListingPhoto(apiParams);
         }
         if(operation == "create_list"){
@@ -787,9 +882,9 @@ JsChat.prototype = {
                 elem.find(".chatBoxBar").addClass("js-minimizedChatBox");
                 elem.find(".downBarPic").addClass("downBarPicMin");
                 elem.find(".downBarUserName").addClass("downBarUserNameMin");
-                if (type != "min") {
+                /*if (type != "min") { //manvi1
                     $(elem).attr("pos-state", "close");
-                }
+                }*/
             });
         }
     },
@@ -835,7 +930,7 @@ JsChat.prototype = {
                 }
             }
             
-            $(elem).attr("pos-state", "open");
+            // $(elem).attr("pos-state", "open"); manvi1
         });
         if(typeof notRead == "undefined" || notRead == false){
             
@@ -900,8 +995,8 @@ JsChat.prototype = {
 		        curElem._scrollUp($('chat-box[user-id="' + userId + '"]'), "297px");
 		        curElem._changeLocalStorage("stateChange",userId,"","open");
 		        var bubbleData = [];
-		        if(localStorage.getItem("bubbleData")) {
-		            bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+		        if(localStorage.getItem("bubbleData_new")) {
+		            bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
 		        }
 		        var indexToBeRemoved;
 		        $.each(bubbleData, function(index, elem){
@@ -912,7 +1007,7 @@ JsChat.prototype = {
 		        if(indexToBeRemoved != undefined) {
 		            bubbleData.splice(indexToBeRemoved,1);
 		        }
-		        localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+		        localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
 		}      
   	});
 
@@ -1140,7 +1235,7 @@ JsChat.prototype = {
     },
     //sending chat
     _bindSendChat: function (userId) {
-        console.log("_bindSendChat");
+        //console.log("_bindSendChat");
         var _this = this,
             that = this,
             messageId,
@@ -1371,8 +1466,8 @@ JsChat.prototype = {
                     curElem._bindExtraPopupUserClose($("#extra_" + data + " .nchatic_4"));
                 }
                 var bubbleData = [];
-                if(localStorage.getItem("bubbleData")) {
-                    bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                if(localStorage.getItem("bubbleData_new")) {
+                    bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
                 }
                 var indexToBeRemoved;
                 $.each(bubbleData, function(index, elem){
@@ -1383,7 +1478,7 @@ JsChat.prototype = {
                 if(indexToBeRemoved != undefined) {
                     bubbleData.splice(indexToBeRemoved,1);
                 }
-                localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+                localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
             } else {
                 $(this).next().click();
             }
@@ -1435,7 +1530,7 @@ JsChat.prototype = {
 
     //append chat box on page
     _appendChatBox: function (userId, status, jid, pcheckSum, groupId,hisStatus) {
-        var strHtm = '<chat-box group-id="' + groupId + '" pos-state="open" data-nodeMigrated="false" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum+'"';
+        var strHtm = '<chat-box group-id="' + groupId + '" data-nodeMigrated="false" data-paidInitiated="false" data-jid="' + jid + '" status-user="' + status + '" user-id="' + userId + '" data-checks="' + pcheckSum+'"';
         if(hisStatus == "noHis"){
             strHtm += 'his-status="not"';
         }
@@ -2029,6 +2124,11 @@ JsChat.prototype = {
         curElem._bindChatPoxPicClick(userId);
         this._postChatPanelsBox(userId);
         this._bindSendChat(userId);
+        if($(curElem._minPanelId).length !=0){
+            //console.log("11111 apend");
+            curElem._scrollDown($('chat-box[user-id="' + userId + '"]'),"min");
+        
+        }
     },
     //bind click action on chat box pic click
     _bindChatPoxPicClick: function(userId){
@@ -2065,10 +2165,12 @@ JsChat.prototype = {
             }, 1000);   
         } else if(type == "noAnimate") {
             setTimeout(function () {
-                var len = document.getElementById("chatMessage_"+userId).scrollHeight;
-                $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                    scrollTop: len
-                }, 0);
+                if(document.getElementById("chatMessage_"+userId) != null){
+                    var len = document.getElementById("chatMessage_"+userId).scrollHeight;
+                    $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                        scrollTop: len
+                    }, 0);
+                }
             }, 100);    
         }
     },
@@ -2275,8 +2377,8 @@ JsChat.prototype = {
                         $('chat-box[user-id="' + userId + '"] .chatBoxBar .pinkBubble2').show();
                         //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received");
                         var bubbleData = [];
-                        if(localStorage.getItem("bubbleData")) {
-                            bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                        if(localStorage.getItem("bubbleData_new")) {
+                            bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
                         }
                         var dataPresent = false;
                         $.each(bubbleData, function(index, elem){
@@ -2289,7 +2391,7 @@ JsChat.prototype = {
                             var obj = {userId:userId,bCount:val};
                             bubbleData.push(obj);
                         }
-                        localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+                        localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
                     } else {
                         if($('#extra_'+userId).length == 0){
                             //$('chat-box[user-id="' + userId + '"] .chatMessage').find('#text_' + userId + '_' + uniqueId).addClass("received")
@@ -2303,8 +2405,8 @@ JsChat.prototype = {
                         $("#extra_" + userId + " .pinkBubble span").html(val);
                         $("#extra_" + userId + " .pinkBubble").show();
                          var bubbleData = [];
-                            if(localStorage.getItem("bubbleData")) {
-                                bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+                            if(localStorage.getItem("bubbleData_new")) {
+                                bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
                             }
                             var dataPresent = false;
                             $.each(bubbleData, function(index, elem){
@@ -2317,7 +2419,7 @@ JsChat.prototype = {
                                 var obj = {userId:userId,bCount:val};
                                 bubbleData.push(obj);
                             }
-                            localStorage.setItem("bubbleData", JSON.stringify(bubbleData));
+                            localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
                     }
                     //change count of online matches panel
                     if ($(".js-minpanel").length != 0) {
@@ -2393,15 +2495,15 @@ JsChat.prototype = {
                 noOfInputs++;
            }
         });
-        if ($('.showcountmin').hasClass('vishid')) {
-            //this._chatLoggerPlugin('no exist');
-            //noOfInputs = 5;
+        if(noOfInputs != 0){
             $('.countVal').html(noOfInputs);
-            $('.showcountmin').toggleClass('vishid');
+            if ($('.showcountmin').hasClass('vishid')) {
+                $('.showcountmin').removeClass('vishid');
+            } 
         } else {
-            //noOfInputs = 15;
-            $('.countVal').html(noOfInputs);
+            $('.showcountmin').addClass('vishid');  
         }
+        
         return noOfInputs;
     },
     //handle typing status of message
@@ -2890,6 +2992,26 @@ JsChat.prototype = {
                 reAdd = false;
             }
         }
+        else if(type == "chatStateChange"){
+            var chatState = "";
+            if(localStorage.getItem("chatStateData")) {
+                chatState = localStorage.getItem("chatStateData");
+            }
+            chatState = newState;
+            localStorage.setItem("chatStateData",chatState);
+        }
+        else if(type == "tabStateChange") {
+            var tabState = "";
+            if(localStorage.getItem("tabState")) {
+                tabState = localStorage.getItem("tabState");
+            }
+            if(newState.indexOf("tab") != -1) {
+                tabState = newState;
+                localStorage.setItem("tabState",tabState);
+            } else {
+                localStorage.setItem("tabState",thisElem._defaultActiveTab);
+            }
+        } 
         if(reAdd == true){
             localStorage.setItem("chatBoxData", JSON.stringify(data));
         }
@@ -2898,7 +3020,7 @@ JsChat.prototype = {
     _updateChatStructure:function(type) {
 		//console.log("inside update function",type);
        // console.log("In updateCHatstructure");
-		var data = [];
+		var data = [],curEle = this;
 		var currentUserId = [];
 		var localId = [],pageId = [];
 		if(localStorage.getItem("chatBoxData")) {
@@ -2997,17 +3119,15 @@ JsChat.prototype = {
 				});
 			}
 		}
-        var bubbleData = [];
-        if(localStorage.getItem("bubbleData")) {
-            bubbleData = JSON.parse(localStorage.getItem("bubbleData"));
+        var bubbleData = [],chatBoxData=[];
+        if(localStorage.getItem("bubbleData_new")) {
+            bubbleData = JSON.parse(localStorage.getItem("bubbleData_new"));
+            chatBoxData = JSON.parse(localStorage.getItem("chatBoxData"));
         }
-        //console.log(bubbleData);
-        //console.log(bubbleData);
         setTimeout(function() {
+            var totalCount = 0;
             $.each(bubbleData, function(index,elem) {
-                //confirm manvi
-                //console.log($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state"));
-                if($('chat-box[user-id="'+elem.userId+'"]').attr("pos-state") != "open"){
+                if($('chat-box[user-id="'+elem.userId+'"] .chatBoxBar img').hasClass("downBarPicMin")){
                     //console.log("manvi_check",$('chat-box[user-id="'+elem.userId+'"] .pinkBubble2'));
                     $('chat-box[user-id="'+elem.userId+'"] .pinkBubble2 span').html(elem.bCount);
                     if(elem.bCount != 0){
@@ -3018,8 +3138,47 @@ JsChat.prototype = {
                     $('#extra_'+elem.userId+' .pinkBubble span').html(elem.bCount);
                     $('#extra_'+elem.userId+' .pinkBubble').show();
                 }
+                if(elem.bCount != 0){
+                    totalCount++;
+                }
             });
+            if(totalCount != 0){
+                $('.countVal').html(totalCount);
+                if ($('.showcountmin').hasClass('vishid')) {
+                    $('.showcountmin').removeClass('vishid');
+                }
+            }
+            else{
+                $('.showcountmin').addClass('vishid'); 
+            }
+            
         }, 2000);
+        var chatStatus = "";
+        if(localStorage.getItem("chatStateData")) {
+            chatStatus = localStorage.getItem("chatStateData");
+        } else {
+            localStorage.setItem("chatStateData","max");
+        }
+        if(chatStatus == "min"){
+            $(".js-minChatBarIn").click();
+        } else if(chatStatus == "max" && $(".js-minpanel").length !=0){
+            $(".js-minpanel").click();
+        } 
+        //console.log("local",localStorage.getItem("tabState"));
+        var tabStatus = "";
+        if(localStorage.getItem("tabState")) {
+            chatStatus = localStorage.getItem("tabState");
+        } else {
+            localStorage.setItem("tabState",curEle._defaultActiveTab);
+        }
+        curEle._chatTabs(chatStatus,"noAnimate");
+        /*if(chatStatus == "accepted"){
+            //$("#tab2").click();
+            curEle._chatTabs("tab2","noAnimate");
+        } else if(chatStatus == "online") {
+            //$("#tab1").click();
+            curEle._chatTabs("tab1","noAnimate");
+        }*/
 		localStorage.setItem("lastUId",$(".tabUId").attr("id"));
 	},    
     
@@ -3034,7 +3193,7 @@ JsChat.prototype = {
     addLoginHTML: function (failed) {
         //this._chatLoggerPlugin('in addLoginHTML');
         var curEle = this;
-        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
+        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100" id="selfImgDiv"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
         var errorHTML = '';
         if (failed == true) {
             errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">' + curEle._loginFailueMsg + '</div>';
@@ -3065,6 +3224,7 @@ JsChat.prototype = {
         delete that;
         //auto login to chat on site relogin if flag true and login authentication success
         if(curEle._chatAutoLogin == true && failed!= true){
+            //console.log("clicked");
             setTimeout(function(){
                 invokePluginLoginHandler("autoChatLogin");
             },100);
@@ -3122,12 +3282,28 @@ JsChat.prototype = {
                 _this._maximizeChatPanel();
             });
         } else {
-            $('body').css('width', '80%');
-            $(this._parendID).addClass('wid20p').css('height', this._getHeight());
-            //handle postion of next prev buttons on view profile
-            if(my_action && (my_action=="detailed" || my_action == "noprofile")){
-                _this.handleNextPrevButtons("makeCloser");
-            }
+            if(localStorage.getItem("chatStateData") == "min"){
+                $(this._parendID).css('display', 'none');
+                $(this._parendID).addClass('wid20p').css('height', this._getHeight());
+                this.minimizedPanelHTML();
+                setTimeout(function(){
+                    //console.log("manvi",$("chat-box"));
+                    $("chat-box").each(function (index, element) {
+                        console.log("element",element);
+                        _this._scrollDown($(this), "min");
+                    });
+                },1000);
+                $(this._minPanelId).click(function () {
+                    _this._maximizeChatPanel();
+                });
+            } else {
+                $('body').css('width', '80%');
+                $(this._parendID).addClass('wid20p').css('height', this._getHeight());
+                //handle postion of next prev buttons on view profile
+                if(my_action && (my_action=="detailed" || my_action == "noprofile")){
+                    _this.handleNextPrevButtons("makeCloser");
+                }     
+            }   
         }
         if (this.checkLoginStatus()) {
             //this._chatLoggerPlugin("checking login status");
