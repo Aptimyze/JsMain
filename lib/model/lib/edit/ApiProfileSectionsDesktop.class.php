@@ -126,7 +126,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     $contactArr = parent::getApiContactInfo();
     $extendedContactArray = $this->profile->getExtendedContacts("onlyValues");
     $extendedContactObj   = $this->profile->getExtendedContacts();
-   unset($contactArr[0]); //remove entry for profile handler data ithout changing indexes as indexes have dependancy in javascripts
     //Mobile Number Owner Name
     $contactArr[]=$this->getApiFormatArray("MOBILE_OWNER_NAME","Name of owner" ,$this->profile->getMOBILE_OWNER_NAME(),$this->profile->getMOBILE_OWNER_NAME(),$this->getApiScreeningField("MOBILE_OWNER_NAME"));
     
