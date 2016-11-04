@@ -3183,6 +3183,7 @@ JsChat.prototype = {
 	},    
     
     manageLoginLoader: function(type){
+        console.log("Manage login loader");
             $("#loginLoader").toggleClass("disp-none");
     },
     /*
@@ -3269,12 +3270,16 @@ JsChat.prototype = {
     },
     //start:this function is that init forthe chat
     start: function () {
+        console.log("YOYO");
         //console.log(my_action,"ankita1");
         var divElement = document.createElement("Div");
+        console.log("Z");
         $(divElement).addClass('pos_fix chatbg chatpos1 z7 js-openOutPanel').appendTo(this._mainID);
+        console.log("A");
         this._createPrototypeChatBox();
         var _this = this;
         if (this._checkWidth()) {
+            console.log("B");
             $(this._parendID).css('display', 'none');
             $(this._parendID).addClass('chatw5').css('height', this._getHeight());
             this.minimizedPanelHTML();
@@ -3282,40 +3287,55 @@ JsChat.prototype = {
                 _this._maximizeChatPanel();
             });
         } else {
+            console.log("C");
             if(localStorage.getItem("chatStateData") == "min"){
+                console.log("D");
                 $(this._parendID).css('display', 'none');
                 $(this._parendID).addClass('wid20p').css('height', this._getHeight());
                 this.minimizedPanelHTML();
                 setTimeout(function(){
+                    console.log("E");
                     //console.log("manvi",$("chat-box"));
                     $("chat-box").each(function (index, element) {
                         console.log("element",element);
                         _this._scrollDown($(this), "min");
                     });
                 },1000);
+                console.log("F");
                 $(this._minPanelId).click(function () {
                     _this._maximizeChatPanel();
                 });
+                console.log("G");
             } else {
+                console.log("H");
                 $('body').css('width', '80%');
                 $(this._parendID).addClass('wid20p').css('height', this._getHeight());
+                console.log("I");
                 //handle postion of next prev buttons on view profile
                 if(my_action && (my_action=="detailed" || my_action == "noprofile")){
                     _this.handleNextPrevButtons("makeCloser");
-                }     
-            }   
+                }
+                console.log("J");
+            }
+            console.log("K");
         }
         if (this.checkLoginStatus()) {
             //this._chatLoggerPlugin("checking login status");
             this._startLoginHTML();
+            console.log("L");
         } else {
             //this._chatLoggerPlugin("in start function");
             this.addLoginHTML();
+            console.log("M");
         }
         if(typeof showHelpScreen !== typeof undefined) {
+            console.log("N");
             if (showHelpScreen == 'Y' && moduleChat && (moduleChat == "myjs" || moduleChat == "homepage")) {
                 showHelpScreenFunction();
+                console.log("I");
             }
         }
+        console.log("J");
+        
     },
 };
