@@ -745,24 +745,28 @@ JsChat.prototype = {
         if(operation == "create_list"){
             retainHiddenListing();
         }
-        var newTab = false;
-        if($(".tabUId").length == 0){
-            //console.log("does not exsist");
-            $("body").append("<input type='hidden' class='tabUId' id='tab_"+new Date().getTime()+"'>");
-            //console.log("calling update _updateChatStructure new");
-            elem._updateChatStructure("new");
-            //elem._updateChatStructure("exsisting");
-            newTab = true;
-        }
-
-        if(localStorage.getItem("lastUId")) {
-            if($(".tabUId").attr("id") != localStorage.getItem("lastUId") && newTab ==  false){
-                //console.log("calling update _updateChatStructure exsisting");
-                elem._updateChatStructure("exsisting");
+        setTimeout(function(){
+            var newTab = false;
+            //console.log("newTab update",$(".tabUId").length,localStorage.getItem("lastUId"));
+            if($(".tabUId").length == 0){
+                //console.log("does not exsist");
+                $("body").append("<input type='hidden' class='tabUId' id='tab_"+new Date().getTime()+"'>");
+                //console.log("calling update _updateChatStructure new");
+                elem._updateChatStructure("new");
+                //elem._updateChatStructure("exsisting");
+                newTab = true;
             }
-        } else {
-            localStorage.setItem("lastUId",$(".tabUId").attr("id"));
-        }
+
+            if(localStorage.getItem("lastUId")) {
+                if($(".tabUId").attr("id") != localStorage.getItem("lastUId") && newTab ==  false){
+                    //console.log("calling update _updateChatStructure exsisting");
+                    elem._updateChatStructure("exsisting");
+                }
+            } else {
+                localStorage.setItem("lastUId",$(".tabUId").attr("id"));
+            }
+        },1000);
+        
         
         
         $(window).focus(function() {
@@ -3097,7 +3101,6 @@ JsChat.prototype = {
     
     _updateChatStructure:function(type) {
 		//console.log("inside update function",type);
-       // console.log("In updateCHatstructure");
 		var data = [],curEle = this;
 		var currentUserId = [];
 		var localId = [],pageId = [];
