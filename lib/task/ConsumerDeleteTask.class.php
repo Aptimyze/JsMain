@@ -31,7 +31,7 @@ EOF;
     // Server at which ElasticSearch and kibana is running
     $elkServer = '10.10.18.66';
     $elkPort = '9200';
-    $indexName = 'consumer-'.$currdate;
+    $indexName = "consumer-$currdate";
     passthru("curl -XDELETE 'http://$elkServer:$elkPort/$indexName/'");
   }
 }
