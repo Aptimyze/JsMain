@@ -33,8 +33,11 @@ class incentive_DISCOUNT_NEGOTIATION_LOG extends TABLE
             $res = $this->db->prepare($sql);
             $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $res->execute();
-            $row = $res->fetch(PDO::FETCH_ASSOC);
-            return $row;
+            if ($row = $res->fetch(PDO::FETCH_ASSOC)){
+                return $row;
+            } else {
+                return NULL;
+            }
         } catch (PDOException $e) {
             /*** echo the sql statement and error message ***/
             throw new jsException($e);
