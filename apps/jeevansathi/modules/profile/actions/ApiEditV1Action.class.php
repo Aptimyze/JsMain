@@ -28,7 +28,7 @@ class ApiEditV1Action extends sfActions
 		}
 		//Contains loggedin Profile information;
 		$this->loginProfile = LoggedInProfile::getInstance();
-    if($this->loginProfile->getAGE()== "")
+    if($this->loginProfile->getAGE()== "" || $this->loginProfile->getRELIGION() == "" || is_null($this->loginProfile->getRELIGION()))
       $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
                 $c =  $this->loginProfile;
                 $d = $request->getAttribute("profileid");
