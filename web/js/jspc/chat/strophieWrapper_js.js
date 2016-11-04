@@ -80,7 +80,7 @@ var strophieWrapper = {
     // },
     //connect to openfire
     connect: function (bosh_service_url, username, password) {
-        console.log("In conenct");
+        //console.log("In conenct");
         strophieWrapper.connectionObj = new Strophe.Connection(chatConfig.Params[device].bosh_service_url);
         strophieWrapper.connectionObj.connect(username, password, strophieWrapper.onConnect);
         //strophieWrapper.stropheLoggerPC("Openfire wrapper");
@@ -90,7 +90,7 @@ var strophieWrapper = {
     },
     //reconnect to openfire
     reconnect: function (bosh_service_url, username, password) {
-        console.log("in reconnect");
+        //console.log("in reconnect");
         if (strophieWrapper.tryReconnection == true) {
             strophieWrapper.disconnect();
             //reconnect to chat if net connected
@@ -103,11 +103,11 @@ var strophieWrapper = {
         //strophieWrapper.stropheLoggerPC("In onConnect function");
         if (status == Strophe.Status.CONNECTING) {
             //strophieWrapper.stropheLoggerPC("Connecting");
-            console.log("CONNECTING");
+            //console.log("CONNECTING");
             setTimeout(function(){
-                console.log("In timeout");
+                //console.log("In timeout");
                 if($("#js-loginPanel").length == 0 && $("#js-lsitingPanel").length == 0){
-                    console.log("In if of timeout");
+                    //console.log("In if of timeout");
                     strophieWrapper.disconnect();
                     invokePluginLoginHandler("failure",false);
                 }
@@ -115,22 +115,22 @@ var strophieWrapper = {
         } else if (status == Strophe.Status.CONNFAIL) {
             //strophieWrapper.stropheLoggerPC("CONNFAIL");
             $('#connect').get(0).value = 'connect';
-            console.log("CONNFAIL");
+            //console.log("CONNFAIL");
         } else if (status == Strophe.Status.DISCONNECTING) {
             //strophieWrapper.stropheLoggerPC("DISCONNECTING");
-            console.log("DISCONNECTING");
+            //console.log("DISCONNECTING");
         } else if (status == Strophe.Status.DISCONNECTED) {
             //strophieWrapper.stropheLoggerPC("DISCONNECTED");
             $('#connect').get(0).value = 'connect';
-            console.log("DISCONNECTED");
+            //console.log("DISCONNECTED");
         } else if (status == Strophe.Status.AUTHFAIL) {
             //strophieWrapper.stropheLoggerPC("AUTHFAIL");
             invokePluginLoginHandler("failure");
-            console.log("AUTHFAIL");
+            //console.log("AUTHFAIL");
         } else if (status == Strophe.Status.CONNECTED) {
             //strophieWrapper.stropheLoggerPC("CONNECTED");
             invokePluginLoginHandler("success");
-            console.log("CONNECTED");
+            //console.log("CONNECTED");
         }
     },
     //trigger bindings
@@ -774,7 +774,7 @@ strophieWrapper.sendPresence();
      * Disconnect strophe connection
      */
     disconnect: function () {
-        console.log("disconnected");
+        //console.log("disconnected");
         strophieWrapper.connectionObj.disconnect();
     },
     /* addMessageHandler

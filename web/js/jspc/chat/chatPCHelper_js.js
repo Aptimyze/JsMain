@@ -586,8 +586,8 @@ function xmlToJson(xml) {
  * @param: state
  */
 function invokePluginLoginHandler(state, loader) {
-    console.log("invoke plign handler");
-    console.log(state);
+    //console.log("invoke plign handler");
+    //console.log(state);
     if (state == "success") {
         createCookie("chatAuth", "true",chatConfig.Params[device].loginSessionTimeout);
         //setLogoutClickLocalStorage("unset");
@@ -1227,13 +1227,13 @@ $(document).ready(function () {
         $(window).on("online", function () {
             globalSleep(15000);
             //console.log("detected internet connectivity");
-            console.log("In online");
+            //console.log("In online");
             chatLoggedIn = readCookie('chatAuth');
-            console.log(chatLoggedIn);
+            //console.log(chatLoggedIn);
             if (chatLoggedIn == 'true' && loginStatus == "Y") {
-                console.log("In if of online");
+                //console.log("In if of online");
                 if (username && pass) {
-                    console.log("user pass exist");
+                    //console.log("user pass exist");
                     strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
                 }
             }
