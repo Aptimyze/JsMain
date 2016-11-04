@@ -42,7 +42,7 @@
 
           objConfig.complete(data, objConfig);
         }
-        console.log("before complete",objConfig.updateChatList,oldUrl,window.location.href);
+        //console.log("before complete",objConfig.updateChatList,oldUrl,window.location.href);
         //update non roster chat list
         if($.isFunction(reActivateNonRosterPolling) && ((window.location.href != oldUrl) || objConfig.updateChatList == true)){
           reActivateNonRosterPolling("ajax");
