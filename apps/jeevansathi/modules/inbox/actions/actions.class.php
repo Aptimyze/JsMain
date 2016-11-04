@@ -111,6 +111,10 @@ class inboxActions extends sfActions
         $this->matchAlertCountResetLogic($profileObj);
       }
       
+                        if ($infoType == "VISITORS") {
+                            $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                        }
+      
 			if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
 			{
 				$this->count= $profileCommunication->getCount($module,$profileObj,$infoTypenav);
