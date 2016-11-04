@@ -1,9 +1,16 @@
 <?php
 
 /*
-This Cron is used to compress the data which is stored in the indices of Elastic Search.
+This Cron is used to compress the data which is stored in the indices of Elastic Search. 
 @author :  Ayush Sethi
 @dated  :  9 Oct 2016
+
+ * <code>
+ * To execute : $ php symfony Kibana:indicesCompressor 24
+ * The parameter passed in above query is the time in hours. 
+ * example  $ php symfony Kibana:indicesCompressor 
+ * By default the time (in hours) whose data is to be fetched 
+ * </code>
 */
 
 class kibanaCompressingTask extends sfBaseTask
@@ -11,15 +18,24 @@ class kibanaCompressingTask extends sfBaseTask
   protected function configure()
   {
 
-    $this->namespace        = 'indexCompressor';
-    $this->name             = 'kibanaCompressing';
+    $this->namespace        = 'Kibana';
+    $this->name             = 'indicesCompressor';
+    //This is the path to ELK server
+    $this->elkServer = '10.10.18.66';
+    //This is the port number where Elastic Search is running
+    $this->elkPort = '9200';
+    //This is the index name which will be searched for getting the records.
+    $this->indexName = 'filebeat-*';
+    //This is the type of query which will be used to query elastic search.
+    $this->query = '_search'; 
+
     $this->addArguments(array(new sfCommandArgument('hours',sfCommandArgument::OPTIONAL,'this parameter is added to include the number of hours for which the cron has to be made',$hours = "72")));   
     $this->briefDescription = 'This cron is used to compress data which is extracted from indices of the elastic search.';
     $this->detailedDescription = <<<EOF
 The [kibanaCompressing|INFO] task does things.
 Call it with:
 
-  [php symfony indexCompressor:kibanaCompressing]
+  [php symfony Kibana:indicesCompressor]
 EOF;
   }
     // add your code here
@@ -34,11 +50,7 @@ EOF;
       $hoursNow = 48;
       for($i=0 ; $i <= $hoursNow ; $i++)
       {
-        $hoursNow = $i;
-        $elkServer = 'localhost';
-        $elkPort = '9200';
-        $indexName = 'filebeat-*';
-        $query = '_search';
+        $hoursNow = $i; 
         $urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
         $ltHour = $hoursNow + 1;
 
