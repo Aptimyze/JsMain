@@ -16,11 +16,11 @@ function to stop polling for non roster webservice api
 * @inputs:type(optional)
 */
 function clearNonRosterPollingInterval(type){
-    console.log("in clearNonRosterPollingInterval");
+    //console.log("in clearNonRosterPollingInterval");
     if(type == undefined){
         if(strophieWrapper.nonRosterClearInterval && (Object.keys(strophieWrapper.nonRosterClearInterval)).length > 0){
             $.each(strophieWrapper.nonRosterClearInterval,function(key,type){
-                console.log("clear",strophieWrapper.nonRosterClearInterval[key]);
+                //console.log("clear",strophieWrapper.nonRosterClearInterval[key]);
                 clearTimeout(strophieWrapper.nonRosterClearInterval[key]);
             });
         }
@@ -45,8 +45,8 @@ function reActivateNonRosterPolling(source){
             //pollForNonRosterListing(groupId);
             clearNonRosterPollingInterval(groupId);
             strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
-                                                                pollForNonRosterListing(groupId); //uncomment later
-                                                            },500/*chatConfig.Params[device].nonRosterListingRefreshCap*/);
+                                                                pollForNonRosterListing(groupId);
+                                                            },500);
             
         });
     }
@@ -57,22 +57,23 @@ function to check whether request to non roster webservice is valid or not
 * @inputs:groupId
 */
 function checkForValidNonRosterRequest(groupId){
+    //return true;
     var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
     var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
-        if(timeDiff < chatConfig.Params[device].nonRosterListingRefreshCap){ //uncomment later
+        if(timeDiff < chatConfig.Params[device].nonRosterListingRefreshCap){
             valid = false;
         }
     }
     if(data && valid == false){
-        data = {"3290997":{"rosterDetails":{"jid":"3290997@localhost","chat_status":"online","nick":"aloha_2008|4656179bccedf6fffb977aa43f44fdc4i3290997","fullname":"aloha_2008","groups":["dpp"],"subscription":"both","profile_checksum":"4656179bccedf6fffb977aa43f44fdc4i3290997","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":6,"nodeType":"non-roster"}},"3997986":{"rosterDetails":{"jid":"3997986@localhost","chat_status":"online","nick":"UYZ2063|5ff5ff3d2f3217d7158d7b2e40572eafi3997986","fullname":"UYZ2063","groups":["dpp"],"subscription":"both","profile_checksum":"5ff5ff3d2f3217d7158d7b2e40572eafi3997986","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":8,"nodeType":"non-roster"}},"5054004":{"rosterDetails":{"jid":"5054004@localhost","chat_status":"online","nick":"TXT8609|1d2bc71e6adf4550e4c8b638e4e30897i5054004","fullname":"TXT8609","groups":["dpp"],"subscription":"both","profile_checksum":"1d2bc71e6adf4550e4c8b638e4e30897i5054004","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":3,"nodeType":"non-roster"}},"5385186":{"rosterDetails":{"jid":"5385186@localhost","chat_status":"online","nick":"TTA9972|a7dd65ce4a7f2d222f63a95db1685d44i5385186","fullname":"TTA9972","groups":["dpp"],"subscription":"both","profile_checksum":"a7dd65ce4a7f2d222f63a95db1685d44i5385186","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":5,"nodeType":"non-roster"}},"5545059":{"rosterDetails":{"jid":"5545059@localhost","chat_status":"online","nick":"TSU9916|92e39acb3c9c0d9e95053cd2d32db79ei5545059","fullname":"TSU9916","groups":["dpp"],"subscription":"both","profile_checksum":"92e39acb3c9c0d9e95053cd2d32db79ei5545059","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":11,"nodeType":"non-roster"}},"5669960":{"rosterDetails":{"jid":"5669960@localhost","chat_status":"online","nick":"TRR4847|01e19fbeb41aa12facb278cda6a8393ci5669960","fullname":"TRR4847","groups":["dpp"],"subscription":"both","profile_checksum":"01e19fbeb41aa12facb278cda6a8393ci5669960","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":4,"nodeType":"non-roster"}},"5714570":{"rosterDetails":{"jid":"5714570@localhost","chat_status":"online","nick":"SAX9468|ff51de7e53b2096676938ed771c41ac7i5714570","fullname":"SAX9468","groups":["dpp"],"subscription":"both","profile_checksum":"ff51de7e53b2096676938ed771c41ac7i5714570","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":15,"nodeType":"non-roster"}},"6439626":{"rosterDetails":{"jid":"6439626@localhost","chat_status":"online","nick":"STU4834|c37191df737061a131ba30f91870be0di6439626","fullname":"STU4834","groups":["dpp"],"subscription":"both","profile_checksum":"c37191df737061a131ba30f91870be0di6439626","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":21,"nodeType":"non-roster"}},"6547446":{"rosterDetails":{"jid":"6547446@localhost","chat_status":"online","nick":"SST3318|34299a817ece0d6aec2c7932f31898e8i6547446","fullname":"SST3318","groups":["dpp"],"subscription":"both","profile_checksum":"34299a817ece0d6aec2c7932f31898e8i6547446","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":22,"nodeType":"non-roster"}},"6889709":{"rosterDetails":{"jid":"6889709@localhost","chat_status":"online","nick":"RYZ5781|efec1f895fc3aee614750406a3de481di6889709","fullname":"RYZ5781","groups":["dpp"],"subscription":"both","profile_checksum":"efec1f895fc3aee614750406a3de481di6889709","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":17,"nodeType":"non-roster"}},"6933026":{"rosterDetails":{"jid":"6933026@localhost","chat_status":"online","nick":"RYV9126|1cc3378df531ec91646480ff0bcc6b75i6933026","fullname":"RYV9126","groups":["dpp"],"subscription":"both","profile_checksum":"1cc3378df531ec91646480ff0bcc6b75i6933026","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":9,"nodeType":"non-roster"}}};
+        //data = {"3290997":{"rosterDetails":{"jid":"3290997@localhost","chat_status":"online","nick":"aloha_2008|4656179bccedf6fffb977aa43f44fdc4i3290997","fullname":"aloha_2008","groups":["dpp"],"subscription":"both","profile_checksum":"4656179bccedf6fffb977aa43f44fdc4i3290997","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":6,"nodeType":"non-roster"}},"3997986":{"rosterDetails":{"jid":"3997986@localhost","chat_status":"online","nick":"UYZ2063|5ff5ff3d2f3217d7158d7b2e40572eafi3997986","fullname":"UYZ2063","groups":["dpp"],"subscription":"both","profile_checksum":"5ff5ff3d2f3217d7158d7b2e40572eafi3997986","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":8,"nodeType":"non-roster"}},"5054004":{"rosterDetails":{"jid":"5054004@localhost","chat_status":"online","nick":"TXT8609|1d2bc71e6adf4550e4c8b638e4e30897i5054004","fullname":"TXT8609","groups":["dpp"],"subscription":"both","profile_checksum":"1d2bc71e6adf4550e4c8b638e4e30897i5054004","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":3,"nodeType":"non-roster"}},"5385186":{"rosterDetails":{"jid":"5385186@localhost","chat_status":"online","nick":"TTA9972|a7dd65ce4a7f2d222f63a95db1685d44i5385186","fullname":"TTA9972","groups":["dpp"],"subscription":"both","profile_checksum":"a7dd65ce4a7f2d222f63a95db1685d44i5385186","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":5,"nodeType":"non-roster"}},"5545059":{"rosterDetails":{"jid":"5545059@localhost","chat_status":"online","nick":"TSU9916|92e39acb3c9c0d9e95053cd2d32db79ei5545059","fullname":"TSU9916","groups":["dpp"],"subscription":"both","profile_checksum":"92e39acb3c9c0d9e95053cd2d32db79ei5545059","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":11,"nodeType":"non-roster"}},"5669960":{"rosterDetails":{"jid":"5669960@localhost","chat_status":"online","nick":"TRR4847|01e19fbeb41aa12facb278cda6a8393ci5669960","fullname":"TRR4847","groups":["dpp"],"subscription":"both","profile_checksum":"01e19fbeb41aa12facb278cda6a8393ci5669960","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":4,"nodeType":"non-roster"}},"5714570":{"rosterDetails":{"jid":"5714570@localhost","chat_status":"online","nick":"SAX9468|ff51de7e53b2096676938ed771c41ac7i5714570","fullname":"SAX9468","groups":["dpp"],"subscription":"both","profile_checksum":"ff51de7e53b2096676938ed771c41ac7i5714570","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":15,"nodeType":"non-roster"}},"6439626":{"rosterDetails":{"jid":"6439626@localhost","chat_status":"online","nick":"STU4834|c37191df737061a131ba30f91870be0di6439626","fullname":"STU4834","groups":["dpp"],"subscription":"both","profile_checksum":"c37191df737061a131ba30f91870be0di6439626","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":21,"nodeType":"non-roster"}},"6547446":{"rosterDetails":{"jid":"6547446@localhost","chat_status":"online","nick":"SST3318|34299a817ece0d6aec2c7932f31898e8i6547446","fullname":"SST3318","groups":["dpp"],"subscription":"both","profile_checksum":"34299a817ece0d6aec2c7932f31898e8i6547446","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":22,"nodeType":"non-roster"}},"6889709":{"rosterDetails":{"jid":"6889709@localhost","chat_status":"online","nick":"RYZ5781|efec1f895fc3aee614750406a3de481di6889709","fullname":"RYZ5781","groups":["dpp"],"subscription":"both","profile_checksum":"efec1f895fc3aee614750406a3de481di6889709","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":17,"nodeType":"non-roster"}},"6933026":{"rosterDetails":{"jid":"6933026@localhost","chat_status":"online","nick":"RYV9126|1cc3378df531ec91646480ff0bcc6b75i6933026","fullname":"RYV9126","groups":["dpp"],"subscription":"both","profile_checksum":"1cc3378df531ec91646480ff0bcc6b75i6933026","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":9,"nodeType":"non-roster"}}};
         processNonRosterData(data,groupId,"localstorage");
     }
     else{
         valid = true;
     }
-    console.log("checkForValidNonRosterRequest",valid);
+    //console.log("checkForValidNonRosterRequest",valid);
     return valid;
 }
 
@@ -81,7 +82,7 @@ function to poll for non roster webservice api
 * @inputs:type
 */
 function pollForNonRosterListing(type){
-    console.log("pollForNonRosterListing",type);
+    //console.log("pollForNonRosterListing",type);
     if(type == undefined || type == ""){
         type = "dpp";
     }
@@ -89,7 +90,7 @@ function pollForNonRosterListing(type){
     if(validRe == true){
         var getInputData = "",outputProfileIds = [];
         //postData["pageSource"] = "chat";
-        //postData["channel"] = device; //req for tracking??? later
+        //postData["channel"] = device; //req for tracking
         if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
             $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"], function (k, v) {
                 if(getInputData == ""){
@@ -113,7 +114,7 @@ function pollForNonRosterListing(type){
             },
             beforeSend: function (xhr) {},
             success: function (response) {
-                response = {  //comment later
+                /*response = {  //comment later
                 "data": [
                     {
                     "profileid": "2865000",
@@ -152,7 +153,7 @@ function pollForNonRosterListing(type){
             "pollTime":20000
             },
             "debugInfo": null
-            };
+            };*/
         
                 if(response["header"]["status"] == 200){
                     //console.log("fetchNonRosterListing success",response);
@@ -171,7 +172,7 @@ function pollForNonRosterListing(type){
                 }
             },
             error: function (xhr) {
-                console.log("fetchNonRosterListing error",xhr);
+                //console.log("fetchNonRosterListing error",xhr);
                 //return "error";
             }
         });
@@ -184,32 +185,27 @@ function to process the non roster data
 */
 function processNonRosterData(response,type,source){
     var operation = "create_list",reCreateList = true;
-    console.log("in processNonRosterData",response,strophieWrapper.initialNonRosterFetched);
-    //if(strophieWrapper.initialNonRosterFetched == true)
-    { //case of list update after first time creation
-        //operation = "create_list";
-        //console.log("update after non roster list creation case");
-        var newNonRoster = response,oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
-        if((Object.keys(oldNonRoster)).length > 0){
-            //reCreateList = checkForNonRosterListRecreation(newNonRoster);
-            if(reCreateList == true){
-                if(chatConfig.Params.nonRosterPollingGroups.length == 1 && chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
-                    //only dpp is non roster group case
-                    offlineNonRoster = oldNonRoster;
-                }
-                else{
-                    //in case there are multiple non roster groups
-                    /*if(chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
-                        $.each(oldNonRoster,function(profileid,nodeObj){
-                            if((oldNonRoster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == type) && (newNonRoster.length == 0 || newNonRoster[profileid] == undefined)){
-                                offlineNonRoster[profileid] = oldNonRoster[profileid];
-                            }
-                        });
-                    }*/
-                }
-                //mark old list as offline
-                strophieWrapper.onNonRosterPresenceUpdate("offline",offlineNonRoster);
+    //console.log("in processNonRosterData",response,strophieWrapper.initialNonRosterFetched);
+    var newNonRoster = response,oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
+    if((Object.keys(oldNonRoster)).length > 0){
+        //reCreateList = checkForNonRosterListRecreation(newNonRoster);
+        if(reCreateList == true){
+            if(chatConfig.Params.nonRosterPollingGroups.length == 1 && chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
+                //only dpp is non roster group case
+                offlineNonRoster = oldNonRoster;
             }
+            else{
+                //in case there are multiple non roster groups
+                /*if(chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
+                    $.each(oldNonRoster,function(profileid,nodeObj){
+                        if((oldNonRoster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == type) && (newNonRoster.length == 0 || newNonRoster[profileid] == undefined)){
+                            offlineNonRoster[profileid] = oldNonRoster[profileid];
+                        }
+                    });
+                }*/
+            }
+            //mark old list as offline
+            strophieWrapper.onNonRosterPresenceUpdate("offline",offlineNonRoster);
         }
     }
     if(reCreateList == true){
@@ -820,13 +816,13 @@ function to update non roster item in listing
 * @inputs:actionParams
 */
 function updateNonRosterListOnCEAction(actionParams){
-    console.log("updateNonRosterListOnCEAction",actionParams);
+    //console.log("updateNonRosterListOnCEAction",actionParams);
     var action = actionParams["action"],
     user_id = actionParams["user_id"];
     if(user_id != undefined){
         if(action == "REMOVE" || action == "BLOCK"){
             var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
-            console.log("updateNonRosterListOnCEAction",checkIfExists);
+            //console.log("updateNonRosterListOnCEAction",checkIfExists);
             if(checkIfExists && checkIfExists["exists"] == true){
                 var deleteIdArr = [];
                 deleteIdArr.push(user_id);
@@ -1471,10 +1467,8 @@ $(document).ready(function () {
             globalSleep(15000);
             //console.log("detected internet connectivity");
             chatLoggedIn = readCookie('chatAuth');
-            console.log("chatLoggedIn",chatLoggedIn);
             if (chatLoggedIn == 'true' && loginStatus == "Y") {
                 if (username && pass) {
-                    console.log("reconnect");
                     strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
                 }
             }

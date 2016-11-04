@@ -88,7 +88,7 @@ var strophieWrapper = {
         //strophieWrapper.stropheLoggerPC("Openfire wrapper");
     },
     getCurrentConnStatus: function () {
-        console.log("getCurrentConnStatus",strophieWrapper.currentConnStatus == Strophe.Status.CONNECTED);
+        //console.log("getCurrentConnStatus",strophieWrapper.currentConnStatus == Strophe.Status.CONNECTED);
         return (strophieWrapper.currentConnStatus == Strophe.Status.CONNECTED);
     },
     //reconnect to openfire
@@ -104,20 +104,20 @@ var strophieWrapper = {
         strophieWrapper.currentConnStatus = status;
         //strophieWrapper.stropheLoggerPC("In onConnect function");
         if (status == Strophe.Status.CONNECTING) {
-            console.log("Connecting");
+            //console.log("Connecting");
         } else if (status == Strophe.Status.CONNFAIL) {
-            console.log("CONNFAIL");
+            //console.log("CONNFAIL");
             $('#connect').get(0).value = 'connect';
         } else if (status == Strophe.Status.DISCONNECTING) {
-            console.log("DISCONNECTING");
+            //console.log("DISCONNECTING");
         } else if (status == Strophe.Status.DISCONNECTED) {
-            console.log("DISCONNECTED");
+            //console.log("DISCONNECTED");
             $('#connect').get(0).value = 'connect';
         } else if (status == Strophe.Status.AUTHFAIL) {
-            console.log("AUTHFAIL");
+            //console.log("AUTHFAIL");
             invokePluginLoginHandler("failure");
         } else if (status == Strophe.Status.CONNECTED) {
-            console.log("CONNECTED");
+            //console.log("CONNECTED");
             invokePluginLoginHandler("success");
         }
     },
@@ -463,7 +463,7 @@ strophieWrapper.sendPresence();
 
     //executed after non-roster list has been fetched or new non roster node is added
     onNonRosterListFetched: function(response,groupid,operation,source){
-        console.log("in onNonRosterListFetched",source);
+        //console.log("in onNonRosterListFetched",source);
         var storeData = {};
         if(response != undefined){
             if(source == "localstorage"){
@@ -502,7 +502,7 @@ strophieWrapper.sendPresence();
 
     //executed after any non-roster list node presence has been updated
     onNonRosterPresenceUpdate:function(status,nodeArr){
-        console.log("in onNonRosterPresenceUpdate - "+status,nodeArr);
+        //console.log("in onNonRosterPresenceUpdate - "+status,nodeArr);
         var updatedObj = {
             "chat_status": status
         };
@@ -524,9 +524,9 @@ strophieWrapper.sendPresence();
 
     //executed on deletion of non roster nodes in listing - remove if not required later
     onNonRosterListDeletion:function(nodeIdArr){
-        console.log("in onNonRosterListDeletion",nodeIdArr);
+        //console.log("in onNonRosterListDeletion",nodeIdArr);
         $.each(nodeIdArr,function(key,user_id){
-            console.log(user_id,strophieWrapper.NonRoster[user_id]);
+            //console.log(user_id,strophieWrapper.NonRoster[user_id]);
             if(typeof strophieWrapper.NonRoster[user_id]!= "undefined"){
                 var inputObj = {};
                 inputObj[user_id] = strophieWrapper.NonRoster[user_id];
@@ -610,7 +610,7 @@ strophieWrapper.sendPresence();
 
     //fetch non roster list
     getNonRosterList:function(){
-        console.log("in getNonRosterList");
+        //console.log("in getNonRosterList");
         reActivateNonRosterPolling("refresh");
     },
 

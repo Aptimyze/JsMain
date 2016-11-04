@@ -749,7 +749,7 @@ JsChat.prototype = {
         if($(".tabUId").length == 0){
             //console.log("does not exsist");
             $("body").append("<input type='hidden' class='tabUId' id='tab_"+new Date().getTime()+"'>");
-            console.log("calling update _updateChatStructure new");
+            //console.log("calling update _updateChatStructure new");
             elem._updateChatStructure("new");
             //elem._updateChatStructure("exsisting");
             newTab = true;
@@ -757,7 +757,7 @@ JsChat.prototype = {
 
         if(localStorage.getItem("lastUId")) {
             if($(".tabUId").attr("id") != localStorage.getItem("lastUId") && newTab ==  false){
-                console.log("calling update _updateChatStructure exsisting");
+                //console.log("calling update _updateChatStructure exsisting");
                 elem._updateChatStructure("exsisting");
             }
         } else {
@@ -766,12 +766,12 @@ JsChat.prototype = {
         
         
         $(window).focus(function() {
-            console.log("tab changed");
+            //console.log("tab changed");
             if(localStorage.getItem("lastUId")) {
                 //console.log("11");
                 if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
-                    console.log("22 change");
-                    reActivateNonRosterPolling("tab change"); //confirm on tabs sync later
+                    //console.log("22 change");
+                    reActivateNonRosterPolling("tab change");
                     elem._updateChatStructure("exsisting");
                 }
             } else {
