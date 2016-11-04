@@ -661,6 +661,7 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
 	var titleOfFilter = typeof infoArr["titleOfFilter"] !== 'undefined' ? infoArr["titleOfFilter"] : '';
         var pageOfResult = typeof infoArr["pageOfResult"] !== 'undefined' ? infoArr["pageOfResult"] : '1';
         var listType = typeof infoArr["listType"] !== 'undefined' ? infoArr["listType"] : '';
+
 	/**
 	* Params to be used for calling pagination
 	*/
@@ -695,6 +696,7 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
                 cache: true,
 		data: postParams,
 		timeout: 60000,
+		updateChatList:(infoArr["action"] == "pagination") ? true : false,
 		beforeSend: function( xhr ) {
 			//if(action=="moreCluster")
 			if(action=='pagination' || action =='stayOnPage')
