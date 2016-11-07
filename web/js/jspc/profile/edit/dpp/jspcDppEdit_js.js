@@ -292,20 +292,10 @@ slider();
 $(".chosen-container").on('keyup',function(e) {
 $(".chosen-container .chosen-results li").addClass("chosenfloat").removeClass("chosenDropWid");
 });
+
 $("#mutualMatchCount").css("padding","2px");
 
-var value  = parseInt($("#mutualMatchCount").text().replace(",","")).toLocaleString();
-$("#mutualMatchCount").text(value);
-
-if ( parseInt($("#mutualMatchCount").text().replace(",","") ) > 100 )
-{
-  $("#mutualMatchCount").css("background-color","#374a5b"); 
-}
-else
-{
-  $("#mutualMatchCount").css("background-color","#d9475c"); 
-}
-
+showMutualCount(mutualMatchCount,parseInt($("#mutualMatchCount").text()).toLocaleString());
 
 //$(".chosen-container.chosen-container-multi").on('mousedown',function(e) {
 //  $(".chosen-container .chosen-results li").removeClass("highlighted");
@@ -347,6 +337,23 @@ if(isBrowserIE() === false)
   $(document).on("scroll", isScrolledIntoView);
 });
 
+function showMutualCount(id,value) {
+
+  $(id).text(value);
+
+  if (  parseInt( value.replace(",","") ) > 100 )
+  {
+    $(id).removeClass("js-selected");
+    $(id).addClass("dppnbg1");
+  }
+  else
+  {
+    $(id).removeClass("dppnbg1");
+    $(id).addClass("js-selected"); 
+  }
+}
+
+
 //click on more to show full prefilled text data
 $(function(){
     
@@ -356,8 +363,6 @@ $(function(){
         $("#shortContent_"+getName).hide();
         $("#fullContent_"+getName).show();
         $(this).addClass("hideMore").addClass("js-saveShow");
-            
-                    
     });
     
 });
@@ -515,16 +520,7 @@ function saveSectionsFields(sectionId){
               for (var ke in data) {
                  if ( data[ke].key == "P_MATCHCOUNT")
                  {
-                    $("#mutualMatchCount").text((data[ke].value).toLocaleString());
-
-                    if ( parseInt($("#mutualMatchCount").text().replace(",","")) > 100 )
-                    {
-                        $("#mutualMatchCount").css("background-color","#374a5b"); 
-                    }
-                    else
-                    {
-                        $("#mutualMatchCount").css("background-color","#d9475c"); 
-                    }
+                    showMutualCount(mutualMatchCount,(data[ke].value).toLocaleString());
                  }
               }           
             }

@@ -52,20 +52,20 @@ var mobEditPage=(function(){
 			{
 				if ( result.Dpp.BasicDetails.OnClick[k]['key'] == "P_MATCHCOUNT")
 				{
-					// result.Dpp.BasicDetails.OnClick[k]['value'] = 1000;
 					$("#mutualMatchCountMobile").css("padding","2px");
 
-					$("#mutualMatchCountMobile").text((result.Dpp.BasicDetails.OnClick[k]['value']).toLocaleString());
+					$("#mutualMatchCountMobile").text(parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])).toLocaleString());
 
                     if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") )> 100 )
                     {
-                    	$("#mutualMatchCountMobile").css("background-color","#e3e1e2"); 
+                    	$("#mutualMatchCountMobile").removeClass("bg7");
+                    	$("#mutualMatchCountMobile").addClass("dpbg1");
                     }
                     else
                     {
-                       	$("#mutualMatchCountMobile").css("background-color","#d9475c"); 
+                    	$("#mutualMatchCountMobile").removeClass("dpbg1");
+                    	$("#mutualMatchCountMobile").addClass("bg7");
                     }
-
 				}
 			}
 
