@@ -415,6 +415,7 @@ function formatJsonOutput(result)
         delete(result.cache_flag);
         delete(result.cache_interval);
         delete(result.resetCache);
+        delete(result.flagForAppRatingControl);
 	return result;
 }
 
