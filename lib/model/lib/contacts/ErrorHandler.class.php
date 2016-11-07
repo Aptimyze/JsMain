@@ -312,36 +312,35 @@ class ErrorHandler
 		
 		if($this->checkProfileFiltered())
 		{
-			if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
-			{
-				if($this->checkPaid())
-				{ 	
-					$name = $this->contactHandlerObj->getViewed()->getUSERNAME();
-						if($this->interestNotSent())
-						{
-							$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
-							$error = Messages::PAID_FILTERED_INTEREST_NOT_SENT;
-							$error = str_replace("{{UNAME}}",$name, $error);
-							$this->setErrorMessage($error);
-							return false;
-						}
-						else
-						{ 
-							$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_SENT,ErrorHandler::ERROR_FOUND);
-							$error = Messages::PAID_FILTERED_INTEREST_SENT;
-							$error = str_replace("{{UNAME}}",$name, $error);
-							$this->setErrorMessage($error);
-							return false;
-						}
+				$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
+				if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
+				{					
+					if($this->checkPaid())
+					{	
+							$name = $this->contactHandlerObj->getViewed()->getUSERNAME();
+							
+							if($this->interestNotSent())
+							{
+								$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
+								$error = Messages::PAID_FILTERED_INTEREST_NOT_SENT;
+								$error = str_replace("{{UNAME}}",$name, $error);
+								$this->setErrorMessage($error);
+								return false;
+							}
+							else
+							{ 
+								$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_SENT,ErrorHandler::ERROR_FOUND);
+								$error = Messages::PAID_FILTERED_INTEREST_SENT;
+								$error = str_replace("{{UNAME}}",$name, $error);
+								$this->setErrorMessage($error);
+								return false;
+							}
 
-				}
-
-			$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
-			$error = Messages::FILTERED;
-			$this->setErrorMessage($error);
-			return false;
-			}			
-			
+					}
+					$error = Messages::FILTERED;
+					$this->setErrorMessage($error);
+					return false;
+				}			
 		}
 		
 		//7. Reminder limit		

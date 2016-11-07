@@ -1,73 +1,82 @@
 <?php
-/*
- *	A Symfony task which sends a alert at an interval whenever the count of
- *  errors for modules crosses the specified threshold
- */
-class kibanAlertsTask extends sfBaseTask
+
+class ConsumerKibanaAlertTask extends sfBaseTask
 {
 	protected function configure()
 	{
+		// // add your own arguments here
+		// $this->addArguments(array(
+		//   new sfCommandArgument('my_arg', sfCommandArgument::REQUIRED, 'My argument'),
+		// ));
+
+		// // add your own options here
+		// $this->addOptions(array(
+		//   new sfCommandOption('my_option', null, sfCommandOption::PARAMETER_REQUIRED, 'My option'),
+		// ));
+
 		$this->namespace        = 'Alerter';
-		$this->name             = 'kibanAlerts';
-		$this->briefDescription = 'Sends alerts if no. of errors cross a threshold';
+		$this->name             = 'ConsumerKibanaAlert';
+		$this->briefDescription = 'Sends alerts for Consumer services and Roster logs';
 		$this->detailedDescription = <<<EOF
-The [kibanAlerts|INFO] task does things.
+The [ConsumerKibanaAlert|INFO] task does things.
 Call it with:
 
-	[php symfony kibanAlerts|INFO]
+	[php symfony ConsumerKibanaAlert|INFO]
 EOF;
 	}
 
 	protected function execute($arguments = array(), $options = array())
 	{
+
 		$currdate = date('Y.m.d');
 		// Server at which ElasticSearch and kibana is running
 		$elkServer = '10.10.18.66';
 		$elkPort = '9200';
 		$kibanaPort = '5601';
-		$indexName = 'filebeat-'.$currdate;
+		$indexName = 'consumer-'.$currdate;
 		$query = '_search';
 		// in hours
 		$interval = 1;
 		$intervalString = '-'.$interval.' hour';
 		$toInt = date('H:i:s');
 		$fromInt = date('H:i:s',strtotime($intervalString));
-		$threshold = 50;
+		$threshold = 100;
 		$timeout = 5000;
-		$dashboard = 'Common-Dash';
+		$dashboard = 'Consumer_new_dashboard';
 		$msg = '';
+		$noError = 1;
 		$from = "jsissues@jeevansathi.com";
-		$subject = "Kibana Module Alert";
+		$subject = "Consumer alert";
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 
 		// parameters required, log type of Error and get all module counts in the specified interval
 		$params = [
 			"query"=> [
-			    "match" => ["logType"=>"Error"]
+					"match" => ["logLevel"=>"error"]
 			],
 			"aggs"=> [
 			"filtered"=> [
-			  "filter"=> [
-			    "bool"=> [
-			      "must"=> [
-			        [
-			          "range"=> [
-			            "@timestamp"=> [
-			              "gt"=> "now-".$interval."h",
-			              "lt"=> "now"
-			            ]
-			          ]
-			        ]
-			      ]
-			    ]
-			  ],
-			  "aggs"=> [
-			    "modules"=>
-			    [
-			        "terms"=>
-			        [ "field" => "moduleName" ,  "size" => 1000 ]
-			    ]
-			  ]
+				"filter"=> [
+					"bool"=> [
+						"must"=> [
+							[
+								"range"=> [
+									"@timestamp"=> [
+										"gt"=> "now-".$interval."h",
+										"lt"=> "now"
+									]
+								]
+							]
+						]
+					]
+				],
+				"aggs"=> [
+					"modules"=>
+					[
+							"terms"=>
+							[ "field" => "source" ,  "size" => 1000 ]
+					]
+				]
 			]
 			]
 		];
@@ -79,10 +88,10 @@ EOF;
 			date_default_timezone_set('UTC');
 			$arrResponse = json_decode($response, true);
 			$arrModules = array();
-			// Get module count for each module
+			// Get count for each source type
 			foreach($arrResponse['aggregations']['filtered']['modules']['buckets'] as $module)
 			{
-			    $arrModules[$module['key']] = $module['doc_count']; 
+					$arrModules[$module['key']] = $module['doc_count']; 
 			}
 			$to = "jsissues@jeevansathi.com";
 			// Kibana Url for the dashboard in the specified interval
@@ -93,10 +102,18 @@ EOF;
 				{
 					$msg .= $key." has encountered ".$value." errors.\n";
 				}
+				if ($value > 0)
+				{
+					$noError = 0;
+				}
 			}
 			if($msg != '')
 			{
 				$msg = "In the interval ".$fromInt." - ".$toInt." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
+			}
+			else if($noError)
+			{
+				$msg = "In the interval ".$fromInt." - ".$toInt." , no errors were logged.\n";
 			}
 		}
 		else
