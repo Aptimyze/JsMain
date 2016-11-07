@@ -462,35 +462,16 @@ strophieWrapper.sendPresence();
     },
 
     //executed after non-roster list has been fetched or new non roster node is added
-    onNonRosterListFetched: function(response,groupid,operation,source){
-        //console.log("in onNonRosterListFetched",source);
-        var storeData = {};
+    onNonRosterListFetched: function(response,groupid,operation){
+        console.log("in onNonRosterListFetched",response);
         if(response != undefined){
-            if(source == "localstorage"){
-                $.each(response,function(profileid,nodeObj){
-                    if (strophieWrapper.isItSelfUser(profileid) == false) {
-                        if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && strophieWrapper.Roster[profileid] == undefined){
-                            strophieWrapper.NonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
-                            //storeData[nodeObj["profileid"]] = strophieWrapper.NonRoster[nodeObj["profileid"]];
-                        }
+            $.each(response,function(profileid,nodeObj){
+                if (strophieWrapper.isItSelfUser(profileid) == false) {
+                    if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && strophieWrapper.Roster[profileid] == undefined){
+                        strophieWrapper.NonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
                     }
-                    //console.log("converted",strophieWrapper.Roster[nodeObj["profileid"]]);
-                });
-            }
-            else{
-                $.each(response,function(key,nodeObj){
-                    nodeObj["groupid"] = groupid;
-                    nodeObj["addIndex"] = key;
-                    if (strophieWrapper.isItSelfUser(nodeObj["profileid"]) == false) {
-                        var listObj = strophieWrapper.formatNonRosterObj(nodeObj);
-                        if (strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && strophieWrapper.Roster[nodeObj["profileid"]] == undefined){
-                            strophieWrapper.NonRoster[nodeObj["profileid"]] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[nodeObj["profileid"]], listObj);
-                            //storeData[nodeObj["profileid"]] = strophieWrapper.NonRoster[nodeObj["profileid"]];
-                        }
-                    }
-                    //console.log("converted",strophieWrapper.Roster[nodeObj["profileid"]]);
-                });
-            }
+                }
+            });
             //console.log("adding",strophieWrapper.NonRoster);
             if(operation == "create_list"){
                 strophieWrapper.initialNonRosterFetched = true;

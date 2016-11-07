@@ -185,32 +185,59 @@ function to process the non roster data
 */
 function processNonRosterData(response,type,source){
     var operation = "create_list",reCreateList = true;
-    //console.log("in processNonRosterData",response,strophieWrapper.initialNonRosterFetched);
-    var newNonRoster = response,oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
-    if((Object.keys(oldNonRoster)).length > 0){
-        //reCreateList = checkForNonRosterListRecreation(newNonRoster);
-        if(reCreateList == true){
+    console.log("in processNonRosterData",source); 
+    var newNonRoster = {},oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
+    /*if((Object.keys(oldNonRoster)).length == 0){
+        oldNonRoster = strophieWrapper.getRosterStorage("non-roster");
+    }*/
+    if((Object.keys(response)).length > 0){
+        if(source != "localstorage"){
+            $.each(response,function(key,nodeObj){
+                nodeObj["groupid"] = type;
+                nodeObj["addIndex"] = key;
+                var listObj = strophieWrapper.formatNonRosterObj(nodeObj);
+                if (strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && strophieWrapper.Roster[nodeObj["profileid"]] == undefined){
+                    newNonRoster[nodeObj["profileid"]] = listObj;
+                }
+            });
+        }
+        else{
+            newNonRoster = response;
+        }
+    }
+    console.log("oldNonRoster",oldNonRoster);
+    console.log("newNonRoster",newNonRoster);
+    isResponseSame = checkForObjectsEquality(oldNonRoster,newNonRoster);
+    if(isResponseSame == false){
+        if((Object.keys(oldNonRoster)).length > 0){
             if(chatConfig.Params.nonRosterPollingGroups.length == 1 && chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
                 //only dpp is non roster group case
                 offlineNonRoster = oldNonRoster;
             }
-            else{
-                //in case there are multiple non roster groups
-                /*if(chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
-                    $.each(oldNonRoster,function(profileid,nodeObj){
-                        if((oldNonRoster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == type) && (newNonRoster.length == 0 || newNonRoster[profileid] == undefined)){
-                            offlineNonRoster[profileid] = oldNonRoster[profileid];
-                        }
-                    });
-                }*/
-            }
             //mark old list as offline
             strophieWrapper.onNonRosterPresenceUpdate("offline",offlineNonRoster);
         }
-    }
-    if(reCreateList == true){
         //add new list
-        strophieWrapper.onNonRosterListFetched(response,type,operation,source);
+        strophieWrapper.onNonRosterListFetched(newNonRoster,type,operation);
+    }
+}
+
+/*checkForObjectsEquality
+function to check whether two objects are equal or not 
+* @inputs:obj1,obj2
+*/
+function checkForObjectsEquality(obj1,obj2){
+    if((Object.keys(obj1)).length == 0 && (Object.keys(obj2)).length == 0){
+        console.log("checkForObjectsEquality",true);
+        return true;
+    }
+    if((Object.keys(obj1)).length == 0 || (Object.keys(obj2)).length == 0){
+        console.log("checkForObjectsEquality",false);
+        return false;
+    }
+    else{
+        console.log("checkForObjectsEquality",(JSON.stringify(obj1) === JSON.stringify(obj2)));
+        return (JSON.stringify(obj1) === JSON.stringify(obj2));
     }
 }
 
