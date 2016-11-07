@@ -192,6 +192,10 @@ class MessageLog
                           $skip[] = $k; 
                           unset($messageArr[$k]);
                         }
+                        else if(array_key_exists($k, $finalArr)){
+                          $finalArr[$k] = $this->sortInnerArr($finalArr[$k],$v);
+                          $skip[] = $k;
+                        }
                         else
                           $finalArr[$k] = $v;
                         unset($chatArr[$k]);
@@ -199,7 +203,7 @@ class MessageLog
                     if(count($finalArr)>=$limit)
                         return $finalArr;
                 }
-                else{
+                else if(count($finalArr)<$limit){
                     $finalArr[$key] = $val;
                 }
             }
