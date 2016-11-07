@@ -28,7 +28,8 @@ class SearchParamtersLayer
 		$QuickSearchBand = $request->getParameter("QuickSearchBand");
                 $verifiedMatches = $request->getParameter("verifiedMatches");
                 $ContactViewAttempts = $request->getParameter("contactViewAttempts");
-                
+        $lastSearchResults = $request->getParameter("lastSearchResults");
+
 		$uri = $request->getUri();
 		if($specialSearch=='AppSearch')
 			$AppSearch=1;
@@ -39,7 +40,7 @@ class SearchParamtersLayer
 		elseif($request->getParameter("appnotification")==1)
 			$appnotification=1;
 
-		if($mySaveSearchId || $searchId || $dpp || $membersLookingForMe || $appnotification || $twowaymatch || $justJoinedMatches || $matchalerts || $kundlialerts || $verifiedMatches || $ContactViewAttempts)
+		if($mySaveSearchId || $searchId || $dpp || $membersLookingForMe || $appnotification || $twowaymatch || $justJoinedMatches || $matchalerts || $kundlialerts || $verifiedMatches || $ContactViewAttempts || $lastSearchResults)
 		/**
 		* If predifined searches like save-search , dpp , reversedpp is run
 		*/
@@ -126,6 +127,12 @@ class SearchParamtersLayer
                                 $SearchParamtersObj = PredefinedSearchFactory::getSetterBy('verifiedMatches',$loggedInProfileObj);
 				$SearchParamtersObj->getSearchCriteria();
                         }
+            //last search results
+            elseif($lastSearchResults && !$searchId)
+            {
+            	$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('lastSearchResults',$loggedInProfileObj);
+				$SearchParamtersObj->getLastSearchResultCriteria();
+            }
 			elseif($searchId)
 			/* Search is performed based on search-id */
 			{

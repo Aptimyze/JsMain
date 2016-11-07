@@ -144,7 +144,7 @@ return 0;
     $profileid = $profileObj->getPROFILEID();
     $show=0;
     $request=sfContext::getInstance()->getRequest();
-
+    $isApp=MobileCommon::isApp();
         switch ($layerToShow) {
           case '1': 
                     $picObj= new PictureService($profileObj);
@@ -165,7 +165,7 @@ return 0;
                     $show=1;
                     break;
           case '6': 
-                  if(MobileCommon::isApp()!='I')
+                  if($isApp!='I')
                     {
                           $loginData = $request->getAttribute('loginData');
                           $birthdate = new DateTime($loginData['DTOFBIRTH']);
@@ -215,6 +215,7 @@ return 0;
 
                     case '8': 
                       
+
                       $isApp=MobileCommon::isApp();
                       if(!$isApp || ($request->getParameter('API_APP_VERSION')>72 && $isApp=='A'))
                       {
@@ -228,12 +229,42 @@ return 0;
                     
                     case '9': 
                       $appVersion=$request->getParameter('API_APP_VERSION');
-                      $isApp=MobileCommon::isApp();
                       if(!$isApp || ($isApp=='A' && $appVersion>=63) || ($isApp=='I' && $appVersion>=3.0) )
                       {
                       $nameArr=(new NameOfUser())->getNameData($profileid);
                       if(!is_array($nameArr[$profileid]) || !$nameArr[$profileid]['DISPLAY'] || !$nameArr[$profileid]['NAME'])
                           $show=1;
+                      }
+                    
+                    break;
+
+                      case '10': 
+                      if(!$isApp)
+                      {
+                        if($profileObj->getHAVEPHOTO() == 'Y' && $profileObj->getPHOTO_DISPLAY() == 'C')
+                          $show = 1;
+                      }
+                    
+                    break;
+
+                      case '11':                      
+                      
+                      if(!$isApp)
+                      {
+                          $memObject=  JsMemcache::getInstance();
+                          if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                                  $show=1;
+                            
+                      }
+                    
+                    break;
+
+                      case '12':               
+                      if(!$isApp)
+                      { 
+                        $horoscopeObj = new Horoscope();
+                        if($profileObj->getHOROSCOPE_MATCH() == 'Y' && $horoscopeObj->ifHoroscopePresent($profileid) == 'N')
+                          $show = 1;
                       }
                     
                     break;  
