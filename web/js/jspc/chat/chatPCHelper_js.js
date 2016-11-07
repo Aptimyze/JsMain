@@ -46,7 +46,7 @@ function reActivateNonRosterPolling(source){
             clearNonRosterPollingInterval(groupId);
             strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
                                                                 pollForNonRosterListing(groupId);
-                                                            },500);
+                                                            },100);
             
         });
     }
