@@ -12,6 +12,7 @@ mysql_query("set session wait_timeout=600",$db2);
                 $uname_arr      =array(); 
                 $uname_str      ='';
 		$type	 	='REG';
+		$todayDate      =date("Y-m-d");	
 		$last30Days     =date("Y-m-d H:i:s",strtotime("$todayDate -30 days"));
 	
 		// Get the currently active executives from the PSWRDS table
