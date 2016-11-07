@@ -23,7 +23,7 @@ mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_master);
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
 $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer,$db_master);
-$csvEntryDate =date("Y-m-d",time()-9.5*60*60);
+$csvEntryDate =date("Y-m-d",time()-10.5*60*60);
 
 /* Config array Start */
 $campaignArr 		=array('JS_NCRNEW','MAH_JSNEW','JS_RENEWAL','OB_JS_PAID','OB_RENEWAL_MAH');

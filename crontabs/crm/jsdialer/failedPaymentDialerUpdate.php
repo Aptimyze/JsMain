@@ -22,7 +22,7 @@ $campaignName	='FP_JS';
 $action		='STOP';
 $str		='Dial_Status=0';
 $npriority	=5;
-$last20MinTime	=date("Y-m-d H:i:s",time()-9.5*60*60-20*60);
+$last20MinTime	=date("Y-m-d H:i:s",time()-10.5*60*60-20*60);
 $last20MinTime	=strtotime($last20MinTime);
 
 $profilesArr 	=fetchProfiles($db_js);
