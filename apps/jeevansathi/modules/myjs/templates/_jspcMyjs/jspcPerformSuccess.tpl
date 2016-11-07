@@ -66,7 +66,7 @@
                             <div id="test" class="pt10 f14">Your profile is 100% complete.</div>~/if` </div>
                         <div class="fr pr20">
                             <a href="/search/matchalerts" onclick="trackJsEventGA('My JS JSPC', 'Match Alerts Bubble',loggedInJspcGender,'')">
-                                <div id="dailyMatchesCountBar" class="fl cursp colrw fontlig pt10 pl55 disp-none">
+                                <div id="dailyMatchesCountBar" class="fl cursp colrw fontlig pt10 disp-none">
                                     <div class="disp-tbl mauto">
                                         <div class="disp-cell myjs-br2 bg_pink vmid txtc imgdim2 f22 pos-rel"> <span id="dailyMatchesCountTotal">~$engagementCount.DAILY_MATCHES`</span> ~if $engagementCount.DAILY_MATCHES_NEW`
                                             <div id="dailyMatchesNewCircle" class="pos-abs fontlig myjs-pos1"> ~else`

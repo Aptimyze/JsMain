@@ -575,7 +575,7 @@ function generateFaceCard(Object)
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','DPP Matches/Last Search Section - Tuple',loggedInJspcGender,'')";
     }
 
-      totalCount=Object.data.no_of_results;
+      totalCount=Object.data.profiles.length;
 
 
     if(totalCount >Object.maxCount){
