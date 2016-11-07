@@ -12,9 +12,10 @@ mysql_query("set session wait_timeout=600",$db2);
                 $uname_arr      =array(); 
                 $uname_str      ='';
 		$type	 	='REG';
+		$last30Days     =date("Y-m-d H:i:s",strtotime("$todayDate -30 days"));
 	
 		// Get the currently active executives from the PSWRDS table
-                $sql_unames = "SELECT USERNAME FROM jsadmin.PSWRDS WHERE LAST_LOGIN_DT>='$last15Days'";
+                $sql_unames = "SELECT USERNAME FROM jsadmin.PSWRDS WHERE LAST_LOGIN_DT>='$last30Days'";
                 $res_unames = mysql_query_decide($sql_unames,$db) or die($sql_unames.mysql_error_js());
                 while($row_unames = mysql_fetch_array($res_unames)){
                 	$uname_arr[] = $row_unames['USERNAME'];
