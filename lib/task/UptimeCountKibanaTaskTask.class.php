@@ -65,10 +65,8 @@ EOF;
 			{
 					$arrModules[$rcode['key']] = $rcode['doc_count']; 
 			}
-
-			$count200 = $arrModules[200];
-			$count500 = $arrModules[500];
-			
+			$count = ['200' => $arrModules[200], '500' => $arrModules[500]];
+			var_dump($count);
 			die;
 		}
 	}
