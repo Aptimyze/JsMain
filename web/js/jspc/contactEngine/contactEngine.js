@@ -678,7 +678,7 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	jObject=$(FinalHtml);
 	var profileChecksum=this.buttonObj.profileChecksum;
 
-	jObject.find('.reportInvalid').bind('click',function(){phoneReportInvalid(this,profileChecksum);});
+	jObject.find('.reportInvalid').bind('click',function(){reportInvalidReason(this,profileChecksum);});
 	jObject.find(".SMSContactsDiv").removeClass('disp-none').attr('profileChecksum',profileChecksum).bind('click',function(){SMSContactsDivBinding(this);});
 
 	return jObject;
@@ -922,4 +922,79 @@ function openChatWindow(aJid,param,profileID,userName,have_photo,checksum){
 
 	}
 	
+}
+
+function reportInvalidReason(ele,profileChecksum){
+if(!profileChecksum || !ele) return;
+
+var parent=$(ele).closest('.cEParent');
+parent.find('.js-usernameCE');
+
+
+var reason='';
+var layerObj=$("#reportInvalidReason-layer");
+if(layerObj.find("#otherOptionBtn").is(':checked')) {
+	var reason=layerObj.find("#otherOptionMsgBox textarea").eq(0).val();
+	if(!reason) {layerObj.find('#errorText').removeClass('disp-none');return;}
+}
+$('.js-overlay').unbind('click');
+var layerObj=$("#reportInvalidReason-layer");
+
+var phoneType=$(ele).attr('phoneType');
+if (phoneType=='L') {var mobile='N';var phone='Y';}
+if (phoneType=='M') {var mobile='Y';var phone='N';}
+ajaxConfig=new Object();
+if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("*Please Select a reason");return;}
+if(!reason) reason=layerObj.find(".selected").eq(0).text().trim();
+if(!reason||!selfUname || !otherUser) return;
+showCommonLoader();
+reason=$.trim(reason);
+ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileChecksum,'reason',''};
+ajaxConfig.url='/phone/reportInvalid';
+ajaxConfig.data=ajaxData;
+ajaxConfig.type='POST';
+ajaxConfig.success=function(response){
+	$('#reportInvalidReason-layer').fadeOut(300,"linear");
+
+	          	hideCommonLoader();
+	          	
+		var jObject=$("#reportInvalidConfirmLayer");
+	jObject.find('.js-username').html(otherUser);
+	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
+
+		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportInvalidConfirmLayer').fadeIn(300,"linear",function(){})}); 
+
+closeInvalidConfirmLayer=function() {
+
+$('.js-overlay').fadeOut(200,"linear",function(){ 
+	$('#reportInvalidConfirmLayer').fadeOut(300,"linear")});
+	$('.js-overlay').unbind('click');
+
+};
+
+$('.js-overlay').bind('click',closeInvalidConfirmLayer);
+
+	}
+
+jQuery.myObj.ajax(ajaxConfig);
+
+
+}
+
+function showReportInvalidLayer(){
+	var jObject=$("#reportInvalidReason-layer");
+	jObject.find('.js-username').html(finalResponse.about.username);
+	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
+
+$('.js-overlay').unbind();
+$('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportInvalidReason-layer').fadeIn(300,"linear",function(){})}); 
+closeReportInvalidLayer=function() {
+
+$('.js-overlay').fadeOut(200,"linear",function(){ 
+	$('#reportInvalidReason-layer').fadeOut(300,"linear")});
+	
+};
+
+$('#buttonForReportInvalid').bind('click',closeReportInvalidLayer);
+
 }
