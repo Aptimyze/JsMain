@@ -497,6 +497,15 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
 		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
 		$arrOut[] = $this->handleStateCityData($szState,$szCity);
+
+		$count_matches = SearchCommonFunctions::getMyDppMatches("","",'',"",'',"","",1)["CNT"];
+
+	    if ( !isset($count_matches))
+	    {
+	      $count_matches = 0;
+	    }
+
+	    $arrOut[]= $this->getApiFormatArray("P_MATCHCOUNT","","",$count_matches,"");
 		return $arrOut;
 	}
 

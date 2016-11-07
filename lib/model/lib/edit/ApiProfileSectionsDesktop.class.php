@@ -263,14 +263,7 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     $szHaveChild = $this->getDecorateDPP_Response($jpartnerObj->getCHILDREN());
     $szDecordateHaveChild = $this->getPartnerChildren($szHaveChild);
     $arrOut[] = $this->getApiFormatArray("P_HAVECHILD","Have Children",trim($szDecordateHaveChild),$szHaveChild,$this->getApiScreeningField("PARTNER_HAVECHILD"));
-    $count_matches = SearchCommonFunctions::getMyDppMatches("","",'',"",'',"","",1)["CNT"];
-
-    if ( !isset($count_matches))
-    {
-      $count_matches = 0;
-    }
-
-    $arrOut[]= $this->getApiFormatArray("P_MATCHCOUNT","","",$count_matches,"");
+  
 
     
     return $arrOut;
