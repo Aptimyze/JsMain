@@ -2,6 +2,10 @@
 $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 include ("$docRoot/crontabs/connect.inc");
+include_once($_SERVER['DOCUMENT_ROOT']."/classes/globalVariables.Class.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
+include_once($_SERVER['DOCUMENT_ROOT']."/classes/Memcache.class.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once(JsConstants::$docRoot."/classes/VariableDiscountHandler.class.php");
 
 ini_set('max_execution_time',0);
