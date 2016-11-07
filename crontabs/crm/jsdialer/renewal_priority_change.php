@@ -15,6 +15,7 @@ $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js);
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
+$dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer);
 $priorityHandlerObj =new PriorityHandler($db_js, $db_js_111, $db_dialer);
 $campaign_nameArr =array("JS_RENEWAL","OB_RENEWAL_MAH");
 $limit =10;
