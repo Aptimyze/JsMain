@@ -212,8 +212,11 @@ class phoneActions extends sfActions
 //this method is used for reporting a phone number as abuse
 	public function executeReportInvalid(sfWebRequest $request)
 	{
-		
-   		
+   		$reasonNumber = $request->getParameter('reasonCode'); 
+   		$reason = phoneEnums::$mappingArrayReportInvalid[$reasonNumber-1];
+   		$otherReason = "";
+   		if($reasonNumber == 5)
+   		$otherReason = $request->getParameter('otherReasonValue');	
 		$respObj = ApiResponseHandler::getInstance();
 		$profileChecksum=$request->getParameter('profilechecksum');
 		$phone=$request->getParameter('phone');
@@ -230,7 +233,7 @@ class phoneActions extends sfActions
 		$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
    		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
 		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
-   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'');
+   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);
    			$profile2->getDetail($profileid,"PROFILEID");
 			$result['username']=$profile2->getUSERNAME();
 			
