@@ -586,6 +586,16 @@ ContactEngineCard.prototype.postCCViewContactLayer= function(Obj,profileChecksum
 	if (actionDetails.contact2){phoneContact+=(actionDetails.contact2.value+',    ');}
 	if (actionDetails.contact3){phoneContact+=(actionDetails.contact3.value+' ');}
 	
+	if(!phoneContact){
+		if(actionDetails.contact1_message || actionDetails.contact2_message || actionDetails.contact3_message )
+ 		{
+ 			if((actionDetails.contact1_message && actionDetails.contact1_message.indexOf('accept')) 
+			|| (actionDetails.contact2_message && actionDetails.contact2_message.indexOf('accept'))
+			|| (actionDetails.contact3_message && actionDetails.contact3_message.indexOf('accept')) )
+				phoneContact = "Phone number visible on accept";
+			else phoneContact = "Phone number hidden";
+		}
+	}
 	if (!phoneContact) phoneContact='NA';
 		viewContactElement.find('.js-phoneContactCC').removeClass('disp-none').find('.js-phoneValuesCC').html(phoneContact);
 		
@@ -645,7 +655,7 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	}
 	else if(Obj.actiondetails.contact3_message)
 	{
-		liFinalHtml+=ViewContactLiCreate('Alternate No.',Obj.actiondetails.contact3_message);
+		liFinalHtml+=viewContactHiddenLabel('Alternate No.',Obj.actiondetails.contact3_message);
 	}
 	
 	if(Obj.actiondetails.contact5!=null)
