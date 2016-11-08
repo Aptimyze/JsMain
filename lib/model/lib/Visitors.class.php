@@ -26,7 +26,7 @@ class Visitors
 	{
 		return $value["VIEWER"];
 	}
-	public function getVisitorProfile($page="",$profileCount="",$infoTypenav)
+	public function getVisitorProfile($page="",$profileCount="",$infoTypenav="")
 	{
 		$skipContactedType = SkipArrayCondition::$VISITOR;
 		$skipProfileObj    = SkipProfile::getInstance($this->profile->getPROFILEID());
@@ -47,7 +47,7 @@ class Visitors
 				$fieldList                  = "AGE,HEIGHT,MANGLIK,MSTATUS,CASTE,RELIGION,MTONGUE,COUNTRY_RES,INCOME,PROFILEID,OCCUPATION,EDU_LEVEL_NEW,CITY_RES";
 				$profileIdArr1["PROFILEID"] = implode(",", $profileIdArr);
 				$this->visitorsProfile      = $multipleProfileObj->getResultsBasedOnJprofileFields($profileIdArr1, '', '', $fieldList, "JPROFILE", "", "");
-                            if($infoTypenav["matchedOrAll"]=="M")
+                            if($infoTypenav["matchedOrAll"]!="A")
                                 $this->passInVisitors();
                             
 			}
