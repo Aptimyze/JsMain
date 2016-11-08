@@ -221,7 +221,9 @@ class Producer
                                 case "ViewLogQueue":
                                         $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::VIEW_LOG,MQ::MANDATORY,MQ::IMMEDIATE);
                                         break;
-
+                case MQ::SCREENING_Q_EOI:
+                	$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::SCREENING_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+                	break;
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;
