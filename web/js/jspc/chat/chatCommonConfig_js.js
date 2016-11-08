@@ -86,7 +86,7 @@ chatConfig.Params = {
             "extraGETParams":{
                 "type":"CHATDPP"
             },
-            "timeoutTime":5000
+            "timeoutTime":60000
         }
     },
     //api config for non roster presence api
