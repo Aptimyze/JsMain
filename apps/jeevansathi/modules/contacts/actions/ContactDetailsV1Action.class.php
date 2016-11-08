@@ -345,6 +345,7 @@ class ContactDetailsV1Action extends sfAction
 					$responseArray["footerbutton"]["params"] = "&VIEWCONTACT=1";
 					$responseArray["footerbutton"]["action"] = "CONTACTDETAIL";
 				}
+                                
 			} 
 			else {
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
@@ -382,6 +383,16 @@ class ContactDetailsV1Action extends sfAction
 			$responseArray["contact4"] = ButtonResponse::buttonMerge($responseArray["contact4"]);
 		if (is_array($responseArray["footerButton"]))
 			$responseArray["footerButton"] = ButtonResponse::buttonMerge($responseArray["footerButton"]);
+                
+                if(!$responseArray['contact1']){
+                    $responseArray['contact1_message']=$this->contactEngineObj->getComponent()->contactDetailsObj->getPrimaryMobileHiddenMessage();
+                }
+                if(!$responseArray['contact2']){
+                    $responseArray['contact2_message']=$this->contactEngineObj->getComponent()->contactDetailsObj->getLandlMobileHiddenMessage();
+                }
+                if(!$responseArray['contact3']){
+                    $responseArray['contact3_message']=$this->contactEngineObj->getComponent()->contactDetailsObj->getAltMobileHiddenMessage();
+                }
 		$responseArray = array_change_key_case($responseArray,CASE_LOWER);
 		$finalresponseArray["actiondetails"] = ButtonResponse::actionDetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = null;
