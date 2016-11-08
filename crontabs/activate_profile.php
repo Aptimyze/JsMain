@@ -21,10 +21,10 @@
 			$preactivated = $row['PREACTIVATED'];
 			$arrFields = array('ACTIVATED'=>$preactivated);
 			$exrtaWhereCond = "ACTIVATE_ON<='$today'";
-			$res = $jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
+			$res1 = $jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID",$exrtaWhereCond);
 			// $sql="UPDATE JPROFILE SET ACTIVATED=PREACTIVATED WHERE PROFILEID='$profileid' AND ACTIVATE_ON<='$today'";
 			//mysql_query($sql) or logError($sql);
-			if(false !== $res) {
+			if(false !== $res1) {
 				$argv[1] = $profileid;
 				include_once(JsConstants::$docRoot."/profile/retrieveprofile_bg.php");
 			}
