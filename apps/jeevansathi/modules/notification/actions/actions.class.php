@@ -375,7 +375,7 @@ class notificationActions extends sfActions
                 $output['result']= $res;
             }
             else{
-                $output['result']= "Not found";   
+                $output['result']= array("notificationStatus"=>"Not found");   
             }
         }
         else{
