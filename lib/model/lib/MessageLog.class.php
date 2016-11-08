@@ -169,6 +169,8 @@ class MessageLog
         private function mergeChatsAndMessages($messageArr,$chatArr,$limit){
             $count = 0;
             $skip = array();
+            $finalArr=array();
+            if(count($messageArr)>0)
             foreach ($messageArr as $key=>$val){
                 if(in_array($key, $skip))
                    continue;
@@ -219,7 +221,9 @@ class MessageLog
         }
         
         private function sortInnerArr($messageInnerArr,$chatInnerArr){
+            if(count($messageInnerArr)>0)
             foreach ($messageInnerArr as $key=>$val){
+                if(count($chatInnerArr)>0)
                 foreach($chatInnerArr as $k=>$v) {
                     if($val['DATE'] > $v['DATE']){
                         $finalInnerArr[] = $val;
