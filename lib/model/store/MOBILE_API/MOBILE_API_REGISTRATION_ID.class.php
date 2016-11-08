@@ -209,7 +209,7 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
                 return $pid;
         }
         
-        public function checkNotificationSubscriptionStatus($profileid,$channel){
+        public function checkNotificationSubscriptionStatus($profileid){
         	try{
         		if($profileid){
         			$sql = "SELECT * from MOBILE_API.REGISTRATION_ID WHERE PROFILEID = :PROFILEID ORDER BY TIME DESC LIMIT 1";

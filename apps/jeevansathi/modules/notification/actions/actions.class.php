@@ -369,13 +369,13 @@ class notificationActions extends sfActions
         $loginData = $request->getAttribute("loginData");
         $profileId = $loginData["PROFILEID"];
         if($profileId){
-            $mobileApiRegistrationObj = new MOBILE_API_REGISTRATION_ID;
+            $mobileApiRegistrationObj = new MOBILE_API_REGISTRATION_ID("newjs_masterRep");
             $res = $mobileApiRegistrationObj->checkNotificationSubscriptionStatus($profileId);
             if($res){
                 $output['result']= $res;
             }
             else{
-                $output['result']= array("notificationStatus"=>"Not found");   
+                $output['result']= array("notificationStatus"=>"NotFound");   
             }
         }
         else{
