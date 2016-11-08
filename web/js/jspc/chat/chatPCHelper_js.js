@@ -111,6 +111,7 @@ function pollForNonRosterListing(type){
             timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
             headers:{
                 'JB-Profile-Identifier':loggedInJspcUser
+                //'Cache-Control':'max-age=300'
             },
             beforeSend: function (xhr) {},
             success: function (response) {
