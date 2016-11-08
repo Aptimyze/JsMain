@@ -53,6 +53,7 @@ class MessageQueues
   CONST BUFFER_INSTANT_NOTIFICATION_QUEUE = "BufferInstantNotificationsQueue"; //Queue for storing buffer instant notifications(JSPC/JSMS/FSO)
   CONST DUPLICATE_LOG_QUEUE = "DuplicateLogQueue"; //Queue for logging duplicate profiles
   CONST DELETE_RETRIEVE_QUEUE = "DeleteRetrieveQueue"; //Queue that contains profileId's for those profiles that are deleted.
+  CONST SCREENING_QUEUE = "ScreeningQueue"; //Queue that contains profileId's for those profiles that are screened.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
@@ -93,6 +94,7 @@ class MessageQueues
   /*----------------JS notification(scheduled/instant) queues configuration details-------------------------*/
   const PROFILE_CACHE_Q_DELETE = "ProfileCacheDeleteQueue";
   const PROCESS_PROFILE_CACHE_DELETE = "PROFILE_CACHE_DELETE";
+  const SCREENING_Q_EOI = "SCREENING_SEND_EOI";
 }
 
 ?>

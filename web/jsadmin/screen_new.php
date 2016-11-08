@@ -701,6 +701,12 @@ if (authenticated($cid)) {
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
+						$producerObj=new Producer();
+						if($producerObj->getRabbitMQServerConnected())
+						{
+							$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($sendMailData);
+						}
 						CommonFunction::sendWelcomeMailer($pid);
 					}
 						//send_email($to, $MESSAGE);
