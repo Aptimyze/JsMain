@@ -10,7 +10,7 @@ class DialerHandler
         }
         public function getCampaignEligibilityStatus($campaign_name,$eligibleType='')
         {
-		$entryDt =date("Y-m-d",time()-9.5*60*60);
+		$entryDt =date("Y-m-d",time()-10.5*60*60);
 		$dataArr =array();
                 $sql = "SELECT * FROM js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS WHERE CAMPAIGN='$campaign_name' AND ENTRY_DT='$entryDt'";
 		if($eligibleType)
@@ -240,7 +240,10 @@ class DialerHandler
 
 				}
 				if($jp_condition_arr1){
-					$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=5";
+					if($renewal==1)
+						$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=5";
+					else
+						$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=6";
 					mssql_query($query2,$this->db_dialer) or $this->logError($query2,$campaign_name,$this->db_dialer,1);
 					$ustr1 = str_replace("'","",$jp_condition_arr1);
 					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE-PRIORITY')";
@@ -319,19 +322,14 @@ class DialerHandler
 
 		//INITIAL PRIORITY UPDATE 
 		$priority=0;
-		if($score>=81 && $score<=100)
-			$priority='5';
-		elseif($score>=61 && $score<=80)
-			$priority='4';
-		elseif($score>=41 && $score<=60)
-			$priority='3';
-		elseif($score>=21 and $score<=40)
-			$priority='2';
-		elseif($score>=11 and $score<=20)
-			$priority='1';
-		elseif($score>=1 and $score<=10)
-			$priority='0';
-		
+                if($alloted_to==''){
+                        if($score>=81 && $score<=100)
+                                $priority='2';
+                        elseif($score>=41 && $score<=80)
+                                $priority='1';
+                        else
+                                $priority='0';
+                }
 		if($priority!=$dialer_data['initialPriority']){
 			$update_str[] 	="old_priority='$priority'";
 		}

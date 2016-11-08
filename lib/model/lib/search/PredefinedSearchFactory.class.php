@@ -52,6 +52,9 @@ class PredefinedSearchFactory
                         case 'ContactViewAttempts' :
                                 $object = new ContactViewAttempts($loggedInProfileObj);
                                 break;
+                        case 'lastSearchResults'  :
+                                $object = new lastSearchResults($loggedInProfileObj);
+                                break;
                 }
                 return $object;
 	}

@@ -1,7 +1,7 @@
 
 $(document).ready(function() {
 	$('body').css('background-color','#09090b');
-                  if($("#submitName").offset().top-$("#skipBtn").offset().top-70 >0){
+                  if($("#submitName").length && $("#submitName").offset().top-$("#skipBtn").offset().top-70 >0){
               $("#skipBtn").css("margin-top",$("#submitName").offset().top-$("#skipBtn").offset().top-70);
           }
 

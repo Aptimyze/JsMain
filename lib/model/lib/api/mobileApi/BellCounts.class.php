@@ -99,7 +99,19 @@ class BellCounts
 				if(!$countDetails["FILTERED"]){
 					$countDetails["FILTERED"] = 0;
 				}
-
+				$justJoinedMemcacheCount = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+				if($justJoinedMemcacheCount){
+					$countDetails['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
+				}
+				else{
+					$countDetails['NEW_MATCHES']=0;
+				}
+				$dailyMatchesMemcacheCount=$profileMemcacheObj->get('MATCHALERT');
+				$countDetails['DAILY_MATCHES_NEW']=JsCommon::convert99($dailyMatchesMemcacheCount);
+				if(!$countDetails['DAILY_MATCHES_NEW']){
+					$countDetails['DAILY_MATCHES_NEW']=0;
+				}
+				$countDetails['TOTAL_NEW'] = $countDetails['PHOTO_REQUEST_NEW'] + $countDetails['MESSAGE_NEW'] + $countDetails['ACC_ME_NEW'] + $countDetails['AWAITING_RESPONSE_NEW'] + $countDetails['FILTERED_NEW'] + $countDetails['NEW_MATCHES'] + $countDetails['DAILY_MATCHES_NEW'];
 				return $countDetails;
         	}
         }
