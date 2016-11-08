@@ -293,9 +293,9 @@ $(".chosen-container").on('keyup',function(e) {
 $(".chosen-container .chosen-results li").addClass("chosenfloat").removeClass("chosenDropWid");
 });
 
+//showing the threshold for mutual match count
 $("#mutualMatchCount").css("padding","2px");
-
-showMutualCount(mutualMatchCount,parseInt($("#mutualMatchCount").text()).toLocaleString());
+showMutualCount(mutualMatchCount,parseInt($("#mutualMatchCount").data('value')).toLocaleString());
 
 //$(".chosen-container.chosen-container-multi").on('mousedown',function(e) {
 //  $(".chosen-container .chosen-results li").removeClass("highlighted");
@@ -338,10 +338,12 @@ if(isBrowserIE() === false)
 });
 
 function showMutualCount(id,value) {
+  var mutualMatchCountThreshold = 100;
 
   $(id).text(value);
+  $(id).attr("data-value",value);
 
-  if (  parseInt( value.replace(",","") ) > 100 )
+  if (  parseInt( value.replace(",","") ) > mutualMatchCountThreshold )
   {
     $(id).removeClass("js-selected");
     $(id).addClass("dppnbg1");
@@ -518,10 +520,14 @@ function saveSectionsFields(sectionId){
                 });
               }
               for (var ke in data) {
-                 if ( data[ke].key == "P_MATCHCOUNT")
-                 {
-                    showMutualCount(mutualMatchCount,(data[ke].value).toLocaleString());
-                 }
+
+                if ( data[ke] !== null )
+                {
+                  if ( data[ke].key == "P_MATCHCOUNT")
+                   {
+                      showMutualCount(mutualMatchCount,(data[ke].value).toLocaleString());
+                   }  
+                }
               }           
             }
     });
