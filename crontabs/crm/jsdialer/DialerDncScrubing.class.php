@@ -82,7 +82,7 @@ class DialerDncScrubing
 				mssql_query($query1,$this->db_dialer) or $this->logError($query1,$campaign_name,$this->db_dialer,1);
 
 				$updateString ='Dial_Status='.$dialStatus;
-				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$phoneNo,','$campaign_name','$updateString',now(),'OPTIN')";
+				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$updateString',now(),'OPTIN')";
 				mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 			}
 		}
