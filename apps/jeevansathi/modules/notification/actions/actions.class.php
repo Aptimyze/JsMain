@@ -360,5 +360,30 @@ class notificationActions extends sfActions
         $respObj->setResponseBody($output);
         $respObj->generateResponse();
         die;
-    }   
+    }
+    
+    /* function to get notification subsciption status
+    */
+    public function executeNotificationSubscriptionStatusV1(sfWebRequest $request){
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $loginData = $request->getAttribute("loginData");
+        $profileId = $loginData["PROFILEID"];
+        if($profileId){
+            $mobileApiRegistrationObj = new MOBILE_API_REGISTRATION_ID;
+            $res = $mobileApiRegistrationObj->checkNotificationSubscriptionStatus($profileId);
+            if($res){
+                $output['result']= $res;
+            }
+            else{
+                $output['result']= "Not found";   
+            }
+        }
+        else{
+            $output = array("error"=>"Profileid not found");
+        }
+        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $apiResponseHandlerObj->setResponseBody($output);
+        $apiResponseHandlerObj->generateResponse();
+        die;
+    }
 }
