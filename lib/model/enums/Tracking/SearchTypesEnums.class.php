@@ -133,5 +133,8 @@ class SearchTypesEnums
         const PC_CHAT_NEW = 'PCN';
         const kundliAlertMailer = "KAM";
         const EXCLUSIVE_SERVICE2_MAILER_STYPE = 'ES2M';
+        const LAST_SEARCH_RESULTS = "LSR";
+        const JSPC_LAST_SEARCH = "LSPC";
+        const LAST_SEARCH_DESIRED_PARTNER_MATCHES = "DPMD";
 }
 ?>

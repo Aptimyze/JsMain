@@ -23,7 +23,7 @@ class InboxMobileAppV2
 	const MY_MESSAGE = "You have not sent or received any messages yet";
 	const MY_MESSAGE_RECEIVED = "You have not received any messages yet";
 	//const MATCH_ALERT = "Profiles you would see here are Matches sent to you every day on your Email ID. We have not sent you any 'Match Alert' emails yet.";
-	const MATCH_ALERT = "Match alerts will appear here";
+	const MATCH_ALERT = "Daily Recommendations will appear here";
 	const PHOTO_REQUEST_RECEIVED = "No Photo Request Received";
 	const PHOTO_REQUEST_SENT = "No Photo Requests sent";
 	const INTRO_CALLS = "Members to be called will appear here";

@@ -3569,7 +3569,6 @@ if(!function_exists('logError'))
 {
         function logError($message,$query="",$critical="exit", $sendmailto="NO",$server="",$database="")
         {
-        		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
                 global $smarty, $checksum,$sql,$ajax_error,$isMobile;
 
                 //if(mysql_error_js() && $sendmailto!="YES")
@@ -3594,6 +3593,7 @@ if(!function_exists('logError'))
 		error_log($errorstring,3,JsConstants::$docRoot . "/profile/logerror_temp.txt");
 		
 		$errorstring.="\n#Details : $ret_val";
+        LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorstring));
                 if($sendmailto!="NO" && $sendmailto!="YES")
                         $b=mail($sendmailto,"ERROR in jeevansathi", $errorstring);
 
