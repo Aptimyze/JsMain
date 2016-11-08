@@ -166,7 +166,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
       $educationValues = (array) $educationValues;
     }
     
-		$education = $this->profile->getEducationDetail();
+		$education = $this->profile->getEducationDetail(1);
 		
 		
 		$eduArr[]=$this->getApiFormatArray("EDUCATION","About My Education" ,$this->profile->getDecoratedEducationInfo(),$this->profile->getEDUCATION(),$this->getApiScreeningField("EDUCATION"));
@@ -175,9 +175,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//highest degree should in a pg degree
 		if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education->PG_DEGREE,$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education["PG_DEGREE"],$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
 		
-			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education->PG_COLLEGE,$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education["PG_COLLEGE"],$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
       
 		}
 		else
@@ -188,9 +188,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//highest degree should not be high school or trade school
 		if(!($this->profile->getEDU_LEVEL_NEW()=="23" ||$this->profile->getEDU_LEVEL_NEW()=="24"))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , $education->UG_DEGREE,$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , $education["UG_DEGREE"],$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
 		
-			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education->COLLEGE,$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education["COLLEGE"],$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
       
 		}
 		else
@@ -198,7 +198,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree","","",$this->getApiScreeningField("DEGREE_UG"));		
 			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College","","",$this->getApiScreeningField("COLLEGE"));
 		}
-		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education->SCHOOL,$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
+		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education["SCHOOL"],$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
 
 		return $eduArr;
 	}
