@@ -3,10 +3,10 @@
   <div class="fullwid pb10 ~if $matchalertData.tuples eq ''` pt15 ~/if`">
     ~if $matchalertData.tuples neq ''`
     <div class="fl color7"> <span class="f17 fontlig">~$matchalertData.title`</span>&nbsp;<span id='matchAlert_count' class="opa50 f14">~$matchalertData.view_all_count`</span> </div>
-    <div class="fr pt5"> <a href="~$SITE_URL`/profile/contacts_made_received.php?page=matches&filter=R" class="f14 color7 opa50 icons1 myjs_arow1">See all </a> </div>
+    <div class="fr pt5"> <a href="~$SITE_URL`/profile/contacts_made_received.php?page=matches&filter=R" class="f14 color7 opa50 icons1 myjs_arow1">View all </a> </div>
     <div class="clr"></div>
     ~else`
-      <div class="f17 fontlig color7">Match Alerts</div>
+      <div class="f17 fontlig color7">Daily Recommendations</div>
     ~/if`
   </div>
 ~if $matchalertData.tuples neq ''`

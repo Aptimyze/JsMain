@@ -190,7 +190,10 @@ class ContactDetailsV1Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 				}
 				 elseif ($errorArr["FILTERED"] == 2) {
-					$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
+					 if($this->contactEngineObj->errorHandlerObj->getErrorMessage())
+						$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+					else
+						$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
 					$responseArray["errMsgIconId"] = "12";
 					$responseArray["headerLabel"]  = "Filtered Member";
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');

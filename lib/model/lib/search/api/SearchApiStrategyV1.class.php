@@ -188,7 +188,7 @@ class SearchApiStrategyV1
 		if($SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::AppJustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::JustJoinedMatches || $SearchParamtersObj->getSEARCH_TYPE()==SearchTypesEnums::iOSJustJoinedMatches || $this->searchCat == 'justJoinedMatches')
 		{
 			$this->output["newTagJustJoinDate"] = $SearchParamtersObj->getNewTagJustJoinDate();
-			$this->output["dppLinkAtEnd"] = 'Go To My Matches.';
+			$this->output["dppLinkAtEnd"] = 'Go To Desired Partner Matches.';
 		}
 
 		$this->output["no_of_results"]= "$cnt";

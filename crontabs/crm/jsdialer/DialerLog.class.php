@@ -31,5 +31,11 @@ class DialerLog
 			}
 		}
 	}
+	public function logOnlinePriority($profileid,$npriority,$dialStatus='',$priorityType='',$campaignName,$sourceType='',$alloted='')
+	{
+        	$query = "INSERT into js_crm.ONLINE_PRIORITY_LOG (PROFILEID,PRIORITY,DIAL_STATUS,TIME,ACTION,CAMPAIGN,SOURCE_TYPE,ALLOTED) VALUES ('$profileid','$npriority','$dialStatus',now(),'$priorityType','$campaignName','$sourceType','$alloted')";
+		mysql_query($query,$this->db_js_111) or die($query.mysql_error($this->db_js_111));	
+	}
+
 }
 ?>
