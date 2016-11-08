@@ -50,11 +50,12 @@ EOF;
         $fieldsToQuery = array("channelName",'Domain','typeOfError','beat.name','moduleName','logType','apiVersion','REQUEST_URI','actionName');
 
       $hoursNow = $arguments['hours'];
+
       for($j=0 ; $j <9 ; $j++){
       for($i=0 ; $i <= $hoursNow ; $i++)
       {
         $hoursNow = $i; 
-        $urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
+        $urlToHit = $this->elkServer.':'.$this->elkPort.'/'.$this->indexName.'/'.$this->query;
         $ltHour = $hoursNow + 1;
 
         $time = time('Y-m-d H:i:s',strtotime('-'.$hoursNow.' hours'));         
