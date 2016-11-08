@@ -253,7 +253,7 @@ return 0;
                       {
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
-                                  $show=1;
+                                  $show=0;
                             
                       }
                     

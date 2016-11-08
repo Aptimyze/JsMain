@@ -574,16 +574,18 @@ function generateFaceCard(Object)
       GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','DPP Matches/Last Search Section - Send Interest',loggedInJspcGender,'')";
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','DPP Matches/Last Search Section - Tuple',loggedInJspcGender,'')";
     }
+		if(Object.name=="DAILYMATCHES")
+			totalCount=Object.data.total;
+		if(Object.name=="JUSTJOINED" || Object.name=="DESIREDPARTNERMATCHES" || Object.name=="VERIFIEDMATCHES" || Object.name=="LASTSEARCH")
+			totalCount=Object.data.no_of_results;
 
-      totalCount=Object.data.profiles.length;
 
-
-    if(totalCount >Object.maxCount){
+    if(Object.data.profiles.length >Object.maxCount){
 			loopCount=Object.maxCount-1;
 			viewAllInnerHtml=Object.viewAllInnerHtml.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[Object.name]);
 		}
 		else
-			loopCount=totalCount;
+			loopCount=Object.data.profiles.length;
 		if(loopCount){
 		    for (i = 0; i < loopCount; i++) {
 				innerHtml=innerHtml+Object.innerHtml;
