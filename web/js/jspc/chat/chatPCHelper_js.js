@@ -40,7 +40,7 @@ function reActivateNonRosterPolling(source){
     //kills interval polling for non roster list
     //clearNonRosterPollingInterval();
     if (strophieWrapper.getCurrentConnStatus() == true) {
-        console.log("in reActivateNonRosterPolling",source);
+        //console.log("in reActivateNonRosterPolling",source);
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
             //pollForNonRosterListing(groupId);
             clearNonRosterPollingInterval(groupId);
