@@ -582,6 +582,7 @@ ContactEngineCard.prototype.postCCViewContactLayer= function(Obj,profileChecksum
 	userLoginStatus=this.buttonObj.parent.find('.js-userLoginStatus').html();
 	phoneContact='';
 
+
 	if (actionDetails.contact1){phoneContact+=(actionDetails.contact1.value+',    ');}
 	if (actionDetails.contact2){phoneContact+=(actionDetails.contact2.value+',    ');}
 	if (actionDetails.contact3){phoneContact+=(actionDetails.contact3.value+' ');}
@@ -603,6 +604,7 @@ viewContactElement.find('.js-usernameCC').html(username);
 viewContactElement.find('.js-onlineStatusCC').html(userLoginStatus);
 viewContactElement.find(".SMSContactsDiv").removeClass('disp-none').attr('profileChecksum',profileChecksum).bind('click',function(){SMSContactsDivBinding(this);});
 
+
 return viewContactElement;
 
 
@@ -613,7 +615,7 @@ return viewContactElement;
 
 
 ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
-{
+{ 
 	
 	var viewContactElement=$("#postViewContactLayer").clone();
 	var liFinalHtml="";
@@ -624,6 +626,7 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	if(Obj.actiondetails.contact1!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact1,true,'M');
+		$("#reportInvalidReasonLayer").bind('click',function(){reportInvalidReason('M',profileChecksum);});		
 	}
 	
 	if(Obj.actiondetails.contact2!=null)
@@ -676,17 +679,16 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	}
 	FinalHtml=viewContactElement.html();
 	jObject=$(FinalHtml);
-	var profileChecksum=this.buttonObj.profileChecksum;
+	var profileChecksum=this.buttonObj.profileChecksum;		
 
-	jObject.find('.reportInvalid').bind('click',function(){showReportInvalidLayer();});
 	jObject.find(".SMSContactsDiv").removeClass('disp-none').attr('profileChecksum',profileChecksum).bind('click',function(){SMSContactsDivBinding(this);});
-
+	jObject.find('.reportInvalid').bind('click',function(){showReportInvalidLayer();});
 	return jObject;
 }
 
 function ViewContactLiCreate(Obj,reportInvalid,phoneType,label)
 {
-	
+
 	var liHtml = $("#cEViewContactListing").html();
 	if(Obj!=null)
 	{
@@ -695,6 +697,7 @@ function ViewContactLiCreate(Obj,reportInvalid,phoneType,label)
 		if(reportInvalid){
 			liHtml=liHtml.replace(/\{\{phonetype\}\}/g,"phoneType='"+phoneType+"'");
 			liHtml=liHtml.replace(/\{\{DISP_REPORT\}\}/g,"");
+
 		}
 		else
 			liHtml=liHtml.replace(/\{\{DISP_REPORT\}\}/g,"disp-none");
@@ -815,7 +818,7 @@ var parent=$(ele).closest('.cEParent');
 parent.find('.js-usernameCE');
 
 showCommonLoader();
-var phoneType=$(ele).attr('phoneType');
+var phoneType=$(ele).attr('phonetype');
 if (phoneType=='L') {var mobile='N';var phone='Y';}
 if (phoneType=='M') {var mobile='Y';var phone='N';}
 ajaxConfig=new Object();
@@ -926,35 +929,34 @@ function openChatWindow(aJid,param,profileID,userName,have_photo,checksum){
 
 function reportInvalidReason(ele,profileChecksum){
 if(!profileChecksum || !ele) return;
-
-var parent=$(ele).closest('.cEParent');
-parent.find('.js-usernameCE');
-
-
-var reason='';
+//var parent=$(ele).closest('.cEParent');
+//parent.find('.js-usernameCE');
+var reason;
+var Otherreason='';
 var layerObj=$("#reportInvalidReason-layer");
 if(layerObj.find("#otherOptionBtn").is(':checked')) {
-	var reason=layerObj.find("#otherOptionMsgBox textarea").eq(0).val();
+ reason=layerObj.find("#otherOptionMsgBox textarea").eq(0).val();
 	if(!reason) {layerObj.find('#errorText').removeClass('disp-none');return;}
+	Otherreason = reason;
 }
 $('.js-overlay').unbind('click');
+if (finalResponse) var otherUser=finalResponse.about.username;
+var selfUname=selfUsername;
 var layerObj=$("#reportInvalidReason-layer");
-
-var phoneType=$(ele).attr('phoneType');
+var phoneType=ele;
 if (phoneType=='L') {var mobile='N';var phone='Y';}
 if (phoneType=='M') {var mobile='Y';var phone='N';}
 
+var rCode = $("input:radio[name=report_profile]:checked").val();
+
 ajaxConfig=new Object();
-/*
 if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("*Please Select a reason");return;}
 if(!reason) reason=layerObj.find(".selected").eq(0).text().trim();
 if(!reason) return;
-*/
-alert(2);
 showCommonLoader();
-//reason=$.trim(reason);
+reason=$.trim(reason);
 
-ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileChecksum,'reasonCode':1,'otherReasonValue':" "};
+ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileChecksum,'reasonCode':rCode,'otherReasonValue':Otherreason};
 ajaxConfig.url='/phone/reportInvalid';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST';
@@ -964,8 +966,8 @@ ajaxConfig.success=function(response){
 	          	hideCommonLoader();
 	          	
 		var jObject=$("#reportInvalidConfirmLayer");
-	//jObject.find('.js-username').html(otherUser);
-	//jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
+	jObject.find('.js-username').html(otherUser);
+	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
 
 		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportInvalidConfirmLayer').fadeIn(300,"linear",function(){})}); 
 
@@ -983,14 +985,12 @@ $('.js-overlay').bind('click',closeInvalidConfirmLayer);
 
 jQuery.myObj.ajax(ajaxConfig);
 
-
 }
 
 function showReportInvalidLayer(){
-	alert(1);
 	var jObject=$("#reportInvalidReason-layer");
-//	jObject.find('.js-username').html(finalResponse.about.username);
-//	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
+	jObject.find('.js-username').html(finalResponse.about.username);
+	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
 
 $('.js-overlay').unbind();
 $('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportInvalidReason-layer').fadeIn(300,"linear",function(){})}); 
@@ -1000,7 +1000,5 @@ $('.js-overlay').fadeOut(200,"linear",function(){
 	$('#reportInvalidReason-layer').fadeOut(300,"linear")});
 	
 };
-
-$('#buttonForReportInvalid').bind('click',closeReportInvalidLayer);
-alert(2);
+$('#reportInvalidCross').bind('click',closeReportInvalidLayer);
 }
