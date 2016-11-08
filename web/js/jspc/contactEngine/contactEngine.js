@@ -625,15 +625,27 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact1,true,'M');
 	}
+	else if(Obj.actiondetails.contact1_message)
+	{
+		liFinalHtml+=viewContactHiddenLabel('Phone No.',Obj.actiondetails.contact1_message);
+	}
 	
 	if(Obj.actiondetails.contact2!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact2,true,'L');
 	}
+	else if(Obj.actiondetails.contact2_message)
+	{
+		liFinalHtml+=viewContactHiddenLabel('Landline',Obj.actiondetails.contact2_message);
+	}
 	
 	if(Obj.actiondetails.contact3!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact3,false);
+	}
+	else if(Obj.actiondetails.contact3_message)
+	{
+		liFinalHtml+=ViewContactLiCreate('Alternate No.',Obj.actiondetails.contact3_message);
 	}
 	
 	if(Obj.actiondetails.contact5!=null)
@@ -711,6 +723,13 @@ function ViewContactLiCreate(Obj,reportInvalid,phoneType,label)
 	return liHtml;
 }
 
+function viewContactHiddenLabel(label,value){
+	var liHtml = $("#cEViewContactListing").html();
+		liHtml=liHtml.replace(/\{\{CONTACT_NAME\}\}/g,label);
+		liHtml=liHtml.replace(/\{\{CONTACT_VALUE\}\}/g,value);
+		liHtml=liHtml.replace(/\{\{DISP_REPORT\}\}/g,"disp-none");
+	return liHtml;
+}
 
 function cECommonBinding()
 {
