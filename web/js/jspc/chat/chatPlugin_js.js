@@ -27,7 +27,7 @@ JsChat.prototype = {
     _listingTabs: {},
     _loginFailueMsg: "Login Failed,Try later",
     _noDataTabMsg: {
-        "tab1": "<span class='fontlig pb10 disp_b'>There are no shortlisted members online</span> You can find online members by clicking ‘Online Now’ link present on right, after conducting a search.",
+        "tab1": "<span class='fontlig pb10 disp_b'>There are no shortlisted profiles online</span> You can find online members by clicking ‘Online Now’ link present on right, after conducting a search.",
         //"tab1": "<span class='fontreg pb10 disp_b'>There are no matching members online</span> Please <a href='/profile/dpp' class='color5 cursp'>relax your partner preference</a> to see more matches.",
         "tab2": "You currently don’t have any accepted members, get started by sending interests or initiating chat with your matches."
     },

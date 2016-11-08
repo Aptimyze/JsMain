@@ -99,7 +99,7 @@ function createMessage($propertyArr){
 	$message.=".<br><br>
 		We are happy to inform you that we have found ".$propertyArr['count']." ".$opgender." profiles that match your criteria.<br><br>
 		To get the details of these profiles, please $urlToSend with Jeevansathi.com.</a><br><br>
-		Once you register, you will get profiles (match alerts) in your inbox which will be as per your preferences.
+		Once you register, you will get profiles (Daily Recommendations) in your inbox which will be as per your preferences.
 		<br> You will also be able to search and express interest to profiles on Jeevansathi.com.<br><br>
 		   If you need any assistance, please do get in touch with us.<br><br>
 			Best regards,<br>

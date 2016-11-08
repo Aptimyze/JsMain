@@ -34,6 +34,13 @@
 	        {
 	        	$about =  preg_replace('/[.]{4,}/','...',$about);
 	        	$about = preg_replace('/([^\w.])\1+/','$1',$about);
+
+	        	foreach ( JunkCharacterEnums::$ABOUT_WEBSITE_TEXT as $about_text) {
+	        		if ( stristr($about,$about_text) !== FALSE)
+	        		{
+	        			return "";
+	        		}
+	        	}
 	        }
 	        return $about;
 	    }

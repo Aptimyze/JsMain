@@ -226,8 +226,8 @@ class LoggingManager
 	 */
 	private function getLogData($exception,$isSymfony,$logArray)
 	{
-		$time = time();
 
+		$time = time();
 		$logId = $this->getLogId($logArray);
 		$clientIp = $this->getLogClientIP();
 		$channelName = $this->getLogChannelName();
