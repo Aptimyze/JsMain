@@ -463,7 +463,7 @@ strophieWrapper.sendPresence();
 
     //executed after non-roster list has been fetched or new non roster node is added
     onNonRosterListFetched: function(response,groupid,operation){
-        console.log("in onNonRosterListFetched",response);
+        //console.log("in onNonRosterListFetched",response);
         if(response != undefined){
             $.each(response,function(profileid,nodeObj){
                 if (strophieWrapper.isItSelfUser(profileid) == false) {

@@ -106,7 +106,7 @@ function pollForNonRosterListing(type){
             dataType: 'json',
             //data: postData,
             type: 'GET',
-            cache: false,
+            //cache: false,
             async: true,
             timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
             headers:{
@@ -158,7 +158,7 @@ function pollForNonRosterListing(type){
                 if(response["header"]["status"] == 200){
                     //console.log("fetchNonRosterListing success",response);
                     if(response["header"]["pollTime"] != undefined && response["header"]["pollTime"] > 0){
-                        //chatConfig.Params[device].nonRosterListingRefreshCap = response["header"]["pollTime"];
+                        chatConfig.Params[device].nonRosterListingRefreshCap = response["header"]["pollTime"];
                         //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
                     }
                     var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
@@ -185,7 +185,7 @@ function to process the non roster data
 */
 function processNonRosterData(response,type,source){
     var operation = "create_list",reCreateList = true;
-    console.log("in processNonRosterData",source); 
+    //console.log("in processNonRosterData",source); 
     var newNonRoster = {},oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
     /*if((Object.keys(oldNonRoster)).length == 0){
         oldNonRoster = strophieWrapper.getRosterStorage("non-roster");
@@ -205,8 +205,8 @@ function processNonRosterData(response,type,source){
             newNonRoster = response;
         }
     }
-    console.log("oldNonRoster",oldNonRoster);
-    console.log("newNonRoster",newNonRoster);
+    //console.log("oldNonRoster",oldNonRoster);
+    //console.log("newNonRoster",newNonRoster);
     isResponseSame = checkForObjectsEquality(oldNonRoster,newNonRoster);
     if(isResponseSame == false){
         if((Object.keys(oldNonRoster)).length > 0){
@@ -228,15 +228,15 @@ function to check whether two objects are equal or not
 */
 function checkForObjectsEquality(obj1,obj2){
     if((Object.keys(obj1)).length == 0 && (Object.keys(obj2)).length == 0){
-        console.log("checkForObjectsEquality",true);
+        //console.log("checkForObjectsEquality",true);
         return true;
     }
     if((Object.keys(obj1)).length == 0 || (Object.keys(obj2)).length == 0){
-        console.log("checkForObjectsEquality",false);
+        //console.log("checkForObjectsEquality",false);
         return false;
     }
     else{
-        console.log("checkForObjectsEquality",(JSON.stringify(obj1) === JSON.stringify(obj2)));
+        //console.log("checkForObjectsEquality",(JSON.stringify(obj1) === JSON.stringify(obj2)));
         return (JSON.stringify(obj1) === JSON.stringify(obj2));
     }
 }
