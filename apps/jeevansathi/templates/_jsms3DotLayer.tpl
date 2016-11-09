@@ -1,3 +1,70 @@
+
+<div class="posfix z112 dispnone"  id="reportInvalidContainer">
+                    <div class="fullwid fontlig" >
+                        <div class="photoheader">
+                            <div class="pad16 brdr_new" style="height:85px;">
+                                <div class="rem_pad1 posrel fullwid ">
+                                    <img id="photoReportInvalid" class="srp_box3 abs_c" src="">
+                                    <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report Invalid</div>
+                                    <div id="savedSearchIcon" class="posabs " style="top:18px;right: 0;" onclick="hideReportInvalid()">
+                                        <div class="posrel"> <i class="mainsp com_cross"></i>
+                                        </div>
+                                    </div>
+                                    <div class="clr"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="reportInvalidMidDiv" style="width:200%;overflow:auto;">
+                        
+                        <div class="selectOptions reportInvalidScreen fl" id="js-reportInvalidMainScreen" style="height:100%;">
+                            <i class="mainsp arow_new dispibl"></i>
+                            <ul class="f16 fontthin white">
+                                <li class="white fullwid dispibl dashedBorder pad18">Reason for reporting invalid </li>
+
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="1">
+                                	<div class="fullwid posrel">
+                                		Phone is not reachable
+                                		<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="2">
+                                	<div class="fullwid posrel">
+                                	Not an account holder's phone
+                                	<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="3">
+                                	<div class="fullwid posrel">
+                                	Fake number<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="4">
+                                	<div class="fullwid posrel">
+                                	Invalid phone number<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" id="js-otherInvalidReasons">
+                                	<div class="fullwid posrel">
+                                	Other reasons (please specify)<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="reportInvalidScreen">
+                        <textarea class="disp-none pad18 fullheight fullwid f18 fontthin" id="js-otherInvalidReasonsLayer" style="background: none;" placeholder="Describe your concern for this number"></textarea>
+                        </div>
+                        </div>
+                        <div class="posfix fullwid scrollhid pos1_c1">
+                            <div id="reportInvalidSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report Invalid</div>
+                        </div>
+                        <div class="reportInvalidConfirmScreen">
+                        <textarea class="disp-none pad18 fullheight fullwid f18 fontthin" id="invalidConfirmationMessage" style="background: none;" > Thank you for helping us if our team find this number invalid we will remove this number and credit you with a contact as compensation.</textarea>
+                        </div>
+                        </div>
+                </div>
+
 <div class="posfix z112 dispnone"  id="reportAbuseContainer">
                     <div class="fullwid fontlig" >
                         <div class="photoheader">
@@ -131,8 +198,8 @@
 			<!--start:mobile no.-->
 			<div class="pt15" id="mobile" style="display:none">
 				<div class="fl white">
-					<div class=" f14 lh30 opa50">Mobile no</div>
-					<div class="f16 forHide" id="mobileVal" style="display:none"></div>
+					<div class=" f14 lh30 opa50">Mobile no </div>
+					<div class="f16 forHide" id="mobileVal" style="display:none"> </div> <span onclick="reportInvalid()" class="reportInvalidjsmsButton invalidMob"> Invalid </span>
 					<div class="pb20 forHide" id="mobileValBlur" style="display:none;"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
@@ -157,7 +224,7 @@
 			<div class="pt15 forHide" id="landline" style="display:none">
 				<div class="fl white">
 					<div class=" f14 lh30 opa50" >Landline no</div>
-					<div class="f16" id="landlineVal" style="display:none"></div>
+					<div class="f16" id="landlineVal" style="display:none"></div><span class="reportInvalidjsmsButton invalidLand"> Invalid </span>
 					<div class="pb20" id="landlineValBlur" style="display:none"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
@@ -279,3 +346,4 @@
     <div class="posrel forHide" style="display:none; z-index: 115;" id="loaderOverlay">
         <a href class="loaderOverlayDialog" onClick="return false;"> </a>
     </div>
+

@@ -235,3 +235,14 @@ color: transparent;
 }
 
 .z112{z-index:112;}
+
+.reportInvalid{
+    background-position: -158px -322px;
+    width: 22px;
+    height: 23px;
+}
+ .reportInvalidScreen{
+    display: inline-block;
+    width: 50%;
+    position: relative;
+}

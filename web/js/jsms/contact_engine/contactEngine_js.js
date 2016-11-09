@@ -1039,7 +1039,6 @@ function initiateContact(result,action, index){
 
 function contactDetailMessage(result,action,index)
 {
-  
  $("#mobile").hide();
   aUrl = actionUrl[action];
   aUrl+="?r=1&stype=WQ"+result.actiondetails.footerbutton.params;
@@ -1169,7 +1168,7 @@ if(result.actiondetails.bottommsg2){
 		$("#footerButton").show();
     $("#mobile").hide();
     if(result.actiondetails.infomsglabel)
-    {
+    {  
       $("#ViewContactPreLayerText").html(result.actiondetails.infomsglabel);
       $("#ViewContactPreLayer").show();
     }
@@ -1479,4 +1478,134 @@ function browserBackCommonOverlay() {
 function nl2br(str)
 {
     return str.replace(/\n/g, "<br />");
+}
+
+function hideReportInvalid(){
+  var mainEle=$("#reportInvalidContainer");
+  if(mainEle.css('display')!='none'){
+    $("#commonOverlayTop").show();
+    mainEle.hide();
+  return true;  
+  }
+  
+  return false;
+
+}
+
+function reportInvalid(index) {
+  alert('got here');
+$("#photoReportInvalid").attr("src", buttonSt.photo.url);
+$('.RAcorrectImg,#commonOverlayTop').hide();
+//$("#commonOverlayTop").hide();
+var mainEle=$("#reportInvalidContainer");
+mainEle.show();
+
+var el=$("#reportInvalidMidDiv");
+el.height($(window).height()-$("#reportInvalidSubmit").height()-mainEle.find('.photoheader').eq(0).height());
+
+var div = document.createElement('div');
+            // css transition properties
+            var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
+            // test for each property
+            for (var i in props) {
+                if (div.style[props[i]] !== undefined) {
+                    
+                    cssPrefix = props[i].replace('Perspective', '').toLowerCase();
+                    animProp = '-' + cssPrefix + '-transform';
+                }
+            }
+
+
+el.css(animProp, 'translate(50%,0px)');
+el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
+.css(animProp, 'translate(0px,0px)');
+
+selectedReportInvalid="";
+RAOtherReasons=0;
+
+
+$(".reportInvalidOption").unbind().bind('click',function () {
+
+if($(this).attr('id')=='js-otherInvalidReasons')
+{
+el.scrollTop('0px');
+el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
+.css(animProp, 'translate(-50%,0px)');
+RAOtherReasons=1;selectedReportInvalid="";
+}
+else 
+{
+  selectedReportInvalid=$(this).text();RAOtherReasons=0;
+}
+$('.RAcorrectImg').hide();
+$(this).find('.RAcorrectImg').show();
+});
+
+
+
+
+
+$("#reportInvalidSubmit").unbind().bind('click',function() {
+
+var reason="";
+
+if(RAOtherReasons)
+{
+  reason=$("#js-otherInvalidReasonsLayer").val();
+  reasonCode = '5'; 
+  if(!reason){ShowTopDownError(["Please enter the reason"],3000);return;}
+}
+else {
+  reason=selectedReportInvalid;
+  reasonCode = '';
+if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
+}
+
+
+reason=$.trim(reason);
+//Phone type for phone api
+var phoneType='M';
+if (phoneType=='L') {var mobile='N';var phone='Y';}
+if (phoneType=='M') {var mobile='Y';var phone='N';}
+var mobile = 'Y';
+var phone = 'N';
+var rCode = '2';
+var otherReason = '';
+
+
+//feed.message:as sdf sd f
+//feed.category='Abuse';
+//feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
+ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileChkSum,'reasonCode':rCode,'otherReasonValue':otherReason};
+var url='/phone/reportInvalid';
+loaderTop();
+$("#contactLoader,#loaderOverlay").show();
+//$("#loaderOverlay").show();
+//ajax data for phone api
+$.ajax({
+                
+    url: url,
+    type: "POST",
+    data: ajaxData,
+    //crossDomain: true,
+    success: function(result){
+          $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
+          //$("#loaderOverlay").hide();
+          //$("#reportAbuseContainer").hide();
+          $("#invalidConfirmationMessage").show();
+                    if(CommonErrorHandling(result,'?regMsg=Y')) 
+                    {
+          ShowTopDownError([result.message],5000);
+          $("#commonOverlayTop").show();
+                    } 
+                    
+                }
+});
+
+});
+
+
+historyStoreObj.push(hideReportInvalid,"#reportInvalid");
+
+
 }
