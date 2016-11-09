@@ -589,9 +589,9 @@ ContactEngineCard.prototype.postCCViewContactLayer= function(Obj,profileChecksum
 	if(!phoneContact){
 		if(actionDetails.contact1_message || actionDetails.contact2_message || actionDetails.contact3_message )
  		{
- 			if((actionDetails.contact1_message && actionDetails.contact1_message.indexOf('accept')) 
-			|| (actionDetails.contact2_message && actionDetails.contact2_message.indexOf('accept'))
-			|| (actionDetails.contact3_message && actionDetails.contact3_message.indexOf('accept')) )
+ 			if((actionDetails.contact1_message && actionDetails.contact1_message.indexOf('accept')!=-1) 
+			|| (actionDetails.contact2_message && actionDetails.contact2_message.indexOf('accept')!=-1)
+			|| (actionDetails.contact3_message && actionDetails.contact3_message.indexOf('accept')!=-1) )
 				phoneContact = "Phone number visible on accept";
 			else phoneContact = "Phone number hidden";
 		}
