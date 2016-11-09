@@ -197,89 +197,95 @@ var strophieWrapper = {
             subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],
             ask = rosterObj[strophieWrapper.rosterDetailsKey]["ask"];
         nodeArr[user_id] = rosterObj;
-        if (strophieWrapper.checkForGroups(rosterObj[strophieWrapper.rosterDetailsKey]["groups"]) == true) {
-            //nodeArr[user_id] = rosterObj;
-            //strophieWrapper.stropheLoggerPC(nodeArr);
-            //strophieWrapper.stropheLoggerPC(ask);
-            if(typeof subscription == "undefined" || subscription != "remove"){
-                if (ask == "unsubscribe") {
-                    //console.log("got unsubscribe ask");
-                    //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
-                    //strophieWrapper.stropheLoggerPC("deleting node");
-                    invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                    //console.log(strophieWrapper.Roster);
-                    try{
-                        delete strophieWrapper.Roster[user_id];
-                        //var return1 = strophieWrapper.Roster.splice(user_id,1);
-                        //console.log(return1);
-                    }
-                    catch(e){
-                        //console.log(e);
-                    }
-                    //strophieWrapper.unauthorize(rosterObj[strophieWrapper.rosterDetailsKey]["jid"]);
-                } else if (strophieWrapper.checkForSubscription(subscription) == true) {
-                    //strophieWrapper.stropheLoggerPC("adding node");
-                    //strophieWrapper.stropheLoggerPC(subscription);
-                    //console.log("add node case");
-                    if (typeof strophieWrapper.Roster[user_id] == "undefined" || typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["subscription"]=="undefined") {
-                        //console.log("adding new1");
-                        invokePluginManagelisting(nodeArr, "add_node", user_id);
-                    } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
-                        var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
-                        if (typeof oldGroupId == "undefined" || (oldGroupId && oldGroupId != rosterObj[strophieWrapper.rosterDetailsKey]["groups"][0])) {
-                            var oldArr = [];
-                            //console.log("adding new2");
-                            oldArr[user_id] = strophieWrapper.Roster[user_id];
-                            //strophieWrapper.stropheLoggerPC("moving node from " + oldGroupId);
-                            if(typeof oldGroupId != "undefined"){
-                                invokePluginManagelisting(oldArr, "delete_node", user_id);
-                            }
-                            //strophieWrapper.stropheLoggerPC("adding node");
-                            //strophieWrapper.stropheLoggerPC(nodeArr);
-                            //console.log("adding new 2");
-                            invokePluginManagelisting(nodeArr, "add_node", user_id);
+        if(rosterObj[strophieWrapper.rosterDetailsKey]["groups"].indexOf("NOTINUSE") != -1){
+            //console.log("filtered interset receive case");
+            updateNonRosterListOnCEAction({"user_id":user_id,"action":"REMOVE"});
+        }
+        else{
+            if (strophieWrapper.checkForGroups(rosterObj[strophieWrapper.rosterDetailsKey]["groups"]) == true) {
+                //nodeArr[user_id] = rosterObj;
+                //strophieWrapper.stropheLoggerPC(nodeArr);
+                //strophieWrapper.stropheLoggerPC(ask);
+                if(typeof subscription == "undefined" || subscription != "remove"){
+                    if (ask == "unsubscribe") {
+                        //console.log("got unsubscribe ask");
+                        //strophieWrapper.stropheLoggerPC(strophieWrapper.Roster[user_id]);
+                        //strophieWrapper.stropheLoggerPC("deleting node");
+                        invokePluginManagelisting(nodeArr, "delete_node", user_id);
+                        //console.log(strophieWrapper.Roster);
+                        try{
+                            delete strophieWrapper.Roster[user_id];
+                            //var return1 = strophieWrapper.Roster.splice(user_id,1);
+                            //console.log(return1);
                         }
+                        catch(e){
+                            //console.log(e);
+                        }
+                        //strophieWrapper.unauthorize(rosterObj[strophieWrapper.rosterDetailsKey]["jid"]);
+                    } else if (strophieWrapper.checkForSubscription(subscription) == true) {
+                        //strophieWrapper.stropheLoggerPC("adding node");
+                        //strophieWrapper.stropheLoggerPC(subscription);
+                        //console.log("add node case");
+                        if (typeof strophieWrapper.Roster[user_id] == "undefined" || typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["subscription"]=="undefined") {
+                            //console.log("adding new1");
+                            invokePluginManagelisting(nodeArr, "add_node", user_id);
+                        } else if (typeof strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"] != "undefined") {
+                            var oldGroupId = strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["groups"][0];
+                            if (typeof oldGroupId == "undefined" || (oldGroupId && oldGroupId != rosterObj[strophieWrapper.rosterDetailsKey]["groups"][0])) {
+                                var oldArr = [];
+                                //console.log("adding new2");
+                                oldArr[user_id] = strophieWrapper.Roster[user_id];
+                                //strophieWrapper.stropheLoggerPC("moving node from " + oldGroupId);
+                                if(typeof oldGroupId != "undefined"){
+                                    invokePluginManagelisting(oldArr, "delete_node", user_id);
+                                }
+                                //strophieWrapper.stropheLoggerPC("adding node");
+                                //strophieWrapper.stropheLoggerPC(nodeArr);
+                                //console.log("adding new 2");
+                                invokePluginManagelisting(nodeArr, "add_node", user_id);
+                            }
+                        }
+                        strophieWrapper.Roster[user_id] = rosterObj;
+                        
+                        if (subscription == "to") {
+                           //console.log("subcribing");
+                            strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
+                        }
+                        setTimeout(function () {
+                            //console.log("sent self presence");                        
+                            strophieWrapper.sendPresence();
+                        }, 5000);
                     }
-                    strophieWrapper.Roster[user_id] = rosterObj;
-                    
-                    if (subscription == "to") {
-                       //console.log("subcribing");
-                        strophieWrapper.subscribe(rosterObj[strophieWrapper.rosterDetailsKey]["jid"], rosterObj[strophieWrapper.rosterDetailsKey]["nick"]);
-                    }
-                    setTimeout(function () {
-                        //console.log("sent self presence");                        
-                        strophieWrapper.sendPresence();
-                    }, 5000);
+                }
+                else if(subscription == "remove"){
+                    //console.log("got remove subscription 1",rosterObj);
+                    if(typeof strophieWrapper.Roster[user_id]!= "undefined"){
+                        nodeArr[user_id] = strophieWrapper.Roster[user_id];
+                        if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
+                            //console.log("removed..");
+                            invokePluginManagelisting(nodeArr, "delete_node", user_id);
+                            delete strophieWrapper.Roster[user_id];
+                            //var return2 = strophieWrapper.Roster.splice(user_id,1);
+                        }
+                    } 
+                    //case of remove subscription with group
                 }
             }
             else if(subscription == "remove"){
-                //console.log("got remove subscription 1",rosterObj);
+                //console.log("got remove subscription 2",rosterObj);
                 if(typeof strophieWrapper.Roster[user_id]!= "undefined"){
                     nodeArr[user_id] = strophieWrapper.Roster[user_id];
                     if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
                         //console.log("removed..");
                         invokePluginManagelisting(nodeArr, "delete_node", user_id);
                         delete strophieWrapper.Roster[user_id];
-                        //var return2 = strophieWrapper.Roster.splice(user_id,1);
+                        //var return3 = strophieWrapper.Roster.splice(user_id,1);
                     }
-                } 
-                //case of remove subscription with group
+                }  
             }
+            //console.log("on roster update",user_id);
+            strophieWrapper.setRosterStorage(strophieWrapper.Roster);
         }
-        else if(subscription == "remove"){
-            //console.log("got remove subscription 2",rosterObj);
-            if(typeof strophieWrapper.Roster[user_id]!= "undefined"){
-                nodeArr[user_id] = strophieWrapper.Roster[user_id];
-                if (strophieWrapper.checkForGroups(nodeArr[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true) {
-                    //console.log("removed..");
-                    invokePluginManagelisting(nodeArr, "delete_node", user_id);
-                    delete strophieWrapper.Roster[user_id];
-                    //var return3 = strophieWrapper.Roster.splice(user_id,1);
-                }
-            }  
-        }
-        //console.log("on roster update",user_id);
-        strophieWrapper.setRosterStorage(strophieWrapper.Roster);
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
         //return true;
     },
