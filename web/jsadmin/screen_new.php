@@ -424,6 +424,14 @@ if (authenticated($cid)) {
 						mysql_query_decide($sql_a) or die("$sql_a" . mysql_error_js());
 					}
 				}
+		/*
+			changing to get original and modified your info here and saving in table Profile
+		 */
+        $your_info = $arrProfileUpdateParams['YOURINFO'];
+        $your_info_original = $_POST['YOURINFO_ORIGINAL'];
+        $sql_junk_character_check = "INSERT INTO  `PROFILE`.`JUNK_CHARACTER_TEXT` (  `id` ,  `PROFILEID` ,  `original_text` ,  `modified_custom`) VALUES('',  '$pid',  '$your_info_original',  '$your_info');";
+		$result = mysql_query($sql_junk_character_check);
+
 				/*if (0)
 				 $sql.= "ACTIVATED = 'N' AND INCOMPLETE ='Y' ";*/
 				/*else
