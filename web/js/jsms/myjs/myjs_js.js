@@ -1,11 +1,4 @@
-var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,
-	index = 0,
-            pc_temp1 = 0,
-	pc_temp2 = 0,
-	t1 = null,
-	profileCompletionCount = 0,
-	start = 0,
-	m,windowWidth=$(window).width();
+var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2, matchAlertNext=0, full_loaded = 0;
 
 
 
@@ -24,9 +17,7 @@ function start1() {
 
 
 	$("#percent").html(profileCompletionCount + "%");
-	$(".pie2").css("-o-transform", "rotate(" + pc_temp1 + "deg)");
-	$(".pie2").css("-moz-transform", "rotate(" + pc_temp1 + "deg)");
-	$(".pie2").css("-webkit-transform", "rotate(" + pc_temp1 + "deg)");
+	$(".pie2").css("-o-transform", "rotate(" + pc_temp1 + "deg)").css("-moz-transform", "rotate(" + pc_temp1 + "deg)").css("-webkit-transform", "rotate(" + pc_temp1 + "deg)");
 };
 
 
@@ -43,9 +34,7 @@ function start2() {
 		t1 = setInterval("start1()",100);
 	};*/
 	$("#percent").html(profileCompletionCount + "%");
-	$(".pie1").css("-o-transform", "rotate(" + pc_temp2 + "deg)");
-	$(".pie1").css("-moz-transform", "rotate(" + pc_temp2 + "deg)");
-	$(".pie1").css("-webkit-transform", "rotate(" + pc_temp2 + "deg)");
+	$(".pie1").css("-o-transform", "rotate(" + pc_temp2 + "deg)").css("-moz-transform", "rotate(" + pc_temp2 + "deg)").css("-webkit-transform", "rotate(" + pc_temp2 + "deg)");
 };
 
 function profile_completion(lim) {
@@ -116,6 +105,57 @@ function setBlock(blockName) {
 		document.getElementById(blockName + "Absent").style.display = "block";
 	}
 }
+	$(window).load(function() {
+		profile_completion(completionScore);
+
+	});
+
+        
+
+	$(document).ready(function() {
+		jsmsMyjsReady();
+                $(".tuple_image").each(function(index, element) {
+                    var dSource=$(this).attr("data-src");   
+                    if(dSource) {
+                        $(this).attr("src",dSource)
+                }
+                   });
+                $(".contactLoader").each(function(){
+                $(this).attr("src","IMG_URL/images/jsms/commonImg/loader.gif");
+                });   
+		var d = new Date();
+		var hrefVal = $("#calltopSearch").attr("href")+"&stime="+d.getTime();
+		$("#calltopSearch").attr("href",hrefVal);
+                $(document).on('contextmenu', 'img',function(e) {
+                return false;
+                });
+
+                
+    });
+
+
+	function setNotificationView() {
+                    $("#darkSection").toggleClass("posabs");
+		$("#darkSection").toggleClass("tapoverlay");
+		$("#notificationBellView").toggle();
+        if ($("#mainContent").css("overflow")=="hidden") 
+                   scrollOn();
+               else scrollOff();
+		
+	};
+
+
+	function onnewtuples(_parent) {
+		if (_parent.page >= 0) {
+                        if (_parent._isRequested) return ;
+                        ++_parent.page;
+			loadnew(_parent.page,_parent);
+                        
+		}
+	};
+      
+
+
 
 /*
 function add_divs(width, length, index) {
@@ -141,95 +181,4 @@ function add_divs(width, length, index) {
 	}
 
 }
-*/
-
-
-
-/*
-
-(function($) {
-	$.fn.Slider = function(options) {
-		var windowWidth = $(window).width();
-		var el = $(this);
-                var tuple_ratio=85;
-		var childElement = el.children();
-		var transformX_corr = ((tuple_ratio * 3-100)*windowWidth)/200  + 20;
-
-
-		var start_scroll = 0,
-			scroll_timer, scroll_flag = 0;
-		var transformX = (tuple_ratio * windowWidth) / 100 + 10;
-
-		//variable introduced to control transforming so that only eighty percent of total width is covered by the current photo margin is also given concern;
-		var init = function() {
-
-			AlterChildrenCss();
-
-		};
-
-		var position = function(curr_scroll) {
-			var x = transformX_corr,
-				pos, current_index = 1;
-			if (curr_scroll <= x)
-				if ((x - curr_scroll) > curr_scroll) pos = 0;
-				else pos = x;
-			else {
-				for (;;) {
-
-					if (curr_scroll <= x) break;
-					x += transformX;
-                                            current_index += 1;
-				}
-				if (x > (curr_scroll + transformX / 2)) pos = x - transformX;
-				else pos = x;
-			}
-			if (current_index >= index) onnewtuples();
-			el.animate({
-				scrollLeft: pos + "px"
-			}, 300, function() {
-				scroll_flag = 0;
-			});
-			// el.css('-webkit-transition-duration', 1 + 's');
-			//	var propValue = 'translate3d(-' + pos + 'px, 0, 0)';
-			//el.css('-webkit-transform', propValue);
-		};
-
-		var check_scroll = function() {
-			var current_scroll = el.scrollLeft();
-			if (current_scroll == start_scroll) {
-				clearInterval(scroll_timer);
-				position(current_scroll);
-			} else start_scroll = current_scroll;
-
-		};
-
-		var on_scroll = function() {
-
-			if (scroll_flag == 0) {
-				scroll_flag = 1;
-				start_scroll = el.scrollLeft();
-				scroll_timer = setInterval(check_scroll, 100);
-
-			}
-
-		};
-
-
-		el.scroll(on_scroll);
-
-		var AlterChildrenCss = function() {
-			$.each(childElement, function(index, element) {
-				$(element).css('width', (windowWidth * tuple_ratio) / 100 + "px");
-			});
-
-		}
-
-		var init_obj = {
-			load: init
-		};
-
-		return init_obj;
-
-	}
-})(jQuery);
 */

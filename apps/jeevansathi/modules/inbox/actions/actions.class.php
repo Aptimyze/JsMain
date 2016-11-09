@@ -410,7 +410,7 @@ public function executePerformV2(sfWebRequest $request)
 				$response2["searchid"]=$infoTypeId;
 				$response2["dppLinkAtEnd"]=null;
                                 if ($infoType == "MATCH_ALERT") {
-                                        $response2["dppLinkAtEnd"] = 'Go To My Matches.';
+                                        $response2["dppLinkAtEnd"] = 'Go To Desired Partner Matches.';
                                 }
 				$response2["sorting"]=0;
 				$response2["sortType"]=null;
@@ -561,7 +561,9 @@ public function executePerformV2(sfWebRequest $request)
 					break;
 					
 					case 'MATCH_ALERT': 
-					$response2["subtitle"]='Match Alerts '.$response2['total'];
+					$response2["subtitle"]='Daily Recommen.. '.$response2['total'];					
+					if(MobileCommon::isDesktop())
+						$response2["subtitle"]='Daily Recommendations '.$response2['total'];
 					$response2["title2"]=null;
 					break;
 					
@@ -658,9 +660,9 @@ public function executePerformV2(sfWebRequest $request)
 					break;
 					
 					case 'SHORTLIST': 
-					$response2["subtitle"]='Shortlisted Mem.. '.$response2['total'];
+					$response2["subtitle"]='Shortlisted Pro.. '.$response2['total'];
 					if(MobileCommon::isDesktop())
-						$response2["subtitle"]='Shortlisted Members '.$response2['total'];
+						$response2["subtitle"]='Shortlisted Profiles '.$response2['total'];
 					$response2["title2"]=null;
 					break;
 
