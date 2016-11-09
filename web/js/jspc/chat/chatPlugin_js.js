@@ -45,7 +45,7 @@ JsChat.prototype = {
     _categoryTrackingParams:{},
     _groupBasedConfig:{},
     _defaultActiveTab:"tab1",
-    _sentMsgRefTime:120000,
+    _sentMsgRefTime:300000,
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
