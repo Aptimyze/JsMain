@@ -16,7 +16,7 @@ class PriorityHandler
 		if(is_array($profileArr))
 			$profileStr =implode("','",$profileArr);
 
-		$squery1 = "SELECT easycode,old_priority,PROFILEID,Dial_Status,EXPIRY_DT FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and priority!='10' and Dial_Status!='9' AND Dial_Status!='0' AND Dial_Status!='3'";
+		$squery1 = "SELECT easycode,priority,old_priority,PROFILEID,Dial_Status,EXPIRY_DT,PREFERRED_TIME_IST FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and Dial_Status!='9' AND Dial_Status!='0' AND Dial_Status!='3'";
 		if($profileStr)	
 			$squery1.=" AND PROFILEID IN ('$profileStr')";
 		else
@@ -59,6 +59,29 @@ class PriorityHandler
                 mssql_query($query,$this->db_dialer) or $this->logError($query,$campaignName,$this->db_dialer,1);
 
         }
+	// get TimeSlot for RCB campaign priority
+	/*  Slots are defined based on process frequency of 15 min. interval */	
+	public function getTimeSlot($timeInMin){
+		$slotExist =false;
+
+		$slotArr[] =array('start'=>'30','end'=>'45');		//7
+		$slotArr[] =array('start'=>'60','end'=>'75');		//6
+		$slotArr[] =array('start'=>'90','end'=>'105');		//5
+		$slotArr[] =array('start'=>'120','end'=>'135');		//4
+		$slotArr[] =array('start'=>'150','end'=>'165');		//3
+		$slotArr[] =array('start'=>'180','end'=>'195');		//2
+		$slotArr[] =array('start'=>'210','end'=>'225');		//1
+		$slotArr[] =array('start'=>'240','end'=>'');		//0
+
+		foreach($slotArr as $key=>$data){
+			$start 	=$data['start'];
+			$end	=$data['end'];
+			if($timeInMin>=$start && $timeInMin<=$end)
+				$slotExist =true;
+		}		
+		return $slotExist;
+	}
+	// logging Erro
         public function logError($sql,$campaignName='',$dbConnect='',$ms='')
         {
                 $dialerLogObj =new DialerLog();
