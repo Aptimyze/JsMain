@@ -427,8 +427,8 @@ if (authenticated($cid)) {
 		/*
 			changing to get original and modified your info here and saving in table Profile
 		 */
-        $your_info = $arrProfileUpdateParams['YOURINFO'];
-        $your_info_original = $_POST['YOURINFO_ORIGINAL'];
+        $your_info = mysql_real_escape_string($arrProfileUpdateParams['YOURINFO']);
+        $your_info_original = mysql_real_escape_string($_POST['YOURINFO_ORIGINAL']);
         $sql_junk_character_check = "INSERT INTO  `PROFILE`.`JUNK_CHARACTER_TEXT` (  `id` ,  `PROFILEID` ,  `original_text` ,  `modified_custom`) VALUES('',  '$pid',  '$your_info_original',  '$your_info');";
 		$result = mysql_query($sql_junk_character_check);
 
