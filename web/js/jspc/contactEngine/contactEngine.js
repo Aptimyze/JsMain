@@ -626,12 +626,13 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	if(Obj.actiondetails.contact1!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact1,true,'M');
-		$("#reportInvalidReasonLayer").bind('click',function(){reportInvalidReason('M',profileChecksum);});		
+		$("#reportInvalidReasonLayer").bind('click',function(){reportInvalidReason('M',profileChecksum);});	
 	}
 	
 	if(Obj.actiondetails.contact2!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact2,true,'L');
+		$("#reportInvalidReasonLayer").bind('click',function(){reportInvalidReason('L',profileChecksum);});	
 	}
 	
 	if(Obj.actiondetails.contact3!=null)
@@ -697,7 +698,6 @@ function ViewContactLiCreate(Obj,reportInvalid,phoneType,label)
 		if(reportInvalid){
 			liHtml=liHtml.replace(/\{\{phonetype\}\}/g,"phoneType='"+phoneType+"'");
 			liHtml=liHtml.replace(/\{\{DISP_REPORT\}\}/g,"");
-
 		}
 		else
 			liHtml=liHtml.replace(/\{\{DISP_REPORT\}\}/g,"disp-none");
@@ -940,7 +940,7 @@ if(layerObj.find("#otherOptionBtn").is(':checked')) {
 	Otherreason = reason;
 }
 $('.js-overlay').unbind('click');
-if (finalResponse) var otherUser=finalResponse.about.username;
+if (typeof(finalResponse) != "undefined") var otherUser=finalResponse.about.username;
 var selfUname=selfUsername;
 var layerObj=$("#reportInvalidReason-layer");
 var phoneType=ele;
@@ -989,7 +989,9 @@ jQuery.myObj.ajax(ajaxConfig);
 
 function showReportInvalidLayer(){
 	var jObject=$("#reportInvalidReason-layer");
+	if(typeof(finalResponse)!="undefined"){
 	jObject.find('.js-username').html(finalResponse.about.username);
+	}
 	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
 
 $('.js-overlay').unbind();
