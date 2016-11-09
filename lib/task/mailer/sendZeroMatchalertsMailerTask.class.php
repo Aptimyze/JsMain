@@ -51,10 +51,6 @@ EOF;
             
             $data["RECEIVER"]["PROFILE"] = $profileObj;
             $data["RECEIVER"]["EMAILID"] = $profileObj->getEMAIL();
-            $data["subject"]= "There are no more members matching your Desired Partner Profile, broaden your Desired Partner Profile to get more matches"; 
-            $data["body"]="There are no more members left which match your Desired Partner Profile. Please broaden your Desired Partner Profile to get more matches.";
-            $data["showDpp"]= 1;
-            $data["mailSentDate"] = date("Y-m-d H:i:s");
             
             
             $mailerLinks = $mailerServiceObj->getLinks();
@@ -66,7 +62,13 @@ EOF;
             
             //Common Parameters required in mailer links
             $data["commonParamaters"] ="/".$receiverechecksum."/".$receiverProfilechecksum;
-            $subject ='=?UTF-8?B?' . base64_encode($data["subject"]) . '?='; 
+            $data["subject"]= "Get more matching profiles in your Inbox by broadening your Desired Partner Profile"; 
+            $data["body"]="We always strive to send the most relevant matches to you based on your Desired Partner Profile. It looks like your Desired Partner Profile could be too strict, which may reduce the number of interests and relevant daily recommendations you receive.<br><br>
+Please <a href='".$mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic."'>Edit Desired Partner Profile</a> to get more relevant matches.<br><br>
+If you require any assistance with your editing your Desired Partner Profile, do look out for suggestions (available on Desktop Site as of now) while you are editing a section. You may also call us at our toll-free number or Email us at help@jeevansathi.com, so that we can help you set a Desired Partner Profile which best suits your needs.";
+            $data["showDpp"]= 1;
+            $data["mailSentDate"] = date("Y-m-d H:i:s");
+            $subject ='=?UTF-8?B?' . base64_encode($data["subject"]) . '?=';
             $this->smarty->assign('data',$data);
             
             $mailerServiceObj->loadPartials();
