@@ -34,9 +34,9 @@ function clearNonRosterPollingInterval(type){
 
 /*reActivateNonRosterPolling
 function to reactivate poll for non roster list 
-* @inputs:none
+* @inputs:source,updateChatImmediate
 */
-function reActivateNonRosterPolling(source){
+function reActivateNonRosterPolling(source,updateChatImmediate){
     //kills interval polling for non roster list
     //clearNonRosterPollingInterval();
     if (strophieWrapper.getCurrentConnStatus() == true) {
@@ -44,8 +44,9 @@ function reActivateNonRosterPolling(source){
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
             //pollForNonRosterListing(groupId);
             clearNonRosterPollingInterval(groupId);
+            var updateChatListImmediate = (updateChatImmediate != undefined) ? updateChatListImmediate : false;
             strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
-                                                                pollForNonRosterListing(groupId);
+                                                                pollForNonRosterListing(groupId,updateChatListImmediate);
                                                             },100);
             
         });
@@ -81,12 +82,18 @@ function checkForValidNonRosterRequest(groupId){
 function to poll for non roster webservice api 
 * @inputs:type
 */
-function pollForNonRosterListing(type){
+function pollForNonRosterListing(type,updateChatListImmediate){
     //console.log("pollForNonRosterListing",type);
     if(type == undefined || type == ""){
         type = "dpp";
     }
-    var validRe = checkForValidNonRosterRequest(type);
+    var validRe;
+    if(updateChatListImmediate == undefined || updateChatListImmediate == false){
+        validRe = true;
+    }
+    else{
+        validRe = checkForValidNonRosterRequest(type);
+    }
     if(validRe == true){
         var getInputData = "",outputProfileIds = [];
         //postData["pageSource"] = "chat";

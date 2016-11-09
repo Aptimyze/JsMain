@@ -31,6 +31,7 @@
         timeout: (objConfig.timeout != undefined)?objConfig.timeout:'30000',
         showError: (objConfig.showError != undefined)?objConfig.showError:true,
         updateChatList: (objConfig.updateChatList != undefined)?objConfig.updateChatList:false,
+        updateChatListImmediate: (objConfig.updateChatListImmediate != undefined)?objConfig.updateChatListImmediate:false,
         beforeSend: function() {
          /** add common code **/
          if ( $.isFunction(objConfig.beforeSend) ) {
@@ -42,10 +43,10 @@
 
           objConfig.complete(data, objConfig);
         }
-        //console.log("before complete",objConfig.updateChatList,oldUrl,window.location.href);
+        //console.log("before complete",objConfig.updateChatListImmediate,oldUrl,window.location.href);
         //update non roster chat list
-        if($.isFunction(reActivateNonRosterPolling) && ((window.location.href != oldUrl) || objConfig.updateChatList == true)){
-          reActivateNonRosterPolling("ajax");
+        if($.isFunction(reActivateNonRosterPolling) && ((window.location.href != oldUrl) || objConfig.updateChatList == true || objConfig.updateChatListImmediate == true)){
+          reActivateNonRosterPolling("ajax",objConfig.updateChatListImmediate);
         }
       },
 
