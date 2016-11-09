@@ -112,7 +112,7 @@
 		<ul id="cEViewContactListing" class="ceviewcontct fontlig">
 			<li class="clearfix">
 				<div class="fl">{{CONTACT_NAME}}</div>
-				<div class="fl">{{CONTACT_VALUE}}<span class="{{DISP_REPORT}} cursp disp_ib pl30 color11 reportInvalid" {{phonetype}}>Report Invalid</span></div>
+				<div class="fl">{{CONTACT_VALUE}}<span id ="reportInvalidButton" class="{{DISP_REPORT}} cursp disp_ib pl30 color11 reportInvalid" {{phonetype}}>Report Invalid</span></div>
 			
 			</li>
 		</ul>

@@ -234,27 +234,6 @@ class phoneActions extends sfActions
    		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
 		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
    		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);
-   			$profile2->getDetail($profileid,"PROFILEID");
-			$result['username']=$profile2->getUSERNAME();
-			
-			$havePhoto=$profile2->getHAVEPHOTO();
-			if($havePhoto=='Y'){
-			$pictureServiceObj=new PictureService($profile2);
-			$profilePicObj = $pictureServiceObj->getProfilePic();
-			if($profilePicObj){
-			$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getThumbailUrl(),'ThumbailUrl','',$otherGender);
-              if($thumbNailArray[label] != '')
-                   $thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
-               else
-                   $thumbNail = $thumbNailArray['url'];
-           }
-			else $thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
-
-
-		}
-		else 
-				$thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
-			$result['userPhoto']=$thumbNail;
     $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();

@@ -10,7 +10,6 @@ var profChecksumCheckArr = new Array();
 var listType;
 
 $(document).ready(function() {
-
 	showSearchLoader('Show');
 
 	/**
@@ -127,8 +126,26 @@ $(document).ready(function() {
             $("#"+clickOn).closest('li').addClass('active');
             $("#"+clickOn).removeClass("cursp").addClass("cursd");
         }
+		customOptionButton('report_profile');
 
 });
+
+
+function customOptionButton(optionBtnName) {
+	var checkBox = $('input[name="' + optionBtnName + '"]');
+	$(checkBox).each(function() {
+		$(this).wrap("<span class='custom-checkbox-reportAbuse'></span>");
+			if ($(this).is(':checked')) {
+		 		$(this).closest('li').addClass("selected");
+			}
+			else $(this).closest('li').removeClass("selected"); 
+		});
+		$(checkBox).click(function() {
+			$('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
+			$(this).closest('li').addClass("selected");
+		});
+
+}
 /**
 * Function which will be used for the action of search Listing
 */
