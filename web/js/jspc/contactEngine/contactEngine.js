@@ -818,7 +818,7 @@ var parent=$(ele).closest('.cEParent');
 parent.find('.js-usernameCE');
 
 showCommonLoader();
-var phoneType=$(ele).attr('phonetype');
+var phoneType=$(ele).attr('phoneType');
 if (phoneType=='L') {var mobile='N';var phone='Y';}
 if (phoneType=='M') {var mobile='Y';var phone='N';}
 ajaxConfig=new Object();
