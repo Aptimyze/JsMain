@@ -20,17 +20,17 @@ class PictureStaticVariablesEnum
 	public static $PICTURE_ALLOWED_FORMATS = array("image/gif","image/jpg","image/jpeg");
         public static $DELETE_REASONS = array("The photo is not clear.",
                                            "We find that the photo you have submitted is inappropriate.",
-                                           "The photo is of a well known personality. If the photo is yours then submit a proof of identity.",
+                                           "The photo is of a well known personality. If it is yours, submit an identity.",
 					   "Gender not proper.",
 					   "Group photo.",
-					   "Age not proper/ age not match.",
+					   "Age not proper/Age doesn’t match.",
 					   "Obscene photo.",
 					   "Side face.",
 					   "Attachment error.",
 					   "Small size / size is not proper.",
-					   "Same photo.",
-					   "Edited photo/ body not match.",
-					   "Watermark photo."	);
+					   "Repeated photo.",
+					   "Edited/Morphed photo.",
+					   "Watermarked photo."	);
         
         public static $PICTURE_STATUS = array("UPLOAD_COMPLETED",
                                               "RESIZE_CRON_COMPLETED",

@@ -10,7 +10,7 @@ class DialerHandler
         }
         public function getCampaignEligibilityStatus($campaign_name,$eligibleType='')
         {
-		$entryDt =date("Y-m-d",time()-9.5*60*60);
+		$entryDt =date("Y-m-d",time()-10.5*60*60);
 		$dataArr =array();
                 $sql = "SELECT * FROM js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS WHERE CAMPAIGN='$campaign_name' AND ENTRY_DT='$entryDt'";
 		if($eligibleType)
