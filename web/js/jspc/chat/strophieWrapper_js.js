@@ -197,7 +197,7 @@ var strophieWrapper = {
             subscription = rosterObj[strophieWrapper.rosterDetailsKey]["subscription"],
             ask = rosterObj[strophieWrapper.rosterDetailsKey]["ask"];
         nodeArr[user_id] = rosterObj;
-        if(rosterObj[strophieWrapper.rosterDetailsKey]["groups"].indexOf("NOTINUSE") != -1){
+        if(rosterObj[strophieWrapper.rosterDetailsKey]["groups"] != undefined && rosterObj[strophieWrapper.rosterDetailsKey]["groups"].indexOf("NOTINUSE") != -1){
             //console.log("filtered interset receive case");
             updateNonRosterListOnCEAction({"user_id":user_id,"action":"REMOVE"});
         }
