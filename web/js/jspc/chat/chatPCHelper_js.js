@@ -113,12 +113,13 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             dataType: 'json',
             //data: postData,
             type: 'GET',
-            //cache: false,
+           // cache: true,
             async: true,
             timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
             headers:{
-                'JB-Profile-Identifier':loggedInJspcUser
-                //'Cache-Control':'max-age=300'
+                'JB-Profile-Identifier':loggedInJspcUser/*,
+                'Cache-Control':'max-age=300',
+                'Last-Modified':((new Date()).toLocaleString())*/
             },
             beforeSend: function (xhr) {},
             success: function (response) {
