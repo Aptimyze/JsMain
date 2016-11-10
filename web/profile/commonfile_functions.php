@@ -187,7 +187,7 @@ $css_arr[]=array("jspc/profile/view/jspcViewProfile_css"                       =
 $css_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_css"         => "9");
 $css_arr[]=array("jspc/search/advancedSearch"      => "3");
 $css_arr[]=array("jspc/faq/feedback"    => "1");
-$css_arr[]=array("jspc/contactEngine/contactEngine_css"       => "4");
+$css_arr[]=array("jspc/contactEngine/contactEngine_css"        => "5");
 $css_arr[]=array("jspc/profile/edit/profile/jspcCoverPhoto_css"    => "1");
 $css_arr[]=array("jspc/profile/edit/profile/jspcEditProfileCompletion_css"    => "1");
 $css_arr[]=array("jspc/common/mCustomScrollBar_css"       => "4");
@@ -570,7 +570,7 @@ $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                      => "
 $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                                           => "49");
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
-$js_arr[]=array("jspc/contactEngine/contactEngine"               => "15");
+$js_arr[]=array("jspc/contactEngine/contactEngine"                => "16");
 $js_arr[]=array("jspc/contactEngine/contactEngineButtons"              => "15");
 $js_arr[]=array("jspc/search/advancedSearch"     => "2");
 $js_arr[]=array("jspc/common/jquery_mCustomScrollbar"           => "10");
