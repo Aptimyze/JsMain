@@ -30,7 +30,7 @@ EOF;
 
     protected function execute($arguments = array(), $options = array())
     {
-      $file_path = JsConstants::$cronDocRoot."/lib/task/trained_data.txt";
+      $file_path = JsConstants::$cronDocRoot."/lib/task/profile/spam_character_trained.txt";
       $this->accepted_characters = 'abcdefghijklmnopqrstuvwxyz ';
 
 
@@ -45,7 +45,7 @@ EOF;
         }
         else
         {
-          $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($value['id'],"NOT JUNK");
+          $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($value['id'],"NOT_JUNK");
         }
       }
     }

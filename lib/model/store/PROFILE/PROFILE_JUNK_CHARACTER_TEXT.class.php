@@ -23,7 +23,7 @@ class PROFILE_JUNK_CHARACTER_TEXT extends TABLE {
 
         public function getOriginalText()
         {
-            $sql = "SELECT id,original_text FROM `PROFILE`.`JUNK_CHARACTER_TEXT` WHERE modified_automate IS NULL";
+            $sql = "SELECT id,original_text FROM PROFILE.JUNK_CHARACTER_TEXT WHERE modified_automate IS NULL";
             $pdoStatement = $this->db->prepare($sql);
             $pdoStatement->execute();
 
@@ -34,10 +34,10 @@ class PROFILE_JUNK_CHARACTER_TEXT extends TABLE {
 
         public function updateModifiedText($id,$modified_automate)
         {
-            $sql = "UPDATE `PROFILE`.`JUNK_CHARACTER_TEXT` set modified_automate =:MODIFIED_TEXT WHERE id =:ID";
+            $sql = "UPDATE PROFILE.JUNK_CHARACTER_TEXT set modified_automate =:MODIFIED_TEXT WHERE id =:ID";
             $pdoStatement = $this->db->prepare($sql);
             $pdoStatement->bindValue(":MODIFIED_TEXT",$modified_automate,PDO::PARAM_STR);
-            $pdoStatement->bindValue(":ID",$id,PDO::PARAM_STR);
+            $pdoStatement->bindValue(":ID",$id,PDO::PARAM_INT);
             $pdoStatement->execute();
 
         }
