@@ -59,7 +59,7 @@ function to check whether request to non roster webservice is valid or not
 */
 function checkForValidNonRosterRequest(groupId){
     //return true;
-    var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
+    var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true,lastUpdateTime=null;
     var data;
     if(chatConfig.Params[device].storageForNonRosterList == "local"){
         data = strophieWrapper.getRosterStorage("non-roster");
@@ -71,6 +71,7 @@ function checkForValidNonRosterRequest(groupId){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
         if(timeDiff < chatConfig.Params[device].nonRosterListingRefreshCap){
             valid = false;
+            lastUpdateTime = lastUpdated[groupId];
         }
     }
     if(chatConfig.Params[device].storageForNonRosterList == "local"){
@@ -82,8 +83,8 @@ function checkForValidNonRosterRequest(groupId){
             valid = true;
         }
     }
-    console.log("checkForValidNonRosterRequest",valid);
-    return valid;
+    console.log("checkForValidNonRosterRequest",valid,lastUpdateTime);
+    return {"validRe":valid,"lastUpdateTime":lastUpdateTime};
 }
 
 /*pollForNonRosterListing
@@ -91,23 +92,25 @@ function to poll for non roster webservice api
 * @inputs:type
 */
 function pollForNonRosterListing(type,updateChatListImmediate){
-    console.log("pollForNonRosterListing",type);
+    console.log("pollForNonRosterListing",type,updateChatListImmediate);
     if(type == undefined || type == ""){
         type = "dpp";
     }
-    var validRe,headerData = {'JB-Profile-Identifier':loggedInJspcUser};
+    var validRe,lastUpdateTime,headerData = {'JB-Profile-Identifier':loggedInJspcUser};
     if(updateChatListImmediate != undefined && updateChatListImmediate == true){
         validRe = true;
         if(chatConfig.Params[device].storageForNonRosterList == "header"){
-            headerData['Cache-Control'] = 'no-cache,no-store';
+            //headerData['Cache-Control'] = 'no-cache,no-store';
         }
     }
     else{
-        validRe = checkForValidNonRosterRequest(type);
+        var validReOutput = checkForValidNonRosterRequest(type);
+        validRe = validReOutput["validRe"],lastUpdateTime = validReOutput["lastUpdateTime"];
         if(chatConfig.Params[device].storageForNonRosterList == "header"){
             headerData['Cache-Control'] = 'max-age=300,public'; //private or public later
         }
     }
+    
     if(chatConfig.Params[device].storageForNonRosterList == "header" || validRe == true){
         var getInputData = "";
         if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
@@ -120,11 +123,39 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                 }
             });
         }
+        if(chatConfig.Params[device].storageForNonRosterList == "header"){
+            var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
+            if(validRe == true || updateChatListImmediate == true || lastUpdateTime == undefined){
+                if(getInputData == ""){
+                    getInputData = getInputData+"?timestamp="+(new Date()).getTime();
+                }
+                else{
+                    getInputData = getInputData+"&timestamp="+(new Date()).getTime();
+                }
+            }
+            else{
+                if(getInputData == ""){
+                    getInputData = getInputData+"?timestamp="+lastUpdateTime;
+                }
+                else{
+                    getInputData = getInputData+"&timestamp="+lastUpdateTime;
+                }
+            }
+        }
+        else{
+            if(getInputData == ""){
+                    getInputData = getInputData+"?timestamp="+(new Date()).getTime();
+                }
+                else{
+                    getInputData = getInputData+"&timestamp="+(new Date()).getTime();
+                }
+        }
+        console.log("headers",headerData);
         $.myObj.ajax({
             url: (dppListingWebServiceUrl+getInputData),
             dataType: 'json',
             type: 'GET',
-            cache: true,//((chatConfig.Params[device].storageForNonRosterList == "header") ? true : false),
+            cache: ((chatConfig.Params[device].storageForNonRosterList == "header") ? true : false),
             async: true,
             timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
             headers:headerData,
@@ -170,19 +201,21 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             },
             "debugInfo": null
             };*/
-        
+        console.log("jerencndc");
                 if(response["header"]["status"] == 200){
                     //console.log("fetchNonRosterListing success",response);
                     if(response["header"]["pollTime"] != undefined && response["header"]["pollTime"] > 0){
                         chatConfig.Params[device].nonRosterListingRefreshCap = response["header"]["pollTime"];
                         //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
                     }
-                    var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
-                    if(nonRosterCLUpdated == undefined){
-                        nonRosterCLUpdated = {};
+                    if(chatConfig.Params[device].storageForNonRosterList == "local" || validRe == true){
+                        var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
+                        if(nonRosterCLUpdated == undefined){
+                            nonRosterCLUpdated = {};
+                        }
+                        nonRosterCLUpdated[type] = (new Date()).getTime();
+                        localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
                     }
-                    nonRosterCLUpdated[type] = (new Date()).getTime();
-                    localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
                     //add in listing, after non roster list has been fetched
                     if(chatConfig.Params[device].storageForNonRosterList == "header" && updateChatListImmediate != true){
                         processNonRosterData(response["data"],type,"headerStorage"); 
@@ -222,11 +255,11 @@ function processNonRosterData(response,type,source){
                     if(source == "headerStorage"){
                         //console.log("in onNonRosterListDeletion",nonRosterUpdates,nonRosterUpdates[nodeObj["profileid"]]);
                         if(nonRosterUpdates == undefined || nonRosterUpdates[nodeObj["profileid"]] == undefined){
-                            console.log("added1",nodeObj["profileid"]);
+                            //console.log("added1",nodeObj["profileid"]);
                             newNonRoster[nodeObj["profileid"]] = listObj;
                         }
                         else{
-                            console.log("ignored1",nodeObj["profileid"]);
+                            //console.log("ignored1",nodeObj["profileid"]);
                         }
                     }
                     else{
