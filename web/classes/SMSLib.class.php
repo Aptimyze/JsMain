@@ -102,6 +102,7 @@ class SMSLib
             "PHONE_ISD_COMMA" => array("maxlength" => "17"), //      ,,
             "COUNTRY_RES"     => array("maxlength" => "10"), //added by nitesh
             "SERVNAME"        => array("maxlength" => "50"),
+            "SHORT_DISC_LINK_URL"=> array("maxlength" => "50"),
         );
         return $varArr[$variable];
     }
@@ -300,6 +301,9 @@ class SMSLib
 
             case "PHTOUPNO":
                 return $messageValue["PHOTO_UPLOAD_COUNT"];
+            
+            case "SHORT_DISC_LINK_URL":
+                return $this->getShortURL($tokenValue["SHORT_DISC_LINK_URL"], $messageValue["RECEIVER"]["PROFILEID"], $messageValue["EMAIL"], '', '');
 
             case "URL_EDIT_PHONE":
                 $longURL   = $this->SITE_URL . "/profile/viewprofile.php?ownview=1";

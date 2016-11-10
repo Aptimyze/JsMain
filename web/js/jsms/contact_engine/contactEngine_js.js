@@ -1123,7 +1123,11 @@ if(result.actiondetails.bottommsg2){
             $("#mobileIcon").show();
         }
   }
-        
+      else if(result.actiondetails.contact1_message)
+      {
+        $("#mobileVal,#mobile").show();
+        $("#mobileVal").html(result.actiondetails.contact1_message);
+      }  
         if(result.actiondetails.contact2){
     $("#landlineValBlur,#landlineVal").hide();
             // $("#landlineVal").hide();
@@ -1135,6 +1139,11 @@ if(result.actiondetails.bottommsg2){
             $("#landlineIcon").show();
         }
     }
+      else if(result.actiondetails.contact2_message)
+      {
+        $("#landline,#landlineVal").show();
+        $("#landlineVal").html(result.actiondetails.contact2_message);
+      }  
         if(result.actiondetails.contact3){
     $("#alternateValBlur,#alternateVal").hide();
                // $("#alternateVal").hide();
@@ -1148,6 +1157,11 @@ if(result.actiondetails.bottommsg2){
     
     
     }
+      else if(result.actiondetails.contact3_message)
+      {
+        $("#alternate,#alternateVal").show();
+        $("#alternateVal").html(result.actiondetails.contact3_message);
+      }  
         if(result.actiondetails.contact4){
                 $("#emailVal,#emailValBlur").hide();
     //$("#emailValBlur").hide();

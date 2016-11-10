@@ -587,6 +587,16 @@ ContactEngineCard.prototype.postCCViewContactLayer= function(Obj,profileChecksum
 	if (actionDetails.contact2){phoneContact+=(actionDetails.contact2.value+',    ');}
 	if (actionDetails.contact3){phoneContact+=(actionDetails.contact3.value+' ');}
 	
+	if(!phoneContact){
+		if(actionDetails.contact1_message || actionDetails.contact2_message || actionDetails.contact3_message )
+ 		{
+ 			if((actionDetails.contact1_message && actionDetails.contact1_message.indexOf('accept')!=-1) 
+			|| (actionDetails.contact2_message && actionDetails.contact2_message.indexOf('accept')!=-1)
+			|| (actionDetails.contact3_message && actionDetails.contact3_message.indexOf('accept')!=-1) )
+				phoneContact = "Phone number visible on accept";
+			else phoneContact = "Phone number hidden";
+		}
+	}
 	if (!phoneContact) phoneContact='NA';
 		viewContactElement.find('.js-phoneContactCC').removeClass('disp-none').find('.js-phoneValuesCC').html(phoneContact);
 		
@@ -627,15 +637,27 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact1,true,'M','',profileChecksum);
 	}
+	else if(Obj.actiondetails.contact1_message)
+	{
+		liFinalHtml+=viewContactHiddenLabel('Phone No.',Obj.actiondetails.contact1_message);
+	}
 	
 	if(Obj.actiondetails.contact2!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact2,true,'L','',profileChecksum);
 	}
+	else if(Obj.actiondetails.contact2_message)
+	{
+		liFinalHtml+=viewContactHiddenLabel('Landline',Obj.actiondetails.contact2_message);
+	}
 	
 	if(Obj.actiondetails.contact3!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact3,false);
+	}
+	else if(Obj.actiondetails.contact3_message)
+	{
+		liFinalHtml+=viewContactHiddenLabel('Alternate No.',Obj.actiondetails.contact3_message);
 	}
 	
 	if(Obj.actiondetails.contact5!=null)
@@ -713,6 +735,13 @@ function ViewContactLiCreate(Obj,reportInvalid,phoneType,label,profileChecksum)
 	return liHtml;
 }
 
+function viewContactHiddenLabel(label,value){
+	var liHtml = $("#cEViewContactListing").html();
+		liHtml=liHtml.replace(/\{\{CONTACT_NAME\}\}/g,label);
+		liHtml=liHtml.replace(/\{\{CONTACT_VALUE\}\}/g,value);
+		liHtml=liHtml.replace(/\{\{DISP_REPORT\}\}/g,"disp-none");
+	return liHtml;
+}
 
 function cECommonBinding()
 {
