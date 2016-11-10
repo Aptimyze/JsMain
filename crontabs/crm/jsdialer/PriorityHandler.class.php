@@ -16,7 +16,13 @@ class PriorityHandler
 		if(is_array($profileArr))
 			$profileStr =implode("','",$profileArr);
 
-		$squery1 = "SELECT easycode,priority,old_priority,PROFILEID,Dial_Status,EXPIRY_DT,PREFERRED_TIME_IST FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and Dial_Status!='9' AND Dial_Status!='0' AND Dial_Status!='3'";
+		$fields ='easycode,priority,old_priority,PROFILEID,Dial_Status';
+		if($campaignName=='JS_RENEWAL' || $campaignName=='OB_RENEWAL_MAH')
+			$fields .=',EXPIRY_DT';
+		elseif($campaignName=='OB_JS_RCB')
+			$fields .=',PREFERRED_TIME_IST';
+
+		$squery1 = "SELECT $fields FROM easy.dbo.ct_$campaignName JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 and priority!='10' and Dial_Status!='9' AND Dial_Status!='0' AND Dial_Status!='3'";
 		if($profileStr)	
 			$squery1.=" AND PROFILEID IN ('$profileStr')";
 		else

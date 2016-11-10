@@ -20,7 +20,7 @@ $priorityHandlerObj =new PriorityHandler($db_js, $db_js_111, $db_dialer);
 $campaign_nameArr =array("JS_RENEWAL","OB_RENEWAL_MAH");
 $limit =10;
 $npriority =5;
-$todayDate =date("Y-m-d");
+$todayDate =date("Y-m-d",time()-10.5*60*60);
 $todayDate1 =strtotime($todayDate);
 
 foreach($campaign_nameArr as $key=>$campaignName)
