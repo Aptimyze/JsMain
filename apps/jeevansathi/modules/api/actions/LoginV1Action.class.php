@@ -145,7 +145,7 @@ class LoginV1Action extends sfActions
                 $alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
                 $alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
                 $alarmTime[$result['PROFILEID']]=alarmTimeManager::getNextTime($alarmCurrentTime,NotificationEnums::$alarmMaxTime,NotificationEnums::$alarmMinTime);
-                $alarmTimeObj = new MOBILE_API_ALARM_TIME;
+                $alarmTimeObj = new MOBILE_API_ALARM_TIME('newjs_masterDDL');
                 $alarmTimeObj->replace($alarmTime);
                 $maxAlarmTimeObj->updateMaxAlarmTime($alarmTime[$result['PROFILEID']]);
                 if(CommonFunction::getMainMembership($result[SUBSCRIPTION]))

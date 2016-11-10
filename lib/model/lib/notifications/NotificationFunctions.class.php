@@ -63,7 +63,7 @@ class NotificationFunctions
         	        $alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
         	        $alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
         	        $alarmTime[$profileid]=alarmTimeManager::getNextTime($alarmCurrentTime,NotificationEnums::$alarmMaxTime,NotificationEnums::$alarmMinTime);
-        	        $alarmTimeObj = new MOBILE_API_ALARM_TIME;
+        	        $alarmTimeObj = new MOBILE_API_ALARM_TIME('newjs_masterDDL');
         	        $alarmTimeObj->replace($alarmTime);
         	        $maxAlarmTimeObj->updateMaxAlarmTime($alarmTime[$profileid]);
         	}
