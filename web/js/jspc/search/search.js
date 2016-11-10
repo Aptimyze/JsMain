@@ -102,6 +102,7 @@ $(document).ready(function() {
                 infoArr["searchID"] = "skip";
                 infoArr["listType"] = "cc";
 		sendProcessSearchRequest(postParams,infoArr);	
+                updateHistory("visitors?matchedOrAll="+value,1);
             }
 	});
 
@@ -211,7 +212,9 @@ function searchListingAction(thisElement){
 				listType="search";
                                 break;
                 }
-                if(postParams1)
+                if(thisElement.id=="js-visitors")
+                    updateHistory("visitors?matchedOrAll=A",1);
+                else if(postParams1)
 	                updateHistory(postParams1.split("=")[0],1);
                 else if(postParams)
 	                updateHistory(postParams.split("=")[0],1);

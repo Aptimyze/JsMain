@@ -50,6 +50,8 @@ class MobSearchAction extends sfActions
                             	mail("lavesh.rawat@gmail.com","MobSearchAction - CC page","$http_msg");
                                 $request->setParameter("currentPage",1);
                         }
+                        if($request->getParameter("matchedOrAll"))
+                            $this->matchedOrAll=$request->getParameter("matchedOrAll");
 			$request->setParameter("infoTypeId",$request->getParameter("searchId"));
 			$request->setParameter("pageNo",$request->getParameter("currentPage"));
             		$request->setParameter("ContactCenterDesktop",1);
