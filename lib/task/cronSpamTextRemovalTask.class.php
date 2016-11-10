@@ -9,6 +9,8 @@ class cronSpamTextRemovalTask extends sfBaseTask
 {
   protected function configure()
   {
+    $this->file_path = JsConstants::$cronDocRoot."/lib/utils/junkCharacters/spam_character_trained.txt";
+    $this->accepted_characters = 'abcdefghijklmnopqrstuvwxyz ';
 
 
 
@@ -30,22 +32,20 @@ EOF;
 
     protected function execute($arguments = array(), $options = array())
     {
-      $file_path = JsConstants::$cronDocRoot."/lib/task/profile/spam_character_trained.txt";
-      $this->accepted_characters = 'abcdefghijklmnopqrstuvwxyz ';
-
-
       $PROFILE_JUNK_CHARACTER_TEXT = new PROFILE_JUNK_CHARACTER_TEXT;
       $result = ($PROFILE_JUNK_CHARACTER_TEXT->getOriginalText());
-
       foreach ($result as $key => $value) {
-        $isGibberish = $this->test($value['original_text'],$file_path);
-        if ( $isGibberish )
+        $isGibberish = $this->test($value['original_text'],$this->file_path);
+        if ( $isGibberish !== -1 )
         {
-          $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($value['id'],"JUNK");
-        }
-        else
-        {
-          $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($value['id'],"NOT_JUNK");
+          if ( $isGibberish )
+          {
+            $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($value['id'],"JUNK");
+          }
+          else
+          {
+            $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($value['id'],"NOT_JUNK");
+          }
         }
       }
     }
