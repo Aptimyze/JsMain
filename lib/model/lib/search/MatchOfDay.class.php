@@ -27,7 +27,8 @@ class MatchOfDay extends TwoWayMatch
 		$this->LAST_LOGGEDIN=7;
                 parent::getSearchCriteria();
                 $this->setSUBSCRIPTION('"F"');
-                $this->setPHOTO_DISPLAY('"A"');
+                $this->setPHOTO_VISIBILITY_LOGGEDIN(2);
+                $this->setPRIVACY('"A"');
 		$this->rangeParams .= ",LAST_LOGIN_DT";
 		$this->setRangeParams($this->rangeParams);
 		$endDate = date("Y-m-d H:i:s", strtotime("now"));
