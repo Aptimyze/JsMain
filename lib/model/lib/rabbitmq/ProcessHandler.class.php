@@ -247,8 +247,8 @@ public function sendEOI($body, $type)
 {
 	if($type == "SCREENING")
 	{
-		$deliverContacts = new deliverTempContacts;
-		$deliverContacts->deliverContactsTemp($body['profileId']);
+		$deliverContactsObj = new deliverTempContacts;
+		$deliverContactsObj->deliverContactsTemp($body['profileId']);
 	}
 }
 

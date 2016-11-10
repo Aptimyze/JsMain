@@ -129,7 +129,7 @@ class ScreeningConsumer
       $handlerObj=new ProcessHandler();
       switch($process)
       {
-        case MQ::SCREENING_Q_EOI : $handlerObj->sendEOI($type,$body);
+        case MQ::SCREENING_Q_EOI : $handlerObj->sendEOI($body, $type);
             break;
       }     
     }
