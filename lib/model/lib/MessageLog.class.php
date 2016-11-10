@@ -214,7 +214,7 @@ class MessageLog
                     if(count($finalArr)>=$limit)
                         break;
                     
-                    $finalArr[$key] = $chatArr[$val];
+                    $finalArr[$key] = $val;
                 }
             }
             return $finalArr;
