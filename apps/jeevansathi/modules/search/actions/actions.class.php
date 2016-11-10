@@ -1424,7 +1424,7 @@ class searchActions extends sfActions
 			$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
         	        if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID()=='')
 			{
-				if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("lastSearchResults")==1 || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts','lastSearchResults')) || $request->getParameter("dashboard")==1))
+				if(($request->getParameter("justJoinedMatches")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("lastSearchResults")==1 || $request->getParameter("matchofday")==1 || in_array($request->getParameter("searchBasedParam"),array('shortlisted','visitors','justJoinedMatches','twowaymatch','reverseDpp','partnermatches','matchalerts','kundlialerts','contactViewAttempts','lastSearchResults','matchofday')) || $request->getParameter("dashboard")==1))
 				{
 					$statusArr = ResponseHandlerConfig::$LOGOUT_PROFILE;
 					$respObj = ApiResponseHandler::getInstance();
@@ -1449,7 +1449,7 @@ class searchActions extends sfActions
 		}
                 elseif($resp["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
-                        $searchTypeArray = Array('twowaymatch','reverseDpp','justJoinedMatches','partnermatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches','lastSearchResults');
+                        $searchTypeArray = Array('twowaymatch','reverseDpp','justJoinedMatches','partnermatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches','lastSearchResults','matchofday');
                         $searchType = $request->getParameter("searchBasedParam");
                         if(in_array($searchType,$searchTypeArray))
                         {
@@ -1560,7 +1560,7 @@ class searchActions extends sfActions
 						$noCasteMapping = 1;
 						$hideFeatureProfile = 1;
 					}
-					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1 || $request->getParameter("searchBasedParam") == "matchalerts")
+					if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("partnermatches")==1 || $request->getParameter("reverseDpp")==1 || $request->getParameter("twowaymatch")==1 || $request->getParameter("verifiedMatches") == 1 || $request->getParameter("contactViewAttempts") == 1 || $request->getParameter("searchBasedParam") == "matchalerts" || $request->getParameter("matchofday")==1)
 					{
 						$noRelaxation = 1;
 						$noCasteMapping = 1;
@@ -1633,7 +1633,7 @@ class searchActions extends sfActions
                                 else
                                         $currentPageFeatured = $currentPage;
        
-				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("matchalerts")==1 || $request->getParameter("verifiedMatches")==1 || $request->getParameter("kundlialerts")==1 || $request->getParameter("contactViewAttempts")==1 || in_array($request->getParameter("searchBasedParam"),array('justJoinedMatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches')))
+				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("matchalerts")==1 || $request->getParameter("verifiedMatches")==1 || $request->getParameter("kundlialerts")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("matchofday")==1 || in_array($request->getParameter("searchBasedParam"),array('justJoinedMatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches','matchofday')))
 				;
 				else
 					$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
