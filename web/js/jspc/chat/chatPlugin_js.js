@@ -3264,6 +3264,7 @@ JsChat.prototype = {
 	},    
     
     manageLoginLoader: function(type){
+        //console.log("Manage login loader");
             $("#loginLoader").toggleClass("disp-none");
     },
     /*
@@ -3383,8 +3384,8 @@ JsChat.prototype = {
                 //handle postion of next prev buttons on view profile
                 if(my_action && (my_action=="detailed" || my_action == "noprofile")){
                     _this.handleNextPrevButtons("makeCloser");
-                }     
-            }   
+                }
+            }
         }
         if (this.checkLoginStatus()) {
             //this._chatLoggerPlugin("checking login status");
