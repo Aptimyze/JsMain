@@ -212,6 +212,9 @@ class BrowserNotification{
 
             $poolObj = new NotificationDataPool();
 			$details = $poolObj->getProfilesData($browserProfilesArr,"newjs_SMS_TEMP_TABLE","newjs_masterRep");
+            if(count($details) <= 1){
+                $details = $poolObj->getProfilesData($browserProfilesArr,"JPROFILE","newjs_masterRep");
+            }
             //print_r($details);die;
             $dataAccumulated = $poolObj->getProfileVisitorData($browserProfilesArr, $details, $processObj->getmessage());
             //print_r($dataAccumulated);die;
@@ -236,6 +239,9 @@ class BrowserNotification{
         case "EOI_REMINDER":
             $poolObj = new NotificationDataPool();
             $details = $poolObj->getProfilesData(array($browserProfilesArr['SELF'],$browserProfilesArr['OTHER']),"newjs_SMS_TEMP_TABLE","newjs_masterRep");
+            if(count($details) <= 1){
+                $details = $poolObj->getProfilesData(array($browserProfilesArr['SELF'],$browserProfilesArr['OTHER']),"JPROFILE","newjs_masterRep");
+            }
             $dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$browserProfilesArr, $details,$processObj->getmessage());
             unset($poolObj);
             break;

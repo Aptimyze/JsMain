@@ -17,7 +17,7 @@
                         <td width="606">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;">
                                 <tr>
-                                    <td valign="top">Hi ~if $data.RECEIVER.PROFILE->getNAME()`~$data.RECEIVER.PROFILE->getNAME()`~else`~$data.RECEIVER.PROFILE->getUSERNAME()`~/if`,</td>
+                                    <td valign="top">Dear ~if $data.RECEIVER.PROFILE->getNAME()`~$data.RECEIVER.PROFILE->getNAME()`~else`~$data.RECEIVER.PROFILE->getUSERNAME()`~/if`,</td>
                                 </tr>
                                 <tr>
                                     <td colspan="3" height="10"></td>
@@ -27,9 +27,6 @@
                                         <table border="0" cellspacing="0" cellpadding="0" style="max-width:540px;font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;" align="left">
                                             <tr>
                                                 <td width="540">~$data.body`
-                                                ~if $data.showDpp eq 1`
-                                                        <div><div style="padding-top: 5px;"><a href="~$mailerLinks['MY_DPP']`~$data.commonParamaters`?From_Mail=Y&EditWhatNew=FocusDpp&stype=~$data.stypeMatch`&logic_used=~$data.logic`" target="_blank" style="text-decoration:none; color:#0f529d; display:inline-block;" title="Edit Desired Partner Profile">Edit Desired Partner Profile</a></div></div>
-                                                ~/if`
                                                 </td>
                                             </tr>
                                         </table>
