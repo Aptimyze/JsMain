@@ -15,7 +15,12 @@ class myprofilemobAction extends sfAction
 	//~ public $smarty;
 	
 	public function execute($request)
-	{
+	{ 
+		if($request->getParameter('fromCALHoro') == 1)
+			$this->fromCALHoro = 1;
+		if($request->getParameter('fromCALphoto') == 1)
+			$this->fromCALphoto = 1;
+
 		$this->groupname = $request->getParameter("groupname");
 		//Testing Variables:
 		$request->setParameter("sectionFlag","all");
@@ -111,7 +116,6 @@ class myprofilemobAction extends sfAction
     
 		$horoscope = new Horoscope();  
 		$this->horoExist = $horoscope->isHoroscopeExist($this->loginProfile);
-		
 		$this->setTemplate("_mobedit/myprofilemob");
     
 	}

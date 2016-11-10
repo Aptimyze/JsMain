@@ -1128,7 +1128,6 @@ if(!function_exists("logError"))
 {
 function logError($message,$query="",$critical="exit", $sendmailto="NO")
 {
-	LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
 	global $db, $smarty, $checksum;
         ob_start();
         var_dump($_SERVER);
@@ -1138,6 +1137,7 @@ function logError($message,$query="",$critical="exit", $sendmailto="NO")
         $errorstring="\n" . date("Y-m-d G:i:s",time() + 37800) . "\nErrorMsg: $message\nMysql Error: " . addslashes(mysql_error_js()) ."\nMysql Error Number:". mysql_errno_js()."\nSQL: $query\n#User Agent : " . $_SERVER['HTTP_USER_AGENT'] . "\n #Referer : " . $_SERVER['HTTP_REFERER'] . " \n #Self :  ".$_SERVER['PHP_SELF']."\n #Uri : ".$_SERVER['REQUEST_URI']."\n #Method : ".$_SERVER['REQUEST_METHOD']."\n";
 
         error_log($errorstring,3,JsConstants::$docRoot . "/jsadmin/temp/logerror.txt");
+	LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorstring));
 
         if($critical=="exit")
         {
