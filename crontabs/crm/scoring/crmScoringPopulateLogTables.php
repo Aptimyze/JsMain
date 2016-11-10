@@ -1,5 +1,5 @@
 <?php
-include("/home/developer/scoring/MysqlDbConstants.class.php");
+include("/home/developer/jsdialer/MysqlDbConstants.class.php");
 
 //Sent mail for daily tracking
 $msg="\nPopulate Log Tables # Start Time=".date("Y-m-d H:i:s");

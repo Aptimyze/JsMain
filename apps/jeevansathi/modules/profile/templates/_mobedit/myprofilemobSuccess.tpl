@@ -4,7 +4,7 @@
   ~/if`
 <div class="perspective" id="perspective">
 	<div class="pcontainer" id="pcontainer">
-<!--start:div-->
+<!--start:div--> 
 		<!--start:div-->
 		<div class="fullwid bg1" id="topbar">
 		  <div class="pad1">
@@ -106,7 +106,7 @@
 </div>
 <div id="filterButton" class ="dn">
 	<div class="fullwid bg7">
-	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Manage Filters</div>
+	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Manage Strict Filters</div>
 	</div>
  </div>
 ~if isset($horoExist)`
@@ -154,10 +154,13 @@
 </div>
 </div>    
 
+
 <script>
 	showLoader();	
 		var renderPage=new mobEditPage;
 		 var DualHamburger=0;
+		 var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
+		 var fromCALphoto=~if $fromCALphoto == 1`'1'~else`'0'~/if`;
 </script>
 </div>
 <div class="hamburger dn fullwid" id="ehamburger">

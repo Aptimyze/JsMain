@@ -11,7 +11,7 @@
 <div class="clr"></div>
 <div class="pt25">
 <div class="pos-rel clearfix fontlig">
-    <div id="seeAllId_INTERESTRECEIVED" class="pos-abs wid100 txtc myjs-pos8"><a href="/profile/contacts_made_received.php?page=eoi&filter=R" class="color12">See All <span id='seeAllIntCount'>{{SEE_ALL_TOTAL}}</span></a></div>
+    <div id="seeAllId_INTERESTRECEIVED" class="pos-abs wid100 txtc myjs-pos8"><a href="/profile/contacts_made_received.php?page=eoi&filter=R" class="color12">View All <span id='seeAllIntCount'>{{SEE_ALL_TOTAL}}</span></a></div>
 <div class="fr myjs-wid8 clearfix opa50">
 <div id='panelCounter_INTERESTRECEIVED' class="fl color12 pt5 disp-none"><span id="slideCurrent{{type}}">1 </span> of <span id="slideTotal{{type}}">{{TOTAL_NUM}}</span> </div>
 <div id='arrowKeys_INTERESTRECEIVED' class="fr opa50"> <a id="prv-{{list_id}}" class="sprite2 myjs-ic7 disp_ib"></a> <a id="nxt-{{list_id}}" class="sprite2 myjs-ic8 disp_ib myjs-m3"></a> </div>
@@ -38,7 +38,7 @@
 <div class="clr"></div>
 <div class="pt25">
 <div class="pos-rel clearfix fontlig">
-    <div id="seeAll_FILTEREDINTEREST_List" class="pos-abs wid100 txtc myjs-pos8"><a href="/inbox/12/1" class="color12">See All <span id='seeAllFilteredCount'>{{SEE_ALL_TOTAL}}</span></a></div>
+    <div id="seeAll_FILTEREDINTEREST_List" class="pos-abs wid100 txtc myjs-pos8"><a href="/inbox/12/1" class="color12">View All <span id='seeAllFilteredCount'>{{SEE_ALL_TOTAL}}</span></a></div>
 <div class="fr myjs-wid8 clearfix opa50">
 <div id='panelCounter_FILTEREDINTEREST' class="fl color12 pt5 disp-none"><span id="slideCurrent{{type}}">1 </span> of <span id="slideTotal{{type}}">{{TOTAL_NUM}}</span> </div>
 <div id='arrowKeys_FILTEREDINTEREST' class="fr opa50"> <a id="prv-{{list_id}}" class="sprite2 myjs-ic7 disp_ib"></a> <a id="nxt-{{list_id}}" class="sprite2 myjs-ic8 disp_ib myjs-m3"></a> </div>
@@ -79,7 +79,7 @@
 <!--start:div-->
 <div id={{p_id}} class="pt40 clearfix fontlig">
 <div class="fl f22 color11">{{HEADING}}  <span class="fontreg colr5">{{COUNT}}</span></div>
-<div id="seeAll{{div_id}}" class="fr pt5 f16"><a href={{LISTING_LINK}} class="color12 icons myjs-ic1 pr15">See All</a> </div>
+<div id="seeAll{{div_id}}" class="fr pt5 f16"><a href={{LISTING_LINK}} onclick="{{SEE_ALL_GA_TRACKING}}" class="color12 icons myjs-ic11 pr15">View All</a> </div>
 </div>
 <!--end:div-->
 <!--start:slider-->
@@ -127,7 +127,7 @@
 		</div>
 		<div class="pt25">
 			<div class="pos-rel clearfix fontlig">
-				<div id=seeAll{{list_id}} class="pos-abs wid100 txtc myjs-pos8"><a href={{LISTING_LINK}} class="color12">See All {{SEE_ALL_TOTAL}}</a></div>
+				<div id=seeAll{{list_id}} class="pos-abs wid100 txtc myjs-pos8"><a href={{LISTING_LINK}} class="color12">View All {{SEE_ALL_TOTAL}}</a></div>
 				<div id="panelCounter_message" class="fr myjs-wid8 clearfix opa50">
 					<div class="fl color12 pt5"><span id="slideCurrent{{list_id}}">1 </span> of <span id="slideTotal{{list_id}}">{{TOTAL_NUM}}</span> </div>
 					<div class="fr"> <a id="prv-{{list_id}}" class="sprite2 myjs-ic7 disp_ib"></a> <a id="nxt-{{list_id}}" class="sprite2 myjs-ic8 disp_ib myjs-m3"></a> </div>

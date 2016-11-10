@@ -235,10 +235,6 @@ function getAndroidVersion(ua) {
    OperaMiniFlag=1;
    return true;
  }
- else if(mobile==-1)
- {
-   return false;
- }
  else if(match==null)
  {
    return true;

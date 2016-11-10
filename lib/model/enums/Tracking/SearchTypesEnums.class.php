@@ -136,5 +136,8 @@ class SearchTypesEnums
 	const AndroidMatchOfDay = "AMD";
 	const IOSMatchOfDay = "IMD";
 	const MatchOfDay = "MD";
+        const LAST_SEARCH_RESULTS = "LSR";
+        const JSPC_LAST_SEARCH = "LSPC";
+        const LAST_SEARCH_DESIRED_PARTNER_MATCHES = "DPMD";
 }
 ?>

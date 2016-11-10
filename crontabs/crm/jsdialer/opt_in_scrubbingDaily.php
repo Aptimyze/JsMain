@@ -15,32 +15,42 @@ $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$
 
 $dialerDncScrubingObj =new DialerDncScrubing($db_js, $db_js_111, $db_dialer);
 
-// Failed Payment,Upsell campaign OPT-IN Check
-$campaignArr =array('FP_JS','UPSELL_JS');
+// campaign OPT-IN Check
+$campaignArr =array('FP_JS','UPSELL_JS','JS_RENEWAL','OB_RENEWAL_MAH','MAH_JSNEW','JS_NCRNEW');
+$eligibleCampaignArr =array('JS_RENEWAL','OB_RENEWAL_MAH','MAH_JSNEW','JS_NCRNEW');
+$renewalCampaignArr =array('JS_RENEWAL','OB_RENEWAL_MAH');
+
 foreach($campaignArr as $key=>$campaignName)
 {
+	$dateTime ='';
 	if($campaignName=='FP_JS')
 		$dateTime =date("Y-m-d H:i:s",time()-26*60*60);
 	elseif($campaignName=='UPSELL_JS')
 		$dateTime =date("Y-m-d H:i:s",time()-48*60*60);
 
-	$msg    	="Start time:".@date('H:i:s');
 	$dnc_array      =$dialerDncScrubingObj->compute_dnc_array($campaignName, $dateTime);
 	$opt_in_array   =$dialerDncScrubingObj->compute_opt_in_array($dnc_array);
 
+	if(in_array("$campaignName", $eligibleCampaignArr)){
+		if(in_array("$campaignName",$renewalCampaignArr))
+			$renewal =1;
+		else
+			$renewal ='';
+		$opt_in_array1	=$dialerDncScrubingObj->compute_eligible_in_array($opt_in_array, $renewal);
+		unset($opt_in_array);
+		$opt_in_array =$opt_in_array1;
+	}
+	// common computation
 	for($i=0;$i<count($opt_in_array);$i++){
 	        $profileid =$opt_in_array[$i];
 	        $dialerDncScrubingObj->start_opt_in_profiles($campaignName,$profileid,$dateTime);
 	}
 	unset($dnc_array);
 	unset($opt_in_array);
-	$sub="Dialer updates for $campaignName-Campaign opt-in done";
-	$msg.="End time:".@date('H:i:s');
-	mail($to,$sub,$msg,$from);
+	$msg[] =$campaignName;
 }
 
 // OB_Sales OPT-IN Check
-$msg    	="Start time:".@date('H:i:s');
 $campaignName 	='OB_Sales';
 $leadId 	=date("Y-m-d",time()-24*60*60);  
 $dnc_phoneArray =$dialerDncScrubingObj->compute_dnc_array_forSalesCampaign($campaignName, $leadId);
@@ -63,8 +73,10 @@ for($i=0;$i<count($opt_in_array);$i++){
 unset($opt_in_array);
 unset($profileidArr);
 unset($phoneArr);
-$sub='Dialer updates for OB_Sales-Campaign opt-in done.';
-$msg.="End time:".@date('H:i:s');
+$msg[]=$campaignName;
+
+$sub='Dialer updates for OPT-IN done';
+$msg =implode(" | ",$msg);
 mail($to,$sub,$msg,$from);
 
 ?>

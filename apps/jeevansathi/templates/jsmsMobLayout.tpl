@@ -38,10 +38,14 @@
     ~include_title`
     ~include_canurl`
     ~use helper = SfMinify`
-    ~minify_get_mobile('js','','1')`
-     ~minify_get_mobile('css','','1')`
+    ~minify_get_mobile('css','','1')`
     ~minify_include_stylesheets()`
+  ~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
+  ~minify_get_mobile('js','','1')`
     ~minify_include_javascripts()`
+
+  ~/if`
+
     <!--link rel="shortcut icon" href="/favicon.ico" /-->
      	<script type="text/javascript">
 		var t_headend = new Date().getTime();
@@ -119,10 +123,13 @@ var domainCode={};
             ~JsTrackingHelper::setJsLoadFlag(1)`
         ~/if`
 	</div>
- ~minify_include_javascripts('bottom')`
+  <!--Palash-->
+  ~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
+  ~minify_include_javascripts('bottom')`
+  ~/if`
   <div class="urldiv dn" id="urldiv" ></div>  
   <div class="posfix dn" style="top:45%; left:0;z-index:1000" id="2dView">
-        	<img src="~sfConfig::get('app_img_url')`/images/jsms/commonImg/2d-slider-left.png" border="0">
+        	<img border="0">
         
         </div>
   ~if $sf_request->getParameter('module') eq 'membership' || $sf_request->getParameter('module') eq 'help'`
@@ -159,4 +166,8 @@ window._fbq.push(['track', 'PixelInitialized', {}]);
 </script>
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
 <!-- Pixel Fire Code ends here-->
+~if $sf_request->getAttribute('mobLogoutPage') eq 'Y'` 
+    ~minify_get_mobile('js','','1')`
+    ~minify_include_javascripts()`
+~/if`
 </html>

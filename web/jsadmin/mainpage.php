@@ -102,6 +102,9 @@ if (isset($data)) //successful login
         if (in_array('LTFVnd', $priv) || in_array('LTFHD', $priv) || in_array('P', $priv) || in_array('MG', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/register_lead.php?name=$username&cid=$cid\">Register a Lead</a>";
         }
+        if (in_array('CRMTEC', $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/commoninterface/selectGateway\">Select Gateway Redirection</a>";
+        }
 
     } else {
         //    if(in_array('MA',$priv)||in_array("MC",$priv)||in_array("CSEXEC",$priv)||in_array("CSSUP",$priv)||in_array("LTFSUP",$priv)||in_array("LTFHD",$priv)||in_array("SLSUP",$priv)||in_array("SLHD",$priv)||in_array("SLMGR",$priv)||in_array("SLSMGR",$priv)||in_array("SLHDO",$priv)||in_array("AUTLOG",$priv) || in_array("SupFld",$priv) || in_array("MgrFld",$priv) || in_array("PA",$priv))
@@ -772,6 +775,9 @@ if (isset($data)) //successful login
 
         if (in_array('CSEXEC', $priv) || in_array('CSSUP', $priv) || in_array("P", $priv) || in_array("MG", $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/feedback/reportAbuse\">Fetch Report Abuse Data</a>";
+        }
+        if (in_array('CSSUP', $priv) || in_array("P", $priv) || in_array("MG", $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/profileVerification/InappropriateUsers\">Fetch Inappropriate Users Data</a>";
         }
 
         if (in_array('SLHDO', $priv) || in_array('P', $priv) || in_array('SLHD', $priv) || in_array('MG', $priv)) {

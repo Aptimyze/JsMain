@@ -995,7 +995,7 @@ class ApiMembershipDetailsV2Action extends sfAction
 		$output = array('title'=>'Receipt',
 			'message'=>$username.', you are now an '.$main_serv_name.' member',
 			'order_content'=>$order_content,
-			'proceed_text'=>'Browse My Matches');
+			'proceed_text'=>'Browse Desired Partner Matches');
 
 		return $output;
 	}
@@ -1010,14 +1010,14 @@ class ApiMembershipDetailsV2Action extends sfAction
 			'failure_message'=>$message,
 			'try_again'=>'Try Again',
 			'toll_free'=>array('label'=>'Call 1800-419-6299','value'=>'18004196299','action'=>'CALL'),
-			'proceed_text'=>'Skip To My Matches');
+			'proceed_text'=>'Skip To Desired Partner Matches');
 		}
 		else{
 		$output = array('title'=>$title,
                         'failure_message'=>$message,
                         'try_again'=>'Try Again',
                         'toll_free'=>array('label'=>'Call +911204393500','value'=>'+911204393500','action'=>'CALL'),
-                        'proceed_text'=>'Skip To My Matches');
+                        'proceed_text'=>'Skip To Desired Partner Matches');
 		}
 		unset($jprofileObj);
 		return $output;

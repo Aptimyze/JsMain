@@ -8,7 +8,7 @@
 class IgnoredProfiles
 {
         protected $dbname = "";
-        private $measurePerformance = true;
+        private $measurePerformance = false;
         /**
          * Constructor to set DB
          * @param type $dbname

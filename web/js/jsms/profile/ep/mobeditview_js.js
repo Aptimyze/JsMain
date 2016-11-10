@@ -100,10 +100,7 @@ var mobEditPage=(function(){
                             current="Desired Partner";
                         if(key=="Details")
                         {
-                            if(value["basic"]["OnClick"][2]["label_val"]==="Male")
-                                current="Groom's Details";
-                            else
-                                current="Bride's Details";
+                                current="Basic Info";
                         }
 			//sliderDiv=sliderDiv.replace('sw', key+'_info_slider');
 			sliderDiv=sliderDiv.replace(/subHeadTab/g, key+'SubHead');
@@ -193,7 +190,20 @@ var mobEditPage=(function(){
 		$("#privacyOption").hide();
 		$("#topbar").hide();
 		$("#AlbumSubHead").hide();
-});
+}
+);
+
+	if(typeof(fromCALphoto)!='undefined' && fromCALphoto == '1')
+	{ 
+	    var newUrl=document.location.href.replace('fromCALphoto','');
+	    history.pushState('', '', newUrl);
+		$( "#"+key+"EditSection" ).height(privacyH);
+		$("#privacyoptionshow").show();
+		$("#privacyOption").hide();
+		$("#topbar").hide();
+		$("#AlbumSubHead").hide();
+	}
+
 	$("#privacyoptionclose").click(function()
        	{
 				$( "#"+key+"EditSection" ).height(editHgt);
@@ -209,6 +219,8 @@ var mobEditPage=(function(){
 				if(value!=null)
 				$.each(value, function(k ,v)
 				{
+					if(v.outerSectionKey!="NameoftheProfileCreator")
+					{
 					
 					sliderDiv=sliderDiv.replace('EditFieldName', v.outerSectionKey+'_name');
 					sliderDiv=sliderDiv.replace('EditFieldLabelValue', v.outerSectionKey+'_value');				
@@ -336,6 +348,7 @@ var mobEditPage=(function(){
 					
 					i=2;
 					sliderDiv=originalDiv;
+  				  }
 				});
 				
 				if(st==1)
@@ -359,6 +372,13 @@ var mobEditPage=(function(){
       $("#KundliEditSection").after(horoscopeButton);
     
       $('.js-createHoroscope').on('click',onHoroscopeButtonClick);
+      if(typeof(fromCALHoro)!='undefined' && fromCALHoro == '1')
+      {
+      	var newUrl=document.location.href.replace('fromCALHoro','');
+	    history.pushState('', '', newUrl);
+
+      	onHoroscopeButtonClick();
+        }
     }
     
 	};
@@ -395,6 +415,7 @@ function formatJsonOutput(result)
         delete(result.cache_flag);
         delete(result.cache_interval);
         delete(result.resetCache);
+        delete(result.flagForAppRatingControl);
 	return result;
 }
 

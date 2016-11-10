@@ -54,6 +54,8 @@ class PredefinedSearchFactory
                                 break;
 			case 'MatchOfDay':
 				$object = new MatchOfDay($loggedInProfileObj);
+                        case 'lastSearchResults'  :
+                                $object = new lastSearchResults($loggedInProfileObj);
                                 break;
                 }
                 return $object;

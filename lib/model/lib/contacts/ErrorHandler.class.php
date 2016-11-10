@@ -51,6 +51,7 @@ class ErrorHandler
 	const EOI_ACTION_TYPE="ContactHandler::ACCEPT,ContactHandler::CANCEL,ContactHandler::DECLINE,ContactHandler::CANCELINITIATED,ContactHandler::SEND_REMINDER,ContactHandler::INITIATED,ContactHandler::COMMUNICATION";
 	const EOI_CONTACT_LIMIT = 'EOI_CONTACT_LIMIT';
 	const PROFILE_HIDDEN ='PROFILE_HIDDEN';
+	const PROFILE_VIEWED_HIDDEN ='PROFILE_VIEWED_HIDDEN';
 	const PROFILE_IGNORE = "PROFILE_IGNORE";
 	
 	const USERNAME='USERNAME';
@@ -200,11 +201,20 @@ class ErrorHandler
 		$error = $this->checkIgnoreProfile();
 		if($error)
 		{	
-			
+
 			$this->setErrorMessage($error);
 			$this->setErrorType(ErrorHandler::PROFILE_IGNORE,ErrorHandler::ERROR_FOUND);
 			return false;
 		}
+
+		$error = $this->checkViewedHiddenProfile();
+		if($error)
+		{
+			$this->setErrorMessage($error);
+			$this->setErrorType(ErrorHandler::PROFILE_VIEWED_HIDDEN,ErrorHandler::ERROR_FOUND);
+			return false;
+		}
+
 		//0. Privilege error	
 		$error = $this->checkPrivilegeError();
 		if($error)
@@ -302,36 +312,35 @@ class ErrorHandler
 		
 		if($this->checkProfileFiltered())
 		{
-			if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
-			{
-				if($this->checkPaid())
-				{ 	
-					$name = $this->contactHandlerObj->getViewed()->getUSERNAME();
-						if($this->interestNotSent())
-						{
-							$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
-							$error = Messages::PAID_FILTERED_INTEREST_NOT_SENT;
-							$error = str_replace("{{UNAME}}",$name, $error);
-							$this->setErrorMessage($error);
-							return false;
-						}
-						else
-						{ 
-							$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_SENT,ErrorHandler::ERROR_FOUND);
-							$error = Messages::PAID_FILTERED_INTEREST_SENT;
-							$error = str_replace("{{UNAME}}",$name, $error);
-							$this->setErrorMessage($error);
-							return false;
-						}
+				$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
+				if($this->contactHandlerObj->getEngineType()==ContactHandler::INFO)
+				{					
+					if($this->checkPaid())
+					{	
+							$name = $this->contactHandlerObj->getViewed()->getUSERNAME();
+							
+							if($this->interestNotSent())
+							{
+								$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_NOT_SENT,ErrorHandler::ERROR_FOUND);
+								$error = Messages::PAID_FILTERED_INTEREST_NOT_SENT;
+								$error = str_replace("{{UNAME}}",$name, $error);
+								$this->setErrorMessage($error);
+								return false;
+							}
+							else
+							{ 
+								$this->setErrorType(ErrorHandler::PAID_FILTERED_INTEREST_SENT,ErrorHandler::ERROR_FOUND);
+								$error = Messages::PAID_FILTERED_INTEREST_SENT;
+								$error = str_replace("{{UNAME}}",$name, $error);
+								$this->setErrorMessage($error);
+								return false;
+							}
 
-				}
-
-			$this->setErrorType(ErrorHandler::FILTERED,ErrorHandler::ERROR_FOUND);
-			$error = Messages::FILTERED;
-			$this->setErrorMessage($error);
-			return false;
-			}			
-			
+					}
+					$error = Messages::FILTERED;
+					$this->setErrorMessage($error);
+					return false;
+				}			
 		}
 		
 		//7. Reminder limit		
@@ -469,6 +478,23 @@ class ErrorHandler
 		return $error;
 	}
 	
+	/**
+	 * Check if the viewed profile is hidden and set error message.
+	 * @return string
+	 * @uses $contactHandlerObj
+	 * @uses $errorTypeArr
+	 */
+	function checkViewedHiddenProfile()
+	{
+		$error = '';
+		if($this->contactHandlerObj->getViewed()->getActivated() == 'H')
+		{
+			$POGID = $this->contactHandlerObj->getViewed()->getUSERNAME();
+			$error = Messages::getMessage(Messages::HIDDEN_ERROR,array('POGID'=> $POGID));
+		}
+		return $error;
+	}
+
 	/**
 	 * Check if the profile is incomplete and set the error message
 	 * @return string 
