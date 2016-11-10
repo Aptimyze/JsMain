@@ -16,40 +16,75 @@ class jsadmin_PremiumUsers extends TABLE
             $prep->bindValue(":TIME", $time, PDO::PARAM_INT);
             $prep->execute();
             return $prep->rowCount();
+		}
+		catch(Exception $e)
+		{
+			throw new jsException($e);
+		}
+	}
+	public function RemoveUser($did)
+	{
+		try
+                {
+			$sql="delete from jsadmin.PremiumUsers where DID=:DID";
+			$prep = $this->db->prepare($sql);
+                        $prep->bindValue(":DID",$did,PDO::PARAM_INT);
+			$prep->execute();
+			return $prep->rowCount();
+                }
+                catch(Exception $e)
+                {
+                        throw new jsException($e);
+                }
+	}
+	public function isDummy($did)
+	{
+		try
+                {
+			$sql="select DID from jsadmin.PremiumUsers where DID=:DID";
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(":DID",$did,PDO::PARAM_INT);
+			$prep->execute();
+			 if($result = $prep->fetch(PDO::FETCH_ASSOC))
+				return $result;
+		}
+		catch(Exception $e)
+                {
+                        throw new jsException($e);
+                }
+	}
+	
+	public function countDummy($detailArr)
+	{
+		try
+		{
+			$sql = "SELECT COUNT(*) as CNT from jsadmin.PremiumUsers where DID IN (";
+			$inCondition = "";
+			foreach($detailArr as $k =>$varr)
+			{
+				$inCondition .=":DID".$k.", "; 
+			}
+			$inCondition = rtrim($inCondition,", ").")";
+			$sql = $sql.$inCondition;
+			$prep = $this->db->prepare($sql);
+			foreach($detailArr as $k =>$varr)
+			{
+				$prep->bindValue(":DID".$k,$varr["PROFILEID"],PDO::PARAM_INT);
+			}
+			$prep->execute();
 
-        } catch (Exception $e) {
-            throw new jsException($e);
-        }
-    }
-    public function RemoveUser($did)
-    {
-        try
-        {
-            $sql  = "delete from jsadmin.PremiumUsers where DID=:DID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":DID", $did, PDO::PARAM_INT);
-            $prep->execute();
-            return $prep->rowCount();
-        } catch (Exception $e) {
-            throw new jsException($e);
-        }
-    }
-    public function isDummy($did)
-    {
-        try
-        {
-            $sql  = "select DID from jsadmin.PremiumUsers where DID=:DID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":DID", $did, PDO::PARAM_INT);
-            $prep->execute();
-            if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                return $result;
-            }
+			if($result = $prep->fetch(PDO::FETCH_ASSOC))
+			{
+				$count = $result["CNT"];
+				return $count;
+			}
+		}
+		catch(Exception $e)
+		{
+			throw new jsException($e);
+		}
+	}
 
-        } catch (Exception $e) {
-            throw new jsException($e);
-        }
-    }
     public function filterDummyProfiles($didArr)
     {
         if (empty($didArr) || !is_array($didArr)) {

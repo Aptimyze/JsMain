@@ -289,14 +289,16 @@ public function fetchProfiles($processObj)
 		if($level==1||$level==2||$level==4||$level==5){
 			$cities=array();
 			$cities=$processObj->getProfileCities();
-			$lowerScoreLimit=31;
+			$lowerScoreLimit=70;
 		}
 		if($level==2||$level==6){
 			//$locationObj=new incentive_LOCATION('newjs_slave');	
 			//$citySelArr=$locationObj->fetchSpecialCities();
 			$citySelArr =$processObj->getSpecialCityList();
-			if(array_key_exists($city,$citySelArr))
-				$lowerScoreLimit=1;
+			if(array_key_exists($city,$citySelArr)){
+				//$lowerScoreLimit=1;
+				$lowerScoreLimit=70;	
+			}
 			if($level==6){
 				$cityNewArr=$processObj->getSpecialCities();
 				$state=$citySelArr[$city];
@@ -318,7 +320,7 @@ public function fetchProfiles($processObj)
 				$cityNewArr[$state]=$cities_str;
 				$processObj->setSpecialCities($cityNewArr);
 			}
-			$lowerScoreLimit=31;
+			$lowerScoreLimit=70;
 		}
                 if($level==-5){
 			$preAllocationTempPoolObj =new incentive_PRE_ALLOCATION_TEMP_POOL();
@@ -663,7 +665,7 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 		$screenedTimeHandled 	=$processObj->getStartDate();
 		$subMethod		=$processObj->getSubMethod();	  
 		$pincodeList		=$this->getPincodeList();
-		$profileData 		=$this->applyGenericFilters($profiles, $method);
+		$profileData 		=$this->applyGenericFilters($profiles, $method,$subMethod);
 		unset($profiles);
 		foreach($profileData as $pid=>$data)
 			$profiles[] =$pid;		
@@ -695,6 +697,8 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 
 			// first time screening check
 			if($subMethod=='FIELD_SALES'){
+				$screenedTimeHandled =date('Y-m-d H:i:s');
+				$screenedTimeHandled =date('Y-m-d H:i:s', strtotime('-24 hours',strtotime($screenedTimeHandled)));
 				$lastScreenedTime=$screeningObj->lastScreenedTime($profileid,$screenedTimeHandled);	
 				if(JSstrToTime($entryDt)>=JSstrToTime($lastScreenedTime)){}
 				else
@@ -1944,7 +1948,7 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
         if($method=='FIELD_SALES' || $method=='PRE_ALLOCATION'){
                 if(count($profileArr)>0){
 			if($method=='FIELD_SALES')
-				$preAllocationObj =new incentive_PROFILE_ALLOCATION_TECH('newjs_slave');
+				$preAllocationObj =new incentive_PROFILE_ALLOCATION_TECH('newjs_masterRep');
 			else
                         	$preAllocationObj =new incentive_PROFILE_ALLOCATION_TECH();
                         $profileArrNew =$preAllocationObj->getAllotedProfiles($profileArr);
@@ -1957,7 +1961,7 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
         // Invalid phone check
         if(in_array($method, $methodForJprofileFilter) && count($profileArr)>0){
 		$jprofileObj =new JPROFILE('newjs_masterRep');
-		$fields	='PROFILEID,ISD,PHONE_FLAG,ACTIVATED,GENDER,AGE,ENTRY_DT,MTONGUE,SUBSCRIPTION,CITY_RES,PINCODE,MOB_STATUS,LANDL_STATUS';
+		$fields	='PROFILEID,ISD,PHONE_FLAG,ACTIVATED,GENDER,AGE,ENTRY_DT,MTONGUE,SUBSCRIPTION,CITY_RES,PINCODE,MOB_STATUS,LANDL_STATUS,INCOME';
 		$profileStr =implode(",", $profileArr);	
 		$valueArray['PROFILEID'] =$profileStr;
                 $resDetails=$jprofileObj->getArray($valueArray,"","",$fields);
@@ -1966,8 +1970,12 @@ public function applyGenericFilters($profileArr, $method='',$subMethod='')
 			$profileid =$data['PROFILEID'];
 			$phoneFlag =$data['PHONE_FLAG'];
 			$flag =1;
-	                if($phoneFlag=='I' || $data['ACTIVATED']!='Y' || ($data['GENDER']=='M' && $data['AGE'] <24)){
-				if($subMethod!='WEBMASTER_LEADS'){
+            if($subMethod=='FIELD_SALES' && (($data['GENDER']=='M' && ($data['AGE'] <=24 || $data['INCOME'] == 15) ) || ($data['GENDER']=='F' && $data['AGE'] <=21))){
+                $profileArrNew[] =$profileid;
+                $flag=0;
+            }
+            if($flag == 1 && ($phoneFlag=='I' || $data['ACTIVATED']!='Y' || ($data['GENDER']=='M' && $data['AGE'] <24))){
+                if($subMethod!='WEBMASTER_LEADS'){
 					$profileArrNew[] =$profileid;
 					$flag=0;
 				}

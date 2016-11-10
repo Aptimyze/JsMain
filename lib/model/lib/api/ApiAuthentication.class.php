@@ -211,7 +211,7 @@ Abstract class ApiAuthentication
 			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_master");
 		$loggedInProfileObj->getDetail($loginData[PROFILEID],"","*");
 		//If any changes Found then logout user
-		if($loggedInProfileObj->getGENDER()!=$loginData[GENDER] || $loggedInProfileObj->getACTIVATED()=="D"|| $loggedInProfileObj->getDTOFBIRTH()!=$loginData[DTOFBIRTH] ||$loggedInProfileObj->getINCOMPLETE()!=$loginData[INCOMPLETE])
+		if($loggedInProfileObj->getACTIVATED()=="D" || $loggedInProfileObj->getACTIVATED()=="")
 		{
 			ValidationHandler::getValidationHandler("","mismatch in important fields of Profile in mobile authenication");
 			return null;
@@ -266,6 +266,8 @@ Abstract class ApiAuthentication
 			$loginData["EMAIL"]=$loggedInProfileObj->getEMAIL();
 			$loginData["PHONE_MOB"]=$loggedInProfileObj->getPHONE_MOB();
             $loginData["ACTIVATED"]=$loggedInProfileObj->getACTIVATED();
+            $loginData["INCOMPLETE"]=$loggedInProfileObj->getINCOMPLETE();
+            $loginData["DTOFBIRTH"]=$loggedInProfileObj->getDTOFBIRTH();
 			return $loginData;
 		}
                 

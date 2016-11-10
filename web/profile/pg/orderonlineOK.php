@@ -35,9 +35,9 @@ $dup = false;
 if ($Checksum == "true" && $AuthDesc == "Y") {
     $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
+    // if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
+    if ($ret) $membershipObj->startServiceOrder($Order_Id);
 
-    if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
-    
     list($part1, $part2) = explode("-", $Order_Id);
     $sql = "SELECT * from billing.ORDERS where ID = '$part2' and ORDERID = '$part1'";
     $res = mysql_query_decide($sql);

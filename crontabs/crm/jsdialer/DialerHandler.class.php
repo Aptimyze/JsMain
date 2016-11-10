@@ -1,4 +1,5 @@
 <?php
+include_once('DialerLog.class.php');
 class DialerHandler
 {
         public function __construct($db_js, $db_js_111, $db_dialer,$db_master=''){
@@ -9,7 +10,7 @@ class DialerHandler
         }
         public function getCampaignEligibilityStatus($campaign_name,$eligibleType='')
         {
-		$entryDt =date("Y-m-d",time()-9.5*60*60);
+		$entryDt =date("Y-m-d",time()-10.5*60*60);
 		$dataArr =array();
                 $sql = "SELECT * FROM js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS WHERE CAMPAIGN='$campaign_name' AND ENTRY_DT='$entryDt'";
 		if($eligibleType)
@@ -27,6 +28,22 @@ class DialerHandler
         {
                 $sql = "REPLACE INTO js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS(`CAMPAIGN`,`ELIGIBLE_TYPE`,`STEP_COMPLETED`,`ENTRY_DT`) VALUES('$campaign_name','$eligibleType','$i',now())";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js_111));
+        }
+        public function getInDialerEligibleProfiles($x,$campaign_name='')
+        {
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE!='N'";
+                $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+                while($row = mysql_fetch_array($res))
+                        $eligible_array[] = $row["PROFILEID"];
+                return $eligible_array;
+        }
+        public function getInDialerInEligibleProfiles($x,$campaign_name='')
+        {
+                $sql = "SELECT PROFILEID FROM incentive.IN_DIALER WHERE PROFILEID%10=$x AND ELIGIBLE='N'";
+                $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+                while($row = mysql_fetch_array($res))
+                        $ignore_array[] = $row["PROFILEID"];
+                return $ignore_array;
         }
 	public function getRenewalEligibleProfiles($x,$campaign_name='')
 	{
@@ -58,27 +75,40 @@ class DialerHandler
 		}
 		return $vd_profiles;
 	}
+	public function getVDdiscount($profiles_array)
+	{
+	        $vd_profiles = array();
+	        $profileid_str = implode(",",$profiles_array);
+	        if($profileid_str){
+	                $sql_vd="select PROFILEID,DISCOUNT from billing.VARIABLE_DISCOUNT WHERE SDATE<=CURDATE() AND EDATE>=CURDATE() AND PROFILEID IN ($profileid_str)";
+	                $res_vd = mysql_query($sql_vd,$this->db_js) or die($sql_vd.mysql_error($this->db_js));
+	                while($row_vd = mysql_fetch_array($res_vd)){
+	                        $pid = $row_vd["PROFILEID"];
+	                        $vd_profiles[$pid] = $row_vd["DISCOUNT"];
+	                }
+	        }
+	        return $vd_profiles;
+	}
 	public function getLoginWithin15Days($profiles_array)
 	{
-		$profileid_str = @implode(",",$profiles_array);
-		if($profileid_str){
-			$sql = "SELECT PROFILEID,LAST_LOGIN_DT FROM newjs.JPROFILE WHERE PROFILEID IN ($profileid_str)";
-			$res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
-			while($row = mysql_fetch_array($res))
-			{
-				$pid = $row["PROFILEID"];
-				if($row["LAST_LOGIN_DT"]>=@date('Y-m-d',time()-14*86400))
-					$loginWithin15Days[$pid] = 1;
-				else
-					$loginWithin15Days[$pid] = 0;
-			}
-		}
-		else
-			$loginWithin15Days = array();
-		return $loginWithin15Days;
+		$loginWithin15Days = array();
+	        $profileid_str = implode(",",$profiles_array);
+        	if($profileid_str){
+	                $sql = "SELECT PROFILEID,LAST_LOGIN_DT FROM newjs.JPROFILE WHERE PROFILEID IN ($profileid_str)";
+	                $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));
+	                while($row = mysql_fetch_array($res)){
+	                        $pid = $row["PROFILEID"];
+	                        if(strtotime($row["LAST_LOGIN_DT"])>=strtotime(date('Y-m-d',time()-15*86400)))
+	                                $loginWithin15Days[$pid] = 1;
+	                        else
+	                                $loginWithin15Days[$pid] = 0;
+	                }
+	        }
+	        return $loginWithin15Days;
 	}
 	public function getAllotedProfiles($profiles_array)
 	{
+		$alloted_array = array();
 		$profileid_str = @implode(",",$profiles_array);
 		if($profileid_str){
 			$sql = "SELECT PROFILEID,ALLOTED_TO from incentive.MAIN_ADMIN WHERE PROFILEID IN ($profileid_str)";
@@ -88,12 +118,11 @@ class DialerHandler
 				$alloted_array[$pid] = $row["ALLOTED_TO"];
 			}
 		}
-		else
-			$alloted_array = array();
 		return $alloted_array;
 	}
 	public function getScoreArray($profiles_array)
 	{
+		$score_array = array();
 		$profileid_str = @implode(",",$profiles_array);
 		if($profileid_str){
 			$sql = "SELECT PROFILEID,ANALYTIC_SCORE from incentive.MAIN_ADMIN_POOL WHERE PROFILEID IN ($profileid_str)";
@@ -103,8 +132,6 @@ class DialerHandler
 				$score_array[$pid] = $row["ANALYTIC_SCORE"];
 			}
 		}
-		else    
-			$score_array = array();
 		return $score_array;
 	}
         public function getPaidProfilesArray($profiles_array)
@@ -124,29 +151,44 @@ class DialerHandler
         }
 	public function stop_non_eligible_profiles($campaign_name,$x,$ignore_array,$discount_profiles)
 	{
-		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,DISCOUNT_PERCENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID%10=$x";
-		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logerror($squery1,$this->db_dialer);
+		if($campaign_name=='JS_RENEWAL' || $campaign_name=='OB_JS_RENEWAL'){
+			$renewal=true;
+			$discountColumn ='DISCOUNT_PERCENT';
+		}
+		else{
+			$renewal=false;
+			$discountColumn ='VD_PERCENT';
+		}
+		$squery1 = "SELECT easycode,PROFILEID,Dial_Status,$discountColumn FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID%10=$x";
+		$sresult1 = mssql_query($squery1,$this->db_dialer) or $this->logError($squery1,$campaign_name,$this->db_dialer,1);
 		while($srow1 = mssql_fetch_array($sresult1))
 		{
-			$ecode = $srow1["easycode"];
-			$proid = $srow1["PROFILEID"];
-			$vd_discount_dialer = $srow1["DISCOUNT_PERCENT"];
-			$updateStr='';
-			$vdDiscount =0;
+			$ecode 			= $srow1["easycode"];
+			$proid 			= $srow1["PROFILEID"];
+			$vd_discount_dialer 	= $srow1[$discountColumn];
+			$dialStatus		= $srow1["Dial_Status"];
+			$updateStr		='';
+			$vdDiscount 		=0;
 			$updateArr =array();
-			if(in_array($proid,$ignore_array)){
-				if($srow1["Dial_Status"]!=9)
-					$updateArr[] ="Dial_Status=0";
 
+			if(in_array($proid,$ignore_array)){
+				if($renewal){
+					if($dialStatus!='0' && $dialStatus!='9')
+						$updateArr[] ="Dial_Status=0";
+				}
+				else{
+					if($dialStatus!='0' && $dialStatus!='9' && $dialStatus!='3')
+						$updateArr[] ="Dial_Status=0";
+				}
 				if(array_key_exists($proid,$discount_profiles))
 					$vdDiscount = $discount_profiles[$proid];
 				if($vdDiscount != $vd_discount_dialer)
-					$updateArr[] ="DISCOUNT_PERCENT=$vdDiscount";
+					$updateArr[] =$discountColumn.'='.$vdDiscount;
 				
 				if(count($updateArr)>0){
 					$updateStr =implode(",",$updateArr);
 					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET $updateStr WHERE easycode='$ecode'";
-					mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
+					mssql_query($query1,$this->db_dialer) or $this->logError($query1,$campaign_name,$this->db_dialer,1);
 
 					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$updateStr',now(),'STOP')";
 					mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
@@ -155,10 +197,18 @@ class DialerHandler
 		}
 	}
 
-	public function update_data_of_eligible_profiles($campaign_name,$x,$eligible_array,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles)
+	public function update_data_of_eligible_profiles($campaign_name,$x,$eligible_array,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles='',$login15DaysArr='')
 	{
-		$squery2 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT,old_priority,DISCOUNT_PERCENT,SCORE,Dial_Status,EXPIRY_DT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID%10=$x";
-		$sresult2 = mssql_query($squery2,$this->db_dialer) or $this->logerror($squery2,$this->db_dialer);
+                if($campaign_name=='JS_RENEWAL' || $campaign_name=='OB_JS_RENEWAL'){
+			$renewal=true;
+                        $discountColumn ='DISCOUNT_PERCENT,EXPIRY_DT';
+		}
+                else{
+			$renewal=false;
+                        $discountColumn ='VD_PERCENT';
+		}
+		$squery2 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT,old_priority,$discountColumn,SCORE,Dial_Status FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE status=0 AND PROFILEID%10=$x";
+		$sresult2 = mssql_query($squery2,$this->db_dialer) or $this->logError($squery2,$campaign_name,$this->db_dialer,1);
 		while($srow1 = mssql_fetch_array($sresult2))
 		{
 			$dialer_data["initialPriority"]	=$srow1["old_priority"];
@@ -166,46 +216,54 @@ class DialerHandler
 			$proid 				= $srow1["PROFILEID"];
 			$dialer_data["profileid"] 	= $srow1["PROFILEID"];
 			$dialer_data["allocated"] 	= $srow1["AGENT"];
-			$dialer_data["discount"] 	= $srow1["DISCOUNT_PERCENT"];
+			$dialer_data["discount"] 	= $srow1[$discountColumn];
 			$dialer_data["analytic_score"] 	= $srow1["SCORE"];
 			$dialer_data["dial_status"] 	= $srow1["Dial_Status"];
-			$dialer_data['expiryDt'] 	= $srow1["EXPIRY_DT"];	
+			if($renewal)
+				$dialer_data['expiryDt']= $srow1["EXPIRY_DT"];	
 
 			if(in_array($proid,$eligible_array)){
-				$jp_condition_str	=$this->data_comparision($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles);
+				if($renewal==1)
+					$jp_condition_str =$this->data_comparision_renewal($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles);
+				else
+					$jp_condition_str =$this->data_comparision_others($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$login15DaysArr);
 				$jp_condition_arr	=explode("*",$jp_condition_str);
 				$jp_condition_arr0 	=$jp_condition_arr[0];
 				$jp_condition_arr1 	=$jp_condition_arr[1];
+
 				if($jp_condition_arr0!='ignore'){
 					$query1 = "UPDATE easy.dbo.ct_$campaign_name SET $jp_condition_arr0 WHERE easycode='$ecode'";
-					mssql_query($query1,$this->db_dialer) or $this->logerror($query1,$this->db_dialer);
+					mssql_query($query1,$this->db_dialer) or $this->logError($query1,$campaign_name,$this->db_dialer,1);
 					$ustr = str_replace("'","",$jp_condition_arr0);
-					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr',now(),'UPDATE')";
+					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr',now(),'UPDATE-CAMPAIGN')";
 					mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 
 				}
 				if($jp_condition_arr1){
-					$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=5";
-					mssql_query($query2,$this->db_dialer) or $this->logerror($query2,$this->db_dialer);
+					if($renewal==1)
+						$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=5";
+					else
+						$query2 = "UPDATE easy.dbo.ph_contact SET $jp_condition_arr1 WHERE code='$ecode' AND priority <=6";
+					mssql_query($query2,$this->db_dialer) or $this->logError($query2,$campaign_name,$this->db_dialer,1);
 					$ustr1 = str_replace("'","",$jp_condition_arr1);
-					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE')";
+					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$ustr1',now(),'UPDATE-PRIORITY')";
 					mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 				}
 
 				$sql_chk="select AGENT from easy.dbo.ct_$campaign_name where easycode='$ecode'";
-				$sresult_chk = mssql_query($sql_chk,$this->db_dialer) or $this->logerror($sql_chk,$this->db_dialer);
+				$sresult_chk = mssql_query($sql_chk,$this->db_dialer) or $this->logError($sql_chk,$campaign_name,$this->db_dialer,1);
 				$row_chk= mssql_fetch_array($sresult_chk);
 				if(!$row_chk["AGENT"]){
 					$query_ph2 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
-					mssql_query($query_ph2,$this->db_dialer) or $this->logerror($query_ph2,$this->db_dialer);
-					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE2')";
+					mssql_query($query_ph2,$this->db_dialer) or $this->logError($query_ph2,$campaign_name,$this->db_dialer,1);
+					$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','Agent=NULL',now(),'UPDATE-AGENT_NOT_EXI')";
 					mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 				}
 			}
 			unset($dialer_data);
 		}
 	}
-	public function data_comparision($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles)
+	public function data_comparision_renewal($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles)
 	{
 		$profileid = $dialer_data["profileid"];
 		$update_str =array();
@@ -245,9 +303,9 @@ class DialerHandler
 			}
 			else{
 				$query_ph1 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
-				mssql_query($query_ph1,$this->db_dialer) or $this->logerror($query_ph1,$this->db_dialer);
+				mssql_query($query_ph1,$this->db_dialer) or $this->logError($query_ph1,$campaign_name,$this->db_dialer,1);
 
-				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE1')";
+				$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE-AGENT_NULL')";
 				mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
 
 				$update_str[] ="easy.dbo.ct_$campaign_name.AGENT=''";
@@ -264,19 +322,14 @@ class DialerHandler
 
 		//INITIAL PRIORITY UPDATE 
 		$priority=0;
-		if($score>=81 && $score<=100)
-			$priority='5';
-		elseif($score>=61 && $score<=80)
-			$priority='4';
-		elseif($score>=41 && $score<=60)
-			$priority='3';
-		elseif($score>=21 and $score<=40)
-			$priority='2';
-		elseif($score>=11 and $score<=20)
-			$priority='1';
-		elseif($score>=1 and $score<=10)
-			$priority='0';
-		
+                if($alloted_to==''){
+                        if($score>=81 && $score<=100)
+                                $priority='2';
+                        elseif($score>=41 && $score<=80)
+                                $priority='1';
+                        else
+                                $priority='0';
+                }
 		if($priority!=$dialer_data['initialPriority']){
 			$update_str[] 	="old_priority='$priority'";
 		}
@@ -290,6 +343,87 @@ class DialerHandler
 		else
 			return "ignore";
 	}
+        public function data_comparision_others($dialer_data,$campaign_name,$ecode,$discount_profiles,$allotedArray,$scoreArray,$login15DaysArr)
+        {
+                $profileid 	= $dialer_data["profileid"];
+		$dialStatus 	= $dialer_data["dial_status"];
+		$login15Days 	= $login15DaysArr[$profileid];
+                $update_str 	= array();
+
+                //VD_PERCENT
+                $vd_percent=0;
+                if(array_key_exists($profileid,$discount_profiles))
+                        $vd_percent=$discount_profiles[$profileid];
+                if($vd_percent!=$dialer_data['discount'])
+                        $update_str[] ="VD_PERCENT='$vd_percent'";
+
+                //ANALYTIC_SCORE
+                $score='';
+                if(array_key_exists($profileid,$scoreArray))
+                        $score=$scoreArray[$profileid];
+                if($score!=$dialer_data['analytic_score'] && $score!='')
+                        $update_str[]="SCORE='$score'";
+
+                //AGENT & Dial_Status
+                $alloted_to = '';
+                if(array_key_exists($profileid,$allotedArray))
+                        $alloted_to = $allotedArray[$profileid];
+
+                if($alloted_to!=$dialer_data['allocated'])
+                {
+                        if($alloted_to){
+                                $update_str[]="easy.dbo.ct_$campaign_name.AGENT='$alloted_to'";
+                                if($dialStatus!=3 && $dialStatus!=9)
+                                        $update_str[]="Dial_Status='2'";
+                        }
+                        else{
+                                $query_ph1 = "UPDATE easy.dbo.ph_contact SET Agent=NULL WHERE code='$ecode'";
+                                mssql_query($query_ph1,$this->db_dialer) or $this->logError($query_ph1,$campaign_name,$this->db_dialer,1);
+
+                                $log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaign_name','Agent=NULL',now(),'UPDATE-AGENT_NULL')";
+                                mysql_query($log_query,$this->db_js_111) or die($log_query.mysql_error($this->db_js_111));
+
+                                $update_str[] ="easy.dbo.ct_$campaign_name.AGENT=''";
+                                if($dialStatus!=3 && $dialStatus!=9 && $login15Days)
+                                        $update_str[] ="Dial_Status='1'";
+				elseif($dialStatus!=3 && $dialStatus!=9 && !$login15Days)
+					$update_str[] ="Dial_Status='0'";
+                        }
+                }
+                elseif($dialer_data['allocated']!='' && $dialStatus!='2' && $dialStatus!='9' && $dialStatus!='3'){
+                        $update_str[] ="Dial_Status='2'";
+                }
+                elseif($dialStatus!='1' && $dialStatus!='9' && $dialStatus!='3' && $login15Days){
+                        $update_str[] ="Dial_Status='1'";
+                }
+		elseif($dialStatus!=3 && $dialStatus!=9 && !$login15Days){
+			$update_str[] ="Dial_Status='0'";
+		}
+
+                //INITIAL PRIORITY UPDATE 
+                $priority=0;
+	        if($alloted_to==''){
+                	if($score>=81 && $score<=100)
+                	        $priority='2';
+                	elseif($score>=41 && $score<=80)
+                	        $priority='1';
+                	else
+                	        $priority='0';
+        	}
+	        if($priority!=$dialer_data['initialPriority']){
+			$update_str[]   ="old_priority='$priority'";	
+ 	       	}
+	       	if(count($update_str)>0){
+			$update_str1 =@implode(",",$update_str);
+			$update_strPri  ="*priority='$priority'";
+			$update_str1 =$update_str1.$update_strPri;
+			unset($update_str);
+			return $update_str1;		
+	       	}
+	       	else
+	               return "ignore";
+	}
+
         public function getProfilesForCampaign($tableName, $csvEntryDate='',$campaignName='',$startDt='',$endDt='',$ID='')
         {
 		$tableName =trim($tableName);
@@ -322,7 +456,7 @@ class DialerHandler
 				$table ='easy.dbo.tbl_lead_table_JS';
 			$squery ="insert into ".$table."(".$fieldsStr.") VALUES($valuesStr)";
                 	//$squery ="insert into easy.dbo.tbl_lead_table_JS($fieldsStr) VALUES($valuesStr)";
-			$result =mssql_query($squery,$this->db_dialer) or $this->logerror($squery,$this->db_dialer);
+			$result =mssql_query($squery,$this->db_dialer) or $this->logError($squery,$campaignName,$this->db_dialer,1);
 			//die;
 		}
         }
@@ -390,7 +524,7 @@ class DialerHandler
         public function getDialerCampaignRecords($campaignName,$csvEntryDate)
         {
                 $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_JS WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE='$csvEntryDate'";
-		$sresult =mssql_query($squery,$this->db_dialer) or $this->logerror($squery,$this->db_dialer);
+		$sresult =mssql_query($squery,$this->db_dialer) or $this->logError($squery,$campaignName,$this->db_dialer,1);
                 if($srow = mssql_fetch_array($sresult)){
 			$cnt =$srow['cnt'];
 		}
@@ -402,7 +536,7 @@ class DialerHandler
 			$squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>='$startDate'";		
 		else
 	                $squery = "select count(1) cnt from easy.dbo.tbl_lead_table_OB_JS_RCB WHERE Campaign='$campaignName' AND CSV_ENTRY_DATE>'$startDate'";
-                $sresult =mssql_query($squery,$this->db_dialer) or $this->logerror($squery,$this->db_dialer);
+                $sresult =mssql_query($squery,$this->db_dialer) or $this->logError($squery,$campaignName,$this->db_dialer,1);
                 if($srow = mssql_fetch_array($sresult)){
                         $cnt =$srow['cnt'];
                 }
@@ -447,23 +581,10 @@ class DialerHandler
                         $leadIdSuffix = $row["LEAD_ID_SUFFIX"];
                 return $leadIdSuffix;
         }
-	public function logerror($sql="",$db="",$ms='')
+	public function logError($sql,$campaignName='',$dbConnect='',$ms='')
 	{
-		$today=@date("Y-m-d H:m:i");
-		$filename="logerror.txt";
-		if(is_writable($filename)){
-			if (!$handle = fopen($filename, 'a')){
-				echo "Cannot open file ($filename)";
-				exit;
-			}
-			if(!$ms)
-				fwrite($handle,"\n\nQUERY : $sql \t ERROR : " .mssql_get_last_message(). " \t $today");
-			else
-				fwrite($handle,"\n\nQUERY : $sql \t ERROR : " .mysql_error(). " \t $today");
-			fclose($handle);
-		}
-		else
-			echo "The file $filename is not writable";
+		$dialerLogObj =new DialerLog();
+		$dialerLogObj->logError($sql,$campaignName,$dbConnect,$ms);	
 	}
 }
 ?>

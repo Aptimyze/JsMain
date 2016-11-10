@@ -9,7 +9,7 @@
 var retryAttempt = 0;
 var EditApp = {};
 EditApp = function(){
-  
+
   try{
     var config = {
     '.chosen-select'           : {},
@@ -401,6 +401,9 @@ EditApp = function(){
       if(debugInfo){
         console.log(editAppObject);
       }
+    // called here fof horoscope CAL so that layer is shown only after whole edit data is loaded  
+    if(typeof(fromCALHoro)!='undefined' && fromCALHoro=='1')createHoroscopeFun();
+
     }
     
     /*
@@ -2732,7 +2735,7 @@ EditApp = function(){
          
         var fieldObject = editAppObject[sectionId][fieldKey];
         
-        if(typeof fieldObject == "undefined"){
+        if(typeof fieldObject == "undefined" || fieldObject.key=="PROFILE_HANDLER_NAME"){
           if(debugInfo)
             console.log("i : " + i);
           continue;
@@ -5654,7 +5657,9 @@ EditApp = function(){
       if(fieldServerError == "This Phone is banned due to terms of use violation"){
         fieldServerError = "Phone no. Banned";
       }
-      
+      if(fieldServerError == "There are already two other profiles active on Jeevansathi with the same phone number."){
+        fieldServerError = "Exists in 2 other profiles";
+      }
       return fieldServerError;
     }
     
@@ -5780,9 +5785,7 @@ function clearFileUpload(){
     input.replaceWith(input.val('').clone(true));
     $("#uploadFileName").val("");
 }
-
-function onCreateUploadHoroBtn(){
-    $("#crUpHoroBtn").on('click', function(){
+function createHoroscopeFun(){
             var horoscopeValue = EditApp.getEditAppFields('horoscope','HOROSCOPE_MATCH').value;
             if(horoscopeValue != 'Y' && horoscopeValue != 'N' ){
                 disableUploadBtn();
@@ -5800,7 +5803,9 @@ function onCreateUploadHoroBtn(){
                 $("#horoscopeDiv").addClass('disp-none');
                 showCreateHoroDiv();
             }
-    });
+    }
+function onCreateUploadHoroBtn(){
+    $("#crUpHoroBtn").on('click',createHoroscopeFun );
 }
 
 function onaddHoroscopeCloseBtn()
@@ -6129,6 +6134,7 @@ $(document).ready(function() {
     onClickOfHoroscopeOverlay();
     onClickViewHoroCloseBtn();
     onClickHoroscopeMust();
+
 	$("body").on("click",'.js-uploadPhoto',function()
     {
             window.location="/social/addPhotos";
@@ -6136,6 +6142,7 @@ $(document).ready(function() {
     if(EditWhatNew){
         redirectToEditSection(EditWhatNew);
     }
+
 });
 
 $(document).mousedown(function (event)
@@ -6347,3 +6354,4 @@ $('.js-previewAlbum').click(function(){
 		$(show).addClass("selected");
 		$("#showText").html(text);
 	}
+ 

@@ -2,14 +2,14 @@
         <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;" id="~$section`tuple_~$index`">
            <input class="proChecksum" type="hidden" value="~$profileTuple.profilechecksum`" />
     
-            <img src="/images/jsms/commonImg/loader.gif" class="srp_box2 contactLoader" style="position:absolute;display:none; top:65px; ">
+            <img class="srp_box2 contactLoader" style="position:absolute;display:none; top:65px; ">
    
                  <div class="bg4" style="overflow-x: hidden; " id="hideOnAction">
                      <a id="detailedProfileRedirect" href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$profileTuple.profilechecksum`&~if $section eq "eoi"`responseTracking=~JSTrackingPageType::MYJS_EOI_JSMS`~else`stype=~SearchTypesEnums::MATCHALERT_MYJS_JSMS`~/if`&total_rec=~$total`&actual_offset=~$index+1`&contact_id=~$contactId`" > 
                          <div class="pad16" style="overflow:hidden;height:140px;" >
                              <div style="overflow-x:hidden; height:100%;">
                         <div style="white-space: nowrap; word-wrap:normal; width:200%;" class="overflowWrap">
-                         <div class="fl"> <img class="tuple_image" style="height:110px; width:110px;" src="~$profileTuple.photo.url`" border="0"/> </div>
+                         <div class="fl"> <img class="tuple_image" style="height:110px; width:110px;" src=~if $gender eq 'M'`'/images/picture/120x120_f.png'~else`'/images/picture/120x120_m.png'~/if` data-src="~$profileTuple.photo.url`" border="0"/> </div>
                          <div class="fl pl_a">
                              <div class="f14 color7"> <span class="username">~$profileTuple.username`</span></div>
                             <div class="attr">

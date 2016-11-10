@@ -41,8 +41,6 @@ class ContactDetailsV2Action extends sfAction
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile, $this->Profile, "INFO", $this->contactObj, 'CONTACT_DETAIL', ContactHandler::PRE);
 					$this->contactEngineObj  = ContactFactory::event($this->contactHandlerObj);
 					$responseArray           = $this->getContactDetailsArray($request);
-					
-
 				}
 			}
 		}
@@ -244,8 +242,18 @@ class ContactDetailsV2Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 
 				}
-				 elseif ($errorArr["FILTERED"] == 2) { 
-					$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
+				elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2) {
+					$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+					$responseArray["errmsgiconid"] = "16";
+					$responseArray["headerlabel"] = "Unsupported action";
+        				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+				 elseif ($errorArr["FILTERED"] == 2) {
+					 if($this->contactEngineObj->errorHandlerObj->getErrorMessage())
+						$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+					else
+						$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
 					$responseArray["errMsgIconId"] = "12";
 					$responseArray["headerLabel"]  = "Filtered Member";
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');

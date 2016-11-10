@@ -135,7 +135,7 @@ font-style:normal;
                         </div>
                          <div class="fl befbox center">
                             <i class="logo6-appdsk sprte-appdsk appdsk_ml1"></i>
-                            <div class="pad10top">See Daily Match Alerts and recommendations within the App</div>
+                            <div class="pad10top">See Daily Recommendations within the App</div>
                         </div>                    
                     </div>                
                 </div>
