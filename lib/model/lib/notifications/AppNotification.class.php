@@ -465,6 +465,17 @@ public function microtime_float()
 			}
 			// print_r($dataAccumulated);
 			break;
+        case "MATCH_OF_DAY":
+            $applicableProfiles=array();
+            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+            $applicableProfilesArr = array_keys($applicableProfiles);
+            $poolObj = new NotificationDataPool;
+            foreach($applicableProfilesArr as $key => $profile){
+                
+            }
+            $dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+            unset($poolObj);
+            break;
 	  }
 
 	  $completeNotificationInfo = array();
