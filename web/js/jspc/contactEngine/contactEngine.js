@@ -951,7 +951,6 @@ if(!reason) reason=layerObj.find(".selected").eq(0).text().trim();
 if(!reason) return;
 showCommonLoader();
 reason=$.trim(reason);
-
 ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileChecksum,'reasonCode':rCode,'otherReasonValue':Otherreason};
 ajaxConfig.url='/phone/reportInvalid';
 ajaxConfig.data=ajaxData;
@@ -962,7 +961,7 @@ ajaxConfig.success=function(response){
 	var jObject=$("#reportInvalidConfirmLayer");
 	jObject.find('.js-username').html(username);
 	jObject.find('.js-otherProfilePic').attr('src',photoUrl);
-
+	layerObj.find("#otherOptionMsgBox textarea").val('');
 		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportInvalidConfirmLayer').fadeIn(300,"linear",function(){})}); 
 
 closeInvalidConfirmLayer=function() {

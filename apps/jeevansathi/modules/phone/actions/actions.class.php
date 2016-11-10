@@ -209,7 +209,7 @@ class phoneActions extends sfActions
 	die;
   }
 
-//this method is used for reporting a phone number as abuse
+//this method is used for reporting a phone number as invalid
 	public function executeReportInvalid(sfWebRequest $request)
 	{
    		$reasonNumber = $request->getParameter('reasonCode'); 
@@ -234,7 +234,7 @@ class phoneActions extends sfActions
    		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
 		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
    		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);
-    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+    $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_SUCCESS);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();
 	die;

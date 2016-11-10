@@ -1071,7 +1071,7 @@ function contactDetail(result,action, index){
   {
     contactDetailMessage(result,action, index);
     return;
-  }*/
+  }*/var proCheck = params.profilechecksum;
     if(result.actiondetails.errmsglabel)
     {
     showCommonOverlay();
@@ -1110,14 +1110,14 @@ else
 if(result.actiondetails.bottommsg2){
     $("#bottomMsg2").html(result.actiondetails.bottommsg2).css('display', 'inline-block');
   }
-  
+
   if(result.actiondetails.contact1){
     $("#mobileVal,#mobileValBlur").hide();
     //$("#mobileValBlur").hide();
     $("#mobile").show();
     if(result.actiondetails.contact1.value=="blur"){ $("#mobileValBlur").show(); $("#neverMindLayer").show(); }
     else $("#mobileVal").show();
-                $("#mobileVal").html(result.actiondetails.contact1.value);
+                $("#mobileVal").html(result.actiondetails.contact1.value+'<span id=\'reportInvalidButtonLayer\' onclick="reportInvalid(\'M\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c"> Report Invalid </span>');
                 if (result.actiondetails.contact1.iconid){ 
                    $("#mobileIcon > a").attr('href','tel:'+result.actiondetails.contact1.value.toString());
             $("#mobileIcon").show();
@@ -1129,7 +1129,7 @@ if(result.actiondetails.bottommsg2){
             // $("#landlineVal").hide();
                 $("#landline").show();
                 if(result.actiondetails.contact2.value=="blur") { $("#landlineValBlur").show(); $("#neverMindLayer").show();}
-                else $("#landlineVal").show();$("#landlineVal").html(result.actiondetails.contact2.value);
+                else $("#landlineVal").show();$("#landlineVal").html(result.actiondetails.contact2.value+'<span id=\'reportInvalidButtonLayer\'  onclick="reportInvalid(\'L\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c">Report Invalid </span>');
                 if (result.actiondetails.contact2.iconid){ 
                    $("#landlineIcon > a").attr('href','tel:'+result.actiondetails.contact2.value.toString());
             $("#landlineIcon").show();
@@ -1492,11 +1492,20 @@ function hideReportInvalid(){
 
 }
 
-function reportInvalid(index) {
-  alert('got here');
-$("#photoReportInvalid").attr("src", buttonSt.photo.url);
+function reportInvalid(phoneType,Obj,profileCheckSum) {
+var imgURL;
+if(typeof(buttonSt) != "undefined" && buttonSt.photo.url){
+imgURL = buttonSt.photo.url;
+}
+else{
+ var topDiv = $(Obj).closest('#commonOverlayTop');  
+ var nextLevel = topDiv.find("#3DotProPic");
+ var lastLevel = nextLevel.find("#photoIDDiv");
+     imgURL = lastLevel.find("#ce_photo").attr('src');
+
+}
+$("#photoReportInvalid").attr("src",imgURL);
 $('.RAcorrectImg,#commonOverlayTop').hide();
-//$("#commonOverlayTop").hide();
 var mainEle=$("#reportInvalidContainer");
 mainEle.show();
 
@@ -1522,7 +1531,7 @@ el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 
 selectedReportInvalid="";
 RAOtherReasons=0;
-
+var rCode ;
 
 $(".reportInvalidOption").unbind().bind('click',function () {
 
@@ -1532,17 +1541,19 @@ el.scrollTop('0px');
 el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
 .css(animProp, 'translate(-50%,0px)');
 RAOtherReasons=1;selectedReportInvalid="";
+rCode = '5';
 }
 else 
 {
   selectedReportInvalid=$(this).text();RAOtherReasons=0;
+  rCode = $(this).val();
 }
+ 
+;
+
 $('.RAcorrectImg').hide();
 $(this).find('.RAcorrectImg').show();
 });
-
-
-
 
 
 $("#reportInvalidSubmit").unbind().bind('click',function() {
@@ -1550,16 +1561,15 @@ $("#reportInvalidSubmit").unbind().bind('click',function() {
 var reason="";
 
 if(RAOtherReasons)
-{
+{ 
   reason=$("#js-otherInvalidReasonsLayer").val();
-  reasonCode = '5'; 
   if(!reason){ShowTopDownError(["Please enter the reason"],3000);return;}
 }
 else {
   reason=selectedReportInvalid;
-  reasonCode = '';
 if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
 }
+
 
 
 reason=$.trim(reason);
@@ -1567,20 +1577,18 @@ reason=$.trim(reason);
 var phoneType='M';
 if (phoneType=='L') {var mobile='N';var phone='Y';}
 if (phoneType=='M') {var mobile='Y';var phone='N';}
-var mobile = 'Y';
-var phone = 'N';
-var rCode = '2';
+
 var otherReason = '';
+if(rCode == '5')
+{
+  otherReason = reason;
+}
 
-
-//feed.message:as sdf sd f
-//feed.category='Abuse';
-//feed.message=userName+' has been reported abuse by '+selfUsername+' with the following reason:'+reason;
-ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileChkSum,'reasonCode':rCode,'otherReasonValue':otherReason};
+ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileCheckSum,'reasonCode':rCode,'otherReasonValue':otherReason};
 var url='/phone/reportInvalid';
 loaderTop();
 $("#contactLoader,#loaderOverlay").show();
-//$("#loaderOverlay").show();
+$("#loaderOverlay").show();
 //ajax data for phone api
 $.ajax({
                 
@@ -1589,21 +1597,17 @@ $.ajax({
     data: ajaxData,
     //crossDomain: true,
     success: function(result){
-          $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
-          //$("#loaderOverlay").hide();
-          //$("#reportAbuseContainer").hide();
-          $("#invalidConfirmationMessage").show();
+         $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
+         $("#js-otherInvalidReasonsLayer").val('');
                     if(CommonErrorHandling(result,'?regMsg=Y')) 
                     {
-          ShowTopDownError([result.message],5000);
+          ShowTopDownError([result.responseMessage],10000);
           $("#commonOverlayTop").show();
-                    } 
-                    
-                }
-});
+                    }
+}
 
 });
-
+});
 
 historyStoreObj.push(hideReportInvalid,"#reportInvalid");
 

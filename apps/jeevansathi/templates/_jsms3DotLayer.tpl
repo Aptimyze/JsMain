@@ -1,7 +1,7 @@
 
 <div class="posfix z112 dispnone"  id="reportInvalidContainer">
                     <div class="fullwid fontlig" >
-                        <div class="photoheader">
+                        <data></data><div class="photoheader">
                             <div class="pad16 brdr_new" style="height:85px;">
                                 <div class="rem_pad1 posrel fullwid ">
                                     <img id="photoReportInvalid" class="srp_box3 abs_c" src="">
@@ -21,9 +21,9 @@
                             <ul class="f16 fontthin white">
                                 <li class="white fullwid dispibl dashedBorder pad18">Reason for reporting invalid </li>
 
-                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="1">
+                                <li id = "reasonCodeOption" class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="1">
                                 	<div class="fullwid posrel">
-                                		Phone is not reachable
+                                		Switched off / Not reachable
                                 		<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
@@ -35,13 +35,13 @@
                                 </li>
                                 <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="3">
                                 	<div class="fullwid posrel">
-                                	Fake number<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	 Already married / engaged<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
 
                                 <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="4">
                                 	<div class="fullwid posrel">
-                                	Invalid phone number<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	Not picking up<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
                                 	</div>
                                 </li>
 
@@ -52,8 +52,8 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="reportInvalidScreen">
-                        <textarea class="disp-none pad18 fullheight fullwid f18 fontthin" id="js-otherInvalidReasonsLayer" style="background: none;" placeholder="Describe your concern for this number"></textarea>
+                        <div class="reportInvalidScreen" style="height:100%">
+                        <textarea class="disp-none pad18 fullheight fullwid f18 fontthin" id="js-otherInvalidReasonsLayer" style="background: none;height: 100%" placeholder="Describe your concern for this number"></textarea>
                         </div>
                         </div>
                         <div class="posfix fullwid scrollhid pos1_c1">
@@ -131,7 +131,7 @@
 
 		<!--top section starts here-->
 		<div id="3DotProPic" class="txtc">
-			<div style="border: 1px solid rgb(255,255,255);border: 1px solid rgba(255,255,255,0.2);  overflow:hidden; width: 90px; height: 90px; border-radius: 45px;"><img id="ce_photo"  class="srp_box2 mr6"/></div>
+			<div id = "photoIDDiv" style="border: 1px solid rgb(255,255,255);border: 1px solid rgba(255,255,255,0.2);  overflow:hidden; width: 90px; height: 90px; border-radius: 45px;"><img id="ce_photo"  class="srp_box2 mr6"/></div>
 			<div class="f14 white fontlig opa80 pt10 forHide" id="topMsg"></div>
                         <div class="f16 pt10 lh25 fontlig white opa80 forHide" id="topMsg2" style='padding-left:15px; padding-right:15px'></div>
 
@@ -199,7 +199,7 @@
 			<div class="pt15" id="mobile" style="display:none">
 				<div class="fl white">
 					<div class=" f14 lh30 opa50">Mobile no </div>
-					<div class="f16 forHide" id="mobileVal" style="display:none"> </div> <span onclick="reportInvalid()" class="reportInvalidjsmsButton invalidMob"> Invalid </span>
+					<div class="f16 forHide" id="mobileVal" style="display:none"> </div> 
 					<div class="pb20 forHide" id="mobileValBlur" style="display:none;"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
@@ -224,7 +224,7 @@
 			<div class="pt15 forHide" id="landline" style="display:none">
 				<div class="fl white">
 					<div class=" f14 lh30 opa50" >Landline no</div>
-					<div class="f16" id="landlineVal" style="display:none"></div><span class="reportInvalidjsmsButton invalidLand"> Invalid </span>
+					<div class="f16 forHide" id="landlineVal" style="display:none"> </div>
 					<div class="pb20" id="landlineValBlur" style="display:none"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
