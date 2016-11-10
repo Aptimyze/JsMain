@@ -122,6 +122,10 @@ class SMSLib
         }
 
         switch ($messageToken) {
+            case "PHOTO_REJECTION_REASON":                    
+                    $rejectReasonArr = explode(". or ", $messageValue['PHOTO_REJECTION_REASON'], 2);                    
+                    return $rejectReasonArr[0];
+                        break;
             case "SALES_ADDRESS_NOIDA":
                 return "B-8,Sector 132,Noida-201301";
 
