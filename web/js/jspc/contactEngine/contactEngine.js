@@ -946,7 +946,7 @@ if (phoneType=='M') {var mobile='Y';var phone='N';}
 var rCode = $("input:radio[name=report_profile]:checked").val();
 
 ajaxConfig=new Object();
-if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("*Please Select a reason");return;}
+if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("*Please Select a reason").addClass('colorerror').removeClass('color12');return;}
 if(!reason) reason=layerObj.find(".selected").eq(0).text().trim();
 if(!reason) return;
 showCommonLoader();
@@ -986,7 +986,7 @@ function showReportInvalidLayer(obj){
 	if(typeof(viewedProfileUsername)!="undefined" && viewedProfileUsername){
 	var otherUser = viewedProfileUsername;
 	var imgUrl = $("#profilePicScrollBar").attr('src');
-	jObject.find('.js-username').html(selfUsername);
+	jObject.find('.js-username').html(otherUser);
 	jObject.find('.js-otherProfilePic').attr('src',imgUrl);
 	}
 	else
