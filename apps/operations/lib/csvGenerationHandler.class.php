@@ -1766,7 +1766,7 @@ class csvGenerationHandler
 		{
 			if($processName=='rcbCampaignInDialer')
 				$priority =8;
-			if($processName=='upsellProcessInDialer')
+			elseif($processName=='upsellProcessInDialer')
 				$priority='6';
 			elseif($allotedTo=='' && $vdDiscount && $score>=1 && $score<=100)
 				$priority='6';
