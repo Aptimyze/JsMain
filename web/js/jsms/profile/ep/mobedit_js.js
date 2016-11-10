@@ -658,10 +658,10 @@ function showFilterOverlayer()
         filterJson.FILTER[0]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][1]["label_val"];
         filterJson.FILTER[1]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][2]["label"];
         filterJson.FILTER[1]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][2]["label_val"];
-        filterJson.FILTER[2]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][3]["label"];
-        filterJson.FILTER[2]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][3]["label_val"];
-        filterJson.FILTER[3]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label"];
-        filterJson.FILTER[3]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label_val"];
+        filterJson.FILTER[2]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label"];
+        filterJson.FILTER[2]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][4]["label_val"];
+        filterJson.FILTER[3]["label"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][5]["label"];
+        filterJson.FILTER[3]["label_val"]=pageJson["Dpp"]["BasicDetails"]["OnClick"][5]["label_val"];
         filterJson.FILTER[4]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][0]["label"];
         filterJson.FILTER[4]["label_val"]=pageJson["Dpp"]["Religion"]["OnClick"][0]["label_val"];
         filterJson.FILTER[5]["label"]=pageJson["Dpp"]["Religion"]["OnClick"][1]["label"];
@@ -1105,10 +1105,7 @@ function ToggleMore(keyName)
                                     keyName="Desired Partner";
 				if(keys=="Details")
                                 {
-                                    if(values["basic"]["OnClick"][2]["label_val"]==="Male")
-                                        keyName="Groom's Details";
-                                    else
-                                        keyName="Bride's Details";
+                                        keyName="Basic Info";
                                 }	
 				arr[i]=UpdateHtml(html,{"KEYNAME":keyName,"indexpos":i-1,"BOLD":bold});
 				

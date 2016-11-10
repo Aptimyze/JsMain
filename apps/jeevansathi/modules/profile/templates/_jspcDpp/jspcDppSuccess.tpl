@@ -117,13 +117,13 @@ dppApp = function(){
   var filterNeedToCheckArray = {'P_CITY':0,'P_CASTE':0};
   
   function getFilterCheck(fieldName){
-    if(false === filterNeedToCheckArray.hasOwnProperty(fieldName)){
-      return null;
-    }
-    return filterNeedToCheckArray[fieldName];
+	  if(false === filterNeedToCheckArray.hasOwnProperty(fieldName)){
+		  return null;
+	  }
+	  return filterNeedToCheckArray[fieldName];
   }
   function setFilterCheck(fieldName,fieldValue){
-    if(false !== filterNeedToCheckArray.hasOwnProperty(fieldName)){
+	  if(false !== filterNeedToCheckArray.hasOwnProperty(fieldName)){
       filterNeedToCheckArray[fieldName] = fieldValue;
     }
   }

@@ -76,7 +76,8 @@ class Messages
   const DETAILS_INCOMPLETE = "You need to complete your profile before viewing the user's contact details.<BR><BR>{{BUTTON}}";
   const ANY_INCOMPLETE_EXP="To further communicate with this person,<BR><BR>{{BUTTON}}";
   const MOBILE_INCOMPLETE="Switch to desktop version to complete your profile";
-  
+  const PHONE_HIDDEN = "Phone number hidden";
+  const PHONE_VISIBLE_ON_ACCEPT="Phone number visible on accept";
   const DETAILS_UNDERSCREENING_FTO="To view contact details of the user – {{MEMBERSHIPLINK}} or take {{FREETRIALOFFER}}<BR><BR><BR><B>Note</B>: Free Trial can be availed once profile is screened. Profile screening takes place on Mon-Sat, from 7AM - 7PM.";
   const DETAILS_UNDERSCREENING="You can view the contact details of the user only after your profile is screened.";
   const DECLINED = "You cannot see the contact details of this profile as the profile has declined any further contacts with you.";
@@ -90,6 +91,7 @@ class Messages
   const OTHER_SCREENING = "This Profile is currently being Screened. Kindly view this profile after 24 hours.";
   //privilege error message starts here
   const ACTION_NOT_ALLOWED = "You cannot perform this action.";
+  const HIDDEN_ERROR = "You cannot perform this action as {{POGID}}'s profile is hidden"; 
   const DROP_DOWN = "please <a href='/profile/mem_comparison.php'>pay</a>, to avail this feature";
   const MESSAGE = "Please <a href='/profile/mem_comparison.php'>pay</a>, to avail this feature";
   const MESSAGE_BOX_VISIBILE = "please <a href='/profile/mem_comparison.php'>pay</a>, to avail this feature";

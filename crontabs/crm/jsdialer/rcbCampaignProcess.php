@@ -23,6 +23,7 @@ $campaignTableArr       =array('OB_JS_RCB'=>array('SALES_CSV_DATA_RCB'));
 
 foreach($campaignArr as $key=>$campaignName)
 {
+		$totalIns       =0;
 		$processId	=$campaignIdArr[$campaignName];
 		$startID 	=$dialerHandlerObj->getLastHandledID($processId);
                 /*if($startDate=='0000-00-00 00:00:00')
@@ -42,6 +43,7 @@ foreach($campaignArr as $key=>$campaignName)
 					$endID =$dataArr['ID'];
 					unset($dataArr['ID']);
 					$dialerHandlerObj->addProfileinCampaign($dataArr, $campaignName);
+					$totalIns++;
 					if($endID>0)
 						$dialerHandlerObj->updateLastHandledID($processId,$endID);
 					unset($dataArr);
@@ -53,7 +55,7 @@ foreach($campaignArr as $key=>$campaignName)
 			$dialerCampaignReords =$dialerHandlerObj->getCampaignRecordsForDuration($campaignName, $startDate );
 		if($totalRecord !=$dialerCampaignReords){
 			$sub	="FAILED: Dialer insert for $campaignName";
-			$msg	="Campaign Records:".$totalRecord."# Dialer Records Inserted:".$dialerCampaignReords;	
+			$msg	="JS Campaign Records:".$totalRecord."# Dialer Insert:".$dialerCampaignReords."# Eligible Count:".$totalIns;	
 			mail($to,$sub,$msg,$from);
 		}
 		unset($startDate);

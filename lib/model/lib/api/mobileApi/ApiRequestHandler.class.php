@@ -6,7 +6,7 @@ class ApiRequestHandler
 	private $responseFlag = false;
 	private $response;
 	private static $apiRequestHandlerObj = null;
-	private $app=array("android"=>array('APILEVEL'=>'11',"CURRENT_VERSION"=>"2.3","API_APP_VERSION"=>49,"FORCE_API_APP_VERSION"=>40),"ios"=>array("APILEVEL"=>"1","CURRENT_VERSION"=>"5","API_APP_VERSION"=>1));
+	private $app=array("android"=>array('APILEVEL'=>'11',"CURRENT_VERSION"=>"2.3","API_APP_VERSION"=>65,"FORCE_API_APP_VERSION"=>40),"ios"=>array("APILEVEL"=>"1","CURRENT_VERSION"=>"5","API_APP_VERSION"=>1));
 	private $forceUpgrade=false;
 	public function __construct($request)
 	{

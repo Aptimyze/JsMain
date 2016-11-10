@@ -623,6 +623,32 @@ class JsMemcache extends sfMemcacheCache{
 			}
 		}
   }
+    
+  /**
+   * 
+   * @param type $key
+   * @param type $fields
+   * @param type $throwException
+   * @return type
+   * @throws Exception
+   */
+    public function hdel($key, $fields, $throwException = false)
+    {
+        if (self::isRedis()) {
+            if ($this->client) {
+                try {
+                    $response = $this->client->hdel($key, $fields);
+                    return $response;
+                }
+                catch (Exception $e) {
+                    if ($throwException) {
+                        throw $e;
+                    }
+                    jsException::log("HG-redisClusters hdel" . $e->getMessage());
+                }
+            }
+        }
+    }
 
   public function getSetsAllValue($key)
   {

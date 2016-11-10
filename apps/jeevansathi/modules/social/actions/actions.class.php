@@ -619,7 +619,10 @@ class socialActions extends sfActions
 		header('Location: '.$SITE_URL."/profile/viewprofile.php?ownview=1");
 		exit;
 	}
-
+	if($request->getParameter('fromCALphoto')==1)
+	{
+		$this->fromCALphoto = 1;
+	}
 	$this->keywords=sfConfig::get("app_social_keywords");//array("My photo", "My family", "My friends", "My office", "My home");
 	$this->request->setAttribute('bms_sideBanner',711);
 
@@ -1449,6 +1452,8 @@ CloseMySelf(this);</script>';
  **/
   public function executeSaveImportImages(sfWebRequest $request)
   {
+//VA whitelisting
+	SendMail::send_email("eshajain88@gmail.com,lavesh.rawat@gmail.com","executeSaveImportImages loop which was assumed not to be in use in social/actions","executeSaveImportImages called");
         $profileObj=LoggedInProfile::getInstance('newjs_master'); 
 //throw new jsException("","PROFILEID & PICTUREID IS BLANK IN get() of PICTURE_NEW.class.php");
 	$pid=$profileObj->getPROFILEID();

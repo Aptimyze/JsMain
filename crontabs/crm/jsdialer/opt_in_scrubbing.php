@@ -5,6 +5,8 @@
 * MADE DATE 	: 12 May, 2015
 *********************************************************************************************/
 include("MysqlDbConstants.class.php");
+include("DialerLog.class.php");
+$dialerLogObj =new DialerLog();
 
 //Connection at JSDB
 $db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
@@ -16,7 +18,7 @@ function compute_dnc_array($db_dialer,$campaign_name)
 {
 	$dnc_array = array();
 	$squery1 = "SELECT PROFILEID FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE Dial_Status='9'";
-        $sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
+        $sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaign_name,$db_dialer,1);
 	while($srow1 = mssql_fetch_array($sresult1))
 		$dnc_array[] = $srow1["PROFILEID"];
         return $dnc_array;
@@ -55,7 +57,7 @@ function compute_eligible_in_array($db_js,$dnc_array,$renewal='')
 function start_opt_in_profiles($campaign_name,$opt_in_profile,$db_dialer,$db_js_111)
 {
 	$squery1 = "SELECT easycode,PROFILEID,easy.dbo.ct_$campaign_name.AGENT FROM easy.dbo.ct_$campaign_name JOIN easy.dbo.ph_contact ON easycode=code WHERE PROFILEID ='$opt_in_profile'";
-        $sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
+        $sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaign_name,$db_dialer,1);
         while($srow1 = mssql_fetch_array($sresult1))
         {
                 $ecode = $srow1["easycode"];
@@ -68,34 +70,12 @@ function start_opt_in_profiles($campaign_name,$opt_in_profile,$db_dialer,$db_js_
 			else
 				$dialStatus ='1';
 			$query1 = "UPDATE easy.dbo.ct_$campaign_name SET Dial_Status=$dialStatus WHERE easycode='$ecode'";
-			mssql_query($query1,$db_dialer) or logerror($query1,$db_dialer);
+			mssql_query($query1,$db_dialer) or $dialerLogObj->logError($query1,$campaign_name,$db_dialer,1);
 
-			$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','DIAL_STATUS=1',now(),'OPTIN')";
+			$updateString ='Dial_Status='.$dialStatus;
+			$log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$proid','$campaign_name','$updateString',now(),'OPTIN')";
 			mysql_query($log_query,$db_js_111) or die($log_query.mysql_error($db_js_111));
                 }
-        }
-}
-
-function logerror($sql="",$db="",$ms)
-{
-        $today=@date("Y-m-d h:m:s");
-        $filename="logerror.txt";
-        if(is_writable($filename))
-        {
-                if (!$handle = fopen($filename, 'a'))
-                {
-                        echo "Cannot open file ($filename)";
-                        exit;
-                }
-                if($ms)
-                        fwrite($handle,"\n\nQUERY : $sql \t ERROR : " .mssql_get_last_message(). " \t $today");
-                else
-                        fwrite($handle,"\n\nQUERY : $sql \t ERROR : " .mysql_error(). " \t $today");
-                fclose($handle);
-        }
-        else
-        {
-                echo "The file $filename is not writable";
         }
 }
 
@@ -109,7 +89,7 @@ for($i=0;$i<count($opt_in_array1);$i++)
 unset($dnc_array);
 unset($opt_in_array);
 unset($opt_in_array1);
-$msg.="End time:".@date('H:i:s')."\n";
+$msg.=" End time:".@date('H:i:s')."\n";
 
 // JS_NCRNEW OPT-IN Check
 $msg.= "JS_NCRNEW - Start time:".@date('H:i:s');
@@ -121,7 +101,7 @@ for($i=0;$i<count($opt_in_array1);$i++)
 unset($dnc_array);
 unset($opt_in_array);
 unset($opt_in_array1);
-$msg.="End time:".@date('H:i:s')."\n";
+$msg.=" End time:".@date('H:i:s')."\n";
 
 // Renewal OPT-IN Check
 $msg.= "JS_RENEWAL - Start time:".@date('H:i:s');
@@ -133,7 +113,7 @@ for($i=0;$i<count($opt_in_array1);$i++)
 unset($dnc_array);
 unset($opt_in_array);
 unset($opt_in_array1);
-$msg.="End time:".@date('H:i:s')."\n";
+$msg.=" End time:".@date('H:i:s')."\n";
 
 // Renewal-Mah OPT-IN Check
 $msg.= "OB_RENEWAL_MAH - Start time:".@date('H:i:s');
@@ -145,9 +125,9 @@ for($i=0;$i<count($opt_in_array1);$i++)
 unset($dnc_array);
 unset($opt_in_array);
 unset($opt_in_array1);
-$msg.="End time:".@date('H:i:s');
+$msg.=" End time:".@date('H:i:s')."\n";
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
-$sub="Dialer updates NCR-MAH-RENEWAL Campaign opt-in done.";
+$sub="Dialer updates JS_NCRNEW|MAH_JSNEW|JS_RENEWAL|OB_RENEWAL_MAH Campaign OPT-IN done.";
 $from="From:vibhor.garg@jeevansathi.com";
 mail($to,$sub,$msg,$from);
 

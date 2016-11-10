@@ -1,7 +1,7 @@
         <div id="detailsContactCompleteDiv"  class="fl prfwid17 pos-rel CEParent">
             <!--start:description-->
             <div class="fl prfwid2 pos-rel ht220">
-          ~if $apiData['about']['introCallData']['OFFLINE_CALL_PROGRESS']`
+          ~if $apiData['about']['introCallData']['OFFLINE_CALL_PROGRESS'] || $apiData['button_details']['contactType'] eq 'E' || $apiData['button_details']['contactType'] eq 'D' || $apiData['button_details']['contactType'] eq 'C' || $SAMEGENDER`
           ~elseif ($apiData['about']['introCallData']['OFFLINE_ASSISTANT_ADD']||$apiData['about']['introCallData']['OFFLINE_ASSISTANT_REM']) && $apiData['about']['introCallData']['introCallDetail']['PURCHASED']`
             <!--start:we talk for you added-->  
             <div class="pos-abs" style="top:80%; right:30px;">

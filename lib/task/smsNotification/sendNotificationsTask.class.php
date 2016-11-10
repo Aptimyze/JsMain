@@ -33,6 +33,10 @@ $this->addOptions(array(
   {
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
+	$notificationStop =JsConstants::$notificationStop;
+        if($notificationStop)
+        	die('successfulDie');
+
         $this->notificationKey = $arguments["notificationKey"]; // NEW / EDIT
 	$this->scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS('newjs_masterRep');
 	$this->scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;

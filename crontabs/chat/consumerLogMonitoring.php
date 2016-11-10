@@ -81,7 +81,7 @@
 		global $consumerMapping;
 		foreach($consumerMapping[$path] as $key => $consumerDetails){
 			unset($processNumbers);
-			exec("ps aux | grep ".$consumerDetails["consumerGrep"]." | grep -v grep | awk '{ print $2 }'", $processNumbers);
+			exec("ps aux | grep '".$consumerDetails["consumerPath"]."' | grep -v grep | awk '{ print $2 }'", $processNumbers);
 			if(!empty($processNumbers) && is_array($processNumbers)){
 				foreach($processNumbers as $key => $value){
 					$count = shell_exec("ps -p ".$value." | wc -l") -1;
