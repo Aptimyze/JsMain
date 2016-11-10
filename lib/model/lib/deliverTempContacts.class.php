@@ -83,7 +83,6 @@
 		 */
 		private function sendEOI()
 		{
-			// die(x);
 			try {
 				if ($this->contactObj->getTYPE() == 'N') {
 					$contactHandlerObj = new ContactHandler($this->contactObj->getSenderObj(), $this->contactObj->getReceiverobj(), "EOI", $this->contactObj, 'I', ContactHandler::POST);
@@ -101,8 +100,6 @@
 			catch (Exception $e) {
 				$this->setExceptionError($e);
 			}
-			//$this->errorMsg = $this->errorMsg.'Caught Exception: '. $profileObj->getPROFILEID().'->'.$receiverObj->getPROFILEID().'=>'.$e->getMessage(). "";
-			
 			
 			return null;
 			
