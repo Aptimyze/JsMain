@@ -4,6 +4,7 @@ include $_SERVER['DOCUMENT_ROOT'] . "/crm/connect.inc";
 include $_SERVER['DOCUMENT_ROOT'] . "/profile/pg/functions.php";
 include_once $_SERVER['DOCUMENT_ROOT'] . "/crm/func_sky.php";
 include_once $_SERVER['DOCUMENT_ROOT'] . "/classes/Services.class.php";
+include_once(JsConstants::$docRoot."/classes/ShortURL.class.php");
 
 if (authenticated($cid)) {
     $name = getname($cid);
@@ -128,6 +129,8 @@ if (authenticated($cid)) {
             }
 
             $URL = "$SITE_URL/profile/membership_redirect.php?id=$req_id1";
+            
+            CommonUtility::sendPlusTrackInstantSMS('MEM_BACK_DISC_SMS', $profileid, array("SHORT_DISC_LINK_URL"=>$URL));
 
             $msg .= "A mail has been sent to the user for payment using following URL :- $URL .<br>";
             $msg .= "<a href=\"mainpage.php?name=$name&cid=$cid\">";
