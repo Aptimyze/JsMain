@@ -982,6 +982,9 @@ jQuery.myObj.ajax(ajaxConfig);
 }
 
 function showReportInvalidLayer(obj){
+
+	var layerObj=$("#reportInvalidReason-layer");
+	if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("Select reason").addClass('color12').removeClass('colorerror');}
 	var jObject=$("#reportInvalidReason-layer");
 	if(typeof(viewedProfileUsername)!="undefined" && viewedProfileUsername){
 	var otherUser = viewedProfileUsername;
@@ -1012,4 +1015,21 @@ $('#reportInvalidReason-layer').fadeOut(200,"linear",function(){
 	
 };
 $('#reportInvalidCross').unbind().bind('click',closeReportInvalidLayer);
+}
+
+
+function customOptionButton(optionBtnName) {
+       var checkBox = $('input[name="' + optionBtnName + '"]');
+       $(checkBox).each(function() {
+               $(this).wrap("<span class='custom-checkbox-reportAbuse'></span>");
+                       if ($(this).is(':checked')) {
+                               $(this).closest('li').addClass("selected");
+                       }
+                       else $(this).closest('li').removeClass("selected"); 
+               });
+               $(checkBox).click(function() {
+                       $('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
+                       $(this).closest('li').addClass("selected");
+               });
+
 }
