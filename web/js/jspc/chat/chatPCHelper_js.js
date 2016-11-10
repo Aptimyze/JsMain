@@ -44,7 +44,7 @@ function reActivateNonRosterPolling(source,updateChatImmediate){
         $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
             //pollForNonRosterListing(groupId);
             clearNonRosterPollingInterval(groupId);
-            var updateChatListImmediate = (updateChatImmediate != undefined) ? updateChatListImmediate : false;
+            var updateChatListImmediate = (updateChatImmediate != undefined) ? updateChatImmediate : false;
             strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
                                                                 pollForNonRosterListing(groupId,updateChatListImmediate);
                                                             },100);
@@ -88,7 +88,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
         type = "dpp";
     }
     var validRe;
-    if(updateChatListImmediate == undefined || updateChatListImmediate == false){
+    if(updateChatListImmediate != undefined && updateChatListImmediate == true){
         validRe = true;
     }
     else{
@@ -113,12 +113,12 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             dataType: 'json',
             //data: postData,
             type: 'GET',
-           cache: true,
+            cache:false,
             async: true,
             timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
             headers:{
-                'JB-Profile-Identifier':loggedInJspcUser,
-                'Cache-Control':'max-age=300,public'
+                'JB-Profile-Identifier':loggedInJspcUser/*,
+                'Cache-Control':'max-age=300,public'*/
                 //'Last-Modified':((new Date()).toLocaleString())
             },
             beforeSend: function (xhr) {},
