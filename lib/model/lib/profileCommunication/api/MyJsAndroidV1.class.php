@@ -11,9 +11,9 @@ class MyJsAndroidV1 extends MyJsMobileAppV1
         {
         	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class MyJsAndroidV1 for android ");
 		self::$informationTupleFields= Array(
-			"INTEREST_RECEIVED"=>Array("PROFILECHECKSUM","OCCUPATION","AGE", "HEIGHT", "RELIGION","CASTE","MTONGUE","INCOME","ThumbailUrl","EDUCATION"),
-			"VISITORS"=>Array("PROFILECHECKSUM","ThumbailUrl"),
-			"MATCH_ALERT"=>Array("PROFILECHECKSUM","OCCUPATION","AGE", "HEIGHT", "RELIGION","CASTE","MTONGUE","INCOME","ThumbailUrl","EDUCATION"));
+			"INTEREST_RECEIVED"=>Array("PROFILECHECKSUM","OCCUPATION","AGE", "HEIGHT", "RELIGION","CASTE","MTONGUE","INCOME","ProfilePic120Url","EDUCATION"),
+			"VISITORS"=>Array("PROFILECHECKSUM","ProfilePic120Url"),
+			"MATCH_ALERT"=>Array("PROFILECHECKSUM","OCCUPATION","AGE", "HEIGHT", "RELIGION","CASTE","MTONGUE","INCOME","ProfilePic120Url","EDUCATION"));
 		self::$informationTypeFields= Array(
 			"INTEREST_RECEIVED"=>Array("NEW_COUNT","TITLE","TUPLES","TRACKING","SHOW_NEXT","VIEW_ALL_COUNT","CONTACT_ID"),
 			"VISITORS"=>Array("NEW_COUNT","TITLE","TUPLES","TRACKING","CONTACT_ID","VIEW_ALL_COUNT"),

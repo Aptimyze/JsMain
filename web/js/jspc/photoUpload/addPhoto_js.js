@@ -36,6 +36,15 @@ $(document).ready(function()
 		$(".js-overlay").show();
 		$(".js-cropper").show();
 	}
+
+	if(typeof(fromCALphoto)!='undefined' && fromCALphoto=='1')
+	{	
+		 $('html, body').animate({
+        scrollTop: $("#photoPrivacyDiv").offset().top
+    }, 500);
+
+     }
+	
 });
 
 function handleUploadType()
@@ -544,7 +553,14 @@ function loadPhotos(val,albumDiv)
                 var albumTuple = $.ReplaceJsVars(albumStructure, mapObj);
                 $("#js-addImportPhotos").append(albumTuple);
 		var htm = "<img src="+removeNull(val1.display)+" class='pudim5 brdr-1'/>";
-		$(".photonumber"+key1).append(htm);
+		if (key1 == 0)
+		{
+			$(".photonumber").append(htm);
+		}
+		else
+		{
+			$(".photonumber"+key1).append(htm);
+		}
 		cnt++;
         });
 	if(fbImportData["'"+albumPosition+"'"])

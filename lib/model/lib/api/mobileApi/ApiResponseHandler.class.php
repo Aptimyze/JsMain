@@ -16,6 +16,7 @@ class ApiResponseHandler
 	private $cache_flag=true;
 	private $cache_interval=60000; //in milisecond should be integer always 
 	private $resetCache=false;
+	private $androidFlagForRatingLogic=true;
 	//Constructor
 	private function __construct()
 	{
@@ -113,7 +114,7 @@ class ApiResponseHandler
 		$output["cache_flag"]=$this->cache_flag;
 		$output["cache_interval"]=$this->cache_interval;
 		$output["resetCache"]=$this->resetCache;
-
+		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
 			if(isset($this->upgradeDetails[forceupgrade_message]))

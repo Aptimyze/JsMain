@@ -245,9 +245,9 @@
               <div class="filbtn fl pos-rel h31">
               ~if $fieldData.filter.FILTER eq "Y"`
                 ~if $fieldData.filter.FILTER_VALUE eq "N"`
-                <div class="filter posthide ml10 cursp" id="~$fieldData.filter.FILTER_MAP`-filter"><span>Filter OFF</span></div>
+                <div class="filter posthide ml10 cursp" id="~$fieldData.filter.FILTER_MAP`-filter"><span>Strict Filter OFF</span></div>
                 ~else`
-                <div class="filterset posthide ml10 cursp" id="~$fieldData.filter.FILTER_MAP`-filter"><span class="colrw"><span>Filter ON</span></div>
+                <div class="filterset posthide ml10 cursp" id="~$fieldData.filter.FILTER_MAP`-filter"><span class="colrw"><span>Strict Filter ON</span></div>
                  ~/if`
                 <div class="pos-abs edwid3 z2 edpos1 filterhover">
                   <div class="edp3">
@@ -255,9 +255,9 @@
                     <input type="hidden" id="~$fieldData.filter.FILTER_MAP`-hint" value="~$fieldData.label`"/>
                       <div class="txtc fontreg">
                       ~if $fieldData.filter.FILTER_VALUE eq "N"`
-                        <p class="js-~$fieldData.filter.FILTER_MAP`-filter colr5 f15 lh30">Setting ~$fieldData.label` as filter?</p>
+                        <p class="js-~$fieldData.filter.FILTER_MAP`-filter colr5 f15 lh30">Setting ~$fieldData.label` as strict filter?</p>
                         ~else`
-                        <p class="js-~$fieldData.filter.FILTER_MAP`-filter colr5 f15 lh30">~$fieldData.label` set as filter</p>
+                        <p class="js-~$fieldData.filter.FILTER_MAP`-filter colr5 f15 lh30">~$fieldData.label` set as strict filter</p>
                         ~/if`
                         <p class="f13 color11 lnHt">~$fieldData.filter.FILTER_HINT_TEXT` </p>
                       </div>

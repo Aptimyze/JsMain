@@ -3,6 +3,7 @@ var JsChat = function () {
     this._construct(this, arguments);
 };
 var lrr;
+var tab1ListingIds = {},tab2ListingIds = {};
 //start:prototype
 JsChat.prototype = {
     _mainID: "#chatOpenPanel",
@@ -26,7 +27,7 @@ JsChat.prototype = {
     _listingTabs: {},
     _loginFailueMsg: "Login Failed,Try later",
     _noDataTabMsg: {
-        "tab1": "<span class='fontlig pb10 disp_b'>There are no shortlisted members online</span> You can find online members by clicking ‘Online Now’ link present on right, after conducting a search.",
+        "tab1": "<span class='fontlig pb10 disp_b'>There are no shortlisted profiles online</span> You can find online members by clicking ‘Online Now’ link present on right, after conducting a search.",
         //"tab1": "<span class='fontreg pb10 disp_b'>There are no matching members online</span> Please <a href='/profile/dpp' class='color5 cursp'>relax your partner preference</a> to see more matches.",
         "tab2": "You currently don’t have any accepted members, get started by sending interests or initiating chat with your matches."
     },
@@ -295,12 +296,30 @@ JsChat.prototype = {
             }
             else {
                 $('.js-htab').fadeOut('slow').promise().done(function() {
-                    $('.show' + param).fadeIn('slow')
+                    $('.show' + param).fadeIn('slow');
+                    $(curElem._scrollDivId).mCustomScrollbar("scrollTo",0,{dur:0,scrollEasing:"mcsEaseInOut"});
                 }); 
             }
             /*$('.js-htab').fadeOut('slow').promise().done(function () {
                 $('.show' + param).fadeIn('slow')
             });*/
+        }
+        
+        var apiParams = {};
+        if(localStorage && localStorage.getItem("tabState") == "tab1"){
+            apiParams["profiles"] = tab1ListingIds;
+            tab1ListingIds.length = 0;
+        }
+        else if(localStorage && localStorage.getItem("tabState") == "tab2") {
+            apiParams["profiles"] = tab2ListingIds;
+            tab2ListingIds.length = 0;
+        }
+        if (apiParams["profiles"] != undefined && Object.keys(apiParams["profiles"]).length > 1) {
+            //apiParams["pid"] = jidStr.slice(0, -1);
+            apiParams["photoType"] = "ProfilePic120Url";
+            apiParams["initialList"] = true;
+            //console.log("request2");
+            requestListingPhoto(apiParams);
         }
     },
     onLogoutPreClick: null,
@@ -565,7 +584,7 @@ JsChat.prototype = {
     addListingInit: function (data,operation) {
         var elem = this,
             statusArr = [],
-            jidStr = "",
+            //jidStr = "",
             currentID;
         //this._chatLoggerPlugin("addListing");
         for (var key in data) {
@@ -577,13 +596,21 @@ JsChat.prototype = {
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
-                jidStr = jidStr + runID + ",";
+                //jidStr = jidStr + runID + ",";
                 statusArr[runID] = status;
                 if (typeof data[key]["rosterDetails"]["groups"] != "undefined" && data[key]["rosterDetails"]["groups"].length > 0) {
                     var that = this;
                     //console.log("ankita",data[key]["rosterDetails"]["groups"]);
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
                         //that._chatLoggerPlugin("groups " + val);
+                        if(chatConfig.Params.pc.tab1groups.indexOf(val) !== -1){
+                            //tab1ListingIds.push(key);
+                            tab1ListingIds[key] = {"PROFILEID":key,"GROUP":val};
+                        }
+                        else if (chatConfig.Params.pc.tab2groups.indexOf(val) !== -1){
+                            //tab2ListingIds.push(key);
+                            tab2ListingIds[key] = {"PROFILEID":key,"GROUP":val};
+                        }
                         var List = '',
                             fullname = data[key]["rosterDetails"]["fullname"],
                             tabShowStatus = $('div.' + val).attr('data-showuser'),
@@ -605,10 +632,8 @@ JsChat.prototype = {
                         List += '</li>';
                         var addNode = false;
                         if (tabShowStatus == 'false') {
-                            //that._chatLoggerPlugin(status + "2222");
                             addNode = true;
-                        } else {
-                            //that._chatLoggerPlugin(status + "1111");
+                        } else {  
                             if (status == 'online') {
                                 addNode = true;
                             }
@@ -617,8 +642,6 @@ JsChat.prototype = {
                         if (addNode == true) {
                             if ($('#' + runID + "_" + val).length == 0) {
                                 if ($('#' + runID + "_" + val).find('.nchatspr').length == 0) {
-                                    //that._chatLoggerPlugin("checking no of nodes in group " + $('div.' + val + ' ul li').size());
-                                    //that._chatLoggerPlugin("b2");
                                     var tabId = $('div.' + val).parent().attr("id");
                                     if ($("#show" + tabId + "NoResult").length != 0) {
                                         that._chatLoggerPlugin("me");
@@ -635,11 +658,7 @@ JsChat.prototype = {
                                             setTimeout(function(){
                                                $("#"+currentID+"_hover").css("visibility","hidden"); 
                                             },100);
-                                            //console.log("A",currentID);
-                                            //console.log("B",statusArr[currentID]);
-                                            //console.log("C",$(this).attr("data-jid"));
-                                            //console.log("D",$(this).attr("data-checks"));
-                                            //console.log("E",$(this).attr("id").split("_")[1]);
+                                           
                                             //setTimeout(function(){
                                                 elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
                                             //    console.log("Timeouttocreatechatbox");
@@ -673,12 +692,26 @@ JsChat.prototype = {
             global: elem
         }, elem._calltohover);
         //var APIsrc ="http://xmppdev.jeevansathi.com/api/v1/social/getMultiUserPhoto?pid=";
-        //this._chatLoggerPlugin("api");
-        //this._chatLoggerPlugin(jidStr);
         var apiParams = {};
-        if (jidStr) {
-            apiParams["pid"] = jidStr.slice(0, -1);
+        if(localStorage && localStorage.getItem("tabState") == "tab1"){
+            apiParams["profiles"] = tab1ListingIds;
+            tab1ListingIds.length = 0;
+            tab1ListingIds = {};
+        }
+        else if(localStorage && localStorage.getItem("tabState") == "tab2") {
+            apiParams["profiles"] = tab2ListingIds;
+            tab2ListingIds.length = 0;
+            tab2ListingIds = {};
+        }
+        if(apiParams["profiles"] != undefined && Object.keys(apiParams["profiles"]).length > 0){
             apiParams["photoType"] = "ProfilePic120Url";
+            if(operation == "create_list"){
+                apiParams["initialList"] = true;
+            }
+            else{
+                apiParams["initialList"] = false;
+            }
+            //console.log("request1");
             requestListingPhoto(apiParams);
         }
         if(operation == "create_list"){
@@ -3150,6 +3183,7 @@ JsChat.prototype = {
 	},    
     
     manageLoginLoader: function(type){
+        //console.log("Manage login loader");
             $("#loginLoader").toggleClass("disp-none");
     },
     /*
@@ -3160,7 +3194,7 @@ JsChat.prototype = {
     addLoginHTML: function (failed) {
         //this._chatLoggerPlugin('in addLoginHTML');
         var curEle = this;
-        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
+        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100" id="selfImgDiv"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
         var errorHTML = '';
         if (failed == true) {
             errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">' + curEle._loginFailueMsg + '</div>';
@@ -3256,7 +3290,7 @@ JsChat.prototype = {
                 setTimeout(function(){
                     //console.log("manvi",$("chat-box"));
                     $("chat-box").each(function (index, element) {
-                        console.log("element",element);
+                        //console.log("element",element);
                         _this._scrollDown($(this), "min");
                     });
                 },1000);
@@ -3269,8 +3303,8 @@ JsChat.prototype = {
                 //handle postion of next prev buttons on view profile
                 if(my_action && (my_action=="detailed" || my_action == "noprofile")){
                     _this.handleNextPrevButtons("makeCloser");
-                }     
-            }   
+                }
+            }
         }
         if (this.checkLoginStatus()) {
             //this._chatLoggerPlugin("checking login status");

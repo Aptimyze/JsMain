@@ -144,7 +144,7 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
 						$paramBindValue = $this->{$param."_BIND_TYPE"};
 						$values = explode(",",$value);
 						foreach($values as $k1=>$val)
-							$resSelectDetail->bindValue(":".$param."_".$count."_".$k1,$val,constant('PDO::PARAM_'.$paramBindValue));
+							$resSelectDetail->bindValue(":".$param."_".$count."_".$k1,$val,PDO::PARAM_STR);
 						$count++;
 					}
 				}

@@ -52,6 +52,8 @@ class EditDetails{
 			if(MobileCommon::isApp()){
 				
 				$myProfileArr["album"]["privacy"] = $actionObj->loginProfile->getPHOTO_DISPLAY();
+                                if($myProfileArr["album"]["privacy"]=='')
+                                        $myProfileArr["album"]["privacy"]="A";
 				$picServiceObj = new PictureService($actionObj->loginProfile);
 				$album = $picServiceObj->getAlbum($request->getParameter("contactType"));
 				if($album && is_array($album))

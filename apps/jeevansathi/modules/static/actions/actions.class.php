@@ -468,6 +468,7 @@ public function executeCALRedirection($request){
 	$this->PREV_URL=$this->getRequestURI();
 	$this->SITE_URL=sfConfig::get("app_site_url");
         if(MobileCommon::isNewMobileSite()){
+            $request->setAttribute('mobLogoutPage','Y');
             $this->setTemplate("newMobLogin");
             if ($request->getParameter('regMsg')=='Y')   
           $this->showRegisterMsg='Y';

@@ -85,4 +85,9 @@ height:220px;width:220px;
 
 #homepage .stickyTopNavBar{position: fixed !important}
 
-
+.loaderSmallIcon2{
+display:block;
+position: relative;
+width: 20px;
+height: 20px;
+}
