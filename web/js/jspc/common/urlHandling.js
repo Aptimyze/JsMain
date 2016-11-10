@@ -41,7 +41,7 @@ function updateHistory(tabName,page,searchId)
                         addMoreParams += '/'+window.location.href.split("/perform?")[1].split("=")[0];
                 }
                 else if(window.location.href.split("/").length>3){
-											if(window.location.href.indexOf("?useHeaderCaching")!=-1)
+											if(window.location.href.indexOf("?useHeaderCaching")!=-1 || window.location.href.indexOf("?matchedOrAll")!=-1)
 											{
 												var splitted = window.location.href.split("/")[4];
 												addMoreParams += '/'+splitted.split("?")[0];

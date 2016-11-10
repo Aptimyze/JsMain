@@ -198,7 +198,7 @@ function searchListingAction(thisElement){
 				listType="cc";
                                 break;
                         case 'js-visitors':
-                                postParams = "searchId=5&currentPage=1";
+                                postParams = "searchId=5&currentPage=1&matchedOrAll=A";
                                 postParams1 = "visitors=1";
 				listType="cc";
                                 break;

@@ -646,17 +646,22 @@ public function executePerformV2(sfWebRequest $request)
 						break;
 
 					case 'VISITORS': 
-                                        if($infoTypenav["matchedOrAll"]=="" || $infoTypenav["matchedOrAll"]=="A"){
+                                        if($infoTypenav["matchedOrAll"]==""){
+                                            $response2["subtitle"]='Profile Visitors '.$response2['total'];
+                                            $response2["title2"]=null;
+                                        }
+                                        elseif($infoTypenav["matchedOrAll"]=="A"){
                                             $response2["subtitle"]='All Profile Visitors '.$response2['total'];
                                             $response2["title2"]="Matching Visitors"; 
                                             $response2["url"]="/profile/contacts_made_received.php?page=idd1&searchId=5&currentPage=1&matchedOrAll=M";
+                                            $response2["visitorAllOrMatching"]=$infoTypenav["matchedOrAll"];
                                         }
                                         else{
                                             $response2["title2"]='All Profile Visitors';
                                             $response2["subtitle"]="Matching Visitors ".$response2['total']; 
                                             $response2["url"]="/profile/contacts_made_received.php?page=idd1&searchId=5&currentPage=1&matchedOrAll=A";
+                                            $response2["visitorAllOrMatching"]=$infoTypenav["matchedOrAll"];
                                         }
-                                        $response2["visitorAllOrMatching"]=$infoTypenav["matchedOrAll"];
 					break;
 					
 					case 'SHORTLIST': 
