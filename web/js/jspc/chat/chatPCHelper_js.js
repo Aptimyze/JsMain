@@ -205,19 +205,22 @@ function to process the non roster data
 * @inputs:response,type
 */
 function processNonRosterData(response,type,source){
-    var operation = "create_list",reCreateList = true;
+    var operation = "create_list",reCreateList = true,nonRosterUpdates = null;
     console.log("in processNonRosterData",source); 
     var newNonRoster = {},oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
     if((Object.keys(response)).length > 0){
         if(source != "localstorage"){
+            if(source == "headerStorage"){
+                nonRosterUpdates = strophieWrapper.getRosterStorage("non-roster-updates");
+            }
+            
             $.each(response,function(key,nodeObj){
                 nodeObj["groupid"] = type;
                 nodeObj["addIndex"] = key;
                 var listObj = strophieWrapper.formatNonRosterObj(nodeObj);
                 if (strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && strophieWrapper.Roster[nodeObj["profileid"]] == undefined){
                     if(source == "headerStorage"){
-                        var nonRosterUpdates = strophieWrapper.getRosterStorage("non-roster-updates");
-                        console.log("in onNonRosterListDeletion",nonRosterUpdates,nonRosterUpdates[nodeObj["profileid"]]);
+                        //console.log("in onNonRosterListDeletion",nonRosterUpdates,nonRosterUpdates[nodeObj["profileid"]]);
                         if(nonRosterUpdates == undefined || nonRosterUpdates[nodeObj["profileid"]] == undefined){
                             console.log("added1",nodeObj["profileid"]);
                             newNonRoster[nodeObj["profileid"]] = listObj;
