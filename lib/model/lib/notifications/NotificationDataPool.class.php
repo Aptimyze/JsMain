@@ -412,5 +412,50 @@ class NotificationDataPool
         unset($tempArray);
         return $data;
     }
+    
+    public function getMatchOfDayData($applicableProfiles){
+        if($applicableProfiles){
+            $counter = 0;
+            $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY("newjs_slave");
+            $curDate = date('Y-m-d');
+            $paramsArr["ENTRY_DT"] = date('Y-m-d', strtotime('-7 day',  strtotime($curDate)));
+            $matchCount = $matchOfDayObj->getCountForMatchProfile();
+            foreach($applicableProfiles as $profileid => $details){
+                $searchResult = SearchCommonFunctions::getMatchofTheDay($profileid);
+                //print_r($searchResult);
+                //print_r("\n***********\n");
+                $resultSet = $searchResult["PIDS"];
+                $paramsArr["PROFILEID"] = $profileid;
+                if($searchResult["CNT"] > 0){
+                    unset($resultToFilter);
+                    $resultToFilter = $matchOfDayObj->getMatchForProfileTillDays($paramsArr);
+                    if($resultToFilter){
+                        $resultSet = array_diff($resultSet, $resultToFilter);
+                    }
+                    $copyResultSet = $resultSet;
+                    unset($firstResult);
+                    foreach($resultSet as $key => $value){
+                        if($matchCount[$value]){
+                            if(!$firstResult){
+                                $firstResult = $value;
+                            }
+                            unset($copyResultSet[$key]);
+                        }
+                    }
+                    if($copyResultSet){
+                        reset($copyResultSet);
+                        $resultMatchProfileid = current($copyResultSet);
+                    }
+                    else{
+                        $resultMatchProfileid = $firstResult;
+                    }
+                    //$dataAccumulated[$counter];
+                    //print_r($resultMatchProfileid."\n");
+                    $counter++;
+                }
+            }
+            return $dataAccumulated;
+        }
+    }
 }
 ?>

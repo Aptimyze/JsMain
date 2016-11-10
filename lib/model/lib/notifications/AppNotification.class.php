@@ -468,15 +468,9 @@ public function microtime_float()
         case "MATCH_OF_DAY":
             $applicableProfiles=array();
             $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
-            $applicableProfilesArr = array_keys($applicableProfiles);
-            $res = SearchCommonFunctions::getMatchofTheDay(14411);
-            //print_r($res);
-            //die("NN");
-            $poolObj = new NotificationDataPool;
-            foreach($applicableProfilesArr as $key => $profile){
-                
-            }
-            $dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+            $notificationDataPoolObj = new NotificationDataPool();
+            $dataAccumulated = $notificationDataPoolObj->getMatchOfDayData($applicableProfiles);
+            //die("XX");
             unset($poolObj);
             break;
 	  }
