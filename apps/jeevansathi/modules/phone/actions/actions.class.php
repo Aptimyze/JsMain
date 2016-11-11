@@ -222,7 +222,7 @@ class phoneActions extends sfActions
 		$phone=$request->getParameter('phone');
 		$mobile=$request->getParameter('mobile');
    		
-   		if(!$profileChecksum || ($phone!='Y' && $phone!='N') || ($mobile!='Y' && $mobile!='N')) {
+   		if(!$profileChecksum) {
    			$respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();
