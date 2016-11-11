@@ -59,7 +59,7 @@ class FAQFeedBack
                 if($reasonMap)
                 {
                     $reasonMapArray=self::$REASON_MAP;
-                    $reasonNew=$reasonMapArray[$reasonMap];
+                    $reasonNew=$reasonMapArray[$reasonMap+1];
                     if($reasonNew=='other')
                         $reasonNew=$this->webRequest->getParameter('other_reason');
                 }
