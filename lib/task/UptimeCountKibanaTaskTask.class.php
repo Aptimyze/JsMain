@@ -21,7 +21,7 @@ class UptimeCountKibanaTaskTask extends sfBaseTask
 The [UptimeCountKibanaTask|INFO] task does things.
 Call it with:
 
-	[php symfony UptimeCountKibanaTask|INFO]
+	[php symfony Kibana:UptimeCountKibanaTask|INFO]
 EOF;
 	}
 
@@ -32,42 +32,54 @@ EOF;
 		$indexName = 'jeevansathiactivity';
 		$query = '_search';
 		$timeout = 5000;
-		$date = date('Y-m-d', strtotime('-1 day'));
-
-		var_dump($date);
+		$filePath = $dirPath."/Counts.log";
+		$date = date('Y-m-d', strtotime('-2 day'));
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
-		// parameters required, log type of Error and get all module counts in the specified interval
+
+		$dirPath = '/home/nickedes/Desktop/logs';
+		if (false === is_dir($dirPath)) {
+			mkdir($dirPath,0777,true);
+		}
+
+		// parameters required, get all request code counts in the specified interval
 		$params = [
-			// "query"  => [
-			// 	"range" => [
-			// 		"ACTIVITY_DATE" => 
-			// 		[
-			// 			"gte" => "$date"
-			// 		]
-			// 	]
-			// ],
 			"aggs" => [
-        		"modules" => [
-            		"terms" => [ "field" => "RCODE" ,  "size" => 100 ] 
-            	]
-			]
+					"rcodes" => [
+						"terms" => [ "field" => "RCODE" ,  "size" => 100 ],
+						"aggs" => [
+							"histo" => [
+								"date_histogram" => [
+									"field" => "ACTIVITY_DATE",
+									"interval" => "day",
+									"format" => "yyyy-MM-dd"
+								]
+							]
+						]
+					]
+				]
 		];
 
 		// send curl request
 		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
-		var_dump($response);
 		if($response)
 		{
 			$arrResponse = json_decode($response, true);
 			$arrModules = array();
-			print_r($arrResponse);
-			foreach($arrResponse['aggregations']['modules']['buckets'] as $rcode)
+			foreach($arrResponse['aggregations']['rcodes']['buckets'] as $rcode)
 			{
-					$arrModules[$rcode['key']] = $rcode['doc_count']; 
+					foreach ($rcode['histo']['buckets'] as $dateCounts) {
+						print_r($dateCounts);
+						if($dateCounts['key_as_string'] == $date)
+						{
+							$arrModules[$rcode['key']] = $dateCounts['doc_count'];
+						}
+					}
 			}
-			$count = ['200' => $arrModules[200], '500' => $arrModules[500]];
-			var_dump($count);
-			die;
+			$ratio = $arrModules['200']/$arrModules['500'];
+			$count = array('200' => $arrModules['200'], '500' => $arrModules['500'], 'ratio' => $ratio);
+			$fileResource = fopen($filePath,"a");
+			fwrite($fileResource,json_encode($count)."\n");
+			fclose($fileResource);
 		}
 	}
 }
