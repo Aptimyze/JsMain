@@ -353,6 +353,31 @@ function generateChatHistoryID(key){
 }
 
 /*
+ * set self name in chat header as well as localstorage
+ * @inputs : nameStr
+ * @returns : none
+ */
+function setChatSelfName(nameStr,target){
+    if(nameStr != undefined && nameStr != ""){
+        /*var trimmedString = nameStr.length > chatConfig.Params[device].nameTrimmLength ? nameStr.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameStr;
+        var oldChatName = $(".chatName").html(trimmedString);
+        if(showChat == "0" || (trimmedString && oldChatName != trimmedString)){
+            $(".chatName").html(trimmedString);
+            localStorage.setItem('name', JSON.stringify({
+                'selfName': nameStr,
+                'user': loggedInJspcUser
+            }));
+        }*/
+        if(target == "storage"){
+            localStorage.setItem('name', JSON.stringify({
+                'selfName': nameStr,
+                'user': loggedInJspcUser
+            }));
+        }
+    }
+}
+
+/*
  * request self name
  * @inputs none
  * @returns self name / username
@@ -360,14 +385,33 @@ function generateChatHistoryID(key){
 function getSelfName(){
     var selfName = localStorage.getItem('name'),
         flag = true;
+
     if (selfName) {
         var data = JSON.parse(selfName);
         var user = data['user'];
         if (user == loggedInJspcUser) {
             flag = false;
             selfName = data['selfName'];
+            if(my_action == "jspcPerform" && $("#js-usernameAutomation").length != 0){
+                console.log("from myjs",$("#js-usernameAutomation").html());
+                var myjsUserName = $("#js-usernameAutomation").html();
+                if(myjsUserName && selfName != myjsUserName){
+                    setChatSelfName(myjsUserName,"storage");
+                    selfName = myjsUserName;
+                }
+            }
         }
     }
+    else if(my_action == "jspcPerform" && $("#js-usernameAutomation").length != 0){
+        console.log("from myjs",$("#js-usernameAutomation").html());
+        var myjsUserName = $("#js-usernameAutomation").html();
+        if(myjsUserName && selfName != myjsUserName){
+            setChatSelfName(myjsUserName,"storage");
+            selfName = myjsUserName;
+            flag = false;
+        }
+    }
+    console.log("name",flag);
     if(flag){
         var apiUrl = chatConfig.Params.selfNameUr;
         ////console.log("In self Name");
