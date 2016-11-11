@@ -30,11 +30,11 @@ EOF;
 		$elkServer = 'aura.infoedge.com';
 		$elkPort = '9203';
 		$indexName = 'jeevansathiactivity';
-		$query = '_search';
+		$query = '_count';
 		$timeout = 5000;
 		$dirPath = '/home/nickedes/Desktop/logs';
 		$filePath = $dirPath."/Counts.log";
-		$date = date('Y-m-d', strtotime('-2 day'));
+		$date = date('Y-m-d', strtotime('-1 day'));
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 
 		if (false === is_dir($dirPath)) {
@@ -42,28 +42,65 @@ EOF;
 		}
 
 		// parameters required, get all request code counts in the specified interval
-		$params = [
-			"aggs" => [
-					"rcodes" => [
-						"terms" => [ "field" => "RCODE" ,  "size" => 100 ],
-						"aggs" => [
-							"histo" => [
-								"date_histogram" => [
-									"field" => "ACTIVITY_DATE",
-									"interval" => "day",
-									"format" => "yyyy-MM-dd"
-								]
-							]
-						]
-					]
-				]
-		];
+		// $params = [
+		// 	"aggs" => [
+		// 			"rcodes" => [
+		// 				"terms" => [ "field" => "RCODE" ,  "size" => 100 ],
+		// 				"aggs" => [
+		// 					"histo" => [
+		// 						"date_histogram" => [
+		// 							"field" => "ACTIVITY_DATE",
+		// 							"interval" => "day",
+		// 							"format" => "yyyy-MM-dd"
+		// 						]
+		// 					]
+		// 				]
+		// 			]
+		// 		]
+		// ];
 
+		$params = [
+
+			"query"=> [
+			    "filtered"=> [
+			      "query"=> [
+			        "match"=> [ "RCODE" => "200" ]
+			      ],
+			      "filter"=> [
+			        "range"=> [ "ACTIVITY_DATE"=> 
+				        	[
+				        		"gte" => "now-20h",
+				        		"lt" => "now",
+				        	]
+			      ]
+			    ]
+			  ]
+		]];
+
+		$params = [
+
+			"query"=> [
+			    "filtered"=> [
+			      "query"=> [
+			        "match"=> [ "RCODE" => "500" ]
+			      ],
+			      "filter"=> [
+			        "range"=> [ "ACTIVITY_DATE"=> 
+				        	[
+				        		"gte" => "now-1h",
+				        		"lt" => "now",
+				        	]
+			      ]
+			    ]
+			  ]
+		]];
 		// send curl request
 		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
 		if($response)
 		{
 			$arrResponse = json_decode($response, true);
+			print_r($arrResponse);
+			die;
 			$arrModules = array();
 			foreach($arrResponse['aggregations']['rcodes']['buckets'] as $rcode)
 			{
