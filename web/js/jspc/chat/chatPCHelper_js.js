@@ -94,7 +94,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
     }
     else{
         validRe = checkForValidNonRosterRequest(type);
-        headerData['Cache-Control'] = 'max-age=120000,public';
+        headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].nonRosterListingRefreshCap+',public';
     }
     if(validRe == true){
         var getInputData = "";
