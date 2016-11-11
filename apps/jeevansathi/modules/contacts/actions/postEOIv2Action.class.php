@@ -97,6 +97,7 @@ class postEOIv2Action extends sfAction
 		$profilePicObj = $pictureServiceObj->getProfilePic();
 		$this->loginProfile = LoggedInProfile::getInstance();
 		$subscription=$this->loginProfile->getSubscription();
+		$this->OnceUnderScreen = 0;
 		if($profilePicObj)
 			$thumbNail = $profilePicObj->getThumbailUrl();
 		if(!$thumbNail)
@@ -265,11 +266,15 @@ class postEOIv2Action extends sfAction
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{  
-				$responseArray["topMsg2"] = "Interest will be delivered once your profile is screened";
-				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
-				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-				$responseArray["headerlabel"] = "Profile Under Screening";
-				$responseArray["redirect"] = true;
+				if(!$this->OnceUnderScreen)
+				{		
+					// $this->OnceUnderScreen = 1;
+					$responseArray["topMsg2"] = "Interest will be delivered once your profile is screened";
+					$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
+					$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+					$responseArray["headerlabel"] = "Profile Under Screening";
+					$responseArray["redirect"] = true;
+				}
 			}
 			elseif($errorArr["DECLINED"] == 2)
 			{
