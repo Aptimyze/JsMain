@@ -87,17 +87,17 @@ function pollForNonRosterListing(type,updateChatListImmediate){
     if(type == undefined || type == ""){
         type = "dpp";
     }
-    var validRe;
+    var validRe,headerData = {'JB-Profile-Identifier':loggedInJspcUser};
     if(updateChatListImmediate != undefined && updateChatListImmediate == true){
         validRe = true;
+        headerData['Cache-Control'] = 'no-cache,no-store';
     }
     else{
         validRe = checkForValidNonRosterRequest(type);
+        headerData['Cache-Control'] = 'max-age=120000,public';
     }
     if(validRe == true){
-        var getInputData = "",outputProfileIds = [];
-        //postData["pageSource"] = "chat";
-        //postData["channel"] = device; //req for tracking
+        var getInputData = "";
         if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
             $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"], function (k, v) {
                 if(getInputData == ""){
@@ -114,14 +114,10 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             dataType: 'json',
             //data: postData,
             type: 'GET',
-            cache:false,
+            cache:true,
             async: true,
             timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
-            headers:{
-                'JB-Profile-Identifier':loggedInJspcUser/*,
-                'Cache-Control':'max-age=300,public'*/
-                //'Last-Modified':((new Date()).toLocaleString())
-            },
+            headers:headerData,
             beforeSend: function (xhr) {},
             success: function (response) {
                 /*response = {
