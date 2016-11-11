@@ -90,7 +90,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
     var selfAuth = readCookie("AUTHCHECKSUM");
     if(selfAuth != undefined){
         //console.log("selfAuth",selfAuth);
-        var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
+        var validRe,headerData = {'JB-Profile-Identifier':loggedInJspcUser};
         if(updateChatListImmediate != undefined && updateChatListImmediate == true){
             validRe = true;
             headerData['Cache-Control'] = 'no-cache,no-store';
