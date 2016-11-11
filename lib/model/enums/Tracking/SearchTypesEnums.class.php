@@ -68,6 +68,7 @@ class SearchTypesEnums
         //const HOROSCOPE_REQUEST_SENT_JSMS = "20";
 
         const SHORTLIST_JSMS = "WS";
+        const MATCHING_VISITORS_JSMS = "MWV";
         const VISITORS_JSMS = "WV";
         const VISITORS_MYJS_JSMS = "WMV";
         const MATCHALERT_MYJS_JSMS = "WMM";
@@ -78,7 +79,8 @@ class SearchTypesEnums
 		const CONTACT_VIEWERS_ANDROID = "ACVS";
 		const JUST_JOINED_MYJS_JSMS="JJM"; 
 		//const DPP_MYJS_JSMS="DPM";              not in use now.
-
+                
+        const MATCHING_VISITORS_IOS = "MIV";
         const VISITORS_IOS = "IV";
         const SHORTLIST_IOS = "IS";
         const PHOTO_REQUEST_RECEIVED_IOS = "37";
@@ -107,6 +109,8 @@ class SearchTypesEnums
         const PHONEBOOK_CC_PC = "M26";
         const CONTACTS_VIEWED_BY_CC_PC="M27";
         const ViewSimilarDesktop = "30";
+        const MATCHING_VISITORS_JSPC="M5";
+        const MATCHING_VISITORS_ANDROID="MAV";
         const VISITORS_JSPC="5";
         const SHORTLIST_JSPC="7";
         const VIEW_SIMILAR_ANDROID = "ACO";

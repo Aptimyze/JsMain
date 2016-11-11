@@ -51,9 +51,10 @@ class Visitors
                                 $this->passInVisitors();
                             
 			}
-			if (is_array($this->visitorsProfile) && $infoTypenav["matchedOrAll"]=="A" && $this->profile->getPRIVACY()=="F") {
-						$this->filterCheck();
-			}
+			if ($infoTypenav["matchedOrAll"]=="A") 
+                            $this->filterCheck();
+                        
+                        $this->reverseFilterCheck();
 		}
 		if (is_array($this->visitorsProfile)) {
 			foreach ($this->visitorsProfile as $key => $value) {
@@ -186,10 +187,22 @@ class Visitors
 	}
 	public function filterCheck()
 	{
+                if(is_array($this->visitorsProfile))
 		foreach ($this->visitorsProfile as $key=>$profile) {
 			$filtercheck = UserFilterCheck::getInstance($profile,$this->profile);
 			if ($filtercheck->getFilteredContact($action = "VISIT"))
 				unset($this->visitorsProfile[$key]);
+		}
+        }
+        public function reverseFilterCheck()
+	{
+                if(is_array($this->visitorsProfile))
+                foreach ($this->visitorsProfile as $key=>$profile) {
+                    if($profile->getPRIVACY()=='F'){
+			$filtercheck = UserFilterCheck::getInstance($this->profile,$profile);
+			if ($filtercheck->getFilteredContact($action = "VISIT"))
+				unset($this->visitorsProfile[$key]);
+                    }
 		}
 	}
 	
