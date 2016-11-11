@@ -32,11 +32,11 @@ EOF;
 		$indexName = 'jeevansathiactivity';
 		$query = '_search';
 		$timeout = 5000;
+		$dirPath = '/home/nickedes/Desktop/logs';
 		$filePath = $dirPath."/Counts.log";
 		$date = date('Y-m-d', strtotime('-2 day'));
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 
-		$dirPath = '/home/nickedes/Desktop/logs';
 		if (false === is_dir($dirPath)) {
 			mkdir($dirPath,0777,true);
 		}
