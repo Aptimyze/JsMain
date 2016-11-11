@@ -1117,7 +1117,7 @@ if(result.actiondetails.bottommsg2){
     $("#mobile").show();
     if(result.actiondetails.contact1.value=="blur"){ $("#mobileValBlur").show(); $("#neverMindLayer").show(); }
     else $("#mobileVal").show();
-                $("#mobileVal").html(result.actiondetails.contact1.value+'<span id=\'reportInvalidButtonLayer\' onclick="reportInvalid(\'M\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c"> Report Invalid </span>');
+                $("#mobileVal").html(result.actiondetails.contact1.value+'<span  onclick="reportInvalid(\'M\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c"> Report Invalid </span>');
                 if (result.actiondetails.contact1.iconid){ 
                    $("#mobileIcon > a").attr('href','tel:'+result.actiondetails.contact1.value.toString());
             $("#mobileIcon").show();
@@ -1133,7 +1133,7 @@ if(result.actiondetails.bottommsg2){
             // $("#landlineVal").hide();
                 $("#landline").show();
                 if(result.actiondetails.contact2.value=="blur") { $("#landlineValBlur").show(); $("#neverMindLayer").show();}
-                else $("#landlineVal").show();$("#landlineVal").html(result.actiondetails.contact2.value+'<span id=\'reportInvalidButtonLayer\'  onclick="reportInvalid(\'L\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c">Report Invalid </span>');
+                else $("#landlineVal").show();$("#landlineVal").html(result.actiondetails.contact2.value+'<span onclick="reportInvalid(\'L\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c">Report Invalid </span>');
                 if (result.actiondetails.contact2.iconid){ 
                    $("#landlineIcon > a").attr('href','tel:'+result.actiondetails.contact2.value.toString());
             $("#landlineIcon").show();
