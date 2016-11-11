@@ -108,6 +108,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                 }
             });
         }
+        getInputData = getInputData+"&timestamp="+(new Date()).getTime();
         $.myObj.ajax({
             url: (dppListingWebServiceUrl+getInputData),
             dataType: 'json',
@@ -123,7 +124,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             },
             beforeSend: function (xhr) {},
             success: function (response) {
-                /*response = {  //comment later
+                /*response = {
                 "data": [
                     {
                     "profileid": "2865000",

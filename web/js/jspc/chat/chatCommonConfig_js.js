@@ -86,7 +86,7 @@ chatConfig.Params = {
             "extraGETParams":{
                 "type":"CHATDPP"
             },
-            "timeoutTime":60000 //1 min
+            "timeoutTime":120000 //1 min
         }
     },
     //api config for chat history
