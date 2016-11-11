@@ -747,10 +747,14 @@ die;
   }
 
   //send instant sms with tracking
-  public static function sendPlusTrackInstantSMS($key,$profileid)
+  public static function sendPlusTrackInstantSMS($key,$profileid,$tokenArr=null)
   {
   	include_once(sfConfig::get("sf_web_dir")."/P/InstantSMS.php");
-	$sms=new InstantSMS($key,$profileid);
+	if (!empty($tokenArr) && is_array($tokenArr)) {
+		$sms=new InstantSMS($key,$profileid, $tokenArr);
+	} else {
+		$sms=new InstantSMS($key,$profileid);
+	}
 	$sms->send();
   }
 
