@@ -87,102 +87,106 @@ function pollForNonRosterListing(type,updateChatListImmediate){
     if(type == undefined || type == ""){
         type = "dpp";
     }
-    var validRe,headerData = {'JB-Profile-Identifier':loggedInJspcUser};
-    if(updateChatListImmediate != undefined && updateChatListImmediate == true){
-        validRe = true;
-        headerData['Cache-Control'] = 'no-cache,no-store';
-    }
-    else{
-        validRe = checkForValidNonRosterRequest(type);
-        headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].headerCachingAge+',public';
-    }
-    //console.log("headerData",headerData);
-    if(validRe == true){
-        var getInputData = "";
-        if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
-            $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"], function (k, v) {
-                if(getInputData == ""){
-                    getInputData = "?"+k+"="+v;
-                }
-                else{
-                    getInputData = getInputData+"&"+k+"="+v;
+    var selfAuth = readCookie("AUTHCHECKSUM");
+    if(selfAuth != undefined){
+        //console.log("selfAuth",selfAuth);
+        var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
+        if(updateChatListImmediate != undefined && updateChatListImmediate == true){
+            validRe = true;
+            headerData['Cache-Control'] = 'no-cache,no-store';
+        }
+        else{
+            validRe = checkForValidNonRosterRequest(type);
+            headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].headerCachingAge+',public';
+        }
+        //console.log("headerData",headerData);
+        if(validRe == true){
+            var getInputData = "";
+            if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
+                $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"], function (k, v) {
+                    if(getInputData == ""){
+                        getInputData = "?"+k+"="+v;
+                    }
+                    else{
+                        getInputData = getInputData+"&"+k+"="+v;
+                    }
+                });
+            }
+            //getInputData = getInputData+"&timestamp="+(new Date()).getTime();
+            $.myObj.ajax({
+                url: (dppListingWebServiceUrl+getInputData),
+                dataType: 'json',
+                //data: postData,
+                type: 'GET',
+                cache:true,
+                async: true,
+                timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
+                headers:headerData,
+                beforeSend: function (xhr) {},
+                success: function (response) {
+                    /*response = {
+                    "data": [
+                        {
+                        "profileid": "2865000",
+                        "username": "WYZ6824",
+                        "profileChecksum": "74cd670dc3ff8c388b823cf5c166ca84i2865000"
+                        },
+                        {
+                        "profileid": "8925000",
+                        "username": "ZZYV2509",
+                        "profileChecksum": "d948e45111aee5677868d6b17bec9ca7i8925000"
+                        },
+                        {
+                        "profileid": "7415000",
+                        "username": "RTW1253",
+                        "profileChecksum": "5f42a56a1d5df485dc3dc26bafca6d52i7415000"
+                        },
+                        {
+                        "profileid": "8874000",
+                        "username": "ZZYA1475",
+                        "profileChecksum": "4f29b43a3c50e05531fd01132f7f1d66i8874000"
+                        },
+                        {
+                        "profileid": "1764127",
+                        "username": "YAS8573",
+                        "profileChecksum": "1764127lr"
+                        },
+                        {
+                        "profileid": "3599124",
+                        "username": "nokumarriage",
+                        "profileChecksum": "3599124lr"
+                        }
+                    ],
+                "header": {
+                "status": 200,
+                "errorMsg": "",
+                "pollTime":20000
+                },
+                "debugInfo": null
+                };*/
+            
+                    if(response["header"]["status"] == 200){
+                        //console.log("fetchNonRosterListing success",response);
+                        if(response["header"]["pollTime"] != undefined && response["header"]["pollTime"] > 0){
+                            chatConfig.Params[device].nonRosterListingRefreshCap = response["header"]["pollTime"];
+                            //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
+                        }
+                        var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
+                        if(nonRosterCLUpdated == undefined){
+                            nonRosterCLUpdated = {};
+                        }
+                        nonRosterCLUpdated[type] = (new Date()).getTime();
+                        localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
+                        //add in listing, after non roster list has been fetched
+                        processNonRosterData(response["data"],type,"api");
+                    }
+                },
+                error: function (xhr) {
+                    //console.log("fetchNonRosterListing error",xhr);
+                    //return "error";
                 }
             });
         }
-        //getInputData = getInputData+"&timestamp="+(new Date()).getTime();
-        $.myObj.ajax({
-            url: (dppListingWebServiceUrl+getInputData),
-            dataType: 'json',
-            //data: postData,
-            type: 'GET',
-            cache:true,
-            async: true,
-            timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
-            headers:headerData,
-            beforeSend: function (xhr) {},
-            success: function (response) {
-                /*response = {
-                "data": [
-                    {
-                    "profileid": "2865000",
-                    "username": "WYZ6824",
-                    "profileChecksum": "74cd670dc3ff8c388b823cf5c166ca84i2865000"
-                    },
-                    {
-                    "profileid": "8925000",
-                    "username": "ZZYV2509",
-                    "profileChecksum": "d948e45111aee5677868d6b17bec9ca7i8925000"
-                    },
-                    {
-                    "profileid": "7415000",
-                    "username": "RTW1253",
-                    "profileChecksum": "5f42a56a1d5df485dc3dc26bafca6d52i7415000"
-                    },
-                    {
-                    "profileid": "8874000",
-                    "username": "ZZYA1475",
-                    "profileChecksum": "4f29b43a3c50e05531fd01132f7f1d66i8874000"
-                    },
-                    {
-                    "profileid": "1764127",
-                    "username": "YAS8573",
-                    "profileChecksum": "1764127lr"
-                    },
-                    {
-                    "profileid": "3599124",
-                    "username": "nokumarriage",
-                    "profileChecksum": "3599124lr"
-                    }
-                ],
-            "header": {
-            "status": 200,
-            "errorMsg": "",
-            "pollTime":20000
-            },
-            "debugInfo": null
-            };*/
-        
-                if(response["header"]["status"] == 200){
-                    //console.log("fetchNonRosterListing success",response);
-                    if(response["header"]["pollTime"] != undefined && response["header"]["pollTime"] > 0){
-                        chatConfig.Params[device].nonRosterListingRefreshCap = response["header"]["pollTime"];
-                        //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
-                    }
-                    var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
-                    if(nonRosterCLUpdated == undefined){
-                        nonRosterCLUpdated = {};
-                    }
-                    nonRosterCLUpdated[type] = (new Date()).getTime();
-                    localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
-                    //add in listing, after non roster list has been fetched
-                    processNonRosterData(response["data"],type,"api");
-                }
-            },
-            error: function (xhr) {
-                //console.log("fetchNonRosterListing error",xhr);
-                //return "error";
-            }
-        });
     }
 }
 
