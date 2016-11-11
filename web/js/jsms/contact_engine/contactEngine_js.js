@@ -1614,7 +1614,7 @@ $.ajax({
          $("#js-otherInvalidReasonsLayer").val('');
                     if(CommonErrorHandling(result,'?regMsg=Y')) 
                     {
-          ShowTopDownError([result.responseMessage],10000);
+          ShowTopDownError([result.message],10000);
           $("#commonOverlayTop").show();
                     }
 }

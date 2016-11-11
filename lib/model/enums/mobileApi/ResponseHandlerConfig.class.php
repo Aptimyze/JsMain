@@ -117,6 +117,6 @@ class ResponseHandlerConfig
 
     // Captcha Not verified
 	public static $CAPTCHA_UNVERIFIED = array("message"=>"Please click the box 'I'm not a robot'","statusCode"=>'1');
-	public static $PHONE_INVALID_SUCCESS = array("message"=>"Thank you for helping us . If our team finds this number invalid we will remove this number and credit you with a contact as compensation.","statusCode"=>'0');
+	public static $PHONE_INVALID_SUCCESS = array("message"=>"Successfull","statusCode"=>'0');
 }
 ?>
