@@ -1588,7 +1588,6 @@ if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
 
 reason=$.trim(reason);
 //Phone type for phone api
-var phoneType='M';
 if (phoneType=='L') {var mobile='N';var phone='Y';}
 if (phoneType=='M') {var mobile='Y';var phone='N';}
 
