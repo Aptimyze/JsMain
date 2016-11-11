@@ -436,7 +436,14 @@ strophieWrapper.sendPresence();
                 if(strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] == true){
                     //console.log("New case");
                     strophieWrapper.updatePresence(user_id, chat_status);
-                    strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] = false;
+                    var rosterDetails = JSON.parse(getFromLocalStorage('chatListing'+loggedInJspcUser));
+                    if(rosterDetails[user_id]) {
+                        rosterDetails[user_id]["rosterDetails"]["chat_status"] = chat_status;
+                    }
+                    setInLocalStorage('chatListing'+loggedInJspcUser,JSON.stringify(rosterDetails));
+                    setTimeout(function(){
+                        strophieWrapper.Roster[user_id][strophieWrapper.rosterDetailsKey]["new"] = false;
+                    },2000);
                 }
 	            //strophieWrapper.updatePresence(user_id, chat_status); //nitish commented
         	}
