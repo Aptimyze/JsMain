@@ -38,8 +38,11 @@
     ~include_title`
     ~include_canurl`
     ~use helper = SfMinify`
+~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
     ~minify_get_mobile('css','','1')`
     ~minify_include_stylesheets()`
+
+~/if`
   ~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
   ~minify_get_mobile('js','','1')`
     ~minify_include_javascripts()`
@@ -110,7 +113,10 @@ var domainCode={};
 	~JsTrackingHelper::getHeadTrackJs()`
   ~/if`
   <body >
-	  
+	~if $sf_request->getAttribute('mobLogoutPage') eq 'Y'`
+    ~minify_include_stylesheets()`
+    ~/if`
+  
 <noscript><div style="z-index:1000;width:100%"><div style="text-align:center;padding-bottom:3px;font:12px arial,verdana; line-height:normal;background:#E5E5E5;"><b><img src="~sfConfig::get('app_img_url')`/profile/images/registration_new/error.gif" alt="matrimonial" height="20" width="23"> Javascript is disabled in your browser.Due to this certain functionalities will not work. Please enable it</b></div></div></noscript>
 
     <script type="text/javascript">
