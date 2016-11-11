@@ -109,7 +109,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                 }
             });
         }
-        getInputData = getInputData+"&timestamp="+(new Date()).getTime();
+        //getInputData = getInputData+"&timestamp="+(new Date()).getTime();
         $.myObj.ajax({
             url: (dppListingWebServiceUrl+getInputData),
             dataType: 'json',
