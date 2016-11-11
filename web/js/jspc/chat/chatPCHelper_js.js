@@ -59,32 +59,23 @@ function to check whether request to non roster webservice is valid or not
 */
 function checkForValidNonRosterRequest(groupId){
     //return true;
-    var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true,lastUpdateTime=null;
-    var data;
-    if(chatConfig.Params[device].storageForNonRosterList == "local"){
-        data = strophieWrapper.getRosterStorage("non-roster");
-    }
-    else{
-        data = null;
-    }
+    var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
+    var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
         if(timeDiff < chatConfig.Params[device].nonRosterListingRefreshCap){
             valid = false;
-            lastUpdateTime = lastUpdated[groupId];
         }
     }
-    if(chatConfig.Params[device].storageForNonRosterList == "local"){
-        if(data && valid == false){
-            //data = {"3290997":{"rosterDetails":{"jid":"3290997@localhost","chat_status":"online","nick":"aloha_2008|4656179bccedf6fffb977aa43f44fdc4i3290997","fullname":"aloha_2008","groups":["dpp"],"subscription":"both","profile_checksum":"4656179bccedf6fffb977aa43f44fdc4i3290997","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":6,"nodeType":"non-roster"}},"3997986":{"rosterDetails":{"jid":"3997986@localhost","chat_status":"online","nick":"UYZ2063|5ff5ff3d2f3217d7158d7b2e40572eafi3997986","fullname":"UYZ2063","groups":["dpp"],"subscription":"both","profile_checksum":"5ff5ff3d2f3217d7158d7b2e40572eafi3997986","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":8,"nodeType":"non-roster"}},"5054004":{"rosterDetails":{"jid":"5054004@localhost","chat_status":"online","nick":"TXT8609|1d2bc71e6adf4550e4c8b638e4e30897i5054004","fullname":"TXT8609","groups":["dpp"],"subscription":"both","profile_checksum":"1d2bc71e6adf4550e4c8b638e4e30897i5054004","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":3,"nodeType":"non-roster"}},"5385186":{"rosterDetails":{"jid":"5385186@localhost","chat_status":"online","nick":"TTA9972|a7dd65ce4a7f2d222f63a95db1685d44i5385186","fullname":"TTA9972","groups":["dpp"],"subscription":"both","profile_checksum":"a7dd65ce4a7f2d222f63a95db1685d44i5385186","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":5,"nodeType":"non-roster"}},"5545059":{"rosterDetails":{"jid":"5545059@localhost","chat_status":"online","nick":"TSU9916|92e39acb3c9c0d9e95053cd2d32db79ei5545059","fullname":"TSU9916","groups":["dpp"],"subscription":"both","profile_checksum":"92e39acb3c9c0d9e95053cd2d32db79ei5545059","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":11,"nodeType":"non-roster"}},"5669960":{"rosterDetails":{"jid":"5669960@localhost","chat_status":"online","nick":"TRR4847|01e19fbeb41aa12facb278cda6a8393ci5669960","fullname":"TRR4847","groups":["dpp"],"subscription":"both","profile_checksum":"01e19fbeb41aa12facb278cda6a8393ci5669960","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":4,"nodeType":"non-roster"}},"5714570":{"rosterDetails":{"jid":"5714570@localhost","chat_status":"online","nick":"SAX9468|ff51de7e53b2096676938ed771c41ac7i5714570","fullname":"SAX9468","groups":["dpp"],"subscription":"both","profile_checksum":"ff51de7e53b2096676938ed771c41ac7i5714570","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":15,"nodeType":"non-roster"}},"6439626":{"rosterDetails":{"jid":"6439626@localhost","chat_status":"online","nick":"STU4834|c37191df737061a131ba30f91870be0di6439626","fullname":"STU4834","groups":["dpp"],"subscription":"both","profile_checksum":"c37191df737061a131ba30f91870be0di6439626","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":21,"nodeType":"non-roster"}},"6547446":{"rosterDetails":{"jid":"6547446@localhost","chat_status":"online","nick":"SST3318|34299a817ece0d6aec2c7932f31898e8i6547446","fullname":"SST3318","groups":["dpp"],"subscription":"both","profile_checksum":"34299a817ece0d6aec2c7932f31898e8i6547446","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":22,"nodeType":"non-roster"}},"6889709":{"rosterDetails":{"jid":"6889709@localhost","chat_status":"online","nick":"RYZ5781|efec1f895fc3aee614750406a3de481di6889709","fullname":"RYZ5781","groups":["dpp"],"subscription":"both","profile_checksum":"efec1f895fc3aee614750406a3de481di6889709","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":17,"nodeType":"non-roster"}},"6933026":{"rosterDetails":{"jid":"6933026@localhost","chat_status":"online","nick":"RYV9126|1cc3378df531ec91646480ff0bcc6b75i6933026","fullname":"RYV9126","groups":["dpp"],"subscription":"both","profile_checksum":"1cc3378df531ec91646480ff0bcc6b75i6933026","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":9,"nodeType":"non-roster"}}};
-            processNonRosterData(data,groupId,"localstorage");
-        }
-        else{
-            valid = true;
-        }
+    if(data && valid == false){
+        //data = {"3290997":{"rosterDetails":{"jid":"3290997@localhost","chat_status":"online","nick":"aloha_2008|4656179bccedf6fffb977aa43f44fdc4i3290997","fullname":"aloha_2008","groups":["dpp"],"subscription":"both","profile_checksum":"4656179bccedf6fffb977aa43f44fdc4i3290997","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":6,"nodeType":"non-roster"}},"3997986":{"rosterDetails":{"jid":"3997986@localhost","chat_status":"online","nick":"UYZ2063|5ff5ff3d2f3217d7158d7b2e40572eafi3997986","fullname":"UYZ2063","groups":["dpp"],"subscription":"both","profile_checksum":"5ff5ff3d2f3217d7158d7b2e40572eafi3997986","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":8,"nodeType":"non-roster"}},"5054004":{"rosterDetails":{"jid":"5054004@localhost","chat_status":"online","nick":"TXT8609|1d2bc71e6adf4550e4c8b638e4e30897i5054004","fullname":"TXT8609","groups":["dpp"],"subscription":"both","profile_checksum":"1d2bc71e6adf4550e4c8b638e4e30897i5054004","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":3,"nodeType":"non-roster"}},"5385186":{"rosterDetails":{"jid":"5385186@localhost","chat_status":"online","nick":"TTA9972|a7dd65ce4a7f2d222f63a95db1685d44i5385186","fullname":"TTA9972","groups":["dpp"],"subscription":"both","profile_checksum":"a7dd65ce4a7f2d222f63a95db1685d44i5385186","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":5,"nodeType":"non-roster"}},"5545059":{"rosterDetails":{"jid":"5545059@localhost","chat_status":"online","nick":"TSU9916|92e39acb3c9c0d9e95053cd2d32db79ei5545059","fullname":"TSU9916","groups":["dpp"],"subscription":"both","profile_checksum":"92e39acb3c9c0d9e95053cd2d32db79ei5545059","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":11,"nodeType":"non-roster"}},"5669960":{"rosterDetails":{"jid":"5669960@localhost","chat_status":"online","nick":"TRR4847|01e19fbeb41aa12facb278cda6a8393ci5669960","fullname":"TRR4847","groups":["dpp"],"subscription":"both","profile_checksum":"01e19fbeb41aa12facb278cda6a8393ci5669960","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":4,"nodeType":"non-roster"}},"5714570":{"rosterDetails":{"jid":"5714570@localhost","chat_status":"online","nick":"SAX9468|ff51de7e53b2096676938ed771c41ac7i5714570","fullname":"SAX9468","groups":["dpp"],"subscription":"both","profile_checksum":"ff51de7e53b2096676938ed771c41ac7i5714570","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":15,"nodeType":"non-roster"}},"6439626":{"rosterDetails":{"jid":"6439626@localhost","chat_status":"online","nick":"STU4834|c37191df737061a131ba30f91870be0di6439626","fullname":"STU4834","groups":["dpp"],"subscription":"both","profile_checksum":"c37191df737061a131ba30f91870be0di6439626","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":21,"nodeType":"non-roster"}},"6547446":{"rosterDetails":{"jid":"6547446@localhost","chat_status":"online","nick":"SST3318|34299a817ece0d6aec2c7932f31898e8i6547446","fullname":"SST3318","groups":["dpp"],"subscription":"both","profile_checksum":"34299a817ece0d6aec2c7932f31898e8i6547446","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.356Z","ask":null,"addIndex":22,"nodeType":"non-roster"}},"6889709":{"rosterDetails":{"jid":"6889709@localhost","chat_status":"online","nick":"RYZ5781|efec1f895fc3aee614750406a3de481di6889709","fullname":"RYZ5781","groups":["dpp"],"subscription":"both","profile_checksum":"efec1f895fc3aee614750406a3de481di6889709","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":17,"nodeType":"non-roster"}},"6933026":{"rosterDetails":{"jid":"6933026@localhost","chat_status":"online","nick":"RYV9126|1cc3378df531ec91646480ff0bcc6b75i6933026","fullname":"RYV9126","groups":["dpp"],"subscription":"both","profile_checksum":"1cc3378df531ec91646480ff0bcc6b75i6933026","listing_tuple_photo":"/images/picture/120x120_f.png?noPhoto","last_online_time":"2016-11-03T09:48:12.355Z","ask":null,"addIndex":9,"nodeType":"non-roster"}}};
+        processNonRosterData(data,groupId,"localstorage");
     }
-    console.log("checkForValidNonRosterRequest",valid,lastUpdateTime);
-    return {"validRe":valid,"lastUpdateTime":lastUpdateTime};
+    else{
+        valid = true;
+    }
+    //console.log("checkForValidNonRosterRequest",valid);
+    return valid;
 }
 
 /*pollForNonRosterListing
@@ -92,27 +83,21 @@ function to poll for non roster webservice api
 * @inputs:type
 */
 function pollForNonRosterListing(type,updateChatListImmediate){
-    console.log("pollForNonRosterListing",type,updateChatListImmediate);
+    //console.log("pollForNonRosterListing",type);
     if(type == undefined || type == ""){
         type = "dpp";
     }
-    var validRe,lastUpdateTime,headerData = {'JB-Profile-Identifier':loggedInJspcUser};
+    var validRe;
     if(updateChatListImmediate != undefined && updateChatListImmediate == true){
         validRe = true;
-        if(chatConfig.Params[device].storageForNonRosterList == "header"){
-            //headerData['Cache-Control'] = 'no-cache,no-store';
-        }
     }
     else{
-        var validReOutput = checkForValidNonRosterRequest(type);
-        validRe = validReOutput["validRe"],lastUpdateTime = validReOutput["lastUpdateTime"];
-        if(chatConfig.Params[device].storageForNonRosterList == "header"){
-            headerData['Cache-Control'] = 'max-age=300,public'; //private or public later
-        }
+        validRe = checkForValidNonRosterRequest(type);
     }
-    
-    if(chatConfig.Params[device].storageForNonRosterList == "header" || validRe == true){
-        var getInputData = "";
+    if(validRe == true){
+        var getInputData = "",outputProfileIds = [];
+        //postData["pageSource"] = "chat";
+        //postData["channel"] = device; //req for tracking
         if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
             $.each(chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"], function (k, v) {
                 if(getInputData == ""){
@@ -123,45 +108,22 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                 }
             });
         }
-        if(chatConfig.Params[device].storageForNonRosterList == "header"){
-            var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
-            if(validRe == true || updateChatListImmediate == true || lastUpdateTime == undefined){
-                if(getInputData == ""){
-                    getInputData = getInputData+"?timestamp="+(new Date()).getTime();
-                }
-                else{
-                    getInputData = getInputData+"&timestamp="+(new Date()).getTime();
-                }
-            }
-            else{
-                if(getInputData == ""){
-                    getInputData = getInputData+"?timestamp="+lastUpdateTime;
-                }
-                else{
-                    getInputData = getInputData+"&timestamp="+lastUpdateTime;
-                }
-            }
-        }
-        else{
-            if(getInputData == ""){
-                    getInputData = getInputData+"?timestamp="+(new Date()).getTime();
-                }
-                else{
-                    getInputData = getInputData+"&timestamp="+(new Date()).getTime();
-                }
-        }
-        console.log("headers",headerData);
         $.myObj.ajax({
             url: (dppListingWebServiceUrl+getInputData),
             dataType: 'json',
+            //data: postData,
             type: 'GET',
-            cache: ((chatConfig.Params[device].storageForNonRosterList == "header") ? true : false),
+            cache:false,
             async: true,
             timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
-            headers:headerData,
+            headers:{
+                'JB-Profile-Identifier':loggedInJspcUser/*,
+                'Cache-Control':'max-age=300,public'*/
+                //'Last-Modified':((new Date()).toLocaleString())
+            },
             beforeSend: function (xhr) {},
             success: function (response) {
-                /*response = {
+                /*response = {  //comment later
                 "data": [
                     {
                     "profileid": "2865000",
@@ -201,28 +163,21 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             },
             "debugInfo": null
             };*/
-        console.log("jerencndc");
+        
                 if(response["header"]["status"] == 200){
                     //console.log("fetchNonRosterListing success",response);
                     if(response["header"]["pollTime"] != undefined && response["header"]["pollTime"] > 0){
                         chatConfig.Params[device].nonRosterListingRefreshCap = response["header"]["pollTime"];
                         //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
                     }
-                    if(chatConfig.Params[device].storageForNonRosterList == "local" || validRe == true){
-                        var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
-                        if(nonRosterCLUpdated == undefined){
-                            nonRosterCLUpdated = {};
-                        }
-                        nonRosterCLUpdated[type] = (new Date()).getTime();
-                        localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
+                    var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
+                    if(nonRosterCLUpdated == undefined){
+                        nonRosterCLUpdated = {};
                     }
+                    nonRosterCLUpdated[type] = (new Date()).getTime();
+                    localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
                     //add in listing, after non roster list has been fetched
-                    if(chatConfig.Params[device].storageForNonRosterList == "header" && updateChatListImmediate != true){
-                        processNonRosterData(response["data"],type,"headerStorage"); 
-                    }
-                    else{
-                        processNonRosterData(response["data"],type,"api");
-                    }
+                    processNonRosterData(response["data"],type,"api");
                 }
             },
             error: function (xhr) {
@@ -238,33 +193,20 @@ function to process the non roster data
 * @inputs:response,type
 */
 function processNonRosterData(response,type,source){
-    var operation = "create_list",reCreateList = true,nonRosterUpdates = null;
-    console.log("in processNonRosterData",source); 
+    var operation = "create_list",reCreateList = true;
+    //console.log("in processNonRosterData",source); 
     var newNonRoster = {},oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
+    /*if((Object.keys(oldNonRoster)).length == 0){
+        oldNonRoster = strophieWrapper.getRosterStorage("non-roster");
+    }*/
     if((Object.keys(response)).length > 0){
         if(source != "localstorage"){
-            if(source == "headerStorage"){
-                nonRosterUpdates = strophieWrapper.getRosterStorage("non-roster-updates");
-            }
-            
             $.each(response,function(key,nodeObj){
                 nodeObj["groupid"] = type;
                 nodeObj["addIndex"] = key;
                 var listObj = strophieWrapper.formatNonRosterObj(nodeObj);
                 if (strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && strophieWrapper.Roster[nodeObj["profileid"]] == undefined){
-                    if(source == "headerStorage"){
-                        //console.log("in onNonRosterListDeletion",nonRosterUpdates,nonRosterUpdates[nodeObj["profileid"]]);
-                        if(nonRosterUpdates == undefined || nonRosterUpdates[nodeObj["profileid"]] == undefined){
-                            //console.log("added1",nodeObj["profileid"]);
-                            newNonRoster[nodeObj["profileid"]] = listObj;
-                        }
-                        else{
-                            //console.log("ignored1",nodeObj["profileid"]);
-                        }
-                    }
-                    else{
-                        newNonRoster[nodeObj["profileid"]] = listObj;
-                    }
+                    newNonRoster[nodeObj["profileid"]] = listObj;
                 }
             });
         }
@@ -295,15 +237,15 @@ function to check whether two objects are equal or not
 */
 function checkForObjectsEquality(obj1,obj2){
     if((Object.keys(obj1)).length == 0 && (Object.keys(obj2)).length == 0){
-        console.log("checkForObjectsEquality",true);
+        //console.log("checkForObjectsEquality",true);
         return true;
     }
     if((Object.keys(obj1)).length == 0 || (Object.keys(obj2)).length == 0){
-        console.log("checkForObjectsEquality",false);
+        //console.log("checkForObjectsEquality",false);
         return false;
     }
     else{
-        console.log("checkForObjectsEquality",(JSON.stringify(obj1) === JSON.stringify(obj2)));
+        //console.log("checkForObjectsEquality",(JSON.stringify(obj1) === JSON.stringify(obj2)));
         return (JSON.stringify(obj1) === JSON.stringify(obj2));
     }
 }
@@ -1249,9 +1191,9 @@ function clearChatMsgFromLS(){
     var patt1 = new RegExp("chatMsg_");
     var patt2 = new RegExp("listingPic_");
     var patt3 = new RegExp("chatListing");
-    var patt4 = new RegExp("presence_"),patt5 = new RegExp("nonRosterChatListing"),patt6 = new RegExp("_sentMsgRefTime"),patt7 = new RegExp("nonRosterUpdates");
+    var patt4 = new RegExp("presence_"),patt5 = new RegExp("nonRosterChatListing"),patt6 = new RegExp("_sentMsgRefTime");
     for(var key in localStorage){
-        if(patt1.test(key) || patt2.test(key) || patt3.test(key) || patt4.test(key) || patt5.test(key) || patt6.test(key) || patt7.test(key)){
+        if(patt1.test(key) || patt2.test(key) || patt3.test(key) || patt4.test(key) || patt5.test(key) || patt6.test(key)){
             localStorage.removeItem(key);
         }
     }
@@ -1260,7 +1202,7 @@ function clearChatMsgFromLS(){
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated','nonRosterCLUpdated','nonRosterUpdates'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated','nonRosterCLUpdated'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });

@@ -498,9 +498,7 @@ strophieWrapper.sendPresence();
                 strophieWrapper.initialNonRosterFetched = true;
             }
             invokePluginManagelisting(strophieWrapper.NonRoster, operation);
-            if(chatConfig.Params[device].storageForNonRosterList == "local"){
-                strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
-            }
+            strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
         }
     },
 
@@ -536,24 +534,12 @@ strophieWrapper.sendPresence();
                 inputObj[user_id] = strophieWrapper.NonRoster[user_id];
                 invokePluginManagelisting(inputObj, "delete_node", user_id);
                 delete strophieWrapper.NonRoster[user_id];
-                if(chatConfig.Params[device].storageForNonRosterList == "local"){
-                    var nonRosterData = strophieWrapper.getRosterStorage("non-roster");
-                    
-                    if(nonRosterData != undefined && nonRosterData[user_id] != undefined){
-                        //update localstorage
-                        delete nonRosterData[user_id];                       
-                        strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
-                        //console.log("after delete",strophieWrapper.getRosterStorage("non-roster"));
-                    }
-                }
-                else{
-                    //keep updated ones in localstorage
-                    var nonRosterData = strophieWrapper.getRosterStorage("non-roster-updates");
-                    if(nonRosterData == undefined){
-                        nonRosterData = {};
-                    }
-                    nonRosterData[user_id] =  inputObj[user_id];                    
-                    strophieWrapper.setRosterStorage(nonRosterData,"non-roster-updates");
+                var nonRosterData = strophieWrapper.getRosterStorage("non-roster");
+                if(nonRosterData != undefined && nonRosterData[user_id] != undefined){
+                    //update localstorage
+                    delete nonRosterData[user_id];                       
+                    strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
+                    //console.log("after delete",strophieWrapper.getRosterStorage("non-roster"));
                 }
             }
         });
@@ -750,9 +736,6 @@ strophieWrapper.sendPresence();
             if(listType == "non-roster"){
                 localStorage.setItem('nonRosterChatListing'+loggedInJspcUser, JSON.stringify(rosterData));
             }
-            else if(listType == "non-roster-updates"){
-                localStorage.setItem('nonRosterUpdates'+loggedInJspcUser, JSON.stringify(rosterData));
-            }
             else{
                 localStorage.setItem('chatListing'+loggedInJspcUser, JSON.stringify(rosterData));
             }
@@ -764,9 +747,6 @@ strophieWrapper.sendPresence();
         if (strophieWrapper.useLocalStorage == true) {
             if(listType == "non-roster"){
                 data = JSON.parse(localStorage.getItem('nonRosterChatListing'+loggedInJspcUser));
-            }
-            else if(listType == "non-roster-updates"){
-                data = JSON.parse(localStorage.getItem('nonRosterUpdates'+loggedInJspcUser));
             }
             else{
                 data = JSON.parse(localStorage.getItem('chatListing'+loggedInJspcUser));
