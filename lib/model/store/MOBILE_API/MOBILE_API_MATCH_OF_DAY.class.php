@@ -51,4 +51,15 @@ class MOBILE_API_MATCH_OF_DAY extends TABLE{
             throw new jsException($ex);
         }
     }
+    
+    public function deleteLessthanDays($date){
+        try{
+            $sql = "DELETE FROM MOBILE_API.MATCH_OF_DAY_LOG WHERE ENTRY_DT < :DATE";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":DATE",$date,PDO::PARAM_STR);
+            $prep->execute();
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 }

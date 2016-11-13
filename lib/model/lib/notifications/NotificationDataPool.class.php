@@ -415,6 +415,9 @@ class NotificationDataPool
     
     public function getMatchOfDayData($applicableProfiles){
         if($applicableProfiles){
+            $date = date("Y-m-d", strtotime("-10 days",strtotime(date('Y-m-d'))));
+            $matchOfDayMasterObj = new MOBILE_API_MATCH_OF_DAY();
+            $matchOfDayMasterObj->deleteLessthanDays($date);
             $counter = 0;
             $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY("newjs_slave");
             $curDate = date('Y-m-d');
@@ -463,7 +466,6 @@ class NotificationDataPool
             }
             unset($otherProfiles);
             $counter = 0;
-            $matchOfDayMasterObj = new MOBILE_API_MATCH_OF_DAY();
             if(is_array($matchedProfiles))
             {
                 foreach($matchedProfiles as $k1=>$v1)
@@ -479,6 +481,7 @@ class NotificationDataPool
                     $matchOfDayMasterObj->insert($k1,$v1);
                 }
             }
+            unset($matchOfDayMasterObj);
             unset($matchedProfiles);
             return $dataAccumulated;
         }
