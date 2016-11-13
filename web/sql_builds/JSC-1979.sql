@@ -1,2 +1,5 @@
 use MOBILE_API;
-INSERT INTO  MOBILE_API.`APP_NOTIFICATIONS` (  `ID` ,  `NOTIFICATION_KEY` ,  `MESSAGE` , `LANDING_SCREEN` ,  `OS_TYPE` ,  `STATUS` ,  `FREQUENCY` ,  `TIME_CRITERIA` ,  `PRIORITY` ,  `COUNT` ,  `COLLAPSE_STATUS` ,  `TTL` ,  `GENDER` , `SUBSCRIPTION` ,  `TITLE` ,  `PHOTO_URL` ) VALUES ('',  'MATCH_OF_DAY',  '{USERNAME_OTHER_1} is your match of the day, Connect now!.',  '',  'ALL',  'Y',  'D', NULL ,  '',  'SINGLE',  'Y',  '3600',  'A',  'A',  'Match of the day!',  'P');
+
+INSERT INTO `APP_NOTIFICATIONS` VALUES (42, 'MATCH_OF_DAY', '{USERNAME_OTHER_1} is your match of the day, Connect now!.', 1, 'ALL', 'Y', 'D', '15', 0, 'SINGLE', 'Y', 3600, 'A', 'A', 'Match of the day!', 'P');
+
+CREATE TABLE MOBILE_API.`MATCH_OF_DAY_LOG` ( `ID` int(11) NOT NULL AUTO_INCREMENT, `PROFILEID` int(11) NOT NULL, `MATCH_PROFILEID` int(11) NOT NULL, `ENTRY_DT` date NOT NULL, PRIMARY KEY (`ID`), KEY `PROFILEID` (`PROFILEID`,`MATCH_PROFILEID`,`ENTRY_DT`)) ENGINE=InnoDB;
