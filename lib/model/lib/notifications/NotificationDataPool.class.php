@@ -422,6 +422,7 @@ class NotificationDataPool
             $matchCount = $matchOfDayObj->getCountForMatchProfile();
             foreach($applicableProfiles as $profileid => $details){
                 $searchResult = SearchCommonFunctions::getMatchofTheDay($profileid);
+                //print_r($searchResult);
                 //print_r("\n***********\n");
                 $resultSet = $searchResult["PIDS"];
                 $paramsArr["PROFILEID"] = $profileid;
@@ -448,10 +449,12 @@ class NotificationDataPool
                     else{
                         $resultMatchProfileid = $firstResult;
                     }
-                    $matchedProfiles[$profileid] = $resultMatchProfileid;
-                    $otherProfiles[] = $resultMatchProfileid;
-                    //$dataAccumulated[$counter];
-                    //print_r($resultMatchProfileid."\n");
+                    if($resultMatchProfileid){
+                        $matchedProfiles[$profileid] = $resultMatchProfileid;
+                        $otherProfiles[] = $resultMatchProfileid;
+                        //$dataAccumulated[$counter];
+                        //print_r($resultMatchProfileid."\n");
+                    }
                 }
             }
             if(is_array($otherProfiles))
@@ -460,6 +463,7 @@ class NotificationDataPool
             }
             unset($otherProfiles);
             $counter = 0;
+            $matchOfDayMasterObj = new MOBILE_API_MATCH_OF_DAY();
             if(is_array($matchedProfiles))
             {
                 foreach($matchedProfiles as $k1=>$v1)
@@ -472,8 +476,10 @@ class NotificationDataPool
                     }
                     $dataAccumulated[$counter]['COUNT'] = "SINGLE";
                     $counter++;
+                    $matchOfDayMasterObj->insert($k1,$v1);
                 }
             }
+            unset($matchedProfiles);
             return $dataAccumulated;
         }
     }
