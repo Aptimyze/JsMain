@@ -470,7 +470,8 @@ public function microtime_float()
             $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
             $notificationDataPoolObj = new NotificationDataPool();
             $dataAccumulated = $notificationDataPoolObj->getMatchOfDayData($applicableProfiles);
-            //die("XX");
+            //print_r($dataAccumulated);
+            
             unset($poolObj);
             break;
 	  }

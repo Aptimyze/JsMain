@@ -422,7 +422,6 @@ class NotificationDataPool
             $matchCount = $matchOfDayObj->getCountForMatchProfile();
             foreach($applicableProfiles as $profileid => $details){
                 $searchResult = SearchCommonFunctions::getMatchofTheDay($profileid);
-                //print_r($searchResult);
                 //print_r("\n***********\n");
                 $resultSet = $searchResult["PIDS"];
                 $paramsArr["PROFILEID"] = $profileid;
@@ -449,8 +448,29 @@ class NotificationDataPool
                     else{
                         $resultMatchProfileid = $firstResult;
                     }
+                    $matchedProfiles[$profileid] = $resultMatchProfileid;
+                    $otherProfiles[] = $resultMatchProfileid;
                     //$dataAccumulated[$counter];
                     //print_r($resultMatchProfileid."\n");
+                }
+            }
+            if(is_array($otherProfiles))
+            {
+                $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="JPROFILE","newjs_masterRep");
+            }
+            unset($otherProfiles);
+            $counter = 0;
+            if(is_array($matchedProfiles))
+            {
+                foreach($matchedProfiles as $k1=>$v1)
+                {
+                    
+                    $dataAccumulated[$counter]['SELF']=$applicableProfiles[$k1];
+                    if($getOtherProfilesData[$v1]){
+                        $dataAccumulated[$counter]['OTHER'][]=$getOtherProfilesData[$v1];
+                        $dataAccumulated[$counter]['ICON_PROFILEID']=$getOtherProfilesData[$v1]["PROFILEID"];
+                    }
+                    $dataAccumulated[$counter]['COUNT'] = "SINGLE";
                     $counter++;
                 }
             }
