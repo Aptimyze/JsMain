@@ -14,7 +14,10 @@ function loadPage(pageNo) {
   /**
    * Params to be used for calling pagination
    */
-  var postParams = "results_orAnd_cluster=onlyResults&currentPage=" + pageNo;
+  if(response.infotype == "VISITORS")
+      var postParams = "results_orAnd_cluster=onlyResults&matchedOrAll="+matchedOrAll+"&currentPage=" + pageNo;
+  else
+      var postParams = "results_orAnd_cluster=onlyResults&currentPage=" + pageNo;
   var infoArr = {};
   infoArr["action"] = "pagination";
   infoArr["listType"] = listType;

@@ -97,6 +97,7 @@ $(document).ready(function() {
                 $(".js-visType"+sort).addClass("js-sort-grey").removeClass("cursp").addClass("cursd");
 		var postParams;
 		postParams = "matchedOrAll="+value+"&pageNo=1";
+                matchedOrAll=value;
             	var infoArr = {};
                 infoArr["action"] = "stayOnPage";
                 infoArr["searchID"] = "skip";
@@ -201,6 +202,7 @@ function searchListingAction(thisElement){
                         case 'js-visitors':
                                 postParams = "searchId=5&currentPage=1&matchedOrAll=A";
                                 postParams1 = "visitors=1";
+                                matchedOrAll=A;
 				listType="cc";
                                 break;
                         case 'js-fsoVerified':

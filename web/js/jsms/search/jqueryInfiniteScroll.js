@@ -591,7 +591,8 @@ function generateParams(page)
 {
 	var searchid = firstResponse.searchid;
 	var sbPar = removeNull(firstResponse.searchBasedParam);
-	var temp = "results_orAnd_cluster=onlyResults&searchBasedParam="+sbPar+"&searchId="+searchid+"&currentPage="
+        if(firstResponse.visitorAllOrMatching!='' || typeof(firstResponse.visitorAllOrMatching) !="undefined")
+	var temp = "results_orAnd_cluster=onlyResults&searchBasedParam="+sbPar+"&searchId="+searchid+"&matchedOrAll="+firstResponse.visitorAllOrMatching+"&currentPage="
 	temp = $.addReplaceParam(temp,'currentPage',page)
 	return temp;
 }
