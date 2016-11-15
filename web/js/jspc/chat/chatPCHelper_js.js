@@ -380,7 +380,7 @@ function setChatSelfName(nameStr,target){
             modifiedName = nameStr;
         }
         else if(target == "syncName"){
-            var nameOnSite = selfUserName;
+            var nameOnSite = selfUserChatName;
             if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
                 nameOnSite = $(".js-syncChatHeaderName").html();
             }
@@ -394,7 +394,7 @@ function setChatSelfName(nameStr,target){
         }
     }
     else if(target == "syncName"){
-        var nameOnSite = selfUserName;
+        var nameOnSite = selfUserChatName;
         if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
             nameOnSite = $(".js-syncChatHeaderName").html();
         }
