@@ -81,6 +81,8 @@ function updateHistory(tupleNo)
 			addMoreParams += '&profilechecksum='+viewedProfilechecksum+'&'+NAVIGATOR;
 		if(fmBack==1)
 			addMoreParams += '&fmBack=1';
+                if(window.location.href.indexOf('matchedOrAll')!=-1)
+			addMoreParams += '&matchedOrAll='+window.location.href.split('matchedOrAll=')[1].slice(0,1);
 		$.urlUpdateHistory('Search Results Page '+tupleNo,tupleNo,addMoreParams);
 	}
 	BindNextPage();

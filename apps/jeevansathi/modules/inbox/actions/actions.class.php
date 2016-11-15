@@ -652,13 +652,13 @@ public function executePerformV2(sfWebRequest $request)
                                         }
                                         elseif($infoTypenav["matchedOrAll"]=="A"){
                                             $response2["subtitle"]='All Visitors '.$response2['total'];
-                                            $response2["title2"]="Matching Visitors"; 
+                                            $response2["title2"]="Matching"; 
                                             $response2["url"]="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=M";
                                             $response2["visitorAllOrMatching"]='A';
                                         }
                                         else{
                                             $response2["title2"]='All Visitors';
-                                            $response2["subtitle"]="Matching Visitors ".$response2['total']; 
+                                            $response2["subtitle"]="Matching ".$response2['total']; 
                                             $response2["url"]="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=A";
                                             $response2["visitorAllOrMatching"]='M';
                                         }
