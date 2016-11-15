@@ -526,7 +526,7 @@ $js_arr[]=array("jspc/common/jquery_equalheights"   => "1");
 $js_arr[]=array("jspc/common/photoAlbum"         => "8");
 $js_arr[]=array("jspc/search/saveSearch"   => "1");
 $js_arr[]=array("jspc/search/relaxCriteria"   => "1");
-$js_arr[]=array("jspc/search/search"                               => "31");
+$js_arr[]=array("jspc/search/search"                                => "32");
 $js_arr[]=array("jspc/search/searchClusters"     => "3");
 $js_arr[]=array("jspc/search/searchBand"     => "3");
 $js_arr[]=array("jspc/search/searchDropdowns"     => "3");
