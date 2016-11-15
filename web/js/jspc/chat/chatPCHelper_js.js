@@ -358,6 +358,7 @@ function generateChatHistoryID(key){
  * @returns : none
  */
 function setChatSelfName(nameStr,target){
+    var modifiedName;
     if(nameStr != undefined && nameStr != ""){
         if(target == "chatHeader"){
             var trimmedString = nameStr.length > chatConfig.Params[device].nameTrimmLength ? nameStr.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameStr;
@@ -368,15 +369,38 @@ function setChatSelfName(nameStr,target){
                     'selfName': nameStr,
                     'user': loggedInJspcUser
                 }));
+                modifiedName = trimmedString;
             }
         }
-        if(target == "storage"){
+        else if(target == "storage"){
             localStorage.setItem('name', JSON.stringify({
                 'selfName': nameStr,
                 'user': loggedInJspcUser
             }));
+            modifiedName = nameStr;
+        }
+        else if(target == "syncName"){
+            if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
+                var nameOnSite = $(".js-syncChatHeaderName").html();
+                nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
+                if(nameOnSite && nameStr != nameOnSite){
+                    setChatSelfName(nameOnSite,"storage");
+                    modifiedName = nameOnSite;
+                }
+            }
         }
     }
+    else if(target == "syncName"){
+        if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
+            var nameOnSite = $(".js-syncChatHeaderName").html();
+            nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
+            if(nameOnSite && nameStr != nameOnSite){
+                setChatSelfName(nameOnSite,"storage");
+                modifiedName = nameOnSite;
+            }
+        }
+    }
+    return modifiedName;
 }
 
 /*
@@ -394,25 +418,17 @@ function getSelfName(){
         if (user == loggedInJspcUser) {
             flag = false;
             selfName = data['selfName'];
-            if(my_action == "jspcPerform" && $("#js-usernameAutomation").length != 0){
-                //console.log("from myjs",$("#js-usernameAutomation").html());
-                var myjsUserName = $("#js-usernameAutomation").html();
-                if(myjsUserName && selfName != myjsUserName){
-                    //console.log("here");
-                    setChatSelfName(myjsUserName,"storage");
-                    selfName = myjsUserName;
-                }
+            var modifiedName = setChatSelfName(selfName,"syncName");
+            if(modifiedName != undefined){
+                selfName =  modifiedName;
             }
         }
     }
-    else if(my_action == "jspcPerform" && $("#js-usernameAutomation").length != 0){
-        //console.log("from myjs",$("#js-usernameAutomation").html());
-        var myjsUserName = $("#js-usernameAutomation").html();
-        if(myjsUserName && selfName != myjsUserName){
-            //console.log("here1");
-            setChatSelfName(myjsUserName,"storage");
-            selfName = myjsUserName;
+    else{
+        var modifiedName = setChatSelfName(selfName,"syncName");
+        if(modifiedName != undefined){
             flag = false;
+            selfName =  modifiedName;
         }
     }
     //console.log("name",flag);
