@@ -1,5 +1,8 @@
 <script>appPromoPerspective=1;
 var site_key = "~CaptchaEnum::SITE_KEY`";
+var hamCss="~$hamCss`";
+var hamJs="~$hamJs`";
+var logoutCssFiles="~$cssArray`";
 </script>
 <div class="perspective" id="perspective">
 	<div class="" id="pcontainer">    

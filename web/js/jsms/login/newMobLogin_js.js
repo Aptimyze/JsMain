@@ -26,7 +26,7 @@ $(function(){
             //src="~$IMG_URL`/images/jsms/commonImg/mainLogoNew.png" 
             setTimeout(function(){ 
                 $("body").append("<div class='icons1 uicon dn'></div> <div class='mainsp baricon dn'></div>");
-                loadCSS("IMG_URL/min/?f=/css/jsms/common/commoncss_17.css,/css/jsms/common/errorBar_1.css,/css/jsms/common/fonts_2.css,/css/jsms/common/mediaquery_3.css,/css/jsms/common/jsmsApp_promo_css_4.css,/css/rippleEffectCommon_css_2.css");
+                loadCSS("IMG_URL/min/?f="+logoutCssFiles);
             }, 5000);
             $("#hamburgerIcon").on("click", function() {
                 if($("#hamburger").length == 0){
@@ -34,9 +34,9 @@ $(function(){
                     $("#hamIc").hide();
                     $("#perspective").append('<div id="hamburger" class="hamburgerCommon fullhgt fullwid dn"><div><div id="outerHamDiv" class="fullwid outerdiv"><div class="wid76p hamlist fl" id="mainHamDiv"><div class="clearfix fontlig padHamburger"></div><div class=" pt20  hampad1"><ul class="fontlig"><li><a href="#" onclick=translateSite("http://hindi.jeevansathi.com"); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li><li><a id="abc" href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px">Home</a></li><li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li> <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li><li><a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide=1 class="white">Browse by Community</a></li><li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li><li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li></ul></div><div class="hampad1"><ul class=" brdr9_ham fontlig"><li class="pt20"><a href="" onclick="window.location.href = \'tel:18004196299\';" title="call" alt="call" class="white">1800-419-6299 <span class="dispibl padl10 opa70 f12">Toll Free</span></a></li></ul></div><div class="hampad1" id="appDownloadLink2" style="display:none"><ul class=" brdr9_ham fontlig"><li class="pt20 white fb1 ham_opa fontrobbold">It\'s Free</li><li class=""><a onclick="window.location.href="/static/appredirect?type=jsmsHamburger";" bind-slide=1 class="white">Download  Android App </a></li></ul></div><div class="hampad1" id="appleAppDownloadLink2" style="display:none"><ul class=" brdr9_ham fontlig"><li class="pt20 white fb1 ham_opa fontrobbold">It\'s Free</li><li class=""><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger&channel=iosLayer\';" bind-slide=1 class="white">Download iOS App </a></li></ul></div></div><div class="posfix ham_pos1 fullwid js-loginBtn"><div class="pad1"><div class="ham_bdr1"><div id="loggedOutHamFoot" class="pt10 fontlig f17"><div class="fl wid49p txtc ham_bdr2"><a bind-slide=1 href="/static/LogoutPage" class="white lh30">Login</a></div><div class="fl wid49p txtc"><a bind-slide=1 href="/register/page1?source=mobreg5" class="white lh30">Register</a></div></div></div></div></div></div></div></div>');
                     $("#hamburgerIcon").off("click");
-                    loadCSS("css/jsms/hamburger/ham_css.css");
+                    loadCSS(hamCss);
                     var imported = document.createElement('script');
-                    imported.src = '/js/jsms/hamburger/ham_js.js';
+                    imported.src = '/'+hamJs;
                     imported.onload = function() {
                         BindNextPage();
                         $("#hamburgerIcon").click();
