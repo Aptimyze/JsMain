@@ -85,6 +85,7 @@ Class ButtonResponseFinal
 					$buttons[] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
 			}
 			$responseArray['buttons'] = $buttons;
+                        $responseArray['contactType'] = $type;
 			//print_r($responseArray);die;
 
 		}

@@ -275,6 +275,8 @@ class Initiate extends ContactEvent{
       else
       {
         $this->contactHandler->getContactObj()->setCount(1);
+        $pageSource=$this->contactHandler->getPageSource();
+        $this->contactHandler->getContactObj()->setPageSource($pageSource);
         $this->contactHandler->getContactObj()->insertContact();
         $action = FTOStateUpdateReason::EOI_SENT;
         $this->contactHandler->getViewer()->getPROFILE_STATE()->updateFTOState($this->viewer, $action);
@@ -338,7 +340,9 @@ class Initiate extends ContactEvent{
           $sms= new InstantSMS("INSTANT_EOI",$this->viewed->getPROFILEID(),array(),$this->viewer->getPROFILEID());
           $sms->send();
       }
-
+      
+      if(!$this->optionalFlag)
+          $this->getNegativeScoreForUser();
     }
     catch (Exception $e) {
       throw new jsException($e);
@@ -625,5 +629,59 @@ class Initiate extends ContactEvent{
   {
     return $this->_errorArray;
   }
+public function getNegativeScoreForUser()
+  {
+    $senderRow=$this->contactHandler->getViewer();
+    $receiverRow=$this->contactHandler->getViewed();
+    $receiverDPP = UserFilterCheck::getInstance($senderRow, $receiverRow)->getDppParameters();
+    $receiverProfileId=$receiverRow->getPROFILEID();
+    $score=array('R'=>0,'A'=>0,'M'=>0);
+// RELIGION CHECK
+    $religionExclude=array('1','4','7','9');
+    if(!(in_array($senderRow->getRELIGION(),$religionExclude ) && in_array($receiverRow->getRELIGION(),$religionExclude )) && $senderRow->getRELIGION()!='8')
+    {
+        if($receiverDPP['RELIGION'])
+        {
+            if(!in_array($senderRow->getRELIGION(),$receiverDPP['RELIGION']))
+                $score['R']=1;
+        }        
+    }
+ // MARITAL STATUS CHECK
+    if($receiverDPP['MSTATUS'])
+    {
+        $marriedArray=array('S','D','W','A','M');
+        $unMarriedArray=array('N');
+        $Rmstatus=$receiverRow->getMSTATUS();
+        $Smstatus=$senderRow->getMSTATUS();
+        if(!( (in_array($Smstatus,$marriedArray) && in_array($Rmstatus,$marriedArray))
+        || (in_array($Smstatus,$unMarriedArray) && in_array($Rmstatus,$unMarriedArray))
+           ))
+        {
+            if(!in_array($Smstatus, $receiverDPP['MSTATUS']))
+                    $score['M']=1;
+            
+        }     
+        
+    }
+    // AGE DIFFERENCE CHECK
+    $Rage=$receiverRow->getAGE();
+    $Sage=$senderRow->getAGE();
+    if($receiverDPP['LAGE'] && $receiverDPP['HAGE'] && ($Sage<35 || $Rage<35))
+    {
+        $ageDiff = $Sage - $Rage;
+        if($ageDiff<0)$ageDiff=$ageDiff*(-1);
+        if($ageDiff>=10 && ($Sage < $receiverDPP['LAGE'] || $Sage>$receiverDPP['HAGE']))
+                    $score['A']=1;
+    }
+
+    $totalScore = $score['A'] + $score['R'] + $score['M'];
+    
+    if($totalScore)
+    {   
+        $score['USERNAME'] = $senderRow->getUSERNAME();
+        (new MIS_INAPPROPRIATE_USERS_LOG())->insert($senderRow->getPROFILEID(),$score);
+        
+    }
+    }
 
 } // end of Initiate Class.

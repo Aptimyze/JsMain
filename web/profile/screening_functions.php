@@ -27,10 +27,16 @@ function check_obscene_word($string_to_check)
 	$string_to_check = remove_special_characters($string_to_check,"alphabets");
 	$sql = "SELECT SQL_CACHE WORD FROM newjs.OBSCENE_WORDS";
 	$res = mysql_query_decide($sql) or  logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+
+	$string_to_check_array = explode(" ",$string_to_check); 
+
 	while($row = mysql_fetch_array($res))
 	{
-		if(strstr($string_to_check, $row['WORD']))
+		// var_dump($row['WORD']);
+		if(in_array($row['WORD'],$string_to_check_array))
+		{
 			return true;
+		}
 	}
 }
 
@@ -85,6 +91,13 @@ function check_for_minimum_character($string_to_check)
 //retiurns string with special characters removed.
 function remove_special_characters($string,$return_what="")
 {
+	$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$string);
+	$string_replaced_special_characters = preg_replace('/[^a-zA-Z\'\s]/', ' ', $string);
+	$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
+
+	$string = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
+	$string = implode(' ',$string);
+
 	$let_go_dots = 0;
 	$string = strtolower($string);
 
@@ -101,7 +114,7 @@ function remove_special_characters($string,$return_what="")
 	{
 		if($retrun_what == "alphabets")
 		{
-			if((ord($string[$i]) >= 97 && ord($string[$i]) <= 122))
+			if((ord($string[$i]) >= 97 && ord($string[$i]) <= 122) || ord($string[$i]) == 32)
 				$string_actual .= $string[$i];
 		}
 		elseif($return_what == "numbers")
@@ -111,11 +124,10 @@ function remove_special_characters($string,$return_what="")
 		}
 		else
 		{
-			if((ord($string[$i]) >= 97 && ord($string[$i]) <= 122) || (ord($string[$i]) >= 48 && ord($string[$i]) <= 57) || ($let_go_dots && ord($string[$i]) == 46))
+			if((ord($string[$i]) >= 97 && ord($string[$i]) <= 122) || (ord($string[$i]) >= 48 && ord($string[$i]) <= 57) || ($let_go_dots && ord($string[$i]) == 46) || (ord($string[$i]) == 32))
 				$string_actual .= $string[$i];
 		}
 	}
-
 	return $string_actual;
 }
 /**********************Code Added by sriram on May 21 2007******************/

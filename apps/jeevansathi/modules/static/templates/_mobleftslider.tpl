@@ -2,8 +2,8 @@
 <div id="slider" class="hideslider list-menu-left">
 		
 		<a href="~sfConfig::get('app_site_url')`/search/topSearchBand?isMobile=Y" alt="Search" title="Search"><strong class="icon-search">&nbsp;</strong>Search</a>
-		<a href="~sfConfig::get('app_site_url')`/search/partnermatches" alt="My Matches" title="My Matches"><strong class="icon-matches">&nbsp;</strong>My Matches</a>
-		<a href="~sfConfig::get('app_site_url')`/profile/viewprofile.php?ownview=1" alt="Register" title="My Matches"><strong class="icon-profile">&nbsp;</strong>My Profile</a>
+		<a href="~sfConfig::get('app_site_url')`/search/partnermatches" alt="Desired Partner Matches" title="Desired Partner Matches"><strong class="icon-matches">&nbsp;</strong>Desired Partner Matches</a>
+		<a href="~sfConfig::get('app_site_url')`/profile/viewprofile.php?ownview=1" alt="Register" title="Desired Partner Matches"><strong class="icon-profile">&nbsp;</strong>My Profile</a>
 		~if $memStat eq 'F'`
 		<a href="~sfConfig::get('app_site_url')`/profile/mem_comparison.php" alt="Buy paid Membership (upgrade)" title="Buy paid Membership (upgrade)"><strong class="icon-buypaid">&nbsp;</strong>Buy paid Membership</a>
 		~else if $memStat eq 'R'`
@@ -20,7 +20,7 @@
 			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=accept&filter=R" alt="" title=""><strong class="icon-mwam">&nbsp;</strong>People who Accepted me ~if $profileMemcacheObj->get('ACC_ME_NEW')` (~$profileMemcacheObj->get('ACC_ME_NEW')`) ~/if`</a>
 			~/if`
 				~if $profileMemcacheObj->get('BOOKMARK')`
-			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=favorite&filter=M" alt="Shortlisted members" title=""><strong class="icon-sm">&nbsp;</strong>Shortlisted Members</a>
+			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=favorite&filter=M" alt="Shortlisted Profiles" title=""><strong class="icon-sm">&nbsp;</strong>Shortlisted Profiles</a>
 			~/if`
 			~if $profileMemcacheObj->get('ACC_BY_ME')`
 			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=accept&filter=M" alt="Members I accepted" title=""><strong class="icon-mia">&nbsp;</strong>People I Accepted</a>
@@ -50,10 +50,10 @@
 		~if $profileMemcacheObj->get('MATCHALERT') || $profileMemcacheObj->get('VISITOR_ALERT')`
 			<span>My Alerts</span>
 			~if $profileMemcacheObj->get('MATCHALERT')`
-			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=matches&filter=R" alt="" title=""><strong class="icon-ma">&nbsp;</strong>Match Alerts (~$profileMemcacheObj->get('MATCHALERT')`)</a>
+			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=matches&filter=R" alt="" title=""><strong class="icon-ma">&nbsp;</strong>Daily Recommendations (~$profileMemcacheObj->get('MATCHALERT')`)</a>
 			~/if`
 			~if $profileMemcacheObj->get('VISITOR_ALERT')`
-			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=visitors&filter=R" alt="" title=""><strong class="icon-rpv">&nbsp;</strong>Recent Profile Visitors (~$profileMemcacheObj->get('VISITOR_ALERT')`)</a>
+			<a href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?&page=visitors&filter=R" alt="" title=""><strong class="icon-rpv">&nbsp;</strong>Profile Visitors (~$profileMemcacheObj->get('VISITOR_ALERT')`)</a>
 			~/if`
 		~/if`
 		

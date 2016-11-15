@@ -126,7 +126,6 @@ class ApiProfileSectionsDesktop extends ApiProfileSectionsApp{
     $contactArr = parent::getApiContactInfo();
     $extendedContactArray = $this->profile->getExtendedContacts("onlyValues");
     $extendedContactObj   = $this->profile->getExtendedContacts();
-    
     //Mobile Number Owner Name
     $contactArr[]=$this->getApiFormatArray("MOBILE_OWNER_NAME","Name of owner" ,$this->profile->getMOBILE_OWNER_NAME(),$this->profile->getMOBILE_OWNER_NAME(),$this->getApiScreeningField("MOBILE_OWNER_NAME"));
     

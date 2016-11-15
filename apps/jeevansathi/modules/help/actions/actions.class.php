@@ -20,8 +20,20 @@ class helpActions extends sfActions
       $loginData=$request->getAttribute("loginData");
       $this->username = $loginData["USERNAME"];
       $this->email = $loginData["EMAIL"];
+      $ios = $request->getParameter('iosWebView');
       if(MobileCommon::isNewMobileSite())
         {
+            if ($ios == 1) {
+              $this->iosWebView = 1;
+            }
+            if (strpos($_SERVER['HTTP_USER_AGENT'], 'JsAndWeb') > 1) {
+              $this->andWebView = 1;
+            }
+            if ($this->iosWebView == 1 || $this->andWebView == 1) {
+              $this->webView = 1;
+            } else {
+              $this->webView = 0;
+            }
             $this->setTemplate("JSMSHelp");
         }
         else
@@ -65,5 +77,6 @@ class helpActions extends sfActions
       $loginData=$request->getAttribute("loginData");
       $this->username = $loginData["USERNAME"];
       $this->email = $loginData["EMAIL"];
+      $this->iosWebView = $request->getParameter('iosWebView');
   }
 }

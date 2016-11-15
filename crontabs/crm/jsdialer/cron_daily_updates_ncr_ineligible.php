@@ -4,8 +4,8 @@
 * MADE DATE 	: 20 Mar, 2014
 * MADE BY     	: VIBHOR GARG
 *********************************************************************************************/
+//include("cron_daily_updates_functions.php");
 include("MysqlDbConstants.class.php");
-include("cron_daily_updates_functions.php");
 include("DialerHandler.class.php");
 
 //Connection at JSDB
@@ -22,7 +22,7 @@ $eligibleType ='N';
 $limit =10;
 
 // get Status
-$status =getCampaignEligibilityStatus($campaign_name,$eligibleType);
+$status =$dialerHandlerObj->getCampaignEligibilityStatus($campaign_name,$eligibleType);
 if(!$status)
 	$status=0;
 
@@ -30,10 +30,10 @@ if(!$status)
 $start_from =$status;
 for($i=$start_from;$i<$limit;$i++)
 {
-	$ignore_array 	= compute_ignore_array($i,$db_js);
-	$vd_array 	= getVDdiscount($ignore_array,$db_js);
-        stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$db_dialer,$db_js_157,$vd_array);
-	updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+	$ignore_array 	= $dialerHandlerObj->getInDialerInEligibleProfiles($i,$campaign_name);
+	$vd_array 	= $dialerHandlerObj->getVDdiscount($ignore_array);
+        $dialerHandlerObj->stop_non_eligible_profiles($campaign_name,$i,$ignore_array,$vd_array);
+	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
 	echo "DONE$i"."\n";
 }
 
