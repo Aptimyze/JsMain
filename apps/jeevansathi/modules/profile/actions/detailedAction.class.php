@@ -80,7 +80,7 @@ class detailedAction extends sfAction
                 
                 // VA Whitelisting
                 //whiteListing of parameters
-                DetailActionLib::whiteListParams($request);
+                //DetailActionLib::whiteListParams($request);
                 
 		// Do Horscope Check
 		DetailActionLib::DoHorscope_Check();
