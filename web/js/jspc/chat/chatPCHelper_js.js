@@ -384,7 +384,7 @@ function setChatSelfName(nameStr,target){
             if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
                 nameOnSite = $(".js-syncChatHeaderName").html();
             }
-            if(nameOnSite != ""){
+            if(nameOnSite != undefined && nameOnSite != ""){
                 nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
                 if(nameOnSite && nameStr != nameOnSite){
                     setChatSelfName(nameOnSite,"storage");
@@ -398,7 +398,7 @@ function setChatSelfName(nameStr,target){
         if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
             nameOnSite = $(".js-syncChatHeaderName").html();
         }
-        if(nameOnSite != ""){
+        if(nameOnSite != undefined && nameOnSite != ""){
             nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
             if(nameOnSite && nameStr != nameOnSite){
                 setChatSelfName(nameOnSite,"storage");

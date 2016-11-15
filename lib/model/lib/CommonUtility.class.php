@@ -798,10 +798,10 @@ die;
 		return $showChat;
 	}
 
-	/*checkChatPanelCondition
-	* check whether to show chat panel or not acc to module
-	* @inputs: $loggedIn,$module
-	* @return: $showChat
+	/*fetchSelfUserName
+	* fetch user self name for chat header
+	* @inputs: $loggedInProfile,$module, $action,$showChat
+	* @return: $userName
 	*/
 	public static function fetchSelfUserName($loggedInProfile,$module, $action,$showChat){
 		$excludeModuleArr = ["profile","myjs","homepage"];
