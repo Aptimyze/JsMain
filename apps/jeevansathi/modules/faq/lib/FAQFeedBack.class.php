@@ -238,7 +238,7 @@ class FAQFeedBack
 			}
 		}
 		
-		if($bNewTicket)
+		if($bNewTicket || $this->m_szCategory==FeedbackEnum::CAT_ABUSE)
 		{
 			// Now Insert in Following Stores 
 			// 1) MIS_FEEDBACK_RESULT 
