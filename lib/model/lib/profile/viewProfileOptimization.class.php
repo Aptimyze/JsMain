@@ -34,8 +34,8 @@ class viewProfileOptimization{
         if(self::$sender){
             $ignore=new IgnoredProfiles("newjs_master");
             //he ignored
-            $otherIgnored = $ignore->ifIgnored(self::$receiver,self::$sender);
-            if($ignore->ifIgnored(self::$sender,self::$receiver)){
+            $otherIgnored = $ignore->ifIgnored(self::$receiver,self::$sender,"byMe");
+            if($ignore->ifIgnored(self::$sender,self::$receiver,"byMe")){
                     $ignore=1; //I Ignored
             }
             elseif($otherIgnored)

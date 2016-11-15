@@ -228,6 +228,13 @@ class phoneActions extends sfActions
 	$respObj->generateResponse();
 	die;
   }
+     	if(!$reasonNumber)
+     	{
+     			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_NO_OPTION_SELECTED);
+	$respObj->setResponseBody($result);
+	$respObj->generateResponse();
+	die;
+     	}
 
    		$profile2=new Profile();
 		$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
