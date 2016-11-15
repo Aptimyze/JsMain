@@ -24,10 +24,10 @@ EOF;
 	{	
         	if (!sfContext::hasInstance())
         		sfContext::createInstance($this->configuration);
-	$maxCount = 100;
-        $limit = 100;
+	$maxCount = 800;
+        $limit = 800;
         $offset  = 0;
-        $incrementValue = 10;
+        $incrementValue = 800;
         $pictureFieldsArr = ProfilePicturesTypeEnum::$PICTURE_SIZES_FIELDS;
         $pictureFieldsArrAlbumPic = ProfilePicturesTypeEnum::$PICTURE_FIELD_FOR_ALBUM_PICS;
         
@@ -84,6 +84,7 @@ EOF;
     {
         foreach($value as $k1=>$v1)
         {
+		$newValue[$k1]=$v1;
             if(in_array($k1,$pictureFieldsArr))
             {
 		if($v1!='')
@@ -91,7 +92,7 @@ EOF;
                     $result = $this->getCurlResult($v1);
                     if($result["http_code"]!="200" && $result["http_code"]!="304")
 		    {
-			$value[$k1]='';
+			$newValue[$k1]='';
 			$v1='';
 		    }
 		}
@@ -105,18 +106,18 @@ EOF;
                 }
                 if($v1 == '')
                 {
-		    $value[$k1]='';
+		    $newValue[$k1]='';
 		    $blankArr[]=$k1;
                 }
             }
         }        
-	$this->checkPicDetails($value,$profileId,$pictureId,$ordering,$mainPicUrl,$originalPicUrl,$blankArr);
+	$this->checkPicDetails($newValue,$profileId,$pictureId,$ordering,$mainPicUrl,$originalPicUrl,$blankArr,$value);
     }
 
-    public function checkPicDetails($valueArr,$profileId,$pictureId,$ordering,$mainPicUrl,$originalPicUrl,$blankArr)
+    public function checkPicDetails($valueArr,$profileId,$pictureId,$ordering,$mainPicUrl,$originalPicUrl,$blankArr,$originalValArr)
     {
 	$countBlank = count($blankArr);
-	
+	file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/pictureDelete.txt",$profileId.":::".$pictureId.":::::".var_export($valueArr,true)."\n",FILE_APPEND);
 	if($countBlank==0 ||($countBlank==1 && in_array("OriginalPicUrl",$blankArr)))
 	{
 		return;
@@ -128,6 +129,7 @@ EOF;
 	{
 		if($ordering==0)
 		{
+/*
 			$newProfilePicId='';
 			$pics=$pictureServiceObj->getAlbum();
 			if($pics)
@@ -148,10 +150,18 @@ EOF;
 				$pictureObj=$pictureServiceObj->getPicDetails($whereArr);
 				$status=$pictureServiceObj->setProfilePic($pictureObj[0]);
 			}
+*/
 		}
-		$pictureServiceObj->deletePhoto($pictureId,$profileId,"other");
+		else
+		{
+			echo $pictureId.",";
+			$bkpObj = new PICTURE_NEW_BKP;
+			$bkpObj->ins($originalValArr);
+		//	$pictureServiceObj->deletePhoto($pictureId,$profileId,"other");
+		}
 		return;
 	}
+/*
 	if(($mainPicUrl!='' && $ordering==0 &&($countBlank>1||($countBlank==1&& !in_array("OriginalPicUrl",$blankArr))))
 		||
 		($mainPicUrl=='' && $originalPicUrl!=''))
@@ -165,6 +175,7 @@ EOF;
                 $pictureServiceObj->addPhotos($PICTURE_FOR_SCREEN_NEW);
 		return;
 	}
+*/
     }
         public function getNonScreenedObjectArray($picObj)
         {
