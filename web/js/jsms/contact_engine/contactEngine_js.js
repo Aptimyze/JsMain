@@ -562,9 +562,7 @@ function afterAction(result,action, index){
         $("#primeButton_"+index).html(result.buttondetails.button.label);
         if(result.buttondetails.button.label == "Interest Saved")
         {
-          console.log(result.buttondetails.button.label);
-          $(".threeDots").hide();
-          
+          $("#"+index+'_3Dots').hide();
         }
       }
 			if(result.actiondetails.footerbutton!=null)
