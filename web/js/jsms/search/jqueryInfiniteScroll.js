@@ -270,8 +270,8 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 {
 		
-	
-	contactTracking="&stype="+tupleStype;
+	if(firstResponse.infotype != 'VISITORS')
+            contactTracking="&stype="+tupleStype;
 			
 	//console.log(contactTracking);
 		if(totalNoOfResults=='')
