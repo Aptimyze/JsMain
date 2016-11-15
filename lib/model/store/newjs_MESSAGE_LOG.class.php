@@ -1272,12 +1272,14 @@ return $result;
 				}
 				else
 				{
-					$sql="SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,INET_NTOA(IP) AS IP,RECEIVER FROM newjs.MESSAGE_LOG  where ".$senderRecevierStr." = :PROFILEID ORDER BY DATE DESC limit 20";
+					$sql="SELECT CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,IP,RECEIVER FROM newjs.MESSAGE_LOG  where ".$senderRecevierStr." = :PROFILEID ORDER BY DATE DESC limit 20";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
+                                                if(strpos($row['IP'],'.')===false)
+                                                        $row['IP']=long2ip($row['IP']);
 						$output[] = $row;
 					}
 				

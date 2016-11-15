@@ -123,7 +123,6 @@ var domainCode={};
             ~JsTrackingHelper::setJsLoadFlag(1)`
         ~/if`
 	</div>
-  <!--Palash-->
   ~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
   ~minify_include_javascripts('bottom')`
   ~/if`
