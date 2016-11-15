@@ -75,6 +75,14 @@
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
         var dppListingWebServiceUrl = "~JsConstants::$chatListingWebServiceUrl['dpp']`";
+        var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
+        //console.log("dppLiveForAll",dppLiveForAll);
+        var betaDppExpression = "";
+        if(dppLiveForAll == "0"){
+            betaDppExpression = "~JsConstants::$profilesEligibleForDpp['modulusDivisor']`"+","+"~JsConstants::$profilesEligibleForDpp['modulusRemainder']`";
+        }
+        
+        //console.log("betaDppExpression",betaDppExpression);
         //console.log("ank",dppListingWebServiceUrl);
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");

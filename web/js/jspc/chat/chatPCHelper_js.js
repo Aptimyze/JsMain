@@ -39,17 +39,29 @@ function to reactivate poll for non roster list
 function reActivateNonRosterPolling(source,updateChatImmediate){
     //kills interval polling for non roster list
     //clearNonRosterPollingInterval();
+    //console.log("dppLiveForAll",dppLiveForAll);
+    //console.log("betaDppExpression",betaDppExpression);
     if (strophieWrapper.getCurrentConnStatus() == true) {
-        //console.log("in reActivateNonRosterPolling",source);
-        $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
-            //pollForNonRosterListing(groupId);
-            clearNonRosterPollingInterval(groupId);
-            var updateChatListImmediate = (updateChatImmediate != undefined) ? updateChatImmediate : false;
-            strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
-                                                                pollForNonRosterListing(groupId,updateChatListImmediate);
-                                                            },100);
-            
-        });
+        var profileEligible = true;
+        if(dppLiveForAll != "1" && betaDppExpression != undefined && betaDppExpression != ""){
+            var splitArr = JSON.parse("[" + betaDppExpression + "]");
+            if(splitArr != undefined && loggedInJspcUser && (loggedInJspcUser % splitArr[0] >= splitArr[1])){
+                profileEligible = false;
+            }
+        }
+        //console.log("profileEligible",profileEligible);
+        if(profileEligible == true){
+            //console.log("in reActivateNonRosterPolling",source);
+            $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
+                    //pollForNonRosterListing(groupId);
+                    clearNonRosterPollingInterval(groupId);
+                    var updateChatListImmediate = (updateChatImmediate != undefined) ? updateChatImmediate : false;
+                    strophieWrapper.nonRosterClearInterval[groupId] = setTimeout(function(){
+                                                                        pollForNonRosterListing(groupId,updateChatListImmediate);
+                                                                    },100);
+                    
+            });
+        }
     }
 }
 
