@@ -76,7 +76,7 @@
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
         var selfUserName = "~$selfUserName`";
-        console.log("ank",selfUserName);
+        //console.log("ank",selfUserName);
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
         //console.log("ankita_localstorage",localStorage.getItem("self_subcription"));
