@@ -53,14 +53,11 @@
                             </ul>
                         </div>
                         <div class="reportInvalidScreen" style="height:100%">
-                        <textarea class="disp-none pad18 fullheight fullwid f18 fontthin" id="js-otherInvalidReasonsLayer" style="background: none;height: 100%" placeholder="Describe your concern for this number"></textarea>
+                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherInvalidReasonsLayer" style="background: none;height: 100%" placeholder="Describe your concern for this number"></textarea>
                         </div>
                         </div>
                         <div class="posfix fullwid scrollhid pos1_c1">
                             <div id="reportInvalidSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report Invalid</div>
-                        </div>
-                        <div class="reportInvalidConfirmScreen">
-                        <textarea class="disp-none pad18 fullheight fullwid f18 fontthin" id="invalidConfirmationMessage" style="background: none;" > Thank you for helping us if our team find this number invalid we will remove this number and credit you with a contact as compensation.</textarea>
                         </div>
                         </div>
                 </div>
@@ -112,7 +109,7 @@
                             </ul>
                         </div>
                         <div class="reportAbuseScreen">
-                        <textarea class="disp-none pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Describe your concern for this profile"></textarea>
+                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Describe your concern for this profile"></textarea>
                         </div>
                         </div>
                         <div class="posfix fullwid scrollhid pos1_c1">
