@@ -16,8 +16,12 @@ class BellCounts
 	                $bellCounts['PHOTO_REQUEST_NEW']=JsCommon::convert99($profileMemcacheObj->get("PHOTO_REQUEST_NEW"));
 	        $justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
 			$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
+
 			 $declinedMeNewMemcacheCount=$profileMemcacheObj->get('DEC_ME_NEW');
+			 if($declinedMeNewMemcacheCount)
 			$bellCounts['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
+			else
+				$bellCounts['DEC_ME_NEW'] = 0;
             //            $justJoinMatchArr = SearchCommonFunctions::getJustJoinedMatches($profileObj); 
                         //$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinMatchArr['CNT']);
             
@@ -29,7 +33,7 @@ class BellCounts
 			{
 				$bellCounts["FILTERED_NEW"] = 0;
 			}
-			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $profileMemcacheObj->get("PHOTO_REQUEST_NEW") + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"]);
+			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $profileMemcacheObj->get("PHOTO_REQUEST_NEW") + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"] + $bellCounts['DEC_ME_NEW']);
 			return $bellCounts;
 		}
         }
