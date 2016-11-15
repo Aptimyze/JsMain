@@ -115,17 +115,13 @@ EOF;
 
     public function checkPicDetails($valueArr,$profileId,$pictureId,$ordering,$mainPicUrl,$originalPicUrl,$blankArr)
     {
-echo $profileId;
-echo "\n\n\n";
-echo $pictureId;
-echo "\n\n\n";
-	$countBlank = count($valueArr);
+	$countBlank = count($blankArr);
 	
 	if($countBlank==0 ||($countBlank==1 && in_array("OriginalPicUrl",$blankArr)))
 	{
 		return;
 	}
-	$profileObj = new Profile('',$profileId);
+        $profileObj = new LoggedInProfile('',$profileId);
         $profileObj->getDetail('', '', '*');
 	$pictureServiceObj=new PictureService($profileObj);
 	if($mainPicUrl=='' && $originalPicUrl=='')
@@ -138,7 +134,7 @@ echo "\n\n\n";
 			{
 				foreach((array)$pics as $v)
 				{
-					if($v=>getORDERING==1)
+					if($v->getORDERING()==1)
 					{
 						$newProfilePicId = $v->getPICTUREID();
 						break;
@@ -153,7 +149,7 @@ echo "\n\n\n";
 				$status=$pictureServiceObj->setProfilePic($pictureObj[0]);
 			}
 		}
-		$pictureServiceObj->deletePhoto($pictureId,$profileId);
+		$pictureServiceObj->deletePhoto($pictureId,$profileId,"other");
 		return;
 	}
 	if(($mainPicUrl!='' && $ordering==0 &&($countBlank>1||($countBlank==1&& !in_array("OriginalPicUrl",$blankArr))))
@@ -174,13 +170,15 @@ echo "\n\n\n";
         {
                 foreach(ProfilePicturesTypeEnum::$PICTURE_SCREENED_SIZES_FIELDS as $k=>$v)
                 {
-                        if($k=="TITLE" && $picObj->getUNSCREENED_TITLE()){
+/*
+                        if($k=="TITLE" && $picObj->getUNSCREENED_TITLE())
                                 eval('$updateArray['.'"'.$v.'"'.']=$picObj->getUNSCREENED_TITLE();');
-      }else
-      {
+		      else
+		      {
+*/
                                 eval('$updateArray['.'"'.$v.'"'.']=$picObj->get'.$v.'(1);');
                                 $updateArray[$v] = PictureFunctions::getPictureServerUrl($updateArray[$v]);
-                        }
+//                        }
                 }
                 return $updateArray;
         }
