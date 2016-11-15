@@ -533,8 +533,7 @@ class profileVerificationActions extends sfActions
       $endDate=$request->getParameter('RAStartDate');
       $startDate=date('Y-m-d',strtotime("-7 day"));
 
-      $resultArr=(new inappropriateUsersReportTask())->setData();
-      
+      $resultArr=(new inappropriateUsers())->getDataForADate($endDate);
       ob_end_clean();
       if(sizeof($resultArr) == 0 )
           die;
