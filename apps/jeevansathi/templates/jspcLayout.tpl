@@ -115,6 +115,7 @@
 ~else if`
     <body>
 ~/if`
+<div id='mainContent'>
 
     <div id="clickHolderCE" onclick="javascript:updateClickHolderCE(false,event)" style="height:0px;width:0px">&nbsp;</div>
     <div id="clickHolder" onclick="javascript:updateClickHolder(false,event)" style="height:0px;width:0px" >&nbsp;</div><div id="commonOverlay" class="jspcOverlay js-overlay overlayZ disp-none"></div>
@@ -137,6 +138,7 @@
     ~minify_include_javascripts('commonBottom')`
     ~minify_include_javascripts('bottom')`
     <!--Google Analytics Code-->
+</div>
 </body>
 ~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>

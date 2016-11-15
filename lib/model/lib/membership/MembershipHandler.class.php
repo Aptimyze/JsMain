@@ -1923,4 +1923,36 @@ class MembershipHandler
         }
         return $servName;
     }
+
+    public function calculateNewRenewalDiscountBasedOnPreviousTransaction($profileid, $discount_calc, $purDet) {
+        $billServObj    = new billing_SERVICES('newjs_slave');
+        $servDetailsArr = $billServObj->getServiceDetailsArr();
+        // Start - Logic to change renewal based on previous discount
+        $prevServPur = explode(",", $purDet['SERVICEID']);
+        $prevDiscAmt = $purDet['DISCOUNT'];
+        if ($prevDiscAmt != 0) {
+            $currency    = $purDet['CUR_TYPE'];
+            foreach ($prevServPur as $val) {
+                if ($currency == "RS") {
+                    $prevTotAmt += $servDetailsArr[$val]['desktop_RS'];
+                } else {
+                    $prevTotAmt += $servDetailsArr[$val]['desktop_DOL'];
+                }
+            }
+            $prevDisc = round(($prevDiscAmt/$prevTotAmt)*100, 2);
+        } else {
+            $prevDisc = 0;
+        }
+        if ($prevDisc > $discount_calc) {
+            $discount = (0.6 * ($prevDisc- $discount_calc)) + $discount_calc;
+            // rounding to nearest 5
+            $discount = round($discount/5) * 5; 
+        } else {
+            $discount = $discount_calc;
+        }
+        // print_r(array('profileid' => $profileid, 'currency' => $currency, 'last_main_transaction_services' => implode(",", $prevServPur), 'previous_discount_amount' => $prevDiscAmt, 'previous_final_amount' => $prevTotAmt, 'previous_discount_perc' => $prevDisc, 'rd_algo_calculated_discount_prec' => $discount_calc, 'rohan_algo_calculated_discount_prec' => $discount));
+        // End - Logic to change renewal based on previous discount
+        unset($discount_calc, $currency, $prevServPur, $prevDiscAmt, $prevTotAmt, $prevDisc);
+        return $discount;
+    }
 }

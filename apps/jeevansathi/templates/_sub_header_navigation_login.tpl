@@ -11,7 +11,7 @@
 				~/if`
                     	<div class="fullwidth padleft22 bold_gnb">
                         	<div class="fl" id="myMatchesLoggedIn">
-                            	My Matches
+                            	Desired Partner Matches
                             </div>
                             <div class="fl droparw">
                             	<div class="droparrow1"></div>
@@ -41,7 +41,7 @@
 								<li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a href="~sfConfig::get('app_site_url')`/search/matchalerts" class="fullwidth cursp">
-                                       <div class="paddallfive" id="MatchAlertsLoggedIn">Match Alerts</div>                                       
+                                       <div class="paddallfive" id="MatchAlertsLoggedIn">Daily Recommendations</div>                                       
                                      </a>                                        
                                   </div>  
                                 </li>
@@ -57,7 +57,7 @@
                                  <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a href="~sfConfig::get('app_site_url')`/search/reverseDpp" class="fullwidth cursp">
-                                        <div class="paddallfive" id="memberslookingForMeLoggedIn">People Looking for me</div>
+                                        <div class="paddallfive" id="memberslookingForMeLoggedIn">Members Looking for Me</div>
                                      </a>                                        
                                   </div>  
                                 </li>
@@ -111,7 +111,7 @@
                                  <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a class="fullwidth cursp" href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?checksum=~$sf_request->getAttribute('checksum')`&page=visitors&filter=R">
-                                        <div class="paddallfive" id="recentProfileLoggedIn">Recent Profile Visitors</div>
+                                        <div class="paddallfive" id="recentProfileLoggedIn">Profile Visitors</div>
                                      </a>                                        
                                   </div>  
                                 </li>                                
@@ -139,7 +139,7 @@
                                  <li style="margin-top:0px;">
                                   <div class="padallsix">
                                   	<a class="fullwidth cursp" href="~sfConfig::get('app_site_url')`/profile/contacts_made_received.php?checksum=~$sf_request->getAttribute('checksum')`&page=favorite&filter=M">
-                                        <div class="paddallfive" id="shortlistedLoggedIn">Shortlisted Members</div>
+                                        <div class="paddallfive" id="shortlistedLoggedIn">Shortlisted Profiles</div>
                                      </a>                                        
                                   </div>  
                                 </li>

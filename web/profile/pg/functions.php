@@ -17,6 +17,7 @@ include_once (JsConstants::$docRoot . "/classes/shardingRelated.php");
 include_once (JsConstants::$docRoot . "/commonFiles/flag.php");
 include_once (JsConstants::$docRoot . "/profile/contacts_functions.php");
 include_once (JsConstants::$cronDocRoot . "/lib/model/enums/Membership.enum.class.php");
+include_once (JsConstants::$cronDocRoot . "/lib/model/lib/SendMail.class.php");
 include_once (JsConstants::$docRoot . "/classes/JProfileUpdateLib.php");
 
 $error_msg = "Due to some temporary problem your request could not be processed. Please try after some time.";
@@ -47,7 +48,8 @@ function updtOrder($ORDERID, &$dup, $updateStatus = 'Y') {
     $res = mysql_query_decide($sql) or logError($error_msg, $sql, "ShowErrTemplate");
     
     if (!mysql_num_rows($res)) {
-        mail($announce_to_email, "Record not found for $ORDERID", "In function updtOrder, script name functions.php\nmysql_num_rows is : " . mysql_num_rows($res));
+        SendMail::send_mail('vibhor.garg@jeevansathi.com', "Record not found for $ORDERID", "Record not found for $ORDERID", 'js-sums@jeevansathi.com', 'avneet.bindra@jeevansathi.com');
+        //mail($announce_to_email, "Record not found for $ORDERID", "In function updtOrder, script name functions.php\nmysql_num_rows is : " . mysql_num_rows($res));
         $ret = false;
     } 
     else {
@@ -63,7 +65,8 @@ function updtOrder($ORDERID, &$dup, $updateStatus = 'Y') {
             $dup = false;
         } 
         else {
-            mail($announce_to_email, "PMTRECVD failed for $ORDERID", "in funcion updtOrder script name funcion.php\nPMTRECVD already populated for $ORDERID");
+            SendMail::send_mail('vibhor.garg@jeevansathi.com', "PMTRECVD already populated for $ORDERID", "PMTRECVD already populated for $ORDERID", 'js-sums@jeevansathi.com', 'avneet.bindra@jeevansathi.com');
+            //mail($announce_to_email, "PMTRECVD failed for $ORDERID", "in funcion updtOrder script name funcion.php\nPMTRECVD already populated for $ORDERID");
             $dup = true;
             $ret = true;
         }

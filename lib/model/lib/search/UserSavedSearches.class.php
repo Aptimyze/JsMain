@@ -142,8 +142,7 @@ class UserSavedSearches extends SearchParamters
 		{
 			$key = "ID";
 			$updateArr[$key] = "'".$replaceId."'";
-		}
-
+		}			
                 $saveId = $SEARCH_AGENTObj->addRecords($updateArr);
 		$SearchParamtersObj->setID($saveId);
                 return $saveId;

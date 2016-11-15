@@ -492,8 +492,8 @@ class DetailedViewApi
 		if($szRelation)
 		{
 			$szPosted = ApiViewConstants::$arrPostedBy[$objProfile->getGENDER()] . " $szRelation";
-			if(strlen($szPH_Name)!=0 && $szPH_Name != ApiViewConstants::getNullValueMarker())
-				$szPosted .= " ($szPH_Name)";
+//			if(strlen($szPH_Name)!=0 && $szPH_Name != ApiViewConstants::getNullValueMarker())
+//				$szPosted .= " ($szPH_Name)";
 		}	
 		
 		if($szPosted == "")

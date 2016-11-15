@@ -154,7 +154,7 @@ function MM_openBrWindow(theURL,winName,features)
         <br>
         ~/if`
         ~if $profileDetailArr['Dpp']['SPOUSE']['label_val'] neq null`
-        <span><b>About my Desired Partner Profile: </b></span><span class="wordbreakwrap">~$profileDetailArr['Dpp']['SPOUSE']['label_val']|decodevar`</span><br>
+        <span><b>About Desired Partner Profile: </b></span><span class="wordbreakwrap">~$profileDetailArr['Dpp']['SPOUSE']['label_val']|decodevar`</span><br>
         ~if $profileDetailArr['Dpp']['SPOUSE']['screenBit'] eq 1`
         <span class = "smallred">This field is currently being screened. Please re-check shortly.</span><br>
         ~/if`

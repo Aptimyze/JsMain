@@ -585,7 +585,9 @@ function xmlToJson(xml) {
  *handles login success/failure cases
  * @param: state
  */
-function invokePluginLoginHandler(state) {
+function invokePluginLoginHandler(state, loader) {
+    //console.log("invoke plign handler");
+    //console.log(state);
     if (state == "success") {
         createCookie("chatAuth", "true",chatConfig.Params[device].loginSessionTimeout);
         //setLogoutClickLocalStorage("unset");
@@ -597,7 +599,9 @@ function invokePluginLoginHandler(state) {
         setLogoutClickLocalStorage("set");
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
             objJsChat.addLoginHTML(true);
-            objJsChat.manageLoginLoader();
+            if(loader != false) {
+                objJsChat.manageLoginLoader();
+            }
         }
     } else if (state == "session_sync") {
         if ($(objJsChat._logoutChat).length != 0 && readCookie('chatAuth') != "true") {
@@ -1223,9 +1227,13 @@ $(document).ready(function () {
         $(window).on("online", function () {
             globalSleep(15000);
             //console.log("detected internet connectivity");
+            //console.log("In online");
             chatLoggedIn = readCookie('chatAuth');
+            //console.log(chatLoggedIn);
             if (chatLoggedIn == 'true' && loginStatus == "Y") {
+                //console.log("In if of online");
                 if (username && pass) {
+                    //console.log("user pass exist");
                     strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
                 }
             }

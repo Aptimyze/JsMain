@@ -172,6 +172,7 @@ ul.myjstab li:nth-child(3).active ~ li:last-child::before {
 .myjs-ic8{background-position:-37px -145px;width: 39px;height: 31px;}
 .myjs-ic9{background-position: -140px -53px;width: 39px;height: 35px;}
 .myjs-ic10{background-position: -181px -53px;width: 21px;height: 35px;}
+.myjs-ic11{background-position: 50px -149px}
 .myjs-error{background-position: -141px -222px;
     width: 42px;
     height: 42px;}
