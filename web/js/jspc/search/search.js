@@ -202,7 +202,7 @@ function searchListingAction(thisElement){
                         case 'js-visitors':
                                 postParams = "searchId=5&currentPage=1&matchedOrAll=A";
                                 postParams1 = "visitors=1";
-                                matchedOrAll=A;
+                                matchedOrAll='A';
 				listType="cc";
                                 break;
                         case 'js-fsoVerified':
