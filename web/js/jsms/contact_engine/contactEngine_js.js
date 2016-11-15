@@ -555,12 +555,18 @@ function afterAction(result,action, index){
 			$("#errorMsgOverlay").show();
 			$("#errorMsgHead").html(result.actiondetails.errmsglabel);
 			var headerLabel = result.actiondetails.headerlabel;
-			var underscreen = headerLabel.match(/Underscreen/g);
+			var underscreen = headerLabel.match(/Under Screen/g);
 			if(underscreen!=''&& underscreen!=null)
 			{
 				disablePrimeButton(action,index);
-				$("#primeButton_"+index).html("Interest sent");
-			}
+        $("#primeButton_"+index).html(result.buttondetails.button.label);
+        if(result.buttondetails.button.label == "Interest Saved")
+        {
+          console.log(result.buttondetails.button.label);
+          $(".threeDots").hide();
+          
+        }
+      }
 			if(result.actiondetails.footerbutton!=null)
 			{
 				bindFooterButtons(result);
