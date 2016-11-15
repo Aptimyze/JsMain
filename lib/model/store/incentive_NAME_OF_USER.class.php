@@ -26,7 +26,7 @@ class incentive_NAME_OF_USER extends TABLE{
                 {
                     $whereStr = "PROFILEID = :PROFILEID";
                 }
-                $sql="SELECT PROFILEID,NAME from incentive.NAME_OF_USER WHERE ".$whereStr;
+                $sql="SELECT SQL_CACHE PROFILEID,NAME from incentive.NAME_OF_USER WHERE ".$whereStr;
                 $resSelectDetail = $this->db->prepare($sql);
                 if(!is_array($profileid))
                     $resSelectDetail->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
