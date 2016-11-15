@@ -137,7 +137,9 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                 beforeSend: function (xhr) {},
                 success: function (response) {
                     /*response = {
-                    "data": [
+                    "data":{
+        
+                    "items":[
                         {
                         "profileid": "2865000",
                         "username": "WYZ6824",
@@ -169,18 +171,19 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                         "profileChecksum": "3599124lr"
                         }
                     ],
+                    "pollTime":20000
+                },
                 "header": {
-                "status": 200,
-                "errorMsg": "",
-                "pollTime":20000
+                    "status": 200,
+                    "errorMsg": ""
                 },
                 "debugInfo": null
                 };*/
             
                     if(response["header"]["status"] == 200){
                         //console.log("fetchNonRosterListing success",response);
-                        if(response["header"]["pollTime"] != undefined && response["header"]["pollTime"] > 0){
-                            chatConfig.Params[device].nonRosterListingRefreshCap = response["header"]["pollTime"];
+                        if(response["data"]["pollTime"] != undefined && response["data"]["pollTime"] > 0){
+                            chatConfig.Params[device].nonRosterListingRefreshCap = response["data"]["pollTime"];
                             //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
                         }
                         var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
@@ -190,7 +193,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                         nonRosterCLUpdated[type] = (new Date()).getTime();
                         localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
                         //add in listing, after non roster list has been fetched
-                        processNonRosterData(response["data"],type,"api");
+                        processNonRosterData(response["data"]["items"],type,"api");
                     }
                 },
                 error: function (xhr) {
