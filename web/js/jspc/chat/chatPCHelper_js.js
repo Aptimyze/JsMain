@@ -380,8 +380,11 @@ function setChatSelfName(nameStr,target){
             modifiedName = nameStr;
         }
         else if(target == "syncName"){
+            var nameOnSite = selfUserName;
             if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
-                var nameOnSite = $(".js-syncChatHeaderName").html();
+                nameOnSite = $(".js-syncChatHeaderName").html();
+            }
+            if(nameOnSite != ""){
                 nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
                 if(nameOnSite && nameStr != nameOnSite){
                     setChatSelfName(nameOnSite,"storage");
@@ -391,8 +394,11 @@ function setChatSelfName(nameStr,target){
         }
     }
     else if(target == "syncName"){
+        var nameOnSite = selfUserName;
         if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
-            var nameOnSite = $(".js-syncChatHeaderName").html();
+            nameOnSite = $(".js-syncChatHeaderName").html();
+        }
+        if(nameOnSite != ""){
             nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
             if(nameOnSite && nameStr != nameOnSite){
                 setChatSelfName(nameOnSite,"storage");

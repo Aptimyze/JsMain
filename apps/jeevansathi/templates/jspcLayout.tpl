@@ -4,6 +4,7 @@
 ~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
 ~if JsConstants::$jsChatFlag eq "1"`
     ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
+    ~assign var=selfUserName value= CommonUtility::fetchSelfUserName($sf_request->getAttribute('profileid'),$module,$action,$showChat)`
 ~/if`
 <!DOCTYPE html>
 <head>
@@ -74,7 +75,8 @@
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
-        //console.log("ank",hideUnimportantFeatureAtPeakLoad);
+        var selfUserName = "~$selfUserName`";
+        console.log("ank",selfUserName);
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
         //console.log("ankita_localstorage",localStorage.getItem("self_subcription"));
