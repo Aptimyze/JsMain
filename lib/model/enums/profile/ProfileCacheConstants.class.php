@@ -215,6 +215,7 @@ class ProfileCacheConstants
                                         "VARA",
                                         "MASA",
                                         "HAVE_ASTRO",
+                                        "FSO_EXISTS"
                                     );
     
     public static $arrJProfileColumns = array(
@@ -416,10 +417,16 @@ class ProfileCacheConstants
                                         "MASA",
                                         HAVE_ASTRO
                                     );
+    
     public static $arrDuplicateFieldsMap = array(
                                         //'BTIME',
                                         'COUNTRY_BIRTH',
                                         'SHOW_HOROSCOPE',
+                                    );
+
+    public static $arrFSOColumns = array(
+                                        //'BTIME',
+                                        'PROFILEID'    
                                     );
     public static $arrCommonFieldsMap = array(
                                         'PROFILEID',

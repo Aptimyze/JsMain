@@ -15,12 +15,13 @@ $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js);
 mysql_query('set session wait_timeout=10000,net_read_timeout=10000',$db_js_111);
 
+$dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer);
 $priorityHandlerObj =new PriorityHandler($db_js, $db_js_111, $db_dialer);
 $campaign_nameArr =array("JS_RENEWAL","OB_RENEWAL_MAH");
 $limit =10;
 $npriority =5;
-$last5day =date("Y-m-d 00:00:00",time()-5*24*60*60);
-$last5day =strtotime($last5day);
+$todayDate =date("Y-m-d",time()-10.5*60*60);
+$todayDate1 =strtotime($todayDate);
 
 foreach($campaign_nameArr as $key=>$campaignName)
 {
@@ -36,8 +37,12 @@ foreach($campaign_nameArr as $key=>$campaignName)
 		if(!$dialerData)
 			continue;
 		foreach($dialerData as $profileid=>$dataArr){
-			$expiryDate =$dataArr['EXPIRY_DT'];	
-			if(strtotime($expiryDate)>=$last5day){
+			$expiryDate 		=$dataArr['EXPIRY_DT'];	
+			$expiryDate1 		=strtotime($expiryDate);
+			$expiryDatePrev5Days 	=date('Y-m-d', strtotime('-4 days',strtotime($expiryDate)));
+			$expiryDatePrev5Days1 	=strtotime($expiryDatePrev5Days);
+
+			if($todayDate1>=$expiryDatePrev5Days1 && $todayDate1<=$expiryDate1){
 				// Prioritize - with new priority
 				$priorityHandlerObj->prioritizeProfile($profileid,$campaignName,$dialerData,$npriority);
 			}

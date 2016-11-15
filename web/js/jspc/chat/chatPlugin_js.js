@@ -3183,6 +3183,7 @@ JsChat.prototype = {
 	},    
     
     manageLoginLoader: function(type){
+        //console.log("Manage login loader");
             $("#loginLoader").toggleClass("disp-none");
     },
     /*
@@ -3289,7 +3290,7 @@ JsChat.prototype = {
                 setTimeout(function(){
                     //console.log("manvi",$("chat-box"));
                     $("chat-box").each(function (index, element) {
-                        console.log("element",element);
+                        //console.log("element",element);
                         _this._scrollDown($(this), "min");
                     });
                 },1000);
@@ -3302,8 +3303,8 @@ JsChat.prototype = {
                 //handle postion of next prev buttons on view profile
                 if(my_action && (my_action=="detailed" || my_action == "noprofile")){
                     _this.handleNextPrevButtons("makeCloser");
-                }     
-            }   
+                }
+            }
         }
         if (this.checkLoginStatus()) {
             //this._chatLoggerPlugin("checking login status");

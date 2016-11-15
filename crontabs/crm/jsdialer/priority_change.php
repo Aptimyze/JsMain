@@ -90,8 +90,7 @@ if(count($camp_array)>0)
 		$sresult1 = mssql_query($squery1,$db_dialer) or logError($squery1,$campaign_name,$db_dialer,1);
 		while($srow1 = mssql_fetch_array($sresult1))
 		{
-			//$today = @date("Y-m-d",time());//When server is on IST
-			$today = @date("Y-m-d",time()+9.5*3600);//When server is on EST
+			$today = @date("Y-m-d",time());//When server is on IST
 			$ecode = $srow1["easycode"];
 			$opriority = $srow1["old_priority"];
 			$profileid = $srow1["PROFILEID"];
