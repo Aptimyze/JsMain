@@ -359,15 +359,17 @@ function generateChatHistoryID(key){
  */
 function setChatSelfName(nameStr,target){
     if(nameStr != undefined && nameStr != ""){
-        /*var trimmedString = nameStr.length > chatConfig.Params[device].nameTrimmLength ? nameStr.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameStr;
-        var oldChatName = $(".chatName").html(trimmedString);
-        if(showChat == "0" || (trimmedString && oldChatName != trimmedString)){
-            $(".chatName").html(trimmedString);
-            localStorage.setItem('name', JSON.stringify({
-                'selfName': nameStr,
-                'user': loggedInJspcUser
-            }));
-        }*/
+        if(target == "chatHeader"){
+            var trimmedString = nameStr.length > chatConfig.Params[device].nameTrimmLength ? nameStr.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameStr;
+            var oldChatName = $(".chatName").html();
+            if(showChat == "0" || (trimmedString && oldChatName != trimmedString)){
+                $(".chatName").html(trimmedString);
+                localStorage.setItem('name', JSON.stringify({
+                    'selfName': nameStr,
+                    'user': loggedInJspcUser
+                }));
+            }
+        }
         if(target == "storage"){
             localStorage.setItem('name', JSON.stringify({
                 'selfName': nameStr,

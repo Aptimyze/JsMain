@@ -3340,6 +3340,7 @@ EditApp = function(){
         data: sectionId == 'verification'?editData:eData,
         processData: sectionId == 'verification'?false:true,
         success: function (result) {
+          console.log("ankita submit",eData);
                 if(typeof showLoader != "undefined" && showLoader === false){
                 }else{
                   toggleLoader(false);
@@ -3351,6 +3352,12 @@ EditApp = function(){
             storeData(JSON.stringify(result.editApi));
             updateView(result.viewApi);
             delete editedFields[sectionId];
+            console.log("bhsghags",eData["editFieldArr"]["NAME"]);
+            if(sectionId != 'verification' && eData && eData["editFieldArr"] && eData["editFieldArr"]["NAME"] != undefined){
+              if($.isFunction(setChatSelfName)){
+                setChatSelfName(eData["editFieldArr"]['NAME'],"chatHeader");
+              }
+            }
           }
           else if(statusCode === 1 &&  result.hasOwnProperty('error'))
           {
