@@ -1,24 +1,17 @@
 <?php
-
+/*
+ *	A Symfony task which gets the counts of 200 and 500 requests over a period of time
+ *  and calculates the uptime ratio and log this information.
+ */
 class UptimeCountKibanaTaskTask extends sfBaseTask
 {
 	protected function configure()
 	{
-		// // add your own arguments here
-		// $this->addArguments(array(
-		//   new sfCommandArgument('my_arg', sfCommandArgument::REQUIRED, 'My argument'),
-		// ));
-
-		// // add your own options here
-		// $this->addOptions(array(
-		//   new sfCommandOption('my_option', null, sfCommandOption::PARAMETER_REQUIRED, 'My option'),
-		// ));
-
 		$this->namespace        = 'Kibana';
 		$this->name             = 'UptimeCountKibanaTask';
 		$this->briefDescription = '';
 		$this->detailedDescription = <<<EOF
-The [UptimeCountKibanaTask|INFO] task does things.
+The [UptimeCountKibanaTask|INFO] task calculates the uptime and logs it.
 Call it with:
 
 	[php symfony Kibana:UptimeCountKibanaTask|INFO]
