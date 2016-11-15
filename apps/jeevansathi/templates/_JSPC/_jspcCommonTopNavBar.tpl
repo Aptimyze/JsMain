@@ -250,6 +250,19 @@ window.onload=function(){
                                     </a>
                                 </li>
 
+                                <li>
+                                    <a href="/inbox/9/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl"> Declined Me</div>
+                                        <div class="fr">
+                                            <div id="membersDeclinedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
+                                                <div id="DeclinedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+
                             </ul>
                             <!--end:submenu-->
                         </li>

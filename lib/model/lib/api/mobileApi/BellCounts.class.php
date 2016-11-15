@@ -16,6 +16,8 @@ class BellCounts
 	                $bellCounts['PHOTO_REQUEST_NEW']=JsCommon::convert99($profileMemcacheObj->get("PHOTO_REQUEST_NEW"));
 	        $justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
 			$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
+			 $declinedMeNewMemcacheCount=$profileMemcacheObj->get('DEC_ME_NEW');
+			$bellCounts['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
             //            $justJoinMatchArr = SearchCommonFunctions::getJustJoinedMatches($profileObj); 
                         //$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinMatchArr['CNT']);
             
@@ -111,7 +113,14 @@ class BellCounts
 				if(!$countDetails['DAILY_MATCHES_NEW']){
 					$countDetails['DAILY_MATCHES_NEW']=0;
 				}
-				$countDetails['TOTAL_NEW'] = $countDetails['PHOTO_REQUEST_NEW'] + $countDetails['MESSAGE_NEW'] + $countDetails['ACC_ME_NEW'] + $countDetails['AWAITING_RESPONSE_NEW'] + $countDetails['FILTERED_NEW'] + $countDetails['NEW_MATCHES'] + $countDetails['DAILY_MATCHES_NEW'];
+				$declinedMeNewMemcacheCount = $profileMemcacheObj->get('DEC_ME_NEW');
+				if($declinedMeNewMemcacheCount){
+					$countDetails['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
+				}
+				else{
+					$countDetails['DEC_ME_NEW']=0;
+				}
+				$countDetails['TOTAL_NEW'] = $countDetails['PHOTO_REQUEST_NEW'] + $countDetails['MESSAGE_NEW'] + $countDetails['ACC_ME_NEW'] + $countDetails['AWAITING_RESPONSE_NEW'] + $countDetails['FILTERED_NEW'] + $countDetails['NEW_MATCHES'] + $countDetails['DAILY_MATCHES_NEW']+$countDetails['DEC_ME_NEW'];
 				return $countDetails;
         	}
         }
@@ -176,6 +185,11 @@ class BellCounts
 				$countDetails["FILTERED_NEW"] = $profileMemcacheObj->get("FILTERED_NEW");
 				if(!$countDetails["FILTERED_NEW"]){
 					$countDetails["FILTERED_NEW"] = 0;
+				}
+
+				$countDetails['DEC_ME_NEW'] = $profileMemcacheObj->get('DEC_ME_NEW');
+				if(!$countDetails['DEC_ME_NEW']){
+					$countDetails['DEC_ME_NEW'] = 0;
 				}
 				
 				foreach($countDetails as $key=>$val){
