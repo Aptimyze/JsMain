@@ -343,7 +343,7 @@ function showMutualCount(id,value) {
   $(id).text(value);
   $(id).attr("data-value",value);
 
-  if (  parseInt( value.replace(",","") ) > mutualMatchCountThreshold )
+  if (  parseInt( value.replace(",","") ) >= mutualMatchCountThreshold )
   {
     $(id).removeClass("js-selected");
     $(id).addClass("dppnbg1");

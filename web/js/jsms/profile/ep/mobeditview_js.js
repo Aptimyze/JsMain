@@ -64,7 +64,7 @@ var mobEditPage=(function(){
 					$("#mutualMatchCountMobile").text(parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])).toLocaleString());
 					$("#mutualMatchCountMobile").attr("data-value",parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])));
 
-                    if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) > mutualMatchCountThreshold )
+                    if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) >= mutualMatchCountThreshold )
                     {
                     	$("#mutualMatchCountMobile").removeClass("bg7");
                     	$("#mutualMatchCountMobile").addClass("dpbg1");
