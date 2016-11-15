@@ -11,8 +11,6 @@ include_once(JsConstants::$docRoot."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once(JsConstants::$docRoot."/classes/globalVariables.Class.php");
 
-global $updateTypeArray;
-$updateTypeArray = array("single","comma","pipehash");
 // Column mapping and values to update
 $columnToUpdate = array("column_name"=>"SHOW_HOROSCOPE","column_name_rev"=>"PARTNER_CASTE","column_trends"=>"CASTE_VALUE_PERCENTILE","new_value"=>"'N'","old_value"=>"'Y'");
 
