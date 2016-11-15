@@ -276,7 +276,7 @@ class ProfileAstro
             return true;
         }
         
-        return self::$objAstroDetailMysql->getIfHoroPresent($profileid);
+        //return self::$objAstroDetailMysql->getIfHoroPresent($profileid);
     }
     
     /**

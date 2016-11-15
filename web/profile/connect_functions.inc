@@ -7466,7 +7466,7 @@ function check_astro_details($profileid,$show_horoscope="abc")
 				$HOROSCOPE_ARRAY[$row_ast_det["PROFILEID"]]=array("HOROSCOPE"=>"Y","ASTRO_DETAILS"=>"$row_ast_det[PROFILEID]:$gender_value:$lagna:$sun:$mo:$ma:$me:$ju:$ve:$sa");
 			}
 		}
-		$profileid_str='';
+		/*$profileid_str='';
 		foreach($profileid_arr as $key=>$value)
 		{
 			if(!array_key_exists($value,$HOROSCOPE_ARRAY) && $show_horoscope[$value]["SHOW_HOROSCOPE"]=="Y")
@@ -7481,7 +7481,7 @@ function check_astro_details($profileid,$show_horoscope="abc")
 			{
 				$HOROSCOPE_ARRAY[$row_ast_det["PROFILEID"]]=array("HOROSCOPE"=>"Y","ASTRO_DETAILS"=>'');
 			}
-		}
+		}*/
 		foreach($profileid_arr as $key=>$value)
                 {
                         if(!array_key_exists($value,$HOROSCOPE_ARRAY))
@@ -7500,12 +7500,12 @@ function check_astro_details($profileid,$show_horoscope="abc")
 			return true;
 		else
 		{
-			$sql_ast_det1 = "SELECT COUNT(*) AS COUNT FROM newjs.HOROSCOPE WHERE PROFILEID = '$profileid'";
+			/*$sql_ast_det1 = "SELECT COUNT(*) AS COUNT FROM newjs.HOROSCOPE WHERE PROFILEID = '$profileid'";
                         $res_ast_det1 = mysql_query_optimizer($sql_ast_det1) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ast_det1,"ShowErrTemplate");
                         $row_ast_det1 = mysql_fetch_array($res_ast_det1);
                         if($row_ast_det1['COUNT'] > 0)
                                 return true;
-                        else
+                        else*/
                                 return false;
 		}
 		
