@@ -53,14 +53,14 @@
                             </ul>
                         </div>
                         <div class="reportInvalidScreen" style="height:100%">
-                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherInvalidReasonsLayer" style="background: none;height: 100%" placeholder="Describe your concern for this number"></textarea>
+                        <textarea class=" pad18 fullheight fullwid f18 fontthin" id="js-otherInvalidReasonsLayer" style="background: none;height: 100%" placeholder="Describe your concern for this number"></textarea>
                         </div>
                         </div>
                         <div class="posfix fullwid scrollhid pos1_c1">
                             <div id="reportInvalidSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report Invalid</div>
                         </div>
                         </div>
-                </div>
+                </div> 
 
 <div class="posfix z112 dispnone"  id="reportAbuseContainer">
                     <div class="fullwid fontlig" >
