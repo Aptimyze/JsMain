@@ -110,10 +110,10 @@ window.onload=function(){
                     <!--start:left-->
                     <ul class="topnavbar listnone fontlig f14 fl pt23">
                         <li tabindex="1"><a id="homepageLink" href="~if $loggedIn`/myjs/jspcPerform~else`/~/if`">HOME</a></li>
-                        <li tabindex="1" class="ml13"> <a class="drop" href="/search/index">MATCHES</a>
+                        <li tabindex="1" class="ml13"> <a class="drop" href="/search/partnermatches">MATCHES</a>
                             <ul class="menushadowGNB">
-                                <li><a class="disp_b js-gnbsearchLists cursp" data="matchalerts"> Daily Recommendations</a></li>
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="partnermatches">Desired Partner Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="matchalerts"> Daily Recommendations</a></li>
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="justjoined">Just Joined Matches</a></li>
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="verifiedMatches">Verified Matches</a></li>
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="twoway">Mutual Matches</a></li>
@@ -236,7 +236,7 @@ window.onload=function(){
                                     </div>
                                     </a>
                                 </li>
-				 <li>
+				                <li>
                                     <a href="/inbox/12/1">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Filtered Interests</div>

@@ -208,6 +208,25 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 			$pid =$rowSelectDetail['PROFILEID'];
                 return $pid;
         }
+        
+        public function checkNotificationSubscriptionStatus($profileid){
+        	try{
+        		if($profileid){
+        			$sql = "SELECT * from MOBILE_API.REGISTRATION_ID WHERE PROFILEID = :PROFILEID ORDER BY TIME DESC LIMIT 1";
+	        		$res = $this->db->prepare($sql);
+        			$res->bindValue(":PROFILEID",$profileid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
+	        		$res->execute();
+	        		while($row = $res->fetch(PDO::FETCH_ASSOC)){
+	        			$result["notificationStatus"]=$row['NOTIFICATION_STATUS'];
+	        		}
+	        		return $result;
+	        	}
+			}
+			catch(PDOException $e)
+			{
+				throw new jsException($e);
+			}
+		}
 
 }
 ?>
