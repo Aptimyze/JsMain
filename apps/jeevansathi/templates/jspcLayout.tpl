@@ -77,9 +77,10 @@
         var dppListingWebServiceUrl = "~JsConstants::$chatListingWebServiceUrl['dpp']`";
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
         //console.log("dppLiveForAll",dppLiveForAll);
-        var betaDppExpression = "";
+        var betaDppExpression = "",specialDppProfiles="";
         if(dppLiveForAll == "0"){
             betaDppExpression = "~JsConstants::$profilesEligibleForDpp['modulusDivisor']`"+","+"~JsConstants::$profilesEligibleForDpp['modulusRemainder']`";
+            specialDppProfiles = "~JsConstants::$profilesEligibleForDpp['privilegedProfiles']`";
         }
         
         //console.log("betaDppExpression",betaDppExpression);

@@ -41,11 +41,18 @@ function reActivateNonRosterPolling(source,updateChatImmediate){
     //clearNonRosterPollingInterval();
     //console.log("dppLiveForAll",dppLiveForAll);
     //console.log("betaDppExpression",betaDppExpression);
-    if (strophieWrapper.getCurrentConnStatus() == true) {
+    if (strophieWrapper.getCurrentConnStatus() == true && loggedInJspcUser != undefined) {
         var profileEligible = true;
+        
         if(dppLiveForAll != "1" && betaDppExpression != undefined && betaDppExpression != ""){
-            var splitArr = JSON.parse("[" + betaDppExpression + "]");
-            if(splitArr != undefined && loggedInJspcUser && (loggedInJspcUser % splitArr[0] >= splitArr[1])){
+            var splitArr = JSON.parse("[" + betaDppExpression + "]"),specialProfiles="";
+          
+            if(specialDppProfiles != undefined){
+                specialProfiles = specialDppProfiles;
+            }
+       
+            if(splitArr != undefined && (specialProfiles.indexOf(loggedInJspcUser) == -1) && (loggedInJspcUser % splitArr[0] >= splitArr[1])){
+                console.log("snssn");
                 profileEligible = false;
             }
         }
