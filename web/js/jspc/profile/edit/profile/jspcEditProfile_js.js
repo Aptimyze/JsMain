@@ -3352,7 +3352,7 @@ EditApp = function(){
             storeData(JSON.stringify(result.editApi));
             updateView(result.viewApi);
             delete editedFields[sectionId];
-            console.log("bhsghags",eData["editFieldArr"]["NAME"]);
+            //update self name in chat header
             if(sectionId != 'verification' && eData && eData["editFieldArr"] && eData["editFieldArr"]["NAME"] != undefined){
               if($.isFunction(setChatSelfName)){
                 setChatSelfName(eData["editFieldArr"]['NAME'],"chatHeader");

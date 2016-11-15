@@ -394,8 +394,8 @@ function getSelfName(){
         if (user == loggedInJspcUser) {
             flag = false;
             selfName = data['selfName'];
-            if(my_action == "jspcPerform" && $("#js-usernameAutomation").length != 0){
-                console.log("from myjs",$("#js-usernameAutomation").html());
+            if((moduleChat+"|"+my_action) == "myjs|jspcPerform" && $("#js-usernameAutomation").length != 0){
+                //console.log("from myjs",$("#js-usernameAutomation").html());
                 var myjsUserName = $("#js-usernameAutomation").html();
                 if(myjsUserName && selfName != myjsUserName){
                     setChatSelfName(myjsUserName,"storage");
@@ -404,8 +404,8 @@ function getSelfName(){
             }
         }
     }
-    else if(my_action == "jspcPerform" && $("#js-usernameAutomation").length != 0){
-        console.log("from myjs",$("#js-usernameAutomation").html());
+    else if((moduleChat+"|"+my_action) == "myjs|jspcPerform" && $("#js-usernameAutomation").length != 0){
+        //console.log("from myjs",$("#js-usernameAutomation").html());
         var myjsUserName = $("#js-usernameAutomation").html();
         if(myjsUserName && selfName != myjsUserName){
             setChatSelfName(myjsUserName,"storage");
@@ -413,7 +413,7 @@ function getSelfName(){
             flag = false;
         }
     }
-    console.log("name",flag);
+    //console.log("name",flag);
     if(flag){
         var apiUrl = chatConfig.Params.selfNameUr;
         ////console.log("In self Name");
