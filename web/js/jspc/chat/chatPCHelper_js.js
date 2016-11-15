@@ -394,20 +394,22 @@ function getSelfName(){
         if (user == loggedInJspcUser) {
             flag = false;
             selfName = data['selfName'];
-            if((moduleChat+"|"+my_action) == "myjs|jspcPerform" && $("#js-usernameAutomation").length != 0){
+            if(my_action == "jspcPerform" && $("#js-usernameAutomation").length != 0){
                 //console.log("from myjs",$("#js-usernameAutomation").html());
                 var myjsUserName = $("#js-usernameAutomation").html();
                 if(myjsUserName && selfName != myjsUserName){
+                    //console.log("here");
                     setChatSelfName(myjsUserName,"storage");
                     selfName = myjsUserName;
                 }
             }
         }
     }
-    else if((moduleChat+"|"+my_action) == "myjs|jspcPerform" && $("#js-usernameAutomation").length != 0){
+    else if(my_action == "jspcPerform" && $("#js-usernameAutomation").length != 0){
         //console.log("from myjs",$("#js-usernameAutomation").html());
         var myjsUserName = $("#js-usernameAutomation").html();
         if(myjsUserName && selfName != myjsUserName){
+            //console.log("here1");
             setChatSelfName(myjsUserName,"storage");
             selfName = myjsUserName;
             flag = false;
@@ -995,7 +997,7 @@ function clearChatMsgFromLS(){
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','name'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
@@ -1321,7 +1323,6 @@ $(document).ready(function () {
         objJsChat.onEnterToChatPreClick = function () {
 	    removeLocalStorageForNonChatBoxProfiles();
             //objJsChat._loginStatus = 'N';
-            
             var chatLoggedIn = readCookie('chatAuth');
             //if (chatLoggedIn != 'true') 
             {
@@ -1333,7 +1334,8 @@ $(document).ready(function () {
                     //console.log("123");
                     return;
                 } else {
-                    //console.log("login my case");
+                    objJsChat._selfName = getSelfName();
+                    //console.log("login my case",objJsChat._selfName);
                     if($("#selfImgDiv img") != undefined && $("#selfImgDiv img").attr("src") != undefined){
                         localStorage.setItem('userImg', JSON.stringify({
                             'img': $("#selfImgDiv img").attr("src"),

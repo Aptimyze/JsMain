@@ -3340,7 +3340,6 @@ EditApp = function(){
         data: sectionId == 'verification'?editData:eData,
         processData: sectionId == 'verification'?false:true,
         success: function (result) {
-          console.log("ankita submit",eData);
                 if(typeof showLoader != "undefined" && showLoader === false){
                 }else{
                   toggleLoader(false);

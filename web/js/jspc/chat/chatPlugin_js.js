@@ -3211,6 +3211,7 @@ JsChat.prototype = {
         //start login button capture
         var that = this;
         $(this._loginbtnID).click(function () {
+            //console.log("before login",that._selfName);
             if (curEle.onEnterToChatPreClick && typeof (curEle.onEnterToChatPreClick) == "function") {
                 //that._chatLoggerPlugin("in onEnterToChatPreClick");
                 curEle.onEnterToChatPreClick();
