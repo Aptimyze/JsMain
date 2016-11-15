@@ -41,6 +41,8 @@ $(document).ready(function() {
 	$('#paginationNext').bind('click', function() {
 		currentPage = $('#paginationLiDiv').find('.active').attr("data");
 		loadPage(parseInt(currentPage) + 1);
+                if(response.infotype == "VISITORS")
+                    updateHistory("",parseInt(currentPage) + 1);
 	});
 
 	/**
@@ -49,6 +51,8 @@ $(document).ready(function() {
 	$('#paginationPrev').bind('click', function() {
 		currentPage = $('#paginationLiDiv').find('.active').attr("data");
 		loadPage(parseInt(currentPage) - 1);
+                if(response.infotype == "VISITORS")
+                    updateHistory("",parseInt(currentPage) + 1);
 
 	});
 

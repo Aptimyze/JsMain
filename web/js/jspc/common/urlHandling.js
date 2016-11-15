@@ -47,6 +47,13 @@ function updateHistory(tabName,page,searchId)
 												addMoreParams += '/'+splitted.split("?")[0];
 												cachingParam = window.location.href.split("?")[1];
 											}
+                                                                                        else if(window.location.href.indexOf("matchedOrAll")!=-1){
+                                                                                            //var splitted = window.location.href.split("/")[6];
+												addMoreParams = '/visitors';
+//												cachingParam = window.location.href.split("?")[1];
+                                                                                                
+                                                                                        }
+                                                                                            
 											else
 												addMoreParams += '/'+window.location.href.split("/")[4];
                 }

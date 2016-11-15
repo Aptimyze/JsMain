@@ -21,7 +21,10 @@ function loadPage(pageNo) {
   var infoArr = {};
   infoArr["action"] = "pagination";
   infoArr["listType"] = listType;
-  updateHistory("",pageNo);   //added to update url on click of next and prev button
+  if(response.infotype == "VISITORS")
+      updateHistory("visitors?matchedOrAll="+matchedOrAll,pageNo);
+  else
+      updateHistory("",pageNo);   //added to update url on click of next and prev button
   sendProcessSearchRequest(postParams,infoArr);
   return false;
 
