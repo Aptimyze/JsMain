@@ -560,10 +560,10 @@ function afterAction(result,action, index){
 			{
 				disablePrimeButton(action,index);
         $("#primeButton_"+index).html(result.buttondetails.button.label);
-        // if(result.buttondetails.button.label == "Interest Saved")
-        // {
-        //   $("#"+index+'_3Dots').hide();
-        // }
+        if(result.buttondetails.button.label == "Interest Saved")
+        {
+          $("#"+index+'_3Dots').hide();
+        }
       }
 			if(result.actiondetails.footerbutton!=null)
 			{

@@ -97,7 +97,6 @@ class postEOIv2Action extends sfAction
 		$profilePicObj = $pictureServiceObj->getProfilePic();
 		$this->loginProfile = LoggedInProfile::getInstance();
 		$subscription=$this->loginProfile->getSubscription();
-		$this->OnceUnderScreen = 0;
 		if($profilePicObj)
 			$thumbNail = $profilePicObj->getThumbailUrl();
 		if(!$thumbNail)
@@ -266,15 +265,12 @@ class postEOIv2Action extends sfAction
 			}
 			elseif($errorArr["UNDERSCREENING"] == 2)
 			{  
-				if(!$this->OnceUnderScreen)
-				{		
-					// $this->OnceUnderScreen = 1;
-					$responseArray["topMsg2"] = "Interest will be delivered once your profile is screened";
-					$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
-					$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-					$responseArray["headerlabel"] = "Profile Under Screening";
-					$responseArray["redirect"] = true;
-				}
+				$responseArray["topMsg2"] = "Interest will be delivered once your profile is screened";
+				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
+				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				$responseArray["remove3Dots_UnderScreen"] = true;
+				$responseArray["headerlabel"] = "Profile Under Screening";
+				$responseArray["redirect"] = true;
 			}
 			elseif($errorArr["DECLINED"] == 2)
 			{
@@ -298,15 +294,7 @@ class postEOIv2Action extends sfAction
 			// $responseArray = array();
 			// $responseArray['buttons'] = $buttons;
 			// $finalresponseArray["button_after_action"] = ButtonResponseFinal::buttonDetailsMerge($responseArray);
-			if($this->contactObj->getTYPE() == ContactHandler::NOCONTACT && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
-			{
-				$finalresponseArray["button_after_action"]['buttons'] = [ButtonResponse::getCustomButton("Interest Saved","","","","",false)];
-				// var_dump($finalresponseArray);die;
-			}
-			else
-			{
-				$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
-			}
+			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
 			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
 			//$finalresponseArray["button_after_action"]["photo"]["url"]=$thumbnail;
