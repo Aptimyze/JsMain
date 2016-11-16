@@ -253,9 +253,9 @@ window.onload=function(){
                                 <li>
                                     <a href="/inbox/10/1">
                                     <div class="clearfix topnavp1">
-                                        <div class="fl"> Declined Me</div>
+                                        <div class="fl"> Declined</div>
                                         <div class="fr">
-                                            <div id="membersDeclinedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
+                                            <div id="membersDeclinedMeCountParent" class="disp-tbl txtc" style="display:none">
                                                 <div id="DeclinedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
                                             </div>
                                         </div>
