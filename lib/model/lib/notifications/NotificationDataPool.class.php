@@ -468,7 +468,7 @@ class NotificationDataPool
             }
             if(is_array($otherProfiles))
             {
-                $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="SMS_TEMP_TABLE","newjs_masterRep");
+                $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="JPROFILE","newjs_masterRep");
                 $profileStr = implode(",",$nameOfUserProfiles);
                 $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
                 $queryParam["PROFILEID"] = $profileStr;
