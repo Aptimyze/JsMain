@@ -359,7 +359,7 @@ JsChat.prototype = {
         var curEleRef = this,
             that = this;
         
-        var lengthReq = 14;
+        var lengthReq = chatConfig.Params[device].nameTrimmLength;
         var stringName = this._selfName;
         var trimmedString = stringName.length > lengthReq ? stringName.substring(0, lengthReq - 3) + "..." : stringName;
         var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp" data-siteLogout="false">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
@@ -3211,6 +3211,7 @@ JsChat.prototype = {
         //start login button capture
         var that = this;
         $(this._loginbtnID).click(function () {
+            //console.log("before login",that._selfName);
             if (curEle.onEnterToChatPreClick && typeof (curEle.onEnterToChatPreClick) == "function") {
                 //that._chatLoggerPlugin("in onEnterToChatPreClick");
                 curEle.onEnterToChatPreClick();
