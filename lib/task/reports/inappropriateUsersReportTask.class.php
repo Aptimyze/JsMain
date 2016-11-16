@@ -7,6 +7,9 @@
  */
 class inappropriateUsersReportTask extends sfBaseTask
 {
+  public static $cronLIVEDate='2016-11-16';
+  public static $dayDiff;
+
   protected function configure()
   {
 
@@ -30,23 +33,81 @@ EOF;
 		ini_set('memory_limit','512M');
                 ini_set('max_execution_time', 0);
 		if(!sfContext::hasInstance())
-	         sfContext::createInstance($this->configuration);
-                $startDate=date('Y-m-d',strtotime("-14 day"));
+	        sfContext::createInstance($this->configuration);
+                $startDate=date('Y-m-d',strtotime("-7 day"));
                 $masterDbObj=new MIS_INAPPROPRIATE_USERS_LOG();
                 $masterDbObj->truncateTable($startDate);
-
-                    $finalResultsArray = (new inappropriateUsers())->getDataForADate();
-                    $data="Username,Outside Religion Contact,Outside Marital Status Contact,Outside Age Bracket Contact,Overall negative score\r\n";
-                    foreach ($finalResultsArray as $key => $value) 
-                      {
-                      $data.="\r\n".$value['USERNAME'].','.$value['RCOUNT'].','.$value['MCOUNT'].','.$value['ACOUNT'].','.$value['TCOUNT'];
-                      }
-                      SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Inappropriate Users Summary for $todayDate","noreply@jeevansathi.com",'','',$data,'','inappropriateUsers_'.$todayDate.".csv");
+                $masterDbReportObj=new MIS_INAPPROPRIATE_USERS_REPORT();
+                $masterDbReportObj->truncateTable($startDate);
+                $this->getDataForToday();
+                $data="Username,Outside Religion Contact,Outside Marital Status Contact,Outside Age Bracket Contact,Overall negative score\r\n";
+                foreach ($this->finalResultsArray as $key => $value) 
+                {
+                $data.="\r\n".$value['USERNAME'].','.$value['RCOUNT'].','.$value['MCOUNT'].','.$value['ACOUNT'].','.$value['TCOUNT'];
+                }
+                     SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Inappropriate Users Summary for $todayDate","noreply@jeevansathi.com",'','',$data,'','inappropriateUsers_'.$todayDate.".csv");
 
 
   }
 
-    
+
+  public function isLast7Max($value,$reportObj)
+    {
+        $dateStart = date('Y-m-d',strtotime("-7 day"));
+        $dateEnd = date('Y-m-d',strtotime("-1 day"));
+        $MAX=$reportObj->getMaxForUser($value['PROFILEID'],$dateStart,$dateEnd);
+      for($i=1;$i<8;$i++)
+      {
+      
+      $date1 = date('Y-m-d',strtotime("-".($i)." day"));
+      $return['RCOUNT'] += $value[$date1]['RCOUNT'];
+      $return['TCOUNT'] += $value[$date1]['TCOUNT'];
+      $return['ACOUNT'] += $value[$date1]['ACOUNT'];
+      $return['MCOUNT'] += $value[$date1]['MCOUNT'];
+
+      }  
+      if(!$MAX['MAX'] || $return['TCOUNT']>$MAX['MAX'])
+          return $return;
+      return false;
+    }
+
+ 
+    public function getDataForToday(){
+                    $reportObjSlave = new MIS_INAPPROPRIATE_USERS_REPORT('newjs_slave');
+                    $reportObj = new MIS_INAPPROPRIATE_USERS_REPORT();
+                    self::$dayDiff = floor((time()-strtotime(self::$cronLIVEDate))/(60 * 60 * 24));
+                    $yesterDate=date('Y-m-d',strtotime("-1 day"));
+                    $startDate=date('Y-m-d',strtotime("-7 day"));
+                    $chunks=10;
+                    for($i=0;$i<$chunks;$i++)
+                    {
+                        empty($groupedByUsername);
+                        if(date('Y-m-d')==self::$cronLIVEDate)
+                            $resultArr=(new MIS_INAPPROPRIATE_USERS_LOG('newjs_slave'))->getDataForLast7Days($startDate,$yesterDate,$chunks,$i);
+                        else
+                            $resultArr=(new MIS_INAPPROPRIATE_USERS_LOG('newjs_slave'))->getDataForADate($startDate,$yesterDate,$chunks,$i);
+
+                        foreach ($resultArr as $key => $value) 
+                        {
+                            $groupedByUsername[$value['USERNAME']][$value['DATE']] = $value;
+                            $groupedByUsername[$value['USERNAME']]['PROFILEID'] = $value[PROFILEID];
+                            unset($resultArr[$key]);
+                        }
+                        empty($resultArr);
+                        foreach ($groupedByUsername as $key => $value) 
+                        {
+
+                                if($tempVal=$this->isLast7Max($value,$reportObjSlave))
+                                {
+                                $this->finalResultsArray[] = $tempVal;
+                                $reportObj->insert($value['PROFILEID'],$tempVal['TCOUNT'],$tempVal['RCOUNT'],$tempVal['ACOUNT'],$tempVal['MCOUNT'],$key);
+                                }
+                                unset($groupedByUsername[$key]);
+                        }
+                    }
+//                    array_multisort($Tarray, SORT_DESC, SORT_NUMERIC, $this->finalResultsArray);
+    }
+
   
     
 }

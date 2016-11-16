@@ -531,9 +531,7 @@ class profileVerificationActions extends sfActions
         public function executeInappropriateUsersReport(sfWebRequest $request)
   {
       $endDate=$request->getParameter('RAStartDate');
-      $startDate=date('Y-m-d',strtotime("-7 day"));
-
-      $resultArr=(new inappropriateUsers())->getDataForADate($endDate);
+      $resultArr=(new MIS_INAPPROPRIATE_USERS_REPORT())->getReportForADate($endDate);
       ob_end_clean();
       if(sizeof($resultArr) == 0 )
           die;
