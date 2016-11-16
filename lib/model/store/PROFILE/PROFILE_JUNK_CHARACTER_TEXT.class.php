@@ -21,15 +21,14 @@ class PROFILE_JUNK_CHARACTER_TEXT extends TABLE {
                 parent::__construct($dbname);
         }
 
-        public function getOriginalText()
+        public function getOriginalText($limitValue)
         {
             try
             {
-                $sql = "SELECT id,original_text FROM PROFILE.JUNK_CHARACTER_TEXT WHERE modified_automate IS NULL";
+                $sql = "SELECT id,original_text FROM PROFILE.JUNK_CHARACTER_TEXT WHERE modified_automate IS NULL limit :limitValue";
                 $pdoStatement = $this->db->prepare($sql);
+                $pdoStatement->bindValue(":limitValue",$limitValue,PDO::PARAM_INT);
                 $pdoStatement->execute();
-
-
                 $res=$pdoStatement->fetchAll(PDO::FETCH_ASSOC);
                 return $res;
             }
@@ -38,6 +37,7 @@ class PROFILE_JUNK_CHARACTER_TEXT extends TABLE {
                 throw new jsException($e);
             }
         }
+
 
         public function updateModifiedText($idArr,$modified_automate)
         {

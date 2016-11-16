@@ -11,8 +11,7 @@ class cronSpamTextRemovalTask extends sfBaseTask
   {
     $this->file_path = JsConstants::$cronDocRoot."/lib/utils/junkCharacters/spam_character_trained.txt";
     $this->accepted_characters = 'abcdefghijklmnopqrstuvwxyz ';
-
-
+    $this->limit = 2;
 
 $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
@@ -33,34 +32,41 @@ EOF;
     protected function execute($arguments = array(), $options = array())
     {
       $PROFILE_JUNK_CHARACTER_TEXT = new PROFILE_JUNK_CHARACTER_TEXT;
-      $result = ($PROFILE_JUNK_CHARACTER_TEXT->getOriginalText());
 
-      $gibberishArray = array();
-      $notGibberishArray = array();
+      $result = ($PROFILE_JUNK_CHARACTER_TEXT->getOriginalText($this->limit));
 
-      foreach ($result as $key => $value) 
+      while ( !empty($result))
       {
-        $isGibberish = $this->test($value['original_text'],$this->file_path);
-        if ( $isGibberish !== -1 )
+        $gibberishArray = array();
+        $notGibberishArray = array();
+
+        foreach ($result as $key => $value) 
         {
-          if ( $isGibberish )
+          $isGibberish = $this->test($value['original_text'],$this->file_path);
+          if ( $isGibberish !== -1 )
           {
-            $gibberishArray[] = $value['id'];
-          }
-          else
-          {
-            $notGibberishArray[] = $value['id'];
+            if ( $isGibberish )
+            {
+              $gibberishArray[] = $value['id'];
+            }
+            else
+            {
+              $notGibberishArray[] = $value['id'];
+            }
           }
         }
+        if ( !empty($gibberishArray))
+        {
+          $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($gibberishArray,"JUNK");
+        }
+        if ( !empty($notGibberishArray))
+        {
+          $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($notGibberishArray,"NOT_JUNK");
+        }
+        $result = ($PROFILE_JUNK_CHARACTER_TEXT->getOriginalText($this->limit));
       }
-      if ( !empty($gibberishArray))
-      {
-        $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($gibberishArray,"JUNK");
-      }
-      if ( !empty($notGibberishArray))
-      {
-        $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($notGibberishArray,"NOT_JUNK");
-      }
+
+     
     }
 
     private function test($text, $lib_path, $raw=false)
