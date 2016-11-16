@@ -251,7 +251,7 @@ window.onload=function(){
                                 </li>
 
                                 <li>
-                                    <a href="/inbox/9/1">
+                                    <a href="/inbox/10/1">
                                     <div class="clearfix topnavp1">
                                         <div class="fl"> Declined Me</div>
                                         <div class="fr">
