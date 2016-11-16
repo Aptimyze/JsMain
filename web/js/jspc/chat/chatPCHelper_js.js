@@ -52,7 +52,6 @@ function reActivateNonRosterPolling(source,updateChatImmediate){
             }
        
             if(splitArr != undefined && (specialProfiles.indexOf(loggedInJspcUser) == -1) && (loggedInJspcUser % splitArr[0] >= splitArr[1])){
-                console.log("snssn");
                 profileEligible = false;
             }
         }
