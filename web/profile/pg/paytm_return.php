@@ -67,7 +67,7 @@ $dup = false;
 if ($isValidChecksum && $AuthDesc == "Y") {
     $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
-    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, $dup, $ret);
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
     if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
     
     list($part1, $part2) = explode("-", $Order_Id);
@@ -150,6 +150,7 @@ if ($isValidChecksum && $AuthDesc == "Y") {
 } 
 else if ($isValidChecksum && $AuthDesc == "N") {
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
     list($part1, $part2) = explode("-", $Order_Id);
     $ordrDeviceObj = new billing_ORDERS_DEVICE();
     $device = $ordrDeviceObj->getOrderDevice($part2, $part1);

@@ -33,12 +33,11 @@ class billing_GATEWAY_RESPONSE_LOG extends TABLE
     {
         try
         {
-            $dt = date("Y-m-d H:i:s");
             $sql = "UPDATE billing.GATEWAY_RESPONSE_LOG SET DUP=:DUP, RET=:RET WHERE PROFILEID=:PROFILEID AND ORDER_ID=
             :ORDER_ID";
             $res = $this->db->prepare($sql);
             $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-            $res->bindValue(":ORDER_ID", $order_id, PDO::PARAM_STR);
+            $res->bindValue(":ORDER_ID", $order_id, PDO::PARAM_INT);
             $res->bindValue(":DUP", $dup, PDO::PARAM_STR);
             $res->bindValue(":RET", $ret, PDO::PARAM_STR);
             $res->execute();
