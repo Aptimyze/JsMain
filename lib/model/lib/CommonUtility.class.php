@@ -815,7 +815,7 @@ die;
 			$getName = 0;
 		}
 		if($getName){
-			$nameOfUserObj = new incentive_NAME_OF_USER();
+			$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
 			$userName = $nameOfUserObj->getName($loggedInProfile);
 		}
 		//error_log("ankita-".$getName);
