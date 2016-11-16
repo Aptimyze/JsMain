@@ -238,6 +238,18 @@ class VariableDiscountHandler
 					$fieldNameArr[] =$fieldName;
 					$valuesArr[] 	=$discount;			
 				}
+				// Start : Code to pick last discount capping by executive
+				$discNegLogObj = new incentive_DISCOUNT_NEGOTIATION_LOG('newjs_masterRep');
+				$lastNegDet = $discNegLogObj->getLastNegotiatedDiscountDetails($profileid);
+				if (!empty($lastNegDet) && strtotime($lastNegDet['ENTRY_DT']) < time() && strtotime($lastNegDet['EXPIRY_DT']) > time()) {
+					$valuesArrTemp = $valuesArr;	
+					foreach ($valuesArrTemp as $key=>$val) {
+						$valuesArr[$key] = min($val, $lastNegDet['DISCOUNT']);
+					}
+					unset($valuesArrTemp);
+				}
+				unset($discNegLogObj, $lastNegDet);
+				// End : Code to pick last discount capping by executive
 				$valuesArr[] 	=$profileid;
 				$valuesArr[] 	=$service;
 				$valuesStr 	="'".implode("','",$valuesArr)."'";
