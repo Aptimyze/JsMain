@@ -11,7 +11,7 @@ class cronSpamTextRemovalTask extends sfBaseTask
   {
     $this->file_path = JsConstants::$cronDocRoot."/lib/utils/junkCharacters/spam_character_trained.txt";
     $this->accepted_characters = 'abcdefghijklmnopqrstuvwxyz ';
-    $this->limit = 2;
+    $this->limit = 1000;
 
 $this->addOptions(array(
         new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
