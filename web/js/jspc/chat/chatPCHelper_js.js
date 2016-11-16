@@ -421,7 +421,8 @@ function getSelfName(){
     if (selfName) {
         var data = JSON.parse(selfName);
         var user = data['user'];
-        if (user == loggedInJspcUser) {
+        //if (user == loggedInJspcUser) 
+        {
             flag = false;
             selfName = data['selfName'];
             var modifiedName = setChatSelfName(selfName,"syncName");
@@ -437,7 +438,7 @@ function getSelfName(){
             selfName =  modifiedName;
         }
     }
-    //console.log("name",flag);
+    //console.log("getSelfName",flag);
     if(flag){
         var apiUrl = chatConfig.Params.selfNameUr;
         ////console.log("In self Name");
