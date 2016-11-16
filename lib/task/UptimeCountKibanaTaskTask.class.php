@@ -23,8 +23,9 @@ EOF;
 		$elkServer = 'aura.infoedge.com';
 		$elkPort = '9203';
 		$indexName = 'jeevansathiactivity';
-		$query = '_count';
+		$query = '_search';
 		$timeout = 5000;
+		// Todo: set path
 		$dirPath = '/home/nickedes/Desktop/logs';
 		$filePath = $dirPath."/Counts.log";
 		$interval = 24;
@@ -36,53 +37,43 @@ EOF;
 		}
 		$rcode200 = "200";
 		$rcode500 = "500";
-		// parameters required, get all request code counts in the specified interval
-		$params = [
 
-			"query"=> [
-				"filtered"=> [
-				  "query"=> [
-					"match"=> [ "RCODE" => $rcode200 ]
-				  ],
-				  "filter"=> [
-					"range"=> [ "ACTIVITY_DATE"=>
-							[
-								"gte" => "now-".$interval."h",
-								"lt" => "now",
-							]
-				  ]
+		$params = [
+			"query" => [
+				"filtered" => ["query" => ["query_string" => [
+					"query" => "*",
+					"analyze_wildcard" => true ]],
+					"filter" => ["bool"=>["must"=>[["range"=> [
+						"ACTIVITY_DATE"=> [ "gte"=> "now-".$interval."h", "lte"=> "now"]]]],
+				]]]],
+				"aggs"=> [
+					"2"=> [
+						"terms"=> ["field"=> "RCODE",],
+					"aggs"=> [
+						"1"=> ["sum"=> ["field"=> "COUNT"]]]
+					]
 				]
-			  ]
-		]];
+			];
 
 		// send curl request
-		$response200 =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
-		$params = [
-
-			"query"=> [
-				"filtered"=> [
-				  "query"=> [
-					"match"=> [ "RCODE" => $rcode500 ]
-				  ],
-				  "filter"=> [
-					"range"=> [ "ACTIVITY_DATE"=> 
-							[
-								"gte" => "now-".$interval."h",
-								"lt" => "now",
-							]
-				  ]
-				]
-			  ]
-		]];
-		// send curl request
-		$response500 =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
-		if($response200 && $response500)
+		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
+		if($response)
 		{
+			$arrResponse = json_decode($response, true);
 			$arrModules = array();
-			$arrModules[$rcode200] = json_decode($response200, true)['count'];
-			$arrModules[$rcode500] = json_decode($response500, true)['count'];
+			foreach($arrResponse['aggregations']['2']['buckets'] as $result)
+			{
+				$arrModules[$result['key']] = $result['1']['value'];
+			}
+			print_r($arrModules);
 			$ratio = $arrModules[$rcode200]/$arrModules[$rcode500];
-			$count = array($rcode200 => $arrModules[$rcode200], $rcode500 => $arrModules[$rcode500], 'ratio' => $ratio);
+			$count = array(
+					'Date' => $date,
+					$rcode200 => $arrModules[$rcode200],
+					$rcode500 => $arrModules[$rcode500],
+					'ratio' => $ratio
+					);
+			print_r($count);
 			$fileResource = fopen($filePath,"a");
 			fwrite($fileResource,json_encode($count)."\n");
 			fclose($fileResource);
