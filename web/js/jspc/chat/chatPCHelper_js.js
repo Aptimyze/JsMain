@@ -918,7 +918,9 @@ function invokePluginManagelisting(listObject, key, user_id) {
             objJsChat._updateChatPanelsBox(user_id, newGroupId);
         }
         if (key == "create_list") {
-            objJsChat.noResultError();
+            setTimeout(function(){
+                objJsChat.noResultError();
+            },500);
         }
     } else if (key == "update_status") {
         //update existing user status in listing
