@@ -1,3 +1,55 @@
+function getIosVersionOne(ua) {
+    //return false;
+    var ua = ua || navigator.userAgent;
+    var match= ua.match(/(iPhone);/i);
+    //console.log(match);
+    var OsVersion=ua.match(/OS\s[0-9.]*/i);
+    //console.log(OsVersion);
+    if(match==null)
+        return false;
+    else if(OsVersion==null)
+    {
+        return false
+    }
+    else if(OsVersion[0].substring(3,4)>=7)
+        return true;
+    else
+        return false;
+    
+}
+
+
+function getAndroidVersionOne(ua) {
+  var ua = ua || navigator.userAgent;
+  var android=ua.indexOf("Android");
+  var match = ua.match(/Android\s([0-9\.]*)/);
+  var mobile=ua.indexOf("Mobile");
+  var operaMini=ua.indexOf("Opera Mini");
+  if(android==-1)
+   return false;
+ else if(operaMini!=-1){
+   OperaMiniFlag=1;
+   return true;
+ }
+ else if(match==null)
+ {
+   return true;
+ }
+ else if(typeof(parseFloat(match[1]))=='number')
+ {
+   var androidVersion=match[1].substring(0,3);
+   if(androidVersion>2.3)
+    return true;
+  else if(androidVersion==2.3 && match[1].charAt(4)>0)
+    return true;
+  else
+    return false;
+}
+else
+ return true;
+        
+  };
+
 $(function(){
            
 
@@ -11,11 +63,11 @@ $(function(){
 			hgt = (hgt)+"px";
 			$('#headerimg1').css( "height", hgt );
 	  
-           if(getAndroidVersion())
+           if(getAndroidVersionOne())
            {
                $("#appLinkAndroid").show();
            }
-           if(getIosVersion())
+           if(getIosVersionOne())
            {
 			   $("#appLinkIos").show();
 		   }
@@ -25,7 +77,7 @@ $(function(){
             $(".loginLogo").attr("src","IMG_URL/images/jsms/commonImg/mainLogoNew.png");
             //src="~$IMG_URL`/images/jsms/commonImg/mainLogoNew.png" 
             setTimeout(function(){ 
-                $("body").append("<div class='icons1 uicon dn'></div> <div class='mainsp baricon dn'></div>");
+                $("#mainContent").append("<div class='icons1 uicon dn'></div> <div class='mainsp baricon dn'></div>");
                 loadCSS("IMG_URL/min/?f="+logoutCssFiles);
             }, 5000);
             $("#hamburgerIcon").on("click", function() {
