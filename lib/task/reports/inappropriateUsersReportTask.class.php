@@ -8,8 +8,6 @@
 class inappropriateUsersReportTask extends sfBaseTask
 {
   public static $cronLIVEDate='2016-11-16';
-  public static $dayDiff;
-
   protected function configure()
   {
 
