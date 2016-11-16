@@ -31,6 +31,14 @@ if ($data = authenticated($decoded_response['merchant_param5'])) {
     $profileid = $data["PROFILEID"];
 }
 
+$gatewayRespObj = new billing_GATEWAY_RESPONSE_LOG();
+
+if ($profileid) {
+    list($order_str, $order_num) = explode("-", $Order_Id);
+    $responseMsg = serialize($_REQUEST);
+    $gatewayRespObj->insertResponseMessage($profileid, $order_num, $order_str, 'CCAVENUE', $responseMsg);
+}
+
 if ($order_status == 'success') {
     $AuthDesc = "Y";
     $ret_status = "S";
@@ -49,7 +57,7 @@ $dup = false;
 if ($profileid && $AuthDesc == "Y") {
     $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
-
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, $dup, $ret);
     if (!$dup && $ret) {
         $membershipObj->startServiceOrder($Order_Id);
     }

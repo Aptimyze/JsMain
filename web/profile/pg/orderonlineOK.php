@@ -16,6 +16,14 @@ if ($data = authenticated($checksum)) {
     $profileid = $data["PROFILEID"];
 }
 
+$gatewayRespObj = new billing_GATEWAY_RESPONSE_LOG();
+
+if ($profileid) {
+    list($order_str, $order_num) = explode("-", $Order_Id);
+    $responseMsg = serialize($_REQUEST);
+    $gatewayRespObj->insertResponseMessage($profileid, $order_num, $order_str, 'CCAVENUE', $responseMsg);
+}
+
 if (JsConstants::$whichMachine == 'test') {
     $WorkingKey = gatewayConstants::$CCAvenueTestRsSalt;
 } 
@@ -36,6 +44,7 @@ if ($Checksum == "true" && $AuthDesc == "Y") {
     $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
     // if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, $dup, $ret);
     if ($ret) $membershipObj->startServiceOrder($Order_Id);
 
     list($part1, $part2) = explode("-", $Order_Id);
