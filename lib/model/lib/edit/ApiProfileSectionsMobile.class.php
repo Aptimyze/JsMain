@@ -747,7 +747,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 
 		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_COUNTRY","Country",trim($jpartnerObj->getDecoratedPARTNER_COUNTRYRES()),$szCountry,$this->getApiScreeningField("PARTNER_COUNTRYRES"),$this->dropdown,'',1,'dppCountry');
 
-		$count_matches = SearchCommonFunctions::getMyDppMatches("","",'',"",'',"","",1)["CNT"];
+		$count_matches = SearchCommonFunctions::getMyDppMatches("",$this->profile,'',"",'',"","",1)["CNT"];
 
 	    if ( !isset($count_matches))
 	    {

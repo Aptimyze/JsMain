@@ -500,7 +500,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
 		$arrOut[] = $this->handleStateCityData($szState,$szCity);
 
-		$count_matches = SearchCommonFunctions::getMyDppMatches("","",'',"",'',"","",1)["CNT"];
+		$count_matches = SearchCommonFunctions::getMyDppMatches("",$this->profile,'',"",'',"","",1)["CNT"];
 
 	    if ( !isset($count_matches))
 	    {

@@ -66,11 +66,13 @@ var mobEditPage=(function(){
 
                     if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) >= mutualMatchCountThreshold )
                     {
+                    	$("#mutualMatchCountMobile").css('color', '')
                     	$("#mutualMatchCountMobile").removeClass("bg7");
                     	$("#mutualMatchCountMobile").addClass("dpbg1");
                     }
                     else
                     {
+                    	$("#mutualMatchCountMobile").css('color', 'white')
                     	$("#mutualMatchCountMobile").removeClass("dpbg1");
                     	$("#mutualMatchCountMobile").addClass("bg7");
                     }
