@@ -68,6 +68,7 @@ if ($hash == $reverseHash && $AuthDesc == "Y") {
     $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
     if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
+    //if ($ret) $membershipObj->startServiceOrder($Order_Id);
     
     list($part1, $part2) = explode("-", $Order_Id);
     $sql = "SELECT * from billing.ORDERS where ID = '$part2' and ORDERID = '$part1'";

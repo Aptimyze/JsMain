@@ -10,7 +10,7 @@ $dialerLogObj =new DialerLog();
 
 //Open connection at JSDB
 $db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
-$db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$master['USER'],MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
+$db_master = mysql_connect(MysqlDbConstants::$master1['HOST'],MysqlDbConstants::$master1['USER'],MysqlDbConstants::$master1['PASS']) or die("Unable to connect to nmit server ");
 $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
 mysql_query("set session wait_timeout=600",$db_master);

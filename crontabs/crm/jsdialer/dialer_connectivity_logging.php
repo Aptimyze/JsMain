@@ -21,8 +21,7 @@ if(count($camp_array)>0)
         for($i=0;$i<count($camp_array);$i++)
         {
                 $campaign_name = $camp_array[$i];
-		//$today = @date("Y-m-d 00:00:00",time()-86400);//When server is on IST
-		$today = @date("Y-m-d 00:00:00",(time()-86400)+(9.5*3600));//When server is on EST
+		$today = @date("Y-m-d 00:00:00",time()-86400);//When server is on IST
 
 		/*$squery1 = "SELECT easycode,old_priority,lastonlinepriority,lastpriortizationt,PROFILEID,LAST_CALL_DATE,LAST_CALL_TIME FROM easy.dbo.ct_$campaign_name where Lead_Id IN ('noida$suffix','mumbai$suffix') AND LAST_CALL_DATE>='$today'";
 		$squery1 .= " UNION SELECT easycode,old_priority,lastonlinepriority,lastpriortizationt,PROFILEID,LAST_CALL_DATE,LAST_CALL_TIME FROM easy.dbo.ct_$campaign_name where Lead_Id IN ('noida$suffix','mumbai$suffix') AND lastpriortizationt>='$today'";*/
@@ -46,7 +45,7 @@ if(count($camp_array)>0)
 					if($srow1["lastpriortizationt"])
 					{
 						//$priortization_time = @date("Y-m-d H:i:s",@strtotime($srow1["lastpriortizationt"]));//When server is on IST
-						$priortization_time = @date("Y-m-d H:i:s",@strtotime($srow1["lastpriortizationt"])+9.5*3600);//When server is on EST;
+						$priortization_time = @date("Y-m-d H:i:s",@strtotime($srow1["lastpriortizationt"])+10.5*3600);//When server is on EST;
 					}
 					else
 						$priortization_time = '0000-00-00 00:00:00';
@@ -60,7 +59,7 @@ if(count($camp_array)>0)
 						if($srow2["start_time"])
 						{
 							//$dial_time = @date("Y-m-d H:i:s",@strtotime($srow2["start_time"]));//When server is on IST
-							$dial_time = @date("Y-m-d H:i:s",@strtotime($srow2["start_time"])+9.5*3600);//When server is on EST;
+							$dial_time = @date("Y-m-d H:i:s",@strtotime($srow2["start_time"])+10.5*3600);//When server is on EST;
 							$termination_status = $termination_status_labels[$srow2["termination_status"]];
 						}
 						else

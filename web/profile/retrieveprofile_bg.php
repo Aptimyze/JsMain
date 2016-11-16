@@ -201,7 +201,7 @@ mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 $billingObj = new BILLING_SERVICE_STATUS('newjs_slave');
 $szSubscription = $billingObj->getActiveSuscriptionString($profileid);
 if(stristr($szSubscription, 'T')) {//Its a active assisted product user 
-   $sql = "INSERT INTO Assisted_Product.AP_PROFILE_INFO(PROFILEID,SE,STATUS) VALUES('$profileid', 'default.se', 'LIVE')";
+   $sql = "INSERT IGNORE INTO Assisted_Product.AP_PROFILE_INFO(PROFILEID,SE,STATUS) VALUES('$profileid', 'default.se', 'LIVE')";
    mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 }
 //////////////////////////////

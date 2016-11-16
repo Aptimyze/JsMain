@@ -1,43 +1,6 @@
 <script type="text/javascript">
     var userGender="~$apiData.gender`",siteUrl="~$SITE_URL`";
-	var tupleObject,tupleObject2,responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`,
-                matchAlertNext=0,
-		full_loaded = 0;
-	$(window).load(function() {
-		profile_completion("~$apiData.my_profile.completion`");
-
-	});
-        
-
-	$(document).ready(function() {
-		jsmsMyjsReady();
-		var d = new Date();
-		var hrefVal = $("#calltopSearch").attr("href")+"&stime="+d.getTime();
-		$("#calltopSearch").attr("href",hrefVal);
-                
-    });
-
-
-	function setNotificationView() {
-                    $("#darkSection").toggleClass("posabs");
-		$("#darkSection").toggleClass("tapoverlay");
-		$("#notificationBellView").toggle();
-        if ($("#mainContent").css("overflow")=="hidden") 
-                   scrollOn();
-               else scrollOff();
-		
-	};
-
-
-	function onnewtuples(_parent) {
-		if (_parent.page >= 0) {
-                        if (_parent._isRequested) return ;
-                        ++_parent.page;
-			loadnew(_parent.page,_parent);
-                        
-		}
-	};
-      
+    var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
 </script>
 <!--start:div-->
 <div class="perspective" id="perspective">
@@ -114,7 +77,7 @@
                 <a href="~$SITE_URL`/profile/contacts_made_received.php?page=eoi&filter=R">
 	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
-			<div class="fullwid txtc">People to Respond to</div>
+			<div class="fullwid txtc">Interests Received</div>
 		</div>
 		~if $apiData.BELL_COUNT.AWAITING_RESPONSE_NEW>0`
 		<div class="fr wid8p">
@@ -211,7 +174,7 @@
 <!--MembershipMessageStarts-->
 ~if $apiData.membership_message neq ''`
 <a href="~$IMG_URL`~$apiData.membership_message_link`">
-    <div class="posrel pt20 pb20" style='background-image: url("~$IMG_URL`/images/band-image.jpg");'>
+    <div class="posrel pt20 pb20 newBgBand">
     <div class="posrel fullwid" style="top:0px; left:0px;">
     	<div class="clearfix" style="padding:0 30px 0;">
         	<div class="fl fontlig wid88p">

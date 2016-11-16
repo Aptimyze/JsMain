@@ -715,5 +715,10 @@ class UserFilterCheck
 		return $dpp_parameters;
 	}
 	
+        
+        public function getDppParameters(){
+            
+            return $this->dppParameters;
+        }
 
 }

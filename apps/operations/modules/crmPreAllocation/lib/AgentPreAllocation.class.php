@@ -43,7 +43,7 @@ class AgentPreAllocation
 		unset($profileDetails);
                 $preAllocationTempPoolObj->removeAllotedProfiles();
         }
-        public function createPoolForCenterPreAllocation()
+        /*public function createPoolForCenterPreAllocation()
         {
 		$jprofileObj    =new JPROFILE('newjs_slave');
 		$preAllocationTempPoolObj =new incentive_PRE_ALLOCATION_TEMP_POOL();	
@@ -58,7 +58,7 @@ class AgentPreAllocation
 		unset($profiles);
 		$preAllocationTempPoolObj->updateScore();
 		$preAllocationTempPoolObj->removeAllotedProfiles();			
-        }
+        }*/
 	// level wise sorting 
 	public function sort_pre_all(&$profiles, $level='')
 	{
@@ -130,39 +130,35 @@ class AgentPreAllocation
 				if($agents[$n]['ALLOTED'] < $limitVal)
 				{
 					//while($agents[$n]['ALLOTED'] > $aadObj->getAgentPreAllocationLimit($agents[$n]['NAME'], $limitArr))
-					while($agents[$n]['ALLOTED'] > $limitVal)
-					{
+					while($agents[$n]['ALLOTED'] > $limitVal){
 						$n++;
 						if($n == $total_executives)
 							$n = 0;
 					}
 					$user_value = $agents[$n]['NAME'];
-					if($user_value !='')
-					{
+					if($user_value !=''){
 						$profileid=$profiles[$i]['PROFILEID'];
 						$lastLoginDt =$profiles[$i]['LAST_LOGIN_DT'];
 						$fields="ENTRY_DT";
-					$whereClause="PROFILEID=$profileid";
-					$orderBy=" ENTRY_DT DESC";
-					/*$history=$historyObj->get($profileid,$fields,$whereClause,$orderBy," LIMIT 1");
-					if($history)
-						$profile_type = 'O';
-					else
-						$profile_type = 'N';*/
-					$profile_type =$profiles[$i]['PROFILE_TYPE'];
-					$analyticScore = $profiles[$i]['ANALYTIC_SCORE'];
-					if($profileid && $user_value){
-						//$profileTechObj->insertProfileTemp($profileid,$user_value,'N',$profile_type);
-						//$profileTechObj->insertPreAllocationLogTemp($profileid,$user_value,$level,$analyticScore,$lastLoginDt);
-						$profileTechObj->insertProfile($profileid,$user_value,'N',$profile_type);
-						$profileTechObj->insertPreAllocationLog($profileid,$user_value,$level,$analyticScore,$lastLoginDt);
-					}
-					$agents[$n]['ALLOTED']++;
-					$n++;
-					if($n == $total_executives)
-						$n = 0;
+						$whereClause="PROFILEID=$profileid";
+						$orderBy=" ENTRY_DT DESC";
+						$profile_type =$profiles[$i]['PROFILE_TYPE'];
+						$analyticScore = $profiles[$i]['ANALYTIC_SCORE'];
+						if($profileid && $user_value){
+							//$profileTechObj->insertProfileTemp($profileid,$user_value,'N',$profile_type);
+							//$profileTechObj->insertPreAllocationLogTemp($profileid,$user_value,$level,$analyticScore,$lastLoginDt);
+							$profileTechObj->insertProfile($profileid,$user_value,'N',$profile_type);
+							$profileTechObj->insertPreAllocationLog($profileid,$user_value,$level,$analyticScore,$lastLoginDt);
+						}
+						$agents[$n]['ALLOTED']++;
+						/*$n++;
+						if($n == $total_executives)
+							$n = 0;*/
 					}
 				}
+				$n++;
+				if($n == $total_executives)
+					$n = 0;
 			}
 			// delete profile for Temp Pool which are allocated
 			$preAllocationTempPoolObj->removePreAllotedProfiles();		

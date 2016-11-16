@@ -4,16 +4,16 @@
 */
 class savedSearchPopulateTask extends sfBaseTask
 {
-	protected function configure()
+  protected function configure()
     {
         $this->addArguments(array(
                         new sfCommandArgument('totalScripts', sfCommandArgument::REQUIRED, 'My argument'),
                         new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'My argument'),
-        	));
+          ));
 
-		$this->addOptions(array(
-		new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
-	     ));
+    $this->addOptions(array(
+    new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
+       ));
         
         $this->namespace = 'savedSearch';
         $this->name = 'savedSearchPopulate';
@@ -34,16 +34,16 @@ EOF;
         $currentScript = $arguments["currentScript"]; // current script number
         
         $savedSearchObj = new send_saved_search_mail();
-		
-		//Truncate table Data       
-		$savedSearchDDLObj = new send_saved_search_mail('newjs_masterDDL');
-		$savedSearchDDLObj->truncateSavedSearchData();
+    
+    //Truncate table Data       
+    $savedSearchDDLObj = new send_saved_search_mail('newjs_masterDDL');
+    $savedSearchDDLObj->truncateSavedSearchData();
 
         $lastLoginDate = date('Y-m-d', strtotime("-1 month"));
 
         //select from slave
-		$selectSearchAgentObj = new SEARCH_AGENT("newjs_slave");
-		$receiverData = $selectSearchAgentObj->selectSavedSearchMailerData($currentScript,$totalScripts,$lastLoginDate);
+    $selectSearchAgentObj = new SEARCH_AGENT("newjs_slave");
+    $receiverData = $selectSearchAgentObj->selectSavedSearchMailerData($currentScript,$totalScripts,$lastLoginDate);
         unset($selectSearchAgentObj);
         
         if(is_array($receiverData))
