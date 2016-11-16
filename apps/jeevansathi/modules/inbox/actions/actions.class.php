@@ -650,7 +650,7 @@ public function executePerformV2(sfWebRequest $request)
                                             if($infoTypenav["matchedOrAll"]=="A")
                                                 $response2["subtitle"]='All Profile Visitors '.$response2['total'];
                                             else
-                                                $response2["subtitle"]="Matching Visitors".$response2['total'];
+                                                $response2["subtitle"]="Matching Visitors ".$response2['total'];
                                             $response2["title2"]=null;
                                         }
                                         else if($infoTypenav["matchedOrAll"]=="" && !MobileCommon::isNewMobileSite()){
