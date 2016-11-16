@@ -49,6 +49,9 @@ function profile_completion(lim) {
 function jsmsMyjsReady() {
     
     var arr=["awaitingResponse","visitor","matchalert"];
+    if(document.getElementById("awaitingResponseCount") == null) {
+        return ;
+    }
 	awaitingResponseCount = document.getElementById("awaitingResponseCount").value;
 	visitorCount = document.getElementById("visitorCount").value;
 	matchalertCount = document.getElementById("matchalertCount").value;
@@ -106,8 +109,9 @@ function setBlock(blockName) {
 	}
 }
 	$(window).load(function() {
-		profile_completion(completionScore);
-
+        if(typeof completionScore != "undefined")  {
+		  profile_completion(completionScore);
+        }
 	});
 
         
