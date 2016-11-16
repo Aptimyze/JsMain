@@ -39,14 +39,20 @@ class PROFILE_JUNK_CHARACTER_TEXT extends TABLE {
             }
         }
 
-        public function updateModifiedText($id,$modified_automate)
+        public function updateModifiedText($idArr,$modified_automate)
         {
             try
             {
-                $sql = "UPDATE PROFILE.JUNK_CHARACTER_TEXT set modified_automate =:MODIFIED_TEXT WHERE id =:ID";
+                foreach($idArr as $k=>$v)
+                {
+                    $queryArr[]=":ID".$k;
+                }
+                $queryStr = "(".implode(",", $queryArr).")";
+                $sql = "UPDATE PROFILE.JUNK_CHARACTER_TEXT set modified_automate =:MODIFIED_TEXT WHERE id IN ".$queryStr;
                 $pdoStatement = $this->db->prepare($sql);
                 $pdoStatement->bindValue(":MODIFIED_TEXT",$modified_automate,PDO::PARAM_STR);
-                $pdoStatement->bindValue(":ID",$id,PDO::PARAM_INT);
+                foreach($idArr as $k=>$v)
+                    $pdoStatement->bindValue(":ID".$k,$v,PDO::PARAM_INT);
                 $pdoStatement->execute();
             }
             catch (Exception $ex) 

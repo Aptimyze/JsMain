@@ -430,15 +430,7 @@ if (authenticated($cid)) {
         $your_info = mysql_real_escape_string($arrProfileUpdateParams['YOURINFO']);
         $your_info_original = mysql_real_escape_string($_POST['YOURINFO_ORIGINAL']);
 
-        /*
-        	check for whether your_info_original was set or not.
-         */
-        if ( strlen($your_info_original) !== 0 )
-        {
-	        $sql_junk_character_check = "INSERT INTO  `PROFILE`.`JUNK_CHARACTER_TEXT` (  `id` ,  `PROFILEID` ,  `original_text` ,  `modified_custom`) VALUES('',  '$pid',  '$your_info_original',  '$your_info');";
-			$result = mysql_query($sql_junk_character_check);
-        }
-
+      
 				/*if (0)
 				 $sql.= "ACTIVATED = 'N' AND INCOMPLETE ='Y' ";*/
 				/*else
@@ -447,6 +439,17 @@ if (authenticated($cid)) {
 				//mysql_query_decide($sql) or die("$sql" . mysql_error_js());
         //Update JPROFILE Store
         $result = $objUpdate->editJPROFILE($arrProfileUpdateParams,$pid,'PROFILEID','activatedKey=1');
+
+	    /*
+	    	check for whether your_info_original was set or not.
+	    */
+        if ( strlen($your_info_original) !== 0 )
+        {
+	        $sql_junk_character_check = "INSERT INTO  `PROFILE`.`JUNK_CHARACTER_TEXT` (  `id` ,  `PROFILEID` ,  `original_text` ,  `modified_custom`) VALUES('',  '$pid',  '$your_info_original',  '$your_info');";
+			$result = mysql_query($sql_junk_character_check);
+        }
+
+
         if(false === $result) {
           die('Mysql error while updating JPROFILE at line 385');
         }

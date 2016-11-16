@@ -34,19 +34,32 @@ EOF;
     {
       $PROFILE_JUNK_CHARACTER_TEXT = new PROFILE_JUNK_CHARACTER_TEXT;
       $result = ($PROFILE_JUNK_CHARACTER_TEXT->getOriginalText());
-      foreach ($result as $key => $value) {
+
+      $gibberishArray = array();
+      $notGibberishArray = array();
+
+      foreach ($result as $key => $value) 
+      {
         $isGibberish = $this->test($value['original_text'],$this->file_path);
         if ( $isGibberish !== -1 )
         {
           if ( $isGibberish )
           {
-            $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($value['id'],"JUNK");
+            $gibberishArray[] = $value['id'];
           }
           else
           {
-            $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($value['id'],"NOT_JUNK");
+            $notGibberishArray[] = $value['id'];
           }
         }
+      }
+      if ( !empty($gibberishArray))
+      {
+        $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($gibberishArray,"JUNK");
+      }
+      if ( !empty($notGibberishArray))
+      {
+        $PROFILE_JUNK_CHARACTER_TEXT->updateModifiedText($notGibberishArray,"NOT_JUNK");
       }
     }
 
