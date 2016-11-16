@@ -388,8 +388,8 @@ function setChatSelfName(nameStr,target){
                 nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
                 if(nameOnSite && nameStr != nameOnSite){
                     setChatSelfName(nameOnSite,"storage");
-                    modifiedName = nameOnSite;
                 }
+                modifiedName = nameOnSite;
             }
         }
     }
@@ -402,8 +402,8 @@ function setChatSelfName(nameStr,target){
             nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
             if(nameOnSite && nameStr != nameOnSite){
                 setChatSelfName(nameOnSite,"storage");
-                modifiedName = nameOnSite;
             }
+            modifiedName = nameOnSite;
         }
     }
     return modifiedName;
@@ -416,27 +416,25 @@ function setChatSelfName(nameStr,target){
  */
 function getSelfName(){
     var selfName = localStorage.getItem('name'),
-        flag = true;
+        flag = true,data,user,modifiedName;
 
     if (selfName) {
-        var data = JSON.parse(selfName);
-        var user = data['user'];
-        //if (user == loggedInJspcUser) 
+        data = JSON.parse(selfName);
+        user = data['user'];
+        selfName = data['selfName'];
+        /*if (user == loggedInJspcUser) 
         {
             flag = false;
-            selfName = data['selfName'];
-            var modifiedName = setChatSelfName(selfName,"syncName");
+            modifiedName = setChatSelfName(selfName,"syncName");
             if(modifiedName != undefined){
                 selfName =  modifiedName;
             }
-        }
+        }*/
     }
-    else{
-        var modifiedName = setChatSelfName(selfName,"syncName");
-        if(modifiedName != undefined){
-            flag = false;
-            selfName =  modifiedName;
-        }
+    modifiedName = setChatSelfName(selfName,"syncName");
+    if(modifiedName != undefined){
+        flag = false;
+        selfName =  modifiedName;
     }
     //console.log("getSelfName",flag);
     if(flag){
