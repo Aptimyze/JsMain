@@ -425,10 +425,9 @@ class NotificationDataPool
             $matchCount = $matchOfDayObj->getCountForMatchProfile();
             foreach($applicableProfiles as $profileid => $details){
                 $searchResult = SearchCommonFunctions::getMatchofTheDay($profileid);
-                //print_r($searchResult);
-                //print_r("\n***********\n");
                 $resultSet = $searchResult["PIDS"];
                 $paramsArr["PROFILEID"] = $profileid;
+                $nameOfUserProfiles[] = $profileid;
                 if($searchResult["CNT"] > 0){
                     unset($resultToFilter);
                     $resultToFilter = $matchOfDayObj->getMatchForProfileTillDays($paramsArr);
@@ -455,6 +454,7 @@ class NotificationDataPool
                     if($resultMatchProfileid){
                         $matchedProfiles[$profileid] = $resultMatchProfileid;
                         $otherProfiles[] = $resultMatchProfileid;
+                        $nameOfUserProfiles[] = $resultMatchProfileid;
                         //$dataAccumulated[$counter];
                         //print_r($resultMatchProfileid."\n");
                     }
@@ -463,6 +463,13 @@ class NotificationDataPool
             if(is_array($otherProfiles))
             {
                 $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="JPROFILE","newjs_masterRep");
+                $profileStr = implode(",",$nameOfUserProfiles);
+                $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+                $queryParam["PROFILEID"] = $profileStr;
+                $nameOfUserDetails = $nameOfUserObj->getArray($queryParam,'',"",$fields="*");
+                foreach ($nameOfUserDetails as $key => $val){
+                    $nameDetails[$val["PROFILEID"]] = $val;
+                }
             }
             unset($otherProfiles);
             $counter = 0;
@@ -475,6 +482,9 @@ class NotificationDataPool
                     if($getOtherProfilesData[$v1]){
                         $dataAccumulated[$counter]['OTHER'][]=$getOtherProfilesData[$v1];
                         $dataAccumulated[$counter]['ICON_PROFILEID']=$getOtherProfilesData[$v1]["PROFILEID"];
+                        if($nameDetails[$k1]["DISPLAY"] == "Y" && $nameDetails[$v1]["DISPLAY"] == "Y"){
+                            $dataAccumulated[$counter]['NAME_OF_USER']= $nameDetails[$v1]["NAME"];
+                        }
                     }
                     $dataAccumulated[$counter]['COUNT'] = "SINGLE";
                     $counter++;
