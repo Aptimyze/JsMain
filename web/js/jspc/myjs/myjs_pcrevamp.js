@@ -6,23 +6,23 @@ var memTimer,memTimerTime,memTimerExtraDays=0;
          
 var timeI=""; var timeE=""; var timeD="";
 var MyjsRequestCounter=0;
-
+// for last search
+var PageSrc = 0;
 /*
 *COMPONENT CLASS
 *
 */
 
-var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1","DAILYMATCHES":"/api/v2/inbox/perform?infoTypeId=7&pageNo=1&myjs=1&caching=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1	","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount",
-"VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1"};
+var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1","DAILYMATCHES":"/api/v2/inbox/perform?infoTypeId=7&pageNo=1&myjs=1&caching=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1	","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","LASTSEARCH":"/api/v1/search/perform?lastSearchResults=1&results_orAnd_cluster=onlyResults&myjs=1"};
 
-var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20};
+var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20, "LASTSEARCH":20};
 
 var noResultMessagesArray={
-	"JUSTJOINED":"People matching your desired partner profile who have joined in last one week will appear here","DESIREDPARTNERMATCHES":"We are finding the matches who recently joined us. It might take a while","DAILYMATCHES":"We are finding the best recommendations for you. It may take a while.","VISITORS":"People who visited your profile will appear here","SHORTLIST":"People you shortlist will appear here",'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":"People who have requested your photo will appear here.","COUNTS":5,"VERIFIEDMATCHES":"People matching your desired partner profile and are <a href='/static/agentinfo' class='fontreg colr5'>verified by visit</a> will appear here"
+	"JUSTJOINED":"People matching your desired partner profile who have joined in last one week will appear here","DESIREDPARTNERMATCHES":"We are finding the matches who recently joined us. It might take a while","DAILYMATCHES":"We are finding the best recommendations for you. It may take a while.","VISITORS":"People who visited your profile will appear here","SHORTLIST":"People you shortlist will appear here",'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":"People who have requested your photo will appear here.","COUNTS":5,"VERIFIEDMATCHES":"People matching your desired partner profile and are <a href='/static/agentinfo' class='fontreg colr5'>verified by visit</a> will appear here", "LASTSEARCH":"No result message here"
 };
 
 var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/profile/contacts_made_received.php?page=visitors&filter=R","SHORTLIST":"/profile/contacts_made_received.php?page=favorite&filter=M","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/profile/contacts_made_received.php?&page=photo&filter=R",
-"VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1"};
+"VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1","LASTSEARCH":"/search/lastSearchResults"};
 
 
 var postActionsUrlArray ={"INITIATE":"/api/v2/contacts/postEOI","ACCEPT":"/api/v2/contacts/postAccept","DECLINE":"/api/v2/contacts/postNotInterested","WRITE_MESSAGE":"/api/v2/contacts/postWriteMessage","VIEWCONTACT":"/api/v2/contacts/contactDetails"};
@@ -39,16 +39,23 @@ var component = function() {
 @abstract
 */
 component.prototype.pre = function() {
-  if(this.name=="DAILYMATCHES")
+  var seeAllTrackingLink = "";
+  if(this.name=="DAILYMATCHES"){
    var containerBarObj = new dailyMatchesBar('dailyMatchesTab');
- else if(this.name=="JUSTJOINED")
+   seeAllTrackingLink = "trackJsEventGA('My JS JSPC', 'Match Alert Section - See All',loggedInJspcGender,'')";
+  }
+ else if(this.name=="JUSTJOINED"){
    var containerBarObj = new JustJoinBar('dailyMatchesTab');
+   seeAllTrackingLink = "trackJsEventGA('My JS JSPC', 'Just Joined Section - See All',loggedInJspcGender,'')";
+ }
  else if(this.name=="VISITORS")
    var containerBarObj = new recentProfileVisitorsBar('dailyMatchesTab');
  else if(this.name=="SHORTLIST")
    var containerBarObj = new shortListProfileVisitorsBar('dailyMatchesTab');
- else if(this.name=="DESIREDPARTNERMATCHES")
+ else if(this.name=="DESIREDPARTNERMATCHES"){
    var containerBarObj = new desiredPartnerMatchesBar('dailyMatchesTab');
+   seeAllTrackingLink ="trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')";
+ }
  else if(this.name=="PHOTOREQUEST")
    var containerBarObj = new photoRequestBar('photoRequestTab');
  else if(this.name=="ACCEPTANCE")
@@ -59,8 +66,14 @@ component.prototype.pre = function() {
   var containerBarObj =new interestReceivedBar();
 else if(this.name=="FILTEREDINTEREST")
   var containerBarObj =new filteredInterestBar();  
-else if(this.name=="VERIFIEDMATCHES")
+else if(this.name=="VERIFIEDMATCHES"){
   var containerBarObj =new verifiedMatchesBar();
+  seeAllTrackingLink ="trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - See All',loggedInJspcGender,'')";
+}
+else if(this.name=="LASTSEARCH"){
+  var containerBarObj = new LastSearchBar('dailyMatchesTab');
+  seeAllTrackingLink = "trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')";
+}
 this.containerHtml=containerBarObj.getContainerHtml();
 this.viewAllInnerHtml=containerBarObj.getViewAllInnerHtml();
 this.emptyInnerHtml=containerBarObj.getEmptyInnerHtml();
@@ -70,6 +83,7 @@ this.containerHtml=this.containerHtml.replace(/\{\{p_id\}\}/g,this.headingId);
 this.containerHtml=this.containerHtml.replace(/\{\{list_id\}\}/g,this.list);
 this.containerHtml=this.containerHtml.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
 this.containerHtml=this.containerHtml.replace(/\{\{type\}\}/g,this.list);
+this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_GA_TRACKING\}\}/g,seeAllTrackingLink);
 this.maxCount=maxCountArray[this.name];
 
 this.innerHtml=containerBarObj.getInnerHtml();
@@ -210,6 +224,14 @@ $( document ).ajaxSend(function( event,request, settings ) {
     };
     JustJoinBar.prototype = new container();
     
+    var LastSearchBar = function(name) {
+      this.ContainerHtml = $("#largeContainer").html();
+      this.innerHtml= $("#faceCard").html();
+      this.viewAllInnerHtml=$("#viewAllCard").html();
+      this.emptyInnerHtml=$("#noFaceCard").html();
+    };
+    LastSearchBar.prototype = new container();
+
     var verifiedMatchesBar = function(name) {
       this.ContainerHtml = $("#largeContainer").html();
       this.innerHtml= $("#faceCard").html();
@@ -250,7 +272,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
     var dailyMatches = function() {
       this.name = "DAILYMATCHES";
       this.containerName = this.name+"_Container";
-      this.heading = "Match Alerts";
+      this.heading = "Daily Recommendations";
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.isEngagementBar=0;
@@ -270,8 +292,6 @@ $( document ).ajaxSend(function( event,request, settings ) {
 			this.noResultCase();
 	}
 	dailyMatches.prototype.noResultCase = function() {
-		bellCountStatus++;
-		createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
 		noResultFaceCard(this);		
 	}
 
@@ -299,21 +319,48 @@ $( document ).ajaxSend(function( event,request, settings ) {
 			this.noResultCase();
 	}
 	justJoinedMatches.prototype.noResultCase = function() {
-		bellCountStatus++;
-		createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 		noResultFaceCard(this);		
 				
 	}
 
+    // Last Search
+    var lastSearchMatches = function() {
+      this.name = "LASTSEARCH";
+      this.containerName = this.name+"_Container";
+      this.heading = "Based on your Last Search";
+      this.headingId = this.name+"_head";
+      this.list = this.name+"_List";
+      this.error=0;
+      this.displayed = 0;
+      component.apply(this, arguments);
+    };
+    lastSearchMatches.prototype = Object.create(component.prototype);
+    lastSearchMatches.prototype.constructor = lastSearchMatches;
+    lastSearchMatches.prototype.post = function() {
+        if(this.data.no_of_results >= 5)
+        {
+            generateFaceCard(this);
+        }
+        else
+            this.noResultCase();
+    }
+    lastSearchMatches.prototype.noResultCase = function() {
+        $("#LASTSEARCH").addClass("disp-none");
+        PageSrc = 1;
+        var desiredPartnersObj = new desiredPartnerMatches();
+        desiredPartnersObj.pre();
+        desiredPartnersObj.request();
+    }
 
 	    //VERIFIED MATCHES
     var verifiedMatches = function() {
       this.name = "VERIFIEDMATCHES";
       this.containerName = this.name+"_Container";
-      this.heading = "Matches verified by Visit";
+      this.heading = "Verified Matches";
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.error=0;
+      this.displayed = 0;
       component.apply(this, arguments);
     };
     verifiedMatches.prototype = Object.create(component.prototype);
@@ -332,14 +379,15 @@ $( document ).ajaxSend(function( event,request, settings ) {
 	}
 
 
-    //RECENT PROFILE VISITORS
+    //Profile Visitors
     var recentProfileVisitor = function() {
       this.name = "VISITORS";
       this.containerName = this.name+"_Container";
-      this.heading = "Recent Profile Visitors";
+      this.heading = "Profile Visitors";
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.error=0;
+      this.displayed = 0;
       component.apply(this, arguments);
       
     };
@@ -366,6 +414,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.heading = "Shortlisted Profiles";
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
+      this.displayed = 0;
       component.apply(this, arguments);
 
     };
@@ -391,7 +440,10 @@ $( document ).ajaxSend(function( event,request, settings ) {
   var desiredPartnerMatches = function() {
     this.name = "DESIREDPARTNERMATCHES";
     this.containerName = this.name+"_Container";
+    if(showFTU)
     this.heading = "Here are a few matches for you";
+    else
+      this.heading = "Desired Partner Matches";
     this.headingId = this.name+"_head";
     this.list = this.name+"_List";
     this.error=0;
@@ -401,15 +453,36 @@ $( document ).ajaxSend(function( event,request, settings ) {
   desiredPartnerMatches.prototype.constructor = desiredPartnerMatches;
 
   desiredPartnerMatches.prototype.post = function() {
-	if(this.data.no_of_results>0)
-	{
-		generateFaceCard(this);
-	}
+    // FTU case
+    if(!PageSrc && this.data.no_of_results>0)
+    {
+        generateFaceCard(this);
+    }
+    // In case if DPP matches are also less than 5, listing will not be shown for non FTU users.
+    else if(PageSrc && this.data.no_of_results >= 5)
+    {
+        generateFaceCard(this);
+    }
 	else
 		this.noResultCase();
   }
   desiredPartnerMatches.prototype.noResultCase = function() {
-	  noResultFaceCard(this);	  
+      if(!PageSrc)
+      {
+        noResultFaceCard(this);
+      }
+      else
+      {
+        // Remove DPP listing for non FTU users
+        $("#DESIREDPARTNERMATCHES_Container").remove();
+        inView = $('#'+verifedMatchObj.name+':in-viewport').length;
+        if(inView != 0 && verifedMatchObj.displayed == 0)
+        {
+          verifedMatchObj.pre();
+          verifedMatchObj.request();
+          verifedMatchObj.displayed = 1;
+        }
+      }
 	}
 
   var engagementCounts = function(){
@@ -460,8 +533,6 @@ $( document ).ajaxSend(function( event,request, settings ) {
    else{
     $("#totalFilteredInterestReceived").removeClass("disp-none");
    }
-   bellCountStatus++;
-   createTotalBellCounts(parseInt(this.data.PHOTO_REQUEST_NEW) +this.data.MESSAGE_NEW+this.data.ACC_ME_NEW+this.data.AWAITING_RESPONSE_NEW + this.data.FILTERED_NEW);
    setBellCountHTML(this.data);
  }
 engagementCounts.prototype.noResultCase = function() {
@@ -676,34 +747,36 @@ else {
 		desiredPartnersObj.request();
 		$("#justJoinedCountBar").removeClass("disp-none");
 		$("#dailyMatchesCountBar").removeClass("disp-none");
-		bellCountStatus++;
-		setBellCountHTML(newEngagementArray);
-		bellCountStatus++;
-		createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);
-		bellCountStatus++;
-		createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 	}
 	else
 	{
-		var recentvisitors = new recentProfileVisitor();
-		recentvisitors.pre();
-		recentvisitors.request();
-		var shortlist = new shortlistProfiles();
-		shortlist.pre();
-		shortlist.request();
+		inviewCheck();
+
 		var count = new engagementCounts();
+		var dailyMatchObj =new dailyMatches();
+		var justJoined = new justJoinedMatches();
+		var lastSearch = new lastSearchMatches();
+		verifedMatchObj =new verifiedMatches();
+		var recentvisitors = new recentProfileVisitor();
+		var shortlist = new shortlistProfiles();
+
 		count.pre();
 		count.request();
-		var justJoined = new justJoinedMatches();
-		justJoined.pre();
-		justJoined.request();
-		var dailyMatchObj =new dailyMatches();
+
 		dailyMatchObj.pre();
 		dailyMatchObj.request();
-		var verifedMatchObj =new verifiedMatches();
-		verifedMatchObj.pre();
-		verifedMatchObj.request();
+
+		justJoined.pre();
+		justJoined.request();
+
+		$(window).on('beforeunload', function() {
+		    $(window).scrollTop(0);
+		});
 		
+		$(window).scroll(function () {
+		 scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shortlist);
+		});
+
 		var interests = new interestReceived();
 		var mess = new messages();
 		var accept = new acceptance();		
@@ -843,3 +916,40 @@ var buttonClicked=0;
                 
         }
 
+function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shortlist)
+{
+	if(!showFTU && PageSource == "MyjsPc")
+	{
+		inView = $('#'+lastSearch.name+':in-viewport').length;
+		if(inView != 0 && lastSearch.displayed == 0)
+		{
+			lastSearch.pre();
+			lastSearch.request();
+			lastSearch.displayed = 1;
+		}
+
+		inView = $('#'+verifedMatchObj.name+':in-viewport').length;
+		if(inView != 0 && verifedMatchObj.displayed == 0)
+		{
+			verifedMatchObj.pre();
+			verifedMatchObj.request();
+			verifedMatchObj.displayed = 1;
+		}
+
+		inView = $('#'+recentvisitors.name+':in-viewport').length;
+		if(inView != 0 && recentvisitors.displayed == 0)
+		{
+			recentvisitors.pre();
+			recentvisitors.request();
+			recentvisitors.displayed = 1;
+		}
+
+		inView = $('#'+shortlist.name+':in-viewport').length;
+		if(inView != 0 && shortlist.displayed == 0)
+		{
+			shortlist.pre();
+			shortlist.request();
+			shortlist.displayed = 1;
+		}
+	}
+}

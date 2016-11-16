@@ -539,30 +539,62 @@ function generateFaceCard(Object)
 			tracking = Object.data.tracking;
 		else
     {
-      var stype = {"DAILYMATCHES":"15","JUSTJOINED":"JJPC","DESIREDPARTNERMATCHES":"DPMP","VERIFIEDMATCHES":"VMPC"}
+      // modify for last search
+      var stype = {"DAILYMATCHES":"15","JUSTJOINED":"JJPC","DESIREDPARTNERMATCHES":"DPMP","VERIFIEDMATCHES":"VMPC","LASTSEARCH":"LSPC"}
+      // when last search are less than 5
+      if(PageSrc == 1)
+      {
+        stype[Object.name] = "DPMD";
+      }
 			tracking = "stype="+stype[Object.name];
     }
 		var innerHtml="";
 		var viewAllInnerHtml="";
 		var loopCount=0;
-		var totalCount=0;
+
+		var totalCount=0,GATrackingFunForSubmit='',GATrackingFunForPhoto='';
+		if(Object.name=="DAILYMATCHES"){
+      GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','Match Alert Section - Send Interest',loggedInJspcGender,'')";
+      GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','Match Alert Section - Tuple',loggedInJspcGender,'')";
+    }
+
+    else if(Object.name=="JUSTJOINED"){
+      GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','Just Joined Section - Send Interest',loggedInJspcGender,'')";
+      GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','Just Joined Section - Tuple',loggedInJspcGender,'')";
+
+    }
+
+    else if(Object.name=="VERIFIEDMATCHES"){
+      GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','Matches Verified by Visit Section - Send Interest',loggedInJspcGender,'')";
+      GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','Matches Verified by Visit Section - Tuple',loggedInJspcGender,'')";
+    }
+
+
+		else if(Object.name=="DESIREDPARTNERMATCHES" || Object.name=="LASTSEARCH"){
+      GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','DPP Matches/Last Search Section - Send Interest',loggedInJspcGender,'')";
+      GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','DPP Matches/Last Search Section - Tuple',loggedInJspcGender,'')";
+    }
 		if(Object.name=="DAILYMATCHES")
 			totalCount=Object.data.total;
-		if(Object.name=="JUSTJOINED" || Object.name=="DESIREDPARTNERMATCHES" || Object.name=="VERIFIEDMATCHES")
+		if(Object.name=="JUSTJOINED" || Object.name=="DESIREDPARTNERMATCHES" || Object.name=="VERIFIEDMATCHES" || Object.name=="LASTSEARCH")
 			totalCount=Object.data.no_of_results;
-    if(totalCount >Object.maxCount){
-			loopCount=Object.maxCount-1;
-			viewAllInnerHtml=Object.viewAllInnerHtml.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[Object.name]);
-		}
+
+    var noOfTuples=Object.data.profiles.length;
+    if(totalCount > Object.maxCount){
+			loopCount=(Object.maxCount-1) > noOfTuples ? noOfTuples : (Object.maxCount-1) ;
+      viewAllInnerHtml=Object.viewAllInnerHtml.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[Object.name]);
+			}
 		else
-			loopCount=totalCount;
+			loopCount=Object.data.profiles.length;
+    
+      
 		if(loopCount){
 		    for (i = 0; i < loopCount; i++) {
 				innerHtml=innerHtml+Object.innerHtml;
 				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+'&'+tracking);
 				innerHtml=innerHtml.replace(/\{\{PROFILE_FACE_CARD_ID\}\}/g,Object.data.profiles[i]["profilechecksum"]+"_"+Object.name+"_id");
         innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,Object.data.profiles[i]['album_count']);
-        
+        innerHtml=innerHtml.replace(/\{\{GA_TRACKING_FOR_PHOTO_VIEW\}\}/,GATrackingFunForPhoto);
         if(Object.data.profiles[i]['album_count']=='0')
         innerHtml=innerHtml.replace(/\{\{albumHide\}\}/gi,'disp-none'); 
         else 
@@ -585,32 +617,49 @@ function generateFaceCard(Object)
 				
 				//post action handling
 				if(Object.name=="DAILYMATCHES")
-				{
+				{ 
 					innerHtml=innerHtml.replace(/\{\{ACTION_1_LABEL\}\}/g,Object.data.profiles[i]["buttonDetailsJSMS"]["buttons"][0]["label"]);
 					innerHtml=innerHtml.replace(/\{\{POST_ACTION_1\}\}/g,"postActionMyjs('"+Object.data.profiles[i]["profilechecksum"]+"','"+postActionsUrlArray[Object.data.profiles[i]["buttonDetailsJSMS"]["buttons"][0]["action"]]+"','" +Object.data.profiles[i]["profilechecksum"]+"_"+Object.name+"','interest','"+tracking+"')");
 				}
 				else
 				{
 					innerHtml=innerHtml.replace(/\{\{ACTION_1_LABEL\}\}/g,Object.data.profiles[i]["buttonDetails"]["buttons"][0]["label"]);
-					innerHtml=innerHtml.replace(/\{\{POST_ACTION_1\}\}/g,"postActionMyjs('"+Object.data.profiles[i]["profilechecksum"]+"','"+postActionsUrlArray[Object.data.profiles[i]["buttonDetails"]["buttons"][0]["action"]]+"','" +Object.data.profiles[i]["profilechecksum"]+"_"+Object.name+"','interest','"+tracking+"')");
+					innerHtml=innerHtml.replace(/\{\{POST_ACTION_1\}\}/g,"postActionMyjs('"+Object.data.profiles[i]["profilechecksum"]+"','"+postActionsUrlArray[Object.data.profiles[i]["buttonDetails"]["buttons"][0]["action"]]+"','" +Object.data.profiles[i]["profilechecksum"]+"_"+Object.name+"','interest','"+tracking+"');"+GATrackingFunForSubmit);
 				}
 				
 			}
 			innerHtml=innerHtml+viewAllInnerHtml;
 		
 			Object.containerHtml=Object.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
-			if(Object.name=="DAILYMATCHES" || Object.name=="JUSTJOINED" || Object.name=="VERIFIEDMATCHES")
+			// check for Last search
+      if(Object.name=="DAILYMATCHES" || Object.name=="JUSTJOINED" || Object.name=="VERIFIEDMATCHES" || Object.name=="LASTSEARCH" || Object.name=="DESIREDPARTNERMATCHES")
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,totalCount);
 			else
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,"");
 			$("#"+Object.name).after(Object.containerHtml);
 			$("#"+Object.name).addClass("disp-none");
-			var listName=Object.list;
+		 	var listName=Object.list;
 			$("#prv-"+Object.list).bind(clickEventType,function(){
-				myjsSlider("prv-"+listName);						
-			});
+				myjsSlider("prv-"+listName);
+        if(listName == 'DAILYMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Match Alert Section - Left',loggedInJspcGender,'');						
+			 else if (listName == 'JUSTJOINED_List')
+        trackJsEventGA('My JS JSPC', 'Just Joined Section - Left',loggedInJspcGender,'');             
+       else if (listName == 'VERIFIEDMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Left',loggedInJspcGender,'');
+        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
+        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Left',loggedInJspcGender,'');           
+      });
 			$("#nxt-"+Object.list).click(function(){
 				myjsSlider("nxt-"+listName);
+        if(listName == 'DAILYMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Match Alert Section - Right',loggedInJspcGender,'');           
+       else if (listName == 'JUSTJOINED_List')
+        trackJsEventGA('My JS JSPC', 'Just Joined Section - Right',loggedInJspcGender,'');             
+       else if (listName == 'VERIFIEDMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Right',loggedInJspcGender,'');
+        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
+        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Right',loggedInJspcGender,'');  
 			});
 			topSliderInt('init');
 			
@@ -753,6 +802,18 @@ function noResultFaceCard(Object)
 		$("#justJoinedCountBar").removeClass("disp-none");
 		$("#justJoinedCountBar > .disp-tbl").addClass("bounceIn animated");
 	}
+  if(Object.name=="LASTSEARCH")
+  {
+    if(Object.error)
+        $("#lastSearchCountTotal").html("--");
+    else{
+      $("#lastSearchCountTotal").html(0);
+      $("#Error"+Object.name).remove();
+    }
+    $("#lastSearchNewCircle").addClass("disp-none");
+    $("#lastSearchCountBar").removeClass("disp-none");
+    $("#lastSearchCountBar > .disp-tbl").addClass("bounceIn animated");
+  }
 }
 
 catch (e){

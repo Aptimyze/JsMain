@@ -213,7 +213,7 @@ class commoninterfaceActions extends sfActions
 	include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 	connect_db();
     $billingObj = new billing_SERVICE_STATUS("newjs_slave"); 
-    $activeServiceDetails =$billingObj->getActiveJsExclusiveServiceID($premiumProfileID);
+    $activeServiceDetails =$billingObj->checkJsExclusiveServiceIDEver($premiumProfileID);
     list($mainServiceID,$mainServiceDuration) = sscanf($activeServiceDetails["SERVICEID"], "%[A-Z]%d");
     if($mainServiceID == 'X')
     {
@@ -274,7 +274,7 @@ class commoninterfaceActions extends sfActions
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
-	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP();
+	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterDDL');
 	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}

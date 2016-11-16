@@ -7,10 +7,9 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $limit = 5000;
 	private $limitNtRec = 16;
 	private $limitTRec = 10;
-        private $minDppIntersectionCnt = 50;
-        private $idealTrendsResultsNo=10;
-        private $idealNonTrendsResultsNo=16;
 	private $limitTRecTemp = 10;
+	private $LowDppCountCachetime = 25200; // 1 week
+	private $LowDppLimit = 10;
 	const clusterRecordLimit = 10;
         
 	protected function configure()
@@ -88,7 +87,9 @@ EOF;
 							$totalResults = $StrategyReceiversNT->getMatches('',1,array(),$matchesSetting);
                                                         if($totalResults["CNT"] == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                 $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
-                                                                                                                
+                                                        
+                                                        // Set Low Dpp flag
+                                            //            $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                       
                                                         if($totalResults["LOGIN_SCORE"] > self::clusterRecordLimit){
                                                                 $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithTrendsScoreSort);
                                                                 $totalResults = $StrategyReceiversNT->getMatches('',0,array(),$matchesSetting); 
@@ -128,6 +129,9 @@ EOF;
 							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$returnTotalCountWithCluster,array(),$matchesSetting);
                                                         if($totalResults["CNT"] == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                 $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
+                                                        
+                                                        // Set Low Dpp flag
+                                                   //     $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
 						}
                                                 $memObject->remove('SEARCH_JPARTNER_'.$profileid);
                                                 $memObject->remove('SEARCH_MA_IGNOREPROFILE_'.$profileid);
@@ -140,4 +144,16 @@ EOF;
 				$flag=0;
 		}while($flag);
 	}
+        /**
+         * This function sets low dpp cache flag.
+         * @param type $memObject Cahce Object
+         * @param type $profileid // profile id
+         */
+        private function setLowDppFlag($memObject,$profileid,$dppCount){
+                if($dppCount < $this->LowDppLimit){
+                        $memObject->set('MA_LOWDPP_FLAG_'.$profileid,1,$this->LowDppCountCachetime);
+                }else{
+                        $memObject->remove('MA_LOWDPP_FLAG_'.$profileid);
+                }       
+        }
 }
