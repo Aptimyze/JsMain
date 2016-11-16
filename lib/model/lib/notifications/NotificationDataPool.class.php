@@ -415,7 +415,7 @@ class NotificationDataPool
     
     public function getMatchOfDayData($applicableProfiles){
         if($applicableProfiles){
-            $date = date("Y-m-d", strtotime("-10 days",strtotime(date('Y-m-d'))));
+            $date = date("Y-m-d", strtotime("-30 days",strtotime(date('Y-m-d'))));
             $matchOfDayMasterObj = new MOBILE_API_MATCH_OF_DAY();
             $matchOfDayMasterObj->deleteLessthanDays($date);
             $counter = 0;
@@ -436,10 +436,16 @@ class NotificationDataPool
                     }
                     $copyResultSet = $resultSet;
                     unset($firstResult);
+                    unset($minResult);
                     foreach($resultSet as $key => $value){
                         if($matchCount[$value]){
-                            if(!$firstResult){
-                                $firstResult = $value;
+                            if(!$minResult){
+                                $minResult["MATCH_PROFILEID"] = $value;
+                                $minResult["MATCH_COUNT"] = $matchCount[$value];
+                            }
+                            if($minResult && ($matchCount[$value] < $minResult["MATCH_COUNT"])){
+                                $minResult["MATCH_PROFILEID"] = $value;
+                                $minResult["MATCH_COUNT"] = $matchCount[$value];
                             }
                             unset($copyResultSet[$key]);
                         }
@@ -449,7 +455,7 @@ class NotificationDataPool
                         $resultMatchProfileid = current($copyResultSet);
                     }
                     else{
-                        $resultMatchProfileid = $firstResult;
+                        $resultMatchProfileid = $minResult["MATCH_PROFILEID"];
                     }
                     if($resultMatchProfileid){
                         $matchedProfiles[$profileid] = $resultMatchProfileid;
@@ -462,7 +468,7 @@ class NotificationDataPool
             }
             if(is_array($otherProfiles))
             {
-                $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="JPROFILE","newjs_masterRep");
+                $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="SMS_TEMP_TABLE","newjs_masterRep");
                 $profileStr = implode(",",$nameOfUserProfiles);
                 $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
                 $queryParam["PROFILEID"] = $profileStr;
@@ -472,6 +478,7 @@ class NotificationDataPool
                 }
             }
             unset($otherProfiles);
+            unset($nameOfUserProfiles);
             $counter = 0;
             if(is_array($matchedProfiles))
             {
