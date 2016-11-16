@@ -192,7 +192,7 @@ $css_arr[]=array("jspc/profile/edit/profile/jspcCoverPhoto_css"    => "1");
 $css_arr[]=array("jspc/profile/edit/profile/jspcEditProfileCompletion_css"    => "1");
 $css_arr[]=array("jspc/common/mCustomScrollBar_css"       => "4");
 $css_arr[]=array("jspc/profile/view/jspcNoProfile_css"    => "1");
-$css_arr[]=array("jspc/seo/seo"    => "1");
+$css_arr[]=array("jspc/seo/seo"     => "2");
 $css_arr[]=array("jspc/static/static_css"    => "1");
 $css_arr[]=array("jspc/settings/settings"        => "5");
 $css_arr[]=array("jspc/static/kycss"    => "1");
