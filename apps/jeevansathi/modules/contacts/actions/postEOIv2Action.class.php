@@ -294,7 +294,19 @@ class postEOIv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = ButtonResponse::buttondetailsMerge($responseButtonArray);
 		if(MobileCommon::isNewMobileSite())
 		{
-			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
+			
+			// $responseArray = array();
+			// $responseArray['buttons'] = $buttons;
+			// $finalresponseArray["button_after_action"] = ButtonResponseFinal::buttonDetailsMerge($responseArray);
+			if($this->contactObj->getTYPE() == ContactHandler::NOCONTACT && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
+			{
+				$finalresponseArray["button_after_action"]['buttons'] = [ButtonResponse::getCustomButton("Interest Saved","","","","",false)];
+				// var_dump($finalresponseArray);die;
+			}
+			else
+			{
+				$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
+			}
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
 			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
 			//$finalresponseArray["button_after_action"]["photo"]["url"]=$thumbnail;
