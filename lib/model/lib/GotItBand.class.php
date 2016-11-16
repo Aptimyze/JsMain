@@ -20,7 +20,7 @@ class GotItBand
 	public static $educationMYJS="Here you can view  a summary of all activities related to your account";
 	public static $educationCONTACTS="These are Interests, Requests and Messages you have received. Respond to them to proceed further";
 	public static $educationPROFILE="Here you can upload your photographs and update information about your Self, Family, Work and Education.";
-	public static $educationMATCHALERT="Here you can see all the 'Match Alerts' which are sent to you on Email in the last 45 days";
+	public static $educationMATCHALERT="Here you can see all the 'Daily Recommendations' which are sent to you on Email in the last 45 days";
 	public static $educationKUNDLI_MATCHES="Here you can see all Members who match your Kundli (Guna Score between you and the member is at least 18)";
 	public static $educationMATCH_2WAY="Here you can see those matches  where both of you match each others' Partner Preference";
 	public function __construct($profile)

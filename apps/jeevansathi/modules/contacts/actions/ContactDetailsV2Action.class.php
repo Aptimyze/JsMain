@@ -250,7 +250,10 @@ class ContactDetailsV2Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 				}
 				 elseif ($errorArr["FILTERED"] == 2) {
-					$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
+					 if($this->contactEngineObj->errorHandlerObj->getErrorMessage())
+						$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+					else
+						$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
 					$responseArray["errMsgIconId"] = "12";
 					$responseArray["headerLabel"]  = "Filtered Member";
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
@@ -420,6 +423,19 @@ class ContactDetailsV2Action extends sfAction
 			$responseArray["contact4"] = ButtonResponse::buttonMerge($responseArray["contact4"]);
 		if (is_array($responseArray["footerButton"]))
 			$responseArray["footerButton"] = ButtonResponse::buttonMerge($responseArray["footerButton"]);
+
+//  set the hidden message for contacts hidden or visible on accept
+		if($this->contactEngineObj->getComponent()->contactDetailsObj){
+		        if(!$responseArray['contact1']){
+                    $responseArray['contact1_message']=$this->contactEngineObj->getComponent()->contactDetailsObj->getPrimaryMobileHiddenMessage();
+                }
+                if(!$responseArray['contact2']){
+                    $responseArray['contact2_message']=$this->contactEngineObj->getComponent()->contactDetailsObj->getLandlMobileHiddenMessage();
+                }
+                if(!$responseArray['contact3']){
+                    $responseArray['contact3_message']=$this->contactEngineObj->getComponent()->contactDetailsObj->getAltMobileHiddenMessage();
+                }
+            }
 		$responseArray = array_change_key_case($responseArray,CASE_LOWER);
 		$finalresponseArray["actiondetails"] = ButtonResponse::actionDetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = null;

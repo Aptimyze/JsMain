@@ -454,7 +454,6 @@ function label_select($columnname,$value,$database="")
 
 function logError($message,$query="",$critical="exit", $sendmailto="NO")
 {
-		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
         global $db, $smarty, $checksum;
         ob_start();
         var_dump($_SERVER);
@@ -466,6 +465,7 @@ function logError($message,$query="",$critical="exit", $sendmailto="NO")
 	error_log($errorstring,3,JsConstants::$docRoot . "/jsadmin/temp/logerror.txt");
 
         $errorstring.="\n#Details : $ret_val";
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorstring));
         if($sendmailto!="NO" && $sendmailto!="YES")
                 $b=mail($sendmailto,"ERROR in new resman connect", $errorstring);
 

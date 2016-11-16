@@ -53,11 +53,11 @@ EOF;
 
                       if($count==$record && $count<600000)	
                       {       $from="alert@jeevansathi.com";
-                              mail("lavesh.rawat@gmail.com,reshurajput@gmail.com,akashkumardce@gmail.com","SAME COUNT LOG_TEMP","matchalerts.LOG_TEMP- SAME COUNT<br>Last Count-".$count,"From: $from\n");
+                              mail("lavesh.rawat@gmail.com,reshurajput@gmail.com,bhavanakadwal@gmail.com","SAME COUNT LOG_TEMP","matchalerts.LOG_TEMP- SAME COUNT<br>Last Count-".$count,"From: $from\n");
                               // ALERT
                               
                               include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-			      $mobileArr         = array("9818424749","9873639543","9716918347");
+			      $mobileArr         = array("9818424749","9873639543","9650350387");
 			      $date = date("Y-m-d h");
 			      $message        = "Mysql Error Count have reached logTempMatchalert $date within 5 minutes";
 			      $from           = "JSSRVR";

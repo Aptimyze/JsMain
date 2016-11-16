@@ -40,7 +40,7 @@ class processInterfaceAction extends sfActions {
 		{
 			$photoScreeningServiceObj = new photoScreeningService($profileDetails["profileObj"]);
 			$paramArr["interface"]=ProfilePicturesTypeEnum::$INTERFACE["2"];
-			$this->hideCropper = false;
+			$this->hideCropper = true;
                 	//Show in Template 
                 	$this->photoArr = $photoScreeningServiceObj->getPicturesToScreen($paramArr);
 			$totalPicSizeForScreen = count($this->photoArr['profilePic']['profileType']);

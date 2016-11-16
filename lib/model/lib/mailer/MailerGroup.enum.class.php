@@ -47,4 +47,5 @@ class MailerGroup{
   const REMINDER_MAILER=44;
   const ASTRO_COMPATIBILTY = 27;
   const JUNK_REMOVAL = 45;
+  const DELETE_PROFILE = 27;
 }

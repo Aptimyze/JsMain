@@ -30,6 +30,8 @@ EOF;
 		// in hours
 		$interval = 1;
 		$intervalString = '-'.$interval.' hour';
+		$toInt = date('H:i:s');
+		$fromInt = date('H:i:s',strtotime($intervalString));
 		$threshold = 50;
 		$timeout = 5000;
 		$dashboard = 'Common-Dash';
@@ -94,7 +96,7 @@ EOF;
 			}
 			if($msg != '')
 			{
-				$msg = "In the interval of ".$interval." hour with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
+				$msg = "In the interval ".$fromInt." - ".$toInt." with threshold of ".$threshold."\n\n".$msg."\n\n Kibana Url: ".$kibanaUrl;
 			}
 		}
 		else
