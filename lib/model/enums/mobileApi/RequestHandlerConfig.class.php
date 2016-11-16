@@ -12,7 +12,8 @@ class RequestHandlerConfig
         "getNotification"=>array("v1"=>"getNotificationV1"),
         "updateNotificationSetting"=>array("v1"=>"updateNotificationSettingV1"),
         "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
-        "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1")),
+        "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1"),
+		"notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1")),
 	"search"=>array(
 		"partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
 		"perform"=>array("v1"=>"performV1","v2"=>"","v3"=>"performV1"),
@@ -34,6 +35,7 @@ class RequestHandlerConfig
     "profile"=>array(
 		"editprofile"=>array("v1"=>"ApiEditV1","v2"=>"ApiEditV1","v3"=>"ApiEditV1"),
 		"editsubmit"=>array("v1"=>"ApiEditSubmitV1","v2"=>"","v3"=>"ApiEditSubmitV1"),
+		 "editsubmitDocuments"=>array("v1"=>"ApiEditSubmitDocumentsV1","v2"=>"","v3"=>"ApiEditSubmitDocumentsV1"),
 		"filter"=>array("v1"=>"ApiEditFilterV1","v2"=>"","v3"=>"ApiEditFilterV1"),
 		"filtersubmit"=>array("v1"=>"ApiEditFilterSubmitV1","v2"=>"","v3"=>"ApiEditFilterSubmitV1"),
 		"dppsubmit"=>array("v1"=>"apieditdppv1","v2"=>"","v3"=>"apieditdppv1"),
