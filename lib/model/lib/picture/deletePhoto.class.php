@@ -219,7 +219,7 @@ class deletePhoto extends PictureService
 	 *
 	 * this is the control function for the complete steps of deleting photo of a profile
 	 */
-	public function deletePhoto()
+	public function deletePhotoId()
 	{
                 if(!$this->pictureid)
                         throw new jsException("","PICTUREID IS BLANK IN deletePhoto() of PictureService.class.php");
