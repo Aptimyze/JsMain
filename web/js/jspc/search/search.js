@@ -126,7 +126,7 @@ $(document).ready(function() {
             $("#"+clickOn).closest('li').addClass('active');
             $("#"+clickOn).removeClass("cursp").addClass("cursd");
         }
-		customOptionButton('report_profile');
+
 
 });
 

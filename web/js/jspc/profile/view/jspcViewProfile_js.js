@@ -151,10 +151,6 @@ $(function(){
         $(".content").mCustomScrollbar();
         if(hideUnimportantFeatureAtPeakLoad != '1')
             displayViewSimilarProfiles();
-
-        //function calling for report abuse layer
-		customOptionButton('report_profile');
-///////////////////////////
        	
       });
       $('.js-hasaction').click(function() {
