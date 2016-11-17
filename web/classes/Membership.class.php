@@ -2090,7 +2090,7 @@ class Membership
 
         if ($allMembershipsNew != $allMemberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$allMemberships}' vs final sent to newOrder '{$allMembershipsNew}'<br>Profileid : '{$profileid}', Device : '{$device}'";
-            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in forOnline function', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com");
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in forOnline function', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
         }
 
         $memHandlerObj->trackMembership($userObj, '', '', $service_str_off, '', $discount, $total, $paymentOptionSel, 'F', $device);

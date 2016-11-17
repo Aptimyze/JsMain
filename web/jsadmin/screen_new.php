@@ -23,7 +23,7 @@ include ("../billing/comfunc_sums.php");
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/authentication.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
-
+use MessageQueues as MQ;
 $protect_obj = new protect;
 global $screen_time;
 global $FLAGS_VAL;
@@ -58,10 +58,10 @@ if (authenticated($cid)) {
 	}
 	
         // VA Whitelisting
-        if($pid && !is_numeric($pid)){
-            $http_msg=print_r($_SERVER,true);
-            mail("ankitshukla125@gmail.com","Screen_new pid whitelisting","PID :$pid:$http_msg");
-        }
+//        if($pid && !is_numeric($pid)){
+//            $http_msg=print_r($_SERVER,true);
+//            mail("ankitshukla125@gmail.com","Screen_new pid whitelisting","PID :$pid:$http_msg");
+//        }
             
 	if ($Submit || $Submit1) {
 		
@@ -719,6 +719,12 @@ if (authenticated($cid)) {
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
+						$producerObj=new Producer();
+						if($producerObj->getRabbitMQServerConnected())
+						{
+							$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($sendMailData);
+						}
 						CommonFunction::sendWelcomeMailer($pid);
 					}
 						//send_email($to, $MESSAGE);
