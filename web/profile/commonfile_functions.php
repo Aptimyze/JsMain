@@ -135,7 +135,7 @@ $css_arr[]=array("jsms/contacts/contact_engine" => "2");
 $css_arr[]=array("mobreg_pass_css"     => "2");
 $css_arr[]=array("operations_styles"   => "1");
 $css_arr[]=array("jsms/Seo/seoMobile_css"   => "1");
-$css_arr[]=array("jsms/login/newMobLogin_css"         => "7");
+$css_arr[]=array("jsms/login/newMobLogin_css"         => "8");
 $css_arr[]=array("jsms/search/searchdropdown"    => "1");
 $css_arr[]=array("jsms/contact_engine/contactEngine"        => "5");
 $css_arr[]=array("jsms/hamburger/ham_css"  => "3");
