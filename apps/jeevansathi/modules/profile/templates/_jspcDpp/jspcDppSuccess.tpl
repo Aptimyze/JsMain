@@ -57,7 +57,7 @@ Moreover, Filters determine whose Interests/Calls you want to receive.</div>
       <div class="clearfix pt20 pb20 mauto wid90p">
         <div class="fl">
           <label class="control control--checkbox">
-              <input type="checkbox" id="mutualMatchCountCheckBox"/>
+              <input type="checkbox" ~if $toggleMatchalerts eq 'dpp'`~else` checked ~/if` id="mutualMatchCountCheckBox"/>
               <div class="control__indicator"></div>
             </label>
         </div>
