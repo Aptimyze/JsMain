@@ -119,7 +119,8 @@ class DetailActionLib
                             $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$actionObject->loginProfile->getPROFILEID(),VIEWED=>$actionObject->profile->getPROFILEID())), 'redeliveryCount'=>0 );
                             $producerObj->sendMessage($queueData);
                         }
-			//$vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+                        else
+                            $vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////
 	}
@@ -607,7 +608,7 @@ class DetailActionLib
             {
                 $objProfileDisplay = new profileDisplay;
 
-                $actionObj->profilechecksum = $objProfileDisplay->getNextPreviousProfile($actionObj->loginProfile,$szContactID,$iOffset);
+                $actionObj->profilechecksum = $objProfileDisplay->getNextPreviousProfile($actionObj->loginProfile,$szContactID,$iOffset,$request->getParameter('stype'));
 
                 // Subtracting -1 ,as in case of else call to function ProfileCommon::showNextPrev() will need 
                 // offset to start from -1 And while baking response DetailedViewApi we add +1 actual_offset
