@@ -11,7 +11,7 @@ class UptimeCountKibanaTaskTask extends sfBaseTask
 		$this->name             = 'UptimeCountKibanaTask';
 		$this->briefDescription = '';
 		$this->detailedDescription = <<<EOF
-The [UptimeCountKibanaTask|INFO] task calculates the uptime and logs it.
+The [UptimeCountKibanaTask|INFO] task calculates the uptime ratio and logs it.
 Call it with:
 
 	[php symfony Kibana:UptimeCountKibanaTask|INFO]
@@ -36,7 +36,7 @@ EOF;
 		}
 		$rcode200 = "200";
 		$rcode500 = "500";
-
+		// Calculates the aggregated sum of counts of Rcodes
 		$params = [
 			"query" => [
 				"filtered" => ["query" => ["query_string" => [
@@ -62,6 +62,7 @@ EOF;
 			$arrModules = array();
 			foreach($arrResponse['aggregations']['2']['buckets'] as $result)
 			{
+				// get the aggregated value of sum of counts
 				$arrModules[$result['key']] = $result['1']['value'];
 			}
 			$ratio = $arrModules[$rcode200]/$arrModules[$rcode500];
@@ -69,7 +70,7 @@ EOF;
 					'Date' => $date,
 					$rcode200 => $arrModules[$rcode200],
 					$rcode500 => $arrModules[$rcode500],
-					'ratio' => $ratio
+					'ratio' => intval($ratio)
 					);
 			$fileResource = fopen($filePath,"a");
 			fwrite($fileResource,json_encode($count)."\n");
