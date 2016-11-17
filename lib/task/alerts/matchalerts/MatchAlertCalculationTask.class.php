@@ -119,6 +119,8 @@ EOF;
                                                                                 $this->limitTRecTemp = abs($this->limitTRec - count($profiles));
                                                                                 $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRecTemp,MailerConfigVariables::$TrendsNotLoggedinWithLoginDateSort);
                                                                                 $totalResults = $StrategyReceiversT->getMatches($profiles,$matchesSetting);
+                                                                                if($totalResults["profiles"])
+                                                                                        $profiles = array_merge($profiles,$totalResults["profiles"]);
                                                                         }
                                                                 }
                                                         }                                                        
