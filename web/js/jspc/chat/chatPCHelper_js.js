@@ -111,11 +111,11 @@ function pollForNonRosterListing(type,updateChatListImmediate){
         var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
         if(updateChatListImmediate != undefined && updateChatListImmediate == true){
             validRe = true;
-            headerData['Cache-Control'] = 'no-cache,no-store';
+            //headerData['Cache-Control'] = 'no-cache,no-store';
         }
         else{
             validRe = checkForValidNonRosterRequest(type);
-            headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].headerCachingAge+',public';
+            //headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].headerCachingAge+',public';
         }
         //console.log("headerData",headerData);
         if(validRe == true){
@@ -136,7 +136,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                 dataType: 'json',
                 //data: postData,
                 type: 'GET',
-                cache:true,
+                cache:false,
                 async: true,
                 timeout: chatConfig.Params.nonRosterListingApiConfig[type]["timeoutTime"],
                 headers:headerData,
