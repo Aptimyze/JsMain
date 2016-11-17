@@ -51,7 +51,7 @@ Moreover, Filters determine whose Interests/Calls you want to receive.</div>
 <!--start: new div-->
       <div id="newdppT">
           <div class="dppnbg1 fullwid txtc lh50 colrw fontlig f19 z7" id="countScroll">
-            No. of Partner Profile with below criteria - <span id="mutualMatchCount" data-value="~$mutualMatchCount`">~$mutualMatchCount`</span>
+            No. of Mutual Matches with below criteria - <span id="mutualMatchCount" data-value="~$mutualMatchCount`">~$mutualMatchCount`</span>
           </div>
       </div>
       <div class="clearfix pt20 pb20 mauto wid90p">
