@@ -151,7 +151,7 @@ class DialerHandler
         }
 	public function stop_non_eligible_profiles($campaign_name,$x,$ignore_array,$discount_profiles)
 	{
-		if($campaign_name=='JS_RENEWAL' || $campaign_name=='OB_JS_RENEWAL'){
+		if($campaign_name=='JS_RENEWAL' || $campaign_name=='OB_RENEWAL_MAH'){
 			$renewal=true;
 			$discountColumn ='DISCOUNT_PERCENT';
 		}
@@ -199,7 +199,7 @@ class DialerHandler
 
 	public function update_data_of_eligible_profiles($campaign_name,$x,$eligible_array,$discount_profiles,$allotedArray,$scoreArray,$paidProfiles='',$login15DaysArr='')
 	{
-                if($campaign_name=='JS_RENEWAL' || $campaign_name=='OB_JS_RENEWAL'){
+                if($campaign_name=='JS_RENEWAL' || $campaign_name=='OB_RENEWAL_MAH'){
 			$renewal=true;
                         $discountColumn ='DISCOUNT_PERCENT,EXPIRY_DT';
 		}

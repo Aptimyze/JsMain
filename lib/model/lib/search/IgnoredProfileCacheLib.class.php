@@ -179,12 +179,19 @@ class IgnoredProfileCacheLib
     }
 
     //This function checks if a particular value exists in the redis corresponding to a given key and accordingly returns the boolean response
-    public function checkIfDataExists($profileid,$ignoredProfileid)
+    public function checkIfDataExists($profileid,$ignoredProfileid,$suffix="")
     {
     	if (false === ignoredProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-    	$pidKey = $profileid.ignoredProfileCacheConstants::ALL_DATA;
+        if($suffix == "byMe")
+        {
+           $pidKey = $profileid.ignoredProfileCacheConstants::BYME_DATA; 
+        }
+    	else
+        {
+             $pidKey = $profileid.ignoredProfileCacheConstants::ALL_DATA; 
+        }
     	$keyExists = JsMemcache::getInstance()->keyExist($pidKey);
         if($keyExists == 1)
     	{

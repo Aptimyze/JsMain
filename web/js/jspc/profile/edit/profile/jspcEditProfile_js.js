@@ -3331,7 +3331,7 @@ EditApp = function(){
       var eData = {};
       eData.editFieldArr = editFieldArr;
       $.myObj.ajax({
-        url: "/api/v1/profile/editsubmit",
+        url: sectionId ==  'verification'?"/api/v1/profile/editsubmitDocuments":"/api/v1/profile/editsubmit",
         type: 'POST',
         datatype: 'json',       
         cache: false,
@@ -3351,6 +3351,12 @@ EditApp = function(){
             storeData(JSON.stringify(result.editApi));
             updateView(result.viewApi);
             delete editedFields[sectionId];
+            //update self name in chat header
+            if(sectionId != 'verification' && eData && eData["editFieldArr"] && eData["editFieldArr"]["NAME"] != undefined){
+              if($.isFunction(setChatSelfName)){
+                setChatSelfName(eData["editFieldArr"]['NAME'],"chatHeader");
+              }
+            }
           }
           else if(statusCode === 1 &&  result.hasOwnProperty('error'))
           {
