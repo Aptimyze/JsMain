@@ -25,9 +25,8 @@ EOF;
 		$indexName = 'jeevansathiactivity';
 		$query = '_search';
 		$timeout = 5000;
-		// Todo: set path
-		$dirPath = '/home/nickedes/Desktop/logs';
-		$filePath = $dirPath."/Counts.log";
+		$dirPath = '/data/applogs';
+		$filePath = $dirPath."/UptimeCounts.log";
 		$interval = 24;
 		$date = date('Y-m-d', strtotime('-1 day'));
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
@@ -65,7 +64,6 @@ EOF;
 			{
 				$arrModules[$result['key']] = $result['1']['value'];
 			}
-			print_r($arrModules);
 			$ratio = $arrModules[$rcode200]/$arrModules[$rcode500];
 			$count = array(
 					'Date' => $date,
@@ -73,7 +71,6 @@ EOF;
 					$rcode500 => $arrModules[$rcode500],
 					'ratio' => $ratio
 					);
-			print_r($count);
 			$fileResource = fopen($filePath,"a");
 			fwrite($fileResource,json_encode($count)."\n");
 			fclose($fileResource);
