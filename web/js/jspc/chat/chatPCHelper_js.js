@@ -237,6 +237,9 @@ function processNonRosterData(response,type,source){
             newNonRoster = response;
         }
     }
+    else{
+        newNonRoster = {};
+    }
     //console.log("oldNonRoster",oldNonRoster);
     //console.log("newNonRoster",newNonRoster);
     isResponseSame = checkForObjectsEquality(oldNonRoster,newNonRoster);

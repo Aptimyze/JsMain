@@ -507,6 +507,9 @@ strophieWrapper.sendPresence();
             invokePluginManagelisting(strophieWrapper.NonRoster, operation);
             strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
         }
+        else{
+            strophieWrapper.setRosterStorage({},"non-roster"); 
+        }
     },
 
     //executed after any non-roster list node presence has been updated
