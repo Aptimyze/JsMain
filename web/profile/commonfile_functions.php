@@ -462,7 +462,7 @@ $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"           => "12");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"         => "14");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                  => "40");
 $js_arr[]=array("jsms/search/inview"   => "2");
-$js_arr[]=array("jsms/login/newMobLogin_js"                 => "16");
+$js_arr[]=array("jsms/login/newMobLogin_js"                => "17");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "12");
 $js_arr[]=array("jsms/login/resetPass_js"   => "2");
 $js_arr[]=array("jsms/hamburger/ham_js"         => "11");
@@ -646,7 +646,7 @@ function getJavascriptFileName($jsFile){
                                                 $JAVASCRIPT[$key]=$key."_".$val;
                                 else
                                                 throw new jsException("","Duplicate $key javascript in commonfile");
-        }
+         }
         return $JAVASCRIPT[$jsFile];
 }
 function getCss(){
@@ -688,5 +688,24 @@ function assignVars($JAVASCRIPT,$CSS,$smarty){
 	{
 	    $smarty->assign("$key","$val");
 	}
+}
+
+function getCommaSeparatedCSSFileNames($cssArray){
+        $css_arr = getCssFilesArr();
+        for($i=0;$i<count($css_arr);$i++)
+        {
+                $temp=$css_arr[$i];
+
+                foreach($temp as $key=>$val)
+                                if(!$CSS[$key])
+                                                $CSS[$key]=$key."_".$val;
+                                else
+                                                throw new jsException("","Duplicate $key css in commonfile");
+        }
+        foreach($cssArray as $key=>$val)
+        {
+        	$result.='/css/'.$CSS[$val].".css,";
+        }
+return substr($result,0,-1);
 }
 ?>
