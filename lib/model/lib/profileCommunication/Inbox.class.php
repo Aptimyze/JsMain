@@ -242,7 +242,6 @@ class Inbox implements Module
 				{
 					
 					JsMemcache::getInstance()->remove($key);
-				
 					JsMemcache::getInstance()->set($keyCount,$countObj[$infoType]);
 					$this->totalCount = $countObj[$infoType];
 					
@@ -259,10 +258,8 @@ class Inbox implements Module
 				if ($displayFlag && PROFILE_COMMUNICATION_ENUM_INFO::ifInformationTypeExists($infoType) && PROFILE_COMMUNICATION_ENUM_INFO::ifTupleExists($tuple)) {
 					$memdata =  JsMemcache::getInstance()->get($key);
 					$data = unserialize(JsMemcache::getInstance()->get($key));
-                                        
 					if(empty($memdata) || ($nav-1)*$config["COUNT"] >=count($data) || (count($data) == 0 && $countObj[$infoType]))
 					{
-						
 						$infoTypeAdapter = new InformationTypeAdapter($infoType, $this->profileObj->getPROFILEID());
 						// Myjs require only New information type tuples 
 					
@@ -294,14 +291,21 @@ class Inbox implements Module
                                                     $conditionArray['LIMIT']++;
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
                                                 if($infoType == "MY_MESSAGE"){
-                                                    $this->totalCount = count($profilesArray);
-                                                    if($this->totalCount==$conditionArray['LIMIT'])
-                                                        array_pop($profilesArray);
+							if(JsMemcache::getInstance()->get($keyCount))
+                                                    		$this->totalCount = $this->totalCount+count($profilesArray)-1;
+							else
+						    		$this->totalCount = count($profilesArray);
+							JsMemcache::getInstance()->set($keyCount, $this->totalCount);
+                                                    	if(count($profilesArray)==$conditionArray['LIMIT'])
+                                                        	array_pop($profilesArray);
                                                 }
-					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray))
+					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray)){
+					//		print_r(count($data));
 							$data = $data+$profilesArray;
+						}
 						else if(is_array($profilesArray))
 							$data = $profilesArray;
+					//	print_r($data);  die;
 						JsMemcache::getInstance()->set($key,serialize($data),1800);
 					}
 					if(is_array($data))
@@ -349,7 +353,8 @@ class Inbox implements Module
 			$config = $this->configurations[$infoType];
 			//var_dump($this->totalCount);die;
 			$this->completeProfilesInfo[$infoType]["ID"]             = $config["ID"];
-			$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = $this->totalCount;
+//			$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = $this->totalCount;
+			$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = JsMemcache::getInstance()->get("message_count_".LoggedInProfile::getInstance()->getPROFILEID());
 			$this->completeProfilesInfo[$infoType]["NEW_COUNT"]      = $countObj[$infoType. "_NEW"];
 			$this->completeProfilesInfo[$infoType]["TITLE"]          = $config["TITLE"];
 			$this->completeProfilesInfo[$infoType]["HEADING"]          = $config["HEADING"];
@@ -372,8 +377,8 @@ class Inbox implements Module
 			if ($config["COUNT"]) {
 				if ($this->totalCount / $config["COUNT"] > $this->completeProfilesInfo[$infoType]["CURRENT_NAV"])
 					$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;            
-                                elseif ($infoType == "MY_MESSAGE" && $this->totalCount / $config["COUNT"] > 1)
-					$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
+                                //elseif ($infoType == "MY_MESSAGE" && $this->totalCount / $config["COUNT"] > 1)
+				//	$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
 				$this->completeProfilesInfo[$infoType]["NAVIGATION_INDEX"] = $this->getNavigationArray($this->completeProfilesInfo[$infoType]["CURRENT_NAV"], $this->totalCount, $config["COUNT"]);
 				$this->completeProfilesInfo[$infoType]["TRACKING"]  	 = $config["TRACKING"];
 				$this->completeProfilesInfo[$infoType]["contact_id"] = $key;

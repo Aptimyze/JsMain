@@ -167,6 +167,9 @@ class MessageLog
 	}
         
         private function mergeChatsAndMessages($messageArr,$chatArr,$limit){
+	if(!$limit)
+		$limit = 1000000;
+
             $count = 0;
             $skip = array();
             $finalArr=array();
@@ -177,6 +180,8 @@ class MessageLog
                   
                 if(count($chatArr)>0)
                 foreach($chatArr as $k=>$v){
+		     if(count($finalArr)>=$limit)
+                        return $finalArr;
                     if($key == $k){
                         $finalArr[$key] = $this->sortInnerArr($val,$v);
                         break;
@@ -202,8 +207,6 @@ class MessageLog
                           $finalArr[$k] = $v;
                         unset($chatArr[$k]);
                     }
-                    if(count($finalArr)>=$limit)
-                        return $finalArr;
                 }
                 else if(count($finalArr)<$limit){
                     $finalArr[$key] = $val;
@@ -217,6 +220,14 @@ class MessageLog
                     $finalArr[$key] = $val;
                 }
             }
+/***/
+if($limit == 1000000)
+{
+	$pid = LoggedInProfile::getInstance()->getPROFILEID();
+	JsMemcache::getInstance()->set("message_count_".$pid,count($finalArr),18000);
+	$finalArr = array_splice($finalArr,0,$ankit);
+}
+/***/
             return $finalArr;
         }
         
