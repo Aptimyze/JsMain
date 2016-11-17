@@ -757,7 +757,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	      $count_matches = 0;
 	    }
 		
-		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_MATCHCOUNT","","",(string)$count_matches,"","",'',1,"");
+		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_MATCHCOUNT","","",(string)$count_matches,"","",'',1,"","Y");
 
 
 
