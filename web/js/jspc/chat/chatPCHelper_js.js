@@ -255,6 +255,9 @@ function processNonRosterData(response,type,source){
         //add new list
         strophieWrapper.onNonRosterListFetched(newNonRoster,type,operation);
     }
+    else if((Object.keys(newNonRoster)).length == 0){
+        strophieWrapper.setRosterStorage({},"non-roster");
+    }
 }
 
 /*checkForObjectsEquality
