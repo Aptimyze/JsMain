@@ -81,7 +81,7 @@ function checkForValidNonRosterRequest(groupId){
     var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
-        if(timeDiff < chatConfig.Params[device].nonRosterListingRefreshCap){
+        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap){
             valid = false;
         }
     }
