@@ -2234,10 +2234,12 @@ JsChat.prototype = {
     _scrollToBottom: function (userId,type) {
         //console.log("type in _scrollToBottom",type);
         if(type == undefined) {
-            var len = document.getElementById("chatMessage_"+userId).scrollHeight;
-            $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                scrollTop: len
-            }, 1000);   
+            if(document.getElementById("chatMessage_" + userId) != null){
+                var len = document.getElementById("chatMessage_"+userId).scrollHeight;
+                $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                    scrollTop: len
+                }, 1000);   
+            }
         } else if(type == "noAnimate") {
             setTimeout(function () {
                 if(document.getElementById("chatMessage_"+userId) != null){
