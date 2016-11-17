@@ -124,7 +124,7 @@ var domainCode={};
         ~/if`
 	</div>
   <!--Palash-->
-  ~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
+  ~if ($sf_request->getAttribute('mobLogoutPage') neq 'Y') && ($sf_request->getAttribute('jsmsMyjsPage') neq 1)`
   ~minify_include_javascripts('bottom')`
   ~/if`
   <div class="urldiv dn" id="urldiv" ></div>  
