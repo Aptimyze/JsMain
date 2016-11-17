@@ -25,6 +25,7 @@ EOF;
 		$indexName = 'jeevansathiactivity';
 		$query = '_search';
 		$timeout = 5000;
+		$currDate = date('Y.m.d');
 		$dirPath = '/data/applogs';
 		$filePath = $dirPath."/UptimeCounts.log";
 		$interval = 24;
@@ -70,11 +71,11 @@ EOF;
 					'Date' => $date,
 					$rcode200 => $arrModules[$rcode200],
 					$rcode500 => $arrModules[$rcode500],
-					'ratio' => intval($ratio)
+					'ratio' => intval($ratio),
 					);
-			$fileResource = fopen($filePath,"a");
-			fwrite($fileResource,json_encode($count)."\n");
-			fclose($fileResource);
+			$count = json_encode($count);
+			$ObjectId = 1;
+			passthru("curl -XPOST 'localhost:9200/uptime-$currDate/json/$ObjectId' -d'$count'");
 		}
 	}
 }
