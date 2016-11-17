@@ -570,7 +570,7 @@ $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                      => "
 $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                                             => "51");
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
-$js_arr[]=array("jspc/contactEngine/contactEngine"          => "11");
+$js_arr[]=array("jspc/contactEngine/contactEngine"           => "12");
 $js_arr[]=array("jspc/contactEngine/contactEngineButtons"              => "15");
 $js_arr[]=array("jspc/search/advancedSearch"     => "2");
 $js_arr[]=array("jspc/common/jquery_mCustomScrollbar"             => "12");
