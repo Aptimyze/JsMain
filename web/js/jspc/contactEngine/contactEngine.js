@@ -929,6 +929,7 @@ $('.communicationParent').bind('click',
 			function () {	
 					communicationLayerAjax(1);
 			});	
+	customOptionButton('report_profile');
  })
 
 function openChatWindow(aJid,param,profileID,userName,have_photo,checksum){
@@ -1010,7 +1011,6 @@ jQuery.myObj.ajax(ajaxConfig);
 }
 
 function showReportInvalidLayer(obj){
-
 	var layerObj=$("#reportInvalidReason-layer");
 	if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("Select reason").addClass('color12').removeClass('colorerror');}
 	var jObject=$("#reportInvalidReason-layer");
