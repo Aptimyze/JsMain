@@ -2419,11 +2419,11 @@ JsChat.prototype = {
                     }
                     else{
                         checkInterval = checkInterval+1;
-                        if(checkInterval == 20){
+                        if(checkInterval == 15){
                             clearInterval(chatBoxOpenInterval);
                         }
                     }    
-                },500);
+                },700);
                     
                 
 
