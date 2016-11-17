@@ -1136,7 +1136,9 @@ JsChat.prototype = {
             for (var key in data) {
                 var runID = '';
                 if(typeof data[key] != "undefined"){
-                    runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                    if(typeof data[key]["rosterDetails"]["jid"] != "undefined"){
+                        runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                    }
                     if(param1 == 'delete_node'){
                         localStorage.removeItem("listingPic_"+runID);
                     }
