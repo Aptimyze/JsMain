@@ -189,7 +189,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                     if(response["header"]["status"] == 200){
                         //console.log("fetchNonRosterListing success",response);
                         if(response["data"]["pollTime"] != undefined && response["data"]["pollTime"] > 0){
-                            chatConfig.Params[device].nonRosterListingRefreshCap = response["data"]["pollTime"];
+                            //chatConfig.Params[device].nonRosterListingRefreshCap = response["data"]["pollTime"];
                             //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
                         }
                         var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));

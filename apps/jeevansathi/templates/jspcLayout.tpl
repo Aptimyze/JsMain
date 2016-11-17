@@ -75,6 +75,7 @@
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
         var dppListingWebServiceUrl = "~JsConstants::$chatListingWebServiceUrl['dpp']`";
+        var nonRosterRefreshUpdate = "~JsConstants::$nonRosterRefreshUpdate`";
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
         //console.log("dppLiveForAll",dppLiveForAll);
         var betaDppExpression = "",specialDppProfiles="";
