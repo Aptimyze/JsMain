@@ -3351,6 +3351,12 @@ EditApp = function(){
             storeData(JSON.stringify(result.editApi));
             updateView(result.viewApi);
             delete editedFields[sectionId];
+            //update self name in chat header
+            if(sectionId != 'verification' && eData && eData["editFieldArr"] && eData["editFieldArr"]["NAME"] != undefined){
+              if($.isFunction(setChatSelfName)){
+                setChatSelfName(eData["editFieldArr"]['NAME'],"chatHeader");
+              }
+            }
           }
           else if(statusCode === 1 &&  result.hasOwnProperty('error'))
           {
