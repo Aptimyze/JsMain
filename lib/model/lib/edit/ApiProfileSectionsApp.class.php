@@ -175,7 +175,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//highest degree should in a pg degree
 		if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education["PG_DEGREE"],$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , FieldMap::getFieldLabel("degree_pg",$education['PG_DEGREE']),$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
 		
 			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education["PG_COLLEGE"],$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
       
@@ -188,7 +188,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//highest degree should not be high school or trade school
 		if(!($this->profile->getEDU_LEVEL_NEW()=="23" ||$this->profile->getEDU_LEVEL_NEW()=="24"))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , $education["UG_DEGREE"],$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , FieldMap::getFieldLabel("degree_ug",$education['UG_DEGREE']),$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
 		
 			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education["COLLEGE"],$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
       

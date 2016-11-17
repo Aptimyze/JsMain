@@ -240,7 +240,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		if($educationValues instanceOf ProfileComponent)
 			unset($educationValues);
 		$education = $this->profile->getEducationDetail(1);
-		
+		// die("")
 		//your info
 		$eduArr[EDUCATION][outerSectionName]="About My Education";
 		$eduArr[EDUCATION][outerSectionKey]="AboutMyEducation";
@@ -261,7 +261,8 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//{
 			//if(!$isPG)
 			//$education["PG_DEGREE"]="N_B";
-			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education["PG_DEGREE"],$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"),$this->dropdown,'','','',!$showPg);
+			
+			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , FieldMap::getFieldLabel("degree_pg",$education['PG_DEGREE']),$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"),$this->dropdown,'','','',!$showPg);
 			//if(!$isPG)
 			//$education["PG_COLLEGE"]="N_B";
 			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education["PG_COLLEGE"],"",$this->getApiScreeningField("PG_COLLEGE"),$this->text,'','','',!$isPG);
@@ -282,7 +283,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 				$isUG=0;
 			//if(!$isUG)
 			//$education["UG_DEGREE"]='N_B';	
-			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_UG","Graduation Degree" , $education["UG_DEGREE"],$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"),$this->dropdown,"","","",!$isUG);
+			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("DEGREE_UG","Graduation Degree" , FieldMap::getFieldLabel("degree_ug",$education['UG_DEGREE']),$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"),$this->dropdown,"","","",!$isUG);
 			//if(!$isUG)
 			//	$education["COLLEGE"]="N_B";
 			$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("COLLEGE","Graduation College" , $education["COLLEGE"],"",$this->getApiScreeningField("COLLEGE"),$this->text,'','','',!$isUG);
@@ -291,6 +292,8 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		//{
 		//}
 		$eduArr[CollegeDetails][OnClick][]=$this->getApiFormatArray("SCHOOL","School Name" , $education["SCHOOL"],"",$this->getApiScreeningField("SCHOOL"),$this->text);
+
+		// var_dump($education);
 
 		return $eduArr;
 	}
