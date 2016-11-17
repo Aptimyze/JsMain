@@ -8,7 +8,8 @@ var albumPresent=0;
 var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2'};
 var bCallCreateHoroscope = false;
  $("document").ready(function() {
-	 
+
+
     setTimeout(function() {
 		if($('#listShow').val()==1)
          $("#AlbumMainTab").click(); 
@@ -28,6 +29,7 @@ var bCallCreateHoroscope = false;
       bxslider.gotoSlide(index);
     }
    },200);
+   
 });
 var albumNoPhotoStr="";
 (function($){
@@ -48,7 +50,35 @@ var mobEditPage=(function(){
 		{
 			result=formatJsonOutput(result);
 			
-			//console.log(result);
+			for( var k in result.Dpp.BasicDetails.OnClick )
+			{
+				if ( result.Dpp.BasicDetails.OnClick[k]['key'] == "P_MATCHCOUNT")
+				{
+					/*
+				   	variable to store threshold for mutual match count.
+				    */
+				   	var mutualMatchCountThreshold = 100;
+
+					$("#mutualMatchCountMobile").css("padding","2px");
+
+					$("#mutualMatchCountMobile").text(parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])).toLocaleString());
+					$("#mutualMatchCountMobile").attr("data-value",parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])));
+
+                    if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) >= mutualMatchCountThreshold )
+                    {
+                    	$("#mutualMatchCountMobile").css('color', '')
+                    	$("#mutualMatchCountMobile").removeClass("bg7");
+                    	$("#mutualMatchCountMobile").addClass("dpbg1");
+                    }
+                    else
+                    {
+                    	$("#mutualMatchCountMobile").css('color', 'white')
+                    	$("#mutualMatchCountMobile").removeClass("dpbg1");
+                    	$("#mutualMatchCountMobile").addClass("bg7");
+                    }
+				}
+			}
+
 			changingEditData=ele.pageJson=result;
 			originalEditData=JSON.parse(JSON.stringify(changingEditData));
 			//console.log(changingEditData);

@@ -126,7 +126,7 @@ $css_arr[]=array("jsms/search/srpcss"       => "4");
 $css_arr[]=array("jsms/photo/photoup"    => "1");
 $css_arr[]=array("jsms/membership/revamp_membership_css"   => "3");
 $css_arr[]=array("jsms/membership/new_revamp_membership_css"        => "6");
-$css_arr[]=array("jsms/profile/ep/revamp_edit_profile_css"       => "8");
+$css_arr[]=array("jsms/profile/ep/revamp_edit_profile_css"        => "9");
 $css_arr[]=array("jsms/register/regis_css"        => "9");
 $css_arr[]=array("jsms/register/reg_animate"   => "4");
 $css_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_css"        => "11");
@@ -166,7 +166,7 @@ $css_arr[]=array("jspc/common/cssRangeSlider"     => "2");
 $css_arr[]=array("jspc/search/rangeslider"    => "1");
 $css_arr[]=array("jspc/common/jquerymCustomScrollbar"    => "1");
 $css_arr[]=array("jspc/search/searchBand"    => "1");
-$css_arr[]=array("jspc/profile/edit/dpp/dppEdit_css"                       => "20");
+$css_arr[]=array("jspc/profile/edit/dpp/dppEdit_css"                       => "21");
 $css_arr[]=array("jspc/utility/chosen/chosen_css"    => "1");
 $css_arr[]=array("jspc/logout/homecss"           => "8");
 $css_arr[]=array("jspc/phone/phoneVerification_css"     => "2");
@@ -408,7 +408,7 @@ $js_arr[]=array("mouseClickTracking_js"  => "2");
 $js_arr[]=array("jsms/profile/ep/submitDetails_js"             => "14");
 $js_arr[]=array("jsms/profile/ep/hamburger_js"           => "11");
 $js_arr[]=array("jsms/profile/ep/mobedit_js"                     => "26");
-$js_arr[]=array("jsms/profile/ep/mobeditview_js"                          => "29");
+$js_arr[]=array("jsms/profile/ep/mobeditview_js"                           => "31");
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"              => "5");
 $js_arr[]=array("jsms/common/disableScroll_js"  => "1");
 $js_arr[]=array("jsms/utility/sessionStorage_js"    => "3");
@@ -460,9 +460,9 @@ $js_arr[]=array("jsms/angular/registration/scripts/directives"                =>
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                          => "29");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"           => "12");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"         => "14");
-$js_arr[]=array("jsms/contact_engine/contactEngine_js"                                   => "39");
+$js_arr[]=array("jsms/contact_engine/contactEngine_js"                                  => "40");
 $js_arr[]=array("jsms/search/inview"   => "2");
-$js_arr[]=array("jsms/login/newMobLogin_js"                 => "16");
+$js_arr[]=array("jsms/login/newMobLogin_js"                => "17");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "12");
 $js_arr[]=array("jsms/login/resetPass_js"   => "2");
 $js_arr[]=array("jsms/hamburger/ham_js"         => "11");
@@ -534,8 +534,8 @@ $js_arr[]=array("jspc/search/common/commonSlider"    => "1");
 $js_arr[]=array("jspc/search/searchSliders"    => "1");
 $js_arr[]=array("jspc/search/common/ionRangeSliderPlugin"    => "1");
 $js_arr[]=array("jspc/common/jquerymCustomScrollbarConcat"   => "1");
+$js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"                            => "28");
 $js_arr[]=array("jspc/utility/chosen/chosen_jquery"          => "7");
-$js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"                         => "24");
 $js_arr[]=array("jspc/utility/chosen/docsupport/prism"    => "1");
 $js_arr[]=array("jspc/logout/hpjs"      => "3");
 $js_arr[]=array("jspc/common/hslider"    => "1");
@@ -567,7 +567,7 @@ $js_arr[]=array("jspc/success_story/imagefit"  => "1");
 $js_arr[]=array("jspc/contactus/contactus_js"  => "1");
 $js_arr[]=array("jspc/success_story/successScroll"  => "1");
 $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                      => "27");
-$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                                                 => "55");
+$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                                             => "56");
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"           => "12");
@@ -602,12 +602,12 @@ $js_arr[]=array("jsms/utility/offlineTracking_js"   => "1");
 $js_arr[]=array("jsms/common/disableRightClick_js"    => "2");
 $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
-$js_arr[]=array("jspc/chat/chatPCHelper_js"                                                  => "64");
+$js_arr[]=array("jspc/chat/chatPCHelper_js"                                       => "65");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"                    => "26");
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                          => "35");
 $js_arr[]=array("jspc/chat/chatStrophieClient_js"      => "7");
 $js_arr[]=array("jspc/help/JSPCHelp_js"              => "16");
-$js_arr[]=array("jspc/chat/chatPlugin_js"                                       => "64");
+$js_arr[]=array("jspc/chat/chatPlugin_js"                                    => "65");
 $js_arr[]=array("jsms/help/JSMSHelp_js"          => "8");
 $js_arr[]=array("jsms/help/jsmsPostQuery_js"     => "3");
 $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"     => "3");
@@ -646,7 +646,7 @@ function getJavascriptFileName($jsFile){
                                                 $JAVASCRIPT[$key]=$key."_".$val;
                                 else
                                                 throw new jsException("","Duplicate $key javascript in commonfile");
-        }
+         }
         return $JAVASCRIPT[$jsFile];
 }
 function getCss(){
@@ -688,5 +688,24 @@ function assignVars($JAVASCRIPT,$CSS,$smarty){
 	{
 	    $smarty->assign("$key","$val");
 	}
+}
+
+function getCommaSeparatedCSSFileNames($cssArray){
+        $css_arr = getCssFilesArr();
+        for($i=0;$i<count($css_arr);$i++)
+        {
+                $temp=$css_arr[$i];
+
+                foreach($temp as $key=>$val)
+                                if(!$CSS[$key])
+                                                $CSS[$key]=$key."_".$val;
+                                else
+                                                throw new jsException("","Duplicate $key css in commonfile");
+        }
+        foreach($cssArray as $key=>$val)
+        {
+        	$result.='/css/'.$CSS[$val].".css,";
+        }
+return substr($result,0,-1);
 }
 ?>
