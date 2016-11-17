@@ -25,7 +25,7 @@ class PictureStaticVariablesEnum
                                            "The photo is of a well known personality. If it is yours, submit an identity.",
 					   "Gender not proper.",
 					   "Group photo.",
-					   "Age not proper/Age doesn’t match.",
+					   "Age not proper/Age does not match.",
 					   "Obscene photo.",
 					   "Side face.",
 					   "Attachment error.",

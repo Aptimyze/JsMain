@@ -1,43 +1,43 @@
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<title>Update order and start service</title>
-<link rel="stylesheet" href="jeevansathi.css" type="text/css">
-<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-        <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
-
-</head>
-<body leftmargin="5" topmargin="5">
-~$HEAD`
-<br><br>
-<table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
-    <tr class="formhead">
-          <td width=55% class="formhead" border=1><font><b>Welcome : ~$username`</b></font></td>
-          <td width="35%" class="formhead" align="center"><a href="../jsadmin/mainpage.php?name=&cid=~$CID`"
->Main Page</a></td>
-
-          <td width=10% class="formhead" border=1 align='CENTER'><a href="../jsadmin/logout.php?cid=~$CID`">
-Logout</a></td>
-    </tr>
-</table>
-<br><br>
-<form name="f1" action="order_check.php" method="post">
-<input type=hidden name=cid value=~$CID`>
-<table width="80%" align="center" border=0>
-  <tr>
-  <td class="formhead" colspan=2 align="center">Enter OrderId</td>
-  </tr>
-  <tr>
-  <td width=50% class="label" bgcolor="#F9F9F9">Order Id :</td>
-  <td width=50% bgcolor="#F9F9F9"><input type=text name="Order_Id" size="75" class="textboxes1" ></td>
-  </tr>
-  <tr>
-  <td bgcolor="#F9F9F9" width=50% class="label">&nbsp;</td>
-  <td width=50% align=left bgcolor="#F9F9F9"><input type=submit name="Submit" value="Submit"  class="textboxes1"></td>
-  </tr>
-</table>
-</form>
-~$FOOT`
-</body>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>Update order and start service</title>
+    <link rel="stylesheet" href="jeevansathi.css" type="text/css">
+    <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+  </head>
+  <body leftmargin="5" topmargin="5">
+    ~$HEAD`
+    <br><br>
+    <table width=760 cellspacing="1" cellpadding='3' ALIGN="CENTER" >
+      <tr class="formhead">
+        <td width=55% class="formhead" border=1><font><b>Welcome : ~$username`</b></font></td>
+        <td width="35%" class="formhead" align="center"><a href="../jsadmin/mainpage.php?name=&cid=~$CID`">Main Page</a></td>
+        <td width=10% class="formhead" border=1 align='CENTER'><a href="../jsadmin/logout.php?cid=~$CID`">Logout</a></td>
+      </tr>
+    </table>
+    <br><br>
+    <form name="f1" action="order_check.php" method="post">
+      <input type=hidden name=cid value=~$CID`>
+      <table width="80%" align="center" border=0>
+        <tr>
+          <td class="formhead" colspan=2 align="center">Enter OrderId</td>
+        </tr>
+        <tr>
+          <td width=50% class="label" bgcolor="#F9F9F9">Order Id :</td>
+          <td width=50% bgcolor="#F9F9F9"><input type=text name="Order_Id" size="75" class="textboxes1" ></td>
+        </tr>
+        <tr>
+          <td width=50% class="label" bgcolor="#F9F9F9">Force Update</td>
+          <td width=50% bgcolor="#F9F9F9"><input type=checkbox name="force" size="75" class="" >&nbsp;&nbsp;&nbsp;<span>use this feature to update already processed(recorded successful in system) orders but whose services are not yet activated corresponding to the order !<span></td>
+        </tr>
+        <tr>
+          <td bgcolor="#F9F9F9" width=50% class="label">&nbsp;</td>
+          <td width=50% align=left bgcolor="#F9F9F9"><input type=submit name="Submit" value="Submit"  class="textboxes1"></td>
+        </tr>
+      </table>
+    </form>
+    ~$FOOT`
+  </body>
 </html>

@@ -10,7 +10,6 @@ var profChecksumCheckArr = new Array();
 var listType;
 
 $(document).ready(function() {
-
 	showSearchLoader('Show');
 
 	/**
@@ -151,7 +150,9 @@ $(document).ready(function() {
             $("#"+clickOn).removeClass("cursp").addClass("cursd");
         }
 
+
 });
+
 /**
 * Function which will be used for the action of search Listing
 */

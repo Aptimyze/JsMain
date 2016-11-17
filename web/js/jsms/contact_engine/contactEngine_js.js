@@ -1039,7 +1039,6 @@ function initiateContact(result,action, index){
 
 function contactDetailMessage(result,action,index)
 {
-  
  $("#mobile").hide();
   aUrl = actionUrl[action];
   aUrl+="?r=1&stype=WQ"+result.actiondetails.footerbutton.params;
@@ -1072,7 +1071,7 @@ function contactDetail(result,action, index){
   {
     contactDetailMessage(result,action, index);
     return;
-  }*/
+  }*/var proCheck = params.profilechecksum;
     if(result.actiondetails.errmsglabel)
     {
     showCommonOverlay();
@@ -1111,31 +1110,40 @@ else
 if(result.actiondetails.bottommsg2){
     $("#bottomMsg2").html(result.actiondetails.bottommsg2).css('display', 'inline-block');
   }
-  
+
   if(result.actiondetails.contact1){
     $("#mobileVal,#mobileValBlur").hide();
     //$("#mobileValBlur").hide();
     $("#mobile").show();
     if(result.actiondetails.contact1.value=="blur"){ $("#mobileValBlur").show(); $("#neverMindLayer").show(); }
     else $("#mobileVal").show();
-                $("#mobileVal").html(result.actiondetails.contact1.value);
+                $("#mobileVal").html(result.actiondetails.contact1.value+'<span  onclick="reportInvalid(\'M\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c"> Report Invalid </span>');
                 if (result.actiondetails.contact1.iconid){ 
                    $("#mobileIcon > a").attr('href','tel:'+result.actiondetails.contact1.value.toString());
             $("#mobileIcon").show();
         }
   }
-        
+      else if(result.actiondetails.contact1_message)
+      {
+        $("#mobileVal,#mobile").show();
+        $("#mobileVal").html(result.actiondetails.contact1_message);
+      }  
         if(result.actiondetails.contact2){
     $("#landlineValBlur,#landlineVal").hide();
             // $("#landlineVal").hide();
                 $("#landline").show();
                 if(result.actiondetails.contact2.value=="blur") { $("#landlineValBlur").show(); $("#neverMindLayer").show();}
-                else $("#landlineVal").show();$("#landlineVal").html(result.actiondetails.contact2.value);
+                else $("#landlineVal").show();$("#landlineVal").html(result.actiondetails.contact2.value+'<span onclick="reportInvalid(\'L\',this,\''+proCheck+'\')" class="reportInvalidjsmsButton invalidMob " style = "color:#d9475c">Report Invalid </span>');
                 if (result.actiondetails.contact2.iconid){ 
                    $("#landlineIcon > a").attr('href','tel:'+result.actiondetails.contact2.value.toString());
             $("#landlineIcon").show();
         }
     }
+      else if(result.actiondetails.contact2_message)
+      {
+        $("#landline,#landlineVal").show();
+        $("#landlineVal").html(result.actiondetails.contact2_message);
+      }  
         if(result.actiondetails.contact3){
     $("#alternateValBlur,#alternateVal").hide();
                // $("#alternateVal").hide();
@@ -1149,6 +1157,11 @@ if(result.actiondetails.bottommsg2){
     
     
     }
+      else if(result.actiondetails.contact3_message)
+      {
+        $("#alternate,#alternateVal").show();
+        $("#alternateVal").html(result.actiondetails.contact3_message);
+      }  
         if(result.actiondetails.contact4){
                 $("#emailVal,#emailValBlur").hide();
     //$("#emailValBlur").hide();
@@ -1169,7 +1182,7 @@ if(result.actiondetails.bottommsg2){
 		$("#footerButton").show();
     $("#mobile").hide();
     if(result.actiondetails.infomsglabel)
-    {
+    {  
       $("#ViewContactPreLayerText").html(result.actiondetails.infomsglabel);
       $("#ViewContactPreLayer").show();
     }
@@ -1479,4 +1492,137 @@ function browserBackCommonOverlay() {
 function nl2br(str)
 {
     return str.replace(/\n/g, "<br />");
+}
+
+function hideReportInvalid(){
+  var mainEle=$("#reportInvalidContainer");
+  if(mainEle.css('display')!='none'){
+    $("#commonOverlayTop").show();
+    mainEle.hide();
+  return true;  
+  }
+  
+  return false;
+
+}
+
+function reportInvalid(phoneType,Obj,profileCheckSum) {
+var imgURL;
+if(typeof(buttonSt) != "undefined" && buttonSt.photo.url){
+imgURL = buttonSt.photo.url;
+}
+else{
+ var topDiv = $(Obj).closest('#commonOverlayTop');  
+ var nextLevel = topDiv.find("#3DotProPic");
+ var lastLevel = nextLevel.find("#photoIDDiv");
+     imgURL = lastLevel.find("#ce_photo").attr('src');
+
+}
+$("#photoReportInvalid").attr("src",imgURL);
+$('.RAcorrectImg,#commonOverlayTop').hide();
+var mainEle=$("#reportInvalidContainer");
+mainEle.show();
+
+var el=$("#reportInvalidMidDiv");
+el.height($(window).height()-$("#reportInvalidSubmit").height()-mainEle.find('.photoheader').eq(0).height());
+
+var div = document.createElement('div');
+            // css transition properties
+            var props = ['WebkitPerspective', 'MozPerspective', 'OPerspective', 'msPerspective'];
+            // test for each property
+            for (var i in props) {
+                if (div.style[props[i]] !== undefined) {
+                    
+                    cssPrefix = props[i].replace('Perspective', '').toLowerCase();
+                    animProp = '-' + cssPrefix + '-transform';
+                }
+            }
+
+
+el.css(animProp, 'translate(50%,0px)');
+el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
+.css(animProp, 'translate(0px,0px)');
+
+selectedReportInvalid="";
+RAOtherReasons=0;
+var rCode ;
+
+$(".reportInvalidOption").unbind().bind('click',function () {
+
+if($(this).attr('id')=='js-otherInvalidReasons')
+{
+el.scrollTop('0px');
+el.css('-' + cssPrefix + '-transition-duration', 600 + 'ms')
+.css(animProp, 'translate(-50%,0px)');
+RAOtherReasons=1;selectedReportInvalid="";
+rCode = '5';
+}
+else 
+{
+  selectedReportInvalid=$(this).text();RAOtherReasons=0;
+  rCode = $(this).val();
+}
+ 
+;
+
+$('.RAcorrectImg').hide();
+$(this).find('.RAcorrectImg').show();
+});
+
+
+$("#reportInvalidSubmit").unbind().bind('click',function() {
+
+var reason="";
+
+if(RAOtherReasons)
+{ 
+  reason=$("#js-otherInvalidReasonsLayer").val();
+  if(!reason){ShowTopDownError(["Please enter the reason"],3000);return;}
+}
+else {
+  reason=selectedReportInvalid;
+if(!reason){ShowTopDownError(["Please select the reason"],3000);return;}
+}
+
+
+
+reason=$.trim(reason);
+//Phone type for phone api
+if (phoneType=='L') {var mobile='N';var phone='Y';}
+if (phoneType=='M') {var mobile='Y';var phone='N';}
+
+var otherReason = '';
+if(rCode == '5')
+{
+  otherReason = reason;
+}
+
+ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileCheckSum,'reasonCode':rCode,'otherReasonValue':otherReason};
+var url='/phone/reportInvalid';
+loaderTop();
+$("#contactLoader,#loaderOverlay").show();
+$("#loaderOverlay").show();
+//ajax data for phone api
+$.ajax({
+                
+    url: url,
+    type: "POST",
+    data: ajaxData,
+    //crossDomain: true,
+    success: function(result){
+         $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
+         $("#js-otherInvalidReasonsLayer").val('');
+                    if(CommonErrorHandling(result,'?regMsg=Y')) 
+                    {
+          ShowTopDownError([result.message],10000);
+          $("#commonOverlayTop").show();
+                    }
+}
+
+});
+});
+
+historyStoreObj.push(hideReportInvalid,"#reportInvalid");
+
+
 }
