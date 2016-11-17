@@ -97,6 +97,53 @@ class matchalerts_LOG_TEMP extends TABLE
 			return 0;
 		}
 	}
+
+  public function getCountGroupedByLogic()
+  {
+    try
+    {
+      $sql = "SELECT count( DISTINCT (RECEIVER) ) as CNT, LOGICLEVEL FROM matchalerts.`LOG_TEMP` GROUP BY LOGICLEVEL; "; 
+               $prep = $this->db->prepare($sql);
+               $prep->execute();               
+               while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+              {
+                $resultArr[] = $row;          
+              }              
+               return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      throw new jsException($e);
+    }
+  }
+
+  public function getCountGroupedByLogicAndRecommendation()
+  {
+    try
+    {
+      $sql = "SELECT COUNT(DISTINCT(RECEIVER)) as PeopleCount , LOGICLEVEL, RecCount
+      FROM (
+
+        SELECT COUNT( * ) AS RecCount, LOGICLEVEL, RECEIVER
+        FROM  matchalerts.`LOG_TEMP` 
+        GROUP BY LOGICLEVEL, RECEIVER
+      ) AS tablename
+GROUP BY LOGICLEVEL, RecCount"; 
+               $prep = $this->db->prepare($sql);
+               $prep->execute();               
+               while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+               {
+                $resultArr[] = $row;          
+              }              
+              return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      throw new jsException($e);
+    }
+  }
 }
 ?>
 

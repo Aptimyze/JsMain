@@ -130,4 +130,23 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
 			throw new jsException($e);
 		}
         }
+
+        public function getTotalCount()
+        {
+        	try
+        	{
+        		$sql = "SELECT COUNT(*) as TOTALCOUNT FROM matchalerts.MATCHALERTS_TO_BE_SENT";
+        		$prep = $this->db->prepare($sql);
+        		$prep->execute();
+        		while($row = $prep->fetch(PDO::FETCH_ASSOC))
+        		{
+        			$resultCount = $row["TOTALCOUNT"];
+        		}        	
+				return $resultCount;
+        	}
+        	catch (PDOException $e)
+        	{
+        		throw new jsException($e);
+        	}        
+        }
 }
