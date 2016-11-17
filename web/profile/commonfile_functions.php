@@ -604,7 +604,7 @@ $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                             => "59");
 $js_arr[]=array("jspc/chat/chatPCHelper_js"                                                             => "82");
-$js_arr[]=array("jspc/chat/chatPlugin_js"                                      => "64");
+$js_arr[]=array("jspc/chat/chatPlugin_js"                                       => "65");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"                      => "28");
 $js_arr[]=array("jspc/chat/chatStrophieClient_js"      => "7");
 $js_arr[]=array("jspc/help/JSPCHelp_js"              => "17");
