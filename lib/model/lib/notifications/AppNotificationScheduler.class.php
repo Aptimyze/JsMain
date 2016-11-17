@@ -67,6 +67,9 @@ class AppNotificationScheduler extends NotificationScheduler
 				  $insertData[$k]['TITLE']=$v['NOTIFICATION_MESSAGE_TITLE'];		
 			  else
 				$insertData[$k]['TITLE']=$v['TITLE'];
+              if($v['OTHER_PROFILE_CHECKSUM']){
+                $insertData[$k]['PROFILE_CHECKSUM']=$v['OTHER_PROFILE_CHECKSUM'];
+              }
 
 				/*$dataSet =$insertData[$k];	
 			  	$this->insert($dataSet);
