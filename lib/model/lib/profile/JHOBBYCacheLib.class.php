@@ -18,7 +18,6 @@ class JHOBBYCacheLib extends TABLE{
 
         $criteria = "PROFILEID";
         $fields = "JHOBBY_EXISTS";
-        $storeName = "HOBBIES";
         $bServedFromCache = false;
 
        if($objProCacheLib->isCached($criteria,$pid,$fields,$storeName))
@@ -68,7 +67,6 @@ class JHOBBYCacheLib extends TABLE{
 
         $criteria = "PROFILEID";
         $fields = "JHOBBY_EXISTS";
-        $storeName = "HOBBIES";
         $bServedFromCache = false;
 
        if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__))
@@ -161,7 +159,6 @@ class JHOBBYCacheLib extends TABLE{
 
         $criteria = "PROFILEID";
         $fields = "JHOBBY_EXISTS";
-        $storeName = "HOBBIES";
         $bServedFromCache = false;
 
        if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__))
@@ -200,43 +197,52 @@ class JHOBBYCacheLib extends TABLE{
 
     }
     
- /*   
+    
      public function getUserHobbiesApi($pid)
         {
-            try 
-            {
-                if($pid)
-                { 
-                    $sql="select HOBBY,FAV_MOVIE,FAV_TVSHOW,FAV_FOOD,FAV_BOOK,FAV_VAC_DEST from newjs.JHOBBY where PROFILEID=:PROFILEID";
-                    $prep=$this->db->prepare($sql);
-                    $prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
-                    $prep->execute();
-          $this->logFunctionCalling(__FUNCTION__);
-                    $hobbies = array();
-                    if($result = $prep->fetch(PDO::FETCH_ASSOC))
-                    {
-                            $hobby=$result[HOBBY];
-                            if($result){
-                                if($hobby)
-                                $hobbies = $this->getHobbyValueApi($hobby);
-                                $hobbies["FAV_MOVIE"] = $result["FAV_MOVIE"];
-                                $hobbies["FAV_TVSHOW"] = $result["FAV_TVSHOW"];
-                                $hobbies["FAV_FOOD"] = $result["FAV_FOOD"];
-                                $hobbies["FAV_BOOK"] = $result["FAV_BOOK"];
-                                $hobbies["FAV_VAC_DEST"] = $result["FAV_VAC_DEST"];
-                            }
-                    }
-                    return $hobbies;
-                }
+        
+        $objProCacheLib = ProfileCacheLib::getInstance();
+
+        $criteria = "PROFILEID";
+        $fields = "JHOBBY_EXISTS";
+        $bServedFromCache = false;
+
+       if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__))
+       {
+        $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
+
+           if (false !== $result) {
+                $bServedFromCache = true;
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
             }
-            catch(PDOException $e)
-            {
-                /*** echo the sql statement and error message *
-                throw new jsException($e);
+
+            $result = $result['JHOBBY_EXISTS'];
+
+            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
+            
+            if($result && in_array($result, $validNotFilled)){
+                $result = 0;
             }
+
+       }
+
+        if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+            $this->logCacheConsumeCount(__CLASS__);
+            return $result;
+        }
+
+         //Get Data from Mysql
+        $objJHB = new NEWJS_HOBBIES($this->dbName); 
+
+        $result = $objJHB->getUserHobbiesApi($pid);
+   
+        $dummyResult['PROFILEID'] = $pid;
+        $dummyResult['JHOBBY_EXISTS'] = (intval($result) === 0) ? 'N' : $result;
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult,__CLASS__);
+        return $result;
         }
     
-  */  
+  
     public function getHobbyValueApi($hobby="")
     {
        $objProCacheLib = ProfileCacheLib::getInstance();
