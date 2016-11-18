@@ -56,8 +56,8 @@ EOF;
                 $finalArr[]=$tempArr;
             }
 
-            //$filepath = "/var/www/html/web/uploads/csv_files/";
-            $filepath = "/var/www/html/branches/mobile/web/uploads";
+            $filepath = "/var/www/html/web/uploads/csv_files/";
+            //$filepath = "/var/www/html/branches/mobile/web/uploads";
             $filename = $filepath."preAllocatedProfileMailer.csv";
             unlink($filename);
             $csvData = fopen("$filename", "w") or print_r("Cannot Open");
