@@ -266,6 +266,34 @@ class inboxActions extends sfActions
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
+					//
+					case "10":
+					$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
+					if($currentCount)
+					{
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+												$contactsObj = new ContactsRecords();
+												$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
+                                                       
+                                                }
+						$profileMemcacheObj->update("DECLINE",-$currentCount);
+						$profileMemcacheObj->updateMemcache();
+					}
+					break;
 
 			}
 			$respObj = ApiResponseHandler::getInstance();
@@ -560,7 +588,7 @@ public function executePerformV2(sfWebRequest $request)
 								$producerObj=new Producer();
 								if($producerObj->getRabbitMQServerConnected())
 								{
-									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINED_RECEIVED)), 'redeliveryCount'=>0 );
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
 									$producerObj->sendMessage($updateSeenData);
 								}
 								else
@@ -573,7 +601,7 @@ public function executePerformV2(sfWebRequest $request)
 								 $contactRObj=new EoiViewLog();
                                                                 $contactRObj->setEoiViewedForAReceiver($pid,'Y');
 								$contactsObj = new ContactsRecords();
-								$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINED_RECEIVED);
+								$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
                                                                
 							}
 							$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);
