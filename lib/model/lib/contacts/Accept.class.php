@@ -191,6 +191,7 @@ class Accept extends ContactEvent
         $profileMemcacheServiceViewedObj->update("ACC_ME_NEW",1);
         $profileMemcacheServiceViewerObj->update("DEC_BY_ME",-1);
         $profileMemcacheServiceViewedObj->update("DEC_ME",-1);
+        $profileMemcacheServiceViewedObj->update("DEC_ME_NEW",-1);
         if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
 		$profileMemcacheServiceViewedObj->update("DEC_ME_NEW",-1);
       }
