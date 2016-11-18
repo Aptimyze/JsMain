@@ -21,6 +21,8 @@ EOF;
 	protected function execute($arguments = array(), $options = array())
 	{
 		$elkServer = 'aura.infoedge.com';
+		// server at which data will be pushed
+		$indexElkServer = '10.10.18.66';
 		$elkPort = '9203';
 		$indexName = 'jeevansathiactivity';
 		$query = '_search';
@@ -74,8 +76,8 @@ EOF;
 					'ratio' => intval($ratio),
 					);
 			$count = json_encode($count);
-			$ObjectId = 1;
-			passthru("curl -XPOST 'localhost:9200/uptime-$currDate/json/$ObjectId' -d'$count'");
+			$ObjectId = time();
+			passthru("curl -XPOST '$indexElkServer:$elkPort/uptime/json/$ObjectId' -d'$count'");
 		}
 	}
 }
