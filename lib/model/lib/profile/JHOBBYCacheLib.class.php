@@ -1,19 +1,17 @@
 <?php
 class JHOBBYCacheLib extends TABLE{
-       
-}
         /**
          * @fn __construct
          * @brief Constructor function
          * @param $dbName - Database to which the connection would be made
-         */ /*
+         */ 
         private $dbName;
 
         public function __construct($dbname="")
         {
-            $this->dbName = $dbname
+            $this->dbName = $dbname;
         } 
-/*
+
     public function getAllHobby($hobby="",$pid)
     {   
         $objProCacheLib = ProfileCacheLib::getInstance();
@@ -25,7 +23,7 @@ class JHOBBYCacheLib extends TABLE{
 
        if($objProCacheLib->isCached($criteria,$pid,$fields,$storeName))
        {
-        $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, $storeName);
+        $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
 
            if (false !== $result) {
                 $bServedFromCache = true;
@@ -52,16 +50,16 @@ class JHOBBYCacheLib extends TABLE{
 
         $result = $objJHB->getAllHobby($hobby);
    
-        $dummyResult['PROFILEID'] = $profileid;
+        $dummyResult['PROFILEID'] = $pid;
         $dummyResult['JHOBBY_EXISTS'] = (intval($result) === 0) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, $storeName);
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         return $result;
 
     }
-*/
 
 
-/*
+
+
 
         public function getUserHobbies($pid, $onlyValues="")
         {
@@ -73,9 +71,9 @@ class JHOBBYCacheLib extends TABLE{
         $storeName = "HOBBIES";
         $bServedFromCache = false;
 
-       if($objProCacheLib->isCached($criteria,$pid,$fields,$storeName))
+       if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__))
        {
-        $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, $storeName);
+        $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
 
            if (false !== $result) {
                 $bServedFromCache = true;
@@ -100,14 +98,15 @@ class JHOBBYCacheLib extends TABLE{
          //Get Data from Mysql
         $objJHB = new NEWJS_HOBBIES($this->dbName); 
 
-        $result = $objJHB->getAllHobby($hobby);
+        $result = $objJHB->getUserHobbies($pid, $onlyValues);
    
         $dummyResult['PROFILEID'] = $profileid;
         $dummyResult['JHOBBY_EXISTS'] = (intval($result) === 0) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, $storeName);
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         return $result;
 
         }
+        /*
     public function update($pid,$paramArr=array())
     {
    
@@ -152,34 +151,56 @@ class JHOBBYCacheLib extends TABLE{
                 }
     }
 
-    
+/**    
     This function is used to get all data related to HOBBY,INTEREST and LANGUAGE
     @return - resultset array
-      
+   **/   
     public function getHobbiesAndInterestAndSpokenLanguage()
     {
-        try
-        {
-            $sql = "SELECT LABEL,VALUE,IF(TYPE='HOBBY','H',IF(TYPE='INTEREST','I','L')) AS TYPE FROM newjs.HOBBIES WHERE TYPE IN (:TYPE1,:TYPE2,:TYPE3) ORDER BY SORTBY";
-            $res = $this->db->prepare($sql);
-            $res->bindValue(":TYPE1", 'HOBBY',PDO::PARAM_STR);
-            $res->bindValue(":TYPE2", 'INTEREST',PDO::PARAM_STR);
-            $res->bindValue(":TYPE3", 'LANGUAGE',PDO::PARAM_STR);
-            $res->execute();
-      $this->logFunctionCalling(__FUNCTION__);
-            while($row = $res->fetch(PDO::FETCH_ASSOC))
-                        {
-                                $output[] = $row;
-                        }
+        $objProCacheLib = ProfileCacheLib::getInstance();
+
+        $criteria = "PROFILEID";
+        $fields = "JHOBBY_EXISTS";
+        $storeName = "HOBBIES";
+        $bServedFromCache = false;
+
+       if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__))
+       {
+        $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
+
+           if (false !== $result) {
+                $bServedFromCache = true;
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+            }
+
+            $result = $result['JHOBBY_EXISTS'];
+
+            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
+            
+            if($result && in_array($result, $validNotFilled)){
+                $result = 0;
+            }
+
+       }
+
+        if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+            $this->logCacheConsumeCount(__CLASS__);
+            return $result;
         }
-        catch(PDOException $e)
-        {
-            throw new jsException($e);
-        }
-        return $output;
+
+         //Get Data from Mysql
+        $objJHB = new NEWJS_HOBBIES($this->dbName); 
+
+        $result = $objJHB->getHobbiesAndInterestAndSpokenLanguage();
+   
+        $dummyResult['PROFILEID'] = $pid;
+        $dummyResult['JHOBBY_EXISTS'] = (intval($result) === 0) ? 'N' : $result;
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult,__CLASS__);
+        return $result;
+
     }
     
-    
+ /*   
      public function getUserHobbiesApi($pid)
         {
             try 
@@ -210,49 +231,55 @@ class JHOBBYCacheLib extends TABLE{
             }
             catch(PDOException $e)
             {
-                /*** echo the sql statement and error message **
+                /*** echo the sql statement and error message *
                 throw new jsException($e);
             }
         }
     
-    
+  */  
     public function getHobbyValueApi($hobby="")
     {
-        try
-        {
-            if($hobby)
-            {
-                $sql="select SQL_CACHE TYPE,LABEL,VALUE from newjs.HOBBIES where VALUE IN ($hobby) order by SORTBY";
-                $prep=$this->db->prepare($sql);
-                $prep->execute();
-        $this->logFunctionCalling(__FUNCTION__);
-                while($result = $prep->fetch(PDO::FETCH_ASSOC))
-                {
-                    $res[$result[TYPE]]["LABEL"][]=$result[LABEL];
-                    $res[$result[TYPE]]["VALUE"][]=$result[VALUE];
-                }
-                
-                if(is_array($res))
-                    foreach($res as $key=>$val)
-                    {
-                        foreach($val as $k=>$v)
-                        {
-                            if($k=="LABEL")
-                                $hobbies[$key][$k]=implode(", ",$v);
-                            else
-                                $hobbies[$key][$k]=implode(",",$v);
-                        }
-                        //$hobbies[$key]=implode(", ",$val);
-                    }
-                if(is_array($hobbies))
-                    return $hobbies;
+       $objProCacheLib = ProfileCacheLib::getInstance();
+
+        $criteria = "PROFILEID";
+        $fields = "JHOBBY_EXISTS";
+        $storeName = "HOBBIES";
+        $bServedFromCache = false;
+
+       if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__))
+       {
+        $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
+
+           if (false !== $result) {
+                $bServedFromCache = true;
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
             }
+
+            $result = $result['JHOBBY_EXISTS'];
+
+            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
+            
+            if($result && in_array($result, $validNotFilled)){
+                $result = 0;
+            }
+
+       }
+
+        if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+            $this->logCacheConsumeCount(__CLASS__);
+            return $result;
         }
-        catch(PDOException $e)
-        {
-            /*** echo the sql statement and error message ***
-            throw new jsException($e);
-        }
+
+         //Get Data from Mysql
+        $objJHB = new NEWJS_HOBBIES($this->dbName); 
+
+        $result = $objJHB->getHobbyValueApi($hobby);
+   
+        $dummyResult['PROFILEID'] = $pid;
+        $dummyResult['JHOBBY_EXISTS'] = (intval($result) === 0) ? 'N' : $result;
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
+        return $result;
+
     }
   
     private function logFunctionCalling($funName)
@@ -274,4 +301,3 @@ class JHOBBYCacheLib extends TABLE{
 }
 
 ?>
-*/
