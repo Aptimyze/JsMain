@@ -468,6 +468,18 @@ public function executeCALRedirection($request){
 	$this->PREV_URL=$this->getRequestURI();
 	$this->SITE_URL=sfConfig::get("app_site_url");
         if(MobileCommon::isNewMobileSite()){
+
+          include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
+          $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
+          $this->hamCss='css/'.getCssFileName('jsms/hamburger/ham_css').'.css';   
+          $this->cssArray = getCommaSeparatedCSSFileNames(array(
+            'jsms/common/commoncss',
+            'jsms/common/errorBar',
+            'jsms/common/fonts',
+            'jsms/common/mediaquery',
+            'jsms/common/jsmsApp_promo_css',
+            'rippleEffectCommon_css'));
+
             $request->setAttribute('mobLogoutPage','Y');
             $this->setTemplate("newMobLogin");
             if ($request->getParameter('regMsg')=='Y')   

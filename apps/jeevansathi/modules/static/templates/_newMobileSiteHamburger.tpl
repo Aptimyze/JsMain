@@ -112,7 +112,7 @@
                     <li><a href="/search/perform?reverseDpp=1" bind-slide=1 class="white">Members Looking For Me</a></li>
                    
                     
-                    <li><a href="/profile/contacts_made_received.php?page=visitors&filter=R" bind-slide=1 class="white">Profile Visitors ~if $profileMemcacheObj->get('VISITOR_ALERT')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('VISITOR_ALERT')`</span> ~/if`</a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=A" bind-slide=1 class="white">Profile Visitors ~if 0`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('VISITOR_ALERT')`</span> ~/if`</a></li>
                     
                    <!-- <li><a href="#" bind-slide=1 class="white">Kundli Matches</a></li>-->
                     
