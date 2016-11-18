@@ -291,9 +291,6 @@ class postEOIv2Action extends sfAction
 		if(MobileCommon::isNewMobileSite())
 		{
 			
-			// $responseArray = array();
-			// $responseArray['buttons'] = $buttons;
-			// $finalresponseArray["button_after_action"] = ButtonResponseFinal::buttonDetailsMerge($responseArray);
 			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
 			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;
