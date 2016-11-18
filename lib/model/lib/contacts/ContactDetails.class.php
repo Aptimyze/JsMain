@@ -862,7 +862,7 @@ class ContactDetails {
 		else
 			$this->setVERIFIED_ALT_MOB(Messages::NO);
 			
-		if(($altArr["SHOWALT_MOBILE"]==Messages::YES || ($altArr["SHOWALT_MOBILE"]=="C" && ($this->contactHandlerObj->getContactType() == ContactHandler::ACCEPT ||($this->contactHandlerObj->getContactType() == ContactHandler::INITIATED && $this->contactHandlerObj->getContactInitiator() == ContactHandler::RECEIVER))))&& $altArr["ALT_MOBILE"] && $ALT_NUM!="I") 
+		if(($altArr["SHOWALT_MOBILE"]==Messages::YES || $altArr["SHOWALT_MOBILE"]=="" || ($altArr["SHOWALT_MOBILE"]=="C" && ($this->contactHandlerObj->getContactType() == ContactHandler::ACCEPT ||($this->contactHandlerObj->getContactType() == ContactHandler::INITIATED && $this->contactHandlerObj->getContactInitiator() == ContactHandler::RECEIVER))))&& $altArr["ALT_MOBILE"] && $ALT_NUM!="I") 
 		{
 				if($altArr["ALT_MOBILE_ISD"])
 					$altIsd = $altArr["ALT_MOBILE_ISD"]."-";
