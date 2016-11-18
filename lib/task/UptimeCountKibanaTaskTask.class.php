@@ -21,22 +21,18 @@ EOF;
 	protected function execute($arguments = array(), $options = array())
 	{
 		$elkServer = 'aura.infoedge.com';
-		// server at which data will be pushed
-		$indexElkServer = '10.10.18.66';
 		$elkPort = '9203';
 		$indexName = 'jeevansathiactivity';
 		$query = '_search';
 		$timeout = 5000;
-		$currDate = date('Y.m.d');
-		$dirPath = '/data/applogs';
-		$filePath = $dirPath."/UptimeCounts.log";
 		$interval = 24;
-		$date = date('Y-m-d', strtotime('-1 day'));
+		$day = 1;
+		// server at which data will be pushed
+		$indexElkServer = '10.10.18.66';
+		$indexElkPort = '9200';
+		$pushIndexName = 'uptime';
+		$date = date('Y-m-d', strtotime("-$day day"));
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
-
-		if (false === is_dir($dirPath)) {
-			mkdir($dirPath,0777,true);
-		}
 		$rcode200 = "200";
 		$rcode500 = "500";
 		// Calculates the aggregated sum of counts of Rcodes
@@ -46,7 +42,7 @@ EOF;
 					"query" => "*",
 					"analyze_wildcard" => true ]],
 					"filter" => ["bool"=>["must"=>[["range"=> [
-						"ACTIVITY_DATE"=> [ "gte"=> "now-".$interval."h", "lte"=> "now"]]]],
+						"ACTIVITY_DATE"=> [ "gte"=> "now-".($day*$interval)."h", "lte"=> "now-".(($day-1)*$interval)."h"]]]],
 				]]]],
 				"aggs"=> [
 					"2"=> [
@@ -77,7 +73,7 @@ EOF;
 					);
 			$count = json_encode($count);
 			$ObjectId = time();
-			passthru("curl -XPOST '$indexElkServer:$elkPort/uptime/json/$ObjectId' -d'$count'");
+			passthru("curl -XPOST '$indexElkServer:$indexElkPort/$pushIndexName/json/$ObjectId' -d'$count'");
 		}
 	}
 }
