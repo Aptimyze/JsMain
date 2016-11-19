@@ -7,7 +7,7 @@
  */
 class inappropriateUsersReportTask extends sfBaseTask
 {
-  public static $cronLIVEDate='2016-11-16';
+  public static $cronLIVEDate='2016-11-19';
   protected function configure()
   {
 
@@ -43,13 +43,13 @@ EOF;
                 {
                 $data.="\r\n".$value['USERNAME'].','.$value['RCOUNT'].','.$value['MCOUNT'].','.$value['ACOUNT'].','.$value['TCOUNT'];
                 }
-                     SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Inappropriate Users Summary for $todayDate","noreply@jeevansathi.com",'','',$data,'','inappropriateUsers_'.$todayDate.".csv");
+                SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Inappropriate Users Summary for $todayDate","noreply@jeevansathi.com",'','',$data,'','inappropriateUsers_'.$todayDate.".csv");
 
 
   }
 
 
-  public function isLast7Max($value,$reportObj)
+  public function isLast7Max($value,$reportObj,$uname)
     {
         $dateStart = date('Y-m-d',strtotime("-7 day"));
         $dateEnd = date('Y-m-d',strtotime("-1 day"));
@@ -64,8 +64,10 @@ EOF;
       $return['MCOUNT'] += $value[$date1]['MCOUNT'];
 
       }  
-      if(!$MAX['MAX'] || $return['TCOUNT']>$MAX['MAX'])
+      if(!$MAX['MAX'] || $return['TCOUNT']>$MAX['MAX']){
+          $return['USERNAME']=$uname;
           return $return;
+      }
       return false;
     }
 
@@ -94,7 +96,7 @@ EOF;
                         foreach ($groupedByUsername as $key => $value) 
                         {
 
-                                if($tempVal=$this->isLast7Max($value,$reportObjSlave))
+                                if($tempVal=$this->isLast7Max($value,$reportObjSlave,$key))
                                 {
                                 $this->finalResultsArray[] = $tempVal;
                                 $Tarray[]=$tempVal['TCOUNT'];
