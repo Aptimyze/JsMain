@@ -98,12 +98,13 @@ EOF;
                                 if($tempVal=$this->isLast7Max($value,$reportObjSlave))
                                 {
                                 $this->finalResultsArray[] = $tempVal;
+                                $Tarray[]=$tempVal['TCOUNT'];
                                 $reportObj->insert($value['PROFILEID'],$tempVal['TCOUNT'],$tempVal['RCOUNT'],$tempVal['ACOUNT'],$tempVal['MCOUNT'],$key);
                                 }
                                 unset($groupedByUsername[$key]);
                         }
                     }
-//                    array_multisort($Tarray, SORT_DESC, SORT_NUMERIC, $this->finalResultsArray);
+                    array_multisort($Tarray, SORT_DESC, SORT_NUMERIC, $this->finalResultsArray);
     }
 
   
