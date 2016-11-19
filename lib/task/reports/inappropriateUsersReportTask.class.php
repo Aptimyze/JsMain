@@ -73,7 +73,6 @@ EOF;
     public function getDataForToday(){
                     $reportObjSlave = new MIS_INAPPROPRIATE_USERS_REPORT('newjs_slave');
                     $reportObj = new MIS_INAPPROPRIATE_USERS_REPORT();
-                    self::$dayDiff = floor((time()-strtotime(self::$cronLIVEDate))/(60 * 60 * 24));
                     $yesterDate=date('Y-m-d',strtotime("-1 day"));
                     $startDate=date('Y-m-d',strtotime("-7 day"));
                     $chunks=10;
