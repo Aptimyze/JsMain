@@ -30,7 +30,10 @@ class GetMultiUserPhotoV1Action extends sfActions
 		{
 //VA Whitelisting
 			if($v!='' && !in_array($v,$whitelistedPhotoTypes))
+			{
 				SendMail::send_email("eshajain88@gmail.com,lavesh.rawat@gmail.com","apps/jeevansathi/modules/social/actions/GetMultiUserPhotoV1Action.class.php phototype not whitelisted and came as".$v." for profile ".$pid,"GetMultiUserPhotoV1Action.class.php phototype not whitelisted");
+				$photoTypeArr[$k]="ProfilePic120Url";
+			}
 
 		}
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
