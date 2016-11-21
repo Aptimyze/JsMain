@@ -1410,11 +1410,11 @@ class DetailedViewApi
         return 'Y';
       }
       
-      $horoscope = new newjs_HOROSCOPE();
+      /*$horoscope = new newjs_HOROSCOPE();
 			$result = $horoscope->getIfHoroscopePresent($this->m_objProfile->getPROFILEID());
 			if ($result == 1) {
 				return 'Y';
-      }
+      }*/
       return 'N';
     }
     

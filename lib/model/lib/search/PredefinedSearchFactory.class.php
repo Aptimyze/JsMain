@@ -52,6 +52,9 @@ class PredefinedSearchFactory
                         case 'ContactViewAttempts' :
                                 $object = new ContactViewAttempts($loggedInProfileObj);
                                 break;
+			case 'MatchOfDay':
+				$object = new MatchOfDay($loggedInProfileObj);
+				break;
                         case 'lastSearchResults'  :
                                 $object = new lastSearchResults($loggedInProfileObj);
                                 break;

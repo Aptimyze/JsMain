@@ -142,7 +142,7 @@
                     <div class="pl30 prflist1 fontlig js-basicView">
                       <p class="f24 pt25 fontlig" id="nameLabelParent"><span class="edpcolr2" >Full Name</span> - 
                         ~if isset($arrOutDisplay.about.name) and $arrOutDisplay.about.name neq $notFilledInText`
-                          <span class="color11" id='nameView'>
+                          <span class="color11 js-syncChatHeaderName" id='nameView'>
                             ~$name`
                           </span>
                           ~else`
