@@ -498,7 +498,7 @@ strophieWrapper.sendPresence();
         if(response != undefined){
             $.each(response,function(profileid,nodeObj){
                 if (strophieWrapper.isItSelfUser(profileid) == false) {
-                    if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && (strophieWrapper.Roster[profileid] == undefined || strophieWrapper.checkForGroups(strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"]) == false)){
+                    if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && (strophieWrapper.Roster[profileid] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == undefined)){
                         strophieWrapper.NonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
                     }
                 }
