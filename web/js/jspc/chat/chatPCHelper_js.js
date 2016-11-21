@@ -665,7 +665,8 @@ function getSelfName(){
 
 function checkForSiteLoggedOutMode(response){
     if(typeof response != "undefined" && response["responseStatusCode"] == "9"){
-        window.location.href = "/";
+        //window.location.href = "/";
+        location.reload();
     }
 }
 
