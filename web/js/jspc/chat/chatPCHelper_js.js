@@ -1691,6 +1691,7 @@ $(document).ready(function () {
                 //clear polling of non roster groups listing
                 clearNonRosterPollingInterval();
                 strophieWrapper.disconnect();
+                strophieWrapper.Roster = {};
                 eraseCookie("chatAuth");
                 manageListingPhotoReqFlag("reset");
                 if(fromSiteLogout == "true"){
