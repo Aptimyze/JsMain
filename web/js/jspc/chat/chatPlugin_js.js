@@ -782,7 +782,7 @@ JsChat.prototype = {
                 //console.log("33");
                 localStorage.setItem("lastUId",$(".tabUId").attr("id"));
             }
-            updatePresenceAfterInterval();
+            //updatePresenceAfterInterval();
         });
         /*
         $(window).focus(function () {

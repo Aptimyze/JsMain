@@ -337,7 +337,7 @@ chatConfig.Params = {
         autoChatLogin:((hideUnimportantFeatureAtPeakLoad == "1") ? false : true),  //auto-login to chat on site login
         rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
         clearListingCacheTimeout:86400000, //Time in milliseconds(1 day)
-        listingRefreshTimeout:600000, //Time in milliseconds (10 min)
+        //listingRefreshTimeout:600000, //Time in milliseconds (10 min)
         nonRosterListingRefreshCap:nonRosterRefreshUpdate, //time in ms(5 min)
         headerCachingAge:60000   //time in ms(5 min)
     }
