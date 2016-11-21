@@ -412,5 +412,96 @@ class NotificationDataPool
         unset($tempArray);
         return $data;
     }
+    
+    public function getMatchOfDayData($applicableProfiles){
+        if($applicableProfiles){
+            $date = date("Y-m-d", strtotime("-30 days",strtotime(date('Y-m-d'))));
+            $matchOfDayMasterObj = new MOBILE_API_MATCH_OF_DAY();
+            $matchOfDayMasterObj->deleteLessthanDays($date);
+            $counter = 0;
+            $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY("newjs_slave");
+            $curDate = date('Y-m-d');
+            $paramsArr["ENTRY_DT"] = date('Y-m-d', strtotime('-7 day',  strtotime($curDate)));
+            $matchCount = $matchOfDayObj->getCountForMatchProfile();
+            foreach($applicableProfiles as $profileid => $details){
+                $searchResult = SearchCommonFunctions::getMatchofTheDay($profileid);
+                $resultSet = $searchResult["PIDS"];
+                $paramsArr["PROFILEID"] = $profileid;
+                $nameOfUserProfiles[] = $profileid;
+                if($searchResult["CNT"] > 0){
+                    unset($resultToFilter);
+                    $resultToFilter = $matchOfDayObj->getMatchForProfileTillDays($paramsArr);
+                    if($resultToFilter){
+                        $resultSet = array_diff($resultSet, $resultToFilter);
+                    }
+                    $copyResultSet = $resultSet;
+                    unset($firstResult);
+                    unset($minResult);
+                    foreach($resultSet as $key => $value){
+                        if($matchCount[$value]){
+                            if(!$minResult){
+                                $minResult["MATCH_PROFILEID"] = $value;
+                                $minResult["MATCH_COUNT"] = $matchCount[$value];
+                            }
+                            if($minResult && ($matchCount[$value] < $minResult["MATCH_COUNT"])){
+                                $minResult["MATCH_PROFILEID"] = $value;
+                                $minResult["MATCH_COUNT"] = $matchCount[$value];
+                            }
+                            unset($copyResultSet[$key]);
+                        }
+                    }
+                    if($copyResultSet){
+                        reset($copyResultSet);
+                        $resultMatchProfileid = current($copyResultSet);
+                    }
+                    else{
+                        $resultMatchProfileid = $minResult["MATCH_PROFILEID"];
+                    }
+                    if($resultMatchProfileid){
+                        $matchedProfiles[$profileid] = $resultMatchProfileid;
+                        $otherProfiles[] = $resultMatchProfileid;
+                        $nameOfUserProfiles[] = $resultMatchProfileid;
+                        //$dataAccumulated[$counter];
+                        //print_r($resultMatchProfileid."\n");
+                    }
+                }
+            }
+            if(is_array($otherProfiles))
+            {
+                $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="JPROFILE","newjs_masterRep");
+                $profileStr = implode(",",$nameOfUserProfiles);
+                $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+                $queryParam["PROFILEID"] = $profileStr;
+                $nameOfUserDetails = $nameOfUserObj->getArray($queryParam,'',"",$fields="*");
+                foreach ($nameOfUserDetails as $key => $val){
+                    $nameDetails[$val["PROFILEID"]] = $val;
+                }
+            }
+            unset($otherProfiles);
+            unset($nameOfUserProfiles);
+            $counter = 0;
+            if(is_array($matchedProfiles))
+            {
+                foreach($matchedProfiles as $k1=>$v1)
+                {
+                    
+                    $dataAccumulated[$counter]['SELF']=$applicableProfiles[$k1];
+                    if($getOtherProfilesData[$v1]){
+                        $dataAccumulated[$counter]['OTHER'][]=$getOtherProfilesData[$v1];
+                        $dataAccumulated[$counter]['ICON_PROFILEID']=$getOtherProfilesData[$v1]["PROFILEID"];
+                        if($nameDetails[$k1]["DISPLAY"] == "Y" && $nameDetails[$v1]["DISPLAY"] == "Y"){
+                            $dataAccumulated[$counter]['NAME_OF_USER']= $nameDetails[$v1]["NAME"];
+                        }
+                    }
+                    $dataAccumulated[$counter]['COUNT'] = "SINGLE";
+                    $counter++;
+                    $matchOfDayMasterObj->insert($k1,$v1);
+                }
+            }
+            unset($matchOfDayMasterObj);
+            unset($matchedProfiles);
+            return $dataAccumulated;
+        }
+    }
 }
 ?>

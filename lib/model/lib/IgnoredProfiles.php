@@ -8,7 +8,7 @@
 class IgnoredProfiles
 {
         protected $dbname = "";
-        private $measurePerformance = true;
+        private $measurePerformance = false;
         /**
          * Constructor to set DB
          * @param type $dbname
@@ -55,6 +55,10 @@ class IgnoredProfiles
         		if($seperator == "spaceSeperator")
         		{
         			$resultArr = implode(" ",$resultArr);
+        			if($resultArr !="")
+        			{
+        				$resultArr.= " ";
+        			}
         		}        		
         		return $resultArr;        		
         	}
@@ -133,14 +137,14 @@ class IgnoredProfiles
 		return $ignoredProfile;
 	}
 
-	public function ifIgnored($profileid,$otherProfileId)
+	public function ifIgnored($profileid,$otherProfileId,$suffix="")
 	{
 		 $this->addDataToFile("old");
-		 $response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($profileid,$otherProfileId);
+		 $response = IgnoredProfileCacheLib::getInstance()->checkIfDataExists($profileid,$otherProfileId,$suffix);
 		 if($response == "noKey" || $response == false)
 		 {
 		 	$ignoreObj = new newjs_IGNORE_PROFILE($this->dbname);
-		 	$this->addDataToFile("new");
+		 	$this->addDataToFile("new");	
 			return $ignoreObj->isIgnored($profileid,$otherProfileId);
 		 }
 		 elseif($response == 1)

@@ -34,8 +34,8 @@ class viewProfileOptimization{
         if(self::$sender){
             $ignore=new IgnoredProfiles("newjs_master");
             //he ignored
-            $otherIgnored = $ignore->ifIgnored(self::$receiver,self::$sender);
-            if($ignore->ifIgnored(self::$sender,self::$receiver)){
+            $otherIgnored = $ignore->ifIgnored(self::$receiver,self::$sender,"byMe");
+            if($ignore->ifIgnored(self::$sender,self::$receiver,"byMe")){
                     $ignore=1; //I Ignored
             }
             elseif($otherIgnored)
@@ -50,7 +50,7 @@ class viewProfileOptimization{
             $bookmark= new NEWJS_BOOKMARKS("newjs_masterRep");
             $this->statusArr["isBookmarked"] = $bookmark->isBookmarked(self::$sender,self::$receiver);
         }
-            $fsoObj = new PROFILE_VERIFICATION_FSO("newjs_masterRep");
+            $fsoObj = ProfileFSO::getInstance("newjs_masterRep");
             $this->statusArr["fsoStatus"] = $fsoObj->check(self::$receiver);
             $hobbyObj=new NEWJS_HOBBIES("newjs_masterRep");
             $this->statusArr["hobbies"] = $hobbyObj->getUserHobbies(self::$receiver);

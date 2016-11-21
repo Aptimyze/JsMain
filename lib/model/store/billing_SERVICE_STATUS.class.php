@@ -397,6 +397,24 @@ class BILLING_SERVICE_STATUS extends TABLE {
         }
     }
 
+    public function checkJsExclusiveServiceIDEver($profileId)
+    {
+        try
+        {
+            $sql="SELECT SERVICEID FROM billing.SERVICE_STATUS WHERE PROFILEID=:PROFILEID AND SERVICEID LIKE '%X%'"; 
+            $prep=$this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
+            $prep->execute();
+            $res = $prep->fetch(PDO::FETCH_ASSOC);
+            return $res;
+        }
+        catch(PDOException $e)
+        {
+            /*** echo the sql statement and error message ***/
+            throw new jsException($e);
+        }
+    }
+
     public function getLastActiveServiceDetails($profileid)
     {
         try

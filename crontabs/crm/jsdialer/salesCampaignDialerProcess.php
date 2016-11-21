@@ -5,10 +5,12 @@
 * MADE BY     	: MANOJ RANA 
 *********************************************************************************************/
 include("MysqlDbConstants.class.php");
+include("DialerLog.class.php");
+$dialerLogObj =new DialerLog();
 
 //Open connection at JSDB
 $db_js = mysql_connect(MysqlDbConstants::$misSlave['HOST'],MysqlDbConstants::$misSlave['USER'],MysqlDbConstants::$misSlave['PASS']) or die("Unable to connect to nmit server");
-$db_master = mysql_connect(MysqlDbConstants::$master['HOST'],MysqlDbConstants::$master['USER'],MysqlDbConstants::$master['PASS']) or die("Unable to connect to nmit server ");
+$db_master = mysql_connect(MysqlDbConstants::$master1['HOST'],MysqlDbConstants::$master1['USER'],MysqlDbConstants::$master1['PASS']) or die("Unable to connect to nmit server ");
 $db_dialer = mssql_connect(MysqlDbConstants::$dialer['HOST'],MysqlDbConstants::$dialer['USER'],MysqlDbConstants::$dialer['PASS']) or die("Unable to connect to dialer server");
 
 mysql_query("set session wait_timeout=600",$db_master);
@@ -25,7 +27,7 @@ mysql_query($sqlTrunc,$db_master) or die($sqlTrunc.mysql_error($db_master));
 foreach($campaignArr as $key=>$campaignName){	
 
 	$squery1 = "select distinct(PHONE_NO1) as PHONE_NO from easy.dbo.ct_$campaignName where Last_call_date between '$startDt' and '$endDate'";
-	$sresult1 = mssql_query($squery1,$db_dialer) or logerror($squery1,$db_dialer);
+	$sresult1 = mssql_query($squery1,$db_dialer) or $dialerLogObj->logError($squery1,$campaignName,$db_dialer,1);
 	while($srow1 = mssql_fetch_array($sresult1))
 	{
 		$phoneNo =$srow1["PHONE_NO"];

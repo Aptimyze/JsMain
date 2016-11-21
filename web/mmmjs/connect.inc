@@ -1282,7 +1282,6 @@ function label_select($columnname,$value,$database="")
 
 function logError($message,$query="",$critical="exit", $sendmailto="NO")
 {
-		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($message));
         global $db, $smarty, $checksum;
         ob_start();
         var_dump($_SERVER);
@@ -1296,6 +1295,7 @@ function logError($message,$query="",$critical="exit", $sendmailto="NO")
         //for resman
         //$errorstring.="\" >> /usr/local/apache/sites/site2/manager/logs/resmgr.err
         passthru($errorstring);
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorstring));
         $errorstring.="\n#Details : $ret_val";
         if($sendmailto!="NO")
                 $b=mail($sendmailto,"ERROR in new resman connect", $errorstring);

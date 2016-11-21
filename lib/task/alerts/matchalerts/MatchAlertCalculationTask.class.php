@@ -7,9 +7,10 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $limit = 5000;
 	private $limitNtRec = 16;
 	private $limitTRec = 10;
-        private $minDppIntersectionCnt = 50;
-        private $idealTrendsResultsNo=10;
-        private $idealNonTrendsResultsNo=16;
+	private $limitTRecTemp = 10;
+	private $LowDppCountCachetime = 25200; // 1 week
+	private $LowDppLimit = 10;
+	const clusterRecordLimit = 10;
         
 	protected function configure()
   	{
@@ -52,6 +53,8 @@ EOF;
 			/**
 			* Fetch Ids to be send.
 			*/
+                        
+                        $memObject=JsMemcache::getInstance();
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
                         //$arr = array(7043932=>1,144111=>1);
@@ -59,47 +62,62 @@ EOF;
 			{
 				foreach($arr as $profileid=>$v)
 				{
-                                  if($v != 1)
-                                    $v = 0;
+                                  if($v["HASTRENDS"] != 1)
+                                    $v["HASTRENDS"] = 0;
 					/**
 					* update flag.
 					*/
 					$matchalerts_MATCHALERTS_TO_BE_SENT->update($profileid);
-
 					$loggedInProfileObj = LoggedInProfile::getInstance();
 					$loggedInProfileObj->getDetail($profileid,"PROFILEID","*");
 
-					$trends = $v;
+					$trends = $v["HASTRENDS"];
+                                        $matchesSetting = $v["PERSONAL_MATCHES"];
 					if($loggedInProfileObj->getPROFILEID())
 					{
+                                                $returnTotalCountWithCluster = 0;
 						if($trends)
 						{
-                                                        $includeDppCnt = 1;
-                                                        $sendIntersectionMatches=1;
-                                                        $toSendFromIntersection = 1;
+                                                        $profiles = array();
 							/*
-							* Two mails willl be snet to user if has trends
+							* Two mails willl be sent to user if has trends
 							*/
-                                                        $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT);
-							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt);
-                                                        if($totalResults == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
-                                                               $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
-                                                        $profileId = $loggedInProfileObj->getPROFILEID();
-                                                        $isProfileEligible = logAndFetchProfilesForZeroMatches::checkIfProfileIsEligible($profileId);
-                                                        if($totalResults >= $this->minDppIntersectionCnt && $isProfileEligible)
-                                                         {
-                                                            $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec);   
-                                                            $toSendFromIntersection = $StrategyReceiversT->getMatches($sendIntersectionMatches);
-                                                            if(!$toSendFromIntersection){
-                                                                $StrategyReceiversT->getMatches();
-                                                                logAndFetchProfilesForZeroMatches::insertEntry($profileId);
-                                                            }
+
+                                                        $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
+							$totalResults = $StrategyReceiversNT->getMatches('',1,array(),$matchesSetting);
+                                                        if($totalResults["CNT"] == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
+                                                                $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
+                                                        
+                                                        // Set Low Dpp flag
+                                            //            $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                       
+                                                        if($totalResults["LOGIN_SCORE"] > self::clusterRecordLimit){
+                                                                $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithTrendsScoreSort);
+                                                                $totalResults = $StrategyReceiversNT->getMatches('',0,array(),$matchesSetting); 
+                                                                if($totalResults["profiles"])
+                                                                        $profiles = array_merge($profiles,$totalResults["profiles"]);
                                                         }
-                                                        else{
-                                                            $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRec);   
-                                                            $StrategyReceiversT->getMatches();
+                                                        
+                                                        if(count($profiles)<$this->limitTRec){
+                                                                $this->limitTRecTemp = abs($this->limitTRec - count($profiles));
+                                                                $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRecTemp,MailerConfigVariables::$TrendsLoggedinWithTrendsScoreSort);   
+                                                                $totalResults = $StrategyReceiversT->getMatches($profiles,$matchesSetting);
+                                                                if($totalResults["profiles"])
+                                                                        $profiles = array_merge($profiles,$totalResults["profiles"]);
+                                                                
+                                                                if(count($profiles)<$this->limitTRec){
+                                                                        
+                                                                        $this->limitTRecTemp = abs($this->limitTRec - count($profiles));
+                                                                        $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRecTemp,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppNotLoggedinWithLoginDateSort);                                                                                                        $totalResults = $StrategyReceiversNT->getMatches('',0,$profiles,$matchesSetting);
+                                                                        if($totalResults["profiles"])
+                                                                                $profiles = array_merge($profiles,$totalResults["profiles"]);
+                                                                        
+                                                                        if(count($profiles)<$this->limitTRec){
+                                                                                $this->limitTRecTemp = abs($this->limitTRec - count($profiles));
+                                                                                $StrategyReceiversT = new TrendsBasedMatchAlertsStrategy($loggedInProfileObj, $this->limitTRecTemp,MailerConfigVariables::$TrendsNotLoggedinWithLoginDateSort);
+                                                                                $totalResults = $StrategyReceiversT->getMatches($profiles,$matchesSetting);
+                                                                        }
+                                                                }
                                                         }
-                                                            
 						}
 						else
 						{
@@ -107,11 +125,17 @@ EOF;
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
                                                         $includeDppCnt = 1;
-							$StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$strategyReceiversNT);
-							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt);
-                                                        if($totalResults == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
+							$StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$strategyReceiversNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
+							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$returnTotalCountWithCluster,array(),$matchesSetting);
+                                                        if($totalResults["CNT"] == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                 $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
-						}	
+                                                        
+                                                        // Set Low Dpp flag
+                                                   //     $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
+						}
+                                                $memObject->remove('SEARCH_JPARTNER_'.$profileid);
+                                                $memObject->remove('SEARCH_MA_IGNOREPROFILE_'.$profileid);
+
 					}
 				}
 			
@@ -120,4 +144,16 @@ EOF;
 				$flag=0;
 		}while($flag);
 	}
+        /**
+         * This function sets low dpp cache flag.
+         * @param type $memObject Cahce Object
+         * @param type $profileid // profile id
+         */
+        private function setLowDppFlag($memObject,$profileid,$dppCount){
+                if($dppCount < $this->LowDppLimit){
+                        $memObject->set('MA_LOWDPP_FLAG_'.$profileid,1,$this->LowDppCountCachetime);
+                }else{
+                        $memObject->remove('MA_LOWDPP_FLAG_'.$profileid);
+                }       
+        }
 }

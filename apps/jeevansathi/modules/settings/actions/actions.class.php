@@ -106,7 +106,7 @@ class settingsActions extends sfActions
                 	//echo"sdh";
     			$hideDays=$request->getParameter("hideDays");
     			$hideDeleteObj->UpdateHide($privacy,$profileid,$hideDays);
-                $this->hideProfile($profileid);
+                //$this->hideProfile($profileid);
     			$DeleteProfileObj->callDeleteCronBasedOnId($profileid);
                     //code cookie
     			$webAuthObj = new WebAuthentication;
@@ -214,6 +214,9 @@ public function executeAlertManager(sfWebRequest $request){
         }
         else
         {
+            if (is_numeric($iProfileID) === false) {
+                return;
+            }
             $path = $_SERVER['DOCUMENT_ROOT']."/profile/deleteprofile_bg.php $iProfileID > /dev/null &";
             $cmd = JsConstants::$php5path." -q ".$path;
             passthru($cmd);

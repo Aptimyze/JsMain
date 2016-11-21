@@ -227,6 +227,7 @@ class chatActions extends sfActions
 			$photo = '';
 			$photoObj = $photosArr[$profileid];
 			if ($photoObj) {
+				$photoType = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $photoType);
 				eval('$temp =$photoObj->get' . $photoType . '();');
                 if(! (strstr($temp, '_vis_') || strstr($temp, 'photocomming') || strstr($temp, 'filtered')) )
                     $photo = $temp;

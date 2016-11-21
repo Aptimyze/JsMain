@@ -69,14 +69,17 @@ class commoninterfaceActions extends sfActions
 		}
 		else //if valid username was entered and profileid is obtained
 		{
-			global $protect;
-			JsCommon::oldIncludes();
-			$protect = new protect();
-			$protect->logout();
+			//global $protect;
+			//JsCommon::oldIncludes();
+			//$protect = new protect();
+			//$protect->logout();
 			$checksum = md5($this->profile->getPROFILEID()) . "i" . $this->profile->getPROFILEID();
-			$echecksum = $protect->js_encrypt($checksum);
-			$this->autologinUrl = JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
-			$this->profileid = $this->profile->getPROFILEID();
+		//	$echecksum = $protect->js_encrypt($checksum);
+			$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
+			$authenticationLoginObj->setTrackLogin(false);
+			$authenticationLoginObj->setCrmAdminAuthchecksum($checksum);
+			$this->autologinUrl = JsConstants::$siteUrl;//JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
+			//$this->profileid = $this->profile->getPROFILEID();
 		}
 	}
 	$this->setTemplate('generateAutologin');
@@ -210,7 +213,7 @@ class commoninterfaceActions extends sfActions
 	include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 	connect_db();
     $billingObj = new billing_SERVICE_STATUS("newjs_slave"); 
-    $activeServiceDetails =$billingObj->getActiveJsExclusiveServiceID($premiumProfileID);
+    $activeServiceDetails =$billingObj->checkJsExclusiveServiceIDEver($premiumProfileID);
     list($mainServiceID,$mainServiceDuration) = sscanf($activeServiceDetails["SERVICEID"], "%[A-Z]%d");
     if($mainServiceID == 'X')
     {
@@ -271,7 +274,7 @@ class commoninterfaceActions extends sfActions
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
-	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP();
+	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterDDL');
 	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}

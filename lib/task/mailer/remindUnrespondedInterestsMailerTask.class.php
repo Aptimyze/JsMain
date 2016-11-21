@@ -63,7 +63,7 @@ EOF;
                                         unset($jprofileArray);
                                         unset($jprofileArray2);
                                         unset($profileString);
-                                        $dbObShard = JsDbSharding::getShardNo($j);
+                                        $dbObShard = JsDbSharding::getShardNo($j,'Y');
 					$dbOb=new newjs_CONTACTS($dbObShard);
                                         $shardRemainder = $j%3;
                                         $remainderArray=array('divisor'=>$chunk,'remainder'=>$i,'shardRemainder' => $shardRemainder);

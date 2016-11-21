@@ -23,7 +23,7 @@ include ("../billing/comfunc_sums.php");
 include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/authentication.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
-
+use MessageQueues as MQ;
 $protect_obj = new protect;
 global $screen_time;
 global $FLAGS_VAL;
@@ -57,6 +57,12 @@ if (authenticated($cid)) {
 		unset($memcacheObj);
 	}
 	
+        // VA Whitelisting
+//        if($pid && !is_numeric($pid)){
+//            $http_msg=print_r($_SERVER,true);
+//            mail("ankitshukla125@gmail.com","Screen_new pid whitelisting","PID :$pid:$http_msg");
+//        }
+            
 	if ($Submit || $Submit1) {
 		
 		$check = screening_recheck($pid);
@@ -228,6 +234,8 @@ if (authenticated($cid)) {
 							
 							} 
 							$INCOMPLETE="Y";
+							$instantNotificationObj = new InstantAppNotification("INCOMPLETE_SCREENING");
+                			$instantNotificationObj->sendNotification($pid);
 						}
 					}
 						
@@ -416,6 +424,13 @@ if (authenticated($cid)) {
 						mysql_query_decide($sql_a) or die("$sql_a" . mysql_error_js());
 					}
 				}
+		/*
+			changing to get original and modified your info here and saving in table Profile
+		 */
+        $your_info = mysql_real_escape_string($arrProfileUpdateParams['YOURINFO']);
+        $your_info_original = mysql_real_escape_string($_POST['YOURINFO_ORIGINAL']);
+
+      
 				/*if (0)
 				 $sql.= "ACTIVATED = 'N' AND INCOMPLETE ='Y' ";*/
 				/*else
@@ -424,6 +439,17 @@ if (authenticated($cid)) {
 				//mysql_query_decide($sql) or die("$sql" . mysql_error_js());
         //Update JPROFILE Store
         $result = $objUpdate->editJPROFILE($arrProfileUpdateParams,$pid,'PROFILEID','activatedKey=1');
+
+	    /*
+	    	check for whether your_info_original was set or not.
+	    */
+        if ( strlen($your_info_original) !== 0 )
+        {
+	        $sql_junk_character_check = "INSERT INTO  `PROFILE`.`JUNK_CHARACTER_TEXT` (  `id` ,  `PROFILEID` ,  `original_text` ,  `modified_custom`) VALUES('',  '$pid',  '$your_info_original',  '$your_info');";
+			$result = mysql_query($sql_junk_character_check);
+        }
+
+
         if(false === $result) {
           die('Mysql error while updating JPROFILE at line 385');
         }
@@ -693,6 +719,12 @@ if (authenticated($cid)) {
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
+						$producerObj=new Producer();
+						if($producerObj->getRabbitMQServerConnected())
+						{
+							$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($sendMailData);
+						}
 						CommonFunction::sendWelcomeMailer($pid);
 					}
 						//send_email($to, $MESSAGE);
@@ -859,7 +891,7 @@ if (authenticated($cid)) {
 				exit;
 			}
 //			$profileid = "3187961";
-			$sql = "SELECT USERNAME, SCREENING,AGE,COUNTRY_RES,CITY_RES,MANGLIK,MTONGUE,RELIGION,CASTE,SUBCASTE,COUNTRY_BIRTH,CITY_BIRTH,GOTHRA,NAKSHATRA,MESSENGER_ID,YOURINFO,FAMILYINFO,SPOUSE,CONTACT,EDUCATION,EDU_LEVEL_NEW,PHONE_RES,PHONE_MOB,EMAIL,JOB_INFO,FATHER_INFO,SIBLING_INFO,PARENTS_CONTACT,ANCESTRAL_ORIGIN,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,RELATION,SOURCE,SUBSCRIPTION,GENDER,MSTATUS,DTOFBIRTH,PHOTO_DISPLAY,PHONE_FLAG,COMPANY_NAME,PROFILE_HANDLER_NAME,HAVE_JCONTACT,HAVE_JEDUCATION,GOTHRA_MATERNAL,INCOME from newjs.JPROFILE where activatedKey=1 and PROFILEID=$profileid";
+			$sql = "SELECT USERNAME, SCREENING,AGE,COUNTRY_RES,CITY_RES,MANGLIK,MTONGUE,RELIGION,CASTE,SUBCASTE,COUNTRY_BIRTH,CITY_BIRTH,GOTHRA,NAKSHATRA,MESSENGER_ID,YOURINFO,FAMILYINFO,SPOUSE,CONTACT,EDUCATION,EDU_LEVEL_NEW,PHONE_RES,PHONE_MOB,EMAIL,JOB_INFO,FATHER_INFO,SIBLING_INFO,PARENTS_CONTACT,ANCESTRAL_ORIGIN,PHONE_OWNER_NAME,MOBILE_OWNER_NAME,RELATION,SOURCE,SUBSCRIPTION,GENDER,MSTATUS,DTOFBIRTH,PHOTO_DISPLAY,PHONE_FLAG,COMPANY_NAME,HAVE_JCONTACT,HAVE_JEDUCATION,GOTHRA_MATERNAL,INCOME from newjs.JPROFILE where activatedKey=1 and PROFILEID=$profileid";
 			$result = mysql_query_decide($sql) or die("$sql" . mysql_error_js());
 			$myrow = mysql_fetch_array($result);
 			//**********************query added by Aman for screening Recheck on 15-05-2007*******************************************//
@@ -1120,19 +1152,19 @@ if (authenticated($cid)) {
 			if (!$uname_set) {
 				$item[] = "USERNAME";
 				$smarty->assign("SHOWUSERNAME", "Y");
-				$smarty->assign("USERNAMEvalue", $myrow['USERNAME']);
+				$smarty->assign("USERNAMEvalue", strip_tags($myrow['USERNAME']));
 			} else $item[] = "USERNAME";
 			if (!$subcaste_set) {
 				$item[] = "SUBCASTE";
 				$smarty->assign("SHOWSUBCASTE", "Y");
-				$smarty->assign("SUBCASTEvalue", $myrow['SUBCASTE']);
+				$smarty->assign("SUBCASTEvalue", strip_tags($myrow['SUBCASTE']));
 				$obsceneWord=getObsceneWords($myrow['SUBCASTE'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_SUBCASTE", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$citybirth_set) {
 				$item[] = "CITY_BIRTH";
 				$smarty->assign("SHOWCITY", "Y");
-				$smarty->assign("CITY_BIRTHvalue", $myrow['CITY_BIRTH']);
+				$smarty->assign("CITY_BIRTHvalue", strip_tags($myrow['CITY_BIRTH']));
 				$obsceneWord=getObsceneWords($myrow['CITY_BIRTH'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_CITYBIRTH", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
@@ -1140,21 +1172,21 @@ if (authenticated($cid)) {
 				$item[] = "GOTHRA";
 				$smarty->assign("SHOWGOTHRA", "Y");
 				if ($diocese) $smarty->assign("GOTHRAvalue", $diocese);
-				else $smarty->assign("GOTHRAvalue", $myrow['GOTHRA']);
+				else $smarty->assign("GOTHRAvalue", strip_tags($myrow['GOTHRA']));
 				$obsceneWord=getObsceneWords($myrow['GOTHRA'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_GOTHRA", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 				}
 			if (!$nakshatra_set) {
 				$item[] = "NAKSHATRA";
 				$smarty->assign("SHOWNAKSHATRA", "Y");
-				$smarty->assign("NAKSHATRAvalue", $myrow['NAKSHATRA']);
+				$smarty->assign("NAKSHATRAvalue", strip_tags($myrow['NAKSHATRA']));
 				$obsceneWord=getObsceneWords($myrow['NAKSHATRA'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_NAKSHATRA", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$messenger_set) {
 				$item[] = "MESSENGER_ID";
 				$smarty->assign("SHOWMESSENGER", "Y");
-				$smarty->assign("MESSENGER_IDvalue", $myrow['MESSENGER_ID']);
+				$smarty->assign("MESSENGER_IDvalue", strip_tags($myrow['MESSENGER_ID']));
 				$obsceneWord=getObsceneWords($myrow['MESSENGER_ID'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_MESSENGER", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 
@@ -1162,7 +1194,7 @@ if (authenticated($cid)) {
 			if (!$yourinfo_set) {
 				$item[] = "YOURINFO";
 				$smarty->assign("SHOWYOURINFO", "Y");
-				$smarty->assign("YOURINFOvalue", $myrow['YOURINFO']);
+				$smarty->assign("YOURINFOvalue", strip_tags($myrow['YOURINFO']));
 				$obsceneWord=getObsceneWords($myrow['YOURINFO'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_INFO", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 				if($val=="edit")
@@ -1181,14 +1213,14 @@ if (authenticated($cid)) {
 			if (!$familyinfo_set) {
 				$item[] = "FAMILYINFO";
 				$smarty->assign("SHOWFAMILYINFO", "Y");
-				$smarty->assign("FAMILYINFOvalue", $myrow['FAMILYINFO']);
+				$smarty->assign("FAMILYINFOvalue", strip_tags($myrow['FAMILYINFO']));
 					$obsceneWord=getObsceneWords($myrow['FAMILYINFO'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_FAMILY", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$spouse_set) {
 				$item[] = "SPOUSE";
 				$smarty->assign("SHOWSPOUSE", "Y");
-				$smarty->assign("SPOUSEvalue", $myrow['SPOUSE']);
+				$smarty->assign("SPOUSEvalue", strip_tags($myrow['SPOUSE']));
 				$obsceneWord=getObsceneWords($myrow['SPOUSE'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_SPOUSE", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 
@@ -1196,7 +1228,7 @@ if (authenticated($cid)) {
 			if (!$contact_set) {
 				$item[] = "CONTACT";
 				$smarty->assign("SHOWCONTACT", "Y");
-				$smarty->assign("CONTACTvalue", $myrow['CONTACT']);
+				$smarty->assign("CONTACTvalue", strip_tags($myrow['CONTACT']));
 				$obsceneWord=getObsceneWords($myrow['CONTACT'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_CONTACT", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 
@@ -1204,7 +1236,7 @@ if (authenticated($cid)) {
 			if (!$education_set) {
 				$item[] = "EDUCATION";
 				$smarty->assign("SHOWEDUCATION", "Y");
-				$smarty->assign("EDUCATIONvalue", $myrow['EDUCATION']);
+				$smarty->assign("EDUCATIONvalue", strip_tags($myrow['EDUCATION']));
 				$obsceneWord=getObsceneWords($myrow['EDUCATION'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_EDUCATION", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 
@@ -1212,12 +1244,12 @@ if (authenticated($cid)) {
 			if (!$phoneres_set) {
 				$item[] = "PHONE_RES";
 				$smarty->assign("SHOWPHONERES", "Y");
-				$smarty->assign("PHONE_RESvalue", $myrow['PHONE_RES']);
+				$smarty->assign("PHONE_RESvalue", strip_tags($myrow['PHONE_RES']));
 			}
 			if (!$phonemob_set) {
 				$item[] = "PHONE_MOB";
 				$smarty->assign("SHOWPHONEMOB", "Y");
-				$smarty->assign("PHONE_MOBvalue", $myrow['PHONE_MOB']);
+				$smarty->assign("PHONE_MOBvalue", strip_tags($myrow['PHONE_MOB']));
 			}
 			if (!$phoneres_set || !$phonemob_set) {
 				$smarty->assign("PHONE_FLAG", $myrow['PHONE_FLAG']);
@@ -1225,35 +1257,35 @@ if (authenticated($cid)) {
 			if (!$email_set) {
 				$item[] = "EMAIL";
 				$smarty->assign("SHOWEMAIL", "Y");
-				$smarty->assign("EMAILvalue", $myrow['EMAIL']);
+				$smarty->assign("EMAILvalue", strip_tags($myrow['EMAIL']));
 				$obsceneWord=getObsceneWords($myrow['EMAIL'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_EMAIL", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$jobinfo_set) {
 				$item[] = "JOB_INFO";
 				$smarty->assign("SHOWJOBINFO", "Y");
-				$smarty->assign("JOB_INFOvalue", $myrow['JOB_INFO']);
+				$smarty->assign("JOB_INFOvalue", strip_tags($myrow['JOB_INFO']));
 				$obsceneWord=getObsceneWords($myrow['JOB_INFO'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_JOBINFO", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$fatherinfo_set) {
 				$item[] = "FATHER_INFO";
 				$smarty->assign("SHOWFATHERINFO", "Y");
-				$smarty->assign("FATHER_INFOvalue", $myrow['FATHER_INFO']);
+				$smarty->assign("FATHER_INFOvalue", strip_tags($myrow['FATHER_INFO']));
 				$obsceneWord=getObsceneWords($myrow['FATHER_INFO'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_FATHERINFO", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$siblinginfo_set) {
 				$item[] = "SIBLING_INFO";
 				$smarty->assign("SHOWSIBLINGINFO", "Y");
-				$smarty->assign("SIBLING_INFOvalue", $myrow['SIBLING_INFO']);
+				$smarty->assign("SIBLING_INFOvalue", strip_tags($myrow['SIBLING_INFO']));
 				$obsceneWord=getObsceneWords($myrow['SIBLING_INFO'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_SIBLINGINFO", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$parentscontact_set) {
 				$item[] = "PARENTS_CONTACT";
 				$smarty->assign("SHOWPARENTSCONTACT", "Y");
-				$smarty->assign("PARENTS_CONTACTvalue", $myrow['PARENTS_CONTACT']);
+				$smarty->assign("PARENTS_CONTACTvalue", strip_tags($myrow['PARENTS_CONTACT']));
 				$obsceneWord=getObsceneWords($myrow['PARENTS_CONTACT'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_PARENTSCONTACT", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
@@ -1270,21 +1302,21 @@ if (authenticated($cid)) {
 			if (!$ancestral_set) {
 				$item[] = "ANCESTRAL_ORIGIN";
 				$smarty->assign("SHOWANCESTRAL_ORIGIN", "Y");
-				$smarty->assign("ANCESTRAL_ORIGINvalue", $myrow['ANCESTRAL_ORIGIN']);
+				$smarty->assign("ANCESTRAL_ORIGINvalue", strip_tags($myrow['ANCESTRAL_ORIGIN']));
 				$obsceneWord=getObsceneWords($myrow['ANCESTRAL_ORIGIN'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_ANCESTRAL", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$phoneOwnerName_set) {
 				$item[] = "PHONE_OWNER_NAME";
 				$smarty->assign("SHOWPHONE_OWNER_NAME", "Y");
-				$smarty->assign("PHONE_OWNER_NAMEvalue", $myrow['PHONE_OWNER_NAME']);
+				$smarty->assign("PHONE_OWNER_NAMEvalue", strip_tags($myrow['PHONE_OWNER_NAME']));
 				$obsceneWord=getObsceneWords($myrow['PHONE_OWNER_NAME'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_PHONEOWNER", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
 			if (!$mobileOwnerName_set) {
 				$item[] = "MOBILE_OWNER_NAME";
 				$smarty->assign("SHOWMOBILE_OWNER_NAME", "Y");
-				$smarty->assign("MOBILE_OWNER_NAMEvalue", $myrow['MOBILE_OWNER_NAME']);
+				$smarty->assign("MOBILE_OWNER_NAMEvalue", strip_tags($myrow['MOBILE_OWNER_NAME']));
 				$obsceneWord=getObsceneWords($myrow['MOBILE_OWNER_NAME'],$obscene);
 				$smarty->assign("OBSCENE_MESSAGE_MOBILEOWNER", $warning_message_start . $obscene_message ." {".$obsceneWord."}" . $warning_message_end);
 			}
@@ -1435,9 +1467,12 @@ function getAge($newDob) {
 }
 	function getObsceneWords($message,$obscene)
 	{
-		$message = str_replace(str_split(',.;!?"\''), ' ', $message);
-		$message = preg_replace("/\r\n|\r|\n/",' ',$message);
-   		$messageArr = explode(" ",$message);
+
+		$string_removed_special_characters = preg_replace('/[^a-zA-Z0-9\'\s]/','',$message);
+		$string_replaced_special_characters = preg_replace('/[^a-zA-Z\'\s]/', ' ', $message);
+		$string_replaced_special_characters = preg_replace('/[\.]/', '', $string_replaced_special_characters);
+
+		$messageArr = array_unique(array_merge(explode(" ",$string_removed_special_characters),explode(" ",$string_replaced_special_characters)));
    		$result = array_intersect($messageArr, $obscene);
    		$resultstr=implode(',',array_values($result));
    		return $resultstr;
@@ -1448,7 +1483,7 @@ function getAge($newDob) {
    * @param type $iProfileID
    */
   function markProfileUnderScreening($iProfileID)
-  {
+	  {
     $objUpdate = JProfileUpdateLib::getInstance();
     $arrFields = array('ACTIVATED'=>'U');
     $result = $objUpdate->editJPROFILE($arrFields,$iProfileID,"PROFILEID");

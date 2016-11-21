@@ -119,7 +119,8 @@ class DetailActionLib
                             $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$actionObject->loginProfile->getPROFILEID(),VIEWED=>$actionObject->profile->getPROFILEID())), 'redeliveryCount'=>0 );
                             $producerObj->sendMessage($queueData);
                         }
-			//$vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
+                        else
+                            $vlt->updateViewLog($actionObject->loginProfile->getPROFILEID(),$actionObject->profile->getPROFILEID());
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////
 	}
@@ -607,7 +608,7 @@ class DetailActionLib
             {
                 $objProfileDisplay = new profileDisplay;
 
-                $actionObj->profilechecksum = $objProfileDisplay->getNextPreviousProfile($actionObj->loginProfile,$szContactID,$iOffset);
+                $actionObj->profilechecksum = $objProfileDisplay->getNextPreviousProfile($actionObj->loginProfile,$szContactID,$iOffset,$request->getParameter('stype'));
 
                 // Subtracting -1 ,as in case of else call to function ProfileCommon::showNextPrev() will need 
                 // offset to start from -1 And while baking response DetailedViewApi we add +1 actual_offset
@@ -724,5 +725,49 @@ class DetailActionLib
         //Common Logic
         return self::Show_Next_Previous($actObj);
     }
+    
+    /* VA Whitelisting
+     * Common Function to whiteListParams
+     */
+    public static function whiteListParams($request)
+    {
+        $stype  = $request->getParameter("stype");
+        $sort  = $request->getParameter("Sort");
+        $contactId  = $request->getParameter("contact_id");
+        $totalRec  = $request->getParameter("total_rec");
+        $username  = $request->getParameter("username");
+        
+        if(strlen($stype)>6)
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","Stype whitelisting 3","STYPE :$stype:$http_msg");
+        }
+        
+        if(strlen($sort)>3)
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","Sort whitelisting 3","SORT :$sort:$http_msg");
+        }
+        
+        if($contactId && !is_numeric(explode("_",$contactId)[0]) && explode("_",$contactId)[0]!='contactId')
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","contact Id whitelisting 3","CONTACT_ID :contactId:$http_msg");
+        }
+        
+        if($totalRec && !is_numeric($totalRec))
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","total records whitelisting 3","TOTAL_REC :$totalRec:$http_msg");
+        }
+        
+        if((strlen($username)>=3 && !ctype_alpha(substr($username,0,3))) || strlen($username)>10)
+        {
+            $http_msg=print_r($_SERVER,true);
+            mail("ankitshukla125@gmail.com","usrname whitelisting 3","USERNAME :$username:$http_msg");
+        }
+    }
+    
+    
 }
 ?>

@@ -107,7 +107,7 @@ class JsMemcache extends sfMemcacheCache{
 	public function releaseLock($fp) {
 		/* removed the function defination as file locking does not make any sense here */
 	}
-	public function set($key,$value,$lifetime = NULL,$retryCount=0)
+	public function set($key,$value,$lifetime = NULL,$retryCount=0,$jsonEncode='')
 	{
 		if(self::isRedis())
 		{
@@ -132,7 +132,10 @@ class JsMemcache extends sfMemcacheCache{
 					if(!$lifetime)
 						$lifetime= 3600;
 					$key = (string)$key;
-					$value = serialize($value);
+					if($jsonEncode=='1')
+						$value = json_encode($value);
+					else
+						$value = serialize($value);
 					$this->client->setEx($key,$lifetime,$value);
 					if($retryCount == 1)
 						jsException::log("S-redisClusters  ->".$key." -- ".$this->get($key));
@@ -623,6 +626,32 @@ class JsMemcache extends sfMemcacheCache{
 			}
 		}
   }
+    
+  /**
+   * 
+   * @param type $key
+   * @param type $fields
+   * @param type $throwException
+   * @return type
+   * @throws Exception
+   */
+    public function hdel($key, $fields, $throwException = false)
+    {
+        if (self::isRedis()) {
+            if ($this->client) {
+                try {
+                    $response = $this->client->hdel($key, $fields);
+                    return $response;
+                }
+                catch (Exception $e) {
+                    if ($throwException) {
+                        throw $e;
+                    }
+                    jsException::log("HG-redisClusters hdel" . $e->getMessage());
+                }
+            }
+        }
+    }
 
   public function getSetsAllValue($key)
   {

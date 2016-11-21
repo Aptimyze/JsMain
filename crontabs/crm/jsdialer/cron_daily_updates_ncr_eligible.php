@@ -4,8 +4,8 @@
 * MADE DATE 	: 20 Mar, 2014
 * MADE BY     	: VIBHOR GARG
 *********************************************************************************************/
+//include("cron_daily_updates_functions.php");
 include("MysqlDbConstants.class.php");
-include("cron_daily_updates_functions.php");
 include("DialerHandler.class.php");
 
 //Connection at JSDB
@@ -22,7 +22,7 @@ $eligibleType ='Y';
 $limit =10;
 
 // get Status
-$status =getCampaignEligibilityStatus($campaign_name,$eligibleType);
+$status =$dialerHandlerObj->getCampaignEligibilityStatus($campaign_name,$eligibleType);
 if(!$status)
         $status=0;
 
@@ -30,13 +30,13 @@ if(!$status)
 $start_from =$status;
 for($i=$start_from;$i<$limit;$i++)
 {
-	$eligible_array 	= compute_eligible_array($i,$db_js);
-	$vd_array 		= getVDdiscount($eligible_array,$db_js);
-	$loggedinWithin15days 	= loginWithin15Days($eligible_array,$db_js);
-	$allotedArray 		= allotedArray($eligible_array,$db_js);
-	$scoreArray 		= scoreArray($eligible_array,$db_js);
-        update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$db_dialer,$vd_array,$loggedinWithin15days,$allotedArray,$scoreArray,$db_js_157);
-	updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+	$eligible_array 	= $dialerHandlerObj->getInDialerEligibleProfiles($i,$campaign_name);
+	$vd_array 		= $dialerHandlerObj->getVDdiscount($eligible_array);
+	$loggedinWithin15days	= $dialerHandlerObj->getLoginWithin15Days($eligible_array);
+	$allotedArray 		= $dialerHandlerObj->getAllotedProfiles($eligible_array);
+	$scoreArray 		= $dialerHandlerObj->getScoreArray($eligible_array);
+        $dialerHandlerObj->update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$vd_array,$allotedArray,$scoreArray,'',$loggedinWithin15days);
+	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
 	echo "DONE$i"."\n";
 }
 

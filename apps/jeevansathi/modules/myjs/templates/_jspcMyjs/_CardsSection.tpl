@@ -3,7 +3,7 @@
 <li id='{{list_id}}' class="pos-rel">
 <div class="pos-abs fullwid myjs-block f17 myjs-pos170 fontlig txtc lh50 sendintr"> <a onClick={{POST_ACTION_1}} class="colr5 cursp fontreg">{{ACTION_1_LABEL}}</a> </div>
 <div class="bg-white" >
-	<a href ={{DETAILED_PROFILE_LINK}}>
+	<a href ={{DETAILED_PROFILE_LINK}} onClick ={{GA_TRACKING_FOR_PHOTO_VIEW}}>
 	<div id={{PROFILE_FACE_CARD_ID}} class="pos-rel">
   <div class="pos-abs fontlig myjs-pos10 cursp  {{albumHide}}">
 <div class="disp-tbl opaclr1 myjs-br3 colrw txtc" style="height:30px;width:30px;">
@@ -215,7 +215,10 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
 <div id="{{MESSAGE_RESPONSE_ID}}" class='fontlig color11 f16 pt55 disp-none'>Message has been sent.</div>
 <div id="{{contactDivId}}" class="fullwid mt26 clearfix color12 f12 fontlig myjs-brd8 disp-none">
 	<div id="{{handled_contact}}" class="fullwid clearfix pt10">
-		<div class="fl wid90p pt4"><span id="{{postedById}}" class="disp_ib"></span><span  class="SMSContactsDiv fr colr5 disp-none cursp">SMS these details to me</span></div>
+    
+		<div class="fl wid90p pt4"><span id="{{postedById}}" class="disp_ib"></span>
+      ~if LoggedInProfile::getInstance()->getISD() eq '91'`
+    <span  class="SMSContactsDiv fr colr5 disp-none cursp">SMS these details to me</span>~/if`</div> 
 		<div class="fr "><a onclick="{{POST_ACTION_VIEWCONTACT_CLOSE}}"><i class="sprite2 myjs-close2 cursp"></i></a></div>
 	</div>
 	<div id="{{phone_view_Contact}}" class="fullwid clearfix pt20">

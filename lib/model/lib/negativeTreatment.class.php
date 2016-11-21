@@ -206,7 +206,7 @@ class negativeTreatment
             $jprofileArr1        = $this->jprofileEmailObj->getArray($valueArray, '', '', 'PROFILEID,EMAIL');
             foreach ($jprofileArr1 as $key => $val) {
                 $tempEmailArr[$val['EMAIL']][] = $val['PROFILEID'];
-                $profileArr[] = $val['PROFILEID'];
+                $profileArr[]                  = $val['PROFILEID'];
             }
             $profileArr = array_filter(array_unique($profileArr));
             // Filter profiles from the above list to exclude dummy profiles
@@ -315,12 +315,14 @@ class negativeTreatment
             $delete_reason    = 'Other reasons';
             $specify_reason   = 'Negative List';
             foreach ($this->profileArr as $key => $profileid) {
-                $jProfile  = $jProfileObj->get($profileid, "PROFILEID", 'PROFILEID,ACTIVATED');
+                $jProfile  = $jProfileObj->get($profileid, "PROFILEID", 'USERNAME,PROFILEID,ACTIVATED');
                 $profileid = $jProfile['PROFILEID'];
                 $activated = $jProfile['ACTIVATED'];
+                $username  = $jProfile['USERNAME'];
                 if ($profileid && $activated != 'D') {
                     // $DeleteProfileObj->delete_profile($profileid, $delete_reason, $specify_reason);
-                    // $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
+                    $this->deleteProfilesForNegativeTreatment($profileid, $delete_reason, $specify_reason, $username);
+                    $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
                 }
             }
         }
@@ -358,5 +360,24 @@ class negativeTreatment
         // Clear Memory
         unset($profileArr, $profileDummyArr);
         return $profileArrFinal;
+    }
+
+    public function deleteProfilesForNegativeTreatment($profileid, $delete_reason, $specify_reason, $username)
+    {
+        $jprofileObj         = new JPROFILE;
+        $markDelObj          = new JSADMIN_MARK_DELETE;
+        $ProfileDelReasonObj = new NEWJS_PROFILE_DEL_REASON;
+        $AP_ProfileInfo      = new ASSISTED_PRODUCT_AP_PROFILE_INFO;
+        $AP_MissedServiceLog = new ASSISTED_PRODUCT_AP_MISSED_SERVICE_LOG;
+        $AP_CallHistory      = new ASSISTED_PRODUCT_AP_CALL_HISTORY;
+        
+        //$ProfileDelReasonObj->Replace($username, $delete_reason, $specify_reason, $profileid);
+
+        $jprofileObj->updateDeleteData($profileid);
+        
+        $markDelObj->Update($profileid);
+        $AP_ProfileInfo->Delete($profileid);
+        $AP_MissedServiceLog->Update($profileid);
+        $AP_CallHistory->UpdateDeleteProfile($profileid);
     }
 }
