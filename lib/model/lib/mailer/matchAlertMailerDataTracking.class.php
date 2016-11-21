@@ -3,24 +3,35 @@
 class matchAlertMailerDataTracking
 {
 	
+	//This function is used to insert data for count of profiles based on logic level
 	public function insertCountDataByLogicLevel($countByLogicArr)
 	{		
 		$todayDate = date("Y-m-d");
 		$countByLogicObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC();
-		$countByLogicObj->insertCountByLogicTypeForDate($todayDate,$countByLogicArr);
-		
-		$matchAlertsToBeSentObj = new matchalerts_MATCHALERTS_TO_BE_SENT();
-		$totalCount = $matchAlertsToBeSentObj->getTotalCount($todayDate);		
-		$matchAlertByLogicTotalObj = new MATCHALERT_TRACKING_MATCH_ALERT_BYLOGIC_TOTAL();
-		$matchAlertByLogicTotalObj->insertTotalCountForDate($todayDate,$totalCount);
+		$rowCount = $countByLogicObj->insertCountByLogicTypeForDate($todayDate,$countByLogicArr);
+		if($rowCount == 0)
+		{
+			$this->sendSMS(MatchAlertDataLoggingEnums::$messageByLogic);
+		}
 
+
+		//This is called to save the total count of profiles grouped by logic level
+		$this->insertTotalCountByLogicLevel($todayDate);
+		unset($countByLogicObj);		
 	}
 
+	//This function is used to insert data for count of profiles based on logic level and no of recommendations
 	public function insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations)
 	{		
 		$todayDate = date("Y-m-d");
 		$loggingObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND();
-		$loggingObj->insertCountByLogicTypeAndRecommendForDate($todayDate,$countByLogicAndRecommendations);				
+		$rowCount = $loggingObj->insertCountByLogicTypeAndRecommendForDate($todayDate,$countByLogicAndRecommendations);				
+		if($rowCount == 0)
+		{
+			$this->sendSMS(MatchAlertDataLoggingEnums::$messageByLogicRecommend);
+		}
+
+		unset($loggingObj);
 		
 		foreach($countByLogicAndRecommendations as $key =>$val)
 		{
@@ -33,15 +44,40 @@ class matchAlertMailerDataTracking
 			}
 		}
 
-		$totalCountObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL();
-		$totalCountObj->insertTotalCountForRecommedByDate($totalCountArr,$todayDate);		
+		//This is called to save the total count of profiles grouped by logic level and no of recommendations
+		$this->insertTotalCountByLogicRecommend($todayDate,$totalCountArr);		
 	}
-
-	public function getNoOfDays()
+	
+    public function insertTotalCountByLogicLevel($todayDate)
     {
-            $today=mktime(0,0,0,date("m"),date("d"),date("Y"));
-            $zero=mktime(0,0,0,01,01,2005);
-            $gap=($today-$zero)/(24*60*60);          
-            return $gap;
+    	$matchAlertsToBeSentObj = new matchalerts_MATCHALERTS_TO_BE_SENT();
+		$totalCount = $matchAlertsToBeSentObj->getTotalCount($todayDate);		
+		$matchAlertByLogicTotalObj = new MATCHALERT_TRACKING_MATCH_ALERT_BYLOGIC_TOTAL();
+		$rowCount = $matchAlertByLogicTotalObj->insertTotalCountForDate($todayDate,$totalCount);
+		if($rowCount == 0)
+		{
+			$this->sendSMS(MatchAlertDataLoggingEnums::$messageByLogicTotal);
+		}
+		
+		unset($matchAlertByLogicTotalObj);
+		unset($matchAlertsToBeSentObj);
     }
+
+    public function insertTotalCountByLogicRecommend($todayDate,$totalCountArr)
+    {
+    	$totalCountObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL();
+		$rowCount = $totalCountObj->insertTotalCountForRecommedByDate($totalCountArr,$todayDate);
+		if($rowCount == 0)
+		{
+			$this->sendSMS(MatchAlertDataLoggingEnums::$messageByLogicRecommendTotal);
+		}
+		unset($totalCountObj);
+    }
+
+    public function sendSMS($message)
+    {
+    	include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
+    	foreach(MatchAlertDataLoggingEnums::$arrMob as $mobile1)
+				$smsState = send_sms($message,MatchAlertDataLoggingEnums::$from,$mobile1,MatchAlertDataLoggingEnums::$uniqueId,'','Y');
+    }	
 }

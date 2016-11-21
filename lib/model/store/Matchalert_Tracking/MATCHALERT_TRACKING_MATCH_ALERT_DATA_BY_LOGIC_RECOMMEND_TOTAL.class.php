@@ -32,6 +32,8 @@ class MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL extends TABL
 				$bind++;
 			}
 			$prep->execute();
+			$count = $prep->rowCount();
+            return $count; 
 		}
 		catch (PDOException $e)
 		{

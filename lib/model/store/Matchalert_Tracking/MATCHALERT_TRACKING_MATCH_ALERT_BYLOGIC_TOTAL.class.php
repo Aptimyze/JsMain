@@ -19,6 +19,8 @@ class MATCHALERT_TRACKING_MATCH_ALERT_BYLOGIC_TOTAL extends TABLE
 			$prep->bindValue(":DATEVAL",$date,PDO::PARAM_STR);
 			$prep->bindValue(":TOTALCOUNT",$totalCount,PDO::PARAM_INT);
             $prep->execute();
+            $count = $prep->rowCount();
+            return $count;            
 		}
 		catch (PDOException $e)
 		{

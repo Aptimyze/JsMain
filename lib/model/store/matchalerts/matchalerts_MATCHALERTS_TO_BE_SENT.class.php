@@ -131,6 +131,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
 		}
         }
 
+        // to get total count from MATCHALERTS_TO_BE_SENT
         public function getTotalCount()
         {
         	try

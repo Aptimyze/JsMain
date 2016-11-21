@@ -58,6 +58,8 @@ class MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND extends TABLE
 				}
 			}
 			$prep->execute();
+			$count = $prep->rowCount();
+            return $count; 
 		}
 		catch (PDOException $e)
 		{

@@ -29,14 +29,14 @@ class matchalerts_LowTrendsMatchalertsCheck extends TABLE
             }
         }
 
-        public function getLowCountGroupedByLogic()
-        {
-            $todayDate = date("Y-m-d");
+        // This function is used to get Low Count for profiles grouped by logic
+        public function getLowCountGroupedByLogic($date)
+        {            
             try
             {
-                $sql="SELECT count( DISTINCT (PROFILEID) ) as CNT , LOGICLEVEL FROM matchalerts.`LOW_TRENDS_MATCHALERTS_CHECK` WHERE DATE = :DATE GROUP BY LOGICLEVEL";
+                $sql="SELECT count( DISTINCT (PROFILEID) ) as CNT , LOGICLEVEL FROM matchalerts.`LOW_TRENDS_MATCHALERTS_CHECK` WHERE DATE >= :DATEVAL GROUP BY LOGICLEVEL";
                 $prep = $this->db->prepare($sql);
-                $prep->bindValue(":DATE", $todayDate, PDO::PARAM_INT);
+                $prep->bindValue(":DATEVAL", $date, PDO::PARAM_INT);
                 $prep->execute();               
                 while ($row = $prep->fetch(PDO::FETCH_ASSOC))
                 {
@@ -49,5 +49,24 @@ class matchalerts_LowTrendsMatchalertsCheck extends TABLE
                 jsException::nonCriticalError($ex);
             }
         }
+
+        /**
+        * Empty The table
+        */
+        public function truncateTable()
+        {
+                try
+                {
+                        $sql="TRUNCATE TABLE matchalerts.`LOW_TRENDS_MATCHALERTS_CHECK`";
+                        $res = $this->db->prepare($sql);
+                        $res->execute();
+                }
+                catch (PDOException $e)
+                {
+                        //add mail/sms
+                        throw new jsException($e);
+                }
+        }
+
        
 }

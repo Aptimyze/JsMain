@@ -3,11 +3,7 @@
 class matchAlertTrackingTask extends sfBaseTask
 {
 	protected function configure()
-  	{
-		/*$this->addArguments(array(
-                        new sfCommandArgument('totalScripts', sfCommandArgument::REQUIRED, 'My argument'),
-                        new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'My argument'),
-        	));*/
+  	{		
 
 		$this->addOptions(array(
 		new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
@@ -15,7 +11,7 @@ class matchAlertTrackingTask extends sfBaseTask
 	     
 	    $this->namespace        = 'alert';
 	    $this->name             = 'matchAlertTracking';
-	    $this->briefDescription = '';
+	    $this->briefDescription = 'This cron is run daily after Match Alert Calculation task and is used to log counts of recommendations based on different criterias into different tables';
 	    $this->detailedDescription = <<<EOF
 	Call it with:
 	  [php symfony alert:matchAlertTracking] 
@@ -28,21 +24,20 @@ EOF;
 			sfContext::createInstance($this->configuration);
 
 		ini_set('memory_limit','512M');
-        $totalScripts = $arguments["totalScripts"]; // total no of scripts
-        $currentScript = $arguments["currentScript"]; // current script number
-
+        
         $trackingLibObj = new matchAlertMailerDataTracking();
-        $todayDate = $trackingLibObj->getNoOfDays();
+        $todayDate = MailerConfigVariables::getNoOfDays(); //To get the current date
         $logTempObj = new matchalerts_LOG_TEMP();
-        $countByLogicArr = $logTempObj->getCountGroupedByLogic();
-        $dateInLogTemp = $logTempObj->getDate();
+        $countByLogicArr = $logTempObj->getCountGroupedByLogic(); //To get count of profiles grouped by Logic
+        $dateInLogTemp = $logTempObj->getDate(); //Get date from LOG_TEMP
         $date = date("Y-m-d");
-        if($todayDate > $dateInLogTemp)
+        
+        if($todayDate > $dateInLogTemp) //To check if the date in LOG_TEMP is the current date
         {
         	$date = date('Y-m-d',strtotime("-1 day"));
         }        
         $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
-        $lowTrendsCountArr = $lowTrendsObj->getLowCountGroupedByLogic($date);        
+        $lowTrendsCountArr = $lowTrendsObj->getLowCountGroupedByLogic($date); //Get count where count is ZERO       // To get ZERO count for each logic level
         foreach($countByLogicArr as $key => $val)
         {
         	foreach($val as $k1=>$v1)
@@ -80,5 +75,8 @@ EOF;
         }
         $countByLogicAndRecommendations = array_merge($countByLogicAndRecommendations,$lowCountFinalArr);        
         $trackingLibObj->insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations);        
+   		unset($trackingLibObj);
+   		unset($logTempObj);
+   		unset($lowTrendsObj);
    	}
 }
