@@ -1069,7 +1069,7 @@ public function getSendersPending($profileids)
 				}					
         		elseif($type == ContactHandler::DECLINE){
 					$SENDER_RECEIVER = "SENDER";
-					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE ";
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE and (`SEEN` != 'Y') ";
 				}					
         		
         		$prep = $this->db->prepare($sql);
