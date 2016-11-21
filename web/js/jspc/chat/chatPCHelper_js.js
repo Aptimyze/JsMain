@@ -911,7 +911,7 @@ function invokePluginManagelisting(listObject, key, user_id) {
             //console.log("create_list",listObject);
             objJsChat.manageChatLoader("hide");
         }
-        if(key == "add_node" && user_id != undefined){
+        if(key == "add_node" && user_id != undefined && strophieWrapper.checkForGroups(listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true){
             //before adding new node in list,check presence in nonroster list to remove it first
             updateNonRosterListOnCEAction({"user_id":user_id,"action":"REMOVE"});
         }

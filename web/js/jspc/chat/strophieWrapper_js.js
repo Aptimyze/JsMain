@@ -495,7 +495,7 @@ strophieWrapper.sendPresence();
         if(response != undefined){
             $.each(response,function(profileid,nodeObj){
                 if (strophieWrapper.isItSelfUser(profileid) == false) {
-                    if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && strophieWrapper.Roster[profileid] == undefined){
+                    if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && (strophieWrapper.Roster[profileid] == undefined || strophieWrapper.checkForGroups(strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"]) == false)){
                         strophieWrapper.NonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
                     }
                 }
