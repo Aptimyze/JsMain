@@ -598,8 +598,7 @@ public function executePerformV2(sfWebRequest $request)
 							}
 							else
 							{
-								 $contactRObj=new EoiViewLog();
-                                                                $contactRObj->setEoiViewedForAReceiver($pid,'Y');
+
 								$contactsObj = new ContactsRecords();
 								$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
                                                                
