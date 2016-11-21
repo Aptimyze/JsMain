@@ -771,12 +771,20 @@ class InboxMobileAppV2
 				// Interest viewed required only in case of interest sent
 				if($infoKey=="INTEREST_SENT")
 				{
-							if($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							if($profile[$count]["interest_viewed_date"]!=null)
 							{
-								$eoiViewedText = "Interest viewed".($profile[$count]["interest_viewed_date"]!=null?" on ".$profile[$count]["interest_viewed_date"]:"");
+								$eoiViewedText = "Interest viewed on ".$profile[$count]["interest_viewed_date"];
 								$profile[$count]["interest_viewed_date"] = $eoiViewedText;
 								if(!MobileCommon::isDesktop())
 									$profile[$count]["timetext"] = $profile[$count]["interest_viewed_date"];
+							}
+							elseif($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							{
+								$eoiViewedText = "Interest viewed";
+								$profile[$count]["interest_viewed_date"] = $eoiViewedText;
+								if(!MobileCommon::isDesktop())
+									$profile[$count]["timetext"] = $profile[$count]["interest_viewed_date"];
+								
 							}
 							else
 							{
