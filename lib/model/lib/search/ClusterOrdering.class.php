@@ -107,10 +107,15 @@ class ClusterOrdering
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
 				}
-				if($this->SearchParamtersObj->getINDIA_NRI()==2 || ($this->SearchParamtersObj->getCOUNTRY_RES() && $this->SearchParamtersObj->getCOUNTRY_RES()!=51))
+				if($this->SearchParamtersObj->getCOUNTRY_RES()){
 					$orderingArr[28] = 12;
-				else
+                                        $orderingArr[26] = 10;
+					$orderingArr[27] = 11;
+                                }else{
 					$orderingArr[28] = 0;
+                                        $orderingArr[26] = 0;
+					$orderingArr[27] = 0;
+                                }
 				$orderingArr[29] = 17;	
 			}
 			else		//BRIDE SEARCH
@@ -388,12 +393,13 @@ class ClusterOrdering
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
 				}
-				if($this->SearchParamtersObj->getINDIA_NRI()==2 || ($this->SearchParamtersObj->getCOUNTRY_RES() && $this->SearchParamtersObj->getCOUNTRY_RES()!=51))
+				if($this->SearchParamtersObj->getCOUNTRY_RES())
 					$orderingArr[28] = 12;
 				else
 					$orderingArr[28] = 0;
 			}
 		}
+                
 		$orderingArr = $this->formatOutput($orderingArr,$returnType,$orderingFor);
 		$SearchUtility = new SearchUtility;
 		if($SearchUtility->isMatchAlertsPage($this->SearchParamtersObj))

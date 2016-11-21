@@ -264,9 +264,14 @@ class SearchUtility
 					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
 				}
-				elseif($cluster == 'STATE')
+                                elseif($cluster == 'COUNTRY_RES'){
+					$searchParamsSetter['STATE']='';
 					$searchParamsSetter['CITY_INDIA']='';
-				elseif($cluster=='OCCUPATION_GROUPING')
+					$searchParamsSetter['CITY_RES']='';
+                                }elseif($cluster == 'STATE'){
+					$searchParamsSetter['CITY_INDIA']='';
+					$searchParamsSetter['CITY_RES']='';
+                                }elseif($cluster=='OCCUPATION_GROUPING')
 					$searchParamsSetter['OCCUPATION']='';
 				elseif($cluster=='EDUCATION_GROUPING')
 					$searchParamsSetter['EDU_LEVEL_NEW']='';
@@ -515,6 +520,14 @@ class SearchUtility
 						$clusterVal='';
 					}
 				}
+                                if($cluster=='COUNTRY_RES'){
+                                        $selectedVAl = explode(",",$clusterVal);
+                                        if(!in_array(51, $selectedVAl)){
+                                                $searchParamsSetter['STATE']='';
+                                                $searchParamsSetter['CITY_INDIA']='';
+                                                $searchParamsSetter['CITY_RES']='';
+                                        }
+                                }
 				$searchParamsSetter[$cluster]=$clusterVal;
 			}
 		}
