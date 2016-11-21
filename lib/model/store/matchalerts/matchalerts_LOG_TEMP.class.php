@@ -144,6 +144,27 @@ GROUP BY LOGICLEVEL, RecCount";
       throw new jsException($e);
     }
   }
+
+  public function getDate()
+  {
+    try
+    {
+      $sql = "SELECT DATE from matchalerts.`LOG_TEMP` ORDER BY DATE LIMIT 1";
+      $prep = $this->db->prepare($sql);
+      $prep->execute();
+      while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+      {
+        $resultArr = $row;          
+      }              
+      return $resultArr["DATE"]; 
+
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      throw new jsException($e);
+    }
+  }
 }
 ?>
 

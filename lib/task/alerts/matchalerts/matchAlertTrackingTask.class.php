@@ -4,10 +4,10 @@ class matchAlertTrackingTask extends sfBaseTask
 {
 	protected function configure()
   	{
-		$this->addArguments(array(
+		/*$this->addArguments(array(
                         new sfCommandArgument('totalScripts', sfCommandArgument::REQUIRED, 'My argument'),
                         new sfCommandArgument('currentScript', sfCommandArgument::REQUIRED, 'My argument'),
-        	));
+        	));*/
 
 		$this->addOptions(array(
 		new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi'),
@@ -31,10 +31,18 @@ EOF;
         $totalScripts = $arguments["totalScripts"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
 
+        $trackingLibObj = new matchAlertMailerDataTracking();
+        $todayDate = $trackingLibObj->getNoOfDays();
         $logTempObj = new matchalerts_LOG_TEMP();
-        $countByLogicArr = $logTempObj->getCountGroupedByLogic();        
+        $countByLogicArr = $logTempObj->getCountGroupedByLogic();
+        $dateInLogTemp = $logTempObj->getDate();
+        $date = date("Y-m-d");
+        if($todayDate > $dateInLogTemp)
+        {
+        	$date = date('Y-m-d',strtotime("-1 day"));
+        }        
         $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
-        $lowTrendsCountArr = $lowTrendsObj->getLowCountGroupedByLogic();
+        $lowTrendsCountArr = $lowTrendsObj->getLowCountGroupedByLogic($date);        
         foreach($countByLogicArr as $key => $val)
         {
         	foreach($val as $k1=>$v1)
@@ -50,10 +58,27 @@ EOF;
         		
         	}
         }        
-        $trackingLibObj = new matchAlertMailerDataTracking();
+        
         $trackingLibObj->insertCountDataByLogicLevel($finalCountByLogicArr);
         
-        $countByLogicAndRecommendations = $logTempObj->getCountGroupedByLogicAndRecommendation();
+        $countByLogicAndRecommendations = $logTempObj->getCountGroupedByLogicAndRecommendation();        
+        
+        foreach($lowTrendsCountArr as $key=>$val)
+        {
+        	foreach($val as $k1=>$v1)
+        	{
+        		if($k1=="CNT")
+        		{
+        			$lowCountFinalArr[$key]["PeopleCount"] = $v1;
+        		}
+        		if($k1=="LOGICLEVEL")
+        		{
+        			$lowCountFinalArr[$key]["LOGICLEVEL"] = $v1;
+        			$lowCountFinalArr[$key]["RecCount"] = 0;
+        		}        		
+        	}
+        }
+        $countByLogicAndRecommendations = array_merge($countByLogicAndRecommendations,$lowCountFinalArr);        
         $trackingLibObj->insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations);        
    	}
 }

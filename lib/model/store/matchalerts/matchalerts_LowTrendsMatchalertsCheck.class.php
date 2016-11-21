@@ -31,10 +31,12 @@ class matchalerts_LowTrendsMatchalertsCheck extends TABLE
 
         public function getLowCountGroupedByLogic()
         {
+            $todayDate = date("Y-m-d");
             try
             {
-                $sql="SELECT count( DISTINCT (PROFILEID) ) as CNT , LOGICLEVEL FROM matchalerts.`LOW_TRENDS_MATCHALERTS_CHECK` GROUP BY LOGICLEVEL";
+                $sql="SELECT count( DISTINCT (PROFILEID) ) as CNT , LOGICLEVEL FROM matchalerts.`LOW_TRENDS_MATCHALERTS_CHECK` WHERE DATE = :DATE GROUP BY LOGICLEVEL";
                 $prep = $this->db->prepare($sql);
+                $prep->bindValue(":DATE", $todayDate, PDO::PARAM_INT);
                 $prep->execute();               
                 while ($row = $prep->fetch(PDO::FETCH_ASSOC))
                 {

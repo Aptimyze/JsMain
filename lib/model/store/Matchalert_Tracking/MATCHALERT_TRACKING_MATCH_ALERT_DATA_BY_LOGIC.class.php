@@ -14,29 +14,30 @@ class MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC extends TABLE
 	{
 		try
 		{
-		
-			// print_R($countByLogicArr);die;					
-			$sql = "INSERT into MATCHALERT_TRACKING.MATCH_ALERT_DATA_BY_LOGIC (DATE,LOGICLEVEL,COUNT) values ";		
+			//print_R($countByLogicArr);die;					
+			$sql = "INSERT IGNORE into MATCHALERT_TRACKING.MATCH_ALERT_DATA_BY_LOGIC (DATE,COUNT,LOGICLEVEL) values ";		
 			foreach($countByLogicArr as $key=>$val)
 			{
 				$insertSql.= "(:DATEVAL, "; 
 				foreach($val as $k1=>$v1)
 				{				
-					if($k1 == "LOGICLEVEL")
-					{
-						$insertSql.= ":LOGIC".$key.",";
-					}
 					if($k1 == "CNT")
 					{
-						$insertSql.= ":COUNT".$key."), ";
+						$insertSql.= ":COUNT".$key.", ";
 						$totalCount+=$v1;
 					}
+					if($k1 == "LOGICLEVEL")
+					{
+						$insertSql.= ":LOGIC".$key."),";
+					}
+					
 								
 				}
 			}
 
 			$insertSql = rtrim($insertSql,", ");
 			$sql.= $insertSql;
+
 			$prep = $this->db->prepare($sql);
 
 			$prep->bindValue(":DATEVAL",$date,PDO::PARAM_STR);
@@ -55,8 +56,7 @@ class MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC extends TABLE
 					}
 				}
 			}		
-		 	$prep->execute();
-		 	echo("DONE");die;
+		 	$prep->execute();		 	
 		}
 		catch (PDOException $e)
 		{
