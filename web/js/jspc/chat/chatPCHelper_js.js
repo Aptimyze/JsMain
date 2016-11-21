@@ -779,9 +779,11 @@ function initiateChatConnection() {
     username = loggedInJspcUser + '@' + openfireServerName;    
     strophieWrapper.connect(chatConfig.Params[device].bosh_service_url, username, pass);
 
+    /*
     updatePresenceIntervalId = setInterval(function(){
         updatePresenceAfterInterval();
     },chatConfig.Params[device].listingRefreshTimeout);
+    */
     //console.log(updatePresenceIntervalId);
 }
 /*getConnectedUserJID
@@ -1222,10 +1224,11 @@ function getProfileImage() {
 function clearChatMsgFromLS(){
     var patt1 = new RegExp("chatMsg_");
     var patt2 = new RegExp("listingPic_");
-    var patt3 = new RegExp("chatListing");
-    var patt4 = new RegExp("presence_"),patt5 = new RegExp("nonRosterChatListing"),patt6 = new RegExp("_sentMsgRefTime");
+    //var patt3 = new RegExp("chatListing");
+    //var patt4 = new RegExp("presence_");
+    var patt5 = new RegExp("nonRosterChatListing"),patt6 = new RegExp("_sentMsgRefTime");
     for(var key in localStorage){
-        if(patt1.test(key) || patt2.test(key) || patt3.test(key) || patt4.test(key) || patt5.test(key) || patt6.test(key)){
+        if(patt1.test(key) || patt2.test(key) || /*patt3.test(key) || patt4.test(key) || */patt5.test(key) || patt6.test(key)){
             localStorage.removeItem(key);
         }
     }
@@ -1234,7 +1237,8 @@ function clearChatMsgFromLS(){
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated','nonRosterCLUpdated'];
+    //var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated','nonRosterCLUpdated'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','nonRosterCLUpdated'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
@@ -1489,6 +1493,7 @@ function setInLocalStorage(key, value){
     localStorage.setItem(key, value);
 }
 
+/*
 function updatePresenceAfterInterval(){
     //console.log("In updatePresenceAfterInterval");
     var presenceData = JSON.parse(getFromLocalStorage("presence_"+loggedInJspcUser));
@@ -1503,6 +1508,7 @@ function updatePresenceAfterInterval(){
         setInLocalStorage('chatListing'+loggedInJspcUser,JSON.stringify(rosterDetails));
     }
 }
+*/
 
 $(document).ready(function () {
     //console.log("Doc ready");
@@ -1686,13 +1692,13 @@ $(document).ready(function () {
                 //console.log("in onLogoutPreClick",fromSiteLogout);
                 objJsChat._loginStatus = 'N';
                 clearLocalStorage();
-                clearInterval(updatePresenceIntervalId);
+                //clearInterval(updatePresenceIntervalId);
                 strophieWrapper.initialRosterFetched = false;
                 strophieWrapper.initialNonRosterFetched = false;
                 //clear polling of non roster groups listing
                 clearNonRosterPollingInterval();
                 strophieWrapper.disconnect();
-                strophieWrapper.Roster = {};
+                //strophieWrapper.Roster = {};
                 eraseCookie("chatAuth");
                 manageListingPhotoReqFlag("reset");
                 if(fromSiteLogout == "true"){

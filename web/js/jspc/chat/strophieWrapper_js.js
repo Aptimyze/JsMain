@@ -204,7 +204,7 @@ var strophieWrapper = {
         //console.log(iq);
         //strophieWrapper.stropheLoggerPC(iq);
         var nodeObj = xmlToJson(iq);
-        nodeObj["query"]["item"]["attributes"]["new"] = true;
+        //nodeObj["query"]["item"]["attributes"]["new"] = true;
         rosterObj = strophieWrapper.formatRosterObj(nodeObj["query"]["item"]);
         //strophieWrapper.stropheLoggerPC(rosterObj);
         var nodeArr = [],
@@ -299,7 +299,7 @@ var strophieWrapper = {
                 }  
             }
             //console.log("on roster update",user_id);
-            strophieWrapper.setRosterStorage(strophieWrapper.Roster);
+            //strophieWrapper.setRosterStorage(strophieWrapper.Roster);
         }
         strophieWrapper.connectionObj.addHandler(strophieWrapper.onRosterUpdate, Strophe.NS.ROSTER, 'iq', 'set');
         //return true;
@@ -418,6 +418,8 @@ strophieWrapper.authorize(from);
 strophieWrapper.sendPresence();
 }
                 //console.log("In onPresenceReceived",user_id,chat_status);
+                strophieWrapper.updatePresence(user_id, chat_status);
+                /*
                 var pd = JSON.parse(getFromLocalStorage("presence_"+loggedInJspcUser));
                 var presenceData = {};
                 if(pd){
@@ -446,6 +448,7 @@ strophieWrapper.sendPresence();
                     },2000);
                 }
 	            //strophieWrapper.updatePresence(user_id, chat_status); //nitish commented
+                */
         	}
         } else {
             if (strophieWrapper.synchronize_selfPresence == true) {
@@ -584,6 +587,7 @@ strophieWrapper.sendPresence();
         strophieWrapper.initialRosterFetched = true;
         //console.log("Initial roster set to true");
         //strophieWrapper.connectionObj.addHandler(strophieWrapper.onPresenceReceived, null, 'presence', null);
+        /*
         var data = strophieWrapper.getRosterStorage();
         var lastUpdated = localStorage.getItem("clLastUpdated");
         var d = new Date();
@@ -608,6 +612,7 @@ strophieWrapper.sendPresence();
             localStorage.removeItem("presence_"+loggedInJspcUser);
         }
         //console.log(strophieWrapper.Roster);
+        */
         invokePluginManagelisting(strophieWrapper.Roster, "create_list");
         setTimeout(function () {
           strophieWrapper.sendPresence();
@@ -664,8 +669,8 @@ strophieWrapper.sendPresence();
             "last_online_time": null,
             "ask": obj["attributes"]["ask"],
             "addIndex":0,
-            "nodeType":"roster",
-            "new": obj["attributes"]["new"]
+            "nodeType":"roster"
+            //"new": obj["attributes"]["new"]
         };
         if (typeof obj["group"] != "undefined") {
             newObj[strophieWrapper.rosterDetailsKey]["groups"].push(obj["group"]["#text"]);
