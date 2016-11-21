@@ -12,7 +12,8 @@ class RequestHandlerConfig
         "getNotification"=>array("v1"=>"getNotificationV1"),
         "updateNotificationSetting"=>array("v1"=>"updateNotificationSettingV1"),
         "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
-        "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1")),
+        "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1"),
+		"notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1")),
 	"search"=>array(
 		"partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
 		"perform"=>array("v1"=>"performV1","v2"=>"","v3"=>"performV1"),
@@ -34,6 +35,7 @@ class RequestHandlerConfig
     "profile"=>array(
 		"editprofile"=>array("v1"=>"ApiEditV1","v2"=>"ApiEditV1","v3"=>"ApiEditV1"),
 		"editsubmit"=>array("v1"=>"ApiEditSubmitV1","v2"=>"","v3"=>"ApiEditSubmitV1"),
+		 "editsubmitDocuments"=>array("v1"=>"ApiEditSubmitDocumentsV1","v2"=>"","v3"=>"ApiEditSubmitDocumentsV1"),
 		"filter"=>array("v1"=>"ApiEditFilterV1","v2"=>"","v3"=>"ApiEditFilterV1"),
 		"filtersubmit"=>array("v1"=>"ApiEditFilterSubmitV1","v2"=>"","v3"=>"ApiEditFilterSubmitV1"),
 		"dppsubmit"=>array("v1"=>"apieditdppv1","v2"=>"","v3"=>"apieditdppv1"),
@@ -44,6 +46,7 @@ class RequestHandlerConfig
         "horoscope"=>array("v1"=>"HoroscopeV1"),
         "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),
         "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1"),
+        "dppSuggestions"=>array("v1"=>"dppSuggestionsV1","v2"=>"dppSuggestionsV1","v3"=>"dppSuggestionsV1"),
       "cache"=>array("v1"=>"ApiProfileCacheV1","v2"=>"ApiProfileCacheV1","v3"=>"ApiProfileCacheV1")),
     "settings"=>array(
 		"alertManager"=>array("v1"=>"AlertManagerV1","v2"=>"","v3"=>"AlertManagerV1"),
@@ -97,7 +100,8 @@ class RequestHandlerConfig
 			"verified"=>array("v1"=>"verifiedV1","v3"=>"verifiedV1"),
 			"sendOTPSMS"=>array("v1"=>"SendOtpSMS","v2"=>"SendOtpSMS","v3"=>"SendOtpSMS"),
 			"matchOTP"=>array("v1"=>"MatchOtp","v2"=>"MatchOtp","v3"=>"MatchOtp"),
-			"SMSContactsToMobile"=>array("v1"=>"SMSContactsToMobile","v2"=>"SMSContactsToMobile","v3"=>"SMSContactsToMobile")),
+			"SMSContactsToMobile"=>array("v1"=>"SMSContactsToMobile","v2"=>"SMSContactsToMobile","v3"=>"SMSContactsToMobile"),
+			"reportPhoneInvalid"=>array("v1"=>"ReportInvalid","v2"=>"ReportInvalid","v3"=>"ReportInvalid")),
 	"static"=>array("page"=>array("v1"=>"pagev1","v2"=>"pagev1","v3"=>"pagev1"),"pagehits"=>array("v1"=>"savehitsv1","v2"=>"savehitsv1","v3"=>"savehitsv1")),	
     "help"=>array(
         "helpQuery"=>array("v1"=>"SubmitQueryV1"),

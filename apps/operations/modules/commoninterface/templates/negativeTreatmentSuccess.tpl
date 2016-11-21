@@ -8,7 +8,7 @@
 			~if $successMessage`
 				<tr align=center><td class=fieldsnew colspan=100%><font size=2><b>Negative treatment submission is successful. List will be updated and the profiles deleted within 5 minutes. </b></font></td></tr>
 				<tr align=center><td class=fieldsnew colspan=100%><font size=2><b>
-					<a href="~sfConfig::get('app_site_url')`/operations.php/commoninterface//negativeTreatment?cid=~$cid`">Add More</a></b>
+					<a href="~sfConfig::get('app_site_url')`/operations.php/commoninterface/negativeTreatment?cid=~$cid`">Add More</a></b>
 				</font></td></tr>			
 			~else`
 				<tr class="formhead" align=center>

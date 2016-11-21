@@ -452,7 +452,6 @@ function CommonErrorHandling(json,toAppend)
 	}
 	else
 		output=json;
-		
 	if(typeof(output)!='object')
 	{
 		ShowTopDownError(['Something went wrong']);
@@ -473,7 +472,16 @@ function CommonErrorHandling(json,toAppend)
 			if(json.responseStatusCode==8)
 				ShowNextPage("/phone/jsmsDisplay",0);
 			if(statusCode==1)
-                                ShowTopDownError([json.responseMessage],5000);
+			{
+               if(json.error.indexOf("banned") !=0 || json.error.indexOf("same phone number")!=0)
+               {
+               		ShowTopDownError([json.error],5000);
+               }
+               else
+               {
+               		ShowTopDownError([json.responseMessage],5000);
+               }            
+			}
 
                         if(statusCode)
 				if($.inArray(parseInt(statusCode),[1,0,9,8,7])!=-1)

@@ -8,6 +8,10 @@
 	class FieldMap{
 		/*This will return label corresponding to value*/
 public static function getFieldLabel($label,$value,$returnArr=''){
+if(($label=="city"||$label=="city_india")&& (substr($value,2)=="OT"))
+{
+	$value=0;
+}
 	switch($label){
 	case "income":
 		$arr=array( 

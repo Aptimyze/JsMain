@@ -802,17 +802,16 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		if($iProfileID === null || $iProfileID == null )
 			return false;
 			
-		$objHoroscope1 = new newjs_HOROSCOPE;
+		/*$objHoroscope1 = new newjs_HOROSCOPE;
 		$iCount1 = $objHoroscope1->getIfHoroscopePresent($iProfileID);
 		
 		$objHoroscope2 = new NEWJS_HOROSCOPE_FOR_SCREEN;
-		$iCount2 = $objHoroscope2->getHoroscope($iProfileID);
+		$iCount2 = $objHoroscope2->getHoroscope($iProfileID);*/
 		
-		$objHoroscope3 = new NEWJS_ASTRO;
+		$objHoroscope3 = ProfileAstro::getInstance();
 		$iCount3 = $objHoroscope3->getIfAstroDetailsPresent($iProfileID);
-		$arrRes = $objHoroscope3->getAstroDetails(array($iProfileID),'');
 		
-		if($iCount1 || $iCount2 || $iCount3)
+		if($iCount3) /*$iCount1 || $iCount2 ||*/
 			return true;
 			
 		return false;

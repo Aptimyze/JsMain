@@ -136,6 +136,37 @@ class JsNotificationsLogConsume
 	$registationIdObj = new MOBILE_API_REGISTRATION_ID();
 	$registationIdObj->updateVersion($body['regid'],$body['appVersion'],$body['osVersion'],$body['brand'],$body['model']);
       }     
+      elseif($type == 'LOCAL_NOTIFICATION_LOG')
+      {
+	$localLogObj = new MOBILE_API_LOCAL_NOTIFICATION_LOG();
+	$localLogObj->insert($body['profileid'],$body['notificationKey'],$body['messageId'],$body['status'],$body['alarmTime'],$body['osType']);
+      }
+      elseif($type == 'DELIVERY_TRACKING_API')
+      {
+        $profileid 	=$body['profileid'];
+	$notificationKey=$body['notificationKey'];
+	$messageId	=$body['messageId'];
+	$status		=$body['status'];
+	$osType		=$body['osType'];			
+	NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
+      }
+      elseif($type == 'UPDATE_NOTIFICATION_STATUS_API')
+      {
+        $profileid      	=$body['profileid'];
+        $notificationStatus     =$body['status'];
+        $mobileApiRegistrationObj = new MOBILE_API_REGISTRATION_ID;
+        $mobileApiRegistrationObj->updateNotificationStatus($profileid,$notificationStatus);
+      }
+      elseif($type == 'REGISTRATION_API')
+      {
+        $profileid      =$body['profileid'];
+        $registrationid =$body['registrationid'];
+        $appVersion     =$body['appVersion'];
+        $osVersion      =$body['osVersion'];
+        $deviceBrand    =$body['deviceBrand'];
+	$deviceModel	=$body['deviceModel'];
+	NotificationFunctions::registrationIdInsert($profileid,$registrationid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
+      }
 
     }
     catch (Exception $exception) 

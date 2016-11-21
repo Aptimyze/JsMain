@@ -4,7 +4,6 @@
  *created on : 07 Sept 2016 
  */
 
-ini_set("max_execution_time",-1);
 class kundliAlertsMailerTask extends sfBaseTask
 {
 	private $smarty;
@@ -51,10 +50,14 @@ $this->addOptions(array(
        {
        		foreach($value as $k1=>$v1)
        		{
-       			if($k1 !="RECEIVER" && strpos($k1,"GUNA_")===false)
-       			{
-       				$gunaScoreArr[$v1] = $value["GUNA_U".substr($k1,4)];
-       			}
+       			if($k1 == "RECEIVER")
+            {
+              $receiverId = $v1;
+            }
+            elseif(strpos($k1,"GUNA_")===false && $v1!=0)
+            {
+              $gunaScoreArr[$receiverId][$v1] = $value["GUNA_U".substr($k1,4)];
+            }
        		}
         }
         if(is_array($receivers))
@@ -69,7 +72,7 @@ $this->addOptions(array(
         foreach($receivers as $sno => $values)
     		{
     			$pid = $values["RECEIVER"];
-          $data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray,$gunaScoreArr);                
+          $data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray,$gunaScoreArr[$pid]);                
           if(is_array($data))
           {
            $data["stypeMatch"] =$stypeMatch;
@@ -79,9 +82,8 @@ $this->addOptions(array(
            $subject = $subjectAndBody["subject"];
            $this->smarty->assign('data',$data);
            $msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
-          // $file = fopen("sampleMailer.html","w");
-          // fwrite($file,$msg);die;
-
+          /*$file = fopen("sampleMailer.html","w");
+          fwrite($file,$msg);die;*/
             //Sending mail and tracking sent status
            $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid);
           }

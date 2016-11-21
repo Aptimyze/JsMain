@@ -20,7 +20,7 @@ class SearchUtility
 	* @param profile to ignore is passed in the url (optional)
 	* @param noAwaitingContacts exclude awaiting contacts.
 	*/
-	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '',$showOnlineArr='')
+	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '',$showOnlineArr='',$getFromCache = 0)
 	{
 		//print_r($SearchParamtersObj);die;
 		if($profileFromUrl)
@@ -50,14 +50,23 @@ class SearchUtility
 			{
 				if($pid)
 				{
-					/* ignored profiles two way */
-					$IgnoredProfilesObj = new IgnoredProfiles();
-					$hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid,$seperator);
+                                        if($getFromCache == 1){
+                                                $memObject=JsMemcache::getInstance();
+                                                $hideArr = $memObject->get('SEARCH_MA_IGNOREPROFILE_'.$pid);
+                                        }
+                                        if(!$hideArr){
+                                                /* ignored profiles two way */
+                                                $IgnoredProfilesObj = new IgnoredProfiles();
+                                                $hideArr = $IgnoredProfilesObj->listIgnoredProfile($pid,$seperator);
 
-					/* contacted profiles */
-					$Obj = new ContactsRecords;
-					$hideArr.= $Obj->getContactsList($pid,$seperator,$noAwaitingContacts);
-
+                                                /* contacted profiles */
+                                                $Obj = new ContactsRecords;
+                                                $hideArr.= $Obj->getContactsList($pid,$seperator,$noAwaitingContacts);
+                                                
+                                                if($getFromCache == 1){
+                                                       $memObject->set('SEARCH_MA_IGNOREPROFILE_'.$pid,$hideArr,SearchConfig::$matchAlertCacheLifetime);
+                                                }
+                                        }
 					/** matchAlerts Profile **/
 					if($removeMatchAlerts)
 					{
@@ -102,7 +111,6 @@ class SearchUtility
 						else			
 							$alreadyInShowArr = $alreadyInShowArr1;
 					}
-
 					if($SearchParamtersObj->getMATCHALERTS_DATE_CLUSTER())
 					{
 						

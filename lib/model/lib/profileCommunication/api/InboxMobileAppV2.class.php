@@ -23,7 +23,7 @@ class InboxMobileAppV2
 	const MY_MESSAGE = "You have not sent or received any messages yet";
 	const MY_MESSAGE_RECEIVED = "You have not received any messages yet";
 	//const MATCH_ALERT = "Profiles you would see here are Matches sent to you every day on your Email ID. We have not sent you any 'Match Alert' emails yet.";
-	const MATCH_ALERT = "Match alerts will appear here";
+	const MATCH_ALERT = "Daily Recommendations will appear here";
 	const PHOTO_REQUEST_RECEIVED = "No Photo Request Received";
 	const PHOTO_REQUEST_SENT = "No Photo Requests sent";
 	const INTRO_CALLS = "Members to be called will appear here";
@@ -1133,8 +1133,12 @@ class InboxMobileAppV2
 		}
 		else if(sfContext::getInstance()->getRequest()->getParameter("ContactCenterDesktop")==1)
 		{
+                        if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")=="M")
+                            $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_JSPC;
+                        else
+                            $visitorsStype = SearchTypesEnums::VISITORS_JSPC;
 			$trackingMap=array("INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::CONTACT_AWAITING,
-				"VISITORS"=>"stype=".SearchTypesEnums::VISITORS_JSPC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
+				"VISITORS"=>"stype=".$visitorsStype."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_JSPC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_SENT_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
@@ -1147,10 +1151,14 @@ class InboxMobileAppV2
                 "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACTS_VIEWED_BY_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER
                  );
 		}
-		elseif(MobileCommon::isApp()=='I')
+		elseif(MobileCommon::isApp()=='I'){
+                    if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")=="M")
+                        $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_IOS;
+                    else
+                        $visitorsStype = SearchTypesEnums::VISITORS_IOS;
                         $trackingMap=array(
                                 "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MOBILE_AWAITING_IOS,
-                                "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_IOS,
+                                "VISITORS"=>"stype=".$visitorsStype,
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::iOSMatchAlertsCC,
                                 "SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_IOS."&responseTracking=".JSTrackingPageType::SHORTLIST_IOS,
                                 "PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_IOS,
@@ -1158,10 +1166,15 @@ class InboxMobileAppV2
                                 "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_IOS,
                                 "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_IOS,"responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_IOS
                                 );
-		else
+                }
+		else{
+                    if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")=="M")
+                        $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_JSMS;
+                    else
+                        $visitorsStype = SearchTypesEnums::VISITORS_JSMS;
 			$trackingMap=array(
 				"INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MOBILE_AWAITING,
-				"VISITORS"=>"stype=".SearchTypesEnums::VISITORS_JSMS,
+				"VISITORS"=>"stype=".$visitorsStype,
 				"MATCH_ALERT"=>"stype=".SearchTypesEnums::WapMatchAlertsCC,
 				"SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_JSMS."&responseTracking=".JSTrackingPageType::SHORTLIST_JSMS,
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_JSMS,
@@ -1169,6 +1182,7 @@ class InboxMobileAppV2
 				"FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_JSMS,
 				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_JSMS."&responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_JSMS
 				);
+                }
 		return $trackingMap[$infoType]?$trackingMap[$infoType]:false;
 	}
 

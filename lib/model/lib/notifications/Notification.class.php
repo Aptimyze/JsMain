@@ -99,7 +99,13 @@ abstract class Notification
 	  case "USERNAME_SELF":
 			  return strlen($details["SELF"]["USERNAME"])<=$maxlength ? $details["SELF"]["USERNAME"] : substr($details["SELF"]["USERNAME"],0,$maxlength-2) . "..";
           case "USERNAME_OTHER_1":
-              return strlen($details['OTHER'][0]["USERNAME"])<=$maxlength ? $details['OTHER'][0]["USERNAME"] : substr($details['OTHER'][0]["USERNAME"],0,$maxlength-2) . "..";
+              if($details["NAME_OF_USER"]){
+                  $username = $details["NAME_OF_USER"];
+              }
+              else{
+                  $username = $details['OTHER'][0]["USERNAME"];
+              }
+              return strlen($username)<=$maxlength ? $username : substr($username,0,$maxlength-2) . "..";
           case "USERNAME_OTHER_2":
               return strlen($details['OTHER'][1]["USERNAME"])<=$maxlength ? $details['OTHER'][1]["USERNAME"] : substr($details['OTHER'][1]["USERNAME"],0,$maxlength-2) . "..";
           case "DISCOUNT":

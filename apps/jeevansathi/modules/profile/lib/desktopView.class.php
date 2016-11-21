@@ -71,6 +71,22 @@ class desktopView extends DetailedViewApi
         }
         $this->m_arrOut['othersHoroscope'] = $this->getHoroscopeExist();
     }
+        $subscriptionData = $this->m_actionObject->loginProfile->getSUBSCRIPTION();
+        if(!strstr($subscriptionData,'A'))
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='N';
+        else
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='Y';
+        
+        if($subscriptionData)
+            $this->m_arrOut['paidMem']='Y';
+        else
+            $this->m_arrOut['paidMem']='N';
+        
+        if ($this->m_arrOut['myHoroscope']=='Y' && $this->m_arrOut['othersHoroscope']=='Y')
+                $this->m_arrOut['NO_ASTRO']=0;
+            else
+                $this->m_arrOut['NO_ASTRO']=1;
+            
     $havePhoto=$this->m_objProfile->getHAVEPHOTO();
         if($havePhoto=='Y'){
             if($this->m_actionObject->THUMB_URL) {
@@ -796,19 +812,21 @@ class desktopView extends DetailedViewApi
         $profileId = $objProfile->getPROFILEID();
         if($this->bResponseForEditView){
             if (!check_astro_details($profileId, "Y")){
-                include_once(sfConfig::get("sf_web_dir")."/profile/horoscope_upload.inc");
+                /*include_once(sfConfig::get("sf_web_dir")."/profile/horoscope_upload.inc");
                     if (get_horoscope($profileId)){
                     $HOROSCOPE = "Y";
                 }
                 else{
                     $HOROSCOPE = "N";
-                }
+                }*/
+                $HOROSCOPE = "N";
+                $this->m_arrOut['NO_ASTRO']=1;
             }
             else{
                 $HOROSCOPE = "Y";
             }
             
-            $horoStoreObj = new NEWJS_HOROSCOPE_FOR_SCREEN;
+            /*$horoStoreObj = new NEWJS_HOROSCOPE_FOR_SCREEN;
             $horoRow =  $horoStoreObj->getHoroscopeIfNotDeleted($objProfile->getPROFILEID());
             unset($horoStoreObj);
 
@@ -817,8 +835,8 @@ class desktopView extends DetailedViewApi
             }
             else{
                 $horo_for_screen = 'Y';
-            }
-            if($horo_for_screen == 'Y' || $HOROSCOPE == 'Y')
+            }*/
+            if($HOROSCOPE == 'Y')/*$horo_for_screen == 'Y' || */
                 $this->m_arrOut['horo_available'] = 'Y';
             else
                 $this->m_arrOut['horo_available'] = 'N';

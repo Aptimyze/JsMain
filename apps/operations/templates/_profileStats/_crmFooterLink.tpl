@@ -75,7 +75,7 @@
         </tr>-->
 	<tr class="fieldsnew">
 		<td align="center">
-		<a href="~sfConfig::get('app_site_url')`/crm/show_matchalert.php?cid=~$cid`&pid=~$profileid`&crmback=admin" target="_blank"><font size='2'>Click here to view match alerts sent to this user</font></a><br>
+		<a href="~sfConfig::get('app_site_url')`/crm/show_matchalert.php?cid=~$cid`&pid=~$profileid`&crmback=admin" target="_blank"><font size='2'>Click here to view Daily Recommendations sent to this user</font></a><br>
 		</td>
 	</tr>
 ~if $isAlloted`

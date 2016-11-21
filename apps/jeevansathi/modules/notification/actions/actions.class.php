@@ -21,15 +21,29 @@ class notificationActions extends sfActions
   }
   public function executeUpdateNotificationStatusV1(sfWebRequest $request)
   {
+        /*$notificationStop =JsConstants::$notificationStop;
+        if($notificationStop){
+		$respObj = ApiResponseHandler::getInstance();
+                $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                $respObj->generateResponse();
+                die;
+        }*/
 	$respObj = ApiResponseHandler::getInstance();
-	//$registrationid = $request->getParameter('registrationid');
 	$notificationStatus = $request->getParameter('notificationStatus');
 	$loginData =$request->getAttribute("loginData");
 	$profileid =$loginData['PROFILEID'];
 	if($profileid)
 	{
-		$mobileApiRegistrationObj = new MOBILE_API_REGISTRATION_ID;
-		$mobileApiRegistrationObj->updateNotificationStatus($profileid,$notificationStatus);
+                $producerObj = new JsNotificationProduce();
+                if($producerObj->getRabbitMQServerConnected()){
+                        $dataSet =array('profileid'=>$profileid,'status'=>$notificationStatus);
+                        $msgdata = FormatNotification::formatLogData($dataSet,'','UPDATE_NOTIFICATION_STATUS_API');
+                        $producerObj->sendMessage($msgdata);
+                }
+		else{
+			$mobileApiRegistrationObj = new MOBILE_API_REGISTRATION_ID;
+			$mobileApiRegistrationObj->updateNotificationStatus($profileid,$notificationStatus);
+		}
 	}
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         $respObj->generateResponse();
@@ -37,6 +51,13 @@ class notificationActions extends sfActions
   }
   public function executeRegistrationIdInsertV1(sfRequest $request)
   {
+        /*$notificationStop =JsConstants::$notificationStop;
+        if($notificationStop){
+		$respObj = ApiResponseHandler::getInstance();
+		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                $respObj->generateResponse();
+                die;
+        }*/
 	$respObj = ApiResponseHandler::getInstance();
         $registrationid = $request->getParameter('registrationid');
 	$deviceBrand = $request->getParameter('DEVICE_BRAND');
@@ -46,19 +67,15 @@ class notificationActions extends sfActions
         $loginData =$request->getAttribute("loginData");
         $profileid =$loginData['PROFILEID'];
 	
-	if($profileid)
-	{
-		//$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-		//$profileid= $loggedInProfileObj->getPROFILEID();
-		$maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME;
-		$alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
-		$alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
-		$alarmTime[$profileid]=alarmTimeManager::getNextTime($alarmCurrentTime,NotificationEnums::$alarmMaxTime,NotificationEnums::$alarmMinTime);
-		$alarmTimeObj = new MOBILE_API_ALARM_TIME;
-		$alarmTimeObj->replace($alarmTime);
-		$maxAlarmTimeObj->updateMaxAlarmTime($alarmTime[$profileid]);
-	}
-	$done = NotificationFunctions::manageGcmRegistrationid($registrationid,$profileid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
+        /*$producerObj = new JsNotificationProduce();
+        if($producerObj->getRabbitMQServerConnected()){
+        	$dataSet =array('profileid'=>$profileid,'registrationid'=>$registrationid,'appVersion'=>$appVersion,'osVersion'=>$osVersion,'deviceBrand'=>$deviceBrand,'deviceModel'=>$deviceModel);
+                $msgdata = FormatNotification::formatLogData($dataSet,'','REGISTRATION_API');
+                $producerObj->sendMessage($msgdata);
+        }
+	else{*/
+		NotificationFunctions::registrationIdInsert($profileid,$registrationid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
+	//}
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         $respObj->generateResponse();
 	die;
@@ -66,6 +83,13 @@ class notificationActions extends sfActions
 
   public function executeDeliveryTrackingV1(sfRequest $request)
   {
+	$notificationStop =JsConstants::$notificationStop;
+	if($notificationStop){
+		$respObj = ApiResponseHandler::getInstance();
+	        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+	        $respObj->generateResponse();
+	        die;
+	}
         $respObj = ApiResponseHandler::getInstance();
         $notificationKey = $request->getParameter('notificationKey');
 	$notificationType = $request->getParameter('notificationType');
@@ -79,34 +103,15 @@ class notificationActions extends sfActions
         $profileid =$loginData['PROFILEID'];
         if($profileid)
         {
-                //$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-                //$profileid= $loggedInProfileObj->getPROFILEID();
-		$scheduledNotificationKey  =NotificationEnums::$scheduledNotificationKey;
-
-		// code execute for Scheduled Notification	
-		if(in_array("$notificationKey", $scheduledNotificationKey)){
-			$schedduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
-			if(!$messageId)
-				$schedduledAppNotificationObj->updateSent('',$notificationKey,$status,$profileid);
-			else if($messageId)
-				$schedduledAppNotificationObj->updateSuccessSent($status,$messageId);
-		}
-		if($status=='L'){
-			$notificationObj =new MOBILE_API_LOCAL_NOTIFICATION_LOG;
-			$notificationDelLogObj= new MOBILE_API_NOTIFICATION_LOG;
-		}
+                $producerObj = new JsNotificationProduce();
+                if($producerObj->getRabbitMQServerConnected()){
+                        $dataSet =array('profileid'=>$profileid,'notificationKey'=>$notificationKey,'messageId'=>$messageId,'status'=>$status,'osType'=>$osType);
+                        $msgdata = FormatNotification::formatLogData($dataSet,'','DELIVERY_TRACKING_API');
+                        $producerObj->sendMessage($msgdata);
+                }
 		else{
-			$notificationObj =new MOBILE_API_NOTIFICATION_LOG;
-			$notificationDelLogObj= new MOBILE_API_LOCAL_NOTIFICATION_LOG;
+			NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
 		}
-		if(!$messageId){
-			$notificationObj->updateSentPrev($profileid,$notificationKey,$status);
-		}
-		else if($messageId && $osType){
-			$notificationObj->updateSent($messageId,$status,$osType);
-			$notificationDelLogObj->deleteNotification($messageId,$osType);						
-		}
-
                 // temporary_logging    
                 //$fileName ="manoj_".$notificationKey.".txt";
                 //passthru("echo ' $profileid $status ' >>/tmp/$fileName");
@@ -117,6 +122,17 @@ class notificationActions extends sfActions
   }
   public function executePollV1(sfRequest $request)
   {
+	$notificationStop =JsConstants::$notificationStop;
+	if((date("H")>='11' && date("H")<='15') || (date("H")>='01' && date("H")<='03'))
+		$notificationStop=1;
+
+	if($notificationStop)
+	{
+		$notificationData['notifications'] = '';
+	        $notificationData['alarmTime']= '';
+		echo json_encode($notificationData);die;
+	}
+
 	$currentOSversion	=$request->getParameter('CURRENT_VERSION');
 	$apiappVersion		=intval($request->getParameter('API_APP_VERSION'));
         $deviceBrand 		=$request->getParameter('DEVICE_BRAND');
@@ -133,18 +149,17 @@ class notificationActions extends sfActions
                 $respObj->generateResponse();
                 die;
 	}
-	/*
-	$registationIdObj = new MOBILE_API_REGISTRATION_ID();
-	$registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);*/
 
 	/* Rabbit MQ */
 	$producerObj = new JsNotificationProduce();
 	if($producerObj->getRabbitMQServerConnected()){
+		$producerObjSet =true;
 		$dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion,"osVersion"=>$currentOSversion,"brand"=>$deviceBrand,"model"=>$deviceModel);
 		$msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
 		$producerObj->sendMessage($msgdata);
 	}
         else{
+		$producerObjSet =false;
 		$registationIdObj = new MOBILE_API_REGISTRATION_ID();
 		$registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
         }
@@ -162,15 +177,24 @@ class notificationActions extends sfActions
 	$notificationData['notifications'] = $notifications;
 	$notificationData['alarmTime']=$alarmDate;
 
-	//$scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;	
 	$osType =MobileCommon::isApp();
 	$status ='D';
 	if(count($notifications)>0){
-		foreach($notifications as $key=>$val){
-			$notificationKey =$val['NOTIFICATION_KEY'];
-			$messageId =$val['MSG_ID'];
-                        //$scheduledAppNotificationObj->updateSuccessSent($status,$messageId);
-			$localLogObj->insert($profileid,$notificationKey,$messageId,$status,$alarmDate,$osType);
+                if($producerObjSet){
+                        foreach($notifications as $key=>$val){
+                                $notificationKey =$val['NOTIFICATION_KEY'];
+                                $messageId =$val['MSG_ID'];
+                                $dataSet1 =array('profileid'=>$profileid,'notificationKey'=>$notificationKey,'messageId'=>$messageId,'status'=>$status,'alarmTime'=>$alarmDate,'osType'=>$osType);
+                                $msgdata1 = FormatNotification::formatLogData($dataSet1,'LOCAL_NOTIFICATION_LOG');
+                                $producerObj->sendMessage($msgdata1);
+                        }
+                }
+		else{
+			foreach($notifications as $key=>$val){
+				$notificationKey =$val['NOTIFICATION_KEY'];
+				$messageId =$val['MSG_ID'];
+				$localLogObj->insert($profileid,$notificationKey,$messageId,$status,$alarmDate,$osType);
+			}
 		}
 	}
 	echo json_encode($notificationData);die;
@@ -183,6 +207,12 @@ class notificationActions extends sfActions
     public function executeInsertChromeIdV1(sfWebRequest $request)
     {
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        /*$notificationStop =JsConstants::$notificationStop;
+        if($notificationStop){
+		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_ID_INSERT_FAILURE);
+                $apiResponseHandlerObj->generateResponse();
+                die;
+        }*/
         $loginData = $request->getAttribute("loginData");
         $profileId = $loginData['PROFILEID'];
         if($profileId){
@@ -218,6 +248,12 @@ class notificationActions extends sfActions
     
     public function executeGetNotificationV1($request){
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $notificationStop =JsConstants::$notificationStop;
+        if($notificationStop){
+		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_FAILURE);	
+                $apiResponseHandlerObj->generateResponse();
+                die;
+        }
         $regId = $request->getParameter('regId');
         $browserNotificationObj = new MOBILE_API_BROWSER_NOTIFICATION();
         $notifications = $browserNotificationObj->getNotification($regId);
@@ -236,28 +272,18 @@ class notificationActions extends sfActions
         else{
             $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_FAILURE);
         }
-        /*
-        $response = array('title' => 'Jeevansathi.com - Match Alert',
-                          'body' => 'Pooja has sent you an interest. Click here to view her profile',
-                          'icon' => 'http://mediacdn.jeevansathi.com/2575/18/51518499-1454658632.jpeg',
-                          //'tag' => "MA",
-                          'tag' => "MA",
-                          'regId' => $regId,
-                          'url'=> "http://www.jeevansathi.com/profiles/ZWRS3785");
-         */
-//        $response = array('title' => 'Jeevansathi.com: Chat request',
-//                          'body' => 'Simran has sent you a chat request. Click here to subscribe',
-//                          'icon' => 'http://mediacdn.jeevansathi.com/1831/6/36626927-1438947150.jpeg',
-//                          //'tag' => "MA",
-//                          'tag' => "CR",
-//                          'regId' => $regId,
-//                          'url'=> "http://www.jeevansathi.com/profiles/ZXWA1376");
         $apiResponseHandlerObj->generateResponse();
         die;
     }
     
     public function executeUpdateNotificationSettingV1($request){
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        /*$notificationStop =JsConstants::$notificationStop;
+        if($notificationStop){
+                $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_PARAM);
+                $apiResponseHandlerObj->generateResponse();
+                die;
+        }*/
         $channel = MobileCommon::isMobile()?"M":"D";
         $loginData = $request->getAttribute("loginData");
         $profileId = $loginData["PROFILEID"];
@@ -281,6 +307,12 @@ class notificationActions extends sfActions
     
     public function executeNotificationLayerSettingsV1($request){
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        /*$notificationStop =JsConstants::$notificationStop;
+        if($notificationStop){
+                $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_PARAM);
+                $apiResponseHandlerObj->generateResponse();
+                die;
+        }*/
         $channel = MobileCommon::isMobile()?"M":"D";
         $loginData = $request->getAttribute("loginData");
         $profileId = $loginData["PROFILEID"];
@@ -309,6 +341,13 @@ class notificationActions extends sfActions
     
     public function executeMonitoringNotificationsKeyV1(sfWebRequest $request)
     {
+        $notificationStop =JsConstants::$notificationStop;
+        if($notificationStop){
+                $respObj = ApiResponseHandler::getInstance();
+                $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                $respObj->generateResponse();
+                die;
+        }
         $respObj = ApiResponseHandler::getInstance();
         $notificationKey = $request->getParameter('notificationKey');
         if ($notificationKey) {
@@ -321,5 +360,30 @@ class notificationActions extends sfActions
         $respObj->setResponseBody($output);
         $respObj->generateResponse();
         die;
-    }   
+    }
+    
+    /* function to get notification subsciption status
+    */
+    public function executeNotificationSubscriptionStatusV1(sfWebRequest $request){
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $loginData = $request->getAttribute("loginData");
+        $profileId = $loginData["PROFILEID"];
+        if($profileId){
+            $mobileApiRegistrationObj = new MOBILE_API_REGISTRATION_ID("newjs_masterRep");
+            $res = $mobileApiRegistrationObj->checkNotificationSubscriptionStatus($profileId);
+            if($res){
+                $output['result']= $res;
+            }
+            else{
+                $output['result']= array("notificationStatus"=>"NotFound");   
+            }
+        }
+        else{
+            $output = array("error"=>"Profileid not found");
+        }
+        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $apiResponseHandlerObj->setResponseBody($output);
+        $apiResponseHandlerObj->generateResponse();
+        die;
+    }
 }

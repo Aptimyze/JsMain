@@ -214,7 +214,14 @@ class dppAction extends sfAction {
                                         foreach($this->existingData as $ky=>$vl){
                                           if(DPPConstants::$prefilledKeyArray[$key1][$value]==$vl[key]){
                                             $this->arrOut[$key1]["fieldArray"][$value]["prefilledMap"]=$ky;
+
+
                                           }
+                                         if($vl['key'] == "P_MATCHCOUNT")
+                                         {
+                                         	$this->mutualMatchCount = $vl["value"];
+                                         }
+
                                         }
 
 		}
@@ -268,6 +275,13 @@ class dppAction extends sfAction {
 		$this->staticFields["age"] = $this->alterAgeArray();
 		$this->staticFields["height_json"] = $this->orderHeightValues();
                 $this->staticFields["p_mstatus"] = $this->updateMStatus($this->staticFields["p_mstatus"]);
+		foreach($this->staticFields as $k=>$v)
+		{
+			if($v[0][0][0]=="Select")
+			{
+				unset($this->staticFields[$k][0][0]);
+			}
+		}
 		return $this->staticFields;
 	}
 	/* This function changes the format of the array into the requried format so as to make all data 

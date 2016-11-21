@@ -259,8 +259,8 @@ class UserFilterCheck
                 if(isset($ignFilterStatus))
                     $ignoreFilter = $ignFilterStatus;
                 else{
-                    $ignoreObj = new newjs_IGNORE_PROFILE();
-                    $ignoreFilter = $ignoreObj->isIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID());
+                    $ignoreObj = new IgnoredProfiles("newjs_master");
+                    $ignoreFilter = $ignoreObj->ifIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID());
                 }
 		if($ignoreFilter)
 		{	$data= "Ignored By the Reciever";
@@ -715,5 +715,10 @@ class UserFilterCheck
 		return $dpp_parameters;
 	}
 	
+        
+        public function getDppParameters(){
+            
+            return $this->dppParameters;
+        }
 
 }

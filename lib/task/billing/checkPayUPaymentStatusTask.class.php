@@ -58,6 +58,7 @@ EOF;
             
             foreach ($ordersArray as $key => $value) {
 
+                $profileid = $value['PROFILEID'];
                 $currency = $value['CURTYPE'];
                 $Order_Id = $value['ORDERID']."-".$value['ID'];
 
@@ -108,6 +109,11 @@ EOF;
                     continue; 
                 }
 
+                $gatewayRespObj = new billing_GATEWAY_RESPONSE_LOG();
+                list($order_str, $order_num) = explode("-", $Order_Id);
+                $responseMsg = serialize($response);
+                $gatewayRespObj->insertResponseMessage($profileid, $order_num, $order_str, 'PAYU_POLLING', $responseMsg);
+
                 $orderDetails = $response->transaction_details->$Order_Id;
                 $status = $orderDetails->status;
 
@@ -137,7 +143,7 @@ EOF;
                     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
                 }
 
-                unset($AuthDesc);
+                unset($AuthDesc, $profileid, $Order_Id, $currency);
             }
         }
     }

@@ -4,7 +4,7 @@
   ~/if`
 <div class="perspective" id="perspective">
 	<div class="pcontainer" id="pcontainer">
-<!--start:div-->
+<!--start:div--> 
 		<!--start:div-->
 		<div class="fullwid bg1" id="topbar">
 		  <div class="pad1">
@@ -106,7 +106,7 @@
 </div>
 <div id="filterButton" class ="dn">
 	<div class="fullwid bg7">
-	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Manage Filters</div>
+	<div class="dispbl lh50 txtc white" onClick="showFilterOverlayer()">Manage Strict Filters</div>
 	</div>
  </div>
 ~if isset($horoExist)`
@@ -123,7 +123,7 @@
   </div>
 </div>
 ~/if`
-<div id='dppToolTip' class='dn'>
+<!-- <div id='dppToolTip' class='dn'>
   <div  class="fullwid  brdr1 bwhite">
   <div class="pad1">
     <div class="pad2">
@@ -134,16 +134,27 @@
     </div>
   </div>
 </div>
-</div>
+</div> -->
 
 <div id="dppMatchalertToggle" class="dn">
+
+	<div class="fullwid dpbg1">
+		<div class="dpbg2 fontlig txtc">
+			<p class="f14"> The criteria below influences the matches and interests you recieve</p>
+			<p class="f16 pt10">No. of Mutual Matches with below criteria - <span id="mutualMatchCountMobile"></span></p>
+
+		</div>
+	</div>
+
+
+
 <div class="fullwid brdr1 bwhite">
 <div class="pad1">
 <div class="pad2">
 <div class="fl wwrap fontlig f14 color3">
 <div class="fl wwrap fontlig color3">
 <div class="f13 wid76p dispibl">Also send me matches outside my Desired Partner Profile
-<div class="f12 color4 pt10">If this is 'ON', you may receive recommendations based on your activity which can be outside your Desired Partner Profile</div>
+<!-- <div class="f12 color4 pt10">If this is 'ON', you may receive recommendations based on your activity which can be outside your Desired Partner Profile</div> -->
 </div>
     <div id="toggleButton" class="fr dispibl filter-onoff-new ~if $toggleMatchalerts eq 'dpp'` filter-off ~else` filter-on ~/if`" onclick="toggleDppMatchalerts();"></div>
 </div>
@@ -154,10 +165,13 @@
 </div>
 </div>    
 
+
 <script>
 	showLoader();	
 		var renderPage=new mobEditPage;
 		 var DualHamburger=0;
+		 var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
+		 var fromCALphoto=~if $fromCALphoto == 1`'1'~else`'0'~/if`;
 </script>
 </div>
 <div class="hamburger dn fullwid" id="ehamburger">

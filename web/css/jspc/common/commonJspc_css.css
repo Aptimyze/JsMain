@@ -848,6 +848,11 @@ input:focus {
 .pt25 {
     padding-top: 25px
 }
+.ptm25 {
+    padding-top: 25px;
+    padding-right: 48px;
+    padding-left: 48px;
+}
 
 .pt26 {
     padding-top: 26px
@@ -2346,4 +2351,11 @@ line-height:25px;
 }
 .vertM {
     vertical-align: middle;
+}
+
+.reportInv1{padding:0px 21px 30px 21px}
+.reportInv2{padding:31px 21px 0px 21px}
+.fontlig {
+    font-family: "Roboto", "sans-serif";
+    font-weight: 300
 }

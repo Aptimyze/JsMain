@@ -17,7 +17,9 @@ class LoggingEnums
     const LOG_ERROR = 0;
     const SERVER_FLAG = false;
     // 1 for Enabling config of modules, 0 for not
-    const CONFIG_ON = false;
+    const CONFIG_ON = true;
+    // Info For VA, on for referer in logs
+    const CONFIG_INFO_VA = true;
     // 1 for logging all modules in same file, 0 different
     const LOG_TOGETHER = false;
     const LOG_TRACE = false;
@@ -32,6 +34,7 @@ class LoggingEnums
     const I = 'I';
     const MS = 'MS';
     const OMS = 'OMS';
+    public static $Referer_ignore = array('jeevansathi.com', 'google.com', 'google.co.in', 'yahoo.com', 'yahoo.co.in', 'rediffmail.com', 'rediff.com', 'bing.com', 'outlook.com', 'infoedge.com');
     // exceptions type
     const MYSQL_EXCEPTION = "MYSQL";
     const PDO_EXCEPTION = "PDO";
@@ -65,7 +68,10 @@ class LoggingEnums
     const SEO = 'seo';
     const MYJS = 'myjs';
     const HOMEPAGE = 'homepage';
-    const _VAR = 'var';
+    const STATIC_MODULE = 'static';
     const REQUEST_URI = 'REQUEST_URI';
     const DOMAIN = 'Domain';
+    const REFERER = 'Referer';
+    const LOG_REFERER = 'Log_Referer';
+    const LOG_VA_MODULE = 'VA_Info';
 }

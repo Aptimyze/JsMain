@@ -136,6 +136,13 @@ class postSendReminderv1Action extends sfAction
 				$responseArray["headerlabel"] = "Hidden Profile";
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
+			elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
 			elseif($errorArr["REMINDER_LIMIT"] == 2)
 			{
 				if($this->loginProfile->getPROFILE_STATE()->getPaymentStates()->isPAID())

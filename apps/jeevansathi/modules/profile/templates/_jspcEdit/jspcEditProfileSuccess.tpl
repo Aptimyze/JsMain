@@ -1,6 +1,7 @@
 ~include_Partial("search/photoAlbum")`
 
 
+
 <input id='hiddenPhoneMain' type='hidden' value='' phonetype='M'>
 <input id='hiddenIsd1' type='hidden' value=''>
 <input id='hiddenPhoneOther' type='hidden' value='' phonetype='A'>
@@ -141,7 +142,7 @@
                     <div class="pl30 prflist1 fontlig js-basicView">
                       <p class="f24 pt25 fontlig" id="nameLabelParent"><span class="edpcolr2" >Full Name</span> - 
                         ~if isset($arrOutDisplay.about.name) and $arrOutDisplay.about.name neq $notFilledInText`
-                          <span class="color11" id='nameView'>
+                          <span class="color11 js-syncChatHeaderName" id='nameView'>
                             ~$name`
                           </span>
                           ~else`
@@ -568,6 +569,7 @@
   <!--end:second part--> 
 </div>
 <script type="text/javascript">
+  var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
   var senderEmail = "~$loggedInEmail`";
   var ProCheckSum = "~$arrOutDisplay["page_info"]["profilechecksum"]`";
   var profileGender = "~$arrOutDisplay["about"]["gender"]`";
@@ -582,3 +584,4 @@
    var profileCompletionValue = "~$iPCS`";
    var coverPhotoUrl = "~$editApiResponse.Details.COVER.value`";
 </script>
+

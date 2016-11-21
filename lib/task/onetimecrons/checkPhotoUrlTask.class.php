@@ -78,6 +78,7 @@ EOF;
         curl_setopt($ch,CURLOPT_URL,$completeUrl);
         curl_setopt($ch,CURLOPT_HEADER,1);
         curl_setopt($ch,CURLOPT_NOBODY,true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_exec($ch);
         $result=curl_getinfo($ch);
         curl_close ($ch);
@@ -101,19 +102,22 @@ EOF;
                 {
                     $mainPicUrl = $v1;
                 }                
+                if($k1 == "OriginalPicUrl")
+                {
+                    $originalPicUrl = $v1;
+                }
                 if($v1 == '')
                 {
-                    $this->checkPicDetails($k1,$profileId,$pictureId,$ordering,"B",$mainPicUrl,$picFormat);                     
-                    //check if condition is to be added for breaking on specific url
+                    $this->checkPicDetails($k1,$profileId,$pictureId,$ordering,"B",$mainPicUrl,$originalPicUrl,$picFormat);                     
                     break;
                 }
                 else
                 {                    
                     $result = $this->getCurlResult($v1);
                 
-                    if($result["http_code"]!="200")
+                    if($result["http_code"]!="200" && $result["http_code"]!="304")
                     {
-                        $this->checkPicDetails($k1,$profileId,$pictureId,$ordering,"I",$mainPicUrl,$picFormat);
+                        $this->checkPicDetails($k1,$profileId,$pictureId,$ordering,"I",$mainPicUrl,$originalPicUrl,$picFormat);
                         break;
                     }                    
                 }
@@ -121,20 +125,34 @@ EOF;
         }        
     }
 
-    //This function checks if a given url is of ThumbailUrl type and if it is Blank or incorrect, a new url is created and updated. For others, a database entry marking the fact that the data is incorrect is placed.
-    public function checkPicDetails($urlType,$profileId,$pictureId,$ordering,$reason,$mainPicUrl,$picFormat)
+    //This function checks if a given url is of ThumbailUrl type and if it is Blank or incorrect, a new url is created and updated. For others, a database entry marking the fact that the data is incorrect is placed. Also,
+    public function checkPicDetails($urlType,$profileId,$pictureId,$ordering,$reason,$mainPicUrl,$originalPicUrl,$picFormat)
     {
-        // if($urlType == "ThumbailUrl")
-        // {
-        //     $urlType = "thumbnail";
-        //     $this->createThumbnailUrl($urlType,$profileId,$pictureId,$mainPicUrl,$reason,$picFormat);
-        // }
-        //else
-        //{
-            $incorrectPicDetailObj = new PICTURE_INCORRECT_PICTURE_DATA("newjs_masterRep");
-            $incorrectPicDetailObj->insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason);
-            unset($incorrectPicDetailObj);
-        //}
+        if($urlType == "ThumbailUrl")
+        {
+            $urlType = "thumbnail";
+            $this->createThumbnailUrl($urlType,$profileId,$pictureId,$mainPicUrl,$reason,$picFormat);
+        }
+        elseif($urlType == "OriginalPicUrl" && $originalPicUrl != "")
+        {
+            $checkUrl = substr($originalPicUrl,0,2);
+
+            if($checkUrl ==  IMAGE_SERVER_ENUM::$cloudUrl)
+            {
+                $originalPicUrl = str_replace(IMAGE_SERVER_ENUM::$cloudUrl,IMAGE_SERVER_ENUM::$cloudArchiveUrl,$originalPicUrl);
+                $paramArr = array("OriginalPicUrl"=>$originalPicUrl);
+                $picObj = new PICTURE_NEW("newjs_masterRep");
+                $picObj->edit($paramArr,$pictureId,$profileId);
+            }
+            else
+            {
+                $this->insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason);
+            }
+        }
+        else
+        {
+            $this->insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason);
+        }
     }
 
     //This functions creates ThumbailUrl and updates in on the database
@@ -187,5 +205,12 @@ EOF;
         //to insert row in ImageServerLog
         $imageServer=new ImageServerLog;
         $result=$imageServer->insertBulk("PICTURE",$pictureId,"ThumbailUrl","N");
+    }
+
+    public function insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason)
+    {
+       $incorrectPicDetailObj = new PICTURE_INCORRECT_PICTURE_DATA("newjs_masterRep");
+       $incorrectPicDetailObj->insertIncorrectPicDetail($profileId,$pictureId,$ordering,$reason);
+       unset($incorrectPicDetailObj);
     }
 }

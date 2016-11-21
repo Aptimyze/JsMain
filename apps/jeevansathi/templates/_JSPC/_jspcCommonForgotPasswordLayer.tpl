@@ -11,7 +11,7 @@
 <div class="mt10"></div>
 <form id="forgotPasswordForm" action="">
 <div class="clearfix wid92p brderinp layerp2" id="userEmailBox">
-<input type="text" class="bgnone f15 grey6 brdr-0 fl fullwid" placeholder="Registered Email Id" id="userEmail">
+<input type="text" class="bgnone f15 grey6 brdr-0 fl fullwid" placeholder="Registered Email Id or Primary Mobile Number" id="userEmail">
 </div>
 <div class="mt30">
 <div class="lh63 txtc colrw f18 fullwid brdr-0 bg5 cursp"id="sendLinkForgot">Send Link</div>

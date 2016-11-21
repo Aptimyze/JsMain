@@ -185,6 +185,7 @@ class registerMisActions extends sfActions {
     $name = $request->getAttribute('name');
     $this->cid = $formArr['cid'];
     if ($formArr['submit']) {
+      ini_set('memory_limit','256M');
       $commonUtilObj = new CommonUtility();
       $commonUtilObj->avoidPageRefresh("QUALITY_REGISTRATION", $name);
       $this->range_format = $formArr['range_format'];
@@ -267,14 +268,14 @@ class registerMisActions extends sfActions {
             if($formArr['source_names']){
               // insert source id data
               $sourceGroups[$keyVal][$groupData['SOURCEID']]['groupName'] = strtolower($groupData['SOURCEID']) == 'blanksourcegroup' ? 'BlankSourceId' : $groupData['SOURCEID'];
-              $sourceGroups[$keyVal][$groupData['SOURCEID']]['TOTAL_REG'][$groupData['REG_DATE']] = $groupData['TOTAL_REG'];
-              $sourceGroups[$keyVal][$groupData['SOURCEID']]['F22'][$groupData['REG_DATE']] = $groupData['F22'];
-              $sourceGroups[$keyVal][$groupData['SOURCEID']]['F22MV'][$groupData['REG_DATE']] = $groupData['F22MV'];
-              $sourceGroups[$keyVal][$groupData['SOURCEID']]['F22MVCC'][$groupData['REG_DATE']] = $groupData['F22MVCC'];
-              $sourceGroups[$keyVal][$groupData['SOURCEID']]['M26'][$groupData['REG_DATE']] = $groupData['M26'];
-              $sourceGroups[$keyVal][$groupData['SOURCEID']]['M26MV'][$groupData['REG_DATE']] = $groupData['M26MV'];
-              $sourceGroups[$keyVal][$groupData['SOURCEID']]['M26MVCC'][$groupData['REG_DATE']] = $groupData['M26MVCC'];
-              $sourceGroups[$keyVal][$groupData['SOURCEID']]['SCREENED_SIC'][$groupData['REG_DATE']] = $groupData['SCREENED_SIC'];
+              $sourceGroups[$keyVal][$groupData['SOURCEID']]['TOTAL_REG'][$groupData['REG_DATE']] += $groupData['TOTAL_REG'];
+              $sourceGroups[$keyVal][$groupData['SOURCEID']]['F22'][$groupData['REG_DATE']] += $groupData['F22'];
+              $sourceGroups[$keyVal][$groupData['SOURCEID']]['F22MV'][$groupData['REG_DATE']] += $groupData['F22MV'];
+              $sourceGroups[$keyVal][$groupData['SOURCEID']]['F22MVCC'][$groupData['REG_DATE']] += $groupData['F22MVCC'];
+              $sourceGroups[$keyVal][$groupData['SOURCEID']]['M26'][$groupData['REG_DATE']] += $groupData['M26'];
+              $sourceGroups[$keyVal][$groupData['SOURCEID']]['M26MV'][$groupData['REG_DATE']] += $groupData['M26MV'];
+              $sourceGroups[$keyVal][$groupData['SOURCEID']]['M26MVCC'][$groupData['REG_DATE']] += $groupData['M26MVCC'];
+              $sourceGroups[$keyVal][$groupData['SOURCEID']]['SCREENED_SIC'][$groupData['REG_DATE']] += $groupData['SCREENED_SIC'];
             }
           }
         } else {

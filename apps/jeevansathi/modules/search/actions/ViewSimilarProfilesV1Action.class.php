@@ -41,13 +41,16 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                 //View Similar Profile Object to set Search Criteria
                                 $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
                                 if($pid){
-                                    if(JsConstants::$vspServer == 'live' && !MobileCommon::isDesktop()){
+                                    $modVal = 9;
+                                    $loggedinMod = $loggedInProfileObj->getPROFILEID()%$modVal;
+                                    $modResult =  array(1);
+                                    if(JsConstants::$vspServer == 'live' && !MobileCommon::isDesktop() && in_array($loggedinMod,$modResult)){
                                       if($viewerGender == 'M')
                                         $feedURL = JsConstants::$vspMaleUrl;
                                       else
                                         $feedURL = JsConstants::$vspFemaleUrl;
                                       $profileListObj = new IgnoredContactedProfiles();
-                                      $ignoredContactedProfiles = $profileListObj->getProfileList($this->loginProfile->getPROFILEID(),'');
+                                      $ignoredContactedProfiles = $profileListObj->getProfileList($loggedInProfileObj->getPROFILEID(),'');
                                       $postParams = json_encode(array("PROFILEID"=>$pid,"PROFILEID_POG"=>$viewedProfileID,'removeProfiles'=>$ignoredContactedProfiles));
                                       $profilesList = CommonUtility::sendCurlPostRequest($feedURL,$postParams);
                                       if($profilesList == "Error") {
@@ -119,6 +122,8 @@ class ViewSimilarProfilesV1Action extends sfActions {
                               	if($resultsArray)
                                 	$button = $contactButtonObj->setSearchResults($loggedInProfileObj, "", "", $resultsArray,'',$fromVspAndroid);
                                 $i = 0;
+                                $nameOfUserObj = new NameOfUser;
+                                $nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());
        	                        if(is_array($resultsArray))
                                 { 
                                     foreach ($resultsArray as $k => $v) {
@@ -134,6 +139,12 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                             $resultsArray[$k][location] = $resultsArray[$k][decorated_city_res];
                                             $resultsArray[$k][subscription_icon] = $resultsArray[$k][paidlabel];
                                             $resultsArray[$k][subscription_text] = $resultsArray[$k][paidlabel];
+                                            $name = '';
+                                            if(is_array($nameData)&& $nameData[$loggedInProfileObj->getPROFILEID()]['DISPLAY']=="Y" && $nameData[$loggedInProfileObj->getPROFILEID()]['NAME']!='')
+                                                {
+                                                        $name = $nameOfUserObj->getNameStr($resultsArray[$k][name_of_user],$loggedInProfileObj->getSUBSCRIPTION());
+                                                }
+                                            $resultsArray[$k][name_of_user]=$name;
                                             if($fromVspAndroid)
                                                 $resultsArray[$k][apiLinkToProfile] = "/api/v1/profile/detail?profilechecksum=".$resultsArray[$k][profilechecksum];
                                             if ($resultsArray[$k][userloginstatus] == "gtalk" || $resultsArray[$k][userloginstatus] == "jschat")

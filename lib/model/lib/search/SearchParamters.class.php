@@ -14,6 +14,7 @@ class SearchParamters
 	protected $LAGE;
 	protected $HAGE;
 	protected $HAVEPHOTO;
+	protected $PHOTO_VISIBILITY_LOGGEDIN;
 	protected $MANGLIK;
 	protected $MSTATUS;
 	protected $HAVECHILD;
@@ -113,7 +114,9 @@ class SearchParamters
         protected $NATIVE_STATE;
         protected $NATIVE_CITY;
         protected $SHOW_RESULT_FOR_SELF;
-
+        protected $LAST_LOGIN_SCORE;
+        protected $TRENDS_DATA;
+        
         public function __construct()
 	{
 		$this->whereParams = SearchConfig::$searchWhereParameters;
@@ -138,6 +141,12 @@ class SearchParamters
 			$this->GENDER = $GENDER;
 	}
 	public function getGENDER() { return $this->GENDER; }
+        
+	/* Getter and Setter functions*/
+	public function setLAST_LOGIN_SCORE($LAST_LOGIN_SCORE) {
+			$this->LAST_LOGIN_SCORE = $LAST_LOGIN_SCORE;
+	}
+	public function getLAST_LOGIN_SCORE() { return $this->LAST_LOGIN_SCORE; }
 
         public function setNATIVE_STATE($NATIVE_STATE) 
 	{ 
@@ -213,6 +222,13 @@ class SearchParamters
 			$this->HAVEPHOTO = $HAVEPHOTO; 
 	}
         public function getHAVEPHOTO() { return $this->HAVEPHOTO; }
+        public function setPHOTO_VISIBILITY_LOGGEDIN($PHOTO_VISIBILITY_LOGGEDIN)
+        {
+                $validInput = SearchInputValidation::validateInput("PHOTO_VISIBILITY_LOGGEDIN",$PHOTO_VISIBILITY_LOGGEDIN);
+                if($validInput)
+                        $this->PHOTO_VISIBILITY_LOGGEDIN = $PHOTO_VISIBILITY_LOGGEDIN;
+        }
+        public function getPHOTO_VISIBILITY_LOGGEDIN() { return $this->PHOTO_VISIBILITY_LOGGEDIN; }
 	public function setMANGLIK($MANGLIK) 
 	{ 
                 // append Dont know to search string if 'not manglik' is selected. Exclude cluster search by APPLY_ONLY_CLUSTER enum.
@@ -1175,4 +1191,9 @@ class SearchParamters
 					$this->SHOW_RESULT_FOR_SELF = $SHOW_RESULT_FOR_SELF; 
 			}
 			public function getSHOW_RESULT_FOR_SELF() { return $this->SHOW_RESULT_FOR_SELF; }
+        public function setTRENDS_DATA($TRENDS_DATA='') 
+        { 
+                $this->TRENDS_DATA = $TRENDS_DATA; 
+        }
+        public function getTRENDS_DATA() { return $this->TRENDS_DATA; }
 }

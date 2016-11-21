@@ -4,6 +4,7 @@
 ~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
 ~if JsConstants::$jsChatFlag eq "1"`
     ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
+    ~assign var=selfUserChatName value= CommonUtility::fetchSelfUserName($loggedIn,$sf_request->getAttribute('profileid'),$module,$action,$showChat)`
 ~/if`
 <!DOCTYPE html>
 <head>
@@ -72,7 +73,10 @@
         var my_action = "~$action`";
         var moduleChat = "~$module`";
         var self_subcription = "~$subscription`";
-        
+        var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
+        var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
+        var selfUserChatName = "~$selfUserChatName`";
+        //console.log("ank",selfUserChatName);
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
         //console.log("ankita_localstorage",localStorage.getItem("self_subcription"));
@@ -113,6 +117,7 @@
 ~else if`
     <body>
 ~/if`
+<div id='mainContent'>
 
     <div id="clickHolderCE" onclick="javascript:updateClickHolderCE(false,event)" style="height:0px;width:0px">&nbsp;</div>
     <div id="clickHolder" onclick="javascript:updateClickHolder(false,event)" style="height:0px;width:0px" >&nbsp;</div><div id="commonOverlay" class="jspcOverlay js-overlay overlayZ disp-none"></div>
@@ -135,6 +140,7 @@
     ~minify_include_javascripts('commonBottom')`
     ~minify_include_javascripts('bottom')`
     <!--Google Analytics Code-->
+</div>
 </body>
 ~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>
