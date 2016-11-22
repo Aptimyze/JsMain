@@ -225,6 +225,9 @@ class myjsActions extends sfActions
 
               		$length=count($this->apiData['my_profile']['incomplete']);
               		$this->apiData['my_profile']['incomplete'][$length]=$tempDpp;	
+                        include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
+                        $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
+                        $request->setAttribute('jsmsMyjsPage',1);
 
                    $this->setTemplate("jsmsPerform");
                    $request->setParameter('INTERNAL',1);

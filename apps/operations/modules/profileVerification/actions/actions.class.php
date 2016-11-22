@@ -531,18 +531,11 @@ class profileVerificationActions extends sfActions
         public function executeInappropriateUsersReport(sfWebRequest $request)
   {
       $endDate=$request->getParameter('RAStartDate');
-      $startDate=date('Y-m-d',strtotime("-7 day"));
-
-      $resultArr=(new MIS_INAPPROPRIATE_USERS_LOG('newjs_slave'))->getDataForADate($startDate,$endDate);
-      
+      $resultArr=(new MIS_INAPPROPRIATE_USERS_REPORT())->getReportForADate($endDate);
       ob_end_clean();
       if(sizeof($resultArr) == 0 )
           die;
       $i=0;
-      foreach ($resultArr as $key => $value) {
-          $Tarray[]=$value['TCOUNT'];
-      }
-      array_multisort($Tarray, SORT_DESC, SORT_NUMERIC, $resultArr);
       echo json_encode($resultArr);
       return sfView::NONE;
       die;

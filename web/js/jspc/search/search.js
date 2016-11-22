@@ -10,7 +10,6 @@ var profChecksumCheckArr = new Array();
 var listType;
 
 $(document).ready(function() {
-
 	showSearchLoader('Show');
 
 	/**
@@ -41,6 +40,8 @@ $(document).ready(function() {
 	$('#paginationNext').bind('click', function() {
 		currentPage = $('#paginationLiDiv').find('.active').attr("data");
 		loadPage(parseInt(currentPage) + 1);
+                if(response.infotype == "VISITORS")
+                    updateHistory("",parseInt(currentPage) + 1);
 	});
 
 	/**
@@ -49,6 +50,8 @@ $(document).ready(function() {
 	$('#paginationPrev').bind('click', function() {
 		currentPage = $('#paginationLiDiv').find('.active').attr("data");
 		loadPage(parseInt(currentPage) - 1);
+                if(response.infotype == "VISITORS")
+                    updateHistory("",parseInt(currentPage) + 1);
 
 	});
 
@@ -85,6 +88,25 @@ $(document).ready(function() {
                 infoArr["action"] = "stayOnPage";
                 infoArr["searchID"] = "skip";
 		sendProcessSearchRequest(postParams,infoArr);	
+            }
+	});
+        
+        $(".js-visitors").bind('click', function() {
+            if($(this).hasClass("cursp")){
+                var value=$(this).attr('value');
+                var sort = value=="M"?"M":"A";
+                var oppo = value=="M"?"A":"M"; 
+                $(".js-visType"+oppo).removeClass("js-sort-grey").removeClass("cursd").addClass("cursp");
+                $(".js-visType"+sort).addClass("js-sort-grey").removeClass("cursp").addClass("cursd");
+		var postParams;
+		postParams = "matchedOrAll="+value+"&pageNo=1";
+                matchedOrAll=value;
+            	var infoArr = {};
+                infoArr["action"] = "stayOnPage";
+                infoArr["searchID"] = "skip";
+                infoArr["listType"] = "cc";
+		sendProcessSearchRequest(postParams,infoArr);	
+                updateHistory("visitors?matchedOrAll="+value,1);
             }
 	});
 
@@ -128,7 +150,9 @@ $(document).ready(function() {
             $("#"+clickOn).removeClass("cursp").addClass("cursd");
         }
 
+
 });
+
 /**
 * Function which will be used for the action of search Listing
 */
@@ -181,8 +205,9 @@ function searchListingAction(thisElement){
 				listType="cc";
                                 break;
                         case 'js-visitors':
-                                postParams = "searchId=5&currentPage=1";
+                                postParams = "searchId=5&currentPage=1&matchedOrAll=A";
                                 postParams1 = "visitors=1";
+                                matchedOrAll='A';
 				listType="cc";
                                 break;
                         case 'js-fsoVerified':
@@ -194,7 +219,9 @@ function searchListingAction(thisElement){
 				listType="search";
                                 break;
                 }
-                if(postParams1)
+                if(thisElement.id=="js-visitors")
+                    updateHistory("visitors?matchedOrAll=A",1);
+                else if(postParams1)
 	                updateHistory(postParams1.split("=")[0],1);
                 else if(postParams)
 	                updateHistory(postParams.split("=")[0],1);
@@ -205,7 +232,8 @@ function searchListingAction(thisElement){
 		if(0)
                 infoArr["pageOfResult"] = window.location.href.split("/")[6]>0?window.location.href.split("/")[6]:"1";
                 lastSearchBasedParam = '';
-                sendProcessSearchRequest(postParams,infoArr,'noSearchId');	
+                sendProcessSearchRequest(postParams,infoArr,'noSearchId');
+                resetVisitorTabs(response);
             }
 }
 /**
@@ -308,6 +336,15 @@ function pageResponsePopulate(response) {
 	                $("#heightRight").addClass('srpHeightRightcc').removeClass('srpHeightRight');
 		else
 	                $("#heightRight").addClass('srpHeightRight').removeClass('srpHeightRightcc');
+                    
+                if(response.infotype == "VISITORS"){
+                        $("#heightRightVisitors").addClass('srpHeightRight').removeClass('disp-none');
+                        $("#ClusterTupleStructure").addClass('srppt28');
+                }
+                else{
+	                $("#heightRightVisitors").addClass('disp-none').removeClass('srpHeightRight');
+                        $("#ClusterTupleStructure").removeClass('srppt28');
+                }
 	}
 	else
 	{
@@ -901,6 +938,11 @@ function resetTopTab(){
         }
         else
             $(".sortOrderOnline").removeClass("js-sort-grey").removeClass("cursd").addClass("cursp");
+}
+
+function resetVisitorTabs(response){
+    $(".js-visTypeM").removeClass("js-sort-grey").removeClass("cursd").addClass("cursp");
+    $(".js-visTypeA").addClass("js-sort-grey").removeClass("cursp").addClass("cursd");
 }
 
 /**Change Listing Logic */

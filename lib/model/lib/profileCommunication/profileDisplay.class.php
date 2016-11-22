@@ -3,7 +3,7 @@
 class profileDisplay{
 	
 	
-	public function getNextPreviousProfile($profileObj,$key,$offset)
+	public function getNextPreviousProfile($profileObj,$key,$offset,$stype='')
 	{
 		$data = unserialize(JsMemcache::getInstance()->get($key));
 		if(false === $data || count($data)<$offset)
@@ -22,6 +22,12 @@ class profileDisplay{
 				$infoType.=$v."_";
 			}
 			$infoType = substr($infoType, 0, -1);
+                        if($infoType=="VISITORS"){
+                            if($stype=='5' || $stype=='IV' || $stype=='AV' || $stype=='WV')
+                                $infoTypenav['matchedOrAll']= 'A';
+                            elseif($stype=='M5' || $stype=='MIV' || $stype=='MAV' || $stype=='MWV')
+                                $infoTypenav['matchedOrAll']= 'M';
+                        }
 			$pageNo = ceil($offset/$config[$infoType]["COUNT"]);
 			$infoTypenav["PAGE"] = $infoType;
 			$infoTypenav["NUMBER"]=$pageNo;

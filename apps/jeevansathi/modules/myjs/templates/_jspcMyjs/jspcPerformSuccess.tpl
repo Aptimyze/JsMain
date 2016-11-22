@@ -50,7 +50,7 @@
                         </div>
                         <div class="fl pt8 pl10 fontlig f13">
                             <div class="clearfix">
-                                <div class="f20 fl textTru" id="js-usernameAutomation" style="max-width:250px;">~if $nameOfUser`~$nameOfUser`~else`~$loginProfile->getUSERNAME()`~/if`</div>
+                                <div class="f20 fl textTru js-syncChatHeaderName" id="js-usernameAutomation" style="max-width:250px;">~if $nameOfUser`~$nameOfUser`~else`~$loginProfile->getUSERNAME()`~/if`</div>
                                 ~if $membershipStatus neq 'Free'`<div class="f17 fl pl10">~$membershipStatus` member</div>~/if`
                             </div>~if $membershipStatus neq 'Free'`
                             <ul class="hor_list pt4 lh20 clearfix">

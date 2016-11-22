@@ -21,13 +21,13 @@ class Horoscope
 		$result = $astroObj->getIfAstroDetailsPresent($profileId);
 		if($result == 1)
 			return 'Y';
-		else
+		/*else
 		{
 			$horoscope = new newjs_HOROSCOPE();
 			$result = $horoscope->getIfHoroscopePresent($profileId);
 			if($result == 1)
 				return 'Y';
-		}
+		}*/
 		return 'N';
 	}
 	

@@ -787,7 +787,7 @@ die;
 	*/
 	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
 		$chatNotAvailModuleArr = ["membership","register","phone","social","settings"];
-        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404"];
+        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp"];
 		$showChat = 1;
 		if(!$loggedIn){
 			$showChat = 0;
@@ -796,6 +796,30 @@ die;
 			$showChat = 0;
 		}
 		return $showChat;
+	}
+
+	/*fetchSelfUserName
+	* fetch user self name for chat header
+	* @inputs: $loggedIn,$loggedInProfile,$module, $action,$showChat
+	* @return: $userName
+	*/
+	public static function fetchSelfUserName($loggedIn,$loggedInProfile,$module, $action,$showChat){
+		$excludeModuleArr = ["profile","myjs","homepage"];
+        $excludeActionArr = ["edit","jspcPerform"];
+        $getName = 1;
+        $userName = "";
+        if(!$loggedIn || !$loggedInProfile || $showChat == 0){
+			$getName = 0;
+        }
+		else if(in_array($module, $excludeModuleArr) || in_array($action, $excludeActionArr)){
+			$getName = 0;
+		}
+		if($getName){
+			$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+			$userName = $nameOfUserObj->getName($loggedInProfile);
+		}
+		//error_log("ankita-".$getName);
+		return $userName;
 	}
 
 

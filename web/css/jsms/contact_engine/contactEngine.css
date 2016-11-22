@@ -235,3 +235,26 @@ color: transparent;
 }
 
 .z112{z-index:112;}
+
+.reportInvalid{
+    background-position: -158px -322px;
+    width: 22px;
+    height: 23px;
+}
+ .reportInvalidScreen{
+    display: inline-block;
+    width: 50%;
+    position: relative;
+}
+.fontlig {
+    font-family: "Roboto", "sans-serif";
+    font-weight: 300
+}
+.setshare {top: 50%;transform: translate(-50%,-50%);left: 50%;}
+
+.layersZ{
+    z-index: 10;
+}
+.pos_fix {
+    position: fixed
+}

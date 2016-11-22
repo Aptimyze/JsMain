@@ -33,13 +33,16 @@
 	<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="/apple-touch-icon-114x114-precomposed_new.png">
 
-	<script src="~JsConstants::$jquery`"></script>	
     ~assign var=trackProfileId value= $sf_request->getAttribute('profileid')`
     ~include_title`
     ~include_canurl`
     ~use helper = SfMinify`
+~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
+	<script src="~JsConstants::$jquery`"></script>
     ~minify_get_mobile('css','','1')`
     ~minify_include_stylesheets()`
+
+~/if`
   ~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
   ~minify_get_mobile('js','','1')`
     ~minify_include_javascripts()`
@@ -110,7 +113,11 @@ var domainCode={};
 	~JsTrackingHelper::getHeadTrackJs()`
   ~/if`
   <body >
-	  
+	~if $sf_request->getAttribute('mobLogoutPage') eq 'Y'`
+    ~minify_include_stylesheets()`
+	<script src="~JsConstants::$jquery`"></script>
+    ~/if`
+  
 <noscript><div style="z-index:1000;width:100%"><div style="text-align:center;padding-bottom:3px;font:12px arial,verdana; line-height:normal;background:#E5E5E5;"><b><img src="~sfConfig::get('app_img_url')`/profile/images/registration_new/error.gif" alt="matrimonial" height="20" width="23"> Javascript is disabled in your browser.Due to this certain functionalities will not work. Please enable it</b></div></div></noscript>
 
     <script type="text/javascript">
@@ -123,7 +130,7 @@ var domainCode={};
             ~JsTrackingHelper::setJsLoadFlag(1)`
         ~/if`
 	</div>
-  ~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
+  ~if ($sf_request->getAttribute('mobLogoutPage') neq 'Y') && ($sf_request->getAttribute('jsmsMyjsPage') neq 1)`
   ~minify_include_javascripts('bottom')`
   ~/if`
   <div class="urldiv dn" id="urldiv" ></div>  
@@ -166,7 +173,7 @@ window._fbq.push(['track', 'PixelInitialized', {}]);
 <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
 <!-- Pixel Fire Code ends here-->
 ~if $sf_request->getAttribute('mobLogoutPage') eq 'Y'` 
-    ~minify_get_mobile('js','','1')`
-    ~minify_include_javascripts()`
+    ~minify_get_mobile('js','','1',"1")`
+    ~minify_include_javascripts("","1")`
 ~/if`
 </html>
