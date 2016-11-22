@@ -791,7 +791,9 @@ JsChat.prototype = {
         
         });
         */
-	ifChatListingIsCreated = 1;
+        setTimeout(function(){
+            ifChatListingIsCreated = 1;
+        },1000);
     },
 
     //add photo in tuple div of listing
