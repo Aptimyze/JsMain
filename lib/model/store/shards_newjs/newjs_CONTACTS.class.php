@@ -729,14 +729,7 @@ public function getSendersPending($profileids)
 				$sql = $sql.implode("AND",$sqlArr);
 
 			}
-
-			if(count($skipArray)<1000 && count($skipArray)>0)
-				$skipSql=1;
-			else
-				$skipSql=0;
-
-
-			if( $skipSql )
+			if($skipProfile)
 			{
 				$other = isset($where["RECEIVER"])?"SENDER":"RECEIVER";
 				$str = " ".$other." NOT IN(";
@@ -766,23 +759,10 @@ public function getSendersPending($profileids)
 			foreach($bindArr as $k=>$v)
 				$res->bindValue($k,$v);
 			$res->execute();
-
-			if(!$skipSql)
+			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
-				while($row = $res->fetch(PDO::FETCH_ASSOC))
-				{
-					if(!in_array($row["PROFILEID"],$skipArray))
-						$output[$row["PROFILEID"]][] = $row;
-				}
+				$output[] = $row;
 			}
-			else
-			{
-				while($row = $res->fetch(PDO::FETCH_ASSOC))
-				{
-						$output[$row["PROFILEID"]][] = $row;
-				}
-			}
-
 		}
 		catch (PDOException $e)
 		{
@@ -988,7 +968,6 @@ public function getSendersPending($profileids)
 						$res->bindValue($k,$v["VALUE"],PDO::PARAM_INT);
 					}
 				}
-						
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
