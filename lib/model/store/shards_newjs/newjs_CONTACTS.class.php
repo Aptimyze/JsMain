@@ -685,6 +685,93 @@ public function getSendersPending($profileids)
 		return $output;
 	}
 
+	public function getExpiredContactsCount($where, $group='',$time='',$skipProfile)
+	{
+		try{
+			if(!$where)
+				throw new jsException("","No where condition is specified in funcion getContactsCount OF newjs_CONTACTS.class.php");
+
+			$sql = "SELECT COUNT(*) AS COUNT";
+			if($group)
+			{
+				$sql = $sql.",".$group;
+			}
+			if($time)
+				$sql = $sql.",CASE WHEN DATEDIFF(NOW( ) ,  `TIME`) > 90 THEN 0 ELSE 1 END AS TIME1 ";
+			$sql = $sql." FROM newjs.CONTACTS WHERE FILTERED != 'Y' AND";
+			if($where)
+			{
+				$count = 1;
+				foreach($where as $key=>$value)
+				{
+					if(!is_array($value))
+					{
+
+						$sqlArr[] = " ".$key."=:VALUE".$count." ";
+						$bindArr["VALUE".$count] = $value;
+						$count++;
+					}
+					else
+					{
+						$str = " ".$key." IN(";
+
+						foreach($value as $key1=>$value1)
+						{
+							$str = $str.":VALUE".$count.",";
+							$bindArr["VALUE".$count] = $value1;
+							$count++;
+						}
+						$str = substr($str, 0, -1);
+						$str = $str.")";
+						$sqlArr[] = $str;
+					}
+				}
+				$sql = $sql.implode("AND",$sqlArr);
+
+			}
+			if($skipProfile)
+			{
+				$other = isset($where["RECEIVER"])?"SENDER":"RECEIVER";
+				$str = " ".$other." NOT IN(";
+
+				foreach($skipProfile as $key1=>$value1)
+				{
+					$str = $str.":VALUE".$count.",";
+					$bindArr["VALUE".$count] = $value1;
+					$count++;
+				}
+				$str = substr($str, 0, -1);
+				$str = $str.")";
+				$sql = $sql." AND ". $str;
+			}
+			if($group)
+			{
+				$sql = $sql." GROUP BY ".$group;
+				if($time)
+					$sql = $sql.",TIME1";
+			}
+			elseif($time)
+			{
+				$sql = $sql." GROUP BY TIME1";
+			}
+
+			$res=$this->db->prepare($sql);
+			foreach($bindArr as $k=>$v)
+				$res->bindValue($k,$v);
+			$res->execute();
+			while($row = $res->fetch(PDO::FETCH_ASSOC))
+			{
+				$output[] = $row;
+			}
+		}
+		catch (PDOException $e)
+		{
+			throw new jsException($e);
+		}
+		return $output;
+	}
+
+
 
 	public function getContactedProfiles($profileId,$senderReceiver,$type='',$cnt='')
 	{
@@ -740,6 +827,7 @@ public function getSendersPending($profileids)
 	}
 	public function getContactedProfileArray($condition,$skipArray)
 	{
+
 		$string = array('TYPE','SEEN','FILTER','TIME');
 		try{
 			if(!$condition)
@@ -815,6 +903,19 @@ public function getSendersPending($profileids)
 								$count++;
 							}
 						}
+						if($key1 == "LESS_THAN_EQUAL")
+						{
+							foreach($value1 as $keyName=>$keyValue)
+							{
+								$arr[] = $keyName."< :VALUE".$count;
+								$bindArr["VALUE".$count]["VALUE"] = $keyValue;
+								if(in_array($keyName,$string))
+									$bindArr["VALUE".$count]["TYPE"] = "STRING";
+								else
+									$bindArr["VALUE".$count]["TYPE"] = "INT";
+								$count++;
+							}
+						}
 					}
 					$where = "WHERE ".implode(" AND ",$arr);
 				}
@@ -867,7 +968,7 @@ public function getSendersPending($profileids)
 						$res->bindValue($k,$v["VALUE"],PDO::PARAM_INT);
 					}
 				}
-
+						
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
