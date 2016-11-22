@@ -41,7 +41,7 @@ function reActivateNonRosterPolling(source,updateChatImmediate){
     //clearNonRosterPollingInterval();
     //console.log("dppLiveForAll",dppLiveForAll);
     //console.log("betaDppExpression",betaDppExpression);
-    if (strophieWrapper.getCurrentConnStatus() == true && loggedInJspcUser != undefined) {
+    if (((my_action == "dpp" && moduleChat == "profile") || strophieWrapper.getCurrentConnStatus() == true) && loggedInJspcUser != undefined) {
         var profileEligible = true;
         
         if(dppLiveForAll != "1" && betaDppExpression != undefined && betaDppExpression != ""){
