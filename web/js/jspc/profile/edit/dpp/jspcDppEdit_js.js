@@ -258,6 +258,20 @@ $(function(){
           dppApp.setForSave(section,fieldName,fieldVal);
           dppApp.set(fieldName,fieldVal); 
         });
+        //start:remove all option from chosen
+   $('.js-resetall').click(function(){
+     var mainVal,getID = $(this).attr('id').split('-');      
+     mainVal = getID[1];
+     console.log(mainVal);
+     $('#dpp-'+mainVal).val([" "]).trigger('chosen:updated');
+     $('#dpp-'+mainVal).trigger('change');
+
+     if(   $('#suggest_'+mainVal.split('_')[1]).length != 0    )
+     {
+         $('#suggest_'+mainVal.split('_')[1]).remove();
+     }
+   });
+
 	
 });
 

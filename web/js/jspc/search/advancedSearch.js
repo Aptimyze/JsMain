@@ -607,6 +607,26 @@ $(function(){
 		$(myele).find(".js-dd").addClass("disp-none");
 		ev.stopPropagation();
 	});
+
+   $('.js-remall').click(function(){
+
+    var getID = $(this).attr('id').split('-')[0];  
+    
+    $('#'+getID).val([" "]).trigger('chosen:updated'); 
+    if(getID == 'partner_religion_arr')
+    {
+       updateCastOption($('#partner_religion_arr').val());
+    }
+    else if(getID=='partner_country_arr')
+    {
+      $('#partner_country_arr').trigger('change');
+    }
+    else if(getID=='partner_mstatus_arr')
+    {
+       $('#partner_mstatus_arr').trigger('change');
+    }
+
+ });
 	
 });
 
