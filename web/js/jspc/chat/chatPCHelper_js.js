@@ -1770,6 +1770,7 @@ $(document).ready(function () {
                 //strophieWrapper.Roster = {};
                 eraseCookie("chatAuth");
                 manageListingPhotoReqFlag("reset");
+                ifChatListingIsCreated = 0;
                 if(fromSiteLogout == "true"){
                     setLogoutClickLocalStorage("unset");
                 }
