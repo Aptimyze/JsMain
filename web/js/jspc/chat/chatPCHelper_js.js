@@ -228,7 +228,7 @@ function processNonRosterData(response,type,source){
                 nodeObj["groupid"] = type;
                 nodeObj["addIndex"] = key;
                 var listObj = strophieWrapper.formatNonRosterObj(nodeObj);
-                if (strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && strophieWrapper.Roster[nodeObj["profileid"]] == undefined){
+                if (strophieWrapper.checkForGroups(listObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && (strophieWrapper.Roster[nodeObj["profileid"]] == undefined || strophieWrapper.Roster[nodeObj["profileid"]][strophieWrapper.rosterDetailsKey]["groups"] == undefined || strophieWrapper.Roster[nodeObj["profileid"]][strophieWrapper.rosterDetailsKey]["groups"][0] == undefined)){
                     newNonRoster[nodeObj["profileid"]] = listObj;
                 }
             });
