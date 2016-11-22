@@ -18,12 +18,25 @@ $action         = 'STOP';
 $str            = 'Dial_Status=0';
 $date2DayBefore = date("Y-m-d H:i:s", time() - 58 * 60 * 60);
 
-$profilesArr = fetchProfiles($db_master);
-$profileStr  = implode(",", $profilesArr);
+$profilesArr   = fetchProfiles($db_master);
+$eligibleArr   = $profilesArr['ELIGIBLE'];
+$inEligibleArr = $profilesArr['IN_ELIGIBLE'];
 
-$allocatedArr   = getAllocatedProfiles($profilesArr, $db_js);
-$paidArr        = getPaidProfiles($profilesArr, $db_js, $dateTime);
-$eligibleArrNew = array_merge($allocatedArr, $paidArr);
+$profileStr = implode(",", $eligibleArr);
+
+$allocatedArr = getAllocatedProfiles($eligibleArr, $db_js);
+$paidArr      = getPaidProfiles($eligibleArr, $db_js);
+
+if (!empty($allocatedArr) && !empty($paidArr)) {
+    $eligibleArrNew = array_merge($allocatedArr, $paidArr);
+} else if (empty($allocatedArr)) {
+    $eligibleArrNew = $paidArr;
+} else if (empty($paidArr)) {
+    $eligibleArrNew = $allocatedArr;
+} else {
+    $eligibleArrNew = array();
+}
+
 $eligibleArrNew = array_unique($eligibleArrNew);
 $eligibleArrNew = array_values($eligibleArrNew);
 
@@ -49,11 +62,11 @@ if (count($eligibleArrNew > 0)) {
         $deleteArr[] = $profileid;
         addLog($profileid, $campaignName, $str, $action, $db_js_111);
     }
-    if (is_array($deleteArr)) {
-        $profileStrDel = implode(",", $deleteArr);
-        deleteProfiles($db_master, $profileStrDel);
-        unset($deleteArr);
-    }
+    // if (is_array($deleteArr)) {
+    //     $profileStrDel = implode(",", $deleteArr);
+    //     deleteProfiles($db_master, $profileStrDel);
+    //     unset($deleteArr);
+    // }
 }
 
 // mail added
@@ -66,14 +79,20 @@ mail($to, $sub, $profileStr, $from);
 function fetchProfiles($db_js)
 {
     $profileArr = array();
-    $sql        = "SELECT PROFILEID FROM incentive.SALES_CSV_DATA_RCB WHERE DIAL_STATUS=0";
+    $sql        = "SELECT PROFILEID, DIAL_STATUS, CSV_ENTRY_DATE FROM incentive.SALES_CSV_DATA_RCB";
     $res        = mysql_query($sql, $db_js) or die($sql . mysql_error($db_js));
     while ($myrow = mysql_fetch_array($res)) {
-        $profileArr[] = $myrow["PROFILEID"];
+        $dialStatus = $myrow["DIAL_STATUS"];
+        $pid        = $myrow['PROFILEID'];
+        if ($dialStatus) {
+            $eligibleArr[] = $pid;
+        } else {
+            $inEligibleArr[] = $pid;
+        }
     }
-
-    return $profileArr;
+    return array("ELIGIBLE" => $eligibleArr, "IN_ELIGIBLE" => $inEligibleArr);
 }
+
 function deleteProfiles($db_master, $profiles)
 {
     $sql = "delete FROM incentive.SALES_CSV_DATA_RCB WHERE DIAL_STATUS=0 AND PROFILEID IN ($profiles)";
@@ -101,11 +120,11 @@ function getAllocatedProfiles($profileArr, $db_js)
 }
 
 // Fetch Paid profiles
-function getPaidProfiles($profileArr, $db_js, $dateTime)
+function getPaidProfiles($profileArr, $db_js)
 {
     $dataArr    = array();
     $profileStr = implode(",", $profileArr);
-    $sql        = "SELECT distinct PROFILEID FROM billing.PURCHASES WHERE PROFILEID IN($profileStr) AND STATUS='DONE' AND ENTRY_DT>='$dateTime' AND MEMBERSHIP='Y'";
+    $sql        = "SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE PROFILEID IN($profileStr) AND SERVEFOR LIKE %F% AND ACTIVE='Y' AND ACTIVATED='Y'";
     $res        = mysql_query($sql, $db_js) or die($sql . mysql_error($db_js));
     while ($myrow = mysql_fetch_array($res)) {
         $dataArr[] = $myrow["PROFILEID"];
