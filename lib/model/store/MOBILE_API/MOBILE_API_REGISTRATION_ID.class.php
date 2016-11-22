@@ -170,10 +170,26 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 			$return.=" ".$param." ".$relation." (".$str.") ";
 		return $return;
 	}
-        public function getResObj($noOfScripts,$currentScript,$andAppVersion='',$iosAppVersion='')
+        public function getResObj($noOfScripts,$currentScript,$andAppVersion='',$iosAppVersion='',$separateWhereProfile = '',$separateSelectColumns = '')
         {
                 //$sqlUpdate = "SELECT DISTINCT(PROFILEID) FROM MOBILE_API.REGISTRATION_ID WHERE PROFILEID%:NO_OF_SCRIPTS=:CURRENT_SCRIPT";
-		$sqlUpdate = "SELECT DISTINCT(PROFILEID) FROM MOBILE_API.REGISTRATION_ID WHERE PROFILEID%:NO_OF_SCRIPTS=:CURRENT_SCRIPT AND (";
+   
+		$sqlUpdate = "SELECT";
+		if($separateSelectColumns == ""){
+			$sqlUpdate = $sqlUpdate." DISTINCT(PROFILEID)";
+		}
+		else{
+			$sqlUpdate = $sqlUpdate." ".$separateSelectColumns;
+		}
+		
+		$sqlUpdate = $sqlUpdate." FROM MOBILE_API.REGISTRATION_ID WHERE";
+		if($separateWhereProfile != ''){
+			$sqlUpdate = $sqlUpdate." ".$separateWhereProfile;
+		}
+		else{
+			$sqlUpdate = $sqlUpdate." PROFILEID%:NO_OF_SCRIPTS=:CURRENT_SCRIPT";
+		}
+		$sqlUpdate = $sqlUpdate." AND (";
 		if($andAppVersion)
 			$sqlUpdate = $sqlUpdate."(APP_VERSION>=:AND_APP_VERSION AND OS_TYPE=:AND_OS_TYPE)";
 		//else
@@ -183,9 +199,12 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 		//else
 		//	$sqlUpdate = $sqlUpdate." OR (OS_TYPE=:IOS_OS_TYPE)";
 		$sqlUpdate = $sqlUpdate.")";
+		
 	        $resUpdate = $this->db->prepare($sqlUpdate);
-		$resUpdate->bindValue(":NO_OF_SCRIPTS",$noOfScripts,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
-		$resUpdate->bindValue(":CURRENT_SCRIPT",$currentScript,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
+	    if($separateWhereProfile == ''){
+			$resUpdate->bindValue(":NO_OF_SCRIPTS",$noOfScripts,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
+			$resUpdate->bindValue(":CURRENT_SCRIPT",$currentScript,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
+		}
 		if($andAppVersion){
 			$resUpdate->bindValue(":AND_APP_VERSION",$andAppVersion,constant('PDO::PARAM_'.$this->{'APP_VERSION_BIND_TYPE'}));
 			$resUpdate->bindValue(":AND_OS_TYPE",'AND',constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));

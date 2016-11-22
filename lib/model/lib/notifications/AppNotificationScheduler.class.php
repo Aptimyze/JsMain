@@ -35,6 +35,7 @@ class AppNotificationScheduler extends NotificationScheduler
 		  if($numberOfLoopsExecuted==0)
 			$restartLooper = true;
 		  $appProfiles = $appProfilesHandlerObj->getProfiles($this->notificationKey,$numberOfProfilesPerLoop=100,$restartLooper,$this->noOfScripts,$this->currentScript,$this->osType);
+		  print_r($appProfiles);die;
 		  if(is_array($appProfiles))
 		  {
 			  $notificationData = $this->notificationObj->getNotificationData($appProfiles,$this->notificationKey);
