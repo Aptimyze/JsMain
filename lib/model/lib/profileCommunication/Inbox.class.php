@@ -181,7 +181,7 @@ class Inbox implements Module
 					$where["RECEIVER"]=$this->profileObj->getPROFILEID();
 					$dbName = JsDbSharding::getShardNo($this->profileObj->getPROFILEID());
 					$contactsObj = new newjs_CONTACTS($dbName);
-					// $group             = "FILTERED,TYPE,SEEN";
+					$group             = '';
 					$contactsCount = $contactsObj->getExpiredContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
 					$countObj[$infoTypenav["PAGE"]] = $contactsCount[0]["COUNT"];
 				}

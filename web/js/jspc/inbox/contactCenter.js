@@ -207,6 +207,10 @@ if(typeof response.searchid!="undefined")
 		handleCCPagination(response);
 		handleExpireInterest(activeHorizontalTabInfoID);
 		
+		/*
+			If this is the interest received page and at the last page , do show horizontal tab.
+		 */
+
 		if(activeHorizontalTabInfoID == 1 && response.page_index == response.paginationArray[response.paginationArray.length - 1])
 		{
 			$('#HorizontalTab22_Label_nonzero').show();
@@ -227,6 +231,9 @@ if(typeof response.searchid!="undefined")
 	else
 	{
 		handleExpireInterest(activeHorizontalTabInfoID);
+		/*
+			If this is the interest received page, do show horizontal tab.
+		 */
 		if(activeHorizontalTabInfoID == 1)
 		{
 			$('#HorizontalTab22_Label_zero').show();
@@ -346,7 +353,7 @@ function handleExpireInterest(activeHorizontalTabInfoID) {
 		$('#ccHorizontalTabsBar > li').hide();
 		if ( $('#HorizontalTab22').length == 0)
 		{
-			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab22" data-id="22" data-infoId="22" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Interests Archived</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine22"></li>	');
+			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab22" data-id="22" data-infoId="22" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Interests Archived</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine22"></li>');
 		}
 		else
 		{
