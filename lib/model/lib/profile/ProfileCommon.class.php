@@ -542,18 +542,34 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 	 * Return Main pic+ album count + stopAlbumView[helps in providing link on albumpage or not]
 	 * 
 	 */	
-	public static function getprofilePicForApi($profileObj,$contact_status,$login=0,$bIsPhoto_Requested='')
-	{
+	public static function getprofilePicForApi($profileObj,$contact_status,$login=0,$bIsPhoto_Requested='',$loggedInProfileObj='')
+	{								
 		$ALBUM_CNT=0;
 		$PHOTO="";
-		$pictureServiceObj=new PictureService($profileObj);
+		if($loggedInProfileObj!='')
+		{
+			
+			if($loggedInProfileObj->getPROFILEID() == $profileObj->getPROFILEID())
+			{				
+				$pictureServiceObj=new PictureService($$loggedInProfileObj);				
+			}
+			
+		}
+		else
+		{
+			$pictureServiceObj=new PictureService($profileObj);
+		}
+		
+		//$pictureServiceObj=new PictureService($profileObj);
 		$pictureObj=new ScreenedPicture;
 		$stopAlbumView=0;
                 if($contact_status == 'I')
                     $contact_status = 'RI';
                 else if($contact_status == 'RI')
                     $contact_status = 'I';
+       
         $album=$pictureServiceObj->getAlbum($contact_status);
+       	//print_R($album);die;
         $mobile="";
 		$request=sfContext::getInstance()->getRequest();	
         
