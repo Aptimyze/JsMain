@@ -106,7 +106,7 @@ class JHOBBYCacheLib extends TABLE{
         $dummyResult = array();
         //print_r($result); 
         $dummyResult['PROFILEID'] = $pid;
-        $dummyResult['RESULT_VAL'] = (intval($result) === 0) ? 'N' : $result;
+        $dummyResult['RESULT_VAL'] = (intval($result) === 0 || ($result == NULL)) ? 'N' : $result;
         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         return $result;
 
@@ -223,7 +223,7 @@ class JHOBBYCacheLib extends TABLE{
         $result = $objJHB->getUserHobbiesApi($pid);
    
         $dummyResult['PROFILEID'] = $pid;
-        $dummyResult['RESULT_VAL'] = (intval($result) === 0) ? 'N' : $result;
+        $dummyResult['RESULT_VAL'] = (intval($result) === 0 || ($result == NULL)) ? 'N' : $result;
         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult,__CLASS__);
         return $result;
 
