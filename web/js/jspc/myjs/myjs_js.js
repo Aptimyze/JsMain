@@ -43,10 +43,13 @@ $(function(){
 		$("#"+id).unbind(clickEventType);
 		var getID,b,getWidth,visWidth,getLeft,p;					
 			getID = id;
+
 			b= getID.split('-');	
 			getWidth =$('#js-'+b[1]).width();
 			visWidth = $('#disp_'+b[1]).width();
+     // alert(visWidth);
 			p=Math.abs($('#js-'+b[1]).position().left);
+      alert(p);
 			if((b[0]=="nxt")&&(getWidth>visWidth))
 			{	
         diff=Math.floor(getWidth-p-visWidth);
@@ -224,10 +227,25 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
             	}
             	else{
 	            	if(type=="interest")
-	            	{
-				callAfterContact();
+	            	{ 
+			//	callAfterContact();
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
 	            		$("#"+div).find("div.sendintr").removeClass("myjs-block sendintr").addClass("myjs-block-after");
+                  $('#'+div).delay(1500).fadeOut('slow').remove();
+                  var profileList  = $("#"+div).parent().attr('id');
+                  var listItems = $("#"+profileList+" li");
+                  listItems.each(function(index) {
+                    console.log(index);
+                    if((index+1)%4 ==0)
+                    {
+                      $(this).css("padding-right" , "2px");
+                    }
+                    else{
+                      $(this).css("padding-right","36px")
+                    }
+
+                    });
+      
 	            	}
 	            	else if(type=="accept")
 	            	{
