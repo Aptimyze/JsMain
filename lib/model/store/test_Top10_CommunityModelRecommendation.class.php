@@ -31,7 +31,7 @@ class test_Top10_CommunityModelRecommendation extends TABLE{
 			catch(PDOException $e)
 			{
 				/*** echo the sql statement and error message ***/
-				throw new jsException($e);
+				jsException::nonCriticalError($e);
 			}
 		}
 		

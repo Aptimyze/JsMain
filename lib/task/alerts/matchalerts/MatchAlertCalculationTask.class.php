@@ -169,7 +169,7 @@ EOF;
          * This function returns whether to use community model.
          */
         private function checkForCommunityModel($profileId,$oldNewLogic){
-                if($profileId%11<12 && self::_communityModelToggle && $oldNewLogic=='N'){
+                if($profileId%11<1 && self::_communityModelToggle && $oldNewLogic=='N'){
                     return true;
                 }
                 else
