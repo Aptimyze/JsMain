@@ -1091,8 +1091,11 @@ JsChat.prototype = {
 		            bubbleData.splice(indexToBeRemoved,1);
 		        }
 		        localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
-                elem.find(".js-chatBoxTopName").addClass("js-viewProfileBind");
-                elem.find(".downBarPic").addClass("js-viewProfileBind");
+                setTimeout(function(){
+                    elem.find(".js-chatBoxTopName").addClass("js-viewProfileBind");
+                    elem.find(".downBarPic").addClass("js-viewProfileBind");    
+                },1000);
+                
 		}      
   	});
 
