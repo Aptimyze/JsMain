@@ -542,19 +542,16 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 	 * Return Main pic+ album count + stopAlbumView[helps in providing link on albumpage or not]
 	 * 
 	 */	
-	public static function getprofilePicForApi($profileObj,$contact_status,$login=0,$bIsPhoto_Requested='',$loggedInProfileObj='')
+	public static function getprofilePicForApi($profileObj,$contact_status,$login=0,$bIsPhoto_Requested='')
 	{								
 		$ALBUM_CNT=0;
 		$PHOTO="";
-		if($loggedInProfileObj!='')
-		{
-			
-			if($loggedInProfileObj->getPROFILEID() == $profileObj->getPROFILEID())
-			{				
-				$pictureServiceObj=new PictureService($$loggedInProfileObj);				
-			}
-			
+		$loggedInProfileObj = LoggedInProfile::getInstance();	
+		if($loggedInProfileObj->getPROFILEID() == $profileObj->getPROFILEID())
+		{				
+			$pictureServiceObj=new PictureService($loggedInProfileObj);				
 		}
+			
 		else
 		{
 			$pictureServiceObj=new PictureService($profileObj);

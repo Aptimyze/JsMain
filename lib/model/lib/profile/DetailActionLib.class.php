@@ -192,7 +192,7 @@ class DetailActionLib
 	public static function GetProfilePicForApi($actionObject)
 	{
 		$login=0;
-		$loggedInProfileObj = LoggedInProfile::getInstance();
+		
 		if($actionObject->loginProfile->getPROFILEID())
 			$login=1;
 		$bOwnProfile = false;
@@ -201,7 +201,7 @@ class DetailActionLib
 
 		$bPhotoReq = $actionObject->PHOTO_REQUESTED ? 'Y' : 'N';
 		//contact_status will be initalzed by call to IsNoProfile
-		$return=ProfileCommon::getprofilePicForApi($actionObject->profile,$actionObject->contact_status,$login,$bPhotoReq,$loggedInProfileObj);
+		$return=ProfileCommon::getprofilePicForApi($actionObject->profile,$actionObject->contact_status,$login,$bPhotoReq);
 		
 		$actionObject->PHOTO=$return[0];
 		$actionObject->ALBUM_CNT=$return[1];
