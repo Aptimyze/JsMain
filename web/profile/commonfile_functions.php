@@ -604,7 +604,7 @@ $js_arr[]=array("common_comscore_js"   => "2");
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                              => "60");
 $js_arr[]=array("jspc/chat/chatPCHelper_js"                                                                       => "92");
 $js_arr[]=array("jspc/chat/chatPlugin_js"                                               => "73");
-$js_arr[]=array("jspc/chat/strophieWrapper_js"                           => "33");
+$js_arr[]=array("jspc/chat/strophieWrapper_js"                            => "34");
 $js_arr[]=array("jspc/chat/chatStrophieClient_js"      => "7");
 $js_arr[]=array("jspc/help/JSPCHelp_js"              => "18");
 $js_arr[]=array("jsms/help/JSMSHelp_js"        => "10");
