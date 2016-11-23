@@ -113,7 +113,6 @@ class ClusterOrdering
                                         $orderingArr[26] = 10;
 					$orderingArr[27] = 11;
                                 }else{
-					$orderingArr[28] = 0;
                                         $orderingArr[26] = 0;
 					$orderingArr[27] = 0;
                                 }
@@ -202,7 +201,6 @@ class ClusterOrdering
                                         $orderingArr[26] = 14;
 					$orderingArr[27] = 15;
                                 }else{
-					$orderingArr[28] = 0;
                                         $orderingArr[26] = 0;
 					$orderingArr[27] = 0;
                                 }
@@ -283,7 +281,6 @@ class ClusterOrdering
                                         $orderingArr[26] = 10;
 					$orderingArr[27] = 11;
                                 }else{
-					$orderingArr[28] = 0;
                                         $orderingArr[26] = 0;
 					$orderingArr[27] = 0;
                                 }
@@ -413,13 +410,12 @@ class ClusterOrdering
                                         $orderingArr[26] = 10;
 					$orderingArr[27] = 11;
                                 }else{
-					$orderingArr[28] = 0;
                                         $orderingArr[26] = 0;
 					$orderingArr[27] = 0;
                                 }
 			}
 		}
-                
+                //print_r($orderingArr);die;
 		$orderingArr = $this->formatOutput($orderingArr,$returnType,$orderingFor);
 		$SearchUtility = new SearchUtility;
 		if($SearchUtility->isMatchAlertsPage($this->SearchParamtersObj))
