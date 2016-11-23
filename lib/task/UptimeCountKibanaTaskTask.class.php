@@ -73,7 +73,7 @@ EOF;
 					);
 			$count = json_encode($count);
 			$ObjectId = time();
-			passthru("curl -XPOST '$indexElkServer:$indexElkPort/$pushIndexName/json/$ObjectId' -d'$count'");
+			exec("curl -XPOST '$indexElkServer:$indexElkPort/$pushIndexName/json/$ObjectId' -d'$count'".' 2>&1');
 		}
 	}
 }
