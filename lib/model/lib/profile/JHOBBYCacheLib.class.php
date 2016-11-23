@@ -72,7 +72,7 @@ class JHOBBYCacheLib extends TABLE{
         $bServedFromCache = false;
 
         if($onlyValues)
-        { die(x);
+        { 
             if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__)) 
             {
 
