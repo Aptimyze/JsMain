@@ -647,10 +647,8 @@ class PICTURE_NEW extends TABLE
 		{
 			$sql = " SELECT P.PROFILEID,P.PICTUREID,P.ORDERING,P.PICFORMAT,P.MainPicUrl,P.OriginalPicUrl,P.ProfilePic120Url,
 						P.ProfilePic235Url,P.ProfilePicUrl,P.ProfilePic450Url,
-						P.MobileAppPicUrl,P.Thumbail96Url,P.ThumbailUrl,P.SearchPicUrl FROM newjs.PICTURE_NEW AS P JOIN newjs.".$tableName." as S  ON S.PROFILEID = P.PROFILEID WHERE S.HAVEPHOTO = 'Y' LIMIT :LOWERLIMIT, :UPPERLIMIT";
+						P.MobileAppPicUrl,P.Thumbail96Url,P.ThumbailUrl,P.SearchPicUrl FROM newjs.PICTURE_NEW AS P JOIN newjs.".$tableName." as S  ON S.PROFILEID = P.PROFILEID WHERE S.HAVEPHOTO = 'Y' LIMIT ".$lowerLimit.","$upperLimit;
 			$prep=$this->db->prepare($sql);
-            $prep->bindParam(":LOWERLIMIT", $lowerLimit, PDO::PARAM_INT);
-            $prep->bindParam(":UPPERLIMIT", $upperLimit, PDO::PARAM_INT);
             $prep->execute();
             while($row = $prep->fetch(PDO::FETCH_ASSOC))
             {
