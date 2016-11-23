@@ -1133,7 +1133,7 @@ class InboxMobileAppV2
 		}
 		else if(sfContext::getInstance()->getRequest()->getParameter("ContactCenterDesktop")==1)
 		{
-                        if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")=="M")
+                        if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")!="A")
                             $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_JSPC;
                         else
                             $visitorsStype = SearchTypesEnums::VISITORS_JSPC;
@@ -1168,7 +1168,7 @@ class InboxMobileAppV2
                                 );
                 }
 		else{
-                    if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")=="M")
+                    if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")!="A")
                         $visitorsStype = SearchTypesEnums::MATCHING_VISITORS_JSMS;
                     else
                         $visitorsStype = SearchTypesEnums::VISITORS_JSMS;
