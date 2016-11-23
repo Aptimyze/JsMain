@@ -294,6 +294,21 @@
                       </span>
                     </p>  
                   </li>
+                  <!-- added alt email -->
+                  <li>
+                    <p class="color12" id="emailLabelParent">
+                      Alternate Email id <span class="ml5 ~if ($editApiResponse.Contact.ALT_EMAIL.value|count_characters:true) eq 0 || $editApiResponse.Contact.ALT_EMAIL.screenBit neq 1` disp-none ~/if` js-undSecMsg">
+                          <span class="disp_ib color5 f13" > Under Screening</span>
+                        </span>
+                    </p>
+                    <p class="color11">
+                      <span id='my_emailView' ~if $arrOutDisplay.contact.my_email eq $notFilledInText` class="color5"  ~/if`>
+                        ~$arrOutDisplay['contact']['my_email']`
+                      </span>
+                    </p>  
+                    <div class="f12 color12 pt5"><span class="color5 cursp" id="alternateEmailVerify">Verify</span> email id to receive mails.</div>
+                  </li>
+
                   <li>
                     <p class="color12" >
                       Mobile No. 
