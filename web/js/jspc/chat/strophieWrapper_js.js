@@ -115,7 +115,7 @@ var strophieWrapper = {
                     strophieWrapper.disconnect();
                     invokePluginLoginHandler("failure",false);
                 }
-            },10000);
+            },5000);
         } else if (status == Strophe.Status.CONNFAIL) {
             //console.log("CONNFAIL");
             $('#connect').get(0).value = 'connect';
