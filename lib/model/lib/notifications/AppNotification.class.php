@@ -102,12 +102,14 @@ public function microtime_float()
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+
             		$applicableProfilesArr = array_keys($applicableProfiles);
             		$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
 			unset($applicableProfilesArr);
             
             		$poolObj = new NotificationDataPool();
             		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+
             		unset($poolObj);
 			break;
 
@@ -174,6 +176,12 @@ public function microtime_float()
 			// print_r($dataAccumulated);
 			unset($poolObj);
 			break;
+		   case "LOGIN_REGISTER":
+		   		$poolObj = new NotificationDataPool();
+				$dataAccumulated = $poolObj->getLOGIN_REGISTERNotificationData($appProfiles);
+				//print_r($dataAccumulated);die;
+				unset($poolObj);
+		   		break;
                   case "CSV_UPLOAD":
                         $details = $this->getProfilesData($appProfiles,$className="JPROFILE");
                         foreach($appProfiles as $k=>$v)
@@ -478,6 +486,7 @@ public function microtime_float()
 
 	  $completeNotificationInfo = array();
 	  $counter = 0;
+
 	  if(is_array($dataAccumulated))
 	  {
 		  foreach($dataAccumulated as $x=>$dataPerNotification)
@@ -487,7 +496,7 @@ public function microtime_float()
 			  if($notificationId)
 			  {
 				  $completeNotificationInfo[$counter] = $this->generateNotification($notificationId, $notificationKey,$dataPerNotification);
-				  // print_r($completeNotificationInfo); die;
+				  //print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT')	
 				  	$completeNotificationInfo[$counter]["PHOTO_URL"] =$dataPerNotification['PHOTO_URL'];
@@ -502,6 +511,7 @@ public function microtime_float()
 		  }
 		  unset($notificationId);
 		  unset($dataAccumulated);
+		  //print_r($completeNotificationInfo);
 		  return $completeNotificationInfo;
 	  }
   }

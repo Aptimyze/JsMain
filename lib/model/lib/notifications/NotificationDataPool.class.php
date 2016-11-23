@@ -70,6 +70,7 @@ class NotificationDataPool
 
   public function getJustJoinData($applicableProfiles)
   {
+    //print_r($applicableProfiles);
     if(is_array($applicableProfiles))
     {
         foreach($applicableProfiles as $profileid=>$profiledetails)
@@ -87,6 +88,7 @@ class NotificationDataPool
         unset($loggedInProfileObj);
         unset($dppMatchDetails);
         unset($applicableProfilesData);
+        
         if(is_array($matchedProfiles))
         {
             foreach($matchedProfiles as $k1=>$v1)
@@ -500,6 +502,18 @@ class NotificationDataPool
             }
             unset($matchOfDayMasterObj);
             unset($matchedProfiles);
+            return $dataAccumulated;
+        }
+    }
+
+    function getLOGIN_REGISTERNotificationData($applicableProfiles){
+        if(is_array($applicableProfiles)){
+            $counter =0;
+            foreach($applicableProfiles as $key=>$regId){
+                $dataAccumulated[$counter++]['SELF']=array('REG'=>$regId);
+            }
+            $dataAccumulated[0]['COUNT'] = "SINGLE";
+            unset($applicableProfiles);
             return $dataAccumulated;
         }
     }

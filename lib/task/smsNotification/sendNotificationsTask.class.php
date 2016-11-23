@@ -74,6 +74,7 @@ $this->addOptions(array(
   }
   private function sendPushNotifications($profileDetails,$idArr)
   {
+  	print_r($profileDetails);die;
 	$this->notificationSenderObj->sendNotifications($profileDetails);
 	if(is_array($idArr))
 		$this->scheduledAppNotificationUpdateSentObj->updateSent($idArr,$this->notificationKey,NotificationEnums::$PENDING);
