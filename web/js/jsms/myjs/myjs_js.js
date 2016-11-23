@@ -67,16 +67,17 @@ function jsmsMyjsReady() {
         
         if (parseInt(awaitingResponseCount)) {
             var slider1=$("#awaitingResponsePresent #awaiting_tuples");
-          tupleObject = slider1.Slider(7,slider1,parseInt(awaitingResponseCount),"interest_received",awaitingResponseNext);
-            tupleObject._defaultInit();
+ //         tupleObject = slider1.Slider(7,slider1,parseInt(awaitingResponseCount),"interest_received",awaitingResponseNext);
+   //         tupleObject._defaultInit();
+            bindScrollAnimation(slider1);
         }
         
         if (parseInt(matchalertCount)) {
             var slider2=$("#matchalertPresent #match_alert_tuples");
-           tupleObject2 =   slider2.Slider(9,slider2,parseInt(matchalertCount),"match_alert",matchAlertNext);
-          tupleObject2._defaultInit();
-                  bindSlider();
-
+     //      tupleObject2 =   slider2.Slider(9,slider2,parseInt(matchalertCount),"match_alert",matchAlertNext);
+       //   tupleObject2._defaultInit();
+         //         bindSlider();
+            bindScrollAnimation(slider2);
         }
                 $(".contactLoader").css("left",((windowWidth/2)-$(".contactLoader").width()/2)-20+"px");
 
@@ -257,15 +258,155 @@ function getCount(response){
 
 	function onnewtuples(_parent) {
 		if (_parent.page >= 0) {
-                        if (_parent._isRequested) return ;
-                        ++_parent.page;
 			loadnew(_parent.page,_parent);
                         
 		}
 	};
       
+function bindScrollAnimation (elem) {
+    var initialPosition = "",indexTupple="",page = 1;
+    $(elem).bind('touchstart', function(){
+        initialPosition = $(elem).scrollLeft();
+    });
+    $(elem).scroll(function() {
+        clearTimeout($.data(this, "scrollCheck"));
+        $.data(this, "scrollCheck", setTimeout(function() {
+            var dataRight = false, swipStyle = "", tupleDivArray=$(elem).find('.toupleDiv');
+            if ($(elem).scrollLeft() > initialPosition && initialPosition != "reset"){
+                swipStyle = "ltr";
+            } else if ($(this).scrollLeft() < initialPosition && initialPosition != "reset") {
+                swipStyle = "rtl";
+            }
+        
+            tupleDivArray.each(function(index, element) {
+                var leftVal = $(this).offset().left;
+                if (leftVal > 25 && leftVal < 35) {
+                    dataRight = true;
+                    indexTupple = index+1;
+                }
+            });
+            if (dataRight == false) {
+                tupleDivArray.each(function(index, element) {
+                    var leftVal = $(this).offset().left, diff = 0;
+                    if (swipStyle == "ltr" && leftVal > 35){
+                        diff = parseInt($(elem).scrollLeft() + leftVal - 30);
+                        $(elem).animate({scrollLeft:diff + "px"}, 250);
+                        initialPosition = "reset";
+                        indexTupple = index+1; 
+                        return false;
+                    }
+                    else if (swipStyle == "rtl" && leftVal > 0 && $(this).prev().offset()){
+                        diff = parseInt($(elem).scrollLeft() + $(this).prev().offset().left - 25);
+                        $(elem).animate({scrollLeft:diff + "px"}, 250);
+                        initialPosition = "reset";
+                        indexTupple = index+1;
+                        return false;
+                    }
+                });
+            }
+            if (indexTupple >= $(elem).find('.toupleDiv').length / 2 && swipStyle != "") {
+                page++;
+                var id = 0,mapString="";
+                if($(elem.attr("id")== "match_alert_tuples")){
+                    id= 9;
+                    mapString="match_alert";
+                } else if($(elem.attr("id")== "awaiting_tuples")){
+                    id=7;
+                    mapString = "interest_received";
+                }
+                var ob = {_tupleCount: $(elem).find('.toupleDiv').length, _tupleIndex:$(elem).find('.toupleDiv').length, page: page,_objId: id,  _parent: elem,_mapString:mapString};
+                onnewtuples(ob);
+            }
 
+        }, 100));
+    });
+}
 
+function loadnew(page_no, eleObj) {
+    console.log("eleObj",eleObj);
+    var xmlhttp;
+    if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
+        xmlhttp = new XMLHttpRequest();
+    } else { // code for IE6, IE5
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var parentElement = eleObj._parent,loadingMore=parentElement.find("#loadingMorePic").clone();
+            parentElement.find("#loadingMorePic").remove();
+            var index = eleObj._tupleIndex,rsp = xmlhttp.responseText,child = parentElement.children(),total_len = child.length,maxlength = 10,length;
+            if (child.length == 0) {
+                eleObj.page = -1;
+                return;
+            }
+            rsp = JSON.parse(rsp);
+            //console.log("rsp",rsp[eleObj._mapString]['tuples']);
+            if (rsp[eleObj._mapString]['tuples']) {
+                var x, newdiv,width = parseInt($(child[0]).css("width"));;
+                length = rsp[eleObj._mapString]['tuples'].length;
+                x=child.eq(0).html();
+                for (i = 0; i < length; i++) {
+                        newdiv = $(child[i + index]);
+                        newdiv.css("width", width + "px");
+                        newdiv.html(x);
+                       newdiv.attr("id",$(child[0]).attr("id").split("_")[0]+"_"+(i + index));
+                       
+                    }
+                for (i = 0; i < length; i++) {
+                    console.log("child",child[16],eleObj._tupleIndex);
+                    var y = $(child[i + eleObj._tupleIndex]);
+                    console.log("y",y);
+                    if (eleObj._objId == 7) {
+                        y.attr("id", "eoituple_" + (i + eleObj._tupleCount));
+                        y.find(".eoiAcceptBtn").attr("index", (i + eleObj._tupleCount)).children("input").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
+                        y.find(".eoiDeclineBtn").attr("index", (i + eleObj._tupleCount)).children("input").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
+                    }
+                    y.find(".username").html(rsp[eleObj._mapString]['tuples'][i]["username"]);    
+                    y.find(".tuple_image").attr("src", rsp[eleObj._mapString]['tuples'][i]["photo"]["url"]);
+                    y.find(".tuple_title").html(rsp[eleObj._mapString]['tuples'][i]["tuple_title_field"]);
+                    y.find(".tuple_age").html(rsp[eleObj._mapString]['tuples'][i]["age"]);
+                    y.find(".tuple_height").html(rsp[eleObj._mapString]['tuples'][i]["height"]);
+                    y.find(".tuple_caste").html(rsp[eleObj._mapString]['tuples'][i]["caste"]);
+                    y.find(".tuple_mtongue").html(rsp[eleObj._mapString]['tuples'][i]["mtongue"]);
+                    y.find(".tuple_education").html(rsp[eleObj._mapString]['tuples'][i]["education"]);
+                    y.find(".tuple_income").html(rsp[eleObj._mapString]['tuples'][i]["income"]);
+                    y.find(".proChecksum").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
+                    y.find("#detailedProfileRedirect").attr('href','/profile/viewprofile.php?profilechecksum='+rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]+'&'+rsp[eleObj._mapString]['tracking']+"&total_rec="+rsp[eleObj._mapString]['view_all_count']+"&actual_offset="+(i+1)+"&contact_id="+rsp[eleObj._mapString]['contact_id']);
+                }
+            }
+            else
+                length = 0;
+            
+            eleObj._tupleCount += length;
+            eleObj._tupleIndex += length;
+            
+
+            if (!rsp[eleObj._mapString]['show_next']) {
+                eleObj.page = -1;
+                eleObj._parent.find("#loadingMorePic").hide();
+                return;
+            }
+            
+           
+            parentElement.append(loadingMore);
+            loadingMore.hide();
+            for (i = 0; i < maxlength; i++)
+                parentElement.append('<div style="margin-right:10px; display:inline-block; margin-left:0px;" ></div>');
+        }
+
+    };
+    
+    var proChecksumString= "profileList=";
+    var prochecks=eleObj._parent.find(".proChecksum");
+    
+    proChecksumString+=prochecks.eq(0).val();
+    for(i=1;i<prochecks.length;i++)
+        proChecksumString+=(","+prochecks.eq(i).val());
+    var str = "/api/v1/myjs/perform?infoTypeId=" + eleObj._objId + "&pageNo=" + page_no+"&"+proChecksumString;
+    eleObj._parent.find("#loadingMorePic").css("display","inline-block");                
+    xmlhttp.open("POST", str, true);
+    xmlhttp.send();
+};
 
 /*
 function add_divs(width, length, index) {

@@ -107,7 +107,7 @@ class CriticalActionLayerTracking
           
         }
 // in the order of priority
-        for ($i=1;;$i++)
+        for ($i=6;;$i++)
         { 
 
       $layer = CriticalActionLayerDataDisplay::getDataValue('','PRIORITY',$i);

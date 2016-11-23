@@ -16,7 +16,7 @@ class Horoscope
 		return $horoscopeRequested;
 	}
 
-	public function ifHoroscopePresent($profileId) {
+	public function ifHoroscopePresent($profileId) {return 'N';
 		$astroObj = ProfileAstro::getInstance();
 		$result = $astroObj->getIfAstroDetailsPresent($profileId);
 		if($result == 1)

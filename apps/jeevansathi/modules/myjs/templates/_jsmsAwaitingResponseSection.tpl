@@ -15,7 +15,7 @@
 
      <div class="swrapper" id="swrapper">
         <div class="wrap-box" id="wrapbox">
-    <div id="awaiting_tuples"  style=" white-space: nowrap; margin-left:10px; font-size:0px; width:200%">
+    <div id="awaiting_tuples"  style=" overflow-x:auto;white-space: nowrap; margin-left:10px; font-size:0px;width:100%">
         ~foreach from=$eoiData.tuples item=tupleInfo key=id`
                
                         ~include_partial("myjs/jsmsProfileTuple",[profileTuple=>$tupleInfo,section=>"eoi",index=>$id,gender=>$gender,total=>$eoiData.view_all_count,contactId=>$eoiData.contact_id])`
