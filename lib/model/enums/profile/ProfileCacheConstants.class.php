@@ -215,8 +215,7 @@ class ProfileCacheConstants
                                         "VARA",
                                         "MASA",
                                         "HAVE_ASTRO",
-                                        "FSO_EXISTS",
-                                        "JHOBBY_EXISTS"
+                                        "FSO_EXISTS"
                                     );
     
     public static $arrJProfileColumns = array(
