@@ -997,11 +997,7 @@ JsChat.prototype = {
             elem.find(".pinkBubble2").hide();
             elem.find(".pinkBubble2 span").html("0");
             elem.find(".chatBoxBar").removeClass("cursp");
-            if(elem.find(".chatBoxBar").hasClass("js-minimizedChatBox")){
-                elem.find(".chatBoxBar").removeClass("js-minimizedChatBox");
-                elem.find(".js-chatBoxTopName").addClass("js-viewProfileBind");
-                elem.find(".downBarPic").addClass("js-viewProfileBind");
-            }
+            elem.find(".chatBoxBar").removeClass("js-minimizedChatBox");
             elem.find(".downBarPic").removeClass("downBarPicMin");
             elem.find(".downBarUserName").removeClass("downBarUserNameMin");
             //console.log("type in _scrollUp",type);
@@ -1095,7 +1091,8 @@ JsChat.prototype = {
 		            bubbleData.splice(indexToBeRemoved,1);
 		        }
 		        localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
-
+                elem.find(".js-chatBoxTopName").addClass("js-viewProfileBind");
+                elem.find(".downBarPic").addClass("js-viewProfileBind");
 		}      
   	});
 
