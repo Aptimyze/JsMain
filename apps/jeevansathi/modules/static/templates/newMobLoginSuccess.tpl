@@ -156,17 +156,17 @@ You need to be a Registered Member<br />to connect with this user</div>
 </div>   
 <script>
 	var d = new Date();
-	var hrefVal = $("#calltopSearch").attr("href")+"&stime="+d.getTime();
+	var hrefVal = document.getElementById("calltopSearch").href+"&stime="+d.getTime();
 	var captchaShow=~$captchaDiv`;
 	var nua = navigator.userAgent;
-		var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 &&     nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
+        var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 &&     nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
 	
 	
-	$("#calltopSearch").attr("href",hrefVal);
-    enableLoader = function()
-    {
-        $('.loader').addClass('simple').addClass('dark').addClass('image');
-    }
+	document.getElementById("calltopSearch").href = hrefVal;
+        enableLoader = function()
+        {
+            $('.loader').addClass('simple').addClass('dark').addClass('image');
+        }
 
 
 </script> 
