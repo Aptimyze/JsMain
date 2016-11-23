@@ -5,7 +5,7 @@ use matchalerts;
  `DATE` date NOT NULL,
  `LOGICLEVEL` smallint(6) NOT NULL,
  PRIMARY KEY (`ID`)
-) ENGINE=MyISA;
+) ENGINE=MyISAM;
 
 
 
