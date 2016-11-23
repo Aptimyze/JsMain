@@ -41,7 +41,7 @@ function reActivateNonRosterPolling(source,updateChatImmediate){
     //clearNonRosterPollingInterval();
     //console.log("dppLiveForAll",dppLiveForAll);
     //console.log("betaDppExpression",betaDppExpression);
-    if (((my_action == "dpp" && moduleChat == "profile") || strophieWrapper.getCurrentConnStatus() == true) && loggedInJspcUser != undefined) {
+    if ((updateChatImmediate == true || strophieWrapper.getCurrentConnStatus() == true) && loggedInJspcUser != undefined) {
         var profileEligible = true;
         
         if(dppLiveForAll != "1" && betaDppExpression != undefined && betaDppExpression != ""){
@@ -110,7 +110,14 @@ function pollForNonRosterListing(type,updateChatListImmediate){
         //console.log("selfAuth",selfAuth);
         var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
         if(updateChatListImmediate != undefined && updateChatListImmediate == true){
-            validRe = true;
+            if(showChat == "1"){
+                validRe = true;
+            }
+            else{
+                validRe = false;
+                localStorage.removeItem("nonRosterCLUpdated");
+                localStorage.removeItem("nonRosterChatListing"+loggedInJspcUser);
+            }
             //headerData['Cache-Control'] = 'no-cache,no-store';
         }
         else{
