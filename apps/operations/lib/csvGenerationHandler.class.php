@@ -842,6 +842,14 @@ class csvGenerationHandler
                         foreach($profiles as $profileid=>$dataArr){
 				if(!$profileid)
 					continue;
+
+				if ($processName == 'rcbCampaignInDialer') {
+                	$allotedAgent = $AgentAllocDetailsObj->getAllotedAgent($profileid);
+                	if ((strstr($dataArr['SUBSCRIPTION'], "F") !== false) || (strstr($dataArr['SUBSCRIPTION'], "D") !==  false) || $alloted) {
+                    	continue;
+                	}
+                }
+                
 				if($processName!='rcbCampaignInDialer'){
 	                                if($dataArr["ACTIVATED"]!='Y')
 	                                        continue;
