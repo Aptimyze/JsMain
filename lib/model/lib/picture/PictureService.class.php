@@ -467,9 +467,9 @@ class PictureService
         **/
 	//public function deletePhoto($picObj)
 	public function deletePhoto($pictureId,$profileId,$userType="other")
-	{ 
+	{
 		$deletePhotoObj = new deletePhoto($pictureId,$profileId,$this->profileObj,$userType,$this->source);
-		return $status = $deletePhotoObj->deletePhoto();
+		return $status = $deletePhotoObj->deletePhotoId();
 	}
 
         /**

@@ -353,21 +353,90 @@ function generateChatHistoryID(key){
 }
 
 /*
+ * set self name in chat header as well as localstorage
+ * @inputs : nameStr
+ * @returns : none
+ */
+function setChatSelfName(nameStr,target){
+    var modifiedName;
+    if(nameStr != undefined && nameStr != ""){
+        if(target == "chatHeader"){
+            var trimmedString = nameStr.length > chatConfig.Params[device].nameTrimmLength ? nameStr.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameStr;
+            var oldChatName = $(".chatName").html();
+            if(showChat == "0" || (trimmedString && oldChatName != trimmedString)){
+                $(".chatName").html(trimmedString);
+                localStorage.setItem('name', JSON.stringify({
+                    'selfName': nameStr,
+                    'user': loggedInJspcUser
+                }));
+                modifiedName = trimmedString;
+            }
+        }
+        else if(target == "storage"){
+            localStorage.setItem('name', JSON.stringify({
+                'selfName': nameStr,
+                'user': loggedInJspcUser
+            }));
+            modifiedName = nameStr;
+        }
+        else if(target == "syncName"){
+            var nameOnSite = selfUserChatName;
+            if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
+                nameOnSite = $(".js-syncChatHeaderName").html();
+            }
+            if(nameOnSite != undefined && nameOnSite != ""){
+                nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
+                if(nameOnSite && nameStr != nameOnSite){
+                    setChatSelfName(nameOnSite,"storage");
+                }
+                modifiedName = nameOnSite;
+            }
+        }
+    }
+    else if(target == "syncName"){
+        var nameOnSite = selfUserChatName;
+        if(((moduleChat == "profile" && my_action == "edit") || my_action == "jspcPerform") && $(".js-syncChatHeaderName").length != 0){
+            nameOnSite = $(".js-syncChatHeaderName").html();
+        }
+        if(nameOnSite != undefined && nameOnSite != ""){
+            nameOnSite = nameOnSite.length > chatConfig.Params[device].nameTrimmLength ? nameOnSite.substring(0, chatConfig.Params[device].nameTrimmLength - 3) + "..." : nameOnSite;
+            if(nameOnSite && nameStr != nameOnSite){
+                setChatSelfName(nameOnSite,"storage");
+            }
+            modifiedName = nameOnSite;
+        }
+    }
+    return modifiedName;
+}
+
+/*
  * request self name
  * @inputs none
  * @returns self name / username
  */
 function getSelfName(){
     var selfName = localStorage.getItem('name'),
-        flag = true;
+        flag = true,data,user,modifiedName;
+
     if (selfName) {
-        var data = JSON.parse(selfName);
-        var user = data['user'];
-        if (user == loggedInJspcUser) {
+        data = JSON.parse(selfName);
+        user = data['user'];
+        selfName = data['selfName'];
+        /*if (user == loggedInJspcUser) 
+        {
             flag = false;
-            selfName = data['selfName'];
-        }
+            modifiedName = setChatSelfName(selfName,"syncName");
+            if(modifiedName != undefined){
+                selfName =  modifiedName;
+            }
+        }*/
     }
+    modifiedName = setChatSelfName(selfName,"syncName");
+    if(modifiedName != undefined){
+        flag = false;
+        selfName =  modifiedName;
+    }
+    //console.log("getSelfName",flag);
     if(flag){
         var apiUrl = chatConfig.Params.selfNameUr;
         ////console.log("In self Name");
@@ -585,7 +654,9 @@ function xmlToJson(xml) {
  *handles login success/failure cases
  * @param: state
  */
-function invokePluginLoginHandler(state) {
+function invokePluginLoginHandler(state, loader) {
+    //console.log("invoke plign handler");
+    //console.log(state);
     if (state == "success") {
         createCookie("chatAuth", "true",chatConfig.Params[device].loginSessionTimeout);
         //setLogoutClickLocalStorage("unset");
@@ -597,7 +668,9 @@ function invokePluginLoginHandler(state) {
         setLogoutClickLocalStorage("set");
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
             objJsChat.addLoginHTML(true);
-            objJsChat.manageLoginLoader();
+            if(loader != false) {
+                objJsChat.manageLoginLoader();
+            }
         }
     } else if (state == "session_sync") {
         if ($(objJsChat._logoutChat).length != 0 && readCookie('chatAuth') != "true") {
@@ -945,7 +1018,7 @@ function clearChatMsgFromLS(){
  * Clear local storage
  */
 function clearLocalStorage() {
-    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','name'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
@@ -1223,9 +1296,13 @@ $(document).ready(function () {
         $(window).on("online", function () {
             globalSleep(15000);
             //console.log("detected internet connectivity");
+            //console.log("In online");
             chatLoggedIn = readCookie('chatAuth');
+            //console.log(chatLoggedIn);
             if (chatLoggedIn == 'true' && loginStatus == "Y") {
+                //console.log("In if of online");
                 if (username && pass) {
+                    //console.log("user pass exist");
                     strophieWrapper.reconnect(chatConfig.Params[device].bosh_service_url, username, pass);
                 }
             }
@@ -1267,7 +1344,6 @@ $(document).ready(function () {
         objJsChat.onEnterToChatPreClick = function () {
 	    removeLocalStorageForNonChatBoxProfiles();
             //objJsChat._loginStatus = 'N';
-            
             var chatLoggedIn = readCookie('chatAuth');
             //if (chatLoggedIn != 'true') 
             {
@@ -1279,7 +1355,8 @@ $(document).ready(function () {
                     //console.log("123");
                     return;
                 } else {
-                    //console.log("login my case");
+                    objJsChat._selfName = getSelfName();
+                    //console.log("login my case",objJsChat._selfName);
                     if($("#selfImgDiv img") != undefined && $("#selfImgDiv img").attr("src") != undefined){
                         localStorage.setItem('userImg', JSON.stringify({
                             'img': $("#selfImgDiv img").attr("src"),

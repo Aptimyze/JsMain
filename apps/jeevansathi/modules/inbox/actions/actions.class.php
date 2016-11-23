@@ -111,6 +111,10 @@ class inboxActions extends sfActions
         $this->matchAlertCountResetLogic($profileObj);
       }
       
+                        if ($infoType == "VISITORS") {
+                            $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                        }
+      
 			if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
 			{
 				$this->count= $profileCommunication->getCount($module,$profileObj,$infoTypenav);
@@ -346,6 +350,9 @@ public function executePerformV2(sfWebRequest $request)
         if ($infoType == "MATCH_ALERT") {
           $this->matchAlertCountResetLogic($profileObj);
         }
+                                if ($infoType == "VISITORS") {
+                                    $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                                }
        
 				if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
 				{
@@ -403,7 +410,7 @@ public function executePerformV2(sfWebRequest $request)
 				$response2["searchid"]=$infoTypeId;
 				$response2["dppLinkAtEnd"]=null;
                                 if ($infoType == "MATCH_ALERT") {
-                                        $response2["dppLinkAtEnd"] = 'Go To My Matches.';
+                                        $response2["dppLinkAtEnd"] = 'Go To Desired Partner Matches.';
                                 }
 				$response2["sorting"]=0;
 				$response2["sortType"]=null;
@@ -554,7 +561,9 @@ public function executePerformV2(sfWebRequest $request)
 					break;
 					
 					case 'MATCH_ALERT': 
-					$response2["subtitle"]='Match Alerts '.$response2['total'];
+					$response2["subtitle"]='Daily Recommen.. '.$response2['total'];					
+					if(MobileCommon::isDesktop())
+						$response2["subtitle"]='Daily Recommendations '.$response2['total'];
 					$response2["title2"]=null;
 					break;
 					
@@ -637,14 +646,35 @@ public function executePerformV2(sfWebRequest $request)
 						break;
 
 					case 'VISITORS': 
-					$response2["subtitle"]='Profile Visitors '.$response2['total'];
-					$response2["title2"]=null;
+                                        if(MobileCommon::isDesktop()){
+                                            if($infoTypenav["matchedOrAll"]=="A")
+                                                $response2["subtitle"]='All Profile Visitors '.$response2['total'];
+                                            else
+                                                $response2["subtitle"]="Matching Visitors ".$response2['total'];
+                                            $response2["title2"]=null;
+                                        }
+                                        else if($infoTypenav["matchedOrAll"]=="" && !MobileCommon::isNewMobileSite()){
+                                            $response2["subtitle"]='Profile Visitors '.$response2['total'];
+                                            $response2["title2"]=null;
+                                        }
+                                        elseif($infoTypenav["matchedOrAll"]=="A"){
+                                            $response2["subtitle"]='All Visitors '.$response2['total'];
+                                            $response2["title2"]="Matching"; 
+                                            $response2["url"]="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=M";
+                                            $response2["visitorAllOrMatching"]='A';
+                                        }
+                                        else{
+                                            $response2["title2"]='All Visitors';
+                                            $response2["subtitle"]="Matching ".$response2['total']; 
+                                            $response2["url"]="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=A";
+                                            $response2["visitorAllOrMatching"]='M';
+                                        }
 					break;
 					
 					case 'SHORTLIST': 
-					$response2["subtitle"]='Shortlisted Mem.. '.$response2['total'];
+					$response2["subtitle"]='Shortlisted Pro.. '.$response2['total'];
 					if(MobileCommon::isDesktop())
-						$response2["subtitle"]='Shortlisted Members '.$response2['total'];
+						$response2["subtitle"]='Shortlisted Profiles '.$response2['total'];
 					$response2["title2"]=null;
 					break;
 
@@ -807,6 +837,7 @@ public function executePerformV2(sfWebRequest $request)
 				$this->title2=$ResponseArr['title2'];
 				$this->infotypeid2=$ResponseArr['infotypeid2'];
 				$this->infotype=$ResponseArr['infotype'];
+                                $this->visitorAllOrMatching = $ResponseArr['visitorAllOrMatching'];
 				$this->noresultmessage = $ResponseArr["noresultmessage"];
 				$this->_SEARCH_RESULTS_PER_PAGE = ProfileInformationModuleMap::$ContactCenterAPP[$ResponseArr['infotype']]['COUNT'];	
 				$this->heading = $ResponseArr['subtitle'];

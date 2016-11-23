@@ -8,7 +8,8 @@ var albumPresent=0;
 var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2'};
 var bCallCreateHoroscope = false;
  $("document").ready(function() {
-	 
+
+
     setTimeout(function() {
 		if($('#listShow').val()==1)
          $("#AlbumMainTab").click(); 
@@ -28,6 +29,7 @@ var bCallCreateHoroscope = false;
       bxslider.gotoSlide(index);
     }
    },200);
+   
 });
 var albumNoPhotoStr="";
 (function($){
@@ -48,7 +50,35 @@ var mobEditPage=(function(){
 		{
 			result=formatJsonOutput(result);
 			
-			//console.log(result);
+			for( var k in result.Dpp.BasicDetails.OnClick )
+			{
+				if ( result.Dpp.BasicDetails.OnClick[k]['key'] == "P_MATCHCOUNT")
+				{
+					/*
+				   	variable to store threshold for mutual match count.
+				    */
+				   	var mutualMatchCountThreshold = 100;
+
+					$("#mutualMatchCountMobile").css("padding","2px");
+
+					$("#mutualMatchCountMobile").text(parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])).toLocaleString());
+					$("#mutualMatchCountMobile").attr("data-value",parseInt((result.Dpp.BasicDetails.OnClick[k]['value'])));
+
+                    if ( parseInt($("#mutualMatchCountMobile").text().replace(",","") ) >= mutualMatchCountThreshold )
+                    {
+                    	$("#mutualMatchCountMobile").css('color', '')
+                    	$("#mutualMatchCountMobile").removeClass("bg7");
+                    	$("#mutualMatchCountMobile").addClass("dpbg1");
+                    }
+                    else
+                    {
+                    	$("#mutualMatchCountMobile").css('color', 'white')
+                    	$("#mutualMatchCountMobile").removeClass("dpbg1");
+                    	$("#mutualMatchCountMobile").addClass("bg7");
+                    }
+				}
+			}
+
 			changingEditData=ele.pageJson=result;
 			originalEditData=JSON.parse(JSON.stringify(changingEditData));
 			//console.log(changingEditData);
@@ -100,10 +130,7 @@ var mobEditPage=(function(){
                             current="Desired Partner";
                         if(key=="Details")
                         {
-                            if(value["basic"]["OnClick"][4]["label_val"]==="Male")
-                                current="Groom's Details";
-                            else
-                                current="Bride's Details";
+                                current="Basic Info";
                         }
 			//sliderDiv=sliderDiv.replace('sw', key+'_info_slider');
 			sliderDiv=sliderDiv.replace(/subHeadTab/g, key+'SubHead');
@@ -193,7 +220,20 @@ var mobEditPage=(function(){
 		$("#privacyOption").hide();
 		$("#topbar").hide();
 		$("#AlbumSubHead").hide();
-});
+}
+);
+
+	if(typeof(fromCALphoto)!='undefined' && fromCALphoto == '1')
+	{ 
+	    var newUrl=document.location.href.replace('fromCALphoto','');
+	    history.pushState('', '', newUrl);
+		$( "#"+key+"EditSection" ).height(privacyH);
+		$("#privacyoptionshow").show();
+		$("#privacyOption").hide();
+		$("#topbar").hide();
+		$("#AlbumSubHead").hide();
+	}
+
 	$("#privacyoptionclose").click(function()
        	{
 				$( "#"+key+"EditSection" ).height(editHgt);
@@ -209,6 +249,8 @@ var mobEditPage=(function(){
 				if(value!=null)
 				$.each(value, function(k ,v)
 				{
+					if(v.outerSectionKey!="NameoftheProfileCreator")
+					{
 					
 					sliderDiv=sliderDiv.replace('EditFieldName', v.outerSectionKey+'_name');
 					sliderDiv=sliderDiv.replace('EditFieldLabelValue', v.outerSectionKey+'_value');				
@@ -336,6 +378,7 @@ var mobEditPage=(function(){
 					
 					i=2;
 					sliderDiv=originalDiv;
+  				  }
 				});
 				
 				if(st==1)
@@ -359,6 +402,13 @@ var mobEditPage=(function(){
       $("#KundliEditSection").after(horoscopeButton);
     
       $('.js-createHoroscope').on('click',onHoroscopeButtonClick);
+      if(typeof(fromCALHoro)!='undefined' && fromCALHoro == '1')
+      {
+      	var newUrl=document.location.href.replace('fromCALHoro','');
+	    history.pushState('', '', newUrl);
+
+      	onHoroscopeButtonClick();
+        }
     }
     
 	};
@@ -395,6 +445,7 @@ function formatJsonOutput(result)
         delete(result.cache_flag);
         delete(result.cache_interval);
         delete(result.resetCache);
+        delete(result.flagForAppRatingControl);
 	return result;
 }
 

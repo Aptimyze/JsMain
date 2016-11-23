@@ -527,4 +527,24 @@ class profileVerificationActions extends sfActions
 		    $url="/operations.php/$module/$action";
 		    $this->redirect($url);
 		}
+                
+        public function executeInappropriateUsersReport(sfWebRequest $request)
+  {
+      $endDate=$request->getParameter('RAStartDate');
+      $resultArr=(new MIS_INAPPROPRIATE_USERS_REPORT())->getReportForADate($endDate,10);
+      ob_end_clean();
+      if(sizeof($resultArr) == 0 )
+          die;
+      $i=0;
+      echo json_encode($resultArr);
+      return sfView::NONE;
+      die;
+
+  }
+    public function executeInappropriateUsers(sfWebRequest $request)
+    {
+            $this->setTemplate('inappropriateUsers');
+
+    }        
+                
 }

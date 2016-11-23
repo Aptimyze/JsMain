@@ -13,14 +13,16 @@ class FEATURED_PROFILE_VIEW extends TABLE{
 			try 
 			{
 				$date=date('Y-m-d');
-				$sqlUpdate = "UPDATE MIS.FEATURED_PROFILE_VIEW SET COUNT=COUNT+1 WHERE DATE='$date'";
-				
-				$count=$this->db->exec($sqlUpdate);
+				$sqlUpdate = "UPDATE MIS.FEATURED_PROFILE_VIEW SET COUNT=COUNT+1 WHERE DATE=:DATEVAL";
+				$res = $this->db->prepare($sqlUpdate);
+				$res->bindParam(":DATEVAL", $date, PDO::PARAM_STR);
+				$count=$res->execute();
 				if($count<=0)
 				{
-					$sqlInsert="INSERT IGNORE INTO MIS.FEATURED_PROFILE_VIEW (DATE,COUNT) VALUES ('$date','1')";
-					
-					$this->db->exec($sqlInsert);
+					$sqlInsert="INSERT IGNORE INTO MIS.FEATURED_PROFILE_VIEW (DATE,COUNT) VALUES (:DATEVAL,'1')";
+					$res = $this->db->prepare($sqlInsert);
+					$res->bindParam(":DATEVAL", $date, PDO::PARAM_STR);
+					$res->execute();
 				}
 				return true;
 			}

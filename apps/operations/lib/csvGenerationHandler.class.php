@@ -1126,6 +1126,7 @@ class csvGenerationHandler
 				$tablesName     	=$salesCampaignTables[$processName];
 				$salesCsvDataObj	=new $tablesName;
 				$callTimeArr		=$processObj->getProfiles();
+				$AgentAllocDetailsObj   =new AgentAllocationDetails();
 			}
 			$method			=$processObj->getMethod();
 			$leadIdSuffix           =$processObj->getLeadIdSuffix();		
@@ -1160,6 +1161,10 @@ class csvGenerationHandler
 					$havePhoto='Yes';
 				else
 					$havePhoto='No';
+				if($processName=='failedPaymentInDialer' || $processName=='renewalProcessInDialer'){
+					$allotedAgent =$AgentAllocDetailsObj->getAllotedAgent($profileid);
+					$dataArr['ALLOTED_TO'] =$allotedAgent;	
+				}
 				$dialerPriority 	=$this->fetchDialerPriority($dataArr['ALLOTED_TO'],$vdDiscount,$score,$processName);
 				$dialerDialStatus 	=$this->fetchDialerStatus($dataArr['ALLOTED_TO'],$vdDiscount,$score,$processName);
 				$relation 		=FieldMap::getFieldLabel('relation',$dataArr['RELATION']);
@@ -1743,7 +1748,7 @@ class csvGenerationHandler
 	}
 	public function fetchDialerPriority($allotedTo,$vdDiscount,$score,$processName)
 	{
-		if($processName=="SALES_REGULAR")
+		if($processName=="SALES_REGULAR" || $processName=='failedPaymentInDialer' || $processName=='renewalProcessInDialer')
 		{
 			 if($allotedTo=='')
 			 {
@@ -1759,8 +1764,8 @@ class csvGenerationHandler
 		}
 		else
 		{
-			if($processName=='renewalProcessInDialer')
-				$priority =$this->fetchDialerPriorityForScore($score);	
+			if($processName=='rcbCampaignInDialer')
+				$priority =8;
 			elseif($processName=='upsellProcessInDialer')
 				$priority='6';
 			elseif($allotedTo=='' && $vdDiscount && $score>=1 && $score<=100)
@@ -1793,7 +1798,7 @@ class csvGenerationHandler
 	}
 	public function fetchDialerStatus($allotedTo,$vdDiscount,$score,$processName)
 	{
-		if($processName=='failedPaymentInDialer' || $processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='rcbCampaignInDialer')
+		if($processName=='upsellProcessInDialer' || $processName=='rcbCampaignInDialer')
 			$dial_status=1;
 		else{
 			if($allotedTo=='')

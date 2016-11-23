@@ -492,8 +492,8 @@ class DetailedViewApi
 		if($szRelation)
 		{
 			$szPosted = ApiViewConstants::$arrPostedBy[$objProfile->getGENDER()] . " $szRelation";
-			if(strlen($szPH_Name)!=0 && $szPH_Name != ApiViewConstants::getNullValueMarker())
-				$szPosted .= " ($szPH_Name)";
+//			if(strlen($szPH_Name)!=0 && $szPH_Name != ApiViewConstants::getNullValueMarker())
+//				$szPosted .= " ($szPH_Name)";
 		}	
 		
 		if($szPosted == "")
@@ -1410,11 +1410,11 @@ class DetailedViewApi
         return 'Y';
       }
       
-      $horoscope = new newjs_HOROSCOPE();
+      /*$horoscope = new newjs_HOROSCOPE();
 			$result = $horoscope->getIfHoroscopePresent($this->m_objProfile->getPROFILEID());
 			if ($result == 1) {
 				return 'Y';
-      }
+      }*/
       return 'N';
     }
     

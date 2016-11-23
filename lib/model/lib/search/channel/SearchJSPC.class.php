@@ -112,7 +112,13 @@ class SearchJSPC extends SearchJS
 		$actionObject = $params["actionObject"];
                 if($request->getParameter("searchBasedParam")){
 			$actionObject->searchListings=1;
-                        $actionObject->isRightListing=0;
+
+			//Check that allows QuickSearchBand to appear in case last Search Results are viewed
+				if($request->getParameter("searchBasedParam") == 'lastSearchResults')
+				{
+                        $actionObject->searchListings=0;
+				}
+				$actionObject->isRightListing=0;
 			if(in_array($request->getParameter("searchBasedParam"),array('kundlialerts','reverseDpp','shortlisted','visitors','contactViewAttempts')))
                                 $actionObject->isRightListing=1;
                         switch ($request->getParameter("searchBasedParam")){
