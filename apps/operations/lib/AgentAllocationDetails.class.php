@@ -582,8 +582,8 @@ public function fetchPremiumOutSourcingProfiles()
 {
 	$searchMaleObj=new NEWJS_SEARCH_MALE('newjs_slave');		
 	$searchFemaleObj=new NEWJS_SEARCH_FEMALE('newjs_slave');	
-	$startDt=date('Y-m-d',time()-2*30*86400);
-	$endDt  =date('Y-m-d',time()-1*30*86400);
+	$startDt = CommonUtility::makeTime(date('Y-m-d',time()-2*30*86400));
+	$endDt  = CommonUtility::makeTime(date('Y-m-d',time()-1*30*86400));
 	$endEntryDt=date('Y-m-d',time()-36*30*86400);
 	$greaterArray['LAST_LOGIN_DT']="$startDt";
 	$lessArray['LAST_LOGIN_DT']="$endDt";
@@ -821,7 +821,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 
 		if($level != -1 && $level !=-3 && $level!=-2){
 			if($level==0 || $level==-4 || $level==-5){
-				$lastLoginFiter =date('Y-m-d',time()-15*86400);
+				$lastLoginFiter = CommonUtility::makeTime(date('Y-m-d',time()-15*86400));
 				$greaterArray['LAST_LOGIN_DT'] ="$lastLoginFiter";
 			}
 		}
