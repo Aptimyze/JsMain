@@ -22,10 +22,10 @@ $profilesArr   = fetchProfiles($db_master);
 $eligibleArr   = $profilesArr['ELIGIBLE'];
 $inEligibleArr = $profilesArr['IN_ELIGIBLE'];
 
-$profileStr = implode(",", $eligibleArr);
+$profileStrIneligible = implode(",", $inEligibleArr);
 
 $allocatedArr = getAllocatedProfiles($eligibleArr, $db_js);
-$paidArr      = getPaidProfiles($eligibleArr, $db_js);
+$paidArr      = getPaidProfiles($eligibleArr, $db_js,$date2DayBefore);
 
 if (!empty($allocatedArr) && !empty($paidArr)) {
     $eligibleArrNew = array_merge($allocatedArr, $paidArr);
@@ -36,19 +36,18 @@ if (!empty($allocatedArr) && !empty($paidArr)) {
 } else {
     $eligibleArrNew = array();
 }
-
 $eligibleArrNew = array_unique($eligibleArrNew);
 $eligibleArrNew = array_values($eligibleArrNew);
 
-if ($profileStr != '') {
+// Stop profiles which are 2 days old
+if ($profileStrIneligible != '') {
     // Set dial status=0 for paid campaign
     $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status='0' WHERE CSV_ENTRY_DATE<'$date2DayBefore'";
     mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
-    deleteProfiles($db_master, $profileStr);
+    deleteProfiles($db_master, $profileStrIneligible);
 
     foreach ($profilesArr as $key => $profileid) {
-        $log_query = "INSERT into js_crm.DIALER_UPDATE_LOG (PROFILEID,CAMPAIGN,UPDATE_STRING,TIME,ACTION) VALUES ('$profileid','$campaignName','Dial_Status=0',now(),'$action')";
-        mysql_query($log_query, $db_js_111) or die($log_query . mysql_error($db_js_111));
+	addLog($profileid, $campaignName, $str, $action, $db_js_111);	
     }
 }
 
@@ -62,18 +61,18 @@ if (count($eligibleArrNew > 0)) {
         $deleteArr[] = $profileid;
         addLog($profileid, $campaignName, $str, $action, $db_js_111);
     }
-    // if (is_array($deleteArr)) {
-    //     $profileStrDel = implode(",", $deleteArr);
-    //     deleteProfiles($db_master, $profileStrDel);
-    //     unset($deleteArr);
-    // }
+     /*if (is_array($deleteArr)) {
+         $profileStrDel = implode(",", $deleteArr);
+         deleteProfiles($db_master, $profileStrDel);
+         unset($deleteArr);
+     }*/
 }
 
 // mail added
 $to   = "manoj.rana@naukri.com";
 $sub  = "Dialer updates of RCB Campaign Process.";
 $from = "From:vibhor.garg@jeevansathi.com";
-mail($to, $sub, $profileStr, $from);
+mail($to, $sub, $profileStrIneligible, $from);
 
 // Fetch profile with dial status 0
 function fetchProfiles($db_js)
@@ -120,11 +119,11 @@ function getAllocatedProfiles($profileArr, $db_js)
 }
 
 // Fetch Paid profiles
-function getPaidProfiles($profileArr, $db_js)
+function getPaidProfiles($profileArr, $db_js,$date2DayBefore)
 {
     $dataArr    = array();
     $profileStr = implode(",", $profileArr);
-    $sql        = "SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE PROFILEID IN($profileStr) AND SERVEFOR LIKE %F% AND ACTIVE='Y' AND ACTIVATED='Y'";
+    $sql        = "SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE PROFILEID IN($profileStr) AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' AND ACTIVATED='Y' AND ENTRY_DT>='$date2DayBefore'";
     $res        = mysql_query($sql, $db_js) or die($sql . mysql_error($db_js));
     while ($myrow = mysql_fetch_array($res)) {
         $dataArr[] = $myrow["PROFILEID"];
