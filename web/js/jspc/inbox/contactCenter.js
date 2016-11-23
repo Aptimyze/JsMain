@@ -339,11 +339,11 @@ function handleExpireInterest(activeHorizontalTabInfoID) {
 	
 	if ( $('#HorizontalTab22_Label_nonzero').length == 0)
 	{
-		$("#ccTuplesMainDiv").append('<div id="HorizontalTab22_Label_nonzero" onclick="performCCListingAction(this);" style="font-size: 90%;"  data-id="22" data-infoid="22" class="js-ccHorizontalLists txtc divcenter cursp color5 pt5 pl20 pb20 ">Interests Archived</div>');
+		$("#ccTuplesMainDiv").append('<div id="HorizontalTab22_Label_nonzero" onclick="performCCListingAction(this);" style="font-size: 90%;"  data-id="22" data-infoid="22" class="js-ccHorizontalLists txtc divcenter cursp color5 pt5 pl20 pb20 ">Archived Interests</div>');
 	}
 	if ( $('#HorizontalTab22_Label_zero').length == 0)
 	{
-		$("#zeroResultSection").append('<div id="HorizontalTab22_Label_zero" onclick="performCCListingAction(this);" style="font-size: 90%;"  data-id="22" data-infoid="22" class="js-ccHorizontalLists txtc divcenter cursp color5 pt5 pl20 pb20">Interests Archived</div>');
+		$("#zeroResultSection").append('<div id="HorizontalTab22_Label_zero" onclick="performCCListingAction(this);" style="font-size: 90%;"  data-id="22" data-infoid="22" class="js-ccHorizontalLists txtc divcenter cursp color5 pt5 pl20 pb20">Archived Interests</div>');
 	}
 	$('#HorizontalTab22_Label_zero').hide();
 	$('#HorizontalTab22_Label_nonzero').hide();
@@ -353,7 +353,7 @@ function handleExpireInterest(activeHorizontalTabInfoID) {
 		$('#ccHorizontalTabsBar > li').hide();
 		if ( $('#HorizontalTab22').length == 0)
 		{
-			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab22" data-id="22" data-infoId="22" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Interests Archived</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine22"></li>');
+			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab22" data-id="22" data-infoId="22" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Archived Interests</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine22"></li>');
 		}
 		else
 		{
