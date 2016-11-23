@@ -107,6 +107,7 @@ class ClusterOrdering
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
 				}
+                                $orderingArr[28] = 9;
                                 if($this->SearchParamtersObj->getCOUNTRY_RES() && in_array('51',explode(',',$this->SearchParamtersObj->getCOUNTRY_RES()))){
 					$orderingArr[28] = 9;
                                         $orderingArr[26] = 10;
@@ -195,6 +196,7 @@ class ClusterOrdering
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
 				}*/
+                                $orderingArr[28] = 13;
 				if($this->SearchParamtersObj->getCOUNTRY_RES() && in_array('51',explode(',',$this->SearchParamtersObj->getCOUNTRY_RES()))){
 					$orderingArr[28] = 13;
                                         $orderingArr[26] = 14;
@@ -275,7 +277,7 @@ class ClusterOrdering
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
 				}
-                                
+                                $orderingArr[28] = 9;
                                 if($this->SearchParamtersObj->getINDIA_NRI()==2 || ($this->SearchParamtersObj->getCOUNTRY_RES() && in_array('51',explode(',',$this->SearchParamtersObj->getCOUNTRY_RES())))){
 					$orderingArr[28] = 9;
                                         $orderingArr[26] = 10;
@@ -405,6 +407,7 @@ class ClusterOrdering
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
 				}
+                                $orderingArr[28] = 9;
 				if($this->SearchParamtersObj->getCOUNTRY_RES() && in_array('51',explode(',',$this->SearchParamtersObj->getCOUNTRY_RES()))){
 					$orderingArr[28] = 9;
                                         $orderingArr[26] = 10;
