@@ -21,7 +21,6 @@ $date2DayBefore = date("Y-m-d H:i:s", time() - 58 * 60 * 60);
 $profilesArr   = fetchProfiles($db_master);
 $eligibleArr   = $profilesArr['ELIGIBLE'];
 $inEligibleArr = $profilesArr['IN_ELIGIBLE'];
-
 $profileStrIneligible = implode(",", $inEligibleArr);
 
 $allocatedArr = getAllocatedProfiles($eligibleArr, $db_js);
@@ -61,18 +60,20 @@ if (count($eligibleArrNew > 0)) {
         $deleteArr[] = $profileid;
         addLog($profileid, $campaignName, $str, $action, $db_js_111);
     }
-     /*if (is_array($deleteArr)) {
+    $profileStrEligible = implode(",", $eligibleArrNew);
+    /*if (is_array($deleteArr)){
          $profileStrDel = implode(",", $deleteArr);
          deleteProfiles($db_master, $profileStrDel);
          unset($deleteArr);
-     }*/
+    }*/
 }
 
 // mail added
+$profilesStr =$profileStrIneligible.",".$profileStrEligible;
 $to   = "manoj.rana@naukri.com";
 $sub  = "Dialer updates of RCB Campaign Process.";
 $from = "From:vibhor.garg@jeevansathi.com";
-mail($to, $sub, $profileStrIneligible, $from);
+mail($to, $sub, $profilesStr, $from);
 
 // Fetch profile with dial status 0
 function fetchProfiles($db_js)

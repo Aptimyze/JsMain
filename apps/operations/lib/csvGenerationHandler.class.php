@@ -160,7 +160,7 @@ class csvGenerationHandler
 		}
 		else if(!$fields)
 		{
-			$fields ="PROFILEID,USERNAME,ISD,COUNTRY_RES,MTONGUE,FAMILY_INCOME,ENTRY_DT,PHONE_WITH_STD,DTOFBIRTH,STD,PHONE_MOB,CITY_RES,GENDER,RELATION,AGE,INCOME,SEC_SOURCE,HAVEPHOTO,MSTATUS,PHONE_FLAG,INCOMPLETE,LAST_LOGIN_DT";
+			$fields ="PROFILEID,USERNAME,ISD,COUNTRY_RES,MTONGUE,FAMILY_INCOME,ENTRY_DT,PHONE_WITH_STD,DTOFBIRTH,STD,PHONE_MOB,CITY_RES,GENDER,RELATION,AGE,INCOME,SEC_SOURCE,HAVEPHOTO,MSTATUS,PHONE_FLAG,INCOMPLETE,LAST_LOGIN_DT,SUBSCRIPTION";
 			if($processName=='paidCampaignProcess'){
 				$fields .=",YOURINFO,FAMILYINFO,FATHER_INFO,SPOUSE,SIBLING_INFO,JOB_INFO";	
 			}
@@ -845,8 +845,9 @@ class csvGenerationHandler
 
 				if ($processName == 'rcbCampaignInDialer') {
                 	$allotedAgent = $AgentAllocDetailsObj->getAllotedAgent($profileid);
-                	if ((strstr($dataArr['SUBSCRIPTION'], "F") !== false) || (strstr($dataArr['SUBSCRIPTION'], "D") !==  false) || $alloted) {
-                    	continue;
+			$subscription =$dataArr['SUBSCRIPTION'];
+                	if ((strstr($subscription, "F") !== false) || (strstr($subscription, "D") !==  false) || $allotedAgent) {
+                    		continue;
                 	}
                 }
                 
