@@ -550,14 +550,12 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
 		if($loggedInProfileObj->getPROFILEID() == $profileObj->getPROFILEID())
 		{				
 			$pictureServiceObj=new PictureService($loggedInProfileObj);				
-		}
-			
+		}			
 		else
 		{
 			$pictureServiceObj=new PictureService($profileObj);
 		}
 		
-		//$pictureServiceObj=new PictureService($profileObj);
 		$pictureObj=new ScreenedPicture;
 		$stopAlbumView=0;
                 if($contact_status == 'I')
