@@ -134,6 +134,44 @@ class NEWJS_CHAT_LOG extends TABLE{
 				throw new jsException($e);
 			}
 			return $output;
-		}	
+		}
+		
+		public function makeAllChatsSeen($profileid)
+		{
+			try{
+				$sql = "UPDATE newjs.CHAT_LOG SET SEEN = 'Y' WHERE RECEIVER = :PROFILEID AND TYPE = 'A'";
+				$prep = $this->db->prepare($sql);
+				$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+				$prep->execute();
+			}
+			catch(PDOException $e)
+			{
+				throw new jsException($e);
+			}
+		}
+		
+		public function markChatSeen($viewer,$viewed)
+		{
+			try{
+				if(!$viewer && !$viewed)
+				{
+					throw new jsException("","profile ids are not specified in  funcion getMessageHistory OF newjs_MESSAGE_LOG.class.php");
+				}
+				else
+				{
+					$sql = "UPDATE newjs.CHAT_LOG SET `SEEN`='Y' WHERE SENDER = :VIEWED AND RECEIVER = :VIEWER AND TYPE = 'A' ";
+					$prep=$this->db->prepare($sql);
+					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
+					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
+					$prep->execute();
+					$count = $prep->rowCount();
+				}
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+			return $count;
+		}
 }
 	?>

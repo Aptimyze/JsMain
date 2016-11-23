@@ -265,6 +265,7 @@ class inboxActions extends sfActions
                                                 else
                                                 {
 							MessageLog::makeAllMessagesSeen($pid);
+							ChatLog::makeAllChatsSeen($pid);
 						}
 						$profileMemcacheObj->update("MESSAGE_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
@@ -735,6 +736,7 @@ public function executePerformV2(sfWebRequest $request)
                                                 else
                                                 {
 							MessageLog::makeAllMessagesSeen($pid);
+							ChatLog::makeAllChatsSeen($pid);
 						}
 						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("MESSAGE_NEW");
