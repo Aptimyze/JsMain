@@ -118,6 +118,9 @@ EOF;
       case 3:
         return SearchTypesEnums::MatchAlertMailer3;
         break;
+      case 4:
+        return SearchTypesEnums::MatchAlertMailer4;
+        break;
       default:
         return SearchTypesEnums::MatchAlertMailer;
         break;
@@ -158,11 +161,15 @@ EOF;
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
                         break;
-		case "4":// NT -T case
 		case "1":// T-T case
                         $subject["subject"]= $count.$matchStr." based on your recent activity | $today";
 			$subject["body"]="You may send interest to".$these." ".$count.strtolower($matchStr)." based on your recent activity. Your recent activity includes the interests, acceptances and declines sent in the last two months.";
                         $subject["surveyLink"]= 'T';
+                        break;
+                case "4"://community model case
+                        $subject["subject"]= $count.$matchStr." based on activity of people similar to you";
+			$subject["body"]="Following are profiles which we have picked based on the activity of people similar to you. Note that some of these profiles may not match your Desired Partner Profile. If you wish to only receive matches as per your Desired Partner Profile, <click here>";
+                        $subject["showDpp"]= 1;
                         break;
 		default :
 			 throw  new Exception("No logic send in subjectAndBody() in RegularMatchAlerts task");
