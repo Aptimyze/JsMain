@@ -19,12 +19,13 @@ $str            = 'Dial_Status=0';
 $date2DayBefore = date("Y-m-d H:i:s", time() - 58 * 60 * 60);
 
 $profilesArr   = fetchProfiles($db_master);
+
 $eligibleArr   = $profilesArr['ELIGIBLE'];
 $inEligibleArr = $profilesArr['IN_ELIGIBLE'];
 $profileStrIneligible = implode(",", $inEligibleArr);
 
 $allocatedArr = getAllocatedProfiles($eligibleArr, $db_js);
-$paidArr      = getPaidProfiles($eligibleArr, $db_js,$date2DayBefore);
+$paidArr      = getPaidProfiles($eligibleArr, $db_js);
 
 if (!empty($allocatedArr) && !empty($paidArr)) {
     $eligibleArrNew = array_merge($allocatedArr, $paidArr);
@@ -45,7 +46,7 @@ if ($profileStrIneligible != '') {
     mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
     deleteProfiles($db_master, $profileStrIneligible);
 
-    foreach ($profilesArr as $key => $profileid) {
+    foreach ($inEligibleArr as $key => $profileid) {
 	addLog($profileid, $campaignName, $str, $action, $db_js_111);	
     }
 }
@@ -95,7 +96,7 @@ function fetchProfiles($db_js)
 
 function deleteProfiles($db_master, $profiles)
 {
-    $sql = "delete FROM incentive.SALES_CSV_DATA_RCB WHERE DIAL_STATUS=0 AND PROFILEID IN ($profiles)";
+    $sql = "delete FROM incentive.SALES_CSV_DATA_RCB WHERE PROFILEID IN ($profiles)";
     $res = mysql_query($sql, $db_master) or die($sql . mysql_error($db_master));
 }
 
@@ -120,11 +121,11 @@ function getAllocatedProfiles($profileArr, $db_js)
 }
 
 // Fetch Paid profiles
-function getPaidProfiles($profileArr, $db_js,$date2DayBefore)
+function getPaidProfiles($profileArr, $db_js)
 {
     $dataArr    = array();
     $profileStr = implode(",", $profileArr);
-    $sql        = "SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE PROFILEID IN($profileStr) AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' AND ACTIVATED='Y' AND ENTRY_DT>='$date2DayBefore'";
+    $sql        = "SELECT distinct PROFILEID FROM billing.SERVICE_STATUS WHERE PROFILEID IN($profileStr) AND SERVEFOR LIKE '%F%' AND ACTIVE='Y' AND ACTIVATED='Y'";
     $res        = mysql_query($sql, $db_js) or die($sql . mysql_error($db_js));
     while ($myrow = mysql_fetch_array($res)) {
         $dataArr[] = $myrow["PROFILEID"];
