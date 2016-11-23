@@ -30,6 +30,8 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                         }elseif($type == MailerConfigVariables::$DppLoggedinWithTrendsScoreSort){
                                 $this->sort = SearchSortTypesEnums::SortByTrendsScore;
                                 $this->logicLevel = MailerConfigVariables::$strategyReceiversTVsT;
+                        }elseif($type == MailerConfigVariables::$DppNotLoggedinWithLoginDateSort){
+                                $this->logicLevel = MailerConfigVariables::$strategyReceiversTVsT;
                         }
                 }else{
                         $this->sort = SearchSortTypesEnums::FullDppWithReverseFlag;
