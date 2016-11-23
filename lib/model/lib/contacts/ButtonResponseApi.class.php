@@ -309,7 +309,7 @@ Class ButtonResponseApi
 		}
 		else if(($this->contactObj->getTYPE() == ContactHandler::NOCONTACT) && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
 		{
-			$button["iconid"] = IdToAppImagesMapping::UNDERSCREENING;
+			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
 			$button["label"]  = "Interest Saved";
 			$button["enable"]  = false;
 		}
