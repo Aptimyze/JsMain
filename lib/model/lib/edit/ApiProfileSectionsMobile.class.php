@@ -17,7 +17,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	private $textArea=4;
 	function __construct($profile,$isEdit='') {
 		$this->profile = $profile;
-		$dbHobbies = new NEWJS_HOBBIES();
+		$dbHobbies = new JHOBBYCacheLib();
 		$this->Hobbies=$dbHobbies->getUserHobbiesApi($this->profile->getPROFILEID());
 		$this->isEdit=$isEdit;
 		$this->underScreening="under Screening";

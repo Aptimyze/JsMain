@@ -675,7 +675,7 @@ class ApiProfileCompletionScore extends AbstractProfileCompletionScore
 		}
 		
 				
-		$objHobbies = new NEWJS_HOBBIES;
+		$objHobbies = new JHOBBYCacheLib;
 		$arrHobbies = $objHobbies->getUserHobbies($this->m_objProfile->getPROFILEID());
 		
 		if($arrHobbies['HOBBY'] || $arrHobbies['INTEREST'])

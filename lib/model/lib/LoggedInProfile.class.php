@@ -108,7 +108,7 @@ class LoggedInProfile extends Profile{
 		 * */
 		public function editHobby($paramArr)
 		{
-			$hobbyObj=new NEWJS_HOBBIES();
+			$hobbyObj=new JHOBBYCacheLib();
 			$hobbyObj->update($this->PROFILEID,$paramArr);
 		}
 		/**
