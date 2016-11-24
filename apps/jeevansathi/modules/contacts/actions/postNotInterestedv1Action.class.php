@@ -49,7 +49,7 @@ class postNotInterestedv1Action extends sfAction
 			}
 		}
 		if (is_array($responseArray)) {
-			CommonFunction::removeCanChat($this->loginProfile->getPROFILEID(),$this->Profile->getPROFILEID());
+			//CommonFunction::removeCanChat($this->loginProfile->getPROFILEID(),$this->Profile->getPROFILEID());
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->setResetCache(true);
