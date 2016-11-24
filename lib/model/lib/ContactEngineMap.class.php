@@ -644,7 +644,8 @@
 136=>array("ID"=>'116',"CHANNEL"=>'M',"SOURCE"=>'MATCH_ALERT',"VIEWER"=>'',"CONTACT_TYPE"=>'N',"BUTTONS"=>'[{"TYPE":"INITIATE","label":"Send Interest","active":"true","primary":"true","secondary":"true","tracking":null,"icon":"001"},{"TYPE":"CONTACT_DETAIL","label":"View Contacts","active":"true","primary":null,"secondary":"true","tracking":null,"icon":"007"},{"TYPE":"SHORTLIST","label":"Shortlist","active":"true","primary":null,"secondary":"true","tracking":null,"icon":"003"},{"TYPE":"IGNORE","label":"Block","active":"true","primary":null,"secondary":"true","tracking":null,"icon":"ignore"}]'),
 137=>array("ID"=>'117',"CHANNEL"=>'M',"SOURCE"=>'MATCH_ALERT',"VIEWER"=>'',"CONTACT_TYPE"=>'RI',"BUTTONS"=>'[{"TYPE":"TEXT","label":"Interest Sent","active":null,"primary":"true","secondary":null,"tracking":null,"icon":null}]'),
 138=>array("ID"=>'139',"CHANNEL"=>'M',"SOURCE"=>'VDP',"VIEWER"=>'S',"CONTACT_TYPE"=>'B',"BUTTONS"=>'[{"TYPE":"IGNORE","label":"Unblock","active":"true","primary":"true","secondary":null,"tracking":null,"icon":"ignore"}]'),
-139=>array("ID"=>'140',"CHANNEL"=>'M',"SOURCE"=>'IGNORED_PROFILES',"VIEWER"=>'',"CONTACT_TYPE"=>'',"BUTTONS"=>'[{"TYPE":"IGNORE","label":"Unblock","active":"true","primary":"true","secondary":null,"tracking":null,"icon":"ignore"}]')
+139=>array("ID"=>'140',"CHANNEL"=>'M',"SOURCE"=>'IGNORED_PROFILES',"VIEWER"=>'',"CONTACT_TYPE"=>'',"BUTTONS"=>'[{"TYPE":"IGNORE","label":"Unblock","active":"true","primary":"true","secondary":null,"tracking":null,"icon":"ignore"}]'),
+140=>array("ID"=>'141',"CHANNEL"=>'P',"SOURCE"=>'INTEREST_ARCHIVED',"VIEWER"=>'',"CONTACT_TYPE"=>'',"BUTTONS"=>'[{"TYPE":"ACCEPT","label":"Accept","active":"true","primary":"true","secondary":null,"tracking":null,"icon":null},{"TYPE":"DECLINE","label":"Decline","active":"true","primary":"true","secondary":null,"tracking":null,"icon":null}]')
 );
 
 	break;

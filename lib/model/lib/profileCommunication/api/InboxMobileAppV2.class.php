@@ -1162,7 +1162,9 @@ class InboxMobileAppV2
 		}
 		else if(sfContext::getInstance()->getRequest()->getParameter("ContactCenterDesktop")==1)
 		{
-			$trackingMap=array("INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::CONTACT_AWAITING,
+			$trackingMap=array(
+				"INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::CONTACT_AWAITING,
+				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::ARCHIVED_INTEREST,
 				"VISITORS"=>"stype=".SearchTypesEnums::VISITORS_JSPC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_JSPC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
