@@ -676,10 +676,10 @@ class CommonFunction
     
     public static function removeCanChat($loginProfileId,$otherProfileId)
     {
-		if(JsMemcache::getInstance()->get("can_chat".$loginProfileId."_".$otherProfileId) || JsMemcache::getInstance()->get("can_chat".$this->Profile->getPROFILEID()."_".$loginProfileId)){
+		if(JsMemcache::getInstance()->get("can_chat".$loginProfileId."_".$otherProfileId) || JsMemcache::getInstance()->get("can_chat".$otherProfileId."_".$loginProfileId)){
 			JsMemcache::getInstance()->set("can_chat".$loginProfileId."_".$otherProfileId,false);
 			JsMemcache::getInstance()->set("can_chat".$loginProfileId."_".$loginProfileId,false);
-			}
+		}
 	}
 }
 ?>
