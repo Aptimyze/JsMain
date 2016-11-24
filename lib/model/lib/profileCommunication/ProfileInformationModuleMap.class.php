@@ -1211,7 +1211,7 @@ self::$ContactCenterMYJS=Array(
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=22",
+			"TRACKING"=> "responseTracking=53",
       		"CONTACT_ID"=>"",
 		),
 		);
