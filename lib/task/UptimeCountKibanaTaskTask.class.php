@@ -20,7 +20,7 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		$elkServer = 'aura.infoedge.com';
+		$elkServer = 'es.aura.resdex.com';
 		$elkPort = '9203';
 		$indexName = 'jeevansathiactivity';
 		$query = '_search';
