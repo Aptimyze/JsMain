@@ -2352,3 +2352,10 @@ line-height:25px;
 .vertM {
     vertical-align: middle;
 }
+
+.reportInv1{padding:0px 21px 30px 21px}
+.reportInv2{padding:31px 21px 0px 21px}
+.fontlig {
+    font-family: "Roboto", "sans-serif";
+    font-weight: 300
+}
