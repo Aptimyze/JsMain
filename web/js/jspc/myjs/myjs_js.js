@@ -38,7 +38,7 @@ $(function(){
 
 	function myjsSlider(id)
 	{ 
-
+    alert(id);
     try{
 		$("#"+id).unbind(clickEventType);
 		var getID,b,getWidth,visWidth,getLeft,p;					
@@ -49,12 +49,21 @@ $(function(){
 			visWidth = $('#disp_'+b[1]).width();
      // alert(visWidth);
 			p=Math.abs($('#js-'+b[1]).position().left);
-      //alert(p);
+      alert(p);
+      if(p == 2970 && b[0] == "nxt")
+        $("#"+id).hide();
+      else if(p == 3960 && b[0] =="prv")
+        $("#nxt-"+b[1]).show();
+      if(p == 990 && b[0] == "prv")
+        $("#"+id).hide();
+      if(p == 0 && b[0] == "nxt")
+         $("#prv-"+b[1]).show();
 			if((b[0]=="nxt")&&(getWidth>visWidth))
 			{	
         diff=Math.floor(getWidth-p-visWidth);
 				if(diff>0)
-				{
+				{ 
+          alert('bye');
 					p=p+visWidth;
 					$('#js-'+b[1]).animate({left:-p}, 500, function() {
 					// Animation complete.
@@ -63,8 +72,10 @@ $(function(){
 							});
 				  }); 
 				}
-				else
+				else{
+          
 					setTimeout(function(){$("#"+id).bind(clickEventType,function(){myjsSlider(id);});},100);
+        }
        
         tempDiv=document.getElementById("slideCurrent"+b[1]);
           if (tempDiv){
@@ -231,9 +242,14 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 			//	callAfterContact();
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
 	            		$("#"+div).find("div.sendintr").removeClass("myjs-block sendintr").addClass("myjs-block-after");
-                  var ind = $("#"+div).parent().attr('id');
+                  var ind = $("#"+div).attr('id');
                   alert(ind);
-                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear();});      
+                  var nameInitials = ind.split('_');
+                  var countToUpdate = (nameInitials[1]+"_resultCount");
+                  var out = $("#"+countToUpdate).text();
+                //  var count = $("#"+ind).closest('.countNumber').text();
+                  //alert(count);
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(out,countToUpdate);});      
 	            	}
 	            	else if(type=="accept")
 	            	{
@@ -888,15 +904,17 @@ catch (e){
 }
 }
 
-function reArrangeDivsAfterDissapear()
+function reArrangeDivsAfterDissapear(value,position)
 { alert(1);
+  value -- ;
+  $("#"+position).text(value);
   topSliderInt("init");
   //alert(eleId);
  // var profileList = eleId;
  // alert(profileList);
   //$(this).remove();
   //$(ele).remove();
- //var listItems = $("#"+profileList+" li");
+ //var listItem s = $("#"+profileList+" li");
   //                listItems.each(function(index) {
    //                 console.log(index);
 //}

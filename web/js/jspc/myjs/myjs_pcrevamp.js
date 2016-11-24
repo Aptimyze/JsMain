@@ -84,6 +84,7 @@ this.containerHtml=this.containerHtml.replace(/\{\{list_id\}\}/g,this.list);
 this.containerHtml=this.containerHtml.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
 this.containerHtml=this.containerHtml.replace(/\{\{type\}\}/g,this.list);
 this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_GA_TRACKING\}\}/g,seeAllTrackingLink);
+this.containerHtml=this.containerHtml.replace(/\{\{count_results_id\}\}/g,this.countingValId);
 this.maxCount=maxCountArray[this.name];
 
 this.innerHtml=containerBarObj.getInnerHtml();
@@ -277,6 +278,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.list = this.name+"_List";
       this.isEngagementBar=0;
       this.error=0;
+      this.countingValId = this.name+"_resultCount";
       component.apply(this, arguments);
     };
     dailyMatches.prototype = Object.create(component.prototype);
@@ -305,6 +307,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.error=0;
+      this.countingValId = this.name+"_resultCount";
       component.apply(this, arguments);
     };
     justJoinedMatches.prototype = Object.create(component.prototype);
@@ -332,6 +335,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.list = this.name+"_List";
       this.error=0;
       this.displayed = 0;
+      this.countingValId = this.name+"_resultCount";
       component.apply(this, arguments);
     };
     lastSearchMatches.prototype = Object.create(component.prototype);
@@ -361,6 +365,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.list = this.name+"_List";
       this.error=0;
       this.displayed = 0;
+      this.countingValId = this.name+"_resultCount";
       component.apply(this, arguments);
     };
     verifiedMatches.prototype = Object.create(component.prototype);
@@ -388,6 +393,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.list = this.name+"_List";
       this.error=0;
       this.displayed = 0;
+      this.countingValId = this.name+"_resultCount";
       component.apply(this, arguments);
       
     };
@@ -415,6 +421,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
       this.headingId = this.name+"_head";
       this.list = this.name+"_List";
       this.displayed = 0;
+      this.countingValId = this.name+"_resultCount";
       component.apply(this, arguments);
 
     };
@@ -447,6 +454,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
     this.headingId = this.name+"_head";
     this.list = this.name+"_List";
     this.error=0;
+    this.countingValId = this.name+"_resultCount";
     component.apply(this, arguments);
   };
   desiredPartnerMatches.prototype = Object.create(component.prototype);
