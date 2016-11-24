@@ -11,6 +11,7 @@ javaService($pid);
 
 function javaService($pid)
 {
+        global $mobileNumberArr;
         $WebAuthentication = new WebAuthentication;
         $x = $WebAuthentication->setPaymentGatewayAuthchecksum($pid);
         $auth = $x["AUTHCHECKSUM"];
