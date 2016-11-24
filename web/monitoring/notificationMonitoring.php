@@ -28,7 +28,7 @@ while(1){
 
 function sendPresenceRequest($url)
 {
-//    $url = JsConstants::$communicationServiceUrl."/profile/v1/presence?pfids=9061321";
+//    $url = JsConstants::$presenceServiceUrl."/profile/v1/presence?pfids=9061321";
 //    $res = CommonUtility::sendCurlPostRequest($url,'');
     $res = sendCurlPostRequest($url,'',5000,true);
     $res = (array) json_decode($res);
