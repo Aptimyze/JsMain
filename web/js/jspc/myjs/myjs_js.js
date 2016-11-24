@@ -231,21 +231,9 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 			//	callAfterContact();
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
 	            		$("#"+div).find("div.sendintr").removeClass("myjs-block sendintr").addClass("myjs-block-after");
-                  $('#'+div).delay(1500).fadeOut('slow').remove();
-                  var profileList  = $("#"+div).parent().attr('id');
-                  var listItems = $("#"+profileList+" li");
-                  listItems.each(function(index) {
-                    console.log(index);
-                    if((index+1)%4 ==0)
-                    {
-                      $(this).css("padding-right" , "2px");
-                    }
-                    else{
-                      $(this).css("padding-right","36px")
-                    }
-
-                    });
-      
+                  var ind = $("#"+div).parent().attr('id');
+                  alert(ind);
+                  $('#'+div).delay(1500).fadeOut('slow',reArrangeDivsAfterDissapear(ind));      
 	            	}
 	            	else if(type=="accept")
 	            	{
@@ -898,4 +886,36 @@ catch (e){
   console.log('getting error '+e+' in function createTotalBellCounts')
 
 }
+}
+
+function reArrangeDivsAfterDissapear(eleId)
+{ alert(1);
+  alert(eleId);
+  var profileList = eleId;
+  alert(profileList);
+  //$(this).remove();
+  //$(ele).remove();
+ var listItems = $("#"+profileList+" li");
+                  listItems.each(function(index) {
+                    console.log(index);
+}
+);
+
+/*  
+$(ele).remove();
+var profileList  = $(ele).parent().attr('id');
+                  var listItems = $("#"+profileList+" li");
+                  listItems.each(function(index) {
+                    console.log(index);
+                    if((index+1)%4 ==0)
+                    {
+                      $(this).css("padding-right" , "2px");
+                    }
+                    else{
+                      $(this).css("padding-right","36px");
+                    }
+
+
+});
+*/
 }
