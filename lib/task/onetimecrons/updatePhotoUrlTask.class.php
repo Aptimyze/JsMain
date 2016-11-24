@@ -24,7 +24,7 @@ EOF;
 	{	
         	if (!sfContext::hasInstance())
         		sfContext::createInstance($this->configuration);
-	$maxCount = 800;
+	$maxCount = 10000;
         $limit = 800;
         $offset  = 0;
         $incrementValue = 800;
@@ -58,6 +58,14 @@ EOF;
                         $this->checkPicUrl($value,$pictureFieldsArrAlbumPic,$profileId,$pictureId,$ordering);
                     }
                 }
+            if(is_array($this->donePictureIds))
+            {
+                $picObj1 = new PICTURE_INCORRECT_PICTURE_DATA("master");
+                $picObj1->deleteIncorrectPicDetail($this->donePictureIds);
+print_r($this->donePictureIds);
+                unset($this->donePictureIds);
+                unset($picObj1);die;
+            }
             }
         }
 	}
@@ -158,6 +166,7 @@ EOF;
 			$bkpObj = new PICTURE_NEW_BKP;
 			$bkpObj->ins($originalValArr);
 		//	$pictureServiceObj->deletePhoto($pictureId,$profileId,"other");
+			$this->donePictureIds[]=$pictureId;
 		}
 		return;
 	}
