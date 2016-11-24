@@ -205,7 +205,7 @@ if(typeof response.searchid!="undefined")
                 setcontactCenterHeading(response);
 		dataForCCPagination(parseInt(response.total),parseInt(response.page_index),parseInt(response.no_of_results));
 		handleCCPagination(response);
-		handleExpireInterest(activeHorizontalTabInfoID);
+		handleArchiveInterest(activeHorizontalTabInfoID);
 		
 		/*
 			If this is the interest received page and at the last page , do show horizontal tab.
@@ -230,7 +230,7 @@ if(typeof response.searchid!="undefined")
 	}
 	else
 	{
-		handleExpireInterest(activeHorizontalTabInfoID);
+		handleArchiveInterest(activeHorizontalTabInfoID);
 		/*
 			If this is the interest received page, do show horizontal tab.
 		 */
@@ -335,7 +335,7 @@ if(typeof response.searchid!="undefined")
  * Function is added to add link for expire interests listing.
  * @param  {int} activeHorizontalTabInfoID to check whether activeHorizontalTabInfoID is 22 and make changes accordingly.
  */
-function handleExpireInterest(activeHorizontalTabInfoID) {
+function handleArchiveInterest(activeHorizontalTabInfoID) {
 	
 	if ( $('#HorizontalTab22_Label_nonzero').length == 0)
 	{
