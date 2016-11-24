@@ -511,7 +511,7 @@ public function microtime_float()
 		  }
 		  unset($notificationId);
 		  unset($dataAccumulated);
-		  //print_r($completeNotificationInfo);
+		  //print_r($completeNotificationInfo);die;
 		  return $completeNotificationInfo;
 	  }
   }

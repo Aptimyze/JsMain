@@ -63,7 +63,13 @@ class AppNotificationScheduler extends NotificationScheduler
 			  $insertData[$k]['COUNT']=$v['COUNT'];
 			  $insertData[$k]['MSG_ID']=$v['MSG_ID'];
 			  $insertData[$k]['SENT']='N';	
-		          $insertData[$k]['PHOTO_URL']=$v['PHOTO_URL'];
+			  if($v['SELF']['REG_ID']){
+			  	  $insertData[$k]['REG_ID']=$v['SELF']['REG_ID'];
+			  }
+			  else{
+			  	$insertData[$k]['REG_ID']="";
+			  }
+		      $insertData[$k]['PHOTO_URL']=$v['PHOTO_URL'];
 			  if($v['NOTIFICATION_KEY']=='VD')
 				  $insertData[$k]['TITLE']=$v['NOTIFICATION_MESSAGE_TITLE'];		
 			  else
@@ -76,6 +82,7 @@ class AppNotificationScheduler extends NotificationScheduler
 			  	$this->insert($dataSet);
 				unset($dataSet);*/		
 		  }
+		  //print_r($insertData);
 		  $scheduledAppNotificationsObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
 		  $scheduledAppNotificationsObj->insert($insertData);
 	  }
