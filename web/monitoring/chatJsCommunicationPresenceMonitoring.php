@@ -72,7 +72,7 @@ function checkRabbitmqQueueMsgCount($serverid){
 
 function sendPresenceRequest($url)
 {
-        $url = JsConstants::$communicationServiceUrl."/profile/v1/presence?pfids=9061321";
+        $url = JsConstants::$presenceServiceUrl."/profile/v1/presence?pfids=9061321";
         $res = CommonUtility::sendCurlPostRequest($url,'',10);
         $res = (array) json_decode($res);
         $res = (array) $res["header"];
