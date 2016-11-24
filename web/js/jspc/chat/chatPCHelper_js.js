@@ -106,7 +106,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
         type = "dpp";
     }
     var selfAuth = readCookie("AUTHCHECKSUM");
-    if(selfAuth != undefined){
+    if(selfAuth != undefined && selfAuth != ""){
         //console.log("selfAuth",selfAuth);
         var validRe,headerData = {'JB-Profile-Identifier':selfAuth};
         if(updateChatListImmediate != undefined && updateChatListImmediate == true){
