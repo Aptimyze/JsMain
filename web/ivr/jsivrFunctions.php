@@ -427,7 +427,7 @@ return $returnArray;
 			return;
 		$profileArray	=array();
 		$execute	='';
-		$date_1year 	=date("Y-m-d", JSstrToTime("-12 months"));
+		$date_1year 	= CommonUtility::makeTime(date("Y-m-d", JSstrToTime("-12 months")));
 		$date_5month 	=date("Y-m-d", JSstrToTime("-5 months"));
 			
 		if($phone_type =='M')
