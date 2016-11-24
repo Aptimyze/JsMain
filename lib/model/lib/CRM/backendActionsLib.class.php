@@ -86,7 +86,7 @@ class backendActionsLib
 	**/
 	public function checkExpiredLoginForAgent($agentData,$lastLoggedInOffset)
 	{
-		$lastLoginDt = CommonUtility::makeTime(date('Y-m-d H:i:s',strtotime($lastLoggedInOffset)));
+		$lastLoginDt = date('Y-m-d H:i:s',strtotime($lastLoggedInOffset));
 		if($agentData['last_login_dt'] < $lastLoginDt || $agentData['active']!='Y')
 			return true;
 		else

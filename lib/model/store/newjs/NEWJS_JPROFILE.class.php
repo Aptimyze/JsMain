@@ -263,7 +263,7 @@ class NEWJS_JPROFILE extends TABLE
             $date15daysback = date('Y-m-d', $date15);
             $date6 = strtotime(date('Y-m-d H:i:s') . $lastRegistrationOffset);
             $date6monthsback = date('Y-m-d H:i:s', $date6);
-            $sql = "SELECT PROFILEID,EMAIL,USERNAME,COUNTRY_RES FROM JPROFILE WHERE LAST_LOGIN_DT>=:LAST_LOGIN_DT AND ENTRY_DT<=:ENTRY_DT ";
+            $sql = "SELECT PROFILEID,EMAIL,USERNAME,COUNTRY_RES FROM JPROFILE WHERE DATE(LAST_LOGIN_DT)>=:LAST_LOGIN_DT AND ENTRY_DT<=:ENTRY_DT ";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":LAST_LOGIN_DT", $date15daysback, PDO::PARAM_STR);
             $prep->bindValue(":ENTRY_DT", $date6monthsback, PDO::PARAM_STR);
@@ -625,7 +625,7 @@ class NEWJS_JPROFILE extends TABLE
     public function getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd)
     {
         try {
-            $sql = "SELECT PROFILEID,USERNAME,ENTRY_DT FROM newjs.JPROFILE WHERE LAST_LOGIN_DT>:LOGIN_DT_START AND LAST_LOGIN_DT<=:LOGIN_DT_END";
+            $sql = "SELECT PROFILEID,USERNAME,ENTRY_DT FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT)>:LOGIN_DT_START AND LAST_LOGIN_DT<=:LOGIN_DT_END";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":LOGIN_DT_START", $logindDtStart, PDO::PARAM_STR);
             $prep->bindValue(":LOGIN_DT_END", $loginDtEnd, PDO::PARAM_STR);
@@ -691,7 +691,7 @@ class NEWJS_JPROFILE extends TABLE
     {
         try {
             //$sql = "SELECT PROFILEID,CITY_RES FROM newjs.JPROFILE WHERE LAST_LOGIN_DT>=:LOGIN_DT_START AND LAST_LOGIN_DT<:LOGIN_DT_END";
-            $sql = "SELECT PROFILEID,CITY_RES,ISD,LAST_LOGIN_DT FROM newjs.JPROFILE WHERE LAST_LOGIN_DT>=:LOGIN_DT_START AND LAST_LOGIN_DT<=:LOGIN_DT_END";
+            $sql = "SELECT PROFILEID,CITY_RES,ISD,LAST_LOGIN_DT FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT)>=:LOGIN_DT_START AND DATE(LAST_LOGIN_DT)<=:LOGIN_DT_END";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":LOGIN_DT_START", $logindDtStart, PDO::PARAM_STR);
             $prep->bindValue(":LOGIN_DT_END", $loginDtEnd, PDO::PARAM_STR);
@@ -1052,7 +1052,7 @@ class NEWJS_JPROFILE extends TABLE
     {
         try {
             if ($date) {
-                $sql = "SELECT PROFILEID FROM newjs.JPROFILE AS I LEFT JOIN PROFILE.DPP_REVIEW_MAILER_LOG AS L ON I.PROFILEID = L.RECEIVER WHERE LAST_LOGIN_DT > :date AND ACTIVATED = 'Y' AND L.RECEIVER IS NULL";
+                $sql = "SELECT PROFILEID FROM newjs.JPROFILE AS I LEFT JOIN PROFILE.DPP_REVIEW_MAILER_LOG AS L ON I.PROFILEID = L.RECEIVER WHERE DATE(LAST_LOGIN_DT) > :date AND ACTIVATED = 'Y' AND L.RECEIVER IS NULL";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":date", $date, PDO::PARAM_STR);
                 $prep->execute();
@@ -1653,7 +1653,7 @@ $time->sub(date_interval_create_from_date_string($lastLoginWithIn));
             $sql =  <<<SQL
             SELECT PROFILEID
             FROM  newjs.`JPROFILE`
-            WHERE LAST_LOGIN_DT  >=  :LAST_LOGIN_DT
+            WHERE DATE(LAST_LOGIN_DT)  >=  :LAST_LOGIN_DT
             AND activatedKey=1
             AND PROFILEID MOD :T_SCRIPT = :CUR_SCRIPT
             AND ACTIVATED = 'Y'
