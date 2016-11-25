@@ -18,7 +18,7 @@ var logoutCssFiles="~$cssArray`";
 			<div class="lgin_pad1">
 				<div class="fl HamiconLogin"> 
 					<div id ="hamburgerIcon" hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1">
-						<img class="loaderSmallIcon dn">
+                                            <i class="loaderSmallIcon dn"></i>
 						<svg id="hamIc" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.2px;}</style></defs><title>icons</title><line class="cls-1" x1="2" y1="3.04" x2="18" y2="3.04"/><line class="cls-1" x1="2.29" y1="10" x2="18.29" y2="10"/><line class="cls-1" x1="2" y1="16.96" x2="18" y2="16.96"/></svg>
 					</div> 
 				</div>
