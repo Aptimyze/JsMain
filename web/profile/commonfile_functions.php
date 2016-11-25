@@ -411,7 +411,7 @@ $js_arr[]=array("jsms/profile/ep/mobeditview_js"                              =>
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"              => "5");
 $js_arr[]=array("jsms/common/disableScroll_js"  => "1");
 $js_arr[]=array("jsms/utility/sessionStorage_js"    => "3");
-$js_arr[]=array("jsms/myjs/myjs_js"                => "18");
+$js_arr[]=array("jsms/myjs/myjs_js"                 => "19");
 $js_arr[]=array("jsms/myjs/touchswipemyjs_js"            => "12");
 $js_arr[]=array("showHide_js"     => "2");
 $js_arr[]=array("showHideReg_js"      => "2");
@@ -503,7 +503,7 @@ $js_arr[]=array("registration_pg2"     => "3");
 $js_arr[]=array("registration_pg1"     => "3");
 $js_arr[]=array("jsms/contactus/contactus_js"     => "1");
 $js_arr[]=array("jsms/common/sly"      => "2");
-$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                        => "41");
+$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                         => "42");
 $js_arr[]=array("jspc/myjs/myjs_js"                                 => "37");
 $js_arr[]=array("jspc/myjs/engBarJs_js"                => "16");
 $js_arr[]=array("jspc/common/nano"     => "2");
