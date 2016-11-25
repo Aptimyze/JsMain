@@ -30,28 +30,41 @@ EOF;
         $password       =MysqlDbConstants::$dnc['PASS'];
         $dns            =MysqlDbConstants::$dnc['HOST'];
         $port           =MysqlDbConstants::$dnc['PORT'];
-        $query          ='select PHONE FROM DNC.DNC_LIST;';
-	//$sql ="SELECT PHONE FROM DNC.DNC_LIST limit 10 INTO OUTFILE ".$sourceFile." LINES TERMINATED BY '\n'";
 
-	// Dir. structure
-	$filename ='dnc_'.date('dmY').'.csv';
-	$sourceDir = JsConstants::$docRoot.'/uploads/csv_files/dnc/'.$filename;
-	$destDir = JsConstants::$docRoot.'/uploads/csv_files/fpdialer/';
+        // Dir. structure
+        $filename ='dnc_'.date('dmY').'.csv';
+        $sourceDir = JsConstants::$docRoot.'/uploads/csv_files/dnc/'.$filename;
+        $destDir = JsConstants::$docRoot.'/uploads/csv_files/fpdialer/';
 
+	$dncListObj =new dnc_DNC_LIST();
+	$count =$dncListObj->fetchDncCount();
 
-	// dump command	
-	$command ='/usr/local/mysql_php/bin/mysql -u'.$user.' -p'.$password.' -h'.$dns.' -P'.$port.' -e "'.$query.'" >'.$sourceDir;	
-	passthru($command);
-	die('test');
+	$loopCnt        =10000000;
+	$totLoop 	=intval($count/$loopCnt)+1;
+	$startLimit	=0;
+
+	for($i=0; $i<$totLoop; $i++){
+
+	        $query          ="select PHONE FROM DNC.DNC_LIST limit $startLimit, $loopCnt;";
+		$startLimit	+=$loopCnt;
+
+		// dump command	
+		$command ='/usr/local/mysql_php/bin/mysql -u'.$user.' -p'.$password.' -h'.$dns.' -P'.$port.' -e "'.$query.'" >>'.$sourceDir;	
+		passthru($command);
+	}	
 	
         //Copy dnc data to shared dir.(fpdialer) 
 	usleep(3000000);
-	passthru("cp $sourceDir $destDir", $return_var);
+	$totCsvCnt =passthru("wc -l < $sourceDir");
+
+	if($totCsvCnt>=$count){
+		passthru("cp $sourceDir $destDir", $return_var);
+	}
 	if($return_var){
-		$message ='ERROR: DNC-Data csv not copied on fpdialer';
+		$message ="ERROR: DNC-Data csv not copied on fpdialer";
 	}
 	else{
-		$message ='SUCCESS: DNC-Data csv copied on fpdialer';
+		$message ="SUCCESS: DNC-Data ($totCsvCnt) csv copied on fpdialer";
 	}
 	mail("manoj.rana@naukri.com,dheeraj.negi@naukri.com","$message","","From:JeevansathiCrm@jeevansathi.com");
   }
