@@ -370,7 +370,7 @@ class crmUtility
 		$priv9 =array('ExcFld','SupFld');
 		$priv10=array('PreAll','ExcPrm','RmnInd');
 		$priv11=array('ExcEP','PreNri');
-		$priv12=array('ExcWL','ExcPrm');
+		$priv12=array('ExcWL','ExPmWL');
                 $billingPriv 	=array('BU','BA');
                 $aramexPriv 	=array('IUP');
 		$offlineExclusive =array('OA','OB');
