@@ -182,7 +182,7 @@ class Inbox implements Module
 					$dbName = JsDbSharding::getShardNo($this->profileObj->getPROFILEID());
 					$contactsObj = new newjs_CONTACTS($dbName);
 					$group             = '';
-					$contactsCount = $contactsObj->getExpiredContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
+					$contactsCount = $contactsObj->getArchivedContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
 					$countObj[$infoTypenav["PAGE"]] = $contactsCount[0]["COUNT"];
 				}
 

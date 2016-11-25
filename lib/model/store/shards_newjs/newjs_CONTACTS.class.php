@@ -685,7 +685,7 @@ public function getSendersPending($profileids)
 		return $output;
 	}
 
-	public function getExpiredContactsCount($where, $group='',$time='',$skipProfile)
+	public function getArchivedContactsCount($where, $group='',$time='',$skipProfile)
 	{
 		try{
 			if(!$where)
