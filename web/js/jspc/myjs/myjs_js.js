@@ -37,23 +37,23 @@ $(function(){
 });
 
 	function myjsSlider(id)
-	{ 
-    alert(id);
+	{ //alert(1);
+    //alert(id);
     try{
 		$("#"+id).unbind(clickEventType);
 		var getID,b,getWidth,visWidth,getLeft,p;					
-			getID = id;
-
-			b= getID.split('-');	
+			getID = id; //alert('get ifd'+getID);
+			b= getID.split('-');
+     // alert('is b1 : '+b[1]);	
 			getWidth =$('#js-'+b[1]).width();
 			visWidth = $('#disp_'+b[1]).width();
      // alert(visWidth);
 			p=Math.abs($('#js-'+b[1]).position().left);
-      alert(p);
+     // alert('value of p is : '+p);
      // alert(visWidth);alert(getWidth);
-      var boxes = getWidth/visWidth;
-      var currentBox;
-      currentBox = getCurrentBox(b[0],p);
+   //   var boxes = getWidth/visWidth;
+   //   var currentBox;
+    //  currentBox = getCurrentBox(b[0],p);
       
      // alert(boxes);
       /*
@@ -71,7 +71,7 @@ $(function(){
         diff=Math.floor(getWidth-p-visWidth);
 				if(diff>0)
 				{ 
-          alert('bye');
+        //  alert('bye');
 					p=p+visWidth;
 					$('#js-'+b[1]).animate({left:-p}, 500, function() {
 					// Animation complete.
@@ -251,13 +251,13 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
 	            		$("#"+div).find("div.sendintr").removeClass("myjs-block sendintr").addClass("myjs-block-after");
                   var ind = $("#"+div).attr('id');
-                  alert(ind);
+                 // alert(ind);
                   var nameInitials = ind.split('_');
                   var countToUpdate = (nameInitials[1]+"_resultCount");
                   var out = $("#"+countToUpdate).text();
                 //  var count = $("#"+ind).closest('.countNumber').text();
                   //alert(count);
-                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(out,countToUpdate);});      
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(out,countToUpdate,nameInitials[1]);});     
 	            	}
 	            	else if(type=="accept")
 	            	{
@@ -913,19 +913,26 @@ catch (e){
 }
 
 function reArrangeDivsAfterDissapear(value,position,id)
-{ alert(1);
-  value -- ;
+{ //alert('the id is : '+id);
+  value-- ;
   $("#"+position).text(value);
-  topSliderInt("init");
-
   var currentBox = getCurrentBox(id);
+  topSliderInt("init");
+  var visWidth = 990;
   var totalBoxes = getTotalBoxes(id);
   var numberOfProfiles = getNumberOfProfiles(id);
+//alert('in');
+  alert('current box is : '+currentBox); alert('totalBoxes are :'+totalBoxes); alert('number of pro are :'+numberOfProfiles);
 
-
-  if(!isFirstBox(currentBox) && (onlyViewAllCardPresent() || noCardPresent(currentBox,totalBoxes,numberOfProfiles)))
+  if(!isFirstBox(currentBox) && (onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresent(currentBox,totalBoxes,numberOfProfiles,id)))
   {
+      p=Math.abs($('#js-'+id+'_List').position().left);
+    //  alert('value of p is : '+p);
+      p=-(p-visWidth);
+          if(Math.floor(p)<=0)
+            $('#js-'+id+'_List').animate({left:p},500);
 
+    //  $('#js-'+id).animate({left:p},500,
   }
   //alert(eleId);
  // var profileList = eleId;
@@ -958,9 +965,9 @@ var profileList  = $(ele).parent().attr('id');
 }
 
     function getCurrentBox(id)
-    {
+    {  // alert('#js-'+id+'_List');
 
-                $('#js-'+id+'_List').position().left;
+              var position = $('#js-'+id+'_List').position().left;
 
                 if(position == 0)
                       {
@@ -989,11 +996,11 @@ var profileList  = $(ele).parent().attr('id');
     }
 
 
-    function getCurrentBox(id)
+    function getTotalBoxes(id)
     {
 
             var totalWidth = $('#js-'+id+'_List').width();
-            var visibleBoxes = totalWidth/990;
+            var visibleBoxes = Math.ceil(totalWidth/990);
 
             return visibleBoxes;
 
@@ -1007,9 +1014,9 @@ var profileList  = $(ele).parent().attr('id');
         return 0;
     }
 
-    function noCardPresent(currentBox,totalBoxes,numberOfProfiles)
+    function noCardPresent(currentBox,totalBoxes,numberOfProfiles,id)
     {
-        if(currentBox == totalBoxes)
+        if(currentBox > totalBoxes)
         {
           if(numberOfProfiles % 4 == 0)
             return 1;
@@ -1029,12 +1036,15 @@ var profileList  = $(ele).parent().attr('id');
           return count;
     }
 
-    function onlyViewAllCardPresent(currentBox ,totalBoxes)
+    function onlyViewAllCardPresent(currentBox ,totalBoxes,id,numberOfProfiles)
     {
 
-      if(currentBox == totalBoxes)
+      if(currentBox == totalBoxes && numberOfProfiles % 4 == 1)
       {
-        
+        if($('ul#js-'+id+'_List li:nth-last-child(1)').find('.colrw').text() == "View All")
+        {
+          return 1;
+        }
       }
-
+      return 0;
     }
