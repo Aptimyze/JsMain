@@ -1,3 +1,67 @@
+
+<div class="posfix z112 dispnone"  id="reportInvalidContainer">
+                    <div class="fullwid fontlig" >
+                        <data></data><div class="photoheader">
+                            <div class="pad16 brdr_new" style="height:85px;">
+                                <div class="rem_pad1 posrel fullwid ">
+                                    <img id="photoReportInvalid" class="srp_box3 abs_c" src="">
+                                    <div style="position:absolute; top:16px;" class="white fullwid fontthin f19 txtc">Report Invalid</div>
+                                    <div id="savedSearchIcon" class="posabs " style="top:18px;right: 0;" onclick="hideReportInvalid()">
+                                        <div class="posrel"> <i class="mainsp com_cross"></i>
+                                        </div>
+                                    </div>
+                                    <div class="clr"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="reportInvalidMidDiv" style="width:200%;overflow:auto;">
+                        
+                        <div class="selectOptions reportInvalidScreen fl" id="js-reportInvalidMainScreen" style="height:100%;">
+                            <i class="mainsp arow_new dispibl"></i>
+                            <ul class="f16 fontthin white">
+                                <li class="white fullwid dispibl dashedBorder pad18">Reason for reporting invalid </li>
+
+                                <li id = "reasonCodeOption" class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="1">
+                                	<div class="fullwid posrel">
+                                		Switched off / Not reachable
+                                		<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="2">
+                                	<div class="fullwid posrel">
+                                	Not an account holder's phone
+                                	<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="3">
+                                	<div class="fullwid posrel">
+                                	 Already married / engaged<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" value="4">
+                                	<div class="fullwid posrel">
+                                	Not picking up<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+
+                                <li class="reportInvalidOption dispibl dashedBorder pad3015 fullwid" id="js-otherInvalidReasons">
+                                	<div class="fullwid posrel">
+                                	Other reasons (please specify)<img class="RAcorrectImg dispnone" src="/images/jsms/commonImg/correct.png">
+                                	</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="reportInvalidScreen" style="height:100%">
+                        <textarea class=" pad18 fullheight fullwid f18 fontthin" id="js-otherInvalidReasonsLayer" style="background: none;height: 100%" placeholder="Describe your concern for this number"></textarea>
+                        </div>
+                        </div>
+                        <div class="posfix fullwid scrollhid pos1_c1">
+                            <div id="reportInvalidSubmit" class="bg7 white lh30 fullwid dispbl txtc lh50">Report Invalid</div>
+                        </div>
+                        </div>
+                </div> 
+
 <div class="posfix z112 dispnone"  id="reportAbuseContainer">
                     <div class="fullwid fontlig" >
                         <div class="photoheader">
@@ -45,7 +109,7 @@
                             </ul>
                         </div>
                         <div class="reportAbuseScreen">
-                        <textarea class="disp-none pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Describe your concern for this profile"></textarea>
+                        <textarea class="dispnone pad18 fullheight fullwid f18 fontthin" id="js-otherReasonsLayer" style="background: none;" placeholder="Describe your concern for this profile"></textarea>
                         </div>
                         </div>
                         <div class="posfix fullwid scrollhid pos1_c1">
@@ -64,7 +128,7 @@
 
 		<!--top section starts here-->
 		<div id="3DotProPic" class="txtc">
-			<div style="border: 1px solid rgb(255,255,255);border: 1px solid rgba(255,255,255,0.2);  overflow:hidden; width: 90px; height: 90px; border-radius: 45px;"><img id="ce_photo"  class="srp_box2 mr6"/></div>
+			<div id = "photoIDDiv" style="border: 1px solid rgb(255,255,255);border: 1px solid rgba(255,255,255,0.2);  overflow:hidden; width: 90px; height: 90px; border-radius: 45px;"><img id="ce_photo"  class="srp_box2 mr6"/></div>
 			<div class="f14 white fontlig opa80 pt10 forHide" id="topMsg"></div>
                         <div class="f16 pt10 lh25 fontlig white opa80 forHide" id="topMsg2" style='padding-left:15px; padding-right:15px'></div>
 
@@ -131,8 +195,8 @@
 			<!--start:mobile no.-->
 			<div class="pt15" id="mobile" style="display:none">
 				<div class="fl white">
-					<div class=" f14 lh30 opa50">Mobile no</div>
-					<div class="f16 forHide" id="mobileVal" style="display:none"></div>
+					<div class=" f14 lh30 opa50">Mobile no </div>
+					<div class="f16 forHide" id="mobileVal" style="display:none"> </div> 
 					<div class="pb20 forHide" id="mobileValBlur" style="display:none;"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
@@ -157,7 +221,7 @@
 			<div class="pt15 forHide" id="landline" style="display:none">
 				<div class="fl white">
 					<div class=" f14 lh30 opa50" >Landline no</div>
-					<div class="f16" id="landlineVal" style="display:none"></div>
+					<div class="f16 forHide" id="landlineVal" style="display:none"> </div>
 					<div class="pb20" id="landlineValBlur" style="display:none"><img src="/images/blurredtext.png"></div>
 					<div></div>
 				</div>
@@ -279,3 +343,4 @@
     <div class="posrel forHide" style="display:none; z-index: 115;" id="loaderOverlay">
         <a href class="loaderOverlayDialog" onClick="return false;"> </a>
     </div>
+

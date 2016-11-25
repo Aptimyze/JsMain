@@ -9,7 +9,7 @@
  * @return string <script> tag
  */
 include_once (sfConfig::get("sf_web_dir")."/profile/commonfile_functions.php");
-function minify_get_javascripts($response, $minify, $placement)
+function minify_get_javascripts($response, $minify, $placement, $async=false)
 {
   if(!$minify) return get_javascripts();
 
@@ -27,6 +27,9 @@ function minify_get_javascripts($response, $minify, $placement)
       }
 
       $options = array_merge(array('type' => 'text/javascript'));
+      if($async) {
+        $options['async'] = 'true';
+      }
       foreach ($files as $key=>$file)
       {
         if (isset($already_seen[$file])) continue;
@@ -97,11 +100,11 @@ function minify_get_javascripts($response, $minify, $placement)
  * @param placement top or bottom wherever you need to include javascripts, Added by Tanu
  * @see minify_get_javascripts()
  */
-function minify_include_javascripts($placement="")
+function minify_include_javascripts($placement="",$async=false)
 {
 	$response = sfContext::getInstance()->getResponse();
 	$minify = true;
-	echo minify_get_javascripts($response, $minify, $placement);
+	echo minify_get_javascripts($response, $minify, $placement, $async);
 }
 
 
@@ -207,7 +210,7 @@ function minify_include_stylesheets($placement="")
 	$minify = true;
   	echo minify_get_stylesheets($response, $minify, $placement);
 }
-function minify_get_mobile($which="js",$placement="",$newMobileSite="")
+function minify_get_mobile($which="js",$placement="",$newMobileSite="",$async = false)
 {
 	$config = sfYaml::load ( sfConfig::get ( 'sf_app_dir' ) .'/config/mobview.yml' );
 	
@@ -217,6 +220,9 @@ function minify_get_mobile($which="js",$placement="",$newMobileSite="")
 				
 				$arr=$config["jsmsMobLayout"][javascripts];
 				$options = array_merge(array('type' => 'text/javascript'));
+                if($async) {
+                    $options['async'] = 'true';
+                }
 		}
 		else 
 		{

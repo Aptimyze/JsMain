@@ -160,7 +160,7 @@ class csvGenerationHandler
 		}
 		else if(!$fields)
 		{
-			$fields ="PROFILEID,USERNAME,ISD,COUNTRY_RES,MTONGUE,FAMILY_INCOME,ENTRY_DT,PHONE_WITH_STD,DTOFBIRTH,STD,PHONE_MOB,CITY_RES,GENDER,RELATION,AGE,INCOME,SEC_SOURCE,HAVEPHOTO,MSTATUS,PHONE_FLAG,INCOMPLETE,LAST_LOGIN_DT";
+			$fields ="PROFILEID,USERNAME,ISD,COUNTRY_RES,MTONGUE,FAMILY_INCOME,ENTRY_DT,PHONE_WITH_STD,DTOFBIRTH,STD,PHONE_MOB,CITY_RES,GENDER,RELATION,AGE,INCOME,SEC_SOURCE,HAVEPHOTO,MSTATUS,PHONE_FLAG,INCOMPLETE,LAST_LOGIN_DT,SUBSCRIPTION";
 			if($processName=='paidCampaignProcess'){
 				$fields .=",YOURINFO,FAMILYINFO,FATHER_INFO,SPOUSE,SIBLING_INFO,JOB_INFO";	
 			}
@@ -842,6 +842,15 @@ class csvGenerationHandler
                         foreach($profiles as $profileid=>$dataArr){
 				if(!$profileid)
 					continue;
+
+				if ($processName == 'rcbCampaignInDialer') {
+                	$allotedAgent = $AgentAllocDetailsObj->getAllotedAgent($profileid);
+			$subscription =$dataArr['SUBSCRIPTION'];
+                	if ((strstr($subscription, "F") !== false) || (strstr($subscription, "D") !==  false) || $allotedAgent) {
+                    		continue;
+                	}
+                }
+                
 				if($processName!='rcbCampaignInDialer'){
 	                                if($dataArr["ACTIVATED"]!='Y')
 	                                        continue;
@@ -1764,9 +1773,9 @@ class csvGenerationHandler
 		}
 		else
 		{
-			/*if($processName=='renewalProcessInDialer')
-				$priority =$this->fetchDialerPriorityForScore($score);*/
-			if($processName=='upsellProcessInDialer')
+			if($processName=='rcbCampaignInDialer')
+				$priority =8;
+			elseif($processName=='upsellProcessInDialer')
 				$priority='6';
 			elseif($allotedTo=='' && $vdDiscount && $score>=1 && $score<=100)
 				$priority='6';

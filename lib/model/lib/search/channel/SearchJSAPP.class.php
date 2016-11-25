@@ -147,5 +147,12 @@ private static $featuredProfileCount= 1;
 		}
 				
 				
+        /**
+        * getMatchOfDay.
+        */
+        public static function getSearchTypeMatchOfDay()
+        {
+                 return SearchTypesEnums::AndroidMatchOfDay;
+        }
 }
 ?>

@@ -2046,6 +2046,8 @@ class photoScreeningService
 						}
 					}
                                 }
+                                if(array_key_exists("Save",$formArr)&& $formArr['Save']=="Save")
+                                {
                                 foreach ($filesGlobArr["uploadPhotoNonScr"]['name'] as $k=>$v)
                                 {
 					$imageT = $filesGlobArr["uploadPhotoNonScr"]["type"][$k];
@@ -2072,6 +2074,7 @@ class photoScreeningService
 						$count++;
 */
                                         }
+				}
 				}
 				$pictureServiceObj->setPicProgressBit(ProfilePicturesTypeEnum::$INTERFACE["2"],$picturesToUpdate);
 				$profileScreened = "0";

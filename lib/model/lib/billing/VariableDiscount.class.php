@@ -405,6 +405,18 @@ class VariableDiscount
                       $edate  =$details['EDATE'];
                       $dateArr=array("$sdate","$edate");
                     }
+                    // Start : Code to pick last discount capping by executive
+                    $discNegLogObj = new incentive_DISCOUNT_NEGOTIATION_LOG('newjs_masterRep');
+                    $lastNegDet = $discNegLogObj->getLastNegotiatedDiscountDetails($pid);
+                    if (!empty($lastNegDet) && strtotime($lastNegDet['ENTRY_DT']) < time() && strtotime($lastNegDet['EXPIRY_DT']) > time()) {
+                        $disc2 = min($disc2, $lastNegDet['DISCOUNT']);
+                        $disc3 = min($disc3, $lastNegDet['DISCOUNT']);
+                        $disc6 = min($disc6, $lastNegDet['DISCOUNT']);
+                        $disc12 = min($disc12, $lastNegDet['DISCOUNT']);
+                        $discL = min($discL, $lastNegDet['DISCOUNT']);
+                    }
+                    unset($discNegLogObj, $lastNegDet);
+                    // End : Code to pick last discount capping by executive
                     $discMax  =max($disc2,$disc3,$disc6,$disc12,$discL);
                     if(!isset($profileArr[$pid])){
                         $profileArr[$pid] = 0;
@@ -461,6 +473,18 @@ class VariableDiscount
                       $edate  =$details['EDATE'];
                       $dateArr=array("$sdate","$edate");
                     }
+                    // Start : Code to pick last discount capping by executive
+                    $discNegLogObj = new incentive_DISCOUNT_NEGOTIATION_LOG('newjs_masterRep');
+                    $lastNegDet = $discNegLogObj->getLastNegotiatedDiscountDetails($pid);
+                    if (!empty($lastNegDet) && strtotime($lastNegDet['ENTRY_DT']) < time() && strtotime($lastNegDet['EXPIRY_DT']) > time()) {
+                        $disc2 = min($disc2, $lastNegDet['DISCOUNT']);
+                        $disc3 = min($disc3, $lastNegDet['DISCOUNT']);
+                        $disc6 = min($disc6, $lastNegDet['DISCOUNT']);
+                        $disc12 = min($disc12, $lastNegDet['DISCOUNT']);
+                        $discL = min($discL, $lastNegDet['DISCOUNT']);
+                    }
+                    unset($discNegLogObj, $lastNegDet);
+                    // End : Code to pick last discount capping by executive
                     $discMax  =max($disc2,$disc3,$disc6,$disc12,$discL);
                     if(!isset($profileArr[$pid])){
                         $profileArr[$pid] = 0;

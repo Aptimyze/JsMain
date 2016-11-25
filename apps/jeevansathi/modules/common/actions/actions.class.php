@@ -898,4 +898,18 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
         
  }
 
+
+
+        public function executeHamburgerCounts(sfWebRequest $request){
+    $respObj = ApiResponseHandler::getInstance();
+    $loginData=$request->getAttribute('loginData');
+    $forwArray=array('moduleName'=>'myjs','actionName'=>'performV1');
+    $response=HamburgerApp::getHamburgerDetails($loginData[PROFILEID],'',$forwArray);
+    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+    $respObj->setResponseBody($response);
+    $respObj->generateResponse();
+    die;
+
+
+        }
 }

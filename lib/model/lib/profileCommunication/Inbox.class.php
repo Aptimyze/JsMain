@@ -193,7 +193,7 @@ class Inbox implements Module
 				if($infoTypenav["PAGE"] == "VISITORS")
 				{
 					$visitorObj = new Visitors($this->profileObj);
-					$visitors = $visitorObj->getVisitorProfile();
+					$visitors = $visitorObj->getVisitorProfile("","",$infoTypenav);
 					$countObj[$infoTypenav["PAGE"]] = count($visitors);
 				}
 				
@@ -288,6 +288,8 @@ class Inbox implements Module
 							$page = $nav;
 						}
 						$conditionArray = $this->getCondition($infoType, $page);
+                                                if($infoTypeNav["matchedOrAll"])
+                                                    $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
 					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray))
 							$data = $data+$profilesArray;
@@ -364,7 +366,10 @@ class Inbox implements Module
 				if ($this->totalCount / $config["COUNT"] > $this->completeProfilesInfo[$infoType]["CURRENT_NAV"])
 					$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
 				$this->completeProfilesInfo[$infoType]["NAVIGATION_INDEX"] = $this->getNavigationArray($this->completeProfilesInfo[$infoType]["CURRENT_NAV"], $this->totalCount, $config["COUNT"]);
-				$this->completeProfilesInfo[$infoType]["TRACKING"]  	 = $config["TRACKING"];
+                                if($infoType=="VISITORS" && $config["TRACKING"]=="stype=AV" && $infoTypeNav['matchedOrAll']=="M")
+                                    $this->completeProfilesInfo[$infoType]["TRACKING"] = "stype=".SearchTypesEnums::MATCHING_VISITORS_ANDROID;
+                                else
+                                    $this->completeProfilesInfo[$infoType]["TRACKING"] = $config["TRACKING"];
 				$this->completeProfilesInfo[$infoType]["contact_id"] = $key;
 				$this->completeProfilesInfo[$infoType]["self_profileid"] = $this->profileObj->getPROFILEID();
 				if($infoType == "INTEREST_RECEIVED_FILTER")
