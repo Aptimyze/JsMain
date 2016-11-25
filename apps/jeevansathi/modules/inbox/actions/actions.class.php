@@ -290,7 +290,7 @@ class inboxActions extends sfActions
 												$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
                                                        
                                                 }
-						$profileMemcacheObj->update("DECLINE",-$currentCount);
+						$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
