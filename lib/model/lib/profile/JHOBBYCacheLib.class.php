@@ -94,6 +94,7 @@ class JHOBBYCacheLib extends TABLE{
             
             if($onlyValues && $bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE ){
             $this->logCacheConsumeCount(__CLASS__);
+            
         return $result;             
         }
 
@@ -102,14 +103,14 @@ class JHOBBYCacheLib extends TABLE{
 
        // if($onlyValues == '')
           $toSend = '1';
-        var_dump($toSend);
+       // var_dump($toSend);
         //print_r('sadadas'.$toSend); die('hshs');
         $result = $objJHB->getUserHobbies($pid, $toSend);
 
         $dummyResult = array(); 
         $dummyResult['PROFILEID'] = $pid;
         $dummyResult['RESULT_VAL'] = (intval($result) === 0 || ($result == NULL)) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult['RESULT_VAL'], __CLASS__);
         if($onlyValues)  
        {  
           return $result;
@@ -208,7 +209,7 @@ class JHOBBYCacheLib extends TABLE{
    
         $dummyResult['PROFILEID'] = $pid;
         $dummyResult['RESULT_VAL'] = (intval($result) === 0 || ($result == NULL)) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult,__CLASS__);
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult['RESULT_VAL'],__CLASS__);
         
          $this->logFunctionCalling(__FUNCTION__);
 
@@ -286,7 +287,7 @@ class JHOBBYCacheLib extends TABLE{
 
 
     private function logCacheConsumeCount($funName)
-  {
+  { 
     $key = 'cacheConsumption'.'_'.date('Y-m-d');
     JsMemcache::getInstance()->hIncrBy($key, $funName);
     

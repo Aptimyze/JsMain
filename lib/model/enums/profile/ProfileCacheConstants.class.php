@@ -215,7 +215,13 @@ class ProfileCacheConstants
                                         "VARA",
                                         "MASA",
                                         "HAVE_ASTRO",
-                                        "FSO_EXISTS"
+                                        "FSO_EXISTS",
+                                        "HOBBY",
+                                        "FAV_MOVIE",
+                                        "FAV_TVSHOW",
+                                        "FAV_FOOD",
+                                        "FAV_BOOK",
+                                        "FAV_VAC_DEST"
                                     );
     
     public static $arrJProfileColumns = array(
