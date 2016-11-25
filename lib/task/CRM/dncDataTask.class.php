@@ -34,7 +34,7 @@ EOF;
         // Dir. structure
         $filename ='dnc_'.date('dmY').'.csv';
         $sourceDir = JsConstants::$docRoot.'/uploads/csv_files/dnc/'.$filename;
-        $destDir = JsConstants::$docRoot.'/uploads/csv_files/fpdialer/';
+        $destDir = JsConstants::$docRoot.'/uploads/csv_files/fpdialer/dnc_dump.csv';
 
 	$dncListObj =new dnc_DNC_LIST();
 	$count =$dncListObj->fetchDncCount();
@@ -52,9 +52,8 @@ EOF;
 		$command ='/usr/local/mysql_php/bin/mysql -u'.$user.' -p'.$password.' -h'.$dns.' -P'.$port.' -e "'.$query.'" >>'.$sourceDir;	
 		passthru($command);
 	}	
-	
-        //Copy dnc data to shared dir.(fpdialer) 
 	usleep(3000000);
+	//Copy dnc data to shared dir.(fpdialer)
 	//$totCsvCnt =passthru("wc -l < $sourceDir");
 
 	passthru("cp $sourceDir $destDir", $return_var);
