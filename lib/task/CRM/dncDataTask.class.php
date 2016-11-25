@@ -55,16 +55,14 @@ EOF;
 	
         //Copy dnc data to shared dir.(fpdialer) 
 	usleep(3000000);
-	$totCsvCnt =passthru("wc -l < $sourceDir");
+	//$totCsvCnt =passthru("wc -l < $sourceDir");
 
-	if($totCsvCnt>=$count){
-		passthru("cp $sourceDir $destDir", $return_var);
-	}
+	passthru("cp $sourceDir $destDir", $return_var);
 	if($return_var){
 		$message ="ERROR: DNC-Data csv not copied on fpdialer";
 	}
 	else{
-		$message ="SUCCESS: DNC-Data ($totCsvCnt) csv copied on fpdialer";
+		$message ="SUCCESS: DNC-Data ($count) csv copied on fpdialer";
 	}
 	mail("manoj.rana@naukri.com,dheeraj.negi@naukri.com","$message","","From:JeevansathiCrm@jeevansathi.com");
   }
