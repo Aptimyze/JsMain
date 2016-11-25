@@ -50,6 +50,13 @@ $(function(){
      // alert(visWidth);
 			p=Math.abs($('#js-'+b[1]).position().left);
       alert(p);
+     // alert(visWidth);alert(getWidth);
+      var boxes = getWidth/visWidth;
+      var currentBox;
+      currentBox = getCurrentBox(b[0],p);
+      
+     // alert(boxes);
+      /*
       if(p == 2970 && b[0] == "nxt")
         $("#"+id).hide();
       else if(p == 3960 && b[0] =="prv")
@@ -58,6 +65,7 @@ $(function(){
         $("#"+id).hide();
       if(p == 0 && b[0] == "nxt")
          $("#prv-"+b[1]).show();
+       */
 			if((b[0]=="nxt")&&(getWidth>visWidth))
 			{	
         diff=Math.floor(getWidth-p-visWidth);
@@ -904,11 +912,21 @@ catch (e){
 }
 }
 
-function reArrangeDivsAfterDissapear(value,position)
+function reArrangeDivsAfterDissapear(value,position,id)
 { alert(1);
   value -- ;
   $("#"+position).text(value);
   topSliderInt("init");
+
+  var currentBox = getCurrentBox(id);
+  var totalBoxes = getTotalBoxes(id);
+  var numberOfProfiles = getNumberOfProfiles(id);
+
+
+  if(!isFirstBox(currentBox) && (onlyViewAllCardPresent() || noCardPresent(currentBox,totalBoxes,numberOfProfiles)))
+  {
+
+  }
   //alert(eleId);
  // var profileList = eleId;
  // alert(profileList);
@@ -938,3 +956,85 @@ var profileList  = $(ele).parent().attr('id');
 });
 */
 }
+
+    function getCurrentBox(id)
+    {
+
+                $('#js-'+id+'_List').position().left;
+
+                if(position == 0)
+                      {
+                        return 1;
+                      }
+
+                if(position == -990)
+                      {
+                        return 2;
+                      }
+
+                if(position == -1980)
+                      {
+                        return 3;
+                      }
+
+                if(position == -2970)
+                      {
+                        return 4;
+                      }
+
+                if(position == -3960)
+                      {
+                        return 5;
+                      }
+    }
+
+
+    function getCurrentBox(id)
+    {
+
+            var totalWidth = $('#js-'+id+'_List').width();
+            var visibleBoxes = totalWidth/990;
+
+            return visibleBoxes;
+
+    }
+
+    function isFirstBox(boxNumber)
+    {
+      if(boxNumber == 1)
+        return 1;
+      else
+        return 0;
+    }
+
+    function noCardPresent(currentBox,totalBoxes,numberOfProfiles)
+    {
+        if(currentBox == totalBoxes)
+        {
+          if(numberOfProfiles % 4 == 0)
+            return 1;
+        }
+
+        return 0;
+
+    }
+
+    function getNumberOfProfiles(id)
+    {
+      var count = 0;
+      var listItems = $("#js-"+id+"_List li");
+                  listItems.each(function(index) {
+                    count++;
+                  });
+          return count;
+    }
+
+    function onlyViewAllCardPresent(currentBox ,totalBoxes)
+    {
+
+      if(currentBox == totalBoxes)
+      {
+        
+      }
+
+    }
