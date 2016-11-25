@@ -36,12 +36,14 @@ EOF;
         $incrementValue = 10000;
         $pictureFieldsArr = ProfilePicturesTypeEnum::$PICTURE_SIZES_FIELDS;
         $pictureFieldsArrAlbumPic = ProfilePicturesTypeEnum::$PICTURE_FIELD_FOR_ALBUM_PICS;
-        
+	if(file_exists(sfConfig::get("sf_upload_dir")."/SearchLogs/photoUrl".$tableName.".txt"))
+		$offset = file_get_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/photoUrl".$tableName.".txt");
         //PICTURE_NEW object
         $picObj = new PICTURE_NEW("newjs_slave");
         
         for($i=0;$i<$maxCount;$i+= $incrementValue)
         {
+	    file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/photoUrl".$tableName.".txt",$offset);
             if($lowerLimit < $maxCount) //change logic depending on maxCount logic
             {
                 $picUrlArr = $picObj->getPicUrlArr($tableName,$offset,$limit);  
