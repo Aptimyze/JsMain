@@ -971,6 +971,11 @@ function reArrangeDivsAfterDissapear(value,position,id)
 
     //  $('#js-'+id).animate({left:p},500,
   }
+
+  if(viewCardInList(currentBox,totalBoxes,id,numberOfProfiles))
+  {
+     $('#nxt-'+id+'_List').hide();
+  }
   //alert(eleId);
  // var profileList = eleId;
  // alert(profileList);
@@ -1078,6 +1083,20 @@ var profileList  = $(ele).parent().attr('id');
     {
 
       if(currentBox == totalBoxes && numberOfProfiles % 4 == 1)
+      {
+        if($('ul#js-'+id+'_List li:nth-last-child(1)').find('.colrw').text() == "View All")
+        {
+          return 1;
+        }
+      }
+      return 0;
+    }
+
+
+  function viewCardInList(currentBox ,totalBoxes,id,numberOfProfiles)
+    {
+
+      if(currentBox == totalBoxes && numberOfProfiles % 4 == 0)
       {
         if($('ul#js-'+id+'_List li:nth-last-child(1)').find('.colrw').text() == "View All")
         {
