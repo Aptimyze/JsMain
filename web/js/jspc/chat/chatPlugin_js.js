@@ -27,8 +27,8 @@ JsChat.prototype = {
     _listingTabs: {},
     _loginFailueMsg: "Login Failed,Try later",
     _noDataTabMsg: {
-        "tab1": "<span class='fontlig pb10 disp_b'>There are no shortlisted profiles online</span> You can find online members by clicking ‘Online Now’ link present on right, after conducting a search.",
-        //"tab1": "<span class='fontreg pb10 disp_b'>There are no matching members online</span> Please <a href='/profile/dpp' class='color5 cursp'>relax your partner preference</a> to see more matches.",
+        //"tab1": "<span class='fontlig pb10 disp_b'>There are no shortlisted profiles online</span> You can find online members by clicking ‘Online Now’ link present on right, after conducting a search.",
+        "tab1": "<span class='fontreg pb10 disp_b'>There are no matching members online</span> Please <a href='/profile/dpp' class='color5 cursp'>relax your partner preference</a> to see more matches.",
         "tab2": "You currently don’t have any accepted members, get started by sending interests or initiating chat with your matches."
     },
     _rosterDetailsKey: "rosterDetails",
@@ -45,6 +45,7 @@ JsChat.prototype = {
     _categoryTrackingParams:{},
     _groupBasedConfig:{},
     _defaultActiveTab:"tab1",
+    _sentMsgRefTime:60000,
 
     _chatLoggerPlugin: function (msgOrObj) {
         if (this._loggingEnabledPlugin) {
@@ -359,7 +360,7 @@ JsChat.prototype = {
         var curEleRef = this,
             that = this;
         
-        var lengthReq = 14;
+        var lengthReq = chatConfig.Params[device].nameTrimmLength;
         var stringName = this._selfName;
         var trimmedString = stringName.length > lengthReq ? stringName.substring(0, lengthReq - 3) + "..." : stringName;
         var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp" data-siteLogout="false">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
@@ -386,6 +387,7 @@ JsChat.prototype = {
             }
         });
         $(curEleRef._logoutChat).click(function () {
+            //console.log("Site logout clicked");
             if (curEleRef.onLogoutPreClick && typeof (curEleRef.onLogoutPreClick) == "function") {
                 //that._chatLoggerPlugin("in if");
                 var fromSiteLogout = $(curEleRef._logoutChat).attr("data-siteLogout");
@@ -516,9 +518,15 @@ JsChat.prototype = {
     },
     
     //check for node presence
-    checkForNodePresence:function(userId){
-        var exists = false,curElem = this,groupID;
-        $.each(curElem._rosterGroups,function(key,groupId){
+    checkForNodePresence:function(userId,specificGroupIdArr){
+        var exists = false,curElem = this,groupID,groupListArr;
+        if(specificGroupIdArr == undefined){
+            groupListArr = curElem._rosterGroups;
+        }
+        else{
+            groupListArr = specificGroupIdArr;
+        }
+        $.each(groupListArr,function(key,groupId){
             if($(".chatlist li[id='" + userId + "_" + groupId + "']").length != 0){
                 exists = true;
                 groupID = groupId;
@@ -565,7 +573,15 @@ JsChat.prototype = {
                             List += '</li>';
                             if (status == "online") {
                                 if ($('#' + runID + "_" + val).length == 0) {
-                                    addedFlag = curElem._placeContact("add_hidden","nonRosterAdd", runID, val, status, List);
+                                    //addedFlag = curElem._placeContact(0,"add_hidden","nonRosterAdd", runID, val, status, List);
+                                    addedFlag = curElem._placeContact({ "addIndex":0,
+                                                                        "operation":"add_hidden",
+                                                                        "key":"nonRosterAdd",
+                                                                        "contactID":runID,
+                                                                        "groupID":val,
+                                                                        "status":status,
+                                                                        "contactHTML":List
+                                                                    });
                                     if(addedFlag == true){
                                         $("#" + runID + "_" + val).on("click", function () {
                                             currentID = $(this).attr("id").split("_")[0];
@@ -592,7 +608,6 @@ JsChat.prototype = {
                 var runID = data[key]["rosterDetails"]["jid"],
                     res = '',
                     status = data[key]["rosterDetails"]["chat_status"];
-                //elem._chatLoggerPlugin("addlisting for " + runID + "--" + data[key]["rosterDetails"]["chat_status"]);
                 var fullJID = runID;
                 res = runID.split("@");
                 runID = res[0];
@@ -602,7 +617,6 @@ JsChat.prototype = {
                     var that = this;
                     //console.log("ankita",data[key]["rosterDetails"]["groups"]);
                     $.each(data[key]["rosterDetails"]["groups"], function (index, val) {
-                        //that._chatLoggerPlugin("groups " + val);
                         if(chatConfig.Params.pc.tab1groups.indexOf(val) !== -1){
                             //tab1ListingIds.push(key);
                             tab1ListingIds[key] = {"PROFILEID":key,"GROUP":val};
@@ -619,9 +633,8 @@ JsChat.prototype = {
                             picurl = data[key]["rosterDetails"]["listing_tuple_photo"],
                             prfCheckSum = data[key]["rosterDetails"]["profile_checksum"],
                             nick = data[key]["rosterDetails"]["nick"]; //ankita for image
-                        //that._chatLoggerPlugin("prfCheckSum", data[key]["rosterDetails"])
                         List += '<li class=\"clearfix profileIcon\"';
-                        List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-checks=\"" + prfCheckSum + "\" data-nick=\"" + nick + "\" data-jid=\"" + fullJID + "\">";
+                        List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-addIndex=\"" + data[key]["rosterDetails"]["addIndex"] + "\" data-checks=\"" + prfCheckSum + "\" data-nick=\"" + nick + "\" data-jid=\"" + fullJID + "\">";
                         List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
                         List += '<div class="fl f14 fontlig pt15 pl18">';
                         List += getNamelbl;
@@ -647,7 +660,16 @@ JsChat.prototype = {
                                         that._chatLoggerPlugin("me");
                                         $("#show" + tabId + "NoResult").addClass("disp-none");
                                     }
-                                    added = elem._placeContact(operation,"new", runID, val, status, List);
+                                    //added = elem._placeContact(data[key]["rosterDetails"]["addIndex"],operation,"new", runID, val, status, List);
+                                    added = elem._placeContact({   "addIndex":data[key]["rosterDetails"]["addIndex"],
+                                                                    "operation":operation,
+                                                                    "key":"new",
+                                                                    "contactID":runID,
+                                                                    "groupID":val,
+                                                                    "status":status,
+                                                                    "contactHTML":List,
+                                                                    "nodeType":data[key]["rosterDetails"]["nodeType"]
+                                                                });
                                     if(added == true){
                                         if ($('div.' + val + ' ul').parent().hasClass("disp-none")) {
                                             $('div.' + val + ' ul').parent().removeClass("disp-none");
@@ -658,7 +680,6 @@ JsChat.prototype = {
                                             setTimeout(function(){
                                                $("#"+currentID+"_hover").css("visibility","hidden"); 
                                             },100);
-                                           
                                             //setTimeout(function(){
                                                 elem._chatPanelsBox(currentID, statusArr[currentID], $(this).attr("data-jid"), $(this).attr("data-checks"), $(this).attr("id").split("_")[1]);
                                             //    console.log("Timeouttocreatechatbox");
@@ -668,9 +689,16 @@ JsChat.prototype = {
                                     }
                                 }
                             } else {
-                                added = elem._placeContact(operation,"existing", runID, val, status);
+                                //added = elem._placeContact(data[key]["rosterDetails"]["addIndex"],operation,"existing", runID, val, status);
+                                added = elem._placeContact({   "addIndex":data[key]["rosterDetails"]["addIndex"],
+                                                                "operation":operation,
+                                                                "key":"existing",
+                                                                "contactID":runID,
+                                                                "groupID":val,
+                                                                "status":status,
+                                                                "nodeType":data[key]["rosterDetails"]["nodeType"]
+                                                            });
                             }
-                            //elem._updateStatusInChatBox(runID, status);
                         }
                         elem._updateStatusInChatBox(runID, status);
                     });
@@ -691,7 +719,7 @@ JsChat.prototype = {
         $(elem._listingClass).on('mouseenter mouseleave', {
             global: elem
         }, elem._calltohover);
-        //var APIsrc ="http://xmppdev.jeevansathi.com/api/v1/social/getMultiUserPhoto?pid=";
+
         var apiParams = {};
         if(localStorage && localStorage.getItem("tabState") == "tab1"){
             apiParams["profiles"] = tab1ListingIds;
@@ -717,35 +745,44 @@ JsChat.prototype = {
         if(operation == "create_list"){
             retainHiddenListing();
         }
-        var newTab = false;
-        if($(".tabUId").length == 0){
-            //console.log("does not exsist");
-            $("body").append("<input type='hidden' class='tabUId' id='tab_"+new Date().getTime()+"'>");
-            //console.log("calling update _updateChatStructure new");
-            elem._updateChatStructure("new");
-            //elem._updateChatStructure("exsisting");
-            newTab = true;
-        }
-
-        if(localStorage.getItem("lastUId")) {
-            if($(".tabUId").attr("id") != localStorage.getItem("lastUId") && newTab ==  false){
-                //console.log("calling update _updateChatStructure exsisting");
-                elem._updateChatStructure("exsisting");
+        setTimeout(function(){
+            var newTab = false;
+            //console.log("newTab update",$(".tabUId").length,localStorage.getItem("lastUId"));
+            if($(".tabUId").length == 0){
+                //console.log("does not exsist");
+                $("body").append("<input type='hidden' class='tabUId' id='tab_"+new Date().getTime()+"'>");
+                //console.log("calling update _updateChatStructure new");
+                elem._updateChatStructure("new");
+                //elem._updateChatStructure("exsisting");
+                newTab = true;
             }
-        } else {
-            localStorage.setItem("lastUId",$(".tabUId").attr("id"));
-        }
+
+            if(localStorage.getItem("lastUId")) {
+                if($(".tabUId").attr("id") != localStorage.getItem("lastUId") && newTab ==  false){
+                    //console.log("calling update _updateChatStructure exsisting");
+                    elem._updateChatStructure("exsisting");
+                }
+            } else {
+                localStorage.setItem("lastUId",$(".tabUId").attr("id"));
+            }
+        },1000);
+        
         
         
         $(window).focus(function() {
             //console.log("tab changed");
             if(localStorage.getItem("lastUId")) {
+                //console.log("11");
                 if($(".tabUId").attr("id") != localStorage.getItem("lastUId")){
+                    //console.log("22 change");
+                    reActivateNonRosterPolling("tab change");
                     elem._updateChatStructure("exsisting");
                 }
             } else {
+                //console.log("33");
                 localStorage.setItem("lastUId",$(".tabUId").attr("id"));
-            }    	
+            }
+            //updatePresenceAfterInterval();
         });
         /*
         $(window).focus(function () {
@@ -754,8 +791,11 @@ JsChat.prototype = {
         
         });
         */
-	ifChatListingIsCreated = 1;
+        setTimeout(function(){
+            ifChatListingIsCreated = 1;
+        },1000);
     },
+
     //add photo in tuple div of listing
     _addListingPhoto: function (photoObj,type) {
         if(type == "api") {
@@ -788,6 +828,8 @@ JsChat.prototype = {
         }
         
     },
+
+    //remove hidden node from listing
     _removeHiddenNode: function(userId){
         var curElem = this;
         $.each(curElem._rosterGroups,function(key,groupId){
@@ -800,28 +842,54 @@ JsChat.prototype = {
     },
 
     //place contact in appropriate position in listing
-    _placeContact: function (operation,key, contactID, groupID, status, contactHTML) {
+   // _placeContact: function (addIndex,operation,key, contactID, groupID, status, contactHTML) {
+    _placeContact: function (details) {
         var done=false,elem=this;
+        var addIndex = details["addIndex"],
+            operation = details["operation"],
+            key = details["key"],
+            contactID = details["contactID"],
+            groupID = details["groupID"],
+            contactHTML = details["contactHTML"],
+            status = details["status"],
+            nodeType = details["nodeType"];
+        if(addIndex == undefined){
+            addIndex = 0;
+        }
         if (key == "new") {
-            //console.log("adding new"+status+"-"+contactID);
             var upperLimit = elem._listingNodesLimit[groupID],totalNodes = $('div.'+groupID+' ul li').size();
             if (operation == "add_node" || operation == "update_status" || typeof upperLimit == "undefined" || totalNodes < upperLimit){
-                //console.log("adding1-"+groupID+"-"+contactID+"-"+totalNodes);
-                //this._chatLoggerPlugin("ankita_adding" + contactID + " in groupID");
-                //this._chatLoggerPlugin(contactHTML);
                 elem._removeHiddenNode(contactID);
-                $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
-                //upadte status in list
-                if(status && (operation == "update_status" || operation == "removeCall1")){
-                     //console.log("updating 2",chat_status);
-                    $(".chatlist li[id='" + contactID + "_" + groupID + "']").attr("data-status",status);
+                var listCount = $('div.'+groupID+' ul.'+status+' li').size();
+                if(operation == "create_list" && nodeType == "non-roster" && typeof upperLimit != "undefined" && addIndex >= upperLimit){
+                    //console.log("false",addIndex);
+                    done = false;
                 }
-                done = true;
+                else{
+                    //console.log("true",addIndex);
+                    if(addIndex == 0 || listCount == 0){
+                        $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                    }
+                    else{
+                        var insertAfterPos = elem.getNodeInsertPos(addIndex,groupID,status);
+                        //console.log("here out",insertAfterPos);
+                        if(insertAfterPos == -1){
+                            $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                        }
+                        else{
+                            $('div.' + groupID + ' ul.' + status).children(':eq('+insertAfterPos+')').after(contactHTML);
+                        }
+                    }
+                    //update status in list
+                    if(status && (operation == "update_status" || operation == "removeCall1")){
+                        $(".chatlist li[id='" + contactID + "_" + groupID + "']").attr("data-status",status);
+                    }
+                    done = true;
+                }
             }
-            else if(totalNodes >= upperLimit && status == "online"){
+            else if(totalNodes >= upperLimit && status == "online" && nodeType != "non-roster"){
                 var onlineCount = $('div.'+groupID+' ul.online li').size();
                 if(onlineCount < upperLimit){
-                    //console.log("adding2-"+groupID+"-"+contactID+"-"+totalNodes+"-"+onlineCount);
                     $('div.'+groupID+' ul.'+'offline'+' li:last').remove();
                     $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                     done = true;
@@ -850,6 +918,21 @@ JsChat.prototype = {
             done = true;
         }
         return done;
+    },
+
+    //get position at which new node is to be inserted
+    getNodeInsertPos:function(desiredIndex,groupID,status){
+        var insertAfterPos = -1;
+        $('div.' + groupID + ' ul.' + status + ' li').each(function(index,element){
+            if($(element).attr("data-addIndex") > desiredIndex){
+               return (index - 1);
+            }
+            else{
+                insertAfterPos = index;
+            }
+        });
+        //console.log("getNodeInsertPos",desiredIndex,insertAfterPos);
+        return insertAfterPos;
     },
     //scrolling down chat box
     _scrollDown: function (elem, type) {
@@ -1008,6 +1091,11 @@ JsChat.prototype = {
 		            bubbleData.splice(indexToBeRemoved,1);
 		        }
 		        localStorage.setItem("bubbleData_new", JSON.stringify(bubbleData));
+                setTimeout(function(){
+                    elem.find(".js-chatBoxTopName").addClass("js-viewProfileBind");
+                    elem.find(".downBarPic").addClass("js-viewProfileBind");    
+                },1000);
+                
 		}      
   	});
 
@@ -1055,7 +1143,9 @@ JsChat.prototype = {
             for (var key in data) {
                 var runID = '';
                 if(typeof data[key] != "undefined"){
-                    runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                    if(typeof data[key]["rosterDetails"]["jid"] != "undefined"){
+                        runID = data[key]["rosterDetails"]["jid"].split("@")[0];
+                    }
                     if(param1 == 'delete_node'){
                         localStorage.removeItem("listingPic_"+runID);
                     }
@@ -1072,7 +1162,15 @@ JsChat.prototype = {
                             if (tabShowStatus == 'false' && param1 != 'delete_node') {
                                 
                                 $(listElements).find('.nchatspr').detach();
-                                elem._placeContact(param1,"existing", runID, val, "offline");
+                                //elem._placeContact(0,param1,"existing", runID, val, "offline");
+                                elem._placeContact({   "addIndex":0,
+                                                        "operation":param1,
+                                                        "key":"existing",
+                                                        "contactID":runID,
+                                                        "groupID":val,
+                                                        "status":"offline",
+                                                        "nodeType":data[key]["rosterDetails"]["nodeType"]
+                                                    });
                             } else {
                             
                                 $('div').find(listElements).detach();
@@ -1322,27 +1420,6 @@ JsChat.prototype = {
                                 'ID': ''
                             };
                             
-                            
-                            /*
-                            var sjid=selfJID.split('@')[0];
-                            var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId)) || [];
-                            var newMsg = {
-                              'from':sjid,
-                              'to':userId,
-                              'msg':text
-                            };
-                            //var temp = [];
-                            oldMessages.unshift(newMsg);
-                            //newMsg.push(oldMessages);
-                            //temp.push(oldMessages);
-                            console.log(typeof oldMessages);
-                            console.log(JSON.parse(localStorage.getItem(sjid+'_'+userId)),"log");
-                            //oldMessages.push(newMsg);
-                            localStorage.setItem(sjid+'_'+userId,JSON.stringify(oldMessages));
-                            */
-                            //console.log("**************");
-                            //var oldMessages = JSON.parse(localStorage.getItem(sjid+'_'+userId));
-                            //console.log(oldMessages);
                             if (msgSendOutput["sent"] == false || msgSendOutput["cansend"] == false) {
                                 var error_msg = msgSendOutput['errorMsg'] || "Something went wrong";
                                 $('chat-box[user-id="' + userId + '"] #restrictMessgTxt').remove();
@@ -1384,6 +1461,13 @@ JsChat.prototype = {
                                 }
                                 if (msgSendOutput["cansend"] == true) {
                                     $(curElem).prop("disabled", false);
+                                }
+                            }
+                            if(msgSendOutput["sent"] == true){
+                                var currTime = (new Date()).getTime(),lastMsgTime=localStorage.getItem(loggedInJspcUser+"_sentMsgRefTime");
+                                if(lastMsgTime == undefined || (currTime - lastMsgTime) > _this._sentMsgRefTime){
+                                    reActivateNonRosterPolling("chatting");
+                                    localStorage.setItem(loggedInJspcUser+"_sentMsgRefTime",currTime);
                                 }
                             }
                         }
@@ -1694,7 +1778,7 @@ JsChat.prototype = {
             hisStatus = $("chat-box[user-id='" + userId + "']").attr("his-status");
         var nick;
         if (checkSum) {
-            nick = nick + "|" + checkSum;
+            nick = user_name + "|" + checkSum;
         }
         //console.log("chatBoxType"+chatBoxType);
         if (curElem._contactStatusMapping[chatBoxType]["showHistory"] == true) {
@@ -2159,10 +2243,12 @@ JsChat.prototype = {
     _scrollToBottom: function (userId,type) {
         //console.log("type in _scrollToBottom",type);
         if(type == undefined) {
-            var len = document.getElementById("chatMessage_"+userId).scrollHeight;
-            $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
-                scrollTop: len
-            }, 1000);   
+            if(document.getElementById("chatMessage_" + userId) != null){
+                var len = document.getElementById("chatMessage_"+userId).scrollHeight;
+                $('chat-box[user-id="' + userId + '"] .chatMessage').animate({
+                    scrollTop: len
+                }, 1000);   
+            }
         } else if(type == "noAnimate") {
             setTimeout(function () {
                 if(document.getElementById("chatMessage_"+userId) != null){
@@ -2240,6 +2326,9 @@ JsChat.prototype = {
                                 removeFreeMemMsg = true;
                                 curElem._enableChatAfterPaidInitiates(other_id);
                             }
+                        }
+                        if(logObj["IS_EOI"] == true && requestType == "first_history" && $('chat-box[user-id="' + other_id + '"]').hasClass("js-minimizedChatBox") == false){
+                            curElem._handleUnreadMessages($('chat-box[user-id="' + other_id + '"]'),{"msg_id":logObj["CHATID"]});
                         }
                         //append received message
                         logObj["MESSAGE"] = logObj["MESSAGE"].replace(/\&lt;br \/\&gt;/g, "<br />");
@@ -2319,6 +2408,7 @@ JsChat.prototype = {
             var appendMsg = true;
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
+                //console.log("msg from history1",uniqueId);
                 appendMsg = false; //as this msg already exists in history
                 var checkInterval = 0;
                 var chatBoxOpenInterval = setInterval(function(){
@@ -2330,17 +2420,22 @@ JsChat.prototype = {
                                 appendMsg = true;
                                 $('chat-box[user-id="' + userId + '"] .nchatic_2').click();
                             }
+                            else if($('#extra_'+userId).length == 0){
+                                //console.log("add here....uncomment",uniqueId);
+                                //mark this msg read on sender side
+                                curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
+                            }
                         },500);
                         //console.log("clear interval");
                         clearInterval(chatBoxOpenInterval);
                     }
                     else{
                         checkInterval = checkInterval+1;
-                        if(checkInterval == 10){
+                        if(checkInterval == 15){
                             clearInterval(chatBoxOpenInterval);
                         }
                     }    
-                },500);
+                },700);
                     
                 
 
@@ -2348,13 +2443,14 @@ JsChat.prototype = {
             if(typeof msg_type != "undefined" && msg_type == "accept"){
                 curEle._enableChatAfterPaidInitiates(userId);
             }
+            //console.log("appendMsg",appendMsg);
             if(appendMsg == true){
                 message = message.replace(/\&lt;br \/\&gt;/g, "<br />");
-                //console.log("append msg1");
-                //adding mege in chat area
+                //adding msg in chat area
                 $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div class="clearfix"><div class="leftBubble"><div class="tri-left"></div><div class="tri-left2"></div><div id="text_' + userId + '_' + uniqueId + '" class="talkText received" data-msgid=' + uniqueId + '>' + message + '</div></div></div>');
             }
             else{
+                //console.log("marking as read",uniqueId);
                 //mark this msg read on sender side
                 curEle._handleUnreadMessages($('chat-box[user-id="' + userId + '"]'),{"msg_id":uniqueId});
             }
@@ -3019,7 +3115,6 @@ JsChat.prototype = {
     
     _updateChatStructure:function(type) {
 		//console.log("inside update function",type);
-       // console.log("In updateCHatstructure");
 		var data = [],curEle = this;
 		var currentUserId = [];
 		var localId = [],pageId = [];
@@ -3211,6 +3306,7 @@ JsChat.prototype = {
         //start login button capture
         var that = this;
         $(this._loginbtnID).click(function () {
+            //console.log("before login",that._selfName);
             if (curEle.onEnterToChatPreClick && typeof (curEle.onEnterToChatPreClick) == "function") {
                 //that._chatLoggerPlugin("in onEnterToChatPreClick");
                 curEle.onEnterToChatPreClick();

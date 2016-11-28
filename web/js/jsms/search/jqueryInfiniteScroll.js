@@ -84,6 +84,8 @@ function updateHistory(tupleNo)
 			addMoreParams += '&profilechecksum='+viewedProfilechecksum+'&'+NAVIGATOR;
 		if(fmBack==1)
 			addMoreParams += '&fmBack=1';
+                if(window.location.href.indexOf('matchedOrAll')!=-1)
+			addMoreParams += '&matchedOrAll='+window.location.href.split('matchedOrAll=')[1].slice(0,1);
 		$.urlUpdateHistory('Search Results Page '+tupleNo,tupleNo,addMoreParams);
 	}
 	BindNextPage();
@@ -271,8 +273,8 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 {
 		
-	
-	contactTracking="&stype="+tupleStype;
+	if(firstResponse.infotype != 'VISITORS')
+            contactTracking="&stype="+tupleStype;
 			
 	//console.log(contactTracking);
 		if(totalNoOfResults=='')
@@ -594,7 +596,8 @@ function generateParams(page)
 {
 	var searchid = firstResponse.searchid;
 	var sbPar = removeNull(firstResponse.searchBasedParam);
-	var temp = "results_orAnd_cluster=onlyResults&searchBasedParam="+sbPar+"&searchId="+searchid+"&currentPage="
+        if(firstResponse.visitorAllOrMatching!='' || typeof(firstResponse.visitorAllOrMatching) !="undefined")
+	var temp = "results_orAnd_cluster=onlyResults&searchBasedParam="+sbPar+"&searchId="+searchid+"&matchedOrAll="+firstResponse.visitorAllOrMatching+"&currentPage="
 	temp = $.addReplaceParam(temp,'currentPage',page)
 	return temp;
 }

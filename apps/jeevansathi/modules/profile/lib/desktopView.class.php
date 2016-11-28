@@ -812,20 +812,21 @@ class desktopView extends DetailedViewApi
         $profileId = $objProfile->getPROFILEID();
         if($this->bResponseForEditView){
             if (!check_astro_details($profileId, "Y")){
-                include_once(sfConfig::get("sf_web_dir")."/profile/horoscope_upload.inc");
+                /*include_once(sfConfig::get("sf_web_dir")."/profile/horoscope_upload.inc");
                     if (get_horoscope($profileId)){
                     $HOROSCOPE = "Y";
                 }
                 else{
                     $HOROSCOPE = "N";
-                }
+                }*/
+                $HOROSCOPE = "N";
                 $this->m_arrOut['NO_ASTRO']=1;
             }
             else{
                 $HOROSCOPE = "Y";
             }
             
-            $horoStoreObj = new NEWJS_HOROSCOPE_FOR_SCREEN;
+            /*$horoStoreObj = new NEWJS_HOROSCOPE_FOR_SCREEN;
             $horoRow =  $horoStoreObj->getHoroscopeIfNotDeleted($objProfile->getPROFILEID());
             unset($horoStoreObj);
 
@@ -834,8 +835,8 @@ class desktopView extends DetailedViewApi
             }
             else{
                 $horo_for_screen = 'Y';
-            }
-            if($horo_for_screen == 'Y' || $HOROSCOPE == 'Y')
+            }*/
+            if($HOROSCOPE == 'Y')/*$horo_for_screen == 'Y' || */
                 $this->m_arrOut['horo_available'] = 'Y';
             else
                 $this->m_arrOut['horo_available'] = 'N';

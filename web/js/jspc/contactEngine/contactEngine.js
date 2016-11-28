@@ -70,11 +70,10 @@ switch(this.name)
         case 'VSP':
             var mainDivElement=$("#PreFourButtonsSearch").clone();
             var basicButtonElement = mainDivElement.find('.contactEngineIcon');
-            innerHtml=this.setButtonProperties(buttonArray,basicButtonElement)
+            innerHtml=this.setButtonProperties(buttonArray,basicButtonElement);
             break;
         case 'VDP':
         case 'VSP_VDP':
-        
 			var toBeUpdatedContainerId='#'+actionName+"-"+this.profileChecksum+"-"+this.name;
             var toBeUpdatedLabelId='#'+actionName+"-"+this.profileChecksum+"-"+this.name+"_LABEL";
             var toBeUpdatedIconId='#'+actionName+"-"+this.profileChecksum+"-"+this.name+"_ICON";
@@ -582,6 +581,7 @@ ContactEngineCard.prototype.postCCViewContactLayer= function(Obj,profileChecksum
 	userLoginStatus=this.buttonObj.parent.find('.js-userLoginStatus').html();
 	phoneContact='';
 
+
 	if (actionDetails.contact1){phoneContact+=(actionDetails.contact1.value+',    ');}
 	if (actionDetails.contact2){phoneContact+=(actionDetails.contact2.value+',    ');}
 	if (actionDetails.contact3){phoneContact+=(actionDetails.contact3.value+' ');}
@@ -613,6 +613,7 @@ viewContactElement.find('.js-usernameCC').html(username);
 viewContactElement.find('.js-onlineStatusCC').html(userLoginStatus);
 viewContactElement.find(".SMSContactsDiv").removeClass('disp-none').attr('profileChecksum',profileChecksum).bind('click',function(){SMSContactsDivBinding(this);});
 
+
 return viewContactElement;
 
 
@@ -623,7 +624,7 @@ return viewContactElement;
 
 
 ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
-{
+{ 
 	
 	var viewContactElement=$("#postViewContactLayer").clone();
 	var liFinalHtml="";
@@ -633,7 +634,7 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	}
 	if(Obj.actiondetails.contact1!=null)
 	{
-		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact1,true,'M');
+		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact1,true,'M','',profileChecksum);
 	}
 	else if(Obj.actiondetails.contact1_message)
 	{
@@ -642,7 +643,7 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	
 	if(Obj.actiondetails.contact2!=null)
 	{
-		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact2,true,'L');
+		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact2,true,'L','',profileChecksum);
 	}
 	else if(Obj.actiondetails.contact2_message)
 	{
@@ -698,17 +699,15 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	}
 	FinalHtml=viewContactElement.html();
 	jObject=$(FinalHtml);
-	var profileChecksum=this.buttonObj.profileChecksum;
+	var profileChecksum=this.buttonObj.profileChecksum;		
 
-	jObject.find('.reportInvalid').bind('click',function(){phoneReportInvalid(this,profileChecksum);});
 	jObject.find(".SMSContactsDiv").removeClass('disp-none').attr('profileChecksum',profileChecksum).bind('click',function(){SMSContactsDivBinding(this);});
-
+	jObject.find('.reportInvalid').bind('click',function(){showReportInvalidLayer(this);});
 	return jObject;
 }
 
-function ViewContactLiCreate(Obj,reportInvalid,phoneType,label)
+function ViewContactLiCreate(Obj,reportInvalid,phoneType,label,profileChecksum)
 {
-	
 	var liHtml = $("#cEViewContactListing").html();
 	if(Obj!=null)
 	{
@@ -717,6 +716,8 @@ function ViewContactLiCreate(Obj,reportInvalid,phoneType,label)
 		if(reportInvalid){
 			liHtml=liHtml.replace(/\{\{phonetype\}\}/g,"phoneType='"+phoneType+"'");
 			liHtml=liHtml.replace(/\{\{DISP_REPORT\}\}/g,"");
+			liHtml=liHtml.replace(/\{\{prochecksum\}\}/g,"prochecksum='"+profileChecksum+"'");
+
 		}
 		else
 			liHtml=liHtml.replace(/\{\{DISP_REPORT\}\}/g,"disp-none");
@@ -797,6 +798,16 @@ function cEButtonActionCalling(elementObj)
 	{
 		var buttonObj=new Button(elementObj);
 		buttonObj.request();
+		if(arrID[0] == "IGNORE"){
+			//console.log("ignore from view profile");
+			var chatData = elementObj.attr("data-chat");
+			if(chatData != undefined){
+				var chatSplitData = chatData.split(",");
+				if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+					updateNonRosterListOnCEAction({"user_id":chatSplitData[0],"action":chatSplitData[1]});
+				}
+			}
+		}
 	}
 	else
 	{
@@ -836,7 +847,7 @@ function hpOverlayBinding()
 }
 
 
-
+/*
 function phoneReportInvalid(ele,profileChecksum){
 if(!profileChecksum || !ele) return;
 
@@ -863,7 +874,7 @@ ajaxConfig.success=function(response){
 		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportInvalidLayer').fadeIn(300,"linear",function(){})}); 
 closeReportInvalidLayer=function(){
 
-		$('.js-overlay').eq(0).fadeOut(200,"linear",function(){$('#reportInvalidLayer').fadeOut(300,"linear",function(){})}); 
+		$('#reportInvalidLayer').eq(0).fadeOut(100,"linear",function(){$('.js-overlay').fadeOut(300,"linear",function(){})}); 
 
 }
 $('.js-overlay').bind('click',closeReportInvalidLayer);
@@ -875,7 +886,7 @@ jQuery.myObj.ajax(ajaxConfig);
 
 }
 
-
+*/
 
 function prePostResponse(type,buttonParent){
 switch (type){
@@ -927,6 +938,7 @@ $('.communicationParent').bind('click',
 			function () {	
 					communicationLayerAjax(1);
 			});	
+	customOptionButton('report_profile');
  })
 
 function openChatWindow(aJid,param,profileID,userName,have_photo,checksum){
@@ -951,4 +963,110 @@ function openChatWindow(aJid,param,profileID,userName,have_photo,checksum){
 
 	}
 	
+}
+
+
+function reportInvalidReason(ele,profileChecksum,username,photoUrl){
+if(!profileChecksum || !ele) return;
+var reason;
+var Otherreason='';
+var layerObj=$("#reportInvalidReason-layer");
+if(layerObj.find("#otherOptionBtn").is(':checked')) {
+ reason=layerObj.find("#otherOptionMsgBox textarea").eq(0).val();
+	if(!reason) {layerObj.find('#errorText').removeClass('disp-none');return;}
+	Otherreason = reason;
+}
+$('.js-overlay').unbind('click');
+
+var phoneType=ele;
+if (phoneType=='L') {var mobile='N';var phone='Y';}
+if (phoneType=='M') {var mobile='Y';var phone='N';}
+
+var rCode = $("input:radio[name=report_profile]:checked").val();
+
+ajaxConfig=new Object();
+if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("*Please Select a reason").addClass('colorerror').removeClass('color12');return;}
+if(!reason) reason=layerObj.find(".selected").eq(0).text().trim();
+if(!reason) return;
+showCommonLoader();
+reason=$.trim(reason);
+ajaxData={'mobile':mobile,'phone':phone,'profilechecksum':profileChecksum,'reasonCode':rCode,'otherReasonValue':Otherreason};
+ajaxConfig.url='/phone/reportInvalid';
+ajaxConfig.data=ajaxData;
+ajaxConfig.type='POST';
+ajaxConfig.success=function(response){
+	$('#reportInvalidReason-layer').fadeOut(300,"linear");
+	hideCommonLoader();
+	var jObject=$("#reportInvalidConfirmLayer");
+	jObject.find('.js-username').html(username);
+	jObject.find('.js-otherProfilePic').attr('src',photoUrl);
+	layerObj.find("#otherOptionMsgBox textarea").val('');
+		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportInvalidConfirmLayer').fadeIn(300,"linear",function(){})}); 
+
+closeInvalidConfirmLayer=function() {
+
+$('#reportInvalidConfirmLayer').fadeOut(200,"linear",function(){ 
+	$('.js-overlay').fadeOut(300,"linear")});
+	$('.js-overlay').unbind('click');
+
+};
+
+$('.js-overlay').unbind().bind('click',closeInvalidConfirmLayer);
+
+	}
+
+jQuery.myObj.ajax(ajaxConfig);
+
+}
+
+function showReportInvalidLayer(obj){
+	var layerObj=$("#reportInvalidReason-layer");
+	if(!layerObj.find(".selected").length) {layerObj.find('#RAReasonHead').text("Select reason").addClass('color12').removeClass('colorerror');}
+	var jObject=$("#reportInvalidReason-layer");
+	if(typeof(viewedProfileUsername)!="undefined" && viewedProfileUsername){
+	var otherUser = viewedProfileUsername;
+	var imgUrl = $("#profilePicScrollBar").attr('src');
+	jObject.find('.js-username').html(otherUser);
+	jObject.find('.js-otherProfilePic').attr('src',imgUrl);
+	}
+	else
+	{	
+		var parent = $(obj).closest('.CEParent');
+		var otherUser = parent.find('.js-usernameCE').html();
+		var imgUrl = parent.find('.js-searchTupleImage').eq(0).find('img').eq(0).attr('src');
+		jObject.find('.js-username').html(otherUser);
+		jObject.find('.js-otherProfilePic').attr('src',imgUrl);
+
+	}
+var phoneType = $(obj).attr('phonetype');
+var profileChecksum = $(obj).attr('prochecksum');
+$("#reportInvalidReasonLayer").unbind().bind('click',function(){reportInvalidReason(phoneType,profileChecksum,otherUser,imgUrl);});	
+
+$('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportInvalidReason-layer').fadeIn(300,"linear",function(){})}); 
+$('.js-overlay').unbind();
+
+closeReportInvalidLayer=function() {
+
+$('#reportInvalidReason-layer').fadeOut(200,"linear",function(){ 
+	$('.js-overlay').fadeOut(300,"linear")});
+	
+};
+$('#reportInvalidCross').unbind().bind('click',closeReportInvalidLayer);
+}
+
+
+function customOptionButton(optionBtnName) {
+       var checkBox = $('input[name="' + optionBtnName + '"]');
+       $(checkBox).each(function() {
+               $(this).wrap("<span class='custom-checkbox-reportAbuse'></span>");
+                       if ($(this).is(':checked')) {
+                               $(this).closest('li').addClass("selected");
+                       }
+                       else $(this).closest('li').removeClass("selected"); 
+               });
+               $(checkBox).click(function() {
+                       $('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
+                       $(this).closest('li').addClass("selected");
+               });
+
 }

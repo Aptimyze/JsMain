@@ -113,7 +113,7 @@ class InformationTypeAdapter
                 break;
 	    case "VISITORS":
 	        $visitorObj                              = new Visitors($this->profileId);
-                $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"]);
+                $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"],array("matchedOrAll"=>$condition["matchedOrAll"]));
 			break;
 	    case "MY_MATCHES":
 		$SearchCommonFunctions = new SearchCommonFunctions;

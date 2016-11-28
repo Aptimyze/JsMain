@@ -209,50 +209,40 @@ class phoneActions extends sfActions
 	die;
   }
 
-//this method is used for reporting a phone number as abuse
+//this method is used for reporting a phone number as invalid
 	public function executeReportInvalid(sfWebRequest $request)
 	{
-		
-   		
+   		$reasonNumber = $request->getParameter('reasonCode'); 
+   		$reason = phoneEnums::$mappingArrayReportInvalid[$reasonNumber-1];
+   		$otherReason = "";
+   		if($reasonNumber == 5)
+   		$otherReason = $request->getParameter('otherReasonValue');	
 		$respObj = ApiResponseHandler::getInstance();
 		$profileChecksum=$request->getParameter('profilechecksum');
 		$phone=$request->getParameter('phone');
 		$mobile=$request->getParameter('mobile');
    		
-   		if(!$profileChecksum || ($phone!='Y' && $phone!='N') || ($mobile!='Y' && $mobile!='N')) {
+   		if(!$profileChecksum) {
    			$respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();
 	die;
   }
+     	if(!$reasonNumber)
+     	{
+     			$respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_NO_OPTION_SELECTED);
+	$respObj->setResponseBody($result);
+	$respObj->generateResponse();
+	die;
+     	}
 
    		$profile2=new Profile();
 		$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
    		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
 		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
-   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'');
-   			$profile2->getDetail($profileid,"PROFILEID");
-			$result['username']=$profile2->getUSERNAME();
-			
-			$havePhoto=$profile2->getHAVEPHOTO();
-			if($havePhoto=='Y'){
-			$pictureServiceObj=new PictureService($profile2);
-			$profilePicObj = $pictureServiceObj->getProfilePic();
-			if($profilePicObj){
-			$thumbNailArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getThumbailUrl(),'ThumbailUrl','',$otherGender);
-              if($thumbNailArray[label] != '')
-                   $thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
-               else
-                   $thumbNail = $thumbNailArray['url'];
-           }
-			else $thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
-
-
-		}
-		else 
-				$thumbNail = PictureFunctions::getNoPhotoJSMS($otherGender,'ProfilePic120Url');
-			$result['userPhoto']=$thumbNail;
-    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);
+    $result['message']='Thank you for helping us . If our team finds this number invalid we will remove this number and credit you with a contact as compensation.';	
+    $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_SUCCESS);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();
 	die;

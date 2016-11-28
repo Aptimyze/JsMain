@@ -1,3 +1,55 @@
+function getIosVersionOne(ua) {
+    //return false;
+    var ua = ua || navigator.userAgent;
+    var match= ua.match(/(iPhone);/i);
+    //console.log(match);
+    var OsVersion=ua.match(/OS\s[0-9.]*/i);
+    //console.log(OsVersion);    
+    if(match==null)
+        return false;
+    else if(OsVersion==null)
+    {
+        return false
+    }
+    else if(OsVersion[0].substring(3,5) >= 7)
+        return true;
+    else
+        return false;
+    
+}
+
+
+function getAndroidVersionOne(ua) {
+  var ua = ua || navigator.userAgent;
+  var android=ua.indexOf("Android");
+  var match = ua.match(/Android\s([0-9\.]*)/);
+  var mobile=ua.indexOf("Mobile");
+  var operaMini=ua.indexOf("Opera Mini");
+  if(android==-1)
+   return false;
+ else if(operaMini!=-1){
+   OperaMiniFlag=1;
+   return true;
+ }
+ else if(match==null)
+ {
+   return true;
+ }
+ else if(typeof(parseFloat(match[1]))=='number')
+ {
+   var androidVersion=match[1].substring(0,3);
+   if(androidVersion>2.3)
+    return true;
+  else if(androidVersion==2.3 && match[1].charAt(4)>0)
+    return true;
+  else
+    return false;
+}
+else
+ return true;
+        
+  };
+
 $(function(){
            
 
@@ -11,11 +63,11 @@ $(function(){
 			hgt = (hgt)+"px";
 			$('#headerimg1').css( "height", hgt );
 	  
-           if(getAndroidVersion())
+           if(getAndroidVersionOne())
            {
                $("#appLinkAndroid").show();
            }
-           if(getIosVersion())
+           if(getIosVersionOne())
            {
 			   $("#appLinkIos").show();
 		   }
@@ -26,15 +78,17 @@ $(function(){
             //src="~$IMG_URL`/images/jsms/commonImg/mainLogoNew.png" 
             setTimeout(function(){ 
                 $("#mainContent").append("<div class='icons1 uicon dn'></div> <div class='mainsp baricon dn'></div>");
+                loadCSS("IMG_URL/min/?f="+logoutCssFiles);
             }, 5000);
             $("#hamburgerIcon").on("click", function() {
                 if($("#hamburger").length == 0){
                     $(".loaderSmallIcon").attr("src","IMG_URL/images/jsms/commonImg/loader.gif").removeClass("dn");
                     $("#hamIc").hide();
-                    $("#perspective").append('<div id="hamburger" class="hamburgerCommon fullhgt fullwid dn"><div><div id="outerHamDiv" class="fullwid outerdiv"><div class="wid76p hamlist fl" id="mainHamDiv"><div class="clearfix fontlig padHamburger"></div><div class=" pt20  hampad1"><ul class="fontlig"><li><a href="#" onclick=translateSite("http://hindi.jeevansathi.com"); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li><li><a id="abc" href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px">Home</a></li><li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li> <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li><li><a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide=1 class="white">Browse by Community</a></li><li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li><li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li></ul></div><div class="hampad1"><ul class=" brdr9_ham fontlig"><li class="pt20"><a href="" onclick="window.location.href = \'tel:18004196299\';" title="call" alt="call" class="white">1800-419-6299 <span class="dispibl padl10 opa70 f12">Toll Free</span></a></li></ul></div><div class="hampad1" id="appDownloadLink2" style="display:none"><ul class=" brdr9_ham fontlig"><li class="pt20 white fb1 ham_opa fontrobbold">It\'s Free</li><li class=""><a onclick="window.location.href="/static/appredirect?type=jsmsHamburger";" bind-slide=1 class="white">Download  Android App </a></li></ul></div><div class="hampad1" id="appleAppDownloadLink2" style="display:none"><ul class=" brdr9_ham fontlig"><li class="pt20 white fb1 ham_opa fontrobbold">It\'s Free</li><li class=""><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger&channel=iosLayer\';" bind-slide=1 class="white">Download iOS App </a></li></ul></div></div><div class="posfix ham_pos1 fullwid js-loginBtn"><div class="pad1"><div class="ham_bdr1"><div id="loggedOutHamFoot" class="pt10 fontlig f17"><div class="fl wid49p txtc ham_bdr2"><a bind-slide=1 href="/static/LogoutPage" class="white lh30">Login</a></div><div class="fl wid49p txtc"><a bind-slide=1 href="/register/page1?source=mobreg5" class="white lh30">Register</a></div></div></div></div></div></div></div></div>');
+                    loadCSS('IMG_URL/min/?f=/'+hamCss);
                     $("#hamburgerIcon").off("click");
+                    $("#perspective").append('<div id="hamburger" class="hamburgerCommon fullhgt fullwid dn"><div><div id="outerHamDiv" class="fullwid outerdiv"><div class="wid76p hamlist fl" id="mainHamDiv"><div class="clearfix fontlig padHamburger"></div><div class=" pt20  hampad1"><ul class="fontlig"><li><a href="#" onclick=translateSite("http://hindi.jeevansathi.com"); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li><li><a id="abc" href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px">Home</a></li><li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li> <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li><li><a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide=1 class="white">Browse by Community</a></li><li><a href="/contactus/index" bind-slide=1 class="white">Contact Us</a></li><li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li></ul></div><div class="hampad1"><ul class=" brdr9_ham fontlig"><li class="pt20"><a href="" onclick="window.location.href = \'tel:18004196299\';" title="call" alt="call" class="white">1800-419-6299 <span class="dispibl padl10 opa70 f12">Toll Free</span></a></li></ul></div><div class="hampad1" id="appDownloadLink2" style="display:none"><ul class=" brdr9_ham fontlig"><li class="pt20 white fb1 ham_opa fontrobbold">It\'s Free</li><li class=""><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger\';" bind-slide=1 class="white">Download  Android App </a></li></ul></div><div class="hampad1" id="appleAppDownloadLink2" style="display:none"><ul class=" brdr9_ham fontlig"><li class="pt20 white fb1 ham_opa fontrobbold">It\'s Free</li><li class=""><a onclick="window.location.href=\'/static/appredirect?type=jsmsHamburger&channel=iosLayer\';" bind-slide=1 class="white">Download iOS App </a></li></ul></div></div><div class="posfix ham_pos1 fullwid js-loginBtn"><div class="pad1"><div class="ham_bdr1"><div id="loggedOutHamFoot" class="pt10 fontlig f17"><div class="fl wid49p txtc ham_bdr2"><a bind-slide=1 href="/static/LogoutPage" class="white lh30">Login</a></div><div class="fl wid49p txtc"><a bind-slide=1 href="/register/page1?source=mobreg5" class="white lh30">Register</a></div></div></div></div></div></div></div></div>');
                     var imported = document.createElement('script');
-                    imported.src = '/js/jsms/hamburger/ham_js.js';
+                    imported.src = 'IMG_URL/min/?f=/'+hamJs;
                     imported.onload = function() {
                         BindNextPage();
                         $("#hamburgerIcon").click();
@@ -256,4 +310,14 @@ if(navigator.userAgent.toLowerCase().indexOf("chrome") >= 0 || navigator.userAge
                     );
                 }, 500);
             }
+}
+
+function loadCSS(href) {
+     var cssLink = $("<link>");
+     $("head").append(cssLink);
+     cssLink.attr({
+       rel:  "stylesheet",
+       type: "text/css",
+       href: href
+     });
 }
