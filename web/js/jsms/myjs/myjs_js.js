@@ -365,6 +365,7 @@ function loadnew(eleObj) {
 		//crossDomain: true,
 		success: function(rsp)
                 {
+                if(CommonErrorHandling(rsp) != true) return;
                 if (rsp[eleObj._mapString]['tuples']) 
                 {
                 var x = child[0].outerHTML,
