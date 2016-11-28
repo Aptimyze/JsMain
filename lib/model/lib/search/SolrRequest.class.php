@@ -319,7 +319,7 @@ class SolrRequest implements RequestHandleInterface
                         }
                 }
                 if(!empty($setOrCond)){
-                        if(isset($setOrCond["CITY_RES"]) && isset($setOrCond["COUNTRY_RES"])){ 
+                        if((isset($setOrCond["CITY_RES"]) || isset($setOrCond["CITY_INDIA"])) && isset($setOrCond["COUNTRY_RES"])){ 
                                 $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
                                 $this->clusters[]="&facet.field={!ex=city_india}CITY_INDIA";
                                 $this->clusters[]="&facet.field={!ex=state}STATE";
