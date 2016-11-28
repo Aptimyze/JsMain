@@ -43,7 +43,7 @@ while($row=mysql_fetch_array($res))
                 $rowup=mysql_fetch_assoc($resup);
 		//$sqlup="update newjs.JPROFILE set LAST_LOGIN_DT='$rowup[SORT_DT]' where PROFILEID='$profileid'";
 		//mysql_query($sqlup,$db) or logError($sqlup);
-                $arrFields1 = array('LAST_LOGIN_DT'=>$rowup[SORT_DT]);
+                $arrFields1 = array('LAST_LOGIN_DT'=>CommonUtility::makeTime($rowup[SORT_DT]));
                 $objUpdate->editJPROFILE($arrFields1,$row[PROFILEID],"PROFILEID");
 		$myDbName=getProfileDatabaseConnectionName($profileid);
 
