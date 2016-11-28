@@ -420,7 +420,7 @@ class PictureFunctions
 	* @param url : url of the photo to be displayed.
 	* @return arr aray containg photo message and action on message;
 	*/
-	public static function mapUrlToMessageInfoArr($url,$photoType='Profile',$isPhotoRequested='',$gender="")
+	public static function mapUrlToMessageInfoArr($url,$photoType='Profile',$isPhotoRequested='',$gender="", $noStaticImage=false)
 	{
 		$clickAction = null;
 		$msg = null;
@@ -472,7 +472,7 @@ class PictureFunctions
 		$arr["label"] = $msg;
 		if($msg!=null)
 		{
-			if(MobileCommon::isApp())
+			if(MobileCommon::isApp() || $noStaticImage)
 				$arr["url"] = null;
 			else
 				$arr["url"] =self::getNoPhotoJSMS($gender,$photoType);
