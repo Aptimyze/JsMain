@@ -144,7 +144,6 @@ function disableFieldsOption(fieldId,value){
 }
 
 function updateCastOption(religionValArray){
-  console.log("1");
   var casteField = $('#partner_caste_arr');
   if(false === religionValArray instanceof Array && typeof(religionValArray) == "string" && religionValArray.length ){
     var temp = religionValArray;
@@ -239,21 +238,6 @@ function showHideField(fieldSelector,bShow,clearField){
     
   }
 }
-
-/*function showHideRemoveLabel(param)
-{
- console.log("rem");
-  console.log(param.val());
-  var remID = param.attr('id');
-  console.log(remID);
-  if(param.val()!=null)
-  {
-    $('#'+remID+'-rem').css('visibility','visible');
-  }
- 
- 
-
-}*/
 
 function showHideRem2(param)
 {
