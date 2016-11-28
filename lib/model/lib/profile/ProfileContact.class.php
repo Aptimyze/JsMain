@@ -121,6 +121,17 @@ class ProfileContact
 		return $result;
 	}
 
+	public function updateAltMobile($profileid, $altMobile)
+	{
+		$objProCacheLib = ProfileCacheLib::getInstance();
+		$result = self::$objJprofileContact->updateAltMobile($profileid, $altMobile);
+		if($result)
+		{
+			$paramArr = array('PROFILEID' => $profileid, 'ALT_MOBILE' => $altMobile);
+			$objProCacheLib->updateCache($paramArr, ProfileCacheConstants::CACHE_CRITERIA, $profileid, __CLASS__);
+		}
+	}
+
 	public function update($pid, $paramArr = array())
 	{
 		$bResult = self::$objJprofileContact->update($pid, $paramArr);
@@ -129,6 +140,11 @@ class ProfileContact
 		}
 
 		return $bResult;
+	}
+
+	public function checkPhone($numberArray='',$isd='')
+	{
+		return self::$objJprofileContact->checkPhone($numberArray, $isd);
 	}
 }
 ?>

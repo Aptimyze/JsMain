@@ -151,6 +151,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
                                 $prep->execute();
                         }
                         $this->logFunctionCalling(__FUNCTION__);
+                        return true;
                 }catch(PDOException $e)
                 {
                         throw new jsException($e);
