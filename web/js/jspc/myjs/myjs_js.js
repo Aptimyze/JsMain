@@ -38,7 +38,7 @@ $(function(){
 
 	function myjsSlider(id)
 	{ //alert(1);
-    //alert(id);
+    
     try{
 		$("#"+id).unbind(clickEventType);
 		var getID,b,getWidth,visWidth,getLeft,p;					
@@ -47,7 +47,8 @@ $(function(){
      // alert('is b1 : '+b[1]);	
 			getWidth =$('#js-'+b[1]).width();
 			visWidth = $('#disp_'+b[1]).width();
-     // alert(visWidth);
+      var idList = b[1].split('_');
+   //   alert(idList[0]);
 			p=Math.abs($('#js-'+b[1]).position().left);
      // alert('value of p is : '+p);
      // alert(visWidth);alert(getWidth);
@@ -66,6 +67,9 @@ $(function(){
       if(p == 0 && b[0] == "nxt")
          $("#prv-"+b[1]).show();
        */
+      var currentBox = getCurrentBox(idList[0]);//alert(currentBox);
+      var totalBoxes = getTotalBoxes(idList[0]);//alert(totalBoxes);
+
 			if((b[0]=="nxt")&&(getWidth>visWidth))
 			{	
         diff=Math.floor(getWidth-p-visWidth);
@@ -79,6 +83,14 @@ $(function(){
 								myjsSlider(id);						
 							});
 				  }); 
+        
+        if(currentBox == totalBoxes - 1)
+          $("#nxt-"+idList[0]+'_List').hide();
+        if(currentBox == 1)
+        {
+          $("#prv-"+idList[0]+'_List').show();
+        }
+
 				}
 				else{
           
@@ -105,6 +117,14 @@ $(function(){
 					p=-(p-visWidth);
 					if(Math.floor(p)<=0)
 						$('#js-'+b[1]).animate({left:p},500, function() {
+              if(currentBox == 2)
+              {
+                $("#prv-"+idList[0]+'_List').hide();
+              }
+              if(currentBox == totalBoxes)
+              {
+                $("#nxt-"+idList[0]+'_List').show(); 
+              }
 						// Animation complete.
 						$("#"+id).bind(clickEventType,function(){
 								myjsSlider(id);						
@@ -563,7 +583,8 @@ function postActionViewContactClose(checksum,url,count,formtype)
 function generateFaceCard(Object)
 {
 
-  try{
+  try{//alert(Object.name);
+  
 	var tracking = "";
 		if(Object.data.tracking!==undefined)
 			tracking = Object.data.tracking;
@@ -597,6 +618,7 @@ function generateFaceCard(Object)
     else if(Object.name=="VERIFIEDMATCHES"){
       GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','Matches Verified by Visit Section - Send Interest',loggedInJspcGender,'')";
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','Matches Verified by Visit Section - Tuple',loggedInJspcGender,'')";
+
     }
 
 
@@ -668,30 +690,6 @@ function generateFaceCard(Object)
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,"");
 			$("#"+Object.name).after(Object.containerHtml);
 			$("#"+Object.name).addClass("disp-none");
-		 	var listName=Object.list;
-			$("#prv-"+Object.list).bind(clickEventType,function(){
-				myjsSlider("prv-"+listName);
-        if(listName == 'DAILYMATCHES_List')
-        trackJsEventGA('My JS JSPC', 'Match Alert Section - Left',loggedInJspcGender,'');						
-			 else if (listName == 'JUSTJOINED_List')
-        trackJsEventGA('My JS JSPC', 'Just Joined Section - Left',loggedInJspcGender,'');             
-       else if (listName == 'VERIFIEDMATCHES_List')
-        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Left',loggedInJspcGender,'');
-        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
-        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Left',loggedInJspcGender,'');           
-      });
-			$("#nxt-"+Object.list).click(function(){
-				myjsSlider("nxt-"+listName);
-        if(listName == 'DAILYMATCHES_List')
-        trackJsEventGA('My JS JSPC', 'Match Alert Section - Right',loggedInJspcGender,'');           
-       else if (listName == 'JUSTJOINED_List')
-        trackJsEventGA('My JS JSPC', 'Just Joined Section - Right',loggedInJspcGender,'');             
-       else if (listName == 'VERIFIEDMATCHES_List')
-        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Right',loggedInJspcGender,'');
-        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
-        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Right',loggedInJspcGender,'');  
-			});
-			topSliderInt('init');
 			
 			if(Object.name=="DAILYMATCHES")
 			{
@@ -703,6 +701,7 @@ function generateFaceCard(Object)
 				bellCountStatus++;
 				createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);				
 			}
+
 			else if(Object.name=="JUSTJOINED")
 			{
 				//Just joined counts in profile bar			
@@ -713,8 +712,44 @@ function generateFaceCard(Object)
 				bellCountStatus++;
 				createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 			}
-		
-			
+		  
+      var listName=Object.list;
+      $("#prv-"+Object.list).bind(clickEventType,function(){
+        myjsSlider("prv-"+listName);
+        if(listName == 'DAILYMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Match Alert Section - Left',loggedInJspcGender,'');           
+       else if (listName == 'JUSTJOINED_List')
+        trackJsEventGA('My JS JSPC', 'Just Joined Section - Left',loggedInJspcGender,'');             
+       else if (listName == 'VERIFIEDMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Left',loggedInJspcGender,'');
+        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
+        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Left',loggedInJspcGender,'');
+                   
+      });
+      $("#nxt-"+Object.list).click(function(){
+        myjsSlider("nxt-"+listName);
+        if(listName == 'DAILYMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Match Alert Section - Right',loggedInJspcGender,'');           
+       else if (listName == 'JUSTJOINED_List')
+        trackJsEventGA('My JS JSPC', 'Just Joined Section - Right',loggedInJspcGender,'');             
+       else if (listName == 'VERIFIEDMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Right',loggedInJspcGender,'');
+        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
+        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Right',loggedInJspcGender,''); 
+        $("#prv-"+Object.list).show();
+
+      });
+      topSliderInt('init');
+      var listName=Object.list;
+      var currentBox = getCurrentBox(Object.name);//alert(currentBox);
+      var totalBoxes = getTotalBoxes(Object.name);//alert(totalBoxes);
+      if(currentBox == 1){ //alert('in');
+          $("#prv-"+Object.list).hide();
+        }
+         if(currentBox == totalBoxes){ //alert('inside');
+          $("#nxt-"+Object.list).hide();
+        }
+
       $("#"+Object.containerName).removeClass("disp-none");
     }
     photo_init();
@@ -922,15 +957,17 @@ function reArrangeDivsAfterDissapear(value,position,id)
   var totalBoxes = getTotalBoxes(id);
   var numberOfProfiles = getNumberOfProfiles(id);
 //alert('in');
-  alert('current box is : '+currentBox); alert('totalBoxes are :'+totalBoxes); alert('number of pro are :'+numberOfProfiles);
+ // alert('current box is : '+currentBox); alert('totalBoxes are :'+totalBoxes); alert('number of pro are :'+numberOfProfiles);
 
   if(!isFirstBox(currentBox) && (onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresent(currentBox,totalBoxes,numberOfProfiles,id)))
   {
       p=Math.abs($('#js-'+id+'_List').position().left);
     //  alert('value of p is : '+p);
       p=-(p-visWidth);
-          if(Math.floor(p)<=0)
+          if(Math.floor(p)<=0){
             $('#js-'+id+'_List').animate({left:p},500);
+            $('#nxt-'+id+'_List').show();
+          }
 
     //  $('#js-'+id).animate({left:p},500,
   }
@@ -998,8 +1035,9 @@ var profileList  = $(ele).parent().attr('id');
 
     function getTotalBoxes(id)
     {
-
+     // alert('debug');
             var totalWidth = $('#js-'+id+'_List').width();
+           // alert(totalWidth);
             var visibleBoxes = Math.ceil(totalWidth/990);
 
             return visibleBoxes;
