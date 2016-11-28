@@ -1,4 +1,4 @@
-var clickEventType="click", cssBrowserAnimProperty=null,sliderNav={};
+var clickEventType="click", cssBrowserAnimProperty=null,sliderNav={'VERIFIEDMATCHES_List':1,'DAILYMATCHES_List':1,'JUSTJOINED_List':1,'LASTSEARCH_List':1,'DESIREDPARTNERMATCHES_List':1};
 
 function topSliderInt(param){
 	if(param=="init")
@@ -50,7 +50,6 @@ $(function(){
 			p=Math.abs($('#js-'+b[1]).position().left);
       var idList = (b[1].split('_'));
       var totalBoxes = getTotalBoxes(idList[0]);
-
       if(!sliderNav[b[1]])
       {
         sliderNav[b[1]]=1;
@@ -68,6 +67,7 @@ $(function(){
           $("#nxt-"+idList[0]+'_List').hide();
           $("#prv-"+idList[0]+'_List').show();
 					p=p+visWidth;
+
 					$('#js-'+b[1]).animate({left:-p}, 500, function() {
 					// Animation complete.
 					elem.bind(clickEventType,function(){
@@ -933,24 +933,64 @@ function reArrangeDivsAfterDissapear(value,position,id)
   $("#"+position).text(value);
   var currentBox = getCurrentBox(id);
   topSliderInt("init");
-  var visWidth = 990;
   var totalBoxes = getTotalBoxes(id);
   var numberOfProfiles = getNumberOfProfiles(id);
-  if(!isFirstBox(currentBox) && (onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresent(currentBox,totalBoxes,numberOfProfiles,id)))
+  if(onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresent(currentBox,totalBoxes))
   {
-  $("#nxt-"+id+"_List").click();  
+    if(!isFirstBox(currentBox))
+          $("#prv-"+id+"_List").click();
+    else
+      {
+        if(id == 'DAILYMATCHES')
+        {
+          $("#DAILYMATCHES_Container").remove()
+          var dailyMatchObj =new dailyMatches();
+          dailyMatchObj.pre();
+          dailyMatchObj.request();
+        }
+        if(id == 'JUSTJOINED')
+        {
+          $("#JUSTJOINED_Container").remove()
+          var justJoinedMatchObj =new justJoinedMatches();
+          justJoinedMatchObj.pre();
+          justJoinedMatchObj.request();
+        }
+        if(id == 'LASTSEARCH')
+        {
+          $("#LASTSEARCH_Container").remove()
+          var lastSearch =new lastSearchMatches();
+          lastSearch.pre();
+          lastSearch.request();
+        }
+        if(id == 'VERIFIEDMATCHES')
+        {
+          $("#VERIFIEDMATCHES_Container").remove()
+          var verifiedMatchObj =new verifiedMatches();
+          verifiedMatchObj.pre();
+          verifiedMatchObj.request();
+        }
+        if(id == 'DESIREDPARTNERMATCHES')
+       {  
+          $("#DESIREDPARTNERMATCHES_Container").remove()
+          var desiredMatchObj =new desiredPartnerMatches();
+          desiredMatchObj.pre();
+          desiredMatchObj.request();
+        }
+
+
+      }        
   }
 
   if(viewCardInList(currentBox,totalBoxes,id,numberOfProfiles))
   {
      $('#nxt-'+id+'_List').hide();
   }
- 
+
+
 }
 
     function getCurrentBox(id)
-    {  // alert('#js-'+id+'_List');
-
+    {   
               return sliderNav[id+'_List'];
     }
 
@@ -970,7 +1010,7 @@ function reArrangeDivsAfterDissapear(value,position,id)
         return 0;
     }
 
-    function noCardPresent(currentBox,totalBoxes,numberOfProfiles,id)
+    function noCardPresent(currentBox,totalBoxes)
     {
         if(currentBox > totalBoxes)
         {
@@ -989,12 +1029,11 @@ function reArrangeDivsAfterDissapear(value,position,id)
     }
 
     function onlyViewAllCardPresent(currentBox ,totalBoxes,id,numberOfProfiles)
-    {
-      var tupleNumber = (currentBox)*4-3;
-      if(currentBox)
-      {
-        if($('ul#js-'+id+'_List li:nth-last-child(1)').find('.colrw').text() == "View All")
-        {
+    { 
+      if(currentBox == totalBoxes && numberOfProfiles%4 == 1)
+      { 
+        if($('ul#js-'+id+'_List li:nth-last-child(1)').find('#idForViewAllCard').text() == "View All")
+        { 
           return 1;
         }
       }

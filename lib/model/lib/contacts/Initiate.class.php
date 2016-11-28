@@ -227,13 +227,13 @@ class Initiate extends ContactEvent{
         try
         {
                 $instantNotificationObj = new InstantAppNotification("EOI");
-            //    $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
+                $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
         }
         catch(Exception $e)
         {
           throw new jsException($e);
         }
-  /*      try
+        try
         {
           //send instant JSPC/JSMS notification
           $producerObj = new Producer();
@@ -247,7 +247,7 @@ class Initiate extends ContactEvent{
         catch (Exception $e) {
           throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
         }
-*/    }
+    }
       
       
       
@@ -314,7 +314,7 @@ class Initiate extends ContactEvent{
           
       $isFiltered = $this->_makeEntryInContactsOnce();
 
-/*
+
       try {
         //send instant JSPC/JSMS notification
         $producerObj = new Producer();
@@ -327,9 +327,9 @@ class Initiate extends ContactEvent{
       } catch (Exception $e) {
         throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
       }
-*/
+
       if (!$isFiltered && $this->contactHandler->getPageSource()!='AP' && $this->_sendMail=='Y') { // Instant mailer
-  //      $this->sendMail();
+        $this->sendMail();
       }
       
        $viewedEntryDate = $this->viewed->getENTRY_DT();
