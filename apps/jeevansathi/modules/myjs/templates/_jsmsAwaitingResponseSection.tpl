@@ -13,8 +13,6 @@
 <!--endt:slider div-->
 <!--start:div-->
 
-     <div class="swrapper" id="swrapper">
-        <div class="wrap-box" id="wrapbox">
     <div id="awaiting_tuples"  style=" overflow-x:auto;white-space: nowrap; margin-left:10px; font-size:0px;width:100%">
         ~foreach from=$eoiData.tuples item=tupleInfo key=id`
                
@@ -24,7 +22,7 @@
       
        
        
-        <div style="margin-right:10px; display: inline-block;margin-left:0px; display:none;position:relative;" id="loadingMorePic">
+        <div class="dn" style="margin-right:10px; margin-left:0px; position:relative;" id="loadingMorePic">
         <div class="bg4">
              	<div class="row minhgt199">
                 	<div class="cell vmid txtc pad17">
@@ -34,17 +32,13 @@
                     </div>
                 </div>
              </div> </div>
-        ~for $i=1 to 10`
+        <div id="tupleBasicStruct" style="display:none;"> 
             <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;"></div>
-        ~/for`
-        
+        </div>
     
     </div>
 
-         
-    </div>
-    </div>
-    
+
     
 <div class="hgt10"></div>
 
