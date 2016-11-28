@@ -68,11 +68,43 @@ class ProfileContact
 	{
 		$bServedFromCache = false;
 		$objProCacheLib = ProfileCacheLib::getInstance();
-		$valueArray =  array('PROFILEID'=>$profileid);
-		if(is_array($valueArray) && in_array(ProfileCacheConstants::CACHE_CRITERIA, $valueArray))
+
+		if(is_array($valueArray) && in_array(ProfileCacheConstants::CACHE_CRITERIA, $valueArray) && $excludeArray == "" && $greaterThanArray == "")
 		{
 			// Todo: From cache nd set
+			// profileId array
+			$pid_arr = explode(",", $valueArray['PROFILEID']);
+			$result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $pid_arr, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__);
+			
+			if($result && false !== $result)
+			{
+				$bServedFromCache = true;
+				$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+			}
+
+			if($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE)
+			{
+				$this->logCacheConsumeCount(__CLASS__);
+				// Todo: $indexProfileId case handle
+				return $result;
+			}
+
+			$result = self::$objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);
+
+			if(is_array($result) && count($pid_arr) == 1 && false === ProfileCacheLib::getInstance()->isCommandLineScript())
+			{
+				$result['PROFILEID'] = $pid;
+				ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
+			}
+
+			if(is_array($pid))
+			{
+				ProfileCacheLib::getInstance()->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result);
+			}
+
+			return $result;
 		}
+		return self::$objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);	
 	}
 
 	public function getProfileContacts($pid)
