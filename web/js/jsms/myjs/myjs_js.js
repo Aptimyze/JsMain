@@ -408,7 +408,6 @@ function loadnew(eleObj) {
  
             if (!rsp[eleObj._mapString]['show_next']) {
                 eleObj.page = -1;
-                return;
             }
             else eleObj.page++;
 
