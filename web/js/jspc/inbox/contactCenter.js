@@ -168,7 +168,7 @@ if(typeof response.searchid!="undefined")
     }
 	//show horroscope/photo request option if requests tab is selected
 	showRequestsSubTypeListings(response,uploadRequestParamArr);
-	   
+	handleExpireInterest(activeHorizontalTabInfoID);
        	//typeOfApi='';
 	if(response.no_of_results!=0)
 	{
@@ -631,6 +631,8 @@ function dataForCCPagination(totalCount,page_index,no_of_results) {
  */
 function setActiveCCTabs(VerticalTab,HorizontalTabInfoID)
 {
+	if ( HorizontalTabInfoID == 23 )
+		VerticalTab = 0;
 	$("#VerticalTab"+VerticalTab).addClass("active").addClass("jsButton-disabled");
 	$("#HorizontalTab"+HorizontalTabInfoID).addClass("jsButton-disabled");
 	$("#Request"+activeRequestTypeID).addClass("jsButton-disabled");
@@ -901,4 +903,30 @@ function hidePersonalisedMessage()
 	});
 
 
+}
+
+function handleExpireInterest(activeHorizontalTabInfoID) {
+	
+	if ( activeHorizontalTabInfoID == 23 )
+	{
+		$('#ccHorizontalTabsBar > li').hide();
+		if ( $('#HorizontalTab23').length == 0)
+		{
+			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab23" data-id="23" data-infoId="23" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Intersts Expiring</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine23"></li>');
+		}
+		else
+		{
+
+		$('#HorizontalTab23').addClass('jsButton-disabled');
+		$('#horizontalActiveLine23').show();
+			
+			$('#HorizontalTab23').show();
+		}
+	}
+	else
+	{
+		$('#ccHorizontalTabsBar > li').show();	
+		$('#HorizontalTab23').show();
+		$('#horizontalActiveLine23').hide();
+	}
 }

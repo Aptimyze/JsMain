@@ -59,10 +59,11 @@
 			</div-->
 			<div class="clr"></div>
 		</div>
-	
+  
                         
       ~/if` 
       
+      <div><p id="expire_message" class="txtc disp-none" style="display:none;background-color: #fefdff">These interests will expire in this week. Take action</p></div>
   </div>
 </div>
 
@@ -108,5 +109,4 @@ var contactTracking = '~$tracking`';
 var NAVIGATOR = "~$NAVIGATOR`";
 var stypeKey = '';
 var contactEngineChannel = "CC";
-
 </script>

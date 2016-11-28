@@ -26,6 +26,7 @@ class PROFILE_COMMUNICATION_ENUM_INFO
 		self::$informationTypeEnum["ACCEPTANCES_RECEIVED"]       = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_RECEIVED"]          = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_RECEIVED_FILTER"]          = "ContactsRecord";
+		self::$informationTypeEnum["INTEREST_EXPIRING"]          = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_SENT"]              = "ContactsRecord";
 		self::$informationTypeEnum["DECLINE_RECEIVED"]           = "ContactsRecord";
 		self::$informationTypeEnum["NOT_INTERESTED"]           = "ContactsRecord";

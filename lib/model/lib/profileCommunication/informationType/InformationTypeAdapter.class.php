@@ -30,6 +30,12 @@ class InformationTypeAdapter
                 $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
                 $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
                 break;
+            case "INTEREST_EXPIRING":
+                $contactsObj                          = new ContactsRecords();
+                $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+                $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
+                $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
+                break;
             case "CONTACTS_VIEWED":
 				if(CommonFunction::isPaid($subscription))
                 {

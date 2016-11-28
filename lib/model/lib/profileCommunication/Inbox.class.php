@@ -165,7 +165,21 @@ class Inbox implements Module
 						$key = "IGNORED_PROFILES";
 						$memKeyNotExists=1;
 						break;
-				} 
+					case "INTEREST_EXPIRING":
+						$key = "INTEREST_EXPIRING";
+						$memKeyNotExists=1;
+						break;
+				}
+				if ( $key == "INTEREST_EXPIRING")
+ 				{
+ 					$where['TYPE']="I";
+ 					$where["RECEIVER"]=$this->profileObj->getPROFILEID();
+ 					$dbName = JsDbSharding::getShardNo($this->profileObj->getPROFILEID());
+ 					$contactsObj = new newjs_CONTACTS($dbName);
+ 					$group             = '';
+ 					$contactsCount = $contactsObj->getExpiredContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
+ 					$countObj[$infoTypenav["PAGE"]] = $contactsCount[0]["COUNT"];
+ 				} 
 			
 				if($key == "IGNORED_PROFILES")
 				{
@@ -493,6 +507,17 @@ class Inbox implements Module
 				}	
 
 			}
+			if ($infoType == "INTEREST_EXPIRING") {
+				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$bday                                             = mktime(0, 0, 0, date("m"), date("d") - 84, date("Y"));
+				$back_90_days                                     = date("Y-m-d", $yday);
+				$back_84_days                                     = date("Y-m-d", $bday);
+				$condition["WHERE"]["LESS_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_90_days 00:00:00";
+				$condition["WHERE"]["GREATER_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_84_days 00:00:00";
+			}
+
+
 		if ($infoType == "FILTERED_INTEREST") {
 				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);

@@ -33,7 +33,10 @@ $('body').on('click', '.searchNavigation', function()
 		$("div.loaderBottomDiv").addClass("initialLoader fullwid").css("margin-top",height+"px");
 	}
 	$('body').css("background","#b1b1b1");
-        
+    if ( firstResponse.searchid == 23)
+    {
+    	$("#expire_message").show();
+    }
         
 //        onBackBtnSRP = function()
 //        { 
