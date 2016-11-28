@@ -24,14 +24,16 @@ class AppProfilesHandler
 			if($osType=='IOS' || $osType=='ALL')
 				$appVersionIos =$appVersion['IOS'];
 			if($notificationKey == "LOGIN_REGISTER"){
-				$separateWhereProfile = "PROFILEID IS NULL OR PROFILEID = 0";
+				$separateWhereProfile = "(PROFILEID IS NULL OR PROFILEID = 0)";
 				$separateSelectColumns = "REG_ID";
+				$notificationStatus = 'Y';
 			}
 			else{
 				$separateWhereProfile = '';
 				$separateSelectColumns = '';
+				$notificationStatus = '';
 			}
-			self::$res[$notificationKey][$currentScript] = $regIdObj->getResObj($noOfScripts,$currentScript,$appVersionAnd,$appVersionIos,$separateWhereProfile,$separateSelectColumns);
+			self::$res[$notificationKey][$currentScript] = $regIdObj->getResObj($noOfScripts,$currentScript,$appVersionAnd,$appVersionIos,$notificationStatus,$separateWhereProfile,$separateSelectColumns);
 			self::$startPointer[$notificationKey][$currentScript] = 0;
 			self::$allProfilesDone[$notificationKey][$currentScript] = false;
 		}
