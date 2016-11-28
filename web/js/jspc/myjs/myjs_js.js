@@ -260,12 +260,11 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
 	            		$("#"+div).find("div.sendintr").removeClass("myjs-block sendintr").addClass("myjs-block-after");
                   var ind = $("#"+div).attr('id');
-                 // alert(ind);
                   var nameInitials = ind.split('_');
                   var countToUpdate = (nameInitials[1]+"_resultCount");
                   var out = $("#"+countToUpdate).text();
-                //  var count = $("#"+ind).closest('.countNumber').text();
-                  //alert(count);
+                  --out;
+                  $("#"+countToUpdate).text(out);
                   $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(out,countToUpdate,nameInitials[1]);});     
 	            	}
 	            	else if(type=="accept")
@@ -929,8 +928,6 @@ catch (e){
 
 function reArrangeDivsAfterDissapear(value,position,id)
 { 
-  value-- ;
-  $("#"+position).text(value);
   var currentBox = getCurrentBox(id);
   topSliderInt("init");
   var totalBoxes = getTotalBoxes(id);
