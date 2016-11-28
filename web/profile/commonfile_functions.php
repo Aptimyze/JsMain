@@ -571,7 +571,7 @@ $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                  
 $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                          => "31");
 $js_arr[]=array("jspc/contactEngine/contactEngine"                      => "22");
 $js_arr[]=array("jspc/contactEngine/contactEngineButtons"              => "15");
-$js_arr[]=array("jspc/search/advancedSearch"       => "4");
+$js_arr[]=array("jspc/search/advancedSearch"        => "5");
 $js_arr[]=array("jspc/common/jquery_mCustomScrollbar"             => "12");
 $js_arr[]=array("jspc/success_story/jqueryFilestyle" => "1");
 $js_arr[]=array("jspc/profile/edit/profile/jspcCoverPhoto_js"  => "1");
