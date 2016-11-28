@@ -135,6 +135,7 @@ class NotificationDataPool
         unset($matchedProfiles);
         unset($matchCount);
     }
+
     return $dataAccumulated;
   }
   
@@ -510,7 +511,7 @@ class NotificationDataPool
         if(is_array($applicableProfiles)){
             $counter =0;
             foreach($applicableProfiles as $key=>$regId){
-                $dataAccumulated[$counter++]['SELF']=array('REG_ID'=>$regId,'PROFILEID'=>$key);
+                $dataAccumulated[$counter++]['SELF']=array('REG_ID'=>$regId,'PROFILEID'=>($key+1));
             }
             $dataAccumulated[0]['COUNT'] = "SINGLE";
             unset($applicableProfiles);
