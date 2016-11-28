@@ -36,6 +36,21 @@ class apiActions extends sfActions
 			if($request->getParameter("FROM_GCM")==1)
 				$gcm=1;
     		$apiValidation=$this->apiWebHandler->getResponse();
+
+                // Notification Check
+                $forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
+                $actionName =$forwardingArray["actionName"];
+                if($actionName=='pollV1'){
+                        $notifCheck =NotificationFunctions::notificationCheck($request);
+                        if($notifCheck){
+				echo $notifCheck;
+                                //$respObj->setHttpArray($this->apiWebHandler->getResponse());
+                                //$respObj->generateResponse();
+                                die;
+                        }
+                }
+                // end
+
 		if($apiValidation["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
 			$upgradeStatus=$this->apiWebHandler->forceUpgradeCheck($request,"apiAction");
