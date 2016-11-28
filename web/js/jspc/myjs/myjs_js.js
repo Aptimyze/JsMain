@@ -1,4 +1,4 @@
-var clickEventType="click", cssBrowserAnimProperty=null;
+var clickEventType="click", cssBrowserAnimProperty=null,sliderNav={};
 
 function topSliderInt(param){
 	if(param=="init")
@@ -37,64 +37,49 @@ $(function(){
 });
 
 	function myjsSlider(id)
-	{ //alert(1);
-    
+	{ 
     try{
-		$("#"+id).unbind(clickEventType);
+     var elem = $('#'+id);
+		elem.unbind(clickEventType);
 		var getID,b,getWidth,visWidth,getLeft,p;					
-			getID = id; //alert('get ifd'+getID);
+			getID = id; 
 			b= getID.split('-');
-     // alert('is b1 : '+b[1]);	
 			getWidth =$('#js-'+b[1]).width();
 			visWidth = $('#disp_'+b[1]).width();
       var idList = b[1].split('_');
-   //   alert(idList[0]);
 			p=Math.abs($('#js-'+b[1]).position().left);
-     // alert('value of p is : '+p);
-     // alert(visWidth);alert(getWidth);
-   //   var boxes = getWidth/visWidth;
-   //   var currentBox;
-    //  currentBox = getCurrentBox(b[0],p);
-      
-     // alert(boxes);
-      /*
-      if(p == 2970 && b[0] == "nxt")
-        $("#"+id).hide();
-      else if(p == 3960 && b[0] =="prv")
-        $("#nxt-"+b[1]).show();
-      if(p == 990 && b[0] == "prv")
-        $("#"+id).hide();
-      if(p == 0 && b[0] == "nxt")
-         $("#prv-"+b[1]).show();
-       */
-      var currentBox = getCurrentBox(idList[0]);//alert(currentBox);
-      var totalBoxes = getTotalBoxes(idList[0]);//alert(totalBoxes);
+      var idList = (b[1].split('_'));
+      var totalBoxes = getTotalBoxes(idList[0]);
+
+      if(!sliderNav[b[1]])
+      {
+        sliderNav[b[1]]=1;
+      }
 
 			if((b[0]=="nxt")&&(getWidth>visWidth))
 			{	
+
         diff=Math.floor(getWidth-p-visWidth);
 				if(diff>0)
 				{ 
-        //  alert('bye');
+          var currBox=sliderNav[b[1]];
+          sliderNav[b[1]] = ++currBox;
+        if(currBox == totalBoxes)
+          $("#nxt-"+idList[0]+'_List').hide();
+          $("#prv-"+idList[0]+'_List').show();
 					p=p+visWidth;
 					$('#js-'+b[1]).animate({left:-p}, 500, function() {
 					// Animation complete.
-					$("#"+id).bind(clickEventType,function(){
+					elem.bind(clickEventType,function(){
 								myjsSlider(id);						
 							});
 				  }); 
-        
-        if(currentBox == totalBoxes - 1)
-          $("#nxt-"+idList[0]+'_List').hide();
-        if(currentBox == 1)
-        {
-          $("#prv-"+idList[0]+'_List').show();
-        }
+
 
 				}
 				else{
           
-					setTimeout(function(){$("#"+id).bind(clickEventType,function(){myjsSlider(id);});},100);
+					setTimeout(function(){elem.bind(clickEventType,function(){myjsSlider(id);});},100);
         }
        
         tempDiv=document.getElementById("slideCurrent"+b[1]);
@@ -115,26 +100,30 @@ $(function(){
 				if(p!=0)
 				{
 					p=-(p-visWidth);
-					if(Math.floor(p)<=0)
-						$('#js-'+b[1]).animate({left:p},500, function() {
-              if(currentBox == 2)
+					if(Math.floor(p)<=0){
+
+              var currBox=sliderNav[b[1]];
+              sliderNav[b[1]] =--currBox;
+              if(currBox == 1)
               {
                 $("#prv-"+idList[0]+'_List').hide();
               }
-              if(currentBox == totalBoxes)
-              {
-                $("#nxt-"+idList[0]+'_List').show(); 
-              }
+              $("#nxt-"+idList[0]+'_List').show();
+
+						$('#js-'+b[1]).animate({left:p},500, function() {
 						// Animation complete.
-						$("#"+id).bind(clickEventType,function(){
+						elem.bind(clickEventType,function(){
 								myjsSlider(id);						
 						});});
+
+             
+          }
 					else
-						setTimeout(function(){$("#"+id).bind(clickEventType,function(){myjsSlider(id);});},100);
+						setTimeout(function(){elem.bind(clickEventType,function(){myjsSlider(id);});},100);
 				  
 				}
 				else
-					setTimeout(function(){$("#"+id).bind(clickEventType,function(){myjsSlider(id);});},100);
+					setTimeout(function(){elem.bind(clickEventType,function(){myjsSlider(id);});},100);
 			        tempDiv=document.getElementById("slideCurrent"+b[1]);
       	 if (tempDiv){
         currentPanel=parseInt((tempDiv).textContent);
@@ -740,15 +729,6 @@ function generateFaceCard(Object)
 
       });
       topSliderInt('init');
-      var listName=Object.list;
-      var currentBox = getCurrentBox(Object.name);//alert(currentBox);
-      var totalBoxes = getTotalBoxes(Object.name);//alert(totalBoxes);
-      if(currentBox == 1){ //alert('in');
-          $("#prv-"+Object.list).hide();
-        }
-         if(currentBox == totalBoxes){ //alert('inside');
-          $("#nxt-"+Object.list).hide();
-        }
 
       $("#"+Object.containerName).removeClass("disp-none");
     }
@@ -948,7 +928,7 @@ catch (e){
 }
 
 function reArrangeDivsAfterDissapear(value,position,id)
-{ //alert('the id is : '+id);
+{ 
   value-- ;
   $("#"+position).text(value);
   var currentBox = getCurrentBox(id);
@@ -956,96 +936,29 @@ function reArrangeDivsAfterDissapear(value,position,id)
   var visWidth = 990;
   var totalBoxes = getTotalBoxes(id);
   var numberOfProfiles = getNumberOfProfiles(id);
-//alert('in');
- // alert('current box is : '+currentBox); alert('totalBoxes are :'+totalBoxes); alert('number of pro are :'+numberOfProfiles);
-
   if(!isFirstBox(currentBox) && (onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresent(currentBox,totalBoxes,numberOfProfiles,id)))
   {
-      p=Math.abs($('#js-'+id+'_List').position().left);
-    //  alert('value of p is : '+p);
-      p=-(p-visWidth);
-          if(Math.floor(p)<=0){
-            $('#js-'+id+'_List').animate({left:p},500);
-            $('#nxt-'+id+'_List').show();
-          }
-
-    //  $('#js-'+id).animate({left:p},500,
+  $("#nxt-"+id+"_List").click();  
   }
 
   if(viewCardInList(currentBox,totalBoxes,id,numberOfProfiles))
   {
      $('#nxt-'+id+'_List').hide();
   }
-  //alert(eleId);
- // var profileList = eleId;
- // alert(profileList);
-  //$(this).remove();
-  //$(ele).remove();
- //var listItem s = $("#"+profileList+" li");
-  //                listItems.each(function(index) {
-   //                 console.log(index);
-//}
-//);
-
-/*  
-$(ele).remove();
-var profileList  = $(ele).parent().attr('id');
-                  var listItems = $("#"+profileList+" li");
-                  listItems.each(function(index) {
-                    console.log(index);
-                    if((index+1)%4 ==0)
-                    {
-                      $(this).css("padding-right" , "2px");
-                    }
-                    else{
-                      $(this).css("padding-right","36px");
-                    }
-
-
-});
-*/
+ 
 }
 
     function getCurrentBox(id)
     {  // alert('#js-'+id+'_List');
 
-              var position = $('#js-'+id+'_List').position().left;
-
-                if(position == 0)
-                      {
-                        return 1;
-                      }
-
-                if(position == -990)
-                      {
-                        return 2;
-                      }
-
-                if(position == -1980)
-                      {
-                        return 3;
-                      }
-
-                if(position == -2970)
-                      {
-                        return 4;
-                      }
-
-                if(position == -3960)
-                      {
-                        return 5;
-                      }
+              return sliderNav[id+'_List'];
     }
 
 
     function getTotalBoxes(id)
     {
-     // alert('debug');
-            var totalWidth = $('#js-'+id+'_List').width();
-           // alert(totalWidth);
-            var visibleBoxes = Math.ceil(totalWidth/990);
 
-            return visibleBoxes;
+            return Math.ceil(getNumberOfProfiles(id)/4);
 
     }
 
@@ -1061,7 +974,7 @@ var profileList  = $(ele).parent().attr('id');
     {
         if(currentBox > totalBoxes)
         {
-          if(numberOfProfiles % 4 == 0)
+          
             return 1;
         }
 
@@ -1071,18 +984,14 @@ var profileList  = $(ele).parent().attr('id');
 
     function getNumberOfProfiles(id)
     {
-      var count = 0;
       var listItems = $("#js-"+id+"_List li");
-                  listItems.each(function(index) {
-                    count++;
-                  });
-          return count;
+      return listItems.length;
     }
 
     function onlyViewAllCardPresent(currentBox ,totalBoxes,id,numberOfProfiles)
     {
-
-      if(currentBox == totalBoxes && numberOfProfiles % 4 == 1)
+      var tupleNumber = (currentBox)*4-3;
+      if(currentBox)
       {
         if($('ul#js-'+id+'_List li:nth-last-child(1)').find('.colrw').text() == "View All")
         {
@@ -1098,10 +1007,7 @@ var profileList  = $(ele).parent().attr('id');
 
       if(currentBox == totalBoxes && numberOfProfiles % 4 == 0)
       {
-        if($('ul#js-'+id+'_List li:nth-last-child(1)').find('.colrw').text() == "View All")
-        {
           return 1;
-        }
       }
       return 0;
     }
