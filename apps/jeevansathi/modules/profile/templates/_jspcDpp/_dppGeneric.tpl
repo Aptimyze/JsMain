@@ -12,7 +12,7 @@
             <div class="clearfix pt20" id="dpp-~$fieldID|lower`Parent">
 
             ~if $fieldData.type eq "M"` 
-             <div class="js-resetall f12 prehide color5 cursp wid83p txtr fontreg" id="rem-~$fieldID|lower`">Remove all</div>
+             <div class="js-resetall f12 prehide color5 cursp wid83p txtr fontreg vishid" id="~$fieldID|lower`-rem">Remove all</div>
              ~/if`
 
               <label>~$fieldData.label`</label>
@@ -209,7 +209,7 @@
                 <!--start:edit on-->
                 <div class="bg-white dpp-sel clearfix prehide">
                   <div class="padalli">
-                    <select data-placeholder="" id="dpp-~$fieldID|lower`" multiple class="chosen-select-width">
+                    <select data-placeholder="" id="dpp-~$fieldID|lower`" multiple class="chosen-select-width js-torem">
                     <option value=""></option>
                     ~assign var="doItOnce" value="false"`
                     ~foreach from=$dropDownData[$fieldData.dropDownMap][0] key=id item=dropDownVal` 

@@ -55,6 +55,24 @@ function setFilters(filterId){
           }
   });
 }
+function showHideRemLabel(param)
+{
+ 
+ var getID = param.attr('id').split('-')[1];
+ 
+ if(param.val()!=null)
+ {
+   $('#'+getID+'-rem').css('visibility','visible');
+ }
+ else
+ {
+   $('#'+getID+'-rem').css('visibility','hidden');
+ }
+ if(   $('#suggest_'+getID).length != 0    )
+ {
+   $('#suggest_'+getID).remove();
+ }
+}
 
 $(function(){
   
@@ -174,7 +192,7 @@ $(function(){
           parentFieldId = parentDiv[0].id;
           afterLH = fieldName.split("_")[1];
           fieldVal = $(this).attr("data-dbVal");
-          
+
           if(afterLH == "income") {//Income 
             afterLH = divWithId.attr("data-income");//either Rs or Dol,but update rest 
             
@@ -258,18 +276,27 @@ $(function(){
           dppApp.setForSave(section,fieldName,fieldVal);
           dppApp.set(fieldName,fieldVal); 
         });
+
         //start:remove all option from chosen
    $('.js-resetall').click(function(){
-     var mainVal,getID = $(this).attr('id').split('-');      
-     mainVal = getID[1];
-     console.log(mainVal);
-     $('#dpp-'+mainVal).val([" "]).trigger('chosen:updated');
-     $('#dpp-'+mainVal).trigger('change');
+     var getID = $(this).attr('id').split('-')[0];      
+     
 
-     if(   $('#suggest_'+mainVal.split('_')[1]).length != 0    )
+     $('#dpp-'+getID).val([" "]).trigger('chosen:updated');
+     $('#dpp-'+getID).trigger('change');
+     $('#'+getID+'-rem').css('visibility','hidden');
+
+
+
+     if(   $('#suggest_'+getID.split('_')[1]).length != 0    )
      {
-         $('#suggest_'+mainVal.split('_')[1]).remove();
+         $('#suggest_'+getID.split('_')[1]).remove();
      }
+  
+   });
+
+   $('.js-torem').on("change",function(){   
+       showHideRemLabel($(this));     
    });
 
 	
@@ -433,6 +460,12 @@ function fillValuesInChosen(sectionId){
     if(valueToFill != "" && valueToFill != null){
       $(this).val(valueToFill);
       $(this).trigger("chosen:updated");
+      
+      //show remove label if values are present
+     var getID = $(this).attr('id').split('-')[1];
+     console.log(getID);
+     $('#'+getID+'-rem').css('visibility','visible');
+
     }
     else
     {
@@ -1215,6 +1248,11 @@ var _parentCatogary = [{
                   changeSuggestion(htmlStr, "add"); 
                   dppApp.set("p_"+parentText,$("#dpp-p_" + parentText).val());
                   dppApp.setForSave(parentSection,"p_"+parentText,$("#dpp-p_" + parentText).val());
+
+                  if($('#dpp-p_'+parentText).val()!=null)
+                 {
+                   $('#p_'+parentText+'-rem').css('visibility','visible');
+                 }
                 });
               });
             } else if($("#suggest_" + type + " .suggestBoxList div").length == 0) {
