@@ -623,6 +623,15 @@ Class ButtonResponseFinal
 			$buttons = self::buttonMerge($button);
 			return $buttons;
 		}
+		else if($this->contactObj->getTYPE() == ContactHandler::NOCONTACT)
+		{
+			$button["iconid"] = IdToAppImagesMapping::UNDERSCREENING;
+			$button["label"]  = "Interest Saved";
+			$button["enable"]  = false;
+			$button['id'] 			= "INITIATE";
+			$buttons = self::buttonMerge($button);
+			return $buttons;
+		}
 		return null;
 	}
 

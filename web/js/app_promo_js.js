@@ -280,7 +280,7 @@ function getIosVersion(ua) {
 	{
 		return false
 	}
-	else if(OsVersion[0].substring(3,4)>=7)
+	else if(OsVersion[0].substring(3,5)>=7)
 		return true;
 	else
 		return false;
