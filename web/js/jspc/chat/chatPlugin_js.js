@@ -2657,6 +2657,7 @@ JsChat.prototype = {
                     if(curElem._setLastReadMsgStorage == true){
                         setLastReadMsgStorage(userId,messgId);
                     }
+                    curElem._handlePreUnreadMessages(userId);
                 }, 500);
 
             }

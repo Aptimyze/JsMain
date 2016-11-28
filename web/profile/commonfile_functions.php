@@ -459,7 +459,7 @@ $js_arr[]=array("jsms/angular/registration/scripts/directives"                =>
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                          => "29");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"           => "12");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"         => "14");
-$js_arr[]=array("jsms/contact_engine/contactEngine_js"                                    => "43");
+$js_arr[]=array("jsms/contact_engine/contactEngine_js"                                        => "44");
 $js_arr[]=array("jsms/search/inview"   => "2");
 $js_arr[]=array("jsms/login/newMobLogin_js"                      => "21");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "12");
@@ -603,7 +603,7 @@ $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                              => "60");
 $js_arr[]=array("jspc/chat/chatPCHelper_js"                                                                         => "94");
-$js_arr[]=array("jspc/chat/chatPlugin_js"                                               => "73");
+$js_arr[]=array("jspc/chat/chatPlugin_js"                                                => "74");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"                            => "34");
 $js_arr[]=array("jspc/chat/chatStrophieClient_js"      => "7");
 $js_arr[]=array("jspc/help/JSPCHelp_js"              => "18");

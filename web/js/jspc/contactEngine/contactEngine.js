@@ -70,11 +70,10 @@ switch(this.name)
         case 'VSP':
             var mainDivElement=$("#PreFourButtonsSearch").clone();
             var basicButtonElement = mainDivElement.find('.contactEngineIcon');
-            innerHtml=this.setButtonProperties(buttonArray,basicButtonElement)
+            innerHtml=this.setButtonProperties(buttonArray,basicButtonElement);
             break;
         case 'VDP':
         case 'VSP_VDP':
-        
 			var toBeUpdatedContainerId='#'+actionName+"-"+this.profileChecksum+"-"+this.name;
             var toBeUpdatedLabelId='#'+actionName+"-"+this.profileChecksum+"-"+this.name+"_LABEL";
             var toBeUpdatedIconId='#'+actionName+"-"+this.profileChecksum+"-"+this.name+"_ICON";
