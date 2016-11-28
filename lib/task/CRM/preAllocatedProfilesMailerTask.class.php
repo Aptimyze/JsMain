@@ -75,7 +75,7 @@ EOF;
             //$to = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com";
             $cc = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
             $from = "js-sums@jeevansathi.com";
-            $subject = "Pre Allocated Profiles Mailer";
+            $subject = "Pre Allocated Profiles Mailer for ".$dt;
             $msgBody = "PFA CSV report containing pre allocated profiles.";
 
             SendMail::send_email($to, $msgBody, $subject, $from, $cc, '', $csvAttachment, '', 'preAllocatedProfileMailer.csv');
