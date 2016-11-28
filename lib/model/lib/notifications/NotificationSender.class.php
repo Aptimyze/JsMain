@@ -24,7 +24,9 @@ class NotificationSender
 			$osType = "";
 			if(!isset($details))
 				continue;
-			$regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE']);
+            //echo "send data...";
+            //print_r($profileDetails[$profileid]['REG_ID']);
+			$regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE'],$profileDetails[$profileid]['REG_ID']);
 			if(is_array($regIds))
 			{
 				if(is_array($regIds[$profileid]["AND"]))
@@ -55,29 +57,34 @@ class NotificationSender
 	}
 
     }
-    public function getRegistrationIds($profileid,$osType)
+    public function getRegistrationIds($profileid,$osType,$regId="")
     {
 	$valArr['PROFILEID']=$profileid;
 	if($osType != "ALL")
 		$valArr['OS_TYPE']=$osType;
 	$valArr['NOTIFICATION_STATUS'] = "Y";
-
+    if($regId && $regId != ""){
+        $regIdArr = array($profileid=>array($valArr['OS_TYPE']=>array($regId)));
+        return $regIdArr;
+    }
+    else{
         $appVersion = NotificationEnums::$appVersionCheck["DEFAULT"];
        	$appVersionAnd =$appVersion['AND'];
        	$appVersionIos =$appVersion['IOS'];
 
-	$registrationIdObj = new MOBILE_API_REGISTRATION_ID('newjs_masterRep');
-	$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');
-	if(is_array($registrationIdData))
-	{
-		foreach($registrationIdData as $k=>$v){
-			$os_type 	=$v['OS_TYPE'];
-			$appVersion 	=$v['APP_VERSION'];
-			if(($os_type=='AND' && $appVersion>=$appVersionAnd) || ($os_type=='IOS' && $appVersion>=$appVersionIos))
-				$regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
-		}
-		return $regIdArr;
-	}
+    	$registrationIdObj = new MOBILE_API_REGISTRATION_ID('newjs_masterRep');
+    	$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');
+    	if(is_array($registrationIdData))
+    	{
+    		foreach($registrationIdData as $k=>$v){
+    			$os_type 	=$v['OS_TYPE'];
+    			$appVersion 	=$v['APP_VERSION'];
+    			if(($os_type=='AND' && $appVersion>=$appVersionAnd) || ($os_type=='IOS' && $appVersion>=$appVersionIos))
+    				$regIdArr[$v['PROFILEID']][$v['OS_TYPE']][]=$v['REG_ID'];
+    		}
+    		return $regIdArr;
+    	}
+    }
 	return false;
     }
 
