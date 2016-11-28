@@ -57,8 +57,6 @@ if (count($eligibleArrNew > 0)) {
 
         $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
         mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
-
-        $deleteArr[] = $profileid;
         addLog($profileid, $campaignName, $str, $action, $db_js_111);
     }
     $profileStrEligible = implode(",", $eligibleArrNew);
