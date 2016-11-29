@@ -94,9 +94,20 @@ class ProfileContact
 
 			if($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE)
 			{
+				// modify result according to indexProfileId
+				foreach ($result as $rowSelectDetail)
+				{
+					if($indexProfileId == 1)
+					{
+							$detailArr[$rowSelectDetail['PROFILEID']] = $rowSelectDetail;
+					}
+					else
+					{
+							$detailArr[] = $rowSelectDetail;
+					}
+				}
 				$this->logCacheConsumeCount(__CLASS__);
-				// Todo: $indexProfileId case handle
-				return $result;
+				return $detailArr;
 			}
 
 			$result = self::$objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);
@@ -181,6 +192,14 @@ class ProfileContact
 	public function checkPhone($numberArray='',$isd='')
 	{
 		return self::$objJprofileContact->checkPhone($numberArray, $isd);
+	}
+
+	private function logCacheConsumeCount($funName)
+	{
+		$key = 'cacheConsumption' . '_' . date('Y-m-d');
+		JsMemcache::getInstance()->hIncrBy($key, $funName);
+
+		JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
 	}
 }
 ?>
