@@ -64,6 +64,16 @@ class ProfileContact
 		return self::$instance;
 	}
 
+	/**
+	* @fn getArray
+	* @brief fetches results for multiple profiles to query from JPROFILE_CONTACT,it also caches the result in redis and after the result is set in cache, it returns from cache. The result is cached only when $excludeArray and $greaterThanArray both are empty.
+	* @param $valueArray - array with field name as key and comma separated field values as the value corresp to the key - rows satisfying these values are included in the result
+	* @param $excludeArray - array with field name as key and comma separated field values as the value corresp to the key - rows satisfying these values are excluded from the result
+	* @param $fields Columns to query
+	* @return results Array according to criteria having incremented index
+	* @exception jsException for blank criteria
+	* @exception PDOException for database level error handling
+	*/
 	public function getArray($valueArray="",$excludeArray="",$greaterThanArray="",$fields="PROFILEID",$indexProfileId = 0)
 	{
 		$bServedFromCache = false;
@@ -110,12 +120,11 @@ class ProfileContact
 	public function getProfileContacts($pid)
 	{
 		$bServedFromCache = false;
-		$fields='*'; // todo : see fields
 		$objProCacheLib = ProfileCacheLib::getInstance();
 
 		if ($objProCacheLib->isCached(ProfileCacheConstants::CACHE_CRITERIA, $pid, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__))
 		{
-			$result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
+			$result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__);
 			//so for that case also we are going to query mysql
 			if (false !== $result)
 			{
@@ -123,21 +132,16 @@ class ProfileContact
 				$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
 				// Todo: check if result is suitable acc to requirement
 			}
-
-			if($result && in_array(ProfileCacheConstants::NOT_FILLED, $result))
-			{
-				$result = array();
-			}
 		}
 
-		if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+		if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE)
+		{
 			$this->logCacheConsumeCount(__CLASS__);
 			return $result;
 		}
 
 		// Get Records from Mysql
 		$result = self::$objJprofileContact->getProfileContacts($pid);
-
 		// Request to Cache this Record, on demand
 		if(is_array($result) && count($result))
 		{
