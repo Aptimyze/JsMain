@@ -14,8 +14,7 @@ class newjs_CHAT_TIMEOUT_LOG extends TABLE {
     
     public function insert($paramsArr){
         try{
-
-            $sql = "INSERT INTO MOBILE_API.SENT_NOTIFICATIONS_COUNT (PROFILEID,COUNT,ENTRY_DT) VALUES (:PROFILEID,1,:ENTRY_DT) ON DUPLICATE KEY UPDATE COUNT=:COUNT";
+            $sql = "INSERT INTO newjs.CHAT_TIMEOUT_LOG (PROFILEID,COUNT,ENTRY_DT) VALUES (:PROFILEID,1,:ENTRY_DT) ON DUPLICATE KEY UPDATE COUNT=COUNT+1";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$paramsArr["PROFILEID"],PDO::PARAM_INT);
             $prep->bindValue(":ENTRY_DT",date("Y-m-d"),PDO::PARAM_STR);
