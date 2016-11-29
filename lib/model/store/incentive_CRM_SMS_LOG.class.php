@@ -25,19 +25,20 @@ class incentive_CRM_SMS_LOG extends TABLE{
 		}
 	}
 
-	public function getSmsSentCountForProfile($profileid, $entryDt)
+	public function getSmsSentKeysForProfileAndDate($profileid, $entryDt)
 	{
 		try
 		{
-			$sql = "SELECT COUNT(1) AS CNT FROM incentive.CRM_SMS_LOG WHERE PROFILEID=:PROFILEID AND ENTRY_DT=:ENTRY_DT" ;
+			$sql = "SELECT ID, SMS_KEY FROM incentive.CRM_SMS_LOG WHERE PROFILEID=:PROFILEID AND ENTRY_DT=:ENTRY_DT" ;
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
 			$res->bindValue(":ENTRY_DT", $entryDt, PDO::PARAM_STR);
 			$res->execute();
-			if($result = $res->fetch(PDO::FETCH_ASSOC))
+			while($result = $res->fetch(PDO::FETCH_ASSOC))
 			{
-				return $result['CNT'];
+				$output[$result['ID']] = $result['SMS_KEY'];
 			}
+			return $output;
 		}
 		catch(PDOException $e)
 		{

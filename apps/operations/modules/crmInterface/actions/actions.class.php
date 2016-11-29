@@ -1031,12 +1031,13 @@ class crmInterfaceActions extends sfActions
             if ($submit) {
                 $crmSmsLogObj = new incentive_CRM_SMS_LOG();
                 $entryDt = date("Y-m-d", time());
-                $sentCount = $crmSmsLogObj->getSmsSentCountForProfile($this->profileid, $entryDt);
+                $sentKeys = $crmSmsLogObj->getSmsSentKeysForProfileAndDate($this->profileid, $entryDt);
+                $sentCount = count($sentKeys);
                 if ($sentCount >= 2) {
                     $this->showError = 1;
                     $this->errorMsg = "You have exceeded the number of SMS's that can be sent to this user today";
                 } else {
-                    if (in_array("B", $this->smsType)) {
+                    if (in_array("B", $this->smsType) && !in_array("CRM_SMS_BRANCH", $sentKeys)) {
                         $payHandlerObj = new PaymentHandler();
                         $states        = $payHandlerObj->getStates();
                         $cityRes       = $payHandlerObj->getCityRes($this->profileid);
@@ -1082,17 +1083,26 @@ class crmInterfaceActions extends sfActions
                         $tokenArr      = array("BRANCH_ADDRESS" => $branchAddress);
                         CommonUtility::sendPlusTrackInstantSMS('CRM_SMS_BRANCH', $this->profileid, $tokenArr);
                         $crmSmsLogObj->insertSmsLog($this->profileid,'CRM_SMS_BRANCH',$entryDt);
+                    } else if (in_array("B", $this->smsType) && in_array("CRM_SMS_BRANCH", $sentKeys)) {
+                        $this->showError = 1;
+                        $this->errorMsg = "You've already sent this type of SMS to profile for today";
                     }
-                    if (in_array("O", $this->smsType)) {
+                    if (in_array("O", $this->smsType) && !in_array("CRM_SMS_OFFER", $sentKeys)) {
                         $memHandlerObj = new MembershipHandler();
                         $discText = $memHandlerObj->getCrmSmsDiscountText($this->profileid);
                         if ($discText) {
                             $tokenArr = array("DISCOUNT_TEXT" => $discText);
                             CommonUtility::sendPlusTrackInstantSMS('CRM_SMS_OFFER', $this->profileid, $tokenArr);
                             $crmSmsLogObj->insertSmsLog($this->profileid,'CRM_SMS_OFFER',$entryDt);
+                        } else {
+                            $this->showError = 1;
+                            $this->errorMsg = "No offer currently applicable for Profile";    
                         }
+                    } else if (in_array("O", $this->smsType) && in_array("CRM_SMS_OFFER", $sentKeys)) {
+                        $this->showError = 1;
+                        $this->errorMsg = "You've already sent this type of SMS to profile for today";
                     }
-                    if (in_array("N", $this->smsType)) {
+                    if (in_array("N", $this->smsType) && !in_array("CRM_SMS_NOT_REACH", $sentKeys)) {
                         $agentAllocDetailsObj = new AgentAllocationDetails();
                         $agentName            = $agentAllocDetailsObj->fetchAgentName($this->cid);
                         if ($agentName) {
@@ -1100,14 +1110,22 @@ class crmInterfaceActions extends sfActions
                             CommonUtility::sendPlusTrackInstantSMS('CRM_SMS_NOT_REACH', $this->profileid, $tokenArr);
                             $crmSmsLogObj->insertSmsLog($this->profileid,'CRM_SMS_NOT_REACH',$entryDt);
                         }
+                    } else if (in_array("N", $this->smsType) && in_array("CRM_SMS_NOT_REACH", $sentKeys)) {
+                        $this->showError = 1;
+                        $this->errorMsg = "You've already sent this type of SMS to profile for today";
                     }
-                    if (in_array("M", $this->smsType)) {
+                    if (in_array("M", $this->smsType) && !in_array("CRM_SMS_APP_DOWNLOAD", $sentKeys)) {
                         $tokenArr = null;
                         CommonUtility::sendPlusTrackInstantSMS('CRM_SMS_APP_DOWNLOAD', $this->profileid, $tokenArr);
                         $crmSmsLogObj->insertSmsLog($this->profileid,'CRM_SMS_APP_DOWNLOAD',$entryDt);
+                    } else if (in_array("N", $this->smsType) && in_array("CRM_SMS_APP_DOWNLOAD", $sentKeys)) {
+                        $this->showError = 1;
+                        $this->errorMsg = "You've already sent this type of SMS to profile for today";
                     }
-                    $this->successMsg = "SMS Successfully Sent";
-                    $this->sent       = 1;
+                    if (!$this->showError) {
+                        $this->successMsg = "SMS Successfully Sent";
+                        $this->sent       = 1;
+                    }
                 }
             }
         }
