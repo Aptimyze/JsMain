@@ -113,7 +113,8 @@ var strophieWrapper = {
                 if($("#js-loginPanel").length == 0 && $("#js-lsitingPanel").length == 0){
                     //console.log("In if of timeout");
                     strophieWrapper.disconnect();
-                    invokePluginLoginHandler("failure",false);
+                    console.log("timeout case");
+                    invokePluginLoginHandler("failurePlusLog",false);
                 }
             },5000);
         } else if (status == Strophe.Status.CONNFAIL) {
