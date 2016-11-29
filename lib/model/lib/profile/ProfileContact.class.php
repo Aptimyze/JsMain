@@ -78,14 +78,13 @@ class ProfileContact
 	{
 		$bServedFromCache = false;
 		$objProCacheLib = ProfileCacheLib::getInstance();
-
-		if(is_array($valueArray) && in_array(ProfileCacheConstants::CACHE_CRITERIA, $valueArray) && $excludeArray == "" && $greaterThanArray == "")
+		if(is_array($valueArray) && in_array(ProfileCacheConstants::CACHE_CRITERIA, array_keys($valueArray)) && $excludeArray == "" && $greaterThanArray == "")
 		{
 			// Todo: From cache nd set
 			// profileId array
 			$pid_arr = explode(",", $valueArray['PROFILEID']);
-			$result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $pid_arr, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__);
-			
+			$result = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $pid_arr, $fields, __CLASS__);
+
 			if($result && false !== $result)
 			{
 				$bServedFromCache = true;
@@ -111,14 +110,12 @@ class ProfileContact
 			}
 
 			$result = self::$objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);
-
-			if(is_array($result) && count($pid_arr) == 1 && false === ProfileCacheLib::getInstance()->isCommandLineScript())
+			foreach ($result as $key => $value)
 			{
-				$result['PROFILEID'] = $pid;
-				ProfileCacheLib::getInstance()->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result);
+				$result[$key]['PROFILEID'] = $pid_arr[$key];
 			}
 
-			if(is_array($pid))
+			if(is_array($pid_arr))
 			{
 				ProfileCacheLib::getInstance()->cacheForMultiple(ProfileCacheConstants::CACHE_CRITERIA, $result);
 			}
@@ -141,7 +138,6 @@ class ProfileContact
 			{
 				$bServedFromCache = true;
 				$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-				// Todo: check if result is suitable acc to requirement
 			}
 		}
 
@@ -164,7 +160,6 @@ class ProfileContact
 			$objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result, __CLASS__);
 		}
 
-		// todo : what is dummyResult case?
 		return $result;
 	}
 
