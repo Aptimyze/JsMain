@@ -68,7 +68,7 @@
 ~/if`
 	<tr class=fieldsnew>
                 <td align=center>
-		<a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/crmSmsFunctionalityInterface?cid=~$cid`&pid=~$profileid`&username=~$username`" target="_blank"><font size='2'>Send SMS to this profile user</font></a><br>
+		<a href="~sfConfig::get('app_site_url')`/operations.php/crmInterface/crmSmsFunctionalityInterface?cid=~$cid`&profileid=~$profileid`&username=~$username`" target="_blank"><font size='2'>Send SMS to this profile user</font></a><br>
 		</td>
         </tr>
 	<!-- ADDED  -->
