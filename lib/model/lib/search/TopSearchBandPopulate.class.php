@@ -2291,8 +2291,8 @@ class TopSearchBandPopulate
                                                 $output["mtongue"][] = $mt;
                                                 $output["mtongue_label"][] =FieldMap::getFieldLabel("community_small",$mt); 
                                         }
-                                        $output["mtongue"] = implode(',',$output["mtongue"]);
-                                        $output["mtongue_label"] =implode(',',$output["mtongue_label"]); 
+                                        $output["mtongue"] = trim(implode(',',$output["mtongue"]),",");
+                                        $output["mtongue_label"] =trim(implode(',',$output["mtongue_label"]),","); 
                                 }else{
                                         $output["mtongue"] = $output["mtongue"][0];
                                         $output["mtongue_label"] = $output["mtongue_label"][0];

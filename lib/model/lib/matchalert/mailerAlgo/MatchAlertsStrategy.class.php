@@ -12,6 +12,7 @@ abstract class MatchAlertsStrategy
   
 
         public function logRecords($receiverId,$profileIds,$logicLevel,$limit,$listCount = 0,$matchesSetting=''){
+
                 $profileIdsForList = array();
                 if($logicLevel == MailerConfigVariables::$strategyReceiversNT)
                         $profileIds = array_slice($profileIds,0,$this->limitNtRec);
