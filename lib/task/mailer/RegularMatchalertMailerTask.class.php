@@ -174,7 +174,7 @@ EOF;
                         break;
                 case "4"://community model case
                         $subject["subject"]= $count.$matchStr." based on activity of people similar to you";
-			$subject["body"]="Following are profiles which we have picked based on the activity of people similar to you. Note that some of these profiles may not match your Desired Partner Profile. If you wish to only receive matches as per your Desired Partner Profile, ";
+			$subject["body"]="Following are profiles which we have picked based on the activity of people similar to you. Note that some of these profiles may not match your Desired Partner Profile. <br>If you wish to only receive matches as per your Desired Partner Profile, ";
                         break;
 		default :
 			 throw  new Exception("No logic send in subjectAndBody() in RegularMatchAlerts task");

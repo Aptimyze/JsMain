@@ -21,7 +21,10 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy
                 $communityModelTable = new test_Top10_CommunityModelRecommendation();
                 $profileIdString = $communityModelTable->fetchProfiles($this->profileId);
                 $profilesArray = explode(',', $profileIdString);
-                $this->logRecords($this->profileId, $profilesArray, $this->logicLevel, $this->limit,0,$matchesSetting);
+                if($profilesArray[0]!='' || count($profilesArray)>1){
+                    $profilesArray = array_slice($profilesArray,0,$this->limit);
+                    $this->logRecords($this->profileId, $profilesArray, $this->logicLevel, $this->limit,0,$matchesSetting);
+                }
             }       
 	}
 }

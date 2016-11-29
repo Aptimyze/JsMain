@@ -124,20 +124,17 @@ EOF;
 						}
 						else
 						{
-							/**
-							* Matches : Trends are not set, Only one mailer will be sent. 
-							*/
-                                                        $includeDppCnt = 1;
-                                                        if($this->checkForCommunityModel($loggedInProfileObj->getPROFILEID(),$matchLogic))
+                                                    
+                                                        if($this->checkForCommunityModel($loggedInProfileObj->getPROFILEID(),$matchLogic)){
+                                                            $communityModelNT = new CommunityModelMatchAlertsStrategy($loggedInProfileObj,$this->limitCommunityRec,MailerConfigVariables::$communityModelNT);
+                                                            $communityModelNT->getMatches($matchesSetting);
                                                             $this->limitNtRec=10;
+                                                        }
+                                                        $includeDppCnt = 1;
 							$StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$strategyReceiversNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
 							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$returnTotalCountWithCluster,array(),$matchesSetting);
                                                         if($totalResults["CNT"] == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                 $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
-                                                        if($this->checkForCommunityModel($loggedInProfileObj->getPROFILEID(),$matchLogic)){
-                                                            $communityModelNT = new CommunityModelMatchAlertsStrategy($loggedInProfileObj,$this->limitCommunityRec,MailerConfigVariables::$communityModelNT);
-                                                            $communityModelNT->getMatches($matchesSetting);
-                                                        }
                                                         // Set Low Dpp flag
                                                    //     $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
 						}
