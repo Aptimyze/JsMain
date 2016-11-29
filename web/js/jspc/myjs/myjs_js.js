@@ -266,7 +266,8 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
                   --out;
                   $("#"+countToUpdate).text(out);
                   $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(out,countToUpdate,nameInitials[1]);});     
-	            	}
+	        
+                }
 	            	else if(type=="accept")
 	            	{
 	            		$("#"+div).find("div.intdisp").html("Accepted");
@@ -571,7 +572,7 @@ function postActionViewContactClose(checksum,url,count,formtype)
 function generateFaceCard(Object)
 {
 
-  try{//alert(Object.name);
+  try{
   
 	var tracking = "";
 		if(Object.data.tracking!==undefined)
@@ -677,8 +678,14 @@ function generateFaceCard(Object)
 			else
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,"");
 			if($("#"+Object.name+"_Container").length == 1){
+        if(Object.name == 'LASTSEARCH' && Object.data.no_of_results == 0)
+        { 
+          $("#LASTSEARCH_Container").remove();
+        }
+        else{
         $("#"+Object.name+"_Container").css('height',$("#"+Object.name+"_Container").height());
         $("#"+Object.name+"_Container").html($(Object.containerHtml.trim()).html());
+        }
       }
       else 
         $("#"+Object.name).after(Object.containerHtml);
@@ -738,6 +745,11 @@ function generateFaceCard(Object)
             $('#nxt-'+Object.list).show();
         }
       $("#"+Object.containerName).removeClass("disp-none");
+      if(totalCount <= 4)
+    { 
+      $("#seeAll"+Object.containerName).hide();
+    }
+
     }
     photo_init();
   }
@@ -936,6 +948,10 @@ catch (e){
 
 function reArrangeDivsAfterDissapear(value,position,id)
 { 
+  if(value <= 4)
+  {  
+    $('#seeAll'+id+'_Container').hide();
+  }
   var currentBox = getCurrentBox(id);
   topSliderInt("init");
   var totalBoxes = getTotalBoxes(id);
@@ -965,11 +981,17 @@ function reArrangeDivsAfterDissapear(value,position,id)
           justJoinedMatchObj.request();
         }
         if(id == 'LASTSEARCH')
-        {
-        //  $("#LASTSEARCH_Container").remove()
+        {  
+          if(value == 0)
+          {
+          $("#LASTSEARCH_Container").remove();
+          }
+          else
+          {
           var lastSearch =new lastSearchMatches();
           lastSearch.pre();
           lastSearch.request();
+          }
         }
         if(id == 'VERIFIEDMATCHES')
         {
@@ -995,6 +1017,7 @@ function reArrangeDivsAfterDissapear(value,position,id)
      $('#nxt-'+id+'_List').hide();
   }
 
+  
 
 }
 
