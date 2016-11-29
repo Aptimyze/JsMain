@@ -215,7 +215,26 @@ class ProfileCacheConstants
                                         "VARA",
                                         "MASA",
                                         "HAVE_ASTRO",
-                                        "FSO_EXISTS"
+                                        "FSO_EXISTS",
+                                        // Jprofile Contact details
+                                        "ALT_MOBILE",
+                                        "ALT_MOBILE_ISD",
+                                        "SHOWALT_MOBILE",
+                                        "ALT_MOBILE_OWNER_NAME",
+                                        "ALT_MOBILE_NUMBER_OWNER",
+                                        "ALT_MESSENGER_ID",
+                                        "ALT_MESSENGER_CHANNEL",
+                                        "SHOW_ALT_MESSENGER",
+                                        "BLACKBERRY",
+                                        "LINKEDIN_URL",
+                                        "FB_URL",
+                                        "CALL_ANONYMOUS",
+                                        "SHOWBLACKBERRY",
+                                        "SHOWLINKEDIN",
+                                        "SHOWFACEBOOK",
+                                        "ALT_MOB_STATUS",
+                                        "ALT_EMAIL",
+                                        "ALT_EMAIL_STATUS",
                                     );
     
     public static $arrJProfileColumns = array(
