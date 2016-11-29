@@ -73,7 +73,7 @@ EOF;
             $csvAttachment = file_get_contents($filename);
             //print_r($csvAttachment);
             $to = "isha.mehra@jeevansathi.com,bharat.vaswani@jeevansathi.com,shashank.ghanekar@jeevansathi.com,anamika.singh@jeevasathi.com,rajeev.joshi@jeevansathi.com,rohan.mathur@jeevansathi.com";
-            //$to = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com,nitishpost@gmail.com";
+            //$to = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com";
             $cc = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
             //$cc = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com";
             $from = "js-sums@jeevansathi.com";
