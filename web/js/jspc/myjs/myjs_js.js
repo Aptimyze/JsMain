@@ -118,7 +118,7 @@ $(function(){
 
              
           }
-					elseF
+					else
 						setTimeout(function(){elem.bind(clickEventType,function(){myjsSlider(id);});},100);
 				  
 				}
@@ -943,7 +943,7 @@ function reArrangeDivsAfterDissapear(value,position,id)
   var noCardPresentState = noCardPresent(currentBox,totalBoxes);
   if(onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresentState)
   {
-    if(!isFirstBox(currentBox))}{
+    if(!isFirstBox(currentBox)){
           $("#prv-"+id+"_List").click();
           if(noCardPresentState)
           $("#nxt-"+id+"_List").hide();  
