@@ -86,9 +86,9 @@ class JS_Communication
 				
 					//print_r($result);die;			
 			}
-				$chatLog=new ChatLog();
-				$messageLog=new MessageLog();
-			$MessageLog->markMessageSeen($this->loginProfile,$this->otherProfile);
+			$chatLog=new ChatLog();
+			$messageLog=new MessageLog();
+			$messageLog->markMessageSeen($this->loginProfile,$this->otherProfile);
 			$chatLog->markChatSeen($this->loginProfile,$this->otherProfile);
 		}
 		else
