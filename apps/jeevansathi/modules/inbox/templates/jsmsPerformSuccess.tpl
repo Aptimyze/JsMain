@@ -60,10 +60,9 @@
 			<div class="clr"></div>
 		</div>
   
-                        
+      <div id="interestExpiringMessageDiv"><p id="interestExpiringMessage" class="txtc bg4 pad15 color13 f12 fontlig">These interests will expire in this week, Take action</p></div>                  
       ~/if` 
       
-      <div><p id="expire_message" class="txtc disp-none" style="display:none;background-color: #fefdff">These interests will expire in this week. Take action</p></div>
   </div>
 </div>
 
