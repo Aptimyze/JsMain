@@ -100,11 +100,11 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 			{
         $this->logFunctionCalling(__FUNCTION__);
                                 //Memcache to be moved to library - JSM-938
-                                $memObject=JsMemcache::getInstance();
-                                if($memObject->get("JPROFILE_CONTACT_".$pid)){
-                                        return $memObject->get("JPROFILE_CONTACT_".$pid);
-                                }
-				else if($pid)
+                                // $memObject=JsMemcache::getInstance();
+                                // if($memObject->get("JPROFILE_CONTACT_".$pid)){
+                                //         return $memObject->get("JPROFILE_CONTACT_".$pid);
+                                // }
+				if($pid)
 				{ 
                                         $sql="SELECT * FROM newjs.JPROFILE_CONTACT WHERE PROFILEID=:PROFILEID";
 					$prep=$this->db->prepare($sql);
@@ -112,11 +112,11 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 					$prep->execute();
 					if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					{
-                                                $memObject->set("JPROFILE_CONTACT_".$pid,$result);
+                                                // $memObject->set("JPROFILE_CONTACT_".$pid,$result);
 						return $result;
 					}
-                                        else
-                                                $memObject->set("JPROFILE_CONTACT_".$pid,"false");
+                                        // else
+                                        //         $memObject->set("JPROFILE_CONTACT_".$pid,"false");
 					return false;
 				}	
 			}
@@ -129,8 +129,8 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 
 		public function updateAltMobile($profileid, $altMobile){
                 try{
-                        $memObject=JsMemcache::getInstance();
-                        $memObject->delete("JPROFILE_CONTACT_".$pid);
+                        // $memObject=JsMemcache::getInstance();
+                        // $memObject->delete("JPROFILE_CONTACT_".$pid);
                         
                         $sql = "SELECT PROFILEID FROM newjs.JPROFILE_CONTACT WHERE PROFILEID=:PROFILEID";
                         $prep=$this->db->prepare($sql);
@@ -162,8 +162,8 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 	{
    
 		try {
-                        $memObject=JsMemcache::getInstance();
-                        $memObject->delete("JPROFILE_CONTACT_".$pid);
+                        // $memObject=JsMemcache::getInstance();
+                        // $memObject->delete("JPROFILE_CONTACT_".$pid);
                         
 			$keys="PROFILEID,";
 			$values=":PROFILEID ,";
@@ -264,9 +264,9 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
     private function logFunctionCalling($funName)
     {
       $key = __CLASS__.'_'.date('Y-m-d');
-      JsMemcache::getInstance()->hIncrBy($key, $funName);
+      // JsMemcache::getInstance()->hIncrBy($key, $funName);
       
-      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+      // JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
     }
 }
 ?>
