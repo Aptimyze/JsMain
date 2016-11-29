@@ -19,30 +19,43 @@ class NotificationSender
 	if(is_array($profileDetails))
 	{
 		$notificationLogObj = new MOBILE_API_NOTIFICATION_LOG;
-		foreach($profileDetails as $profileid=>$details)
+		foreach($profileDetails as $identifier=>$details)
 		{
+            if($profileDetails[$identifier]["NOTIFICATION_KEY"] != "LOGIN_REGISTER"){
+                $profileid = $identifier;
+            }
+            else{
+                $profileid = $profileDetails[$identifier]["PROFILEID"];
+            }
 			$osType = "";
 			if(!isset($details))
 				continue;
             //echo "send data...";
-            //print_r($profileDetails[$profileid]['REG_ID']);
-			$regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE'],$profileDetails[$profileid]['REG_ID']);
+            //print_r($profileDetails);
+            if($profileDetails[$identifier]['NOTIFICATION_KEY'] == 'LOGIN_REGISTER'){
+               $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE'],$profileDetails[$identifier]['REG_ID']); 
+            }
+            else{
+			 $regIds = $this->getRegistrationIds($identifier,$profileDetails[$identifier]['OS_TYPE']);
+            }
 			if(is_array($regIds))
 			{
-				if(is_array($regIds[$profileid]["AND"]))
+                //print_r($profileDetails);
+                //echo "log---------";
+				if(is_array($regIds[$identifier]["AND"]))
 				{
 					$osType = "AND";
 					$notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
 					$engineObject =NotificationEngineFactory::geNotificationEngineObject('GCM');
-					$result = $engineObject->sendNotification($regIds[$profileid]["AND"], $details,$profileid);
+					$result = $engineObject->sendNotification($regIds[$identifier]["AND"], $details,$profileid);
 				}
-				if(is_array($regIds[$profileid]["IOS"]))
+				if(is_array($regIds[$identifier]["IOS"]))
                                 {
 					$osType = "IOS";
                     $details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
 					$notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
 					$engineObject =NotificationEngineFactory::geNotificationEngineObject($osType);
-					$engineObject->sendNotification($regIds[$profileid]['IOS'], $details,$profileid);
+					$engineObject->sendNotification($regIds[$identifier]['IOS'], $details,$profileid);
                                 }
 			}
 			// logging of Notification Messages 

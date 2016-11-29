@@ -51,7 +51,12 @@ $this->addOptions(array(
 
 			foreach($details as $k=>$v)
 			{
-				$profileDetails[$v['PROFILEID']]=$v;
+				if($this->notificationKey == "LOGIN_REGISTER"){
+					$profileDetails[$k]=$v;
+				}
+				else{
+					$profileDetails[$v['PROFILEID']]=$v;
+				}
 				$idArr[] = $v['ID'];
 			}
 			
@@ -61,6 +66,8 @@ $this->addOptions(array(
 			else
 				$filteredProfileDetails = $profileDetails;
 			unset($profileDetails);
+			//echo "send to...........";
+			//print_r($filteredProfileDetails);
 			$this->sendPushNotifications($filteredProfileDetails,$idArr);
 			unset($details);
 			unset($filteredProfileDetails);
