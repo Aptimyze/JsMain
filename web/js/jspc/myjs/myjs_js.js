@@ -118,7 +118,7 @@ $(function(){
 
              
           }
-					else
+					elseF
 						setTimeout(function(){elem.bind(clickEventType,function(){myjsSlider(id);});},100);
 				  
 				}
@@ -940,10 +940,14 @@ function reArrangeDivsAfterDissapear(value,position,id)
   topSliderInt("init");
   var totalBoxes = getTotalBoxes(id);
   var numberOfProfiles = getNumberOfProfiles(id);
-  if(onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresent(currentBox,totalBoxes))
+  var noCardPresentState = noCardPresent(currentBox,totalBoxes);
+  if(onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresentState)
   {
-    if(!isFirstBox(currentBox))
+    if(!isFirstBox(currentBox))}{
           $("#prv-"+id+"_List").click();
+          if(noCardPresentState)
+          $("#nxt-"+id+"_List").hide();  
+        }
     else
       {
         if(id == 'DAILYMATCHES')
