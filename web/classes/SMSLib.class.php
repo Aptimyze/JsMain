@@ -605,6 +605,9 @@ class SMSLib
                 return $tokenValue['BRANCH_ADDRESS'];
             case "CRM_AGENT": 
                 return $tokenValue['CRM_AGENT'];
+            case "CRM_SMS_APP_URL":
+                $appStoreUrl = $this->SITE_URL . "/SMS-Download-Android-App";
+                return $this->getShortURL($appStoreUrl, '', '', $withoutLogin = 1);
             default:
                 return "";
         }
