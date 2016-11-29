@@ -445,7 +445,7 @@ if(authenticated($cid))
 				$is_error++;
 				$smarty->assign("CHECK_BANK","Y");
 			}
-			if(trim($address) == "" && $curtype == "DOL") {
+			if(trim($address) == "") {
 				$is_error++;
 				$smarty->assign("CHECK_ADDRESS","Y");	
 			}
