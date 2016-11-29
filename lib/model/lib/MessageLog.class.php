@@ -208,9 +208,8 @@ class MessageLog
                         unset($chatArr[$k]);
                     }
                 }
-                else if(count($finalArr)<$limit){
-                    $finalArr[$key] = $val;
-                }
+		else
+		   break;
             }
             if(count($messageArr)==0 && count($finalArr) < $limit){
                 foreach ($chatArr as $key=>$val){
@@ -219,6 +218,13 @@ class MessageLog
                     
                     $finalArr[$key] = $val;
                 }
+            }
+	    if(count($finalArr)<$limit && count($messageArr!=0) && count($chatArr)==0){
+		foreach ($messageArr as $key=>$val){
+                    $finalArr[$key] = $val;
+		    if(count($finalArr) >=$limit)
+			break;
+		}
             }
 /***/
 if($limit == 1000000)
