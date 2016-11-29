@@ -93,7 +93,7 @@
 </div>
 </div>
 <i class="pos-abs sprite2 myjs-ic2 myjs-pos3 scntrl cursp disp-none" id="prv-{{list_id}}"></i>
-<i class="pos-abs sprite2 myjs-ic3 myjs-pos4 scntrl cursp" id="nxt-{{list_id}}"></i>
+<i class="pos-abs sprite2 myjs-ic3 myjs-pos4 scntrl cursp disp-none" id="nxt-{{list_id}}"></i>
 </div>
 </div>
 <!--end:slider-->

@@ -728,7 +728,10 @@ function generateFaceCard(Object)
 
       });
       topSliderInt('init');
-
+        if(totalCount > 4)
+        {
+            $('#nxt-'+Object.list).show();
+        }
       $("#"+Object.containerName).removeClass("disp-none");
     }
     photo_init();
