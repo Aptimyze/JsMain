@@ -953,10 +953,20 @@ function invokePluginLoginHandler(state, loader) {
             objJsChat._appendLoggedHTML();
         }
     } else if (state == "failure" || state == "failurePlusLog") {
-        eraseCookie("chatAuth");
-        setLogoutClickLocalStorage("set");
+        if(state == "failure"){
+            eraseCookie("chatAuth");
+            setLogoutClickLocalStorage("set");
+        }
+        else{
+            setLogoutClickLocalStorage("unset");
+        }
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-            objJsChat.addLoginHTML(true);
+            if(state == "failure"){
+                objJsChat.addLoginHTML(true);
+            }
+            else{
+                objJsChat.addLoginHTML(true,true);
+            }
             if(loader != false) {
                 objJsChat.manageLoginLoader();
             }
@@ -980,6 +990,7 @@ function invokePluginLoginHandler(state, loader) {
         if(localStorage.getItem("logout_"+loggedInJspcUser) != "true"){
             //console.log("yes");
             if($(objJsChat._loginbtnID).length != 0){
+                //console.log("click button");
                 $(objJsChat._loginbtnID).click();
             }
         }
