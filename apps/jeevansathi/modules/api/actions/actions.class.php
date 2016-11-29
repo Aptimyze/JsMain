@@ -36,9 +36,9 @@ class apiActions extends sfActions
 			if($request->getParameter("FROM_GCM")==1)
 				$gcm=1;
     		$apiValidation=$this->apiWebHandler->getResponse();
+		$forwardingArray =$this->apiWebHandler->getModuleAndActionName($request);
 
                 // Notification Check
-                $forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
                 $actionName =$forwardingArray["actionName"];
                 if($actionName=='pollV1'){
                         $notifCheck =NotificationFunctions::notificationCheck($request);
@@ -63,7 +63,7 @@ class apiActions extends sfActions
 					$this->AfterAuth($loginData,$request);
 				}
 			}
-			$this->ForwardOrNot($request,$loginData,$upgradeStatus);
+			$this->ForwardOrNot($request,$loginData,$upgradeStatus,$forwardingArray);
 		}
 		else
 		{		
@@ -80,19 +80,15 @@ class apiActions extends sfActions
 		$respObj->setAuthChecksum($loginData[AUTHCHECKSUM]);
 		$respObj->setImageCopyServer($loginData[PROFILEID]);
 	}
-	private function ForwardOrNot($request,$loginData,$upgradeStatus)
+	private function ForwardOrNot($request,$loginData,$upgradeStatus,$forwardingArray)
 	{
 		$respObj = ApiResponseHandler::getInstance();
-		$forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
+		//$forwardingArray=$this->apiWebHandler->getModuleAndActionName($request);
 		$hamburgerDetails = HamburgerApp::getHamburgerDetails($loginData[PROFILEID],$request->getParameter("version"),$forwardingArray);
 		$respObj->setHamburgerDetails($hamburgerDetails);
 		if($upgradeStatus)
 			$respObj->setUpgradeDetails($upgradeStatus);
 
-		// Code added to update app device details (app version/os version/device model)
-		if($forwardingArray["moduleName"]=='myjs'){
-			//NotificationFunctions::updateVersionDetails($request);
-		}// Code ends
 		$this->forward($forwardingArray["moduleName"],$forwardingArray["actionName"]);
 	}
         public function executeHamburgerDetailsV1(sfWebRequest $request)
