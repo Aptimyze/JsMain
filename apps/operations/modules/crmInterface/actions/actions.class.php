@@ -1118,7 +1118,7 @@ class crmInterfaceActions extends sfActions
                         $tokenArr = null;
                         CommonUtility::sendPlusTrackInstantSMS('CRM_SMS_APP_DOWNLOAD', $this->profileid, $tokenArr);
                         $crmSmsLogObj->insertSmsLog($this->profileid,'CRM_SMS_APP_DOWNLOAD',$entryDt);
-                    } else if (in_array("N", $this->smsType) && in_array("CRM_SMS_APP_DOWNLOAD", $sentKeys)) {
+                    } else if (in_array("M", $this->smsType) && in_array("CRM_SMS_APP_DOWNLOAD", $sentKeys)) {
                         $this->showError = 1;
                         $this->errorMsg = "You've already sent this type of SMS to profile for today";
                     }
