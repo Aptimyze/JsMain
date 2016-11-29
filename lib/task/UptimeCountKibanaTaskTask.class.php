@@ -70,6 +70,7 @@ EOF;
 					$rcode200 => $arrModules[$rcode200],
 					$rcode500 => $arrModules[$rcode500],
 					'ratio' => $ratio,
+					'total' => $arrModules[$rcode200] + $arrModules[$rcode500],
 					);
 			$count = json_encode($count);
 			$ObjectId = time();
