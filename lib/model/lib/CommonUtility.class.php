@@ -910,7 +910,7 @@ die;
 	public static function makeTime($date, $format = 'YYYY-MM-DD')
 	{
 		$value = CommonUtility::datetotime($date, $format);
-		$time = mktime(0, 0, 0, $value["month"], $value["day"], $value["year"]);
+		$time = mktime(date('H'), date('i'), date('s'), $value["month"], $value["day"], $value["year"]);
 		return date("Y-m-d H:i:s", $time);
 	}
 
