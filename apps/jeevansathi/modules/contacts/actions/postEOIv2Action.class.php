@@ -268,6 +268,7 @@ class postEOIv2Action extends sfAction
 				$responseArray["topMsg2"] = "Interest will be delivered once your profile is screened";
 				$responseArray["errmsglabel"] = "Your interest has been saved and will be sent after screening. Content of each profile created on Jeevansathi is manually screened for best experience of our users and may take up to 24 hours.";
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
+				$responseArray["remove3Dots_UnderScreen"] = true;
 				$responseArray["headerlabel"] = "Profile Under Screening";
 				$responseArray["redirect"] = true;
 			}
@@ -289,6 +290,7 @@ class postEOIv2Action extends sfAction
 		$finalresponseArray["buttondetails"] = ButtonResponse::buttondetailsMerge($responseButtonArray);
 		if(MobileCommon::isNewMobileSite())
 		{
+			
 			$finalresponseArray["button_after_action"] = ButtonResponseFinal::getListingButtons("CC","M","S","I");
 			$restResponseArray= $buttonObj->jsmsRestButtonsrray();
 			$finalresponseArray["button_after_action"]["photo"]=$thumbNail;

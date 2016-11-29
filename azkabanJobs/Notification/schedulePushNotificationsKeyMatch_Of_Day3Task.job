@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/symfony  notification:schedulePushNotificationsKey MATCH_OF_DAY 5 2

@@ -513,6 +513,7 @@ function sendProcessCCRequest(requestParams,infoArr)
 		data: postParams,
 		timeout: 60000,
 		cache: false,
+		updateChatList:(action == "pagination") ? true : false,
 		beforeSend: function( xhr ) 
 		{               
 			$("#mainUploadRequestDiv").hide();

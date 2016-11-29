@@ -1247,6 +1247,10 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 		$fields ="USERNAME,EMAIL,PROFILEID,AGE,CITY_RES,AGE,ACTIVATED,GENDER,ENTRY_DT,LAST_LOGIN_DT,PHONE_MOB,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,HAVEPHOTO,SUBSCRIPTION,RELATION,DTOFBIRTH,PINCODE,CONTACT,ISD";
 
 	$profileStr=implode(",",$profilesArr);
+	if($subMethod=='NEW_PROFILES' || $subMethod=='FOLLOWUP') {
+		$billPurObj = new billing_PURCHASES('newjs_slave');
+		$everPaidProfiles = $billPurObj->isPaidEver($profileStr);
+	}
 	if($profileStr){
 		$crmUtilityObj          =new crmUtility();	
 		$cityObj		=new newjs_CITY_NEW();
@@ -1293,6 +1297,13 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
                         		$setProfileArr[$pid]["RES_NO"] =$isdNo."-".$setProfileArr[$pid]["RES_NO"];
 				if($setProfileArr[$pid]["ALTERNATE_NO"] && $isdNo)
 					$setProfileArr[$pid]["ALTERNATE_NO"] =$isdNo."-".$setProfileArr[$pid]["ALTERNATE_NO"];
+				if($subMethod=='NEW_PROFILES' || $subMethod=='FOLLOWUP') {
+					if(in_array($pid, array_keys($everPaidProfiles))) {
+						$setProfileArr[$pid]["EVER_PAID"] = 'Y';
+					} else {
+						$setProfileArr[$pid]["EVER_PAID"] = 'N';
+					}
+				}
 			}
 			
 			$setProfileArr[$pid]["CHECKSUM"]         =md5($pid)."i".$pid;

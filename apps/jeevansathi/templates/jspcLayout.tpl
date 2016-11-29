@@ -75,6 +75,18 @@
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
+        var dppListingWebServiceUrl = "~JsConstants::$chatListingWebServiceUrl['dpp']`";
+        var nonRosterRefreshUpdate = "~JsConstants::$nonRosterRefreshUpdate`";
+        var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
+        //console.log("dppLiveForAll",dppLiveForAll);
+        var betaDppExpression = "",specialDppProfiles="";
+        if(dppLiveForAll == "0"){
+            betaDppExpression = "~JsConstants::$profilesEligibleForDpp['modulusDivisor']`"+","+"~JsConstants::$profilesEligibleForDpp['modulusRemainder']`";
+            specialDppProfiles = "~JsConstants::$profilesEligibleForDpp['privilegedProfiles']`";
+        }
+        
+        //console.log("betaDppExpression",betaDppExpression);
+        //console.log("ank",dppListingWebServiceUrl);
         var selfUserChatName = "~$selfUserChatName`";
         //console.log("ank",selfUserChatName);
         localStorage.removeItem("self_subcription");
