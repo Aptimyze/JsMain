@@ -676,7 +676,12 @@ function generateFaceCard(Object)
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,totalCount);
 			else
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,"");
-			$("#"+Object.name).after(Object.containerHtml);
+			if($("#"+Object.name+"_Container").length == 1){
+        $("#"+Object.name+"_Container").css('height',$("#"+Object.name+"_Container").height());
+        $("#"+Object.name+"_Container").html($(Object.containerHtml.trim()).html());
+      }
+      else 
+        $("#"+Object.name).after(Object.containerHtml);
 			$("#"+Object.name).addClass("disp-none");
 			
 			if(Object.name=="DAILYMATCHES")
@@ -943,35 +948,35 @@ function reArrangeDivsAfterDissapear(value,position,id)
       {
         if(id == 'DAILYMATCHES')
         {
-          $("#DAILYMATCHES_Container").remove()
+          //$("#DAILYMATCHES_Container").html('')
           var dailyMatchObj =new dailyMatches();
           dailyMatchObj.pre();
           dailyMatchObj.request();
         }
         if(id == 'JUSTJOINED')
         {
-          $("#JUSTJOINED_Container").remove()
+          //$("#JUSTJOINED_Container").remove()
           var justJoinedMatchObj =new justJoinedMatches();
           justJoinedMatchObj.pre();
           justJoinedMatchObj.request();
         }
         if(id == 'LASTSEARCH')
         {
-          $("#LASTSEARCH_Container").remove()
+        //  $("#LASTSEARCH_Container").remove()
           var lastSearch =new lastSearchMatches();
           lastSearch.pre();
           lastSearch.request();
         }
         if(id == 'VERIFIEDMATCHES')
         {
-          $("#VERIFIEDMATCHES_Container").remove()
+          //$("#VERIFIEDMATCHES_Container").remove()
           var verifiedMatchObj =new verifiedMatches();
           verifiedMatchObj.pre();
           verifiedMatchObj.request();
         }
         if(id == 'DESIREDPARTNERMATCHES')
        {  
-          $("#DESIREDPARTNERMATCHES_Container").remove()
+         // $("#DESIREDPARTNERMATCHES_Container").remove()
           var desiredMatchObj =new desiredPartnerMatches();
           desiredMatchObj.pre();
           desiredMatchObj.request();
