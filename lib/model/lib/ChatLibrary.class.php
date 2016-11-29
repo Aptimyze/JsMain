@@ -35,7 +35,7 @@ class ChatLibrary
 	*/	
 	public static function getPresenceOfIds($profileIdStr="")
 	{
-		$url = JsConstants::$communicationServiceUrl."/profile/v1/presence"; 
+		$url = JsConstants::$presenceServiceUrl."/profile/v1/presence"; 
 		if($profileIdStr)
 			$url.= "?pfids=$profileIdStr"; 
 		$out = CommonUtility::sendCurlPostRequest($url,'',5);
