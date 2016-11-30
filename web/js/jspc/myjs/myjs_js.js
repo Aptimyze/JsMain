@@ -977,6 +977,8 @@ function reArrangeDivsAfterDissapear(value,position,id)
       {
     
       $("#"+id+"_Container").css('height',$("#"+id+"_Container").height());
+      if(value ==0)
+      $("#"+id+"_Container").css('height','');
 
         if(id == 'DAILYMATCHES')
         {
