@@ -773,7 +773,7 @@ class InboxMobileAppV2
 				{
 							if($profile[$count]["interest_viewed_date"]!=null)
 							{
-								$eoiViewedText = "Interest viewed on ".$profile[$count]["interest_viewed_date"];
+								$eoiViewedText = "Interest viewed".((stripos($profile[$count]["interest_viewed_date"],'today')=== false)?' on ':" ").$profile[$count]["interest_viewed_date"];
 								$profile[$count]["interest_viewed_date"] = $eoiViewedText;
 								if(!MobileCommon::isDesktop())
 									$profile[$count]["timetext"] = $profile[$count]["interest_viewed_date"];
