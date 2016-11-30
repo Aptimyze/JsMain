@@ -847,6 +847,30 @@ function requestListingPhoto(apiParams) {
         }
     }
 }
+
+/* requestListingPhoto
+ * request listing photo through api
+ * @inputs: apiParams
+ * @return: response
+ */
+function logChatListingFetchTimeout() {
+    var postData = {"username":loggedInJspcUser};
+    $.myObj.ajax({
+        url: "/api/v1/chat/logChatListingFetchTimeout",
+        dataType: 'json',
+        type: 'POST',
+        data: postData,
+        timeout: 60000,
+        cache: false,
+        beforeSend: function (xhr) {},
+        success: function (response) {
+        },
+        error: function (xhr) {
+            //return "error";
+        }
+    });
+}
+
 /*function initiateChatConnection
  * request sent to openfire to initiate chat and maintain session
  * @params:none
@@ -928,13 +952,29 @@ function invokePluginLoginHandler(state, loader) {
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
             objJsChat._appendLoggedHTML();
         }
-    } else if (state == "failure") {
+    } else if (state == "failure" || state == "failurePlusLog") {
         eraseCookie("chatAuth");
         setLogoutClickLocalStorage("set");
+        /*if(state == "failure"){
+            eraseCookie("chatAuth");
+            setLogoutClickLocalStorage("set");
+        }
+        else{
+            setLogoutClickLocalStorage("unset");
+        }*/
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
             objJsChat.addLoginHTML(true);
+            /*if(state == "failure"){
+                objJsChat.addLoginHTML(true);
+            }
+            else{
+                objJsChat.addLoginHTML(true,true);
+            }*/
             if(loader != false) {
                 objJsChat.manageLoginLoader();
+            }
+            if(state == "failurePlusLog" && chatConfig.Params[device].logChatTimeout == true){
+                logChatListingFetchTimeout();
             }
         }
     } else if (state == "session_sync") {
@@ -953,6 +993,7 @@ function invokePluginLoginHandler(state, loader) {
         if(localStorage.getItem("logout_"+loggedInJspcUser) != "true"){
             //console.log("yes");
             if($(objJsChat._loginbtnID).length != 0){
+                //console.log("click button");
                 $(objJsChat._loginbtnID).click();
             }
         }
