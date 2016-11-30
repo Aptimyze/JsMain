@@ -757,7 +757,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	      $count_matches = 0;
 	    }
 		
-		$DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_MATCHCOUNT","","",(string)$count_matches,"","",'',1,"","Y");
+		
 
 
 
@@ -767,6 +767,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
 		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
 		$DppBasicArr["BasicDetails"][OnClick][]= $this->handleStateCityData($szState,$szCity,$showCity);
+                $DppBasicArr["BasicDetails"][OnClick][] = $this->getApiFormatArray("P_MATCHCOUNT","","",(string)$count_matches,"","",'',1,"","Y");
 		return $DppBasicArr;
 	}
 
