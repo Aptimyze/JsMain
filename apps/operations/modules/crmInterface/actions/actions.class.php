@@ -1038,48 +1038,27 @@ class crmInterfaceActions extends sfActions
                     $this->errorMsg = "You have exceeded the number of SMS's that can be sent to this user today";
                 } else {
                     if (in_array("B", $this->smsType) && !in_array("CRM_SMS_BRANCH", $sentKeys)) {
-                        $payHandlerObj = new PaymentHandler();
-                        $states        = $payHandlerObj->getStates();
-                        $cityRes       = $payHandlerObj->getCityRes($this->profileid);
-                        $cityArr       = FieldMap::getFieldLabel("city", 1, 1);
-                        $cityName      = $cityArr[$cityRes];
-                        if ($cityName == "New Delhi" || empty($cityName)) {
-                            $userCity = "Delhi";
-                        } else {
-                            $userCity = $cityName;
-                        }
-                        foreach ($states as $key => $val) {
-                            $statesArr[] = $val['STATE'];
-                        }
-                        $branchesArrRaw = $payHandlerObj->getBranchesInCityArr($statesArr);
-                        foreach ($branchesArrRaw as $key => $val) {
-                            $branches[$val['STATE']][] = $val;
-                        }
-                        foreach ($branches as $key => $val) {
-                            foreach ($val as $kk => $vv) {
-                                $temp    = explode("(", $vv['PHONE']);
-                                $temp[0] = str_replace("//", "/", $temp[0]);
-                                $temp[0] = str_replace("/", ", ", $temp[0]);
-                                if (count($temp) > 1) {
-                                    $temp[1] = "(" . $temp[1];
-                                    $temp    = $temp[0] . $temp[1];
-                                } else {
-                                    $temp = $temp[0];
-                                }
-                                $branches[$key][$kk]['PHONE'] = $temp;
-                                $temp2                        = explode("(", $vv['MOBILE']);
-                                $temp2[0]                     = str_replace("//", "/", $temp2[0]);
-                                $temp2[0]                     = str_replace("/", ", ", $temp2[0]);
-                                if (count($temp2) > 1) {
-                                    $temp2[1] = "(" . $temp2[1];
-                                    $temp2    = $temp2[0] . $temp2[1];
-                                } else {
-                                    $temp2 = $temp2[0];
-                                }
-                                $branches[$key][$kk]['MOBILE'] = $temp2;
+                        $newjsConObj = new NEWJS_CONTACT_US('newjs_slave');
+                        $arrResult = array();
+                        $newjsConObj->fetch_All_Contact($arrResult);
+                        foreach($arrResult as $key=>$val) {
+                            if (empty($branchArr[$val['STATE_VAL']][$val['CITY_ID']])) {
+                                $branchArr[$val['STATE_VAL']][$val['CITY_ID']] = $val['ADDRESS'];
                             }
                         }
-                        $branchAddress = wordwrap($branches[$userCity][0]['ADDRESS'], 120);
+                        $payHandlerObj = new PaymentHandler();
+                        $cityRes       = $payHandlerObj->getCityRes($this->profileid);
+                        $state = ucwords(preg_replace("/[^A-Z]+/", "", $cityRes));
+                        if (in_array($state, array_keys($branchArr))) {
+                            if (in_array($cityRes, array_keys($branchArr[$state]))) {
+                                $branchAddress = $branchArr[$state][$cityRes]; 
+                            } else {
+                                $branchAddress = array_values($branchArr[$state])[0]; 
+                            }
+                        } else {
+                            $branchAddress = $branchAddress = array_values($branchArr['DE'])[0]; 
+                        }
+                        $branchAddress = wordwrap($branchAddress, 120);
                         $tokenArr      = array("BRANCH_ADDRESS" => $branchAddress);
                         CommonUtility::sendPlusTrackInstantSMS('CRM_SMS_BRANCH', $this->profileid, $tokenArr);
                         $crmSmsLogObj->insertSmsLog($this->profileid,'CRM_SMS_BRANCH',$entryDt);

@@ -37,16 +37,16 @@
 			<br>
 			<div width="100%" style="background-color:lightblue;text-align:center;padding:20px;font-size:12px;">
 				<span style="font-weight:bold;padding-left:20px;">
-					<input type="checkbox" ~if $showError eq '1' || $sent eq '1'`disabled~/if` name="smsType[]" value="B" style="text-align:center;font-size:14px;"> Branch Details <br>
+					<input type="checkbox" name="smsType[]" value="B" style="text-align:center;font-size:14px;"> Branch Details <br>
 				</span>
 				<span style="font-weight:bold;padding-left:20px;">
-					<input type="checkbox" ~if $showError eq '1' || $sent eq '1'`disabled~/if` name="smsType[]" value="O" style="text-align:center;font-size:14px;"> Current Offer with Discount <br>
+					<input type="checkbox" name="smsType[]" value="O" style="text-align:center;font-size:14px;"> Current Offer with Discount <br>
 				</span>
 				<span style="font-weight:bold;padding-left:20px;">
-					<input type="checkbox" ~if $showError eq '1' || $sent eq '1'`disabled~/if` name="smsType[]" value="N" style="text-align:center;font-size:14px;"> Not able to reach you <br>
+					<input type="checkbox" name="smsType[]" value="N" style="text-align:center;font-size:14px;"> Not able to reach you <br>
 				</span>
 				<span style="font-weight:bold;padding-left:20px;">
-					<input type="checkbox" ~if $showError eq '1' || $sent eq '1'`disabled~/if` name="smsType[]" value="M" style="text-align:center;font-size:14px;"> Mobile App Download Link <br>
+					<input type="checkbox" name="smsType[]" value="M" style="text-align:center;font-size:14px;"> Mobile App Download Link <br>
 				</span>
 			</div>
 			<br>
