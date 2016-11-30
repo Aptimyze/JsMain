@@ -28,7 +28,13 @@ jQuery.validator.setDefaults({
 
 // invalid domain check on email
 jQuery.validator.addMethod("invalidDomain", function(value, element) {
-	value=$.trim($("#EMAIL").val());
+	
+	if($(element).attr("id") == "EMAIL" || $(element).attr("id") == "ALT_EMAIL")
+	{
+		var idVal = "#"+$(element).attr("id");
+		var email=$.trim($(idVal).val());
+	}	
+	
 	var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
 	var start = value.indexOf('@');
 	var end = value.lastIndexOf('.');
@@ -65,13 +71,27 @@ jQuery.validator.addMethod("invalidDomain", function(value, element) {
 
 // regex pattern check on email
 jQuery.validator.addMethod("emailPattern", function(value, element) {
-       var email = $.trim($("#EMAIL").val());
+	
+	if($(element).attr("id") == "EMAIL")
+	{
+		var idVal = "#"+$(element).attr("id");		
+	}
+	else if($(element).attr("id") == "ALT_EMAIL" && value!="")
+	{
+		var idVal = "#"+$(element).attr("id");
+	}
+	else if($(element).attr("id") == "ALT_EMAIL" && value=="")
+	{
+		return true;
+	}	
+	   var email=$.trim($(idVal).val());
        if(!email_regex.test(email))
 			return false;
         else
 			return true;
 
 },"Please provide a valid Email Id");
+
 
 // regex pattern check on name
 jQuery.validator.addMethod("validate_name", function (value, element){
@@ -249,7 +269,7 @@ function validator(tabKey){
 				//debug:true;
 				
 				});	
-	if(tabKey=="SuitableTimetoCall" || tabKey=="NameoftheProfileCreator" || tabKey=="EmailId" || tabKey=="MobileNo" || tabKey=="AlternateMobileNo" || tabKey=="LandlineNo")
+	if(tabKey=="SuitableTimetoCall" || tabKey=="NameoftheProfileCreator" || tabKey=="EmailId" || tabKey=="MobileNo" || tabKey=="AlternateMobileNo" || tabKey=="LandlineNo" || tabKey == "AlternateEmailId")
 	{
 		$("#PROFILE_HANDLER_NAME").rules("add", {
 			validate_name: true,
@@ -262,7 +282,13 @@ function validator(tabKey){
 
 
 		$("#EMAIL").rules("add", {
-			required: false,
+			required: false, //Should be true 
+			invalidDomain: true,
+			emailPattern: true,		
+		});
+
+		$("#ALT_EMAIL").rules("add", {
+			required: false, //should be false since it is not mandatory.
 			invalidDomain: true,
 			emailPattern: true,		
 		});

@@ -184,6 +184,12 @@ case 'EMAIL':
 					$field->setConstraintClass("email");
 					$field->setTableName("JPROFILE:EMAIL");
 				break;
+case 'ALT_EMAIL':
+					$field=new Field('','ALT_EMAIL');
+					$field->setFieldType("text");
+					$field->setConstraintClass("alt_email");
+					$field->setTableName("JPROFILE_CONTACT:ALT_EMAIL");
+				break;
 
 case 'FAMILYINFO':
 					$field=new Field('','FAMILYINFO');

@@ -27,6 +27,7 @@ class ApiEditSubmitV1Action extends sfActions
 		//Get symfony form object related to Edit Fields coming.
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->editFieldNameArr=$request->getParameter('editFieldArr');
+		
 		if($this->editFieldNameArr['STATE_RES'] && $this->editFieldNameArr['CITY_RES']=="0")
 		{
 			$this->editFieldNameArr['CITY_RES']=  $this->editFieldNameArr['STATE_RES'] ."OT";
@@ -80,10 +81,10 @@ class ApiEditSubmitV1Action extends sfActions
 			
 			$this->form->bind($this->editFieldNameArr);
 			if ($this->form->isValid() && !$nonEditableField && $incompleteFieldFlag)
-			{       
+			{   
                                 if($this->editFieldNameArr["FAMILYINFO"])
 					RegChannelTrack::insertPageChannel($request->getAttribute("profileid"),PageTypeTrack::_ABOUTFAMILY);
-				$this->form->updateData();
+				$this->form->updateData();				
 				if($this->incomplete==EditProfileEnum::$INCOMPLETE_YES)
 				{
 					//Channel tracking for Incomplete SMS to track incomplete to complete )
