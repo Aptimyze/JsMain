@@ -190,6 +190,7 @@ class ProcessHandler
 			break;
 		case "ALL_MESSAGES":
 			MessageLog::makeAllMessagesSeen($body['profileid']);
+			ChatLog::makeAllChatsSeen($body['profileid']);
 			break;
 		case "PHOTO_REQUEST":
 			Inbox::setAllPhotoRequestsSeen($body['profileid']);
@@ -243,5 +244,14 @@ public function updateViewLogTable($body,$type)
         $viewLogObj->updateViewLog($viewer,$viewed);
  }
  
+public function sendEOI($body, $type)
+{
+	if($type == "SCREENING")
+	{
+		$deliverContactsObj = new deliverTempContacts;
+		$deliverContactsObj->deliverContactsTemp($body['profileId']);
+	}
+}
+
  }
 ?>

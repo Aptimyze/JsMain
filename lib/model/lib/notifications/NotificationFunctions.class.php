@@ -59,7 +59,7 @@ class NotificationFunctions
 	}
         public static function registrationIdInsert($profileid='',$registrationid,$appVersion='',$osVersion='',$deviceBrand='',$deviceModel=''){
         	if($profileid){
-        	        $maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME;
+        	        $maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_masterDDL');
         	        $alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
         	        $alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
         	        $alarmTime[$profileid]=alarmTimeManager::getNextTime($alarmCurrentTime,NotificationEnums::$alarmMaxTime,NotificationEnums::$alarmMinTime);
@@ -96,4 +96,19 @@ class NotificationFunctions
 			$notificationDelLogObj->deleteNotification($messageId,$osType);
 		}
 	}
+        public function notificationCheck($request)
+        {
+                $notificationStop =JsConstants::$notificationStop;
+                if((date("H")>='10' && date("H")<='20') || (date("H")>='00' && date("H")<='03'))
+                        $notificationStop=1;
+                if($notificationStop)
+                {
+                        $notificationData['notifications'] = '';
+                        $notificationData['alarmTime']= '';
+                        $data =json_encode($notificationData);
+                        return $data;
+                }
+                else
+                        return;
+        }
 }

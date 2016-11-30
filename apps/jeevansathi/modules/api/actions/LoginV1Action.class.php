@@ -141,7 +141,7 @@ class LoginV1Action extends sfActions
 	if($result && $result[ACTIVATED]<>'D' && $result[GENDER]!="")
 	{
 		$apiObj->setAuthChecksum($result[AUTHCHECKSUM]);
-                $maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME;
+                $maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_masterDDL');
                 $alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
                 $alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
                 $alarmTime[$result['PROFILEID']]=alarmTimeManager::getNextTime($alarmCurrentTime,NotificationEnums::$alarmMaxTime,NotificationEnums::$alarmMinTime);

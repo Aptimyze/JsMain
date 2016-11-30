@@ -151,10 +151,6 @@ $(function(){
         $(".content").mCustomScrollbar();
         if(hideUnimportantFeatureAtPeakLoad != '1')
             displayViewSimilarProfiles();
-
-        //function calling for report abuse layer
-		customOptionButton('report_profile');
-///////////////////////////
        	
       });
       $('.js-hasaction').click(function() {
@@ -454,24 +450,6 @@ $(".okayClick").click(function(){
 	$('.noHoroData').hide();
 	$('.fullHoroData').show();
 })
-
-function customOptionButton(optionBtnName) {
-	var checkBox = $('input[name="' + optionBtnName + '"]');
-	$(checkBox).each(function() {
-		$(this).wrap("<span class='custom-checkbox-reportAbuse'></span>");
-			if ($(this).is(':checked')) {
-		 		$(this).closest('li').addClass("selected");
-			}
-			else $(this).closest('li').removeClass("selected"); 
-		});
-		$(checkBox).click(function() {
-			$('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
-			$(this).closest('li').addClass("selected");
-		});
-
-}
-
-
 
 
 function showReportAbuseLayer(){

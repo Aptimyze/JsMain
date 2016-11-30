@@ -195,7 +195,7 @@ class Inbox implements Module
 				if($infoTypenav["PAGE"] == "VISITORS")
 				{
 					$visitorObj = new Visitors($this->profileObj);
-					$visitors = $visitorObj->getVisitorProfile();
+					$visitors = $visitorObj->getVisitorProfile("","",$infoTypenav);
 					$countObj[$infoTypenav["PAGE"]] = count($visitors);
 				}
 				
@@ -289,6 +289,8 @@ class Inbox implements Module
 						$conditionArray = $this->getCondition($infoType, $page); 
                                                 if($infoType == "MY_MESSAGE")
                                                     $conditionArray['LIMIT']++;
+                                                if($infoTypeNav["matchedOrAll"])
+                                                    $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
                                                 if($infoType == "MY_MESSAGE"){
 							if(JsMemcache::getInstance()->get($keyCount))
@@ -380,7 +382,10 @@ class Inbox implements Module
                                 //elseif ($infoType == "MY_MESSAGE" && $this->totalCount / $config["COUNT"] > 1)
 				//	$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
 				$this->completeProfilesInfo[$infoType]["NAVIGATION_INDEX"] = $this->getNavigationArray($this->completeProfilesInfo[$infoType]["CURRENT_NAV"], $this->totalCount, $config["COUNT"]);
-				$this->completeProfilesInfo[$infoType]["TRACKING"]  	 = $config["TRACKING"];
+                                if($infoType=="VISITORS" && $config["TRACKING"]=="stype=AV" && $infoTypeNav['matchedOrAll']=="M")
+                                    $this->completeProfilesInfo[$infoType]["TRACKING"] = "stype=".SearchTypesEnums::MATCHING_VISITORS_ANDROID;
+                                else
+                                    $this->completeProfilesInfo[$infoType]["TRACKING"] = $config["TRACKING"];
 				$this->completeProfilesInfo[$infoType]["contact_id"] = $key;
 				$this->completeProfilesInfo[$infoType]["self_profileid"] = $this->profileObj->getPROFILEID();
 				if($infoType == "INTEREST_RECEIVED_FILTER")

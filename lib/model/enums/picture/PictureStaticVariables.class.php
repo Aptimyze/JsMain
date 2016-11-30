@@ -15,6 +15,8 @@ class PictureStaticVariablesEnum
 	const maxPhotoSize = 6291456;//6*1024*1024
 	const maxNumberOfPhotos = 20;
 	const profilePicOrdering = 0;
+        const photoLoggingMod=11;
+        const photoLoggingRem=2;
 	public static $photoFormats = array("jpeg", "gif", "jpg");
 	public static $orientationToAngle= array("6"=>"-90","3"=>"180","8"=>"90");
 	public static $PICTURE_ALLOWED_FORMATS = array("image/gif","image/jpg","image/jpeg");
@@ -23,7 +25,7 @@ class PictureStaticVariablesEnum
                                            "The photo is of a well known personality. If it is yours, submit an identity.",
 					   "Gender not proper.",
 					   "Group photo.",
-					   "Age not proper/Age doesn’t match.",
+					   "Age not proper/Age does not match.",
 					   "Obscene photo.",
 					   "Side face.",
 					   "Attachment error.",

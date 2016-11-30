@@ -32,36 +32,14 @@ EOF;
 	protected function execute($arguments = array(), $options = array())
 	{
 		if(!sfContext::hasInstance())
-	                sfContext::createInstance($this->configuration);
-	            $mailerYNObj = new MAIL_YesNoMail("newjs_masterDDL");
-	            $mailerYNObj->EmptyMailerYN();
-	            $chunk=$arguments["chunks"];
-	            for($serverId=0;$serverId<$this->noOfActiveServers;$serverId++){
-	            	for($i=0;$i<$chunk;$i++){
-	            	$dbName = JsDbSharding::getShardNo($serverId,true);
-	            	$Contactsobj = new newjs_CONTACTS($dbName);
-	            	$chunkstr="AND RECEIVER%".$chunk."=".$i;
-	            	$profilemail=$Contactsobj->getContactsPending($serverId,$chunkstr);
-	            	if($profilemail)
-	            	{
-	            	$profileMailChunkArray=array_chunk($profilemail, $this->noOfChunksSender);
-	            	foreach ($profileMailChunkArray as $key => $value) {
-	            		$profilemailchunk=$value;
-			            	$profilemailchunk=implode(',',$profilemailchunk);
-			            	$contactResult = $Contactsobj->getSendersPending($profilemailchunk);
-			            	$contactResult = $this->skipProfiles($contactResult);
-				            	foreach ($contactResult as $key => $usercode) {
-				            		$count=count($usercode);
-				            		if(count($usercode)>10)
-				            			$usercode = array_slice($usercode, 0, 10);
-				            		
-				            		$usercode = implode(',',$usercode);
-									$mailerYNObj->InsertMailerYN($key,$usercode,$count);
+			sfContext::createInstance($this->configuration);
 
-				            	}
-								}
-	            	}
-	            }
+		$mailerYNObj = new MAIL_YesNoMail("newjs_masterDDL");
+		$this->emptyMailer($mailerYNObj);
+		$chunk = $arguments["chunks"];
+        for($serverId = 0; $serverId < $this->noOfActiveServers; $serverId++)
+        {
+			$this->profileChunk($chunk, $serverId, $mailerYNObj);
 		}
 	
 	}
@@ -80,8 +58,55 @@ EOF;
 				$temp=$value;
 			if(count($temp)>0)
 				$result[$key]=$temp;
+			$skipProfileObj::unsetInstance($key);
 		}
 		return $result;
+	}
+
+	private function emptyMailer($mailerYNObj)
+	{
+		$mailerYNObj->EmptyMailerYN();
+	}
+
+	private function profileChunk($chunk ,$serverId, $mailerYNObj)
+	{
+		for($i = 0; $i < $chunk; $i++)
+		{
+			$dbName = JsDbSharding::getShardNo($serverId,true);
+			$Contactsobj = new newjs_CONTACTS($dbName);
+			$chunkstr = "AND RECEIVER%".$chunk."=".$i;
+			$profilemail = $Contactsobj->getContactsPending($serverId,$chunkstr);
+			if($profilemail)
+			{
+				$profileMailChunkArray = array_chunk($profilemail, $this->noOfChunksSender);
+
+				$this->generateContactResult($profileMailChunkArray, $Contactsobj, $mailerYNObj);
+			}
+		}
+	}
+
+	private function generateContactResult($profileMailChunkArray, $Contactsobj, $mailerYNObj)
+	{
+		foreach ($profileMailChunkArray as $key => $value)
+		{
+			$profilemailchunk = $value;
+			$profilemailchunk = implode(',',$profilemailchunk);
+			$contactResult = $Contactsobj->getSendersPending($profilemailchunk);
+			$contactResult = $this->skipProfiles($contactResult);
+			$this->InsertMailer($contactResult, $mailerYNObj);
+		}
+	}
+
+	private function InsertMailer($contactResult, $mailerYNObj)
+	{
+		foreach ($contactResult as $key => $usercode)
+		{
+			$count = count($usercode);
+			if(count($usercode)>10)
+				$usercode = array_slice($usercode, 0, 10);
+			$usercode = implode(',',$usercode);
+			$mailerYNObj->InsertMailerYN($key,$usercode,$count);
+		}
 	}
  }
 

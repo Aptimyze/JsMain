@@ -149,6 +149,14 @@ class RenewalDialer {
                         $this->inRenewalDialerInsObj->updateRenewalDialerEligibility($profileid, "N");
                         continue;
                     }
+		    if($disposition=='NI'){
+			$todayDate 	=date("Y-m-d");
+			$prev2Days    	=date('Y-m-d', strtotime('-1 days',strtotime($todayDate)));
+			if(strtotime($dispEntryDt)>=strtotime($prev2Days)){
+				$this->inRenewalDialerInsObj->updateRenewalDialerEligibility($profileid, "N");	
+				continue;	
+			}
+		    }	
                 }
                 $this->inRenewalDialerInsObj->updateRenewalDialerEligibility($profileid, "Y");
                 unset($jProfileArr);

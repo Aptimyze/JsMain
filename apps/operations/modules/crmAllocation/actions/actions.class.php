@@ -161,6 +161,7 @@ class crmAllocationActions extends sfActions
 	$this->orders		=$request->getParameter("orders");		
 	$pchecksum		=$request->getParameter("pchecksum");
 	$submit			=$request->getParameter("submit");
+	$discountNegVal         =$request->getParameter("discountNegVal");
 	if(!$this->profileid){
 		$this->forward('commoninterface','CrmLogin');
 	}
@@ -176,7 +177,6 @@ class crmAllocationActions extends sfActions
 		die('SORRY !!! YOU CANNOT PROCEED FURTHER.');
         $this->agentName        =$agentAllocDetailsObj->fetchAgentName($this->cid);
         $privilege              =$agentAllocDetailsObj->getprivilage($this->cid);
-
         $processObj->setProcessName('Allocation');
         $processObj->setMethod('OUTBOUND');
 	$processObj->setSubMethod($this->subMethod);	
@@ -199,6 +199,13 @@ class crmAllocationActions extends sfActions
 		$follow_hour    	=$request->getParameter("follow_hour");
 		$follow_min     	=$request->getParameter("follow_min");
 		$error			=false;
+
+		if(!empty($discountNegVal) && is_numeric($discountNegVal) && $discountNegVal > 0 && $discountNegVal < 100) {
+			$discNegObj = new incentive_DISCOUNT_NEGOTIATION_LOG();
+			$entryDt = date("Y-m-d H:i:s");
+			$expiryDt = date("Y-m-d H:i:s", (time() + 15*24*60*60));
+			$discNegObj->insert($this->agentName, $this->profileid, $discountNegVal, $entryDt, $expiryDt);
+		}
 
 		// Disposition value parsing  
 		if($willPay=='AA|X')
@@ -272,6 +279,7 @@ class crmAllocationActions extends sfActions
         $this->cid              =$request->getParameter("cid");
         $this->username        	=$request->getParameter("username");
         $submit                 =$request->getParameter("submit");
+        $discountNegVal         =$request->getParameter("discountNegVal");
 
         $processObj             =new PROCESS();
         $crmUtilityObj          =new crmUtility();
@@ -312,6 +320,13 @@ class crmAllocationActions extends sfActions
 	                $follow_hour                  =$request->getParameter("follow_hour");
 	                $follow_min                   =$request->getParameter("follow_min");
 			$showDetail                   =$request->getParameter("showDetail");
+
+				if(!empty($discountNegVal) && is_numeric($discountNegVal) && $discountNegVal > 0 && $discountNegVal < 100) {
+					$discNegObj = new incentive_DISCOUNT_NEGOTIATION_LOG();
+					$entryDt = date("Y-m-d H:i:s");
+					$expiryDt = date("Y-m-d H:i:s", (time() + 15*24*60*60));
+					$discNegObj->insert($this->agentName, $this->profileid, $discountNegVal, $entryDt, $expiryDt);
+				}
 
 	                // Disposition value parsing  
 	                if($willPayVal=='AA|X')

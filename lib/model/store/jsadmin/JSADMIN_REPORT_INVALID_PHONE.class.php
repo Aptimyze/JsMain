@@ -13,16 +13,16 @@ class JSADMIN_REPORT_INVALID_PHONE extends TABLE{
         * @param  $profileId Int
         * 
         **/
-	public function insertReport($submitter,$submittee,$phone,$mob,$comments){
+	public function insertReport($submitter,$submittee,$phone,$mob,$comments,$reason,$otherReason){
                
-                            if(!$submitter || !$submittee || !$phone || !$mob)
-                        throw new jsException("","Any one or more of SUBMITTER, SUBMITTEE, PHONE, MOBILE IS BLANK IN INSERTREPORT() OF NEWJS_CONTACT_ARCHIVE.class.php");
+                            if(!$submitter || !$submittee || !$phone || !$mob || !$reason)
+                        throw new jsException("","Any one or more of SUBMITTER, SUBMITTEE, PHONE, MOBILE, REASON IS BLANK IN INSERTREPORT() OF NEWJS_CONTACT_ARCHIVE.class.php");
 
                 try
                 {
 
 					$now = date("Y-m-d G:i:s");
-					$sql = "REPLACE INTO jsadmin.REPORT_INVALID_PHONE(SUBMITTER,SUBMITTEE,SUBMIT_DATE,PHONE,MOBILE,COMMENTS) VALUES(:SUBMITTER,:SUBMITTEE,:SUBMIT_DATE,:PHONE,:MOBILE,:COMMENTS)";
+					$sql = "REPLACE INTO jsadmin.REPORT_INVALID_PHONE(SUBMITTER,SUBMITTEE,SUBMIT_DATE,PHONE,MOBILE,COMMENTS,REASON,OTHER_REASON) VALUES(:SUBMITTER,:SUBMITTEE,:SUBMIT_DATE,:PHONE,:MOBILE,:COMMENTS,:REASON,:OTHER_REASON)";
 					$res = $this->db->prepare($sql);
                                         $comments=$comments?$comments:'';
 				  	$res->bindValue(":SUBMITTER", $submitter, PDO::PARAM_INT);	
@@ -30,7 +30,9 @@ class JSADMIN_REPORT_INVALID_PHONE extends TABLE{
                                         $res->bindValue(":SUBMIT_DATE", $now, PDO::PARAM_STR);                                  
                                         $res->bindValue(":PHONE", $phone, PDO::PARAM_STR);                                  
                                         $res->bindValue(":MOBILE", $mob, PDO::PARAM_STR);                                  
-				  	$res->bindValue(":COMMENTS", $comments, PDO::PARAM_STR);				  	
+				  	$res->bindValue(":COMMENTS", $comments, PDO::PARAM_STR);
+                    $res->bindValue(":REASON", $reason, PDO::PARAM_STR);
+                    $res->bindValue(":OTHER_REASON", $otherReason, PDO::PARAM_STR);	
 					$res->execute();
                 }
                 catch(PDOException $e)

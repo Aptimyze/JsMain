@@ -122,17 +122,10 @@ class notificationActions extends sfActions
   }
   public function executePollV1(sfRequest $request)
   {
-	$notificationStop =JsConstants::$notificationStop;
-	if((date("H")>='11' && date("H")<='15') || (date("H")>='01' && date("H")<='03'))
-		$notificationStop=1;
-
-	if($notificationStop)
-	{
-		$notificationData['notifications'] = '';
-	        $notificationData['alarmTime']= '';
-		echo json_encode($notificationData);die;
+	$notifCheck =NotificationFunctions::notificationCheck($request);
+	if($notifCheck){
+		echo $notifCheck;die;
 	}
-
 	$currentOSversion	=$request->getParameter('CURRENT_VERSION');
 	$apiappVersion		=intval($request->getParameter('API_APP_VERSION'));
         $deviceBrand 		=$request->getParameter('DEVICE_BRAND');
@@ -141,8 +134,6 @@ class notificationActions extends sfActions
 	$loginData 		=$request->getAttribute("loginData");
 	$profileid 		=$loginData['PROFILEID'];
 
-	$localLogObj= new MOBILE_API_LOCAL_NOTIFICATION_LOG();
-	//$localLogObj->addLog($registrationid,$apiappVersion, $currentOSversion,$profileid,$deviceBrand,$deviceModel);
 	if(!$profileid){
                 $respObj = ApiResponseHandler::getInstance();
                 $respObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
@@ -170,9 +161,10 @@ class notificationActions extends sfActions
 		$localNotificationObj=new LocalNotificationList();
 		$failedDecorator=new FailedNotification($localNotificationObj,$profileid);
 		$notifications = $failedDecorator->getNotifications();
-		$alarmTimeObj = new MOBILE_API_ALARM_TIME('newjs_masterRep');
+		/*$alarmTimeObj = new MOBILE_API_ALARM_TIME('newjs_slave');
 		$alarmTime = $alarmTimeObj->getData($profileid);
-		$alarmDate = alarmTimeManager::getNextDate($alarmTime);
+		$alarmDate = alarmTimeManager::getNextDate($alarmTime);*/
+		$alarmDate ='';
 	}
 	$notificationData['notifications'] = $notifications;
 	$notificationData['alarmTime']=$alarmDate;
@@ -190,6 +182,7 @@ class notificationActions extends sfActions
                         }
                 }
 		else{
+			$localLogObj= new MOBILE_API_LOCAL_NOTIFICATION_LOG();
 			foreach($notifications as $key=>$val){
 				$notificationKey =$val['NOTIFICATION_KEY'];
 				$messageId =$val['MSG_ID'];
@@ -360,5 +353,30 @@ class notificationActions extends sfActions
         $respObj->setResponseBody($output);
         $respObj->generateResponse();
         die;
-    }   
+    }
+    
+    /* function to get notification subsciption status
+    */
+    public function executeNotificationSubscriptionStatusV1(sfWebRequest $request){
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+        $loginData = $request->getAttribute("loginData");
+        $profileId = $loginData["PROFILEID"];
+        if($profileId){
+            $mobileApiRegistrationObj = new MOBILE_API_REGISTRATION_ID("newjs_masterRep");
+            $res = $mobileApiRegistrationObj->checkNotificationSubscriptionStatus($profileId);
+            if($res){
+                $output['result']= $res;
+            }
+            else{
+                $output['result']= array("notificationStatus"=>"NotFound");   
+            }
+        }
+        else{
+            $output = array("error"=>"Profileid not found");
+        }
+        $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $apiResponseHandlerObj->setResponseBody($output);
+        $apiResponseHandlerObj->generateResponse();
+        die;
+    }
 }

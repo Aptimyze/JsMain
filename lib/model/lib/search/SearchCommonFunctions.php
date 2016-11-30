@@ -324,5 +324,37 @@ class SearchCommonFunctions
 		$arr['CNT_NEW']  = count($arr['PIDS_NEW']);
 		return $arr;
 	}
+	/**
+	* This section will show the match of the matches.
+	*/
+	public static function getMatchofTheDay($profileid=null,$limit=10,$currentPage=0,$alertLogic='')
+	{
+		$limit = $limit?$limit:SearchConfig::$matchMaxLimit;
+		$searchEngine = 'solr';
+		$outputFormat = 'array';
+		$noAwaitingContacts=1;
+		$loggedInProfileObj = LoggedInProfile::getInstance('newjs_master',$profileid);
+		$loggedInProfileObj->getDetail("","","AGE,MSTATUS,RELIGION,CASTE,COUNTRY_RES,CITY_RES,MTONGUE,INCOME");
+		
+		$SearchParamtersObj = PredefinedSearchFactory::getSetterBy('MatchOfDay',$loggedInProfileObj);
+		$SearchParamtersObj->setNoOfResults($limit);
+    
+	    //Get Reset Match Alert Count Params
+	    $request=sfContext::getInstance()->getRequest();   
+		$SearchParamtersObj->getSearchCriteria();
+		$SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
+		$SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj);
+		$SearchUtilityObj =  new SearchUtility;
+		$SearchUtilityObj->removeProfileFromSearch($SearchParamtersObj,'spaceSeperator',$loggedInProfileObj,'',$noAwaitingContacts);
+		$results_orAnd_cluster = 'onlyResults';
+		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,$currentPage,'',$loggedInProfileObj);
+		$profileids = $responseObj->getsearchResultsPidArr();    
+		//$arr["profiles"] = $responseObj->getResultsArr();
+		$arr['PIDS'] = $profileids;
+		$arr['TIME'] = $date;
+		$arr['CNT']  = count($arr['PIDS']);
+		//$arr['CNT_NEW']  = count($arr['PIDS_NEW']);
+		return $arr;
+	}
 }
 ?>

@@ -789,10 +789,22 @@ class socialActions extends sfActions
 		//Code for album view logging
 		if($requestedProfileid != $loggedInProfileid)
 		{
-			$channel = MobileCommon::getChannel();
-			$date = date("Y-m-d H:i:s");
-			$albumViewLoggingObj = new albumViewLogging();
-			$albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$requestedProfileid,$date,$channel);
+                        $producerObj = new Producer();
+                        if($loggedInProfileid%PictureStaticVariablesEnum::photoLoggingMod<PictureStaticVariablesEnum::photoLoggingRem){
+                            if($producerObj->getRabbitMQServerConnected()){
+                                $triggerOrNot = "inTrigger";
+                                $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$loggedInProfileid,VIEWED=>$requestedProfileid)), 'redeliveryCount'=>0 );
+                                $producerObj->sendMessage($queueData);
+                            }
+                            else{    
+                                $vlt=new VIEW_LOG_TRIGGER();
+                                $vlt->updateViewTrigger($loggedInProfileid,$requestedProfileid);
+                            }
+                        }
+//			$channel = MobileCommon::getChannel();
+//			$date = date("Y-m-d H:i:s");
+//			$albumViewLoggingObj = new albumViewLogging();
+//			$albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$requestedProfileid,$date,$channel);
 		}		
 	}
 	else if($profilechecksum)

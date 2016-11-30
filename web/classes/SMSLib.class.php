@@ -102,6 +102,7 @@ class SMSLib
             "PHONE_ISD_COMMA" => array("maxlength" => "17"), //      ,,
             "COUNTRY_RES"     => array("maxlength" => "10"), //added by nitesh
             "SERVNAME"        => array("maxlength" => "50"),
+            "SHORT_DISC_LINK_URL"=> array("maxlength" => "50"),
         );
         return $varArr[$variable];
     }
@@ -122,6 +123,10 @@ class SMSLib
         }
 
         switch ($messageToken) {
+            case "PHOTO_REJECTION_REASON":                    
+                    $rejectReasonArr = explode(". or ", $messageValue['PHOTO_REJECTION_REASON'], 2);                    
+                    return $rejectReasonArr[0];
+                        break;
             case "SALES_ADDRESS_NOIDA":
                 return "B-8,Sector 132,Noida-201301";
 
@@ -300,6 +305,9 @@ class SMSLib
 
             case "PHTOUPNO":
                 return $messageValue["PHOTO_UPLOAD_COUNT"];
+            
+            case "SHORT_DISC_LINK_URL":
+                return $this->getShortURL($tokenValue["SHORT_DISC_LINK_URL"], $messageValue["RECEIVER"]["PROFILEID"], $messageValue["EMAIL"], '', '');
 
             case "URL_EDIT_PHONE":
                 $longURL   = $this->SITE_URL . "/profile/viewprofile.php?ownview=1";

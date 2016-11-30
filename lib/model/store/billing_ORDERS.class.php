@@ -171,7 +171,7 @@ class BILLING_ORDERS extends TABLE{
     public function getFailedPayUOrders($entryDt){
         try     
         {       
-            $sql="SELECT ID, ORDERID, CURTYPE FROM billing.ORDERS WHERE STATUS='' AND PMTRECVD = '0000-00-00' AND GATEWAY = 'PAYU' AND ENTRY_DT>=:ENTRY_DT";
+            $sql="SELECT ID, ORDERID, CURTYPE, PROFILEID FROM billing.ORDERS WHERE STATUS='' AND PMTRECVD = '0000-00-00' AND GATEWAY = 'PAYU' AND ENTRY_DT>=:ENTRY_DT";
             $prep=$this->db->prepare($sql);
             $prep->bindValue(":ENTRY_DT", $entryDt, PDO::PARAM_STR);
             $prep->execute();

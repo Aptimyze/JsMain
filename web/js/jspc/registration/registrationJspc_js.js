@@ -1429,6 +1429,8 @@ var padding = 31;
                 ele1.putValuesInList(regField['cityReg'], arrayfamilyCity);
                 $("#cityReg-gridDropdown_set").hide();
             }
+            else
+              ele1.fieldElement.removeAttr("data-alpha");
                 $("#stateReg-inputBox_set").val("");
                 $("#stateReg").val("");
                 $("#stateRegOther").val("");
@@ -1437,8 +1439,6 @@ var padding = 31;
                 regField["stateReg"].selected = "";
                 $("#stateReg-gridUl").find(".activeopt").removeClass("activeopt");
           }
-          else
-              ele1.fieldElement.removeAttr("data-alpha");
           if (ele1.name == "familyCity")
           {
             if (inputData['native_city'] != "0")
