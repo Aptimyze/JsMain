@@ -71,8 +71,6 @@ class ProfileContact
 	* @param $excludeArray - array with field name as key and comma separated field values as the value corresp to the key - rows satisfying these values are excluded from the result
 	* @param $fields Columns to query
 	* @return results Array according to criteria having incremented index
-	* @exception jsException for blank criteria
-	* @exception PDOException for database level error handling
 	*/
 	public function getArray($valueArray="",$excludeArray="",$greaterThanArray="",$fields="PROFILEID",$indexProfileId = 0)
 	{
@@ -120,6 +118,13 @@ class ProfileContact
 		return self::$objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);	
 	}
 
+	/*
+	 * @fn getProfileContacts
+	 * @brief fetch all contact details for a profile from cache, if not in cache then get 
+	 * from store. The result is then cached.
+	 * @param $pid Profile Id
+	 * @return results Array containing all contact details for a profile.
+	 */
 	public function getProfileContacts($pid)
 	{
 		$bServedFromCache = false;
@@ -161,6 +166,13 @@ class ProfileContact
 		return $result;
 	}
 
+	/*
+	 * @fn updateAltMobile
+	 * @brief update Alternate Mobile details for a profile, and then update the result in
+	 * cache.
+	 * @param $profileid Profile Id
+	 * @param $altMobile Alternate Mobile
+	 */
 	public function updateAltMobile($profileid, $altMobile)
 	{
 		$objProCacheLib = ProfileCacheLib::getInstance();
@@ -172,6 +184,14 @@ class ProfileContact
 		}
 	}
 
+	/*
+	 * @fn update
+	 * @brief update Contact details for a profile, and then update the result in
+	 * cache.
+	 * @param $pid Profile Id, profile whose details are updated.
+	 * @param $paramArr - array with field name as key and field value as the value corresp
+	 * to the key, which has to be updated.
+	 */
 	public function update($pid, $paramArr = array())
 	{
 		$bResult = self::$objJprofileContact->update($pid, $paramArr);
