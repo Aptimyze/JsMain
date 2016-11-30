@@ -1480,7 +1480,7 @@ class Profile{
         public function getExtendedContacts($onlyValues="")
 		{
 			if($this->HAVE_JCONTACT=="Y"){
-				$pc=new NEWJS_JPROFILE_CONTACT();
+				$pc= ProfileContact::getInstance();
 				$contacts_arr=$pc->getProfileContacts($this->PROFILEID);
 				if($onlyValues)
 					return $contacts_arr;

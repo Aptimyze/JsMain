@@ -138,7 +138,7 @@ public static function insertConsentMessageFlag($profileid) {
                 	}
 
 
-                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $contactNumOb= ProfileContact::getInstance();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileid),'','',"ALT_MOBILE");
                 if($numArray['0']['ALT_MOBILE']){
                 	$resultArray=$dncOb->DncStatus(array($numArray['0']['ALT_MOBILE']));

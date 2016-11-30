@@ -573,7 +573,7 @@ class ShowProfileStats
 	}
 
 	private function getMobileVerificaionStatus(){
-		$altContact = new NEWJS_JPROFILE_CONTACT();
+		$altContact = ProfileContact::getInstance();
 		$data = $altContact->getProfileContacts($this->profileid);
 		$altMobileStatus = $data["ALT_MOB_STATUS"];
 		$mobStatus = $this->profileObj->getMOB_STATUS();

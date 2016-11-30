@@ -36,7 +36,7 @@ public function __construct($phone,$virtualNo)
 			break;
 
 			default:
-			$contactArray=(new newjs_JPROFILE_CONTACT())->getArray(array('PROFILEID'=>$profileId),'','',"ALT_MOBILE,ALT_MOB_STATUS");
+			$contactArray= ProfileContact::getInstance()->getArray(array('PROFILEID'=>$profileId),'','',"ALT_MOBILE,ALT_MOB_STATUS");
 			if($this->isd.$contactArray['0']['ALT_MOBILE']==$phone){
 				$this->phoneType='A'; 		
 				$this->isVerified=$contactArray['0']['ALT_MOB_STATUS']=='Y'?'Y':'N';

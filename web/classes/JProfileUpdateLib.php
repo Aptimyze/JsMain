@@ -88,7 +88,7 @@ class JProfileUpdateLib
     $this->currentDBName = $dbname;
     $this->objJProfileStore = new JPROFILE($dbname);
     $this->objProfileEducationStore = ProfileEducation::getInstance($dbname);
-    $this->objProfileContactStore = new NEWJS_JPROFILE_CONTACT($dbname);
+    $this->objProfileContactStore = ProfileContact::getInstance($dbname);
     $this->objProfileHobbyStore = new NEWJS_HOBBIES($dbname);
     $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
     $this->objProfileChristianStore = new NEWJS_JP_CHRISTIAN($dbname);

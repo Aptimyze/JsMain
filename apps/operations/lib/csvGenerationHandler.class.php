@@ -993,7 +993,7 @@ class csvGenerationHandler
 			if($processName=="FTA_REGULAR"||$processName=="FTA_ONE_TIME")
 			{
 			$ftaDataObj=new incentive_FTA_CSV_DATA();
-			$jprofileContactObj=new NEWJS_JPROFILE_CONTACT();
+			$jprofileContactObj= ProfileContact::getInstance();
 			$viewContactsLogObj=new jsadmin_VIEW_CONTACTS_LOG();
 			$jpViewsObj=new NEWJS_JP_NTIMES();
 			$in_dialerObj=new incentive_FTA_IN_DIALER();

@@ -124,7 +124,7 @@ class LoggedInProfile extends Profile{
 		 * */
 		public function editCONTACT($paramArr)
 		{
-			$contactObj=new NEWJS_JPROFILE_CONTACT();
+			$contactObj= ProfileContact::getInstance();
 			$contactObj->update($this->PROFILEID,$paramArr);
 		}
 

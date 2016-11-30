@@ -354,9 +354,9 @@ if (authenticated($cid)) {
 				}
 				if ($str_contact) {
           
-          $memObject=new UserMemcache;
-          $memObject->delete("JPROFILE_CONTACT_".$profileid);
-          unset($memObject);
+          // $memObject=new UserMemcache;
+          // $memObject->delete("JPROFILE_CONTACT_".$profileid);
+          // unset($memObject);
 					//$sql_contact = "UPDATE newjs.JPROFILE_CONTACT set $str_contact where PROFILEID=$pid";
           //mysql_query_decide($sql_contact) or die("$sql_contact" . mysql_error_js()."at line 282");
           

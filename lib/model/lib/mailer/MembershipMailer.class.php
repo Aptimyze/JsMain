@@ -444,7 +444,7 @@ class MembershipMailer {
 		$resDetails =$jprofileObj->getArray($valueArray,$excludeArray,'',$fields);	
 
 		// jprofile Contact
-	        $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT('newjs_local111');
+	        $jprofileContactObj    = ProfileContact::getInstance('newjs_local111');
         	$valueArr['PROFILEID']  =$profileStr;
         	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOBILE_OWNER_NAME,ALT_MOBILE_NUMBER_OWNER,SHOWALT_MOBILE');
 		if(is_array($result)){
