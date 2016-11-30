@@ -683,13 +683,13 @@ function generateFaceCard(Object)
           $("#LASTSEARCH_Container").remove();
         }
         else{
-        $("#"+Object.name+"_Container").css('height',$("#"+Object.name+"_Container").height());
         $("#"+Object.name+"_Container").html($(Object.containerHtml.trim()).html());
 
         }
       }
       else 
         $("#"+Object.name).after(Object.containerHtml);
+      $("#"+Object.name+"_Container").css('height','');
 			$("#"+Object.name).addClass("disp-none");
 			
 			if(Object.name=="DAILYMATCHES")
@@ -834,7 +834,7 @@ function noResultFaceCard(Object)
       Object.containerHtml=Object.containerHtml.replace(/\{\{INNER_HTML\}\}/g,Object.emptyInnerHtml);
     
     if($("#"+Object.name+"_Container").length == 1){ 
-      $("#"+Object.name+"_Container").css('height',$("#"+Object.name+"_Container").height());
+   //   $("#"+Object.name+"_Container").css('height',$("#"+Object.name+"_Container").height());
      $("#"+Object.name+"_Container").html($(Object.containerHtml.trim()).html());
       }
     else      
@@ -975,6 +975,9 @@ function reArrangeDivsAfterDissapear(value,position,id)
         }
     else
       {
+    
+      $("#"+id+"_Container").css('height',$("#"+id+"_Container").height());
+
         if(id == 'DAILYMATCHES')
         {
           //$("#DAILYMATCHES_Container").html('')
@@ -1020,7 +1023,6 @@ function reArrangeDivsAfterDissapear(value,position,id)
 
       }        
   }
-
   if(viewCardInList(currentBox,totalBoxes,id,numberOfProfiles))
   {
      $('#nxt-'+id+'_List').hide();

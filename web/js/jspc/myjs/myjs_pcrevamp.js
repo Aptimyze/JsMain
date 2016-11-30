@@ -102,6 +102,7 @@ component.prototype.request = function() {
          $.myObj.ajax({
           type: "GET",
           dataType: "json",
+          data: {'timestamp':(new Date()).getTime()/1000},  
 	  cache: true,
           url: myLurl,
           context: this,
