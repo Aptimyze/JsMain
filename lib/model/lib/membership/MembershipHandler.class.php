@@ -884,20 +884,20 @@ class MembershipHandler
         if ($validityCheck && ($renewCheckFlag || $specialActive == 1 || $discountActive == 1 || $fest == 1)) {
             if ($renewCheckFlag) {
                 if ($fest == 1) {
-                    $text    = "upto " . $renewalPercent . "%";
+                    $text    = "discount of upto " . $renewalPercent . "%";
                 } else {
-                    $text    = "flat " . $renewalPercent . "%";
+                    $text    = "discount of flat" . $renewalPercent . "%";
                 }
             } else if ($specialActive == 1) {
                 $discountType = 'VD';
                 $messageArr   = $this->getOCBTextMessage($profileid, $discountType, $discPerc, $expiry_date, $fest);
-                $text         = str_replace("OFF", "", str_replace("Get ", "", $messageArr['top']));
+                $text         = "discount of " . str_replace("OFF", "", str_replace("Get ", "", $messageArr['top']));
             } else if ($discountActive == 1) {
                 $discountType = 'CASH';
                 $messageArr   = $this->getOCBTextMessage($profileid, $discountType, $discPerc, $expiry_date, $fest);
-                $text         = str_replace("OFF", "", str_replace("Get ", "", $messageArr['top']));
+                $text         = "discount of " . str_replace("OFF", "", str_replace("Get ", "", $messageArr['top']));
             } elseif ($fest == 1) {
-                $text    = "extra months";
+                $text    = "discount of extra months";
             }
         } 
         if (!empty($text)) {
