@@ -609,7 +609,7 @@ function updateSectionContact(obj)
 		else
 			submitObj.pop('EMAIL');
 	}
-	else if(tabId=="ALT_EMAIL"){ console.log("alt_email");
+	else if(tabId=="ALT_EMAIL"){
 		if(pageJson.Contact.ALT_EMAIL.OnClick[2].label_val!=$("#ALT_EMAIL").val())
 			newJson["ALT_EMAIL"]=$("#ALT_EMAIL").val();
 		else

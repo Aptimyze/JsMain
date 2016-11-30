@@ -47,7 +47,6 @@ EditApp = function(){
                               "EMAIL":"Email Required",
                               "EMAIL_WRONG_FORMAT":"Invalid Format",
                               "EMAIL_INVALID_DOMAIN":"Invalid domain",
-                              "SAME_EMAIL":"Same Email",
                               "ISD_INVALID":"Invalid ISD",
                               "STD_INVALID":"Invalid Std",
                               "STD_REQUIRED":"Std Code Required",
@@ -59,7 +58,7 @@ EditApp = function(){
                               "ID_PROOF_VAL":"Please attach document",
                               "ADDR_PROOF_TYPE":"Required",
                               "ID_PROOF_TYPE":"Required",
-                                      
+                              "SAME_EMAIL":"Both Emails are Same",
                             };
     //Section List
     var BASIC             = "basic";

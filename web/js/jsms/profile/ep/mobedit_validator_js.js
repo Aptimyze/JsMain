@@ -106,6 +106,18 @@ jQuery.validator.addMethod("validate_name", function (value, element){
 				return true;	
 },"Please provide a valid Name");
 
+// check if email and alternate email are same
+jQuery.validator.addMethod("sameEmail", function (value, element){
+	if( $("#EMAIL").val() == $("#ALT_EMAIL").val() && ( $("#ALT_EMAIL").val().length > 0 ))
+	{
+		return false;
+    }
+    else
+    return true;	
+},"Both Email are same");
+
+
+
 var nameError = {"noSpace":"Please provide your first name along with surname, not just the first name","invalidChars":"Please provide a valid Full Name"};
 var telNumberErrorNo = '';
 jQuery.validator.addMethod("validate_custom_name", function (value, element){
@@ -282,15 +294,16 @@ function validator(tabKey){
 
 
 		$("#EMAIL").rules("add", {
-			required: false, //Should be true 
+			required: false, 
 			invalidDomain: true,
 			emailPattern: true,		
 		});
 
 		$("#ALT_EMAIL").rules("add", {
-			required: false, //should be false since it is not mandatory.
+			//required: false, 
 			invalidDomain: true,
-			emailPattern: true,		
+			emailPattern: true,
+			sameEmail:true,		
 		});
 		
 		$("#ISD").rules("add", {
