@@ -47,12 +47,17 @@ class JHOBBYCacheLib extends TABLE{
             return $result;             
         }
 
+
          //Get Data from Mysql
         $objJHB = new NEWJS_HOBBIES($this->dbName); 
 
         $toSend = '1';
+
+        if(!$bServedFromCache)
         $result = $objJHB->getUserHobbies($pid, $toSend);
+
         $noResult = $result;
+
         $result['PROFILEID'] = $pid;
 
         if(!$bServedFromCache)
@@ -158,13 +163,17 @@ class JHOBBYCacheLib extends TABLE{
         $objJHB = new NEWJS_HOBBIES($this->dbName); 
 
         if(!$bServedFromCache)
-        {  
-        $result = $objJHB->getUserHobbiesApi($pid);
+        { 
+        $result = $this->getUserHobbiesApi($pid);
+
         $noResult = $result;
         $result['PROFILEID'] = $pid;
+
         $dummyResult['RESULT_VAL'] = (intval($noResult) === 0 || ($noResult == NULL)) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult['RESULT_VAL'],__CLASS__);
+
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['RESULT_VAL']['PROFILEID'], $dummyResult['RESULT_VAL'],__CLASS__);
         }
+
          $this->logFunctionCalling(__FUNCTION__);
 
         $hobbies = array();
