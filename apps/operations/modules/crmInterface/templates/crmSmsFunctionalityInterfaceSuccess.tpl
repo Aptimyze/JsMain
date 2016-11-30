@@ -79,14 +79,20 @@
 			$('input[type="checkbox"]').click(function(event) {
 			    if (GetSelectedCheckboxCount() > 2) {
 			        event.preventDefault();
+			        event.stopPropagation();
 			        alert('You\'re not allowed to choose more than 2 boxes');
 			    }
 			});
-			$("#crmSmsFunctionality").click(function(e){
-				if(GetSelectedCheckboxCount() > 2){
+			$("#submit").click(function(e){
+				var count = GetSelectedCheckboxCount();
+				if(count > 2 || count == 0){
 					e.preventDefault();
 					e.stopPropagation();
-					alert('You\'re not allowed to choose more than 2 boxes');
+					if (count == 0) {
+						alert('You have to select atleast one checkbox before submitting');
+					} else  {
+						alert('You\'re not allowed to choose more than 2 boxes');
+					}
 				}
 			});
 		</script>
