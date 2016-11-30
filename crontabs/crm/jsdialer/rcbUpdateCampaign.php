@@ -22,7 +22,8 @@ $profilesArr   = fetchProfiles($db_master);
 
 $eligibleArr   = $profilesArr['ELIGIBLE'];
 $inEligibleArr = $profilesArr['IN_ELIGIBLE'];
-$profileStrIneligible = implode(",", $inEligibleArr);
+if(is_array($inEligibleArr))
+	$profileStrIneligible = implode(",", $inEligibleArr);
 
 $allocatedArr = getAllocatedProfiles($eligibleArr, $db_js);
 $paidArr      = getPaidProfiles($eligibleArr, $db_js);
@@ -57,8 +58,6 @@ if (count($eligibleArrNew > 0)) {
 
         $query1 = "UPDATE easy.dbo.ct_$campaignName SET Dial_Status=0 WHERE PROFILEID='$profileid'";
         mssql_query($query1, $db_dialer) or $dialerLogObj->logError($query1, $campaignName, $db_dialer, 1);
-
-        $deleteArr[] = $profileid;
         addLog($profileid, $campaignName, $str, $action, $db_js_111);
     }
     $profileStrEligible = implode(",", $eligibleArrNew);
@@ -70,7 +69,7 @@ if (count($eligibleArrNew > 0)) {
 }
 
 // mail added
-$profilesStr =$profileStrIneligible.",".$profileStrEligible;
+$profilesStr =$profileStrIneligible."###".$profileStrEligible;
 $to   = "manoj.rana@naukri.com";
 $sub  = "Dialer updates of RCB Campaign Process.";
 $from = "From:vibhor.garg@jeevansathi.com";
