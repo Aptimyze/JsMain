@@ -20,7 +20,7 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		$elkServer = 'aura.infoedge.com';
+		$elkServer = 'es.aura.resdex.com';
 		$elkPort = '9203';
 		$indexName = 'jeevansathiactivity';
 		$query = '_search';
@@ -73,7 +73,7 @@ EOF;
 					);
 			$count = json_encode($count);
 			$ObjectId = time();
-			passthru("curl -XPOST '$indexElkServer:$indexElkPort/$pushIndexName/json/$ObjectId' -d'$count'");
+			exec("curl -XPOST '$indexElkServer:$indexElkPort/$pushIndexName/json/$ObjectId' -d'$count'".' 2>&1');
 		}
 	}
 }

@@ -8,7 +8,7 @@ class PartnerProfile extends SearchParamters
 {
 	private $isDppExist;
 	public function getIsDppExist(){return $this->isDppExist;}
-	public static $addNonFilledValuesAttributeArr = array('DIET','SMOKE','HIV','DRINK','HANDICAPPED');
+	public static $addNonFilledValuesAttributeArr = array('DIET','SMOKE','HIV','DRINK');
 
         public function __construct($loggedInProfileObj)
         {

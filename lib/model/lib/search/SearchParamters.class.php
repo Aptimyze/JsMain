@@ -307,8 +307,13 @@ class SearchParamters
 	public function setHANDICAPPED($HANDICAPPED) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("HANDICAPPED",$HANDICAPPED);
-                if($validInput)
-			$this->HANDICAPPED = $HANDICAPPED; 
+                if($validInput){
+                    if(strstr($HANDICAPPED,SearchConfig::_noneValueHandicapped) && !strstr($HANDICAPPED,SearchConfig::_nullValueAttributeLabel))   
+			$this->HANDICAPPED = $HANDICAPPED.",".SearchConfig::_nullValueAttributeLabel;
+                    else  
+			$this->HANDICAPPED = $HANDICAPPED;
+                    
+                }
 	}
 	public function getHANDICAPPED() { return $this->HANDICAPPED; }
 	public function setOCCUPATION($OCCUPATION) 
