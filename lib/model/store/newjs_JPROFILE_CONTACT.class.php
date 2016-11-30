@@ -254,9 +254,9 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
     private function logFunctionCalling($funName)
     {
       $key = __CLASS__.'_'.date('Y-m-d');
-      // JsMemcache::getInstance()->hIncrBy($key, $funName);
+      JsMemcache::getInstance()->hIncrBy($key, $funName);
       
-      // JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
     }
 }
 ?>

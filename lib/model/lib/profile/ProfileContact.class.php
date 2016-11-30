@@ -125,6 +125,9 @@ class ProfileContact
 		$bServedFromCache = false;
 		$objProCacheLib = ProfileCacheLib::getInstance();
 
+		if(!$pid)
+			return ;
+
 		if ($objProCacheLib->isCached(ProfileCacheConstants::CACHE_CRITERIA, $pid, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__))
 		{
 			$result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, ProfileCacheConstants::ALL_FIELDS_SYM, __CLASS__);
@@ -145,7 +148,7 @@ class ProfileContact
 		// Get Records from Mysql
 		$result = self::$objJprofileContact->getProfileContacts($pid);
 		// Request to Cache this Record, on demand
-		if(is_array($result) && count($result))
+		if(false !== $result && is_array($result) && count($result))
 		{
 			$result['PROFILEID'] = $pid;
 		}
