@@ -243,7 +243,7 @@ function getCount(response){
 		$("#MATCHALERT span").html(response.MATCHALERT).removeClass("dn");
 	} 
 	if(response.VISITOR_ALERT != 0){
-		$("#VISITOR_ALERT span").html(response.VISITOR_ALERT).removeClass("dn");
+		$("#VISITOR_ALERT span").html(response.VISITORS_ALL).removeClass("dn");
 	}
 }
 
