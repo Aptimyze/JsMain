@@ -10,7 +10,8 @@ class test_Top10_CommunityModelRecommendation extends TABLE{
 
         public function __construct($dbname="")
         {               
-                        $dbname = $dbname?$dbname:"newjs_local111";
+                        if(JsConstants::$whichMachine == "prod")
+                            $dbname = $dbname?$dbname:"newjs_local111";
 			parent::__construct($dbname);
         }
         public function fetchProfiles($val)
