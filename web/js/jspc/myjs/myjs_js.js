@@ -685,6 +685,7 @@ function generateFaceCard(Object)
         else{
         $("#"+Object.name+"_Container").css('height',$("#"+Object.name+"_Container").height());
         $("#"+Object.name+"_Container").html($(Object.containerHtml.trim()).html());
+
         }
       }
       else 
@@ -823,7 +824,7 @@ function generateShortCards(Object)
 
 function noResultFaceCard(Object)
 {
-  try{
+  try{ 
 	Object.emptyInnerHtml=Object.emptyInnerHtml.replace(/\{\{ID\}\}/g,"Error"+Object.name);
 		if(Object.error)
 			Object.emptyInnerHtml=Object.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Failed to Load");
@@ -831,6 +832,12 @@ function noResultFaceCard(Object)
 			Object.emptyInnerHtml=Object.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,noResultMessagesArray[Object.name]);
       Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,'');
       Object.containerHtml=Object.containerHtml.replace(/\{\{INNER_HTML\}\}/g,Object.emptyInnerHtml);
+    
+    if($("#"+Object.name+"_Container").length == 1){ 
+      $("#"+Object.name+"_Container").css('height',$("#"+Object.name+"_Container").height());
+     $("#"+Object.name+"_Container").html($(Object.containerHtml.trim()).html());
+      }
+    else      
       $("#"+Object.name).after(Object.containerHtml);
       $("#"+Object.name).addClass("disp-none");
       $("#disp_"+Object.list).after(Object.emptyInnerHtml);
@@ -878,6 +885,8 @@ function noResultFaceCard(Object)
     $("#lastSearchCountBar").removeClass("disp-none");
     $("#lastSearchCountBar > .disp-tbl").addClass("bounceIn animated");
   }
+ 
+
 }
 
 catch (e){
