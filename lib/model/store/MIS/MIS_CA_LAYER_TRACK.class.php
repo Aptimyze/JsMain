@@ -112,6 +112,7 @@ class MIS_CA_LAYER_TRACK extends TABLE
     
     catch(PDOException $e)
     {
+        mail("palash.chordia@jeevansathi.com,ayush.sethi@jeevansathi.com,nitesh.s@jeevansathi.com","CA Layer :","error in function truncateForUserAndLayer of MIS_CA_LAYER_TRACK.class.php");
     jsException::nonCriticalError("lib/model/store/MIS/MIS_CA_LAYER_TRACK.class.php(3)-->.$sql".$e);
                         return '';
       //throw new jsException($e);

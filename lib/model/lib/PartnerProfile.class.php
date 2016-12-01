@@ -8,7 +8,7 @@ class PartnerProfile extends SearchParamters
 {
 	private $isDppExist;
 	public function getIsDppExist(){return $this->isDppExist;}
-	public static $addNonFilledValuesAttributeArr = array('DIET','SMOKE','HIV','DRINK','HANDICAPPED');
+	public static $addNonFilledValuesAttributeArr = array('DIET','SMOKE','HIV','DRINK');
 
         public function __construct($loggedInProfileObj)
         {
@@ -153,7 +153,8 @@ class PartnerProfile extends SearchParamters
 						eval ('$this->set'.$field.'($value);');
 					}
 				}
-
+				if($this->getCITY_RES() && $this->getCITY_INDIA()=="")
+					$this->setCITY_INDIA($this->getCITY_RES());
 				/*as state is mapped to city and if both are same , it means we have mapped them and in order to show city cluser , we need to unset city*/
 				if($this->getSTATE()==$this->getCITY_RES())
 					$this->setCITY_RES('');

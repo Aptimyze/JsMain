@@ -911,7 +911,7 @@ self::$ContactCenterMYJS=Array(
 			"TITLE"=> "Profile Visitors",
 			"SUBTITLE"=> "",
 			"HEADING"=> "Profile Visitors",
-			"CCMESSAGE"=> "These members can be your potential match, they have visited your profile in the last 15 days.",
+			"CCMESSAGE"=> "These members can be your potential match, they have visited your profile/album in the last 15 days.",
 			"ICONS"=> "",
 			"BUTTONS"=> "INITIATE|SHORTLIST|PHOTO|CONTACT",
 			"TRACKING"=> "",
@@ -1193,7 +1193,27 @@ self::$ContactCenterMYJS=Array(
                        "BUTTONS"=> "REMINDER",
                        "TRACKING"=> "",
                        "CONTACT_ID"=>"",
-               )
+               ),
+            /*
+            	Added for making archive in case of Interest archived.
+             */
+            "INTEREST_ARCHIVED"=>Array( 
+			"ID"=> "22",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "25",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Interests Archive",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=53",
+      		"CONTACT_ID"=>"",
+		),
 		);
 	}
 }

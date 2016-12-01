@@ -5,6 +5,7 @@ class MessageQueues
 {
   CONST CONSUMERCOUNT = 3;  //Number of instances of Consumer class run at a time.
   CONST NOTIFICATIONCONSUMERCOUNT = 3;  //Number of instances of JsNotificationsConsume class run at a time.
+  CONST SCREENINGCONSUMERCOUNT = 1;  //Number of instances of ScreeningConsumer class run at a time.
   CONST MAILQUEUE = "MailQueue";  //Queue for storing mails
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
   CONST CONTACTCACHEINITIATE = "ContactCacheInitiate"; //Queue for sending data to webservice to create cache
@@ -16,7 +17,7 @@ class MessageQueues
   CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
-  CONST NOTIFICATION_LOG_CONSUMER_COUNT = 2; //count of notification log consumer instances
+  CONST NOTIFICATION_LOG_CONSUMER_COUNT = 1; //count of notification log consumer instances
   CONST INVALIDATECACHE = "invalidateCache";
   CONST CHAT_MESSAGE = "chatMessage";
   CONST VIEW_LOG = "ViewLogQueue";
@@ -46,6 +47,7 @@ class MessageQueues
   CONST CRONCONSUMER_STARTCOMMAND = "symfony cron:cronConsumeQueueMessage"; //Command to start cron:cronConsumeQueueMessageTask
   CONST CRONCHAT_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeChatMessage"; //Command to start cron:cronConsumeChatMessage
   CONST CRONNOTIFICATION_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsQueueMessage"; //Command to start cron:cronConsumeNotificationsQueueMessageTask
+  CONST CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeScreeningQueueTask"; //Command to start cron:cronConsumeScreeningQueueTask
   CONST CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsLogQueueMessage";
   CONST FALLBACK_STATUS= true;   //If true, second server is used to handle fallback otherwise only one server is in use.
   CONST REDELIVERY_LIMIT = 3; //This limit is used to set the redelivery limit of messages at the consumer end.
@@ -53,6 +55,7 @@ class MessageQueues
   CONST BUFFER_INSTANT_NOTIFICATION_QUEUE = "BufferInstantNotificationsQueue"; //Queue for storing buffer instant notifications(JSPC/JSMS/FSO)
   CONST DUPLICATE_LOG_QUEUE = "DuplicateLogQueue"; //Queue for logging duplicate profiles
   CONST DELETE_RETRIEVE_QUEUE = "DeleteRetrieveQueue"; //Queue that contains profileId's for those profiles that are deleted.
+  CONST SCREENING_QUEUE = "ScreeningQueue"; //Queue that contains profileId's for those profiles that are screened.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
@@ -93,6 +96,7 @@ class MessageQueues
   /*----------------JS notification(scheduled/instant) queues configuration details-------------------------*/
   const PROFILE_CACHE_Q_DELETE = "ProfileCacheDeleteQueue";
   const PROCESS_PROFILE_CACHE_DELETE = "PROFILE_CACHE_DELETE";
+  const SCREENING_Q_EOI = "SCREENING_SEND_EOI";
 }
 
 ?>

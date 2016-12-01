@@ -226,6 +226,9 @@ function formatTrackingString($trackingString)
 			case JSTrackingPageType::EXCLUSIVE_SERVICE2_MAILER_RTYPE:
 				$formattedString.="JS Exclusive Servicing II Mailer";
 				break;
+			case JSTrackingPageType::ARCHIVED_INTEREST:
+				$formattedString.="ARCHIVED_INTEREST";
+				break;
 		}
 	}
 	return $formattedString;

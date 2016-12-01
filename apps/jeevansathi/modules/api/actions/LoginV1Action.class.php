@@ -141,7 +141,7 @@ class LoginV1Action extends sfActions
 	if($result && $result[ACTIVATED]<>'D' && $result[GENDER]!="")
 	{
 		$apiObj->setAuthChecksum($result[AUTHCHECKSUM]);
-                $maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME;
+                $maxAlarmTimeObj = new MOBILE_API_MAX_ALARM_TIME('newjs_masterDDL');
                 $alarmCurrentTimeData = $maxAlarmTimeObj->getArray();
                 $alarmCurrentTime = $alarmCurrentTimeData[0][MAX_ALARM_TIME];
                 $alarmTime[$result['PROFILEID']]=alarmTimeManager::getNextTime($alarmCurrentTime,NotificationEnums::$alarmMaxTime,NotificationEnums::$alarmMinTime);
@@ -164,7 +164,7 @@ class LoginV1Action extends sfActions
 		    unset($registrationIdObj);
 	    }
 
-		$loginData=array("GENDER"=>$result[GENDER],"USERNAME"=>$result[USERNAME],"INCOMPLETE"=>$result[INCOMPLETE],"SUBSCRIPTION"=>$subscription,"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done,"NOTIFICATION_STATUS"=>$notificationStatus);
+		$loginData=array("GENDER"=>$result[GENDER],"USERNAME"=>$result[USERNAME],"INCOMPLETE"=>$result[INCOMPLETE],"SUBSCRIPTION"=>$subscription,"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done,"NOTIFICATION_STATUS"=>$notificationStatus,"RELIGION"=>$result[RELIGION]);
 		$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_SUCCESS);
                 if($familyArr = $request->getParameter('setFamilyArr')){
                     $loginData['FamilyDetails'] = $familyArr;

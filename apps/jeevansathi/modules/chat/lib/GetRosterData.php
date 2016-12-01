@@ -36,7 +36,7 @@ class GetRosterData
 		$skipArray = $this->getSkipProfiles($type);
 
 		$newLimit = $limit+$limit;//ForOptimization
-		$conditions = $this->getConditions($type,$newLimit);
+		$conditions = $this->getConditions($type);
 		$profilelists = $infoTypeAdapter->getProfiles($conditions,$skipArray);
 		if(is_array($profilelists))
 		{
@@ -54,7 +54,9 @@ class GetRosterData
 			$monthGap = mktime(0, 0, 0, date("m")- self::LOGIN_MONTHS_GAP, date("d"),   date("Y"));
 			$dateAfterMonthGap = date("Y-m-d",$monthGap);
 			$greaterThanEqualArrayWithoutQuote["LAST_LOGIN_DT"] = "'".$dateAfterMonthGap."'";
-			$orderBy = "FIELD(PROFILEID,$whereArr[PROFILEID])";
+			$orderBy = "LAST_LOGIN_DT DESC";
+			
+			//$orderBy = "FIELD(PROFILEID,$whereArr[PROFILEID])";
 
 			$profArrObj                = new ProfileArray();
 			$usernameArray = $profArrObj->getResultsBasedOnJprofileFields($whereArr, '', '', implode(',',Array("PROFILEID", "USERNAME")),'JPROFILE',"newjs_bmsSlave","",$greaterThanEqualArrayWithoutQuote,$orderBy,$limit);

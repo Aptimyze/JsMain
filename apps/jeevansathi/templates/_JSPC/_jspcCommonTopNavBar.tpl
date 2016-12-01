@@ -122,7 +122,7 @@ window.onload=function(){
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted Profiles</a></li>
-                                <li><a class="disp_b" href="/search/visitors">Profile Visitors</a></li>
+                                <li><a class="disp_b" href="/search/visitors?matchedOrAll=A">Profile Visitors</a></li>
                                 <!--
                                 ~if CommonFunction::getMainMembership($subscription) eq mainMem::EVALUE || CommonFunction::getMainMembership($subscription) eq mainMem::EADVANTAGE`
                                 ~else`

@@ -1119,3 +1119,9 @@ transform:  translateX(100%) rotateY(0deg) !important;
     overflow: hidden;
 }
 .vbtm{	vertical-align:bottom;}
+
+.reportInvalidjsmsButton
+{
+	display: inline-block;
+    padding-left: 15px;
+}

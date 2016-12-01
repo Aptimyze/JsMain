@@ -31,6 +31,14 @@ if ($data = authenticated($decoded_response['merchant_param5'])) {
     $profileid = $data["PROFILEID"];
 }
 
+$gatewayRespObj = new billing_GATEWAY_RESPONSE_LOG();
+
+if ($profileid) {
+    list($order_str, $order_num) = explode("-", $Order_Id);
+    $responseMsg = serialize($_REQUEST);
+    $gatewayRespObj->insertResponseMessage($profileid, $order_num, $order_str, 'CCAVENUE', $responseMsg);
+}
+
 if ($order_status == 'success') {
     $AuthDesc = "Y";
     $ret_status = "S";
@@ -47,9 +55,8 @@ $membershipObj->log_payment_status($Order_Id, $ret_status, 'CCAVENUE', $AuthDesc
 $dup = false;
 
 if ($profileid && $AuthDesc == "Y") {
-    $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
-
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
     if (!$dup && $ret) {
         $membershipObj->startServiceOrder($Order_Id);
     }
@@ -125,6 +132,7 @@ if ($profileid && $AuthDesc == "Y") {
     $ordrDeviceObj = new billing_ORDERS_DEVICE();
     $device = $ordrDeviceObj->getOrderDevice($part2, $part1);
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
     $smarty->assign("CHECKSUM", $decoded_response['merchant_param5']);
     $smarty->assign("HEAD", $smarty->fetch("revamp_head.htm"));
     $smarty->assign("SUBHEADER", $smarty->fetch("subheader.htm"));

@@ -88,7 +88,14 @@ class SearchLogger extends SearchParamters
 			$paramArray["PROFILEID"]=$this->pid;
                         $paramArray["SEARCH_CHANNEL"]=CommonFunction::getChannel();
                         
-                        $search_LATEST_SEARCHQUERYObj->insertOrReplace($paramArray); 
+                        if(array_key_exists("GENDER",$updateArr) && $updateArr["GENDER"]!='')
+						{
+						
+							$search_LATEST_SEARCHQUERYObj->insertOrReplace($paramArray); 
+					
+						}
+                        
+                        
                        
 		}
 		if($flag == 1)

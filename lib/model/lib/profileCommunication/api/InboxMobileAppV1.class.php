@@ -438,11 +438,16 @@ class InboxMobileAppV1
                                 
         if($infoKey=="INTEREST_SENT")
 				{
-							if($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							$heshe = $tupleObj->getGENDER()=="F"?"She":"He";
+							$viewedDate=$tupleObj->getINTEREST_VIEWED_DATE();
+							if($viewedDate!='')
 							{
-								$heshe = $tupleObj->getGENDER()=="F"?"She":"He";
-								$viewedDate=$tupleObj->getINTEREST_VIEWED_DATE();
-								$profile[$count]["timetext"] = "$heshe viewed your interest ".($viewedDate!=''?((stripos($viewedDate,'today')=== false)?'on ':"").$viewedDate:"");
+								$profile[$count]["timetext"] = "$heshe viewed your interest ".((stripos($viewedDate,'today')=== false)?'on ':"").$viewedDate;
+							}
+							elseif($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							{
+								$profile[$count]["timetext"] = "$heshe viewed your interest";
+							
 							}
 							$profile[$count]["seen"]=null; // We are not required to show New so setting it to blank
 							$profile[$count]["interest_viewed_date"] = null;
@@ -525,7 +530,7 @@ class InboxMobileAppV1
 				unset($button);
 				
 				
-			}
+			}			
 			$finalResponse["profiles"] = array_change_key_case($profile,CASE_LOWER);
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"];
 			$finalResponse["subtitle"] = $displayObj[$infoKey]["SUBTITLE"];
@@ -565,17 +570,26 @@ class InboxMobileAppV1
 		else
 			$finalResponse["noresultmessage"] = null;
 		if(!isset($finalResponse["profiles"]))
-			$finalResponse["profiles"] = null; 
+			$finalResponse["profiles"] = null;			 
 		if(isset($displayObj[$infoKey]["VIEW_ALL_COUNT"]) && !in_array($infoKey, array(
 			'NOT_INTERESTED',
 			'NOT_INTERESTED_BY_ME',
 			'ACCEPTANCES_RECEIVED',
-			'ACCEPTANCES_SENT'))) 
+			'ACCEPTANCES_SENT')))
+		{
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"]." ".$displayObj[$infoKey]["VIEW_ALL_COUNT"]; 
+			if($infoKey == "VISITORS" && MobileCommon::isApp() == "A")
+			{
+				$apiVersion = sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION');
+				if($apiVersion>74)
+				{
+					$finalResponse["title"] = $displayObj[$infoKey]["TITLE"]; 
+				}
+			}
+		} 
 		else
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"];
-		$finalResponse["infotype"] = $infoKey;
-		
+		$finalResponse["infotype"] = $infoKey;		
 		$finalResponse["currentPage"] = $displayObj[$infoKey]["CURRENT_NAV"];
 		$finalResponse["newCount"] = $displayObj[$infoKey]["NEW_COUNT"]?$displayObj[$infoKey]["NEW_COUNT"]:'0';
 		$finalResponse["nextPossible"] = $displayObj[$infoKey]["SHOW_NEXT"]?"true":"false";

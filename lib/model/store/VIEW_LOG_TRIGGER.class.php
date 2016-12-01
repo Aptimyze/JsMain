@@ -66,7 +66,7 @@ class VIEW_LOG_TRIGGER extends TABLE{
 				$yday=mktime(0,0,0,date("m"),date("d")-15,date("Y"));    // To get the time for before 15 days to get visitors
 				$date=date("Y-m-d",$yday)." 00:00:00";
 				
-				$sql= "SELECT VIEWER,DATE AS TIME,SEEN FROM VIEW_LOG_TRIGGER WHERE VIEWED = :PROFILEID ".$str." AND VIEWER!= :PROFILEID AND DATE>=:DATE ORDER BY TIME DESC";
+				$sql= "SELECT SQL_CACHE VIEWER,DATE AS TIME,SEEN FROM VIEW_LOG_TRIGGER WHERE VIEWED = :PROFILEID ".$str." AND VIEWER!= :PROFILEID AND DATE>=:DATE ORDER BY TIME DESC";
 				$res=$this->db->prepare($sql);
 				$res->bindValue(":PROFILEID",$viewed,PDO::PARAM_INT);
 				if(is_array($bindArr))

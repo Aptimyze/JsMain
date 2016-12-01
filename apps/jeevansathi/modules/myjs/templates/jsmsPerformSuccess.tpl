@@ -1,6 +1,7 @@
 <script type="text/javascript">
     var userGender="~$apiData.gender`",siteUrl="~$SITE_URL`";
     var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
+    var hamJs= '~$hamJs`';
 </script>
 <!--start:div-->
 <div class="perspective" id="perspective">
@@ -8,7 +9,12 @@
 <div class="fullwid bg1">
 	<div class="pad1">
 		<div class="rem_pad1">
-			<div class="fl wid20p"> <i id ="hamburgerIcon" class="mainsp baricon " hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i> </div>
+			<div class="fl wid20p">                             
+                            <div id="hamburgerIcon" hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1">
+                                <i class="loaderSmallIcon dn"></i>
+                            <svg id="hamIc" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.2px;}</style></defs><title>icons</title><line class="cls-1" x1="2" y1="3.04" x2="18" y2="3.04"/><line class="cls-1" x1="2.29" y1="10" x2="18.29" y2="10"/><line class="cls-1" x1="2" y1="16.96" x2="18" y2="16.96"/></svg>
+                            </div>
+                        </div>
                         <div id='myJsHeadingId' class="fl wid60p txtc color5  fontthin f19">Home</div>
                                                 <div class="fr">
 				<div class="fullwid">
@@ -293,10 +299,6 @@
 	~include_partial("myjs/jsmsMatchalertSection",[matchalertData=>$apiData.match_alert])`
 </span>
 ~include_component('common', 'notificationLayerJsms')`	
-</div>
-
-<div id="hamburger" class="hamburgerCommon dn fullwid">	
-	~include_component('static', 'newMobileSiteHamburger')`	
 </div>
 </div>
 <script>~$pixelcode|decodevar`</script>

@@ -17,8 +17,15 @@ class InformationTypeAdapter
     public function getProfiles($condition, $skipArray,$subscription="")
     {
 		$profilesArray = array();
+       
 		switch ($this->infoType) {
             case "INTEREST_RECEIVED":
+                $contactsObj                          = new ContactsRecords();
+                $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+                $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
+                $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
+                break;
+             case "INTEREST_ARCHIVED":
                 $contactsObj                          = new ContactsRecords();
                 $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
                 $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
@@ -107,7 +114,7 @@ class InformationTypeAdapter
                 break;
 	    case "VISITORS":
 	        $visitorObj                              = new Visitors($this->profileId);
-                $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"]);
+                $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"],array("matchedOrAll"=>$condition["matchedOrAll"]));
 			break;
 	    case "MY_MATCHES":
 		$SearchCommonFunctions = new SearchCommonFunctions;
