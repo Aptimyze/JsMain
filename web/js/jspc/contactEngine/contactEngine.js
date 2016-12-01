@@ -640,18 +640,10 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	{
 		liFinalHtml+=viewContactHiddenLabel('Phone No.',Obj.actiondetails.contact1_message);
 	}
-	else if(Obj.actiondetails.contact1_message)
-	{
-		liFinalHtml+=viewContactHiddenLabel('Phone No.',Obj.actiondetails.contact1_message);
-	}
 	
 	if(Obj.actiondetails.contact2!=null)
 	{
 		liFinalHtml+=ViewContactLiCreate(Obj.actiondetails.contact2,true,'L','',profileChecksum);
-	}
-	else if(Obj.actiondetails.contact2_message)
-	{
-		liFinalHtml+=viewContactHiddenLabel('Landline',Obj.actiondetails.contact2_message);
 	}
 	else if(Obj.actiondetails.contact2_message)
 	{
@@ -664,11 +656,7 @@ ContactEngineCard.prototype.postViewContactLayer=function(Obj,profileChecksum)
 	}
 	else if(Obj.actiondetails.contact3_message)
 	{
-<<<<<<< Updated upstream
 		liFinalHtml+=viewContactHiddenLabel('Alternate No.',Obj.actiondetails.contact3_message);
-=======
-		liFinalHtml+=ViewContactLiCreate('Alternate No.',Obj.actiondetails.contact3_message);
->>>>>>> Stashed changes
 	}
 	
 	if(Obj.actiondetails.contact5!=null)
