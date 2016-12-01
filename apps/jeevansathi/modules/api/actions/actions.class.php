@@ -39,16 +39,14 @@ class apiActions extends sfActions
 		$forwardingArray =$this->apiWebHandler->getModuleAndActionName($request);
 
                 // Notification Check
-                $actionName =$forwardingArray["actionName"];
+                /*$actionName =$forwardingArray["actionName"];
                 if($actionName=='pollV1'){
                         $notifCheck =NotificationFunctions::notificationCheck($request);
                         if($notifCheck){
 				echo $notifCheck;
-                                //$respObj->setHttpArray($this->apiWebHandler->getResponse());
-                                //$respObj->generateResponse();
                                 die;
                         }
-                }
+                }*/
                 // end
 
 		if($apiValidation["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"])
