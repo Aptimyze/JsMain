@@ -107,8 +107,7 @@ class JHOBBYCacheLib extends TABLE{
            if(isset($paramArr['PROFILEID'])) {
                $iProfileId = $paramArr['PROFILEID'];
            } else {
-               $arrData = $this->get($value,$criteria,"PROFILEID");
-               $iProfileId = $arrData['PROFILEID'];
+               $iProfileId = $pid;
            }
 
            //Remove From Cache
