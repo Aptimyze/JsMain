@@ -371,8 +371,8 @@ class NotificationDataPool
                 $pictureServiceObj=new PictureService($profile);
                 $profilePicObj = $pictureServiceObj->getProfilePic();
                 if($profilePicObj){
-                    $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$this->gender);
-                    if($photoArray[label] != '')
+                    $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ProfilePic120Url','',$this->gender,true);
+                    if($photoArray[label] != '' || $photoArray["url"] == null)
                        $icon = 'D';
                     else
                        $icon = $photoArray['url'];

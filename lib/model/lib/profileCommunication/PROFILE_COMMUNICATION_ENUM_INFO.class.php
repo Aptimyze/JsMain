@@ -25,6 +25,7 @@ class PROFILE_COMMUNICATION_ENUM_INFO
 		self::$informationTypeEnum["HOROSCOPE_REQUEST_SENT"] = "Horoscope";
 		self::$informationTypeEnum["ACCEPTANCES_RECEIVED"]       = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_RECEIVED"]          = "ContactsRecord";
+		self::$informationTypeEnum["INTEREST_ARCHIVED"]          = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_RECEIVED_FILTER"]          = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_SENT"]              = "ContactsRecord";
 		self::$informationTypeEnum["DECLINE_RECEIVED"]           = "ContactsRecord";

@@ -70,11 +70,10 @@ switch(this.name)
         case 'VSP':
             var mainDivElement=$("#PreFourButtonsSearch").clone();
             var basicButtonElement = mainDivElement.find('.contactEngineIcon');
-            innerHtml=this.setButtonProperties(buttonArray,basicButtonElement)
+            innerHtml=this.setButtonProperties(buttonArray,basicButtonElement);
             break;
         case 'VDP':
         case 'VSP_VDP':
-        
 			var toBeUpdatedContainerId='#'+actionName+"-"+this.profileChecksum+"-"+this.name;
             var toBeUpdatedLabelId='#'+actionName+"-"+this.profileChecksum+"-"+this.name+"_LABEL";
             var toBeUpdatedIconId='#'+actionName+"-"+this.profileChecksum+"-"+this.name+"_ICON";
@@ -799,6 +798,16 @@ function cEButtonActionCalling(elementObj)
 	{
 		var buttonObj=new Button(elementObj);
 		buttonObj.request();
+		if(arrID[0] == "IGNORE"){
+			//console.log("ignore from view profile");
+			var chatData = elementObj.attr("data-chat");
+			if(chatData != undefined){
+				var chatSplitData = chatData.split(",");
+				if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+					updateNonRosterListOnCEAction({"user_id":chatSplitData[0],"action":chatSplitData[1]});
+				}
+			}
+		}
 	}
 	else
 	{

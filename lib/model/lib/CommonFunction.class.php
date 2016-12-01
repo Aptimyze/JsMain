@@ -673,5 +673,13 @@ class CommonFunction
         );
         return $dropDownTimeArr2;
     }
+    
+    public static function removeCanChat($loginProfileId,$otherProfileId)
+    {
+		if(JsMemcache::getInstance()->get("can_chat_".$loginProfileId."_".$otherProfileId,1) || JsMemcache::getInstance()->get("can_chat_".$otherProfileId."_".$loginProfileId,1)){
+			JsMemcache::getInstance()->set("can_chat_".$loginProfileId."_".$otherProfileId,false,'','',1);
+			JsMemcache::getInstance()->set("can_chat_".$otherProfileId."_".$loginProfileId,false,'','',1);
+		}
+	}
 }
 ?>
