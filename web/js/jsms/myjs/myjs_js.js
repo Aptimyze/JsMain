@@ -45,13 +45,6 @@ function profile_completion(lim) {
 
 };
 
-var AlterChildrenCss = function (childElement)
-        {
-	        var windowWidth = $(window).width(),tuple_ratio = 80,transformX = (tuple_ratio * windowWidth) / 100 + 10;
-            $.each(childElement, function (index, element) {
-                $(element).css('width', transformX - 10);
-            });
-        }
 
 function jsmsMyjsReady() {
     
@@ -67,29 +60,23 @@ function jsmsMyjsReady() {
 	setBlock(arr[i]);
        
     
-        setBrowseBand();
+    setBrowseBand();
         
         $("#hamburger").width($(window).width());
-        $(".setWidth").width($(window).width());
-        
-        $( window ).resize(function() {
-            $(".setWidth").width($(window).width());
-        });
+     $(".setWidth").width($(window).width());
         
         if (parseInt(awaitingResponseCount)) {
             var slider1=$("#awaitingResponsePresent #awaiting_tuples");
- //         tupleObject = slider1.Slider(7,slider1,parseInt(awaitingResponseCount),"interest_received",awaitingResponseNext);
-   //         tupleObject._defaultInit();
-            bindScrollAnimation(slider1);
-            
+          tupleObject = slider1.Slider(7,slider1,parseInt(awaitingResponseCount),"interest_received",awaitingResponseNext);
+            tupleObject._defaultInit();
         }
         
         if (parseInt(matchalertCount)) {
             var slider2=$("#matchalertPresent #match_alert_tuples");
-     //      tupleObject2 =   slider2.Slider(9,slider2,parseInt(matchalertCount),"match_alert",matchAlertNext);
-       //   tupleObject2._defaultInit();
-         //         bindSlider();
-            bindScrollAnimation(slider2);
+           tupleObject2 =   slider2.Slider(9,slider2,parseInt(matchalertCount),"match_alert",matchAlertNext);
+          tupleObject2._defaultInit();
+                  bindSlider();
+
         }
                 $(".contactLoader").css("left",((windowWidth/2)-$(".contactLoader").width()/2)-20+"px");
 
@@ -134,7 +121,7 @@ function setBlock(blockName) {
                 $("#hamburgerIcon").bind("click", function() {
 			if($("#hamburger").length == 0){
                                 $(".loaderSmallIcon").addClass("loaderimg").removeClass("dn");
-				$("#hamIc").hide();
+                                $("#hamIc").hide();
 				if(localStorage.getItem("hamHtml")){
 					$("#perspective").append(localStorage.getItem("hamHtml"));	
 				} else{
@@ -147,14 +134,13 @@ function setBlock(blockName) {
 				var imported = document.createElement('script');
 				imported.src = 'IMG_URL/min/?f=/'+hamJs;
                                 imported.onerror = function() {
-                                ShowTopDownError(['Something went wrong']); 
-                                $("#hamburger").remove(); 
-                                setTimeout(function(){
-                                    $(".loaderSmallIcon").addClass("dn");
-                                    $("#hamIc").show();
-                                }, 100);   
-                                };
-
+                                 ShowTopDownError(['Something went wrong']); 
+                                 $("#hamburger").remove(); 
+                                 setTimeout(function(){
+                                     $(".loaderSmallIcon").addClass("dn");
+                                     $("#hamIc").show();
+                                 }, 100);   
+                                 };
 				imported.onload = function() {
 					BindNextPage();
 				    $("#hamburgerIcon").click();
@@ -277,142 +263,39 @@ function getCount(response){
 
 
 	function onnewtuples(_parent) {
-		if ( _parent.page >= 0 && !(_parent.requestPending==1)) {
-			loadnew(_parent);
+		if (_parent.page >= 0) {
+                        if (_parent._isRequested) return ;
+                        ++_parent.page;
+			loadnew(_parent.page,_parent);
                         
 		}
 	};
       
-function bindScrollAnimation (elem) {
-    var initialPosition = "",indexTupple="",page=0;
-    var id = 0,mapString="";
-    if(elem.attr("id")== "match_alert_tuples"){
-        id= 9;
-        page=-1;
-        mapString="match_alert";
-    } else if(elem.attr("id")== "awaiting_tuples"){
-        id=7;
-        mapString = "interest_received";
-    }
-    AlterChildrenCss(elem.children());
-    var ob = {page: page,_objId: id,  _parent: elem,_mapString:mapString,eleDomID : $(elem).attr('id'),requestPending:0};
-    $.data(elem, "props",ob); 
-    $(elem).bind('touchstart', function(){
-        
-        initialPosition = $(elem).scrollLeft();
-    });
-    $(elem).scroll(function() {
-        clearTimeout($.data(this, "scrollCheck"));
-        $.data(this, "scrollCheck", setTimeout(function() {
-            var dataRight = false, swipStyle = "", tupleDivArray=$(elem).children();
-            if ($(elem).scrollLeft() > initialPosition && initialPosition != "reset"){
-                swipStyle = "ltr";
-            } else if ($(this).scrollLeft() < initialPosition && initialPosition != "reset") {
-                swipStyle = "rtl";
-            }
-        
-            tupleDivArray.each(function(index, element) {
-                var leftVal = $(this).offset().left;
-              
-                if (leftVal > 25 && leftVal < 35) {
-                    dataRight = true;
-                    indexTupple = index+1;
-                }
-            });
-            if (dataRight == false) {
-                tupleDivArray.each(function(index, element) {
-                    var leftVal = $(this).offset().left, diff = 0;
-                    if (swipStyle == "ltr" && leftVal > 35){
-                        diff = parseInt($(elem).scrollLeft() + leftVal - 30);
-                        $(elem).animate({scrollLeft:diff + "px"}, 250);
-                        initialPosition = "reset";
-                        indexTupple = index+1; 
-                        return false;
-                    }
-                    else if (swipStyle == "rtl" && leftVal > 0 && $(this).prev().offset()){
-                        diff = parseInt($(elem).scrollLeft() + $(this).prev().offset().left - 25);
-                        $(elem).animate({scrollLeft:diff + "px"}, 250);
-                        initialPosition = "reset";
-                        indexTupple = index+1;
-                        return false;
-                    }
-                });
-            }
-            if (indexTupple >= $(elem).find('.toupleDiv').length / 2 && swipStyle != "") {
-                var boundProps = $.data(elem, "props");
-                onnewtuples(boundProps);
-            }
 
-        }, 100));
-    });
+
+
+/*
+function add_divs(width, length, index) {
+	var parent = document.getElementById("eoituples");
+
+
+	var node;
+
+	for (i = 0; i < length; i++) {
+		node = document.createElement("div");
+
+		parent.appendChild(node);
+		node.style.display = "inline";
+		node.style.width = width + "px";
+		node.setAttribute("class", "fl");
+		node.style.marginRight = "10px";
+
+
+		node.style.visibility = "hidden";
+
+		node.style.visibility = "visible";
+
+	}
+
 }
-
-function loadnew(eleObj) {
-    var proChecksumString="",page_no= (++eleObj.page);
-    var prochecks=eleObj._parent.find(".proChecksum");
-    proChecksumString+=prochecks.eq(0).val();
-    for(i=1;i<prochecks.length;i++)
-        proChecksumString+=(","+prochecks.eq(i).val());
-    var child = $("#"+eleObj.eleDomID).children('.toupleDiv');
-    var ajaxData={'pageNo':page_no,'infoTypeId':eleObj._objId,'profileList':proChecksumString};
-    var loadingMoreObj = $("#"+eleObj.eleDomID).find("#loadingMorePic").removeClass("dn").addClass("dispibl");
-    eleObj.requestPending=1;
-    $.ajax({
-		url: "/api/v1/myjs/perform",
-		type: "POST",
-		data: ajaxData,
-                dataType : 'json',
-		//crossDomain: true,
-		success: function(rsp)
-                {
-                if(CommonErrorHandling(rsp) != true) return;
-                if (rsp[eleObj._mapString]['tuples']) 
-                {
-                var x = child[0].outerHTML,
-                width = parseInt($(child[0]).css("width")),
-                length = rsp[eleObj._mapString]['tuples'].length,
-                index = child.length,basicId=$(child[0]).attr("id").split("_")[0]+"_";
-                
-/*                for (i = 0; i < length; i++) {
-                    newdiv = $(child[i + index]);
-                    newdiv.css("width", width + "px");
-                    newdiv.html(x);
-                    newdiv.attr("id",$(child[0]).attr("id").split("_")[0]+"_"+(i + index));
-                    }
-  */              for (i = 0; i < length; i++) {
-                    var y = $(x);
-                    if (eleObj._objId == 7) 
-                    {
-                        y.find(".eoiAcceptBtn").attr("index", (i + index)).children("input").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
-                        y.find(".eoiDeclineBtn").attr("index", (i + index)).children("input").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
-                    }
-                    y.attr("id",basicId + (i + index));
-                    y.find(".username").html(rsp[eleObj._mapString]['tuples'][i]["username"]);    
-                    y.find(".tuple_image").attr("src", rsp[eleObj._mapString]['tuples'][i]["photo"]["url"]);
-                    y.find(".tuple_title").html(rsp[eleObj._mapString]['tuples'][i]["tuple_title_field"]);
-                    y.find(".tuple_age").html(rsp[eleObj._mapString]['tuples'][i]["age"]);
-                    y.find(".tuple_height").html(rsp[eleObj._mapString]['tuples'][i]["height"]);
-                    y.find(".tuple_caste").html(rsp[eleObj._mapString]['tuples'][i]["caste"]);
-                    y.find(".tuple_mtongue").html(rsp[eleObj._mapString]['tuples'][i]["mtongue"]);
-                    y.find(".tuple_education").html(rsp[eleObj._mapString]['tuples'][i]["education"]);
-                    y.find(".tuple_income").html(rsp[eleObj._mapString]['tuples'][i]["income"]);
-                    y.find(".proChecksum").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
-                    y.find("#detailedProfileRedirect").attr('href','/profile/viewprofile.php?profilechecksum='+rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]+'&'+rsp[eleObj._mapString]['tracking']+"&total_rec="+rsp[eleObj._mapString]['view_all_count']+"&actual_offset="+(i+1)+"&contact_id="+rsp[eleObj._mapString]['contact_id']);
-                    y.css('width',width+'px');
-                    loadingMoreObj.before(y);
-                    
-                   }
-            }
-                        
-            loadingMoreObj.addClass("dn").removeClass("dispibl");
-            eleObj.requestPending=0;
- 
-            if (!rsp[eleObj._mapString]['show_next']) {
-                eleObj.page = -1;
-            }
-            else eleObj.page++;
-
-                    
-                }
-    });
-}
+*/
