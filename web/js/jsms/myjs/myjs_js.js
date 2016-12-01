@@ -45,6 +45,13 @@ function profile_completion(lim) {
 
 };
 
+var AlterChildrenCss = function (childElement)
+        {
+	        var windowWidth = $(window).width(),tuple_ratio = 80,transformX = (tuple_ratio * windowWidth) / 100 + 10;
+            $.each(childElement, function (index, element) {
+                $(element).css('width', transformX - 10);
+            });
+        }
 
 function jsmsMyjsReady() {
     
@@ -60,16 +67,21 @@ function jsmsMyjsReady() {
 	setBlock(arr[i]);
        
     
-    setBrowseBand();
+        setBrowseBand();
         
         $("#hamburger").width($(window).width());
-     $(".setWidth").width($(window).width());
+        $(".setWidth").width($(window).width());
+        
+        $( window ).resize(function() {
+            $(".setWidth").width($(window).width());
+        });
         
         if (parseInt(awaitingResponseCount)) {
             var slider1=$("#awaitingResponsePresent #awaiting_tuples");
  //         tupleObject = slider1.Slider(7,slider1,parseInt(awaitingResponseCount),"interest_received",awaitingResponseNext);
    //         tupleObject._defaultInit();
             bindScrollAnimation(slider1);
+            
         }
         
         if (parseInt(matchalertCount)) {
@@ -265,21 +277,34 @@ function getCount(response){
 
 
 	function onnewtuples(_parent) {
-		if (_parent.page >= 0) {
-			loadnew(_parent.page,_parent);
+		if ( _parent.page >= 0 && !(_parent.requestPending==1)) {
+			loadnew(_parent);
                         
 		}
 	};
       
 function bindScrollAnimation (elem) {
-    var initialPosition = "",indexTupple="",page = 1;
+    var initialPosition = "",indexTupple="",page=0;
+    var id = 0,mapString="";
+    if(elem.attr("id")== "match_alert_tuples"){
+        id= 9;
+        page=-1;
+        mapString="match_alert";
+    } else if(elem.attr("id")== "awaiting_tuples"){
+        id=7;
+        mapString = "interest_received";
+    }
+    AlterChildrenCss(elem.children());
+    var ob = {page: page,_objId: id,  _parent: elem,_mapString:mapString,eleDomID : $(elem).attr('id'),requestPending:0};
+    $.data(elem, "props",ob); 
     $(elem).bind('touchstart', function(){
+        
         initialPosition = $(elem).scrollLeft();
     });
     $(elem).scroll(function() {
         clearTimeout($.data(this, "scrollCheck"));
         $.data(this, "scrollCheck", setTimeout(function() {
-            var dataRight = false, swipStyle = "", tupleDivArray=$(elem).find('.toupleDiv');
+            var dataRight = false, swipStyle = "", tupleDivArray=$(elem).children();
             if ($(elem).scrollLeft() > initialPosition && initialPosition != "reset"){
                 swipStyle = "ltr";
             } else if ($(this).scrollLeft() < initialPosition && initialPosition != "reset") {
@@ -288,6 +313,7 @@ function bindScrollAnimation (elem) {
         
             tupleDivArray.each(function(index, element) {
                 var leftVal = $(this).offset().left;
+              
                 if (leftVal > 25 && leftVal < 35) {
                     dataRight = true;
                     indexTupple = index+1;
@@ -313,62 +339,54 @@ function bindScrollAnimation (elem) {
                 });
             }
             if (indexTupple >= $(elem).find('.toupleDiv').length / 2 && swipStyle != "") {
-                page++;
-                var id = 0,mapString="";
-                if($(elem.attr("id")== "match_alert_tuples")){
-                    id= 9;
-                    mapString="match_alert";
-                } else if($(elem.attr("id")== "awaiting_tuples")){
-                    id=7;
-                    mapString = "interest_received";
-                }
-                var ob = {_tupleCount: $(elem).find('.toupleDiv').length, _tupleIndex:$(elem).find('.toupleDiv').length, page: page,_objId: id,  _parent: elem,_mapString:mapString};
-                onnewtuples(ob);
+                var boundProps = $.data(elem, "props");
+                onnewtuples(boundProps);
             }
 
         }, 100));
     });
 }
 
-function loadnew(page_no, eleObj) {
-    console.log("eleObj",eleObj);
-    var xmlhttp;
-    if (window.XMLHttpRequest) { // code for IE7+, Firefox, Chrome, Opera, Safari
-        xmlhttp = new XMLHttpRequest();
-    } else { // code for IE6, IE5
-        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    }
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            var parentElement = eleObj._parent,loadingMore=parentElement.find("#loadingMorePic").clone();
-            parentElement.find("#loadingMorePic").remove();
-            var index = eleObj._tupleIndex,rsp = xmlhttp.responseText,child = parentElement.children(),total_len = child.length,maxlength = 10,length;
-            if (child.length == 0) {
-                eleObj.page = -1;
-                return;
-            }
-            rsp = JSON.parse(rsp);
-            //console.log("rsp",rsp[eleObj._mapString]['tuples']);
-            if (rsp[eleObj._mapString]['tuples']) {
-                var x, newdiv,width = parseInt($(child[0]).css("width"));;
-                length = rsp[eleObj._mapString]['tuples'].length;
-                x=child.eq(0).html();
-                for (i = 0; i < length; i++) {
-                        newdiv = $(child[i + index]);
-                        newdiv.css("width", width + "px");
-                        newdiv.html(x);
-                       newdiv.attr("id",$(child[0]).attr("id").split("_")[0]+"_"+(i + index));
-                       
+function loadnew(eleObj) {
+    var proChecksumString="",page_no= (++eleObj.page);
+    var prochecks=eleObj._parent.find(".proChecksum");
+    proChecksumString+=prochecks.eq(0).val();
+    for(i=1;i<prochecks.length;i++)
+        proChecksumString+=(","+prochecks.eq(i).val());
+    var child = $("#"+eleObj.eleDomID).children('.toupleDiv');
+    var ajaxData={'pageNo':page_no,'infoTypeId':eleObj._objId,'profileList':proChecksumString};
+    var loadingMoreObj = $("#"+eleObj.eleDomID).find("#loadingMorePic").removeClass("dn").addClass("dispibl");
+    eleObj.requestPending=1;
+    $.ajax({
+		url: "/api/v1/myjs/perform",
+		type: "POST",
+		data: ajaxData,
+                dataType : 'json',
+		//crossDomain: true,
+		success: function(rsp)
+                {
+                if(CommonErrorHandling(rsp) != true) return;
+                if (rsp[eleObj._mapString]['tuples']) 
+                {
+                var x = child[0].outerHTML,
+                width = parseInt($(child[0]).css("width")),
+                length = rsp[eleObj._mapString]['tuples'].length,
+                index = child.length,basicId=$(child[0]).attr("id").split("_")[0]+"_";
+                
+/*                for (i = 0; i < length; i++) {
+                    newdiv = $(child[i + index]);
+                    newdiv.css("width", width + "px");
+                    newdiv.html(x);
+                    newdiv.attr("id",$(child[0]).attr("id").split("_")[0]+"_"+(i + index));
                     }
-                for (i = 0; i < length; i++) {
-                    console.log("child",child[16],eleObj._tupleIndex);
-                    var y = $(child[i + eleObj._tupleIndex]);
-                    console.log("y",y);
-                    if (eleObj._objId == 7) {
-                        y.attr("id", "eoituple_" + (i + eleObj._tupleCount));
-                        y.find(".eoiAcceptBtn").attr("index", (i + eleObj._tupleCount)).children("input").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
-                        y.find(".eoiDeclineBtn").attr("index", (i + eleObj._tupleCount)).children("input").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
+  */              for (i = 0; i < length; i++) {
+                    var y = $(x);
+                    if (eleObj._objId == 7) 
+                    {
+                        y.find(".eoiAcceptBtn").attr("index", (i + index)).children("input").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
+                        y.find(".eoiDeclineBtn").attr("index", (i + index)).children("input").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
                     }
+                    y.attr("id",basicId + (i + index));
                     y.find(".username").html(rsp[eleObj._mapString]['tuples'][i]["username"]);    
                     y.find(".tuple_image").attr("src", rsp[eleObj._mapString]['tuples'][i]["photo"]["url"]);
                     y.find(".tuple_title").html(rsp[eleObj._mapString]['tuples'][i]["tuple_title_field"]);
@@ -380,64 +398,21 @@ function loadnew(page_no, eleObj) {
                     y.find(".tuple_income").html(rsp[eleObj._mapString]['tuples'][i]["income"]);
                     y.find(".proChecksum").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
                     y.find("#detailedProfileRedirect").attr('href','/profile/viewprofile.php?profilechecksum='+rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]+'&'+rsp[eleObj._mapString]['tracking']+"&total_rec="+rsp[eleObj._mapString]['view_all_count']+"&actual_offset="+(i+1)+"&contact_id="+rsp[eleObj._mapString]['contact_id']);
-                }
+                    y.css('width',width+'px');
+                    loadingMoreObj.before(y);
+                    
+                   }
             }
-            else
-                length = 0;
-            
-            eleObj._tupleCount += length;
-            eleObj._tupleIndex += length;
-            
-
+                        
+            loadingMoreObj.addClass("dn").removeClass("dispibl");
+            eleObj.requestPending=0;
+ 
             if (!rsp[eleObj._mapString]['show_next']) {
                 eleObj.page = -1;
-                eleObj._parent.find("#loadingMorePic").hide();
-                return;
             }
-            
-           
-            parentElement.append(loadingMore);
-            loadingMore.hide();
-            for (i = 0; i < maxlength; i++)
-                parentElement.append('<div style="margin-right:10px; display:inline-block; margin-left:0px;" ></div>');
-        }
+            else eleObj.page++;
 
-    };
-    
-    var proChecksumString= "profileList=";
-    var prochecks=eleObj._parent.find(".proChecksum");
-    
-    proChecksumString+=prochecks.eq(0).val();
-    for(i=1;i<prochecks.length;i++)
-        proChecksumString+=(","+prochecks.eq(i).val());
-    var str = "/api/v1/myjs/perform?infoTypeId=" + eleObj._objId + "&pageNo=" + page_no+"&"+proChecksumString;
-    eleObj._parent.find("#loadingMorePic").css("display","inline-block");                
-    xmlhttp.open("POST", str, true);
-    xmlhttp.send();
-};
-
-/*
-function add_divs(width, length, index) {
-	var parent = document.getElementById("eoituples");
-
-
-	var node;
-
-	for (i = 0; i < length; i++) {
-		node = document.createElement("div");
-
-		parent.appendChild(node);
-		node.style.display = "inline";
-		node.style.width = width + "px";
-		node.setAttribute("class", "fl");
-		node.style.marginRight = "10px";
-
-
-		node.style.visibility = "hidden";
-
-		node.style.visibility = "visible";
-
-	}
-
+                    
+                }
+    });
 }
-*/
