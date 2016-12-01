@@ -60,7 +60,7 @@
    <table width=760 align="CENTER" cellspacing="0px;">
         <tr class="formhead topDetails" style="background:#EFEFD3;">
 	<td>Username : ~$profileData['USERNAME']`</td>
-	<td>Gender : <font class="red">~$profileData['GENDER']` (~$profileData['AGE']`)</font></td>
+	<td>Gender : <font class="red" style="font-size:16px;" >~$profileData['GENDER']` (~$profileData['AGE']`)</font></td>
 	</tr>  
         
         <tr class="deleteReasonShow" id="deleteReasonsArea">
@@ -187,6 +187,7 @@
 	~if $search neq 1 && ($photoArr['nonScreened'] || $photoArr['profilePic'])`
         <tr class = "fieldsnew" align = "CENTER">
             <td colspan="2"><input type="submit" tabIndex="~$tabIndex`" name="Submit" id="formSubmit" class="formSubmitButton" onsubmit="formSubmit()" value="Submit"><br/><br/>&nbsp;&nbsp;&nbsp;
+<font class="red" style="font-size:16px;" >~$profileData['GENDER']` (~$profileData['AGE']`)</font>
                 <input class="deleteReasonHide" id="skipSubmit" type="submit" name="Skip" value="Skip">
             </td>
         </tr>    	

@@ -35,7 +35,14 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
         }
         elseif(($page=='visitors' && $filter=='R')&& MobileCommon::isDesktop())
         {
-                header("Location:".$SITE_URL."/search/visitors");die;
+                        if ($matchedOrAll== 'A')
+                        {
+                                header("Location:".$SITE_URL."/search/visitors?matchedOrAll=A");die;
+                        }
+                        else
+                        {
+                                header("Location:".$SITE_URL."/search/visitors");die;
+                        }
         }
         elseif(($page=='favorite' && $filter=='M')&& MobileCommon::isDesktop())
         {

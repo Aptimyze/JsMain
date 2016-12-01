@@ -1,3 +1,3 @@
 type=command
-dependencies=kundliAlertCalculation0Task,kundliAlertCalculation1Task,kundliAlertCalculation2Task,kundliAlertCalculation3Task
+dependencies=KundliAlertCalculation0Task,KundliAlertCalculation1Task,KundliAlertCalculation2Task,KundliAlertCalculation3Task
 command=echo KundliAlert successfully sent

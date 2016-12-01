@@ -59,6 +59,8 @@ EOF;
 
 		$matchalerts_LOG_TEMP = new matchalerts_LOG_TEMP;
 		$matchalerts_LOG_TEMP->truncateTable();
+		$matchAlertsLowTrendsObj =  new matchalerts_LowTrendsMatchalertsCheck();
+		$matchAlertsLowTrendsObj->truncateTable();
 		/* truncate tables */
                 
                 //delete one month old entries

@@ -4,14 +4,14 @@ function getIosVersionOne(ua) {
     var match= ua.match(/(iPhone);/i);
     //console.log(match);
     var OsVersion=ua.match(/OS\s[0-9.]*/i);
-    //console.log(OsVersion);
+    //console.log(OsVersion);    
     if(match==null)
         return false;
     else if(OsVersion==null)
     {
         return false
     }
-    else if(OsVersion[0].substring(3,4)>=7)
+    else if(OsVersion[0].substring(3,5) >= 7)
         return true;
     else
         return false;
