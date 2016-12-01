@@ -236,7 +236,7 @@ function showHideField(fieldSelector,bShow,clearField){
 $('#partner_country_arr').on("change",function (){
     var values =$(this).val();
     var cityField = '#partner_city_arr';
-	  if(values instanceof Array !== false && values.indexOf("51") !== -1 && values.length<2 ){
+	  if(values instanceof Array !== false && values.indexOf("51") !== -1 ){
 	    showHideField(cityField,true);
 	  }
 	  else if(typeof values == "string" && values.indexOf("51") !== -1) 
