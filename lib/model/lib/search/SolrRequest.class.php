@@ -383,6 +383,13 @@ class SolrRequest implements RequestHandleInterface
                                 $solrFormatValueCOUNTRY = str_replace(","," ",$setOrCond["COUNTRY_RES"]);
                                 $solrFormatValueCOUNTRY = str_replace("','"," ",$solrFormatValueCOUNTRY);
                                 $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}COUNTRY_RES:($solrFormatValueCOUNTRY)";
+                        }elseif($setOrCond["STATE"]){
+                                $solrFormatValueStateIndia = str_replace(","," ",$setOrCond["STATE"]);
+                                $solrFormatValueStateIndia = str_replace("','"," ",$solrFormatValueStateIndia);
+                                $solrFormatValueStateIndia='"'.implode('","',explode(" ",$solrFormatValueStateIndia)).'"';
+                                $setWhereParams[]="STATE";
+                                $this->clusters[]="&facet.field={!ex=city_res,city_india,state}STATE";
+                                $this->filters[]="&fq={!tag=city_res,city_india,state}STATE:($solrFormatValueStateIndia)";
                         }
                 }
 		
