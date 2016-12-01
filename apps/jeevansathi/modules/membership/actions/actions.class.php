@@ -45,9 +45,7 @@ class membershipActions extends sfActions
         $request->setParameter('device', 'desktop');
 
         $memActFunc = new MembershipActionFunctions();
-
         list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum) = $memActFunc->getReqParamsForRevMobMem($request);
-
         switch ($displayPage) {
             case '1':
                 $apiParams = $pageURL . $authChecksum . "&device=" . $device;
@@ -75,6 +73,7 @@ class membershipActions extends sfActions
                 $apiParams = $pageURL . $mainMem . $authChecksum . $device;
                 $template  = 'JSPCCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
+                print_r($data);die;
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
 
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage3Url);
