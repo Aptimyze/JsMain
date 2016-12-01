@@ -92,6 +92,10 @@ class jsValidatorMail extends sfValidatorBase
           if($affectedRows == 0)
               throw new sfValidatorError($this, 'err_email_del', array('value' => $value, 'err_email_del' => $this->getOption('err_email_del')));
     }
+    if($this->_sameEmail($value))
+    {
+      throw new sfValidatorError($this, 'err_email_same', array('value' => $value, 'err_email_same' => $this->getOption('err_email_same')));
+    }
 	$this->_trackDuplicateEmail($value,'N');
     $negativeProfileListObj = new incentive_NEGATIVE_LIST;
     $negativeEmail = $negativeProfileListObj->checkEmailOrPhone("EMAIL",$value);
@@ -183,5 +187,21 @@ class jsValidatorMail extends sfValidatorBase
             $ip = CommonFunction::getIP();
             $page = JsRegistrationCommon::getSourcePage();
             $dupObj->insert($email, $page, $ip, $flag); 
+  }
+
+  private function _sameEmail($email)
+  {
+    $loggedInObj = LoggedInProfile::getInstance();
+    $pid = $loggedInObj->getPROFILEID();
+    $jprofileContactObj = new NEWJS_JPROFILE_CONTACT();
+    $contactsArr = $jprofileContactObj->getProfileContacts($pid);
+    if($contactsArr["ALT_EMAIL"] == $email)
+    {
+      return 1;
+    }
+    else
+    {
+      return 0;
+    }
   } 
 }
