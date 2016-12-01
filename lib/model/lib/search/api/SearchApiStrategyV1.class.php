@@ -17,7 +17,7 @@ class SearchApiStrategyV1
 	private $searchCat;
 	private $version;
 	private $channel;
-	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER');
+	private $profileTupleInfoArr = array('PROFILECHECKSUM','userLoginStatus','SUBSCRIPTION','AGE','USERNAME','DECORATED_HEIGHT','DECORATED_OCCUPATION','DECORATED_CASTE','DECORATED_INCOME','DECORATED_MTONGUE','DECORATED_EDU_LEVEL_NEW','DECORATED_CITY_RES','PHOTO','SIZE','ALBUM_COUNT','CONTACT_STATUS','BOOKMARKED','VERIFY_ACTIVATED_DT','NEW_FLAG','DECORATED_RELIGION','GENDER','FEATURED','FILTER_SCORE','FILTER_REASON','HIGHLIGHTED','VERIFICATION_SEAL','VERIFICATION_STATUS','stype','MSTATUS','COLLEGE','PG_COLLEGE','COMPANY_NAME','IGNORE_BUTTON','GUNASCORE','NAME_OF_USER','PROFILEID');
         private $profileInfoMappingArr = array("subscription"=>"subscription_icon","decorated_city_res"=>"decorated_location","contact_status"=>"eoi_label","verify_activated_dt"=>"timetext","new_flag"=>"seen","VERIFICATION_SEAL"=>"verification_seal");
 
 	const caste_relaxation_text1  = 'To get $casteMappingCnt more matching profiles, include castes $casteMappingCastes';
@@ -121,8 +121,14 @@ class SearchApiStrategyV1
                 $params['noOfResults'] = $this->responseObj->getTotalResults();
                 $params['result_count'] = $this->output['result_count'];
                 $params['pageSubHeading'] = $this->output['pageSubHeading'];
-                $outputArray = $this->SearchChannelObj->setRequestParameters($params);
+                $params['profileCount'] = 0;
+                $params["nextAvail"] = $this->output['next_avail'];
+                if(is_array($this->output["profiles"]))
+					$params['profileCount'] = sizeOf($this->output["profiles"]);
+				$outputArray = $this->SearchChannelObj->setRequestParameters($params);
+              
                 $this->output = array_merge($this->output,$outputArray);
+               
 		return $this->output;
 	}
 
@@ -166,11 +172,12 @@ class SearchApiStrategyV1
         if(($this->output["searchBasedParam"]=='kundlialerts' || $this->searchCat=='kundlialerts')&& $cnt==0)
         {   
          	$params["horoscope"] = "withoutHoro";  	
-
+			$this->output["uploadHoroscope"] = "1";
            	//The same check has been applied on apps/jeevansathi/modules/profile/templates/_jspcViewProfile/_jspcViewProfileAstroSection.tpl
            	if($loggedInProfileObj->getBTIME()!="" && $loggedInProfileObj->getCITY_BIRTH()!="" && $loggedInProfileObj->getCOUNTRY_BIRTH()!="")
            	{
            		$params["horoscope"] = "withHoro";
+           		$this->output["uploadHoroscope"] = "0";
            	}
         }
 		$params["matLogic"]= $this->output["matchAlertsLogic"];
@@ -350,6 +357,7 @@ class SearchApiStrategyV1
                     $resultsArray=$resultArrNew;
                 }
                 $profilesArr["profiles"] = $resultsArray;
+             
                 $profilesArr["featuredProfiles"] = $featuredProfileArrNew;
 		$nameOfUserObj = new NameOfUser;
 		$nameData = $nameOfUserObj->getNameData($loggedInProfileObj->getPROFILEID());	

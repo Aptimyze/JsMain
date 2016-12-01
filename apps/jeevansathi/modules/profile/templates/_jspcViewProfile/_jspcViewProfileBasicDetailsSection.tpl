@@ -127,9 +127,9 @@
 
                   <span class="disp_ib ignoreParent pos-rel pl15">
                   ~if $apiData['page_info']['is_ignored']`
-                                <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" cEIgnoreDetailProfile" data="&ignore=0">
+                                <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" cEIgnoreDetailProfile" data="&ignore=0" data-chat="~$apiData['other_profileid']`,UNBLOCK">
                 ~else`
-                  <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" ~if $loginProfileId`cEIgnoreDetailProfile~/if`" data="&ignore=1">
+                  <span id="IGNORE-~$apiData['page_info']['profilechecksum']`-VDP-IGNORE" class=" ~if $loginProfileId`cEIgnoreDetailProfile~/if`" data="&ignore=1" data-chat="~$apiData['other_profileid']`,BLOCK">
                 ~/if`
                   ~if !$loginProfileId`
                     <span class="disp_ib spriteIgnoreReport prfic51 cursp loginLayerJspc"></span>
