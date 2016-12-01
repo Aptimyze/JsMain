@@ -1,5 +1,5 @@
 ~if $profileTuple neq ''`
-        <div class="toupleDiv" style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;" id="~$section`tuple_~$index`">
+        <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;" id="~$section`tuple_~$index`">
            <input class="proChecksum" type="hidden" value="~$profileTuple.profilechecksum`" />
     
             <img class="srp_box2 contactLoader" style="position:absolute;display:none; top:65px; ">
