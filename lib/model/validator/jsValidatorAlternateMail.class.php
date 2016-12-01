@@ -48,7 +48,7 @@ class jsValidatorAlternateMail extends sfValidatorBase
    {
     if($key == 'err_email_del')
      $msg = "The profile with this email has been deleted. To retrieve profile, kindly contact bug@jeevansathi.com";
-
+   $this->addOption("email");
     $this->addMessage($key, $msg);
    }
   }
@@ -60,39 +60,16 @@ class jsValidatorAlternateMail extends sfValidatorBase
   {
 	  $email = (string) $value;
     $value = trim($email);
-    
-    //$activatedFlag = $this->_dupProfileEmail($value);
+    $primaryEmail = trim($this->getOption('email'));
     
     if ($this->_emailValidation($value))
     {
       throw new sfValidatorError($this, 'err_email_req', array('value' => $value, 'err_email_req' => $this->getOption('err_email_req')));
     }
-    
-    /*if ($this->_emailOld($value,$activatedFlag))
-    { 
-	  $this->_trackDuplicateEmail($value,'Y');
-      throw new sfValidatorError($this, 'err_email_duplicate', array('value' => $value, 'err_email_duplicate' => $this->getOption('err_email_duplicate')));
-    }*/
-    
-    /*if ($this->_emailDeleted($value,$activatedFlag))
+    if($this->_sameEmail($value,$primaryEmail))
     {
-	  $this->_trackDuplicateEmail($value,'Y',1);
-          //modify old email
-          $deletedEmailModify = new RegistrationFunctions();
-          $affectedRows = $deletedEmailModify->deletedEmailModify($value);
-          if($affectedRows == 0)
-              throw new sfValidatorError($this, 'err_email_del', array('value' => $value, 'err_email_del' => $this->getOption('err_email_del')));
-    }*/
-	//$this->_trackDuplicateEmail($value,'N');
-    /*$negativeProfileListObj = new incentive_NEGATIVE_LIST;
-    $negativeEmail = $negativeProfileListObj->checkEmailOrPhone("EMAIL",$value);
-    if($negativeEmail)
-    {
-      file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/loggingIgnoredEmailAndPhone.txt",$value."\t".date("Y-m-d H:i:s")."\t".$source."\n",FILE_APPEND);
-	    throw new sfValidatorError($this, 'err_email_revoke', array('value' => $value));
-    }*/
-
-    /*$this->*/
+      throw new sfValidatorError($this, 'err_email_same', array('value' => $value, 'err_email_same' => $this->getOption('err_email_same')));
+    }
     return $value;
   }
   
@@ -135,46 +112,26 @@ class jsValidatorAlternateMail extends sfValidatorBase
 	  
   }
   
-  /*private function _dupProfileEmail($email)
+  private function _sameEmail($altEmail,$primaryEmail)
   {
-	$profileObj = new JPROFILE();
-	$dupEmailAct = $profileObj->duplicateEmail($email);
-	return $dupEmailAct;
-  }*/
-  
-  private function _emailDeleted($email,$activated)
-  {
-	  if($activated === 'D')
-	  {
-		return 1;
-	  }
-	  return 0;
+	 if($primaryEmail !="")
+   {
+    if($altEmail == $primaryEmail)
+    {
+      return 1;
+    }
+   }
+   else
+   {
+    $loggedInObj = LoggedInProfile::getInstance();
+    if($altEmail == $loggedInObj->getEMAIL())
+    {      
+      return 1;
+    }
+    else
+    {     
+      return 0;
+    } 
+   }
   }
-  
- /* private function _emailOld($email,$activated)
-  {
-	  $oldEmailObj = new newjs_OLDEMAIL();
-	  $dupOldEmailFlag = $oldEmailObj->duplicateOldEmail($email);
-	   
-	  // check in old email table or in jprofile table with ACTIVATED NOT AS 'D'
-	  
-	  if($dupOldEmailFlag || ($activated != 'D' && $activated != -1))
-	  {
-		 return 1;
-	  }
-	  return 0;
-  }*/
-  
-  /*private function _trackDuplicateEmail($email,$flag,$emailDeletedProfile='')
-  {
-          //track deleted email reusage
-          if($emailDeletedProfile){
-            $duplicateEmailTrack = new TrackDuplicateEmailUsage();
-            $duplicateEmailTrack->insertEmailEntry($email);
-          }
-            $dupObj = new MIS_TRACK_DUPLICATE_EMAIL();
-            $ip = CommonFunction::getIP();
-            $page = JsRegistrationCommon::getSourcePage();
-            $dupObj->insert($email, $page, $ip, $flag); 
-  } */
 }
