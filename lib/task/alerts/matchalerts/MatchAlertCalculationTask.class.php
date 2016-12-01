@@ -93,7 +93,7 @@ EOF;
                                                             $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$strategyReceiversTVsNT);
                                                         }
                                                         // Set Low Dpp flag
-                                            //            $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                       
+                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                       
                                                         if($totalResults["LOGIN_SCORE"] > self::clusterRecordLimit){
                                                                 $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithTrendsScoreSort);
                                                                 $totalResults = $StrategyReceiversNT->getMatches('',0,array(),$matchesSetting); 
@@ -144,7 +144,7 @@ EOF;
                                                             $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$strategyReceiversNT);
                                                         }
                                                         // Set Low Dpp flag
-                                                   //     $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
+                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
 						}
                                                 $memObject->remove('SEARCH_JPARTNER_'.$profileid);
                                                 $memObject->remove('SEARCH_MA_IGNOREPROFILE_'.$profileid);
