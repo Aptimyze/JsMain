@@ -1167,6 +1167,10 @@ public function getSendersPending($profileids)
 					$SENDER_RECEIVER = "RECEIVER";
 					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED='Y'";
 				}					
+        		elseif($type == ContactHandler::DECLINE){
+					$SENDER_RECEIVER = "SENDER";
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE and (`SEEN` != 'Y') ";
+				}					
         		
         		$prep = $this->db->prepare($sql);
         		$prep->bindValue("PROFILEID",$profileid, PDO::PARAM_INT);
