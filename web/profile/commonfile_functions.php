@@ -411,7 +411,7 @@ $js_arr[]=array("jsms/profile/ep/mobeditview_js"                              =>
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"              => "5");
 $js_arr[]=array("jsms/common/disableScroll_js"  => "1");
 $js_arr[]=array("jsms/utility/sessionStorage_js"    => "3");
-$js_arr[]=array("jsms/myjs/myjs_js"                => "19");
+$js_arr[]=array("jsms/myjs/myjs_js"                  => "20");
 $js_arr[]=array("jsms/myjs/touchswipemyjs_js"            => "12");
 $js_arr[]=array("showHide_js"     => "2");
 $js_arr[]=array("showHideReg_js"      => "2");
@@ -571,7 +571,7 @@ $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"               => "25");
 $js_arr[]=array("jspc/contactEngine/contactEngineButtons"              => "15");
-$js_arr[]=array("jspc/search/advancedSearch"     => "3");
+$js_arr[]=array("jspc/search/advancedSearch"      => "4");
 $js_arr[]=array("jspc/common/jquery_mCustomScrollbar"              => "13");
 $js_arr[]=array("jspc/success_story/jqueryFilestyle" => "1");
 $js_arr[]=array("jspc/profile/edit/profile/jspcCoverPhoto_js"  => "1");

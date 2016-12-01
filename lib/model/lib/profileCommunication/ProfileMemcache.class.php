@@ -89,6 +89,7 @@ class ProfileMemcache
     private $MATCHALERT;
     private $MATCHALERT_TOTAL;
     private $VISITOR_ALERT;
+    private $VISITORS_ALL;
     private $CHAT_REQUEST;
     private $BOOKMARK;
     private $SAVED_SEARCH;
@@ -320,6 +321,7 @@ class ProfileMemcache
         $this->MATCHALERT              = $this->_memcache["MATCHALERT"] ? $this->_memcache["MATCHALERT"] : 0;
         $this->MATCHALERT_TOTAL              = $this->_memcache["MATCHALERT_TOTAL"] ? $this->_memcache["MATCHALERT_TOTAL"] : 0;
         $this->VISITOR_ALERT           = $this->_memcache["VISITOR_ALERT"] ? $this->_memcache["VISITOR_ALERT"] : 0;
+        $this->VISITORS_ALL           = $this->_memcache["VISITORS_ALL"] ? $this->_memcache["VISITORS_ALL"] : 0;
         $this->CHAT_REQUEST            = $this->_memcache["CHAT_REQUEST"] ? $this->_memcache["CHAT_REQUEST"] : 0;
         $this->BOOKMARK                = $this->_memcache["BOOKMARK"] ? $this->_memcache["BOOKMARK"] : 0;
         $this->SAVED_SEARCH                = $this->_memcache["SAVED_SEARCH"] ? $this->_memcache["SAVED_SEARCH"] : 0;
@@ -791,6 +793,16 @@ class ProfileMemcache
     public function setVISITOR_ALERT($current = 0)
     {
         $this->VISITOR_ALERT = $current;
+    }
+    
+    public function getVISITORS_ALL()
+    {
+        return $this->VISITORS_ALL ? $this->VISITORS_ALL : 0;
+        
+    }
+    public function setVISITORS_ALL($current = 0)
+    {
+        $this->VISITORS_ALL = $current;
     }
     
     /**
@@ -1474,6 +1486,10 @@ class ProfileMemcache
             "VISITOR_ALERT" => call_user_func(array(
                 $this,
                 getVISITOR_ALERT
+            )),
+            "VISITORS_ALL" => call_user_func(array(
+                $this,
+                getVISITORS_ALL
             )),
             "CHAT_REQUEST" => call_user_func(array(
                 $this,
