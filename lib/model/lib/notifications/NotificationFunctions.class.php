@@ -96,4 +96,20 @@ class NotificationFunctions
 			$notificationDelLogObj->deleteNotification($messageId,$osType);
 		}
 	}
+        public function notificationCheck($request)
+        {
+                $notificationStop =JsConstants::$notificationStop;
+                if((date("H")>='11' && date("H")<='15') || (date("H")>='01' && date("H")<='03'))
+                        $notificationStop=1;
+                if($notificationStop)
+                {
+                        $notificationData['notifications'] = '';
+			//$newTime =date('Y-m-d H:i:s',time()+86400);
+                        $notificationData['alarmTime']= '';
+                        $data =json_encode($notificationData);
+                        return $data;
+                }
+                else
+                        return;
+        }
 }
