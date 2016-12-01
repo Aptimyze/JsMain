@@ -29,9 +29,17 @@ class BellCounts
 				if(!$bellCounts["FILTERED_NEW"]){
 					$bellCounts["FILTERED_NEW"] = 0;
 				}
-			if(MobileCommon::isApp()=="I" ||( MobileCommon::isApp()=="A" && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")  && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")<48))
+			$isApp = MobileCommon::isApp();
+			$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
+
+			if($isApp=="I" ||( $isApp=="A" && $appVersion  && $appVersion<48))
 			{
 				$bellCounts["FILTERED_NEW"] = 0;
+			}	
+
+			if(!(($isApp=="I" && $appVersion >=3.9) || ( $isApp=="A" && $appVersion>=79) || !$isApp))	
+			{	
+				$bellCounts['DEC_ME_NEW']=0;
 			}
 			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $profileMemcacheObj->get("PHOTO_REQUEST_NEW") + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"] + $bellCounts['DEC_ME_NEW']);
 			return $bellCounts;
