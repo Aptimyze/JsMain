@@ -167,6 +167,7 @@ while($myrow=mysql_fetch_array($result))
 	                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
 	                    else
 	                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+	                    unset($cityWithQuotesArr);
 	                }
                 }
 
@@ -216,6 +217,7 @@ while($myrow=mysql_fetch_array($result))
 	                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
 	                    else
 	                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+	                    unset($cityWithQuotesArr);
 	                }
                 } 
 
