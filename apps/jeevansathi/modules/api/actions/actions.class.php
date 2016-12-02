@@ -38,17 +38,6 @@ class apiActions extends sfActions
     		$apiValidation=$this->apiWebHandler->getResponse();
 		$forwardingArray =$this->apiWebHandler->getModuleAndActionName($request);
 
-                // Notification Check
-                /*$actionName =$forwardingArray["actionName"];
-                if($actionName=='pollV1'){
-                        $notifCheck =NotificationFunctions::notificationCheck($request);
-                        if($notifCheck){
-				echo $notifCheck;
-                                die;
-                        }
-                }*/
-                // end
-
 		if($apiValidation["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
 			$upgradeStatus=$this->apiWebHandler->forceUpgradeCheck($request,"apiAction");
