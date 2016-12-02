@@ -15,6 +15,9 @@ class JHOBBYCacheLib extends TABLE{
 
         public function getUserHobbies($pid, $onlyValues="")
         { 
+          if(!$pid)
+            return NULL;
+          
         $objProCacheLib = ProfileCacheLib::getInstance();
 
         $criteria = "PROFILEID";
@@ -130,7 +133,9 @@ class JHOBBYCacheLib extends TABLE{
     
      public function getUserHobbiesApi($pid)
     {
-        
+        if(!$pid)
+            return NULL;
+
         $objProCacheLib = ProfileCacheLib::getInstance();
 
         $criteria = "PROFILEID";
