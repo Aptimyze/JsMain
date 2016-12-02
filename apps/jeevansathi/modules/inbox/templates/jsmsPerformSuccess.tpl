@@ -28,7 +28,7 @@
         
         <div class="fullwid bg1 posfixTop" id="searchHeader">
 ~if ($title2 neq null)`
-    ~if ( ($infotype eq 'ACCEPTANCES_RECEIVED')||($infotype eq 'INTEREST_RECEIVED')||($infotype eq 'NOT_INTERESTED_BY_ME'))||($visitorAllOrMatching eq 'A')` ~assign var=isReceived value=1`  ~else` ~assign var=isReceived value=0` ~/if`  
+    ~if ( ($infotype eq 'ACCEPTANCES_RECEIVED')||($infotype eq 'INTEREST_RECEIVED') ||($infotype eq 'NOT_INTERESTED_BY_ME'))||($visitorAllOrMatching eq 'A')` ~assign var=isReceived value=1`  ~else` ~assign var=isReceived value=0` ~/if`  
     
 
     <div class="padd22 txtc">
@@ -60,7 +60,7 @@
 			<div class="clr"></div>
 		</div>
   
-      <div id="interestExpiringMessageDiv"><p id="interestExpiringMessage" class="txtc bg4 pad15 color13 f12 fontlig">These interests will expire in this week, Take action</p></div>                  
+      <div id="interestExpiringMessageDiv"><p id="interestExpiringMessage" class="txtc bg4 pad15 color13 f12 fontlig dispnone">These interests will be archived in this week, Take action</p></div>                  
       ~/if` 
       
   </div>

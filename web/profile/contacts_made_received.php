@@ -74,7 +74,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			$resetPage = true;
 		}
 
-
 		$self_details=authenticated($checksum); 
 // the next 4 lines update seen status of all photorequests received by the loggedin user as 'Y' if the page is photo_request ... JSI-443
 		if ($page=='photo'){
@@ -143,6 +142,10 @@ if ($photoRCurrentCount!='0'){
 		case "contact_viewers":
 				$searchId  = 17;
 			break;
+		case "eeoi":
+			if($filter=="R")
+				$searchId=23;
+			break;
 		
 		}
 		if($searchId)
@@ -156,6 +159,10 @@ if ($photoRCurrentCount!='0'){
 					case 3:
 						$page = "accept";
 						$filter = "M";
+						break;
+					case 23:
+						$page = "eeoi";
+						$filter = "R";	
 						break;
 					case 1:
 						$page = "eoi";

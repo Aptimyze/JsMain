@@ -35,7 +35,7 @@ $('body').on('click', '.searchNavigation', function()
 	$('body').css("background","#b1b1b1");
     if ( firstResponse.searchid == 23)
     {
-    	$("#interestExpiringMessage").show();
+    	$("#interestExpiringMessage").removeClass('dispnone');
     }
         
 //        onBackBtnSRP = function()
@@ -1078,12 +1078,11 @@ function forceJumpToPage(idToJump){
 				var top = $('#idd'+idToJump).offset().top;
 			else
 				var top = $('#iddf1').offset().top;
-			
-			if ( idToJump == 1 && response.searchid == 23 )
+
+			if ( $('#interestExpiringMessage').hasClass('dispnone'))
 			{
-				top = top - $("#interestExpiringMessage").height();
+				$("html, body").scrollTop(top);		
 			}
-			$("html, body").scrollTop(top);		
 			loadNextImages();
 		},timedOut);
 	}
