@@ -12,7 +12,10 @@
             <div class="clearfix pt20" id="dpp-~$fieldID|lower`Parent">
 
             ~if $fieldData.type eq "M"` 
-             <div class="js-resetall f12 prehide color5 cursp wid83p txtr fontreg vishid" id="~$fieldID|lower`-rem">Remove all</div>
+             <div class="clearfix wid83p txtr">
+               <div class="js-resetall f12 color5 cursp disp_ib vishid" 
+               id="~$fieldID|lower`-rem">Remove all</div>
+             </div>
              ~/if`
 
               <label>~$fieldData.label`</label>

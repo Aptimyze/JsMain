@@ -110,7 +110,7 @@
 								<li id="~$value`Parent" class="clearfix pt20" ~if $searchFeilds[$value]["isDependant"]` style="display: none;" ~/if`>
 
 									<div class="clearfix advremall">
-										<div class="cursp f12 color5 pb5 js-remall vishid" id="~$value`-rem" >Remove all</div>
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
 
 									</div>
 									
@@ -166,7 +166,7 @@
 									 ~foreach from=$searchSection["ASTRO"] name=a item=value key=kk`
 										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.a.first` pt20 ~/if`">
 										<div class="clearfix advremall">
-										<div class="cursp f12 color5 pb5 js-remall vishid" id="~$value`-rem" >Remove all</div>
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
 
 									</div>
 												<label class="pt14">~$searchFeilds[$value]["label"]`</label>
@@ -221,7 +221,7 @@
                   ~foreach from=$searchSection["EDUCATION_CAREER"] name=e item=value key=kk`
 										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.e.first` pt20 ~/if`">
 										<div class="clearfix advremall">
-										<div class="cursp f12 color5 pb5 js-remall vishid" id="~$value`-rem" >Remove all</div>
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
 
 									</div>
 												<label class="pt14">~$searchFeilds[$value]["label"]`</label>
@@ -266,7 +266,7 @@
                   ~foreach from=$searchSection["LIFESTYLE"] name=l item=value key=kk`
 										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.l.first` pt20 ~/if`">
 										<div class="clearfix advremall">
-										<div class="cursp f12 color5 pb5 js-remall vishid" id="~$value`-rem" >Remove all</div>
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
 
 									</div>
 												<label class="pt14">~$searchFeilds[$value]["label"]`</label>
@@ -312,7 +312,7 @@
                    ~foreach from=$searchSection["MORE"] name=m item=value key=kk`
 										<li id="~$value`Parent" class="clearfix ~if !$smarty.foreach.m.first` pt20 ~/if`">
 										<div class="clearfix advremall">
-										<div class="cursp f12 color5 pb5 js-remall vishid" id="~$value`-rem" >Remove all</div>
+										<div class="cursp f12 color5 pb5 js-remall vishid fr" id="~$value`-rem" >Remove all</div>
 
 									</div>
 												<label class="pt14">~$searchFeilds[$value]["label"]`</label>
