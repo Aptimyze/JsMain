@@ -26,12 +26,12 @@ mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_
 $parameter = "GENDER,MTONGUE,CITY_RES,ENTRY_DT,SHOW_HOROSCOPE,AGE,INCOME,SOURCE,CASTE,OCCUPATION,MOB_STATUS,LANDL_STATUS,EDU_LEVEL,MSTATUS,GET_SMS,RELIGION,EDU_LEVEL_NEW,VERIFY_EMAIL,HEIGHT,TIME_TO_CALL_START,TIME_TO_CALL_END,HAVE_CAR,OWN_HOUSE,FAMILY_STATUS,SHOWADDRESS,WORK_STATUS,DTOFBIRTH,LAST_LOGIN_DT";
 
 //Pool set of today model wise
-$modelType_arr = array("P","R","E","N");
+$modelType_arr = array("N","R","E","P");
 for($t=0;$t<count($modelType_arr);$t++)
 {
 	$modelArr = array();
         $modelType = $modelType_arr[$t];
-	$sql = "SELECT DISTINCT(PROFILEID) FROM js_crm.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%3=1";
+	$sql = "SELECT DISTINCT(PROFILEID) FROM js_crm.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%6=1";
 	$res = mysql_query($sql,$myDb) or die($sql.mysql_error($myDb));
 	while($row = mysql_fetch_array($res))
         	$modelArr[] = $row['PROFILEID'];

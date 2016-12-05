@@ -33,7 +33,7 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{  
-		ini_set('memory_limit','512M');
+		ini_set('memory_limit','912M');
                 ini_set('max_execution_time', 0);
 		if(!sfContext::hasInstance())
 	            sfContext::createInstance($this->configuration);
@@ -128,6 +128,7 @@ public function skipProfiles($arranged)
 			$temp=$value;
 		if(count($temp)>0)
 			$result[$key]=$temp;
+		$skipProfileObj::unsetInstance($key);
 	}
 	return $result;
 }

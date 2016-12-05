@@ -46,4 +46,12 @@ class Chat {
         }
     }
 
+    public function storeChatTimeoutProfiles($profileid){
+        if($profileid){
+            $paramsArr['PROFILEID'] = $profileid;
+            $chatContactsLogObj = new newjs_CHAT_TIMEOUT_LOG();
+            $chatContactsLogObj->insert($paramsArr);
+        }
+    }
+
 }

@@ -543,6 +543,7 @@ function saveSectionsFields(sectionId){
             datatype: 'json',
             cache: true,
             async: true,
+            updateChatListImmediate:true,
             data: {editFieldArr : editFieldArr,getData : "dpp",fromBackend:ifBackend},
             success: function(data) { 
               if(typeof data == "string")
