@@ -293,6 +293,10 @@ $(".chosen-container").on('keyup',function(e) {
 $(".chosen-container .chosen-results li").addClass("chosenfloat").removeClass("chosenDropWid");
 });
 
+//showing the threshold for mutual match count
+$("#mutualMatchCount").css("padding","2px");
+showMutualCount(mutualMatchCount,parseInt($("#mutualMatchCount").data('value')).toLocaleString());
+
 //$(".chosen-container.chosen-container-multi").on('mousedown',function(e) {
 //  $(".chosen-container .chosen-results li").removeClass("highlighted");
 //});
@@ -307,15 +311,50 @@ $("#loadLate").css('visibility','visible');
 if(isBrowserIE() === false)
   $(".js-txtarea").attr('placeholder','What are you looking into a partner?');
   
-    $("#unchk_dpp").on("click",function(){
-        $("#boxDiv").removeClass("move");
-        sendAjaxForToggleMatchalertLogic("dpp");
-    });
-    $("#chk_dpp").on("click",function(){
-        $("#boxDiv").addClass("move");
+    // $("#unchk_dpp").on("click",function(){
+    //     $("#boxDiv").removeClass("move");
+    //     sendAjaxForToggleMatchalertLogic("dpp");
+    // });
+    // $("#chk_dpp").on("click",function(){
+    //     $("#boxDiv").addClass("move");
+    //     sendAjaxForToggleMatchalertLogic("history");
+    // });
+
+
+    $('#mutualMatchCountCheckBox').click(function(){
+      if (this.checked) {
         sendAjaxForToggleMatchalertLogic("history");
-    });
+      }
+      else
+      {
+        sendAjaxForToggleMatchalertLogic("dpp");
+      }
+  });
+
+
+    isScrolledIntoView();
+
+  $(document).on("scroll", isScrolledIntoView);
 });
+
+function showMutualCount(id,value) {
+  var mutualMatchCountThreshold = 100;
+
+  $(id).text(value);
+  $(id).attr("data-value",value);
+
+  if (  parseInt( value.replace(",","") ) >= mutualMatchCountThreshold )
+  {
+    $(id).removeClass("js-selected");
+    $(id).addClass("dppnbg1");
+  }
+  else
+  {
+    $(id).removeClass("dppnbg1");
+    $(id).addClass("js-selected"); 
+  }
+}
+
 
 //click on more to show full prefilled text data
 $(function(){
@@ -326,12 +365,37 @@ $(function(){
         $("#shortContent_"+getName).hide();
         $("#fullContent_"+getName).show();
         $(this).addClass("hideMore").addClass("js-saveShow");
-            
-                    
     });
     
 });
 
+function isScrolledIntoView()
+  {
+    var docViewTop = $(window).scrollTop();
+      var docViewBottom = docViewTop + $(window).height();
+    var elemN = $("#newdppT");
+    var elemN2 = $('#countScroll');
+    
+    var elemTop = elemN.offset().top;
+      var elemBottom = elemTop + elemN.height();
+    
+    if((elemBottom <= docViewBottom) && (elemTop >= docViewTop))
+    {
+      
+      if(elemN2.hasClass('posnd'))
+      {
+        elemN2.removeClass('posnd');
+      }
+      
+      
+    }
+    else
+    {
+      var findleft = $('#midsec').offset().left;
+      elemN2.addClass("posnd").css('left',findleft);
+      
+    }
+  }
 
 function sendAjaxForToggleMatchalertLogic(setValue)
 {
@@ -432,6 +496,7 @@ function saveSectionsFields(sectionId){
             datatype: 'json',
             cache: true,
             async: true,
+            updateChatListImmediate:true,
             data: {editFieldArr : editFieldArr,getData : "dpp",fromBackend:ifBackend},
             success: function(data) { 
               if(typeof data == "string")
@@ -455,6 +520,16 @@ function saveSectionsFields(sectionId){
                   $('.'+sectionId+' .posthide:not(.hideMore,.msgscr)').fadeIn(200,"linear");
                 });
               }
+              for (var ke in data) {
+
+                if ( data[ke] !== null )
+                {
+                  if ( data[ke].key == "P_MATCHCOUNT")
+                   {
+                      showMutualCount(mutualMatchCount,(data[ke].value).toLocaleString());
+                   }  
+                }
+              }           
             }
     });
   }

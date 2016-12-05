@@ -1,5 +1,8 @@
 <script>appPromoPerspective=1;
 var site_key = "~CaptchaEnum::SITE_KEY`";
+var hamCss="~$hamCss`";
+var hamJs="~$hamJs`";
+var logoutCssFiles="~$cssArray`";
 </script>
 <div class="perspective" id="perspective">
 	<div class="" id="pcontainer">    
@@ -15,12 +18,55 @@ var site_key = "~CaptchaEnum::SITE_KEY`";
 			<div class="lgin_pad1">
 				<div class="fl HamiconLogin"> 
 					<div id ="hamburgerIcon" hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1">
-						<img class="loaderSmallIcon dn">
+                                            <i class="loaderSmallIcon dn"></i>
 						<svg id="hamIc" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.2px;}</style></defs><title>icons</title><line class="cls-1" x1="2" y1="3.04" x2="18" y2="3.04"/><line class="cls-1" x1="2.29" y1="10" x2="18.29" y2="10"/><line class="cls-1" x1="2" y1="16.96" x2="18" y2="16.96"/></svg>
 					</div> 
 				</div>
-				<img class ="loginLogo" border="0">
-			</div>
+                            <svg class="loginLogo" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="141px" height="38px" viewBox="0 0 141 38" enable-background="new 0 0 141 38" xml:space="preserve">  <image id="image0" width="141" height="38" x="0" y="0"
+    xlink:href="data:image/png;base64,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" />
+</svg>
+                        </div>
 			<!--end:logo-->
 			~if $showRegisterMsg eq 'Y'`
 			<div class="txtc f15 white fontlig" style='padding:20px 35px;'>
@@ -110,17 +156,17 @@ You need to be a Registered Member<br />to connect with this user</div>
 </div>   
 <script>
 	var d = new Date();
-	var hrefVal = $("#calltopSearch").attr("href")+"&stime="+d.getTime();
+	var hrefVal = document.getElementById("calltopSearch").href+"&stime="+d.getTime();
 	var captchaShow=~$captchaDiv`;
 	var nua = navigator.userAgent;
-		var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 &&     nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
+        var is_android = ((nua.indexOf('Mozilla/5.0') > -1 && nua.indexOf('Android ') > -1 &&     nua.indexOf('AppleWebKit') > -1) && !(nua.indexOf('Chrome') > -1));
 	
 	
-	$("#calltopSearch").attr("href",hrefVal);
-    enableLoader = function()
-    {
-        $('.loader').addClass('simple').addClass('dark').addClass('image');
-    }
+	document.getElementById("calltopSearch").href = hrefVal;
+        enableLoader = function()
+        {
+            $('.loader').addClass('simple').addClass('dark').addClass('image');
+        }
 
 
 </script> 

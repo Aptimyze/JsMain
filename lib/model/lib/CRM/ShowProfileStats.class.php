@@ -112,7 +112,19 @@ class ShowProfileStats
 	{
 		// Renewal Discount
 		$memHandlerObj = new MembershipHandler();
-		$renewalDiscount = $memHandlerObj->getVariableRenewalDiscount($this->profileid,1);
+		// Start - Conditions to display renewal discount only if profile applicable		
+		$userObj = new memUser($this->profileid);
+		list($ipAddress, $currency) = $memHandlerObj->getUserIPandCurrency($this->profileid);
+        $userObj->setIpAddress($ipAddress);
+        $userObj->setCurrency($currency);
+        if (!empty($this->profileid)) {
+            $userObj->setMemStatus();
+            $userType = $userObj->userType;
+        }
+        if($userType == 4 || $userType == 6) {
+        	$renewalDiscount = $memHandlerObj->getVariableRenewalDiscount($this->profileid,1);
+        }
+        // End - Conditions to display renewal discount only if profile applicable
 
 		// Vd discount
 		$vdObj = new VariableDiscount();

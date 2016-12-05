@@ -4,6 +4,7 @@
 ~assign var=subscription value= CommonFunction::getMembershipName($sf_request->getAttribute('profileid'))`
 ~if JsConstants::$jsChatFlag eq "1"`
     ~assign var=showChat value= CommonUtility::checkChatPanelCondition($loggedIn,$module,$action,$sf_request->getAttribute('activated'))`
+    ~assign var=selfUserChatName value= CommonUtility::fetchSelfUserName($loggedIn,$sf_request->getAttribute('profileid'),$module,$action,$showChat)`
 ~/if`
 <!DOCTYPE html>
 <head>
@@ -74,7 +75,20 @@
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
-        //console.log("ank",hideUnimportantFeatureAtPeakLoad);
+        var dppListingWebServiceUrl = "~JsConstants::$chatListingWebServiceUrl['dpp']`";
+        var nonRosterRefreshUpdate = "~JsConstants::$nonRosterRefreshUpdate`";
+        var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
+        //console.log("dppLiveForAll",dppLiveForAll);
+        var betaDppExpression = "",specialDppProfiles="";
+        if(dppLiveForAll == "0"){
+            betaDppExpression = "~JsConstants::$profilesEligibleForDpp['modulusDivisor']`"+","+"~JsConstants::$profilesEligibleForDpp['modulusRemainder']`";
+            specialDppProfiles = "~JsConstants::$profilesEligibleForDpp['privilegedProfiles']`";
+        }
+        
+        //console.log("betaDppExpression",betaDppExpression);
+        //console.log("ank",dppListingWebServiceUrl);
+        var selfUserChatName = "~$selfUserChatName`";
+        //console.log("ank",selfUserChatName);
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
         //console.log("ankita_localstorage",localStorage.getItem("self_subcription"));

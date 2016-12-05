@@ -122,7 +122,7 @@ window.onload=function(){
                                 <li><a class="disp_b js-gnbsearchLists cursp" data="kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
                                 <li><a class="disp_b" href="/search/shortlisted">Shortlisted Profiles</a></li>
-                                <li><a class="disp_b" href="/search/visitors">Profile Visitors</a></li>
+                                <li><a class="disp_b" href="/search/visitors?matchedOrAll=A">Profile Visitors</a></li>
                                 <!--
                                 ~if CommonFunction::getMainMembership($subscription) eq mainMem::EVALUE || CommonFunction::getMainMembership($subscription) eq mainMem::EADVANTAGE`
                                 ~else`
@@ -223,7 +223,22 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>                                
+                                </li>
+
+                                     <li>
+                                    <a href="/inbox/10/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl"> Declined</div>
+                                        <div class="fr">
+                                            <div id="membersDeclinedMeCountParent" class="disp-tbl txtc" style="display:none">
+                                                <div id="DeclinedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+
+
                                 <li>
                                     <a href="/search/matchalerts">
                                     <div class="clearfix topnavp1">
@@ -249,6 +264,8 @@ window.onload=function(){
                                     </div>
                                     </a>
                                 </li>
+
+                           
 
                             </ul>
                             <!--end:submenu-->

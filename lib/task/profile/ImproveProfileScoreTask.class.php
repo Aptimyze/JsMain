@@ -156,7 +156,7 @@ EOF;
        */
       try{
         if(false === $this->m_MasterObj->isImproveScoreTableExist()){
-          $this->m_MasterObj->createImproveScoreTable();
+          $this->m_MasterDDLObj->createImproveScoreTable();
         }
 
         //Get Profile Id in Improve Score Table From Slave

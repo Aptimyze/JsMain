@@ -1,4 +1,4 @@
-var clickEventType="click", cssBrowserAnimProperty=null;
+var clickEventType="click", cssBrowserAnimProperty=null,sliderNav={'VERIFIEDMATCHES_List':1,'DAILYMATCHES_List':1,'JUSTJOINED_List':1,'LASTSEARCH_List':1,'DESIREDPARTNERMATCHES_List':1};
 
 function topSliderInt(param){
 	if(param=="init")
@@ -38,30 +38,49 @@ $(function(){
 
 	function myjsSlider(id)
 	{ 
-
     try{
-		$("#"+id).unbind(clickEventType);
+     var elem = $('#'+id);
+		elem.unbind(clickEventType);
 		var getID,b,getWidth,visWidth,getLeft,p;					
-			getID = id;
-			b= getID.split('-');	
+			getID = id; 
+			b= getID.split('-');
 			getWidth =$('#js-'+b[1]).width();
 			visWidth = $('#disp_'+b[1]).width();
+      var idList = b[1].split('_');
 			p=Math.abs($('#js-'+b[1]).position().left);
+      var idList = (b[1].split('_'));
+      var totalBoxes = getTotalBoxes(idList[0]);
+      if(!sliderNav[b[1]])
+      {
+        sliderNav[b[1]]=1;
+      }
+
 			if((b[0]=="nxt")&&(getWidth>visWidth))
 			{	
+
         diff=Math.floor(getWidth-p-visWidth);
 				if(diff>0)
-				{
+				{ 
+          var currBox=sliderNav[b[1]];
+          sliderNav[b[1]] = ++currBox;
+        if(currBox == totalBoxes)
+          $("#nxt-"+idList[0]+'_List').hide();
+          $("#prv-"+idList[0]+'_List').show();
 					p=p+visWidth;
+
 					$('#js-'+b[1]).animate({left:-p}, 500, function() {
 					// Animation complete.
-					$("#"+id).bind(clickEventType,function(){
+					elem.bind(clickEventType,function(){
 								myjsSlider(id);						
 							});
 				  }); 
+
+
 				}
-				else
-					setTimeout(function(){$("#"+id).bind(clickEventType,function(){myjsSlider(id);});},100);
+				else{
+          
+					setTimeout(function(){elem.bind(clickEventType,function(){myjsSlider(id);});},100);
+        }
        
         tempDiv=document.getElementById("slideCurrent"+b[1]);
           if (tempDiv){
@@ -81,18 +100,30 @@ $(function(){
 				if(p!=0)
 				{
 					p=-(p-visWidth);
-					if(Math.floor(p)<=0)
+					if(Math.floor(p)<=0){
+
+              var currBox=sliderNav[b[1]];
+              sliderNav[b[1]] =--currBox;
+              if(currBox == 1)
+              {
+                $("#prv-"+idList[0]+'_List').hide();
+              }
+              $("#nxt-"+idList[0]+'_List').show();
+
 						$('#js-'+b[1]).animate({left:p},500, function() {
 						// Animation complete.
-						$("#"+id).bind(clickEventType,function(){
+						elem.bind(clickEventType,function(){
 								myjsSlider(id);						
 						});});
+
+             
+          }
 					else
-						setTimeout(function(){$("#"+id).bind(clickEventType,function(){myjsSlider(id);});},100);
+						setTimeout(function(){elem.bind(clickEventType,function(){myjsSlider(id);});},100);
 				  
 				}
 				else
-					setTimeout(function(){$("#"+id).bind(clickEventType,function(){myjsSlider(id);});},100);
+					setTimeout(function(){elem.bind(clickEventType,function(){myjsSlider(id);});},100);
 			        tempDiv=document.getElementById("slideCurrent"+b[1]);
       	 if (tempDiv){
         currentPanel=parseInt((tempDiv).textContent);
@@ -224,11 +255,19 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
             	}
             	else{
 	            	if(type=="interest")
-	            	{
-				callAfterContact();
+	            	{ 
+			//	callAfterContact();
 	            		$("#"+div).find("div.sendintr").html("Interest Sent");
 	            		$("#"+div).find("div.sendintr").removeClass("myjs-block sendintr").addClass("myjs-block-after");
-	            	}
+                  var ind = $("#"+div).attr('id');
+                  var nameInitials = ind.split('_');
+                  var countToUpdate = (nameInitials[1]+"_resultCount");
+                  var out = $("#"+countToUpdate).text();
+                  --out;
+                  $("#"+countToUpdate).text(out);
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(out,countToUpdate,nameInitials[1]);});     
+	        
+                }
 	            	else if(type=="accept")
 	            	{
 	            		$("#"+div).find("div.intdisp").html("Accepted");
@@ -534,6 +573,7 @@ function generateFaceCard(Object)
 {
 
   try{
+  
 	var tracking = "";
 		if(Object.data.tracking!==undefined)
 			tracking = Object.data.tracking;
@@ -567,6 +607,7 @@ function generateFaceCard(Object)
     else if(Object.name=="VERIFIEDMATCHES"){
       GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','Matches Verified by Visit Section - Send Interest',loggedInJspcGender,'')";
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','Matches Verified by Visit Section - Tuple',loggedInJspcGender,'')";
+
     }
 
 
@@ -636,32 +677,20 @@ function generateFaceCard(Object)
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,totalCount);
 			else
 				Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,"");
-			$("#"+Object.name).after(Object.containerHtml);
+			if($("#"+Object.name+"_Container").length == 1){
+        if(Object.name == 'LASTSEARCH' && Object.data.no_of_results == 0)
+        { 
+          $("#LASTSEARCH_Container").remove();
+        }
+        else{
+        $("#"+Object.name+"_Container").html($(Object.containerHtml.trim()).html());
+
+        }
+      }
+      else 
+        $("#"+Object.name).after(Object.containerHtml);
+      $("#"+Object.name+"_Container").css('height','');
 			$("#"+Object.name).addClass("disp-none");
-		 	var listName=Object.list;
-			$("#prv-"+Object.list).bind(clickEventType,function(){
-				myjsSlider("prv-"+listName);
-        if(listName == 'DAILYMATCHES_List')
-        trackJsEventGA('My JS JSPC', 'Match Alert Section - Left',loggedInJspcGender,'');						
-			 else if (listName == 'JUSTJOINED_List')
-        trackJsEventGA('My JS JSPC', 'Just Joined Section - Left',loggedInJspcGender,'');             
-       else if (listName == 'VERIFIEDMATCHES_List')
-        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Left',loggedInJspcGender,'');
-        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
-        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Left',loggedInJspcGender,'');           
-      });
-			$("#nxt-"+Object.list).click(function(){
-				myjsSlider("nxt-"+listName);
-        if(listName == 'DAILYMATCHES_List')
-        trackJsEventGA('My JS JSPC', 'Match Alert Section - Right',loggedInJspcGender,'');           
-       else if (listName == 'JUSTJOINED_List')
-        trackJsEventGA('My JS JSPC', 'Just Joined Section - Right',loggedInJspcGender,'');             
-       else if (listName == 'VERIFIEDMATCHES_List')
-        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Right',loggedInJspcGender,'');
-        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
-        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Right',loggedInJspcGender,'');  
-			});
-			topSliderInt('init');
 			
 			if(Object.name=="DAILYMATCHES")
 			{
@@ -673,6 +702,7 @@ function generateFaceCard(Object)
 				bellCountStatus++;
 				createTotalBellCounts(newEngagementArray["DAILY_MATCHES_NEW"]);				
 			}
+
 			else if(Object.name=="JUSTJOINED")
 			{
 				//Just joined counts in profile bar			
@@ -683,9 +713,44 @@ function generateFaceCard(Object)
 				bellCountStatus++;
 				createTotalBellCounts(newEngagementArray["NEW_MATCHES"]);
 			}
-		
-			
+		  
+      var listName=Object.list;
+      $("#prv-"+Object.list).bind(clickEventType,function(){
+        myjsSlider("prv-"+listName);
+        if(listName == 'DAILYMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Match Alert Section - Left',loggedInJspcGender,'');           
+       else if (listName == 'JUSTJOINED_List')
+        trackJsEventGA('My JS JSPC', 'Just Joined Section - Left',loggedInJspcGender,'');             
+       else if (listName == 'VERIFIEDMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Left',loggedInJspcGender,'');
+        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
+        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Left',loggedInJspcGender,'');
+                   
+      });
+      $("#nxt-"+Object.list).click(function(){
+        myjsSlider("nxt-"+listName);
+        if(listName == 'DAILYMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Match Alert Section - Right',loggedInJspcGender,'');           
+       else if (listName == 'JUSTJOINED_List')
+        trackJsEventGA('My JS JSPC', 'Just Joined Section - Right',loggedInJspcGender,'');             
+       else if (listName == 'VERIFIEDMATCHES_List')
+        trackJsEventGA('My JS JSPC', 'Matches Verified by Visit Section - Right',loggedInJspcGender,'');
+        else if (listName == 'DESIREDPARTNERMATCHES_List' || listName == 'LASTSEARCH_List')
+        trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - Right',loggedInJspcGender,''); 
+        $("#prv-"+Object.list).show();
+
+      });
+      topSliderInt('init');
+        if(totalCount > 4)
+        {
+            $('#nxt-'+Object.list).show();
+        }
       $("#"+Object.containerName).removeClass("disp-none");
+      if(totalCount <= 4)
+    { 
+      $("#seeAll"+Object.containerName).hide();
+    }
+
     }
     photo_init();
   }
@@ -759,7 +824,7 @@ function generateShortCards(Object)
 
 function noResultFaceCard(Object)
 {
-  try{
+  try{ 
 	Object.emptyInnerHtml=Object.emptyInnerHtml.replace(/\{\{ID\}\}/g,"Error"+Object.name);
 		if(Object.error)
 			Object.emptyInnerHtml=Object.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Failed to Load");
@@ -767,6 +832,12 @@ function noResultFaceCard(Object)
 			Object.emptyInnerHtml=Object.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,noResultMessagesArray[Object.name]);
       Object.containerHtml=Object.containerHtml.replace(/\{\{COUNT\}\}/g,'');
       Object.containerHtml=Object.containerHtml.replace(/\{\{INNER_HTML\}\}/g,Object.emptyInnerHtml);
+    
+    if($("#"+Object.name+"_Container").length == 1){ 
+   //   $("#"+Object.name+"_Container").css('height',$("#"+Object.name+"_Container").height());
+     $("#"+Object.name+"_Container").html($(Object.containerHtml.trim()).html());
+      }
+    else      
       $("#"+Object.name).after(Object.containerHtml);
       $("#"+Object.name).addClass("disp-none");
       $("#disp_"+Object.list).after(Object.emptyInnerHtml);
@@ -814,6 +885,8 @@ function noResultFaceCard(Object)
     $("#lastSearchCountBar").removeClass("disp-none");
     $("#lastSearchCountBar > .disp-tbl").addClass("bounceIn animated");
   }
+ 
+
 }
 
 catch (e){
@@ -881,3 +954,144 @@ catch (e){
 
 }
 }
+
+function reArrangeDivsAfterDissapear(value,position,id)
+{ 
+  if(value <= 4)
+  {  
+    $('#seeAll'+id+'_Container').hide();
+  }
+  var currentBox = getCurrentBox(id);
+  topSliderInt("init");
+  var totalBoxes = getTotalBoxes(id);
+  var numberOfProfiles = getNumberOfProfiles(id);
+  var noCardPresentState = noCardPresent(currentBox,totalBoxes);
+  if(onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresentState)
+  {
+    if(!isFirstBox(currentBox)){
+          $("#prv-"+id+"_List").click();
+          if(noCardPresentState)
+          $("#nxt-"+id+"_List").hide();  
+        }
+    else
+      {
+    
+      $("#"+id+"_Container").css('height',$("#"+id+"_Container").height());
+      if(value ==0)
+      $("#"+id+"_Container").css('height','');
+
+        if(id == 'DAILYMATCHES')
+        {
+          //$("#DAILYMATCHES_Container").html('')
+          var dailyMatchObj =new dailyMatches();
+          dailyMatchObj.pre();
+          dailyMatchObj.request();
+        }
+        if(id == 'JUSTJOINED')
+        {
+          //$("#JUSTJOINED_Container").remove()
+          var justJoinedMatchObj =new justJoinedMatches();
+          justJoinedMatchObj.pre();
+          justJoinedMatchObj.request();
+        }
+        if(id == 'LASTSEARCH')
+        {  
+          if(value == 0)
+          {
+          $("#LASTSEARCH_Container").remove();
+          }
+          else
+          {
+          var lastSearch =new lastSearchMatches();
+          lastSearch.pre();
+          lastSearch.request();
+          }
+        }
+        if(id == 'VERIFIEDMATCHES')
+        {
+          //$("#VERIFIEDMATCHES_Container").remove()
+          var verifiedMatchObj =new verifiedMatches();
+          verifiedMatchObj.pre();
+          verifiedMatchObj.request();
+        }
+        if(id == 'DESIREDPARTNERMATCHES')
+       {  
+         // $("#DESIREDPARTNERMATCHES_Container").remove()
+          var desiredMatchObj =new desiredPartnerMatches();
+          desiredMatchObj.pre();
+          desiredMatchObj.request();
+        }
+
+
+      }        
+  }
+  if(viewCardInList(currentBox,totalBoxes,id,numberOfProfiles))
+  {
+     $('#nxt-'+id+'_List').hide();
+  }
+
+  
+
+}
+
+    function getCurrentBox(id)
+    {   
+              return sliderNav[id+'_List'];
+    }
+
+
+    function getTotalBoxes(id)
+    {
+
+            return Math.ceil(getNumberOfProfiles(id)/4);
+
+    }
+
+    function isFirstBox(boxNumber)
+    {
+      if(boxNumber == 1)
+        return 1;
+      else
+        return 0;
+    }
+
+    function noCardPresent(currentBox,totalBoxes)
+    {
+        if(currentBox > totalBoxes)
+        {
+          
+            return 1;
+        }
+
+        return 0;
+
+    }
+
+    function getNumberOfProfiles(id)
+    {
+      var listItems = $("#js-"+id+"_List li");
+      return listItems.length;
+    }
+
+    function onlyViewAllCardPresent(currentBox ,totalBoxes,id,numberOfProfiles)
+    { 
+      if(currentBox == totalBoxes && numberOfProfiles%4 == 1)
+      { 
+        if($('ul#js-'+id+'_List li:nth-last-child(1)').find('#idForViewAllCard').text() == "View All")
+        { 
+          return 1;
+        }
+      }
+      return 0;
+    }
+
+
+  function viewCardInList(currentBox ,totalBoxes,id,numberOfProfiles)
+    {
+
+      if(currentBox == totalBoxes && numberOfProfiles % 4 == 0)
+      {
+          return 1;
+      }
+      return 0;
+    }
