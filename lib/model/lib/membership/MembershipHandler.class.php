@@ -25,7 +25,7 @@ class MembershipHandler
 
     public function fetchMembershipDetails($membership, $userObj, $device = 'desktop',$ignoreShowOnlineCheck= false)
     {
-
+        //var_dump($ignoreShowOnlineCheck);
         $memCacheObject = JsMemcache::getInstance();
 
         $servicesObj = new billing_SERVICES('newjs_master');
@@ -62,14 +62,14 @@ class MembershipHandler
                 $serviceInfoAggregateData = $this->serviceObj->getServiceInfo($serviceArr, $currencyType, "", $renew, $userObj->getProfileid(), $device, $userObj,$fetchOnline,$fetchOffline);
                 
                 //echo "all services.........".count($serviceInfoAggregateData);
-                //print_r($serviceInfoAggregateData);
+                //print_r($serviceInfoAggregateData);die;
                 foreach ($serviceArr as $key => $value) {
                     foreach ($serviceInfoAggregateData as $kk => $vv) {
                         if ($value == substr($kk, 0, strlen($value))) {
-                            if($vv['SHOW_ONLINE'] == 'N'){
+                            if($fetchOffline == true && $vv['SHOW_ONLINE'] == 'N'){
                                 $allMainMemHidden[$value][$kk] = $vv;
                             }
-                            else{
+                            else if($fetchOnline == true){
                                 $allMainMem[$value][$kk] = $vv;
                             }
                         }
@@ -88,7 +88,6 @@ class MembershipHandler
             //echo "all hidden services.........".count($allMainMemHidden);
             //print_r($allMainMemHidden);
             if(is_array($allMainMem) && is_array($allMainMemHidden)){
-                //$allMainMemCombined = array_unique(array_merge($allMainMem,$allMainMemHidden), SORT_REGULAR);
                 foreach ($allMainMem as $key => $value) {
                     $allMainMemCombined[$key] = $value;
                 }
@@ -112,6 +111,7 @@ class MembershipHandler
             else{
                 $allMainMemCombined = array();
             }
+            //print_r($allMainMemCombined);
             return $allMainMemCombined;
         } elseif ($membership == "ADDON") {
             $key = $device . "_ADDON_MEMBERSHIP";
