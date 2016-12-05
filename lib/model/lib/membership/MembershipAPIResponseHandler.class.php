@@ -144,7 +144,6 @@ class MembershipAPIResponseHandler {
             $this->memID = $this->memApiFuncs->retrieveCorrectMemID($this->memID, $this);
             $this->activeServiceName = $this->memHandlerObj->getUserServiceName($this->memID);
         }
-        //var_dump($fromBackend);
         //var_dump($this->backendRedirect);
         if($fromBackend == "discount_link"){
             $ignoreShowOnlineCheck = true;
