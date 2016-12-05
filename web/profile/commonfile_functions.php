@@ -165,7 +165,7 @@ $css_arr[]=array("jspc/common/cssRangeSlider"     => "2");
 $css_arr[]=array("jspc/search/rangeslider"    => "1");
 $css_arr[]=array("jspc/common/jquerymCustomScrollbar"    => "1");
 $css_arr[]=array("jspc/search/searchBand"    => "1");
-$css_arr[]=array("jspc/profile/edit/dpp/dppEdit_css"                           => "25");
+$css_arr[]=array("jspc/profile/edit/dpp/dppEdit_css"                            => "26");
 $css_arr[]=array("jspc/utility/chosen/chosen_css"    => "1");
 $css_arr[]=array("jspc/logout/homecss"            => "9");
 $css_arr[]=array("jspc/phone/phoneVerification_css"     => "2");
