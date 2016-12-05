@@ -198,7 +198,7 @@ class DetailActionLib
 		$bOwnProfile = false;
 		if($actionObject->loginProfile->getPROFILEID() ===  $actionObject->profile->getPROFILEID())
 			$bOwnProfile = true;
-			
+
 		$bPhotoReq = $actionObject->PHOTO_REQUESTED ? 'Y' : 'N';
 		//contact_status will be initalzed by call to IsNoProfile
 		$return=ProfileCommon::getprofilePicForApi($actionObject->profile,$actionObject->contact_status,$login,$bPhotoReq);

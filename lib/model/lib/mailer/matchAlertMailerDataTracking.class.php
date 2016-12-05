@@ -7,7 +7,7 @@ class matchAlertMailerDataTracking
 	public function insertCountDataByLogicLevel($countByLogicArr)
 	{		
 		$todayDate = date("Y-m-d");
-		$countByLogicObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC();
+		$countByLogicObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC('newjs_master');
 		$rowCount = $countByLogicObj->insertCountByLogicTypeForDate($todayDate,$countByLogicArr);
 		if($rowCount == 0)
 		{
@@ -24,7 +24,7 @@ class matchAlertMailerDataTracking
 	public function insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations)
 	{		
 		$todayDate = date("Y-m-d");
-		$loggingObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND();
+		$loggingObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND('newjs_master');
 		$rowCount = $loggingObj->insertCountByLogicTypeAndRecommendForDate($todayDate,$countByLogicAndRecommendations);				
 		if($rowCount == 0)
 		{
@@ -52,7 +52,7 @@ class matchAlertMailerDataTracking
     {
     	$matchAlertsToBeSentObj = new matchalerts_MATCHALERTS_TO_BE_SENT();
 		$totalCount = $matchAlertsToBeSentObj->getTotalCount($todayDate);		
-		$matchAlertByLogicTotalObj = new MATCHALERT_TRACKING_MATCH_ALERT_BYLOGIC_TOTAL();
+		$matchAlertByLogicTotalObj = new MATCHALERT_TRACKING_MATCH_ALERT_BYLOGIC_TOTAL('newjs_master');
 		$rowCount = $matchAlertByLogicTotalObj->insertTotalCountForDate($todayDate,$totalCount);
 		if($rowCount == 0)
 		{
@@ -65,7 +65,7 @@ class matchAlertMailerDataTracking
 
     public function insertTotalCountByLogicRecommend($todayDate,$totalCountArr)
     {
-    	$totalCountObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL();
+    	$totalCountObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL('newjs_master');
 		$rowCount = $totalCountObj->insertTotalCountForRecommedByDate($totalCountArr,$todayDate);
 		if($rowCount == 0)
 		{

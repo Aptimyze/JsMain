@@ -918,6 +918,44 @@ class MembershipHandler
         );
     }
 
+    public function getCrmSmsDiscountText($profileid) {
+        $userObj = new memUser($profileid);
+        list($ipAddress, $currency) = $this->getUserIPandCurrency($profileid);
+        $userObj->setIpAddress($ipAddress);
+        $userObj->setCurrency($currency);
+        $userObj->setMemStatus();
+        $userType = $userObj->userType;
+        $validityCheck = $this->checkIfUserIsPaidAndNotWithinRenew($profileid, $userType);
+        if ($userType == 4 || $userType == 6) {
+            $renewCheckFlag = 1;
+        }
+        list($discountType,$discountActive,$discount_expiry,$discountPercent,$specialActive,$variable_discount_expiry,$discountSpecial,$fest,$festEndDt,$festDurBanner,$renewalPercent,$renewalActive,$expiry_date,$discPerc,$code) = $this->getUserDiscountDetailsArray($userObj);
+        if ($validityCheck && ($renewCheckFlag || $specialActive == 1 || $discountActive == 1 || $fest == 1)) {
+            if ($renewCheckFlag) {
+                if ($fest == 1) {
+                    $text    = "discount of upto " . $renewalPercent . "%";
+                } else {
+                    $text    = "discount of flat" . $renewalPercent . "%";
+                }
+            } else if ($specialActive == 1) {
+                $discountType = 'VD';
+                $messageArr   = $this->getOCBTextMessage($profileid, $discountType, $discPerc, $expiry_date, $fest);
+                $text         = "discount of " . str_replace("OFF", "", str_replace("Get ", "", $messageArr['top']));
+            } else if ($discountActive == 1) {
+                $discountType = 'CASH';
+                $messageArr   = $this->getOCBTextMessage($profileid, $discountType, $discPerc, $expiry_date, $fest);
+                $text         = "discount of " . str_replace("OFF", "", str_replace("Get ", "", $messageArr['top']));
+            } elseif ($fest == 1) {
+                $text    = "discount of extra months";
+            }
+        } 
+        if (!empty($text)) {
+            return $text;
+        } else {
+            return null;
+        }
+    }
+
     public function getSubscriptionStatusArray($userObj, $subStatus = null, $module = null)
     {
         $memCacheObject = JsMemcache::getInstance();
@@ -1529,15 +1567,20 @@ class MembershipHandler
 
     public function checkIfUserIsPaidAndNotWithinRenew($profileid, $userType = "")
     {
-        if (!$userType && !empty($profileid)) {
+        if (empty($userType) && !empty($profileid)) {
             $userObj = new memUser($profileid);
             $userObj->setMemStatus();
             $userType = $userObj->userType;
         }
-        $profileObj      = LoggedInProfile::getInstance();
-        $activatedStatus = $profileObj->getACTIVATED();
-        $screeningStatus = $activatedStatus;
-        if ($userType != 5 && $screeningStatus == 'Y') {
+        if (!empty($profileid)) {
+            $jprofileObj     = new JPROFILE('newjs_slave');
+            $profileDetails  = $jprofileObj->get($profileid, "PROFILEID", "ACTIVATED");
+            $activatedStatus = $profileDetails['ACTIVATED'];
+        } else {
+            $profileObj      = LoggedInProfile::getInstance();
+            $activatedStatus = $profileObj->getACTIVATED();
+        }
+        if ($userType != 5 && $activatedStatus == 'Y') {
             return 1;
         } else {
             return 0;

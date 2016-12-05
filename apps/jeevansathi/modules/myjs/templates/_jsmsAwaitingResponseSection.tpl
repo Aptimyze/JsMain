@@ -13,9 +13,9 @@
 <!--endt:slider div-->
 <!--start:div-->
 
-     <div class="swrapper" id="swrapper">
-        <div class="wrap-box" id="wrapbox">
-    <div id="awaiting_tuples"  style=" white-space: nowrap; margin-left:10px; font-size:0px; width:200%">
+      <div class="swrapper" id="swrapper">
+         <div class="wrap-box" id="wrapbox">
+     <div id="awaiting_tuples"  style=" white-space: nowrap; margin-left:10px; font-size:0px; width:200%">
         ~foreach from=$eoiData.tuples item=tupleInfo key=id`
                
                         ~include_partial("myjs/jsmsProfileTuple",[profileTuple=>$tupleInfo,section=>"eoi",index=>$id,gender=>$gender,total=>$eoiData.view_all_count,contactId=>$eoiData.contact_id])`
@@ -34,17 +34,17 @@
                     </div>
                 </div>
              </div> </div>
-        ~for $i=1 to 10`
-            <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;"></div>
-        ~/for`
-        
+
+         ~for $i=1 to 10`
+             <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;"></div>
+         ~/for`
+
     
+    </div>
+    </div>
     </div>
 
-         
-    </div>
-    </div>
-    
+
     
 <div class="hgt10"></div>
 

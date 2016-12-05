@@ -161,10 +161,9 @@ class notificationActions extends sfActions
 		$localNotificationObj=new LocalNotificationList();
 		$failedDecorator=new FailedNotification($localNotificationObj,$profileid);
 		$notifications = $failedDecorator->getNotifications();
-		/*$alarmTimeObj = new MOBILE_API_ALARM_TIME('newjs_slave');
+		$alarmTimeObj = new MOBILE_API_ALARM_TIME('newjs_slave');
 		$alarmTime = $alarmTimeObj->getData($profileid);
-		$alarmDate = alarmTimeManager::getNextDate($alarmTime);*/
-		$alarmDate ='';
+		$alarmDate = alarmTimeManager::getNextDate($alarmTime);
 	}
 	$notificationData['notifications'] = $notifications;
 	$notificationData['alarmTime']=$alarmDate;
