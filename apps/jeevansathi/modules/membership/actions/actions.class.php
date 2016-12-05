@@ -73,7 +73,6 @@ class membershipActions extends sfActions
                 $apiParams = $pageURL . $mainMem . $authChecksum . $device;
                 $template  = 'JSPCCartPage';
                 $data      = $this->fetchApiData($apiParams, $request, 3);
-                print_r($data);die;
                 $data      = $memActFunc->formatDataForNewRevMobMem($request, $displayPage, $data);
 
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMemPage3Url);
