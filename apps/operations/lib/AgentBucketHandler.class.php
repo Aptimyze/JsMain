@@ -9,7 +9,12 @@ class AgentBucketHandler
                 $method=$processObj->getMethod();
                 if($subMethod=="LIMIT_EXCEED")
                 {
-                        $processObj->setLimit(125);
+                        $utilityObj =new crmUtility();
+                        $limitArr = $utilityObj->getProcessLimit();
+                        $processObj->setLimitArr($limitArr);
+			$minLimit =min($limitArr);	
+	
+                        $processObj->setLimit($minLimit);
                         $msg=$this->deAllocateDisp($processObj,$agentAllocDetailsObj,$agentDeAllocObj);
                 }
 		elseif($subMethod=="LIMIT_EXCEED_RENEWAL"){
@@ -396,7 +401,7 @@ class AgentBucketHandler
         public function deAllocateDisp($processObj,$agentAllocDetailsObj,$agentDeAllocObj)	
         {
 		$jprofileObj=new JPROFILE('newjs_masterRep');
-                $limit=$processObj->getLimit();
+                //$limit=$processObj->getLimit();
 		$subMethod=$processObj->getSubMethod();
                 $disp_order_arr=$agentAllocDetailsObj->fetchDispositionOrder();
                 $tot_disp=count($disp_order_arr);
@@ -430,11 +435,23 @@ class AgentBucketHandler
                         $agentDeAllocObj->insertProfilesTemp($processObj);
                 }
 		$fexecutives=$tempAllocBucketObj->fetchFinalExecutives($processObj);
+		// New limit logic
+		$utilityObj =new crmUtility();	
+		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+		$privilegeArr =$jsadminPswrdsObj->getPrivilegesForSalesTarget();
+		$limitArr =$processObj->getLimitArr();
+		// end
+
                 for($i=0;$i<count($fexecutives);$i++)
                 {
                         $exe_arr = explode(":",$fexecutives[$i]);
                         $exe = $exe_arr[0];
                         $cnt = $exe_arr[1];
+			// New limit logic
+			$privilege =$privilegeArr[$exe];
+			$processName =$utilityObj->getProcessName($privilege);
+			$limit = $limitArr[$processName];
+			
                         $exceed = $cnt-$limit;
                         $processObj->setUsername($exe);
                         $processObj->setExceed($exceed);
