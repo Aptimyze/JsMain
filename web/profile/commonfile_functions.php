@@ -620,6 +620,8 @@ $js_arr[]=array("jspc/chat/core"    => "3");
 $js_arr[]=array("jspc/chat/converse_js"    => "3");
 $js_arr[]=array("jspc/chat/aes"    => "3");
 $js_arr[]=array("/web/converse"    => "3");
+$js_arr[]=array(" /web/billing/billing_v2"   => "1");
+$js_arr[]=array("/web/billing/billing"   => "1");
 return $js_arr;
 }
 function getJavascript(){
