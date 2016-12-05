@@ -172,13 +172,22 @@ class Inbox implements Module
 				}
 				if ( $key == "INTEREST_EXPIRING")
  				{
- 					$where['TYPE']="I";
- 					$where["RECEIVER"]=$this->profileObj->getPROFILEID();
- 					$dbName = JsDbSharding::getShardNo($this->profileObj->getPROFILEID());
- 					$contactsObj = new newjs_CONTACTS($dbName);
- 					$group             = '';
- 					$contactsCount = $contactsObj->getExpiredContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
- 					$countObj[$infoTypenav["PAGE"]] = $contactsCount[0]["COUNT"];
+ 					$memcacheKey = $this->profileObj->getPROFILEID()."_".$key;
+ 					$memcacheObj=new UserMemcache;
+ 					$expiringContactsCount = $memcacheObj->get($memcacheKey);
+ 					if (  $expiringContactsCount === false || $infoTypenav["NUMBER"] == 1 )
+ 					{
+ 						$where['TYPE']="I";
+	 					$where["RECEIVER"]=$this->profileObj->getPROFILEID();
+	 					$dbName = JsDbSharding::getShardNo($this->profileObj->getPROFILEID());
+	 					$contactsObj = new newjs_CONTACTS($dbName);
+	 					$group             = '';
+	 					$contactsCount = $contactsObj->getExpiredContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
+	 					$expiringContactsCount = $contactsCount[0]["COUNT"];
+
+	 					$memcacheObj->set($memcacheKey,$expiringContactsCount);
+ 					}
+					$countObj[$infoTypenav["PAGE"]] = $expiringContactsCount; 					
  				} 
 			
 				if($key == "IGNORED_PROFILES")
