@@ -171,6 +171,8 @@ function define_source_val_array()
 	source_arr_value[7] = "CASH";
 	source_arr_value[8] = "BLUEDART_COD";
 	source_arr_value[9] = "GHAR_PAY_CASH";
+	source_arr_value[10] = "PayTM_ON_DELIVERY";
+
 
 	return source_arr_value;
 }
@@ -189,8 +191,8 @@ function define_source_label_array()
 	source_arr_label[6] = "IVR Code";
 	source_arr_label[7] = "Cash Receipt Number";
 	source_arr_label[8] = "BlueDart Airway Number";
-        source_arr_label[9] = "Ghar Pay Cash Receipt Number";
-
+    source_arr_label[9] = "Ghar Pay Cash Receipt Number";
+    source_arr_label[10] = "Paytm Receipt Number";
 	return source_arr_label;
 }
 
@@ -207,6 +209,7 @@ function define_disable_array()
 	disable_arr[5] = "IVR";
 	disable_arr[6] = "GHAR_PAY_CASH";
 	disable_arr[7] = "CASH_WITHOUT_RECEIPT";
+	disable_arr[8] = "PayTM_ON_DELIVERY";
 
 	return disable_arr;
 }
