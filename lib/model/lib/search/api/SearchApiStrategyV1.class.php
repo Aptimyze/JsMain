@@ -121,8 +121,14 @@ class SearchApiStrategyV1
                 $params['noOfResults'] = $this->responseObj->getTotalResults();
                 $params['result_count'] = $this->output['result_count'];
                 $params['pageSubHeading'] = $this->output['pageSubHeading'];
-                $outputArray = $this->SearchChannelObj->setRequestParameters($params);
+                $params['profileCount'] = 0;
+                $params["nextAvail"] = $this->output['next_avail'];
+                if(is_array($this->output["profiles"]))
+					$params['profileCount'] = sizeOf($this->output["profiles"]);
+				$outputArray = $this->SearchChannelObj->setRequestParameters($params);
+              
                 $this->output = array_merge($this->output,$outputArray);
+               
 		return $this->output;
 	}
 
@@ -166,11 +172,12 @@ class SearchApiStrategyV1
         if(($this->output["searchBasedParam"]=='kundlialerts' || $this->searchCat=='kundlialerts')&& $cnt==0)
         {   
          	$params["horoscope"] = "withoutHoro";  	
-
+			$this->output["uploadHoroscope"] = "1";
            	//The same check has been applied on apps/jeevansathi/modules/profile/templates/_jspcViewProfile/_jspcViewProfileAstroSection.tpl
            	if($loggedInProfileObj->getBTIME()!="" && $loggedInProfileObj->getCITY_BIRTH()!="" && $loggedInProfileObj->getCOUNTRY_BIRTH()!="")
            	{
            		$params["horoscope"] = "withHoro";
+           		$this->output["uploadHoroscope"] = "0";
            	}
         }
 		$params["matLogic"]= $this->output["matchAlertsLogic"];

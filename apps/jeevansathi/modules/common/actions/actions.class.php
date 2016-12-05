@@ -151,6 +151,9 @@ class commonActions extends sfActions
         if (JsCommon::checkAppPromoValid($ua)) {
             header("Location: https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dmobile%26utm_content%3Dsms%26utm_campaign%3DJSAA");
             die;
+        } if (JsCommon::checkIosPromoValid($ua)) {
+            header("Location: https://itunes.apple.com/in/app/jeevansathi/id969994186");
+            die;
         } else {
             $this->setTemplate('appNotCompatible');
         }

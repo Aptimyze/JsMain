@@ -756,10 +756,6 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	    {
 	      $count_matches = 0;
 	    }
-		
-
-
-
 		//City
 		if(strpos($szCountry,"51")!==false || strpos($szCountry,"128")!==false)
 			$showCity=1;

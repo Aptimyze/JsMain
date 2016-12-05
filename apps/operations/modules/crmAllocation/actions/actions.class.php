@@ -384,6 +384,12 @@ class crmAllocationActions extends sfActions
 	$this->callSource   =$crmUtilityObj->populateCallSource();
         $this->queryType    =$crmUtilityObj->populateQueryType();
 	$this->willPay      =$crmUtilityObj->populateDisposition($this->willPayVal);
+		if ($this->profileid) {
+			$curAllotAgent = $agentAllocDetailsObj->getAllotedAgent($this->profileid);
+			if ($curAllotAgent == $this->agentName) {
+				$this->isAlloted = 1;
+			}
+		}
        	$this->setTemplate('inboundAllocation');
   }
   public function executeManualAllocation(sfWebRequest $request)
