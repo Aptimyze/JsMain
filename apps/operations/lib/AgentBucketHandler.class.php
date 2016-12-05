@@ -440,6 +440,7 @@ class AgentBucketHandler
 		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
 		$privilegeArr =$jsadminPswrdsObj->getPrivilegesForSalesTarget();
 		$limitArr =$processObj->getLimitArr();
+		$exceed =0;
 		// end
 
                 for($i=0;$i<count($fexecutives);$i++)
@@ -452,7 +453,8 @@ class AgentBucketHandler
 			$processName =$utilityObj->getProcessName($privilege);
 			$limit = $limitArr[$processName];
 			
-                        $exceed = $cnt-$limit;
+			if($cnt>=$limit)
+	                        $exceed = $cnt-$limit;
                         $processObj->setUsername($exe);
                         $processObj->setExceed($exceed);
                         for($d=1; $d<=$tot_disp; $d++)

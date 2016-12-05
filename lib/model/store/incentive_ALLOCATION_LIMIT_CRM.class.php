@@ -9,13 +9,13 @@ class incentive_ALLOCATION_LIMIT_CRM extends TABLE {
         {
                 try
                 {
-                        $sql="SELECT PROCESS_ID,LIMIT from incentive.ALLOCATION_LIMIT_CRM";
+                        $sql="SELECT PROCESS_ID,LIMIT_VALUE from incentive.ALLOCATION_LIMIT_CRM";
                         $resSelectDetail = $this->db->prepare($sql);
                         $resSelectDetail->execute();
                         while($row =$resSelectDetail->fetch(PDO::FETCH_ASSOC))
 			{
 				$processId 		=$row['PROCESS_ID'];	
-				$limitArr[$processId] 	=$row['LIMIT'];
+				$limitArr[$processId] 	=$row['LIMIT_VALUE'];
 			}
                 }
                 catch(Exception $e)
