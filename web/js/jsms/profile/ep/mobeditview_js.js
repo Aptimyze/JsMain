@@ -5,7 +5,7 @@ var sliderCurrentPage="";
 var underScreenStr="";
 var filterJson="";
 var albumPresent=0;
-var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2'};
+var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','FocusDpp':'7'};
 var bCallCreateHoroscope = false;
  $("document").ready(function() {
 
