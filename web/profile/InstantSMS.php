@@ -9,7 +9,7 @@ class InstantSMS {
 	private $otherProfileDetails = array();
 	private $smsSettings = array();
 	private $varArray = array();
-	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP","MEM_REN_ACT_CRON","MEM_BACK_DISC_SMS");
+	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP","MEM_REN_ACT_CRON","MEM_BACK_DISC_SMS","CRM_SMS_BRANCH","CRM_SMS_OFFER","CRM_SMS_NOT_REACH","CRM_SMS_APP_DOWNLOAD");
 	private $errorMessage = "Due to a temporary problem your request could not be processed. Please try after a couple of minutes";
 	private $unverified_key = array("REGISTER_RESPONSE" ,"PHONE_UNVERIFY");
 	private $customCriteria=0;
@@ -74,6 +74,10 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		if($this->smsKey=='OTP') return true;
 		if($this->smsKey=="DEL_OTP") return true;
 		if($this->smsKey=="MEM_BACK_DISC_SMS") return true;
+		if($this->smsKey=="CRM_SMS_OFFER") return true;
+		if($this->smsKey=="CRM_SMS_BRANCH") return true;
+		if($this->smsKey=="CRM_SMS_APP_DOWNLOAD") return true;
+		if($this->smsKey=="CRM_SMS_NOT_REACH") return true;
 		if($this->smsKey=='PHONE_UNVERIFY') return true;
 		$sendToInt = in_array($this->smsKey, $this->sendToInternational);
 		if(!$sendToInt && !$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"], $sendToInt))

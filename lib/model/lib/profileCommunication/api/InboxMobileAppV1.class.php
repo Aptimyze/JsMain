@@ -438,11 +438,16 @@ class InboxMobileAppV1
                                 
         if($infoKey=="INTEREST_SENT")
 				{
-							if($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							$heshe = $tupleObj->getGENDER()=="F"?"She":"He";
+							$viewedDate=$tupleObj->getINTEREST_VIEWED_DATE();
+							if($viewedDate!='')
 							{
-								$heshe = $tupleObj->getGENDER()=="F"?"She":"He";
-								$viewedDate=$tupleObj->getINTEREST_VIEWED_DATE();
-								$profile[$count]["timetext"] = "$heshe viewed your interest ".($viewedDate!=''?((stripos($viewedDate,'today')=== false)?'on ':"").$viewedDate:"");
+								$profile[$count]["timetext"] = "$heshe viewed your interest ".((stripos($viewedDate,'today')=== false)?'on ':"").$viewedDate;
+							}
+							elseif($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							{
+								$profile[$count]["timetext"] = "$heshe viewed your interest";
+							
 							}
 							$profile[$count]["seen"]=null; // We are not required to show New so setting it to blank
 							$profile[$count]["interest_viewed_date"] = null;
