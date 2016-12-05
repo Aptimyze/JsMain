@@ -35,37 +35,34 @@ class MembershipHandler
             $key_main .= "_" . $userObj->getCurrency();
             $key_main_hidden = $device . "_".$membership."_HIDDEN_MEMBERSHIP";
             $key_main_hidden .= "_" . $userObj->getCurrency();
-            $mainExist = false;
-            $mainHiddenExist = false;
+            $fetchOnline = true;
+            $fetchOffline = $ignoreShowOnlineCheck;
             $allMainMemHidden = array();
             $allMainMem = array();
-            if($ignoreShowOnlineCheck == true){
-                $mainHiddenExist = true;
-            }
-            if ($mainHiddenExist == false && $memCacheObject->get($key_main_hidden)) {
+            if ($fetchOffline == true && $memCacheObject->get($key_main_hidden)) {
                 $allMainMemHidden = unserialize($memCacheObject->get($key_main_hidden));
-                echo "memcache hidden...".count($allMainMemHidden);
-                print_r($allMainMemHidden);
-                $mainHiddenExist = true;
+                //echo "memcache hidden...".count($allMainMemHidden);
+                //print_r($allMainMemHidden);
+                $fetchOffline = false;
             } 
-            if ($mainExist == false && $memCacheObject->get($key_main)) {
+            if ($fetchOnline == true && $memCacheObject->get($key_main)) {
                 $allMainMem = unserialize($memCacheObject->get($key_main));
-                echo "memcache main...".count($allMainMem);
-                print_r($allMainMem);
-                $mainExist = true;
+                //echo "memcache main...".count($allMainMem);
+                //print_r($allMainMem);
+                $fetchOnline = false;
             }
-            if($mainExist == false || $mainHiddenExist == false){
+            if($fetchOnline == true || $fetchOffline == true){
                 $serviceArr = VariableParams::$mainMembershipsArr;
                 //print_r($serviceArr);
                 if ($userObj) {
                     $currencyType = $userObj->getCurrency();
                 }
-                var_dump($mainExist);
-                var_dump($mainHiddenExist);
-                $serviceInfoAggregateData = $this->serviceObj->getServiceInfo($serviceArr, $currencyType, "", $renew, $userObj->getProfileid(), $device, $userObj,$mainExist,$mainHiddenExist);
+                //var_dump($fetchOnline);
+                //var_dump($fetchOffline);
+                $serviceInfoAggregateData = $this->serviceObj->getServiceInfo($serviceArr, $currencyType, "", $renew, $userObj->getProfileid(), $device, $userObj,$fetchOnline,$fetchOffline);
                 
-                echo "all services.........".count($serviceInfoAggregateData);
-                print_r($serviceInfoAggregateData);
+                //echo "all services.........".count($serviceInfoAggregateData);
+                //print_r($serviceInfoAggregateData);
                 foreach ($serviceArr as $key => $value) {
                     foreach ($serviceInfoAggregateData as $kk => $vv) {
                         if ($value == substr($kk, 0, strlen($value))) {
@@ -79,19 +76,32 @@ class MembershipHandler
                         
                     }
                 }
-                if($mainHiddenExist == false){
+                if($fetchOffline == true){
                    $memCacheObject->set($key_main_hidden, serialize($allMainMemHidden), 3600); 
                 }
-                else if($mainExist == false){
+                if($fetchOnline == true){
                     $memCacheObject->set($key_main, serialize($allMainMem), 3600);
                 }
             }
-            echo "all main services.........".count($allMainMem);
-            print_r($allMainMem);
-            echo "all hidden services.........".count($allMainMemHidden);
-            print_r($allMainMemHidden);die;
+            //echo "all main services.........".count($allMainMem);
+            //print_r($allMainMem);
+            //echo "all hidden services.........".count($allMainMemHidden);
+            //print_r($allMainMemHidden);
             if(is_array($allMainMem) && is_array($allMainMemHidden)){
-                $allMainMemCombined = array_unique(array_merge($allMainMem,$allMainMemHidden), SORT_REGULAR);
+                //$allMainMemCombined = array_unique(array_merge($allMainMem,$allMainMemHidden), SORT_REGULAR);
+                foreach ($allMainMem as $key => $value) {
+                    $allMainMemCombined[$key] = $value;
+                }
+                foreach ($allMainMemHidden as $key => $value) {
+                    if($allMainMemCombined[$key]){
+                        foreach ($value as $durationId => $durationWiseServices) {
+                            $allMainMemCombined[$key][$durationId] = $durationWiseServices;
+                        }
+                    }
+                    else{
+                        $allMainMemCombined[$key] = $value;
+                    }
+                }
             }
             else if(is_array($allMainMem)){
                 $allMainMemCombined = $allMainMem;
@@ -1037,8 +1047,8 @@ class MembershipHandler
     public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false)
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
-        var_dump("in getMembershipDurationsAndPrices...");
-        var_dump($allMainMem);die("success");
+        //var_dump("in getMembershipDurationsAndPrices...");
+        //var_dump($allMainMem);
         
         if ($displayPage == 1) {
             if (isset($allMainMem['P']['P1'])) {

@@ -144,12 +144,13 @@ class MembershipAPIResponseHandler {
             $this->memID = $this->memApiFuncs->retrieveCorrectMemID($this->memID, $this);
             $this->activeServiceName = $this->memHandlerObj->getUserServiceName($this->memID);
         }
-        var_dump($fromBackend);
+        //var_dump($fromBackend);
+        //var_dump($this->backendRedirect);
         if($fromBackend == "discount_link"){
-            $ignoreShowOnlineCheck = false;
+            $ignoreShowOnlineCheck = true;
         }
         else{
-            $ignoreShowOnlineCheck = true;
+            $ignoreShowOnlineCheck = false;
         }
         list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck);
         $this->curActServices = array_keys($this->allMainMem);
@@ -788,7 +789,9 @@ class MembershipAPIResponseHandler {
             }
             $mainServices['service_contacts'] = $this->allMainMem[$id][$subId]['CALL'] . ' Contacts To View';
             $mainServices['standard_price'] = $this->allMainMem[$id][$subId]['PRICE'];
-            print_r($this->allMainMem);die("ankita");
+            //echo "abc........";
+            //print_r($this->allMainMem);
+            //die("ankita");
             $mainServices['orig_price'] = $mainServices['standard_price'];
             $mainServices['orig_price_formatted'] = number_format($mainServices['standard_price'], 2, '.', ',');
             

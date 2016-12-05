@@ -367,26 +367,26 @@ class billing_SERVICES extends TABLE
         }
     }
 
-    public function getServiceInfo($search_id,$id,$offer,$price_str,$ignoreMain=false,$ignoreMainHidden=true) {
+    public function getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline=true,$fetchOffline=false) {
         try {
-            if($ignoreMain == false || $ignoreMainHidden == false){
+            if($fetchOnline == true || $fetchOffline == true){
                 $SHOW_ONLINE_OFFER = "(";
                 $SHOW_ONLINE = "(";
-                if($ignoreMain == false && $ignoreMainHidden == false){
+                if($fetchOnline == true && $fetchOffline == true){
                     $SHOW_ONLINE_OFFER .= "'Y','S','N'";
                     $SHOW_ONLINE .= "'Y','N'";
                 }
-                else if($ignoreMainHidden == false){
+                else if($fetchOffline == true){
                     $SHOW_ONLINE_OFFER .= "'N'";
                     $SHOW_ONLINE .= "'N'";
                 }
-                else if($ignoreMain == false){
+                else if($fetchOnline == true){
                     $SHOW_ONLINE_OFFER .= "'Y','S'";
                     $SHOW_ONLINE .= "'Y'";
                 }
                 $SHOW_ONLINE_OFFER .= ")";
                 $SHOW_ONLINE .= ")";
-                var_dump($SHOW_ONLINE);
+                //var_dump($SHOW_ONLINE);
             	if(is_array($id)){
     		        if ($offer) {
     		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE ({$search_id}) AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
@@ -402,7 +402,7 @@ class billing_SERVICES extends TABLE
     		        	$sql = "SELECT SQL_CACHE SERVICEID, NAME, SHOW_ONLINE, $price_str as PRICE FROM billing.SERVICES WHERE SERVICEID LIKE '$search_id' AND ACTIVE='Y' AND SHOW_ONLINE IN".$SHOW_ONLINE_OFFER." order by PRICE ASC";
     		        }
     	        }
-                var_dump($sql);
+                //var_dump($sql);
                 $resSelectDetail = $this->db->prepare($sql);
                 $resSelectDetail->execute();
                 while($rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC)){

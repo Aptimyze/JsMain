@@ -314,7 +314,7 @@ class Services
         return $service_name;
     }
 
-    public function getServiceInfo($id, $cur_type = 'RS', $offer = 0, $renew = '', $profileid = '', $device='desktop', $userObj,$ignoreMain=false,$ignoreMainHidden=true) {
+    public function getServiceInfo($id, $cur_type = 'RS', $offer = 0, $renew = '', $profileid = '', $device='desktop', $userObj,$fetchOnline=true,$fetchOffline=false) {
 
         global $user_disc;
         $search_id = "";
@@ -339,7 +339,7 @@ class Services
         	$price_str = $device."_RS";
         }
         
-        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$ignoreMain,$ignoreMainHidden);
+        $row_services = $billingServicesObj->getServiceInfo($search_id,$id,$offer,$price_str,$fetchOnline,$fetchOffline);
 
         $i = 0;
         
