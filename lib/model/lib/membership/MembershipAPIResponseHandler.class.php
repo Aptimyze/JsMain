@@ -791,7 +791,6 @@ class MembershipAPIResponseHandler {
             $mainServices['standard_price'] = $this->allMainMem[$id][$subId]['PRICE'];
             //echo "abc........";
             //print_r($this->allMainMem);
-            //die("ankita");
             $mainServices['orig_price'] = $mainServices['standard_price'];
             $mainServices['orig_price_formatted'] = number_format($mainServices['standard_price'], 2, '.', ',');
             
