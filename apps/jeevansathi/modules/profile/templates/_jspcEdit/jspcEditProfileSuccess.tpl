@@ -297,16 +297,24 @@
                   <!-- added alt email -->
                   <li>
                     <p class="color12" id="emailLabelParent">
-                      Alternate Email id <span class="ml5 ~if ($editApiResponse.Contact.ALT_EMAIL.value|count_characters:true) eq 0 || $editApiResponse.Contact.ALT_EMAIL.screenBit neq 1` disp-none ~/if` js-undSecMsg">
-                          <span class="disp_ib color5 f13" > Under Screening</span>
-                        </span>
+                      Alternate Email id
                     </p>
-                    <p class="color11">
-                      <span id='my_emailView' ~if $arrOutDisplay.contact.my_email eq $notFilledInText` class="color5"  ~/if`>
-                        ~$arrOutDisplay['contact']['my_email']`
-                      </span>
-                    </p>  
-                    <div class="f12 color12 pt5"><span class="color5 cursp" id="alternateEmailVerify">Verify</span> email id to receive mails.</div>
+                    <div class="clearfix pos-rel">
+                      <div class="fl wid70p">
+                        <p class="color11">
+                          <span id='my_alt_emailView' ~if $arrOutDisplay.contact.my_alt_email eq $notFilledInText` class="color5"  ~/if`>
+                            ~$arrOutDisplay['contact']['my_alt_email']`
+                          </span>
+                        </p>
+                      </div>
+                      <div class="fr wid25p pos-abs right0">
+                          <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color11" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
+                      </div>
+
+                    </div>
+                    ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify`
+                      <div class="f12 color12 pt5">Verify email id to receive mails.</div>
+                    ~/if`
                   </li>
 
                   <li>

@@ -935,7 +935,13 @@ class desktopView extends DetailedViewApi
     
     //Email
     $this->m_arrOut['my_email'] = $objProfile->getEMAIL();
-    
+    //alternate Email
+    $this->m_arrOut['my_alt_email'] = $objProfile->getExtendedContacts("onlyValues")["ALT_EMAIL"];
+    $this->m_arrOut['alt_email_status'] = "Verify";
+    if (  $objProfile->getExtendedContacts("onlyValues")["ALT_EMAIL_STATUS"] == 'Y')
+    {
+      $this->m_arrOut['alt_email_status'] = "Verified";
+    }
     //Mobile number
     $mobile_label = ApiViewConstants::getNullValueMarker();
     $this->m_arrOut['mobile_desc'] = '';
