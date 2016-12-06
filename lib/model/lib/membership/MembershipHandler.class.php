@@ -832,10 +832,11 @@ class MembershipHandler
                 $activatedStatus = $profileObj->getACTIVATED();
                 $screeningStatus = $activatedStatus;
             }
-            if ($screeningStatus == "Y") {
+            //if ($screeningStatus == "Y") 
+            //{
                 $discountTypeArr = $this->getDiscountInfo($userObj);
                 $discountType    = $discountTypeArr['TYPE'];
-            }
+            //}
         }
         if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
             $discountActive  = '1';
