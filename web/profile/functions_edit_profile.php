@@ -80,9 +80,12 @@ function log_edit($paramArray, $table_name = "") {
     if (!$table_name) $table_name = "newjs.EDIT_LOG";
     $paramArray[IPADD] = FetchClientIP();
     foreach ($paramArray as $field => $value) {
-        $value = addslashes(stripslashes($value));
-        $fields.= $field . ",";
-        $values.= "'$value',";
+        if($field != "ALT_EMAIL" && $field != "ALT_EMAIL_STATUS")
+        {
+            $value = addslashes(stripslashes($value));
+            $fields.= $field . ",";
+            $values.= "'$value',";
+        }        
     }
     $fields = substr($fields, 0, -1);
     $values = substr($values, 0, -1);
@@ -97,11 +100,27 @@ function log_edit($paramArray, $table_name = "") {
             $values_backup.= "'$value',";
         }
         $fields_backup = substr($fields_backup, 0, -1);
-        $values_backup = substr($values_backup, 0, -1);
+        $values_backup = substr($values_backup, 0, -1);        
         $sql_backup = "INSERT INTO $table_name ($fields_backup) VALUES ($values_backup)";
         $result = mysql_query_decide($sql_backup) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_backup, "ShowErrTemplate");
     }
     $result_el = mysql_query_decide($sql_el) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_el, "ShowErrTemplate");
+    if($paramArray["ALT_EMAIL"] || $paramArray["ALT_EMAIL_STATUS"])
+    {
+        foreach($paramArray as $field => $value)
+        {
+           if($field == "ALT_EMAIL" || $field == "PROFILEID" ||$field == "MOD_DT")
+           {
+                $value = addslashes(stripslashes($value));
+                $alt_fields.= $field . ",";
+                $alt_values.= "'$value',";
+            }  
+        }
+        $alt_fields = substr($alt_fields, 0, -1);
+        $alt_values = substr($alt_values, 0, -1);
+        $sql_altEmail = "INSERT INTO newjs.ALT_EMAIL_LOG ($alt_fields) VALUES ($alt_values)";        
+        $result_altEmail = mysql_query_decide($sql_altEmail) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_altEmail, "ShowErrTemplate");
+    }
 }
 
 function is_new_entry($profileid) {
