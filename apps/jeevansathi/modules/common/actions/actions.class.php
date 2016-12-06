@@ -705,6 +705,7 @@ class commonActions extends sfActions
             $nameData=(new NameOfUser())->getNameData($profileId);
             $this->nameOfUser=$nameData[$profileId]['NAME'];
             $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
+            if($profileId%10==1)$this->skipSkipButton=1;
         }
                 
 		if($calObject['LAYERID']==1)
