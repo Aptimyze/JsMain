@@ -109,7 +109,7 @@ class SearchTypesEnums
         const PHONEBOOK_CC_PC = "M26";
         const CONTACTS_VIEWED_BY_CC_PC="M27";
         const ViewSimilarDesktop = "30";
-        const MATCHING_VISITORS_JSPC="M5";
+        const MATCHING_VISITORS_JSPC="MV5";
         const MATCHING_VISITORS_ANDROID="MAV";
         const VISITORS_JSPC="5";
         const SHORTLIST_JSPC="7";
@@ -125,6 +125,7 @@ class SearchTypesEnums
 	const MatchAlertMailer1 = "BN1";
 	const MatchAlertMailer2 = "BN2";
 	const MatchAlertMailer3 = "BN3";
+        const MatchAlertMailer4 = "BN4";
 
         const contactViewerMailer="CVM";
 

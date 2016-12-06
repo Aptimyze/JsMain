@@ -1,6 +1,7 @@
 //var commonUrl="/contacts";
 
 var dim='',postParams,photo={},disablePrimary={},disableOthers={},actionUrl = {"CONTACT_DETAIL":"/api/v2/contacts/contactDetails","INITIATE":"/api/v2/contacts/postEOI","INITIATE_MYJS":"/api/v2/contacts/postEOI","CANCEL":"/api/v2/contacts/postCancelInterest","SHORTLIST":"/api/v1/common/AddBookmark","DECLINE":"/api/v2/contacts/postNotInterested","REMINDER":"/api/v2/contacts/postSendReminder","MESSAGE":"/api/v2/contacts/postWriteMessage","ACCEPT":"/api/v2/contacts/postAccept","WRITE_MESSAGE":"/api/v2/contacts/WriteMessage","IGNORE":"/api/v1/common/ignoreprofile","PHONEVERIFICATION":"/phone/jsmsDisplay","MEMBERSHIP":"/profile/mem_comparison.php","COMPLETEPROFILE":"/profile/viewprofile.php","PHOTO_UPLOAD":'/social/MobilePhotoUpload',"ACCEPT_MYJS":"/api/v2/contacts/postAccept","DECLINE_MYJS":"/api/v2/contacts/postNotInterested","EDITPROFILE":"/profile/viewprofile.php?ownview=1"}, actionDetail = {'CONTACT_DETAIL':'ContactDetails',"INITIATE":"postEOI","CANCEL":"cancel","DECLINE":"decline","REMINDER":"reminder","MESSAGE":"postWriteMessage","ACCEPT":"accept","WRITE_MESSAGE":"WriteMessage"},actionTemplate = {"CONTACT_DETAIL":"contactDetailOverlay","INITIATE":"buttonsOverlay","CANCEL":"confirmationOverlay","DECLINE":"confirmationOverlay","REMINDER":"writeMessageOverlay","MESSAGE":"","WRITE_MESSAGE":"writeMessageOverlay","ACCEPT":"confirmationOverlay"},current_index ='', params = {},iButton = {},profile_index = {}, writeMessageAction = false,cssMap={'001':'mainsp msg_srp','003':'mainsp srtlist','004':'mainsp shortlisted','083':'ot_sprtie ot_bell','007':'mainsp vcontact','085':'ot_sprtie ot_chk','084':'deleteDecline','086':'mainsp ot_msg cursp','018':"mainsp srp_phnicon",'020':'mainsp srp_phnicon','ignore':'mainsp ignore','088':'deleteDeclineNew','089':'newitcross','090':'newitchk','099':'reportAbuse mainsp'};
+var hideOverlay = 0;
 var mainHeight, msgWindowMSGID='',msgWindowCHATID='',msgWindowPageIndex=1,paramsForMsgWindow,indexForMsgWindow,msgWindowOn=0,MsgWindowLoading=0;
 function bgSetting() 
 {
@@ -551,23 +552,51 @@ function afterAction(result,action, index){
 		if(result.actiondetails.errmsglabel!=null)
 		{
 			hideForHide();
-			showCommonOverlay();
-			$("#errorMsgOverlay").show();
-			$("#errorMsgHead").html(result.actiondetails.errmsglabel);
-			var headerLabel = result.actiondetails.headerlabel;
-			var underscreen = headerLabel.match(/Underscreen/g);
-			if(underscreen!=''&& underscreen!=null)
-			{
-				disablePrimeButton(action,index);
-				$("#primeButton_"+index).html("Interest sent");
-			}
-			if(result.actiondetails.footerbutton!=null)
-			{
-				bindFooterButtons(result);
-			}
-			else {
-			    $("#closeLayer").show();
-			}
+      var headerLabel = result.actiondetails.headerlabel;
+      var underscreen = headerLabel.match(/Under Screen/g);
+      if(!hideOverlay)
+      {
+       showCommonOverlay();
+        $("#errorMsgOverlay").show();
+      $("#errorMsgHead").html(result.actiondetails.errmsglabel);
+      if(underscreen!=''&& underscreen!=null)
+      {
+        disablePrimeButton(action,index);
+        $("#primeButton_"+index).html(result.buttondetails.button.label);
+        if(result.buttondetails.button.label == "Interest Saved")
+        {
+          $("#"+index+'_3Dots').hide();
+          hideOverlay = 1;
+        }
+      }
+      if(result.actiondetails.footerbutton!=null)
+      {
+        bindFooterButtons(result);
+      }
+      else {
+          $("#closeLayer").show();
+      }
+      }
+      else
+      {
+        //showCommonOverlay();
+        //$("#errorMsgOverlay").show();
+        if(underscreen!=''&& underscreen!=null)
+        {
+          disablePrimeButton(action,index);
+          $("#primeButton_"+index).html(result.buttondetails.button.label);
+          if(result.buttondetails.button.label == "Interest Saved")
+          {
+            $("#"+index+'_3Dots').hide();
+          }
+         // $("#closeLayer").show();
+        }
+        $("#contactLoader").hide();
+        var current_index       =$("#selIndexId").val();
+    setTimeout(function(){$("#primeButton_"+current_index).attr("tabindex",-1).css('outline',0).focus();}, 0);
+  scrollOn();
+
+      }
 			return;
 		}
 		else{

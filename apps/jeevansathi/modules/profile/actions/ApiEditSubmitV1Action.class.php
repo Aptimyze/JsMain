@@ -95,7 +95,7 @@ class ApiEditSubmitV1Action extends sfActions
 					$request->setParameter('email', $this->loginProfile->getEMAIL());
 					$request->setParameter('password', $this->loginProfile->getPASSWORD());
 					$request->setParameter('fromIncompleteApi',1);
-                                        if(MobileCommon::isIOSApp()){
+                                        if(MobileCommon::isIOSApp() || MobileCommon::isAndroidApp()){
                                             $familyArr = $this->bakeIOSResponse(); 
                                             $request->setParameter('setFamilyArr',$familyArr);
                                         }
