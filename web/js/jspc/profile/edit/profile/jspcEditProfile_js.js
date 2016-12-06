@@ -152,10 +152,10 @@ EditApp = function(){
     
     var requiredArray             = {};
     var previousSectionValue      = {};
-    var updateViewColor12Map      = ["fav_book","fav_movie","fav_food","phone_res_status","phone_mob_status","alt_mob_status"]
+    var updateViewColor12Map      = ["fav_book","fav_movie","fav_food","phone_res_status","phone_mob_status","alt_mob_status","alt_email_status"]
     var multiFieldViewMap         = ["appearance","habbits","assets","religious_beliefs","special_cases","open_to_pets","living","plan_to_work","abroad","horo_match"];
     
-    var phoneStatusMap            = ["phone_res_status","phone_mob_status","alt_mob_status"];
+    var phoneStatusMap            = ["phone_res_status","phone_mob_status","alt_mob_status","alt_email_status"];
     var phoneDescriptionMap       = ["landline_desc","alt_mobile_desc","mobile_desc"];
     
     var autoSuggestRequest        = {}; 
@@ -2416,7 +2416,7 @@ EditApp = function(){
           validateSTD(event,$(self).attr('id'));
         },0);
       });
-      //Mobile Validation
+      //Mobile Validationx
       $(mobileFieldID).bind('keydown',function(event){
         if(false == whiteListingKeys(event,"onlyNums",$(event.target).val(),$(event.target).attr('myMaxLength')) ){
           return false;
@@ -3146,7 +3146,6 @@ EditApp = function(){
      * @returns {undefined}
      */
     onSectionSave = function(sectionId,showLoader){
-             
       //If no editing happens, then gracefully hide :D
       if(editedFields.hasOwnProperty(sectionId) === false){
         showHideEditSection(sectionId,"hide");
@@ -5319,7 +5318,6 @@ EditApp = function(){
         colorClass = "color12";
         removedClass = "color5 cursp";
       }
-      
       $(fieldId).addClass(colorClass).removeClass(removedClass);
     }
     
@@ -5691,6 +5689,9 @@ EditApp = function(){
           $('#emailParent').find('.avaliableTop').text("Not Available").removeClass('colorAva').addClass('color5').addClass(dispNone);
           fieldServerError = "Not available";
         }
+        if(fieldServerError == "Both emails are same"){
+          fieldServerError = "Same Email";
+        }
         
         if(fieldServerError == "Provide your email in proper format, e.g. raj1984@gmail.com"){
           fieldServerError = "Invalid format";
@@ -5710,6 +5711,10 @@ EditApp = function(){
         
         if(fieldServerError == "Provide your email in proper format, e.g. raj1984@gmail.com"){
           fieldServerError = "Invalid format";
+        }
+
+        if(fieldServerError == "Both emails are same"){
+          fieldServerError = "Same Email";
         }
         if(fieldServerError == "This Email is banned due to terms of use violation"){
           fieldServerError = "Email Banned";
