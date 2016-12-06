@@ -508,7 +508,10 @@ function fillRangeValues(sectionId){
         valueToFill = $(this).parent().find("ul li:first").html();
         //put last value if no value in casse of max range
         if($(this).hasClass("js-rangeDiv2"))
+        {
           valueToFill = $(this).parent().find("ul li:last").html();
+          $(this).parent().find("ul li:last").addClass("js-selected");
+        }
     }
     $(this).find('span').html(valueToFill);
   }); 
@@ -927,11 +930,13 @@ function disableRangeOption(fieldName,minValue){
       $(maxOption).trigger("click");
       return;
     }
-    
     //In case of income checl equal to also
     if(specialCheck && parseInt($(domEle).attr('data-dbVal')) <= parseInt(minValue) )
     {
-      $(maxOption).trigger("click");
+      if($(domEle).attr('data-dbval') != 19   )
+      {
+        $(maxOption).trigger("click");
+      }
     }
     else if(parseInt($(domEle).attr('data-dbVal')) < parseInt(minValue) )
     {
