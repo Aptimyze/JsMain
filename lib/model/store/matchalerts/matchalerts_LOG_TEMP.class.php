@@ -114,7 +114,7 @@ class matchalerts_LOG_TEMP extends TABLE
     catch (PDOException $e)
     {
                         //add mail/sms
-      throw new jsException($e);
+      jsException::nonCriticalError($e);
     }
   }
 
@@ -141,7 +141,7 @@ GROUP BY LOGICLEVEL, RecCount";
     catch (PDOException $e)
     {
                         //add mail/sms
-      throw new jsException($e);
+      jsException::nonCriticalError($e);
     }
   }
 
@@ -162,7 +162,7 @@ GROUP BY LOGICLEVEL, RecCount";
     catch (PDOException $e)
     {
                         //add mail/sms
-      throw new jsException($e);
+      jsException::nonCriticalError($e);
     }
   }
   public function getTotalCountGroupedByLogicAndReceiver()
@@ -182,7 +182,7 @@ GROUP BY LOGICLEVEL, RecCount";
     catch (PDOException $e)
     {
                         //add mail/sms
-      throw new jsException($e);
+      jsException::nonCriticalError($e);
     }
   }
 }

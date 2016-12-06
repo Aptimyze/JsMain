@@ -64,7 +64,7 @@ class matchalerts_LowTrendsMatchalertsCheck extends TABLE
                 catch (PDOException $e)
                 {
                         //add mail/sms
-                        throw new jsException($e);
+                        jsException::nonCriticalError($e);
                 }
         }
 
