@@ -144,7 +144,8 @@ var mobEditPage=(function(){
 			sliderDiv=sliderDiv.replace(/MainTabValue/g, current);
                         if((key=="Education"||key=="Kundli")&&(flag1==0))
                         {
-                            editWhatsNew["FocusDpp"] = "8";
+                            if(key=="Kundli")
+                                editWhatsNew["FocusDpp"] = "8";
                             $("#DetailsRightTab").html(current);
                             flag1=1;
                         }
