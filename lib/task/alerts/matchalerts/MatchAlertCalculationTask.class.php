@@ -8,7 +8,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $limitNtRec = 16;
 	private $limitTRec = 10;
 	private $limitTRecTemp = 10;
-	private $LowDppCountCachetime = 25200; // 1 week
+	private $LowDppCountCachetime = 604800; // 1 week
 	private $LowDppLimit = 10;
         private $limitCommunityRec = 10;
 	const clusterRecordLimit = 10;
