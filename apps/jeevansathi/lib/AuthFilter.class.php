@@ -69,7 +69,7 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto"))
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll"))
 					JsCommon::oldIncludes(false);
 				else
 					JsCommon::oldIncludes(true);
@@ -83,7 +83,6 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('FirstCall', 1);
 				
 				// Code to execute after the action execution, before the rendering
-				
 				$fromRegister="";
 				if($request->getParameter('module')=="register")
 					$fromRegister="y";
@@ -346,11 +345,13 @@ class AuthFilter extends sfFilter {
 		}
 		if($data[PROFILEID])
 		{
-			$profileObj= LoggedInProfile::getInstance();
-			if($profileObj->getPROFILEID()!='')
-			{
-				if(in_array($profileObj->getRELIGION(), array('1','4','7','9')))
-				$request->setParameter('showKundliList', 1);
+			if(!strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
+				$profileObj= LoggedInProfile::getInstance();
+				if($profileObj->getPROFILEID()!='')
+				{
+					if(in_array($profileObj->getRELIGION(), array('1','4','7','9')))
+					$request->setParameter('showKundliList', 1);
+				}
 			}
 		}
 		//code to fetch the revision number to clear local storage
