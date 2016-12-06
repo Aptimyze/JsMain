@@ -9,7 +9,7 @@ class incentive_PRE_ALLOCATION_LOG extends TABLE{
     
     public function getProfileIdsScoreForDate($entryDt){
         try{
-            $sql="SELECT PROFILEID,SCORE FROM incentive.PRE_ALLOCATION_LOG WHERE ALLOT_DT = :ALLOT_DT";
+            $sql="SELECT PROFILEID,SCORE,ALLOTED_TO FROM incentive.PRE_ALLOCATION_LOG WHERE ALLOT_DT = :ALLOT_DT";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":ALLOT_DT", $entryDt, PDO::PARAM_STR);
             $prep->execute();

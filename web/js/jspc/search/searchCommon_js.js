@@ -226,7 +226,8 @@ var verificationDocumentsList;
     '{highlightedProfile}': removeNull(highlightedProfile),
     '{filterReason}': removeNull(val1.filter_reason),
     '{showFilterReason}': toShowFilterReason,
-    '{mstatus}': removeNull(val1.mstatus)
+    '{mstatus}': removeNull(val1.mstatus),
+    '{userId}':removeNull(val1.profileid)
   };
   return mapping;
 }

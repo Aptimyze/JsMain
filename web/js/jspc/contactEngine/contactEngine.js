@@ -798,6 +798,16 @@ function cEButtonActionCalling(elementObj)
 	{
 		var buttonObj=new Button(elementObj);
 		buttonObj.request();
+		if(arrID[0] == "IGNORE"){
+			//console.log("ignore from view profile");
+			var chatData = elementObj.attr("data-chat");
+			if(chatData != undefined){
+				var chatSplitData = chatData.split(",");
+				if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+					updateNonRosterListOnCEAction({"user_id":chatSplitData[0],"action":chatSplitData[1]});
+				}
+			}
+		}
 	}
 	else
 	{

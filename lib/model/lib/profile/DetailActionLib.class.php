@@ -198,7 +198,7 @@ class DetailActionLib
 		$bOwnProfile = false;
 		if($actionObject->loginProfile->getPROFILEID() ===  $actionObject->profile->getPROFILEID())
 			$bOwnProfile = true;
-			
+
 		$bPhotoReq = $actionObject->PHOTO_REQUESTED ? 'Y' : 'N';
 		//contact_status will be initalzed by call to IsNoProfile
 		$return=ProfileCommon::getprofilePicForApi($actionObject->profile,$actionObject->contact_status,$login,$bPhotoReq);
@@ -737,31 +737,31 @@ class DetailActionLib
         $totalRec  = $request->getParameter("total_rec");
         $username  = $request->getParameter("username");
         
-        if(strlen($stype)>6)
+        if(strlen($stype)>6 && $stype!="{{stypeInfo}}")
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","Stype whitelisting 3","STYPE :$stype:$http_msg");
         }
         
-        if(strlen($sort)>3)
+        if(strlen($sort)>3 && $sort!="null")
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","Sort whitelisting 3","SORT :$sort:$http_msg");
         }
         
-        if($contactId && !is_numeric(explode("_",$contactId)[0]) && explode("_",$contactId)[0]!='contactId')
+        if($contactId && !is_numeric(explode("_",$contactId)[0]) && explode("_",$contactId)[0]!='contactId' && $contactId!='contactId')
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","contact Id whitelisting 3","CONTACT_ID :contactId:$http_msg");
         }
         
-        if($totalRec && !is_numeric($totalRec))
+        if($totalRec && !is_numeric($totalRec) && $totalRec != "{total_rec}")
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","total records whitelisting 3","TOTAL_REC :$totalRec:$http_msg");
         }
         
-        if((strlen($username)>=3 && !ctype_alpha(substr($username,0,3))) || strlen($username)>10)
+        if((strlen($username)>=3 && !ctype_alpha(substr($username,0,3))) || strlen($username)>15)
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","usrname whitelisting 3","USERNAME :$username:$http_msg");

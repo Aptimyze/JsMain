@@ -26,7 +26,7 @@ class Visitors
 	{
 		return $value["VIEWER"];
 	}
-	public function getVisitorProfile($page="",$profileCount="",$infoTypenav="")
+	public function getVisitorProfile($page="",$profileCount="",$infoTypenav="",$memcacheObjToSetAllVisitorsKey="")
 	{
 		$skipContactedType = SkipArrayCondition::$VISITOR;
 		$skipProfileObj    = SkipProfile::getInstance($this->profile->getPROFILEID());
@@ -63,6 +63,10 @@ class Visitors
 			}
 		}
 		$returnProfiles = $this->sortArray($returnProfiles);
+                
+                if($memcacheObjToSetAllVisitorsKey)
+                    $memcacheObjToSetAllVisitorsKey->setVISITORS_ALL(count($returnProfiles));
+                
 		if(($page || $profileCount) && is_array($returnProfiles))
 		{
 			$count = count($returnProfiles);
@@ -202,9 +206,9 @@ class Visitors
 			$filtercheck = UserFilterCheck::getInstance($this->profile,$profile);
 			if ($filtercheck->getFilteredContact($action = "VISIT"))
 				unset($this->visitorsProfile[$key]);
+                        }
                     }
 		}
-	}
 	
 	public function sortArray($returnProfiles)
 	{

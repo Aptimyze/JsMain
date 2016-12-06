@@ -56,10 +56,11 @@ class MIS_INAPPROPRIATE_USERS_REPORT extends TABLE
 
         }
   }
-  public function getReportForADate($date)
+  public function getReportForADate($date,$minTotalScore=0)
   {
     try {  
-      $sql= "SELECT * FROM MIS.INAPPROPRIATE_USERS_REPORT WHERE DATE = :EDATE ORDER BY TOTAL_SCORE DESC";
+      $minScoreQuery = $minTotalScore ? "AND TOTAL_SCORE >= $minTotalScore " :"";
+      $sql= "SELECT * FROM MIS.INAPPROPRIATE_USERS_REPORT WHERE DATE = :EDATE $minScoreQuery ORDER BY TOTAL_SCORE DESC";
       $prep=$this->db->prepare($sql);
       $prep->bindValue(":EDATE",$date,PDO::PARAM_STR);
       $prep->execute();
