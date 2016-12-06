@@ -96,8 +96,10 @@ class FeaturedProfile extends MembersLookingForMe
 				$producerObj=new Producer();
 				if($producerObj->getRabbitMQServerConnected())
 				{
-					$updateSeenData = array('process' =>'UPDATE_FEATURED_PROFILE','data'=>array('type' => '','body'=>array("profileid"=>$this->loggedInProfileObj->getPROFILEID(),"id"=>$idArr[0])), 'redeliveryCount'=>0 );
-					$producerObj->sendMessage($updateSeenData);
+					if($this->loggedInProfileObj instanceof LoggedInProfile)
+						$profileid = $this->loggedInProfileObj->getPROFILEID();
+					$updateFeaturedData = array('process' =>'UPDATE_FEATURED_PROFILE','data'=>array('type' => '','body'=>array("profileid"=>$profileid,"id"=>$idArr[0])), 'redeliveryCount'=>0 );
+					$producerObj->sendMessage($updateFeaturedData);
 				}
 				else
 				{
@@ -192,8 +194,10 @@ class FeaturedProfile extends MembersLookingForMe
 						$producerObj=new Producer();
 						if($producerObj->getRabbitMQServerConnected())
 						{
-							$updateSeenData = array('process' =>'UPDATE_FEATURED_PROFILE','data'=>array('type' => '','body'=>array("profileid"=>$this->loggedInProfileObj->getPROFILEID(),"id"=>$outputId)), 'redeliveryCount'=>0 );
-							$producerObj->sendMessage($updateSeenData);
+							if($this->loggedInProfileObj instanceof LoggedInProfile)
+								$profileid = $this->loggedInProfileObj->getPROFILEID();
+							$updateFeaturedData = array('process' =>'UPDATE_FEATURED_PROFILE','data'=>array('type' => '','body'=>array("profileid"=>$profileid,"id"=>$outputId)), 'redeliveryCount'=>0 );
+							$producerObj->sendMessage($updateFeaturedData);
 						}
 						else
 						{
