@@ -28,6 +28,7 @@ class versionupgrade_v1Action extends sfActions
 		$this->defaultArray["titleButtonB"]="Skip";
 		$this->defaultArray["RATE_US_AUTO"]="true";
 		$this->defaultArray["RATE_US_MANUAL"]="true";
+		$this->defaultArray["RATE_US_BEHAVIORAL"]="true";
 		$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$apiObj->setResponseBody($this->defaultArray);
 		$apiObj->generateResponse();
