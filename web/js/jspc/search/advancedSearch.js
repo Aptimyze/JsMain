@@ -194,6 +194,8 @@ function updateCastOption(religionValArray){
     }
   }
   $(casteField).trigger("chosen:updated");
+  var getRemId =$(casteField).attr('id');
+  $('#'+getRemId+'-rem').css('visibility','hidden');
   
   if(isCasteVisible === false){
     showHideField('#partner_caste_arr',false,true);
@@ -224,6 +226,7 @@ function showHideField(fieldSelector,bShow,clearField){
   }
   else{
     $(parentField).hide();
+    $(fieldSelector+'-rem').css('visibility','hidden');
   }
   
   //IF Chosen then empty  all selected value and update the list
