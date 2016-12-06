@@ -71,6 +71,7 @@ class InboxMobileAppV2
                                 "ANCESTRAL_ORIGIN",
 				"NAME_OF_USER",
 				),
+			
 				"INTEREST_EXPIRING"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -86,7 +87,6 @@ class InboxMobileAppV2
 				"subscription_icon",
 				"subscription_text",
 				"TIME",
-				"MESSAGE",
 				"SEEN",
 				"edu_level_new",
 				"userloginstatus",

@@ -927,7 +927,7 @@ public function getSendersPending($profileids)
 						{
 							foreach($value1 as $keyName=>$keyValue)
 							{
-								$arr[] = $keyName."<= :VALUE".$count;
+								$arr[] = $keyName."< :VALUE".$count;
 								$bindArr["VALUE".$count]["VALUE"] = $keyValue;
 								if(in_array($keyName,$string))
 									$bindArr["VALUE".$count]["TYPE"] = "STRING";

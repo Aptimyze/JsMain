@@ -1079,7 +1079,7 @@ function forceJumpToPage(idToJump){
 			else
 				var top = $('#iddf1').offset().top;
 
-			if ( $('#interestExpiringMessage').hasClass('dispnone'))
+			if ( idToJump != 1 )
 			{
 				$("html, body").scrollTop(top);		
 			}
