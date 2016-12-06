@@ -592,7 +592,7 @@ $js_arr[]=array("jspc/bounceMail/bounceMailDetection_js" => "1");
 $js_arr[]=array("jspc/contactus/sw"   => "3");
 $js_arr[]=array("jsms/settings/mobDeleteProfile_js"              => "16");
 $js_arr[]=array("commonExpiration_js"  => "2");
-$js_arr[]=array("sw"      => "4");
+$js_arr[]=array("sw"       => "5");
 $js_arr[]=array("main"      => "4");
 $js_arr[]=array("jsms/common/verificationIcon_js"     => "3");
 $js_arr[]=array("jsms/settings/settings_js"     => "2");
@@ -620,6 +620,8 @@ $js_arr[]=array("jspc/chat/core"    => "3");
 $js_arr[]=array("jspc/chat/converse_js"    => "3");
 $js_arr[]=array("jspc/chat/aes"    => "3");
 $js_arr[]=array("/web/converse"    => "3");
+$js_arr[]=array(" /web/billing/billing_v2"   => "1");
+$js_arr[]=array("/web/billing/billing"   => "1");
 return $js_arr;
 }
 function getJavascript(){
