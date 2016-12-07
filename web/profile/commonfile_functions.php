@@ -321,7 +321,7 @@ $js_arr[]=array("header_js"       => "14");
 $js_arr[]=array("homepage_js"     => "6");
 $js_arr[]=array("edit_page_js"    => "4");
 $js_arr[]=array("city_country_common"     => "7");
-$js_arr[]=array("tracking_js"     => "6");
+$js_arr[]=array("tracking_js"      => "7");
 $js_arr[]=array("chk_drp_js"    => "4");
 $js_arr[]=array("viewSimilar_js"    => "7");
 $js_arr[]=array("textbox_hinter"    => "4");
