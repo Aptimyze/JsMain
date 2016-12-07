@@ -299,6 +299,17 @@
                     <p class="color12" id="emailLabelParent">
                       Alternate Email id
                     </p>
+
+                    ~if $arrOutDisplay.contact.my_alt_email eq NULL`
+                    <div class="clearfix pos-rel">
+                      <div class="fl wid74p">
+                        <p class="color11">
+                          <span id="alt_mobileView" class="color5">Not filled in</span>
+                        </p>
+
+                      </div>
+                    </div>
+                    ~else`
                     <div class="clearfix pos-rel">
                       <div class="fl wid70p">
                         <p class="color11">
@@ -310,8 +321,8 @@
                       <div class="fr wid25p pos-abs right0">
                           <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color11" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
                       </div>
-
                     </div>
+                    ~/if`
                     ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify`
                       <div class="f12 color12 pt5">Verify email id to receive mails.</div>
                     ~/if`
