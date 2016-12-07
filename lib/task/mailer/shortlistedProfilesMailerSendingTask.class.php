@@ -125,7 +125,7 @@ EOF;
         $subject = "You may send an interest to these members you have shortlisted recently | ".$date;
 		$tpl->setSubject($subject);
         $contactNumOb=new newjs_JPROFILE_CONTACT();
-        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
         if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
         {
            $ccEmail =  $numArray['0']['ALT_EMAIL'];    
