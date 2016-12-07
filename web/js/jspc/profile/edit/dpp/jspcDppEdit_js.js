@@ -463,7 +463,6 @@ function fillValuesInChosen(sectionId){
       
       //show remove label if values are present
      var getID = $(this).attr('id').split('-')[1];
-     console.log(getID);
      $('#'+getID+'-rem').css('visibility','visible');
 
     }
