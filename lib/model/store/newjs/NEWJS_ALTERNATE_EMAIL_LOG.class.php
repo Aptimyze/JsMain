@@ -24,10 +24,11 @@ class NEWJS_ALTERNATE_EMAIL_LOG extends TABLE {
 	}
         
         public function insertEmailChange($profileid,$email)
-	{  
+	{ 
+
 		try
 		{
-			
+			$email=$email?$email:"";	
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
 			$sql = "INSERT INTO newjs.ALTERNATE_EMAIL_CHANGE_LOG(PROFILEID,CHANGE_DATE,EMAIL,STATUS) VALUES (:PROFILEID,'$timeNow',:EMAIL,'N')";
 			$prep = $this->db->prepare($sql);
