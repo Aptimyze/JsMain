@@ -591,6 +591,17 @@
   </div>
   <!--end:second part--> 
 </div>
+<div id="js-alternateEmailConfirmLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white">
+<div class="phnvp4 f17 fontreg color11 phnvbdr4">Email Verification</div>
+<div class="color11">
+<!--start:div-->
+<div class="phnvwid3 mauto pt40 pb27 fontlig">
+<p id='altEmailConfirmText' class=" f17 txtc lh26"></p>
+</div>
+</div>
+<!--end:layer 1-->
+</div>    
+    
 <script type="text/javascript">
   var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
   var senderEmail = "~$loggedInEmail`";
