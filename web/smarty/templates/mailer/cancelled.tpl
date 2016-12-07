@@ -196,22 +196,33 @@
     </td>
     <td  width="20"></td>
   </tr>
-  ~if $photo eq 0`
-    <tr>
-      <td width="20"></td>
-      <td width="560">
-      <strong>To get better responses:</strong>
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td height="25"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
-          <td>Your photo is missing</td>
-        </tr>
-      </table>
-      </td>
-      <td  width="20"></td>
-    </tr>
-  ~/if`
 
+  <tr>
+    <td style="border-bottom:1px #c1bfbf dotted"></td>
+    <td height="10" style="border-bottom:1px #c1bfbf dotted"></td>
+    <td style="border-bottom:1px #c1bfbf dotted"></td>
+  </tr>
+
+ ~if $photo eq 0`
+  <tr>
+    <td></td>
+    <td height="10"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td height="15"></td>
+    <td>
+    <strong>To get better responses:</strong>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="15"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
+    <td height="25"><a href="(LINK)UPLOAD_PHOTO:profileid=~$profileid`(/LINK)" style="color:#003a7e; text-decoration:underline;">Upload Your Photo</a> </td>
+  </tr>
+</table>
+    </td>
+    <td></td>
+  </tr>
+  ~/if`
 
   <tr>
     <td></td>
