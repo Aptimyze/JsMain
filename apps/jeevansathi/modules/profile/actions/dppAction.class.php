@@ -214,7 +214,14 @@ class dppAction extends sfAction {
                                         foreach($this->existingData as $ky=>$vl){
                                           if(DPPConstants::$prefilledKeyArray[$key1][$value]==$vl[key]){
                                             $this->arrOut[$key1]["fieldArray"][$value]["prefilledMap"]=$ky;
+
+
                                           }
+                                         if($vl['key'] == "P_MATCHCOUNT")
+                                         {
+                                         	$this->mutualMatchCount = $vl["value"];
+                                         }
+
                                         }
 
 		}

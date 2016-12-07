@@ -107,7 +107,7 @@ class JsMemcache extends sfMemcacheCache{
 	public function releaseLock($fp) {
 		/* removed the function defination as file locking does not make any sense here */
 	}
-	public function set($key,$value,$lifetime = NULL,$retryCount=0)
+	public function set($key,$value,$lifetime = NULL,$retryCount=0,$jsonEncode='')
 	{
 		if(self::isRedis())
 		{
@@ -132,7 +132,10 @@ class JsMemcache extends sfMemcacheCache{
 					if(!$lifetime)
 						$lifetime= 3600;
 					$key = (string)$key;
-					$value = serialize($value);
+					if($jsonEncode=='1')
+						$value = json_encode($value);
+					else
+						$value = serialize($value);
 					$this->client->setEx($key,$lifetime,$value);
 					if($retryCount == 1)
 						jsException::log("S-redisClusters  ->".$key." -- ".$this->get($key));
@@ -669,7 +672,7 @@ class JsMemcache extends sfMemcacheCache{
   }
 
   //This function uses pipeline to save all values in arr corresponding to the given key in the redis
-  public function storeDataInCacheByPipeline($key,$arr)
+  public function storeDataInCacheByPipeline($key,$arr,$expiryTime=3600)
   {
   	if(self::isRedis())
   	{
@@ -681,6 +684,7 @@ class JsMemcache extends sfMemcacheCache{
 
   				foreach($arr as $k=>$value) {
   					$pipe->sadd($key,$value); //adds $value to $key
+  					$pipe->expire($key, $expiryTime);
   				}
   				$resultArr = $pipe->execute();
   				return $resultArr;
@@ -693,7 +697,7 @@ class JsMemcache extends sfMemcacheCache{
   	}
   }
 
-  public function deleteSpecificDataFromCache($key,$value)
+  public function deleteSpecificDataFromCache($key,$value,$expiryTime=3600)
   {
   	if(self::isRedis())
   	{
@@ -701,7 +705,9 @@ class JsMemcache extends sfMemcacheCache{
   		{
   			try
   			{
-  				return $this->client->srem($key,$value);
+  				$returnVal = $this->client->srem($key,$value);
+  				$this->client->expire($key, $expiryTime);
+  				return $returnVal;		
   			}
   			catch (Exception $e)
   			{
@@ -711,7 +717,7 @@ class JsMemcache extends sfMemcacheCache{
   	}
   }
 
-  public function addDataToCache($key,$value)
+  public function addDataToCache($key,$value,$expiryTime=3600)
   {
   	if(self::isRedis())
   	{
@@ -719,7 +725,9 @@ class JsMemcache extends sfMemcacheCache{
   		{
   			try
   			{
-  				return $this->client->sadd($key,$value);
+  				$returnVal = $this->client->sadd($key,$value);
+  				$this->client->expire($key, $expiryTime);
+  				return $returnVal;
   			}
   			catch (Exception $e)
   			{

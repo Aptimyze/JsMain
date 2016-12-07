@@ -111,6 +111,10 @@ class inboxActions extends sfActions
         $this->matchAlertCountResetLogic($profileObj);
       }
       
+                        if ($infoType == "VISITORS") {
+                            $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                        }
+      
 			if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
 			{
 				$this->count= $profileCommunication->getCount($module,$profileObj,$infoTypenav);
@@ -266,6 +270,34 @@ class inboxActions extends sfActions
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
+					//
+					case "10":
+					$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
+					if($currentCount)
+					{
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+												$contactsObj = new ContactsRecords();
+												$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
+                                                       
+                                                }
+						$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);
+						$profileMemcacheObj->updateMemcache();
+					}
+					break;
 
 			}
 			$respObj = ApiResponseHandler::getInstance();
@@ -346,6 +378,9 @@ public function executePerformV2(sfWebRequest $request)
         if ($infoType == "MATCH_ALERT") {
           $this->matchAlertCountResetLogic($profileObj);
         }
+                                if ($infoType == "VISITORS") {
+                                    $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                                }
        
 				if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
 				{
@@ -551,6 +586,33 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["title2"]='I Declined';
 					$response2["infotypeid2"]=11; 
 					$response2["url"]="/profile/contacts_made_received.php?page=decline&filter=M";
+					$profileMemcacheObj = new ProfileMemcacheService($profileObj);
+						$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
+						if($currentCount)
+						{
+							if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+							{
+								$producerObj=new Producer();
+								if($producerObj->getRabbitMQServerConnected())
+								{
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
+									$producerObj->sendMessage($updateSeenData);
+								}
+								else
+								{
+							              $this->sendMail();
+								}
+							}
+							else
+							{
+
+								$contactsObj = new ContactsRecords();
+								$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
+                                                               
+							}
+							$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);
+							$profileMemcacheObj->updateMemcache();
+						}
 					break;
 					
 					case 'MATCH_ALERT': 
@@ -639,8 +701,29 @@ public function executePerformV2(sfWebRequest $request)
 						break;
 
 					case 'VISITORS': 
-					$response2["subtitle"]='Profile Visitors '.$response2['total'];
-					$response2["title2"]=null;
+                                        if(MobileCommon::isDesktop()){
+                                            if($infoTypenav["matchedOrAll"]=="A")
+                                                $response2["subtitle"]='All Profile Visitors '.$response2['total'];
+                                            else
+                                                $response2["subtitle"]="Matching Visitors ".$response2['total'];
+                                            $response2["title2"]=null;
+                                        }
+                                        else if($infoTypenav["matchedOrAll"]=="" && !MobileCommon::isNewMobileSite()){
+                                            $response2["subtitle"]='Profile Visitors '.$response2['total'];
+                                            $response2["title2"]=null;
+                                        }
+                                        elseif($infoTypenav["matchedOrAll"]=="A"){
+                                            $response2["subtitle"]='All Visitors '.$response2['total'];
+                                            $response2["title2"]="Matching"; 
+                                            $response2["url"]="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=M";
+                                            $response2["visitorAllOrMatching"]='A';
+                                        }
+                                        else{
+                                            $response2["title2"]='All Visitors';
+                                            $response2["subtitle"]="Matching ".$response2['total']; 
+                                            $response2["url"]="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=A";
+                                            $response2["visitorAllOrMatching"]='M';
+                                        }
 					break;
 					
 					case 'SHORTLIST': 
@@ -809,6 +892,7 @@ public function executePerformV2(sfWebRequest $request)
 				$this->title2=$ResponseArr['title2'];
 				$this->infotypeid2=$ResponseArr['infotypeid2'];
 				$this->infotype=$ResponseArr['infotype'];
+                                $this->visitorAllOrMatching = $ResponseArr['visitorAllOrMatching'];
 				$this->noresultmessage = $ResponseArr["noresultmessage"];
 				$this->_SEARCH_RESULTS_PER_PAGE = ProfileInformationModuleMap::$ContactCenterAPP[$ResponseArr['infotype']]['COUNT'];	
 				$this->heading = $ResponseArr['subtitle'];

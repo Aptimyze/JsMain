@@ -20,7 +20,7 @@ class SearchUtility
 	* @param profile to ignore is passed in the url (optional)
 	* @param noAwaitingContacts exclude awaiting contacts.
 	*/
-	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '',$showOnlineArr='',$getFromCache = 0)
+	function removeProfileFromSearch($SearchParamtersObj,$seperator,$loggedInProfileObj,$profileFromUrl="",$noAwaitingContacts='',$removeMatchAlerts="",$notInArray = '',$showOnlineArr='',$getFromCache = 0,$tempContacts = "")
 	{
 		//print_r($SearchParamtersObj);die;
 		if($profileFromUrl)
@@ -68,13 +68,19 @@ class SearchUtility
                                                 }
                                         }
 					/** matchAlerts Profile **/
+					
 					if($removeMatchAlerts)
 					{
 						$matchalerts_LOG = new matchalerts_LOG();
 						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
 					}
 				}
-
+				// adding code to remove temporary contacts sent by the user while the user is unscreened.
+				if($tempContacts)
+				{		
+					$contactsTempObj =  new NEWJS_CONTACTS_TEMP(SearchConfig::getSearchDb());
+					$hideArr.= $contactsTempObj->getTempContactProfilesForUser($pid,$seperator);
+				}
 				if($SearchParamtersObj->getONLINE()==SearchConfig::$onlineSearchFlag)
 				/* For Online search  */
 				{
@@ -272,9 +278,14 @@ class SearchUtility
 					$searchParamsSetter['CITY_INDIA']='';
 					$searchParamsSetter['CITY_RES']='';
 				}
-				elseif($cluster == 'STATE')
+                                elseif($cluster == 'COUNTRY_RES'){
+					$searchParamsSetter['STATE']='';
 					$searchParamsSetter['CITY_INDIA']='';
-				elseif($cluster=='OCCUPATION_GROUPING')
+					$searchParamsSetter['CITY_RES']='';
+                                }elseif($cluster == 'STATE'){
+					$searchParamsSetter['CITY_INDIA']='';
+					$searchParamsSetter['CITY_RES']='';
+                                }elseif($cluster=='OCCUPATION_GROUPING')
 					$searchParamsSetter['OCCUPATION']='';
 				elseif($cluster=='EDUCATION_GROUPING')
 					$searchParamsSetter['EDU_LEVEL_NEW']='';
@@ -523,6 +534,14 @@ class SearchUtility
 						$clusterVal='';
 					}
 				}
+                                if($cluster=='COUNTRY_RES'){
+                                        $selectedVAl = explode(",",$clusterVal);
+                                        if(!in_array(51, $selectedVAl)){
+                                                $searchParamsSetter['STATE']='';
+                                                $searchParamsSetter['CITY_INDIA']='';
+                                                $searchParamsSetter['CITY_RES']='';
+                                        }
+                                }
 				$searchParamsSetter[$cluster]=$clusterVal;
 			}
 		}

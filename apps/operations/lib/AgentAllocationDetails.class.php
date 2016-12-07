@@ -48,23 +48,23 @@ class AgentAllocationDetails
 			if($subMethod=="LIMIT_EXCEED" || $subMethod=='LIMIT_EXCEED_RENEWAL')
 			{
 				/*  Check added for ignoring Renewal Agents, as discussed with Rohan */
-				$priv1="%ExcRnw%";
+				/*$priv1="%ExcRnw%";
 				$renewalAgents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges($priv1);
 				if(!is_array($renewalAgents))
-					$renewalAgents =array();
+					$renewalAgents =array();*/
 				/* Check ended */	
 
 				$resArr1 = array();
 				for ($i = 0; $i < count($agents); $i++){
 					$agent_name = explode(":",$agents[$i]);
-					//if(!in_array($agent_name[0],$renewalAgents))
 					$Allagents[]=$agent_name[0];
 				}
-				if($subMethod=='LIMIT_EXCEED_RENEWAL')
+				/*if($subMethod=='LIMIT_EXCEED_RENEWAL')
 					$restofagents =array_intersect($Allagents,$renewalAgents);
 				elseif($subMethod=='LIMIT_EXCEED')
-					$restofagents =array_diff($Allagents,$renewalAgents);
+					$restofagents =array_diff($Allagents,$renewalAgents);*/
 
+				$restofagents =$Allagents;
 				$restofagents =array_unique($restofagents);
 				$restofagents =array_values($restofagents);
 				for ($k = 0; $k < count($agents); $k++){
@@ -1247,6 +1247,10 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 		$fields ="USERNAME,EMAIL,PROFILEID,AGE,CITY_RES,AGE,ACTIVATED,GENDER,ENTRY_DT,LAST_LOGIN_DT,PHONE_MOB,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,HAVEPHOTO,SUBSCRIPTION,RELATION,DTOFBIRTH,PINCODE,CONTACT,ISD";
 
 	$profileStr=implode(",",$profilesArr);
+	if($subMethod=='NEW_PROFILES' || $subMethod=='FOLLOWUP') {
+		$billPurObj = new billing_PURCHASES('newjs_slave');
+		$everPaidProfiles = $billPurObj->isPaidEver($profileStr);
+	}
 	if($profileStr){
 		$crmUtilityObj          =new crmUtility();	
 		$cityObj		=new newjs_CITY_NEW();
@@ -1293,6 +1297,13 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
                         		$setProfileArr[$pid]["RES_NO"] =$isdNo."-".$setProfileArr[$pid]["RES_NO"];
 				if($setProfileArr[$pid]["ALTERNATE_NO"] && $isdNo)
 					$setProfileArr[$pid]["ALTERNATE_NO"] =$isdNo."-".$setProfileArr[$pid]["ALTERNATE_NO"];
+				if($subMethod=='NEW_PROFILES' || $subMethod=='FOLLOWUP') {
+					if(in_array($pid, array_keys($everPaidProfiles))) {
+						$setProfileArr[$pid]["EVER_PAID"] = 'Y';
+					} else {
+						$setProfileArr[$pid]["EVER_PAID"] = 'N';
+					}
+				}
 			}
 			
 			$setProfileArr[$pid]["CHECKSUM"]         =md5($pid)."i".$pid;

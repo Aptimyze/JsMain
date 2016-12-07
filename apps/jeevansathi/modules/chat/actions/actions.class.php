@@ -30,6 +30,19 @@ class chatActions extends sfActions
 		die;
 	}
 
+	public function executeLogChatListingFetchTimeoutV1(sfwebrequest $request){
+		$username = $request->getParameter("username");
+		if($username){
+			$chatLoggingObj = new Chat();
+	        $chatLoggingObj->storeChatTimeoutProfiles($username);
+	        unset($chatLoggingObj);
+	    }
+        $apiResponseHandlerObj = ApiResponseHandler::getInstance();
+		$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$apiResponseHandlerObj->generateResponse();
+		die;
+	}
+
 	public function executeChatUserAuthenticationV1(sfWebRequest $request)
 	{
 		$apiResponseHandlerObj = ApiResponseHandler::getInstance();

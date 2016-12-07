@@ -16,6 +16,12 @@ class BellCounts
 	                $bellCounts['PHOTO_REQUEST_NEW']=JsCommon::convert99($profileMemcacheObj->get("PHOTO_REQUEST_NEW"));
 	        $justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
 			$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
+
+			 $declinedMeNewMemcacheCount=$profileMemcacheObj->get('DEC_ME_NEW');
+			 if($declinedMeNewMemcacheCount)
+			$bellCounts['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
+			else
+				$bellCounts['DEC_ME_NEW'] = 0;
             //            $justJoinMatchArr = SearchCommonFunctions::getJustJoinedMatches($profileObj); 
                         //$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinMatchArr['CNT']);
             
@@ -23,11 +29,19 @@ class BellCounts
 				if(!$bellCounts["FILTERED_NEW"]){
 					$bellCounts["FILTERED_NEW"] = 0;
 				}
-			if(MobileCommon::isApp()=="I" ||( MobileCommon::isApp()=="A" && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")  && sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")<48))
+			$isApp = MobileCommon::isApp();
+			$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
+
+			if($isApp=="I" ||( $isApp=="A" && $appVersion  && $appVersion<48))
 			{
 				$bellCounts["FILTERED_NEW"] = 0;
+			}	
+
+			if(!(($isApp=="I" && $appVersion >=3.9) || ( $isApp=="A" && $appVersion>=79) || !$isApp))	
+			{	
+				$bellCounts['DEC_ME_NEW']=0;
 			}
-			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $profileMemcacheObj->get("PHOTO_REQUEST_NEW") + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"]);
+			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $profileMemcacheObj->get("PHOTO_REQUEST_NEW") + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"] + $bellCounts['DEC_ME_NEW']);
 			return $bellCounts;
 		}
         }
@@ -111,7 +125,14 @@ class BellCounts
 				if(!$countDetails['DAILY_MATCHES_NEW']){
 					$countDetails['DAILY_MATCHES_NEW']=0;
 				}
-				$countDetails['TOTAL_NEW'] = $countDetails['PHOTO_REQUEST_NEW'] + $countDetails['MESSAGE_NEW'] + $countDetails['ACC_ME_NEW'] + $countDetails['AWAITING_RESPONSE_NEW'] + $countDetails['FILTERED_NEW'] + $countDetails['NEW_MATCHES'] + $countDetails['DAILY_MATCHES_NEW'];
+				$declinedMeNewMemcacheCount = $profileMemcacheObj->get('DEC_ME_NEW');
+				if($declinedMeNewMemcacheCount){
+					$countDetails['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
+				}
+				else{
+					$countDetails['DEC_ME_NEW']=0;
+				}
+				$countDetails['TOTAL_NEW'] = $countDetails['PHOTO_REQUEST_NEW'] + $countDetails['MESSAGE_NEW'] + $countDetails['ACC_ME_NEW'] + $countDetails['AWAITING_RESPONSE_NEW'] + $countDetails['FILTERED_NEW'] + $countDetails['NEW_MATCHES'] + $countDetails['DAILY_MATCHES_NEW']+$countDetails['DEC_ME_NEW'];
 				return $countDetails;
         	}
         }
@@ -176,6 +197,11 @@ class BellCounts
 				$countDetails["FILTERED_NEW"] = $profileMemcacheObj->get("FILTERED_NEW");
 				if(!$countDetails["FILTERED_NEW"]){
 					$countDetails["FILTERED_NEW"] = 0;
+				}
+
+				$countDetails['DEC_ME_NEW'] = $profileMemcacheObj->get('DEC_ME_NEW');
+				if(!$countDetails['DEC_ME_NEW']){
+					$countDetails['DEC_ME_NEW'] = 0;
 				}
 				
 				foreach($countDetails as $key=>$val){

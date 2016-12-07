@@ -86,7 +86,7 @@
 				<!--start:div-->
 				<div class="fr puwid7">
 					<div class="pup11">
-						<p class="f15 fontlig color11">Username: ~$profileData['USERNAME']`</p>
+						<p class="f15 fontlig color11">Username: ~$profileData['USERNAME']`   <font style="font-size:16px;" class="red"> Gender: ~$profileData['GENDER']`</font></p>
 						<!--start:crop pictures-->
 						<div class="clearfix pt10">
 							<div class="fl">

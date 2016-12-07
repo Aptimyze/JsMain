@@ -447,6 +447,8 @@ class ContactsRecords
 				$params["VIEWEDTYPE"] = "RECEIVER";
 			elseif ($type == ContactHandler::ACCEPT)
 				$params["VIEWEDTYPE"] = "SENDER";
+			else if($type == ContactHandler::DECLINE)
+				$params["VIEWEDTYPE"] = "SENDER";
 			$timeout = WebServicesTimeOut::$contactServiceTimeout["updateseen"];
 			$result = CommonUtility::webServiceRequestHandler($url, $params, "POST",$timeout);
 		}

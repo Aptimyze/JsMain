@@ -14,6 +14,7 @@ class SearchParamters
 	protected $LAGE;
 	protected $HAGE;
 	protected $HAVEPHOTO;
+	protected $PHOTO_VISIBILITY_LOGGEDIN;
 	protected $MANGLIK;
 	protected $MSTATUS;
 	protected $HAVECHILD;
@@ -221,6 +222,13 @@ class SearchParamters
 			$this->HAVEPHOTO = $HAVEPHOTO; 
 	}
         public function getHAVEPHOTO() { return $this->HAVEPHOTO; }
+        public function setPHOTO_VISIBILITY_LOGGEDIN($PHOTO_VISIBILITY_LOGGEDIN)
+        {
+                $validInput = SearchInputValidation::validateInput("PHOTO_VISIBILITY_LOGGEDIN",$PHOTO_VISIBILITY_LOGGEDIN);
+                if($validInput)
+                        $this->PHOTO_VISIBILITY_LOGGEDIN = $PHOTO_VISIBILITY_LOGGEDIN;
+        }
+        public function getPHOTO_VISIBILITY_LOGGEDIN() { return $this->PHOTO_VISIBILITY_LOGGEDIN; }
 	public function setMANGLIK($MANGLIK) 
 	{ 
                 // append Dont know to search string if 'not manglik' is selected. Exclude cluster search by APPLY_ONLY_CLUSTER enum.
@@ -299,8 +307,13 @@ class SearchParamters
 	public function setHANDICAPPED($HANDICAPPED) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("HANDICAPPED",$HANDICAPPED);
-                if($validInput)
-			$this->HANDICAPPED = $HANDICAPPED; 
+                if($validInput){
+                    if(strstr($HANDICAPPED,SearchConfig::_noneValueHandicapped) && !strstr($HANDICAPPED,SearchConfig::_nullValueAttributeLabel))   
+			$this->HANDICAPPED = $HANDICAPPED.",".SearchConfig::_nullValueAttributeLabel;
+                    else  
+			$this->HANDICAPPED = $HANDICAPPED;
+                    
+                }
 	}
 	public function getHANDICAPPED() { return $this->HANDICAPPED; }
 	public function setOCCUPATION($OCCUPATION) 

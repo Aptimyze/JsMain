@@ -80,7 +80,7 @@ class detailedAction extends sfAction
                 
                 // VA Whitelisting
                 //whiteListing of parameters
-                //DetailActionLib::whiteListParams($request);
+                DetailActionLib::whiteListParams($request);
                 
 		// Do Horscope Check
 		DetailActionLib::DoHorscope_Check();
@@ -1328,7 +1328,8 @@ class detailedAction extends sfAction
                 $this->searchId= $request->getParameter('searchid');
 		$this->finalResponse=json_encode($this->arrOutDisplay);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
-        //print_r($this->arrOutDisplay);die;
+                $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
+        //print_r($this->arrOutDisplay);
         $this->setTemplate("_jspcViewProfile/jspcViewProfile");
       }
     }
