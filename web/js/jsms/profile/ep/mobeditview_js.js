@@ -267,7 +267,7 @@ var mobEditPage=(function(){
 					var sectionStr="";
 					if(v.outerSectionKey=='AlternateEmailId' &&v.OnClick[2].screenBit==1 && v.OnClick[2].label_val!="")
 					{
-						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verfiy</div>");
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verify</div>");
 					}
 					if(v.singleKey)
 					{
