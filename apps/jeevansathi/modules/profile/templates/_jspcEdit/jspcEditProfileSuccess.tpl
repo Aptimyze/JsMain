@@ -322,9 +322,7 @@
                           <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color12" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
                       </div>
                     </div>
-                    ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify`
-                      <div class="f12 color12 pt5">Verify email id to receive mails.</div>
-                    ~/if`
+                     <div id="showAlternateEmailHint" ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify` class="f12 color12  pt5" ~else` class="f12 color12  pt5 disp-none"  ~/if`>Verify email id to receive mails.</div>
                     ~/if`
                   </li>
 
