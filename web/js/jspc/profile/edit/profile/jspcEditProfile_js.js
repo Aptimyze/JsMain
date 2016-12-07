@@ -58,7 +58,7 @@ EditApp = function(){
                               "ID_PROOF_VAL":"Please attach document",
                               "ADDR_PROOF_TYPE":"Required",
                               "ID_PROOF_TYPE":"Required",
-                              "SAME_EMAIL":"Both Emails are Same",
+                              "SAME_EMAIL":"Same Email",
                             };
     //Section List
     var BASIC             = "basic";
@@ -4111,7 +4111,7 @@ EditApp = function(){
       }
       
 
-      if( $("#email").val() == $("#alt_email").val() && ( $("#alt_email").val().length > 0 ) && valid){
+      if( $("#email").val().toLowerCase() == $("#alt_email").val().toLowerCase() && ( $("#alt_email").val().length > 0 ) && valid){
         valid = false;
         if ( emailCurrentId )
         {
@@ -5317,6 +5317,18 @@ EditApp = function(){
       if(value.toLowerCase() == "verified"){
         colorClass = "color12";
         removedClass = "color5 cursp";
+      }
+
+      if ( fieldId == "#alt_email_statusView")
+      {
+         if(value.toLowerCase() == "verify")
+         {
+          $("#showAlternateEmailHint").removeClass("disp-none");
+         }
+         else
+         {
+          $("#showAlternateEmailHint").addClass("disp-none");
+         }
       }
       $(fieldId).addClass(colorClass).removeClass(removedClass);
     }
