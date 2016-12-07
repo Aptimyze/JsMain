@@ -168,7 +168,7 @@ class JHOBBYCacheLib extends TABLE{
 
         if(!$bServedFromCache)
         { 
-        $result = $this->getUserHobbiesApi($pid);
+        $result = $objJHB->getUserHobbiesApi($pid);
 
         $noResult = $result;
         $result['PROFILEID'] = $pid;
