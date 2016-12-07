@@ -105,21 +105,13 @@ function log_edit($paramArray, $table_name = "") {
         $result = mysql_query_decide($sql_backup) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_backup, "ShowErrTemplate");
     }
     $result_el = mysql_query_decide($sql_el) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_el, "ShowErrTemplate");
-    if($paramArray["ALT_EMAIL"] || $paramArray["ALT_EMAIL_STATUS"])
+    if($paramArray["ALT_EMAIL"])
     {
-        foreach($paramArray as $field => $value)
+        $emailUID=(new NEWJS_ALTERNATE_EMAIL_LOG())->insertEmailChange($paramArray["PROFILEID"],$paramArray['ALT_EMAIL']);
+        if($paramArray["ALT_EMAIL"]!="")
         {
-           if($field == "ALT_EMAIL" || $field == "PROFILEID" ||$field == "MOD_DT")
-           {
-                $value = addslashes(stripslashes($value));
-                $alt_fields.= $field . ",";
-                $alt_values.= "'$value',";
-            }  
+            $result = (new emailVerification())->sendAlternateVerificationMail($paramArray["PROFILEID"], $emailUID,$paramArray['ALT_EMAIL']);
         }
-        $alt_fields = substr($alt_fields, 0, -1);
-        $alt_values = substr($alt_values, 0, -1);
-        $sql_altEmail = "INSERT INTO newjs.ALT_EMAIL_LOG ($alt_fields) VALUES ($alt_values)";        
-        $result_altEmail = mysql_query_decide($sql_altEmail) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_altEmail, "ShowErrTemplate");
     }
 }
 
