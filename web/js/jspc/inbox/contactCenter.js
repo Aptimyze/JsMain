@@ -168,7 +168,7 @@ if(typeof response.searchid!="undefined")
     }
 	//show horroscope/photo request option if requests tab is selected
 	showRequestsSubTypeListings(response,uploadRequestParamArr);
-	handleExpireInterest(activeHorizontalTabInfoID);
+	
        	//typeOfApi='';
 	if(response.no_of_results!=0)
 	{
@@ -205,6 +205,17 @@ if(typeof response.searchid!="undefined")
                 setcontactCenterHeading(response);
 		dataForCCPagination(parseInt(response.total),parseInt(response.page_index),parseInt(response.no_of_results));
 		handleCCPagination(response);
+		handleArchiveExpireInterest(activeHorizontalTabInfoID);
+		/*
+			If this is the interest received page and at the last page , do show horizontal tab.
+		 */
+
+		if(activeHorizontalTabInfoID == 1 && response.page_index == response.paginationArray[response.paginationArray.length - 1])
+		{
+			$('#HorizontalTab22_Label_nonzero').show();
+			$('#HorizontalTab22_Label_nonzero').removeClass('jsButton-disabled');
+		}
+
 		if(response.total)
 		{ 
 			$(".js-resultsCount").remove();
@@ -218,6 +229,15 @@ if(typeof response.searchid!="undefined")
 	}
 	else
 	{
+		handleArchiveExpireInterest(activeHorizontalTabInfoID);
+		/*
+			If this is the interest received page, do show horizontal tab.
+		 */
+		if(activeHorizontalTabInfoID == 1)
+		{
+			$('#HorizontalTab22_Label_zero').show();
+			$('#HorizontalTab22_Label_zero').removeClass('jsButton-disabled');
+		}
 		updateHistory("",1);
 		/** handling zero results message */
 		$("#HorizontalTab"+activeHorizontalTabInfoID+" .js-resultsCount").remove();
@@ -309,6 +329,63 @@ if(typeof response.searchid!="undefined")
     }
   }
 }
+
+/**
+ * Function is added to add link for expire interests listing.
+ * @param  {int} activeHorizontalTabInfoID to check whether activeHorizontalTabInfoID is 22 and make changes accordingly.
+ */
+ function handleArchiveExpireInterest(activeHorizontalTabInfoID) {
+ 	if ( activeHorizontalTabInfoID == 23 )
+ 	{
+ 		$('#ccHorizontalTabsBar > li').hide();
+ 		if ( $('#HorizontalTab23').length == 0)
+ 		{
+ 			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab23" data-id="23" data-infoId="23" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Intersts Expiring</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine23"></li>');
+ 		}
+ 		else
+ 		{
+ 			$('#HorizontalTab23').addClass('jsButton-disabled');
+ 			$('#horizontalActiveLine23').show();
+ 			$('#HorizontalTab23').show();
+ 		}
+ 	}
+ 	else
+ 	{
+ 		if ( $('#HorizontalTab22_Label_nonzero').length == 0)
+ 		{
+ 			$("#ccTuplesMainDiv").append('<div id="HorizontalTab22_Label_nonzero" onclick="performCCListingAction(this);" style="font-size: 90%;"  data-id="22" data-infoid="22" class="js-ccHorizontalLists txtc divcenter cursp color5 pt5 pl20 pb20 ">Archived Interests</div>');
+ 		}
+ 		if ( $('#HorizontalTab22_Label_zero').length == 0)
+ 		{
+ 			$("#zeroResultSection").append('<div id="HorizontalTab22_Label_zero" onclick="performCCListingAction(this);" style="font-size: 90%;"  data-id="22" data-infoid="22" class="js-ccHorizontalLists txtc divcenter cursp color5 pt5 pl20 pb20">Archived Interests</div>');
+ 		}
+ 		$('#HorizontalTab22_Label_zero').hide();
+ 		$('#HorizontalTab22_Label_nonzero').hide();
+
+ 		if ( activeHorizontalTabInfoID == 22 )
+ 		{
+ 			$('#ccHorizontalTabsBar > li').hide();
+ 			if ( $('#HorizontalTab22').length == 0)
+ 			{
+ 				$('#ccHorizontalTabsBar').append('<li id="HorizontalTab22" data-id="22" data-infoId="22" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Archived Interests</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine22"></li>');
+ 			}
+ 			else
+ 			{
+
+ 				$('#HorizontalTab22').addClass('jsButton-disabled');
+ 				$('#horizontalActiveLine22').show();
+
+ 				$('#HorizontalTab22').show();
+ 			}
+ 		}
+ 		else
+ 		{
+ 			$('#ccHorizontalTabsBar > li').show();	
+ 			$('#HorizontalTab22').show();
+ 			$('#horizontalActiveLine22').hide();
+ 		}
+ 	}
+ }
 
 /***
 * This function will get all the mapping variables related to contact center tuples.
@@ -634,6 +711,11 @@ function setActiveCCTabs(VerticalTab,HorizontalTabInfoID)
 {
 	if ( HorizontalTabInfoID == 23 )
 		VerticalTab = 0;
+	/*
+		Added this condition for expire interest check.
+	 */
+	if ( HorizontalTabInfoID == 22 )
+		VerticalTab = 0;
 	$("#VerticalTab"+VerticalTab).addClass("active").addClass("jsButton-disabled");
 	$("#HorizontalTab"+HorizontalTabInfoID).addClass("jsButton-disabled");
 	$("#Request"+activeRequestTypeID).addClass("jsButton-disabled");
@@ -902,32 +984,4 @@ function hidePersonalisedMessage()
 			}
 		}
 	});
-
-
-}
-
-function handleExpireInterest(activeHorizontalTabInfoID) {
-	
-	if ( activeHorizontalTabInfoID == 23 )
-	{
-		$('#ccHorizontalTabsBar > li').hide();
-		if ( $('#HorizontalTab23').length == 0)
-		{
-			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab23" data-id="23" data-infoId="23" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Intersts Expiring</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine23"></li>');
-		}
-		else
-		{
-
-		$('#HorizontalTab23').addClass('jsButton-disabled');
-		$('#horizontalActiveLine23').show();
-			
-			$('#HorizontalTab23').show();
-		}
-	}
-	else
-	{
-		$('#ccHorizontalTabsBar > li').show();	
-		$('#HorizontalTab23').show();
-		$('#horizontalActiveLine23').hide();
-	}
 }

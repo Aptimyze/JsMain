@@ -11,7 +11,7 @@ class InboxMobileAppV2
 	static public $myProfileIncompleteFields;
 	static public $tupleTitleField;
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
-	static public $noresultArray = Array("INTEREST_RECEIVED","INTEREST_EXPIRING","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MY_MESSAGE_RECEIVED","MATCH_ALERT","PHOTO_REQUEST_RECEIVED","PHOTO_REQUEST_SENT","HOROSCOPE_REQUEST_RECEIVED","HOROSCOPE_REQUEST_SENT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","CONTACTS_VIEWED","PEOPLE_WHO_VIEWED_MY_CONTACTS","IGNORED_PROFILES","INTRO_CALLS","INTRO_CALLS_COMPLETE");
+	static public $noresultArray = Array("INTEREST_RECEIVED","INTEREST_EXPIRING","INTEREST_ARCHIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MY_MESSAGE_RECEIVED","MATCH_ALERT","PHOTO_REQUEST_RECEIVED","PHOTO_REQUEST_SENT","HOROSCOPE_REQUEST_RECEIVED","HOROSCOPE_REQUEST_SENT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","CONTACTS_VIEWED","PEOPLE_WHO_VIEWED_MY_CONTACTS","IGNORED_PROFILES","INTRO_CALLS","INTRO_CALLS_COMPLETE");
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
 	const INTEREST_EXPIRING = "You have no interests left to respond to";
 	const ACCEPTANCES_RECEIVED = "No one has yet accepted your interest";
@@ -75,6 +75,34 @@ class InboxMobileAppV2
 			
 				"INTEREST_EXPIRING"=>Array(
 				"PROFILECHECKSUM",
+                                "USERNAME",
+                                "GENDER",
+                                "OCCUPATION",
+                                "LOCATION",
+                                "AGE",
+                                "HEIGHT",
+                                "RELIGION",
+                                "CASTE",
+                                "MTONGUE",
+                                "INCOME",
+                                "subscription_icon",
+                                "subscription_text",
+                                "TIME",
+                                "SEEN",
+                                "edu_level_new",
+                                "userloginstatus",
+                                "ProfilePic120Url",
+                                "ProfilePic450Url",
+                                "MSTATUS",
+                                "VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+                                ),
+			"INTEREST_ARCHIVED"=>Array(
+				"PROFILECHECKSUM",
 				"USERNAME",
 				"GENDER",
 				"OCCUPATION",
@@ -88,6 +116,7 @@ class InboxMobileAppV2
 				"subscription_icon",
 				"subscription_text",
 				"TIME",
+				"MESSAGE",
 				"SEEN",
 				"edu_level_new",
 				"userloginstatus",
@@ -801,12 +830,20 @@ class InboxMobileAppV2
 				// Interest viewed required only in case of interest sent
 				if($infoKey=="INTEREST_SENT")
 				{
-							if($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							if($profile[$count]["interest_viewed_date"]!=null)
 							{
-								$eoiViewedText = "Interest viewed".($profile[$count]["interest_viewed_date"]!=null?" on ".$profile[$count]["interest_viewed_date"]:"");
+								$eoiViewedText = "Interest viewed".((stripos($profile[$count]["interest_viewed_date"],'today')=== false)?' on ':" ").$profile[$count]["interest_viewed_date"];
 								$profile[$count]["interest_viewed_date"] = $eoiViewedText;
 								if(!MobileCommon::isDesktop())
 									$profile[$count]["timetext"] = $profile[$count]["interest_viewed_date"];
+							}
+							elseif($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							{
+								$eoiViewedText = "Interest viewed";
+								$profile[$count]["interest_viewed_date"] = $eoiViewedText;
+								if(!MobileCommon::isDesktop())
+									$profile[$count]["timetext"] = $profile[$count]["interest_viewed_date"];
+								
 							}
 							else
 							{
@@ -1170,6 +1207,7 @@ class InboxMobileAppV2
 			$trackingMap=array("INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::CONTACT_AWAITING,
 				           "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
 					   "VISITORS"=>"stype=".$visitorsStype."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
+				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::ARCHIVED_INTEREST,
 				"SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_JSPC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_SENT_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,

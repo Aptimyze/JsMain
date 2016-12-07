@@ -37,7 +37,9 @@ EOF;
         	$date = date('Y-m-d',strtotime("-1 day"));
         }        
         $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
-        $lowTrendsCountArr = $lowTrendsObj->getLowCountGroupedByLogic($date); //Get count where count is ZERO       // To get ZERO count for each logic level
+        $lowTrendsCountArr = $lowTrendsObj->getLowCountGroupedByLogic($date); //Get count where count is ZERO       // To get ZERO count for each logic level       
+        $distinctIdZeroArr = $lowTrendsObj->getLowCountGroupedByProfileIdLogic($date); //profileIdArr withe ZERO count required for table 4
+
         foreach($countByLogicArr as $key => $val)
         {
         	foreach($val as $k1=>$v1)
@@ -52,12 +54,12 @@ EOF;
         		}
         		
         	}
-        }        
-        
+        }
+
         $trackingLibObj->insertCountDataByLogicLevel($finalCountByLogicArr);
         
         $countByLogicAndRecommendations = $logTempObj->getCountGroupedByLogicAndRecommendation();        
-        
+       
         foreach($lowTrendsCountArr as $key=>$val)
         {
         	foreach($val as $k1=>$v1)
@@ -73,9 +75,14 @@ EOF;
         		}        		
         	}
         }
+
         $countByLogicAndRecommendations = array_merge($countByLogicAndRecommendations,$lowCountFinalArr);        
+
         $trackingLibObj->insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations);        
-   		unset($trackingLibObj);
+   		$totalCountByLogicReceiver = $logTempObj->getTotalCountGroupedByLogicAndReceiver();        
+        
+        $trackingLibObj->insertTotalCountGroupedByLogicAndReceiver($totalCountByLogicReceiver,$distinctIdZeroArr);        
+        unset($trackingLibObj);
    		unset($logTempObj);
    		unset($lowTrendsObj);
    	}

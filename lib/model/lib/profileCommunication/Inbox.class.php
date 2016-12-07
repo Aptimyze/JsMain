@@ -169,6 +169,11 @@ class Inbox implements Module
 						$key = "INTEREST_EXPIRING";
 						$memKeyNotExists=1;
 						break;
+					case "INTEREST_ARCHIVED":
+                        $key = "INTEREST_ARCHIVED";
+                        $memKeyNotExists=1;
+                        break;
+
 				}
 				if ( $key == "INTEREST_EXPIRING")
  				{
@@ -190,6 +195,22 @@ class Inbox implements Module
 					$countObj[$infoTypenav["PAGE"]] = $expiringContactsCount; 					
  				} 
 			
+
+				/*
+					added this check for getting count data for interest archive data.
+				 */
+				
+				if ( $key == "INTEREST_ARCHIVED")
+				{
+					$where['TYPE']="I";
+					$where["RECEIVER"]=$this->profileObj->getPROFILEID();
+					$dbName = JsDbSharding::getShardNo($this->profileObj->getPROFILEID());
+					$contactsObj = new newjs_CONTACTS($dbName);
+					$group             = '';
+					$contactsCount = $contactsObj->getArchivedContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
+					$countObj[$infoTypenav["PAGE"]] = $contactsCount[0]["COUNT"];
+				}
+
 				if($key == "IGNORED_PROFILES")
 				{
 					$IgnoredObj = new IgnoredProfiles;
@@ -283,10 +304,10 @@ class Inbox implements Module
 					
 					if(empty($memdata) || ($nav-1)*$config["COUNT"] >=count($data) || (count($data) == 0 && $countObj[$infoType]))
 					{
-						
+
 						$infoTypeAdapter = new InformationTypeAdapter($infoType, $this->profileObj->getPROFILEID());
 						// Myjs require only New information type tuples 
-					
+											
 						$skipArray       = $this->getSkipProfiles($infoType);
 						
 						if($infoType == "VISITORS" || $infoType== "HOROSCOPE_REQUEST_RECEIVED" || $infoType=="HOROSCOPE_REQUEST_SENT")
@@ -314,19 +335,21 @@ class Inbox implements Module
                                                 if($infoTypeNav["matchedOrAll"])
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
+
 					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray))
 							$data = $data+$profilesArray;
 						else if(is_array($profilesArray))
 							$data = $profilesArray;
 						JsMemcache::getInstance()->set($key,serialize($data),1800);
+					 
 					}
 					if(is_array($data))
 					{
 						$pager = array_slice($data,($infoTypeNav["NUMBER"]-1)*$config["COUNT"],$config["COUNT"],true);
 					}
 					$infoTypeObj[$infoType] = $pager;
-
 					if (!empty($infoTypeObj[$infoType])) {
+
 						// Get required tuple, unique fields required by the tuples
 						$tupleFields            = $tupleService->getFields($tuple);
 						$fields                 = array_merge($fields, $tupleFields);
@@ -349,6 +372,7 @@ class Inbox implements Module
 		if (is_array($infoTypeObj)) {
 			// Calling tuple service to retrieve complete information of all the profiles in one go
 			$tupleService->setProfileInfo($infoTypeObj, array_unique($fields));
+
 			if ($config) {
 				unset($tuplesValues);
 				if ($config["TUPLE"])
@@ -404,6 +428,8 @@ class Inbox implements Module
 			} //$config["COUNT"]
 			} //$this->completeProfilesInfo as $infoType => $values
 			unset($infoTypeObj); 
+			// var_dump($this->completeProfilesInfo);
+			// die();
 			return $this->completeProfilesInfo;
 		} //is_array($infoTypeObj)
 		return null;
@@ -495,7 +521,6 @@ class Inbox implements Module
 	 */
 	public function getCondition($infoType, $nav = null)
 	{
-		
 		$condition  = array();
 		if($infoType!="VISITORS")
 			$limit      = ceil(($this->configurations[$infoType]["COUNT"]*$nav)/self::$profileCount)*self::$profileCount;
@@ -509,6 +534,14 @@ class Inbox implements Module
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 			} //$infoType == "INTEREST_RECEIVED"
+
+			if ($infoType == "INTEREST_ARCHIVED") {
+				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$back_90_days                                     = date("Y-m-d", $yday);
+				$condition["WHERE"]["LESS_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
+			}
+
 			if($infoType == "INTEREST_RECEIVED_FILTER")
 			{
 				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));

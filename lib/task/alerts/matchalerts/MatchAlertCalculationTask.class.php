@@ -8,9 +8,11 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $limitNtRec = 16;
 	private $limitTRec = 10;
 	private $limitTRecTemp = 10;
-	private $LowDppCountCachetime = 25200; // 1 week
+	private $LowDppCountCachetime = 604800; // 1 week
 	private $LowDppLimit = 10;
+        private $limitCommunityRec = 10;
 	const clusterRecordLimit = 10;
+        const _communityModelToggle=1;
         
 	protected function configure()
   	{
@@ -58,7 +60,7 @@ EOF;
                         $memObject=JsMemcache::getInstance();
 			$matchalerts_MATCHALERTS_TO_BE_SENT = new matchalerts_MATCHALERTS_TO_BE_SENT;
 			$arr = $matchalerts_MATCHALERTS_TO_BE_SENT->fetch($totalScripts,$currentScript,$this->limit);
-                        //$arr = array(7043932=>1,144111=>1);
+                        //$arr = array(7043932=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'),144111=>array("HASTRENDS"=>0,"MATCH_LOGIC"=>'N','PERSONAL_MATCHES'=>'A'));
 			if(is_array($arr))
 			{
 				foreach($arr as $profileid=>$v)
@@ -74,6 +76,7 @@ EOF;
 
 					$trends = $v["HASTRENDS"];
                                         $matchesSetting = $v["PERSONAL_MATCHES"];
+                                        $matchLogic = $v["MATCH_LOGIC"];
 					if($loggedInProfileObj->getPROFILEID())
 					{
                                                 $returnTotalCountWithCluster = 0;
@@ -93,7 +96,7 @@ EOF;
                                                             $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$strategyReceiversTVsNT);
                                                         }
                                                         // Set Low Dpp flag
-                                            //            $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                       
+                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                       
                                                         if($totalResults["LOGIN_SCORE"] > self::clusterRecordLimit){
                                                                 $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithTrendsScoreSort);
                                                                 $totalResults = $StrategyReceiversNT->getMatches('',0,array(),$matchesSetting); 
@@ -131,6 +134,17 @@ EOF;
 						}
 						else
 						{
+                                                    
+                                                        if($this->checkForCommunityModel($loggedInProfileObj->getPROFILEID(),$matchLogic)){
+                                                            $communityModelNT = new CommunityModelMatchAlertsStrategy($loggedInProfileObj,$this->limitCommunityRec,MailerConfigVariables::$communityModelNT);
+                                                            $profilesArray = $communityModelNT->getMatches($matchesSetting);                                                                                                                
+                                                            if($profilesArray[0] == '')
+                                                            {
+                                                                $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$communityModelNT);
+                                                            }
+                                                            
+                                                            $this->limitNtRec=10;
+                                                        }
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
@@ -144,7 +158,7 @@ EOF;
                                                             $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$strategyReceiversNT);
                                                         }
                                                         // Set Low Dpp flag
-                                                   //     $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
+                                                        $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);
 						}
                                                 $memObject->remove('SEARCH_JPARTNER_'.$profileid);
                                                 $memObject->remove('SEARCH_MA_IGNOREPROFILE_'.$profileid);
@@ -168,5 +182,16 @@ EOF;
                 }else{
                         $memObject->remove('MA_LOWDPP_FLAG_'.$profileid);
                 }       
+        }
+        
+        /**
+         * This function returns whether to use community model.
+         */
+        private function checkForCommunityModel($profileId,$oldNewLogic){
+                if($profileId%11<1 && self::_communityModelToggle && $oldNewLogic=='N'){
+                    return true;
+                }
+                else
+                    return false;
         }
 }

@@ -600,6 +600,18 @@ class SMSLib
                 $memHandlerObj = new MembershipHandler();
                 $servName = $memHandlerObj->getRenewCronSMSServiceName($tokenValue['PROFILEID']);
                 return $servName;
+            case "MEM_AUTO_LOGIN": 
+                $longURL = $this->SITE_URL . "/membership/jspc?from_source=CRM_SMS_OFFER";
+                return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"]);
+            case "DISCOUNT_TEXT": 
+                return $tokenValue['DISCOUNT_TEXT'];
+            case "BRANCH_ADDRESS": 
+                return $tokenValue['BRANCH_ADDRESS'];
+            case "CRM_AGENT": 
+                return $tokenValue['CRM_AGENT'];
+            case "CRM_SMS_APP_URL":
+                $appStoreUrl = $this->SITE_URL . "/SMS-Download-Android-App";
+                return $this->getShortURL($appStoreUrl, '', '', $withoutLogin = 1);
             default:
                 return "";
         }

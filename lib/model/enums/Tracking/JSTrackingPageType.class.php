@@ -51,6 +51,7 @@ class JSTrackingPageType
 	const FILTERED_INTEREST_MYJS_JSPC = 52;
 	const INTEREST_EXPIRING = 54;
 	const INTEREST_EXPIRING_JSMS = 55;
+	const ARCHIVED_INTEREST = 53;
 }
 
 ?>

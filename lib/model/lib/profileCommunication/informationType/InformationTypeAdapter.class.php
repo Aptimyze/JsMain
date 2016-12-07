@@ -17,8 +17,15 @@ class InformationTypeAdapter
     public function getProfiles($condition, $skipArray,$subscription="")
     {
 		$profilesArray = array();
+       
 		switch ($this->infoType) {
             case "INTEREST_RECEIVED":
+                $contactsObj                          = new ContactsRecords();
+                $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+                $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
+                $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
+                break;
+             case "INTEREST_ARCHIVED":
                 $contactsObj                          = new ContactsRecords();
                 $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
                 $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
