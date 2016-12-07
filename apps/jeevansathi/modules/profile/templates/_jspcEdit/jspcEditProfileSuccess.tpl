@@ -319,7 +319,7 @@
                         </p>
                       </div>
                       <div class="fr wid25p pos-abs right0">
-                          <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color11" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
+                          <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color12" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
                       </div>
                     </div>
                     ~/if`
