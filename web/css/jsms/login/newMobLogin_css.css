@@ -385,7 +385,7 @@ input {
     padding: 10px 15px
 }
 .ocbnewimg {
-    background-image: url(http://static.jeevansathi.com/images/jsms/interstital/mob-newocb.png);
+    background-image: url(IMG_URL/images/jsms/interstital/mob-newocb.svg);
     background-repeat: no-repeat
 }
 .ocbclose {
@@ -682,7 +682,7 @@ input {
     background-color: #d9475c
 }
 .ocbnewimg {
-    background-image: url(http://static.jeevansathi.com/images/jsms/interstital/mob-newocb.png);
+    background-image: url(IMG_URL/images/jsms/interstital/mob-newocb.svg);
     background-repeat: no-repeat
 }
 .logoocb {

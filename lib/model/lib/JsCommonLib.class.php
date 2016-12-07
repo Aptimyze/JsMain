@@ -1031,7 +1031,7 @@ public static function insertConsentMessageFlag($profileid) {
                 $pm = preg_match('/iPhone\s*([0-9\.]*)/',$ua,$matches);
                  if(!strstr($ua,"iPhone"))
                         return false;
-                $av = explode(" ",explode("OS ",$ua)[1])[0];
+                $av = intval(explode(" ",explode("OS ",$ua)[1])[0]);
                 if($av>=7)
                 	return true;
                 return false;

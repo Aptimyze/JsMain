@@ -49,6 +49,7 @@ class JSTrackingPageType
 	const PC_CHAT_RTYPE = 50;
 	const EXCLUSIVE_SERVICE2_MAILER_RTYPE = 51;
 	const FILTERED_INTEREST_MYJS_JSPC = 52;
+	const ARCHIVED_INTEREST = 53;
 }
 
 ?>

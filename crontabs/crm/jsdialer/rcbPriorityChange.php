@@ -61,5 +61,5 @@ foreach($campaign_nameArr as $key=>$campaignName)
 $to="manoj.rana@naukri.com";
 $sub="RCB Prioritization Done.";
 $from="From:vibhor.garg@jeevansathi.com";
-mail($to,$sub,'',$from);
+//mail($to,$sub,'',$from);
 ?>

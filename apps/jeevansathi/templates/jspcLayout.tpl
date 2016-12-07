@@ -75,6 +75,18 @@
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
+        var dppListingWebServiceUrl = "~JsConstants::$chatListingWebServiceUrl['dpp']`";
+        var nonRosterRefreshUpdate = "~JsConstants::$nonRosterRefreshUpdate`";
+        var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
+        //console.log("dppLiveForAll",dppLiveForAll);
+        var betaDppExpression = "",specialDppProfiles="";
+        if(dppLiveForAll == "0"){
+            betaDppExpression = "~JsConstants::$profilesEligibleForDpp['modulusDivisor']`"+","+"~JsConstants::$profilesEligibleForDpp['modulusRemainder']`";
+            specialDppProfiles = "~JsConstants::$profilesEligibleForDpp['privilegedProfiles']`";
+        }
+        
+        //console.log("betaDppExpression",betaDppExpression);
+        //console.log("ank",dppListingWebServiceUrl);
         var selfUserChatName = "~$selfUserChatName`";
         //console.log("ank",selfUserChatName);
         localStorage.removeItem("self_subcription");
@@ -149,21 +161,19 @@ if (window.location.protocol == "https:")
 	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 </script>
 ~if !get_slot('disableFbRemarketing')`
-<script>(function() {
-var _fbq = window._fbq || (window._fbq = []);
-if (!_fbq.loaded) {
-var fbds = document.createElement('script');
-fbds.async = true;
-fbds.src = '//connect.facebook.net/en_US/fbds.js';
-var s = document.getElementsByTagName('script')[0];
-s.parentNode.insertBefore(fbds, s);
-_fbq.loaded = true;
-}
-_fbq.push(['addPixelId', '569447716516417']);
-})();
-window._fbq = window._fbq || [];
-window._fbq.push(['track', 'PixelInitialized', {}]);
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '569447716516417');
+fbq('track', 'PageView');
 </script>
-<script type="text/javascript" language="Javascript" src="~JsConstants::$siteUrl`/min/?f=/js/jspc/chat/enc-base64-min.js,/js/jspc/chat/aes.js,/js/jspc/chat/core.js,/js/jspc/chat/enc-utf16.js"></script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=569447716516417&ev=PageView&noscript=1"
+/></noscript>
+<!-- DO NOT MODIFY -->
+<!-- End Facebook Pixel Code -->
 ~/if`
