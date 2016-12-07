@@ -304,7 +304,7 @@
                     <div class="clearfix pos-rel">
                       <div class="fl wid74p">
                         <p class="color11">
-                          <span id="alt_mobileView" class="color5">Not filled in</span>
+                          <span id="alt_emailView" class="color5">Not filled in</span>
                         </p>
 
                       </div>
@@ -322,9 +322,9 @@
                           <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color12" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
                       </div>
                     </div>
-                    ~/if`
                     ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify`
                       <div class="f12 color12 pt5">Verify email id to receive mails.</div>
+                    ~/if`
                     ~/if`
                   </li>
 
