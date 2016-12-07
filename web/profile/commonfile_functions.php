@@ -125,7 +125,7 @@ $css_arr[]=array("jsms/search/srpcss"       => "4");
 $css_arr[]=array("jsms/photo/photoup"    => "1");
 $css_arr[]=array("jsms/membership/revamp_membership_css"   => "3");
 $css_arr[]=array("jsms/membership/new_revamp_membership_css"        => "6");
-$css_arr[]=array("jsms/profile/ep/revamp_edit_profile_css"            => "13");
+$css_arr[]=array("jsms/profile/ep/revamp_edit_profile_css"            => "14");
 $css_arr[]=array("jsms/register/regis_css"        => "9");
 $css_arr[]=array("jsms/register/reg_animate"   => "4");
 $css_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_css"        => "11");
@@ -507,7 +507,7 @@ $js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                       
 $js_arr[]=array("jspc/myjs/myjs_js"                                                    => "56");
 $js_arr[]=array("jspc/myjs/engBarJs_js"                => "16");
 $js_arr[]=array("jspc/common/nano"     => "2");
-$js_arr[]=array("jspc/common/commonJspc_js"                                 => "35");
+$js_arr[]=array("jspc/common/commonJspc_js"                                 => "36");
 $js_arr[]=array("jspc/registration/registrationJspc_js"                   => "27");
 $js_arr[]=array("jspc/registration/validation_js"             => "20");
 $js_arr[]=array("jspc/search/hslider"    => "1");

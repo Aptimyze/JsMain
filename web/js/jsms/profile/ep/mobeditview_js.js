@@ -265,9 +265,10 @@ var mobEditPage=(function(){
 					var emptyFields=0;
 						var jsonCnt=0;
 					var sectionStr="";
-					if(v.outerSectionKey=='AlternateEmailId' &&v.OnClick[2].screenBit==1 && v.OnClick[2].label_val!="")
+					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].screenBit==1 && v.OnClick[2].label_val!="")
 					{
 						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verify</div>");
+                                                bindAlternateEmailButton();
 					}
 					if(v.singleKey)
 					{
@@ -489,4 +490,33 @@ function readMore(string,keyName)
 	}
 	else
 		return string;
+}
+
+
+function bindAlternateEmailButton(){
+    
+    $("#altEmailVerify").click(function(event)
+    {
+        
+      event.stopPropagation();
+      showLoader();
+      var ajaxData={'emailType':'2'};
+      $.ajax({
+                                url:'/api/v1/profile/sendEmailVerLink',
+                                dataType: 'json',
+                                data: ajaxData,
+                                type: "POST",
+                                success: function(response) 
+                                {
+                                    hideLoader(1);
+                                    $("#emailConfirmationText").text(response.responseMessage.replace(/\{email\}/g,$("#AlternateEmailId_value").text().trim()));
+                                    $("#emailSentConfirmLayer").show();
+                                    var tempOb=$("#altEmailinnerLayer");
+                                    tempOb.css('margin-left','-'+$(tempOb).width()/2+'px')
+                                        .css('margin-top','-'+$(tempOb).height()/2+'px');   
+                                    
+                                }
+    
+            });
+    });
 }
