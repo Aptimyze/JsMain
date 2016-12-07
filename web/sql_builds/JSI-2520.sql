@@ -1,0 +1,2 @@
+use jeevansathi_mailer;
+UPDATE  `MAILER_SUBJECT` SET  `SUBJECT_CODE` =  '<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Cancelled interest in you.' WHERE  `MAIL_ID` =  '1758' AND CONVERT(  `SUBJECT_TYPE` USING utf8 ) =  'P' AND CONVERT( `SUBJECT_CODE` USING utf8 ) =  '<var>{{USERNAME:profileid=~$otherProfile`}}</var> has Cancelled interest in you. See suggested matches ' AND CONVERT(  `DESCRIPTION` USING utf8 ) =  'Cancel mailer with photo' LIMIT 1 ;
