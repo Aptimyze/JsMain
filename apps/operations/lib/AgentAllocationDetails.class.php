@@ -1298,7 +1298,7 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 				if($setProfileArr[$pid]["ALTERNATE_NO"] && $isdNo)
 					$setProfileArr[$pid]["ALTERNATE_NO"] =$isdNo."-".$setProfileArr[$pid]["ALTERNATE_NO"];
 				if($subMethod=='NEW_PROFILES' || $subMethod=='FOLLOWUP') {
-					if(in_array($pid, $everPaidProfiles)) {
+					if(in_array($pid, array_keys($everPaidProfiles))) {
 						$setProfileArr[$pid]["EVER_PAID"] = 'Y';
 					} else {
 						$setProfileArr[$pid]["EVER_PAID"] = 'N';

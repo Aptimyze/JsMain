@@ -6,10 +6,10 @@
 
 		var tempHtml=$(rowHtml);
 		tempHtml.find('.IUUsername').text(rowJson.USERNAME);
-		tempHtml.find('.IUReligion').text(rowJson.RCOUNT);
-		tempHtml.find('.IUMarriage').text(rowJson.MCOUNT);
-		tempHtml.find('.IUAge').text(rowJson.ACOUNT);
-		tempHtml.find('.IUTotalScore').text(rowJson.TCOUNT);
+		tempHtml.find('.IUReligion').text(rowJson.RELIGION_COUNT);
+		tempHtml.find('.IUMarriage').text(rowJson.MSTATUS_COUNT);
+		tempHtml.find('.IUAge').text(rowJson.AGE_COUNT);
+		tempHtml.find('.IUTotalScore').text(rowJson.TOTAL_SCORE);
 		return tempHtml;
 
 	}

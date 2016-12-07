@@ -376,7 +376,7 @@ function getBellCountData(profileid, setHeader) {
 }
 
 function setBellCountHTML(data) {
-    if (data) {
+    if (data) { 
         if (parseInt(data.TOTAL_NEW)) {
             $("#totalBellCountParent").css('display', 'table');
             if (data.TOTAL_NEW < 10) {
@@ -441,6 +441,14 @@ function setBellCountHTML(data) {
                 $("#FilteredInterstsCount").text("9+");
             }
         }
+        if (parseInt(data.DEC_ME_NEW)) {
+            $("#membersDeclinedMeCountParent").css('display', 'block');
+            if (data.DEC_ME_NEW < 10) {
+                $("#DeclinedMeCount").text(data.DEC_ME_NEW);
+            } else {
+                $("#DeclinedMeCount").text("9+");
+            }
+        } 
     }
 }
 

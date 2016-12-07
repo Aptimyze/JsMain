@@ -118,10 +118,10 @@ function setBlock(blockName) {
 
 	$(document).ready(function() {
             
-                $("#hamburgerIcon").on("click", function() {
+                $("#hamburgerIcon").bind("click", function() {
 			if($("#hamburger").length == 0){
-				$(".loaderSmallIcon").attr("src","IMG_URL/images/jsms/commonImg/loader.gif").removeClass("dn");
-				$("#hamIc").hide();
+                                $(".loaderSmallIcon").addClass("loaderimg").removeClass("dn");
+                                $("#hamIc").hide();
 				if(localStorage.getItem("hamHtml")){
 					$("#perspective").append(localStorage.getItem("hamHtml"));	
 				} else{
@@ -131,9 +131,16 @@ function setBlock(blockName) {
 				}
 					//Jquery call 
                                 getHamburgerCounts();
-                                $("#hamburgerIcon").off("click");
 				var imported = document.createElement('script');
 				imported.src = 'IMG_URL/min/?f=/'+hamJs;
+                                imported.onerror = function() {
+                                 ShowTopDownError(['Something went wrong']); 
+                                 $("#hamburger").remove(); 
+                                 setTimeout(function(){
+                                     $(".loaderSmallIcon").addClass("dn");
+                                     $("#hamIc").show();
+                                 }, 100);   
+                                 };
 				imported.onload = function() {
 					BindNextPage();
 				    $("#hamburgerIcon").click();
@@ -242,6 +249,9 @@ function getCount(response){
 	if(response.MATCHALERT != 0){
 		$("#MATCHALERT span").html(response.MATCHALERT).removeClass("dn");
 	} 
+	if(response.VISITOR_ALERT != 0){
+		$("#VISITOR_ALERT span").html(response.VISITORS_ALL).removeClass("dn");
+	}
 }
 
 	function setNotificationView() {

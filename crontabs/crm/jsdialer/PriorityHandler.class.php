@@ -82,8 +82,14 @@ class PriorityHandler
 		foreach($slotArr as $key=>$data){
 			$start 	=$data['start'];
 			$end	=$data['end'];
-			if($timeInMin>=$start && $timeInMin<=$end)
+			if($timeInMin>=$start && $timeInMin<=$end){
 				$slotExist =true;
+				return $slotExist;
+			}
+			elseif($timeInMin>=240){
+				$slotExist =true;
+				return $slotExist;
+			}
 		}		
 		return $slotExist;
 	}

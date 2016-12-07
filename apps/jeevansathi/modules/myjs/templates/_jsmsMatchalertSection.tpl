@@ -18,12 +18,11 @@
                         ~include_partial("myjs/jsmsProfileTuple",[profileTuple=>$tupleInfo,section=>"matchAlert",index=>$id,gender=>$gender,total=>$matchalertData.view_all_count,contactId=>$matchalertData.contact_id])`
                 
         ~/foreach`
-        
-        ~for $i=1 to 10`
-    <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;"></div>
-        ~/for`
-        
-        
+
+         ~for $i=1 to 10`
+     <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;"></div>
+         ~/for`
+         
         <div class="clr"></div>
  </div>
     </div>
