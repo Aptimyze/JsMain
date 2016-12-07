@@ -25,7 +25,8 @@ class apiSendEmailVerificationLinkV1Action extends sfAction
     {
 
 	case 1:
-            $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->getLastEntry($profileId);
+            $tempArray=(new NEWJS_EMAIL_CHANGE_LOG())->getLastEntry($profileId);
+            $emailUID = $tempArray['ID'];
             $result = (new emailVerification())->sendVerificationMail($profileId, $emailUID);
             break;
         case 2 :

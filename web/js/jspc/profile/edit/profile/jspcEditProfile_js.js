@@ -6233,14 +6233,7 @@ $(document).ready(function() {
                 ajaxConfig.success=function(resp)
                 {
                     var emailText = resp.responseMessage.replace(/\{email\}/g,$("#my_alt_emailView").text().trim());
-                    $("#altEmailConfirmText").text(emailText);
-                    showLayerCommon("js-alternateEmailConfirmLayer");
-                    $('.js-overlay').bind("click", function () 
-                        {
-                        closeCurrentLayerCommon();  
-                        $(this).unbind();
-                        });
-
+                    showAlternateConfirmLayer(emailText);   
                     hideCommonLoader();
                 }
                 jQuery.myObj.ajax(ajaxConfig);
@@ -6338,7 +6331,17 @@ $('#validateSenderEmail').click(function(e){
   return false;
 });
 }
-
+function showAlternateConfirmLayer(msg){
+    if(typeof msg=='undefined')
+        return;
+    $("#altEmailConfirmText").text(msg);
+                    showLayerCommon("js-alternateEmailConfirmLayer");
+                    $('.js-overlay').bind("click", function () 
+                        {
+                        closeCurrentLayerCommon();  
+                        $(this).unbind();
+                        });
+}
 function shareProfile(){
   var dataArr = {};
   var femail = {};
