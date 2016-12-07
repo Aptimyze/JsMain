@@ -31,7 +31,8 @@ class apiSendEmailVerificationLinkV1Action extends sfAction
         case 2 :
             $contactNumOb=new newjs_JPROFILE_CONTACT();
             $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileId),'','',"ALT_EMAIL");
-            $emailUID = (new NEWJS_ALTERNATE_EMAIL_LOG())->getLastEntry($profileId);
+            $tempArray = (new NEWJS_ALTERNATE_EMAIL_LOG())->getLastEntry($profileId);
+            $emailUID =  $tempArray['ID'];
             $result = (new emailVerification())->sendAlternateVerificationMail($profileId, $emailUID,$numArray[0]['ALT_EMAIL']);
             break;
     }

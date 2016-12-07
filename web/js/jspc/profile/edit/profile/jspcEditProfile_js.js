@@ -6232,7 +6232,8 @@ $(document).ready(function() {
                 ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
                 ajaxConfig.success=function(resp)
                 {
-                    $("#altEmailConfirmText").text(resp.responseMessage);
+                    var emailText = resp.responseMessage.replace(/\{email\}/g,$("#my_alt_emailView").text().trim());
+                    $("#altEmailConfirmText").text(emailText);
                     showLayerCommon("js-alternateEmailConfirmLayer");
                     $('.js-overlay').bind("click", function () 
                         {

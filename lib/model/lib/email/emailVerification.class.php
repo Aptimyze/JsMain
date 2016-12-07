@@ -29,6 +29,8 @@ class emailVerification
         $tpl->getSmarty()->assign("profileid", $profileId);
         $tpl->getSmarty()->assign("uniqueId", $uniqueId);
         $tpl->getSmarty()->assign("instanceID", $instanceID);
+        $tpl->getSmarty()->assign("emailType", 1);
+
 		$partialObj = new PartialList();
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
@@ -64,6 +66,7 @@ class emailVerification
         $tpl->getSmarty()->assign("profileid", $profileId);
         $tpl->getSmarty()->assign("uniqueId", $uniqueId);
         $tpl->getSmarty()->assign("instanceID", $instanceID);
+        $tpl->getSmarty()->assign("emailType", 2);
 		$partialObj = new PartialList();
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
