@@ -341,7 +341,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),"",$this->getApiScreeningField("EMAIL"),$this->text);
 		
 		//Alternate Email
-		$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,"",$this->getApiScreeningField("EMAIL"),$this->text);//
+		$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,"",$this->getVerificationStatusForAltEmail($this->profile->getExtendedContacts()->ALT_EMAIL),$this->text);
 		
 		//mobile number
 		if($this->profile->getPHONE_MOB())
@@ -1177,6 +1177,16 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
     	}
     	$stateCityArr = $this->getApiFormatArray("P_CITY","State/City",$stateCityNames,$szStateCity,$this->getApiScreeningField("PARTNER_CITYRES"),$this->dropdown,'',1,'',!$showCity);
     	return($stateCityArr);
+    }
+
+    public function getVerificationStatusForAltEmail($altEmail)
+    {    
+    	$jprofileObj = new NEWJS_JPROFILE_CONTACT();
+    	$altEmailStatus = $jprofileObj->getAltEmailVerificationStatus($this->profile->getPROFILEID(),$altEmail);
+    	if($altEmailStatus == "N")
+    		return 1;
+    	else
+    		return 0;
     }
 }
 ?>

@@ -260,12 +260,15 @@ var mobEditPage=(function(){
 						$( "#"+key+"EditSection" ).html(sliderDiv);
 					else
 						$( "#"+key+"EditSection" ).append(sliderDiv);
-					$( "#"+v.outerSectionKey+'_name' ).text(v.outerSectionName)
+					$( "#"+v.outerSectionKey+'_name' ).text(v.outerSectionName);
 					
 					var emptyFields=0;
 						var jsonCnt=0;
 					var sectionStr="";
-					
+					if(v.outerSectionKey=='AlternateEmailId' &&v.OnClick[2].screenBit==1 && v.OnClick[2].label_val!="")
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verfiy</div>");
+					}
 					if(v.singleKey)
 					{
 						
