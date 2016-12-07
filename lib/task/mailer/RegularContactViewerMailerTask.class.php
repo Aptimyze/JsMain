@@ -418,7 +418,15 @@ return $edu;
 		{
 			$senderDetails = MAILER_COMMON_ENUM::getSenderEnum($mailerName);
         	        // Sending mail and tracking sent status
-                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],'','','','','','','1','',$senderDetails["ALIAS"]);
+                	                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+                        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+                        {
+                           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+                        }
+                        else $ccEmail = "";
+
+                        $mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$ccEmail,'','','','','','1','',$senderDetails["ALIAS"]);
 	                $flag= $mailSent?"Y":"F";
         	        if($flag =="F")
                 		$this->failCount++;
