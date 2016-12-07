@@ -337,10 +337,11 @@ if(typeof response.searchid!="undefined")
  function handleArchiveExpireInterest(activeHorizontalTabInfoID) {
  	if ( activeHorizontalTabInfoID == 23 )
  	{
+ 		$('#horizontalActiveLine22').remove();
  		$('#ccHorizontalTabsBar > li').hide();
  		if ( $('#HorizontalTab23').length == 0)
  		{
- 			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab23" data-id="23" data-infoId="23" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Intersts Expiring</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine23"></li>');
+ 			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab23" data-id="23" data-infoId="23" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Interests Expiring</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine23"></li>');
  		}
  		else
  		{
@@ -351,6 +352,7 @@ if(typeof response.searchid!="undefined")
  	}
  	else
  	{
+ 		$('#horizontalActiveLine23').remove();
  		if ( $('#HorizontalTab22_Label_nonzero').length == 0)
  		{
  			$("#ccTuplesMainDiv").append('<div id="HorizontalTab22_Label_nonzero" onclick="performCCListingAction(this);" style="font-size: 90%;"  data-id="22" data-infoid="22" class="js-ccHorizontalLists txtc divcenter cursp color5 pt5 pl20 pb20 ">Archived Interests</div>');
