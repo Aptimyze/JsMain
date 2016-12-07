@@ -299,6 +299,17 @@
                     <p class="color12" id="emailLabelParent">
                       Alternate Email id
                     </p>
+
+                    ~if $arrOutDisplay.contact.my_alt_email eq NULL`
+                    <div class="clearfix pos-rel">
+                      <div class="fl wid74p">
+                        <p class="color11">
+                          <span id="alt_mobileView" class="color5">Not filled in</span>
+                        </p>
+
+                      </div>
+                    </div>
+                    ~else`
                     <div class="clearfix pos-rel">
                       <div class="fl wid70p">
                         <p class="color11">
@@ -310,8 +321,8 @@
                       <div class="fr wid25p pos-abs right0">
                           <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color11" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
                       </div>
-
                     </div>
+                    ~/if`
                     ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify`
                       <div class="f12 color12 pt5">Verify email id to receive mails.</div>
                     ~/if`
@@ -591,6 +602,17 @@
   </div>
   <!--end:second part--> 
 </div>
+<div id="js-alternateEmailConfirmLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white">
+<div class="phnvp4 f17 fontreg color11 phnvbdr4">Email Verification</div>
+<div class="color11">
+<!--start:div-->
+<div class="phnvwid3 mauto pt40 pb27 fontlig">
+<p id='altEmailConfirmText' class=" f17 txtc lh26"></p>
+</div>
+</div>
+<!--end:layer 1-->
+</div>    
+    
 <script type="text/javascript">
   var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
   var senderEmail = "~$loggedInEmail`";

@@ -12,10 +12,9 @@ class NEWJS_ALTERNATE_EMAIL_LOG extends TABLE {
 		try	 	
 		{	
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
-			$sql="UPDATE newjs.ALTERNATE_EMAIL_LOG SET STATUS = 'Y', VERIFY_DATE='$timeNow' WHERE PROFILEID = :PROFILEID AND EMAIL=:EMAIL ORDER BY CHANGE_DATE DESC LIMIT 1";
+			$sql="UPDATE newjs.ALTERNATE_EMAIL_CHANGE_LOG SET STATUS = 'Y', VERIFY_DATE='$timeNow' WHERE PROFILEID = :PROFILEID  ORDER BY CHANGE_DATE DESC LIMIT 1";
 			$prep=$this->db->prepare($sql);
 			$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
-			$prep->bindValue(":EMAIL",$email,PDO::PARAM_STR);
 			$prep->execute();
 		}
 		catch(Exception $e)
@@ -30,7 +29,7 @@ class NEWJS_ALTERNATE_EMAIL_LOG extends TABLE {
 		{
 			
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
-			$sql = "INSERT INTO newjs.ALTERNATE_EMAIL_LOG(PROFILEID,CHANGE_DATE,EMAIL,STATUS) VALUES (:PROFILEID,'$timeNow',:EMAIL,'N')";
+			$sql = "INSERT INTO newjs.ALTERNATE_EMAIL_CHANGE_LOG(PROFILEID,CHANGE_DATE,EMAIL,STATUS) VALUES (:PROFILEID,'$timeNow',:EMAIL,'N')";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$prep->bindValue(":EMAIL",$email,PDO::PARAM_STR);
@@ -48,7 +47,7 @@ class NEWJS_ALTERNATE_EMAIL_LOG extends TABLE {
         {
                 try{
                         
-                                $sql = "SELECT ID FROM newjs.ALTERNATE_EMAIL_LOG WHERE PROFILEID = :PROFILEID ORDER BY ID DESC LIMIT 1";
+                                $sql = "SELECT ID,STATUS FROM newjs.ALTERNATE_EMAIL_CHANGE_LOG WHERE PROFILEID = :PROFILEID ORDER BY ID DESC LIMIT 1";
                                 $res=$this->db->prepare($sql);
                                 $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                                 $res->execute();

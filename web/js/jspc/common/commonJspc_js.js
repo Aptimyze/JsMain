@@ -587,8 +587,8 @@ function showLayerCommon(layerId) {
 
 function closeCurrentLayerCommon(extraFunction) {
     if (extraFunction) extraFunction();
-    $('.js-overlay').eq(0).fadeOut(100, "linear", function () {
-        $("#" + currentlyDisplayedLayer).eq(0).fadeOut(100, "linear", function () {})
+    $("#" + currentlyDisplayedLayer).eq(0).fadeOut(100, "linear", function () {
+        $('.js-overlay').eq(0).fadeOut(100, "linear", function () {})
     });
 }
 

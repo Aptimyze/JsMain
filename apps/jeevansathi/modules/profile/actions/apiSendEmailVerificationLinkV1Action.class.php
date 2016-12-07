@@ -25,32 +25,39 @@ class apiSendEmailVerificationLinkV1Action extends sfAction
     {
 
 	case 1:
-            $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loggedInProfile->getPROFILEID(),$this->loggedInProfile->getEMAIL());
+            $emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->getLastEntry($profileId);
             $result = (new emailVerification())->sendVerificationMail($profileId, $emailUID);
             break;
         case 2 :
             $contactNumOb=new newjs_JPROFILE_CONTACT();
             $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileId),'','',"ALT_EMAIL");
-            $emailUID=(new NEWJS_ALTERNATE_EMAIL_LOG())->insertEmailChange($profileId,$numArray['ALT_EMAIL']);print($emailUID);die;
-            $result = (new emailVerification())->sendAlternateVerificationMail($profileId, $emailUID,$numArray['ALT_EMAIL']);
+            $tempArray = (new NEWJS_ALTERNATE_EMAIL_LOG())->getLastEntry($profileId);
+            $emailUID =  $tempArray['ID'];
+            $result = (new emailVerification())->sendAlternateVerificationMail($profileId, $emailUID,$numArray[0]['ALT_EMAIL']);
             break;
     }
 
 
-    if($result)
-    {
-        
-        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-	$respObj->generateResponse();
-        die;
-    }
-    else 
+        if($result)
         {
-        $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+
+            $respObj->setHttpArray(ResponseHandlerConfig::$ALTERNATE_EMAIL_SUCCESS);
+            $respObj->generateResponse();
+            die;
+        }
+        else 
+        {
+        
+        if(!$emailUID)
+            {
+            $response=ResponseHandlerConfig::$ALTERNATE_EMAIL_ID_NOT_FOUND;
+            }
+        else $response = ResponseHandlerConfig::$FAILURE;
+        $respObj->setHttpArray($response);
 	$respObj->generateResponse();
         die;
        }
-	}
+    }
 	
 }
 ?>

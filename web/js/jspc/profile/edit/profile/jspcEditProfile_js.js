@@ -6118,6 +6118,8 @@ $(document).ready(function() {
       $(this).closest('.chosen-container').trigger('mousedown');
     }
     
+  
+    
     //Some awful checks !!
     var id = $($(this).closest('.chosen-container-single')).attr('id');
     
@@ -6218,6 +6220,31 @@ $(document).ready(function() {
     if(EditWhatNew){
         redirectToEditSection(EditWhatNew);
     }
+  
+    
+    $("body").on('click','#alt_email_statusView',function () {
+		if($("#alt_email_statusView").html()!='Verify') return;
+                showCommonLoader();
+                var ajaxData={'emailType':'2'};
+                var ajaxConfig={};
+                ajaxConfig.data=ajaxData;
+                ajaxConfig.type='POST';
+                ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
+                ajaxConfig.success=function(resp)
+                {
+                    var emailText = resp.responseMessage.replace(/\{email\}/g,$("#my_alt_emailView").text().trim());
+                    $("#altEmailConfirmText").text(emailText);
+                    showLayerCommon("js-alternateEmailConfirmLayer");
+                    $('.js-overlay').bind("click", function () 
+                        {
+                        closeCurrentLayerCommon();  
+                        $(this).unbind();
+                        });
+
+                    hideCommonLoader();
+                }
+                jQuery.myObj.ajax(ajaxConfig);
+	});
 
 });
 
