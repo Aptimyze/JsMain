@@ -73,7 +73,7 @@ EOF;
 
 				// Sending mail and tracking sent status
 				$subject = $this->getSubject($data["RECEIVER"]["PROFILE"]->getNAME(),$data["COUNT"]);
-                                $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName);
+                                $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$data["RECEIVER"]["ALTERNATEEMAILID"]);
 					 
 			}
 			else

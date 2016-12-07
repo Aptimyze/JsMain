@@ -67,6 +67,7 @@ EOF;
 			$pid = $values["RECEIVER"];
 			$sno = $values["SNO"];
 			$data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);
+
       if(is_array($data))
 			{
                                 $stypeMatch = $this->getStype($values["LOGIC_USED"]);
@@ -95,7 +96,7 @@ EOF;
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
-        $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid);
+        $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$data["RECEIVER"]["ALTERNATEEMAILID"]);
 				
 			}
 			else

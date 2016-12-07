@@ -46,7 +46,7 @@ class MailerService
 	*@param $mailerName : name of mailer to find mailer send details
 	*@return $flag: "Y" or "F" if mail sent is success or fail respectively
 	*/
-	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="")
+	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='')
 	{
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$emailID,"EMAIL_TYPE"=>$mailerName),$pid);
 		$canSend = $canSendObj->canSendIt();
@@ -54,7 +54,7 @@ class MailerService
 		{
 			$senderDetails = MAILER_COMMON_ENUM::getSenderEnum($mailerName);
         	        // Sending mail and tracking sent status
-                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],'','','','','','','1','',$senderDetails["ALIAS"]);
+                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,'','','','','','1','',$senderDetails["ALIAS"]);
 	                $flag= $mailSent?"Y":"F";
         	        if($flag =="F")
                 		$this->failCount++;
@@ -705,9 +705,20 @@ return $edu;
 			$data = array();
 			$receiverProfilechecksum = JsAuthentication::jsEncryptProfilechecksum($pid);
                         $emailId = $operatorProfileObj->getEMAIL();
+            $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT();
+            $receiverProfileData = $jprofileContactObj->getProfileContacts($pid);
+            $alternateEmailID = $receiverProfileData["ALT_EMAIL"];
+            $alternateEmailIDStatus = $receiverProfileData["ALT_EMAIL_STATUS"];
+
+            if ( $alternateEmailIDStatus != 'Y' || $alternateEmailID == NULL)
+            {
+            	$alternateEmailID = '';
+            }
+
 			$data["RECEIVER"]["PROFILE"] = $operatorProfileObj;
 			$data["RECEIVER"]["PROFILECHECKSUM"] = $receiverProfilechecksum;
 			$data["RECEIVER"]["EMAILID"] = $emailId;
+			$data["RECEIVER"]["ALTERNATEEMAILID"] = $alternateEmailID;
                         if($widgetArray["autoLogin"])
 			{
 				$receiverechecksum = JsAuthentication::jsEncrypt($pid,"");

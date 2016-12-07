@@ -71,13 +71,14 @@ EOF;
 		{
 			$pid = $values["PROFILEID"];
                         $data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);
+                                
 			if(is_array($data))
 			{ 
 				$data["stypeMatch"] =$stypeMatch;
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
                                 $subject = $this->getSubject($data["USERS"][0],$data["COUNT"]);
-                                $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName);
+                                $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$data["RECEIVER"]["ALTERNATEEMAILID"]);
 				$otherUserId = $data["USERS"][0]->getPROFILEID();
 				$this->recentProfileVisitorNotification($pid,$subject,$otherUserId);
                 		$this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);

@@ -85,7 +85,7 @@ $this->addOptions(array(
           /*$file = fopen("sampleMailer.html","w");
           fwrite($file,$msg);die;*/
             //Sending mail and tracking sent status
-           $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid);
+           $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$data["RECEIVER"]["ALTERNATEEMAILID"]);
           }
 				  else
 				  {
