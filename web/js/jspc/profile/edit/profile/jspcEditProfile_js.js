@@ -4128,6 +4128,12 @@ EditApp = function(){
           }
         }
       }
+      else
+      {
+        $("div p:contains('Same Email')").addClass('disp-none');
+        $("div p:contains('Same Email')").parent('div').removeClass('brdr-1');
+        $("div p:contains('Same Email')").parent('div').addClass('edpbrd3');
+      }
       
       if(emailVal.length == 0){
         if ( emailCurrentId )
