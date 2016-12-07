@@ -571,9 +571,8 @@ function postActionViewContactClose(checksum,url,count,formtype)
 
 function generateFaceCard(Object)
 {
-
   try{
-  
+  var searchId = Object.data.searchid;
 	var tracking = "";
 		if(Object.data.tracking!==undefined)
 			tracking = Object.data.tracking;
@@ -630,9 +629,10 @@ function generateFaceCard(Object)
     
       
 		if(loopCount){
+      var contactId = profileid+'_'+Object.name;
 		    for (i = 0; i < loopCount; i++) {
 				innerHtml=innerHtml+Object.innerHtml;
-				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+'&'+tracking);
+				innerHtml=innerHtml.replace(/\{\{DETAILED_PROFILE_LINK\}\}/g,"/profile/viewprofile.php?profilechecksum="+Object.data.profiles[i]["profilechecksum"]+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1);
 				innerHtml=innerHtml.replace(/\{\{PROFILE_FACE_CARD_ID\}\}/g,Object.data.profiles[i]["profilechecksum"]+"_"+Object.name+"_id");
         innerHtml=innerHtml.replace(/\{\{js-AlbumCount\}\}/gi,Object.data.profiles[i]['album_count']);
         innerHtml=innerHtml.replace(/\{\{GA_TRACKING_FOR_PHOTO_VIEW\}\}/,GATrackingFunForPhoto);

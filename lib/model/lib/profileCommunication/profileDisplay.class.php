@@ -55,4 +55,13 @@ class profileDisplay{
 		$profileid = $key;
 		return JsCommon::createChecksumForProfile($profileid);
 	}
+
+	public function getNextPreviousProfileForMyjs($profileObj,$key,$offset,$stype='')
+	{
+		$profileid = unserialize(JsMemcache::getInstance()->get($key));
+		return JsCommon::createChecksumForProfile($profileid);
+	}
+
+
+
 }
