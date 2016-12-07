@@ -69,6 +69,19 @@ class NotificationFunctions
         	}
         	NotificationFunctions::manageGcmRegistrationid($registrationid,$profileid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
         }
+
+        /* function logNotificationOpened
+        * log notification opened entry in table
+        * @params: $params
+        * @return: none
+        */
+        public static function logNotificationOpened($params){
+        	if(is_array($params) && count($params) > 0){
+        		$dbObj = new MOBILE_API_NOTIFICATION_OPENED_TRACKING();
+        		$dbObj->insertEntry($params);
+        	}
+        }
+
         public static function deliveryTrackingHandling($profileid,$notificationKey,$messageId='',$status='',$osType='')
         {
 		$scheduledNotificationKey  =NotificationEnums::$scheduledNotificationKey;
