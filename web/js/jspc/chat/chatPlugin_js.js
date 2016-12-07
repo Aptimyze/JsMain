@@ -363,7 +363,7 @@ JsChat.prototype = {
         var lengthReq = chatConfig.Params[device].nameTrimmLength;
         var stringName = this._selfName;
         var trimmedString = stringName.length > lengthReq ? stringName.substring(0, lengthReq - 3) + "..." : stringName;
-        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp" data-siteLogout="false">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
+        var chatHeaderHTML = '<div class="nchatbg1 nchatp2 clearfix pos-rel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarIn"></i> </div><div class="fl"> <img src="' + this._imageUrl + '" class="nchatp4 wd40" oncontextmenu="return false;" onmousedown="return false;"/> </div><div class="fl nchatm2 pos-rel"> <div id="js-chattopH" class="pos-abs z1 disp-none"><div class="nchatw1 nchatbg2"><div class="nchatp3"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div><div class="pos-rel pt5 f12 pl7"><span class="nchatcolor1 LogOut1 pt2 jschatLogOut cursp" data-siteLogout="false">Logout from chat</span> </div></div></div></div><div class="nchatw1 nchatp9"><div class="colrw f14 pos-rel js-LogoutPanel cursp pl7"> <span class="chatName">'+trimmedString+'</span> <i class="nchatspr nchatic1 nchatm4"></i> <i class="nchatspr pos-abs nchatic2 nchatpos3"></i> </div> </div></div></div>';
         $(curEleRef._listingPanelID).append(chatHeaderHTML);
 	$('body').on('click', function(event) {
             if(($(event.target).parent().attr('id') != "undefined" && $(event.target).parent().attr('id') != 'js-chattopH') &&
@@ -563,7 +563,7 @@ JsChat.prototype = {
                                 nick = data[key]["rosterDetails"]["nick"]; 
                             List += '<li class=\"clearfix profileIcon js-nonRosterNode disp-none\"';
                             List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-checks=\"" + prfCheckSum + "\" data-nick=\"" + nick + "\" data-jid=\"" + fullJID + "\">";
-                            List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
+                            List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" onmousedown=\"return false;\" oncontextmenu=\"return false;\" class=\"fl wid40hgt40\" >";
                             List += '<div class="fl f14 fontlig pt15 pl18">';
                             List += getNamelbl;
                             List += '</div>';
@@ -635,7 +635,7 @@ JsChat.prototype = {
                             nick = data[key]["rosterDetails"]["nick"]; //ankita for image
                         List += '<li class=\"clearfix profileIcon\"';
                         List += "id=\"" + runID + "_" + val + "\" data-status=\"" + status + "\" data-addIndex=\"" + data[key]["rosterDetails"]["addIndex"] + "\" data-checks=\"" + prfCheckSum + "\" data-nick=\"" + nick + "\" data-jid=\"" + fullJID + "\">";
-                        List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" class=\"fl wid40hgt40\">";
+                        List += "<img id=\"pic_" + runID + "_" + val + "\" src=\"" + picurl + "\" onmousedown=\"return false;\" oncontextmenu=\"return false;\" class=\"fl wid40hgt40\">";
                         List += '<div class="fl f14 fontlig pt15 pl18">';
                         List += getNamelbl;
                         List += '</div>';
@@ -2804,7 +2804,7 @@ JsChat.prototype = {
         if ($('#' + param1 + '_hover').length == 0) {
             var str = '<div class="pos_fix info-hover fontlig nz21 vishid" id="' + param1 + '_hover">';
             str += '<div class="nchatbdr3 f13 nchatgrad nchathoverdim pos-rel">';
-            str += '<a href = "/profile/viewprofile.php?profilechecksum=' + pCheckSum + trackingParamsStr + '" class = "cursp"><img src="' + param2.photo + '" class="vtop ch220"/></a>';
+            str += '<a href = "/profile/viewprofile.php?profilechecksum=' + pCheckSum + trackingParamsStr + '" class = "cursp"><img src="' + param2.photo + '" onmousedown=\"return false;\" oncontextmenu=\"return false;\" class="vtop ch220"/></a>';
             str += '<div id="' + param1 + '_hoverinfo-a">';
             str += '<div class="padall-10 pos-rel">';
             str += '<div class="pos-abs err2 nchatrr1 disp-none" id="' + param1 + '_hoverDvBgEr">';
@@ -3290,7 +3290,7 @@ JsChat.prototype = {
     addLoginHTML: function (failed,timeoutCase) {
         //this._chatLoggerPlugin('in addLoginHTML');
         var curEle = this;
-        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100" id="selfImgDiv"> <img src="' + this._imageUrl + '" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
+        var LoginHTML = '<div class="fullwid txtc fontlig pos-rel" id="js-loginPanel"><div class="pos-abs nchatpos6"> <i class="nchatspr nchatclose cursp js-minChatBarOut"></i> </div><div class="chpt100" id="selfImgDiv"> <img src="' + this._imageUrl + '" onmousedown=\"return false;\" oncontextmenu=\"return false;\" /> </div><button id="js-chatLogin" class="chatbtnbg1 mauto chatw1 colrw f14 brdr-0 lh40 cursp nchatm5">Enter to Chat</button><div id="loginLoader" class="loginSpinner disp-none" style="margin-top: 14px"></div></div>';
         var errorHTML = '';
         if (failed == true) {
             errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">' + curEle._loginFailueMsg + '</div>';
