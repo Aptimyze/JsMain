@@ -400,34 +400,37 @@ class notificationActions extends sfActions
             if($osType == null || $osType == ""){
                 $respObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_CHANNEL);
                 $respObj->setResponseBody(array("trackingDone"=>false));
-                $respObj->generateResponse();
-                die;
             }
             else if($messageId && $notificationKey){
-                $dataSet = array('MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
-                //print_r($dataSet);
-                $producerObj = new JsNotificationProduce();
-                if($producerObj->getRabbitMQServerConnected()){     //flow with rabbitmq
-                    $msgdata = FormatNotification::formatLogData($dataSet,'','NOTIFICATION_OPENED_TRACKING_API');
-                    //echo "rabbitmq flow";
-                    //print_r($msgdata);
-                    $producerObj->sendMessage($msgdata);
+                if(is_numeric($messageId)){
+                    $dataSet = array('MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
+                    //print_r($dataSet);
+                    $producerObj = new JsNotificationProduce();
+                    if($producerObj->getRabbitMQServerConnected()){     //flow with rabbitmq
+                        $msgdata = FormatNotification::formatLogData($dataSet,'','NOTIFICATION_OPENED_TRACKING_API');
+                        //echo "rabbitmq flow";
+                        //print_r($msgdata);
+                        $producerObj->sendMessage($msgdata);
+                    }
+                    else{  
+                        //echo "without rabbitmq";                        //flow without rabbitmq
+                        NotificationFunctions::logNotificationOpened($dataSet);
+                    }
+                    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                    $respObj->setResponseBody(array("trackingDone"=>true));
+                    
                 }
-                else{  
-                    //echo "without rabbitmq";                        //flow without rabbitmq
-                    NotificationFunctions::logNotificationOpened($dataSet);
+                else{
+                    $respObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_PARAM);
+                    $respObj->setResponseBody(array("trackingDone"=>false));
                 }
-                $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-                $respObj->setResponseBody(array("trackingDone"=>true));
-                $respObj->generateResponse();
-                die;
             }
             else{
                 $respObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_MISSING);
-                $respObj->setResponseBody(array("trackingDone"=>false));
-                $respObj->generateResponse();
-                die;
+                $respObj->setResponseBody(array("trackingDone"=>false)); 
             }
+            $respObj->generateResponse();
+            die;
         }
         catch(Exception $e){
             $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
