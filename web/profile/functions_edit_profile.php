@@ -105,7 +105,8 @@ function log_edit($paramArray, $table_name = "") {
         $result = mysql_query_decide($sql_backup) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_backup, "ShowErrTemplate");
     }
     $result_el = mysql_query_decide($sql_el) or logError("Due to some temporary problem your request could not be processed. Please try after some time.", $sql_el, "ShowErrTemplate");
-    if($paramArray["ALT_EMAIL"])
+   
+    if(array_key_exists("ALT_EMAIL", $paramArray))
     {
         $emailUID=(new NEWJS_ALTERNATE_EMAIL_LOG())->insertEmailChange($paramArray["PROFILEID"],$paramArray['ALT_EMAIL']);
         if($paramArray["ALT_EMAIL"]!="")
