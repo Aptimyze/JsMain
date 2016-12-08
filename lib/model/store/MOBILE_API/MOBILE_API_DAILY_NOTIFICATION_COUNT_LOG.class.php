@@ -4,10 +4,10 @@ class MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG extends TABLE{
         {
         	parent::__construct($dbname);
         }
-	public function insertData($notificationKey,$totalCount, $gcmPush,$gcmAccepted,$pushReceived,$localApiHit,$localDelivered,$localReceived,$active7Days, $active1Days, $totalIosPushed, $totalIosReceived, $entryDate,$channelType)
+	public function insertData($notificationKey,$totalCount, $gcmPush,$gcmAccepted,$pushReceived,$localApiHit,$localDelivered,$localReceived,$active7Days, $active1Days, $totalIosPushed, $totalIosReceived, $entryDate,$channelType,$notificationOpenedCount='0')
 	{
 		try{
-			$sqlInsert ="INSERT INTO MOBILE_API.DAILY_NOTIFICATION_COUNT_LOG(`NOTIFICATION_KEY`,`TOTAL_COUNT`,`PUSHED_TO_GCM`,`ACCEPTED_BY_GCM`,`PUSH_ACKNOWLEDGED`,`LOCAL_API_HIT_BY_DEVICE`,`LOCAL_SENT_TO_DEVICE`,`LOCAL_ACKNOWLEDGED`,`ACTIVE_LOGIN_7DAY`,`ACTIVE_LOGIN_1DAY`,`PUSHED_TO_IOS`,`ACCEPTED_BY_IOS`,`ENTRY_DT`,`TYPE`) VALUES (:NOTIFICATION_KEY,:TOTAL_COUNT,:PUSHED_TO_GCM,:ACCEPTED_BY_GCM,:PUSH_ACKNOWLEDGED,:LOCAL_API_HIT_BY_DEVICE,:LOCAL_SENT_TO_DEVICE,:LOCAL_ACKNOWLEDGED,:ACTIVE_LOGIN_7DAY,:ACTIVE_LOGIN_1DAY,:PUSHED_TO_IOS,:ACCEPTED_BY_IOS,:ENTRY_DT,:TYPE)";
+			$sqlInsert ="INSERT INTO MOBILE_API.DAILY_NOTIFICATION_COUNT_LOG(`NOTIFICATION_KEY`,`TOTAL_COUNT`,`PUSHED_TO_GCM`,`ACCEPTED_BY_GCM`,`PUSH_ACKNOWLEDGED`,`LOCAL_API_HIT_BY_DEVICE`,`LOCAL_SENT_TO_DEVICE`,`LOCAL_ACKNOWLEDGED`,`ACTIVE_LOGIN_7DAY`,`ACTIVE_LOGIN_1DAY`,`PUSHED_TO_IOS`,`ACCEPTED_BY_IOS`,`ENTRY_DT`,`TYPE`,`OPENED_COUNT`) VALUES (:NOTIFICATION_KEY,:TOTAL_COUNT,:PUSHED_TO_GCM,:ACCEPTED_BY_GCM,:PUSH_ACKNOWLEDGED,:LOCAL_API_HIT_BY_DEVICE,:LOCAL_SENT_TO_DEVICE,:LOCAL_ACKNOWLEDGED,:ACTIVE_LOGIN_7DAY,:ACTIVE_LOGIN_1DAY,:PUSHED_TO_IOS,:ACCEPTED_BY_IOS,:ENTRY_DT,:TYPE,:OPENED_COUNT)";
 			$resInsert = $this->db->prepare($sqlInsert);
 			$resInsert->bindValue(":NOTIFICATION_KEY",$notificationKey, PDO::PARAM_STR);
 			$resInsert->bindValue(":TOTAL_COUNT",$totalCount, PDO::PARAM_INT);
@@ -23,6 +23,7 @@ class MOBILE_API_DAILY_NOTIFICATION_COUNT_LOG extends TABLE{
 			$resInsert->bindValue(":ACCEPTED_BY_IOS",$totalIosReceived, PDO::PARAM_INT);
 			$resInsert->bindValue(":ENTRY_DT",$entryDate, PDO::PARAM_STR);
 			$resInsert->bindValue(":TYPE",$channelType, PDO::PARAM_STR);
+			$resInsert->bindValue(":OPENED_COUNT",$notificationOpenedCount, PDO::PARAM_STR);
 			$resInsert->execute();
 		}
                 catch(PDOException $e){
