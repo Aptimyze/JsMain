@@ -6353,7 +6353,7 @@ $('#validateSenderEmail').click(function(e){
 }
 function showAlternateConfirmLayer(){
     var obj = $("#js-alternateEmailConfirmLayer");
-    var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,obj.find("#my_alt_emailView").eq(0).text().trim());
+    var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,$("#my_alt_emailView").eq(0).text().trim());
     obj.find("#altEmailConfirmText").eq(0).text(msg);
     showLayerCommon("js-alternateEmailConfirmLayer");
     obj.find('.closeCommLayer').eq(0).bind('click',function(){
