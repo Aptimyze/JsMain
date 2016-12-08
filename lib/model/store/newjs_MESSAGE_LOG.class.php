@@ -1187,7 +1187,7 @@ return $result;
 			}
 			else
 			{
-				$sql="SELECT COUNT(SENDER) MSG_COUNT FROM MESSAGE_LOG WHERE RECEIVER = :PROFILEID AND IS_MSG='Y' AND TYPE='R' AND `DATE`>=:LAST_LOGIN_DT";
+				$sql="SELECT COUNT(SENDER) MSG_COUNT FROM MESSAGE_LOG WHERE RECEIVER = :PROFILEID AND IS_MSG='Y' AND TYPE='R' AND `DATE`>= DATE(:LAST_LOGIN_DT)";
 				$prep=$this->db->prepare($sql);
 				$prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 				$prep->bindValue(":LAST_LOGIN_DT",$lastLoginDt,PDO::PARAM_STR);

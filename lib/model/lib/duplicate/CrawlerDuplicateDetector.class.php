@@ -87,7 +87,7 @@ print_r($this->profileParameters);
 		$this->multipleProfileObj = new ProfileArray();
 
 		$noOfMonths = CrawlerConfig::$greaterThanConditions["LAST_LOGIN_DT"];
-		$dateValue = CommonUtility::makeTime(date("Y-m-d", JSstrToTime("- $noOfMonths month",JSstrToTime(date("Y-m-d")))));
+		$dateValue = date("Y-m-d", JSstrToTime("- $noOfMonths month",JSstrToTime(date("Y-m-d"))));
 		$this->greaterThanCond['LAST_LOGIN_DT'] = $dateValue;
 
                 foreach(CrawlerConfig::$crawlerChecks as $crawlerCheck)
