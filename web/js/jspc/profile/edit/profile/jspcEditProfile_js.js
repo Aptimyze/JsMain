@@ -4179,18 +4179,20 @@ EditApp = function(){
       }
       
       //Call Ajax
-      var request = checkEmailStatus(emailVal);
-      
+      if ( emailCurrentId )
+      {
+        var request = checkEmailStatus(emailVal);
+      }
       if(autoSuggestRequest.hasOwnProperty(emailField.key) === true){
         autoSuggestRequest[emailField.key].abort();
       }
               
       autoSuggestRequest[emailField.key] = request;
             
-      request.done(function(data){
-
       if ( emailCurrentId )
       {
+      request.done(function(data){
+
       
         if($('#emailAvailable').length == 0){
           self.parent().append($("<p />",{class:"avaliableTop pos-abs f13",id:'emailAvailable'}));
@@ -4201,8 +4203,9 @@ EditApp = function(){
         if(data == "exist"){
           $('#emailAvailable').text('Not Available').addClass('color5').removeClass('colorAva').removeClass(dispNone);
         }
-      }
+      
       });
+    }
     }
     
     /*
