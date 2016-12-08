@@ -929,14 +929,13 @@ class ApiProfileSectionsApp extends ApiProfileSections {
     }
 
     
-  public function getVerificationStatusForAltEmail($altEmail)
+  public function getVerificationStatusForAltEmail($altEmailStatus)
   {    
-    $jprofileObj = new NEWJS_JPROFILE_CONTACT();
-    $altEmailStatus = $jprofileObj->getAltEmailVerificationStatus($this->profile->getPROFILEID(),$altEmail);
+    
     if($altEmailStatus == "N")
-      return 1;
-    else
       return 0;
+    else
+      return 1;
   }
     
 }

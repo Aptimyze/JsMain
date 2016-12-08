@@ -46,7 +46,7 @@ class jsValidatorAlternateMail extends sfValidatorBase
   {
    foreach(ErrorHelp::getErrorArrayByField('EMAIL') as $key=>$msg)
    {
-    if($key == 'err_email_del')
+    if($key == 'err_email_del') //CHECK THIS
      $msg = "The profile with this email has been deleted. To retrieve profile, kindly contact bug@jeevansathi.com";
    $this->addOption("email");
     $this->addMessage($key, $msg);

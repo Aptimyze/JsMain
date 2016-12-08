@@ -72,13 +72,9 @@ jQuery.validator.addMethod("invalidDomain", function(value, element) {
 // regex pattern check on email
 jQuery.validator.addMethod("emailPattern", function(value, element) {
 	
-	if($(element).attr("id") == "EMAIL")
+	if(($(element).attr("id") == "EMAIL") || ($(element).attr("id") == "ALT_EMAIL" && value!=""))
 	{
 		var idVal = "#"+$(element).attr("id");		
-	}
-	else if($(element).attr("id") == "ALT_EMAIL" && value!="")
-	{
-		var idVal = "#"+$(element).attr("id");
 	}
 	else if($(element).attr("id") == "ALT_EMAIL" && value=="")
 	{
