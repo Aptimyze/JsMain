@@ -566,7 +566,7 @@ $js_arr[]=array("jspc/success_story/imagefit"  => "1");
 $js_arr[]=array("jspc/contactus/contactus_js"  => "1");
 $js_arr[]=array("jspc/success_story/successScroll"  => "1");
 $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                       => "33");
-$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                                                     => "67");
+$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                                                      => "68");
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"                => "26");
