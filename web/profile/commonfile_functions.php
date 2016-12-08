@@ -419,7 +419,7 @@ $js_arr[]=array("operations_validate1"   => "1");
 $js_arr[]=array("jsms/photo/mobPhotoAlbum_photoswipe"       => "3");
 $js_arr[]=array("jsms/photo/mobPhotoAlbum_panzoom"     => "1");
 $js_arr[]=array("jsms/photo/mobPhotoAlbum_photoSwipeInheritence"     => "1");
-$js_arr[]=array("jsms/profile/ep/mobedit_validator_js"               => "14");
+$js_arr[]=array("jsms/profile/ep/mobedit_validator_js"                => "15");
 $js_arr[]=array("js_common"      => "2");
 $js_arr[]=array("mobBrowser_js_2"      => "2");
 $js_arr[]=array("jsms/membership/jquery_sly"   => "2");
