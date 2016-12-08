@@ -53,18 +53,12 @@ class ContactMailer
 		if($photoCount[$receiver->getPROFILEID()]>0)
 		{
 			$photo = 1;
-			$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
-			//$dppMatchesArr = SearchCommonFunctions::getDppMatches($receiver->getPROFILEID(),'fto_offer',SearchSortTypesEnums::popularSortFlag);
 		}
 		else
 		{
 			$photo = 0;
-			if($FtoState == FTOSubStateTypes::FTO_ACTIVE_LEAST_THRESHOLD)
-				$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
-			else
-				$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
-				//$dppMatchesArr = SearchCommonFunctions::getDppMatches($receiver->getPROFILEID(),'fto_offer');
 		}
+		$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
 		$inputM2 = $dppMatchesArr["PIDS"];
 		$partialList=new PartialList;
 		$partialList->addPartial('suggested_profiles','suggested_profiles2',$inputM2,false);
@@ -183,16 +177,12 @@ class ContactMailer
 		if($photoCount[$receiver->getPROFILEID()]>0)
 		{
 			$photo = 1;
-			$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
 		}
 		else
 		{
 			$photo = 0;
-			if($FtoState == FTOSubStateTypes::FTO_ACTIVE_LEAST_THRESHOLD)
-				$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
-			else
-				$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
 		}
+		$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
 		$inputM2 = $dppMatchesArr["PIDS"];
 		$partialList=new PartialList;
 		$partialList->addPartial('suggested_profiles','suggested_profiles1',$inputM2,false);
