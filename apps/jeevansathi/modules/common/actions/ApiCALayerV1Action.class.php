@@ -59,8 +59,7 @@ class ApiCALayerV1Action extends sfActions
                     if($profileId%10==1 && MobileCommon::isNewMobileSite()){
                     	$todayDate= date('Y-m-d');
                     	$memObj = JsMemcache::getInstance();
-                    	if(!$memObj->get('nameCalTrack_'.$todayDate.'_'.$profileId))
-                    	$memObj->set('nameCalTrack_'.$todayDate.'_'.$profileId,1,1209600);
+                    	$memObj->addKeyToSet('nameCalTrack_'.$todayDate,$profileId);
                     }
                 }
 		$this->m_arrOut=$layerData;
