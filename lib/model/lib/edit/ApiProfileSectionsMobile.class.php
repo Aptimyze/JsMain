@@ -341,7 +341,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),"",$this->getApiScreeningField("EMAIL"),$this->text,"",0,"","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));
 		
 		//Alternate Email
-		$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,"",0,$this->text,"",0,"","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
+		$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,"","0",$this->text,"",0,"","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
 		
 		//mobile number
 		if($this->profile->getPHONE_MOB())
