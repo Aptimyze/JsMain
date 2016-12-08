@@ -10,7 +10,7 @@ class test_Top10_CommunityModelRecommendation extends TABLE{
 
         public function __construct($dbname="")
         {               
-                        if(JsConstants::$whichMachine == "prod")
+                        if(JsConstants::$whichMachine == "matchAlert")
                             $dbname = $dbname?$dbname:"newjs_local111";
 			parent::__construct($dbname);
         }

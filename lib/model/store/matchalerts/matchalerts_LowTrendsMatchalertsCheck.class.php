@@ -64,8 +64,28 @@ class matchalerts_LowTrendsMatchalertsCheck extends TABLE
                 catch (PDOException $e)
                 {
                         //add mail/sms
-                        throw new jsException($e);
+                        jsException::nonCriticalError($e);
                 }
+        }
+
+        public function getLowCountGroupedByProfileIdLogic($date)
+        {
+            try
+            {
+                $sql="SELECT DISTINCT(PROFILEID) FROM matchalerts.`LOW_TRENDS_MATCHALERTS_CHECK` where DATE=:DATEVAL ";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":DATEVAL", $date, PDO::PARAM_INT);
+                $prep->execute();               
+                while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $resultArr[$row["PROFILEID"]] = $row["PROFILEID"];          
+                }  
+                return $resultArr;
+            }
+            catch (PDOException $ex)
+            {
+                jsException::nonCriticalError($ex);
+            }
         }
 
        
