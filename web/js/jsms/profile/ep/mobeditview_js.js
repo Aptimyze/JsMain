@@ -492,6 +492,21 @@ function readMore(string,keyName)
 		return string;
 }
 
+function showAlternateConfirmLayerMS(email){
+                var altEmail = typeof email !='undefined' ? email :   $("#AlternateEmailId_value").eq(0).text().trim();
+                var obj = $("#emailSentConfirmLayer");
+                var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,altEmail);
+                obj.find("#emailConfirmationText").eq(0).text(msg);
+                obj.show();
+                var tempOb=$("#altEmailinnerLayer");
+                tempOb.css('margin-left','-'+$(tempOb).width()/2+'px')
+                    .css('margin-top','-'+$(tempOb).height()/2+'px');   
+
+    
+    
+    
+    
+}
 
 function bindAlternateEmailButton(){
     
@@ -509,12 +524,7 @@ function bindAlternateEmailButton(){
                                 success: function(response) 
                                 {
                                     hideLoader(1);
-                                    $("#emailConfirmationText").text(response.responseMessage.replace(/\{email\}/g,$("#AlternateEmailId_value").text().trim()));
-                                    $("#emailSentConfirmLayer").show();
-                                    var tempOb=$("#altEmailinnerLayer");
-                                    tempOb.css('margin-left','-'+$(tempOb).width()/2+'px')
-                                        .css('margin-top','-'+$(tempOb).height()/2+'px');   
-                                    
+                                    showAlternateConfirmLayerMS();
                                 }
     
             });
