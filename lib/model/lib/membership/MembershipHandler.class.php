@@ -69,7 +69,7 @@ class MembershipHandler
                             if($fetchOffline == true && $vv['SHOW_ONLINE'] == 'N'){
                                 $allMainMemHidden[$value][$kk] = $vv;
                             }
-                            else if($fetchOnline == true && ($vv['SHOW_ONLINE'] == 'Y' || $vv['SHOW_ONLINE'] == 'S')){
+                            if($fetchOnline == true && ($vv['SHOW_ONLINE'] == 'Y' || $vv['SHOW_ONLINE'] == 'S')){
                                 $allMainMem[$value][$kk] = $vv;
                             }
                         }
