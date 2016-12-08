@@ -4054,10 +4054,6 @@ EditApp = function(){
       {
         emailCurrentId = true; 
         savedEmail = editAppObject.contact.EMAIL.decValue;
-      }
-
-      if ( emailCurrentId )
-      {
         var parentID = '#emailParent';
         var fieldID = '#email';
         var emailField = editAppObject[CONTACT]['EMAIL'];
@@ -4114,21 +4110,8 @@ EditApp = function(){
       
 
       if( $("#email").val().toLowerCase() == $("#alt_email").val().toLowerCase() && ( $("#alt_email").val().length > 0 ) && valid){
-        valid = false;
-        if ( emailCurrentId )
-        {
-          if ( !($("#email").val() == savedEmail) )
-          {
-             errorMsg = errorMap['SAME_EMAIL'];//Required
-          }
-        }
-        else
-        {
-          if ( !($("#alt_email").val() == savedEmail) )
-          {
-             errorMsg = errorMap['SAME_EMAIL'];//Required
-          }
-        }
+       valid = false;
+       errorMsg = errorMap['SAME_EMAIL'];//Required
       }
       else
       {
