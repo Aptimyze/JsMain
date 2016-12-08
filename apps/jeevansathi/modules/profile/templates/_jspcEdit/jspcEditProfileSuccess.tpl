@@ -591,7 +591,9 @@
   <!--end:second part--> 
 </div>
 <div id="js-alternateEmailConfirmLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white">
+    <input id='altEmailDefaultText' type="hidden" value="A link has been sent to your email id {email}, click on the link to verify email.">
 <div class="phnvp4 f17 fontreg color11 phnvbdr4">Email Verification</div>
+<i class="sprite2 sendcross cursp pos-abs crosspos closeCommLayer"></i>
 <div class="color11">
 <!--start:div-->
 <div class="phnvwid3 mauto pt40 pb27 fontlig">

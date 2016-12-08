@@ -72,13 +72,9 @@ jQuery.validator.addMethod("invalidDomain", function(value, element) {
 // regex pattern check on email
 jQuery.validator.addMethod("emailPattern", function(value, element) {
 	
-	if($(element).attr("id") == "EMAIL")
+	if(($(element).attr("id") == "EMAIL") || ($(element).attr("id") == "ALT_EMAIL" && value!=""))
 	{
 		var idVal = "#"+$(element).attr("id");		
-	}
-	else if($(element).attr("id") == "ALT_EMAIL" && value!="")
-	{
-		var idVal = "#"+$(element).attr("id");
 	}
 	else if($(element).attr("id") == "ALT_EMAIL" && value=="")
 	{
@@ -108,7 +104,7 @@ jQuery.validator.addMethod("validate_name", function (value, element){
 
 // check if email and alternate email are same
 jQuery.validator.addMethod("sameEmail", function (value, element){
-	if( $("#EMAIL").val() == $("#ALT_EMAIL").val() && ( $("#ALT_EMAIL").val().length > 0 ))
+	if($("#EMAIL").val().toLowerCase() == $("#ALT_EMAIL").val().toLowerCase() && ( $("#ALT_EMAIL").val().length > 0 ))
 	{
 		return false;
     }

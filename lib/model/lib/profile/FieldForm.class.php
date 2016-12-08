@@ -378,7 +378,7 @@ class FieldForm extends sfForm
 					$jprofileFieldArr['HAVE_JCONTACT']="Y";
 				}
         else if(count($jprofileContactArr)){
-        	if(isset($jprofileContactArr["ALT_EMAIL"]))
+        	if(array_key_exists("ALT_EMAIL", $jprofileContactArr))
         	{
         		$jprofileContactArr["ALT_EMAIL_STATUS"] = "N";
         	}

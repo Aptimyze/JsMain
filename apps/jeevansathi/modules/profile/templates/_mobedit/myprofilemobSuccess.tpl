@@ -194,13 +194,14 @@
 ~/if`
 
 <div id='emailSentConfirmLayer' class="otplayer dispnone">
+        <input id='altEmailDefaultText' type="hidden" value="A link has been sent to your email id {email}, click on the link to verify email.">
     <div id="altEmailinnerLayer" class="otpcenter cssLayerFix bg4 fontlig f18">
         <div class="txtc pt40">
         </div>
         <p class="color3 txtc pt10">Email Verification</p>
         <p id="emailConfirmationText" class="color4 txtc pt10 pb30"></p>
         <div class="otpbr2 txtc otplh60">
-            <div id='js-okIncorrectOtp'  onclick='$("#emailSentConfirmLayer").hide();return true;' class="f19 otpcolr2 fontthin">Ok</div>
+            <div id='js-okIncorrectOtp'  onclick='$("#emailSentConfirmLayer").hide();return true;' class="f19 otpcolr2 fontthin">OK</div>
         </div>
     </div>
 </div>
