@@ -114,17 +114,12 @@ class jsValidatorAlternateMail extends sfValidatorBase
   
   private function _sameEmail($altEmail,$primaryEmail)
   {
-	 if($primaryEmail !="")
-   {
-    if(strtolower($altEmail) == strtolower($primaryEmail))
-    {
-      return 1;
-    }
-   }
-   else
+	 if($primaryEmail =="")
    {
     $loggedInObj = LoggedInProfile::getInstance();
-    if(strtolower($altEmail) == strtolower($loggedInObj->getEMAIL()))
+    $primaryEmail = $loggedInObj->getEMAIL();
+   }
+    if(strtolower($altEmail) == strtolower($primaryEmail))
     {      
       return 1;
     }
@@ -132,6 +127,5 @@ class jsValidatorAlternateMail extends sfValidatorBase
     {     
       return 0;
     } 
-   }
   }
 }
