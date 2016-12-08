@@ -116,7 +116,7 @@ class jsValidatorAlternateMail extends sfValidatorBase
   {
 	 if($primaryEmail !="")
    {
-    if($altEmail == $primaryEmail)
+    if(strtolower($altEmail) == strtolower($primaryEmail))
     {
       return 1;
     }
@@ -124,7 +124,7 @@ class jsValidatorAlternateMail extends sfValidatorBase
    else
    {
     $loggedInObj = LoggedInProfile::getInstance();
-    if($altEmail == $loggedInObj->getEMAIL())
+    if(strtolower($altEmail) == strtolower($loggedInObj->getEMAIL()))
     {      
       return 1;
     }

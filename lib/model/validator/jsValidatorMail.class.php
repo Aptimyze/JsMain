@@ -195,7 +195,7 @@ class jsValidatorMail extends sfValidatorBase
     $pid = $loggedInObj->getPROFILEID();
     $jprofileContactObj = new NEWJS_JPROFILE_CONTACT();
     $contactsArr = $jprofileContactObj->getProfileContacts($pid);
-    if($contactsArr["ALT_EMAIL"] == $email)
+    if(strtolower($contactsArr["ALT_EMAIL"]) == strtolower($email))
     {
       return 1;
     }
