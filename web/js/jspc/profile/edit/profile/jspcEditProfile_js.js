@@ -4165,16 +4165,11 @@ EditApp = function(){
       if ( emailCurrentId )
       {
         var request = checkEmailStatus(emailVal);
-      }
-      if(autoSuggestRequest.hasOwnProperty(emailField.key) === true){
-        autoSuggestRequest[emailField.key].abort();
-      }
-              
-      autoSuggestRequest[emailField.key] = request;
-            
-      if ( emailCurrentId )
-      {
-      request.done(function(data){
+        if(autoSuggestRequest.hasOwnProperty(emailField.key) === true){
+          autoSuggestRequest[emailField.key].abort();
+        }
+        autoSuggestRequest[emailField.key] = request;
+        request.done(function(data){
 
       
         if($('#emailAvailable').length == 0){
