@@ -8,6 +8,8 @@ class MOBILE_API_NOTIFICATION_OPENED_TRACKING extends TABLE{
 		$this->CHANNEL_BIND_TYPE = "STR";
 		$this->NOTIFICATION_KEY_BIND_TYPE = "STR";
 		$this->CLICKED_DATE_BIND_TYPE = "STR";
+		$this->START_CLICKED_DT_BIND_TYPE = "STR";
+		$this->END_CLICKED_DT_BIND_TYPE = "STR";
     }
 
     /*func insertEntry
@@ -36,13 +38,14 @@ class MOBILE_API_NOTIFICATION_OPENED_TRACKING extends TABLE{
 
     /*func getEntriesForNotificationKey
     *get details condition based
-    *@param : $notificationKey='',$startDt='',$endDt=''
+    *@param : $notificationKey='',$startDt='',$endDt='',$groupByArr
     */
-    public function getEntriesForNotificationKey($notificationKey='',$startDt='',$endDt='')
+    public function getEntriesForNotificationKey($notificationKey='',$startDt='',$endDt='',$groupByArr='')
     {
 		try
 		{
 			$whereClause = "";
+			$groupClause = "";
 			$bindParams = array();
 			if($notificationKey != ''){
 				$whereClause .= " WHERE NOTIFICATION_KEY = :NOTIFICATION_KEY";
@@ -55,12 +58,21 @@ class MOBILE_API_NOTIFICATION_OPENED_TRACKING extends TABLE{
 				else{
 					$whereClause .= " WHERE";
 				}
-				$whereClause .= "CLICKED_DATE BETWEEN :START_CLICKED_DT AND :END_CLICKED_DT";
+				$whereClause .= " CLICKED_DATE BETWEEN :START_CLICKED_DT AND :END_CLICKED_DT";
 				$bindParams["START_CLICKED_DT"] = $startDt;
 				$bindParams["END_CLICKED_DT"] = $endDt;
 			}
-			$sql = "SELECT COUNT(ID) AS CNT FROM MOBILE_API.NOTIFICATION_OPENED_TRACKING".$whereClause;
+			if(is_array($groupByArr)){
+				$groupStr = implode(",", $groupByArr);
+				$groupClause = " GROUP BY ".$groupStr;
+			}
+			else{
+				$groupStr = "";
+			}
+			$sql = "SELECT COUNT(ID) AS CNT,".$groupStr." FROM MOBILE_API.NOTIFICATION_OPENED_TRACKING".$whereClause.$groupClause;
+			//var_dump($sql);
 			$res=$this->db->prepare($sql);
+			
 			if(is_array($bindParams)){
 				foreach ($bindParams as $key => $value) {
 					$paramBindValue = $this->{$key."_BIND_TYPE"};
@@ -68,23 +80,22 @@ class MOBILE_API_NOTIFICATION_OPENED_TRACKING extends TABLE{
 				}
 			}
 			$res->execute();
-			if($row=$res->fetch(PDO::FETCH_ASSOC)){
-				return $row['CNT'];
+			while($row=$res->fetch(PDO::FETCH_ASSOC)){
+				$results[$row["NOTIFICATION_KEY"]][$row["CHANNEL"]] = $row["CNT"];
 			}
-			else
-				return 0;
+			return $results;
 		}
 		catch(PDOException $e)
 		{
-		        throw new jsException($e);
+		    throw new jsException($e);
 		}
     }
     
-    /*func truncateCountEntries
+    /*func truncateTable
     *truncate table
     *@param : none
     */
-    public function truncateCountEntries()
+    public function truncateTable()
     {
 		try
 		{
