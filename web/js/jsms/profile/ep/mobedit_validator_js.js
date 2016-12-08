@@ -25,7 +25,6 @@ jQuery.validator.setDefaults({
 		errorElement: "div"
 					});
 
-
 // invalid domain check on email
 jQuery.validator.addMethod("invalidDomain", function(value, element) {
 	
@@ -34,7 +33,6 @@ jQuery.validator.addMethod("invalidDomain", function(value, element) {
 		var idVal = "#"+$(element).attr("id");
 		var email=$.trim($(idVal).val());
 	}	
-	
 	var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
 	var start = value.indexOf('@');
 	var end = value.lastIndexOf('.');
@@ -67,7 +65,7 @@ jQuery.validator.addMethod("invalidDomain", function(value, element) {
 	}
 
 	return true;
-},"Please provide a valid Email Id");
+});
 
 // regex pattern check on email
 jQuery.validator.addMethod("emailPattern", function(value, element) {
@@ -86,7 +84,7 @@ jQuery.validator.addMethod("emailPattern", function(value, element) {
         else
 			return true;
 
-},"Please provide a valid Email Id");
+});
 
 
 // regex pattern check on name
@@ -292,14 +290,24 @@ function validator(tabKey){
 		$("#EMAIL").rules("add", {
 			required: false, 
 			invalidDomain: true,
-			emailPattern: true,		
+			emailPattern: true,
+			messages:
+			{
+				invalidDomain:"Please provide a valid Email Id",
+				emailPattern:"Please provide a valid Email Id"
+			}		
 		});
 
 		$("#ALT_EMAIL").rules("add", {
 			//required: false, 
 			invalidDomain: true,
 			emailPattern: true,
-			sameEmail:true,		
+			sameEmail:true,	
+			messages:
+			{
+				invalidDomain:"Please provide a valid Alternate Email Id",
+				emailPattern:"Please provide a valid Alternate Email Id"
+			}	
 		});
 		
 		$("#ISD").rules("add", {
