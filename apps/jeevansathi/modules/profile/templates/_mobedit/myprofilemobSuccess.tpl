@@ -6,7 +6,12 @@
 	<div class="pcontainer" id="pcontainer">
 <!--start:div--> 
 		<!--start:div-->
-		<div class="fullwid bg1" id="topbar">
+		
+            <div id="newLoader" class='otplayer' style="display:none;">
+                <img src="/images/jsms/commonImg/loader.gif" class="posabs" style="left: 44%;top: 50%;"/>
+            </div>
+
+                <div class="fullwid bg1" id="topbar">
 		  <div class="pad1">
 			<div class="rem_pad1">
 			  <div class="fl wid20p white"><i id ="hamburgerIcon" class="mainsp baricon " hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1"></i> </div>

@@ -512,9 +512,8 @@ function bindAlternateEmailButton(){
     
     $("#altEmailVerify").click(function(event)
     {
-        
       event.stopPropagation();
-      showLoader();
+      $("#newLoader").show();
       var ajaxData={'emailType':'2'};
       $.ajax({
                                 url:'/api/v1/profile/sendEmailVerLink',
@@ -523,7 +522,7 @@ function bindAlternateEmailButton(){
                                 type: "POST",
                                 success: function(response) 
                                 {
-                                    hideLoader(1);
+                                    $("#newLoader").hide();
                                     showAlternateConfirmLayerMS();
                                 }
     
