@@ -71,6 +71,7 @@ $this->addOptions(array(
 		$browserNotificationObj =new MOBILE_API_BROWSER_NOTIFICATION('newjs_slave');
 		$browserNotificationData =$browserNotificationObj->getDataCountForRange($startDate, $endDate);
 
+		//data for channel wise and notification wise count of opened notifications
 		$startDate 	=date('Y-m-d',time()-1*86400)." 00:00:00";
 		$endDate 	=date("Y-m-d")." 00:00:00";
 		$slaveNotificationOpenedLog = new MOBILE_API_NOTIFICATION_OPENED_TRACKING("newjs_slave");
