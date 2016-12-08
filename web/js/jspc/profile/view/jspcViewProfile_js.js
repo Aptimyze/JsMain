@@ -1,4 +1,4 @@
-var getaTop,commLayerPageIndex=1,commHistoryFullLoaded=0,commHistoryLoading=0,commHistoryDivCount=1;
+var getaTop,commLayerPageIndex=1,commHistoryFullLoaded=0,commHistoryLoading=0,commHistoryDivCount=1,vspScrollLevel=600,alreadyShown=0;
 var kundliResponseArr = {"F":"You cannot request horoscope as you don’t match this profile's filters","G":"You cannot request horoscope to a person of the same gender"};
 
 $(function(){
@@ -149,8 +149,6 @@ $(function(){
         if($(".js-checkMatch").length ==0)
             $(".js-hideMatch").hide();
         $(".content").mCustomScrollbar();
-        if(hideUnimportantFeatureAtPeakLoad != '1')
-            displayViewSimilarProfiles();
        	
       });
       $('.js-hasaction').click(function() {
@@ -290,7 +288,10 @@ function OnScrollChange(event){
 			moveline(newWidth,leftPos);
         }
       });
-	 
+        if(scrollPos>vspScrollLevel && !alreadyShown){
+            if(hideUnimportantFeatureAtPeakLoad != '1')
+               displayViewSimilarProfiles();
+        }
 	 
      
 }
@@ -327,6 +328,7 @@ $('.js-undoAction').click(function(){
 });
 
 function displayViewSimilarProfiles(){
+    alreadyShown=1;
     $.myObj.ajax({
           showError: false, 
           method: "POST",
