@@ -265,11 +265,30 @@ var mobEditPage=(function(){
 					var emptyFields=0;
 						var jsonCnt=0;
 					var sectionStr="";
-					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].screenBit==0 && v.OnClick[2].label_val!="")
+					console.log(v);
+
+					//Email (Verify link or Verified text)
+					if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==0 && v.OnClick[1].label_val!="")
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerify' class='padl10 dispibl color2'>Verify</div>");
+                                                //bindAlternateEmailButton();
+					}
+					else if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==1 && v.OnClick[1].label_val!="")
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
+					}
+					
+					//alternateEmail (Verify link or Verified text)
+					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==0 && v.OnClick[2].label_val!="")
 					{
 						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verify</div>");
                                                 bindAlternateEmailButton();
 					}
+					else if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==1 && v.OnClick[2].label_val!="")
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
+					}
+
 					if(v.singleKey)
 					{
 						
@@ -509,7 +528,7 @@ function showAlternateConfirmLayerMS(email){
 }
 
 function bindAlternateEmailButton(){
-    
+    $("#altEmailVerify").unbind();
     $("#altEmailVerify").click(function(event)
     {
         
