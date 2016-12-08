@@ -942,6 +942,11 @@ class desktopView extends DetailedViewApi
     {
       $this->m_arrOut['alt_email_status'] = "Verified";
     }
+    if ( $this->m_arrOut['my_alt_email'] == NULL )
+    {
+      $this->m_arrOut['alt_email_status'] = "empty";
+      $this->m_arrOut['my_alt_email'] = ApiViewConstants::JSPC_NULL_VALUE_MARKER;
+    }
     //Mobile number
     $mobile_label = ApiViewConstants::getNullValueMarker();
     $this->m_arrOut['mobile_desc'] = '';

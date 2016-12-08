@@ -300,16 +300,7 @@
                       Alternate Email id
                     </p>
 
-                    ~if $arrOutDisplay.contact.my_alt_email eq NULL`
-                    <div class="clearfix pos-rel">
-                      <div class="fl wid74p">
-                        <p class="color11">
-                          <span id="alt_emailView" class="color5">Not filled in</span>
-                        </p>
-
-                      </div>
-                    </div>
-                    ~else`
+                    
                     <div class="clearfix pos-rel">
                       <div class="fl wid70p">
                         <p class="color11">
@@ -323,7 +314,6 @@
                       </div>
                     </div>
                      <div id="showAlternateEmailHint" ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify` class="f12 color12  pt5" ~else` class="f12 color12  pt5 disp-none"  ~/if`>Verify email id to receive mails.</div>
-                    ~/if`
                   </li>
 
                   <li>

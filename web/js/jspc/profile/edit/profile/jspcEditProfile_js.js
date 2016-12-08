@@ -5330,10 +5330,18 @@ EditApp = function(){
          if(value.toLowerCase() == "verify")
          {
           $("#showAlternateEmailHint").removeClass("disp-none");
+          $("#alt_email_statusView").removeClass("disp-none");
+         }
+         else if ( value.toLowerCase() == "verified" )
+         {
+          $("#alt_email_statusView").removeClass("disp-none");
+          $("#showAlternateEmailHint").addClass("disp-none");
          }
          else
          {
+          $("#alt_email_statusView").addClass("disp-none");
           $("#showAlternateEmailHint").addClass("disp-none");
+
          }
       }
       $(fieldId).addClass(colorClass).removeClass(removedClass);
