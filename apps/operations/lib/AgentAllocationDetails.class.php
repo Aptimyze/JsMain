@@ -582,8 +582,8 @@ public function fetchPremiumOutSourcingProfiles()
 {
 	$searchMaleObj=new NEWJS_SEARCH_MALE('newjs_slave');		
 	$searchFemaleObj=new NEWJS_SEARCH_FEMALE('newjs_slave');	
-	$startDt = date('Y-m-d',time()-2*30*86400);
-	$endDt  = date('Y-m-d',time()-1*30*86400);
+	$startDt=date('Y-m-d',time()-2*30*86400);
+	$endDt  =date('Y-m-d',time()-1*30*86400);
 	$endEntryDt=date('Y-m-d',time()-36*30*86400);
 	$greaterArray['LAST_LOGIN_DT']="$startDt";
 	$lessArray['LAST_LOGIN_DT']="$endDt";

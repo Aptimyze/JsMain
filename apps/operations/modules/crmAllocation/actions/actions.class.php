@@ -810,7 +810,7 @@ class crmAllocationActions extends sfActions
   	}
   	$pswrdsObj = new jsadmin_PSWRDS('newjs_slave'); 
   	$whereCondition = array("ACTIVE"=>'Y');
-  	$greaterCondition = array("LAST_LOGIN_DT"=> date('Y-m-d',strtotime("- 15 day")));
+  	$greaterCondition = array("LAST_LOGIN_DT"=>date('Y-m-d',strtotime("- 15 day")));
   	$this->ExPmSrExecutivesList = $pswrdsObj->getArray('%ExPmSr%','PRIVILAGE',"USERNAME,PHONE,EMAIL",$whereCondition,$greaterCondition);
   	$this->executivesData = json_encode($this->ExPmSrExecutivesList);
   	$this->result = $memHandlerObj->getExclusiveAllocationDetails($assigned,"BILLING_DT");
