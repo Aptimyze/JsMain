@@ -549,7 +549,7 @@ engagementCounts.prototype.noResultCase = function() {
 
 function CriticalActionLayer(){
 var CALayerShow=$("#CALayerShow").val();
-if(typeof(CALayerShow)=='undefined' ||  !CALayerShow) return;
+if(typeof(CALayerShow)=='undefined' ||  !CALayerShow || getCookie("calShown") ) return;
 if(CALayerShow!='0')
   {
       
@@ -922,7 +922,7 @@ var buttonClicked=0;
                 else {
                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                 }
-                
+                Set_Cookie('calShown', 1, 1200)
         }
 
 function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shortlist)
