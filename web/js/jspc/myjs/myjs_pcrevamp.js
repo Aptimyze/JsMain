@@ -885,6 +885,7 @@ var buttonClicked=0;
 
                 if(buttonClicked)return;    
                 buttonClicked=1;
+                
                 var layerId= $("#CriticalActionlayerId").val();
                 
                     var newNameOfUser='',namePrivacy='';
@@ -900,9 +901,11 @@ var buttonClicked=0;
                             buttonClicked=0;
                             return;
                         }
+                        
                         namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
                         
                       }
+                    Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
                     var URL="/common/criticalActionLayerTracking";
                     $.ajax({
@@ -922,7 +925,7 @@ var buttonClicked=0;
                 else {
                 window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button; 
                 }
-                Set_Cookie('calShown', 1, 1200)
+                
         }
 
 function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shortlist)
