@@ -26,8 +26,10 @@
 	<meta name="theme-color" content="#415765">
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-	    <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
-	<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed_new.png">
+	~if $sf_request->getAttribute('mobLogoutPage') neq 'Y'`
+        <link rel="stylesheet" async=true type="text/css" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700">
+	~/if`
+        <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed_new.png">
 	<link rel="apple-touch-icon" href="/apple-touch-icon_new.png">
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="/apple-touch-icon-72x72-precomposed_new.png">
 	<link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72_new.png">
@@ -48,7 +50,24 @@
     ~minify_include_javascripts()`
 
   ~/if`
-
+    ~if $sf_request->getAttribute('mobLogoutPage') eq 'Y'`
+     <style type="text/css">
+       @font-face {
+         font-family: 'Roboto';
+         font-style: normal;
+         font-weight: 300;
+         src: local('Roboto Light'), local('Roboto-Light'), local('sans-serif-light'), url(http://fonts.gstatic.com/s/roboto/v15/Hgo13k-tfSpn0qi1SFdUfZBw1xU1rKptJj_0jans920.woff2) format('woff2');
+         unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+       }
+       @font-face {
+         font-family: 'Roboto';
+         font-style: normal;
+         font-weight: 500;
+         src: local('Roboto Medium'), local('Roboto-Medium'), local('sans-serif-medium'), url(http://fonts.gstatic.com/s/roboto/v15/RxZJdnzeo3R5zSexge8UUZBw1xU1rKptJj_0jans920.woff2) format('woff2');
+         unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+       }
+     </style>
+    ~/if`
     <!--link rel="shortcut icon" href="/favicon.ico" /-->
      	<script type="text/javascript">
 		var t_headend = new Date().getTime();
@@ -115,7 +134,6 @@ var domainCode={};
   <body >
 	~if $sf_request->getAttribute('mobLogoutPage') eq 'Y'`
     ~minify_include_stylesheets()`
-	<script src="~JsConstants::$jquery`"></script>
     ~/if`
   
 <noscript><div style="z-index:1000;width:100%"><div style="text-align:center;padding-bottom:3px;font:12px arial,verdana; line-height:normal;background:#E5E5E5;"><b><img src="~sfConfig::get('app_img_url')`/profile/images/registration_new/error.gif" alt="matrimonial" height="20" width="23"> Javascript is disabled in your browser.Due to this certain functionalities will not work. Please enable it</b></div></div></noscript>
@@ -143,7 +161,11 @@ var domainCode={};
         ~include_partial('global/freshDesk')`
      ~/if`
   ~/if`
+  ~if $sf_request->getAttribute('mobLogoutPage') eq 'Y'` 
+     <script src="~JsConstants::$jquery`"></script>
+  ~/if`
   </body>
+  
  ~if get_slot('optionaljsb9Key')|count_characters neq 0`
     ~assign var="jsb9Key" value=get_slot('optionaljsb9Key')`
 	~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~$jsb9Key|replace:'JSMOB':'JSNEWMOB'`")`
@@ -154,24 +176,21 @@ var domainCode={};
 				<script type="text/javascript" src="~sfconfig::get("app_img_url")`/min/?f=/js/boomerang_tracking_js_2.js"></script>
 				<noscript><img src="/beacon.php?noscript=1"></noscript>
 			~/if`
-    <!--Pixel fire code starts here-->  
-<script>(function() {
-var _fbq = window._fbq || (window._fbq = []);
-if (!_fbq.loaded) {
-var fbds = document.createElement('script');
-fbds.async = true;
-fbds.src = '//connect.facebook.net/en_US/fbds.js';
-var s = document.getElementsByTagName('script')[0];
-s.parentNode.insertBefore(fbds, s);
-_fbq.loaded = true;
-}
-_fbq.push(['addPixelId', '569447716516417']);
-})();
-window._fbq = window._fbq || [];
-window._fbq.push(['track', 'PixelInitialized', {}]);
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '569447716516417');
+fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
-<!-- Pixel Fire Code ends here-->
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=569447716516417&ev=PageView&noscript=1"
+/></noscript>
+<!-- DO NOT MODIFY -->
+<!-- End Facebook Pixel Code -->
 ~if $sf_request->getAttribute('mobLogoutPage') eq 'Y'` 
     ~minify_get_mobile('js','','1')`
     ~minify_include_javascripts()`

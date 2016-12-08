@@ -167,7 +167,14 @@ Abstract class ApiAuthentication
 		}		
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
-                    	$this->loginData=$this->IsAlive($loginData,$gcm);
+			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
+				$this->loginData =$loginData;
+				$this->loginData[AUTHCHECKSUM]=$authChecksum;
+				return $this->loginData;
+			}
+			else
+                    		$this->loginData=$this->IsAlive($loginData,$gcm);
+
 			if($this->loginData)
 			{
 				if($this->trackLogin)

@@ -164,7 +164,7 @@ class LoginV1Action extends sfActions
 		    unset($registrationIdObj);
 	    }
 
-		$loginData=array("GENDER"=>$result[GENDER],"USERNAME"=>$result[USERNAME],"INCOMPLETE"=>$result[INCOMPLETE],"SUBSCRIPTION"=>$subscription,"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done,"NOTIFICATION_STATUS"=>$notificationStatus);
+		$loginData=array("GENDER"=>$result[GENDER],"USERNAME"=>$result[USERNAME],"INCOMPLETE"=>$result[INCOMPLETE],"SUBSCRIPTION"=>$subscription,"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done,"NOTIFICATION_STATUS"=>$notificationStatus,"RELIGION"=>$result[RELIGION]);
 		$apiObj->setHttpArray(ResponseHandlerConfig::$LOGIN_SUCCESS);
                 if($familyArr = $request->getParameter('setFamilyArr')){
                     $loginData['FamilyDetails'] = $familyArr;
