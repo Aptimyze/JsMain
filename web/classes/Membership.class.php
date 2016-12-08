@@ -2011,14 +2011,14 @@ class Membership
             $discount = 0;
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
-        }/* else if ($screeningStatus == "N") {
+        }else if ($screeningStatus == "N") {
             $main_service = $mainServiceId;
             $allMembershipsNew = $allMemberships;
             $service_str_off = $allMemberships;
             $discount = 0;
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
-        } */else {
+        }else {
             list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L");
         
             // Existing codes for setting discount type in billing.ORDERS
