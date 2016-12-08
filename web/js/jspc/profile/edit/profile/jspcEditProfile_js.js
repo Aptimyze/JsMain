@@ -3370,6 +3370,9 @@ EditApp = function(){
             var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
             $(document).scrollTop($(validationCheck).offset().top);
           }
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email)) 
+              showAlternateConfirmLayer();
+              
         },
         error:function(result){
                 if(typeof showLoader != "undefined" && showLoader === false){
@@ -6250,8 +6253,7 @@ $(document).ready(function() {
                 ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
                 ajaxConfig.success=function(resp)
                 {
-                    var emailText = resp.responseMessage.replace(/\{email\}/g,$("#my_alt_emailView").text().trim());
-                    showAlternateConfirmLayer(emailText);   
+                    showAlternateConfirmLayer();   
                     hideCommonLoader();
                 }
                 jQuery.myObj.ajax(ajaxConfig);
@@ -6349,11 +6351,15 @@ $('#validateSenderEmail').click(function(e){
   return false;
 });
 }
-function showAlternateConfirmLayer(msg){
-    if(typeof msg=='undefined')
-        return;
-    $("#altEmailConfirmText").text(msg);
-                    showLayerCommon("js-alternateEmailConfirmLayer");
+function showAlternateConfirmLayer(){
+    var obj = $("#js-alternateEmailConfirmLayer");
+    var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,obj.find("#my_alt_emailView").eq(0).text().trim());
+    obj.find("#altEmailConfirmText").eq(0).text(msg);
+    showLayerCommon("js-alternateEmailConfirmLayer");
+    obj.find('.closeCommLayer').eq(0).bind('click',function(){
+                        closeCurrentLayerCommon();  
+                        $(this).unbind();
+                        });
                     $('.js-overlay').bind("click", function () 
                         {
                         closeCurrentLayerCommon();  
