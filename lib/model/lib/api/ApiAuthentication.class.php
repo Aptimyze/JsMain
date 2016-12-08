@@ -1,7 +1,10 @@
 <?php
 Abstract class ApiAuthentication
 {
-	private $request;
+	public static $recentUserEntry="RECENT_USER_ENTRY";
+	public static $loginHistory="LOGIN_HISTORY";
+	public static $loginTracking="LOGIN_TRACKING";	
+        private $request;
 	protected $encryptSeprator="______";
 	protected $_KEY = "Radhe Shaam";
     protected $_SUBKEY = "muhaafiz Khudi ke";
@@ -110,7 +113,7 @@ Abstract class ApiAuthentication
 							$this->rememberMe=0;
 						$this->setcookies($this->loginData,$email,$password);
 					}
-					CommonUtility::sendtoRabbitMq($loginData[PROFILEID]);
+					//CommonUtility::sendtoRabbitMq($loginData[PROFILEID]);
 					return $this->loginData;
 				}
 			}
@@ -249,7 +252,7 @@ Abstract class ApiAuthentication
 			$loginData[TIME]=time();
 			if($time>$this->inActive && $this->trackLogin)
 			{
-				CommonUtility::sendtoRabbitMq($loginData[PROFILEID]);
+				//CommonUtility::sendtoRabbitMq($loginData[PROFILEID]);
 				if($this->rememberMe)
 				{
 					$this->insert_into_login_history($loginData["PROFILEID"]);
@@ -289,6 +292,8 @@ Abstract class ApiAuthentication
 	*/
 	public function loginTracking($profileId,$channel,$websiteVersion,$location="")
 	{
+                $body = array('profileId'=>$profileId,'channel'=>$channel,'websiteVersion'=>$websiteVersion,'location'=>$location,'isNotApp'=>$this->isNotApp,'isNewMobileSite'=>$this->isNewMobileSite);
+                if($this->sendLoggingDataQueue(self::$loginTracking, $body))return;
 		if(!$websiteVersion)
 		{
 			if($this->isNotApp){
@@ -485,8 +490,9 @@ Abstract class ApiAuthentication
 	*/        
 	public function insert_into_login_history($profileID)
 	{	
-		
-		$ip=CommonFunction::getIP();
+                $ip=CommonFunction::getIP();
+                $body=array('IP'=>$ip,'profileId'=>$profileID);
+		if($this->sendLoggingDataQueue(self::$loginHistory, $body))return ;
 		$dbName = JsDbSharding::getShardNo($profileID);
 		//Insert Into LOG_LOGIN_HISTORY
 		$dbLogLoginHistory=new NEWJS_LOG_LOGIN_HISTORY($dbName);
@@ -519,6 +525,10 @@ Abstract class ApiAuthentication
 	*/
 	public function RecentUserEntry()
 	{
+
+		$type=self::$recentUserEntry;
+		$body = array('gapTimeEntry'=>$this->gapTimeEntry,'isMobile'=>$this->isMobile,'domain'=>$this->domain,'profileid'=>$this->loginData[PROFILEID],'dateTime1'=>$this->dateTime1,'dateTime2'=>$this->dateTime2);
+		if($this->sendLoggingDataQueue($type,$body))return;
 		$allow=1;
 		$pid=intval($this->loginData[PROFILEID]);
 		if(!$this->isMobile)
@@ -753,5 +763,32 @@ Abstract class ApiAuthentication
 
 		}
 	}
+
+	public function sendLoggingDataQueue($type,$body){
+
+			
+        if(true)
+        {
+
+            $producerObj=new Producer();
+            if($producerObj->getRabbitMQServerConnected())
+            {
+                    $updateSeenData = array('process' =>'LOGGING_TRACKING',
+                                            'data'=>
+                                            array(
+                                            'body'=>$body,
+                                             'type'=>$type, 
+                                            'redeliveryCount'=>0 )
+                                            );
+                    $producerObj->sendMessage($updateSeenData);
+                    return true;
+            }
+
+        return false;
+
+
+	}
+}
+	
 }
 ?>
