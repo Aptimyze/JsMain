@@ -527,7 +527,7 @@ Abstract class ApiAuthentication
 	{
 
 		$type=self::$recentUserEntry;
-		$body = array('gapTimeEntry'=>$this->gapTimeEntry,'isMobile'=>$this->isMobile,'domain'=>$this->domain,'profileid'=>$this->loginData[PROFILEID],'dateTime1'=>$this->dateTime1,'dateTime2'=>$this->dateTime2);
+		$body = array('gapTimeEntry'=>$this->gapTimeEntry,'isMobile'=>$this->isMobile,'domain'=>$this->domain,'profileId'=>$this->loginData[PROFILEID],'dateTime1'=>$this->dateTime1,'dateTime2'=>$this->dateTime2);
 		if($this->sendLoggingDataQueue($type,$body))return;
 		$allow=1;
 		$pid=intval($this->loginData[PROFILEID]);
