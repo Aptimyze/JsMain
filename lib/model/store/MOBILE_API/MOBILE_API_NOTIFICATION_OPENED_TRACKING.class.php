@@ -80,6 +80,7 @@ class MOBILE_API_NOTIFICATION_OPENED_TRACKING extends TABLE{
 				}
 			}
 			$res->execute();
+			$results = array();
 			while($row=$res->fetch(PDO::FETCH_ASSOC)){
 				$results[$row["NOTIFICATION_KEY"]][$row["CHANNEL"]] = $row["CNT"];
 			}
