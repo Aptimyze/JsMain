@@ -648,9 +648,10 @@ class Membership
         $this->setGenerateBillParams();
 
         $this->geoIpCountryName = $_SERVER['GEOIP_COUNTRY_NAME'];
-        if(!empty($geoIpCountryName)){
-		$this->geoIpCountryName ='India';
+        if(!$this->geoIpCountryName){
+                $this->geoIpCountryName ='India';
         }
+
         
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();
