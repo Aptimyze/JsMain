@@ -128,7 +128,7 @@ class LoggingConsumer
       switch($type)
       {
 	case ApiAuthentication::$recentUserEntry:
-            CommonUtility::logRecentUserEntry($body['profileid'],$body['gapTimeEntry'],$body['isMobile'],$body['domain'],$body['dateTime1'],$body['dateTime2']);
+            CommonUtility::logRecentUserEntry($body['profileId'],$body['gapTimeEntry'],$body['isMobile'],$body['domain'],$body['dateTime1'],$body['dateTime2']);
         break;
 	
         case ApiAuthentication::$loginHistory:
