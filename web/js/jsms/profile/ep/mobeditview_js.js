@@ -265,7 +265,7 @@ var mobEditPage=(function(){
 					var emptyFields=0;
 						var jsonCnt=0;
 					var sectionStr="";
-					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].screenBit==1 && v.OnClick[2].label_val!="")
+					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].screenBit==0 && v.OnClick[2].label_val!="")
 					{
 						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verify</div>");
                                                 bindAlternateEmailButton();

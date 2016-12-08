@@ -46,7 +46,7 @@ class jsValidatorAlternateMail extends sfValidatorBase
   {
    foreach(ErrorHelp::getErrorArrayByField('EMAIL') as $key=>$msg)
    {
-    if($key == 'err_email_del')
+    if($key == 'err_email_del') //CHECK THIS
      $msg = "The profile with this email has been deleted. To retrieve profile, kindly contact bug@jeevansathi.com";
    $this->addOption("email");
     $this->addMessage($key, $msg);
@@ -114,17 +114,12 @@ class jsValidatorAlternateMail extends sfValidatorBase
   
   private function _sameEmail($altEmail,$primaryEmail)
   {
-	 if($primaryEmail !="")
-   {
-    if($altEmail == $primaryEmail)
-    {
-      return 1;
-    }
-   }
-   else
+	 if($primaryEmail =="")
    {
     $loggedInObj = LoggedInProfile::getInstance();
-    if($altEmail == $loggedInObj->getEMAIL())
+    $primaryEmail = $loggedInObj->getEMAIL();
+   }
+    if(strtolower($altEmail) == strtolower($primaryEmail))
     {      
       return 1;
     }
@@ -132,6 +127,5 @@ class jsValidatorAlternateMail extends sfValidatorBase
     {     
       return 0;
     } 
-   }
   }
 }
