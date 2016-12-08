@@ -264,8 +264,7 @@ var mobEditPage=(function(){
 					
 					var emptyFields=0;
 						var jsonCnt=0;
-					var sectionStr="";
-					console.log(v);
+					var sectionStr="";					
 
 					//Email (Verify link or Verified text)
 					if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==0 && v.OnClick[1].label_val!="")
