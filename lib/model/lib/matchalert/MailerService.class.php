@@ -705,20 +705,29 @@ return $edu;
 			$data = array();
 			$receiverProfilechecksum = JsAuthentication::jsEncryptProfilechecksum($pid);
                         $emailId = $operatorProfileObj->getEMAIL();
-            $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT();
-            $receiverProfileData = $jprofileContactObj->getProfileContacts($pid);
-            $alternateEmailID = $receiverProfileData["ALT_EMAIL"];
-            $alternateEmailIDStatus = $receiverProfileData["ALT_EMAIL_STATUS"];
 
-            if ( $alternateEmailIDStatus != 'Y' || $alternateEmailID == NULL)
+            if ( $widgetArray["alternateEmailSend"] === true )
+            {
+	            $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT();
+	            $receiverProfileData = $jprofileContactObj->getProfileContacts($pid);
+	            $alternateEmailID = $receiverProfileData["ALT_EMAIL"];
+	            $alternateEmailIDStatus = $receiverProfileData["ALT_EMAIL_STATUS"];
+	            if ( $alternateEmailIDStatus != 'Y' || $alternateEmailID == NULL)
+	            {
+	            	$alternateEmailID = '';
+	            }
+            }
+            else
             {
             	$alternateEmailID = '';
             }
 
+            $data["RECEIVER"]["ALTERNATEEMAILID"] = $alternateEmailID;
+
+
 			$data["RECEIVER"]["PROFILE"] = $operatorProfileObj;
 			$data["RECEIVER"]["PROFILECHECKSUM"] = $receiverProfilechecksum;
 			$data["RECEIVER"]["EMAILID"] = $emailId;
-			$data["RECEIVER"]["ALTERNATEEMAILID"] = $alternateEmailID;
                         if($widgetArray["autoLogin"])
 			{
 				$receiverechecksum = JsAuthentication::jsEncrypt($pid,"");

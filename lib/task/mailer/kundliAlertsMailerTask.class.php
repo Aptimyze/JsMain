@@ -67,7 +67,7 @@ $this->addOptions(array(
     		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
 
     		//check and reconfirm what all flags have to be set in this.
-    		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>true,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true);
+    		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>true,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"alternateEmailSend"=>true);
 
         foreach($receivers as $sno => $values)
     		{
