@@ -99,7 +99,9 @@ class NotificationFunctions
         public function notificationCheck($request)
         {
                 $notificationStop =JsConstants::$notificationStop;
-                if((date("H")>='10' && date("H")<='20') || (date("H")>='23' && date("H")<='02'))
+                if((date("H")>='02' && date("H")<='09') && !$notificationStop)
+                        $notificationStop=0;
+                else
                         $notificationStop=1;
                 if($notificationStop)
                 {

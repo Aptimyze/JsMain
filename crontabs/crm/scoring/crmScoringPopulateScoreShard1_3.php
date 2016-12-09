@@ -30,7 +30,7 @@ for($t=0;$t<count($modelType_arr);$t++)
 {
 	$modelArr = array();
         $modelType = $modelType_arr[$t];
-	$sql = "SELECT DISTINCT(PROFILEID) FROM js_crm.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%6=0";
+	$sql = "SELECT DISTINCT(PROFILEID) FROM js_crm.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%6=3";
 	$res = mysql_query($sql,$myDb) or die($sql.mysql_error($myDb));
 	while($row = mysql_fetch_array($res))
         	$modelArr[] = $row['PROFILEID'];
