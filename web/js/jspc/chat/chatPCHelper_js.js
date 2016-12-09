@@ -1827,45 +1827,55 @@ $(document).ready(function () {
                 //the function goes here which will send user id to the backend
             }*/
         objJsChat.onPreHoverCallback = function (pCheckSum, username, hoverNewTop, shiftright) {
-           
-            jid = [];
-            jid[0] = "'" + pCheckSum + "'";
-            url = "/api/v1/chat/getProfileData";
+          
+           url = profileServiceUrl + '/profile/v1/profile';
+           var authchecksum = readCookie("AUTHCHECKSUM");
+	   		
             $.ajax({
-                type: 'POST',
+                type: 'GET',
                 async: false,
                 data: {
-                    jid: jid,
-                    username: username,
-                    profilechecksum: pCheckSum
+                    view : "vcard",
+                    pfids : pCheckSum,
                 },
+		        headers:{
+			    "JB-Profile-Identifier" : authchecksum,
+			    "JB-Raw-Data" : false
+		        },
                 url: url,
-                success: function (data) {
-                    ////console.log("Nitishvcard");
-                   
-                    if(data["responseStatusCode"] == "0"){
-                        if (data.photo == '' && loggedInJspcGender) {
+                success: function (response) {
+                
+		 
+		        if(response.header.status == 200) { 
+			         for(var i=0;i<response.data.items.length;i++) {
+    				    var data = response.data.items[i];
+    		
+    				    data.jid = data.profileid;
+    				    data.education = data.eduLevelNew;
+    				    data.location = data.cityRes.length ? data.cityRes : data.countryRes;
+    				    if (data.photo == '' && loggedInJspcGender) {
                             if (loggedInJspcGender == "F") {
-                                data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["M"];
-                            } else if (loggedInJspcGender == "M") {
-                                data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
-                            }
-                        }
-                        objJsChat.updateVCard(data, pCheckSum, function () {
-                            $('#' + username + '_hover').css({
-                                'top': hoverNewTop,
-                                'visibility': 'visible',
-                                'right': shiftright
-                            });
-                            
-                        });
-                    }
-                    else {
-                        checkForSiteLoggedOutMode(data);
-                    }
-                }
-            });
-        }
+                	                data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["M"];
+        	                    } else if (loggedInJspcGender == "M") {
+                        	        data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["F"];
+                        	    }
+                            } 
+    			
+        	                objJsChat.updateVCard(data, pCheckSum, function () {
+                	            $('#' + username + '_hover').css({
+                        	        'top': hoverNewTop,
+                                    'visibility': 'visible',
+        	                        'right': shiftright
+                                });
+    	
+        	                }); 
+        			}
+		        } else {
+			         checkForSiteLoggedOutMode({"responseStatusCode":9});
+		        }
+            }
+        });
+       }
         objJsChat.start();
     }
 

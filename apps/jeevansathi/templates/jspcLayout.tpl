@@ -78,6 +78,7 @@
         var dppListingWebServiceUrl = "~JsConstants::$chatListingWebServiceUrl['dpp']`";
         var nonRosterRefreshUpdate = "~JsConstants::$nonRosterRefreshUpdate`";
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
+        var profileServiceUrl = "~JsConstants::$profileServiceUrl`";
         //console.log("dppLiveForAll",dppLiveForAll);
         var betaDppExpression = "",specialDppProfiles="";
         if(dppLiveForAll == "0"){
