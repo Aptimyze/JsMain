@@ -780,9 +780,52 @@ class DetailActionLib
 
     public static function GetNextPreviousForMyjs($request,$actionObj)
     {	
-       // $szContactID = $request->getParameter("contact_id");
+    	$maxProfilesOnMyjs = 20;
         $iTotalRecord = $request->getParameter('total_rec');
-        $iOffset = $request->getParameter('actual_offset');//Offset Range from 1 to TotalRecords
+        //Offset Range from 1 to TotalRecords
+        $iOffset = $request->getParameter('actual_offset');
+        $iListingType = $request->getParameter('listingName');
+        $profileObj= LoggedInProfile::getInstance();
+		$pid = $profileObj->getPROFILEID();
+
+        if($iOffset%$maxProfilesOnMyjs == 1 && $iOffset > 1)
+        {	
+        	$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
+        	$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria.$pid));
+
+        	$request->setParameter('caching',0);
+
+        	if($iListingType == 'VERIFIEDMATCHES')
+        	{
+        		$request->setParameter('verifiedMatches',1);
+        	}
+
+        	if($iListingType == 'JUSTJOINED')
+        	{
+        		$request->setParameter('searchBasedParam','justJoinedMatches');
+        		$request->setParameter('justJoinedMatches',1);
+        	}
+
+        	if($iListingType == 'DESIREDPARTNERMATCHES')
+        	{
+        		$request->setParameter('partnermatches',1);
+        	}
+        	ob_start();
+        	$request->setParameter("useSfViewNone",1);
+        	$nextProfileToAppend = sfContext::getInstance()->getController()->getPresentationFor('search','PerformV1');
+        	$output = (array)(json_decode(ob_get_contents(),true));
+
+        	ob_end_clean();
+        	$iterate = $iOffset-1;
+
+        	foreach ($output['profiles'] as $key => $value) {
+        		array_push($cachedResultsPoolArray['profiles'], $value);
+        	}
+        	
+
+        	JsMemcache::getInstance()->set("cached".$cacheCriteria.$pid,serialize($cachedResultsPoolArray));
+							        	
+        }
 
         if($actionObj->loginProfile->getPROFILEID() && ($iOffset)>0 && ($iOffset)<=$iTotalRecord)
         {	
@@ -794,12 +837,12 @@ class DetailActionLib
             if($iOffset>1)
             {	
                 $actionObj->SHOW_PREV = true;
-                $actionObj->prevLink = "&total_rec=".$iTotalRecord."&actual_offset=".($iOffset-1);
+                $actionObj->prevLink = "&total_rec=".$iTotalRecord."&actual_offset=".($iOffset-1)."&listingName=".$iListingType."&hitFromMyjs=1";
             }
             if($iOffset < $iTotalRecord && $iOffset!=$iTotalRecord)
             {
                 $actionObj->SHOW_NEXT = true;
-                $actionObj->nextLink ="&total_rec=".$iTotalRecord."&actual_offset=".($iOffset+1);
+                $actionObj->nextLink ="&total_rec=".$iTotalRecord."&actual_offset=".($iOffset+1)."&listingName=".$iListingType."&hitFromMyjs=1";
             }
             $actionObj->$fromPage = 'myjs';
             $actionObj->SHOW_NEXT_PREV = 1;
@@ -808,9 +851,7 @@ class DetailActionLib
             if(!$pchkSum || strlen($pchkSum)==0)
             { 
                 $objProfileDisplay = new profileDisplay;
-                $keyForMemCache = '';
-                $actionObj->profilechecksum = $objProfileDisplay->getNextPreviousProfileForMyjs($keyForMemCache,$iOffset);
-
+                $actionObj->profilechecksum = $objProfileDisplay->getNextPreviousProfileForMyjs($iListingType,$iOffset);
                 // Subtracting -1 ,as in case of else call to function ProfileCommon::showNextPrev() will need 
                 // offset to start from -1 And while baking response DetailedViewApi we add +1 actual_offset
                 $actionObj->actual_offset = $iOffset - 1 ;
@@ -830,7 +871,7 @@ class DetailActionLib
             }
 
             return true;
-        }
+        }	
         return false;
     }
     

@@ -56,10 +56,30 @@ class profileDisplay{
 		return JsCommon::createChecksumForProfile($profileid);
 	}
 
-	public function getNextPreviousProfileForMyjs($profileObj,$key,$offset,$stype='')
-	{
-		$profileid = unserialize(JsMemcache::getInstance()->get($key));
-		return JsCommon::createChecksumForProfile($profileid);
+	public function getNextPreviousProfileForMyjs($iListingType,$iOffset)
+	{	
+
+
+		$profileObj= LoggedInProfile::getInstance();
+		$pid = $profileObj->getPROFILEID();
+
+		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
+
+		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cachedPMR$pid"));
+
+ 		
+		$profileIdPoolArray = array();
+		if(is_array($cachedResultsPoolArray) && in_array('profiles',$cachedResultsPoolArray )) { 
+		foreach ($cachedResultsPoolArray['profiles'] as $key => $value) {
+	
+		 	array_push($profileIdPoolArray,$value['profileid']);
+		}
+	}
+		$profileIdToReturn = $profileIdPoolArray[$iOffset-1];
+
+
+		return JsCommon::createChecksumForProfile($profileIdToReturn);
+		
 	}
 
 

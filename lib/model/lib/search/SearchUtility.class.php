@@ -74,6 +74,31 @@ class SearchUtility
 						$matchalerts_LOG = new matchalerts_LOG();
 						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
 					}
+
+
+					
+					$request = sfContext::getInstance()->getRequest();	
+					if($request->getParameter('hitFromMyjs') == 1 && $request->getParameter('caching') == 0)
+					{	
+					$stype = $request->getParameter('stype');	
+					$listnameForMyjs = $request->getParameter('listingName');
+					$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($listnameForMyjs);
+
+
+	                                        $forNextPrev = JsMemcache::getInstance()->get("cached".$cacheCriteria.$pid);
+						$forNextPrev = unserialize($forNextPrev);
+						$forNextPrev = $forNextPrev["profiles"];
+						if(is_array($forNextPrev))
+						{
+							foreach($forNextPrev as $v)
+							{
+								$forNextPrevTemp[] = $v["profileid"];
+							}
+							$forNextPrev = implode(" ",$forNextPrevTemp);
+							$hideArr.= $forNextPrev;
+						}
+					}
+					
 				}
 				// adding code to remove temporary contacts sent by the user while the user is unscreened.
 				if($tempContacts)
@@ -853,7 +878,7 @@ class SearchUtility
 	}
 
 	public static function cachedSearchApi($type,$request="",$pid="",$statusArr="",$resultArr="")
-        {
+        {  
                 $caching = $request->getParameter("caching");
                 if($caching)
                 {       
@@ -885,19 +910,19 @@ class SearchUtility
                                 }
                         }
 			elseif($request->getParameter("partnermatches")=='1')
-                        {
+                        {	
                                 if($type=='set')
-                                {
+                                {	
                                         JsMemcache::getInstance()->set("cachedPMS$pid",serialize($statusArr));
-                                        JsMemcache::getInstance()->set("cachedPMR$pid",serialize($resultArr));
+                                        JsMemcache::getInstance()->set("cachedPMR$pid",serialize($resultArr)); 
                                         return 1;
                                 }
                                 elseif($type=='get')
-                                {
+                                {	
                                         $statusArr = JsMemcache::getInstance()->get("cachedPMS$pid");
                                         $resultArr = JsMemcache::getInstance()->get("cachedPMR$pid");
                                         if($statusArr && $resultArr)
-                                        {
+                                        {	
                                                 $cachedArr["statusArr"] = unserialize($statusArr);
                                                 $cachedArr["resultArr"] = unserialize($resultArr);
                                                 return $cachedArr;
@@ -905,19 +930,20 @@ class SearchUtility
                                 }
                         }
 			elseif($request->getParameter("verifiedMatches")=='1')
-                        {
+                        {	
                                 if($type=='set')
-                                {
+                                {	
                                         JsMemcache::getInstance()->set("cachedVMS$pid",serialize($statusArr));
                                         JsMemcache::getInstance()->set("cachedVMR$pid",serialize($resultArr));
                                         return 1;
                                 }
                                 elseif($type=='get')
-                                {
+                                {	
                                         $statusArr = JsMemcache::getInstance()->get("cachedVMS$pid");
                                         $resultArr = JsMemcache::getInstance()->get("cachedVMR$pid");
+                                        
                                         if($statusArr && $resultArr)
-                                        {
+                                        {	
                                                 $cachedArr["statusArr"] = unserialize($statusArr);
                                                 $cachedArr["resultArr"] = unserialize($resultArr);
                                                 return $cachedArr;
