@@ -430,7 +430,7 @@ JsChat.prototype = {
             TabsOpt += "<p>" + objin["tab_name"] + "</p><div class=\"showlinec\"></div></li>";
         }
         TabsOpt += '</ul></div>';
-        TabsOpt += '<div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner"></div>';
+        TabsOpt += '<div id="nchatDivs" class="nchatscrollDiv"><div id="scrollDivLoader" class="spinner pos_fix chatpos1 z7 blankLoader"></div>';
         TabsOpt += '<div class="showtab1 js-htab" id="tab1"> <div id="showtab1NoResult" class="noResult f13 fontlig disp-none">' + curEle._noDataTabMsg["tab1"] + '</div>';
         for (var i = 0; i < obj["tab1"]["groups"].length; i++) {
             TabsOpt += "<div class=\"" + obj["tab1"]["groups"][i]["id"] + " disp-none chatListing\" data-showuser=\"" + obj["tab1"]["groups"][i]["hide_offline_users"] + "\">";
@@ -3035,6 +3035,7 @@ JsChat.prototype = {
                 curEle._addChatTop();
                 curEle.addTab();
                 curEle.onChatLoginSuccess();
+                $("#blankPanelLoader").addClass("disp-none");
             });
         }
     },
@@ -3295,7 +3296,10 @@ JsChat.prototype = {
         if (failed == true) {
             errorHTML += '<div class="txtc color5 f13 mt10" id="loginErr">' + curEle._loginFailueMsg + '</div>';
         }
-        if (failed == false || typeof failed == "undefined" || $("#js-loginPanel").length == 0) $(this._parendID).append(LoginHTML);
+        if (failed == false || typeof failed == "undefined" || $("#js-loginPanel").length == 0){
+            $(this._parendID).append(LoginHTML);
+            $("#blankPanelLoader").addClass("disp-none");
+        }
         else {
             //this._chatLoggerPlugin("removing");
             $(curEle._loginPanelID).fadeIn('fast');
@@ -3308,6 +3312,10 @@ JsChat.prototype = {
         var that = this;
         $(this._loginbtnID).click(function () {
             //console.log("before login",that._selfName);
+            if($("#js-loginPanel").length == 0 && $("#js-lsitingPanel").length == 0){
+                //console.log("Loggedinclicked",$(".js-openOutPanel").is(":visible"));
+                $("#blankPanelLoader").removeClass("disp-none");
+            }
             if (curEle.onEnterToChatPreClick && typeof (curEle.onEnterToChatPreClick) == "function") {
                 //that._chatLoggerPlugin("in onEnterToChatPreClick");
                 curEle.onEnterToChatPreClick();
@@ -3370,6 +3378,7 @@ JsChat.prototype = {
         //console.log(my_action,"ankita1");
         var divElement = document.createElement("Div");
         $(divElement).addClass('pos_fix chatbg chatpos1 z7 js-openOutPanel').appendTo(this._mainID);
+        
         this._createPrototypeChatBox();
         var _this = this;
         if (this._checkWidth()) {
@@ -3402,6 +3411,10 @@ JsChat.prototype = {
                     _this.handleNextPrevButtons("makeCloser");
                 }
             }
+        }
+        $("<div id='blankPanelLoader' class='loginSpinner pos_fix chatpos1 z7 blankLoader'></div>").appendTo(this._mainID);
+        if($(".js-minpanel").length != 0){
+            $("#blankPanelLoader").addClass("disp-none");
         }
         if (this.checkLoginStatus()) {
             //this._chatLoggerPlugin("checking login status");

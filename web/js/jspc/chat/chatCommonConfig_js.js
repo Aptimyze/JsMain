@@ -341,7 +341,8 @@ chatConfig.Params = {
         nonRosterListingRefreshCap:nonRosterRefreshUpdate, //time in ms(5 min)
         headerCachingAge:60000,  //time in ms(5 min)
         nameTrimmLength:14,
-        logChatTimeout:false
+        logChatTimeout:true,
+        autoDisplayLoginPanel: 30000 //time in ms
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
