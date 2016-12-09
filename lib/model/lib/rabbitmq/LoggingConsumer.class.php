@@ -68,6 +68,7 @@ class LoggingConsumer
    */ 
   public function receiveMessage()
   {   
+      
     try 
     {
       $this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
@@ -118,7 +119,8 @@ class LoggingConsumer
    */
   public function processMessage(AMQPMessage $msg)
   {
-    $msgdata=json_decode($msg,true);
+
+    $msgdata=json_decode($msg->body,true);
     $process=$msgdata['process'];
     $redeliveryCount=$msgdata['redeliveryCount'];
     $type=$msgdata['data']['type'];
