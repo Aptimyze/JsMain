@@ -66,7 +66,7 @@ EOF;
 		$mailerLinks = $mailerServiceObj->getLinks();
     $this->smarty->assign('mailerLinks',$mailerLinks); 
     $this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
-		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>false,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>false,"googleAppTrackingFlag"=>true);
+		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>false,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>false,"googleAppTrackingFlag"=>true,"alternateEmailSend"=>true);
 		foreach($receivers as $sno=>$values)
 		{
 			$pid = $values["PROFILEID"];
@@ -78,7 +78,7 @@ EOF;
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
                                 $subject = $this->getSubject($data["USERS"][0],$data["COUNT"]);
-                                $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$data["RECEIVER"]["ALTERNATEEMAILID"]);
+                                $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,"",$data["RECEIVER"]["ALTERNATEEMAILID"]);
 				$otherUserId = $data["USERS"][0]->getPROFILEID();
 				$this->recentProfileVisitorNotification($pid,$subject,$otherUserId);
                 		$this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);
