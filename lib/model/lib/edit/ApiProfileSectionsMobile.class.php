@@ -1182,10 +1182,10 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 
     public function getVerificationStatusForAltEmailAndMail($EmailStatus)
     {    
-    	if($EmailStatus == "N")
-    		return 0;
-    	else
+    	if($EmailStatus == "Y")
     		return 1;
+    	else
+    		return 0;
     }
 }
 ?>

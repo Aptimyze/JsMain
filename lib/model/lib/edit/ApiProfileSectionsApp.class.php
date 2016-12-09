@@ -943,10 +943,10 @@ class ApiProfileSectionsApp extends ApiProfileSections {
   public function getVerificationStatusForAltEmailAndMail($altEmailStatus)
   {    
     
-    if($altEmailStatus == "N")
-      return 0;
-    else
+    if($altEmailStatus == "Y")
       return 1;
+    else
+      return 0;
   }
     
 }
