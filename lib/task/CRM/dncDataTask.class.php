@@ -49,7 +49,7 @@ EOF;
 		$startLimit	+=$loopCnt;
 
 		// dump command	
-		$command ='/usr/local/mysql_php/bin/mysql -u'.$user.' -p'.$password.' -h'.$dns.' -P'.$port.' -e "'.$query.'" >>'.$sourceDir;	
+		$command ='/usr/local/mysql_php/bin/mysql -s -u'.$user.' -p'.$password.' -h'.$dns.' -P'.$port.' -e "'.$query.'" >>'.$sourceDir;	
 		passthru($command);
 	}	
 	usleep(3000000);

@@ -64,12 +64,13 @@ EOF;
 				// get the aggregated value of sum of counts
 				$arrModules[$result['key']] = $result['1']['value'];
 			}
-			$ratio = $arrModules[$rcode200]/$arrModules[$rcode500];
+			$ratio = ($arrModules[$rcode500]*100)/($arrModules[$rcode500]+$arrModules[$rcode200]);
 			$count = array(
 					'Date' => $date,
 					$rcode200 => $arrModules[$rcode200],
 					$rcode500 => $arrModules[$rcode500],
-					'ratio' => intval($ratio),
+					'ratio' => $ratio,
+					'total' => $arrModules[$rcode200] + $arrModules[$rcode500],
 					);
 			$count = json_encode($count);
 			$ObjectId = time();

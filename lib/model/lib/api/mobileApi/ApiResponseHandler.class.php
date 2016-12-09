@@ -44,7 +44,6 @@ class ApiResponseHandler
 	{
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
-	
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
 	public function getResetCache(){return $this->resetCache;}
 	public function setHttpArray($httpArray)
@@ -122,6 +121,9 @@ class ApiResponseHandler
 		}
 			
 		$output["phoneDetails"]=$this->phoneDetails;
+		$loggedIn=LoggedInProfile::getInstance();
+		if(MobileCommon::isApp() && $loggedIn && $loggedIn->getPROFILEID())
+			$output["userReligion"] = $loggedIn->getRELIGION();
 		// set the content type
 		header('Content-type: ' . $this->responseContentType);
 

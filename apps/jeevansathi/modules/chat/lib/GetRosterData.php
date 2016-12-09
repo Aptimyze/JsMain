@@ -54,7 +54,7 @@ class GetRosterData
 			$monthGap = mktime(0, 0, 0, date("m")- self::LOGIN_MONTHS_GAP, date("d"),   date("Y"));
 			$dateAfterMonthGap = date("Y-m-d",$monthGap);
 			$greaterThanEqualArrayWithoutQuote["LAST_LOGIN_DT"] = "'".$dateAfterMonthGap."'";
-			$orderBy = "LAST_LOGIN_DT";
+			$orderBy = "LAST_LOGIN_DT DESC";
 			
 			//$orderBy = "FIELD(PROFILEID,$whereArr[PROFILEID])";
 

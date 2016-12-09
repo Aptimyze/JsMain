@@ -43,6 +43,7 @@ EOF;
             foreach($preAllocationData as $profileid => $details){
                 unset($tempArr);
                 $tempArr["USERNAME"] = $profileDetails[$profileid]["USERNAME"];
+                $tempArr["ALLOTED_TO"] = $details["ALLOTED_TO"];
                 $tempArr["ANALYTIC_SCORE"] = $details["SCORE"];
                 $tempArr["LAST_LOGIN_DT"] = $profileDetails[$profileid]["LAST_LOGIN_DT"];
                 $countryCode = $profileDetails[$profileid]["COUNTRY_RES"];
@@ -62,7 +63,7 @@ EOF;
             unlink($filename);
             $csvData = fopen("$filename", "w") or print_r("Cannot Open");
 
-            fputcsv($csvData, array('Username','Latest analytics score','Last login date','City'));
+            fputcsv($csvData, array('Username','Alloted To','Latest analytics score','Last login date','City'));
             foreach($finalArr as $key=>&$val) {
                 fputcsv($csvData, $val);
             }
@@ -74,8 +75,9 @@ EOF;
             $to = "isha.mehra@jeevansathi.com,bharat.vaswani@jeevansathi.com,shashank.ghanekar@jeevansathi.com,anamika.singh@jeevasathi.com,rajeev.joshi@jeevansathi.com,rohan.mathur@jeevansathi.com";
             //$to = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com";
             $cc = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
+            //$cc = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com";
             $from = "js-sums@jeevansathi.com";
-            $subject = "Pre Allocated Profiles Mailer for ".$dt;
+            $subject = "Pre Allocated Profiles Mailer for allot date ".$dt;
             $msgBody = "PFA CSV report containing pre allocated profiles.";
 
             SendMail::send_email($to, $msgBody, $subject, $from, $cc, '', $csvAttachment, '', 'preAllocatedProfileMailer.csv');
