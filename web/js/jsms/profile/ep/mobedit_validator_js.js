@@ -108,7 +108,7 @@ jQuery.validator.addMethod("sameEmail", function (value, element){
     }
     else
     return true;	
-},"Both Email are same");
+},"Both Emails are same");
 
 
 
