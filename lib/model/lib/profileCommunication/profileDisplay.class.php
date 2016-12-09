@@ -65,16 +65,16 @@ class profileDisplay{
 
 		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
 
-		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cachedPMR$pid"));
+		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria.$pid));
 
  		
 		$profileIdPoolArray = array();
-		if(is_array($cachedResultsPoolArray) && in_array('profiles',$cachedResultsPoolArray )) { 
+		if(is_array($cachedResultsPoolArray)) {  
 		foreach ($cachedResultsPoolArray['profiles'] as $key => $value) {
 	
 		 	array_push($profileIdPoolArray,$value['profileid']);
 		}
-	}
+	}	
 		$profileIdToReturn = $profileIdPoolArray[$iOffset-1];
 
 
