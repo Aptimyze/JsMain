@@ -26,7 +26,7 @@ $this->addOptions(array(
 		$startDate 	=date('Y-m-d',time()-86400)." 19.30:00:00";
 		$endDate 	=date("Y-m-d")." 19.30:00:00";
 		$datePrev6day	=date("Y-m-d",time()-6*24*60*60)." 00:00:00";
-		$entryDate	=date("Y-m-d");
+		$entryDate	=date('Y-m-d');
 
 		// get data from Notification Log
                 $notificationsLogObj = new MOBILE_API_NOTIFICATION_LOG('newjs_slave'); 
@@ -122,7 +122,7 @@ $this->addOptions(array(
 			}
 			
 			// Add record in daily log table	
-			$dailyScheduledLog->insertData($notificationKey,$totalCount, $gcmPush,$gcmAccepted,$pushAcknowledged ,$localApiHit, $localDelivered,$localAcknowledged, $active7DaysCount, $active1DaysCount,$totalIosPushed, $totalIosReceived, $entryDate,'A_I',$channelWiseOpenedCountArr['A']."-".$channelWiseOpenedCountArr['I']);
+			$dailyScheduledLog->insertData($notificationKey,$totalCount, $gcmPush,$gcmAccepted,$pushAcknowledged ,$localApiHit, $localDelivered,$localAcknowledged, $active7DaysCount, $active1DaysCount,$totalIosPushed, $totalIosReceived, $entryDate,'A_I',$channelWiseOpenedCountArr['A'],$channelWiseOpenedCountArr['I']);
 
                         // Browser Notification Records 
                         $desktopAcknowledged    =$browserData['D']['Y']['Y'];
@@ -140,8 +140,8 @@ $this->addOptions(array(
 			unset($recordCount);
 		}
 		unset($notificationOpenedData);
-		$masterNotificationOpenedLog = new MOBILE_API_NOTIFICATION_OPENED_TRACKING();
-		$masterNotificationOpenedLog->truncateTable();
-		unset($masterNotificationOpenedLog);
+		//$masterNotificationOpenedLog = new MOBILE_API_NOTIFICATION_OPENED_TRACKING();
+		//$masterNotificationOpenedLog->truncateTable();
+		//unset($masterNotificationOpenedLog);
   }
 }
