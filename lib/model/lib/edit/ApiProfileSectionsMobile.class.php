@@ -430,7 +430,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 
 		$contactArrFinal[ALT_EMAIL][outerSectionName]="Alternate Email Id";
 		$contactArrFinal[ALT_EMAIL][outerSectionKey]="AlternateEmailId";
-		$contactArrFinal[ALT_EMAIL][outerSectionValue]=$this->profile->getExtendedContacts()->ALT_EMAIL; //getEMAIL needs to be changed
+		$contactArrFinal[ALT_EMAIL][outerSectionValue]=$this->profile->getExtendedContacts()->ALT_EMAIL; 
 		$contactArrFinal[ALT_EMAIL][singleKey]=1;
 		$contactArrFinal[ALT_EMAIL][OnClick]=$contactArr;
 		
