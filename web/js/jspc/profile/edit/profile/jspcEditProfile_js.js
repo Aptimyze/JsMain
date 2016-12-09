@@ -3178,7 +3178,7 @@ EditApp = function(){
         editFieldArr['WEIGHT'] = editFieldArr['WEIGHT'].toString().toLowerCase().split('kg')[0].trim(); 
       }
       //Check for valid changes, if same value then delete that key
-      var arrIgnore = ['M_BROTHER','M_SISTER','ALT_MOBILE','ALT_EMAIL','PHONE_RES','PHONE_MOB','TIME_TO_CALL_START','TIME_TO_CALL_END'];
+      var arrIgnore = ['M_BROTHER','M_SISTER','ALT_MOBILE','PHONE_RES','PHONE_MOB','TIME_TO_CALL_START','TIME_TO_CALL_END'];
       for(var fieldKey in editFieldArr){
         //For Resave case : when duplicate fields remaped to its original name
         if (false === sectionObject.hasOwnProperty(fieldKey)) {
