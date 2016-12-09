@@ -895,6 +895,14 @@ class SearchUtility
                                 {      
                                         JsMemcache::getInstance()->set("cachedJJS$pid",serialize($statusArr));
                                         JsMemcache::getInstance()->set("cachedJJR$pid",serialize($resultArr));
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedJJRMyjs$pid",serialize($profileIdPoolArray));
+
 					return 1;
                                 }       
                                 elseif($type=='get')
@@ -915,6 +923,15 @@ class SearchUtility
                                 {	
                                         JsMemcache::getInstance()->set("cachedPMS$pid",serialize($statusArr));
                                         JsMemcache::getInstance()->set("cachedPMR$pid",serialize($resultArr)); 
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedPMRMyjs$pid",serialize($profileIdPoolArray));
+
+
                                         return 1;
                                 }
                                 elseif($type=='get')
@@ -935,6 +952,13 @@ class SearchUtility
                                 {	
                                         JsMemcache::getInstance()->set("cachedVMS$pid",serialize($statusArr));
                                         JsMemcache::getInstance()->set("cachedVMR$pid",serialize($resultArr));
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedVMRMyjs$pid",serialize($profileIdPoolArray));
                                         return 1;
                                 }
                                 elseif($type=='get')

@@ -65,17 +65,9 @@ class profileDisplay{
 
 		$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
 
-		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria.$pid));
-
- 		
-		$profileIdPoolArray = array();
-		if(is_array($cachedResultsPoolArray)) {  
-		foreach ($cachedResultsPoolArray['profiles'] as $key => $value) {
+		$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
 	
-		 	array_push($profileIdPoolArray,$value['profileid']);
-		}
-	}	
-		$profileIdToReturn = $profileIdPoolArray[$iOffset-1];
+		$profileIdToReturn = $cachedResultsPoolArray[$iOffset-1];
 
 
 		return JsCommon::createChecksumForProfile($profileIdToReturn);

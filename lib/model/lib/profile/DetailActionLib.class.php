@@ -791,7 +791,7 @@ class DetailActionLib
         if($iOffset%$maxProfilesOnMyjs == 1 && $iOffset > 1)
         {	
         	$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($iListingType);
-        	$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria.$pid));
+        	$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
 
         	$request->setParameter('caching',0);
 
@@ -819,11 +819,11 @@ class DetailActionLib
         	$iterate = $iOffset-1;
 
         	foreach ($output['profiles'] as $key => $value) {
-        		array_push($cachedResultsPoolArray['profiles'], $value);
+        		array_push($cachedResultsPoolArray, $value['profileid']);
         	}
         	
 
-        	JsMemcache::getInstance()->set("cached".$cacheCriteria.$pid,serialize($cachedResultsPoolArray));
+        	JsMemcache::getInstance()->set("cached".$cacheCriteria."Myjs".$pid,serialize($cachedResultsPoolArray));
 							        	
         }
 
