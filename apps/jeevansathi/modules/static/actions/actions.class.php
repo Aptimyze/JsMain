@@ -1036,6 +1036,8 @@ public function executeAppredirect(sfWebRequest $request)
 		$output=$this->getJspcSect();
 		if($k=="p_caste" || $k=="p_sect")
 		$output=$this->getCaste(1);
+		if($k=="p_caste_jsms" || $k=="p_sect_jsms")
+		$output=$this->getNonOtherCaste(1);
 
 		if($k=="mtongue")
 			$output=$this->getMtongue();
@@ -1214,6 +1216,32 @@ if($k=="state_res")
 	  }
 	  
 		return $Arr;
+  }
+  private function getNonOtherCaste()
+  {
+          $arr=FieldMap::getFieldLabel("religion_caste",'',1);
+          $casteArr=FieldMap::getFieldLabel("caste",'',1);
+	  foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v) 
+	  {
+		unset($casteArr[$v]);
+	  }
+          foreach($arr as $key=>$val)
+          {
+		$val = $this->unsetOtherCaste($val);
+		$Arr[$key][0]=$this->getCasteArr(explode(",",$val),$casteArr);
+
+          }
+	return $Arr;
+  }
+  private function unsetOtherCaste($val)
+  {
+	$valArr = explode(",",$val);
+	$flipArr = array_flip($valArr);
+	foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v) 
+	{
+		unset($valArr[$flipArr[$v]]);
+	}
+	return implode(",",$valArr);
   }
   private function getCasteArr($needleArr,$searchArr)
   {

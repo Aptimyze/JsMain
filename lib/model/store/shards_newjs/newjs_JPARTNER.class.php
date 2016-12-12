@@ -220,7 +220,37 @@ class newjs_JPARTNER extends TABLE
 			throw new jsException($e);
 		}
 	}
-
-		
+	public function selectPartnerCaste($p_caste)
+	{
+                try
+                {
+                        $sql  =  "SELECT PROFILEID,PARTNER_CASTE FROM newjs.JPARTNER WHERE PARTNER_CASTE LIKE :PARTNER_CASTE LIMIT 100";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":PARTNER_CASTE","%".$p_caste."%",PDO::PARAM_STR);
+                        $res->execute();
+			while ($row = $res->fetch(PDO::FETCH_ASSOC))
+			{
+				$output[]=$row;
+			}
+			return $output;
+                }
+                catch (Exception $e){
+                        throw new jsException($e);
+                }
+	}
+	public function updateCaste($profileid,$caste)
+	{
+		try
+		{
+			$sql  =  "UPDATE newjs.JPARTNER SET PARTNER_CASTE=:PARTNER_CASTE WHERE PROFILEID=:PROFILEID";
+			$res = $this->db->prepare($sql);
+			$res->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
+			$res->bindValue(":PARTNER_CASTE",$caste,PDO::PARAM_STR);
+			$res->execute();
+                }
+		catch (Exception $e){
+                        throw new jsException($e);
+                }
+	}	
 }
 ?>
