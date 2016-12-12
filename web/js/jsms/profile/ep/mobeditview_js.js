@@ -5,7 +5,7 @@ var sliderCurrentPage="";
 var underScreenStr="";
 var filterJson="";
 var albumPresent=0;
-var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2'};
+var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','FocusDpp':'7'};
 var bCallCreateHoroscope = false;
  $("document").ready(function() {
 
@@ -144,6 +144,8 @@ var mobEditPage=(function(){
 			sliderDiv=sliderDiv.replace(/MainTabValue/g, current);
                         if((key=="Education"||key=="Kundli")&&(flag1==0))
                         {
+                            if(key=="Kundli")
+                                editWhatsNew["FocusDpp"] = "8";
                             $("#DetailsRightTab").html(current);
                             flag1=1;
                         }

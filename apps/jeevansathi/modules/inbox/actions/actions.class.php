@@ -380,6 +380,11 @@ public function executePerformV2(sfWebRequest $request)
         }
                                 if ($infoType == "VISITORS") {
                                     $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                                    if(MobileCommon::isIOSApp())
+                                    {
+                                           $infoTypenav["matchedOrAll"] = "A";
+                                    }
+
                                 }
        
 				if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
