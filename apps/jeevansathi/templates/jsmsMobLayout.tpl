@@ -176,24 +176,21 @@ var domainCode={};
 				<script type="text/javascript" src="~sfconfig::get("app_img_url")`/min/?f=/js/boomerang_tracking_js_2.js"></script>
 				<noscript><img src="/beacon.php?noscript=1"></noscript>
 			~/if`
-    <!--Pixel fire code starts here-->  
-<script>(function() {
-var _fbq = window._fbq || (window._fbq = []);
-if (!_fbq.loaded) {
-var fbds = document.createElement('script');
-fbds.async = true;
-fbds.src = '//connect.facebook.net/en_US/fbds.js';
-var s = document.getElementsByTagName('script')[0];
-s.parentNode.insertBefore(fbds, s);
-_fbq.loaded = true;
-}
-_fbq.push(['addPixelId', '569447716516417']);
-})();
-window._fbq = window._fbq || [];
-window._fbq.push(['track', 'PixelInitialized', {}]);
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '569447716516417');
+fbq('track', 'PageView');
 </script>
-<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=569447716516417&amp;ev=PixelInitialized" /></noscript>
-<!-- Pixel Fire Code ends here-->
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=569447716516417&ev=PageView&noscript=1"
+/></noscript>
+<!-- DO NOT MODIFY -->
+<!-- End Facebook Pixel Code -->
 ~if $sf_request->getAttribute('mobLogoutPage') eq 'Y'` 
     ~minify_get_mobile('js','','1')`
     ~minify_include_javascripts()`

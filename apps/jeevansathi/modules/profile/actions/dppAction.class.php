@@ -33,6 +33,9 @@ class dppAction extends sfAction {
 		//Contains login credentials
 		global $smarty, $data;
 		$this->loginData = $data = $request->getAttribute("loginData");
+                if(MobileCommon::isNewMobileSite()){
+                        $this->forward("profile","edit");
+                }
 		//Contains loggedin Profile information;
 		new ProfileCommon($this->loginData,1);
 		$this->loginProfile = LoggedInProfile::getInstance();
