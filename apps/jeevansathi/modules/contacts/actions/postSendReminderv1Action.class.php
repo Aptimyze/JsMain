@@ -101,7 +101,8 @@ class postSendReminderv1Action extends sfAction
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
-				
+				$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+
 
 			}
                         else
