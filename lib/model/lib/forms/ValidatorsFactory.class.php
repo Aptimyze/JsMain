@@ -2,7 +2,7 @@
 class ValidatorsFactory{
 public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","STATE_INDIA");
 	
-	public static function getValidator($field,$form_values="",$page=""){
+	public static function getValidator($field,$form_values="",$page=""){		
 		$const_cl=$field->getConstraintClass();
 		$field_map_name=ObjectiveFieldMap::getFieldMapKey($field->getName(),$page);
 		//get all dropdown values from Fieldmaplib
@@ -162,6 +162,9 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			break;
 		case 'email':
 			return new jsValidatorMail(array(),array('required' => $defaultMsg,'err_email_duplicate'=>"This email is already registered in our system"));
+			break;
+		case 'alt_email':
+			return new jsValidatorAlternateMail(array('email'=>$form_values["EMAIL"],'required'=>false));
 			break;
 		case 'pin':
 		{
