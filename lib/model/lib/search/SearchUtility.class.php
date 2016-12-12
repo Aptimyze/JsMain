@@ -85,15 +85,11 @@ class SearchUtility
 					$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($listnameForMyjs);
 
 
-	                                        $forNextPrev = JsMemcache::getInstance()->get("cached".$cacheCriteria.$pid);
+	                                        $forNextPrev = JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid);
 						$forNextPrev = unserialize($forNextPrev);
-						$forNextPrev = $forNextPrev["profiles"];
 						if(is_array($forNextPrev))
-						{
-							foreach($forNextPrev as $v)
-							{
-								$forNextPrevTemp[] = $v["profileid"];
-							}
+						{	
+							$forNextPrevTemp[] = $forNextPrev;
 							$forNextPrev = implode(" ",$forNextPrevTemp);
 							$hideArr.= $forNextPrev;
 						}

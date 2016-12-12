@@ -817,11 +817,11 @@ class DetailActionLib
 
         	ob_end_clean();
         	$iterate = $iOffset-1;
-
+        	if(is_array($output) && array_key_exists("profiles",$output)){
         	foreach ($output['profiles'] as $key => $value) {
         		array_push($cachedResultsPoolArray, $value['profileid']);
         	}
-        	
+        	}
 
         	JsMemcache::getInstance()->set("cached".$cacheCriteria."Myjs".$pid,serialize($cachedResultsPoolArray));
 							        	
