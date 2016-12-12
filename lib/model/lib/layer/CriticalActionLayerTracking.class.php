@@ -272,9 +272,13 @@ return 0;
                     case '13':               
                       if(!$isApp)
                       { 
-                        $showAltCALObj = new NEWJS_JPROFILE_CONTACT();
-                        if($showAltCALObj->getIfAltEmailIsNotPresent($profileid))    
-                          $show = 1;
+                        $contactNumOb=new newjs_JPROFILE_CONTACT();
+                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL");
+                        if(!$numArray['0']['ALT_EMAIL'] || $numArray['0']['ALT_EMAIL'] == NULL)
+                        {
+                           $show = 1;
+                        }  
+                         
                       }
                     
                     break; 
@@ -282,10 +286,10 @@ return 0;
                     case '14':               
                       if(!$isApp)
                       { 
-                        $showAltCALObj = new NEWJS_JPROFILE_CONTACT();
-                        $altEmail = $showAltCALObj->getAlternateEmail($profileid); 
-                        if($showAltCALObj->getAltEmailVerificationStatus($profileid,$altEmail))
-                          $show = 1;
+                        $contactNumOb=new newjs_JPROFILE_CONTACT();
+                        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
+                        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL'] != NULL && ($numArray['0']['ALT_EMAIL_STATUS'] == NULL || $numArray['0']['ALT_EMAIL_STATUS'] == 'N'))
+                          $show = 1; 
                       }
                     
                     break; 
