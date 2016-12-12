@@ -269,15 +269,14 @@
   <td height="10"></td>
   </tr>
   <tr>
-  <td><table style="max-width:600px;" border="0" cellspacing="0" cellpadding="0">
+      <td valign="top" height="30" >
+        <table style="max-width:600px; min-width:240px"  border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="20"></td>
-    <td align="right" width="560"><a href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)" style="color:#0f529d">View All</a></td>
-    <td width="20"></td>
+    <td style=" font-family: Arial, Helvetica, sans-serif; font-size:12px;"><a href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)" style="color:#0f529d">View All</a></td>
   </tr>
 </table>
-</td>
-  
+        </td>
   </tr>
   ~/if`
   <tr>
