@@ -1,9 +1,9 @@
 /*This file contains global chat configurable variables used in chat javascripts channel wise*/
 var chatConfig = chatConfig || {};
 var cook = readCookie('AUTHCHECKSUM');
-if(multiUserPhotoUrl.indexOf("staging") !== -1){
+//if(multiUserPhotoUrl.indexOf("staging") !== -1){
     multiUserPhotoUrl=multiUserPhotoUrl+"?AUTHCHECKSUM="+cook;
-}
+//}
 chatConfig.Params = {
     //array of groups for which no roster exists in openfire and polling is to be done
     nonRosterPollingGroups:['dpp'],
