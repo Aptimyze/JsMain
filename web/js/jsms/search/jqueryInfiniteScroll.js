@@ -33,7 +33,7 @@ $('body').on('click', '.searchNavigation', function()
 		$("div.loaderBottomDiv").addClass("initialLoader fullwid").css("margin-top",height+"px");
 	}
 	$('body').css("background","#b1b1b1");
-    if ( firstResponse.searchid == 23)
+    if ( firstResponse.searchid == 23 && firstResponse.total != "0")
     {
     	$("#interestExpiringMessage").removeClass('dispnone');
     }
@@ -274,7 +274,11 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 		
 	if(firstResponse.infotype != 'VISITORS')
             contactTracking="&stype="+tupleStype;
-			
+    if ( firstResponse.infotype == "INTEREST_EXPIRING" || firstResponse.infotype == "INTEREST_RECEIVED")
+	{
+		contactTracking += "&"+firstResponse.tracking;
+	}
+
 	//console.log(contactTracking);
 		if(totalNoOfResults=='')
 		{

@@ -341,7 +341,7 @@ if(typeof response.searchid!="undefined")
  		$('#ccHorizontalTabsBar > li').hide();
  		if ( $('#HorizontalTab23').length == 0)
  		{
- 			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab23" data-id="23" data-infoId="23" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Interests Expiring</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine23"></li>');
+ 			$('#ccHorizontalTabsBar').append('<li id="HorizontalTab23" data-id="23" data-infoId="23" class="js-ccHorizontalLists jsButton-disabled txtc cursp">Expiring Interests</li><li class="pos-abs bg5 cssline" style="bottom: 0px; height: 2px; left: 0px; display: list-item;" id="horizontalActiveLine23"></li>');
  		}
  		else
  		{

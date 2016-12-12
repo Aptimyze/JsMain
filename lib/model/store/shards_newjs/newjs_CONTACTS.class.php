@@ -694,6 +694,7 @@ public function getSendersPending($profileids)
 	 */
 	public function getExpiredContactsCount($where, $group='',$time='',$skipProfile)
 	{
+		
 		try{
 			if(!$where)
 				throw new jsException("","No where condition is specified in funcion getExpiredContactsCount OF newjs_CONTACTS.class.php");
@@ -703,9 +704,9 @@ public function getSendersPending($profileids)
 			{
 				$sql = $sql.",".$group;
 			}
-			if($time)
-				$sql = $sql.",CASE WHEN DATEDIFF(NOW( ) ,  `TIME`) <= 90 AND DATEDIFF(NOW( ) ,  `TIME`) >= 84 THEN 0 ELSE 1 END AS TIME1 ";
 			$sql = $sql." FROM newjs.CONTACTS WHERE FILTERED != 'Y' AND";
+			if($time)
+				$sql = $sql." DATEDIFF(NOW( ) ,  `TIME`) >= 84 AND DATEDIFF(NOW( ) ,  `TIME`) <= 90 AND ";
 			if($where)
 			{
 				$count = 1;
@@ -753,12 +754,6 @@ public function getSendersPending($profileids)
 			if($group)
 			{
 				$sql = $sql." GROUP BY ".$group;
-				if($time)
-					$sql = $sql.",TIME1";
-			}
-			elseif($time)
-			{
-				$sql = $sql." GROUP BY TIME1";
 			}
 
 			$res=$this->db->prepare($sql);
