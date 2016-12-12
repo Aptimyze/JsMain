@@ -12,65 +12,18 @@ class JHOBBYCacheLib extends TABLE{
             $this->dbName = $dbname;
 
         } 
-/*
-    public function getAllHobby($hobby="",$pid)
-    {   
-        $objProCacheLib = ProfileCacheLib::getInstance();
-
-        $criteria = "PROFILEID";
-        $fields = "";
-        $bServedFromCache = false;
-
-
-
-       if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__))
-       {
-        $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
-
-           if (false !== $result) {
-                $bServedFromCache = true;
-                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-            }
-
-            $result = array();
-
-            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
-            
-            if($result && in_array($result, $validNotFilled)){
-                $result = 0;
-            }
-
-       }
-
-        if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-            $this->logCacheConsumeCount(__CLASS__);
-            return $result;
-        }
-
-         //Get Data from Mysql
-        $objJHB = new NEWJS_HOBBIES($this->dbName); 
-
-        $result = $objJHB->getAllHobby($hobby);
-   
-        $dummyResult['PROFILEID'] = $pid;
-        $dummyResult['JHOBBY_EXISTS'] = (intval($result) === 0) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
-        return $result;
-
-    }
-
-
-
-*/
 
         public function getUserHobbies($pid, $onlyValues="")
         { 
+          if(!$pid)
+            return NULL;
+          
         $objProCacheLib = ProfileCacheLib::getInstance();
 
         $criteria = "PROFILEID";
         $fields = "HOBBY,FAV_MOVIE,FAV_TVSHOW,FAV_FOOD,FAV_BOOK,FAV_VAC_DEST";
+
         $bServedFromCache = false;
-      //  print($criteria.":".$pid.":".$fields.":".__CLASS__); die;
             if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__)) 
             {
 
@@ -93,28 +46,35 @@ class JHOBBYCacheLib extends TABLE{
          
             
             if($onlyValues && $bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE ){
-            $this->logCacheConsumeCount(__CLASS__);
-            
-        return $result;             
+            $this->logCacheConsumeCount(__CLASS__);      
+            return $result;             
         }
+
 
          //Get Data from Mysql
         $objJHB = new NEWJS_HOBBIES($this->dbName); 
 
-       // if($onlyValues == '')
-          $toSend = '1';
-       // var_dump($toSend);
-        //print_r('sadadas'.$toSend); die('hshs');
+        $toSend = '1';
+
+        if(!$bServedFromCache)
         $result = $objJHB->getUserHobbies($pid, $toSend);
 
+        $noResult = $result;
+
+        $result['PROFILEID'] = $pid;
+
+        if(!$bServedFromCache)
+        { 
         $dummyResult = array(); 
-        $dummyResult['PROFILEID'] = $pid;
-        $dummyResult['RESULT_VAL'] = (intval($result) === 0 || ($result == NULL)) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult['RESULT_VAL'], __CLASS__);
+        $dummyResult['RESULT_VAL'] = (intval($noResult) === 0 || ($noResult == NULL)) ? 'N' : $result;
+
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['RESULT_VAL']['PROFILEID'], $dummyResult['RESULT_VAL'], __CLASS__);
+        }
+
         if($onlyValues)  
        {  
           return $result;
-        }
+       }
 
         else
         { 
@@ -150,8 +110,7 @@ class JHOBBYCacheLib extends TABLE{
            if(isset($paramArr['PROFILEID'])) {
                $iProfileId = $paramArr['PROFILEID'];
            } else {
-               $arrData = $this->get($value,$criteria,"PROFILEID");
-               $iProfileId = $arrData['PROFILEID'];
+               $iProfileId = $pid;
            }
 
            //Remove From Cache
@@ -173,8 +132,10 @@ class JHOBBYCacheLib extends TABLE{
     
     
      public function getUserHobbiesApi($pid)
-        {
-        
+    {
+        if(!$pid)
+            return NULL;
+
         $objProCacheLib = ProfileCacheLib::getInstance();
 
         $criteria = "PROFILEID";
@@ -182,10 +143,10 @@ class JHOBBYCacheLib extends TABLE{
         $bServedFromCache = false;
 
        if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__))
-       {
+       { 
         $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
 
-           if (false !== $result) {
+           if (false !== $result) { 
                 $bServedFromCache = true;
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
             }
@@ -205,19 +166,24 @@ class JHOBBYCacheLib extends TABLE{
          //Get Data from Mysql
         $objJHB = new NEWJS_HOBBIES($this->dbName); 
 
-        $result = $objJHB->getUserHobbiesApi($pid,'1');
-   
-        $dummyResult['PROFILEID'] = $pid;
-        $dummyResult['RESULT_VAL'] = (intval($result) === 0 || ($result == NULL)) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult['RESULT_VAL'],__CLASS__);
-        
+        if(!$bServedFromCache)
+        { 
+        $result = $objJHB->getUserHobbiesApi($pid);
+
+        $noResult = $result;
+        $result['PROFILEID'] = $pid;
+
+        $dummyResult['RESULT_VAL'] = (intval($noResult) === 0 || ($noResult == NULL)) ? 'N' : $result;
+
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['RESULT_VAL']['PROFILEID'], $dummyResult['RESULT_VAL'],__CLASS__);
+        }
+
          $this->logFunctionCalling(__FUNCTION__);
 
-          $hobbies = array();
+        $hobbies = array();
           if($result)
           { 
               $hobby=$result[HOBBY];
-              if($result){
                 if($hobby){
                 $hobbies = $objJHB->getHobbyValueApi($hobby);
                 }
@@ -227,55 +193,11 @@ class JHOBBYCacheLib extends TABLE{
                 $hobbies["FAV_BOOK"] = $result["FAV_BOOK"];
                 $hobbies["FAV_VAC_DEST"] = $result["FAV_VAC_DEST"];
               }
-          }
+          
           return $hobbies;
         }
     
-  /*
-    public function getHobbyValueApi($hobby="")
-    {
-       $objProCacheLib = ProfileCacheLib::getInstance();
-
-        $criteria = "PROFILEID";
-        $fields = "";
-        $bServedFromCache = false;
-
-       if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__))
-       {
-        $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $pid, $fields, __CLASS__);
-
-           if (false !== $result) {
-                $bServedFromCache = true;
-                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-            }
-
-            $result = $result['JHOBBY_EXISTS'];
-
-            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
-            
-            if($result && in_array($result, $validNotFilled)){
-                $result = 0;
-            }
-
-       }
-
-        if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-            $this->logCacheConsumeCount(__CLASS__);
-            return $result;
-        }
-
-         //Get Data from Mysql
-        $objJHB = new NEWJS_HOBBIES($this->dbName); 
-
-        $result = $objJHB->getHobbyValueApi($hobby);
-   
-        $dummyResult['PROFILEID'] = $pid;
-        $dummyResult['JHOBBY_EXISTS'] = (intval($result) === 0) ? 'N' : $result;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
-        return $result;
-
-    }
-  */
+ 
     
     private function logFunctionCalling($funName)
   {
