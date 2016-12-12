@@ -229,10 +229,7 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
         if(typeof contactTracking == 'undefined')
 		contactTracking="&stype="+stypeKey;
 
-		if ( firstResponse.infotype == "INTEREST_ARCHIVED")
-		{
-			contactTracking += "&"+firstResponse.tracking;
-		}
+		
 		
         var tupleStructure = 
 	'<div class="tupleOuterDiv searchNavigation bg4 padsp1 bbtsp1" tupleNo="idd'+idd+'"  id="{tupleOuterDiv}">\
@@ -277,6 +274,10 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 		
 	if(firstResponse.infotype != 'VISITORS')
             contactTracking="&stype="+tupleStype;
+    if ( firstResponse.infotype == "INTEREST_ARCHIVED")
+	{
+		contactTracking += "&"+firstResponse.tracking;
+	}
 			
 	//console.log(contactTracking);
 		if(totalNoOfResults=='')
