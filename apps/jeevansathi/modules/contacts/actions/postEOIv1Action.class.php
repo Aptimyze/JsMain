@@ -99,11 +99,12 @@ class postEOIv1Action extends sfAction
 		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
 		if($this->contactEngineObj->messageId)
 		{
+                        $responseArray["headerthumbnailurl"] = $thumbNail;
+                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                        $responseArray["selfthumbnailurl"] = $ownthumbNail;
+
 			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
-				$responseArray["headerthumbnailurl"] = $thumbNail;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["selfthumbnailurl"] = $ownthumbNail;
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");

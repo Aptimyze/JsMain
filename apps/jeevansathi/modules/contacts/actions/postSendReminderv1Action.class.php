@@ -92,11 +92,11 @@ class postSendReminderv1Action extends sfAction
 		$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::REMINDER);
 		if($this->contactEngineObj->messageId)
 		{	
-			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
+                        $responseArray["headerthumbnailurl"] = $thumbNail;;
+                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                        $responseArray["selfthumbnailurl"] = $ownthumbNail;
+                        if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
-				$responseArray["headerthumbnailurl"] = $thumbNail;;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["selfthumbnailurl"] = $ownthumbNail;
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
