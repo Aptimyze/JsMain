@@ -14,7 +14,6 @@ class matchAlertMailerDataTracking
 			$this->sendSMS(MatchAlertDataLoggingEnums::$messageByLogic);
 		}
 
-
 		//This is called to save the total count of profiles grouped by logic level
 		$this->insertTotalCountByLogicLevel($todayDate);
 		unset($countByLogicObj);		
@@ -30,22 +29,7 @@ class matchAlertMailerDataTracking
 		{
 			$this->sendSMS(MatchAlertDataLoggingEnums::$messageByLogicRecommend);
 		}
-
-		unset($loggingObj);
-		
-		foreach($countByLogicAndRecommendations as $key =>$val)
-		{
-			foreach($val as $k=>$v)
-			{
-				if($k == "RecCount")
-				{
-					$totalCountArr[$v] += $val["PeopleCount"]; 
-				}
-			}
-		}
-
-		//This is called to save the total count of profiles grouped by logic level and no of recommendations
-		$this->insertTotalCountByLogicRecommend($todayDate,$totalCountArr);		
+		unset($loggingObj);		
 	}
 	
     public function insertTotalCountByLogicLevel($todayDate)
@@ -57,14 +41,30 @@ class matchAlertMailerDataTracking
 		if($rowCount == 0)
 		{
 			$this->sendSMS(MatchAlertDataLoggingEnums::$messageByLogicTotal);
-		}
-		
+		}		
 		unset($matchAlertByLogicTotalObj);
 		unset($matchAlertsToBeSentObj);
     }
 
-    public function insertTotalCountByLogicRecommend($todayDate,$totalCountArr)
-    {
+    public function insertTotalCountGroupedByLogicAndReceiver($totalCountByLogicReceiver,$distinctIdZeroArr)        
+    {    	
+    	$todayDate = date("Y-m-d");    	
+    	foreach($totalCountByLogicReceiver as $key=>$val)
+    	{
+    		foreach($val as $k1=>$v1)
+    		{
+    			if($k1 == "RECEIVER")
+    			{
+    				if(in_array($v1,$distinctIdZeroArr))
+    				{
+    					unset($distinctIdZeroArr[$v1]);
+    				}
+    			}
+    			if($k1=="TOTALCOUNT")
+    			$totalCountArr[$v1]++;
+    		}
+    	}
+    	$totalCountArr[0]= count($distinctIdZeroArr);    	
     	$totalCountObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL('newjs_master');
 		$rowCount = $totalCountObj->insertTotalCountForRecommedByDate($totalCountArr,$todayDate);
 		if($rowCount == 0)

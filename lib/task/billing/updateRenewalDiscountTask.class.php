@@ -47,7 +47,17 @@ EOF;
                 $discount = $memHandlerObj->calculateNewRenewalDiscountBasedOnPreviousTransaction($profileid, $discount, $purDet[$profileid]);
                 $rdObj->insert($profileid, $discount, $expiryDt);
                 $rdLogObj->insert($profileid, $discount, $startDt, $discountExpiryDt);
+		$countArr[] =$profileid;
             }
         }
+	$totRenewal =count($countArr);
+	if($totRenewal<100){	
+                $to             ="rohan.mathur@jeevansathi.com,manoj.rana@naukri.com";
+                $latest_date    =date("Y-m-d");
+                $subject        ="Renewal Discount Calculated For: ".date("jS F Y", strtotime($latest_date));
+                $fromEmail      ="From:JeevansathiCrm@jeevansathi.com";
+                $msg            ="Total Renewal calculated: $totRenewal having Expiry on: $expiryDt";
+                mail($to,$subject,$msg,$fromEmail);
+	}
     }
 }

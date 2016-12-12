@@ -747,7 +747,7 @@ class crmMisActions extends sfActions
             $this->ddarr = range($stFortDate,$endFortDate);
 			$ddarr_cnt = count($this->ddarr);
 			$this->empDetailArr = $jsadminPswrdsObj->fetchAllUsernamesAndEmpID();
-			if($misGenerationhandlerObj->isPrivilege_P_MG($this->agentName))
+			if($misGenerationhandlerObj->isPrivilege_P_MG($this->agentName,'Y'))
 			{
 				$hierarchyObj = new hierarchy($misGenerationhandlerObj->get_SLHDO());
 			}
@@ -923,7 +923,7 @@ class crmMisActions extends sfActions
 						$this->setTemplate('crmHandledRevenueTeamWise');
 						return;
 					}
-					if($misGenerationhandlerObj->isPrivilege_P_MG($this->agentName))
+					if($misGenerationhandlerObj->isPrivilege_P_MG($this->agentName,'Y'))
 						$hierarchyObj = new hierarchy($names['BOSS'][0]);
 					$this->hierarchy = $hierarchyObj->getHierarchyData($users);
 					foreach($this->hierarchy as $v)
