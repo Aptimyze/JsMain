@@ -691,7 +691,24 @@ class ProfileInformationModuleMap
                        "ICONS"=> "",
                        "BUTTONS"=> "UNBLOCK",
                        "TRACKING"=> "",
-               )
+               ),
+             "INTEREST_ARCHIVED"=>Array( 
+				"ID"=> "22",
+				"SORT_ORDER"=> "",
+				"COUNT"=> "10",
+				"TUPLE"=> "INBOX_EOI_APP",
+				"TUPLE_ORDER"=> "TIME",
+				"ACTIVE_FLAG"=> "Y",
+				"AJAX_FLAG"=> "N",
+				"CALLOUT_MESSAGES"=> "",
+				"VIEW_ALL_LINK"=> "",
+				"TITLE"=> "Interests Archived",
+				"SUBTITLE"=> "",
+				"ICONS"=> "",
+				"BUTTONS"=> "ACCEPT|DECLINE",
+				"TRACKING"=> "responseTracking=56",
+		  		"CONTACT_ID"=>"",
+		),
 
 		); 
 self::$ContactCenterMYJS=Array(

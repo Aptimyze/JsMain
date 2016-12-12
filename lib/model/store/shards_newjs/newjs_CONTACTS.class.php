@@ -696,9 +696,9 @@ public function getSendersPending($profileids)
 			{
 				$sql = $sql.",".$group;
 			}
-			if($time)
-				$sql = $sql.",CASE WHEN DATEDIFF(NOW( ) ,  `TIME`) > 90 THEN 0 ELSE 1 END AS TIME1 ";
 			$sql = $sql." FROM newjs.CONTACTS WHERE FILTERED != 'Y' AND";
+			if($time)
+				$sql = $sql." DATEDIFF(NOW( ) ,  `TIME`) > 90 AND ";
 			if($where)
 			{
 				$count = 1;
@@ -747,12 +747,6 @@ public function getSendersPending($profileids)
 			if($group)
 			{
 				$sql = $sql." GROUP BY ".$group;
-				if($time)
-					$sql = $sql.",TIME1";
-			}
-			elseif($time)
-			{
-				$sql = $sql." GROUP BY TIME1";
 			}
 
 			$res=$this->db->prepare($sql);

@@ -228,6 +228,11 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 { 
         if(typeof contactTracking == 'undefined')
 		contactTracking="&stype="+stypeKey;
+
+		if ( firstResponse.infotype == "INTEREST_ARCHIVED")
+		{
+			contactTracking += "&"+firstResponse.tracking;
+		}
 		
         var tupleStructure = 
 	'<div class="tupleOuterDiv searchNavigation bg4 padsp1 bbtsp1" tupleNo="idd'+idd+'"  id="{tupleOuterDiv}">\
@@ -788,6 +793,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 	}
 	else
   $("#iddf1").css("margin-top",$("#searchHeader").height()+"px");
+ 	
   if(nextAvail!='false')
 	{ 	
 		
@@ -806,6 +812,10 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 		}
 	}
 	else{
+		if ( response.archivedInterestLinkAtEnd )
+		{
+			bottomErrorMsg('<a href="/profile/contacts_made_received.php?page=aeoi&filter=R" class="color2 txtc">'+response.archivedInterestLinkAtEnd+'</a>','','')
+		}
 		noScrollingAction=1;
 		reachedEnd=1;
 		$("div.loaderBottomDiv").remove();

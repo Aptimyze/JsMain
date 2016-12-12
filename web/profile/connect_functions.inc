@@ -3118,6 +3118,8 @@ function show_navigation($navigator,$show_all,$navig_id)
 		$TYPE["FIL"]="/profile/contacts_made_received.php";
 		$TYPE["VCB"]="/profile/contacts_made_received.php";
 		$TYPE["HOR_M"]="/profile/contacts_made_received.php";
+		$TYPE["AEOI"]="/profile/contacts_made_received.php";
+
 	}
 	$TYPE["FAV"]="/profile/contacts_made_received.php";
 	$TYPE["PHO"]="/profile/contacts_made_received.php";
