@@ -113,6 +113,9 @@ class inboxActions extends sfActions
       
                         if ($infoType == "VISITORS") {
                             $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                            if($infoTypenav["matchedOrAll"]=='')
+                                $infoTypenav["matchedOrAll"]='A';
+
                         }
       
 			if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
@@ -380,7 +383,7 @@ public function executePerformV2(sfWebRequest $request)
         }
                                 if ($infoType == "VISITORS") {
                                     $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
-                                    if(MobileCommon::isIOSApp())
+                                    if(MobileCommon::isIOSApp() && $infoTypenav["matchedOrAll"]=='')
                                     {
                                            $infoTypenav["matchedOrAll"] = "A";
                                     }
