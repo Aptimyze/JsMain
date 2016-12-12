@@ -109,6 +109,34 @@ class NotificationFunctions
 			$notificationDelLogObj->deleteNotification($messageId,$osType);
 		}
 	}
+
+	public static function handleNotificationClickEvent($params){
+		$notificationStop =JsConstants::$notificationStop;
+        if(!$notificationStop && is_array($params)){
+	        $notificationKey = $params['notificationKey'];
+	        $messageId = $params['messageId'];
+	        $osType = MobileCommon::isApp();
+	        try{
+	            if($osType && $messageId && $notificationKey && is_numeric($messageId)){ 
+                    $dataSet = array('MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
+                    //print_r($dataSet);
+                    $producerObj = new JsNotificationProduce();
+                    if($producerObj->getRabbitMQServerConnected()){     //flow with rabbitmq
+                        $msgdata = FormatNotification::formatLogData($dataSet,'','NOTIFICATION_OPENED_TRACKING_API');
+                        //echo "rabbitmq flow";
+                        //print_r($msgdata);
+                        $producerObj->sendMessage($msgdata);
+                    }
+                    else{  
+                        //echo "without rabbitmq";                        //flow without rabbitmq
+                        NotificationFunctions::logNotificationOpened($dataSet);
+                    }
+	            }
+	        }
+	        catch(Exception $e){
+	        }
+    	}
+	}
         public function notificationCheck($request)
         {
                 $notificationStop =JsConstants::$notificationStop;

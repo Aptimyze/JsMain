@@ -33,8 +33,14 @@ class apiActions extends sfActions
     		$this->apiWebHandler = ApiRequestHandler::getInstance($request);
 		$request->setAttribute("mobileAppApi",1);
 		$respObj = ApiResponseHandler::getInstance();
-			if($request->getParameter("FROM_GCM")==1)
+			if($request->getParameter("FROM_GCM")==1){
 				$gcm=1;
+				$msgId = $request->getParameter("messageId");
+				$notificationKey = $request->getParameter("notificationKey");
+				//error_log("in api request ankita");
+				//file_put_contents("/home/ankita/Desktop/1.txt", serialize($request));
+				NotificationFunctions::handleNotificationClickEvent(array("messageId"=>$request->getParameter("messageId"),"notificationKey"=>$request->getParameter("messageId")));
+			}
     		$apiValidation=$this->apiWebHandler->getResponse();
 		$forwardingArray =$this->apiWebHandler->getModuleAndActionName($request);
 
