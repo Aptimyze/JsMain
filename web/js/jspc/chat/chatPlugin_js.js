@@ -2699,6 +2699,7 @@ JsChat.prototype = {
             } else {
                 //this._chatLoggerPlugin("ankita_2");
                 $(curEle._loginPanelID).remove();
+                $("#blankPanelLoader").removeClass("disp-none");
                 // function () {
                 //curEle._appendLoggedHTML();
                 //});
