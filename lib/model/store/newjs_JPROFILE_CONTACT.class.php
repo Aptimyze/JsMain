@@ -286,5 +286,53 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 				jsException::nonCriticalError($e);
 			}
     }
+
+
+
+    public function getIfAltEmailIsNotPresent($profileId)
+    {
+    	try
+    	{
+    		$sql = "SELECT ALT_EMAIL FROM newjs.JPROFILE_CONTACT WHERE PROFILEID=:PROFILEID";
+    		$prep=$this->db->prepare($sql);
+    		$prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
+    		$prep->execute();
+    		$result = $prep->fetch(PDO::FETCH_ASSOC);
+    		$ifPresent =  $result["ALT_EMAIL"];
+    		if($ifPresent && $ifPresent != NULL)
+    		{
+    			return false;
+    		}
+    		return true;
+    	}
+    	catch(PDOException $e)
+			{
+				/*** echo the sql statement and error message ***/
+				jsException::nonCriticalError($e);
+			}
+    }
+
+     public function getAlternateEmail($profileId)
+    {
+    	try
+    	{
+    		$sql = "SELECT ALT_EMAIL FROM newjs.JPROFILE_CONTACT WHERE PROFILEID=:PROFILEID";
+    		$prep=$this->db->prepare($sql);
+    		$prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
+    		$prep->execute();
+    		$result = $prep->fetch(PDO::FETCH_ASSOC);
+    		$alternateEmail =  $result["ALT_EMAIL"];
+    		if($alternateEmail)
+    		{
+    			return $alternateEmail;
+    		}
+    		return NULL;
+    	}
+    	catch(PDOException $e)
+			{
+				/*** echo the sql statement and error message ***/
+				jsException::nonCriticalError($e);
+			}
+    }
 }
 ?>

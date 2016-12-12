@@ -6249,8 +6249,10 @@ $(document).ready(function() {
 	});
 
       if(typeof(fromCALAlternate)!= "undefined" && fromCALAlternate == '1')
-    {
-        $("#section-basic").slideDown("fast");
+    {   
+        $('html, body').animate({
+         scrollTop: ($('#section-basic').offset().top)
+      },500);
         var newUrl=document.location.href.replace('fromCALAlternate','');
         history.pushState('', '', newUrl);
     }

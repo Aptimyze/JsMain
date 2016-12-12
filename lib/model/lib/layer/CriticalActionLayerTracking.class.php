@@ -128,7 +128,7 @@ return 0;
    * @return- layerid to display layer 
    */
   public static function checkFinalLayerConditions($profileObj,$layerToShow,$interestsPending,$getTotalLayers) 
-  {
+  { 
     $layerInfo=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     if($getTotalLayers[$layerToShow])
       if ($getTotalLayers[$layerToShow]["COUNT"]>=$layerInfo['TIMES'])
@@ -272,8 +272,8 @@ return 0;
                     case '13':               
                       if(!$isApp)
                       { 
-                        $horoscopeObj = new Horoscope();
-                        if($profileObj->getHOROSCOPE_MATCH() == 'Y' && $horoscopeObj->ifHoroscopePresent($profileid) == 'N')
+                        $showAltCALObj = new NEWJS_JPROFILE_CONTACT();
+                        if($showAltCALObj->getIfAltEmailIsNotPresent($profileid))    
                           $show = 1;
                       }
                     
@@ -282,8 +282,9 @@ return 0;
                     case '14':               
                       if(!$isApp)
                       { 
-                        $horoscopeObj = new Horoscope();
-                        if($profileObj->getHOROSCOPE_MATCH() == 'Y' && $horoscopeObj->ifHoroscopePresent($profileid) == 'N')
+                        $showAltCALObj = new NEWJS_JPROFILE_CONTACT();
+                        $altEmail = $showAltCALObj->getAlternateEmail($profileid); 
+                        if($showAltCALObj->getAltEmailVerificationStatus($profileid,$altEmail))
                           $show = 1;
                       }
                     
