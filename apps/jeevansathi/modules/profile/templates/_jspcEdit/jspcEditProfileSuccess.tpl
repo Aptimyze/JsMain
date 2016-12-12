@@ -605,6 +605,7 @@
     
 <script type="text/javascript">
   var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
+  var fromCALAlternate=~if $fromCALAlternate == 1`'1'~else`'0'~/if`;
   var senderEmail = "~$loggedInEmail`";
   var ProCheckSum = "~$arrOutDisplay["page_info"]["profilechecksum"]`";
   var profileGender = "~$arrOutDisplay["about"]["gender"]`";
