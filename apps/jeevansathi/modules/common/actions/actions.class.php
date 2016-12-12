@@ -151,6 +151,9 @@ class commonActions extends sfActions
         if (JsCommon::checkAppPromoValid($ua)) {
             header("Location: https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dmobile%26utm_content%3Dsms%26utm_campaign%3DJSAA");
             die;
+        } if (JsCommon::checkIosPromoValid($ua)) {
+            header("Location: https://itunes.apple.com/in/app/jeevansathi/id969994186");
+            die;
         } else {
             $this->setTemplate('appNotCompatible');
         }
@@ -638,6 +641,7 @@ class commonActions extends sfActions
         
         if($layerToShow==9 && $button=='B1'){
             
+            
             $namePrivacy=$request->getParameter('namePrivacy');
             $newName=$request->getParameter('newNameOfUser');
             
@@ -675,6 +679,13 @@ class commonActions extends sfActions
                                }
                                else
                                        $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
+                    if($profileid%10==1 && MobileCommon::isNewMobileSite())
+                    {
+                    	$todayDate= date('Y-m-d');
+                    	$memObj = JsMemcache::getInstance();
+                    	$memObj->addKeyToSet('nameCalTrackR_'.$todayDate,$profileid);
+                    }
+               
                     
             }
             
@@ -702,6 +713,7 @@ class commonActions extends sfActions
             $nameData=(new NameOfUser())->getNameData($profileId);
             $this->nameOfUser=$nameData[$profileId]['NAME'];
             $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
+            if($profileId%10==1)$this->skipSkipButton=1;
         }
                 
 		if($calObject['LAYERID']==1)
@@ -898,4 +910,18 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
         
  }
 
+
+
+        public function executeHamburgerCounts(sfWebRequest $request){
+    $respObj = ApiResponseHandler::getInstance();
+    $loginData=$request->getAttribute('loginData');
+    $forwArray=array('moduleName'=>'myjs','actionName'=>'performV1');
+    $response=HamburgerApp::getHamburgerDetails($loginData[PROFILEID],'',$forwArray);
+    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+    $respObj->setResponseBody($response);
+    $respObj->generateResponse();
+    die;
+
+
+        }
 }

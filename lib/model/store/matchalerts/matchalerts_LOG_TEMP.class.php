@@ -97,6 +97,94 @@ class matchalerts_LOG_TEMP extends TABLE
 			return 0;
 		}
 	}
+
+  public function getCountGroupedByLogic()
+  {
+    try
+    {
+      $sql = "SELECT count( DISTINCT (RECEIVER) ) as CNT, LOGICLEVEL FROM matchalerts.`LOG_TEMP` GROUP BY LOGICLEVEL; "; 
+               $prep = $this->db->prepare($sql);
+               $prep->execute();               
+               while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+              {
+                $resultArr[] = $row;          
+              }              
+               return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
+
+  public function getCountGroupedByLogicAndRecommendation()
+  {
+    try
+    {
+      $sql = "SELECT COUNT(DISTINCT(RECEIVER)) as PeopleCount , LOGICLEVEL, RecCount
+      FROM (
+
+        SELECT COUNT( * ) AS RecCount, LOGICLEVEL, RECEIVER
+        FROM  matchalerts.`LOG_TEMP` 
+        GROUP BY LOGICLEVEL, RECEIVER
+      ) AS tablename
+GROUP BY LOGICLEVEL, RecCount"; 
+               $prep = $this->db->prepare($sql);
+               $prep->execute();               
+               while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+               {
+                $resultArr[] = $row;          
+              }              
+              return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
+
+  public function getDate()
+  {
+    try
+    {
+      $sql = "SELECT DATE from matchalerts.`LOG_TEMP` ORDER BY DATE LIMIT 1";
+      $prep = $this->db->prepare($sql);
+      $prep->execute();
+      while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+      {
+        $resultArr = $row;          
+      }              
+      return $resultArr["DATE"]; 
+
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
+  public function getTotalCountGroupedByLogicAndReceiver()
+  {
+    try
+    {
+      $sql = "SELECT RECEIVER, SUM( CNT ) as TOTALCOUNT FROM ( SELECT DISTINCT (RECEIVER), LOGICLEVEL, COUNT( * ) AS CNT
+              FROM  matchalerts.`LOG_TEMP` GROUP BY RECEIVER, LOGICLEVEL) AS count GROUP BY RECEIVER"; 
+               $prep = $this->db->prepare($sql);
+               $prep->execute();               
+               while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+               {
+                $resultArr[] = $row;          
+              }              
+              return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
 }
 ?>
 

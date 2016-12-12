@@ -200,7 +200,17 @@ class ProcessHandler
 	}
         
  }
-
+ public function updateFeaturedProfile($type,$body)
+ {
+	if($body['profileid']!=null|| $body['profileid']!='')
+	{
+		$loggedInProfile = new LoggedInProfile('',$body['profileid']);
+		$loggedInProfile->getDetail('', '', '*');
+	}
+	$featuredProfileObj = new FeaturedProfile($loggedInProfile);
+	$featuredProfileObj->performDbActionFunction($body['id']);
+	unset($loggedInProfile);
+ }
  /**
  * HandleProfileCacheQueue
  * @param $process
@@ -243,5 +253,14 @@ public function updateViewLogTable($body,$type)
         $viewLogObj->updateViewLog($viewer,$viewed);
  }
  
+public function sendEOI($body, $type)
+{
+	if($type == "SCREENING")
+	{
+		$deliverContactsObj = new deliverTempContacts;
+		$deliverContactsObj->deliverContactsTemp($body['profileId']);
+	}
+}
+
  }
 ?>

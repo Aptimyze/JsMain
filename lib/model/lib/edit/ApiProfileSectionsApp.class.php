@@ -125,6 +125,16 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$AstroKundali = $this->profile->getAstroKundali();
 		
 		$astro[]=$this->getApiFormatArray("HOROSCOPE_MATCH","Horoscope match is must?" , $this->profile->getDecoratedHoroscopeMatch(),$this->profile->getHOROSCOPE_MATCH(),$this->getApiScreeningField("HOROSCOPE_MATCH"));
+                $horoscope = new Horoscope();
+		$horoExists = $horoscope->isHoroscopeExist($this->profile);
+		if($horoExists=="Y")
+		{
+			$astro[0][HORO_BUTTON_LABEL] ="Update Horoscope"; 
+		}
+		elseif($horoExists=="N")
+		{
+			$astro[0][HORO_BUTTON_LABEL] ="Create Horoscope"; 
+		}
 		
     $this->addSunSign($astro,$AstroKundali);
     
@@ -152,7 +162,6 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$astro[]=$this->getApiFormatArray("ASTRO_COUNTRY_BIRTH","Country" , $this->profile->getDecoratedBirthCountry(),"",$this->getApiScreeningField(""));
 		
 		$astro[]=$this->getApiFormatArray("ASTRO_PLACE_BIRTH","City/Town" , $this->profile->getDecoratedBirthCity(),"",$this->getApiScreeningField(""));
-		
 		return $astro;
 	}
 	
@@ -166,7 +175,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
       $educationValues = (array) $educationValues;
     }
     
-		$education = $this->profile->getEducationDetail();
+		$education = $this->profile->getEducationDetail(1);
 		
 		
 		$eduArr[]=$this->getApiFormatArray("EDUCATION","About My Education" ,$this->profile->getDecoratedEducationInfo(),$this->profile->getEDUCATION(),$this->getApiScreeningField("EDUCATION"));
@@ -175,9 +184,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//highest degree should in a pg degree
 		if(array_key_exists($this->profile->getEDU_LEVEL_NEW(),FieldMap::getFieldLabel("degree_pg","",1)))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , $education->PG_DEGREE,$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_PG","PG Degree" , FieldMap::getFieldLabel("degree_pg",$education['PG_DEGREE']),$educationValues[PG_DEGREE],$this->getApiScreeningField("DEGREE_PG"));
 		
-			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education->PG_COLLEGE,$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("PG_COLLEGE","PG College" , $education["PG_COLLEGE"],$educationValues[PG_COLLEGE],$this->getApiScreeningField("PG_COLLEGE"));
       
 		}
 		else
@@ -188,9 +197,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		//highest degree should not be high school or trade school
 		if(!($this->profile->getEDU_LEVEL_NEW()=="23" ||$this->profile->getEDU_LEVEL_NEW()=="24"))
 		{
-			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , $education->UG_DEGREE,$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
+			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree" , FieldMap::getFieldLabel("degree_ug",$education['UG_DEGREE']),$educationValues[UG_DEGREE],$this->getApiScreeningField("DEGREE_UG"));
 		
-			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education->COLLEGE,$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
+			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College" , $education["COLLEGE"],$educationValues['COLLEGE'],$this->getApiScreeningField("COLLEGE"));
       
 		}
 		else
@@ -198,7 +207,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 			$eduArr[]=$this->getApiFormatArray("DEGREE_UG","UG Degree","","",$this->getApiScreeningField("DEGREE_UG"));		
 			$eduArr[]=$this->getApiFormatArray("COLLEGE","UG College","","",$this->getApiScreeningField("COLLEGE"));
 		}
-		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education->SCHOOL,$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
+		$eduArr[]=$this->getApiFormatArray("SCHOOL","School Name" , $education["SCHOOL"],$educationValues['SCHOOL'],$this->getApiScreeningField("SCHOOL"));
 
 		return $eduArr;
 	}
@@ -499,6 +508,15 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$szCity = $this->getDecorateDPP_Response($jpartnerObj->getPARTNER_CITYRES());
 		$szState = $this->getDecorateDPP_Response($jpartnerObj->getSTATE());
 		$arrOut[] = $this->handleStateCityData($szState,$szCity);
+
+		$count_matches = SearchCommonFunctions::getMyDppMatches("",$this->profile,'',"",'',"","",1)["CNT"];
+
+	    if ( !isset($count_matches))
+	    {
+	      $count_matches = 0;
+	    }
+
+	    $arrOut[]= $this->getApiFormatArray("P_MATCHCOUNT","","",$count_matches,"");
 		return $arrOut;
 	}
 

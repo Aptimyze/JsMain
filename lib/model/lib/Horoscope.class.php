@@ -21,13 +21,13 @@ class Horoscope
 		$result = $astroObj->getIfAstroDetailsPresent($profileId);
 		if($result == 1)
 			return 'Y';
-		else
+		/*else
 		{
 			$horoscope = new newjs_HOROSCOPE();
 			$result = $horoscope->getIfHoroscopePresent($profileId);
 			if($result == 1)
 				return 'Y';
-		}
+		}*/
 		return 'N';
 	}
 	
@@ -150,9 +150,9 @@ class Horoscope
     
     if (in_array($iReligion, $arrAllowedReligion)) {
 			$horoExist = $this->ifHoroscopePresent($iProfileID);
-			if ($checkForScreened && 'N' == $horoExist) {
+			/*if ($checkForScreened && 'N' == $horoExist) {
 				$horoExist = $this->isHoroscopeUnderScreen($iProfileID);
-			}
+			}*/
 	
 		}
 	

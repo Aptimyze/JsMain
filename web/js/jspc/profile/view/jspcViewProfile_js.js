@@ -1,4 +1,4 @@
-var getaTop,commLayerPageIndex=1,commHistoryFullLoaded=0,commHistoryLoading=0,commHistoryDivCount=1;
+var getaTop,commLayerPageIndex=1,commHistoryFullLoaded=0,commHistoryLoading=0,commHistoryDivCount=1,vspScrollLevel=600,alreadyShown=0;
 var kundliResponseArr = {"F":"You cannot request horoscope as you don’t match this profile's filters","G":"You cannot request horoscope to a person of the same gender"};
 
 $(function(){
@@ -149,12 +149,6 @@ $(function(){
         if($(".js-checkMatch").length ==0)
             $(".js-hideMatch").hide();
         $(".content").mCustomScrollbar();
-        if(hideUnimportantFeatureAtPeakLoad != '1')
-            displayViewSimilarProfiles();
-
-        //function calling for report abuse layer
-		customOptionButton('report_profile');
-///////////////////////////
        	
       });
       $('.js-hasaction').click(function() {
@@ -294,7 +288,10 @@ function OnScrollChange(event){
 			moveline(newWidth,leftPos);
         }
       });
-	 
+        if(scrollPos>vspScrollLevel && !alreadyShown){
+            if(hideUnimportantFeatureAtPeakLoad != '1')
+               displayViewSimilarProfiles();
+        }
 	 
      
 }
@@ -331,6 +328,7 @@ $('.js-undoAction').click(function(){
 });
 
 function displayViewSimilarProfiles(){
+    alreadyShown=1;
     $.myObj.ajax({
           showError: false, 
           method: "POST",
@@ -454,24 +452,6 @@ $(".okayClick").click(function(){
 	$('.noHoroData').hide();
 	$('.fullHoroData').show();
 })
-
-function customOptionButton(optionBtnName) {
-	var checkBox = $('input[name="' + optionBtnName + '"]');
-	$(checkBox).each(function() {
-		$(this).wrap("<span class='custom-checkbox-reportAbuse'></span>");
-			if ($(this).is(':checked')) {
-		 		$(this).closest('li').addClass("selected");
-			}
-			else $(this).closest('li').removeClass("selected"); 
-		});
-		$(checkBox).click(function() {
-			$('input[name="' + optionBtnName + '"]').closest('li').removeClass('selected');
-			$(this).closest('li').addClass("selected");
-		});
-
-}
-
-
 
 
 function showReportAbuseLayer(){

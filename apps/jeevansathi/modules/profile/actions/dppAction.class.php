@@ -33,6 +33,9 @@ class dppAction extends sfAction {
 		//Contains login credentials
 		global $smarty, $data;
 		$this->loginData = $data = $request->getAttribute("loginData");
+                if(MobileCommon::isNewMobileSite()){
+                        $this->forward("profile","edit");
+                }
 		//Contains loggedin Profile information;
 		new ProfileCommon($this->loginData,1);
 		$this->loginProfile = LoggedInProfile::getInstance();
@@ -214,7 +217,14 @@ class dppAction extends sfAction {
                                         foreach($this->existingData as $ky=>$vl){
                                           if(DPPConstants::$prefilledKeyArray[$key1][$value]==$vl[key]){
                                             $this->arrOut[$key1]["fieldArray"][$value]["prefilledMap"]=$ky;
+
+
                                           }
+                                         if($vl['key'] == "P_MATCHCOUNT")
+                                         {
+                                         	$this->mutualMatchCount = $vl["value"];
+                                         }
+
                                         }
 
 		}

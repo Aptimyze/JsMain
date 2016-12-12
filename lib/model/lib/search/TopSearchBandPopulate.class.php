@@ -248,8 +248,8 @@ class TopSearchBandPopulate
                                         $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
                                 else
                                         $this->selectedCity_Country = $param["COUNTRY_RES"];
-                                if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
-                                        $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
+//                                if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
+//                                        $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
                                 $this->selectedCity_Country = trim($this->selectedCity_Country,",");
                         }
                 }
@@ -2291,8 +2291,8 @@ class TopSearchBandPopulate
                                                 $output["mtongue"][] = $mt;
                                                 $output["mtongue_label"][] =FieldMap::getFieldLabel("community_small",$mt); 
                                         }
-                                        $output["mtongue"] = implode(',',$output["mtongue"]);
-                                        $output["mtongue_label"] =implode(',',$output["mtongue_label"]); 
+                                        $output["mtongue"] = trim(implode(',',$output["mtongue"]),",");
+                                        $output["mtongue_label"] =trim(implode(',',$output["mtongue_label"]),","); 
                                 }else{
                                         $output["mtongue"] = $output["mtongue"][0];
                                         $output["mtongue_label"] = $output["mtongue_label"][0];

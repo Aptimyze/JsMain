@@ -13,7 +13,7 @@ class RequestHandlerConfig
         "updateNotificationSetting"=>array("v1"=>"updateNotificationSettingV1"),
         "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
         "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1"),
-		"notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1")),
+		"notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1","v3"=>"notificationSubscriptionStatusV1")),
 	"search"=>array(
 		"partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
 		"perform"=>array("v1"=>"performV1","v2"=>"","v3"=>"performV1"),
@@ -100,7 +100,8 @@ class RequestHandlerConfig
 			"verified"=>array("v1"=>"verifiedV1","v3"=>"verifiedV1"),
 			"sendOTPSMS"=>array("v1"=>"SendOtpSMS","v2"=>"SendOtpSMS","v3"=>"SendOtpSMS"),
 			"matchOTP"=>array("v1"=>"MatchOtp","v2"=>"MatchOtp","v3"=>"MatchOtp"),
-			"SMSContactsToMobile"=>array("v1"=>"SMSContactsToMobile","v2"=>"SMSContactsToMobile","v3"=>"SMSContactsToMobile")),
+			"SMSContactsToMobile"=>array("v1"=>"SMSContactsToMobile","v2"=>"SMSContactsToMobile","v3"=>"SMSContactsToMobile"),
+			"reportPhoneInvalid"=>array("v1"=>"ReportInvalid","v2"=>"ReportInvalid","v3"=>"ReportInvalid")),
 	"static"=>array("page"=>array("v1"=>"pagev1","v2"=>"pagev1","v3"=>"pagev1"),"pagehits"=>array("v1"=>"savehitsv1","v2"=>"savehitsv1","v3"=>"savehitsv1")),	
     "help"=>array(
         "helpQuery"=>array("v1"=>"SubmitQueryV1"),
@@ -117,7 +118,8 @@ class RequestHandlerConfig
 	"sendEOI"=>array("v1"=>"sendEOIV1"),
         "selfName"=>array("v1"=>"SelfNameV1"),
 	"pushChat"=>array("v1"=>"pushChat"),
-	"popChat"=>array("v1"=>"popChat")
+	"popChat"=>array("v1"=>"popChat"),
+	"logChatListingFetchTimeout"=>array("v1"=>"logChatListingFetchTimeoutV1")
         )
 );
 
