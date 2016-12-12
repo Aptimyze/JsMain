@@ -710,11 +710,19 @@ return $edu;
             {
 	            $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT();
 	            $receiverProfileData = $jprofileContactObj->getProfileContacts($pid);
-	            $alternateEmailID = $receiverProfileData["ALT_EMAIL"];
-	            $alternateEmailIDStatus = $receiverProfileData["ALT_EMAIL_STATUS"];
-	            if ( $alternateEmailIDStatus != 'Y' || $alternateEmailID == NULL)
+
+	            if ( is_array($receiverProfileData ))
 	            {
-	            	$alternateEmailID = '';
+		            $alternateEmailID = $receiverProfileData["ALT_EMAIL"];
+		            $alternateEmailIDStatus = $receiverProfileData["ALT_EMAIL_STATUS"];
+		            if ( $alternateEmailIDStatus != 'Y' || $alternateEmailID == NULL)
+		            {
+		            	$alternateEmailID = '';
+		            }
+	            }
+	            else
+	            {
+	            	$alternateEmailID = '';	
 	            }
             }
             else
