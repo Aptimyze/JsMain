@@ -65,10 +65,11 @@ class JHOBBYCacheLib extends TABLE{
 
         if(!$bServedFromCache)
         { 
-        $dummyResult = array(); 
+        $dummyResult = array();
+        $dummyResult['PFID'] = $pid; 
         $dummyResult['RESULT_VAL'] = (intval($noResult) === 0 || ($noResult == NULL)) ? 'N' : $result;
 
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['RESULT_VAL']['PROFILEID'], $dummyResult['RESULT_VAL'], __CLASS__);
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PFID'], $dummyResult['RESULT_VAL'], __CLASS__);
         }
 
         if($onlyValues)  
@@ -172,10 +173,10 @@ class JHOBBYCacheLib extends TABLE{
 
         $noResult = $result;
         $result['PROFILEID'] = $pid;
-
+        $dummyResult['PFID'] = $pid;
         $dummyResult['RESULT_VAL'] = (intval($noResult) === 0 || ($noResult == NULL)) ? 'N' : $result;
 
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['RESULT_VAL']['PROFILEID'], $dummyResult['RESULT_VAL'],__CLASS__);
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PFID'], $dummyResult['RESULT_VAL'],__CLASS__);
         }
 
          $this->logFunctionCalling(__FUNCTION__);
