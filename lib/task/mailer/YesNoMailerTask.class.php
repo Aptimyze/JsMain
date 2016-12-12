@@ -50,8 +50,7 @@ EOF;
 		foreach ($arranged as $key => $value) 
 		{
 			$skipProfileObj     = SkipProfile::getInstance($key);
-	        $skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
-			$value = explode(',',$value);       
+        	        $skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 			if(is_array($skipProfiles))
 				$temp=array_diff($value,$skipProfiles); 
 			else
@@ -75,26 +74,18 @@ EOF;
 			$dbName = JsDbSharding::getShardNo($serverId,true);
 			$Contactsobj = new newjs_CONTACTS($dbName);
 			$chunkstr = "AND RECEIVER%".$chunk."=".$i;
-			$profilemail = $Contactsobj->getContactsPending($serverId,$chunkstr);
+			$profilemail = $Contactsobj->getSendersPending($chunkstr);
 			if($profilemail)
 			{
-				$profileMailChunkArray = array_chunk($profilemail, $this->noOfChunksSender);
-
-				$this->generateContactResult($profileMailChunkArray, $Contactsobj, $mailerYNObj);
+				$this->generateContactResult($profileMail, $mailerYNObj);
 			}
 		}
 	}
 
-	private function generateContactResult($profileMailChunkArray, $Contactsobj, $mailerYNObj)
+	private function generateContactResult($profileMailChunkArray, $mailerYNObj)
 	{
-		foreach ($profileMailChunkArray as $key => $value)
-		{
-			$profilemailchunk = $value;
-			$profilemailchunk = implode(',',$profilemailchunk);
-			$contactResult = $Contactsobj->getSendersPending($profilemailchunk);
-			$contactResult = $this->skipProfiles($contactResult);
+			$contactResult = $this->skipProfiles($profileMailChunkArray);
 			$this->InsertMailer($contactResult, $mailerYNObj);
-		}
 	}
 
 	private function InsertMailer($contactResult, $mailerYNObj)
