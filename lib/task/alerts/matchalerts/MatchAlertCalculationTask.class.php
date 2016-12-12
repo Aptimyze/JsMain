@@ -137,7 +137,12 @@ EOF;
                                                     
                                                         if($this->checkForCommunityModel($loggedInProfileObj->getPROFILEID(),$matchLogic)){
                                                             $communityModelNT = new CommunityModelMatchAlertsStrategy($loggedInProfileObj,$this->limitCommunityRec,MailerConfigVariables::$communityModelNT);
-                                                            $communityModelNT->getMatches($matchesSetting);
+                                                            $profilesArray = $communityModelNT->getMatches($matchesSetting);                                                                                                                
+                                                            if($profilesArray[0] == '')
+                                                            {
+                                                                $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$communityModelNT);
+                                                            }
+                                                            
                                                             $this->limitNtRec=10;
                                                         }
 							/**

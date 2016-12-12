@@ -260,6 +260,8 @@ EOF;
         $delRetrieveConsumerObj->receiveMessage();   
         $updateSeenConsumerObj=new updateSeenConsumer('SECOND_SERVER',$msgPickCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
         $updateSeenConsumerObj->receiveMessage();
+        $updateFeaturedProfileConsumerObj=new updateSeenConsumer('SECOND_SERVER',$msgPickCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $updateFeaturedProfileConsumerObj->receiveMessage();
         $profileCacheConsumerObj = new ProfileCacheConsumer('SECOND_SERVER', $msgPickCount);
         $profileCacheConsumerObj->receiveMessage();
         $updateViewLogConsumerObj = new updateViewLogConsumer('SECOND_SERVER', $msgPickCount);
