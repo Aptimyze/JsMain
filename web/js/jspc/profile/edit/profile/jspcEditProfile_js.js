@@ -6149,6 +6149,13 @@ $(document).ready(function() {
         redirectToEditSection(EditWhatNew);
     }
 
+      if(typeof(fromCALAlternate)!= "undefined" && fromCALAlternate == '1')
+    {
+        $("#section-basic").slideDown("fast");
+        var newUrl=document.location.href.replace('fromCALAlternate','');
+        history.pushState('', '', newUrl);
+    }
+
 });
 
 $(document).mousedown(function (event)

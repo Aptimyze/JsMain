@@ -269,6 +269,26 @@ return 0;
                     
                     break;  
 
+                    case '13':               
+                      if(!$isApp)
+                      { 
+                        $horoscopeObj = new Horoscope();
+                        if($profileObj->getHOROSCOPE_MATCH() == 'Y' && $horoscopeObj->ifHoroscopePresent($profileid) == 'N')
+                          $show = 1;
+                      }
+                    
+                    break; 
+
+                    case '14':               
+                      if(!$isApp)
+                      { 
+                        $horoscopeObj = new Horoscope();
+                        if($profileObj->getHOROSCOPE_MATCH() == 'Y' && $horoscopeObj->ifHoroscopePresent($profileid) == 'N')
+                          $show = 1;
+                      }
+                    
+                    break; 
+
           default : return false;
         }
         /*check if this layer is to be displayed
