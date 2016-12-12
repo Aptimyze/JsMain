@@ -405,7 +405,7 @@ $js_arr[]=array("assisted_product"   => "1");
 $js_arr[]=array("pixel_js"    => "2");
 $js_arr[]=array("mouseClickTracking_js"  => "2");
 $js_arr[]=array("jsms/profile/ep/submitDetails_js"              => "15");
-$js_arr[]=array("jsms/profile/ep/hamburger_js"            => "12");
+$js_arr[]=array("jsms/profile/ep/hamburger_js"             => "13");
 $js_arr[]=array("jsms/profile/ep/mobedit_js"                      => "27");
 $js_arr[]=array("jsms/profile/ep/mobeditview_js"                                 => "38");
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"              => "5");
