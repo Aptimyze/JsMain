@@ -104,6 +104,20 @@ class postSendReminderv1Action extends sfAction
 				
 
 			}
+                        else
+			{
+					$memHandlerObj = new MembershipHandler();
+					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
+					$MembershipMessage = $data2['hamburger_message']['top']; 
+					$responseArray["errmsglabel"]= "Reminder sent. Upgrade to send personalized messages or initiate chat";
+					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+					$responseArray["footerbutton"]["value"] = "";
+					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+					$responseArray["footerbutton"]["text"] = $MembershipMessage;
+
+				
+			}
+
 		}
 		else
 		{
