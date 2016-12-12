@@ -316,6 +316,13 @@ class myjsActions extends sfActions
 		//USING ENTRY DATE TO COMPARE WITH CURRENT TIME AND SET FLAG
 		$currentTime=time();
 		$registrationTime = strtotime($entryDate);
+
+		$this->showExpiring = 0;
+		if(($currentTime - $registrationTime)/(3600*24) >= 84)
+		{
+			$this->showExpiring = 1;
+		}
+
 		$this->engagementCount=array();
 
 //Flag to compute data for important section for FTU page
