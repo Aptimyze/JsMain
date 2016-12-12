@@ -23,7 +23,10 @@ class FormatNotification
 	if($details['NOTIFICATION_KEY']=='PHOTO_REQUEST')
 		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_REQUEST_ANDROID;
 	if($details['NOTIFICATION_KEY']=='PHOTO_UPLOAD')
-		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_ANDROID;	
+		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_ANDROID;
+    if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
+		$dataArray['STYPE'] =SearchTypesEnums::AndroidMatchOfDay;
+    
 	return $dataArray;
     }
     public static function formaterForIos($details)
@@ -33,6 +36,8 @@ class FormatNotification
                 $dataArray['STYPE'] =SearchTypesEnums::PHOTO_REQUEST_IOS;
         if($details['NOTIFICATION_KEY']=='PHOTO_UPLOAD')
                 $dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_IOS;
+        if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
+                $dataArray['STYPE'] =SearchTypesEnums::IOSMatchOfDay;
         return $dataArray;
     }
 

@@ -15,6 +15,14 @@ if ($data = authenticated($checksum)) {
     $profileid = $data["PROFILEID"];
 }
 
+$gatewayRespObj = new billing_GATEWAY_RESPONSE_LOG();
+
+if ($profileid) {
+    list($order_str, $order_num) = explode("-", $txnid);
+    $responseMsg = serialize($_REQUEST);
+    $gatewayRespObj->insertResponseMessage($profileid, $order_num, $order_str, 'PAYU', $responseMsg);
+}
+
 if (MobileCommon::isMobile()) {
     include_once ($_SERVER['DOCUMENT_ROOT'] . "/profile/common_functions.inc");
     assignHamburgerSmartyVariables($profileid);
@@ -67,8 +75,9 @@ $dup = false;
 if ($hash == $reverseHash && $AuthDesc == "Y") {
     $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
-    //if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
-    if ($ret) $membershipObj->startServiceOrder($Order_Id);
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
+    if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
+    //if ($ret) $membershipObj->startServiceOrder($Order_Id);
     
     list($part1, $part2) = explode("-", $Order_Id);
     $sql = "SELECT * from billing.ORDERS where ID = '$part2' and ORDERID = '$part1'";
@@ -149,6 +158,7 @@ if ($hash == $reverseHash && $AuthDesc == "Y") {
 } 
 else if ($hash == $reverseHash && $AuthDesc == "N") {
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
+    $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
     list($part1, $part2) = explode("-", $Order_Id);
     $ordrDeviceObj = new billing_ORDERS_DEVICE();
     $device = $ordrDeviceObj->getOrderDevice($part2, $part1);

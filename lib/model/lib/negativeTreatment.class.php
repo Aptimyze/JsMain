@@ -371,7 +371,7 @@ class negativeTreatment
         $AP_MissedServiceLog = new ASSISTED_PRODUCT_AP_MISSED_SERVICE_LOG;
         $AP_CallHistory      = new ASSISTED_PRODUCT_AP_CALL_HISTORY;
         
-        $ProfileDelReasonObj->Replace($username, $delete_reason, $specify_reason, $profileid);
+        //$ProfileDelReasonObj->Replace($username, $delete_reason, $specify_reason, $profileid);
 
         $jprofileObj->updateDeleteData($profileid);
         

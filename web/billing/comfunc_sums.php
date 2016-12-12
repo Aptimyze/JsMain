@@ -4,7 +4,7 @@ include_once JsConstants::$docRoot . "/crm/func_sky.php";
 include_once JsConstants::$docRoot . "/profile/contacts_functions.php";
 include_once JsConstants::$docRoot . "/commonFiles/comfunc.inc";
 include_once JsConstants::$docRoot . "/classes/JProfileUpdateLib.php";
-include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+include_once JsConstants::$docRoot . "/commonFiles/SymfonyPictureFunctions.class.php";
 
 /**
  * @param $serid
@@ -20,8 +20,8 @@ function get_services_amount($serid, $addonid)
     }
 
     $result = mysql_query_decide($sql) or logError_sums($sql, 0);
-    $myrow = mysql_fetch_array($result);
-    $price = $myrow['PRICE'] * (1 - (billingVariables::TAX_RATE / 100));
+    $myrow  = mysql_fetch_array($result);
+    $price  = $myrow['PRICE'] * (1 - (billingVariables::TAX_RATE / 100));
     return $price;
 }
 
@@ -32,7 +32,7 @@ function get_dep_branches()
 {
     $sql = "SELECT NAME FROM incentive.BRANCHES order by NAME";
     $res = mysql_query_decide($sql) or logError_sums($sql, 0);
-    $i = 0;
+    $i   = 0;
 
     while ($row = mysql_fetch_array($res)) {
         $dep_branch_arr[$i] = $row['NAME'];
@@ -48,9 +48,9 @@ function get_dep_branches()
  */
 function get_subscription($profileid)
 {
-    $sql = "SELECT SUBSCRIPTION FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
-    $res = mysql_query_decide($sql) or logError_sums($sql, 0);
-    $row = mysql_fetch_array($res);
+    $sql  = "SELECT SUBSCRIPTION FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
+    $res  = mysql_query_decide($sql) or logError_sums($sql, 0);
+    $row  = mysql_fetch_array($res);
     $subs = $row['SUBSCRIPTION'];
     return $subs;
 }
@@ -62,7 +62,7 @@ function get_banks()
 {
     $sql = "SELECT NAME FROM billing.BANK";
     $res = mysql_query_decide($sql) or logError_sums($sql, 0);
-    $i = 0;
+    $i   = 0;
 
     while ($row = mysql_fetch_array($res)) {
         $bank_arr[$i] = $row['NAME'];
@@ -149,7 +149,7 @@ function populate_search_criteria()
         array('name' => 'By RequestID', 'value' => 'reqid'),
         array('name' => 'By Phone Number', 'value' => 'phone'),
         array('name' => 'By Mobile Number', 'value' => 'mobile'),
-        array('name' => 'By Order-ID', 'value' => 'orderid')
+        array('name' => 'By Order-ID', 'value' => 'orderid'),
     );
     return $cri;
 }
@@ -162,7 +162,7 @@ function populate_rev_search_criteria()
     $rev_cri = array(
         array('name' => 'By Client-name', 'value' => 'uname'),
         array('name' => 'By Cheque/DD No.', 'value' => 'cdnum'),
-        array('name' => 'By BillID', 'value' => 'billid')
+        array('name' => 'By BillID', 'value' => 'billid'),
     );
     return $rev_cri;
 }
@@ -177,7 +177,7 @@ function populate_service_type()
     if ($offline_billing) {
         $service_main = array(
             array('name' => 'Offline', 'value' => 'O'),
-            array('name' => '101 Membership', 'value' => 'HDO')
+            array('name' => '101 Membership', 'value' => 'HDO'),
         );
     } else {
         $service_main = array(
@@ -189,7 +189,7 @@ function populate_service_type()
             array('name' => '101 Membership', 'value' => 'HDO'),
             array('name' => 'e-Sathi Confidential', 'value' => 'ES'),
             array('name' => 'e-Sathi Classified', 'value' => 'ESP'),
-            array('name' => 'JS Assisted', 'value' => 'ESJA')
+            array('name' => 'JS Assisted', 'value' => 'ESJA'),
         );
     }
 
@@ -209,9 +209,9 @@ function populate_service_duration()
 
     while ($row_dur = mysql_fetch_array($res_dur)) {
         if (!@in_array($row_dur['DURATION'], $val_arr)) {
-            $dur = $row_dur['DURATION'];
-            $exp = explode("-", $row_dur['NAME']);
-            $val_arr[] = $dur;
+            $dur           = $row_dur['DURATION'];
+            $exp           = explode("-", $row_dur['NAME']);
+            $val_arr[]     = $dur;
             $dur_arr[$dur] = "For " . trim($exp[1]);
         }
     }
@@ -224,11 +224,11 @@ function populate_service_duration()
             array("value" => "1", "duration" => "For One Month"),
             array("value" => "3", "duration" => "For Three Month"),
             array("value" => "6", "duration" => "For Six Month"),
-            array("value" => "12", "duration" => "For Twelve Month")
+            array("value" => "12", "duration" => "For Twelve Month"),
         );
     } else {
         for ($i = 0; $i < count($fin_arr); $i++) {
-            $service_duration[$i]['value'] = $fin_arr[$i];
+            $service_duration[$i]['value']    = $fin_arr[$i];
             $service_duration[$i]['duration'] = $dur_arr[$fin_arr[$i]];
         }
     }
@@ -250,7 +250,7 @@ function populate_discount_type()
         array("value" => "6", "dtype" => "Festive Discount"),
         array("value" => "7", "dtype" => "Renewal + Festive Discount"),
         array("value" => "8", "dtype" => "Voucher Code Discount"),
-        array("value" => "9", "dtype" => "Variable + Festive Discount")
+        array("value" => "9", "dtype" => "Variable + Festive Discount"),
     );
 
     return $discount_type;
@@ -276,7 +276,7 @@ function populate_bounce_reason()
         array("value" => "NDU", "reason" => "Not drawn on us"),
         array("value" => "PNR", "reason" => "Payee&quot;s name required / differs / mismatch"),
         array("value" => "AC", "reason" => "Account Closed"),
-        array("value" => "", "reason" => "Other")
+        array("value" => "", "reason" => "Other"),
     );
 
     return $bounce_reason;
@@ -289,7 +289,7 @@ function populate_bounce_reason()
 function populate_service_count()
 {
     $service_count = array(
-        array("value" => "10", "count" => "10 Acceptances")
+        array("value" => "10", "count" => "10 Acceptances"),
     );
 
     return $service_count;
@@ -419,7 +419,8 @@ else
         array('name' => 'CCOFFILINE', 'value' => 'CCOFFLINE'),
         array('name' => 'IVR', 'value' => 'IVR'),
         array('name' => 'Ghar Pay Cheque', 'value' => 'GHAR_PAY_CHEQUE'),
-        array('name' => 'Ghar Pay Cash', 'value' => 'GHAR_PAY_CASH')
+        array('name' => 'Ghar Pay Cash', 'value' => 'GHAR_PAY_CASH'),
+        array('name' => 'PayTM on delivery','value'=>'PayTM_ON_DELIVERY')
     );
 //    }
     return $pay_mode;
@@ -433,7 +434,7 @@ function get_deposit_branches()
     //$sql="SELECT NAME FROM incentive.BRANCHES order by NAME";
     $sql = "SELECT NAME FROM billing.BRANCHES order by NAME";
     $res = mysql_query_decide($sql) or logError_sums($sql, 0);
-    $i = 0;
+    $i   = 0;
 
     while ($row = mysql_fetch_array($res)) {
         $branch_arr[$i] = htmlentities($row['NAME']);
@@ -454,8 +455,8 @@ function get_deposit_branches()
  */
 function send_log_mail($email, $Cc, $Bcc, $msg, $subject, $from)
 {
-    $boundry = "b" . md5(uniqid(time()));
-    $MP = "/usr/sbin/sendmail -t  ";
+    $boundry       = "b" . md5(uniqid(time()));
+    $MP            = "/usr/sbin/sendmail -t  ";
     $spec_envelope = 1;
 
     if ($spec_envelope) {
@@ -492,15 +493,15 @@ function logError_sums($query, $sendmail = "0")
     $error_msg .= "Script : " . $_SERVER['REQUEST_URI'] . "\n";
 
     $error_msg = "echo \"" . $error_msg;
-    $msg = $error_msg . "\" >> /var/www/html/web/billing/logError_sums.txt";
+    $msg       = $error_msg . "\" >> /var/www/html/web/billing/logError_sums.txt";
 
     passthru($msg);
     $smarty->display("logError_sums.htm");
 
     if ($sendmail) {
-        $to = "vibhor.garg@jeevansathi.com, aman.sharma@jeevansathi.com";
+        $to      = "vibhor.garg@jeevansathi.com, aman.sharma@jeevansathi.com";
         $subject = "Error in Jeevansathi Sums";
-        $from = "js-sums@jeevansathi.com";
+        $from    = "js-sums@jeevansathi.com";
         mail($to, $subject, $msg, $from);
     }
 
@@ -520,7 +521,7 @@ function maStripVARS_sums($action)
             if (is_array($_GET)) {
                 while (list($k, $v) = each($_GET)) {
                     if (!is_array($v)) {
-                        $_GET[$k] = strip_tags(str_replace("\"", "'", $v));
+                        $_GET[$k]    = strip_tags(str_replace("\"", "'", $v));
                         $GLOBALS[$k] = strip_tags(str_replace("\"", "'", $GLOBALS[$k]));
                     }
                 }
@@ -531,7 +532,7 @@ function maStripVARS_sums($action)
             if (is_array($_POST)) {
                 while (list($k, $v) = each($_POST)) {
                     if (!is_array($v)) {
-                        $_POST[$k] = strip_tags(str_replace("\"", "'", $v));
+                        $_POST[$k]   = strip_tags(str_replace("\"", "'", $v));
                         $GLOBALS[$k] = strip_tags(str_replace("\"", "'", $GLOBALS[$k]));
                     }
                 }
@@ -546,7 +547,7 @@ function maStripVARS_sums($action)
             if (is_array($_GET)) {
                 while (list($k, $v) = each($_GET)) {
                     if (!is_array($v)) {
-                        $_GET[$k] = strip_tags(str_replace("\"", "'", $v));
+                        $_GET[$k]    = strip_tags(str_replace("\"", "'", $v));
                         $GLOBALS[$k] = strip_tags(str_replace("\"", "'", $GLOBALS[$k]));
                     }
                 }
@@ -557,7 +558,7 @@ function maStripVARS_sums($action)
             if (is_array($_POST)) {
                 while (list($k, $v) = each($_POST)) {
                     if (!is_array($v)) {
-                        $_POST[$k] = strip_tags(str_replace("\"", "'", $v));
+                        $_POST[$k]   = strip_tags(str_replace("\"", "'", $v));
                         $GLOBALS[$k] = strip_tags(str_replace("\"", "'", $GLOBALS[$k]));
                     }
                 }
@@ -573,13 +574,13 @@ function maStripVARS_sums($action)
         while (list($k, $v) = each($_GET)) {
             if (!is_array($v)) {
                 if ($action == "stripslashes") {
-                    $_GET[$k] = strip_tags(str_replace("\"", "'", stripslashes($v)));
+                    $_GET[$k]    = strip_tags(str_replace("\"", "'", stripslashes($v)));
                     $GLOBALS[$k] = strip_tags(str_replace("\"", "'", stripslashes($GLOBALS[$k])));
                     $GLOBALS[$k] = strip_tags(str_replace("\"", "'", stripslashes($GLOBALS[$k])));
                 }
 
                 if ($action == "addslashes") {
-                    $_GET[$k] = strip_tags(str_replace("\"", "'", addslashes($v)));
+                    $_GET[$k]    = strip_tags(str_replace("\"", "'", addslashes($v)));
                     $GLOBALS[$k] = strip_tags(str_replace("\"", "'", addslashes($GLOBALS[$k])));
                 }
             }
@@ -592,12 +593,12 @@ function maStripVARS_sums($action)
         while (list($k, $v) = each($_POST)) {
             if (!is_array($v)) {
                 if ($action == "stripslashes") {
-                    $_POST[$k] = strip_tags(str_replace("\"", "'", stripslashes($v)));
+                    $_POST[$k]   = strip_tags(str_replace("\"", "'", stripslashes($v)));
                     $GLOBALS[$k] = strip_tags(str_replace("\"", "'", stripslashes($GLOBALS[$k])));
                 }
 
                 if ($action == "addslashes") {
-                    $_POST[$k] = strip_tags(str_replace("\"", "'", addslashes($v)));
+                    $_POST[$k]   = strip_tags(str_replace("\"", "'", addslashes($v)));
                     $GLOBALS[$k] = strip_tags(str_replace("\"", "'", addslashes($GLOBALS[$k])));
                 }
             }
@@ -639,16 +640,16 @@ function change_notify_mail($id, $message, $flag)
         $subject = "Receipt ID : " . $id . " has been modified";
     }
 
-    $db_slave = connect_slave();
-    $email = get_email($row_wlk['WALKIN'], $db_slave);
+    $db_slave   = connect_slave();
+    $email      = get_email($row_wlk['WALKIN'], $db_slave);
     $boss_email = get_boss_email($row_wlk['WALKIN'], $db_slave);
     unset($db_slave);
     $db = connect_db();
 
-    $from = "info_sums@jeevansathi.com";
+    $from      = "info_sums@jeevansathi.com";
     $emailHead = "anamika.singh@jeevansathi.com";
-    $to = $emailHead . "," . $boss_email;
-    $cc = $email . "," . "shyam.kumar@jeevansathi.com, bodhsatv@naukri.com";
+    $to        = $emailHead . "," . $boss_email;
+    $cc        = $email . "," . "shyam.kumar@jeevansathi.com, bodhsatv@naukri.com";
 
     mail($to, $subject, $msg, "From: $from\r\n" . "Cc: $cc\r\n" . "X-Mailer: PHP/" . phpversion());
 }
@@ -685,7 +686,8 @@ else
         array('name' => 'IVR', 'value' => 'IVR'),
         array('name' => 'BLUEDART COD', 'value' => 'BLUEDART_COD'),
         array('name' => 'Ghar Pay Cheque', 'value' => 'GHAR_PAY_CHEQUE'),
-        array('name' => 'Ghar Pay Cash', 'value' => 'GHAR_PAY_CASH')
+        array('name' => 'Ghar Pay Cash', 'value' => 'GHAR_PAY_CASH'),
+        array('name'=>'PayTM on delivery','value'=>'PayTM_ON_DELIVERY')
     );
 //    }
     return $from_source;
@@ -709,7 +711,7 @@ function populate_misc_category()
         array('name' => 'Banners', 'value' => 'banners'),
         array('name' => 'Mailers', 'value' => 'mailers'),
         array('name' => 'Marriage Bureau', 'value' => 'marriage_bureau'),
-        array('name' => 'Others', 'value' => 'others')
+        array('name' => 'Others', 'value' => 'others'),
     );
     return $misc_category;
 }
@@ -723,7 +725,7 @@ function populate_misc_saletype()
         array('name' => 'Credit', 'value' => 'Credit'),
         array('name' => 'Part Payment', 'value' => 'Part Payment'),
         array('name' => 'Full Payment', 'value' => 'Full Payment'),
-        array('name' => 'Trial', 'value' => 'Trial')
+        array('name' => 'Trial', 'value' => 'Trial'),
     );
     return $misc_saletype;
 }
@@ -735,7 +737,7 @@ function populate_misc_saleby()
 {
     $sql = "SELECT USERNAME FROM jsadmin.PSWRDS WHERE ACTIVE!='N' and PRIVILAGE REGEXP 'BA|BU|MR|MBU' ORDER BY USERNAME";
     $res = mysql_query_decide($sql) or die(mysql_error_js());
-    $i = 0;
+    $i   = 0;
 
     while ($row = mysql_fetch_array($res)) {
         $employee[$i] = $row['USERNAME'];
@@ -760,30 +762,30 @@ function charge_back_stats_log($profileid, $receiptid, $noChargeLog = '')
     include_once "$path/classes/Memcache.class.php";
 
 //    $mysql = new Mysql;
-//    $myDbName = getProfileDatabaseConnectionName($profileid, '', $mysql);
-//    $myDb = $mysql->connect("$myDbName");
+    //    $myDbName = getProfileDatabaseConnectionName($profileid, '', $mysql);
+    //    $myDb = $mysql->connect("$myDbName");
     $sql_user = " SELECT ENTRY_DT,PHONE_RES,STD,PHONE_MOB,CONTACT,IPADD from newjs.JPROFILE where PROFILEID='$profileid' ";
     $res_user = mysql_query_decide($sql_user) or logError_sums($sql_user, 1);
     $row_user = mysql_fetch_array($res_user);
-    $reg_dt = $row_user["ENTRY_DT"];
-    $phone = $row_user["STD"] . "-" . $row_user["PHONE_RES"];
-    $mob = $row_user["PHONE_MOB"];
-    $address = addslashes(stripslashes($row_user["CONTACT"]));
-    $ip_reg = $row_user["IPADD"];
+    $reg_dt   = $row_user["ENTRY_DT"];
+    $phone    = $row_user["STD"] . "-" . $row_user["PHONE_RES"];
+    $mob      = $row_user["PHONE_MOB"];
+    $address  = addslashes(stripslashes($row_user["CONTACT"]));
+    $ip_reg   = $row_user["IPADD"];
 
     $sql_payment = "SELECT a.BILLID,b.RECEIPTID,b.ENTRY_DT,a.SERVICEID,a.ADDON_SERVICEID,a.ORDERID,b.MODE,b.AMOUNT, b.TYPE, b.IPADD, b.TRANS_NUM from billing.PURCHASES as a,billing.PAYMENT_DETAIL as b where b.RECEIPTID='$receiptid' and a.BILLID=b.BILLID ";
     $res_payment = mysql_query_decide($sql_payment) or logError_sums($sql_payment, 1);
     $row_payment = mysql_fetch_array($res_payment);
-    $billid = $row_payment["BILLID"];
-    $receiptid = $row_payment["RECEIPTID"];
-    $payment_dt = $row_payment["ENTRY_DT"];
-    $service = $row_payment["SERVICEID"];
-    $addon = $row_payment["ADDON_SERVICEID"];
-    $mode = $row_payment["MODE"];
-    $amount = $row_payment["AMOUNT"];
-    $type = $row_payment["TYPE"];
-    $ip_pay = $row_payment["IPADD"];
-    $ref_id = $row_payment["TRANS_NUM"];
+    $billid      = $row_payment["BILLID"];
+    $receiptid   = $row_payment["RECEIPTID"];
+    $payment_dt  = $row_payment["ENTRY_DT"];
+    $service     = $row_payment["SERVICEID"];
+    $addon       = $row_payment["ADDON_SERVICEID"];
+    $mode        = $row_payment["MODE"];
+    $amount      = $row_payment["AMOUNT"];
+    $type        = $row_payment["TYPE"];
+    $ip_pay      = $row_payment["IPADD"];
+    $ref_id      = $row_payment["TRANS_NUM"];
 
     if ($mode != "IVR") {
         $ord_id = $row_payment["ORDERID"];
@@ -800,7 +802,7 @@ function charge_back_stats_log($profileid, $receiptid, $noChargeLog = '')
             $sql_ft = " SELECT TXNREFNO from billing.PAYSEAL where ORDERID='$orderid' ";
             $res_ft = mysql_query_decide($sql_ft) or logError_sums($sql_ft, 1);
             $row_ft = mysql_fetch_array($res_ft);
-            $ft = $row_ft["TXNREFNO"];
+            $ft     = $row_ft["TXNREFNO"];
         }
     }
 
@@ -857,16 +859,15 @@ $wtng_me=$row_rec["cnt"];
             $wtng_me = $contactResult[$i]['CNT'];
         }
     }
-	$pidShard=JsDbSharding::getShardNo($profileid,'slave');
-	$dbMessageLogObj=new NEWJS_MESSAGE_LOG($pidShard);
-	$res=$dbMessageLogObj->getMessageLogBilling($profileid,'SENDER','');
+    $pidShard        = JsDbSharding::getShardNo($profileid, 'slave');
+    $dbMessageLogObj = new NEWJS_MESSAGE_LOG($pidShard);
+    $res             = $dbMessageLogObj->getMessageLogBilling($profileid, 'SENDER', '');
 
 //    $sql_con_made = " SELECT RECEIVER,DATE,IP from newjs.MESSAGE_LOG where SENDER='$profileid' order by ID desc limit 20";
-//    $res_con_made = $mysql->executeQuery($sql_con_made, $myDb) or logError_sums($sql_con_made, 1);
+    //    $res_con_made = $mysql->executeQuery($sql_con_made, $myDb) or logError_sums($sql_con_made, 1);
 
 //    while ($row_con_made = $mysql->fetchArray($res_con_made)) {
-        foreach ($res as $key=>$row_con_made)
-    {
+    foreach ($res as $key => $row_con_made) {
         $sql = "select USERNAME from newjs.JPROFILE where PROFILEID=$row_con_made[RECEIVER] ";
         $res = mysql_query_decide($sql) or logError_sums($sql, 1);
         $row = mysql_fetch_array($res);
@@ -876,14 +877,13 @@ $wtng_me=$row_rec["cnt"];
 
     addslashes(stripslashes($con_made));
 
-	$res=$dbMessageLogObj->getMessageLogBilling($profileid,'RECEIVER','A');
+    $res = $dbMessageLogObj->getMessageLogBilling($profileid, 'RECEIVER', 'A');
 
 //    $sql_con_acc = " SELECT SENDER,DATE,IP from newjs.MESSAGE_LOG where RECEIVER='$profileid' and TYPE='A' order by ID desc limit 20";
-//    $res_con_acc = $mysql->executeQuery($sql_con_acc, $myDb) or logError_sums($sql_con_acc, 1);
+    //    $res_con_acc = $mysql->executeQuery($sql_con_acc, $myDb) or logError_sums($sql_con_acc, 1);
 
 //    while ($row_con_acc = $mysql->fetchArray($res_con_acc)) {
-        foreach ($res as $key=>$row_con_acc)
-	{
+    foreach ($res as $key => $row_con_acc) {
         $sql = "select USERNAME from newjs.JPROFILE where PROFILEID=$row_con_acc[SENDER] ";
         $res = mysql_query_decide($sql) or logError_sums($sql, 1);
         $row = mysql_fetch_array($res);
@@ -926,33 +926,33 @@ $wtng_me=$row_rec["cnt"];
             $i_wtng = 0;
         }
 
-        $resultSetArr = array();
-        $resultSetArr['PROFILEID'] = $profileid;
+        $resultSetArr                    = array();
+        $resultSetArr['PROFILEID']       = $profileid;
         $resultSetArr['REGISTRATION_DT'] = $reg_dt;
-        $resultSetArr['PHONE'] = $phone;
-        $resultSetArr['MOBILE'] = $mob;
+        $resultSetArr['PHONE']           = $phone;
+        $resultSetArr['MOBILE']          = $mob;
         $resultSetArr['CONTACT_ADDRESS'] = $address;
-        $resultSetArr['IP_REG'] = $ip_reg;
-        $resultSetArr['BILLID'] = $billid;
-        $resultSetArr['RECEIPTID'] = $receiptid;
-        $resultSetArr['PAYMENT_DT'] = $payment_dt;
-        $resultSetArr['SERVICEID'] = $service;
-        $resultSetArr['ADDON'] = $addon;
-        $resultSetArr['MODE'] = $mode;
-        $resultSetArr['AMOUNT_PAID'] = $amount;
-        $resultSetArr['TYPE'] = $type;
-        $resultSetArr['IP_PAYMENT'] = $ip_pay;
-        $resultSetArr['REF_NO'] = $ref_id;
-        $resultSetArr['FT_NO'] = $ft;
-        $resultSetArr['ORDERID'] = $orderid;
-        $resultSetArr['I_ACC'] = $i_acc;
-        $resultSetArr['I_DEC'] = $i_dec;
-        $resultSetArr['WTNG_ME'] = $wtng_me;
-        $resultSetArr['ACC_ME'] = $acc_me;
-        $resultSetArr['DEC_ME'] = $dec_me;
-        $resultSetArr['I_WTNG'] = $i_wtng;
-        $resultSetArr['CONTACTS_MADE'] = $con_made;
-        $resultSetArr['CONTACTS_ACC'] = $con_acc;
+        $resultSetArr['IP_REG']          = $ip_reg;
+        $resultSetArr['BILLID']          = $billid;
+        $resultSetArr['RECEIPTID']       = $receiptid;
+        $resultSetArr['PAYMENT_DT']      = $payment_dt;
+        $resultSetArr['SERVICEID']       = $service;
+        $resultSetArr['ADDON']           = $addon;
+        $resultSetArr['MODE']            = $mode;
+        $resultSetArr['AMOUNT_PAID']     = $amount;
+        $resultSetArr['TYPE']            = $type;
+        $resultSetArr['IP_PAYMENT']      = $ip_pay;
+        $resultSetArr['REF_NO']          = $ref_id;
+        $resultSetArr['FT_NO']           = $ft;
+        $resultSetArr['ORDERID']         = $orderid;
+        $resultSetArr['I_ACC']           = $i_acc;
+        $resultSetArr['I_DEC']           = $i_dec;
+        $resultSetArr['WTNG_ME']         = $wtng_me;
+        $resultSetArr['ACC_ME']          = $acc_me;
+        $resultSetArr['DEC_ME']          = $dec_me;
+        $resultSetArr['I_WTNG']          = $i_wtng;
+        $resultSetArr['CONTACTS_MADE']   = $con_made;
+        $resultSetArr['CONTACTS_ACC']    = $con_acc;
 
         return $resultSetArr;
     } else {
@@ -982,7 +982,7 @@ function populate_reject_reason($from)
             array('name' => 'Incorrect Email ID', 'value' => 'IEI'),
             array('name' => 'Deceased', 'value' => 'DES'),
             array('name' => 'Paid at another Matrimonial Site', 'value' => 'PMS'),
-            array('name' => 'Profile Deleted', 'value' => 'PD')
+            array('name' => 'Profile Deleted', 'value' => 'PD'),
         );
     } elseif ($from == "CONFIRM_CLIENT") {
         $reject_reason_arr = array(
@@ -1000,7 +1000,7 @@ function populate_reject_reason($from)
             array('name' => 'Paid at another Matrimonial Site', 'value' => 'PMS'),
             array('name' => 'Never Raised the Request', 'value' => 'NRR'),
             array('name' => 'Profile Deleted', 'value' => 'PD'),
-            array('name' => 'Wants to Pay on another Profile', 'value' => 'POAP')
+            array('name' => 'Wants to Pay on another Profile', 'value' => 'POAP'),
         );
     } elseif ($from == "MIS") {
         $reject_reason_arr = array(
@@ -1023,7 +1023,7 @@ function populate_reject_reason($from)
             array('name' => 'Customer does not recognise the transaction', 'value' => 'DRT'),
             array('name' => 'Customer will update correct details', 'value' => 'UCD'),
             array('name' => 'Customer will make fresh payment', 'value' => 'MFP'),
-            array('name' => 'Customer will send Bank Certificate', 'value' => 'SBC')
+            array('name' => 'Customer will send Bank Certificate', 'value' => 'SBC'),
         );
     }
 
@@ -1180,8 +1180,8 @@ function check_voucher_discount_code($code, $profileid = '')
 
     if ($row_vc = mysql_fetch_array($res_vc)) {
         $return["CODE_EXISTS"] = 1;
-        $return["PERCENT"] = $row_vc['PERCENT'];
-        $return["MESSAGE"] = $row_vc['MESSAGE'];
+        $return["PERCENT"]     = $row_vc['PERCENT'];
+        $return["MESSAGE"]     = $row_vc['MESSAGE'];
     } else {
         $sql_vc = "SELECT DISCOUNT_PERCENT, DISCOUNT_MESSAGE,NAME_OF_CODE FROM newjs.DISCOUNT_CODE WHERE CODE='$code' AND USED='N' AND ACTIVE='Y'";
         $res_vc = mysql_query_decide($sql_vc) or logError_sums($sql_vc, 0);
@@ -1193,22 +1193,22 @@ function check_voucher_discount_code($code, $profileid = '')
 
                 if ($row_p = mysql_fetch_array($res_p)) {
                     $return["CODE_EXISTS"] = 1;
-                    $return["PERCENT"] = $row_vc['DISCOUNT_PERCENT'];
-                    $return["MESSAGE"] = $row_vc['DISCOUNT_MESSAGE'];
+                    $return["PERCENT"]     = $row_vc['DISCOUNT_PERCENT'];
+                    $return["MESSAGE"]     = $row_vc['DISCOUNT_MESSAGE'];
                 } else {
                     $return["CODE_EXISTS"] = 0;
-                    $return["PERCENT"] = 0;
-                    $return["MESSAGE"] = 0;
+                    $return["PERCENT"]     = 0;
+                    $return["MESSAGE"]     = 0;
                 }
             } else {
                 $return["CODE_EXISTS"] = 1;
-                $return["PERCENT"] = $row_vc['DISCOUNT_PERCENT'];
-                $return["MESSAGE"] = $row_vc['DISCOUNT_MESSAGE'];
+                $return["PERCENT"]     = $row_vc['DISCOUNT_PERCENT'];
+                $return["MESSAGE"]     = $row_vc['DISCOUNT_MESSAGE'];
             }
         } else {
             $return["CODE_EXISTS"] = 0;
-            $return["PERCENT"] = 0;
-            $return["MESSAGE"] = 0;
+            $return["PERCENT"]     = 0;
+            $return["MESSAGE"]     = 0;
         }
     }
 
@@ -1311,7 +1311,7 @@ function get_service_type($serviceid)
     $serviceid = str_replace("'", "", $serviceid);
 
     $string_length = strlen($serviceid);
-    $string = substr($serviceid, 0, $string_length);
+    $string        = substr($serviceid, 0, $string_length);
 
     if ($string) {
         while (!ctype_alpha($string)) {
@@ -1332,12 +1332,12 @@ function check_special_discount($profileid)
     return;
     global $smarty;
     $mtongue_arr = array("10", "33", "27", "7", "28", "13", "14", "15", "30", "20", "12", "19", "11", "34", "8", "9");
-    $city_arr = array("JK", "HP", "PU", "DE00", "HA", "WB", "UP", "UT", "BI", "JH", "CH", "MH", "GU", "RA");
+    $city_arr    = array("JK", "HP", "PU", "DE00", "HA", "WB", "UP", "UT", "BI", "JH", "CH", "MH", "GU", "RA");
 
-    $sql = "SELECT MTONGUE,CITY_RES FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
-    $res = mysql_query_decide($sql) or logError_sums($sql, 0);
-    $row = mysql_fetch_array($res);
-    $mtongue = $row['MTONGUE'];
+    $sql      = "SELECT MTONGUE,CITY_RES FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
+    $res      = mysql_query_decide($sql) or logError_sums($sql, 0);
+    $row      = mysql_fetch_array($res);
+    $mtongue  = $row['MTONGUE'];
     $city_res = $row['CITY_RES'];
 
     for ($i = 0; $i < count($city_arr); $i++) {
@@ -1400,27 +1400,27 @@ function evalue_privacy($profileid, $subscription = '')
     if ($row = mysql_fetch_assoc($res)) {
         if ($row["SHOWPHONE_RES"] == "N" || $row["SHOWPHONE_MOB"] == "N" || $row["SHOWMESSENGER"] == "N") {
             $jprofileObj = JProfileUpdateLib::getInstance();
-            $updateStr = "SHOWPHONE_RES='Y',SHOWPHONE_MOB='Y',SHOWMESSENGER='Y'";
-            $paramArr = $jprofileObj->convertUpdateStrToArray($updateStr);
-            $jprofileObj->editJPROFILE($paramArr, $profileid, 'PROFILEID');
-
-//$sqlup="UPDATE newjs.JPROFILE SET SHOWPHONE_RES='Y',SHOWPHONE_MOB='Y',SHOWMESSENGER='Y'";
+            $updateStr   = "SHOWPHONE_RES='Y',SHOWPHONE_MOB='Y',SHOWMESSENGER='Y'";
+            $paramArr    = $jprofileObj->convertUpdateStrToArray($updateStr);
 
             if ($subscription) {
                 if (strstr($subscription, "S")) {
                     $sub1 = substr($subscription, 0, strlen($subscription) - 2);
                 }
-
-                $sqlup .= ", SUBSCRIPTION='$sub1'";
+                $paramArr['SUBSCRIPTION'] = $sub1;
             }
 
-            $sqlup .= " WHERE PROFILEID='$profileid'";
-            mysql_query_decide($sqlup) or logError_sums($sqlup, 1);
-            $from = "info@jeevansathi.com";
-            $subject = "Your contact privacy settings have been changed";
-            $to = $row["EMAIL"];
+            $updateStatus = $jprofileObj->editJPROFILE($paramArr, $profileid, 'PROFILEID');
+            if (!$updateStatus) {
+                include_once JsConstants::$cronDocRoot . "/lib/model/lib/SendMail.class.php";
+                SendMail::send_email("avneet.bindra@jeevansathi", "jProfile Update failed in comfunc_sums.php", "comfunc_sums.php error", "js-sums@jeevansathi.com");
+            }
+
+            $from     = "info@jeevansathi.com";
+            $subject  = "Your contact privacy settings have been changed";
+            $to       = $row["EMAIL"];
             $checksum = md5($profileid) . "i" . $profileid;
-            $msg = "Dear " . $row["USERNAME"];
+            $msg      = "Dear " . $row["USERNAME"];
             $msg .= "\n\n";
             $msg .= "We noticed that you had chosen to hide your contact details from others. Now that you have taken an eValue Pack Membership on jeevansathi.com, to get full value of your subscription, we thought we would change your privacy settings to allow people to see your contact details.";
             $msg .= "\n\n";
@@ -1440,7 +1440,7 @@ function evalue_privacy($profileid, $subscription = '')
                 /*$sqlup="UPDATE newjs.JPROFILE SET SUBSCRIPTION='$sub1' WHERE PROFILEID='$profileid'";
                 mysql_query_decide($sqlup) or logError_sums($sqlup,1);*/
                 $jprofileObj = JProfileUpdateLib::getInstance();
-                $paramArr = array("SUBSCRIPTION" => $sub1);
+                $paramArr    = array("SUBSCRIPTION" => $sub1);
                 $jprofileObj->editJPROFILE($paramArr, $profileid, 'PROFILEID');
             }
         }
