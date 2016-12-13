@@ -37,7 +37,7 @@ class versionupgrade_v1Action extends sfActions
 		$this->defaultArray["RATE_US_BEHAVIORAL"]="true";
 		$this->defaultArray["updateInfo"]['updateInfoFlag']="true";
 		$this->defaultArray["updateInfo"]['updateVersion']="81";
-		$this->defaultArray["updateInfo"]['updateFeatures']=$updateArray;
+		$this->defaultArray["updateInfo"]['updateFeatures']=self::$updateArray;
 
 		$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$apiObj->setResponseBody($this->defaultArray);
