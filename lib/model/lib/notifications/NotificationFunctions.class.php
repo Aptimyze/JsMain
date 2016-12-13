@@ -115,10 +115,11 @@ class NotificationFunctions
         if(!$notificationStop && is_array($params)){
 	        $notificationKey = $params['notificationKey'];
 	        $messageId = $params['messageId'];
+	        $profileid = $params['profileid'];
 	        $osType = MobileCommon::isApp();
 	        try{
 	            if($osType && $messageId && $notificationKey && is_numeric($messageId)){ 
-                    $dataSet = array('MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
+                    $dataSet = array('PROFILEID'=>$profileid,'MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
                     //print_r($dataSet);
                     $producerObj = new JsNotificationProduce();
                     if($producerObj->getRabbitMQServerConnected()){     //flow with rabbitmq

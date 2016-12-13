@@ -395,6 +395,8 @@ class notificationActions extends sfActions
         $respObj = ApiResponseHandler::getInstance();
         $notificationKey = $request->getParameter('notificationKey');
         $messageId = $request->getParameter('messageId');
+        $loginData =$request->getAttribute("loginData");
+        $profileid = ($loginData['PROFILEID'] ? $loginData['PROFILEID'] : null);
         $osType = MobileCommon::isApp();
         try{
             if($osType == null || $osType == ""){
@@ -403,7 +405,7 @@ class notificationActions extends sfActions
             }
             else if($messageId && $notificationKey){
                 if(is_numeric($messageId)){
-                    $dataSet = array('MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
+                    $dataSet = array('PROFILEID'=>$profileid,'MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
                     //print_r($dataSet);
                     $producerObj = new JsNotificationProduce();
                     if($producerObj->getRabbitMQServerConnected()){     //flow with rabbitmq
