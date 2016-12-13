@@ -679,7 +679,7 @@ class commonActions extends sfActions
                                }
                                else
                                        $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
-                    if($profileid%10==1 && MobileCommon::isNewMobileSite())
+                    if($profileid%9==1 && MobileCommon::isNewMobileSite())
                     {
                     	$todayDate= date('Y-m-d');
                     	$memObj = JsMemcache::getInstance();
@@ -713,7 +713,7 @@ class commonActions extends sfActions
             $nameData=(new NameOfUser())->getNameData($profileId);
             $this->nameOfUser=$nameData[$profileId]['NAME'];
             $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
-            if($profileId%10==1)$this->skipSkipButton=1;
+            if($profileId%9==1)$this->skipSkipButton=1;
         }
                 
 		if($calObject['LAYERID']==1)
