@@ -34,8 +34,7 @@ class PROFILE_VIEW_SIMILAR_PROFILE_LOAD extends TABLE {
             }
             catch (Exception $ex) 
             {
-                die("I");
-                throw new jsException($e);
+               jsException::nonCriticalError($e);
             }
         }
 }
