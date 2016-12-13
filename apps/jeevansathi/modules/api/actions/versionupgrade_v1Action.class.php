@@ -16,6 +16,12 @@ class versionupgrade_v1Action extends sfActions
 	* @param sfRequest $request A request object
 	*/
 	
+	private static $updateArray = array(
+            "dpp suggestion cal",
+            "multi select search form",
+            "online chat"
+            
+        );
 	public function execute($request)
 	{	
 		$responseData = array();
@@ -29,9 +35,16 @@ class versionupgrade_v1Action extends sfActions
 		$this->defaultArray["RATE_US_AUTO"]="true";
 		$this->defaultArray["RATE_US_MANUAL"]="true";
 		$this->defaultArray["RATE_US_BEHAVIORAL"]="true";
+		$this->defaultArray["updateInfo"]['updateInfoFlag']="true";
+		$this->defaultArray["updateInfo"]['updateVersion']="81";
+		$this->defaultArray["updateInfo"]['updateFeatures']=$updateArray;
+
 		$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$apiObj->setResponseBody($this->defaultArray);
 		$apiObj->generateResponse();
+
+
+
 		die;
 	}
 }
