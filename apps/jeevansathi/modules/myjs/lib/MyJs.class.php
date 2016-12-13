@@ -595,7 +595,7 @@ class MyJs implements Module
                                 "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_JSMS,
                                 "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_JSMS,
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_JSMS,
-                                
+                                "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS
                                );
 		}
 		elseif(MobileCommon::isApp()=='I')
