@@ -41,7 +41,7 @@ class HamburgerApp
 	                $hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? $profileMemcacheObj->get("MESSAGE_NEW") : 0;
 	                //;
 			$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");
-			if(MobileCommon::isIOSApp())
+			if(MobileCommon::isIOSApp() || MobileCommon::isAndroidApp())
 			{
 				$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITOR_ALL");
 			}
