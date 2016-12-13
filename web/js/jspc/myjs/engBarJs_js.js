@@ -598,7 +598,7 @@ try{
     innerHtml=innerHtml+this.getCards(interestsCount,showViewAll);
     this.containerHtml=this.containerHtml.replace(/\{\{TOTAL_NUM\}\}/gi,totalPanels);  
     this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
-    this.containerHtml=this.containerHtml.replace(/\{\{heading\}\}/g,this.heading);
+    $("#engBarInfoMessage").html(this.heading);
     $("#totalExpiringInterestReceived").text(totalCount);
     if (!totalCount){
     temp2= $(this.containerHtml.trim());

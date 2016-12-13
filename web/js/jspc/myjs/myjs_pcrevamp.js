@@ -822,6 +822,7 @@ else {
 		var called = [];
 	$('#MsgEngagementHead').bind("click",function() 
 	{
+  $("#engBarInfoMessage").hide();
  $("#totalMessagesReceived").removeClass('disp-none');
 		$("#messagesCountNew").addClass("disp-none").removeClass("disp-cell");
     engagementClickHanding(mess,3);
@@ -829,12 +830,14 @@ else {
   
     $('#acceptanceEngagementHead').bind("click",function() 
   {
+    $("#engBarInfoMessage").hide();
     $("#totalAcceptsReceived").removeClass('disp-none');
 	  $("#allAcceptanceCount").addClass("disp-none").removeClass("disp-cell");
     engagementClickHanding(accept,2);
     });
 	 $('#interestEngagementHead').bind("click",function() 
 	{
+    $("#engBarInfoMessage").hide();
     $("#totalInterestReceived").removeClass('disp-none');
 		$("#interetReceivedCount").addClass("disp-none").removeClass("disp-cell");
 		engagementClickHanding(interests,0);
@@ -842,6 +845,7 @@ else {
 
     if(showExpiring)
     {
+      $("#engBarInfoMessage").show();
       $('#expiringInterestHead').bind("click",function() 
       {
         $("#totalExpiringInterestReceived").removeClass('disp-none');
@@ -851,6 +855,7 @@ else {
     } 
     else
     {
+      $("#engBarInfoMessage").hide();
       $('#filteredInterestHead').bind("click",function() 
       {
         $("#totalFilteredInterestReceived").removeClass('disp-none');

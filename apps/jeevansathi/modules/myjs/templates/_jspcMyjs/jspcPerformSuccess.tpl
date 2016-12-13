@@ -133,7 +133,9 @@
                 <li id="expiringInterestHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
-                            <div id="engage_expiringInterestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Expiring Interests',loggedInJspcGender,'')" >Interests Expiring</div>
+                            <div id="engage_expiringInterestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Expiring Interests',loggedInJspcGender,'')" >Interests Expiring
+                            <div id="ExpiringAction" style="color:red;">Take Action</div>
+                            </div>
                             <div id="totalExpiringInterestReceived" class="myjs-fsize2  vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="expiringInterestCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
@@ -159,12 +161,7 @@
                     </div>
                 </li>
             </ul>
-            <div class="txtc fontlig f13 wid100p" style="
-    position: absolute;
-    padding: 14px 27px;
-    width: 100%;
-">Interests are expiring this week, Take action NOW Accept/Decline
-       </div>
+            <div id="engBarInfoMessage" class="txtc fontlig f13 wid100p engBarInfoMsg" style="position: absolute; padding: 14px 27px; width: 100%;"></div>
             <div id="engagementContainerTop">
                 <div id="engagementContainer" class="disp-none"> </div>
             </div>

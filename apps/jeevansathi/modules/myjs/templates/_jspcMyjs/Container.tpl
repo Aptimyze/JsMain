@@ -56,7 +56,6 @@
 <div class="clearfix fontlig" id="expiringIntr_show">
 <div class="fullwid scrollhid">
 <div id="disp_{{list_id}}" class="pos-rel li-slide1">
-{{heading}}
 <ul id ="js-{{list_id}}" class="myjs-fulwid hor_list clearfix boxslide myjslist3 pos-rel" style="width:100%">
 {{INNER_HTML}}
 </ul>
