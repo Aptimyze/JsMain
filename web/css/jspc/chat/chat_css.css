@@ -736,3 +736,11 @@ overflow-y: auto;
 .js-chatBoxHeight{
 	height: 255px;
 }}
+
+.blankLoader{
+    margin-top: 14px;
+    position: fixed;
+    top: 50%;
+    margin-right: 115px;
+    transform: translateY(-50%);
+}
