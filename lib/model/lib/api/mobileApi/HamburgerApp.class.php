@@ -43,7 +43,7 @@ class HamburgerApp
 			$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");
 			if(MobileCommon::isIOSApp() || MobileCommon::isAndroidApp())
 			{
-				$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITOR_ALL");
+				$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITORS_ALL");
 			}
 			else
 			{
