@@ -684,6 +684,93 @@ public function getSendersPending($profileids)
 		}
 		return $output;
 	}
+	/**
+	 * returns count for interests send between 84 and 90 days.
+	 * @param  [type] $where       [description]
+	 * @param  string $group       [description]
+	 * @param  string $time        [description]
+	 * @param  [type] $skipProfile [description]
+	 * @return [type]              [description]
+	 */
+	public function getExpiredContactsCount($where, $group='',$time='',$skipProfile)
+	{
+		
+		try{
+			if(!$where)
+				throw new jsException("","No where condition is specified in funcion getExpiredContactsCount OF newjs_CONTACTS.class.php");
+
+			$sql = "SELECT COUNT(*) AS COUNT";
+			if($group)
+			{
+				$sql = $sql.",".$group;
+			}
+			$sql = $sql." FROM newjs.CONTACTS WHERE FILTERED != 'Y' AND";
+			if($time)
+				$sql = $sql." DATEDIFF(NOW( ) ,  `TIME`) >= 84 AND DATEDIFF(NOW( ) ,  `TIME`) <= 90 AND ";
+			if($where)
+			{
+				$count = 1;
+				foreach($where as $key=>$value)
+				{
+					if(!is_array($value))
+					{
+						$sqlArr[] = " ".$key."=:VALUE".$count." ";
+						$bindArr["VALUE".$count] = $value;
+						$count++;
+					}
+					else
+					{
+						$str = " ".$key." IN(";
+
+						foreach($value as $key1=>$value1)
+						{
+							$str = $str.":VALUE".$count.",";
+							$bindArr["VALUE".$count] = $value1;
+							$count++;
+						}
+						$str = substr($str, 0, -1);
+						$str = $str.")";
+						$sqlArr[] = $str;
+					}
+				}
+				$sql = $sql.implode("AND",$sqlArr);
+
+			}
+			if($skipProfile)
+			{
+				$other = isset($where["RECEIVER"])?"SENDER":"RECEIVER";
+				$str = " ".$other." NOT IN(";
+
+				foreach($skipProfile as $key1=>$value1)
+				{
+					$str = $str.":VALUE".$count.",";
+					$bindArr["VALUE".$count] = $value1;
+					$count++;
+				}
+				$str = substr($str, 0, -1);
+				$str = $str.")";
+				$sql = $sql." AND ". $str;
+			}
+			if($group)
+			{
+				$sql = $sql." GROUP BY ".$group;
+			}
+
+			$res=$this->db->prepare($sql);
+			foreach($bindArr as $k=>$v)
+				$res->bindValue($k,$v);
+			$res->execute();
+			while($row = $res->fetch(PDO::FETCH_ASSOC))
+			{
+				$output[] = $row;
+			}
+		}
+		catch (PDOException $e)
+		{
+			throw new jsException($e);
+		}
+		return $output;
+	}
 
 	public function getArchivedContactsCount($where, $group='',$time='',$skipProfile)
 	{
@@ -706,7 +793,6 @@ public function getSendersPending($profileids)
 				{
 					if(!is_array($value))
 					{
-
 						$sqlArr[] = " ".$key."=:VALUE".$count." ";
 						$bindArr["VALUE".$count] = $value;
 						$count++;
@@ -771,8 +857,6 @@ public function getSendersPending($profileids)
 		return $output;
 	}
 
-
-
 	public function getContactedProfiles($profileId,$senderReceiver,$type='',$cnt='')
 	{
 		try{
@@ -827,7 +911,6 @@ public function getSendersPending($profileids)
 	}
 	public function getContactedProfileArray($condition,$skipArray)
 	{
-
 		$string = array('TYPE','SEEN','FILTER','TIME');
 		try{
 			if(!$condition)
@@ -903,6 +986,36 @@ public function getSendersPending($profileids)
 								$count++;
 							}
 						}
+
+						if($key1 == "LESS_THAN_EQUAL_EXPIRING")
+						{
+							$expiry = 1;
+							foreach($value1 as $keyName=>$keyValue)
+							{
+								$arr[] = $keyName.">= :VALUE".$count;
+								$bindArr["VALUE".$count]["VALUE"] = $keyValue;
+								if(in_array($keyName,$string))
+									$bindArr["VALUE".$count]["TYPE"] = "STRING";
+								else
+									$bindArr["VALUE".$count]["TYPE"] = "INT";
+								$count++;
+							}
+						}
+
+						if($key1 == "GREATER_THAN_EQUAL_EXPIRING")
+						{
+							foreach($value1 as $keyName=>$keyValue)
+							{
+								$arr[] = $keyName."< :VALUE".$count;
+								$bindArr["VALUE".$count]["VALUE"] = $keyValue;
+								if(in_array($keyName,$string))
+									$bindArr["VALUE".$count]["TYPE"] = "STRING";
+								else
+									$bindArr["VALUE".$count]["TYPE"] = "INT";
+								$count++;
+							}
+						}
+
 						if($key1 == "LESS_THAN_EQUAL")
 						{
 							foreach($value1 as $keyName=>$keyValue)
@@ -926,9 +1039,17 @@ public function getSendersPending($profileids)
 				}
 				if($key == "ORDER")
 				{
+						
 					if($value)
 					{
-						$order = "ORDER BY ".$value." DESC";
+						if ( isset($expiry) )
+						{
+							$order = "ORDER BY ".$value." ASC";
+						}
+						else
+						{
+							$order = "ORDER BY ".$value." DESC";
+						}
 					}
 				}
 

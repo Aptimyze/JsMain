@@ -165,11 +165,36 @@ class Inbox implements Module
 						$key = "IGNORED_PROFILES";
 						$memKeyNotExists=1;
 						break;
-					case "INTEREST_ARCHIVED":
-						$key = "INTEREST_ARCHIVED";
+					case "INTEREST_EXPIRING":
+						$key = "INTEREST_EXPIRING";
 						$memKeyNotExists=1;
 						break;
-				} 
+					case "INTEREST_ARCHIVED":
+                        $key = "INTEREST_ARCHIVED";
+                        $memKeyNotExists=1;
+                        break;
+
+				}
+				if ( $key == "INTEREST_EXPIRING")
+ 				{
+ 					$memcacheKey = $this->profileObj->getPROFILEID()."_".$key;
+ 					$memcacheObj=new UserMemcache;
+ 					$expiringContactsCount = $memcacheObj->get($memcacheKey);
+ 					if (  $expiringContactsCount === false || $infoTypenav["NUMBER"] == 1 )
+ 					{
+ 						$where['TYPE']="I";
+	 					$where["RECEIVER"]=$this->profileObj->getPROFILEID();
+	 					$dbName = JsDbSharding::getShardNo($this->profileObj->getPROFILEID());
+	 					$contactsObj = new newjs_CONTACTS($dbName);
+	 					$group             = '';
+	 					$contactsCount = $contactsObj->getExpiredContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
+	 					$expiringContactsCount = $contactsCount[0]["COUNT"];
+
+	 					$memcacheObj->set($memcacheKey,$expiringContactsCount);
+ 					}
+					$countObj[$infoTypenav["PAGE"]] = $expiringContactsCount; 					
+ 				} 
+			
 
 				/*
 					added this check for getting count data for interest archive data.
@@ -529,6 +554,17 @@ class Inbox implements Module
 				}	
 
 			}
+			if ($infoType == "INTEREST_EXPIRING") {
+				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$bday                                             = mktime(0, 0, 0, date("m"), date("d") - 83, date("Y"));
+				$back_90_days                                     = date("Y-m-d", $yday);
+				$back_83_days                                     = date("Y-m-d", $bday);
+				$condition["WHERE"]["LESS_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_90_days 00:00:00";
+				$condition["WHERE"]["GREATER_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_83_days 00:00:00";
+			}
+
+
 		if ($infoType == "FILTERED_INTEREST") {
 				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
