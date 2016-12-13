@@ -73,11 +73,11 @@ EOF;
 		{
 			$dbName = JsDbSharding::getShardNo($serverId,true);
 			$Contactsobj = new newjs_CONTACTS($dbName);
-			$chunkstr = "AND RECEIVER % ".$chunk."=".$i. "AND RECEIVER % 3 = $serverId ";
+			$chunkstr = "AND RECEIVER % ".$chunk."=".$i. " AND RECEIVER % 3 = $serverId ";
 			$profilemail = $Contactsobj->getSendersPending($chunkstr);
 			if($profilemail)
 			{
-				$this->generateContactResult($profileMail, $mailerYNObj);
+				$this->generateContactResult($profilemail, $mailerYNObj);
 			}
 		}
 	}
