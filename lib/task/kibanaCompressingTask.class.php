@@ -40,7 +40,7 @@ EOF;
   }
     // add your code here
     protected function execute($arguments = array(), $options = array())
-    {   echo('yes');
+    {   
       //Path of Folder which will store all Data Files.
       $dirPath = '/home/ayush/Desktop/logsForCompress';
                 if (false === is_dir($dirPath)) {
