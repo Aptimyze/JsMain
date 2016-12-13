@@ -43,7 +43,7 @@ class MembershipActionFunctions
             $pageURL.= "&FROM_GCM=" . $fromGCM;
             $msgId = $request->getParameter("messageId");
             $notificationKey = $request->getParameter("notificationKey");
-            error_log("in api request membership ankita-".$msgId."---".$notificationKey);
+            //error_log("in api request membership ankita-".$msgId."---".$notificationKey);
             //file_put_contents("/home/ankita/Desktop/1.txt", serialize($request));
             NotificationFunctions::handleNotificationClickEvent(array("messageId"=>$msgId,"notificationKey"=>$notificationKey));
         }
