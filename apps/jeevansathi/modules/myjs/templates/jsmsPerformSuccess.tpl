@@ -276,9 +276,7 @@
 	</div>
 </div>
 
-
-~include_partial("myjs/jsmsInterestExpiringSection",[visitorData=>$apiData.interest_expiring])`
-
+~include_partial("myjs/jsmsInterestExpiringSection",[expiringData=>$apiData.interest_expiring])`
 <!--end:div-->
 <!--eoi section-->
 <span class="setWidth" id="awaitingResponsePresent" style="display:block;background-color: #e4e4e4; margin-top:15px;">
