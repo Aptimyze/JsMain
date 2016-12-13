@@ -87,7 +87,6 @@ class InboxMobileAppV2
 				"subscription_icon",
 				"subscription_text",
 				"TIME",
-				"MESSAGE",
 				"SEEN",
 				"edu_level_new",
 				"userloginstatus",
