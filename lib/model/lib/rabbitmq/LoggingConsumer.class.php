@@ -130,15 +130,15 @@ class LoggingConsumer
       switch($type)
       {
 	case ApiAuthentication::$recentUserEntry:
-            CommonUtility::logRecentUserEntry($body['profileId'],$body['gapTimeEntry'],$body['isMobile'],$body['domain'],$body['dateTime1'],$body['dateTime2']);
+            commonTracking::logRecentUserEntry($body['profileId'],$body['isMobile'],$body['dateTime1'],$body['dateTime2']);
         break;
 	
         case ApiAuthentication::$loginHistory:
-            CommonUtility::insert_into_login_history($body['profileId'], $body['IP']);
+            commonTracking::insert_into_login_history($body['profileId'], $body['IP']);
         break;
 	
         case ApiAuthentication::$loginTracking:
-            CommonUtility::loginTracking($body['profileId'],$body['channel'], $body['websiteVersion'], $body['location'],$body['isNotApp'],$body['isNewMobileSite']);
+            commonTracking::loginTracking($body['profileId'],$body['channel'], $body['websiteVersion'], $body['location'],$body['reqUri']);
         break;
         
     }     

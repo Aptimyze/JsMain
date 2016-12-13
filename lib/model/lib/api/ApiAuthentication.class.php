@@ -292,9 +292,7 @@ Abstract class ApiAuthentication
 	*/
 	public function loginTracking($profileId,$channel,$websiteVersion,$location="")
 	{
-                $body = array('profileId'=>$profileId,'channel'=>$channel,'websiteVersion'=>$websiteVersion,'location'=>$location,'isNotApp'=>$this->isNotApp,'isNewMobileSite'=>$this->isNewMobileSite);
-                if($this->sendLoggingDataQueue(self::$loginTracking, $body))return;
-		if(!$websiteVersion)
+                if(!$websiteVersion)
 		{
 			if($this->isNotApp){
 				if($this->isNewMobileSite){
@@ -307,6 +305,9 @@ Abstract class ApiAuthentication
 					$websiteVersion="D";				
 			}
 		}
+
+                $body = array('profileId'=>$profileId,'channel'=>$channel,'websiteVersion'=>$websiteVersion,'location'=>$location,'reqUri'=>$_SERVER[REQUEST_URI]);
+                if($this->sendLoggingDataQueue(self::$loginTracking, $body))return;
 		include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
 		$loginTracking= LoginTracking::getInstance($profileId);
 		$loginTracking->setChannel($channel);
@@ -525,12 +526,6 @@ Abstract class ApiAuthentication
 	*/
 	public function RecentUserEntry()
 	{
-
-		$type=self::$recentUserEntry;
-		$body = array('gapTimeEntry'=>$this->gapTimeEntry,'isMobile'=>$this->isMobile,'domain'=>$this->domain,'profileId'=>$this->loginData[PROFILEID],'dateTime1'=>$this->dateTime1,'dateTime2'=>$this->dateTime2);
-		if($this->sendLoggingDataQueue($type,$body))return;
-		$allow=1;
-		$pid=intval($this->loginData[PROFILEID]);
 		if(!$this->isMobile)
 		{
 			$allow=0;
@@ -549,6 +544,12 @@ Abstract class ApiAuthentication
 			if($allow)
 			@setcookie("LOGUSERENTRY",time(),0,"/",$this->domain);
 		}
+
+		$type=self::$recentUserEntry;
+		$body = array('isMobile'=>$this->isMobile,'profileId'=>$this->loginData[PROFILEID],'dateTime1'=>$this->dateTime1,'dateTime2'=>$this->dateTime2);
+		if($this->sendLoggingDataQueue($type,$body))return;
+		$allow=1;
+		$pid=intval($this->loginData[PROFILEID]);
 		if($allow && $pid && !$this->isMobile)
 		{
 			if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
