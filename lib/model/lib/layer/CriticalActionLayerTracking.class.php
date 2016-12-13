@@ -272,7 +272,7 @@ return 0;
                     case '13':               
                       if(!$isApp)
                       { 
-                        $profileObj = LoggedInProfile::getInstance('newjs_master');
+                        $profileObject = LoggedInProfile::getInstance('newjs_master');
                         $contactNumOb=new newjs_JPROFILE_CONTACT();
                         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL");
                         if(!$numArray['0']['ALT_EMAIL'] || $numArray['0']['ALT_EMAIL'] == NULL)
@@ -287,7 +287,7 @@ return 0;
                     case '14':               
                       if(!$isApp)
                       { 
-                        $profileObj = LoggedInProfile::getInstance('newjs_master');
+                        $profileObject = LoggedInProfile::getInstance('newjs_master');
                         $contactNumOb=new newjs_JPROFILE_CONTACT();
                         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
                         if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL'] != NULL && $numArray['0']['ALT_EMAIL_STATUS'] != 'Y')
