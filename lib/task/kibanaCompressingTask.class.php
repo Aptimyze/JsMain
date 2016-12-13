@@ -40,7 +40,7 @@ EOF;
   }
     // add your code here
     protected function execute($arguments = array(), $options = array())
-    {   
+    {   echo('yes');
       //Path of Folder which will store all Data Files.
       $dirPath = '/home/ayush/Desktop/logsForCompress';
                 if (false === is_dir($dirPath)) {
@@ -86,7 +86,7 @@ EOF;
         {  
 
             $fieldName = $module['key'];
-            for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            for($k = 0 ; $k < $module['doc_count'] ; $k++)
             { 
                 $arrResult['time'] = $time;
                 $arrResult[$fieldsToQuery[$j]] = $fieldName;
