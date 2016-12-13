@@ -13,7 +13,7 @@ var PageSrc = 0;
 *
 */
 
-var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1","DAILYMATCHES":"/api/v2/inbox/perform?infoTypeId=7&pageNo=1&myjs=1&caching=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&matchedOrAll=A&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1	","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","EXPIRINGINTEREST":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1","LASTSEARCH":"/api/v1/search/perform?lastSearchResults=1&results_orAnd_cluster=onlyResults&myjs=1"};
+var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1","DAILYMATCHES":"/api/v2/inbox/perform?infoTypeId=7&pageNo=1&myjs=1&caching=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&matchedOrAll=A&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1	","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","EXPIRINGINTEREST":"/profile/contacts_made_received.php?page=eeoi&filter=R","LASTSEARCH":"/api/v1/search/perform?lastSearchResults=1&results_orAnd_cluster=onlyResults&myjs=1"};
 
 var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20, "LASTSEARCH":20, 'EXPIRINGINTEREST':20,};
 
@@ -22,7 +22,7 @@ var noResultMessagesArray={
 };
 
 var listingUrlArray ={"JUSTJOINED":"/search/perform?justJoinedMatches=1","DESIREDPARTNERMATCHES":"/search/partnermatches","DAILYMATCHES":"/search/matchalerts","VISITORS":"/profile/contacts_made_received.php?page=visitors&matchedOrAll=A&filter=R","SHORTLIST":"/profile/contacts_made_received.php?page=favorite&filter=M","INTERESTRECEIVED":"/inbox/1/1","ACCEPTANCE":"/inbox/2/1","MESSAGES":"/inbox/4/1","PHOTOREQUEST":"/profile/contacts_made_received.php?&page=photo&filter=R",
-"VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1","LASTSEARCH":"/search/lastSearchResults","EXPIRINGINTEREST":"/inbox/12/1"};
+"VERIFIEDMATCHES":"/search/verifiedMatches","FILTEREDINTEREST":"/inbox/12/1","LASTSEARCH":"/search/lastSearchResults","EXPIRINGINTEREST":"/inbox/23/1"};
 
 
 var postActionsUrlArray ={"INITIATE":"/api/v2/contacts/postEOI","ACCEPT":"/api/v2/contacts/postAccept","DECLINE":"/api/v2/contacts/postNotInterested","WRITE_MESSAGE":"/api/v2/contacts/postWriteMessage","VIEWCONTACT":"/api/v2/contacts/contactDetails"};
