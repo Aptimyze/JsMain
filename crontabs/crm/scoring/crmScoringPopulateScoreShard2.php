@@ -1,5 +1,4 @@
 <?php
-
 include("/home/developer/jsdialer/MysqlDbConstants.class.php");
 include("Scoring.class.php");
 
@@ -16,7 +15,7 @@ ini_set('memory_limit', '300M');
 //$myDb = mysql_connect("localhost:/tmp/mysql_06.sock","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
 //$shDb2 = mysql_connect("productshard2slave.js.jsb9.net:3306","user_sel","CLDLRTa9") or die("Unable to connect to js server".$start);
 $maDb = mysql_connect(MysqlDbConstants::$master1['HOST'],MysqlDbConstants::$master1['USER'],MysqlDbConstants::$master1['PASS']) or die("Unable to connect to js server".$start);
-$myDb = mysql_connect(MysqlDbConstants::$slave111['HOST'],MysqlDbConstants::$slave111['USER'],MysqlDbConstants::$slave111['PASS']) or die("Unable to connect to js server".$start);
+$myDb = mysql_connect(MysqlDbConstants::$slave111_sel['HOST'],MysqlDbConstants::$slave111_sel['USER'],MysqlDbConstants::$slave111_sel['PASS']) or die("Unable to connect to js server".$start);
 $shDb2 = mysql_connect(MysqlDbConstants::$shard2Slave112['HOST'],MysqlDbConstants::$shard2Slave112['USER'],MysqlDbConstants::$shard2Slave112['PASS']) or die("Unable to connect to js server".$start);
 
 mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_timeout=10000',$maDb);
@@ -26,12 +25,12 @@ mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_
 $parameter = "GENDER,MTONGUE,CITY_RES,ENTRY_DT,SHOW_HOROSCOPE,AGE,INCOME,SOURCE,CASTE,OCCUPATION,MOB_STATUS,LANDL_STATUS,EDU_LEVEL,MSTATUS,GET_SMS,RELIGION,EDU_LEVEL_NEW,VERIFY_EMAIL,HEIGHT,TIME_TO_CALL_START,TIME_TO_CALL_END,HAVE_CAR,OWN_HOUSE,FAMILY_STATUS,SHOWADDRESS,WORK_STATUS,DTOFBIRTH,LAST_LOGIN_DT";
 
 //Pool set of today model wise
-$modelType_arr = array("N","R","E","P");
+$modelType_arr = array("P","R","E","N");
 for($t=0;$t<count($modelType_arr);$t++)
 {
 	$modelArr = array();
         $modelType = $modelType_arr[$t];
-	$sql = "SELECT DISTINCT(PROFILEID) FROM js_crm.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%6=1";
+	$sql = "SELECT DISTINCT(PROFILEID) FROM test.ANALYTIC_SCORE_POOL WHERE MODEL='$modelType' AND SCORE IS NULL AND PROFILEID%6=1";
 	$res = mysql_query($sql,$myDb) or die($sql.mysql_error($myDb));
 	while($row = mysql_fetch_array($res))
         	$modelArr[] = $row['PROFILEID'];
@@ -123,7 +122,7 @@ function updateScoreLog($profileid, $score, $modelType) {
 	mysql_query($sql_up,$maDb) or die($sql_up.mysql_error($maDb));	
 
 	global $myDb;
-	$sql_up = "UPDATE js_crm.ANALYTIC_SCORE_POOL SET SCORE='$score' WHERE PROFILEID='$profileid' AND MODEL='$modelType'";
+	$sql_up = "UPDATE test.ANALYTIC_SCORE_POOL SET SCORE='$score' WHERE PROFILEID='$profileid' AND MODEL='$modelType'";
         mysql_query($sql_up,$myDb) or die($sql_up.mysql_error($myDb));
 }
 

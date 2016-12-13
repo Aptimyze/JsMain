@@ -339,11 +339,13 @@ class misGenerationhandler
 				$monthlyIncentiveObj->deleteCancelledPayment($dataArr['RECEIPTID'],$dataArr['BILLID']);	
 		}
 	}
-	public function isPrivilege_P_MG($username)
+	public function isPrivilege_P_MG($username,$fncFlag='')
 	{
 		$jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_masterRep');
 		$priv = $jsadminPswrdsObj->getPrivilegeForAgent($username);
 		$priv = explode("+", $priv);
+		if($fncFlag && in_array("FNC",$priv))
+			return true;	
 		if(in_array("P",$priv) || in_array("MG",$priv))
 			return true;
 		return false;
