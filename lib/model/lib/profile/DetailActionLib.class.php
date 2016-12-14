@@ -794,6 +794,7 @@ class DetailActionLib
         	$cachedResultsPoolArray = unserialize(JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid));
 
         	$request->setParameter('caching',0);
+        	$request->setParameter('hitFromMyjs',1);
 
         	if($iListingType == 'VERIFIEDMATCHES')
         	{

@@ -89,9 +89,10 @@ class SearchUtility
 						$forNextPrev = unserialize($forNextPrev);
 						if(is_array($forNextPrev))
 						{	
-							$forNextPrevTemp[] = $forNextPrev;
+							$forNextPrevTemp = $forNextPrev;
 							$forNextPrev = implode(" ",$forNextPrevTemp);
 							$hideArr.= $forNextPrev;
+						
 						}
 					}
 					
@@ -892,7 +893,7 @@ class SearchUtility
                                         JsMemcache::getInstance()->set("cachedJJS$pid",serialize($statusArr));
                                         JsMemcache::getInstance()->set("cachedJJR$pid",serialize($resultArr));
                                         $profileIdPoolArray = array();
-                                        if(is_array($resultArr)) {  
+                                        if(is_array($resultArr)&&array_key_exists('profiles',$resultArr)) {  
 				foreach ($resultArr['profiles'] as $key => $value) {
 		 			array_push($profileIdPoolArray,$value['profileid']);
 			}
@@ -920,7 +921,7 @@ class SearchUtility
                                         JsMemcache::getInstance()->set("cachedPMS$pid",serialize($statusArr));
                                         JsMemcache::getInstance()->set("cachedPMR$pid",serialize($resultArr)); 
                                         $profileIdPoolArray = array();
-                                        if(is_array($resultArr)) {  
+                                        if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
 				foreach ($resultArr['profiles'] as $key => $value) {
 		 			array_push($profileIdPoolArray,$value['profileid']);
 			}
@@ -949,7 +950,7 @@ class SearchUtility
                                         JsMemcache::getInstance()->set("cachedVMS$pid",serialize($statusArr));
                                         JsMemcache::getInstance()->set("cachedVMR$pid",serialize($resultArr));
                                         $profileIdPoolArray = array();
-                                        if(is_array($resultArr)) {  
+                                        if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
 				foreach ($resultArr['profiles'] as $key => $value) {
 		 			array_push($profileIdPoolArray,$value['profileid']);
 			}

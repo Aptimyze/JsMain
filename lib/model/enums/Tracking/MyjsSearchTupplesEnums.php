@@ -9,7 +9,7 @@ class MyjsSearchTupplesEnums
         public static $JUSTJOINED   ="JJR";
         public static $DESIREDPARTNERMATCHES ="PMR";
         public static $VERIFIEDMATCHES ="VMR";
-        public static $LASTSEARCH ="LS";
+        public static $LASTSEARCH ="LSR";
 
         public static function getListNameForCaching($listName)
         {
@@ -28,7 +28,7 @@ class MyjsSearchTupplesEnums
         		
         	}
 
-
+                return 0;
         }
 
         
