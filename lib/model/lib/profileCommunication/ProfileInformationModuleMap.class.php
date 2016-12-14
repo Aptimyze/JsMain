@@ -702,7 +702,7 @@ class ProfileInformationModuleMap
 				"AJAX_FLAG"=> "N",
 				"CALLOUT_MESSAGES"=> "",
 				"VIEW_ALL_LINK"=> "",
-				"TITLE"=> "Interests Archived",
+				"TITLE"=> "Archived Interests",
 				"SUBTITLE"=> "",
 				"ICONS"=> "",
 				"BUTTONS"=> "ACCEPT|DECLINE",
