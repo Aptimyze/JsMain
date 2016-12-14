@@ -5,11 +5,24 @@ class dppSuggestions
 	//This function fetches dppSuggestion values to be shown and returns it to the calling function
 	public function getDppSuggestions($trendsArr,$type,$valArr)
 	{
+		$loggedInProfileObj = LoggedInProfile::getInstance();
+		$this->age = $loggedInProfileObj->getAGE();
+		$this->gender = $loggedInProfileObj->getGENDER();
+		$this->income = $loggedInProfileObj->getINCOME();
+		
 		if(is_array($trendsArr))
 		{
 			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 			$trendVal = $this->getTrendsValues($percentileArr);	
-			$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);
+			$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);			
+		}
+		if($type == "AGE")
+		{
+			$valueArr = $this->getSuggestionForAge($type,$valArr);
+		}
+		if($type == "INCOME")
+		{
+			$valueArr = $this->getSuggestionForIncome($type,$valArr);
 		}
 		if(count($valueArr["data"])< DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
 		{
@@ -27,7 +40,7 @@ class dppSuggestions
 			elseif ($type == "EDUCATION" || $type == "OCCUPATION")
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
-			}
+			}			
 			else
 			{
 				foreach($valArr as $k2=>$v2)
@@ -336,6 +349,60 @@ class dppSuggestions
 		}
 
 		return $GroupingArr;
+	}
+
+	public function getSuggestionForAge($type,$valArr)
+	{
+		
+		if($this->gender == "F")
+		{
+			$minAge = min($valArr["LAGE"],$this->age);
+			$maxAge = max($valArr["HAGE"],$this->age+DppAutoSuggestEnum::$ageDiffNo);
+		}
+		elseif($this->gender == "M")
+		{
+			$minAge = min($valArr["LAGE"],$this->age-DppAutoSuggestEnum::$ageDiffNo);
+			$maxAge = max($valArr["HAGE"],$this->age);
+		}
+
+		if($minAge < $valArr["LAGE"] || $maxAge > $valArr["HAGE"])
+		{
+			$valueArr["data"]["LAGE"] = $minAge;
+			$valueArr["data"]["HAGE"] =$maxAge;
+		}
+		return $valueArr;
+	}
+	public function getSuggestionForIncome($type,$valArr)
+	{
+		if($this->gender == "M")
+		{
+			if(in_array($this->income,DppAutoSuggestEnum::$dollarArr))
+			{
+				if($this->income > $valArr["DRS"] && $valArr["DRS"]!="19")
+				{
+					$valueArr["data"]["DRS"] = $this->income;
+				}
+			}
+			else
+			{
+				if($this->income > $valArr["HRS"] && $valArr["HRS"]!="19")
+				{
+					$valueArr["data"]["HRS"] = $this->income;
+				}
+			}		
+		}
+		elseif($this->gender == "F")
+		{
+			if($valArr["HRS"] != "19")
+			{
+				$valueArr["data"]["HRS"] = "19";
+			}
+			if($valArr["DRS"] !="19")
+			{
+				$valueArr["data"]["DRS"] = "19";
+			}
+		}
+		return $valueArr;
 	}
 }
 ?>
