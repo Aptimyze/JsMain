@@ -25,7 +25,7 @@ mysql_query('set session wait_timeout=100000,interactive_timeout=10000,net_read_
 $parameter = "GENDER,MTONGUE,CITY_RES,ENTRY_DT,SHOW_HOROSCOPE,AGE,INCOME,SOURCE,CASTE,OCCUPATION,MOB_STATUS,LANDL_STATUS,EDU_LEVEL,MSTATUS,GET_SMS,RELIGION,EDU_LEVEL_NEW,VERIFY_EMAIL,HEIGHT,TIME_TO_CALL_START,TIME_TO_CALL_END,HAVE_CAR,OWN_HOUSE,FAMILY_STATUS,SHOWADDRESS,WORK_STATUS,DTOFBIRTH,LAST_LOGIN_DT";
 
 //Pool set of today model wise
-$modelType_arr = array("P","R","E","N");
+$modelType_arr = array("N","R","E","P");
 for($t=0;$t<count($modelType_arr);$t++)
 {
 	$modelArr = array();
