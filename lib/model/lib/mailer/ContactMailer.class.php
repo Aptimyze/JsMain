@@ -185,7 +185,7 @@ class ContactMailer
 		$dppMatchesArr = SearchCommonFunctions::getMyDppMatches("",$receiver,4);
 		$inputM2 = $dppMatchesArr["PIDS"];
 		$partialList=new PartialList;
-		$partialList->addPartial('suggested_profiles','suggested_profiles1',$inputM2,false);
+		$partialList->addPartial('suggested_profiles','suggested_profiles2',$inputM2,false);
 		$partialList->addPartial('jeevansathi_contact_address','jeevansathi_contact_address');
 		$smartyObj = $tpl->getSmarty();
 		$smartyObj->assign("sugcount",count($inputM2));
