@@ -25,7 +25,7 @@ class PROFILE_VIEW_SIMILAR_PROFILE_LOAD extends TABLE {
         {
             try
             {
-                $sql = "INSERT INTO  `PROFILE`.`VIEW_SIMILAR_PROFILE_LOAD` (  `viewer` ,  `viewed` ,  `COUNT` ) VALUES (:viewer,  :viewed,  '1') ON DUPLICATE KEY UPDATE count = count + 1";
+                $sql = "INSERT INTO  `PROFILE`.`VIEW_SIMILAR_PROFILE_LOAD` (  `viewer` ,  `viewed`) VALUES (:viewer,  :viewed)";
                 $pdoStatement = $this->db->prepare($sql);
                 $pdoStatement->bindValue(":viewer",$viewer,PDO::PARAM_INT);
                 $pdoStatement->bindValue(":viewed",$viewed,PDO::PARAM_INT);
