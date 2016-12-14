@@ -13,14 +13,66 @@ class VSPLoadCheckV1Action extends sfAction
   */
 
  function execute($request){
- 	$sender_username = $request->getParameter("sender_username");
- 	$receiver_username =  $request->getParameter("receiver_username");
+ 	$decryptObj= new Encrypt_Decrypt();
+ 	$jsAuthentication = new jsAuthentication();
+ 	$viewer = $request->getParameter("viewer");
+ 	$viewed =  $request->getParameter("viewed");
 
- 	if ( isset($sender_username) && isset($receiver_username))
+ 	if ( isset($viewer) )
  	{
-	 	$vspLoadCheck =new VSPLoadCheck();
-	    $result = $vspLoadCheck->set($sender_username,$receiver_username);
+ 		$viewerProfileId = 0;
+ 		if ( $viewer != "0")
+ 		{
+ 			$decryptedAuthChecksumViewer=$decryptObj->decrypt($viewer);
+ 			$loginDataViewer=$this->fetchLoginData($decryptedAuthChecksumViewer);
+ 			$viewerProfileId = $loginDataViewer['PROFILEID'];	
+ 		}
+ 	}
+ 	if ( isset($viewed))
+ 	{
+ 		$viewedProfileId = $jsAuthentication->jsDecryptProfilechecksum($viewed);
+ 	}
+ 	
+
+ 	if ( isset($viewerProfileId) && isset($viewedProfileId))
+ 	{
+ 		$vspLoadCheck =new VSPLoadCheck();
+ 		$result = $vspLoadCheck->set($viewerProfileId,$viewedProfileId);
  	}
  	die();
+ }
+
+ public function fetchLoginData($checksum)
+ {
+ 	if($checksum)
+ 	{
+ 		$temp=$this->explode_assoc('=',':',$checksum);
+ 		
+ 		$data["PROFILEID"]=$temp['PR'];
+ 		$data["USERNAME"]=$temp['US'];
+ 		$data["GENDER"]=$temp['GE'];
+ 		$data["ACTIVATED"]=$temp['AC'];
+ 		$data["SUBSCRIPTION"]=$temp['SU'];
+ 		$data["SOURCE"]=$temp['SO'];
+ 		$data["CHECKSUM"]=$temp['ID'];
+ 		$data["INCOMPLETE"]=$temp['IN'];
+ 		$data["DTOFBIRTH"]=$temp['DOB'];
+ 		$data["HAVEPHOTO"]=$temp['HP'];
+ 		$data["TIME"]=$temp[TM];
+ 		$data["FROM_BACKEND"]=$temp['BK'];
+ 		return $data;
+ 	}
+ 	return null;
+ }
+ public function explode_assoc($glue1, $glue2, $array)
+ {
+ 	$array2=explode($glue2, $array);
+ 	foreach($array2 as  $val)
+ 	{
+ 		$pos=strpos($val,$glue1);
+ 		$key=substr($val,0,$pos);
+ 		$array3[$key] =substr($val,$pos+1,strlen($val));
+ 	}
+ 	return $array3;
  }
 }
