@@ -161,7 +161,7 @@ public static $validateZeroForFields = array("FAMILY_INCOME","NATIVE_COUNTRY","S
 			return new sfValidatorString(array('required'=>false,'nameField'=>1));
 			break;
 		case 'email':
-			return new jsValidatorMail(array(),array('required' => $defaultMsg,'err_email_duplicate'=>"This email is already registered in our system"));
+			return new jsValidatorMail(array('altEmail'=>$form_values["ALT_EMAIL"]),array('required' => $defaultMsg,'err_email_duplicate'=>"This email is already registered in our system"));
 			break;
 		case 'alt_email':
 			return new jsValidatorAlternateMail(array('email'=>$form_values["EMAIL"],'required'=>false));
