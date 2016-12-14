@@ -268,7 +268,7 @@ var mobEditPage=(function(){
 						var jsonCnt=0;
 					var sectionStr="";					
 					
-					//Email (Verify link or Verified text)
+					/*//Email (Verify link or Verified text)
 					if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==0 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
 					{
 						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerify' class='padl10 dispibl color2'>Verify</div>");
@@ -277,7 +277,7 @@ var mobEditPage=(function(){
 					else if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==1 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
 					{
 						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
-					}
+					}*/
 					
 					//alternateEmail (Verify link or Verified text)
 					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==0 && v.OnClick[2].label_val!="" && v.OnClick[2].label_val!=null)
