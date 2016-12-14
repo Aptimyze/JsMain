@@ -49,17 +49,6 @@ class VSPLoadCheckV1Action extends sfAction
  		$temp=$this->explode_assoc('=',':',$checksum);
  		
  		$data["PROFILEID"]=$temp['PR'];
- 		$data["USERNAME"]=$temp['US'];
- 		$data["GENDER"]=$temp['GE'];
- 		$data["ACTIVATED"]=$temp['AC'];
- 		$data["SUBSCRIPTION"]=$temp['SU'];
- 		$data["SOURCE"]=$temp['SO'];
- 		$data["CHECKSUM"]=$temp['ID'];
- 		$data["INCOMPLETE"]=$temp['IN'];
- 		$data["DTOFBIRTH"]=$temp['DOB'];
- 		$data["HAVEPHOTO"]=$temp['HP'];
- 		$data["TIME"]=$temp[TM];
- 		$data["FROM_BACKEND"]=$temp['BK'];
  		return $data;
  	}
  	return null;
