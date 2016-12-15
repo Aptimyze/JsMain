@@ -217,6 +217,11 @@ class ProfileCacheConstants
                                         "HAVE_ASTRO",
                                         "FSO_EXISTS",
                                         "HOBBY",
+                                        "ALLMUSIC",
+                                        "ALLBOOK",
+                                        "ALLMOVIE",
+                                        "ALLSPORTS",
+                                        "ALLCUISINE",
                                         "FAV_MOVIE",
                                         "FAV_TVSHOW",
                                         "FAV_FOOD",
@@ -439,7 +444,22 @@ class ProfileCacheConstants
                                         'DTOFBIRTH',
                                         'CITY_BIRTH',
                                         'BTIME',
-        
-    );
+    
+                                    );
+    
+    public static $arrJHobbyColumns = array(
+                                        'PROFILEID',
+                                        "HOBBY",
+                                        "ALLMUSIC",
+                                        "ALLBOOK",
+                                        "ALLMOVIE",
+                                        "ALLSPORTS",
+                                        "ALLCUISINE",
+                                        "FAV_MOVIE",
+                                        "FAV_TVSHOW",
+                                        "FAV_FOOD",
+                                        "FAV_BOOK",
+                                        "FAV_VAC_DEST"
+                                    );
 }
 ?>

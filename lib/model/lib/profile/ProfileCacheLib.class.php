@@ -914,6 +914,8 @@ class ProfileCacheLib
             $arrFields = ProfileCacheConstants::$arrNativePlaceColumns;
         } else if(false !== stristr($storeName, "ASTRO")) {
             $arrFields = ProfileCacheConstants::$arrAstroDetailsColumns;
+        } else if(false !== stristr($storeName, "HOBBY")) {
+            $arrFields = ProfileCacheConstants::$arrJHobbyColumns;
         }
         return $arrFields;
     }
