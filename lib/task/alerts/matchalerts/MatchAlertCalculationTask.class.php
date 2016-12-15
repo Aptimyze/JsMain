@@ -13,6 +13,8 @@ class MatchAlertCalculationTask extends sfBaseTask
         private $limitCommunityRec = 10;
 	const clusterRecordLimit = 10;
         const _communityModelToggle=0;
+        const limitNtWhenCommunity = 10;
+        const limitNtNoCommunity = 16;
         
 	protected function configure()
   	{
@@ -143,10 +145,10 @@ EOF;
                                                                 $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$communityModelNT);
                                                             }
                                                             
-                                                            $this->limitNtRec=10;
+                                                            $this->limitNtRec=self::limitNtWhenCommunity;
                                                         }
                                                         else
-                                                            $this->limitNtRec=16;
+                                                            $this->limitNtRec=self::limitNtNoCommunity;
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
