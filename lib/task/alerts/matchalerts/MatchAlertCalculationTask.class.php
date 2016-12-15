@@ -145,6 +145,8 @@ EOF;
                                                             
                                                             $this->limitNtRec=10;
                                                         }
+                                                        else
+                                                            $this->limitNtRec=16;
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
