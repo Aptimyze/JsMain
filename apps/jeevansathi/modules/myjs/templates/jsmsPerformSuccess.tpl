@@ -276,7 +276,9 @@
 	</div>
 </div>
 
-~include_partial("myjs/jsmsInterestExpiringSection",[expiringData=>$apiData.interest_expiring])`
+~if $apiData.interest_expiring.view_all_count > 0`
+	~include_partial("myjs/jsmsInterestExpiringSection",[expiringData=>$apiData.interest_expiring])`
+~/if`
 <!--end:div-->
 <!--eoi section-->
 <span class="setWidth" id="awaitingResponsePresent" style="display:block;background-color: #e4e4e4; margin-top:15px;">

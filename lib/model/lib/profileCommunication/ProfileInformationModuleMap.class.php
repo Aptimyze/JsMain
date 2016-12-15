@@ -860,8 +860,24 @@ self::$ContactCenterMYJS=Array(
 			"ICONS"=> "",
 			"BUTTONS"=> "",
 			"TRACKING"=> "responseTracking=52",
+		),
+        "INTEREST_EXPIRING"=>Array( 
+			"ID"=> "23",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "10",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Expiring Interests",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=55",
+      "KUNAL"=>"1",
 		)
-
 		); 
     self::$ContactCenterDesktop=Array(
 		"INTEREST_RECEIVED"=>Array( 
