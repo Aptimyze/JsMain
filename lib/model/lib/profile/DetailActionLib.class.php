@@ -752,7 +752,7 @@ class DetailActionLib
         if($contactId && !is_numeric(explode("_",$contactId)[0]) && explode("_",$contactId)[0]!='contactId' && $contactId!='contactId')
         {
             $http_msg=print_r($_SERVER,true);
-            mail("ankitshukla125@gmail.com","contact Id whitelisting 3","CONTACT_ID :contactId:$http_msg");
+            mail("ankitshukla125@gmail.com","contact Id whitelisting 3","CONTACT_ID :$contactId:$http_msg");
         }
         
         if($totalRec && !is_numeric($totalRec) && $totalRec != "{total_rec}")
@@ -761,7 +761,7 @@ class DetailActionLib
             mail("ankitshukla125@gmail.com","total records whitelisting 3","TOTAL_REC :$totalRec:$http_msg");
         }
         
-        if((strlen($username)>=3 && !ctype_alpha(substr($username,0,3))) || strlen($username)>15)
+        if(strlen($username)>15)
         {
             $http_msg=print_r($_SERVER,true);
             mail("ankitshukla125@gmail.com","usrname whitelisting 3","USERNAME :$username:$http_msg");
