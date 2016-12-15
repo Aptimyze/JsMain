@@ -443,11 +443,12 @@ if (authenticated($cid)) {
 	    /*
 	    	check for whether your_info_original was set or not.
 	    */
-        if ( strlen($your_info_original) !== 0 )
-        {
-	        $sql_junk_character_check = "INSERT INTO  `PROFILE`.`JUNK_CHARACTER_TEXT` (  `id` ,  `PROFILEID` ,  `original_text` ,  `modified_custom`) VALUES('',  '$pid',  '$your_info_original',  '$your_info');";
-			$result = mysql_query($sql_junk_character_check);
-        }
+	   // commented since the code was written for benchmarking purpose
+   //      if ( strlen($your_info_original) !== 0 )
+   //      {
+	  //       $sql_junk_character_check = "INSERT INTO  `PROFILE`.`JUNK_CHARACTER_TEXT` (  `id` ,  `PROFILEID` ,  `original_text` ,  `modified_custom`) VALUES('',  '$pid',  '$your_info_original',  '$your_info');";
+			// $result = mysql_query($sql_junk_character_check);
+   //      }
 
 
         if(false === $result) {
