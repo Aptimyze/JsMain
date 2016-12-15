@@ -376,8 +376,8 @@ class Inbox implements Module
 			$config = $this->configurations[$infoType];
 			//var_dump($this->totalCount);die;
 			$this->completeProfilesInfo[$infoType]["ID"]             = $config["ID"];
-//			$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = $this->totalCount;
-			$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = JsMemcache::getInstance()->get("message_count_".LoggedInProfile::getInstance()->getPROFILEID());
+			$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = $this->totalCount;
+			//$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = JsMemcache::getInstance()->get("message_count_".LoggedInProfile::getInstance()->getPROFILEID());
 			$this->completeProfilesInfo[$infoType]["NEW_COUNT"]      = $countObj[$infoType. "_NEW"];
 			$this->completeProfilesInfo[$infoType]["TITLE"]          = $config["TITLE"];
 			$this->completeProfilesInfo[$infoType]["HEADING"]          = $config["HEADING"];
