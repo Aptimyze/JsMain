@@ -157,14 +157,19 @@ while($myrow=mysql_fetch_array($result))
                     $stateArr = explode(",",$row_jp['STATE']);
                     $cityWithQuotes = "";
                     foreach($stateArr as $key => $value){
-                        $cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
-                        $cityWithQuotes.= str_replace(",","','",$cityString);
+						$cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
+                        $cityWithQuotesArr[]= str_replace(",","','",$cityString);
                     }
-                    if($row_jp['PARTNER_CITYRES'])
-                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
-                    else
-                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
-                } 
+                    if(is_array($cityWithQuotesArr))
+                    {
+						$cityWithQuotes = implode("','",$cityWithQuotesArr);
+	                    if($row_jp['PARTNER_CITYRES'])
+	                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
+	                    else
+	                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+	                    unset($cityWithQuotesArr);
+	                }
+                }
 
 		$filterIncome = getFilteredIncome($row_jp['LINCOME'],$row_jp['LINCOME_DOL']);
 
@@ -202,13 +207,18 @@ while($myrow=mysql_fetch_array($result))
                     $stateArr = explode(",",$row_jp['STATE']);
                     $cityWithQuotes = "";
                     foreach($stateArr as $key => $value){
-                        $cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
-                        $cityWithQuotes.= str_replace(",","','",$cityString);
+						$cityString = FieldMap::getFieldLabel('state_CITY', trim($value,"'"));
+                        $cityWithQuotesArr[]= str_replace(",","','",$cityString);
                     }
-                    if($row_jp['PARTNER_CITYRES'])
-                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
-                    else
-                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+                    if(is_array($cityWithQuotesArr))
+                    {
+						$cityWithQuotes = implode("','",$cityWithQuotesArr);
+	                    if($row_jp['PARTNER_CITYRES'])
+	                        $row_jp['PARTNER_CITYRES'].= ",'".$cityWithQuotes."'";
+	                    else
+	                        $row_jp['PARTNER_CITYRES'] = "'".$cityWithQuotes."'";
+	                    unset($cityWithQuotesArr);
+	                }
                 } 
 
                 $filterIncome = getFilteredIncome($row_jp['LINCOME'],$row_jp['LINCOME_DOL']);

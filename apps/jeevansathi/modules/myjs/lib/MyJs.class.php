@@ -245,11 +245,15 @@ class MyJs implements Module
 					if($nav > 1 && !is_array($pids))
 						$infoTypeObj[$infoType] = null;
 					else{
+                                            if($infoType == "VISITORS" && MobileCommon::isNewMobileSite())
+                                            {
+                                            	$conditionArray["matchedOrAll"] = 'A';
+                                            }
                                             if(($infoType == "MATCH_ALERT")&&((MobileCommon::isNewMobileSite())||(MobileCommon::isApp()=='I'))) {
 //                                                $conditionArray['LIMIT']=$matchAlertCount['NEW'];
                                                 $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
                                             }
-                                                else $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
+                                            else $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
                                         }
                                         //Cache the data
                                         $arrAllowedType = array('INTEREST_RECEIVED','VISITORS','MATCH_ALERT');

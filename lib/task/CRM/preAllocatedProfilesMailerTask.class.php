@@ -30,7 +30,7 @@ EOF;
         //$profileidArr = $profileAllocationTechObj->fetchAllProfileIds();
         
         $dt = date('Y-m-d');
-//        $dt = "2015-08-05";
+        //$dt = "2015-08-05";
         $preAllocationLogObj = new incentive_PRE_ALLOCATION_LOG("newjs_slave");
         $preAllocationData = $preAllocationLogObj->getProfileIdsScoreForDate($dt); 
         if($preAllocationData){
@@ -40,6 +40,10 @@ EOF;
             
             //$mainAdminPoolObj = new incentive_MAIN_ADMIN_POOL("newjs_slave");
             //$analyticScore = $mainAdminPoolObj->getArray(array("PROFILEID"=>  implode(",", $profileidArr)), '', '', 'PROFILEID, ANALYTIC_SCORE');
+            $purchasesObj = new billing_PURCHASES("newjs_slave");
+            $profilesStr = implode(",", $profileidArr);
+            $purchaseDetails = $purchasesObj->isPaidEver($profilesStr);
+            unset($purchasesObj);
             foreach($preAllocationData as $profileid => $details){
                 unset($tempArr);
                 $tempArr["USERNAME"] = $profileDetails[$profileid]["USERNAME"];
@@ -54,16 +58,20 @@ EOF;
                     $cityCode = $profileDetails[$details["PROFILEID"]]["CITY_RES"];
                     $tempArr["CITY_RES"] = FieldMap::getFieldLabel("city_india", $cityCode);
                 }
+                $tempArr["EVER_PAID"] = 'N';
+                if(is_array($purchaseDetails) && $profileid && array_key_exists($profileid, $purchaseDetails)){
+                    $tempArr["EVER_PAID"] = 'Y';
+                }
                 $finalArr[]=$tempArr;
             }
-
+            unset($purchaseDetails);
             $filepath = "/var/www/html/web/uploads/csv_files/";
-            //$filepath = "/var/www/html/branches/mobile/web/uploads";
+            //$filepath = "/var/www/html/branches/membership/web/uploads/";
             $filename = $filepath."preAllocatedProfileMailer.csv";
             unlink($filename);
             $csvData = fopen("$filename", "w") or print_r("Cannot Open");
 
-            fputcsv($csvData, array('Username','Alloted To','Latest analytics score','Last login date','City'));
+            fputcsv($csvData, array('Username','Alloted To','Latest analytics score','Last login date','City','EVER_PAID'));
             foreach($finalArr as $key=>&$val) {
                 fputcsv($csvData, $val);
             }
@@ -71,9 +79,9 @@ EOF;
             fclose($csvData);
 
             $csvAttachment = file_get_contents($filename);
-            //print_r($csvAttachment);
+            //print_r($csvAttachment);die;
             $to = "isha.mehra@jeevansathi.com,bharat.vaswani@jeevansathi.com,shashank.ghanekar@jeevansathi.com,anamika.singh@jeevasathi.com,rajeev.joshi@jeevansathi.com,rohan.mathur@jeevansathi.com";
-            //$to = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com,nitishpost@gmail.com";
+            //$to = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com";
             $cc = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
             //$cc = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com";
             $from = "js-sums@jeevansathi.com";

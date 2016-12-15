@@ -22,7 +22,8 @@ $profilesArr   = fetchProfiles($db_master);
 
 $eligibleArr   = $profilesArr['ELIGIBLE'];
 $inEligibleArr = $profilesArr['IN_ELIGIBLE'];
-$profileStrIneligible = implode(",", $inEligibleArr);
+if(is_array($inEligibleArr))
+	$profileStrIneligible = implode(",", $inEligibleArr);
 
 $allocatedArr = getAllocatedProfiles($eligibleArr, $db_js);
 $paidArr      = getPaidProfiles($eligibleArr, $db_js);
@@ -68,7 +69,7 @@ if (count($eligibleArrNew > 0)) {
 }
 
 // mail added
-$profilesStr =$profileStrIneligible.",".$profileStrEligible;
+$profilesStr =$profileStrIneligible."###".$profileStrEligible;
 $to   = "manoj.rana@naukri.com";
 $sub  = "Dialer updates of RCB Campaign Process.";
 $from = "From:vibhor.garg@jeevansathi.com";

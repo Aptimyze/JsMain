@@ -6,7 +6,7 @@
 		<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.3  (Linux)">
 		<META NAME="AUTHOR" CONTENT="Shyam">
 		<META NAME="CREATED" CONTENT="20130506;11300000">
-		<META NAME="CHANGEDBY" CONTENT="manoj ">
+		<META NAME="CHANGEDBY" CONTENT="Avneet">
 		<META NAME="CHANGED" CONTENT="20130705;9585100">
 		<META NAME="CHANGEDBY" CONTENT="Shyam">
 		<STYLE type="text/css">
@@ -150,23 +150,30 @@
 			</TABLE>
 			<TABLE cellpadding=0 cellspacing=0 class="t2">
 				<TR>
-					<TD class="tr1 td10"><P class="p1 ft2">Price ~if $type eq "RS"`INR~else`USD ~/if`&nbsp;(Ex. Tax)</P></TD>
+					<TD class="tr1 td10"><P class="p1 ft2">Price ~if $type eq "RS"`INR~else`USD ~/if`&nbsp;~if $type eq 'RS'`(Ex. Tax)~/if`</P></TD>
 					<TD class="tr1 td11 txtr"><P class="p1 ft1 txtr">~$costvalue_exTax_rs`.~$costvalue_exTax_paise`</P></TD>
 				</TR>
-				<TR>
-					<TD class="tr3 td10"><P class="p1 ft2">~$service_tax_content`</P></TD>
-					<TD class="tr3 td11 txtr"><P class="p1 ft1 txtr">~if $TAX_RATEVALUE_rs1 gte '0'`~$TAX_RATEVALUE_rs1`.~$TAX_RATEVALUE_paise1`~/if`</P></TD>
-				</TR>
-				<TR>
-					<TD class="tr3 td10"><P class="p1 ft2">~$swachh_content`</P></TD>
-					<TD class="tr3 td11 txtr"><P class="p1 ft1 txtr">~if $TAX_RATEVALUE_SWACHH_rs1 gte '0'`~$TAX_RATEVALUE_SWACHH_rs1`.~$TAX_RATEVALUE_SWACHH_paise1`~/if`</P></TD>
-				</TR>
-                ~if $krishi_content`
-				<TR>
-					<TD class="tr3 td10"><P class="p1 ft2">~$krishi_content`</P></TD>
-					<TD class="tr3 td11 txtr"><P class="p1 ft1 txtr">~if $TAX_RATEVALUE_KRISHI_rs1 gte '0'`~$TAX_RATEVALUE_KRISHI_rs1`.~$TAX_RATEVALUE_KRISHI_paise1`~/if`</P></TD>
-				</TR>
-                ~/if`
+				~if $type eq 'RS'`
+					<TR>
+						<TD class="tr3 td10"><P class="p1 ft2">~$service_tax_content`</P></TD>
+						<TD class="tr3 td11 txtr"><P class="p1 ft1 txtr">~if $TAX_RATEVALUE_rs1 gte '0'`~$TAX_RATEVALUE_rs1`.~$TAX_RATEVALUE_paise1`~/if`</P></TD>
+					</TR>
+					<TR>
+						<TD class="tr3 td10"><P class="p1 ft2">~$swachh_content`</P></TD>
+						<TD class="tr3 td11 txtr"><P class="p1 ft1 txtr">~if $TAX_RATEVALUE_SWACHH_rs1 gte '0'`~$TAX_RATEVALUE_SWACHH_rs1`.~$TAX_RATEVALUE_SWACHH_paise1`~/if`</P></TD>
+					</TR>
+	                ~if $krishi_content`
+					<TR>
+						<TD class="tr3 td10"><P class="p1 ft2">~$krishi_content`</P></TD>
+						<TD class="tr3 td11 txtr"><P class="p1 ft1 txtr">~if $TAX_RATEVALUE_KRISHI_rs1 gte '0'`~$TAX_RATEVALUE_KRISHI_rs1`.~$TAX_RATEVALUE_KRISHI_paise1`~/if`</P></TD>
+					</TR>
+	                ~/if`
+	            ~else`
+	            <TR>
+	            <TD class="tr3 td10"><P class="p1 ft2"></P></TD>
+	            <TD class="tr3 td10"><P class="p1 ft2"></P></TD>
+	            </TR>
+	            ~/if`
 				<TR>
 					<TD class="tr4 td10"><P class="p1 ft2">Total (~if $type eq "RS"`INR~else`USD ~/if`)</P></TD>
 					<TD class="tr4 td11 txtr"><P class="p1 ft1 txtr">~$costvalue_rs`.~$costvalue_paise`</P></TD>
@@ -184,10 +191,13 @@
 			</div>
 			<P class="p9"><SPAN class="ft8">Please Note the following :</SPAN></P>
 			<P class="p9 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">This invoice is recognized subject to realization of payment/confirmation.</SPAN></P>
-			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">All cheques / DD should be made in favor of "Jeevansathi Internet Services" payable at New Delhi.</SPAN></P>
+			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">All ~if $type eq 'RS'`cheques / DD~else`payments~/if` should be made in favor of "Jeevansathi Internet Services" payable at New Delhi.</SPAN></P>
 			<P class="p11 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">Refer Terms and Conditions attached in the next page and visit:<br> </SPAN><SPAN class="ft9"><a href="http://www.jeevansathi.com/profile/disclaimer.php">http://www.jeevansathi.com/profile/disclaimer.php</a></SPAN></P>
 			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">All disputes subject to Delhi Jurisdiction only</SPAN></P>
 			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">This is a computer generated invoice</SPAN></P>
+			~if $type eq 'DOL'`
+			<P class="p10 ft1"><SPAN class="ft7">•</SPAN><SPAN class="ft8">The transaction is covered as exports as per Provisions of Rule 6A of the Service Tax Rules 1994, and therefore Service Tax is not applicable.</SPAN></P>
+			~/if`
 			~if $countServices lte 4` <br>
 			~/if`
 			<table cellspacing="0" cellpadding="0" class="t3" style="width:100%">

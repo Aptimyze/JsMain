@@ -71,7 +71,7 @@ class ProfileMemcacheService
 						ProfileMemcacheService::JUST_JOINED_MATCHES => array('JUST_JOINED_MATCHES','JUST_JOINED_MATCHES_NEW'), 
 						ProfileMemcacheService::CONTACTS_VIEWED => array('CONTACTS_VIEWED'), 
 						ProfileMemcacheService::PEOPLE_WHO_VIEWED_MY_CONTACTS => array('PEOPLE_WHO_VIEWED_MY_CONTACTS'),
-                        ProfileMemcacheService::VISITOR_ALERT => array('VISITOR_ALERT'), 
+                        ProfileMemcacheService::VISITOR_ALERT => array('VISITOR_ALERT','VISITORS_ALL'), 
 						ProfileMemcacheService::CHAT_REQUEST => array('CHAT_REQUEST'), 
 						ProfileMemcacheService::BOOKMARK => array('BOOKMARK'),
 						ProfileMemcacheService::SAVED_SEARCH => array('SAVED_SEARCH'),
@@ -787,12 +787,17 @@ public function unsett()
     public function setVisitorAlertData()
     {
         $visitorObj = new Visitors($this->profileid);
-		$visitors = $visitorObj->getVisitorProfile();
+                $infoTypenav["matchedOrAll"]='A';
+		$visitors = $visitorObj->getVisitorProfile('','',$infoTypenav,$setAllVisitorsKey=$this->memcache);
 		$this->memcache->setVISITOR_ALERT(count($visitors) ? count($visitors) : 0);
 	}
     public function unsetVisitorAlertData()
     {
 		$this->memcache->setVISITOR_ALERT(0);
+    }
+    public function setVisitorsAll($allVisitorCount)
+    {
+		$this->memcache->setVISITORS_ALL($allVisitorCount ? $allVisitorCount : 0);
     }
     public function setChatRequestData()
     {

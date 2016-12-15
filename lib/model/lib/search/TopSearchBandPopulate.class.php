@@ -248,8 +248,8 @@ class TopSearchBandPopulate
                                         $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
                                 else
                                         $this->selectedCity_Country = $param["COUNTRY_RES"];
-                                if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
-                                        $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
+//                                if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
+//                                        $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
                                 $this->selectedCity_Country = trim($this->selectedCity_Country,",");
                         }
                 }

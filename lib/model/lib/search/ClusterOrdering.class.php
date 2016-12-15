@@ -61,7 +61,7 @@ class ClusterOrdering
 					$orderingArr[11] = 0;
 				else
 					$orderingArr[11] = 6;
-				$orderingArr[12] = 9;
+				//$orderingArr[12] = 9;
 				$orderingArr[13] = 7;
 				if(strstr($this->SearchParamtersObj->getRELIGION(),"2") || strstr($this->SearchParamtersObj->getRELIGION(),"3") || strstr($this->SearchParamtersObj->getRELIGION(),"6"))
 					$orderingArr[14] = 0;
@@ -107,10 +107,15 @@ class ClusterOrdering
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
 				}
-				if($this->SearchParamtersObj->getINDIA_NRI()==2 || ($this->SearchParamtersObj->getCOUNTRY_RES() && $this->SearchParamtersObj->getCOUNTRY_RES()!=51))
-					$orderingArr[28] = 12;
-				else
-					$orderingArr[28] = 0;
+                                $orderingArr[28] = 9;
+                                if(!$this->SearchParamtersObj->getCOUNTRY_RES() || in_array('51',explode(',',$this->SearchParamtersObj->getCOUNTRY_RES()))){
+					$orderingArr[28] = 9;
+                                        $orderingArr[26] = 10;
+					$orderingArr[27] = 11;
+                                }else{
+                                        $orderingArr[26] = 0;
+					$orderingArr[27] = 0;
+                                }
 				$orderingArr[29] = 17;	
 			}
 			else		//BRIDE SEARCH
@@ -141,7 +146,7 @@ class ClusterOrdering
 					$orderingArr[11] = 0;
 				else
 					$orderingArr[11] = 5.5;
-				$orderingArr[12] = 13;
+				//$orderingArr[12] = 13;
 				$orderingArr[13] = 12;
 				if(strstr($this->SearchParamtersObj->getRELIGION(),"2") || strstr($this->SearchParamtersObj->getRELIGION(),"3") || strstr($this->SearchParamtersObj->getRELIGION(),"6"))
 					$orderingArr[14] = 0;
@@ -180,7 +185,7 @@ class ClusterOrdering
 					$orderingArr[25] = 23;
 				else
 					$orderingArr[25] = 0;
-				if($this->SearchParamtersObj->getINDIA_NRI()==1 || $this->SearchParamtersObj->getCOUNTRY_RES()==51)
+				/*if($this->SearchParamtersObj->getINDIA_NRI()==1 || in_array('51',explode(',',$this->SearchParamtersObj->getCOUNTRY_RES())))
 				{
 					$orderingArr[26] = 14;
 					$orderingArr[27] = 15;
@@ -189,11 +194,16 @@ class ClusterOrdering
 				{
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
-				}
-				if($this->SearchParamtersObj->getINDIA_NRI()==2 || ($this->SearchParamtersObj->getCOUNTRY_RES() && $this->SearchParamtersObj->getCOUNTRY_RES()!=51))
-					$orderingArr[28] = 16;
-				else
-					$orderingArr[28] = 0;
+				}*/
+                                $orderingArr[28] = 13;
+				if(!$this->SearchParamtersObj->getCOUNTRY_RES() || in_array('51',explode(',',$this->SearchParamtersObj->getCOUNTRY_RES()))){
+					$orderingArr[28] = 13;
+                                        $orderingArr[26] = 14;
+					$orderingArr[27] = 15;
+                                }else{
+                                        $orderingArr[26] = 0;
+					$orderingArr[27] = 0;
+                                }
 				$orderingArr[29] = 19;	
 			}
 		}
@@ -225,7 +235,7 @@ class ClusterOrdering
 					$orderingArr[11] = 0;
 				else
 					$orderingArr[11] = 6;
-				$orderingArr[12] = 9;
+				//$orderingArr[12] = 9;
 				$orderingArr[13] = 7;
 				if(strstr($this->SearchParamtersObj->getRELIGION(),"2") || strstr($this->SearchParamtersObj->getRELIGION(),"3") || strstr($this->SearchParamtersObj->getRELIGION(),"6"))
 					$orderingArr[14] = 0;
@@ -265,10 +275,16 @@ class ClusterOrdering
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
 				}
-				if($this->SearchParamtersObj->getINDIA_NRI()==2 || ($this->SearchParamtersObj->getCOUNTRY_RES() && $this->SearchParamtersObj->getCOUNTRY_RES()!=51))
-					$orderingArr[28] = 12;
-				else
-					$orderingArr[28] = 0;
+                                $orderingArr[28] = 9;
+                                if($this->SearchParamtersObj->getINDIA_NRI()==2 || (!$this->SearchParamtersObj->getCOUNTRY_RES() || in_array('51',explode(',',$this->SearchParamtersObj->getCOUNTRY_RES())))){
+					$orderingArr[28] = 9;
+                                        $orderingArr[26] = 10;
+					$orderingArr[27] = 11;
+                                }else{
+                                        $orderingArr[26] = 0;
+					$orderingArr[27] = 0;
+                                }
+                                
 				if($profileObj  && $profileObj->getPROFILEID())
 				{
 					$orderingArr[1] = 18;
@@ -320,7 +336,7 @@ class ClusterOrdering
 					$orderingArr[11] = 0;
 				else
 					$orderingArr[11] = 5.8;
-				$orderingArr[12] = 9;
+				//$orderingArr[12] = 9;
 				$orderingArr[13] = 8;
 				if(strstr($this->SearchParamtersObj->getRELIGION(),"2") || strstr($this->SearchParamtersObj->getRELIGION(),"3") || strstr($this->SearchParamtersObj->getRELIGION(),"6"))
 					$orderingArr[14] = 0;
@@ -388,12 +404,18 @@ class ClusterOrdering
 					$orderingArr[26] = 0;
 					$orderingArr[27] = 0;
 				}
-				if($this->SearchParamtersObj->getINDIA_NRI()==2 || ($this->SearchParamtersObj->getCOUNTRY_RES() && $this->SearchParamtersObj->getCOUNTRY_RES()!=51))
-					$orderingArr[28] = 12;
-				else
-					$orderingArr[28] = 0;
+                                $orderingArr[28] = 9;
+				if(!$this->SearchParamtersObj->getCOUNTRY_RES() || in_array('51',explode(',',$this->SearchParamtersObj->getCOUNTRY_RES()))){
+					$orderingArr[28] = 9;
+                                        $orderingArr[26] = 10;
+					$orderingArr[27] = 11;
+                                }else{
+                                        $orderingArr[26] = 0;
+					$orderingArr[27] = 0;
+                                }
 			}
 		}
+                //print_r($orderingArr);die;
 		$orderingArr = $this->formatOutput($orderingArr,$returnType,$orderingFor);
 		$SearchUtility = new SearchUtility;
 		if($SearchUtility->isMatchAlertsPage($this->SearchParamtersObj))

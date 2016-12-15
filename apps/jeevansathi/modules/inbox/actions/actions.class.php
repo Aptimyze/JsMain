@@ -271,6 +271,34 @@ class inboxActions extends sfActions
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
+					//
+					case "10":
+					$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
+					if($currentCount)
+					{
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                {
+												$contactsObj = new ContactsRecords();
+												$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
+                                                       
+                                                }
+						$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);
+						$profileMemcacheObj->updateMemcache();
+					}
+					break;
 
 			}
 			$respObj = ApiResponseHandler::getInstance();
@@ -353,6 +381,11 @@ public function executePerformV2(sfWebRequest $request)
         }
                                 if ($infoType == "VISITORS") {
                                     $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                                    if(MobileCommon::isIOSApp())
+                                    {
+                                           $infoTypenav["matchedOrAll"] = "A";
+                                    }
+
                                 }
        
 				if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
@@ -559,6 +592,33 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["title2"]='I Declined';
 					$response2["infotypeid2"]=11; 
 					$response2["url"]="/profile/contacts_made_received.php?page=decline&filter=M";
+					$profileMemcacheObj = new ProfileMemcacheService($profileObj);
+						$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
+						if($currentCount)
+						{
+							if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+							{
+								$producerObj=new Producer();
+								if($producerObj->getRabbitMQServerConnected())
+								{
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
+									$producerObj->sendMessage($updateSeenData);
+								}
+								else
+								{
+							              $this->sendMail();
+								}
+							}
+							else
+							{
+
+								$contactsObj = new ContactsRecords();
+								$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
+                                                               
+							}
+							$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);
+							$profileMemcacheObj->updateMemcache();
+						}
 					break;
 					
 					case 'MATCH_ALERT': 

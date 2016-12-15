@@ -102,7 +102,7 @@ oncontextmenu="return false;" onmousedown="return false;" /> </li>
 		<div class="pos-rel myjs-dim9">
 			<div class="pos-abs z4">
 				<div class="disp-tbl myjs-dim9 txtc">
-					<div class="disp-cell vmid"><a href="{{LISTING_LINK}}" class="f30 fontreg colrw">View All</a></div>
+					<div class="disp-cell vmid"><a id ="idForViewAllCard" href="{{LISTING_LINK}}" class="f30 fontreg colrw">View All</a></div>
 				</div>
 			</div>
 			~if $gender eq 'M'`
