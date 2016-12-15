@@ -286,5 +286,6 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 				jsException::nonCriticalError($e);
 			}
     }
+
 }
 ?>
