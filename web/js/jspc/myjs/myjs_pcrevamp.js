@@ -514,8 +514,14 @@ $( document ).ajaxSend(function( event,request, settings ) {
     $("#totalMessagesReceived").html(this.data.MESSAGE);
     $("#totalAcceptsReceived").html(this.data.ACC_ME);
     $("#totalInterestReceived").html(this.data.AWAITING_RESPONSE);
-    $("#totalFilteredInterestReceived").html(this.data.FILTERED);
-    $("#totalexpiringInterestReceived").html(this.data.FILTERED);
+    if(showExpiring)
+    {
+      $("#totalexpiringInterestReceived").html(this.data.INTERESTS_EXPIRED);
+    }
+    else
+    {
+      $("#totalFilteredInterestReceived").html(this.data.FILTERED);
+    }
 
     if(this.data.AWAITING_RESPONSE_NEW!='0'){
      $("#interetReceivedCount").html(this.data.AWAITING_RESPONSE_NEW);
@@ -549,12 +555,8 @@ $( document ).ajaxSend(function( event,request, settings ) {
    else{
     $("#totalFilteredInterestReceived").removeClass("disp-none");
    }
-   if(this.data.FILTERED_NEW!='0'){
-     $("#expiringInterestCount").html(this.data.FILTERED_NEW);
-     $("#expiringInterestCount").removeClass("disp-none");
-     $("#expiringInterestCount").addClass("disp-cell bounceIn animated");
-   }
-   else{
+   if(showExpiring)
+   {
     $("#totalExpiringInterestReceived").removeClass("disp-none");
    }
    setBellCountHTML(this.data);

@@ -134,9 +134,9 @@
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
                             <div id="engage_expiringInterestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Expiring Interests',loggedInJspcGender,'')" >Interests Expiring
-                            <div id="ExpiringAction" style="color:red;">Take Action</div>
+                            <div id="totalExpiringInterestReceived" class="myjs-fsize2 dispib vmid myjs_p_new disp-none myjs-fw"></div>
+                            <div style="color:red;padding-left: 5px;" class="dispib fontreg f14 vmid" id="ExpiringAction">Take Action</div>
                             </div>
-                            <div id="totalExpiringInterestReceived" class="myjs-fsize2  vmid myjs-p15 disp-none myjs-fw"></div>
                             <div id="expiringInterestCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
                         </div>
                     </div>

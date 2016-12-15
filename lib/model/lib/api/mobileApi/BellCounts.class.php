@@ -90,6 +90,7 @@ class BellCounts
         		$profileObj=LoggedInProfile::getInstance('newjs_master');
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 				$countDetails["AWAITING_RESPONSE_NEW"] = $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
+				$countDetails["INTERESTS_EXPIRED"] = $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 				$countDetails["ACC_ME_NEW"] = $profileMemcacheObj->get("ACC_ME_NEW");
 				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1){
 					$countDetails["MESSAGE_NEW"] = 0;
