@@ -294,6 +294,28 @@
                       </span>
                     </p>  
                   </li>
+                  <!-- added alt email -->
+                  <li>
+                    <p class="color12" id="emailLabelParent">
+                      Alternate Email id
+                    </p>
+
+                    
+                    <div class="clearfix pos-rel">
+                      <div class="fl wid70p">
+                        <p class="color11">
+                          <span id='my_alt_emailView' ~if $arrOutDisplay.contact.my_alt_email eq $notFilledInText` class="color5"  ~/if`>
+                            ~$arrOutDisplay['contact']['my_alt_email']`
+                          </span>
+                        </p>
+                      </div>
+                      <div class="fr wid25p pos-abs right0">
+                          <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color12" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
+                      </div>
+                    </div>
+                     <div id="showAlternateEmailHint" ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify` class="f12 color12  pt5" ~else` class="f12 color12  pt5 disp-none"  ~/if`>Verify email id to receive mails.</div>
+                  </li>
+
                   <li>
                     <p class="color12" >
                       Mobile No. 
@@ -568,6 +590,19 @@
   </div>
   <!--end:second part--> 
 </div>
+<div id="js-alternateEmailConfirmLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white">
+    <input id='altEmailDefaultText' type="hidden" value="A link has been sent to your email id {email}, click on the link to verify email.">
+<div class="phnvp4 f17 fontreg color11 phnvbdr4">Email Verification</div>
+<i class="sprite2 sendcross cursp pos-abs crosspos closeCommLayer"></i>
+<div class="color11">
+<!--start:div-->
+<div class="phnvwid3 mauto pt40 pb27 fontlig">
+<p id='altEmailConfirmText' class=" f17 txtc lh26"></p>
+</div>
+</div>
+<!--end:layer 1-->
+</div>    
+    
 <script type="text/javascript">
   var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
   var senderEmail = "~$loggedInEmail`";

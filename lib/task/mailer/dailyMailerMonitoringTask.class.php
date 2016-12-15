@@ -214,6 +214,13 @@ EOF;
 
          if($mailer_key[0]=='EMAIL_VER_MAILER')
                 {
+                        $mailVerOb = new MAIL_ALTERNATE_EMAIL_MAILER();
+                        $countArr = $mailVerOb->getMailCountForRange();
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }        
+         if($mailer_key[0]=='ALTERNATE_EMAIL_VER_MAILER')
+                {
                         $mailVerOb = new MAIL_EMAIL_VER_MAILER();
                         $countArr = $mailVerOb->getMailCountForRange();
                         $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
