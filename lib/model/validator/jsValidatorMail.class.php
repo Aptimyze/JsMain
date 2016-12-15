@@ -191,7 +191,7 @@ class jsValidatorMail extends sfValidatorBase
   }
 
   private function _sameEmail($email,$altEmail)
-  { 
+  {   
     if(strtolower($altEmail) == strtolower($email)) 
     {
       return 1;
