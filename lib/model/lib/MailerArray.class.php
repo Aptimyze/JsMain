@@ -50,7 +50,7 @@
 '41'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'PROFILE_FAMILY','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=FamilyDetails','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '42'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'PROFILE_HOBBIES','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=Interests','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '43'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'GOOGLE_PLAY_APP','URL'=>'https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source=organic&ut','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'','OUTER_LINK'=>'Y'),
-'44'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'NEW_MATCHES','URL'=>'search/perform','OTHER_GET_PARAMS'=>'noRelaxation=1&type=NME','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'44'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'NEW_MATCHES','URL'=>'search/justjoined','OTHER_GET_PARAMS'=>'noRelaxation=1&type=NME','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '45'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'MEMBERSHIP_DETAIL','URL'=>'profile/mem_comparison.php','OTHER_GET_PARAMS'=>'from_source=memMailer	','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '46'=>array('APP_SCREEN_ID'=>'a11','LINK_NAME'=>'ALLCENTRESLOCATIONS_N','URL'=>'profile/contact.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'N','OUTER_LINK'=>'N'),
 '47'=>array('APP_SCREEN_ID'=>'a12','LINK_NAME'=>'MY_OCCUPATION','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'ownview=1&EditWhatNew=EduOcc&editSec=Occ','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
