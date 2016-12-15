@@ -210,6 +210,7 @@ $css_arr[]=array("jspc/help/JSPCHelp_css"     => "3");
 $css_arr[]=array("jsms/help/JSMSHelp_css"     => "3");
 $css_arr[]=array("jsms/myjs/CALJSMS_css"       => "4");
 $css_arr[]=array("-1"     => "3");
+$css_arr[]=array(" /web/js/ /web/profile/css/my_js_css"   => "1");
 return $css_arr;
 }
 /* JavaScript File */
@@ -503,7 +504,7 @@ $js_arr[]=array("registration_pg2"     => "3");
 $js_arr[]=array("registration_pg1"     => "3");
 $js_arr[]=array("jsms/contactus/contactus_js"     => "1");
 $js_arr[]=array("jsms/common/sly"      => "2");
-$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                              => "47");
+$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                               => "48");
 $js_arr[]=array("jspc/myjs/myjs_js"                                                    => "57");
 $js_arr[]=array("jspc/myjs/engBarJs_js"                  => "18");
 $js_arr[]=array("jspc/common/nano"     => "2");
