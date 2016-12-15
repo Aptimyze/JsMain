@@ -49,7 +49,7 @@ class jsValidatorMail extends sfValidatorBase
 	{
 		if($key == 'err_email_del')
 			$msg = "The profile with this email has been deleted. To retrieve profile, kindly contact bug@jeevansathi.com";
-		
+		$this->addOption("altEmail");
 		$this->addMessage($key, $msg);
 	}
   }
@@ -70,6 +70,7 @@ class jsValidatorMail extends sfValidatorBase
     }
 	   $email = (string) $value;
     $value = trim($email);
+    $altEmail = trim($this->getOption('altEmail'));
     $activatedFlag = $this->_dupProfileEmail($value);
     
     if ($this->_emailValidation($value))
@@ -92,7 +93,7 @@ class jsValidatorMail extends sfValidatorBase
           if($affectedRows == 0)
               throw new sfValidatorError($this, 'err_email_del', array('value' => $value, 'err_email_del' => $this->getOption('err_email_del')));
     }
-    if($this->_sameEmail($value))
+    if($this->_sameEmail($value,$altEmail))
     {
       throw new sfValidatorError($this, 'err_email_same', array('value' => $value, 'err_email_same' => $this->getOption('err_email_same')));
     }
@@ -189,13 +190,17 @@ class jsValidatorMail extends sfValidatorBase
             $dupObj->insert($email, $page, $ip, $flag); 
   }
 
-  private function _sameEmail($email)
+  private function _sameEmail($email,$altEmail)
   {
-    $loggedInObj = LoggedInProfile::getInstance();
-    $pid = $loggedInObj->getPROFILEID();
-    $jprofileContactObj = new NEWJS_JPROFILE_CONTACT();
-    $contactsArr = $jprofileContactObj->getProfileContacts($pid);
-    if(strtolower($contactsArr["ALT_EMAIL"]) == strtolower($email))
+    if($altEmail == "")
+    {
+      $loggedInObj = LoggedInProfile::getInstance();
+      $pid = $loggedInObj->getPROFILEID();
+      $jprofileContactObj = new NEWJS_JPROFILE_CONTACT();
+      $contactsArr = $jprofileContactObj->getProfileContacts($pid);
+      $altEmail = $contactsArr["ALT_EMAIL"];
+    }    
+    if(strtolower($altEmail) == strtolower($email)) 
     {
       return 1;
     }

@@ -6248,6 +6248,15 @@ $(document).ready(function() {
                 jQuery.myObj.ajax(ajaxConfig);
 	});
 
+      if(typeof(fromCALAlternate)!= "undefined" && fromCALAlternate == '1')
+    {   
+        $('html, body').animate({
+         scrollTop: ($('#section-basic').offset().top)
+      },500);
+        var newUrl=document.location.href.replace('fromCALAlternate','');
+        history.pushState('', '', newUrl);
+    }
+
 });
 
 $(document).mousedown(function (event)
