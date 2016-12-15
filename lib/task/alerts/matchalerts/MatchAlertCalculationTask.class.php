@@ -12,7 +12,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $LowDppLimit = 10;
         private $limitCommunityRec = 10;
 	const clusterRecordLimit = 10;
-        const _communityModelToggle=1;
+        const _communityModelToggle=0;
         
 	protected function configure()
   	{
@@ -145,6 +145,8 @@ EOF;
                                                             
                                                             $this->limitNtRec=10;
                                                         }
+                                                        else
+                                                            $this->limitNtRec=16;
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
