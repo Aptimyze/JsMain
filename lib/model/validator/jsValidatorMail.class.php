@@ -191,15 +191,7 @@ class jsValidatorMail extends sfValidatorBase
   }
 
   private function _sameEmail($email,$altEmail)
-  {
-    if($altEmail == "")
-    {
-      $loggedInObj = LoggedInProfile::getInstance();
-      $pid = $loggedInObj->getPROFILEID();
-      $jprofileContactObj = new NEWJS_JPROFILE_CONTACT();
-      $contactsArr = $jprofileContactObj->getProfileContacts($pid);
-      $altEmail = $contactsArr["ALT_EMAIL"];
-    }    
+  { 
     if(strtolower($altEmail) == strtolower($email)) 
     {
       return 1;
