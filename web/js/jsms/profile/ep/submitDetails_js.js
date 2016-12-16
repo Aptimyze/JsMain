@@ -99,6 +99,8 @@ var saveDetail=(function(){
 				{
 			
 				}
+                                
+
 			},
 		  error: function() {
 			hideLoader();
