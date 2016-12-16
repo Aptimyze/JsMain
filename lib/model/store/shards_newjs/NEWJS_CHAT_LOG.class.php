@@ -74,7 +74,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 				else
 				{
 					if($pagination)
-						$whrStr="AND M.ID < :pagination";
+						$whrStr="AND C.ID < :pagination";
 					else
 						$whrStr="";
 					if($limit)
