@@ -52,31 +52,6 @@ class ProfileAUTO_EXPIRY
         
     }
 
-    /**
-     * @fn getInstance
-     * @brief fetches the instance of the class
-     * @param $dbName - Database name to which the connection would be made
-     * @return instance of this class
-     */
-    public static function getInstance($dbName = '')
-    {
-        if (!$dbName)
-            $dbName = "newjs_master";
-        if (isset(self::$instance)) {
-            //If different instance is required
-            if ($dbName != self::$instance->connectionName) {
-                $class = __CLASS__;
-                self::$instance = new $class($dbName);
-                self::$instance->connectionName = $dbName;
-            }
-        }
-        else {
-            $class = __CLASS__;
-            self::$instance = new $class($dbName);
-            self::$instance->connectionName = $dbName;
-        }
-        return self::$instance;
-    }
 
     /**
      * 
