@@ -63,10 +63,8 @@ class ContactHandler
   const CANCEL_RECEIVED       = 'C';
   const CANCEL_EOI_SENT       = 'RE';
   const CANCEL_EOI_RECEIVED   = 'E';
-  //
   const CANCEL_ALL   = 'CER';
 /* contact enums where we distinguish contact type based on sender/receiver. */
-  
   /**
      * Profile Obj
      * Stores the Profile Obj of viewer, Who is trying to view the engine
@@ -107,7 +105,7 @@ class ContactHandler
      *
      * Format:<pre>
      * array(
-     *        "status"=>"I",
+     * 				"status"=>"I",
      *        "fromPage"=>"VSP",
      *        "DRAFT_NAME"=>"DRE"
      *     )
@@ -167,8 +165,8 @@ class ContactHandler
     $this->setContactType($contactType);
     $this->setAction($action);
     if(isset($toBeType))
-      $this->setToBeType($toBeType);
-   $this->setPageSource();   
+	    $this->setToBeType($toBeType);
+	 $this->setPageSource();   
   }
   /**
    * Return type of contact he/she is performing[EOI/C.D.]
@@ -191,11 +189,11 @@ class ContactHandler
    */
   public function setToBeType($toBeType)
   {
-    $this->toBeType =$toBeType;
+		$this->toBeType	=$toBeType;
   }
   public function getToBeType()
   {
-  return $this->toBeType;
+	return $this->toBeType;
   }
   /**
    * What action user is performing in terms of contact engine[EOI/Contact Details section]
@@ -240,10 +238,10 @@ class ContactHandler
    */
   public function getContactInitiator()
   {
-    if($this->contactObj->getReceiverObj()->getPROFILEID()==$this->viewerObj->getPROFILEID())
-      return ContactHandler::RECEIVER;
-    else
-      return ContactHandler::SENDER;
+		if($this->contactObj->getReceiverObj()->getPROFILEID()==$this->viewerObj->getPROFILEID())
+			return ContactHandler::RECEIVER;
+		else
+			return ContactHandler::SENDER;
   }
   
 /**
@@ -259,8 +257,8 @@ class ContactHandler
       else
         throw new JsException("",Messages::ELEMENT_ERROR);
     }
-    else      
-      return $this->contactElements;    
+    else			
+      return $this->contactElements;		
 
   } // end of member function getElements
 
@@ -328,9 +326,9 @@ class ContactHandler
    */
   public function setViewed( $profileObj ) {
     if($profileObj instanceof Profile)
-    $this->viewedObj = $profileObj;
+		$this->viewedObj = $profileObj;
     else
-    throw new JsException("",Messages::NO_PROFILE_OBJ);
+		throw new JsException("",Messages::NO_PROFILE_OBJ);
   } // end of member function setReceiver
 
   /**
@@ -349,10 +347,10 @@ class ContactHandler
    * @access public
    */
   public function setContactObj($contactObj) {
-    if($contactObj instanceof Contacts )
-      $this->contactObj=$contactObj;
-    else
-      throw new JsException("",Messages::CONTACT_ERROR);
+  	if($contactObj instanceof Contacts )
+  		$this->contactObj=$contactObj;
+  	else
+  		throw new JsException("",Messages::CONTACT_ERROR);
   }
    /**
    * return contacts class Obj
@@ -360,8 +358,8 @@ class ContactHandler
    * @access public
    */
   public function getContactObj()
-  {   
-    return $this->contactObj;
+  {  	
+  	return $this->contactObj;
   }
    /**
    * return priviledgeObj, used to fetch user's permission in contact engine
@@ -370,10 +368,10 @@ class ContactHandler
    */
   public function getPrivilegeObj()
   {
-  if(!($this->priObj instanceof Privilege))
-    $this->priObj = PrivilegeFactory::getPrivObj($this->getViewer()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus());
-    $privilegeArray=$this->priObj->updatePrivilege($this);
-    return $this->priObj;
+	if(!($this->priObj instanceof Privilege))
+		$this->priObj = PrivilegeFactory::getPrivObj($this->getViewer()->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus());
+		$privilegeArray=$this->priObj->updatePrivilege($this);
+		return $this->priObj;
   } 
    /**
    * From which page user is comming.
@@ -382,23 +380,23 @@ class ContactHandler
    */
   public function getPageSource()
   {
-    return $this->pageSource;
-    /*$this->pageSource="D";
-    $pageSource=$_SERVER["HTTP_REFERER"];
-  if(strstr($pageSource,'simprofile_search.php') || strstr($pageSource,'view_similar_profile.php'))
-    $this->pageSource='VSP';
-  elseif(strstr($pageSource,'viewprofile.php'))
-    $this->pageSource='VDP';
-  elseif(strstr($pageSource,'search.php'))
-    $this->pageSource='S';
-  elseif(strstr($pageSource,'contacts_made_received.php'))
-    $this->pageSource='C';
-  return $this->pageSource;
-  */
+	  return $this->pageSource;
+	  /*$this->pageSource="D";
+	  $pageSource=$_SERVER["HTTP_REFERER"];
+	if(strstr($pageSource,'simprofile_search.php') || strstr($pageSource,'view_similar_profile.php'))
+		$this->pageSource='VSP';
+	elseif(strstr($pageSource,'viewprofile.php'))
+		$this->pageSource='VDP';
+	elseif(strstr($pageSource,'search.php'))
+		$this->pageSource='S';
+	elseif(strstr($pageSource,'contacts_made_received.php'))
+		$this->pageSource='C';
+	return $this->pageSource;
+	*/
   } 
   public function setPageSource($pageSource='VDP')
   {
-  $this->pageSource=$pageSource;  
+	$this->pageSource=$pageSource;  
   }
    
 }
