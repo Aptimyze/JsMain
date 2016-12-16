@@ -135,7 +135,7 @@ EOF;
         $subject = "Did you see the $count Interests in your Filtered Inbox? | ".$date;
 		$tpl->setSubject($subject);
 
-        if(JsConstants::$contactMailersCC)
+        if(CommonConstants::contactMailersCC)
         {    
 
         $contactNumOb=new newjs_JPROFILE_CONTACT();

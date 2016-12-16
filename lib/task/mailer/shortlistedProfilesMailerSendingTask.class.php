@@ -125,7 +125,7 @@ EOF;
         $subject = "You may send an interest to these members you have shortlisted recently | ".$date;
 		$tpl->setSubject($subject);
         
-        if(JsConstants::$contactMailersCC)
+        if(CommonConstants::contactMailersCC)
         {    
         
         $contactNumOb=new newjs_JPROFILE_CONTACT();

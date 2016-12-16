@@ -419,7 +419,7 @@ return $edu;
 			$senderDetails = MAILER_COMMON_ENUM::getSenderEnum($mailerName);
         	        // Sending mail and tracking sent status
                         
-                        if(JsConstants::$contactMailersCC)
+                        if(CommonConstants::contactMailersCC)
                         {    
 
                 	                $contactNumOb=new newjs_JPROFILE_CONTACT();

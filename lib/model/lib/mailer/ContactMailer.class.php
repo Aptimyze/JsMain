@@ -88,7 +88,7 @@ class ContactMailer
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
                 
-                if(JsConstants::$contactMailersCC)
+                if(CommonConstants::contactMailersCC)
                 {    
                 $contactNumOb=new newjs_JPROFILE_CONTACT();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
@@ -169,7 +169,7 @@ class ContactMailer
 		$smartyObj->assign("FTO",$FTO);
 		$tpl->setPartials($partialList);
                 
-                if(JsConstants::$contactMailersCC)
+                if(CommonConstants::contactMailersCC)
                 {
                 $contactNumOb=new newjs_JPROFILE_CONTACT();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
@@ -229,7 +229,7 @@ class ContactMailer
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
                 
-                if(JsConstants::$contactMailersCC)
+                if(CommonConstants::contactMailersCC)
                 {                
                 $contactNumOb=new newjs_JPROFILE_CONTACT();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
@@ -287,7 +287,7 @@ class ContactMailer
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
 
-        if(JsConstants::$contactMailersCC)
+        if(CommonConstants::contactMailersCC)
         {                
 
         $contactNumOb=new newjs_JPROFILE_CONTACT();
@@ -349,7 +349,7 @@ class ContactMailer
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
     
-        if(JsConstants::$contactMailersCC)
+        if(CommonConstants::contactMailersCC)
         {                
         $contactNumOb=new newjs_JPROFILE_CONTACT();
         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
