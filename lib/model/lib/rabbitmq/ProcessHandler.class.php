@@ -190,6 +190,7 @@ class ProcessHandler
 			break;
 		case "ALL_MESSAGES":
 			MessageLog::makeAllMessagesSeen($body['profileid']);
+			ChatLog::makeAllChatsSeen($body['profileid']);
 			break;
 		case "PHOTO_REQUEST":
 			Inbox::setAllPhotoRequestsSeen($body['profileid']);

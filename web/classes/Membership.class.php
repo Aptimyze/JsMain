@@ -1051,6 +1051,7 @@ class Membership
         foreach ($this->assisted_arr as $k => $v) {
             if ($v == 'T') {
                 startAutoApply($this->profileid, $this->walkin);
+		addAutoApplyLog($this->profileid,'MEMBERSHIP',$v);
             }
             if ($v == 'L') {
                 if (!in_array('T', $this->assisted_arr)) startHomeDelivery($this->profileid, '');

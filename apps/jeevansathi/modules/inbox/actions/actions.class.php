@@ -265,6 +265,7 @@ class inboxActions extends sfActions
                                                 else
                                                 {
 							MessageLog::makeAllMessagesSeen($pid);
+							ChatLog::makeAllChatsSeen($pid);
 						}
 						$profileMemcacheObj->update("MESSAGE_NEW",-$currentCount);
 						$profileMemcacheObj->updateMemcache();
@@ -775,7 +776,7 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["subtitle"]='Who Viewed My.. '.$response2['total'];
 					$response2["title2"]=null;
 					break;
-					case "MY_MESSAGE":
+                                        case "MY_MESSAGE":$response2["hidePaginationCount"] = 1;
 					case "MY_MESSAGE_RECEIVED":
 					//if(MobileCommon::isDesktop()==false)
 					{
@@ -795,6 +796,7 @@ public function executePerformV2(sfWebRequest $request)
                                                 else
                                                 {
 							MessageLog::makeAllMessagesSeen($pid);
+							ChatLog::makeAllChatsSeen($pid);
 						}
 						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("MESSAGE_NEW");
