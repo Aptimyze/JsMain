@@ -163,6 +163,11 @@ class ProfileContact
 			$objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $result['PROFILEID'], $result, __CLASS__);
 		}
 
+		if(false === $result) {
+            $dummyResult = array('PROFILEID'=>$pid, "ALT_MOBILE"=>ProfileCacheConstants::NOT_FILLED);
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
+        }
+
 		return $result;
 	}
 
