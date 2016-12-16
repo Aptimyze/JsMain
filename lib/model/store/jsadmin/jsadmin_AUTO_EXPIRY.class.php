@@ -54,10 +54,9 @@ class jsadmin_AUTO_EXPIRY extends TABLE
 		{
 			try{
 
-				$sql = "select DATE from jsadmin.AUTO_EXPIRY WHERE PROFILEID =:PID AND DATE_SUB(DATE,interval 2 second) > :TIME";
+				$sql = "select DATE from jsadmin.AUTO_EXPIRY WHERE PROFILEID =:PID";
 				$prep=$this->db->prepare($sql);
 				$prep->bindValue(":PID",$pid,PDO::PARAM_INT);
-				$prep->bindValue(":TIME",$time,PDO::PARAM_STR);
 				$prep->execute();
 				if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					return $result['DATE'];
