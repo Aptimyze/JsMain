@@ -121,12 +121,17 @@ EOF;
     		 $date = date('d M ', $date);
         $subject = "Respond to ".($count)." member(s) waiting for your response | ".$date;
 	$tpl->setSubject($subject);
-        
+
+        if(JsConstants::$contactMailersCC)
+        {    
+
         $contactNumOb=new newjs_JPROFILE_CONTACT();
         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
         if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
         {
            $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+        }
+        else $ccEmail = "";
         }
         else $ccEmail = "";
 

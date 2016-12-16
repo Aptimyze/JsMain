@@ -418,11 +418,18 @@ return $edu;
 		{
 			$senderDetails = MAILER_COMMON_ENUM::getSenderEnum($mailerName);
         	        // Sending mail and tracking sent status
+                        
+                        if(JsConstants::$contactMailersCC)
+                        {    
+
                 	                $contactNumOb=new newjs_JPROFILE_CONTACT();
                         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$pid),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
                         if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
                         {
                            $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+                        }
+                        else
+                            $ccEmail = "";
                         }
                         else $ccEmail = "";
 
