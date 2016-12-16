@@ -516,7 +516,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
     $("#totalInterestReceived").html(this.data.AWAITING_RESPONSE);
     if(showExpiring)
     {
-      $("#totalexpiringInterestReceived").html(this.data.INTERESTS_EXPIRED);
+      $("#totalExpiringInterestReceived").html(this.data.INTERESTS_EXPIRED);
     }
     else
     {
