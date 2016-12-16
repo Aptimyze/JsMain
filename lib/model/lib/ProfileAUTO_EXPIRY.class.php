@@ -71,19 +71,15 @@ class ProfileAUTO_EXPIRY
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
             }
             $result = $result['AUTO_EXPIRY_DATE'];
-//            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
-  //          if($result && in_array($result, $validNotFilled)){
-    //            return $result;
-      //      }
         }
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             $this->logCacheConsumeCount(__CLASS__);
             return $result;
         }
-        
+        // get from values database by query
         $result = self::$objAUTO_EXPIRY->getDate($profileid);
         $dummyResult['PROFILEID'] = $profileid;
-        $dummyResult['AUTO_EXPIRY_DATE'] = (intval($result) === 0) ? 'N' : $result;
+        $dummyResult['AUTO_EXPIRY_DATE'] = (intval($result) === 0) ? ProfileCacheConstants::NOT_FILLED : $result;
         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
         return $result;
          
@@ -122,8 +118,9 @@ class ProfileAUTO_EXPIRY
         $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
         if(in_array($result, $validNotFilled))
             return true;
-        
-        if((strtotime($result['AUTO_EXPIRY_DATE'])-2) > strtotime($time))return false;    
+        // subtract 2 seconds first from result and then compare
+        if((strtotime($result)-2) > strtotime($time))
+            return false;    
         return true;
 
     }
