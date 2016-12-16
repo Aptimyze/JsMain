@@ -1,5 +1,5 @@
 <?php
-class jsadmin_AUTO_EXPIRY extends TABLE
+class ProfileAUTO_EXPIRY extends TABLE
 {
         public function __construct($dbname="")
         {

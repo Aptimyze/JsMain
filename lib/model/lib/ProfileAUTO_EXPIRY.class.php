@@ -2,12 +2,12 @@
 
 /**
  * Description of ProfileAstro
- * Library Class to handle Model for PROFILE_VERIFICATION.FSO Table
+ * Library Class to handle Model for jsadmin.AUTO_EXPIRY Table
  *
  * @package     jeevansathi
  * @subpackage cache
  * @author      Palash Chordia
- * @created     23rd Sept 2016
+ * @created     10th Dec 2016
  */
 class ProfileAUTO_EXPIRY
 {
@@ -24,7 +24,7 @@ class ProfileAUTO_EXPIRY
      * Object of Store class
      * @var instance of NEWJS_PROFILE|null
      */
-    private static $objFSO = null;
+    private static $objAUTO_EXPIRY = null;
 
     /**
      * @fn __construct
@@ -137,7 +137,7 @@ class ProfileAUTO_EXPIRY
         $result = $this->getDate($profileid);
         if($result===false){
             
-            return self::$objFSO->isAlive($profileid,$time);
+            return self::$objAUTO_EXPIRY->isAlive($profileid,$time);
         }
         
         $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
