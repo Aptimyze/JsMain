@@ -96,17 +96,21 @@ class ProfileAUTO_EXPIRY
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
             }
             $result = $result['AUTO_EXPIRY_DATE'];
-            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
-            if($result && in_array($result, $validNotFilled)){
-                return $result;
-            }
+//            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
+  //          if($result && in_array($result, $validNotFilled)){
+    //            return $result;
+      //      }
         }
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             $this->logCacheConsumeCount(__CLASS__);
             return $result;
         }
-        //Get Data from Mysql
-        return false;
+        
+        $result = self::$objAUTO_EXPIRY->getDate($profileid);
+        $dummyResult['PROFILEID'] = $profileid;
+        $dummyResult['AUTO_EXPIRY_DATE'] = (intval($result) === 0) ? 'N' : $result;
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
+        return $result;
          
     }
     
@@ -119,7 +123,7 @@ class ProfileAUTO_EXPIRY
     public function replace($pid,$type,$date)
     {
         $objProCacheLib = ProfileCacheLib::getInstance();        
-        self::$objFSO->replace($pid,$type,$date);
+        self::$objAUTO_EXPIRY->replace($pid,$type,$date);
         $dummyResult['PROFILEID'] = $pid;
         $dummyResult['AUTO_EXPIRY_DATE'] = $date;
         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
