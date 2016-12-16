@@ -20,13 +20,6 @@
                         <td width="373" height="52" style="padding-left:10px;">
                             <div><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="~$IMG_URL`/images/jspc/commonimg/logo1.png"> </div>
                         </td>
-                        <td width="189" valign="middle" style="padding-right:10px;">
-                            <table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
-                                <tr>
-                                    <td align="right" valign="middle" height="50" style="vertical-align:middle;"><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)OWN_PROFILE:profileid=~$profileid`(/LINK)">My Profile</a> | <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)">My Matches</a> </td>
-                                </tr>
-                            </table>
-                        </td>
                     </tr>
                 </table>
             </td>
@@ -50,12 +43,17 @@
                 
                 <tr>
                         <td>
-                         <td height="27"><a href="(LINK)EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
+                        ~if $emailType eq 1`
+                         <td height="27"><a href="(LINK)EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
+                        ~else`
+                         <td height="27"><a href="(LINK)ALTERNATE_EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
+                        ~/if`
                         </td>
+                        
 
                         <td width="20" height="25"></td>
                 </tr>
-                
+                ~if $emailType eq 1`
                 <tr>
                         <td width="20"></td>
                         <td>
@@ -63,7 +61,7 @@
                         </td>
                         <td width="20" height="25"></td>
                 </tr>
-                
+                ~/if`
                 <tr>
                         <td width="20"></td>
                         <td>
