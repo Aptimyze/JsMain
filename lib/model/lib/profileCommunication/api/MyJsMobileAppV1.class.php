@@ -44,9 +44,14 @@ $className = get_class($this);
 		$displayV1= Array();
 		foreach(self::$informationTypeFields as $key=>$value)
 		{
-			
+			$request = sfContext::getInstance()->getRequest();
+        	$showExpiring = $request->getParameter('showExpiring');
+        	var_dump($showExpiring);
+        	die;
 			if(array_key_exists($key,$displayObj))
 			{
+				if($key == "INTEREST_EXPIRING" && !$showExpiring)
+					continue;
 				foreach($value as $k=>$v)
                                 {
 					if($v == "TUPLES")
