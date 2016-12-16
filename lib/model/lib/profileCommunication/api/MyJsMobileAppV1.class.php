@@ -46,8 +46,6 @@ $className = get_class($this);
 		{
 			$request = sfContext::getInstance()->getRequest();
         	$showExpiring = $request->getParameter('showExpiring');
-        	var_dump($showExpiring);
-        	die;
 			if(array_key_exists($key,$displayObj))
 			{
 				if($key == "INTEREST_EXPIRING" && !$showExpiring)
