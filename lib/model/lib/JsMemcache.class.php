@@ -821,5 +821,25 @@ class JsMemcache extends sfMemcacheCache{
   		}
   	}
   }
+  public function addKeyToSet($setName,$key)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				$pipe = $this->client->pipeline();
+                                $pipe->sAdd($setName,$key);
+                                $pipe->execute();	
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+  
 }
 ?>
