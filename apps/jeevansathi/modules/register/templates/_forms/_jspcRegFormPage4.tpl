@@ -9,7 +9,7 @@
             <!--start:family type-->
             <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="familyType_error"></div>
               </div>
               <!--end:error div-->
@@ -28,7 +28,7 @@
             <!--start:Father's occupation-->
             <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="fatherOccupation_error"></div>
               </div>
               <!--end:error div-->
@@ -50,7 +50,7 @@
             <!--start:Mother's occupation-->
             <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="motherOccupation_error"></div>
               </div>
               <!--end:error div-->
@@ -70,7 +70,7 @@
             <!--start:brother-->
             <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="brother_error"></div>
               </div>
               <!--end:error div-->
@@ -96,7 +96,7 @@
             <!--start:sister-->
             <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="sister_error"></div>
               </div>
               <!--end:error div-->
@@ -123,7 +123,7 @@
             <!--start:familyState-->
             <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="familyState_error"></div>
               </div>
               <!--end:error div-->
@@ -142,7 +142,7 @@
     <!--start:familyCity-->
     <div class="mt7 disp-none" id="familyCity_selector">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="familyCity_error"></div>
       </div>
       <!--end:error div-->
@@ -160,7 +160,7 @@
     <!--start:city other-->
     <div class="mt7 disp-none" id="familyCityOther_selector">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="familyCityOther_error"></div>
       </div>
       <!--end:error div-->
@@ -175,7 +175,7 @@
             <!--start:address-->
             <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="address_error"></div>
               </div>
               <!--end:error div-->
@@ -191,7 +191,7 @@
             <!--start:about family-->
             <div class="mt7">
               <!--start:error div-->
-              <div class="clearfix f11 fontlig">
+              <div class="clearfix f14 fontlig">
                 <div class="reg-wid3 fr colr5 visHid" id="aboutfamily_error"></div>
               </div>
               <!--end:error div-->
