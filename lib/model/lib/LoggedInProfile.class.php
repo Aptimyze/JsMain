@@ -124,7 +124,7 @@ class LoggedInProfile extends Profile{
 		 * */
 		public function editCONTACT($paramArr)
 		{
-			$contactObj= ProfileContact::getInstance();
+			$contactObj= new ProfileContact();
 			$contactObj->update($this->PROFILEID,$paramArr);
 		}
 

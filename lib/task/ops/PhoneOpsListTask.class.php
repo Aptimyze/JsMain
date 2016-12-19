@@ -121,7 +121,7 @@ fclose($fp);
 			}
 		}
 	}
-	$jprofileContactObj = ProfileContact::getInstance();
+	$jprofileContactObj = new ProfileContact();
 	$valueArray=array();
 	$excludeArray=array();
 	$neglectedProfiles = array();

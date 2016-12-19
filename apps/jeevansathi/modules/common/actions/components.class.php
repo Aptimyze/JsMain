@@ -36,7 +36,7 @@ class commonComponents extends sfComponents{
                 $phoneNumber = $loggedInProfileObj->getPHONE_WITH_STD();
             }
             else{//Check Alternate Phone numbmer
-                $objAlternate = ProfileContact::getInstance();
+                $objAlternate = new ProfileContact();
                 $arrResult = $objAlternate->getProfileContacts($iProfileId);
                 if($arrResult["ALT_MOB_STATUS"] == "Y"){
                     if(trim($arrResult["ALT_MOBILE_ISD"]))

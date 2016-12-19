@@ -7,61 +7,19 @@
 
 class ProfileContact
 {
-	
-	/**
-	 * @var Static Instance of this class
-	 */
-	private static $instance;
 
 	/**
 	 * Object of Store class
 	 * @var instance of NEWJS_Jprofile_Contact|null
 	 */
-	private static $objJprofileContact = null;
+	private $objJprofileContact = null;
 
 	/**
 	 * @param $dbName - Database to which the connection would be made
 	 */
-	private function __construct($dbname = "")
+	public function __construct($dbname = "")
 	{
-		self::$objJprofileContact = new NEWJS_Jprofile_Contact($dbname);
-	}
-
-	/**
-	 * To Stop clone of this class object
-	 */
-	private function __clone() {}
-
-	/**
-	 * To stop unserialize for this class object
-	 */
-	private function __wakeup() {}
-
-
-	/**
-	 * @fn getInstance
-	 * @brief fetches the instance of the class
-	 * @param $dbName - Database name to which the connection would be made
-	 * @return instance of this class
-	 */
-	public static function getInstance($dbName = '')
-	{
-		if (!$dbName)
-			$dbName = "newjs_master";
-		if (isset(self::$instance)) {
-			//If different instance is required
-			if ($dbName != self::$instance->connectionName) {
-				$class = __CLASS__;
-				self::$instance = new $class($dbName);
-				self::$instance->connectionName = $dbName;
-			}
-		}
-		else {
-			$class = __CLASS__;
-			self::$instance = new $class($dbName);
-			self::$instance->connectionName = $dbName;
-		}
-		return self::$instance;
+		$this->objJprofileContact = new NEWJS_Jprofile_Contact($dbname);
 	}
 
 	/**
@@ -106,7 +64,7 @@ class ProfileContact
 				return $detailArr;
 			}
 
-			$result = self::$objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);
+			$result = $this->objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);
 
 			if(is_array($pid_arr))
 			{
@@ -115,7 +73,7 @@ class ProfileContact
 
 			return $result;
 		}
-		return self::$objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);	
+		return $this->objJprofileContact->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $indexProfileId);	
 	}
 
 	/*
@@ -151,7 +109,7 @@ class ProfileContact
 		}
 
 		// Get Records from Mysql
-		$result = self::$objJprofileContact->getProfileContacts($pid);
+		$result = $this->objJprofileContact->getProfileContacts($pid);
 		// Request to Cache this Record, on demand
 		if(false !== $result && is_array($result) && count($result))
 		{
@@ -181,7 +139,7 @@ class ProfileContact
 	public function updateAltMobile($profileid, $altMobile)
 	{
 		$objProCacheLib = ProfileCacheLib::getInstance();
-		$result = self::$objJprofileContact->updateAltMobile($profileid, $altMobile);
+		$result = $this->objJprofileContact->updateAltMobile($profileid, $altMobile);
 		if($result)
 		{
 			$paramArr = array('PROFILEID' => $profileid, 'ALT_MOBILE' => $altMobile);
@@ -199,7 +157,7 @@ class ProfileContact
 	 */
 	public function update($pid, $paramArr = array())
 	{
-		$bResult = self::$objJprofileContact->update($pid, $paramArr);
+		$bResult = $this->objJprofileContact->update($pid, $paramArr);
 		if(true === $bResult) {
 		  ProfileCacheLib::getInstance()->updateCache($paramArr, ProfileCacheConstants::CACHE_CRITERIA, $pid, __CLASS__);
 		}
@@ -209,7 +167,7 @@ class ProfileContact
 
 	public function checkPhone($numberArray='',$isd='')
 	{
-		return self::$objJprofileContact->checkPhone($numberArray, $isd);
+		return $this->objJprofileContact->checkPhone($numberArray, $isd);
 	}
 
 	private function logCacheConsumeCount($funName)

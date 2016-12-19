@@ -32,7 +32,7 @@ EOF;
 		$jprofileObj = new JPROFILE('newjs_slave');
 		$historyObj = new incentive_HISTORY('newjs_slave');
 		$jprofileAlertsObj = new newjs_JPROFILE_ALERTS('newjs_slave');
-		$jprofileContactObj = ProfileContact::getInstance('newjs_slave');
+		$jprofileContactObj = new ProfileContact('newjs_slave');
 		$agentAllocDetailsObj = new AgentAllocationDetails('newjs_slave');
 		$countDNC = 0;
 		$countDispTwentyFive = 0;

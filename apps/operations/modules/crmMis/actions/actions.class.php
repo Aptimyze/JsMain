@@ -79,7 +79,7 @@ class crmMisActions extends sfActions
 			}
 			if(!JSstrToTime($dataArr[$i]['PHONE_VERIFY_DT']))
 			{
-				$jprofileContactObj=ProfileContact::getInstance();
+				$jprofileContactObj=new ProfileContact();
 				$valueArr['PROFILEID']=$dataArr[$i]['PROFILEID'];
 				$result=$jprofileContactObj->getArray($valueArr,"","","ALT_MOB_STATUS");
 				if($user['MOB_STATUS']=='Y'||$user['LANDL_STATUS']=='Y'||$result[0]['ALT_MOB_STATUS']=='Y')
