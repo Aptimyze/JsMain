@@ -55,6 +55,11 @@ class profileDisplay{
 		$profileid = $key;
 		return JsCommon::createChecksumForProfile($profileid);
 	}
+	
+	/*
+	* 	This function is used to handle next previous for myjs page
+	*	listing type denotes the list type and offset denotes the current profile number.
+	*/
 
 	public function getNextPreviousProfileForMyjs($iListingType,$iOffset)
 	{	

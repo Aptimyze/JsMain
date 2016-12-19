@@ -14,7 +14,7 @@ class MyjsSearchTupplesEnums
         public static function getListNameForCaching($listName)
         {
 
-        	switch ($listName) {
+        	switch (strtoupper(trim($listName))) {
         		case 'DAILYMATCHES':
         			return self::$DAILYMATCHES;
         		case 'JUSTJOINED':

@@ -777,6 +777,9 @@ class DetailActionLib
         }
     }
 
+   /*	This function is used to handle next previous from myjs page
+   *	
+   */
 
     public static function GetNextPreviousForMyjs($request,$actionObj)
     {	
@@ -785,6 +788,7 @@ class DetailActionLib
         //Offset Range from 1 to TotalRecords
         $iOffset = $request->getParameter('actual_offset');
         $iListingType = $request->getParameter('listingName');
+        $iListingType = strtoupper($iListingType);
         $profileObj= LoggedInProfile::getInstance();
 		$pid = $profileObj->getPROFILEID();
 
@@ -853,7 +857,7 @@ class DetailActionLib
                 $actionObj->SHOW_NEXT = true;
                 $actionObj->nextLink ="&total_rec=".$iTotalRecord."&actual_offset=".($iOffset+1)."&listingName=".$iListingType."&hitFromMyjs=1";
             }
-            $actionObj->$fromPage = 'myjs';
+            $actionObj->fromPage = 'myjs';
             $actionObj->SHOW_NEXT_PREV = 1;
             
             $pchkSum = $request->getParameter('profilechecksum');
