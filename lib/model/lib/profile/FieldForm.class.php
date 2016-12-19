@@ -378,6 +378,10 @@ class FieldForm extends sfForm
 					$jprofileFieldArr['HAVE_JCONTACT']="Y";
 				}
         else if(count($jprofileContactArr)){
+        	if(array_key_exists("ALT_EMAIL", $jprofileContactArr))
+        	{
+        		$jprofileContactArr["ALT_EMAIL_STATUS"] = "N";
+        	}
           $this->checkForChange($jprofileContactArr,"Contact");
 					$this->loggedInObj->editCONTACT($jprofileContactArr);
           $jprofileFieldArr['HAVE_JCONTACT']="Y";

@@ -641,6 +641,7 @@ class commonActions extends sfActions
         
         if($layerToShow==9 && $button=='B1'){
             
+            
             $namePrivacy=$request->getParameter('namePrivacy');
             $newName=$request->getParameter('newNameOfUser');
             
@@ -678,6 +679,13 @@ class commonActions extends sfActions
                                }
                                else
                                        $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
+                    if($profileid%9==1 && MobileCommon::isNewMobileSite())
+                    {
+                    	$todayDate= date('Y-m-d');
+                    	$memObj = JsMemcache::getInstance();
+                    	$memObj->addKeyToSet('nameCalTrackR_'.$todayDate,$profileid);
+                    }
+               
                     
             }
             
@@ -705,6 +713,7 @@ class commonActions extends sfActions
             $nameData=(new NameOfUser())->getNameData($profileId);
             $this->nameOfUser=$nameData[$profileId]['NAME'];
             $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
+            if($profileId%9==1)$this->skipSkipButton=1;
         }
                 
 		if($calObject['LAYERID']==1)

@@ -5,7 +5,7 @@ var sliderCurrentPage="";
 var underScreenStr="";
 var filterJson="";
 var albumPresent=0;
-var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2'};
+var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','FocusDpp':'7'};
 var bCallCreateHoroscope = false;
  $("document").ready(function() {
 
@@ -144,6 +144,8 @@ var mobEditPage=(function(){
 			sliderDiv=sliderDiv.replace(/MainTabValue/g, current);
                         if((key=="Education"||key=="Kundli")&&(flag1==0))
                         {
+                            if(key=="Kundli")
+                                editWhatsNew["FocusDpp"] = "8";
                             $("#DetailsRightTab").html(current);
                             flag1=1;
                         }
@@ -260,12 +262,34 @@ var mobEditPage=(function(){
 						$( "#"+key+"EditSection" ).html(sliderDiv);
 					else
 						$( "#"+key+"EditSection" ).append(sliderDiv);
-					$( "#"+v.outerSectionKey+'_name' ).text(v.outerSectionName)
+					$( "#"+v.outerSectionKey+'_name' ).text(v.outerSectionName);
 					
 					var emptyFields=0;
 						var jsonCnt=0;
-					var sectionStr="";
+					var sectionStr="";					
 					
+					/*//Email (Verify link or Verified text)
+					if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==0 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerify' class='padl10 dispibl color2'>Verify</div>");
+                                                //bindAlternateEmailButton();
+					}
+					else if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==1 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
+					}*/
+					
+					//alternateEmail (Verify link or Verified text)
+					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==0 && v.OnClick[2].label_val!="" && v.OnClick[2].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verify</div>");
+                                                bindAlternateEmailButton();
+					}
+					else if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==1 && v.OnClick[2].label_val!="" && v.OnClick[2].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
+					}
+
 					if(v.singleKey)
 					{
 						
@@ -486,4 +510,42 @@ function readMore(string,keyName)
 	}
 	else
 		return string;
+}
+
+function showAlternateConfirmLayerMS(email){
+                var altEmail = typeof email !='undefined' ? email :   $("#AlternateEmailId_value").eq(0).text().trim();
+                var obj = $("#emailSentConfirmLayer");
+                var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,altEmail);
+                obj.find("#emailConfirmationText").eq(0).text(msg);
+                obj.show();
+                var tempOb=$("#altEmailinnerLayer");
+                tempOb.css('margin-left','-'+$(tempOb).width()/2+'px')
+                    .css('margin-top','-'+$(tempOb).height()/2+'px');   
+
+    
+    
+    
+    
+}
+
+function bindAlternateEmailButton(){
+    $("#altEmailVerify").unbind();
+    $("#altEmailVerify").click(function(event)
+    {
+      event.stopPropagation();
+      $("#newLoader").show();
+      var ajaxData={'emailType':'2'};
+      $.ajax({
+                                url:'/api/v1/profile/sendEmailVerLink',
+                                dataType: 'json',
+                                data: ajaxData,
+                                type: "POST",
+                                success: function(response) 
+                                {
+                                    $("#newLoader").hide();
+                                    showAlternateConfirmLayerMS();
+                                }
+    
+            });
+    });
 }

@@ -337,9 +337,12 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * */
 	public function getApiContactInfo() {
 		$contactArr[]=$this->getApiFormatArray("PROFILE_HANDLER_NAME","Name of the Profile Creator" , $this->profile->getDecoratedPersonHandlingProfile(),"",$this->getApiScreeningField("PROFILE_HANDLER_NAME"),$this->text,'','','',true);
-		
-		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),"",$this->getApiScreeningField("EMAIL"),$this->text);
 
+		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),"",$this->getApiScreeningField("EMAIL"),$this->text,"",0,"","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));
+		
+		//Alternate Email
+		$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,"","0",$this->text,"",0,"","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
+		
 		//mobile number
 		if($this->profile->getPHONE_MOB())
 		{
@@ -424,6 +427,12 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$contactArrFinal[EMAIL][outerSectionValue]=$this->profile->getEMAIL();
 		$contactArrFinal[EMAIL][singleKey]=1;
 		$contactArrFinal[EMAIL][OnClick]=$contactArr;
+
+		$contactArrFinal[ALT_EMAIL][outerSectionName]="Alternate Email Id";
+		$contactArrFinal[ALT_EMAIL][outerSectionKey]="AlternateEmailId";
+		$contactArrFinal[ALT_EMAIL][outerSectionValue]=$this->profile->getExtendedContacts()->ALT_EMAIL; 
+		$contactArrFinal[ALT_EMAIL][singleKey]=1;
+		$contactArrFinal[ALT_EMAIL][OnClick]=$contactArr;
 		
 		$contactArrFinal[PHONE_MOB][outerSectionName]="Mobile No.";
 		$contactArrFinal[PHONE_MOB][outerSectionKey]="MobileNo";
@@ -1099,7 +1108,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 	 * @param $screenBit int
 	 * @param $edit char
 	 * */
-	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="",$showSettings="",$settingData=array()) {
+	public function getApiFormatArray($key,$label,$labelVal,$value,$screenBit,$action=0,$dependant="",$multi=0,$callBack="",$hidden="",$showSettings="",$settingData=array(),$verifyStatus="") {
 	//	$arr["sectionName"]=$sectionName;
 	//	$arr["sectionValue"]=$sectionValue;
 		$arr["key"]=$key;
@@ -1114,6 +1123,7 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		$arr["hidden"]=$hidden;
 		$arr["showSettings"]=$showSettings;
 		$arr["settingData"]=$settingData;
+		$arr["verifyStatus"]=$verifyStatus;
 		return $arr;
 
 	}
@@ -1168,6 +1178,14 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
     	}
     	$stateCityArr = $this->getApiFormatArray("P_CITY","State/City",$stateCityNames,$szStateCity,$this->getApiScreeningField("PARTNER_CITYRES"),$this->dropdown,'',1,'',!$showCity);
     	return($stateCityArr);
+    }
+
+    public function getVerificationStatusForAltEmailAndMail($EmailStatus)
+    {    
+    	if($EmailStatus == "Y")
+    		return 1;
+    	else
+    		return 0;
     }
 }
 ?>

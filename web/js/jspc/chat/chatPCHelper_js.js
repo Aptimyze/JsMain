@@ -953,23 +953,23 @@ function invokePluginLoginHandler(state, loader) {
             objJsChat._appendLoggedHTML();
         }
     } else if (state == "failure" || state == "failurePlusLog") {
-        eraseCookie("chatAuth");
-        setLogoutClickLocalStorage("set");
-        /*if(state == "failure"){
+        //eraseCookie("chatAuth");
+        //setLogoutClickLocalStorage("set");
+        if(state == "failure"){
             eraseCookie("chatAuth");
             setLogoutClickLocalStorage("set");
         }
         else{
             setLogoutClickLocalStorage("unset");
-        }*/
+        }
         if(objJsChat && objJsChat.manageLoginLoader && typeof (objJsChat.manageLoginLoader) == "function"){
-            objJsChat.addLoginHTML(true);
-            /*if(state == "failure"){
+            //objJsChat.addLoginHTML(true);
+            if(state == "failure"){
                 objJsChat.addLoginHTML(true);
             }
             else{
                 objJsChat.addLoginHTML(true,true);
-            }*/
+            }
             if(loader != false) {
                 objJsChat.manageLoginLoader();
             }

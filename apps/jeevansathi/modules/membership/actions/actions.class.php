@@ -45,9 +45,7 @@ class membershipActions extends sfActions
         $request->setParameter('device', 'desktop');
 
         $memActFunc = new MembershipActionFunctions();
-
         list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum) = $memActFunc->getReqParamsForRevMobMem($request);
-
         switch ($displayPage) {
             case '1':
                 $apiParams = $pageURL . $authChecksum . "&device=" . $device;

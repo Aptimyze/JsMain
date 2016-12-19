@@ -64,7 +64,7 @@ class MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND extends TABLE
 		catch (PDOException $e)
 		{
 			//add mail/sms
-			throw new jsException($e);
+			jsException::nonCriticalError($e);
 		}
 	}
 
