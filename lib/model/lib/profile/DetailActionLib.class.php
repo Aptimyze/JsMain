@@ -811,6 +811,14 @@ class DetailActionLib
         	{
         		$request->setParameter('partnermatches',1);
         	}
+        	if($iListingType == 'LASTSEARCH')
+        	{
+        		$request->setParameter('lastsearch',1);
+        	}
+        	if($iListingType == 'DAILYMATCHES')
+        	{
+        		$request->setParameter('matchalerts',1);
+        	}
         	ob_start();
         	$request->setParameter("useSfViewNone",1);
         	$nextProfileToAppend = sfContext::getInstance()->getController()->getPresentationFor('search','PerformV1');

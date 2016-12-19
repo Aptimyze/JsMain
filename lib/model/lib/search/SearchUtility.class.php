@@ -972,6 +972,70 @@ class SearchUtility
                                 }
                         }
 
+               elseif($request->getParameter("searchBasedParam")=='matchalerts')
+                        {	
+                                if($type=='set')
+                                {	
+                                        JsMemcache::getInstance()->set("cachedDMS$pid",serialize($statusArr));
+                                        JsMemcache::getInstance()->set("cachedDMR$pid",serialize($resultArr)); 
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedDMRMyjs$pid",serialize($profileIdPoolArray));
+
+
+                                        return 1;
+                                }
+                                elseif($type=='get')
+                                {	
+                                        $statusArr = JsMemcache::getInstance()->get("cachedDMS$pid");
+                                        $resultArr = JsMemcache::getInstance()->get("cachedDMR$pid");
+                                        if($statusArr && $resultArr)
+                                        {	
+                                                $cachedArr["statusArr"] = unserialize($statusArr);
+                                                $cachedArr["resultArr"] = unserialize($resultArr);
+                                                return $cachedArr;
+                                        }
+                                }
+                        }
+
+
+                        elseif($request->getParameter("lastsearch")=='1')
+                        {	
+                                if($type=='set')
+                                {	
+                                        JsMemcache::getInstance()->set("cachedLSMS$pid",serialize($statusArr));
+                                        JsMemcache::getInstance()->set("cachedLSMR$pid",serialize($resultArr)); 
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedLSMRMyjs$pid",serialize($profileIdPoolArray));
+
+
+                                        return 1;
+                                }
+                                elseif($type=='get')
+                                {	
+                                        $statusArr = JsMemcache::getInstance()->get("cachedLSMS$pid");
+                                        $resultArr = JsMemcache::getInstance()->get("cachedLSMR$pid");
+                                        if($statusArr && $resultArr)
+                                        {	
+                                                $cachedArr["statusArr"] = unserialize($statusArr);
+                                                $cachedArr["resultArr"] = unserialize($resultArr);
+                                                return $cachedArr;
+                                        }
+                                }
+                        }
+
+
+
+
 			if($type=='del')
 			{
 				JsMemcache::getInstance()->set("cachedJJS$pid","");
@@ -980,6 +1044,8 @@ class SearchUtility
                                 JsMemcache::getInstance()->set("cachedVMR$pid","");
 				JsMemcache::getInstance()->set("cachedPMS$pid","");
                                 JsMemcache::getInstance()->set("cachedPMR$pid","");
+                                JsMemcache::getInstance()->set("cachedDMS$pid","");
+                                JsMemcache::getInstance()->set("cachedLSMS$pid","");
 			}	
                 }
                 return 0;

@@ -614,11 +614,9 @@ function generateFaceCard(Object)
       GATrackingFunForSubmit="trackJsEventGA('My JS JSPC','DPP Matches/Last Search Section - Send Interest',loggedInJspcGender,'')";
       GATrackingFunForPhoto="trackJsEventGA('My JS JSPC','DPP Matches/Last Search Section - Tuple',loggedInJspcGender,'')";
     }
-		if(Object.name=="DAILYMATCHES")
-			totalCount=Object.data.total;
-		if(Object.name=="JUSTJOINED" || Object.name=="DESIREDPARTNERMATCHES" || Object.name=="VERIFIEDMATCHES" || Object.name=="LASTSEARCH")
-			totalCount=Object.data.no_of_results;
 
+		if(Object.name=="DAILYMATCHES"||Object.name=="JUSTJOINED" || Object.name=="DESIREDPARTNERMATCHES" || Object.name=="VERIFIEDMATCHES" || Object.name=="LASTSEARCH")
+			totalCount=Object.data.no_of_results;
     var noOfTuples=Object.data.profiles.length;
     if(totalCount > Object.maxCount){
 			loopCount=(Object.maxCount-1) > noOfTuples ? noOfTuples : (Object.maxCount-1) ;
@@ -644,14 +642,14 @@ function generateFaceCard(Object)
         innerHtml=innerHtml.replace(/\{\{PHOTO_URL\}\}/gi,"data-src='"+Object.data.profiles[i]["photo"]['url']+"'");
 				innerHtml=innerHtml.replace(/\{\{EDUCATION_STR\}\}/g,Object.data.profiles[i]["edu_level_new"]);
 				innerHtml=innerHtml.replace(/\{\{ONLINE_STR\}\}/g,Object.data.profiles[i]["userloginstatus"]);
-				var age = Object.data.profiles[i]["age"].split(' ');
+        var age = Object.data.profiles[i]["age"].split(' ');
 				innerHtml=innerHtml.replace(/\{\{AGE\}\}/g,age[0]);
 				innerHtml=innerHtml.replace(/\{\{list_id\}\}/g,Object.data.profiles[i]["profilechecksum"]+'_'+Object.name);
 				innerHtml=innerHtml.replace(/\{\{HEIGHT\}\}/g,$.trim(Object.data.profiles[i]["height"]));
 				innerHtml=innerHtml.replace(/\{\{INCOME\}\}/g,Object.data.profiles[i]["income"]);
         innerHtml=innerHtml.replace(/\{\{OCCUPATION\}\}/g,Object.data.profiles[i]["occupation"]);  
 				innerHtml=innerHtml.replace(/\{\{LOCATION\}\}/g,Object.data.profiles[i]["location"]);
-				var caste = Object.data.profiles[i]["caste"].split(':');
+        var caste = Object.data.profiles[i]["caste"].split(':');
           innerHtml=innerHtml.replace(/\{\{CASTE\}\}/g,caste[caste.length-1]);
         innerHtml=innerHtml.replace(/\{\{RELIGION\}\}/g,Object.data.profiles[i]["religion"]);
 				innerHtml=innerHtml.replace(/\{\{MTONGUE\}\}/g,Object.data.profiles[i]["mtongue"]);

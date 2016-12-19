@@ -5,11 +5,11 @@
 class MyjsSearchTupplesEnums
 {
         //These are the enums that are required for Caching of Myjs Tupples.
-        public static $DAILYMATCHES ="DDR";
+        public static $DAILYMATCHES ="DMR";
         public static $JUSTJOINED   ="JJR";
         public static $DESIREDPARTNERMATCHES ="PMR";
         public static $VERIFIEDMATCHES ="VMR";
-        public static $LASTSEARCH ="LSR";
+        public static $LASTSEARCH ="LSMR";
 
         public static function getListNameForCaching($listName)
         {
