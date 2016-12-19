@@ -145,11 +145,11 @@ Class SearchResultscache
 				if($profileObj->getPROFILEID())
 				{
 						if($profileObj->getPROFILEID()%7>2)
-										$solrServerUrl = JsConstants::$solrServerUrl1."/select";
+										$solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
 						else
-										$solrServerUrl = JsConstants::$solrServerUrl."/select";
+										$solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
 				}else{
-                                        $solrServerUrl = JsConstants::$solrServerUrl."/select";
+                                        $solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
                                 }
 				$res = CommonUtility::sendCurlPostRequest($solrServerUrl,$params);
 				$res = unserialize($res);
