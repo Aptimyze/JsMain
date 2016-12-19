@@ -682,8 +682,13 @@ class commonActions extends sfActions
             }
             
         }
- 		CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button);
-}
+                if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
+                {
+ 		if(CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button))
+                   JsMemcache::getInstance()->set($loginData['PROFILEID'].'_CAL_DAY_FLAG',1,86400);
+                }
+                
+        }
 
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
