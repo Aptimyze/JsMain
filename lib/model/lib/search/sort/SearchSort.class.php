@@ -36,6 +36,12 @@ class SearchSort
 	private $filterSortScore;
         
         private $reverseSortStr;
+        
+        /**
+         * Paid Member Sorting in logged out case
+         * @var type string
+         */
+        private $paidSortStr;
 	/**
 	* When Photos is searched , visible photos will be given more prefernce.
 	* @access public 
@@ -308,6 +314,13 @@ class SearchSort
             }
             return $response;
         }
-
+        public function isPaidSorting($loggedInProfileObj){
+                if (!$loggedInProfileObj || $loggedInProfileObj->getPROFILEID() == '') {
+                        $this->paidSortStr = "if(tf(SUBSCRIPTION,F),1,if(tf(SUBSCRIPTION,D),1,0))";
+                }
+        }
+        public function getPaidSorting(){
+                return $this->paidSortStr;
+        }
 }
 ?>
