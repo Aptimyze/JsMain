@@ -56,7 +56,7 @@ EOF;
         	}
         }
 
-        $trackingLibObj->insertCountDataByLogicLevel($finalCountByLogicArr);
+        $trackingLibObj->insertCountDataByLogicLevel($finalCountByLogicArr,$date);
         
         $countByLogicAndRecommendations = $logTempObj->getCountGroupedByLogicAndRecommendation();        
        
@@ -78,10 +78,8 @@ EOF;
 
         $countByLogicAndRecommendations = array_merge($countByLogicAndRecommendations,$lowCountFinalArr);        
 
-        $trackingLibObj->insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations);        
-   		$totalCountByLogicReceiver = $logTempObj->getTotalCountGroupedByLogicAndReceiver();        
-        
-        $trackingLibObj->insertTotalCountGroupedByLogicAndReceiver($totalCountByLogicReceiver,$distinctIdZeroArr);        
+        $trackingLibObj->insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations,$date);                           
+        $trackingLibObj->insertTotalCountGroupedByLogicAndReceiver($distinctIdZeroArr,$date);        
         unset($trackingLibObj);
    		unset($logTempObj);
    		unset($lowTrendsObj);
