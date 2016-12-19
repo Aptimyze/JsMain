@@ -333,6 +333,7 @@ class ProfileMemcache
          $this->CONTACTED_BY_ME            = $this->_memcache["CONTACTED_BY_ME"] ? $this->_memcache["CONTACTED_BY_ME"] : "";
         $this->CONTACTED_ME            = $this->_memcache["CONTACTED_ME"] ? $this->_memcache["CONTACTED_ME"] : "";
         $this->IGNORED           = $this->_memcache["IGNORED"] ? $this->_memcache["IGNORED"] : "";
+        $this->INTEREST_EXPIRING                = $this->_memcache["INTEREST_EXPIRING"] ? $this->_memcache["INTEREST_EXPIRING"] : 0;
     
     
     }
@@ -1290,6 +1291,23 @@ class ProfileMemcache
         $this->OPEN_CONTACTS = $current;
         
     }
+
+    /**
+     * 
+     * Set count of INTEREST EXPIRING 
+     * 
+     * <p>
+     * This function sets the number of interest expiring values.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setINTEREST_EXPIRING($current = 0)
+    {
+        $this->INTEREST_EXPIRING = $current;
+        
+    }
     
     /**
      * 
@@ -1530,6 +1548,10 @@ class ProfileMemcache
             "IGNORED" => call_user_func(array(
                 $this,
                 getIGNORED
+            )),
+            "INTEREST_EXPIRING" => call_user_func(array(
+                $this,
+                getINTEREST_EXPIRING
             ))
         );
         
@@ -1686,6 +1708,22 @@ class ProfileMemcache
         
         return $this->IGNORED;
         
+    }
+
+    /**
+     * 
+     * Get interest expiring profiles count.
+     * 
+     * <p>
+     * This function returns the interest expiring profiles count.
+     * </p>
+     * 
+     * @access public
+     * @return count
+     */
+    public function getINTEREST_EXPIRING()
+    {
+        return $this->INTEREST_EXPIRING;
     }
     
     
