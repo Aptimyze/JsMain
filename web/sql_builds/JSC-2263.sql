@@ -1,0 +1,4 @@
+use billing;
+CREATE TABLE billing.`DOL_BILLING_USERS_FOR_TEST` ( `ID` INT( 11 ) NOT NULL AUTO_INCREMENT , `PROFILEID` INT( 11 ) NOT NULL , `ENTRY_DT` DATETIME NOT NULL ,PRIMARY KEY (  `ID` ) , UNIQUE KEY `PROFILEID` (`PROFILEID`)) COMMENT =  'To store profileids for test environment to display dollar for payments';
+
+CREATE TABLE billing.`DOL_BILLING_USERS_FOR_TEST` ( `ID` int(11) NOT NULL AUTO_INCREMENT, `PROFILEID` int(11) NOT NULL, `ENTRY_DT` datetime NOT NULL, PRIMARY KEY (`ID`), UNIQUE KEY `PROFILEID` (`PROFILEID`)) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1 COMMENT='To store profileids for test environment to display dollar for payments';
