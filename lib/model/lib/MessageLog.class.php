@@ -231,7 +231,6 @@ if($limit == 1000000)
 {
 	$pid = LoggedInProfile::getInstance()->getPROFILEID();
 	JsMemcache::getInstance()->set("message_count_".$pid,count($finalArr),18000);
-	$finalArr = array_splice($finalArr,0,$ankit);
 }
 /***/
             return $finalArr;

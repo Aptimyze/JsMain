@@ -68,7 +68,7 @@ class Inbox implements Module
 		
 		try {
                         $memcacheServiceObj = new ProfileMemcacheService($this->profileObj);
-			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1))
+			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1) && $fromGetDisplayFunction=='')
 			{
 				JsMemcache::getInstance()->delete($this->profileObj->getPROFILEID());
                                 $memcacheServiceObj->unsetKey("MESSAGE_ALL");
@@ -96,7 +96,6 @@ class Inbox implements Module
 					case "MY_MESSAGE":
 						$keyNew = "MESSAGE_NEW";
 						$key = "MESSAGE_ALL";
-                                                $memKeyNotExists=1;
 						break;
 					case "MESSAGE_RECEIVED":
 					case "MY_MESSAGE_RECEIVED":
