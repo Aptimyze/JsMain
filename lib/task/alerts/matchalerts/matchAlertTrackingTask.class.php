@@ -23,7 +23,7 @@ EOF;
 		if(!sfContext::hasInstance())
 			sfContext::createInstance($this->configuration);
 
-		ini_set('memory_limit','512M');
+		ini_set('memory_limit','1024M');
         
         $trackingLibObj = new matchAlertMailerDataTracking();
         $todayDate = MailerConfigVariables::getNoOfDays(); //To get the current date
@@ -56,7 +56,7 @@ EOF;
         	}
         }
 
-        $trackingLibObj->insertCountDataByLogicLevel($finalCountByLogicArr);
+        $trackingLibObj->insertCountDataByLogicLevel($finalCountByLogicArr,$date);
         
         $countByLogicAndRecommendations = $logTempObj->getCountGroupedByLogicAndRecommendation();        
        
@@ -78,10 +78,8 @@ EOF;
 
         $countByLogicAndRecommendations = array_merge($countByLogicAndRecommendations,$lowCountFinalArr);        
 
-        $trackingLibObj->insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations);        
-   		$totalCountByLogicReceiver = $logTempObj->getTotalCountGroupedByLogicAndReceiver();        
-        
-        $trackingLibObj->insertTotalCountGroupedByLogicAndReceiver($totalCountByLogicReceiver,$distinctIdZeroArr);        
+        $trackingLibObj->insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations,$date);                           
+        $trackingLibObj->insertTotalCountGroupedByLogicAndReceiver($distinctIdZeroArr,$date);        
         unset($trackingLibObj);
    		unset($logTempObj);
    		unset($lowTrendsObj);
