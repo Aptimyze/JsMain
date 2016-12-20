@@ -759,7 +759,6 @@ public function updateMessageLogDetails($msgCommObj)
 				else
 				{
 					$sql = "UPDATE newjs.MESSAGE_LOG SET `SEEN`='Y' WHERE SENDER = :VIEWED AND RECEIVER = :VIEWER AND TYPE = 'R' AND IS_MSG = 'Y'";
-					$res=$this->db->prepare($sql);
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);

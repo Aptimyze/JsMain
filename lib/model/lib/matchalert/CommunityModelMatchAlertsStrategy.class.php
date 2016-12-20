@@ -17,6 +17,7 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy
 	*/
 	public function getMatches($matchesSetting='')    
         {
+            $profilesArray = array();
             if($this->profileId){
                 $communityModelTable = new test_Top10_CommunityModelRecommendation();
                 $profileIdString = $communityModelTable->fetchProfiles($this->profileId);
@@ -24,7 +25,8 @@ class CommunityModelMatchAlertsStrategy extends MatchAlertsStrategy
                 if($profilesArray[0]!='' || count($profilesArray)>1){
                     $profilesArray = array_slice($profilesArray,0,$this->limit);
                     $this->logRecords($this->profileId, $profilesArray, $this->logicLevel, $this->limit,0,$matchesSetting);
-                }
-            }       
+                }            
+            }
+            return $profilesArray;
 	}
 }

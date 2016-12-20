@@ -67,12 +67,13 @@ class Inbox implements Module
 	{
 		
 		try {
-			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1))
+                        $memcacheServiceObj = new ProfileMemcacheService($this->profileObj);
+			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1) && $fromGetDisplayFunction=='')
 			{
 				JsMemcache::getInstance()->delete($this->profileObj->getPROFILEID());
-				
+                                $memcacheServiceObj->unsetKey("MESSAGE_ALL");
 			}
-			$memcacheServiceObj = new ProfileMemcacheService($this->profileObj); 
+                        
 			$countObj           = array();
 			$ifHoroscopePresent = "";
 			$ifPhotoPresent     = "";
@@ -196,8 +197,8 @@ class Inbox implements Module
                                         }
 
                                         $countObj[$infoTypenav["PAGE"]] = count($IgnoredList);
-				}	
-				
+				}
+                                
 				if ($keyNew != "")
 					$countObj[$infoTypenav["PAGE"]."_NEW"] = $memcacheServiceObj->get($keyNew);
 				if ($key != "" && $memKeyNotExists!=1)
@@ -259,7 +260,6 @@ class Inbox implements Module
 				{
 					
 					JsMemcache::getInstance()->remove($key);
-				
 					JsMemcache::getInstance()->set($keyCount,$countObj[$infoType]);
 					$this->totalCount = $countObj[$infoType];
 					
@@ -276,10 +276,8 @@ class Inbox implements Module
 				if ($displayFlag && PROFILE_COMMUNICATION_ENUM_INFO::ifInformationTypeExists($infoType) && PROFILE_COMMUNICATION_ENUM_INFO::ifTupleExists($tuple)) {
 					$memdata =  JsMemcache::getInstance()->get($key);
 					$data = unserialize(JsMemcache::getInstance()->get($key));
-					
 					if(empty($memdata) || ($nav-1)*$config["COUNT"] >=count($data) || (count($data) == 0 && $countObj[$infoType]))
 					{
-
 						$infoTypeAdapter = new InformationTypeAdapter($infoType, $this->profileObj->getPROFILEID());
 						// Myjs require only New information type tuples 
 											
@@ -306,15 +304,23 @@ class Inbox implements Module
 						{ 
 							$page = $nav;
 						}
-						$conditionArray = $this->getCondition($infoType, $page);
+						$conditionArray = $this->getCondition($infoType, $page); 
+                                                if($infoType == "MY_MESSAGE")
+                                                    $conditionArray['LIMIT']++;
                                                 if($infoTypeNav["matchedOrAll"])
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
-
-					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray))
+                                                if($infoType == "MY_MESSAGE"){
+                                                    	if(count($profilesArray)==$conditionArray['LIMIT'])
+                                                        	array_pop($profilesArray);
+                                                }
+					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray)){
+					//		print_r(count($data));
 							$data = $data+$profilesArray;
+						}
 						else if(is_array($profilesArray))
 							$data = $profilesArray;
+					//	print_r($data);  die;
 						JsMemcache::getInstance()->set($key,serialize($data),1800);
 					 
 					}
@@ -365,6 +371,7 @@ class Inbox implements Module
 			//var_dump($this->totalCount);die;
 			$this->completeProfilesInfo[$infoType]["ID"]             = $config["ID"];
 			$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = $this->totalCount;
+			//$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = JsMemcache::getInstance()->get("message_count_".LoggedInProfile::getInstance()->getPROFILEID());
 			$this->completeProfilesInfo[$infoType]["NEW_COUNT"]      = $countObj[$infoType. "_NEW"];
 			$this->completeProfilesInfo[$infoType]["TITLE"]          = $config["TITLE"];
 			$this->completeProfilesInfo[$infoType]["HEADING"]          = $config["HEADING"];
@@ -386,7 +393,9 @@ class Inbox implements Module
 				$this->completeProfilesInfo[$infoType]["SHOW_PREV"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] - 1;
 			if ($config["COUNT"]) {
 				if ($this->totalCount / $config["COUNT"] > $this->completeProfilesInfo[$infoType]["CURRENT_NAV"])
-					$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
+					$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;            
+                                //elseif ($infoType == "MY_MESSAGE" && $this->totalCount / $config["COUNT"] > 1)
+				//	$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
 				$this->completeProfilesInfo[$infoType]["NAVIGATION_INDEX"] = $this->getNavigationArray($this->completeProfilesInfo[$infoType]["CURRENT_NAV"], $this->totalCount, $config["COUNT"]);
                                 if($infoType=="VISITORS" && $config["TRACKING"]=="stype=AV" && $infoTypeNav['matchedOrAll']=="M")
                                     $this->completeProfilesInfo[$infoType]["TRACKING"] = "stype=".SearchTypesEnums::MATCHING_VISITORS_ANDROID;

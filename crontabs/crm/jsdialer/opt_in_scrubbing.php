@@ -1,4 +1,5 @@
 <?php
+die('obselete file');
 /*********************************************************************************************
 * FILE NAME   	: opt_in_scrubbing.php
 * DESCRIPTION 	: Re-start profiles who were marked in DNC but opt-in for calls
