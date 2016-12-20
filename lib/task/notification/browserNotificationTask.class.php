@@ -74,10 +74,13 @@ EOF;
             $processObj->setmethod("SCHEDULED");
             //Add notification key for any new notification and call
             
+            //Added in a new cron browserNotificationJUST_JOINTask
+            /*
             echo "before JUST_JOIN \n";
             $processObj->setnotificationKey("JUST_JOIN");
-			//$browserNotificationObj->addNotification($processObj);
+			$browserNotificationObj->addNotification($processObj);
             echo "After JUST_JOIN \n";
+            */
             
             echo "before PENDING_EOI \n";
             $processObj->setnotificationKey("PENDING_EOI");

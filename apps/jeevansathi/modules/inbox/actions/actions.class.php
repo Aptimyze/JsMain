@@ -17,7 +17,7 @@ class inboxActions extends sfActions
   */
   
   public function executeIndex(sfWebRequest $request)
-  {
+  {	
   	//print_r($request->getParameterHolder()->getAll());
   	$params["request"] = $request;
 
@@ -71,7 +71,7 @@ class inboxActions extends sfActions
   }
 
   public function executePerformV1(sfWebRequest $request)
- {
+ {	
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$inputValidateObj->validateRequestInboxData($request);
 		$output = $inputValidateObj->getResponse();
@@ -275,7 +275,7 @@ class inboxActions extends sfActions
 					case "10":
 					$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
 					if($currentCount)
-					{
+					{	
                                                 if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
                                                 {
                                                         $producerObj=new Producer();
@@ -283,6 +283,9 @@ class inboxActions extends sfActions
                                                         {
                                                                 $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::CANCEL_ALL)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                                
                                                         }
                                                         else
                                                         {
@@ -290,12 +293,15 @@ class inboxActions extends sfActions
                                                         }
                                                 }
                                                 else
-                                                {
+                                                { 
 												$contactsObj = new ContactsRecords();
 												$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
+												$contactsObj->makeAllContactSeen($pid,ContactHandler::CANCEL_ALL);
+
                                                        
                                                 }
 						$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);
+
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
@@ -323,6 +329,7 @@ public function executePerformV2(sfWebRequest $request)
   	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'in inbox api v2 '. $request->getParameter("infoTypeId") ); 
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$inputValidateObj = ValidateInputFactory::getModuleObject('inbox'); //added for contact center
+
 		$inputValidateObj->validateRequestInboxData($request);
 		$output = $inputValidateObj->getResponse();
 
@@ -595,7 +602,7 @@ public function executePerformV2(sfWebRequest $request)
 					$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
 						if($currentCount)
-						{
+						{	
 							if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
 							{
 								$producerObj=new Producer();
@@ -603,6 +610,9 @@ public function executePerformV2(sfWebRequest $request)
 								{
 									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
 									$producerObj->sendMessage($updateSeenData);
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::CANCEL_ALL)), 'redeliveryCount'=>0 );
+									$producerObj->sendMessage($updateSeenData);
+								
 								}
 								else
 								{
@@ -614,6 +624,9 @@ public function executePerformV2(sfWebRequest $request)
 
 								$contactsObj = new ContactsRecords();
 								$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
+								$contactsObj->makeAllContactSeen($pid,ContactHandler::CANCEL_ALL);
+//								$contactsUpdateCancelObj->updateCancelSeen($pid);
+								
                                                                
 							}
 							$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);

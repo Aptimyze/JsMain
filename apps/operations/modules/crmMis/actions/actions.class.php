@@ -2487,11 +2487,35 @@ class crmMisActions extends sfActions
                 } else {
                 	$agents = null;
                 }
+                //print_r($agents);die;
+                //var_dump($start_date);
+                //var_dump($end_date);
+
                 if (!empty($agents)) {
+                	//fetch dialer allocated profiles
+                	$dailyAllotObj = new CRM_DAILY_ALLOT("newjs_slave");
+	                $dailyAllocationProfiles = $dailyAllotObj->getProfilesAllottedInDateRange($start_date,$end_date,$agents,true);
+	                unset($dailyAllotObj);
+	                //print_r($dailyAllocationProfiles);
+
+	                //fetch manually allotted profiles
 	                foreach ($agents as $key=>$agent) {
 	                    $profiles[$agent] = $manualAllotObj->getAgentAllotedProfileArrayforRCBCallSource($agent,$start_date,$end_date);
+	                  	//print_r($profiles[$agent]);
+	                    //print_r($dailyAllocationProfiles[$agent]);
+
+	                    if(is_array($dailyAllocationProfiles) && is_array($dailyAllocationProfiles[$agent])){
+	                    	if(!is_array($profiles[$agent])){
+	                    		$profiles[$agent] = array();
+	                    	}
+	                    	$profiles[$agent] = array_merge($profiles[$agent],$dailyAllocationProfiles[$agent]);
+	                    }
+	               		//print_r($profiles[$agent]);
 	                }
+	                //print_r($profiles);
+	                unset($dailyAllocationProfiles);
 	            }
+	            //print_r($profiles);
                 $this->misData = array();
                 $profilesVisited = array();
                 if (is_array($profiles) && !empty($profiles)) {
@@ -2508,6 +2532,7 @@ class crmMisActions extends sfActions
                             		$profilesVisited[$key][$vv['PROFILEID']] = array();
                             	}
                                 if ($billidArr = $billPurObj->checkIfProfilePaidWithin15Days($vv['PROFILEID'], $vv['ALLOT_TIME'])) {
+                          
                                 	$profilesVisited[$key][$vv['PROFILEID']] = array_unique(array_merge($billidArr,$profilesVisited[$key][$vv['PROFILEID']]));
                                 }
                             }
