@@ -1041,11 +1041,13 @@ class SearchUtility
 				JsMemcache::getInstance()->set("cachedJJS$pid","");
 				JsMemcache::getInstance()->set("cachedJJR$pid","");
 				JsMemcache::getInstance()->set("cachedVMS$pid","");
-                                JsMemcache::getInstance()->set("cachedVMR$pid","");
+                JsMemcache::getInstance()->set("cachedVMR$pid","");
 				JsMemcache::getInstance()->set("cachedPMS$pid","");
-                                JsMemcache::getInstance()->set("cachedPMR$pid","");
-                                JsMemcache::getInstance()->set("cachedDMS$pid","");
-                                JsMemcache::getInstance()->set("cachedLSMS$pid","");
+                JsMemcache::getInstance()->set("cachedPMR$pid","");
+                JsMemcache::getInstance()->set("cachedDMS$pid","");
+                JsMemcache::getInstance()->set("cachedLSMS$pid","");
+                JsMemcache::getInstance()->set("cachedDMR$pid","");
+                JsMemcache::getInstance()->set("cachedLSMR$pid","");
 			}	
                 }
                 return 0;
