@@ -15,16 +15,12 @@ class ProfileAUTO_EXPIRY
      * Member Variable
      */
 
-    /**
-     * @var Static Instance of this class
-     */
-    private static $instance;
 
     /**
      * Object of Store class
      * @var instance of NEWJS_PROFILE|null
      */
-    private static $objAUTO_EXPIRY = null;
+    private $objAUTO_EXPIRY = null;
 
     /**
      * @fn __construct
@@ -33,23 +29,7 @@ class ProfileAUTO_EXPIRY
      */
     public function __construct($dbname = "")
     {
-        self::$objAUTO_EXPIRY = new jsadmin_AUTO_EXPIRY($dbname);
-    }
-
-    /**
-     * To Stop clone of this class object
-     */
-    private function __clone()
-    {
-        
-    }
-
-    /**
-     * To stop unserialize for this class object
-     */
-    private function __wakeup()
-    {
-        
+        $this->objAUTO_EXPIRY = new jsadmin_AUTO_EXPIRY($dbname);
     }
 
 
@@ -77,7 +57,7 @@ class ProfileAUTO_EXPIRY
             return $result;
         }
         // get from values database by query
-        $result = self::$objAUTO_EXPIRY->getDate($profileid);
+        $result = $this->objAUTO_EXPIRY->getDate($profileid);
         $dummyResult['PROFILEID'] = $profileid;
         $dummyResult['AUTO_EXPIRY_DATE'] = (intval($result) === 0) ? ProfileCacheConstants::NOT_FILLED : $result;
         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
@@ -94,7 +74,7 @@ class ProfileAUTO_EXPIRY
     public function replace($pid,$type,$date)
     {
         $objProCacheLib = ProfileCacheLib::getInstance();        
-        self::$objAUTO_EXPIRY->replace($pid,$type,$date);
+        $this->objAUTO_EXPIRY->replace($pid,$type,$date);
         $dummyResult['PROFILEID'] = $pid;
         $dummyResult['AUTO_EXPIRY_DATE'] = $date;
         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
@@ -109,12 +89,7 @@ class ProfileAUTO_EXPIRY
     public function isAlive($profileid,$time)
     {
 
-        $result = $this->getDate($profileid);
-        if($result===false){
-            
-            return self::$objAUTO_EXPIRY->isAlive($profileid,$time);
-        }
-        
+        $result = $this->getDate($profileid);        
         $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
         if(in_array($result, $validNotFilled))
             return true;
