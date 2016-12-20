@@ -54,7 +54,7 @@
             <div id="hideShowText" ~if $namePrivacy neq 'N'`style="display:none"~/if` class="pt10 f15 fontlig fullwid txtc colr8A">You will not be able to see names of other members.</div>
         </div>
         
-        <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');" ~if $skipSkipButton eq 1`style="display:none;"~/if` class="f14 fontlig txtc app_clrw pt35p">~$calObject.BUTTON2`</div>
+        <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw pt35p">~$calObject.BUTTON2`</div>
         
         <div onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1');" type="submit" id="submitName" class="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">~$calObject.BUTTON1`</div>
     </div>
