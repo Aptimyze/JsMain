@@ -1,6 +1,6 @@
 <?php
 /**
-* This taks will decide correct Strategy for the matchalerts  users. 
+* This taks will decide correct Strategy for the matchalerts users. 
 */
 class MatchAlertCalculationTask extends sfBaseTask
 {
@@ -41,7 +41,7 @@ EOF;
 		if(!sfContext::hasInstance())
 			sfContext::createInstance($this->configuration);
 
-                ini_set('memory_limit','1024M');
+                ini_set('memory_limit','512M');
                 $totalScripts = $arguments["totalScripts"]; // total no of scripts
                 $currentScript = $arguments["currentScript"]; // current script number
                 
