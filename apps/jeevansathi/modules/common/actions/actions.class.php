@@ -678,14 +678,7 @@ class commonActions extends sfActions
                                        $nameOfUserObj->updateName($profileid,$nameArr);
                                }
                                else
-                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
-                    if($profileid%9==1 && MobileCommon::isNewMobileSite())
-                    {
-                    	$todayDate= date('Y-m-d');
-                    	$memObj = JsMemcache::getInstance();
-                    	$memObj->addKeyToSet('nameCalTrackR_'.$todayDate,$profileid);
-                    }
-               
+                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);               
                     
             }
             
@@ -713,7 +706,6 @@ class commonActions extends sfActions
             $nameData=(new NameOfUser())->getNameData($profileId);
             $this->nameOfUser=$nameData[$profileId]['NAME'];
             $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
-            if($profileId%9==1)$this->skipSkipButton=1;
         }
                 
 		if($calObject['LAYERID']==1)
