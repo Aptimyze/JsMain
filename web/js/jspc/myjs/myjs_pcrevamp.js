@@ -549,7 +549,7 @@ engagementCounts.prototype.noResultCase = function() {
 
 function CriticalActionLayer(){
 var CALayerShow=$("#CALayerShow").val();
-if(typeof(CALayerShow)=='undefined' ||  !CALayerShow) return;
+if(typeof(CALayerShow)=='undefined' ||  !CALayerShow || getCookie("calShown") ) return;
 if(CALayerShow!='0')
   {
       
@@ -885,6 +885,7 @@ var buttonClicked=0;
 
                 if(buttonClicked)return;    
                 buttonClicked=1;
+                
                 var layerId= $("#CriticalActionlayerId").val();
                 
                     var newNameOfUser='',namePrivacy='';
@@ -900,9 +901,11 @@ var buttonClicked=0;
                             buttonClicked=0;
                             return;
                         }
+                        
                         namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
                         
                       }
+                    Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
                     var URL="/common/criticalActionLayerTracking";
                     $.ajax({

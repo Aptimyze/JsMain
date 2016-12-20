@@ -74,6 +74,7 @@
 '65'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'MATCHALERT_FEEDBACK','URL'=>'/mailer/feedbackMatchAlertMailer','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '66'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'KUNDLI_ALERTS','URL'=>'/search/kundlialerts','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '67'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'SENT_INTEREST','URL'=>'/inbox/6/1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'68'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'ALTERNATE_EMAIL_VER_SUCCESS','URL'=>'static/verifyAlternateEmail','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 );
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
@@ -143,6 +144,8 @@ private static $linkNameArray=array(
 'MATCHALERT_FEEDBACK'=>'65',
 'KUNDLI_ALERTS'=>'66',
 'SENT_INTEREST'=>'67',
+'ALTERNATE_EMAIL_VER_SUCCESS'=>'68',
+    
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),
@@ -292,6 +295,7 @@ private static $variableArray=array(
 'SHORTLISTED'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'255','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'NA'),
 'BASIC_DETAILS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'about basic details layer on my profile page'),
 'EMAIL_VER_SUCCESS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Email Verification'),
+'ALTERNATE_EMAIL_VER_SUCCESS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Alternate Email Verification'),
 'SENT_INTEREST'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Sent Interests'),
 
 
