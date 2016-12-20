@@ -1120,7 +1120,7 @@ class Profile{
                         if(isset($hobbies) && $onlyValues == '')
                             $userHobbies = $hobbies;
                         else{
-                            $hobbyObj=new NEWJS_HOBBIES();
+                            $hobbyObj=new JHOBBYCacheLib();
                             $userHobbies = $hobbyObj->getUserHobbies($this->PROFILEID,$onlyValues);
                         }
 			if($onlyValues)

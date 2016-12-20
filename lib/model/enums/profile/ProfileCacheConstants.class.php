@@ -216,7 +216,6 @@ class ProfileCacheConstants
                                         "MASA",
                                         "HAVE_ASTRO",
                                         "FSO_EXISTS",
-<<<<<<< HEAD
                                         // Jprofile Contact details
                                         "ALT_MOBILE",
                                         "ALT_MOBILE_ISD",
@@ -236,9 +235,20 @@ class ProfileCacheConstants
                                         "ALT_MOB_STATUS",
                                         "ALT_EMAIL",
                                         "ALT_EMAIL_STATUS",
-
                                          // other frequent fields
-                                         "AUTO_EXPIRY_DATE"
+                                         "AUTO_EXPIRY_DATE",
+                                         // Jhobby
+                                        "HOBBY",
+                                        "ALLMUSIC",
+                                        "ALLBOOK",
+                                        "ALLMOVIE",
+                                        "ALLSPORTS",
+                                        "ALLCUISINE",
+                                        "FAV_MOVIE",
+                                        "FAV_TVSHOW",
+                                        "FAV_FOOD",
+                                        "FAV_BOOK",
+                                        "FAV_VAC_DEST"
                                     );
     
     public static $arrJProfileColumns = array(
@@ -455,9 +465,7 @@ class ProfileCacheConstants
                                         'DTOFBIRTH',
                                         'CITY_BIRTH',
                                         'BTIME',
-        
     );
-<<<<<<< HEAD
 
     public static $arrJProfileContact = array(
                                         "PROFILEID",
@@ -481,13 +489,25 @@ class ProfileCacheConstants
                                         "ALT_EMAIL_STATUS",
 
      );
-=======
     public static $arrAUTO_EXPIRY = array(
                                         'PROFILEID',
                                         'TYPE',
                                         'DATE'   
                                     );
-
->>>>>>> b1c80a2c280784746e71463e92de2347083df365
+    
+    public static $arrJHobbyColumns = array(
+                                        'PROFILEID',
+                                        "HOBBY",
+                                        "ALLMUSIC",
+                                        "ALLBOOK",
+                                        "ALLMOVIE",
+                                        "ALLSPORTS",
+                                        "ALLCUISINE",
+                                        "FAV_MOVIE",
+                                        "FAV_TVSHOW",
+                                        "FAV_FOOD",
+                                        "FAV_BOOK",
+                                        "FAV_VAC_DEST"
+                                    );
 }
 ?>
