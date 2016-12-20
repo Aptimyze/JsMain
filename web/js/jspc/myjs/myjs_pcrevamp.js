@@ -516,7 +516,13 @@ $( document ).ajaxSend(function( event,request, settings ) {
     $("#totalInterestReceived").html(this.data.AWAITING_RESPONSE);
     if(showExpiring)
     {
-      $("#totalExpiringInterestReceived").html(this.data.INTERESTS_EXPIRING);
+      expiringCount = this.data.INTEREST_EXPIRING;
+      $("#totalExpiringInterestReceived").html(this.data.INTEREST_EXPIRING);
+      if(this.data.INTEREST_EXPIRING > 0)
+      {
+        $("#ExpiringAction").removeClass('disp-none');
+        $("#ExpiringAction").addClass('dispib');
+      }
     }
     else
     {
@@ -847,9 +853,9 @@ else {
 
     if(showExpiring)
     {
-      $("#engBarInfoMessage").show();
       $('#expiringInterestHead').bind("click",function() 
       {
+        $("#engBarInfoMessage").show();
         $("#totalExpiringInterestReceived").removeClass('disp-none');
         $("#expiringInterestCount").addClass("disp-none").removeClass("disp-cell");
         engagementClickHanding(expiringInterests,1);
