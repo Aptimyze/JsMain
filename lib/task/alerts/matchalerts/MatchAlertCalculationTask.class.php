@@ -41,7 +41,7 @@ EOF;
 		if(!sfContext::hasInstance())
 			sfContext::createInstance($this->configuration);
 
-                ini_set('memory_limit','512M');
+                ini_set('memory_limit','1024M');
                 $totalScripts = $arguments["totalScripts"]; // total no of scripts
                 $currentScript = $arguments["currentScript"]; // current script number
                 
