@@ -3,13 +3,13 @@
 class dppSuggestions
 {
 	//This function fetches dppSuggestion values to be shown and returns it to the calling function
-	public function getDppSuggestions($trendsArr,$type,$valArr)
+	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="")
 	{
 		$loggedInProfileObj = LoggedInProfile::getInstance();
 		$this->age = $loggedInProfileObj->getAGE();
 		$this->gender = $loggedInProfileObj->getGENDER();
 		$this->income = $loggedInProfileObj->getINCOME();
-		
+		$this->calLayer = $calLayer;
 		if(is_array($trendsArr))
 		{
 			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
@@ -24,7 +24,16 @@ class dppSuggestions
 		{
 			$valueArr = $this->getSuggestionForIncome($type,$valArr);
 		}
-		if(count($valueArr["data"])< DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
+		if($this->calLayer)
+		{
+			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS_CAL;
+		}
+		else
+		{
+			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS;
+		}
+
+		if(count($valueArr["data"])< $this->countForComparison)
 		{
 			if($type == "CITY")
 			{	
@@ -83,7 +92,7 @@ class dppSuggestions
 		$count = 0;
 		foreach($trendsArr as $k1=>$v1)
 		{
-			if($count < DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
+			if($count < $this->countForComparison)
 			{
 				if(!in_array($k1,$valArr) && $type != "CITY")
 				{
@@ -155,7 +164,7 @@ class dppSuggestions
 		//frequency distribution calculation
 		$suggestedValueCountArr = $this->getFrequencyDistributedArrForCasteMtongue($suggestedValueArr);
 		$suggestedValueCountArr = $this->getSortedSuggestionArr($suggestedValueCountArr);
-		$remainingCount = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS - $valueArrDataCount;
+		$remainingCount = $this->countForComparison - $valueArrDataCount;
 		foreach($suggestedValueCountArr as $fieldId=>$freqDistribution)
 		{
 			if($remainingCount != 0)
@@ -182,7 +191,7 @@ class dppSuggestions
 		//to find the frequency distribution of grouping array based on the input values sent
 		$suggestionArr = $this->getFrequencyDistributedArr($valArr,$GroupingArr);
 		$suggestionArr = $this->getSortedSuggestionArr($suggestionArr);
-		$remainingCount = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS - count($valueArr["data"]);
+		$remainingCount = $this->countForComparison - count($valueArr["data"]);
 		$valueArr = $this->fillRemainingValuesInEduOccValueArr($remainingCount,$suggestionArr,$valueArr,$valArr,$GroupingArr,$type);	
 		return $valueArr;
 	}
@@ -352,7 +361,8 @@ class dppSuggestions
 	}
 
 	public function getSuggestionForAge($type,$valArr)
-	{
+	{		
+		$valArr = (array_combine(DppAutoSuggestEnum::$keyReplaceAgeArr,$valArr));
 		
 		if($this->gender == "F")
 		{
@@ -372,15 +382,19 @@ class dppSuggestions
 		}
 		return $valueArr;
 	}
+
+	//Mapping of income needs to be changed.
 	public function getSuggestionForIncome($type,$valArr)
 	{
+		$valArr = (array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr));
+		//print_r($valArr);die;
 		if($this->gender == "M")
 		{
 			if(in_array($this->income,DppAutoSuggestEnum::$dollarArr))
 			{
-				if($this->income > $valArr["DRS"] && $valArr["DRS"]!="19")
+				if($this->income > $valArr["HDS"] && $valArr["HDS"]!="19")
 				{
-					$valueArr["data"]["DRS"] = $this->income;
+					$valueArr["data"]["HDS"] = $this->income;
 				}
 			}
 			else
@@ -399,7 +413,7 @@ class dppSuggestions
 			}
 			if($valArr["DRS"] !="19")
 			{
-				$valueArr["data"]["DRS"] = "19";
+				$valueArr["data"]["HDS"] = "19";
 			}
 		}
 		return $valueArr;

@@ -1411,5 +1411,9 @@ public static $eduGrouping = "education_grouping_mapping_to_edu_level_new";
 public static $occupationGrouping = "occupation_grouping_mapping_to_occupation";
 public static $ageDiffNo = "5";
 public static $dollarArr = array("8","9","10","11","12","13","14","21");
+public static $SUGGESTION_FIELDS = array("P_AGE","P_CASTE","P_INCOME","P_EDUCATION","P_OCCUPATION","P_CITY","P_MTONGUE");
+public static $NO_OF_DPP_SUGGESTIONS_CAL = 10; 
+public static $keyReplaceAgeArr = array("0"=>"LAGE","1"=>"HAGE");
+public static $keyReplaceIncomeArr = array("0"=>"LRS","1"=>"HRS","2"=>"LDS","3"=>"HDS");
 }
 
