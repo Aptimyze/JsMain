@@ -1,6 +1,6 @@
 <?php
 /**
-* This taks will decide correct Strategy for the matchalerts users. 
+* This taks will decide correct Strategy for the matchalerts  users. 
 */
 class MatchAlertCalculationTask extends sfBaseTask
 {
