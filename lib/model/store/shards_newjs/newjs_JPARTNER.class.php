@@ -220,11 +220,11 @@ class newjs_JPARTNER extends TABLE
 			throw new jsException($e);
 		}
 	}
-	public function selectPartnerCaste($p_caste)
+	public function selectPartnerCaste($p_caste,$offset,$limit)
 	{
                 try
                 {
-                        $sql  =  "SELECT PROFILEID,PARTNER_CASTE FROM newjs.JPARTNER WHERE PARTNER_CASTE LIKE :PARTNER_CASTE LIMIT 100";
+                        $sql  =  "SELECT PROFILEID,PARTNER_CASTE FROM newjs.JPARTNER WHERE PARTNER_CASTE LIKE :PARTNER_CASTE LIMIT ".$offset.",".$limit;
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":PARTNER_CASTE","%".$p_caste."%",PDO::PARAM_STR);
                         $res->execute();
@@ -238,14 +238,15 @@ class newjs_JPARTNER extends TABLE
                         throw new jsException($e);
                 }
 	}
-	public function updateCaste($profileid,$caste)
+	public function updateCaste($profileid,$caste,$oldCaste)
 	{
 		try
 		{
-			$sql  =  "UPDATE newjs.JPARTNER SET PARTNER_CASTE=:PARTNER_CASTE WHERE PROFILEID=:PROFILEID";
+			$sql  =  "UPDATE newjs.JPARTNER SET PARTNER_CASTE=:PARTNER_CASTE WHERE PROFILEID=:PROFILEID AND PARTNER_CASTE=:OLD_CASTE";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
 			$res->bindValue(":PARTNER_CASTE",$caste,PDO::PARAM_STR);
+			$res->bindValue(":OLD_CASTE",$oldCaste,PDO::PARAM_STR);
 			$res->execute();
                 }
 		catch (Exception $e){
