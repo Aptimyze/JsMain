@@ -13,6 +13,8 @@ if($zipIt)
 	ob_start("ob_gzhandler");
 	
 include_once("connect.inc");
+include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
+
 $db=connect_db();
 $data=authenticated($checksum);
 //Added By lavesh.
@@ -74,8 +76,11 @@ if(isset($data))
 		//Insert into autoexpiry table, to expire all autologin url coming before date
 		PasswordUpdate::change($PROFILEID,$newPwd);
 		$expireDt=date("Y-m-d H:i:s");
-		$sqlExpire="replace into jsadmin.AUTO_EXPIRY set PROFILEID='$PROFILEID',TYPE='P',DATE='$expireDt'";
-		mysql_query_decide($sqlExpire) or logError($errorMsg,"$sqlExpire","ShowErrTemplate");
+        $bRes = ProfileReplaceLib::getInstance()->replaceAUTOEXPIRY($PROFILEID, 'P', $expireDt);
+        if(false === $bRes) {
+            $sqlExpire="replace into jsadmin.AUTO_EXPIRY set PROFILEID='$PROFILEID',TYPE='P',DATE='$expireDt'";
+            logError($errorMsg,"$sqlExpire","ShowErrTemplate");
+        }
 		//end
 		$msg="New Password saved";
 		die($msg);

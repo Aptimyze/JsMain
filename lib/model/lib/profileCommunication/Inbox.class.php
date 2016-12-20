@@ -71,7 +71,7 @@ class Inbox implements Module
 			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1) && $fromGetDisplayFunction=='')
 			{
 				JsMemcache::getInstance()->delete($this->profileObj->getPROFILEID());
-                                $memcacheServiceObj->unsetKey("MESSAGE_ALL");
+                            
 			}
                         
 			$countObj           = array();
@@ -101,6 +101,9 @@ class Inbox implements Module
 					case "MY_MESSAGE_RECEIVED":
 						$keyNew = "MESSAGE_NEW";
 						$key = "MESSAGE";
+						if($infoTypenav["NUMBER"] == 1 && $fromGetDisplayFunction==''){
+							$memcacheServiceObj->unsetKey("MESSAGE_ALL");
+						}
 						break;
 					case "VISITORS":
 						$key = "VISITOR_ALERT";
