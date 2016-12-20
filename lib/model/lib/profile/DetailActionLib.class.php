@@ -850,12 +850,12 @@ class DetailActionLib
             if($iOffset>1)
             {	
                 $actionObj->SHOW_PREV = true;
-                $actionObj->prevLink = "&total_rec=".$iTotalRecord."&actual_offset=".($iOffset-1)."&listingName=".$iListingType."&hitFromMyjs=1";
+                $actionObj->prevLink = "&total_rec=".$iTotalRecord."&actual_offset=".($iOffset-1)."&listingName=".strtolower($iListingType)."&hitFromMyjs=1";
             }
             if($iOffset < $iTotalRecord && $iOffset!=$iTotalRecord)
             {
                 $actionObj->SHOW_NEXT = true;
-                $actionObj->nextLink ="&total_rec=".$iTotalRecord."&actual_offset=".($iOffset+1)."&listingName=".$iListingType."&hitFromMyjs=1";
+                $actionObj->nextLink ="&total_rec=".$iTotalRecord."&actual_offset=".($iOffset+1)."&listingName=".strtolower($iListingType)."&hitFromMyjs=1";
             }
             $actionObj->fromPage = 'myjs';
             $actionObj->SHOW_NEXT_PREV = 1;
