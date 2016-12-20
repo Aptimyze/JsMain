@@ -4,6 +4,7 @@ include("registration_functions.inc");
 connect_db();
 $data=authenticated();
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 if($email || $submit)
 {
 	if($data["PROFILEID"])
@@ -87,10 +88,13 @@ $activated='X';
 				$res_add= mysql_query_decide($sql_add) or die(mysql_error_js());
 			 }
 			//Insert into autoexpiry table, to expire all autologin url coming before date
-			$expireDt=date("Y-m-d H:i:s");
-			$sqlExpire="replace into jsadmin.AUTO_EXPIRY set PROFILEID='$profileid',TYPE='E',DATE='$expireDt'";
-			mysql_query_decide($sqlExpire) or logError($errorMsg,"$sqlExpire","ShowErrTemplate");
-			//end
+                $expireDt=date("Y-m-d H:i:s");
+                $bRes = ProfileReplaceLib::getInstance()->replaceAUTOEXPIRY($profileid, 'E', $expireDt);
+                if(false === $bRes) {
+                    $sqlExpire="replace into jsadmin.AUTO_EXPIRY set PROFILEID='$profileid',TYPE='E',DATE='$expireDt'";
+                    logError($errorMsg,"$sqlExpire","ShowErrTemplate");
+                }
+                         //end
 
 		}
 		if(strstr($email,"@gmail"))

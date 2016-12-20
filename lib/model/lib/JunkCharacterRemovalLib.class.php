@@ -1,9 +1,15 @@
 <?php 
+	
 	/**
 	* To remove junk characters from given field.
 	*/
 	class JunkCharacterRemovalLib
 	{
+		public function __construct()
+		{
+			$this->file_path = JsConstants::$cronDocRoot."/lib/utils/junkCharacters/spam_character_trained.txt";
+			$this->accepted_characters = 'abcdefghijklmnopqrstuvwxyz ';
+		}
 		/**
 		 * Removes junk characters from given variable
 		 * @param  string $fieldName  the field name on which the filter is to be added.
@@ -42,6 +48,15 @@
 	        		}
 	        	}
 	        }
+	        // calling function to check whether about me had junk character.
+	        $isGibberish = $this->test($about,$this->file_path);
+	        if ( $isGibberish !== -1 )
+	        {
+	        	if ( $isGibberish )
+	        	{
+	        		return "";
+	        	}
+	        }
 	        return $about;
 	    }
 
@@ -61,6 +76,66 @@
 	        }
 	        return $five_unique && $space_vowels;
 	    }
+
+	    private function test($text, $lib_path, $raw=false)
+	    {
+	    	if(file_exists($lib_path) === false)
+	    	{
+	    //                  TODO throw error?
+	    		return -1;
+	    	}
+	    	$trained_library = unserialize(file_get_contents($lib_path));
+	    	if(is_array($trained_library) === false)
+	    	{
+	    //                 TODO throw error?
+	    		return -1;
+	    	}
+
+	    	$value = self::_averageTransitionProbability($text, $trained_library['matrix']);
+	    	if($raw === true)
+	    	{
+	    		return $value;
+	    	}
+
+	    	if($value <= $trained_library['threshold'])
+	    	{
+	    		return true;
+	    	}
+
+	    	return false;
+	    }
+
+	    private function normalise($line)
+	    {
+	    //          Return only the subset of chars from accepted_chars.
+	    //          This helps keep the  model relatively small by ignoring punctuation, 
+	    //          infrequenty symbols, etc.
+	    	return preg_replace('/[^a-z\ ]/', '', strtolower($line));
+	    }
+
+	    private function _averageTransitionProbability($line, $log_prob_matrix)
+	    {
+
+	    //          Return the average transition prob from line through log_prob_mat.
+	    	$log_prob = 1.0;
+	    	$transition_ct = 0;
+
+	    	$pos = array_flip(str_split($this->accepted_characters));
+	    	$filtered_line = str_split($this->normalise($line));
+	    	$a = false;
+	    	foreach ($filtered_line as $b)
+	    	{
+	    		if($a !== false)
+	    		{
+	    			$log_prob += $log_prob_matrix[$pos[$a]][$pos[$b]];
+	    			$transition_ct += 1;
+	    		}
+	    		$a = $b;
+	    	}
+	          # The exponentiation translates from log probs to probs.
+	    	return exp($log_prob / max($transition_ct, 1));
+	    }
+
 	}
 
  ?>

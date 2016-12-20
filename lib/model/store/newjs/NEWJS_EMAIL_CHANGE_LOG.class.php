@@ -1,5 +1,5 @@
 <?php
-//This class is used to determine whether the user has been asked the permission to contact him on DNC numbers  ...
+//This class is used to log changes in the primary email id of the user or when he registers and inserts the new primary email
 
 class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
   
