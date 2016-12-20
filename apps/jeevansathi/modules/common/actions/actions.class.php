@@ -245,7 +245,7 @@ class commonActions extends sfActions
                 if ($password && $this->validatePassword($password, $emailStr) == true) {
                     $this->done = PasswordUpdate::change($profileid, $password);
                     $marked     = ResetPasswordAuthentication::disableProfileidLinks($profileid);
-                    $dbObj      = new jsadmin_AUTO_EXPIRY;
+                    $dbObj      = new ProfileAUTO_EXPIRY;
                     $expireDt   = date("Y-m-d H:i:s");
                     $dbObj->replace($profileid, "P", $expireDt);
                 } else {
