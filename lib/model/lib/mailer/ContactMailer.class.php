@@ -81,7 +81,20 @@ class ContactMailer
 		$smartyObj->assign("photo",$photo);
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
-		$email_sender->send("",$partialList);
+                
+                if(CommonConstants::contactMailersCC)
+                {    
+                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+                if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+                {
+                   $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+                }
+                else $ccEmail = "";
+                }
+                else 
+                    $ccEmail = "";
+		$email_sender->send("",$partialList,$ccEmail);
 	}
 	/**
 	 * 
@@ -149,7 +162,20 @@ class ContactMailer
 		$smartyObj->assign("acceptance_mailer",1);
 		$smartyObj->assign("FTO",$FTO);
 		$tpl->setPartials($partialList);
-		$email_sender->send("",$partialList);
+                
+                if(CommonConstants::contactMailersCC)
+                {
+                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+                if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+                {
+                   $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+                }
+                else $ccEmail = "";
+                }
+                else $ccEmail = "";
+
+		$email_sender->send("",$partialList,$ccEmail);
 	}
 	/**
 	 * 
@@ -201,7 +227,20 @@ class ContactMailer
 		$smartyObj->assign("photo",$photo);
 		$smartyObj->assign("otherProfile",$sender->getPROFILEID());
 		$tpl->setPartials($partialList);
-		$email_sender->send("",$partialList);
+                
+                if(CommonConstants::contactMailersCC)
+                {                
+                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+                if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+                {
+                   $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+                }
+                else $ccEmail = "";
+                }
+                else $ccEmail = "";
+
+		$email_sender->send("",$partialList,$ccEmail);
 		
 	}
 	/**
@@ -243,10 +282,23 @@ class ContactMailer
 	$partialObj = new PartialList();
 	$profileChecksum=JsAuthentication::jsEncryptProfilechecksum($sender->getPROFILEID());
 	if(strlen($message)>260){$showReadMore=1;$message=substr($message,0,260);}else $showReadMore=0;
-    $partialObj->addPartial("messageMailerTuple", "messageMailerTuple",  array('profileArray'=>array($sender->getPROFILEID()=>$message),'showReadMore'=>$showReadMore));
-    $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
-    $tpl->setPartials($partialObj);
-	$emailSender->send();
+        $partialObj->addPartial("messageMailerTuple", "messageMailerTuple",  array('profileArray'=>array($sender->getPROFILEID()=>$message),'showReadMore'=>$showReadMore));
+        $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
+        $tpl->setPartials($partialObj);
+
+        if(CommonConstants::contactMailersCC)
+        {                
+
+        $contactNumOb=new newjs_JPROFILE_CONTACT();
+        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+        {
+           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+        }
+        else $ccEmail = "";
+        }
+        else $ccEmail = "";
+	$emailSender->send('','',$ccEmail);
 	}
 
   /**
@@ -292,10 +344,23 @@ class ContactMailer
 	$tpl->getSmarty()->assign("count", 1);
 	$tpl->getSmarty()->assign("totalCount",$totalCount);
 	$partialObj = new PartialList();
-    $partialObj->addPartial("eoi_profile", "eoi_profile", array($viewerProfileId=>$draft));
-    $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
-    $tpl->setPartials($partialObj);
-    $emailSender->send("");
+        $partialObj->addPartial("eoi_profile", "eoi_profile", array($viewerProfileId=>$draft));
+        $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
+        $tpl->setPartials($partialObj);
+    
+        if(CommonConstants::contactMailersCC)
+        {                
+        $contactNumOb=new newjs_JPROFILE_CONTACT();
+        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+        {
+           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+        }
+        else $ccEmail = "";
+        }
+        else $ccEmail = "";
+
+    $emailSender->send("",'',$ccEmail);
   } //end of InstantEOIMailer
   
   /**
