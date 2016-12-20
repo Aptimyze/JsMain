@@ -332,6 +332,7 @@ class ProfileMemcache
         $this->PEOPLE_WHO_VIEWED_MY_CONTACTS            = $this->_memcache["PEOPLE_WHO_VIEWED_MY_CONTACTS"] ? $this->_memcache["PEOPLE_WHO_VIEWED_MY_CONTACTS"] : 0;
          $this->CONTACTED_BY_ME            = $this->_memcache["CONTACTED_BY_ME"] ? $this->_memcache["CONTACTED_BY_ME"] : "";
         $this->CONTACTED_ME            = $this->_memcache["CONTACTED_ME"] ? $this->_memcache["CONTACTED_ME"] : "";
+        $this->INTEREST_ARCHIVED           = $this->_memcache["INTEREST_ARCHIVED"] ? $this->_memcache["INTEREST_ARCHIVED"] : "";
         $this->IGNORED           = $this->_memcache["IGNORED"] ? $this->_memcache["IGNORED"] : "";
     
     
@@ -726,6 +727,16 @@ class ProfileMemcache
         $this->PHOTO_REQUEST = $current;
         
     }
+
+    public function getINTEREST_ARCHIVED()
+    {
+        return $this->INTEREST_ARCHIVED ? $this->INTEREST_ARCHIVED : 0;
+    }
+    public function setINTEREST_ARCHIVED($current = 0)
+    {
+        $this->INTEREST_ARCHIVED = $current;
+    }
+
 
     public function getPHOTO_REQUEST_BY_ME()
     {
@@ -1530,6 +1541,10 @@ class ProfileMemcache
             "IGNORED" => call_user_func(array(
                 $this,
                 getIGNORED
+            )),
+             "INTEREST_ARCHIVED" => call_user_func(array(
+                $this,
+                getINTEREST_ARCHIVED
             ))
         );
         

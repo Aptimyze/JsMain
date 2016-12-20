@@ -40,6 +40,7 @@ class ProfileMemcacheService
 							'AWAITING_RESPONSE_NEW', 
 							'FILTERED', 
                             'FILTERED_NEW',
+                            'INTEREST_ARCHIVED',
 							'NOT_REP', 
 							'OPEN_CONTACTS', 
 							'CANCELLED_EOI'), 
@@ -503,6 +504,10 @@ public function unsett()
 								}
 								$AWAITING_RESPONSE = $AWAITING_RESPONSE + $value["COUNT"];
 							}
+                            if ( $value["TIME1"] == 1 )
+                            {
+                               $INTEREST_ARCHIVED = $INTEREST_ARCHIVED + $value["COUNT"];                                
+                            }
                         }
                         break;
                     case 'C':
@@ -530,6 +535,7 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE ? $AWAITING_RESPONSE : 0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW ? $AWAITING_RESPONSE_NEW : 0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS ? $OPEN_CONTACTS : 0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED ? $INTEREST_ARCHIVED : 0);
     }
     public function unsetContactsData()
     {
@@ -546,6 +552,7 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE=0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW=0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS=0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED = 0);
     }
     /**
      * fucntion setPhotoRequestData()
