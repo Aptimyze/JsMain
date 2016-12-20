@@ -80,6 +80,7 @@ class ProfileReplaceLib
         unset($this->objProfileAstroDetailsStore);
         unset($this->objProfileHoroscopeStore);
         unset($this->objProfileHoroscopeCompatibilityStore);
+        unset($this->objProfileAutoExpiry);
         self::$instance = null;
     }
     /**
@@ -119,6 +120,9 @@ class ProfileReplaceLib
             self::$instance->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
             self::$instance->objProfileHoroscopeStore->setConnection($dbname);
             self::$instance->objProfileHoroscopeCompatibilityStore->setConnection($dbname);
+            
+            unset($this->objProfileAutoExpiry);
+            self::$instance->objProfileAutoExpiry = new ProfileAUTO_EXPIRY($dbname);
         }
 
         return self::$instance;

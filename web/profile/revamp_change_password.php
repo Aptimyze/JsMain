@@ -76,7 +76,11 @@ if(isset($data))
 		//Insert into autoexpiry table, to expire all autologin url coming before date
 		PasswordUpdate::change($PROFILEID,$newPwd);
 		$expireDt=date("Y-m-d H:i:s");
-                (new ProfileReplaceLib())->replaceAUTOEXPIRY($PROFILEID, 'P', $expireDt);
+        $bRes = ProfileReplaceLib::getInstance()->replaceAUTOEXPIRY($PROFILEID, 'P', $expireDt);
+        if(false === $bRes) {
+            $sqlExpire="replace into jsadmin.AUTO_EXPIRY set PROFILEID='$PROFILEID',TYPE='P',DATE='$expireDt'";
+            logError($errorMsg,"$sqlExpire","ShowErrTemplate");
+        }
 		//end
 		$msg="New Password saved";
 		die($msg);

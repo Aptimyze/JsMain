@@ -74,11 +74,14 @@ class ProfileAUTO_EXPIRY
     public function replace($pid,$type,$date)
     {
         $objProCacheLib = ProfileCacheLib::getInstance();        
-        $this->objAUTO_EXPIRY->replace($pid,$type,$date);
-        $dummyResult['PROFILEID'] = $pid;
-        $dummyResult['AUTO_EXPIRY_DATE'] = $date;
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult, __CLASS__);
-    
+        $result = $this->objAUTO_EXPIRY->replace($pid,$type,$date);
+        
+        if($result) {
+            $dummyResult['PROFILEID'] = $pid;
+            $dummyResult['AUTO_EXPIRY_DATE'] = $date;
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $dummyResult, __CLASS__);
+        }
+        
     }
     
     /**
@@ -100,6 +103,26 @@ class ProfileAUTO_EXPIRY
 
     }
     
+    /**
+    * This function is corresponding to this kind of sql query
+    * select count(*) CNT from jsadmin.AUTO_EXPIRY WHERE PROFILEID = '$iProfileID' AND DATE > '$time'";
+    * 
+    * @param type $iProfileID
+    * @param type $time
+    * @return array("CNT"=>0/1) //As per Logic
+    */
+   public function getRecord($iProfileID,$time)
+   {
+       $dbTime = $this->getDate($iProfileID);
+       if(0 === $dbTime) {
+           $result = 0;
+       }
+
+       if($dbTime > $time){
+           $result = 1;
+       }
+       return array("CNT"=>$result);
+   }
   private function logCacheConsumeCount($funName)
   {
     $key = 'cacheConsumption'.'_'.date('Y-m-d');

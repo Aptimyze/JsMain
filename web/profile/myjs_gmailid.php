@@ -88,8 +88,12 @@ $activated='X';
 				$res_add= mysql_query_decide($sql_add) or die(mysql_error_js());
 			 }
 			//Insert into autoexpiry table, to expire all autologin url coming before date
-                         $expireDt=date("Y-m-d H:i:s");
-                         (new ProfileReplaceLib())->replaceAUTOEXPIRY($profileid, 'E', $expireDt);
+                $expireDt=date("Y-m-d H:i:s");
+                $bRes = ProfileReplaceLib::getInstance()->replaceAUTOEXPIRY($profileid, 'E', $expireDt);
+                if(false === $bRes) {
+                    $sqlExpire="replace into jsadmin.AUTO_EXPIRY set PROFILEID='$profileid',TYPE='E',DATE='$expireDt'";
+                    logError($errorMsg,"$sqlExpire","ShowErrTemplate");
+                }
                          //end
 
 		}

@@ -16,6 +16,7 @@ class jsadmin_AUTO_EXPIRY extends TABLE
 		$res->bindValue(":TYPE", $type, PDO::PARAM_STR);
 		$res->bindValue(":expireDt", $date, PDO::PARAM_STR);
 		$res->execute();
+        return true;
 		}
 		catch(PDOException $e)
                 {
