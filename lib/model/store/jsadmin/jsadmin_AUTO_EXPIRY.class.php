@@ -16,6 +16,7 @@ class jsadmin_AUTO_EXPIRY extends TABLE
 		$res->bindValue(":TYPE", $type, PDO::PARAM_STR);
 		$res->bindValue(":expireDt", $date, PDO::PARAM_STR);
 		$res->execute();
+        JsCommon::logFunctionCalling(__CLASS__,__FUNCTION__);
         return true;
 		}
 		catch(PDOException $e)
@@ -36,6 +37,7 @@ class jsadmin_AUTO_EXPIRY extends TABLE
 				$prep->bindValue(":PID",$pid,PDO::PARAM_INT);
 				$prep->bindValue(":TIME",$time,PDO::PARAM_STR);
 				$prep->execute();
+                JsCommon::logFunctionCalling(__CLASS__,__FUNCTION__);
 				if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					return false;
 			}
@@ -59,6 +61,7 @@ class jsadmin_AUTO_EXPIRY extends TABLE
 				$prep=$this->db->prepare($sql);
 				$prep->bindValue(":PID",$pid,PDO::PARAM_INT);
 				$prep->execute();
+                JsCommon::logFunctionCalling(__CLASS__,__FUNCTION__);
 				if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					return $result['DATE'];
 			}
