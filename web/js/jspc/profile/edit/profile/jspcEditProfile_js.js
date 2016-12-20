@@ -152,10 +152,10 @@ EditApp = function(){
     
     var requiredArray             = {};
     var previousSectionValue      = {};
-    var updateViewColor12Map      = ["fav_book","fav_movie","fav_food","phone_res_status","phone_mob_status","alt_mob_status","alt_email_status"]
+    var updateViewColor12Map      = ["fav_book","fav_movie","fav_food","phone_res_status","phone_mob_status","alt_mob_status","alt_email_status","email_status"]
     var multiFieldViewMap         = ["appearance","habbits","assets","religious_beliefs","special_cases","open_to_pets","living","plan_to_work","abroad","horo_match"];
     
-    var phoneStatusMap            = ["phone_res_status","phone_mob_status","alt_mob_status","alt_email_status"];
+    var phoneStatusMap            = ["phone_res_status","phone_mob_status","alt_mob_status","alt_email_status","email_status"];
     var phoneDescriptionMap       = ["landline_desc","alt_mobile_desc","mobile_desc"];
     
     var autoSuggestRequest        = {}; 
