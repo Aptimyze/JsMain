@@ -44,6 +44,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
             $prep->bindValue(":SERVICE_CALL", $alertArr[SERVICE_CALL], PDO::PARAM_STR);
             $prep->execute();
             $this->logFunctionCalling(__FUNCTION__);
+
         }
         catch(PDOException $e) {
             throw new jsException($e);
@@ -69,6 +70,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
         catch(PDOException $e) {
             throw new jsException($e);
         }
+        return true;
     }
     public function getUnsubscribedProfiles($profileIdArr) {
         try {
@@ -106,6 +108,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
         catch(Exception $e) {
             throw new jsException($e);
         }
+
         return $res;
     }
     
@@ -165,6 +168,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
             $prep->execute();
             $this->logFunctionCalling(__FUNCTION__);
+            return true;
         }
         catch(PDOException $e) {
             throw new jsException($e);

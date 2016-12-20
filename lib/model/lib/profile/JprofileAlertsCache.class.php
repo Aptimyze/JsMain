@@ -1,16 +1,14 @@
 <?php
-class newjs_JPROFILE_ALERTS extends TABLE
+class JprofileAlertsCache 
 {
-}    
-/*
-    private $dbname
+
+    private $dbname;
 
     public function __construct($dbname = "") {
         $this->dbname = $dbname;
     }
-
+    //Tested
     public function fetchMembershipStatus($profileid) {
-        try {
 
         $objProCacheLib = ProfileCacheLib::getInstance();
 
@@ -20,7 +18,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
 
         $bServedFromCache = false;
 
-        if($objProCacheLib->isCached($criteria,$pid,$fields,__CLASS__)) 
+        if($objProCacheLib->isCached($criteria,$profileid,$fields,__CLASS__)) 
             {
 
                 $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $fields, __CLASS__);
@@ -32,7 +30,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
 
             $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
             
-            if($result && in_array($result, $validNotFilled)){
+            if($result['MEMB_CALLS'] && in_array($result['MEMB_CALLS'], $validNotFilled)){
                 $result = NULL;
             }   
 
@@ -40,22 +38,31 @@ class newjs_JPROFILE_ALERTS extends TABLE
                 $this->logCacheConsumeCount(__CLASS__);
                 return $result;
             }
+        }
         
         $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
         $result = $objJALT->fetchMembershipStatus($profileid);
-
+        $dummyResult['RESULT_VAL'] = $result;
         $dummyResult = array(); 
-        $dummyResult['PROFILEID'] = $profileid;
-        $dummyResult['RESULT_VAL'] = (intval($result) === 0 || ($result == NULL)) ? 'N' : $result;
+        if($result === NULL)
+        {
+            $tempInsertResult['MEMB_CALLS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['MEMB_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['CONTACT_ALERT_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['PHOTO_REQUEST_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['NEW_MATCHES_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['SERVICE_SMS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['SERVICE_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $dummyResult['RESULT_VAL'] = $tempInsertResult;
+        }
+    
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$profileid, $dummyResult['RESULT_VAL'], __CLASS__);
 
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $dummyResult['PROFILEID'], $dummyResult['RESULT_VAL'], __CLASS__);
-
-        return $result;
-
-            }
+        return $result;   
 
     }
-}
+
+
     /** Function insert added by Hemant
      This function is used to insert the email. call,sms alert data from page 1 registration.
      *
@@ -65,178 +72,235 @@ class newjs_JPROFILE_ALERTS extends TABLE
      *
      *
      */
-  /*   
+ 
     public function insert($profileid, $alertArr, $argFrom = 'R') {
-        try {
-            $sql = "REPLACE INTO newjs.JPROFILE_ALERTS(PROFILEID,MEMB_CALLS,OFFER_CALLS,SERV_CALLS_SITE,SERV_CALLS_PROF,MEMB_MAILS,CONTACT_ALERT_MAILS,KUNDLI_ALERT_MAILS,PHOTO_REQUEST_MAILS,SERVICE_MAILS,SERVICE_SMS,SERVICE_MMS,SERVICE_USSD,PROMO_USSD,PROMO_MMS) VALUES (:PROFILEID,:SERVICE_CALL,:SERVICE_CALL,:MEM_IVR,:MEM_IVR,:MEM_MAILS,:SERVICE_EMAIL,:SERVICE_EMAIL,:SERVICE_EMAIL,:SERVICE_EMAIL,:SERVICE_SMS,:SERVICE_SMS,:SERVICE_SMS,:MEM_SMS,:MEM_SMS)";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_EMAIL", $alertArr[SERVICE_EMAIL], PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_SMS", $alertArr[SERVICE_SMS], PDO::PARAM_STR);
-            $prep->bindValue(":MEM_SMS", $alertArr[MEM_SMS], PDO::PARAM_STR);
-            $prep->bindValue(":MEM_IVR", $alertArr[MEM_IVR], PDO::PARAM_STR);
-            $prep->bindValue(":MEM_MAILS", $alertArr[MEM_MAILS], PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_CALL", $alertArr[SERVICE_CALL], PDO::PARAM_STR);
-            $prep->execute();
-            $this->logFunctionCalling(__FUNCTION__);
+
+             $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
+        $out = $objJALT-> insert($profileid, $alertArr, $argFrom = 'R');
+        if($out === true)
+        {
+
+            $tempInsertResult['PROFILEID'] = $profileid;
+            $tempInsertResult['MEMB_CALLS'] = $alertArr['SERVICE_CALL'];
+            $tempInsertResult['OFFER_CALLS'] = $alertArr['SERVICE_CALL'];
+            $tempInsertResult['SERV_CALLS_SITE'] = $alertArr['MEM_IVR'];
+            $tempInsertResult['SERV_CALLS_PROF'] = $alertArr['MEM_IVR'];
+            $tempInsertResult['MEMB_MAILS'] = $alertArr['MEM_MAILS'];
+            $tempInsertResult['CONTACT_ALERT_MAILS'] = $alertArr['SERVICE_EMAIL'];
+            $tempInsertResult['KUNDLI_ALERT_MAILS'] = $alertArr['SERVICE_EMAIL'];
+            $tempInsertResult['PHOTO_REQUEST_MAILS'] = $alertArr['SERVICE_EMAIL'];
+            $tempInsertResult['SERVICE_MAILS'] = $alertArr['SERVICE_EMAIL'];
+            $tempInsertResult['SERVICE_SMS'] = $alertArr['SERVICE_SMS'];
+            $tempInsertResult['SERVICE_MMS'] = $alertArr['SERVICE_SMS'];
+            $tempInsertResult['SERVICE_USSD'] = $alertArr['SERVICE_SMS'];
+            $tempInsertResult['PROMO_USSD'] = $alertArr['MEM_SMS'];
+            $tempInsertResult['PROMO_MMS'] = $alertArr['MEM_SMS'];
+
+            $dummyResult['RESULT_VAL'] = $tempInsertResult;
+            $objProCacheLib = ProfileCacheLib::getInstance();
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $dummyResult['RESULT_VAL'], __CLASS__);
+
         }
-        catch(PDOException $e) {
-            throw new jsException($e);
-        }
-        
-        //Update EDIT_LOG_JPROFILE_ALERTS
-        
-        try {
-            $now = date("Y-m-d H-i-s");
-            $sql = "INSERT IGNORE INTO newjs.JPROFILE_ALERTS_LOG (PROFILEID,MEMB_CALLS,OFFER_CALLS,SERV_CALLS_SITE,SERV_CALLS_PROF,MEMB_MAILS,CONTACT_ALERT_MAILS,KUNDLI_ALERT_MAILS,PHOTO_REQUEST_MAILS,SERVICE_MAILS,SERVICE_SMS,SERVICE_MMS,SERVICE_USSD,PROMO_USSD,PROMO_MMS,FROM_PAGE,MOD_DT) VALUES (:PROFILEID,:SERVICE_CALL,:SERVICE_CALL,:MEM_IVR,:MEM_IVR,:MEM_MAILS,:SERVICE_EMAIL,:SERVICE_EMAIL,:SERVICE_EMAIL,:SERVICE_EMAIL,:SERVICE_SMS,:SERVICE_SMS,:SERVICE_SMS,:MEM_SMS,:MEM_SMS,:FROM_PAGE,:MOD_DT)";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_EMAIL", $alertArr[SERVICE_EMAIL], PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_SMS", $alertArr[SERVICE_SMS], PDO::PARAM_STR);
-            $prep->bindValue(":MEM_SMS", $alertArr[MEM_SMS], PDO::PARAM_STR);
-            $prep->bindValue(":MEM_IVR", $alertArr[MEM_IVR], PDO::PARAM_STR);
-            $prep->bindValue(":MEM_MAILS", $alertArr[MEM_MAILS], PDO::PARAM_STR);
-            $prep->bindValue(":SERVICE_CALL", $alertArr[SERVICE_CALL], PDO::PARAM_STR);
-            $prep->bindValue(":FROM_PAGE", $argFrom, PDO::PARAM_STR);
-            $prep->bindValue(":MOD_DT", $now, PDO::PARAM_STR);
-            $prep->execute();
-        }
-        catch(PDOException $e) {
-            throw new jsException($e);
-        }
+  
+        //Update EDIT_LOG_JPROFILE_ALERTS has not been moved into Cache as it belongs to a different table.
+
     }
-    
+
+    //Done
     public function getUnsubscribedProfiles($profileIdArr) {     
         $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
         $result = $objJALT->getUnsubscribedProfiles($profileIdArr);
     }
 
+//tested
     public function getSubscriptions($profileid, $field) {
-        try {
-            $sql = "SELECT " . $field . " FROM newjs.JPROFILE_ALERTS WHERE PROFILEID=:PROFILEID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
-            $prep->execute();
-            $this->logFunctionCalling(__FUNCTION__);
-            if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $res = $result[$field];
+
+        $objProCacheLib = ProfileCacheLib::getInstance();
+
+        $criteria = "PROFILEID";
+
+        $fields = $field;
+
+        $bServedFromCache = false;
+
+        if($objProCacheLib->isCached($criteria,$profileid,$fields,__CLASS__)) 
+            {
+
+                $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $fields, __CLASS__);
+
+           if (false !== $result) {
+                $bServedFromCache = true;
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+            }
+
+            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
+            $arr = explode(',',$field);
+            if($result && in_array($arr[0], $validNotFilled)){
+                $result = NULL;
+            }   
+
+             if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+                $this->logCacheConsumeCount(__CLASS__);
+                return $result;
             }
         }
-        catch(Exception $e) {
-            throw new jsException($e);
+        
+        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
+        $result = $objJALT->getSubscriptions($profileid, $field);
+        $dummyResult['RESULT_VAL'] = $result;
+        if($result === NULL)
+        {
+            $tempInsertResult['MEMB_CALLS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['MEMB_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['CONTACT_ALERT_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['PHOTO_REQUEST_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['NEW_MATCHES_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['SERVICE_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $dummyResult['RESULT_VAL'] = $tempInsertResult;
+
         }
-        return $res;
+
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $dummyResult['RESULT_VAL'], __CLASS__);
+
+        return $result;
+        
     }
-    
+
     public function getAllSubscriptions($profileid) {
-        try {
-            $sql = "SELECT * FROM newjs.JPROFILE_ALERTS WHERE PROFILEID=:PROFILEID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
-            $prep->execute();
-            $this->logFunctionCalling(__FUNCTION__);
-            if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $res = $result;
+        
+        $objProCacheLib = ProfileCacheLib::getInstance();
+
+        $criteria = "PROFILEID";
+
+        $fields = "*";
+
+        $bServedFromCache = false;
+
+        if($objProCacheLib->isCached($criteria,$profileid,$fields,__CLASS__)) 
+            {
+
+                $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $fields, __CLASS__);
+
+           if (false !== $result) {
+                $bServedFromCache = true;
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+            }
+
+            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
+            
+            if($result && in_array($result['MEMB_CALLS'], $validNotFilled)){
+                $result = NULL;
+            }   
+
+             if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+                $this->logCacheConsumeCount(__CLASS__);
+                return $result;
             }
         }
-        catch(Exception $e) {
-            throw new jsException($e);
+        
+        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
+        $result = $objJALT->getAllSubscriptions($profileid);
+        $dummyResult['RESULT_VAL'] = $result;
+
+        if($result === NULL)
+        {
+            $tempInsertResult['MEMB_CALLS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['MEMB_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['CONTACT_ALERT_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['PHOTO_REQUEST_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['NEW_MATCHES_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult['SERVICE_MAILS'] = ProfileCacheConstants::NOT_FILLED;
+            $dummyResult['RESULT_VAL'] = $tempInsertResult;
+
         }
-        return $res;
+
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $dummyResult['RESULT_VAL'], __CLASS__);
+
+        return $result;
     }
 
     public function getAllSubscriptionsArr($profileArr) {
-        try {
-        	$profileStr = implode(",", $profileArr);
-            $sql = "SELECT * FROM newjs.JPROFILE_ALERTS WHERE PROFILEID IN ($profileStr)";
-            $prep = $this->db->prepare($sql);
-            $prep->execute();
-            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
-                $res[$result['PROFILEID']] = $result;
-            }
-            $this->logFunctionCalling(__FUNCTION__);
-        }
-        catch(Exception $e) {
-            throw new jsException($e);
-        }
-        return $res;
-    }
-    
+     
+                
+            foreach ($profileArr as $key => $value) {
+
+                    $tempResult = $this->getAllSubscriptions($value);
+                    $output[$value] = $tempResult;
+
+                          }              
+
+                 return $output;
+             } 
+ 
     public function update($profileid, $key, $val) {
-        try {
-            $sql = "UPDATE newjs.JPROFILE_ALERTS SET {$key}=:VAL WHERE PROFILEID=:PROFILEID";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
-            $prep->bindValue(":VAL", $val, PDO::PARAM_STR);
-            $prep->execute();
-            $this->logFunctionCalling(__FUNCTION__);
-            return true;
+
+        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
+        $out = $objJALT->update($profileid, $key, $val);
+        if($out === true)
+        {   
+            $updateCacheVal[$key] = (intval($val) === 0 || ($val === NULL)) ? ProfileCacheConstants::NOT_FILLED : $val;
+
+            ProfileCacheLib::getInstance()->updateCache($updateCacheVal,ProfileCacheConstants::CACHE_CRITERIA, $profileid ,__CLASS__);
         }
-        catch(PDOException $e) {
-            throw new jsException($e);
-        }
+
     }
 
+    //Reviewed
     public function insertNewRow($profileid) {
-        try {
-            $sql = "INSERT INTO newjs.JPROFILE_ALERTS VALUES(:PROFILEID,'S','S','S','S','S','S','S','S','S','S','S','S','S','S','S')";
-            $prep = $this->db->prepare($sql);
-            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
-            $prep->execute();
-            $this->logFunctionCalling(__FUNCTION__);
-        }
-        catch(PDOException $e) {
-            throw new jsException($e);
-        }
+        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
+        $out = $objJALT-> insertNewRow($profileid);
+        if($out === true)
+        {
+
+            $tempInsertResult['PROFILEID'] = $profileid;
+            $tempInsertResult['MEMB_CALLS'] = 'S';
+            $tempInsertResult['OFFER_CALLS'] = 'S';
+            $tempInsertResult['SERV_CALLS_SITE'] = 'S';
+            $tempInsertResult['SERV_CALLS_PROF'] = 'S';
+            $tempInsertResult['MEMB_MAILS'] = 'S';
+            $tempInsertResult['CONTACT_ALERT_MAILS'] = 'S';
+            $tempInsertResult['KUNDLI_ALERT_MAILS'] = 'S';
+            $tempInsertResult['PHOTO_REQUEST_MAILS'] = 'S';
+            $tempInsertResult['NEW_MATCHES_MAILS'] = 'S';
+            $tempInsertResult['SERVICE_SMS'] = 'S';
+            $tempInsertResult['SERVICE_MMS'] = 'S';
+            $tempInsertResult['SERVICE_USSD'] = 'S';
+            $tempInsertResult['PROMO_USSD'] = 'S';
+            $tempInsertResult['SERVICE_MAILS'] = 'S';
+            $tempInsertResult['PROMO_MMS'] = 'S';
+
+            $dummyResult['RESULT_VAL'] = $tempInsertResult;
+            $objProCacheLib = ProfileCacheLib::getInstance();
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $dummyResult['RESULT_VAL'], __CLASS__);
+
+        }   
+
     }
 
-    /**
+    /*
      * @param $arrRecordData
      * @return mixed
      */
-    /*
+    
     public function insertRecord($arrRecordData)
     {
-        if(!is_array($arrRecordData))
-            throw new jsException("","Array is not passed in InsertRecord OF newjs_JPROFILE_ALERTS.class.php");
 
-        try{
-            $szINs = implode(',',array_fill(0,count($arrRecordData),'?'));
-
-            $arrFields = array();
+         $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
+        $out = $objJALT-> insertRecord($arrRecordData);
+        if($out === true)
+        {
+       
             foreach($arrRecordData as $key=>$val)
             {
-                $arrFields[] = strtoupper($key);
-            }
-            $szFields = implode(",",$arrFields);
+                $tempInsertResult[strtoupper($key)] = $val;
+            }    
 
-            $sql = "INSERT IGNORE INTO newjs.JPROFILE_ALERTS ($szFields) VALUES ($szINs)";
-            $pdoStatement = $this->db->prepare($sql);
+            $dummyResult['RESULT_VAL'] = $tempInsertResult;
+            $objProCacheLib = ProfileCacheLib::getInstance();
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $arrRecordData['PROFILEID'], $dummyResult['RESULT_VAL'], __CLASS__);
 
-            //Bind Value
-            $count =0;
-            foreach ($arrRecordData as $k => $value)
-            {
-                ++$count;
-                $pdoStatement->bindValue(($count), $value);
-            }
-            $pdoStatement->execute();
-            $this->logFunctionCalling(__FUNCTION__);
-            return true;
-        }
-        catch(Exception $e)
-        {
-            throw new jsException($e);
-        }
-    }
-    
-    private function logFunctionCalling($funName)
-    {
-      $key = __CLASS__.'_'.date('Y-m-d');
-      JsMemcache::getInstance()->hIncrBy($key, $funName);
-      
-      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
-    }
+        }     
+    } 
 
     private function logCacheConsumeCount($funName)
   { 
@@ -246,5 +310,5 @@ class newjs_JPROFILE_ALERTS extends TABLE
     JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
   }
 }
-*/
+
 ?>
