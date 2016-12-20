@@ -625,7 +625,7 @@ class NEWJS_JPROFILE extends TABLE
     public function getLoggedInProfilesForDateRange($logindDtStart, $loginDtEnd)
     {
         try {
-            $sql = "SELECT PROFILEID,USERNAME,ENTRY_DT FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT)>:LOGIN_DT_START AND LAST_LOGIN_DT<=:LOGIN_DT_END";
+            $sql = "SELECT PROFILEID,USERNAME,ENTRY_DT FROM newjs.JPROFILE WHERE LAST_LOGIN_DT>=:LOGIN_DT_START AND LAST_LOGIN_DT<=:LOGIN_DT_END";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":LOGIN_DT_START", $logindDtStart, PDO::PARAM_STR);
             $prep->bindValue(":LOGIN_DT_END", $loginDtEnd, PDO::PARAM_STR);
@@ -691,7 +691,7 @@ class NEWJS_JPROFILE extends TABLE
     {
         try {
             //$sql = "SELECT PROFILEID,CITY_RES FROM newjs.JPROFILE WHERE LAST_LOGIN_DT>=:LOGIN_DT_START AND LAST_LOGIN_DT<:LOGIN_DT_END";
-            $sql = "SELECT PROFILEID,CITY_RES,ISD,LAST_LOGIN_DT FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT)>=:LOGIN_DT_START AND DATE(LAST_LOGIN_DT)<=:LOGIN_DT_END";
+            $sql = "SELECT PROFILEID,CITY_RES,ISD,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT FROM newjs.JPROFILE WHERE LAST_LOGIN_DT>=:LOGIN_DT_START AND LAST_LOGIN_DT<=:LOGIN_DT_END";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":LOGIN_DT_START", $logindDtStart, PDO::PARAM_STR);
             $prep->bindValue(":LOGIN_DT_END", $loginDtEnd, PDO::PARAM_STR);
