@@ -3370,7 +3370,9 @@ EditApp = function(){
             $(document).scrollTop($(validationCheck).offset().top);
           }
           if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email)) 
-              showAlternateConfirmLayer();
+              showAlternateConfirmLayer($("#my_alt_emailView"));
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.viewApi.contact.my_email)) 
+              showAlternateConfirmLayer($("#my_emailView"));
               
         },
         error:function(result){
@@ -6242,7 +6244,22 @@ $(document).ready(function() {
                 ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
                 ajaxConfig.success=function(resp)
                 {
-                    showAlternateConfirmLayer();   
+                    showAlternateConfirmLayer($("#my_alt_emailView"));   
+                    hideCommonLoader();
+                }
+                jQuery.myObj.ajax(ajaxConfig);
+	});
+    $("body").on('click','#email_statusView',function () {
+		if($("#alt_email_statusView").html()!='Verify') return;
+                showCommonLoader();
+                var ajaxData={'emailType':'1'};
+                var ajaxConfig={};
+                ajaxConfig.data=ajaxData;
+                ajaxConfig.type='POST';
+                ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
+                ajaxConfig.success=function(resp)
+                {
+                    showAlternateConfirmLayer($("#my_emailView"));   
                     hideCommonLoader();
                 }
                 jQuery.myObj.ajax(ajaxConfig);
@@ -6349,9 +6366,9 @@ $('#validateSenderEmail').click(function(e){
   return false;
 });
 }
-function showAlternateConfirmLayer(){
+function showAlternateConfirmLayer(jObject){
     var obj = $("#js-alternateEmailConfirmLayer");
-    var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,$("#my_alt_emailView").eq(0).text().trim());
+    var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,jObject.eq(0).text().trim());
     obj.find("#altEmailConfirmText").eq(0).text(msg);
     showLayerCommon("js-alternateEmailConfirmLayer");
     obj.find('.closeCommLayer').eq(0).bind('click',function(){
