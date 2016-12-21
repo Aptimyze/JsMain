@@ -282,7 +282,7 @@ class MembershipAPIResponseHandler {
             $output = $this->doTestBilling($request);
         }
         elseif ($this->userForDolPayment == 1) {
-            $output = $this->addUserForDolPayment($request);
+            $output = $this->addRemoveUserForDolPayment($request);
         }
         else {
             if ($this->displayPage == 1) {
@@ -2280,7 +2280,7 @@ class MembershipAPIResponseHandler {
     	return $output;
     }
     
-    public function addUserForDolPayment($request) {
+    public function addRemoveUserForDolPayment($request) {
     	if(JsConstants::$whichMachine == 'test'){
             if($this->profileid){
                 if($request->getParameter('add') == 1){
