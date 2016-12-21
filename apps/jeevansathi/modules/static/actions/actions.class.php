@@ -1037,7 +1037,7 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_caste" || $k=="p_sect")
 		$output=$this->getCaste(1);
 		if($k=="p_caste_jsms" || $k=="p_sect_jsms")
-		$output=$this->getNonOtherCaste(1);
+		$output=$this->getNonOtherCaste();
 
 		if($k=="mtongue")
 			$output=$this->getMtongue();

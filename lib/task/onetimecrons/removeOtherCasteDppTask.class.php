@@ -24,30 +24,34 @@ EOF;
 	{	
         	if (!sfContext::hasInstance())
         		sfContext::createInstance($this->configuration);
+		$limit = 1000;
 		for($shard=1;$shard<=3;$shard++)
 		{
+			$jpartnerSlaveObj = new newjs_JPARTNER("shard".$shard."_slave");
+			$jpartnerMasterObj = new newjs_JPARTNER("shard".$shard."_master");
 			foreach(DPPConstants::$removeCasteFromDppArr as $k=>$p_caste)
 			{
+				$offset = 0;
 				while(1)
-				{sleep(5);
-					$jpartnerSlaveObj = new newjs_JPARTNER("shard".$shard."_slave");
+				{
 					unset($results);
-					$results = $jpartnerSlaveObj->selectPartnerCaste($p_caste);
+					$results = $jpartnerSlaveObj->selectPartnerCaste($p_caste,$offset,$limit);
 					if(!is_array($results))
 						break;
 					else
 					{
-						$jpartnerMasterObj = new newjs_JPARTNER("shard".$shard."_master");
 						foreach($results as $x=>$y)
 						{
 							$newCaste = '';
 							$newCaste = $this->getNewCaste($y);
-							$jpartnerMasterObj->updateCaste($y['PROFILEID'],$newCaste);
+							$jpartnerMasterObj->updateCaste($y['PROFILEID'],$newCaste,$y['PARTNER_CASTE']);
 						}
-						unset($jpartnerMasterObj);
 					}
+					$offset+=$limit;
 				}
 			}
+			unset($jpartnerSlaveObj);
+			unset($jpartnerMasterObj);
 		}
 	}
 	public function getNewCaste($data)
