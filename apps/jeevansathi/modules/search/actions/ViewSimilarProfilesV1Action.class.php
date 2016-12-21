@@ -72,8 +72,11 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                             $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria("","ios");
                                     }
                                 }
-                                else
+                                else{
+                                   $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
                                   $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria($request->getParameter('searchid'),"ios");
+                                  
+                                }
                                 $searchEngine = 'solr';
                                 $outputFormat = 'array';
                                 if(MobileCommon::isDesktop())
