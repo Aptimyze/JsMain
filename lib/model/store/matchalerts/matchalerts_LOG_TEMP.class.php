@@ -165,15 +165,13 @@ GROUP BY LOGICLEVEL, RecCount";
       jsException::nonCriticalError($e);
     }
   }
-  public function getTotalCountGroupedByLogicAndReceiver($limit,$offset)
+  public function getTotalCountGroupedByLogicAndReceiver()
   {
     try
     {
-      $sql = "SELECT DISTINCT (RECEIVER), COUNT( * ) AS TOTALCOUNT FROM matchalerts.`LOG_TEMP` 
-              GROUP BY RECEIVER LIMIT :OFFSETVAL, :LIMITVAL"; 
+      $sql = "SELECT COUNT(RECEIVER) as TOTALCOUNT, RECOMMENDCOUNT FROM (SELECT DISTINCT (RECEIVER), COUNT( * ) AS RECOMMENDCOUNT FROM matchalerts.`LOG_TEMP` 
+              GROUP BY RECEIVER) as a GROUP BY RECOMMENDCOUNT";
       $prep = $this->db->prepare($sql);
-      $prep->bindParam(":LIMITVAL", $limit, PDO::PARAM_INT);
-      $prep->bindParam(":OFFSETVAL", $offset, PDO::PARAM_INT);
       $prep->execute();
       while ($row = $prep->fetch(PDO::FETCH_ASSOC))
       {
