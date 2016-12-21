@@ -101,7 +101,8 @@ class postSendReminderv1Action extends sfAction
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
-				$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+                                if($request->getParameter('API_APP_VERSION')>=80)
+                                   $responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
 
 
 			}
@@ -109,8 +110,9 @@ class postSendReminderv1Action extends sfAction
 			{
 					$memHandlerObj = new MembershipHandler();
 					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-					$MembershipMessage = $data2['hamburger_message']['top']; 
-					$responseArray["errmsglabel"]= "Reminder sent. Upgrade to send personalized messages or initiate chat";
+					$MembershipMessage = $data2['hamburger_message']['top'];
+                                        if($request->getParameter('API_APP_VERSION')>=80)
+        					$responseArray["errmsglabel"]= "Reminder sent. Upgrade to send personalized messages or initiate chat";
 					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
 					$responseArray["footerbutton"]["value"] = "";
 					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
