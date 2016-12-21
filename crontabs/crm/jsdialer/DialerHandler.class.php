@@ -10,7 +10,6 @@ class DialerHandler
         }
         public function getEST($time='')
         {
-                $dateTime =date("Y-m-d H:i:s");
                 $sql = "SELECT now() as time";
                 $res = $this->db->prepare($sql,$this->db_js);
                 $res->execute();
