@@ -373,7 +373,7 @@
                 </ul>
             </div>
             <div id="SHORTLIST" class="myjs-wid11 fr">
-                <p class="fontlig f22 color11">~$profileid` Shortlisted Profiles</p>
+                <p class="fontlig f22 color11">Shortlisted Profiles</p>
                 <ul class="hor_list clearfix mysj-btmwid pt30 pl20">
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>

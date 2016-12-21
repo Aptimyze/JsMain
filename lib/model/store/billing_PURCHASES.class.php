@@ -89,14 +89,19 @@ class BILLING_PURCHASES extends TABLE
         }
     }
 
-    public function isPaidBefore($profileid, $time)
+    public function isPaidBefore($profileid, $time='')
     {
         try
         {
-            if ($time) {
-                $sql  = "SELECT COUNT(*) AS CNT from billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND ENTRY_DT<=:ENTRY_DT AND PROFILEID=:PROFILEID";
+            if($profileid){
+                $sql  = "SELECT COUNT(*) AS CNT from billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND PROFILEID=:PROFILEID";
+                if($time){
+                    $sql .= " AND ENTRY_DT<=:ENTRY_DT";
+                }
                 $prep = $this->db->prepare($sql);
-                $prep->bindValue(":ENTRY_DT", $time, PDO::PARAM_INT);
+                if($time){
+                    $prep->bindValue(":ENTRY_DT", $time, PDO::PARAM_INT);
+                }
                 $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                 $prep->execute();
                 if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
@@ -108,6 +113,11 @@ class BILLING_PURCHASES extends TABLE
                     }
 
                 }
+                else{
+                    return 0;
+                }
+            }
+            else{
                 return 0;
             }
         } catch (PDOException $e) {
@@ -449,7 +459,7 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT, ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD WHERE PD.BILLID=PUR.BILLID AND PUR.BILLID=:BILLID";
+            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT, ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT,COUNTRY,ENTRYBY FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD WHERE PD.BILLID=PUR.BILLID AND PUR.BILLID=:BILLID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
             $prep->execute();

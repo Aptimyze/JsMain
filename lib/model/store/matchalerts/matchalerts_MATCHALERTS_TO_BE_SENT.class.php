@@ -148,7 +148,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
         	}
         	catch (PDOException $e)
         	{
-        		throw new jsException($e);
+        		jsException::nonCriticalError($e);
         	}        
         }
 }

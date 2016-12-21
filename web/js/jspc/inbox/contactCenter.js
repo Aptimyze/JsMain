@@ -217,7 +217,7 @@ if(typeof response.searchid!="undefined")
 			$('#HorizontalTab22_Label_nonzero').removeClass('jsButton-disabled');
 		}
 
-		if(response.total)
+		if(response.total && response.hidePaginationCount != 1)
 		{ 
 			$(".js-resultsCount").remove();
 			var countClass = "js-resultsCount";
@@ -605,7 +605,7 @@ function sendProcessCCRequest(requestParams,infoArr)
 				hideCommonLoader();
 				animationToTop();
 			}
-						
+                        
 			loadCCPageResponse(response);
 			jsLoadFlag = 1;
 			timeE = new Date().getTime();

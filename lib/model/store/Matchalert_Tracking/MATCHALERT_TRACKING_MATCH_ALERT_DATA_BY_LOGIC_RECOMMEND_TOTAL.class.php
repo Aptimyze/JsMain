@@ -9,26 +9,26 @@ class MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL extends TABL
 	}
 
 	public function insertTotalCountForRecommedByDate($totalCountArr,$todayDate)
-	{
+	{		
 		$i=0;
 		$bind = 0;
 		try
 		{		
 			$sql = "INSERT IGNORE INTO MATCHALERT_TRACKING.MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL (DATE,RECOMMENDCOUNT,TOTALCOUNT) values ";
-			foreach($totalCountArr as $recCount=>$totalCount)
+			foreach($totalCountArr as $key=>$value)
 			{
 				$insertSql.= "(:DATEVAL, :RECCOUNT".$i.", :TOTALCOUNT".$i."),";
 				$i++;
-			}			
+			}
 			$insertSql = rtrim($insertSql,",");
-			$sql.=$insertSql;			
+			$sql.=$insertSql;				
 			$prep = $this->db->prepare($sql);
 
 			$prep->bindValue(":DATEVAL",$todayDate,PDO::PARAM_STR);
-			foreach($totalCountArr as $recCount=>$totalCount)
+			foreach($totalCountArr as $key=>$value)
 			{				
-				$prep->bindValue(":RECCOUNT".$bind,$recCount,PDO::PARAM_INT);
-				$prep->bindValue(":TOTALCOUNT".$bind,$totalCount,PDO::PARAM_INT);
+				$prep->bindValue(":RECCOUNT".$bind,$value["RECOMMENDCOUNT"],PDO::PARAM_INT);
+				$prep->bindValue(":TOTALCOUNT".$bind,$value["TOTALCOUNT"],PDO::PARAM_INT);
 				$bind++;
 			}
 			$prep->execute();
@@ -38,7 +38,7 @@ class MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL extends TABL
 		catch (PDOException $e)
 		{
 			//add mail/sms
-			throw new jsException($e);
+			jsException::nonCriticalError($e);
 		}
 	}
 }
