@@ -411,7 +411,7 @@ $js_arr[]=array("jsms/profile/ep/mobeditview_js"                                
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"              => "5");
 $js_arr[]=array("jsms/common/disableScroll_js"  => "1");
 $js_arr[]=array("jsms/utility/sessionStorage_js"    => "3");
-$js_arr[]=array("jsms/myjs/myjs_js"                    => "22");
+$js_arr[]=array("jsms/myjs/myjs_js"                    => "23");
 $js_arr[]=array("jsms/myjs/touchswipemyjs_js"            => "12");
 $js_arr[]=array("showHide_js"     => "2");
 $js_arr[]=array("showHideReg_js"      => "2");
@@ -461,7 +461,7 @@ $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"            => "13")
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"         => "14");
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                           => "47");
 $js_arr[]=array("jsms/search/inview"   => "2");
-$js_arr[]=array("jsms/login/newMobLogin_js"                         => "24");
+$js_arr[]=array("jsms/login/newMobLogin_js"                         => "25");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
 $js_arr[]=array("jsms/login/resetPass_js"   => "2");
 $js_arr[]=array("jsms/hamburger/ham_js"         => "11");
