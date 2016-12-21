@@ -11,8 +11,8 @@ class DialerHandler
         public function getEST($time='')
         {
                 $dateTime =date("Y-m-d H:i:s");
-                $sql = "SELECT CONVERT_TZ('$dateTime','SYSTEM','US/Eastern') as time";
-                $res = $this->db->prepare($sql);
+                $sql = "SELECT now() as time";
+                $res = $this->db->prepare($sql,$this->db_js);
                 $res->execute();
                 if($row = $res->fetch(PDO::FETCH_ASSOC)){
                         $dateTime = $row['time'];
