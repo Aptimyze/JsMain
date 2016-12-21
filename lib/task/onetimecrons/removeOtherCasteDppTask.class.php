@@ -58,6 +58,9 @@ EOF;
 		{
 			unset($casteArr[$flipArr[$p_caste]]);
 		}
-		return "'".implode("','",$casteArr)."'";
+		if(is_array($casteArr) && count($casteArr)>0)
+			return "'".implode("','",$casteArr)."'";
+		else
+			return;
 	}
 }
