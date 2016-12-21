@@ -645,7 +645,7 @@ expiringInterest.prototype.noResultCase = function() {
     if(this.error)
       this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Failed to Load");
     else
-      this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Interest Expiring every week will appear here, take urgent action(Accept or Decline) as soon as you see them");
+      this.emptyInnerHtml=this.emptyInnerHtml.replace(/\{\{NO_PROFILE_TEXT\}\}/g,"Interests which expire in next 7 days will appear here. Respond to them immediately after they appear here");
     this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,'');
     this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_TOTAL\}\}/g,'');
     $("#engagementContainer").after(this.containerHtml);

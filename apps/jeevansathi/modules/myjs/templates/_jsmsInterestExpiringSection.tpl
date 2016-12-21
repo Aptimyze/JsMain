@@ -31,7 +31,7 @@
 		~else`
 			<div class="bg9">
 			<div class="pad15 txtc">
-				<div class="fontlig f14 color8">Interest Expiring every week will appear here, take urgent action(Accept or Decline) as soon as you see them
+				<div class="fontlig f14 color8">Interests which expire in next 7 days will appear here. Respond to them immediately after they appear here
 				</div>
 			</div>
 			</div>

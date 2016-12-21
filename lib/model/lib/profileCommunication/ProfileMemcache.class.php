@@ -205,7 +205,7 @@ class ProfileMemcache
     private $HOROSCOPE_REQUEST_BY_ME;
     //private $HOROSCOPE_NEW;
     private $contactedProfile;
-    
+    private $INTEREST_EXPIRING;
     
     
     /**
@@ -1234,8 +1234,7 @@ class ProfileMemcache
      * @return integer
      */
     public function getNOT_REP()
-    {
-        
+    { 
         return $this->NOT_REP ? $this->NOT_REP : 0;
         
     }

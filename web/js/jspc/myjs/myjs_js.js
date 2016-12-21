@@ -270,6 +270,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
                 }
 	            	else if(type=="accept")
 	            	{
+                  updateExpiringCount(div);
 	            		$("#"+div).find("div.intdisp").html("Accepted");
                   $("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
 	            		$("#"+div).find("div.intdisp").removeClass("intdisp");
@@ -277,6 +278,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 	            	}
 	            	else if(type=="decline")
 	            	{
+                  updateExpiringCount(div);
 	            		$("#"+div).find("div.intdisp").html("Declined");
 	            		$("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
                   $("#"+div).find("div.intdisp").removeClass("intdisp");
@@ -369,7 +371,18 @@ catch(e){}
     }
 
 
-	
+	function updateExpiringCount(div)
+  {
+      if(div.indexOf("EXPIRINGINTEREST") >= 0)
+      {
+        expiringCount = $("#totalExpiringInterestReceived").html();
+        expiringCount = parseInt(expiringCount) - 1;
+        $("#totalExpiringInterestReceived").html(expiringCount);
+        $("#seeAllExpiringCount").html(expiringCount);
+        var heading = "Interests are expiring this week, Take action NOW Accept/Decline";
+        $("#engBarInfoMessage").html(expiringCount + " " + heading);
+      }
+  }
 
 //Completion Bar 
 function start1() {

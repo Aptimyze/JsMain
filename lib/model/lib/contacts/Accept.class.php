@@ -179,7 +179,7 @@ class Accept extends ContactEvent
         $profileMemcacheServiceViewedObj->update("NOT_REP",-1);
         if($daysDiff >= 84 && $daysDiff <= 90)
         {
-          $profileMemcacheServiceViewedObj->update("INTEREST_EXPIRING",-1); 
+          $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
         }
         if ($filtered!='Y'){
         $profileMemcacheServiceViewerObj->update("OPEN_CONTACTS",-1);
