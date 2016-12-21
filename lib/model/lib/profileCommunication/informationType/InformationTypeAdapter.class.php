@@ -113,7 +113,7 @@ class InformationTypeAdapter
                 $profilesArray                                 = $introCallObj->getHistoryOfIntroCallsComplete($this->profileId, $condition, $skipArray);
                 break;
 	    case "VISITORS":
-	        $visitorObj                              = new Visitors($this->profileId);
+	        $visitorObj                              = new Visitors(LoggedInProfile::getInstance('newjs_master'));
                 $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"],array("matchedOrAll"=>$condition["matchedOrAll"]));
 			break;
 	    case "MY_MATCHES":
