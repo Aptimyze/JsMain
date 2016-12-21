@@ -277,6 +277,7 @@
 	</div>
 </div>
 
+<!-- Interest Expiring section -->
 ~if $apiData.interest_expiring.view_all_count > 0`
 	~include_partial("myjs/jsmsInterestExpiringSection",[expiringData=>$apiData.interest_expiring])`
 ~/if`

@@ -379,7 +379,7 @@ catch(e){}
         expiringCount = parseInt(expiringCount) - 1;
         $("#totalExpiringInterestReceived").html(expiringCount);
         $("#seeAllExpiringCount").html(expiringCount);
-        var heading = "Interests are expiring this week, Take action NOW Accept/Decline";
+        var heading = "Interests will be moved to archived inbox in next 7 days, respond now!";
         $("#engBarInfoMessage").html(expiringCount + " " + heading);
       }
   }

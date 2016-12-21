@@ -128,6 +128,9 @@ class MyJs implements Module
 							case "VISITORS":
 								$key = "VISITOR_ALERT";
 								break;
+							case "INTEREST_EXPIRING":
+								$key = "INTEREST_EXPIRING";
+								break;
 							case "ACCEPTANCES_SENT":
 								$key = "ACC_BY_ME";
 								break;
