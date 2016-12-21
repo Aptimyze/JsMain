@@ -20,7 +20,6 @@
 			var AndroidPromotion= ~JsConstants::$AndroidPromotion`;
       var trackingProfile = "~$sf_request->getAttribute('profileid')`";
                         var webView= "~$webView`";
-                        console.log(~$sf_request->getAttribute('mobLogoutPage')`);
 	</script>
 	<meta name="verify-v1" content="y8P0QEbZI8rd6ckhDc6mIedNE4mlDMVDFD2MuWjjW9M=" />
 	<meta http-equiv="content-language" content="en" />
@@ -192,7 +191,6 @@ var jqueryVar = setInterval(function(){ checkJquery() }, 500);
 
 function checkJquery() {
     if(window.jQuery) {
-        console.log("Jquery Loaded");
         stopInterval();
 
         var lib2 = document.createElement('script');
@@ -203,7 +201,7 @@ function checkJquery() {
         lib.src = "~JsConstants::$imgUrl`/min/?f=/js/modernizr_p_js_3.js,/js/tracking_js_7.js,/js/jsms/common/CommonFunctions_22.js,/js/jsms/common/scrollTo_1.js,/js/jsms/common/urlParamHandling_1.js,/js/app_promo_js_41.js,/js/commonMob_2.js,/js/jsms/common/touchswipe_js_3.js,/js/jsms/common/disableScroll_js_1.js,/js/jsms/common/history_js_7.js,/js/commonExpiration_js_2.js,/js/rippleEffectCommon_js_3.js,/js/common_comscore_js_2.js";
         document.head.appendChild(lib);
     } else{
-        console.log("Jquery not loaded")
+        console.log("Jquery not loaded");
     }
 }
 function stopInterval(){
