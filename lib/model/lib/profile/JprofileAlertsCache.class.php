@@ -1,4 +1,8 @@
 <?php
+/*
+*  This Class is used for Caching of JProfile_Alerts. All the calls to the store are made through this Library only. It checks if the code is present in Cache or not. If it is, It returns the result , else it makes a call to DB.
+*
+*/
 class JprofileAlertsCache 
 {
 
@@ -80,25 +84,14 @@ class JprofileAlertsCache
         if($out === true)
         {
 
-            $tempInsertResult['PROFILEID'] = $profileid;
-            $tempInsertResult['MEMB_CALLS'] = $alertArr['SERVICE_CALL'];
-            $tempInsertResult['OFFER_CALLS'] = $alertArr['SERVICE_CALL'];
-            $tempInsertResult['SERV_CALLS_SITE'] = $alertArr['MEM_IVR'];
-            $tempInsertResult['SERV_CALLS_PROF'] = $alertArr['MEM_IVR'];
-            $tempInsertResult['MEMB_MAILS'] = $alertArr['MEM_MAILS'];
-            $tempInsertResult['CONTACT_ALERT_MAILS'] = $alertArr['SERVICE_EMAIL'];
-            $tempInsertResult['KUNDLI_ALERT_MAILS'] = $alertArr['SERVICE_EMAIL'];
-            $tempInsertResult['PHOTO_REQUEST_MAILS'] = $alertArr['SERVICE_EMAIL'];
-            $tempInsertResult['SERVICE_MAILS'] = $alertArr['SERVICE_EMAIL'];
-            $tempInsertResult['SERVICE_SMS'] = $alertArr['SERVICE_SMS'];
-            $tempInsertResult['SERVICE_MMS'] = $alertArr['SERVICE_SMS'];
-            $tempInsertResult['SERVICE_USSD'] = $alertArr['SERVICE_SMS'];
-            $tempInsertResult['PROMO_USSD'] = $alertArr['MEM_SMS'];
-            $tempInsertResult['PROMO_MMS'] = $alertArr['MEM_SMS'];
+            $keys = array('PROFILEID','MEMB_CALLS','OFFER_CALLS','SERV_CALLS_SITE','SERV_CALLS_PROF','MEMB_MAILS','CONTACT_ALERT_MAILS','KUNDLI_ALERT_MAILS','PHOTO_REQUEST_MAILS','SERVICE_MAILS','SERVICE_SMS','SERVICE_MMS','SERVICE_USSD','PROMO_USSD','PROMO_MMS');
 
-            $dummyResult['RESULT_VAL'] = $tempInsertResult;
+            $values = array($profileid,$alertArr['SERVICE_CALL'],$alertArr['SERVICE_CALL'],$alertArr['MEM_IVR'],$alertArr['MEM_IVR'],$alertArr['MEM_MAILS'],$alertArr['SERVICE_EMAIL'],$alertArr['SERVICE_EMAIL'],$alertArr['SERVICE_EMAIL'],$alertArr['SERVICE_EMAIL'],$alertArr['SERVICE_SMS'],$alertArr['SERVICE_SMS'],$alertArr['SERVICE_SMS'],$alertArr['MEM_SMS'],$alertArr['MEM_SMS']);
+
+            $tempInsertResult = array_fill_keys($keys, $values);
+
             $objProCacheLib = ProfileCacheLib::getInstance();
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $dummyResult['RESULT_VAL'], __CLASS__);
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $tempInsertResult, __CLASS__);
 
         }
   
@@ -110,6 +103,7 @@ class JprofileAlertsCache
     public function getUnsubscribedProfiles($profileIdArr) {     
         $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
         $result = $objJALT->getUnsubscribedProfiles($profileIdArr);
+        return $result;
     }
 
 //tested
@@ -221,13 +215,7 @@ class JprofileAlertsCache
 
     public function getAllSubscriptionsArr($profileArr) {
      
-                
-            foreach ($profileArr as $key => $value) {
-
-                    $tempResult = $this->getAllSubscriptions($value);
-                    $output[$value] = $tempResult;
-
-                          }              
+            $output = ProfileCacheLib::getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA,$profileArr,'*',__CLASS__);              
 
                  return $output;
              } 
@@ -252,26 +240,14 @@ class JprofileAlertsCache
         if($out === true)
         {
 
-            $tempInsertResult['PROFILEID'] = $profileid;
-            $tempInsertResult['MEMB_CALLS'] = 'S';
-            $tempInsertResult['OFFER_CALLS'] = 'S';
-            $tempInsertResult['SERV_CALLS_SITE'] = 'S';
-            $tempInsertResult['SERV_CALLS_PROF'] = 'S';
-            $tempInsertResult['MEMB_MAILS'] = 'S';
-            $tempInsertResult['CONTACT_ALERT_MAILS'] = 'S';
-            $tempInsertResult['KUNDLI_ALERT_MAILS'] = 'S';
-            $tempInsertResult['PHOTO_REQUEST_MAILS'] = 'S';
-            $tempInsertResult['NEW_MATCHES_MAILS'] = 'S';
-            $tempInsertResult['SERVICE_SMS'] = 'S';
-            $tempInsertResult['SERVICE_MMS'] = 'S';
-            $tempInsertResult['SERVICE_USSD'] = 'S';
-            $tempInsertResult['PROMO_USSD'] = 'S';
-            $tempInsertResult['SERVICE_MAILS'] = 'S';
-            $tempInsertResult['PROMO_MMS'] = 'S';
+           $keys = array('PROFILEID','MEMB_CALLS','OFFER_CALLS','SERV_CALLS_SITE','SERV_CALLS_PROF','MEMB_MAILS','CONTACT_ALERT_MAILS','KUNDLI_ALERT_MAILS','PHOTO_REQUEST_MAILS','SERVICE_MAILS','SERVICE_SMS','SERVICE_MMS','SERVICE_USSD','PROMO_USSD','PROMO_MMS');
+            
+           $values = array($profileid,'S','S','S','S','S','S','S','S','S','S','S','S','S','S');
 
-            $dummyResult['RESULT_VAL'] = $tempInsertResult;
+           $tempInsertResult = array_fill_keys($keys, $values);
+
             $objProCacheLib = ProfileCacheLib::getInstance();
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $dummyResult['RESULT_VAL'], __CLASS__);
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $tempInsertResult, __CLASS__);
 
         }   
 
@@ -295,9 +271,8 @@ class JprofileAlertsCache
                 $tempInsertResult[strtoupper($key)] = $val;
             }    
 
-            $dummyResult['RESULT_VAL'] = $tempInsertResult;
             $objProCacheLib = ProfileCacheLib::getInstance();
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $arrRecordData['PROFILEID'], $dummyResult['RESULT_VAL'], __CLASS__);
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $arrRecordData['PROFILEID'], $tempInsertResult, __CLASS__);
 
         }     
     } 
