@@ -39,12 +39,12 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                 $viewedGender = $this->Profile->getGENDER();
                                 //$viewSimilarProfileObj = new ViewSimilarPageProfiles($loggedInProfileObj, $this->Profile);
                                 //View Similar Profile Object to set Search Criteria
-                                $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
                                 if($pid){
                                     $modVal = 9;
                                     $loggedinMod = $loggedInProfileObj->getPROFILEID()%$modVal;
                                     $modResult =  array(1);
                                     if(JsConstants::$vspServer == 'live' && !MobileCommon::isDesktop() && in_array($loggedinMod,$modResult)){
+                                      $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile,$removeFilters=1);
                                       if($viewerGender == 'M')
                                         $feedURL = JsConstants::$vspMaleUrl;
                                       else
@@ -65,14 +65,18 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     }
                                     else 
                                     {
+                                          $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
                                           if(MobileCommon::isDesktop() || MobileCommon::isAndroidApp())
                                             $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria();
                                           else
                                             $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria("","ios");
                                     }
                                 }
-                                else
+                                else{
+                                   $viewSimilarProfileObj=new viewSimilarfiltering($loggedInProfileObj,$this->Profile);
                                   $profileidsort = $viewSimilarProfileObj->getViewSimilarCriteria($request->getParameter('searchid'),"ios");
+                                  
+                                }
                                 $searchEngine = 'solr';
                                 $outputFormat = 'array';
                                 if(MobileCommon::isDesktop())
