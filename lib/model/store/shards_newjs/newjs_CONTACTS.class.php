@@ -615,9 +615,9 @@ public function getSendersPending($profileids)
 			// 	$sql = $sql.",CASE WHEN DATEDIFF(NOW( ) ,  `TIME`) <=90 THEN 0 ELSE 1 END AS TIME1 ";
 			if ($time)
 				$sql = $sql.",CASE
-				WHEN DATEDIFF(NOW( ) ,  `TIME` ) <= 90 AND DATEDIFF(NOW( ) ,  `TIME` ) >= 84  THEN 2 
-				WHEN DATEDIFF(NOW( ) ,  `TIME` ) <=84 THEN 0
-				WHEN DATEDIFF(NOW( ) ,  `TIME` ) >90 THEN 1
+				WHEN DATEDIFF(NOW( ) ,  `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." AND DATEDIFF(NOW( ) ,  `TIME` ) >= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT."  THEN 2 
+				WHEN DATEDIFF(NOW( ) ,  `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." THEN 0
+				WHEN DATEDIFF(NOW( ) ,  `TIME` ) > ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." THEN 1
 				END AS TIME1 ";
 			$sql = $sql." FROM newjs.CONTACTS WHERE";
 			if($where)
