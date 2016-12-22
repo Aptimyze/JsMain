@@ -23,9 +23,9 @@ EOF;
 			sfContext::createInstance($this->configuration);
 
 		ini_set('memory_limit','512M');
-		$limit = 20;
+		$limit = 2000;
 		$offset = 0;
-		$incrementValue = 20;
+		$incrementValue = 2000;
 		$profileIdStr  = "";
 		$hincome = "19";
 		for($activeServerId=0;$activeServerId<=2;$activeServerId++)
@@ -43,15 +43,16 @@ EOF;
 				}				
 				foreach($profileData as $key=>$value)
 				{
-					if($value["HINCOME"]!=19 && ($value["HINCOME"] != $value["LINCOME"]+1)) //change != to ==
+					if($value["HINCOME"]!=19 && ($value["HINCOME"] == $value["LINCOME"]+1)) //change != to ==
 					{
 						$rArr["minIR"] = $value["LINCOME"];
 						$rArr["maxIR"] = $hincome;
 						$incomeMapObj = new IncomeMapping($rArr);
 						$incomeMapArr = $incomeMapObj->incomeMapping();
-						$Income = $incomeMapArr['istr'];
+						$Income = $incomeMapArr['istr'];						
 						$jpartnerMasterObj->updateIncomeValueForProfile($value["PROFILEID"],$hincome,$Income,$value["HINCOME"]);			
 						$currentTime = date("Y-m-d H:i:s");
+						unset($incomeMapObj);
 						if($value["GENDER"] == "M")
 						{							
 							$searchFemaleObj = new NEWJS_SEARCH_FEMALE();
@@ -67,7 +68,7 @@ EOF;
 					}				
 				}				
 				$offset +=$incrementValue;
-
+				unset($profileData);
 			}
 			$offset = 0;
 			unset($jpartnerSlaveObj);
