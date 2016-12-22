@@ -21,7 +21,7 @@ class kibanaCompressingTask extends sfBaseTask
     $this->namespace        = 'Kibana';
     $this->name             = 'indicesCompressor';
     //This is the path to ELK server
-    $this->elkServer = 'localhost';
+    $this->elkServer = 'http://172.10.18.66';
     //This is the port number where Elastic Search is running
     $this->elkPort = '9200';
     //This is the index name which will be searched for getting the records.
@@ -42,7 +42,7 @@ EOF;
     protected function execute($arguments = array(), $options = array())
     {   
       //Path of Folder which will store all Data Files.
-      $dirPath = '/home/ayush/Desktop/logsForCompress';
+      $dirPath = '/data/applogs/CompressData';
                 if (false === is_dir($dirPath)) {
             mkdir($dirPath,0777,true);
         }

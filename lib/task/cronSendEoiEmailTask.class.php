@@ -220,6 +220,8 @@ $memcacheObj->set("cronSendEoi",$i);
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
         
+        if(CommonConstants::contactMailersCC)
+        {
         $contactNumOb=new newjs_JPROFILE_CONTACT();
         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
         if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
@@ -227,7 +229,8 @@ $memcacheObj->set("cronSendEoi",$i);
            $ccEmail =  $numArray['0']['ALT_EMAIL'];    
         }
         else $ccEmail = "";
-
+        }
+        else $ccEmail = "";
         $emailSender->send('','',$ccEmail);
         $status = $emailSender->getEmailDeliveryStatus();
         unset($emailSender);

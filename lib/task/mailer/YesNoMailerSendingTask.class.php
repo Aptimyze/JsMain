@@ -122,7 +122,7 @@ EOF;
         $subject = "Respond to ".($count)." member(s) waiting for your response | ".$date;
 	$tpl->setSubject($subject);
 
-        if(JsConstants::$contactMailersCC)
+        if(CommonConstants::contactMailersCC)
         {    
 
         $contactNumOb=new newjs_JPROFILE_CONTACT();

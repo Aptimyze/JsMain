@@ -54,7 +54,7 @@ class BrowserNotificationEnums
       
     public static $publishedNotificationLog = "/web/uploads/NotificationLogs/PublishedNotifications.txt";
     public static $transferredNotificationlog = "/web/uploads/NotificationLogs/TransferredNotifications.txt";
-    public static $addNotificationLog = true;  //add published and transferred msg keys in logs
+    public static $addNotificationLog = false;  //add published and transferred msg keys in logs
     public static $notificationChannelType = array("BROWSER_NOTIFICATION","FSOAPP_NOTIFICATION");
     public static $instantNotifications = array("AGENT_ONLINE_PROFILE","AGENT_FP_PROFILE", "PROFILE_VISITOR","EOI","MESSAGE_RECEIVED","EOI_REMINDER");
     public static $renewalReminderNotification = array("MEM_EXPIRE_A5", "MEM_EXPIRE_A10", "MEM_EXPIRE_A15", "MEM_EXPIRE_B1", "MEM_EXPIRE_B5");
