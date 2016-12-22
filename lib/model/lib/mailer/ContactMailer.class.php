@@ -202,7 +202,15 @@ class ContactMailer
 		$photoCount = $picture->getNoOfPics($profileArr);
 		if($photoCount[$receiver->getPROFILEID()]>0)
 		{
-			$photo = 1;
+			// Photo is visible on accept
+			if($receiver->getPHOTO_DISPLAY() == 'C')
+			{
+				$photo = 2;
+			}
+			else
+			{
+				$photo = 1;
+			}
 		}
 		else
 		{
