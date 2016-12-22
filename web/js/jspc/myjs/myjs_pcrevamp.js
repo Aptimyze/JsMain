@@ -871,8 +871,9 @@ else {
 	    });
     }
    var engagementClickHanding = function (ele, currentTabId) {
+    // same height for all tabs.
     if(currentTabId=='0' || currentTabId=='1') var height='390px';
-      else var height='350px';      
+      else var height='390px';      
     if(currentTab == -1)
     {
       $("#engagementContainerTop").addClass("myjs-p6");
