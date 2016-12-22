@@ -398,6 +398,12 @@ class notificationActions extends sfActions
         $loginData =$request->getAttribute("loginData");
         $profileid = ($loginData['PROFILEID'] ? $loginData['PROFILEID'] : null);
         $osType = MobileCommon::isApp();
+        if($osType == null){
+            $webOs = MobileCommon::isAppWebView();
+            if($webOs == "A"){
+                $osType = "A";
+            }
+        }
         try{
             if($osType == null || $osType == ""){
                 $respObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_CHANNEL);
