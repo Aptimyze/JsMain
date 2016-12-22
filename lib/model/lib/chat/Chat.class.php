@@ -46,9 +46,11 @@ class Chat {
         }
     }
 
-    public function storeChatTimeoutProfiles($profileid){
+    public function storeChatTimeoutProfiles($profileid,$cookie,$uagent){
         if($profileid){
             $paramsArr['PROFILEID'] = $profileid;
+            $paramsArr['COOKIE'] = $cookie;
+            $paramsArr['UAGENT'] = $uagent;
             $chatContactsLogObj = new newjs_CHAT_TIMEOUT_LOG();
             $chatContactsLogObj->insert($paramsArr);
         }

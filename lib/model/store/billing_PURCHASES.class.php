@@ -459,7 +459,7 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT, ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD WHERE PD.BILLID=PUR.BILLID AND PUR.BILLID=:BILLID";
+            $sql  = "SELECT PD.SERVICEID,PD.CUR_TYPE,PD.PRICE AS PRICE_RS,PUR.DISCOUNT,PD.START_DATE,PD.END_DATE,PUR.PROFILEID,USERNAME,PUR.NAME,PUR.WALKIN,PUR.OVERSEAS,PUR.ENTRY_DT, ADDRESS, CITY, PIN, EMAIL,DISCOUNT_TYPE, TAX_RATE,SERVICE_TAX_CONTENT,COUNTRY,ENTRYBY FROM billing.PURCHASES AS PUR, billing.PURCHASE_DETAIL AS PD WHERE PD.BILLID=PUR.BILLID AND PUR.BILLID=:BILLID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
             $prep->execute();
@@ -713,11 +713,8 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            if (is_array($profileid)) {
-                $profileid = implode(",", $profileid);
-            }
             if (!empty($profileid)) {
-                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND PROFILEID IN ($profileid) GROUP BY PROFILEID ORDER BY ENTRY_DT DESC";
+                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND PROFILEID IN ($profileid) ORDER BY ENTRY_DT DESC LIMIT 1";
                 $prep = $this->db->prepare($sql);
                 $prep->execute();
                 while ($result  = $prep->fetch(PDO::FETCH_ASSOC)) {

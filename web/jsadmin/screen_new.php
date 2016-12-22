@@ -427,8 +427,8 @@ if (authenticated($cid)) {
 		/*
 			changing to get original and modified your info here and saving in table Profile
 		 */
-        $your_info = mysql_real_escape_string($arrProfileUpdateParams['YOURINFO']);
-        $your_info_original = mysql_real_escape_string($_POST['YOURINFO_ORIGINAL']);
+        // $your_info = mysql_real_escape_string($arrProfileUpdateParams['YOURINFO']);
+        // $your_info_original = mysql_real_escape_string($_POST['YOURINFO_ORIGINAL']);
 
       
 				/*if (0)
