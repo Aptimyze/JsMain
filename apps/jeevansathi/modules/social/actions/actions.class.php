@@ -785,12 +785,12 @@ class socialActions extends sfActions
 	if(is_array($album))
 	{
 		$this->countPics = count($album);
-
 		//Code for album view logging
 		if($requestedProfileid != $loggedInProfileid)
 		{
                         $producerObj = new Producer();
-                        if($loggedInProfileid%PictureStaticVariablesEnum::photoLoggingMod<PictureStaticVariablesEnum::photoLoggingRem){
+                        $loggedInProfileForLogging = LoggedInProfile::getInstance('newjs_master');
+                        if($loggedInProfileid && $loggedInProfileid%PictureStaticVariablesEnum::photoLoggingMod<PictureStaticVariablesEnum::photoLoggingRem && $loggedInProfileForLogging->getGENDER()!= $ProfileObj->getGENDER()){
                             if($producerObj->getRabbitMQServerConnected()){
                                 $triggerOrNot = "inTrigger";
                                 $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$loggedInProfileid,VIEWED=>$requestedProfileid)), 'redeliveryCount'=>0 );
