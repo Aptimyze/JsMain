@@ -6250,7 +6250,7 @@ $(document).ready(function() {
                 jQuery.myObj.ajax(ajaxConfig);
 	});
     $("body").on('click','#email_statusView',function () {
-		if($("#alt_email_statusView").html()!='Verify') return;
+		if($("#email_statusView").html()!='Verify') return;
                 showCommonLoader();
                 var ajaxData={'emailType':'1'};
                 var ajaxConfig={};
