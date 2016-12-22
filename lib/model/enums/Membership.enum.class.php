@@ -139,6 +139,18 @@ class VariableParams
 		"JSAA_mobile_website_ADDON_MEMBERSHIP_DOL",
 		"Android_app_ADDON_MEMBERSHIP_DOL",
 		"old_mobile_website_ADDON_MEMBERSHIP_DOL",
+        "desktop_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "iOS_app_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "mobile_website_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "JSAA_mobile_website_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "Android_app_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "old_mobile_website_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "desktop_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "iOS_app_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "mobile_website_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "JSAA_mobile_website_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "Android_app_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "old_mobile_website_MAIN_HIDDEN_MEMBERSHIP_DOL"
     );
     public static $vasOrder = array(
         'T',

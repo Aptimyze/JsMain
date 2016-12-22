@@ -74,14 +74,15 @@ class WriteMessagev1Action extends sfAction
 						}
 						else
 							$nextPaginationCall=false;
-
+						$countChat = $chatLogObj->markChatSeen($this->loginProfile->getPROFILEID(),$profileid);
 					}
 					else{
 						$messageDetailsArr = $messageLogObj->getMessageHistory($this->loginProfile->getPROFILEID(),$profileid);
 						$nextPaginationCall=false;
 					}
 					$count = $messageLogObj->markMessageSeen($this->loginProfile->getPROFILEID(),$profileid);
-					if($count>0)
+					
+					if($count>0 )
 					{
 						$profileMemcacheServiceObj = new ProfileMemcacheService($this->loginProfile);
 						$profileMemcacheServiceObj->update("MESSAGE_NEW",-1);

@@ -120,6 +120,7 @@ class Producer
 			$this->channel->queue_declare(MQ::BUFFER_INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::DELETE_RETRIEVE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::UPDATE_SEEN_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+			$this->channel->queue_declare(MQ::UPDATE_FEATURED_PROFILE_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
 			$this->channel->queue_declare(MQ::CHAT_MESSAGE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
@@ -178,6 +179,10 @@ class Producer
 				case "UPDATE_SEEN":
 					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_SEEN_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
 					break;
+				case "UPDATE_FEATURED_PROFILE":
+					$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::UPDATE_FEATURED_PROFILE_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+					break;
+					
 				case "USERCREATION":
 					if (JsConstants::$jsChatFlag >= 1) {
 						$data = $msgdata['data'];

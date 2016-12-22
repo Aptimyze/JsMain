@@ -12,7 +12,9 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $LowDppLimit = 10;
         private $limitCommunityRec = 10;
 	const clusterRecordLimit = 10;
-        const _communityModelToggle=1;
+        const _communityModelToggle=0;
+        const limitNtWhenCommunity = 10;
+        const limitNtNoCommunity = 16;
         
 	protected function configure()
   	{
@@ -137,9 +139,16 @@ EOF;
                                                     
                                                         if($this->checkForCommunityModel($loggedInProfileObj->getPROFILEID(),$matchLogic)){
                                                             $communityModelNT = new CommunityModelMatchAlertsStrategy($loggedInProfileObj,$this->limitCommunityRec,MailerConfigVariables::$communityModelNT);
-                                                            $communityModelNT->getMatches($matchesSetting);
-                                                            $this->limitNtRec=10;
+                                                            $profilesArray = $communityModelNT->getMatches($matchesSetting);                                                                                                                
+                                                            if($profilesArray[0] == '')
+                                                            {
+                                                                $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$communityModelNT);
+                                                            }
+                                                            
+                                                            $this->limitNtRec=self::limitNtWhenCommunity;
                                                         }
+                                                        else
+                                                            $this->limitNtRec=self::limitNtNoCommunity;
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
