@@ -598,7 +598,7 @@ try{
     this.containerHtml=this.containerHtml.replace(/\{\{TOTAL_NUM\}\}/gi,totalPanels);  
     this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
     setTimeout(function(){ 
-      $("#engBarInfoMessage").html('<span id="expiringCount">'+expiringCount + '</span> Interests will be moved to archived inbox in next 7 days, respond now!');
+      $("#engBarInfoMessage").html('<span id="expiringCount">'+expiringCount + '</span> interests are expiring this week and will be removed from your Inbox. Please Accept/Decline');
     }, 50);
     
     $("#totalExpiringInterestReceived").text(totalCount);
