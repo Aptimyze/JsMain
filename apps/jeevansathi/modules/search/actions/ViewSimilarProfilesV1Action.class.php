@@ -107,9 +107,6 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     $paramArray["stype"]=  SearchTypesEnums::VIEW_SIMILAR_ANDROID;
                                 if(MobileCommon::isIOSApp())
                                     $paramArray["stype"]=  SearchTypesEnums::VIEW_SIMILAR_IOS;
-                                if(MobileCommon::isNewMobileSite())
-                                    $paramArray["stype"]=  SearchTypesEnums::VIEW_SIMILAR_JSMS;
-
                                 if(is_array($resultsArray))
                                 {   
                                      foreach ($resultsArray as $k => $v) {
