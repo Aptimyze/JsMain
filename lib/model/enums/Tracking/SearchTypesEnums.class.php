@@ -115,7 +115,6 @@ class SearchTypesEnums
         const SHORTLIST_JSPC="7";
         const VIEW_SIMILAR_ANDROID = "ACO";
         const VIEW_SIMILAR_IOS = "ICO";
-        const VIEW_SIMILAR_JSMS = "MCO";
         const VERIFIED_MATCHES_JSPC="VM";
 	const CONTACT_DETAIL_SMS='CDS';
         const VERIFIED_MATCHES_IOS="IVM";
