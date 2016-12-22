@@ -591,7 +591,7 @@ $js_arr[]=array("jspc/common/jquery_mousewheel" => "1");
 $js_arr[]=array("jspc/bounceMail/bounceMailDetection_js" => "1");
 $js_arr[]=array("jspc/contactus/sw"   => "3");
 $js_arr[]=array("jsms/settings/mobDeleteProfile_js"              => "16");
-$js_arr[]=array("commonExpiration_js"  => "2");
+$js_arr[]=array("commonExpiration_js"   => "3");
 $js_arr[]=array("sw"        => "6");
 $js_arr[]=array("main"      => "4");
 $js_arr[]=array("jsms/common/verificationIcon_js"     => "3");
