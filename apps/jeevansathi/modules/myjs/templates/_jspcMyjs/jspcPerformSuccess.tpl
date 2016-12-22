@@ -161,7 +161,6 @@
                     </div>
                 </li>
             </ul>
-            <div id="engBarInfoMessage" class="txtc fontlig f13 wid100p engBarInfoMsg" style="position: absolute; padding: 14px 27px; width: 100%;"></div>
             <div id="engagementContainerTop">
                 <div id="engagementContainer" class="disp-none"> </div>
             </div>

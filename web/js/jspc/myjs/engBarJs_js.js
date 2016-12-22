@@ -535,7 +535,6 @@ filteredInterest.prototype.noResultCase = function() {
   var expiringInterest = function() {
     this.name = "EXPIRINGINTEREST";
     this.containerName = this.name+"_Container";
-    this.heading = "Interests will be moved to archived inbox in next 7 days, respond now!";
     this.headingId = this.name+"_head";
     this.isEngagementBar = 1;
     this.list = this.name+"_List";
@@ -598,7 +597,10 @@ try{
     innerHtml=innerHtml+this.getCards(interestsCount,showViewAll);
     this.containerHtml=this.containerHtml.replace(/\{\{TOTAL_NUM\}\}/gi,totalPanels);  
     this.containerHtml=this.containerHtml.replace(/\{\{INNER_HTML\}\}/g,innerHtml);
-    $("#engBarInfoMessage").html(expiringCount + ' ' + this.heading);
+    setTimeout(function(){ 
+      $("#engBarInfoMessage").html('<span id="expiringCount">'+expiringCount + '</span> Interests will be moved to archived inbox in next 7 days, respond now!');
+    }, 50);
+    
     $("#totalExpiringInterestReceived").text(totalCount);
     if (!totalCount){
     temp2= $(this.containerHtml.trim());
