@@ -154,7 +154,7 @@ class Decline extends ContactEvent{
         $profileMemcacheServiceViewedObj->update("DEC_ME_NEW",1);
       if($currentFlag==ContactHandler::INITIATED)
       {
-        if($daysDiff >= 84 && $daysDiff <= 90)
+        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
         {
           $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
         }
