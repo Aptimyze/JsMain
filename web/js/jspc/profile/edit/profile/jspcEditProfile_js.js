@@ -3369,9 +3369,9 @@ EditApp = function(){
             var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
             $(document).scrollTop($(validationCheck).offset().top);
           }
-          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email)) 
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email) && editFieldArr.ALT_EMAIL) 
               showAlternateConfirmLayer($("#my_alt_emailView"));
-          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.viewApi.contact.my_email)) 
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.viewApi.contact.my_email) && editFieldArr.EMAIL) 
               showAlternateConfirmLayer($("#my_emailView"));
               
         },

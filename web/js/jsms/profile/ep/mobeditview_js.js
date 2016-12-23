@@ -106,9 +106,9 @@ var mobEditPage=(function(){
                         // check for showing email verification link sent confirmation
                         if(typeof editFieldArr != 'undefined')
                         {
-                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.Contact.ALT_EMAIL.outerSectionValue)) 
+                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.Contact.ALT_EMAIL.outerSectionValue) && editFieldArr.ALT_EMAIL) 
                                     showAlternateConfirmLayerMS(editFieldArr.ALT_EMAIL);
-                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.Contact.EMAIL.outerSectionValue)) 
+                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.Contact.EMAIL.outerSectionValue) && editFieldArr.EMAIL) 
                                     showAlternateConfirmLayerMS(editFieldArr.EMAIL);
                         }
                         
