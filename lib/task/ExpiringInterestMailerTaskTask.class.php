@@ -68,7 +68,7 @@ EOF;
       $dbName = JsDbSharding::getShardNo($serverId,true);
       $Contactsobj = new newjs_CONTACTS($dbName);
       $chunkstr = "AND RECEIVER%".$chunk."=".$i;
-      $profilemail = $Contactsobj->getContactsPending($serverId,$chunkstr);
+      $profilemail = $Contactsobj->getContactsExpiring($serverId,$chunkstr);
       if($profilemail)
       {
         $profileMailChunkArray = array_chunk($profilemail, $this->noOfChunksSender);
