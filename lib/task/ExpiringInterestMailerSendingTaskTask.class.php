@@ -15,7 +15,7 @@ class ExpiringInterestMailerSendingTaskTask extends sfBaseTask
 
 	  $this->namespace        = 'mailer';
 	  $this->name             = 'NEWJS_ExpiringInterestMailerSend';
-	  $this->briefDescription = 'send the mail to jeevansathi users for pending interests';
+	  $this->briefDescription = 'send the mail to jeevansathi users for expiring interests';
 $this->detailedDescription = <<<EOF
 Call it with:
 [php symfony mailer:NEWJS_ExpiringInterestMailerSend totalScript currentScript] 
