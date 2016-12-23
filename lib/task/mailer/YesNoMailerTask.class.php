@@ -57,6 +57,7 @@ EOF;
 				$temp=$value;
 			if(count($temp)>0)
 				$result[$key]=$temp;
+                        $arranged[$key] = null;
 			$skipProfileObj::unsetInstance($key);
 		}
 		return $result;
@@ -97,6 +98,7 @@ EOF;
 				$usercode = array_slice($usercode, 0, 10);
 			$usercode = implode(',',$usercode);
 			$mailerYNObj->InsertMailerYN($key,$usercode,$count);
+                        $contactResult[$key] = null;
 		}
 	}
  }
