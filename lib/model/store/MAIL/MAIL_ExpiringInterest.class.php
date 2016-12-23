@@ -10,7 +10,7 @@ class MAIL_ExpiringInterest extends TABLE
 	/**
 	  * 
 	**/
-	public function InsertMailerExpiring($pid,$usercode,$count)
+	public function InsertMailerEI($pid,$usercode,$count)
 	        {
 	                try
 	                {//print_r($pid);die;
@@ -27,7 +27,7 @@ class MAIL_ExpiringInterest extends TABLE
 	                }
 	        }
 
-	        public function UpdateMailerExpiring($pid,$mailStatus)
+	        public function UpdateMailerEI($pid,$mailStatus)
 	        {
 	                try
 	                {//print_r($pid);die;
@@ -43,7 +43,7 @@ class MAIL_ExpiringInterest extends TABLE
 	                        throw new jsException($e);
 	                }
 	        }
-	public function SelectMailerExpiring($totalScript,$currentScript)
+	public function SelectMailerEI($totalScript,$currentScript)
 	        {
 	                try
 	                {
@@ -66,7 +66,7 @@ class MAIL_ExpiringInterest extends TABLE
 	                }
 	        }
 
-	        public function EmptyMailerExpiring()
+	        public function EmptyMailerEI()
 	        {
 	                try
 	                {//print_r($pid);die;
