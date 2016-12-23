@@ -41,6 +41,13 @@ class BellCounts
 			{	
 				$bellCounts['DEC_ME_NEW']=0;
 			}
+			//Fix To cater IOS bug in revision 3.9 of mismatch in Message and photo request counts
+			if($isApp=="I" && $appVersion ==3.9)
+			{
+				$messageCount=$bellCounts['MESSAGE_NEW'];
+				 $bellCounts['MESSAGE_NEW']=$bellCounts['PHOTO_REQUEST_NEW'];
+				 $bellCounts['PHOTO_REQUEST_NEW']=$messageCount;
+			}
 			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $profileMemcacheObj->get("PHOTO_REQUEST_NEW") + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"] + $bellCounts['DEC_ME_NEW']);
 			return $bellCounts;
 		}
