@@ -148,7 +148,7 @@ class AgentAllocationDetails
 		elseif($method=="WEBMASTER_LEADS" || $subMethod=='WEBMASTER_LEADS')
 		{
             		if($subMethod == 'WEBMASTER_LEADS_EXCLUSIVE'){
-                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcPrm%");
+                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExPmWL%");
             		}
             		else{
                 		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcWL%");
