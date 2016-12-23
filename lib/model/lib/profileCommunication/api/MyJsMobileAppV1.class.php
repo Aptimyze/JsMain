@@ -42,13 +42,12 @@ $className = get_class($this);
 			$className::init();
 			
 		$displayV1= Array();
-		$request = sfContext::getInstance()->getRequest();
-		$showExpiring = $request->getParameter('showExpiring');
+		$showExpiring = $this->getExpiring();
 		foreach(self::$informationTypeFields as $key=>$value)
 		{
 			if(array_key_exists($key,$displayObj))
 			{
-				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isApp()))
+				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isIOSApp()))
 				{
 					continue;
 				}
@@ -246,7 +245,6 @@ private function getBannerMessage($profileInfo) {
 		{
 			$showExpiring = 1;
 		}
-        var_dump($showExpiring);die;
 		return $showExpiring;
     }
 
