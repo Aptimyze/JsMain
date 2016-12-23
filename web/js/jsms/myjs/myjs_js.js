@@ -84,6 +84,15 @@ function jsmsMyjsReady() {
         $("#jsmsProfilePic").bind('click',function() {
         	$(location).attr('href',siteUrl+"/profile/viewprofile.php?ownview=1");
         });
+        var circleDim = (($(window).innerWidth()-30)/4)-20;
+        $(".outerCircleDiv").each(function(){
+        	$(this).height(circleDim);
+        	$(this).width(circleDim);
+        });
+        $(".innerCircleDiv").each(function(){
+        	$(this).height(circleDim-2);
+        	$(this).width(circleDim-2);
+        });
         
 }
 
