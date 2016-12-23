@@ -14,7 +14,7 @@ class MAIL_ExpiringInterest extends TABLE
 	        {
 	                try
 	                {//print_r($pid);die;
-							$sql = "INSERT IGNORE INTO  MAIL.Expiring (RECEIVER,USERS,COUNTS,DATE) VALUES(:PROFILEID,:USERSENDER,:COUNT,now())";
+							$sql = "INSERT IGNORE INTO  MAIL.EXPIRING_MAILER (RECEIVER,USERS,COUNTS,DATE) VALUES(:PROFILEID,:USERSENDER,:COUNT,now())";
 							$res = $this->db->prepare($sql);
 				            $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
 				            $res->bindValue(":USERSENDER", $usercode, PDO::PARAM_STR);
@@ -32,7 +32,7 @@ class MAIL_ExpiringInterest extends TABLE
 	                try
 	                {//print_r($pid);die;
 	                	
-						$sql = "UPDATE MAIL.Expiring SET SENT=:STATUS WHERE RECEIVER=:PROFILEID";
+						$sql = "UPDATE MAIL.EXPIRING_MAILER SET SENT=:STATUS WHERE RECEIVER=:PROFILEID";
 						$res = $this->db->prepare($sql);
 			            $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
 			            $res->bindValue(":STATUS", $mailStatus, PDO::PARAM_INT);
@@ -47,7 +47,7 @@ class MAIL_ExpiringInterest extends TABLE
 	        {
 	                try
 	                {
-							$sql = "SELECT ID,RECEIVER,USERS,COUNTS,DATE FROM MAIL.Expiring WHERE SENT IS NULL AND RECEIVER%:totalScript=:currentScript";
+							$sql = "SELECT ID,RECEIVER,USERS,COUNTS,DATE FROM MAIL.EXPIRING_MAILER WHERE SENT IS NULL AND RECEIVER%:totalScript=:currentScript";
 							$res = $this->db->prepare($sql);
 				           // $res->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
 							$res->bindValue(":currentScript", $currentScript, PDO::PARAM_INT);
@@ -71,7 +71,7 @@ class MAIL_ExpiringInterest extends TABLE
 	                try
 	                {//print_r($pid);die;
 	                	
-						$sql = "TRUNCATE TABLE MAIL.Expiring";
+						$sql = "TRUNCATE TABLE MAIL.EXPIRING_MAILER";
 						$res = $this->db->prepare($sql);
                 		$res->execute();       
 	                }
@@ -84,7 +84,7 @@ class MAIL_ExpiringInterest extends TABLE
 	public function getMailCountForRange()
     	{           
                 try{    
-                        $sql = "SELECT count(1) as cnt,SENT FROM MAIL.Expiring group by SENT";
+                        $sql = "SELECT count(1) as cnt,SENT FROM MAIL.EXPIRING_MAILER group by SENT";
                         $res=$this->db->prepare($sql);
                         $res->execute();
 			$total = 0;
