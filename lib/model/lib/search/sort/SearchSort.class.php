@@ -316,7 +316,7 @@ class SearchSort
         }
         public function isPaidSorting($loggedInProfileObj){
                 if (!$loggedInProfileObj || $loggedInProfileObj->getPROFILEID() == '') {
-                        $this->paidSortStr = "if(tf(SUBSCRIPTION,F),1,if(tf(SUBSCRIPTION,D),1,0))";
+                        $this->paidSortStr = "if(tf(SUBSCRIPTION,F),1,if(tf(SUBSCRIPTION,X),1,0))";
                 }
         }
         public function getPaidSorting(){
