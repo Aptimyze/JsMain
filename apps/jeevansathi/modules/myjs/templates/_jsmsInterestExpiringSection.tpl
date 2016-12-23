@@ -9,8 +9,8 @@
 					~if $tupleInfo.photo.url`
 						~assign var=counter value=$counter+1`
 						<div class="mar05 dispibl">
-							<div class="row mar05 bg7 brdr50p posrel wid70 hgt70">
-		                    <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$expiringData.tracking`&actual_offset=~$id+1`&contact_id=~$expiringData.contact_id`&tupleId=~$id`&searchid=23&total_rec=~$expiringData.view_all_count`"><img src="~$tupleInfo.photo.url`" class="cell vmid brdr50p" style="width:68px;height:68px;margin-top:1px;" /></a>
+							<div class="row mar05 bg7 brdr50p posrel outerCircleDiv">
+		                    <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$expiringData.tracking`&actual_offset=~$id+1`&contact_id=~$expiringData.contact_id`&tupleId=~$id`&searchid=23&total_rec=~$expiringData.view_all_count`"><img src="~$tupleInfo.photo.url`" class="cell vmid brdr50p innerCircleDiv" style="margin-top:1px;" /></a>
 							</div>
 						</div>
 					~/if`
@@ -19,7 +19,7 @@
 			~if $expiringData.view_all_count>3`
 				<div class="mar05 dispibl">
 				<a href="~$SITE_URL`/profile/contacts_made_received.php?page=eeoi&filter=R">
-					<div class="row mar05 bg7 wid75 hgt75 brdr50p posrel">
+					<div class="row mar05 bg7 brdr50p posrel outerCircleDiv">
 	            	<div class="cell vmid white fullwid f23 fontlig txtc">+~math equation="x-y" x=$expiringData.view_all_count y=3`
 	            	</div>
 	    			</div>
