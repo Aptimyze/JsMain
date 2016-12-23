@@ -8,6 +8,22 @@ class DialerHandler
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
         }
+        public function getEST($time='')
+        {
+                $sql = "SELECT now() as time";
+                $res = $this->db->prepare($sql,$this->db_js);
+                $res->execute();
+                if($row = $res->fetch(PDO::FETCH_ASSOC)){
+                        $dateTime = $row['time'];
+		}
+		if($time){
+			return $dateTime;
+		}
+		else{
+			$dateArr =@explode(" ",$dateTime);
+			return $dateArr[0];
+		}
+        }
         public function getCampaignEligibilityStatus($campaign_name,$eligibleType='')
         {
 		$entryDt =date("Y-m-d",time()-10.5*60*60);
@@ -24,9 +40,11 @@ class DialerHandler
 		}
                 return $dataArr;
         }
-        public function updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i)
+        public function updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i, $dateSet='')
         {
-                $sql = "REPLACE INTO js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS(`CAMPAIGN`,`ELIGIBLE_TYPE`,`STEP_COMPLETED`,`ENTRY_DT`) VALUES('$campaign_name','$eligibleType','$i',now())";
+		if(!$dateSet)
+			$dateSet =date("Y-m-d");
+                $sql = "REPLACE INTO js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS(`CAMPAIGN`,`ELIGIBLE_TYPE`,`STEP_COMPLETED`,`ENTRY_DT`) VALUES('$campaign_name','$eligibleType','$i','$dateSet')";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js_111));
         }
         public function getInDialerEligibleProfiles($x,$campaign_name='')

@@ -74,6 +74,28 @@ class SearchUtility
 						$matchalerts_LOG = new matchalerts_LOG();
 						$hideArr.= $matchalerts_LOG->getProfilesSentInMatchAlerts($pid,$seperator);
 					}
+
+
+					
+					$request = sfContext::getInstance()->getRequest();	
+					if($request->getParameter('hitFromMyjs') == 1 && $request->getParameter('caching') == 0)
+					{	
+					$stype = $request->getParameter('stype');	
+					$listnameForMyjs = $request->getParameter('listingName');
+					$cacheCriteria = MyjsSearchTupplesEnums::getListNameForCaching($listnameForMyjs);
+
+
+	                                        $forNextPrev = JsMemcache::getInstance()->get("cached".$cacheCriteria."Myjs".$pid);
+						$forNextPrev = unserialize($forNextPrev);
+						if(is_array($forNextPrev))
+						{	
+							$forNextPrevTemp = $forNextPrev;
+							$forNextPrev = implode(" ",$forNextPrevTemp);
+							$hideArr.= $forNextPrev;
+						
+						}
+					}
+					
 				}
 				// adding code to remove temporary contacts sent by the user while the user is unscreened.
 				if($tempContacts)
@@ -853,7 +875,7 @@ class SearchUtility
 	}
 
 	public static function cachedSearchApi($type,$request="",$pid="",$statusArr="",$resultArr="")
-        {
+        {  
                 $caching = $request->getParameter("caching");
                 if($caching)
                 {       
@@ -870,6 +892,14 @@ class SearchUtility
                                 {      
                                         JsMemcache::getInstance()->set("cachedJJS$pid",serialize($statusArr));
                                         JsMemcache::getInstance()->set("cachedJJR$pid",serialize($resultArr));
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr)&&array_key_exists('profiles',$resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedJJRMyjs$pid",serialize($profileIdPoolArray));
+
 					return 1;
                                 }       
                                 elseif($type=='get')
@@ -885,19 +915,28 @@ class SearchUtility
                                 }
                         }
 			elseif($request->getParameter("partnermatches")=='1')
-                        {
+                        {	
                                 if($type=='set')
-                                {
+                                {	
                                         JsMemcache::getInstance()->set("cachedPMS$pid",serialize($statusArr));
-                                        JsMemcache::getInstance()->set("cachedPMR$pid",serialize($resultArr));
+                                        JsMemcache::getInstance()->set("cachedPMR$pid",serialize($resultArr)); 
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedPMRMyjs$pid",serialize($profileIdPoolArray));
+
+
                                         return 1;
                                 }
                                 elseif($type=='get')
-                                {
+                                {	
                                         $statusArr = JsMemcache::getInstance()->get("cachedPMS$pid");
                                         $resultArr = JsMemcache::getInstance()->get("cachedPMR$pid");
                                         if($statusArr && $resultArr)
-                                        {
+                                        {	
                                                 $cachedArr["statusArr"] = unserialize($statusArr);
                                                 $cachedArr["resultArr"] = unserialize($resultArr);
                                                 return $cachedArr;
@@ -905,19 +944,27 @@ class SearchUtility
                                 }
                         }
 			elseif($request->getParameter("verifiedMatches")=='1')
-                        {
+                        {	
                                 if($type=='set')
-                                {
+                                {	
                                         JsMemcache::getInstance()->set("cachedVMS$pid",serialize($statusArr));
                                         JsMemcache::getInstance()->set("cachedVMR$pid",serialize($resultArr));
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedVMRMyjs$pid",serialize($profileIdPoolArray));
                                         return 1;
                                 }
                                 elseif($type=='get')
-                                {
+                                {	
                                         $statusArr = JsMemcache::getInstance()->get("cachedVMS$pid");
                                         $resultArr = JsMemcache::getInstance()->get("cachedVMR$pid");
+                                        
                                         if($statusArr && $resultArr)
-                                        {
+                                        {	
                                                 $cachedArr["statusArr"] = unserialize($statusArr);
                                                 $cachedArr["resultArr"] = unserialize($resultArr);
                                                 return $cachedArr;
@@ -925,14 +972,82 @@ class SearchUtility
                                 }
                         }
 
+               elseif($request->getParameter("searchBasedParam")=='matchalerts')
+                        {	
+                                if($type=='set')
+                                {	
+                                        JsMemcache::getInstance()->set("cachedDMS$pid",serialize($statusArr));
+                                        JsMemcache::getInstance()->set("cachedDMR$pid",serialize($resultArr)); 
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedDMRMyjs$pid",serialize($profileIdPoolArray));
+
+
+                                        return 1;
+                                }
+                                elseif($type=='get')
+                                {	
+                                        $statusArr = JsMemcache::getInstance()->get("cachedDMS$pid");
+                                        $resultArr = JsMemcache::getInstance()->get("cachedDMR$pid");
+                                        if($statusArr && $resultArr)
+                                        {	
+                                                $cachedArr["statusArr"] = unserialize($statusArr);
+                                                $cachedArr["resultArr"] = unserialize($resultArr);
+                                                return $cachedArr;
+                                        }
+                                }
+                        }
+
+
+                        elseif($request->getParameter("lastsearch")=='1')
+                        {	
+                                if($type=='set')
+                                {	
+                                        JsMemcache::getInstance()->set("cachedLSMS$pid",serialize($statusArr));
+                                        JsMemcache::getInstance()->set("cachedLSMR$pid",serialize($resultArr)); 
+                                        $profileIdPoolArray = array();
+                                        if(is_array($resultArr) &&array_key_exists('profiles',$resultArr)) {  
+				foreach ($resultArr['profiles'] as $key => $value) {
+		 			array_push($profileIdPoolArray,$value['profileid']);
+			}
+		}
+		JsMemcache::getInstance()->set("cachedLSMRMyjs$pid",serialize($profileIdPoolArray));
+
+
+                                        return 1;
+                                }
+                                elseif($type=='get')
+                                {	
+                                        $statusArr = JsMemcache::getInstance()->get("cachedLSMS$pid");
+                                        $resultArr = JsMemcache::getInstance()->get("cachedLSMR$pid");
+                                        if($statusArr && $resultArr)
+                                        {	
+                                                $cachedArr["statusArr"] = unserialize($statusArr);
+                                                $cachedArr["resultArr"] = unserialize($resultArr);
+                                                return $cachedArr;
+                                        }
+                                }
+                        }
+
+
+
+
 			if($type=='del')
 			{
 				JsMemcache::getInstance()->set("cachedJJS$pid","");
 				JsMemcache::getInstance()->set("cachedJJR$pid","");
 				JsMemcache::getInstance()->set("cachedVMS$pid","");
-                                JsMemcache::getInstance()->set("cachedVMR$pid","");
+                JsMemcache::getInstance()->set("cachedVMR$pid","");
 				JsMemcache::getInstance()->set("cachedPMS$pid","");
-                                JsMemcache::getInstance()->set("cachedPMR$pid","");
+                JsMemcache::getInstance()->set("cachedPMR$pid","");
+                JsMemcache::getInstance()->set("cachedDMS$pid","");
+                JsMemcache::getInstance()->set("cachedLSMS$pid","");
+                JsMemcache::getInstance()->set("cachedDMR$pid","");
+                JsMemcache::getInstance()->set("cachedLSMR$pid","");
 			}	
                 }
                 return 0;
