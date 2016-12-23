@@ -379,8 +379,7 @@ catch(e){}
         expiringCount = parseInt(expiringCount) - 1;
         $("#totalExpiringInterestReceived").html(expiringCount);
         $("#seeAllExpiringCount").html(expiringCount);
-        var heading = "Interests will be moved to archived inbox in next 7 days, respond now!";
-        $("#engBarInfoMessage").html(expiringCount + " " + heading);
+        $("#expiringCount").html(expiringCount);
       }
   }
 

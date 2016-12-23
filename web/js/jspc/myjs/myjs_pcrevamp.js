@@ -830,7 +830,7 @@ else {
 		var called = [];
 	$('#MsgEngagementHead').bind("click",function() 
 	{
-  $("#engBarInfoMessage").hide();
+  
  $("#totalMessagesReceived").removeClass('disp-none');
 		$("#messagesCountNew").addClass("disp-none").removeClass("disp-cell");
     engagementClickHanding(mess,3);
@@ -838,14 +838,14 @@ else {
   
     $('#acceptanceEngagementHead').bind("click",function() 
   {
-    $("#engBarInfoMessage").hide();
+    
     $("#totalAcceptsReceived").removeClass('disp-none');
 	  $("#allAcceptanceCount").addClass("disp-none").removeClass("disp-cell");
     engagementClickHanding(accept,2);
     });
 	 $('#interestEngagementHead').bind("click",function() 
 	{
-    $("#engBarInfoMessage").hide();
+    
     $("#totalInterestReceived").removeClass('disp-none');
 		$("#interetReceivedCount").addClass("disp-none").removeClass("disp-cell");
 		engagementClickHanding(interests,0);
@@ -855,7 +855,6 @@ else {
     {
       $('#expiringInterestHead').bind("click",function() 
       {
-        $("#engBarInfoMessage").show();
         $("#totalExpiringInterestReceived").removeClass('disp-none');
         $("#expiringInterestCount").addClass("disp-none").removeClass("disp-cell");
         engagementClickHanding(expiringInterests,1);
@@ -863,7 +862,7 @@ else {
     } 
     else
     {
-      $("#engBarInfoMessage").hide();
+      
       $('#filteredInterestHead').bind("click",function() 
       {
         $("#totalFilteredInterestReceived").removeClass('disp-none');
@@ -872,8 +871,9 @@ else {
 	    });
     }
    var engagementClickHanding = function (ele, currentTabId) {
-    if(currentTabId=='0' || currentTabId=='1') var height='360px';
-      else var height='350px';      
+    // same height for all tabs.
+    if(currentTabId=='0' || currentTabId=='1') var height='390px';
+      else var height='390px';      
     if(currentTab == -1)
     {
       $("#engagementContainerTop").addClass("myjs-p6");

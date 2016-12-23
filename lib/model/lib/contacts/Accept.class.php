@@ -177,7 +177,7 @@ class Accept extends ContactEvent
         $profileMemcacheServiceViewedObj->update("ACC_ME",1);
         $profileMemcacheServiceViewedObj->update("ACC_ME_NEW",1);
         $profileMemcacheServiceViewedObj->update("NOT_REP",-1);
-        if($daysDiff >= 84 && $daysDiff <= 90)
+        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
         {
           $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
         }
