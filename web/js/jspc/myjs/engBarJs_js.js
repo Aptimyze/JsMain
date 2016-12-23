@@ -453,6 +453,12 @@ try{
     this.containerHtml=temp2.outerHtml();
     }
 		this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_TOTAL\}\}/g,totalCount?totalCount:'');
+    if($("#"+Object.name+"_Container").length == 1)
+    { 
+
+      $("#FILTEREDINTEREST_Container").html($(this.containerHtml.trim()).html());
+    }
+    else
    	$("#engagementContainer").after(this.containerHtml);
 		$("#engagementContainer").addClass("disp-none");
 
@@ -471,7 +477,11 @@ try{
 		});
 
 	}
-            
+
+        if($('#totalFilteredInterestReceived').text()>4)
+          $('#seeAll_FILTEREDINTEREST_List').show();
+
+              
             topSliderInt('init');
 	    removeOtherDiv();
 	    photo_init();
@@ -612,6 +622,11 @@ try{
     this.containerHtml=temp2.outerHtml();
     }
 		this.containerHtml=this.containerHtml.replace(/\{\{SEE_ALL_TOTAL\}\}/g,totalCount?totalCount:'');
+    if($("#"+Object.name+"_Container").length == 1)
+    { 
+      $("#INTERESTRECEIVED_Container").html($(this.containerHtml.trim()).html());
+    }
+    else
    	$("#engagementContainer").after(this.containerHtml);
 		$("#engagementContainer").addClass("disp-none");
 
@@ -627,7 +642,9 @@ try{
 		  myjsSlider("nxt-"+listName);
 		});
 
-	}
+	}    
+      if($('#totalInterestReceived').text()>4)
+      $('#seeAllId_INTERESTRECEIVED').show();
 	    topSliderInt('init');
 	    removeOtherDiv();
 	    photo_init();

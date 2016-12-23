@@ -11,7 +11,7 @@
 <div class="clr"></div>
 <div class="pt25">
 <div class="pos-rel clearfix fontlig">
-    <div id="seeAllId_INTERESTRECEIVED" class="pos-abs wid100 txtc myjs-pos8"><a href="/profile/contacts_made_received.php?page=eoi&filter=R" class="color12">View All <span id='seeAllIntCount'>{{SEE_ALL_TOTAL}}</span></a></div>
+    <div id="seeAllId_INTERESTRECEIVED" class="pos-abs wid100 txtc myjs-pos8 disp-none"><a href="/profile/contacts_made_received.php?page=eoi&filter=R" class="color12">View All <span id='seeAllIntCount'>{{SEE_ALL_TOTAL}}</span></a></div>
 <div class="fr myjs-wid8 clearfix opa50">
 <div id='panelCounter_INTERESTRECEIVED' class="fl color12 pt5 disp-none"><span id="slideCurrent{{type}}">1 </span> of <span id="slideTotal{{type}}">{{TOTAL_NUM}}</span> </div>
 <div id='arrowKeys_INTERESTRECEIVED' class="fr opa50"> <a id="prv-{{list_id}}" class="sprite2 myjs-ic7 disp_ib"></a> <a id="nxt-{{list_id}}" class="sprite2 myjs-ic8 disp_ib myjs-m3"></a> </div>
@@ -30,7 +30,7 @@
 <div class="clearfix fontlig" id="filteredIntr_show">
 <div class="fullwid scrollhid">
 <div id="disp_{{list_id}}" class="pos-rel li-slide1">
-<ul id ="js-{{list_id}}" class="myjs-fulwid hor_list clearfix boxslide myjslist3 pos-rel" style="width:100%">
+<ul id ="js-{{list_id}}" class="myjs-fulwid hor_list clearfix boxslide myjslist3 pos-rel disp-none" style="width:100%">
 {{INNER_HTML}}
 </ul>
 </div>
