@@ -11,8 +11,9 @@ class InboxMobileAppV2
 	static public $myProfileIncompleteFields;
 	static public $tupleTitleField;
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
-	static public $noresultArray = Array("INTEREST_RECEIVED","INTEREST_ARCHIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MY_MESSAGE_RECEIVED","MATCH_ALERT","PHOTO_REQUEST_RECEIVED","PHOTO_REQUEST_SENT","HOROSCOPE_REQUEST_RECEIVED","HOROSCOPE_REQUEST_SENT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","CONTACTS_VIEWED","PEOPLE_WHO_VIEWED_MY_CONTACTS","IGNORED_PROFILES","INTRO_CALLS","INTRO_CALLS_COMPLETE");
+	static public $noresultArray = Array("INTEREST_RECEIVED","INTEREST_EXPIRING","INTEREST_ARCHIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MY_MESSAGE_RECEIVED","MATCH_ALERT","PHOTO_REQUEST_RECEIVED","PHOTO_REQUEST_SENT","HOROSCOPE_REQUEST_RECEIVED","HOROSCOPE_REQUEST_SENT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","CONTACTS_VIEWED","PEOPLE_WHO_VIEWED_MY_CONTACTS","IGNORED_PROFILES","INTRO_CALLS","INTRO_CALLS_COMPLETE");
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
+	const INTEREST_EXPIRING = "You have no interests left to respond to";
 	const ACCEPTANCES_RECEIVED = "No one has yet accepted your interest";
 	const ACCEPTANCES_SENT = "You haven't yet accepted any interests sent to you";
 	const INTEREST_SENT = "You haven't sent any interests yet";
@@ -71,6 +72,35 @@ class InboxMobileAppV2
                                 "ANCESTRAL_ORIGIN",
 				"NAME_OF_USER",
 				),
+			
+				"INTEREST_EXPIRING"=>Array(
+				"PROFILECHECKSUM",
+                                "USERNAME",
+                                "GENDER",
+                                "OCCUPATION",
+                                "LOCATION",
+                                "AGE",
+                                "HEIGHT",
+                                "RELIGION",
+                                "CASTE",
+                                "MTONGUE",
+                                "INCOME",
+                                "subscription_icon",
+                                "subscription_text",
+                                "TIME",
+                                "SEEN",
+                                "edu_level_new",
+                                "userloginstatus",
+                                "ProfilePic120Url",
+                                "ProfilePic450Url",
+                                "MSTATUS",
+                                "VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+                                ),
 			"INTEREST_ARCHIVED"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -1175,7 +1205,8 @@ class InboxMobileAppV2
                         else
                             $visitorsStype = SearchTypesEnums::VISITORS_JSPC;
 			$trackingMap=array("INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::CONTACT_AWAITING,
-				"VISITORS"=>"stype=".$visitorsStype."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
+				           "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
+					   "VISITORS"=>"stype=".$visitorsStype."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::ARCHIVED_INTEREST,
 				"SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_JSPC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
@@ -1212,6 +1243,7 @@ class InboxMobileAppV2
                         $visitorsStype = SearchTypesEnums::VISITORS_JSMS;
 			$trackingMap=array(
 				"INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MOBILE_AWAITING,
+				"INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS,
 				"VISITORS"=>"stype=".$visitorsStype,
 				"MATCH_ALERT"=>"stype=".SearchTypesEnums::WapMatchAlertsCC,
 				"SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_JSMS."&responseTracking=".JSTrackingPageType::SHORTLIST_JSMS,

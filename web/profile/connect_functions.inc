@@ -3112,6 +3112,7 @@ function show_navigation($navigator,$show_all,$navig_id)
 		$TYPE["IGN"]="/profile/contacts_made_received.php";
 		$TYPE["DEC_R"]="/profile/contacts_made_received.php";
 		$TYPE["DEC_S"]="/profile/contacts_made_received.php";
+		$TYPE["EEOI"]="/profile/contacts_made_received.php";
 		$TYPE["EOI"]="/profile/contacts_made_received.php";
 		$TYPE["REM"]="/profile/contacts_made_received.php";
 		$TYPE["MES"]="/profile/contacts_made_received.php";

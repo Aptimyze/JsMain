@@ -1,4 +1,4 @@
-var clickEventType="click", cssBrowserAnimProperty=null,sliderNav={'VERIFIEDMATCHES_List':1,'DAILYMATCHES_List':1,'JUSTJOINED_List':1,'LASTSEARCH_List':1,'DESIREDPARTNERMATCHES_List':1,'INTERESTRECEIVED_List':1,'FILTEREDINTEREST_List':1 };
+var clickEventType="click", cssBrowserAnimProperty=null,sliderNav={'VERIFIEDMATCHES_List':1,'DAILYMATCHES_List':1,'JUSTJOINED_List':1,'LASTSEARCH_List':1,'DESIREDPARTNERMATCHES_List':1,'INTERESTRECEIVED_List':1,'FILTEREDINTEREST_List':1,'EXPIRINGINTEREST_List':1 };
 
 function topSliderInt(param){
 	if(param=="init")
@@ -271,9 +271,15 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 	            	else if(type=="accept")
 	            	{ 
               
+                  updateExpiringCount(div);
                   field = div.split('_');
                   comingFrom = field[1];
+                  if(comingFrom == 'INTERESTRECEIVED')
                   countLeft = $('#totalInterestReceived').text();
+                if(comingFrom == 'FILTEREDINTEREST')
+                  countLeft = $('#totalFilteredInterestReceived').text();
+                if(comingFrom == 'EXPIRINGINTEREST')
+                  countLeft = $('#totalExpiringInterestReceived').text();
                   --countLeft;
 	            		$("#"+div).find("div.intdisp").html("Accepted");
                   $("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
@@ -281,14 +287,23 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
                   if(comingFrom == 'INTERESTRECEIVED')
                   $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalInterestReceived','INTERESTRECEIVED');}); 
                   else if(comingFrom == 'FILTEREDINTEREST')
-                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalInterestReceived','FILTEREDINTEREST');});
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalFilteredInterestReceived','FILTEREDINTEREST');});
+                  else if(comingFrom == 'EXPIRINGINTEREST')
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalExpiringInterestReceived','EXPIRINGINTEREST');});
+
                                 
 	            	}
 	            	else if(type=="decline")
 	            	{ 
+                  updateExpiringCount(div);
                   field = div.split('_');
                   comingFrom = field[1];
+                    if(comingFrom == 'INTERESTRECEIVED')
                   countLeft = $('#totalInterestReceived').text();
+                if(comingFrom == 'FILTEREDINTEREST')
+                  countLeft = $('#totalFilteredInterestReceived').text();
+                if(comingFrom == 'EXPIRINGINTEREST')
+                  countLeft = $('#totalExpiringInterestReceived').text();
                   --countLeft;
 	            		$("#"+div).find("div.intdisp").html("Declined");
 	            		$("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
@@ -296,7 +311,9 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
                   if(comingFrom == 'INTERESTRECEIVED')
                   $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalInterestReceived','INTERESTRECEIVED');}); 
                   else if(comingFrom == 'FILTEREDINTEREST')
-                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalInterestReceived','INTERESTRECEIVED');});
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalFilteredInterestReceived','INTERESTRECEIVED');});
+                  else if(comingFrom == 'EXPIRINGINTEREST')
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalExpiringInterestReceived','EXPIRINGINTEREST');});
 	            	}
                 else if(type=="message")
                 {
@@ -385,7 +402,17 @@ catch(e){}
     }
 
 
-	
+	function updateExpiringCount(div)
+  {
+      if(div.indexOf("EXPIRINGINTEREST") >= 0)
+      {
+        expiringCount = $("#totalExpiringInterestReceived").html();
+        expiringCount = parseInt(expiringCount) - 1;
+        $("#totalExpiringInterestReceived").html(expiringCount);
+        $("#seeAllExpiringCount").html(expiringCount);
+        $("#expiringCount").html(expiringCount);
+      }
+  }
 
 //Completion Bar 
 function start1() {
@@ -980,6 +1007,10 @@ function reArrangeDivsAfterDissapear(value,position,id)
       $('#seeAllId_'+id).hide();
     }
     else if (id == 'FILTEREDINTEREST')
+    {
+     $('#seeAll_'+id+'_List').hide(); 
+    }
+    else if (id == 'EXPIRINGINTEREST')
     {
      $('#seeAll_'+id+'_List').hide(); 
     }
