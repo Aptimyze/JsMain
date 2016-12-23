@@ -1029,12 +1029,16 @@ function reArrangeDivsAfterDissapear(value,position,id)
       shortBigCard(currentBox,totalBoxes,id,numberOfProfiles);
     }
 
-  if(id == 'FILTEREDINTEREST' || id == 'INTERESTRECEIVED')
+  if(id == 'FILTEREDINTEREST' || id == 'INTERESTRECEIVED' || id == 'EXPIRINGINTEREST')
   { 
     if(id == 'INTERESTRECEIVED' && lastCardIsShortedOne(id))
      { 
       totalBoxes = Math.ceil((numberOfProfiles-3)/4);
      } 
+     if(id == 'INTERESTRECEIVED' && lastCardIsDoubleOne(id))
+     { 
+      totalBoxes = Math.ceil((numberOfProfiles-3)/4);
+     }
     $('#slideTotal'+id+'_List').text(totalBoxes);
     $('#slideCurrent'+id+'_List').text(currentBox);
   }
@@ -1108,6 +1112,13 @@ function reArrangeDivsAfterDissapear(value,position,id)
         $("#"+id+"_Container").html('');
           filterSec.pre();
           filterSec.request();
+        }
+        if(id == 'EXPIRINGINTEREST')
+       { 
+        var expSec = new expiringInterest();
+        $("#"+id+"_Container").html('');
+          expSec.pre();
+          expSec.request();
         }
        
       }        
@@ -1199,6 +1210,17 @@ function reArrangeDivsAfterDissapear(value,position,id)
     function lastCardIsShortedOne(id)
     { 
       var lastCard = $('ul#js-'+id+'_List li:nth-last-child(1)').find('#infoCardSingle');
+       
+        if(lastCard.length == 1)
+        { 
+         return 1;
+        }
+        return 0;
+    }
+
+    function lastCardIsDoubleOne(id)
+    { 
+      var lastCard = $('ul#js-'+id+'_List li:nth-last-child(1)').find('#infoCardDouble');
        
         if(lastCard.length == 1)
         { 

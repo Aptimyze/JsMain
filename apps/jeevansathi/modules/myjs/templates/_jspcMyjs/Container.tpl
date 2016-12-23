@@ -65,7 +65,7 @@
 <div class="clr"></div>
 <div class="pt25">
 <div class="pos-rel clearfix fontlig">
-    <div id="seeAll_EXPIRINGINTEREST_List" class="pos-abs wid100 txtc myjs-pos8">
+    <div id="seeAll_EXPIRINGINTEREST_List" class="pos-abs wid100 txtc myjs-pos8 disp-none">
     
     <a href="/inbox/23/1" class="color12">View All <span id='seeAllExpiringCount'>{{SEE_ALL_TOTAL}}</span></a></div>
 <div class="fr myjs-wid8 clearfix opa50">
