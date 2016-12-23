@@ -1006,11 +1006,7 @@ function reArrangeDivsAfterDissapear(value,position,id)
     { 
       $('#seeAllId_'+id).hide();
     }
-    else if (id == 'FILTEREDINTEREST')
-    {
-     $('#seeAll_'+id+'_List').hide(); 
-    }
-    else if (id == 'EXPIRINGINTEREST')
+    else if (id == 'FILTEREDINTEREST' || id == 'EXPIRINGINTEREST')
     {
      $('#seeAll_'+id+'_List').hide(); 
     }
@@ -1018,6 +1014,11 @@ function reArrangeDivsAfterDissapear(value,position,id)
     {
     $('#seeAll'+id+'_Container').hide();
     }
+  }
+
+  if(value == 0 && id == 'EXPIRINGINTEREST')
+  {
+    $('#ExpiringAction').hide();
   }
   
   var currentBox = getCurrentBox(id);
@@ -1035,10 +1036,6 @@ function reArrangeDivsAfterDissapear(value,position,id)
      { 
       totalBoxes = Math.ceil((numberOfProfiles-3)/4);
      } 
-     if(id == 'INTERESTRECEIVED' && lastCardIsDoubleOne(id))
-     { 
-      totalBoxes = Math.ceil((numberOfProfiles-3)/4);
-     }
     $('#slideTotal'+id+'_List').text(totalBoxes);
     $('#slideCurrent'+id+'_List').text(currentBox);
   }
