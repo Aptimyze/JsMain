@@ -234,6 +234,22 @@ private function getBannerMessage($profileInfo) {
 
      	}
 
+    public function getExpiring()
+    {
+		$this->profile=Profile::getInstance();
+        $this->loginProfile=LoggedInProfile::getInstance();
+        $entryDate = $this->loginProfile->getENTRY_DT();
+		$currentTime=time();
+		$registrationTime = strtotime($entryDate);
+        $showExpiring = 0;
+		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		{
+			$showExpiring = 1;
+		}
+        var_dump($showExpiring);die;
+		return $showExpiring;
+    }
+
 
 }
 ?>
