@@ -1027,7 +1027,7 @@ function reArrangeDivsAfterDissapear(value,position,id)
   var numberOfProfiles = getNumberOfProfiles(id);
     if(currentBox <= totalBoxes && numberOfProfiles%4 == 0 && value < 20 && id == 'INTERESTRECEIVED')
     {
-      shortBigCard(currentBox,totalBoxes,id,numberOfProfiles);
+      shortBigCard(id);
     }
 
   if(id == 'FILTEREDINTEREST' || id == 'INTERESTRECEIVED' || id == 'EXPIRINGINTEREST')
@@ -1040,7 +1040,6 @@ function reArrangeDivsAfterDissapear(value,position,id)
     $('#slideCurrent'+id+'_List').text(currentBox);
   }
   
-  var noCardPresentState = noCardPresent(currentBox,totalBoxes);
   if(value == 0 && id == 'INTERESTRECEIVED')
   {
        var IntRecSec = new interestReceived();
@@ -1049,6 +1048,8 @@ function reArrangeDivsAfterDissapear(value,position,id)
           IntRecSec.request();
           return;    
   }
+  var noCardPresentState = noCardPresent(currentBox,totalBoxes);
+
   if(onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresentState)
   {
     if(!isFirstBox(currentBox)){
@@ -1191,7 +1192,7 @@ function reArrangeDivsAfterDissapear(value,position,id)
       return 0;
     }
 
-    function shortBigCard(currentBox ,totalBoxes,id,numberOfProfiles)
+    function shortBigCard(id)
     { 
       var toBeReplaced = $('ul#js-'+id+'_List li:nth-last-child(1)').find('#infoCardDouble');
        
