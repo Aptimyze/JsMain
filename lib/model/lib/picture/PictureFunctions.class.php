@@ -368,9 +368,17 @@ class PictureFunctions
 		$remaining=substr($value,2);
 		switch($flag)
 		{
-			case IMAGE_SERVER_ENUM::$appPicUrl : $setServer=$getAbsoluteUrl?JsConstants::$docRoot:JsConstants::$applicationPhotoUrl;
+			case IMAGE_SERVER_ENUM::$appPicUrl : 
+							if(MobileCommon::getHttpsUrl()==true)
+								$setServer=$getAbsoluteUrl?JsConstants::$docRoot:JsConstants::$httpsApplicationPhotoUrl;
+							else
+								$setServer=$getAbsoluteUrl?JsConstants::$docRoot:JsConstants::$applicationPhotoUrl;
 							     break;
-			case IMAGE_SERVER_ENUM::$cloudUrl : $setServer=JsConstants::$cloudUrl;
+			case IMAGE_SERVER_ENUM::$cloudUrl : 
+							if(MobileCommon::getHttpsUrl()==true)
+								$setServer=JsConstants::$httpsCloudUrl;
+							else
+								$setServer=JsConstants::$cloudUrl;
 							    break;
 			 case IMAGE_SERVER_ENUM::$cloudArchiveUrl : $setServer=JsConstants::$cloudArchiveUrl;
                                                             break;
