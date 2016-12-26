@@ -1031,7 +1031,7 @@ function reArrangeDivsAfterDissapear(value,position,id)
   topSliderInt("init");
   var totalBoxes = getTotalBoxes(id);
   var numberOfProfiles = getNumberOfProfiles(id);
-  alert(numberOfProfiles);
+
     if(currentBox <= totalBoxes && numberOfProfiles%4 == 0 && value < 20 && id == 'INTERESTRECEIVED')
     {
       shortBigCard(id);
