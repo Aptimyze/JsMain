@@ -95,8 +95,8 @@ EOF;
     foreach ($contactResult as $key => $usercode)
     {
       $count = count($usercode);
-      if(count($usercode)>10)
-        $usercode = array_slice($usercode, 0, 10);
+      if(count($usercode)>16)
+        $usercode = array_slice($usercode, 0, 16);
       $usercode = implode(',',$usercode);
       $mailerEIObj->InsertMailerEI($key,$usercode,$count);
     }
