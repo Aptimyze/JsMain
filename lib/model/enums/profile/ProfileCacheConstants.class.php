@@ -215,7 +215,9 @@ class ProfileCacheConstants
                                         "VARA",
                                         "MASA",
                                         "HAVE_ASTRO",
-                                        "FSO_EXISTS"
+                                        "FSO_EXISTS",
+                                         // other frequent fields
+                                         "AUTO_EXPIRY_DATE"   
                                     );
     
     public static $arrJProfileColumns = array(
@@ -425,7 +427,6 @@ class ProfileCacheConstants
                                     );
 
     public static $arrFSOColumns = array(
-                                        //'BTIME',
                                         'PROFILEID'    
                                     );
     public static $arrCommonFieldsMap = array(
@@ -435,5 +436,11 @@ class ProfileCacheConstants
                                         'BTIME',
         
     );
+    public static $arrAUTO_EXPIRY = array(
+                                        'PROFILEID',
+                                        'TYPE',
+                                        'DATE'   
+                                    );
+
 }
 ?>

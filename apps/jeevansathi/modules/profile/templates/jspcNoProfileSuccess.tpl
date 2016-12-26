@@ -1,3 +1,11 @@
+<script>
+  ~if $noIndexNoFollow`
+  var m = document.createElement('meta'); 
+  m.name = 'ROBOTS'; 
+  m.content = 'NOINDEX, NOFOLLOW'; 
+  document.head.appendChild(m);
+  ~/if`
+</script>
 <div class="pos-rel fullwid">   
   <!--start:top part-->
   <div class="prf-coverNoPro" style="height:387px">
