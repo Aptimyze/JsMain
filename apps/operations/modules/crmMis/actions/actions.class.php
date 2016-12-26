@@ -2061,7 +2061,11 @@ class crmMisActions extends sfActions
 		 $appNotificationsObj =new MOBILE_API_APP_NOTIFICATIONS('newjs_masterRep');
 		 $scheduledNotificaionArr =$appNotificationsObj->getScheduledNotifications();
 		 $scheduledNotificaionStr ="'".implode("','", $scheduledNotificaionArr)."'";
-	
+		
+		//var_dump($start_date);
+		//var_dump($end_date);
+		//var_dump($notificationKey);
+		//var_dump($this->channelKey);
 		 $dataArr =$dailyScheduledLog->getData($start_date, $end_date, $notificationKey,'',$this->channelKey);
 		 if($notificationKey)
 			$dataArrForScheduled =$dataArr;
@@ -2102,19 +2106,27 @@ class crmMisActions extends sfActions
 	                                $overallSuccess    			=($overallAcknowledged/$total)*100;
         	                        $dataArr[$key]['OVERALL_SUCCESS_RATE']	=round($overallSuccess,0)."%";
 				}
+				if($this->channelKey=='A_I'){
+					$dataArr[$key]['NOTIFICATION_OPENED_COUNT_ANDROID'] = $val['OPENED_COUNT1'];
+					$dataArr[$key]['NOTIFICATION_OPENED_COUNT_IOS'] = $val['OPENED_COUNT2'];
+				}
+				else{
+					$dataArr[$key]['NOTIFICATION_OPENED_COUNT'] = $val['OPENED_COUNT1'];
+				}
 				$newData[$val['DAY']] =$dataArr[$key];					
 			}
 			unset($countTypeArr);
 			if($this->channelKey=='A_I')	
-	                        $countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','PUSHED_TO_IOS','TOTAL_PUSHED','ACCEPTED_BY_GCM','ACCEPTED_BY_IOS','TOTAL_ACCEPTED','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','','','','TOTAL_LOCAL_ELIGIBLE','LOCAL_API_HIT_BY_DEVICE','LOCAL_SENT_TO_DEVICE','LOCAL_ACKNOWLEDGED','LOCAL_SUCCESS_RATE','','','','TOTAL_ACKNOWLEDGED','OVERALL_SUCCESS_RATE','','','','ACTIVE_LOGIN_7DAY','ACTIVE_LOGIN_1DAY');
+	                        $countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','PUSHED_TO_IOS','TOTAL_PUSHED','ACCEPTED_BY_GCM','ACCEPTED_BY_IOS','TOTAL_ACCEPTED','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','','','','TOTAL_LOCAL_ELIGIBLE','LOCAL_API_HIT_BY_DEVICE','LOCAL_SENT_TO_DEVICE','LOCAL_ACKNOWLEDGED','LOCAL_SUCCESS_RATE','','','','TOTAL_ACKNOWLEDGED','OVERALL_SUCCESS_RATE','','','','ACTIVE_LOGIN_7DAY','ACTIVE_LOGIN_1DAY','NOTIFICATION_OPENED_COUNT_ANDROID','NOTIFICATION_OPENED_COUNT_IOS');
 			else
-				$countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','','','','','','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE');
+				$countTypeArr =array('TOTAL_COUNT','','','','PUSHED_TO_GCM','','','','','','PUSH_ACKNOWLEDGED','PUSH_SUCCESS_RATE','NOTIFICATION_OPENED_COUNT');
 
 			if(!$notificationKey)
 				$this->notificationType ='All Notification';
 			$this->newData =$newData;
 			$this->countTypeArr=$countTypeArr;
 			$this->notifExist =1;
+			//var_dump($this->notifExist);die("done");
 		 }
                  $this->setTemplate('notificationMisResultScreen');
             }

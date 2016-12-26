@@ -378,4 +378,74 @@ class notificationActions extends sfActions
         $apiResponseHandlerObj->generateResponse();
         die;
     }
+
+    /* NotificationOpenedTrackingV1 api
+    * tracks the opened notification details in MOBILE_API.NOTIFICATION_OPENED_TRACKING table
+    * @params: $request
+    */
+    public function executeNotificationOpenedTrackingV1(sfRequest $request)
+    {
+        $notificationStop =JsConstants::$notificationStop;
+        if($notificationStop){
+            $respObj = ApiResponseHandler::getInstance();
+            $respObj->setHttpArray(ResponseHandlerConfig::$PEAK_LOAD_FAILURE);
+            $respObj->generateResponse();
+            die;
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        $notificationKey = $request->getParameter('notificationKey');
+        $messageId = $request->getParameter('messageId');
+        $loginData =$request->getAttribute("loginData");
+        $profileid = ($loginData['PROFILEID'] ? $loginData['PROFILEID'] : null);
+        $osType = MobileCommon::isApp();
+        if($osType == null){
+            $webOs = MobileCommon::isAppWebView();
+            if($webOs == "A"){
+                $osType = "A";
+            }
+        }
+        try{
+            if($osType == null || $osType == ""){
+                $respObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_CHANNEL);
+                $respObj->setResponseBody(array("trackingDone"=>false));
+            }
+            else if($messageId && $notificationKey){
+                if(is_numeric($messageId)){
+                    $dataSet = array('PROFILEID'=>$profileid,'MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
+                    //print_r($dataSet);
+                    $producerObj = new JsNotificationProduce();
+                    if($producerObj->getRabbitMQServerConnected()){     //flow with rabbitmq
+                        $msgdata = FormatNotification::formatLogData($dataSet,'','NOTIFICATION_OPENED_TRACKING_API');
+                        //echo "rabbitmq flow";
+                        //print_r($msgdata);
+                        $producerObj->sendMessage($msgdata);
+                    }
+                    else{  
+                        //echo "without rabbitmq";                        //flow without rabbitmq
+                        NotificationFunctions::logNotificationOpened($dataSet);
+                    }
+                    $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                    $respObj->setResponseBody(array("trackingDone"=>true));
+                    
+                }
+                else{
+                    $respObj->setHttpArray(ResponseHandlerConfig::$BROWSER_NOTIFICATION_INVALID_PARAM);
+                    $respObj->setResponseBody(array("trackingDone"=>false));
+                }
+            }
+            else{
+                $respObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_MISSING);
+                $respObj->setResponseBody(array("trackingDone"=>false)); 
+            }
+            $respObj->generateResponse();
+            die;
+        }
+        catch(Exception $e){
+            $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+            $respObj->setResponseBody(array("trackingDone"=>false));
+            $respObj->generateResponse();
+            die;
+        }
+       
+  }
 }
