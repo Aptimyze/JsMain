@@ -1031,6 +1031,7 @@ function reArrangeDivsAfterDissapear(value,position,id)
   topSliderInt("init");
   var totalBoxes = getTotalBoxes(id);
   var numberOfProfiles = getNumberOfProfiles(id);
+  alert(numberOfProfiles);
     if(currentBox <= totalBoxes && numberOfProfiles%4 == 0 && value < 20 && id == 'INTERESTRECEIVED')
     {
       shortBigCard(id);
@@ -1038,10 +1039,6 @@ function reArrangeDivsAfterDissapear(value,position,id)
 
   if(id == 'FILTEREDINTEREST' || id == 'INTERESTRECEIVED' || id == 'EXPIRINGINTEREST')
   { 
-    if(id == 'INTERESTRECEIVED' && lastCardIsShortedOne(id))
-     { 
-      totalBoxes = Math.ceil((numberOfProfiles-3)/4);
-     } 
     $('#slideTotal'+id+'_List').text(totalBoxes);
     $('#slideCurrent'+id+'_List').text(currentBox);
   }
@@ -1171,8 +1168,11 @@ function reArrangeDivsAfterDissapear(value,position,id)
 
     function getNumberOfProfiles(id)
     {
-      var listItems = $("#js-"+id+"_List li");
-      return listItems.length;
+      var count = 0;
+    $("#js-"+id+"_List > li").each(function( index ) {
+  count++;
+      });
+    return count;
     }
 
     function onlyViewAllCardPresent(currentBox ,totalBoxes,id,numberOfProfiles)
