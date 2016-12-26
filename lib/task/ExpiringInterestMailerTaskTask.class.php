@@ -27,7 +27,7 @@ EOF;
 		$chunk = $arguments["chunks"];
 		for($serverId = 0; $serverId < $this->noOfActiveServers; $serverId++)
 		{
-			$this->profileChunk($chunk, $serverId, $mailerYNObj);
+			$this->profileChunk($chunk, $serverId, $mailerEIObj);
 		}
 	}
 
@@ -67,7 +67,8 @@ EOF;
 		{
 			$dbName = JsDbSharding::getShardNo($serverId,true);
 			$Contactsobj = new newjs_CONTACTS($dbName);
-			$chunkstr = "AND RECEIVER%".$chunk."=".$i;
+			$chunkstr = "AND RECEIVER%".$this->noOfActiveServers."=".$serverId." AND RECEIVER%"  .$chunk."=".$i;
+			var_dump($chunkstr);
 			$profilemail = $Contactsobj->getContactsExpiring($serverId,$chunkstr);
 			if($profilemail)
 			{
@@ -83,9 +84,9 @@ EOF;
 		{
 			$profilemailchunk = $value;
 			$profilemailchunk = implode(',',$profilemailchunk);
-			$contactResult = $Contactsobj->getContactsExpiring($profilemailchunk);
+			$contactResult = $Contactsobj->getSendersPending($profilemailchunk);
 			$contactResult = $this->skipProfiles($contactResult);
-			$this->InsertMailer($contactResult, $mailerYNObj);
+			$this->InsertMailer($contactResult, $mailerEIObj);
 		}
 	}
 

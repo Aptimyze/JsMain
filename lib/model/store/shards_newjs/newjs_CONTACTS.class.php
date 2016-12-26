@@ -1289,13 +1289,11 @@ public function getSendersPending($profileids)
         	}
         }
 
-        public function getContactsExpiring($serverId)
+        public function getContactsExpiring($serverId, $chunkStr)
 		{
 			try
 			{
-				$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING 
-					where TYPE='I' and FILTERED<>'Y' and TIME >= DATE_SUB(CURDATE(), INTERVAL 84 DAY) and TIME <= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
-					AND RECEIVER=PROFILEID AND SERVERID= :SERVERID group by RECEIVER";
+				$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' ".$chunkStr." and FILTERED<>'Y' and TIME <= DATE_SUB(CURDATE(), INTERVAL 84 DAY) and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND RECEIVER=PROFILEID AND SERVERID=:SERVERID group by RECEIVER order by TIME";
 				$res = $this->db->prepare($sql);
 				$res->bindValue(":SERVERID",$serverId,PDO::PARAM_INT);
 				$res->execute();

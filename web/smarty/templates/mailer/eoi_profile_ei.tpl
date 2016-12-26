@@ -100,13 +100,13 @@
                                         <table cellspacing="0" cellpadding="0" border="0" align="left" width="100" style="font-family:Arial, Verdana; font-size:14px;">
                                             <tr>
                                                 <td bgcolor="#ad160d" align="center" width="100" height="27">
-                                                    <a style="text-decoration:none; width:100px; color:#ffffff; float:left" target="_blank" href="(LINK)ACCEPT:profileid=~$profileid`,receiver_id=~$eoiProfileId`,source=yn(/LINK)"> <strong>Accept</strong> </a>
+                                                    <a style="text-decoration:none; width:100px; color:#ffffff; float:left" target="_blank" href="(LINK)ACCEPT:profileid=~$profileid`,receiver_id=~$eoiProfileId`,source=ei(/LINK)"> <strong>Accept</strong> </a>
                                                 </td>
                                             </tr>
                                         </table>
                                     </td>
                                     <td width="10"></td>
-                                    <td><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif; text-decoration:underline;" target="_blank" href="(LINK)DECLINE:profileid=~$profileid`,receiver_id=~$eoiProfileId`,source=yn(/LINK)">Not interested</a> </td>
+                                    <td><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif; text-decoration:underline;" target="_blank" href="(LINK)DECLINE:profileid=~$profileid`,receiver_id=~$eoiProfileId`,source=ei(/LINK)">Not interested</a> </td>
                                 </tr>
                             </table>
                         </td>
