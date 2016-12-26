@@ -796,7 +796,8 @@ public function unsett()
     
     public function setVisitorAlertData()
     {
-        $visitorObj = new Visitors($this->profileid);
+        $profileObj=LoggedInProfile::getInstance('newjs_master');
+        $visitorObj = new Visitors($profileObj);
                 $infoTypenav["matchedOrAll"]='A';
 		$visitors = $visitorObj->getVisitorProfile('','',$infoTypenav,$setAllVisitorsKey=$this->memcache);
 		$this->memcache->setVISITOR_ALERT(count($visitors) ? count($visitors) : 0);

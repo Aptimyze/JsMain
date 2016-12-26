@@ -512,8 +512,7 @@ class AgentAllocation
 		$phoneNumberArrUn =array_unique($phoneNumberArr);
 		$phoneNumberStr =implode(",",$phoneNumberArrUn);
 		$smartyObjEx->assign("phoneNumberStr",$phoneNumberStr);
-        $ccEmailIds = "manoj.rana@naukri.com,nitishpost@gmail.com";
-	        $excEmailSender->send($agentEmail,'',$ccEmailIds);
+	        $excEmailSender->send($agentEmail);
 	}
     
     public function sendPostVerificationSMSAndMail($profileid, $name, $username)
