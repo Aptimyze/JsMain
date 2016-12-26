@@ -11,72 +11,14 @@ class JprofileAlertsCache
     public function __construct($dbname = "") {
         $this->dbname = $dbname;
     }
-    //Tested
+
     public function fetchMembershipStatus($profileid) {
 
-        $objProCacheLib = ProfileCacheLib::getInstance();
-
-        $criteria = "PROFILEID";
-
-        $fields = "MEMB_CALLS,OFFER_CALLS";
-
-        $bServedFromCache = false;
-
-        if($objProCacheLib->isCached($criteria,$profileid,$fields,__CLASS__)) 
-            {
-
-                $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $fields, __CLASS__);
-
-           if (false !== $result) {
-                $bServedFromCache = true;
-                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-            }
-
-            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
-            
-            if($result['MEMB_CALLS'] && in_array($result['MEMB_CALLS'], $validNotFilled)){
-                $result = NULL;
-            }   
-
-             if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-                $this->logCacheConsumeCount(__CLASS__);
-                return $result;
-            }
-        }
-        
-        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
-        $result = $objJALT->fetchMembershipStatus($profileid);
-        $dummyResult['RESULT_VAL'] = $result;
-        $dummyResult = array(); 
-        if($result === NULL)
-        {
-            $tempInsertResult['MEMB_CALLS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['MEMB_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['CONTACT_ALERT_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['PHOTO_REQUEST_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['NEW_MATCHES_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['SERVICE_SMS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['SERVICE_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $dummyResult['RESULT_VAL'] = $tempInsertResult;
-        }
-    
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$profileid, $dummyResult['RESULT_VAL'], __CLASS__);
-
-        return $result;   
-
+        $strFields = "MEMB_CALLS,OFFER_CALLS";
+        $result = $this->commonFunctionForSelect($profileid,$strFields);
+        return $result;
     }
 
-
-    /** Function insert added by Hemant
-     This function is used to insert the email. call,sms alert data from page 1 registration.
-     *
-     * @param $profileid
-     * @param $alertArr
-     *
-     *
-     *
-     */
- 
     public function insert($profileid, $alertArr, $argFrom = 'R') {
 
              $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
@@ -99,118 +41,28 @@ class JprofileAlertsCache
 
     }
 
-    //Done
     public function getUnsubscribedProfiles($profileIdArr) {     
         $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
         $result = $objJALT->getUnsubscribedProfiles($profileIdArr);
         return $result;
     }
 
-//tested
+
     public function getSubscriptions($profileid, $field) {
 
-        $objProCacheLib = ProfileCacheLib::getInstance();
-
-        $criteria = "PROFILEID";
-
-        $fields = $field;
-
-        $bServedFromCache = false;
-
-        if($objProCacheLib->isCached($criteria,$profileid,$fields,__CLASS__)) 
-            {
-
-                $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $fields, __CLASS__);
-
-           if (false !== $result) {
-                $bServedFromCache = true;
-                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-            }
-
-            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
-            $arr = explode(',',$field);
-            if($result && in_array($arr[0], $validNotFilled)){
-                $result = NULL;
-            }   
-
-             if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-                $this->logCacheConsumeCount(__CLASS__);
-                return $result;
-            }
-        }
-        
-        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
-        $result = $objJALT->getSubscriptions($profileid, $field);
-        $dummyResult['RESULT_VAL'] = $result;
-        if($result === NULL)
-        {
-            $tempInsertResult['MEMB_CALLS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['MEMB_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['CONTACT_ALERT_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['PHOTO_REQUEST_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['NEW_MATCHES_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['SERVICE_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $dummyResult['RESULT_VAL'] = $tempInsertResult;
-
-        }
-
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $dummyResult['RESULT_VAL'], __CLASS__);
-
+        $strFields = $field;
+        $result = $this->commonFunctionForSelect($profileid,$strFields,'1');
         return $result;
         
     }
 
     public function getAllSubscriptions($profileid) {
-        
-        $objProCacheLib = ProfileCacheLib::getInstance();
 
-        $criteria = "PROFILEID";
-
-        $fields = "*";
-
-        $bServedFromCache = false;
-
-        if($objProCacheLib->isCached($criteria,$profileid,$fields,__CLASS__)) 
-            {
-
-                $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $fields, __CLASS__);
-
-           if (false !== $result) {
-                $bServedFromCache = true;
-                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-            }
-
-            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
-            
-            if($result && in_array($result['MEMB_CALLS'], $validNotFilled)){
-                $result = NULL;
-            }   
-
-             if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-                $this->logCacheConsumeCount(__CLASS__);
-                return $result;
-            }
-        }
-        
-        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
-        $result = $objJALT->getAllSubscriptions($profileid);
-        $dummyResult['RESULT_VAL'] = $result;
-
-        if($result === NULL)
-        {
-            $tempInsertResult['MEMB_CALLS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['MEMB_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['CONTACT_ALERT_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['PHOTO_REQUEST_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['NEW_MATCHES_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $tempInsertResult['SERVICE_MAILS'] = ProfileCacheConstants::NOT_FILLED;
-            $dummyResult['RESULT_VAL'] = $tempInsertResult;
-
-        }
-
-        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $dummyResult['RESULT_VAL'], __CLASS__);
-
+        $field = "*";
+        $strFields = $field;
+        $result = $this->commonFunctionForSelect($profileid,$strFields);
         return $result;
+
     }
 
     public function getAllSubscriptionsArr($profileArr) {
@@ -235,7 +87,7 @@ class JprofileAlertsCache
 
     //Reviewed
     public function insertNewRow($profileid) {
-        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
+        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName); 
         $out = $objJALT-> insertNewRow($profileid);
         if($out === true)
         {
@@ -275,7 +127,70 @@ class JprofileAlertsCache
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $arrRecordData['PROFILEID'], $tempInsertResult, __CLASS__);
 
         }     
-    } 
+    }
+
+    /*
+     * @param string profileid
+     * @param string fields
+     * @param string onlyValues
+     * @return mixed
+     */
+
+      public function commonFunctionForSelect($profileid,$strFields,$onlyValue = 0)
+    {
+
+        $objProCacheLib = ProfileCacheLib::getInstance();
+        
+        $criteria = "PROFILEID";
+        $fields = $strFields;
+        $bServedFromCache = false;
+
+        if($objProCacheLib->isCached($criteria,$profileid,$fields,__CLASS__)) 
+            {
+
+                $result = $objProCacheLib->get(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $fields, __CLASS__);
+
+           if (false !== $result) {
+                $bServedFromCache = true;
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+            }
+
+            $columnForNotNullCondition = explode(',',$strFields)[0];
+            $validNotFilled = array('N', ProfileCacheConstants::NOT_FILLED);
+            
+            if($result[$columnForNotNullCondition] && in_array($result[$columnForNotNullCondition], $validNotFilled)){
+                $result = NULL;
+            }   
+
+             if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+                $this->logCacheConsumeCount(__CLASS__);
+                if($onlyValue){
+                    return $result[$fields];
+                }
+                return $result;
+            }
+        }
+        
+        $objJALT = new newjs_JPROFILE_ALERTS($this->dbName); 
+        $result = $objJALT->commonSelectFunction($profileid,$strFields,$onlyValue);
+        $dummyResult['RESULT_VAL'] = $result;
+ 
+        if($result === NULL)
+        {   
+             $keys = array('MEMB_CALLS','MEMB_MAILS','CONTACT_ALERT_MAILS','PHOTO_REQUEST_MAILS','SERVICE_MAILS','SERVICE_SMS','NEW_MATCHES_MAILS');
+             $values = array(ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED);
+
+             $tempInsertResult = array_fill_keys($keys, $values);
+             $dummyResult['RESULT_VAL'] = $tempInsertResult;
+        }
+
+        var_dump($profileid, $dummyResult);
+
+        $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$profileid, $dummyResult['RESULT_VAL'], __CLASS__);
+
+        return $result;  
+            
+    }  
 
     private function logCacheConsumeCount($funName)
   { 

@@ -226,7 +226,7 @@ class ProfileCacheConstants
                                         'CONTACT_ALERT_MAILS',
                                         'KUNDLI_ALERT_MAILS',
                                         'PHOTO_REQUEST_MAILS',
-                                        'NEW_MATCHES_MAILS ',
+                                        'NEW_MATCHES_MAILS',
                                         'SERVICE_SMS',
                                         'SERVICE_MMS',
                                         'SERVICE_USSD',

@@ -162,7 +162,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
     }
 
     public function insertNewRow($profileid) {
-        try {
+        try { 
             $sql = "INSERT INTO newjs.JPROFILE_ALERTS VALUES(:PROFILEID,'S','S','S','S','S','S','S','S','S','S','S','S','S','S','S')";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
@@ -214,6 +214,30 @@ class newjs_JPROFILE_ALERTS extends TABLE
         }
     }
     
+
+     public function commonSelectFunction($profileid, $fields,$onlyValue = 0) {
+        try {
+            $sql = "SELECT " . $fields . " FROM newjs.JPROFILE_ALERTS WHERE PROFILEID=:PROFILEID"; 
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
+            $prep->execute();
+            $this->logFunctionCalling(__FUNCTION__);
+            if ($result = $prep->fetch(PDO::FETCH_ASSOC)) { 
+                $res = $result;
+            }
+        }
+        catch(Exception $e) {
+            throw new jsException($e);
+        }
+
+        if($onlyValue){
+            return $res[$fields];
+        }
+
+        return $res;
+    }
+
+
     private function logFunctionCalling($funName)
     {
       $key = __CLASS__.'_'.date('Y-m-d');
