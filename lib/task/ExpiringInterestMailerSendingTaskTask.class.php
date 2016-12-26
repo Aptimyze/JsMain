@@ -31,18 +31,19 @@ EOF;
 		//open rate tracking by nitesh as per vibhor        
 		$cronDocRoot = JsConstants::$cronDocRoot;
 		$php5 = JsConstants::$php5path;
-		passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring YESNO_MAILER#INSERT");
+		passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring ExpiringInterest_MAILER#INSERT");
 		$countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
 		$instanceID = $countObj->getID('Expiring_MAILER');
 
-		$profileMailData=$mailerEIObj->SelectMailerExpiring($arguments["totalScript"],$arguments["currentScript"]);
+		$profileMailData=$mailerEIObj->SelectMailerEI($arguments["totalScript"],$arguments["currentScript"]);
+		var_dump($profileMailData);
 		$count = $profileMailData[COUNT];
 		unset($profileMailData[COUNT]);
 		$index=0;
 		foreach ($profileMailData as $key => $value)
 		{
 			$mailStatus = $this->sendMail($key,$value,$count[$index++],$instanceID);
-			$mailerEIObj->UpdateMailerExpiring($key,$mailStatus);
+			$mailerEIObj->UpdateMailerEI($key,$mailStatus);
 		}
 		$totalScriptVar = $arguments["totalScript"];
 		$currentScriptVar = $arguments["currentScript"];
@@ -51,7 +52,7 @@ EOF;
 			if($instanceID)
 			{
 				/** code for daily count monitoring**/
-				   passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring YESNO_MAILER");
+				   passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring ExpiringInterest_MAILER");
 				/**code ends*/
 			}
 		}

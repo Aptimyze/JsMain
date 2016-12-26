@@ -47,7 +47,7 @@
                             ~else`
                                 Following interests will expire in the next one week. Please accept / decline these interests.
                             ~/if`
-                            <a style="font-family:Arial; font-size:12px; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)EOI_RECEIVIED:profileid=~$profileid`(/LINK)">View all pending interests</a>
+                            <a style="font-family:Arial; font-size:12px; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)EOI_EXPIRING:profileid=~$profileid`(/LINK)">View all expiring interests</a>
                         </td>
                         <td width="20"></td>
                     </tr>

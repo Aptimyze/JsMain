@@ -1,5 +1,5 @@
-~assign var="count" value=$eoi_profile_yn_inputs|@count`
-~foreach from=$eoi_profile_yn_inputs item=eoiProfileId key=eoi_draft`
+~assign var="count" value=$eoi_profile_ei_inputs|@count`
+~foreach from=$eoi_profile_ei_inputs item=eoiProfileId key=eoi_draft`
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                     <tr>
                         <td height="10"></td>
