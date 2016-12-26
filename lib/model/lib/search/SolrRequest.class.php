@@ -25,14 +25,14 @@ class SolrRequest implements RequestHandleInterface
                         if($profileObj->getPROFILEID())
                 	{ 
                         	if($profileObj->getPROFILEID()%7>2)
-	                                $this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
+	                                $this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
         	                else
                 	                $this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
 	                }
         	        else
                 	{ 
 				if(JsConstants::$whichMachine=='matchAlert') /* new matches load on one server */
-	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
+	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
 				else
 	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
 	                }

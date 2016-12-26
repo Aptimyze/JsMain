@@ -145,7 +145,7 @@ Class SearchResultscache
 				if($profileObj->getPROFILEID())
 				{
 						if($profileObj->getPROFILEID()%7>2)
-										$solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
+										$solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
 						else
 										$solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
 				}else{
