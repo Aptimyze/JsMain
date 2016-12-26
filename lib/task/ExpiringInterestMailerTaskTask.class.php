@@ -67,8 +67,7 @@ EOF;
 		{
 			$dbName = JsDbSharding::getShardNo($serverId,true);
 			$Contactsobj = new newjs_CONTACTS($dbName);
-			$chunkstr = "AND RECEIVER%".$this->noOfActiveServers."=".$serverId." AND RECEIVER%"  .$chunk."=".$i;
-			var_dump($chunkstr);
+			$chunkstr = "AND RECEIVER%".$this->noOfActiveServers."=".$serverId." AND RECEIVER%".$chunk."=".$i;
 			$profilemail = $Contactsobj->getContactsExpiring($serverId,$chunkstr);
 			if($profilemail)
 			{
