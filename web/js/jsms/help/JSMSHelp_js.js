@@ -9,9 +9,13 @@ $(document).ready(function (e) {
 });
 
 function getData() {
+    var url = "/api/v1/help/publicQuestions";
+    if(iosWebView == 1){
+        url = SSL_SITE_URL+"/api/v1/help/publicQuestions";
+    }
     $.ajax({
         type: "GET",
-        url: "/api/v1/help/publicQuestions",
+        url: url,
         success: function (a) {
             jsonData = a.Response;
             catogaries = Object.keys(jsonData);
