@@ -93,10 +93,12 @@ class noprofileAction extends sfAction
                           $this->PRIMARYMESSAGE = noProfileConstants::PROFILE_SCREENED;
                         }
 			elseif($hidden=="H"){
+                                $this->noIndexNoFollow = 1;
 				$this->MESSAGE=sfConfig::get("app_profile_hidden");
                                 $this->PRIMARYMESSAGE = noProfileConstants::PROFILE_HIDDEN;
                         }
 			elseif($hidden=="D"){
+                                $this->noIndexNoFollow = 1;
 				$this->MESSAGE="The profile ".$this->profile->getUSERNAME()." was deleted";
                                 $this->PRIMARYMESSAGE = noProfileConstants::API_PROFILE_DELETED;
                         }

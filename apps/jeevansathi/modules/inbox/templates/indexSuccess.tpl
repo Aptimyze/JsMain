@@ -57,7 +57,7 @@
 
 		<!--start:pagination-->
 		<div class="clearfix ccp7">
-			~include_partial("inbox/JSPC/pagination")`
+			~include_partial("inbox/JSPC/pagination",[hidePaginationCount=>$hidePaginationCount])`
 			
 		</div>
 		<!--end:pagination-->

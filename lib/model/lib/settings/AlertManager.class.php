@@ -354,7 +354,7 @@ class AlertManager
                                 $dup_fields[] = "email";
                                 duplication_fields_insertion($dup_fields, $this->profileid);
                                 $expireDt = date("Y-m-d H:i:s");
-                                $jsadminAutoExpObj = new jsadmin_AUTO_EXPIRY();
+                                $jsadminAutoExpObj = new ProfileAUTO_EXPIRY();
                                 $jsadminAutoExpObj->replace($this->profileid, 'E', $expireDt);
                                 $newjsContactArchiveObj = new NEWJS_CONTACT_ARCHIVE();
                                 $newjsContactArchiveInfoObj = new CONTACT_ARCHIVE_INFO();

@@ -190,6 +190,7 @@ class ProcessHandler
 			break;
 		case "ALL_MESSAGES":
 			MessageLog::makeAllMessagesSeen($body['profileid']);
+			ChatLog::makeAllChatsSeen($body['profileid']);
 			break;
 		case "PHOTO_REQUEST":
 			Inbox::setAllPhotoRequestsSeen($body['profileid']);
@@ -200,7 +201,17 @@ class ProcessHandler
 	}
         
  }
-
+ public function updateFeaturedProfile($type,$body)
+ {
+	if($body['profileid']!=null|| $body['profileid']!='')
+	{
+		$loggedInProfile = new LoggedInProfile('',$body['profileid']);
+		$loggedInProfile->getDetail('', '', '*');
+	}
+	$featuredProfileObj = new FeaturedProfile($loggedInProfile);
+	$featuredProfileObj->performDbActionFunction($body['id']);
+	unset($loggedInProfile);
+ }
  /**
  * HandleProfileCacheQueue
  * @param $process

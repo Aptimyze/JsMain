@@ -267,5 +267,25 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
       
       JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
     }
+
+    public function getAltEmailVerificationStatus($profileId,$altEmail)
+    {
+    	try
+    	{
+    		$sql = "SELECT ALT_EMAIL_STATUS FROM newjs.JPROFILE_CONTACT WHERE PROFILEID=:PROFILEID AND ALT_EMAIL=:ALT_EMAIL";
+    		$prep=$this->db->prepare($sql);
+    		$prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
+    		$prep->bindValue(":ALT_EMAIL",$altEmail,PDO::PARAM_STR);
+    		$prep->execute();
+    		$result = $prep->fetch(PDO::FETCH_ASSOC);
+    		return $result["ALT_EMAIL_STATUS"];
+    	}
+    	catch(PDOException $e)
+			{
+				/*** echo the sql statement and error message ***/
+				jsException::nonCriticalError($e);
+			}
+    }
+
 }
 ?>

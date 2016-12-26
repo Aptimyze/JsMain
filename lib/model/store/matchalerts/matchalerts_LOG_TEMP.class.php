@@ -114,7 +114,7 @@ class matchalerts_LOG_TEMP extends TABLE
     catch (PDOException $e)
     {
                         //add mail/sms
-      throw new jsException($e);
+      jsException::nonCriticalError($e);
     }
   }
 
@@ -141,7 +141,7 @@ GROUP BY LOGICLEVEL, RecCount";
     catch (PDOException $e)
     {
                         //add mail/sms
-      throw new jsException($e);
+      jsException::nonCriticalError($e);
     }
   }
 
@@ -162,7 +162,28 @@ GROUP BY LOGICLEVEL, RecCount";
     catch (PDOException $e)
     {
                         //add mail/sms
-      throw new jsException($e);
+      jsException::nonCriticalError($e);
+    }
+  }
+  public function getTotalCountGroupedByLogicAndReceiver()
+  {
+    try
+    {
+      $sql = "SELECT COUNT(RECEIVER) as TOTALCOUNT, RECOMMENDCOUNT FROM (SELECT DISTINCT (RECEIVER), COUNT( * ) AS RECOMMENDCOUNT FROM matchalerts.`LOG_TEMP` 
+              GROUP BY RECEIVER) as a GROUP BY RECOMMENDCOUNT";
+      $prep = $this->db->prepare($sql);
+      $prep->execute();
+      while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+      {
+        $resultArr[] = $row;          
+      }
+
+      return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
     }
   }
 }

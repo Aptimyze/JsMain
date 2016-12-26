@@ -116,7 +116,7 @@ var strophieWrapper = {
                     //console.log("timeout case");
                     invokePluginLoginHandler("failurePlusLog",false);
                 }
-            },7000);
+            },chatConfig.Params[device].autoDisplayLoginPanel);
         } else if (status == Strophe.Status.CONNFAIL) {
             //console.log("CONNFAIL");
             $('#connect').get(0).value = 'connect';

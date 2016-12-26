@@ -48,23 +48,23 @@ class AgentAllocationDetails
 			if($subMethod=="LIMIT_EXCEED" || $subMethod=='LIMIT_EXCEED_RENEWAL')
 			{
 				/*  Check added for ignoring Renewal Agents, as discussed with Rohan */
-				$priv1="%ExcRnw%";
+				/*$priv1="%ExcRnw%";
 				$renewalAgents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges($priv1);
 				if(!is_array($renewalAgents))
-					$renewalAgents =array();
+					$renewalAgents =array();*/
 				/* Check ended */	
 
 				$resArr1 = array();
 				for ($i = 0; $i < count($agents); $i++){
 					$agent_name = explode(":",$agents[$i]);
-					//if(!in_array($agent_name[0],$renewalAgents))
 					$Allagents[]=$agent_name[0];
 				}
-				if($subMethod=='LIMIT_EXCEED_RENEWAL')
+				/*if($subMethod=='LIMIT_EXCEED_RENEWAL')
 					$restofagents =array_intersect($Allagents,$renewalAgents);
 				elseif($subMethod=='LIMIT_EXCEED')
-					$restofagents =array_diff($Allagents,$renewalAgents);
+					$restofagents =array_diff($Allagents,$renewalAgents);*/
 
+				$restofagents =$Allagents;
 				$restofagents =array_unique($restofagents);
 				$restofagents =array_values($restofagents);
 				for ($k = 0; $k < count($agents); $k++){
@@ -148,7 +148,7 @@ class AgentAllocationDetails
 		elseif($method=="WEBMASTER_LEADS" || $subMethod=='WEBMASTER_LEADS')
 		{
             		if($subMethod == 'WEBMASTER_LEADS_EXCLUSIVE'){
-                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcPrm%");
+                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExPmWL%");
             		}
             		else{
                 		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcWL%");

@@ -152,17 +152,19 @@ class viewSimilarProfileAction extends sfActions
 			$this->finalResponse=json_encode($this->arrOutDisplay);
 		}                
 		//View Similar Profile Object to set Search Criteria
-		$viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile);
                 $modVal = 9;
                 $loggedinMod = $this->loginProfile->getPROFILEID()%$modVal;
                 $modResult =  array(1);
                 if(JsConstants::$vspServer != 'live' || !in_array($loggedinMod,$modResult)){
+                    $viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile);
                     $viewSimilarProfileObj->getViewSimilarCriteria();
                     if($viewSimilarProfileObj->getProfilesToShow() && $viewSimilarProfileObj->getProfilesToShow()!=='9999999999')
                             $this->similarPageShow=1;
                     else
                             $this->similarPageShow=0;
                 }
+                else
+                    $viewSimilarProfileObj=new viewSimilarfiltering($this->loginProfile,$this->Profile,$removeFilters=1);
 		//EOI Successsfull Confirmation Message
 		if($request->getParameter('contactEngineConfirmation'))
 		{
