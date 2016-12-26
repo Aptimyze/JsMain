@@ -1051,6 +1051,7 @@ function reArrangeDivsAfterDissapear(value,position,id)
           IntRecSec.request();
           return;    
   }
+  
   var noCardPresentState = noCardPresent(currentBox,totalBoxes);
 
   if(onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresentState)
@@ -1121,6 +1122,13 @@ function reArrangeDivsAfterDissapear(value,position,id)
           expSec.pre();
           expSec.request();
         }
+         if(id == 'INTERESTRECEIVED')
+     {
+       var IntRecSec = new interestReceived();
+          $("#"+id+"_Container").html('');
+          IntRecSec.pre();
+          IntRecSec.request(); 
+     }
        
       }        
   }
