@@ -280,7 +280,10 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
                   countLeft = $('#totalFilteredInterestReceived').text();
                 if(comingFrom == 'EXPIRINGINTEREST')
                   countLeft = $('#totalExpiringInterestReceived').text();
+                if(comingFrom != 'EXPIRINGINTEREST')
+                {
                   --countLeft;
+                }
 	            		$("#"+div).find("div.intdisp").html("Accepted");
                   $("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
 	            		$("#"+div).find("div.intdisp").removeClass("intdisp");
@@ -304,7 +307,10 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
                   countLeft = $('#totalFilteredInterestReceived').text();
                 if(comingFrom == 'EXPIRINGINTEREST')
                   countLeft = $('#totalExpiringInterestReceived').text();
+                if(comingFrom != 'EXPIRINGINTEREST')
+                {
                   --countLeft;
+                }
 	            		$("#"+div).find("div.intdisp").html("Declined");
 	            		$("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
                   $("#"+div).find("div.intdisp").removeClass("intdisp");
