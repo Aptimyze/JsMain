@@ -57,6 +57,7 @@
 <div class="fullwid scrollhid">
 <div id="disp_{{list_id}}" class="pos-rel li-slide1">
 <ul id ="js-{{list_id}}" class="myjs-fulwid hor_list clearfix boxslide myjslist3 pos-rel" style="width:100%">
+<div id="engBarInfoMessage" class="txtc fontlig f13 engBarInfoMsg" style="position: relative;padding: 0px 27px 20px 27px;width: 850px;"></div>
 {{INNER_HTML}}
 </ul>
 </div>
