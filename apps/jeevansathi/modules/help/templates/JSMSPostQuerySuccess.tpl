@@ -1,6 +1,3 @@
-<script>
-    var iosWebView = '~$iosWebView`';
-</script>
 <div class="bg4 minhgt600">
     
     	<!--heading start-->
