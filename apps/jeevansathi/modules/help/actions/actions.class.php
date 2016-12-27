@@ -25,6 +25,7 @@ class helpActions extends sfActions
         {
             if ($ios == 1) {
               $this->iosWebView = 1;
+              $request->setParameter('iosWebView',1);
             }
             if (strpos($_SERVER['HTTP_USER_AGENT'], 'JsAndWeb') > 1) {
               $this->andWebView = 1;
@@ -78,5 +79,7 @@ class helpActions extends sfActions
       $this->username = $loginData["USERNAME"];
       $this->email = $loginData["EMAIL"];
       $this->iosWebView = $request->getParameter('iosWebView');
+      if($this->iosWebView == 1)
+        $request->setParameter('iosWebView',1);
   }
 }
