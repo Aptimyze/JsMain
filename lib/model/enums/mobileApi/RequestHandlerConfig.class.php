@@ -13,6 +13,7 @@ class RequestHandlerConfig
         "updateNotificationSetting"=>array("v1"=>"updateNotificationSettingV1"),
         "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
         "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1"),
+        "notificationOpenedTracking"=>array("v1"=>"notificationOpenedTrackingV1"),
 		"notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1","v3"=>"notificationSubscriptionStatusV1")),
 	"search"=>array(
 		"partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
@@ -47,7 +48,8 @@ class RequestHandlerConfig
         "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),
         "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1"),
         "dppSuggestions"=>array("v1"=>"dppSuggestionsV1","v2"=>"dppSuggestionsV1","v3"=>"dppSuggestionsV1"),
-      "cache"=>array("v1"=>"ApiProfileCacheV1","v2"=>"ApiProfileCacheV1","v3"=>"ApiProfileCacheV1")),
+      "cache"=>array("v1"=>"ApiProfileCacheV1","v2"=>"ApiProfileCacheV1","v3"=>"ApiProfileCacheV1"),
+        "sendEmailVerLink"=>array("v1"=>"apiSendEmailVerificationLinkV1","v2"=>"apiSendEmailVerificationLinkV1","v3"=>"apiSendEmailVerificationLinkV1")),
     "settings"=>array(
 		"alertManager"=>array("v1"=>"AlertManagerV1","v2"=>"","v3"=>"AlertManagerV1"),
     	"deleteProfile"=>array("v1"=>"DeleteProfileV1","v2"=>"","v3"=>"DeleteProfileV1")),

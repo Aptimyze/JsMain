@@ -1408,6 +1408,7 @@ class searchActions extends sfActions
 	*/
 	public function executePerformV1(sfWebRequest $request)
 	{
+		
 		//sleep(10);
 		$showAllClustersOptions=1;
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));

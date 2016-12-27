@@ -1150,19 +1150,19 @@ public function getSendersPending($chunkStr)
         	try{
         		if($type == ContactHandler::INITIATED){
         			$SENDER_RECEIVER = "RECEIVER";
-        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED !='Y'" ;
+        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED !='Y' and (`SEEN` != 'Y')" ;
 				}
         		elseif($type == ContactHandler::ACCEPT){
         			$SENDER_RECEIVER = "SENDER";
-        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE";
+        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE and (`SEEN` != 'Y')";
 				}
         		elseif($type == ContactHandler::FILTERED){
 					$SENDER_RECEIVER = "RECEIVER";
-					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED='Y'";
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED='Y' and (`SEEN` != 'Y')";
 				}					
         		elseif($type == ContactHandler::DECLINE){
 					$SENDER_RECEIVER = "SENDER";
-					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE and (`SEEN` != 'Y') ";
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE and (`SEEN` != 'Y')";
 				}					
         		
         		$prep = $this->db->prepare($sql);
@@ -1224,6 +1224,22 @@ public function getSendersPending($chunkStr)
                 throw new jsException($ex);
             }
         }
-			
+		
+		 public function updateCancelSeen($profileid)
+        {
+        	try{
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE RECEIVER = :PROFILEID and (TYPE = 'C' or TYPE = 'E') and (`SEEN` != 'Y') ";
+								
+        		
+        		$prep = $this->db->prepare($sql);
+        		$prep->bindValue(":PROFILEID",$profileid, PDO::PARAM_INT);
+        		
+					
+        		$prep->execute();
+        	}
+        	catch(Execption $e){
+        		throw new jsException($e);
+        	}
+        }			
 }
 ?>

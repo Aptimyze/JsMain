@@ -23,7 +23,7 @@ EOF;
 		if(!sfContext::hasInstance())
 			sfContext::createInstance($this->configuration);
 
-		ini_set('memory_limit','512M');
+		ini_set('memory_limit','1024M');
         
         $trackingLibObj = new matchAlertMailerDataTracking();
         $todayDate = MailerConfigVariables::getNoOfDays(); //To get the current date
@@ -37,9 +37,8 @@ EOF;
         	$date = date('Y-m-d',strtotime("-1 day"));
         }        
         $lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
-        $lowTrendsCountArr = $lowTrendsObj->getLowCountGroupedByLogic($date); //Get count where count is ZERO       // To get ZERO count for each logic level       
-        $distinctIdZeroArr = $lowTrendsObj->getLowCountGroupedByProfileIdLogic($date); //profileIdArr withe ZERO count required for table 4
-
+        $lowTrendsCountArr = $lowTrendsObj->getLowCountGroupedByLogic($date); //Get count where count is ZERO       // To get ZERO count for each logic level               
+        
         foreach($countByLogicArr as $key => $val)
         {
         	foreach($val as $k1=>$v1)
@@ -56,7 +55,7 @@ EOF;
         	}
         }
 
-        $trackingLibObj->insertCountDataByLogicLevel($finalCountByLogicArr);
+        $trackingLibObj->insertCountDataByLogicLevel($finalCountByLogicArr,$date);
         
         $countByLogicAndRecommendations = $logTempObj->getCountGroupedByLogicAndRecommendation();        
        
@@ -78,10 +77,8 @@ EOF;
 
         $countByLogicAndRecommendations = array_merge($countByLogicAndRecommendations,$lowCountFinalArr);        
 
-        $trackingLibObj->insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations);        
-   		$totalCountByLogicReceiver = $logTempObj->getTotalCountGroupedByLogicAndReceiver();        
-        
-        $trackingLibObj->insertTotalCountGroupedByLogicAndReceiver($totalCountByLogicReceiver,$distinctIdZeroArr);        
+        $trackingLibObj->insertCountDataByLogicLevelAndRecommendation($countByLogicAndRecommendations,$date);                           
+        $trackingLibObj->insertTotalCountGroupedByLogicAndReceiver($date);        
         unset($trackingLibObj);
    		unset($logTempObj);
    		unset($lowTrendsObj);

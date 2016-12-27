@@ -21,9 +21,6 @@ EOF;
 
     protected function execute($arguments = array(), $options = array())
     {
-        $start_time=date("Y-m-d H:i:s");
-        mail("manoj.rana@naukri.com","NEW LTF CSV Generation Started At $start_time<EOD>","","From:JeevansathiCrm@jeevansathi.com");
-
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
 
