@@ -1,5 +1,4 @@
 <?php
-include "JsConstantsConfig.class.php";
 $env = $argv[1];
 /*$urlInput = $argv[2];
 $branch = $argv[3];
@@ -9,6 +8,8 @@ $urlInput = $argv[2];
 $rootDir = realpath(dirname(__FILE__)."/..");
 $branchStrArr = explode("/",$rootDir);
 $branch = end($branchStrArr);
+
+include $rootDir."/commonConfig/JsConstantsConfig.class.php";
 
 //echo $branch." ".$rootDir;die;
 switch ($env){
