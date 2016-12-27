@@ -1058,13 +1058,13 @@ function reArrangeDivsAfterDissapear(value,position,id)
   {
     if(!isFirstBox(currentBox)){
           $("#prv-"+id+"_List").click();
-          if(noCardPresentState && id != 'INTERESTRECEIVED' && id != 'FILTEREDINTEREST')
+          if(noCardPresentState && id != 'INTERESTRECEIVED' && id != 'FILTEREDINTEREST' && id != 'EXPIRINGINTEREST')
           $("#nxt-"+id+"_List").hide();  
         }
     else
       {
       $("#"+id+"_Container").css('height',$("#"+id+"_Container").height());
-      if(value ==0 && id != 'INTERESTRECEIVED' && id != 'FILTEREDINTEREST')
+      if(value ==0 && id != 'INTERESTRECEIVED' && id != 'FILTEREDINTEREST' && id != 'EXPIRINGINTEREST')
       $("#"+id+"_Container").css('height','');
 
         if(id == 'DAILYMATCHES')
