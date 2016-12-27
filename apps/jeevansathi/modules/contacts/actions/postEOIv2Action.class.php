@@ -114,6 +114,9 @@ class postEOIv2Action extends sfAction
 		$ownthumbNail = $ownthumbNail['url'];
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
+		$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+		print_r($errorArr);
+		die;
 		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
 
 		if($this->contactEngineObj->messageId)
