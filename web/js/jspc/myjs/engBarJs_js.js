@@ -531,7 +531,7 @@ filteredInterest.prototype.noResultCase = function() {
       viewAllCard=viewAllCard.replace(/myjs-dim9/g,'myjs-dim11');
       viewAllCard=viewAllCard.replace(/\{\{disp-none\}\}/g,'');
       viewAllCard=viewAllCard.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
-     	var tempDiv=$('<li style="padding-top:0px;"></li>');
+     	var tempDiv=$('<li style="padding-top:0px;background:none"></li>');
 		tempDiv.append(viewAllCard);
 			
       html+=tempDiv.outerHtml();
@@ -687,7 +687,7 @@ expiringInterest.prototype.noResultCase = function() {
       viewAllCard=viewAllCard.replace(/myjs-dim9/g,'myjs-dim11');
       viewAllCard=viewAllCard.replace(/\{\{disp-none\}\}/g,'');
       viewAllCard=viewAllCard.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
-      var tempDiv=$('<li style="padding-top:0px;"></li>');
+      var tempDiv=$('<li style="padding-top:0px;background:none"></li>');
     tempDiv.append(viewAllCard);
       
       html+=tempDiv.outerHtml();
@@ -853,7 +853,7 @@ interestReceived.prototype.noResultCase = function() {
       viewAllCard=viewAllCard.replace(/myjs-dim9/g,'myjs-dim11');
       viewAllCard=viewAllCard.replace(/\{\{disp-none\}\}/g,'');
 			viewAllCard=viewAllCard.replace(/\{\{LISTING_LINK\}\}/g,listingUrlArray[this.name]);
-     	tempDiv=$('<li style="padding-top:0px;"></li>');
+     	tempDiv=$('<li style="padding-top:0px;background:none"></li>');
 		tempDiv.append(viewAllCard);
 			
       html+=tempDiv.outerHtml();
