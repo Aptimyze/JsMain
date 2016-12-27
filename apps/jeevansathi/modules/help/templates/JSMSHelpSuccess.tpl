@@ -96,5 +96,7 @@ $(document).ready(function(){
     $("#pageBack").click(function(e){
         window.location.href = "/profile/mainmenu.php";
     });
+    getHelpModuleData();
+    applySearchAlgo();
 });
 </script>
