@@ -32,7 +32,7 @@ class BellCounts
 			$isApp = MobileCommon::isApp();
 			$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
 
-			if($isApp=="I" ||( $isApp=="A" && $appVersion  && $appVersion<48))
+			if(($isApp=="I" && $appVersion<3.9 )||( $isApp=="A" && $appVersion  && $appVersion<48))
 			{
 				$bellCounts["FILTERED_NEW"] = 0;
 			}	
