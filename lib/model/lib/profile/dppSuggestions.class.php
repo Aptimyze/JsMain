@@ -385,35 +385,40 @@ class dppSuggestions
 
 	//Mapping of income needs to be changed.
 	public function getSuggestionForIncome($type,$valArr)
-	{
-		$valArr = (array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr));
-		//print_r($valArr);die;
+	{			
+		//use if array keys are 0,1,2,3 and we require LRS,HRS		
+		//$valArr = (array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr));
+		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
+		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
+
 		if($this->gender == "M")
 		{
 			if(in_array($this->income,DppAutoSuggestEnum::$dollarArr))
 			{
-				if($this->income > $valArr["HDS"] && $valArr["HDS"]!="19")
+				$key = array_search($valArr["HDS"],$hIncomeDol);				
+				if($this->income > $key && $key!="19")
 				{
-					$valueArr["data"]["HDS"] = $this->income;
+					$valueArr["data"]["HDS"] = $hIncomeDol[$this->income];
 				}
 			}
 			else
 			{
-				if($this->income > $valArr["HRS"] && $valArr["HRS"]!="19")
+				$key = array_search($valArr["HRS"],$hIncomeRs);
+				if($this->income > $key && $key!="19")
 				{
-					$valueArr["data"]["HRS"] = $this->income;
+					$valueArr["data"]["HRS"] = $hIncomeRs[$this->income];
 				}
 			}		
 		}
 		elseif($this->gender == "F")
 		{
-			if($valArr["HRS"] != "19")
+			if($valArr["HRS"] != "and above")
 			{
-				$valueArr["data"]["HRS"] = "19";
+				$valueArr["data"]["HRS"] = "and above";
 			}
-			if($valArr["DRS"] !="19")
+			if($valArr["DRS"] !="and above")
 			{
-				$valueArr["data"]["HDS"] = "19";
+				$valueArr["data"]["HDS"] = "and above";
 			}
 		}
 		return $valueArr;

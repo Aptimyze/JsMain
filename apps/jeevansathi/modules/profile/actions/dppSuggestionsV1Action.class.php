@@ -33,11 +33,11 @@ class dppSuggestionsV1Action extends sfActions
 		// $decodedData[11]["data"]["LAGE"] = "24";
 		// $decodedData[11]["data"]["HAGE"] = "30";
 		
-		// $decodedData[10]["type"] = "INCOME";
-		// $decodedData[10]["data"]["LRS"] = "1";
-		// $decodedData[10]["data"]["HRS"] = "2";
-		// $decodedData[10]["data"]["LDS"] = "12";
-		// $decodedData[10]["data"]["HDS"] = "15";
+		/*$decodedData[10]["type"] = "INCOME";
+		$decodedData[10]["data"]["LRS"] = "Rs.1 Lakh";
+		$decodedData[10]["data"]["HRS"] = "Rs.2 Lakh";
+		$decodedData[10]["data"]["LDS"] = "$40,001";
+		$decodedData[10]["data"]["HDS"] = "$100,000";*/
 		//print_r($decodedData);die;
 		foreach($decodedData as $key=>$val)
 		{
