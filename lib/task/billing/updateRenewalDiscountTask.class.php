@@ -37,9 +37,13 @@ EOF;
         // Get bulk details of profiles last main membership transactions
         if (count($res) > 0) {
             foreach ($res as $key => $profileid) {
-                $proArr[] = $profileid;
+		$details =$billPurObj->getLastPurchaseDetails($profileid);
+		$detailsArr =$details[$profileid];
+		if(is_array($detailsArr))
+			$purDet[$profileid] =$detailsArr;
+                //$proArr[] = $profileid;
             }
-            $purDet = $billPurObj->getLastPurchaseDetails($proArr);
+            //$purDet = $billPurObj->getLastPurchaseDetails($proArr);
         }
         if (count($res) > 0) {
             foreach ($res as $key => $profileid) {

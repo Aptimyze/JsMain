@@ -616,8 +616,12 @@ public function executeCALRedirection($request){
 	public function executeRedirectToOldJsms(sfWebRequest $request)
 	{
 		$this->getResponse()->setCookie('TO_OLD_JSMS',1,time()+60*60*24*150,"/");
-		$rUrl=$request->getParameter("rUrl");	
-		$this->redirect($rUrl);
+		$rUrl=$request->getParameter("rUrl");
+		if(!$rUrl){
+				$this->redirect(JsConstants::$siteUrl);
+			}
+		else
+			$this->redirect($rUrl);
 		die;
 	}
 public function executeAppredirect(sfWebRequest $request)
@@ -763,6 +767,36 @@ public function executeAppredirect(sfWebRequest $request)
     }
   } 
 
+
+
+  public function executeVerifyAlternateEmail($request)
+  {
+
+  $loggedInProfile=LoggedInProfile::getInstance();
+  $profileid=$loggedInProfile->getPROFILEID();
+  $UIDParam=$request->getParameter('EmailUID');
+  $changeLog=new NEWJS_ALTERNATE_EMAIL_LOG();
+  $row=$changeLog->getLastEntry($profileid);
+  $emailUID=$row['ID'];
+  if($emailUID!=$UIDParam){
+  header("Location: $SITE_URL/static/logoutPage?fromSignout=1");
+  die;
+  }
+
+  else if($row['STATUS']!='Y')
+    {   
+        $paramArr=array('ALT_EMAIL_STATUS'=>'Y');
+        $contactObj=new NEWJS_JPROFILE_CONTACT();
+        $contactObj->update($profileid,$paramArr);
+        $changeLog->markAsVerified($profileid);
+  
+    }
+    if(MobileCommon::isMobile())
+      $this->setTemplate('jsmsEmailVerified');
+    else{
+       $this->setTemplate('jspcEmailVerified'); 
+    }
+  } 
 
 
 

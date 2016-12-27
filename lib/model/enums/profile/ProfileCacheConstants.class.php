@@ -235,6 +235,8 @@ class ProfileCacheConstants
                                         "ALT_MOB_STATUS",
                                         "ALT_EMAIL",
                                         "ALT_EMAIL_STATUS",
+                                         // other frequent fields
+                                         "AUTO_EXPIRY_DATE",
                                     );
     
     public static $arrJProfileColumns = array(
@@ -444,7 +446,6 @@ class ProfileCacheConstants
                                     );
 
     public static $arrFSOColumns = array(
-                                        //'BTIME',
                                         'PROFILEID'    
                                     );
     public static $arrCommonFieldsMap = array(
@@ -477,5 +478,12 @@ class ProfileCacheConstants
                                         "ALT_EMAIL_STATUS",
 
      );
+
+    public static $arrAUTO_EXPIRY = array(
+                                        'PROFILEID',
+                                        'TYPE',
+                                        'DATE'   
+                                    );
+
 }
 ?>

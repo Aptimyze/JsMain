@@ -68,10 +68,10 @@ class Inbox implements Module
 		
 		try {
                         $memcacheServiceObj = new ProfileMemcacheService($this->profileObj);
-			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1))
+			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1) && $fromGetDisplayFunction=='')
 			{
 				JsMemcache::getInstance()->delete($this->profileObj->getPROFILEID());
-                                $memcacheServiceObj->unsetKey("MESSAGE_ALL");
+                            
 			}
                         
 			$countObj           = array();
@@ -96,12 +96,14 @@ class Inbox implements Module
 					case "MY_MESSAGE":
 						$keyNew = "MESSAGE_NEW";
 						$key = "MESSAGE_ALL";
-                                                $memKeyNotExists=1;
 						break;
 					case "MESSAGE_RECEIVED":
 					case "MY_MESSAGE_RECEIVED":
 						$keyNew = "MESSAGE_NEW";
 						$key = "MESSAGE";
+						if($infoTypenav["NUMBER"] == 1 && $fromGetDisplayFunction==''){
+							$memcacheServiceObj->unsetKey("MESSAGE_ALL");
+						}
 						break;
 					case "VISITORS":
 						$key = "VISITOR_ALERT";
@@ -312,11 +314,6 @@ class Inbox implements Module
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
                                                 if($infoType == "MY_MESSAGE"){
-							if(JsMemcache::getInstance()->get($keyCount))
-                                                    		$this->totalCount = $this->totalCount+count($profilesArray)-1;
-							else
-						    		$this->totalCount = count($profilesArray);
-							JsMemcache::getInstance()->set($keyCount, $this->totalCount);
                                                     	if(count($profilesArray)==$conditionArray['LIMIT'])
                                                         	array_pop($profilesArray);
                                                 }
