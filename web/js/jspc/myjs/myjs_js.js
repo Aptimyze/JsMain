@@ -317,7 +317,7 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
                   if(comingFrom == 'INTERESTRECEIVED')
                   $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalInterestReceived','INTERESTRECEIVED');}); 
                   else if(comingFrom == 'FILTEREDINTEREST')
-                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalFilteredInterestReceived','INTERESTRECEIVED');});
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalFilteredInterestReceived','FILTEREDINTEREST');});
                   else if(comingFrom == 'EXPIRINGINTEREST')
                   $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalExpiringInterestReceived','EXPIRINGINTEREST');});
 	            	}
