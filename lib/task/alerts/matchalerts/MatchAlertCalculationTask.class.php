@@ -14,7 +14,7 @@ class MatchAlertCalculationTask extends sfBaseTask
 	const clusterRecordLimit = 10;
         const _communityModelToggle=0;
         const limitNtWhenCommunity = 10;
-        const limitNtNoCommunity = 16;
+  	const limitNtNoCommunity = 16;
         
 	protected function configure()
   	{
@@ -101,7 +101,7 @@ EOF;
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                       
                                                         if($totalResults["LOGIN_SCORE"] > self::clusterRecordLimit){
                                                                 $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithTrendsScoreSort);
-                                                                $totalResults = $StrategyReceiversNT->getMatches('',0,array(),$matchesSetting); 
+                                                                $totalResults = $StrategyReceiversNT->getMatches('',0,array(),$matchesSetting,$matchLogic); 
                                                                 if($totalResults["profiles"])
                                                                         $profiles = array_merge($profiles,$totalResults["profiles"]);
                                                         }

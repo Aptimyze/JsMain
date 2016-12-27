@@ -323,6 +323,13 @@ class SearchParamters
 			$this->OCCUPATION = $OCCUPATION; 
 	}
 	public function getOCCUPATION() { return $this->OCCUPATION; }
+        public function setOCCUPATION_IGNORE($OCCUPATION_IGNORE) 
+	{ 
+		$validInput = SearchInputValidation::validateInput("OCCUPATION_IGNORE",$OCCUPATION_IGNORE);
+                if($validInput)
+                    $this->OCCUPATION_IGNORE = $OCCUPATION_IGNORE;
+	}
+	public function getOCCUPATION_IGNORE() {   return $this->OCCUPATION_IGNORE; }
 	public function setCOUNTRY_RES($COUNTRY_RES) 
 	{
 		$validInput = SearchInputValidation::validateInput("COUNTRY_RES",$COUNTRY_RES);
