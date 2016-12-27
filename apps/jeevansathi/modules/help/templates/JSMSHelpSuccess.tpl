@@ -1,4 +1,7 @@
 ~assign var=currency value= $sf_request->getAttribute('currency')`
+<script>
+    var iosWebView = '~$iosWebView`';
+</script>
 <div class="bg4">
     <div class="perspective" id="perspective">
         <div class="" id="pcontainer">
@@ -93,5 +96,7 @@ $(document).ready(function(){
     $("#pageBack").click(function(e){
         window.location.href = "/profile/mainmenu.php";
     });
+    getHelpModuleData();
+    applySearchAlgo();
 });
 </script>
