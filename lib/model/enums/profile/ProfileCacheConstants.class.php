@@ -237,6 +237,18 @@ class ProfileCacheConstants
                                         "ALT_EMAIL_STATUS",
                                          // other frequent fields
                                          "AUTO_EXPIRY_DATE",
+                                         // Jhobby
+                                        "HOBBY",
+                                        "ALLMUSIC",
+                                        "ALLBOOK",
+                                        "ALLMOVIE",
+                                        "ALLSPORTS",
+                                        "ALLCUISINE",
+                                        "FAV_MOVIE",
+                                        "FAV_TVSHOW",
+                                        "FAV_FOOD",
+                                        "FAV_BOOK",
+                                        "FAV_VAC_DEST"
                                     );
     
     public static $arrJProfileColumns = array(
@@ -453,7 +465,6 @@ class ProfileCacheConstants
                                         'DTOFBIRTH',
                                         'CITY_BIRTH',
                                         'BTIME',
-        
     );
 
     public static $arrJProfileContact = array(
@@ -478,12 +489,25 @@ class ProfileCacheConstants
                                         "ALT_EMAIL_STATUS",
 
      );
-
     public static $arrAUTO_EXPIRY = array(
                                         'PROFILEID',
                                         'TYPE',
                                         'DATE'   
                                     );
-
+    
+    public static $arrJHobbyColumns = array(
+                                        'PROFILEID',
+                                        "HOBBY",
+                                        "ALLMUSIC",
+                                        "ALLBOOK",
+                                        "ALLMOVIE",
+                                        "ALLSPORTS",
+                                        "ALLCUISINE",
+                                        "FAV_MOVIE",
+                                        "FAV_TVSHOW",
+                                        "FAV_FOOD",
+                                        "FAV_BOOK",
+                                        "FAV_VAC_DEST"
+                                    );
 }
 ?>

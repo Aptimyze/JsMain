@@ -1120,7 +1120,7 @@ class Profile{
                         if(isset($hobbies) && $onlyValues == '')
                             $userHobbies = $hobbies;
                         else{
-                            $hobbyObj=new NEWJS_HOBBIES();
+                            $hobbyObj=new JHOBBYCacheLib();
                             $userHobbies = $hobbyObj->getUserHobbies($this->PROFILEID,$onlyValues);
                         }
 			if($onlyValues)
@@ -1480,7 +1480,7 @@ class Profile{
         public function getExtendedContacts($onlyValues="")
 		{
 			if($this->HAVE_JCONTACT=="Y"){
-				$pc= ProfileContact::getInstance();
+				$pc= new ProfileContact();
 				$contacts_arr=$pc->getProfileContacts($this->PROFILEID);
 				if($onlyValues)
 					return $contacts_arr;

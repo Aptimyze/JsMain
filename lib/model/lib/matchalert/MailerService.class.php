@@ -708,7 +708,7 @@ return $edu;
 
             if ( $widgetArray["alternateEmailSend"] === true )
             {
-	            $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT();
+	            $jprofileContactObj    =new ProfileContact();
 	            $receiverProfileData = $jprofileContactObj->getProfileContacts($pid);
 
 	            if ( is_array($receiverProfileData ))

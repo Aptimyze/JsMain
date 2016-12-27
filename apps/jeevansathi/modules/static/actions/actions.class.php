@@ -786,7 +786,7 @@ public function executeAppredirect(sfWebRequest $request)
   else if($row['STATUS']!='Y')
     {   
         $paramArr=array('ALT_EMAIL_STATUS'=>'Y');
-        $contactObj=new NEWJS_JPROFILE_CONTACT();
+        $contactObj=new ProfileContact();
         $contactObj->update($profileid,$paramArr);
         $changeLog->markAsVerified($profileid);
   
