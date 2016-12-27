@@ -288,9 +288,9 @@ $jprofileUpdateObj = JProfileUpdateLib::getInstance();
 		{
 			if(trim($rowAlt['ALT_MOBILE']))
 			{
-        $memObject=new UserMemcache;
-        $memObject->delete("JPROFILE_CONTACT_".$profileid);
-        unset($memObject);
+        // $memObject=new UserMemcache;
+        // $memObject->delete("JPROFILE_CONTACT_".$profileid);
+        // unset($memObject);
 			$arrParams = array('ALT_MOB_STATUS'=>'Y');
 			$jprofileUpdateObj->updateJPROFILE_CONTACT($profileid, $arrParams);
 			//	$sqlAltUp="UPDATE newjs.JPROFILE_CONTACT SET `ALT_MOB_STATUS`='Y' WHERE `PROFILEID` =  '".$profileid."'";
