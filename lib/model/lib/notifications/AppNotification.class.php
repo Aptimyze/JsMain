@@ -917,7 +917,7 @@ public function microtime_float()
               */
               $date = date('Y-m-d');
               $msg = "Url:$url, Key:$notificationKey, pid: $profileid\n";
-              file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/wrongImageUrl".$date.".txt",$msg,FILE_APPEND);
+              file_put_contents(sfConfig::get("sf_upload_dir")."wrongImageUrl".$date.".txt",$msg,FILE_APPEND);
           }
       }
       unset($validPicArray);
