@@ -721,12 +721,15 @@ public function unsett()
         $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
         $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
         $condition["WHERE"]["IN"]["TYPE"]     = "R";
+//        $configObj            = new ProfileInformationModuleMap();
+//        $configurations = $configObj->getConfiguration("ContactCenterDesktop");
+//        $condition["LIMIT"]    = $configurations["MY_MESSAGE"]["COUNT"]+1;
         $profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
         if(is_array($profilesArray))
 					$MESSAGE_ALL = count($profilesArray);
         
-                
-       
+        
+        
         
         //print_r($msgCount); die;
         if(is_array($msgCount))
@@ -783,7 +786,8 @@ public function unsett()
     
     public function setVisitorAlertData()
     {
-        $visitorObj = new Visitors($this->profileid);
+        $profileObj=LoggedInProfile::getInstance('newjs_master');
+        $visitorObj = new Visitors($profileObj);
                 $infoTypenav["matchedOrAll"]='A';
 		$visitors = $visitorObj->getVisitorProfile('','',$infoTypenav,$setAllVisitorsKey=$this->memcache);
 		$this->memcache->setVISITOR_ALERT(count($visitors) ? count($visitors) : 0);
