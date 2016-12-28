@@ -394,7 +394,7 @@ class ApiCommon
                                 {
 					$output[$k]["result"] = "yes";
                                         $output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
-                                        $nhObj = new NEWJS_HOBBIES;
+                                        $nhObj = new JHOBBYCacheLib;
                                         $hobbyArr = $nhObj->getHobbiesAndInterestAndSpokenLanguage();
                                         unset($nhObj);
                                         $i=0;

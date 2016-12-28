@@ -855,7 +855,7 @@ class ContactDetails {
 		/*********Alternative number********/
 		$altMob = "";
 		$altMobDetail = "";
-		$jProfileContactObj= new NEWJS_JPROFILE_CONTACT();
+		$jProfileContactObj= new ProfileContact();
 		$altArr=$jProfileContactObj->getProfileContacts($this->profileObj->getPROFILEID()); 
 		if($altArr["ALT_MOB_STATUS"]==Messages::YES || $altArr["SHOWALT_MOBILE"] == "C")
 			$this->setVERIFIED_ALT_MOB(Messages::YES);
