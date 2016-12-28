@@ -153,7 +153,7 @@ $css_arr[]=array("jsexclusive_style"         => "8");
 $css_arr[]=array("helpWidget_css"                  => "17");
 $css_arr[]=array("jsms/search/savesearchcss"      => "5");
 $css_arr[]=array("iosprmo"  => "2");
-$css_arr[]=array("jspc/registration/registrationJspc_css"        => "7");
+$css_arr[]=array("jspc/registration/registrationJspc_css"         => "8");
 $css_arr[]=array("jspc/common/commonJspc_css"                      => "25");
 $css_arr[]=array("jspc/myjs/myjs"                => "20");
 $css_arr[]=array("jspc/common/fontsJspc_css"   => "1");
