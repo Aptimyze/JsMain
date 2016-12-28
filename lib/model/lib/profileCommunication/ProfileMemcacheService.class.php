@@ -119,7 +119,7 @@ class ProfileMemcacheService
      */
     public function get($key, $optionalDataFlag = false)
     {
-        
+
         $set = $this->checkPreSettings($key, $optionalDataFlag);
         if ($set === true)
             return call_user_func(array(
@@ -307,7 +307,7 @@ public function unsett()
 
     private function print_data()
     {
-        $md = unserialize(JsMemcache::getInstance()->get($this->profileid));
+        //$md = unserialize(JsMemcache::getInstance()->get($this->profileid));
        // print_r($md);   die;
     }
     /**
