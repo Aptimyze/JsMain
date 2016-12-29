@@ -637,6 +637,7 @@ class InboxMobileAppV1
 		$heshe = $gender=="F"?"She":"He";
 		switch($infokey){
 			case "INTEREST_RECEIVED":
+			case "INTEREST_EXPIRING":
 			case "FILTERED_INTEREST":
 				if($count>1)
 				{
