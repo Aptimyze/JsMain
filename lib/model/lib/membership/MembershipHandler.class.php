@@ -2059,4 +2059,9 @@ class MembershipHandler
         unset($discount_calc, $currency, $prevServPur, $prevDiscAmt, $prevTotAmt, $prevDisc);
         return $discount;
     }
+    
+    public function cancelTransaction($params){
+        $negTransactionObj = new billing_NEGATIVE_TRANSACTIONS();
+        $negTransactionObj->insertRecord($params);
+    }
 }

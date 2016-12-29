@@ -33,13 +33,16 @@ if(authenticated($cid))
 		if($is_error=="0")
 		{
 			$entryby = getuser($cid);
-			$sql_det = "SELECT PROFILEID,BILLID, RECEIPTID FROM billing.PAYMENT_DETAIL WHERE BILLID='$billid' ORDER BY RECEIPTID DESC LIMIT 1";
+			$sql_det = "SELECT PROFILEID,BILLID, RECEIPTID, TYPE, AMOUNT, INVOICE_NO FROM billing.PAYMENT_DETAIL WHERE BILLID='$billid' ORDER BY RECEIPTID DESC LIMIT 1";
 			$res_det = mysql_query_decide($sql_det) or logError_sums($sql_det);
 			$row_det = mysql_fetch_array($res_det);
 			$profileid = $row_det["PROFILEID"];
 			$billid = $row_det["BILLID"];
 			$receiptid = $row_det["RECEIPTID"];
-
+            $type = $row_det["TYPE"];
+            $amount = $row_det["AMOUNT"];
+            $invoiceNo = $row_det["INVOICE_NO"];
+            
 			$changes = "TRANSACTION CANCELLED \n";
 			$changes .= "REASON :- ".$reason;
 			$changes = addslashes(stripslashes($changes));
@@ -75,6 +78,18 @@ if(authenticated($cid))
 		        $memCacheObject->remove($row_det['PROFILEID'] . "_MEM_HAMB_MESSAGE");
 		        $memCacheObject->remove($row_det['PROFILEID'] . "_MEM_SUBSTATUS_ARRAY");
 		    }
+            
+            $negativeParams["RECEIPTID"] = $receiptid;
+            $negativeParams["BILLID"] = $billid;
+            $negativeParams["PROFILEID"] = $profileid;
+            $negativeParams["AMOUNT"] = $amount;
+            $negativeParams["TYPE"] = $type;
+            $negativeParams["CANCEL_TYPE"] = "CANCEL";
+            $negativeParams["INVOICE_NO"] = $invoiceNo;
+            
+            $obj = new MembershipHandler();
+            $obj->cancelTransaction($negativeParams);
+            unset($negativeParams);
 
 			$smarty->assign("flag","1");
 			$smarty->display("cancel_transaction.htm");
