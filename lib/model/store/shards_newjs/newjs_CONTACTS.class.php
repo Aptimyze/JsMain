@@ -1203,6 +1203,41 @@ public function getSendersPending($profileids)
         	catch(Execption $e){
         		throw new jsException($e);
         	}
-        }			
+        }
+
+        public function getContactsExpiring($serverId, $chunkStr)
+		{
+			try
+			{
+				$sql = "SELECT RECEIVER,count(*) as count, GROUP_CONCAT( SENDER ORDER BY TIME  SEPARATOR ',' ) AS SENDER from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' ".$chunkStr." and FILTERED<>'Y' and DATEDIFF(NOW( ) , `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." AND DATEDIFF(NOW( ) ,  `TIME` ) >= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." AND RECEIVER=PROFILEID AND SERVERID=:SERVERID group by RECEIVER order by TIME";
+				$res = $this->db->prepare($sql);
+				$res->bindValue(":SERVERID",$serverId,PDO::PARAM_INT);
+				$res->execute();
+				while($row = $res->fetch(PDO::FETCH_ASSOC))
+				{
+					$result[] = $row;
+				}
+				return $result;
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+		}
+
+
+    	public function setGroupContact()
+    	{
+    		try
+    		{
+	    		$sql = "SET SESSION group_concat_max_len = 1000000;";
+	    		$res = $this->db->prepare($sql);
+	            $res->execute();
+    		}
+    		catch(PDOException $e)
+    		{
+    			throw new jsException($e);	
+    		}
+    	}	
 }
 ?>

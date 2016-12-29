@@ -54,6 +54,7 @@ class JSTrackingPageType
 	const INTEREST_EXPIRING = 54;
 	const INTEREST_EXPIRING_JSMS = 55;
 	const INTEREST_EXPIRING_ANDROID = 56;
+	const EXPIRING_INTEREST_MAILER = 58;
 }
 
 ?>
