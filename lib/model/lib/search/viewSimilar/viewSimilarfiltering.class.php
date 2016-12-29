@@ -40,7 +40,7 @@ class viewSimilarfiltering extends SearchParamters
 	/**
 	* Constructor.
 	*/
-        public function __construct($loggedInProfileObj,$profileObj)
+        public function __construct($loggedInProfileObj,$profileObj,$removeFilters=0)
         {
 		    parent::__construct();
                     if($loggedInProfileObj->getPROFILEID()){
@@ -58,8 +58,10 @@ class viewSimilarfiltering extends SearchParamters
 				$this->setGENDER(self::maleProfile);
 			else
 				$this->setGENDER(self::femaleProfile);
-                        $this->setFilterForAge();
-			$this->setShowFilteredProfiles(self::removeFilteredForAllPrivacy);
+                        if(!$removeFilters){
+                            $this->setFilterForAge();
+                            $this->setShowFilteredProfiles(self::removeFilteredForAllPrivacy);
+                        }
                     }
                     else{
                         $this->ProfileObj=$profileObj;

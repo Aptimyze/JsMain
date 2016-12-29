@@ -723,7 +723,7 @@ class ProfileCompletionScore extends AbstractProfileCompletionScore
 		$iPercentage =0;
 		$this->m_arrSection_Max['HOBBY'] =2;
 		
-		$objHobbies = new NEWJS_HOBBIES;
+		$objHobbies = new JHOBBYCacheLib;
 		$arrHobbies = $objHobbies->getUserHobbies($this->m_objProfile->getPROFILEID());
 		
 		if($arrHobbies['HOBBY'] || $arrHobbies['INTEREST'])

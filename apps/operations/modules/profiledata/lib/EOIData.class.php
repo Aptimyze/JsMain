@@ -126,7 +126,7 @@ class EOIData
 		
 		$multipleProfileObj = new ProfileArray();
 		$this->profileDetail =$multipleProfileObj->getResultsBasedOnJprofileFields($pid,'','',"PROFILEID,USERNAME,EMAIL,PHONE_RES,PHONE_MOB,CONTACT","JPROFILE","newjs_master");
-		$contactNumOb=new newjs_JPROFILE_CONTACT('newjs_masterRep');
+		$contactNumOb= new ProfileContact('newjs_masterRep');
                 $altNumArray=$contactNumOb->getArray(array('PROFILEID'=>implode(",",$pidArr)),'','',"PROFILEID,ALT_MOBILE",1);
                 
 		foreach($this->profileDetail as $key =>$profileObj)
