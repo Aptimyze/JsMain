@@ -14,7 +14,7 @@ class ApiResponseHandler
 	private $imageCopyServer = null;
 	private $phoneDetails = null;
 	private $cache_flag=true;
-	private $cache_interval=60000; //in milisecond should be integer always 
+	private $cache_interval=120000; //in milisecond should be integer always 
 	private $resetCache=false;
 	private $androidFlagForRatingLogic=true;
 	//Constructor

@@ -253,5 +253,44 @@ class newjs_JPARTNER extends TABLE
                         throw new jsException($e);
                 }
 	}	
+
+	public function getDppDataForProfiles($limit,$offset)
+	{
+		try
+		{
+			$sql = "SELECT PROFILEID,GENDER,LINCOME,HINCOME from newjs.JPARTNER LIMIT :OFFSETVAL, :LIMITVAL";
+			$prep = $this->db->prepare($sql);
+			$prep->bindParam(":LIMITVAL", $limit, PDO::PARAM_INT);
+			$prep->bindParam(":OFFSETVAL", $offset, PDO::PARAM_INT);
+			$prep->execute();
+			while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+			{
+				$resultArr[] = $row;          
+			}
+
+			return $resultArr;
+		}
+		catch (Exception $e){
+			throw new jsException($e);
+		}
+	}
+
+	public function updateIncomeValueForProfile($profileId,$hincome,$partnerIncome,$oldValue)
+	{
+		try
+		{
+			$sql = "UPDATE newjs.JPARTNER set HINCOME = :HINCOME , PARTNER_INCOME = :PARTNERINCOME WHERE PROFILEID = :PROFILEID AND HINCOME = :OLDVALUE";
+			$prep = $this->db->prepare($sql);
+			$prep->bindParam(":HINCOME", $hincome, PDO::PARAM_INT);
+			$prep->bindParam(":PROFILEID", $profileId, PDO::PARAM_INT);
+			$prep->bindParam(":OLDVALUE", $oldValue, PDO::PARAM_INT);
+			$prep->bindParam(":PARTNERINCOME", $partnerIncome, PDO::PARAM_STR);
+			$prep->execute();
+		}
+		catch (Exception $e){
+			throw new jsException($e);
+		}
+	}
+		
 }
 ?>

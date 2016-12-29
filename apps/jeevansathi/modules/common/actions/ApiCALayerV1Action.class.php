@@ -56,11 +56,6 @@ class ApiCALayerV1Action extends sfActions
                     $nameData=(new NameOfUser())->getNameData($profileId);
                     $nameOfUser=$nameData[$profileId]['NAME'];
                     $namePrivacy=$nameData[$profileId]['DISPLAY'];
-                    if($profileId%10==1 && MobileCommon::isNewMobileSite()){
-                    	$todayDate= date('Y-m-d');
-                    	$memObj = JsMemcache::getInstance();
-                    	$memObj->addKeyToSet('nameCalTrack_'.$todayDate,$profileId);
-                    }
                 }
 		$this->m_arrOut=$layerData;
                 $this->m_arrOut['NAME_OF_USER']=$nameOfUser ? $nameOfUser : NULL;

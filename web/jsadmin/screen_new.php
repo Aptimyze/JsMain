@@ -354,9 +354,9 @@ if (authenticated($cid)) {
 				}
 				if ($str_contact) {
           
-          $memObject=new UserMemcache;
-          $memObject->delete("JPROFILE_CONTACT_".$profileid);
-          unset($memObject);
+          // $memObject=new UserMemcache;
+          // $memObject->delete("JPROFILE_CONTACT_".$profileid);
+          // unset($memObject);
 					//$sql_contact = "UPDATE newjs.JPROFILE_CONTACT set $str_contact where PROFILEID=$pid";
           //mysql_query_decide($sql_contact) or die("$sql_contact" . mysql_error_js()."at line 282");
           
@@ -427,8 +427,8 @@ if (authenticated($cid)) {
 		/*
 			changing to get original and modified your info here and saving in table Profile
 		 */
-        $your_info = mysql_real_escape_string($arrProfileUpdateParams['YOURINFO']);
-        $your_info_original = mysql_real_escape_string($_POST['YOURINFO_ORIGINAL']);
+        // $your_info = mysql_real_escape_string($arrProfileUpdateParams['YOURINFO']);
+        // $your_info_original = mysql_real_escape_string($_POST['YOURINFO_ORIGINAL']);
 
       
 				/*if (0)
@@ -443,11 +443,12 @@ if (authenticated($cid)) {
 	    /*
 	    	check for whether your_info_original was set or not.
 	    */
-        if ( strlen($your_info_original) !== 0 )
-        {
-	        $sql_junk_character_check = "INSERT INTO  `PROFILE`.`JUNK_CHARACTER_TEXT` (  `id` ,  `PROFILEID` ,  `original_text` ,  `modified_custom`) VALUES('',  '$pid',  '$your_info_original',  '$your_info');";
-			$result = mysql_query($sql_junk_character_check);
-        }
+	   // commented since the code was written for benchmarking purpose
+   //      if ( strlen($your_info_original) !== 0 )
+   //      {
+	  //       $sql_junk_character_check = "INSERT INTO  `PROFILE`.`JUNK_CHARACTER_TEXT` (  `id` ,  `PROFILEID` ,  `original_text` ,  `modified_custom`) VALUES('',  '$pid',  '$your_info_original',  '$your_info');";
+			// $result = mysql_query($sql_junk_character_check);
+   //      }
 
 
         if(false === $result) {
