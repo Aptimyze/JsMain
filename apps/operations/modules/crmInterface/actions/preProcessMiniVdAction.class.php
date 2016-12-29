@@ -95,7 +95,7 @@ class preProcessMiniVdAction extends sfActions
                 if($submit=='Upload Offer Now'){
 
 	                $uploadTempObj =new test_VD_UPLOAD_TEMP('newjs_local111');
-                        $uploadTempObj->truncate();
+                        //$uploadTempObj->truncate();
 
                         // Background script execute to pre-process Mini VD data
                         passthru(JsConstants::$php5path." ".JsConstants::$alertSymfonyRoot."/symfony billing:preProcessMiniVdData > /dev/null &");
