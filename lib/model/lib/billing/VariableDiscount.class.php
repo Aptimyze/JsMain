@@ -703,7 +703,7 @@ class VariableDiscount
 			$countArr[] =array('cluster'=>$clusterName,'count'=>$totalCount);
 
 			// Delete Cluster
-			$vdClusterObj->deleteCluster($clusterName);
+			//$vdClusterObj->deleteCluster($clusterName);
 			unset($profileArr);	
 		}
 		foreach($countArr as $key=>$dataArr){
