@@ -9,7 +9,7 @@ class ApiRequestHandler
         public static $ANDROID_PLAYSTORE_APP_VERSION = 80;
         public static $ANDROID_FORCE_UPGRADE_VERSION = 40;
 	private static $apiRequestHandlerObj = null;
-	private $app=array("android"=>array('APILEVEL'=>'11',"CURRENT_VERSION"=>"2.3","API_APP_VERSION"=>self::ANDROID_OPTIONAL_UPGRADE_VERSION,"FORCE_API_APP_VERSION"=>self::ANDROID_FORCE_UPGRADE_VERSION),"ios"=>array("APILEVEL"=>"1","CURRENT_VERSION"=>"5","API_APP_VERSION"=>1));
+	private $app=array();
 	private $forceUpgrade=false;
 	public function __construct($request)
 	{
@@ -18,7 +18,7 @@ class ApiRequestHandler
 		{
 			$this->AuthenticateDevice($request);
 		}
-		
+		$this->app= array("android"=>array('APILEVEL'=>'11',"CURRENT_VERSION"=>"2.3","API_APP_VERSION"=>self::$ANDROID_OPTIONAL_UPGRADE_VERSION,"FORCE_API_APP_VERSION"=>self::$ANDROID_OPTIONAL_UPGRADE_VERSION),"ios"=>array("APILEVEL"=>"1","CURRENT_VERSION"=>"5","API_APP_VERSION"=>1));
 	}
 	
 	/*
