@@ -10,6 +10,15 @@ class dppSuggestions
 		$this->gender = $loggedInProfileObj->getGENDER();
 		$this->income = $loggedInProfileObj->getINCOME();
 		$this->calLayer = $calLayer;
+		if($this->calLayer)
+		{
+			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS_CAL;
+		}
+		else
+		{
+			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS;
+		}
+
 		if(is_array($trendsArr))
 		{
 			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
@@ -23,16 +32,7 @@ class dppSuggestions
 		if($type == "INCOME")
 		{
 			$valueArr = $this->getSuggestionForIncome($type,$valArr);
-		}
-		if($this->calLayer)
-		{
-			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS_CAL;
-		}
-		else
-		{
-			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS;
-		}
-
+		}		
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
 			if($type == "CITY")
@@ -362,30 +362,28 @@ class dppSuggestions
 
 	public function getSuggestionForAge($type,$valArr)
 	{		
-		$valArr = (array_combine(DppAutoSuggestEnum::$keyReplaceAgeArr,$valArr));
-		
 		if($this->gender == "F")
 		{
-			$minAge = min($valArr["LAGE"],$this->age);
-			$maxAge = max($valArr["HAGE"],$this->age+DppAutoSuggestEnum::$ageDiffNo);
+			$minAge = min($valArr->LAGE,$this->age);
+			$maxAge = max($valArr->HAGE,$this->age+DppAutoSuggestEnum::$ageDiffNo);
 		}
 		elseif($this->gender == "M")
-		{
-			$minAge = min($valArr["LAGE"],$this->age-DppAutoSuggestEnum::$ageDiffNo);
-			$maxAge = max($valArr["HAGE"],$this->age);
+		{		
+			$minAge = min($valArr->LAGE,$this->age - DppAutoSuggestEnum::$ageDiffNo);
+			$maxAge = max($valArr->HAGE,$this->age);
 		}
 
-		if($minAge < $valArr["LAGE"] || $maxAge > $valArr["HAGE"])
+		if($minAge < $valArr->LAGE || $maxAge > $valArr->HAGE)
 		{
 			$valueArr["data"]["LAGE"] = $minAge;
-			$valueArr["data"]["HAGE"] =$maxAge;
+			$valueArr["data"]["HAGE"] = $maxAge;
 		}
 		return $valueArr;
 	}
 
 	//Mapping of income needs to be changed.
 	public function getSuggestionForIncome($type,$valArr)
-	{			
+	{
 		//use if array keys are 0,1,2,3 and we require LRS,HRS		
 		//$valArr = (array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr));
 		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
@@ -395,30 +393,34 @@ class dppSuggestions
 		{
 			if(in_array($this->income,DppAutoSuggestEnum::$dollarArr))
 			{
-				$key = array_search($valArr["HDS"],$hIncomeDol);				
+				$key = array_search($valArr->HDS,$hIncomeDol);				
 				if($this->income > $key && $key!="19")
-				{
+				{				
+					$valueArr["data"]["LDS"] = $valArr->LDS;
 					$valueArr["data"]["HDS"] = $hIncomeDol[$this->income];
 				}
 			}
 			else
 			{
-				$key = array_search($valArr["HRS"],$hIncomeRs);
+				$key = array_search($valArr->HRS,$hIncomeRs);
 				if($this->income > $key && $key!="19")
 				{
-					$valueArr["data"]["HRS"] = $hIncomeRs[$this->income];
+					$valueArr["data"]["LRS"] = $valArr->LRS;
+					$valueArr["data"]["HRS"] = $hIncomeRs[$this->income];					
 				}
 			}		
 		}
 		elseif($this->gender == "F")
 		{
-			if($valArr["HRS"] != "and above")
+			if($valArr->HRS != "and above")
 			{
-				$valueArr["data"]["HRS"] = "and above";
+				$valueArr["data"]["LRS"] = $valArr->LRS;
+				$valueArr["data"]["HRS"] = "and above";				
 			}
-			if($valArr["DRS"] !="and above")
+			if($valArr->HDS !="and above")
 			{
-				$valueArr["data"]["HDS"] = "and above";
+				$valueArr["data"]["LDS"] = $valArr->LDS;
+				$valueArr["data"]["HDS"] = "and above";				
 			}
 		}
 		return $valueArr;
