@@ -1304,10 +1304,23 @@ class DetailedViewApi
                 $this->m_arrOut['show_ecp'] = 'true';
         
         //AstroApiParam for third party
-        $this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
-        if(true !== is_null($this->m_arrOut['guna_api_parmas'])) {
-            $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
-        }
+	 $appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+	if(MobileCommon::getHttpsUrl()==true && $appVersion>3.9)
+	{
+		$this->m_arrOut['guna_api_parmas'] = CommonFunction::createChecksumForProfile($this->m_objProfile->getPROFILEID());
+		if(true !== is_null($this->m_arrOut['guna_api_parmas'])) 
+		{
+		    $this->m_arrOut['guna_api_url'] = JsConstants::$ssl_siteUrl.'/api/v3/profile/gunascore?oprofile=';
+		}
+	}
+	else
+	{
+		$this->m_arrOut['guna_api_parmas'] = $this->getGunaApiParams();
+		if(true !== is_null($this->m_arrOut['guna_api_parmas'])) 
+		{
+		    $this->m_arrOut['guna_api_url'] = 'http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?';
+		}
+	}
 	}
 	
 	protected function DecorateOpenTextField($szInput)

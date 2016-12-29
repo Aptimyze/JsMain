@@ -195,7 +195,7 @@
 ~include_partial("social/mobile/mobilePhotoUploadProgress",[gender=>~$GENDER`,username=>~$USERNAME`,selectTemplate=>~$selectTemplate`,alreadyPhotoCount=>~$alreadyPhotoCount`,profilepicurl=>~$profilepicurl`,selectFile=>~$selectFile`,privacy=>~$privacy`,selectFileOrNot=>~$selectFileOrNot`,picturecheck=>~$picturecheck`])`
 </div>
 ~if $sourcename && $groupname && $fromPhoneVerify`
-~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename,'age'=>$loginProfile->getAGE(),'mtongue'=>$loginProfile->getMTONGUE(),'city'=>$loginProfile->getCITY_RES()])`
 ~/if`
 
 <div id='emailSentConfirmLayer' class="otplayer dispnone">

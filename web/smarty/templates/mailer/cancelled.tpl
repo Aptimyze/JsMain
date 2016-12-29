@@ -192,6 +192,13 @@
         <td>Your photo is missing</td>
       </tr>
       ~/if`
+
+      ~if $photo eq 2`
+      <tr>
+        <td height="25"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
+        <td>Your photo is not visible to all</td>
+      </tr>
+      ~/if`
     </table>
     </td>
     <td  width="20"></td>
@@ -217,6 +224,27 @@
   <tr>
     <td width="15"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
     <td height="25"><a href="(LINK)UPLOAD_PHOTO:profileid=~$profileid`(/LINK)" style="color:#003a7e; text-decoration:underline;">Upload Your Photo</a> </td>
+  </tr>
+</table>
+    </td>
+    <td></td>
+  </tr>
+  ~/if`
+
+  ~if $photo eq 2`
+  <tr>
+    <td></td>
+    <td height="10"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td height="15"></td>
+    <td>
+    <strong>To get better responses:</strong>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="15"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
+    <td height="25"><a href="(LINK)UPLOAD_PHOTO:profileid=~$profileid`(/LINK)" style="color:#003a7e; text-decoration:underline;">Change Photo Privacy</a> </td>
   </tr>
 </table>
     </td>

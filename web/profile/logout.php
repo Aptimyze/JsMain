@@ -9,6 +9,9 @@ $sql="DELETE FROM userplane.users WHERE userID='$profileId'";
 mysql_query_decide($sql);
  */
 // check referer
+if(MobileCommon::isNewMobileSite())
+        $isMobile=1;
+
 if(MobileCommon::isDesktop() || MobileCommon::isNewMobileSite())
 {
     if(isset($_SERVER['HTTP_REFERER']))
