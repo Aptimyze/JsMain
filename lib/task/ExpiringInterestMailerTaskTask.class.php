@@ -72,20 +72,18 @@ EOF;
 			if($profilemail)
 			{
 				$profileMailChunkArray = array_chunk($profilemail, $this->noOfChunksSender);
-				$this->generateContactResult($profileMailChunkArray, $Contactsobj, $mailerEIObj);
+				foreach ($profileMailChunkArray as $key => $ArrayRow)
+				{
+					// ArrayRows has rows of query
+					foreach ($ArrayRow as $key => $row)
+					{
+						$contactResult = array();
+						$contactResult[$row['RECEIVER']] = $row['SENDER'];
+						$contactResult = $this->skipProfiles($contactResult);
+						$this->InsertMailer($contactResult, $mailerEIObj);
+					}
+				}
 			}
-		}
-	}
-
-	private function generateContactResult($profileMailChunkArray, $Contactsobj, $mailerEIObj)
-	{
-		foreach ($profileMailChunkArray as $key => $value)
-		{
-			$profilemailchunk = $value;
-			$profilemailchunk = implode(',',$profilemailchunk);
-			$contactResult = $Contactsobj->getSendersPendingExpiring($profilemailchunk);
-			$contactResult = $this->skipProfiles($contactResult);
-			$this->InsertMailer($contactResult, $mailerEIObj);
 		}
 	}
 
