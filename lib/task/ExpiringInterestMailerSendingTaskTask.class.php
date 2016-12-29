@@ -36,7 +36,6 @@ EOF;
 		$instanceID = $countObj->getID('Expiring_MAILER');
 
 		$profileMailData=$mailerEIObj->SelectMailerEI($arguments["totalScript"],$arguments["currentScript"]);
-		var_dump($profileMailData);
 		$count = $profileMailData[COUNT];
 		unset($profileMailData[COUNT]);
 		$index=0;
