@@ -377,7 +377,7 @@ class TopSearchBandPopulate
 	public function generateDataArrayApp()
 	{
 		
-		if(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_APP"))
+		if(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_APP")  && MobileCommon::isApp() != 'I')
                 {
                         $this->dataArray = unserialize(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_APP"));
                 }
