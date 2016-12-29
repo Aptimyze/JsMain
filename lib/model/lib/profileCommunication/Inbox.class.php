@@ -169,29 +169,13 @@ class Inbox implements Module
 						$key = "IGNORED_PROFILES";
 						$memKeyNotExists=1;
 						break;
+					case "INTEREST_ARCHIVED":
+						$key = "INTEREST_ARCHIVED";
+						break;
 					case "INTEREST_EXPIRING":
 						$key = "INTEREST_EXPIRING";
 						break;
-					case "INTEREST_ARCHIVED":
-                        $key = "INTEREST_ARCHIVED";
-                        $memKeyNotExists=1;
-                        break;
 
-				}
-
-				/*
-					added this check for getting count data for interest archive data.
-				 */
-				
-				if ( $key == "INTEREST_ARCHIVED")
-				{
-					$where['TYPE']="I";
-					$where["RECEIVER"]=$this->profileObj->getPROFILEID();
-					$dbName = JsDbSharding::getShardNo($this->profileObj->getPROFILEID());
-					$contactsObj = new newjs_CONTACTS($dbName);
-					$group             = '';
-					$contactsCount = $contactsObj->getArchivedContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
-					$countObj[$infoTypenav["PAGE"]] = $contactsCount[0]["COUNT"];
 				}
 
 				if($key == "IGNORED_PROFILES")

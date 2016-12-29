@@ -146,6 +146,9 @@ if ($photoRCurrentCount!='0'){
 			if($filter=="M")
 				$searchId  = 16;
 			break;
+		case "aeoi":
+				$searchId  = 22;
+			break;
 		case "contact_viewers":
 				$searchId  = 17;
 			break;
@@ -161,6 +164,10 @@ if ($photoRCurrentCount!='0'){
 				{
 					case 2:
 						$page = "accept";
+						$filter="R";//or A
+						break;
+					case 22:
+						$page = "aeoi";
 						$filter="R";//or A
 						break;
 					case 3:

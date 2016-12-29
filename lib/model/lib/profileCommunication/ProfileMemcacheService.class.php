@@ -41,6 +41,7 @@ class ProfileMemcacheService
 							'AWAITING_RESPONSE_NEW', 
 							'FILTERED', 
                             'FILTERED_NEW',
+                            'INTEREST_ARCHIVED',
 							'NOT_REP', 
 							'OPEN_CONTACTS', 
 							'CANCELLED_EOI'), 
@@ -307,7 +308,7 @@ public function unsett()
 
     private function print_data()
     {
-        $md = unserialize(JsMemcache::getInstance()->get($this->profileid));
+        //$md = unserialize(JsMemcache::getInstance()->get($this->profileid));
        // print_r($md);   die;
     }
     /**
@@ -503,6 +504,10 @@ public function unsett()
 								}
 								$AWAITING_RESPONSE = $AWAITING_RESPONSE + $value["COUNT"];
 							}
+                            if ( $value["TIME1"] == 1 )
+                            {
+                               $INTEREST_ARCHIVED = $INTEREST_ARCHIVED + $value["COUNT"];                                
+                            }
 
                             if ( $value["TIME1"] == 2 )
                             {
@@ -538,6 +543,7 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE ? $AWAITING_RESPONSE : 0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW ? $AWAITING_RESPONSE_NEW : 0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS ? $OPEN_CONTACTS : 0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED ? $INTEREST_ARCHIVED : 0);
         $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING ? $INTEREST_EXPIRING : 0);
     }
     public function unsetContactsData()
@@ -555,6 +561,7 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE=0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW=0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS=0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED = 0);
         $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING = 0);
     }
     /**
