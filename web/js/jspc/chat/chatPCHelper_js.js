@@ -230,7 +230,14 @@ function to process the non roster data
 function processNonRosterData(response,type,source){
     var operation = "create_list",reCreateList = true;
     //console.log("in processNonRosterData",source); 
-    var newNonRoster = {},oldNonRoster = strophieWrapper.NonRoster,offlineNonRoster = {};
+    var newNonRoster = {},oldNonRoster = {},offlineNonRoster = {};
+    if((Object.keys(strophieWrapper.NonRoster)).length>0){
+        $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
+            if (nodeObj[strophieWrapper.rosterDetailsKey]["groups"].indexOf(type) != -1) {
+                oldNonRoster[profileid] = nodeObj;
+            }
+        });
+    }
     /*if((Object.keys(oldNonRoster)).length == 0){
         oldNonRoster = strophieWrapper.getRosterStorage("non-roster");
     }*/
@@ -257,7 +264,7 @@ function processNonRosterData(response,type,source){
     isResponseSame = checkForObjectsEquality(oldNonRoster,newNonRoster);
     if(isResponseSame == false){
         if((Object.keys(oldNonRoster)).length > 0){
-            if(chatConfig.Params.nonRosterPollingGroups.length == 1 && chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
+            if(/*chatConfig.Params.nonRosterPollingGroups.length == 1 && */chatConfig.Params.nonRosterPollingGroups.indexOf(type) != -1){
                 //only dpp is non roster group case
                 offlineNonRoster = oldNonRoster;
             }
@@ -268,7 +275,8 @@ function processNonRosterData(response,type,source){
         strophieWrapper.onNonRosterListFetched(newNonRoster,type,operation);
     }
     else if((Object.keys(newNonRoster)).length == 0){
-        strophieWrapper.setRosterStorage({},"non-roster");
+        console.log("here ankita check",newNonRoster,oldNonRoster);
+        //strophieWrapper.setRosterStorage({},"non-roster");
     }
 }
 

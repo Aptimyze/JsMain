@@ -496,11 +496,13 @@ strophieWrapper.sendPresence();
     //executed after non-roster list has been fetched or new non roster node is added
     onNonRosterListFetched: function(response,groupid,operation){
         //console.log("in onNonRosterListFetched",response);
+        var newNonRoster = {};
         if(response != undefined){
             $.each(response,function(profileid,nodeObj){
                 if (strophieWrapper.isItSelfUser(profileid) == false) {
                     if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && (strophieWrapper.Roster[profileid] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == undefined)){
                         strophieWrapper.NonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
+                        newNonRoster[profileid] = strophieWrapper.NonRoster[profileid];
                     }
                 }
             });
@@ -508,7 +510,7 @@ strophieWrapper.sendPresence();
             if(operation == "create_list"){
                 strophieWrapper.initialNonRosterFetched = true;
             }
-            invokePluginManagelisting(strophieWrapper.NonRoster, operation);
+            invokePluginManagelisting(newNonRoster, operation);
             strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
         }
     },
