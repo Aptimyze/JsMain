@@ -101,7 +101,7 @@ function to poll for non roster webservice api
 * @inputs:type
 */
 function pollForNonRosterListing(type,updateChatListImmediate){
-    //console.log("pollForNonRosterListing",type);
+    console.log("pollForNonRosterListing",type,updateChatListImmediate);
     if(type == undefined || type == ""){
         type = "dpp";
     }
@@ -115,8 +115,13 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             }
             else{
                 validRe = false;
-                localStorage.removeItem("nonRosterCLUpdated");
-                localStorage.removeItem("nonRosterChatListing"+loggedInJspcUser);
+                var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
+                if(nonRosterCLUpdated != undefined && nonRosterCLUpdated[type] != undefined){
+                    nonRosterCLUpdated[type] = 0;
+                    localStorage.setItem("nonRosterCLUpdated",JSON.stringify(nonRosterCLUpdated));
+                }
+                //localStorage.removeItem("nonRosterCLUpdated");
+                //localStorage.removeItem("nonRosterChatListing"+loggedInJspcUser);
             }
             //headerData['Cache-Control'] = 'no-cache,no-store';
         }
@@ -124,7 +129,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             validRe = checkForValidNonRosterRequest(type);
             //headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].headerCachingAge+',public';
         }
-        //console.log("headerData",headerData);
+        console.log("validRe",type,validRe);
         if(validRe == true){
             var getInputData = "";
             if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
@@ -139,7 +144,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             }
             //getInputData = getInputData+"&timestamp="+(new Date()).getTime();
             $.myObj.ajax({
-                url: (dppListingWebServiceUrl+getInputData),
+                url: (listingWebServiceUrl[type]+getInputData),
                 dataType: 'json',
                 //data: postData,
                 type: 'GET',
