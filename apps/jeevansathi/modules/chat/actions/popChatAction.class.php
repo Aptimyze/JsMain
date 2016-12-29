@@ -26,7 +26,15 @@ class popChatAction extends sfAction
 			$inputJSON = file_get_contents('php://input');
 			$input= json_decode( $inputJSON, TRUE );
 			
-			
+			if(!$input)
+			{
+				$inputObj=json_decode($request->getParameter("json"));
+				$input["from"]=$inputObj->from;
+				$input["to"]=$inputObj->to;
+				$msgIdNo=$inputObj->messageId;
+			}
+			else
+				$msgIdNo=$input['messageId'];
 			
 				$sender=substr($input['from'],0,strrpos($input['from'] ,"@"));
 				$receiver=substr($input['to'],0,strrpos($input['to'] ,"@"));
@@ -34,7 +42,7 @@ class popChatAction extends sfAction
 			//	$message=$input['msg'];
 				$request->setParameter("communicationType",'C');
 				$communicationType='C';
-				$msgIdNo=$input['messageId'];
+				
 			//	$request->setParameter("message",$message);
 			
 			$inputValidateObj->validatePopChat($request);
@@ -57,6 +65,11 @@ class popChatAction extends sfAction
 						$responseArray["pagination"] = 0;
 					else
 						$responseArray["pagination"] = 1;
+					 foreach($arr as $key=>$val)
+					{
+							$arr[$key]["DATE"]=strtotime($val["DATE"]) * 1000;
+					}
+
 					$responseArray["Message"] = json_encode($arr);
 				}
 				else
