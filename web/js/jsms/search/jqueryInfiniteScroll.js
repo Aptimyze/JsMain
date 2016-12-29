@@ -1049,7 +1049,17 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 				var pageAct = parseInt($("div.tupleOuterDiv").last().attr("id").replace(/[^-\d\.]/g, ''))+1;
 				pageAct = "idd"+pageAct;
 				var sbPar = removeNull(firstResponse.searchBasedParam);
-				var newAction = "/search/perform/?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				/*
+					Added this check for contacts section more listing.
+				 */
+				if ( contactCenter == 1 )
+				{
+					var newAction = "/profile/contacts_made_received.php?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				}
+				else
+				{
+					var newAction = "/search/perform/?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				}
 				bottomErrorMsg('<a href="'+newAction+'" class="color2 txtc">Load More Profiles.</a>','','');
 			}
 		}

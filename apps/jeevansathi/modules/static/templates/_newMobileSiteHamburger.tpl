@@ -84,7 +84,7 @@
                 <div class="brdr9_ham pt20">
                   <ul class="fontlig">
                   <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li>
-                    <li><a href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px;">Home</a></li>
+                    <li><a href="/" bind-slide=1 onclick='trackJsEventGA("jsms","homeClick", "", "");' class="white" style="font-size: 17px;">Home</a></li>
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
                     <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li>
                     <li><a href="/search/MobSaveSearch" bind-slide=1 class="white">Saved Searches <span class="dispibl padl10 opa70 f12">~$savedSearchCount`</span></a></li>
@@ -225,7 +225,7 @@
                 <div class=" pt20  hampad1">
                   <ul class="fontlig">
                   <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li>
-                    <li><a href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px">Home</a></li>
+                    <li><a href="/" bind-slide=1 class="white" style="font-size: 17px">Home</a></li>
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
                     <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li>
                      <li><a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide=1 class="white">Browse by Community</a></li>

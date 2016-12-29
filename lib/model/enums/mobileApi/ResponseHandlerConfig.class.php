@@ -120,12 +120,9 @@ class ResponseHandlerConfig
 	public static $PHONE_INVALID_SUCCESS = array("message"=>"Successfull","statusCode"=>'0');
 	public static $PHONE_INVALID_NO_OPTION_SELECTED = array("message"=>"Please provide a valid reason","statusCode"=>'1');
         
-              	public static $NO_EMAILTYPE=  array("message"=>"No Email Type Passed","statusCode"=>'1');
+    public static $NO_EMAILTYPE=  array("message"=>"No Email Type Passed","statusCode"=>'1');
   	public static $ALTERNATE_EMAIL_SUCCESS=  array("message"=>"A link has been sent to your email id {email}, click on the link to verify email.","statusCode"=>'0');
   	public static $ALTERNATE_EMAIL_ID_NOT_FOUND=  array("message"=>"No alternate email ID found for the given user.","statusCode"=>'0');
-
-        
-        
-        
+	public static $PEAK_LOAD_FAILURE = array("message"=>"This operation cannot be done at site peak load","statusCode"=>'0');
 }
 ?>

@@ -20,6 +20,7 @@ $dialerHandlerObj =new DialerHandler($db_js, $db_js_111, $db_dialer);
 $campaign_name = 'JS_NCRNEW';
 $eligibleType ='Y';
 $limit =10;
+$todayDate =$dialerHandlerObj->getEST();
 
 // get Status
 $status =$dialerHandlerObj->getCampaignEligibilityStatus($campaign_name,$eligibleType);
@@ -36,7 +37,7 @@ for($i=$start_from;$i<$limit;$i++)
 	$allotedArray 		= $dialerHandlerObj->getAllotedProfiles($eligible_array);
 	$scoreArray 		= $dialerHandlerObj->getScoreArray($eligible_array);
         $dialerHandlerObj->update_data_of_eligible_profiles($campaign_name,$i,$eligible_array,$vd_array,$allotedArray,$scoreArray,'',$loggedinWithin15days);
-	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i);
+	$dialerHandlerObj->updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i, $todayDate);
 	echo "DONE$i"."\n";
 }
 

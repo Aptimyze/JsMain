@@ -481,14 +481,25 @@ class ContactsRecords
 				$params["VIEWEDTYPE"] = "SENDER";
 			else if($type == ContactHandler::DECLINE)
 				$params["VIEWEDTYPE"] = "SENDER";
+			else if($type == ContactHandler::CANCEL_ALL)
+				$params["VIEWEDTYPE"] = "SENDER";
 			$timeout = WebServicesTimeOut::$contactServiceTimeout["updateseen"];
 			$result = CommonUtility::webServiceRequestHandler($url, $params, "POST",$timeout);
 		}
 		if($result === false)
 		{
+			if($type == ContactHandler::CANCEL_ALL)
+			{
+				$dbName = JsDbSharding::getShardNo($profileid);
+			$contactResultSetObj = new newjs_CONTACTS($dbName);
+			$result = $contactResultSetObj->updateCancelSeen($profileid);
+			}
+			else
+			{	
 			$dbName = JsDbSharding::getShardNo($profileid);
 			$contactResultSetObj = new newjs_CONTACTS($dbName);
 			$result = $contactResultSetObj->updateContactSeen($profileid,$type);
+			}
 		}
 		return $result;
 	}

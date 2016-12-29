@@ -203,9 +203,9 @@ if($data)
       // $sql = "UPDATE newjs.JPROFILE SET $mobile $phonetext $stdtext ACTIVATED = 'Y' WHERE USERNAME = '".$user."'";
  //     	$res_mp = mysql_query($sql,$db) or die("$res_mp".mysql_error_js());
         
-        $memObject=new UserMemcache;
-        $memObject->delete("JPROFILE_CONTACT_".$profileid);
-        unset($memObject);
+        // $memObject=new UserMemcache;
+        // $memObject->delete("JPROFILE_CONTACT_".$profileid);
+        // unset($memObject);
         
       	$sql = "UPDATE newjs.JPROFILE_CONTACT SET ALT_MOBILE = '".$altphone."' WHERE PROFILEID = $profileid";
       	$res_mp = mysql_query($sql,$db) or die("$res_mp".mysql_error_js());

@@ -152,10 +152,10 @@ EditApp = function(){
     
     var requiredArray             = {};
     var previousSectionValue      = {};
-    var updateViewColor12Map      = ["fav_book","fav_movie","fav_food","phone_res_status","phone_mob_status","alt_mob_status","alt_email_status"]
+    var updateViewColor12Map      = ["fav_book","fav_movie","fav_food","phone_res_status","phone_mob_status","alt_mob_status","alt_email_status","email_status"]
     var multiFieldViewMap         = ["appearance","habbits","assets","religious_beliefs","special_cases","open_to_pets","living","plan_to_work","abroad","horo_match"];
     
-    var phoneStatusMap            = ["phone_res_status","phone_mob_status","alt_mob_status","alt_email_status"];
+    var phoneStatusMap            = ["phone_res_status","phone_mob_status","alt_mob_status","alt_email_status","email_status"];
     var phoneDescriptionMap       = ["landline_desc","alt_mobile_desc","mobile_desc"];
     
     var autoSuggestRequest        = {}; 
@@ -3369,8 +3369,10 @@ EditApp = function(){
             var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
             $(document).scrollTop($(validationCheck).offset().top);
           }
-          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email)) 
-              showAlternateConfirmLayer();
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email) && editFieldArr.ALT_EMAIL) 
+              showAlternateConfirmLayer($("#my_alt_emailView"));
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.viewApi.contact.my_email) && editFieldArr.EMAIL) 
+              showAlternateConfirmLayer($("#my_emailView"));
               
         },
         error:function(result){
@@ -6242,7 +6244,22 @@ $(document).ready(function() {
                 ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
                 ajaxConfig.success=function(resp)
                 {
-                    showAlternateConfirmLayer();   
+                    showAlternateConfirmLayer($("#my_alt_emailView"));   
+                    hideCommonLoader();
+                }
+                jQuery.myObj.ajax(ajaxConfig);
+	});
+    $("body").on('click','#email_statusView',function () {
+		if($("#email_statusView").html()!='Verify') return;
+                showCommonLoader();
+                var ajaxData={'emailType':'1'};
+                var ajaxConfig={};
+                ajaxConfig.data=ajaxData;
+                ajaxConfig.type='POST';
+                ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
+                ajaxConfig.success=function(resp)
+                {
+                    showAlternateConfirmLayer($("#my_emailView"));   
                     hideCommonLoader();
                 }
                 jQuery.myObj.ajax(ajaxConfig);
@@ -6349,9 +6366,9 @@ $('#validateSenderEmail').click(function(e){
   return false;
 });
 }
-function showAlternateConfirmLayer(){
+function showAlternateConfirmLayer(jObject){
     var obj = $("#js-alternateEmailConfirmLayer");
-    var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,$("#my_alt_emailView").eq(0).text().trim());
+    var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,jObject.eq(0).text().trim());
     obj.find("#altEmailConfirmText").eq(0).text(msg);
     showLayerCommon("js-alternateEmailConfirmLayer");
     obj.find('.closeCommLayer').eq(0).bind('click',function(){
