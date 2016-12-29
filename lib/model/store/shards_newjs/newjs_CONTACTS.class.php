@@ -611,8 +611,14 @@ public function getSendersPending($profileids)
 			{
 				$sql = $sql.",".$group;
 			}
-			if($time)
-				$sql = $sql.",CASE WHEN DATEDIFF(NOW( ) ,  `TIME`) <=90 THEN 0 ELSE 1 END AS TIME1 ";
+			// if($time)
+			// 	$sql = $sql.",CASE WHEN DATEDIFF(NOW( ) ,  `TIME`) <=90 THEN 0 ELSE 1 END AS TIME1 ";
+			if ($time)
+				$sql = $sql.",CASE
+				WHEN DATEDIFF(NOW( ) ,  `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." AND DATEDIFF(NOW( ) ,  `TIME` ) >= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT."  THEN 2 
+				WHEN DATEDIFF(NOW( ) ,  `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." THEN 0
+				WHEN DATEDIFF(NOW( ) ,  `TIME` ) > ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." THEN 1
+				END AS TIME1 ";
 			$sql = $sql." FROM newjs.CONTACTS WHERE";
 			if($where)
 			{
@@ -740,7 +746,6 @@ public function getSendersPending($profileids)
 	}
 	public function getContactedProfileArray($condition,$skipArray)
 	{
-
 		$string = array('TYPE','SEEN','FILTER','TIME');
 		try{
 			if(!$condition)
@@ -816,6 +821,36 @@ public function getSendersPending($profileids)
 								$count++;
 							}
 						}
+
+						if($key1 == "LESS_THAN_EQUAL_EXPIRING")
+						{
+							$expiry = 1;
+							foreach($value1 as $keyName=>$keyValue)
+							{
+								$arr[] = $keyName.">= :VALUE".$count;
+								$bindArr["VALUE".$count]["VALUE"] = $keyValue;
+								if(in_array($keyName,$string))
+									$bindArr["VALUE".$count]["TYPE"] = "STRING";
+								else
+									$bindArr["VALUE".$count]["TYPE"] = "INT";
+								$count++;
+							}
+						}
+
+						if($key1 == "GREATER_THAN_EQUAL_EXPIRING")
+						{
+							foreach($value1 as $keyName=>$keyValue)
+							{
+								$arr[] = $keyName."< :VALUE".$count;
+								$bindArr["VALUE".$count]["VALUE"] = $keyValue;
+								if(in_array($keyName,$string))
+									$bindArr["VALUE".$count]["TYPE"] = "STRING";
+								else
+									$bindArr["VALUE".$count]["TYPE"] = "INT";
+								$count++;
+							}
+						}
+
 						if($key1 == "LESS_THAN_EQUAL")
 						{
 							foreach($value1 as $keyName=>$keyValue)
@@ -839,9 +874,17 @@ public function getSendersPending($profileids)
 				}
 				if($key == "ORDER")
 				{
+						
 					if($value)
 					{
-						$order = "ORDER BY ".$value." DESC";
+						if ( isset($expiry) )
+						{
+							$order = "ORDER BY ".$value." ASC";
+						}
+						else
+						{
+							$order = "ORDER BY ".$value." DESC";
+						}
 					}
 				}
 

@@ -33,7 +33,10 @@ $('body').on('click', '.searchNavigation', function()
 		$("div.loaderBottomDiv").addClass("initialLoader fullwid").css("margin-top",height+"px");
 	}
 	$('body').css("background","#b1b1b1");
-        
+    if ( firstResponse.searchid == 23 && firstResponse.total != "0")
+    {
+    	$("#interestExpiringMessage").removeClass('dispnone');
+    }
         
 //        onBackBtnSRP = function()
 //        { 
@@ -107,7 +110,6 @@ function triggerLoader(type,loadPageToLoadId,idToLoad)
 	var triggerPoint = $(document).height() - ($(window).scrollTop() + $(window).height());
 	if(!isLoading)
 	{
-		
 		if(loadPageToLoadId)
 		{			
 			loadsNextResult(loadPageToLoadId,idToLoad);
@@ -279,6 +281,11 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 		contactTracking += "&"+firstResponse.tracking;
 	}
 			
+    if ( firstResponse.infotype == "INTEREST_EXPIRING" || firstResponse.infotype == "INTEREST_RECEIVED")
+	{
+		contactTracking += "&"+firstResponse.tracking;
+	}
+
 	//console.log(contactTracking);
 		if(totalNoOfResults=='')
 		{
@@ -1087,7 +1094,11 @@ function forceJumpToPage(idToJump){
 				var top = $('#idd'+idToJump).offset().top;
 			else
 				var top = $('#iddf1').offset().top;
-			$("html, body").scrollTop(top);		
+
+			if ( idToJump != 1 )
+			{
+				$("html, body").scrollTop(top);		
+			}
 			loadNextImages();
 		},timedOut);
 	}
