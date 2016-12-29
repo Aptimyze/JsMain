@@ -83,7 +83,7 @@ EOF;
 		{
 			$profilemailchunk = $value;
 			$profilemailchunk = implode(',',$profilemailchunk);
-			$contactResult = $Contactsobj->getSendersPending($profilemailchunk);
+			$contactResult = $Contactsobj->getSendersPendingExpiring($profilemailchunk);
 			$contactResult = $this->skipProfiles($contactResult);
 			$this->InsertMailer($contactResult, $mailerEIObj);
 		}

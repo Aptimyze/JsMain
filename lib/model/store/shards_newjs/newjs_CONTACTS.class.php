@@ -1293,12 +1293,16 @@ public function getSendersPending($profileids)
 		{
 			try
 			{
-				$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' ".$chunkStr." and FILTERED<>'Y' and TIME <= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." DAY) and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." DAY) AND RECEIVER=PROFILEID AND SERVERID=:SERVERID group by RECEIVER order by TIME";
+				$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' ".$chunkStr." and FILTERED<>'Y' and DATE(TIME) <= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." DAY) and DATE(TIME) >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." DAY) AND RECEIVER=PROFILEID AND SERVERID=:SERVERID group by RECEIVER order by TIME";
 				$res = $this->db->prepare($sql);
 				$res->bindValue(":SERVERID",$serverId,PDO::PARAM_INT);
 				$res->execute();
 				while($row = $res->fetch(PDO::FETCH_ASSOC))
 				{
+					if($row['RECEIVER'] == 699918)
+					{
+						var_dump($row);
+					}
 					$result[] = $row['RECEIVER'];
 				}
 				return $result;
@@ -1307,6 +1311,38 @@ public function getSendersPending($profileids)
 			{
 				throw new jsException($e);
 			}
-		}			
+		}
+
+		public function getSendersPendingExpiring($profileids)
+		{
+			// todo: do with one query.
+			try
+			{
+				$idStr= str_replace("'","",$profileids);
+			$idArr= explode(",",$idStr);
+			foreach($idArr as $k=>$v)
+				$idSqlArr[]=":v$k";
+			$idSql="(".(implode(",",$idSqlArr)).")";
+			// $sql = "SELECT RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM newjs.CONTACTS WHERE RECEIVER IN $idSql AND TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) GROUP BY RECEIVER";
+			$sql = "SELECT RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM newjs.CONTACTS WHERE RECEIVER IN $idSql AND TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME <= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." DAY) and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." DAY) GROUP BY RECEIVER";
+				$res = $this->db->prepare($sql);
+				foreach($idArr as $k=>$v)
+					$res->bindValue(":v$k", $v, PDO::PARAM_INT);
+				$res->execute();
+				while($row = $res->fetch(PDO::FETCH_ASSOC))
+				{
+					$result[$row['RECEIVER']] = $row['SENDER'];	
+					//$result['count'][] = $row['count'];		
+				}
+				//print_r($profileids);
+				//var_dump($result);die;
+				return $result;
+			}
+		    catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}	
+			
+		}	
 }
 ?>
