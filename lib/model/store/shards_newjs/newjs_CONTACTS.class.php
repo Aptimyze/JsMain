@@ -1309,35 +1309,19 @@ public function getSendersPending($profileids)
 			}
 		}
 
-		public function getSendersPendingExpiring($profileids)
-		{
-			// todo: do with one query.
-			try
-			{
-				$idStr= str_replace("'","",$profileids);
-			$idArr= explode(",",$idStr);
-			foreach($idArr as $k=>$v)
-				$idSqlArr[]=":v$k";
-			$idSql="(".(implode(",",$idSqlArr)).")";
-			$sql = "SELECT RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM newjs.CONTACTS WHERE RECEIVER IN $idSql AND TYPE IN ('I') AND FILTERED NOT IN('Y') and DATEDIFF(NOW( ) ,  `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." AND DATEDIFF(NOW( ) ,  `TIME` ) >= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." GROUP BY RECEIVER";
-				$res = $this->db->prepare($sql);
-				foreach($idArr as $k=>$v)
-					$res->bindValue(":v$k", $v, PDO::PARAM_INT);
-				$res->execute();
-				while($row = $res->fetch(PDO::FETCH_ASSOC))
-				{
-					$result[$row['RECEIVER']] = $row['SENDER'];	
-					//$result['count'][] = $row['count'];		
-				}
-				//print_r($profileids);
-				//var_dump($result);die;
-				return $result;
-			}
-		    catch (PDOException $e)
-			{
-				throw new jsException($e);
-			}	
-			
-		}	
+
+    	public function setGroupContact()
+    	{
+    		try
+    		{
+	    		$sql = "SET SESSION group_concat_max_len = 1000000;";
+	    		$res = $this->db->prepare($sql);
+	            $res->execute();
+    		}
+    		catch(PDOException $e)
+    		{
+    			throw new jsException($e);	
+    		}
+    	}	
 }
 ?>
