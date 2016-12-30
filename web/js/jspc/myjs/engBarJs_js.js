@@ -471,7 +471,7 @@ try{
     
 	if (totalPanels>=2)
         {
-		listName=this.list;
+		var listName=this.list;
 		$("#panelCounter_FILTEREDINTEREST").removeClass('disp-none');
 		$("#arrowKeys_FILTEREDINTEREST").removeClass('opa50');
 		$("#prv-"+this.list).addClass('cursp').bind(clickEventType,function(){
@@ -629,7 +629,7 @@ try{
     
   if (totalPanels>=2)
         {
-    listName=this.list;
+    var listName=this.list;
     $("#panelCounter_EXPIRINGINTEREST").removeClass('disp-none');
     $("#arrowKeys_EXPIRINGINTEREST").removeClass('opa50');
     $("#prv-"+this.list).addClass('cursp').bind(clickEventType,function(){
@@ -795,7 +795,7 @@ try{
 
     
 	if (totalPanels>=2){
-		listName=this.list;
+		var listName=this.list;
 		$("#panelCounter_INTERESTRECEIVED").removeClass('disp-none');
 		$("#arrowKeys_INTERESTRECEIVED").removeClass('opa50');
 		$("#prv-"+this.list).addClass('cursp').bind(clickEventType,function(){

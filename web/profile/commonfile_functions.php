@@ -506,7 +506,7 @@ $js_arr[]=array("jsms/contactus/contactus_js"     => "1");
 $js_arr[]=array("jsms/common/sly"      => "2");
 $js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                                       => "56");
 $js_arr[]=array("jspc/myjs/myjs_js"                                                                    => "73");
-$js_arr[]=array("jspc/myjs/engBarJs_js"                            => "28");
+$js_arr[]=array("jspc/myjs/engBarJs_js"                             => "29");
 $js_arr[]=array("jspc/common/nano"     => "2");
 $js_arr[]=array("jspc/common/commonJspc_js"                                    => "39");
 $js_arr[]=array("jspc/registration/registrationJspc_js"                   => "27");
