@@ -46,9 +46,10 @@ EOF;
 
 	public function skipProfiles($arranged)
 	{
+            $skipProfileObj     = new newjs_IGNORE_PROFILE('newjs_slave');
+
 		foreach ($arranged as $key => $value) 
 		{
-			$skipProfileObj     = new newjs_IGNORE_PROFILE('newjs_slave');
         	        $skipProfiles       = $skipProfileObj->listIgnoredProfile($key);
 			if(is_array($skipProfiles))
 				$temp=array_diff($value,$skipProfiles); 
@@ -57,7 +58,7 @@ EOF;
 			if(count($temp)>0)
 				$result[$key]=$temp;
                         $arranged[$key] = null;
-			$skipProfileObj::unsetInstance($key);
+                        $skipProfiles = null;
 		}
 		return $result;
 	}
