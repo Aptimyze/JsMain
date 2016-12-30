@@ -1710,6 +1710,7 @@ class csvGenerationHandler
 	}
 	public function premiumIncomeBasedCheck($income,$familyIncome,$regEntryDt)
 	{
+		return true;
 		$premiumIncome  =crmParams::$premiumIncome;
 		$today		=date('Y-m-d',time());
 		$regEntryDtArr	=@explode(" ",$regEntryDt);
