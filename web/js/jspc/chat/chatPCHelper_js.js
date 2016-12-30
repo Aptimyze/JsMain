@@ -1022,8 +1022,7 @@ function updateNonRosterListOnCEAction(actionParams){
     var action = actionParams["action"],
     user_id = actionParams["user_id"],
     groupId = actionParams["groupId"];
-    if(user_id != undefined){
-        
+    if(user_id != undefined){        
         switch(action){
             case "REMOVE":
             case "BLOCK":
@@ -1036,6 +1035,12 @@ function updateNonRosterListOnCEAction(actionParams){
                 }
                 break;
             case "ADD":
+                //remove this node from existing list first
+                updateNonRosterListOnCEAction({
+                    "user_id":user_id,
+                    "action":"REMOVE"
+                });
+                //now add this node in new group
                 var chatStatus = actionParams["chatStatus"],
                 username = actionParams["username"],
                 profilechecksum = actionParams["profilechecksum"];
@@ -1066,8 +1071,8 @@ function invokePluginManagelisting(listObject, key, user_id) {
             //console.log("create_list",listObject);
             objJsChat.manageChatLoader("hide");
         }
-        if(key == "add_node" && user_id != undefined && strophieWrapper.checkForGroups(listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true && listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0] != undefined){
-            //before adding new node in list,check presence in nonroster list to remove it first
+        if(key == "add_node" && user_id != undefined && strophieWrapper.checkForGroups(listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"]) == true && listObject[user_id][strophieWrapper.rosterDetailsKey]["groups"][0] != undefined && listObject[user_id][strophieWrapper.rosterDetailsKey]["nodeType"] != "non-roster"){
+            //before adding new roster openfire node in list,check presence in nonroster list to remove it first
             updateNonRosterListOnCEAction({"user_id":user_id,"action":"REMOVE"});
         }
         objJsChat.addListingInit(listObject,key);

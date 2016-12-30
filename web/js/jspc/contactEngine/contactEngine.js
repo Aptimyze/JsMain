@@ -838,7 +838,10 @@ function updateChatRosterList(elementObj,arrID){
 			if(chatData != undefined){
 				var chatSplitData = chatData.split(",");
 				if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
-					updateNonRosterListOnCEAction({"user_id":chatSplitData[0],"action":chatSplitData[1],"chatStatus":"offline"});
+					updateNonRosterListOnCEAction({
+											"user_id":chatSplitData[0],
+											"action":chatSplitData[1]
+										});
 				}
 			}
 		}

@@ -520,6 +520,15 @@ strophieWrapper.sendPresence();
             else{
                 invokePluginManagelisting(newNonRoster, operation);
             }
+            if(operation == "add_node" && user_id != undefined && strophieWrapper.NonRoster[user_id] != undefined){
+                //update addIndex for rest of nodes to keep them sorted with this new node
+                $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
+                    if(profileid != user_id){
+                        var addIndex = nodeObj[strophieWrapper.rosterDetailsKey]["addIndex"];
+                        strophieWrapper.NonRoster[profileid][strophieWrapper.rosterDetailsKey]["addIndex"] = addIndex+1;
+                    }
+                });
+            }
             strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
         }
     },
