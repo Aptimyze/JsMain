@@ -2,7 +2,7 @@
 
 /**
  * Description of billing_NEGATIVE_TRANSACTIONS 
- * To store newgative transactions i.e. Cancel, Refund, Cheque Bounce, Cancellation.
+ * To store negative transactions i.e. Cancel, Refund, Cheque Bounce, Cancellation.
  * @author nitish
  */
 class billing_NEGATIVE_TRANSACTIONS extends TABLE{
