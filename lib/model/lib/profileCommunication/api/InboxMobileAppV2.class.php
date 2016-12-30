@@ -1192,6 +1192,7 @@ class InboxMobileAppV2
                                 "SHORTLIST"=>"stype=".SearchTypesEnums::MYJS_SHORTLIST_PC."&responseTracking=".JSTrackingPageType::MYJS_SHORTLIST_PC,
                                 "PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
                                 "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_MYJS_JSPC,
+                                "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSPC_MYJS,
                                 //"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
