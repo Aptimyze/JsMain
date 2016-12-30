@@ -848,7 +848,7 @@ function updateChatRosterList(elementObj,arrID){
 				if(arrID[1] != undefined){
 					var profileSplitData = arrID[1].split("i");
 					var chatStatus = "offline";
-					if(elementObj.parent().hasClass("contactEngineIcon OnlineChat")){
+					if(elementObj.parent().find(".OnlineChat").length == 1){
 						chatStatus = "online";
 					}
 					var pcChatData = [],action = "",group="",title = elementObj.attr("title");
