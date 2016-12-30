@@ -1018,18 +1018,40 @@ function to update non roster item in listing
 * @inputs:actionParams
 */
 function updateNonRosterListOnCEAction(actionParams){
-    //console.log("updateNonRosterListOnCEAction",actionParams);
+    console.log("updateNonRosterListOnCEAction",actionParams);
     var action = actionParams["action"],
-    user_id = actionParams["user_id"];
+    user_id = actionParams["user_id"],
+    groupId = actionParams["groupId"];
     if(user_id != undefined){
-        if(action == "REMOVE" || action == "BLOCK"){
-            var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
-            //console.log("updateNonRosterListOnCEAction",checkIfExists);
-            if(checkIfExists && checkIfExists["exists"] == true){
-                var deleteIdArr = [];
-                deleteIdArr.push(user_id);
-                strophieWrapper.onNonRosterListDeletion(deleteIdArr);
-            }
+        
+        switch(action){
+            case "REMOVE":
+            case "BLOCK":
+                var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
+                console.log("updateNonRosterListOnCEAction",checkIfExists);
+                if(checkIfExists && checkIfExists["exists"] == true){
+                    var deleteIdArr = [];
+                    deleteIdArr.push(user_id);
+                    strophieWrapper.onNonRosterListDeletion(deleteIdArr);
+                }
+                break;
+            case "ADD":
+                var chatStatus = actionParams["chatStatus"],
+                username = actionParams["username"],
+                profilechecksum = actionParams["profilechecksum"];
+                if(groupId != undefined && groupId != "" && chatConfig.Params.nonRosterPollingGroups.indexOf(groupId) != -1){
+                    var nodeObj = {};
+                    nodeObj[user_id] = strophieWrapper.formatNonRosterObj({
+                                                        "chatStatus":chatStatus,
+                                                        "profileid":user_id,
+                                                        "username":username,
+                                                        "profileChecksum":profilechecksum,
+                                                        "groupid":groupId,
+                                                        "addIndex":0
+                                                    });
+                    strophieWrapper.onNonRosterListFetched(nodeObj,groupId,"add_node");
+                }
+                break;
         }
     }
 }

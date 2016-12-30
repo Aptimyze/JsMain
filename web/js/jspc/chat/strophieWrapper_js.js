@@ -497,20 +497,29 @@ strophieWrapper.sendPresence();
     onNonRosterListFetched: function(response,groupid,operation){
         //console.log("in onNonRosterListFetched",response);
         var newNonRoster = {};
+        var user_id;
         if(response != undefined){
             $.each(response,function(profileid,nodeObj){
                 if (strophieWrapper.isItSelfUser(profileid) == false) {
                     if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && (strophieWrapper.Roster[profileid] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == undefined)){
                         strophieWrapper.NonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
                         newNonRoster[profileid] = strophieWrapper.NonRoster[profileid];
+                        if(user_id == undefined){
+                            user_id = profileid;
+                        }
                     }
                 }
             });
             //console.log("adding",strophieWrapper.NonRoster);
-            if(operation == "create_list"){
+            if(operation == "create_list" || operation == "add_node"){
                 strophieWrapper.initialNonRosterFetched = true;
             }
-            invokePluginManagelisting(newNonRoster, operation);
+            if(operation == "add_node"){
+                invokePluginManagelisting(newNonRoster,operation,user_id);
+            }
+            else{
+                invokePluginManagelisting(newNonRoster, operation);
+            }
             strophieWrapper.setRosterStorage(strophieWrapper.NonRoster,"non-roster");
         }
     },
