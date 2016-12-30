@@ -46,11 +46,10 @@ EOF;
 
 	public function skipProfiles($arranged)
 	{
-		$skipConditionArray = SkipArrayCondition::$default;
 		foreach ($arranged as $key => $value) 
 		{
-			$skipProfileObj     = SkipProfile::getInstance($key);
-        	        $skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+			$skipProfileObj     = new newjs_IGNORE_PROFILE('newjs_slave');
+        	        $skipProfiles       = $skipProfileObj->listIgnoredProfile($key);
 			if(is_array($skipProfiles))
 				$temp=array_diff($value,$skipProfiles); 
 			else
