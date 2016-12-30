@@ -31,7 +31,10 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		if(!sfContext::hasInstance())
+		ini_set('memory_limit','912M');
+                ini_set('max_execution_time', 0);
+
+            if(!sfContext::hasInstance())
 			sfContext::createInstance($this->configuration);
 
 		$mailerYNObj = new MAIL_YesNoMail("newjs_masterDDL");
