@@ -479,6 +479,21 @@ public function executeCALRedirection($request){
             'jsms/common/mediaquery',
             'jsms/common/jsmsApp_promo_css',
             'rippleEffectCommon_css'));
+          $this->JSArray = getCommaSeparatedJSFileNames(array(
+              'modernizr_p_js',
+              'tracking_js',
+              'jsms/common/CommonFunctions',
+              'jsms/common/scrollTo',
+              'jsms/common/urlParamHandling',
+              'app_promo_js',
+              'commonMob.js',
+              'jsms/common/touchswipe_js',
+              'jsms/common/disableScroll_js',
+              'jsms/common/history_js',
+              'commonExpiration_js',
+              'rippleEffectCommon_js',
+              'common_comscore_js',
+              'jsms/login/newMobLogin_js'));
 
             $request->setAttribute('mobLogoutPage','Y');
             $this->setTemplate("newMobLogin");

@@ -197,13 +197,10 @@ function checkJquery() {
     if(window.jQuery) {
         stopInterval();
 
-        var lib2 = document.createElement('script');
-        lib2.src = "~JsConstants::$imgUrl`/min/?f=/js/jsms/login/newMobLogin_js_22.js";
+        var lib2 = document.createElement('script');/min/?f="+logoutCssFiles
+        lib2.src = "~JsConstants::$imgUrl`/min/?f=~$JSArray`";
         document.head.appendChild(lib2);
         
-        var lib = document.createElement('script');
-        lib.src = "~JsConstants::$imgUrl`/min/?f=/js/modernizr_p_js_3.js,/js/tracking_js_7.js,/js/jsms/common/CommonFunctions_22.js,/js/jsms/common/scrollTo_1.js,/js/jsms/common/urlParamHandling_1.js,/js/app_promo_js_41.js,/js/commonMob_2.js,/js/jsms/common/touchswipe_js_3.js,/js/jsms/common/disableScroll_js_1.js,/js/jsms/common/history_js_7.js,/js/commonExpiration_js_2.js,/js/rippleEffectCommon_js_3.js,/js/common_comscore_js_2.js";
-        document.head.appendChild(lib);
     } else{
         console.log("Jquery not loaded");
     }
