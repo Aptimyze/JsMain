@@ -24,14 +24,10 @@ $("#submitRequest").click(function() {
         var username = $("#usernameInp").find("input").val(),
             email = $("#emailInp").find("input").val(),
             query = $("#quesInp").find("input").val();
-            //console.log(username+email+query);
-        var url = '/api/v1/help/helpQuery';
-        if(iosWebView == 1){
-            url = SSL_SITE_URL+"/api/v1/help/helpQuery";
-        }
+            console.log(username+email+query);
         $.ajax({
             type: "POST",
-            url: url,
+            url: '/api/v1/help/helpQuery',
             cache: false,
             timeout: 5000, 
             data: {email:email,username:username,query:query},
