@@ -173,7 +173,7 @@
             <!--end:description--> 
             <!--start:link-->
             <div class="fr prfwid12 colrw fontlig f20"> 
-              <div id="cEButtonsContainer-~$apiData['page_info']['profilechecksum']`-VDP" class="bg5">
+              <div id="cEButtonsContainer-~$apiData['page_info']['profilechecksum']`-VDP" class="bg5 pcChatHelpData" data-pcChat="~$apiData['about']['username']`,~$apiData['page_info']['profilechecksum']`">
                    
               </div>          
             </div>

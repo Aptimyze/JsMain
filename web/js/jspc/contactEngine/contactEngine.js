@@ -833,55 +833,56 @@ function cEButtonActionCalling(elementObj)
 
 function updateChatRosterList(elementObj,arrID){
 	if(arrID[0] == "IGNORE"){
-			//console.log("ignore from cEButtonActionCalling");
-			var chatData = elementObj.attr("data-chat");
-			if(chatData != undefined){
-				var chatSplitData = chatData.split(",");
-				if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+		//console.log("ignore from cEButtonActionCalling");
+		var chatData = elementObj.attr("data-chat");
+		if(chatData != undefined){
+			var chatSplitData = chatData.split(",");
+			if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+				updateNonRosterListOnCEAction({
+										"user_id":chatSplitData[0],
+										"action":chatSplitData[1]
+									});
+			}
+		}
+	}
+	else{
+		//non roster actions(shortlist,remove shortlist) other than ignore and chat
+		if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+			if(arrID[1] != undefined){
+				var profileSplitData = arrID[1].split("i");
+				var chatStatus = "offline";
+				if(elementObj.parent().find(".OnlineChat").length == 1){
+					chatStatus = "online";
+				}
+				var pcChatData = [],action = "",group="";
+				switch(arrID[0]){
+					case "SHORTLIST":
+						var isShortlisted = elementObj.attr("data");
+						if(isShortlisted.indexOf("&shortlist=false")>-1){
+							action = "ADD";
+							group = "shortlist";
+						}
+						else if(isShortlisted.indexOf("&shortlist=true")>-1){
+							action = "REMOVE";
+							group = "shortlist"
+						}
+						break;
+				}
+				if(action != "" && elementObj.parent().parent().hasClass("pcChatHelpData")){
+					pcChatData = (elementObj.parent().parent().attr("data-pcChat")).split(",");
+					console.log("from cEButtonActionCalling ",profileSplitData,action,group,chatStatus);
 					updateNonRosterListOnCEAction({
-											"user_id":chatSplitData[0],
-											"action":chatSplitData[1]
+											"user_id":profileSplitData[1],
+											"action":action,
+											"chatStatus":chatStatus,
+											"username":pcChatData[0],
+											"profilechecksum":pcChatData[1],
+											"groupId":group
 										});
 				}
 			}
 		}
-		else{
-			//actions other than ignore and chat
-			if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
-				if(arrID[1] != undefined){
-					var profileSplitData = arrID[1].split("i");
-					var chatStatus = "offline";
-					if(elementObj.parent().find(".OnlineChat").length == 1){
-						chatStatus = "online";
-					}
-					var pcChatData = [],action = "",group="",title = elementObj.attr("title");
-					switch(arrID[0]){
-						case "SHORTLIST":
-							if(title == "Shortlist"){
-								action = "ADD";
-								group = "shortlist";
-							}
-							else{
-								action = "REMOVE";
-								group = "shortlist"
-							}
-							break;
-					}
-					if(action != "" && elementObj.parent().parent().hasClass("contactEngineBar")){
-						pcChatData = (elementObj.parent().parent().attr("data-pcChat")).split(",");
-						console.log("from cEButtonActionCalling ",profileSplitData,action,group,chatStatus);
-						updateNonRosterListOnCEAction({
-												"user_id":profileSplitData[1],
-												"action":action,
-												"chatStatus":chatStatus,
-												"username":pcChatData[0],
-												"profilechecksum":pcChatData[1],
-												"groupId":group
-											});
-					}
-				}
-			}
-		}
+	}
 }
 
 function hpOverlayBinding()

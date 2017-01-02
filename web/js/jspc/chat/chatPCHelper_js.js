@@ -1026,21 +1026,22 @@ function updateNonRosterListOnCEAction(actionParams){
         switch(action){
             case "REMOVE":
             case "BLOCK":
+                //remove from non roster list
                 var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
                 console.log("updateNonRosterListOnCEAction",checkIfExists);
-                if(checkIfExists && checkIfExists["exists"] == true){
+                if(checkIfExists && checkIfExists["exists"] == true && checkIfExists["groupID"] != undefined && chatConfig.Params.nonRosterPollingGroups.indexOf(checkIfExists["groupID"]) != -1){
                     var deleteIdArr = [];
                     deleteIdArr.push(user_id);
                     strophieWrapper.onNonRosterListDeletion(deleteIdArr);
                 }
                 break;
             case "ADD":
-                //remove this node from existing list first
+                //remove this node from existing non roster list first if node is not a roster
                 updateNonRosterListOnCEAction({
                     "user_id":user_id,
                     "action":"REMOVE"
                 });
-                //now add this node in new group
+                //now add this node in new non roster group
                 var chatStatus = actionParams["chatStatus"],
                 username = actionParams["username"],
                 profilechecksum = actionParams["profilechecksum"];

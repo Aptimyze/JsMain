@@ -496,34 +496,33 @@ strophieWrapper.sendPresence();
     //executed after non-roster list has been fetched or new non roster node is added
     onNonRosterListFetched: function(response,groupid,operation){
         //console.log("in onNonRosterListFetched",response);
-        var newNonRoster = {};
-        var user_id;
+        var newNonRoster = {},profileAdded;
         if(response != undefined){
             $.each(response,function(profileid,nodeObj){
                 if (strophieWrapper.isItSelfUser(profileid) == false) {
                     if (strophieWrapper.checkForGroups(nodeObj[strophieWrapper.rosterDetailsKey]["groups"]) == true && (strophieWrapper.Roster[profileid] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"] == undefined || strophieWrapper.Roster[profileid][strophieWrapper.rosterDetailsKey]["groups"][0] == undefined)){
-                        strophieWrapper.NonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
-                        newNonRoster[profileid] = strophieWrapper.NonRoster[profileid];
-                        if(user_id == undefined){
-                            user_id = profileid;
+                        newNonRoster[profileid] = strophieWrapper.mergeRosterObj(strophieWrapper.NonRoster[profileid], nodeObj);
+                        strophieWrapper.NonRoster[profileid] = newNonRoster[profileid];
+                        if(profileAdded == undefined){
+                            profileAdded = profileid;
                         }
                     }
                 }
             });
             //console.log("adding",strophieWrapper.NonRoster);
-            if(operation == "create_list" || operation == "add_node"){
+            if(operation == "create_list" || (operation == "add_node" && profileAdded != undefined)){
                 strophieWrapper.initialNonRosterFetched = true;
             }
-            if(operation == "add_node"){
-                invokePluginManagelisting(newNonRoster,operation,user_id);
+            if(operation == "add_node" && profileAdded != undefined){
+                invokePluginManagelisting(newNonRoster,operation,profileAdded);
             }
-            else{
+            else if(operation == "create_list"){
                 invokePluginManagelisting(newNonRoster, operation);
             }
-            if(operation == "add_node" && user_id != undefined && strophieWrapper.NonRoster[user_id] != undefined){
+            if(operation == "add_node" && profileAdded != undefined){
                 //update addIndex for rest of nodes to keep them sorted with this new node
                 $.each(strophieWrapper.NonRoster,function(profileid,nodeObj){
-                    if(profileid != user_id){
+                    if(profileid != profileAdded){
                         var addIndex = nodeObj[strophieWrapper.rosterDetailsKey]["addIndex"];
                         strophieWrapper.NonRoster[profileid][strophieWrapper.rosterDetailsKey]["addIndex"] = addIndex+1;
                     }
