@@ -253,7 +253,7 @@ $js_arr[]=array("search_similar_js"    => "8");
 $js_arr[]=array("search_js"    => "4");
 $js_arr[]=array("jspc/search/viewSimilarProfile_js"    => "1");
 $js_arr[]=array("jspc/search/jspcMembershipMsg_js"    => "1");
-$js_arr[]=array("jspc/search/searchCommon_js"                => "17");
+$js_arr[]=array("jspc/search/searchCommon_js"                 => "18");
 $js_arr[]=array("profile_js"    => "4");
 $js_arr[]=array("searchhover_js"    => "6");
 $js_arr[]=array("conf_layer_js"    => "4");
