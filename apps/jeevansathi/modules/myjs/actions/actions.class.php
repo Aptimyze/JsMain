@@ -203,7 +203,7 @@ class myjsActions extends sfActions
                 $this->showExpiring = 0;
 				if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 				{
-					$this->showExpiring = 1;
+					$this->showExpiring = 0;
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
           //      $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
@@ -330,7 +330,7 @@ class myjsActions extends sfActions
 		$this->showExpiring = 0;
 		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 		{
-			$this->showExpiring = 1;
+			$this->showExpiring = 0;
 		}
 
 		$this->engagementCount=array();
