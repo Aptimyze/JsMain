@@ -382,7 +382,6 @@ public function getSendersPending($chunkStr)
 			$prep->bindValue(":FOLDER",$contactObj->getFOLDER(),PDO::PARAM_STR);
 			if($prep->execute())
 			{
-                                Contacts::setContactsTypeCache($contactObj->getSenderObj()->getPROFILEID(), $contactObj->getReceiverObj()->getPROFILEID(), $contactObj->getTYPE());
 				return $prep->rowCount();
 			}
 			else
@@ -414,7 +413,6 @@ public function getSendersPending($chunkStr)
 
 			if($prep->execute())
 			{
-                                Contacts::setContactsTypeCache($contactObj->getSenderObj()->getPROFILEID(), $contactObj->getReceiverObj()->getPROFILEID(), $contactObj->getTYPE());
 				return $prep->rowCount();
 			}
 			else

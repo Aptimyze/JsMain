@@ -469,6 +469,8 @@ class Contacts {
 				$success=$this->dbObjSender->update($this);
 			if($this->dbSender!=$this->dbReceiver && $success)
 				$this->dbObjReceiver->update($this);
+                        if($success)
+                            Contacts::setContactsTypeCache($this->getSenderObj()->getPROFILEID(), $this->getReceiverObj()->getPROFILEID(), $this->getTYPE());
 		}
 	}
 	/**
@@ -509,13 +511,17 @@ class Contacts {
 				$success=$this->dbObjSender->insert($this);
 			if($this->dbSender!=$this->dbReceiver && $success)
 			{
-				if(!$this->dbObjReceiver->insert($this))
+                                $success = $this->dbObjReceiver->insert($this);
+				if(!$success)
 				{
-					if(!$this->dbObjReceiver->insert($this))
+                                    $success = $this->dbObjReceiver->insert($this); 
+					if(!$success)
 						$this->dbObjSender->delete($this);
 				}
 
 			}
+                        if($success)
+                                Contacts::setContactsTypeCache($this->getSenderObj()->getPROFILEID(), $this->getReceiverObj()->getPROFILEID(), $this->getTYPE());                            
 		}
 
 	}
