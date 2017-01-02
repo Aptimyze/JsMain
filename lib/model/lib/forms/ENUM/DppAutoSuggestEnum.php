@@ -1417,5 +1417,7 @@ public static $SUGGESTION_FIELDS = array("P_AGE","P_CASTE","P_INCOME","P_EDUCATI
 public static $NO_OF_DPP_SUGGESTIONS_CAL = 10; 
 public static $keyReplaceAgeArr = array("0"=>"LAGE","1"=>"HAGE");
 public static $keyReplaceIncomeArr = array("0"=>"LRS","1"=>"HRS","2"=>"LDS","3"=>"HDS");
+public static $delhiCityCount = 7;
+public static $mumbaiCityCount = 4; 
 }
 

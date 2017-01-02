@@ -78,6 +78,19 @@ class dppSuggestions
 	public function getDppSuggestionsFromTrends($trendsArr,$type,$valArr)
 	{
 		$count = 0;
+		$delhiCityCount=0;
+		$mumbaiCityCount=0;
+		foreach($valArr as $key=>$value)
+		{
+			if(in_array($value, DppAutoSuggestEnum::$delhiNCRCities))
+			{
+				$delhiCityCount++;
+			}
+			if(in_array($value, DppAutoSuggestEnum::$mumbaiRegion))
+			{
+				$mumbaiCityCount++;
+			}
+		}
 		foreach($trendsArr as $k1=>$v1)
 		{
 			if($count < $this->countForComparison)
@@ -88,20 +101,26 @@ class dppSuggestions
 					$count++;
 				}
 				elseif(!in_array($k1,$valArr))
-				{
+				{										
 					foreach($valArr as $key=>$value)
-					{
-						// if Delhi NCR or Mumbai Region is already not in value arr or in the selected arr then add the value and increment count
-						if(!in_array(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valArr) && in_array($value, DppAutoSuggestEnum::$delhiNCRCities) && !in_array("Delhi NCR",$valueArr["data"]))
+					{	
+						//if Delhi NCR or Mumbai Region is already not in value arr or in the selected arr then add the value and increment count
+						if($delhiCityCount < DppAutoSuggestEnum::$delhiCityCount)
 						{
-							$valueArr["data"][DppAutoSuggestEnum::$delhiNCRCitiesStr] = "Delhi NCR";
-							$count++;
+							if(!in_array(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valArr) && !in_array($value, DppAutoSuggestEnum::$delhiNCRCities) && !in_array("Delhi NCR",$valueArr["data"]))
+							{
+								$valueArr["data"][DppAutoSuggestEnum::$delhiNCRCitiesStr] = "Delhi NCR";
+								$count++;
+							}
 						}
-						if(!in_array(DppAutoSuggestEnum::$mumbaiRegionStr,$valArr) && in_array($value, DppAutoSuggestEnum::$mumbaiRegion)  && !in_array("Mumbai Region",$valueArr["data"]))
+						if($mumbaiCityCount < DppAutoSuggestEnum::$mumbaiCityCount)
 						{
-							$valueArr["data"][DppAutoSuggestEnum::$mumbaiRegionStr] = "Mumbai Region";
-							$count++;
-						}
+							if(!in_array(DppAutoSuggestEnum::$mumbaiRegionStr,$valArr) && !in_array($value, DppAutoSuggestEnum::$mumbaiRegion)  && !in_array("Mumbai Region",$valueArr["data"]))
+							{
+								$valueArr["data"][DppAutoSuggestEnum::$mumbaiRegionStr] = "Mumbai Region";
+								$count++;
+							}
+						}						
 					}
 					$this->stateIndiaArr = $this->getFieldMapLabels("state_india",'',1);
 					$this->cityIndiaArr = $this->getFieldMapLabels("city_india",'',1);
