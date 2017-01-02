@@ -131,7 +131,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
             validRe = checkForValidNonRosterRequest(type);
             //headerData['Cache-Control'] = 'max-age='+chatConfig.Params[device].headerCachingAge+',public';
         }
-        console.log("validRe",type,validRe);
+        //console.log("validRe",type,validRe);
         if(validRe == true){
             var getInputData = "";
             if (typeof chatConfig.Params.nonRosterListingApiConfig[type]["extraGETParams"] != "undefined") {
