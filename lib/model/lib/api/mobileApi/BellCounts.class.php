@@ -32,11 +32,11 @@ class BellCounts
 			$isApp = MobileCommon::isApp();
 			$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
 
-			if($isApp=="I" ||( $isApp=="A" && $appVersion  && $appVersion<48))
+			if(($isApp=="I" && $appVersion<3.9 )||( $isApp=="A" && $appVersion  && $appVersion<48))
 			{
 				$bellCounts["FILTERED_NEW"] = 0;
 			}	
-
+			
 			if(!(($isApp=="I" && $appVersion >=3.9) || ( $isApp=="A" && $appVersion>=79) || !$isApp))	
 			{	
 				$bellCounts['DEC_ME_NEW']=0;
@@ -48,7 +48,7 @@ class BellCounts
 				 $bellCounts['MESSAGE_NEW']=$bellCounts['PHOTO_REQUEST_NEW'];
 				 $bellCounts['PHOTO_REQUEST_NEW']=$messageCount;
 			}
-			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $profileMemcacheObj->get("PHOTO_REQUEST_NEW") + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"] + $bellCounts['DEC_ME_NEW']);
+			$bellCounts['TOTAL_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW") + $profileMemcacheObj->get("ACC_ME_NEW") + $bellCounts['MESSAGE_NEW'] + $bellCounts['PHOTO_REQUEST_NEW'] + $justJoinedMemcacheCount + $bellCounts["FILTERED_NEW"] + $bellCounts['DEC_ME_NEW']);
 			return $bellCounts;
 		}
         }

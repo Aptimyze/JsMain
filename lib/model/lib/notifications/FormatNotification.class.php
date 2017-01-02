@@ -68,21 +68,24 @@ class FormatNotification
     public static function formatLogData($dataArray,$table='',$process='')
     {
         if($table =='REGISTRATION_ID'){
-            	$type = $table;
+            $type = $table;
         }
-	elseif($table=='LOCAL_NOTIFICATION_LOG'){
-		$type = $table;
-	}
-	elseif($process=='DELIVERY_TRACKING_API'){
-		$type = $process;
-	}
-	elseif($process=='UPDATE_NOTIFICATION_STATUS_API'){
-		$type = $process;
-	}
+        elseif($table=='LOCAL_NOTIFICATION_LOG'){
+            $type = $table;
+        }
+        elseif($process=='DELIVERY_TRACKING_API'){
+            $type = $process;
+        }
+        elseif($process=='UPDATE_NOTIFICATION_STATUS_API'){
+            $type = $process;
+        }
         elseif($process=='REGISTRATION_API'){
-                $type = $process;
+            $type = $process;
         }
-	$queueName ='JS_NOTIFICATION_LOG';
+        else if($process == 'NOTIFICATION_OPENED_TRACKING_API'){
+            $type = $process;
+        }
+        $queueName ='JS_NOTIFICATION_LOG';
         $msgdata = array('process' => $queueName, 'data' => array('type' => $type, 'body' => $dataArray), 'redeliveryCount' => 0);
         return $msgdata;
     }

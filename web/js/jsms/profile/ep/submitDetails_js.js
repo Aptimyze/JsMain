@@ -89,8 +89,6 @@ var saveDetail=(function(){
 						hideLoader();
 					}
 					//startTouchEvents();
-                                    if(Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL)) 
-                                    showAlternateConfirmLayerMS(editFieldArr.ALT_EMAIL);
 					
 					return true;
 
