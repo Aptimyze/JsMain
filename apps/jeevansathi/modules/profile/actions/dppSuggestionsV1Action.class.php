@@ -28,22 +28,11 @@ class dppSuggestionsV1Action extends sfActions
 		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields,$trendsObj);
 		unset($trendsObj);
 		$data = $request->getParameter("Param");		
-		$decodedData = json_decode($data);
-		// $decodedData[11]["type"] = "AGE";
-		// $decodedData[11]["data"]["LAGE"] = "24";
-		// $decodedData[11]["data"]["HAGE"] = "30";
-		
-		/*$decodedData[10]["type"] = "INCOME";
-		$decodedData[10]["data"]["LRS"] = "Rs.1 Lakh";
-		$decodedData[10]["data"]["HRS"] = "Rs.2 Lakh";
-		$decodedData[10]["data"]["LDS"] = "$40,001";
-		$decodedData[10]["data"]["HDS"] = "$100,000";*/
-		//print_r($decodedData);die;
+		$decodedData = json_decode($data);		
 		foreach($decodedData as $key=>$val)
 		{
 			foreach($val as $key1=>$val1)
 			{									
-				//$type = $val["type"];
 				$type  = $val->type;
 				if($key1 == "data")
 				{											

@@ -383,9 +383,7 @@ class dppSuggestions
 
 	//Mapping of income needs to be changed.
 	public function getSuggestionForIncome($type,$valArr)
-	{
-		//use if array keys are 0,1,2,3 and we require LRS,HRS		
-		//$valArr = (array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr));
+	{		
 		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
 
