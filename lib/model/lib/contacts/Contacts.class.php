@@ -697,5 +697,32 @@ class Contacts {
 		else
 			return '';
 	}
+        
+        
+        public static function setContactsTypeCache($profileId1,$profileId2,$type){
+            if(!$profileId1 || !$profileId2 || !$type)return false;
+            $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
+            JsMemcache::getInstance()->set($sortedArray[0].'_'.$sortedArray[1].'_contactType',$type);
+            return true;
+            
+        }
+        public static function getContactsTypeCache($profileId1,$profileId2){
+            if(!$profileId1 || !$profileId2 || !$type)return false;
+            $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
+            $return = JsMemcache::getInstance()->get($sortedArray[0].'_'.$sortedArray[1].'_contactType');
+            
+            if(!$return){
+                
+                $shardNo = JsDbSharding::getShardNo($profileId1);
+                $dbObj = new newjs_CONTACTS($shardNo);
+                $resArray = $dbObj->getContactRecord($profileId1, $profileId2);
+                $result = $resArray['TYPE'] ? $resArray['TYPE'] : 'N' ;
+                self::setContactsTypeCache($profileId1, $profileId2, $result);
+                return $result;
+            }
+            
+        }
+
+        
 }
 ?>
