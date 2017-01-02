@@ -94,7 +94,7 @@ function checkForValidNonRosterRequest(groupId){
     else{
         valid = true;
     }
-    console.log("checkForValidNonRosterRequest",valid,groupId);
+    //console.log("checkForValidNonRosterRequest",valid,groupId);
     return valid;
 }
 
@@ -1020,7 +1020,7 @@ function to update non roster item in listing
 * @inputs:actionParams
 */
 function updateNonRosterListOnCEAction(actionParams){
-    console.log("updateNonRosterListOnCEAction",actionParams);
+    //console.log("updateNonRosterListOnCEAction",actionParams);
     var action = actionParams["action"],
     user_id = actionParams["user_id"],
     groupId = actionParams["groupId"];
@@ -1030,7 +1030,7 @@ function updateNonRosterListOnCEAction(actionParams){
             case "BLOCK":
                 //remove from non roster list
                 var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
-                console.log("updateNonRosterListOnCEAction",checkIfExists);
+                //console.log("updateNonRosterListOnCEAction",checkIfExists);
                 if(checkIfExists && checkIfExists["exists"] == true && checkIfExists["groupID"] != undefined && chatConfig.Params.nonRosterPollingGroups.indexOf(checkIfExists["groupID"]) != -1){
                     var deleteIdArr = [];
                     deleteIdArr.push(user_id);
