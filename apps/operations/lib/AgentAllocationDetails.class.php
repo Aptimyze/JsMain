@@ -759,7 +759,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 	$jprofileObj		=new JPROFILE('newjs_slave');
 	$historyObj		=new incentive_HISTORY('newjs_slave');		
 	$jprofileAlertsObj	=new newjs_JPROFILE_ALERTS('newjs_slave');		
-	$jprofileContactObj	=new NEWJS_JPROFILE_CONTACT('newjs_slave');		
+	$jprofileContactObj	= new ProfileContact('newjs_slave');
 	$vdObj 			=new billing_VARIABLE_DISCOUNT('newjs_slave');
 	$consentDncObj  	=new NEWJS_CONSENTMSG('newjs_slave');
 	
@@ -1357,7 +1357,7 @@ public function fetchJprofileContact($profileidArr=array(),$profileDetailsArr=ar
 	if(count($profileidArr)==0)
 		return;
 
-	$jprofileContactObj    =new NEWJS_JPROFILE_CONTACT();
+	$jprofileContactObj    = new ProfileContact();
 	$valueArr['PROFILEID']  =@implode(",",$profileidArr);;
 	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOB_STATUS,ALT_MOBILE_ISD');
 	if($result){

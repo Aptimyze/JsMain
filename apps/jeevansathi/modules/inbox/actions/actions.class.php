@@ -113,6 +113,9 @@ class inboxActions extends sfActions
       
                         if ($infoType == "VISITORS") {
                             $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                            if($infoTypenav["matchedOrAll"]=='')
+                                $infoTypenav["matchedOrAll"]='A';
+
                         }
       
 			if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
@@ -388,7 +391,7 @@ public function executePerformV2(sfWebRequest $request)
         }
                                 if ($infoType == "VISITORS") {
                                     $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
-                                    if(MobileCommon::isIOSApp())
+                                    if(MobileCommon::isIOSApp() && $infoTypenav["matchedOrAll"]=='')
                                     {
                                            $infoTypenav["matchedOrAll"] = "A";
                                     }
@@ -453,6 +456,12 @@ public function executePerformV2(sfWebRequest $request)
                                 if ($infoType == "MATCH_ALERT") {
                                         $response2["dppLinkAtEnd"] = 'Go To Desired Partner Matches.';
                                 }
+                $response2["archivedInterestLinkAtEnd"] = null;
+                if ( $infoType == "INTEREST_RECEIVED")
+                {
+                	$response2["archivedInterestLinkAtEnd"] = 'Archived Interests'; 
+                }
+
 				$response2["sorting"]=0;
 				$response2["sortType"]=null;
 				$response2["stype"]=null;
