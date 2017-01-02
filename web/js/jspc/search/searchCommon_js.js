@@ -198,6 +198,7 @@ var verificationDocumentsList;
     '{album_count}': removeNull(val1.album_count),
     '{countDisplay}': countDisplay,
     '{username}': removeNull(val1.username),
+    '{orig_username}':removeNull(val1.orig_username),
     '{userloginstatus}': removeNull(val1.userloginstatus),
     '{isNewProfile}': isNewProfile,
     '{age}': removeNull(val1.age),

@@ -35,7 +35,8 @@ class viewSimilarConfig
     													"college"=>"COLLEGE",
     													"pg_college"=>"PG_COLLEGE",
     													"company_name"=>"COMPANY_NAME",
-    													"name_of_user"=>"NAME_OF_USER"
+    													"name_of_user"=>"NAME_OF_USER",
+    													"orig_username"=>"USERNAME"
     													); 
 
         public static function getFieldLabel($label,$value,$returnArr=''){

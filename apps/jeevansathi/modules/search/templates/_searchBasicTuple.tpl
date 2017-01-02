@@ -71,7 +71,7 @@
           <!--end:description--> 
           
            <!--start:option-->
-          <div class="srpwid8 fr tupleic contactEngineBar pcChatHelpData" data-pcChat="{username},{profilechecksum}">
+          <div class="srpwid8 fr tupleic contactEngineBar pcChatHelpData" data-pcChat="{orig_username},{profilechecksum}">
          {{contactEngineBar}}
           </div>
           <!--end:option--> 
