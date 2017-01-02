@@ -492,9 +492,9 @@ public function executeCALRedirection($request){
               'jsms/common/history_js',
               'commonExpiration_js',
               'rippleEffectCommon_js',
-              'common_comscore_js',
-              'jsms/login/newMobLogin_js'));
-
+              'common_comscore_js'));
+            $this->singleJs = getCommaSeparatedJSFileNames(array('jsms/login/newMobLogin_js'));
+              
             $request->setAttribute('mobLogoutPage','Y');
             $this->setTemplate("newMobLogin");
             if ($request->getParameter('regMsg')=='Y')   
