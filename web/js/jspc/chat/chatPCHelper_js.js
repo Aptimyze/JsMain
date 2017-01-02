@@ -40,9 +40,9 @@ function reActivateNonRosterPolling(source,updateChatImmediate,nonRosterGroups){
     //kills interval polling for non roster list
     //clearNonRosterPollingInterval();
     //console.log("dppLiveForAll",dppLiveForAll);
-    console.log("betaDppExpression",updateChatImmediate,nonRosterGroups);
+    //console.log("betaDppExpression",updateChatImmediate,nonRosterGroups);
     nonRosterGroups = ((nonRosterGroups == undefined || nonRosterGroups.length == 0) ? chatConfig.Params.nonRosterPollingGroups : nonRosterGroups);
-    console.log("reActivateNonRosterPolling",nonRosterGroups);
+    //console.log("reActivateNonRosterPolling",nonRosterGroups);
     if ((updateChatImmediate == true || strophieWrapper.getCurrentConnStatus() == true) && loggedInJspcUser != undefined) {
         var profileEligible = true;
         
@@ -103,7 +103,7 @@ function to poll for non roster webservice api
 * @inputs:type
 */
 function pollForNonRosterListing(type,updateChatListImmediate){
-    console.log("pollForNonRosterListing",type,updateChatListImmediate);
+    //console.log("pollForNonRosterListing",type,updateChatListImmediate);
     if(type == undefined || type == ""){
         type = "dpp";
     }
@@ -277,7 +277,7 @@ function processNonRosterData(response,type,source){
         strophieWrapper.onNonRosterListFetched(newNonRoster,type,operation);
     }
     else if((Object.keys(newNonRoster)).length == 0){
-        console.log("here ankita check",newNonRoster,oldNonRoster);
+        //console.log("here",newNonRoster,oldNonRoster);
         //strophieWrapper.setRosterStorage({},"non-roster");
     }
 }

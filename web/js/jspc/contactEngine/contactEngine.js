@@ -870,7 +870,7 @@ function updateChatRosterList(elementObj,arrID){
 				}
 				if(action != "" && elementObj.parent().parent().hasClass("pcChatHelpData")){
 					pcChatData = (elementObj.parent().parent().attr("data-pcChat")).split(",");
-					console.log("from cEButtonActionCalling ",profileSplitData,action,group,chatStatus);
+					//console.log("from cEButtonActionCalling ",profileSplitData,action,group,chatStatus);
 					updateNonRosterListOnCEAction({
 											"user_id":profileSplitData[1],
 											"action":action,
