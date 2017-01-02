@@ -42,7 +42,7 @@ function reActivateNonRosterPolling(source,updateChatImmediate,nonRosterGroups){
     //console.log("dppLiveForAll",dppLiveForAll);
     //console.log("betaDppExpression",updateChatImmediate,nonRosterGroups);
     nonRosterGroups = ((nonRosterGroups == undefined || nonRosterGroups.length == 0) ? chatConfig.Params.nonRosterPollingGroups : nonRosterGroups);
-    //console.log("reActivateNonRosterPolling",nonRosterGroups);
+    console.log("reActivateNonRosterPolling",nonRosterGroups);
     if ((updateChatImmediate == true || strophieWrapper.getCurrentConnStatus() == true) && loggedInJspcUser != undefined) {
         var profileEligible = true;
         
@@ -94,7 +94,7 @@ function checkForValidNonRosterRequest(groupId){
     else{
         valid = true;
     }
-    //console.log("checkForValidNonRosterRequest",valid);
+    console.log("checkForValidNonRosterRequest",valid,groupId);
     return valid;
 }
 
