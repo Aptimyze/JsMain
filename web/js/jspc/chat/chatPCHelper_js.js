@@ -34,13 +34,15 @@ function clearNonRosterPollingInterval(type){
 
 /*reActivateNonRosterPolling
 function to reactivate poll for non roster list 
-* @inputs:source,updateChatImmediate
+* @inputs:source,updateChatImmediate(optional),nonRosterGroups(optional)
 */
-function reActivateNonRosterPolling(source,updateChatImmediate){
+function reActivateNonRosterPolling(source,updateChatImmediate,nonRosterGroups){
     //kills interval polling for non roster list
     //clearNonRosterPollingInterval();
     //console.log("dppLiveForAll",dppLiveForAll);
-    //console.log("betaDppExpression",betaDppExpression);
+    console.log("betaDppExpression",updateChatImmediate,nonRosterGroups);
+    nonRosterGroups = ((nonRosterGroups == undefined || nonRosterGroups.length == 0) ? chatConfig.Params.nonRosterPollingGroups : nonRosterGroups);
+    console.log("reActivateNonRosterPolling",nonRosterGroups);
     if ((updateChatImmediate == true || strophieWrapper.getCurrentConnStatus() == true) && loggedInJspcUser != undefined) {
         var profileEligible = true;
         
@@ -58,7 +60,7 @@ function reActivateNonRosterPolling(source,updateChatImmediate){
         //console.log("profileEligible",profileEligible);
         if(profileEligible == true){
             //console.log("in reActivateNonRosterPolling",source);
-            $.each(chatConfig.Params.nonRosterPollingGroups,function(key,groupId){
+            $.each(nonRosterGroups,function(key,groupId){
                     //pollForNonRosterListing(groupId);
                     clearNonRosterPollingInterval(groupId);
                     var updateChatListImmediate = (updateChatImmediate != undefined) ? updateChatImmediate : false;
