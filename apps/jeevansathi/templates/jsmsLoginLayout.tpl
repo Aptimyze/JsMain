@@ -197,7 +197,6 @@ function checkJquery() {
     if(window.jQuery) {
         stopInterval();
 
-
          var lib = document.createElement('script');
          lib.src = "~JsConstants::$imgUrl`/min/?f=~$singleJs`";
          document.head.appendChild(lib);
