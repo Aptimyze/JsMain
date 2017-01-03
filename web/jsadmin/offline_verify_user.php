@@ -60,6 +60,7 @@ if(authenticated($cid))
 					$actionStatus ='D';
 					$phoneType ='L';
 					phoneUpdateProcess($profileid,$phone_num_res,$phoneType,$actionStatus,$message,$name,$isd);
+					UnverifyNum($profileid, $phoneType, $phone_num_res);
 					//markInvalidProfile($row['PROFILEID'],'R');	
 				}
 				if($mcheck=="valid")
@@ -76,6 +77,7 @@ if(authenticated($cid))
 					$actionStatus ='D';
 					$phoneType ='M';
 					phoneUpdateProcess($profileid,$phone_num_mob,$phoneType,$actionStatus,$message,$name,$isd);
+					UnverifyNum($profileid, $phoneType, $phone_num_mob);
                                 }
 //trac 745 start
 				if($acheck=="valid")

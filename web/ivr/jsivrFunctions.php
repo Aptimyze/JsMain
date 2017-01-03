@@ -1121,6 +1121,68 @@ function getIsdInFormat($isd)
 	return false;
 }
 
+function UnverifyNum($profileId, $phoneType, $number)
+{
+	// Profile Id of Submittee and its phone type
+	$interval = 10;
+	$ReportObj = new JSADMIN_REPORT_INVALID_PHONE();
+	$result = $ReportObj->getReportInvalidInterval($profileId,$interval);
+	$arrSubmitter = array();
+	$ReportedDate = array();
+	if($result)
+	{
+		foreach ($result as $row)
+		{
+			if($phoneType == 'L' && $row['PHONE'] == 'Y')
+			{
+				array_push($arrSubmitter, $row['SUBMITTER']);
+				$ReportedDate[$row['SUBMITTER']] = $row['SUBMIT_DATE'];
+			}
+			elseif ($phoneType == 'M' && $row['MOBILE'] == 'Y')
+			{
+				array_push($arrSubmitter, $row['SUBMITTER']);
+				$ReportedDate[$row['SUBMITTER']] = $row['SUBMIT_DATE'];
+			}
+		}
+		if(count($arrSubmitter) == 0)
+		{
+			return ;
+		}
+		$arrSubmitter = array_unique($arrSubmitter);
+		$jobj = new Jprofile;
+		$ProfileIds = array('PROFILEID' => implode(",", $arrSubmitter));
+		$arrSubscription = $jobj->getArray($ProfileIds,"","",'PROFILEID, SUBSCRIPTION');
+    	foreach ($arrSubscription as $key => $value)
+		{
+			$jsCommonObj =new JsCommon();
+			if($jsCommonObj->isPaid($value['SUBSCRIPTION']))
+			{
+				// Paid User
+				$contactAllotedObj = new jsadmin_CONTACTS_ALLOTED();
+				if($contactAllotedObj->updateAllotedContacts($value['PROFILEID'],1))
+				{
+					// send mail to user about increase in contact quota
+					$top8Mailer = new EmailSender(MailerGroup::TOP8,1845);
+					// var_dump($value['PROFILEID']);die;
+					$tpl = $top8Mailer->setProfileId($value['PROFILEID']);
+					$date = date('d-m-Y');
+					$reportedDate = date('d-m-Y', strtotime($ReportedDate[$value['PROFILEID']]));
+					$subject = "A contact has been added to your quota of contacts | $date";
+					$quota = $contactAllotedObj->getAllotedContacts($value['PROFILEID']);
+					$tpl->setSubject($subject);
+					// PogId is profile id of submittee
+					$tpl->getSmarty()->assign("pogid", $profileId);
+        			$tpl->getSmarty()->assign("number", $number);
+        			$tpl->getSmarty()->assign("date", $reportedDate);
+        			$tpl->getSmarty()->assign("quota", $quota);
+					$top8Mailer->send();
+				}
+			}
+		}
+	}
+	
+}
+
 function deleteCachedJprofile_Contact($profileid){
   return;
   $memObject=JsMemcache::getInstance();
