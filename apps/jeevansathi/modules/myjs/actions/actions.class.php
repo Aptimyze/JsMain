@@ -227,7 +227,7 @@ class myjsActions extends sfActions
               		$this->apiData['my_profile']['incomplete'][$length]=$tempDpp;	
                         include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
                         $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
-                        $request->setAttribute('jsmsMyjsPage',1);
+                        $request->setAttribute('jsmsMyjsPage','Y');
                         include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
                         $request->setAttribute('JSArray',getCommaSeparatedJSFileNames(array(              
                             'modernizr_p_js',
