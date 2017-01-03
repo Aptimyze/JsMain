@@ -30,7 +30,7 @@
 						<b>Reason</b> *
 					</td>
                                         <td class='fieldsnew formfield' width=60% colspan=100%>
-						<textarea rows=3 cols=35 name='reason' id ='reasonId'></textarea>
+						<textarea rows=1 cols=29 name='reason' id ='reasonId'></textarea>
                                         </td>
                                 </tr>
 
