@@ -279,6 +279,11 @@ function processNonRosterData(response,type,source){
     else if((Object.keys(newNonRoster)).length == 0){
         //console.log("here",newNonRoster,oldNonRoster);
         //strophieWrapper.setRosterStorage({},"non-roster");
+        
+        var data = strophieWrapper.getRosterStorage("non-roster");
+        if(data == undefined || (Object.keys(data)).length == 0){
+            strophieWrapper.setRosterStorage({},"non-roster");
+        }
     }
 }
 
