@@ -76,7 +76,7 @@
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
         var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`"};
-        var nonRosterRefreshUpdate = "~JsConstants::$nonRosterRefreshUpdate`";
+        var nonRosterRefreshUpdate = {"dpp":"~JsConstants::$nonRosterRefreshUpdate['dpp']`","shortlist":"~JsConstants::$nonRosterRefreshUpdate['shortlist']`"};
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
         //console.log("dppLiveForAll",dppLiveForAll);
         var betaDppExpression = "",specialDppProfiles="";

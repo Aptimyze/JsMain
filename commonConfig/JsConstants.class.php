@@ -187,7 +187,7 @@ class JsConstants
     public static $multiUserPhotoUrl = "http://www.jeevansathi.com/api/v1/social/getMultiUserPhoto"; //Api from staging for multi user photo being used in chat listing and self photo.
     public static $chatListingWebServiceUrl = array("dpp"=>"http://localhost:8190/listings/v1/discover","shortlist"=>"http://localhost:8190/listings/v1/activities");
     public static $profilesEligibleForDpp = array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>"5616315|9061321");
-    public static $nonRosterRefreshUpdate = 300000;
-        public static $httpsApplicationPhotoUrl      = 'https://xmppdev1.jeevansathi.com';
-        public static $httpsCloudUrl                 = 'https://mediacdn.jeevansathi.com';
+    public static $nonRosterRefreshUpdate = array("dpp"=>300000,"shortlist"=>300000);
+    public static $httpsApplicationPhotoUrl      = 'https://xmppdev1.jeevansathi.com';
+    public static $httpsCloudUrl                 = 'https://mediacdn.jeevansathi.com';
 }

@@ -83,7 +83,7 @@ function checkForValidNonRosterRequest(groupId){
     var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
-        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap){
+        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId]){
             valid = false;
         }
     }
@@ -94,7 +94,7 @@ function checkForValidNonRosterRequest(groupId){
     else{
         valid = true;
     }
-    //console.log("checkForValidNonRosterRequest",valid,groupId);
+    //console.log("checkForValidNonRosterRequest",valid,groupId,chatConfig.Params[device].nonRosterListingRefreshCap);
     return valid;
 }
 
@@ -203,7 +203,7 @@ function pollForNonRosterListing(type,updateChatListImmediate){
                     if(response["header"]["status"] == 200){
                         //console.log("fetchNonRosterListing success",response);
                         if(response["data"]["pollTime"] != undefined && response["data"]["pollTime"] > 0){
-                            //chatConfig.Params[device].nonRosterListingRefreshCap = response["data"]["pollTime"];
+                            //chatConfig.Params[device].nonRosterListingRefreshCap[type] = response["data"]["pollTime"];
                             //console.log("seting pollTime",chatConfig.Params[device].nonRosterListingRefreshCap);
                         }
                         var nonRosterCLUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated"));
