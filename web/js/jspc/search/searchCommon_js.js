@@ -16,6 +16,7 @@ function showSearchLoader(type)
 
 function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, featuredCount, profileOffset,key,resp) {
   var searchDefault = val1.photo.url;
+  var orig_username = removeNull(val1.username);
   if(resp.listType=="cc")
     searchDefault = val1.profilepic450url;
   var loaderPicDisplay = 'none';
@@ -67,6 +68,7 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
   if(resp.listType != "undefined" && resp.listType == "vsp")
   {
     removeThisProfile = "disp-none";
+    orig_username = removeNull(val1.orig_username);
   }
   else
   {
@@ -198,7 +200,7 @@ var verificationDocumentsList;
     '{album_count}': removeNull(val1.album_count),
     '{countDisplay}': countDisplay,
     '{username}': removeNull(val1.username),
-    '{orig_username}':removeNull(val1.orig_username),
+    '{orig_username}':orig_username,
     '{userloginstatus}': removeNull(val1.userloginstatus),
     '{isNewProfile}': isNewProfile,
     '{age}': removeNull(val1.age),
