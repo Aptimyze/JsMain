@@ -60,11 +60,11 @@ function checkJquery() {
         stopInterval();
 
         var lib2 = document.createElement('script');
-        lib2.src = "~JsConstants::$imgUrl`/min/?f=~$JSArray`";
+        lib2.src = "~JsConstants::$imgUrl`/min/?f=~$sf_request->getAttribute('JSArray')`";
         document.head.appendChild(lib2);
 
         var lib = document.createElement('script');
-        lib.src = "~JsConstants::$imgUrl`/min/?f=~$singleJs`";
+        lib.src = "~JsConstants::$imgUrl`/min/?f=~$sf_request->getAttribute('singleJs')`";
         document.head.appendChild(lib);
         
     } else{

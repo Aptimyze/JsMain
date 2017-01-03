@@ -229,7 +229,7 @@ class myjsActions extends sfActions
                         $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
                         $request->setAttribute('jsmsMyjsPage',1);
                         include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
-                        $this->jsArray = getCommaSeparatedJSFileNames(array(              
+                        $request->setAttribute('JSArray',getCommaSeparatedJSFileNames(array(              
                             'modernizr_p_js',
                             'tracking_js',
                             'jsms/common/CommonFunctions',
@@ -244,8 +244,8 @@ class myjsActions extends sfActions
                             'rippleEffectCommon_js',
                             'common_comscore_js'
                             
-                        ));
-                        $this->singleJs = getCommaSeparatedJSFileNames(array('jsms/myjs/myjs_js','jsms/contact_engine/contactEngine_js','jsms/myjs/touchswipemyjs_js'));
+                        )));
+                        $request->setAttribute('singleJs',getCommaSeparatedJSFileNames(array('jsms/myjs/myjs_js','jsms/contact_engine/contactEngine_js','jsms/myjs/touchswipemyjs_js')));
 
          
                    $this->setTemplate("jsmsPerform");

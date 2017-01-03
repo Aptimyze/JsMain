@@ -479,7 +479,7 @@ public function executeCALRedirection($request){
             'jsms/common/mediaquery',
             'jsms/common/jsmsApp_promo_css',
             'rippleEffectCommon_css'));
-          $this->JSArray = getCommaSeparatedJSFileNames(array(
+          $request->setAttribute('JSArray',getCommaSeparatedJSFileNames(array(
               'modernizr_p_js',
               'tracking_js',
               'jsms/common/CommonFunctions',
@@ -492,8 +492,8 @@ public function executeCALRedirection($request){
               'jsms/common/history_js',
               'commonExpiration_js',
               'rippleEffectCommon_js',
-              'common_comscore_js'));
-            $this->singleJs = getCommaSeparatedJSFileNames(array('jsms/login/newMobLogin_js'));
+              'common_comscore_js')));
+            $request->setAttribute('singleJs',getCommaSeparatedJSFileNames(array('jsms/login/newMobLogin_js')));
               
             $request->setAttribute('mobLogoutPage','Y');
             $this->setTemplate("newMobLogin");
