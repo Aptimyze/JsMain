@@ -239,7 +239,7 @@ class ContactsRecords
 	* @param - while condition, group by condition
 	* @return - array of count with given condition
 	*/
-	public function getContactsCount( $where, $group='',$time='',$skipProfile='')
+	public function getContactsCount( $where, $group='',$time='',$skipProfile='',$isProfileMemCacheService = '')
 	{
 		if(!$where["RECEIVER"]&&!$where["SENDER"])
 		{
@@ -309,7 +309,16 @@ class ContactsRecords
 			}
 			
 		}
-
+	
+		if ( $isProfileMemCacheService == '')
+		{
+			foreach ($contactsCount as $key => $value) {
+					if ( $value['TIME1'] == 2 )
+					{
+						unset($contactsCount[$key]);
+					}
+				}	
+		}
 		return $contactsCount;
 
 	}
@@ -358,6 +367,7 @@ class ContactsRecords
 	}
 	public function getContactedProfileArray($profileid,$condition,$skipArray)
 	{
+
 		$result = false;
 		if(JsConstants::$webServiceFlag == 1 && php_sapi_name() != 'cli') {
 			$result = true;
@@ -506,6 +516,7 @@ class ContactsRecords
 
 	public function getContactRecords($profileId1,$profileId2,$checkdb=0)
 	{
+
 		$result = false;
 		if((JsConstants::$webServiceFlag == 1 && php_sapi_name() != 'cli') && $checkdb != 1) {
 			$result = true;
