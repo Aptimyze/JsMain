@@ -126,7 +126,7 @@ class NotificationFunctions
 		        }
 		    }
 	        try{
-	            if($osType && $messageId && $notificationKey && is_numeric($messageId)){ 
+	            if($osType && $osType != "" && $messageId && $notificationKey && is_numeric($messageId)){ 
                     $dataSet = array('PROFILEID'=>$profileid,'MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
                     //print_r($dataSet);
                     $producerObj = new JsNotificationProduce();
