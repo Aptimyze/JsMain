@@ -1392,12 +1392,12 @@ var _parentCatogary = [{
             if(type == "basic") {
              obj.push({
                "type":"AGE",
-               "data":{"LAGE":$("#dpp1-p_age span").html(),"HAGE":$("#dpp2-p_age span").html()}
+               "data":[$("#dpp1-p_age span").html(),$("#dpp2-p_age span").html()]
              });
            } else if(type == "education") {
              obj.push({
                "type":"INCOME",
-               "data":{"LRS":$("#incomeRangeRs #dpp1-p_income span").html(),"HRS":$("#incomeRangeRs #dpp2-p_income span").html(),"LDS":$("#incomeRangeDol #dpp1-p_income span").html(),"HDS":$("#incomeRangeDol #dpp2-p_income span").html()}
+               "data":[$("#incomeRangeRs #dpp1-p_income span").html(),$("#incomeRangeRs #dpp2-p_income span").html(),$("#incomeRangeDol #dpp1-p_income span").html(),$("#incomeRangeDol #dpp2-p_income span").html()]
              });
            }
             $.each(elem.sub, function(index2, elem2) {
@@ -1426,17 +1426,17 @@ var _parentCatogary = [{
        if(type ==  "age") {
        obj = {
                  "type":"AGE",
-                 "data":{"LAGE":$("#dpp1-p_age span").html(),"HAGE":$("#dpp2-p_age span").html()}
+                 "data":[$("#dpp1-p_age span").html(),$("#dpp2-p_age span").html()]
              }; 
        } else if(type == "income") {
          obj = {
                  "type":"INCOME",
-                 "data":{"LRS":$("#incomeRangeRs #dpp1-p_income span").html(),"HRS":$("#incomeRangeRs #dpp2-p_income span").html()}
+                 "data":[$("#incomeRangeRs #dpp1-p_income span").html(),$("#incomeRangeRs #dpp2-p_income span").html(),$("#incomeRangeDol #dpp1-p_income span").html(),$("#incomeRangeDol #dpp2-p_income span").html()]
                };  
        } else if(type == "incomeDol") {
          obj = {
                  "type":"INCOME",
-                 "data":{"LDS":$("#incomeRangeDol #dpp1-p_income span").html(),"HDS":$("#incomeRangeDol #dpp2-p_income span").html()}
+                 "data":[$("#incomeRangeRs #dpp1-p_income span").html(),$("#incomeRangeRs #dpp2-p_income span").html(),$("#incomeRangeDol #dpp1-p_income span").html(),$("#incomeRangeDol #dpp2-p_income span").html()]
                }; 
        }
        if(obj){
