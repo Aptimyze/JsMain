@@ -30,7 +30,7 @@ $(document).ready(function() {
      
     }
     function criticalLayerButtonsAction(clickAction,button) {
-        if(CALButtonClicked)return;
+        if(CALButtonClicked===1)return;
         CALButtonClicked=1;
         var CALParams='';
         var layerId= $("#CriticalActionlayerId").val();
@@ -47,11 +47,10 @@ $(document).ready(function() {
                         }
                         CALParams="&namePrivacy="+namePrivacy+"&newNameOfUser="+newNameOfUser;
                     }
-
+        window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
+        CALButtonClicked=0;
         
-                                   window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
-                               
-        }
+    }
 
 
         function switchColors(id1,id2){
