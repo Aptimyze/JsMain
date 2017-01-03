@@ -905,6 +905,33 @@ class NEWJS_JPROFILE extends TABLE
         }
     }
 
+    public function getEmailFromUsername($username)
+    {
+        try {
+            $sql = "SELECT EMAIL FROM newjs.JPROFILE WHERE USERNAME=:USERNAME";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":USERNAME", $username, PDO::PARAM_INT);
+            $prep->execute();
+            $row = $prep->fetch(PDO::FETCH_ASSOC);
+            return $row;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+    public function getEmailFromProfileId($profileid)
+    {
+        try {
+            $sql = "SELECT EMAIL FROM newjs.JPROFILE WHERE PROFILEID=:PROFILEID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $prep->execute();
+            $row = $prep->fetch(PDO::FETCH_ASSOC);
+            return $row;
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
     /**
      * Function to fetch profiles(registered after given date)
      *
