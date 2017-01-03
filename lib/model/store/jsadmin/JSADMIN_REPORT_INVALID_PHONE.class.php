@@ -118,6 +118,25 @@ public function updateAsVerified($submittee){
     
     }
 
+    public function getReportInvalidInterval($profileId, $interval)
+    {
+        try     
+        {   
+            $sql = "SELECT * from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFILEID AND DATEDIFF(NOW(), `SUBMIT_DATE`) <= :INTERVAL ORDER BY `SUBMIT_DATE` DESC";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_STR);
+            $prep->bindValue(":INTERVAL",$interval,PDO::PARAM_INT);
+            $prep->execute();
+            while($row=$prep->fetch(PDO::FETCH_ASSOC))
+                $result[]=$row;
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
 
 }
 ?>    

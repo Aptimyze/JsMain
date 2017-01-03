@@ -156,6 +156,12 @@ class jsadmin_CONTACTS_ALLOTED extends TABLE {
             $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_INT);
             $prep->bindValue(":COUNT", $count, PDO::PARAM_INT);
             $prep->execute();           
+            $row_affected = $prep->rowCount();
+            if($row_affected == 0)
+            {
+                return false;
+            }
+            return true;
         }
         catch (PDOException $e)
         {
