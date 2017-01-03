@@ -14,6 +14,6 @@ all:
     
   ApiFeedbackV1:
     enable_login:  off
-
-  ReportAbuseForUserLog:
+    
+  reportAbuseForUserLog:
     enable_login:  off
