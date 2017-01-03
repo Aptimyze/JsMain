@@ -1239,6 +1239,15 @@ function invokePluginReceivedMsgHandler(msgObj) {
     }
 }
 
+/*play sound on receiving the message
+ * @params:none
+ */
+function playChatNotificationSound(){
+    console.log("here playChatNotificationSound");
+    var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
+    audio.play();
+}
+
 /*update last read msg in localstorage
  * @params:user_id,msg_id
  */

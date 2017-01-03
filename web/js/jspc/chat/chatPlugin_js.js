@@ -2525,7 +2525,9 @@ JsChat.prototype = {
                     curEle._scrollToBottom(userId);
                     //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
                 },500);
-            }
+            //play sound on receiving the message
+            playChatNotificationSound();
+        }
             
 
     },
