@@ -91,12 +91,18 @@ EOF;
 					$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onImageServer;
 					$type="";
 				}
-				
+			
 				$url = $this->callImageServerApi($v["AUTOID"],trim($v[$whichImage]),$type);
 				if($url)
 				{
 					if($this->updateUrls($url,$v,$module))
 						$this->updateImageServerTable($v["AUTOID"],$serverEnum);
+				}
+				else{
+					if($module == "PICTURE_DELETED"){
+						$serverEnum = IMAGE_SERVER_STATUS_ENUM::$deleted;
+						$this->updateImageServerTable($v["AUTOID"],$serverEnum);
+					}
 				}
 			}
 			
