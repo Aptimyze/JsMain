@@ -456,6 +456,12 @@ public function executePerformV2(sfWebRequest $request)
                                 if ($infoType == "MATCH_ALERT") {
                                         $response2["dppLinkAtEnd"] = 'Go To Desired Partner Matches.';
                                 }
+                $response2["archivedInterestLinkAtEnd"] = null;
+                if ( $infoType == "INTEREST_RECEIVED")
+                {
+                	$response2["archivedInterestLinkAtEnd"] = 'Archived Interests'; 
+                }
+
 				$response2["sorting"]=0;
 				$response2["sortType"]=null;
 				$response2["stype"]=null;
