@@ -38,45 +38,14 @@
     ~include_canurl`
     ~use helper = SfMinify`
 
-    ~if $sf_request->getAttribute('jsmsMyjsPage') neq 'Y'`
-    <script src="~JsConstants::$jquery`"></script>
-    ~/if`
+    <script  src="~JsConstants::$jquery`"></script>
     
     ~minify_get_mobile('css','','1')`
     ~minify_include_stylesheets()`
 
-    ~if $sf_request->getAttribute('jsmsMyjsPage') neq 'Y'`
     ~minify_get_mobile('js','','1')`
-    ~/if`
     ~minify_include_javascripts()`
 
-    ~if $sf_request->getAttribute('jsmsMyjsPage') eq 'Y'`
-    <script async="true" src="~JsConstants::$jquery`"></script>
-        <script type="text/javascript">
-var jqueryVar = setInterval(function(){ checkJquery() }, 500);
-
-function checkJquery() {
-    if(window.jQuery) {
-        stopInterval();
-
-        var lib2 = document.createElement('script');
-        lib2.src = "~JsConstants::$imgUrl`/min/?f=~$sf_request->getAttribute('JSArray')`";
-        document.head.appendChild(lib2);
-
-        var lib = document.createElement('script');
-        lib.src = "~JsConstants::$imgUrl`/min/?f=~$sf_request->getAttribute('singleJs')`";
-        document.head.appendChild(lib);
-        
-    } else{
-        console.log("Jquery not loaded");
-    }
-}
-function stopInterval(){
-    clearInterval(jqueryVar);
-}
-   </script>
-
-    ~/if`
 
     <!--link rel="shortcut icon" href="/favicon.ico" /-->
      	<script type="text/javascript">
@@ -138,6 +107,7 @@ var domainCode={};
 </script>
 ~/if`
   </head>
+
   ~if get_slot('optionaljsb9Key')|count_characters neq 0`
 	~JsTrackingHelper::getHeadTrackJs()`
   ~/if`
@@ -167,7 +137,6 @@ var domainCode={};
      ~/if`
   ~/if`
   </body>
-  
  ~if get_slot('optionaljsb9Key')|count_characters neq 0`
     ~assign var="jsb9Key" value=get_slot('optionaljsb9Key')`
 	~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~$jsb9Key|replace:'JSMOB':'JSNEWMOB'`")`
