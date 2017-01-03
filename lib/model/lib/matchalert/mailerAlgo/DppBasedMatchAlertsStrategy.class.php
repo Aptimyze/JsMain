@@ -34,6 +34,8 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                                 $this->logicLevel = MailerConfigVariables::$strategyReceiversTVsT;
                         }
                 }else{
+                        if($this->logicLevel == MailerConfigVariables::$strategyReceiversNT)
+                            $this->clusterToShow = array("LAST_LOGIN_SCORE");
                         $this->sort = SearchSortTypesEnums::FullDppWithReverseFlag;
                         $this->logProfile = 1;
                 }
@@ -68,10 +70,10 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                 }
 
                 if($returnTotalCountWithCluster == 1){
-                        return array("CNT"=>count($arr["PIDS"]),"LOGIN_SCORE"=>$this->clusterLoginScore,"profiles"=>$arr["PIDS"]);
+                        return array("CNT"=>count($arr["PIDS"]),"LOGIN_SCORE"=>$this->clusterLoginScore,"profiles"=>$arr["PIDS"],"actualDppCount"=>$arr["actualDppCount"]);
                 }
                 
-                return array("CNT"=>count($arr["PIDS"]),"profiles"=>$arr["PIDS"]);
+                return array("CNT"=>count($arr["PIDS"]),"profiles"=>$arr["PIDS"],"actualDppCount"=>$arr["actualDppCount"]);
         }
         /**
          * 
@@ -88,6 +90,7 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                         $lastLoginCluster = $responseObj->getClustersResults();
                         $this->clusterLoginScore = isset($lastLoginCluster['LAST_LOGIN_SCORE'][100])?$lastLoginCluster['LAST_LOGIN_SCORE'][100]:0;
                         if($this->clusterLoginScore==0 && ($this->logicLevel==MailerConfigVariables::$strategyReceiversTVsNT || $this->logicLevel==MailerConfigVariables::$strategyReceiversNT) && $matchLogic!='O'){
+                            $PidsAndCount['actualDppCount']=0;
                             $this->searchObj->getRelaxedSearchCriteria($this->limit,$this->sort);
                             $SearchUtilityObj->removeProfileFromSearch($this->searchObj, 'spaceSeperator', $this->loggedInProfileObj, '', 1, $this->removeMatchAlerts,$notInProfiles,'',1);
                             $responseObj = $SearchServiceObj->performSearch($this->searchObj, "", $clustersToShow, "", '', $this->loggedInProfileObj);

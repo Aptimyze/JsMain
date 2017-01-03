@@ -90,12 +90,12 @@ EOF;
 							*/
 
                                                         $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
-							$totalResults = $StrategyReceiversNT->getMatches('',1,array(),$matchesSetting);
-                                                        if($totalResults["CNT"] == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
+							$totalResults = $StrategyReceiversNT->getMatches('',1,array(),$matchesSetting,$matchLogic);
+                                                        if(($totalResults["CNT"] == 0 || $totalResults["actualDppCount"] == 0) && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
                                                         if($totalResults["CNT"] == 0)
                                                         {
-                                                            $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$strategyReceiversTVsNT);
+                                                            $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$relaxedDpp);
                                                         }
                                                         // Set Low Dpp flag
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                       
@@ -154,12 +154,12 @@ EOF;
 							*/
                                                    $includeDppCnt = 1;
 							$StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$strategyReceiversNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
-							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$returnTotalCountWithCluster,array(),$matchesSetting);
-                                                        if($totalResults["CNT"] == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
+							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$returnTotalCountWithCluster,array(),$matchesSetting,$matchLogic);
+                                                        if(($totalResults["CNT"] == 0 || $totalResults["actualDppCount"] == 0) && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
                                                         if($totalResults["CNT"] == 0)
                                                         {
-                                                            $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$strategyReceiversNT);
+                                                            $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$relaxedDpp);
                                                         }
                                                         // Set Low Dpp flag
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);

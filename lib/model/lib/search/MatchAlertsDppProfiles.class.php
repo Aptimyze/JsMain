@@ -58,7 +58,8 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 
                 $city = $this->getCITY_RES();
                 $relaxedCity = $this->getRelaxedCity($city);
-                $this->setCITY_RES($city);
+                $this->setCITY_RES($relaxedCity);
+                $this->setCITY_INDIA($relaxedCity);
         }
         /**
          * Function to set sort order and results count
