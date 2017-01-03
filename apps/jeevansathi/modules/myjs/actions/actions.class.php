@@ -228,7 +228,26 @@ class myjsActions extends sfActions
                         include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
                         $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
                         $request->setAttribute('jsmsMyjsPage',1);
+                        include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
+                        $this->jsArray = getCommaSeparatedJSFileNames(array(              
+                            'modernizr_p_js',
+                            'tracking_js',
+                            'jsms/common/CommonFunctions',
+                            'jsms/common/scrollTo',
+                            'jsms/common/urlParamHandling',
+                            'app_promo_js',
+                            'commonMob.js',
+                            'jsms/common/touchswipe_js',
+                            'jsms/common/disableScroll_js',
+                            'jsms/common/history_js',
+                            'commonExpiration_js',
+                            'rippleEffectCommon_js',
+                            'common_comscore_js'
+                            
+                        ));
+                        $this->singleJs = getCommaSeparatedJSFileNames(array('jsms/myjs/myjs_js','jsms/contact_engine/contactEngine_js','jsms/myjs/touchswipemyjs_js'));
 
+         
                    $this->setTemplate("jsmsPerform");
                    $request->setParameter('INTERNAL',1);
 				$request->setParameter('getMembershipMessage',1);
@@ -495,6 +514,5 @@ return $staticCardArr;
 
 
 	} 
-
 }
  
