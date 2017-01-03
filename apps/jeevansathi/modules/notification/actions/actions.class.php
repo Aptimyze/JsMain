@@ -119,7 +119,7 @@ class notificationActions extends sfActions
 
                 //log the notification click event only for IOS app
                 if($osType == "I"){
-                    NotificationFunctions::handleNotificationClickEvent(array("profileid"=>$profileid,"messageId"=>$messageId,"notificationKey"=>$notificationKey));
+                    NotificationFunctions::handleNotificationClickEvent(array("profileid"=>$profileid,"messageId"=>$messageId,"notificationKey"=>$notificationKey),$osType);
                 }
 	}
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

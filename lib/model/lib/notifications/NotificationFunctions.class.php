@@ -110,19 +110,21 @@ class NotificationFunctions
 		}
 	}
 
-	public static function handleNotificationClickEvent($params){
+	public static function handleNotificationClickEvent($params,$osType=""){
 		$notificationStop =JsConstants::$notificationStop;
         if(!$notificationStop && is_array($params)){
 	        $notificationKey = $params['notificationKey'];
 	        $messageId = $params['messageId'];
 	        $profileid = $params['profileid'];
-	        $osType = MobileCommon::isApp();
-	        if($osType == null){
-	        	$webOs = MobileCommon::isAppWebView();
-	        	if($webOs == "A"){
-	        		$osType = "A";
-	        	}
-	        }
+	        if($osType == ""){
+		        $osType = MobileCommon::isApp();
+		        if($osType == null){
+		        	$webOs = MobileCommon::isAppWebView();
+		        	if($webOs == "A"){
+		        		$osType = "A";
+		        	}
+		        }
+		    }
 	        try{
 	            if($osType && $messageId && $notificationKey && is_numeric($messageId)){ 
                     $dataSet = array('PROFILEID'=>$profileid,'MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
