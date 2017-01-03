@@ -278,20 +278,24 @@ class ContactsRecords
 		}
 
 		$newArrayTime2 = array();
+		if ( is_array($contactsCount))
+		{
+			foreach ($contactsCount as $key => $value) {
+				if ( $value['TIME1'] == 2 )
+				{
+					$newArray = array('FILTERED' => $value['FILTERED'], 'TYPE' => $value['TYPE'],'SEEN'=>$value['SEEN'],'COUNT'=>$value['COUNT'] );
+					array_push($newArrayTime2, $newArray);
+				}
 
-		foreach ($contactsCount as $key => $value) {
-			if ( $value['TIME1'] == 2 )
-			{
-				$newArray = array('FILTERED' => $value['FILTERED'], 'TYPE' => $value['TYPE'],'SEEN'=>$value['SEEN'],'COUNT'=>$value['COUNT'] );
-				array_push($newArrayTime2, $newArray);
 			}
-
 		}
 
 		$finalArray = array();
 		foreach ($newArrayTime2 as $keyTime2 => $valueTime2) {
 			$isPresent = 0;
-			foreach ($contactsCount as $key => $value) {
+			if ( is_array($contactsCount))
+			{
+				foreach ($contactsCount as $key => $value) {
 				if ( $value['TIME1'] == 0 )
 				{
 					if ( $valueTime2['FILTERED'] == $value['FILTERED'] && $valueTime2['TYPE'] == $value['TYPE'] && $valueTime2['SEEN'] == $value['SEEN'])
@@ -303,6 +307,7 @@ class ContactsRecords
 				}
 			}
 
+			}
 			if ( !$isPresent )
 			{
 				array_push($contactsCount,array('FILTERED' => $valueTime2['FILTERED'], 'TYPE' => $valueTime2['TYPE'],'SEEN'=>$valueTime2['SEEN'],'COUNT'=>$valueTime2['COUNT'] ));
@@ -312,12 +317,15 @@ class ContactsRecords
 	
 		if ( $isProfileMemCacheService == '')
 		{
-			foreach ($contactsCount as $key => $value) {
+			if ( is_array($contactsCount))
+			{
+				foreach ($contactsCount as $key => $value) {
 					if ( $value['TIME1'] == 2 )
 					{
 						unset($contactsCount[$key]);
 					}
-				}	
+				}
+			}	
 		}
 		return $contactsCount;
 
