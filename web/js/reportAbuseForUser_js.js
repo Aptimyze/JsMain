@@ -70,7 +70,7 @@ function reportAbuseForUserFun(){
 		              },
 
 		         error: function(result)
-		         {    alert('no');
+		         {   
                  		$('#formForReportAbuse').hide();
                  		$('#invalidEntries').css('display','block');
                  	
