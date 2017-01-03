@@ -1,0 +1,82 @@
+
+
+function reportAbuseForUserFun(){
+
+		 var reporterName = $("#reporterProfileId").val().trim();
+		 var reporteeName = $("#reporteeProfileId").val().trim();
+		 var reason = $("#reasonId").val().trim();
+		 var crmUserName = $("#crmUserId").val().trim();
+		 $("#reporterProfileId").removeAttr("style");$("#reporteeProfileId").removeAttr("style");$("#crmUserId").removeAttr("style");$("#reasonId").removeAttr("style");
+		if(reporterName== '' || reporteeName == '' || reason == ''){
+		if(reporterName == '')
+		{
+				$("#reporterProfileId").css('borderColor','red');
+		}
+
+		if(reporteeName == '')
+		{
+			$("#reporteeProfileId").css('borderColor','red');
+		}
+
+		if(reason == '')
+		{
+			$("#reasonId").css('borderColor','red');
+		}
+		return;
+	  }
+
+	var feed={}; 
+	//feed.message:as sdf sd f
+	feed.category='Abuse';
+	feed.reporter = reporterName;
+	feed.reportee = reporteeName;
+	feed.crmUser = crmUserName;
+	feed.reason = reason;
+	feed.message=reporteeName+' has been reported abuse by '+reporterName+' with the following reason:'+reason;
+	ajaxData={'feed':feed,'CMDSubmit':1};
+	var url='/faq/reportAbuseForUserLog';
+
+
+		$.ajax({
+				url: url,
+				type: "POST",
+				data: ajaxData,
+				//crossDomain: true,
+				success: function(result){
+			         if(typeof(result) != 'object')
+					  var out = JSON.parse(result);
+					  
+					 if(typeof(out) != 'undefined' && out['message'] == "reportee profileID is not correct")
+		                 {
+		                 		//$('#formForReportAbuse').hide();
+		                 		$('#reporterNp').css('display','none');
+		                 		$('#reporteeNp').css('display','block');
+		                 } 
+
+ 					else if(typeof(out) != 'undefined' && out['message'] == "reporter profileID is not correct")
+		                 {
+		                 		//$('#formForReportAbuse').hide();
+		                 		$('#reporteeNp').css('display','none');
+		                 		$('#reporterNp').css('display','block');
+		                 } 
+
+		                 else if (result.responseStatusCode == '0')
+		                 { 
+		                 		$('#formForReportAbuse').hide();
+		                 		$('#successfullDisplay').css('display','block');
+		                 }  	            
+
+
+		              },
+
+		         error: function(result)
+		         {    alert('no');
+                 		$('#formForReportAbuse').hide();
+                 		$('#invalidEntries').css('display','block');
+                 	
+		         }
+		});
+
+	
+
+}
