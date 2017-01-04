@@ -248,8 +248,8 @@ class TopSearchBandPopulate
                                         $this->selectedCity_Country = $param["STATE"].",".$param["COUNTRY_RES"];
                                 else
                                         $this->selectedCity_Country = $param["COUNTRY_RES"];
-                                if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
-                                        $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
+//                                if($param["CITY_INDIA"] || $param["CITY_RES"] || $param["STATE"])
+//                                        $this->selectedCity_Country = str_replace("51","",$this->selectedCity_Country); // India any city remove
                                 $this->selectedCity_Country = trim($this->selectedCity_Country,",");
                         }
                 }
@@ -377,7 +377,7 @@ class TopSearchBandPopulate
 	public function generateDataArrayApp()
 	{
 		
-		if(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_APP"))
+		if(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_APP")  && MobileCommon::isApp() != 'I')
                 {
                         $this->dataArray = unserialize(JsMemcache::getInstance()->get("TOP_SEARCH_BAND_CONTENT_APP"));
                 }

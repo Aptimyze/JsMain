@@ -117,6 +117,7 @@ class myjsActions extends sfActions
 			$infoTypeId = $request->getParameter("infoTypeId");
                 	$pageNo = $request->getParameter("pageNo");
 			$params["profileList"] = $request->getParameter("profileList");
+			$params["showExpiring"] = $request->getParameter("showExpiring");
 			if((MobileCommon::isApp() == "I")||MobileCommon::isNewMobileSite())
 			{  
 				$Apptype="IOS";
@@ -196,6 +197,15 @@ class myjsActions extends sfActions
                 $this->loginData=$request->getAttribute("loginData");
                 $this->profile=Profile::getInstance();
                 $this->loginProfile=LoggedInProfile::getInstance();
+                $entryDate = $this->loginProfile->getENTRY_DT();
+				$currentTime=time();
+				$registrationTime = strtotime($entryDate);
+                $this->showExpiring = 0;
+				if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+				{
+					$this->showExpiring = 1;
+				}
+				$request->setParameter("showExpiring", $this->showExpiring);
           //      $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
                 ob_start();
                 $jsonData = sfContext::getInstance()->getController()->getPresentationFor("myjs", "performV1");
@@ -316,6 +326,13 @@ class myjsActions extends sfActions
 		//USING ENTRY DATE TO COMPARE WITH CURRENT TIME AND SET FLAG
 		$currentTime=time();
 		$registrationTime = strtotime($entryDate);
+
+		$this->showExpiring = 0;
+		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		{
+			$this->showExpiring = 1;
+		}
+
 		$this->engagementCount=array();
 
 //Flag to compute data for important section for FTU page

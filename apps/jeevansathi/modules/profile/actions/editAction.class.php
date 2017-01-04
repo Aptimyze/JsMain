@@ -65,6 +65,9 @@ class editAction extends sfAction {
                 
                 if($request->getParameter('fromCALHoro') == 1)
 			$this->fromCALHoro = 1;
+		
+		 if($request->getParameter('fromCALAlternate') == 1)
+			$this->fromCALAlternate = 1;
 
 		///////////////////////////////
         $this->EditWhatNew = $request->getParameter("EditWhatNew");

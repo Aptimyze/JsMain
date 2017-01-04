@@ -423,6 +423,10 @@ input:focus {
     width: 67px;
 }
 
+.wid97{
+    width: 97px;
+}
+
 .wid100 {
     width: 100px;
 }
@@ -2359,3 +2363,7 @@ line-height:25px;
     font-family: "Roboto", "sans-serif";
     font-weight: 300
 }
+.engBarInfoMsg{
+    position: absolute;
+    padding: 14px 27px;
+    width: 100%;}

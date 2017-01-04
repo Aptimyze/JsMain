@@ -59,7 +59,7 @@ class pass_changev1Action extends sfActions
 					$this->form->updateData($loginData[PROFILEID]);
 
 					//Update auto expiry table
-					$dbObj=new jsadmin_AUTO_EXPIRY;
+					$dbObj=new ProfileAUTO_EXPIRY;
 					$expireDt=date("Y-m-d H:i:s");
 					$dbObj->replace($loginData[PROFILEID],"P",$expireDt);
 					$responseArr=ResponseHandlerConfig::$PASSWORD_CHANGE;

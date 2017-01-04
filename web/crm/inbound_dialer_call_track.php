@@ -2,7 +2,7 @@
 include_once("connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 //$db = connect_db();
-$db = connect_db2();
+$db = connect_crmSlave();
 
 $general_message_filename_val="general_info_1";
 $profile_specific_filename_val="transfer_agent";

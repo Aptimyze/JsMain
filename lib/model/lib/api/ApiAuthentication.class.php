@@ -242,9 +242,9 @@ Abstract class ApiAuthentication
 
 		$difftime = date("Y-m-d H:i:s",$loginData[TIME]);
 		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-			$dbObj=new jsadmin_AUTO_EXPIRY("newjs_masterRep");
+			$dbObj=new ProfileAUTO_EXPIRY("newjs_masterRep");
 		else
-			$dbObj=new jsadmin_AUTO_EXPIRY("newjs_master");
+			$dbObj=new ProfileAUTO_EXPIRY("newjs_master");
 		
 		
 		if($dbObj->IsAlive($loginData[PROFILEID],$difftime))
@@ -611,9 +611,9 @@ Abstract class ApiAuthentication
 					$timediff = $curTime-$arr[1];
 					$mailedtime = date("Y-m-d H:i:s",$arr[1]);
 					if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-						$dbObj=new jsadmin_AUTO_EXPIRY("newjs_masterRep");
+						$dbObj=new ProfileAUTO_EXPIRY("newjs_masterRep");
 					else
-						$dbObj=new jsadmin_AUTO_EXPIRY("newjs_master");
+						$dbObj=new ProfileAUTO_EXPIRY("newjs_master");
 					if($timediff > $this->expiryTime || !$dbObj->IsAlive($profileid,$mailedtime))
 					{
 						

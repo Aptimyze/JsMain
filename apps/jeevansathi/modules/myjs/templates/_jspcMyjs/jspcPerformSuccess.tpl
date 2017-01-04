@@ -2,7 +2,8 @@
 <header>
     <script>
         var iPCS = ~$iPCS`;
-		var showFTU=~$showFtu`;
+        var showFTU=~$showFtu`;
+        var showExpiring=~$showExpiring`;
         var profileid = '~$profileid`';
         var profilePic = '~$profilePic`';
         var PageSource = "MyjsPc";
@@ -118,7 +119,7 @@
                         </div>
                     </div>
                 </li>
-
+                ~if $showExpiring eq 0`
                 <li id="filteredInterestHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
@@ -128,6 +129,19 @@
                         </div>
                     </div>
                 </li>
+                ~else`
+                <li id="expiringInterestHead">
+                    <div class="myjs-bdr3 fullwid">
+                        <div class="disp-tbl mauto">
+                            <div id="engage_expiringInterestReceived" class="hgt25 disp-cell vmid myjs-fsize1 pr5" onclick="trackJsEventGA('My JS JSPC', 'Engagement Bar - Expiring Interests',loggedInJspcGender,'')" >Interests Expiring
+                            <div id="totalExpiringInterestReceived" style="padding-left: 5px;" class="myjs-fsize2 dispib vmid myjs_p_new disp-none myjs-fw"></div>
+                            <div style="color:#D9475C;padding-left: 5px;" class="fontreg f14 vmid disp-none" id="ExpiringAction">Take Action</div>
+                            </div>
+                            <div id="expiringInterestCount" class="scir fontreg txtc vmid myjs-dim4 disp-none"></div>
+                        </div>
+                    </div>
+                </li>
+                ~/if`
                 <li id="acceptanceEngagementHead">
                     <div class="myjs-bdr3 fullwid">
                         <div class="disp-tbl mauto">
@@ -373,7 +387,7 @@
                 </ul>
             </div>
             <div id="SHORTLIST" class="myjs-wid11 fr">
-                <p class="fontlig f22 color11">~$profileid` Shortlisted Profiles</p>
+                <p class="fontlig f22 color11">Shortlisted Profiles</p>
                 <ul class="hor_list clearfix mysj-btmwid pt30 pl20">
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>

@@ -2,210 +2,423 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
+<title>jeevansathi.com</title>
 </head>
 
 <body>
-<table border="0" cellspacing="0" cellpadding="0" style="max-width:600px; min-width:318px; border:1px solid #efefef; -webkit-text-size-adjust: none; font-family:Arial; font-size:13px; color:#000000;" align="center">
-	<tr>
+<table style="max-width:600px; min-width:240px; border:1px solid #dcdcdc;"  border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
 <td colspan="4" style="font-size: 11px !important; font-family: Arial; color: black; padding-top: 10px;">
 ~$PREHEADER`
 </td>
 </tr>
-	<tr>
-          <td colspan="3" height="10" valign="top"  style="font-family:Arial; font-size:10px; color:#000000; padding-left:13px;"><p>~if $FTO eq 1`Take FREE TRIAL OFFER - Verify Phone &amp; Add Photo ~elseif $FTO eq 2`Jeevansathi matches Thousands of people every month. ~/if`
-</p></td>
-        </tr>
   <tr>
-    <td width="10"></td>
-    <td width="562"><img src="~$IMG_URL`/images/jspc/commonimg/logo1.png" width="213" height="56" vspace="0" hspace="0" align="left" border="0" alt="Jeevansathi.com" />
-      <table border="0" cellpadding="0" cellspacing="0" align="right">
+    <td style="border-bottom:1px solid #ededed"><table cellspacing="0" cellpadding="0" border="0" width="100%">
         <tr>
-          <td width="184" height="56"><font style="font-size:10px;" color="#474646">Call us at <var>{{TOLLNO:profileid=~$profileid`}}</var> (Toll free), or<br />
-            Visit any of our <a href="(LINK)ALLCENTRESLOCATIONS:profileid=~$profileid`(/LINK)" target="_blank" style="color:#0f529d;">60+ offices</a> across India</font></td>
-        </tr>
-      </table></td>
-    <td width="10"></td>
-  </tr>
-  <tr>
-    <td colspan="3"><table border="0" width="100%" cellspacing="0" cellpadding="0" style="font-family:Arial; font-size:22px; color:#ffffff; font-weight:bold;" align="left">
-        <tr>
-          <td height="44"></td>
-          <td></td>
-          <td rowspan="3" width="214"><img src="~$IMG_URL`/images/mailer/declineMailer/envelop.jpg" width="214" height="144" vspace="0" hspace="0" align="right" /></td>
-        </tr>
-        <tr>
-          <td height="62" width="15"><img src="~$IMG_URL`/images/mailer/declineMailer/BandLft.gif" width="5" height="62" vspace="0" hspace="0" align="right" /></td>
-          <td bgcolor="#920606" style="padding-left:10px;">Life has more to offer...
-            <div style="padding-left:25px; font-size:28px; line-height:25px;">AND SO DO WE!</div></td>
-        </tr>
-        <tr>
-          <td height="38"></td>
-          <td></td>
-        </tr>
-      </table></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td height="45" valign="top">Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>,<br /><br />
-      This is to inform you that Jeevansathi member <var>{{USERNAME:profileid=~$otherProfile`}}</var> has cancelled ~if $GENDER eq 'M'`her~elseif $GENDER eq 'F'`his~/if` expression of interest in you.</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td colspan="3" height="5"></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td bgcolor="#f7f7f7" style="padding:5px;"><table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" style="border:1px solid #ececec; padding:5px; font-family:Arial; font-size:11px; color:#000000;">
-        <tr>
-          <td width="67"><a href="(LINK)PHOTO_ALBUM:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"target=_"blank"><img src="(PHOTO)PROFILE_PIC:receiver_id=~$profileid`,profileid=~$otherProfile`,photo_type=thumbnail(/PHOTO)" width="61" height="61" vspace="0" hspace="0" align="left" /></a></td>
-          <td valign="bottom"> <var>{{AGE:profileid=~$otherProfile`}}</var>, <var>{{HEIGHT:profileid=~$otherProfile`}}</var>,<var>{{MTONGUE:profileid=~$otherProfile`}}</var>,<br />
-            <var>{{CITY:profileid=~$otherProfile`}}</var>,<var>{{OCCUPATION:profileid=~$otherProfile`}}</var>, <var>{{INCOME:profileid=~$otherProfile`}}</var>
-            <div align="right"><a href="(LINK)DETAILED_PROFILE_HOME:receiver_id=~$otherProfile`,profileid=~$profileid`(/LINK)" target="_blank" style="text-decoration:underline; color:#0f529d; font-family:Arial; font-size:11px; line-height:17px;">View Full Profile</a></div></td>
-        </tr>
-      </table></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td colspan="3" height="15"></td>
-  </tr>
-  <tr>
-    <td></td>
-    <td style="padding:0 5px;"><table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial; font-size:13px; color:#000000;">
-        <tr>
-          <td valign="top" height="21"><strong>The interest could have been cancelled due to the following reasons:</strong></td>
-        </tr>
-        <tr>
-          <td><table width="94%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial; font-size:13px; color:#000000;">
+          <td width="373" height="52" style="padding-left:10px;"><div><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="~$IMG_URL`/images/jspc/commonimg/logo1.png"></div></td>
+          <td width="189" valign="middle" style="padding-right:10px;"><table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
               <tr>
-                <td valign="top"><img src="~$IMG_URL`/images/mailer/declineMailer/arrowBullt.gif" width="16" height="9" vspace="6" hspace="0" align="left" /></td>
-                <td style="line-height:22px;">Your profile doesn't meet this member's set criteria</td>
+                <td align="right" valign="middle" height="50" style="vertical-align:middle;"><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)COMPLETE_PROFILE:profileid=~$profileid`(/LINK)">My Profile</a> | <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)">My Matches</a></td>
               </tr>
-              <tr>
-                <td width="16" valign="top"><img src="~$IMG_URL`/images/mailer/declineMailer/arrowBullt.gif" width="16" height="9" vspace="6" hspace="0" align="left" /></td>
-                ~if $photo eq 1`
-                <td width="494">Your profile is incomplete. You should <a href="(LINK)UPLOAD_PHOTO:profileid=~$profileid`(/LINK)" target="_blank" style="text-decoration:underline; color:#0f529d;">Upload more photos</a> and <a href="(LINK)DETAILED_PROFILE_HOME:receiver_id=~$profileid`,profileid=~$profileid`(/LINK)" target="_blank" style="text-decoration:underline; color:#0f529d;">add more information</a> such as education, lifestyle, hobbies etc. to receive more positive responses</td>
-                ~else if $photo eq 0`
-                <td width="494">Your profile is incomplete. Upload your photo to receive more positive responses. 
-				<table><tr>
-					~if $GENDER eq 'M'`
-					<td width="110" height="32" background="~$IMG_URL`/images/mailer/declineMailer/btn-update-female-trans.png" style="font:12px 'Trebuchet MS', Arial, Helvetica, sans-serif; padding-left:50px">
-					~elseif $GENDER eq 'F'`	
-					<td width="110" height="32" background="~$IMG_URL`/images/mailer/declineMailer/btn-update-male-trans.png" style="font:12px 'Trebuchet MS', Arial, Helvetica, sans-serif; padding-left:50px">
-					~/if`
-						<a style="COLOR:#000; text-decoration:NONE" href="(LINK)UPLOAD_PHOTO:profileid=~$profileid`(/LINK)">UPLOAD PHOTO</a></td></tr></table></td>
-						~/if`
-				</tr>
-            </table></td>
-        </tr>
-        <tr>
-          <td height="20"></td>
-        </tr>
-        <tr>
-          <td style="line-height:22px;"><em><strong style="color:#4c4b4b;">And don't lose hope!</strong></em></td>
-        </tr>
-        <tr>
-          <td style="font-size:12px; color:#5f5f5f;" width="538">There are a lot more profiles that match your criteria. So, continue your search and browse through our database of over 6 Lakh profiles and find your dream match now.</td>
-        </tr>
-        <tr>
-          ~$suggested_profiles`
-        
-        <tr>
-			<tr>
-          <td align="right" style="font-size:11px; color:#474646;" height="40"><a href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)#" target="_blank" style="text-decoration:underline; color:#0f529d;">Click here</a> to see more profiles</td>
-        </tr>
-          <td height="11"></td>
-        </tr>
-        <tr>
-          <td style="font-size:12px;" valign="top" height="30">Wish you luck in your search!</td>
-        </tr>
-        <tr>
-          <td><table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#000000; margin-left:10px;-webkit-text-size-adjust: none;" align="left" border="0" cellpadding="0" cellspacing="0">
-              <tbody>
-                <tr>
-                  <td style="font-size:12px" valign="top">Warm Regards,<br>
-                    <b style="color:#c4161c;">Jeevansathi<span style="font-size:1px;"> </span><font color="#00000">.com Team</font></b><br />
-                    <a href="(LINK)JS_FB_PAGE:profileid=~$profileid`(/LINK)" target="_blank"><img src="~$IMG_URL`/images/mailer/declineMailer/fbBTN.gif" width="111" height="29" border="0" alt="Join Us on Facebook" vspace="4"></a></td>
-                  <td style="font-size:12px" valign="top" width="10"></td>
-                </tr>
-              </tbody>
             </table></td>
         </tr>
       </table></td>
-    <td></td>
   </tr>
   <tr>
-    <td></td>
-    <td height="20" style="border-bottom:1px solid #f5f3f3;"><img src="~$IMG_URL`/images/mailer/declineMailer/spacer.gif" width="1" height="20" /></td>
-    <td></td>
-  </tr>
+  <td>
+  <table style="max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td></td>
-    <td width="562">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial; color:#000000; font-size:10px;">
-      <tr>
-        <td valign="bottom" height="22"> <table width="300" border="0" cellspacing="0" cellpadding="0" align="left" style="font-family:Arial; color:#000000; font-size:11px;">
-                  <tr>
-                    <td>You can also visit any of our 60+ offices across India</td>
-                  </tr>
-                </table>
-                <table width="133" border="0" cellspacing="0" cellpadding="0" align="right" style="font-family:Arial; color:#000000; font-size:11px;">
-                  <tr>
-                    <td><a href="(LINK)ALLCENTRESLOCATIONS:profileid=~$profileid`(/LINK)" target="_blank" title="View all Centre Addesses" style="color:#0f529d">View all Centre Addesses</a></td>
-                  </tr>
-                </table></td>
-      </tr>
-      <tr>
-        <td height="12"></td>
-      </tr>
-      <tr>
-        <td width="542"><span style="color:#711e1e">North India:</span> Noida, Gurgaon, Delhi - <font color="#7a7676">Laxmi Nagar, Connaught Place, Nehru Place, Kamla Nagar, Pitampura, Malviya Nagar, Rajori Garden,</font> Agra, Allahabad, Chandigarh, Jaipur, Kanpur, Dehradun, Varanasi, Lucknow, Ludhiana, Jallandhar, Gorakhpur, Pathankot, Amritsar, Jammu, Bareilly</td>
-      </tr>
-      <tr>
-        <td height="12"></td>
-      </tr>
-      <tr>
-        <td><span style="color:#711e1e">West India:</span> Goa, Kolahpur, Ahmedabad, Aurangabad, Baroda, Nagpur, Nashik, Rajkot, Surat, Pune - <font color="#7a7676">Chinchwad, Deccan, Koregaon, Modelina Road, Mumbai - Andheri(West), Andheri East, Borivalli, Chembur, Ghatkopar, Mulund, Thane, Vashi, Worli</font></td>
-      </tr>
-      <tr>
-        <td height="12"></td>
-      </tr>
-      <tr>
-        <td><span style="color:#711e1e">South India:</span> Chennai, Kochi, Coimboture, Hosur, Mangalore, Mysore, Trichy, Trivandrum, Vijaywada, Vyzag
-Bangalore - <font color="#7a7676">Dickenson Road, Koramangla,</font> Hyderabad - <font color="#7a7676">Begumpet, Himmayat Nagar</font></td>
-      </tr>
-      <tr>
-        <td height="12"></td>
-      </tr>
-      <tr>
-        <td><span style="color:#711e1e">East &amp; Central India:</span> Ranchi, Bhopal, Bhubneshwar, Indore, Patna, Jamshedpur,  Gwalior, Jabalpur, Raipur,
-Kolkata - <font color="#7a7676">Ghariat Road, Salt Lake, AJC Bose Road</font></td>
-      </tr>
-       <tr>
-        <td height="12"></td>
-      </tr>
-    </table>
+    <td width="20"></td>
+    <td valign="middle" height="35">
+   Hi <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>,
 </td>
-    <td></td>
+    <td width="20" height="25"></td>
   </tr>
   <tr>
-    <td colspan="3" bgcolor="#f7f6f6"  height="23"><table width="75%" border="0" cellspacing="0" cellpadding="0" align="center" style="font-family:Verdana, Arial, Times New Roman, Times, serif; color:#000000; font-size:11px;">
-                  <tr>
-                    <td><table width="97%" border="0" cellspacing="0" cellpadding="0" align="center" style="font-family:Verdana, Arial, Times New Roman, Times, serif; color:#000000; font-size:11px;">
-                      <tr>
-                        <td width="150">100% Profile Screening</td>
-                        <td width="20" align="center"><font color="#b7b6b6">|</font></td>
-                        <td width="160">Lakhs of Success Stories</td>
-                        <td width="20" align="center"><font color="#b7b6b6">|</font></td>
-                        <td width="120">Privacy Options</td>
-                      </tr>
-                    </table></td>
-                  </tr>
-                </table></td>
-  </tr>
-  <tr>
-    <td align="center" height="40" colspan="3" style="font-family:Verdana, Arial, Times New Roman, Times, serif; color:#c9c9c9; font-size:11px; line-height:16px;">You have received this mail because your e-mail ID is registered with Jeevansathi.com. This is a system-generated e-mail, please don't reply to this message. The profiles sent in this mail have been posted by registered members of Jeevansathi.com. Jeevansathi.com has taken all reasonable steps to ensure that the information in this mailer is authentic. Users are advised to research bonafides of these profiles independently. To stop receiving these mails <a href="(LINK)UNSUBSCRIBE:profileid=~$profileid`(/LINK)" target="_blank" title="Click here" style="color:#c9c9c9;">UNSUBSCRIBE</a>.</td>
+    <td width="20"></td>
+   <td>
+<var>{{USERNAME:profileid=~$otherProfile`}}</var> has cancelled the interest sent to you. </td>
+    <td width="20"></td>
   </tr>
 </table>
+
+  </td>
+  </tr>
+
+  <tr>
+  <td width="600" valign="top" align="left">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr><td height="10"></td></tr>
+  <tr>
+    <td> <table style="max-width:280px; min-width:240px" border="0" cellspacing="0" cellpadding="0" align="left">
+    <tr>
+    <td></td>
+    <td height="25"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)"><var>{{USERNAME:profileid=~$otherProfile`}}</var></a> <var>{{PAIDSTATUS:profileid=~$otherProfile`}}</var></td>
+    </tr>
+  <tr>
+    <td width="20"></td>
+    <td width="280">
+    <table width="110" border="0" cellspacing="0" cellpadding="0" align="left">
+  <tr>
+ <td width="133"><a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfile`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img border="0"  align="left" width="100" vspace="0" hspace="0" height="133" src="(PHOTO)PROFILE_PIC:receiver_id=~$profileid`,profileid=~$otherProfile`,photo_type=search(/PHOTO)" style="border:1px solid #e6e6e6;"></a></td>
+  </tr>
+  <tr><td height="15"></td></tr>
+  <tr>
+    <td height=""></td>
+  </tr>
+</table>
+<table width="150" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px; color:#000000;-webkit-text-size-adjust: none; text-align:left;">
+  <tr>
+    <td width="5"></td>
+    <td><var>{{AGE:profileid=~$otherProfile`}}</var>yrs; <var>{{HEIGHT:profileid=~$otherProfile`}}</var></td>
+  </tr>
+  <tr>
+     <td width="5"></td>
+    <td><var>{{RELIGION_CASTE_VALUE_TEMPLATE:profileid=~$otherProfile`}}<var></td>
+  </tr>
+  <tr>
+     <td width="5"></td>
+    <td><var>{{MTONGUE:profileid=~$otherProfile`}}</var></td>
+  </tr>
+  <tr>
+     <td width="5"></td>
+    <td><var>{{EDUCATION:profileid=~$otherProfile`}}</var></td>
+  </tr>
+    <tr>
+    <td width="5"></td>
+    <td><var>{{OCCUPATION:profileid=~$otherProfile`}}</var></td>
+  </tr>
+    <tr>
+    <td width="5"></td>
+    <td><var>{{INCOME:profileid=~$otherProfile`}}</var></td>
+  </tr>
+    <tr>
+   <td width="5"></td>
+    <td><var>{{CITY_WITH_COUNTRY:profileid=~$otherProfile`}}</var></td>
+  </tr>
+    <tr><td height="10"></td></tr>
+</table>
+
+    </td>
+  </tr>
+</table>
+  </td>
+  </tr>
+
+  <tr>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td><table  style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
+
+</table></td>
+  </tr>
+
+</table>
+
+  </td>
+  </tr>
+
+  <tr><td width="600" valign="top">
+  <table style=" font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0" width="100%">
+  <td style="color:#4a4a4a;" >
+</td>
+    
+  </tr>
+  
+  <tr>
+   
+      <td  width="600"  >
+</td>
+    
+  </tr>
+  <tr>
+   
+      <td colspan="2" width="600"><table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
+ 
+</table>
+
+                  
+
+              </td>
+    
+  </tr>
+  
+   
+   
+ 
+   
+   <tr>
+    
+      <td height="10" style="border-top:1px solid #eae9e9"><img align="left" width="6" vspace="0" hspace="0" height="10" src="~$IMG_URL`/images/mailer/ADRM/spacer.gif"></td>
+    
+  </tr>
+  
+  
+  
+  <tr>
+ 
+      <td>
+        <table align="left" style="max-width:340px; min-width:240px;" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+    
+                  
+    </td>
+  </tr>
+</table>
+
+        
+        </td>
+    
+  </tr>
+  <tr>
+   
+      <td>
+        <table style="max-width:600px" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="20"></td>
+    <td width="560">
+    <strong>The interest could have been cancelled due to the following reasons:</strong>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="15"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
+        <td height="25">They have changed their mind or sent you an interest by mistake</td>
+      </tr>
+      ~if $photo eq 0`
+      <tr>
+        <td height="25"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
+        <td>Your photo is missing</td>
+      </tr>
+      ~/if`
+
+      ~if $photo eq 2`
+      <tr>
+        <td height="25"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
+        <td>Your photo is not visible to all</td>
+      </tr>
+      ~/if`
+    </table>
+    </td>
+    <td  width="20"></td>
+  </tr>
+
+  <tr>
+    <td style="border-bottom:1px #c1bfbf dotted"></td>
+    <td height="10" style="border-bottom:1px #c1bfbf dotted"></td>
+    <td style="border-bottom:1px #c1bfbf dotted"></td>
+  </tr>
+
+ ~if $photo eq 0`
+  <tr>
+    <td></td>
+    <td height="10"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td height="15"></td>
+    <td>
+    <strong>To get better responses:</strong>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="15"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
+    <td height="25"><a href="(LINK)UPLOAD_PHOTO:profileid=~$profileid`(/LINK)" style="color:#003a7e; text-decoration:underline;">Upload Your Photo</a> </td>
+  </tr>
+</table>
+    </td>
+    <td></td>
+  </tr>
+  ~/if`
+
+  ~if $photo eq 2`
+  <tr>
+    <td></td>
+    <td height="10"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td height="15"></td>
+    <td>
+    <strong>To get better responses:</strong>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="15"><img src="~$IMG_URL`/images/mailer/ADRM/point.jpg" /></td>
+    <td height="25"><a href="(LINK)UPLOAD_PHOTO:profileid=~$profileid`(/LINK)" style="color:#003a7e; text-decoration:underline;">Change Photo Privacy</a> </td>
+  </tr>
+</table>
+    </td>
+    <td></td>
+  </tr>
+  ~/if`
+
+  <tr>
+    <td></td>
+    <td height="10"></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td height="10"></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+        </td>
+    
+  </tr>
+  ~if $sugcount gt 0`
+   <tr>
+  <td valign="top" width="100%">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+    <td width="10px"></td>
+    <td width="580px">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td height="25" valign="top">Express Interest in these people who match your Desired Partner Profile:</td>
+  </tr>
+  <tr>
+   ~$suggested_profiles`
+  </tr>
+</table>
+
+  </td>
+  </tr>
+</table>
+</td>
+   <td width="10px"></td>
+  </tr>
+</table>
+
+</td>
+  </tr>
+  <tr>
+  <td height="10"></td>
+  </tr>
+  <tr>
+      <td valign="top" height="30" >
+        <table style="max-width:600px; min-width:240px"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="20"></td>
+    <td style=" font-family: Arial, Helvetica, sans-serif; font-size:12px;"><a href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)" style="color:#0f529d">View All</a></td>
+  </tr>
+</table>
+        </td>
+  </tr>
+  ~/if`
+  <tr>
+    
+      <td valign="top" height="30" >
+        <table style="max-width:600px; min-width:240px"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="20"></td>
+    <td style=" font-family: Arial, Helvetica, sans-serif; font-size:12px;">Wish you success in your search.</td>
+  </tr>
+</table>
+
+        </td>
+   
+  </tr>
+  
+  <tr>
+   
+      <td valign="top"><table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="20"></td>
+    <td style=" font-family: Arial, Helvetica, sans-serif; font-size:12px;">Warm Regards,<br>
+                          <b style="color:#c4161c;">Jeevansathi</b><span style="font-size:1px;"> </span><b color="#00000">.com Team</b></td>
+  </tr>
+</table>
+</td>
+    
+  </tr>
+  
+  <tr>
+    
+      <td height="40"></td>
+   
+  </tr>
+  
+  <tr>
+ 
+      <td align="center" valign="top" height="20"><font face="Tahoma, Geneva, sans-serif" style="font-size:12px;">Got any Questions?</font></td>
+    
+  </tr>
+   
+    <tr>
+    
+      <td height="40">
+        <table cellspacing="0" cellpadding="0" border="0" align="left" width="241" style="font-family:Tahoma, Geneva, sans-serif; font-size:11px; color:#555555; text-align:left">
+              <tr>
+              <td width="15"></td>
+                <td width="23"><img align="left" width="23" vspace="0" hspace="0" height="20" src="~$IMG_URL`/images/mailer/ADRM/icon1.gif"></td>
+                <td><var>{{TOLLNO:profileid=~$profileid`}}</var> (Toll Free) or <var>{{NOIDALANDL}}</var></td>
+              </tr>
+              <tr>
+                <td height="8" colspan="2"></td>
+              </tr>
+            </table>
+            <table cellspacing="0" cellpadding="0" border="0" align="left" width="158" style="font-family:Tahoma, Geneva, sans-serif; font-size:11px; color:#555555; text-align:left">
+              <tr>
+              <td width="15"></td>
+                <td width="28" height="20"><img align="left" width="28" vspace="0" hspace="0" height="14" src="~$IMG_URL`/images/mailer/ADRM/msg_IC.gif"></td>
+                <td><a style="color:#0f529d; text-decoration:underline;" target="_blank" href="mailto:help@jeevansathi.com">help@jeevansathi.com </a></td>
+              </tr>
+              <tr>
+                <td height="8" colspan="2"></td>
+              </tr>
+            </table>
+            <table cellspacing="0" cellpadding="0" border="0" align="left" width="165" style="font-family:Tahoma, Geneva, sans-serif; font-size:11px; color:#555555; text-align:left">
+              <tr>
+              <td width="15"></td>
+                <td width="18" height="20"><img align="left" width="18" vspace="0" hspace="0" height="18" src="~$IMG_URL`/images/mailer/ADRM/visitIC.gif"></td>
+                <td>Visit any of our <a style="color:#0f529d; text-decoration:underline;" target="_blank" href="(LINK)ALLCENTRESLOCATIONS:profileid=~$profileid`(/LINK)">60+centres</a></td>
+              </tr>
+              <tr>
+                <td height="8" colspan="2"></td>
+              </tr>
+            </table>
+        </td>
+    
+  </tr>
+  
+   <tr>
+    
+      <td align="center" valign="top" height="20"><font face="Tahoma, Geneva, sans-serif" style="font-size:12px;">----- More Value, Less Money -----</font>
+        <table cellspacing="0" cellpadding="0" border="0" bgcolor="#f0f0f0" align="center"  style="font-family:Tahoma, Geneva, sans-serif; font-size:11px; color:#555555; text-align:center; max-width:570px; min-width:240px;">
+                  <tr>
+                    <td width="148" height="36" style="border:1px dashed #c4c3c3; border-top:0px;">LOWEST<br>Price per Contact </td>
+                    <td width="148" style="border:1px dashed #c4c3c3; border-left:0px; border-top:0px;">MAXIMUM<br>Benefits per Month</td>
+                     <td width="148" height="36" style="border:1px dashed #c4c3c3; border-top:0px;">BIGGEST<br>Savings per Plan </td>
+                    <td width="148" style="border:1px dashed #c4c3c3; border-left:0px; border-top:0px;">ON CALL<br>Customer Service</td>
+                  </tr>
+                </table>
+        </td>
+    
+  </tr>
+  
+   
+   <tr>
+  <td align="center" height="31" style="font-size:11px;">You have received this mail because your e-mail ID is registered with Jeevansathi.com. This is a system-generated e-mail, please don't reply to this message. The profiles sent in this mail have been posted by registered members of Jeevansathi.com. Jeevansathi.com has taken all reasonable steps to ensure that the information in this mailer is authentic. Users are advised to research bonafides of these profiles independently. To stop receiving these mails <a style="text-decoration:none;" target="_blank" href="(LINK)UNSUBSCRIBE:profileid=~$profileid`(/LINK)"><font color="#7d7b7b" face="Tahoma, Geneva, sans-serif" style="font-size:11px;"><u>Unsubscribe</u>.</font></a></td>
+  </tr>
+</table>
+
+  </td></tr>
+  <tr>
+  <td align="center" width="600px">
+  <table width="98%" border="0" cellspacing="0" cellpadding="0" align="center">
+  <tr>
+    <td> 
+</td>
+  </tr>
+</table>
+
+ 
+  </td>
+  </tr>
+ 
+</table>
+
 </body>
 </html>

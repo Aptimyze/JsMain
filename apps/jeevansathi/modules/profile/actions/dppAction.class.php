@@ -33,6 +33,9 @@ class dppAction extends sfAction {
 		//Contains login credentials
 		global $smarty, $data;
 		$this->loginData = $data = $request->getAttribute("loginData");
+                if(MobileCommon::isNewMobileSite()){
+                        $this->forward("profile","edit");
+                }
 		//Contains loggedin Profile information;
 		new ProfileCommon($this->loginData,1);
 		$this->loginProfile = LoggedInProfile::getInstance();
@@ -349,25 +352,35 @@ class dppAction extends sfAction {
         
         private function getCasteValues()
         {
-	  
-						$arr=FieldMap::getFieldLabel("religion_caste",'',1);
-					  $casteArr=FieldMap::getFieldLabel("caste_without_religion",'',1);
-					  $casteObj = new NEWJS_CASTE;
-				    $caste_arr = $casteObj->getTopSearchBandCasteData();
-				
-					  foreach($caste_arr as $key=>$val)
-					  {
-							$parent = $val["PARENT"];
-							if(array_key_exists($parent,$arr) && $val["ISALL"]!="Y")
-							{
-										$label = ($casteArr[$val["VALUE"]]?$casteArr[$val["VALUE"]]:$val["LABEL"]).(($val["ISGROUP"]=="Y")?"- All":"");
-										$Arr[$parent][0][]=array($val["VALUE"]=>$label);
-						  }
-						}
-						
-						return $Arr;
+		  $arr=FieldMap::getFieldLabel("religion_caste",'',1);
+		  $casteArr=FieldMap::getFieldLabel("caste_without_religion",'',1);
+		  foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v)
+		  {
+			unset($casteArr[$v]);
+		  }
+		  $casteObj = new NEWJS_CASTE;
+		  $caste_arr = $casteObj->getTopSearchBandCasteData();
+		  $caste_arr = $this->unsetOtherCaste($caste_arr);
+		  foreach($caste_arr as $key=>$val)
+		  {
+			$parent = $val["PARENT"];
+			if(array_key_exists($parent,$arr) && $val["ISALL"]!="Y")
+			{
+				$label = ($casteArr[$val["VALUE"]]?$casteArr[$val["VALUE"]]:$val["LABEL"]).(($val["ISGROUP"]=="Y")?"- All":"");
+				$Arr[$parent][0][]=array($val["VALUE"]=>$label);
+			}
+		  }
+		  return $Arr;
         }
-        
+  private function unsetOtherCaste($arr)
+  {
+	foreach($arr as $k=>$v)
+	{
+		if(in_array($v['VALUE'],DPPConstants::$removeCasteFromDppArr))
+			unset($arr[$k]);
+	}
+	return $arr;
+  }      
    /*
    * Function to fromat and order height values in desired order
    */

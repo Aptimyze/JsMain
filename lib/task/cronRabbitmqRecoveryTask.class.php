@@ -230,6 +230,7 @@ EOF;
                                   MessageQueues::UPDATE_VIEW_LOG_STARTCOMMAND=>MessageQueues::UPDATE_VIEW_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND=>MessageQueues::NOTIFICATION_LOG_CONSUMER_COUNT,
                                   MessageQueues::CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGCONSUMERCOUNT,
+                                  MessageQueues::UPDATE_FEATURED_PROFILE_STARTCOMMAND=>MessageQueues::FEATURED_PROFILE_CONSUMER_COUNT,
                                     );
     $this->callRabbitmqServerApi("FIRST_SERVER");
    
@@ -260,6 +261,8 @@ EOF;
         $delRetrieveConsumerObj->receiveMessage();   
         $updateSeenConsumerObj=new updateSeenConsumer('SECOND_SERVER',$msgPickCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
         $updateSeenConsumerObj->receiveMessage();
+        $updateFeaturedProfileConsumerObj=new updateSeenConsumer('SECOND_SERVER',$msgPickCount);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
+        $updateFeaturedProfileConsumerObj->receiveMessage();
         $profileCacheConsumerObj = new ProfileCacheConsumer('SECOND_SERVER', $msgPickCount);
         $profileCacheConsumerObj->receiveMessage();
         $updateViewLogConsumerObj = new updateViewLogConsumer('SECOND_SERVER', $msgPickCount);

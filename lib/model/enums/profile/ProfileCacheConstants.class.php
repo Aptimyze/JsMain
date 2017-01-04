@@ -215,7 +215,40 @@ class ProfileCacheConstants
                                         "VARA",
                                         "MASA",
                                         "HAVE_ASTRO",
-                                        "FSO_EXISTS"
+                                        "FSO_EXISTS",
+                                        // Jprofile Contact details
+                                        "ALT_MOBILE",
+                                        "ALT_MOBILE_ISD",
+                                        "SHOWALT_MOBILE",
+                                        "ALT_MOBILE_OWNER_NAME",
+                                        "ALT_MOBILE_NUMBER_OWNER",
+                                        "ALT_MESSENGER_ID",
+                                        "ALT_MESSENGER_CHANNEL",
+                                        "SHOW_ALT_MESSENGER",
+                                        "BLACKBERRY",
+                                        "LINKEDIN_URL",
+                                        "FB_URL",
+                                        "CALL_ANONYMOUS",
+                                        "SHOWBLACKBERRY",
+                                        "SHOWLINKEDIN",
+                                        "SHOWFACEBOOK",
+                                        "ALT_MOB_STATUS",
+                                        "ALT_EMAIL",
+                                        "ALT_EMAIL_STATUS",
+                                         // other frequent fields
+                                         "AUTO_EXPIRY_DATE",
+                                         // Jhobby
+                                        "HOBBY",
+                                        "ALLMUSIC",
+                                        "ALLBOOK",
+                                        "ALLMOVIE",
+                                        "ALLSPORTS",
+                                        "ALLCUISINE",
+                                        "FAV_MOVIE",
+                                        "FAV_TVSHOW",
+                                        "FAV_FOOD",
+                                        "FAV_BOOK",
+                                        "FAV_VAC_DEST"
                                     );
     
     public static $arrJProfileColumns = array(
@@ -425,7 +458,6 @@ class ProfileCacheConstants
                                     );
 
     public static $arrFSOColumns = array(
-                                        //'BTIME',
                                         'PROFILEID'    
                                     );
     public static $arrCommonFieldsMap = array(
@@ -433,7 +465,49 @@ class ProfileCacheConstants
                                         'DTOFBIRTH',
                                         'CITY_BIRTH',
                                         'BTIME',
-        
     );
+
+    public static $arrJProfileContact = array(
+                                        "PROFILEID",
+                                        "ALT_MOBILE",
+                                        "ALT_MOBILE_ISD",
+                                        "SHOWALT_MOBILE",
+                                        "ALT_MOBILE_OWNER_NAME",
+                                        "ALT_MOBILE_NUMBER_OWNER",
+                                        "ALT_MESSENGER_ID",
+                                        "ALT_MESSENGER_CHANNEL",
+                                        "SHOW_ALT_MESSENGER",
+                                        "BLACKBERRY",
+                                        "LINKEDIN_URL",
+                                        "FB_URL",
+                                        "CALL_ANONYMOUS",
+                                        "SHOWBLACKBERRY",
+                                        "SHOWLINKEDIN",
+                                        "SHOWFACEBOOK",
+                                        "ALT_MOB_STATUS",
+                                        "ALT_EMAIL",
+                                        "ALT_EMAIL_STATUS",
+
+     );
+    public static $arrAUTO_EXPIRY = array(
+                                        'PROFILEID',
+                                        'TYPE',
+                                        'DATE'   
+                                    );
+    
+    public static $arrJHobbyColumns = array(
+                                        'PROFILEID',
+                                        "HOBBY",
+                                        "ALLMUSIC",
+                                        "ALLBOOK",
+                                        "ALLMOVIE",
+                                        "ALLSPORTS",
+                                        "ALLCUISINE",
+                                        "FAV_MOVIE",
+                                        "FAV_TVSHOW",
+                                        "FAV_FOOD",
+                                        "FAV_BOOK",
+                                        "FAV_VAC_DEST"
+                                    );
 }
 ?>

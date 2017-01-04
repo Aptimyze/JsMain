@@ -21,7 +21,7 @@ class kibanaCompressingTask extends sfBaseTask
     $this->namespace        = 'Kibana';
     $this->name             = 'indicesCompressor';
     //This is the path to ELK server
-    $this->elkServer = 'localhost';
+    $this->elkServer = 'http://172.10.18.66';
     //This is the port number where Elastic Search is running
     $this->elkPort = '9200';
     //This is the index name which will be searched for getting the records.
@@ -42,7 +42,7 @@ EOF;
     protected function execute($arguments = array(), $options = array())
     {   
       //Path of Folder which will store all Data Files.
-      $dirPath = '/home/ayush/Desktop/logsForCompress';
+      $dirPath = '/data/applogs/CompressData';
                 if (false === is_dir($dirPath)) {
             mkdir($dirPath,0777,true);
         }
@@ -53,19 +53,18 @@ EOF;
 
       for($j=0 ; $j <9 ; $j++){
       for($i=0 ; $i <= $hoursNow ; $i++)
-      {
-        $hoursNow = $i; 
+      { 
+        $greaterThan = $i+1;
+        $lessThan = $i;
         $urlToHit = $this->elkServer.':'.$this->elkPort.'/'.$this->indexName.'/'.$this->query;
-        $ltHour = $hoursNow + 1;
-
-        $time = time('Y-m-d H:i:s',strtotime('-'.$hoursNow.' hours'));         
+        $time = time('Y-m-d H:i:s',strtotime('-'.$lessThan.' hours'));
       
         $params = [
             "query"=> [
                 "range" => [
                     "@timestamp" => [
-                        "gte" => "now-{$ltHour}h",
-                        "lte" => "now-{$hoursNow}h"                    ]
+                        "gte" => "now-{$greaterThan}h",
+                        "lte" => "now-{$lessThan}h"                    ]
                 ]
             ],
             "aggs" => [
@@ -77,24 +76,28 @@ EOF;
                 ]
             ]
         ];
-
+     
+        
         $response = CommonUtility::sendCurlPostRequest($urlToHit,json_encode($params));
         $arrResponse = json_decode($response, true);
         $arrResult = array();
+        if(is_array($arrResponse) && array_key_exists('aggregations',$arrResponse )){
         foreach($arrResponse['aggregations']['modules']['buckets'] as $module)
         {  
 
             $fieldName = $module['key'];
-            for($i = 0 ; $i < $module['doc_count'] ; $i++)
+            for($k = 0 ; $k < $module['doc_count'] ; $k++)
             { 
                 $arrResult['time'] = $time;
-                $arrResult['fieldValue'] = $fieldName;
+                $arrResult[$fieldsToQuery[$j]] = $fieldName;
                 $filePath = $dirPath."/kibanaCompressing-";
                 $fileResource = fopen($filePath,"a");
                 fwrite($fileResource,json_encode($arrResult)."\n");
                 fclose($fileResource);
             }
         }
+    }
+        
      }
     }
 
