@@ -37,23 +37,12 @@ class dppSuggestionsCALV1Action extends sfActions
 				$dppDataArr[$key]["type"] = substr($value->key,2);
 				$dppDataArr[$key]["data"] = explode(",",$value->value);
 			}
-		}
-		// foreach($dppDataArr as $key=>$val)
-		// {
-		// 	if($val["type"] == "AGE")
-		// 	{
-		// 		$dppDataArr[$key]["data"] = array_combine(DppAutoSuggestEnum::$keyReplaceAgeArr,$val["data"]);
-		// 	}
-		// 	if($val["type"] == "INCOME")
-		// 	{
-		// 		$dppDataArr[$key]["data"] = array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$val["data"]);
-		// 	}
-		// }
-		//print_r($dppDataArr);die;		
+		}		
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
 		$profileId = $this->loggedInProfileObj->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
 		$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
+
 		//Trends arr is fetched from twoWayMatches.Trends table
 		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields,$trendsObj);
 		unset($trendsObj);
@@ -69,6 +58,10 @@ class dppSuggestionsCALV1Action extends sfActions
 				}					
 			}
 		}
+		if(MobileCommon::isApp())
+		{
+			$finalArr = $this->getFormattedArrForApp($finalArr);			
+		}
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -82,6 +75,29 @@ class dppSuggestionsCALV1Action extends sfActions
 		}
 		$apiResponseHandlerObj->generateResponse();
 		return sfView::NONE;
-	}	
+	}
+
+	public function getFormattedArrForApp($finalArr)
+	{		
+		$i=0;
+		foreach($finalArr as $key => $value)
+		{
+			foreach($value as $k1=>$v1)
+			{
+				if($k1 == "data")
+				{
+					foreach($v1 as $k2=>$v2)
+					{
+						$finalArrApp[$key][$k1][$i]["id"] = $k2;
+						$finalArrApp[$key][$k1][$i]["value"] = $v2;	
+						$i++;
+					}
+					
+				}
+				$i=0;
+			}
+		}
+		return $finalArrApp;
+	}
 }
 ?>
