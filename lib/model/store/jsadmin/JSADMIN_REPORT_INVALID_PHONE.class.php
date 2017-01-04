@@ -118,6 +118,36 @@ public function updateAsVerified($submittee){
     
     }
 
+        public function getReportInvalidCountMIS($profileId)
+    {
+       try     
+        {   
+
+
+                        if(!($profileId))
+                            throw new jsException("","profileId IS not passed or blank");
+
+                        $sql = 'SELECT count( * ) AS CNT
+                        FROM jsadmin.REPORT_INVALID_PHONE
+                        WHERE 
+                         SUBMITTEE ='.$profileId;
+                        $prep = $this->db->prepare($sql);
+                        $prep->execute();
+
+                        if($row=$prep->fetch(PDO::FETCH_ASSOC))   
+                            $output=$row['CNT'];
+                        return $output;
+
+                       
+
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
+
 
 }
 ?>    

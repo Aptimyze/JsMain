@@ -529,14 +529,23 @@ class profileVerificationActions extends sfActions
 		}
                 
         public function executeInappropriateUsersReport(sfWebRequest $request)
-  {
+  {  
       $endDate=$request->getParameter('RAStartDate');
       $resultArr=(new MIS_INAPPROPRIATE_USERS_REPORT())->getReportForADate($endDate,10);
       ob_end_clean();
       if(sizeof($resultArr) == 0 )
           die;
       $i=0;
+
+      foreach ($resultArr as $key => $value) {
+        $reportInvalidCount=(new JSADMIN_REPORT_INVALID_PHONE())->getReportInvalidCountMIS($value['PROFILEID']);
+        $reportAbuseCount = (new REPORT_ABUSE_LOG())->getReportAbuseCountMIS($value['PROFILEID']);
+        $resultArr[$key]['INVALID_COUNT'] = $reportInvalidCount;
+        $resultArr[$key]['ABUSED_COUNT'] = $reportAbuseCount;
+      }
+
       echo json_encode($resultArr);
+     // print_r($resultArr);
       return sfView::NONE;
       die;
 

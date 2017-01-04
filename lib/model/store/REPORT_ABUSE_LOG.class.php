@@ -90,6 +90,29 @@ class REPORT_ABUSE_LOG extends TABLE
 	}
         
 
+        public function getReportAbuseCountMIS($profileID)
+	{
+		try	 	
+		{	
+                        if(!($profileID))
+                            throw new jsException("","profileID IS not array or blank");
+                                                                             
+                        $sql = "SELECT count(*) AS CNT from feedback.REPORT_ABUSE_LOG WHERE REPORTEE =".$profileID; 
+                        $prep = $this->db->prepare($sql);
+                        $prep->execute();
+
+                          if($row=$prep->fetch(PDO::FETCH_ASSOC))   
+                            $output=$row['CNT'];
+                        return $output;
+
+		}
+		catch(Exception $e)
+		{
+			throw new jsException($e);
+		}
+	
+	}
+
 }
 
 ?>
