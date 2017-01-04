@@ -184,4 +184,33 @@ class jsadmin_CONTACTS_ALLOTED extends TABLE {
             throw new jsException($e);
         }
     }
+
+    /*function to get contact alloted for profiles
+    * @param : $profileIdArr---array of profileids
+    * @return : $data(profileid based array of alloted,viewed and remaining contacts)
+    */
+    public function getAllotedContactsForProfiles($profileIdArr)
+    {
+        try
+        {
+            if(is_array($profileIdArr) && $profileIdArr)
+            {
+                $profileIdStr = implode("','", $profileIdArr);
+                $sql = "SELECT PROFILEID,ALLOTED FROM jsadmin.CONTACTS_ALLOTED WHERE PROFILEID IN ('".$profileIdStr."')";
+                $prep = $this->db->prepare($sql);
+                $prep->execute(); 
+                while($result = $prep->fetch(PDO::FETCH_ASSOC))
+                {
+                    $data[$result['PROFILEID']] = $result['ALLOTED'];
+                } 
+                return $data; 
+            }
+            else 
+                return null;
+        }
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    }
 }

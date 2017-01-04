@@ -1127,8 +1127,10 @@ function UnverifyNum($profileId, $phoneType, $number)
 	$interval = 10;
 	$ReportObj = new JSADMIN_REPORT_INVALID_PHONE();
 	$result = $ReportObj->getReportInvalidInterval($profileId,$interval);
+	// array of profile ids of Submitters
 	$arrSubmitter = array();
 	$ReportedDate = array();
+	$arrUpdatedProfiles = array();
 	if($result)
 	{
 		foreach ($result as $row)
@@ -1150,35 +1152,48 @@ function UnverifyNum($profileId, $phoneType, $number)
 		}
 		$arrSubmitter = array_unique($arrSubmitter);
 		$jobj = new Jprofile;
+		$contactAllotedObj = new jsadmin_CONTACTS_ALLOTED();
+		$jsCommonObj =new JsCommon();
 		$ProfileIds = array('PROFILEID' => implode(",", $arrSubmitter));
 		$arrSubscription = $jobj->getArray($ProfileIds,"","",'PROFILEID, SUBSCRIPTION');
     	foreach ($arrSubscription as $key => $value)
 		{
-			$jsCommonObj =new JsCommon();
 			if($jsCommonObj->isPaid($value['SUBSCRIPTION']))
 			{
 				// Paid User
-				$contactAllotedObj = new jsadmin_CONTACTS_ALLOTED();
 				if($contactAllotedObj->updateAllotedContacts($value['PROFILEID'],1))
 				{
-					// send mail to user about increase in contact quota
-					$top8Mailer = new EmailSender(MailerGroup::TOP8,1845);
-					// var_dump($value['PROFILEID']);die;
-					$tpl = $top8Mailer->setProfileId($value['PROFILEID']);
-					$date = date('d-m-Y');
-					$reportedDate = date('d-m-Y', strtotime($ReportedDate[$value['PROFILEID']]));
-					$subject = "A contact has been added to your quota of contacts | $date";
-					$quota = $contactAllotedObj->getAllotedContacts($value['PROFILEID']);
-					$tpl->setSubject($subject);
-					// PogId is profile id of submittee
-					$tpl->getSmarty()->assign("pogid", $profileId);
-        			$tpl->getSmarty()->assign("number", $number);
-        			$tpl->getSmarty()->assign("date", $reportedDate);
-        			$tpl->getSmarty()->assign("quota", $quota);
-					$top8Mailer->send();
+					// contacts allocated increased
+					array_push($arrUpdatedProfiles, $value['PROFILEID']);
 				}
 			}
 		}
+
+		if(count($arrUpdatedProfiles) == 0)
+		{
+			return ;
+		}
+		//Todo: get allocated contacts quota for all profiles
+		$arrContactQuota = $contactAllotedObj->getAllotedContactsForProfiles($arrUpdatedProfiles);
+
+		foreach ($arrUpdatedProfiles as $value)
+		{
+			// send mail to user about increase in contact quota
+			$top8Mailer = new EmailSender(MailerGroup::TOP8,1845);
+			
+			$tpl = $top8Mailer->setProfileId($value);
+			$date = date('d-m-Y');
+			$reportedDate = date('d-m-Y', strtotime($ReportedDate[$value]));
+			$subject = "A contact has been added to your quota of contacts | $date";
+			$quota = $arrContactQuota[$value];
+			$tpl->setSubject($subject);
+			// PogId is profile id of submittee
+			$tpl->getSmarty()->assign("otherProfile", $profileId);
+			$tpl->getSmarty()->assign("number", $number);
+			$tpl->getSmarty()->assign("date", $reportedDate);
+			$tpl->getSmarty()->assign("quota", $quota);
+			$top8Mailer->send();
+		}		
 	}
 	
 }
