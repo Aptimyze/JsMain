@@ -1,6 +1,6 @@
 ~include_partial('global/header')`
 
-<form name="insertForm" id = "formForReportAbuse" onsubmit="reportAbuseForUserFun();return false;">
+<form name="insertForm" id = "formForReportAbuse">
 	<table width=900 align=center >
 		<tr class="formhead" align=center><td colspan=5>Report Abuse For User Process</tr>			
 				<br>
@@ -41,7 +41,7 @@
                                 </tr>
 				<tr align=center>
 					<td class=fieldsnew colspan=100% align="right">
-						<button type="submit" id ="buttonForReportAbuse" >Report Abuse</button>
+						<button id ="buttonForReportAbuse" onclick="reportAbuseForUserFun();">Report Abuse</button>
 					</td>
 				</tr>
 	</table>

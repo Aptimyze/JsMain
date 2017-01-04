@@ -1,8 +1,8 @@
 
 
 function reportAbuseForUserFun(){
-		 $('#formForReportAbuse').removeAttr('onsubmit');
-
+		 
+		 $("#buttonForReportAbuse").unbind();
 		 $('#reporterNp').css('display','none');
 		 $('#reporteeNp').css('display','none');
 		 var reporterName = $("#reporterProfileId").val().trim();
@@ -25,14 +25,15 @@ function reportAbuseForUserFun(){
 		{
 			$("#reasonId").css('borderColor','red');
 		}
-		$('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
+//		$('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
+		$("#buttonForReportAbuse").unbind().bind('click',reportAbuseForUserFun);
 		return;
 	  }
 
 	  if(reporteeName == reporterName)
 	  {
 	  	alert('Both Reporter and Reportee are same');
-	  	$('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
+	  	$("#buttonForReportAbuse").unbind().bind('click',reportAbuseForUserFun);
 	  	return;
 	  }
 
@@ -85,7 +86,7 @@ function reportAbuseForUserFun(){
 		                 		$('#successfullDisplay').css('display','block');
 		                 		$('#goBackforRishav').css('display','block');
 		                 }  	            
-		                 $('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
+		                 $("#buttonForReportAbuse").unbind().bind('click',reportAbuseForUserFun);
 ;
 		              },
 
@@ -94,7 +95,7 @@ function reportAbuseForUserFun(){
                  		$('#formForReportAbuse').hide();
                  		$('#invalidEntries').css('display','block');
                  		$('goBackforRishav').css('display','block');
-                 		$('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
+                 		$("#buttonForReportAbuse").unbind().bind('click',reportAbuseForUserFun);
 
 		         }
 		});
