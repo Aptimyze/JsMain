@@ -37,6 +37,12 @@ class InformationTypeAdapter
                 $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
                 $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
                 break;
+            case "INTEREST_EXPIRING":
+                $contactsObj                          = new ContactsRecords();
+                $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+                $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
+                $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
+                break;
             case "CONTACTS_VIEWED":
 				if(CommonFunction::isPaid($subscription))
                 {
@@ -113,7 +119,7 @@ class InformationTypeAdapter
                 $profilesArray                                 = $introCallObj->getHistoryOfIntroCallsComplete($this->profileId, $condition, $skipArray);
                 break;
 	    case "VISITORS":
-	        $visitorObj                              = new Visitors($this->profileId);
+	        $visitorObj                              = new Visitors(LoggedInProfile::getInstance('newjs_master'));
                 $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"],array("matchedOrAll"=>$condition["matchedOrAll"]));
 			break;
 	    case "MY_MATCHES":

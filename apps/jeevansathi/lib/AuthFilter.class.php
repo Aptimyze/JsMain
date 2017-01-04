@@ -11,6 +11,13 @@
  */
 class AuthFilter extends sfFilter {
 	public function execute($filterChain) {
+
+	if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll/repeatAlarm"))
+	{
+		$notifCheck =NotificationFunctions::notificationCheck();
+        	if($notifCheck){echo $notifCheck;die;}
+	}
+
 	$context = $this->getContext();
 		$request = $context->getRequest();
 

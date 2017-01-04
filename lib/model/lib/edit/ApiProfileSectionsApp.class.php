@@ -13,7 +13,7 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 	
 	function __construct($profile,$isEdit='') {
 		$this->profile = $profile;
-		$dbHobbies = new NEWJS_HOBBIES();
+		$dbHobbies = new JHOBBYCacheLib();
 		$this->Hobbies=$dbHobbies->getUserHobbiesApi($this->profile->getPROFILEID());
                 $this->isEdit=$isEdit;
 		$this->underScreening="under Screening";
@@ -248,20 +248,10 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 
 		$contactArr[]=$this->getApiFormatArray("PROFILE_HANDLER_NAME","Profile Handler Name" , $this->profile->getDecoratedPersonHandlingProfile(),$this->profile->getPROFILE_HANDLER_NAME(),$this->getApiScreeningField("PROFILE_HANDLER_NAME"));
 
-		if(MobileCommon::isDesktop())
-		{
-			$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),$this->profile->getEMAIL(),$this->getApiScreeningField("EMAIL"),$this->text,"","0","","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));
-
-			$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,$this->profile->getExtendedContacts()->ALT_EMAIL,0,$this->text,"",0,"","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
-		}
-		
-		elseif(MobileCommon::isApp())
-		{
-			$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),$this->profile->getEMAIL(),$this->getApiScreeningField("EMAIL"),$this->text,$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));			
-		}
-		if(MobileCommon::isApp() == "A")
-		{
-			$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,$this->profile->getExtendedContacts()->ALT_EMAIL,"0",$this->text,$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));		
+		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),$this->profile->getEMAIL(),$this->getApiScreeningField("EMAIL"),"Y",$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));
+		if(MobileCommon::isApp() != "I")// || MobileCommon::isDesktop())
+		{			
+			$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,$this->profile->getExtendedContacts()->ALT_EMAIL,"2","Y",$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
 		}
 		//mobile number
 		if($this->profile->getPHONE_MOB())

@@ -19,7 +19,7 @@ class phoneActions extends sfActions
 	$sendingDetails['ISD'] = $profileObj->getISD() ? phoneKnowlarity::removeAllSpecialChars($profileObj->getISD()):null;
 	$sendingDetails['PHONE1']=$profileObj->getPHONE_MOB() ? trim($profileObj->getPHONE_MOB()) :null;
 
-	$contactNumOb=new newjs_JPROFILE_CONTACT();
+	$contactNumOb= new ProfileContact();
     $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileid),'','',"ALT_MOBILE");
 	$sendingDetails['PHONE2']=$numArray['0']['ALT_MOBILE']?trim($numArray['0']['ALT_MOBILE']):null;
 
