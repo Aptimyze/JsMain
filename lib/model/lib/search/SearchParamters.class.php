@@ -287,7 +287,7 @@ class SearchParamters
 	{ 
 		$validInput = SearchInputValidation::validateInput("DIET",$DIET);
                 if($validInput){
-                        if(!strstr($DIET,SearchConfig::_doesntMatterValue) && !strstr($DIET,SearchConfig::_nullValueAttributeLabel))   
+                        if($DIET && !strstr($DIET,SearchConfig::_doesntMatterValue) && !strstr($DIET,SearchConfig::_nullValueAttributeLabel) && !strstr($DIET,SearchTypesEnums::APPLY_ONLY_CLUSTER))   
                                 $this->DIET = $DIET.",".SearchConfig::_nullValueAttributeLabel;
                         else  
                                 $this->DIET = $DIET;
@@ -298,7 +298,7 @@ class SearchParamters
 	{ 
 		$validInput = SearchInputValidation::validateInput("SMOKE",$SMOKE);
                 if($validInput){
-                        if(!strstr($SMOKE,SearchConfig::_doesntMatterValue) && !strstr($SMOKE,SearchConfig::_nullValueAttributeLabel))   
+                        if($SMOKE && !strstr($SMOKE,SearchConfig::_doesntMatterValue) && !strstr($SMOKE,SearchConfig::_nullValueAttributeLabel))   
                                 $this->SMOKE = $SMOKE.",".SearchConfig::_nullValueAttributeLabel;
                         else  
                                 $this->SMOKE = $SMOKE;
@@ -309,7 +309,7 @@ class SearchParamters
 	{ 
 		$validInput = SearchInputValidation::validateInput("DRINK",$DRINK);
                 if($validInput){
-                        if(!strstr($DRINK,SearchConfig::_doesntMatterValue) && !strstr($DRINK,SearchConfig::_nullValueAttributeLabel))   
+                        if($DRINK && !strstr($DRINK,SearchConfig::_doesntMatterValue) && !strstr($DRINK,SearchConfig::_nullValueAttributeLabel))   
                                 $this->DRINK = $DRINK.",".SearchConfig::_nullValueAttributeLabel;
                         else  
                                 $this->DRINK = $DRINK; 
