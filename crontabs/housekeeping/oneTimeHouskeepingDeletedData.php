@@ -11,8 +11,6 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 $dbSlave=connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbSlave);
 $mysqlObj=new Mysql;
-
-date_default_timezone_set("Asia/Calcutta");
 $todayTimestamp=mktime(0, 0, 0, date("m")  , date("d"), date("Y"));
 $todayDate=date("Y-m-d",$todayTimestamp);
 if(date('N', strtotime($todayDate)) >= 6)
@@ -177,6 +175,7 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
 	//CONTACTS ARCHIVING 
 	//CONTACTS -- EOI -- MESSAGE_LOG -- MESSAGES
 	if($contactsMessageArchive){
+		date_default_timezone_set("Asia/Calcutta");
 		echo "\n\n";
 		echo "CONTACTS ARCHIVING";
 		echo "\n\n";
