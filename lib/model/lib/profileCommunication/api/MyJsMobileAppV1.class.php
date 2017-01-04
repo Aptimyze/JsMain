@@ -47,7 +47,7 @@ $className = get_class($this);
 		{
 			if(array_key_exists($key,$displayObj))
 			{
-				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isIOSApp()))
+				if($key == "INTEREST_EXPIRING" && !$showExpiring)
 				{
 					continue;
 				}
