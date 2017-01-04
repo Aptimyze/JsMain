@@ -14,9 +14,9 @@
 </head>
 
 <body>
-<table border="0" cellpadding="0" cellspacing="0" align="left" style="font-family:Arial; font-size:12px; color:#474646;">
+<table border="0" cellpadding="0" cellspacing="0" align="center" style="font-family:Arial; font-size:12px; color:#474646;">
 	<tr>
-	<td width="566" height="10" style="font-family:Arial; font-size:11px; color:#000000;">~$PREHEADER`</td>
+	<td width="566" height="10" align="center" style="font-family:Arial; font-size:11px; color:#000000;">~$PREHEADER`</td>
 	</tr>
 </table>
 <table border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" style="border:1px solid #dcdcdc; max-width:575px; text-align:left" align="center">
@@ -55,7 +55,7 @@
               <tr>
                 
                       <td valign="top"><br /><font color="#000000">
-                      You had reported <var>{{USERNAME:profileid=~$otherProfile`}}</var>'s contact no.: ~$number` as invalid on ~$date`. We have looked into it and found that the phone number may not be valid. Hence, as promised, we have added one contact to your quota. Your revised contact quota is <b>~$quota`</b>.
+                      You had reported <var>{{USERNAME:profileid=~$otherProfile`}}</var>'s contact no. ~$number` as invalid on ~$date`. We have looked into it and found that the phone number may not be valid. Hence, as promised, we have added one contact to your quota. Your revised contact quota is <b>~$quota`</b>.
 
                       </font></td>
               </tr>
