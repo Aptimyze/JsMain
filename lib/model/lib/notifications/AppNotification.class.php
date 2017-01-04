@@ -581,7 +581,7 @@ public function microtime_float()
             $mess = $temp["A"]["A"][$count];
         return $mess;
   }   
-  public function getProfileApplicableForNotification($profiles,$notificationKey,$className="newjs_SMS_TEMP_TABLE")
+  public function getProfileApplicableForNotification($profiles,$notificationKey,$className="")
   {
 
 	  unset($applicableProfiles);
@@ -593,7 +593,7 @@ public function microtime_float()
           $smsTempTableObj = new JPROFILE("crm_slave");
       }
       else{
-        $smsTempTableObj = new newjs_SMS_TEMP_TABLE;
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
       }
 	  $varArray['PROFILEID']=implode(",",array_filter($profiles));
 	  unset($profiles);

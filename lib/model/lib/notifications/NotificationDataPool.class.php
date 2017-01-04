@@ -494,10 +494,10 @@ class NotificationDataPool
                         
                         unset($selfProfileObj);
                         unset($otherProfileObj);
-                        $selfProfileObj = Profile::getInstance('newjs_master',$k1);
+                        $selfProfileObj = Profile::getInstance('crm_slave',$k1);
                         $selfProfileObj->setDetail($applicableProfiles[$k1]);
 
-                        $otherProfileObj = Profile::getInstance('newjs_master',$v1);
+                        $otherProfileObj = Profile::getInstance('crm_slave',$v1);
                         $otherProfileObj->setDetail($getOtherProfilesData[$v1]);
 
                         $nameOfUserClassObj = new NameOfUser();
