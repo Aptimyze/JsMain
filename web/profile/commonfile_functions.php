@@ -622,7 +622,7 @@ $js_arr[]=array("jspc/chat/aes"    => "3");
 $js_arr[]=array("/web/converse"    => "3");
 $js_arr[]=array(" /web/billing/billing_v2"      => "4");
 $js_arr[]=array(" /web/billing/billing"     => "3");
-$js_arr[]=array("reportAbuseForUser_js"     => "3");
+$js_arr[]=array("reportAbuseForUser_js"      => "4");
 return $js_arr;
 }
 function getJavascript(){
