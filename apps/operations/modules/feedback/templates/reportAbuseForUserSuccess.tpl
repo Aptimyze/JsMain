@@ -1,6 +1,6 @@
 ~include_partial('global/header')`
 
-<form name="insertForm" id = "formForReportAbuse">
+<div id = "formForReportAbuse">
 	<table width=900 align=center >
 		<tr class="formhead" align=center><td colspan=5>Report Abuse For User Process</tr>			
 				<br>
@@ -45,7 +45,7 @@
 					</td>
 				</tr>
 	</table>
-</form>
+</div>
 
 <tr align=center><td class=fieldsnew colspan=100%><font size=2><b style="display: none" align = "CENTER" id ="successfullDisplay">The Person has been reported abuse successfully. </b></font></td></tr>
 <tr align=center> <a href=~$linkToInterface`> <font size=2 color="red"><b align = "center" style="display: none" id="goBackforRishav">Go Back To Report Another User . </b></font></a></tr>
