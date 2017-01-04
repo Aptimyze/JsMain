@@ -1123,7 +1123,7 @@ function getIsdInFormat($isd)
 
 function UnverifyNum($profileId, $phoneType, $number)
 {
-	// Profile Id of Submittee and its phone type
+	// Profile Id of Submittee, its phone type and the reported number
 	$interval = 10;
 	$ReportObj = new JSADMIN_REPORT_INVALID_PHONE();
 	$result = $ReportObj->getReportInvalidInterval($profileId,$interval);
