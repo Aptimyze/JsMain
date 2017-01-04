@@ -1,8 +1,8 @@
 
 
 function reportAbuseForUserFun(){
+		 $('#formForReportAbuse').removeAttr('onsubmit');
 
-		 $('#buttonForReportAbuse').unbind();
 		 $('#reporterNp').css('display','none');
 		 $('#reporteeNp').css('display','none');
 		 var reporterName = $("#reporterProfileId").val().trim();
@@ -25,14 +25,14 @@ function reportAbuseForUserFun(){
 		{
 			$("#reasonId").css('borderColor','red');
 		}
-		$('#buttonForReportAbuse').bind('click','submit');
+		$('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
 		return;
 	  }
 
 	  if(reporteeName == reporterName)
 	  {
 	  	alert('Both Reporter and Reportee are same');
-	  	$('#buttonForReportAbuse').bind('click','submit');
+	  	$('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
 	  	return;
 	  }
 
@@ -85,8 +85,8 @@ function reportAbuseForUserFun(){
 		                 		$('#successfullDisplay').css('display','block');
 		                 		$('#goBackforRishav').css('display','block');
 		                 }  	            
-
-		                $('#buttonForReportAbuse').bind('click','submit');
+		                 $('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
+;
 		              },
 
 		         error: function(result)
@@ -94,7 +94,8 @@ function reportAbuseForUserFun(){
                  		$('#formForReportAbuse').hide();
                  		$('#invalidEntries').css('display','block');
                  		$('goBackforRishav').css('display','block');
-                 	  $('#buttonForReportAbuse').bind('click','submit');
+                 		$('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
+
 		         }
 		});
 
