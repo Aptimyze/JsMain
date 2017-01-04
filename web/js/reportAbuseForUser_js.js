@@ -2,6 +2,9 @@
 
 function reportAbuseForUserFun(){
 
+		 $('#buttonForReportAbuse').unbind();
+		 $('#reporterNp').css('display','none');
+		 $('#reporteeNp').css('display','none');
 		 var reporterName = $("#reporterProfileId").val().trim();
 		 var reporteeName = $("#reporteeProfileId").val().trim();
 		 var reason = $("#reasonId").val().trim();
@@ -22,8 +25,17 @@ function reportAbuseForUserFun(){
 		{
 			$("#reasonId").css('borderColor','red');
 		}
+		$('#buttonForReportAbuse').bind('click','submit');
 		return;
 	  }
+
+	  if(reporteeName == reporterName)
+	  {
+	  	alert('Both Reporter and Reportee are same');
+	  	$('#buttonForReportAbuse').bind('click','submit');
+	  	return;
+	  }
+
 
 	var feed={}; 
 	//feed.message:as sdf sd f
@@ -45,8 +57,15 @@ function reportAbuseForUserFun(){
 				success: function(result){
 			         if(typeof(result) != 'object')
 					  var out = JSON.parse(result);
+
+					 if(typeof(out) != 'undefined' && out['message'] == "both are not correct")
+		                 {
+		                 		//$('#formForReportAbuse').hide();
+		                 		$('#reporterNp').css('display','block');
+		                 		$('#reporteeNp').css('display','block');
+		                 } 
 					  
-					 if(typeof(out) != 'undefined' && out['message'] == "reportee profileID is not correct")
+					 else if(typeof(out) != 'undefined' && out['message'] == "reportee profileID is not correct")
 		                 {
 		                 		//$('#formForReportAbuse').hide();
 		                 		$('#reporterNp').css('display','none');
@@ -64,16 +83,18 @@ function reportAbuseForUserFun(){
 		                 { 
 		                 		$('#formForReportAbuse').hide();
 		                 		$('#successfullDisplay').css('display','block');
+		                 		$('#goBackforRishav').css('display','block');
 		                 }  	            
 
-
+		                $('#buttonForReportAbuse').bind('click','submit');
 		              },
 
 		         error: function(result)
 		         {   
                  		$('#formForReportAbuse').hide();
                  		$('#invalidEntries').css('display','block');
-                 	
+                 		$('goBackforRishav').css('display','block');
+                 	  $('#buttonForReportAbuse').bind('click','submit');
 		         }
 		});
 

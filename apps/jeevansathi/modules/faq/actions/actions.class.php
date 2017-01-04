@@ -115,8 +115,10 @@ class faqActions extends sfActions
 
   if($reporterPFID==NULL || $reporteePFID == NULL)
   { 
+    if($reporterPFID==NULL && $reporteePFID == NULL)
+    $error[message] = "both are not correct";
 
-    if($reporterPFID==NULL) 
+    else if($reporterPFID==NULL) 
       $error[message] = "reporter profileID is not correct";
     else
       $error[message] = "reportee profileID is not correct"; 

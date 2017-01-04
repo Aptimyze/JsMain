@@ -41,13 +41,14 @@
                                 </tr>
 				<tr align=center>
 					<td class=fieldsnew colspan=100% align="right">
-						<button type="submit" >Report Abuse</button>
+						<button type="submit" id ="buttonForReportAbuse" >Report Abuse</button>
 					</td>
 				</tr>
 	</table>
 </form>
 
-<tr align=center><td class=fieldsnew colspan=100%><font size=2><b style="display: none" align = "CENTER" id ="successfullDisplay">The Person has been reported abuse successfully.  </b></font></td></tr>
+<tr align=center><td class=fieldsnew colspan=100%><font size=2><b style="display: none" align = "CENTER" id ="successfullDisplay">The Person has been reported abuse successfully. </b></font></td></tr>
+<tr align=center> <a href=~$linkToInterface`> <font size=2 color="red"><b align = "center" style="display: none" id="goBackforRishav">Go Back To Report Another User . </b></font></a></tr>
 
 <tr align="center"><td class=fieldsnew colspan=100%><font size=2><b style="display: none" align = "CENTER" id ="invalidEntries">Either Entry already exists for this profile or Internal Server Error.  </b></font></td></tr>
 
