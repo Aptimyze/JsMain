@@ -293,6 +293,8 @@ function UpdateOverlayLayer(attr)
 	var htmlArr=new Array();
 	for(i=0;i<key.length;i++)
 	{
+	if(($.inArray(key[i]["key"],editInArr[arr[0]])>-1)|| ($.inArray(key[i]["key"],editValArr[arr[1]])>-1))
+	{
 		var temp=overLayHtml;
 		temp=temp.replace(/key_label/g,key[i]["key"]+"label");
 		temp=temp.replace(/key_NAME/g,key[i]["key"]);
@@ -341,6 +343,7 @@ function UpdateOverlayLayer(attr)
 		
 		htmlArr.push(temp);
 					
+	}
 	}
 	var tempStr=htmlArr.join("");
 	var tempHtml=overLayerParent;
