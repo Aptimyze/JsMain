@@ -421,7 +421,7 @@ class NotificationDataPool
             $counter = 0;
             $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY("newjs_slave");
             $curDate = date('Y-m-d');
-            $paramsArr["ENTRY_DT"] = date('Y-m-d', strtotime('-7 day',  strtotime($curDate)));
+            $paramsArr["ENTRY_DT"] = date('Y-m-d', strtotime('-30 day',  strtotime($curDate)));
             $matchCount = $matchOfDayObj->getCountForMatchProfile();
             foreach($applicableProfiles as $profileid => $details){
                 $searchResult = SearchCommonFunctions::getMatchofTheDay($profileid);
