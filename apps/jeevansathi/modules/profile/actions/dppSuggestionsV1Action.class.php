@@ -28,7 +28,8 @@ class dppSuggestionsV1Action extends sfActions
 		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields,$trendsObj);
 		unset($trendsObj);
 		$data = $request->getParameter("Param");		
-		$decodedData = json_decode($data);		
+		$decodedData = json_decode($data);
+		
 		foreach($decodedData as $key=>$val)
 		{
 			foreach($val as $key1=>$val1)
