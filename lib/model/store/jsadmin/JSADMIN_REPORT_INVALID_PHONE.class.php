@@ -122,7 +122,7 @@ public function updateAsVerified($submittee){
     {
         try     
         {   
-            $sql = "SELECT * from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFILEID AND DATEDIFF(NOW(), `SUBMIT_DATE`) <= :INTERVAL ORDER BY `SUBMIT_DATE` DESC";
+            $sql = "SELECT * from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFILEID AND TIMESTAMPDIFF(DAY , `SUBMIT_DATE`, NOW()) <= :INTERVAL ORDER BY `SUBMIT_DATE` DESC";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_STR);
             $prep->bindValue(":INTERVAL",$interval,PDO::PARAM_INT);
