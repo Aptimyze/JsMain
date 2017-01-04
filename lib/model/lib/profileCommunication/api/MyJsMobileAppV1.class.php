@@ -51,6 +51,12 @@ $className = get_class($this);
 				{
 					continue;
 				}
+				$isApp = MobileCommon::isApp();
+				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+				if($isApp == "A" && $appVersion  && $appVersion < 81)
+				{
+					continue;
+				}
 				foreach($value as $k=>$v)
                                 {
 					if($v == "TUPLES")
