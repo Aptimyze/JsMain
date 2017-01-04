@@ -31,7 +31,7 @@ class dppSuggestions
 		}
 		if($type == "INCOME")
 		{
-			$valueArr = $this->getSuggestionForIncome($type,$valArr);
+			$valueArr = $this->getSuggestionForIncome($type,$valArr,$calLayer);
 		}		
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
@@ -397,7 +397,6 @@ class dppSuggestions
 	public function getSuggestionForAge($type,$valArr)
 	{		
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceAgeArr,$valArr);
-		
 		if($this->gender == "F")
 		{
 			$minAge = min($valArr["LAGE"],$this->age);
@@ -418,12 +417,26 @@ class dppSuggestions
 	}
 
 	//Mapping of income needs to be changed.
-	public function getSuggestionForIncome($type,$valArr)
+	public function getSuggestionForIncome($type,$valArr,$calLayer="")
 	{	
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr);			
+		
 		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
-
+		if($calLayer)
+		{
+			foreach($valArr as $key=>$val)
+			{
+				if(array_key_exists($val, $hIncomeRs))
+				{
+					$valArr[$key] = $hIncomeRs[$val];
+				}
+				elseif(array_key_exists($val, $hIncomeDol))
+				{
+					$valArr[$key] = $hIncomeDol[$val];	
+				}
+			}
+		}
 		if($this->gender == "M")
 		{
 			if(in_array($this->income,DppAutoSuggestEnum::$dollarArr))
