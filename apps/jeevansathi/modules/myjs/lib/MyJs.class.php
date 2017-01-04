@@ -248,10 +248,22 @@ class MyJs implements Module
 					if($nav > 1 && !is_array($pids))
 						$infoTypeObj[$infoType] = null;
 					else{
-                                            if($infoType == "VISITORS" && MobileCommon::isNewMobileSite())
-                                            {
-                                            	$conditionArray["matchedOrAll"] = 'A';
-                                            }
+		                    if($infoType == "VISITORS")
+		                    {
+		                        if(MobileCommon::isNewMobileSite())
+		                        {
+									$conditionArray["matchedOrAll"] = 'A';
+		                        }
+		                        elseif (MobileCommon::isApp()=='I' || MobileCommon::isApp()=='A')
+		                        {
+									$request = sfContext::getInstance()->getRequest();
+									$conditionArray["matchedOrAll"] = $request->getParameter("matchedOrAll");
+									if($request->getParameter("matchedOrAll")!='M')
+									{
+										$conditionArray["matchedOrAll"] = 'A';
+									}
+		                        }
+							}
                                             if(($infoType == "MATCH_ALERT")&&((MobileCommon::isNewMobileSite())||(MobileCommon::isApp()=='I'))) {
 //                                                $conditionArray['LIMIT']=$matchAlertCount['NEW'];
                                                 $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);

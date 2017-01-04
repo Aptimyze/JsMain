@@ -39,6 +39,7 @@ class InboxMobileAppV2
 	const CONTACTS_VIEWED_PAID = "Contacts viewed by you would be shown here";
 	const CONTACTS_VIEWED_UNPAID_V2 = "<span style='color:#666'> Upgrade membership to view contact details and connect to your match instantly.</span>";
 	const CONTACTS_VIEWED_UNPAID_V2_IOS = "Upgrade membership to view contact details and connect to your match instantly.";
+	const INTEREST_ARCHIVED = "You have no interests left to respond to";
 
 	static public function init()
 	{
@@ -116,7 +117,6 @@ class InboxMobileAppV2
 				"subscription_icon",
 				"subscription_text",
 				"TIME",
-				"MESSAGE",
 				"SEEN",
 				"edu_level_new",
 				"userloginstatus",
@@ -1192,6 +1192,7 @@ class InboxMobileAppV2
                                 "SHORTLIST"=>"stype=".SearchTypesEnums::MYJS_SHORTLIST_PC."&responseTracking=".JSTrackingPageType::MYJS_SHORTLIST_PC,
                                 "PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
                                 "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_MYJS_JSPC,
+                                "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSPC_MYJS,
                                 //"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
@@ -1205,9 +1206,9 @@ class InboxMobileAppV2
                         else
                             $visitorsStype = SearchTypesEnums::VISITORS_JSPC;
 			$trackingMap=array("INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::CONTACT_AWAITING,
+				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED,
 				           "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
 					   "VISITORS"=>"stype=".$visitorsStype."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
-				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::ARCHIVED_INTEREST,
 				"SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_JSPC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_SENT_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
@@ -1250,7 +1251,8 @@ class InboxMobileAppV2
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_JSMS,
 				"CONTACTS_VIEWED"=>"stype=".SearchTypesEnums::PHONEBOOK_JSMS."&responseTracking=".JSTrackingPageType::PHONEBOOK_JSMS,
 				"FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_JSMS,
-				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_JSMS."&responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_JSMS
+				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_JSMS."&responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_JSMS,
+				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_JSMS,
 				);
                 }
 		return $trackingMap[$infoType]?$trackingMap[$infoType]:false;

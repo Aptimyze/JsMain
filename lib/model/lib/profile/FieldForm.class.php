@@ -378,6 +378,10 @@ class FieldForm extends sfForm
 					$jprofileFieldArr['HAVE_JCONTACT']="Y";
 				}
         else if(count($jprofileContactArr)){
+        	if(array_key_exists("ALT_EMAIL", $jprofileContactArr))
+        	{
+        		$jprofileContactArr["ALT_EMAIL_STATUS"] = "N";
+        	}
           $this->checkForChange($jprofileContactArr,"Contact");
 					$this->loggedInObj->editCONTACT($jprofileContactArr);
           $jprofileFieldArr['HAVE_JCONTACT']="Y";
@@ -564,7 +568,7 @@ class FieldForm extends sfForm
 					//bot EMAIL ENTRY
 					bot_email_entry($profileid, $jprofileFieldArr[EMAIL]);
 					//Insert into autoexpiry table, to expire all autologin url coming before date
-					$autoExObj=new jsadmin_AUTO_EXPIRY();
+					$autoExObj=new ProfileAUTO_EXPIRY();
 					$autoExObj->replace($profileid,'E',date("Y-m-d H:i:s"));
 					//end
 					insert_in_old_email($profileid, $this->loggedInObj->getEMAIL());

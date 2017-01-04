@@ -245,7 +245,7 @@ class commonActions extends sfActions
                 if ($password && $this->validatePassword($password, $emailStr) == true) {
                     $this->done = PasswordUpdate::change($profileid, $password);
                     $marked     = ResetPasswordAuthentication::disableProfileidLinks($profileid);
-                    $dbObj      = new jsadmin_AUTO_EXPIRY;
+                    $dbObj      = new ProfileAUTO_EXPIRY;
                     $expireDt   = date("Y-m-d H:i:s");
                     $dbObj->replace($profileid, "P", $expireDt);
                 } else {
@@ -678,20 +678,18 @@ class commonActions extends sfActions
                                        $nameOfUserObj->updateName($profileid,$nameArr);
                                }
                                else
-                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
-                    if($profileid%9==1 && MobileCommon::isNewMobileSite())
-                    {
-                    	$todayDate= date('Y-m-d');
-                    	$memObj = JsMemcache::getInstance();
-                    	$memObj->addKeyToSet('nameCalTrackR_'.$todayDate,$profileid);
-                    }
-               
+                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);               
                     
             }
             
         }
- 		CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button);
-}
+                if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
+                {
+ 		if(CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button))
+                   JsMemcache::getInstance()->set($loginData['PROFILEID'].'_CAL_DAY_FLAG',1,86400);
+                }
+                
+        }
 
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -713,7 +711,6 @@ class commonActions extends sfActions
             $nameData=(new NameOfUser())->getNameData($profileId);
             $this->nameOfUser=$nameData[$profileId]['NAME'];
             $this->namePrivacy=$nameData[$profileId]['DISPLAY'];
-            if($profileId%9==1)$this->skipSkipButton=1;
         }
                 
 		if($calObject['LAYERID']==1)

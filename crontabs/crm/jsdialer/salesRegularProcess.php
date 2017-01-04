@@ -56,7 +56,7 @@ foreach($campaignArr as $key=>$campaignName)
 		}
 		// Update Status log - CAMPAIGN NAME:,DATE:,STATUS=1	
 		$dialerCampaignReords =$dialerHandlerObj->getDialerCampaignRecords($campaignName, $csvEntryDate);
-		if($campaignRecord == $dialerCampaignReords){
+		if(($campaignRecord == $dialerCampaignReords) && $dialerCampaignReords>0){
 			$status=1;
 			$statusMsg ='Success';
 			$dialerHandlerObj->setCampaignStatus($campaignName,$csvEntryDate,$status);

@@ -32,9 +32,11 @@ class chatActions extends sfActions
 
 	public function executeLogChatListingFetchTimeoutV1(sfwebrequest $request){
 		$username = $request->getParameter("username");
+        $cookie = $_SERVER["HTTP_COOKIE"];
+        $uagent = $_SERVER["HTTP_USER_AGENT"];
 		if($username){
 			$chatLoggingObj = new Chat();
-	        $chatLoggingObj->storeChatTimeoutProfiles($username);
+	        $chatLoggingObj->storeChatTimeoutProfiles($username,$cookie,$uagent);
 	        unset($chatLoggingObj);
 	    }
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();

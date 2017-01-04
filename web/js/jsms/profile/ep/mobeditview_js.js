@@ -103,7 +103,16 @@ var mobEditPage=(function(){
                         });
 			PhotoUpload();
                         privacybind();
-                        setTimeout(function(){stopLoader()},200);
+                        // check for showing email verification link sent confirmation
+                        if(typeof editFieldArr != 'undefined')
+                        {
+                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.Contact.ALT_EMAIL.outerSectionValue) && editFieldArr.ALT_EMAIL) 
+                                    showAlternateConfirmLayerMS(editFieldArr.ALT_EMAIL);
+                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.Contact.EMAIL.outerSectionValue) && editFieldArr.EMAIL) 
+                                    showAlternateConfirmLayerMS(editFieldArr.EMAIL);
+                        }
+                        
+                            setTimeout(function(){stopLoader()},200);
 		}
 		else{
 			//setTimeout(function(){stopLoader()},200);
@@ -262,12 +271,34 @@ var mobEditPage=(function(){
 						$( "#"+key+"EditSection" ).html(sliderDiv);
 					else
 						$( "#"+key+"EditSection" ).append(sliderDiv);
-					$( "#"+v.outerSectionKey+'_name' ).text(v.outerSectionName)
+					$( "#"+v.outerSectionKey+'_name' ).text(v.outerSectionName);
 					
 					var emptyFields=0;
 						var jsonCnt=0;
-					var sectionStr="";
+					var sectionStr="";					
 					
+					//Email (Verify link or Verified text)
+					if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==0 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerify' class='padl10 dispibl color2'>Verify</div>");
+                                                bindEmailButtons();
+					}
+					else if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==1 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
+					}
+					
+					//alternateEmail (Verify link or Verified text)
+					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==0 && v.OnClick[2].label_val!="" && v.OnClick[2].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verify</div>");
+                                                bindEmailButtons();
+					}
+					else if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==1 && v.OnClick[2].label_val!="" && v.OnClick[2].label_val!=null)
+					{
+						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
+					}
+
 					if(v.singleKey)
 					{
 						
@@ -488,4 +519,55 @@ function readMore(string,keyName)
 	}
 	else
 		return string;
+}
+
+function showAlternateConfirmLayerMS(email){
+                var altEmail = typeof email !='undefined' ? email :   $("#AlternateEmailId_value").eq(0).text().trim();
+                var obj = $("#emailSentConfirmLayer");
+                var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,altEmail);
+                obj.find("#emailConfirmationText").eq(0).text(msg);
+                obj.show();
+                var tempOb=$("#altEmailinnerLayer");
+                tempOb.css('margin-left','-'+$(tempOb).width()/2+'px')
+                    .css('margin-top','-'+$(tempOb).height()/2+'px');   
+
+    
+    
+    
+    
+}
+
+function bindEmailButtons(){
+    $("#altEmailVerify,#EmailVerify").unbind();
+    $("#altEmailVerify,#EmailVerify").click(function(event)
+    {
+      event.stopPropagation();
+      $("#newLoader").show();
+      
+      var this_id = $(this).attr('id'),emailType='',email='';
+      if(this_id == 'altEmailVerify')
+      {
+          emailType=2;
+          email=$("#AlternateEmailId_value").eq(0).text().trim();
+      }
+      else 
+      {
+          emailType=1;
+          email=$("#EmailId_value").eq(0).text().trim();
+          
+      }
+      var ajaxData={'emailType':emailType};
+      $.ajax({
+                                url:'/api/v1/profile/sendEmailVerLink',
+                                dataType: 'json',
+                                data: ajaxData,
+                                type: "POST",
+                                success: function(response) 
+                                {
+                                    $("#newLoader").hide();
+                                    showAlternateConfirmLayerMS(email);
+                                }
+    
+            });
+    });
 }

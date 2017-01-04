@@ -4,7 +4,7 @@ $solr1 = JsConstants::$solrServerUrl;
 $solr1 = JsConstants::$solrServerUrl;
 $solr2 = JsConstants::$solrServerUrl1;
 $today    = date("Y-m-d");
-$yesterday = date("Y-m-d",strtotime("-1 day",strtotime($today)));
+$yesterday = date("Y-m-d",strtotime("-3 day",strtotime($today)));
 $daily = "&fq=ENTRY_DT:[".$yesterday."T00:00:00Z%20".$today."T00:00:00Z]";
 
 $url[670000] = $solr1.'/select?q=*:*';

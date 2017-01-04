@@ -73,7 +73,7 @@ $profilesStr =$profileStrIneligible."###".$profileStrEligible;
 $to   = "manoj.rana@naukri.com";
 $sub  = "Dialer updates of RCB Campaign Process.";
 $from = "From:vibhor.garg@jeevansathi.com";
-mail($to, $sub, $profilesStr, $from);
+//mail($to, $sub, $profilesStr, $from);
 
 // Fetch profile with dial status 0
 function fetchProfiles($db_js)

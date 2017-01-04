@@ -41,6 +41,7 @@ class ProfileMemcacheService
 							'AWAITING_RESPONSE_NEW', 
 							'FILTERED', 
                             'FILTERED_NEW',
+                            'INTEREST_ARCHIVED',
 							'NOT_REP', 
 							'OPEN_CONTACTS', 
 							'CANCELLED_EOI'), 
@@ -307,7 +308,7 @@ public function unsett()
 
     private function print_data()
     {
-        $md = unserialize(JsMemcache::getInstance()->get($this->profileid));
+        //$md = unserialize(JsMemcache::getInstance()->get($this->profileid));
        // print_r($md);   die;
     }
     /**
@@ -475,18 +476,25 @@ public function unsett()
                 'E',
                 'C'
             )
-        ), $group, 1,$skipProfile);
+        ), $group, 1,$skipProfile,1);
 
         if (is_array($contactsCount)) {
             foreach ($contactsCount as $key => $value) {
                 switch ($value["TYPE"]) {
                     case 'A':
-                        $ACC_BY_ME = $ACC_BY_ME + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            $ACC_BY_ME = $ACC_BY_ME + $value["COUNT"];
+                        }
                         break;
                     case 'D':
-                        $DEC_BY_ME = $DEC_BY_ME + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            $DEC_BY_ME = $DEC_BY_ME + $value["COUNT"];
+                        }
                         break;
                     case 'I':
+                        
                         if ($value["FILTERED"] == 'Y'){
                                     if ($value['TIME1']=='0'){
                                     if ($value["SEEN"] != 'Y')
@@ -494,7 +502,8 @@ public function unsett()
                                 	$FILTERED = $FILTERED + $value["COUNT"];
                                 }
                         }
-                        else {
+                        else 
+                        {
 							if($value["TIME1"] == 0)
 							{
 	                            if ($value["SEEN"] != 'Y')
@@ -503,20 +512,26 @@ public function unsett()
 								}
 								$AWAITING_RESPONSE = $AWAITING_RESPONSE + $value["COUNT"];
 							}
-
+                            if ( $value["TIME1"] == 1 )
+                            {
+                               $INTEREST_ARCHIVED = $INTEREST_ARCHIVED + $value["COUNT"];                                
+                            }
                             if ( $value["TIME1"] == 2 )
                             {
-                                $INTEREST_EXPIRING = $INTEREST_EXPIRING + $value["COUNT"];                                
+                                $INTEREST_EXPIRING = $INTEREST_EXPIRING + $value["COUNT"];
                             }
 
                         }
                         break;
                     case 'C':
                     case 'E':
-                        if ($value["SEEN"] != 'Y') {
-                            $DEC_ME_NEW = $DEC_ME_NEW + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            if ($value["SEEN"] != 'Y') {
+                                $DEC_ME_NEW = $DEC_ME_NEW + $value["COUNT"];
+                            }
+                            $DEC_ME = $DEC_ME + $value["COUNT"];
                         }
-                        $DEC_ME = $DEC_ME + $value["COUNT"];
                         break;
 
                     default:
@@ -538,6 +553,7 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE ? $AWAITING_RESPONSE : 0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW ? $AWAITING_RESPONSE_NEW : 0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS ? $OPEN_CONTACTS : 0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED ? $INTEREST_ARCHIVED : 0);
         $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING ? $INTEREST_EXPIRING : 0);
     }
     public function unsetContactsData()
@@ -555,6 +571,7 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE=0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW=0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS=0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED = 0);
         $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING = 0);
     }
     /**
@@ -731,12 +748,15 @@ public function unsett()
         $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
         $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
         $condition["WHERE"]["IN"]["TYPE"]     = "R";
+//        $configObj            = new ProfileInformationModuleMap();
+//        $configurations = $configObj->getConfiguration("ContactCenterDesktop");
+//        $condition["LIMIT"]    = $configurations["MY_MESSAGE"]["COUNT"]+1;
         $profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
         if(is_array($profilesArray))
 					$MESSAGE_ALL = count($profilesArray);
         
-                
-       
+        
+        
         
         //print_r($msgCount); die;
         if(is_array($msgCount))
@@ -793,7 +813,8 @@ public function unsett()
     
     public function setVisitorAlertData()
     {
-        $visitorObj = new Visitors($this->profileid);
+        $profileObj=LoggedInProfile::getInstance('newjs_master');
+        $visitorObj = new Visitors($profileObj);
                 $infoTypenav["matchedOrAll"]='A';
 		$visitors = $visitorObj->getVisitorProfile('','',$infoTypenav,$setAllVisitorsKey=$this->memcache);
 		$this->memcache->setVISITOR_ALERT(count($visitors) ? count($visitors) : 0);

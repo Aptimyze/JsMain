@@ -552,7 +552,7 @@ function UpdateCommonOverlay(ele)
 	$(ele).parent().removeClass("notfilled");
 }
 function updateSectionContact(obj)
-{
+{	
 	var tabId=obj.id;
 	var tabValue=obj.value;
 	var oriValue=tabValue;
@@ -608,6 +608,12 @@ function updateSectionContact(obj)
 			newJson["EMAIL"]=$("#EMAIL").val();
 		else
 			submitObj.pop('EMAIL');
+	}
+	else if(tabId=="ALT_EMAIL"){
+		if(pageJson.Contact.ALT_EMAIL.OnClick[2].label_val!=$("#ALT_EMAIL").val())
+			newJson["ALT_EMAIL"]=$("#ALT_EMAIL").val();
+		else
+			submitObj.pop('ALT_EMAIL');
 	}
 	else if(tabId=="PROFILE_HANDLER_NAME")
 		newJson["PROFILE_HANDLER_NAME"]=$("#PROFILE_HANDLER_NAME").val();
