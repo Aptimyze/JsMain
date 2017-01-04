@@ -75,22 +75,12 @@ class dppSuggestions
 	}
 
 	//This function takes the trendsArr for each $type and gets the trends data to be sent as apiResponse
-	public function getDppSuggestionsFromTrends($trendsArr,$type,$valArr)
+	public function getDppSuggestionsFromTrends($trendsArr=array(),$type,$valArr=array())
 	{
 		$count = 0;
-		$delhiCityCount=0;
-		$mumbaiCityCount=0;
-		foreach($valArr as $key=>$value)
-		{
-			if(in_array($value, DppAutoSuggestEnum::$delhiNCRCities))
-			{
-				$delhiCityCount++;
-			}
-			if(in_array($value, DppAutoSuggestEnum::$mumbaiRegion))
-			{
-				$mumbaiCityCount++;
-			}
-		}
+		$delhiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$delhiNCRCities));
+		$mumbaiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$mumbaiRegion));
+		
 		foreach($trendsArr as $k1=>$v1)
 		{
 			if($count < $this->countForComparison)
@@ -101,26 +91,26 @@ class dppSuggestions
 					$count++;
 				}
 				elseif(!in_array($k1,$valArr))
-				{										
+				{	
 					foreach($valArr as $key=>$value)
 					{	
 						//if Delhi NCR or Mumbai Region is already not in value arr or in the selected arr then add the value and increment count
-						if($delhiCityCount < DppAutoSuggestEnum::$delhiCityCount)
+						if($delhiCityCount < count(DppAutoSuggestEnum::$delhiNCRCities))
 						{
-							if(!in_array(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valArr) && !in_array($value, DppAutoSuggestEnum::$delhiNCRCities) && !in_array("Delhi NCR",$valueArr["data"]))
+							if(!in_array(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valArr) && in_array($value, DppAutoSuggestEnum::$delhiNCRCities) && !array_key_exists(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valueArr["data"]))
 							{
-								$valueArr["data"][DppAutoSuggestEnum::$delhiNCRCitiesStr] = "Delhi NCR";
+								$valueArr["data"][DppAutoSuggestEnum::$delhiNCRCitiesStr] = TopSearchBandConfig::$ncrLabel;
 								$count++;
 							}
 						}
-						if($mumbaiCityCount < DppAutoSuggestEnum::$mumbaiCityCount)
+						if($mumbaiCityCount < count(DppAutoSuggestEnum::$mumbaiRegion))
 						{
-							if(!in_array(DppAutoSuggestEnum::$mumbaiRegionStr,$valArr) && !in_array($value, DppAutoSuggestEnum::$mumbaiRegion)  && !in_array("Mumbai Region",$valueArr["data"]))
+							if(!in_array(DppAutoSuggestEnum::$mumbaiRegionStr,$valArr) && in_array($value, DppAutoSuggestEnum::$mumbaiRegion)  && !array_key_exists(DppAutoSuggestEnum::$mumbaiRegionStr,$valueArr["data"]))
 							{
-								$valueArr["data"][DppAutoSuggestEnum::$mumbaiRegionStr] = "Mumbai Region";
+								$valueArr["data"][DppAutoSuggestEnum::$mumbaiRegionStr] = TopSearchBandConfig::$mumbaiRegionLabel;
 								$count++;
 							}
-						}						
+						}
 					}
 					$this->stateIndiaArr = $this->getFieldMapLabels("state_india",'',1);
 					$this->cityIndiaArr = $this->getFieldMapLabels("city_india",'',1);
@@ -148,7 +138,7 @@ class dppSuggestions
 			{
 				break; //check 
 			}
-		}
+		}		
 		return $valueArr;
 
 
