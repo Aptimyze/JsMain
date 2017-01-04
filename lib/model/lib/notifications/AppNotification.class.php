@@ -467,7 +467,7 @@ public function microtime_float()
 			break;
         case "MATCH_OF_DAY":
             $applicableProfiles=array();
-            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
             $notificationDataPoolObj = new NotificationDataPool();
             $dataAccumulated = $notificationDataPoolObj->getMatchOfDayData($applicableProfiles);
             //print_r($dataAccumulated);
@@ -581,7 +581,7 @@ public function microtime_float()
             $mess = $temp["A"]["A"][$count];
         return $mess;
   }   
-  public function getProfileApplicableForNotification($profiles,$notificationKey)
+  public function getProfileApplicableForNotification($profiles,$notificationKey,$className="newjs_SMS_TEMP_TABLE")
   {
 
 	  unset($applicableProfiles);
@@ -589,7 +589,12 @@ public function microtime_float()
 	  foreach($notifications[$notificationKey] as $k=>$notificationKeyDetails)
 		$timeCriteria = $notificationKeyDetails['TIME_CRITERIA'];
 	  unset($notifications);
-	  $smsTempTableObj = new newjs_SMS_TEMP_TABLE;
+      if($className == "JPROFILE"){
+          $smsTempTableObj = new JPROFILE("crm_slave");
+      }
+      else{
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE;
+      }
 	  $varArray['PROFILEID']=implode(",",array_filter($profiles));
 	  unset($profiles);
 	  if($timeCriteria!='')
