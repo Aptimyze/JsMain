@@ -1264,7 +1264,7 @@ class Membership
             $tax_rate = $myrow['TAX_RATE'];
             $cur_type = $myrow['CUR_TYPE'];
 	    $entryBy =$myrow['ENTRYBY'];
-	    if($entryBy!='ONLINE')
+	    if($entryBy=='ONLINE')
 		$country =$myrow['COUNTRY'];
 	
             if(stristr($myrow['SERVICE_TAX_CONTENT'],'swachh') && stristr($myrow['SERVICE_TAX_CONTENT'],'krishi')){ // this will occur only for billings occurring with swachh tax applied or krishi kalyan tax is applied

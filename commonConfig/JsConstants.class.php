@@ -51,6 +51,9 @@ class JsConstants
         public static $solrServerUrl1     = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
         public static $solrServerUrl2     = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
 
+        public static $solrServerProxyUrl      = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
+        public static $solrServerProxyUrl1     = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
+        
 	/* bms */
 	public static $bmsUrl             = 'http://milestoneconfig.jeevansathi.com';
 	public static $bmsDocRoot         = '/var/www/htmlrevamp/ser6/branches/milestoneConfig/web';
@@ -185,4 +188,6 @@ class JsConstants
     public static $chatListingWebServiceUrl = array("dpp"=>"http://www.jeevansathi.com:8190/listings/v1/discover");
     public static $profilesEligibleForDpp = array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>"5616315|9061321");
     public static $nonRosterRefreshUpdate = 300000;
+        public static $httpsApplicationPhotoUrl      = 'https://xmppdev1.jeevansathi.com';
+        public static $httpsCloudUrl                 = 'https://mediacdn.jeevansathi.com';
 }

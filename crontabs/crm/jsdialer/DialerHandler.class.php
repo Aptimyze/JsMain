@@ -11,9 +11,8 @@ class DialerHandler
         public function getEST($time='')
         {
                 $sql = "SELECT now() as time";
-                $res = $this->db->prepare($sql,$this->db_js);
-                $res->execute();
-                if($row = $res->fetch(PDO::FETCH_ASSOC)){
+                $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));;
+		if($row = mysql_fetch_array($res)){
                         $dateTime = $row['time'];
 		}
 		if($time){
@@ -43,7 +42,7 @@ class DialerHandler
         public function updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i, $dateSet='')
         {
 		if(!$dateSet)
-			$dateSet =date("Y-m-d");
+			$dateSet =$this->getEST();
                 $sql = "REPLACE INTO js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS(`CAMPAIGN`,`ELIGIBLE_TYPE`,`STEP_COMPLETED`,`ENTRY_DT`) VALUES('$campaign_name','$eligibleType','$i','$dateSet')";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js_111));
         }
