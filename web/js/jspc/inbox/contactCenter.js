@@ -277,8 +277,13 @@ if(typeof response.searchid!="undefined")
 		$("#js-ccContainer").hide();
 		$("#ccPaginationDiv").hide();
 		$("#zeroResultSection").show();
+
+	 
 	}
-	
+	if ( activeHorizontalTabInfoID == 22 )
+	{
+		$(window).scrollTop(0);
+	}
 	if(typeof zmt_get_tag== "function")
 	{
 		renderBanners();
