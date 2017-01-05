@@ -633,6 +633,8 @@ function mysql_error1($db)
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
         $mobile         = "9818424749";
         $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        $mobile         = "9873639543";
+	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 }
 
 function DayDiff($StartDate, $StopDate)
