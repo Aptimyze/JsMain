@@ -66,10 +66,24 @@ class JprofileAlertsCache
     }
 
     public function getAllSubscriptionsArr($profileArr) {
-     
-            $output = ProfileCacheLib::getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA,$profileArr,'*',__CLASS__);              
+       
+            $output = ProfileCacheLib::getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA,$profileArr,'*',__CLASS__);  
+            
+            if($output == false)
+            {
 
-                 return $output;
+                $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
+                $output = $objJALT->getAllSubscriptionsArr($profileArr);
+                $objProCacheLib = ProfileCacheLib::getInstance();
+                        
+                foreach ($output as $key => $value) {
+             $tempInsertResult = $value;
+             unset($tempInsertResult['PROFILEID']);       
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$key, $tempInsertResult, __CLASS__);
+                }
+
+            }            
+                return $output;
              } 
  
     public function update($profileid, $key, $val) {
@@ -78,7 +92,7 @@ class JprofileAlertsCache
         $out = $objJALT->update($profileid, $key, $val);
         if($out === true)
         {   
-            $updateCacheVal[$key] = (intval($val) === 0 || ($val === NULL)) ? ProfileCacheConstants::NOT_FILLED : $val;
+            $updateCacheVal[$key] = $val;
 
             ProfileCacheLib::getInstance()->updateCache($updateCacheVal,ProfileCacheConstants::CACHE_CRITERIA, $profileid ,__CLASS__);
         }
@@ -184,7 +198,7 @@ class JprofileAlertsCache
              $dummyResult['RESULT_VAL'] = $tempInsertResult;
         }
 
-        var_dump($profileid, $dummyResult);
+
 
         $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$profileid, $dummyResult['RESULT_VAL'], __CLASS__);
 
