@@ -1162,7 +1162,7 @@ public function getSendersPending($chunkStr)
         public function getInterestSentForDuration($stTime, $endTime,$remainderArray){
             try{
             	
-                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM AND `MSG_DEL`!='Y' ORDER BY `TIME` DESC  ";
+                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM  ORDER BY `TIME` DESC  ";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
                 $prep->bindValue(":END_TIME",$endTime,PDO::PARAM_STR);

@@ -476,18 +476,25 @@ public function unsett()
                 'E',
                 'C'
             )
-        ), $group, 1,$skipProfile);
+        ), $group, 1,$skipProfile,1);
 
         if (is_array($contactsCount)) {
             foreach ($contactsCount as $key => $value) {
                 switch ($value["TYPE"]) {
                     case 'A':
-                        $ACC_BY_ME = $ACC_BY_ME + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            $ACC_BY_ME = $ACC_BY_ME + $value["COUNT"];
+                        }
                         break;
                     case 'D':
-                        $DEC_BY_ME = $DEC_BY_ME + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            $DEC_BY_ME = $DEC_BY_ME + $value["COUNT"];
+                        }
                         break;
                     case 'I':
+                        
                         if ($value["FILTERED"] == 'Y'){
                                     if ($value['TIME1']=='0'){
                                     if ($value["SEEN"] != 'Y')
@@ -495,7 +502,8 @@ public function unsett()
                                 	$FILTERED = $FILTERED + $value["COUNT"];
                                 }
                         }
-                        else {
+                        else 
+                        {
 							if($value["TIME1"] == 0)
 							{
 	                            if ($value["SEEN"] != 'Y')
@@ -508,20 +516,22 @@ public function unsett()
                             {
                                $INTEREST_ARCHIVED = $INTEREST_ARCHIVED + $value["COUNT"];                                
                             }
-
                             if ( $value["TIME1"] == 2 )
                             {
-                                $INTEREST_EXPIRING = $INTEREST_EXPIRING + $value["COUNT"];                                
+                                $INTEREST_EXPIRING = $INTEREST_EXPIRING + $value["COUNT"];
                             }
 
                         }
                         break;
                     case 'C':
                     case 'E':
-                        if ($value["SEEN"] != 'Y') {
-                            $DEC_ME_NEW = $DEC_ME_NEW + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            if ($value["SEEN"] != 'Y') {
+                                $DEC_ME_NEW = $DEC_ME_NEW + $value["COUNT"];
+                            }
+                            $DEC_ME = $DEC_ME + $value["COUNT"];
                         }
-                        $DEC_ME = $DEC_ME + $value["COUNT"];
                         break;
 
                     default:

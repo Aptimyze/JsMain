@@ -56,7 +56,7 @@ class CriticalActionLayerTracking
   public static function insertLayerType($profileId,$layerId,$button)
   {
     $layerButtonTrack= new MIS_CA_LAYER_TRACK();
-    $layerButtonTrack->insert($profileId, $layerId,$button);
+    return $layerButtonTrack->insert($profileId, $layerId,$button);
   }
   /* this function will update button type entry on a 
    * particular profile id
@@ -75,6 +75,9 @@ class CriticalActionLayerTracking
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
     $profileId = $profileObj->getPROFILEID();
+    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1)
+              return 0;
+
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
