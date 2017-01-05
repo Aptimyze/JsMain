@@ -262,9 +262,9 @@ oncontextmenu="return false;" onmousedown="return false;" ></div></a>
 <div id="noEngagementCard" class="disp-none">
 <div class="myjs-bg2 fullwid pt45">
       <div class="myjs-p9">
-                <div class=" disp-tbl mauto">
+                <div class=" disp-tbl mauto wid70p">
 					<div id="{{ID}}" class="disp-cell"><i class="sprite2 myjs-erric"></i></div>
-					<div class="disp-cell vmid pl10  f24 fontlig color15">{{NO_PROFILE_TEXT}}</div>
+					<div class="disp-cell vmid pl10  f24 fontlig color15 txtc">{{NO_PROFILE_TEXT}}</div>
 				</div>
       </div>
     </div>

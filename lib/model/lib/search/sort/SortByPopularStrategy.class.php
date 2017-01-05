@@ -20,6 +20,7 @@ class SortByPopularStrategy extends SearchSort implements SortStrategyInterface
                 $this->SearchParamtersObj = $SearchParamtersObj;
 		parent::isPhotoSorting($SearchParamtersObj,$loggedInProfileObj);
 		parent::isFilterSorting($loggedInProfileObj);
+		parent::isPaidSorting($loggedInProfileObj);
         }
 
 	/**
@@ -28,7 +29,11 @@ class SortByPopularStrategy extends SearchSort implements SortStrategyInterface
 	public function getSortString()
 	{
 		$counter = 0;
-
+                if(parent::getPaidSorting()){
+                        $sortString[$counter] = parent::getPaidSorting();
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }
 		/*Filter sorting to be given max preference*/
                 if(SearchConfig::$filteredRemove && parent::getFilterSort())
                 {

@@ -91,7 +91,7 @@ class GetAlbumV1Action extends sfActions
 //						$channel = MobileCommon::getChannel();
 //						$date = date("Y-m-d H:i:s");
                                                 $producerObj = new Producer();
-                                                if($loggedInProfileid%PictureStaticVariablesEnum::photoLoggingMod<PictureStaticVariablesEnum::photoLoggingRem){
+                                                if($loggedInProfileid && $loggedInProfileid%PictureStaticVariablesEnum::photoLoggingMod<PictureStaticVariablesEnum::photoLoggingRem && $loggedInProfile->getGENDER()!= $viewerObj->getGENDER()){
                                                     if($producerObj->getRabbitMQServerConnected()){
                                                         $triggerOrNot = "inTrigger";
                                                         $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$loggedInProfileid,VIEWED=>$profileid)), 'redeliveryCount'=>0 );
