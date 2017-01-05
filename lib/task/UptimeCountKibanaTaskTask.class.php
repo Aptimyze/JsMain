@@ -53,6 +53,26 @@ EOF;
 				]
 			];
 
+		// Calculates 500 counts from APP logs
+		$params2 = [
+			"query"=> [
+				"filtered"=> [ "query"=> [ "query_string"=> [
+					"analyze_wildcard"=> true,
+					"query"=> "*" ]],
+					"filter"=> ["bool"=> ["must"=> [[
+						"query"=> [
+							"match"=> [ "moduleName"=> [ "query"=> "500", "type"=> "phrase"] ]],
+					  "$state"=> ["store"=> "appState"]],
+			["range"=> [
+				"@timestamp"=> [
+				  "gte"=> 1483592781925,
+				  "lte"=> 1483596381925,
+				  "format"=> "epoch_millis"
+				]]]],]]]],
+			"aggs"=> ["2"=> ["terms"=> [
+				"field"=> "moduleName","size"=> 100,
+				"order"=> ["_count"=> "desc"]]]]
+		];
 		// send curl request
 		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
 		if($response)
