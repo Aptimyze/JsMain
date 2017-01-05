@@ -311,6 +311,11 @@ public static $test =
         "usePhotoDistributed" => 0,
         "communicationRep" => 1,
         "jsChatFlag"  => '0',
+        "presenceServiceUrl" => "http://192.168.120.70:8290",
+    "multiUserPhotoUrl" => "http://www.jeevansathi.com/api/v1/social/getMultiUserPhoto", //Api from staging for multi user photo being used in chat listing and self photo.
+    "chatListingWebServiceUrl" => 'array("dpp"=>"http://www.jeevansathi.com:8190/listings/v1/discover")',
+    "profilesEligibleForDpp" => "array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>'5616315|9061321')",
+    "nonRosterRefreshUpdate" => 300000,
         "stopOnPeakLoad"     => 1,
         "postEoiUrl"           => 'http://updateapi.analytics.resdex.com:9000/update_today_IAD',
         "actionPathDeletePid"         => "http://wso2.org/delete",
