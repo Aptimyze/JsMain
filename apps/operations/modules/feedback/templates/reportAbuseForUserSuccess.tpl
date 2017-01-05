@@ -41,7 +41,7 @@
                                 </tr>
 				<tr align=center>
 					<td class=fieldsnew colspan=100% align="right">
-						<button id ="buttonForReportAbuse" onclick="reportAbuseForUserFun();">Report Abuse</button>
+						<button id ="buttonForReportAbuse" onclick="reportAbuseForUserFun(this);">Report Abuse</button>
 					</td>
 				</tr>
 	</table>

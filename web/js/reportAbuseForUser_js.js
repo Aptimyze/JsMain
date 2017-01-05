@@ -1,8 +1,10 @@
 
 
-function reportAbuseForUserFun(){
-		 
-		 $("#buttonForReportAbuse").unbind();
+function reportAbuseForUserFun(obj){
+//	alert("Profile is being reported Abuse");
+		  obj.disabled = true;
+
+		 $( "buttonForReportAbuse").off( "click", "**" );
 		 $('#reporterNp').css('display','none');
 		 $('#reporteeNp').css('display','none');
 		 var reporterName = $("#reporterProfileId").val().trim();
@@ -26,14 +28,14 @@ function reportAbuseForUserFun(){
 			$("#reasonId").css('borderColor','red');
 		}
 //		$('#formForReportAbuse').attr('onsubmit',"reportAbuseForUserFun();return false;");
-		$("#buttonForReportAbuse").unbind().bind('click',reportAbuseForUserFun);
+		obj.disabled = false;
 		return;
 	  }
 
 	  if(reporteeName == reporterName)
 	  {
 	  	alert('Both Reporter and Reportee are same');
-	  	$("#buttonForReportAbuse").unbind().bind('click',reportAbuseForUserFun);
+	  	obj.disabled = false;
 	  	return;
 	  }
 
@@ -86,7 +88,7 @@ function reportAbuseForUserFun(){
 		                 		$('#successfullDisplay').css('display','block');
 		                 		$('#goBackforRishav').css('display','block');
 		                 }  	            
-		                 $("#buttonForReportAbuse").unbind().bind('click',reportAbuseForUserFun);
+		                 obj.disabled = false;
 ;
 		              },
 
@@ -95,7 +97,7 @@ function reportAbuseForUserFun(){
                  		$('#formForReportAbuse').hide();
                  		$('#invalidEntries').css('display','block');
                  		$('goBackforRishav').css('display','block');
-                 		$("#buttonForReportAbuse").unbind().bind('click',reportAbuseForUserFun);
+                 		obj.disabled = false;
 
 		         }
 		});
