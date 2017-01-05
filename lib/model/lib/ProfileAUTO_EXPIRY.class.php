@@ -124,7 +124,7 @@ class ProfileAUTO_EXPIRY
        return array("CNT"=>$result);
    }
   private function logCacheConsumeCount($funName)
-  {
+  {return;
     $key = 'cacheConsumption'.'_'.date('Y-m-d');
     JsMemcache::getInstance()->hIncrBy($key, $funName);
     

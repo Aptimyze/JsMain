@@ -268,6 +268,23 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
+		"INTEREST_EXPIRING"=>Array( 
+			"ID"=> "23",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "10",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Interests Expiring this week",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID,
+      "KUNAL"=>"1",
+		),
 		);
 		self::$MYJSAPP_IOS_1=Array(
 		"INTEREST_RECEIVED"=>Array( 
@@ -480,7 +497,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_APP,
       "KUNAL"=>"1",
 		),
 		"ACCEPTANCES_RECEIVED"=>Array( 

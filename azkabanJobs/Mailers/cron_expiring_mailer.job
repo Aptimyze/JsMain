@@ -1,0 +1,2 @@
+type=command
+command=${php5} ${docRoot}/symfony mailer:NEWJS_ExpiringMailer 100

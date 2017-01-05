@@ -1,0 +1,3 @@
+type=command
+dependencies=cron_expiring_mailer
+command=${php5} ${docRoot}/symfony mailer:NEWJS_ExpiringInterestMailerSend 4 1
