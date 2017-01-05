@@ -90,8 +90,8 @@ class dppSuggestionsCALV1Action extends sfActions
 				{
 					foreach($v1 as $k2=>$v2)
 					{
-						$finalArrApp[$key][$k1][$i]["id"] = $k2;
-						$finalArrApp[$key][$k1][$i]["value"] = $v2;	
+						$finalArrApp["dppData"][$key][$k1][$i]["id"] = $k2;
+						$finalArrApp["dppData"][$key][$k1][$i]["value"] = $v2;	
 						$i++;
 					}
 					
@@ -99,11 +99,11 @@ class dppSuggestionsCALV1Action extends sfActions
 				}
 				elseif($k1 == "type")
 				{
-					$finalArrApp[$key][$k1] = $v1;
+					$finalArrApp["dppData"][$key][$k1] = $v1;
 				}
 				elseif($k1 == "heading")
 				{
-					$finalArrApp[$key][$k1] = $v1;	
+					$finalArrApp["dppData"][$key][$k1] = $v1;	
 				}
 				
 			}
