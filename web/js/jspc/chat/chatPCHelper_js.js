@@ -1043,26 +1043,30 @@ function updateNonRosterListOnCEAction(actionParams){
                 }
                 break;
             case "ADD":
-                //remove this node from existing non roster list first if node is not a roster
-                updateNonRosterListOnCEAction({
-                    "user_id":user_id,
-                    "action":"REMOVE"
-                });
-                //now add this node in new non roster group
-                var chatStatus = actionParams["chatStatus"],
-                username = actionParams["username"],
-                profilechecksum = actionParams["profilechecksum"];
-                if(groupId != undefined && groupId != "" && chatConfig.Params.nonRosterPollingGroups.indexOf(groupId) != -1){
-                    var nodeObj = {};
-                    nodeObj[user_id] = strophieWrapper.formatNonRosterObj({
-                                                        "chatStatus":chatStatus,
-                                                        "profileid":user_id,
-                                                        "username":username,
-                                                        "profileChecksum":profilechecksum,
-                                                        "groupid":groupId,
-                                                        "addIndex":0
-                                                    });
-                    strophieWrapper.onNonRosterListFetched(nodeObj,groupId,"add_node");
+                var otherGender = actionParams["otherGender"];
+                //opposite gender check
+                if(loggedInJspcGender != undefined && otherGender != undefined && loggedInJspcGender != otherGender){
+                    //remove this node from existing non roster list first if node is not a roster
+                    updateNonRosterListOnCEAction({
+                        "user_id":user_id,
+                        "action":"REMOVE"
+                    });
+                    //now add this node in new non roster group
+                    var chatStatus = actionParams["chatStatus"],
+                    username = actionParams["username"],
+                    profilechecksum = actionParams["profilechecksum"];
+                    if(groupId != undefined && groupId != "" && chatConfig.Params.nonRosterPollingGroups.indexOf(groupId) != -1){
+                        var nodeObj = {};
+                        nodeObj[user_id] = strophieWrapper.formatNonRosterObj({
+                                                            "chatStatus":chatStatus,
+                                                            "profileid":user_id,
+                                                            "username":username,
+                                                            "profileChecksum":profilechecksum,
+                                                            "groupid":groupId,
+                                                            "addIndex":0
+                                                        });
+                        strophieWrapper.onNonRosterListFetched(nodeObj,groupId,"add_node");
+                    }
                 }
                 break;
         }

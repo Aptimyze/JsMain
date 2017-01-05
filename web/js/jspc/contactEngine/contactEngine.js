@@ -877,7 +877,8 @@ function updateChatRosterList(elementObj,arrID){
 											"chatStatus":chatStatus,
 											"username":pcChatData[0],
 											"profilechecksum":pcChatData[1],
-											"groupId":group
+											"groupId":group,
+											"otherGender":pcChatData[2]
 										});
 				}
 			}
