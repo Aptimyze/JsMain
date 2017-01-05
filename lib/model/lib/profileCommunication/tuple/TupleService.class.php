@@ -11,6 +11,8 @@ class TupleService
 	private $IGNORED_PROFILES = Array();
 
 	private $INTEREST_RECEIVED = Array();
+	private $INTEREST_EXPIRING = Array();
+	private $INTEREST_ARCHIVED = Array();
 	private $FILTERED_INTEREST = Array();
 	private $INTEREST_SENT = Array();
 	private $ACCEPTANCES_RECEIVED = Array();
@@ -243,6 +245,15 @@ class TupleService
 	public function getINTEREST_RECEIVED()
 	{
 		return $this->INTEREST_RECEIVED;
+	}
+
+	public function getINTEREST_EXPIRING()
+	{
+		return $this->INTEREST_EXPIRING;
+	}
+	public function getINTEREST_ARCHIVED()
+	{
+		return $this->INTEREST_ARCHIVED;
 	}
 	public function getFILTERED_INTEREST()
 	{

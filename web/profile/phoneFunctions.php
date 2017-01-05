@@ -334,6 +334,7 @@ function getProfilePhoneDetails($profileid)
 }
 
 function deleteCachedJprofile_ContactDetails($profileid){
+  return;
   $memObject=JsMemcache::getInstance();
   $memObject->delete("JPROFILE_CONTACT_".$profileid);
 }

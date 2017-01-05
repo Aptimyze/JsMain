@@ -590,7 +590,7 @@ function UpdateOverlayTags(string,json,indexPos)
 		string=string.replace(/\{\{inputDiv\}\}/g,input);
 		
 		//Checks for contact tab.
-		if(json.screenBit==1 && $.inArray(json.key,['EMAIL','PHONE_MOB','ALT_MOBILE','PHONE_RES'])==-1 && json.label_val!="")
+		if(json.screenBit==1 && $.inArray(json.key,['EMAIL','PHONE_MOB','ALT_MOBILE','PHONE_RES','ALT_EMAIL'])==-1 && json.label_val!="")
 			string=string.replace(/\{\{underScreening\}\}/g,underScreenStr);
 		string=string.replace(/\{\{underScreening\}\}/g,"");
 		string=string.replace(/\{\{displayArrow\}\}/g,"dn");

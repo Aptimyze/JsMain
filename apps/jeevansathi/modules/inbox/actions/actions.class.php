@@ -17,7 +17,7 @@ class inboxActions extends sfActions
   */
   
   public function executeIndex(sfWebRequest $request)
-  {
+  {	
   	//print_r($request->getParameterHolder()->getAll());
   	$params["request"] = $request;
 
@@ -71,7 +71,7 @@ class inboxActions extends sfActions
   }
 
   public function executePerformV1(sfWebRequest $request)
- {
+ {	
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$inputValidateObj->validateRequestInboxData($request);
 		$output = $inputValidateObj->getResponse();
@@ -113,6 +113,9 @@ class inboxActions extends sfActions
       
                         if ($infoType == "VISITORS") {
                             $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                            if($infoTypenav["matchedOrAll"]=='')
+                                $infoTypenav["matchedOrAll"]='A';
+
                         }
       
 			if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
@@ -265,8 +268,43 @@ class inboxActions extends sfActions
                                                 else
                                                 {
 							MessageLog::makeAllMessagesSeen($pid);
+							ChatLog::makeAllChatsSeen($pid);
 						}
 						$profileMemcacheObj->update("MESSAGE_NEW",-$currentCount);
+						$profileMemcacheObj->updateMemcache();
+					}
+					break;
+					//
+					case "10":
+					$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
+					if($currentCount)
+					{	
+                                                if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+                                                {
+                                                        $producerObj=new Producer();
+                                                        if($producerObj->getRabbitMQServerConnected())
+                                                        {
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::CANCEL_ALL)), 'redeliveryCount'=>0 );
+                                                                $producerObj->sendMessage($updateSeenData);
+                                                                
+                                                        }
+                                                        else
+                                                        {
+                                                              $this->sendMail();
+                                                        }
+                                                }
+                                                else
+                                                { 
+												$contactsObj = new ContactsRecords();
+												$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
+												$contactsObj->makeAllContactSeen($pid,ContactHandler::CANCEL_ALL);
+
+                                                       
+                                                }
+						$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);
+
 						$profileMemcacheObj->updateMemcache();
 					}
 					break;
@@ -294,6 +332,7 @@ public function executePerformV2(sfWebRequest $request)
   	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'in inbox api v2 '. $request->getParameter("infoTypeId") ); 
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
 		$inputValidateObj = ValidateInputFactory::getModuleObject('inbox'); //added for contact center
+
 		$inputValidateObj->validateRequestInboxData($request);
 		$output = $inputValidateObj->getResponse();
 
@@ -352,6 +391,11 @@ public function executePerformV2(sfWebRequest $request)
         }
                                 if ($infoType == "VISITORS") {
                                     $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                                    if(MobileCommon::isIOSApp() && $infoTypenav["matchedOrAll"]=='')
+                                    {
+                                           $infoTypenav["matchedOrAll"] = "A";
+                                    }
+
                                 }
        
 				if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
@@ -412,6 +456,12 @@ public function executePerformV2(sfWebRequest $request)
                                 if ($infoType == "MATCH_ALERT") {
                                         $response2["dppLinkAtEnd"] = 'Go To Desired Partner Matches.';
                                 }
+                $response2["archivedInterestLinkAtEnd"] = null;
+                if ( $infoType == "INTEREST_RECEIVED")
+                {
+                	$response2["archivedInterestLinkAtEnd"] = 'Archived Interests'; 
+                }
+
 				$response2["sorting"]=0;
 				$response2["sortType"]=null;
 				$response2["stype"]=null;
@@ -558,6 +608,39 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["title2"]='I Declined';
 					$response2["infotypeid2"]=11; 
 					$response2["url"]="/profile/contacts_made_received.php?page=decline&filter=M";
+					$profileMemcacheObj = new ProfileMemcacheService($profileObj);
+						$currentCount =  $profileMemcacheObj->get("DEC_ME_NEW");
+						if($currentCount)
+						{	
+							if(JsConstants::$updateSeenQueueConfig['ALL_CONTACTS'])
+							{
+								$producerObj=new Producer();
+								if($producerObj->getRabbitMQServerConnected())
+								{
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::DECLINE)), 'redeliveryCount'=>0 );
+									$producerObj->sendMessage($updateSeenData);
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::CANCEL_ALL)), 'redeliveryCount'=>0 );
+									$producerObj->sendMessage($updateSeenData);
+								
+								}
+								else
+								{
+							              $this->sendMail();
+								}
+							}
+							else
+							{
+
+								$contactsObj = new ContactsRecords();
+								$contactsObj->makeAllContactSeen($pid,ContactHandler::DECLINE);
+								$contactsObj->makeAllContactSeen($pid,ContactHandler::CANCEL_ALL);
+//								$contactsUpdateCancelObj->updateCancelSeen($pid);
+								
+                                                               
+							}
+							$profileMemcacheObj->update("DEC_ME_NEW",-$currentCount);
+							$profileMemcacheObj->updateMemcache();
+						}
 					break;
 					
 					case 'MATCH_ALERT': 
@@ -715,7 +798,7 @@ public function executePerformV2(sfWebRequest $request)
 					$response2["subtitle"]='Who Viewed My.. '.$response2['total'];
 					$response2["title2"]=null;
 					break;
-					case "MY_MESSAGE":
+                                        case "MY_MESSAGE":$response2["hidePaginationCount"] = 1;
 					case "MY_MESSAGE_RECEIVED":
 					//if(MobileCommon::isDesktop()==false)
 					{
@@ -735,6 +818,7 @@ public function executePerformV2(sfWebRequest $request)
                                                 else
                                                 {
 							MessageLog::makeAllMessagesSeen($pid);
+							ChatLog::makeAllChatsSeen($pid);
 						}
 						$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 						$currentCount =  $profileMemcacheObj->get("MESSAGE_NEW");

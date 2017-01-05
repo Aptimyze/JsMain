@@ -376,7 +376,7 @@ function getBellCountData(profileid, setHeader) {
 }
 
 function setBellCountHTML(data) {
-    if (data) {
+    if (data) { 
         if (parseInt(data.TOTAL_NEW)) {
             $("#totalBellCountParent").css('display', 'table');
             if (data.TOTAL_NEW < 10) {
@@ -441,6 +441,14 @@ function setBellCountHTML(data) {
                 $("#FilteredInterstsCount").text("9+");
             }
         }
+        if (parseInt(data.DEC_ME_NEW)) {
+            $("#membersDeclinedMeCountParent").css('display', 'block');
+            if (data.DEC_ME_NEW < 10) {
+                $("#DeclinedMeCount").text(data.DEC_ME_NEW);
+            } else {
+                $("#DeclinedMeCount").text("9+");
+            }
+        } 
     }
 }
 
@@ -535,17 +543,17 @@ function populateFreshDeskGlobal(username, email) {
     }, 500);
 }
 
-function Set_Cookie(name, value, days, path, domain, secure) {
+function Set_Cookie(name, value, minutes, path, domain, secure) {
     var date = new Date();
-    if (days) {
+    if (minutes) {
         //Make cookie for day
         //date.setTime(date.getTime()+(days*24*60*60*1000));
         //Make cookie for hour
         //date.setTime(date.getTime()+(days60*60*1000));
         //Make cookie for minute
-        date.setTime(date.getTime() + (days * 60 * 1000));
+        date.setTime(date.getTime() + (minutes * 60 * 1000));
     }
-    document.cookie = name + "=" + escape(value) + ((days) ? ";expires=" + date.toGMTString() : "") + ((path) ? ";path=" + path : "") + ((domain) ? ";domain=" + domain : "") + ((secure) ? ";secure" : "");
+    document.cookie = name + "=" + escape(value) + ((minutes) ? ";expires=" + date.toGMTString() : "") + ((path) ? ";path=" + path : "") + ((domain) ? ";domain=" + domain : "") + ((secure) ? ";secure" : "");
 }
 
 function getCookie(cname) {
@@ -579,8 +587,8 @@ function showLayerCommon(layerId) {
 
 function closeCurrentLayerCommon(extraFunction) {
     if (extraFunction) extraFunction();
-    $('.js-overlay').eq(0).fadeOut(100, "linear", function () {
-        $("#" + currentlyDisplayedLayer).eq(0).fadeOut(100, "linear", function () {})
+    $("#" + currentlyDisplayedLayer).eq(0).fadeOut(100, "linear", function () {
+        $('.js-overlay').eq(0).fadeOut(100, "linear", function () {})
     });
 }
 

@@ -23,7 +23,10 @@ class FormatNotification
 	if($details['NOTIFICATION_KEY']=='PHOTO_REQUEST')
 		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_REQUEST_ANDROID;
 	if($details['NOTIFICATION_KEY']=='PHOTO_UPLOAD')
-		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_ANDROID;	
+		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_ANDROID;
+    if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
+		$dataArray['STYPE'] =SearchTypesEnums::AndroidMatchOfDay;
+    
 	return $dataArray;
     }
     public static function formaterForIos($details)
@@ -33,6 +36,8 @@ class FormatNotification
                 $dataArray['STYPE'] =SearchTypesEnums::PHOTO_REQUEST_IOS;
         if($details['NOTIFICATION_KEY']=='PHOTO_UPLOAD')
                 $dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_IOS;
+        if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
+                $dataArray['STYPE'] =SearchTypesEnums::IOSMatchOfDay;
         return $dataArray;
     }
 
@@ -63,21 +68,24 @@ class FormatNotification
     public static function formatLogData($dataArray,$table='',$process='')
     {
         if($table =='REGISTRATION_ID'){
-            	$type = $table;
+            $type = $table;
         }
-	elseif($table=='LOCAL_NOTIFICATION_LOG'){
-		$type = $table;
-	}
-	elseif($process=='DELIVERY_TRACKING_API'){
-		$type = $process;
-	}
-	elseif($process=='UPDATE_NOTIFICATION_STATUS_API'){
-		$type = $process;
-	}
+        elseif($table=='LOCAL_NOTIFICATION_LOG'){
+            $type = $table;
+        }
+        elseif($process=='DELIVERY_TRACKING_API'){
+            $type = $process;
+        }
+        elseif($process=='UPDATE_NOTIFICATION_STATUS_API'){
+            $type = $process;
+        }
         elseif($process=='REGISTRATION_API'){
-                $type = $process;
+            $type = $process;
         }
-	$queueName ='JS_NOTIFICATION_LOG';
+        else if($process == 'NOTIFICATION_OPENED_TRACKING_API'){
+            $type = $process;
+        }
+        $queueName ='JS_NOTIFICATION_LOG';
         $msgdata = array('process' => $queueName, 'data' => array('type' => $type, 'body' => $dataArray), 'redeliveryCount' => 0);
         return $msgdata;
     }

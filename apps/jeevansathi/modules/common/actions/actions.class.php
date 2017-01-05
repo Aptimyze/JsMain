@@ -151,6 +151,9 @@ class commonActions extends sfActions
         if (JsCommon::checkAppPromoValid($ua)) {
             header("Location: https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dmobile%26utm_content%3Dsms%26utm_campaign%3DJSAA");
             die;
+        } if (JsCommon::checkIosPromoValid($ua)) {
+            header("Location: https://itunes.apple.com/in/app/jeevansathi/id969994186");
+            die;
         } else {
             $this->setTemplate('appNotCompatible');
         }
@@ -242,7 +245,7 @@ class commonActions extends sfActions
                 if ($password && $this->validatePassword($password, $emailStr) == true) {
                     $this->done = PasswordUpdate::change($profileid, $password);
                     $marked     = ResetPasswordAuthentication::disableProfileidLinks($profileid);
-                    $dbObj      = new jsadmin_AUTO_EXPIRY;
+                    $dbObj      = new ProfileAUTO_EXPIRY;
                     $expireDt   = date("Y-m-d H:i:s");
                     $dbObj->replace($profileid, "P", $expireDt);
                 } else {
@@ -638,6 +641,7 @@ class commonActions extends sfActions
         
         if($layerToShow==9 && $button=='B1'){
             
+            
             $namePrivacy=$request->getParameter('namePrivacy');
             $newName=$request->getParameter('newNameOfUser');
             
@@ -674,7 +678,7 @@ class commonActions extends sfActions
                                        $nameOfUserObj->updateName($profileid,$nameArr);
                                }
                                else
-                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
+                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);               
                     
             }
             

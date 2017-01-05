@@ -124,7 +124,8 @@ class AgentDeAllocation
                 foreach($dispositionArr[$pid] as $dispPid => $val){
                     $flag = 0;
                     $endTime = date('Y-m-d',strtotime("+$days day",strtotime($allotTime)))." 23:59:59";
-                    if($val["ENTRY_DT"] >= $allotTime && ($val["ENTRY_DT"] <= $endTime) && ($days == 2 || ($days == 10 && $val["DISPOSITION"] == "FVD"))){
+                    //if($val["ENTRY_DT"] >= $allotTime && ($val["ENTRY_DT"] <= $endTime) && ($days == 2 || ($days == 10 && $val["DISPOSITION"] == "FVD"))){
+		    if($val["ENTRY_DT"] >= $allotTime && ($val["ENTRY_DT"] <= $endTime) && ($days == 2 || $days == 10)){	
                         $flag = 1;
                         break;
                     }

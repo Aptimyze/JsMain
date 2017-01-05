@@ -380,4 +380,65 @@ class negativeTreatment
         $AP_MissedServiceLog->Update($profileid);
         $AP_CallHistory->UpdateDeleteProfile($profileid);
     }
+    
+    public function checkEmail($email)
+    {
+        if (!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i", $email)) {
+            return 1;
+        }
+
+        return;
+    }
+    public function checkPhoneNumber($phoneNumber)
+    {
+        $phoneNumber = substr(preg_replace("/[a-zA-Z!(\' ')@#$+^&*-]/", "", $phoneNumber), -15);
+        $phoneNumber = ltrim($phoneNumber, 0);
+        $totLength   = strlen($phoneNumber);
+        if ($totLength < 6 || $totLength > 14) {
+            return false;
+        }
+
+        if (!is_numeric($phoneNumber)) {
+            return false;
+        }
+
+        return $phoneNumber;
+    }
+    public function fetchProfileDetailsFromNegative($negType, $negativeVal)
+    {
+        $negativeListObj        =new incentive_NEGATIVE_LIST('newjs_slave');
+
+        $dataArr =$negativeListObj->getProfileData($negType,$negativeVal);
+	if(is_array($dataArr)){
+		$id =$dataArr['SUBMISSION_ID'];
+		$submissionListObj =new incentive_NEGATIVE_SUBMISSION_LIST('newjs_slave');
+		$subDataArr =$submissionListObj->getData($id);
+		$dataArr['COMMENTS'] =$subDataArr['COMMENTS'];
+	}
+        if(is_array($dataArr))
+                return $dataArr;
+        return;
+
+    }
+    public function removeProfileFromNegative($negType, $negativeVal)
+    {
+
+        $negativeListObj        =new incentive_NEGATIVE_LIST();
+        $negativeProfileListObj =new incentive_NEGATIVE_PROFILE_LIST();
+
+	$status1 =$negativeListObj->removeProfile($negType,$negativeVal);
+	if($negType=='PHONE_NUM')
+		$status2 =$negativeProfileListObj->removeProfileUsingPhone($negativeVal);
+	else
+		$status2 =$negativeProfileListObj->removeProfile($negType,$negativeVal);
+
+	if($status2>=1 && $negType=='PROFILEID'){
+		$negativeTreatmentObj   =new incentive_NEGATIVE_TREATMENT_LIST();
+		$status3 =$negativeTreatmentObj->removeProfile($negType,$negativeVal);
+	}
+	if($status1>=1 || $status2>=1)
+		return true;
+	return;
+    }	
+
 }

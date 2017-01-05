@@ -9,7 +9,7 @@ class EoiViewLog{
 
 	public function getEoiViewed($viewer,$viewed)
 	{
-		$dbName = JsDbSharding::getShardNo($viewer);
+		$dbName = JsDbSharding::getShardNo($viewed);
 		$eoiViewedLogObj = new NEWJS_EOI_VIEWED_LOG($dbName);
 		$ifViewed = $eoiViewedLogObj->getEoiViewed($viewer,$viewed);
 		return $ifViewed;

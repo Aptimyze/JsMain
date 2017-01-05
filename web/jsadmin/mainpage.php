@@ -90,6 +90,9 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/billingManagementInterface?user=$name&cid=$cid\">Billing Management Interface</a>";
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/changeActiveServicesInterface?user=$name&cid=$cid\">Change Active Services Interface</a>";
         }
+        if (in_array("CRMTEC", $priv) || in_array("DA", $priv) || in_array("MG", $priv) || in_array("SLHDO", $priv)) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmInterface/manageVdOffer\">Manage Variable Discount Offer </a>";
+        }
         if (in_array('MBU', $priv) || in_array('BU', $priv) || in_array('BA', $priv)) //Misc-Revenue billing entry operator
         {
             $linkarr[] = "<a href=\"$SITE_URL/billing/search_rev_user.php?user=$name&cid=$cid\">Misc Revenue Billing</a>";
@@ -419,7 +422,7 @@ if (isset($data)) //successful login
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/outboundProcessList\">Outbound Calls User</a>";
         }
 
-        if (in_array("ExcSl", $priv) || in_array("SLMNTR", $priv) || in_array("SLSUP", $priv) || in_array("SLMGR", $priv) || in_array("SLSMGR", $priv) || in_array("SLHD", $priv) || in_array("SLHDO", $priv) || in_array("TRNG", $priv) || in_array("P", $priv) || in_array("MG", $priv)) {
+        if (in_array("ExcSl", $priv) || in_array("SLMNTR", $priv) || in_array("SLSUP", $priv) || in_array("SLMGR", $priv) || in_array("SLSMGR", $priv) || in_array("SLHD", $priv) || in_array("SLHDO", $priv) || in_array("TRNG", $priv) || in_array("P", $priv) || in_array("MG", $priv) || in_array("FNC", $priv)) {
             $linkarr[] = "<a href=\"/operations.php/crmMis/crmHandledRevenueMis\">CRM Handled Revenue MIS</a>";
         }
 
@@ -689,6 +692,10 @@ if (isset($data)) //successful login
         }
         if(in_array('NEGLST',$priv))
 	        $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeTreatment?cid=$cid\">Delete and Mark profiles in Negative List</a>";
+	if(in_array('NEGLST',$priv))
+		$linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeHandler?cid=$cid&actionType=D\">Remove from Negative List</a>";
+	$linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeHandler?cid=$cid&actionType=F\">Fetch Negative Profile</a>";
+
         if (in_array('MG', $priv) || in_array('P', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/go_to_large_file.php?name=$user&cid=$cid\">Configure Large File</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/show_IM.php?cid=$cid\">Show/Hide Incentive Multiplier</a>";

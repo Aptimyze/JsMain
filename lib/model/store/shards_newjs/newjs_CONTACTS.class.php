@@ -96,23 +96,16 @@ public function getContactsPending($serverId)
 	}
 
 
-public function getSendersPending($profileids)
+public function getSendersPending($chunkStr)
 	{
 		try
 		{
-			$idStr= str_replace("'","",$profileids);
-		$idArr= explode(",",$idStr);
-		foreach($idArr as $k=>$v)
-			$idSqlArr[]=":v$k";
-		$idSql="(".(implode(",",$idSqlArr)).")";
-		 $sql = "SELECT RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM newjs.CONTACTS WHERE RECEIVER IN $idSql AND TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) GROUP BY RECEIVER";
+        		$sql = "SELECT RECEIVER, SENDER   FROM newjs.CONTACTS WHERE TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) $chunkStr ORDER BY TIME DESC";
 			$res = $this->db->prepare($sql);
-			foreach($idArr as $k=>$v)
-				$res->bindValue(":v$k", $v, PDO::PARAM_INT);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
-				$result[$row['RECEIVER']] = $row['SENDER'];	
+				$result[$row['RECEIVER']][] = $row['SENDER'];	
 				//$result['count'][] = $row['count'];		
 			}
 			//print_r($profileids);
@@ -611,8 +604,14 @@ public function getSendersPending($profileids)
 			{
 				$sql = $sql.",".$group;
 			}
-			if($time)
-				$sql = $sql.",CASE WHEN DATEDIFF(NOW( ) ,  `TIME`) <=90 THEN 0 ELSE 1 END AS TIME1 ";
+			// if($time)
+			// 	$sql = $sql.",CASE WHEN DATEDIFF(NOW( ) ,  `TIME`) <=90 THEN 0 ELSE 1 END AS TIME1 ";
+			if ($time)
+				$sql = $sql.",CASE
+				WHEN DATEDIFF(NOW( ) ,  `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." AND DATEDIFF(NOW( ) ,  `TIME` ) >= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT."  THEN 2 
+				WHEN DATEDIFF(NOW( ) ,  `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." THEN 0
+				WHEN DATEDIFF(NOW( ) ,  `TIME` ) > ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." THEN 1
+				END AS TIME1 ";
 			$sql = $sql." FROM newjs.CONTACTS WHERE";
 			if($where)
 			{
@@ -815,6 +814,49 @@ public function getSendersPending($profileids)
 								$count++;
 							}
 						}
+
+						if($key1 == "LESS_THAN_EQUAL_EXPIRING")
+						{
+							$expiry = 1;
+							foreach($value1 as $keyName=>$keyValue)
+							{
+								$arr[] = $keyName.">= :VALUE".$count;
+								$bindArr["VALUE".$count]["VALUE"] = $keyValue;
+								if(in_array($keyName,$string))
+									$bindArr["VALUE".$count]["TYPE"] = "STRING";
+								else
+									$bindArr["VALUE".$count]["TYPE"] = "INT";
+								$count++;
+							}
+						}
+
+						if($key1 == "GREATER_THAN_EQUAL_EXPIRING")
+						{
+							foreach($value1 as $keyName=>$keyValue)
+							{
+								$arr[] = $keyName."< :VALUE".$count;
+								$bindArr["VALUE".$count]["VALUE"] = $keyValue;
+								if(in_array($keyName,$string))
+									$bindArr["VALUE".$count]["TYPE"] = "STRING";
+								else
+									$bindArr["VALUE".$count]["TYPE"] = "INT";
+								$count++;
+							}
+						}
+
+						if($key1 == "LESS_THAN_EQUAL")
+						{
+							foreach($value1 as $keyName=>$keyValue)
+							{
+								$arr[] = $keyName."< :VALUE".$count;
+								$bindArr["VALUE".$count]["VALUE"] = $keyValue;
+								if(in_array($keyName,$string))
+									$bindArr["VALUE".$count]["TYPE"] = "STRING";
+								else
+									$bindArr["VALUE".$count]["TYPE"] = "INT";
+								$count++;
+							}
+						}
 					}
 					$where = "WHERE ".implode(" AND ",$arr);
 				}
@@ -825,9 +867,17 @@ public function getSendersPending($profileids)
 				}
 				if($key == "ORDER")
 				{
+						
 					if($value)
 					{
-						$order = "ORDER BY ".$value." DESC";
+						if ( isset($expiry) )
+						{
+							$order = "ORDER BY ".$value." ASC";
+						}
+						else
+						{
+							$order = "ORDER BY ".$value." DESC";
+						}
 					}
 				}
 
@@ -867,7 +917,6 @@ public function getSendersPending($profileids)
 						$res->bindValue($k,$v["VALUE"],PDO::PARAM_INT);
 					}
 				}
-
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
@@ -1057,15 +1106,19 @@ public function getSendersPending($profileids)
         	try{
         		if($type == ContactHandler::INITIATED){
         			$SENDER_RECEIVER = "RECEIVER";
-        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED !='Y'" ;
+        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED !='Y' and (`SEEN` != 'Y')" ;
 				}
         		elseif($type == ContactHandler::ACCEPT){
         			$SENDER_RECEIVER = "SENDER";
-        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE";
+        			$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE and (`SEEN` != 'Y')";
 				}
         		elseif($type == ContactHandler::FILTERED){
 					$SENDER_RECEIVER = "RECEIVER";
-					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED='Y'";
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE AND FILTERED='Y' and (`SEEN` != 'Y')";
+				}					
+        		elseif($type == ContactHandler::DECLINE){
+					$SENDER_RECEIVER = "SENDER";
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE ".$SENDER_RECEIVER." = :PROFILEID and TYPE = :TYPE and (`SEEN` != 'Y')";
 				}					
         		
         		$prep = $this->db->prepare($sql);
@@ -1127,6 +1180,57 @@ public function getSendersPending($profileids)
                 throw new jsException($ex);
             }
         }
-			
+		
+		 public function updateCancelSeen($profileid)
+        {
+        	try{
+					$sql = "UPDATE newjs.`CONTACTS` SET SEEN='Y' WHERE RECEIVER = :PROFILEID and (TYPE = 'C' or TYPE = 'E') and (`SEEN` != 'Y') ";
+								
+        		
+        		$prep = $this->db->prepare($sql);
+        		$prep->bindValue(":PROFILEID",$profileid, PDO::PARAM_INT);
+        		
+					
+        		$prep->execute();
+        	}
+        	catch(Execption $e){
+        		throw new jsException($e);
+        	}
+        }
+
+        public function getContactsExpiring($serverId, $chunkStr)
+		{
+			try
+			{
+				$sql = "SELECT RECEIVER,count(*) as count, GROUP_CONCAT( SENDER ORDER BY TIME  SEPARATOR ',' ) AS SENDER from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' ".$chunkStr." and FILTERED<>'Y' and DATEDIFF(NOW( ) , `TIME` ) <= ".CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT." AND DATEDIFF(NOW( ) ,  `TIME` ) >= ".CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT." AND RECEIVER=PROFILEID AND SERVERID=:SERVERID group by RECEIVER order by TIME";
+				$res = $this->db->prepare($sql);
+				$res->bindValue(":SERVERID",$serverId,PDO::PARAM_INT);
+				$res->execute();
+				while($row = $res->fetch(PDO::FETCH_ASSOC))
+				{
+					$result[] = $row;
+				}
+				return $result;
+			}
+			catch (PDOException $e)
+			{
+				throw new jsException($e);
+			}
+		}
+
+
+    	public function setGroupContact()
+    	{
+    		try
+    		{
+	    		$sql = "SET SESSION group_concat_max_len = 1000000;";
+	    		$res = $this->db->prepare($sql);
+	            $res->execute();
+    		}
+    		catch(PDOException $e)
+    		{
+    			throw new jsException($e);	
+    		}
+    	}	
 }
 ?>

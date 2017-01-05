@@ -13,6 +13,7 @@ class InboxMobileAppV1
 	static public $noresultArray = Array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MATCH_ALERT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED","IGNORED_PROFILES");
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
+	const INTEREST_EXPIRING = "You have no interests left to respond to";
 	const ACCEPTANCES_RECEIVED = "No one has yet accepted your interest";
 	const ACCEPTANCES_SENT = "You haven't yet accepted any interests sent to you";
 	const INTEREST_SENT = "You haven't sent any interests yet";
@@ -438,11 +439,16 @@ class InboxMobileAppV1
                                 
         if($infoKey=="INTEREST_SENT")
 				{
-							if($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							$heshe = $tupleObj->getGENDER()=="F"?"She":"He";
+							$viewedDate=$tupleObj->getINTEREST_VIEWED_DATE();
+							if($viewedDate!='')
 							{
-								$heshe = $tupleObj->getGENDER()=="F"?"She":"He";
-								$viewedDate=$tupleObj->getINTEREST_VIEWED_DATE();
-								$profile[$count]["timetext"] = "$heshe viewed your interest ".($viewedDate!=''?((stripos($viewedDate,'today')=== false)?'on ':"").$viewedDate:"");
+								$profile[$count]["timetext"] = "$heshe viewed your interest ".((stripos($viewedDate,'today')=== false)?'on ':"").$viewedDate;
+							}
+							elseif($profile[$count]["seen"]!=null && $profile[$count]["seen"]=="Y")
+							{
+								$profile[$count]["timetext"] = "$heshe viewed your interest";
+							
 							}
 							$profile[$count]["seen"]=null; // We are not required to show New so setting it to blank
 							$profile[$count]["interest_viewed_date"] = null;

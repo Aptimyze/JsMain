@@ -14,6 +14,7 @@ class RegularMatchalertMailerTask extends sfBaseTask
     const TDPP_COUNT = 10;
     const NON_TRENDS_LOGIC=3;
     const TRENDS_LOGIC=2;
+    const COMMUNITY_MODEL=4;
   
   protected function configure()
   {
@@ -60,12 +61,13 @@ EOF;
 		$mailerLinks = $mailerServiceObj->getLinks();
 		$this->smarty->assign('mailerLinks',$mailerLinks);
 		$this->smarty->assign('mailerName',MAILER_COMMON_ENUM::getSenderEnum($this->mailerName)["SENDER"]);
-		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true);
+		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true,"googleAppTrackingFlag"=>true,"primaryMailGifFlag"=>true,"alternateEmailSend"=>true);
 		foreach($receivers as $sno=>$values)
 		{
 			$pid = $values["RECEIVER"];
 			$sno = $values["SNO"];
 			$data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);
+
       if(is_array($data))
 			{
                                 $stypeMatch = $this->getStype($values["LOGIC_USED"]);
@@ -84,17 +86,22 @@ EOF;
                                         $data["bodyNote"]="<b>Note</b>: For your best interest, we try to recommend up to $minIdealRecords members matching your Desired Partner Profile every day, but we could find only $foundCount members matching your partner preference. Please broaden your Desired Partner Profile to get more matches on a daily basis.";
                                         $data["showDpp"]=1;
                                 }
+                                
+                                if(($values["LOGIC_USED"] == self::COMMUNITY_MODEL)){
+                                    $data["body"].="<a href='".$mailerLinks['MY_DPP'].$data['commonParamaters']."?From_Mail=Y&EditWhatNew=FocusDpp&stype=".$data['stypeMatch']."&logic_used=".$data.logic."'>click here</a>";
+                                }
+                                
 				$data["surveyLink"]=$subjectAndBody["surveyLink"];
         $data["mailSentDate"] = date("Y-m-d H:i:s");
 				$subject ='=?UTF-8?B?' . base64_encode($subjectAndBody["subject"]) . '?='; 
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
-        $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid);
+        $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$data["RECEIVER"]["ALTERNATEEMAILID"]);
 				
 			}
 			else
 				$flag = "I"; // Invalid users given in database
-                        
+
 			$mailerServiceObj->updateSentForUsers($sno,$flag);
 			unset($subject);
 			unset($mailSent);
@@ -117,6 +124,9 @@ EOF;
         break;
       case 3:
         return SearchTypesEnums::MatchAlertMailer3;
+        break;
+      case 4:
+        return SearchTypesEnums::MatchAlertMailer4;
         break;
       default:
         return SearchTypesEnums::MatchAlertMailer;
@@ -158,11 +168,14 @@ EOF;
                         $subject["showDpp"]= 1;
                         $subject["surveyLink"]= 'NT';
                         break;
-		case "4":// NT -T case
 		case "1":// T-T case
                         $subject["subject"]= $count.$matchStr." based on your recent activity | $today";
 			$subject["body"]="You may send interest to".$these." ".$count.strtolower($matchStr)." based on your recent activity. Your recent activity includes the interests, acceptances and declines sent in the last two months.";
                         $subject["surveyLink"]= 'T';
+                        break;
+                case "4"://community model case
+                        $subject["subject"]= $count.$matchStr." based on activity of people similar to you";
+			$subject["body"]="Following are profiles which we have picked based on the activity of people similar to you. Note that some of these profiles may not match your Desired Partner Profile. <br>If you wish to only receive matches as per your Desired Partner Profile, ";
                         break;
 		default :
 			 throw  new Exception("No logic send in subjectAndBody() in RegularMatchAlerts task");

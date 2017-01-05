@@ -14,7 +14,7 @@ class ApiResponseHandler
 	private $imageCopyServer = null;
 	private $phoneDetails = null;
 	private $cache_flag=true;
-	private $cache_interval=60000; //in milisecond should be integer always 
+	private $cache_interval=120000; //in milisecond should be integer always 
 	private $resetCache=false;
 	private $androidFlagForRatingLogic=true;
 	//Constructor
@@ -44,7 +44,6 @@ class ApiResponseHandler
 	{
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
-	
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
 	public function getResetCache(){return $this->resetCache;}
 	public function setHttpArray($httpArray)
@@ -122,6 +121,9 @@ class ApiResponseHandler
 		}
 			
 		$output["phoneDetails"]=$this->phoneDetails;
+		$loggedIn=LoggedInProfile::getInstance();
+		if(MobileCommon::isApp() && $loggedIn && $loggedIn->getPROFILEID())
+			$output["userReligion"] = $loggedIn->getRELIGION();
 		// set the content type
 		header('Content-type: ' . $this->responseContentType);
 

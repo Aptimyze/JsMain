@@ -2,6 +2,7 @@
     var userGender="~$apiData.gender`",siteUrl="~$SITE_URL`";
     var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
     var hamJs= '~$hamJs`';
+    var showExpiring=~$showExpiring`;
 </script>
 <!--start:div-->
 <div class="perspective" id="perspective">
@@ -11,7 +12,7 @@
 		<div class="rem_pad1">
 			<div class="fl wid20p">                             
                             <div id="hamburgerIcon" hamburgermenu="1" dmove="left" dshow="" dhide="decide" dselect="" dependant="" dcallback="" dindexpos="1">
-                            <img class="loaderSmallIcon dn">
+                                <i class="loaderSmallIcon dn"></i>
                             <svg id="hamIc" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.2px;}</style></defs><title>icons</title><line class="cls-1" x1="2" y1="3.04" x2="18" y2="3.04"/><line class="cls-1" x1="2.29" y1="10" x2="18.29" y2="10"/><line class="cls-1" x1="2" y1="16.96" x2="18" y2="16.96"/></svg>
                             </div>
                         </div>
@@ -106,6 +107,18 @@
 		<div class="clr"></div>
 	</div>
                 </a>
+                  <a href="~$SITE_URL`/profile/contacts_made_received.php?page=decline&filter=R">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
+		<div class="fl wid92p">
+			<div class="fullwid txtc">Declined</div>
+		</div>
+		~if $apiData.BELL_COUNT.DEC_ME_NEW>0`
+		<div class="fr wid8p">
+			<div class="bg7 brdr50p white f12 wid25 hgt25 pt4 txtc">~$apiData.BELL_COUNT.DEC_ME_NEW`</div>
+		</div>
+		~/if`
+		<div class="clr"></div>
+	</div>
+</a>
            
            <a href="~$SITE_URL`/inbox/12/1">
 	<div class="fullwid fontthin f14 color3 pad18 brdr1">
@@ -120,6 +133,8 @@
 		<div class="clr"></div>
 	</div>
                 </a>
+
+              
 
 </div>
 
@@ -261,6 +276,11 @@
 		<div class="clr"></div>
 	</div>
 </div>
+
+<!-- Interest Expiring section -->
+~if $apiData.interest_expiring.view_all_count > 0`
+	~include_partial("myjs/jsmsInterestExpiringSection",[expiringData=>$apiData.interest_expiring])`
+~/if`
 <!--end:div-->
 <!--eoi section-->
 <span class="setWidth" id="awaitingResponsePresent" style="display:block;background-color: #e4e4e4; margin-top:15px;">
@@ -288,3 +308,5 @@
 </div>
 </div>
 <script>~$pixelcode|decodevar`</script>
+
+

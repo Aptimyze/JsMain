@@ -31,7 +31,9 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 			throw new jsException("","no where conditions passed");
 		try
 		{
-			$fields = $fields?$fields:$this->getFields();//Get columns to query
+			if (strpos($fields, 'PROFILEID') === false) {
+			    $fields .= ',PROFILEID';
+			}
 			$sqlSelectDetail = "SELECT $fields FROM newjs.JPROFILE_CONTACT WHERE ";
 			$count = 1;
 			if(is_array($valueArray))
@@ -99,12 +101,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 			try 
 			{
         $this->logFunctionCalling(__FUNCTION__);
-                                //Memcache to be moved to library - JSM-938
-                                $memObject=JsMemcache::getInstance();
-                                if($memObject->get("JPROFILE_CONTACT_".$pid)){
-                                        return $memObject->get("JPROFILE_CONTACT_".$pid);
-                                }
-				else if($pid)
+				if($pid)
 				{ 
                                         $sql="SELECT * FROM newjs.JPROFILE_CONTACT WHERE PROFILEID=:PROFILEID";
 					$prep=$this->db->prepare($sql);
@@ -112,12 +109,9 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 					$prep->execute();
 					if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					{
-                                                $memObject->set("JPROFILE_CONTACT_".$pid,$result);
 						return $result;
 					}
-                                        else
-                                                $memObject->set("JPROFILE_CONTACT_".$pid,"false");
-					return false;
+                    return false;
 				}	
 			}
 			catch(PDOException $e)
@@ -129,8 +123,6 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 
 		public function updateAltMobile($profileid, $altMobile){
                 try{
-                        $memObject=JsMemcache::getInstance();
-                        $memObject->delete("JPROFILE_CONTACT_".$pid);
                         
                         $sql = "SELECT PROFILEID FROM newjs.JPROFILE_CONTACT WHERE PROFILEID=:PROFILEID";
                         $prep=$this->db->prepare($sql);
@@ -151,6 +143,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
                                 $prep->execute();
                         }
                         $this->logFunctionCalling(__FUNCTION__);
+                        return true;
                 }catch(PDOException $e)
                 {
                         throw new jsException($e);
@@ -161,8 +154,6 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 	{
    
 		try {
-                        $memObject=JsMemcache::getInstance();
-                        $memObject->delete("JPROFILE_CONTACT_".$pid);
                         
 			$keys="PROFILEID,";
 			$values=":PROFILEID ,";
@@ -267,5 +258,6 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
       
       JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
     }
+
 }
 ?>
