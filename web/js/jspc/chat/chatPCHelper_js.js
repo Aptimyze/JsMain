@@ -9,8 +9,7 @@ var listingInputData = [],
     loggingEnabledPC = false,
     clearTimedOut,
     listingPhotoRequestCompleted = ",",
-    localStorageExists = isStorageExist(),
-    isCurrentJeevansathiTab = 1;
+    localStorageExists = isStorageExist();
 
 /*clearNonRosterPollingInterval
 function to stop polling for non roster webservice api 
@@ -1245,7 +1244,8 @@ function invokePluginReceivedMsgHandler(msgObj) {
  */
 function playChatNotificationSound(){
     //if current url is not jeevansathi tab and jspc chat is on
-    if(showChat == "1" && isCurrentJeevansathiTab == 0){
+    var isCurrentJeevansathiTab = localstorage.getItem("isCurrentJeevansathiTab");
+    if(showChat == "1" && isCurrentJeevansathiTab == undefined || isCurrentJeevansathiTab == 0){
         //console.log("here playChatNotificationSound");
         var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
         audio.play();
@@ -1641,7 +1641,7 @@ function updatePresenceAfterInterval(){
 */
 
 $(document).ready(function () {
-    isCurrentJeevansathiTab = 1;
+    localstorage.setItem("isCurrentJeevansathiTab",1);
     //console.log("Doc ready");
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
@@ -1672,7 +1672,7 @@ $(document).ready(function () {
             /*var dt = new Date();
             var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
             console.log("page focus in",time);*/
-            isCurrentJeevansathiTab = 1;
+            localstorage.setItem("isCurrentJeevansathiTab",1);
         });
 
         //event to detect focus out of page
@@ -1680,7 +1680,7 @@ $(document).ready(function () {
             /*var dt = new Date();
             var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
             console.log("page focus out",time);*/
-            isCurrentJeevansathiTab = 0;
+            localstorage.setItem("isCurrentJeevansathiTab",0);
         });
         
         $(window).on("offline", function () {
