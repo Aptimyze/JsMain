@@ -108,6 +108,7 @@ EOF;
 		else
 		{
 			// Uptime count not pushed
+			die;
 		}
 	}
 }
