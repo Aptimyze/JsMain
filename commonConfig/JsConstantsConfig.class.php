@@ -47,6 +47,8 @@ public static $dev =
         "solrServerUrl"      => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
         "solrServerUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
         "solrServerUrl2"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+        "solrServerProxyUrl"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+        "solrServerProxyUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 
 	/* bms */
 	"bmsUrl"             => 'http://ieplads.com',
@@ -208,6 +210,8 @@ public static $test =
         "solrServerUrl"      => 'http://172.16.3.203:8080/solr/',
         "solrServerUrl1"     => 'http://172.16.3.203:8080/solr/',
         "solrServerUrl2"     => 'http://172.16.3.203:8080/solr/',
+        "solrServerProxyUrl"     => 'http://172.16.3.203:8080/solr/',
+        "solrServerProxyUrl1"     => 'http://172.16.3.203:8080/solr/',
 
 
 
