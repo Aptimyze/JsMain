@@ -230,7 +230,8 @@ var verificationDocumentsList;
     '{filterReason}': removeNull(val1.filter_reason),
     '{showFilterReason}': toShowFilterReason,
     '{mstatus}': removeNull(val1.mstatus),
-    '{userId}':removeNull(val1.profileid)
+    '{userId}':removeNull(val1.profileid),
+    '{gender}':removeNull(val1.gender)
   };
   return mapping;
 }
