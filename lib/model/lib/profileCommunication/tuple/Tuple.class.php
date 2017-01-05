@@ -76,7 +76,8 @@ class Tuple {
 		public $ANCESTRAL_ORIGIN;
 		public $NATIVE_CITY;
 		public $NATIVE_STATE;
-
+        public $EMAIL;
+        public $GUNA;
     //Getters and setter of all the base class as well as child class fields
         
         public function getprofileObject() {
@@ -145,6 +146,9 @@ class Tuple {
     public function getACTIVATED() {
 		return $this->ACTIVATED;
 	}
+     public function getEMAIL() {
+        return $this->EMAIL;
+    }
     public function getVERIFICATION_SEAL()
     {
         $verificationSealObj=new VerificationSealLib($this->profileObject,'1');
@@ -158,7 +162,9 @@ class Tuple {
         else
             return 0;
     }
-        
+    public function getGUNA() {
+        return $this->GUNA;
+    }
         public function setprofileObject($x) {
         $this->profileObject=$x;
     }
@@ -348,7 +354,12 @@ public function getPIC_ID($x="") {
     public function setIS_ALBUM($x) {
         $this->IS_ALBUM = $x;
     }
-
+    public function setNAME_OF_USER($x) {
+	$this->NAME_OF_USER = $x;
+    }
+    public function getNAME_OF_USER() {
+	return $this->NAME_OF_USER;
+    }
     public function getIS_ALBUM_TEXT() {
         return $this->IS_ALBUM_TEXT;
     }
@@ -439,6 +450,14 @@ public function getPIC_ID($x="") {
 	{
 		$this->LAST_LOGIN_DT = $string;
 	}
+    public function setEMAIL($string)
+    {
+        $this->EMAIL = $string;
+    }
+    public function setGUNA($x)
+    {
+        $this->GUNA = $x;
+    }
 	public function getsubscription_icon()
 	{
             $subscription=$this->getSUBSCRIPTION();              // JSExclusive.... excluded for app as it is not implemented in app yet. 

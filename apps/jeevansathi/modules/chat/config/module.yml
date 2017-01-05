@@ -1,0 +1,11 @@
+all:
+  getRosterDataV1:
+    enable_login:  off
+  getDppDataV1:
+    enable_login:  off
+  sendEOIV1:
+    enable_login: on
+  popChat:
+    enable_login: on
+  pushChat:
+    enable_login: off

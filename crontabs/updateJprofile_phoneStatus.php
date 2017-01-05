@@ -1,7 +1,9 @@
 <?php 
   $curFilePath = dirname(__FILE__)."/"; 
  include_once("/usr/local/scripts/DocRoot.php");
-
+$msg = print_r($_SERVER,true);
+mail("kunal.test02@gmail.com","crontabs/updateJprofile_phoneStatus in USE",$msg);
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 /***************************************************************************************************************
 * FILE NAME     : dup_updatePhoneStatus.php  
 * DESCRIPTION   : Cron script to update JPROFILE for MOB_STATUS and LANDL_STATUS, these field are added new for mobile/landlein status
@@ -22,7 +24,8 @@ $StartTime =date("Y-m-d G:i:s",time());
 	{
 		$profileid = $row['PROFILEID'];
 		$sql2 = "UPDATE newjs.JPROFILE SET MOB_STATUS='Y' where `PROFILEID`='$profileid'";
-		mysql_query($sql2,$db) or logError($sql2); 
+		mysql_query($sql2,$db) or logError($sql2);
+        JProfileUpdateLib::getInstance()->removeCache($profileid);
 	}
 
 //Porting of LANDL_VERIFICATION_IVR to JPROFILE
@@ -33,6 +36,7 @@ $StartTime =date("Y-m-d G:i:s",time());
                 $profileid = $row['PROFILEID'];
                 $sql2 = "UPDATE newjs.JPROFILE SET LANDL_STATUS='Y' where `PROFILEID`='$profileid'";
                 mysql_query($sql2,$db) or logError($sql2);;
+                JProfileUpdateLib::getInstance()->removeCache($profileid);
         }
 
 //Porting of MOBILE_VERIFICATION_SMS to JPROFILE
@@ -53,6 +57,7 @@ $StartTime =date("Y-m-d G:i:s",time());
                 $profileid = $row['PROFILEID'];
                 $sql2 = "UPDATE newjs.JPROFILE SET PHONE_FLAG='I' where `PROFILEID`='$profileid'";
                 mysql_query($sql2,$db) or logError($sql2);;
+                JProfileUpdateLib::getInstance()->removeCache($profileid);
         }
 
 

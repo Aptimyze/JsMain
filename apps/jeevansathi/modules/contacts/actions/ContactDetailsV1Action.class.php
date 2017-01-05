@@ -102,7 +102,7 @@ class ContactDetailsV1Action extends sfAction
 					if(MobileCommon::isApp()=="A" && $this->contactEngineObj->getComponent()->contactDetailsObj->getEvalueLimitUser()==CONTACT_ELEMENTS::EVALUE_PCS)
 					{
 						unset($responseArray);					
-						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
+						$responseArray["errmsglabel"] 			= $this->contactHandlerObj->getViewed()->getUSERNAME()." has an eValue/eAdvantage plan and has made Phone/Email visible.\n\n But to view ".$this->contactHandlerObj->getViewed()->getUSERNAME()."'s Phone/Email, your profile should be at least ".CONTACT_ELEMENTS::PCS_CHECK_VALUE."% complete.\n\n Please add more information to your profile.";
 							$responseArray["headerLabel"]            = "Complete your profile";
 							$responseArray["errMsgIconId"]           = "21";
 						VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
@@ -181,13 +181,41 @@ class ContactDetailsV1Action extends sfAction
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 						
 				}
+				elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2) {
+					$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+					$responseArray["errmsgiconid"] = "16";
+					$responseArray["headerlabel"] = "Unsupported action";
+        				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
 				 elseif ($errorArr["FILTERED"] == 2) {
-					$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
+					 if($this->contactEngineObj->errorHandlerObj->getErrorMessage())
+						$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+					else
+						$responseArray["errMsgLabel"]  = "You cannot see the contact details of this profile as the profile has filtered you.";
 					$responseArray["errMsgIconId"] = "12";
 					$responseArray["headerLabel"]  = "Filtered Member";
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 						
 				} 
+
+				elseif ($errorArr["PAID_FILTERED_INTEREST_NOT_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+					elseif ($errorArr["PAID_FILTERED_INTEREST_SENT"] == 2) { 
+					$responseArray["errMsgLabel"]  = $this->contactEngineObj->errorHandlerObj->getErrorMessage();;
+					$responseArray["errMsgIconId"] = "12";
+					$responseArray["headerLabel"]  = "Filtered Member";
+					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
+				}
+
+
+
 				elseif($errorArr["PROFILE_IGNORE"] == 2)
 				{
 					$responseArray["errmsglabel"] = $this->contactEngineObj->errorHandlerObj->getErrorMessage();
@@ -282,6 +310,10 @@ class ContactDetailsV1Action extends sfAction
 					VCDTracking::insertTracking($this->contactHandlerObj);
 				}
 			} elseif ($priArr[0]["CALL_DIRECT"]["ALLOWED"] == "Y") {
+				
+				if($request->getParameter("VIEWCONTACT") == 1)
+			 	{
+					
 				$this->contactHandlerObj1 = new ContactHandler($this->loginProfile, $this->Profile, "INFO", $this->contactObj, 'CALL_DIRECT', ContactHandler::POST);
 				$this->contactHandlerObj1->setElement("ALLOWED", 1);
 				$this->contactEngineObj1 = ContactFactory::event($this->contactHandlerObj1);
@@ -294,7 +326,26 @@ class ContactDetailsV1Action extends sfAction
 		            $responseArray["headerLabel"]        = $this->contactHandlerObj->getViewed()->getUSERNAME();
 					VCDTracking::insertYesNoTracking($this->contactHandlerObj,'N');
 						
+					}
 				}
+				else
+				{
+					$leftAlloted                       = $this->contactEngineObj->getComponent()->contactDetailsObj->getLEFT_ALLOTED();
+					$responseArray["headerThumbnailURL"] = $thumbNail;
+                    $responseArray["headerLabel"]        = $this->contactHandlerObj->getViewed()->getUSERNAME();
+                    $responseArray["contactdetailmsg"]          = "<b>".$leftAlloted."</b> contacts left to view";
+                    $responseArray['errmsglabel'] = "<b>".$leftAlloted."</b> contacts left to view";
+                    if($this->contactEngineObj->getComponent()->contactDetailsObj->getHiddenPhoneMsg() == "Y")
+                    {
+                    	$responseArray['errmsglabel'].= "<br><br>This member has choosen to hide phone number. Only email is available but no phone number";
+                    }
+                    
+                    $responseArray["footerbutton"]["label"]  = "View Contact Details";
+					$responseArray["footerbutton"]["value"] = "";
+					$responseArray["footerbutton"]["params"] = "&VIEWCONTACT=1";
+					$responseArray["footerbutton"]["action"] = "CONTACTDETAIL";
+				}
+                                
 			} 
 			else {
 				$responseArray["contactdetailmsg"]       = "Upgrade your membership to view phone/email of ".$this->contactHandlerObj->getViewed()->getUSERNAME()." (and other members)";
@@ -332,6 +383,18 @@ class ContactDetailsV1Action extends sfAction
 			$responseArray["contact4"] = ButtonResponse::buttonMerge($responseArray["contact4"]);
 		if (is_array($responseArray["footerButton"]))
 			$responseArray["footerButton"] = ButtonResponse::buttonMerge($responseArray["footerButton"]);
+                if($this->contactEngineObj->getComponent()->contactDetailsObj)
+        {        	
+                if(!$responseArray['contact1']){
+                    $responseArray['contact1_message']=$this->contactEngineObj->getComponent()->contactDetailsObj->getPrimaryMobileHiddenMessage();
+                }
+                if(!$responseArray['contact2']){
+                    $responseArray['contact2_message']=$this->contactEngineObj->getComponent()->contactDetailsObj->getLandlMobileHiddenMessage();
+                }
+                if(!$responseArray['contact3']){
+                    $responseArray['contact3_message']=$this->contactEngineObj->getComponent()->contactDetailsObj->getAltMobileHiddenMessage();
+                }
+        }
 		$responseArray = array_change_key_case($responseArray,CASE_LOWER);
 		$finalresponseArray["actiondetails"] = ButtonResponse::actionDetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = null;

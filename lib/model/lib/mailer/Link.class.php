@@ -107,7 +107,7 @@ class LinkClass {
   		else
 	  		$url=JsConstants::$siteUrl.'/e/'.$app_screen_id.$this->_link_id.'/'.$mail_group;
 	  	if($EmailUID)
-			$url=$url."&EmailUID=".$EmailUID;
+			$url=$url."?EmailUID=".$EmailUID;
 	}
 	html_entity_decode($url);
   	return $url;
@@ -141,6 +141,9 @@ class LinkClass {
 		}
 		$checksum=$request->getParameter('checksum');
 		$echecksum=$request->getParameter('echecksum');
+		
+		
+
 		if($param_str){
 			$url.="?$param_str";
 		}
@@ -152,15 +155,30 @@ class LinkClass {
 			$append=strpos($url,'?')?"&":"?";
 			$stypeNew =$request->getParameter('stype');
 			if($stypeNew)
-                                $url.=$append."checksum=$checksum&echecksum=$echecksum&CMGFRMMMMJS=y";
+                                $url.=$append."checksum=$checksum";
                         else
-				$url.=$append."checksum=$checksum&echecksum=$echecksum&CMGFRMMMMJS=y&stype=$stype";
+				$url.=$append."checksum=$checksum&stype=$stype";
 			$_SERVER['REQUEST_URI']=$url;
+			if($checksum){
+				$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
+				if($authenticationLoginObj->decrypt($echecksum,"Y")==$checksum)
+				{
+					$authenticationLoginObj->setAutologinAuthchecksum($checksum,$loc);
+				}
+				else
+				{
+					$authenticationLoginObj->removeCookies();
+				}
+			}
 		}
 		$site_url=sfConfig::get('app_site_url');
 	    $loc=$site_url."/".$url;
 	    $append=strpos($loc,'?')?"&":"?";
 	    $loc.=$append.'from_mailer=1';
+	    
+	    
+		
+		
 	//	echo "<script>document.location='$loc';</script>";
 		header("Location:$loc");
 		die;

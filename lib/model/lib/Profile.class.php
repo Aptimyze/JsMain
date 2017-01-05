@@ -1120,7 +1120,7 @@ class Profile{
                         if(isset($hobbies) && $onlyValues == '')
                             $userHobbies = $hobbies;
                         else{
-                            $hobbyObj=new NEWJS_HOBBIES();
+                            $hobbyObj=new JHOBBYCacheLib();
                             $userHobbies = $hobbyObj->getUserHobbies($this->PROFILEID,$onlyValues);
                         }
 			if($onlyValues)
@@ -1144,7 +1144,7 @@ class Profile{
 	 */
 	public function getAstroKundali($onlyValues="")
 	{
-		$astro=new NEWJS_ASTRO();
+		$astro= ProfileAstro::getInstance();
 
 		$astroDetails=$astro->getAstros($this->PROFILEID);
 		if($onlyValues)
@@ -1480,7 +1480,7 @@ class Profile{
         public function getExtendedContacts($onlyValues="")
 		{
 			if($this->HAVE_JCONTACT=="Y"){
-				$pc=new NEWJS_JPROFILE_CONTACT();
+				$pc= new ProfileContact();
 				$contacts_arr=$pc->getProfileContacts($this->PROFILEID);
 				if($onlyValues)
 					return $contacts_arr;
@@ -1508,7 +1508,7 @@ class Profile{
 				//If already fetched then return the fetched object
 				//otherwise fetch education details
 				if(! $this->education_other instanceof ProfileComponent){
-				$pe=new NEWJS_JPROFILE_EDUCATION($dbname);
+				$pe = ProfileEducation::getInstance($dbname);
 				$education_arr=$pe->getProfileEducation($this->PROFILEID);
 				if($valuesOnly)
 					return $education_arr;
@@ -1600,6 +1600,8 @@ class Profile{
 		 */
 			foreach($res as $field=>$value){
 				$this->$field=$value;
+				if(in_array($field,ProfileEnums::$saveBlankIfZeroForFields) &&$value=="0")
+					$this->$field='';
 			}
 		}
 		return $res;

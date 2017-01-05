@@ -15,6 +15,8 @@ class ValidateInputFactory
 			$obj = new PictureModuleInputValidate;
 		elseif($module == "contacts")
 			$obj = new ContactModuleInputValidate;
+		elseif($module == "chat")
+			$obj = new ChatModuleInputValidate;
 		elseif($module == "myjs")
 			$obj = new MyJsModuleInputValidate;
         elseif($module == "inbox")

@@ -35,7 +35,7 @@ class newjs_HIDDEN_DELETED_PROFILES extends TABLE
                               $sql = "DELETE FROM newjs.HIDDEN_DELETED_PROFILES WHERE LAST_UPDATED <= '".$date."'";
                         }else{
                               $sql = "TRUNCATE TABLE newjs.HIDDEN_DELETED_PROFILES";
-                        }
+                        }          
 			$res = $this->db->prepare($sql);
 			$res->execute();
 		}

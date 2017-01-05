@@ -57,7 +57,38 @@ class REPORT_ABUSE_LOG extends TABLE
 		}
 	
 	}
+
+	public function getReportAbuseCount($profileArray)
+	{
+		try	 	
+		{	
+                        if(!is_array($profileArray))
+                            throw new jsException("","profileArray IS not array or blank");
+                        $pdoStr="";
+                        foreach($profileArray as $k=>$v)
+						{
+
+                                                    $pdoStr.=":v".$k.",";
+                                                    
+						}
+                        $pdoStr = substr($pdoStr, 0, -1);                                                     
+                        $sql = "SELECT REPORTEE,count(*) AS CNT from feedback.REPORT_ABUSE_LOG WHERE REPORTEE IN ($pdoStr) GROUP BY REPORTEE"; 
+                        $prep = $this->db->prepare($sql);
+                        foreach($profileArray as $k=>$v)
+                            $prep->bindValue(":v".$k,$v,PDO::PARAM_INT);
+                        $prep->execute();
+                        while($row=$prep->fetch(PDO::FETCH_ASSOC))
+                            $result[$row['REPORTEE']]=$row['CNT'];
+                        
+                        return $result;
+		}
+		catch(Exception $e)
+		{
+			throw new jsException($e);
+		}
 	
+	}
+        
 
 }
 

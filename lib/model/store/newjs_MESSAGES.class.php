@@ -67,7 +67,7 @@ class NEWJS_MESSAGES extends TABLE{
 			{
 				if($msgCommObj->getID() && $msgCommObj->getMESSAGE())
 				{ 
-					$sql="UPDATE MESSAGES SET MESSAGE = :CUSTOMMESSAGE WHERE ID = :GENERATEDID";
+					$sql="REPLACE INTO MESSAGES VALUES (:GENERATEDID,:CUSTOMMESSAGE)";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":GENERATEDID",$msgCommObj->getID(),PDO::PARAM_INT);
 					$prep->bindValue(":CUSTOMMESSAGE",$msgCommObj->getMESSAGE(),PDO::PARAM_STR);

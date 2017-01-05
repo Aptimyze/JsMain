@@ -606,7 +606,7 @@ class CommonFunction
     return $arrOut;
   }
 
-  	public function getMembershipName($profileid){
+  	public static function getMembershipName($profileid){
   		if ($profileid) {
 	  		$memHandlerObj = new MembershipHandler();
 			$membershipStatus = $memHandlerObj->getRealMembershipName($profileid);
@@ -615,5 +615,71 @@ class CommonFunction
 		}
 		return $membershipStatus;
   	}
+
+  	public static function getRCBDayDropDown()
+    {
+        $orgTZ = date_default_timezone_get();
+        date_default_timezone_set("Asia/Calcutta");
+
+        $server_day = date('j M');
+        if (date('H') >= 21) {
+            $server_day = date('j M', strtotime('+1 day', strtotime($server_day)));
+        }
+
+        $next_1         = date('j M', strtotime('+1 day', strtotime($server_day)));
+        $next_2         = date('j M', strtotime('+2 day', strtotime($server_day)));
+        $dropDownDayArr = array(
+            date("Y-m-d", strtotime($server_day))=>$server_day,
+            date("Y-m-d", strtotime($next_1))=>$next_1,
+            date("Y-m-d", strtotime($next_2))=>$next_2,
+        );
+        
+        date_default_timezone_set($orgTZ);
+        return $dropDownDayArr;
+    }
+
+    public static function getRCBStartTimeDropDown() {
+    	$dropDownTimeArr1 = array(
+            "09:00:00"=>"9 AM",
+            "10:00:00"=>"10 AM",
+            "11:00:00"=>"11 AM",
+            "12:00:00"=>"12 PM",
+            "13:00:00"=>"1 PM",
+            "14:00:00"=>"2 PM",
+            "15:00:00"=>"3 PM",
+            "16:00:00"=>"4 PM",
+            "17:00:00"=>"5 PM",
+            "18:00:00"=>"6 PM",
+            "19:00:00"=>"7 PM",
+            "20:00:00"=>"8 PM",
+        );
+        return $dropDownTimeArr1;
+    }
+
+    public static function getRCBEndTimeDropDown() {
+    	$dropDownTimeArr2 = array(
+            "10:00:00"=>"10 AM",
+            "11:00:00"=>"11 AM",
+            "12:00:00"=>"12 PM",
+            "13:00:00"=>"1 PM",
+            "14:00:00"=>"2 PM",
+            "15:00:00"=>"3 PM",
+            "16:00:00"=>"4 PM",
+            "17:00:00"=>"5 PM",
+            "18:00:00"=>"6 PM",
+            "19:00:00"=>"7 PM",
+            "20:00:00"=>"8 PM",
+            "21:00:00"=>"9 PM",
+        );
+        return $dropDownTimeArr2;
+    }
+    
+    public static function removeCanChat($loginProfileId,$otherProfileId)
+    {
+		if(JsMemcache::getInstance()->get("can_chat_".$loginProfileId."_".$otherProfileId,1) || JsMemcache::getInstance()->get("can_chat_".$otherProfileId."_".$loginProfileId,1)){
+			JsMemcache::getInstance()->set("can_chat_".$loginProfileId."_".$otherProfileId,false,'','',1);
+			JsMemcache::getInstance()->set("can_chat_".$otherProfileId."_".$loginProfileId,false,'','',1);
+		}
+	}
 }
 ?>

@@ -90,19 +90,28 @@ class QuickSearchBand extends SearchParamters
 			$searchParamsSetter['RELIGION'] = $jsonArr["RELIGION"];
 		if($jsonArr["MANGLIK"] && $jsonArr["MANGLIK"] !=self::manglik_blank)
 			$searchParamsSetter['MANGLIK'] = $jsonArr["MANGLIK"];
+                
 		if($jsonArr["CASTE"])
 		{
 			if(MobileCommon::isDesktop())
 				$searchParamsSetter['CASTE'] = $jsonArr["CASTE"];
 			else
 			{
+                               
 				$json1 = $jsonArr["CASTE"];
 				$json1Arr = json_decode($json1,true);
-				if(is_array($json1Arr))
-				{
-					$tempStr = implode(",",$json1Arr);
-					$searchParamsSetter['CASTE'] = $tempStr;
-				}
+                                if(empty($json1Arr)){
+                                     $json1Arr = explode(',',$json1);
+                                }
+                                if(is_array($json1Arr))
+                                {
+                                        $tempStr = implode(",",$json1Arr);
+                                        $searchParamsSetter['CASTE'] = $tempStr;
+                                }else{
+                                    $json1Arr = explode(',',$json1Arr);
+                                    $json1Arr = implode(',',$json1Arr);
+                                    $searchParamsSetter['CASTE'] = $json1Arr;    
+                                }
 			}
 		}
                 if($jsonArr["EDUCATION"] && $jsonArr["EDUCATION"]!=self::education_blank)
@@ -113,6 +122,14 @@ class QuickSearchBand extends SearchParamters
 		{
                   $searchParamsSetter['OCCUPATION'] = $jsonArr["OCCUPATION"];
                 }
+                
+                if($jsonArr["LOCATION"]){
+                        $jsonArr["LOCATION"] .= ",".$jsonArr["LOCATION_CITIES"];
+                }else{
+                        $jsonArr["LOCATION"] = $jsonArr["LOCATION_CITIES"];
+                }
+                $jsonArr["LOCATION"] = trim($jsonArr["LOCATION"],',');
+                
 		if($jsonArr["LOCATION"] && $jsonArr["LOCATION"]!=self::blankValue)
 		{
 			$city_country_resArr = explode(",",$jsonArr["LOCATION"]);
@@ -129,13 +146,16 @@ class QuickSearchBand extends SearchParamters
 		                $searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
 			if($tempCity)
 			{
+				$searchParamsSetter['CITY_RES'] = implode(",",$tempCity);
 				$searchParamsSetter['CITY_INDIA'] = implode(",",$tempCity);
-				$searchParamsSetter['COUNTRY_RES'] = 51;
+                                $tempCountry[] = 51;
+				$searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
 			}
 			if($tempState)
 			{
 				$searchParamsSetter['STATE'] = implode(",",$tempState);
-				$searchParamsSetter['COUNTRY_RES'] = 51;
+				$tempCountry[] = 51;
+				$searchParamsSetter['COUNTRY_RES'] = implode(",",$tempCountry);
 			}
 		}
 

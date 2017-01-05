@@ -30,7 +30,7 @@ class JsNotificationProduce
   { 
     if(JsMemcache::getInstance()->get("mqMemoryAlarmFIRST_SERVER")==true || JsMemcache::getInstance()->get("mqDiskAlarmFIRST_SERVER")==true || $this->serverConnection('FIRST_SERVER')==false)
     {
-      if(MQ::FALLBACK_STATUS==true && $useFallbackServer==true)
+      if(MQ::FALLBACK_STATUS==true && $useFallbackServer==true && JsConstants::$hideUnimportantFeatureAtPeakLoad == 0)
       {
         if(JsMemcache::getInstance()->get("mqMemoryAlarmSECOND_SERVER")==true || JsMemcache::getInstance()->get("mqDiskAlarmSECOND_SERVER")==true || $this->serverConnection('SECOND_SERVER')==false)
         {
@@ -62,7 +62,7 @@ class JsNotificationProduce
     }
     try
     {
-      $this->channel = RabbitmqHelper::RMQDeclaration($this->channel,"notification");
+      $this->channel = RabbitmqHelper::RMQDeclaration($this->channel,"notificationLog");
     }
     catch (Exception $exception) 
     {
@@ -174,6 +174,9 @@ class JsNotificationProduce
                     break;
         case "JS_INSTANT_NOTIFICATION":
                     $this->channel->basic_publish($msg,MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"]);
+                    break;
+        case "JS_NOTIFICATION_LOG":
+                    $this->channel->basic_publish($msg,MQ::$NOTIFICATION_LOG_EXCHANGE["NAME"]);
                     break;
       }
     }

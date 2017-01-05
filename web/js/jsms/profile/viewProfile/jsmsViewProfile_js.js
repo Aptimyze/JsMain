@@ -13,6 +13,7 @@ var sendInterestBtn = '#buttons1';
 var closeMyPreview;
 var onScrollIntervalId;
 var viewBackLocation = null;
+var commLayerPageIndex=1,commHistoryLoading=0,commHScrollHeight=0;
 initGuiElements = function()
 {
 	//Tab Elements
@@ -33,7 +34,7 @@ initGuiElements = function()
 	comHistoryOverlay	= '#comHistoryOverlay';
 	comHistoryActive 	= '.vpro_comHisIcon';
 	comHistoryClose 	= '#js-comCloseBtn';
-	comMessage 			= '.message';
+	comMessage 			= '#commHistoryScroller';
 	
 	errorContent		= '#errorContent';
 	//Content Elements
@@ -272,15 +273,19 @@ Onscroll = function()
 
 displayComHistory = function()
 {
+        $(comMessage).unbind('scroll');
+        $("#commHistoryScroller #commHistoryLoader").show();
+        commLayerPageIndex=1;
+        commHistoryLoading=0;
 	$(profileContent).css('display','none');
 	$(comHistoryOverlay).css('display','block');
 	$(comHistoryOverlay).css('overflow','hidden');
     $(comHistoryOverlay).removeClass('vpro_dn');
 	$(mainContent).addClass('posrel');
-	$(comHistoryOverlay).css('height',$(window).innerHeight()+'px');
+	$(comHistoryOverlay).css('height',$(window).height()+'px');
 	$(sendInterestBtn).addClass('vpro_dn');
 	var com_msgHgt = $(window).innerHeight() - $('#comm_header').outerHeight();
-	$(comMessage).css({'height':com_msgHgt,'overflow':'auto'});
+	$(comMessage).css({'height':com_msgHgt,'overflow-y':'auto','overflow-x':'hidden'});
     enableLoader();
     getCommHistory().success(function(data,textStatus,jqXHR){
        commHistoryJson = data;
@@ -304,12 +309,13 @@ hideComHistory = function()
 	$(comHistoryOverlay).css('display','none');
     $(comHistoryOverlay).addClass('vpro_dn');
     $(sendInterestBtn).removeClass('vpro_dn');
-	$(comMessage).html('');
+    $(comMessage).html($("#commHistoryPreLoad").html());
     
 }
 
 bakeCommHistory = function(bShowError)
 {
+        var commHScrollHeight=0;
 	if((!commHistoryJson || typeof commHistoryJson !== "object" ) && typeof bShowError == "undefined")
 	{
 		return;
@@ -318,18 +324,25 @@ bakeCommHistory = function(bShowError)
     if(bShowError)
     {
         message = "<div class='disptbl hgtInherit'><div class='dispcell vertmid white txtc'> Something went wrong. Please try in some time.</div></div>"
-		$(comMessage).append(message);
+        $(comMessage).append(message);
         setTimeout(popBrowserStack,200);
         return;
     }
     
-	if(commHistoryJson.history)
+        var commLoader=$("#commHistoryScroller #commHistoryLoader");
+        if(commHistoryJson.history)
 	{
+        commHScrollHeight=$(comMessage)[0].scrollHeight;  
+        if(commHistoryJson.nextPage=='false')
+        {
+            $(comMessage).unbind('scroll');
+            commLoader.hide();
+            commHistoryFullLoaded = 1; 
+        }
         var historyMsg = commHistoryJson.history;
 		var msg = '';
 		var addBrdr = false;
 		var msgType = '';
-        var scrollTop = 1;
 		$.each(historyMsg,function(key,msgObj){
 			var lastMsg = msg;
 			if(msgObj.ismine)
@@ -350,29 +363,56 @@ bakeCommHistory = function(bShowError)
 				msg = partnerMsgHtml;
 				msgType = 2;
 			}
-            scrollTop += 42; 
 			msg = msg.replace(/MSG_TEXT/g,msgObj.message);
 			msg = msg.replace(/SENT_TEXT/g,msgObj.header + " " + msgObj.time);
 			if(addBrdr)
 			{
 				if(msgType === 1)
-					$(comMessage).append("<div class='vpro_padr'><div class='brdr4'></div></div>");
+					msg+=("<div class='vpro_padr'><div class='brdr4'></div></div>");
 				else if(msgType === 2 )	
-					$(comMessage).append("<div class='vpro_padl'><div class='brdr4'></div></div>");
+					msg+=("<div class='vpro_padl'><div class='brdr4'></div></div>");
 				addBrdr = false;
-                scrollTop += 21; 
+                
 			}
-			$(comMessage).append(msg);
+                        commLoader.after(msg);
 		});
         
-        $(comMessage).append("<div class='hgt35'></div>");
-        $(comMessage).scrollTop(scrollTop);
+           //    $(comMessage).append("<div class='hgt35'></div>");
+        
 	}
 	else
 	{
 		message = "<div class='disptbl hgtInherit'><div class='dispcell vertmid white txtc'> Your interaction with "+ userName + " will appear here.</div></div>"
 		$(comMessage).append(message);
 	}
+        $(comMessage).scrollTop($(comMessage)[0].scrollHeight-commHScrollHeight);
+        commHistoryLoading=0;
+        
+        if(commHistoryJson.nextPage=='false')
+        {
+            $(comMessage).unbind('scroll');
+            commLoader.hide();
+            commHistoryFullLoaded = 1; 
+        }
+        else
+         $(comMessage).unbind('scroll').scroll(function()
+        {
+            
+            if($(this).scrollTop()==0)
+            {
+            if(commHistoryLoading)return;    
+            commHistoryLoading=1;    
+            getCommHistory().success(function(data,textStatus,jqXHR){
+            commHistoryJson = data;
+            bakeCommHistory();
+            disableLoader();
+    }).error(function(jqXHR,textStatus,errorThrown){
+        //Something went wrong use old commHistoryJson
+        bakeCommHistory('show error message');
+        CommonErrorHandling();
+        disableLoader();
+    });}});
+
 }
 
 onResize = function()
@@ -510,7 +550,7 @@ $(document).ready(function()
 getCommHistory = function()
 {
     return $.ajax({
-				url : '/contacts/CommunicationHistoryV1?profilechecksum='+getProfileCheckSum(),
+				url : '/contacts/CommunicationHistoryV1?profilechecksum='+getProfileCheckSum()+"&pageNo="+commLayerPageIndex++,
 				data : ({dataType:"json"}),
 				async:true,
 				timeout:30000,

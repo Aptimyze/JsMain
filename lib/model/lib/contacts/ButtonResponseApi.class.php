@@ -307,6 +307,12 @@ Class ButtonResponseApi
 			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
 			$button["label"]  = "Interest Sent";
 		}
+		else if(($this->contactObj->getTYPE() == ContactHandler::NOCONTACT) && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
+		{
+			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
+			$button["label"]  = "Interest Saved";
+			$button["enable"]  = false;
+		}
 		else
 		{
 			$button = $this->getInitiateButton($this->page);
@@ -339,7 +345,7 @@ Class ButtonResponseApi
 				case ContactHandler::REMINDER:
 					$button                        = $this->getSendReminderButton();
 					$responseArray["button"]      = $button;
-					$responseArray["infomsglabel"] = "Reminder of interest Sent";
+					$responseArray["infomsglabel"]=null;
 					//echo "NOCONTACT";
 					break;
 				case ContactHandler::INITIATED:
@@ -348,7 +354,7 @@ Class ButtonResponseApi
 						$button                        = $this->getSendReminderButton(3);
 						$responseArray["button"]      = $button;
 						if($privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y" &&  $this->contactObj->getCOUNT() < ErrorHandler::REMINDER_COUNT)
-							$responseArray["infomsglabel"] = "Reminder of interest Sent";
+							$responseArray["infomsglabel"] = null;
 					}
 					else
 					{

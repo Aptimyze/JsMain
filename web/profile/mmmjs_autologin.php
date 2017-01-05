@@ -88,13 +88,11 @@ if($echecksum && $checksum && !$data[PROFILEID])
 					if($show_chatbar)
 					{
 						$pos = strpos($request_uri,"login.php");
-						$pos1= strpos($request_uri,"intermediate.php");
 						$pos2= strpos($request_uri,"login_redirect.php");
-						$pos3=strpos($request_uri,"jsChat.php");
 						$pos4=in_array("fromRegister=1",$param);
-						if($pos == false && $pos1 == false && $pos2== false && $pos3 == false && !$pos4 && !$isMobile){
+						if($pos == false  && $pos2== false && $pos3 == false && !$isMobile){
 							if(($_COOKIE['JS_MOBILE']=='N' || !isset($_COOKIE['JS_MOBILE'])))
-								$url_to_go="$SITE_URL/profile/intermediate.php?parentUrl=/$request_uri";
+								$url_to_go="$SITE_URL/$request_uri";
 						}
 					}
 				}

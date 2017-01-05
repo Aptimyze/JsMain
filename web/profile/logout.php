@@ -8,6 +8,17 @@ $db=connect_db();
 $sql="DELETE FROM userplane.users WHERE userID='$profileId'";
 mysql_query_decide($sql);
  */
+// check referer
+if(MobileCommon::isNewMobileSite())
+        $isMobile=1;
+
+if(MobileCommon::isDesktop() || MobileCommon::isNewMobileSite())
+{
+    if(isset($_SERVER['HTTP_REFERER']))
+    {
+        LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO,'',array(LoggingEnums::REFERER => $_SERVER['HTTP_REFERER'], LoggingEnums::LOG_REFERER => LoggingEnums::CONFIG_INFO_VA, LoggingEnums::MODULE_NAME => LoggingEnums::LOG_VA_MODULE));
+    }
+}
 if(MobileCommon::isDesktop())
 {
 	header("Location:".$SITE_URL."/static/logoutPage?fromSignout=1");die;

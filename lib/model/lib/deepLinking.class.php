@@ -71,7 +71,7 @@ class deepLinking
 	public function loggedInUserCondition($loggedInProfileId)
 	{	
 		$loggedInProfileId = "'".$loggedInProfileId."'";
-		$loginTrackingObj = new MIS_LOGIN_TRACKING();
+		$loginTrackingObj = new MIS_LOGIN_TRACKING('newjs_slave');
 		$loggedInIDArr = $loginTrackingObj->getLastLoginProfilesForDate($loggedInProfileId,$this->date,self::WEBSITE_VERSION);
 		if($loggedInIDArr)
 		{

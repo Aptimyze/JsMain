@@ -15,7 +15,7 @@
     <td background="images/bg.jpg" width="316" valign="top"><img src="images/pic-1.jpg" width="316" height="70" border="0" vspace="0" hspace="0"></td>
 
     <td background="images/bg.jpg" valign="top" align="right"><img src="images/naukri-logo.gif" width="160" height="36" border="0" vspace="0" hspace="0"><br>
-      <a href="http://www.naukri.com" target="_blank"><img src="images/home.jpg" width="68" height="34" border="0" vspace="0" hspace="0"></a><img src="images/job-seeker-services.jpg" width="165" height="34" border="0" vspace="0" hspace="0"><a href="http://www.naukri.com/contact/" target="_blank"><img src="images/contact.jpg" width="98" height="34" border="0" vspace="0" hspace="0"></a><a href="http://www.naukri.com"><img src="images/search-jobs.jpg" width="98" height="34" border="0" vspace="0" hspace="0"></a> 
+      <a href="https://www.naukri.com" target="_blank"><img src="images/home.jpg" width="68" height="34" border="0" vspace="0" hspace="0"></a><img src="images/job-seeker-services.jpg" width="165" height="34" border="0" vspace="0" hspace="0"><a href="https://www.naukri.com/contact/" target="_blank"><img src="images/contact.jpg" width="98" height="34" border="0" vspace="0" hspace="0"></a><a href="https://www.naukri.com"><img src="images/search-jobs.jpg" width="98" height="34" border="0" vspace="0" hspace="0"></a> 
     </td>
   </tr>
 </table>
@@ -46,17 +46,17 @@
 
     <td valign="middle" bgcolor="#EFEFEF" align="center" height="22" class="bottom">
 
-      <a href="http://www.naukri.com/infoedge/naukhome.htm" class="bottom">About
+      <a href="https://www.naukri.com/infoedge/naukhome.htm" class="bottom">About
 
-      Us</a> - <a href="http://www.naukri.com/infoedge/clients/clients.htm" class="bottom">Our
+      Us</a> - <a href="https://www.naukri.com/infoedge/clients/clients.htm" class="bottom">Our
 
-      Clients</a> - <a href="http://www.naukri.com/infoedge/pageview.htm" class="bottom">
+      Clients</a> - <a href="https://www.naukri.com/infoedge/pageview.htm" class="bottom">
 
-      Check Hits</a> - <a href="http://www.naukri.com/infoedge/naukri.htm" class="bottom">
+      Check Hits</a> - <a href="https://www.naukri.com/infoedge/naukri.htm" class="bottom">
 
-      Disclaimer</a> - <a href="http://www.naukri.com/faq" class="bottom"> F.A.Q's</a>
+      Disclaimer</a> - <a href="https://www.naukri.com/faq" class="bottom"> F.A.Q's</a>
 
-      - <a href="http://www.naukri.com" class="bottom"> Home</a> - <a href="http://www.naukri.com/contact/" class="bottom">Contact
+      - <a href="https://www.naukri.com" class="bottom"> Home</a> - <a href="https://www.naukri.com/contact/" class="bottom">Contact
 
       Us</a></td>
 

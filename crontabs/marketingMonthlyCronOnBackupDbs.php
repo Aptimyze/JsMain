@@ -22,20 +22,20 @@ $dumpMe = array(
 );
 
 $dumpDb = 'test';
-$shard1UserName =  'user_js';
-$shard1Password = 'userjsKm7Iv80l'; 
-$shard1HostName = '172.16.3.157';
-$shard1Port =  '3309';
+$shard1UserName = MysqlDbConstants::$shard1DDL['USER'];
+$shard1Password = MysqlDbConstants::$shard1DDL['PASS']; 
+$shard1HostName = MysqlDbConstants::$shard1DDL['HOST'];
+$shard1Port =  MysqlDbConstants::$shard1DDL['PORT'];
 
-$shard2UserName =  'user_js';
-$shard2Password = 'userjsKm7Iv80l'; 
-$shard2HostName = '172.16.3.187';
-$shard2Port =  '3308';
+$shard2UserName = MysqlDbConstants::$shard2DDL['USER'];
+$shard2Password = MysqlDbConstants::$shard2DDL['PASS']; 
+$shard2HostName = MysqlDbConstants::$shard2DDL['HOST'];
+$shard2Port =  MysqlDbConstants::$shard2DDL['PORT'];
 
-$shard3UserName =  'user_js';
-$shard3Password = 'userjsKm7Iv80l'; 
-$shard3HostName = '192.168.2.240';
-$shard3Port =  '3314';
+$shard3UserName = MysqlDbConstants::$shard3DDL['USER'];
+$shard3Password = MysqlDbConstants::$shard3DDL['PASS']; 
+$shard3HostName = MysqlDbConstants::$shard3DDL['HOST'];
+$shard3Port =  MysqlDbConstants::$shard3DDL['PORT'];
 
 
 

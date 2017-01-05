@@ -42,7 +42,7 @@
                     <tr>
                         <td width="20"></td>
                         <td>
-                You have shortlisted these profiles recently. Take the next step and let them know you are interested by sending them an interest.<a style="font-family:Arial; font-size:12px; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)SHORTLISTED:profileid=~$profileid`(/LINK)">View All Shortlisted Members</a>
+                You have shortlisted these profiles recently. Take the next step and let them know you are interested by sending them an interest.<a style="font-family:Arial; font-size:12px; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)SHORTLISTED:profileid=~$profileid`(/LINK)">View All Shortlisted Profiles</a>
             </td>
 
                         <td width="20"></td>

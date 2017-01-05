@@ -4,6 +4,8 @@
 * @author Vibhor Garg 
 * @copyright Copyright 2010, Infoedge India Ltd.
 */
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 class Sugar_Variables
 {
 	public $ID_C;
@@ -119,7 +121,7 @@ class Sugar_Variables
 		if($leadid)
                         $this->ID_C=$leadid;
                 $sql="SELECT $parameter FROM sugarcrm.leads_cstm WHERE id_c='$leadid'";
-                $result = mysql_query_decide($sql,$myDb) or die($sql.mysql_error($myDb));
+                $result = mysql_query_decide($sql,$myDb) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql.mysql_error($myDb)));
                 $myrow = mysql_fetch_array($result);
 		if($myrow)
                 {

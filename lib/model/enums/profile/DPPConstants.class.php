@@ -218,7 +218,7 @@
 	  		"CHALLENGED" =>"Challenged",
 	  		"NATURE_OF_HANDICAP" => "Nature of handicap"),
 	  	"DESIRED_PARTNER" => array(
-	  		"DESCRIBE_PARTNER" => "About My Desired Partner",),
+	  		"DESCRIBE_PARTNER" => "About Desired Partner",),
 	  	);	
 	  public static $fieldTypeArray = array(
 	  	"BASIC" => array(
@@ -474,6 +474,7 @@
 	const VALUE_NO = "N";
 
   const AP_SCREEN_MSG = 'Your desired partner profile will be vetted by our matchmaking expert before it is updated on your profile';
+  public static $removeCasteFromDppArr = array("242","243","244","245","246");
  
  }
  

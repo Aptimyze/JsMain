@@ -10,7 +10,7 @@ class SearchLogger extends SearchParamters
 	private $ID;
 	private $dbname;
 	private $pid;
-        private $LastSearchRequiredFor = Array(SearchTypesEnums::Advance,SearchTypesEnums::MobileSearchBand,SearchTypesEnums::Quick,SearchTypesEnums::App);
+        private $LastSearchRequiredFor = Array(SearchTypesEnums::Advance,SearchTypesEnums::MobileSearchBand,SearchTypesEnums::Quick,SearchTypesEnums::App,SearchTypesEnums::iOS);
 
         public function __construct($loggedInProfileObj='')
         {
@@ -87,7 +87,15 @@ class SearchLogger extends SearchParamters
 			$paramArray["ID"]=$searchId;
 			$paramArray["PROFILEID"]=$this->pid;
                         $paramArray["SEARCH_CHANNEL"]=CommonFunction::getChannel();
-                        $search_LATEST_SEARCHQUERYObj->insertOrReplace($paramArray); 
+                        
+                        if(array_key_exists("GENDER",$updateArr) && $updateArr["GENDER"]!='')
+						{
+						
+							$search_LATEST_SEARCHQUERYObj->insertOrReplace($paramArray); 
+					
+						}
+                        
+                        
                        
 		}
 		if($flag == 1)
@@ -151,7 +159,8 @@ class SearchLogger extends SearchParamters
                 if($stype)
                         $paramArray["SEARCH_TYPE"]=$stype;
                 $arr =  $search_LATEST_SEARCHQUERYObj->getSearchQuery($paramArray,$this->possibleSearchParamters);
-		if(is_array($arr))
+		      
+        if(is_array($arr))
                 {
                         foreach($arr as $field=>$value)
                         {

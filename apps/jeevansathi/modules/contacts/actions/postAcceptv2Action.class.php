@@ -41,7 +41,7 @@ class postAcceptv2Action extends sfAction
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'A',ContactHandler::POST);
 					$this->contactHandlerObj->setElement("STATUS","A");
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("RESPONSETRACKING",$request->getParameter('responseTracking'));
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
@@ -121,6 +121,14 @@ class postAcceptv2Action extends sfAction
 				$responseArray["errmsglabel"] = "This profile is Hidden";
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Hidden Profile";
+			}
+                        elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+                                $responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+
 			}
 			elseif($errorArr["EOI_CONTACT_LIMIT"] == 2)
 			{

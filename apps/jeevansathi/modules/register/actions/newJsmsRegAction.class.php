@@ -267,7 +267,7 @@ class newJsmsRegAction extends sfAction
         }
       }
      
-	$nativeObj = new NEWJS_NATIVE_PLACE;
+	$nativeObj = ProfileNativePlace::getInstance();
 	$nativePlaceDataArr = array("native_state","native_country","native_city");
 	$nativeData = $nativeObj->getNativeData($iProfileID);
 	foreach($nativePlaceDataArr as $k=>$field)

@@ -35,7 +35,7 @@ class AgentAllocation
 		{
 			$mainAdminObj           	=new incentive_MAIN_ADMIN();
 			$historyObj			=new incentive_HISTORY();
-			$jprofileContactObj    		=new NEWJS_JPROFILE_CONTACT();
+			$jprofileContactObj    		= new ProfileContact();
 			$iProfileAlternateNumberObj	=new PROFILE_ALTERNATE_NUMBER();
 			$crmDailyAllotObj       	=new CRM_DAILY_ALLOT();
 			$serviceStatusObj		=new BILLING_SERVICE_STATUS();
@@ -213,7 +213,7 @@ class AgentAllocation
 	}
 	public function allocateProfiles($processObj)
         {
-		$jprofileObj            =new JPROFILE('newjs_slave');
+		$jprofileObj            =new JPROFILE('newjs_masterRep');
 
 		// Queries cannot be moved to slave- due to slave lag spike arises in FS allocation
 		$lastAgentAllotedObj    =new AGENT_ALLOTED();
@@ -224,9 +224,9 @@ class AgentAllocation
 		$method			=$processObj->getMethod();
 		$executives             =$processObj->getExecutives();
 		$totalExecutives        =count($executives);
-//$executives =array("amuda");
+		//$executives =array("amuda");
 		if($method=='FIELD_SALES'){
-			$mainAdminObj   =new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj   =new incentive_MAIN_ADMIN('newjs_masterRep');
 			$center		=$processObj->getCenter();
 			$allocationLimit=$processObj->getLimit();
 			if($totalExecutives>0)

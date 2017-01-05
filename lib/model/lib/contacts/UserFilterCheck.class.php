@@ -259,8 +259,8 @@ class UserFilterCheck
                 if(isset($ignFilterStatus))
                     $ignoreFilter = $ignFilterStatus;
                 else{
-                    $ignoreObj = new newjs_IGNORE_PROFILE();
-                    $ignoreFilter = $ignoreObj->isIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID());
+                    $ignoreObj = new IgnoredProfiles("newjs_master");
+                    $ignoreFilter = $ignoreObj->ifIgnored($this->receiverObj->getPROFILEID(),$this->senderObj->getPROFILEID());
                 }
 		if($ignoreFilter)
 		{	$data= "Ignored By the Reciever";
@@ -407,7 +407,6 @@ class UserFilterCheck
 	 */
 	private function isFilter($type,$type1="",$type2="")
 	{
-                
 		if($this->filterParameters[$type]==Messages::YES && $type && $type2 && $type1) //Applied for Age check
 		{
 			if($this->myParameters[$type] < $this->dppParameters[$type1] || $this->myParameters[$type]>$this->dppParameters[$type2])
@@ -419,6 +418,11 @@ class UserFilterCheck
 		}
 		else if($this->filterParameters[$type]==Messages::YES && is_array($this->dppParameters[$type]))
 		{
+                        if($type == 'CITY_RES' && $this->myParameters["COUNTRY_RES"] != 51){
+                                if(in_array($this->myParameters["COUNTRY_RES"],$this->dppParameters["COUNTRY_RES"])){
+                                        return false;
+                                }
+                        }
 			if(!in_array($this->myParameters[$type],$this->dppParameters[$type]))
 			{  
 				
@@ -605,8 +609,10 @@ class UserFilterCheck
 						
 		}
 		else
-		{
-			throw new sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method));
+		{   
+			$ex = new sfException(sprintf(' Jpartner object is not present  %s::%s.', get_class($this), $method));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $ex);
+			throw $ex;
 		}
 		
 		return $DPP_PARAMETERS;
@@ -705,11 +711,18 @@ class UserFilterCheck
 			
 		}
 		else
-		{
-			throw new sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method));
+		{		
+			$ex = new sfException(sprintf(' No profile class object send with profileid  %s::%s.', get_class($actionObj), $method));
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR, $ex);
+			throw $ex;
 		}
 		return $dpp_parameters;
 	}
 	
+        
+        public function getDppParameters(){
+            
+            return $this->dppParameters;
+        }
 
 }

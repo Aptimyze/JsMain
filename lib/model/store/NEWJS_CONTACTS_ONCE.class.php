@@ -174,5 +174,47 @@ class NEWJS_CONTACTS_ONCE extends TABLE
                 return $output;
 
     }
+    
+    
+   //To delete enteries from contacts_once whom mailers have been sent from cronSendEoiEmailTask;
+	public function deleteYesterData()
+    {
+        
+        try {
+            $todayDate=date('Y-m-d');
+            $sql ="DELETE FROM newjs.CONTACTS_ONCE WHERE SENT!='N' AND DATE(`TIME`)<'$todayDate'";
+            
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+        }
+        catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+     public function getCountOfSentMailsToday($receiver)
+    {
+		if(!$receiver)
+			throw new jsException("","receiver is not specified in getContactsDetails() OF newjs_MESSAGE_LOG.class.php");               
+		try{    
+                        $todayDate=date('Y-m-d');
+			$sql = "SELECT count(*) as CNT FROM newjs.CONTACTS_ONCE WHERE RECEIVER = :PROFILEID1 AND DATE(`TIME`)='$todayDate' AND SENT='Y'";
+			$res=$this->db->prepare($sql);
+			$res->bindValue(":PROFILEID1",$receiver,PDO::PARAM_INT);
+			$res->execute();
+			if($row = $res->fetch(PDO::FETCH_ASSOC))
+			{
+				$output = $row;
+			}
+		}
+		catch(PDOException $e)
+		{
+		   throw new jsException($e);
+		}
+		return $output['CNT'];
 
+    }
+
+    
+    
+    
 }

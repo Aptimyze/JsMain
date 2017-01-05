@@ -47,8 +47,17 @@ class SearchService
 	public function performSearch($SearchParamtersObj='',$results_cluster='',$clustersToShow='',$currentPage='',$cachedSearch='',$loggedInProfileObj='')
 	{
 		$SearchResponseObj = ResponseHandleFactory::getResponseEngine($this->responseType,$this->engineType,$this->showAllClustersOptions);
+		if($SearchParamtersObj->getSHOW_RESULT_FOR_SELF() =='N')
+		{
+			return $SearchResponseObj;
+		}
 		$SearchRequestObj = RequestHandleFactory::getRequestEngine($SearchResponseObj,$SearchParamtersObj);
 		$SearchRequestObj->getResults($results_cluster,$clustersToShow,$currentPage,$cachedSearch,$loggedInProfileObj);
+		if($SearchParamtersObj->getSHOW_RESULT_FOR_SELF()=='ISKUNDLIMATCHES')
+		{
+			$SearchResponseObj = $SearchParamtersObj->getGunaMatches($SearchResponseObj);
+		}
+		
 		return $SearchResponseObj;
 	}
 
@@ -56,7 +65,7 @@ class SearchService
         * This function is used to delete profile or array of profiles from search engine(as per current implementation : solr)
         * @param pid array/integer
         */
-	public function deleteIdsFromSearch($pid)
+	public function deleteIdsFromSearch($pid)		
 	{
 		$SearchResponseObj = ResponseHandleFactory::getResponseEngine($this->responseType,$this->engineType,'');
 		$SearchRequestObj  = RequestHandleFactory::getRequestEngine($SearchResponseObj,'');	

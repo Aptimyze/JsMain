@@ -6,6 +6,7 @@ $fromCrontab = 1;
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/ScheduleSms.class.php");
 
+$db_ddl = connect_ddl();
 
 $orgTZ = date_default_timezone_get();
 date_default_timezone_set("Asia/Calcutta");
@@ -13,7 +14,7 @@ $sms = new ScheduleSms;
 date_default_timezone_set($orgTZ);
 
 $sql= "TRUNCATE TABLE newjs.TEMP_SMS_DETAIL";
-$res=mysql_query($sql,$sms->dbMaster) or $sms->SMSLib->errormail($sql,mysql_errno().":".mysql_error());
+$res=mysql_query($sql,$db_ddl) or $sms->SMSLib->errormail($sql,mysql_errno().":".mysql_error());
 $sms->unsetTempJPROFILE();
 
 $sms->setTempJPROFILE();

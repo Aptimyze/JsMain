@@ -117,7 +117,7 @@ $memcacheObj->set("cronSendEoi",$i);
                     /**code ends*/
 				}
                 unset($countArr);
- $contactOnceObj->delete();
+ $contactOnceObj->deleteYesterData();
     }
 
     
@@ -219,7 +219,19 @@ $memcacheObj->set("cronSendEoi",$i);
         $partialObj->addPartial("eoi_profile", "eoi_profile", $draft);
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
-        $emailSender->send();
+        
+        if(CommonConstants::contactMailersCC)
+        {
+        $contactNumOb=new ProfileContact();
+        $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
+        if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
+        {
+           $ccEmail =  $numArray['0']['ALT_EMAIL'];    
+        }
+        else $ccEmail = "";
+        }
+        else $ccEmail = "";
+        $emailSender->send('','',$ccEmail);
         $status = $emailSender->getEmailDeliveryStatus();
         unset($emailSender);
 

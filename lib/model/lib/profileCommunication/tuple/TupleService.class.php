@@ -11,6 +11,8 @@ class TupleService
 	private $IGNORED_PROFILES = Array();
 
 	private $INTEREST_RECEIVED = Array();
+	private $INTEREST_EXPIRING = Array();
+	private $INTEREST_ARCHIVED = Array();
 	private $FILTERED_INTEREST = Array();
 	private $INTEREST_SENT = Array();
 	private $ACCEPTANCES_RECEIVED = Array();
@@ -37,6 +39,7 @@ class TupleService
     private $loginProfileObj;
     private $PEOPLE_WHO_VIEWED_MY_CONTACTS=Array();
     private $INTEREST_RECEIVED_FILTER = Array();
+    private $FEATURED_PROFILE_TUPLE =  Array();
 	// Function to initalize logic array which have logic id and corresponding fields mapping
 	static public function initLogics()
 	{
@@ -64,7 +67,8 @@ class TupleService
 					"YOURINFO",
 					"SCREENING",
                                         "COMPANY_NAME",
-                                        "ANCESTRAL_ORIGIN"
+                                        "ANCESTRAL_ORIGIN",
+                                        "EMAIL"
 					
 				),
 				"LOGIC" => Array(
@@ -124,7 +128,11 @@ class TupleService
                         "NATIVE_LOGIC" => Array(
 				"FIELDS" => Array("NATIVE_CITY","NATIVE_STATE"),
 				"LOGIC" => Array()
-			)
+			),
+			"NAME_LOGIC" =>Array(
+				"FIELDS" => Array("NAME_OF_USER","DISPLAY_NAME"),
+				"LOGIC" =>Array()
+			),
 			
 		);
 	}
@@ -185,10 +193,13 @@ class TupleService
 		calling the setters of various fields*/
 		if (is_array($profileObjArray)){
                    	foreach ($profileObjArray as $infoType => $profilesInfoTypeBasedValues) {
+                   		
 				if (is_array($profilesInfoTypeBasedValues))
 					foreach ($profilesInfoTypeBasedValues as $profileId => $profileValues) {
+						
 						$tupleObject = $this->getTupleObject($infoType, $profileId);
                                                 foreach($this->profileDetailsArray as $key=>$tp) {
+
 						if ($profileId==($tp->getPROFILEID()))
 	                                                $tupleObject->setprofileObject($this->profileDetailsArray[$key]);
 						}
@@ -208,6 +219,7 @@ class TupleService
 					}
                         }
 			}
+
 	}
         
         public function getlocationWithNativeCity($tupleObject){
@@ -233,6 +245,15 @@ class TupleService
 	public function getINTEREST_RECEIVED()
 	{
 		return $this->INTEREST_RECEIVED;
+	}
+
+	public function getINTEREST_EXPIRING()
+	{
+		return $this->INTEREST_EXPIRING;
+	}
+	public function getINTEREST_ARCHIVED()
+	{
+		return $this->INTEREST_ARCHIVED;
 	}
 	public function getFILTERED_INTEREST()
 	{
@@ -334,6 +355,11 @@ class TupleService
 		return $this->INTEREST_RECEIVED_FILTER;
 	}
 	
+	public function getFEATURED_PROFILE_TUPLE()
+	{
+		return $this->FEATURED_PROFILE_TUPLE;
+	}
+
 	/*This function will return particular tuple object from the requested infotype array and given profileid
 	 *@param  infotype : information type array defined in this service
 	 *@param profileId : profileid to identify the tuple object
@@ -360,7 +386,22 @@ class TupleService
 		}
 		return null;
 	}
-	
+	public function executeNAME_LOGIC($profileIds)
+	{
+		if(!empty($profileIds))
+		{
+			$nameOfUserObj = new NameOfUser();
+			$showNameData = $nameOfUserObj->showNameToProfiles($this->getLoginProfileObj(),$this->profileDetailsArray);
+			foreach($showNameData as $k=>$v)
+			{
+				if($v['SHOW']==true)
+					$profileArray[$k]['NAME_OF_USER']=$v['NAME'];
+				else
+					$profileArray[$k]['NAME_OF_USER']='';
+			}
+		}
+		return $profileArray;
+	}
 	/* Various logic implementations defined in initLogics for respective fields
 	/*@param profileIds : array of profile ids to find the fields
 	/*@return profilesArray : array of profiles with complete information retrieved from this logic
@@ -369,7 +410,7 @@ class TupleService
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_JPROFILE_EDUCATION("newjs_masterRep");
+			$jprofArrObj                = ProfileEducation::getInstance("newjs_masterRep");
 			$profileDetailsArray = $jprofArrObj->getProfileEducation($profileIds,'mailer');
 				
 			foreach($profileDetailsArray as $k=>$row)
@@ -825,6 +866,7 @@ else {
 				$result[$profileid]["ENTRY_DT"]        = $profileObj->getENTRY_DT();
 				$result[$profileid]["SUBSCRIPTION"]    = $profileObj->getSUBSCRIPTION();
 				$result[$profileid]["LAST_LOGIN_DT"]    = $profileObj->getLAST_LOGIN_DT();
+				$result[$profileid]["EMAIL"]    = $profileObj->getEMAIL();
                                 if(Flag::isFlagSet("company_name",$profileObj->getSCREENING()))
                                         $result[$profileid]["COMPANY_NAME"]          = $profileObj->getCOMPANY_NAME();
                                 else
@@ -848,7 +890,7 @@ else {
 	{
 		if(!empty($profileIds))
 		{
-			$jprofArrObj                = new NEWJS_NATIVE_PLACE("newjs_masterRep");
+			$jprofArrObj                = ProfileNativePlace::getInstance("newjs_masterRep");
                          if(!is_array($profileIds)){
                             $profileIds = array($profileIds);
                         }

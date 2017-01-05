@@ -307,6 +307,8 @@ if($data)
 			if($_SERVER['REQUEST_METHOD']=="POST")	
 			{
 				mysql_query_decide($sql_up) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_up,"ShowErrTemplate");
+				include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+				JProfileUpdateLib::getInstance()->removeCache($profileid);
 			}
 
 			//to check partner profile is filled by the user or not //

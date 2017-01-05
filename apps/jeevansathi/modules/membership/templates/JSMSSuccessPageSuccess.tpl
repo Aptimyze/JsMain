@@ -98,6 +98,6 @@
   var email = "~$data.userDetails.EMAIL`";
   setTimeout(function(){
     autoPopupFreshdesk(username,email);
-  }, 60000);
+  }, 90000);
 </script>
 ~/if`

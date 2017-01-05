@@ -26,7 +26,12 @@ class ApiEditSubmitV1Action extends sfActions
 		$this->loginProfile->setJpartner($jpartnerObj);
 		//Get symfony form object related to Edit Fields coming.
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
-		$this->editFieldNameArr=$request->getParameter('editFieldArr');
+		$this->editFieldNameArr=$request->getParameter('editFieldArr');		
+		if($this->editFieldNameArr['STATE_RES'] && $this->editFieldNameArr['CITY_RES']=="0")
+		{
+			$this->editFieldNameArr['CITY_RES']=  $this->editFieldNameArr['STATE_RES'] ."OT";
+		}		
+		unset($this->editFieldNameArr['STATE_RES']);
                 if(!empty($_FILES)){
                         foreach($_FILES as $f1){
                                 foreach($f1 as $fKey=>$fVal){
@@ -75,10 +80,10 @@ class ApiEditSubmitV1Action extends sfActions
 			
 			$this->form->bind($this->editFieldNameArr);
 			if ($this->form->isValid() && !$nonEditableField && $incompleteFieldFlag)
-			{       
+			{   
                                 if($this->editFieldNameArr["FAMILYINFO"])
 					RegChannelTrack::insertPageChannel($request->getAttribute("profileid"),PageTypeTrack::_ABOUTFAMILY);
-				$this->form->updateData();
+				$this->form->updateData();				
 				if($this->incomplete==EditProfileEnum::$INCOMPLETE_YES)
 				{
 					//Channel tracking for Incomplete SMS to track incomplete to complete )
@@ -90,7 +95,7 @@ class ApiEditSubmitV1Action extends sfActions
 					$request->setParameter('email', $this->loginProfile->getEMAIL());
 					$request->setParameter('password', $this->loginProfile->getPASSWORD());
 					$request->setParameter('fromIncompleteApi',1);
-                                        if(MobileCommon::isIOSApp()){
+                                        if(MobileCommon::isIOSApp() || MobileCommon::isAndroidApp()){
                                             $familyArr = $this->bakeIOSResponse(); 
                                             $request->setParameter('setFamilyArr',$familyArr);
                                         }
@@ -154,8 +159,14 @@ class ApiEditSubmitV1Action extends sfActions
 			$apiResponseHandlerObj->setResponseBody($errorArr);
 			ValidationHandler::getValidationHandler("","EditField Array is not valid");
 		}
+
 		$apiResponseHandlerObj->generateResponse();
+
+		if($request->getParameter('internally'))
+		return sfView::NONE;
+
 		die;
+		
 	}
   
   private function bakeDesktopResponse(){

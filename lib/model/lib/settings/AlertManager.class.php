@@ -354,7 +354,7 @@ class AlertManager
                                 $dup_fields[] = "email";
                                 duplication_fields_insertion($dup_fields, $this->profileid);
                                 $expireDt = date("Y-m-d H:i:s");
-                                $jsadminAutoExpObj = new jsadmin_AUTO_EXPIRY();
+                                $jsadminAutoExpObj = new ProfileAUTO_EXPIRY();
                                 $jsadminAutoExpObj->replace($this->profileid, 'E', $expireDt);
                                 $newjsContactArchiveObj = new NEWJS_CONTACT_ARCHIVE();
                                 $newjsContactArchiveInfoObj = new CONTACT_ARCHIVE_INFO();
@@ -371,7 +371,7 @@ class AlertManager
                                     
                                     // Chat Code here
                                     $userData = $jprofileObj->get($this->profileid, 'PROFILEID', "USERNAME");
-                                    send_chat_request_email($this->profileid, $this->objVars['emailadd'], $userData['USERNAME']);
+                                    //send_chat_request_email($this->profileid, $this->objVars['emailadd'], $userData['USERNAME']);
                                     $botUserInfoObj = new bot_jeevansathi_user_info();
                                     $botUserOnlineObj = new bot_jeevansathi_user_online();
                                     $botGmailObj = new bot_jeevansathi_gmail_invites();

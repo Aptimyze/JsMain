@@ -7,6 +7,7 @@ class HamburgerApp
 		$actionName = $forwardingArray['actionName'];
 		if($profileid && RequestHandlerConfig::$moduleActionHamburgerArray[$moduleName][$actionName])
 		{
+                        $isNewMobileSite = MobileCommon::isNewMobileSite();
 			$profileObj=LoggedInProfile::getInstance('newjs_master');
 			$profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
 			$pictureServiceObj=new PictureService($profileObj);
@@ -37,16 +38,24 @@ class HamburgerApp
 					$hamburgerDetails["FILTERED_NEW"] = 0;
 				}
 			$hamburgerDetails['ACC_ME_NEW']=$profileMemcacheObj->get("ACC_ME_NEW");
-	                $hamburgerDetails['MESSAGE_NEW']=0;
-	                //$profileMemcacheObj->get("MESSAGE_NEW");
+	                $hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? $profileMemcacheObj->get("MESSAGE_NEW") : 0;
+	                //;
 			$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");
-			$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITOR_ALERT");
+			if(MobileCommon::isIOSApp() || MobileCommon::isAndroidApp())
+			{
+				$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITORS_ALL");
+			}
+			else
+			{
+				$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITOR_ALERT");
+			}
+                        $hamburgerDetails['VISITORS_ALL']=$profileMemcacheObj->get("VISITORS_ALL");
 			$hamburgerDetails['BOOKMARK']=$profileMemcacheObj->get("BOOKMARK");
 				$hamburgerDetails['JUST_JOINED_COUNT'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES');
 				$hamburgerDetails['JUST_JOINED_NEW'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
 				$hamburgerDetails['INTEREST_PENDING'] = $profileMemcacheObj->get('AWAITING_RESPONSE')+$profileMemcacheObj->get('NOT_REP');
 				$hamburgerDetails['ACCEPTED_MEMBERS'] = $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME');
-				if(MobileCommon::isApp() == "I")
+				if(MobileCommon::isApp() == "I" || $isNewMobileSite)
 				{
 					$request->setParameter("perform","count");
 					ob_start();

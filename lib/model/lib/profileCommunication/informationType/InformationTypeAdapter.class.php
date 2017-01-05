@@ -15,8 +15,9 @@ class InformationTypeAdapter
     }
     
     public function getProfiles($condition, $skipArray,$subscription="")
-    {//print_r($skipArray); die;
+    {
 		$profilesArray = array();
+       
 		switch ($this->infoType) {
             case "INTEREST_RECEIVED":
                 $contactsObj                          = new ContactsRecords();
@@ -24,7 +25,19 @@ class InformationTypeAdapter
                 $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
                 $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
                 break;
+             case "INTEREST_ARCHIVED":
+                $contactsObj                          = new ContactsRecords();
+                $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+                $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
+                $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
+                break;
             case "INTEREST_RECEIVED_FILTER":
+                $contactsObj                          = new ContactsRecords();
+                $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+                $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
+                $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
+                break;
+            case "INTEREST_EXPIRING":
                 $contactsObj                          = new ContactsRecords();
                 $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
                 $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
@@ -106,8 +119,8 @@ class InformationTypeAdapter
                 $profilesArray                                 = $introCallObj->getHistoryOfIntroCallsComplete($this->profileId, $condition, $skipArray);
                 break;
 	    case "VISITORS":
-	        $visitorObj                              = new Visitors($this->profileId);
-                $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"]);
+	        $visitorObj                              = new Visitors(LoggedInProfile::getInstance('newjs_master'));
+                $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"],array("matchedOrAll"=>$condition["matchedOrAll"]));
 			break;
 	    case "MY_MATCHES":
 		$SearchCommonFunctions = new SearchCommonFunctions;

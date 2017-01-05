@@ -67,7 +67,7 @@ class itunesReceiptValidator {
         curl_close($ch);
 
         if ($errno != 0) {
-            throw new Exception($errmsg, $errno);
+            throw new jsException('',$errmsg, $errno);
         }
 
         return $response;

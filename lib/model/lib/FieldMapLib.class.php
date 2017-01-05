@@ -8,6 +8,10 @@
 	class FieldMap{
 		/*This will return label corresponding to value*/
 public static function getFieldLabel($label,$value,$returnArr=''){
+if(($label=="city"||$label=="city_india")&& (substr($value,2)=="OT"))
+{
+	$value=0;
+}
 	switch($label){
 	case "income":
 		$arr=array( 
@@ -2055,6 +2059,7 @@ case "state_CITY":
 "TR"=>"TR01",
 "UK"=>"UK05,UK11,UK10,UK07,UK02,UK01,UK08,UK04,UK12,UK06,UK03,UK09",
 "UP"=>"UP13,UP12,UP42,UP14,UP53,UP41,UP26,UP48,UP47,UP21,UP46,UP18,UP19,UP17,UP24,UP45,UP22,UP16,UP44,UP54,UP25,UP43,UP33,UP20,UP34,UP04,UP39,UP02,UP37,UP50,UP36,UP38,UP52,UP05,UP35,UP30,UP51,UP06,UP01,UP40,UP32,UP29,UP11,UP10,UP03,UP08,UP09,UP49",
+"WB"=>"WB23,WB19,WB11,WB12,WB09,WB24,WB39,WB31,WB20,WB04,WB34,WB22,WB10,WB18,WB21,WB05,WB38,WB02,WB35,WB42,WB07,WB29,WB32,WB03,WB06,WB30,WB14,WB33,WB13,WB40,WB17,WB26,WB01,WB37,WB16,WB08,WB27,WB28,WB41,WB36,WB25",
 );
 
 	break;
@@ -3104,6 +3109,7 @@ case "education_label":
 case "family_background":
 
 	$arr=array(
+"0"=>"Select",
 "1"=>"Business/Entrepreneur",
 "2"=>"Service - Private",
 "3"=>"Service - Govt./PSU",
@@ -3119,6 +3125,7 @@ case "family_background":
 case "mother_occupation":
 
 	$arr=array(
+"0"=>"Select",
 "1"=>"Housewife",
 "2"=>"Business/Entrepreneur",
 "3"=>"Service-Private",
@@ -8990,6 +8997,7 @@ case "children_ascii_array":
 	case "family_values":
 
 		$arr=array(
+"0"=>"Select",
 "4" => "Orthodox",
 "1" => "Conservative",
 "2" => "Moderate",
@@ -9001,6 +9009,7 @@ case "children_ascii_array":
 	case "family_type":
 
 		$arr=array(
+"0"=>"Select",
 "1" => "Joint Family",
 "2" => "Nuclear Family",
 "3" => "Others",
@@ -9011,8 +9020,9 @@ case "children_ascii_array":
 	case "family_status":
 
 		$arr=array(
+"0"=>"Select",
 "3" => "Rich/Affluent",
-"2" => "Upper Middle Class",
+"2" => "Upper Middle",
 "1" => "Middle Class",
 );
 
@@ -9089,6 +9099,7 @@ case "children_ascii_array":
 	case "bodytype":
 
 		$arr=array(
+"0"=>"Select",
 "1" => "Slim",
 "2" => "Average",
 "3" => "Athletic",
@@ -9100,6 +9111,7 @@ case "children_ascii_array":
 	case "complexion":
 
 		$arr=array(
+"0"=>"Select",
 "1" => "Very Fair",
 "2" => "Fair",
 "3" => "Wheatish",
@@ -9112,6 +9124,7 @@ case "children_ascii_array":
 	case "smoke":
 
 		$arr=array(
+"0"=>"Select",
 "Y" => "Yes",
 "N" => "No",
 "O" => "Occasionally",
@@ -9122,8 +9135,9 @@ case "children_ascii_array":
 	case "diet":
 
 		$arr=array(
+"0"=>"Select",
 "V" => "Vegetarian",
-"N" => "Non Vegetarian",
+"N" => "Non Veg",
 "J" => "Jain",
 "E" => "Eggetarian",
 );
@@ -9133,6 +9147,7 @@ case "children_ascii_array":
 	case "drink":
 
 		$arr=array(
+"0"=>"Select",
 "Y" => "Yes",
 "N" => "No",
 "O" => "Occasionally",
@@ -9987,10 +10002,16 @@ $arr["Non-Graduate"]["Trade School"] = "24";
 $arr["Non-Graduate"]["Diploma"] = "9";
 $arr["Others"]["Other"] = "22";
 break;
+        case "qualityMis_top_cities":
+                //$arr = array("DE00","MH04","KA02","MH08","WB05","AP03","UP19","GU01","HA03","PH00","RA07","MH05","TN02","PU07","MP08","MP02","BI06","UP18","UP12","UP25","UP30","GU10","UP03","UP01","GU04","UK05","HA02","PU01","PU10","OR01");
+                $arr = array("DE00","MH04","KA02","MH08","WB05","AP03","UP19","GU01","HA03","PH00","RA07","MH05","TN02","PU07","MP08","MP02","BI06","UP18","UP12","UP25","UP30","GU10","UP03","UP01","GU04","UK05","HA02","UP47","MH12","MH28");
+                break;
 default:
 
 				break;
-
+	case "displayname":
+		$arr['Y']='Y';
+		$arr['N']='N';
 			}
 
 			if($returnArr)

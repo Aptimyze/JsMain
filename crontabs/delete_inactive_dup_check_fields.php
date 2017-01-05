@@ -1,5 +1,6 @@
 <?php
 $curFilePath = dirname(__FILE__)."/";
+
 include_once("/usr/local/scripts/DocRoot.php");
 
 chdir(dirname(__FILE__));
@@ -7,6 +8,7 @@ $flag_using_php5=1;
 
 include("config.php");
 include("connect.inc");
+include_once(JsConstants::$docRoot . "/commonFiles/SymfonyPictureFunctions.class.php");
 
 $dbM = connect_db();
 $dbS = $dbM;
@@ -34,5 +36,6 @@ while($row = mysql_fetch_array($res_main))
 		mysql_query($sql,$dbM) or die($sql.mysql_error($dbM));
 	}
 }
+SendMail::send_email('palashchordia@jeevansathi.com', 'delete_inactive_dup_check_fields', 'cron Alert', '', '', '', '', $this->emailAttachmentType, $this->emailAttachmentName, '', "1", $replyToAddress,$from_name);
 //print_r($arr);
 ?>

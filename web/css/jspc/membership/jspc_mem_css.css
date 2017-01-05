@@ -168,7 +168,7 @@
 }
 
 .mem_mr1 {
-    margin-top: 40px
+    margin-top: 40px;
 }
 
 .mem_mr2 {
@@ -294,6 +294,7 @@
 .mem-widp11 {
     width: 73%
 }
+
 .mem-widp12 {
     width: 78%
 }
@@ -413,12 +414,6 @@
 
 .mem-bdr18 {
     border: 5px solid #999999
-}
-
-.jsexc ul {
-    margin: 0;
-    padding: 15px 0 0 0;
-    list-style-type: none
 }
 
 .jsexc ul li {
@@ -690,16 +685,12 @@ ul.feature li {
 }
 
 .planlist ul li {
-    color: #999999;
+    color: #999;
     display: inline-block;
-    width: 260px;
+    width: 224px;
     text-align: center;
     padding-bottom: 6px;
     cursor: pointer
-}
-
-.planlist ul li span {
-    display: inline-block;
 }
 
 .planlist ul li.active {
@@ -715,24 +706,24 @@ ul.feature li {
     font-size: 24px
 }
 
-.planlist ul li span:nth-child(3) {
+.planlist ul li.planlist ul span:nth-child(3) {
     padding-left: 10px
 }
 
 .opt {
     background-color: #f2f2f2;
-    color: #666666
+    color: #666
 }
 
 .smallcircle {
-    background-color: #aaaaaa;
+    background-color: #aaa;
     border-radius: 5px;
     width: 10px;
     height: 10px
 }
 
 .mem-sep {
-    border-bottom: 1px solid #aaaaaa;
+    border-bottom: 1px solid #aaa
 }
 
 .mem-radio {
@@ -763,15 +754,15 @@ ul.feature li {
 }
 
 .benefits ul li.check {
-    background: url(IMG_URL/images/jspc/membership_img/grey-tick.png) no-repeat 1px 31px;
-    padding: 23px 0 0 25px;
-    color: #2c2c2c
+    background: url(IMG_URL/images/jspc/membership_img/grey-tick.png) no-repeat 1px 19px;
+    padding: 15px 0 0 25px;
+    color: #2c2c2c;
 }
 
 .benefits ul li.cross {
-    background: url(IMG_URL/images/jspc/membership_img/crossicon.png) no-repeat 1px 27px;
-    padding: 23px 0 0 25px;
-    color: #999999
+    background: url(IMG_URL/images/jspc/membership_img/crossicon.png) no-repeat 1px 17px;
+    padding: 15px 0 0 25px;
+    color: #999;
 }
 
 .benefits ul li {
@@ -944,7 +935,7 @@ dl {
 }
 
 .dropdown dd ul li:hover {
-    background-color: #d4d4d4;
+    background-color: #b5b5b5;
     color: #fff
 }
 
@@ -970,7 +961,7 @@ dl {
 }
 
 .drop1 ul li:hover {
-    background-color: #d4d4d4;
+    background-color: #b5b5b5;
     color: #fff
 }
 
@@ -1148,10 +1139,12 @@ td#free-col:hover .hoverimg, td#free-col:hover .cmp-vbtn div {
     box-sizing: border-box;
 }
 
+
 /*.accordion {
     overflow: hidden;
 }
 */
+
 .accordion-section-title {
     display: inline-block;
     color: #666666;
@@ -1216,70 +1209,82 @@ ul.chqpick li span:nth-child(1) {
 
 ul.chqpick li span:nth-child(2) {
     text-align: left;
-    padding-left: 10px
+    padding-left: 10px;
 }
 
 .pt50 {
     padding-top: 50px;
 }
 
-.chqp1{padding:6px 0 0 207px}
-.chqp2{padding:16px 0 0 41px}
-.chq3{padding:8px 0 0 63px}
-.chqp4{right: 31px; top: 115px;}
+.chqp1 {
+    padding: 6px 0 0 207px;
+}
 
-.cheque{
-    background:url(IMG_URL/images/jspc/membership_img/samplechq.jpg) no-repeat;
-    width:293px;
-    height:141px
+.chqp2 {
+    padding: 16px 0 0 41px;
+}
+
+.chq3 {
+    padding: 8px 0 0 63px;
+}
+
+.chqp4 {
+    right: 31px;
+    top: 115px;
+}
+
+.cheque {
+    background: url(IMG_URL/images/jspc/membership_img/samplechq.jpg) no-repeat;
+    width: 293px;
+    height: 141px;
 }
 
 
 /* new logo css */
 
-.icicilogo{
+.icicilogo {
     background-position: -110px -131px;
     width: 71px;
     height: 20px;
 }
 
-.hdfclogo{
-    background-position:-110px -151px;
+.hdfclogo {
+    background-position: -110px -151px;
     width: 71px;
     height: 20px;
 }
 
-.axislogo{
+.axislogo {
     background-position: -112px -170px;
     width: 71px;
     height: 30px;
 }
 
-.citilogo{
+.citilogo {
     background-position: -188px -129px;
     width: 63px;
     height: 22px;
 }
 
-.paytmlogo{
-    background-position:-188px -154px;
+.paytmlogo {
+    background-position: -188px -154px;
     width: 63px;
     height: 22px;
 }
 
-.kotaklogo{
+.kotaklogo {
     background-position: -259px -129px;
     width: 70px;
     height: 22px;
 }
 
-.mobikwiklogo{
+.mobikwiklogo {
     background-position: -261px -154px;
     width: 68px;
     height: 22px;
 }
 
-.paypallogo{
+.paypallogo {
     background-position: -186px -182px;
     width: 68px;
     height: 22px;
@@ -1293,38 +1298,511 @@ ul.chqpick li span:nth-child(2) {
     cursor: default;
 }
 
-.memnp1{
-    padding:20px;
+.memnp1 {
+    padding: 20px;
 }
 
-ul.memul{
-    list-style-type:none;
+ul.memul {
+    list-style-type: none;
 }
 
-ul.memul li{
-    display:inline-block;margin-right:20px;
+ul.memul li {
+    display: inline-block;
+    margin-right: 20px;
 }
 
-ul.memul li:nth-last-child(1){
-    margin-right:0;
+ul.memul li:nth-last-child(1) {
+    margin-right: 0;
 }
 
-.memn-nosel{
-    border:2px solid #f1f0f0;
+.memn-nosel {
+    border: 2px solid #f1f0f0;
 }
 
-.memnp-sel{
-    border:2px solid #d4495c;
+.memnp-sel {
+    border: 2px solid #d4495c;
 }
 
-.mem-mastreo{    
-    width: 45px; 
-    height: 28px; 
+.mem-mastreo {
+    width: 45px;
+    height: 28px;
     background-position: -275px -183px;
 }
 
-.mem-sbi{ 
-    width: 45px; 
-    height: 28px; 
-    background-position: -275px -220px; 
+.mem-sbi {
+    width: 45px;
+    height: 28px;
+    background-position: -275px -220px;
+}
+
+.mempad30 {
+    padding: 31px 0 24px 0px;
+}
+
+.wid63p {
+    width: 63%;
+}
+
+.padallf_new {
+    padding: 19px 0px;
+}
+
+.newSprt_6:hover .hoverDiv {
+    display: block;
+}
+
+.newSprt_6:hover .hoverDiv2 {
+    display: block;
+}
+
+.hoverDiv:hover {
+    display: block;
+}
+
+.hoverDiv {
+    position: absolute;
+    top: 87px;
+    right: 41px;
+    width: 203px;
+    padding: 14px;
+    background-color: white;
+    -webkit-box-shadow: -1px 2px 19px 1px rgba(200, 200, 200, 1);
+    -moz-box-shadow: -1px 2px 19px 1px rgba(200, 200, 200, 1);
+    box-shadow: -1px 2px 19px 1px rgba(200, 200, 200, 1);
+    z-index: 1;
+    border: 1px solid #c8c8c8;
+    display: none;
+}
+
+.hoverDiv:after, .hoverDiv:before {
+    top: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.hoverDiv:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-top-color: #fff;
+    border-width: 10px;
+    margin-left: -10px;
+}
+
+.hoverDiv:before {
+    border-color: rgba(200, 200, 200, 0);
+    border-top-color: #c8c8c8;
+    border-width: 11px;
+    margin-left: -11px;
+}
+
+.hoverDiv2 {
+    top: 140px;
+    right: 58px;
+}
+
+.mt24 {
+    margin-top: 24px;
+}
+
+.memPadNew {
+    width: 21%;
+    margin: 40px 15px;
+}
+
+.newSprt {
+    background-image: url(IMG_URL/images/jspc/membership_img/static_sprite.png);
+    background-repeat: no-repeat;
+}
+
+.newSprt_1 {
+    width: 82px;
+    height: 82px;
+    background-position: -19px -6px;
+}
+
+.newSprt_2 {
+    width: 82px;
+    height: 82px;
+    background-position: -21px -108px;
+}
+
+.newSprt_3 {
+    width: 82px;
+    height: 82px;
+    background-position: -21px -207px;
+}
+
+.newSprt_4 {
+    width: 82px;
+    height: 82px;
+    background-position: -21px -303px;
+}
+
+.newSprt_5 {
+    width: 15px;
+    height: 15px;
+    background-position: -18px -190px;
+}
+
+.newSprt_6 {
+    width: 10px;
+    height: 14px;
+    margin-left: 7px;
+    background-position: -3px -84px;
+}
+
+.jsexc ul {
+    margin: 0;
+    padding: 0 0 0 0;
+    list-style-type: none;
+}
+
+.mem_pad10_new1 {
+    padding: 0 0 0 25px;
+}
+
+.mem_pad_new {
+    padding: 37px 0 0 0;
+}
+
+.mem_pad10_new2 {
+    padding: 20px 0 0 25px;
+}
+
+.brdrTop {
+    border-top: 1px solid #A6AFB8;
+}
+
+.mt60 {
+    margin-top: 60px;
+}
+
+.colrgrey {
+    color: #2C2C2D;
+}
+
+.mar_mem_new10 {
+    margin: 10px 10px 10px 55px;
+}
+
+.mem_mar_lf_55 {
+    margin-left: 55px;
+}
+
+.rcb_pos1 {
+    background-position: 1px 1px
+}
+
+.rcb_pos2 {
+    background-position: -102px 1px
+}
+
+.rcb_pos3 {
+    background-position: -200px 1px
+}
+
+.rcb_pos4 {
+    background-position: 1px -95px
+}
+
+.rcb_pos5 {
+    background-position: -102px -95px
+}
+
+
+/*-- color and background color --*/
+
+.rcb_bg1 {
+    background-color: #d9475c
+}
+
+.rcb_bg2 {
+    background-color: #1c2d40
+}
+
+.rcb_bg3 {
+    background-color: #b4b6b9
+}
+
+.rcb_bg4 {
+    background-color: #1c2d40
+}
+
+.rcb_colr1 {
+    color: #fff
+}
+
+.rcb_colr2 {
+    color: #d9475c
+}
+
+.rcb_color3 {
+    color: #1c2d40
+}
+
+.rcb_color4 {
+    color: #000
+}
+
+.rcb_cursp {
+    cursor: pointer
+}
+
+
+/*-- padding --*/
+
+.rcb_pada {
+    padding: 20px 0
+}
+
+.rcb_padb {
+    padding: 0 10px
+}
+
+.rcb_padc {
+    padding: 19px 21px
+}
+
+.rcb_padd {
+    padding: 60px 0
+}
+
+.rcb_pade {
+    padding: 40px 0 30px
+}
+
+.rcb_padf {
+    padding: 50px 0
+}
+
+.rcb_padg {
+    padding: 25px 0
+}
+
+.rcb_padk {
+    padding: 19px 0 14px 0
+}
+
+.rcb_padh {
+    padding: 20px 0px 0 116px
+}
+
+.rcb_padi {
+    padding: 40px 0px 0px 32px
+}
+
+.rcb_padj {
+    padding: 17px 35px 0px 20px
+}
+
+.rcb_pt10 {
+    padding-top: 10px
+}
+
+.rcb_pt13 {
+    padding-top: 13px
+}
+
+.rcb_pt17 {
+    padding-top: 17px
+}
+
+.rcb_pt25 {
+    padding-top: 25px
+}
+
+.rcb_pt35 {
+    padding-top: 35px
+}
+
+.rcb_pt45 {
+    padding-top: 45px
+}
+
+.rcb_pt40 {
+    padding-top: 40px
+}
+
+.rcb_pt123 {
+    padding-top: 123px
+}
+
+.rcb_pl25 {
+    padding-left: 25px
+}
+
+.rcb_padl {
+    padding-left: 9px
+}
+
+.rcb_pl120 {
+    padding-left: 120px
+}
+
+.rcb_ml2 {
+    margin-left: 2px
+}
+
+.rcb_ml5 {
+    margin-left: 5px
+}
+
+.rcb_m2 {
+    margin-left: 20px
+}
+
+.rcb_ml100 {
+    margin-left: 100px
+}
+
+.rcb_mt11n {
+    margin-top: -11px
+}
+
+.rcbfield input, select {
+    background-color: #697581;
+    border: 0;
+    font-size: 15px
+}
+
+.rcb_mainimg {
+    background: url(IMG_URL/images/membership-img/top-image1.jpg) no-repeat center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.rcb_endqoute {
+    background-image: url(IMG_URL/images/membership-img/rcb_new_sprite.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+    background-position: -253px -121px;
+    width: 33px;
+    height: 19px;
+    margin-left: 15px
+}
+
+.rcb_sprite {
+    background-image: url(IMG_URL/images/membership-img/rcb_new_sprite.png);
+    background-repeat: no-repeat;
+    display: block
+}
+
+.rcb_opa60 {
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+}
+
+.rcb_lh30 {
+    line-height: 30px
+}
+
+.rcb_lh40 {
+    line-height: 40px
+}
+
+.rcb_btn {
+    width: 180px;
+    margin: 0 auto;
+}
+
+.rcb_fl {
+    float: left
+}
+
+.rcb_fr {
+    float: right
+}
+
+.rcb_disib {
+    display: inline-block
+}
+
+.wid88 {
+    width: 88px;
+}
+
+.rcbdropdown dd, .rcbdropdown dt, .rcbdropdown ul, dl {
+    margin: 0px;
+    padding: 0px;
+}
+
+.rcbdropdown dt {
+    line-height: 30px
+}
+
+.rcbdropdown ul {
+    height: 90px;
+    overflow: auto
+}
+
+.rcbdropdown dd {
+    position: relative;
+}
+
+.rcbdropdown, .rcbdropdown li:visited {
+    color: #000;
+    text-decoration: none;
+    outline: none;
+    position: relative;
+    z-index: 1;
+}
+
+.rcbdropdown li:hover {
+    color: #000;
+}
+
+.rcbdropdown dt li:hover {
+    color: #000;
+    border: 1px solid #b5b5b5;
+}
+
+.rcbdropdown dt {
+    background: #d4d4d4 url(IMG_URL/images/membership-img/dropdown1.png) no-repeat scroll right center;
+    display: block;
+    width: 100%;
+}
+
+.rcbdropdown dt span {
+    cursor: pointer;
+    display: block;
+    padding: 5px;
+}
+
+.rcbdropdown dd ul {
+    background: #d4d4d4 none repeat scroll 0 0;
+    color: #000;
+    display: none;
+    left: 0px;
+    padding: 0px;
+    position: absolute;
+    top: 2px;
+    width: 100%;
+    list-style: none;
+}
+
+.rcbdropdown span.value {
+    display: none;
+}
+
+.rcbdropdown dd ul li {
+    padding: 5px;
+    display: block;
+}
+
+.rcbdropdown dd ul li:hover {
+    background-color: #b5b5b5;
+}
+
+.wid35 {
+    width:35%;
+}
+
+.wid65 {
+    width:65%;
 }

@@ -32,7 +32,7 @@ class hierarchy
 
         public function getAllReporters()
         {
-                $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_slave');
+                $jsadminPswrdsObj = new jsadmin_PSWRDS('newjs_masterRep');
                 $info = $jsadminPswrdsObj->get_All_EmpID_Name_HeadID();
                 $empnameArr = $info[0];
                 $headidArr = $info[1];

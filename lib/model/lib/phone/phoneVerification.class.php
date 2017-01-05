@@ -40,7 +40,7 @@ public function __construct($profileObject='',$phoneType)
 				break;	
 				
 				case 'A':		
-					$contactNumOb=new newjs_JPROFILE_CONTACT();
+					$contactNumOb= new ProfileContact();
                		$numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_MOBILE,ALT_MOB_STATUS,ALT_MOBILE_ISD");
                		if($numArray['0']['ALT_MOBILE'])
                		{
@@ -96,7 +96,7 @@ public function phoneUpdateProcess($message)
 
 				case 'A':
 				$paramArr=array('ALT_MOB_STATUS'=>'Y');
-				$contactObj=new NEWJS_JPROFILE_CONTACT();
+				$contactObj= new ProfileContact();
 				$contactObj->update($profileid,$paramArr);
 				break;
 			}
@@ -105,6 +105,31 @@ public function phoneUpdateProcess($message)
 			$verifiedLogObj= new PHONE_VERIFIED_LOG();
 			$row=$verifiedLogObj->getNoOfTimesVerified($profileid);
 			$noOfTimesVerified=$row['COUNT'];
+
+			/**
+			 * this condition is added for automate profile screeening.
+			 */
+
+			if($noOfTimesVerified == '0')
+			{
+                $memcacheObj = JsMemcache::getInstance();
+
+                $minute = date("i");
+                
+                
+                $key = JunkCharacterEnums::JUNK_CHARACTER_KEY;
+
+
+                $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
+
+                $startIndex = floor($minute/$redisQueueInterval);
+                
+                $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
+                
+                $memcacheObj->lpush($key,$profileid);
+
+			}
+
 
 			$this->sendMailerAfterVerification($noOfTimesVerified);
 			$this->trackingAfterVerification($noOfTimesVerified);
@@ -135,12 +160,13 @@ public function phoneUpdateProcess($message)
                                                         }
                                                         else
                                                         {
+                                                        	Duplicate::logIfDuplicate($this->profileObject,$this->phone);	
                                                               $this->sendMail();
                                                         }
                                                 }
                                                 else
                                                 {
-							Duplicate::logIfDuplicate($this->profileObject,$this->phone);
+											Duplicate::logIfDuplicate($this->profileObject,$this->phone);
                                                 }
 
 			            
@@ -205,7 +231,7 @@ public function trackingAfterVerification($noOfTimesVerified) {
 			}
 
 
-			if (JsCommon::showDuplicateNumberConsent($profileid))
+			if ($this->phoneType=='M' && JsCommon::showDuplicateNumberConsent($profileid))
 			{
 			
 			$duplicateObj=new newjs_DUPLICATE_NUMBER_CONSENT();
@@ -263,7 +289,7 @@ static public function hidePhoneVerLayer($profileObj)
 	if($profileObj->getMOB_STATUS()=='Y' || $profileObj->getLANDL_STATUS()=='Y' )
 	return 'Y';
 
-	$contactNumOb=new newjs_JPROFILE_CONTACT();
+	$contactNumOb= new ProfileContact();
 	$numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObj->getPROFILEID()),'','',"*");
     if($numArray['0']['ALT_MOB_STATUS']=='Y')
     return 'Y';
@@ -321,7 +347,7 @@ public function savePhone($phoneNo,$std='',$isd='')
 		$jprofileContactArr['ALT_MOB_STATUS']='N';
 		$jprofileContactArr['ALT_MOBILE_ISD']=$isd;
 
-		$contactObj=new NEWJS_JPROFILE_CONTACT();
+		$contactObj= new ProfileContact();
 		$contactObj->update($this->profileObject->getPROFILEID(),$jprofileContactArr);
 
         $fieldArr['MOD_DT']=$timeNow;

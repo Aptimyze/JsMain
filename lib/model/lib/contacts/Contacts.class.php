@@ -133,7 +133,8 @@ class Contacts {
 	const PROFILE_ERROR = "Object is not profile obj";
 	const FILTER_ERROR = "Filter value in not correct in contacts obj";
 	const SEEN_ERROR = "Seen value is not correct in contacts obj";
-
+	const EXPIRING_INTEREST_UPPER_LIMIT = 90;
+	const EXPIRING_INTEREST_LOWER_LIMIT = 84;
 	/**
 	 *
 	 * Constructor for initializing object of Contacts class
@@ -200,6 +201,28 @@ class Contacts {
 	 * @return void
 	 * @access public
 	 */
+	public function setPageSource($pageSource)
+	{
+			$this->pageSource = $pageSource;
+		
+	}
+	/**
+	 * returns the type of contact between Sender and Reciever.
+	 * @return string
+	 * @access public
+	 */
+	public function getPageSource()
+	{
+		return $this->pageSource;
+	}
+	/**
+	 *
+	 * @param datetime TIME
+	 * @return void
+	 * @access public
+	 */
+
+
 	public function setTIME($TIME)
 	{
 		$this->TIME = $TIME;

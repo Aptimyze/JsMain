@@ -89,12 +89,14 @@ public static function insertConsentMessageFlag($profileid) {
         		
        			$loggedInProfileObj=LoggedInProfile::getInstance();
                	if(!$loggedInProfileObj->getPROFILEID()) $loggedInProfileObj->getDetail($profileid,'','*');
-                if ($primaryNum=$loggedInProfileObj->getPHONE_MOB())
+               	$primaryNum=$loggedInProfileObj->getPHONE_MOB();
+                if ($primaryNum)
                 {
+					$isd=$loggedInProfileObj->getISD();
                 	$jprofileObj=new JPROFILE();
-                	$resultArray=$jprofileObj->checkPhone(array($primaryNum));
+                	$resultArray=$jprofileObj->checkPhone(array($primaryNum),$isd);
                 	$selfProfileId=$loggedInProfileObj->getPROFILEID();
-                	$isd=$loggedInProfileObj->getISD();
+                	
 
                 	foreach ($resultArray as $key => $value) 
                 	{
@@ -136,7 +138,7 @@ public static function insertConsentMessageFlag($profileid) {
                 	}
 
 
-                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $contactNumOb= new ProfileContact();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileid),'','',"ALT_MOBILE");
                 if($numArray['0']['ALT_MOBILE']){
                 	$resultArray=$dncOb->DncStatus(array($numArray['0']['ALT_MOBILE']));
@@ -547,25 +549,24 @@ public static function insertConsentMessageFlag($profileid) {
 			$stateCityMapping = FieldMap::getFieldLabel('state_CITY','',1);
 			if(count($stateArr))
 			{
-				foreach($stateArr as $key=>$val)
-				{
-					if(array_key_exists($val, $stateCityMapping))
-					{
-						$cityString .= $stateCityMapping[$val];
-						$cityString .= ",";
-					}
-				}
+				$cityString = self::getCitiesForStates($stateArr);
 				$ARR = array_merge($cityArr,explode(",",rtrim($cityString,",")));
 			}
 			else
 			{
 				$ARR = $cityArr;
 			}
-			if(is_array($ARR))
-			if(in_array($profile->getCITY_RES(),$ARR))
-			{
+                        $nativePlaceObj = ProfileNativePlace::getInstance();
+                        $nativeData = $nativePlaceObj->getNativeData($profile->getPROFILEID());
+                        $nativeState = $nativeData['NATIVE_STATE'];
+                        $nativeCity = $nativeData['NATIVE_CITY'];
+                        if(strlen($profile->getCITY_RES())==2){
+                            $resState = $profile->getCITY_RES();
+                            if(is_array($stateArr) && in_array($resState,$stateArr))
+                                $CODE['CITYRES']='gnf';
+                        }
+                        if((is_array($stateArr) && in_array($nativeState,$stateArr)) || (is_array($ARR) && (in_array($profile->getCITY_RES(),$ARR) || ($nativeCity && in_array($nativeCity,$ARR)))))
 				$CODE['CITYRES']='gnf';
-			}
 		}
 		return $CODE;	
 	}
@@ -691,11 +692,20 @@ public static function insertConsentMessageFlag($profileid) {
 	{
 		if($profile)
 		{
-			$onlineObj=new USERPLANE_USERS();
-			if($onlineObj->isOnline($profile)==true)
+			if(JsConstants::$jsChatFlag=='1')
+	                {
+				$arr = ChatLibrary::getPresenceOfIds($profile);
+				if(is_array($arr) && count($arr)>0)
+					return true;
+        	        }
+                	else
 			{
-				return true;
-			}	
+				$onlineObj=new USERPLANE_USERS();
+				if($onlineObj->isOnline($profile)==true)
+				{
+					return true;
+				}	
+			}
 		}
 		else
 			throw new JSException("online status of user userplane: Profileid missing.");
@@ -1021,7 +1031,7 @@ public static function insertConsentMessageFlag($profileid) {
                 $pm = preg_match('/iPhone\s*([0-9\.]*)/',$ua,$matches);
                  if(!strstr($ua,"iPhone"))
                         return false;
-                $av = explode(" ",explode("OS ",$ua)[1])[0];
+                $av = intval(explode(" ",explode("OS ",$ua)[1])[0]);
                 if($av>=7)
                 	return true;
                 return false;
@@ -1081,7 +1091,31 @@ public static function insertConsentMessageFlag($profileid) {
                 $JsMemcacheObj->zRemRangeByScore($listName, $score1, $score2);
         }
 
+        public static function getCitiesForStates($stateArr){
+            $stateCityMapping = FieldMap::getFieldLabel('state_CITY','',1);
+            foreach($stateArr as $key=>$val)
+            {
+                    if(array_key_exists($val, $stateCityMapping))
+                    {
+                            $cityString .= $stateCityMapping[$val];
+                            $cityString .= ",";
+                    }
+            }
+            return $cityString;
+        }
+        
+        /**
+         * Function to log Function Calling in Redis
+         * @param type $className
+         * @param type $funName
+         */
+        public static function logFunctionCalling($className, $funName)
+        {
+            $key = $className.'_'.date('Y-m-d');
+            JsMemcache::getInstance()->hIncrBy($key, $funName);
 
+            JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+        }
 
 
 }

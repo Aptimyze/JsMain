@@ -10,7 +10,7 @@
   <!--end:header--> 
   <!--start:div-->
   <div class="pad5">
-  	<div class="fontthin color20 f19">Link to reset your password has been sent to your registered Email Id and Mobile Number. The link will be valid for next 24 hours.</div>
+  	<div class="fontthin color20 f19">~$message`</div>
   </div>  
   <!--end:div-->
  

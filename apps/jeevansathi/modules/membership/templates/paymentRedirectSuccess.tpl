@@ -22,6 +22,9 @@
 	<input type="hidden" name="productinfo" value="~$productinfo`"></input>
 	<input type="hidden" name="udf1" value="~$udf1`"></input>
 	<input type="hidden" name="udf2" value="~$udf2`"></input>
+	<input type="hidden" name="udf3" value="~$udf3`"></input>
+	<input type="hidden" name="udf4" value="~$udf4`"></input>
+	<input type="hidden" name="udf5" value="~$udf5`"></input>
 	<input type="hidden" name="firstname" value="~$firstname`"></input>
 	<input type="hidden" name="email" value="~$email`"></input>
 	<input type="hidden" name="phone" value="~$phone`"></input>

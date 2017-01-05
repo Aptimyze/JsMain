@@ -1,5 +1,7 @@
 <?php
 include_once("CrawlerClassesCommon.php");
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 class CrawlerPriorityCommunity
 {
 	private $communityId;
@@ -52,7 +54,7 @@ class CrawlerPriorityCommunity
 		$db=$mysqlObj->connect('crawler');
 		mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 		$sql="SELECT * FROM crawler.crawler_priority_communities WHERE TO_BE_SEARCHED='Y' AND SITE_ID = $siteId ";
-		$res=$mysqlObj->executeQuery($sql,$db) or die("Error while fetching priority communities to be searched    ".mysql_error());
+		$res=$mysqlObj->executeQuery($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Error while fetching priority communities to be searched    ".mysql_error()));
 		if($mysqlObj->numRows($res))
 		{
 			while($row=$mysqlObj->fetchAssoc($res))

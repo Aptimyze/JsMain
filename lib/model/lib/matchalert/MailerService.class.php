@@ -46,7 +46,7 @@ class MailerService
 	*@param $mailerName : name of mailer to find mailer send details
 	*@return $flag: "Y" or "F" if mail sent is success or fail respectively
 	*/
-	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="")
+	public function sendAndVerifyMail($emailID,$msg,$subject,$mailerName,$pid="",$alternateEmailID ='')
 	{
 		$canSendObj= canSendFactory::initiateClass(CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$emailID,"EMAIL_TYPE"=>$mailerName),$pid);
 		$canSend = $canSendObj->canSendIt();
@@ -54,7 +54,7 @@ class MailerService
 		{
 			$senderDetails = MAILER_COMMON_ENUM::getSenderEnum($mailerName);
         	        // Sending mail and tracking sent status
-                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],'','','','','','','1','',$senderDetails["ALIAS"]);
+                	$mailSent = SendMail::send_email($emailID,$msg,$subject,$senderDetails["SENDER"],$alternateEmailID,'','','','','','1','',$senderDetails["ALIAS"]);
 	                $flag= $mailSent?"Y":"F";
         	        if($flag =="F")
                 		$this->failCount++;
@@ -366,7 +366,6 @@ class MailerService
 	*/	
 	public function getUsersListToSend($profileObj,$filterGenderFlag=false)
 	{
-			
 		if(!is_array($this->userList) || !$profileObj)
 		{
 			jsException::log("No userList or profile in getUsersListToSend() function in RegularMatchAlerts.class.php");
@@ -405,7 +404,13 @@ class MailerService
 								$newInfo=$yourInfo;
 							}
 							$tupleObj->setYOURINFO(strip_tags($newInfo));
-						}					
+						}
+						//This has been added in case of Kundli Matches Mailer
+						if(is_array($this->gunaScoreArr))
+						{
+							$tupleObj->setGUNA($this->gunaScoreArr[$tupleObj->getPROFILEID()]);						
+						}
+						
 					}
 				}
 				return $tuplesValues;
@@ -619,13 +624,13 @@ class MailerService
 	}
 	/* This function is used to load partials , all the partials load is not neccessary so single is uploaded
 	*/
-	private function loadPartials()
+	public function loadPartials()
 	{
         	sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerheader");
   	}
         public function getEducationDetails($pid)
 	{
-                $educationObj = new NEWJS_JPROFILE_EDUCATION();
+                $educationObj = ProfileEducation::getInstance();
                 $Education = $educationObj->getProfileEducation($pid,$from="mailer");
                 $edu=$this->getEducationDisplay($Education);
                 $eduDisplay="";
@@ -637,7 +642,7 @@ class MailerService
 public function getMultipleEducationDetails($profileIdArray)
 	{
 		if(!is_array($profileIdArray)) return false;
-                $educationObj = new NEWJS_JPROFILE_EDUCATION();
+                $educationObj = ProfileEducation::getInstance();
                 $EducationArray = $educationObj->getProfileEducation($profileIdArray,'mailer');
                 foreach($EducationArray as $k=>$Education)
                 {
@@ -676,11 +681,16 @@ return $edu;
 	*@param $widgetArray:  Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>true,"membershipFlag"=>true,"openTrackingFlag"=>true,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>true); 
 	*@return $data : complete data to be sent in mail 
 	*/
-	public function getRecieverDetails($pid,$values,$mailerName,$widgetArray)
+	public function getRecieverDetails($pid,$values,$mailerName,$widgetArray,$gunaScoreArr="")
 	{
 		if(!$pid || !is_array($values) || !$mailerName)
 			throw new jsException("No pid/values/mailerName passed in getRecieverDetails RegularMatchAlerts.class.php");
 		
+		//In case gunaScoreArr is set like in case of kundli Matches Mailer, then this array is assigned so that it can be used later in getUsersListToSend()
+		if(is_array($gunaScoreArr))
+		{
+			$this->gunaScoreArr = $gunaScoreArr;
+		}
 		$operatorProfileObj = Operator::getInstance('newjs_master',$pid);
                 if(!$operatorProfileObj)
                                 throw new jsException("Invalid pid passed in getRecieverDetails RegularMatchAlerts.class.php");
@@ -689,13 +699,40 @@ return $edu;
 		$userFieldLabel = MAILER_COMMON_ENUM::getUserFieldLabel($mailerName);
 		$this->setUsersToSend($values,$userFieldLabel);
 		$users = $this->getUsersListToSend($operatorProfileObj,$widgetArray["filterGenderFlag"]);
-		
 		$usersCount = sizeof($users);
                 if($usersCount >0)
                 {
 			$data = array();
 			$receiverProfilechecksum = JsAuthentication::jsEncryptProfilechecksum($pid);
                         $emailId = $operatorProfileObj->getEMAIL();
+
+            if ( $widgetArray["alternateEmailSend"] === true )
+            {
+	            $jprofileContactObj    =new ProfileContact();
+	            $receiverProfileData = $jprofileContactObj->getProfileContacts($pid);
+
+	            if ( is_array($receiverProfileData ))
+	            {
+		            $alternateEmailID = $receiverProfileData["ALT_EMAIL"];
+		            $alternateEmailIDStatus = $receiverProfileData["ALT_EMAIL_STATUS"];
+		            if ( $alternateEmailIDStatus != 'Y' || $alternateEmailID == NULL)
+		            {
+		            	$alternateEmailID = '';
+		            }
+	            }
+	            else
+	            {
+	            	$alternateEmailID = '';	
+	            }
+            }
+            else
+            {
+            	$alternateEmailID = '';
+            }
+
+            $data["RECEIVER"]["ALTERNATEEMAILID"] = $alternateEmailID;
+
+
 			$data["RECEIVER"]["PROFILE"] = $operatorProfileObj;
 			$data["RECEIVER"]["PROFILECHECKSUM"] = $receiverProfilechecksum;
 			$data["RECEIVER"]["EMAILID"] = $emailId;
@@ -809,8 +846,8 @@ return $edu;
 	{
 		if(!$sno || !$flag)
 			throw  new jsException("No sno/flag in updateSentForSavedSearchUsers() in savedSearchesMailerTask.class.php");
-		$matchalertMailerObj = new send_saved_search_mail();
-                $matchalertMailerObj->update($sno,$flag,$searchId);
+		$savedSearchObj = new send_saved_search_mail();
+                $savedSearchObj->update($sno,$flag,$searchId);
 
 	}
 
@@ -825,5 +862,61 @@ return $edu;
 			return 0;
 		}
 	}
+
+
+	/* This function is used to get featured profile receivers to send mail 
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getFeaturedProfileMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
+		$recievers = $featuredProfileObj->getMailerProfiles($totalScript,$script,$limit);
+		return $recievers;
+	}
+
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each featured Profile mail receiver
+	*@param profileId : profileId of person to whom mail is sent
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForFeaturedProfileUsers($profileId,$flag)
+	{
+		if(!$profileId || !$flag)
+			throw  new jsException("No sno/flag in updateSentForSavedSearchUsers() in savedSearchesMailerTask.class.php");
+		$featuredProfileObj = new FEATURED_PROFILE_MAILER("newjs_masterRep");
+                $featuredProfileObj->update($profileId,$flag);
+
+	}
+
+
+	/* This function is used to get kundli match alert receivers to sent mail 
+	*@param totalScript : total scripts executing for mailer cron
+	*@param script : current script
+	* @param limit : limit of receivers to send mail at a cron execution
+	* @return recievers : array of receivers
+	*/
+	public function getKundliAlertMailerReceivers($totalScript="",$script="",$limit='')
+	{
+		$kundliMailerObj = new KUNDLI_ALERT_KUNDLI_MATCHES_MAILER();
+		$recievers = $kundliMailerObj->getMailerProfiles("",$totalScript,$script,$limit);
+		return $recievers;
+	}
+
+
+	/* This funxtion is used update the sent flag(Y for sent and F for fail) for each savedSearch mail receiver
+	*@param sno : serial number of mail
+	*@param flag : sent status of the mail
+	*/
+	public function updateSentForKundliMatchesMailer($sno,$flag,$pid)
+	{
+		if(!$sno || !$flag)
+			throw  new jsException("No sno/flag in updateSentForKundliMatchesMailer() in kundliAlertsMailerTask.class.php");
+		$kundliMailerObj = new KUNDLI_ALERT_KUNDLI_MATCHES_MAILER();
+                $kundliMailerObj->updateKundliMatchesUsersFlag($sno,$flag,$pid);
+
+	}
+
 }
 ?>

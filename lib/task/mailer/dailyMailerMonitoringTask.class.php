@@ -42,7 +42,7 @@ EOF;
 		//Matchalert mailer
 		if($mailer_key[0]=='MATCHALERT_MAILER')
 		{
-			$maObj = new matchalerts_MAILER('newjs_slave');
+			$maObj = new matchalerts_MAILER();
 			$countArr = $maObj->getMailCountForRange();
 			$countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
 			unset($countArr);
@@ -51,7 +51,7 @@ EOF;
 		//New matchalert mailer
 		if($mailer_key[0]=='NMA_MAILER')
 		{
-			$nmaObj = new new_matches_emails_MAILER('newjs_slave');
+			$nmaObj = new new_matches_emails_MAILER();
 			$countArr = $nmaObj->getMailCountForRange();
 			$countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
 			unset($countArr);
@@ -214,11 +214,33 @@ EOF;
 
          if($mailer_key[0]=='EMAIL_VER_MAILER')
                 {
+                        $mailVerOb = new MAIL_ALTERNATE_EMAIL_MAILER();
+                        $countArr = $mailVerOb->getMailCountForRange();
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }        
+         if($mailer_key[0]=='ALTERNATE_EMAIL_VER_MAILER')
+                {
                         $mailVerOb = new MAIL_EMAIL_VER_MAILER();
                         $countArr = $mailVerOb->getMailCountForRange();
                         $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
                         unset($countArr);
                 }        
+           if($mailer_key[0]=='REMINDER_MAILER')
+                {
+                        $mailVerOb = new MAIL_UNRESPONDED_CONTACTS();
+                        $countArr = $mailVerOb->getMailCountForRange();
+                        $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+                        unset($countArr);
+                }           
+        //Expiring interest mailer
+        if($mailer_key[0]=='ExpiringInterest_MAILER')
+        {
+            $ynObj = new MAIL_ExpiringInterest('newjs_slave');
+            $countArr = $ynObj->getMailCountForRange();
+            $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+            unset($countArr);
+        }
 	}
   }
 }

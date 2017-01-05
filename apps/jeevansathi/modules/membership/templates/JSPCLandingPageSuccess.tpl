@@ -23,7 +23,6 @@
     ~if $data.serviceContent` 
             var pageType = 'membershipPage';
     ~/if`
-
     ~if $data.vasContent`              
         var pageType = 'ConditionsBasedDivVasPaid';
         ~foreach from=$data.vasContent key=k item=v name=vasLoop`
@@ -237,7 +236,7 @@
                 <ul class="tabs">
                     ~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
                     ~if $v.subscription_id neq 'X'`
-                    <li id="main_~$v.subscription_id`" mainMemTab="~$v.subscription_id`" class="fontrobbold ~if $smarty.foreach.servicesLoop.total gt 4`planwidth~/if` trackJsEventGA"> <span>~$k+1`.</span> <span class="trackJsEventGAName">~$v.subscription_name`</span> <span class="fontlig">~$v.starting_price` <span>~$data.currency`&nbsp;</span>~$v.starting_price_string`</span> </li>
+                    <li id="main_~$v.subscription_id`" mainMemTab="~$v.subscription_id`" class="fontrobbold ~if $smarty.foreach.servicesLoop.total gt 4`planwidth~/if` trackJsEventGA"><span></span><span class="trackJsEventGAName">~$v.subscription_name`</span> <span class="fontlig">~$v.starting_price` <span>~$data.currency`&nbsp;</span>~$v.starting_price_string`</span> </li>
                     ~/if`
                     ~/foreach`
                 </ul>
@@ -261,7 +260,7 @@
                                 <div class="mem-overlay3 pos-abs">
                                     <div class="disp-tbl fullwid fullhgt txtc fontlig">
                                         <div class="disp-cell vmid colrw">
-                                            <div class="f26">~$v.subscription_name` starts @ <span>~$data.currency`&nbsp;</span>~$v.starting_price_string`</div>
+                                            <div class="f26">~$v.subscription_name` starts @ <span>~$data.currency`&nbsp;</span><span id="tab_~$v.subscription_id`_startingPrice">~$v.starting_price_string`</span></div>
                                             <div class="f17 pt10">You must be logged in to see detailed plans</div>
                                         </div>
                                     </div>
@@ -299,18 +298,6 @@
                                 <!--end:row-->
                                 ~/foreach`
                             </div>
-                            <!--start:total-->
-                            ~if $data.userId eq '0'`
-                            <!-- <div style="overflow:hidden;position: relative;" class="mt30"> -->
-                            <div id="mainServLoginBtn" class="loginLayerJspc cursp bg_pink txtc mem_pad7 colrw f17 mt30">Login to Continue</div>
-                            <!-- </div> -->
-                            ~else`
-                            <div id="~$v.subscription_id`_savings_container" class="txtc f13 lh41 colr5"> Your Savings ~$data.currency`&nbsp;<span id="~$v.subscription_id`_savings"></span></div>
-                            <div class="overflowPinkRipple" style="overflow:hidden;position: relative;height: 55px;">
-                            <div id="mainServContinueBtn" class="cursp bg_pink txtc mem_pad7 colrw f17 continueBtn pinkRipple hoverPink" selectedTab="~$v.subscription_id`"> <span class="disp_ib">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`&nbsp;</span><span id="~$v.subscription_id`_final_price"></span> | <span class="disp_ib pl10">Continue</span></div>
-                            </div>
-                            ~/if`
-                            <!--end:total-->
                         </div>
                     </div>
                     <!--end:slidercontent-->
@@ -321,26 +308,65 @@
             <!--end:left slider-->
             <!--start:benefits-->
             <div class="fl mem-wid10">
-                <div class="mem_pad10 benefits">
+                <div class="mem_pad10_new1 benefits">
                     ~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
                     ~if $v.subscription_id neq 'X'`
                     <!--start:eRishta-->
-                    <div class="list-main_~$v.subscription_id` planfeat disp-none">
-                        <div class="fontreg f20 color11">~$v.subscription_name` Benefits</div>
-                        <ul class="fontlig">
+                    <div class="list-main_~$v.subscription_id` opt planfeat disp-none">
+                        <div class="fontreg mem_pad10_new2 f20 color11">~$v.subscription_name` Benefits</div>
+                        <ul class="fontlig mem_pad10_new1">
                             ~foreach from=$v.benefits key=kk item=vv name=benefitsLoop`
-                            <li class="check">~$vv`</li>
+                                ~assign var=continue value=0`
+                                ~foreach from=$v.servMessage key=kkk item=vvv name=servMessageLoop`
+                                    ~if $vv eq $kkk`
+                                        ~assign var=continue value=1`
+                                        <li class="check">~$vv`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20 txtc">~$vvv`<br> FREE with eAdvantage package</div></i></li>
+                                    ~/if`
+                                ~/foreach`
+                                ~if $continue eq 0`
+                                    <li class="check">~$vv`</li>
+                                ~/if`
                             ~/foreach`
                             ~foreach from=$v.benefitsExcluded key=kk item=vv name=benefitsExcludedListingLoop`
-                            ~if $eSathiCheck eq 1`
-                                <li class="cross txtstr color12">~$vv`</li>
-                            ~else`
-                                ~if $smarty.foreach.benefitsExcludedListingLoop.index lt (($smarty.foreach.benefitsExcludedListingLoop.total)-2)`
-                                <li class="cross txtstr color12">~$vv`</li>
+                                ~assign var=continueExc value=0`
+                                ~foreach from=$v.servMessage key=kkk item=vvv name=servMessageLoop`
+                                    ~if $vv eq $kkk`
+                                        ~assign var=continueExc value=1`
+                                        ~if $eSathiCheck eq 1`
+                                            <li class="cross txtstr color12">~$vv`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20 txtc">~$vvv`<br> FREE with eAdvantage package</div></i></li>
+                                        ~else`
+                                            ~if $smarty.foreach.benefitsExcludedListingLoop.index lt (($smarty.foreach.benefitsExcludedListingLoop.total)-2)`
+                                                <li class="cross txtstr color12">~$vv`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20 txtc">~$vvv`<br> FREE with eAdvantage package</div></i></li>
+                                            ~/if`
+                                        ~/if`
+                                    ~/if`
+                                ~/foreach`
+                                ~if $continueExc eq 0`
+                                    ~if $eSathiCheck eq 1`
+                                        <li class="cross txtstr color12">~$vv`</li>
+                                    ~else`
+                                        ~if $smarty.foreach.benefitsExcludedListingLoop.index lt (($smarty.foreach.benefitsExcludedListingLoop.total)-2)`
+                                            <li class="cross txtstr color12">~$vv`</li>
+                                        ~/if`
+                                    ~/if`
                                 ~/if`
-                            ~/if`
                             ~/foreach`
                         </ul>
+                        <div class="mt24 mem_pad10_new2 wid90p txtc brdrTop colrgrey f15 fontreg">
+                            <span id="finalMemTab_~$v.subscription_id`"></span><span id="finalMemDuration_~$v.subscription_id`"></span>~$data.currency`<span id="finalMemPrice_~$v.subscription_id`"></span>
+                        </div>
+                        <!--start:total-->
+                        ~if $data.userId eq '0'`
+                        <!-- <div style="overflow:hidden;position: relative;" class="mt30"> -->
+                        <div id="mainServLoginBtn" class="fontreg loginLayerJspc cursp bg_pink txtc mem_pad7 colrw f17 mt30">Login to Continue</div>
+                        <!-- </div> -->
+                        ~else`
+                        <div id="~$v.subscription_id`_savings_container" class="txtc f13 lh41 colr5 fontreg"> Your Savings ~$data.currency`&nbsp;<span id="~$v.subscription_id`_savings"></span></div>
+                        <div class="overflowPinkRipple fontreg" style="overflow:hidden;position: relative;height: 55px;">
+                        <div id="mainServContinueBtn" class="cursp bg_pink txtc mem_pad7 colrw f17 continueBtn pinkRipple hoverPink fontreg" selectedTab="~$v.subscription_id`"> <span class="disp_ib">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`&nbsp;</span><span id="~$v.subscription_id`_final_price"></span> | <span class="disp_ib pl10">Continue</span></div>
+                        </div>
+                        ~/if`
+                        <!--end:total-->
                     </div>
                     <!--end:eRishta-->
                     ~/if`
@@ -354,7 +380,7 @@
 </div>
 <!--end:plan-->
 <!--start:JS Exclusive-->
-<div class="mem_bg1">
+<div class="mem_bg1" id="jsExclusiveDiv">
     <div class="container mainwid mem_pad4">
         <!--start:div-->
         <div class="fullwidth colrw clearfix mem_brdr1">
@@ -367,22 +393,9 @@
         </div>
         <!--end:div-->
         <!--start:div-->
-        <div class="clearfix mem_pad5 colrw fontlig" >
+        <div class="clearfix mem_pad_new colrw fontlig" >
             <!--start:left-->
-            <div class="fl txtc wid29p">
-                <div><img src="~sfConfig::get('app_site_url')`/images/jspc/membership_img/image-2.png"></div>
-                <div class="f13 pt10">Need more details?</div>
-                ~if $data.currency eq '$'`
-                    <div class="fontreg f18 lh30">Call Rahul @ +91-8800909042</div>
-                ~else`
-                    <div class="fontreg f18 lh30">Call us @ 1800-3010-6299</div>
-                    <!-- <div class="fontreg f18 lh30">Call Rahul @ 1800-3010-6299</div> -->
-                ~/if`
-            </div>
-            <!--end:left-->
-            <!--start:right-->
-            <div class="fr wid70p jsexc">
-                <div class="f19">Finding your soulmate is our ONLY mission!</div>
+            <div class="fl wid50p jsexc">
                 <ul>
                     <li>Create a profile for you that gets noticed</li>
                     <li>Understand qualities you are looking in your desired partner</li>
@@ -391,10 +404,22 @@
                     <li>Priority Customer service</li>
                 </ul>
                 <div id="jsxKnowMoreLink" class="pl19 pt10"><a href="~sfConfig::get('app_site_url')`/membership/jsexclusiveDetail" class="fontreg f16 colr5">Know More</a></div>
-                <!--start:value-->
-                <div id="exclusiveContainer" class="mem_mr1 clearfix fontreg">
+                <div class="fullwid txtc">
+                    <div class="f13 pt10">Need more details?</div>
+                    ~if $data.currency eq '$'`
+                        <div class="fontreg f18 lh30">Call Rahul @ +91-8800909042</div>
+                    ~else`
+                        <div class="fontreg f18 lh30">Call us @ 1800-3010-6299</div>
+                        <!-- <div class="fontreg f18 lh30">Call Rahul @ 1800-3010-6299</div> -->
+                    ~/if`
+                </div>
+            </div>
+            <!--end:left-->
+            <!--start:value-->
+            <div class="fl wid50p jsexc">
+                <div id="exclusiveContainer" class="clearfix fontreg">
                     <!--start:div-->
-                    <div class="disp-tbl valuopt fullwid">
+                    <div class="disp-tbl valuopt fullwid mt10">
                         ~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
                         ~if $v.subscription_id eq 'X'`
                         ~foreach from=$v.durations key=kd item=vd name=servDurationsLoop`
@@ -439,6 +464,53 @@
     </div>
 </div>
 <!--end:JS Exclusive-->
+<!-- start: membership benefits block -->
+<div class="bg-white" id="whyPaidDiv">
+    <div class="container mainwid mem_pad4">
+        <div class="fullwid txtc colr3">
+            <div class="f24 fontlig">
+                Why Paid Membership?
+            </div>
+            <div class="pt10 f16 fontlig">
+                Upgrade your membership now to find your perfect partner! With a paid membership, you can seamlessly connect with your prospects and get more responses. Here are some key benefits:
+            </div>
+            <div class="disp_ib memPadNew">
+                <i class="newSprt newSprt_1">
+                </i>
+                <div class="fullwid txtc pt10 f16 fontlig">
+                    Send personalized messages to members you like
+                </div>
+            </div>
+            <div class="disp_ib memPadNew">
+                <i class="newSprt newSprt_2">
+                </i>
+                <div class="fullwid txtc pt10 f16 fontlig">
+                    Send chat requests to members
+                </div>
+            </div>
+            <div class="disp_ib memPadNew">
+                <i class="newSprt newSprt_3">
+                </i>
+                <div class="fullwid txtc pt10 f16 fontlig">
+                    View contact details of the members
+                </div>
+            </div>
+            <div class="disp_ib memPadNew">
+                <i class="newSprt newSprt_4">
+                </i>
+                <div class="fullwid txtc pt10 f16 fontlig">
+                    Show your contact details to other members
+                </div>
+            </div>
+            <div class="fr cursp pt10 f16 fontlig" id="scrollTop">
+                <i class="newSprt pr10 newSprt_5">
+                </i>
+                Top
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end: membership benefits block-->
 ~/if`
 ~if $data.vasContent`
 <!--start:plan-->
@@ -622,6 +694,25 @@
     if(window.top.location.href != window.location.href){
         window.top.location.href = window.location.href;
     }
+    
+    $(window).load(function(){
+        $("#scrollTop").on("click", function () {
+            $('html, body').animate({
+                scrollTop: '0px'
+            }, 1000);
+        });
+        $("#knowMore").on("click", function () {
+            $("html, body").animate({
+                scrollTop: $("#whyPaidDiv").prop('scrollHeight') + 800
+            }, 1000);
+        });
+        $("#landJSExc").on("click", function () {
+            $("html, body").animate({
+                scrollTop: $("#jsExclusiveDiv").prop('scrollHeight') + 360
+            }, 1000);
+        });
+    });
+
     $(document).ready(function() {
     ~if $data.serviceContent`
         eraseCookie('paymentMode');
@@ -695,6 +786,11 @@
             $("ul.tabs li[mainMemTab="+readCookie('mainMemTab')+"]").addClass('active');
             var tabNum = $("ul.tabs li.active").index(),getTabId = $("ul.tabs li.active").attr('id');
             changeTabContent(getTabId,tabNum, 200);
+            $('#sliderContainer div').find('.plansel').each(function () {
+                var m = $(this).attr('mainMem'),
+                    d = $(this).attr('mainMemDur');
+                managePriceStrike(m, d);
+            });
         })
         $(".continueBtn").click(function(){
             if ($(this).attr('id') == 'mainServContinueBtn') 
@@ -752,7 +848,7 @@
             var str = $(this).text();
             if(str.indexOf('FREE') >= 0){
                 str = str.toString();
-                str = str.replace("FREE","<p class='f13 colr5'>Free</p>");
+                str = str.replace("FREE","<p class='f13 colr5'>FREE</p>");
                 $(this).html(str);
             }
         });

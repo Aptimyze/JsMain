@@ -71,7 +71,18 @@ class ImageServerApi
                         $archive="Y";
                 }
                 else
-                        $archive="";
+                {
+                	 $archive="";
+                }
+                       
+                if(is_array($extension) && array_key_exists("optimise",$extension))
+                {
+                	$optimise="Y";
+                }
+                else
+                {
+                	$optimise="";
+                }
 		$extension="";
 		//content type of file uploaded
 		if($type)
@@ -93,6 +104,7 @@ class ImageServerApi
 			<pid>$pid</pid>
 			<pidExtension>$extension</pidExtension>
 			<archive>$archive</archive>
+			<optimise>$optimise</optimise>
 			<ns1:image xmlmime:contentType="$content_type" xmlns:xmlmime="http://www.w3.org/2004/06/xmlmime">
 			<xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:myid1"></xop:Include>
 			</ns1:image>

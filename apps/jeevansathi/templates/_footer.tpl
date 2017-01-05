@@ -160,7 +160,7 @@
      <div class="sp10"></div>
         
           <div >
-            <p><a target="_blank" href="http://www.naukri.com/">Naukri.com - Jobs in India</a></p>
+            <p><a target="_blank" href="https://www.naukri.com/">Naukri.com - Jobs in India</a></p>
             <p>&nbsp;</p>
             <p>
               <a target="_blank" href="http://www.naukrigulf.com/">Naukrigulf.com - <br />

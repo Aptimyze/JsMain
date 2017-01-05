@@ -14,6 +14,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
                 $memStatus['MEMB_CALLS'] = $result['MEMB_CALLS'];
                 $memStatus['OFFER_CALLS'] = $result['OFFER_CALLS'];
             }
+            $this->logFunctionCalling(__FUNCTION__);
         }
         catch(Exception $e) {
             throw new jsException($e);
@@ -42,6 +43,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
             $prep->bindValue(":MEM_MAILS", $alertArr[MEM_MAILS], PDO::PARAM_STR);
             $prep->bindValue(":SERVICE_CALL", $alertArr[SERVICE_CALL], PDO::PARAM_STR);
             $prep->execute();
+            $this->logFunctionCalling(__FUNCTION__);
         }
         catch(PDOException $e) {
             throw new jsException($e);
@@ -81,7 +83,9 @@ class newjs_JPROFILE_ALERTS extends TABLE
                 foreach ($profileIdArr as $key => $pid) $res->bindValue(":PROFILEID$key", $pid, PDO::PARAM_INT);
                 $res->execute();
                 while ($row = $res->fetch(PDO::FETCH_ASSOC)) $result[] = $row['PROFILEID'];
+                $this->logFunctionCalling(__FUNCTION__);
                 return $result;
+                
             }
         }
         catch(Exception $e) {
@@ -94,6 +98,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
             $prep->execute();
+            $this->logFunctionCalling(__FUNCTION__);
             if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $res = $result[$field];
             }
@@ -110,6 +115,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->execute();
+            $this->logFunctionCalling(__FUNCTION__);
             if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $res = $result;
             }
@@ -129,6 +135,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                 $res[$result['PROFILEID']] = $result;
             }
+            $this->logFunctionCalling(__FUNCTION__);
         }
         catch(Exception $e) {
             throw new jsException($e);
@@ -143,6 +150,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
             $prep->bindValue(":VAL", $val, PDO::PARAM_STR);
             $prep->execute();
+            $this->logFunctionCalling(__FUNCTION__);
             return true;
         }
         catch(PDOException $e) {
@@ -156,6 +164,7 @@ class newjs_JPROFILE_ALERTS extends TABLE
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
             $prep->execute();
+            $this->logFunctionCalling(__FUNCTION__);
         }
         catch(PDOException $e) {
             throw new jsException($e);
@@ -192,12 +201,21 @@ class newjs_JPROFILE_ALERTS extends TABLE
                 $pdoStatement->bindValue(($count), $value);
             }
             $pdoStatement->execute();
+            $this->logFunctionCalling(__FUNCTION__);
             return true;
         }
         catch(Exception $e)
         {
             throw new jsException($e);
         }
+    }
+    
+    private function logFunctionCalling($funName)
+    {
+      $key = __CLASS__.'_'.date('Y-m-d');
+      JsMemcache::getInstance()->hIncrBy($key, $funName);
+      
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
     }
 }
 ?>

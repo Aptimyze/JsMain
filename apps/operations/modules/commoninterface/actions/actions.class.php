@@ -69,14 +69,17 @@ class commoninterfaceActions extends sfActions
 		}
 		else //if valid username was entered and profileid is obtained
 		{
-			global $protect;
-			JsCommon::oldIncludes();
-			$protect = new protect();
-			$protect->logout();
+			//global $protect;
+			//JsCommon::oldIncludes();
+			//$protect = new protect();
+			//$protect->logout();
 			$checksum = md5($this->profile->getPROFILEID()) . "i" . $this->profile->getPROFILEID();
-			$echecksum = $protect->js_encrypt($checksum);
-			$this->autologinUrl = JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
-			$this->profileid = $this->profile->getPROFILEID();
+		//	$echecksum = $protect->js_encrypt($checksum);
+			$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
+			$authenticationLoginObj->setTrackLogin(false);
+			$authenticationLoginObj->setCrmAdminAuthchecksum($checksum);
+			$this->autologinUrl = JsConstants::$siteUrl;//JsConstants::$siteUrl . "?echecksum=" . $echecksum . "&checksum=" . $checksum;
+			//$this->profileid = $this->profile->getPROFILEID();
 		}
 	}
 	$this->setTemplate('generateAutologin');
@@ -210,7 +213,7 @@ class commoninterfaceActions extends sfActions
 	include_once($_SERVER['DOCUMENT_ROOT']."/classes/Membership.class.php");
 	connect_db();
     $billingObj = new billing_SERVICE_STATUS("newjs_slave"); 
-    $activeServiceDetails =$billingObj->getActiveJsExclusiveServiceID($premiumProfileID);
+    $activeServiceDetails =$billingObj->checkJsExclusiveServiceIDEver($premiumProfileID);
     list($mainServiceID,$mainServiceDuration) = sscanf($activeServiceDetails["SERVICEID"], "%[A-Z]%d");
     if($mainServiceID == 'X')
     {
@@ -271,7 +274,7 @@ class commoninterfaceActions extends sfActions
   private function transferVDRecords($params)
   {
   	$uploadIncomplete = false;
-	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP();
+	$tempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterDDL');
 	if($uploadIncomplete==false){
 		$tempObj->truncateTable();
 	}
@@ -380,14 +383,21 @@ class commoninterfaceActions extends sfActions
   {
     $this->cid = $request->getAttribute("cid");
     $this->name = $request->getAttribute('name');
-    $this->newGateway = $request->getParameter('payment');
-    $path = '../lib/model/enums/SelectGatewayRedirect.enum.class.php';
-    $content = htmlspecialchars(file_get_contents($path));
-    preg_match('/&quot;([^"]+)&quot;/', $content, $m);
-    $this->preSelectedGateway = $m[1];
+    $this->newGateway = $request->getParameter('payment');  
+    //$path = '../lib/model/enums/SelectGatewayRedirect.enum.class.php';
+    //$content = htmlspecialchars(file_get_contents($path));
+    //preg_match('/&quot;([^"]+)&quot;/', $content, $m);  
+    $billingSelectedGateway = new billing_CURRENT_GATEWAY('newjs_master');
+    $this->preSelectedGateway = JsMemcache::getInstance()->get('JS_PAYMENT_GATEWAY');
+    $gatewayOption = SelectGatewayRedirect::$gatewayOptions;
+    if(!in_array($this->preSelectedGateway,$gatewayOption) || $this->preSelectedGateway == ''){
+        $this->preSelectedGateway = $billingSelectedGateway->fetchCurrentGateway();
+    }
     if($request->getParameter('gatewaySubmit')){
-        $newContent = (str_replace($this->preSelectedGateway, $this->newGateway, $content));
-        file_put_contents($path, htmlspecialchars_decode($newContent));
+        //$newContent = (str_replace($this->preSelectedGateway, $this->newGateway, $content));
+        //file_put_contents($path, htmlspecialchars_decode($newContent));
+        $billingSelectedGateway->setCurrentGateway($this->newGateway,$this->name);
+        JsMemcache::getInstance()->set('JS_PAYMENT_GATEWAY',$this->newGateway);
         $this->preSelectedGateway = $this->newGateway;
         $this->message = "Gateway changed to ".$this->newGateway;
     }

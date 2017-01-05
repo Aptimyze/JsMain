@@ -206,7 +206,7 @@ if(isset($data))
 			$flag=1;
 
 			$sql_act = "SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
-			$res_act = mysql_query_decide($sql_act) or die($sql_act);	
+			$res_act = mysql_query_decide($sql_act) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql_act));
 			$row_act = mysql_fetch_array($res_act);
 			
 			// delete the contacts of this person

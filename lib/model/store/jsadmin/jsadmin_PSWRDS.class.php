@@ -830,5 +830,29 @@ class jsadmin_PSWRDS extends TABLE
             throw new jsException($e);
         }
     }
+    
+    public function getPrivilegesForSalesTargetWithLastLogin()
+    {
+        try
+        {
+            $sql="SELECT USERNAME, PRIVILAGE, LAST_LOGIN_DT FROM jsadmin.PSWRDS WHERE ACTIVE='Y'";
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+
+            while($result=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[$result['USERNAME']]['USERNAME'] = $result['USERNAME'];
+                $res[$result['USERNAME']]['PRIVILAGE'] = $result['PRIVILAGE'];
+                $res[$result['USERNAME']]['LAST_LOGIN_DT'] = $result['LAST_LOGIN_DT'];
+            }
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+        return $res;
+    }
+    
+    
 }
 ?>

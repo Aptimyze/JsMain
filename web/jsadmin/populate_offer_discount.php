@@ -1,6 +1,6 @@
 <?php
 include('connect.inc');
-$db = connect_db();
+$db = connect_ddl();
 //$sql="LOCK TABLE billing.OFFER_DISCOUNT_TEMP WRITE";
 //mysql_query($sql,$db) or die(mysql_error1($sql,$db));
 

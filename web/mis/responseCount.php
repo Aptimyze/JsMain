@@ -223,6 +223,21 @@ function formatTrackingString($trackingString)
 			case JSTrackingPageType::FILTERED_INTEREST_IOS:
 				$formattedString.="JS IOS:Filtered Ios Interest";
 				break;
+			case JSTrackingPageType::EXCLUSIVE_SERVICE2_MAILER_RTYPE:
+				$formattedString.="JS Exclusive Servicing II Mailer";
+				break;
+			case JSTrackingPageType::INTEREST_ARCHIVED:
+				$formattedString.="INTEREST_ARCHIVED";
+				break;
+			case JSTrackingPageType::INTEREST_ARCHIVED_JSMS:
+				$formattedString.="INTEREST_ARCHIVED_JSMS";
+				break;
+			case JSTrackingPageType::INTEREST_EXPIRING:
+				$formattedString.="INTEREST_EXPIRING";
+				break;
+			case JSTrackingPageType::INTEREST_EXPIRING_JSMS:
+				$formattedString.="INTEREST_EXPIRING_JSMS";
+				break;
 		}
 	}
 	return $formattedString;

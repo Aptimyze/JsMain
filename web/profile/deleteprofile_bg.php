@@ -212,6 +212,12 @@ $username_result=mysql_query($username_query,$slaveDb) or mysql_error_with_mail(
 $row=mysql_fetch_assoc($username_result);
 $username=$row['USERNAME'];
 
+if(0 === strlen($username)) {
+        $username_result=mysql_query($username_query,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$username_query);
+        $row=mysql_fetch_assoc($username_result);
+        $username=$row['USERNAME'];
+}
+
 $sugar_sql="select id_c from sugarcrm.leads_cstm where jsprofileid_c='".$username."'";
 $sugar_res=mysql_query($sugar_sql,$slaveDb) or mysql_error_with_mail(mysql_error($mainDb).$sugar_sql);
 if(mysql_num_rows($sugar_res)>0)

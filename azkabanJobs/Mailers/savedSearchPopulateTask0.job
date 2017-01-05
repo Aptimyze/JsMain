@@ -1,0 +1,4 @@
+type=command
+command=${php5} ${docRoot}/symfony  savedSearch:savedSearchPopulate 1 0
+retries=1
+retry.backoff=60000

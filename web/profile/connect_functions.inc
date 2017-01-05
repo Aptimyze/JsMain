@@ -1,7 +1,9 @@
 <?php
 
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
-
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 if(!function_exists("filter_page_redirection"))
 {
 	function filter_page_redirection($profileid)
@@ -368,7 +370,7 @@ function common_assign($data)
 			}
 			else
 			{
-				$naObj = new NEWJS_ASTRO;
+				$naObj = ProfileAstro::getInstance();
 				if($naObj->getIfAstroDetailsPresent($data["PROFILEID"]))
 				{
 					if(JsConstants::$alertServerEnable) {
@@ -3110,12 +3112,15 @@ function show_navigation($navigator,$show_all,$navig_id)
 		$TYPE["IGN"]="/profile/contacts_made_received.php";
 		$TYPE["DEC_R"]="/profile/contacts_made_received.php";
 		$TYPE["DEC_S"]="/profile/contacts_made_received.php";
+		$TYPE["EEOI"]="/profile/contacts_made_received.php";
 		$TYPE["EOI"]="/profile/contacts_made_received.php";
 		$TYPE["REM"]="/profile/contacts_made_received.php";
 		$TYPE["MES"]="/profile/contacts_made_received.php";
 		$TYPE["FIL"]="/profile/contacts_made_received.php";
 		$TYPE["VCB"]="/profile/contacts_made_received.php";
 		$TYPE["HOR_M"]="/profile/contacts_made_received.php";
+		$TYPE["AEOI"]="/profile/contacts_made_received.php";
+
 	}
 	$TYPE["FAV"]="/profile/contacts_made_received.php";
 	$TYPE["PHO"]="/profile/contacts_made_received.php";
@@ -3591,6 +3596,7 @@ if(!function_exists('logError'))
 		error_log($errorstring,3,JsConstants::$docRoot . "/profile/logerror_temp.txt");
 		
 		$errorstring.="\n#Details : $ret_val";
+        LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorstring));
                 if($sendmailto!="NO" && $sendmailto!="YES")
                         $b=mail($sendmailto,"ERROR in jeevansathi", $errorstring);
 
@@ -7463,7 +7469,7 @@ function check_astro_details($profileid,$show_horoscope="abc")
 				$HOROSCOPE_ARRAY[$row_ast_det["PROFILEID"]]=array("HOROSCOPE"=>"Y","ASTRO_DETAILS"=>"$row_ast_det[PROFILEID]:$gender_value:$lagna:$sun:$mo:$ma:$me:$ju:$ve:$sa");
 			}
 		}
-		$profileid_str='';
+		/*$profileid_str='';
 		foreach($profileid_arr as $key=>$value)
 		{
 			if(!array_key_exists($value,$HOROSCOPE_ARRAY) && $show_horoscope[$value]["SHOW_HOROSCOPE"]=="Y")
@@ -7478,7 +7484,7 @@ function check_astro_details($profileid,$show_horoscope="abc")
 			{
 				$HOROSCOPE_ARRAY[$row_ast_det["PROFILEID"]]=array("HOROSCOPE"=>"Y","ASTRO_DETAILS"=>'');
 			}
-		}
+		}*/
 		foreach($profileid_arr as $key=>$value)
                 {
                         if(!array_key_exists($value,$HOROSCOPE_ARRAY))
@@ -7488,19 +7494,21 @@ function check_astro_details($profileid,$show_horoscope="abc")
 	else
 	if($show_horoscope == 'Y')
 	{
-		$sql_ast_det = "SELECT COUNT(*) AS COUNT FROM newjs.ASTRO_DETAILS WHERE PROFILEID = '$profileid'";
-		$res_ast_det = mysql_query_optimizer($sql_ast_det) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ast_det,"ShowErrTemplate");
-		$row_ast_det = mysql_fetch_array($res_ast_det);
-		if($row_ast_det['COUNT'] > 0)
+        $astroLib = ProfileAstro::getInstance();
+        $result = $astroLib->getIfAstroDetailsPresent($profileid);
+//		$sql_ast_det = "SELECT COUNT(*) AS COUNT FROM newjs.ASTRO_DETAILS WHERE PROFILEID = '$profileid'";
+//		$res_ast_det = mysql_query_optimizer($sql_ast_det) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ast_det,"ShowErrTemplate");
+//		$row_ast_det = mysql_fetch_array($res_ast_det);
+		if(intval($result) > 0)
 			return true;
 		else
 		{
-			$sql_ast_det1 = "SELECT COUNT(*) AS COUNT FROM newjs.HOROSCOPE WHERE PROFILEID = '$profileid'";
+			/*$sql_ast_det1 = "SELECT COUNT(*) AS COUNT FROM newjs.HOROSCOPE WHERE PROFILEID = '$profileid'";
                         $res_ast_det1 = mysql_query_optimizer($sql_ast_det1) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ast_det1,"ShowErrTemplate");
                         $row_ast_det1 = mysql_fetch_array($res_ast_det1);
                         if($row_ast_det1['COUNT'] > 0)
                                 return true;
-                        else
+                        else*/
                                 return false;
 		}
 		
@@ -8678,6 +8686,7 @@ function delete_profile($profileid,$delete_reason='',$specify_reason='')
         mysql_query_decide($sql_del) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_jp,"ShowErrTemplate");
 
         $sql="update JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D', MOD_DT=now(),activatedKey=0 where PROFILEID='$profileid'";
+		JProfileUpdateLib::getInstance()->removeCache($profileid);
         mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	
 	if($delete_reason=="I found my match on Jeevansathi.com")
@@ -9132,6 +9141,7 @@ function stat_name($PROFILEID,$username)
 
 function send_chat_request_email($profileid,$gmail,$username)
 {
+return;
 		global $smarty;
         $mypid=$profileid;
         $email=$gmail;
@@ -9290,7 +9300,7 @@ function helpWidget($loginData){
                 $phoneNumber = $loggedInProfileObj->getPHONE_WITH_STD();
             }
             else{//Check Alternate Phone numbmer
-                $objAlternate = new NEWJS_JPROFILE_CONTACT;
+                $objAlternate = new ProfileContact();
                 $arrResult = $objAlternate->getProfileContacts($iProfileId);
                 if($arrResult["ALT_MOB_STATUS"] == "Y"){
                     if(trim($arrResult["ALT_MOBILE_ISD"]))

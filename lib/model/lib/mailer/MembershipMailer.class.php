@@ -24,9 +24,13 @@ class MembershipMailer {
 	if($attachment){	
 		$email_sender->setAttachment($attachment);
 		$email_sender->setAttachmentName($attachmentName);
-		$email_sender->setAttachmentType('application/vnd.ms-excel');
+		$email_sender->setAttachmentType('application/octet-stream');
 	}
-        $email_sender->send();
+        // if($mailid == '1836'){
+        //     $email_sender->send('','','rupali.srivastava@jeevansathi.com');
+        // } else {
+            $email_sender->send();
+        // }
         $deliveryStatus =$email_sender->getEmailDeliveryStatus();
         return $deliveryStatus;
 
@@ -368,21 +372,6 @@ class MembershipMailer {
         $smsSentProfileIDArr = $filterObj->getFilterdProfiles($profileArray,$smsDate);
         return $smsSentProfileIDArr;
     }
-    
-    //commented as general func "sendServiceActivationMail" used in its place
-    /*function sendWeTalkForYouUsageMail($mailId, $profileDetails){
-        $username = $profileDetails["USERNAME"];
-        $profileid = $profileDetails["PROFILEID"];
-        $mailerServiceObj = new MailerService();
-        sfProjectConfiguration::getActive()->loadHelpers("Partial","global/mailerfooter");
-        $mailerLinks = $mailerServiceObj->getLinks();
-        $email_sender = new EmailSender(MailerGroup::MEMBERSHIP_MAILER, $mailId);
-        $emailTpl = $email_sender->setProfileId($profileid);
-        $smartyObj = $emailTpl->getSmarty();         
-        $smartyObj->assign("mailerLinks",$mailerLinks);
-        $smartyObj->assign("USERNAME",$username);
-        $email_sender->send();
-    }*/
    
     // function to send VD Mailer	
     function sendVdMailer($mailId, $profileid, $discount, $expiryDate, $vdDisplayText, $instanceID){
@@ -411,7 +400,10 @@ class MembershipMailer {
         return $deliveryStatus;
     } 
 
-    //send RB activation mail
+    /*send service activation mail
+    * @params: $mailId, $profileDetails
+    * @return: none
+    */
     function sendServiceActivationMail($mailId, $profileDetails){
         //$username = $profileDetails["USERNAME"];
         $profileid = $profileDetails["PROFILEID"];
@@ -424,8 +416,12 @@ class MembershipMailer {
         $smartyObj->assign("mailerLinks",$mailerLinks);
         foreach ($profileDetails as $key => $value) {
             $smartyObj->assign($key,$value);
+        }  
+        $ccList = '';
+        if($profileDetails["CC_EMAIL"]){
+            $ccList = $profileDetails["CC_EMAIL"]; //mail copy sent to this email
         }
-        $email_sender->send();
+        $email_sender->send('','',$ccList);
     }   		
     function getContactsViewedList($profileid,$startDate,$endDate){
 	
@@ -448,7 +444,7 @@ class MembershipMailer {
 		$resDetails =$jprofileObj->getArray($valueArray,$excludeArray,'',$fields);	
 
 		// jprofile Contact
-	        $jprofileContactObj    =new NEWJS_JPROFILE_CONTACT('newjs_local111');
+	        $jprofileContactObj    = new ProfileContact('newjs_local111');
         	$valueArr['PROFILEID']  =$profileStr;
         	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOBILE_OWNER_NAME,ALT_MOBILE_NUMBER_OWNER,SHOWALT_MOBILE');
 		if(is_array($result)){
@@ -549,6 +545,26 @@ class MembershipMailer {
         }
         return $retval;
     }
+    public function getCsvData($data, $dataHeader)
+    {
+        $retval  = "";
+        $filepath = "/var/www/html/web/uploads/csv_files/";
+        $filename = $filepath."tempCsvDataMemMailerContent.csv";
+        unlink($filename);
+        $csvData = fopen("$filename", "w") or print_r("Cannot Open");
+        fputcsv($csvData, array_values($dataHeader));
+        foreach($dataHeader as $key=>$val) {
+            $blankRow[] = "";
+        }
+        fputcsv($csvData, array_values($blankRow));
+        foreach ($data as $key => &$val) {
+            fputcsv($csvData, array_values($val));
+        }
+        fclose($csvData);
+        $csvAttachment = file_get_contents($filename);
+        unlink($filename);
+        return $csvAttachment;
+    }
     public function sendWelcomeMailerToPaidUser($mailid, $profileid, $attachment, $services){
 
         $mailerServiceObj = new MailerService();
@@ -624,6 +640,43 @@ class MembershipMailer {
         $deliveryStatus =$email_sender->getEmailDeliveryStatus();
         return $deliveryStatus;
 
+    }
+
+    /*sendExclusiveServiceIIMailer
+    * function to send exclusive servicing phase II mailer
+    * @params: $profileDetails
+    * @return :$mailSent(1/0)
+    */
+    public function sendExclusiveServiceIIMailer($profileDetails){
+        $mailId = '1837';
+        $mailSent = 0;
+        if(is_array($profileDetails) && is_array($profileDetails["usernameListArr"])){
+            $stype = SearchTypesEnums::EXCLUSIVE_SERVICE2_MAILER_STYPE;
+            $rtype = JSTrackingPageType::EXCLUSIVE_SERVICE2_MAILER_RTYPE;
+            //print_r($profileDetails["usernameListArr"]);die;
+            foreach ($profileDetails["usernameListArr"] as $key => $username) {
+                if($username){
+                    //validate profile in username list
+                    $otherProfileObj = new Operator;
+                    $otherProfileObj->getDetail($username,"USERNAME",'PROFILEID');
+                    $otherPid = $otherProfileObj->getPROFILEID();
+                    unset($otherProfileObj);
+                    //map profileid to view profile links
+                    if($otherPid){
+                        $profilePageLinkArr[$username] = JsConstants::$siteUrl."/profile/viewprofile.php?profilechecksum=".JsAuthentication::jsEncryptProfilechecksum($otherPid)."&stype=".$stype."&responseTracking=".$rtype;
+                    }
+                }
+            }
+            unset($profileDetails["usernameListArr"]);
+        }
+        if($profilePageLinkArr && is_array($profilePageLinkArr) && count($profilePageLinkArr)>0){
+            $profileDetails["USERNAMELIST"] = $profilePageLinkArr;
+            $profileDetails["CURR_MAIL_DATE"] = date("d-M-Y");
+            $mailSent = 1;
+            $profileDetails["CC_EMAIL"] = $profileDetails["SENDER_EMAIL"];
+            $this->sendServiceActivationMail($mailId, $profileDetails);
+        }
+        return $mailSent;
     }
 
 }

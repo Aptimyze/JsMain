@@ -34,7 +34,8 @@ EOF;
 		$crmMailerObj 	= new crmMailer();
 		$profilesArr 	= $crmMailerObj->getProfileForFeedbackMailer();
 		$jprofileObj = new JPROFILE('newjs_slave');
-		$profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
+		if(is_array($profilesArr))
+			$profileDet = $jprofileObj->getAllSubscriptionsArr(array_keys($profilesArr));
 		if(count($profilesArr)>0){
 			foreach($profilesArr as $profileid=>$campaign){
 				$deliveryStatus =$crmMailerObj->sendEmailForFeedback($mailId, $profileid,$instanceID,$campaign,$profileDet[$profileid]['PHONE_MOB']);

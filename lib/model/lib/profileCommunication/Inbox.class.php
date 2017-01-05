@@ -67,13 +67,13 @@ class Inbox implements Module
 	{
 		
 		try {
-			
-			if (is_array($infoTypenav) && $infoTypenav["NUMBER"]==1)
+                        $memcacheServiceObj = new ProfileMemcacheService($this->profileObj);
+			if (is_array($infoTypenav) && ($infoTypenav["NUMBER"]==null || $infoTypenav["NUMBER"]==1) && $fromGetDisplayFunction=='')
 			{
 				JsMemcache::getInstance()->delete($this->profileObj->getPROFILEID());
-				
+                            
 			}
-			$memcacheServiceObj = new ProfileMemcacheService($this->profileObj); 
+                        
 			$countObj           = array();
 			$ifHoroscopePresent = "";
 			$ifPhotoPresent     = "";
@@ -101,6 +101,9 @@ class Inbox implements Module
 					case "MY_MESSAGE_RECEIVED":
 						$keyNew = "MESSAGE_NEW";
 						$key = "MESSAGE";
+						if($infoTypenav["NUMBER"] == 1 && $fromGetDisplayFunction==''){
+							$memcacheServiceObj->unsetKey("MESSAGE_ALL");
+						}
 						break;
 					case "VISITORS":
 						$key = "VISITOR_ALERT";
@@ -166,8 +169,15 @@ class Inbox implements Module
 						$key = "IGNORED_PROFILES";
 						$memKeyNotExists=1;
 						break;
-				} 
-			
+					case "INTEREST_ARCHIVED":
+						$key = "INTEREST_ARCHIVED";
+						break;
+					case "INTEREST_EXPIRING":
+						$key = "INTEREST_EXPIRING";
+						break;
+
+				}
+
 				if($key == "IGNORED_PROFILES")
 				{
 					$IgnoredObj = new IgnoredProfiles;
@@ -178,8 +188,8 @@ class Inbox implements Module
                                         }
 
                                         $countObj[$infoTypenav["PAGE"]] = count($IgnoredList);
-				}	
-				
+				}
+                                
 				if ($keyNew != "")
 					$countObj[$infoTypenav["PAGE"]."_NEW"] = $memcacheServiceObj->get($keyNew);
 				if ($key != "" && $memKeyNotExists!=1)
@@ -194,7 +204,7 @@ class Inbox implements Module
 				if($infoTypenav["PAGE"] == "VISITORS")
 				{
 					$visitorObj = new Visitors($this->profileObj);
-					$visitors = $visitorObj->getVisitorProfile();
+					$visitors = $visitorObj->getVisitorProfile("","",$infoTypenav);
 					$countObj[$infoTypenav["PAGE"]] = count($visitors);
 				}
 				
@@ -218,15 +228,21 @@ class Inbox implements Module
 		$countObj     = $this->getCount('',$infoTypeNav,$fromGetDisplayFunction);
 		$tupleService = new TupleService();
 		$tupleService->setLoginProfile($this->profileObj->getPROFILEID());
-		$config = $this->configurations[$infoTypeNav["PAGE"]];
+		$tupleService->setLoginProfileObj($this->profileObj);
 		$key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"];
 		$keyCount = $key."_COUNT"; 
 		$infoType = $infoTypeNav["PAGE"];
-		
+		// Set limit too high as pagination not implemented in channels others than desktop for messages
+		if(!MobileCommon::isDesktop() && ($infoType == "MESSAGE_RECEIVED" || $infoType == "MY_MESSAGE" || $infoType == "MY_MESSAGE_RECEIVED") && ($infoTypeNav["NUMBER"]==null || MobileCommon::isApp()==null))
+		{
+						$this->configurations[$infoType]["COUNT"]=10000;
+
+		}
+		$config = $this->configurations[$infoTypeNav["PAGE"]];
 		if ($infoTypeNav && $config) {
 				$tuple       = $config["TUPLE"];
 				$displayFlag = 1;
-				if (is_array($infoTypeNav))
+				if (is_array($infoTypeNav) && $infoTypeNav["NUMBER"]!=null)
 					$nav = $infoTypeNav["NUMBER"];
 				else
 					$nav =1;
@@ -235,7 +251,6 @@ class Inbox implements Module
 				{
 					
 					JsMemcache::getInstance()->remove($key);
-				
 					JsMemcache::getInstance()->set($keyCount,$countObj[$infoType]);
 					$this->totalCount = $countObj[$infoType];
 					
@@ -252,13 +267,11 @@ class Inbox implements Module
 				if ($displayFlag && PROFILE_COMMUNICATION_ENUM_INFO::ifInformationTypeExists($infoType) && PROFILE_COMMUNICATION_ENUM_INFO::ifTupleExists($tuple)) {
 					$memdata =  JsMemcache::getInstance()->get($key);
 					$data = unserialize(JsMemcache::getInstance()->get($key));
-					
 					if(empty($memdata) || ($nav-1)*$config["COUNT"] >=count($data) || (count($data) == 0 && $countObj[$infoType]))
 					{
-						
 						$infoTypeAdapter = new InformationTypeAdapter($infoType, $this->profileObj->getPROFILEID());
 						// Myjs require only New information type tuples 
-					
+											
 						$skipArray       = $this->getSkipProfiles($infoType);
 						
 						if($infoType == "VISITORS" || $infoType== "HOROSCOPE_REQUEST_RECEIVED" || $infoType=="HOROSCOPE_REQUEST_SENT")
@@ -282,25 +295,42 @@ class Inbox implements Module
 						{ 
 							$page = $nav;
 						}
-						$conditionArray = $this->getCondition($infoType, $page);
+						$conditionArray = $this->getCondition($infoType, $page); 
+                                                if($infoType == "MY_MESSAGE")
+                                                    $conditionArray['LIMIT']++;
+                                                if($infoTypeNav["matchedOrAll"])
+                                                    $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
-					  
-						if(!empty($memdata) && is_array($profilesArray))
+                                                if($infoType == "MY_MESSAGE"){
+                                                    	if(count($profilesArray)==$conditionArray['LIMIT'])
+                                                        	array_pop($profilesArray);
+                                                }
+					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray)){
+					//		print_r(count($data));
 							$data = $data+$profilesArray;
+						}
 						else if(is_array($profilesArray))
 							$data = $profilesArray;
+					//	print_r($data);  die;
 						JsMemcache::getInstance()->set($key,serialize($data),1800);
+					 
 					}
 					if(is_array($data))
 					{
 						$pager = array_slice($data,($infoTypeNav["NUMBER"]-1)*$config["COUNT"],$config["COUNT"],true);
 					}
 					$infoTypeObj[$infoType] = $pager;
-
 					if (!empty($infoTypeObj[$infoType])) {
+
 						// Get required tuple, unique fields required by the tuples
 						$tupleFields            = $tupleService->getFields($tuple);
 						$fields                 = array_merge($fields, $tupleFields);
+						$nameOfUserObj = new NameOfUser;
+						$profileNameData = $nameOfUserObj->getNameData($this->profileObj->getPROFILEID());
+						if($profileNameData[$this->profileObj->getPROFILEID()]['DISPLAY']=="Y")
+						{
+							$fields[]="NAME_OF_USER";
+						}
 						//print_r($fields );die;
 						//Attaching the callout message,icons and buttons ids  with each profile
 						$infoTypeObj[$infoType] = $tupleService->setButtonIds($config["BUTTONS"], $infoTypeObj[$infoType]);
@@ -314,6 +344,7 @@ class Inbox implements Module
 		if (is_array($infoTypeObj)) {
 			// Calling tuple service to retrieve complete information of all the profiles in one go
 			$tupleService->setProfileInfo($infoTypeObj, array_unique($fields));
+
 			if ($config) {
 				unset($tuplesValues);
 				if ($config["TUPLE"])
@@ -331,6 +362,7 @@ class Inbox implements Module
 			//var_dump($this->totalCount);die;
 			$this->completeProfilesInfo[$infoType]["ID"]             = $config["ID"];
 			$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = $this->totalCount;
+			//$this->completeProfilesInfo[$infoType]["VIEW_ALL_COUNT"] = JsMemcache::getInstance()->get("message_count_".LoggedInProfile::getInstance()->getPROFILEID());
 			$this->completeProfilesInfo[$infoType]["NEW_COUNT"]      = $countObj[$infoType. "_NEW"];
 			$this->completeProfilesInfo[$infoType]["TITLE"]          = $config["TITLE"];
 			$this->completeProfilesInfo[$infoType]["HEADING"]          = $config["HEADING"];
@@ -352,9 +384,14 @@ class Inbox implements Module
 				$this->completeProfilesInfo[$infoType]["SHOW_PREV"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] - 1;
 			if ($config["COUNT"]) {
 				if ($this->totalCount / $config["COUNT"] > $this->completeProfilesInfo[$infoType]["CURRENT_NAV"])
-					$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
+					$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;            
+                                //elseif ($infoType == "MY_MESSAGE" && $this->totalCount / $config["COUNT"] > 1)
+				//	$this->completeProfilesInfo[$infoType]["SHOW_NEXT"] = $this->completeProfilesInfo[$infoType]["CURRENT_NAV"] + 1;
 				$this->completeProfilesInfo[$infoType]["NAVIGATION_INDEX"] = $this->getNavigationArray($this->completeProfilesInfo[$infoType]["CURRENT_NAV"], $this->totalCount, $config["COUNT"]);
-				$this->completeProfilesInfo[$infoType]["TRACKING"]  	 = $config["TRACKING"];
+                                if($infoType=="VISITORS" && $config["TRACKING"]=="stype=AV" && $infoTypeNav['matchedOrAll']=="M")
+                                    $this->completeProfilesInfo[$infoType]["TRACKING"] = "stype=".SearchTypesEnums::MATCHING_VISITORS_ANDROID;
+                                else
+                                    $this->completeProfilesInfo[$infoType]["TRACKING"] = $config["TRACKING"];
 				$this->completeProfilesInfo[$infoType]["contact_id"] = $key;
 				$this->completeProfilesInfo[$infoType]["self_profileid"] = $this->profileObj->getPROFILEID();
 				if($infoType == "INTEREST_RECEIVED_FILTER")
@@ -366,6 +403,8 @@ class Inbox implements Module
 			} //$config["COUNT"]
 			} //$this->completeProfilesInfo as $infoType => $values
 			unset($infoTypeObj); 
+			// var_dump($this->completeProfilesInfo);
+			// die();
 			return $this->completeProfilesInfo;
 		} //is_array($infoTypeObj)
 		return null;
@@ -457,15 +496,11 @@ class Inbox implements Module
 	 */
 	public function getCondition($infoType, $nav = null)
 	{
-		
 		$condition  = array();
 		if($infoType!="VISITORS")
 			$limit      = ceil(($this->configurations[$infoType]["COUNT"]*$nav)/self::$profileCount)*self::$profileCount;
 		else
 			$limit = $this->configurations[$infoType]["COUNT"];
-		if(!MobileCommon::isDesktop() && ($infoType == "MESSAGE_RECEIVED" || $infoType == "MY_MESSAGE" || $infoType == "MY_MESSAGE_RECEIVED"))
-			$limit= '100000'; // Set limit too high as pagination not implemented in channels others than desktop for messages
-		
 		if ($infoType != "MATCH_ALERT" && $infoType != "VISITORS") {
 			//$condition["WHERE"]["NOT_IN"]["SEEN"] = "Y";
 			if ($infoType == "INTEREST_RECEIVED") {
@@ -474,6 +509,14 @@ class Inbox implements Module
 				$back_90_days                                     = date("Y-m-d", $yday);
 				$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 			} //$infoType == "INTEREST_RECEIVED"
+
+			if ($infoType == "INTEREST_ARCHIVED") {
+				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$back_90_days                                     = date("Y-m-d", $yday);
+				$condition["WHERE"]["LESS_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
+			}
+
 			if($infoType == "INTEREST_RECEIVED_FILTER")
 			{
 				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
@@ -486,6 +529,17 @@ class Inbox implements Module
 				}	
 
 			}
+			if ($infoType == "INTEREST_EXPIRING") {
+				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$bday                                             = mktime(0, 0, 0, date("m"), date("d") - 83, date("Y"));
+				$back_90_days                                     = date("Y-m-d", $yday);
+				$back_83_days                                     = date("Y-m-d", $bday);
+				$condition["WHERE"]["LESS_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_90_days 00:00:00";
+				$condition["WHERE"]["GREATER_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_83_days 00:00:00";
+			}
+
+
 		if ($infoType == "FILTERED_INTEREST") {
 				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);

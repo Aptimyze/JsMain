@@ -9,7 +9,7 @@
 			<td class="formhead" valign="middle" colspan="13" align="center" >Payment Data</td>
 		</tr>
 		<br>
-		<TR class="formhead" valign="middle" colspan="2" align="center"><TH>Bill Id</TH><TH>Payment Mode</TH><TH>Cheque No</TH><TH>Cheque Date(EST)</TH><TH>Cheque City</TH><TH>Bank</TH><TH>IP</TH><TH>Status</TH><TH>Entry Date(EST)*</TH><TH>Service Names</TH><TH>Gateway*</TH><TH>TXN Ref No*</TH><TH>RRN*</TH>
+		<TR class="formhead" valign="middle" colspan="2" align="center"><TH>Bill Id</TH><TH>Payment Mode</TH><TH>Cheque No</TH><TH>Cheque Date</TH><TH>Cheque City</TH><TH>Bank</TH><TH>IP</TH><TH>Status</TH><TH>Entry Date(IST)*</TH><TH>Service Names</TH><TH>Gateway*</TH><TH>TXN Ref No*</TH><TH>RRN*</TH>
 		~if !$paymentArr`
 		<table width="60%" border="0" cellspacing="1" cellpadding="2" align="center">
 			<tr class="fieldsnew">

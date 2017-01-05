@@ -1,6 +1,7 @@
 ~include_Partial("search/photoAlbum")`
 
 
+
 <input id='hiddenPhoneMain' type='hidden' value='' phonetype='M'>
 <input id='hiddenIsd1' type='hidden' value=''>
 <input id='hiddenPhoneOther' type='hidden' value='' phonetype='A'>
@@ -85,7 +86,7 @@
           <p class="f13 edpcolr1 txtc pt20">You can set Photo Privacy</p>
           ~if $arrOutDisplay['pic']['pic_count'] neq "0"`
           
-          <div class="fl pos-rel imgSize photoClick js-previewAlbum cursp" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`"><p class="f13 colr5 txtc pt10 pl47 txtl">Preview Album</p></div>
+          <div class="pos-rel pt10 pl47"><p class="f13 colr5 txtc txtl  photoClick js-previewAlbum disp_ib  cursp" data="~$arrOutDisplay['pic']['pic_count']`,~$arrOutDisplay['about']['username']`,~$arrOutDisplay['page_info']['profilechecksum']`">Preview Album</p></div>
           ~/if`
         </div>
         <!--end:upload div--> 
@@ -139,9 +140,9 @@
                         <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections" data-section-id="basic">Edit</a> </div>
                     </div>
                     <div class="pl30 prflist1 fontlig js-basicView">
-                      <p class="f24 pt25 fontlig" id="nameLabelParent"><span class="edpcolr2" >Name</span> - 
+                      <p class="f24 pt25 fontlig" id="nameLabelParent"><span class="edpcolr2" >Full Name</span> - 
                         ~if isset($arrOutDisplay.about.name) and $arrOutDisplay.about.name neq $notFilledInText`
-                          <span class="color11" id='nameView'>
+                          <span class="color11 js-syncChatHeaderName" id='nameView'>
                             ~$name`
                           </span>
                           ~else`
@@ -284,15 +285,45 @@
                   <li>
                     <p class="color12" id="emailLabelParent">
                       Email id <span class="ml5 ~if ($editApiResponse.Contact.EMAIL.value|count_characters:true) eq 0 || $editApiResponse.Contact.EMAIL.screenBit neq 1` disp-none ~/if` js-undSecMsg">
-                          <span class="disp_ib color5 f13" > Under Screening</span>
+                      <span class="disp_ib color5 f13" > Under Screening</span>
+                    </span>
+                  </p>
+                  <div class="clearfix pos-rel">
+                  <div class="fl wid70p">
+                      <p class="color11">
+                        <span id='my_emailView' ~if $arrOutDisplay.contact.my_email eq $notFilledInText` class="color5"  ~/if`>
+                          ~$arrOutDisplay['contact']['my_email']`
                         </span>
+                      </p>
+                    </div>
+                    <div class="fr wid25p pos-abs right0">
+                      <div ~if $arrOutDisplay['contact']['email_status'] eq Verified` class="color12" ~else` class="cursp color5" ~/if` id="email_statusView" >~$arrOutDisplay['contact']['email_status']`</div>
+                    </div> 
+                  </div>
+
+                </li>
+                  <!-- added alt email -->
+                  <li>
+                    <p class="color12" id="emailLabelParent">
+                      Alternate Email id
                     </p>
-                    <p class="color11">
-                      <span id='my_emailView' ~if $arrOutDisplay.contact.my_email eq $notFilledInText` class="color5"  ~/if`>
-                        ~$arrOutDisplay['contact']['my_email']`
-                      </span>
-                    </p>  
+
+                    
+                    <div class="clearfix pos-rel">
+                      <div class="fl wid70p">
+                        <p class="color11">
+                          <span id='my_alt_emailView' ~if $arrOutDisplay.contact.my_alt_email eq $notFilledInText` class="color5"  ~/if`>
+                            ~$arrOutDisplay['contact']['my_alt_email']`
+                          </span>
+                        </p>
+                      </div>
+                      <div class="fr wid25p pos-abs right0">
+                          <div ~if $arrOutDisplay['contact']['alt_email_status'] eq Verified` class="color12" ~else` class="color5 cursp" ~/if` id="alt_email_statusView">~$arrOutDisplay['contact']['alt_email_status']`</div>
+                      </div>
+                    </div>
+                     <div id="showAlternateEmailHint" ~if $arrOutDisplay['contact']['alt_email_status'] eq Verify` class="f12 color12  pt5" ~else` class="f12 color12  pt5 disp-none"  ~/if`>Verify email id to receive mails.</div>
                   </li>
+
                   <li>
                     <p class="color12" >
                       Mobile No. 
@@ -567,7 +598,22 @@
   </div>
   <!--end:second part--> 
 </div>
+<div id="js-alternateEmailConfirmLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white">
+    <input id='altEmailDefaultText' type="hidden" value="A link has been sent to your email id {email}, click on the link to verify email.">
+<div class="phnvp4 f17 fontreg color11 phnvbdr4">Email Verification</div>
+<i class="sprite2 sendcross cursp pos-abs crosspos closeCommLayer"></i>
+<div class="color11">
+<!--start:div-->
+<div class="phnvwid3 mauto pt40 pb27 fontlig">
+<p id='altEmailConfirmText' class=" f17 txtc lh26"></p>
+</div>
+</div>
+<!--end:layer 1-->
+</div>    
+    
 <script type="text/javascript">
+  var fromCALHoro=~if $fromCALHoro == 1`'1'~else`'0'~/if`;
+  var fromCALAlternate=~if $fromCALAlternate == 1`'1'~else`'0'~/if`;
   var senderEmail = "~$loggedInEmail`";
   var ProCheckSum = "~$arrOutDisplay["page_info"]["profilechecksum"]`";
   var profileGender = "~$arrOutDisplay["about"]["gender"]`";
@@ -582,3 +628,4 @@
    var profileCompletionValue = "~$iPCS`";
    var coverPhotoUrl = "~$editApiResponse.Details.COVER.value`";
 </script>
+

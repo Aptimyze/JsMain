@@ -65,7 +65,7 @@ if(isset($data))
 			$sql_ins_str=implode(",",$INS_FIELDS);
 			$sql_log="INSERT into billing.EDIT_LOG(BILLID,RECEIPTID,LOG_STATUS,MOD_BY,MOD_DT,".$sql_ins_str.") SELECT $billid,$receiptid,'P','$user',now(),$sql_mod_str ";
 			$sql_log.= "from billing.PAYMENT_DETAIL as pd,billing.PURCHASES as pur WHERE pd.RECEIPTID='$receiptid' AND pd.BILLID=pur.BILLID";
-			mysql_query_decide($sql_log) or die($sql_log.mysql_error_js()); 
+			mysql_query_decide($sql_log) or die($sql_log.mysql_error_js());
 		}
 		    
 		$sql="SELECT AMOUNT,STATUS FROM billing.PAYMENT_DETAIL WHERE RECEIPTID='$receiptid'";
@@ -197,7 +197,7 @@ if(count($sql_pd)>0)
 						$dueamt+=$amt;
 		
 						$sql_u="UPDATE billing.PURCHASES SET DUEAMOUNT='$dueamt' WHERE BILLID='$billid'";
-						mysql_query_decide($sql_u) or die(mysql_query_decide());
+						mysql_query_decide($sql_u) or die(mysql_error_js());
 					}
 				}
 

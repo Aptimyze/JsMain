@@ -36,15 +36,22 @@ class MyJsMobileAppV1
 
         public function getJsonAppV1($displayObj,$profileInfo='')
 	{
+
+		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class MyJsMobileAppV1 getJsonAppV1 hit");
 $className = get_class($this);
 			$className::init();
 			
 		$displayV1= Array();
+		$request = sfContext::getInstance()->getRequest();
+		$showExpiring = $request->getParameter('showExpiring');
 		foreach(self::$informationTypeFields as $key=>$value)
 		{
-			
 			if(array_key_exists($key,$displayObj))
 			{
+				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isApp()))
+				{
+					continue;
+				}
 				foreach($value as $k=>$v)
                                 {
 					if($v == "TUPLES")

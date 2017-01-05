@@ -88,8 +88,25 @@ class DeletedPictures extends Picture
         // Functions for PICTURE_DELETE_NEW insertion from PICTURE_FOR_SCREEN_NEWstore 
          public function insertDeletedPhotoDetails($whereConditions)
         {
-                $photoObj=new PICTURE_DELETE_NEW;
+								
+								$photoObj=new PICTURE_DELETE_NEW;
                 $photoObj->insertDeletedPhotoDetails($whereConditions);
+								$moduleName= array();
+								$moduleId=array();
+								$imageType=array();
+								$status=array();
+								$j=0;
+								foreach ($whereConditions["PICTUREID"] as $key=>$value)
+                {
+                        $moduleName[$j]="PICTURE_DELETED" ;
+						            $moduleId[$j]=$value;
+						            $imageType[$j]="MAIN_PHOTO_URL";
+						            $status[$j]="N";
+												$j++;
+                }
+                $imageServer=new ImageServerLog;
+                $result=$imageServer->insertBulk($moduleName,$moduleId,$imageType,$status);
+														
         }
 
          public function getDeletedPhotos($profileId)
@@ -117,6 +134,15 @@ class DeletedPictures extends Picture
                                        eval('$this->set'.$k.'($setServer);');
                         }
                }
+        }
+        
+        
+        public function edit($paramArr=array(),$pictureId,$profileId)
+        {
+                $photoObj=new PICTURE_DELETE_NEW;
+                
+                $status=$photoObj->edit($paramArr,$pictureId,$profileId);
+                return $status;
         }
 
 

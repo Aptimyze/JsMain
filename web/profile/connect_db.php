@@ -28,6 +28,28 @@ if(!function_exists('connect_db')){
 		return $db;
 	}
 }
+
+if(!function_exists('connect_ddl')){
+	function connect_ddl($nohtml="")
+	{
+		if($nohtml==1)
+			$db=db_set_active("master",MysqlDbConstants::$masterDDL[HOST].":".MysqlDbConstants::$masterDDL[PORT],MysqlDbConstants::$masterDDL[USER],MysqlDbConstants::$masterDDL[PASS]) or die();
+		else
+			$db=db_set_active("master",MysqlDbConstants::$masterDDL[HOST].":".MysqlDbConstants::$masterDDL[PORT],MysqlDbConstants::$masterDDL[USER],MysqlDbConstants::$masterDDL[PASS],MYSQL_CLIENT_COMPRESS) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes","","ShowErrTemplate","YES");
+		@mysql_select_db_js("newjs",$db);
+
+		if(php_sapi_name()=="cli")
+                        mysql_query("set session wait_timeout=50000,interactive_timeout=50000,net_read_timeout=50000",$db);
+
+		//function will check the status and assign it to a varible named STATUS
+		if(function_exists('check_livestatus'))
+			check_livestatus();
+
+		return $db;
+	}
+}
+
+
 	function connect_db_ro($nohtml="")
 	{
 		if($nohtml==1)
@@ -68,16 +90,6 @@ if(!function_exists('connect_slave81')){
         }
 }
 
-	function connect_mmm()
-	{
-		$db=mysql_connect(MysqlDbConstants::$alertsMMM[HOST].":".MysqlDbConstants::$alertsMMM[PORT],MysqlDbConstants::$alertsMMM[USER],MysqlDbConstants::$alertsMMM[PASS]) or die(mysql_error());
-		mysql_select_db("mmmjs",$db);
-
-		if(php_sapi_name()=="cli")
-                        mysql_query("set session wait_timeout=50000,interactive_timeout=50000,net_read_timeout=50000",$db);
-
-                return $db;
-	}
 if(!function_exists('connect_slave_ro')){
 	function connect_slave_ro()
         {
@@ -96,6 +108,18 @@ if(!function_exists('connect_db4')){
 	function connect_db4()
         {
                 $db=db_set_active("db4",MysqlDbConstants::$viewSimilar[HOST].":".MysqlDbConstants::$viewSimilar[PORT],MysqlDbConstants::$viewSimilar[USER],MysqlDbConstants::$viewSimilar[PASS],MYSQL_CLIENT_COMPRESS) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes","","ShowErrTemplate","YES","db4");
+                @mysql_select_db_js("newjs",$db);
+
+		if(php_sapi_name()=="cli")
+                        mysql_query("set session wait_timeout=50000,interactive_timeout=50000,net_read_timeout=50000",$db);
+
+                return $db;
+        }
+}
+if(!function_exists('connect_db4_ddl')){
+	function connect_db4_ddl()
+        {
+                $db=db_set_active("db4",MysqlDbConstants::$viewSimilarDDL[HOST].":".MysqlDbConstants::$viewSimilarDDL[PORT],MysqlDbConstants::$viewSimilarDDL[USER],MysqlDbConstants::$viewSimilarDDL[PASS],MYSQL_CLIENT_COMPRESS) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes","","ShowErrTemplate","YES","db4_ddl");
                 @mysql_select_db_js("newjs",$db);
 
 		if(php_sapi_name()=="cli")

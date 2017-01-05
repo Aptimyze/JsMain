@@ -492,6 +492,7 @@ var hamHtml="";
       }
       
       if(this.type == "native_country" && value== "FI"){
+        this.type="native_country";
         this.type="native_state";
         this.UpdateHamburgerHTML();
         return;
@@ -505,7 +506,7 @@ var hamHtml="";
 			{
 				
 			}
-			else if(this.dependant && this.type!=this.dependant && this.AnySpecialCheck(value))
+			else if(this.dependant && this.type!=this.dependant && this.AnySpecialCheck(value)&& !(this.type == "native_state" && value==0) && !(this.type == "native_country" && value==0))
 			{
 				stopTouchEvents(1);
 				this.type=this.dependant;
@@ -645,6 +646,22 @@ var hamHtml="";
 				
 				return output;
 				
+			}
+			if(this.type=="city_res")
+			{
+				var dependant1 = getDependantValue('city_res_country');
+				if(dependant1=="51")
+				{
+					var dependant2 = getDependantValue('city_res_state');
+					if(dependant2)
+					{
+						return json[dependant1][dependant2];
+					}
+				}
+				else if(dependant1=="128")
+				{
+					return json[dependant1];
+				}
 			}
 			if(this.type=="p_caste" || this.type=="p_sect")
 			{
@@ -870,6 +887,12 @@ var hamHtml="";
       if(arrKeyMap.indexOf(keyName) != -1){
         keyName = keyName + '_jsms';
       }
+	if(keyName=="city_res")
+		keyName="reg_city_jspc";
+	if(keyName=="p_caste")
+		keyName="p_caste_jsms";
+	if(keyName=="p_sect")
+		keyName="p_sect_jsms";
 			staticTables.getData(keyName,function(data){ele.UpdateUlOption(selArr,data)});
 			
 			
@@ -1120,6 +1143,17 @@ function getDependantValue(key)
 			arr[0]=128;
 		storeJson[key]=parseInt(arr[0]);
 	}
+	if( key=="city_res_country")
+	{
+		data=fetchEditDetails(key,"COUNTRY_RES",changingEditData["Details"]["basic"]);
+		storeJson[key]=data;
+	}
+	if( key=="city_res_state")
+	{
+		data=fetchEditDetails(key,"STATE_RES",changingEditData["Details"]["basic"]);
+		storeJson[key]=data;
+	}
+
 	
 	
 	//console.log(storeJson);

@@ -17,6 +17,7 @@ $cnt=$row['cnt'];
 mysql_close($db2);
 
 $db=connect_db();
+$db_ddl = connect_ddl();
 $sql="select count(*) from newjs.AUTOLOGIN_LOGIN";
 $res=mysql_query($sql) or logError($sql,$db);
 $row=mysql_fetch_row($res);
@@ -26,6 +27,6 @@ $sql="INSERT INTO MIS.DAY_LOGIN_COUNT(LAST_LOGIN_DT,COUNT,AUTO_LOGIN) VALUES('$t
 mysql_query($sql,$db) or logError($sql,$db);
 
 $sql="truncate table newjs.AUTOLOGIN_LOGIN";
-mysql_query($sql) or logError($sql,$db);
+mysql_query($sql,$db_ddl) or logError($sql,$db_ddl);
 
 ?>

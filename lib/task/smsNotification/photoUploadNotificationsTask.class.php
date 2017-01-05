@@ -51,11 +51,11 @@ $this->addOptions(array(
                                 $profileObj1 = Profile::getInstance('', $key);
                                 $profileObj2 = Profile::getInstance('', $profileid);
                                 $contactsObj = new Contacts($profileObj1,$profileObj2);
-                                $ignore=new newjs_IGNORE_PROFILE();
+                                $ignore=new IgnoredProfiles("newjs_master");
                                 
                                 $type = $contactsObj->getTYPE();
                                 if($type != 'C' && $type != 'D' && $type != 'E'){
-                                    if(!$ignore->isIgnored($profileid,$key) && !$ignore->isIgnored($key,$profileid)){
+                                    if(!$ignore->ifIgnored($profileid,$key) && !$ignore->ifIgnored($key,$profileid)){
                                         $instantNotifObj->sendNotification($key,$profileid);
                                         requestedPhotoUploadedMail::sendUploadPhotoMail($key,$profileid);
                                     }

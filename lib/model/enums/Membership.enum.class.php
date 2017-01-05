@@ -139,6 +139,18 @@ class VariableParams
 		"JSAA_mobile_website_ADDON_MEMBERSHIP_DOL",
 		"Android_app_ADDON_MEMBERSHIP_DOL",
 		"old_mobile_website_ADDON_MEMBERSHIP_DOL",
+        "desktop_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "iOS_app_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "mobile_website_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "JSAA_mobile_website_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "Android_app_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "old_mobile_website_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "desktop_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "iOS_app_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "mobile_website_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "JSAA_mobile_website_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "Android_app_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "old_mobile_website_MAIN_HIDDEN_MEMBERSHIP_DOL"
     );
     public static $vasOrder = array(
         'T',
@@ -647,25 +659,26 @@ class paymentOption
         "card3" => array(
             "ic_id" => "",
             "name" => "VISA"
-        ) ,
-        "card4" => array(
-            "ic_id" => "",
-            "name" => "Diners Club"
-        ) ,
-        "card5" => array(
-            "ic_id" => "",
-            "name" => "UCB"
-        ) ,
-        "card6" => array(
-            "ic_id" => "",
-            "name" => "RuPay"
-        )
+        ) 
+        // ,
+        // "card4" => array(
+        //     "ic_id" => "",
+        //     "name" => "Diners Club"
+        // ) ,
+        // "card5" => array(
+        //     "ic_id" => "",
+        //     "name" => "UCB"
+        // ) ,
+        // "card6" => array(
+        //     "ic_id" => "",
+        //     "name" => "RuPay"
+        // )
     );
     public static $dbCardType = array(
-        "card1" => array(
-            "ic_id" => "",
-            "name" => "American Express"
-        ) ,
+        // "card1" => array(
+        //     "ic_id" => "",
+        //     "name" => "American Express"
+        // ) ,
         "card2" => array(
             "ic_id" => "",
             "name" => "MasterCard"
@@ -793,8 +806,8 @@ class gatewayConstants
     public static $PayUTestDolMerchantId = "U0TVwL";
     public static $PayUTestDolSalt = "pvDO157G";
     
-    public static $PayUTestRsMerchantId = "dCBTMi";
-    public static $PayUTestRsSalt = "j2lZUnbX";
+    public static $PayUTestRsMerchantId = "gtKFFx";
+    public static $PayUTestRsSalt = "eCwWELxi";
     
     public static $PayUTestGatewayURL = 'https://test.payu.in/_payment';
     public static $PayULiveGatewayURL = 'https://secure.payu.in/_payment';
@@ -849,5 +862,9 @@ class gatewayConstants
 class franchiseeCommission
 {
     const FRANCHISEE = 40;
+}
+
+class SelectGatewayRedirect{
+    public static $gatewayOptions = array('default','payu','ccavenue');
 }
 ?>

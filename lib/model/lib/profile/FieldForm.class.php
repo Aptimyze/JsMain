@@ -61,6 +61,10 @@ class FieldForm extends sfForm
 	  $bExecuteNative_PlaceUpdate = false;
 	  $this->formValues=$this->getValues();
 	  foreach($this->formValues as $field_name=>$value){
+		if(in_array($field_name,ProfileEnums::$saveBlankIfZeroForFields) && $value=="0")
+		{
+			$value = "";
+		}
 		 // if($value!==null){
 		  $field_name=strtoupper($field_name);
 		  $field_obj=$this->fieldObjArr[$field_name];
@@ -115,7 +119,7 @@ class FieldForm extends sfForm
                                          $jpJainArr[$column_name]=$value;
                                   break;
                                 case "NAME_OF_USER":
-                                         $incentiveUsernameArr[$column_name]=$value;
+                                         $incentiveUsernameArr[$column_name]=trim($value);
                                   break;
                                 case "NATIVE_PLACE":
 						$nativePlaceArr[$column_name] = $value;
@@ -166,7 +170,7 @@ class FieldForm extends sfForm
     if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$this->loggedInObj->getPROFILEID();
 						
-      $nativePlaceObj = new NEWJS_NATIVE_PLACE;
+      $nativePlaceObj = ProfileNativePlace::getInstance();
       $this->checkForChange($nativePlaceArr,'NativePlace');
       if ($nativePlaceObj->InsertRecord($nativePlaceArr) === 0) {
         unset($nativePlaceArr[PROFILEID]);
@@ -291,26 +295,38 @@ class FieldForm extends sfForm
             }
 					}
 				}
-        
-				if($bSet_NativePlaceBit)
-				{
-					$jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL
-					$screen_flag = Flag::setFlag("ANCESTRAL_ORIGIN", $screen_flag);
-				}	
-				
-				if(count($incentiveUsernameArr))
-				{
-					foreach($incentiveUsernameArr as $field=>$value){
-						if($value){
-							if(in_array(strtolower($field),$flag_arr)){
-								$screen_flag = Flag::removeFlag($field, $screen_flag);
-							}
-						}
-					}
-				}
-				if($screen_flag!=$this->loggedInObj->getSCREENING())
-					$jprofileFieldArr['SCREENING']=$screen_flag;
 			  }
+                                if($bSet_NativePlaceBit)
+                                {
+                                        $jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL
+                                        $screen_flag = Flag::setFlag("ANCESTRAL_ORIGIN", $screen_flag);
+                                }
+                                if(count($incentiveUsernameArr) && array_key_exists("NAME",$incentiveUsernameArr))
+                                {
+                                     if($incentiveUsernameArr['NAME'])
+                                     {
+                                      $nameOfUserObj = new NameOfUser();
+                                      $nameOfUserArr['NAME']=$nameOfUserObj->filterName($incentiveUsernameArr['NAME']);
+                                      $isNameAutoScreened  = $nameOfUserObj->isNameAutoScreened($incentiveUsernameArr['NAME'],$this->loggedInObj->getGENDER());
+                                        if($isNameAutoScreened)
+                                        {
+                                                $jprofileFieldArr['SCREENING'] = Flag::setFlag($FLAGID="name",$screen_flag);
+                                        }
+                                      }
+                                      if(!$incentiveUsernameArr['NAME'] || !$isNameAutoScreened)
+                                      {
+                                                $screen_flag = Flag::removeFlag($FLAGID="name", $screen_flag);
+                                      }
+                                }
+			  if(array_key_exists("ANCESTRAL_ORIGIN",$jprofileFieldArr))
+			  {
+				if($jprofileFieldArr["ANCESTRAL_ORIGIN"]=="")
+					$screen_flag = Flag::setFlag("ANCESTRAL_ORIGIN", $screen_flag);
+				else
+					$screen_flag = Flag::removeFlag("ANCESTRAL_ORIGIN", $screen_flag);
+			  }
+			  if($screen_flag!=$this->loggedInObj->getSCREENING())
+				$jprofileFieldArr['SCREENING']=$screen_flag;
 
 			//Logging array for edit profiles
 				$editLogArr=array();
@@ -362,6 +378,10 @@ class FieldForm extends sfForm
 					$jprofileFieldArr['HAVE_JCONTACT']="Y";
 				}
         else if(count($jprofileContactArr)){
+        	if(array_key_exists("ALT_EMAIL", $jprofileContactArr))
+        	{
+        		$jprofileContactArr["ALT_EMAIL_STATUS"] = "N";
+        	}
           $this->checkForChange($jprofileContactArr,"Contact");
 					$this->loggedInObj->editCONTACT($jprofileContactArr);
           $jprofileFieldArr['HAVE_JCONTACT']="Y";
@@ -428,10 +448,15 @@ class FieldForm extends sfForm
 			
 			
 			//NAME OF USER (INCENTIVE TABLE)
+
 			if(count($incentiveUsernameArr) && $this->checkForChange($incentiveUsernameArr,'NameUser'))
 			{
-				$dbIncentive=new incentive_NAME_OF_USER();
-				$dbIncentive->insertName($profileid,$incentiveUsernameArr[NAME]);
+				$nameOfUserObj = new NameOfUser();
+				$nameData = $nameOfUserObj->getNameData($profileid);
+				if(!empty($nameData))
+					$nameOfUserObj->updateName($profileid,$incentiveUsernameArr);
+				else
+					$nameOfUserObj->insertName($profileid,$incentiveUsernameArr['NAME'],$incentiveUsernameArr['DISPLAY']);
 			}
 			//incomplete users 
 			$now = date("Y-m-d H:i:s");
@@ -543,7 +568,7 @@ class FieldForm extends sfForm
 					//bot EMAIL ENTRY
 					bot_email_entry($profileid, $jprofileFieldArr[EMAIL]);
 					//Insert into autoexpiry table, to expire all autologin url coming before date
-					$autoExObj=new jsadmin_AUTO_EXPIRY();
+					$autoExObj=new ProfileAUTO_EXPIRY();
 					$autoExObj->replace($profileid,'E',date("Y-m-d H:i:s"));
 					//end
 					insert_in_old_email($profileid, $this->loggedInObj->getEMAIL());
@@ -830,9 +855,12 @@ class FieldForm extends sfForm
     }
     elseif($table == 'NameUser')
     {
-       $storeObj = new incentive_NAME_OF_USER;
-       $arrResult = array();
-       $arrResult['NAME'] = $storeObj->getName($this->loggedInObj->getPROFILEID());
+        $nameObj= new NameOfUser;
+        $nameData = $nameObj->getNameData($this->loggedInObj->getPROFILEID());
+        $arrResult = array();
+        if(!empty($nameData))
+                $arrResult = $nameData[$this->loggedInObj->getPROFILEID()];
+        
        //if($orgiValue['NAME'])
        foreach ($paramArray as $key => $value) {
         $orig_value = $arrResult[$key];
@@ -842,7 +870,7 @@ class FieldForm extends sfForm
           $oriValueArr[$key] = $orig_value;
 				}
 			}
-      unset($storeObj);
+      unset($nameObj);
     }
 		else
 		{

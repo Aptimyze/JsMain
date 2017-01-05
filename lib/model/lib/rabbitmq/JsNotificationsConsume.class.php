@@ -141,16 +141,14 @@ class JsNotificationsConsume
 	$dataSet[$profileid] =$body;
 
 	//filter profiles based on notification count
-        if(in_array($body["NOTIFICATION_KEY"],NotificationEnums::$scheduledNotificationPriorityArr))
+        /*if(in_array($body["NOTIFICATION_KEY"],NotificationEnums::$scheduledNotificationPriorityArr))
         	$filteredProfileDetails = $notificationSenderObj->filterProfilesBasedOnNotificationCount($dataSet,$body["NOTIFICATION_KEY"]);
         else
-        	$filteredProfileDetails = $dataSet;
+        	$filteredProfileDetails = $dataSet;*/
 	//Send Notification
-	//print_r($filteredProfileDetails);
-	$notificationSenderObj->sendNotifications($filteredProfileDetails);
-	//Update Status
+	/*$notificationSenderObj->sendNotifications($filteredProfileDetails);
 	$scheduledAppNotificationUpdateSentObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS;
-        $scheduledAppNotificationUpdateSentObj->updateSuccessSent(NotificationEnums::$PENDING,$body["MSG_ID"]);
+        $scheduledAppNotificationUpdateSentObj->updateSuccessSent(NotificationEnums::$PENDING,$body["MSG_ID"]);*/
       }     
     }
     catch (Exception $exception) 

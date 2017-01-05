@@ -36,6 +36,12 @@ class SearchSort
 	private $filterSortScore;
         
         private $reverseSortStr;
+        
+        /**
+         * Paid Member Sorting in logged out case
+         * @var type string
+         */
+        private $paidSortStr;
 	/**
 	* When Photos is searched , visible photos will be given more prefernce.
 	* @access public 
@@ -223,6 +229,8 @@ class SearchSort
                         $sortLogin = "LAST_LOGIN_SCORE"; // User who have logged in in last 15 days will be given 100 score
 
                 $doesntMatterValue = 99999;
+                
+                $cityStateArr = $this->setCityStateToBeMatched($loggedInProfileObj);
 
                 if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
                         if ($loggedInProfileObj->getCASTE()) {
@@ -240,9 +248,18 @@ class SearchSort
                         if ($loggedInProfileObj->getCOUNTRY_RES()) {
                                 $sortArray[] = "or(tf(PARTNER_COUNTRYRES," . $loggedInProfileObj->getCOUNTRY_RES() . "),tf(PARTNER_COUNTRYRES," . $doesntMatterValue . "))";
                         }
-                        if ($loggedInProfileObj->getCITY_RES()) {
-                                $sortArray[] = "or(tf(PARTNER_CITYRES," . $loggedInProfileObj->getCITY_RES() . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
-                        }
+                        if($cityStateArr['state'] && $cityStateArr['nativeCity'])
+                            $sortArray[] = "or(tf(PARTNER_CITYRES," . $cityStateArr['nativeCity'] . "),tf(PARTNER_STATE," . $cityStateArr['state'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['state'] && $cityStateArr['nativeState'])
+                            $sortArray[] = "or(tf(PARTNER_STATE," . $cityStateArr['state'] . "),tf(PARTNER_STATE," . $cityStateArr['nativeState'] . "),tf(PARTNER_STATE," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['nativeCity'] && $cityStateArr['city'])
+                            $sortArray[] = "or(tf(PARTNER_CITYRES," . $cityStateArr['nativeCity'] . "),tf(PARTNER_CITYRES," . $cityStateArr['city'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['nativeState'] && $cityStateArr['city'])
+                            $sortArray[] = "or(tf(PARTNER_STATE," . $cityStateArr['nativeState'] . "),tf(PARTNER_CITYRES," . $cityStateArr['city'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['city'])
+                            $sortArray[] = "or(tf(PARTNER_CITYRES," . $cityStateArr['city'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
+                        elseif($cityStateArr['state'])
+                            $sortArray[] = "or(tf(PARTNER_STATE," . $cityStateArr['state'] . "),tf(PARTNER_CITYRES," . $doesntMatterValue . "))";
                         if ($loggedInProfileObj->getMTONGUE()) {
                                 $sortArray[] = "or(tf(PARTNER_MTONGUE," . $loggedInProfileObj->getMTONGUE() . "),tf(PARTNER_MTONGUE," . $doesntMatterValue . "))";
                         }
@@ -274,6 +291,36 @@ class SearchSort
                 }
                 $this->reverseSortStr = $strCondition;
         }
-
+        
+        //this function returns values for state,city,nativestate,nativeCity
+        protected function setCityStateToBeMatched($loggedInObj){
+            $profileId = $loggedInObj->getPROFILEID();
+            $nativePlaceObj = ProfileNativePlace::getInstance("newjs_masterRep");
+            $nativeData = $nativePlaceObj->getNativeData($profileId);
+            $nativeState = $nativeData['NATIVE_STATE'];
+            $nativeCity = $nativeData['NATIVE_CITY'];
+            
+            if(strlen($loggedInObj->getCITY_RES())==2){
+                $response['state'] = $loggedInObj->getCITY_RES();
+            }
+            else
+                $response['city'] = $loggedInObj->getCITY_RES();
+            
+            if($nativeState && $nativeCity)
+                $response['nativeCity'] = $nativeCity;
+            
+            elseif($nativeState){
+                $response['nativeState'] = $nativeState;
+            }
+            return $response;
+        }
+        public function isPaidSorting($loggedInProfileObj){
+                if (!$loggedInProfileObj || $loggedInProfileObj->getPROFILEID() == '') {
+                        $this->paidSortStr = "if(tf(SUBSCRIPTION,F),1,if(tf(SUBSCRIPTION,X),1,0))";
+                }
+        }
+        public function getPaidSorting(){
+                return $this->paidSortStr;
+        }
 }
 ?>

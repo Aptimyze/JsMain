@@ -3222,7 +3222,7 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 	function generate_id_from_table($tablename)
 	{
 		$tablename .= "_GET_ID";
-		$sql_ins_id = "INSERT INTO newjs.$tablename VALUES('')";
+		$sql_ins_id = "REPLACE INTO  newjs.$tablename (ID,NO_USE_VARIABLE) VALUES('','X')";
 		mysql_query_decide($sql_ins_id) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ins_id,"ShowErrTemplate");
 
 		$generated_id = mysql_insert_id_js();
@@ -3232,8 +3232,6 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 
 		$generated_id = $row_get_id['ID'];*/
 
-		$sql_del = "DELETE FROM newjs.$tablename WHERE 1";
-		mysql_query_decide($sql_del) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_del,"ShowErrTemplate");
 
 		return $generated_id;
 	}

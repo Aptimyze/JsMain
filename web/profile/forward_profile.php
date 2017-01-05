@@ -173,6 +173,10 @@ if($send)
 		$myrow["PHOTO_DISPLAY"];
 		
 		$havephoto=$myrow["PHOTO_DISPLAY"];
+		if(!$havephoto)
+		{
+			$havephoto = 'A';
+		}
 		$image_file=return_image_file($myrow["PHOTO_DISPLAY"],$myrow["GENDER"]);
                 if(SymfonyPictureFunctions::haveScreenedMainPhoto($profileid) || $main_photo_is_screened)	//Symfony Photo Modification
                 {

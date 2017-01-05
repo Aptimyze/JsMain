@@ -55,6 +55,24 @@ function setFilters(filterId){
           }
   });
 }
+function showHideRemLabel(param)
+{
+ 
+ var getID = param.attr('id').split('-')[1];
+ 
+ if(param.val()!=null)
+ {
+   $('#'+getID+'-rem').css('visibility','visible');
+ }
+ else
+ {
+   $('#'+getID+'-rem').css('visibility','hidden');
+ }
+ if(   $('#suggest_'+getID).length != 0    )
+ {
+   $('#suggest_'+getID).remove();
+ }
+}
 
 $(function(){
   
@@ -65,6 +83,17 @@ $(function(){
                     $('.'+getfieldID+' .prehide').fadeIn(200,"linear");
                     $('.'+getfieldID+' label').addClass("labelpadding");
             });
+
+                    //Dpp suggestions: start
+                    var editCatogary = getfieldID.split("edit")[1];
+                    if(editCatogary == "edu"){
+                      editCatogary = "education";
+                    }
+                    if(editCatogary == "basic" || editCatogary == "religion" || editCatogary == "education" && typeof(changeCatogarySuggestion) ==  "function") {
+                      changeCatogarySuggestion(editCatogary);
+                    }
+             //Dpp suggestions : end
+
             //fill default values into chosen multiselect
 	          fillValuesInChosen(getfieldID);
       
@@ -110,6 +139,16 @@ $(function(){
         //bind click on save button
         $(".js-saveBtn").bind("click",function(){
           var sectionId = $(this).attr('id').split("-")[1];
+          $('div[data-sectionid = "'+sectionId+'"] .suggestMain').each(function(index, element) {
+            $(this).remove();
+          });
+         /* setTimeout(function(){
+            if($('div[data-sectionid = "'+sectionId+'"] .suggestMain').length != 0){
+              $('div[data-sectionid = "'+sectionId+'"] .suggestMain').each(function(index, element) {
+                $(this).remove();
+              }); 
+            }
+          },500);*/
 
           //to show reg save button when all edit sections have been saved
           hideRegSaveButton--;
@@ -153,7 +192,7 @@ $(function(){
           parentFieldId = parentDiv[0].id;
           afterLH = fieldName.split("_")[1];
           fieldVal = $(this).attr("data-dbVal");
-          
+
           if(afterLH == "income") {//Income 
             afterLH = divWithId.attr("data-income");//either Rs or Dol,but update rest 
             
@@ -237,6 +276,29 @@ $(function(){
           dppApp.setForSave(section,fieldName,fieldVal);
           dppApp.set(fieldName,fieldVal); 
         });
+
+        //start:remove all option from chosen
+   $('.js-resetall').click(function(){
+     var getID = $(this).attr('id').split('-')[0];      
+     
+
+     $('#dpp-'+getID).val([" "]).trigger('chosen:updated');
+     $('#dpp-'+getID).trigger('change');
+     $('#'+getID+'-rem').css('visibility','hidden');
+
+
+
+     if(   $('#suggest_'+getID.split('_')[1]).length != 0    )
+     {
+         $('#suggest_'+getID.split('_')[1]).remove();
+     }
+  
+   });
+
+   $('.js-torem').on("change",function(){   
+       showHideRemLabel($(this));     
+   });
+
 	
 });
 
@@ -272,6 +334,10 @@ $(".chosen-container").on('keyup',function(e) {
 $(".chosen-container .chosen-results li").addClass("chosenfloat").removeClass("chosenDropWid");
 });
 
+//showing the threshold for mutual match count
+$("#mutualMatchCount").css("padding","2px");
+showMutualCount(mutualMatchCount,parseInt($("#mutualMatchCount").data('value')).toLocaleString());
+
 //$(".chosen-container.chosen-container-multi").on('mousedown',function(e) {
 //  $(".chosen-container .chosen-results li").removeClass("highlighted");
 //});
@@ -285,7 +351,51 @@ if(typeof(openSection) != "undefined" && openSection !=""){
 $("#loadLate").css('visibility','visible');
 if(isBrowserIE() === false)
   $(".js-txtarea").attr('placeholder','What are you looking into a partner?');
+  
+    // $("#unchk_dpp").on("click",function(){
+    //     $("#boxDiv").removeClass("move");
+    //     sendAjaxForToggleMatchalertLogic("dpp");
+    // });
+    // $("#chk_dpp").on("click",function(){
+    //     $("#boxDiv").addClass("move");
+    //     sendAjaxForToggleMatchalertLogic("history");
+    // });
+
+
+    $('#mutualMatchCountCheckBox').click(function(){
+      if (this.checked) {
+        sendAjaxForToggleMatchalertLogic("history");
+      }
+      else
+      {
+        sendAjaxForToggleMatchalertLogic("dpp");
+      }
+  });
+
+
+    isScrolledIntoView();
+
+  $(document).on("scroll", isScrolledIntoView);
 });
+
+function showMutualCount(id,value) {
+  var mutualMatchCountThreshold = 100;
+
+  $(id).text(value);
+  $(id).attr("data-value",value);
+
+  if (  parseInt( value.replace(",","") ) >= mutualMatchCountThreshold )
+  {
+    $(id).removeClass("js-selected");
+    $(id).addClass("dppnbg1");
+  }
+  else
+  {
+    $(id).removeClass("dppnbg1");
+    $(id).addClass("js-selected"); 
+  }
+}
+
 
 //click on more to show full prefilled text data
 $(function(){
@@ -296,12 +406,51 @@ $(function(){
         $("#shortContent_"+getName).hide();
         $("#fullContent_"+getName).show();
         $(this).addClass("hideMore").addClass("js-saveShow");
-            
-                    
     });
     
 });
 
+function isScrolledIntoView()
+  {
+    var docViewTop = $(window).scrollTop();
+      var docViewBottom = docViewTop + $(window).height();
+    var elemN = $("#newdppT");
+    var elemN2 = $('#countScroll');
+    
+    var elemTop = elemN.offset().top;
+      var elemBottom = elemTop + elemN.height();
+    
+    if((elemBottom <= docViewBottom) && (elemTop >= docViewTop))
+    {
+      
+      if(elemN2.hasClass('posnd'))
+      {
+        elemN2.removeClass('posnd');
+      }
+      
+      
+    }
+    else
+    {
+      var findleft = $('#midsec').offset().left;
+      elemN2.addClass("posnd").css('left',findleft);
+      
+    }
+  }
+
+function sendAjaxForToggleMatchalertLogic(setValue)
+{
+    $.ajax({
+          url: "/api/v1/search/matchAlertToggleLogic",
+          dataType: 'json',
+          method: "POST",
+          cache: true,
+          async: true,
+          data:{logic:setValue},
+          success: function(result) {
+	  }
+    });
+}
 
 //to auto fill data in multiselect type fields on click of edit button in a particular section
 function fillValuesInChosen(sectionId){
@@ -311,6 +460,11 @@ function fillValuesInChosen(sectionId){
     if(valueToFill != "" && valueToFill != null){
       $(this).val(valueToFill);
       $(this).trigger("chosen:updated");
+      
+      //show remove label if values are present
+     var getID = $(this).attr('id').split('-')[1];
+     $('#'+getID+'-rem').css('visibility','visible');
+
     }
     else
     {
@@ -353,7 +507,10 @@ function fillRangeValues(sectionId){
         valueToFill = $(this).parent().find("ul li:first").html();
         //put last value if no value in casse of max range
         if($(this).hasClass("js-rangeDiv2"))
+        {
           valueToFill = $(this).parent().find("ul li:last").html();
+          $(this).parent().find("ul li:last").addClass("js-selected");
+        }
     }
     $(this).find('span').html(valueToFill);
   }); 
@@ -370,7 +527,7 @@ function fillTextAreaValues(sectionId){
 
 //to save fields in a particular section with api call
 function saveSectionsFields(sectionId){
- 
+  callAfterDppChange();
   var editFieldArr = {};
   $('.'+sectionId+" .prehide").each(function(){  
   });
@@ -388,6 +545,7 @@ function saveSectionsFields(sectionId){
             datatype: 'json',
             cache: true,
             async: true,
+            updateChatListImmediate:true,
             data: {editFieldArr : editFieldArr,getData : "dpp",fromBackend:ifBackend},
             success: function(data) { 
               if(typeof data == "string")
@@ -411,6 +569,16 @@ function saveSectionsFields(sectionId){
                   $('.'+sectionId+' .posthide:not(.hideMore,.msgscr)').fadeIn(200,"linear");
                 });
               }
+              for (var ke in data) {
+
+                if ( data[ke] !== null )
+                {
+                  if ( data[ke].key == "P_MATCHCOUNT")
+                   {
+                      showMutualCount(mutualMatchCount,(data[ke].value).toLocaleString());
+                   }  
+                }
+              }           
             }
     });
   }
@@ -515,7 +683,7 @@ function onCountry(values){
 function onMarital(values){
   
   
-  if(values instanceof Array !== false && 
+  if((values instanceof Array !== false || (values != '' && values != null)) && 
      (values.length > 1 || values.indexOf("N") === -1)
     ){
     showHideField(hasChildrenField,true);
@@ -761,11 +929,13 @@ function disableRangeOption(fieldName,minValue){
       $(maxOption).trigger("click");
       return;
     }
-    
     //In case of income checl equal to also
     if(specialCheck && parseInt($(domEle).attr('data-dbVal')) <= parseInt(minValue) )
     {
-      $(maxOption).trigger("click");
+      if($(domEle).attr('data-dbval') != 19   )
+      {
+        $(maxOption).trigger("click");
+      }
     }
     else if(parseInt($(domEle).attr('data-dbVal')) < parseInt(minValue) )
     {
@@ -847,13 +1017,13 @@ function setUnsetFilter(status,filterId){
     var filterTextId = filterId.split("-")[0];
     if(status == "Y"){
                   $("#"+filterId).addClass("filterset").removeClass("filter");
-                  $("#"+filterId).children().addClass("colrw").html("Filter ON");
-                  $(".js-"+filterId).html($("#"+filterTextId+"-hint").val()+" set as filter");
+                  $("#"+filterId).children().addClass("colrw").html("Strict Filter ON");
+                  $(".js-"+filterId).html($("#"+filterTextId+"-hint").val()+" set as strict filter");
                 }
                 else{
                   $("#"+filterId).removeClass("filterset").addClass("filter");  
-                  $("#"+filterId).children().removeClass("colrw").html("Filter OFF");
-                  $(".js-"+filterId).html("Setting "+$("#"+filterTextId+"-hint").val()+" as filter?");
+                  $("#"+filterId).children().removeClass("colrw").html("Strict Filter OFF");
+                  $(".js-"+filterId).html("Setting "+$("#"+filterTextId+"-hint").val()+" as strict filter?");
                 }
 }
 
@@ -942,3 +1112,192 @@ function handleBack() {
   historyStoreObj.push(onBrowserBack, "#dpp");
   
 };
+
+var _dppType = ["city", "caste", "mtongue", "education", "occupation"];
+var _parentCatogary = [{
+  "parent": "basic",
+  "sub": ["city"]
+}, {
+  "parent": "religion",
+  "sub": ["caste", "mtongue"]
+}, {
+  "parent": "education",
+  "sub": ["education", "occupation"]
+}],queryInput = [];
+
+    //change suggestion on adding or deleting chosen option
+    function changeSuggestion(elem, state) {
+      var type = "",typeElem, typeDataArray = [];
+      elem= elem.split("<em>").join("").split("</em>").join("");
+      setTimeout(function() {
+        if (state == "add") {
+          $(".search-choice").each(function(index, element) {
+            if ($(this).find("span").html() == elem) {
+              typeElem = $(this).closest(".pt20");
+              type = $(this).closest(".pt20").attr("id").split("_")[1].split("Parent")[0];
+              if (_dppType.indexOf(type) != -1) {
+                typeDataArray = $("#dpp-p_" + type).val();
+              }
+            }
+          });
+        } else if (state == "remove") {
+          var type = elem.split("_")[1].split("Parent")[0];
+          if (_dppType.indexOf(type) != -1 && $("#dpp-p_" + type).val() != undefined ) {
+            typeDataArray = $("#dpp-p_" + type).val();
+          }
+        }
+        
+        if(type == "religion" && $("#dpp-p_caste").val()==null) {
+          $("#suggest_caste .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+        }
+        if (typeDataArray.length != 0) {
+          $("#dpp-p_"+type+"Parent").parent().find(".js-saveBtn").attr('disabled','disabled');
+          $("#loader_" + type).removeClass("disp-none");
+          $("#suggest_" + type + " .suggestBoxList").html("");
+          var obj = [{
+            "type": type.toUpperCase(),
+            "data": typeDataArray
+          }];
+          $.each(obj, function(index, elem) {
+            queryInput.push(elem);
+          });
+          getApiResponse();
+        }
+      }, 30);
+}
+
+        //has to changed with actual data + putting a lag of 500ms
+        function getApiResponse() {
+          var finalObj = [],
+          temp, dataPresent, response = [],url="",str="";
+      //time lag for multiple select
+      setTimeout(function() {
+        if (queryInput.length != 0) {
+          for (var i = 0; i <= queryInput.length; i++) {
+            temp = queryInput.pop();
+            dataPresent = false;
+            $.each(finalObj, function(index2, elem2) {
+              if (elem2.type == temp.type) {
+                dataPresent = true;
+              }
+            });
+            if (dataPresent == false) {
+              finalObj.push(temp);
+            }
+          }
+          str = JSON.stringify(finalObj).split('"').join('%22');
+          url = "/api/v1/profile/dppSuggestions?Param="+str;
+          $.ajax({
+            type: "POST",
+            url: url,
+            cache: false,
+            timeout: 5000,
+            success: function(result) {
+              $("#dpp-p_"+finalObj[0].type.toLowerCase()+"Parent").parent().find(".js-saveBtn").removeAttr('disabled');
+              if(result && result != "" && JSON.parse(result)[0] && JSON.parse(result).responseMessage == "Successful") {
+                response = JSON.parse(JSON.parse(result)[0]);
+                appendSuggestionList(response);
+              } else {
+                showCustomCommonError("Something went wrong. Please try again after some time.",1500);
+              }             
+            },
+            error:function(result){
+              $("#dpp-p_"+finalObj[0].type.toLowerCase()+"Parent").parent().find(".js-saveBtn").removeAttr('disabled');
+              showCustomCommonError("Something went wrong. Please try again after some time.",1500);
+            }
+          });
+        }
+      }, 500);
+
+}
+    // append API response in suggestion
+    function appendSuggestionList(response) {
+      var type = "",dataPresent;
+      $.each(response, function(index, elem) {
+        type = elem.type.toLowerCase();
+        if(elem.data) {
+            if (Object.keys(elem.data).length != 0) {
+            if ($("#suggest_" + type).length == 0) {
+              $('<div class="edwid2 fl ml193 pt10 suggestMain" id="suggest_' + type + '"><div class="fontlig f12 wid134 disp_ib color11 mr10 vtop">Suggested (click to add)</div><div class="disp_ib suggestParentBox wid345 disp_none vtop"><div id="loader_' + type + '"><img src="IMG_URL/images/jspc/commonimg/dppLoader.gif"></div><div class="suggestBoxList"></div></div></div>').insertAfter("#dpp-p_" + type + "Parent #multiselect");
+            }
+            $("#suggest_" + type + " .suggestBoxList").html("");
+            $.each(Object.keys(elem.data), function(index2, elem2) {
+              dataPresent = false;
+              if($("#dpp-p_" + type).val() != null) {
+                $.each($("#dpp-p_" + type).val(), function(index3,elem3){
+                  if(elem3 == elem2) {
+                    dataPresent = true;
+                  }
+                });
+              }
+              if (dataPresent == false && $("#dpp-p_"+type+" option[value='"+elem2+"']").length != 0) {
+                $("#suggest_" + type + " .suggestBoxList").append('<div class="fontlig f14 disp_ib color11 cursp suggestBox" index-val="' + elem2 + '">' + $("#dpp-p_"+type+" option[value='"+elem2+"']").html() + '</div>');
+              }
+            });
+            
+            //binding click on each suggestion
+            if($("#suggest_" + type + " .suggestBoxList div").length != 0) {
+              $(".suggestBox").each(function(index, element) {
+                $(element).off("click").on("click", function() {
+                  var newVal = $(this).attr("index-val"),
+                  parentText = $(this).closest(".suggestMain").attr("id").split("suggest_")[1],
+                  currentValArr = $("#dpp-p_" + parentText).val(),
+                  htmlStr = $(this).html(),parentSection = $("#dpp-p_"+parentText).closest(".js-editId").attr("data-sectionid");
+                  if(currentValArr != undefined) {
+                    currentValArr.push(newVal);
+                  } else {
+                    currentValArr = newVal;
+                  }
+                  $("#dpp-p_" + parentText).val(currentValArr).trigger("chosen:updated");
+                  $(this).remove();
+                  changeSuggestion(htmlStr, "add"); 
+                  dppApp.set("p_"+parentText,$("#dpp-p_" + parentText).val());
+                  dppApp.setForSave(parentSection,"p_"+parentText,$("#dpp-p_" + parentText).val());
+
+                  if($('#dpp-p_'+parentText).val()!=null)
+                 {
+                   $('#p_'+parentText+'-rem').css('visibility','visible');
+                 }
+                });
+              });
+            } else if($("#suggest_" + type + " .suggestBoxList div").length == 0) {
+              $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+            }
+          } else {
+            $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+          } 
+        } else {
+            $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
+          } 
+        
+        $("#loader_" + type).addClass("disp-none");
+      });
+
+}
+    //when a user click on edit button of a parent catogary
+    function changeCatogarySuggestion(type) {
+      setTimeout(function() {
+        var obj, typeDataArray;
+        $.each(_parentCatogary, function(index, elem) {
+          if (elem.parent == type) {
+            obj = [];
+            $.each(elem.sub, function(index2, elem2) {
+              typeDataArray = $("#dpp-p_" + elem2).val();
+              if(typeDataArray != null) {
+                obj.push({
+                  "type": elem2.toUpperCase(),
+                  "data": typeDataArray
+                });  
+              }
+            });
+            if(obj){
+              $.each(obj, function(index, elem) {
+                queryInput.push(elem);
+              });
+              getApiResponse();  
+            }
+          }
+        });
+      }, 30);
+    }
+

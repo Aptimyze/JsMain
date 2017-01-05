@@ -3,6 +3,7 @@
 This class includes functions for sending mail, sms and notifications.
 */
 include_once(JsConstants::$cronDocRoot."/crontabs/connect.inc");
+
 class ProcessHandler
 {
   /**
@@ -21,6 +22,7 @@ class ProcessHandler
     $senderObj->getDetail("","","*");
     $receiverObj = new Profile('',$receiverid);
     $receiverObj->getDetail("","","*");
+
     switch($type)
     {
       case 'CANCELCONTACT' :  ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
@@ -28,6 +30,9 @@ class ProcessHandler
       case 'ACCEPTCONTACT' :  ContactMailer::sendAcceptanceMailer($receiverObj,$senderObj);  
                               break;
       case 'DECLINECONTACT':  ContactMailer::sendDeclineMail($receiverObj,$senderObj); 
+                              break;
+      case 'INITIATECONTACT': $viewedSubscriptionStatus=$body['viewedSubscriptionStatus'];
+                              ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus); 
                               break;
       case 'MESSAGE'       :  ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
                               break;
@@ -144,8 +149,39 @@ class ProcessHandler
     }
 
  }
+
+ public function insertChatMessage($type,$body)
+ {
+     switch($type)
+     {
+         case "PUSH":
+             $sender = $body["from"];
+             $receiver = $body["to"];
+             $communicationType = $body["communicationType"];
+             $message = $body["message"];
+             $chatId = $body["chatid"];
+             $ip = $body["ip"];
+             $date = $body["date"];
+             $js_communication=new JS_Communication($sender,$receiver,$communicationType,$message,$chatId,$ip,$date);
+             $js_communication->storeCommunication();
+             break;
+     }
+ }
  public function updateSeen($type,$body)
  {
+
+	if($body['contactType']==ContactHandler::FILTERED)
+        {
+                $contactRObj=new EoiViewLog();
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'Y');
+        }
+
+        if($body['contactType']==ContactHandler::INITIATED)
+        {
+                $contactRObj=new EoiViewLog();
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'N');
+        }
+
 	switch($type)
 	{
 		case "ALL_CONTACTS":
@@ -154,6 +190,7 @@ class ProcessHandler
 			break;
 		case "ALL_MESSAGES":
 			MessageLog::makeAllMessagesSeen($body['profileid']);
+			ChatLog::makeAllChatsSeen($body['profileid']);
 			break;
 		case "PHOTO_REQUEST":
 			Inbox::setAllPhotoRequestsSeen($body['profileid']);
@@ -162,9 +199,42 @@ class ProcessHandler
 			Inbox::setAllHoroscopeRequestsSeen($body['profileid']);
 			break;
 	}
+        
  }
- 
- 
+ public function updateFeaturedProfile($type,$body)
+ {
+	if($body['profileid']!=null|| $body['profileid']!='')
+	{
+		$loggedInProfile = new LoggedInProfile('',$body['profileid']);
+		$loggedInProfile->getDetail('', '', '*');
+	}
+	$featuredProfileObj = new FeaturedProfile($loggedInProfile);
+	$featuredProfileObj->performDbActionFunction($body['id']);
+	unset($loggedInProfile);
+ }
+ /**
+ * HandleProfileCacheQueue
+ * @param $process
+ * @param $body
+ */
+ public function HandleProfileCacheQueue($process, $body)
+ {
+     try{
+         $key = $body['PROFILEID'];
+         if(0 === strlen($key)) {
+             return ;
+         }
+         $key = ProfileCacheConstants::PROFILE_CACHE_PREFIX . $key;
+         JsMemcache::getInstance()->delete($key, true);
+     } catch (Exception $ex) {
+         //Requeue the data
+         $reSendData = array('process' =>$process,'data'=>array('type' => '','body'=>$body), 'redeliveryCount'=> 0);
+         $producerObj=new Producer();
+         $producerObj->sendMessage($reSendData);
+     }
+
+ }
+
   public function logDuplicate($phone,$profileId)
  {
 	$profileObj=new Profile();
@@ -172,5 +242,26 @@ class ProcessHandler
         
         Duplicate::logIfDuplicate($profileObj,$phone);
  }
+ 
+public function updateViewLogTable($body,$type)
+ {
+        $viewer = $body["VIEWER"];
+        $viewed = $body["VIEWED"];
+	$viewLogObj=new VIEW_LOG_TRIGGER();
+        if($type == "inTrigger")
+            $viewLogObj->updateViewTrigger($viewer,$viewed);
+        
+        $viewLogObj->updateViewLog($viewer,$viewed);
+ }
+ 
+public function sendEOI($body, $type)
+{
+	if($type == "SCREENING")
+	{
+		$deliverContactsObj = new deliverTempContacts;
+		$deliverContactsObj->deliverContactsTemp($body['profileId']);
+	}
 }
+
+ }
 ?>

@@ -46,7 +46,7 @@
                     <li class="textTru">{edu_level_new}</li>
                     <li class="textTru">{location}</li>
                     <li class="textTru">{occupation}</li>
-                    <li class="textTru">{religion}, {caste}</li>
+                    <li class="textTru">{religion}{caste}</li>
                     <li class="textTru">{income}</li>
                     <li class="textTru">{mtongue}</li>
                     <li class="textTru">{mstatus}</li>
@@ -78,7 +78,7 @@
         </div>
         <div id="idR{profileNoId}" class="clearfix pt7  cursp" data="{profilechecksum}">
                     <div class="f11 fontlig colr2 fl {showFilterReason} reasonForFilter">Reason for filtering you out : {filterReason}</div>
-                    <div id="idRemove{profileNoId}" class="f11 fontlig color11 {removeThisProfile} txtr cursp fr ~if !$loggedIn` loginLayerJspc~else`js-removeProfile~/if`" data="{profilechecksum}">Ignore This Profile</div>
+                    <div id="idRemove{profileNoId}" class="f11 fontlig color11 {removeThisProfile} txtr cursp fr ~if !$loggedIn` loginLayerJspc~else`js-removeProfile~/if`" data="{profilechecksum}" data-chat="{userId},BLOCK">Ignore This Profile</div>
                     <div id="idRemove{profileNoId}" class="f11 fontlig color11 js-removeProfile txtr cursp fr" data="{profilechecksum}">{joinedOnMsg}</div>
             </div>
     </div>

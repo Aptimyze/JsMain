@@ -25,7 +25,9 @@ class PROFILE_COMMUNICATION_ENUM_INFO
 		self::$informationTypeEnum["HOROSCOPE_REQUEST_SENT"] = "Horoscope";
 		self::$informationTypeEnum["ACCEPTANCES_RECEIVED"]       = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_RECEIVED"]          = "ContactsRecord";
+		self::$informationTypeEnum["INTEREST_ARCHIVED"]          = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_RECEIVED_FILTER"]          = "ContactsRecord";
+		self::$informationTypeEnum["INTEREST_EXPIRING"]          = "ContactsRecord";
 		self::$informationTypeEnum["INTEREST_SENT"]              = "ContactsRecord";
 		self::$informationTypeEnum["DECLINE_RECEIVED"]           = "ContactsRecord";
 		self::$informationTypeEnum["NOT_INTERESTED"]           = "ContactsRecord";
@@ -60,6 +62,7 @@ class PROFILE_COMMUNICATION_ENUM_INFO
 		self::$tuplesEnum["MATCHALERT_MAILER_TUPLE"]                    = "MatchalertMailerTuple";
 		self::$tuplesEnum["INBOX_VIEWED_DATE"]                    = "ContactEngineInterestViewedTuple";
 		self::$tuplesEnum["INBOX_VIEWED_DATE_NO_MESSAGE"]                    = "ContactEngineInterestViewedNoMesageTuple";
+		self::$tuplesEnum["FEATURED_PROFILE_MAILER_TUPLE"]                    = "featuredProfileDetailsTuple";
 
 	}
 	

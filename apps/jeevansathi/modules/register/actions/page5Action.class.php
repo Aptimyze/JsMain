@@ -77,10 +77,8 @@ class page5Action extends sfAction {
 		}
 		//else
 		$parentUrl = "/social/addPhotos?from_registration=1";
-		if (MobileCommon::isMobile())
 			$this->redirect("$parentUrl");
-		else
-			$this->redirect("/profile/intermediate.php?parentUrl=$parentUrl");
+		
 
 
 	}

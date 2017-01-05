@@ -41,10 +41,14 @@ class JeevansathiGatewayManager
         $discount                     = $payment['discount'];
         $discount_type                = $payment['discount_type'];
         $ORDER                        = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYU', $discount_type, $apiParams->device, $apiParams->couponCode);
-        $nameOfUserObj                = new incentive_NAME_OF_USER();
-        $userName                     = $nameOfUserObj->getName($apiParams->profileid);
-        $apiObj->txnid                = $ORDER["ORDERID"];
-        $apiObj->amount               = (float) round($ORDER["AMOUNT"], 2);
+        if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
+            $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYU, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
+        }
+        $nameOfUserObj  = new incentive_NAME_OF_USER();
+        $userName       = $nameOfUserObj->getName($apiParams->profileid);
+        $apiObj->txnid  = $ORDER["ORDERID"];
+        $apiObj->amount = (float) round($ORDER["AMOUNT"], 2);
 
         $apiObj->productinfo = "UsrID: {$apiParams->profileid}, Mem: {$apiParams->track_memberships}, Amt: {$apiObj->amount}, Discnt: {$discount}, DisntTyp: {$discount_type}";
         $userData            = $memHandlerObj->getUserData($apiParams->profileid);
@@ -67,11 +71,15 @@ class JeevansathiGatewayManager
         $apiObj->surl     = JsConstants::$siteUrl . "/profile/pg/payU_return.php";
         $apiObj->furl     = JsConstants::$siteUrl . "/profile/pg/payU_return.php";
         $apiObj->curl     = JsConstants::$siteUrl . "/profile/pg/payU_return.php";
-        $apiObj->udf1     = $apiParams->checksum;
-        $apiObj->udf2     = $apiParams->currency;
+        $checksumSplit    = str_split($apiParams->checksum, 20);
+        $apiObj->udf1     = $checksumSplit[0];
+        $apiObj->udf2     = $checksumSplit[1];
+        $apiObj->udf3     = $checksumSplit[2];
+        $apiObj->udf4     = $checksumSplit[3];
+        $apiObj->udf5     = $apiParams->currency;
         $apiObj->device   = $apiParams->device;
 
-        $hashText     = "{$apiObj->key}|{$apiObj->txnid}|{$apiObj->amount}|{$apiObj->productinfo}|{$apiObj->firstname}|{$apiObj->email}|{$apiParams->checksum}|{$apiParams->currency}|||||||||{$apiObj->salt}";
+        $hashText     = "{$apiObj->key}|{$apiObj->txnid}|{$apiObj->amount}|{$apiObj->productinfo}|{$apiObj->firstname}|{$apiObj->email}|{$checksumSplit[0]}|{$checksumSplit[1]}|{$checksumSplit[2]}|{$checksumSplit[3]}|{$apiParams->currency}||||||{$apiObj->salt}";
         $apiObj->hash = hash("sha512", $hashText);
         $paymentArray = paymentOption::$paymentMode;
         if ($apiParams->paymentMode == "CR") {
@@ -146,6 +154,10 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
         $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'CCAVENUE', $discount_type, $apiParams->device, $apiParams->couponCode);
+        if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
+            $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : CCAVENUE, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
+        }
         $nameOfUserObj = new incentive_NAME_OF_USER();
         $userName      = $nameOfUserObj->getName($apiParams->profileid);
         if ($apiParams->currency == 'DOL') {
@@ -230,7 +242,10 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
         $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYTM', $discount_type, $apiParams->device, $apiParams->couponCode);
-
+        if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
+            $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYTM, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
+        }
         $apiObj->txnid            = $ORDER["ORDERID"];
         $apiObj->INDUSTRY_TYPE_ID = $apiObj->industryType;
         $apiObj->CHANNEL_ID       = $apiObj->channelId;
@@ -291,7 +306,10 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
         $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYPAL', $discount_type, $apiParams->device, $apiParams->couponCode);
-
+        if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
+            $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYPAL, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
+            SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
+        }
         $apiObj->PAYPALAMOUNT  = $ORDER["AMOUNT"];
         $apiObj->PAYPALORDERID = $ORDER["ORDERID"];
         $billServObj           = new billing_SERVICES();
@@ -307,14 +325,16 @@ class JeevansathiGatewayManager
 
     public static function reAuthenticateUser($apiObj)
     {
-        $jprofileObj    = new JPROFILE();
-        $fields         = "PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,EMAIL";
-        $valueArray     = array("PROFILEID" => $apiObj->apiParams->profileid, "activatedKey" => 1);
-        $profileDetails = $jprofileObj->getArray($valueArray, '', '', $fields, '', '', '', '', '', '', '', '');
-        unset($jprofileObj);
-        $protectObj = new protect();
-        $protectObj->logout();
-        $protectObj->postLogin($profileDetails[0]);
-        unset($protectObj);
+        $authenticationLoginObj = AuthenticationFactory::getAuthenicationObj(null);
+        $data                   = $authenticationLoginObj->setPaymentGatewayAuthchecksum($apiObj->apiParams->profileid);
+        // $jprofileObj    = new JPROFILE();
+        // $fields         = "PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,EMAIL";
+        // $valueArray     = array("PROFILEID" => $apiObj->apiParams->profileid, "activatedKey" => 1);
+        // $profileDetails = $jprofileObj->getArray($valueArray, '', '', $fields, '', '', '', '', '', '', '', '');
+        // unset($jprofileObj);
+        // $protectObj = new protect();
+        // $protectObj->logout();
+        // $protectObj->postLogin($profileDetails[0]);
+        // unset($protectObj);
     }
 }

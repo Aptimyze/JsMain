@@ -1,6 +1,8 @@
 <?php
 include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 class protect
 {
 	/***
@@ -436,7 +438,7 @@ class protect
                         //die;
                         $request_uri=$_SERVER['REQUEST_URI'];
                         //print_r("request_uri is >>>>".$request_uri);
-                        $fileslist=array("login.php","intermediate.php","login_redirect.php","jsChat.php","social/import","register/","sugarcrm","autoSug");
+                        $fileslist=array("login.php","login_redirect.php","social/import","register/","sugarcrm","autoSug");
 
                         $iftrue=true;
                         foreach($fileslist as $key=>$val)
@@ -446,10 +448,10 @@ class protect
                                         $iftrue=false;
 
                         }
-                        if($iftrue && !$isMobile){
+                        /*if($iftrue && !$isMobile){
                                         header("Location:".$SITE_URL."/profile/intermediate.php?parentUrl=".$request_uri);
                                         exit;
-                                }
+                                }*/
                         //}
                 }
 
@@ -1295,10 +1297,13 @@ class protect
     		$curTime = time();
         	$timediff = $curTime-$autoLoginTime;
             $mailedtime = date("Y-m-d H:i:s",$autoLoginTime);
-            $db = connect_db();
-            $sql = "select count(*) CNT from jsadmin.AUTO_EXPIRY WHERE PROFILEID = '$profileid' AND DATE > '$mailedtime'";
-            $result = mysql_query($sql,$db) or die(mysql_error($result));
-            $row = mysql_fetch_assoc($result);   
+//            $db = connect_db();
+//            $sql = "select count(*) CNT from jsadmin.AUTO_EXPIRY WHERE PROFILEID = '$profileid' AND DATE > '$mailedtime'";
+//            $result = mysql_query($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception(mysql_error($result)));
+//            $row = mysql_fetch_assoc($result);   
+            
+            $objAuto_Expiry = new ProfileAUTO_EXPIRY;
+            $row = $objAuto_Expiry->getRecord($profileid, $mailedtime);
             
         	if($timediff > $this->expiryTime || $row['CNT']) //30*24*60*60 seconds or email or password changed after mail sent.
         		return false;

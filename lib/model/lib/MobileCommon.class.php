@@ -21,9 +21,9 @@ class MobileCommon{
 		//return true;
 		if(!sfContext::getInstance()->getRequest()->getAttribute("JS_MOBILE"))
 		{
-                        if (JsConstants::$whichMachine != 'matchAlert') {
+			if (JsConstants::$whichMachine != 'matchAlert') {
 				include_once(sfConfig::get("sf_web_dir")."/profile/mobile_detect.php");
-                        }
+			}
 		}
 		return sfContext::getInstance()->getRequest()->getAttribute("JS_MOBILE");
 	}
@@ -59,26 +59,26 @@ class MobileCommon{
 		$snip_view_arr[]=$profileObj->getDecoratedReligion();
 		if(ProfileCommon::CasteAllowed($profileObj->getRELIGION()))
 			$snip_view_arr[]=ltrim(FieldMap::getFieldLabel("caste_small",$profileObj->getCASTE()),"-");
-			
+
 		$snip_view_arr[]=FieldMap::getFieldLabel("community_small",$profileObj->getMTONGUE());
 		$gothra=$profileObj->getDecoratedGothra();
 		if($gothra)
 			$snip_view_arr[]=$gothra."(Gothra)";
 		if($profileObj->getDecoratedEducation())
-				$snip_view_arr[]=$profileObj->getDecoratedEducation();
+			$snip_view_arr[]=$profileObj->getDecoratedEducation();
 		if($profileObj->getDecoratedIncomeLevel())
-				$snip_view_arr[]=$profileObj->getDecoratedIncomeLevel();
+			$snip_view_arr[]=$profileObj->getDecoratedIncomeLevel();
 		if($profileObj->getDecoratedOccupation())
-				$snip_view_arr[]=$profileObj->getDecoratedOccupation();
+			$snip_view_arr[]=$profileObj->getDecoratedOccupation();
 		$snip_view_str=implode(",",$snip_view_arr);
 		
 		if($profileObj->getDecoratedCity())
 		{
-				$residence=$profileObj->getDecoratedCity();
+			$residence=$profileObj->getDecoratedCity();
 		}
 		else
-				$residence=$profileObj->getDecoratedCountry();
-				
+			$residence=$profileObj->getDecoratedCountry();
+
 		$snip_view_str.=" in $residence";
 		return $snip_view_str;
 
@@ -117,11 +117,11 @@ class MobileCommon{
 		}
 	}
 
-        public static function isLogin()
+	public static function isLogin()
 	{
 		$profileObj = LoggedInProfile::getInstance('newjs_master');
-                if($profileObj->getPROFILEID())
-                	return true;
+		if($profileObj->getPROFILEID())
+			return true;
 		else
 			return false;
 	}
@@ -195,17 +195,17 @@ class MobileCommon{
 				self::gotoModuleUrl($module,$action);
 		}
 	}
-        public static function gotoModuleUrl($module,$action)
-        {
-            $request=sfContext::getInstance()->getRequest();
-            $request->setParameter("module",$module);
-            $request->setParameter("action",$action);
-            $request->setParameter("moduleName",$module);
-            $request->setParameter("actionName",$action);
-            $request->setRelativeUrlRoot("");
-            sfContext::getInstance()->getController()->forward($module,$action);
-            die;
-        }
+	public static function gotoModuleUrl($module,$action)
+	{
+		$request=sfContext::getInstance()->getRequest();
+		$request->setParameter("module",$module);
+		$request->setParameter("action",$action);
+		$request->setParameter("moduleName",$module);
+		$request->setParameter("actionName",$action);
+		$request->setRelativeUrlRoot("");
+		sfContext::getInstance()->getController()->forward($module,$action);
+		die;
+	}
 	
     /*
      *isIOS App
@@ -216,7 +216,7 @@ class MobileCommon{
      */
     public static function isIOSApp()
     {
-        return (self::isApp() === 'I');
+    	return (self::isApp() === 'I');
     }
     
     /*
@@ -228,39 +228,80 @@ class MobileCommon{
      */
     public static function isAndroidApp()
     {
-        return (self::isApp() === 'A');
+    	return (self::isApp() === 'A');
     }
     
     public static function isDesktop()
     {
-		if(MobileCommon::isApp() || MobileCommon::isNewMobileSite() || MobileCommon::isAppWebView() || MobileCommon::isMobile())
-			return false;
-		else
-			return true;
-	}
+    	if(MobileCommon::isApp() || MobileCommon::isNewMobileSite() || MobileCommon::isAppWebView() || MobileCommon::isMobile())
+    		return false;
+    	else
+    		return true;
+    }
 
-	public static function isCrmDesktop()
+    public static function isCrmDesktop()
     {
-		if(MobileCommon::isCrmApp())
-			return false;
-		else
-			return true;
+    	if(MobileCommon::isCrmApp())
+    		return false;
+    	else
+    		return true;
+    }
+
+    public static function getChannel(){
+    	if(MobileCommon::isApp() )
+    		return MobileCommon::isApp();
+    	if(MobileCommon::isNewMobileSite())
+    		return "MS";
+    	if(MobileCommon::isDesktop())
+    		return "P";
+    	if(MobileCommon::isOldMobileSite())
+    		return LoggingEnums::OMS;
+    }
+
+	/**
+     * @return channel names
+     */
+	public static function getFullChannelName(){
+		switch (self::getChannel()) {
+			case LoggingEnums::P:
+			{
+				$channelName = "JSPC";
+				break;
+			}
+			case LoggingEnums::A:
+			{
+				$channelName = "JSAA";
+				break;
+			}
+			case LoggingEnums::I:
+			{
+				$channelName = "JSIA";
+				break;
+			}
+			case LoggingEnums::MS:
+			{
+				$channelName = "JSMS";
+				break;
+			} 
+			case LoggingEnums::OMS:
+			{
+				$channelName = "JSOMS";
+				break;
+			} 
+			default:
+			{
+				$channelName = "UNKNOWN CHANNEL";
+				break;
+			} 
+		}
+		return $channelName;
 	}
 
-	public static function getChannel(){
-		if(MobileCommon::isApp() )
-			return MobileCommon::isApp();
-		if(MobileCommon::isNewMobileSite())
-			return "MS";
-		if(MobileCommon::isDesktop())
-			return "P";
-	}
-  
   /*
    * isOldMobileSite
    */
   public static function isOldMobileSite() {
-    return (self::isMobile() && false === self::isNewMobileSite());
+  	return (self::isMobile() && false === self::isNewMobileSite());
   }
 
   /*
@@ -268,14 +309,20 @@ class MobileCommon{
      * @param 
      * @return value : 1 if the conditions specified are true
      */
-    public static function isIOSPhone()
-    {
-    	$iPhone  = stripos($_SERVER['HTTP_USER_AGENT'],"iPhone");
-    	$iPod    = stripos($_SERVER['HTTP_USER_AGENT'],"iPod");
-		$iPad = stripos($_SERVER['HTTP_USER_AGENT'],"iPad");
-		if( $iPod || $iPhone || $iPod)
-		{
-			return 1;
-		}
-    }
+  public static function isIOSPhone()
+  {
+  	$iPhone  = stripos($_SERVER['HTTP_USER_AGENT'],"iPhone");
+  	$iPod    = stripos($_SERVER['HTTP_USER_AGENT'],"iPod");
+  	$iPad = stripos($_SERVER['HTTP_USER_AGENT'],"iPad");
+  	if( $iPod || $iPhone || $iPod)
+  	{
+  		return 1;
+  	}
+  }
+  public static function getHttpsUrl()
+  {
+	if(MobileCommon::isApp()=="I")
+		return true;
+	return false;
+  }
 }

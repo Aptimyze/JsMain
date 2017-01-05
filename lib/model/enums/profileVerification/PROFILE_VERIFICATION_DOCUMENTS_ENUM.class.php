@@ -91,8 +91,9 @@ class PROFILE_VERIFICATION_DOCUMENTS_ENUM
 		if(!$attribute || !$doc) 
 		{	if($throwException==false)
 				return false;
-			else
-				throw new Exception("Empty Attribute or doc are requested in PROFILE_VERIFICATION_DOCUMENTS_ENUM");
+			else{
+				throw new jsException('',"Empty Attribute or doc are requested in PROFILE_VERIFICATION_DOCUMENTS_ENUM");
+			}
 		}
 		else
 		{
@@ -103,7 +104,7 @@ class PROFILE_VERIFICATION_DOCUMENTS_ENUM
 				if($throwException==false)
 					return false;
 			}
-			throw new Exception("Invalid Attribute: $attribute and doc: $doc are requested in PROFILE_VERIFICATION_DOCUMENTS_ENUM");
+			throw new jsException('',"Invalid Attribute: $attribute and doc: $doc are requested in PROFILE_VERIFICATION_DOCUMENTS_ENUM");
 		}
 
         }

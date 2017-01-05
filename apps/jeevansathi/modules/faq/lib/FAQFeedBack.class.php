@@ -13,8 +13,9 @@ class FAQFeedBack
 	private $m_iTracePath;
 	private $errorReq;
 	private $webRequest;
-	
-	public function __construct($api=0)
+	private static $REASON_MAP=array('duplicate profile','incorrect details/photo','already married/engaged','inappropriate content','spam','looks like a fake profile','other');
+
+        public function __construct($api=0)
 	{
 		if($api)
 			$this->api=1;
@@ -32,28 +33,36 @@ class FAQFeedBack
 	private function insertReportAbuseLog(){
 
 		$reasonNew=$this->webRequest->getParameter('reason');
-
+                $reasonMap=$this->webRequest->getParameter('reason_map');
 		$this->otherProfile=new Profile();
-		if($this->webRequest->getParameter('profilechecksum') && $reasonNew)
+		if($this->webRequest->getParameter('profilechecksum') && ($reasonNew || $reasonMap))
 		{ 
 			$otherProfileId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
 		}
 		
-		else{
-			
-			$feed=$this->webRequest->getParameter('feed');
-			$reason=$feed['message'];
+		else {
 
-			$pos=strpos($reason,':');
-			$reasonNew=trim(substr($reason,$pos+1));
+                        $feed=$this->webRequest->getParameter('feed');
+                        $reason=$feed['message'];
 
-			$pos2=strpos($reason,'by');
-			$arr2=split(' ',trim(substr($reason,$pos2+2)));
-			$otherUsername=trim($arr2[0]);
-			$this->otherProfile->getDetail($otherUsername,"USERNAME");
-			$otherProfileId=$this->otherProfile->getPROFILEID();
-			
-		}
+                        $pos=strpos($reason,':');
+                        $reasonNew=trim(substr($reason,$pos+1));
+
+                        $pos2=strpos($reason,'by');
+                        $arr2=split(' ',trim(substr($reason,$pos2+2)));
+                        $otherUsername=trim($arr2[0]);
+                        $this->otherProfile->getDetail($otherUsername,"USERNAME");
+                        $otherProfileId=$this->otherProfile->getPROFILEID();
+
+                }
+	
+                if($reasonMap)
+                {
+                    $reasonMapArray=self::$REASON_MAP;
+                    $reasonNew=$reasonMapArray[$reasonMap-1];
+                    if($reasonNew=='other')
+                        $reasonNew=$this->webRequest->getParameter('other_reason');
+                }
 
 		$reasonsCategory=array('duplicate profile','incorrect details/photo','already married/engaged','looks like fake profile','inappropriate content','spam','looks like a fake profile');
 
@@ -76,8 +85,23 @@ class FAQFeedBack
 
 				// block for blocking the reported abuse added by Palash
 
-				$ignore_Store_Obj = new NEWJS_IGNORE;
+				$ignore_Store_Obj = new IgnoredProfiles("newjs_master");
 				$ignore_Store_Obj->ignoreProfile($loginProfile->getPROFILEID(),$otherProfileId);
+				//Entry in Chat Roster
+				try {
+					$this->ignoreProfile = new Profile("",$otherProfileId);
+					$this->ignoreProfile->getDetail("","","*");
+					$producerObj = new Producer();
+					if ($producerObj->getRabbitMQServerConnected()) {
+						$chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'BLOCK', 'body' => array('sender' => array('profileid'=>$loginProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($loginProfile->getPROFILEID()),'username'=>$loginProfile->getUSERNAME()), 'receiver' => array('profileid'=>$this->ignoreProfile->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->ignoreProfile->getPROFILEID()),"username"=>$this->ignoreProfile->getUSERNAME()))), 'redeliveryCount' => 0);
+						$producerObj->sendMessage($chatData);
+					}
+					unset($producerObj);
+				} catch (Exception $e) {
+					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
+				}
+
+				//End
 				JsMemcache::getInstance()->remove($loginProfile->getPROFILEID());
 				JsMemcache::getInstance()->remove($otherProfileId);
 
@@ -214,7 +238,7 @@ class FAQFeedBack
 			}
 		}
 		
-		if($bNewTicket)
+		if($bNewTicket || $this->m_szCategory==FeedbackEnum::CAT_ABUSE)
 		{
 			// Now Insert in Following Stores 
 			// 1) MIS_FEEDBACK_RESULT 

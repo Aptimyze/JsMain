@@ -95,7 +95,7 @@ function PostRequest(action)
 							commonData={};
 							document.getElementById("Filterid").value=data;
 							if(document.getElementById("from_reg").value==1){
-								window.location=SITE_URL+"/profile/intermediate.php?parentUrl=/social/addPhotos?profilechecksum="+document.myform.profilechecksum.value+"&from_registration=1";
+								window.location=SITE_URL+"/social/addPhotos?profilechecksum="+document.myform.profilechecksum.value+"&from_registration=1";
 							}
 							else
 									window.location=SITE_URL+"/P/mainmenu.php";

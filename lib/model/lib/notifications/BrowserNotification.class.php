@@ -74,7 +74,7 @@ class BrowserNotification{
      * @return : registration id array
      */
     public function getChannelWiseRegId($processObj){
-        $browserRegistrationObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION("newjs_slave");
+        $browserRegistrationObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION("newjs_masterRep");
         $channel = $processObj->getchannel();
         if($channel){
             $regIdArr = $browserRegistrationObj->getRegId($processObj->getprofileId(),$processObj->getagentId(), $channel);
@@ -211,7 +211,10 @@ class BrowserNotification{
             //$profileArr = array_keys($applicableProfiles);
 
             $poolObj = new NotificationDataPool();
-			$details = $poolObj->getProfilesData($browserProfilesArr,"newjs_SMS_TEMP_TABLE","newjs_slave");
+			$details = $poolObj->getProfilesData($browserProfilesArr,"newjs_SMS_TEMP_TABLE","newjs_masterRep");
+            if(count($details) <= 1){
+                $details = $poolObj->getProfilesData($browserProfilesArr,"JPROFILE","newjs_masterRep");
+            }
             //print_r($details);die;
             $dataAccumulated = $poolObj->getProfileVisitorData($browserProfilesArr, $details, $processObj->getmessage());
             //print_r($dataAccumulated);die;
@@ -235,7 +238,10 @@ class BrowserNotification{
         case "MESSAGE_RECEIVED":
         case "EOI_REMINDER":
             $poolObj = new NotificationDataPool();
-            $details = $poolObj->getProfilesData(array($browserProfilesArr['SELF'],$browserProfilesArr['OTHER']),"newjs_SMS_TEMP_TABLE","newjs_slave");
+            $details = $poolObj->getProfilesData(array($browserProfilesArr['SELF'],$browserProfilesArr['OTHER']),"newjs_SMS_TEMP_TABLE","newjs_masterRep");
+            if(count($details) <= 1){
+                $details = $poolObj->getProfilesData(array($browserProfilesArr['SELF'],$browserProfilesArr['OTHER']),"JPROFILE","newjs_masterRep");
+            }
             $dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$browserProfilesArr, $details,$processObj->getmessage());
             unset($poolObj);
             break;
@@ -287,7 +293,7 @@ class BrowserNotification{
         $currentNotificationSetting = $this->allNotificationsTemplate[$notificationKey];
         $timeCriteria = $currentNotificationSetting['TIME_CRITERIA'];
         unset($notifications);
-        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_slave");
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
         $varArray['PROFILEID']=implode(",",array_filter($profiles));
         unset($profiles);
         if($timeCriteria!='')
@@ -328,7 +334,7 @@ class BrowserNotification{
     }
     
     public function getAllNotificationsTemplate(){
-        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_slave");
+        $notificationsTempObj = new MOBILE_API_BROWSER_NOTIFICATION_TEMPLATE("newjs_masterRep");
         $notificationArr = $notificationsTempObj->getAll();
         foreach($notificationArr as $notificationName => $value){
             foreach($value as $key => $val){
@@ -598,7 +604,7 @@ class BrowserNotification{
                     //filter profiles based on login history
                     if(BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel] && !in_array($notificationKey, BrowserNotificationEnums::$notificationWithoutLoginFilter))
                     {        
-                        $loginTrackingObj = new MIS_LOGIN_TRACKING("newjs_slave");
+                        $loginTrackingObj = new MIS_LOGIN_TRACKING("newjs_local111");
                         $date15DaysBack = date("Y-m-d", strtotime("$todayDate -14 days"))." 00:00:00";
                         $profileStr = implode(",", $channelWiseProfiles);
                         $channelStr = BrowserNotificationEnums::$loginBasedNotificationProfileFilter[$channel];

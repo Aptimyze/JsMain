@@ -5,10 +5,13 @@ include_once("/usr/local/scripts/DocRoot.php");
 
 include("$docRoot/crontabs/connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+ini_set('max_execution_time',0);
 
 $db=connect_db();
-$db_slave=connect_slave();
+//$db_slave=connect_slave();
+$db_slave =connect_slave111();
 $mysqlObj=new Mysql;
+mysql_query("set session wait_timeout=2000",$db);
 	//************************************    Condition after submit state  ***************************************
 	
 	

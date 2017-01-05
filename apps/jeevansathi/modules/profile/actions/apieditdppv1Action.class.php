@@ -242,6 +242,14 @@ class apieditdppv1Action extends sfAction
 			$jpartnerEditLog = new JpartnerEditLog();
 			$param["fromBackend"] = $fromBackend;
 			$jpartnerEditLog->logDppEdit($jpartnerObj,$this->dppUpdateArray,$param);
+                        
+                        // remove entry from list count table used in Match alerts mailer
+                        TwoWayBasedDppAlerts::deleteEntry($this->profileId);
+                        
+                        // remove Low Dpp flag when user changes dpp
+                        $memObject=JsMemcache::getInstance();
+                        $memObject->remove('MA_LOWDPP_FLAG_'.$this->profileId);
+                        (new MIS_CA_LAYER_TRACK())->truncateForUserAndLayer($this->profileId,11,'');
 		//}
 		
 		//If profile's Source is ofl_prof Then do following

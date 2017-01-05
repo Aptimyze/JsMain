@@ -110,19 +110,19 @@ window.onload=function(){
                     <!--start:left-->
                     <ul class="topnavbar listnone fontlig f14 fl pt23">
                         <li tabindex="1"><a id="homepageLink" href="~if $loggedIn`/myjs/jspcPerform~else`/~/if`">HOME</a></li>
-                        <li tabindex="1" class="ml13"> <a class="drop" href="/search/index">MATCHES</a>
+                        <li tabindex="1" class="ml13"> <a class="drop" href="/search/partnermatches">MATCHES</a>
                             <ul class="menushadowGNB">
-                                <li><a class="disp_b" href="/search/matchalerts"> Match Alerts</a></li>
-                                <li><a class="disp_b" href="/search/partnermatches">Desired Partner Matches</a></li>
-                                <li><a class="disp_b" href="/search/justjoined">Just Joined Matches</a></li>
-                                <li><a class="disp_b" href="/search/verifiedMatches">Matches verified by Visit</a></li>
-                                <li><a class="disp_b" href="/search/twoway">Mutual Matches</a></li>
-                                <li><a class="disp_b" href="/search/reverseDpp">People Looking for me</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="partnermatches">Desired Partner Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="matchalerts"> Daily Recommendations</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="justjoined">Just Joined Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="verifiedMatches">Verified Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="twoway">Mutual Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="reverseDpp">Members Looking for Me</a></li>
                                 ~if $showKundliList eq '1'`
-                                <li><a class="disp_b" href="/search/kundlialerts">Kundli Matches</a></li>
+                                <li><a class="disp_b js-gnbsearchLists cursp" data="kundlialerts">Kundli Matches<div class="fr"><div class="bg_pink mr15 mt10"><div style="line-height:10px;" class="colrw disp_b padall-6">New</div></div></div></a></li>
                                 ~/if`
-                                <li><a class="disp_b" href="/search/shortlisted">Shortlisted members</a></li>
-                                <li><a class="disp_b" href="/search/visitors">Recent Profile Visitors</a></li>
+                                <li><a class="disp_b" href="/search/shortlisted">Shortlisted Profiles</a></li>
+                                <li><a class="disp_b" href="/search/visitors?matchedOrAll=A">Profile Visitors</a></li>
                                 <!--
                                 ~if CommonFunction::getMainMembership($subscription) eq mainMem::EVALUE || CommonFunction::getMainMembership($subscription) eq mainMem::EADVANTAGE`
                                 ~else`
@@ -164,37 +164,13 @@ window.onload=function(){
                             <!--end:number-->
                             <!--start:submenu-->
                             <ul class="submenu topnavbg pos-abs navbell menushadowGNB navBarZ">
-                           <!--     <li>
+                                <li>
                                     <a href="/search/justjoined">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Just Joined Matches</div>
                                         <div class="fr">
                                             <div id="justJoinedCountParent" class="disp-tbl  txtc" style="display:none">
                                                 <div id="justJoinedCount" class="disp-cell vmid colrw bg_pink f12 fontlig tdim2 count">0</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </a>
-                                </li>-->
-                                <li>
-                                    <a href="/inbox/1/1">
-                                    <div class="clearfix topnavp1">
-                                        <div class="fl">Interests Received</div>
-                                        <div class="fr">
-                                            <div id="interestsReceivedCountParent" class="disp-tbl  txtc" style="display:none">
-                                                <div id="interestsReceivedCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/inbox/2/1">
-                                    <div class="clearfix topnavp1">
-                                        <div class="fl">Members who Accepted me</div>
-                                        <div class="fr">
-                                            <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
-                                                <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
                                             </div>
                                         </div>
                                     </div>
@@ -217,17 +193,56 @@ window.onload=function(){
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Photo Requests</div>
                                         <div class="fr">
-                                            <div id="photoRequestsCountParent" class="disp-tbl  txtc" style="display:none">
+                                            <div id="photoRequestsCountParent" class="disp-tbl countBell txtc" style="display:none">
                                                 <div id="photoRequestsCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
                                             </div>
                                         </div>
                                     </div>
                                     </a>
-                                </li>                                
-                              <!--  <li>
+                                </li>
+                                <li>
+                                    <a href="/inbox/1/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl">Interests Received</div>
+                                        <div class="fr">
+                                            <div id="interestsReceivedCountParent" class="disp-tbl  txtc" style="display:none">
+                                                <div id="interestsReceivedCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/inbox/2/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl">Accepted Me</div>
+                                        <div class="fr">
+                                            <div id="membersAcceptedMeCountParent" class="disp-tbl countBell txtc" style="display:none">
+                                                <div id="membersAcceptedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+
+                                     <li>
+                                    <a href="/inbox/10/1">
+                                    <div class="clearfix topnavp1">
+                                        <div class="fl"> Declined</div>
+                                        <div class="fr">
+                                            <div id="membersDeclinedMeCountParent" class="disp-tbl txtc" style="display:none">
+                                                <div id="DeclinedMeCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </a>
+                                </li>
+
+
+                                <li>
                                     <a href="/search/matchalerts">
                                     <div class="clearfix topnavp1">
-                                        <div class="fl">Match Alerts</div>
+                                        <div class="fl">Daily Recommendations</div>
                                         <div class="fr">
                                             <div id="membersDailyMatchesCountParent" class="disp-tbl  txtc" style="display:none">
                                                 <div id="membersDailyMatchesCount" class="disp-cell vmid colrw f12 fontlig bg_pink tdim2 count">0</div>
@@ -235,8 +250,8 @@ window.onload=function(){
                                         </div>
                                     </div>
                                     </a>
-                                </li>-->
-				 <li>
+                                </li>
+				                <li>
                                     <a href="/inbox/12/1">
                                     <div class="clearfix topnavp1">
                                         <div class="fl">Filtered Interests</div>
@@ -250,6 +265,8 @@ window.onload=function(){
                                     </a>
                                 </li>
 
+                           
+
                             </ul>
                             <!--end:submenu-->
                         </li>
@@ -259,9 +276,9 @@ window.onload=function(){
                             <!--start:submenu-->
                             <ul id="gnbPhotoMenu" class="topnavbg pos-abs submenu fontlig menushadowGNB navBarZ">
                                 <li><div class="topnavp1"><a class="disp_b" href="/profile/viewprofile.php?checksum=~$profilechecksum`&profilechecksum=~$profilechecksum`">My Profile ~if $username`(~$username`)~/if`</a></div></li>
-                                <li><div class="topnavp1"><a class="disp_b" href="/profile/dpp"> My Desired Partner</a></div></li>
+                                <li><div class="topnavp1"><a class="disp_b" href="/profile/dpp"> Desired Partner Profile</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/alertManager"> Alert Manager</a></div></li>
-                                <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?visibility=1`">Privacy Settings</a></div></li>
+                                <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?visibility=1`">Profile Visibility</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?hideDelete=1">Hide/Delete profile</a></div></li>
                                 <li><div class="topnavp1"><a class="disp_b" href="/settings/jspcSettings?changePassword=1">Change Password</a></div></li>
                                 <li>
@@ -275,7 +292,7 @@ window.onload=function(){
                                         ~/if`
                                     </div>
                                 </li>
-                                <li><div class="topnavp1 txtc"><a class="disp_b cursp" onclick="javascript:logOutCheck('/static/logoutPage?fromSignout=1'); return true;">Sign out</a></div></li>
+                                <li><div class="topnavp1 txtc"><a class="disp_b cursp" onclick="javascript:logOutCheck('/static/logoutPage?fromSignout=1'); return true;" id="jspcChatout">Sign out</a></div></li>
                             </ul>
                             <!--end:submenu-->
                         </li>

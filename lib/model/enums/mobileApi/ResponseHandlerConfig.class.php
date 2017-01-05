@@ -20,7 +20,8 @@ class ResponseHandlerConfig
 	public static $FAILURE = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'1');
 	public static $SERVICE_UNAVAILABLE = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'1');
 	public static $HTTP_CODE_MESSAGE_NOT_SET = array("message"=>"HTTP code and message not set","statusCode"=>'1');
-	public static $LOGOUT_PROFILE = array("message"=>"Please login to continue","statusCode"=>'9');
+        public static $IGNORED_MESSAGE = array("message"=>"You have reached the maximum block/ignore limit per user on Jeevansathi. Please unblock some profiles to further use this functionality","statusCode"=>'1');
+        public static $LOGOUT_PROFILE = array("message"=>"Please login to continue","statusCode"=>'9');
 	
 	//Authentication Variables:
 	public static $INVALID_URL = array("message"=>"Something went wrong. Please try again later.","statusCode"=>'3');
@@ -67,9 +68,11 @@ class ResponseHandlerConfig
 
 	/*********************Forgot Password ends here*****/
 	//public static $FLOGIN_EMAIL_NOTPRESENT=array("message"=>"Email doesnot exist","statusCode"=>'2');
-	public static $FLOGIN_EMAIL_ERR=array("message"=>"The email address provided by you is not in our records","statusCode"=>"1");
+	public static $FLOGIN_EMAIL_ERR=array("message"=>"The email address or phone number provided by you is not in our records","statusCode"=>"1");
 	public static $FLOGIN_EMAIL_DELETED=array("message"=>"Profile with this email address has been deleted - please contact customer care.","statusCode"=>"1");
 	public static $FLOGIN_EMAIL_SUCCESS=array("message"=>"Link to reset your password has been sent to your registered Email Id and Mobile Number. The link will be valid for next 24 hours.","statusCode"=>"0");
+	public static $FLOGIN_EMAIL_SMSLIMIT_SUCCESS=array("message"=>"Link to reset your password has been sent to your registered Email Id. The link will be valid for next 24 hours.","statusCode"=>"0");
+	public static $FLOGIN_PHONE_ERR=array("message"=>"There are multiple profiles against this phone number, please enter Email Address of account or contact customer care.","statusCode"=>"1");
 	
 	/********************Forgot password ends here******/
 	//Only For Logging purpose
@@ -90,7 +93,7 @@ class ResponseHandlerConfig
 	public static $PHONE_INVALID = array("message"=>"Provide a valid mobile number","statusCode"=>"1");
 	public static $PHONE_INVALID_INPUT = array("message"=>"Provide a valid phone number","statusCode"=>"1");
 	public static $DISPLAY_PHONE_SCREEN =  array("message"=>"Display phone screen","statusCode"=>'8');
-	
+	public static $PHONE_JUNK = array("message"=>"Phone number banned due to terms of use violation","statusCode"=>"1");	
 	//incomplete
 	public static $INCOMPLETE_USER =  array("message"=>"incomplete Profile","statusCode"=>'7');
 	public static $APP_DOWN =  array("message"=>"Site temporarily down","statusCode"=>'45');
@@ -112,5 +115,14 @@ class ResponseHandlerConfig
     public static $ZERO_GUNA_MATCHES = array("message"=>"No Guna Score Matches","statusCode"=>'1');
     public static $NO_COMMUNICATION_HISTORY = array("message"=>"No Communication History","statusCode"=>'1');
 
+    // Captcha Not verified
+	public static $CAPTCHA_UNVERIFIED = array("message"=>"Please click the box 'I'm not a robot'","statusCode"=>'1');
+	public static $PHONE_INVALID_SUCCESS = array("message"=>"Successfull","statusCode"=>'0');
+	public static $PHONE_INVALID_NO_OPTION_SELECTED = array("message"=>"Please provide a valid reason","statusCode"=>'1');
+        
+    public static $NO_EMAILTYPE=  array("message"=>"No Email Type Passed","statusCode"=>'1');
+  	public static $ALTERNATE_EMAIL_SUCCESS=  array("message"=>"A link has been sent to your email id {email}, click on the link to verify email.","statusCode"=>'0');
+  	public static $ALTERNATE_EMAIL_ID_NOT_FOUND=  array("message"=>"No alternate email ID found for the given user.","statusCode"=>'0');
+	public static $PEAK_LOAD_FAILURE = array("message"=>"This operation cannot be done at site peak load","statusCode"=>'0');
 }
 ?>

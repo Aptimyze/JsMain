@@ -78,10 +78,15 @@ EOF;
 				
 				if($module == "PICTURE" && $whichImage=="OriginalPicUrl")
                                 {
-				       	$type = array("archive"=>1);
-					$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
+				       	$type = array("archive"=>1,"optimise"=>'Y');
+								$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
 				}
-                                else
+				elseif($module == "PICTURE_DELETED")
+                                {
+				       	$type = array("archive"=>1);
+								$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onArchiveServer;
+				}
+        else
 				{
 					$serverEnum = IMAGE_SERVER_STATUS_ENUM::$onImageServer;
 					$type="";
@@ -122,7 +127,7 @@ EOF;
 			{
 				if($serverOutput["urlFile"])
 				{
-					$server = is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;
+					$server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;// make a function call
 					$serverUrl = $server."/".$serverOutput["urlFile"];
 				}	
 			}
@@ -135,7 +140,7 @@ EOF;
                         		{
 						if($serverOutput1["urlFile"])
 						{
-                                		        $server = is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;
+                                		        $server = $this->getServerValue($type);//is_array($type)?IMAGE_SERVER_ENUM::$cloudArchiveUrl:IMAGE_SERVER_ENUM::$cloudUrl;
                                         		$serverUrl = $server."/".$serverOutput1["urlFile"];
         	                        	}
 	
@@ -173,7 +178,6 @@ EOF;
 	{
 		$whichImage = IMAGE_SERVER_IMAGE_TYPE_ENUM::getImageType($dataArr["IMAGE_TYPE"],$dataArr["MODULE_NAME"]);
 		$paramArr[$whichImage] = $url;
-
 		if($paramArr && is_array($paramArr) && $dataArr["MODULE_ID"])
 		{
 			$modObj = UpdateModuleTableFactory::getModuleObject($module);
@@ -194,5 +198,17 @@ EOF;
 		$islObj->updateImageServerTable($id,$paramArr);
 		unset($islObj);
 	}
+	 private function getServerValue($type)
+	 {
+	 	if(is_array($type) && array_key_exists("archive",$type) && !array_key_exists("optimise",$type))
+	 	{
+	 		$source = IMAGE_SERVER_ENUM::$cloudArchiveUrl;
+	 	}
+	 	else
+	 	{
+	 		$source = IMAGE_SERVER_ENUM::$cloudUrl;
+	 	}
+	 	return $source;
+	 }
 }
 ?>

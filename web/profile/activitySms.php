@@ -17,6 +17,7 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 $match_slave=connect_slave81();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$match_slave);
 $db_master = connect_db();
+$db_ddl = connect_ddl();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db_master);
 
 /*Mysql lock
@@ -69,7 +70,7 @@ if($count){
 		mysql_query($sql_ins, $db_master) or die($error=1);
 		if($error){
 			$sql_del = "TRUNCATE TABLE TEMP_ACTIVITY_SMS";
-			mysql_query($sql_del,$db_master) or die(mysql_error($db_master));
+			mysql_query($sql_del,$db_ddl) or die(mysql_error($db_ddl));
 			die(trackSmsError($sql_a, $db_master, "AS_TEMP_INSERT"));
 		}
 	}
@@ -236,7 +237,7 @@ for($i = 0; $i<$totalChunks; $i++)
 	}
 }
 $sql_del = "TRUNCATE TABLE TEMP_ACTIVITY_SMS";
-mysql_query($sql_del) or die(trackSmsError($sql_del, $db_master, "AS_TEMP_TRUNCATE"));
+mysql_query($sql_del,$db_ddl) or die(trackSmsError($sql_del, $db_ddl, "AS_TEMP_TRUNCATE"));
 trackSmsError("", "", "Sent $activityCount Activity SMS");
 
 release_lock($fp);

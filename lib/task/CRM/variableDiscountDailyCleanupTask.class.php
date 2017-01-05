@@ -31,7 +31,7 @@ EOF;
         $todayDate =date("Y-m-d");
         //************** Variable discount cleanup process Starts *************
         
-        $vdBackupOneDayObj = new billing_VARIABLE_DISCOUNT_BACKUP_1DAY();
+        $vdBackupOneDayObj = new billing_VARIABLE_DISCOUNT_BACKUP_1DAY('newjs_masterDDL');
         
         $vdBackupOneDayObj->truncate();
         $vdBackupOneDayObj->insertDataFromVariableDiscount();
@@ -41,7 +41,7 @@ EOF;
         $vdImpactObj->generateVDImpactReport();
         
         $vdObj = new billing_VARIABLE_DISCOUNT();
-        $vdObjSelSlave = new billing_VARIABLE_DISCOUNT('newjs_slave');
+        //$vdObjSelSlave = new billing_VARIABLE_DISCOUNT('newjs_slave');
         
         // Only edate check is added to include current available discounts and future discounts
         /* Future discounts : those discounts whose start date is greater than todays date */
@@ -50,9 +50,9 @@ EOF;
         $vdLogObj = new billing_VARIABLE_DISCOUNT_LOG();
         $vdLogObj->insertDataFromVariableDiscountBackup1Day($todayDate);
         
-        $toBeDeletedProfiles = $vdObjSelSlave->selectToBeDeletedProfilesWhoseVariableDiscountIsEndingYesterday();
-        $newjsTempSMSDetObj = new newjs_TEMP_SMS_DETAIL();
-        $newjsTempSMSDetObj->deletePreviousVdEntries($toBeDeletedProfiles);
+        //$toBeDeletedProfiles = $vdObjSelSlave->selectToBeDeletedProfilesWhoseVariableDiscountIsEndingYesterday();
+        //$newjsTempSMSDetObj = new newjs_TEMP_SMS_DETAIL();
+        //$newjsTempSMSDetObj->deletePreviousVdEntries($toBeDeletedProfiles);
         $vdObj->deleteVariableDiscountEndingYesterday();
 
         

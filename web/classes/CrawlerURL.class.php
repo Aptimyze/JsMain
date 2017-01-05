@@ -1,5 +1,7 @@
 <?php
 include_once("CrawlerClassesCommon.php");
+// including for logging purpose
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 class CrawlerURL
 {
 	private $URLId;
@@ -31,7 +33,7 @@ class CrawlerURL
 			{
 				$sql="SELECT * FROM crawler.crawler_sites_urls WHERE SITE_ID='$siteId' AND ACTION='$do'";
 			}
-			$res=$mysqlObj->executeQuery($sql,$db) or die("Error while fetching url   ".mysql_error());
+			$res=$mysqlObj->executeQuery($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Error while fetching url   ".mysql_error()));
 			unset($query);
 			if($mysqlObj->numRows($res))
 			{
@@ -43,7 +45,7 @@ class CrawlerURL
 				$this->method=$row["REQUEST_METHOD"];
 			}
 			$sql="SELECT * FROM crawler.crawler_sites_urls_parameters WHERE URL_ID='$this->URLId'";
-			$res=$mysqlObj->executeQuery($sql,$db) or die("Error while fetching url parameters   ".mysql_error());
+			$res=$mysqlObj->executeQuery($sql,$db) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Error while fetching url parameters   ".mysql_error()));
 			if($mysqlObj->numRows($res))
 			{
 				while($row=$mysqlObj->fetchAssoc($res))

@@ -163,7 +163,7 @@ and dependencies (minified).
 				when end of scrolling is reached 
 				values: boolean
 				*/
-				preventDefault:false,
+				preventDefault:true,
 				/*
 				the reported mouse-wheel delta value. The number of lines (translated to pixels) one wheel notch scrolls.  
 				values: "auto", integer 
@@ -611,8 +611,13 @@ and dependencies (minified).
 								onComplete:true
 							},
 							methodOptions=$.extend(true,{},methodDefaults,options),
-							to=functions._arr.call(this,val),dur=methodOptions.scrollInertia>0 && methodOptions.scrollInertia<17 ? 17 : methodOptions.scrollInertia;
-						
+							to=functions._arr.call(this,val);
+							if(methodOptions.dur != 0){
+								dur=methodOptions.scrollInertia>0 && methodOptions.scrollInertia<17 ? 17 : methodOptions.scrollInertia;
+							} else {
+								dur = 0;
+							}
+							
 						/* translate yx values to actual scroll-to positions */
 						to[0]=functions._to.call(this,to[0],"y");
 						to[1]=functions._to.call(this,to[1],"x");

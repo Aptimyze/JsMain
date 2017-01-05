@@ -13,10 +13,10 @@
     <!--start:Your email-->
     <div>
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="email_error"></div>
       </div>
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5 visHid disp-none" id="email_autoC"></div>
       </div>
       <!--end:error div-->
@@ -31,7 +31,7 @@
     <!--start:Password-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="password_error"></div>
       </div>
       <!--end:error div-->
@@ -51,7 +51,7 @@
     <!--start:Create profile for-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="cpf_error"></div>
       </div>
       <!--end:error div-->
@@ -78,7 +78,7 @@
     <!--start:gender-->
     <div class="mt7 disp-none" id = "genderBox">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="gender_error"></div>
       </div>
       <!--end:error div-->
@@ -99,22 +99,31 @@
     <!--start:Full Name-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="name_error"></div>
       </div>
       <!--end:error div-->
       <div class="fullwid pos_rel clearfix">
         <div class="reg-wid3 fr reg-divselc bg-white outl-none toValidate" tabindex="0" id="name_box">
-          <label class="lblreg pos_abs js-name js-list pos1_lbl1" id="name_label" data-attr="name">Full Name&nbsp;&nbsp;&nbsp;</label>
-          <input autocomplete="off" class="js-tBox reg_wid2 fr brdr-0 f15 fontlig " id="name_value" maxlength="40" data-type="text" type="text" data-toSave ="name_of_user" data-required=false data-characters-only="1" data-validate=true tabindex="-1" data-fieldtype="name"/>
+          <label class="lblreg pos_abs js-name js-list pos1_lbl1 required" id="name_label" data-attr="name">Full Name</label>
+	  <input autocomplete="off" class="js-tBox reg_wid2 fl brdr-0 f15 fontlig wid77p fl" id="name_value" maxlength="40" data-type="text" type="text" data-toSave="name_of_user" data-required=true  data-validate=true tabindex="-1" data-fieldtype="name" />
+	    <div id="hoverDiv" class="disp_ib pos-abs r0 mt12 mr5 cursp"><span id="showText" class="colrGrey fontlig f12 showToAll">Show to All</span><i id="settingsIcon"></i>
+		<ul id="optionDrop" class="optionDrop pos-abs disp-none" data-toSave="displayName">
+		    <li class="selected" id="showYes" data-fieldVal='Y'>Show my name to all
+		    </li>
+		    <li id="showNo" data-fieldVal="N">Don't show my name<br> ( You will not be able to see names of other members )
+		    </li>
+		</ul>
+	    </div>
         </div>
+	<div class="outl-none colrTxt f13 fontreg fr extraTxt bg-white">If you wish to hide your name from others, click on settings icon and choose the setting</div>
       </div>
     </div>
     <!--end:Full Name--> 
     <!--start:Date of Birth-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="dob_error"></div>
       </div>
       <!--end:error div-->
@@ -156,7 +165,7 @@
     <!--start:phone number-->
     <div class="mt7">
       <!--start:error div-->
-      <div class="clearfix f11 fontlig">
+      <div class="clearfix f14 fontlig">
         <div class="reg-wid3 fr colr5  visHid" id="phone_error"></div>
       </div>
       <!--end:error div-->
@@ -255,4 +264,3 @@
         <!--start:why register div-->
         ~include_partial("register/header/_jspcRegSideBar",[])`
         <!--end:why register div-->
-

@@ -3,7 +3,8 @@ $TOUT = 14400;
 include_once(JsConstants::$smartyDir);
 //include_once("../jsadmin/handleCrmLogin.php");
 
-
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 $smarty=new Smarty;
 $smarty->setTemplateDir(JsConstants::$alertDocRoot."/mmmjs/templates");
 $smarty->setCompileDir(JsConstants::$alertDocRoot."/mmmjs/templates_c");
@@ -1294,6 +1295,7 @@ function logError($message,$query="",$critical="exit", $sendmailto="NO")
         //for resman
         //$errorstring.="\" >> /usr/local/apache/sites/site2/manager/logs/resmgr.err
         passthru($errorstring);
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorstring));
         $errorstring.="\n#Details : $ret_val";
         if($sendmailto!="NO")
                 $b=mail($sendmailto,"ERROR in new resman connect", $errorstring);

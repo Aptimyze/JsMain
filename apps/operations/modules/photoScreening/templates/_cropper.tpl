@@ -46,6 +46,30 @@
 					<!--img src="../SRP/images/srch_image1.jpg" style="width:268px; height:400px"/-->
 					*`
 					<div class="img-container">
+						<script>
+						/*var startTime = new Date().getTime();
+						function doneLoading() {
+						    var loadtime = new Date().getTime() - startTime;
+						    var src = $("#cropperPic").attr("src");
+						    var url = '/operations.php/photoScreening/trackProcessPicUpload?loadtime='+loadtime+'&url='+src;
+						    $.ajax(
+										{	
+											url: url,
+									    type: 'GET',
+											timeout: 60000,
+											success: function(response) 
+											{ 	
+												
+											},
+											error: function(xhr) 
+											{
+												
+											}
+										})
+								    
+							};
+						*/    
+						</script>
 						<img src="~$uploadUrl`~$photoArr['profilePic']['OriginalProfilePicUrl']`" alt="Picture" id="cropperPic">
 					</div>
 					<!--lavesh-->
@@ -62,7 +86,7 @@
 				<!--start:div-->
 				<div class="fr puwid7">
 					<div class="pup11">
-						<p class="f15 fontlig color11">Username: ~$profileData['USERNAME']`</p>
+						<p class="f15 fontlig color11">Username: ~$profileData['USERNAME']`   <font style="font-size:16px;" class="red"> Gender: ~$profileData['GENDER']`</font></p>
 						<!--start:crop pictures-->
 						<div class="clearfix pt10">
 							<div class="fl">

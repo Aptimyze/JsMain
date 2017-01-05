@@ -1407,7 +1407,7 @@ class SugarBean
 			{
 				require_once("../profile/connect_db.php");
 				require_once("../profile/connect_functions.inc");
-				$db=connect_db();
+				$db=connect_ddl();
 				delete_profile($leadProfileID,"Deleted from sugar, to be retrieved after consent");
 			}
 		}
@@ -1455,7 +1455,7 @@ class SugarBean
 				}
 				require_once("../profile/connect_db.php");
 				require_once("../crm/negativeListCommon.php");
-				$db=connect_db();
+				$db=connect_ddl();
 				$dataSetArr =array("TYPE"=>"Marriage Bureau","ADDRESS"=>"$this->primary_address_postalcode","MATCHED_BY"=>"$matchedBy");
 				if($_POST['Leads0emailAddress0'])
 					updateNegativeProfiles('EMAIL','EMAIL',$_POST['Leads0emailAddress0'],'',$db,$dataSetArr);

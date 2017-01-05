@@ -4,7 +4,7 @@ $solr1 = JsConstants::$solrServerUrl;
 $solr1 = JsConstants::$solrServerUrl;
 $solr2 = JsConstants::$solrServerUrl1;
 $today    = date("Y-m-d");
-$yesterday = date("Y-m-d",strtotime("-1 day",strtotime($today)));
+$yesterday = date("Y-m-d",strtotime("-3 day",strtotime($today)));
 $daily = "&fq=ENTRY_DT:[".$yesterday."T00:00:00Z%20".$today."T00:00:00Z]";
 
 $url[670000] = $solr1.'/select?q=*:*';
@@ -33,21 +33,58 @@ foreach($url as $k=>$v)
 				$fromServer[1]="from server 2";
             $msg="TotalResults:$totalResults , Expected:More than $k        ";
         }
-}   
-if($msg)
+} 
+
+$solrDpp = "http://10.10.18.66:8983/solr/techproducts";
+$urlDpp[670001] = $solrDpp.'/select?q=*:*';
+$urlDpp[200001] = $solrDpp.'/select?q=*:*&fq=GENDER:(F)';
+$urlDpp[470001] = $solrDpp.'/select?q=*:*&fq=GENDER:(M)';
+$dppError = 0;
+$msgDpp = '';
+foreach($urlDpp as $k=>$v)
+{
+        $url1=$v."&wt=phps";
+        $res = CommonUtility::sendCurlPostRequest($url1,'nouse=1');
+        $res = unserialize($res);
+        $totalResults = $res['response']['numFound'];
+        if($totalResults < $k)
+        {
+		$fromServer[2]="from server 3";
+                $dppError++;
+                $msgDpp="TotalResults:$totalResults , Expected:More than $k        ";
+        }
+}  
+if($msg || $msgDpp)
 {
 	include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
-	$mobile         = "9818424749";
-	$date = date("Y-m-d h");
-	$str=implode(",", $fromServer);
-	$message        = "Mysql Error Count have reached solr $date within 5 minutes $str";
-	$from           = "JSSRVR";
-	$profileid      = "144111";
-	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        if($msg){
+                $mobile         = "9818424749";
+                $date = date("Y-m-d h");
+                $str=implode(",", $fromServer);
+                $message        = "Mysql Error Count have reached solr $date within 5 minutes $str";
+                $from           = "JSSRVR";
+                $profileid      = "144111";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 
-	$mobile         = "9873639543";
-	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                $mobile         = "9873639543";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 
-	$mobile         = "9711304800";
-	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                $mobile         = "9711304800";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+
+                $mobile         = "9650350387";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        }
+        if($msgDpp && $dppError >=2){
+                $mobile         = "9818424749";
+                $date = date("Y-m-d h");
+                $str=implode(",", $fromServer);
+                $message        = "Mysql Error Count have reached solr $date within 5 minutes $str";
+                $from           = "JSSRVR";
+                $profileid      = "144111";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+
+                $mobile         = "9650350387";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        }
 }

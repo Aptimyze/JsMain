@@ -88,10 +88,22 @@ class GetAlbumV1Action extends sfActions
 					//Code for album view logging
 					if($profileid != $loggedInProfileid)
 					{
-						$channel = MobileCommon::getChannel();
-						$date = date("Y-m-d H:i:s");
-						$albumViewLoggingObj = new albumViewLogging();
-						$albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$profileid,$date,$channel);
+//						$channel = MobileCommon::getChannel();
+//						$date = date("Y-m-d H:i:s");
+                                                $producerObj = new Producer();
+                                                if($loggedInProfileid && $loggedInProfileid%PictureStaticVariablesEnum::photoLoggingMod<PictureStaticVariablesEnum::photoLoggingRem && $loggedInProfile->getGENDER()!= $viewerObj->getGENDER()){
+                                                    if($producerObj->getRabbitMQServerConnected()){
+                                                        $triggerOrNot = "inTrigger";
+                                                        $queueData = array('process' =>MessageQueues::VIEW_LOG,'data'=>array('type' => $triggerOrNot,'body'=>array('VIEWER'=>$loggedInProfileid,VIEWED=>$profileid)), 'redeliveryCount'=>0 );
+                                                        $producerObj->sendMessage($queueData);
+                                                    }
+                                                    else{    
+                                                        $vlt=new VIEW_LOG_TRIGGER();
+                                                        $vlt->updateViewTrigger($loggedInProfileid,$profileid);
+//                                                        $albumViewLoggingObj = new albumViewLogging();
+//                                                        $albumViewLoggingObj->logProfileAlbumView($loggedInProfileid,$profileid,$date,$channel);
+                                                    }
+                                                }
 					}
 
 

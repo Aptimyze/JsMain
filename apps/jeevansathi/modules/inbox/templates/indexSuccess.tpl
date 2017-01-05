@@ -57,7 +57,7 @@
 
 		<!--start:pagination-->
 		<div class="clearfix ccp7">
-			~include_partial("inbox/JSPC/pagination")`
+			~include_partial("inbox/JSPC/pagination",[hidePaginationCount=>$hidePaginationCount])`
 			
 		</div>
 		<!--end:pagination-->
@@ -65,9 +65,7 @@
 </div>
 <!--end:middle part--> 
 <!--end:div for one-->
-<div class="disp-none" id="messageDisplaytuple">
-	<!--start:horizontal list-->
-	<div class="bg-white fullwid ccbrdb1 f13 fontlig color2 ">
+<div class="disp-none" id="messageDisplaytuple"><div class="bg-white fullwid ccbrdb1 f13 fontlig color2 ">
 		<div class="clearfix ccp6 cursp" id="backToMessage">
 			<div class="fl"><i class="sprite2 ccnbck"></i></div>
 			<div class="fl pt5 pl10">Back to messages</div>
@@ -104,9 +102,10 @@
 							</a>                        
 						</li>
 					</ul>
-					<div class="ccp7 ccbrdb1 cEcontent mCustomScrollbar" style="height:200px">
+                                        <img id="msgHistoryLoader" src="/images/jspc/commonimg/loader.gif" style="visibility:hidden;margin: 0 auto;height: 22px;display: block;">
+					<div id='msgListScroller-{profilechecksum}' class="ccp7 ccbrdb1 cEcontent" style="height:200px">
 						<ul class="msglist2 listnone" id="list-{profilechecksum}">
-							{messages}                 
+							                 
 						</ul>
 					</div>
 					<div class="ccp8 CEParent" id="WriteArea" style="display:none;">

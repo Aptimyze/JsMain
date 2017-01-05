@@ -356,7 +356,7 @@ class incentive_MAIN_ADMIN extends TABLE {
 	{
 		try
 		{
-			$sql = "SELECT m.PROFILEID,m.STATUS,c.ALLOT_TIME,c.RELAX_DAYS,c.ALLOCATION_DAYS,c.DE_ALLOCATION_DT FROM incentive.MAIN_ADMIN m ,incentive.CRM_DAILY_ALLOT c WHERE c.PROFILEID=m.PROFILEID AND m.PROFILEID =:PROFILEID AND c.ALLOT_TIME=m.ALLOT_TIME";
+			$sql = "SELECT m.PROFILEID,m.STATUS,c.ALLOT_TIME,c.RELAX_DAYS,c.ALLOCATION_DAYS,c.DE_ALLOCATION_DT FROM incentive.MAIN_ADMIN m ,incentive.CRM_DAILY_ALLOT c WHERE c.PROFILEID=m.PROFILEID AND m.PROFILEID =:PROFILEID AND c.ALLOT_TIME=m.ALLOT_TIME ORDER BY c.DE_ALLOCATION_DT DESC LIMIT 1";
 			if($executive)
 				$sql.=" AND m.ALLOTED_TO=:ALLOTED_TO";
 			$prep = $this->db->prepare($sql);
@@ -382,7 +382,7 @@ class incentive_MAIN_ADMIN extends TABLE {
 				$startTime =$allotedDt." 00:00:00";
 				$endTime =$allotedDt." 23:59:59";
 			}
-			if($subMethod=="LIMIT_EXCEED")
+			if($subMethod=="LIMIT_EXCEED" || $subMethod=="LIMIT_EXCEED_RENEWAL")
 				$fields="PROFILEID,WILL_PAY,ALLOTED_TO";
 			else
 				$fields="PROFILEID";
@@ -413,7 +413,7 @@ class incentive_MAIN_ADMIN extends TABLE {
 			$prep->execute();
 			while($result=$prep->fetch(PDO::FETCH_ASSOC))
 			{
-				if($subMethod=="LIMIT_EXCEED")
+				if($subMethod=="LIMIT_EXCEED" || $subMethod=="LIMIT_EXCEED_RENEWAL")
 					$profiles[]=$result;
 				else
 					$profiles[]=$result['PROFILEID'];
@@ -898,6 +898,16 @@ class incentive_MAIN_ADMIN extends TABLE {
                 throw new jsException($ex);
             }
         }
-
+        public function getIST($dateTime='')
+        {
+                if(!$dateTime)
+                        $dateTime =date("Y-m-d H:i:s");
+                $sql = "SELECT CONVERT_TZ('$dateTime','SYSTEM','right/Asia/Calcutta') as time";
+                $res = $this->db->prepare($sql);
+                $res->execute();
+                if($row = $res->fetch(PDO::FETCH_ASSOC))
+                        $dateTime = $row['time'];
+                return $dateTime;
+        }
 }
 ?>

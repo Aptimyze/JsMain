@@ -22,5 +22,7 @@ class ProfileEnums
   const PROFILE_DELETED  = 'D';
   const PROFILE_HIDDEN  = 'H';
   const PROFILE_UNDERSCREENING  = 'U';
+        public static $saveBlankIfZeroForFields = array("DIET","DRINK","SMOKE","MOTHER_OCC","FAMILY_BACK","FAMILY_STATUS","FAMILY_TYPE","FAMILY_VALUES","COMPLEXION","BTYPE","FAMILY_INCOME","NATIVE_COUNTRY","STATE_INDIA","NATIVE_STATE");
+
 }
 ?>

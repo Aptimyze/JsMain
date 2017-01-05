@@ -16,7 +16,7 @@ include_once(JsConstants::$cronDocRoot.'/lib/model/lib/FieldMapLib.class.php');
 include("connect.inc");
                                                                                                  
 $db2=connect_master();
-$db = connect_misdb();
+$db = connect_rep();
 
 $data=authenticated($cid);
 if(isset($data))

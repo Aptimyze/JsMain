@@ -51,6 +51,9 @@ class JsConstants
         public static $solrServerUrl1     = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
         public static $solrServerUrl2     = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
 
+        public static $solrServerProxyUrl      = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
+        public static $solrServerProxyUrl1     = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
+        
 	/* bms */
 	public static $bmsUrl             = 'http://milestoneconfig.jeevansathi.com';
 	public static $bmsDocRoot         = '/var/www/htmlrevamp/ser6/branches/milestoneConfig/web';
@@ -62,6 +65,10 @@ class JsConstants
 	public static $alertSymfonyRoot   = '/var/www/htmlrevamp/ser6/branches/milestoneConfig';
 	public static $userHome           = '/home/developer';
 	public static $alertServerEnable  = 1;
+	public static $stopOnPeakLoad     = 1;
+	public static $notificationStop	  = 0;
+	//if set to 1, hides unimportant features at time of peak load on site
+	public static $hideUnimportantFeatureAtPeakLoad     = 0;
         
         /* Vsp URL */
 	public static $vspMaleUrl           = 'http://maleapi.analytics.resdex.com:9000/ecpRecommendations_live';
@@ -159,6 +166,11 @@ class JsConstants
         public static $redisCluster = ['tcp://172.10.18.61:7000','tcp://172.10.18.62:7000','tcp://172.10.18.63:7000','tcp://172.10.18.64:7000','tcp://172.10.18.65:7000','tcp://172.10.18.64:7005'];
         public static $redisSentinel = ['tcp://172.10.18.65:26379', 'tcp://172.10.18.64:26379','tcp://172.10.18.70:26379'];
         public static $ifSingleRedis = 'tcp://172.10.18.65:6379';
+        
+    /***openfire config for chat**/
+    public static $openfireConfig = array('HOST'=>'localhost','WSPORT'=>'7070','SERVER_NAME'=>'localhost');
+    public static $openfireConfigInternal = array('HOST'=>'localhost','PORT'=>'9090','SERVER_NAME'=>'localhost');
+    public static $openfireRestAPIKey = "MhXPRu3f4Aw07EbR";
 		/*public static $ifSingleRedis = array(
 		'scheme'   => 'tcp',
 		'host'     => '127.0.0.1',
@@ -169,7 +181,13 @@ class JsConstants
 	 public static $usePhotoDistributed = 0;
   public static $photoServerName='JSPIC1';
 	public static $photoServerShardingEnums = array("JSPIC1","JSPIC2","JSPIC3");
-
-	
 	public static $communicationRep = true;
+    public static $jsChatFlag = 1; //1=enable chat, 0=disable chat
+        public static $presenceServiceUrl = "http://192.168.120.70:8290";
+    public static $multiUserPhotoUrl = "http://www.jeevansathi.com/api/v1/social/getMultiUserPhoto"; //Api from staging for multi user photo being used in chat listing and self photo.
+    public static $chatListingWebServiceUrl = array("dpp"=>"http://www.jeevansathi.com:8190/listings/v1/discover");
+    public static $profilesEligibleForDpp = array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>"5616315|9061321");
+    public static $nonRosterRefreshUpdate = 300000;
+        public static $httpsApplicationPhotoUrl      = 'https://xmppdev1.jeevansathi.com';
+        public static $httpsCloudUrl                 = 'https://mediacdn.jeevansathi.com';
 }

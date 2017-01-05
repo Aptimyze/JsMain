@@ -103,8 +103,9 @@ class RegistrationCommunicate
     public static function sendSms($profileid) {
 			/* SMS Code for sending sms to users added by nitesh in registration revamp*/
 			include_once(sfConfig::get("sf_web_dir")."/profile/InstantSMS.php");
-			$sms1 = new InstantSMS("REGISTER_CONFIRM", $profileid);
-			$sms1->send();
+			
+                        //$sms1 = new InstantSMS("REGISTER_CONFIRM", $profileid); Uncommented by Palash To stop these messages JSI-2106
+			//$sms1->send();
 			$sms2 = new InstantSMS("REGISTER_KYC", $profileid);
 			$sms2->send();
 			/* Ends Here of SMS code */

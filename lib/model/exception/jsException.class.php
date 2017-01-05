@@ -1,19 +1,34 @@
 <?php
 class jsException extends PDOException{
         public function __construct($exceptionObj = "", $message = null, $trace=0, $code=0) {
+        
 		if($message){
 			$this->message = $message;
-			parent::__construct(self::getCustomMessage($this, $trace),$code);
-			jsException::log($message);
+			parent::__construct(self::getCustomMessage($this, $trace),$code);			
+						jsException::log($message);
 		}
 		else{
 			 parent::__construct(self::getCustomMessage($exceptionObj, $trace),$code);
 			if($exceptionObj)
-			{
+			{     		
 				jsException::log($exceptionObj->getMessage()."\n".$exceptionObj->getTraceAsString());
 			}
 		}
 		self::checkCE();
+		// code for exception object. 
+    if ( $exceptionObj && $code === 0 )
+    {
+      $code = $exceptionObj->getCode();
+    }
+		if ( $exceptionObj != "")
+		{
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$exceptionObj,array(LoggingEnums::MESSAGE => $message));
+		}
+		else
+		{
+			$this->message = $message;
+			LoggingManager::getInstance()->logThis(LoggingEnums::LOG_ERROR,$this);
+		}
         }
         static function checkCE()
         {
