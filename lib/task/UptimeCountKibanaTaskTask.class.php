@@ -57,57 +57,22 @@ EOF;
 			];
 
 		// Calculates 500 counts from APP logs
-		// $params2 = [
-		// 	"query"=> [
-		// 		"filtered"=> [ "query"=> [ "query_string"=> [
-		// 			"analyze_wildcard"=> true,
-		// 			"query"=> "*" ]],
-		// 			"filter"=> ["bool"=> ["must"=> [[
-		// 				"query"=> [
-		// 					"match"=> [ "moduleName"=> [ "query"=> "500", "type"=> "phrase"] ]],
-		// 			  "$state"=> ["store"=> "appState"]],
-		// 	["range"=> [
-		// 		"@timestamp"=> [
-		// 		  "gte"=> "now-".($day*$interval)."h",
-		// 		  "lte"=> "now-".(($day-1)*$interval)."h",
-		// 		]]]],]]]],
-		// 	"aggs"=> ["2"=> ["terms"=> [
-		// 		"field"=> "moduleName","size"=> 100,
-		// 		"order"=> ["_count"=> "desc"]]]]
-		// ];
 		$params2 = [
-			"query"=> [
-			    "match" => ["logType"=>"Error"]
-			],
-			"aggs"=> [
-			"filtered"=> [
-			  "filter"=> [
-			    "bool"=> [
-			      "must"=> [
-			        [
+			"query"=> ["match" => ["logType"=>"Error"]],
+			"aggs"=> ["filtered"=> [ "filter"=> [ "bool"=> ["must"=> [[
 			          "range"=> [
 			            "@timestamp"=> [
-			              "gt"=> "now-".$interval."h",
-			              "lt"=> "now"
-			            ]
-			          ]
-			        ]
-			      ]
-			    ]
-			  ],
-			  "aggs"=> [
-			    "modules"=>
-			    [
-			        "terms"=>
-			        [ "field" => "moduleName" ,  "size" => 1000 ]
-			    ]
-			  ]
-			]
-			]
+			              "gt"=> "now-".($day*$interval)."h",
+			              "lt"=> "now-".(($day-1)*$interval)."h",]
+			          ]]]]
+			],
+			"aggs"=> ["modules"=>["terms"=> [ 
+				"field" => "moduleName" ,  "size" => 1000 ]]]]]
 		];
 		// send curl request
 		$AuraResponse =  CommonUtility::sendCurlPostRequest($auraUrl, json_encode($params), $timeout);
 		$ElkResponse =  CommonUtility::sendCurlPostRequest($elkAppUrl, json_encode($params2), $timeout);
+
 		if($AuraResponse && $ElkResponse)
 		{
 			$arrResponse = json_decode($AuraResponse, true);
@@ -119,18 +84,23 @@ EOF;
 			}
 
 			$arrResponse = json_decode($ElkResponse, true);
-			print_r($arrResponse);die;
 			$arrRcode = array();
-			foreach($arrResponse['aggregations']['2']['buckets'] as $result)
+			foreach($arrResponse['aggregations']['filtered']['modules']['buckets'] as $result)
 			{
-				print_r($result);
 				// get the aggregated value of counts
 				$arrRcode[$result['key']] = $result['doc_count'];
-			}			
-			print_r($arrRcode);
+			}
+			print_r($arrModules);
+			$ratio = ($arrModules[$rcode500]*100)/($arrModules[$rcode500]+$arrModules[$rcode200]);
+			print_r($ratio);
+			echo "\n";
+			print_r($arrRcode[$rcode500]);
+			echo "\n";
 			$arrModules[$rcode200] -= $arrRcode[$rcode500];
 			$arrModules[$rcode500] += $arrRcode[$rcode500];
 			print_r($arrModules);
+			$ratio = ($arrModules[$rcode500]*100)/($arrModules[$rcode500]+$arrModules[$rcode200]);
+			print_r($ratio);
 			die;
 			$ratio = ($arrModules[$rcode500]*100)/($arrModules[$rcode500]+$arrModules[$rcode200]);
 			$count = array(
