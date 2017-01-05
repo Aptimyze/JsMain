@@ -9,7 +9,8 @@ var listingInputData = [],
     loggingEnabledPC = false,
     clearTimedOut,
     listingPhotoRequestCompleted = ",",
-    localStorageExists = isStorageExist();
+    localStorageExists = isStorageExist(),
+    isCurrentJeevansathiTab = 1;
 
 /*clearNonRosterPollingInterval
 function to stop polling for non roster webservice api 
@@ -1239,13 +1240,16 @@ function invokePluginReceivedMsgHandler(msgObj) {
     }
 }
 
-/*play sound on receiving the message
+/*play sound on receiving the chat message
  * @params:none
  */
 function playChatNotificationSound(){
-    console.log("here playChatNotificationSound");
-    var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
-    audio.play();
+    //if current url is not jeevansathi tab and jspc chat is on
+    if(showChat == "1" && isCurrentJeevansathiTab == 0){
+        //console.log("here playChatNotificationSound");
+        var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
+        audio.play();
+    }
 }
 
 /*update last read msg in localstorage
@@ -1637,6 +1641,7 @@ function updatePresenceAfterInterval(){
 */
 
 $(document).ready(function () {
+    isCurrentJeevansathiTab = 1;
     //console.log("Doc ready");
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
@@ -1658,12 +1663,26 @@ $(document).ready(function () {
             //setLogoutClickLocalStorage("unset");  
         });
         
+        //event to detect focus on page
         $(window).focus(function() {
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
             }
+            /*var dt = new Date();
+            var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            console.log("page focus in",time);*/
+            isCurrentJeevansathiTab = 1;
         });
+
+        //event to detect focus out of page
+        $(window).on("blur",function() {
+            /*var dt = new Date();
+            var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            console.log("page focus out",time);*/
+            isCurrentJeevansathiTab = 0;
+        });
+        
         $(window).on("offline", function () {
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
