@@ -70,8 +70,11 @@ class JHOBBYCacheLib extends TABLE
             }
         }
 
-        if ($onlyValues && $bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             $this->logCacheConsumeCount(__CLASS__);
+        }
+
+        if ($onlyValues && $bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             return $result;
         }
     

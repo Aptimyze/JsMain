@@ -906,7 +906,8 @@ public function microtime_float()
           $validExtensionArr = array("jpg", "jpeg", "png");
           $imgname = "";
           $ext = explode(".",$url);
-          if(!in_array($ext[1],$validExtensionArr)){
+          $l = end($ext);
+          if(!in_array($l,$validExtensionArr)){
               /*
               $to = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com";
               $cc = "nitishpost@gmail.com";
@@ -917,7 +918,7 @@ public function microtime_float()
               */
               $date = date('Y-m-d');
               $msg = "Url:$url, Key:$notificationKey, pid: $profileid\n";
-              file_put_contents(sfConfig::get("sf_upload_dir")."/wrongImageUrl".$date.".txt",$msg,FILE_APPEND);
+              file_put_contents(sfConfig::get("sf_upload_dir")."/wrongImageUrlNew".$date.".txt",$msg,FILE_APPEND);
           }
       }
       unset($validPicArray);

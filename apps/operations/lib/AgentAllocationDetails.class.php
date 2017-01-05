@@ -852,7 +852,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 			$mtongue=$profileData[0]['MTONGUE'];
 			$income=$profileData[0]['INCOME'];
 			$familyIncome=$profileData[0]['FAMILY_INCOME'];
-			$premiumIncome=array(13,14,16,17,18,19,20,21,22,23);
+			$premiumIncome=array(13,14,17,18,19,20,21,22,23,24,25,26,27);
 			if($level==-2)
 				array_push($premiumIncome,12,16);
 			$exclude_mtongue=array(1,3,16,17,31);
