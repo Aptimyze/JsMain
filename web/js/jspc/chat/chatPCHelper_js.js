@@ -1244,7 +1244,7 @@ function invokePluginReceivedMsgHandler(msgObj) {
  */
 function playChatNotificationSound(){
     //if current url is not jeevansathi tab and jspc chat is on
-    var isCurrentJeevansathiTab = localstorage.getItem("isCurrentJeevansathiTab");
+    var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
     if(showChat == "1" && isCurrentJeevansathiTab == undefined || isCurrentJeevansathiTab == 0){
         //console.log("here playChatNotificationSound");
         var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
@@ -1641,7 +1641,7 @@ function updatePresenceAfterInterval(){
 */
 
 $(document).ready(function () {
-    localstorage.setItem("isCurrentJeevansathiTab",1);
+    localStorage.setItem("isCurrentJeevansathiTab",1);
     //console.log("Doc ready");
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
@@ -1672,7 +1672,7 @@ $(document).ready(function () {
             /*var dt = new Date();
             var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
             console.log("page focus in",time);*/
-            localstorage.setItem("isCurrentJeevansathiTab",1);
+            localStorage.setItem("isCurrentJeevansathiTab",1);
         });
 
         //event to detect focus out of page
@@ -1680,7 +1680,7 @@ $(document).ready(function () {
             /*var dt = new Date();
             var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
             console.log("page focus out",time);*/
-            localstorage.setItem("isCurrentJeevansathiTab",0);
+            localStorage.setItem("isCurrentJeevansathiTab",0);
         });
         
         $(window).on("offline", function () {
