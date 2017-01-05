@@ -40,26 +40,50 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 $relaxedMtongue = $this->getRelaxedMtongues($this->getMTONGUE());
                 $this->setMTONGUE($relaxedMtongue);
                 
-                $ownCaste = $this->loggedInProfileObj->getCASTE();
-                $relaxedCastes = $ownCaste.','.RelatedCastes::$relatedCasteArr[$ownCaste];
-                $this->setCASTE($relaxedCastes);
+                $dppSetCastes = $this->getCASTE();
+                if($dppSetCastes!=''){
+                    $ownCaste = $this->loggedInProfileObj->getCASTE();
+                    $relaxedCastes = $ownCaste.','.RelatedCastes::$relatedCasteArr[$ownCaste];
+                    $this->setCASTE(trim($dppSetCastes.",".$relaxedCastes,','),1);
+                }
                 
                 $dppEducation = $this->getEDU_LEVEL_NEW();
-                $relaxedEducation = $this->getRelaxedEducation($dppEducation);
-                $this->setEDU_LEVEL_NEW($relaxedEducation);
+                if($dppEducation != ''){
+                    $relaxedEducation = $this->getRelaxedEducation($dppEducation);
+                    $this->setEDU_LEVEL_NEW($relaxedEducation);
+                }
                 
                 $occupation = $this->getOCCUPATION();
-                $relaxedOccupation = $this->getRelaxedOccupation($occupation);
-                $this->setOCCUPATION($relaxedOccupation['occ']);
-                if($relaxedOccupation['notOcc']!='')
-                    $this->setOCCUPATION_IGNORE($relaxedOccupation['notOcc']);
+                if($occupation!=''){
+                    $relaxedOccupation = $this->getRelaxedOccupation($occupation);
+                    $this->setOCCUPATION($relaxedOccupation['occ']);
+                    if($relaxedOccupation['notOcc']!='')
+                        $this->setOCCUPATION_IGNORE($relaxedOccupation['notOcc']);
+                }
                 
-                $this->setHINCOME('');
+                if($this->getLINCOME() || $this->getLINCOME_DOL()){
+                    if($this->getLINCOME())
+                    {
+                            $rArr["minIR"] = $this->getLINCOME() ;
+                            $rArr["maxIR"] = "19" ;
+                    }
+                    if($this->getLINCOME_DOL())
+                    {
+                            $dArr["minID"] = $this->getLINCOME_DOL() ;
+                            $dArr["maxID"] = "19" ;
+                    }
+                    $incomeMapObj = new IncomeMapping($rArr,$dArr);
+                    $incomeMapArr = $incomeMapObj->incomeMapping();
+                    $Income = $incomeMapArr['istr'];
+                    $this->setINCOME(str_replace("'", "",$Income));
+                }
                 
                 $city = $this->getCITY_RES();
-                $relaxedCity = $this->getRelaxedCity($city);
-                $this->setCITY_RES($relaxedCity);
-                $this->setCITY_INDIA($relaxedCity);
+                if($city != ''){
+                    $relaxedCity = $this->getRelaxedCity($city);
+                    $this->setCITY_RES($relaxedCity);
+                    $this->setCITY_INDIA($relaxedCity);
+                }
         }
         /**
          * Function to set sort order and results count
