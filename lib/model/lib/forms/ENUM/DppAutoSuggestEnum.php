@@ -1417,5 +1417,7 @@ public static $SUGGESTION_FIELDS = array("P_AGE","P_CASTE","P_INCOME","P_EDUCATI
 public static $NO_OF_DPP_SUGGESTIONS_CAL = 10; 
 public static $keyReplaceAgeArr = array("0"=>"LAGE","1"=>"HAGE");
 public static $keyReplaceIncomeArr = array("0"=>"LRS","1"=>"HRS","2"=>"LDS","3"=>"HDS");
+public static $headingForApp = array("AGE"=>"Widen Age range","CITY"=>"Add these Cities","CASTE"=>"Add these Castes","MTONGUE"=>"Add these Mother Tongues","EDUCATION"=>"Add these Education Degrees","OCCUPATION"=>"Add these Occupations","INCOME"=>"Widen Income range");
+public static $descriptionText = "To increase matches and responses, here are a few suggested options to add to your partner preference. Tap to select options which you wish to add";
 }
 

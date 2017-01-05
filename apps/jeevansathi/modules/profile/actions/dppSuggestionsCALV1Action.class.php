@@ -58,14 +58,16 @@ class dppSuggestionsCALV1Action extends sfActions
 				}					
 			}
 		}
+
 		if(MobileCommon::isApp())
 		{
 			$finalArr = $this->getFormattedArrForApp($finalArr);			
+			$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;			
 		}
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			$apiResponseHandlerObj->setResponseBody(json_encode($finalArr));
+			$apiResponseHandlerObj->setResponseBody($finalArr);
 		}
 		else
 		{
@@ -93,8 +95,17 @@ class dppSuggestionsCALV1Action extends sfActions
 						$i++;
 					}
 					
+					$i=0;
 				}
-				$i=0;
+				elseif($k1 == "type")
+				{
+					$finalArrApp[$key][$k1] = $v1;
+				}
+				elseif($k1 == "heading")
+				{
+					$finalArrApp[$key][$k1] = $v1;	
+				}
+				
 			}
 		}
 		return $finalArrApp;

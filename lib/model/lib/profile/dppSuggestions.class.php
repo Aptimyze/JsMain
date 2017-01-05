@@ -53,6 +53,10 @@ class dppSuggestions
 										
 		} 		
 		$valueArr["type"] = $type;
+		if(MobileCommon::isApp())
+		{
+			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
+		}
 		return $valueArr;
 	}
 
