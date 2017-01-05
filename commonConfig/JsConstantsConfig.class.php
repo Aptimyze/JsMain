@@ -38,7 +38,7 @@ public static $dev =
 	/*Photos*/
 	"unscreenedPhotoUrl" => '%URL_INPUT%',
 	"screenedPhotosUrl"  => 'http://photos.jeevansathi.com',//Doubt
-	"screenedPhotoDir"   => '/var/www/html3/web/uploads',
+	"screenedPhotoDir"   => '%ROOT_DIR%/web/uploads',
 	"ftpUsername"        => 'ftp_user',
 	"ftpPassword"        => 'prinka',
 	"ftpHost"            => '172.16.3.185',
@@ -50,7 +50,7 @@ public static $dev =
 
 	/* bms */
 	"bmsUrl"             => 'http://ieplads.com',
-	"bmsDocRoot"         => '/var/www/html/branches/chat/web',
+	"bmsDocRoot"         => '%ROOT_DIR%/branches/chat/web',
 	"bmsVideoUrl"        => 'mms://video.ieplads.com',
 	"bmsStaticUrl"       => 'http://static.ieplads.com',
 
@@ -171,28 +171,28 @@ public static $test =
 	[
 
 	"whichMachine"       => 'prod',
-	"siteUrl"            => 'http://testsocial2.jeevansathi.com',
+	"siteUrl"            => '%URL_INPUT%',
 	"ser6Url"            => 'http://ser6.jeevansathi.com',
 	"ser2Url"            => 'http://ser2.jeevansathi.com',
 	//"ser2Url            => 'http://testsocial2.jeevansathi.com',
-	"imgUrl"             => 'http://testsocial2.jeevansathi.com',
-	"imgUrl2"            => 'http://testsocial2.jeevansathi.com',
+	"imgUrl"             => '%URL_INPUT%',
+	"imgUrl2"            => '%URL_INPUT%',
 	"php5path"           => 'php',
 	 "java"              => 'java',
-	"docRoot"            => '/var/www/html/web',
-	"cronDocRoot"	  => '/var/www/html',
-	"smartyDir"          => '/var/www/html/lib/vendor/smarty/libs/Smarty.class.php',
+	"docRoot"            => '%ROOT_DIR%/web',
+	"cronDocRoot"	  => '%ROOT_DIR%',
+	"smartyDir"          => '%ROOT_DIR%/lib/vendor/smarty/libs/Smarty.class.php',
 	"chatIp"             => '172.16.3.203',
 	"regImg"             => 'http://static.jeevansathi.com/profile/images/reg',
 	"memcache"            => 'array("HOST"=>"172.16.3.203", "PORT"=>"11211")',
 	"bmsMemcache"        => 'array("HOST"=>"172.16.3.203", "PORT"=>"11211")',
-        "ssl_siteUrl"        => 'http://testsocial2.jeevansathi.com',
+        "ssl_siteUrl"        => '%SSL_URL_INPUT%',
         "crmUrl"             => 'http://crm.jeevansathi.com',
 
 	/****Photos*****/
-	"unscreenedPhotoUrl" => 'http://testsocial2.jeevansathi.com',
+	"unscreenedPhotoUrl" => '%URL_INPUT%',
 	"screenedPhotosUrl"  => 'http://testphotos.jeevansathi.com',
-	"screenedPhotoDir"   => '/var/www/html/web/uploads',
+	"screenedPhotoDir"   => '%ROOT_DIR%/web/uploads',
 	"ftpUsername"        => 'mike',
 	"ftpPassword"        => 'mike123',
 	"ftpHost"            => '172.16.3.203',
@@ -213,14 +213,14 @@ public static $test =
 
 
 	/* bms */
-	"bmsUrl"             => 'http://testsocial2.jeevansathi.com',
-	"bmsDocRoot"         => '/var/www/html/web',
+	"bmsUrl"             => '%URL_INPUT%',
+	"bmsDocRoot"         => '%ROOT_DIR%/web',
 	"bmsVideoUrl"        => 'mms://video.ieplads.com',
 	"bmsStaticUrl"       => 'http://static.ieplads.com',
 
 	/* alerts */
-	"alertDocRoot"       => '/var/www/html/web',
-	"alertSymfonyRoot"   => '/var/www/html/web',
+	"alertDocRoot"       => '%ROOT_DIR%/web',
+	"alertSymfonyRoot"   => '%ROOT_DIR%/web',
 	"userHome"           => '/home/developer',
 
 	/* Send Mail */
@@ -229,7 +229,7 @@ public static $test =
 
 	/* mmmjs */
 	"mmmjs99acres"	  =>'http://mmm.test99-vm1.infoedge.com',
-        "applicationPhotoUrl"      => 'http://testsocial2.jeevansathi.com',
+        "applicationPhotoUrl"      => '%URL_INPUT%',
         "cloudUrl"                 => 'http://mediacdn.jeevansathi.com/',
         "cloudArchiveUrl"          => 'https://jeevansathi.s3.amazonaws.com',
 	"policyFilePath"           => "/home/client/99acres/policy.xml",
@@ -316,7 +316,7 @@ public static $test =
         "actionPathDeletePid"         => "http://wso2.org/delete",
         "passphrase" =>'P@ssw0rd',
         "localImageUrl"      => "http://crawlerjs.infoedge.com/",
-        "iosCertificateKey" =>'/var/www/html/lib/model/lib/notifications/ck.pem',
+        "iosCertificateKey" =>'%ROOT_DIR%/lib/model/lib/notifications/ck.pem',
         "iosApnsUrl" =>'ssl://gateway.push.apple.com:2195',
         "shortUrlDomain" => 'http://js1.in',
         "useMongoDb" => false,
