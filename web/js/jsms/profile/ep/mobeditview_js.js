@@ -19,7 +19,7 @@ editInArr['Contact']=new Array("PROFILE_HANDLER_NAME","EMAIL","ALT_EMAIL","PHONE
 editInArr['Dpp']=new Array("SPOUSE","BasicDetails","Religion","EduAndOcc","Lifestyle");
 var editValArr={};
 editValArr["YOURINFO"]=new Array("YOURINFO");
-editValArr["basic"] = new Array("COUNTRY_RES","STATE_RES","CITY_RES","GENDER","DTOFBIRTH","MSTATUS");
+editValArr["basic"] = new Array("NAME","COUNTRY_RES","STATE_RES","CITY_RES","GENDER","DTOFBIRTH","MSTATUS");
 editValArr["Ethnicity"]=new Array("RELIGION","CASTE","DIOCESE","SUBCASTE","SECT","MTONGUE","NATIVE_COUNTRY","NATIVE_STATE","ANCESTRAL_ORIGIN","GOTHRA");
 editValArr["BeliefSystem"]=new Array("BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE");
 editValArr["Appearance"]=new Array("HEIGHT","COMPLEXION","BTYPE","WEIGHT");
@@ -30,7 +30,7 @@ editValArr["CollegeDetails"]=new Array("EDU_LEVEL_NEW","DEGREE_PG","PG_COLLEGE",
 editValArr["JOB_INFO"]=new Array("JOB_INFO");
 editValArr["CarrerDetails"]=new Array("COMPANY_NAME","OCCUPATION","INCOME");
 editValArr["FuturePlans"]=new Array("MARRIED_WORKING","GOING_ABROAD");
-editValArr["FAMILY_INFO"]=new Array("FAMILYINFO");
+editValArr["FAMILYINFO"]=new Array("FAMILYINFO");
 editValArr["Family"]=new Array("FAMILY_VALUES","FAMILY_TYPE","FAMILY_STATUS","PARENT_CITY_SAME");
 editValArr["Parents"]=new Array("FAMILY_BACK","MOTHER_OCC","FAMILY_INCOME");
 editValArr["Siblings"]=new Array("T_BROTHER","T_SISTER");
@@ -390,7 +390,7 @@ var mobEditPage=(function(){
 						
 						$.each(v.OnClick, function(k1 ,v1)
 						{
-						if($.inArray(v1.key,editValArr[k]))
+						if($.inArray(v1.key,editValArr[k])>-1)
 						{
 							var sectionArr={};
 							if(v1.label_val!="N_B")
