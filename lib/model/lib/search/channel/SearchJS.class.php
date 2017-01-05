@@ -75,6 +75,10 @@ class SearchJS implements SearchChannelInterface
 	{
 		return SearchTypesEnums::MatchOfDay;
 	}
+	public static function getSearchTypeMatchOfDayiList()
+        {
+                return SearchTypesEnums::MatchOfDayList;
+        }
         
         /**
 	* This function will set the No. Of results for search Page
