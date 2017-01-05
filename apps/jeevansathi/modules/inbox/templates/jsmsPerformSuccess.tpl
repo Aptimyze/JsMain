@@ -60,7 +60,7 @@
 			<div class="clr"></div>
 		</div>
   
-      <div id="interestExpiringMessageDiv"><p id="interestExpiringMessage" class="txtc bg4 pad15 color13 f12 fontlig dispnone">These interests will be archived in this week, Take action</p></div>                  
+      <div id="interestExpiringMessageDiv"><p id="interestExpiringMessage" class="txtc bg4 pad15 color13 f12 fontlig dispnone">These interests are expiring this week and will be removed from your Inbox. Please Accept/Decline</p></div>                  
       ~/if` 
       
   </div>
