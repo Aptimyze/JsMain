@@ -99,6 +99,12 @@ class feedbackActions extends sfActions
   }
 
 
+public function executeReportAbuseForUser(sfWebRequest $request)
+{
+  $this->linkToInterface = JsConstants::$siteUrl."/operations.php/feedback/reportAbuseForUser"; 
+  $this->crmUser = $this->user;
+  $this->setTemplate('reportAbuseForUser');
+}
 
 }
 ?>
