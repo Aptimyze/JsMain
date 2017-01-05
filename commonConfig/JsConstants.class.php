@@ -190,4 +190,5 @@ class JsConstants
     public static $nonRosterRefreshUpdate = array("dpp"=>300000,"shortlist"=>300000);
     public static $httpsApplicationPhotoUrl      = 'https://xmppdev1.jeevansathi.com';
     public static $httpsCloudUrl                 = 'https://mediacdn.jeevansathi.com';
+    public static $profileServiceUrl = "http://172.16.3.187:8290";
 }
