@@ -90,18 +90,8 @@ EOF;
 				// get the aggregated value of counts
 				$arrRcode[$result['key']] = $result['doc_count'];
 			}
-			print_r($arrModules);
-			$ratio = ($arrModules[$rcode500]*100)/($arrModules[$rcode500]+$arrModules[$rcode200]);
-			print_r($ratio);
-			echo "\n";
-			print_r($arrRcode[$rcode500]);
-			echo "\n";
 			$arrModules[$rcode200] -= $arrRcode[$rcode500];
 			$arrModules[$rcode500] += $arrRcode[$rcode500];
-			print_r($arrModules);
-			$ratio = ($arrModules[$rcode500]*100)/($arrModules[$rcode500]+$arrModules[$rcode200]);
-			print_r($ratio);
-			die;
 			$ratio = ($arrModules[$rcode500]*100)/($arrModules[$rcode500]+$arrModules[$rcode200]);
 			$count = array(
 					'Date' => $date,
@@ -113,6 +103,11 @@ EOF;
 			$count = json_encode($count);
 			$ObjectId = time();
 			// exec("curl -XPOST '$indexElkServer:$indexElkPort/$pushIndexName/json/$ObjectId' -d'$count'".' 2>&1');
+			exec("curl -XPOST 'localhost:$indexElkPort/$pushIndexName/json/$ObjectId' -d'$count'".' 2>&1');
+		}
+		else
+		{
+			// Uptime count not pushed
 		}
 	}
 }
