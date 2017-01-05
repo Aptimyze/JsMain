@@ -993,7 +993,7 @@ class csvGenerationHandler
 			if($processName=="FTA_REGULAR"||$processName=="FTA_ONE_TIME")
 			{
 			$ftaDataObj=new incentive_FTA_CSV_DATA();
-			$jprofileContactObj=new NEWJS_JPROFILE_CONTACT();
+			$jprofileContactObj= new ProfileContact();
 			$viewContactsLogObj=new jsadmin_VIEW_CONTACTS_LOG();
 			$jpViewsObj=new NEWJS_JP_NTIMES();
 			$in_dialerObj=new incentive_FTA_IN_DIALER();
@@ -1710,6 +1710,7 @@ class csvGenerationHandler
 	}
 	public function premiumIncomeBasedCheck($income,$familyIncome,$regEntryDt)
 	{
+		return true;
 		$premiumIncome  =crmParams::$premiumIncome;
 		$today		=date('Y-m-d',time());
 		$regEntryDtArr	=@explode(" ",$regEntryDt);
@@ -2034,7 +2035,7 @@ class csvGenerationHandler
 				$headers .= "Reply-To: ".$to."\r\n";
 				
 				// Only send email to manoj and vibhor is count is below 300	
-				if($lastCount < 300){
+				if($lastCount < 2000){
 					$headers .= "CC: manoj.rana@naukri.com,vibhor.garg@jeevansathi.com\r\n";
 				}
 

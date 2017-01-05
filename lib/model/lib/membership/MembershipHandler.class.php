@@ -812,8 +812,13 @@ class MembershipHandler
                 $currencyType = VariableParams::$indianCurrency;
             }
         }
-
-        if ($profileid == 12970375) {
+        
+        $testDol = false;
+        if (JsConstants::$whichMachine == 'test') {
+            $dolBillingForTest = new billing_DOL_BILLING_USERS_FOR_TEST();
+            $testDol = $dolBillingForTest->checkUserForDol($profileid);
+        }
+        if ($profileid == 12970375 || $testDol == true) {
             $currency = 'DOL';
         }
 
@@ -2060,8 +2065,20 @@ class MembershipHandler
         return $discount;
     }
     
+
     public function cancelTransaction($params){
         $negTransactionObj = new billing_NEGATIVE_TRANSACTIONS();
         $negTransactionObj->insertRecord($params);
+    }
+
+    public function addUserForDollarPayment($profileid){
+        $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
+        $dolBillingUsersObj->addUserForDol($profileid);
+    }
+    
+    public function removeUserForDollarPayment($profileid){
+        $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
+        $dolBillingUsersObj->removeUserForDol($profileid);
+
     }
 }

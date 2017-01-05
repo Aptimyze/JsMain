@@ -36,10 +36,12 @@ class ProfileMemcacheService
 							'DEC_BY_ME', 
 							'DEC_ME', 
 							'DEC_ME_NEW', 
-							'AWAITING_RESPONSE', 
+                            'AWAITING_RESPONSE', 
+							'INTEREST_EXPIRING', 
 							'AWAITING_RESPONSE_NEW', 
 							'FILTERED', 
                             'FILTERED_NEW',
+                            'INTEREST_ARCHIVED',
 							'NOT_REP', 
 							'OPEN_CONTACTS', 
 							'CANCELLED_EOI'), 
@@ -119,7 +121,6 @@ class ProfileMemcacheService
      */
     public function get($key, $optionalDataFlag = false)
     {
-        
         $set = $this->checkPreSettings($key, $optionalDataFlag);
         if ($set === true)
             return call_user_func(array(
@@ -307,7 +308,7 @@ public function unsett()
 
     private function print_data()
     {
-        $md = unserialize(JsMemcache::getInstance()->get($this->profileid));
+        //$md = unserialize(JsMemcache::getInstance()->get($this->profileid));
        // print_r($md);   die;
     }
     /**
@@ -503,6 +504,16 @@ public function unsett()
 								}
 								$AWAITING_RESPONSE = $AWAITING_RESPONSE + $value["COUNT"];
 							}
+                            if ( $value["TIME1"] == 1 )
+                            {
+                               $INTEREST_ARCHIVED = $INTEREST_ARCHIVED + $value["COUNT"];                                
+                            }
+
+                            if ( $value["TIME1"] == 2 )
+                            {
+                                $INTEREST_EXPIRING = $INTEREST_EXPIRING + $value["COUNT"];                                
+                            }
+
                         }
                         break;
                     case 'C':
@@ -512,11 +523,13 @@ public function unsett()
                         }
                         $DEC_ME = $DEC_ME + $value["COUNT"];
                         break;
+
                     default:
                         break;
                 }
             }
         }
+
         $this->memcache->setACC_BY_ME($ACC_BY_ME ? $ACC_BY_ME : 0);
         $this->memcache->setACC_ME($ACC_ME ? $ACC_ME : 0);
         $this->memcache->setACC_ME_NEW($ACC_ME_NEW ? $ACC_ME_NEW : 0);
@@ -530,6 +543,8 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE ? $AWAITING_RESPONSE : 0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW ? $AWAITING_RESPONSE_NEW : 0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS ? $OPEN_CONTACTS : 0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED ? $INTEREST_ARCHIVED : 0);
+        $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING ? $INTEREST_EXPIRING : 0);
     }
     public function unsetContactsData()
     {
@@ -546,6 +561,8 @@ public function unsett()
         $this->memcache->setAWAITING_RESPONSE($AWAITING_RESPONSE=0);
         $this->memcache->setAWAITING_RESPONSE_NEW($AWAITING_RESPONSE_NEW=0);
         $this->memcache->setOPEN_CONTACTS($OPEN_CONTACTS=0);
+        $this->memcache->setINTEREST_ARCHIVED($INTEREST_ARCHIVED = 0);
+        $this->memcache->setINTEREST_EXPIRING($INTEREST_EXPIRING = 0);
     }
     /**
      * fucntion setPhotoRequestData()
@@ -721,12 +738,15 @@ public function unsett()
         $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
         $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
         $condition["WHERE"]["IN"]["TYPE"]     = "R";
+//        $configObj            = new ProfileInformationModuleMap();
+//        $configurations = $configObj->getConfiguration("ContactCenterDesktop");
+//        $condition["LIMIT"]    = $configurations["MY_MESSAGE"]["COUNT"]+1;
         $profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
         if(is_array($profilesArray))
 					$MESSAGE_ALL = count($profilesArray);
         
-                
-       
+        
+        
         
         //print_r($msgCount); die;
         if(is_array($msgCount))
@@ -783,7 +803,8 @@ public function unsett()
     
     public function setVisitorAlertData()
     {
-        $visitorObj = new Visitors($this->profileid);
+        $profileObj=LoggedInProfile::getInstance('newjs_master');
+        $visitorObj = new Visitors($profileObj);
                 $infoTypenav["matchedOrAll"]='A';
 		$visitors = $visitorObj->getVisitorProfile('','',$infoTypenav,$setAllVisitorsKey=$this->memcache);
 		$this->memcache->setVISITOR_ALERT(count($visitors) ? count($visitors) : 0);
