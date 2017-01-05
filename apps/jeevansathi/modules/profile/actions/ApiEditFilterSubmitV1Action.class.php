@@ -43,9 +43,9 @@ class ApiEditFilterSubmitV1Action extends sfActions
           $bResult = $dbFilterArr=$dbFilter->updateRecord($this->loginProfile->getPROFILEID(),$filterArr);
           if(false === $bResult)
           {
-            $bResult=$dbFilter->insertRecord($this->loginProfile->getPROFILEID(),$filterArr);
+            $bResult1=$dbFilter->insertRecord($this->loginProfile->getPROFILEID(),$filterArr);
           }
-          if($bResult) {
+          if($bResult || $bResult1>=0) {
             $apiResponseStatus = ResponseHandlerConfig::$SUCCESS;
           }
         } catch (Exception $ex) {

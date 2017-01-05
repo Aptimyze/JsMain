@@ -43,6 +43,7 @@ class RequestHandlerConfig
 		"detail"=>array("v1"=>"apidetailedv1","v2"=>"","v3"=>"apidetailedv1"),
 		"gunascore"=>array("v1"=>"gunascorev1","v2"=>"","v3"=>"gunascorev1"),
 		"alterseen"=>array("v1"=>"AlterSeenV1","v2"=>"","v3"=>"AlterSeenV1"),
+		"vsploadcheck"=>array("v1"=>"VSPLoadCheckV1","v2"=>"","v3"=>"VSPLoadCheckV1"),
         "coverphoto"=>array("v1"=>"CoverPhotoV1"),
         "horoscope"=>array("v1"=>"HoroscopeV1"),
         "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),

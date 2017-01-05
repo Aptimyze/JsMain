@@ -233,6 +233,14 @@ EOF;
                         $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
                         unset($countArr);
                 }           
+        //Expiring interest mailer
+        if($mailer_key[0]=='ExpiringInterest_MAILER')
+        {
+            $ynObj = new MAIL_ExpiringInterest('newjs_slave');
+            $countArr = $ynObj->getMailCountForRange();
+            $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+            unset($countArr);
+        }
 	}
   }
 }

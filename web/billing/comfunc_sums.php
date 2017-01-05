@@ -117,10 +117,12 @@ function get_months()
  */
 function get_years()
 {
-    for ($i = 0; $i < 11; $i++) {
-        $yyarr[$i] = $i + 2006;
+    $yy =date("Y");
+    $j=0;
+    for ($i = 2006; $i <= $yy; $i++) {
+        $yyarr[$j] =$i;
+        $j++;
     }
-
     return $yyarr;
 }
 
