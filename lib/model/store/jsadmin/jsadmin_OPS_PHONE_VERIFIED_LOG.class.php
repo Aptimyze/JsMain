@@ -52,5 +52,27 @@ function insertOPSPhoneReport($cid,$profileId,$phoneNum,$phoneType,$phoneStatus)
             throw new jsException($e);
         }
     }
+
+    public function getOPSUserProcessedCount($startDate,$endDate)
+    {
+        try
+        {
+
+            $sql  = "SELECT COUNT(DISTINCT OPS_USERID,PROFILEID,DATE(ENTRY_DT),PHONE_TYPE) AS CNT,OPS_USERID,DATE(ENTRY_DT) as DT FROM  jsadmin.OPS_PHONE_VERIFIED_LOG WHERE ENTRY_DT BETWEEN  :DATE_START AND :DATE_END AND (PHONE_STATUS='N' || PHONE_STATUS='B') GROUP BY OPS_USERID,DATE(ENTRY_DT)";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":DATE_START", $startDate, PDO::PARAM_STR);
+            $prep->bindValue(":DATE_END", $endDate, PDO::PARAM_STR);
+            $prep->execute();
+            while($result = $prep->fetch(PDO::FETCH_ASSOC))
+                $return[]=$result;
+            return $return;
+            
+
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
+
+
 }
 

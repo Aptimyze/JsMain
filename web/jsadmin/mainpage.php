@@ -796,6 +796,9 @@ if (isset($data)) //successful login
         if (in_array('ExPmSr', $priv) || in_array('SupPmS', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/exclusiveServicingII\">Send profiles to customer</a>";
         }
+        if (in_array('CSSUP', $priv) || in_array('MG', $priv) || in_array('P', $priv) ) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/feedback/reportInvalidContactsQC\">Invalid reported Contacts QC</a>";
+        }
         if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
             $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/reportAbuseForUser\">Report Abuse For User</a>";
     }
