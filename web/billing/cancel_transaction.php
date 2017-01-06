@@ -32,16 +32,21 @@ if(authenticated($cid))
 		}
 		if($is_error=="0")
 		{
+            //**START of Get the total amount of all Bill Ids for which the transaction is going to be cancelled.
+            $sql_det = "SELECT SUM(AMOUNT) as AMT FROM billing.PAYMENT_DETAIL WHERE BILLID='$billid' AND STATUS = 'DONE'";
+			$res_det = mysql_query_decide($sql_det) or logError_sums($sql_det);
+			$row_det = mysql_fetch_array($res_det);
+			$totalCancelledAmount = $row_det["AMT"];
+            //**END of total amount for cancel transaction
+            
 			$entryby = getuser($cid);
-			$sql_det = "SELECT PROFILEID,BILLID, RECEIPTID, TYPE, AMOUNT, INVOICE_NO FROM billing.PAYMENT_DETAIL WHERE BILLID='$billid' ORDER BY RECEIPTID DESC LIMIT 1";
+			$sql_det = "SELECT PROFILEID,BILLID, RECEIPTID, TYPE FROM billing.PAYMENT_DETAIL WHERE BILLID='$billid' ORDER BY RECEIPTID DESC LIMIT 1";
 			$res_det = mysql_query_decide($sql_det) or logError_sums($sql_det);
 			$row_det = mysql_fetch_array($res_det);
 			$profileid = $row_det["PROFILEID"];
 			$billid = $row_det["BILLID"];
 			$receiptid = $row_det["RECEIPTID"];
             $type = $row_det["TYPE"];
-            $amount = $row_det["AMOUNT"];
-            $invoiceNo = $row_det["INVOICE_NO"];
             
 			$changes = "TRANSACTION CANCELLED \n";
 			$changes .= "REASON :- ".$reason;
@@ -82,7 +87,7 @@ if(authenticated($cid))
             $negativeParams["RECEIPTID"] = $receiptid;
             $negativeParams["BILLID"] = $billid;
             $negativeParams["PROFILEID"] = $profileid;
-            $negativeParams["AMOUNT"] = $amount;
+            $negativeParams["AMOUNT"] = $totalCancelledAmount;
             $negativeParams["TYPE"] = $type;
             $negativeParams["CANCEL_TYPE"] = "CANCEL";
             
