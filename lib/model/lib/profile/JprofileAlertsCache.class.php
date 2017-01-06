@@ -92,6 +92,7 @@ class JprofileAlertsCache
             $values = ProfileCacheConstants::NOT_FILLED;
             $tempInsertResult = array_fill_keys($keys, $values);
                 foreach ($profileArr as $key => $value) {
+            $tempInsertResult['PROFILEID'] = $value;       
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
 
                 }
@@ -110,7 +111,7 @@ class JprofileAlertsCache
              $values = ProfileCacheConstants::NOT_FILLED;
 
              $tempInsertResult = array_fill_keys($keys, $values);
-
+             $tempInsertResult['PROFILEID'] = $value;
              $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
 
              }
