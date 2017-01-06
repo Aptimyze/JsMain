@@ -114,6 +114,14 @@ class Membership
     function setProfileid($profileid) {
         $this->profileid = $profileid;
     }
+    
+    function setCurtype($curtype) {
+        $this->curtype = $curtype;
+    }
+    
+    function getCurtype() {
+        return $this->curtype;
+    }
 
     public function __get($property) {
         if (property_exists($this, $property)) {

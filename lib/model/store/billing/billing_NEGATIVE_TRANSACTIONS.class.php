@@ -9,22 +9,34 @@ class billing_NEGATIVE_TRANSACTIONS extends TABLE{
     
     public function __construct($dbname = "") {
         parent::__construct($dbname);
+        $this->RECEIPTID_BIND_TYPE = "INT";
+        $this->BILLID_BIND_TYPE = "INT";
+        $this->PROFILEID_BIND_TYPE = "INT";
+        $this->TYPE_BIND_TYPE = "STR";
+        $this->AMOUNT_BIND_TYPE = "INT";
+        $this->CANCEL_TYPE_BIND_TYPE = "STR";
+        $this->ENTRY_DT_BIND_TYPE = "STR";
     }
     
     public function insertRecord($params){
         if(is_array($params)){
             try{
                 $params["ENTRY_DT"] = date('Y-m-d H:i:s');
-                $sql = "INSERT INTO billing.NEGATIVE_TRANSACTIONS (RECEIPTID, BILLID, PROFILEID, TYPE, AMOUNT, CANCEL_TYPE, ENTRY_DT, INVOICE_NO) VALUES (:RECEIPTID, :BILLID, :PROFILEID, :TYPE, :AMOUNT, :CANCEL_TYPE, :ENTRY_DT, :INVOICE_NO)";
+                $sql = "INSERT INTO billing.NEGATIVE_TRANSACTIONS (";
+                foreach($params as $key => $val){
+                    $sql.="$key, ";
+                }
+                $sql = rtrim($sql,", ");
+                $sql.=") VALUES (";
+                foreach($params as $key => $val){
+                    $sql.=":$key, ";
+                }
+                $sql = rtrim($sql,", ");
+                $sql.=")";
                 $prep = $this->db->prepare($sql);
-                $prep->bindValue(":RECEIPTID",$params["RECEIPTID"],PDO::PARAM_INT);
-                $prep->bindValue(":BILLID",$params["BILLID"],PDO::PARAM_INT);
-                $prep->bindValue(":PROFILEID",$params["PROFILEID"],PDO::PARAM_INT);
-                $prep->bindValue(":TYPE",$params["TYPE"],PDO::PARAM_INT);
-                $prep->bindValue(":AMOUNT",$params["AMOUNT"],PDO::PARAM_INT);
-                $prep->bindValue(":CANCEL_TYPE",$params["CANCEL_TYPE"],PDO::PARAM_INT);
-                $prep->bindValue(":ENTRY_DT",$params["ENTRY_DT"],PDO::PARAM_INT);
-                $prep->bindValue(":INVOICE_NO",$params["INVOICE_NO"],PDO::PARAM_INT);
+                foreach($params as $key => $val){
+                    $prep->bindValue(":$key",$val,constant("PDO::PARAM_".$this->{$key."_BIND_TYPE"}));
+                }
                 $prep->execute();
             } catch (Exception $ex) {
                 throw new jsException($ex);

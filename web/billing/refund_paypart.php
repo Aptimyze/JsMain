@@ -297,7 +297,19 @@ if(authenticated($cid))
 			mysql_query_decide($sql) or logError_sums($sql,1);
 			
 			$membershipObj->startServiceBackend($membership_details);
-			$membershipObj->generateReceipt();
+			$membershipObj->generateReceipt(); 
+            if($val=="refund"){
+                $negativeParams["RECEIPTID"] = $membershipObj->getReceiptid();
+                $negativeParams["BILLID"] = $billid;
+                $negativeParams["PROFILEID"] = $profileid;
+                $negativeParams["AMOUNT"] = $amount;
+                $negativeParams["TYPE"] = $membershipObj->getCurtype();
+                $negativeParams["CANCEL_TYPE"] = "REFUND";
+
+                $memHandlerObj = new MembershipHandler();
+                $memHandlerObj->cancelTransaction($negativeParams);
+                unset($memHandlerObj, $negativeParams);
+            }
 			$smarty->display("refund_paypart.htm");
 		}
 		else

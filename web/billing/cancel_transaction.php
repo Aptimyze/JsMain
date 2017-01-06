@@ -85,7 +85,6 @@ if(authenticated($cid))
             $negativeParams["AMOUNT"] = $amount;
             $negativeParams["TYPE"] = $type;
             $negativeParams["CANCEL_TYPE"] = "CANCEL";
-            $negativeParams["INVOICE_NO"] = $invoiceNo;
             
             $obj = new MembershipHandler();
             $obj->cancelTransaction($negativeParams);
