@@ -124,6 +124,10 @@ class NotificationFunctions
 		        		$osType = "A";
 		        	}
 		        }
+		        /*added to prevent double notification open rate tracking for ios as for ios is via delivery tracking*/
+		        if($osType == "I"){
+		        	$osType = "";
+		        }
 		    }
 	        try{
 	            if($osType && $osType != "" && $messageId && $notificationKey && is_numeric($messageId)){ 
