@@ -121,7 +121,7 @@ public static function insertConsentMessageFlag($profileid) {
         		if (!CommonConstants::SHOW_CONSENT_MSG) return false; //check if the global constant flag is set to true
         
         //check whether it is subscribed to both offerCalls and membershipCalls
-        		$dbObj=new newjs_JPROFILE_ALERTS();	
+        		$dbObj=new JprofileAlertsCache();	
         		$res=$dbObj->fetchMembershipStatus($profileid);  
         		if (($res['MEMB_CALLS']!='S')||($res['OFFER_CALLS']!='S')) return false;
 

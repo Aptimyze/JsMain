@@ -60,7 +60,7 @@ class ProfileInsertLib
     $this->objJProfileStore = new JPROFILE($dbname);
     $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
     $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
-    $this->objProfileAlertsStore = new newjs_JPROFILE_ALERTS($dbname);
+    $this->objProfileAlertsStore = new JprofileAlertsCache($dbname);
   }
   /**
    * __destruct

@@ -94,7 +94,7 @@ class JProfileUpdateLib
     $this->objProfileChristianStore = new NEWJS_JP_CHRISTIAN($dbname);
     $this->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
     $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
-    $this->objProfileAlertStore = new newjs_JPROFILE_ALERTS($dbname);
+    $this->objProfileAlertStore = new JprofileAlertsCache($dbname);
 
   }
   /**

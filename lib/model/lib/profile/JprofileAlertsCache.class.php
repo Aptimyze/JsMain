@@ -30,7 +30,7 @@ class JprofileAlertsCache
 
             $values = array($profileid,$alertArr['SERVICE_CALL'],$alertArr['SERVICE_CALL'],$alertArr['MEM_IVR'],$alertArr['MEM_IVR'],$alertArr['MEM_MAILS'],$alertArr['SERVICE_EMAIL'],$alertArr['SERVICE_EMAIL'],$alertArr['SERVICE_EMAIL'],$alertArr['SERVICE_EMAIL'],$alertArr['SERVICE_SMS'],$alertArr['SERVICE_SMS'],$alertArr['SERVICE_SMS'],$alertArr['MEM_SMS'],$alertArr['MEM_SMS']);
 
-            $tempInsertResult = array_fill_keys($keys, $values);
+            $tempInsertResult = array_combine($keys, $values);
 
             $objProCacheLib = ProfileCacheLib::getInstance();
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $tempInsertResult, __CLASS__);
@@ -54,7 +54,7 @@ class JprofileAlertsCache
         $result = $this->commonFunctionForSelect($profileid,$strFields,'1');
         return $result;
         
-    }
+    }   
 
     public function getAllSubscriptions($profileid) {
 
@@ -66,24 +66,62 @@ class JprofileAlertsCache
     }
 
     public function getAllSubscriptionsArr($profileArr) {
-       
-            $output = ProfileCacheLib::getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA,$profileArr,'*',__CLASS__);  
+            
+            $objProCacheLib = ProfileCacheLib::getInstance();
+            $output = $objProCacheLib->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA,$profileArr,'*',__CLASS__);  
+
+            if (is_array($output) && false !== $output) { 
+            $bServedFromCache = true;
+            $output = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $output);
+            }
+
+        if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
+            $this->logCacheConsumeCount(__CLASS__);
+            return $output; 
+        }
             
             if($output == false)
             {
-
+                
                 $objJALT = new newjs_JPROFILE_ALERTS($this->dbName);
-                $output = $objJALT->getAllSubscriptionsArr($profileArr);
-                $objProCacheLib = ProfileCacheLib::getInstance();
-                        
-                foreach ($output as $key => $value) {
-             $tempInsertResult = $value;
-             unset($tempInsertResult['PROFILEID']);       
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$key, $tempInsertResult, __CLASS__);
+                $newOutput = $objJALT->getAllSubscriptionsArr($profileArr);
+
+            if($newOutput == NULL)
+            {  
+            $keys = array('PROMO_MMS','PROMO_USSD','SERVICE_USSD','SERVICE_MMS','KUNDLI_ALERT_MAILS','SERV_CALLS_PROF','SERV_CALLS_SITE','OFFER_CALLS','MEMB_CALLS','MEMB_MAILS','CONTACT_ALERT_MAILS','PHOTO_REQUEST_MAILS','SERVICE_MAILS','SERVICE_SMS','NEW_MATCHES_MAILS');
+            $values = ProfileCacheConstants::NOT_FILLED;
+            $tempInsertResult = array_fill_keys($keys, $values);
+                foreach ($profileArr as $key => $value) {
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+
                 }
 
-            }            
-                return $output;
+                return $newOutput;
+            }    
+                     
+            if($newOutput != NULL && is_array($newOutput))
+            {           
+                foreach ($profileArr as $key => $value) {
+             $tempInsertResult = $newOutput[$value];
+             if(($tempInsertResult) == NULL)
+             {
+
+                 $keys = array('PROMO_MMS','PROMO_USSD','SERVICE_USSD','SERVICE_MMS','KUNDLI_ALERT_MAILS','SERV_CALLS_PROF','SERV_CALLS_SITE','OFFER_CALLS','MEMB_CALLS','MEMB_MAILS','CONTACT_ALERT_MAILS','PHOTO_REQUEST_MAILS','SERVICE_MAILS','SERVICE_SMS','NEW_MATCHES_MAILS');
+             $values = ProfileCacheConstants::NOT_FILLED;
+
+             $tempInsertResult = array_fill_keys($keys, $values);
+
+             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+
+             }
+             else{
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA,$value, $tempInsertResult, __CLASS__);
+            }
+                }
+
+            } 
+            }           
+                return $newOutput;
              } 
  
     public function update($profileid, $key, $val) {
@@ -106,12 +144,13 @@ class JprofileAlertsCache
         if($out === true)
         {
 
-           $keys = array('PROFILEID','MEMB_CALLS','OFFER_CALLS','SERV_CALLS_SITE','SERV_CALLS_PROF','MEMB_MAILS','CONTACT_ALERT_MAILS','KUNDLI_ALERT_MAILS','PHOTO_REQUEST_MAILS','SERVICE_MAILS','SERVICE_SMS','SERVICE_MMS','SERVICE_USSD','PROMO_USSD','PROMO_MMS');
+           $keys = array('MEMB_CALLS','OFFER_CALLS','SERV_CALLS_SITE','SERV_CALLS_PROF','MEMB_MAILS','CONTACT_ALERT_MAILS','KUNDLI_ALERT_MAILS','PHOTO_REQUEST_MAILS','NEW_MATCHES_MAILS','SERVICE_MAILS','SERVICE_SMS','SERVICE_MMS','SERVICE_USSD','PROMO_USSD','PROMO_MMS');
             
-           $values = array($profileid,'S','S','S','S','S','S','S','S','S','S','S','S','S','S');
+           $values = 'S';
 
            $tempInsertResult = array_fill_keys($keys, $values);
-
+           $tempInsertResult['PROFILEID'] = $profileid;
+           
             $objProCacheLib = ProfileCacheLib::getInstance();
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $tempInsertResult, __CLASS__);
 
@@ -137,8 +176,11 @@ class JprofileAlertsCache
                 $tempInsertResult[strtoupper($key)] = $val;
             }    
 
+            $pid = $arrRecordData['PROFILEID'];
+
+
             $objProCacheLib = ProfileCacheLib::getInstance();
-            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $arrRecordData['PROFILEID'], $tempInsertResult, __CLASS__);
+            $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $pid, $tempInsertResult, __CLASS__);
 
         }     
     }
@@ -191,8 +233,8 @@ class JprofileAlertsCache
  
         if($result === NULL)
         {   
-             $keys = array('MEMB_CALLS','MEMB_MAILS','CONTACT_ALERT_MAILS','PHOTO_REQUEST_MAILS','SERVICE_MAILS','SERVICE_SMS','NEW_MATCHES_MAILS');
-             $values = array(ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED,ProfileCacheConstants::NOT_FILLED);
+              $keys = array('MEMB_CALLS','OFFER_CALLS','SERV_CALLS_SITE','SERV_CALLS_PROF','MEMB_MAILS','CONTACT_ALERT_MAILS','KUNDLI_ALERT_MAILS','PHOTO_REQUEST_MAILS','NEW_MATCHES_MAILS','SERVICE_MAILS','SERVICE_SMS','SERVICE_MMS','SERVICE_USSD','PROMO_USSD','PROMO_MMS');
+             $values = ProfileCacheConstants::NOT_FILLED;
 
              $tempInsertResult = array_fill_keys($keys, $values);
              $dummyResult['RESULT_VAL'] = $tempInsertResult;
