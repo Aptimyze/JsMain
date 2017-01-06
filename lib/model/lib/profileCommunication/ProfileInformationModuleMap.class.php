@@ -497,7 +497,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_APP,
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
       "KUNAL"=>"1",
 		),
 		"ACCEPTANCES_RECEIVED"=>Array( 
