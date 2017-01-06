@@ -1945,7 +1945,7 @@ $(document).ready(function () {
     		
     				    data.jid = data.profileid;
     				    data.education = data.eduLevelNew;
-    				    data.location = data.cityRes.length ? data.cityRes : data.countryRes;
+    				    data.location = (typeof data.cityRes == "string" &&  data.cityRes.length) ? data.cityRes : data.countryRes;
     				    if (data.photo == '' && loggedInJspcGender) {
                             if (loggedInJspcGender == "F") {
                 	                data.photo = chatConfig.Params[device].noPhotoUrl["self120"]["M"];
