@@ -345,9 +345,7 @@ Class ButtonResponseApi
 				case ContactHandler::REMINDER:
 					$button                        = $this->getSendReminderButton();
 					$responseArray["button"]      = $button;
-					if(sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION')>=80)
-						$responseArray["infomsglabel"]=null;
-					else $responseArray["infomsglabel"]='Reminder of interest Sent';
+					$responseArray["infomsglabel"] = "Reminder of interest Sent";
 					//echo "NOCONTACT";
 					break;
 				case ContactHandler::INITIATED:
@@ -355,10 +353,8 @@ Class ButtonResponseApi
 					{
 						$button                        = $this->getSendReminderButton(3);
 						$responseArray["button"]      = $button;
-						if(sfContext::getInstance()->getRequest()->getParameter('API_APP_VERSION')>=80)
-							$responseArray["infomsglabel"] =null;
-						else if($privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y" &&  $this->contactObj->getCOUNT() < ErrorHandler::REMINDER_COUNT)
-							$responseArray["infomsglabel"] = "Interest Sent";
+						if($privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y" &&  $this->contactObj->getCOUNT() < ErrorHandler::REMINDER_COUNT)
+							$responseArray["infomsglabel"] = "Reminder of interest Sent";
 					}
 					else
 					{
