@@ -150,7 +150,7 @@ class JprofileAlertsCache
 
            $tempInsertResult = array_fill_keys($keys, $values);
            $tempInsertResult['PROFILEID'] = $profileid;
-           
+
             $objProCacheLib = ProfileCacheLib::getInstance();
             $objProCacheLib->cacheThis(ProfileCacheConstants::CACHE_CRITERIA, $profileid, $tempInsertResult, __CLASS__);
 
@@ -190,6 +190,7 @@ class JprofileAlertsCache
      * @param string fields
      * @param string onlyValues
      * @return mixed
+     * The function if called with $onlyValue = 1, then it will only fetch the value present at that particular field. Thus we can only pass a single field for using $onlyValue
      */
 
       public function commonFunctionForSelect($profileid,$strFields,$onlyValue = 0)
