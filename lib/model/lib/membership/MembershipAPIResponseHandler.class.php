@@ -230,7 +230,7 @@ class MembershipAPIResponseHandler {
 			$this->acceptanceCount = $profileMemcacheObj->get('ACC_ME');
 			$shardDb = JsDbSharding::getShardNo($this->profileid,'slave');
 			$newjsMessageLogObj = new NEWJS_MESSAGE_LOG($shardDb);
-	//		$this->interestRecCount = $newjsMessageLogObj->getInterestRecievedInLastWeek($this->profileid);
+			$this->interestRecCount = $newjsMessageLogObj->getInterestRecievedInLastWeek($this->profileid);
 		}
     
         return $this;
