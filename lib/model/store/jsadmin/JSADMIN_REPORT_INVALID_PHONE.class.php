@@ -146,6 +146,25 @@ public function updateAsVerified($submittee){
     
     }
 
+    public function getReportInvalidForUser($profileid)
+    {
+        try     
+        {   
+            $sql = "SELECT SUBMITTER,SUBMIT_DATE,REASON,OTHER_REASON from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFID",$profileid,PDO::PARAM_INT);
+            $prep->execute();
+            while($row=$prep->fetch(PDO::FETCH_ASSOC))
+            $result[]=$row;
+        return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
+
 
 }
 ?>    

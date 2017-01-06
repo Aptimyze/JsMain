@@ -90,6 +90,26 @@ class REPORT_ABUSE_LOG extends TABLE
 		}
 	
 	}
+
+
+	public function getReportAbuseHistoryOfUser($profileid)
+	{
+		try	 	
+		{	
+			$sql = "SELECT REPORTER,`DATE`,REASON,OTHER_REASON from feedback.REPORT_ABUSE_LOG WHERE REPORTEE = :PROFID";
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(":PROFID",$profileid,PDO::PARAM_INT);
+            $prep->execute();
+            while($row=$prep->fetch(PDO::FETCH_ASSOC))
+			$result[]=$row;
+		return $result;
+		}
+		catch(Exception $e)
+		{
+			throw new jsException($e);
+		}
+	
+	}
         
 
 }
