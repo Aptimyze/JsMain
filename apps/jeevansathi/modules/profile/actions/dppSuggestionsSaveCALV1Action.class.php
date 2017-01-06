@@ -20,8 +20,12 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 	{
 		
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
-		$this->loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+		$this->loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');	
+		$this->hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
+		$this->hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
 		$calLayer = 1;
+
+		//Call to get the data filled in dpp
 		ob_start();
 		$request->setParameter('sectionFlag','dpp');
 		$request->setParameter("internal","1");
@@ -29,94 +33,21 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 
 		$output = ob_get_contents();
 		ob_end_clean();
-		$decodedData = json_decode($output);
-		//print_r($decodedData);
-		$sampleArr[0]["type"]="CASTE";
-		$sampleArr[0]["data"][0] = "278";
-        $sampleArr[0]["data"][1] = "407";
-        $sampleArr[0]["data"][2] = "16";
-        $sampleArr[0]["data"][3] = "408";
-
-        $sampleArr[1]["type"]="EDUCATION";
-		$sampleArr[1]["data"][0] = "18";
-        $sampleArr[1]["data"][1] = "12";
-        $sampleArr[1]["data"][2] = "16";
-        $sampleArr[1]["data"][3] = "15";
-
-        $sampleArr[2]["type"]="OCCUPATION";
-		$sampleArr[2]["data"][0] = "10";
-        $sampleArr[2]["data"][1] = "10";
-        $sampleArr[2]["data"][2] = "28";
-        $sampleArr[2]["data"][3] = "15";
-
-        $sampleArr[3]["type"]="MTONGUE";
-		$sampleArr[3]["data"][0] = "27";
-        $sampleArr[3]["data"][1] = "14";
-        $sampleArr[3]["data"][2] = "6";
-        $sampleArr[3]["data"][3] = "20";
 		
-        $sampleArr[4]["type"]="CITY";
-		$sampleArr[4]["data"][0] = "OR";
-        $sampleArr[4]["data"][1] = "DE00";
-        $sampleArr[4]["data"][2] = "UK06";
-        $sampleArr[4]["data"][3] = "HP08";
+		$decodedData = json_decode($output);
+		$dppSaveData = json_decode($request->getParameter("dppSaveData"));			
+     			
+		$dppDataArr = $this->getDppFilledData($decodedData);		
+		$finalArr = $this->getFinalSubmitData($dppSaveData,$dppDataArr);
 
-        $sampleArr[5]["type"]="AGE";
-        $sampleArr[5]["data"][0]="21";
-        $sampleArr[5]["data"][1]="31";
+		ob_start();
+		//$request->setParameter('sectionFlag','dpp');
+		$request->setParameter("fromBackend",false);
+		$request->setParameter("editFieldArr",$finalArr);
+		$jsonData = sfContext::getInstance()->getController()->getPresentationFor("profile", "apieditdppv1");
 
-        $sampleArr[6]["type"]="INCOME";
-        $sampleArr[6]["data"][0]="2"; //0,1,2,3 for low high rs and low high dollars
-        $sampleArr[6]["data"][1]="5";
-        $sampleArr[6]["data"][2]="12";
-        $sampleArr[6]["data"][3]="19";
-     	//print_r($sampleArr);
-		foreach($decodedData as $key=>$value)
-		{
-			if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
-			{
-				//$dppDataArr[$key]["type"] = substr($value->key,2);
-				$dppDataArr[substr($value->key,2)] = $value->value;
-			}
-		}
-		print_r($dppDataArr);
-		foreach($sampleArr as $key=>$value)
-		{
-			if(array_key_exists($value["type"], $dppDataArr))
-			{
-				if($dppDataArr[$value["type"]] == "DM")
-				{
-					$finalDppArr["P_".$value["type"]] = implode(",",$value["data"]);
-				}
-				elseif($value["type"] == "AGE")
-				{
-					foreach($value["data"] as $k=>$v)
-					{
-						$finalDppArr[DppAutoSuggestEnum::$keyReplaceAgeArr[$k]] = $v;
-					}
-				}
-				elseif ($value["type"] == "INCOME")
-				{
-					foreach($value["data"] as $k=>$v)
-					{
-						$finalDppArr[DppAutoSuggestEnum::$keyReplaceIncomeArr[$k]] = $v;
-					}
-				}
-				else
-				{
-					foreach($value["data"] as $k=>$v)
-					{
-						if(strpos($dppDataArr[$value["type"]],$v) === false)
-						{
-							$appendValues.= ",".$v;
-						}
-					}
-					$finalDppArr["P_".$value["type"]] = $dppDataArr[$value["type"]].$appendValues;
-					unset($appendValues);
-				}
-			}
-		}		
-		print_r($finalDppArr);die;
+		$output = ob_get_contents();
+		ob_end_clean();
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -130,6 +61,73 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		}
 		$apiResponseHandlerObj->generateResponse();
 		return sfView::NONE;
-	}	
+	}
+
+	//This function appends the values of the dpp selected from the CAL to the already set values in the dpp
+	public function getFinalSubmitData($dppSaveData,$dppDataArr)
+	{
+		foreach($dppSaveData as $key=>$value)
+		{
+			if(array_key_exists($value->type, $dppDataArr))
+			{
+				if($dppDataArr[$value->type] == "DM")
+				{
+					$finalDppArr["P_".$value->type] = implode(",",$value->data);
+				}
+				elseif($value->type == "AGE")
+				{
+					foreach($value->data as $k=>$v)
+					{
+						$finalDppArr["P_".$k] = $v;
+					}
+				}
+				elseif ($value->type == "INCOME")
+				{
+					foreach($value->data as $k=>$v)
+					{
+						if($k == "LRS" ||$k == "HRS")
+						{
+							$finalDppArr["P_".$k] = array_search($v,$this->hIncomeRs);
+						}
+						else
+						{
+							$finalDppArr["P_".$k] = array_search($v,$this->hIncomeDol);
+						}						
+					}
+				}
+				else
+				{
+					foreach($value->data as $k=>$v)
+					{
+						if(strpos($dppDataArr[$value->type],$v) === false && strpos($appendValues,$v) === false)
+						{
+							$appendValues.= ",".$v;
+						}
+					}
+					$finalDppArr["P_".$value->type] = $dppDataArr[$value->type].$appendValues;
+					unset($appendValues);
+				}
+			}
+		}
+		return $finalDppArr;
+	}
+	//This function gets labels from FieldMapLib depending on $labels,$value,$returnArr
+	public function getFieldMapLabels($label,$value,$returnArr='')
+	{
+		return FieldMap::getFieldlabel($label,$value,$returnArr);
+	}
+
+	public function getDppFilledData($decodedData)
+	{
+		foreach($decodedData as $key=>$value)
+		{
+			if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
+			{				
+				$dppDataArr[substr($value->key,2)] = $value->value;
+			}
+		}
+
+		return $dppDataArr;
+	}
 }
 ?>
