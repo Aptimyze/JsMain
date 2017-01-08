@@ -91,12 +91,12 @@ class feedbackActions extends sfActions
   {
       $today=date("Y-m-d");
       list($todYear,$todMonth,$todDay)=explode("-",$today);
-      $k=0;
-      while($k<=10)
+      $k=-5;
+      while($k<=0)
       {
         $yearArray[]=$todYear+$k;
         $k++;
-      }//print_r($yearArray);die;
+      }
       $monthArray=array('01'=>'Jan','02'=>'Feb','03'=>'Mar','04'=>'Apr','05'=>'May','06'=>'Jun','07'=>'Jul','08'=>'Aug','09'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Dec');
       $this->typearr=$typearr;
       $this->yearArray = $yearArray;
