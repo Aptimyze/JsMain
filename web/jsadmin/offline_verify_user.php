@@ -77,7 +77,7 @@ if(authenticated($cid))
 				}
 
 				if($rcheck && $phoneStatus) 
-					$opsPhoneReportObj->insertOPSPhoneReport($CRMuserid,$profileid,$row['ISD'].$row['PHONE_WITH_STD'],'L',$phoneStatus);
+					$opsPhoneReportObj->insertOPSPhoneReport($name,$profileid,$row['ISD'].$row['PHONE_WITH_STD'],'L',$phoneStatus);
 
 				if($mcheck=="valid")
                                 {
@@ -104,7 +104,7 @@ if(authenticated($cid))
 //trac 745 start
 
                 	if($mcheck && $phoneStatus) 
-                		$opsPhoneReportObj->insertOPSPhoneReport($CRMuserid,$profileid,$row['ISD'].$row['PHONE_MOB'],'M',$phoneStatus);
+                		$opsPhoneReportObj->insertOPSPhoneReport($name,$profileid,$row['ISD'].$row['PHONE_MOB'],'M',$phoneStatus);
                 
 
 				if($acheck=="valid")
@@ -129,7 +129,7 @@ if(authenticated($cid))
                      elseif($acheck=='noAction')
 						$phoneStatus = 'B';
                 	if($acheck && $phoneStatus) 
-                		$opsPhoneReportObj->insertOPSPhoneReport($CRMuserid,$profileid,$row['ISD'].$row['ALT_MOBILE'],'A',$phoneStatus);
+                		$opsPhoneReportObj->insertOPSPhoneReport($name,$profileid,$row['ISD'].$row['ALT_MOBILE'],'A',$phoneStatus);
 	
 				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 				$profileid=$row[PROFILEID];
