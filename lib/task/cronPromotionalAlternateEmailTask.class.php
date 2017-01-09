@@ -54,40 +54,99 @@ EOF;
                 $activateDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::VERIFY_ACTIVATED_LIMIT));
                 $entryDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::ENTRY_DATE_LIMIT));
 
-                $profileIDs = $jprofileContact->getPromotionalMailerAccounts($activateDate,$entryDate,$totalScript,$currentScript);
 
-                $profileIdsNoContacts = $jprofileContact->getPromotionalMailerAccountNoContact($activateDate,$entryDate,$totalScript,$currentScript);
+                 $i = 0;
+                 do
+                 {
+                   $profileIDs = $jprofileContact->getPromotionalMailerAccountNoContact($activateDate,$entryDate,$totalScript,$currentScript,PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE,$i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE);
+
+                    if ($this->sendPromotionalAlternateEmailProfileIds($profileIDs))
+                    {
+                        $i++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    $i++;
+                } while (1);
+
+
+                $i = 0;
+                do
+                {
+                   $profileIDs = $jprofileContact->getPromotionalMailerAccounts($activateDate,$entryDate,$totalScript,$currentScript,PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE,$i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE);
+
+                    if ($this->sendPromotionalAlternateEmailProfileIds($profileIDs))
+                    {
+                        $i++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    $i++;
+                } while (1);
             }
             else
             {
                 $activateDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::VERIFY_ACTIVATED_LIMIT));
                 $lastLoginDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::LAST_LOGIN_LIMIT));
-                $profileIDs = $jprofileContact->getPromotionalMailerAccountsOnce($activateDate,$lastLoginDate,$totalScript,$currentScript);
-                $profileIdsNoContacts = $jprofileContact->getPromotionalMailerAccountNoContactOnce($activateDate,$lastLoginDate,$totalScript,$currentScript);
-            }
 
-            if ( is_array($profileIDs) && is_array($profileIdsNoContacts))
-            {   
-                $profileIDs = array_merge($profileIDs,$profileIdsNoContacts);
-            }
-            elseif (is_array($profileIdsNoContacts)) {
-                $profileIDs = $profileIdsNoContacts;
-            }
+                $i = 0;
+                 do
+                 {
+                   $profileIDs = $jprofileContact->getPromotionalMailerAccountsOnce($activateDate,$lastLoginDate,$totalScript,$currentScript,PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE,$i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE);
+                    if ($this->sendPromotionalAlternateEmailProfileIds($profileIDs))
+                    {
+                        $i++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    $i++;
+                } while (1);
 
-            if ( is_array($profileIDs))
-            {
-                foreach ($profileIDs as $profileId) {
-                    $this->sendPromotionalAlternateEmail($profileId);
-                }
+
+                $i = 0;
+                 do
+                 {
+                   $profileIDs = $jprofileContact->getPromotionalMailerAccountNoContactOnce($activateDate,$lastLoginDate,$totalScript,$currentScript,PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE,$i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE);
+                    if ($this->sendPromotionalAlternateEmailProfileIds($profileIDs))
+                    {
+                        $i++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (1);
             }
             
-        } catch (Exception $e) {
-            jsException::nonCriticalError("cronPromotionalAlternateEmail ".$e);
+        } 
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
         }
 
         
     }
 
+    public function sendPromotionalAlternateEmailProfileIds($profileIDs)
+    {
+        if ( is_array($profileIDs))
+        {
+            foreach ($profileIDs as $key => $value) {
+                $this->sendPromotionalAlternateEmail($value['PROFILEID']);
+            }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     
     /**

@@ -290,13 +290,16 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
             }
 
     		$prep->execute();
-    		if($result = $prep->fetch(PDO::FETCH_ASSOC))
-    		{
-    			return $result;
-    		}
-    	} catch (Exception $e) {
-    		jsException::nonCriticalError("lib/model/store/newjs_JPROFILE_CONTACT.class.php ".$e);	
+    		while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $detailArr[] = $result;
+            }
+            return $detailArr;
     	}
+        catch(PDOException $e)
+        {
+            throw new jsException($e);
+        }
     	return false;
     }
 
@@ -331,13 +334,16 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 
 
     		$prep->execute();
-    		if($result = $prep->fetch(PDO::FETCH_ASSOC))
-    		{
-    			return $result;
-    		}
-    	} catch (Exception $e) {
-    		jsException::nonCriticalError("lib/model/store/newjs_JPROFILE_CONTACT.class.php ".$e);	
-    	}
+    		while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $detailArr[] = $result;
+            }
+            return $detailArr;
+    	} 
+        catch(PDOException $e)
+        {
+                throw new jsException($e);
+        }
     	return false;
     }
 
@@ -374,13 +380,17 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 
 
     		$prep->execute();
-    		if($result = $prep->fetch(PDO::FETCH_ASSOC))
-    		{
-    			return $result;
-    		}
-    	} catch (Exception $e) {
-    		jsException::nonCriticalError("lib/model/store/newjs_JPROFILE_CONTACT.class.php ".$e);	
-    	}
+    		while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $detailArr[] = $result;
+            }
+            return $detailArr;
+    	} 
+
+        catch(PDOException $e)
+        {
+                throw new jsException($e);
+        }
     	return false;
     }
 
@@ -414,13 +424,16 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 
 
     		$prep->execute();
-    		if($result = $prep->fetch(PDO::FETCH_ASSOC))
-    		{
-    			return $result;
-    		}
-    	} catch (Exception $e) {
-    		jsException::nonCriticalError("lib/model/store/newjs_JPROFILE_CONTACT.class.php ".$e);	
-    	}
+    		while($result = $prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $detailArr[] = $result;
+            }
+            return $detailArr;
+    	} 
+        catch(PDOException $e)
+        {
+                throw new jsException($e);
+        }
     	return false;
     }
 }
