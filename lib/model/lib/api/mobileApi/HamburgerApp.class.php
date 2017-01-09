@@ -43,13 +43,22 @@ class HamburgerApp
 			$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");
 			if(MobileCommon::isIOSApp() || MobileCommon::isAndroidApp())
 			{
-				$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITORS_ALL");
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
+					$hamburgerDetails['VISITOR_ALERT']=0;
+				else
+					$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITORS_ALL");
 			}
 			else
 			{
-				$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITOR_ALERT");
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
+					$hamburgerDetails['VISITOR_ALERT']=0;
+				else
+					$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITOR_ALERT");
 			}
-                        $hamburgerDetails['VISITORS_ALL']=$profileMemcacheObj->get("VISITORS_ALL");
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
+				$hamburgerDetails['VISITORS_ALL']=0;
+			else
+                 $hamburgerDetails['VISITORS_ALL']=$profileMemcacheObj->get("VISITORS_ALL");
 			$hamburgerDetails['BOOKMARK']=$profileMemcacheObj->get("BOOKMARK");
 				$hamburgerDetails['JUST_JOINED_COUNT'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES');
 				$hamburgerDetails['JUST_JOINED_NEW'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
