@@ -12,6 +12,11 @@ class billing_EDIT_DETAILS_LOG extends TABLE {
 		$this->ENTRY_DT_BIND_TYPE = "STR";
     }
 
+    /*function - logEntryInsert
+    * maps passed array to log values to be inserted
+    * @inputs: $paramsArr
+    * @outputs: none
+    */
     public function logEntryInsert($paramsArr = array()){
         if(empty($paramsArr)){
             throw new jsException("Error processing logEntryInsert in billing_EDIT_DETAILS_LOG");
