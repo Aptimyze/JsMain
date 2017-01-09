@@ -2077,6 +2077,7 @@ class MembershipHandler
 
     public function cancelActiveMainMembership($params){
         $billingServStatObj = new BILLING_SERVICE_STATUS();
+
         //get info of active main membership of profile
         $serStatDet  = $billingServStatObj->getLatestActiveMemInfoForProfiles(array($params["PROFILEID"]),"BILLID,SERVICEID");
         //echo "active service detail....";
@@ -2085,9 +2086,14 @@ class MembershipHandler
         //if any main membership is active,then deactivate it
         if(!empty($serStatDet[$params["PROFILEID"]])){
 
+            //get payment details of this billid
+            $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
+            $paymentDet = $billingPaymentDetObj->getAllDetailsForBillidArr(array($serStatDet[$params["PROFILEID"]]["BILLID"]),"RECEIPTID","1");
+            unset($billingPaymentDetObj);
+
             //insert entry in EDIT_DETAILS_LOG for changes
             $billingEditLogObj = new billing_EDIT_DETAILS_LOG();
-            $billingEditLogObj->logEntryInsert(array("PROFILEID"=>$params["PROFILEID"],"BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"RECEIPTID"=>123,"CHANGES"=>"TRANSACTION DEACTIVATED FOR UPGRADE","ENTRYBY"=>$params["USERNAME"],"ENTRY_DT"=>now()));
+            $billingEditLogObj->logEntryInsert(array("PROFILEID"=>$params["PROFILEID"],"BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"RECEIPTID"=>$paymentDet[$serStatDet[$params["PROFILEID"]]["BILLID"]]["RECEIPTID"],"CHANGES"=>"TRANSACTION DEACTIVATED FOR UPGRADE","ENTRYBY"=>$params["USERNAME"],"ENTRY_DT"=>date("Y-m-d H:i:s")));
             unset($billingEditLogObj);
 
             //update status of main membership

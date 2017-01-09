@@ -320,10 +320,16 @@ class BILLING_PAYMENT_DETAIL extends TABLE
         }
     }
 
-    public function getAllDetailsForBillidArr($billidArr) {
+    public function getAllDetailsForBillidArr($billidArr,$orderBy="",$limit="") {
         try {
         	$billidStr = implode(",", $billidArr);
             $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE BILLID IN ($billidStr)";
+            if($orderBy != ""){
+                $sql .= " ORDER BY ".$orderBy." DESC";
+            }
+            if($limit != ""){
+                $sql .= " LIMIT ".$limit;
+            }
             $prep = $this->db->prepare($sql);
             $prep->execute();
             while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
