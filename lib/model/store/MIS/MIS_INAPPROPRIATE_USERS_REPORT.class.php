@@ -4,11 +4,11 @@ class MIS_INAPPROPRIATE_USERS_REPORT extends TABLE
   public function __construct($dbName="") {
     parent::__construct($dbName="");
   }
-  public function insert($profileid,$totalCount,$rCount,$aCount,$mCount,$uName)
+  public function insert($profileid,$totalCount,$rCount,$aCount,$mCount,$uName,$abuseCount,$invalidCount)
   {
     try {
       $date= date("Y-m-d");
-      $sql1="INSERT INTO MIS.INAPPROPRIATE_USERS_REPORT(USERNAME,PROFILEID,RELIGION_COUNT,MSTATUS_COUNT,AGE_COUNT,TOTAL_SCORE,DATE) VALUES (:USERNAME,:ID,:RELIGION_COUNT,:MSTATUS_COUNT,:AGE_COUNT,:TOTAL_SCORE,:DATE)";
+      $sql1="INSERT INTO MIS.INAPPROPRIATE_USERS_REPORT(USERNAME,PROFILEID,RELIGION_COUNT,MSTATUS_COUNT,AGE_COUNT,TOTAL_SCORE,DATE,REPORT_ABUSE_COUNT,REPORT_INVALID_COUNT) VALUES (:USERNAME,:ID,:RELIGION_COUNT,:MSTATUS_COUNT,:AGE_COUNT,:TOTAL_SCORE,:DATE,:REPORT_ABUSE_COUNT,:REPORT_INVALID_COUNT)";
       $res1=$this->db->prepare($sql1);
       $res1->bindValue(":ID",$profileid,PDO::PARAM_INT);
       $res1->bindValue(":RELIGION_COUNT",$rCount,PDO::PARAM_INT);
@@ -17,6 +17,8 @@ class MIS_INAPPROPRIATE_USERS_REPORT extends TABLE
       $res1->bindValue(":USERNAME",$uName,PDO::PARAM_STR);
       $res1->bindValue(":TOTAL_SCORE",$totalCount,PDO::PARAM_INT);
       $res1->bindValue(":DATE",$date,PDO::PARAM_STR);
+      $res1->bindValue(":REPORT_ABUSE_COUNT",$abuseCount,PDO::PARAM_INT);
+      $res1->bindValue(":REPORT_INVALID_COUNT",$invalidCount,PDO::PARAM_INT);
       $res1->execute();
     } 
     catch(PDOException $e){

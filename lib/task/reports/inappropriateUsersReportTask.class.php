@@ -38,10 +38,10 @@ EOF;
                 $masterDbReportObj=new MIS_INAPPROPRIATE_USERS_REPORT();
                 $masterDbReportObj->truncateTable($startDate);
                 $this->getDataForToday();
-                $data="Username,Outside Religion Contact,Outside Marital Status Contact,Outside Age Bracket Contact,Overall negative score\r\n";
+                $data="Username,Outside Religion Contact,Outside Marital Status Contact,Outside Age Bracket Contact,Overall negative scoreUsername,Outside Religion Contact,Report Abuse Count,Report Invalid Count\r\n";
                 foreach ($this->finalResultsArray as $key => $value) 
                 {
-                $data.="\r\n".$value['USERNAME'].','.$value['RCOUNT'].','.$value['MCOUNT'].','.$value['ACOUNT'].','.$value['TCOUNT'];
+                $data.="\r\n".$value['USERNAME'].','.$value['RCOUNT'].','.$value['MCOUNT'].','.$value['ACOUNT'].','.$value['TCOUNT'].','.$value['ABUSE_COUNT'].','.$value['INVALID_COUNT'];
                 }
                 SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Inappropriate Users Summary for $todayDate","noreply@jeevansathi.com",'','',$data,'','inappropriateUsers_'.$todayDate.".csv");
 
@@ -62,6 +62,8 @@ EOF;
       $return['TCOUNT'] += $value[$date1]['TCOUNT'];
       $return['ACOUNT'] += $value[$date1]['ACOUNT'];
       $return['MCOUNT'] += $value[$date1]['MCOUNT'];
+      $return['ABUSE_COUNT'] += $value[$date1]['REPORT_ABUSE_COUNT'];
+      $return['INVALID_COUNT'] += $value[$date1]['REPORT_INVALID_COUNT'];
 
       }  
       if(!$MAX['MAX'] || $return['TCOUNT']>$MAX['MAX']){
@@ -98,9 +100,23 @@ EOF;
 
                                 if($tempVal=$this->isLast7Max($value,$reportObjSlave,$key))
                                 {
+
+
+                                 $startDate = date('Y-m-d H:i:s');
+                                 $date = new DateTime($startDate);
+                                 $date->sub(new DateInterval('P30D')); //get the date which was 30 days ago
+                                 $endDate = $date->format('Y-m-d H:i:s');
+
+                              
+                                $reportInvalidCount=(new JSADMIN_REPORT_INVALID_PHONE())->getReportInvalidCountMIS($value['PROFILEID'],$startDate,$endDate);
+                                $reportAbuseCount = (new REPORT_ABUSE_LOG())->getReportAbuseCountMIS($value['PROFILEID'],$startDate,$endDate);
+                                $tempVal['ABUSE_COUNT'] = $reportInvalidCount;
+                                $tempVal['INVALID_COUNT'] = $reportAbuseCount;
+                              
+
                                 $this->finalResultsArray[] = $tempVal;
                                 $Tarray[]=$tempVal['TCOUNT'];
-                                $reportObj->insert($value['PROFILEID'],$tempVal['TCOUNT'],$tempVal['RCOUNT'],$tempVal['ACOUNT'],$tempVal['MCOUNT'],$key);
+                                $reportObj->insert($value['PROFILEID'],$tempVal['TCOUNT'],$tempVal['RCOUNT'],$tempVal['ACOUNT'],$tempVal['MCOUNT'],$key,$tempVal['ABUSE_COUNT'],$tempVal['INVALID_COUNT']);
                                 }
                                 unset($groupedByUsername[$key]);
                         }

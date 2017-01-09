@@ -538,18 +538,6 @@ class profileVerificationActions extends sfActions
           die;
       $i=0;
 
-         $startDate = date('Y-m-d H:i:s');
-         $date = new DateTime($startDate);
-         $date->sub(new DateInterval('P30D')); //get the date which was 30 days ago
-         $endDate = $date->format('Y-m-d H:i:s');
-
-      foreach ($resultArr as $key => $value) {
-        $reportInvalidCount=(new JSADMIN_REPORT_INVALID_PHONE())->getReportInvalidCountMIS($value['PROFILEID'],$startDate,$endDate);
-        $reportAbuseCount = (new REPORT_ABUSE_LOG())->getReportAbuseCountMIS($value['PROFILEID'],$startDate,$endDate);
-        $resultArr[$key]['INVALID_COUNT'] = $reportInvalidCount;
-        $resultArr[$key]['ABUSED_COUNT'] = $reportAbuseCount;
-      }
-
       echo json_encode($resultArr);
      // print_r($resultArr);
       return sfView::NONE;
