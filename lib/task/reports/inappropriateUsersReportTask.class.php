@@ -62,8 +62,6 @@ EOF;
       $return['TCOUNT'] += $value[$date1]['TCOUNT'];
       $return['ACOUNT'] += $value[$date1]['ACOUNT'];
       $return['MCOUNT'] += $value[$date1]['MCOUNT'];
-      $return['ABUSE_COUNT'] += $value[$date1]['REPORT_ABUSE_COUNT'];
-      $return['INVALID_COUNT'] += $value[$date1]['REPORT_INVALID_COUNT'];
 
       }  
       if(!$MAX['MAX'] || $return['TCOUNT']>$MAX['MAX']){

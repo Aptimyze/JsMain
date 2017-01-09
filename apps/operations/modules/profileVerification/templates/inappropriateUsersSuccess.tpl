@@ -1,7 +1,7 @@
 ~include_partial('global/header')`
 
 	<script type="text/javascript">
-	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='IUUsername'></td><td class='IUReligion'></td><td class='IUMarriage'></td><td class='IUAge'></td><td class='IUTotalScore'><td class='abuseReported'><td class='invalidReported'>";
+	var startDate,endDate,rowHtml="<tr style='font-size:15px' class='label RARowHtml' align='center'><td></td><td class='IUUsername'></td><td class='IUReligion'></td><td class='IUMarriage'></td><td class='IUAge'></td><td class='IUTotalScore'></td><td class='abuseReported'></td><td class='invalidReported'></td></tr>";
 	function getRowHtml(rowJson){
 
 		var tempHtml=$(rowHtml);
