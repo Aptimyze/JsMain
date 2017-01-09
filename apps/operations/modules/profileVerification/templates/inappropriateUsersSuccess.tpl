@@ -10,8 +10,8 @@
 		tempHtml.find('.IUMarriage').text(rowJson.MSTATUS_COUNT);
 		tempHtml.find('.IUAge').text(rowJson.AGE_COUNT);
 		tempHtml.find('.IUTotalScore').text(rowJson.TOTAL_SCORE);
-		tempHtml.find('.abuseReported').text(rowJson.ABUSED_COUNT);
-		tempHtml.find('.invalidReported').text(rowJson.INVALID_COUNT);
+		tempHtml.find('.abuseReported').text(rowJson.REPORT_ABUSE_COUNT);
+		tempHtml.find('.invalidReported').text(rowJson.REPORT_INVALID_COUNT);
 		return tempHtml;
 
 	}
