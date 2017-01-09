@@ -735,7 +735,7 @@ class crmInterfaceActions extends sfActions
         $this->name = $request->getParameter('name');
         $field      = 'ENTRY_DT';
 
-        $slaveNamesArr = array('newjs_master', 'newjs_slave', 'newjs_local111');
+        $slaveNamesArr = array('newjs_master', 'newjs_slave', 'newjs_local111','crm_slave','newjs_masterRep');
         foreach ($slaveNamesArr as $key => $name) {
             $jprofileObj = new JPROFILE($name);
             $dataArr     = $jprofileObj->getLatestValue($field);
@@ -753,7 +753,8 @@ class crmInterfaceActions extends sfActions
         $this->masterTime = $masterTime;
         $this->misSlave   = $dateTimeArr['newjs_slave'];
         $this->slave111   = $dateTimeArr['newjs_local111'];
-
+	$this->crmSlave   = $dateTimeArr['crm_slave'];
+	$this->masterRep  = $dateTimeArr['newjs_masterRep'];
     }
 
     public function executeHelpBackend(sfWebRequest $request)
