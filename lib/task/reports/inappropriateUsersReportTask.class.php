@@ -33,19 +33,21 @@ EOF;
 		if(!sfContext::hasInstance())
 	        sfContext::createInstance($this->configuration);
                 $startDate=date('Y-m-d',strtotime("-7 day"));
+                $todayDate=date('Y-m-d');
                 $masterDbObj=new MIS_INAPPROPRIATE_USERS_LOG();
                 $masterDbObj->truncateTable($startDate);
                 $masterDbReportObj=new MIS_INAPPROPRIATE_USERS_REPORT();
                 $masterDbReportObj->truncateTable($startDate);
                 $this->getDataForToday();
-                $data="Username,Outside Religion Contact,Outside Marital Status Contact,Outside Age Bracket Contact,Overall negative scoreUsername,Outside Religion Contact,Report Abuse Count,Report Invalid Count\r\n";
+                $data="Username,Outside Religion Contact,Outside Marital Status Contact,Outside Age Bracket Contact,Overall negative score,Report Abuse Count,Report Invalid Count";
                 foreach ($this->finalResultsArray as $key => $value) 
-                {
+                { 
                 $data.="\r\n".$value['USERNAME'].','.$value['RCOUNT'].','.$value['MCOUNT'].','.$value['ACOUNT'].','.$value['TCOUNT'].','.$value['ABUSE_COUNT'].','.$value['INVALID_COUNT'];
                 }
+
                 SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Inappropriate Users Summary for $todayDate","noreply@jeevansathi.com",'','',$data,'','inappropriateUsers_'.$todayDate.".csv");
 
-
+  
   }
 
 
