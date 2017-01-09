@@ -2074,4 +2074,45 @@ class MembershipHandler
         $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
         $dolBillingUsersObj->removeUserForDol($profileid);
     }
+
+    public function cancelActiveMainMembership($params){
+        $billingServStatObj = new BILLING_SERVICE_STATUS();
+        //get info of active main membership of profile
+        $serStatDet  = $billingServStatObj->getLatestActiveMemInfoForProfiles(array($params["PROFILEID"]),"BILLID,SERVICEID");
+        //echo "active service detail....";
+        //print_r($serStatDet);
+       
+        //if any main membership is active,then deactivate it
+        if(!empty($serStatDet[$params["PROFILEID"]])){
+
+            //insert entry in EDIT_DETAILS_LOG for changes
+            $billingEditLogObj = new billing_EDIT_DETAILS_LOG();
+            $billingEditLogObj->logEntryInsert(array("PROFILEID"=>$params["PROFILEID"],"BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"RECEIPTID"=>123,"CHANGES"=>"TRANSACTION DEACTIVATED FOR UPGRADE","ENTRYBY"=>$params["USERNAME"],"ENTRY_DT"=>now()));
+            unset($billingEditLogObj);
+
+            //update status of main membership
+            $billingServStatObj->updateActiveStatusForBillidAndServiceid($serStatDet[$params["PROFILEID"]]["BILLID"], $serStatDet[$params["PROFILEID"]]["SERVICEID"],'N');
+
+            //update user's subscription
+            $subscription    = $billingServStatObj->getActiveServeFor($params["PROFILEID"]);
+            //echo "subscription.......";
+            //print_r($subscription);
+            if (empty($subscription)) {
+                $subscription = '';
+            }
+            $jprofileObj        = new JPROFILE();
+            $jprofileObj->edit(array('SUBSCRIPTION' => $subscription), $params["PROFILEID"], 'PROFILEID');
+            unset($jprofileObj);
+
+            //clear the user membership memcache
+            $memCacheObject = JsMemcache::getInstance();
+            if ($memCacheObject) {
+                $memCacheObject->remove($params["PROFILEID"] . '_MEM_NAME');
+                $memCacheObject->remove($params["PROFILEID"] . "_MEM_OCB_MESSAGE_API17");
+                $memCacheObject->remove($params["PROFILEID"] . "_MEM_HAMB_MESSAGE");
+                $memCacheObject->remove($params["PROFILEID"] . "_MEM_SUBSTATUS_ARRAY");
+            }
+        }
+        unset($billingServStatObj);
+    }
 }

@@ -21,6 +21,17 @@ class membershipActions extends sfActions
         $this->redirect('/membership/jspc');
     }
 
+    public function executeMemUpgrade(sfWebRequest $request){
+        $profileObj = LoggedInProfile::getInstance('newjs_master');
+        $profileid  = $profileObj->getPROFILEID();
+        $username = $profileObj->getUSERNAME();
+        //var_dump($profileid."---".$username);
+        $memHandlerObj = new MembershipHandler();
+        $memHandlerObj->cancelActiveMainMembership(array("PROFILEID"=>$profileid,"USERNAME"=>$username));
+        //print_r("cancelled....");
+        $this->redirect('/membership/jspc');
+    }
+
     // JSPC
     public function executeJspc(sfWebRequest $request)
     {
