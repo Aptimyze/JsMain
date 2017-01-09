@@ -96,7 +96,17 @@ class postEOIv1Action extends sfAction
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
 		
-		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+		$onlyUnderScreenError = 0; // No errors
+		if($errorArr["UNDERSCREENING"] == 2 && $this->contactEngineObj->getComponent())
+		{
+			$onlyUnderScreenError = 1;
+		}
+		// print_r($onlyUnderScreenError);die;
+		if($onlyUnderScreenError == 1 || $onlyUnderScreenError == 0)
+		{
+			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		}
 		if($this->contactEngineObj->messageId)
 		{
  
