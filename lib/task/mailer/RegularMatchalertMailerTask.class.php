@@ -128,6 +128,9 @@ EOF;
       case 4:
         return SearchTypesEnums::MatchAlertMailer4;
         break;
+      case 5 : 
+        return SearchTypesEnums::MatchAlertMailer5;
+        break;
       default:
         return SearchTypesEnums::MatchAlertMailer;
         break;
