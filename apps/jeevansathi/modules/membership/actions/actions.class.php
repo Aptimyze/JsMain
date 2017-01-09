@@ -25,10 +25,12 @@ class membershipActions extends sfActions
         $profileObj = LoggedInProfile::getInstance('newjs_master');
         $profileid  = $profileObj->getPROFILEID();
         $username = $profileObj->getUSERNAME();
-        //var_dump($profileid."---".$username);
+
+        //deactivate active main membership
         $memHandlerObj = new MembershipHandler();
-        $memHandlerObj->cancelActiveMainMembership(array("PROFILEID"=>$profileid,"USERNAME"=>$username));
-        //print_r("cancelled....");
+        $memHandlerObj->deactivateCurrentMainMembership(array("PROFILEID"=>$profileid,"USERNAME"=>$username));
+        
+        //allow user to purchase new main membership
         $this->redirect('/membership/jspc');
     }
 
