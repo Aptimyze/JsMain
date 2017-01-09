@@ -86,6 +86,7 @@ class ApiEditSubmitV1Action extends sfActions
 				$this->form->updateData();				
 				if($this->incomplete==EditProfileEnum::$INCOMPLETE_YES)
 				{
+					$this->redisQueueJunkIncompleteProfile($this->loginProfile->getPROFILEID());
 					//Channel tracking for Incomplete SMS to track incomplete to complete )
 					if($request->getParameter('channel')=='INCOM_SMS')
 					{	
@@ -215,5 +216,24 @@ class ApiEditSubmitV1Action extends sfActions
     $editFamilyData = json_decode(ob_get_contents(), true);
     ob_end_clean();
     return $editFamilyData;
+  }
+
+  public function redisQueueJunkIncompleteProfile($profileId)
+  {
+    $memcacheObj = JsMemcache::getInstance();
+
+    $minute = date("i");
+
+
+    $key = JunkCharacterEnums::JUNK_CHARACTER_KEY;
+
+
+    $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
+
+    $startIndex = floor($minute/$redisQueueInterval);
+
+    $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
+
+    $memcacheObj->lpush($key,$profileId);
   }
 }
