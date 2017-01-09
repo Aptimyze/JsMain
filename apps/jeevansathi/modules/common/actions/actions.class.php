@@ -683,6 +683,16 @@ class commonActions extends sfActions
             }
             
         }
+        
+        if($layerToShow==15 && $button=='B1'){
+            
+            
+            $nameArr=array('DISPLAY'=>'Y');
+            $name_pdo = new incentive_NAME_OF_USER();
+            $profileid=$loggedInProfile->getPROFILEID();
+            $name_pdo->updateNameInfo($profileid,$nameArr);
+            
+        }        
                 if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
                 {
  		if(CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button))
