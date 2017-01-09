@@ -65,8 +65,9 @@
                 <table style="border-spacing:0px 10px; max-width:600px; font-family:Arial, Helvetica, sans-serif; font-size:12px">
                     <tbody>
                         <tr>
+
                         <td width="20"></td>
-                        <td height="27" align="center" width="110" bgcolor="#ad160d"><a href="https://www.surveymonkey.com/r/7NRXW3H" style="color:#ffffff;text-decoration:none;font-size:12px" target="_blank" data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=https://www.surveymonkey.com/r/7NRXW3H&amp;source=gmail&amp;ust=1483429133373000&amp;usg=AFQjCNG9_7zvPnOqkjf6GDHMtrnE-35d3Q"><strong>ADD NOW</strong></a></td>
+                        <td height="27" align="center" width="110" bgcolor="#ad160d"><a href="(LINK)COMPLETE_PROFILE:profileid=~$profileid`(/LINK)" style="color:#ffffff;text-decoration:none;font-size:12px" target="_blank"><strong>ADD NOW</strong></a></td>
                         </tr>
                     </tbody>
                 </table>

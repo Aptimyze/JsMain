@@ -45,7 +45,7 @@ EOF;
         $profileIdsNoContacts = array();
         $profileIDs = array();
         
-        $jprofileContact = new NEWJS_JPROFILE_CONTACT();
+        $jprofileContact = new NEWJS_JPROFILE_CONTACT("newjs_slave");
 
         try 
         {
@@ -54,16 +54,16 @@ EOF;
                 $activateDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::VERIFY_ACTIVATED_LIMIT));
                 $entryDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::ENTRY_DATE_LIMIT));
 
-                $profileIDs = $jprofileContact->getPromotionalMailerAccounts($activateDate,$entryDate,$totalScript,$currentScript,10,5);
+                $profileIDs = $jprofileContact->getPromotionalMailerAccounts($activateDate,$entryDate,$totalScript,$currentScript);
 
-                $profileIdsNoContacts = $jprofileContact->getPromotionalMailerAccountNoContact($activateDate,$entryDate,$totalScript,$currentScript,10,5);
+                $profileIdsNoContacts = $jprofileContact->getPromotionalMailerAccountNoContact($activateDate,$entryDate,$totalScript,$currentScript);
             }
             else
             {
                 $activateDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::VERIFY_ACTIVATED_LIMIT));
                 $lastLoginDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::LAST_LOGIN_LIMIT));
-                $profileIDs = $jprofileContact->getPromotionalMailerAccountsOnce($activateDate,$lastLoginDate,$totalScript,$currentScript,10,5);
-                $profileIdsNoContacts = $jprofileContact->getPromotionalMailerAccountNoContactOnce($activateDate,$lastLoginDate,$totalScript,$currentScript,10,5);
+                $profileIDs = $jprofileContact->getPromotionalMailerAccountsOnce($activateDate,$lastLoginDate,$totalScript,$currentScript);
+                $profileIdsNoContacts = $jprofileContact->getPromotionalMailerAccountNoContactOnce($activateDate,$lastLoginDate,$totalScript,$currentScript);
             }
 
             if ( is_array($profileIDs) && is_array($profileIdsNoContacts))
