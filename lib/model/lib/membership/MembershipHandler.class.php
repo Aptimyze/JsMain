@@ -2066,9 +2066,15 @@ class MembershipHandler
     }
     
 
-    public function cancelTransaction($params){
-        $negTransactionObj = new billing_NEGATIVE_TRANSACTIONS();
-        $negTransactionObj->insertRecord($params);
+    public function negativeTransaction($params){
+        foreach($params as $key => $val){
+            $paramsStr.= "$key, ";
+            $valuesStr.= "'$val', ";
+        }
+        $paramsStr = rtrim($paramsStr,", ");
+        $valuesStr = rtrim($valuesStr,", ");
+        $negTransactionObj = new billing_NEGATIVE_PAYMENT_DETAIL();
+        $negTransactionObj->insertRecord($paramsStr,$valuesStr);
     }
 
     public function addUserForDollarPayment($profileid){

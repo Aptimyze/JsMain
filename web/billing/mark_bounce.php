@@ -171,16 +171,13 @@ if(isset($data))
 		mysql_query_decide($sql) or die(mysql_error_js());
 
         //**START - Entry for negative transactions
-        $negativeParams["RECEIPTID"] = $receiptid;
-        $negativeParams["BILLID"] = $billid;
-        $negativeParams["PROFILEID"] = $profileid;
-        $negativeParams["AMOUNT"] = $amt;
-        $negativeParams["TYPE"] = $type;
-        $negativeParams["CANCEL_TYPE"] = "BOUNCE";
-
+        $payDetObj = new BILLING_PAYMENT_DETAIL();
+        $payDetData = $payDetObj->fetchAllDataForReceiptId($receiptid);
+		$payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
+        
         $obj = new MembershipHandler();
-        $obj->cancelTransaction($negativeParams);
-        unset($negativeParams, $obj);
+        $obj->negativeTransaction($payDetData);
+        unset($payDetObj, $payDetData, $obj);
         //**END - Entry for negative transactions
         
 		bounced_mail($profileid,"C");

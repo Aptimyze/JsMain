@@ -297,19 +297,20 @@ if(authenticated($cid))
 			mysql_query_decide($sql) or logError_sums($sql,1);
 			
 			$membershipObj->startServiceBackend($membership_details);
-			$membershipObj->generateReceipt(); 
+			$membershipObj->generateReceipt();
+            
+            //**START - Entry for negative transactions
             if($val=="refund"){
-                $negativeParams["RECEIPTID"] = $membershipObj->getReceiptid();
-                $negativeParams["BILLID"] = $billid;
-                $negativeParams["PROFILEID"] = $profileid;
-                $negativeParams["AMOUNT"] = $amount;
-                $negativeParams["TYPE"] = $membershipObj->getCurtype();
-                $negativeParams["CANCEL_TYPE"] = "REFUND";
+                $payDetObj = new BILLING_PAYMENT_DETAIL();
+                $payDetData = $payDetObj->fetchAllDataForReceiptId($membershipObj->getReceiptid());
+                $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
 
-                $memHandlerObj = new MembershipHandler();
-                $memHandlerObj->cancelTransaction($negativeParams);
-                unset($memHandlerObj, $negativeParams);
+                $obj = new MembershipHandler();
+                $obj->negativeTransaction($payDetData);
+                unset($payDetObj, $payDetData, $obj);
             }
+            //**END - Entry for negative transactions
+            
 			$smarty->display("refund_paypart.htm");
 		}
 		else
