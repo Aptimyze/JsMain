@@ -1677,7 +1677,7 @@ SQL;
      *  //Function to log Select Query Count
      */
     private function logSelectCount()
-    {
+    {return;
         $key = 'selCount_'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
@@ -1689,7 +1689,7 @@ SQL;
      *  //Function to log Select Query Count
      */
     private function logGetArrayCount()
-    {
+    {return;
         $key = 'getArrayCount_'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 

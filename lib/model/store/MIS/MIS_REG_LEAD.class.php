@@ -115,6 +115,8 @@ class MIS_REG_LEAD extends TABLE
                 {
                         $sql = "REPLACE INTO MIS.REG_LEAD (EMAIL,RELATION,GENDER,DTOFBIRTH,ENTRY_DT,INCOMPLETE,MTONGUE,SOURCE,ISD,MOBILE,IPADD) VALUES (:EMAIL,:RELATION,:GENDER,:DOB,:DATE,'Y',:MTONGUE,:SOURCE,:ISD,:MOB,:IP)";
                         $res = $this->db->prepare($sql);
+			if($paramArr[SOURCE]=='')
+				$paramArr[SOURCE]='unknown';
                         $res->bindValue(":EMAIL", $paramArr[EMAIL], PDO::PARAM_STR);
                         $res->bindValue(":RELATION", $paramArr[RELATIONSHIP], PDO::PARAM_STR);
                         $res->bindValue(":GENDER", $paramArr[GENDER], PDO::PARAM_STR);
@@ -124,7 +126,7 @@ class MIS_REG_LEAD extends TABLE
                         $res->bindValue(":SOURCE", $paramArr[SOURCE], PDO::PARAM_STR);
                         $res->bindValue(":ISD", $paramArr[ISD], PDO::PARAM_STR);
                         $res->bindValue(":MOB", $paramArr[PHONE_MOB], PDO::PARAM_STR);
-						$res->bindValue(":IP", $ip, PDO::PARAM_STR);
+			$res->bindValue(":IP", $ip, PDO::PARAM_STR);
                         $res->execute();
                         return($this->db->lastInsertId());
                         

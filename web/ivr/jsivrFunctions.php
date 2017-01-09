@@ -1122,6 +1122,7 @@ function getIsdInFormat($isd)
 }
 
 function deleteCachedJprofile_Contact($profileid){
+  return;
   $memObject=JsMemcache::getInstance();
   $memObject->delete("JPROFILE_CONTACT_".$profileid);
 }

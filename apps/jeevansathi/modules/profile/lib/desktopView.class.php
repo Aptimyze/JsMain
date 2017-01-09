@@ -935,6 +935,10 @@ class desktopView extends DetailedViewApi
     
     //Email
     $this->m_arrOut['my_email'] = $objProfile->getEMAIL();
+    $this->m_arrOut['email_status'] = "Verify";
+      if($objProfile->getVERIFY_EMAIL() == "Y"){
+        $this->m_arrOut['email_status'] = "Verified";
+      }
     //alternate Email
     $this->m_arrOut['my_alt_email'] = $objProfile->getExtendedContacts("onlyValues")["ALT_EMAIL"];
     $this->m_arrOut['alt_email_status'] = "Verify";

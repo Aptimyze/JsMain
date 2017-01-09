@@ -33,7 +33,10 @@ $('body').on('click', '.searchNavigation', function()
 		$("div.loaderBottomDiv").addClass("initialLoader fullwid").css("margin-top",height+"px");
 	}
 	$('body').css("background","#b1b1b1");
-        
+    if ( firstResponse.searchid == 23 && firstResponse.total != "0")
+    {
+    	$("#interestExpiringMessage").removeClass('dispnone');
+    }
         
 //        onBackBtnSRP = function()
 //        { 
@@ -107,7 +110,6 @@ function triggerLoader(type,loadPageToLoadId,idToLoad)
 	var triggerPoint = $(document).height() - ($(window).scrollTop() + $(window).height());
 	if(!isLoading)
 	{
-		
 		if(loadPageToLoadId)
 		{			
 			loadsNextResult(loadPageToLoadId,idToLoad);
@@ -228,6 +230,8 @@ function tupleStructureViewSimilar(profilechecksum,count,idd)
 { 
         if(typeof contactTracking == 'undefined')
 		contactTracking="&stype="+stypeKey;
+
+		
 		
         var tupleStructure = 
 	'<div class="tupleOuterDiv searchNavigation bg4 padsp1 bbtsp1" tupleNo="idd'+idd+'"  id="{tupleOuterDiv}">\
@@ -272,7 +276,16 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 		
 	if(firstResponse.infotype != 'VISITORS')
             contactTracking="&stype="+tupleStype;
+    if ( firstResponse.infotype == "INTEREST_ARCHIVED")
+	{
+		contactTracking += "&"+firstResponse.tracking;
+	}
 			
+    if ( firstResponse.infotype == "INTEREST_EXPIRING" || firstResponse.infotype == "INTEREST_RECEIVED")
+	{
+		contactTracking += "&"+firstResponse.tracking;
+	}
+
 	//console.log(contactTracking);
 		if(totalNoOfResults=='')
 		{
@@ -788,6 +801,7 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 	}
 	else
   $("#iddf1").css("margin-top",$("#searchHeader").height()+"px");
+ 	
   if(nextAvail!='false')
 	{ 	
 		
@@ -806,6 +820,10 @@ function dataForSearchTuple(response,forcePage,idToJump,ifPrePend,searchTuple){
 		}
 	}
 	else{
+		if ( response.archivedInterestLinkAtEnd )
+		{
+			bottomErrorMsg('<a href="/profile/contacts_made_received.php?page=aeoi&filter=R" class="color2 txtc">'+response.archivedInterestLinkAtEnd+'</a>','','')
+		}
 		noScrollingAction=1;
 		reachedEnd=1;
 		$("div.loaderBottomDiv").remove();
@@ -1031,7 +1049,17 @@ function addTupleToPages(tuplesOfOnePage,arr1,ifPrepend){
 				var pageAct = parseInt($("div.tupleOuterDiv").last().attr("id").replace(/[^-\d\.]/g, ''))+1;
 				pageAct = "idd"+pageAct;
 				var sbPar = removeNull(firstResponse.searchBasedParam);
-				var newAction = "/search/perform/?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				/*
+					Added this check for contacts section more listing.
+				 */
+				if ( contactCenter == 1 )
+				{
+					var newAction = "/profile/contacts_made_received.php?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				}
+				else
+				{
+					var newAction = "/search/perform/?searchBasedParam="+sbPar+"&searchId="+firstResponse.searchid+"&page="+pageAct+"&currentPage=1";
+				}
 				bottomErrorMsg('<a href="'+newAction+'" class="color2 txtc">Load More Profiles.</a>','','');
 			}
 		}
@@ -1076,7 +1104,11 @@ function forceJumpToPage(idToJump){
 				var top = $('#idd'+idToJump).offset().top;
 			else
 				var top = $('#iddf1').offset().top;
-			$("html, body").scrollTop(top);		
+
+			if ( idToJump != 1 )
+			{
+				$("html, body").scrollTop(top);		
+			}
 			loadNextImages();
 		},timedOut);
 	}

@@ -713,11 +713,8 @@ class BILLING_PURCHASES extends TABLE
     {
         try
         {
-            if (is_array($profileid)) {
-                $profileid = implode(",", $profileid);
-            }
             if (!empty($profileid)) {
-                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND PROFILEID IN ($profileid) GROUP BY PROFILEID ORDER BY ENTRY_DT DESC";
+                $sql  = "SELECT * from billing.PURCHASES WHERE STATUS='DONE' AND MEMBERSHIP='Y' AND PROFILEID IN ($profileid) ORDER BY ENTRY_DT DESC LIMIT 1";
                 $prep = $this->db->prepare($sql);
                 $prep->execute();
                 while ($result  = $prep->fetch(PDO::FETCH_ASSOC)) {

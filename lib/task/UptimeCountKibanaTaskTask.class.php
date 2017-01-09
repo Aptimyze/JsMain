@@ -31,8 +31,10 @@ EOF;
 		$indexElkServer = '10.10.18.66';
 		$indexElkPort = '9200';
 		$pushIndexName = 'uptime';
+		$appIndexName = 'filebeat-*';
 		$date = date('Y-m-d', strtotime("-$day day"));
-		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
+		$auraUrl = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
+		$elkAppUrl = $indexElkServer.':'.$indexElkPort.'/'.$appIndexName.'/'.$query;
 		$rcode200 = "200";
 		$rcode500 = "500";
 		// Calculates the aggregated sum of counts of Rcodes
@@ -53,17 +55,42 @@ EOF;
 				]
 			];
 
+		// Calculates 500 counts from APP logs
+		$params2 = [
+			"query"=> ["match" => ["logType"=>"Error"]],
+			"aggs"=> ["filtered"=> [ "filter"=> [ "bool"=> ["must"=> [[
+			          "range"=> [
+			            "@timestamp"=> [
+			              "gt"=> "now-".($day*$interval)."h",
+			              "lt"=> "now-".(($day-1)*$interval)."h",]
+			          ]]]]
+			],
+			"aggs"=> ["modules"=>["terms"=> [ 
+				"field" => "moduleName" ,  "size" => 1000 ]]]]]
+		];
 		// send curl request
-		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
-		if($response)
+		$AuraResponse =  CommonUtility::sendCurlPostRequest($auraUrl, json_encode($params), $timeout);
+		$ElkResponse =  CommonUtility::sendCurlPostRequest($elkAppUrl, json_encode($params2), $timeout);
+
+		if($AuraResponse && $ElkResponse)
 		{
-			$arrResponse = json_decode($response, true);
+			$arrResponse = json_decode($AuraResponse, true);
 			$arrModules = array();
 			foreach($arrResponse['aggregations']['2']['buckets'] as $result)
 			{
 				// get the aggregated value of sum of counts
 				$arrModules[$result['key']] = $result['1']['value'];
 			}
+
+			$arrResponse = json_decode($ElkResponse, true);
+			$arrRcode = array();
+			foreach($arrResponse['aggregations']['filtered']['modules']['buckets'] as $result)
+			{
+				// get the aggregated value of counts
+				$arrRcode[$result['key']] = $result['doc_count'];
+			}
+			$arrModules[$rcode200] -= $arrRcode[$rcode500];
+			$arrModules[$rcode500] += $arrRcode[$rcode500];
 			$ratio = ($arrModules[$rcode500]*100)/($arrModules[$rcode500]+$arrModules[$rcode200]);
 			$count = array(
 					'Date' => $date,
@@ -75,6 +102,11 @@ EOF;
 			$count = json_encode($count);
 			$ObjectId = time();
 			exec("curl -XPOST '$indexElkServer:$indexElkPort/$pushIndexName/json/$ObjectId' -d'$count'".' 2>&1');
+		}
+		else
+		{
+			// Uptime count not pushed
+			die;
 		}
 	}
 }

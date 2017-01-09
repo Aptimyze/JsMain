@@ -1,11 +1,7 @@
 <?php
 
 class matchAlertMailerDataTracking
-{
-	private	$limit = 5000;
-    private $offset = 0;
-    private	$incrementValue = 5000;
-	
+{	
 	//This function is used to insert data for count of profiles based on logic level
 	public function insertCountDataByLogicLevel($countByLogicArr,$date)
 	{			
@@ -47,33 +43,15 @@ class matchAlertMailerDataTracking
 		unset($matchAlertsToBeSentObj);
     }
 
-    public function insertTotalCountGroupedByLogicAndReceiver($distinctIdZeroArr,$date)        
+    public function insertTotalCountGroupedByLogicAndReceiver($date)        
     {       	
     	$logTempObj = new matchalerts_LOG_TEMP();
-    	while(1)
-    	{
-    		$totalCountByLogicReceiver = $logTempObj->getTotalCountGroupedByLogicAndReceiver($this->limit,$this->offset);            		
-    		if(count($totalCountByLogicReceiver) == 0)
-    		{    			
-    			break;
-    		}
-    		
-    		foreach($totalCountByLogicReceiver as $key=>$val)
-    		{
-    		
-    			if($val['RECEIVER'] && in_array($val['RECEIVER'],$distinctIdZeroArr))
-    			{
-    				unset($distinctIdZeroArr[$val['RECEIVER']]);
-    			}
-    			$totalCountArr[$val['TOTALCOUNT']]++;
-    		}
-
-    		$this->offset+=$this->incrementValue;
-    	}
-    	
-    	$totalCountArr[0]= count($distinctIdZeroArr);    	
+    	$totalCountByLogicReceiver = $logTempObj->getTotalCountGroupedByLogicAndReceiver();    	  	
     	$totalCountObj = new MATCHALERT_TRACKING_MATCH_ALERT_DATA_BY_LOGIC_RECOMMEND_TOTAL('newjs_master');
-		$rowCount = $totalCountObj->insertTotalCountForRecommedByDate($totalCountArr,$date);
+		$rowCount = $totalCountObj->insertTotalCountForRecommedByDate($totalCountByLogicReceiver,$date);
+		$lowTrendsObj = new matchalerts_LowTrendsMatchalertsCheck();
+		$zeroCountArr = $lowTrendsObj->getZeroCountProfiles();
+		$rowCount = $totalCountObj->insertTotalCountForRecommedByDate($zeroCountArr,$date);
 		if($rowCount == 0)
 		{
 			$this->sendSMS(MatchAlertDataLoggingEnums::$messageByLogicRecommendTotal);

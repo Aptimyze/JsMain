@@ -8,5 +8,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KC9PHJ');
 dataLayer.push({'sourcegroup' : "~$groupname`"});
 dataLayer.push({'sourceid' : "~$sourcename`"});
+dataLayer.push({'age' : "~$age`"});
+dataLayer.push({'mtongue' : "~$mtongue`"});
+dataLayer.push({'city' : "~$city`"});
 </script>
 <!-- End Google Tag Manager -->
