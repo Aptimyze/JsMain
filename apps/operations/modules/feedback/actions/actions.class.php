@@ -84,8 +84,86 @@ class feedbackActions extends sfActions
                 
 	}
 }
+
+
+
+  public function executeReportInvalidContactsQC(sfWebRequest $request)
+  {
+      $today=date("Y-m-d");
+      list($todYear,$todMonth,$todDay)=explode("-",$today);
+      $k=-5;
+      while($k<=0)
+      {
+        $yearArray[]=$todYear+$k;
+        $k++;
+      }
+      $monthArray=array('01'=>'Jan','02'=>'Feb','03'=>'Mar','04'=>'Apr','05'=>'May','06'=>'Jun','07'=>'Jul','08'=>'Aug','09'=>'Sep','10'=>'Oct','11'=>'Nov','12'=>'Dec');
+      $this->typearr=$typearr;
+      $this->yearArray = $yearArray;
+      $this->monthArray = $monthArray;
+      $this->todYear = $todYear;
+      $this->todMonth = $todMonth;
+      $this->setTemplate('reportInvalidContactsQC');
+
+
+
+}
+
+  public function executeReportInvalidContactsQCLog(sfWebRequest $request)
+  {
+
+      $reportInvalidOb = new JSADMIN_REPORT_INVALID_PHONE();
+      $month = $request->getParameter('month');
+      $year = $request->getParameter('year');
+      $date = new DateTime();
+      $date->setDate ( $year , $month , 1 );
+      $endDate = new DateTime();
+      $endDate->setDate ( $year , ($month+1) , 1 );
+      $endDate->modify('-1 day');
+
+      $opsUserArray = (new jsadmin_OPS_PHONE_VERIFIED_LOG())->getOPSUserProcessedCount($date->format('Y-m-d'),$endDate->format('Y-m-d'));
+      foreach ($opsUserArray as $key => $value) {
+        # code...
+        $tempDate =date("d",strtotime($value['DT']));
+        $OPSArray[$value['OPS_USERID']][$tempDate][$value['PHONE_STATUS']] = $value['CNT']; 
+        $totalArray[intval($tempDate)][$value['PHONE_STATUS']]+= $value['CNT'];
+      }
+      $i=0;
+
+      foreach ($OPSArray as $key => $value) {
+        # code...
+        $newOPSArray[$i]['user'] = $key;
+        foreach ($value as $key2 => $value2) {
+              $newOPSArray[$i][intval($key2)] =  array('B'=>$value2['B'],'N'=>$value2['N']); 
+          # code...
+        }
+        $i++;
+      }
+      $date->modify('-1 day');
+      $reportArray = $reportInvalidOb->getTotalReportInvalidCount($date->format('Y-m-d'),$endDate->format('Y-m-d'));
+      foreach ($reportArray as $key => $value) {
+        $tempDate = strtotime("+1 day", strtotime($value['DT']));
+        $newReportArray[intval(date("d", $tempDate))] = $value['CNT'];
+        # code...
+      }
+      $resultArr['INVALID_REPORT']=$newReportArray;
+      $resultArr['OPS']=$newOPSArray;
+      $resultArr['TOTALARRAY']=$totalArray;
+
+      ob_end_clean();
+      if(sizeof($resultArr) == 0 )
+          die;
+      echo json_encode($resultArr);
+      return sfView::NONE;
+      die;
+
+  }
+
   public function executeReportInvalidLog(sfWebRequest $request)
   {
+      $reportInvalidOb = new JSADMIN_REPORT_INVALID_PHONE();
+      $reportArray = $reportInvalidOb->getReportInvalidLog($startDate,$endDate);
+
       $startDate=$request->getParameter('RAStartDate');
       $endDate=$request->getParameter('RAEndDate');
       $resultArr=(new feedbackReports())->getReportInvalidLog($startDate,$endDate);
@@ -99,6 +177,12 @@ class feedbackActions extends sfActions
   }
 
 
+public function executeReportAbuseForUser(sfWebRequest $request)
+{
+  $this->linkToInterface = JsConstants::$siteUrl."/operations.php/feedback/reportAbuseForUser"; 
+  $this->crmUser = $this->user;
+  $this->setTemplate('reportAbuseForUser');
+}
 
 }
 ?>
