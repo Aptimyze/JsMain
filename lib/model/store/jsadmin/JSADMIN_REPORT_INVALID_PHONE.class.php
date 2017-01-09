@@ -118,7 +118,7 @@ public function updateAsVerified($submittee){
     
     }
 
-        public function getReportInvalidCountMIS($profileId)
+        public function getReportInvalidCountMIS($profileId,$startDate,$endDate)
     {
        try     
         {   
@@ -127,10 +127,11 @@ public function updateAsVerified($submittee){
                         if(!($profileId))
                             throw new jsException("","profileId IS not passed or blank");
 
-                        $sql = 'SELECT count( * ) AS CNT
+                    $sql = 'SELECT count( * ) AS CNT
                         FROM jsadmin.REPORT_INVALID_PHONE
-                        WHERE 
-                         SUBMITTEE ='.$profileId;
+                        WHERE DATE( `SUBMIT_DATE` ) <= DATE("'.$startDate.'")
+                        AND DATE( `SUBMIT_DATE` ) >= DATE( "'.$endDate.'" )
+                        AND SUBMITTEE ='.$profileId;
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
 

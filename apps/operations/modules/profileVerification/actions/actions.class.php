@@ -530,6 +530,7 @@ class profileVerificationActions extends sfActions
                 
         public function executeInappropriateUsersReport(sfWebRequest $request)
   {  
+
       $endDate=$request->getParameter('RAStartDate');
       $resultArr=(new MIS_INAPPROPRIATE_USERS_REPORT())->getReportForADate($endDate,10);
       ob_end_clean();
@@ -537,9 +538,14 @@ class profileVerificationActions extends sfActions
           die;
       $i=0;
 
+         $startDate = date('Y-m-d H:i:s');
+         $date = new DateTime($startDate);
+         $date->sub(new DateInterval('P30D')); //get the date which was 30 days ago
+         $endDate = $date->format('Y-m-d H:i:s');
+
       foreach ($resultArr as $key => $value) {
-        $reportInvalidCount=(new JSADMIN_REPORT_INVALID_PHONE())->getReportInvalidCountMIS($value['PROFILEID']);
-        $reportAbuseCount = (new REPORT_ABUSE_LOG())->getReportAbuseCountMIS($value['PROFILEID']);
+        $reportInvalidCount=(new JSADMIN_REPORT_INVALID_PHONE())->getReportInvalidCountMIS($value['PROFILEID'],$startDate,$endDate);
+        $reportAbuseCount = (new REPORT_ABUSE_LOG())->getReportAbuseCountMIS($value['PROFILEID'],$startDate,$endDate);
         $resultArr[$key]['INVALID_COUNT'] = $reportInvalidCount;
         $resultArr[$key]['ABUSED_COUNT'] = $reportAbuseCount;
       }

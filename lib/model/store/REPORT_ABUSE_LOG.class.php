@@ -90,14 +90,18 @@ class REPORT_ABUSE_LOG extends TABLE
 	}
         
 
-        public function getReportAbuseCountMIS($profileID)
+        public function getReportAbuseCountMIS($profileID,$startDate,$endDate)
 	{
 		try	 	
 		{	
                         if(!($profileID))
                             throw new jsException("","profileID IS not array or blank");
                                                                              
-                        $sql = "SELECT count(*) AS CNT from feedback.REPORT_ABUSE_LOG WHERE REPORTEE =".$profileID; 
+                        $sql = 'SELECT count( DISTINCT(REPORTER)) AS CNT
+                        FROM feedback.REPORT_ABUSE_LOG
+                        WHERE DATE( `DATE` ) <= DATE("'.$startDate.'")
+                        AND DATE( `DATE` ) >= DATE( "'.$endDate.'" )
+                        AND REPORTEE ='.$profileID;
                         $prep = $this->db->prepare($sql);
                         $prep->execute();
 
@@ -116,3 +120,4 @@ class REPORT_ABUSE_LOG extends TABLE
 }
 
 ?>
+
