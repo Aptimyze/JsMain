@@ -2075,6 +2075,11 @@ class MembershipHandler
         $dolBillingUsersObj->removeUserForDol($profileid);
     }
 
+    /*function - deactivateCurrentMainMembership
+    * deactivates currently active main membership of user
+    * @inputs: $params
+    * @outputs: none
+    */
     public function deactivateCurrentMainMembership($params){
         $billingServStatObj = new BILLING_SERVICE_STATUS();
 
@@ -2099,7 +2104,7 @@ class MembershipHandler
 
             //update user's subscription
             $subscription    = $billingServStatObj->getActiveServeFor($params["PROFILEID"]);
-            if (empty($subscription)) {
+            if (empty($subscription)){
                 $subscription = '';
             }
             $jprofileObj        = new JPROFILE();
