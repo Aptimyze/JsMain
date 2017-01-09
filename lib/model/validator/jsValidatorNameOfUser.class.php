@@ -70,7 +70,7 @@ class jsValidatorNameOfUser extends sfValidatorBase
               $name_of_user = str_replace("."," ",$name_of_user);
         $name_of_user = preg_replace("/dr|ms|mr|miss/i", "",$name_of_user);
         $name_of_user = preg_replace("/\,|\'/i", "",$name_of_user);
-        $name_of_user = preg_replace("/\s+/i", " ",$name_of_user).trim();
+        $name_of_user = trim(preg_replace("/\s+/i", " ",$name_of_user));
         if($name_of_user == "")return false;
         $match = preg_match("/^[a-zA-Z]+\s[a-zA-Z]+/i",$name_of_user);
         if($match)
