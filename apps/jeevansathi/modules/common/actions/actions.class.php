@@ -684,13 +684,14 @@ class commonActions extends sfActions
             
         }
         
-        if($layerToShow==15 && $button=='B1'){
+        if($layerToShow==15)
+        {
+            $namePrivacy = $button=='B1' ? 'Y' : 'N';
             
             
-            $nameArr=array('DISPLAY'=>'Y');
+            $nameArr=array('DISPLAY'=>$namePrivacy);
             $name_pdo = new incentive_NAME_OF_USER();
-            $profileid=$loggedInProfile->getPROFILEID();
-            $name_pdo->updateNameInfo($profileid,$nameArr);
+            $name_pdo->updateNameInfo($loginData['PROFILEID'],$nameArr);
             
         }        
                 if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
