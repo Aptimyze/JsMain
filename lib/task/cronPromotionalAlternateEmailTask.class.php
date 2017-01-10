@@ -31,90 +31,33 @@ EOF;
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
 
-        $totalScript = $arguments["totalScript"]; // total no of scripts
-        $currentScript = $arguments["currentScript"]; // current script number
+        $this->totalScript = $arguments["totalScript"]; // total no of scripts
+        $this->currentScript = $arguments["currentScript"]; // current script number
 
-        /**
-         * this variable decides whether code is executed only once or multiple times.
-         * @var int
-         */
-        
-        $isLegacyProfiles = $arguments["isLegacyProfiles"]; // whether mail is to be sent all legacy profiles?
+        $this->isLegacyProfiles = $arguments["isLegacyProfiles"]; // whether mail is to be sent all legacy profiles?
 
-        $profileIDs = array();
-        $profileIdsNoContacts = array();
-        $profileIDs = array();
-        
-        $jprofileContact = new NEWJS_JPROFILE_CONTACT("newjs_slave");
+        $this->activateDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::VERIFY_ACTIVATED_LIMIT));
+        $this->entryDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::ENTRY_DATE_LIMIT));
+        $this->lastLoginDate  = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::LAST_LOGIN_LIMIT));
+        $date = date('Y-m-d');
 
         try 
         {
-            if ( !$isLegacyProfiles )
+            $iterationArr = $this->getIterationArr();  
+            foreach($iterationArr as $x=>$case)
             {
-                $activateDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::VERIFY_ACTIVATED_LIMIT));
-                $entryDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::ENTRY_DATE_LIMIT));
-
-
-                 $i = 0;
-                 do
-                 {
-                   $profileIDs = $jprofileContact->getPromotionalMailerAccountNoContact($activateDate,$entryDate,$totalScript,$currentScript,PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE,$i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE);
-
-                    if ($this->sendPromotionalAlternateEmailProfileIds($profileIDs))
-                    {
-                        $i++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                    $i++;
-                } while (1);
-
-
+                $file = sfConfig::get("sf_upload_dir")."/SearchLogs/altPromo_".$this->totalScript."_".$this->currentScript."_".$case."_".$this->isLegacyProfiles;
+                if(!$this->isLegacyProfiles)
+                    $file.="_".$date;
+                $file.=".txt";
                 $i = 0;
                 do
                 {
-                   $profileIDs = $jprofileContact->getPromotionalMailerAccounts($activateDate,$entryDate,$totalScript,$currentScript,PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE,$i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE);
+                    $profileIDs= $this->getData($case,$file,$i);
 
-                    if ($this->sendPromotionalAlternateEmailProfileIds($profileIDs))
+                    if(is_array($profileIDs))
                     {
-                        $i++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                    $i++;
-                } while (1);
-            }
-            else
-            {
-                $activateDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::VERIFY_ACTIVATED_LIMIT));
-                $lastLoginDate = date('Y-m-d',strtotime(PromotionalAlternateEmailEnums::LAST_LOGIN_LIMIT));
-
-                $i = 0;
-                 do
-                 {
-                   $profileIDs = $jprofileContact->getPromotionalMailerAccountsOnce($activateDate,$lastLoginDate,$totalScript,$currentScript,PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE,$i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE);
-                    if ($this->sendPromotionalAlternateEmailProfileIds($profileIDs))
-                    {
-                        $i++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                    $i++;
-                } while (1);
-
-
-                $i = 0;
-                 do
-                 {
-                   $profileIDs = $jprofileContact->getPromotionalMailerAccountNoContactOnce($activateDate,$lastLoginDate,$totalScript,$currentScript,PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE,$i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE);
-                    if ($this->sendPromotionalAlternateEmailProfileIds($profileIDs))
-                    {
+                        $this->sendPromotionalAlternateEmailProfileIds($profileIDs,$file,$i);
                         $i++;
                     }
                     else
@@ -123,22 +66,67 @@ EOF;
                     }
                 } while (1);
             }
-            
-        } 
-        catch(PDOException $e)
+        }
+        catch(Exception $e)
         {
             throw new jsException($e);
         }
+    }
 
+    public function getIterationArr()
+    {
+        $iterationArr = array(1,2);
+        if ( $this->isLegacyProfiles )
+        {
+            $iterationArr=array(3,4);
+        }
+        return $iterationArr;
+    }
+    public function getData($case,$file,$i)
+    {
+
+		$limit = PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE;
+		$offset = $this->getFileOffset($file,$i);
+        $jprofileContact = new NEWJS_JPROFILE_CONTACT('newjs_slave');
+		switch($case)
+		{
+			case 1:
+                $profileIDs = $jprofileContact->getPromotionalMailerAccountNoContact($this->activateDate,$this->entryDate,$this->totalScript,$this->currentScript,$limit,$offset);
+				break;
+			case 2:
+                $profileIDs = $jprofileContact->getPromotionalMailerAccounts($this->activateDate,$this->entryDate,$this->totalScript,$this->currentScript,$limit,$offset);
+				break;
+			case 3:
+                $profileIDs = $jprofileContact->getPromotionalMailerAccountNoContactOnce($this->activateDate,$this->lastLoginDate,$this->totalScript,$this->currentScript,$limit,$offset);
+				break;
+			case 4:
+                $profileIDs = $jprofileContact->getPromotionalMailerAccountsOnce($this->activateDate,$this->lastLoginDate,$this->totalScript,$this->currentScript,$limit,$offset);
+				break;
+		}
+		if(is_array($profileIDs))
+			return $profileIDs;
+		return false;
         
     }
 
-    public function sendPromotionalAlternateEmailProfileIds($profileIDs)
+    public function getFileOffset($file,$i)
+    {
+        $offset=0;
+        if($i!=0)
+            $offset = $i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE;
+    	elseif($offsetFile = file_get_contents($file))
+    		$offset = $offsetFile;
+    	return (int)$offset;
+    }
+
+    public function sendPromotionalAlternateEmailProfileIds($profileIDs,$file,$i)
     {
         if ( is_array($profileIDs))
         {
             foreach ($profileIDs as $key => $value) {
                 $this->sendPromotionalAlternateEmail($value['PROFILEID']);
+                file_put_contents($file,($i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE) + $key + 1 );
+                var_dump($value['PROFILEID']);
             }
             return true;
         }
