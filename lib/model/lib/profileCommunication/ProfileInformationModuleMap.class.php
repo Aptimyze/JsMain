@@ -282,7 +282,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID,
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
       "KUNAL"=>"1",
 		),
 		);
@@ -497,7 +497,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID,
       "KUNAL"=>"1",
 		),
 		"ACCEPTANCES_RECEIVED"=>Array( 
@@ -909,7 +909,7 @@ self::$ContactCenterMYJS=Array(
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=55",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
       "KUNAL"=>"1",
 		)
 		); 
