@@ -6274,6 +6274,8 @@ $(document).ready(function() {
         history.pushState('', '', newUrl);
     }
 
+    openFieldsOnCal();
+
 });
 
 $(document).mousedown(function (event)
@@ -6499,4 +6501,45 @@ $('.js-previewAlbum').click(function(){
 		$(show).addClass("selected");
 		$("#showText").html(text);
 	}
+
+
+  function openFieldsOnCal()
+  {
+    section = getUrlParameter('section');
+    fieldId = getUrlParameter('fieldId');
+
+    if ( typeof section !== 'undefined' && $("[data-section-id="+section+"]").length )
+    {
+     $("[data-section-id="+section+"]").click();      
+     $('html, body').animate({
+         scrollTop: ($('#section-'+section).offset().top)
+      },500);
+
+     if ( typeof fieldId !== 'undefined' )
+     {
+       var checkExist = setInterval(function() {
+        if ($('#'+fieldId).length) {
+          $("#"+fieldId).focus();
+          clearInterval(checkExist);
+        }
+      }, 100);
+     }
+
+    }
+  }
  
+
+  var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
