@@ -301,13 +301,9 @@ if(authenticated($cid))
             
             //**START - Entry for negative transactions
             if($val=="refund"){
-                $payDetObj = new BILLING_PAYMENT_DETAIL();
-                $payDetData = $payDetObj->fetchAllDataForReceiptId($membershipObj->getReceiptid());
-                $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
-
-                $obj = new MembershipHandler();
-                $obj->negativeTransaction($payDetData);
-                unset($payDetObj, $payDetData, $obj);
+                $memHandlerObject = new MembershipHandler();
+                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())));
+                unset($memHandlerObject);
             }
             //**END - Entry for negative transactions
             

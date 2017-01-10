@@ -32,21 +32,13 @@ if(authenticated($cid))
 		}
 		if($is_error=="0")
 		{
-            //**START of Get the total amount of all Bill Ids for which the transaction is going to be cancelled.
-            $sql_det = "SELECT SUM(AMOUNT) as AMT FROM billing.PAYMENT_DETAIL WHERE BILLID='$billid' AND STATUS = 'DONE'";
-			$res_det = mysql_query_decide($sql_det) or logError_sums($sql_det);
-			$row_det = mysql_fetch_array($res_det);
-			$totalCancelledAmount = $row_det["AMT"];
-            //**END of total amount for cancel transaction
-            
 			$entryby = getuser($cid);
-			$sql_det = "SELECT PROFILEID,BILLID, RECEIPTID, TYPE FROM billing.PAYMENT_DETAIL WHERE BILLID='$billid' ORDER BY RECEIPTID DESC LIMIT 1";
+			$sql_det = "SELECT PROFILEID,BILLID, RECEIPTID FROM billing.PAYMENT_DETAIL WHERE BILLID='$billid' ORDER BY RECEIPTID DESC LIMIT 1";
 			$res_det = mysql_query_decide($sql_det) or logError_sums($sql_det);
 			$row_det = mysql_fetch_array($res_det);
 			$profileid = $row_det["PROFILEID"];
 			$billid = $row_det["BILLID"];
 			$receiptid = $row_det["RECEIPTID"];
-            $type = $row_det["TYPE"];
             
 			$changes = "TRANSACTION CANCELLED \n";
 			$changes .= "REASON :- ".$reason;
@@ -58,6 +50,10 @@ if(authenticated($cid))
 
 			//passing billid, the modified string and "C" indicating that the transaction has been cancelled
 			change_notify_mail($billid, $changes,"C");
+            
+            //Get the Receiptids of STATUS 'DONE' which are going to be marked CANCEL for negative entry
+            $memHandlerObject = new MembershipHandler();
+            $receiptidArr = $memHandlerObject->getReceiptids($billid);
 
 			//set STATUS=CANCEL in PURCHASES table.
 			$reason = addslashes(stripslashes($reason));
@@ -84,17 +80,13 @@ if(authenticated($cid))
 		        $memCacheObject->remove($row_det['PROFILEID'] . "_MEM_SUBSTATUS_ARRAY");
 		    }
             
-            $negativeParams["RECEIPTID"] = $receiptid;
-            $negativeParams["BILLID"] = $billid;
-            $negativeParams["PROFILEID"] = $profileid;
-            $negativeParams["AMOUNT"] = $totalCancelledAmount;
-            $negativeParams["TYPE"] = $type;
-            $negativeParams["CANCEL_TYPE"] = "CANCEL";
             
-            $obj = new MembershipHandler();
-            $obj->cancelTransaction($negativeParams);
-            unset($negativeParams);
-
+            //**START - Entry for negative transactions
+            $memHandlerObject = new MembershipHandler();
+            $memHandlerObject->handleNegativeTransaction($receiptidArr,'CANCEL');
+            unset($memHandlerObject);
+            //**END - Entry for negative transactions
+            
 			$smarty->assign("flag","1");
 			$smarty->display("cancel_transaction.htm");
 		}

@@ -2065,6 +2065,22 @@ class MembershipHandler
         return $discount;
     }
     
+    public function handleNegativeTransaction($receiptidArr,$source=''){
+        if(is_array($receiptidArr)){
+            $payDetObj = new BILLING_PAYMENT_DETAIL();
+            foreach($receiptidArr['RECEIPTIDS'] as $key => $receiptid){
+                $payDetData = $payDetObj->fetchAllDataForReceiptId($receiptid);
+                $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
+                if(!($source == 'CANCEL' && in_array($receiptid, $receiptidArr['REFUND']))){
+                    $payDetData['AMOUNT'] = $payDetData['AMOUNT']*(-1);
+                }
+                $this->negativeTransaction($payDetData);
+                unset($payDetData);
+            }
+            unset($payDetObj);
+        }
+    }
+    
 
     public function negativeTransaction($params){
         foreach($params as $key => $val){
@@ -2086,5 +2102,18 @@ class MembershipHandler
         $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
         $dolBillingUsersObj->removeUserForDol($profileid);
 
+    }
+    
+    public function getReceiptids($billid){
+        $payDetObj = new BILLING_PAYMENT_DETAIL();
+        $data = $payDetObj->getStatusTransactions($billid,array("'DONE'","'REFUND'"));
+        foreach($data as $key => $val){
+            if($val['STATUS'] == 'REFUND'){
+                $result['REFUND'][] = $val['RECEIPTID'];
+            }
+            $result['RECEIPTIDS'][] = $val['RECEIPTID'];
+        }
+        unset($payDetObj,$data);
+        return $result;
     }
 }

@@ -38,13 +38,9 @@ if(isset($data))
 			mysql_query_decide($sql) or die(mysql_error_js());
             
             //**START - Entry for negative transactions
-            $payDetObj = new BILLING_PAYMENT_DETAIL();
-            $payDetData = $payDetObj->fetchAllDataForReceiptId($receiptid);
-            $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
-
-            $obj = new MembershipHandler();
-            $obj->negativeTransaction($payDetData);
-            unset($payDetObj, $payDetData, $obj);
+            $memHandlerObject = new MembershipHandler();
+            $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($receiptid)));
+            unset($memHandlerObject);
             //**END - Entry for negative transactions            
 
 			//$dueamt+=$amt;
