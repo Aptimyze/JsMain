@@ -2089,7 +2089,7 @@ class MembershipHandler
         }
         $paramsStr = rtrim($paramsStr,", ");
         $valuesStr = rtrim($valuesStr,", ");
-        $negTransactionObj = new billing_NEGATIVE_PAYMENT_DETAIL();
+        $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
         $negTransactionObj->insertRecord($paramsStr,$valuesStr);
     }
 
