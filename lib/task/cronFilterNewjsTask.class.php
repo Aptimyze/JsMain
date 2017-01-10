@@ -23,7 +23,7 @@ EOF;
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
 
-        $this->limitFetchProfile = 1000;
+        $this->limitUpdateProfile = 10;
 
         try 
         {
@@ -32,25 +32,28 @@ EOF;
 
             $profileIDs = array();
 
-            $filedArray = array('MSTATUS','RELIGION');
+            $fieldArray = array('MSTATUS','RELIGION');
 
-            foreach ($filedArray as $key => $field) 
+            foreach ($fieldArray as $key => $field) 
             {
-                $i = 0;
-                do
+                $profileIDs = $dbFilterSlave->fetchField($field);
+
+                if ( is_array($profileIDs))
                 {
-                    $profileIDs = $dbFilterSlave->fetchField($field,$this->limitFetchProfile,$i * $this->limitFetchProfile);
-                    
-                    if(is_array($profileIDs))
+                    $chunkedProfileIDs = array_chunk($profileIDs,$this->limitUpdateProfile);
+
+                    if ( is_array($chunkedProfileIDs) )
                     {
-                        $dbFilterMaster->updateField($field,$profileIDs);
-                        $i++;
+                        foreach ($chunkedProfileIDs as $key => $value) {
+                            if ( is_array($value))
+                            {
+                                $dbFilterMaster->updateField($field,$value);
+                            }
+                        }
                     }
-                    else
-                    {
-                        break;
-                    }
-                } while (1);
+
+                }
+
             }
         } 
         catch(Exception $e)

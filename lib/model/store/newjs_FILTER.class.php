@@ -333,7 +333,9 @@ class NEWJS_FILTER extends TABLE{
 		}
 
   		$sql="UPDATE FILTERS SET ".$field." = 'Y' WHERE profileid in ($str)";
+
   		$prep=$this->db->prepare($sql);
+
   		foreach($profileIdArr as $key=>$pid)
   		{
   			$prep->bindValue(":PROFILEID".$key, $pid['PROFILEID'], PDO::PARAM_INT);
