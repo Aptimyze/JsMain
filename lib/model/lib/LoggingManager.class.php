@@ -618,7 +618,7 @@ class LoggingManager
 		// A request should be logged only once.
 		if($this->getLogged())
 		{
-			return ;
+			return false;
 		}
 		// set module name
 		$this->moduleName = $this->getLogModuleName($isSymfony,$Var,$logArray);
