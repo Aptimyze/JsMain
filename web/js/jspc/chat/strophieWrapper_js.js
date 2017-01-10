@@ -819,10 +819,10 @@ strophieWrapper.sendPresence();
                     to: to,
                     type: 'chat',
                     id:messageId
-                    }).cnode(Strophe.xmlElement('msg_type', msg_type)).up().cnode(Strophe.xmlElement('body', message)).up().c('active', {
+                    }).c('msg_type',{xmlns:"http://www.jeevansathi.com/message_type",type:msg_type},msg_type).cnode(Strophe.xmlElement('body', message)).up().c('active', {
                         xmlns: "http://jabber.org/protocol/chatstates"
                 });
-                //console.log(reply);
+                console.log(reply);
                 strophieWrapper.connectionObj.send(reply);
                 if (strophieWrapper.syncMessageForSessions == true) {
                     // Forward the message, so that other connected resources are also aware of it.
