@@ -1138,3 +1138,13 @@ transform:  translateX(100%) rotateY(0deg) !important;
 .mt2{margin-top:2px}
 
 .pad015{padding:0px 15px 15px 15px}
+.pad10p0p {
+padding: 10px 0px
+}
+.mar10p10p0p{
+margin: 5px 10px 5px 0px
+}
+.brdr_new{border: 1px solid #cbc9c9;
+border-radius: 32px;
+}
+.pad5{padding: 5px}

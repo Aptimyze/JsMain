@@ -1,4 +1,4 @@
-var hamHtml="";
+var hamHtml="",slider1,slider2;
 
 (function() {
 	var eHamburger=(function(){
@@ -374,11 +374,29 @@ var hamHtml="";
 			this.topPos=topPos=indh*up;
 			var di="<div style='position:absolute;background:#34495e;top:"+topPos+"px;height:"+indh+"px;width:100%;opacity:.4;padding:10px'></div>";
 			$(id).parent().prepend(di);
-			
-			$(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
+			if($(id).attr("id").split("_")[2] == 1) {
+				slider1 = $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
+			} else {
+				slider2 = $(id).VSlider({"width":"100%","height":hgt,"sliderHeight":indh,"fakeb":down,"faket":up,"ids":ids,"type":type,"who":i-1});
+			}
 				})(ham_i,type);
 			}
-			
+			if($("#TAPNAME_1").html() == "Age") {
+				setTimeout(function(){
+					typeDataArray = [$("#ham_p_lage:checked").val(),$("#ham_p_hage:checked").val()];
+					changeSuggestion("AGE", typeDataArray);
+				},50);	
+			} else if ($("#TAPNAME_1").html() == "Income Rs") {
+				setTimeout(function(){
+					typeDataArray = [$("#ham_p_lrs:checked").prev().html(),$("#ham_p_hrs:checked").prev().html(),"No Income","and above"];
+					changeSuggestion("INCOME",typeDataArray);
+				},50);	
+			} else if($("#TAPNAME_1").html() == "Income $") {
+				setTimeout(function(){
+					typeDataArray = ["No Income","and above",$("#ham_p_lds:checked").prev().html(),$("#ham_p_hds:checked").prev().html()];
+					changeSuggestion("INCOME",typeDataArray);
+				},50);	
+			}
 			BindHamWindow(this);
 			
 				
@@ -595,6 +613,35 @@ var hamHtml="";
 			{
 				this.OutputUpdate(this.type,label,value);	
 			}
+			if($("#suggestBox").length == 0 || $("#suggestBox").attr("suggest-click") == 1) {
+				$("#suggestBox").removeAttr("suggest-click");
+				var typeDataArray = [],type;
+				if($("#TAPNAME_1").html() == "State/City") {
+					type = "CITY";
+				} else if($("#TAPNAME_1").html() == "Sect") {
+					type = "CASTE";
+				} else if($("#TAPNAME_1").html() == "Mother Tongue") {
+					type = "MTONGUE";
+				} else if($("#TAPNAME_1").html() == "Highest Degree") {
+					type = "EDUCATION";
+				}
+				else {
+					type = $("#TAPNAME_1").html().toUpperCase()
+				}
+				if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
+					$("#HAM_OPTION_1 li input:checked").each(function(){
+						typeDataArray.push($(this).val());
+					});
+					changeSuggestion(type,typeDataArray);
+				}
+			} else {
+				if(remove == 0) {
+					$(".suggestOption[value='"+value+"']").addClass("bg7");	
+				} else {
+					$(".suggestOption[value='"+value+"']").removeClass("bg7");	
+				}
+			}
+
 			return value;
 		};
 		eHamburger.prototype.FilterData=function(json)
@@ -1084,6 +1131,27 @@ var hamHtml="";
 				}
 			}
 			searchHamburger(this.type,this.ulOption,this.tapid);
+			var typeDataArray = [],type;
+			if($("#TAPNAME_1").html() == "State/City") {
+				type = "CITY";
+			} else if($("#TAPNAME_1").html() == "Sect") {
+				type = "CASTE";
+			} else if($("#TAPNAME_1").html() == "Mother Tongue") {
+				type = "MTONGUE";
+			} else if($("#TAPNAME_1").html() == "Highest Degree") {
+				type = "EDUCATION";
+			}
+			else {
+				type = $("#TAPNAME_1").html().toUpperCase()
+			}
+			if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
+				$("#HAM_OPTION_1 li input:checked").each(function(){
+					typeDataArray.push($(this).val());
+				});
+				changeSuggestion(type,typeDataArray);
+			} 
+
+
 		}
                 eHamburger.prototype.AppendLoader=function()
                 {
@@ -1176,4 +1244,106 @@ function ExtendData(empty,json1,json2)
         i++;
     });
     return result;
+}
+function changeSuggestion(type, param1) {
+	var obj = {
+                "type": type,
+                "data": param1      
+             },response, str = JSON.stringify(obj).split('"').join('%22'), url = "/api/v1/profile/dppSuggestions?Param=["+str+"]";
+    $.ajax({
+        type: "POST",
+        url: url,
+        cache: false,
+        timeout: 5000,
+        success: function(result) {
+            if(result && result != "" && JSON.parse(result)[0] && JSON.parse(result).responseMessage == "Successful") {
+                response = JSON.parse(JSON.parse(result)[0]);
+                appendSuggestionList(response);
+            } else {
+                ShowTopDownError(["Something went wrong. Please try again after some time."]);
+            }             
+        },
+        error:function(result){
+            ShowTopDownError(["Something went wrong. Please try again after some time."]);
+        }
+     });
+}
+function appendSuggestionList(response) {
+	var obj = response[0];
+    if(obj.type == "AGE") {
+      	$("#suggestBox").remove();
+      	if(obj.data) {
+			$("<div class='pad10p0p brdr13' id='suggestBox'><div class='color14 f14 fontlig'>Suggestions</div></div>").insertBefore($("#HAM_LABEL"));
+			$("#suggestBox").append("<div id='suggest_"+obj.data.LAGE+"_"+obj.data.HAGE+"' class='pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+$($("#HAM_OPTION_1 li[value='"+obj.data.LAGE+"'] div")[0]).html()+"&nbsp;-&nbsp;"+$($("#HAM_OPTION_2 li[value='"+obj.data.HAGE+"'] div")[0]).html()+"</div>"); 			
+	      	$("#suggest_"+obj.data.LAGE+"_"+obj.data.HAGE).off("click").on("click",function(){
+	      		var lage = $(this).attr("id").split("suggest_")[1].split("_")[0],hage = $(this).attr("id").split("_")[2],valLage = $("#HAM_OPTION_1 li[value='"+lage+"']").attr("index"),valHage = $("#HAM_OPTION_2 li[value='"+hage+"']").attr("index"),nTop = $("#HAM_OPTION_1 li[fake=1]").length/2;
+				slider1.gotoSlide(valLage,nTop);
+				slider2.gotoSlide(valHage,nTop);
+				$("#suggestBox").remove();
+      		});	
+      	}
+		
+    } else if(obj.type == "INCOME") {
+    	var lVal = 0,hVal = 0;
+    	$("#suggestBox").remove();
+    	if(obj.data) {
+			$("<div class='pad10p0p brdr13' id='suggestBox'><div class='color14 f14 fontlig'>Suggestions</div></div>").insertBefore($("#HAM_LABEL"));
+			if ($("#TAPNAME_1").html() == "Income Rs") {
+				
+				$(".hpad5").each(function(){
+					if($($(this).children()[0]).html() == obj.data.LRS) {
+						lVal = $(this).attr("value");
+					} else if($($(this).children()[0]).html() == obj.data.HRS) {
+						hVal = $(this).attr("value");
+					}
+				});
+				$("#suggestBox").append("<div id='suggest_"+lVal+"_"+hVal+"' class='pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+obj.data.LRS+"&nbsp;-&nbsp;"+obj.data.HRS+"</div>"); 			
+			} else if ($("#TAPNAME_1").html() == "Income $") {
+				$(".hpad5").each(function(){
+					if($($(this).children()[0]).html() == obj.data.LDS) {
+						lVal = $(this).attr("value");
+					} else if($($(this).children()[0]).html() == obj.data.HDS) {
+						hVal = $(this).attr("value");
+					}
+				});
+				$("#suggestBox").append("<div id='suggest_"+lVal+"_"+hVal+"' class='pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+obj.data.LDS+"&nbsp;-&nbsp;"+obj.data.HDS+"</div>"); 			
+			}
+			$("#suggest_"+lVal+"_"+hVal).off("click").on("click",function(){
+				var lValue = $(this).attr("id").split("suggest_")[1].split("_")[0],hValue = $(this).attr("id").split("_")[2],indexLVal = $("#HAM_OPTION_1 li[value='"+lValue+"']").attr("index"),indexHVal = $("#HAM_OPTION_2 li[value='"+hValue+"']").attr("index"),nTop = $("#HAM_OPTION_1 li[fake=1]").length/2;
+				slider1.gotoSlide(indexLVal,nTop);
+				slider2.gotoSlide(indexHVal,nTop);
+				$("#suggestBox").remove();
+			});
+		}
+    } else{
+		var dataPresent,clickVal;
+		if(obj.data && Object.keys(obj.data).length != 0) {
+			$.each(Object.keys(obj.data), function(index, elem) {
+			 	dataPresent = false;
+			 	if($("#HAM_OPTION_1 li[value='"+elem+"']")){
+			 		if($("#HAM_OPTION_1 li[value='"+elem+"'] input").is(":checked")) {
+			 			dataPresent = true;
+			 		}
+			 		$(".suggestOption").each(function(){
+			 			if($(this).attr("value") == elem) {
+			 				dataPresent = true;
+			 			}
+			 		});
+			 		if(dataPresent == false) {
+			 			if($("#suggestBox").length == 0)
+			 				$("<div class='pad10p0p brdr13' id='suggestBox'><div class='color14 f14 fontlig'>Suggestions</div></div>").insertBefore($(".hpad5")[0]);
+			 			if($("#HAM_OPTION_1 li[value='"+elem+"']").length != 0) {
+				 			$("#suggestBox").append("<div style='width: 100px;overflow: hidden;height: 27px;text-overflow: ellipsis;position: relative;white-space: nowrap;' value='"+elem+"' class='suggestOption pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+$($("#HAM_OPTION_1 li[value='"+elem+"'] div")[0]).html()+"</div>");
+				 			$(".suggestOption[value='"+elem+"']").off("click").on("click", function(){
+				 				clickVal = $(this).attr("value");
+				 				$(this).toggleClass("bg7");
+				 				$("#suggestBox").attr("suggest-click",1);
+				 				$(".hpad5[value='"+clickVal+"']").click();
+				 			});
+			 			}
+			 		}
+			 	}
+			 });
+		}
+	}
 }
