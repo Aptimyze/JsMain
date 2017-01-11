@@ -21,7 +21,7 @@ class ConsumerKibanaAlertTask extends sfBaseTask
 The [ConsumerKibanaAlert|INFO] task does things.
 Call it with:
 
-	[php symfony ConsumerKibanaAlert|INFO]
+	[php symfony Alerter:ConsumerKibanaAlert|INFO]
 EOF;
 	}
 
@@ -42,7 +42,7 @@ EOF;
 		$fromInt = date('H:i:s',strtotime($intervalString));
 		$threshold = 100;
 		$timeout = 5000;
-		$dashboard = 'Consumer_new_dashboard';
+		$dashboard = 'ConsumerDashBoard';
 		$msg = '';
 		$noError = 1;
 		$from = "jsissues@jeevansathi.com";
