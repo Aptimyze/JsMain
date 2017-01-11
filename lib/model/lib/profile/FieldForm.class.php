@@ -350,7 +350,7 @@ class FieldForm extends sfForm
                                                         $jprofileEducationArr[UG_DEGREE] =  $jprofileFieldArr["EDU_LEVEL_NEW"];
                                                 
                                                 $jprofileEducationArr[PG_DEGREE] =  '';
-                                        }elseif(in_array($jprofileFieldArr["EDU_LEVEL_NEW"],$degreeGroup["pg"]) || in_array($jprofileFieldArr["EDU_LEVEL_NEW"],$degreeGroup["phd"])){
+                                        }elseif(in_array($jprofileFieldArr["EDU_LEVEL_NEW"],$degreeGroup["pg"])){
                                                 if(!$profileDetailsArray[0]['PG_DEGREE'] || $profileDetailsArray[0]['PG_DEGREE'] = '')
                                                         $jprofileEducationArr[PG_DEGREE] =  $jprofileFieldArr["EDU_LEVEL_NEW"];
                                         }
