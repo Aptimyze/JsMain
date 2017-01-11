@@ -4,7 +4,7 @@ class MIS_INAPPROPRIATE_USERS_REPORT extends TABLE
   public function __construct($dbName="") {
     parent::__construct($dbName="");
   }
-  public function insert($profileid,$totalCount,$rCount,$aCount,$mCount,$uName,$abuseCount,$invalidCount)
+  public function insert($profileid,$totalCount,$rCount,$aCount,$mCount,$uName,$abuseCount =0 ,$invalidCount= 0)
   {
     try {
       $date= date("Y-m-d");
