@@ -6507,22 +6507,34 @@ $('.js-previewAlbum').click(function(){
   {
     section = getUrlParameter('section');
     fieldId = getUrlParameter('fieldId');
+    fieldType = getUrlParameter('fieldType');
 
     if ( typeof section !== 'undefined' && $("[data-section-id="+section+"]").length )
     {
      $("[data-section-id="+section+"]").click();      
-     $('html, body').animate({
-         scrollTop: ($('#section-'+section).offset().top)
-      },500);
 
      if ( typeof fieldId !== 'undefined' )
      {
        var checkExist = setInterval(function() {
         if ($('#'+fieldId).length) {
-          $("#"+fieldId).focus();
+          
+          if ( typeof fieldType !== 'undefined' && fieldType == 'dropdown')
+          {
+            $("#"+fieldId).trigger('mousedown');
+          }
+          else
+          {
+            $("#"+fieldId).focus();
+          }
           clearInterval(checkExist);
         }
       }, 100);
+     }
+     else
+     {
+         $('html, body').animate({
+           scrollTop: ($('#section-'+section).offset().top)
+        },500);
      }
 
     }
