@@ -300,12 +300,22 @@ Class ButtonResponseApi
 		$button = self::buttonMerge($button);
 		return $button;
 	}
-	public function getInitiatedButton()
+	public function getInitiatedButton($androidText = false,$privilageArray="")
 	{
 		if($this->contactObj->getTYPE() == ContactHandler::INITIATED)
 		{
 			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
-			$button["label"]  = "Interest Sent";
+			$button["label"]  = $androidText?"Your Interest has been sent":"Interest Sent";
+			if($androidText && $privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
+			{
+				$responseArray["infobtnlabel"]  = "BECOME A PAID MEMBER";
+				$responseArray["infobtnvalue"]  = "";
+				$responseArray["infobtnaction"] = "MEMBERSHIP";
+				$responseArray["infomsglabel"] = "Only paid members can start the chat";
+			}
+			else{
+				$responseArray["canChat"] = true;
+			}
 		}
 		else if(($this->contactObj->getTYPE() == ContactHandler::NOCONTACT) && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
 		{
@@ -441,6 +451,18 @@ Class ButtonResponseApi
 					$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
 					$responseArray["buttons"] = $button;
 					break;
+				case "CHATACCEPT":
+					$button[]                       = self::getCustomButton("Interest accepted, Continue chat","","","","","");
+					$responseArray["buttons"]       = $button;
+					$responseArray["chatchat"]      = false;
+					break;
+				case "CHATDECLINE":
+					$button[]                       = self::getCustomButton("Interest declined","","","","","");
+					$responseArray["infomsglabel"]  = "Interest declined, you can't chat with this member any more";
+					$responseArray["buttons"]       = $button;
+					break;
+
+
 			}
 		}
 		$finalResponse = self::buttonDetailsMerge($responseArray);
@@ -467,7 +489,7 @@ Class ButtonResponseApi
 	
 	public static function buttonDetailsMerge($buttonDetails)
 	{
-		$responseSet["buttons"]       = null;
+		$responseSet["buttons"]       = array();
 		$responseSet["button"]       = null;
 		$responseSet["infomsgiconid"] = null;
 		$responseSet["infomsglabel"]  = null;

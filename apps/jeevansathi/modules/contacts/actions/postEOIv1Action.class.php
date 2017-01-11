@@ -95,8 +95,11 @@ class postEOIv1Action extends sfAction
 		
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
-		
-		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		if($this->getParameter($request,"page_source") == "chat" && $this->getParameter($request,"channel") == "A")
+		{
+			$androidText = true;
+		}
+		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 		if($this->contactEngineObj->messageId)
 		{
 			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
