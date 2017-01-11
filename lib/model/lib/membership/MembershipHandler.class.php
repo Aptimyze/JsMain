@@ -2107,9 +2107,7 @@ class MembershipHandler
             if (empty($subscription)){
                 $subscription = '';
             }
-            $jprofileObj        = new JPROFILE();
-            $jprofileObj->edit(array('SUBSCRIPTION' => $subscription), $params["PROFILEID"], 'PROFILEID');
-            unset($jprofileObj);
+            $this->jprofileObj->edit(array('SUBSCRIPTION' => $subscription), $params["PROFILEID"], 'PROFILEID');
 
             //clear the user membership memcache
             $memCacheObject = JsMemcache::getInstance();

@@ -2043,6 +2043,7 @@ class MembershipAPIResponseHandler {
         if ($AuthDesc=="Y") {
             $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
             if (!$dup && $ret) {
+                error_log("ankita in startServiceOrder generateAppleOrderProcessingResponse");
                 $membershipObj->startServiceOrder($Order_Id);
                 $output = array('orderId' => $Order_Id,
                     'processingStatus' => $status,
@@ -2266,6 +2267,7 @@ class MembershipAPIResponseHandler {
             $dup = false;
             $ret = $memObj->updtOrder($Order_Id, $dup, "Y");
             if (!$dup && $ret) {
+                error_log("ankita in startServiceOrder doTestBilling");
                 $memObj->startServiceOrder($Order_Id);
                 $output = array('orderId' => $Order_Id,
                     'processingStatus' => 'successful',

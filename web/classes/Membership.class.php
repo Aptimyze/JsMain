@@ -196,7 +196,8 @@ class Membership
         return $ret;
     }
     
-    function startServiceOrder($orderid, $skipBill = false) {
+    function startServiceOrder($orderid, $skipBill = false,$mainMemUpgrade=false) {
+        error_log("ankita inside function startServiceOrder");
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
@@ -279,8 +280,8 @@ class Membership
         $this->source = "ONLINE";
         $this->expiry_dt = $myrow["EXPIRY_DT"];
         $this->set_activate = $myrow["SET_ACTIVATE"];
-        
-        $this->makePaid($skipBill);
+        error_log("ankita-".$mainMemUpgrade);
+        $this->makePaid($skipBill,$mainMemUpgrade);
 
         include_once (JsConstants::$docRoot . "/profile/suspected_ip.php");
         $suspected_check = doubtfull_ip("$ip");
@@ -587,12 +588,19 @@ class Membership
         $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
     }
     
-    function makePaid($skipBill = false) {
+    function makePaid($skipBill = false,$mainMemUpgrade=false) {
+        error_log("ankita in makePaid payu_return-".$mainMemUpgrade);
         $userObjTemp = $this->getTempUserObj();
         if($skipBill == true){
             $this->setGenerateBillParams();
         } else {
             $this->generateBill();
+        }
+        if($mainMemUpgrade == true){
+              $memHandlerObj = new MembershipHandler();
+              error_log("calling ankita deactivateCurrentMainMembership startServiceOrder".$this->profileid.$this->username);
+              $memHandlerObj->deactivateCurrentMainMembership(array("PROFILEID"=>$this->profileid,"USERNAME"=>$this->username));
+              unset($memHandlerObj);
         }
         $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
