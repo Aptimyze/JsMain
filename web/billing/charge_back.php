@@ -58,7 +58,8 @@ if(isset($data))
 			$sql1 ="INSERT INTO billing.BOUNCED_CHEQUE_HISTORY ( ID , RECEIPTID , PROFILEID , BILLID , STATUS,BOUNCE_DT , REMINDER_DT , ENTRYBY , ENTRY_DT , DISPLAY) VALUES ('', '$receiptid', '$profileid', '$billid', 'CHARGE_BACK', NOW(),DATE_ADD( CURDATE( ) , INTERVAL 2 DAY ), '$user', NOW(), 'Y')";
                         mysql_query_decide($sql1) or die("$sql1".mysql_error_js());
 
-			$cc="payments@jeevansathi.com,rohan.mathur@jeevansathi.com,JSSalesLeads@Infoedge.com,nishant.sharma@naukri.com,services@jeevansathi.com,shyam@naukri.com,jitesh.bhugra@naukri.com";
+			//$cc="payments@jeevansathi.com,rohan.mathur@jeevansathi.com,JSSalesLeads@Infoedge.com,nishant.sharma@naukri.com,services@jeevansathi.com,shyam@naukri.com,jitesh.bhugra@naukri.com";
+            $cc="services@jeevansathi.com,JsSalesLeads@jeevansathi.com,payments@jeevansathi.com";
 
 			// function called to get the template to be sent
 			// first argument is the profileid
