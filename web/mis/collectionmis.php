@@ -21,35 +21,15 @@ if (isset($data) || $JSIndicator) {
     
     $smarty->assign('viewmode', $viewmode);
     
-    if ($vtype == 'Q') {
-        if($qyear >= '2017'){
-            $tableName = "PAYMENT_DETAIL_NEW";
-            $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
-        }
-        else{
-            $tableName = "PAYMENT_DETAIL";
-            $condition = "='DONE'";
-        }
-    } 
-    elseif ($vtype == 'M') {
-        if($myear >= '2017'){
-            $tableName = "PAYMENT_DETAIL_NEW";
-            $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
-        }
-        else{
-            $tableName = "PAYMENT_DETAIL";
-            $condition = "='DONE'";
-        }
-    } 
-    elseif ($vtype == 'D') {
-        if($dyear > '2016'||( $dyear == '2016' && $dmonth >= '02') ){
-            $tableName = "PAYMENT_DETAIL_NEW";
-            $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
-        }
-        else{
-            $tableName = "PAYMENT_DETAIL";
-            $condition = "='DONE'";
-        }
+    if (($vtype == 'Q' && $qyear >= '2017') || 
+        ($vtype == 'M' && $myear >= '2017') || 
+        ($vtype == 'D' && ($dyear > '2017'||( $dyear == '2017' && $dmonth >= '02') ))) {
+        $tableName = "PAYMENT_DETAIL_NEW";
+        $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+    }
+    else{
+        $tableName = "PAYMENT_DETAIL";
+        $condition = "='DONE'";
     }
     
     if ($CMDGo && $viewmode == 'O') {
