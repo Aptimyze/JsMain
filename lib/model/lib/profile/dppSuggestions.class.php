@@ -19,11 +19,15 @@ class dppSuggestions
 			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS;
 		}
 
+		if($type == "CITY")
+		{
+			$valueArr["data"] = $this->getDelhiMumbaiSuggestions($valArr);						
+		}
 		if(is_array($trendsArr))
 		{
 			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 			$trendVal = $this->getTrendsValues($percentileArr);	
-			$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);			
+			$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr,$valueArr);			
 		}
 		if($type == "AGE")
 		{
@@ -51,7 +55,7 @@ class dppSuggestions
 				}
 			}
 										
-		} 		
+		}
 		$valueArr["type"] = $type;
 		return $valueArr;
 	}
@@ -75,9 +79,9 @@ class dppSuggestions
 	}
 
 	//This function takes the trendsArr for each $type and gets the trends data to be sent as apiResponse
-	public function getDppSuggestionsFromTrends($trendsArr=array(),$type,$valArr=array())
+	public function getDppSuggestionsFromTrends($trendsArr=array(),$type,$valArr=array(),$valueArr=array())
 	{
-		$count = 0;
+		$count = count($valueArr["data"]);
 		$delhiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$delhiNCRCities));
 		$mumbaiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$mumbaiRegion));
 		
@@ -449,6 +453,22 @@ class dppSuggestions
 			}
 		}
 		return $valueArr;
+	}
+
+	public function getDelhiMumbaiSuggestions($valArr)
+	{
+		foreach($valArr as $key=>$val)
+		{
+			if(in_array($val,DppAutoSuggestEnum::$delhiNCRCities) && !in_array(TopSearchBandConfig::$ncrLabel,$valueArr["data"]) && !in_array(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valArr))
+			{
+				$arr[DppAutoSuggestEnum::$delhiNCRCitiesStr] = TopSearchBandConfig::$ncrLabel;
+			}
+			if(in_array($val,DppAutoSuggestEnum::$mumbaiRegion) && !in_array(TopSearchBandConfig::$mumbaiRegionLabel,$valueArr["data"])  && !in_array(DppAutoSuggestEnum::$mumbaiRegionStr,$valArr))
+			{
+				$arr[DppAutoSuggestEnum::$mumbaiRegionStr] = TopSearchBandConfig::$mumbaiRegionLabel;
+			}
+		}
+		return $arr;
 	}
 }
 ?>
