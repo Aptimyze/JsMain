@@ -398,26 +398,25 @@ class dppSuggestions
 		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
 		$incomeLevel = $this->getFieldMapLabels("income_level",'',1);
 		$annualIncome = $incomeLevel[$this->income];
-		$incomeArr = explode("- ",$annualIncome);
-
+		$mappedIncome = DppAutoSuggestEnum::$incomeMappingArr[$this->income];
 		if($this->gender == "M")
 		{
-			if(in_array($this->income,DppAutoSuggestEnum::$dollarArr))
+			if(!in_array($annualIncome,DppAutoSuggestEnum::$rupeeIncomeArr))
 			{
 				$key = array_search($valArr["HDS"],$hIncomeDol);				
-				if($this->income > $key && $key!="19")
-				{				
+				if($mappedIncome > $key && $key!="19")
+				{	
 					$valueArr["data"]["LDS"] = $valArr["LDS"];
-					$valueArr["data"]["HDS"] = $hIncomeDol[$this->income];
+					$valueArr["data"]["HDS"] = $hIncomeDol[$mappedIncome];
 				}
 			}
 			else
 			{
-				$key = array_search($valArr["HRS"],$hIncomeRs);
-				if($this->income > $key && $key!="19")
+				$key = array_search($valArr["HRS"],$hIncomeRs);				
+				if($mappedIncome > $key && $key!="19")
 				{
 					$valueArr["data"]["LRS"] = $valArr["LRS"];
-					$valueArr["data"]["HRS"] = $hIncomeRs[$this->income];					
+					$valueArr["data"]["HRS"] = $hIncomeRs[$mappedIncome];					
 				}
 			}		
 		}
