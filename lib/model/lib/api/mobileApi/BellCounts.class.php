@@ -32,7 +32,7 @@ class BellCounts
 			$isApp = MobileCommon::isApp();
 			$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0; 
 
-			if($isApp=="I" ||( $isApp=="A" && $appVersion  && $appVersion<48))
+			if(($isApp=="I" && $appVersion<3.9 )||( $isApp=="A" && $appVersion  && $appVersion<48))
 			{
 				$bellCounts["FILTERED_NEW"] = 0;
 			}	
@@ -97,6 +97,7 @@ class BellCounts
         		$profileObj=LoggedInProfile::getInstance('newjs_master');
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 				$countDetails["AWAITING_RESPONSE_NEW"] = $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
+				$countDetails["INTEREST_EXPIRING"] = $profileMemcacheObj->get("INTEREST_EXPIRING");
 				$countDetails["ACC_ME_NEW"] = $profileMemcacheObj->get("ACC_ME_NEW");
 				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1){
 					$countDetails["MESSAGE_NEW"] = 0;

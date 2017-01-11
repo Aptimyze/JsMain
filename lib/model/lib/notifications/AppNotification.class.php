@@ -467,7 +467,7 @@ public function microtime_float()
 			break;
         case "MATCH_OF_DAY":
             $applicableProfiles=array();
-            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
             $notificationDataPoolObj = new NotificationDataPool();
             $dataAccumulated = $notificationDataPoolObj->getMatchOfDayData($applicableProfiles);
             //print_r($dataAccumulated);
@@ -497,6 +497,8 @@ public function microtime_float()
 				  //$completeNotificationInfo[$counter]['MSG_ID']=time().rand(0,99);
 				  $completeNotificationInfo[$counter]['MSG_ID']=rand(0,99).time().rand(0,99).rand(0,99).rand(0,9);
 				  $completeNotificationInfo[$counter]['OTHER_PROFILE_CHECKSUM'] = JsCommon::createChecksumForProfile($dataPerNotification['OTHER'][0]['PROFILEID']);
+                  
+                  $this->checkNotificationExtension($completeNotificationInfo[$counter]["PHOTO_URL"],$notificationKey,$dataPerNotification['ICON_PROFILEID']);
 				  $counter++;
 			  }
 		  }
@@ -579,7 +581,7 @@ public function microtime_float()
             $mess = $temp["A"]["A"][$count];
         return $mess;
   }   
-  public function getProfileApplicableForNotification($profiles,$notificationKey)
+  public function getProfileApplicableForNotification($profiles,$notificationKey,$className="")
   {
 
 	  unset($applicableProfiles);
@@ -587,7 +589,12 @@ public function microtime_float()
 	  foreach($notifications[$notificationKey] as $k=>$notificationKeyDetails)
 		$timeCriteria = $notificationKeyDetails['TIME_CRITERIA'];
 	  unset($notifications);
-	  $smsTempTableObj = new newjs_SMS_TEMP_TABLE;
+      if($className == "JPROFILE"){
+          $smsTempTableObj = new JPROFILE("crm_slave");
+      }
+      else{
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
+      }
 	  $varArray['PROFILEID']=implode(",",array_filter($profiles));
 	  unset($profiles);
 	  if($timeCriteria!='')
@@ -897,6 +904,31 @@ public function microtime_float()
   	else
   		return false;
   }
-
+  
+  public function checkNotificationExtension($url,$notificationKey,$profileid){
+      $validPicArray = array('P','D','O');
+      if(!in_array($url, $validPicArray)){
+          $validExtensionArr = array("jpg", "jpeg", "png");
+          $imgname = "";
+          $ext = explode(".",$url);
+          $l = end($ext);
+          if(!in_array($l,$validExtensionArr)){
+              /*
+              $to = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com";
+              $cc = "nitishpost@gmail.com";
+              $sub = "Invalid Extension for notification key $notificationKey";
+              $from = "info@jeevansathi.com";
+              $msg = "Url Generated $url for $profileid for $notificationKey";
+              SendMail::send_email($to, '', $sub, $from,$cc);
+              */
+              $date = date('Y-m-d');
+              $msg = "Url:$url, Key:$notificationKey, pid: $profileid\n";
+              file_put_contents(sfConfig::get("sf_upload_dir")."/wrongImageUrlNew".$date.".txt",$msg,FILE_APPEND);
+          }
+      }
+      unset($validPicArray);
+      unset($validExtensionArr);
+      unset($ext);
+  }
 }
 ?>

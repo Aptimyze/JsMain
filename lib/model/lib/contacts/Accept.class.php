@@ -168,12 +168,19 @@ class Accept extends ContactEvent
     try {
       $profileMemcacheServiceViewerObj = new ProfileMemcacheService($this->contactHandler->getViewer());
       $profileMemcacheServiceViewedObj = new ProfileMemcacheService($this->contactHandler->getViewed());
+      $ContactTime = strtotime($this->contactHandler->getContactObj()->getTIME());
+      $time = time();
+      $daysDiff  = floor(($time - $ContactTime)/(3600*24));
       if($currentFlag==ContactHandler::INITIATED)
       {
         $profileMemcacheServiceViewerObj->update("ACC_BY_ME",1);
         $profileMemcacheServiceViewedObj->update("ACC_ME",1);
         $profileMemcacheServiceViewedObj->update("ACC_ME_NEW",1);
         $profileMemcacheServiceViewedObj->update("NOT_REP",-1);
+        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
+        {
+          $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
+        }
         if ($filtered!='Y'){
         $profileMemcacheServiceViewerObj->update("OPEN_CONTACTS",-1);
         $profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE",-1);

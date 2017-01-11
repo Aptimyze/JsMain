@@ -96,20 +96,48 @@ class postEOIv1Action extends sfAction
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
 		
-		$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+		$onlyUnderScreenError = 0; // No errors
+		if($errorArr["UNDERSCREENING"] == 2 && $this->contactEngineObj->getComponent())
+		{
+			$onlyUnderScreenError = 1;
+		}
+		// print_r($onlyUnderScreenError);die;
+		if($onlyUnderScreenError == 1 || $onlyUnderScreenError == 0)
+		{
+			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		}
 		if($this->contactEngineObj->messageId)
 		{
+                        $responseArray["headerthumbnailurl"] = $thumbNail;
+                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                        $responseArray["selfthumbnailurl"] = $ownthumbNail;
+
 			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
-				$responseArray["headerthumbnailurl"] = $thumbNail;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["selfthumbnailurl"] = $ownthumbNail;
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
+                                if($request->getParameter('API_APP_VERSION')>=80)
+                                    $responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
+
 			}
-			if($this->getParameter($request,"page_source") == "VDP")
+                        else
+			{
+					$memHandlerObj = new MembershipHandler();
+					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
+					$MembershipMessage = $data2['hamburger_message']['top']; 
+                                        if($request->getParameter('API_APP_VERSION')>=80)
+                                            $responseArray["errmsglabel"]= "Interest sent. Upgrade to send personalized messages or initiate chat";	
+					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
+					$responseArray["footerbutton"]["value"] = "";
+					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
+					$responseArray["footerbutton"]["text"] = $MembershipMessage;
+				
+			}
+
+                        if($this->getParameter($request,"page_source") == "VDP")
 			{
 				$redirection = "true";
 			}
