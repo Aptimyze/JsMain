@@ -23,7 +23,7 @@ if (isset($data) || $JSIndicator) {
     
     if (($vtype == 'Q' && $qyear >= '2017') || 
         ($vtype == 'M' && $myear >= '2017') || 
-        ($vtype == 'D' && ($dyear > '2017'||( $dyear == '2017' && $dmonth >= '02') ))) {
+        ($vtype == 'D' && ($dyear > '2017'||( $dyear == '2017' && $dmonth >= '04') ))) {
         $tableName = "PAYMENT_DETAIL_NEW";
         $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
     }
