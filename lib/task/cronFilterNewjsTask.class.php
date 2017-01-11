@@ -23,7 +23,7 @@ EOF;
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
 
-        $this->limitUpdateProfile = 10;
+        $this->limitUpdateProfile = 2000;
 
         try 
         {
@@ -37,6 +37,7 @@ EOF;
             foreach ($fieldArray as $key => $field) 
             {
                 $profileIDs = $dbFilterSlave->fetchField($field);
+
 
                 if ( is_array($profileIDs))
                 {

@@ -332,7 +332,7 @@ class NEWJS_FILTER extends TABLE{
 				$str .= ",:PROFILEID".$key;
 		}
 
-  		$sql="UPDATE FILTERS SET ".$field." = 'Y' WHERE profileid in ($str)";
+  		$sql="UPDATE FILTERS SET ".$field." = 'Y' WHERE profileid in ($str) AND ".$field." = ''";
 
   		$prep=$this->db->prepare($sql);
 
