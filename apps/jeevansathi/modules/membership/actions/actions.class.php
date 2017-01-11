@@ -21,7 +21,7 @@ class membershipActions extends sfActions
         $this->redirect('/membership/jspc');
     }
 
-    public function executeMemUpgrade(sfWebRequest $request){
+    /*public function executeMemUpgrade(sfWebRequest $request){
         $profileObj = LoggedInProfile::getInstance('newjs_master');
         $profileid  = $profileObj->getPROFILEID();
         $username = $profileObj->getUSERNAME();
@@ -32,7 +32,7 @@ class membershipActions extends sfActions
         
         //allow user to purchase new main membership
         $this->redirect('/membership/jspc');
-    }
+    }*/
 
     // JSPC
     public function executeJspc(sfWebRequest $request)
