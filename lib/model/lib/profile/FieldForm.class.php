@@ -330,6 +330,7 @@ class FieldForm extends sfForm
 				$jprofileFieldArr['SCREENING']=$screen_flag;
 
 			//Logging array for edit profiles
+                        				$editLogArr=array();
 			
                           if(isset($jprofileFieldArr["EDU_LEVEL_NEW"])){
                                         $degreeGroup = FieldMap::getFieldLabel('degree_grouping_reg','',true);
