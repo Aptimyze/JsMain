@@ -110,8 +110,8 @@ EOF;
                               
                                 $reportInvalidCount=(new JSADMIN_REPORT_INVALID_PHONE())->getReportInvalidCountMIS($value['PROFILEID'],$startDate,$endDate);
                                 $reportAbuseCount = (new REPORT_ABUSE_LOG())->getReportAbuseCountMIS($value['PROFILEID'],$startDate,$endDate);
-                                $tempVal['ABUSE_COUNT'] = $reportInvalidCount;
-                                $tempVal['INVALID_COUNT'] = $reportAbuseCount;
+                                $tempVal['ABUSE_COUNT'] = $reportAbuseCount;
+                                $tempVal['INVALID_COUNT'] = $reportInvalidCount;
                               
 
                                 $this->finalResultsArray[] = $tempVal;
