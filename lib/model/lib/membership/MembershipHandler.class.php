@@ -2116,4 +2116,11 @@ class MembershipHandler
         unset($payDetObj,$data);
         return $result;
     }
+    
+    public function getCancelledDate($billid){
+        $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+        $row = $negTransactionObj->getCancelledBillIdDetails($billid);
+        $dt = $row["ENTRY_DT"];
+        return $dt;
+    }
 }

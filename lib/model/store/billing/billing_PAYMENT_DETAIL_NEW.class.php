@@ -30,4 +30,21 @@ class billing_PAYMENT_DETAIL_NEW extends TABLE{
             throw new jsException($ex);
         }
     }
+    
+    public function getCancelledBillIdDetails($billid){
+        if($billid){
+            try{
+                $sql = "SELECT * from billing.PAYMENT_DETAIL_NEW WHERE BILLID = :BILLID AND STATUS = 'CANCEL' ORDER BY RECEIPTID LIMIT 1";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":BILLID", $billid, PDO::PARAM_INT);
+                $prep->execute();
+                while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+                    $output = $result;
+                }
+                return $output;
+            } catch (Exception $ex) {
+                throw new jsException($ex);
+            }
+        }
+    }
 }
