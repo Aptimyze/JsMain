@@ -42,7 +42,7 @@ if (isset($data) || $JSIndicator) {
         }
     } 
     elseif ($vtype == 'D') {
-        if($dyear >= '2016' && $dmonth >= '02' ){
+        if($dyear > '2016'||( $dyear == '2016' && $dmonth >= '02') ){
             $tableName = "PAYMENT_DETAIL_NEW";
             $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
         }
