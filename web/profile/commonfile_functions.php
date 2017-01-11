@@ -505,7 +505,7 @@ $js_arr[]=array("registration_pg1"     => "3");
 $js_arr[]=array("jsms/contactus/contactus_js"     => "1");
 $js_arr[]=array("jsms/common/sly"      => "2");
 $js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                                        => "57");
-$js_arr[]=array("jspc/myjs/myjs_js"                                                                    => "73");
+$js_arr[]=array("jspc/myjs/myjs_js"                                                                     => "74");
 $js_arr[]=array("jspc/myjs/engBarJs_js"                             => "29");
 $js_arr[]=array("jspc/common/nano"     => "2");
 $js_arr[]=array("jspc/common/commonJspc_js"                                    => "39");
@@ -518,7 +518,7 @@ $js_arr[]=array("jspc/search/scrollBar"    => "1");
 $js_arr[]=array("jspc/common/searchDropdown_js"     => "2");
 $js_arr[]=array("jspc/search/searchTuples"              => "11");
 $js_arr[]=array("jspc/search/jspcSuccessStory_js"    => "1");
-$js_arr[]=array("jspc/inbox/contactCenter"                                   => "34");
+$js_arr[]=array("jspc/inbox/contactCenter"                                    => "35");
 $js_arr[]=array("jspc/common/jqueryRangeSlider"     => "2");
 $js_arr[]=array("jspc/search/inview"   => "1");
 $js_arr[]=array("jspc/photo/photoRequest_js"        => "5");
@@ -623,6 +623,7 @@ $js_arr[]=array("jspc/chat/aes"    => "3");
 $js_arr[]=array("/web/converse"    => "3");
 $js_arr[]=array(" /web/billing/billing_v2"      => "4");
 $js_arr[]=array(" /web/billing/billing"     => "3");
+$js_arr[]=array("reportAbuseForUser_js"        => "6");
 return $js_arr;
 }
 function getJavascript(){
