@@ -112,7 +112,7 @@ class feedbackActions extends sfActions
   public function executeReportInvalidContactsQCLog(sfWebRequest $request)
   {
 
-      $reportInvalidOb = new JSADMIN_REPORT_INVALID_PHONE();
+      $reportInvalidOb = new JSADMIN_REPORT_INVALID_PHONE('newjs_slave');
       $month = $request->getParameter('month');
       $year = $request->getParameter('year');
       $date = new DateTime();
@@ -121,7 +121,7 @@ class feedbackActions extends sfActions
       $endDate->setDate ( $year , ($month+1) , 1 );
       $endDate->modify('-1 day');
 
-      $opsUserArray = (new jsadmin_OPS_PHONE_VERIFIED_LOG())->getOPSUserProcessedCount($date->format('Y-m-d'),$endDate->format('Y-m-d'));
+      $opsUserArray = (new jsadmin_OPS_PHONE_VERIFIED_LOG('newjs_slave'))->getOPSUserProcessedCount($date->format('Y-m-d'),$endDate->format('Y-m-d'));
       foreach ($opsUserArray as $key => $value) {
         # code...
         $tempDate =date("d",strtotime($value['DT']));
@@ -161,7 +161,7 @@ class feedbackActions extends sfActions
 
   public function executeReportInvalidLog(sfWebRequest $request)
   {
-      $reportInvalidOb = new JSADMIN_REPORT_INVALID_PHONE();
+     $reportInvalidOb = new JSADMIN_REPORT_INVALID_PHONE();
       $reportArray = $reportInvalidOb->getReportInvalidLog($startDate,$endDate);
 
       $startDate=$request->getParameter('RAStartDate');
