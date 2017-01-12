@@ -1645,7 +1645,7 @@ function updatePresenceAfterInterval(){
 $(document).ready(function () {
     //console.log("Doc ready");
     var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
-    if(isCurrentJeevansathiTab == undefined){
+    if(isCurrentJeevansathiTab == undefined && showChat == "1"){
         localStorage.setItem("isCurrentJeevansathiTab",1);
     }
   
