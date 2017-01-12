@@ -45,7 +45,6 @@ EOF;
                 { 
                 $data.="\r\n".$value['USERNAME'].','.$value['RCOUNT'].','.$value['MCOUNT'].','.$value['ACOUNT'].','.$value['TCOUNT'].','.$value['ABUSE_COUNT'].','.$value['INVALID_COUNT'];
                 }
-                die;
                 SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Inappropriate Users Summary for $todayDate","noreply@jeevansathi.com",'','',$data,'','inappropriateUsers_'.$todayDate.".csv");
 
   
