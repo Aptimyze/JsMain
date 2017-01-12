@@ -268,7 +268,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
     	{
     		$sql = "select t1.PROFILEID from newjs.JPROFILE as t1
     		inner join newjs.JPROFILE_CONTACT as t2 on t1.PROFILEID = t2.PROFILEID 
-    		WHERE  t1.VERIFY_ACTIVATED_DT between :START_ACTIVATEDATE AND :END_ACTIVATEDATE AND t1.ENTRY_DT > :ENTRYDATE  AND t1.ACTIVATED='Y' AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
+    		WHERE t1.INCOMPLETE='N' AND t1.ACTIVATED='Y' AND t1.activatedKey=1 AND t1.VERIFY_ACTIVATED_DT between :START_ACTIVATEDATE AND :END_ACTIVATEDATE AND t1.ENTRY_DT > :ENTRYDATE  AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT";
 
     		if($limit && $offset==""){
                 $sql = $sql." LIMIT :LIMIT";
@@ -314,7 +314,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
     	try 
     	{
             $sql = "select t1.PROFILEID from newjs.JPROFILE as t1
-            WHERE  t1.VERIFY_ACTIVATED_DT between :START_ACTIVATEDATE AND :END_ACTIVATEDATE  AND t1.ENTRY_DT > :ENTRYDATE  AND t1.ACTIVATED='Y' AND t1.HAVE_JCONTACT = 'N' AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
+            WHERE  t1.INCOMPLETE='N' AND t1.ACTIVATED='Y' AND t1.activatedKey=1 AND t1.VERIFY_ACTIVATED_DT between :START_ACTIVATEDATE AND :END_ACTIVATEDATE  AND t1.ENTRY_DT > :ENTRYDATE  AND t1.HAVE_JCONTACT = 'N' AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT";
 
     		if($limit && $offset==""){
                 $sql = $sql." LIMIT :LIMIT";
@@ -360,7 +360,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
     	{
     		$sql = "select t1.PROFILEID from newjs.JPROFILE as t1
     		inner join newjs.JPROFILE_CONTACT as t2 on t1.PROFILEID = t2.PROFILEID
-    		WHERE t1.VERIFY_ACTIVATED_DT < :ACTIVATEDATE AND t1.LAST_LOGIN_DT >= :LAST_LOGIN_DT AND t1.ACTIVATED='Y' AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
+    		WHERE  t1.INCOMPLETE='N' AND t1.ACTIVATED='Y' AND t1.activatedKey=1 AND t1.VERIFY_ACTIVATED_DT < :ACTIVATEDATE AND t1.LAST_LOGIN_DT >= :LAST_LOGIN_DT AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT";
 
     		if($limit && $offset==""){
                 $sql = $sql." LIMIT :LIMIT";
@@ -405,7 +405,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
     	try 
     	{
     		$sql = "select t1.PROFILEID from newjs.JPROFILE as t1
-    		WHERE t1.VERIFY_ACTIVATED_DT < :ACTIVATEDATE AND t1.LAST_LOGIN_DT >= :LAST_LOGIN_DT  AND t1.ACTIVATED='Y' AND t1.HAVE_JCONTACT = 'N' AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
+    		WHERE t1.INCOMPLETE='N' AND t1.ACTIVATED='Y' AND t1.activatedKey=1 AND t1.VERIFY_ACTIVATED_DT < :ACTIVATEDATE AND t1.LAST_LOGIN_DT >= :LAST_LOGIN_DT  AND t1.HAVE_JCONTACT = 'N' AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT";
 
     		if($limit && $offset==""){
                 $sql = $sql." LIMIT :LIMIT";
