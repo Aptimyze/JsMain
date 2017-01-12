@@ -69,6 +69,7 @@ if(authenticated($cid))
 					$phoneType ='L';
 					$phoneStatus = 'N';
 					phoneUpdateProcess($profileid,$phone_num_res,$phoneType,$actionStatus,$message,$name,$isd);
+					UnverifyNum($profileid, $phoneType, $phone_num_res);
 					//markInvalidProfile($row['PROFILEID'],'R');	
 				}
 				elseif($rcheck == 'noAction')
@@ -77,7 +78,7 @@ if(authenticated($cid))
 				}
 
 				if($rcheck && $phoneStatus) 
-					$opsPhoneReportObj->insertOPSPhoneReport($CRMuserid,$profileid,$row['ISD'].$row['PHONE_WITH_STD'],'L',$phoneStatus);
+					$opsPhoneReportObj->insertOPSPhoneReport($name,$profileid,$row['ISD'].$row['PHONE_WITH_STD'],'L',$phoneStatus);
 
 				if($mcheck=="valid")
                                 {
@@ -95,8 +96,8 @@ if(authenticated($cid))
 					$actionStatus ='D';
 					$phoneType ='M';
 					phoneUpdateProcess($profileid,$phone_num_mob,$phoneType,$actionStatus,$message,$name,$isd);
+					UnverifyNum($profileid, $phoneType, $phone_num_mob);
 					$phoneStatus = 'N';
-
                                 }
                  elseif($mcheck=='noAction')
 					$phoneStatus = 'B';
@@ -104,7 +105,7 @@ if(authenticated($cid))
 //trac 745 start
 
                 	if($mcheck && $phoneStatus) 
-                		$opsPhoneReportObj->insertOPSPhoneReport($CRMuserid,$profileid,$row['ISD'].$row['PHONE_MOB'],'M',$phoneStatus);
+                		$opsPhoneReportObj->insertOPSPhoneReport($name,$profileid,$row['ISD'].$row['PHONE_MOB'],'M',$phoneStatus);
                 
 
 				if($acheck=="valid")
@@ -129,7 +130,7 @@ if(authenticated($cid))
                      elseif($acheck=='noAction')
 						$phoneStatus = 'B';
                 	if($acheck && $phoneStatus) 
-                		$opsPhoneReportObj->insertOPSPhoneReport($CRMuserid,$profileid,$row['ISD'].$row['ALT_MOBILE'],'A',$phoneStatus);
+                		$opsPhoneReportObj->insertOPSPhoneReport($name,$profileid,$row['ISD'].$row['ALT_MOBILE'],'A',$phoneStatus);
 	
 				$jprofileUpdateObj = JProfileUpdateLib::getInstance(); 
 				$profileid=$row[PROFILEID];

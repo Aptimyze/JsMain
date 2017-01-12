@@ -297,6 +297,12 @@ return 0;
                       }
                     
                     break; 
+                    case '15': 
+                      $screening=$profileObj->getSCREENING();
+                      $nameArr=(new NameOfUser())->getNameData($profileid);
+                      if(!$nameArr[$profileid]['DISPLAY'] && $nameArr[$profileid]['NAME'] && jsValidatorNameOfUser::validateNameOfUser($nameArr[$profileid]['NAME']) && Flag::isFlagSet("name", $screening))
+                          $show=1;
+                    break;  
 
           default : return false;
         }

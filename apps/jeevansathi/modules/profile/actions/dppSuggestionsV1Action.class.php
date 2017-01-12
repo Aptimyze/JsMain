@@ -27,13 +27,14 @@ class dppSuggestionsV1Action extends sfActions
 		//Trends arr is fetched from twoWayMatches.Trends table
 		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields,$trendsObj);
 		unset($trendsObj);
-		$data = $request->getParameter("Param");
+		$data = $request->getParameter("Param");		
 		$decodedData = json_decode($data);
+		
 		foreach($decodedData as $key=>$val)
 		{
 			foreach($val as $key1=>$val1)
 			{									
-				$type = $val->type;
+				$type  = $val->type;
 				if($key1 == "data")
 				{											
 					$finalArr[] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1);
