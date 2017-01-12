@@ -101,16 +101,16 @@ EOF;
 		$profileArr =array_merge($profileArr30,$profileArr60);	
         
         $ssObj = new BILLING_SERVICE_STATUS("newjs_masterRep");
-        $purchase_dtPlus30 = date('Y-m-d', strtotime('+30 day'));
-        $profileArrPlus30 = array_keys($ssObj->getExpiredProfilesForDate($purchase_dtPlus30,$purchase_dtPlus30));
+        $purchase_dtPlus30 = date('Y-m-d', strtotime('+25 day'));
+        $profileArrPlus30 = $ssObj->getMaxExpiryProfilesForDates($purchase_dtPlus30,$purchase_dtPlus30);
         $purchase_dtMin9 = date('Y-m-d', strtotime('-8 day'));
-        $profileArrMin9 = array_keys($ssObj->getExpiredProfilesForDate($purchase_dtMin9,$purchase_dtMin9));
+        $profileArrMin9 = $ssObj->getMaxExpiryProfilesForDates($purchase_dtMin9,$purchase_dtMin9);
         $purchase_dtMin30 = date('Y-m-d', strtotime('-29 day'));
-        $profileArrMin30 = array_keys($ssObj->getExpiredProfilesForDate($purchase_dtMin30,$purchase_dtMin30));
+        $profileArrMin30 = $ssObj->getMaxExpiryProfilesForDates($purchase_dtMin30,$purchase_dtMin30);
         $purchase_dtMin60 = date('Y-m-d', strtotime('-59 day'));
-        $profileArrMin60 = array_keys($ssObj->getExpiredProfilesForDate($purchase_dtMin60,$purchase_dtMin60));
+        $profileArrMin60 = $ssObj->getMaxExpiryProfilesForDates($purchase_dtMin60,$purchase_dtMin60);
         $purchase_dtMin120 = date('Y-m-d', strtotime('-119 day'));
-        $profileArrMin120 = array_keys($ssObj->getExpiredProfilesForDate($purchase_dtMin120,$purchase_dtMin120));
+        $profileArrMin120 = $ssObj->getMaxExpiryProfilesForDates($purchase_dtMin120,$purchase_dtMin120);
         $profileArr =array_merge($profileArr,$profileArrPlus30,$profileArrMin9,$profileArrMin30,$profileArrMin60,$profileArrMin120);	
         
 		if(count($profileArr)>0) {
