@@ -1123,6 +1123,7 @@ function checkNewLogin(profileid) {
             localStorage.removeItem('tabState');
             localStorage.removeItem('chatBoxData');
             localStorage.removeItem('lastUId');
+            localStorage.setItem('isCurrentJeevansathiTab',1);
         }
     } else {
         createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
@@ -1245,7 +1246,7 @@ function invokePluginReceivedMsgHandler(msgObj) {
 function playChatNotificationSound(){
     //if current url is not jeevansathi tab and jspc chat is on
     var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
-    //console.log("playChatNotificationSound",isCurrentJeevansathiTab);
+    console.log("playChatNotificationSound",isCurrentJeevansathiTab);
     if(showChat == "1" && isCurrentJeevansathiTab == undefined || isCurrentJeevansathiTab == 0){
         //console.log("here playChatNotificationSound");
         var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
@@ -1369,7 +1370,7 @@ function clearChatMsgFromLS(){
  */
 function clearLocalStorage() {
     //var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated','nonRosterCLUpdated'];
-    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','name','nonRosterCLUpdated'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','name','nonRosterCLUpdated','isCurrentJeevansathiTab'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
@@ -1670,7 +1671,7 @@ $(document).ready(function () {
         
         //event to detect focus on page
         $(window).focus(function() {
-            //console.log("Doc focus");
+            console.log("Doc focus");
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
@@ -1683,7 +1684,7 @@ $(document).ready(function () {
 
         //event to detect focus out of page
         $(window).on("blur",function() {
-            //console.log("Doc blur");
+            console.log("Doc blur");
             /*var dt = new Date();
             var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
             console.log("page focus out",time);*/
