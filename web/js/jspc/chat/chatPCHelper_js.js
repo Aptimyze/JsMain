@@ -1245,7 +1245,7 @@ function invokePluginReceivedMsgHandler(msgObj) {
 function playChatNotificationSound(){
     //if current url is not jeevansathi tab and jspc chat is on
     var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
-    console.log("playChatNotificationSound",isCurrentJeevansathiTab);
+    //console.log("playChatNotificationSound",isCurrentJeevansathiTab);
     if(showChat == "1" && isCurrentJeevansathiTab == undefined || isCurrentJeevansathiTab == 0){
         //console.log("here playChatNotificationSound");
         var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
@@ -1643,7 +1643,10 @@ function updatePresenceAfterInterval(){
 
 $(document).ready(function () {
     //console.log("Doc ready");
-    //localStorage.setItem("isCurrentJeevansathiTab",1);
+    var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
+    if(isCurrentJeevansathiTab == undefined){
+        localStorage.setItem("isCurrentJeevansathiTab",1);
+    }
   
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
