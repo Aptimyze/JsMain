@@ -10,7 +10,7 @@
 						~assign var=counter value=$counter+1`
 						<div class="mar05 dispibl">
 							<div class="row mar05 bg7 brdr50p posrel outerCircleDiv">
-		                    <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$expiringData.tracking`&actual_offset=~$id+1`&contact_id=~$expiringData.contact_id`&tupleId=~$id`&searchid=23&total_rec=~$expiringData.view_all_count`"><img src="~$tupleInfo.photo.url`" class="cell vmid brdr50p innerCircleDiv" style="margin-top:1px;" /></a>
+		                    <a href="~$SITE_URL`/profile/viewprofile.php?profilechecksum=~$tupleInfo.profilechecksum`&~$expiringData.tracking`&actual_offset=~$id+1`&contact_id=~$expiringData.contact_id`&tupleId=~$id`&searchid=23&responseTracking=~JSTrackingPageType::INTEREST_EXPIRING_JSMS`&total_rec=~$expiringData.view_all_count`"><img src="~$tupleInfo.photo.url`" class="cell vmid brdr50p innerCircleDiv" style="margin-top:1px;" /></a>
 							</div>
 						</div>
 					~/if`
