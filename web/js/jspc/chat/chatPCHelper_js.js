@@ -1029,7 +1029,7 @@ function updateNonRosterListOnCEAction(actionParams){
     var action = actionParams["action"],
     user_id = actionParams["user_id"],
     groupId = actionParams["groupId"];
-    if(user_id != undefined){        
+    if(user_id != undefined && showChat == "1"){        
         switch(action){
             case "REMOVE":
             case "BLOCK":

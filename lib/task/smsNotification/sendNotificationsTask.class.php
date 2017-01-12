@@ -64,6 +64,7 @@ $this->addOptions(array(
 			$this->sendPushNotifications($filteredProfileDetails,$idArr);
 			unset($details);
 			unset($filteredProfileDetails);
+			unset($idArr);
 		}
 		if($this->doneTillId>=$this->maxId)
 		{
