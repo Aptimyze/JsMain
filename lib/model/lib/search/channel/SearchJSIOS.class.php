@@ -152,6 +152,10 @@ class SearchJSIOS extends SearchJS
         {
                  return SearchTypesEnums::IOSMatchOfDay;
         }
+	public static function getSearchTypeMatchOfDayList()
+        {
+                 return SearchTypesEnums::IOSMatchOfDayList;
+        }
         
         public function setRequestParameters($params){
             $output = array();

@@ -154,6 +154,10 @@ private static $featuredProfileCount= 1;
         {
                  return SearchTypesEnums::AndroidMatchOfDay;
         }
+	public static function getSearchTypeMatchOfDayList()
+	{
+                 return SearchTypesEnums::AndroidMatchOfDayList;
+	}
         
          public function setRequestParameters($params){
             $output = array();
