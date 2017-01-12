@@ -10,7 +10,7 @@ if(authenticated($checksum))
 		$smarty->assign("flag","1");
 		$st_date=$year."-".$month."-".$day." 00:00:00";
 		$end_date=$year2."-".$month2."-".$day2." 23:59:59";
-		if ($st_date >= "2017-04-01 00:00:00") {
+        if(strtotime($st_date) >= strtotime("2017-04-01 00:00:00")){
             $tableName = "PAYMENT_DETAIL_NEW";
             $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
         }
