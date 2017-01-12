@@ -600,6 +600,14 @@ class InboxMobileAppV1
 		$finalResponse["total"]="$temp";
 		$finalResponse["tracking"] = $displayObj[$infoKey]["TRACKING"];	
 		$finalResponse = array_change_key_case($finalResponse,CASE_LOWER);
+    //Request Call Back Communication
+    $arrAllowedRcbCommunication = array("ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT");
+    if (in_array($infoKey, $arrAllowedRcbCommunication)) {
+      $loggedInProfileObject = LoggedInProfile::getInstance();
+      $rcbObj = new RequestCallBack($loggedInProfileObject);
+      $finalResponse['display_rcb_comm'] = $rcbObj->getRCBStatus();
+      unset($rcbObj);
+    }
         return $finalResponse;
 	}
 	private function getDisplaylayerText($gender,$infokey,$count,$contactType='')
