@@ -63,6 +63,7 @@ class dppSuggestionsCALV1Action extends sfActions
 		{
 			$finalArr = $this->getFormattedArrForApp($finalArr);			
 			$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;			
+			
 		}
 		if(is_array($finalArr))
 		{
@@ -102,6 +103,10 @@ class dppSuggestionsCALV1Action extends sfActions
 					$finalArrApp["dppData"][$key][$k1] = $v1;
 				}
 				elseif($k1 == "heading")
+				{
+					$finalArrApp["dppData"][$key][$k1] = $v1;	
+				}
+				elseif($k1 == "range")
 				{
 					$finalArrApp["dppData"][$key][$k1] = $v1;	
 				}

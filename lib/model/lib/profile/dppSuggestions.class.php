@@ -51,8 +51,16 @@ class dppSuggestions
 				}
 			}
 										
-		} 		
+		} 
 		$valueArr["type"] = $type;
+		if($type == "AGE" || $type == "INCOME")
+		{
+			$valueArr["range"] = 1;
+		}
+		else
+		{
+			$valueArr["range"] = 0;
+		}
 		if(MobileCommon::isApp())
 		{
 			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
