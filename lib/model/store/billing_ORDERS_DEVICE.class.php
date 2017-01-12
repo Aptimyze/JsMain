@@ -118,13 +118,13 @@ class billing_ORDERS_DEVICE extends TABLE{
 		{
 			if($cur_type=='RS' || $cur_type=='DOL') 
 			{
-				$sql="SELECT SUM(pd.AMOUNT*(1-TAX_RATE/100)) as AMOUNT, ord.GATEWAY, odd.SOURCE from billing.$table as pd, billing.PURCHASES as pur, billing.ORDERS as ord, billing.ORDERS_DEVICE as odd where pd.ENTRY_DT>=:START_DATE and pd.ENTRY_DT<=:END_DATE and pd.MODE='ONLINE' and pd.AMOUNT>0 and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.ID=odd.ID and ord.STATUS!='R' and pd.TYPE=:CUR_TYPE GROUP BY ord.GATEWAY, odd.SOURCE";
+				$sql="SELECT SUM(pd.AMOUNT*(1-TAX_RATE/100)) as AMOUNT, ord.GATEWAY, odd.SOURCE from billing.$table as pd, billing.PURCHASES as pur, billing.ORDERS as ord, billing.ORDERS_DEVICE as odd where pd.ENTRY_DT>=:START_DATE and pd.ENTRY_DT<=:END_DATE and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.ID=odd.ID and ord.STATUS!='R' and pd.TYPE=:CUR_TYPE GROUP BY ord.GATEWAY, odd.SOURCE";
 				$prep=$this->db->prepare($sql);
 				$prep->bindValue(":CUR_TYPE", $cur_type, PDO::PARAM_STR);
 			}
 			else
 			{
-				$sql="SELECT SUM(if(pd.TYPE='DOL',pd.AMOUNT*DOL_CONV_RATE*(1-TAX_RATE/100),pd.AMOUNT*(1-TAX_RATE/100))) as AMOUNT, ord.GATEWAY, odd.SOURCE from billing.$table as pd, billing.PURCHASES as pur, billing.ORDERS as ord, billing.ORDERS_DEVICE as odd where pd.ENTRY_DT>=:START_DATE and pd.ENTRY_DT<=:END_DATE and pd.MODE='ONLINE' and pd.AMOUNT>0 and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.ID=odd.ID and ord.STATUS!='R' GROUP BY ord.GATEWAY, odd.SOURCE";				
+				$sql="SELECT SUM(if(pd.TYPE='DOL',pd.AMOUNT*DOL_CONV_RATE*(1-TAX_RATE/100),pd.AMOUNT*(1-TAX_RATE/100))) as AMOUNT, ord.GATEWAY, odd.SOURCE from billing.$table as pd, billing.PURCHASES as pur, billing.ORDERS as ord, billing.ORDERS_DEVICE as odd where pd.ENTRY_DT>=:START_DATE and pd.ENTRY_DT<=:END_DATE and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.ID=odd.ID and ord.STATUS!='R' GROUP BY ord.GATEWAY, odd.SOURCE";				
 				$prep=$this->db->prepare($sql);
 			}
 
@@ -150,13 +150,13 @@ class billing_ORDERS_DEVICE extends TABLE{
 		{
 			if($cur_type=='RS' || $cur_type=='DOL') 
 			{
-				$sql="SELECT SUM(pd.AMOUNT*(1-TAX_RATE/100)) as AMOUNT, ord.GATEWAY from billing.$table as pd, billing.PURCHASES as pur, billing.ORDERS as ord where pd.ENTRY_DT>=:START_DATE and pd.ENTRY_DT<=:END_DATE and pd.MODE='ONLINE' and pd.AMOUNT>0 and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' and pd.TYPE=:CUR_TYPE GROUP BY ord.GATEWAY";
+				$sql="SELECT SUM(pd.AMOUNT*(1-TAX_RATE/100)) as AMOUNT, ord.GATEWAY from billing.$table as pd, billing.PURCHASES as pur, billing.ORDERS as ord where pd.ENTRY_DT>=:START_DATE and pd.ENTRY_DT<=:END_DATE and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' and pd.TYPE=:CUR_TYPE GROUP BY ord.GATEWAY";
 				$prep=$this->db->prepare($sql);
 				$prep->bindValue(":CUR_TYPE", $cur_type, PDO::PARAM_STR);
 			}
 			else
 			{
-				$sql="SELECT SUM(if(pd.TYPE='DOL',pd.AMOUNT*DOL_CONV_RATE*(1-TAX_RATE/100),pd.AMOUNT*(1-TAX_RATE/100))) as AMOUNT, ord.GATEWAY from billing.$table as pd, billing.PURCHASES as pur, billing.ORDERS as ord where pd.ENTRY_DT>=:START_DATE and pd.ENTRY_DT<=:END_DATE and pd.MODE='ONLINE' and pd.AMOUNT>0 and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' GROUP BY ord.GATEWAY";				
+				$sql="SELECT SUM(if(pd.TYPE='DOL',pd.AMOUNT*DOL_CONV_RATE*(1-TAX_RATE/100),pd.AMOUNT*(1-TAX_RATE/100))) as AMOUNT, ord.GATEWAY from billing.$table as pd, billing.PURCHASES as pur, billing.ORDERS as ord where pd.ENTRY_DT>=:START_DATE and pd.ENTRY_DT<=:END_DATE and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' GROUP BY ord.GATEWAY";				
 				$prep=$this->db->prepare($sql);
 			}
 
