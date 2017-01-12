@@ -262,11 +262,13 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 
     public function getPromotionalMailerAccounts($activateDate,$entryDate,$totalScript=1,$script=0,$limit='',$offset='')
     {
+        $activateDateStart = $activateDate." 00:00:00";
+        $activateDateEnd = $activateDate." 23:59:59";
     	try 
     	{
     		$sql = "select t1.PROFILEID from newjs.JPROFILE as t1
     		inner join newjs.JPROFILE_CONTACT as t2 on t1.PROFILEID = t2.PROFILEID 
-    		WHERE  t1.VERIFY_ACTIVATED_DT = :ACTIVATEDATE  AND t1.ENTRY_DT > :ENTRYDATE  AND t1.ACTIVATED='Y' AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
+    		WHERE  t1.VERIFY_ACTIVATED_DT between :START_ACTIVATEDATE AND :END_ACTIVATEDATE AND t1.ENTRY_DT > :ENTRYDATE  AND t1.ACTIVATED='Y' AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
 
     		if($limit && $offset==""){
                 $sql = $sql." LIMIT :LIMIT";
@@ -276,7 +278,8 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
             }
 
     		$prep=$this->db->prepare($sql);
-    		$prep->bindValue(":ACTIVATEDATE",$activateDate,PDO::PARAM_STR);
+            $prep->bindValue(":START_ACTIVATEDATE",$activateDateStart,PDO::PARAM_STR);
+    		$prep->bindValue(":END_ACTIVATEDATE",$activateDateEnd,PDO::PARAM_STR);
     		$prep->bindValue(":ENTRYDATE",$entryDate,PDO::PARAM_STR);
     		$prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
             $prep->bindValue(":SCRIPT",$script,PDO::PARAM_INT);
@@ -306,10 +309,12 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
 
     public function getPromotionalMailerAccountNoContact($activateDate,$entryDate,$totalScript=1,$script=0,$limit='',$offset='')
     {
+        $activateDateStart = $activateDate." 00:00:00";
+        $activateDateEnd = $activateDate." 23:59:59";
     	try 
     	{
-    		$sql = "select t1.PROFILEID from newjs.JPROFILE as t1
-    		WHERE  t1.VERIFY_ACTIVATED_DT = :ACTIVATEDATE  AND t1.ENTRY_DT > :ENTRYDATE  AND t1.ACTIVATED='Y' AND t1.HAVE_JCONTACT = 'N' AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
+            $sql = "select t1.PROFILEID from newjs.JPROFILE as t1
+            WHERE  t1.VERIFY_ACTIVATED_DT between :START_ACTIVATEDATE AND :END_ACTIVATEDATE  AND t1.ENTRY_DT > :ENTRYDATE  AND t1.ACTIVATED='Y' AND t1.HAVE_JCONTACT = 'N' AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
 
     		if($limit && $offset==""){
                 $sql = $sql." LIMIT :LIMIT";
@@ -319,7 +324,8 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
             }
 
     		$prep=$this->db->prepare($sql);
-    		$prep->bindValue(":ACTIVATEDATE",$activateDate,PDO::PARAM_STR);
+    		$prep->bindValue(":START_ACTIVATEDATE",$activateDateStart,PDO::PARAM_STR);
+            $prep->bindValue(":END_ACTIVATEDATE",$activateDateEnd,PDO::PARAM_STR);
     		$prep->bindValue(":ENTRYDATE",$entryDate,PDO::PARAM_STR);
     		$prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
             $prep->bindValue(":SCRIPT",$script,PDO::PARAM_INT);
@@ -354,7 +360,7 @@ class NEWJS_JPROFILE_CONTACT extends TABLE{
     	{
     		$sql = "select t1.PROFILEID from newjs.JPROFILE as t1
     		inner join newjs.JPROFILE_CONTACT as t2 on t1.PROFILEID = t2.PROFILEID
-    		WHERE t1.VERIFY_ACTIVATED_DT < :ACTIVATEDATE AND t1.LAST_LOGIN_DT > :LAST_LOGIN_DT AND t1.ACTIVATED='Y' AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
+    		WHERE t1.VERIFY_ACTIVATED_DT < :ACTIVATEDATE AND t1.LAST_LOGIN_DT >= :LAST_LOGIN_DT AND t1.ACTIVATED='Y' AND t1.`HAVE_JCONTACT` =  'Y' and t2.alt_email is null AND MOD(t1.PROFILEID,:TOTAL_SCRIPT)=:SCRIPT AND t1.activatedKey=1";
 
     		if($limit && $offset==""){
                 $sql = $sql." LIMIT :LIMIT";
