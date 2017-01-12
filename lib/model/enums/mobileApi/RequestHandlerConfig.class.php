@@ -43,13 +43,17 @@ class RequestHandlerConfig
 		"detail"=>array("v1"=>"apidetailedv1","v2"=>"","v3"=>"apidetailedv1"),
 		"gunascore"=>array("v1"=>"gunascorev1","v2"=>"","v3"=>"gunascorev1"),
 		"alterseen"=>array("v1"=>"AlterSeenV1","v2"=>"","v3"=>"AlterSeenV1"),
+		"vsploadcheck"=>array("v1"=>"VSPLoadCheckV1","v2"=>"","v3"=>"VSPLoadCheckV1"),
         "coverphoto"=>array("v1"=>"CoverPhotoV1"),
         "horoscope"=>array("v1"=>"HoroscopeV1"),
         "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),
         "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1"),
         "dppSuggestions"=>array("v1"=>"dppSuggestionsV1","v2"=>"dppSuggestionsV1","v3"=>"dppSuggestionsV1"),
       "cache"=>array("v1"=>"ApiProfileCacheV1","v2"=>"ApiProfileCacheV1","v3"=>"ApiProfileCacheV1"),
-        "sendEmailVerLink"=>array("v1"=>"apiSendEmailVerificationLinkV1","v2"=>"apiSendEmailVerificationLinkV1","v3"=>"apiSendEmailVerificationLinkV1")),
+        "sendEmailVerLink"=>array("v1"=>"apiSendEmailVerificationLinkV1","v2"=>"apiSendEmailVerificationLinkV1","v3"=>"apiSendEmailVerificationLinkV1"),
+      	"dppSuggestionsCAL"=>array("v1"=>"dppSuggestionsCALV1","v2"=>"dppSuggestionsCALV1","v3"=>"dppSuggestionsCALV1"),
+      	"dppSuggestionsSaveCAL"=>array("v1"=>"dppSuggestionsSaveCALV1","v2"=>"dppSuggestionsSaveCALV1","v3"=>"dppSuggestionsSaveCALV1")),
+
     "settings"=>array(
 		"alertManager"=>array("v1"=>"AlertManagerV1","v2"=>"","v3"=>"AlertManagerV1"),
     	"deleteProfile"=>array("v1"=>"DeleteProfileV1","v2"=>"","v3"=>"DeleteProfileV1")),

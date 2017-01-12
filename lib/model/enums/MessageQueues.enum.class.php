@@ -13,7 +13,7 @@ class MessageQueues
   CONST CHATROSTERS = "chatRosters"; //Queue for users rosters for chat
   CONST USERCREATION = "USER_CREATION"; //Queue for chat user creation
   CONST CONSUMER_COUNT_SINGLE = 1; //This is to ensure that only 1 consumer instance runs at a time.
-  CONST UPDATE_SEEN_CONSUMER_COUNT = 2; //variable to store cosumers to be executed for update seen
+  CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST FEATURED_PROFILE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages

@@ -623,7 +623,7 @@ Class ButtonResponseFinal
 			$buttons = self::buttonMerge($button);
 			return $buttons;
 		}
-		else if($this->contactObj->getTYPE() == ContactHandler::NOCONTACT)
+		else if($this->contactObj->getTYPE() == ContactHandler::NOCONTACT && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
 		{
 			$button["iconid"] = IdToAppImagesMapping::UNDERSCREENING;
 			$button["label"]  = "Interest Saved";

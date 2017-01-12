@@ -244,6 +244,10 @@ class SearchUtility
                             if($clusterVal!='')
 					$clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;
 			}
+			if($cluster == "DIET" && $clusterVal != 'ALL'){ // check for cluster only search for not adding dont know to 'not manglik'
+                            if($clusterVal!='')
+					$clusterVal .= ','.SearchTypesEnums::APPLY_ONLY_CLUSTER;
+			}
       if($cluster=='MATCHALERTS_DATE_CLUSTER' && $clusterVal==NULL)
 				$clusterVal = 'ALL';
 			if(MobileCommon::isApp()=='A')

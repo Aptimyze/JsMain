@@ -75,6 +75,7 @@
 '66'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'KUNDLI_ALERTS','URL'=>'/search/kundlialerts','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '67'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'SENT_INTEREST','URL'=>'/inbox/6/1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '68'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'ALTERNATE_EMAIL_VER_SUCCESS','URL'=>'static/verifyAlternateEmail','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'69'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'EOI_EXPIRING','URL'=>'/inbox/23/1','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 );
 private static $linkNameArray=array(
 'PHOTO_ALBUM'=>'1',
@@ -145,7 +146,7 @@ private static $linkNameArray=array(
 'KUNDLI_ALERTS'=>'66',
 'SENT_INTEREST'=>'67',
 'ALTERNATE_EMAIL_VER_SUCCESS'=>'68',
-    
+'EOI_EXPIRING' => '69',
 );
 private static $variableArray=array(
 'ABOUTPROFILE'=>array('VARIABLE_PROCESSING_CLASS'=>'2','MAX_LENGTH'=>'100','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Profile'),
@@ -297,6 +298,7 @@ private static $variableArray=array(
 'EMAIL_VER_SUCCESS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Email Verification'),
 'ALTERNATE_EMAIL_VER_SUCCESS'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'255','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Alternate Email Verification'),
 'SENT_INTEREST'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'0','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'About Sent Interests'),
+'EOI_EXPIRING'=>array('VARIABLE_PROCESSING_CLASS'=>'3','MAX_LENGTH'=>'1000','MAX_LENGTH_SMS'=>'1000','DEFAULT_VALUE'=>'NA','DESCRIPTION'=>'Interest expiring response link'),
 
 
 );
