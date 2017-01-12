@@ -22,7 +22,7 @@ EOF;
     protected function execute($arguments = array(), $options = array()){
         if(!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
-        ini_set('memory_limit','256M');
+        // ini_set('memory_limit','256M');
         $this->limitUpdateProfile = 2000;
 
         try 
