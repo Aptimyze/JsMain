@@ -1692,14 +1692,7 @@ $(document).ready(function () {
             localStorage.setItem("isCurrentJeevansathiTab",0);
         });
 
-        $( window ).unload(function() {
-            console.log("Doc unload");
-        /*var dt = new Date();
-         var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-                      console.log("page focus out",time);*/
-        //console.log("blur");
-                localStorage.setItem("isCurrentJeevansathiTab",0);
-        });
+        
 
         
         $(window).on("offline", function () {
