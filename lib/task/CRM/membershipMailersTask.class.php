@@ -112,7 +112,8 @@ EOF;
         $purchase_dtMin120 = date('Y-m-d', strtotime('-119 day'));
         $profileArrMin120 = $ssObj->getMaxExpiryProfilesForDates($purchase_dtMin120,$purchase_dtMin120);
         $profileArr =array_merge($profileArr,$profileArrPlus30,$profileArrMin9,$profileArrMin30,$profileArrMin60,$profileArrMin120);	
-        
+        $c = count($profileArr);
+        mail("nitish.sharma@jeevansathi.com,manoj.rana@naukri.com","Membership mailer","Count of JSExclusive Mailer:$c");
 		if(count($profileArr)>0) {
 			foreach($profileArr as $profileid) {
 				if($mmObj->isExclusive($profileid)) 
