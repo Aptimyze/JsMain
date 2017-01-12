@@ -33,7 +33,7 @@ if(authenticated($cid))
 	if($operator_name != 'all')
 		$center = getcenter_for_walkin($operator_name);
 
-	if(in_array("ExcPrm",$privilage) || in_array("ExPrmO",$privilage)){
+	if(in_array("ExcPrm",$privilage) || in_array("ExPrmO",$privilage) || in_array("ExPmWL",$privilage)){
 		connect_db();
 		include("ncr_individual_operator_detail_sales_new_prem.php");	
 		die();
