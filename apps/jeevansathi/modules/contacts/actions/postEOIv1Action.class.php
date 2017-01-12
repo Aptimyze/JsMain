@@ -100,19 +100,38 @@ class postEOIv1Action extends sfAction
 			$androidText = true;
 		}
 		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
+		
+		$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+		$onlyUnderScreenError = 0; // No errors
+		if($errorArr["UNDERSCREENING"] == 2 && $this->contactEngineObj->getComponent())
+		{
+			$onlyUnderScreenError = 1;
+		}
+		// print_r($onlyUnderScreenError);die;
+		if($onlyUnderScreenError == 1 || $onlyUnderScreenError == 0)
+		{
+			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
+		}
+
 		if($this->contactEngineObj->messageId)
 		{
+ 
+			
+
 			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
-				$responseArray["headerthumbnailurl"] = $thumbNail;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["selfthumbnailurl"] = $ownthumbNail;
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
+                                if($request->getParameter('API_APP_VERSION')>=80)
+					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
+		                        $responseArray["headerthumbnailurl"] = $thumbNail;
+                        		$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                        		$responseArray["selfthumbnailurl"] = $ownthumbNail;
 			}
-			if($this->getParameter($request,"page_source") == "VDP")
+
+                        if($this->getParameter($request,"page_source") == "VDP")
 			{
 				$redirection = "true";
 			}

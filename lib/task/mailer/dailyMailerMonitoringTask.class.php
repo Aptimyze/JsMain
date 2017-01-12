@@ -78,7 +78,7 @@ EOF;
 		//Yes/No mailer
 		if($mailer_key[0]=='YESNO_MAILER')
 		{
-			$ynObj = new MAIL_YesNoMail('newjs_slave');
+			$ynObj = new MAIL_YesNoMail();
 			$countArr = $ynObj->getMailCountForRange();
 			$countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
 			unset($countArr);
@@ -233,6 +233,14 @@ EOF;
                         $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
                         unset($countArr);
                 }           
+        //Expiring interest mailer
+        if($mailer_key[0]=='ExpiringInterest_MAILER')
+        {
+            $eiObj = new MAIL_ExpiringInterest();
+            $countArr = $eiObj->getMailCountForRange();
+            $countObj->updateData($instanceID,$countArr['TOTAL'],$countArr['SENT'],$countArr['BOUNCED'],$countArr['INCOMPLETE'],$countArr['UNSUBSCRIBE']);
+            unset($countArr);
+        }
 	}
   }
 }
