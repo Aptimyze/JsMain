@@ -310,6 +310,11 @@ class LoggingManager
 			$logData[LoggingEnums::MESSAGE] = $message;
 		} 
 
+		if($mappingName != "")
+		{
+			$logData[LoggingEnums::MAPPING] = $mappingName;
+		}
+
 		if($this->canWriteTrace($this->moduleName))
 		{
 			if ( $exception instanceof Exception)
@@ -667,6 +672,10 @@ class LoggingManager
 		return LoggingConfig::getInstance()->traceStatus($moduleName);
 	}
 
+	/**
+	 * @param $moduleName
+	 * @return Mapping name of a module
+	 */
 	private function getlogMappingName($moduleName)
 	{
 		if(in_array($moduleName, LoggingEnums::$ModuleMapping))
