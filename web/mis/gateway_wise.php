@@ -10,7 +10,14 @@ if(authenticated($checksum))
 		$smarty->assign("flag","1");
 		$st_date=$year."-".$month."-".$day." 00:00:00";
 		$end_date=$year2."-".$month2."-".$day2." 23:59:59";
-		
+        if(strtotime($st_date) >= strtotime("2017-04-01 00:00:00")){
+            $tableName = "PAYMENT_DETAIL_NEW";
+            $condition = "IN ('DONE','BOUNCE','CANCEL', 'REFUND', 'CHARGE_BACK')";
+        }
+        else{
+            $tableName = "PAYMENT_DETAIL";
+            $condition = "IN ('DONE','CHARGE_BACK')";
+        }
 		// Cases for date range check
 		$dateFlag;
 		if(strtotime($st_date) > strtotime($end_date)){
@@ -50,9 +57,9 @@ if(authenticated($checksum))
 		$temp_gateway = $gateway;
 
 		if($gateway!='ALL')
-			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,ord.AMOUNT as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.PURCHASES as pur,billing.PAYMENT_DETAIL as pd,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.AMOUNT>0 and pd.STATUS IN ('DONE','CHARGE_BACK') and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' and ord.GATEWAY='$gateway'";
+			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,pd.AMOUNT as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.PURCHASES as pur,billing.$tableName as pd,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R' and ord.GATEWAY='$gateway'";
 		else
-			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,ord.AMOUNT as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.PAYMENT_DETAIL as pd,billing.PURCHASES as pur,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.AMOUNT>0 and pd.STATUS IN ('DONE','CHARGE_BACK') and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R'";
+			$sql="select pd.DOL_CONV_RATE as rate,pur.USERNAME,pd.TYPE,pd.AMOUNT as amt,ord.ORDERID as ordno,ord.ID as ord_ID,pd.ENTRY_DT, ord.GATEWAY as GATEWAY,pd.INVOICE_NO as INVOICE_NO from billing.$tableName as pd,billing.PURCHASES as pur,billing.ORDERS as ord where pd.ENTRY_DT between '$st_date' and '$end_date' and pd.MODE='ONLINE' and pd.STATUS $condition and pd.BILLID=pur.BILLID and pur.ORDERID=ord.ID and ord.STATUS!='R'";
 		//print $sql.PHP_EOL;
 		// print $dateFlag;
 		$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
