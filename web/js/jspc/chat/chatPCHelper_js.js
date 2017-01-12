@@ -1008,7 +1008,7 @@ function updateNonRosterListOnCEAction(actionParams){
     //console.log("updateNonRosterListOnCEAction",actionParams);
     var action = actionParams["action"],
     user_id = actionParams["user_id"];
-    if(user_id != undefined){
+    if(user_id != undefined && showChat == "1"){
         if(action == "REMOVE" || action == "BLOCK"){
             var checkIfExists = objJsChat.checkForNodePresence(user_id,chatConfig.Params.nonRosterPollingGroups);
             //console.log("updateNonRosterListOnCEAction",checkIfExists);
