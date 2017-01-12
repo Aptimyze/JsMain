@@ -1238,3 +1238,85 @@ function reArrangeDivsAfterDissapear(value,position,id)
         }
         return 0;
     }
+
+
+    $(function(){
+
+      try
+      {             
+        cntrlClick = true;
+
+        function moveBelowStack(){
+
+
+          var totalStk = $('.stk').length;
+
+          $('.stk').each(function(index){                                                                  
+            var getTop= parseInt($(this).css('top'));
+            getTop= getTop-7;
+            $('.stk').eq(index).css('top',getTop).removeClass('modt'+(index+2)).addClass('modt'+(index+1)).promise().done(function(){
+              console.log('cc');
+
+            });
+
+          });
+
+          console.log('dd');
+          cntrlClick=true;
+
+          console.log($('.stk').length);
+
+          if($('.stk').length==0)
+          {
+            $('#prfDay').fadeOut('slow');
+          }
+
+        }
+
+        function removeFirstStack(){
+
+          $('.stk').eq(0).addClass('mov1').on('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
+            function() {
+
+              console.log('first removes stack');
+              $(this).remove();
+              console.log('removed first done');
+              moveBelowStack();
+
+            });
+
+        }
+
+        function setStack()
+        {
+          cntrlClick = false;
+
+          if($('.stk').length!=0)
+          {
+            console.log('p1');
+            console.log('1-cntrlClick',cntrlClick);
+
+            $('.stk').eq(0).removeClass('modt1').on('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
+              function() {
+
+
+                removeFirstStack();
+
+              });
+
+          }             
+
+        }
+
+        console.log('cntrlClick',cntrlClick);                            
+
+        if(cntrlClick)
+        {
+          $('.mod_cls').on('click',setStack);
+        }
+      }
+      catch(e){
+        console.log(e);
+      }
+
+    });

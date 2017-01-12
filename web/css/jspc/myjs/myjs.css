@@ -466,3 +466,26 @@ box-shadow: -1px -13px 33px -9px rgba(153,153,153,0.96);}
     background-color: rgba(0, 0, 0, 0.65);
 }
 
+.mod_cls{width:20px; height:20px; background-position:-178px -342px; cursor:pointer}
+.mod_btm1{background:url(bottom_mod.png) no-repeat center center; height:8px}
+.mod_dim1{width:120px; height:120px}
+.mod_p1{padding-left:234px}
+.mod_p2{padding-left:27px}
+.mod_wid1{width:656px}
+ul.modli li{float:left;width:33%; line-height:25px}
+.mod_shd{-webkit-box-shadow: 0px 2px 5px 0px rgba(99,93,99,1);
+-moz-box-shadow: 0px 2px 5px 0px rgba(99,93,99,1);
+box-shadow: 0px 2px 5px 0px rgba(99,93,99,1);}
+
+.mod_l3{z-index:3; top:14px;}
+.mod_l2{z-index:4; top:7px;}
+.mod_l1{z-index:5;top:0}
+
+.modt1{-webkit-transform:scale(1,1);transform:scale(1,1);}
+.modt2{-webkit-transform:scale(0.99,0.99);transform:scale(0.99,0.99);}
+.modt3{-webkit-transform:scale(0.98,0.98);transform:scale(0.98,0.98);}
+
+.anim1{transition:all 500ms ease}
+
+.mov1{-webkit-transform:sclae(1.1,1.1);transform:scale(1.1,1.1); opacity:0}
+  

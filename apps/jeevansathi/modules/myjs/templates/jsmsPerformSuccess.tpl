@@ -286,6 +286,10 @@
 <span class="setWidth" id="awaitingResponsePresent" style="display:block;background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsAwaitingResponseSection",[eoiData=>$apiData.interest_received,gender=>$apiData.gender])`
 </span>
+<span class="setWidth" id="matchOfTheDaySection" style="display:block;background-color: #e4e4e4; margin-top:15px;">
+	~include_partial("myjs/matchOfTheDaySection",[modData=>$apiData.interest_received,gender=>$apiData.gender])`
+</span>
+
 <span class="setWidth"  id="visitorPresent" style="background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsVistorsSection",[visitorData=>$apiData.visitors])`
 </span>
