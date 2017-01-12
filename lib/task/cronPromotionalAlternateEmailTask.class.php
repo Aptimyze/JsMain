@@ -126,7 +126,6 @@ EOF;
             foreach ($profileIDs as $key => $value) {
                 $this->sendPromotionalAlternateEmail($value['PROFILEID']);
                 file_put_contents($file,($i * PromotionalAlternateEmailEnums::LIMIT_FETCH_PROFILE) + $key + 1 );
-                var_dump($value['PROFILEID']);
             }
             return true;
         }
