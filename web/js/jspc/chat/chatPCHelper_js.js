@@ -1246,7 +1246,7 @@ function invokePluginReceivedMsgHandler(msgObj) {
 function playChatNotificationSound(){
     //if current url is not jeevansathi tab and jspc chat is on
     var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
-    console.log("playChatNotificationSound",isCurrentJeevansathiTab);
+    //console.log("playChatNotificationSound",isCurrentJeevansathiTab);
     if(showChat == "1" && isCurrentJeevansathiTab == undefined || isCurrentJeevansathiTab == 0){
         //console.log("here playChatNotificationSound");
         var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
@@ -1671,7 +1671,7 @@ $(document).ready(function () {
         
         //event to detect focus on page
         $(window).focus(function() {
-            console.log("Doc focus");
+            //console.log("Doc focus");
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
@@ -1684,7 +1684,7 @@ $(document).ready(function () {
 
         //event to detect focus out of page
         $(window).on("blur",function() {
-            console.log("Doc blur");
+            //console.log("Doc blur");
             /*var dt = new Date();
             var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
             console.log("page focus out",time);*/
