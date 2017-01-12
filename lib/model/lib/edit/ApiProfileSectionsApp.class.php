@@ -353,9 +353,23 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		
 		//country
 		$basicArr[] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$this->profile->getDecoratedCountry(),$this->profile->getCOUNTRY_RES(),$this->getApiScreeningField("COUNTRY_RES"));
-		
+                
+		$stateValue = substr($this->profile->getCITY_RES(),0,2);
+                $stateLabel = FieldMap::getFieldLabel("state_india",$stateValue);
+                
+		$basicArr[] =$this->getApiFormatArray("STATE_RES","State Living in" ,$stateLabel,$stateValue,$this->getApiScreeningField("CITY_RES"));
+                
 		//city
-		$basicArr[] =$this->getApiFormatArray("CITY_RES","City Living in" ,$this->profile->getDecoratedCity(),$this->profile->getCITY_RES(),$this->getApiScreeningField("CITY_RES"));
+                if($this->profile->getCITY_RES()!='')
+		{
+			if(substr($this->profile->getCITY_RES(),2)=="OT")
+				$city = "0";
+			else
+				$city = $this->profile->getCITY_RES();
+			$value= $city;
+			$label = FieldMap::getFieldLabel("city",$city);
+		}
+		$basicArr[] =$this->getApiFormatArray("CITY_RES","City Living in" ,$label,$value,$this->getApiScreeningField("CITY_RES"));
 		
 		//religion
 		$basicArr[]  =$this->getApiFormatArray("RELIGION","Religion" ,$this->profile->getDecoratedReligion(),$this->profile->getRELIGION(),$this->getApiScreeningField("RELIGION"),"N");

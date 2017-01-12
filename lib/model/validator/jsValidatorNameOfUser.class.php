@@ -64,4 +64,22 @@ class jsValidatorNameOfUser extends sfValidatorBase
           }
     return trim($value);
   }
+  
+  public static function validateNameOfUser($name_of_user){
+        $name_of_user = str_replace("."," ",$name_of_user);
+        $name_of_user = preg_replace("/dr|ms|mr|miss/i", "",$name_of_user);
+        $name_of_user = preg_replace("/\,|\'/i", "",$name_of_user);
+        $name_of_user = trim(preg_replace("/\s+/i", " ",$name_of_user));
+        if($name_of_user == "")return false;
+            $match = preg_match("/^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i",$name_of_user);
+        if(!$match)
+            return false;
+        else{
+            $arr=  explode(" ", $name_of_user);
+            if(count($arr)<2)return false;
+            return true;
+        }
+      
+      
+  }
 }

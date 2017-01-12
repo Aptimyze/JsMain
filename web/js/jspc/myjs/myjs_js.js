@@ -1146,8 +1146,9 @@ function reArrangeDivsAfterDissapear(value,position,id)
 
 
     function getTotalBoxes(id)
-    {
-
+    {       
+            if(id == "MESSAGES" || id =="ACCEPTANCE")
+            return Math.ceil(getNumberOfProfiles(id)/2);
             return Math.ceil(getNumberOfProfiles(id)/4);
 
     }

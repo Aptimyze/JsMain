@@ -112,6 +112,34 @@ class REPORT_ABUSE_LOG extends TABLE
 	}
         
 
+        public function getReportAbuseCountMIS($profileID,$startDate,$endDate)
+	{
+		try	 	
+		{	
+                        if(!($profileID))
+                            throw new jsException("","profileID IS not array or blank");
+                                                                             
+                        $sql = 'SELECT count( DISTINCT(REPORTER)) AS CNT
+                        FROM feedback.REPORT_ABUSE_LOG
+                        WHERE DATE( `DATE` ) <= DATE("'.$startDate.'")
+                        AND DATE( `DATE` ) >= DATE( "'.$endDate.'" )
+                        AND REPORTEE ='.$profileID;
+                        $prep = $this->db->prepare($sql);
+                        $prep->execute();
+
+                          if($row=$prep->fetch(PDO::FETCH_ASSOC))   
+                            $output=$row['CNT'];
+                        return $output;
+
+		}
+		catch(Exception $e)
+		{
+			throw new jsException($e);
+		}
+	
+	}
+
 }
 
 ?>
+

@@ -529,14 +529,17 @@ class profileVerificationActions extends sfActions
 		}
                 
         public function executeInappropriateUsersReport(sfWebRequest $request)
-  {
+  {  
+
       $endDate=$request->getParameter('RAStartDate');
       $resultArr=(new MIS_INAPPROPRIATE_USERS_REPORT())->getReportForADate($endDate,10);
       ob_end_clean();
       if(sizeof($resultArr) == 0 )
           die;
       $i=0;
+
       echo json_encode($resultArr);
+     // print_r($resultArr);
       return sfView::NONE;
       die;
 
