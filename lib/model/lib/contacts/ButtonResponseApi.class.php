@@ -420,22 +420,27 @@ Class ButtonResponseApi
 					if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
 						if($actionType == "CHATACCEPT")
 						{
-							$button[]                       = self::getCustomButton("Interest accepted, Continue chat","","","","","");
+							$button[]                       = self::getCustomButton("Interest accepted, Continue chat","ACCEPT","","","","");
 							$responseArray["canchat"]       = "false";
 						}
 						else {
 							$button[] = $this->getSendMessageButton();
 							$button[] = self::getContactDetailsButton();
 							$button[] = self::getDeclineButton($this->page);
+							$responseArray["infomsglabel"] = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
+							$responseArray["infomsgiconid"] = '023';
 						}
 						$responseArray["buttons"]      = $button;
-						$responseArray["infomsglabel"] = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
-						$responseArray["infomsgiconid"] = '023';
+
 					} else {
 						if($actionType == "CHATACCEPT")
 						{
-							$button[]                       = self::getCustomButton("Interest accepted, Continue chat","","","","","");
+							$button[]                       = self::getCustomButton("Interest accepted, Continue chat","ACCEPT","","","","");
 							$responseArray["canchat"]       = "false";
+						}
+						else{
+							$responseArray["infomsglabel"]  = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
+							$responseArray["infomsgiconid"] = '023';
 						}
 						if(strpos(sfContext::getInstance()->getRequest()->getParameter("newActions"), "MEMBERSHIP")!== false )
 						{
@@ -448,14 +453,13 @@ Class ButtonResponseApi
 							$responseArray["infobtnvalue"]  = "18004196299";
 							$responseArray["infobtnaction"] = "CALL";		
 						}
-						$responseArray["infomsglabel"]  = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
-						$responseArray["infomsgiconid"] = '023';
+
 					}
 					break;
 				case ContactHandler::DECLINE:
 					//echo "DECLINE";
 					if($actionType == "CHATDECLINE") {
-						$button[] = self::getCustomButton("Interest declined", "", "", "", "", "");
+						$button[] = self::getCustomButton("Interest declined", "DECLINE", "", "", "", "");
 						$responseArray["infomsglabel"] = "Interest declined, you can't chat with this member any more";
 						$responseArray["buttons"] = $button;
 					}
