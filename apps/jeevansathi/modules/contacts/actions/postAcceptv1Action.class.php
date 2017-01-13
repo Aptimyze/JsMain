@@ -70,7 +70,7 @@ class postAcceptv1Action extends sfAction
 	{
 		$privilegeArray = $this->contactEngineObj->contactHandler->getPrivilegeObj()->getPrivilegeArray();
 		$buttonObj = new ButtonResponse($this->loginProfile,$this->Profile,"",$this->contactHandlerObj);
-		if($this->getParameter($request,"page_source") == "chat" && $this->getParameter($request,"channel") == "A")
+		if($request->getParameter("page_source") == "chat" && $request->getParameter("channel") == "A")
 		{
 			$actionType = "CHATACCEPT";
 		}
