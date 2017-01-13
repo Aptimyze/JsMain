@@ -153,7 +153,8 @@ class JProfileUpdateLib
       self::$instance->objProfileChristianStore->setConnection($dbname);
       self::$instance->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
       self::$instance->objProfileHoroscopeForScreenStore->setConnection($dbname);
-      self::$instance->objProfileAlertStore->setConnection($dbname);
+      unset(self::$instance->objProfileAlertStore);
+      self::$instance->objProfileAlertStore = new JprofileAlertsCache($dbname);
     }
     
     return self::$instance;
