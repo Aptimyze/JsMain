@@ -474,16 +474,6 @@ Class ButtonResponseApi
 					$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
 					$responseArray["buttons"] = $button;
 					break;
-				case "CHATACCEPT":
-					$button[]                       = self::getCustomButton("Interest accepted, Continue chat","","","","","");
-					$responseArray["buttons"]       = $button;
-					$responseArray["chatchat"]      = false;
-					break;
-				case "CHATDECLINE":
-					$button[]                       = self::getCustomButton("Interest declined","","","","","");
-					$responseArray["infomsglabel"]  = "Interest declined, you can't chat with this member any more";
-					$responseArray["buttons"]       = $button;
-					break;
 
 
 			}
