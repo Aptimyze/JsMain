@@ -31,8 +31,8 @@ class dppSuggestionsCALV1Action extends sfActions
 		ob_end_clean();
 		$decodedData = json_decode($output);
 		foreach($decodedData as $key=>$value)
-		{
-			if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && $value->value!="DM")
+		{			
+			if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($value->value,"DM") === false)
 			{
 				$dppDataArr[$key]["type"] = substr($value->key,2);
 				$dppDataArr[$key]["data"] = explode(",",$value->value);
@@ -46,7 +46,6 @@ class dppSuggestionsCALV1Action extends sfActions
 		//Trends arr is fetched from twoWayMatches.Trends table
 		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields,$trendsObj);
 		unset($trendsObj);
-		
 		foreach($dppDataArr as $key=>$val)
 		{
 			foreach($val as $key1=>$val1)
@@ -58,12 +57,10 @@ class dppSuggestionsCALV1Action extends sfActions
 				}					
 			}
 		}
-
 		if(MobileCommon::isApp())
 		{
 			$finalArr = $this->getFormattedArrForApp($finalArr);			
 			$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;			
-			
 		}
 		if(is_array($finalArr))
 		{
