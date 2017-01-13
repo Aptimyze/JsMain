@@ -180,5 +180,8 @@ class LoggingEnums
         "404_adServe" => 20,
         "404_faq" => 23,
         "successStory" => 5,
+        "myjs_api" => 10,
+        "util" => 21,
+        "common" => 21,
         );
 }

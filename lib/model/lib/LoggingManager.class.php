@@ -684,7 +684,14 @@ class LoggingManager
 		}
 		else
 		{
-			$mappingName = LoggingEnums::$MappingNames[21];
+			if(strpos($moduleName, '404') !== false)
+			{
+				$mappingName = LoggingEnums::$MappingNames[20];
+			}
+			else
+			{
+				$mappingName = LoggingEnums::$MappingNames[21];
+			}
 		}
 		return $mappingName;
 	}
