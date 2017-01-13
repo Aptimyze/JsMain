@@ -47,13 +47,13 @@ $className = get_class($this);
 		{
 			if(array_key_exists($key,$displayObj))
 			{
+				$isApp = MobileCommon::isApp();
+				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
 				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isIOSApp()))
 				{
 					continue;
 				}
-				$isApp = MobileCommon::isApp();
-				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
-				if($isApp == "A" && $appVersion  && $appVersion < 81)
+				if($key == "INTEREST_EXPIRING" && $isApp == "A" && $appVersion  && $appVersion < 81)
 				{
 					continue;
 				}

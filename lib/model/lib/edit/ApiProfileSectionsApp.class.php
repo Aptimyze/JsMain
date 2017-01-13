@@ -13,6 +13,8 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 	
 	function __construct($profile,$isEdit='') {
 		$this->profile = $profile;
+		$request=sfContext::getInstance()->getRequest();
+		$this->showAlternateEmail = $request->getParameter("showAlternateEmail");		
 		$dbHobbies = new JHOBBYCacheLib();
 		$this->Hobbies=$dbHobbies->getUserHobbiesApi($this->profile->getPROFILEID());
                 $this->isEdit=$isEdit;
@@ -249,8 +251,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		$contactArr[]=$this->getApiFormatArray("PROFILE_HANDLER_NAME","Profile Handler Name" , $this->profile->getDecoratedPersonHandlingProfile(),$this->profile->getPROFILE_HANDLER_NAME(),$this->getApiScreeningField("PROFILE_HANDLER_NAME"));
 
 		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),$this->profile->getEMAIL(),$this->getApiScreeningField("EMAIL"),"Y",$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));
-		if(MobileCommon::isApp() != "I")// || MobileCommon::isDesktop())
-		{			
+		
+		if(MobileCommon::isDesktop() || MobileCommon::isApp() == "A" || (MobileCommon::isApp() == "I" && $this->showAlternateEmail == "1"))
+		{
 			$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,$this->profile->getExtendedContacts()->ALT_EMAIL,"2","Y",$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
 		}
 		//mobile number
