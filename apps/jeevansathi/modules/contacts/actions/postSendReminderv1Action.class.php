@@ -92,18 +92,21 @@ class postSendReminderv1Action extends sfAction
 		$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::REMINDER);
 		if($this->contactEngineObj->messageId)
 		{	
-			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
+                        if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
-				$responseArray["headerthumbnailurl"] = $thumbNail;;
-				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-				$responseArray["selfthumbnailurl"] = $ownthumbNail;
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=R&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
-				
+                                if($request->getParameter('API_APP_VERSION')>=80)
+					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+					$responseArray["headerthumbnailurl"] = $thumbNail;;
+		                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                 		        $responseArray["selfthumbnailurl"] = $ownthumbNail;
+
 
 			}
+
 		}
 		else
 		{

@@ -70,3 +70,5 @@ all:
   
   ApiProfileCacheV1:
     enable_login: off
+  VSPLoadCheckV1:
+    enable_login: off

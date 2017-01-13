@@ -117,6 +117,34 @@ public function updateAsVerified($submittee){
         }
     
     }
+    public function getTotalReportInvalidCount( $startDate , $endDate)
+    {
+        try     
+        {   
+
+
+                        if(!$startDate || !$endDate )
+                            throw new jsException("","check if month and year are mentioned");
+
+                        $sql = 'SELECT count( * ) AS CNT,DATE( `SUBMIT_DATE` ) AS DT FROM jsadmin.REPORT_INVALID_PHONE WHERE DATE(`SUBMIT_DATE`) BETWEEN :STARTDATE AND :ENDDATE  GROUP BY DT';
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":STARTDATE", $startDate, PDO::PARAM_STR);  
+                        $res->bindValue(":ENDDATE", $endDate, PDO::PARAM_STR);  
+                        $res->execute();
+
+                        while($row=$res->fetch(PDO::FETCH_ASSOC))   
+                            $output[]=$row;
+                        return $output;
+
+                       
+
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
 
 
 }
