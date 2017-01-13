@@ -9,14 +9,15 @@ class REPORT_ABUSE_LOG extends TABLE
 	
 	
 	
-	public function insertReport($reporter,$reportee,$category,$reason)
-	{
+	public function insertReport($reporter,$reportee,$category,$reason,$from='',$crmUser='') 
+	{  
+		
 		try
 		{
 			if(!$reporter || !$reportee || !$category)
 				return;
 			$timeNow=(new DateTime)->format('Y-m-j H:i:s');
-			$sql="INSERT INTO feedback.REPORT_ABUSE_LOG(REPORTER,REPORTEE,OTHER_REASON,DATE,REASON) VALUES(:REPORTER,:REPORTEE,:REASON,:DATE,:CATEGORY)";
+			$sql="INSERT INTO feedback.REPORT_ABUSE_LOG(REPORTER,REPORTEE,OTHER_REASON,DATE,REASON,CATEGORY,CRM_USER) VALUES(:REPORTER,:REPORTEE,:REASON,:DATE,:CATEGORY,:COMINGFROM,:CRM_USER)";
 			
 			$pdoStatement = $this->db->prepare($sql);
 			
@@ -26,7 +27,8 @@ class REPORT_ABUSE_LOG extends TABLE
 			$pdoStatement->bindValue(":REASON",$reason,PDO::PARAM_STR);
 			$pdoStatement->bindValue(":CATEGORY",$category,PDO::PARAM_STR);
 			$pdoStatement->bindValue(":DATE",$timeNow,PDO::PARAM_STR);
-			
+			$pdoStatement->bindValue(":COMINGFROM",$from,PDO::PARAM_STR);
+			$pdoStatement->bindValue(":CRM_USER",$crmUser,PDO::PARAM_STR);
 			$pdoStatement->execute();
 			
 			return ;

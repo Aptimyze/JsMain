@@ -506,7 +506,9 @@ $js_arr[]=array("jsms/contactus/contactus_js"     => "1");
 $js_arr[]=array("jsms/common/sly"      => "2");
 $js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                                        => "57");
 $js_arr[]=array("jspc/myjs/myjs_js"                                                                     => "74");
+
 $js_arr[]=array("jspc/myjs/engBarJs_js"                              => "30");
+
 $js_arr[]=array("jspc/common/nano"     => "2");
 $js_arr[]=array("jspc/common/commonJspc_js"                                     => "40");
 $js_arr[]=array("jspc/registration/registrationJspc_js"                   => "27");
@@ -602,6 +604,7 @@ $js_arr[]=array("jsms/utility/offlineTracking_js"   => "1");
 $js_arr[]=array("jsms/common/disableRightClick_js"    => "2");
 $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
+
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                                       => "72");
 $js_arr[]=array("jspc/chat/chatPCHelper_js"                                                                                   => "106");
 $js_arr[]=array("jspc/chat/chatPlugin_js"                                                        => "85");
@@ -621,8 +624,12 @@ $js_arr[]=array("jspc/chat/core"    => "3");
 $js_arr[]=array("jspc/chat/converse_js"    => "3");
 $js_arr[]=array("jspc/chat/aes"    => "3");
 $js_arr[]=array("/web/converse"    => "3");
+
 $js_arr[]=array(" /web/billing/billing_v2"       => "5");
 $js_arr[]=array(" /web/billing/billing"      => "4");
+
+$js_arr[]=array("reportAbuseForUser_js"        => "6");
+
 return $js_arr;
 }
 function getJavascript(){

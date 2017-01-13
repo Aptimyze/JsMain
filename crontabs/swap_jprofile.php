@@ -25,6 +25,7 @@ include_once(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/ivr/jsivrFunctions.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/commonFiles/incomeCommonFunctions.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/commonFiles/SymfonyPictureFunctions.inc");
+include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 $mysqlObj=new Mysql;
 //$db2 = connect_slave();
 $LOG_PRO=array();
@@ -622,8 +623,18 @@ function mysql_error1($db)
 {
 	global $sql_update,$sql,$sql_total_points;
 	$msg=$sql_update .":".$sql.":".$sql_total_points;
-	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com","Jeevansathi Error in swapping",$msg);
-	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
+	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",$msg);
+	mail("lavesh.rawat@jeevansathi.com,kumar.anand@jeevansathi.com,lavesh.rawat@gmail.com,bhavanakadwal@gmail.com","Jeevansathi Error in swapping",mysql_error($db));
+        $date = date("Y-m-d h");
+        $message        = "Mysql Error Count have reached swap jpartner $date within 5 minutes";
+        $from           = "JSSRVR";
+        $profileid      = "144111";
+        $mobile         = "9650350387";
+        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        $mobile         = "9818424749";
+        $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+        $mobile         = "9873639543";
+	$smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 }
 
 function DayDiff($StartDate, $StopDate)

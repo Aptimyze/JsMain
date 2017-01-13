@@ -139,10 +139,12 @@ public function phoneUpdateProcess($message)
 
 
 
-
+			if($message=='OPS')
+			{
 			$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
 			$reportInvalidObj->updateAsVerified($profileid);
-
+			}
+				
 			$incentiveObj=new incentive_MAIN_ADMIN_POOL();
 			$incentiveObj->setTimesTriedZero($profileid);
 

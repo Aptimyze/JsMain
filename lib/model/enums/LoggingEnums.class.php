@@ -74,4 +74,5 @@ class LoggingEnums
     const REFERER = 'Referer';
     const LOG_REFERER = 'Log_Referer';
     const LOG_VA_MODULE = 'VA_Info';
+    const JPC = 'Jprofile_Contact';
 }
