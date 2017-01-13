@@ -98,21 +98,11 @@ class postEOIv1Action extends sfAction
 		if($this->getParameter($request,"page_source") == "chat" && $this->getParameter($request,"channel") == "A")
 		{
 			$androidText = true;
+			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 		}
-		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
-		
-		$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
-		$onlyUnderScreenError = 0; // No errors
-		if($errorArr["UNDERSCREENING"] == 2 && $this->contactEngineObj->getComponent())
-		{
-			$onlyUnderScreenError = 1;
-		}
-		// print_r($onlyUnderScreenError);die;
-		if($onlyUnderScreenError == 1 || $onlyUnderScreenError == 0)
-		{
+		else {
 			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
 		}
-
 		if($this->contactEngineObj->messageId)
 		{
  
