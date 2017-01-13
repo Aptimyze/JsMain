@@ -504,8 +504,8 @@ $js_arr[]=array("registration_pg2"     => "3");
 $js_arr[]=array("registration_pg1"     => "3");
 $js_arr[]=array("jsms/contactus/contactus_js"     => "1");
 $js_arr[]=array("jsms/common/sly"      => "2");
-$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                                        => "57");
-$js_arr[]=array("jspc/myjs/myjs_js"                                                                     => "74");
+$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                                         => "58");
+$js_arr[]=array("jspc/myjs/myjs_js"                                                                      => "75");
 
 $js_arr[]=array("jspc/myjs/engBarJs_js"                              => "30");
 
@@ -520,7 +520,7 @@ $js_arr[]=array("jspc/search/scrollBar"    => "1");
 $js_arr[]=array("jspc/common/searchDropdown_js"     => "2");
 $js_arr[]=array("jspc/search/searchTuples"              => "11");
 $js_arr[]=array("jspc/search/jspcSuccessStory_js"    => "1");
-$js_arr[]=array("jspc/inbox/contactCenter"                                    => "35");
+$js_arr[]=array("jspc/inbox/contactCenter"                                     => "36");
 $js_arr[]=array("jspc/common/jqueryRangeSlider"     => "2");
 $js_arr[]=array("jspc/search/inview"   => "1");
 $js_arr[]=array("jspc/photo/photoRequest_js"        => "5");
@@ -606,7 +606,7 @@ $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
 
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                                       => "72");
-$js_arr[]=array("jspc/chat/chatPCHelper_js"                                                                                   => "106");
+$js_arr[]=array("jspc/chat/chatPCHelper_js"                                                                                    => "107");
 $js_arr[]=array("jspc/chat/chatPlugin_js"                                                        => "85");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"                                        => "48");
 $js_arr[]=array("jspc/chat/chatStrophieClient_js"      => "7");
@@ -614,7 +614,7 @@ $js_arr[]=array("jspc/help/JSPCHelp_js"              => "18");
 $js_arr[]=array("jsms/help/JSMSHelp_js"            => "14");
 $js_arr[]=array("jsms/help/jsmsPostQuery_js"        => "6");
 $js_arr[]=array("jsms/help/autoPopulateFreshdesk_js"     => "3");
-$js_arr[]=array("jsms/myjs/CALJSMS_js"              => "11");
+$js_arr[]=array("jsms/myjs/CALJSMS_js"               => "12");
 $js_arr[]=array("jspc/chat/customElem"       => "4");
 $js_arr[]=array("jspc/chat/strophe_receipts"       => "4");
 $js_arr[]=array("-1.0.2/Gruntfile"    => "3");
@@ -628,7 +628,7 @@ $js_arr[]=array("/web/converse"    => "3");
 $js_arr[]=array(" /web/billing/billing_v2"       => "5");
 $js_arr[]=array(" /web/billing/billing"      => "4");
 
-$js_arr[]=array("reportAbuseForUser_js"        => "6");
+$js_arr[]=array("reportAbuseForUser_js"         => "7");
 
 return $js_arr;
 }
