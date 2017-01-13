@@ -64,7 +64,7 @@ class dppSuggestions
 		if(MobileCommon::isApp())
 		{
 			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
-		}
+		}	
 		return $valueArr;
 	}
 
@@ -424,14 +424,18 @@ class dppSuggestions
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr);			
 		
 		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
-		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
+		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);		
 		if($calLayer)
 		{
 			foreach($valArr as $key=>$val)
 			{
-				if(array_key_exists($val, $hIncomeRs))
+				if($val == 0)
 				{
-					$valArr[$key] = $hIncomeRs[$val];
+					$valArr[$key] = TopSearchBandConfig::$noIncomeLabel;
+				}
+				elseif(array_key_exists($val, $hIncomeRs))
+				{					
+						$valArr[$key] = $hIncomeRs[$val];
 				}
 				elseif(array_key_exists($val, $hIncomeDol))
 				{
