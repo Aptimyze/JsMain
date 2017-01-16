@@ -76,7 +76,7 @@ EOF;
                         $flagChangeMade = 1;
                     }
 
-                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('openFields', $profileData[0]['FAMILYINFO']) && (!empty($profileData[0]['FAMILYINFO'])))
+                    if ( !$junkCharacterRemovalLib->removeJunkCharacters('familyInfo', $profileData[0]['FAMILYINFO']) && (!empty($profileData[0]['FAMILYINFO'])))
                     {
                         $paramArr['FAMILYINFO'] = '';
                         $flagChangeMade = 1;
