@@ -75,7 +75,7 @@ class LoggingEnums
     const LOG_REFERER = 'Log_Referer';
     const LOG_VA_MODULE = 'VA_Info';
     const JPC = 'Jprofile_Contact';
-    const MAPPING = 'Heading';
+    const MAPPING = 'Parent';
 
     public static $MappingNames = array(
         // JSC module names
