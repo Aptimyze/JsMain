@@ -869,10 +869,11 @@ JsChat.prototype = {
                     //console.log("true",addIndex);
                     if(addIndex == 0 || listCount == 0){
                         $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                        //console.log("here out",groupID,addIndex,-1);
                     }
                     else{
                         var insertAfterPos = elem.getNodeInsertPos(addIndex,groupID,status);
-                        //console.log("here out",insertAfterPos);
+                        //console.log("here out",groupID,addIndex,insertAfterPos);
                         if(insertAfterPos == -1){
                             $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                         }
