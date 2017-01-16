@@ -96,23 +96,16 @@ public function getContactsPending($serverId)
 	}
 
 
-public function getSendersPending($profileids)
+public function getSendersPending($chunkStr)
 	{
 		try
 		{
-			$idStr= str_replace("'","",$profileids);
-		$idArr= explode(",",$idStr);
-		foreach($idArr as $k=>$v)
-			$idSqlArr[]=":v$k";
-		$idSql="(".(implode(",",$idSqlArr)).")";
-		 $sql = "SELECT RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM newjs.CONTACTS WHERE RECEIVER IN $idSql AND TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) GROUP BY RECEIVER";
+        		$sql = "SELECT RECEIVER, SENDER   FROM newjs.CONTACTS WHERE TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) $chunkStr ORDER BY TIME DESC";
 			$res = $this->db->prepare($sql);
-			foreach($idArr as $k=>$v)
-				$res->bindValue(":v$k", $v, PDO::PARAM_INT);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
 			{
-				$result[$row['RECEIVER']] = $row['SENDER'];	
+				$result[$row['RECEIVER']][] = $row['SENDER'];	
 				//$result['count'][] = $row['count'];		
 			}
 			//print_r($profileids);
@@ -1169,7 +1162,7 @@ public function getSendersPending($profileids)
         public function getInterestSentForDuration($stTime, $endTime,$remainderArray){
             try{
             	
-                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM AND `MSG_DEL`!='Y' ORDER BY `TIME` DESC  ";
+                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM  ORDER BY `TIME` DESC  ";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
                 $prep->bindValue(":END_TIME",$endTime,PDO::PARAM_STR);

@@ -467,7 +467,7 @@ public function microtime_float()
 			break;
         case "MATCH_OF_DAY":
             $applicableProfiles=array();
-            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
             $notificationDataPoolObj = new NotificationDataPool();
             $dataAccumulated = $notificationDataPoolObj->getMatchOfDayData($applicableProfiles);
             //print_r($dataAccumulated);
@@ -581,7 +581,7 @@ public function microtime_float()
             $mess = $temp["A"]["A"][$count];
         return $mess;
   }   
-  public function getProfileApplicableForNotification($profiles,$notificationKey)
+  public function getProfileApplicableForNotification($profiles,$notificationKey,$className="")
   {
 
 	  unset($applicableProfiles);
@@ -589,7 +589,12 @@ public function microtime_float()
 	  foreach($notifications[$notificationKey] as $k=>$notificationKeyDetails)
 		$timeCriteria = $notificationKeyDetails['TIME_CRITERIA'];
 	  unset($notifications);
-	  $smsTempTableObj = new newjs_SMS_TEMP_TABLE;
+      if($className == "JPROFILE"){
+          $smsTempTableObj = new JPROFILE("crm_slave");
+      }
+      else{
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
+      }
 	  $varArray['PROFILEID']=implode(",",array_filter($profiles));
 	  unset($profiles);
 	  if($timeCriteria!='')
@@ -906,7 +911,8 @@ public function microtime_float()
           $validExtensionArr = array("jpg", "jpeg", "png");
           $imgname = "";
           $ext = explode(".",$url);
-          if(!in_array($ext[1],$validExtensionArr)){
+          $l = end($ext);
+          if(!in_array($l,$validExtensionArr)){
               /*
               $to = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com";
               $cc = "nitishpost@gmail.com";
@@ -917,7 +923,7 @@ public function microtime_float()
               */
               $date = date('Y-m-d');
               $msg = "Url:$url, Key:$notificationKey, pid: $profileid\n";
-              file_put_contents(sfConfig::get("sf_upload_dir")."/wrongImageUrl".$date.".txt",$msg,FILE_APPEND);
+              file_put_contents(sfConfig::get("sf_upload_dir")."/wrongImageUrlNew".$date.".txt",$msg,FILE_APPEND);
           }
       }
       unset($validPicArray);

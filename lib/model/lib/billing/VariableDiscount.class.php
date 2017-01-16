@@ -604,6 +604,10 @@ class VariableDiscount
 
                 if(is_array($clusterDetails)){
                 foreach($clusterDetails as $clusterName=>$fieldArr){
+			unset($greaterArray);unset($valueArray);unset($lessArray);
+			unset($expiryDt);unset($analyticScore);
+			unset($everPaid);unset($neverPaid);unset($discount);
+
 			//loop start
 			foreach($fieldArr as $key=>$data){
 				$val1 =$data['VALUE1'];
@@ -703,8 +707,9 @@ class VariableDiscount
 			$countArr[] =array('cluster'=>$clusterName,'count'=>$totalCount);
 
 			// Delete Cluster
-			$vdClusterObj->deleteCluster($clusterName);
-			unset($profileArr);	
+			//$vdClusterObj->deleteCluster($clusterName);
+			unset($profileArr);
+			unset($everPaidArr);unset($jprofileData);unset($expiryProfiles);
 		}
 		foreach($countArr as $key=>$dataArr){
 			$cluster 	=$dataArr['cluster'];
