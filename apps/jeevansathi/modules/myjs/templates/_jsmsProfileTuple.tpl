@@ -58,6 +58,23 @@
 
                  </div>
 ~/if`
+
+~if $section eq 'matchOfDay'`     
+                    
+                 <div class="brdr8 fullwid" style="height:60px;">
+
+                        <div class="txtc fullwid fl matchOfDayBtn brdr7 pad2" index="~$index`"  >
+                            <input class='inputProChecksum' type="hidden" value="~$profileTuple.profilechecksum`" />
+
+                            <a class="f15 color2 fontreg">Send Interest</a>
+                    </div>
+                    <div class="clr"></div>
+
+                 </div>
+~/if`
+
+
+
              </div>
         </div>
 ~/if`

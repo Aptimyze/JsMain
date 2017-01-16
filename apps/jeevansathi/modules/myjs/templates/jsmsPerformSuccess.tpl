@@ -3,6 +3,7 @@
     var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
     var hamJs= '~$hamJs`';
     var showExpiring=~$showExpiring`;
+   
 </script>
 <!--start:div-->
 <div class="perspective" id="perspective">
@@ -142,6 +143,7 @@
 <input type="hidden" id="awaitingResponseCount" value="~$apiData.interest_received.tuples|@count`">
 <input type="hidden" id="visitorCount" value="~$apiData.visitors.new_count`">
 <input type="hidden" id="matchalertCount" value="~$apiData.match_alert.tuples|@count`">
+<input type="hidden" id="matchOfDayCount" value="~$apiData.match_alert.tuples|@count`">
 <a href="#" onClick="setNotificationView();" id="darkSection"></a>
 <div class="pad1 preload" id="profileDetailSection" style="overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;">
 	<div class="row" style=" width:250%;">
@@ -286,9 +288,7 @@
 <span class="setWidth" id="awaitingResponsePresent" style="display:block;background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsAwaitingResponseSection",[eoiData=>$apiData.interest_received,gender=>$apiData.gender])`
 </span>
-<span class="setWidth" id="matchOfTheDaySection" style="display:block;background-color: #e4e4e4; margin-top:15px;">
-	~include_partial("myjs/matchOfTheDaySection",[modData=>$apiData.interest_received,gender=>$apiData.gender])`
-</span>
+
 
 <span class="setWidth"  id="visitorPresent" style="background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsVistorsSection",[visitorData=>$apiData.visitors])`
@@ -296,6 +296,11 @@
 <span id="matchalertPresent"  class="setWidth" style="display:block;background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsMatchalertSection",[matchalertData=>$apiData.match_alert,gender=>$apiData.gender])`
 </span>
+<!--~if $apiData.matchOfDay.view_all_count > 0` -->
+<span id="matchOfDayPresent"  class="setWidth" style="display:block;background-color: #e4e4e4; margin-top:15px;">
+	~include_partial("myjs/jsmsMatchOfTheDaySection",[matchalertData=>$apiData.match_alert,gender=>$apiData.gender])`
+</span>
+<!--~/if` -->
 <span id="browseMyMatchBand" style="display:block; background-color: #e4e4e4;">
 	~include_partial("myjs/jsmsBrowseMyMatchesBand")`
 </span>
@@ -307,6 +312,9 @@
 </span>
 <span id="matchalertAbsent" style="display:none;background-color: #e4e4e4;">
 	~include_partial("myjs/jsmsMatchalertSection",[matchalertData=>$apiData.match_alert])`
+</span>
+<span id="matchOfDayAbsent" style="display:none;background-color: #e4e4e4;">
+	~include_partial("myjs/jsmsMatchOfTheDaySection",[matchalertData=>$apiData.match_alert])`
 </span>
 ~include_component('common', 'notificationLayerJsms')`	
 </div>

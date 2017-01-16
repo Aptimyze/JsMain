@@ -299,6 +299,18 @@ params["profilechecksum"] =input.val();
     
     });
     
+     child=$(".matchOfDayBtn");
+    child.unbind("click");
+    child.bind("click",function(){
+        $(this).unbind("click");
+        var input=$(this).children(".inputProChecksum");
+params["profilechecksum"] =input.val();
+        params["actionName"] ="INITIATE_MYJS";
+        params["fromJSMS_MYJS"] ="1";
+        params['fromJSMS_MOD'] = "1";
+        performAction(params["actionName"], params,  $(this).attr("index"),false);
+    
+    });
     
     
     }   
