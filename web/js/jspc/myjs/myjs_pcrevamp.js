@@ -1016,29 +1016,25 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 
     function showMatchOfTheDayCards()
     { 
-
-          $.ajax(
-                {                 
-                        url: '/search/matchofdaylist',
-                       // data: "profileid="+profileid,
-                        //timeout: 5000,
-                        success: function(response) 
-                        { 
+        $.ajax({                 
+                    url: '/search/matchofdaylist',
+                    // data: "profileid="+profileid,
+                    //timeout: 5000,
+                    success: function(response) 
+                    { 
                         alert('inside'); 
-                          console.log(response);
-                         var modCards = response;
-                         if(modCards.profiles.length == 1)
-                         {
-                          fillMatchOfTheDayCards(modCards);
-                         }
-                         else
-                         {
-                          var flagForMatchOfTheDayCards = 0;
-                         }
+                        console.log(response);
+                        var modCards = response;
+                        if(modCards.profiles.length == 1)
+                        {
+                            fillMatchOfTheDayCards(modCards);
                         }
-                        });
-
-
+                        else
+                        {
+                            var flagForMatchOfTheDayCards = 0;
+                        }
+                    }
+            });
     }
 
     function fillMatchOfTheDayCards(responseObject)
