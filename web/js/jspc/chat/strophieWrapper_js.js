@@ -17,7 +17,8 @@ var strophieWrapper = {
         "RECEIVED": 'received',
         "SENDER_RECEIVED_READ": 'sender_received_read',
         "RECEIVER_RECEIVED_READ": 'receiver_received_read',
-        "FORWARDED": 'forwarded'
+        "FORWARDED": 'forwarded',
+        "MESSAGE_RECEIVED": 'message_received'
     },
     rosterGroups: chatConfig.Params.pc.rosterGroups,
     currentConnStatus: null,

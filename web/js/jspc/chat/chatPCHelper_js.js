@@ -1208,6 +1208,8 @@ function invokePluginReceivedMsgHandler(msgObj) {
         if (typeof msgObj["body"] != "undefined" && msgObj["body"] != "" && msgObj["body"] != null && msgObj['msg_state'] != strophieWrapper.msgStates["FORWARDED"]) {
             ////console.log("appending RECEIVED");
             objJsChat._appendRecievedMessage(msgObj["body"], msgObj["from"], msgObj["msg_id"],msgObj["msg_type"]);
+            //send Message receieved stanza
+            strophieWrapper.sendReceivedReadEvent(msgObj["to"]+"@"+openfireServerName, msgObj["from"]+"@"+openfireServerName, msgObj["msg_id"], strophieWrapper.msgStates["MESSAGE_RECEIVED"]);
         }
         if (typeof msgObj["msg_state"] != "undefined") {
             switch (msgObj['msg_state']) {
