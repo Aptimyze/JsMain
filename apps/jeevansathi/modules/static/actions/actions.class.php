@@ -486,7 +486,7 @@ public function executeCALRedirection($request){
               'jsms/common/scrollTo',
               'jsms/common/urlParamHandling',
               'app_promo_js',
-              'commonMob.js',
+              'commonMob',
               'jsms/common/touchswipe_js',
               'jsms/common/disableScroll_js',
               'jsms/common/history_js',
