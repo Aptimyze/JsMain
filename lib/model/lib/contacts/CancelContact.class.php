@@ -133,6 +133,9 @@ class CancelContact extends ContactEvent{
   private function updateMemcache($currentFlag)
   {
     try {
+      $ContactTime = strtotime($this->contactHandler->getContactObj()->getTIME());
+      $time = time();
+      $daysDiff  = floor(($time - $ContactTime)/(3600*24));
       if($currentFlag==ContactHandler::INITIATED)
       {
         $profileMemcacheServiceViewerObj = new ProfileMemcacheService($this->contactHandler->getViewer());
@@ -140,6 +143,10 @@ class CancelContact extends ContactEvent{
         $profileMemcacheServiceViewerObj->update("TOTAL_CONTACTS_MADE",-1);
         $profileMemcacheServiceViewerObj->update("DEC_BY_ME",1);
         $profileMemcacheServiceViewerObj->update("NOT_REP",-1);
+        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
+        {
+          $profileMemcacheServiceViewedObj->update("INTEREST_EXPIRING",-1);
+        }
         if($this->contactHandler->getContactObj()->getFILTERED() === Contacts::FILTERED)
 			$profileMemcacheServiceViewedObj->update("FILTERED_NEW",-1);
         else        

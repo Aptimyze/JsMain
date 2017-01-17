@@ -35,7 +35,7 @@ class AgentAllocation
 		{
 			$mainAdminObj           	=new incentive_MAIN_ADMIN();
 			$historyObj			=new incentive_HISTORY();
-			$jprofileContactObj    		=new NEWJS_JPROFILE_CONTACT();
+			$jprofileContactObj    		= new ProfileContact();
 			$iProfileAlternateNumberObj	=new PROFILE_ALTERNATE_NUMBER();
 			$crmDailyAllotObj       	=new CRM_DAILY_ALLOT();
 			$serviceStatusObj		=new BILLING_SERVICE_STATUS();
@@ -512,8 +512,7 @@ class AgentAllocation
 		$phoneNumberArrUn =array_unique($phoneNumberArr);
 		$phoneNumberStr =implode(",",$phoneNumberArrUn);
 		$smartyObjEx->assign("phoneNumberStr",$phoneNumberStr);
-        $ccEmailIds = "manoj.rana@naukri.com,nitishpost@gmail.com";
-	        $excEmailSender->send($agentEmail,'',$ccEmailIds);
+	        $excEmailSender->send($agentEmail);
 	}
     
     public function sendPostVerificationSMSAndMail($profileid, $name, $username)

@@ -660,7 +660,7 @@ class JPROFILE
     }
 
     private function logCacheConsumption()
-    {
+    {return;
         $key = 'cacheConsumeCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
@@ -670,7 +670,7 @@ class JPROFILE
     }
 
     private function totalQueryCount()
-    {
+    {return;
         $key = 'totalQueryCount'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 

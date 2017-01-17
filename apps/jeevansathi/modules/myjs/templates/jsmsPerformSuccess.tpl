@@ -2,6 +2,7 @@
     var userGender="~$apiData.gender`",siteUrl="~$SITE_URL`";
     var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
     var hamJs= '~$hamJs`';
+    var showExpiring=~$showExpiring`;
 </script>
 <!--start:div-->
 <div class="perspective" id="perspective">
@@ -275,6 +276,11 @@
 		<div class="clr"></div>
 	</div>
 </div>
+
+<!-- Interest Expiring section -->
+~if $apiData.interest_expiring.view_all_count > 0`
+	~include_partial("myjs/jsmsInterestExpiringSection",[expiringData=>$apiData.interest_expiring])`
+~/if`
 <!--end:div-->
 <!--eoi section-->
 <span class="setWidth" id="awaitingResponsePresent" style="display:block;background-color: #e4e4e4; margin-top:15px;">

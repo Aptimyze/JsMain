@@ -146,11 +146,18 @@ class Decline extends ContactEvent{
     try {
         $profileMemcacheServiceViewerObj = new ProfileMemcacheService($this->contactHandler->getViewer());
         $profileMemcacheServiceViewedObj = new ProfileMemcacheService($this->contactHandler->getViewed());
+        $ContactTime = strtotime($this->contactHandler->getContactObj()->getTIME());
+        $time = time();
+        $daysDiff  = floor(($time - $ContactTime)/(3600*24));
         $profileMemcacheServiceViewerObj->update("DEC_BY_ME",1);
         $profileMemcacheServiceViewedObj->update("DEC_ME",1);
         $profileMemcacheServiceViewedObj->update("DEC_ME_NEW",1);
       if($currentFlag==ContactHandler::INITIATED)
       {
+        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
+        {
+          $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
+        }
         if ($filtered!='Y'){
         $profileMemcacheServiceViewerObj->update("OPEN_CONTACTS",-1);
         $profileMemcacheServiceViewedObj->update("NOT_REP",-1);
