@@ -594,14 +594,14 @@ var hamHtml="",slider1,slider2;
 					remove=1;
 					$(target).parent().removeClass("checked").removeClass("multiple");
 			}
-			else	
-			{
-					
+			else {	
+				if($(target).hasClass("suggestTitle") == false && $(target).hasClass("suggestBox") == false) {	
 					$(target).next().prop("checked","checked");
 					$(target).next().attr("checked","checked");
 					$(target).parent().addClass("checked");
 					if(this.whenHide=="multiple")
 						$(target).parent().addClass("multiple");
+				}
 			}		
 			
 			if(remove)
@@ -1273,7 +1273,7 @@ function appendSuggestionList(response) {
     if(obj.type == "AGE") {
       	$("#suggestBox").remove();
       	if(obj.data) {
-			$("<div class='pad10p0p brdr13' id='suggestBox'><div class='color14 f14 fontlig'>Suggestions</div></div>").insertBefore($("#HAM_LABEL"));
+			$("<div class='pad10p0p brdr13' id='suggestBox'><div class='suggestTitle color14 f14 fontlig'>Suggestions</div></div>").insertBefore($("#HAM_LABEL"));
 			$("#suggestBox").append("<div id='suggest_"+obj.data.LAGE+"_"+obj.data.HAGE+"' class='pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+$($("#HAM_OPTION_1 li[value='"+obj.data.LAGE+"'] div")[0]).html()+"&nbsp;-&nbsp;"+$($("#HAM_OPTION_2 li[value='"+obj.data.HAGE+"'] div")[0]).html()+"</div>"); 			
 	      	$("#suggest_"+obj.data.LAGE+"_"+obj.data.HAGE).off("click").on("click",function(){
 	      		var lage = $(this).attr("id").split("suggest_")[1].split("_")[0],hage = $(this).attr("id").split("_")[2],valLage = $("#HAM_OPTION_1 li[value='"+lage+"']").attr("index"),valHage = $("#HAM_OPTION_2 li[value='"+hage+"']").attr("index"),nTop = $("#HAM_OPTION_1 li[fake=1]").length/2;
@@ -1287,7 +1287,7 @@ function appendSuggestionList(response) {
     	var lVal = 0,hVal = 0;
     	$("#suggestBox").remove();
     	if(obj.data) {
-			$("<div class='pad10p0p brdr13' id='suggestBox'><div class='color14 f14 fontlig'>Suggestions</div></div>").insertBefore($("#HAM_LABEL"));
+			$("<div class='pad10p0p brdr13' id='suggestBox'><div class='suggestTitle color14 f14 fontlig'>Suggestions</div></div>").insertBefore($("#HAM_LABEL"));
 			if ($("#TAPNAME_1").html() == "Income Rs") {
 				
 				$(".hpad5").each(function(){
@@ -1316,6 +1316,9 @@ function appendSuggestionList(response) {
 			});
 		}
     } else{
+    	if($(".suggestOption").length == 0)  {
+    		$("#suggestBox").remove();
+    	}
 		var dataPresent,clickVal;
 		if(obj.data && Object.keys(obj.data).length != 0) {
 			$.each(Object.keys(obj.data), function(index, elem) {
@@ -1331,13 +1334,25 @@ function appendSuggestionList(response) {
 			 		});
 			 		if(dataPresent == false) {
 			 			if($("#suggestBox").length == 0)
-			 				$("<div class='pad10p0p brdr13' id='suggestBox'><div class='color14 f14 fontlig'>Suggestions</div></div>").insertBefore($(".hpad5")[0]);
+			 				$("<div class='pad10p0p brdr13 suggestBox' id='suggestBox'><div class='suggestTitle color14 f14 fontlig'>Suggestions</div></div>").insertBefore($(".hpad5")[0]);
 			 			if($("#HAM_OPTION_1 li[value='"+elem+"']").length != 0) {
 				 			$("#suggestBox").append("<div style='width: 100px;overflow: hidden;height: 27px;text-overflow: ellipsis;position: relative;white-space: nowrap;' value='"+elem+"' class='suggestOption pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+$($("#HAM_OPTION_1 li[value='"+elem+"'] div")[0]).html()+"</div>");
 				 			$(".suggestOption[value='"+elem+"']").off("click").on("click", function(){
+				 				if($(this).hasClass("bg7")) {
+				 					var count = 0;
+				 					$(".suggestOption").each(function(){
+				 						if($(this).hasClass("bg7") == false) {
+				 							count++;
+				 						}
+				 					});
+				 					if(count < 7) {
+				 						$("#suggestBox").attr("suggest-click",1);
+				 					}
+				 				} else {
+				 					$("#suggestBox").attr("suggest-click",1);
+				 				}
 				 				clickVal = $(this).attr("value");
 				 				$(this).toggleClass("bg7");
-				 				$("#suggestBox").attr("suggest-click",1);
 				 				$(".hpad5[value='"+clickVal+"']").click();
 				 			});
 			 			}
