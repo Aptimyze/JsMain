@@ -1182,6 +1182,7 @@ class InboxMobileAppV2
 				"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_SENT_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"HOROSCOPE_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::HOROSCOPE_REQUEST_RECEIVED_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"HOROSCOPE_REQUEST_SENT"=>"stype=".SearchTypesEnums::HOROSCOPE_REQUEST_SENT_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
+				"NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_PC."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_PC,
 				"FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"INTRO_CALLS"=>"responseTracking=".JSTrackingPageType::CONTACT_OTHER,
                 "INTRO_CALLS_COMPLETE"=>"responseTracking=".JSTrackingPageType::CONTACT_OTHER,
@@ -1202,8 +1203,9 @@ class InboxMobileAppV2
                                 "PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_IOS,
                                 "CONTACTS_VIEWED"=>"stype=".SearchTypesEnums::PHONEBOOK_IOS,"responseTracking=".JSTrackingPageType::PHONEBOOK_IOS,
                                 "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_IOS,
-                                "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_IOS,"responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_IOS
-                                );
+                                "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_IOS,"responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_IOS,
+                                "NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_IOS."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_IOS,
+				);
                 }
 		else{
                     if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")!="A")
@@ -1218,7 +1220,9 @@ class InboxMobileAppV2
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_JSMS,
 				"CONTACTS_VIEWED"=>"stype=".SearchTypesEnums::PHONEBOOK_JSMS."&responseTracking=".JSTrackingPageType::PHONEBOOK_JSMS,
 				"FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_JSMS,
-				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_JSMS."&responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_JSMS
+				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_JSMS."&responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_JSMS,
+                                "NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_MS."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_MS,
+				
 				);
                 }
 		return $trackingMap[$infoType]?$trackingMap[$infoType]:false;
