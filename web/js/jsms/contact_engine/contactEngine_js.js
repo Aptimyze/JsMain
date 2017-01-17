@@ -138,8 +138,10 @@ $.ajax({
 					$("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
 					//$("#loaderOverlay").hide();
 					//$("#reportAbuseContainer").hide();
-                    if(CommonErrorHandling(result,'?regMsg=Y')) 
-                    {
+                    if(CommonErrorHandling(result,'?regMsg=Y') || result.responseStatusCode == 2) 
+                    {  
+                      if(result.responseStatusCode == 2)
+                        result.message = result.responseMessage;
 					ShowTopDownError([result.message],5000);
 					$("#commonOverlayTop").show();
                     }	

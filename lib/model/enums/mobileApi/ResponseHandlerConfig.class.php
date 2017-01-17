@@ -126,6 +126,6 @@ class ResponseHandlerConfig
 	public static $PEAK_LOAD_FAILURE = array("message"=>"This operation cannot be done at site peak load","statusCode"=>'0');
 
 	// Report Abuse
-	public static $ABUSE_ATTEMPTS_OVER = array("message"=>"You cannot abuse the same person more than twice.","statusCode"=>'2');
+	public static $ABUSE_ATTEMPTS_OVER = array("message"=>"You cannot abuse the same person more than twice.","statusCode"=>'1');
 }
 ?>

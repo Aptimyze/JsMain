@@ -156,7 +156,7 @@ class REPORT_ABUSE_LOG extends TABLE
 
                           if($row=$prep->fetch(PDO::FETCH_ASSOC))   
                             $output=$row['CNT'];
-                        if($output>2)
+                        if($output>=2)
                         	return 0;
                         return 1;
 

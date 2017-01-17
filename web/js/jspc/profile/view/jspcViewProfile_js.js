@@ -615,8 +615,6 @@ ajaxConfig.success=function(response){
 	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
 
 		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){
-      if(response.responseStatusCode == 2)
-      response.message = response.responseMessage;
       $('#messageForReportAbuse').html(response.message);
       $('#reportAbuseConfirmLayer').fadeIn(300,"linear",function(){})}); 
 
