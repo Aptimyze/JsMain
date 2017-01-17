@@ -39,7 +39,6 @@ Abstract class ApiAuthentication
 	private $logLogoutTracking=false;
 	private $recentLogTracking=false;
 	private $channel='R';
-	private $directLogin=false;
 	private $loc="";
 
 	public function __construct($request)
@@ -68,9 +67,6 @@ Abstract class ApiAuthentication
 					
 					//What about archived users.
 					//What about tracking
-					
-					
-					$this->directLogin=true;
 					$this->channel='D';
 					$this->loginData=$loginData;
 					if($this->isNotApp && $this->loginData[PROFILEID] && $this->loginData["GENDER"]=="")
@@ -117,7 +113,7 @@ Abstract class ApiAuthentication
 							$this->rememberMe=0;
 						$this->setcookies($this->loginData,$email,$password);
 					}
-					$this->completeLoginTracking();
+					$this->CommonLoginTracking();
 					return $this->loginData;
 				}
 			}
@@ -135,7 +131,7 @@ Abstract class ApiAuthentication
 		$this->recentLogTracking=true;
 		$this->removeLoginCookies();
 		$this->logLogoutTracking=true;
-		$this->completeLoginTracking();
+		$this->CommonLoginTracking();
 	}
 
 	
@@ -204,7 +200,7 @@ Abstract class ApiAuthentication
 					$this->recentLogTracking=false;
 				}
 			}
-			$this->completeLoginTracking();
+			$this->CommonLoginTracking();
 			return $this->loginData;
 		}
 		return false;
@@ -370,7 +366,7 @@ Abstract class ApiAuthentication
         
         if($this->sendLoggingDataQueue(self::$loginTracking, $queueArr))return;
         else
-        	CompleteLoginTracking::completeLoginTracking($queueArr);
+        	CommonLoginTracking::completeLoginTracking($queueArr);
 		
 	}
 	
