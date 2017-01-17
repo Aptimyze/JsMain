@@ -296,6 +296,7 @@ class FieldForm extends sfForm
 					}
 				}
 			  }
+				$screen_flag = JsCommon::setAutoScreenFlag($screen_flag,array_keys($this->formValues));
                                 if($bSet_NativePlaceBit)
                                 {
                                         $jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL

@@ -994,8 +994,6 @@ if (authenticated($cid)) {
 			$mobileOwnerName_set = isFlagSet("MOBILE_OWNER_NAME", $screen);
 			$social_new_fields['COMPANY_NAME']['TBL'] = 'jpr';
 			$social_new_fields['COMPANY_NAME']['LABEL'] = 'Name of Organization';
-			$social_new_fields['PROFILE_HANDLER_NAME']['TBL'] = 'jpr';
-			$social_new_fields['PROFILE_HANDLER_NAME']['LABEL'] = 'Person handling Profile';
 			$social_new_fields['GOTHRA_MATERNAL']['TBL'] = 'jpr';
 			$social_new_fields['GOTHRA_MATERNAL']['LABEL'] = 'Gothra (Maternal)';
 			$social_new_fields['PG_COLLEGE']['TBL'] = 'edu';
@@ -1010,14 +1008,6 @@ if (authenticated($cid)) {
 			$social_new_fields['OTHER_PG_DEGREE']['LABEL'] = 'Other PG Degree';
 			$social_new_fields['ALT_MOBILE_OWNER_NAME']['TBL'] = 'contact';
 			$social_new_fields['ALT_MOBILE_OWNER_NAME']['LABEL'] = 'Alternate Mobile Owner';
-			$social_new_fields['ALT_MESSENGER_ID']['TBL'] = 'contact';
-			$social_new_fields['ALT_MESSENGER_ID']['LABEL'] = 'Alternate Messenger Id';
-			$social_new_fields['LINKEDIN_URL']['TBL'] = 'contact';
-			$social_new_fields['LINKEDIN_URL']['LABEL'] = 'LinkedIn Url/Id';
-			$social_new_fields['FB_URL']['TBL'] = 'contact';
-			$social_new_fields['FB_URL']['LABEL'] = 'Facebook Url/Id';
-			$social_new_fields['BLACKBERRY']['TBL'] = 'contact';
-			$social_new_fields['BLACKBERRY']['LABEL'] = 'Blackberry Pin';
 			$social_new_fields['FAV_FOOD']['TBL'] = 'hob';
 			$social_new_fields['FAV_FOOD']['LABEL'] = 'Food I Cook';
 			$social_new_fields['FAV_TVSHOW']['TBL'] = 'hob';

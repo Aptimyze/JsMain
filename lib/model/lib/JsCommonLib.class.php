@@ -1116,7 +1116,17 @@ public static function insertConsentMessageFlag($profileid) {
 
             JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
         }
-
-
+        public static function setAutoScreenFlag($screenVal,$editArr)
+        {
+                $autoScreenArr = array("PHONE_MOB","PHONE_RES","PROFILE_HANDLER_NAME","LINKEDIN_URL","FB_URL","BLACKBERRY","ALT_MESSENGER_ID");
+                foreach($editArr as $k=>$v)
+                {
+                        if(in_array($k,$autoScreenArr))
+                        {
+				$screenVal = Flag::setFlag(strtolower($k),$screenVal);
+                        }
+                }
+		return $screenVal;
+        }
 }
 ?>
