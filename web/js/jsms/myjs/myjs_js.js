@@ -1,4 +1,4 @@
-var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2, matchAlertNext=0, full_loaded = 0,matchOfDayNext=0;
+var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,tupleObject3,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2,tupleObject3, matchAlertNext=0, full_loaded = 0,matchOfDayNext=0;
 
 
 
@@ -79,12 +79,11 @@ function jsmsMyjsReady() {
                   bindSlider();
         }
 
-         if (parseInt(matchOfDayCount)) {
-            var slider3=$("#matchOfDayPresent #matchOfDay_tuples");
-           tupleObject3 =   slider3.Slider(9,slider2,parseInt(matchOfDayCount),"matchOfDay",matchOfDayNext);
-          tupleObject3._defaultInit();
+        if (parseInt(matchOfDayCount)) {
+        	var slider3 = $("#matchOfDayPresent #matchOfDay_tuples");
+        	tupleObject3 = slider3.Slider(9,slider3,parseInt(matchOfDayCount),"matchOfDay",matchOfDayNext);
+        	tupleObject3._defaultInit();
                   bindSlider();
-          alert('insdie2');        
         }
 
                 $(".contactLoader").css("left",((windowWidth/2)-$(".contactLoader").width()/2)-20+"px");
@@ -102,7 +101,6 @@ function jsmsMyjsReady() {
         	$(this).height(circleDim-2);
         	$(this).width(circleDim-2);
         });
- 	alert('this is out');       
 }
 
 

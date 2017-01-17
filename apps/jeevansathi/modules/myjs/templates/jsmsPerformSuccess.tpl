@@ -289,6 +289,9 @@
 	~include_partial("myjs/jsmsAwaitingResponseSection",[eoiData=>$apiData.interest_received,gender=>$apiData.gender])`
 </span>
 
+<span id="matchOfDayPresent"  class="setWidth" style="display:block;background-color: #e4e4e4; margin-top:15px;">
+	~include_partial("myjs/jsmsMatchOfTheDaySection",[matchalertData=>$apiData.match_alert,gender=>$apiData.gender])`
+</span>
 
 <span class="setWidth"  id="visitorPresent" style="background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsVistorsSection",[visitorData=>$apiData.visitors])`
@@ -296,11 +299,7 @@
 <span id="matchalertPresent"  class="setWidth" style="display:block;background-color: #e4e4e4; margin-top:15px;">
 	~include_partial("myjs/jsmsMatchalertSection",[matchalertData=>$apiData.match_alert,gender=>$apiData.gender])`
 </span>
-<!--~if $apiData.matchOfDay.view_all_count > 0` -->
-<span id="matchOfDayPresent"  class="setWidth" style="display:block;background-color: #e4e4e4; margin-top:15px;">
-	~include_partial("myjs/jsmsMatchOfTheDaySection",[matchalertData=>$apiData.match_alert,gender=>$apiData.gender])`
-</span>
-<!--~/if` -->
+
 <span id="browseMyMatchBand" style="display:block; background-color: #e4e4e4;">
 	~include_partial("myjs/jsmsBrowseMyMatchesBand")`
 </span>

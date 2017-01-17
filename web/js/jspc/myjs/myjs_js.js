@@ -1309,7 +1309,6 @@ function reArrangeDivsAfterDissapear(value,position,id)
 
         }
 
-        console.log('cntrlClick',cntrlClick);                            
 
         if(cntrlClick)
         {
