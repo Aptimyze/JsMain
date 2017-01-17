@@ -134,14 +134,12 @@ $.ajax({
 		type: "POST",
 		data: ajaxData,
 		//crossDomain: true,
-		success: function(result){
+		success: function(result){  
 					$("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
 					//$("#loaderOverlay").hide();
 					//$("#reportAbuseContainer").hide();
-                    if(CommonErrorHandling(result,'?regMsg=Y') || result.responseStatusCode == 2) 
+                    if(CommonErrorHandling(result,'?regMsg=Y') || result.message =='You cannot abuse the same person more than twice.' ) 
                     {  
-                      if(result.responseStatusCode == 2)
-                        result.message = result.responseMessage;
 					ShowTopDownError([result.message],5000);
 					$("#commonOverlayTop").show();
                     }	
