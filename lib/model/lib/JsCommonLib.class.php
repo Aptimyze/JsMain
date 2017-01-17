@@ -1121,9 +1121,9 @@ public static function insertConsentMessageFlag($profileid) {
                 $autoScreenArr = array("PHONE_MOB","PHONE_RES","PROFILE_HANDLER_NAME","LINKEDIN_URL","FB_URL","BLACKBERRY","ALT_MESSENGER_ID");
                 foreach($editArr as $k=>$v)
                 {
-                        if(in_array($k,$autoScreenArr))
+                        if(in_array($v,$autoScreenArr))
                         {
-				$screenVal = Flag::setFlag(strtolower($k),$screenVal);
+				$screenVal = Flag::setFlag(strtolower($v),$screenVal);
                         }
                 }
 		return $screenVal;
