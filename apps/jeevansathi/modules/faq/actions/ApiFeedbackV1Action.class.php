@@ -39,8 +39,8 @@ class ApiFeedbackV1Action extends sfActions
   		$reportee = $profileObj->getProfileIdFromUsername($otherUser);
 
   		unset($profileObj);
-  		if(!MobileCommon::isIOSApp() && !MobileCommon::isAndroidApp())
-  		{	
+  		//if(!MobileCommon::isIOSApp() && !MobileCommon::isAndroidApp())
+  	//	{	
 		if(!$reportAbuseObj->canReportAbuse($reporter,$reportee))
 		{  
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
@@ -49,7 +49,7 @@ class ApiFeedbackV1Action extends sfActions
 			$apiResponseHandlerObj->generateResponse();
 			die;
 		}
-		}
+	//	}
 
 		$success=false;
 		$result=$feedBackObj->ProcessData($request);
