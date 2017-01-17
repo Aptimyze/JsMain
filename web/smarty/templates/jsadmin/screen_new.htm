@@ -50,7 +50,15 @@
 			  this.style.height = 'auto';
 			  this.style.height = (this.scrollHeight) + 'px';
 			});
- 		 	
+
+			/*
+				This function is written for dynamic resizing of text
+			 */
+ 		 	$('input[type=text]').each(function(){
+			    var value = $(this).val();
+			    var size  = value.length;
+			    $(this).attr('size',size);
+			 });
 		});
 
 		 	/**
