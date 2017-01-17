@@ -48,4 +48,6 @@ class MailerGroup{
   const ASTRO_COMPATIBILTY = 27;
   const JUNK_REMOVAL = 45;
   const DELETE_PROFILE = 27;
+
+  const PROMOTIONAL_ALTERNATE_EMAIL = 46;
 }

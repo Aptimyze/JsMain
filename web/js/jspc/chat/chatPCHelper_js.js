@@ -1175,6 +1175,7 @@ function checkNewLogin(profileid) {
             localStorage.removeItem('tabState');
             localStorage.removeItem('chatBoxData');
             localStorage.removeItem('lastUId');
+            localStorage.setItem('isCurrentJeevansathiTab',1);
         }
     } else {
         createCookie('chatEncrypt', computedChatEncrypt,chatConfig.Params[device].loginSessionTimeout);
@@ -1288,6 +1289,20 @@ function invokePluginReceivedMsgHandler(msgObj) {
                 objJsChat._changeStatusOfMessg(msgObj["receivedId"],msgObj["from"],"recievedRead");
             }*/
         }
+    }
+}
+
+/*play sound on receiving the chat message
+ * @params:none
+ */
+function playChatNotificationSound(){
+    //if current url is not jeevansathi tab and jspc chat is on
+    var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
+    //console.log("playChatNotificationSound",isCurrentJeevansathiTab);
+    if(showChat == "1" && isCurrentJeevansathiTab == undefined || isCurrentJeevansathiTab == 0){
+        //console.log("here playChatNotificationSound");
+        var audio = new Audio(chatConfig.Params[device].audioChatFilesLocation+'chatNotificationSound.mp3');
+        audio.play();
     }
 }
 
@@ -1407,7 +1422,7 @@ function clearChatMsgFromLS(){
  */
 function clearLocalStorage() {
     //var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','clLastUpdated','nonRosterCLUpdated'];
-    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','name','nonRosterCLUpdated'];
+    var removeArr = ['userImg','bubbleData_new','chatBoxData','tabState','name','nonRosterCLUpdated','isCurrentJeevansathiTab'];
     $.each(removeArr, function (key, val) {
         localStorage.removeItem(val);
     });
@@ -1681,6 +1696,11 @@ function updatePresenceAfterInterval(){
 
 $(document).ready(function () {
     //console.log("Doc ready");
+    var isCurrentJeevansathiTab = localStorage.getItem("isCurrentJeevansathiTab");
+    if(isCurrentJeevansathiTab == undefined && showChat == "1"){
+        localStorage.setItem("isCurrentJeevansathiTab",1);
+    }
+  
     if(typeof loggedInJspcUser!= "undefined")
         checkNewLogin(loggedInJspcUser);
     var checkDiv = $("#chatOpenPanel").length;
@@ -1701,12 +1721,32 @@ $(document).ready(function () {
             //setLogoutClickLocalStorage("unset");  
         });
         
+        //event to detect focus on page
         $(window).focus(function() {
+            //console.log("Doc focus");
             invokePluginLoginHandler("manageLogout");
             if(strophieWrapper.synchronize_selfPresence == true){
                 invokePluginLoginHandler("session_sync");
             }
+            /*var dt = new Date();
+            var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            console.log("page focus in",time);*/
+            localStorage.setItem("isCurrentJeevansathiTab",1);
         });
+
+        //event to detect focus out of page
+        $(window).on("blur",function() {
+            //console.log("Doc blur");
+            /*var dt = new Date();
+            var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            console.log("page focus out",time);*/
+            //console.log("blur");
+            localStorage.setItem("isCurrentJeevansathiTab",0);
+        });
+
+        
+
+        
         $(window).on("offline", function () {
             strophieWrapper.currentConnStatus = Strophe.Status.DISCONNECTED;
         });
