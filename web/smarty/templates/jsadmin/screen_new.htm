@@ -316,10 +316,6 @@
 								<input type="hidden" name="GENDER1" id="GENDER1" value="~$SHOW_GENDER`">
 							</td>
 						</tr>
-						<tr>
-							<td width="157">&nbsp;</td>
-							<td width="343">&nbsp;</td>
-						</tr>
 					~else`
 						<input type="hidden" name="GENDER" id="GENDER" value="~$SHOW_GENDER`">
 						<input type="hidden" name="GENDER1" id="GENDER1" value="~$SHOW_GENDER`">
@@ -354,10 +350,6 @@
 								<td id="m_id" style="display:none;"><font color='red'>Please enter a valid email address.</font></td>
 						</tr>
 						~/if`
-						<tr>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
 					~/if`
 				~if $SHOWSUBCASTE eq "Y" AND $SUBCASTEvalue`
 					<tr class="label">
@@ -578,10 +570,6 @@
 							<td>&nbsp;</td>
 							<td id="min_char_about_me" style="display:none;"><font color='red'>'About me' should be at least 100 characters long. Copy from old 'about me' if required.</font></td>
 					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
 				~/if`
 				~if $SHOW_OLD_INFO eq "Y" AND $YOUR_INFO_OLD`
 					<tr class="label">
@@ -591,10 +579,6 @@
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
 						<td><textarea name="YOUR_INFO_OLD" id="YOUR_INFO_OLD" cols="40" rows="8" class="textboxes1" readonly>~$YOUR_INFO_OLD`</textarea></td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
 					</tr>
 				~/if`
 				~if $SHOWFAMILYINFO eq "Y" AND $FAMILYINFOvalue`
@@ -638,10 +622,6 @@
 					~if $INTELLIGENT_USAGE_SPOUSE`
 						~$INTELLIGENT_USAGE_MESSAGE`
 					~/if`
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
 				~/if`
 				~if $SHOWJOBINFO eq "Y" AND $JOB_INFOvalue`
 					<tr class="label">
@@ -661,10 +641,6 @@
 					~if $INTELLIGENT_USAGE_JOB_INFO`
 						~$INTELLIGENT_USAGE_MESSAGE`
 					~/if`
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
 				~/if`
 				~if $SHOWFATHERINFO eq "Y" AND $FATHER_INFOvalue`
 					<tr class="label">
@@ -707,10 +683,6 @@
 					~if $INTELLIGENT_USAGE_SIBLING_INFO`
 						~$INTELLIGENT_USAGE_MESSAGE`
 					~/if`
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
 				~/if`
 				~if $SHOWPARENTSCONTACT eq "Y" AND $PARENTS_CONTACTvalue`
 					<tr class="label">
