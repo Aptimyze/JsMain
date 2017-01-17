@@ -44,7 +44,7 @@ class ApiFeedbackV1Action extends sfActions
 		if(!$reportAbuseObj->canReportAbuse($reporter,$reportee))
 		{  
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
-			$error[message]='You cannot abuse the same person more than twice.';
+			$error[message]='You cannot report abuse the same person more than twice.';
 			$apiResponseHandlerObj->setResponseBody($error);
 			$apiResponseHandlerObj->generateResponse();
 			die;
