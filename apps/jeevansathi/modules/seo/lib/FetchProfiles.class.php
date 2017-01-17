@@ -191,8 +191,7 @@ class FetchProfiles
 		$paramArr["PHOTO_DISPLAY"]=$PHOTO_DISPLAY;
 		$paramArr["PRIVACY"]=$PRIVACY;
 		$paramArr["IGNORE_PROFILES"]=$notInProfileStr;
-		
-		
+                
 		if($tableName == 'SEARCH_FEMALE')
 			$paramArr["GENDER"] = 'F';
 		elseif($tableName == 'SEARCH_MALE')
@@ -206,7 +205,23 @@ class FetchProfiles
 		// handling of special case static array profiles
 		if($type1 == 'PROFILEID')
 			$paramArr["SHOW_PROFILES"]=$value1In;
-			
+                   
+                if($paramArr["CITY_RES"]){
+                    $paramArr["COUNTRY_RES"] = 51;
+                    $mappedCityValue = FieldMap::getFieldLabel('city_india',$paramArr["CITY_RES"]);
+                    var_dump($mappedCityValue."--".strlen($paramArr["CITY_RES"]));
+                    if($mappedCityValue!=null && strlen($paramArr["CITY_RES"])>0){
+                        if(strlen($paramArr["CITY_RES"]) > 2){
+                            $paramArr["CITY_INDIA"] = $paramArr["CITY_RES"];
+                        }
+                        else{
+                            $paramArr["STATE"] = $paramArr["CITY_RES"];
+                            unset($paramArr["CITY_RES"]);
+                        }
+                    }
+                    
+                }
+                print_r($paramArr);
 		$SearchParametersObj = new SearchBasedOnParameters;
 		$SearchParametersObj->getSearchCriteria($paramArr);
 		$SearchParametersObj->setNoOfResults($noOfResult);
@@ -215,7 +230,7 @@ class FetchProfiles
 		$SearchServiceObj = new SearchService;
 		if($sort && !$cluster)
 			$SearchServiceObj->callSortEngine($SearchParametersObj,'S');
-
+                
 		if($cluster)
 		{	
 			//suggested		

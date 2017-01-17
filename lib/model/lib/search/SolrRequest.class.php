@@ -333,6 +333,8 @@ class SolrRequest implements RequestHandleInterface
                                         $solrFormatValueCityIndia = str_replace(","," ",$setOrCond["CITY_INDIA"]);
                                         $solrFormatValueCityIndia = str_replace("','"," ",$solrFormatValueCityIndia);
                                         $solrFormatValueCityIndia='"'.implode('","',explode(" ",$solrFormatValueCityIndia)).'"';
+                                }else{
+                                    $solrFormatValueCityIndia = $solrFormatValueCity;
                                 }
                                 $solrFormatValueStateIndia = '';
                                 if(isset($setOrCond["STATE"])){
