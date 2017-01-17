@@ -22,6 +22,10 @@ class SortByLoginDate extends SearchSort implements SortStrategyInterface {
         public function getSortString() {
                 $counter = 0;
                 
+                $sortString[$counter] =  "if(tf(SUBSCRIPTION,".SearchConfig::$jsBoostSubscription."),1,0)";
+                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                $counter++;
+                
                 $sortString[$counter] = "LAST_LOGIN_DT";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;

@@ -792,6 +792,10 @@ return $edu;
 			if($widgetArray["sortPhotoFlag"])
 				$users = $this->sortUsersListByPhoto($users);
                         
+                        
+			if($widgetArray["sortSubscriptionFlag"])
+				$users = $this->sortUsersListBySubscription($users,SearchConfig::$jsBoostSubscription);
+                        
 			//if($widgetArray["logicLevelFlag"] && 0)
 				//$users = $this->setUsersLogicalLevel($users,$operatorProfileObj,$mailerName);
 			
@@ -917,6 +921,43 @@ return $edu;
                 $kundliMailerObj->updateKundliMatchesUsersFlag($sno,$flag,$pid);
 
 	}
+        /**
+         * This function sort profile on the basis of subscription
+         * @param type $userList
+         * @param type $subscription
+         * @return type
+         * @throws jsException
+         */
+        public function sortUsersListBySubscription($userList, $subscription)
+	{
+		if(!is_array($userList))
+			throw  new jsException("No userList in sortUsersListByPhoto() function in RegularMatchAlerts.class.php");
 
+		foreach($userList as $k=>$v)
+		{
+			if(strstr($subscription, $v->getSUBSCRIPTION()))
+			{
+                                $sortArr[$v->getPROFILEID()] = 0;
+			}
+			else{
+				$sortArr[$v->getPROFILEID()] = 1;
+			}
+		}
+		asort($sortArr);
+		$i=0;
+		foreach($sortArr as $k=>$v)
+		{
+			foreach($userList as $kk=>$vv)
+			{
+				if($vv->getPROFILEID()==$k)
+				{
+					$matchesDataFinal[$i]=$vv;
+					$i++;
+				}
+			}
+		}
+		unset($userList);
+		return $matchesDataFinal;
+	}
 }
 ?>

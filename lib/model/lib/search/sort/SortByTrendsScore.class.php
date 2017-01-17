@@ -141,6 +141,10 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
         public function getSortString() {
                 $counter = 0;
                 
+                $sortString[$counter] =  "if(tf(SUBSCRIPTION,".SearchConfig::$jsBoostSubscription."),1,0)";
+                $sortAscOrDesc[$counter] = $this->sortByDesc;
+                $counter++;
+                
                 $sortString[$counter] = parent::getReverseDppSort();
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;
