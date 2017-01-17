@@ -130,7 +130,9 @@
 </div>
 
 <div class="f13 reportInv1 txtc">
-<p class="color11 f13 txtl" style="padding-left:70px;">Thank you for helping us. This profile will be removed if the content or behaviour is found to be inappropriate.</p>
+<p id ="messageForReportAbuse" class="color11 f13 txtl" style="padding-left:70px;">
+  Thank you for helping us. This profile will be removed if the content or behaviour is found to be inappropriate.
+</p>
 </div>
 </div>
 </div>

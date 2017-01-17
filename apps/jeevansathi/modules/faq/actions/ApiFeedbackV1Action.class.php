@@ -27,6 +27,28 @@ class ApiFeedbackV1Action extends sfActions
 		}
 		$feedBackObj = new FAQFeedBack(1);
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
+
+		$reportAbuseObj = new REPORT_ABUSE_LOG();
+		$dataArray = $request->getParameter('feed');
+		$dataArray = explode(' ', $dataArray['message']);
+		$selfUser = $dataArray[0];
+		$otherUser = $dataArray[6];
+
+		$profileObj = NEWJS_JPROFILE::getInstance();
+     	$reporter = $profileObj->getProfileIdFromUsername($selfUser);
+  		$reportee = $profileObj->getProfileIdFromUsername($otherUser);
+
+  		unset($profileObj);
+  		if(!MobileCommon::isIOSApp() && !MobileCommon::isAndroidApp())
+  		{	
+		if(!$reportAbuseObj->canReportAbuse($reporter,$reportee))
+		{  
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
+			$apiResponseHandlerObj->generateResponse();
+			die;
+		}
+		}
+
 		$success=false;
 		$result=$feedBackObj->ProcessData($request);
 		if(is_array($result))

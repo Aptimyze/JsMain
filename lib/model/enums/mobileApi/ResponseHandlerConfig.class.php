@@ -124,5 +124,8 @@ class ResponseHandlerConfig
   	public static $ALTERNATE_EMAIL_SUCCESS=  array("message"=>"A link has been sent to your email id {email}, click on the link to verify email.","statusCode"=>'0');
   	public static $ALTERNATE_EMAIL_ID_NOT_FOUND=  array("message"=>"No email ID found for the given user.","statusCode"=>'0');
 	public static $PEAK_LOAD_FAILURE = array("message"=>"This operation cannot be done at site peak load","statusCode"=>'0');
+
+	// Report Abuse
+	public static $ABUSE_ATTEMPTS_OVER = array("message"=>"You cannot abuse the same person more than twice.","statusCode"=>'2');
 }
 ?>
