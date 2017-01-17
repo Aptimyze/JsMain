@@ -1016,6 +1016,8 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 
     function showMatchOfTheDayCards()
     { 
+        fillMatchOfTheDayCards();
+        return;
         $.ajax({                 
                     url: '/search/matchofdaylist',
                     // data: "profileid="+profileid,
@@ -1039,32 +1041,35 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 
     function fillMatchOfTheDayCards(responseObject)
     { 
-      
-      jObject = $('#matchOfDaySection');
-      htmlInside = jObject.html();
-      jObject.html(''); 
-      for(i=0;i<responseObject.profiles.length;i++)
-       {
-          jObject.append(htmlInside);
-          jObject.parent().find('#matchOfDaySubSection').attr('id','matchOfDaySubSection_'+(i+1));
+        jObject = $('#matchOfDaySection');
+        htmlInside = jObject.html();
+        jObject.html(''); 
+        for(i=0;i<7;i++)
+        {
+            jObject.append(htmlInside);
+            jObject.parent().find('#matchOfDaySubSection').attr('id','matchOfDaySubSection_'+(i+1));
        }
+/*
+        for(i=0;i<responseObject.profiles.length;i++)
+        {
+            jObject = $('#matchOfDaySubSection_'+(i+1));
 
-      for(i=0;i<responseObject.profiles.length;i++)
-      {
-        jObject = $('#matchOfDaySubSection_'+(i+1));
-        jObject.find('.profileName').html(responseObject.profiles[i].username);
-        jObject.find('.userLoginStatus').html(responseObject.profiles[i].userloginstatus);
-        jObject.find('.gunascore').html(responseObject.profiles[i].gunascore);
-        jObject.find('.profileName').html(responseObject.profiles[i].gunascore);
-        jObject.find('.edu_level_new').html(responseObject.profiles[i].edu_level_new);
-        jObject.find('.caste').html(responseObject.profiles[i].caste);
-        jObject.find('.religion').html(responseObject.profiles[i].religion);
-        jObject.find('.occupation').html(responseObject.profiles[i].occupation);
-        jObject.find('.location').html(responseObject.profiles[i].location);
-        jObject.find('.occupation').html(responseObject.profiles[i].gunascore);
-        jObject.find('.income').html(responseObject.profiles[i].income);
-        jObject.find('.mstatus').html(responseObject.profiles[i].mstatus);
-        
-      }
+            // set image url
+            jObject.find('.mod_img').html(responseObject.profiles[i].imageUrl);
+            jObject.find('.profileName').html(responseObject.profiles[i].username);
+            jObject.find('.userLoginStatus').html(responseObject.profiles[i].userloginstatus);
+            jObject.find('.gunascore').html(responseObject.profiles[i].gunascore);
+            // set age height
+            jObject.find('.age_height').html(responseObject.profiles[i].gunascore);
+            
+            jObject.find('.edu_level_new').html(responseObject.profiles[i].edu_level_new);
+            jObject.find('.caste').html(responseObject.profiles[i].caste);
+            jObject.find('.religion').html(responseObject.profiles[i].religion);
+            jObject.find('.occupation').html(responseObject.profiles[i].occupation);
+            jObject.find('.location').html(responseObject.profiles[i].location);
+            jObject.find('.income').html(responseObject.profiles[i].income);
+            jObject.find('.mstatus').html(responseObject.profiles[i].mstatus);
+        }
+*/      
       $('#prfDay').removeClass('disp-none');
     }

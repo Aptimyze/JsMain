@@ -11,7 +11,7 @@
         
              <div class="bg-white fullwid mt5 pos-abs stk mod_shd mod_l1 modt1 anim1" id="matchOfDaySubSection">
                 <div class="padall-10 clearfix"> 
-                    <img src="srch_image1.jpg" class="mod_dim1 vtop fl"/>
+                    <img src="srch_image1.jpg" class="mod_dim1 vtop fl mod_img"/>
                     <!--start:info-->
                     <div id = "cardsForMatchOfDay"  class="fl mod_wid1 mod_p2 pt5 fontlig" >            
                         <div class="disp-tbl">
@@ -20,7 +20,7 @@
                             <div class="disp-cell f18 mod_p1 gunascore">Guna 21/36</div>
                         </div>
                         <ul class="listnone f14 fontlig modli clearfix  pt7">
-                            <li class="">27 yr,  5 ft 3 in</li>
+                            <li class="age_height">27 yr,  5 ft 3 in</li>
                             <li class="edu_level_new">MBA/ PGDM</li>
                             <li class="caste">Khatri</li>
                             <li class="religion">Hindu</li>

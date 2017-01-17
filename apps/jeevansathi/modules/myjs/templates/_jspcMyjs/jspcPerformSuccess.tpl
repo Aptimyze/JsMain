@@ -33,7 +33,7 @@
         <div class="container mainwid pt35"> ~include_partial("global/JSPC/_jspcCommonTopNavBar",["stickyTopNavBar"=>1])`
             <div class="mt56 pos-rel">
             <!-- start: match of the day --> 
-            ~include_partial("global/JSPC/_jspcMatchOfTheDayBar")`
+           ~include_partial("global/JSPC/_jspcMatchOfTheDayBar")` 
                 <div class="fullwid color-blockfour">
                     <div class="padall-15 clearfix">
                         <div class="fl" style="height:91px;width:91px;">
