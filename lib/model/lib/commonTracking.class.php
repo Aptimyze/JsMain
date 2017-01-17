@@ -1,100 +1,60 @@
 <?php
 
-class commonTracking {
+class CommonLoginTracking {
     
     
     
     
     	/** Update recent users entry, required to trap in online users
 	*/
-	public static function logRecentUserEntry($profileId,$isMobile,$dateTime1,$dateTime2)
+	public static function completeLoginTracking($trackingData)
 	{
-		$allow=1;
-		$pid=intval($profileId);
-		if($allow && $pid && !$isMobile)
+		$profileId=$trackingData["profileId"];
+		$ip=CommonFunction::getIP();
+		$queueArr['ip']=$ip;
+		if($trackingData[misLoginTracking])
 		{
-                        $dbObj=new userplane_recentusers("newjs_master");
-			$dbObj->replacedata($pid);
-
+			include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
+			$loginTracking= LoginTracking::getInstance($profileId);
+			$loginTracking->setChannel($trackingData["channel"]);
+			$loginTracking->setWebisteVersion($trackingData["websiteVersion"]);
+			$loginTracking->setRequestURI($trackingData["page"]);
+			$loginTracking->loginTracking();
 		}
-
-		// Add Online-User
-		$dateTime =date("H");
-		$redisOnline =true;
-		if(($dateTime>=$dateTime1) && ($dateTime<$dateTime2))
-			$redisOnline =false;
-		if($pid && $allow && $redisOnline)
+		if($trackingData[logLoginHistoryTracking])
 		{
-			$jsCommonObj =new JsCommon();
-			$jsCommonObj->setOnlineUser($pid);
-		}
-
-	}
-
-        public static function insert_into_login_history($profileID,$ip){
-            		$dbName = JsDbSharding::getShardNo($profileID);
-		//Insert Into LOG_LOGIN_HISTORY
-		$dbLogLoginHistory=new NEWJS_LOG_LOGIN_HISTORY($dbName);
-		$dbLogLoginHistory->insertIntoLogLoginHistory($profileID,$ip);
-		
-		//Insert Ignore Into LOGIN_HISTORY 
-		$dbLoginHistory= new NEWJS_LOGIN_HISTORY($dbName);
-		$insert=$dbLoginHistory->insertIntoLoginHistory($profileID);
-		//if exist then update
-		if(!$insert)
-		{
-			//if exist then update  newjs.LOGIN_HISTORY_COUNT
-			$dbLoginHistoryCount= new NEWJS_LOGIN_HISTORY_COUNT($dbName);
-			$update=$dbLoginHistoryCount->updateLoginHistoryCount($profileID);
-            
-            //If No Update then replace
-            if(!$update)
-			$dbLoginHistoryCount->replaceLoginHistoryCount($profileID);
-		}
-		//update Jprofile LAST_LOGIN_DT
-		$dbJprofile=new JPROFILE("newjs_master");
-		$dbJprofile->updateLoginSortDate($profileID);
-        }
-
-	public static function loginTracking($profileId,$channel,$websiteVersion,$location="",$reqUri)
-	{
-		include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
-		$loginTracking= LoginTracking::getInstance($profileId);
-		$loginTracking->setChannel($channel);
-		$loginTracking->setWebisteVersion($websiteVersion);
-		
-		if(!$location)
-		{
-			if(sfContext::getInstance()->getRequest()->getParameter('link_id') && strpos($_SERVER[REQUEST_URI],"/e/")!==false){
-				$link=LinkFactory::getLink(sfContext::getInstance()->getRequest()->getParameter('link_id'));
-				$request_uri=$link->getLinkAddress();
+			$dbName = JsDbSharding::getShardNo($profileId);
+			//Insert Into LOG_LOGIN_HISTORY
+			$dbLogLoginHistory=new NEWJS_LOG_LOGIN_HISTORY($dbName);
+			$dbLogLoginHistory->insertIntoLogLoginHistory($profileId,$ip);
+			
+			//Insert Ignore Into LOGIN_HISTORY 
+			$dbLoginHistory= new NEWJS_LOGIN_HISTORY($dbName);
+			$insert=$dbLoginHistory->insertIntoLoginHistory($profileId);
+			//if exist then update
+			if(!$insert)
+			{
+				//if exist then update  newjs.LOGIN_HISTORY_COUNT
+				$dbLoginHistoryCount= new NEWJS_LOGIN_HISTORY_COUNT($dbName);
+				$update=$dbLoginHistoryCount->updateLoginHistoryCount($profileId);
+	            if(!$update)
+				$dbLoginHistoryCount->replaceLoginHistoryCount($profileId);
 			}
-			else
-				$request_uri=$reqUri;
-			$page=explode('?',$request_uri);
-			$page=$page[0];
-			$page=explode('/',$page);
-			$no=count($page);
-			$page=$page[$no-1];
+			$dbJprofile=new JPROFILE("newjs_master");
+			$dbJprofile->updateLoginSortDate($profileId);
 		}
-		else
+		if($trackingData["appLoginProfileTracking"])
 		{
-			if($location)
-				$request_uri=$location;			
-			$request_uri=str_replace("CMGFRMMMMJS=","pass=",$request_uri);
-			$request_uri=str_replace("&echecksum=","&autologin=",$request_uri);
-			$request_uri=str_replace("?echecksum=","?autologin=",$request_uri);
-			$request_uri=str_replace("&checksum=","&chksum=",$request_uri);
-			$request_uri=str_replace("?checksum=","?ckhsum=",$request_uri);
-			$request_uri=str_replace(urlencode($echecksum),"",$request_uri);
-			$request_uri=str_replace($echecksum,"",$request_uri);
-			$request_uri=ltrim($request_uri,"/");
-			$page=$request_uri;
+			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
+			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId);
 		}
-			$loginTracking->setRequestURI($page);
-		$loginTracking->loginTracking();
-	}
+		if($trackingData["logLogoutTracking"])
+		{
+			$dbObj = new LOG_LOGOUT_HISTORY(JsDbSharding::getShardNo($profileId));
+			$dbObj->insert($profileId,$ip);
+		}
 
+	}
     
     
     

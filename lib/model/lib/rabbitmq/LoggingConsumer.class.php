@@ -127,22 +127,9 @@ class LoggingConsumer
     $body=$msgdata['data']['body'];
     try
     {
-      switch($type)
-      {
-	case ApiAuthentication::$recentUserEntry:
-            commonTracking::logRecentUserEntry($body['profileId'],$body['isMobile'],$body['dateTime1'],$body['dateTime2']);
-        break;
-	
-        case ApiAuthentication::$loginHistory:
-            commonTracking::insert_into_login_history($body['profileId'], $body['IP']);
-        break;
-	
-        case ApiAuthentication::$loginTracking:
-            commonTracking::loginTracking($body['profileId'],$body['channel'], $body['websiteVersion'], $body['location'],$body['reqUri']);
-        break;
-        
+        commonTracking::completeLoginTracking($body);
     }     
-    }
+    
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
