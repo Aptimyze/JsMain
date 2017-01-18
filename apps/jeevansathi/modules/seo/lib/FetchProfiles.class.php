@@ -25,7 +25,6 @@ class FetchProfiles
 	const MSTATUS_TYPE = 'MSTATUS';
 	const SPL_TYPE = 'SPECIAL_CASES';
 	const COUNTRY_INDIA='51';
-        const COUNTRY_USA = '128';
 	
 	function __construct(){	
 		$this->spl_cases_type_arr = array('HIV'=>'HIV','Deaf'=>'NATURE_HANDICAP','Dumb'=>'NATURE_HANDICAP','Blind'=>'NATURE_HANDICAP','Handicapped'=>'NATURE_HANDICAP');
@@ -282,9 +281,6 @@ class FetchProfiles
                         $paramArr["STATE"] = $paramArr["CITY_RES"];  //state case
                         unset($paramArr["CITY_RES"]);
                     }
-                }
-                else{ //if city is not in India
-                    //$paramArr["COUNTRY_RES"] = FetchProfiles::COUNTRY_USA;
                 }
             } 
             //print_r($paramArr);
