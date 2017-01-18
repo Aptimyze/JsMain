@@ -1750,12 +1750,16 @@ if($k=="state_res")
                 {
                         if(strlen($key)===2)
                         {
-				asort($arrFinalOut[$currentKey]);
-                                $currentKey = $key;
-                                $arrFinalOut[$currentKey] = array();
+				if(array_key_exists($currentKey, $arrFinalOut))
+				{
+					asort($arrFinalOut[$currentKey]);
+				}
+				else
+					$arrFinalOut[$currentKey] = array();
                         }
                         else
                         {
+				$currentKey = substr($key,0,2);
                                 $arrFinalOut[$currentKey][$key] = $val;
                         }
                 }
