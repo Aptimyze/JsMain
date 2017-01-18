@@ -1072,8 +1072,11 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 /*
         for(i=0;i<responseObject.profiles.length;i++)
         {
+        	
+            var profileUrl = ~JsConstants::$siteUrl`+'/profile/viewprofile.php?profilechecksum=responseObject.profiles[i].checksum/';
             jObject = $('#matchOfDaySubSection_'+(i+1));
-
+            jObject.find('.cardsForMatchOfDay').attr('href', profileUrl);
+            jObject.find('.mod_img').attr('href', profileUrl);
             // set image url
             jObject.find('.mod_img').html(responseObject.profiles[i].imageUrl);
             jObject.find('.profileName').html(responseObject.profiles[i].username);
@@ -1090,14 +1093,65 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             jObject.find('.income').html(responseObject.profiles[i].income);
             jObject.find('.mstatus').html(responseObject.profiles[i].mstatus);
         }
-*/      
-        $(".stk_cls").bind('click',function() {
-            onCloseMatchOfDay();
-        });
+*/ 
+        //on click close button setStack is call'd
+        $('.stk_cls').on('click',setStack);
         $('#prfDay').removeClass('disp-none');
     }
 
-    function onCloseMatchOfDay(card)
+    function toggleStackClass(param)
     {
+        if(param.hasClass('card-index-1'))
+        {
+            param.removeClass('card-index-1').addClass('card-index-0');
+        }
+        else if(param.hasClass('card-index-2'))
+        {
+            param.removeClass('card-index-2').addClass('card-index-1');
+        }
+        else if( (!param.hasClass('card-index-1')) && (!param.hasClass('card-index-2')))
+        {
+            param.addClass('card-index-2').fadeIn('fast');
+        }
+    }
+    function setStack()
+    {
+        $('.stk_cls').off('click',setStack);
+        var eleActive = $('#prfDay').find('.active');
+        var MatchProfileChecksum = 2;
+        // get value by this 
+        // var x = eleActive.find('.edu_level_new').html();
+        onCloseMatchOfDay(loggedInJspcUser,MatchProfileChecksum);
+        getIdNum = parseInt(eleActive.attr('data-matchID'));
+        $(eleActive).removeClass('active');
+        $('.stk').eq(getIdNum+1).addClass('active');
+        if((isNaN(getIdNum)) ||   ((getIdNum+1)==($('.stk').length)))
+        {
+            $('#prfDay').fadeOut(500);
+        }
+        else
+        {
+            var start = new Date().getTime();
+            $('.stk').eq(getIdNum).addClass('card-card-out');
+            setTimeout(function(){ $('.stk_cls').on('click',setStack);},800);
+            for(i=getIdNum+1;i<(getIdNum+4);i++)
+            {
+                var ele = $('.stk').eq(i);
+                toggleStackClass(ele);
+            }
+        }                             
+    }
 
+    function onCloseMatchOfDay(LoggedInProfileID, MatchProfileChecksum) 
+    {
+			var data = {"profileId":LoggedInProfileID, "MatchProfileChecksum":MatchProfileChecksum};
+      $.ajax({
+				url: '/api/v1/myjs/closematchOfDay',
+				data: data,
+				timeout: 5000,
+				success: function(response) 
+				{
+			  	console.log('1');
+				}
+			});
     }

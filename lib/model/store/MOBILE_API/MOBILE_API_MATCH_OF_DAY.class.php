@@ -62,4 +62,20 @@ class MOBILE_API_MATCH_OF_DAY extends TABLE{
             throw new jsException($ex);
         }
     }
+
+    public function updateMatchProfile($profileid, $matchProfileid)
+    {
+        try
+        {
+            $sql = "UPDATE MOBILE_API.MATCH_OF_DAY_LOG SET IGNORE = 'Y' WHERE PROFILEID = :PROFILEID AND MATCH_PROFILEID = :MATCH_PROFILEID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
+            $prep->bindValue(":MATCH_PROFILEID", $matchProfileid, PDO::PARAM_INT);
+            $prep->execute();
+        }
+        catch(Exception $ex)
+        {
+            throw new jsException($ex);
+        }
+    }
 }

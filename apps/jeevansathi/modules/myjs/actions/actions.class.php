@@ -513,5 +513,13 @@ return $staticCardArr;
 
 	} 
 
+	public function executeClosematchOfDayV1(sfWebRequest $request)
+	{
+		$matchObj= new MOBILE_API_MATCH_OF_DAY();
+		$profileId = $request->getParameter("profileId");
+		$MatchProfileChecksum = $request->getParameter("MatchProfileChecksum");
+		$MatchProfileId = $MatchProfileChecksum;
+		$matchObj->updateMatchProfile($profileId, $matchProfileid);
+		return sfView::NONE;
+	}
 }
- 
