@@ -2,6 +2,7 @@
 Abstract class ApiAuthentication
 {
 	public static $loginTracking="LOGIN_TRACKING";	
+        public static $logTrackingThroughQueue=true;
     private $request;
 	protected $encryptSeprator="______";
 	protected $_KEY = "Radhe Shaam";
@@ -197,7 +198,7 @@ Abstract class ApiAuthentication
 				if($this->isNotApp)
 				{
 					$this->removeLoginCookies();
-					$this->recentLogTracking=false;
+					$this->recentLogTracking=true;
 				}
 			}
 			$this->CommonLoginTracking();
@@ -366,7 +367,7 @@ Abstract class ApiAuthentication
         
         if($this->sendLoggingDataQueue(self::$loginTracking, $queueArr))return;
         else
-        	CommonLoginTracking::completeLoginTracking($queueArr);
+        	self::completeLoginTracking($queueArr);
 		
 	}
 	
@@ -751,7 +752,7 @@ Abstract class ApiAuthentication
 	public function sendLoggingDataQueue($type,$body){
 
 			
-        if(true)
+        if(self::$logTrackingThroughQueue)
         {
 
             $producerObj=new Producer();
@@ -768,11 +769,58 @@ Abstract class ApiAuthentication
                     return true;
             }
 
-        return false;
+	}
 
+        return false;
+}
+
+	public static function completeLoginTracking($trackingData)
+	{
+		$profileId = $trackingData["profileId"];
+		$ip = $queueArr['ip'];
+		if($trackingData[misLoginTracking])
+		{
+			include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
+			$loginTracking= LoginTracking::getInstance($profileId);
+			$loginTracking->setChannel($trackingData["channel"]);
+			$loginTracking->setWebisteVersion($trackingData["websiteVersion"]);
+			$loginTracking->setRequestURI($trackingData["page"]);
+			$loginTracking->loginTracking();
+		}
+		if($trackingData[logLoginHistoryTracking])
+		{
+			$dbName = JsDbSharding::getShardNo($profileId);
+			//Insert Into LOG_LOGIN_HISTORY
+			$dbLogLoginHistory=new NEWJS_LOG_LOGIN_HISTORY($dbName);
+			$dbLogLoginHistory->insertIntoLogLoginHistory($profileId,$ip);
+			
+			//Insert Ignore Into LOGIN_HISTORY 
+			$dbLoginHistory= new NEWJS_LOGIN_HISTORY($dbName);
+			$insert=$dbLoginHistory->insertIntoLoginHistory($profileId);
+			//if exist then update
+			if(!$insert)
+			{
+				//if exist then update  newjs.LOGIN_HISTORY_COUNT
+				$dbLoginHistoryCount= new NEWJS_LOGIN_HISTORY_COUNT($dbName);
+				$update=$dbLoginHistoryCount->updateLoginHistoryCount($profileId);
+	            if(!$update)
+				$dbLoginHistoryCount->replaceLoginHistoryCount($profileId);
+			}
+			$dbJprofile=new JPROFILE("newjs_master");
+			$dbJprofile->updateLoginSortDate($profileId);
+		}
+		if($trackingData["appLoginProfileTracking"])
+		{
+			$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
+			$appProfileId=$dbAppLoginProfiles->insertAppLoginProfile($profileId);
+		}
+		if($trackingData["logLogoutTracking"])
+		{
+			$dbObj = new LOG_LOGOUT_HISTORY(JsDbSharding::getShardNo($profileId));
+			$dbObj->insert($profileId,$ip);
+		}
 
 	}
-}
-	
+
 }
 ?>

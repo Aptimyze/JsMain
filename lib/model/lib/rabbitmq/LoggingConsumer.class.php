@@ -127,7 +127,7 @@ class LoggingConsumer
     $body=$msgdata['data']['body'];
     try
     {
-        commonTracking::completeLoginTracking($body);
+        ApiAuthentication::completeLoginTracking($body);
     }     
     
     catch (Exception $exception) 
