@@ -36,7 +36,7 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		
 		$decodedData = json_decode($output);
 		$dppSaveData = json_decode($request->getParameter("dppSaveData"));			
-     			
+     		
 		$dppDataArr = $this->getDppFilledData($decodedData);		
 		$finalArr = $this->getFinalSubmitData($dppSaveData,$dppDataArr);
 
@@ -46,20 +46,8 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		$request->setParameter("editFieldArr",$finalArr);
 		$jsonData = sfContext::getInstance()->getController()->getPresentationFor("profile", "apieditdppv1");
 
-		$output = ob_get_contents();
-		ob_end_clean();
-		if(is_array($finalArr))
-		{
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			$apiResponseHandlerObj->setResponseBody(json_encode($finalArr));
-		}
-		else
-		{
-			$errorArr["ERROR"] = "Something went wrong";
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-			$apiResponseHandlerObj->setResponseBody($errorArr);
-		}
-		$apiResponseHandlerObj->generateResponse();
+		$output = ob_get_contents();		
+		ob_end_clean();		
 		return sfView::NONE;
 	}
 
