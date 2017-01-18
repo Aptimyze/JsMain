@@ -61,6 +61,16 @@ function reportAbuseForUserFun(obj){
 			         if(typeof(result) != 'object')
 					  var out = JSON.parse(result);
 
+					if(typeof(result) != 'undefined' && result.message == "You cannot report abuse the same person more than twice.")
+		                 {
+		                 	alert('You Cannot Abuse Person more than twice');
+		                 		//$('#reporterProfileId').html('');
+		                 		//$('#reporteeProfileId').html('');
+		                 		//$('#reasonId').html('');
+		                 		obj.disabled = false;
+		                 		return;
+		                 }
+
 					 if(typeof(out) != 'undefined' && out['message'] == "both are not correct")
 		                 {
 		                 		//$('#formForReportAbuse').hide();
@@ -83,7 +93,7 @@ function reportAbuseForUserFun(obj){
 		                 } 
 
 		                 else if (result.responseStatusCode == '0')
-		                 { 
+		                 { 		
 		                 		$('#formForReportAbuse').hide();
 		                 		$('#successfullDisplay').css('display','block');
 		                 		$('#goBackforRishav').css('display','block');
