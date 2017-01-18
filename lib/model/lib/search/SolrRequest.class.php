@@ -398,6 +398,16 @@ class SolrRequest implements RequestHandleInterface
                                 $setWhereParams[]="STATE";
                                 $this->clusters[]="&facet.field={!ex=city_res,city_india,state}STATE";
                                 $this->filters[]="&fq={!tag=city_res,city_india,state}STATE:($solrFormatValueStateIndia)";
+                        }elseif($setOrCond['CITY_RES'] && is_numeric($setOrCond['CITY_RES'])){
+                            //added for seo solr for countries other than india
+                                $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
+                                $this->clusters[]="&facet.field={!ex=city_india}CITY_INDIA";
+                                $this->clusters[]="&facet.field={!ex=state}STATE";
+                                $setWhereParams[]="CITY_RES";
+                                $solrFormatValueCity = str_replace(","," ",$setOrCond["CITY_RES"]);
+                                $solrFormatValueCity = str_replace("','"," ",$solrFormatValueCity);
+                                $solrFormatValueCity='"'.implode('","',explode(" ",$solrFormatValueCity)).'"';
+                                $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}CITY_RES:($solrFormatValueCity)";
                         }
                 }
 		
