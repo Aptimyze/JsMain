@@ -13,6 +13,8 @@
  * @extends ContactEvent {@link ContactEvent}
  * @author Esha Jain <esha.jain@jeevansathi.com>
  */
+use MessageQueues as MQ;     //MessageQueues-having values defined for constants used in this class.
+
 class WriteMessage extends ContactEvent{
   /**
    * 
@@ -155,12 +157,14 @@ class WriteMessage extends ContactEvent{
 	$message = trim($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE));
 	if($message)
 	{
+    // redis key for conversation
+    $key = $this->processMessage($sender, $receiver, $message);
     $producerObj=new Producer();
     if($producerObj->getRabbitMQServerConnected())
     {
         $sender = $this->contactHandler->getViewer();
         $receiver = $this->contactHandler->getViewed();
-        $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'MESSAGE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$message ) ), 'redeliveryCount'=>0 );
+        $sendMailData = array('process' => MQ::WRITE_MSG_Q ,'data'=>array('type' => 'MESSAGE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$message, 'key' => $key) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
         $gcmData=array('process'=>'GCM','data'=>array('type'=>'MESSAGE','body'=>array('receiverid'=>$receiver->getPROFILEID(),'senderid'=>$sender->getPROFILEID(),'message'=>$message ) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($gcmData);
@@ -194,6 +198,30 @@ class WriteMessage extends ContactEvent{
   else{
     return true;
   }
+  }
+
+  public function processMessage($sender, $receiver, $message)
+  {
+    if($sender->getPROFILEID() < $receiver->getPROFILEID())
+    {
+      $key = $sender->getPROFILEID().'-'.$receiver->getPROFILEID();
+    }
+    else
+    {
+      $key = $receiver->getPROFILEID().'-'.$sender->getPROFILEID();
+    }
+
+    $formattedMsg = $sender->getUSERNAME().', time: '.$message.'\n';
+    $arrValue = array("time"=>time(),"message"=>$formattedMsg);
+    // Key doesnt exists in Memcache
+    $data = JsMemcache::getInstance()->getHashAllValue($key);
+    if($data)
+    {
+      $arrValue['message'] = $data['message'] + $arrValue['message'];
+    }
+    var_dump($data);
+    JsMemcache::getInstance()->setHashObject($key,$arrValue);
+    return $key;
   }
 
 }

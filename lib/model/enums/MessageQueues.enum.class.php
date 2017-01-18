@@ -100,6 +100,14 @@ class MessageQueues
   const PROFILE_CACHE_Q_DELETE = "ProfileCacheDeleteQueue";
   const PROCESS_PROFILE_CACHE_DELETE = "PROFILE_CACHE_DELETE";
   const SCREENING_Q_EOI = "SCREENING_SEND_EOI";
+  const DELAY_WRITEMSG = 300;
+
+  // queue/exchange names
+  const WRITE_MSG_queueRightNow = 'right.now.queue';
+  const WRITE_MSG_exchangeRightNow = 'right.now.exchange';
+  const WRITE_MSG_queueDelayed5min = 'delayed.five.minutes.queue';
+  const WRITE_MSG_exchangeDelayed5min = 'delayed.five.minutes.exchange';
+  const WRITE_MSG_Q = "WRITE_MSG_Queue";
 }
 
 ?>
