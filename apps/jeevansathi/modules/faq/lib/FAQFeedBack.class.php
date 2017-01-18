@@ -167,19 +167,25 @@ class FAQFeedBack
 		$this->webRequest=$request;
 		$this->m_objForm = new FeedBackForm($this->api);
 		$arrDeafults = array('name'=>$this->m_szName,'username'=>$this->m_szUserName,'email'=>$this->m_szEmail);
-		if($this->webRequest->getParameter('fromCRM')){
+		if($this->webRequest->getParameter('fromCRM')){  
 			$reporteeId=$this->webRequest->getParameter('reporteePFID');
+			$profileObj = NEWJS_JPROFILE::getInstance();
+			$dataArray = $this->webRequest->getParameter('feed');
+			$reporterId = $profileObj->getProfileIdFromUsername($dataArray['reporter']);
+			unset($profileObj);
 		}
 		else{
 		$reporteeId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
+		$profileObj = NEWJS_JPROFILE::getInstance();
+     	$reporterId = $profileObj->getProfileIdFromUsername($this->m_szUserName);
+     	unset($profileObj);
 		}
 
 		$reportAbuseObj = new REPORT_ABUSE_LOG();
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
-		$profileObj = NEWJS_JPROFILE::getInstance();
-     	$reporterId = $profileObj->getProfileIdFromUsername($this->m_szUserName);
+		
 
-  		unset($profileObj);
+  		
 
   		if(!$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
 		{  
