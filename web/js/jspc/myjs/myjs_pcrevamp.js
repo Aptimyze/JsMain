@@ -1091,7 +1091,13 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             jObject.find('.mstatus').html(responseObject.profiles[i].mstatus);
         }
 */      
-
-      $('#prfDay').removeClass('disp-none');
+        $(".stk_cls").bind('click',function() {
+            onCloseMatchOfDay();
+        });
+        $('#prfDay').removeClass('disp-none');
     }
 
+    function onCloseMatchOfDay(card)
+    {
+
+    }
