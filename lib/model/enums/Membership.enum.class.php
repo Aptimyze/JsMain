@@ -270,6 +270,12 @@ class VariableParams
             "description" => "Get our experts to create comprehensive & well-written profile for you",
             "visibility" => 0,
             "vas_id" => 6
+        ),
+        "J" => array(
+            "name" => "Profile Boost",
+            "description" => "Boost is the secret of my energy",
+            "visibility" => 0,
+            "vas_id" => 7
         )
     );
     public static $vasPerService = array(
@@ -483,6 +489,7 @@ class VariableParams
         "View contacts of members you like",
         "Priority Customer service",
         "Make your contacts visible to others",
+        "Profile Boost",
         "Response Booster",
         "Featured Profile",
         "Astro Compatibility",
@@ -497,6 +504,7 @@ class VariableParams
             0,
             0,
             0,
+            0,
             0
         ) ,
         "C" => array(
@@ -507,9 +515,11 @@ class VariableParams
             0,
             0,
             0,
+            0,
             0
         ) ,
         "ESP" => array(
+            1,
             1,
             1,
             1,
@@ -525,11 +535,13 @@ class VariableParams
             1,
             1,
             1,
-            1,
+            0,
+            0,
             0,
             0
         ) ,
         "D" => array(
+            1,
             1,
             1,
             1,
@@ -543,6 +555,7 @@ class VariableParams
             1,
             1,
             0,
+            1,
             1,
             0,
             0,

@@ -800,7 +800,12 @@ class Membership
             if (count($serviceid_arr1)) {
                 $serviceid_arr = array_merge($serviceid_arr, $serviceid_arr1);
             }
-        } 
+        }
+        elseif(strstr($this->serviceid, 'X')){
+            $serviceArr[] = 'J3';
+            $serviceid_arr = @explode(",", $this->serviceid);
+            $serviceid_arr = array_merge($serviceid_arr, $serviceArr);
+        }
         else $serviceid_arr = @explode(",", $this->serviceid);
         for ($i = 0; $i < count($serviceid_arr); $i++) {
             unset($insert_query_str);
