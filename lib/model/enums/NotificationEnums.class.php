@@ -57,5 +57,6 @@ class NotificationEnums
 
       public static $digestNotificationKeys = array("EOI"=>"EOI_DIGEST");
       public static $channelArr = array("A_I"=>"Android - Ios","D"=>"Desktop","M"=>"Mobile");	
+      public static $enableNotificationLogging = false;
 
 }
