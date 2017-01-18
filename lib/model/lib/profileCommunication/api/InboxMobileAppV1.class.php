@@ -633,7 +633,7 @@ class InboxMobileAppV1
     if (in_array($infoKey, $arrAllowedRcbCommunication)) {
       $loggedInProfileObject = LoggedInProfile::getInstance();
       $rcbObj = new RequestCallBack($loggedInProfileObject);
-      $finalResponse['display_rcb_comm'] = $rcbObj->getRCBStatus();
+      $finalResponse['display_rcb_comm'] = ($rcbObj->getRCBStatus())?'true':'false';
       unset($rcbObj);
     }
         return $finalResponse;
