@@ -92,9 +92,6 @@ class postSendReminderv1Action extends sfAction
 		$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::REMINDER);
 		if($this->contactEngineObj->messageId)
 		{	
-                        $responseArray["headerthumbnailurl"] = $thumbNail;;
-                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
-                        $responseArray["selfthumbnailurl"] = $ownthumbNail;
                         if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
@@ -102,23 +99,12 @@ class postSendReminderv1Action extends sfAction
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"R");
                                 if($request->getParameter('API_APP_VERSION')>=80)
-                                   $responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your reminder" ;
+					$responseArray["headerthumbnailurl"] = $thumbNail;;
+		                        $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                 		        $responseArray["selfthumbnailurl"] = $ownthumbNail;
 
 
-			}
-                        else
-			{
-					$memHandlerObj = new MembershipHandler();
-					$data2 = $memHandlerObj->fetchHamburgerMessage($request);
-					$MembershipMessage = $data2['hamburger_message']['top'];
-                                        if($request->getParameter('API_APP_VERSION')>=80)
-        					$responseArray["errmsglabel"]= "Reminder sent. Upgrade to send personalized messages or initiate chat";
-					$responseArray["footerbutton"]["label"]  = "View Membership Plans";
-					$responseArray["footerbutton"]["value"] = "";
-					$responseArray["footerbutton"]["action"] = "MEMBERSHIP";
-					$responseArray["footerbutton"]["text"] = $MembershipMessage;
-
-				
 			}
 
 		}

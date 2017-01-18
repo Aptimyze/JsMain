@@ -357,5 +357,22 @@ class BILLING_PAYMENT_DETAIL extends TABLE
             throw new jsException($e);
         }
     }
+    
+    public function getStatusTransactions($billId,$statusArr) {
+        try {
+            $statusStr = implode(",",$statusArr);
+            $sql = "SELECT * FROM billing.PAYMENT_DETAIL WHERE BILLID=:BILLID AND STATUS IN ($statusStr)";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":BILLID", $billId, PDO::PARAM_INT);
+            $prep->execute();
+            while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                $output[] = $result;
+            }
+            return $output;
+        }
+        catch(PDOException $e) {
+            throw new jsException($e);
+        }
+    }
 }
 ?>

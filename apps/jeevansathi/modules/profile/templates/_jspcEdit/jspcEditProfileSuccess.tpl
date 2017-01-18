@@ -271,7 +271,7 @@
           <!--start:right div-->
           <div class="fr fontlig prfwid12"> 
             <!--start:contact details-->
-            <div class="bg-white fullwid fontlig" id="section-contact">
+            <div class="bg-white fullwid fontlig noMultiSelect" id="section-contact">
               <div class="edpp3 prfbr2">
                 <ul class="hor_list clearfix  fullwid">
                   <li class="edpwid2 clearfix"> <i class="fl vicons edpic4"></i>
@@ -526,7 +526,7 @@
             
             <!--end:Horoscope Details--> 
             <!--start:verifcation id-->
-            <div class="bg-white fullwid fontlig mt15" id="section-verification">
+            <div class="bg-white fullwid fontlig mt15 noMultiSelect" id="section-verification">
               <div class="edpp3 prfbr2">
                 <ul class="hor_list clearfix  fullwid">
                   <li class="edpwid2 clearfix"> <i class="fl vicons edpic4"></i>
