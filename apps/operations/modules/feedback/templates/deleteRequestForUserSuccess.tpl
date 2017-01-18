@@ -2,19 +2,20 @@
 
 <script type="text/javascript">
 
-	function requestdeletion()
+	function requestdeletion(obj)
 	{ 
-
+		obj.disabled = true;
 	var userName = $("#username").val().trim();
 	$('#userNp').hide();
 	if(userName == '')
 	{	
 		$('#userNp').show().css('display','inline-block');
+		obj.disabled = false;
 		return;
 	}
 
 	var out = $('input[name=reqDel]:checked').val();
-	alert(out);
+	
 	var requestBySelf = 0;
 	if(out == 'requestBySelf')
 	{
@@ -41,16 +42,19 @@
 		                 {
 		                 		//$('#formForReportAbuse').hide();
 		                 		$('#userNp').show().css('display','inline-block');
+		                 		obj.disabled = false;
 		                 } 
 
 		                 else if (out.responseStatusCode == '0')
-		                 {   alert('hahahah');
+		                 {  
 		                 		$('#formForRequestDelete').hide();
 		                 		$('#successfullDisplay').css('display','block');
 		                 		$('#goBackButton').css('display','block');
+		                 		obj.disabled = false;
 		                 }  	            
 		                
 		              }
+
 		});
 
 	}
@@ -83,7 +87,7 @@
 			&nbsp;&nbsp;&nbsp;
                         <tr align="CENTER">
 				<td colspan=3>
-					<button name="submit" onclick="requestdeletion();">Request Deletion </button>
+					<button name="submit" onclick="requestdeletion(this);">Request Deletion </button>
 				<td>
                         </tr>
 		   </table>

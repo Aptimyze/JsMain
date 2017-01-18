@@ -43,17 +43,15 @@
                     </tr>
                 
                 <tr>
-                        <td>
-
-                         <td height="27">
-                         <a href="(LINK)REQUEST_USER_TO_DELETE:profileid=~$profileid`(/LINK)">
-                        <button style="background-color:#ad160d;"><font color="#fff"><strong>Delete Profile</strong></font></button></a></td> 
-<!--
-                         <td height="27"><a href="REQUEST_USER_TO_DELETE:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td> -->  
-                        </td>
-                        
-
-                        <td width="20" height="25"></td>
+       <td></td>
+    <td colspan="2">
+        <table border="0" width="130" align="left" cellspacing="0" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px;">
+            <tr>
+                <td bgcolor="#ad160d" height="27" align="center" width="167"><a href="(LINK)REQUEST_USER_TO_DELETE:profileid=~$profileid`(/LINK)" target="_blank" style="font-size:12px; color:#fff; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;text-decoration: none;"><strong>Delete Profile</strong></a></td>
+            </tr>
+        </table>
+    </td>
+            
                 </tr>
                 <tr>
                         <td width="20"></td>
@@ -89,15 +87,14 @@
                     </tr>
                 
                 <tr>
-                        <td>
-                           <td height="27">
-                         <a href="(LINK)REQUEST_USER_TO_DELETE:profileid=~$profileid`(/LINK)">
-                        <button style="background-color:#ad160d;"><font color="#fff"><strong>Delete Profile</strong></font></button></a></td> 
-                   <!--      <td height="27"><a href="(LINK)ALTERNATE_EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Please verify your Email here.</a></td>   -->
-                        </td>
-                        
-
-                        <td width="20" height="25"></td>
+      <td></td>
+    <td colspan="2">
+        <table border="0" width="130" align="left" cellspacing="0" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px;">
+            <tr>
+                <td bgcolor="#ad160d" height="27" align="center" width="167"><a href="(LINK)REQUEST_USER_TO_DELETE:profileid=~$profileid`(/LINK)" target="_blank" style="font-size:12px; color:#fff; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;text-decoration: none;"><strong>Delete Profile</strong></a></td>
+            </tr>
+        </table>
+    </td>
                 </tr>
                 <tr>
                         <td width="20"></td>

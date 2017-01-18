@@ -219,11 +219,13 @@ public function executeDeleteRequestForUser(sfWebRequest $request)
           }
           else
           { 
-            $sendingObject->deleteRequestedByOther($request);
+          $sendingObject->deleteRequestedByOther($request);
             $requestedBy = 'Other';  
           }
           $crmUserName = $this->user;
-      //    $sendingObject->logThis($crmUserName,$userPFID,$requestedBy);
+
+          $loggingObj = new REQUEST_DELETIONS_LOG();
+          $loggingObj->logThis($crmUserName,$userPFID,$requestedBy);
 
           $response[responseStatusCode] = '0';
           $response[message] = "Successfully sent"; 
