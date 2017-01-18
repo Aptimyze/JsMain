@@ -25,6 +25,7 @@ class FetchProfiles
 	const MSTATUS_TYPE = 'MSTATUS';
 	const SPL_TYPE = 'SPECIAL_CASES';
 	const COUNTRY_INDIA='51';
+        const COUNTRY_USA = '128';
 	
 	function __construct(){	
 		$this->spl_cases_type_arr = array('HIV'=>'HIV','Deaf'=>'NATURE_HANDICAP','Dumb'=>'NATURE_HANDICAP','Blind'=>'NATURE_HANDICAP','Handicapped'=>'NATURE_HANDICAP');
@@ -205,23 +206,10 @@ class FetchProfiles
 		// handling of special case static array profiles
 		if($type1 == 'PROFILEID')
 			$paramArr["SHOW_PROFILES"]=$value1In;
-                   
-                if($paramArr["CITY_RES"]){
-                    $paramArr["COUNTRY_RES"] = 51;
-                    $mappedCityValue = FieldMap::getFieldLabel('city_india',$paramArr["CITY_RES"]);
-                    var_dump($mappedCityValue."--".strlen($paramArr["CITY_RES"]));
-                    if($mappedCityValue!=null && strlen($paramArr["CITY_RES"])>0){
-                        if(strlen($paramArr["CITY_RES"]) > 2){
-                            $paramArr["CITY_INDIA"] = $paramArr["CITY_RES"];
-                        }
-                        else{
-                            $paramArr["STATE"] = $paramArr["CITY_RES"];
-                            unset($paramArr["CITY_RES"]);
-                        }
-                    }
-                    
-                }
-                print_r($paramArr);
+                
+                //format solr inputs from seo
+                $paramArr = $this->formatSeoSolrInputs($paramArr);
+                
 		$SearchParametersObj = new SearchBasedOnParameters;
 		$SearchParametersObj->getSearchCriteria($paramArr);
 		$SearchParametersObj->setNoOfResults($noOfResult);
@@ -275,8 +263,34 @@ class FetchProfiles
 		}
 	}
 	
-	
-	
+	/*function - formatSeoSolrInputs
+         * formats solr inputs from seo
+         * @params: $paramArr
+         * @return : $paramArr
+         */
+	function formatSeoSolrInputs($paramArr){
+            if($paramArr["CITY_RES"]){
+                $mappedCityValue = FieldMap::getFieldLabel('city_india',$paramArr["CITY_RES"]);
+                var_dump($mappedCityValue."--".strlen($paramArr["CITY_RES"]));
+                //if city/state is in India
+                if($mappedCityValue!=null && strlen($paramArr["CITY_RES"])>0){
+                    $paramArr["COUNTRY_RES"] = FetchProfiles::COUNTRY_INDIA;
+                    if(strlen($paramArr["CITY_RES"]) > 2){  //City case
+                        $paramArr["CITY_INDIA"] = $paramArr["CITY_RES"];
+                    }
+                    else{
+                        $paramArr["STATE"] = $paramArr["CITY_RES"];  //state case
+                        unset($paramArr["CITY_RES"]);
+                    }
+                }
+                else{ //if city is not in India
+                    $paramArr["COUNTRY_RES"] = FetchProfiles::COUNTRY_USA;
+                }
+            } 
+            print_r($paramArr);
+            return $paramArr;
+        }
+        
 	function ArrayMerge($array1,$array2)
 	{
 		$returnArray=@array_merge($array1,$array2);
