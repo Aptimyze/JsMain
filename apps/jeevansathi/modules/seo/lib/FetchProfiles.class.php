@@ -271,7 +271,7 @@ class FetchProfiles
 	function formatSeoSolrInputs($paramArr){
             if($paramArr["CITY_RES"]){
                 $mappedCityValue = FieldMap::getFieldLabel('city_india',$paramArr["CITY_RES"]);
-                var_dump($mappedCityValue."--".strlen($paramArr["CITY_RES"]));
+                //var_dump($mappedCityValue."--".strlen($paramArr["CITY_RES"]));
                 //if city/state is in India
                 if($mappedCityValue!=null && strlen($paramArr["CITY_RES"])>0){
                     $paramArr["COUNTRY_RES"] = FetchProfiles::COUNTRY_INDIA;
@@ -284,10 +284,10 @@ class FetchProfiles
                     }
                 }
                 else{ //if city is not in India
-                    $paramArr["COUNTRY_RES"] = FetchProfiles::COUNTRY_USA;
+                    //$paramArr["COUNTRY_RES"] = FetchProfiles::COUNTRY_USA;
                 }
             } 
-            print_r($paramArr);
+            //print_r($paramArr);
             return $paramArr;
         }
         
