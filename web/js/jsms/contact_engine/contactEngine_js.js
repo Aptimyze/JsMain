@@ -138,7 +138,7 @@ $.ajax({
 					$("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
 					//$("#loaderOverlay").hide();
 					//$("#reportAbuseContainer").hide();
-                    if(CommonErrorHandling(result,'?regMsg=Y') || result.message =='You cannot report abuse the same person more than twice.' ) 
+                    if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y') ) 
                     {  
 					ShowTopDownError([result.message],5000);
 					$("#commonOverlayTop").show();

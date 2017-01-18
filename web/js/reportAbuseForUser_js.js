@@ -61,12 +61,13 @@ function reportAbuseForUserFun(obj){
 			         if(typeof(result) != 'object')
 					  var out = JSON.parse(result);
 
-					if(typeof(result) != 'undefined' && result.message == "You cannot report abuse the same person more than twice.")
+					if(typeof(result) != 'undefined' && result.responseStatusCode == "1")
 		                 {
-		                 	alert('You Cannot Abuse Person more than twice');
-		                 		//$('#reporterProfileId').html('');
-		                 		//$('#reporteeProfileId').html('');
-		                 		//$('#reasonId').html('');
+
+		                 		$('#formForReportAbuse').hide();
+		                 		$('#successfullDisplay').html(result.message).css('display','block');
+		                 		$('#goBackforRishav').css('display','block');
+
 		                 		obj.disabled = false;
 		                 		return;
 		                 }
