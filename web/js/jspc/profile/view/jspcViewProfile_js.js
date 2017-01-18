@@ -611,6 +611,11 @@ ajaxConfig.success=function(response){
 	          	hideCommonLoader();
 	          	
 		var jObject=$("#reportAbuseConfirmLayer");
+    if(response.responseStatusCode == '1'){
+      $('#hiphenForConfirm').html('');
+      $('#reportAbuseConfirmHeading').html('');
+    }
+      
 	jObject.find('.js-username').html(otherUser);
 	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
 
