@@ -650,7 +650,7 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 	unset($noLoop);
 	if($method!='NEW_FAILED_PAYMENT' && $method!='FIELD_SALES' && $method!="WEBMASTER_LEADS"){
 		$mainAdminPoolObj	=new incentive_MAIN_ADMIN_POOL('newjs_slave');
-		$alertsObj		=new newjs_JPROFILE_ALERTS('newjs_slave');
+		$alertsObj		=new JprofileAlertsCache('newjs_slave');
 		$profilesStr		="'".implode("','",$profiles)."'";
 		$valueArray['PROFILEID']=$profilesStr;
 		$profiles		=$mainAdminPoolObj->getArray($valueArray,"","","PROFILEID");
@@ -758,7 +758,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 {
 	$jprofileObj		=new JPROFILE('newjs_slave');
 	$historyObj		=new incentive_HISTORY('newjs_slave');		
-	$jprofileAlertsObj	=new newjs_JPROFILE_ALERTS('newjs_slave');		
+	$jprofileAlertsObj	=new JprofileAlertsCache ('newjs_slave');		
 	$jprofileContactObj	= new ProfileContact('newjs_slave');
 	$vdObj 			=new billing_VARIABLE_DISCOUNT('newjs_slave');
 	$consentDncObj  	=new NEWJS_CONSENTMSG('newjs_slave');
