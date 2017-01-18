@@ -217,7 +217,7 @@ class WriteMessage extends ContactEvent{
     $data = JsMemcache::getInstance()->getHashAllValue($key);
     if($data)
     {
-      $arrValue['message'] = $data['message'] + $arrValue['message'];
+      $arrValue['message'] = $data['message'].$arrValue['message'];
     }
     // print_r($data);
     JsMemcache::getInstance()->setHashObject($key,$arrValue);
