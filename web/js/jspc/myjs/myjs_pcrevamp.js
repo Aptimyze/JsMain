@@ -1043,12 +1043,32 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
     { 
         jObject = $('#matchOfDaySection');
         htmlInside = jObject.html();
-        jObject.html(''); 
+        jObject.html('');
+
         for(i=0;i<7;i++)
         {
             jObject.append(htmlInside);
             jObject.parent().find('#matchOfDaySubSection').attr('id','matchOfDaySubSection_'+(i+1));
+            jObject.parent().find('#matchOfDaySubSection_'+(i+1)).attr('data-matchID',i);
        }
+
+       var getNStk = parseInt($('.stk').length);
+        $('.stk').eq(0).addClass('active');
+        $('.stk').each(function(index)
+        {
+            if(index<3)
+            {
+                $(this).css('z-index',getNStk).addClass('card-index-'+index);
+            }
+            else
+            {
+                $(this).css({
+                        'z-index':getNStk,
+                        'display':'none'
+                    });
+            }                             
+            getNStk=getNStk-1;
+        });
 /*
         for(i=0;i<responseObject.profiles.length;i++)
         {
