@@ -108,8 +108,8 @@ class ProfileInsertLib
       self::$instance->objJProfileStore->setConnection($dbname);
       self::$instance->objProfileNTimesStore->setConnection($dbname);
       self::$instance->objProfileHoroscopeForScreenStore->setConnection($dbname);
-      self::$instance->objProfileAlertsStore->setConnection($dbname);
-
+      unset(self::$instance->objProfileAlertsStore);
+      self::$instance->objProfileAlertsStore = new JprofileAlertsCache($dbname);
     }
 
     return self::$instance;
