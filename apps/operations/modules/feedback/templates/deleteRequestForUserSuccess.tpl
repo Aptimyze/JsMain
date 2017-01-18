@@ -36,18 +36,18 @@
 				success: function(result){
 			         if(typeof(result) != 'object')
 					  var out = JSON.parse(result);
-					console.log(result);
+
 					 if(typeof(out) != 'undefined' && out['message'] == "username is not correct")
 		                 {
 		                 		//$('#formForReportAbuse').hide();
 		                 		$('#userNp').show().css('display','inline-block');
 		                 } 
 
-		                 else if (result.responseStatusCode == '0')
-		                 { 
+		                 else if (out.responseStatusCode == '0')
+		                 {   alert('hahahah');
 		                 		$('#formForRequestDelete').hide();
 		                 		$('#successfullDisplay').css('display','block');
-		                 		$('#goBackforRishav').css('display','block');
+		                 		$('#goBackButton').css('display','block');
 		                 }  	            
 		                
 		              }
@@ -91,5 +91,5 @@
 
 
 	<tr align=center><td class=fieldsnew colspan=100%><font size=2><b style="display: none" align = "CENTER" id ="successfullDisplay">Request For deletion has been successfully raised. </b></font></td></tr>
-<tr align=center> <a href=~$linkToInterface`> <font size=2 color="red"><b align = "center" style="display: none" id="goBackforRishav">Go Back To Raise another request . </b></font></a></tr>
+<tr align=center> <a href=~$linkToGoBackToDeleteRequest`> <font size=2 color="red"><b align = "center" style="display: none" id="goBackButton">Go Back To Raise another request . </b></font></a></tr>
 ~include_partial('global/footer')`

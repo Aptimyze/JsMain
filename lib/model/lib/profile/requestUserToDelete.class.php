@@ -32,6 +32,7 @@ class requestUserToDelete
 		public function deleteRequestedByOther(sfWebRequest $request)
 	{	
 		$profileid = $request->getParameter('pfID');
+		include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
 		$sms = new InstantSMS("REQ_CRM_DEL_SELF", $profileid);
         $sms->send();
         $request->setParameter('selfDEL','0');
@@ -87,7 +88,7 @@ class requestUserToDelete
 
 	}
 /*
-	public function logThis($crmUser,$userPFID,$requestedBy) 
+	public function logThis	($crmUser,$userPFID,$requestedBy) 
 	{  
 		
 		try

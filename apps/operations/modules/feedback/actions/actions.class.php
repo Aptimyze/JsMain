@@ -194,7 +194,7 @@ public function executeDeleteRequestForUser(sfWebRequest $request)
 
   public function executeSendDeleteRequestForUser(sfWebRequest $request)
   {       
-          
+          $this->linkToGoBackToDeleteRequest = JsConstants::$siteUrl."/operations.php/feedback/deleteRequestForUser";
           $dataArray = $request->getParameter('feed');
           $userName = $dataArray['username'];
 
@@ -225,9 +225,9 @@ public function executeDeleteRequestForUser(sfWebRequest $request)
           $crmUserName = $this->user;
       //    $sendingObject->logThis($crmUserName,$userPFID,$requestedBy);
 
-
-          $error[message] = "Successfully sent"; 
-            echo json_encode($error);
+          $response[responseStatusCode] = '0';
+          $response[message] = "Successfully sent"; 
+            echo json_encode($response);
             exit;
 
   }

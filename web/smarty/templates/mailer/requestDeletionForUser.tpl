@@ -36,7 +36,7 @@
                     <tr>
                         <td width="20"></td>
                         <td>
-                It looks like we have received a request from you to delete your profile on Jeevansathi. As the request was made over call, as we want to be double sure. Hence, we request you to delete your profile on your own:
+                It looks like we have received a request from you to delete your profile on Jeevansathi. As the request was made over call, we want to be double sure. Hence, we request you to delete your profile on your own:
                         </td>
 
                         <td width="20"></td>
@@ -47,7 +47,7 @@
 
                          <td height="27">
                          <a href="(LINK)REQUEST_USER_TO_DELETE:profileid=~$profileid`(/LINK)">
-                        <button style="background-color:#cc3b51;"><font color="#fff">Delete Profile</font></button></a></td> 
+                        <button style="background-color:#ad160d;"><font color="#fff"><strong>Delete Profile</strong></font></button></a></td> 
 <!--
                          <td height="27"><a href="REQUEST_USER_TO_DELETE:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td> -->  
                         </td>
@@ -90,10 +90,9 @@
                 
                 <tr>
                         <td>
-                            <td height="27">
-                        <td height="27">
+                           <td height="27">
                          <a href="(LINK)REQUEST_USER_TO_DELETE:profileid=~$profileid`(/LINK)">
-                        <button style="background-color:#cc3b51;"><font color="#fff">Delete Profile</font></button></a></td> 
+                        <button style="background-color:#ad160d;"><font color="#fff"><strong>Delete Profile</strong></font></button></a></td> 
                    <!--      <td height="27"><a href="(LINK)ALTERNATE_EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Please verify your Email here.</a></td>   -->
                         </td>
                         
