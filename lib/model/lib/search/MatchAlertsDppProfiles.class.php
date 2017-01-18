@@ -62,14 +62,20 @@ class MatchAlertsDppProfiles extends PartnerProfile {
                 }
                 
                 if($this->getLINCOME() || $this->getLINCOME_DOL()){
-                    if($this->getLINCOME())
-                    {
+                    if($this->getLINCOME()){
                             $rArr["minIR"] = $this->getLINCOME() ;
                             $rArr["maxIR"] = "19" ;
                     }
-                    if($this->getLINCOME_DOL())
-                    {
+                    else{       
+                            $rArr["minIR"] = "0" ;
+                            $rArr["maxIR"] = "19" ;
+                    }    
+                    if($this->getLINCOME_DOL()){
                             $dArr["minID"] = $this->getLINCOME_DOL() ;
+                            $dArr["maxID"] = "19" ;
+                    }
+                    else{
+                            $dArr["minID"] = "0" ;
                             $dArr["maxID"] = "19" ;
                     }
                     $incomeMapObj = new IncomeMapping($rArr,$dArr);
