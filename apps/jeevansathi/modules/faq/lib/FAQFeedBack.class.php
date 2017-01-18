@@ -167,6 +167,30 @@ class FAQFeedBack
 		$this->webRequest=$request;
 		$this->m_objForm = new FeedBackForm($this->api);
 		$arrDeafults = array('name'=>$this->m_szName,'username'=>$this->m_szUserName,'email'=>$this->m_szEmail);
+		if($this->webRequest->getParameter('fromCRM')){
+			$reporteeId=$this->webRequest->getParameter('reporteePFID');
+		}
+		else{
+		$reporteeId = JsCommon::getProfileFromChecksum($this->webRequest->getParameter('profilechecksum'));
+		}
+
+		$reportAbuseObj = new REPORT_ABUSE_LOG();
+		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
+		$profileObj = NEWJS_JPROFILE::getInstance();
+     	$reporterId = $profileObj->getProfileIdFromUsername($this->m_szUserName);
+
+  		unset($profileObj);
+
+  		if(!$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
+		{  
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
+			$error[message]='You cannot report abuse the same person more than twice.';
+			$apiResponseHandlerObj->setResponseBody($error);
+			$apiResponseHandlerObj->generateResponse();
+			die;
+		}
+
+
 		$this->m_objForm->setDefaults($arrDeafults);  
 		if($request->isMethod('POST') && $request->getParameter('CMDSubmit'))
 		{  
