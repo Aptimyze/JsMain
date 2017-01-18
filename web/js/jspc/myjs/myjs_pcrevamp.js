@@ -1091,5 +1091,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             jObject.find('.mstatus').html(responseObject.profiles[i].mstatus);
         }
 */      
+
       $('#prfDay').removeClass('disp-none');
     }
+
