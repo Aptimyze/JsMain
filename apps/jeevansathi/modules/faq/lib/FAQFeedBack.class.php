@@ -190,7 +190,7 @@ class FAQFeedBack
   		if(!$reportAbuseObj->canReportAbuse($reporteeId,$reporterId))
 		{  
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$ABUSE_ATTEMPTS_OVER); 
-			$error[message]='You cannot report abuse the same person more than twice.';
+			$error[message]='You cannot report abuse against the same person more than twice.';
 			$apiResponseHandlerObj->setResponseBody($error);
 			$apiResponseHandlerObj->generateResponse();
 			die;
