@@ -37,13 +37,11 @@
     ~include_title`
     ~include_canurl`
     ~use helper = SfMinify`
-     <script async="true" src="~JsConstants::$jquery`"></script>
+     <script async="true" src="~JsConstants::$jquery`" onload='loadJS();'  ></script>
         <script type="text/javascript">
-var jqueryVar = setInterval(function(){ checkJquery() }, 500);
+//var jqueryVar = setInterval(function(){ loadJS() }, 500);
 
-function checkJquery() {
-    if(window.jQuery) {
-        stopInterval();
+function loadJS() {
 
          var lib = document.createElement('script');
          lib.src = "~JsConstants::$imgUrl`/min/?f=~$sf_request->getAttribute('singleJs')`";
@@ -52,10 +50,6 @@ function checkJquery() {
         var lib2 = document.createElement('script');
         lib2.src = "~JsConstants::$imgUrl`/min/?f=~$sf_request->getAttribute('JSArray')`";
         document.head.appendChild(lib2);
-        
-    } else{
-        console.log("Jquery not loaded");
-    }
 }
 function stopInterval(){
     clearInterval(jqueryVar);
