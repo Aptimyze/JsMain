@@ -211,14 +211,25 @@ class WriteMessage extends ContactEvent{
       $key = $receiver->getPROFILEID().'-'.$sender->getPROFILEID();
     }
 
-    $formattedMsg = $sender->getUSERNAME().', time: '.$message.'\n';
-    $arrValue = array("time"=>time(),"message"=>$formattedMsg);
+    $time = time();
+    $msgTime = date("g:i a",$time);
+    $formattedMsg = $sender->getUSERNAME().", $msgTime: ".$message;
+    $arrValue = array("time"=>time(),"message"=>$formattedMsg,"Receivers"=>$receiver->getPROFILEID(), "sendToBoth" => 0);
     // Key doesnt exists in Memcache
     $data = JsMemcache::getInstance()->getHashAllValue($key);
     if($data)
     {
-      $arrValue['message'] = $data['message'].$arrValue['message'];
+      $arrValue['message'] = $data['message'].'\n'.$arrValue['message'];
+      if($receiver->getPROFILEID() != $data['Receivers'] && !$data['sendToBoth'])
+      {
+        $arrValue['sendToBoth'] = 1;
+      }
+      elseif ($data['sendToBoth'])
+      {
+        $arrValue['sendToBoth'] = 1;  
+      }
     }
+    // var_dump($arrValue);die;
     JsMemcache::getInstance()->setHashObject($key,$arrValue);
     return $key;
   }

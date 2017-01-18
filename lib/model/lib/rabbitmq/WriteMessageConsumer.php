@@ -137,6 +137,9 @@ class WriteMessageConsumer
 			// Todo: Process this
 			$key = $body['key'];
 			$data = JsMemcache::getInstance()->getHashAllValue($key);
+			// todo: delete key data
+			
+			// print_r($data);die;
 			$timeDiff = floor( (time() - $data['time'])/60 );
 			$senderid=$body['senderid'];
 			$receiverid=$body['receiverid'];
@@ -144,11 +147,25 @@ class WriteMessageConsumer
 			$senderObj->getDetail("","","*");
 			$receiverObj = new Profile('',$receiverid);
 			$receiverObj->getDetail("","","*");
+			
 			if($timeDiff >= MQ::DELAY_MINUTE)
 			{
 				// send mail
 				$conversation = $data['message'];
-				var_dump($conversation);die;
+				if($data['sendToBoth'])
+				{
+					// send this mail both to sender and receiver
+					$search = $sender.',';
+					$senderEmailMsg = str_replace($search, 'You,', $conversation);
+					$search = $receiver.',';
+					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+				}
+				else
+				{
+					// send only to receiver
+					$search = $receiver.',';
+					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+				}
 				$handlerObj->sendMail($type,$body);
 			}
 			break;
