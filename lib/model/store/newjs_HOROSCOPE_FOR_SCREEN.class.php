@@ -22,7 +22,7 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
 					$prep->execute();
-                    JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+                    //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 					if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					{
 						return $result[HOROSCOPE];
@@ -46,7 +46,7 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
 					$prep->execute();
-                    JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+                    //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 					if($result = $prep->fetch(PDO::FETCH_ASSOC))
 					{
 						return $result[HOROSCOPE];
@@ -86,7 +86,7 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 
 			$res->bindValue(":PROFILEID", $pid);
 			$res->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return true;
 		}
 		catch(PDOException $e) {
@@ -108,7 +108,7 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 			$pdoStatement->bindValue(":HORO", $blobHoroscope);
 			$pdoStatement->bindValue(":UPLOADED", $cHoroscope);
 			$pdoStatement->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return true;
 		} catch (PDOException $ex) {
 			throw new jsException($ex);
@@ -158,7 +158,7 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 			$pdoStatement->bindValue($count,$iProfileID);
 
 			$pdoStatement->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return true;
 		}
 		catch(Exception $e)
@@ -179,7 +179,7 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 			$sql = 'DELETE FROM newjs.HOROSCOPE_FOR_SCREEN WHERE UPLOADED=\'Y\' or UPLOADED=\'D\'"';
 			$pdoStatement = $this->db->prepare($sql);
 			$pdoStatement->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return true;
 		} catch (PDOException $ex) {
 			throw new jsException($ex);
@@ -197,7 +197,7 @@ class NEWJS_HOROSCOPE_FOR_SCREEN extends TABLE{
 			$pdoStatement = $this->db->prepare($sql);
 			$pdoStatement->bindValue(':ID',$iID,PDO::PARAM_INT);
 			$pdoStatement->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return true;
 		} catch (PDOException $ex) {
 			throw new jsException($ex);

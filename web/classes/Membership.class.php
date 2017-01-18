@@ -114,6 +114,14 @@ class Membership
     function setProfileid($profileid) {
         $this->profileid = $profileid;
     }
+    
+    function setCurtype($curtype) {
+        $this->curtype = $curtype;
+    }
+    
+    function getCurtype() {
+        return $this->curtype;
+    }
 
     public function __get($property) {
         if (property_exists($this, $property)) {
@@ -769,6 +777,12 @@ class Membership
             $valuesStr .= ",'$this->DOL_CONV_RATE'";
         }
         $this->receiptid = $billingPaymentDetObj->genericPaymentInsert($paramsStr, $valuesStr);
+        if($this->status != 'REFUND'){
+            $paramsStr = "RECEIPTID, ".$paramsStr;
+            $valuesStr = "'$this->receiptid', ".$valuesStr;
+            $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+            $negTransactionObj->insertRecord($paramsStr,$valuesStr);
+        }
     }
     
     function setServiceActivation() {
@@ -1264,7 +1278,7 @@ class Membership
             $tax_rate = $myrow['TAX_RATE'];
             $cur_type = $myrow['CUR_TYPE'];
 	    $entryBy =$myrow['ENTRYBY'];
-	    if($entryBy!='ONLINE')
+	    if($entryBy=='ONLINE')
 		$country =$myrow['COUNTRY'];
 	
             if(stristr($myrow['SERVICE_TAX_CONTENT'],'swachh') && stristr($myrow['SERVICE_TAX_CONTENT'],'krishi')){ // this will occur only for billings occurring with swachh tax applied or krishi kalyan tax is applied

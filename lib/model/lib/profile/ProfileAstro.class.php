@@ -342,7 +342,7 @@ class ProfileAstro
      * @param type $funName
      */
     private function logCacheConsumeCount($funName)
-    {
+    {return;
         $key = 'cacheConsumption' . '_' . date('Y-m-d');
         JsMemcache::getInstance()->hIncrBy($key, $funName);
 
