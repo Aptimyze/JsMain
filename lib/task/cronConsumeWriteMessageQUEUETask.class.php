@@ -11,7 +11,7 @@ class cronConsumeWriteMessageQUEUETask extends sfBaseTask
 The [cronConsumeWriteMessageQUEUE|INFO] task does things.
 Call it with:
 
-  [php symfony cronConsumeWriteMessageQUEUE|INFO]
+  [php symfony cron:cronConsumeWriteMessageQUEUE|INFO]
 EOF;
 		$this->addOptions(array(
 			new sfCommandOption('application', null, sfCommandOption::PARAMETER_OPTIONAL, 'The application name', 'jeevansathi')

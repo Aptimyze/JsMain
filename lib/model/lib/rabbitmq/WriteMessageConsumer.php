@@ -72,9 +72,9 @@ class WriteMessageConsumer
 	{
 		$this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
 		$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeRightNow, 'direct');
-		$this->channel->queue_bind(MQ::WRITE_MSG_queueRightNow, MQ::WRITE_MSG_exchangeRightNow);
-		$this->channel->queue_declare(MQ::WRITE_MSG_queueDelayed5min, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, array("x-dead-letter-exchange" => array("S", MQ::MAILQUEUE),"x-message-ttl" => array("I", MQ::DELAY_WRITEMSG*1000)));
 		$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeDelayed5min, 'direct');
+		$this->channel->queue_bind(MQ::WRITE_MSG_queueRightNow, MQ::WRITE_MSG_exchangeRightNow);
+		$this->channel->queue_declare(MQ::WRITE_MSG_queueDelayed5min, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, array("x-dead-letter-exchange" => array("S", MQ::WRITE_MSG_exchangeRightNow),"x-message-ttl" => array("I", MQ::DELAY_WRITEMSG*1000)));
 		$this->channel->queue_bind(MQ::WRITE_MSG_queueDelayed5min, MQ::WRITE_MSG_exchangeDelayed5min);
 	} 
 	catch (Exception $exception) 
