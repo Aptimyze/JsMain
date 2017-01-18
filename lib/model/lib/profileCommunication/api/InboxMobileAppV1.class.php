@@ -634,6 +634,7 @@ class InboxMobileAppV1
       $loggedInProfileObject = LoggedInProfile::getInstance();
       $rcbObj = new RequestCallBack($loggedInProfileObject);
       $finalResponse['display_rcb_comm'] = ($rcbObj->getRCBStatus())?'true':'false';
+	$finalResponse['display_rcb_comm_message']="To reach out to your accepted members, you may consider upgrading your membership. Would you like us to call you to explain the benefits of our membership plans?";
       unset($rcbObj);
     }
         return $finalResponse;
