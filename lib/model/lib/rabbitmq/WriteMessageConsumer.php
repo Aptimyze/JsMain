@@ -138,11 +138,17 @@ class WriteMessageConsumer
 			$key = $body['key'];
 			$data = JsMemcache::getInstance()->getHashAllValue($key);
 			$timeDiff = floor( (time() - $data['time'])/60 );
-			if($timeDiff >= 15)
+			$senderid=$body['senderid'];
+			$receiverid=$body['receiverid'];
+			$senderObj = new Profile('',$senderid);   
+			$senderObj->getDetail("","","*");
+			$receiverObj = new Profile('',$receiverid);
+			$receiverObj->getDetail("","","*");
+			if($timeDiff >= MQ::DELAY_MINUTE)
 			{
 				// send mail
 				$conversation = $data['message'];
-				var_dump($conversation);
+				var_dump($conversation);die;
 				$handlerObj->sendMail($type,$body);
 			}
 			break;
