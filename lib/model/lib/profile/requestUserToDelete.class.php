@@ -80,7 +80,6 @@ class requestUserToDelete
         $date= strtotime(date("Y-m-d"));
     	$date = date('d M ', $date);
 		$tpl->setSubject($subject);
-		$sendTo = 'ayushsethi.js@gmail.com';
         $emailSender->send($sendTo);
         $status = $emailSender->getEmailDeliveryStatus();
        	(new MAIL_EMAIL_VER_MAILER())->makeEntry($profileId,$status);

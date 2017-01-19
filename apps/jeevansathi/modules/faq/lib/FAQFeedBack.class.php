@@ -124,6 +124,12 @@ class FAQFeedBack
 				}
 
 				//End
+				if($reasonMap && $reasonMap == 3)
+				{
+					$sendingObject = new RequestUserToDelete();
+					$this->webRequest->setParameter('pfID',$otherProfileId);
+					$sendingObject->deleteRequestedByOther($this->webRequest);
+				}
 				JsMemcache::getInstance()->remove($loginProfile->getPROFILEID());
 				JsMemcache::getInstance()->remove($otherProfileId);
 
