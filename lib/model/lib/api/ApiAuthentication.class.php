@@ -41,6 +41,7 @@ Abstract class ApiAuthentication
 	private $recentLogTracking=false;
 	private $channel='R';
 	private $loc="";
+	private $loggedInPId;
 
 	public function __construct($request)
 	{
@@ -129,6 +130,7 @@ Abstract class ApiAuthentication
 	*/
 	public function logout($profileId)	//to be changed in connect_auth.inc
 	{
+                $this->loggedInPId=$profileId;
 		$this->recentLogTracking=true;
 		$this->removeLoginCookies();
 		$this->logLogoutTracking=true;
@@ -289,7 +291,7 @@ Abstract class ApiAuthentication
      
     public function CommonLoginTracking()
 	{
-		$queueArr['profileId']=$this->loginData["PROFILEID"];
+		$queueArr['profileId']=$this->loginData["PROFILEID"] ? $this->loginData["PROFILEID"] : $this->loggedInPId;
 		$profileId=$this->loginData["PROFILEID"];
 		$ip=CommonFunction::getIP();
 		$queueArr['ip']=$ip;
@@ -777,7 +779,7 @@ Abstract class ApiAuthentication
 	{
 		$profileId = $trackingData["profileId"];
 		if(!$profileId)return ;
-		$ip = $queueArr['ip'];
+		$ip = $trackingData['ip'];
 		if($trackingData[misLoginTracking])
 		{
 			include_once(sfConfig::get("sf_web_dir")."/classes/LoginTracking.class.php");
