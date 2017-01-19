@@ -119,17 +119,8 @@
                                 var iStr='';
                  if(document.getElementById('val').value=="new")
                  {
-					var mid1=document.getElementById('MSTATUS').value;
-                    var db=document.getElementById('day_of_birth').value;
-                    var mb=document.getElementById('month_of_birth').value;
-                    var yb=document.getElementById('year_of_birth').value;
 					var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9])+$/;
 					var gender_val_selected = document.getElementById('GENDER1').value;
-					var x= new Date();
-					var current_year = x.getFullYear();
-					var current_month = x.getMonth()+1;
-					var current_day = x.getDate();
-				
 					if(inputs.length!=0)
 					{
 						for (var i=0; i < inputs.length; i++)
@@ -152,51 +143,14 @@
 								}
                             }
 					}
-					document.getElementById('m_id1').style.display="none";
-                    document.getElementById('m_id2').style.display="none";
 					if(!checkemail(mid) || !filter.test(mid) || mid.charAt(0)==".")
 					{
 						document.getElementById('m_id').style.display="block";
 						return false;
 					}
-					else if(mid1=='')
-					{
-						document.getElementById('m_id1').style.display="block";
-											return false;
-					}
-					else if(db != "" && mb != "" && yb != "")
-                  	{
-        				age = current_year - yb;
-				        if(mb > current_month)
-							age--;
-				        else if(mb == current_month && db > current_day)
-							age--;
-						if(gender_val_selected == "M" && age < 21)
-						{
-							document.getElementById('m_id2').style.display="block";
-							return false;
-						}
-						else if(gender_val_selected == "F" && age < 18)
-						{
-						document.getElementById('m_id2').style.display="block";
-							return false;
-	                                }
-						else if(info!='')
-						{
-							iStr=trim(info);
-							iStr=trim_newline(iStr);
-							if(iStr=='')
-							{
-								document.getElementById('info_span').style.display="block";
-								return false;
-							}       
-						}
-					}
 					else
 					{
 						document.getElementById('m_id').style.display="none";
-						document.getElementById('m_id1').style.display="none";
-						document.getElementById('m_id2').style.display="none";
 						document.getElementById('info_span').style.display="none";
 											return checkthis();
 					}
