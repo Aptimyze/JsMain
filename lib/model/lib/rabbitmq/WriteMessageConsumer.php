@@ -85,7 +85,7 @@ class WriteMessageConsumer
 	}  
 	try
 	{
-		$this->channel->basic_consume(MQ::WRITE_MSG_queueRightNow, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
+		$this->channel->basic_consume(MQ::WRITE_MSG_queueDelayed5min, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
 	}
 	catch (Exception $exception) 
 	{
@@ -157,16 +157,18 @@ class WriteMessageConsumer
 					// send this mail both to sender and receiver
 					$search = $sender.',';
 					$senderEmailMsg = str_replace($search, 'You,', $conversation);
+					$this->sendMail($senderObj, $receiverObj, $senderEmailMsg, $type);
 					$search = $receiver.',';
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+					$this->sendMail($receiverObj, $senderObj, $receiverEmailMsg, $type);
 				}
 				else
 				{
 					// send only to receiver
 					$search = $receiver.',';
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+					$this->sendMail($receiverObj, $senderObj, $receiverEmailMsg, $type);
 				}
-				$handlerObj->sendMail($type,$body);
 			}
 			break;
 	  }     
@@ -202,5 +204,20 @@ class WriteMessageConsumer
 	  RabbitmqHelper::sendAlert($str);
 	}
   }
+
+  /**
+   * 
+   * Function for sending e-mail
+   * 
+   * @access public
+   * @param $type,$body
+   */
+	public function sendMail($senderObj, $receiverObj, $message, $type)
+	{
+	    if($type == 'MESSAGE')
+	    {
+	    	ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
+	    }
+	}
 }
 ?>
