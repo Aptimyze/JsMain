@@ -178,7 +178,7 @@
 								<ul>
 									~foreach from=$v.benefits key=kk item=vv name=servBenefitsLoop`
                                     <li><span ~if $vv eq 'Profile Boost'`class="fontmed"~/if`>~$vv`</span>~if $v.servMessage`~foreach from=$v.servMessage key=kkk item=vvv name=servMessageLoop`~if $vv eq $kkk` 
-                                    <span class="color2"> FREE with eAdvantage package</span><br>
+                                    <span class="color2"> FREE with eAdvantage</span><br>
                                     ~assign var=helpText value=". "|explode:$vvv`
                                     ~foreach from=$helpText key=helpKey item=helpVal name=helpLoop`
                                         ~$helpVal`<br>
