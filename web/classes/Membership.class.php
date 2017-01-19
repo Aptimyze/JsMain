@@ -802,7 +802,12 @@ class Membership
             }
         }
         elseif(strstr($this->serviceid, 'X')){
-            $serviceArr[] = 'J3';
+            $mainServ = $this->serviceid;
+            $mainServDur = preg_replace("/[^0-9]/","",$mainServ);
+            $serviceArr = array();
+            foreach(VariableParams::$jsExclusiveComboAddon as $key => $val){
+                $serviceArr[] = $val.$mainServDur;
+            }
             $serviceid_arr = @explode(",", $this->serviceid);
             $serviceid_arr = array_merge($serviceid_arr, $serviceArr);
         }
