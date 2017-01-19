@@ -38,6 +38,9 @@ class HamburgerApp
 					$hamburgerDetails["FILTERED_NEW"] = 0;
 				}
 			$hamburgerDetails['ACC_ME_NEW']=$profileMemcacheObj->get("ACC_ME_NEW");
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
+				$hamburgerDetails['MESSAGE_NEW']=0;
+			else
 	                $hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? $profileMemcacheObj->get("MESSAGE_NEW") : 0;
 	                //;
 			$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");

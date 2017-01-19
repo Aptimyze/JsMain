@@ -6,7 +6,7 @@ var cook = readCookie('AUTHCHECKSUM');
 //}
 chatConfig.Params = {
     //array of groups for which no roster exists in openfire and polling is to be done
-    nonRosterPollingGroups:['dpp'],
+    nonRosterPollingGroups:['dpp','shortlist'],
     categoryNames: {
         "Desired Partner Matches": "dpp",
         "Interest Received": "intrec",
@@ -85,6 +85,13 @@ chatConfig.Params = {
         "dpp":{
             "extraGETParams":{
                 "type":"CHATDPP"
+            },
+            "timeoutTime":120000 //1 min
+        },
+        "shortlist":{
+            "extraGETParams":{
+                "source":"chat",
+                "listing":"shortlist"
             },
             "timeoutTime":120000 //1 min
         }
