@@ -629,6 +629,8 @@ class VariableParams
 
     //skip vas page for below main memberships
     public static $skipVasPageMembershipBased = array('X','ESP');
+    
+    public static $jsExclusiveComboAddon = array('J');
 }
 class discountType
 {
