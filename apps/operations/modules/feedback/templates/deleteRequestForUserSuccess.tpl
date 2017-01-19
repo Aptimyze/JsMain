@@ -69,7 +69,7 @@
 				<td class=fieldsnew width=30% align="CENTER">Enter Username
 				</td>
 				<td align="center fieldsnew" width=40% colspan=100%><input type="text" id='username' size=30%>
-				<p id="userNp" style="display:inline-block; padding-left:50px;font-size: 12px;display: none"><font color="red">Incorrect Username or Username not Entered.</font></p>
+				<p id="userNp" style="display:inline-block; padding-left:50px;font-size: 10px;display: none"><font color="red">Incorrect Username or Username not Entered.</font></p>
 				</td>
 										
 			</tr>
