@@ -317,7 +317,12 @@
                                 ~foreach from=$v.servMessage key=kkk item=vvv name=servMessageLoop`
                                     ~if $vv eq $kkk`
                                         ~assign var=continue value=1`
-                                        <li class="check">~$vv`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20 txtc">~$vvv`<br> FREE with eAdvantage package</div></i></li>
+                                        <li class="check ~if $vv eq 'Profile Boost'`fontmed~/if`">~$vv`~if $vv eq 'Profile Boost'`<span class="colr5"> new</span>~/if`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20" style="width:267px; top:48px; right:11px">
+                                                    ~assign var=helpText value=". "|explode:$vvv`
+                                                    ~foreach from=$helpText key=helpKey item=helpVal name=helpLoop`
+                                                        ~$helpVal`<br>
+                                                    ~/foreach`
+                                                    <div class="colr5">FREE with eAdvantage package</div></div></i></li>
                                     ~/if`
                                 ~/foreach`
                                 ~if $continue eq 0`
@@ -330,10 +335,20 @@
                                     ~if $vv eq $kkk`
                                         ~assign var=continueExc value=1`
                                         ~if $eSathiCheck eq 1`
-                                            <li class="cross txtstr color12">~$vv`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20 txtc">~$vvv`<br> FREE with eAdvantage package</div></i></li>
+                                            <li class="cross txtstr color12 ~if $vv eq 'Profile Boost'`fontmed~/if`">~$vv`~if $vv eq 'Profile Boost'`<span class="colr5"> new</span>~/if`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20" style="width:267px; top:48px; right:11px">
+                                                        ~assign var=helpText value=". "|explode:$vvv`
+                                                        ~foreach from=$helpText key=helpKey item=helpVal name=helpLoop`
+                                                            ~$helpVal`<br>
+                                                        ~/foreach`
+                                                        <div class="colr5">FREE with eAdvantage package</div></div></i></li>
                                         ~else`
                                             ~if $smarty.foreach.benefitsExcludedListingLoop.index lt (($smarty.foreach.benefitsExcludedListingLoop.total)-4)`
-                                                <li class="cross txtstr color12">~$vv`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20 txtc">~$vvv`<br> FREE with eAdvantage package</div></i></li>
+                                                <li class="cross txtstr color12 ~if $vv eq 'Profile Boost'`fontmed~/if`">~$vv`~if $vv eq 'Profile Boost'`<span class="colr5"> new</span>~/if`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20" style="width:267px; top:48px; right:11px">
+                                                            ~assign var=helpText value=". "|explode:$vvv`
+                                                            ~foreach from=$helpText key=helpKey item=helpVal name=helpLoop`
+                                                                ~$helpVal`<br>
+                                                            ~/foreach`
+                                                            <div class="colr5">FREE with eAdvantage package</div></div></i></li>
                                             ~/if`
                                         ~/if`
                                     ~/if`

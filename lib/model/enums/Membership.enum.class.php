@@ -274,7 +274,7 @@ class VariableParams
         ),
         "J" => array(
             "name" => "Profile Boost",
-            "description" => "Boost is the secret of my energy",
+            "description" => "Get more response through Profile Boost. 1.Get featured on top of search results. 2.Be shown in profile of the day section. 3.Your profile will be sent daily in app notifs. 4.Appear on top of Daily Recommendations",
             "visibility" => 0,
             "vas_id" => 7
         )
