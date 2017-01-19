@@ -122,10 +122,10 @@ class FAQFeedBack
 				} catch (Exception $e) {
 					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
 				}
-
+				
 				//End
-				if($reasonMap && $reasonMap == 3)
-				{
+				if($reasonMap == 3 || $reasonNew == 'Already married/engaged' )
+				{  
 					$sendingObject = new RequestUserToDelete();
 					$this->webRequest->setParameter('pfID',$otherProfileId);
 					$sendingObject->deleteRequestedByOther($this->webRequest);
