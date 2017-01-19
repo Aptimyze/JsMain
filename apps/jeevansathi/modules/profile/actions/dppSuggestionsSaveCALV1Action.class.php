@@ -17,10 +17,10 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 	* @param sfRequest $request A request object
 	*/
 	public function execute($request)
-	{
-		
+	{		
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');	
+		$source = $request->getParameter("source");		
 		$this->hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$this->hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
 		$calLayer = 1;
@@ -36,10 +36,8 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		
 		$decodedData = json_decode($output);
 		$dppSaveData = json_decode($request->getParameter("dppSaveData"));			
-     		
-		$dppDataArr = $this->getDppFilledData($decodedData);		
-		$finalArr = $this->getFinalSubmitData($dppSaveData,$dppDataArr);
-
+		$dppDataArr = $this->getDppFilledData($decodedData,$source);				
+		$finalArr = $this->getFinalSubmitData($dppSaveData,$dppDataArr);		
 		ob_start();
 		//$request->setParameter('sectionFlag','dpp');
 		$request->setParameter("fromBackend",false);
@@ -105,16 +103,46 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		return FieldMap::getFieldlabel($label,$value,$returnArr);
 	}
 
-	public function getDppFilledData($decodedData)
+	public function getDppFilledData($decodedData,$source="")
 	{
-		foreach($decodedData as $key=>$value)
+		if($source == "jsms")
 		{
-			if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
-			{				
-				$dppDataArr[substr($value->key,2)] = $value->value;
+			foreach($decodedData as $key=>$value)
+			{
+				foreach($value as $k1=>$v1)
+				{
+					if($k1 == "OnClick")
+					{
+						foreach($v1 as $k2=>$v2)
+						{
+							if(in_array($v2->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
+							{
+								if(in_array($v2->key,DppAutoSuggestEnum::$incomeFieldJSMS))
+								{									
+									$incomeStr .= $v2->value.",";
+								}
+								else
+								{
+									$dppDataArr[substr($v2->key,2)] = $v2->value;
+								}								
+							}
+						}				
+					}
+				}
 			}
+			$incomeStr = trim($incomeStr,",");
+			$dppDataArr["INCOME"] = $incomeStr;
 		}
-
+		else
+		{
+			foreach($decodedData as $key=>$value)
+			{
+				if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
+				{				
+					$dppDataArr[substr($value->key,2)] = $value->value;
+				}
+			}
+		}	
 		return $dppDataArr;
 	}
 }

@@ -21,7 +21,10 @@ class dppSuggestionsCALV1Action extends sfActions
 		
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+		$source = $request->getParameter("source");
 		$calLayer = 1;
+		$incmoeStr="";
+		$i=0;
 		ob_start();
 		$request->setParameter('sectionFlag','dpp');
 		$request->setParameter("internal","1");
@@ -30,14 +33,8 @@ class dppSuggestionsCALV1Action extends sfActions
 		$output = ob_get_contents();
 		ob_end_clean();
 		$decodedData = json_decode($output);
-		foreach($decodedData as $key=>$value)
-		{			
-			if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($value->value,"DM") === false)
-			{
-				$dppDataArr[$key]["type"] = substr($value->key,2);
-				$dppDataArr[$key]["data"] = explode(",",$value->value);
-			}
-		}		
+		$dppDataArr = $this->getDppDataArr($decodedData,$source);		
+
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
 		$profileId = $this->loggedInProfileObj->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
@@ -111,6 +108,54 @@ class dppSuggestionsCALV1Action extends sfActions
 			}
 		}
 		return $finalArrApp;
+	}
+
+	public function getDppDataArr($decodedData,$source="")
+	{
+		if($source == 'jsms')
+		{
+			foreach($decodedData as $key=>$value)
+			{
+				foreach($value as $k1=>$v1)
+				{
+					if($k1 == "OnClick")
+					{
+						foreach($v1 as $k2=>$v2)
+						{
+							if(in_array($v2->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($v2->value,"DM") === false)
+							{
+								if(in_array($v2->key,DppAutoSuggestEnum::$incomeFieldJSMS))
+								{									
+									$incomeStr .= $v2->value.",";
+								}
+								else
+								{
+									$dppDataArr[$i]["type"] = substr($v2->key,2);
+									$dppDataArr[$i]["data"] = explode(",",$v2->value);
+									$i++;
+								}																
+							}
+						}				
+					}
+				}
+			}
+			$incomeStr = trim($incomeStr,",");
+			$dppDataArr[$i]["type"] = "INCOME";
+			$dppDataArr[$i]["data"] = explode(",",$incomeStr);
+		}
+		else
+		{
+			foreach($decodedData as $key=>$value)
+			{	
+				if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($value->value,"DM") === false)
+				{
+					$dppDataArr[$key]["type"] = substr($value->key,2);
+					$dppDataArr[$key]["data"] = explode(",",$value->value);
+				}
+			}
+		}
+
+		return $dppDataArr;
 	}
 }
 ?>

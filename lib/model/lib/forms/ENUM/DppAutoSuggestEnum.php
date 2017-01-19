@@ -1413,11 +1413,12 @@ public static $delhiNCRCitiesStr = "DE00,UP25,HA03,HA02,UP12,UP47,UP48";
 public static $mumbaiRegionStr = "MH04,MH12,MH28,MH29";
 public static $ageDiffNo = "5";
 public static $dollarArr = array("8","9","10","11","12","13","14","21");
-public static $SUGGESTION_FIELDS = array("P_AGE","P_CASTE","P_INCOME","P_EDUCATION","P_OCCUPATION","P_CITY","P_MTONGUE");
+public static $SUGGESTION_FIELDS = array("P_AGE","P_CASTE","P_INCOME","P_EDUCATION","P_OCCUPATION","P_CITY","P_MTONGUE","P_INCOME_RS","P_INCOME_DOL");
 public static $NO_OF_DPP_SUGGESTIONS_CAL = 10; 
 public static $keyReplaceAgeArr = array("0"=>"LAGE","1"=>"HAGE");
 public static $keyReplaceIncomeArr = array("0"=>"LRS","1"=>"HRS","2"=>"LDS","3"=>"HDS");
 public static $headingForApp = array("AGE"=>"Widen Age range","CITY"=>"Add these Cities","CASTE"=>"Add these Castes","MTONGUE"=>"Add these Mother Tongues","EDUCATION"=>"Add these Education Degrees","OCCUPATION"=>"Add these Occupations","INCOME"=>"Widen Income range");
 public static $descriptionText = "To increase matches and responses, here are a few suggested options to add to your partner preference. Tap to select options which you wish to add";
+public static $incomeFieldJSMS = array("P_INCOME_RS","P_INCOME_DOL");
 }
 
