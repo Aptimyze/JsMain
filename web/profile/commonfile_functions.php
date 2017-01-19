@@ -119,7 +119,7 @@ $css_arr[]=array("jsms/myjs/jsmsMyjs_css"               => "17");
 $css_arr[]=array("jsms/phone/phoneVerification_css"  => "2");
 $css_arr[]=array("jsms/photo/photoswipe"    => "1");
 $css_arr[]=array("jsms/common/fonts"     => "2");
-$css_arr[]=array("jsms/common/commoncss"                              => "27");
+$css_arr[]=array("jsms/common/commoncss"                               => "28");
 $css_arr[]=array("jsms/common/mediaquery"      => "3");
 $css_arr[]=array("jsms/search/srpcss"       => "4");
 $css_arr[]=array("jsms/photo/photoup"    => "1");
@@ -412,7 +412,7 @@ $js_arr[]=array("jsms/profile/ep/mobeditview_js"                                
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"              => "5");
 $js_arr[]=array("jsms/common/disableScroll_js"  => "1");
 $js_arr[]=array("jsms/utility/sessionStorage_js"    => "3");
-$js_arr[]=array("jsms/myjs/myjs_js"                          => "29");
+$js_arr[]=array("jsms/myjs/myjs_js"                           => "30");
 $js_arr[]=array("jsms/myjs/touchswipemyjs_js"            => "12");
 $js_arr[]=array("showHide_js"     => "2");
 $js_arr[]=array("showHideReg_js"      => "2");
