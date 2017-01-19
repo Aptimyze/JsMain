@@ -2125,48 +2125,58 @@ class MembershipHandler
     }
 
     /*function - deactivateCurrentMainMembership
-    * deactivates currently active main membership of user
+    * deactivates currently active membership of user
     * @inputs: $params
-    * @outputs: none
+    * @outputs: true/false
     */
     public function deactivateCurrentMainMembership($params){
-        $billingServStatObj = new BILLING_SERVICE_STATUS();
+        try{
+            if(is_array($params) && $params["PROFILEID"] && $params["USERNAME"] && $params["MEMBERSHIP"] == "MAIN"){
+                $billingServStatObj = new BILLING_SERVICE_STATUS();
 
-        //get info of active main membership of profile
-        $serStatDet  = $billingServStatObj->getLatestActiveMemInfoForProfiles(array($params["PROFILEID"]),"BILLID,SERVICEID");
-       
-        //if any main membership is active,then deactivate it
-        if(!empty($serStatDet[$params["PROFILEID"]])){
+                //get info of active main membership of profile
+                $serStatDet  = $billingServStatObj->getLatestActiveMemInfoForProfiles(array($params["PROFILEID"]),"BILLID,SERVICEID");
+                //if any main membership is active,then deactivate it
+                if(!empty($serStatDet[$params["PROFILEID"]])){
 
-            //get payment details of this billid
-            $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
-            $paymentDet = $billingPaymentDetObj->getAllDetailsForBillidArr(array($serStatDet[$params["PROFILEID"]]["BILLID"]),"RECEIPTID","1");
-            unset($billingPaymentDetObj);
+                    //get payment details of this billid
+                    $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
+                    $paymentDet = $billingPaymentDetObj->getAllDetailsForBillidArr(array($serStatDet[$params["PROFILEID"]]["BILLID"]),"RECEIPTID","1");
+                    unset($billingPaymentDetObj);
 
-            //insert entry in EDIT_DETAILS_LOG for changes
-            $billingEditLogObj = new billing_EDIT_DETAILS_LOG();
-            $billingEditLogObj->logEntryInsert(array("PROFILEID"=>$params["PROFILEID"],"BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"RECEIPTID"=>$paymentDet[$serStatDet[$params["PROFILEID"]]["BILLID"]]["RECEIPTID"],"CHANGES"=>"TRANSACTION DEACTIVATED FOR UPGRADE","ENTRYBY"=>$params["USERNAME"],"ENTRY_DT"=>date("Y-m-d H:i:s")));
-            unset($billingEditLogObj);
+                    //insert entry in EDIT_DETAILS_LOG for changes
+                    $billingEditLogObj = new billing_EDIT_DETAILS_LOG();
+                    $billingEditLogObj->logEntryInsert(array("PROFILEID"=>$params["PROFILEID"],"BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"RECEIPTID"=>$paymentDet[$serStatDet[$params["PROFILEID"]]["BILLID"]]["RECEIPTID"],"CHANGES"=>"TRANSACTION DEACTIVATED FOR UPGRADE","ENTRYBY"=>$params["USERNAME"],"ENTRY_DT"=>date("Y-m-d H:i:s")));
+                    unset($billingEditLogObj);
 
-            //update status of main membership
-            $billingServStatObj->updateActiveStatusForBillidAndServiceid($serStatDet[$params["PROFILEID"]]["BILLID"], $serStatDet[$params["PROFILEID"]]["SERVICEID"],'N');
+                    //update status of main membership
+                    $billingServStatObj->updateActiveStatusForBillidAndServiceid($serStatDet[$params["PROFILEID"]]["BILLID"], $serStatDet[$params["PROFILEID"]]["SERVICEID"],'N');
 
-            //update user's subscription
-            $subscription    = $billingServStatObj->getActiveServeFor($params["PROFILEID"]);
-            if (empty($subscription)){
-                $subscription = '';
+                    //update user's subscription
+                    $subscription    = $billingServStatObj->getActiveServeFor($params["PROFILEID"]);
+                    if (empty($subscription)){
+                        $subscription = '';
+                    }
+                    $this->jprofileObj->edit(array('SUBSCRIPTION' => $subscription), $params["PROFILEID"], 'PROFILEID');
+
+                    //clear the user membership memcache
+                    $memCacheObject = JsMemcache::getInstance();
+                    if ($memCacheObject) {
+                        $memCacheObject->remove($params["PROFILEID"] . '_MEM_NAME');
+                        $memCacheObject->remove($params["PROFILEID"] . "_MEM_OCB_MESSAGE_API17");
+                        $memCacheObject->remove($params["PROFILEID"] . "_MEM_HAMB_MESSAGE");
+                        $memCacheObject->remove($params["PROFILEID"] . "_MEM_SUBSTATUS_ARRAY");
+                    }
+                }
+                unset($billingServStatObj);
+                return true;
             }
-            $this->jprofileObj->edit(array('SUBSCRIPTION' => $subscription), $params["PROFILEID"], 'PROFILEID');
-
-            //clear the user membership memcache
-            $memCacheObject = JsMemcache::getInstance();
-            if ($memCacheObject) {
-                $memCacheObject->remove($params["PROFILEID"] . '_MEM_NAME');
-                $memCacheObject->remove($params["PROFILEID"] . "_MEM_OCB_MESSAGE_API17");
-                $memCacheObject->remove($params["PROFILEID"] . "_MEM_HAMB_MESSAGE");
-                $memCacheObject->remove($params["PROFILEID"] . "_MEM_SUBSTATUS_ARRAY");
+            else{
+                return false;
             }
         }
-        unset($billingServStatObj);
+        catch(Exception $e){
+            return false;
+        }
     }
 }

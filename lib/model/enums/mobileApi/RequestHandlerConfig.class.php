@@ -32,7 +32,9 @@ class RequestHandlerConfig
 	"contactus"=>array(
 				"info"=>array("v1"=>"ApiContactUsV1","v2"=>"","v3"=>"ApiContactUsV1")),
 	"membership"=>array(
-				"membershipDetails"=>array("v1"=>"ApiMembershipDetailsV1","v2"=>"ApiMembershipDetailsV2","v3"=>"ApiMembershipDetailsV3")),
+				"membershipDetails"=>array("v1"=>"ApiMembershipDetailsV1","v2"=>"ApiMembershipDetailsV2","v3"=>"ApiMembershipDetailsV3"),
+				"deactivateCurrentMembership"=>array("v1"=>"DeactivateCurrentMembershipV1")
+				),
     "profile"=>array(
 		"editprofile"=>array("v1"=>"ApiEditV1","v2"=>"ApiEditV1","v3"=>"ApiEditV1"),
 		"editsubmit"=>array("v1"=>"ApiEditSubmitV1","v2"=>"","v3"=>"ApiEditSubmitV1"),

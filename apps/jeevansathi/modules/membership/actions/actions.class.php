@@ -21,18 +21,53 @@ class membershipActions extends sfActions
         $this->redirect('/membership/jspc');
     }
 
-    /*public function executeMemUpgrade(sfWebRequest $request){
-        $profileObj = LoggedInProfile::getInstance('newjs_master');
-        $profileid  = $profileObj->getPROFILEID();
-        $username = $profileObj->getUSERNAME();
-
-        //deactivate active main membership
-        $memHandlerObj = new MembershipHandler();
-        $memHandlerObj->deactivateCurrentMainMembership(array("PROFILEID"=>$profileid,"USERNAME"=>$username));
+    /*api to deactivate current membership of user
+    * @inputs: $request
+    * @return: api response
+    */
+    public function executeDeactivateCurrentMembershipV1(sfWebRequest $request){
         
-        //allow user to purchase new main membership
-        $this->redirect('/membership/jspc');
-    }*/
+        //parse request inputs and format
+        if($request->getParameter("PROFILECHECKSUM")){
+            $profileid = JsAuthentication::jsDecryptProfilechecksum($request->getParameter("PROFILECHECKSUM"));
+            if($profileid){
+                $membership = "MAIN";
+                if($request->getParameter("MAIN")){
+                    $membership = $request->getParameter("MAIN");
+                }
+                if(!$request->getParameter("USERNAME")){
+                    $profileObj      = new PROFILE();
+                    $detail       = $profileObj->getDetail($profileid, 'PROFILEID', "USERNAME");
+                    unset($profileObj);
+                    if(is_array($detail)){
+                        $username = $detail["USERNAME"];
+                    }
+                }
+                else{
+                    $username = $request->getParameter("USERNAME");
+                }
+               
+                //deactivate current membership based on inputs
+                $memHandlerObj = new MembershipHandler();
+                $deactivationStatus = $memHandlerObj->deactivateCurrentMainMembership(array("PROFILEID"=>$profileid,"USERNAME"=>$username,"MEMBERSHIP"=>$membership));
+                unset($memHandlerObj);
+            }
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        if(isset($deactivationStatus)){
+            if($deactivationStatus == true){
+                $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+            }
+            else{
+                $respObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+            }
+        }
+        else{
+            $respObj->setHttpArray(ResponseHandlerConfig::$LOGIN_FAILURE_MISSING);
+        }
+        $respObj->generateResponse();
+        die;
+    }
 
     // JSPC
     public function executeJspc(sfWebRequest $request)
