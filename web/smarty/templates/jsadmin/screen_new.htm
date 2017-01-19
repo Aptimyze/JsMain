@@ -56,7 +56,8 @@
 			 */
  		 	$('input[type=text]').each(function(){
 			    var value = $(this).val();
-			    var size  = value.length;
+			    var size  = value.length + 5 < 100?(value.length + 5):100;
+
 			    $(this).attr('size',size);
 			 });
 		});
@@ -296,7 +297,7 @@
 		</table>
 		</center>
 		<form name=fr1 action="screen_new.php" method="post" onsubmit="return validate()">
-			<table width="500" border="0" cellspacing="0" cellpadding="0" align="center">
+			<table width="750" border="0" cellspacing="0" cellpadding="0" align="center">
 				<tr>
 					<input type="hidden" name="from_skipped" value=~$from_skipped`>
 					<td width="157">&nbsp;</td>
