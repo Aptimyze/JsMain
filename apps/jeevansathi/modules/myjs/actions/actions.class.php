@@ -517,9 +517,8 @@ return $staticCardArr;
 	{
 		$matchObj= new MOBILE_API_MATCH_OF_DAY();
 		$profileId = $request->getParameter("profileId");
-		$MatchProfileChecksum = $request->getParameter("MatchProfileChecksum");
-		$MatchProfileId = $MatchProfileChecksum;
-		$matchObj->updateMatchProfile($profileId, $matchProfileid);
+		$matchProfileId = JsCommon::getProfileFromChecksum($request->getParameter("MatchProfileChecksum"));
+		$matchObj->updateMatchProfile($profileId, $matchProfileId);
 		return sfView::NONE;
 	}
 }

@@ -1044,7 +1044,9 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
         jObject = $('#matchOfDaySection');
         htmlInside = jObject.html();
         jObject.html('');
-
+        // var totalCount = responseObject.data.no_of_results;
+        // tracking = "stype="+stype[Object.name];
+        var totalCount = 3;
         for(i=0;i<7;i++)
         {
             jObject.append(htmlInside);
@@ -1069,17 +1071,37 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             }                             
             getNStk=getNStk-1;
         });
+
+        for (var i = 0; i < 7; i++)
+        {
+        	var profileChecksum = "a3de632a30a58d6ba236f4a30bfb6b82i9616174";
+        	tracking = 'stype=MOD';
+        	jObject = $('#matchOfDaySubSection_'+(i+1));
+        	var profileUrl = "/profile/viewprofile.php?profilechecksum="+1+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1+"&listingName=matchOfDay";
+        	jObject.find('.profileLink').attr('href',profileUrl);
+
+
+          var postAction = "postActionMyjs('"+profileChecksum+"','"+postActionsUrlArray['INITIATE']+"','" +profileChecksum+"_"+'matchOfDay'+"','interest','"+tracking+"');";
+
+          jObject.find('.profileName').attr('profileChecksum',profileChecksum);
+        	jObject.find('.sendInterest').attr('onClick', postAction);
+        }
 /*
         for(i=0;i<responseObject.profiles.length;i++)
         {
         	
-            var profileUrl = ~JsConstants::$siteUrl`+'/profile/viewprofile.php?profilechecksum=responseObject.profiles[i].checksum/';
+            var profileUrl = "/profile/viewprofile.php?profilechecksum="+responseObject.profiles[i]["profilechecksum"]+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1+"&listingName=matchOfDay";
+
+            var postAction = "postActionMyjs('"+responseObject.profiles[i]["profilechecksum"]+"','"+postActionsUrlArray[responseObject.profiles[i]["buttonDetails"]["buttons"][0]["action"]]+"','" +responseObject.profiles[i]["profilechecksum"]+"_"+'matchOfDay'+"','interest','"+tracking+"');"+GATrackingFunForSubmit;
             jObject = $('#matchOfDaySubSection_'+(i+1));
-            jObject.find('.cardsForMatchOfDay').attr('href', profileUrl);
-            jObject.find('.mod_img').attr('href', profileUrl);
+            jObject.find('.profileLink').attr('href',profileUrl);
+            
+            jObject.find('.sendInterest').attr('onClick', postAction);
+
             // set image url
             jObject.find('.mod_img').html(responseObject.profiles[i].imageUrl);
             jObject.find('.profileName').html(responseObject.profiles[i].username);
+            jObject.find('.profileName').attr('profileChecksum',responseObject.profiles[i]["profilechecksum"]);
             jObject.find('.userLoginStatus').html(responseObject.profiles[i].userloginstatus);
             jObject.find('.gunascore').html(responseObject.profiles[i].gunascore);
             // set age height
@@ -1093,9 +1115,10 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             jObject.find('.income').html(responseObject.profiles[i].income);
             jObject.find('.mstatus').html(responseObject.profiles[i].mstatus);
         }
-*/ 
+*/
         //on click close button setStack is call'd
         $('.stk_cls').on('click',setStack);
+        $('.sendInterest').on('click', setStack);
         $('#prfDay').removeClass('disp-none');
     }
 
@@ -1118,10 +1141,13 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
     {
         $('.stk_cls').off('click',setStack);
         var eleActive = $('#prfDay').find('.active');
-        var MatchProfileChecksum = 2;
-        // get value by this 
-        // var x = eleActive.find('.edu_level_new').html();
-        onCloseMatchOfDay(loggedInJspcUser,MatchProfileChecksum);
+        
+        if($(this).hasClass('stk_cls'))
+        {
+        	// on click of close
+        	var MatchProfileChecksum = eleActive.find('.profileName').attr('profileChecksum');
+        	onCloseMatchOfDay(loggedInJspcUser,MatchProfileChecksum);
+        }
         getIdNum = parseInt(eleActive.attr('data-matchID'));
         $(eleActive).removeClass('active');
         $('.stk').eq(getIdNum+1).addClass('active');

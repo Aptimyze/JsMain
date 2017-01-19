@@ -67,7 +67,7 @@ class MOBILE_API_MATCH_OF_DAY extends TABLE{
     {
         try
         {
-            $sql = "UPDATE MOBILE_API.MATCH_OF_DAY_LOG SET IGNORE = 'Y' WHERE PROFILEID = :PROFILEID AND MATCH_PROFILEID = :MATCH_PROFILEID";
+            $sql = "UPDATE MOBILE_API.MATCH_OF_DAY_LOG SET IGNORED = 'Y' WHERE PROFILEID = :PROFILEID AND MATCH_PROFILEID = :MATCH_PROFILEID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $prep->bindValue(":MATCH_PROFILEID", $matchProfileid, PDO::PARAM_INT);
