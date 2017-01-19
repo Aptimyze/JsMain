@@ -365,10 +365,11 @@ Abstract class ApiAuthentication
 		if($this->recentLogTracking)
 			$this->removeRecentLog();
         
-        if($this->sendLoggingDataQueue(self::$loginTracking, $queueArr))return;
-        else
+        if($body['logLoginHistoryTracking'] || $body['misLoginTracking'] || $body['appLoginProfileTracking'] || $body['logLogoutTracking'])
+        {    
+        if(!($this->sendLoggingDataQueue(self::$loginTracking, $queueArr)))
         	self::completeLoginTracking($queueArr);
-		
+        }	
 	}
 	
 	
@@ -754,7 +755,6 @@ Abstract class ApiAuthentication
 			
         if(self::$logTrackingThroughQueue)
         {
-
             $producerObj=new Producer();
             if($producerObj->getRabbitMQServerConnected())
             {
