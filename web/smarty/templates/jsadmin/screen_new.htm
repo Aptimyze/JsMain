@@ -429,7 +429,7 @@
 								~if $BUREAU eq 'Y'`
 									Profile Posted by Marriage Bureau
 								~else`
-									<input type="text" id="EMAIL" name="EMAIL" value="~$EMAILvalue`" size="40" class="textboxes1">
+									<input type="text" id="EMAIL" name="EMAIL" value="~$EMAILvalue`"  class="textboxes1">
 								~/if`
 							</td>
 						</tr>
@@ -459,7 +459,7 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td >&nbsp;</td>
-						<td><input type="text" name="SUBCASTE" value="~$SUBCASTEvalue`" size="40" class="textboxes1"></td>
+						<td><input type="text" name="SUBCASTE" value="~$SUBCASTEvalue`"  class="textboxes1"></td>
 					</tr>
 					~if $OBSCENE_SUBCASTE`
 						~$OBSCENE_MESSAGE_SUBCASTE`
@@ -482,7 +482,7 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td >&nbsp;</td>
-						<td><input type="text" name="NAKSHATRA" value="~$NAKSHATRAvalue`" size="40" class="textboxes1"></td>
+						<td><input type="text" name="NAKSHATRA" value="~$NAKSHATRAvalue`"  class="textboxes1"></td>
 					</tr>
 					~if $OBSCENE_NAKSHATRA`
 						~$OBSCENE_MESSAGE_NAKSHATRA`
@@ -505,7 +505,7 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td >&nbsp;</td>
-						<td><input type="text" name="GOTHRA" value="~$GOTHRAvalue`" size="40" class="textboxes1"></td>
+						<td><input type="text" name="GOTHRA" value="~$GOTHRAvalue`"  class="textboxes1"></td>
 					</tr>
 					~if $OBSCENE_GOTHRA`
 						~$OBSCENE_MESSAGE_GOTHRA`
@@ -584,7 +584,7 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td >&nbsp;</td>
-						<td><input type="text" name="CITY_BIRTH" value="~$CITY_BIRTHvalue`" size="40" class="textboxes1"></td>
+						<td><input type="text" name="CITY_BIRTH" value="~$CITY_BIRTHvalue`"  class="textboxes1"></td>
 					</tr>
 					~if $OBSCENE_CITY_BIRTH`
 						~$OBSCENE_MESSAGE_CITYBIRTH`
@@ -608,7 +608,7 @@
 				~if $SHOWCOURT eq "Y" AND $Court`
                                 <tr class="label" style="color:red"><td colspan=2><B>Court</b></td></tr>
                                 <Tr class="fieldsnew"><Td>&nbsp;</td>
-				<td><input type="text" name="Court" value="~$Court`" size="40" class="textboxes1"></td>
+				<td><input type="text" name="Court" value="~$Court`"  class="textboxes1"></td>
                                 </tr>
                                 ~/if`
 				~/if`
@@ -642,7 +642,7 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td >&nbsp;</td>
-						<td><input type="text" name="MESSENGER_ID" value="~$MESSENGER_IDvalue`" size="40" class="textboxes1"></td>
+						<td><input type="text" name="MESSENGER_ID" value="~$MESSENGER_IDvalue`"  class="textboxes1"></td>
 					</tr>
 					~if $OBSCENE_MESSENGER_ID`
 						~$OBSCENE_MESSAGE_MESSENGER`
@@ -891,7 +891,7 @@
                                         </tr>
                                         <tr class="fieldsnew">
                                                 <td>&nbsp;</td>
-						<td><input type="text" name="NAME" value="~$NAMEvalue`" size="40" class="textboxes1"></td>
+						<td><input type="text" name="NAME" value="~$NAMEvalue`"  class="textboxes1"></td>
                                         </tr>
                                         ~if $OBSCENE_NAME`
                                                 ~$OBSCENE_MESSAGE_NAME`
@@ -914,7 +914,7 @@
                                         </tr>
                                         <tr class="fieldsnew">
                                                 <td>&nbsp;</td>
-						<td><input type="text" name="ANCESTRAL_ORIGIN" value="~$ANCESTRAL_ORIGINvalue`" size="40" class="textboxes1"></td>
+						<td><input type="text" name="ANCESTRAL_ORIGIN" value="~$ANCESTRAL_ORIGINvalue`"  class="textboxes1"></td>
                                         </tr>
                                         ~if $OBSCENE_ANCESTRAL_ORIGIN`
                                                 ~$OBSCENE_MESSAGE_ANCESTRAL`
@@ -937,7 +937,7 @@
                                         </tr>
                                         <tr class="fieldsnew">
                                                 <td>&nbsp;</td>
-						<td><input type="text" name="PHONE_OWNER_NAME" value="~$PHONE_OWNER_NAMEvalue`" size="40" class="textboxes1"></td>
+						<td><input type="text" name="PHONE_OWNER_NAME" value="~$PHONE_OWNER_NAMEvalue`"  class="textboxes1"></td>
                                         </tr>
                                         ~if $OBSCENE_PHONE_OWNER_NAME`
                                                 ~$OBSCENE_MESSAGE_PHONEOWNER`
@@ -960,7 +960,7 @@
                                         </tr>
                                         <tr class="fieldsnew">
                                                 <td>&nbsp;</td>
-						<td><input type="text" name="MOBILE_OWNER_NAME" value="~$MOBILE_OWNER_NAMEvalue`" size="40" class="textboxes1"></td>
+						<td><input type="text" name="MOBILE_OWNER_NAME" value="~$MOBILE_OWNER_NAMEvalue`"  class="textboxes1"></td>
                                         </tr>
                                         ~if $OBSCENE_MOBILE_OWNER_NAME`
                                                 ~$OBSCENE_MESSAGE_MOBILEOWNER`
@@ -984,7 +984,7 @@
 					</tr>
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
-						<td>~if $values.type neq 'A'`<input type="text" name="~$field`" value="~$values.Value`" size="40" class="textboxes1">~else`<textarea name="~$field`" cols="40" rows="3" class="textboxes1">~$values.Value`</textarea>~/if`</td>
+						<td>~if $values.type neq 'A'`<input type="text" name="~$field`" value="~$values.Value`"  class="textboxes1">~else`<textarea name="~$field`" cols="40" rows="3" class="textboxes1">~$values.Value`</textarea>~/if`</td>
 					</tr>
 					
 					~if $values.OBSCENE_ERR`
