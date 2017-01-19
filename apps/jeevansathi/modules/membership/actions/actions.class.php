@@ -26,14 +26,13 @@ class membershipActions extends sfActions
     * @return: api response
     */
     public function executeDeactivateCurrentMembershipV1(sfWebRequest $request){
-        
         //parse request inputs and format
         if($request->getParameter("PROFILECHECKSUM")){
             $profileid = JsAuthentication::jsDecryptProfilechecksum($request->getParameter("PROFILECHECKSUM"));
             if($profileid){
                 $membership = "MAIN";
-                if($request->getParameter("MAIN")){
-                    $membership = $request->getParameter("MAIN");
+                if($request->getParameter("MEMBERSHIP")){
+                    $membership = $request->getParameter("MEMBERSHIP");
                 }
                 if(!$request->getParameter("USERNAME")){
                     $profileObj      = new PROFILE();

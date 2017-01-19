@@ -597,12 +597,9 @@ class Membership
     }
     
     function makePaid($skipBill = false,$mainMemUpgrade=false) {
-        error_log("ankita in makePaid payu_return-".$mainMemUpgrade);
+        //check for failed payment,tracking here in or not
+        error_log("ankita in makePaid-".$mainMemUpgrade);
         $userObjTemp = $this->getTempUserObj();
-        if($mainMemUpgrade == true){
-            $finalOutput = $this->deactivateMembership(); 
-        }
-        error_log("ankita set deactivation status in table based on output");
         if($skipBill == true){
             $this->setGenerateBillParams();
         } else {
@@ -610,6 +607,10 @@ class Membership
         }
         $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
+        if($mainMemUpgrade == true){
+            $finalOutput = $this->deactivateMembership(); 
+        }
+        error_log("ankita set deactivation status in table based on output");
         $this->setServiceActivation();
         $this->populatePurchaseDetail();
         $this->updateJprofileSubscription();
