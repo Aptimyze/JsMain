@@ -109,7 +109,7 @@
                 </a>
                   <a href="~$SITE_URL`/profile/contacts_made_received.php?page=decline&filter=R">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
-			<div class="fullwid txtc">Declined</div>
+			<div class="fullwid txtc">Declined/Cancelled</div>
 		</div>
 		~if $apiData.BELL_COUNT.DEC_ME_NEW>0`
 		<div class="fr wid8p">
