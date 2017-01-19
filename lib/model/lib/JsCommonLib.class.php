@@ -407,7 +407,7 @@ public static function insertConsentMessageFlag($profileid) {
 			}
 				$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_MANGLIK()));
 			if(is_array($ARR))
-			if(in_array($profile->getMANGLIK(),$ARR))
+			if(in_array($profile->getMANGLIK(),$ARR) || ($profile->getMANGLIK() == '' && in_array('N',$ARR)))
 			{
 				$CODE["MANGLIK"]='gnf';
 				$CODE["Manglik/Chevvai Dosham"]='gnf';

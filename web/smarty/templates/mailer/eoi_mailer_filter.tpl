@@ -13,6 +13,11 @@
 ~$PREHEADER`
 </td>
 </tr>
+    <tr>
+<td colspan="4" style="font-size: 11px !important; font-family: Arial; color: black; padding-top: 10px;">
+This Email contains links which let you to directly login to your account. So forward this Email only to people you can completely trust.
+</td>
+</tr>
         <tr>
             <td style="border-bottom:1px solid #ededed">
                 <table cellspacing="0" cellpadding="0" border="0" width="100%">

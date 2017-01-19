@@ -218,11 +218,11 @@ class JProfile_NativePlace
 	 */
 	private function BakeDecoratedNativePlace()
 	{
-                if(MobileCommon::isApp()=="I")
-                {
-                        $this->m_szDecoratedViewField = $this->m_szDecorate_OpenTextValue;
-                        return;
-                }
+                // if(MobileCommon::isApp()=="I")
+                // {
+                //         $this->m_szDecoratedViewField = $this->m_szDecorate_OpenTextValue;
+                //         return;
+                // }
 		$szSuffixText = null;
 		$szPrefixText = null;
 		

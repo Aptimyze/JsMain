@@ -76,7 +76,13 @@ class MembersLookingForMe extends SearchParamters
 					$value = $this->loggedInProfileObj->getCOMPLEXION();
 				elseif($v=="PARTNER_OCC")
 					$value = $this->loggedInProfileObj->getOCCUPATION();
-				elseif($v=="PARTNER_ELEVEL_NEW"){
+				elseif($v=="PARTNER_MANGLIK"){
+                                        if(!$this->loggedInProfileObj->getMANGLIK()){
+                                                $value = 'N';
+                                        }else{
+                                                $value = $this->loggedInProfileObj->getMANGLIK();
+                                        }
+                                }elseif($v=="PARTNER_ELEVEL_NEW"){
 					$value = $this->loggedInProfileObj->getEDU_LEVEL_NEW();
                                         $ugPg = $this->loggedInProfileObj->getEducationDetail(1,SearchConfig::getSearchDb());
                                         if(!empty($ugPg)){
