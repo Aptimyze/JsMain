@@ -85,7 +85,7 @@ class WriteMessageConsumer
 	}  
 	try
 	{
-		$this->channel->basic_consume(MQ::WRITE_MSG_queueDelayed5min, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
+		$this->channel->basic_consume(MQ::WRITE_MSG_queueRightNow, MQ::CONSUMER, MQ::NO_LOCAL, MQ::NO_ACK,MQ::CONSUMER_EXCLUSIVE , MQ::NO_WAIT, array($this, 'processMessage'));
 	}
 	catch (Exception $exception) 
 	{

@@ -100,7 +100,7 @@ class MessageQueues
   const PROFILE_CACHE_Q_DELETE = "ProfileCacheDeleteQueue";
   const PROCESS_PROFILE_CACHE_DELETE = "PROFILE_CACHE_DELETE";
   const SCREENING_Q_EOI = "SCREENING_SEND_EOI";
-  const DELAY_MINUTE = 5;
+  const DELAY_MINUTE = 1;
   const DELAY_WRITEMSG = DELAY_MINUTE*60;
 
   // queue/exchange names
