@@ -51,9 +51,6 @@ function loadJS() {
         lib2.src = "~JsConstants::$imgUrl`/min/?f=~$sf_request->getAttribute('JSArray')`";
         document.head.appendChild(lib2);
 }
-function stopInterval(){
-    clearInterval(jqueryVar);
-}
    </script>
 
   
