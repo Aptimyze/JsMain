@@ -1724,6 +1724,26 @@ SQL;
             throw new jsException($e);
         }
     }
+
+    public function getUserNameThatDidNotDelete($profileIds) 
+    {  
+        
+        try
+        {
+            $sql = "SELECT USERNAME FROM newjs.JPROFILE where `PROFILEID` in (:PROFILEIDSTRING) and `ACTIVATED` = 'D' ";
+            $pdoStatement = $this->db->prepare($sql);
+            $res->bindValue(":PROFILEIDSTRING",$profileIds, PDO::PARAM_STR);
+            $pdoStatement->execute();
+            while($row=$pdoStatement->fetch(PDO::FETCH_ASSOC))
+            $result[]=$row;
+        return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
+
     
 }
 

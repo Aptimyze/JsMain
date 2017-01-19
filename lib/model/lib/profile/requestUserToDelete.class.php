@@ -33,7 +33,7 @@ class requestUserToDelete
 	{	
 		$profileid = $request->getParameter('pfID');
 		include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
-		$sms = new InstantSMS("REQ_CRM_DEL_SELF", $profileid);
+		$sms = new InstantSMS("REQ_CRM_DEL_OTHER", $profileid);
         $sms->send();
         $request->setParameter('selfDEL','0');
         $this->sendMailForDeletion($request);
