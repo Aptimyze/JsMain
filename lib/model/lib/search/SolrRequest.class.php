@@ -473,6 +473,8 @@ class SolrRequest implements RequestHandleInterface
 			$this->filters[]="&fq=-MSTATUS:(".str_replace(","," ",$this->searchParamtersObj->getMSTATUS_IGNORE()).")";
 		if($this->searchParamtersObj->getHANDICAPPED_IGNORE())
 			$this->filters[]="&fq=-HANDICAPPED:(".str_replace(","," ",$this->searchParamtersObj->getHANDICAPPED_IGNORE()).")";
+                if($this->searchParamtersObj->getOCCUPATION_IGNORE())
+			$this->filters[]="&fq=-OCCUPATION:(".str_replace(","," ",$this->searchParamtersObj->getOCCUPATION_IGNORE()).")";
 		//HIV ignore, MANGLIK ignore, MSTATUS ignore, HANDICAPPED ignore
 
                 //Fso Verified Dpp Matches
