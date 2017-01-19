@@ -190,4 +190,5 @@ class JsConstants
     public static $nonRosterRefreshUpdate = 300000;
         public static $httpsApplicationPhotoUrl      = 'https://xmppdev1.jeevansathi.com';
         public static $httpsCloudUrl                 = 'https://mediacdn.jeevansathi.com';
+        public static $androidChat                   = array("flag"=>1);
 }

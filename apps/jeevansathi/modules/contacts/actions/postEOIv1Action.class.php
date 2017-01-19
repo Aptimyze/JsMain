@@ -100,15 +100,10 @@ class postEOIv1Action extends sfAction
 			$androidText = true;
 			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 		}
-		else {
-			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
-		}
+		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 		if($this->contactEngineObj->messageId)
 		{
- 
-			
-
-			if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
+        	if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] == "Y")
 			{
 				$contactId = $this->contactEngineObj->contactHandler->getContactObj()->getCONTACTID(); 
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;

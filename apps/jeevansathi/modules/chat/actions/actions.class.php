@@ -396,7 +396,13 @@ class chatActions extends sfActions
 					$request->setParameter("moduleName","contacts");
 					$request->setParameter('chatMessage',$chatMessage);
 					$request->setParameter("setFirstEoiMsgFlag",true);
-					$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
+					if($request->getParameter("page_source") == "chat" && $request->getParameter("channel") == "A")
+					{
+						$data  = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv1');
+					}
+					else {
+						$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
+					}
 					$output = ob_get_contents();
 					ob_end_clean();
 					$response = json_decode($output, true);

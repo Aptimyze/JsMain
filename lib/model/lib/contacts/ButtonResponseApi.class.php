@@ -306,6 +306,8 @@ Class ButtonResponseApi
 		{
 			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
 			$button["label"]  = $androidText?"Your Interest has been sent":"Interest Sent";
+			$button["value"] = "INITIATE";
+			$responseArray["canChat"] = false;
 			if($androidText && $privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
 			{
 				$responseArray["infobtnlabel"]  = "BECOME A PAID MEMBER";
@@ -435,7 +437,7 @@ Class ButtonResponseApi
 					} else {
 						if($actionType == "CHATACCEPT")
 						{
-							$button[]                       = self::getCustomButton("Interest accepted, Continue chat","ACCEPT","","","","");
+							$button[]                       = self::getCustomButton("Interest accepted","ACCEPT","","","","");
 							$responseArray["canchat"]       = "false";
 						}
 						else{
