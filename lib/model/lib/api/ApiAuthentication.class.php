@@ -777,6 +777,7 @@ Abstract class ApiAuthentication
 	public static function completeLoginTracking($trackingData)
 	{
 		$profileId = $trackingData["profileId"];
+		if(!$profileId)return ;
 		$ip = $queueArr['ip'];
 		if($trackingData[misLoginTracking])
 		{
