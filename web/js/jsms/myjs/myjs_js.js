@@ -126,9 +126,17 @@ function setBlock(blockName) {
         
 
 	$(document).ready(function() {
-            
+    
+    //Saving HTML of MYJS page on first time load along with current time stamp in session storage
+    if(sessionStorage.getItem("myjsTime") == undefined ||
+      new Date().getTime() - sessionStorage.getItem("myjsTime") < myJsCacheTime)
+    {
+      sessionStorage.setItem("myjsTime",new Date().getTime());
+      sessionStorage.setItem("myjsHtml",document.documentElement.outerHTML);	
+    } 
+
                 $("#hamburgerIcon").bind("click", function() {
-			if($("#hamburger").length == 0){
+			if($("#hamburger").length == 0){ 
                                 $(".loaderSmallIcon").addClass("loaderimg").removeClass("dn");
                                 $("#hamIc").hide();
 				if(localStorage.getItem("hamHtml")){
