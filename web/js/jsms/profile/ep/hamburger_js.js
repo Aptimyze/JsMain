@@ -170,6 +170,8 @@ var hamHtml="",slider1,slider2;
 		eHamburger.prototype.hideHamburger=function()
 		{
                         $("#2dView").addClass("dn");
+                        $("#clearBtn").remove();
+                        $("#suggestBox").remove();
 			$(this.pcontid).removeClass("ham"+this.formation).removeClass("tcenter"+this.formation).removeClass("twodview"+this.formation);
 			var ele=this;
 					
@@ -443,7 +445,12 @@ var hamHtml="",slider1,slider2;
 
 				
 			$("#TAPNAME_"+this.tapid).html(this.TapName());	
-			
+			$('<span id="clearBtn" class="white fontthin f17 pt4 fr pr9 vAlignSub">Clear</span>').insertAfter("#TAPNAME_1");
+			$("#clearBtn").off("click").on("click",function(){
+				$("#HAM_OPTION_1 li input:checked").each(function(){
+					$(this).parent().click()
+				});
+			});
 			
 					
 			//selected value
@@ -1331,9 +1338,12 @@ function appendSuggestionList(response) {
 			 		});
 			 		if(dataPresent == false) {
 			 			if($("#suggestBox").length == 0)
-			 				$("<div class='pad10p0p brdr13' id='suggestBox'><div class='color14 f14 fontlig'>Suggestions</div></div>").insertBefore($(".hpad5")[0]);
+			 				$("<div class='pad10p0p brdr13 dispnone' id='suggestBox'><div class='color14 f14 fontlig'>Suggestions</div></div>").insertBefore($(".hpad5")[0]);
 			 			if($("#HAM_OPTION_1 li[value='"+elem+"']").length != 0) {
 				 			$("#suggestBox").append("<div style='width: 100px;overflow: hidden;height: 27px;text-overflow: ellipsis;position: relative;white-space: nowrap;' value='"+elem+"' class='suggestOption pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+$($("#HAM_OPTION_1 li[value='"+elem+"'] div")[0]).html()+"</div>");
+				 			if($("#suggestBox").hasClass("dispnone")) {
+				 				$("#suggestBox").removeClass("dispnone");
+				 			}
 				 			$(".suggestOption[value='"+elem+"']").off("click").on("click", function(){
 				 				clickVal = $(this).attr("value");
 				 				$(this).toggleClass("bg7");
