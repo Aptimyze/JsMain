@@ -224,7 +224,7 @@ public function executeDeleteRequestForUser(sfWebRequest $request)
           }
           $crmUserName = $this->user;
 
-          $loggingObj = new REQUEST_DELETIONS_LOG();
+          $loggingObj = new MIS_REQUEST_DELETIONS_LOG();
           $loggingObj->logThis($crmUserName,$userPFID,$requestedBy);
 
           $response[responseStatusCode] = '0';
