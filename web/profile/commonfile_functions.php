@@ -711,4 +711,25 @@ function getCommaSeparatedCSSFileNames($cssArray){
         }
 return substr($result,0,-1);
 }
+
+
+function getCommaSeparatedJSFileNames($jsArray){
+        $allJsArr = getJsFilesArr();
+        for($i=0;$i<count($allJsArr);$i++)
+        {
+                $temp=$allJsArr[$i];
+
+                foreach($temp as $key=>$val)
+                                if(!$JS[$key])
+                                                $JS[$key]=$key."_".$val;
+                                else
+                                                throw new jsException("","Duplicate $key css in commonfile");
+        }
+        foreach($jsArray as $key=>$val)
+        {
+        	$result.='/js/'.$JS[$val].".js,";
+        }
+return substr($result,0,-1);
+}
+
 ?>
