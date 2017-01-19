@@ -753,7 +753,7 @@ class crmInterfaceActions extends sfActions
         $this->masterTime = $masterTime;
         $this->misSlave   = $dateTimeArr['newjs_slave'];
         $this->slave111   = $dateTimeArr['newjs_local111'];
-	$this->crmSlave   = $dateTimeArr['crm_slave'];
+	$this->crmSlave   = $dateTimeArr['newjs_masterRep'];
 	$this->masterRep  = $dateTimeArr['newjs_masterRep'];
     }
 

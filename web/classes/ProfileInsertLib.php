@@ -60,7 +60,7 @@ class ProfileInsertLib
     $this->objJProfileStore = new JPROFILE($dbname);
     $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
     $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
-    $this->objProfileAlertsStore = new newjs_JPROFILE_ALERTS($dbname);
+    $this->objProfileAlertsStore = new JprofileAlertsCache($dbname);
   }
   /**
    * __destruct
@@ -108,8 +108,8 @@ class ProfileInsertLib
       self::$instance->objJProfileStore->setConnection($dbname);
       self::$instance->objProfileNTimesStore->setConnection($dbname);
       self::$instance->objProfileHoroscopeForScreenStore->setConnection($dbname);
-      self::$instance->objProfileAlertsStore->setConnection($dbname);
-
+      unset(self::$instance->objProfileAlertsStore);
+      self::$instance->objProfileAlertsStore = new JprofileAlertsCache($dbname);
     }
 
     return self::$instance;

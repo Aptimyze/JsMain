@@ -565,6 +565,7 @@ function saveSectionsFields(sectionId){
             cache: true,
             async: true,
             updateChatListImmediate:true,
+            updateNonRosterChatGroups:["dpp"],
             data: {editFieldArr : editFieldArr,getData : "dpp",fromBackend:ifBackend},
             success: function(data) { 
               if(typeof data == "string")

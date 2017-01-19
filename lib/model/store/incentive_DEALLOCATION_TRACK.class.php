@@ -74,7 +74,7 @@ class incentive_DEALLOCATION_TRACK extends TABLE
 	{
                 try
                 {
-                        $sql = "SELECT PROFILEID,ALLOTED_TO,DEALLOCATION_DT FROM incentive.DEALLOCATION_TRACK WHERE DEALLOCATION_DT>:DEALLOCATION_DT AND PROCESS_NAME IN('RELEASE_PROFILE','NO_LONGER_WORKING')";
+                        $sql = "SELECT PROFILEID,ALLOTED_TO,DEALLOCATION_DT FROM incentive.DEALLOCATION_TRACK WHERE DEALLOCATION_DT>:DEALLOCATION_DT AND PROCESS_NAME IN('RELEASE_PROFILE','NO_LONGER_WORKING') ORDER BY DEALLOCATION_DT ASC";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":DEALLOCATION_DT",$entryDate,PDO::PARAM_STR);
                         $prep->execute();
