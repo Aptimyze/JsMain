@@ -599,15 +599,15 @@ class Membership
     function makePaid($skipBill = false,$mainMemUpgrade=false) {
         error_log("ankita in makePaid payu_return-".$mainMemUpgrade);
         $userObjTemp = $this->getTempUserObj();
+        if($mainMemUpgrade == true){
+            $finalOutput = $this->deactivateMembership(); 
+        }
+        error_log("ankita set deactivation status in table based on output");
         if($skipBill == true){
             $this->setGenerateBillParams();
         } else {
             $this->generateBill();
         }
-        if($mainMemUpgrade == true){
-           $finalOutput = $this->deactivateMembership(); 
-        }
-        error_log("ankita set deactivation status in table based on output");
         $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
         $this->setServiceActivation();
