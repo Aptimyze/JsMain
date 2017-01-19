@@ -470,10 +470,12 @@
                 ~/if`
                 ~if $data.cart_items.vas_memberships`
                 ~foreach from=$data.cart_items.vas_memberships key=k item=v name=vasServLoop`
+                ~if $v.service_name neq "Profile Boost"`
                 <div class="disp-tbl fullwid">
                     <div class="disp-cell wid80p pos-rel">~$v.service_name`</div>
                     <div class="disp-cell txtr wid20p cart_prices">~if $v.orig_price_formatted`~$v.orig_price_formatted`~else`0.00~/if`</div>
                 </div>
+                ~/if`
                 ~/foreach`
                 ~/if`
             </div>
