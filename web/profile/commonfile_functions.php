@@ -534,13 +534,8 @@ $js_arr[]=array("jspc/search/common/commonSlider"    => "1");
 $js_arr[]=array("jspc/search/searchSliders"    => "1");
 $js_arr[]=array("jspc/search/common/ionRangeSliderPlugin"    => "1");
 $js_arr[]=array("jspc/common/jquerymCustomScrollbarConcat"   => "1");
-<<<<<<< HEAD
-$js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"                                            => "44");
-$js_arr[]=array("jspc/utility/chosen/chosen_jquery"                    => "18");
-=======
 $js_arr[]=array("jspc/profile/edit/dpp/jspcDppEdit_js"                                           => "44");
 $js_arr[]=array("jspc/utility/chosen/chosen_jquery"                     => "19");
->>>>>>> cd77ee348ef4bfb5986ed75fd298aec18dda25ea
 $js_arr[]=array("jspc/utility/chosen/docsupport/prism"    => "1");
 $js_arr[]=array("jspc/logout/hpjs"      => "3");
 $js_arr[]=array("jspc/common/hslider"    => "1");
