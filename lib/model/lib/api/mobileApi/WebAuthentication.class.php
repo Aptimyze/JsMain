@@ -73,7 +73,7 @@ class WebAuthentication extends ApiAuthentication
             $this->recentUserTracking=true;
             $this->logLoginHistoryTracking=true;
             $this->loc=$loc;
-			$this->completeLoginTracking();
+			$this->CommonLoginTracking();
 
 			$this->loginData[AUTHCHECKSUM]=$this->encryptAppendTime($this->createAuthChecksum());
 			$this->removeLoginCookies();
