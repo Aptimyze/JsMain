@@ -1046,12 +1046,14 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
         jObject.html('');
         // var totalCount = responseObject.data.no_of_results;
         // tracking = "stype="+stype[Object.name];
+        var pChecksum = ["a3de632a30a58d6ba236f4a30bfb6b82i9616174", "a3de632a30a58d6ba236f4a30bfb6b82i9616170", "a3de632a30a58d6ba236f4a30bfb6b82i9616171", "a3de632a30a58d6ba236f4a30bfb6b82i9616172", "a3de632a30a58d6ba236f4a30bfb6b82i9616173",
+        "a3de632a30a58d6ba236f4a30bfb6b82i9616175", "a3de632a30a58d6ba236f4a30bfb6b82i9616177"];
         var totalCount = 3;
         for(i=0;i<7;i++)
         {
             jObject.append(htmlInside);
-            jObject.parent().find('#matchOfDaySubSection').attr('id','matchOfDaySubSection_'+(i+1));
-            jObject.parent().find('#matchOfDaySubSection_'+(i+1)).attr('data-matchID',i);
+            jObject.parent().find('#matchOfDaySubSection').attr('id',pChecksum[i]+'_matchOfDay');
+            $("#"+pChecksum[i]+'_matchOfDay').attr('data-matchID',i);
        }
 
        var getNStk = parseInt($('.stk').length);
@@ -1074,10 +1076,10 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 
         for (var i = 0; i < 7; i++)
         {
-        	var profileChecksum = "a3de632a30a58d6ba236f4a30bfb6b82i9616174";
+        	var profileChecksum = pChecksum[i];
         	tracking = 'stype=MOD';
-        	jObject = $('#matchOfDaySubSection_'+(i+1));
-        	var profileUrl = "/profile/viewprofile.php?profilechecksum="+1+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1+"&listingName=matchOfDay";
+        	jObject = $("#"+pChecksum[i]+'_matchOfDay');
+        	var profileUrl = "/profile/viewprofile.php?profilechecksum="+profileChecksum+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1+"&listingName=matchOfDay";
         	jObject.find('.profileLink').attr('href',profileUrl);
 
 
@@ -1139,6 +1141,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
     }
     function setStack()
     {
+    		console.log($(this));
         $('.stk_cls').off('click',setStack);
         var eleActive = $('#prfDay').find('.active');
         
@@ -1146,7 +1149,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
         {
         	// on click of close
         	var MatchProfileChecksum = eleActive.find('.profileName').attr('profileChecksum');
-        	onCloseMatchOfDay(loggedInJspcUser,MatchProfileChecksum);
+        	onCloseMatchOfDay(MatchProfileChecksum);
         }
         getIdNum = parseInt(eleActive.attr('data-matchID'));
         $(eleActive).removeClass('active');
@@ -1168,9 +1171,9 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
         }                             
     }
 
-    function onCloseMatchOfDay(LoggedInProfileID, MatchProfileChecksum) 
+    function onCloseMatchOfDay(MatchProfileChecksum) 
     {
-			var data = {"profileId":LoggedInProfileID, "MatchProfileChecksum":MatchProfileChecksum};
+			var data = {"MatchProfileChecksum":MatchProfileChecksum};
       $.ajax({
 				url: '/api/v1/myjs/closematchOfDay',
 				data: data,
