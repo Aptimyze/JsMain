@@ -28,6 +28,7 @@ class ApiMembershipDetailsV3Action extends sfAction
                     $this->setTemplate("paramsError");
                 } else {
                     try {
+                        error_log("ankita start of processPayment..".$this->apiParams->pageRedirectTo);
                         switch ($this->apiParams->pageRedirectTo) {
                             case 'ccavenue':
                                 JeevansathiGatewayManager::setCCAVENUEParams($this, $this->apiParams);

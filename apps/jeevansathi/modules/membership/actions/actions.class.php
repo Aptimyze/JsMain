@@ -48,7 +48,7 @@ class membershipActions extends sfActions
                
                 //deactivate current membership based on inputs
                 $memHandlerObj = new MembershipHandler();
-                $deactivationStatus = $memHandlerObj->deactivateCurrentMainMembership(array("PROFILEID"=>$profileid,"USERNAME"=>$username,"MEMBERSHIP"=>$membership));
+                $deactivationStatus = $memHandlerObj->deactivateCurrentMainMembership(array("PROFILEID"=>$profileid,"USERNAME"=>$username,"MEMBERSHIP"=>$membership,"NEW_ORDERID"=>$request->getParameter("NEW_ORDERID")));
                 unset($memHandlerObj);
             }
         }

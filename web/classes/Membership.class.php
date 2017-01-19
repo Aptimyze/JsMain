@@ -204,8 +204,8 @@ class Membership
         return $ret;
     }
     
-    function startServiceOrder($orderid, $skipBill = false,$mainMemUpgrade=false) {
-        error_log("ankita inside function startServiceOrder");
+    function startServiceOrder($orderid, $skipBill = false,$checkForMainMemUpgrade=false) {
+        error_log("ankita inside function startServiceOrder...".$checkForMainMemUpgrade);
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
@@ -288,8 +288,16 @@ class Membership
         $this->source = "ONLINE";
         $this->expiry_dt = $myrow["EXPIRY_DT"];
         $this->set_activate = $myrow["SET_ACTIVATE"];
-        error_log("ankita-".$mainMemUpgrade);
-        $this->makePaid($skipBill,$mainMemUpgrade);
+        $mainMemUpgrade = false;
+        if($checkForMainMemUpgrade == true){
+            $upgradeOrderObj = new billing_UPGRADE_ORDERS();
+            $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$profileid);
+            error_log("ankita checking entry in mem upgrade..",$isUpgradeCaseEntry["ORDERID"]);
+            if(is_array($isUpgradeCaseEntry)){
+                $mainMemUpgrade = true;
+            }
+        }
+        $this->makePaid($skipBill,$mainMemUpgrade,$orderid);
 
         include_once (JsConstants::$docRoot . "/profile/suspected_ip.php");
         $suspected_check = doubtfull_ip("$ip");
@@ -596,7 +604,7 @@ class Membership
         $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
     }
     
-    function makePaid($skipBill = false,$mainMemUpgrade=false) {
+    function makePaid($skipBill = false,$mainMemUpgrade=false,$orderid="") {
         //check for failed payment,tracking here in or not
         error_log("ankita in makePaid-".$mainMemUpgrade);
         $userObjTemp = $this->getTempUserObj();
@@ -608,9 +616,8 @@ class Membership
         $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
         if($mainMemUpgrade == true){
-            $finalOutput = $this->deactivateMembership(); 
+            $this->deactivateMembership($orderid); 
         }
-        error_log("ankita set deactivation status in table based on output");
         $this->setServiceActivation();
         $this->populatePurchaseDetail();
         $this->updateJprofileSubscription();
@@ -619,13 +626,13 @@ class Membership
 
     /*function - deactivateMembership
     * deactivates currently active membership of user
-    * @inputs: none
-    * @outputs: $finalOutput
+    * @inputs: $orderid=""
+    * @outputs: none
     */
-    function deactivateMembership(){
+    function deactivateMembership($orderid=""){
         $urlToHit = JsConstants::$siteUrl."/api/v1/membership/deactivateCurrentMembership";
         $profileCheckSum = JsAuthentication::jsEncryptProfilechecksum($this->profileid);
-        $postParams = array("PROFILECHECKSUM"=>$profileCheckSum,"USERNAME"=>$this->username,"MEMBERSHIP"=>"MAIN");
+        $postParams = array("PROFILECHECKSUM"=>$profileCheckSum,"USERNAME"=>$this->username,"MEMBERSHIP"=>"MAIN","NEW_ORDERID"=>$orderid);
         $deactivationResponse = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,VariableParams::$deactivationCurlTimeout);
         if($deactivationResponse){
             $finalOutput = json_decode($deactivationResponse,true);
@@ -634,8 +641,14 @@ class Membership
         else{
             $finalOutput = array("responseStatusCode"=>"1");
         }
+        //if not deactivated then send alert mail
+        if($finalOutput["responseStatusCode"] == "1"){
+            $subject = "Curl hit to deactivate main membership failed";
+            $msg = "Details: new_orderid {$orderid} in deactivateMembership called by makepaid function for Username : {$this->username},curlResponse:$deactivationResponse";
+            SendMail::send_email("ankita.g@jeevansathi.com,vibhor.garg@jeevansathi.com",$msg,$subject);
+        }
+        unset($finalOutput);
         unset($deactivationResponse);
-        return $finalOutput;
     }
 
     function getTempUserObj() {

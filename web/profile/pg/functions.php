@@ -197,7 +197,7 @@ function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
  *    RETURNS       :    Returns true if record successfully entered
  ***********************************************************************/
 
-function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '') {
+function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '',$mainMemUpgrade=false) {
     
     //	echo $profileid."-".$paymode."-".$curtype."-".$amount."-".$service_str."-".$service_main."-".$discount."-".$setactivate;
     global $error_msg, $pay_arrayfull, $pay_arrayfull, $announce_to_email, $ip, $DOL_CONV_RATE, $tax_rate;
@@ -283,6 +283,10 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         $ordrDeviceObj->insertOrderDetails($insert_id, $ORDERID, $device, $profileid, $couponCodeVal);
         unset($ordrDeviceObj);
         if ($insert_id) {
+            //set entry in upgrade_orders for membership upgrade for current user
+            $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+            $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$profileid,"ORDERID"=>$data["ORDERID"],"ENTRY_DT"=>date("Y-m-d H:i:s")));
+            unset($upgradeOrdersObj);
         	return $data;
         }
         else {
