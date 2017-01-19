@@ -163,7 +163,7 @@ class RegistrationMisc{
 	
 	public static function updateAlertData($profileid,$alertArr,$cPage='R')
     {
-		$dbObj = new newjs_JPROFILE_ALERTS();
+		$dbObj = new JprofileAlertsCache();
 		$dbObj->insert($profileid,$alertArr,$cPage);
 	}
 	
