@@ -961,11 +961,14 @@ class MembershipApiFunctions
             $apiObj->mainServices['change_text'] = "Change Plan";
         }
 
-        if (($apiObj->mainMem == 'ESP') && !empty($apiObj->mainMemDur)) 
+        if (($apiObj->mainMem == 'ESP' || $apiObj->mainMem == 'NCP') && !empty($apiObj->mainMemDur)) 
         {
             if ($apiObj->mainMem == 'ESP') {
                 $arr = VariableParams::$eSathiAddOns;
-            } 
+            }
+            elseif($apiObj->mainMem == 'NCP'){
+                $arr = VariableParams::$jsExclusiveComboAddon;
+            }
             else {
                 $arr = VariableParams::$eValuePlusAddOns;
             }
