@@ -158,7 +158,8 @@ class VariableParams
         'I',
         'A',
         'B',
-        'M'
+        'M',
+        'J'
     );
     public static $serviceFeatues = array(
         "Send/Receive Interests",
@@ -625,7 +626,7 @@ class VariableParams
     );
 
     //remove specified vas services from vas content based on main membership 
-    public static $mainMemBasedVasFiltering = array('NCP'=>array('R','T'));
+    public static $mainMemBasedVasFiltering = array('NCP'=>array('R','T','J'));
 
     //skip vas page for below main memberships
     public static $skipVasPageMembershipBased = array('X','ESP');
