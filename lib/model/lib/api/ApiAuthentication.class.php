@@ -364,9 +364,8 @@ Abstract class ApiAuthentication
 		
 		if($this->recentLogTracking)
 			$this->removeRecentLog();
-        
-        if($body['logLoginHistoryTracking'] || $body['misLoginTracking'] || $body['appLoginProfileTracking'] || $body['logLogoutTracking'])
-        {    
+        if($queueArr['logLoginHistoryTracking'] || $queueArr['misLoginTracking'] || $queueArr['appLoginProfileTracking'] || $queueArr['logLogoutTracking'])
+        {
         if(!($this->sendLoggingDataQueue(self::$loginTracking, $queueArr)))
         	self::completeLoginTracking($queueArr);
         }	
