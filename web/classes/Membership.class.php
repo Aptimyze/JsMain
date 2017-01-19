@@ -605,17 +605,36 @@ class Membership
             $this->generateBill();
         }
         if($mainMemUpgrade == true){
-              $memHandlerObj = new MembershipHandler();
-              error_log("calling ankita deactivateCurrentMainMembership startServiceOrder".$this->profileid.$this->username);
-              $memHandlerObj->deactivateCurrentMainMembership(array("PROFILEID"=>$this->profileid,"USERNAME"=>$this->username));
-              unset($memHandlerObj);
+           $finalOutput = $this->deactivateMembership(); 
         }
+        error_log("ankita set deactivation status in table based on output");
         $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
         $this->setServiceActivation();
         $this->populatePurchaseDetail();
         $this->updateJprofileSubscription();
         $this->checkIfDiscountExceeds($userObjTemp);
+    }
+
+    /*function - deactivateMembership
+    * deactivates currently active membership of user
+    * @inputs: none
+    * @outputs: $finalOutput
+    */
+    function deactivateMembership(){
+        $urlToHit = JsConstants::$siteUrl."/api/v1/membership/deactivateCurrentMembership";
+        $profileCheckSum = JsAuthentication::jsEncryptProfilechecksum($this->profileid);
+        $postParams = array("PROFILECHECKSUM"=>$profileCheckSum,"USERNAME"=>$this->username,"MEMBERSHIP"=>"MAIN");
+        $deactivationResponse = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,VariableParams::$deactivationCurlTimeout);
+        if($deactivationResponse){
+            $finalOutput = json_decode($deactivationResponse,true);
+            error_log("end of deactivateMembership...".$finalOutput["responseStatusCode"]);
+        }
+        else{
+            $finalOutput = array("responseStatusCode"=>"1");
+        }
+        unset($deactivationResponse);
+        return $finalOutput;
     }
 
     function getTempUserObj() {
