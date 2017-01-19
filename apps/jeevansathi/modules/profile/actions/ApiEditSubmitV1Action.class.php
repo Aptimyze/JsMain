@@ -62,8 +62,8 @@ class ApiEditSubmitV1Action extends sfActions
 			$this->incomplete=EditProfileEnum::$INCOMPLETE_NO;
                 
                 if(($this->editFieldNameArr['EMAIL'] && (strpos($_SERVER['HTTP_REFERER'],JsConstants::$siteUrl)!=0) && (MobileCommon::isDesktop() || MobileCommon::isNewMobileSite()))){
-//                    $http_msg=print_r($_SERVER,true);
-//                    mail("ankitshukla125@gmail.com,lavesh.rawat@gmail.com","referrer not jeevansathi","details :$http_msg");
+                    $http_msg=print_r($_SERVER,true);
+                    mail("ankitshukla125@gmail.com,lavesh.rawat@gmail.com","referrer not jeevansathi","details :$http_msg");
                     $errorArr["ERROR"]="Field Array is not valid";
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
                     $apiResponseHandlerObj->setResponseBody($errorArr);
