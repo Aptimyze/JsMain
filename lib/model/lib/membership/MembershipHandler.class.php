@@ -2167,15 +2167,32 @@ class MembershipHandler
                         $memCacheObject->remove($params["PROFILEID"] . "_MEM_HAMB_MESSAGE");
                         $memCacheObject->remove($params["PROFILEID"] . "_MEM_SUBSTATUS_ARRAY");
                     }
+                    //update the success deactivate entry
+                    if($params["NEW_ORDERID"] && $params["NEW_ORDERID"]!=""){
+                        error_log("ankita updating deactivate success entry");
+                        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+                        $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"OLD_SERVICEID"=>$serStatDet[$params["PROFILEID"]]["SERVICEID"],"DEACTIVATED_STATUS"=>"DONE"));
+                        unset($upgradeOrdersObj);
+                    }
                 }
                 unset($billingServStatObj);
                 return true;
             }
             else{
+                error_log("ankita updating deactivate failed entry");
+                //log the failed deactivate entry
+                $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+                $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("DEACTIVATED_STATUS"=>"FAILED"));
+                unset($upgradeOrdersObj);
                 return false;
             }
         }
         catch(Exception $e){
+            error_log("ankita updating deactivate failed entry");
+            //log the failed deactivate entry
+            $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+            $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("DEACTIVATED_STATUS"=>"FAILED"));
+            unset($upgradeOrdersObj);
             return false;
         }
     }
