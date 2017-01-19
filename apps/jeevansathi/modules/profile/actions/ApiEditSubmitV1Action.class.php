@@ -61,9 +61,6 @@ class ApiEditSubmitV1Action extends sfActions
 		else
 			$this->incomplete=EditProfileEnum::$INCOMPLETE_NO;
                 
-                $submitKey = $request->getParameter('sumbitKey');
-                $redisKey = JsMemcache::getInstance()->get($this->loginProfile->getPROFILEID()."_editSubmitToken");
-                
                 if(($this->editFieldNameArr['EMAIL'] && (strpos($_SERVER['HTTP_REFERER'],JsConstants::$siteUrl)!==false) && MobileCommon::isDesktop())){
 //                    $http_msg=print_r($_SERVER,true);
 //                    mail("ankitshukla125@gmail.com,lavesh.rawat@gmail.com","referrer not jeevansathi","details :$http_msg");
