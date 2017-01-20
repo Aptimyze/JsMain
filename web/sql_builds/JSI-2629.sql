@@ -5,11 +5,11 @@ INSERT INTO `SMS_TYPE` VALUES ('', 'REQ_CRM_DEL_OTHER', 'I', 2, 'A', 'A', 'SINGL
 
 use MIS;
 CREATE TABLE `REQUEST_DELETIONS_LOG` (
-  `DATE` date NOT NULL,
+  `DATE` datetime NOT NULL,
   `CRM_USER` char(50) NOT NULL,
   `REPORTEE` int(11) NOT NULL,
   `REQUESTED_BY` char(15) NOT NULL,
-  KEY `DATE` (`DATE`)
+  KEY `DATE` (`DATETIME`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 use jeevansathi_mailer;
