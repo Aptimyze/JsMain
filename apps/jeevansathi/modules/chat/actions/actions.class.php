@@ -370,7 +370,7 @@ class chatActions extends sfActions
 
 							$responseArray["infomsglabel"] = "You can send more messages if user replies";
 							$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
-							$response["buttonresponse"] = ButtonResponseApi::actionDetailsMerge($responseArray);
+							$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge($responseArray);
 						} else {
 							if ($msgText)
 								$msgText = $msgText . "||" . $chatMessage;
@@ -393,7 +393,7 @@ class chatActions extends sfActions
 
 								$responseArray["infomsglabel"] = "You can send more messages if user replies";
 								$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
-								$response["buttonresponse"] = ButtonResponseApi::actionDetailsMerge($responseArray);
+								$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge($responseArray);
 							}
 							$response['sent'] = true;
 							$response["messageid"] = $message[0]["ID"];
