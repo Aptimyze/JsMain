@@ -387,7 +387,13 @@ class chatActions extends sfActions
 								$response["cansend"] = true;
 							} else {
 								$response["cansend"] = false;
+								$response['sent'] = false;
 								$response["errorMsg"] = "You can send more messages if user replies";
+								$responseArray['cansend']=false;
+
+								$responseArray["infomsglabel"] = "You can send more messages if user replies";
+								$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
+								$response["buttonresponse"] = ButtonResponseApi::actionDetailsMerge($responseArray);
 							}
 							$response['sent'] = true;
 							$response["messageid"] = $message[0]["ID"];
