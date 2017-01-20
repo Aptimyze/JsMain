@@ -207,12 +207,11 @@ class dppSuggestions
 	public function getTrendsArr($profileId,$percentileFields,$trendsObj)
 	{
 		$pidKey = $profileId."_dppSuggestions";
-		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);
+		$trendsArr = dppSuggestionsCacheLib::getInstance()->getHashValueForKey($pidKey);	
 		if($trendsArr == "noKey" || $trendsArr == false)
-		{
-			
-			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
-			//dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
+		{			
+			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);			
+			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
 			return $trendsArr;
 		}
 		else
