@@ -674,7 +674,7 @@ class ProfileInformationModuleMap
                         "SUBTITLE"=> "I Declined",
                         "ICONS"=> "",
                         "BUTTONS"=> "",
-                        "TRACKING"=> ""
+                        "TRACKING"=> "stype=".SearchTypesEnums::CANCELLED_LISTING_PC."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_PC
                 ),
                 "FILTERED_INTEREST"=>Array( 
 			"ID"=> "12",
