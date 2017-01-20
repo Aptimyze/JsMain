@@ -175,6 +175,10 @@ class Inbox implements Module
 					case "INTEREST_EXPIRING":
 						$key = "INTEREST_EXPIRING";
 						break;
+					case "MATCH_OF_THE_DAY":
+						$key = "MATCH_OF_THE_DAY";
+                                                $memKeyNotExists=1;
+						break;
 
 				}
 
@@ -477,6 +481,11 @@ class Inbox implements Module
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 				break;
+			case 'MATCH_OF_THE_DAY':
+				$skipConditionArray = SkipArrayCondition::$MATCHOFTHEDAY;
+				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				break;
 			case 'IGNORED_PROFILES': $this->skipProfiles = array();
 			  break;
 			default:
@@ -568,6 +577,13 @@ class Inbox implements Module
 		if ($infoType == "MATCH_ALERT")
 		{
 			$condition["NEW"] = 0;
+		}
+		if ($infoType == "MATCH_OF_THE_DAY")
+		{
+			$condition["GENDER"] = $this->profileObj->getGENDER();
+                        $condition['PROFILEID'] = $this->profileObj->getPROFILEID();
+                        $condition['ENTRY_DT'] = date("Y-m-d 00:00:00", strtotime('now') - 7*24*3600);
+                        $condition['IGNORED'] = 'N';
 		}
 		return $condition;
 	}

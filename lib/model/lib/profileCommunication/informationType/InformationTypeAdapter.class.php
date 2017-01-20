@@ -229,11 +229,35 @@ class InformationTypeAdapter
 	                uasort($profilesArray,array($this,"cmp"));
 								$profilesArray = array_slice($profilesArray,0,$limit,true);
                 break;
-
+            case "MATCH_OF_THE_DAY":
+                if(!JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId)){
+                        $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY('newjs_master');
+                        $profilesArray = $matchOfDayObj->getMatchForProfileTillDays($condition);
+                        if($condition["GENDER"] == 'F'){
+                                $searchObj = new NEWJS_SEARCH_MALE('newjs_slave');
+                        }else{
+                                $searchObj = new NEWJS_SEARCH_FEMALE('newjs_slave');
+                        }
+                        if(!empty($profilesArray)){
+                                $data = $searchObj->getArray(array("PROFILEID"=>implode(',',$profilesArray)));
+                                $profilesArray1 = array();
+                                if(!empty($data)){
+                                        foreach($data as $profiles){
+                                                $profilesArray1[$profiles["PROFILEID"]]["PROFILEID"] = $profiles["PROFILEID"];
+                                        }
+                                        unset($profilesArray);
+                                        $profilesArray = $profilesArray1;
+                                }
+                        }
+                        JsMemcache::getInstance()->set("MATCHOFTHEDAY_".$this->profileId,  serialize($profilesArray));
+                }else{
+                        $profilesArray = unserialize(JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId));
+                }
+                break;
+        
             default:
 				throw new JsException("","Wrong infoType is given in InformationTypeAdapter.class.php");
         }
-
         return $profilesArray;
         
     }

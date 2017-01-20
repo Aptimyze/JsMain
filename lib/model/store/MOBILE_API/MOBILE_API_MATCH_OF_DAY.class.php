@@ -11,9 +11,15 @@ class MOBILE_API_MATCH_OF_DAY extends TABLE{
         if($paramsArr){
             try{
                 $sql = "SELECT MATCH_PROFILEID FROM MOBILE_API.MATCH_OF_DAY_LOG where PROFILEID = :PROFILEID AND ENTRY_DT > :ENTRY_DT";
+                if(isset($paramsArr["IGNORED"])){
+                        $sql .= " AND IGNORED = :IGNORED";
+                }
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID",$paramsArr["PROFILEID"],PDO::PARAM_INT);
                 $prep->bindValue(":ENTRY_DT",$paramsArr["ENTRY_DT"],PDO::PARAM_STR);
+                if(isset($paramsArr["IGNORED"])){
+                        $prep->bindValue(":IGNORED",$paramsArr["IGNORED"],PDO::PARAM_STR);
+                }
                 $prep->execute();
                 while($row = $prep->fetch(PDO::FETCH_ASSOC)){
                     $result[] = $row["MATCH_PROFILEID"];
