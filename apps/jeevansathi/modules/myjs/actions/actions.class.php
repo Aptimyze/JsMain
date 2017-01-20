@@ -206,6 +206,12 @@ class myjsActions extends sfActions
 					$this->showExpiring = 1;
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
+
+				$this->showMatchOfTheDay = 1;
+				if($this->loginProfile->getACTIVATED() == 'U')
+				{
+					$this->showMatchOfTheDay = 0;
+				}
           //      $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
                 ob_start();
                 $jsonData = sfContext::getInstance()->getController()->getPresentationFor("myjs", "performV1");
@@ -333,6 +339,12 @@ class myjsActions extends sfActions
 			$this->showExpiring = 1;
 		}
 
+		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
+		$this->showMatchOfTheDay = 1;
+		if($loggedInProfileObj->getACTIVATED() == 'U')
+		{
+			$this->showMatchOfTheDay = 0;
+		}
 		$this->engagementCount=array();
 
 //Flag to compute data for important section for FTU page
