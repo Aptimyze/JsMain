@@ -422,7 +422,7 @@ Class ButtonResponseApi
 					if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
 						if($actionType == "CHATACCEPT")
 						{
-							$button[]                       = self::getCustomButton("Interest accepted, Continue chat","ACCEPT","","","","");
+							$button[]                       = self::getCustomButton("Interest accepted, Continue chat","ACCEPT","","","","91");
 							$responseArray["canchat"]       = "false";
 						}
 						else {
@@ -437,7 +437,7 @@ Class ButtonResponseApi
 					} else {
 						if($actionType == "CHATACCEPT")
 						{
-							$button[]                       = self::getCustomButton("Interest accepted","ACCEPT","","","","");
+							$button[]                       = self::getCustomButton("Interest accepted","ACCEPT","","","","91");
 							$responseArray["canchat"]       = "false";
 						}
 						else{
