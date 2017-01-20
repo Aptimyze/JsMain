@@ -10,6 +10,7 @@ INSERT INTO billing.`COMPONENTS` VALUES ('','J8', 'JS Boost - 8 months', '', 8, 
 INSERT INTO billing.`COMPONENTS` VALUES ('','J9', 'JS Boost - 9 months', '', 9, 0, 0, 'J', 'D', 0);
 INSERT INTO billing.`COMPONENTS` VALUES ('','J11', 'JS Boost - 11 months', '', 11, 0, 0, 'J', 'D', 0);
 INSERT INTO billing.`COMPONENTS` VALUES ('','J12', 'JS Boost - 12 months', '', 12, 0, 0, 'J', 'D', 0);
+INSERT INTO billing.`COMPONENTS` VALUES ('','JL', 'JS Boost - Unlimited Months', '', 1188, 0, 0, 'J', 'D', 0);
 
 
 INSERT INTO billing.`PACK_COMPONENTS` VALUES ('', 'PNCP2', 'J2');
@@ -31,6 +32,7 @@ INSERT INTO billing.`SERVICES` VALUES ('', 'J6', 'JS Boost - 6 months', '', 6, '
 INSERT INTO billing.`SERVICES` VALUES ('', 'J8', 'JS Boost - 8 months', '', 8, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'N', 'J8', '', 'Y', 104, 'N', 'Y', 'Y', 'N', ' ');
 INSERT INTO billing.`SERVICES` VALUES ('', 'J9', 'JS Boost - 9 months', '', 9, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'N', 'J9', '', 'Y', 103, 'N', 'Y', 'Y', 'N', ' ');
 INSERT INTO billing.`SERVICES` VALUES ('', 'J12', 'JS Boost - 12 months', '', 12, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'N', 'J12', '', 'Y', 138, 'N', 'Y', 'Y', 'N', ' ');
+INSERT INTO billing.`SERVICES` VALUES ('', 'JL', 'JS Boost - Unlimited Months', '', 1188, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'N', 'JL', '', 'Y', 138, 'N', 'Y', 'Y', 'N', ' ');
 
 DELETE FROM billing.`PACK_COMPONENTS` WHERE  `PACKID` LIKE '%NCP%' AND  `COMPID` LIKE '%T%';
 
