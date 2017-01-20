@@ -213,13 +213,13 @@ class WriteMessage extends ContactEvent{
 
     $time = time();
     $msgTime = date("g:i a",$time);
-    $formattedMsg = '<strong>'.$sender->getUSERNAME().", $msgTime: ".$message.'</strong>';
+    $formattedMsg = '<strong>'.$sender->getUSERNAME().", $msgTime: ".'</strong>'.$message;
     $arrValue = array("time"=>time(),"message"=>$formattedMsg,"Receivers"=>$receiver->getPROFILEID(), "sendToBoth" => 0);
     // Key doesnt exists in Memcache
     $data = JsMemcache::getInstance()->getHashAllValue($key);
     if($data)
     {
-      $arrValue['message'] = $data['message'].'\n'.$arrValue['message'];
+      $arrValue['message'] = $data['message'].'<br>'.$arrValue['message'];
       if($receiver->getPROFILEID() != $data['Receivers'] && !$data['sendToBoth'])
       {
         $arrValue['sendToBoth'] = 1;
