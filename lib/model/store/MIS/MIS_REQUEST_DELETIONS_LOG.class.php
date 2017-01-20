@@ -46,8 +46,8 @@ class MIS_REQUEST_DELETIONS_LOG extends TABLE{
 
 		 $date = new DateTime();
 		 $date->sub(new DateInterval('P2D')); //get the date which was 2 days ago
-         $lastDateToCheck = $date->format('Y-m-d H:i:s');
-			$sql = "SELECT DISTINCT REPORTEE FROM MIS.REQUEST_DELETIONS_LOG where `DATE` >= '".$lastDateToCheck."'";
+         $lastDateToCheck = $date->format('Y-m-d');
+			$sql = "SELECT DISTINCT REPORTEE FROM MIS.REQUEST_DELETIONS_LOG where `DATE` = '".$lastDateToCheck."'";
 			$pdoStatement = $this->db->prepare($sql);
 			$pdoStatement->execute(); 
 			while($row=$pdoStatement->fetch(PDO::FETCH_ASSOC))
