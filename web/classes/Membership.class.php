@@ -604,9 +604,9 @@ class Membership
         $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
     }
     
-    function makePaid($skipBill = false,$mainMemUpgrade=false,$orderid="") {
+    function makePaid($skipBill = false,$mainMemUpgrade = false,$orderid="") {
         //check for failed payment,tracking here in or not
-        error_log("ankita in makePaid-".$mainMemUpgrade);
+        error_log("ankita in makePaid...-".$mainMemUpgrade);
         $userObjTemp = $this->getTempUserObj();
         if($skipBill == true){
             $this->setGenerateBillParams();

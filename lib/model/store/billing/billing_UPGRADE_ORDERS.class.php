@@ -56,15 +56,11 @@ class billing_UPGRADE_ORDERS extends TABLE
         try
         {
             if(is_array($params) && count($params)>0){
-                $keysArr = array_keys($params);
-                $keysStr = implode(",", $keysArr);
-                $valuesStr = ":".implode(",:", $keysArr);
-                $updateStr = "";
                 foreach ($params as $key => $value) {
                   $updateStr .= "".$key."=:".$key.",";
                 }
                 $updateStr = substr($updateStr, 0,-1);
-                $sql = "INSERT INTO billing.UPGRADE_ORDERS (".$keysStr.") VALUES (.".$valuesStr.") ON DUPLICATE KEY UPDATE ".$updateStr;
+                $sql = "UPDATE billing.UPGRADE_ORDERS SET ".$updateStr;
                 $res=$this->db->prepare($sql);
                 foreach ($params as $k => $v) {
                   $res->bindValue(":".$k,$v,constant('PDO::PARAM_'.$this->{$k.'_BIND_TYPE'}));
