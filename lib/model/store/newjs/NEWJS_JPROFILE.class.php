@@ -1730,7 +1730,7 @@ SQL;
         
         try
         {
-            $sql = "SELECT USERNAME FROM newjs.JPROFILE where `PROFILEID` in (:PROFILEIDSTRING) and `ACTIVATED` = 'D' ";
+            $sql = "SELECT USERNAME FROM newjs.JPROFILE where `PROFILEID` in (:PROFILEIDSTRING) and `ACTIVATED` != 'D' ";
             $pdoStatement = $this->db->prepare($sql);
             $res->bindValue(":PROFILEIDSTRING",$profileIds, PDO::PARAM_STR);
             $pdoStatement->execute();
