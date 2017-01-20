@@ -87,13 +87,16 @@ class billing_UPGRADE_ORDERS extends TABLE
   {
     try
     { 
+        if(!$profileid){
+          $profileid = "";
+        }
         $sql = "SELECT * FROM billing.UPGRADE_ORDERS WHERE ORDERID = :ORDERID";
         if($profileid != ""){
           $sql .= " AND PROFILEID = :PROFILEID";
         }
         $res=$this->db->prepare($sql);
         $res->bindValue(":ORDERID", $orderid,constant('PDO::PARAM_'.$this->{'ORDERID_BIND_TYPE'}));
-        $res->bindValue(":PROFILEID", $entryStart,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
+        $res->bindValue(":PROFILEID", $profileid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
         $res->execute();
         $row = $res->fetch(PDO::FETCH_ASSOC);
         if($row){

@@ -283,6 +283,7 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         $ordrDeviceObj->insertOrderDetails($insert_id, $ORDERID, $device, $profileid, $couponCodeVal);
         unset($ordrDeviceObj);
         if ($insert_id) {
+            error_log("ankita inserting new entry in upgrade_orders for ".$profileid."---".$data["ORDERID"]);
             //set entry in upgrade_orders for membership upgrade for current user
             $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
             $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$profileid,"ORDERID"=>$data["ORDERID"],"ENTRY_DT"=>date("Y-m-d H:i:s")));

@@ -291,8 +291,8 @@ class Membership
         $mainMemUpgrade = false;
         if($checkForMainMemUpgrade == true){
             $upgradeOrderObj = new billing_UPGRADE_ORDERS();
-            $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$profileid);
-            error_log("ankita checking entry in mem upgrade..",$isUpgradeCaseEntry["ORDERID"]);
+            $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$this->profileid);
+            error_log("ankita checking entry in mem upgrade for..".$orderid."---".$this->profileid."---===".$isUpgradeCaseEntry["ORDERID"]);
             if(is_array($isUpgradeCaseEntry)){
                 $mainMemUpgrade = true;
             }
