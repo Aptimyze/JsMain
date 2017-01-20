@@ -16,20 +16,20 @@
                     <a href="DETAILED_PROFILE_LINK" class="profileLink colrb">
                     <div  class="fl mod_wid1 mod_p2 pt5 fontlig" >            
                         <div class="disp-tbl">
-                            <div class="disp-cell f24 profileName">P Arora</div>
-                            <div class="disp-cell f14 opa50 pl10 userLoginStatus">Online 2 days ago</div>
-                            <div class="disp-cell f18 mod_p1 gunascore">Guna 21/36</div>
+                            <div class="disp-cell f24 profileName"></div>
+                            <div class="disp-cell f14 opa50 pl10 userLoginStatus"></div>
+                            <div class="disp-cell f18 mod_p1 gunascore"></div>
                         </div>
                         <ul class="listnone f14 fontlig modli clearfix  pt7">
                             <li class="age_height">27 yr,  5 ft 3 in</li>
-                            <li class="edu_level_new">MBA/ PGDM</li>
-                            <li class="caste">Khatri</li>
-                            <li class="religion">Hindu</li>
-                            <li class="occupation">Advertising Professional</li>
-                            <li class="location">Andaman & Nicobar Islands</li>
-                            <li class="">Punjabi</li>
-                            <li class="income">7.5 - 10 lakh</li>
-                            <li class="mstatus">Never Married</li>
+                            <li class="edu_level_new"></li>
+                            <li class="caste"></li>
+                            <li class="religion"></li>
+                            <li class="occupation"></li>
+                            <li class="location"></li>
+                            <li class="mtongue"></li>
+                            <li class="income"></li>
+                            <li class="mstatus"></li>
                         </ul>            
                     </div>
                     </a>

@@ -1016,18 +1016,15 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 
     function showMatchOfTheDayCards()
     { 
-        fillMatchOfTheDayCards();
-        return;
+        // fillMatchOfTheDayCards();
+        // return;
         $.ajax({                 
-                    url: '/search/matchofdaylist',
-                    // data: "profileid="+profileid,
-                    //timeout: 5000,
-                    success: function(response) 
+                    url: '/api/v2/inbox/perform?infoTypeId=24&pageNo=1&myjs=1',
+                    timeout: 5000,
+                    success: function(response, data) 
                     { 
-                        alert('inside'); 
-                        console.log(response);
-                        var modCards = response;
-                        if(modCards.profiles.length == 1)
+                    	  var modCards=JSON.parse(response);
+                        if(modCards.profiles.length)
                         {
                             fillMatchOfTheDayCards(modCards);
                         }
@@ -1044,17 +1041,15 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
         jObject = $('#matchOfDaySection');
         htmlInside = jObject.html();
         jObject.html('');
-        // var totalCount = responseObject.data.no_of_results;
+        var totalCount = responseObject.profiles.length;
+        var profiles = responseObject.profiles;
         // tracking = "stype="+stype[Object.name];
-        var pChecksum = ["a3de632a30a58d6ba236f4a30bfb6b82i9616174", "a3de632a30a58d6ba236f4a30bfb6b82i9616170", "a3de632a30a58d6ba236f4a30bfb6b82i9616171", "a3de632a30a58d6ba236f4a30bfb6b82i9616172", "a3de632a30a58d6ba236f4a30bfb6b82i9616173",
-        "a3de632a30a58d6ba236f4a30bfb6b82i9616175", "a3de632a30a58d6ba236f4a30bfb6b82i9616177"];
-        var totalCount = 3;
-        for(i=0;i<7;i++)
+        for(var i=0; i < totalCount; i++)
         {
             jObject.append(htmlInside);
-            jObject.parent().find('#matchOfDaySubSection').attr('id',pChecksum[i]+'_matchOfDay');
-            jObject.parent().find('#cardsForMatchOfDay').attr('id',pChecksum[i]+'_matchOfDay_id');
-            $("#"+pChecksum[i]+'_matchOfDay').attr('data-matchID',i);
+            jObject.parent().find('#matchOfDaySubSection').attr('id', profiles[i].profilechecksum + '_matchOfDay');
+            jObject.parent().find('#cardsForMatchOfDay').attr('id', profiles[i].profilechecksum + '_matchOfDay_id');
+            $("#" + profiles[i].profilechecksum + '_matchOfDay').attr('data-matchID', i);
        }
 
        var getNStk = parseInt($('.stk').length);
@@ -1075,53 +1070,57 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             getNStk=getNStk-1;
         });
 
-        for (var i = 0; i < 7; i++)
+        for(var i = 0; i < totalCount; i++)
         {
-        	var profileChecksum = pChecksum[i];
-        	tracking = 'stype=MOD';
-        	jObject = $("#"+pChecksum[i]+'_matchOfDay');
+        	var profileChecksum = profiles[i].profilechecksum;
+        	tracking = responseObject.stype;
+        	jObject = $("#"+profileChecksum+'_matchOfDay');
+
         	var profileUrl = "/profile/viewprofile.php?profilechecksum="+profileChecksum+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1+"&listingName=matchOfDay";
         	jObject.find('.profileLink').attr('href',profileUrl);
-
 
           var postAction = "postActionMyjs('"+profileChecksum+"','"+postActionsUrlArray['INITIATE']+"','" +profileChecksum+"_"+'matchOfDay'+"','interest','"+tracking+"');";
 
           jObject.find('.profileName').attr('profileChecksum',profileChecksum);
         	jObject.find('.sendInterest').attr('onClick', postAction);
         }
-/*
-        for(i=0;i<responseObject.profiles.length;i++)
-        {
-        	
-            var profileUrl = "/profile/viewprofile.php?profilechecksum="+responseObject.profiles[i]["profilechecksum"]+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1+"&listingName=matchOfDay";
 
-            var postAction = "postActionMyjs('"+responseObject.profiles[i]["profilechecksum"]+"','"+postActionsUrlArray[responseObject.profiles[i]["buttonDetails"]["buttons"][0]["action"]]+"','" +responseObject.profiles[i]["profilechecksum"]+"_"+'matchOfDay'+"','interest','"+tracking+"');"+GATrackingFunForSubmit;
-            jObject = $('#matchOfDaySubSection_'+(i+1));
+        for(var i = 0; i < totalCount; i++)
+        {
+						var profileChecksum = profiles[i].profilechecksum;
+						tracking = responseObject.stype;
+						jObject = $("#"+profileChecksum+'_matchOfDay');
+
+						var profileUrl = "/profile/viewprofile.php?profilechecksum="+profileChecksum+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1+"&listingName=matchOfDay";
+
+            var postAction = "postActionMyjs('"+profileChecksum+"','"+postActionsUrlArray['INITIATE']+"','" +profileChecksum+"_"+'matchOfDay'+"','interest','"+tracking+"');";
+
             jObject.find('.profileLink').attr('href',profileUrl);
             
             jObject.find('.sendInterest').attr('onClick', postAction);
 
-            // set image url
-            jObject.find('.mod_img').html(responseObject.profiles[i].imageUrl);
-            jObject.find('.profileName').html(responseObject.profiles[i].username);
-            jObject.find('.profileName').attr('profileChecksum',responseObject.profiles[i]["profilechecksum"]);
-            jObject.find('.userLoginStatus').html(responseObject.profiles[i].userloginstatus);
-            jObject.find('.gunascore').html(responseObject.profiles[i].gunascore);
-            // set age height
-            jObject.find('.age_height').html(responseObject.profiles[i].gunascore);
+            jObject.find('.profileName').html(profiles[i].username);
+            jObject.find('.profileName').attr('profileChecksum',profileChecksum);
+            jObject.find('.userLoginStatus').html(profiles[i].userloginstatus);
+            jObject.find('.gunascore').html(profiles[i].gunascore);
             
-            jObject.find('.edu_level_new').html(responseObject.profiles[i].edu_level_new);
-            jObject.find('.caste').html(responseObject.profiles[i].caste);
-            jObject.find('.religion').html(responseObject.profiles[i].religion);
-            jObject.find('.occupation').html(responseObject.profiles[i].occupation);
-            jObject.find('.location').html(responseObject.profiles[i].location);
-            jObject.find('.income').html(responseObject.profiles[i].income);
-            jObject.find('.mstatus').html(responseObject.profiles[i].mstatus);
+            // set image url
+            jObject.find('.mod_img').html(profiles[i].profilepic120url);
+            // set age height
+            jObject.find('.age_height').html(profiles[i].age + ' yr,  ' + profiles[i].height);
+            
+            jObject.find('.edu_level_new').html(profiles[i].edu_level_new);
+            jObject.find('.caste').html(profiles[i].caste);
+            jObject.find('.mtongue').html(profiles[i].mtongue);
+            jObject.find('.religion').html(profiles[i].religion);
+            jObject.find('.occupation').html(profiles[i].occupation);
+            jObject.find('.location').html(profiles[i].location);
+            jObject.find('.income').html(profiles[i].income);
+            jObject.find('.mstatus').html(profiles[i].mstatus);
         }
-*/
+
         //on click close button setStack is call'd
         $('.stk_cls').on('click',setStackMOD);
-        // $('.sendInterest').on('click', setStack);
         $('#prfDay').removeClass('disp-none');
     }
 
