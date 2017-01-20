@@ -1127,7 +1127,6 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
     }
     function setStackMOD()
     {
-    		console.log($(this));
       	$('.stk_cls').off('click',setStackMOD);
         var eleActive = $('#prfDay').find('.active');
         if($(this).hasClass('stk_cls'))
