@@ -204,19 +204,16 @@ public function executeDeleteRequestForUser(sfWebRequest $request)
             exit;
           }
 
-          $request->setParameter('userName',$userName);
-          $request->setParameter('pfID',$userPFID);
-
           $sendingObject = new RequestUserToDelete();
 
           if($dataArray['requestBySelf'] == '1')
           {  
-            $sendingObject->deleteRequestedBySelf($request);
+            $sendingObject->deleteRequestedBySelf($userPFID);
             $requestedBy = 'Self';
           }
           else
           { 
-          $sendingObject->deleteRequestedByOther($request);
+          $sendingObject->deleteRequestedByOther($userPFID);
             $requestedBy = 'Other';  
           }
           $crmUserName = $this->user;
