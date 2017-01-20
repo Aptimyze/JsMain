@@ -443,14 +443,17 @@ var hamHtml="",slider1,slider2;
 			var html=this.originalHtml;
 			
 
-				
+			//State Living in
 			$("#TAPNAME_"+this.tapid).html(this.TapName());	
-			$('<span id="clearBtn" class="white fontthin f17 pt4 fr pr9 vAlignSub">Clear</span>').insertAfter("#TAPNAME_1");
-			$("#clearBtn").off("click").on("click",function(){
-				$("#HAM_OPTION_1 li input:checked").each(function(){
-					$(this).parent().click()
-				});
-			});
+			if($("#TAPNAME_1").html() != "City" && $("#TAPNAME_1").html() != "Country Living in" && $("#TAPNAME_1").html() != "State Living in" && $("#HEAD_Ethnicity").length == 0 && $("#HEAD_Appearance").length == 0 && $("#HEAD_SpecialCases").length == 0 && $("#HEAD_HoroscopeMustforMarriage").length == 0 && $("#HEAD_Rashi").length == 0 && $("#HEAD_Nakshatra").length == 0 && $("#HEAD_Manglik").length ==0 && $("#HEAD_CollegeDetails").length == 0 && $("#HEAD_CarrerDetails").length == 0 && $("#HEAD_Family").length == 0 && $("#HEAD_Parent").length == 0 && $("#HEAD_Siblings").length == 0) {
+				$('<span id="clearBtn" class="white fontthin f17 pt4 fr pr9 vAlignSub">Clear</span>').insertAfter("#TAPNAME_1");
+				$("#clearBtn").off("click").on("click",function(){
+					$("#HAM_OPTION_1 li input:checked").each(function(){
+						$(this).parent().click()
+					});
+				});	
+			}
+			
 			
 					
 			//selected value
@@ -620,6 +623,7 @@ var hamHtml="",slider1,slider2;
 			{
 				this.OutputUpdate(this.type,label,value);	
 			}
+			console.log("heading",$("#TAPNAME_1").html(),$("#TAPNAME_1").html() != "Highest Degree")
 			if($("#suggestBox").length == 0 || $("#suggestBox").attr("suggest-click") == 1) {
 				$("#suggestBox").removeAttr("suggest-click");
 				var typeDataArray = [],type;
@@ -629,10 +633,10 @@ var hamHtml="",slider1,slider2;
 					type = "CASTE";
 				} else if($("#TAPNAME_1").html() == "Mother Tongue") {
 					type = "MTONGUE";
-				} else if($("#TAPNAME_1").html() == "Highest Degree") {
+				} else if($("#TAPNAME_1").html() == "Highest Degree" && $("#HEAD_CollegeDetails").length == 0) {
 					type = "EDUCATION";
 				}
-				else {
+				else if($("#TAPNAME_1").html() != "City") {
 					type = $("#TAPNAME_1").html().toUpperCase()
 				}
 				if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
@@ -1138,17 +1142,19 @@ var hamHtml="",slider1,slider2;
 				}
 			}
 			searchHamburger(this.type,this.ulOption,this.tapid);
+			console.log("heading",$("#TAPNAME_1").html())
 			var typeDataArray = [],type;
 			if($("#TAPNAME_1").html() == "State/City") {
 				type = "CITY";
 			} else if($("#TAPNAME_1").html() == "Sect") {
 				type = "CASTE";
-			} else if($("#TAPNAME_1").html() == "Mother Tongue") {
+			} else if($("#TAPNAME_1").html() == "Mother Tongue" && $("#HEAD_Ethnicity").length == 0) {
 				type = "MTONGUE";
-			} else if($("#TAPNAME_1").html() == "Highest Degree") {
+			} else if($("#TAPNAME_1").html() == "Highest Degree" && $("#HEAD_CollegeDetails").length == 0) {
 				type = "EDUCATION";
 			}
-			else {
+			//Highest Degree
+			else if($("#TAPNAME_1").html() != "City") {
 				type = $("#TAPNAME_1").html().toUpperCase()
 			}
 			if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
