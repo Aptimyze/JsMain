@@ -134,10 +134,8 @@ class WriteMessageConsumer
 	  switch($process)
 	  {
 		case MQ::WRITE_MSG_Q :
-			// Todo: Process this
 			$key = $body['key'];
 			$data = JsMemcache::getInstance()->getHashAllValue($key);
-			// todo: delete key data
 			
 			// print_r($data);die;
 			$timeDiff = floor( (time() - $data['time'])/60 );
@@ -150,25 +148,31 @@ class WriteMessageConsumer
 			
 			if($timeDiff >= MQ::DELAY_MINUTE)
 			{
+				// todo: delete key data
+				JsMemcache::getInstance()->delete($key);
 				// send mail
 				$conversation = $data['message'];
 				if($data['sendToBoth'])
 				{
 					// send this mail both to sender and receiver
-					$search = $sender.',';
+					$search = $senderObj->getUSERNAME().',';
 					$senderEmailMsg = str_replace($search, 'You,', $conversation);
-					$this->sendMail($senderObj, $receiverObj, $senderEmailMsg, $type);
-					$search = $receiver.',';
+					$this->sendMail($receiverObj, $senderObj, $senderEmailMsg, $type);
+					$search = $receiverObj->getUSERNAME().',';
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
-					$this->sendMail($receiverObj, $senderObj, $receiverEmailMsg, $type);
+					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
 				}
 				else
 				{
 					// send only to receiver
-					$search = $receiver.',';
+					$search = $receiverObj->getUSERNAME().',';
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
-					$this->sendMail($receiverObj, $senderObj, $receiverEmailMsg, $type);
+					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
 				}
+				var_dump($data);
+				var_dump($senderEmailMsg);
+				var_dump($receiverEmailMsg);
+				die;
 			}
 			break;
 	  }     

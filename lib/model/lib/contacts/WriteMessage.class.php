@@ -164,7 +164,7 @@ class WriteMessage extends ContactEvent{
     {
         $sender = $this->contactHandler->getViewer();
         $receiver = $this->contactHandler->getViewed();
-        $sendMailData = array('process' => MQ::WRITE_MSG_Q ,'data'=>array('type' => 'MESSAGE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$message, 'key' => $key) ), 'redeliveryCount'=>0 );
+        $sendMailData = array('process' => MQ::WRITE_MSG_Q ,'data'=>array('type' => 'MESSAGE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$message, 'key'=>$key) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
         $gcmData=array('process'=>'GCM','data'=>array('type'=>'MESSAGE','body'=>array('receiverid'=>$receiver->getPROFILEID(),'senderid'=>$sender->getPROFILEID(),'message'=>$message ) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($gcmData);
@@ -213,7 +213,7 @@ class WriteMessage extends ContactEvent{
 
     $time = time();
     $msgTime = date("g:i a",$time);
-    $formattedMsg = $sender->getUSERNAME().", $msgTime: ".$message;
+    $formattedMsg = '<strong>'.$sender->getUSERNAME().", $msgTime: ".$message.'</strong>';
     $arrValue = array("time"=>time(),"message"=>$formattedMsg,"Receivers"=>$receiver->getPROFILEID(), "sendToBoth" => 0);
     // Key doesnt exists in Memcache
     $data = JsMemcache::getInstance()->getHashAllValue($key);

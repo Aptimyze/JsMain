@@ -101,7 +101,7 @@ class MessageQueues
   const PROCESS_PROFILE_CACHE_DELETE = "PROFILE_CACHE_DELETE";
   const SCREENING_Q_EOI = "SCREENING_SEND_EOI";
   const DELAY_MINUTE = 1;
-  const DELAY_WRITEMSG = DELAY_MINUTE*60;
+  const DELAY_WRITEMSG = self::DELAY_MINUTE*60;
 
   // queue/exchange names
   const WRITE_MSG_queueRightNow = 'right.now.queue';
