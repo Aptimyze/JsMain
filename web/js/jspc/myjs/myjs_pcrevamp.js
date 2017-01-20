@@ -1120,7 +1120,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 */
         //on click close button setStack is call'd
         $('.stk_cls').on('click',setStack);
-        $('.sendInterest').on('click', setStack);
+        // $('.sendInterest').on('click', setStack);
         $('#prfDay').removeClass('disp-none');
     }
 
@@ -1180,7 +1180,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 				timeout: 5000,
 				success: function(response) 
 				{
-			  	console.log('1');
+			  	console.log(response);
 				}
 			});
     }
