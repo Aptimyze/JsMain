@@ -128,6 +128,9 @@ EOF;
       case 4:
         return SearchTypesEnums::MatchAlertMailer4;
         break;
+      case 5 : 
+        return SearchTypesEnums::MatchAlertMailer5;
+        break;
       default:
         return SearchTypesEnums::MatchAlertMailer;
         break;
@@ -176,6 +179,11 @@ EOF;
                 case "4"://community model case
                         $subject["subject"]= $count.$matchStr." based on activity of people similar to you";
 			$subject["body"]="Following are profiles which we have picked based on the activity of people similar to you. Note that some of these profiles may not match your Desired Partner Profile. <br>If you wish to only receive matches as per your Desired Partner Profile, ";
+                        break;
+                case "5"://relaxed dpp trends case
+                        $subject["subject"]= $count.$matchStr." based on your broader Desired Partner Profile";
+			$subject["body"]="Shown below are matches based on your broader Desired Partner Profile. We have broadened some of your preferences as your Desired Partner Profile may be very strict. To get matches as per Desired Partner Profile, please ";
+                        $subject["showDpp"]= 1;
                         break;
 		default :
 			 throw  new Exception("No logic send in subjectAndBody() in RegularMatchAlerts task");

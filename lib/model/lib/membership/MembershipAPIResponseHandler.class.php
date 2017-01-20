@@ -20,9 +20,12 @@ class MembershipAPIResponseHandler {
             $this->profileid = $this->userProfile;
         }
         
-        $this->mainMem = $request->getParameter("mainMem");
-        $this->mainMemDur = $request->getParameter("mainMemDur");
-        $this->selectedVas = $request->getParameter("selectedVas");
+        //$this->mainMem = $request->getParameter("mainMem");
+	$this->mainMem = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("mainMem"));
+        //$this->mainMemDur = $request->getParameter("mainMemDur");
+	$this->mainMemDur = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("mainMemDur"));
+        //$this->selectedVas = $request->getParameter("selectedVas");
+	$this->selectedVas = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("selectedVas"));
         $this->displayPage = $request->getParameter("displayPage");
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;

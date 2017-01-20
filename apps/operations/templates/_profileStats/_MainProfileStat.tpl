@@ -112,7 +112,9 @@
      <td height="18" align="right">
         <span class="mediumblackb">&nbsp;
 	<font size='3'><b>
-        <a href="~sfConfig::get('app_site_url')`/crm/extraDetails_profile.php?cid=~$cid`&checksum=~$checksum`&table_name=~$data.CONTACT_TABLE_NAME`&paid_str=~$data.PAID_MEMBERSHIP_EXPIRY`" target=_blank>Profile Matches (Click here)</a></b>
+        <!--<a href="~sfConfig::get('app_site_url')`/crm/extraDetails_profile.php?cid=~$cid`&checksum=~$checksum`&table_name=~$data.CONTACT_TABLE_NAME`&paid_str=~$data.PAID_MEMBERSHIP_EXPIRY`" target=_blank>Profile Matches (Click here)</a>-->
+	<a href="~$data.actualUrl`/crm/extraDetails_profile.php?cid=~$cid`&checksum=~$checksum`&table_name=~$data.CONTACT_TABLE_NAME`&paid_str=~$data.PAID_MEMBERSHIP_EXPIRY`" target=_blank>Profile Matches (Click here)</a>
+	</b>
 	</font>
         </span>
      </td>

@@ -8,6 +8,7 @@ class SearchConfig
 {
 	const _nullValueAttributeLabel= "NS";
 	const _noneValueHandicapped= "N";
+	const _doesntMatterValue= "0";
         public static $maxSaveSearchesAllowed = 5;
 	public static $limitOfViewedFeatureProfile = 3;
 	public static $profilesPerPage = 25;

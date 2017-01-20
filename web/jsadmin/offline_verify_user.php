@@ -69,6 +69,7 @@ if(authenticated($cid))
 					$phoneType ='L';
 					$phoneStatus = 'N';
 					phoneUpdateProcess($profileid,$phone_num_res,$phoneType,$actionStatus,$message,$name,$isd);
+					UnverifyNum($profileid, $phoneType, $phone_num_res);
 					//markInvalidProfile($row['PROFILEID'],'R');	
 				}
 				elseif($rcheck == 'noAction')
@@ -95,8 +96,8 @@ if(authenticated($cid))
 					$actionStatus ='D';
 					$phoneType ='M';
 					phoneUpdateProcess($profileid,$phone_num_mob,$phoneType,$actionStatus,$message,$name,$isd);
+					UnverifyNum($profileid, $phoneType, $phone_num_mob);
 					$phoneStatus = 'N';
-
                                 }
                  elseif($mcheck=='noAction')
 					$phoneStatus = 'B';

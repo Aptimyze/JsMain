@@ -269,6 +269,23 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
+		"INTEREST_EXPIRING"=>Array( 
+			"ID"=> "23",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "10",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Interests Expiring this week",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
+      "KUNAL"=>"1",
+		),
 		);
 		self::$MYJSAPP_IOS_1=Array(
 		"INTEREST_RECEIVED"=>Array( 
@@ -499,7 +516,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID,
       "KUNAL"=>"1",
 		),
 		"ACCEPTANCES_RECEIVED"=>Array( 
@@ -676,7 +693,7 @@ class ProfileInformationModuleMap
                         "SUBTITLE"=> "I Declined",
                         "ICONS"=> "",
                         "BUTTONS"=> "",
-                        "TRACKING"=> ""
+                        "TRACKING"=> "stype=".SearchTypesEnums::CANCELLED_LISTING_PC."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_PC
                 ),
                 "FILTERED_INTEREST"=>Array( 
 			"ID"=> "12",
@@ -928,7 +945,7 @@ self::$ContactCenterMYJS=Array(
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=55",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
       "KUNAL"=>"1",
 		),
                 "MATCH_OF_THE_DAY"=>Array( 
