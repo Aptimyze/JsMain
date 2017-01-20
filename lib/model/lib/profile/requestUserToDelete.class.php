@@ -14,41 +14,31 @@ class requestUserToDelete
 {
 
 
-		public function deleteRequestedBySelf(sfWebRequest $request)
+		public function deleteRequestedBySelf($profileId)
 	{	
-
-		 $profileid = $request->getParameter('pfID');
-
-		 //$profileid = $request->getParameter();
 		 include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
-		 $sms = new InstantSMS("REQ_CRM_DEL_SELF", $profileid); 
+		 $sms = new InstantSMS("REQ_CRM_DEL_SELF", $profileId); 
          $sms->send();
-         $request->setParameter('selfDEL','1');
-         $this->sendMailForDeletion($request);
+         $this->sendMailForDeletion($profileId,'1');
 
 	}
 
 
-		public function deleteRequestedByOther(sfWebRequest $request)
+		public function deleteRequestedByOther($profileId)
 	{	
-		$profileid = $request->getParameter('pfID');
 		include_once(JsConstants::$docRoot."/profile/InstantSMS.php");
-		$sms = new InstantSMS("REQ_CRM_DEL_OTHER", $profileid);
+		$sms = new InstantSMS("REQ_CRM_DEL_OTHER", $profileId);
         $sms->send();
-        $request->setParameter('selfDEL','0');
-        $this->sendMailForDeletion($request);
+        $this->sendMailForDeletion($profileId,'0');
 	}
 
 
-		public function sendMailForDeletion(sfWebRequest $request,$sendTo='')
+		public function sendMailForDeletion($profileId,$selfDEL,$sendTo='')
 	{
-
-		$profileId = $request->getParameter('pfID');
 		if(!$profileId)return false;
 		$emailSender = new EmailSender(MailerGroup::TOP8, '1846');
         $tpl = $emailSender->setProfileId($profileId);
 		$memObject=JsMemcache::getInstance();
-		$comingFrom = $request->getParameter('selfDEL');
 //		$instanceID=$memObject->get('emailVerInstanceId');	
 /*
 		if(!$instanceID)
@@ -61,9 +51,7 @@ class requestUserToDelete
 */
 //        die($emailSender->getProfile()->getEMAIL());
         $tpl->getSmarty()->assign("profileid", $profileId);
-        $tpl->getSmarty()->assign("instanceID", $instanceID);
-
-        if($comingFrom == '1'){  
+        if($selfDEL == '1'){  
         $subject = "Delete your profile on Jeevansathi";
         $tpl->getSmarty()->assign("emailType", 1);
     	}

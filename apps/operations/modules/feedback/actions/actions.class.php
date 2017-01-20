@@ -185,10 +185,7 @@ public function executeReportAbuseForUser(sfWebRequest $request)
 }
 
 public function executeDeleteRequestForUser(sfWebRequest $request)
-{
-
-  $this->linkToInterface = JsConstants::$siteUrl."/operations.php/feedback/reportAbuseForUser"; 
-  $this->crmUser = $this->user;
+{ 
   $this->setTemplate('deleteRequestForUser');
 }
 

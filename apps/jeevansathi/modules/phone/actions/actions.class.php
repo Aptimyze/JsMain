@@ -245,8 +245,7 @@ class phoneActions extends sfActions
 		if($reasonNumber == 3)
 			{  
 				$sendingObject = new RequestUserToDelete();
-				$this->webRequest->setParameter('pfID',$otherProfileId);
-				$sendingObject->deleteRequestedByOther($this->webRequest);
+				$sendingObject->deleteRequestedByOther($otherProfileId);
 			}
 
 
