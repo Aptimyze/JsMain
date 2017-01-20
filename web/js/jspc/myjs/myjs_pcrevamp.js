@@ -1016,24 +1016,25 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 
     function showMatchOfTheDayCards()
     { 
-        // fillMatchOfTheDayCards();
-        // return;
-        $.ajax({                 
-                    url: '/api/v2/inbox/perform?infoTypeId=24&pageNo=1&myjs=1',
-                    timeout: 5000,
-                    success: function(response, data) 
-                    { 
-                    	  var modCards=JSON.parse(response);
-                        if(modCards.profiles.length)
-                        {
-                            fillMatchOfTheDayCards(modCards);
-                        }
-                        else
-                        {
-                            var flagForMatchOfTheDayCards = 0;
-                        }
-                    }
-            });
+    		if(showMatchOfTheDay)
+    		{		
+	        $.ajax({                 
+	                    url: '/api/v2/inbox/perform?infoTypeId=24&pageNo=1&myjs=1',
+	                    timeout: 5000,
+	                    success: function(response, data) 
+	                    { 
+	                    	  var modCards=JSON.parse(response);
+	                        if(modCards.profiles.length)
+	                        {
+	                            fillMatchOfTheDayCards(modCards);
+	                        }
+	                        else
+	                        {
+	                            var flagForMatchOfTheDayCards = 0;
+	                        }
+	                    }
+	            });
+    		}
     }
 
     function fillMatchOfTheDayCards(responseObject)
