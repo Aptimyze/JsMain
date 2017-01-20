@@ -78,7 +78,7 @@ class postDeclinev1Action extends sfAction
 			$actionType = "CHATDECLINE";
 		}
 		else{
-			$actionType = ContactHandler::ACCEPT;
+			$actionType = ContactHandler::DECLINE;
 		}
 		if($this->contactEngineObj->messageId)
 		{

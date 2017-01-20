@@ -17,6 +17,7 @@ class ApiResponseHandler
 	private $cache_interval=120000; //in milisecond should be integer always 
 	private $resetCache=false;
 	private $androidFlagForRatingLogic=true;
+	private $androidChatflag ;
 	//Constructor
 	private function __construct()
 	{
@@ -43,6 +44,12 @@ class ApiResponseHandler
 	public function setImageCopyServer($pid)
 	{
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
+	}
+	public function getAndroidChatFlag(){
+		return JsConstants::$androidChat["flag"];
+	}
+	public function setAndroidChatFlag(){
+		$this->androidChatflag = JsConstants::$androidChat["flag"];
 	}
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
 	public function getResetCache(){return $this->resetCache;}
@@ -113,6 +120,7 @@ class ApiResponseHandler
 		$output["cache_flag"]=$this->cache_flag;
 		$output["cache_interval"]=$this->cache_interval;
 		$output["resetCache"]=$this->resetCache;
+		$output["xmppLoginOn"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];

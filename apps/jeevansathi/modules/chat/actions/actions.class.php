@@ -366,6 +366,10 @@ class chatActions extends sfActions
 							$response["cansend"] = false;
 							$response['sent'] = false;
 							$response["errorMsg"] = "You can send more messages if user replies";
+
+							$responseArray["errmsglabel"] = "You can send more messages if user replies";
+							$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge($responseArray);
+							$response["buttonresponse"] = ButtonResponseApi::actionDetailsMerge(array());
 						} else {
 							if ($msgText)
 								$msgText = $msgText . "||" . $chatMessage;
@@ -396,7 +400,13 @@ class chatActions extends sfActions
 					$request->setParameter("moduleName","contacts");
 					$request->setParameter('chatMessage',$chatMessage);
 					$request->setParameter("setFirstEoiMsgFlag",true);
-					$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
+					if($request->getParameter("page_source") == "chat" && $request->getParameter("channel") == "A")
+					{
+						$data  = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv1');
+					}
+					else {
+						$data = sfContext::getInstance()->getController()->getPresentationFor('contacts', 'postEOIv2');
+					}
 					$output = ob_get_contents();
 					ob_end_clean();
 					$response = json_decode($output, true);
