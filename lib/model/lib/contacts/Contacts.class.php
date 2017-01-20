@@ -133,7 +133,6 @@ class Contacts {
 	const PROFILE_ERROR = "Object is not profile obj";
 	const FILTER_ERROR = "Filter value in not correct in contacts obj";
 	const SEEN_ERROR = "Seen value is not correct in contacts obj";
-
 	/**
 	 *
 	 * Constructor for initializing object of Contacts class
@@ -704,7 +703,6 @@ class Contacts {
 			return '';
 	}
         
-        
         public static function setContactsTypeCache($profileId1,$profileId2,$type){
             if(!$profileId1 || !$profileId2 || !$type)return false;
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
@@ -712,23 +710,33 @@ class Contacts {
             return true;
             
         }
-        public static function getContactsTypeCache($profileId1,$profileId2){
-            if(!$profileId1 || !$profileId2 || !$type)return false;
+        public static function getContactsTypeCache($profileId1,$profileId2)
+        {
+            if(!$profileId1 || !$profileId2)return false;
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
-            $return = JsMemcache::getInstance()->get($sortedArray[0].'_'.$sortedArray[1].'_contactType');
+            $result = JsMemcache::getInstance()->get($sortedArray[0].'_'.$sortedArray[1].'_contactType');
             
-            if(!$return){
-                
-                $shardNo = JsDbSharding::getShardNo($profileId1);
-                $dbObj = new newjs_CONTACTS($shardNo);
-                $resArray = $dbObj->getContactRecord($profileId1, $profileId2);
-                $result = $resArray['TYPE'] ? $resArray['TYPE'] : 'N' ;
-                self::setContactsTypeCache($profileId1, $profileId2, $result);
-                return $result;
-            }
+            if(!$result)
+                {
+				$ignoreObj = new IgnoredProfiles();
+				if($ignoreObj->ifIgnored($profileId1,$profileId2) || $ignoreObj->ifIgnored($profileId2,$profileId1))
+                                {
+                                       $result='B';
+                                       self::setContactsTypeCache($profileId1, $profileId2, $result);
+                                }                
+				else
+				{	 
+                                $shardNo = JsDbSharding::getShardNo($profileId1);
+                                $dbObj = new newjs_CONTACTS($shardNo);
+                                $resArray = $dbObj->getContactRecord($profileId1, $profileId2);
+                                $result = $resArray['TYPE'] ? $resArray['TYPE'] : 'N' ;
+                                self::setContactsTypeCache($profileId1, $profileId2, $result);
+                                }
             
-        }
+                }
 
         
+    }
+
 }
 ?>
