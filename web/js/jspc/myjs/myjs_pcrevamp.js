@@ -1165,7 +1165,6 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 				timeout: 5000,
 				success: function(response) 
 				{
-			  	console.log(response);
 				}
 			});
     }
