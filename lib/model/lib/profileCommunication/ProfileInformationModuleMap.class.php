@@ -480,7 +480,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "",
-			"TRACKING"=> "responseTracking=".JSTrackingPageType::MATCH_OF_DAY_JSPC_MYJS,
+			"TRACKING"=> "",
             "CONTACT_ID"=>""
                 ),
 		);
