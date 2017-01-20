@@ -133,6 +133,7 @@ class Contacts {
 	const PROFILE_ERROR = "Object is not profile obj";
 	const FILTER_ERROR = "Filter value in not correct in contacts obj";
 	const SEEN_ERROR = "Seen value is not correct in contacts obj";
+	const CONTACT_TYPE_CACHE_EXPIRY = 86400; //seconds
 	/**
 	 *
 	 * Constructor for initializing object of Contacts class
@@ -706,7 +707,14 @@ class Contacts {
         public static function setContactsTypeCache($profileId1,$profileId2,$type){
             if(!$profileId1 || !$profileId2 || !$type)return false;
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
-            JsMemcache::getInstance()->set($sortedArray[0].'_'.$sortedArray[1].'_contactType',$type);
+            JsMemcache::getInstance()->set($sortedArray[0].'_'.$sortedArray[1].'_contactType',$type,self::CONTACT_TYPE_CACHE_EXPIRY);
+            return true;
+            
+        }
+        public static function unSetContactsTypeCache($profileId1,$profileId2){
+            if(!$profileId1 || !$profileId2)return false;
+            $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
+            JsMemcache::getInstance()->delete($sortedArray[0].'_'.$sortedArray[1].'_contactType');
             return true;
             
         }
