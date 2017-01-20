@@ -504,7 +504,7 @@ $js_arr[]=array("registration_pg2"     => "3");
 $js_arr[]=array("registration_pg1"     => "3");
 $js_arr[]=array("jsms/contactus/contactus_js"     => "1");
 $js_arr[]=array("jsms/common/sly"      => "2");
-$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                                                   => "68");
+$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                                                    => "69");
 $js_arr[]=array("jspc/myjs/myjs_js"                                                                       => "76");
 $js_arr[]=array("jspc/myjs/engBarJs_js"                             => "29");
 $js_arr[]=array("jspc/common/nano"     => "2");
