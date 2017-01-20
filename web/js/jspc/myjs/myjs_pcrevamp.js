@@ -1053,6 +1053,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
         {
             jObject.append(htmlInside);
             jObject.parent().find('#matchOfDaySubSection').attr('id',pChecksum[i]+'_matchOfDay');
+            jObject.parent().find('#cardsForMatchOfDay').attr('id',pChecksum[i]+'_matchOfDay_id');
             $("#"+pChecksum[i]+'_matchOfDay').attr('data-matchID',i);
        }
 
@@ -1119,7 +1120,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
         }
 */
         //on click close button setStack is call'd
-        $('.stk_cls').on('click',setStack);
+        $('.stk_cls').on('click',setStackMOD);
         // $('.sendInterest').on('click', setStack);
         $('#prfDay').removeClass('disp-none');
     }
@@ -1139,18 +1140,18 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             param.addClass('card-index-2').fadeIn('fast');
         }
     }
-    function setStack()
+    function setStackMOD()
     {
     		console.log($(this));
-        $('.stk_cls').off('click',setStack);
+      	$('.stk_cls').off('click',setStackMOD);
         var eleActive = $('#prfDay').find('.active');
-        
         if($(this).hasClass('stk_cls'))
         {
-        	// on click of close
+      		// on click of close
         	var MatchProfileChecksum = eleActive.find('.profileName').attr('profileChecksum');
         	onCloseMatchOfDay(MatchProfileChecksum);
         }
+        
         getIdNum = parseInt(eleActive.attr('data-matchID'));
         $(eleActive).removeClass('active');
         $('.stk').eq(getIdNum+1).addClass('active');
@@ -1162,7 +1163,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
         {
             var start = new Date().getTime();
             $('.stk').eq(getIdNum).addClass('card-card-out');
-            setTimeout(function(){ $('.stk_cls').on('click',setStack);},800);
+            setTimeout(function(){ $('.stk_cls').on('click',setStackMOD);},800);
             for(i=getIdNum+1;i<(getIdNum+4);i++)
             {
                 var ele = $('.stk').eq(i);

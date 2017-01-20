@@ -519,6 +519,7 @@ return $staticCardArr;
 		$profileId = LoggedInProfile::getInstance()->getPROFILEID();
 		$matchProfileId = JsCommon::getProfileFromChecksum($request->getParameter("MatchProfileChecksum"));
 		$matchObj->updateMatchProfile($profileId, $matchProfileId);
+		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileId);
 		$respObj = ApiResponseHandler::getInstance();
 		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$respObj->generateResponse();
