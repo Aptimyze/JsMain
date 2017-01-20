@@ -211,9 +211,6 @@ search_rule11_twoway:
 search_rule11_match_of_day:
   url:  /search/matchofday
   param: {module: search, action:perform,searchBasedParam:matchofday}
-search_rule11_match_of_day_list:
-  url:  /search/matchofdaylist
-  param: {module: search, action:perform,searchBasedParam:matchofdaylist}
 
 search_rule12_malerts:
   url:  /search/matchalerts
