@@ -1044,7 +1044,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
         jObject.html('');
         var totalCount = responseObject.profiles.length;
         var profiles = responseObject.profiles;
-        // tracking = "stype="+stype[Object.name];
+        var tracking = "stype=MOD";
         for(var i=0; i < totalCount; i++)
         {
             jObject.append(htmlInside);
@@ -1073,23 +1073,8 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 
         for(var i = 0; i < totalCount; i++)
         {
-        	var profileChecksum = profiles[i].profilechecksum;
-        	tracking = responseObject.stype;
-        	jObject = $("#"+profileChecksum+'_matchOfDay');
-
-        	var profileUrl = "/profile/viewprofile.php?profilechecksum="+profileChecksum+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1+"&listingName=matchOfDay";
-        	jObject.find('.profileLink').attr('href',profileUrl);
-
-          var postAction = "postActionMyjs('"+profileChecksum+"','"+postActionsUrlArray['INITIATE']+"','" +profileChecksum+"_"+'matchOfDay'+"','interest','"+tracking+"');";
-
-          jObject.find('.profileName').attr('profileChecksum',profileChecksum);
-        	jObject.find('.sendInterest').attr('onClick', postAction);
-        }
-
-        for(var i = 0; i < totalCount; i++)
-        {
 						var profileChecksum = profiles[i].profilechecksum;
-						tracking = responseObject.stype;
+						var tracking = "stype=MOD";
 						jObject = $("#"+profileChecksum+'_matchOfDay');
 
 						var profileUrl = "/profile/viewprofile.php?profilechecksum="+profileChecksum+'&'+tracking+"&total_rec="+totalCount+"&actual_offset="+(i+1)+"&hitFromMyjs="+1+"&listingName=matchOfDay";
