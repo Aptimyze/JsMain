@@ -197,8 +197,8 @@ function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
  *    RETURNS       :    Returns true if record successfully entered
  ***********************************************************************/
 
-function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '',$mainMemUpgrade=false) {
-    
+function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '',$memUpgrade="NA") {
+    error_log("ankita in newOrder..".$memUpgrade);
     //	echo $profileid."-".$paymode."-".$curtype."-".$amount."-".$service_str."-".$service_main."-".$discount."-".$setactivate;
     global $error_msg, $pay_arrayfull, $pay_arrayfull, $announce_to_email, $ip, $DOL_CONV_RATE, $tax_rate;
     
@@ -283,11 +283,23 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         $ordrDeviceObj->insertOrderDetails($insert_id, $ORDERID, $device, $profileid, $couponCodeVal);
         unset($ordrDeviceObj);
         if ($insert_id) {
-            error_log("ankita inserting new entry in upgrade_orders for ".$profileid."---".$data["ORDERID"]);
-            //set entry in upgrade_orders for membership upgrade for current user
-            $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
-            $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$profileid,"ORDERID"=>$data["ORDERID"],"ENTRY_DT"=>date("Y-m-d H:i:s")));
-            unset($upgradeOrdersObj);
+            //set upgrade entry record for such user
+            if($memUpgrade != "NA" && in_array($memUpgrade, VariableParams::$allowedUpgradeMembershipAllowed)){
+                error_log("ankita inserting new entry in upgrade_orders for ".$profileid."---".$data["ORDERID"]);
+                //set entry in upgrade_orders for membership upgrade for current user
+                $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+                $insertedRowId = $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$profileid,"ORDERID"=>$data["ORDERID"],"ENTRY_DT"=>date("Y-m-d H:i:s"),"MEMBERSHIP"=>$memUpgrade));
+                unset($upgradeOrdersObj);
+                //set upgrade case in memcache for 1 hr for this user ankita
+                if($insertedRowId){
+                    $memCacheObject = JsMemcache::getInstance();
+                    $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],$memUpgrade,3600);
+                }
+            }
+            else{
+                $memCacheObject = JsMemcache::getInstance();
+                $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],"NA",3600);
+            }
         	return $data;
         }
         else {

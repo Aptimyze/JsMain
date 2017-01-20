@@ -60,6 +60,8 @@ class VariableParams
 		'1836' => 'MEM_EXPIRY_CONTACTS_VIEWED'
 	);
     public static $deactivationCurlTimeout = 120000;
+    public static $allowedUpgradeMembershipAllowed = array("MAIN");
+    
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(
         "P",

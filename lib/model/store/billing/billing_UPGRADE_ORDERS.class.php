@@ -13,6 +13,7 @@ class billing_UPGRADE_ORDERS extends TABLE
     $this->DEACTIVATED_STATUS_BIND_TYPE = "STR";
     $this->UPGRADE_STATUS_BIND_TYPE = "STR";
     $this->ENTRY_DT_BIND_TYPE = "STR";
+    $this->MEMBERSHIP_BIND_TYPE = "STR";
   }
 
 	/**
@@ -29,12 +30,13 @@ class billing_UPGRADE_ORDERS extends TABLE
                 $keysArr = array_keys($params);
                 $keysStr = implode(",", $keysArr);
                 $valuesStr = ":".implode(",:", $keysArr);
-                $sql = "INSERT IGNORE INTO billing.UPGRADE_ORDERS(".$keysStr.") VALUES (".$valuesStr.")" ;
+                $sql = "INSERT INTO billing.UPGRADE_ORDERS(".$keysStr.") VALUES (".$valuesStr.")" ;
                 $res = $this->db->prepare($sql);
                 foreach ($params as $key => $value) {
                   $res->bindValue(":".$key,$value,constant('PDO::PARAM_'.$this->{$key.'_BIND_TYPE'}));
                 }
                 $res->execute();
+                return $this->db->lastInsertId();
             }
         }
         catch(PDOException $e)

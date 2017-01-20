@@ -204,8 +204,8 @@ class Membership
         return $ret;
     }
     
-    function startServiceOrder($orderid, $skipBill = false,$checkForMainMemUpgrade=false) {
-        error_log("ankita inside function startServiceOrder...".$checkForMainMemUpgrade);
+    function startServiceOrder($orderid, $skipBill = false) {
+        error_log("ankita inside function startServiceOrder...");
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
@@ -288,16 +288,31 @@ class Membership
         $this->source = "ONLINE";
         $this->expiry_dt = $myrow["EXPIRY_DT"];
         $this->set_activate = $myrow["SET_ACTIVATE"];
-        $mainMemUpgrade = false;
-        if($checkForMainMemUpgrade == true){
+        
+        //check whether user is eligible for membership upgrade or not
+        $memCacheObject = JsMemcache::getInstance();
+        $checkForMemUpgrade = $memCacheObject->get($this->profileid.'_MEM_UPGRADE_'.$orderid);
+        
+        if($checkForMemUpgrade == null || $checkForMemUpgrade == false){
+            error_log("ankita checking entry in mem upgrade for..".$orderid."---".$this->profileid."---===".$checkForMemUpgrade);
             $upgradeOrderObj = new billing_UPGRADE_ORDERS();
             $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$this->profileid);
-            error_log("ankita checking entry in mem upgrade for..".$orderid."---".$this->profileid."---===".$isUpgradeCaseEntry["ORDERID"]);
             if(is_array($isUpgradeCaseEntry)){
-                $mainMemUpgrade = true;
+                $memUpgrade = $isUpgradeCaseEntry["MEMBERSHIP"];
+            }
+            else{
+                $memUpgrade = "NA";
             }
         }
-        $this->makePaid($skipBill,$mainMemUpgrade,$orderid);
+        else{
+            if(in_array($checkForMemUpgrade, VariableParams::$allowedUpgradeMembershipAllowed)){
+                $memUpgrade = $checkForMemUpgrade;
+            }
+            else{
+                $memUpgrade = "NA";
+            }
+        }
+        $this->makePaid($skipBill,$memUpgrade,$orderid);
 
         include_once (JsConstants::$docRoot . "/profile/suspected_ip.php");
         $suspected_check = doubtfull_ip("$ip");
@@ -604,9 +619,9 @@ class Membership
         $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
     }
     
-    function makePaid($skipBill = false,$mainMemUpgrade = false,$orderid="") {
+    function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="") {
         //check for failed payment,tracking here in or not
-        error_log("ankita in makePaid...-".$mainMemUpgrade);
+        error_log("ankita in makePaid...-".$memUpgrade);
         $userObjTemp = $this->getTempUserObj();
         if($skipBill == true){
             $this->setGenerateBillParams();
@@ -615,24 +630,41 @@ class Membership
         }
         $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
         $this->generateReceipt();
-        if($mainMemUpgrade == true){
-            $this->deactivateMembership($orderid); 
+        if($memUpgrade != "NA"){
+            $this->deactivateMembership($memUpgrade,$orderid);
         }
         $this->setServiceActivation();
         $this->populatePurchaseDetail();
         $this->updateJprofileSubscription();
         $this->checkIfDiscountExceeds($userObjTemp);
+        if($memUpgrade != "NA"){
+            $this->updateMemUpgradeStatus($orderid);
+        }
+    }
+
+    /*function - updateMemUpgradeStatus
+    * update success upgrade status
+    * @inputs: $orderid
+    * @outputs: none
+    */
+    function updateMemUpgradeStatus($orderid){
+        error_log("ankita updating upgrade success entry");
+        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+        $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,array("UPGRADE_STATUS"=>"DONE"));
+        unset($upgradeOrdersObj);
+        $memCacheObject = JsMemcache::getInstance();
+        $memCacheObject->remove($this->profileid.'_MEM_UPGRADE_'.$orderid);
     }
 
     /*function - deactivateMembership
     * deactivates currently active membership of user
-    * @inputs: $orderid=""
+    * @inputs: $memUpgrade="NA",$orderid=""
     * @outputs: none
     */
-    function deactivateMembership($orderid=""){
+    function deactivateMembership($memUpgrade="NA",$orderid=""){
         $urlToHit = JsConstants::$siteUrl."/api/v1/membership/deactivateCurrentMembership";
         $profileCheckSum = JsAuthentication::jsEncryptProfilechecksum($this->profileid);
-        $postParams = array("PROFILECHECKSUM"=>$profileCheckSum,"USERNAME"=>$this->username,"MEMBERSHIP"=>"MAIN","NEW_ORDERID"=>$orderid);
+        $postParams = array("PROFILECHECKSUM"=>$profileCheckSum,"USERNAME"=>$this->username,"MEMBERSHIP"=>$memUpgrade,"NEW_ORDERID"=>$orderid);
         $deactivationResponse = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,VariableParams::$deactivationCurlTimeout);
         if($deactivationResponse){
             $finalOutput = json_decode($deactivationResponse,true);
