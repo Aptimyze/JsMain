@@ -155,7 +155,9 @@ class JeevansathiGatewayManager
         $service_main  = $payment['service_str'];
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
-        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'CCAVENUE', $discount_type, $apiParams->device, $apiParams->couponCode);
+        //use ankita mainMemUpgrade from api set param and pass in neworder for all gateways and apple
+        $membershipUpgrade = "MAIN";
+        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'CCAVENUE', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : CCAVENUE, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
             SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
@@ -243,7 +245,9 @@ class JeevansathiGatewayManager
         $service_main  = $payment['service_str'];
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
-        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYTM', $discount_type, $apiParams->device, $apiParams->couponCode);
+        //use ankita mainMemUpgrade from api set param and pass in neworder for all gateways and apple
+        $membershipUpgrade = "MAIN";
+        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYTM', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYTM, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
             SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");
@@ -307,7 +311,9 @@ class JeevansathiGatewayManager
         $service_main  = $payment['service_str'];
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
-        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYPAL', $discount_type, $apiParams->device, $apiParams->couponCode);
+        //use ankita mainMemUpgrade from api set param and pass in neworder for all gateways and apple
+        $membershipUpgrade = "MAIN";
+        $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYPAL', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYPAL, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
             SendMail::send_email('avneet.bindra@jeevansathi.com', $msg, 'Mismatch in Order Generation', $from = "js-sums@jeevansathi.com", $cc = "vibhor.garg@jeevansathi.com,vidushi@naukri.com");

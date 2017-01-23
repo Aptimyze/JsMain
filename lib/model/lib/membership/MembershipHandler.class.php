@@ -25,7 +25,6 @@ class MembershipHandler
 
     public function fetchMembershipDetails($membership, $userObj, $device = 'desktop',$ignoreShowOnlineCheck= false)
     {
-        //var_dump($ignoreShowOnlineCheck);
         $memCacheObject = JsMemcache::getInstance();
 
         $servicesObj = new billing_SERVICES('newjs_master');
@@ -41,28 +40,18 @@ class MembershipHandler
             $allMainMem = array();
             if ($fetchOffline == true && $memCacheObject->get($key_main_hidden)) {
                 $allMainMemHidden = unserialize($memCacheObject->get($key_main_hidden));
-                //echo "memcache hidden...".count($allMainMemHidden);
-                //print_r($allMainMemHidden);
                 $fetchOffline = false;
             } 
             if ($fetchOnline == true && $memCacheObject->get($key_main)) {
                 $allMainMem = unserialize($memCacheObject->get($key_main));
-                //echo "memcache main...".count($allMainMem);
-                //print_r($allMainMem);
                 $fetchOnline = false;
             }
             if($fetchOnline == true || $fetchOffline == true){
                 $serviceArr = VariableParams::$mainMembershipsArr;
-                //print_r($serviceArr);
                 if ($userObj) {
                     $currencyType = $userObj->getCurrency();
                 }
-                //var_dump($fetchOnline);
-                //var_dump($fetchOffline);
                 $serviceInfoAggregateData = $this->serviceObj->getServiceInfo($serviceArr, $currencyType, "", $renew, $userObj->getProfileid(), $device, $userObj,$fetchOnline,$fetchOffline);
-                
-                //echo "all services.........".count($serviceInfoAggregateData);
-                //print_r($serviceInfoAggregateData);die;
                 foreach ($serviceArr as $key => $value) {
                     foreach ($serviceInfoAggregateData as $kk => $vv) {
                         if ($value == substr($kk, 0, strlen($value))) {
@@ -83,10 +72,6 @@ class MembershipHandler
                     $memCacheObject->set($key_main, serialize($allMainMem), 3600);
                 }
             }
-            //echo "all main services.........".count($allMainMem);
-            //print_r($allMainMem);
-            //echo "all hidden services.........".count($allMainMemHidden);
-            //print_r($allMainMemHidden);
             if(is_array($allMainMem) && is_array($allMainMemHidden)){
                 foreach ($allMainMem as $key => $value) {
                     $allMainMemCombined[$key] = $value;
@@ -111,7 +96,6 @@ class MembershipHandler
             else{
                 $allMainMemCombined = array();
             }
-            //print_r($allMainMemCombined);
             return $allMainMemCombined;
         } elseif ($membership == "ADDON") {
             $key = $device . "_ADDON_MEMBERSHIP";
