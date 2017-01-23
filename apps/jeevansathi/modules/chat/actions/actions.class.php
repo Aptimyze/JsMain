@@ -385,6 +385,9 @@ class chatActions extends sfActions
 							$count++;
 							if ($count < 3) {
 								$response["cansend"] = true;
+								$responseArray['cansend']=true;
+								$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
+								$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge($responseArray);
 							} else {
 								$response["cansend"] = false;
 								$response['sent'] = false;
