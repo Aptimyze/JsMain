@@ -44,8 +44,8 @@ EOF;
         connect_db();
 
         $serObj = new Services();
-        $membershipObj = new Membership();
-        $memHandlerObj = new MembershipHandler();
+        //$membershipObj = new Membership();
+        //$memHandlerObj = new MembershipHandler();
 
         $billingOrdersObj = new BILLING_ORDERS('newjs_masterRep');
         //$billingPaymentStatusLogObj = new billing_PAYMENT_STATUS_LOG();
@@ -57,6 +57,9 @@ EOF;
         if (is_array($ordersArray) && !empty($ordersArray) && count($ordersArray) > 0) {
             
             foreach ($ordersArray as $key => $value) {
+
+		$membershipObj = new Membership();
+		$memHandlerObj = new MembershipHandler();
 
                 $profileid = $value['PROFILEID'];
                 $currency = $value['CURTYPE'];
@@ -144,6 +147,7 @@ EOF;
                 }
 
                 unset($AuthDesc, $profileid, $Order_Id, $currency);
+		unset($membershipObj,$memHandlerObj);
             }
         }
     }

@@ -185,9 +185,10 @@ class JsConstants
     public static $jsChatFlag = 1; //1=enable chat, 0=disable chat
         public static $presenceServiceUrl = "http://192.168.120.70:8290";
     public static $multiUserPhotoUrl = "http://www.jeevansathi.com/api/v1/social/getMultiUserPhoto"; //Api from staging for multi user photo being used in chat listing and self photo.
-    public static $chatListingWebServiceUrl = array("dpp"=>"http://www.jeevansathi.com:8190/listings/v1/discover");
+    public static $chatListingWebServiceUrl = array("dpp"=>"http://localhost:8190/listings/v1/discover","shortlist"=>"http://localhost:8190/listings/v1/activities");
     public static $profilesEligibleForDpp = array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>"5616315|9061321");
-    public static $nonRosterRefreshUpdate = 300000;
-        public static $httpsApplicationPhotoUrl      = 'https://xmppdev1.jeevansathi.com';
-        public static $httpsCloudUrl                 = 'https://mediacdn.jeevansathi.com';
+    public static $nonRosterRefreshUpdate = array("dpp"=>300000,"shortlist"=>300000);
+    public static $httpsApplicationPhotoUrl      = 'https://xmppdev1.jeevansathi.com';
+    public static $httpsCloudUrl                 = 'https://mediacdn.jeevansathi.com';
+    public static $profileServiceUrl = "http://172.16.3.187:8290";
 }

@@ -213,12 +213,13 @@ class viewSimilarProfileAction extends sfActions
 		$SearchServiceObj = new SearchService($searchEngine,$outputFormat,$showAllClustersOptions);
 		$viewSimilarProfileObj->setNoOfResults(viewSimilarConfig::$suggAlgoNoOfResultsNoFilter);
 		$responseObj = $SearchServiceObj->performSearch($viewSimilarProfileObj,$results_orAnd_cluster,$clustersToShow,$currentPage,$cachedSearch,$this->loginProfile);
-                
+         //print_r($responseObj);die;
         //search template info array
 		if(MobileCommon::isDesktop())
 		{
 			$SearchDisplayObj = new SearchApiDisplay();
 			$resultsArray = $SearchDisplayObj->searchPageDisplayInfo($this->isMobile,$this->loginProfile,$responseObj,'','','','ProfilePic450Url');
+			//print_r($resultsArray);die;
 		}
 		else
 		{
@@ -324,12 +325,13 @@ class viewSimilarProfileAction extends sfActions
 		if(MobileCommon::isDesktop())
 		{
 			$vspObj = new ViewSimilarProfile();
+			//print_r($this->finalResultsArray);die;
 			$transformedResponse = $vspObj->transformVSPResponseForPC($this->finalResultsArray,$this->Username,$this->similarPageShow,$this->userGender,$stype,$this->loginProfile);
 			$this->defaultImage = $transformedResponse["defaultImage"];
 			$this->firstResponse = json_encode($transformedResponse);
 			
 			//unset($this->finalResultsArray); 
-			//var_dump($this->firstResponse); 
+			//print_r($this->firstResponse);die; 
 			unset($vspObj);
 			//handle visibility of contacted user details top section
 			if($request->getParameter("contactedProfileDetails"))
