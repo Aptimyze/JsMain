@@ -57,7 +57,7 @@ $className = get_class($this);
 				{
 					continue;
 				}
-				if($key == "MATCH_OF_THE_DAY" && LoggedInProfile::getInstance()->getACTIVATED() == 'U')
+				if($key == "MATCH_OF_THE_DAY" && LoggedInProfile::getInstance()->getACTIVATED() == 'U' && !(MobileCommon::isApp()))
 				{
 					continue;					
 				}
