@@ -128,17 +128,8 @@
                                 var iStr='';
                  if(document.getElementById('val').value=="new")
                  {
-					var mid1=document.getElementById('MSTATUS').value;
-                    var db=document.getElementById('day_of_birth').value;
-                    var mb=document.getElementById('month_of_birth').value;
-                    var yb=document.getElementById('year_of_birth').value;
 					var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9])+$/;
 					var gender_val_selected = document.getElementById('GENDER1').value;
-					var x= new Date();
-					var current_year = x.getFullYear();
-					var current_month = x.getMonth()+1;
-					var current_day = x.getDate();
-				
 					if(inputs.length!=0)
 					{
 						for (var i=0; i < inputs.length; i++)
@@ -161,51 +152,14 @@
 								}
                             }
 					}
-					document.getElementById('m_id1').style.display="none";
-                    document.getElementById('m_id2').style.display="none";
 					if(!checkemail(mid) || !filter.test(mid) || mid.charAt(0)==".")
 					{
 						document.getElementById('m_id').style.display="block";
 						return false;
 					}
-					else if(mid1=='')
-					{
-						document.getElementById('m_id1').style.display="block";
-											return false;
-					}
-					else if(db != "" && mb != "" && yb != "")
-                  	{
-        				age = current_year - yb;
-				        if(mb > current_month)
-							age--;
-				        else if(mb == current_month && db > current_day)
-							age--;
-						if(gender_val_selected == "M" && age < 21)
-						{
-							document.getElementById('m_id2').style.display="block";
-							return false;
-						}
-						else if(gender_val_selected == "F" && age < 18)
-						{
-						document.getElementById('m_id2').style.display="block";
-							return false;
-	                                }
-						else if(info!='')
-						{
-							iStr=trim(info);
-							iStr=trim_newline(iStr);
-							if(iStr=='')
-							{
-								document.getElementById('info_span').style.display="block";
-								return false;
-							}       
-						}
-					}
 					else
 					{
 						document.getElementById('m_id').style.display="none";
-						document.getElementById('m_id1').style.display="none";
-						document.getElementById('m_id2').style.display="none";
 						document.getElementById('info_span').style.display="none";
 											return checkthis();
 					}
@@ -325,99 +279,10 @@
 								<input type="hidden" name="GENDER1" id="GENDER1" value="~$SHOW_GENDER`">
 							</td>
 						</tr>
-						<tr>
-							<td width="157">&nbsp;</td>
-							<td width="343">&nbsp;</td>
-						</tr>
 					~else`
 						<input type="hidden" name="GENDER" id="GENDER" value="~$SHOW_GENDER`">
 						<input type="hidden" name="GENDER1" id="GENDER1" value="~$SHOW_GENDER`">
 					~/if`
-					<tr class="label">
-						<td align="center">Marital Status : </td>
-						~if $val eq 'new'`
-						<td>&nbsp;</td>
-						~else`
-							<td>
-							~section name=next loop=$marital_status_arr`
-								~if $marital_status_arr[next].VALUE eq $MSTATUS`
-									~$marital_status_arr[next].LABEL`
-								~/if`
-							~/section`
-							</td>
-						~/if`
-					</tr>
-					~if $val eq 'new'`
-					<tr class="fieldsnew">
-						<td >&nbsp;</td>
-						<td>
-							<select name="MSTATUS" id="MSTATUS">
-								<option value="">Select</option>
-								~section name=next loop=$marital_status_arr`
-									<option value="~$marital_status_arr[next].VALUE`" ~if $marital_status_arr[next].VALUE eq $MSTATUS` selected ~/if`>~$marital_status_arr[next].LABEL`</option>
-								~/section`
-							</select>
-						</td>
-					</tr>
-					~/if`
-					~if $mstatus_err`
-                                        	~$MSTATUS_ERR_MSG`
-                                        ~else`
-                                        	<tr class='fieldsnew'>
-                                                	<td>&nbsp;</td>
-                                                        <td id="m_id1" style="display:none;"><font color='red'>Please select marital status.</font></td>
-                                        	</tr>
-                                        ~/if`
-					<tr>
-						<td width="157">&nbsp;</td>
-						<td width="343">&nbsp;</td>
-					</tr>
-						<tr class="label">
-							<td align="center">Date of Birth : </td>
-							~if $val eq 'new'`
-								<td>&nbsp;</td>
-							~else`
-								<td>~$day_of_birth`-~$month_of_birth`-~$year_of_birth`</td>
-							~/if`
-						</tr>
-						~if $val eq 'new'`
-						<tr class="fieldsnew">
-							<td >&nbsp;</td>
-							<td>
-								<select name="day_of_birth" id="day_of_birth">
-									~section name=next loop=$ddarr`
-										<option value="~$ddarr[next]`" ~if $ddarr[next] eq $day_of_birth` selected ~/if`>~$ddarr[next]`</option>
-									~/section`
-								</select>
-								<select name="month_of_birth" id="month_of_birth">
-									~section name=next loop=$mmarr`
-										<option value="~$mmarr[next].VALUE`" ~if $mmarr[next].VALUE eq $month_of_birth` selected ~/if`>~$mmarr[next].LABEL`</option>
-									~/section`
-								</select>
-								<select name="year_of_birth" id="year_of_birth">
-									~section name=next loop=$yyarr`
-										<option value="~$yyarr[next]`" ~if $yyarr[next] eq $year_of_birth` selected ~/if`>~$yyarr[next]`</option>
-									~/section`
-									~section name=prevyear start=$yyarr[52]-1 loop=$yyarr[52]-$year_of_birth  step=-1`
-										<option value="~$year_of_birth+$smarty.section.prevyear.index`" ~if ($year_of_birth+$smarty.section.prevyear.index) eq $year_of_birth` selected ~/if`>~$year_of_birth+$smarty.section.prevyear.index`</option>
-									~/section`
-								</select>
-							</td>
-						</tr>
-						~/if`
-						~if $date_err`
-                                                	~$DATE_ERR_MSG`
-	                                       ~else`
-        	                                       <tr class='fieldsnew'>
-                	                                       <td>&nbsp;</td>
-                        	                               <td id="m_id2" style="display:none;"><font color='red'>Please select valid date of birth.</font></td>
-                                	               </tr>
-                                        	~/if`
-						<tr>
-							<td width="157">&nbsp;</td>
-							<td width="343">&nbsp;</td>
-						</tr>
-						
 					~/if`
 					~if $SHOWEMAIL eq "Y" AND $EMAILvalue`
 						<tr class="label">
@@ -448,10 +313,6 @@
 								<td id="m_id" style="display:none;"><font color='red'>Please enter a valid email address.</font></td>
 						</tr>
 						~/if`
-						<tr>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
-						</tr>
 					~/if`
 				~if $SHOWSUBCASTE eq "Y" AND $SUBCASTEvalue`
 					<tr class="label">
@@ -522,62 +383,6 @@
 						<td>&nbsp;</td>
 					</tr>
 				~/if`
-				~if $SHOWPHONERES eq "Y" AND $PHONE_RESvalue`
-					<tr class="label">
-						<td align="center">Phone Residence</td>
-						<td>&nbsp;&nbsp; ~$PHONE_RESvalue` </td>
-						<input type="hidden" name="PHONE_RES" value="~$PHONE_RESvalue`">
-					</tr>
-					<!--
-					~if $OBSCENE_PHONE_RES`
-						~$OBSCENE_MESSAGE`
-					~/if`
-					~if $INTELLIGENT_USAGE_PHONE_RES`
-						~$INTELLIGENT_USAGE_MESSAGE`
-					~/if`
-					-->
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-				~/if`
-				~if $SHOWPHONEMOB eq "Y" AND $PHONE_MOBvalue`
-					<tr class="label">
-						<td align="center">Phone Mobile</td>
-						<td>&nbsp;&nbsp; ~$PHONE_MOBvalue` </td>
-						<input type="hidden" name="PHONE_MOB" value="~$PHONE_MOBvalue`">
-					</tr>
-					<!--	
-					~if $OBSCENE_PHONE_MOB`
-						~$OBSCENE_MESSAGE`
-					~/if`
-					~if $INTELLIGENT_USAGE_PHONE_MOB`
-						~$INTELLIGENT_USAGE_MESSAGE`
-					~/if`
-					-->
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
-				~/if`
-                                ~if $SHOWPHONEMOB eq "Y" || $SHOWPHONERES eq "Y"`
-                                        <tr class="label">
-                                                <td align="center">Mark Phone Status:</td>
-                                                <td>&nbsp; </td>
-                                        </tr>
-                                        <tr class="fieldsnew">
-	                                        <td >&nbsp;</td>
-                                                <td>
-        	                                       <input type="checkbox" name="PHONE_FLAG" value="I" ~if $PHONE_FLAG eq 'I'` checked="yes" ~/if`>Invalid.
-							<!--<br><input type="radio" name="PHONE_FLAG" value="">Not Invalid.-->	
-                                                </td>
-                                        </tr>
-                                        <tr>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                        </tr>
-                                ~/if`
-
 				~if $SHOWCITY eq "Y" AND $CITY_BIRTHvalue`
 					<tr class="label">
 						<td align="center">City of Birth</td>
@@ -728,10 +533,6 @@
 							<td>&nbsp;</td>
 							<td id="min_char_about_me" style="display:none;"><font color='red'>'About me' should be at least 100 characters long. Copy from old 'about me' if required.</font></td>
 					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
 				~/if`
 				~if $SHOW_OLD_INFO eq "Y" AND $YOUR_INFO_OLD`
 					<tr class="label">
@@ -741,10 +542,6 @@
 					<tr class="fieldsnew">
 						<td>&nbsp;</td>
 						<td><textarea name="YOUR_INFO_OLD" id="YOUR_INFO_OLD" cols="40" rows="8" class="textboxes1" readonly>~$YOUR_INFO_OLD`</textarea></td>
-					</tr>
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
 					</tr>
 				~/if`
 				~if $SHOWFAMILYINFO eq "Y" AND $FAMILYINFOvalue`
@@ -788,10 +585,6 @@
 					~if $INTELLIGENT_USAGE_SPOUSE`
 						~$INTELLIGENT_USAGE_MESSAGE`
 					~/if`
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
 				~/if`
 				~if $SHOWJOBINFO eq "Y" AND $JOB_INFOvalue`
 					<tr class="label">
@@ -811,10 +604,6 @@
 					~if $INTELLIGENT_USAGE_JOB_INFO`
 						~$INTELLIGENT_USAGE_MESSAGE`
 					~/if`
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
 				~/if`
 				~if $SHOWFATHERINFO eq "Y" AND $FATHER_INFOvalue`
 					<tr class="label">
@@ -857,10 +646,6 @@
 					~if $INTELLIGENT_USAGE_SIBLING_INFO`
 						~$INTELLIGENT_USAGE_MESSAGE`
 					~/if`
-					<tr>
-						<td>&nbsp;</td>
-						<td>&nbsp;</td>
-					</tr>
 				~/if`
 				~if $SHOWPARENTSCONTACT eq "Y" AND $PARENTS_CONTACTvalue`
 					<tr class="label">
