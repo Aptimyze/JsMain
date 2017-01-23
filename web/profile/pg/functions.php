@@ -282,6 +282,9 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         $ordrDeviceObj = new billing_ORDERS_DEVICE();
         $ordrDeviceObj->insertOrderDetails($insert_id, $ORDERID, $device, $profileid, $couponCodeVal);
         unset($ordrDeviceObj);
+        if($memUpgrade == ""){
+            $memUpgrade = "NA";
+        }
         if ($insert_id) {
             //set upgrade entry record for such user
             if($memUpgrade != "NA" && in_array($memUpgrade, VariableParams::$allowedUpgradeMembershipAllowed)){

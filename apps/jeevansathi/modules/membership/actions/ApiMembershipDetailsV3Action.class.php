@@ -23,12 +23,13 @@ class ApiMembershipDetailsV3Action extends sfAction
             if ($this->apiParams->device == "Android_app") {
                 $this->apiParams->device = "JSAA_mobile_website";
             }
+            //print_r($this->apiParams);die;
             if ($this->apiParams->processPayment) {
                 if (empty($this->apiParams->profileid) || !is_numeric($this->apiParams->profileid)) {
                     $this->setTemplate("paramsError");
                 } else {
                     try {
-                        error_log("ankita start of processPayment..".$this->apiParams->pageRedirectTo);
+                        error_log("ankita start of processPayment..".$this->apiParams->upgradeMem);
                         switch ($this->apiParams->pageRedirectTo) {
                             case 'ccavenue':
                                 JeevansathiGatewayManager::setCCAVENUEParams($this, $this->apiParams);

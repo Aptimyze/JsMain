@@ -41,7 +41,7 @@ class JeevansathiGatewayManager
         $discount                     = $payment['discount'];
         $discount_type                = $payment['discount_type'];
         //use ankita mainMemUpgrade from api set param and pass in neworder for all gateways and apple
-        $membershipUpgrade = "MAIN";
+        $membershipUpgrade = $apiParams->upgradeMem;
         $ORDER                        = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYU', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYU, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
@@ -156,7 +156,7 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
         //use ankita mainMemUpgrade from api set param and pass in neworder for all gateways and apple
-        $membershipUpgrade = "MAIN";
+        $membershipUpgrade = $apiParams->upgradeMem;
         $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'CCAVENUE', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : CCAVENUE, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
@@ -246,7 +246,7 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
         //use ankita mainMemUpgrade from api set param and pass in neworder for all gateways and apple
-        $membershipUpgrade = "MAIN";
+        $membershipUpgrade = $apiParams->upgradeMem;
         $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYTM', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYTM, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";
@@ -312,7 +312,7 @@ class JeevansathiGatewayManager
         $discount      = $payment['discount'];
         $discount_type = $payment['discount_type'];
         //use ankita mainMemUpgrade from api set param and pass in neworder for all gateways and apple
-        $membershipUpgrade = "MAIN";
+        $membershipUpgrade = $apiParams->upgradeMem;
         $ORDER         = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYPAL', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {
             $msg = "Mismatch in services sent to forOnline '{$apiParams->track_memberships}' vs newOrder '{$service_main}'<br>Profileid : '{$apiParams->profileid}', Gateway : PAYPAL, Device : '{$apiParams->device}'<br>OrderID : {$ORDER['ORDERID']}";

@@ -633,6 +633,9 @@
                         <div id="payNowBtn" class="fullwid txtc lh50">
                             <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
                         </div>
+                        <div id="upgradeBtn" class="fullwid txtc lh50 cursp">
+                            <span class="colrw">Upgrade</span>
+                        </div>
                     </div>
                     <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
                 </div>
@@ -901,6 +904,13 @@
                 e.preventDefault();
                 //sweetAlert("Hi !", "Please select atleast one item to continue", "error");
             }
+        });
+        $("#upgradeBtn").click(function(e){
+            console.log("clicked on upgrade button");
+            createCookie('mainMemTab', 'C');
+            createCookie('mainMem', 'C');
+            createCookie('mainMemDur', '3');
+            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':'C', 'mainMemDur':'3', 'device':'desktop' , 'upgradeMem':'MAIN'});
         });
         updateVasPageCart();
         var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;

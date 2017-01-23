@@ -27,6 +27,11 @@ class MembershipAPIResponseHandler {
         //$this->selectedVas = $request->getParameter("selectedVas");
 	$this->selectedVas = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("selectedVas"));
         $this->displayPage = $request->getParameter("displayPage");
+        $this->upgradeMem = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("upgradeMem"));
+        if(!$this->upgradeMem || !in_array($this->upgradeMem, VariableParams::$allowedUpgradeMembershipAllowed)){
+           $this->upgradeMem = "NA"; 
+        }
+        error_log("ankita received upgradeMem in Membershipapireponsehandler--".$this->upgradeMem);
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;
         }
@@ -690,7 +695,8 @@ class MembershipAPIResponseHandler {
             'tracking_params' => $tracking_params,
             'proceed_text' => $skip_text,
             'username' => $userName,
-            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
+            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
+            'upgradeMem'=>$this->upgradeMem
         );
         
         if ($this->device == 'desktop') {
@@ -719,7 +725,7 @@ class MembershipAPIResponseHandler {
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != 'Android_app') {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '503', '53', '3', $this->device, $this->user_agent, $allMemberships, $mainMembership, $vasImpression);
         }
-        
+        //print_r($output);die;
         return $output;
     }
     
