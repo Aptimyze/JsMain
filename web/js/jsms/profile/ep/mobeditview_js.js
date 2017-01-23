@@ -578,24 +578,8 @@ function bindEmailButtons(){
     fieldIdMappingArray = {
       "name" : { "type": "text","mobileDivFieldId":"BasicDetails_name","mobileFieldId":"NAME"},
     	// contact section
-      "email" : { "type": "text","mobileDivFieldId":"EmailId_name","mobileFieldId":"EMAIL"},
-      "altEmail" : { "type": "text","mobileDivFieldId":"AlternateEmailId_name","mobileFieldId":"ALT_EMAIL"},
-      "mobile" : { "type": "text","mobileDivFieldId":"MobileNo_name","mobileFieldId":"PHONE_MOB"},
-      "altMobile" : { "type": "text","mobileDivFieldId":"AlternateMobileNo_name","mobileFieldId":"ALT_MOBILE"},
-
-      // family section
-      "familyInfo" : { "type": "text","mobileDivFieldId":"AboutMyFamily_name","mobileFieldId":"FAMILYINFO"},
-      "familyValues" : { "type": "dropdown","mobileDivFieldId":"Family_name","mobileFieldId":"FAMILY_VALUES"},
-      "familyType" : { "type": "dropdown","mobileDivFieldId":"Family_name","mobileFieldId":"FAMILY_TYPE"},
-      "familyStatus" : { "type": "dropdown","mobileDivFieldId":"Family_name","mobileFieldId":"FAMILY_STATUS"},
-      "livingWithParents" : { "type": "dropdown","mobileDivFieldId":"Family_name","mobileFieldId":"PARENT_CITY_SAME"},
-      // parents detail
-      "fatherOccupation" : { "type": "dropdown","mobileDivFieldId":"Parent_name","mobileFieldId":"FAMILY_BACK"},
-      "motherOccupation" : { "type": "dropdown","mobileDivFieldId":"Parent_name","mobileFieldId":"MOTHER_OCC"},
-      "familyIncome" : { "type": "dropdown","mobileDivFieldId":"Parent_name","mobileFieldId":"FAMILY_INCOME"},
-      //siblings detail
-      "brother" : {"type": "dropdown","mobileDivFieldId":"Siblings_name","mobileFieldId":"T_BROTHER"},
-      "sister" : {"type": "dropdown","mobileDivFieldId":"Siblings_name","mobileFieldId":"T_SISTER"},
+      "EMAIL" : { "type": "text","mobileDivFieldId":"EmailId_name","mobileFieldId":"EMAIL"},
+      "ALT_EMAIL" : { "type": "text","mobileDivFieldId":"AlternateEmailId_name","mobileFieldId":"ALT_EMAIL"},
     };
 
 
@@ -623,6 +607,8 @@ function bindEmailButtons(){
 
   function openFieldsOnCal(section='',fieldType='',fieldId='',fieldDivId='') 
   {
+  	var timeoutFieldCheck = 100;
+  	var timeoutDropdown = 100;
     if ( fieldDivId === '')
     {
     	window.location.replace(window.location.href+"#"+section);
@@ -642,14 +628,14 @@ function bindEmailButtons(){
                 {
                 	setTimeout(function() {   
     	            	$("#"+fieldId).click();
-					}, 100);
+					}, timeoutDropdown);
 
                 }
                 clearInterval(checkExist);
             }
 
 
-        }, 100);
+        }, timeoutFieldCheck);
   	}
   }
 

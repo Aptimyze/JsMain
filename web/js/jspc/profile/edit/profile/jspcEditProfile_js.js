@@ -6505,85 +6505,47 @@ $('.js-previewAlbum').click(function(){
 
   function getFieldsOnCal()
   {
-    fieldIdMappingArray = {
-      //basic section
-      "name" : {"type": "text","desktopFieldId":"name"},
-      "height" : {"type": "dropdown","desktopFieldId":"height_chosen"},
-      "havechild" : {"type": "text","desktopFieldId":"havechild"},
-      "mtongue" : {"type": "dropdown","desktopFieldId":"mtongue_chosen"},
-      
-      // contact section
-      "email" : {"type": "text","desktopFieldId":"email"},
-      "altEmail" : {"type": "text","desktopFieldId":"alt_email"},
-      "mobile" : {"type": "text","desktopFieldId":"phone_mob-mobile"},
-      "altMobile" : {"type": "text","desktopFieldId":"alt_mobile-mobile"},
-      "contactAddress" : {"type": "text","desktopFieldId":"contact"},
-      "parentAddress" : {"type": "text","desktopFieldId":"parents_contact"},
-
-       // family section
-      "familyInfo" : { "type": "text","desktopFieldId":"familyinfo"},
-      "familyValues" : { "type": "text","desktopFieldId":"family_values"},
-      "familyType" : { "type": "text","desktopFieldId":"family_type"},
-      "familyStatus" : { "type": "text","desktopFieldId":"family_status"},
-      "livingWithParents" : { "type": "text","desktopFieldId":"parent_city_same"},
-      // parents detail
-      "fatherOccupation" : { "type": "dropdown","desktopFieldId":"family_back_chosen"},
-      "motherOccupation" : { "type": "dropdown","desktopFieldId":"mother_occ_chosen"},
-      "familyIncome" : { "type": "dropdown","desktopFieldId":"family_income_chosen"},
-      //siblings detail
-      "brother" : {"type": "text","desktopFieldId":"t_brother"},
-      "sister" : {"type": "text","desktopFieldId":"t_sister"},
-    };
-
     desktopSectionArray = {"education":"career","basic":"basic","about":"about",
       "career":"career","lifestyle":"lifestyle","contact":"contact","family":"family"
     }
-
+    timeoutFieldCheck = 1000;
     section = getUrlParameter('section');
     fieldName = getUrlParameter('fieldName');
     if ( typeof section !== 'undefined' && $("[data-section-id="+desktopSectionArray[section]+"]").length)
     {
-      fieldType = '';
-      desktopFieldId = '';
-      if ( typeof fieldName !== 'undefined' && fieldIdMappingArray.hasOwnProperty(fieldName) )
-      {
-        fieldType = fieldIdMappingArray[fieldName].type;
-        desktopFieldId = fieldIdMappingArray[fieldName].desktopFieldId;
-      }
-      openFieldsOnCal(desktopSectionArray[section],fieldType,desktopFieldId);        
+      $("[data-section-id="+section+"]").click();
+      $('html, body').animate({
+           scrollTop: ($('#section-'+section).offset().top)
+        },'slow'); 
     }
+
+    setTimeout(function() {
+      if ( EditApp.getEditAppFields(section,fieldName) != false )
+      {
+        if ( EditApp.getEditAppFields(section,fieldName).type == "M" || EditApp.getEditAppFields(section,fieldName).type == "S" )
+        {
+          desktopFieldId = EditApp.getEditAppFields(section,fieldName).key.toLowerCase() + "_chosen";
+          fieldType = "dropdown"; 
+        }
+        else
+        {
+          desktopFieldId = EditApp.getEditAppFields(section,fieldName).key.toLowerCase();
+          fieldType = "text"; 
+        }
+        openFieldsOnCal(fieldType,desktopFieldId); 
+      }                           
+    }, timeoutFieldCheck);
   }
 
-  function openFieldsOnCal(section='',fieldType='',fieldId='') 
+  function openFieldsOnCal(fieldType='',fieldId='') 
   {
-    
-    if ( section !== '' )
+    if ( fieldType == 'dropdown')
     {
-      $("[data-section-id="+section+"]").click();
-      if ( fieldType !== '' && fieldId !== '' )
-      {
-        var checkExist = setInterval(function() 
-        {
-            if ($('#'+fieldId).length) 
-            {
-                if ( fieldType == 'dropdown')
-                {
-                    $("#"+fieldId).trigger('mousedown');
-                }
-                else
-                {
-                    $("#"+fieldId).focus();
-                }
-                clearInterval(checkExist);
-            }
-        }, 100);
+        $("#"+fieldId).trigger('mousedown');
     }
     else
     {
-        $('html, body').animate({
-           scrollTop: ($('#section-'+section).offset().top)
-        },500);  
-      }
+        $("#"+fieldId).focus();
     }
   }
 
