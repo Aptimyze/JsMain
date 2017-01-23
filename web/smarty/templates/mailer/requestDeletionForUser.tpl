@@ -106,7 +106,7 @@ Deletion of profiles who have already found a match helps create a better experi
                 <tr>
                         <td width="20"></td>
                         <td>
-If you have found already found a match, congratulations! If not, please excuse us for the inconvenience. Someone could have incorrectly reported that you are already married/engaged.
+If you have already found a match, congratulations! If not, please excuse us for the inconvenience. Someone could have incorrectly reported that you are already married/engaged.
                         </td>
                         <td width="20"></td>
                 </tr>

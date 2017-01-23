@@ -245,7 +245,7 @@ class phoneActions extends sfActions
 		if($reasonNumber == 3)
 			{  
 				$sendingObject = new RequestUserToDelete();
-				$sendingObject->deleteRequestedByOther($otherProfileId);
+				$sendingObject->deleteRequestedByOther($profileid);
 			}
 
 
