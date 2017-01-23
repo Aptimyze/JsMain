@@ -543,6 +543,11 @@ function afterActionMyjs(index,action,Params){
         { 
             $("#"+section+"Absent").show();
             if(section=='matchAlert')$("#matchAlertAbsentText").text('No more profiles for today');
+            if(section=='matchOfDay')
+            {
+              $("#matchOfDayPresent").hide();
+            }
+
         }
         $(".eoiAcceptBtn").attr("disabled",false);
         $(".eoiDeclineBtn").attr("disabled",false);
