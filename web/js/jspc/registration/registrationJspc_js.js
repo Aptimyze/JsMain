@@ -1999,6 +1999,10 @@ $(document).ready(function () {
       leadid = $("#leadid").val();
       inputData["source"] = $("#reg_source").val();
 //        inputData["record_id"]=$("#reg_record_id").val();
+      if(pageId=="JSPCR2")
+      {
+        inputData["casteNoBar"] = $("#caste_no_bar").is(':checked');  
+      }      
       inputData["_csrf_token"] = $("#registrationData__csrf_token").val();
       if(inputData.hasOwnProperty('state_res')){
           if(inputData['city_res'] == '0' && inputData['country_res']=='51')
