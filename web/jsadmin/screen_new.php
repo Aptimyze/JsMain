@@ -41,7 +41,6 @@ if (authenticated($cid)) {
 		$memcacheObj = new UserMemcache;
 		$key = "PROF_SCREEN_USER_" . $user;
 		if ($memcacheObj->getDataFromMem($key)) {
-			$memcacheObj->setDataToMem(5, $key, 5);
 			exit("Please refresh after 5 seconds.");
 		} else $memcacheObj->setDataToMem(5, $key, 5);
 		unset($memcacheObj);
@@ -439,7 +438,7 @@ if (authenticated($cid)) {
 				//mysql_query_decide($sql) or die("$sql" . mysql_error_js());
         //Update JPROFILE Store
         $result = $objUpdate->editJPROFILE($arrProfileUpdateParams,$pid,'PROFILEID','activatedKey=1');
-
+	unsetMemcache5Sec($user);
 	    /*
 	    	check for whether your_info_original was set or not.
 	    */
@@ -1492,4 +1491,12 @@ function getAge($newDob) {
       die('Mysql error while marking profile under screening at line 1410');
     }
   }
+function unsetMemcache5Sec($user)
+{
+                include_once ("../classes/Memcache.class.php");
+                $memcacheObj = new UserMemcache;
+                $key = "PROF_SCREEN_USER_" . $user;
+		$memcacheObj->setDataToMem(0, $key, 0);
+                unset($memcacheObj);
+}
 ?>

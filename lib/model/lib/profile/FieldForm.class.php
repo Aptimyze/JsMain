@@ -298,7 +298,7 @@ class FieldForm extends sfForm
 				}
 			  }
 				$screen_flag = $this->autoScreenAutoSuggest($screen_flag,$this->formValues);
-				$screen_flag = $this->autoScreenMinorDiff($screen_flag,$this->formValues);
+//				$screen_flag = $this->autoScreenMinorDiff($screen_flag,$this->formValues);
                                 if($bSet_NativePlaceBit)
                                 {
                                         $jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL
