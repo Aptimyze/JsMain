@@ -115,7 +115,7 @@ if (authenticated($cid)) {
 						elseif ($NAME[$i] == "CITY_BIRTH") $screen = setFlag("CITYBIRTH", $screen);
 						elseif ($NAME[$i] == "MESSENGER_ID") $screen = setFlag("MESSENGER_ID", $screen);
 						else {
-							if ($NAME[$i] != "GENDER" && $NAME[$i] != "MSTATUS" && $NAME[$i] != "PHOTO_DISPLAY" && $NAME[$i] != "DTOFBIRTH") $screen = setFlag("$NAME[$i]", $screen);
+							if ($NAME[$i] != "GENDER" && $NAME[$i] != "PHOTO_DISPLAY") $screen = setFlag("$NAME[$i]", $screen);
 						}
 					}
 					if ($fullname != "") $screen = setFlag("NAME", $screen);
@@ -142,6 +142,7 @@ if (authenticated($cid)) {
 								}
 							}
 						} else {
+/*
 							if ($NAME[$i] == "DTOFBIRTH") {
 								list($prev_year, $prev_month, $prev_day) = explode("-", $previous_date_of_birth);
 								$DTOFBIRTH = $year_of_birth . "-" . $month_of_birth . "-" . $day_of_birth;
@@ -168,7 +169,9 @@ if (authenticated($cid)) {
 										$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($DTOFBIRTH));
 									}
 								}
-							} elseif ($NAME[$i] == "GENDER") {
+							}
+*/
+							 if ($NAME[$i] == "GENDER") {
 								if ($previous_gender != $_POST[$NAME[$i]] && $_POST[$NAME[$i]] != '') {
 									if ($_POST[$NAME[$i]] == "M") $notify_gender = "male";
 									elseif ($_POST[$NAME[$i]] == "F") $notify_gender = "female";
@@ -188,7 +191,9 @@ if (authenticated($cid)) {
 									$str.= $NAME[$i] . " = '" . addslashes(stripslashes($Username)) . "' ,";
 									$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($Username));
 								}
-							} elseif ($NAME[$i] == "MSTATUS") {
+							}
+							/*
+							 elseif ($NAME[$i] == "MSTATUS") {
 								$mstatus = addslashes(stripslashes($_POST[$NAME[$i]]));
 								if ($mstatus == '') {
 									header("Location: $SITE_URL/jsadmin/screen_new.php?cid=$cid&mstatus_err=1&email_profileid=$pid&val=$val");
@@ -198,7 +203,6 @@ if (authenticated($cid)) {
 									$arrProfileUpdateParams[$NAME[$i]] = addslashes(stripslashes($mstatus));
 								}
 							}
-							/*
 							                 elseif($NAME[$i]=="PHONE_RES")
 							                                         {
 							                 $phone_res=addslashes(stripslashes($_POST[$NAME[$i]]));
@@ -437,6 +441,8 @@ if (authenticated($cid)) {
 				//$sql.= " where PROFILEID = '$pid' and activatedKey=1 ";
 				//mysql_query_decide($sql) or die("$sql" . mysql_error_js());
         //Update JPROFILE Store
+	unset($arrProfileUpdateParams['MSTATUS']);
+	unset($arrProfileUpdateParams['DTOFBIRTH']);
         $result = $objUpdate->editJPROFILE($arrProfileUpdateParams,$pid,'PROFILEID','activatedKey=1');
 	unsetMemcache5Sec($user);
 	    /*
@@ -758,6 +764,9 @@ if (authenticated($cid)) {
 		$smarty->assign("cid", $cid);
 		$smarty->assign("MSG", $msg);
 		$smarty->display("jsadmin_msg.tpl");
+		if ($medit != 1 && $from_skipped != 1) {
+			header('Location: screen_new.php?user='.$user.'&cid='.$cid.'&val='.$val);
+		}
 	} elseif ($Submit1) 
 	{
 		//Setting the value in memcache, that will be checked in authentication function while user is online.
@@ -993,8 +1002,6 @@ if (authenticated($cid)) {
 			$mobileOwnerName_set = isFlagSet("MOBILE_OWNER_NAME", $screen);
 			$social_new_fields['COMPANY_NAME']['TBL'] = 'jpr';
 			$social_new_fields['COMPANY_NAME']['LABEL'] = 'Name of Organization';
-			$social_new_fields['PROFILE_HANDLER_NAME']['TBL'] = 'jpr';
-			$social_new_fields['PROFILE_HANDLER_NAME']['LABEL'] = 'Person handling Profile';
 			$social_new_fields['GOTHRA_MATERNAL']['TBL'] = 'jpr';
 			$social_new_fields['GOTHRA_MATERNAL']['LABEL'] = 'Gothra (Maternal)';
 			$social_new_fields['PG_COLLEGE']['TBL'] = 'edu';
@@ -1009,14 +1016,6 @@ if (authenticated($cid)) {
 			$social_new_fields['OTHER_PG_DEGREE']['LABEL'] = 'Other PG Degree';
 			$social_new_fields['ALT_MOBILE_OWNER_NAME']['TBL'] = 'contact';
 			$social_new_fields['ALT_MOBILE_OWNER_NAME']['LABEL'] = 'Alternate Mobile Owner';
-			$social_new_fields['ALT_MESSENGER_ID']['TBL'] = 'contact';
-			$social_new_fields['ALT_MESSENGER_ID']['LABEL'] = 'Alternate Messenger Id';
-			$social_new_fields['LINKEDIN_URL']['TBL'] = 'contact';
-			$social_new_fields['LINKEDIN_URL']['LABEL'] = 'LinkedIn Url/Id';
-			$social_new_fields['FB_URL']['TBL'] = 'contact';
-			$social_new_fields['FB_URL']['LABEL'] = 'Facebook Url/Id';
-			$social_new_fields['BLACKBERRY']['TBL'] = 'contact';
-			$social_new_fields['BLACKBERRY']['LABEL'] = 'Blackberry Pin';
 			$social_new_fields['FAV_FOOD']['TBL'] = 'hob';
 			$social_new_fields['FAV_FOOD']['LABEL'] = 'Food I Cook';
 			$social_new_fields['FAV_TVSHOW']['TBL'] = 'hob';

@@ -297,6 +297,7 @@ class FieldForm extends sfForm
 					}
 				}
 			  }
+				$screen_flag = JsCommon::setAutoScreenFlag($screen_flag,array_keys($this->formValues));
 				$screen_flag = $this->autoScreenAutoSuggest($screen_flag,$this->formValues);
 //				$screen_flag = $this->autoScreenMinorDiff($screen_flag,$this->formValues);
                                 if($bSet_NativePlaceBit)

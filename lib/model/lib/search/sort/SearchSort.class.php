@@ -236,6 +236,13 @@ class SearchSort
                         if ($loggedInProfileObj->getCASTE()) {
                                 $sortArray[] = "or(tf(PARTNER_CASTE," . $loggedInProfileObj->getCASTE() . "),tf(PARTNER_CASTE," . $doesntMatterValue . "))";
                         }
+                        if ($loggedInProfileObj->getMANGLIK()) {
+                                if(strstr($loggedInProfileObj->getMANGLIK(),"N")){
+                                        $sortArray[] = "or(tf(PARTNER_MANGLIK," . $loggedInProfileObj->getMANGLIK() . "),tf(PARTNER_MANGLIK," . $doesntMatterValue . "))";
+                                }else{
+                                        $sortArray[] = "tf(PARTNER_MANGLIK," . $loggedInProfileObj->getMANGLIK() . ")"; 
+                                }
+                        }
                         if ($loggedInProfileObj->getAGE()) {
                                 $sortArray[] = "and(if(abs(sub(min(PARTNER_LAGE," . $loggedInProfileObj->getAGE() . "),PARTNER_LAGE)),0,1),if(abs(sub(max(PARTNER_HAGE," . $loggedInProfileObj->getAGE() . "),PARTNER_HAGE)),0,1))";
                         }
@@ -273,7 +280,6 @@ class SearchSort
                                 }
                         }
                 }
-
                 if (!empty($sortArray)) {
                         $brace = '';
                         $strCondition = '';
