@@ -34,7 +34,7 @@ EOF;
     $requestDelLogObj = new MIS_REQUEST_DELETIONS_LOG();
     $userDidNotDelete = $requestDelLogObj->getAllUsersRequestedDeletion();  
     $userDidNotDeleteStr = implode(',', $userDidNotDelete);
-    $usernameObj = NEWJS_JPROFILE::getInstance();
+    $usernameObj = NEWJS_JPROFILE::getInstance('newjs_slave');
     $reportArray= $usernameObj-> getArray(array('PROFILEID' => $userDidNotDeleteStr),'','','USERNAME,EMAIL,PHONE_MOB,ISD','','','','','','','',"ACTIVATED != 'D'");
     $data="USERNAMES,PHONE NUMBER,EMAIL";
  
