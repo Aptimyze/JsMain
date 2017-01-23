@@ -21,15 +21,15 @@
                             <div class="disp-cell f18 mod_p1 gunascore"></div>
                         </div>
                         <ul class="listnone f14 fontlig modli clearfix  pt7">
-                            <li class="age_height">27 yr,  5 ft 3 in</li>
-                            <li class="edu_level_new"></li>
-                            <li class="caste"></li>
-                            <li class="religion"></li>
-                            <li class="occupation"></li>
-                            <li class="location"></li>
-                            <li class="mtongue"></li>
-                            <li class="income"></li>
-                            <li class="mstatus"></li>
+                            <li class="textTru age_height">27 yr,  5 ft 3 in</li>
+                            <li class="textTru edu_level_new"></li>
+                            <li class="textTru caste"></li>
+                            <li class="textTru religion"></li>
+                            <li class="textTru occupation"></li>
+                            <li class="textTru location"></li>
+                            <li class="textTru mtongue"></li>
+                            <li class="textTru income"></li>
+                            <li class="textTru mstatus"></li>
                         </ul>            
                     </div>
                     </a>
