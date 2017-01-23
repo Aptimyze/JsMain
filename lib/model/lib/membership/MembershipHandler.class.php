@@ -2118,7 +2118,7 @@ class MembershipHandler
     */
     public function deactivateCurrentMembership($params){
         try{
-            if(is_array($params) && $params["PROFILEID"] && $params["USERNAME"] && in_array($params["MEMBERSHIP"], VariableParams::$allowedUpgradeMembershipAllowed)){
+            if(is_array($params) && $params["PROFILEID"] && $params["USERNAME"] && in_array($params["MEMBERSHIP"], VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                 if($params["MEMBERSHIP"] == "MAIN"){
                     $billingServStatObj = new BILLING_SERVICE_STATUS();
 

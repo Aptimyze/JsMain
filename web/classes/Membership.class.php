@@ -200,7 +200,7 @@ class Membership
                     //check whether user was eligible for membership upgrade or not
                     $memCacheObject = JsMemcache::getInstance();
                     $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
-                    if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$allowedUpgradeMembershipAllowed)){
+                    if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                         $memHandlerObj = new MembershipHandler(false);
                         $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
                         unset($memHandlerObj);
@@ -316,7 +316,7 @@ class Membership
             }
         }
         else{
-            if(in_array($checkForMemUpgrade, VariableParams::$allowedUpgradeMembershipAllowed)){
+            if(in_array($checkForMemUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                 $memUpgrade = $checkForMemUpgrade;
             }
             else{
@@ -665,7 +665,7 @@ class Membership
         $urlToHit = JsConstants::$siteUrl."/api/v1/membership/deactivateCurrentMembership";
         $profileCheckSum = JsAuthentication::jsEncryptProfilechecksum($this->profileid);
         $postParams = array("PROFILECHECKSUM"=>$profileCheckSum,"USERNAME"=>$this->username,"MEMBERSHIP"=>$memUpgrade,"NEW_ORDERID"=>$orderid);
-        $deactivationResponse = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,VariableParams::$deactivationCurlTimeout);
+        $deactivationResponse = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,VariableParams::$memUpgradeConfig["deactivationCurlTimeout"]);
         if($deactivationResponse){
             $finalOutput = json_decode($deactivationResponse,true);
             error_log("end of deactivateMembership...".$finalOutput["responseStatusCode"]);

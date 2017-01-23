@@ -28,7 +28,7 @@ class MembershipAPIResponseHandler {
 	$this->selectedVas = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("selectedVas"));
         $this->displayPage = $request->getParameter("displayPage");
         $this->upgradeMem = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("upgradeMem"));
-        if(!$this->upgradeMem || !in_array($this->upgradeMem, VariableParams::$allowedUpgradeMembershipAllowed)){
+        if(!$this->upgradeMem || !in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
            $this->upgradeMem = "NA"; 
         }
         if(empty($this->displayPage)) {
@@ -401,7 +401,7 @@ class MembershipAPIResponseHandler {
         else {
             $renewText = NULL;
         }
-        
+        var_dump($this->userObj->userType);die;
         if ($this->userObj->userType == 5 && $this->device != "iOS_app" && $this->contactsRemaining != 0) {
             $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
 

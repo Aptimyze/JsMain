@@ -68,7 +68,7 @@ function updtOrder($ORDERID, &$dup, $updateStatus = 'Y') {
                 //check whether user was eligible for membership upgrade or not
                 $memCacheObject = JsMemcache::getInstance();
                 $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
-                if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$allowedUpgradeMembershipAllowed)){
+                if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                     $memHandlerObj = new MembershipHandler(false);
                     $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
                     unset($memHandlerObj);
@@ -298,7 +298,7 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         }
         if ($insert_id) {
             //set upgrade entry record for such user
-            if($memUpgrade != "NA" && in_array($memUpgrade, VariableParams::$allowedUpgradeMembershipAllowed)){
+            if($memUpgrade != "NA" && in_array($memUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                 error_log("ankita inserting new entry in upgrade_orders for ".$profileid."---".$data["ORDERID"]);
                 //set entry in upgrade_orders for membership upgrade for current user
                 $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
