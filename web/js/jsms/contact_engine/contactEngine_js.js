@@ -469,6 +469,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
                 tempParams["stype"]='WMM';
         if(tempParams["fromJSMS_MOD"] == 1)
         { 
+          tempParams["stype"]='MOD_JSMS';
           $("#matchOfDaytuple_"+index+" .contactLoader").css("display","block");
         }
         else
