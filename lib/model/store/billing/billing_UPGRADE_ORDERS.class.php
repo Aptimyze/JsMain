@@ -14,6 +14,7 @@ class billing_UPGRADE_ORDERS extends TABLE
     $this->UPGRADE_STATUS_BIND_TYPE = "STR";
     $this->ENTRY_DT_BIND_TYPE = "STR";
     $this->MEMBERSHIP_BIND_TYPE = "STR";
+    $this->REASON_BIND_TYPE = "STR";
   }
 
 	/**

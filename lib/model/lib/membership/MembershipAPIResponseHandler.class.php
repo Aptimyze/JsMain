@@ -31,7 +31,6 @@ class MembershipAPIResponseHandler {
         if(!$this->upgradeMem || !in_array($this->upgradeMem, VariableParams::$allowedUpgradeMembershipAllowed)){
            $this->upgradeMem = "NA"; 
         }
-        error_log("ankita received upgradeMem in Membershipapireponsehandler--".$this->upgradeMem);
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;
         }

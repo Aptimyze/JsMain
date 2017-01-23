@@ -16,11 +16,14 @@ class MembershipHandler
     public $serviceObj;
     public $jprofileObj;
 
-    public function __construct()
+    public function __construct($setStoreObj = true)
     {
         $this->memObj      = new JMembership();
         $this->serviceObj  = new JServices();
-        $this->jprofileObj = new JPROFILE();
+        
+        if($setStoreObj != false){
+            $this->jprofileObj = new JPROFILE();
+        }
     }
 
     public function fetchMembershipDetails($membership, $userObj, $device = 'desktop',$ignoreShowOnlineCheck= false)
@@ -2168,7 +2171,7 @@ class MembershipHandler
                 error_log("ankita updating deactivate failed entry");
                 //log the failed deactivate entry
                 $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
-                $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("DEACTIVATED_STATUS"=>"FAILED"));
+                $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Invalid inputs to deactivateCurrentMembership api"));
                 unset($upgradeOrdersObj);
                 return false;
             }
@@ -2177,9 +2180,23 @@ class MembershipHandler
             error_log("ankita updating deactivate failed entry");
             //log the failed deactivate entry
             $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
-            $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("DEACTIVATED_STATUS"=>"FAILED"));
+            $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("DEACTIVATED_STATUS"=>"FAILED","REASON"=>"exception in deactivateCurrentMembership-".$e));
             unset($upgradeOrdersObj);
             return false;
         }
+    }
+    
+    /*function - updateMemUpgradeStatus
+    * update success upgrade status
+    * @inputs: $orderid
+    * @outputs: none
+    */
+    function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array()){
+        error_log("ankita updating upgrade success/failed entry");
+        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+        $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
+        unset($upgradeOrdersObj);
+        $memCacheObject = JsMemcache::getInstance();
+        $memCacheObject->remove($profileid.'_MEM_UPGRADE_'.$orderid);
     }
 }

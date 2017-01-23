@@ -63,6 +63,17 @@ function updtOrder($ORDERID, &$dup, $updateStatus = 'Y') {
             if (mysql_affected_rows_js()) $ret = true;
             else $ret = false;
             $dup = false;
+            
+            if($updateStatus == 'N' || $updateStatus == "N"){
+                //check whether user was eligible for membership upgrade or not
+                $memCacheObject = JsMemcache::getInstance();
+                $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
+                if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$allowedUpgradeMembershipAllowed)){
+                    $memHandlerObj = new MembershipHandler(false);
+                    $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
+                    unset($memHandlerObj);
+                }
+            }
         } 
         else {
             SendMail::send_mail('vibhor.garg@jeevansathi.com', "PMTRECVD already populated for $ORDERID", "PMTRECVD already populated for $ORDERID", 'js-sums@jeevansathi.com', 'avneet.bindra@jeevansathi.com');

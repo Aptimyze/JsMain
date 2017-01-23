@@ -187,14 +187,25 @@ class Membership
             $myrow = $orderDetails[0];
             if ($myrow["PMTRECVD"] == '0000-00-00' || $myrow["STATUS"] == 'N' || $myrow["STATUS"] == 'B') {
                 $date = date("Y-m-d", time());
-                $updateStatus = $billingOrderObj->updatePaymentReceivedStatus($date, $updateStatus, $part2, $part1);
-                if ($updateStatus) {
+                $updateRowStatus = $billingOrderObj->updatePaymentReceivedStatus($date, $updateStatus, $part2, $part1);
+                if ($updateRowStatus) {
                     $ret = true;
                 }
                 else {
                     $ret = false;
                 }
                 $dup = false;
+                if($updateStatus == 'N' || $updateStatus == "N"){
+                    error_log("setting failed payment ankita..".$updateStatus);
+                    //check whether user was eligible for membership upgrade or not
+                    $memCacheObject = JsMemcache::getInstance();
+                    $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
+                    if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$allowedUpgradeMembershipAllowed)){
+                        $memHandlerObj = new MembershipHandler(false);
+                        $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
+                        unset($memHandlerObj);
+                    }
+                }
             } 
             else {
                 $dup = true;
@@ -638,23 +649,12 @@ class Membership
         $this->updateJprofileSubscription();
         $this->checkIfDiscountExceeds($userObjTemp);
         if($memUpgrade != "NA"){
-            $this->updateMemUpgradeStatus($orderid);
+            $memHandlerObj = new MembershipHandler(false);
+            $memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE"));
+            unset($memHandlerObj);
         }
     }
 
-    /*function - updateMemUpgradeStatus
-    * update success upgrade status
-    * @inputs: $orderid
-    * @outputs: none
-    */
-    function updateMemUpgradeStatus($orderid){
-        error_log("ankita updating upgrade success entry");
-        $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
-        $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,array("UPGRADE_STATUS"=>"DONE"));
-        unset($upgradeOrdersObj);
-        $memCacheObject = JsMemcache::getInstance();
-        $memCacheObject->remove($this->profileid.'_MEM_UPGRADE_'.$orderid);
-    }
 
     /*function - deactivateMembership
     * deactivates currently active membership of user
