@@ -2,7 +2,7 @@
 ~if $matchOfDay.tuples neq ''`
 <div class="pad1">
   <div class="fullwid pb10 ~if $matchOfDay.tuples eq ''` pt15 ~/if`">
-    <div class="fl color7"> <span class="f17 fontlig">Featured Profiles</span>&nbsp;<span id='matchOfDay_count' class="opa50 f14">~$matchOfDay.view_all_count`</span> </div>
+    <div class="fl color7"> <span class="f17 fontlig">Featured Profiles</span>&nbsp;<span id='matchOfDay_count' class="opa50 f14">~$matchOfDay.tuples|@count`</span> </div>
     <div class="clr"></div>
   </div>
     <div class="swrapper" id="swrapper">
