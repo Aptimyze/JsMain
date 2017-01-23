@@ -35,17 +35,17 @@ EOF;
     $userDidNotDelete = $requestDelLogObj->getAllUsersRequestedDeletion();  
     $userDidNotDeleteStr = implode(',', $userDidNotDelete);
     $usernameObj = NEWJS_JPROFILE::getInstance();
-    $reportArray= $usernameObj-> getArray(array('PROFILEID' => $userDidNotDeleteStr),'','','USERNAME','','','','','','','',"ACTIVATED != 'D'");
-    $data="USERNAMES";
+    $reportArray= $usernameObj-> getArray(array('PROFILEID' => $userDidNotDeleteStr),'','','USERNAME,EMAIL,PHONE_MOB,ISD','','','','','','','',"ACTIVATED != 'D'");
+    $data="USERNAMES,PHONE NUMBER,EMAIL";
  
      if(is_array($reportArray))
     {
       foreach ($reportArray as $key => $value) 
       {
-      $data.="\r\n".$value['USERNAME'];
+      $data.="\r\n".$value['USERNAME'].",".$value['ISD'].$value['PHONE_MOB'].",".$value['EMAIL'];
       }
     }
-    $todayDate = (new DateTime())->format('Y-m-d h:m');
+    $todayDate = (new DateTime())->format('Y-m-d');
    // print_r($data); die('aaa');
     SendMail::send_email('anant.gupta@naukri.com,mithun.s@jeevansathi.com',"Please find the attached CSV file.","Report for Users who did not delete their profile even after receiving a request to delete","noreply@jeevansathi.com",'','',$data,'','requestDelete_'.$todayDate.".csv");
     // add your code here
