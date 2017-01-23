@@ -232,7 +232,7 @@ class InformationTypeAdapter
             case "MATCH_OF_THE_DAY":
                 if(!JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId)){
                         $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY('newjs_master');
-                        $profilesArray = $matchOfDayObj->getMatchForProfileTillDays($condition);
+                        $profilesArray = $matchOfDayObj->getMatchForProfileForListing($condition, $skipArray);
                         if($condition["GENDER"] == 'F'){
                                 $searchObj = new NEWJS_SEARCH_MALE('newjs_slave');
                         }else{
