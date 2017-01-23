@@ -386,8 +386,17 @@ class chatActions extends sfActions
 							if ($count < 3) {
 								$response["cansend"] = true;
 								$responseArray['cansend']=true;
-								$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
-								$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge($responseArray);
+								if(sfContext::getInstance()->getRequest()->getParameter("page_source") == "chat" && sfContext::getInstance()->getRequest()->getParameter("channel") == "A") {
+									$androidText = true;
+								}
+								else
+									$androidText = false;
+
+									$buttonResponse = new ButtonResponse($this->loginProfile,$this->Profile,array(),$this->contactHandlerObj);
+									$responseArray["buttons"][] = $buttonResponse->getInitiatedButton($androidText);
+									$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
+									$response["buttondetails"] = ButtonResponseApi::buttonDetailsMerge($responseArray);
+
 							} else {
 								$response["cansend"] = false;
 								$response['sent'] = false;
