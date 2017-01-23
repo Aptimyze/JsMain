@@ -57,6 +57,10 @@ $className = get_class($this);
 				{
 					continue;
 				}
+				if($key == "MATCH_OF_THE_DAY" && LoggedInProfile::getInstance()->getACTIVATED() == 'U')
+				{
+					continue;					
+				}
 				foreach($value as $k=>$v)
                                 {
 					if($v == "TUPLES")

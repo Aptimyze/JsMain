@@ -144,7 +144,7 @@
 <input type="hidden" id="awaitingResponseCount" value="~$apiData.interest_received.tuples|@count`">
 <input type="hidden" id="visitorCount" value="~$apiData.visitors.new_count`">
 <input type="hidden" id="matchalertCount" value="~$apiData.match_alert.tuples|@count`">
-<input type="hidden" id="matchOfDayCount" value="~$apiData.match_alert.tuples|@count`">
+<input type="hidden" id="matchOfDayCount" value="~$apiData.match_of_the_day.tuples|@count`">
 <a href="#" onClick="setNotificationView();" id="darkSection"></a>
 <div class="pad1 preload" id="profileDetailSection" style="overflow-x:scroll; width:100% ;white-space: nowrap; background-color: #e4e4e4; overflow-y: hidden;">
 	<div class="row" style=" width:250%;">
@@ -292,7 +292,7 @@
 
 <span id="matchOfDayPresent"  class="setWidth" style="display:block;background-color: #e4e4e4; margin-top:15px;">
 	~if $showMatchOfTheDay eq 1`
-		~include_partial("myjs/jsmsMatchOfTheDaySection",[matchalertData=>$apiData.match_alert,gender=>$apiData.gender])`
+		~include_partial("myjs/jsmsMatchOfTheDaySection",[matchOfDay=>$apiData.match_of_the_day,gender=>$apiData.gender])`
 	~/if`
 </span>
 
@@ -316,7 +316,7 @@
 	~include_partial("myjs/jsmsMatchalertSection",[matchalertData=>$apiData.match_alert])`
 </span>
 <span id="matchOfDayAbsent" style="display:none;background-color: #e4e4e4;">
-	~include_partial("myjs/jsmsMatchOfTheDaySection",[matchalertData=>$apiData.match_alert])`
+	~include_partial("myjs/jsmsMatchOfTheDaySection",[matchalertData=>$apiData.match_of_the_day])`
 </span>
 ~include_component('common', 'notificationLayerJsms')`	
 </div>

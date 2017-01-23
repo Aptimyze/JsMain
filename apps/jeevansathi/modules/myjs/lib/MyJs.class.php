@@ -501,6 +501,13 @@ class MyJs implements Module
 			$condition["NEW"] = 1;
       $condition["LOGIC"] = MatchAlertLogicEnum::MATCHES_LAST_SENT;
 		}
+		if ($infoType == "MATCH_OF_THE_DAY")
+		{
+			$condition["GENDER"] = $this->profileObj->getGENDER();
+            $condition['PROFILEID'] = $this->profileObj->getPROFILEID();
+            $condition['ENTRY_DT'] = date("Y-m-d 00:00:00", strtotime('now') - 7*24*3600);
+            $condition['IGNORED'] = 'N';
+		}
 		
                 $condition["ORDER"] = $this->configurations[$infoType]["TUPLE_ORDER"];
                 return $condition;
