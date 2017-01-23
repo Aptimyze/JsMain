@@ -805,7 +805,7 @@ if (isset($data)) //successful login
             $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/fetchAbuseInvalidData\">Fetch Abuse and Invalid Report</a>";
 
         if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
-            $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/deleteRequestForUser\">Request a Deletion on User's behalf</a>";
+            $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/deleteRequestForUser\">Request user to delete profile</a>";
     }
 
     $smarty->assign("linkarr", $linkarr);
