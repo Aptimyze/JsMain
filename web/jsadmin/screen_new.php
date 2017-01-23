@@ -442,6 +442,8 @@ if (authenticated($cid)) {
 				//$sql.= " where PROFILEID = '$pid' and activatedKey=1 ";
 				//mysql_query_decide($sql) or die("$sql" . mysql_error_js());
         //Update JPROFILE Store
+	unset($arrProfileUpdateParams['MSTATUS']);
+	unset($arrProfileUpdateParams['DTOFBIRTH']);
         $result = $objUpdate->editJPROFILE($arrProfileUpdateParams,$pid,'PROFILEID','activatedKey=1');
 
 	    /*

@@ -284,6 +284,20 @@
 						<input type="hidden" name="GENDER1" id="GENDER1" value="~$SHOW_GENDER`">
 					~/if`
 					~/if`
+                                        ~if $val eq 'new'`
+                                        <tr>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                        </tr>
+                                                <tr class="label">
+                                                                <td align="center">Date of Birth : </td>
+                                                                <td>~$day_of_birth`-~$month_of_birth`-~$year_of_birth`</td>
+                                                </tr>
+                                        <tr>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
+                                        </tr>
+                                        ~/if`
 					~if $SHOWEMAIL eq "Y" AND $EMAILvalue`
 						<tr class="label">
 							<td align="center">Email</td>
