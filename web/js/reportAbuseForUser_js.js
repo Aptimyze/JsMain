@@ -61,6 +61,17 @@ function reportAbuseForUserFun(obj){
 			         if(typeof(result) != 'object')
 					  var out = JSON.parse(result);
 
+					if(typeof(result) != 'undefined' && result.responseStatusCode == "1")
+		                 {
+
+		                 		$('#formForReportAbuse').hide();
+		                 		$('#successfullDisplay').html(result.message).css('display','block');
+		                 		$('#goBackforRishav').css('display','block');
+
+		                 		obj.disabled = false;
+		                 		return;
+		                 }
+
 					 if(typeof(out) != 'undefined' && out['message'] == "both are not correct")
 		                 {
 		                 		//$('#formForReportAbuse').hide();
@@ -83,7 +94,7 @@ function reportAbuseForUserFun(obj){
 		                 } 
 
 		                 else if (result.responseStatusCode == '0')
-		                 { 
+		                 { 		
 		                 		$('#formForReportAbuse').hide();
 		                 		$('#successfullDisplay').css('display','block');
 		                 		$('#goBackforRishav').css('display','block');

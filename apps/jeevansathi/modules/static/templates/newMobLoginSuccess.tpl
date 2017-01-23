@@ -97,7 +97,7 @@ You need to be a Registered Member<br />to connect with this user</div>
 					<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><defs><style>.cls-1{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.2px;}</style></defs><title>icons</title><path class="cls-1" d="M17.49,2h-2a.5.5,0,0,0-.33.12l-6.9,6A7.31,7.31,0,0,0,7,8,5,5,0,1,0,7,18a4.69,4.69,0,0,0,4.8-4.64,4,4,0,0,0-.52-2.06L13.87,10V7.68h1.81c.26,0,.25,0,.26-.26V5.1h1.81c.32,0,.26.13.26-.26V2.5A.5.5,0,0,0,17.49,2ZM15.16,4,9.32,9.07m-1.64,4.8a1.55,1.55,0,1,0-1.55,1.55A1.55,1.55,0,0,0,7.68,13.87Z"/></svg>
 				</div>
 				<div class="fl classone wid80p">
-					<input type="password" id="password" value="" class="fullwid fontlig" maxlength="40" name="password" placeholder="Password">
+					<input type="password" id="password"  autocomplete="off"  value="" class="fullwid fontlig" maxlength="40" name="password" placeholder="Password">
 				</div>
 				<div id="showHide" style="display: none" class="fl f12 white fontlig wid10p txtr">
                                     <span style="vertical-align: middle;">Show</span>

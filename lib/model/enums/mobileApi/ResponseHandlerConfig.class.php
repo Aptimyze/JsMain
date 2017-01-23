@@ -122,7 +122,12 @@ class ResponseHandlerConfig
         
     public static $NO_EMAILTYPE=  array("message"=>"No Email Type Passed","statusCode"=>'1');
   	public static $ALTERNATE_EMAIL_SUCCESS=  array("message"=>"A link has been sent to your email id {email}, click on the link to verify email.","statusCode"=>'0');
-  	public static $ALTERNATE_EMAIL_ID_NOT_FOUND=  array("message"=>"No alternate email ID found for the given user.","statusCode"=>'0');
+  	public static $ALTERNATE_EMAIL_ID_NOT_FOUND=  array("message"=>"No email ID found for the given user.","statusCode"=>'0');
 	public static $PEAK_LOAD_FAILURE = array("message"=>"This operation cannot be done at site peak load","statusCode"=>'0');
+
+	// Report Abuse
+	public static $ABUSE_ATTEMPTS_OVER = array("message"=>"You cannot report abuse against the same person more than twice.","statusCode"=>'1');
 }
 ?>
+
+
