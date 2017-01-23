@@ -222,7 +222,7 @@ class MembershipAPIResponseHandler {
         $dataArr = $this->generateHamburgerMessageResponse();
         $this->topDiscountBanner = $dataArr['hamburger_message'];
 
-        if(!empty($this->profileid) && $this->userObj->userType != 5 && $this->userObj->userType != 6){
+        if(!empty($this->profileid) && $this->userObj->userType != 5 && $this->userObj->userType != memUserType::UPGRADE_ELIGIBLE && $this->userObj->userType != 6){
 	        // VAS Logic data required
 	        $profileObj = LoggedInProfile::getInstance('newjs_master');
 	        $horoscopeObj = new Horoscope();
@@ -377,11 +377,10 @@ class MembershipAPIResponseHandler {
         
         $bottomHelp = $topHelp;
         $bottomHelp['title'] = 'I need help in buying Membership';
-
         //tracking of mem page visits only for free user to autocollapse learning cartoon
         if(in_array($this->userObj->userType,array(2,4,6)))
 		  $openedCount = $this->memHandlerObj->trackAndGetOpenedCount($this->profileid);
-        
+        //var_dump($this->userObj->userType);die;
         if (($this->userObj->userType == 4 || $this->userObj->userType == 6) && $this->device != "iOS_app") {
             if ($this->contactsRemaining == 0) {
                 $renewText = "Renew your membership to continue current benefits";
@@ -390,7 +389,7 @@ class MembershipAPIResponseHandler {
                 $renewText = "Renew before {$this->expiry_date} & get " . substr($this->topDiscountBanner['top'], 0, strpos($this->topDiscountBanner['top'], "till", 0));;
             }
         } 
-        else if ($this->userObj->userType == 5) {
+        else if ($this->userObj->userType == 5 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE) {
             $renewText = "You may choose from Value Added Services below that best fit your needs";
         }
         
@@ -401,8 +400,8 @@ class MembershipAPIResponseHandler {
         else {
             $renewText = NULL;
         }
-        var_dump($this->userObj->userType);die;
-        if ($this->userObj->userType == 5 && $this->device != "iOS_app" && $this->contactsRemaining != 0) {
+        //var_dump($this->userObj->userType);die;
+        if (($this->userObj->userType == 5 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE) && $this->device != "iOS_app" && $this->contactsRemaining != 0) {
             $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
 
             //filter out vas services from vas content based on main membership if vas content is there

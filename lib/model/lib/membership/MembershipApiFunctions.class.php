@@ -800,7 +800,7 @@ class MembershipApiFunctions
             }
             $topBlockMessage["contactsLeftText"] = "Contacts Left To View";
             $topBlockMessage["contactsLeftNumber"] = $apiObj->contactsRemaining;
-            if ($apiObj->userObj->userType == 5 || $apiObj->userObj->userType == 6) {
+            if ($apiObj->userObj->userType == 5 || $apiObj->userObj->userType == 6 || $apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE) {
                 $benefits = $this->getServiceWiseBenefits($apiObj->memID, $apiObj);
                 $benefits = $benefits[0];
             }

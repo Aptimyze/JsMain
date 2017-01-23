@@ -889,7 +889,7 @@ class MembershipHandler
                 unset($festOffrLookupObj);
                 $code = 7;
             }
-        } elseif ($userObj->userType == 5) {
+        } elseif ($userObj->userType == 5 || $userObj->userType == memUserType::UPGRADE_ELIGIBLE) {
 
             $expiry_date = null;
             $discPerc    = null;
@@ -1583,7 +1583,7 @@ class MembershipHandler
             $profileObj      = LoggedInProfile::getInstance();
             $activatedStatus = $profileObj->getACTIVATED();
         }
-        if ($userType != 5 && $activatedStatus == 'Y') {
+        if ($userType != 5 && $userType != memUserType::UPGRADE_ELIGIBLE && $activatedStatus == 'Y') {
             return 1;
         } else {
             return 0;

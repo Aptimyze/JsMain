@@ -20,6 +20,7 @@ class memUser
     public $contactsRemaining;
     public $memObj;
     public $festFlag;
+    public $memUpgradeEligible = false;
 
     function __construct($profileid) {
         if ($profileid != '') {
@@ -61,9 +62,14 @@ class memUser
         } 
         elseif ($userType == 7) {
             $this->userType = memUserType::ONLY_VAS;
-        } 
+        }
+        elseif ($userType == memUserType::UPGRADE_ELIGIBLE) {
+            $this->userType = memUserType::UPGRADE_ELIGIBLE;
+            $this->memStatus = $memStatus;
+        }
         else echo "blank";
         $this->expiryDate = date("jS F", strtotime($expiryDate));
+        $this->memUpgradeEligible = $memUpgradeEligible;
     }
 
     public function getIpAddress() {

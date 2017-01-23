@@ -8,7 +8,7 @@ class memUserType
     const PAID_BEYOND_RENEW = "5";
     const PAID_WITHIN_RENEW = "6";
     const ONLY_VAS = "7";
-    const ELIGIBLE_FOR_MEM_UPGRADE = "8";
+    const UPGRADE_ELIGIBLE = "8";
 }
 class userDiscounts
 {
@@ -65,7 +65,7 @@ class VariableParams
         public static $memUpgradeConfig = array(
                                             "deactivationCurlTimeout"=>120000,
                                             "allowedUpgradeMembershipAllowed"=>array("MAIN"),
-                                            "mainMemUpgradeLimit"=>"+ 7 day"
+                                            "mainMemUpgradeLimit"=>-7
                                             );
     
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");

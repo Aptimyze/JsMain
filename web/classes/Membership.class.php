@@ -536,6 +536,7 @@ class Membership
             $row = $billingServStatObj->getLastActiveServiceDetails($profileid);
             if ($row['EXPIRY_DT']) {
                 if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
+                    //confirm whether to handle upgrade for unlimited or not ankita
                     return array(5, $row["EXPIRY_DT"], $row['SERVICEID']);
                 } 
                 else {
@@ -545,13 +546,28 @@ class Membership
                         $ts1 = mktime(0, 0, 0, $mm, $dd, $yy);
                         $expiry_date_plus_10 = date("j-M-Y", $ts);
                         $expiry_date = date("j-M-Y", $ts1);
+                        
                         if ($row['DIFF'] < 0) return array(4, $expiry_date_plus_10, $row["SERVICEID"]);
-                        else return array(6, $expiry_date, $row['SERVICEID']);
+                        else{
+                            /*if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]){
+                                return array(memUserType::UPGRADE_ELIGIBLE, $expiry_date, $row["SERVICEID"]);
+                            }
+                            else{*/
+                                return array(6, $expiry_date, $row['SERVICEID']);
+                            //}
+                        }
                     } 
                     else if ($row['DIFF'] < - 10) {
                         return array(3, 0, $row["SERVICEID"]);
                     } 
-                    else return array(5, 0, $row["SERVICEID"]);
+                    else {
+                        if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]){
+                            return array(memUserType::UPGRADE_ELIGIBLE, 0, $row["SERVICEID"]);
+                        }
+                        else{
+                            return array(5, 0, $row["SERVICEID"]);
+                        }
+                    }
                 }
             } 
             else {
