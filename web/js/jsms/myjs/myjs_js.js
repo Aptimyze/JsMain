@@ -116,12 +116,11 @@ function setBlock(blockName) {
     
 	var count = eval(blockName + "Count");   
     if (count > 0) {
-           
-		document.getElementById(blockName + "Present").style.display = "block";
-		document.getElementById(blockName + "Absent").style.display = "none";
+           $("#"+blockName+"Present").css('display','block');
+           $("#"+blockName+"Absent").css('display','none');
 	} else {
-		document.getElementById(blockName + "Present").style.display = "none";
-		document.getElementById(blockName + "Absent").style.display = "block";
+		$("#"+blockName+"Present").css('display','none');
+        $("#"+blockName+"Absent").css('display','block');
 	}
 }
 	$(window).load(function() {

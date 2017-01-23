@@ -315,9 +315,6 @@
 <span id="matchalertAbsent" style="display:none;background-color: #e4e4e4;">
 	~include_partial("myjs/jsmsMatchalertSection",[matchalertData=>$apiData.match_alert])`
 </span>
-<span id="matchOfDayAbsent" style="display:none;background-color: #e4e4e4;">
-	~include_partial("myjs/jsmsMatchOfTheDaySection",[matchalertData=>$apiData.match_of_the_day])`
-</span>
 ~include_component('common', 'notificationLayerJsms')`	
 </div>
 </div>
