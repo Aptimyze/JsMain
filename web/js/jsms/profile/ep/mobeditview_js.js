@@ -9,7 +9,7 @@ var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','Foc
 var bCallCreateHoroscope = false;
  $("document").ready(function() {
 
-
+ 	getFieldsOnCal();
     setTimeout(function() {
 		if($('#listShow').val()==1)
          $("#AlbumMainTab").click(); 
@@ -571,3 +571,101 @@ function bindEmailButtons(){
             });
     });
 }
+
+
+  function getFieldsOnCal()
+  {
+    fieldIdMappingArray = {
+      "name" : { "type": "text","mobileDivFieldId":"BasicDetails_name","mobileFieldId":"NAME"},
+    	// contact section
+      "email" : { "type": "text","mobileDivFieldId":"EmailId_name","mobileFieldId":"EMAIL"},
+      "altEmail" : { "type": "text","mobileDivFieldId":"AlternateEmailId_name","mobileFieldId":"ALT_EMAIL"},
+      "mobile" : { "type": "text","mobileDivFieldId":"MobileNo_name","mobileFieldId":"PHONE_MOB"},
+      "altMobile" : { "type": "text","mobileDivFieldId":"AlternateMobileNo_name","mobileFieldId":"ALT_MOBILE"},
+
+      // family section
+      "familyInfo" : { "type": "text","mobileDivFieldId":"AboutMyFamily_name","mobileFieldId":"FAMILYINFO"},
+      "familyValues" : { "type": "dropdown","mobileDivFieldId":"Family_name","mobileFieldId":"FAMILY_VALUES"},
+      "familyType" : { "type": "dropdown","mobileDivFieldId":"Family_name","mobileFieldId":"FAMILY_TYPE"},
+      "familyStatus" : { "type": "dropdown","mobileDivFieldId":"Family_name","mobileFieldId":"FAMILY_STATUS"},
+      "livingWithParents" : { "type": "dropdown","mobileDivFieldId":"Family_name","mobileFieldId":"PARENT_CITY_SAME"},
+      // parents detail
+      "fatherOccupation" : { "type": "dropdown","mobileDivFieldId":"Parent_name","mobileFieldId":"FAMILY_BACK"},
+      "motherOccupation" : { "type": "dropdown","mobileDivFieldId":"Parent_name","mobileFieldId":"MOTHER_OCC"},
+      "familyIncome" : { "type": "dropdown","mobileDivFieldId":"Parent_name","mobileFieldId":"FAMILY_INCOME"},
+      //siblings detail
+      "brother" : {"type": "dropdown","mobileDivFieldId":"Siblings_name","mobileFieldId":"T_BROTHER"},
+      "sister" : {"type": "dropdown","mobileDivFieldId":"Siblings_name","mobileFieldId":"T_SISTER"},
+    };
+
+
+    mobileSectionArray = {"education":"Education","basic":"Details",
+    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family"
+    }
+
+    section = getUrlParameter('section');
+    fieldName = getUrlParameter('fieldName');
+    if ( typeof section !== 'undefined' && mobileSectionArray.hasOwnProperty(section))
+    {
+      fieldType = '';
+      mobileDivFieldId = '';
+      mobileFieldId = '';
+      if ( typeof fieldName !== 'undefined' && fieldIdMappingArray.hasOwnProperty(fieldName) )
+      {
+        fieldType = fieldIdMappingArray[fieldName].type;
+        mobileDivFieldId = fieldIdMappingArray[fieldName].mobileDivFieldId;
+        mobileFieldId = fieldIdMappingArray[fieldName].mobileFieldId;
+      }
+      openFieldsOnCal(mobileSectionArray[section],fieldType,mobileFieldId,mobileDivFieldId);        
+    }
+    
+  }
+
+  function openFieldsOnCal(section='',fieldType='',fieldId='',fieldDivId='') 
+  {
+    if ( fieldDivId === '')
+    {
+    	window.location.replace(window.location.href+"#"+section);
+  	}
+  	else
+  	{
+  		var checkExist = setInterval(function() 
+        {
+            if ($('#'+fieldDivId).length) 
+            {
+                $("#"+fieldDivId).click();
+                if ( fieldType == 'text' && $("#"+fieldId).length )
+                {
+                	$("#"+fieldId).focus();
+                }
+                else if ( fieldType == 'dropdown' && $("#"+fieldId).length )
+                {
+                	setTimeout(function() {   
+    	            	$("#"+fieldId).click();
+					}, 100);
+
+                }
+                clearInterval(checkExist);
+            }
+
+
+        }, 100);
+  	}
+  }
+
+
+
+	var getUrlParameter = function getUrlParameter(sParam) {
+	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+	    sURLVariables = sPageURL.split('&'),
+	    sParameterName,
+	    i;
+
+	for (i = 0; i < sURLVariables.length; i++) {
+	    sParameterName = sURLVariables[i].split('=');
+
+	    if (sParameterName[0] === sParam) {
+	        return sParameterName[1] === undefined ? true : sParameterName[1];
+	    }
+	}
+};

@@ -6274,7 +6274,7 @@ $(document).ready(function() {
         history.pushState('', '', newUrl);
     }
 
-    openFieldsOnCal();
+    getFieldsOnCal();
 
 });
 
@@ -6503,43 +6503,89 @@ $('.js-previewAlbum').click(function(){
 	}
 
 
-  function openFieldsOnCal()
+  function getFieldsOnCal()
   {
+    fieldIdMappingArray = {
+      //basic section
+      "name" : {"type": "text","desktopFieldId":"name"},
+      "height" : {"type": "dropdown","desktopFieldId":"height_chosen"},
+      "havechild" : {"type": "text","desktopFieldId":"havechild"},
+      "mtongue" : {"type": "dropdown","desktopFieldId":"mtongue_chosen"},
+      
+      // contact section
+      "email" : {"type": "text","desktopFieldId":"email"},
+      "altEmail" : {"type": "text","desktopFieldId":"alt_email"},
+      "mobile" : {"type": "text","desktopFieldId":"phone_mob-mobile"},
+      "altMobile" : {"type": "text","desktopFieldId":"alt_mobile-mobile"},
+      "contactAddress" : {"type": "text","desktopFieldId":"contact"},
+      "parentAddress" : {"type": "text","desktopFieldId":"parents_contact"},
+
+       // family section
+      "familyInfo" : { "type": "text","desktopFieldId":"familyinfo"},
+      "familyValues" : { "type": "text","desktopFieldId":"family_values"},
+      "familyType" : { "type": "text","desktopFieldId":"family_type"},
+      "familyStatus" : { "type": "text","desktopFieldId":"family_status"},
+      "livingWithParents" : { "type": "text","desktopFieldId":"parent_city_same"},
+      // parents detail
+      "fatherOccupation" : { "type": "dropdown","desktopFieldId":"family_back_chosen"},
+      "motherOccupation" : { "type": "dropdown","desktopFieldId":"mother_occ_chosen"},
+      "familyIncome" : { "type": "dropdown","desktopFieldId":"family_income_chosen"},
+      //siblings detail
+      "brother" : {"type": "text","desktopFieldId":"t_brother"},
+      "sister" : {"type": "text","desktopFieldId":"t_sister"},
+    };
+
+    desktopSectionArray = {"education":"career","basic":"basic","about":"about",
+      "career":"career","lifestyle":"lifestyle","contact":"contact","family":"family"
+    }
+
     section = getUrlParameter('section');
-    fieldId = getUrlParameter('fieldId');
-    fieldType = getUrlParameter('fieldType');
-
-    if ( typeof section !== 'undefined' && $("[data-section-id="+section+"]").length )
+    fieldName = getUrlParameter('fieldName');
+    if ( typeof section !== 'undefined' && $("[data-section-id="+desktopSectionArray[section]+"]").length)
     {
-     $("[data-section-id="+section+"]").click();      
-
-     if ( typeof fieldId !== 'undefined' )
-     {
-       var checkExist = setInterval(function() {
-        if ($('#'+fieldId).length) {
-          
-          if ( typeof fieldType !== 'undefined' && fieldType == 'dropdown')
-          {
-            $("#"+fieldId).trigger('mousedown');
-          }
-          else
-          {
-            $("#"+fieldId).focus();
-          }
-          clearInterval(checkExist);
-        }
-      }, 100);
-     }
-     else
-     {
-         $('html, body').animate({
-           scrollTop: ($('#section-'+section).offset().top)
-        },500);
-     }
-
+      fieldType = '';
+      desktopFieldId = '';
+      if ( typeof fieldName !== 'undefined' && fieldIdMappingArray.hasOwnProperty(fieldName) )
+      {
+        fieldType = fieldIdMappingArray[fieldName].type;
+        desktopFieldId = fieldIdMappingArray[fieldName].desktopFieldId;
+      }
+      openFieldsOnCal(desktopSectionArray[section],fieldType,desktopFieldId);        
     }
   }
- 
+
+  function openFieldsOnCal(section='',fieldType='',fieldId='') 
+  {
+    
+    if ( section !== '' )
+    {
+      $("[data-section-id="+section+"]").click();
+      if ( fieldType !== '' && fieldId !== '' )
+      {
+        var checkExist = setInterval(function() 
+        {
+            if ($('#'+fieldId).length) 
+            {
+                if ( fieldType == 'dropdown')
+                {
+                    $("#"+fieldId).trigger('mousedown');
+                }
+                else
+                {
+                    $("#"+fieldId).focus();
+                }
+                clearInterval(checkExist);
+            }
+        }, 100);
+    }
+    else
+    {
+        $('html, body').animate({
+           scrollTop: ($('#section-'+section).offset().top)
+        },500);  
+      }
+    }
+  }
 
   var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
