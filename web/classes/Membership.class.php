@@ -114,6 +114,14 @@ class Membership
     function setProfileid($profileid) {
         $this->profileid = $profileid;
     }
+    
+    function setCurtype($curtype) {
+        $this->curtype = $curtype;
+    }
+    
+    function getCurtype() {
+        return $this->curtype;
+    }
 
     public function __get($property) {
         if (property_exists($this, $property)) {
@@ -769,6 +777,12 @@ class Membership
             $valuesStr .= ",'$this->DOL_CONV_RATE'";
         }
         $this->receiptid = $billingPaymentDetObj->genericPaymentInsert($paramsStr, $valuesStr);
+        if($this->status != 'REFUND'){
+            $paramsStr = "RECEIPTID, ".$paramsStr;
+            $valuesStr = "'$this->receiptid', ".$valuesStr;
+            $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+            $negTransactionObj->insertRecord($paramsStr,$valuesStr);
+        }
     }
     
     function setServiceActivation() {

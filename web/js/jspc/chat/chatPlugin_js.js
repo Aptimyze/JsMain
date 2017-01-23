@@ -2416,6 +2416,9 @@ JsChat.prototype = {
                     //console.log("checking",$(".profileIcon[id^='" + userId + "']"));
                     if($(".profileIcon[id^='" + userId + "']").length == 1){
                         $(".profileIcon[id^='" + userId + "']")[0].click();
+                        if(appendMsg == false){
+                            playChatNotificationSound();
+                        }
                         setTimeout(function(){
                             if ($(".js-minpanel").length != 0) {
                                 appendMsg = true;
@@ -2441,6 +2444,7 @@ JsChat.prototype = {
                 
 
             }
+
             if(typeof msg_type != "undefined" && msg_type == "accept"){
                 curEle._enableChatAfterPaidInitiates(userId);
             }
@@ -2526,7 +2530,11 @@ JsChat.prototype = {
                     curEle._scrollToBottom(userId);
                     //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
                 },500);
+            //play sound on receiving the message
+            if(appendMsg == true){
+                playChatNotificationSound();
             }
+        }
             
 
     },

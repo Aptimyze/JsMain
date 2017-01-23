@@ -74,6 +74,18 @@ if($msg || $msgDpp)
 
                 $mobile         = "9650350387";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                
+                $mobile         = "9711818214";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                
+                $mobile         = "8376883735";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                
+                $mobile         = "9810300513";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                
+                $mobile         = "9953457479";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
         }
         if($msgDpp && $dppError >=2){
                 $mobile         = "9818424749";

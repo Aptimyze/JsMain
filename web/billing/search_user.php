@@ -165,8 +165,12 @@ if(isset($data))
 			if($row_check_edit[0]>0)
 				$user_details[$billid]['EDITED'] = 1;
 				
-			if($row_purchases["STATUS"] == "CANCEL")
+			if($row_purchases["STATUS"] == "CANCEL"){
 				$user_details[$billid]["CANCELLED"] = 1;
+                $memHandlerObject = new MembershipHandler();
+                $user_details[$billid]["CANCELLED_ON"] = $memHandlerObject->getCancelledDate($billid);
+                unset($memHandlerObject);
+            }
 			else
 				$partpay_arr[] = $billid;
 					

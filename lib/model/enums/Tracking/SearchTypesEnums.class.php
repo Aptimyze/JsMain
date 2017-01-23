@@ -144,5 +144,10 @@ class SearchTypesEnums
         const LAST_SEARCH_RESULTS = "LSR";
         const JSPC_LAST_SEARCH = "LSPC";
         const LAST_SEARCH_DESIRED_PARTNER_MATCHES = "DPMD";
+        const CANCELLED_LISTING_PC = CLPC;
+	const CANCELLED_LISTING_MS = CLMS;
+	const CANCELLED_LISTING_IOS = CLIOS;
+	const CANCELLED_LISTING_APP = CLAA;
+
 }
 ?>
