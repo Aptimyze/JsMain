@@ -42,11 +42,21 @@ $className = get_class($this);
 			$className::init();
 			
 		$displayV1= Array();
+		$showExpiring = $this->getExpiring();
 		foreach(self::$informationTypeFields as $key=>$value)
 		{
-			
 			if(array_key_exists($key,$displayObj))
 			{
+				$isApp = MobileCommon::isApp();
+				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isIOSApp()))
+				{
+					continue;
+				}
+				if($key == "INTEREST_EXPIRING" && $isApp == "A" && $appVersion  && $appVersion < 81)
+				{
+					continue;
+				}
 				foreach($value as $k=>$v)
                                 {
 					if($v == "TUPLES")
@@ -228,6 +238,21 @@ private function getBannerMessage($profileInfo) {
      		return $mapArray[$key];
 
      	}
+
+    public function getExpiring()
+    {
+		$this->profile=Profile::getInstance();
+        $this->loginProfile=LoggedInProfile::getInstance();
+        $entryDate = $this->loginProfile->getENTRY_DT();
+		$currentTime=time();
+		$registrationTime = strtotime($entryDate);
+        $showExpiring = 0;
+		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		{
+			$showExpiring = 1;
+		}
+		return $showExpiring;
+    }
 
 
 }

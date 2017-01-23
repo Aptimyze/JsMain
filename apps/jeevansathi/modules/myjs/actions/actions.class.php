@@ -117,6 +117,7 @@ class myjsActions extends sfActions
 			$infoTypeId = $request->getParameter("infoTypeId");
                 	$pageNo = $request->getParameter("pageNo");
 			$params["profileList"] = $request->getParameter("profileList");
+			$params["showExpiring"] = $request->getParameter("showExpiring");
 			if((MobileCommon::isApp() == "I")||MobileCommon::isNewMobileSite())
 			{  
 				$Apptype="IOS";
@@ -196,6 +197,15 @@ class myjsActions extends sfActions
                 $this->loginData=$request->getAttribute("loginData");
                 $this->profile=Profile::getInstance();
                 $this->loginProfile=LoggedInProfile::getInstance();
+                $entryDate = $this->loginProfile->getENTRY_DT();
+				$currentTime=time();
+				$registrationTime = strtotime($entryDate);
+                $this->showExpiring = 0;
+				if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+				{
+					$this->showExpiring = 1;
+				}
+				$request->setParameter("showExpiring", $this->showExpiring);
           //      $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
                 ob_start();
                 $jsonData = sfContext::getInstance()->getController()->getPresentationFor("myjs", "performV1");
@@ -227,8 +237,9 @@ class myjsActions extends sfActions
               		$this->apiData['my_profile']['incomplete'][$length]=$tempDpp;	
                         include_once(sfConfig::get("sf_web_dir"). "/P/commonfile_functions.php");
                         $this->hamJs='js/'.getJavascriptFileName('jsms/hamburger/ham_js').'.js';
-                        $request->setAttribute('jsmsMyjsPage',1);
+                        $request->setAttribute('jsmsMyjsPage','Y');
 
+         
                    $this->setTemplate("jsmsPerform");
                    $request->setParameter('INTERNAL',1);
 				$request->setParameter('getMembershipMessage',1);
@@ -316,6 +327,13 @@ class myjsActions extends sfActions
 		//USING ENTRY DATE TO COMPARE WITH CURRENT TIME AND SET FLAG
 		$currentTime=time();
 		$registrationTime = strtotime($entryDate);
+
+		$this->showExpiring = 0;
+		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		{
+			$this->showExpiring = 1;
+		}
+
 		$this->engagementCount=array();
 
 //Flag to compute data for important section for FTU page
@@ -495,6 +513,5 @@ return $staticCardArr;
 
 
 	} 
-
 }
  

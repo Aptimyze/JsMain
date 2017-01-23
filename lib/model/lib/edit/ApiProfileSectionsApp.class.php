@@ -13,7 +13,9 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 	
 	function __construct($profile,$isEdit='') {
 		$this->profile = $profile;
-		$dbHobbies = new NEWJS_HOBBIES();
+		$request=sfContext::getInstance()->getRequest();
+		$this->showAlternateEmail = $request->getParameter("showAlternateEmail");		
+		$dbHobbies = new JHOBBYCacheLib();
 		$this->Hobbies=$dbHobbies->getUserHobbiesApi($this->profile->getPROFILEID());
                 $this->isEdit=$isEdit;
 		$this->underScreening="under Screening";
@@ -248,20 +250,11 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 
 		$contactArr[]=$this->getApiFormatArray("PROFILE_HANDLER_NAME","Profile Handler Name" , $this->profile->getDecoratedPersonHandlingProfile(),$this->profile->getPROFILE_HANDLER_NAME(),$this->getApiScreeningField("PROFILE_HANDLER_NAME"));
 
-		if(MobileCommon::isDesktop())
-		{
-			$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),$this->profile->getEMAIL(),$this->getApiScreeningField("EMAIL"),$this->text,"","0","","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));
-
-			$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,$this->profile->getExtendedContacts()->ALT_EMAIL,0,$this->text,"",0,"","","",array(),$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
-		}
+		$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),$this->profile->getEMAIL(),$this->getApiScreeningField("EMAIL"),"Y",$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));
 		
-		elseif(MobileCommon::isApp())
+		if(MobileCommon::isDesktop() || MobileCommon::isApp() == "A" || (MobileCommon::isApp() == "I" && $this->showAlternateEmail == "1"))
 		{
-			$contactArr[]=$this->getApiFormatArray("EMAIL","Email Id" , $this->profile->getEMAIL(),$this->profile->getEMAIL(),$this->getApiScreeningField("EMAIL"),$this->text,$this->getVerificationStatusForAltEmailAndMail($this->profile->getVERIFY_EMAIL()));			
-		}
-		if(MobileCommon::isApp() == "A")
-		{
-			$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,$this->profile->getExtendedContacts()->ALT_EMAIL,"0",$this->text,$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));		
+			$contactArr[]=$this->getApiFormatArray("ALT_EMAIL","Alternate Email Id" , $this->profile->getExtendedContacts()->ALT_EMAIL,$this->profile->getExtendedContacts()->ALT_EMAIL,"2","Y",$this->getVerificationStatusForAltEmailAndMail($this->profile->getExtendedContacts()->ALT_EMAIL_STATUS));
 		}
 		//mobile number
 		if($this->profile->getPHONE_MOB())
@@ -363,9 +356,23 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		
 		//country
 		$basicArr[] =$this->getApiFormatArray("COUNTRY_RES","Country Living in" ,$this->profile->getDecoratedCountry(),$this->profile->getCOUNTRY_RES(),$this->getApiScreeningField("COUNTRY_RES"));
-		
+                
+		$stateValue = substr($this->profile->getCITY_RES(),0,2);
+                $stateLabel = FieldMap::getFieldLabel("state_india",$stateValue);
+                
+		$basicArr[] =$this->getApiFormatArray("STATE_RES","State Living in" ,$stateLabel,$stateValue,$this->getApiScreeningField("CITY_RES"));
+                
 		//city
-		$basicArr[] =$this->getApiFormatArray("CITY_RES","City Living in" ,$this->profile->getDecoratedCity(),$this->profile->getCITY_RES(),$this->getApiScreeningField("CITY_RES"));
+                if($this->profile->getCITY_RES()!='')
+		{
+			if(substr($this->profile->getCITY_RES(),2)=="OT")
+				$city = "0";
+			else
+				$city = $this->profile->getCITY_RES();
+			$value= $city;
+			$label = FieldMap::getFieldLabel("city",$city);
+		}
+		$basicArr[] =$this->getApiFormatArray("CITY_RES","City Living in" ,$label,$value,$this->getApiScreeningField("CITY_RES"));
 		
 		//religion
 		$basicArr[]  =$this->getApiFormatArray("RELIGION","Religion" ,$this->profile->getDecoratedReligion(),$this->profile->getRELIGION(),$this->getApiScreeningField("RELIGION"),"N");

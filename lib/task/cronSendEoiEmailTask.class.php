@@ -222,7 +222,7 @@ $memcacheObj->set("cronSendEoi",$i);
         
         if(CommonConstants::contactMailersCC)
         {
-        $contactNumOb=new newjs_JPROFILE_CONTACT();
+        $contactNumOb=new ProfileContact();
         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
         if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
         {

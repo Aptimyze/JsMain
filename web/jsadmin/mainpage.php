@@ -3,7 +3,7 @@ include_once "connect.inc";
 include_once "ap_common.php";
 $data = authenticated($cid);
 if (isset($data)) //successful login
-{
+{ 
     $privilage = getprivilage($cid);
     $priv      = explode("+", $privilage);
     if ($data['name']) {
@@ -692,6 +692,10 @@ if (isset($data)) //successful login
         }
         if(in_array('NEGLST',$priv))
 	        $linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeTreatment?cid=$cid\">Delete and Mark profiles in Negative List</a>";
+	if(in_array('NEGLST',$priv))
+		$linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeHandler?cid=$cid&actionType=D\">Remove from Negative List</a>";
+	$linkarr[]="<a href=\"$SITE_URL/operations.php/commoninterface/negativeHandler?cid=$cid&actionType=F\">Fetch Negative Profile</a>";
+
         if (in_array('MG', $priv) || in_array('P', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/jsadmin/go_to_large_file.php?name=$user&cid=$cid\">Configure Large File</a>";
             $linkarr[] = "<a href=\"$SITE_URL/crm/show_IM.php?cid=$cid\">Show/Hide Incentive Multiplier</a>";
@@ -792,6 +796,13 @@ if (isset($data)) //successful login
         if (in_array('ExPmSr', $priv) || in_array('SupPmS', $priv)) {
             $linkarr[] = "<a href=\"$SITE_URL/operations.php/crmAllocation/exclusiveServicingII\">Send profiles to customer</a>";
         }
+        if (in_array('CSSUP', $priv) || in_array('MG', $priv) || in_array('P', $priv) ) {
+            $linkarr[] = "<a href=\"$SITE_URL/operations.php/feedback/reportInvalidContactsQC\">Invalid reported Contacts QC</a>";
+        }
+        if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
+            $linkarr[]="<a href=\"$SITE_URL/operations.php/feedback/reportAbuseForUser\">Report Abuse For User</a>";
+          if(in_array('MG', $priv) || in_array('P', $priv) || in_array('CSEXEC', $priv) || in_array('CSSUP', $priv))
+            $linkarr[]="<a href=\"$SITE_URL/operations.php/profileVerification/fetchAbuseInvalidData\">Fetch Abuse and Invalid Report</a>";
     }
 
     $smarty->assign("linkarr", $linkarr);

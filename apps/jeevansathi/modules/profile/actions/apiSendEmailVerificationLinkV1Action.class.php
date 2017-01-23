@@ -28,13 +28,15 @@ class apiSendEmailVerificationLinkV1Action extends sfAction
             $tempArray=(new NEWJS_EMAIL_CHANGE_LOG())->getLastEntry($profileId);
             $emailUID = $tempArray['ID'];
             $result = (new emailVerification())->sendVerificationMail($profileId, $emailUID);
+            $email = $tempArray['EMAIL'];
             break;
         case 2 :
-            $contactNumOb=new newjs_JPROFILE_CONTACT();
+            $contactNumOb=new ProfileContact();
             $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileId),'','',"ALT_EMAIL");
             $tempArray = (new NEWJS_ALTERNATE_EMAIL_LOG())->getLastEntry($profileId);
             $emailUID =  $tempArray['ID'];
             $result = (new emailVerification())->sendAlternateVerificationMail($profileId, $emailUID,$numArray[0]['ALT_EMAIL']);
+            $email = $tempArray['EMAIL'];
             break;
     }
 
@@ -42,7 +44,7 @@ class apiSendEmailVerificationLinkV1Action extends sfAction
         if($result)
         {
 
-            $respObj->setHttpArray(ResponseHandlerConfig::$ALTERNATE_EMAIL_SUCCESS);
+            $respObj->setHttpArray(str_replace('{email}',$email,ResponseHandlerConfig::$ALTERNATE_EMAIL_SUCCESS));
             $respObj->generateResponse();
             die;
         }

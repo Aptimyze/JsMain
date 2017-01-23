@@ -286,22 +286,34 @@ class SearchParamters
 	public function setDIET($DIET) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("DIET",$DIET);
-                if($validInput)
-			$this->DIET = $DIET; 
+                if($validInput){
+                        if($DIET && !strstr($DIET,SearchConfig::_doesntMatterValue) && !strstr($DIET,SearchConfig::_nullValueAttributeLabel) && !strstr($DIET,SearchTypesEnums::APPLY_ONLY_CLUSTER))   
+                                $this->DIET = $DIET.",".SearchConfig::_nullValueAttributeLabel;
+                        else  
+                                $this->DIET = $DIET;
+                }
 	}
 	public function getDIET() { return $this->DIET; }
 	public function setSMOKE($SMOKE) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("SMOKE",$SMOKE);
-                if($validInput)
-			$this->SMOKE = $SMOKE; 
+                if($validInput){
+                        if($SMOKE && !strstr($SMOKE,SearchConfig::_doesntMatterValue) && !strstr($SMOKE,SearchConfig::_nullValueAttributeLabel))   
+                                $this->SMOKE = $SMOKE.",".SearchConfig::_nullValueAttributeLabel;
+                        else  
+                                $this->SMOKE = $SMOKE;
+                }
 	}
 	public function getSMOKE() { return $this->SMOKE; }
 	public function setDRINK($DRINK) 
 	{ 
 		$validInput = SearchInputValidation::validateInput("DRINK",$DRINK);
-                if($validInput)
-			$this->DRINK = $DRINK; 
+                if($validInput){
+                        if($DRINK && !strstr($DRINK,SearchConfig::_doesntMatterValue) && !strstr($DRINK,SearchConfig::_nullValueAttributeLabel))   
+                                $this->DRINK = $DRINK.",".SearchConfig::_nullValueAttributeLabel;
+                        else  
+                                $this->DRINK = $DRINK; 
+                }
 	}
 	public function getDRINK() { return $this->DRINK; }
 	public function setHANDICAPPED($HANDICAPPED) 
@@ -323,6 +335,13 @@ class SearchParamters
 			$this->OCCUPATION = $OCCUPATION; 
 	}
 	public function getOCCUPATION() { return $this->OCCUPATION; }
+        public function setOCCUPATION_IGNORE($OCCUPATION_IGNORE) 
+	{ 
+		$validInput = SearchInputValidation::validateInput("OCCUPATION_IGNORE",$OCCUPATION_IGNORE);
+                if($validInput)
+                    $this->OCCUPATION_IGNORE = $OCCUPATION_IGNORE;
+	}
+	public function getOCCUPATION_IGNORE() {   return $this->OCCUPATION_IGNORE; }
 	public function setCOUNTRY_RES($COUNTRY_RES) 
 	{
 		$validInput = SearchInputValidation::validateInput("COUNTRY_RES",$COUNTRY_RES);

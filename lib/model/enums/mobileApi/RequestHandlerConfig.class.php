@@ -13,6 +13,7 @@ class RequestHandlerConfig
         "updateNotificationSetting"=>array("v1"=>"updateNotificationSettingV1"),
         "monitoringNotificationsKey"=>array("v1"=>"monitoringNotificationsKeyV1"),
         "notificationLayerSettings"=>array("v1"=>"notificationLayerSettingsV1"),
+        "notificationOpenedTracking"=>array("v1"=>"notificationOpenedTrackingV1"),
 		"notificationSubscriptionStatus"=>array("v1"=>"notificationSubscriptionStatusV1","v3"=>"notificationSubscriptionStatusV1")),
 	"search"=>array(
 		"partnermatches"=>array("v1"=>"searchApiV1Action","v2"=>"","v3"=>"searchApiV1Action"),
@@ -42,13 +43,17 @@ class RequestHandlerConfig
 		"detail"=>array("v1"=>"apidetailedv1","v2"=>"","v3"=>"apidetailedv1"),
 		"gunascore"=>array("v1"=>"gunascorev1","v2"=>"","v3"=>"gunascorev1"),
 		"alterseen"=>array("v1"=>"AlterSeenV1","v2"=>"","v3"=>"AlterSeenV1"),
+		"vsploadcheck"=>array("v1"=>"VSPLoadCheckV1","v2"=>"","v3"=>"VSPLoadCheckV1"),
         "coverphoto"=>array("v1"=>"CoverPhotoV1"),
         "horoscope"=>array("v1"=>"HoroscopeV1"),
         "deleteHoroscope"=>array("v2"=>"deleteHoroscopeV1"),
         "deepLinking"=>array("v1"=>"apiDeepLinkingTrackingV1","v2"=>"apiDeepLinkingTrackingV1","v3"=>"apiDeepLinkingTrackingV1"),
         "dppSuggestions"=>array("v1"=>"dppSuggestionsV1","v2"=>"dppSuggestionsV1","v3"=>"dppSuggestionsV1"),
       "cache"=>array("v1"=>"ApiProfileCacheV1","v2"=>"ApiProfileCacheV1","v3"=>"ApiProfileCacheV1"),
-        "sendEmailVerLink"=>array("v1"=>"apiSendEmailVerificationLinkV1","v2"=>"apiSendEmailVerificationLinkV1","v3"=>"apiSendEmailVerificationLinkV1")),
+        "sendEmailVerLink"=>array("v1"=>"apiSendEmailVerificationLinkV1","v2"=>"apiSendEmailVerificationLinkV1","v3"=>"apiSendEmailVerificationLinkV1"),
+      	"dppSuggestionsCAL"=>array("v1"=>"dppSuggestionsCALV1","v2"=>"dppSuggestionsCALV1","v3"=>"dppSuggestionsCALV1"),
+      	"dppSuggestionsSaveCAL"=>array("v1"=>"dppSuggestionsSaveCALV1","v2"=>"dppSuggestionsSaveCALV1","v3"=>"dppSuggestionsSaveCALV1")),
+
     "settings"=>array(
 		"alertManager"=>array("v1"=>"AlertManagerV1","v2"=>"","v3"=>"AlertManagerV1"),
     	"deleteProfile"=>array("v1"=>"DeleteProfileV1","v2"=>"","v3"=>"DeleteProfileV1")),
@@ -142,14 +147,20 @@ class RequestHandlerConfig
 	
 	public static $trackLoginArray = array(
 	"notification"=>array(
-		"updateNotificationStatus"=>array("v1"=>"N"),
-		"registrationIdUpdate"=>array("v1"=>"N"),
-		"registrationIdInsert"=>array("v1"=>"N"),
-		"deliveryTracking"=>array("v1"=>"N"),
-		"poll"=>array("v1"=>"N")
+		"updateNotificationStatus"=>array("v1"=>"N","v3"=>"N"),
+		"registrationIdUpdate"=>array("v1"=>"N","v3"=>"N"),
+		"registrationIdInsert"=>array("v1"=>"N","v3"=>"N"),
+		"deliveryTracking"=>array("v1"=>"N","v3"=>"N"),
+		"poll"=>array("v1"=>"N"),
+		"insertChromeId"=>array("v1"=>"N"),
+		"getNotification"=>array("v1"=>"N"),
+        "updateNotificationSetting"=>array("v1"=>"N"),
+        "monitoringNotificationsKey"=>array("v1"=>"N"),
+        "notificationLayerSettings"=>array("v1"=>"N"),
+        "notificationOpenedTracking"=>array("v1"=>"N"),
+		"notificationSubscriptionStatus"=>array("v1"=>"N","v3"=>"N")
 		),
-	"profile"=>array(
-	"gunascore"=>array("v1"=>"N","v2"=>"N","v3"=>"N"),
+	"profile"=>array("gunascore"=>array("v1"=>"N","v2"=>"N","v3"=>"N"),
 	),
 	);
 	

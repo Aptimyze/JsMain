@@ -36,6 +36,12 @@ class SearchSort
 	private $filterSortScore;
         
         private $reverseSortStr;
+        
+        /**
+         * Paid Member Sorting in logged out case
+         * @var type string
+         */
+        private $paidSortStr;
 	/**
 	* When Photos is searched , visible photos will be given more prefernce.
 	* @access public 
@@ -230,6 +236,13 @@ class SearchSort
                         if ($loggedInProfileObj->getCASTE()) {
                                 $sortArray[] = "or(tf(PARTNER_CASTE," . $loggedInProfileObj->getCASTE() . "),tf(PARTNER_CASTE," . $doesntMatterValue . "))";
                         }
+                        if ($loggedInProfileObj->getMANGLIK()) {
+                                if(strstr($loggedInProfileObj->getMANGLIK(),"N")){
+                                        $sortArray[] = "or(tf(PARTNER_MANGLIK," . $loggedInProfileObj->getMANGLIK() . "),tf(PARTNER_MANGLIK," . $doesntMatterValue . "))";
+                                }else{
+                                        $sortArray[] = "tf(PARTNER_MANGLIK," . $loggedInProfileObj->getMANGLIK() . ")"; 
+                                }
+                        }
                         if ($loggedInProfileObj->getAGE()) {
                                 $sortArray[] = "and(if(abs(sub(min(PARTNER_LAGE," . $loggedInProfileObj->getAGE() . "),PARTNER_LAGE)),0,1),if(abs(sub(max(PARTNER_HAGE," . $loggedInProfileObj->getAGE() . "),PARTNER_HAGE)),0,1))";
                         }
@@ -267,7 +280,6 @@ class SearchSort
                                 }
                         }
                 }
-
                 if (!empty($sortArray)) {
                         $brace = '';
                         $strCondition = '';
@@ -308,6 +320,13 @@ class SearchSort
             }
             return $response;
         }
-
+        public function isPaidSorting($loggedInProfileObj){
+                if (!$loggedInProfileObj || $loggedInProfileObj->getPROFILEID() == '') {
+                        $this->paidSortStr = "if(tf(SUBSCRIPTION,F),1,if(tf(SUBSCRIPTION,X),1,0))";
+                }
+        }
+        public function getPaidSorting(){
+                return $this->paidSortStr;
+        }
 }
 ?>

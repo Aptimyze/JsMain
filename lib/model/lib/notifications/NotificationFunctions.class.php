@@ -69,6 +69,19 @@ class NotificationFunctions
         	}
         	NotificationFunctions::manageGcmRegistrationid($registrationid,$profileid,$appVersion,$osVersion,$deviceBrand,$deviceModel);
         }
+
+        /* function logNotificationOpened
+        * log notification opened entry in table
+        * @params: $params
+        * @return: none
+        */
+        public static function logNotificationOpened($params){
+        	if(is_array($params) && count($params) > 0){
+        		$dbObj = new MOBILE_API_NOTIFICATION_OPENED_TRACKING();
+        		$dbObj->insertEntry($params);
+        	}
+        }
+
         public static function deliveryTrackingHandling($profileid,$notificationKey,$messageId='',$status='',$osType='')
         {
 		$scheduledNotificationKey  =NotificationEnums::$scheduledNotificationKey;
@@ -95,6 +108,47 @@ class NotificationFunctions
 			$notificationObj->updateSent($messageId,$status,$osType);
 			$notificationDelLogObj->deleteNotification($messageId,$osType);
 		}
+	}
+
+	public static function handleNotificationClickEvent($params,$osType=""){
+		$notificationStop =JsConstants::$notificationStop;
+        if(!$notificationStop && is_array($params)){
+	        $notificationKey = $params['notificationKey'];
+	        $messageId = $params['messageId'];
+	        $profileid = $params['profileid'];
+	        if($osType == ""){
+		        $osType = MobileCommon::isApp();
+		        if($osType == null){
+		        	$webOs = MobileCommon::isAppWebView();
+		        	if($webOs == "A"){
+		        		$osType = "A";
+		        	}
+		        }
+		        /*added to prevent double notification open rate tracking for ios as for ios is via delivery tracking*/
+		        if($osType == "I"){
+		        	$osType = "";
+		        }
+		    }
+	        try{
+	            if($osType && $osType != "" && $messageId && $notificationKey && is_numeric($messageId)){ 
+                    $dataSet = array('PROFILEID'=>$profileid,'MESSAGE_ID'=>$messageId,'NOTIFICATION_KEY'=>$notificationKey,'CLICKED_DATE'=>date('Y-m-d H:i:s'),'CHANNEL'=>$osType);
+                    //print_r($dataSet);
+                    $producerObj = new JsNotificationProduce();
+                    if($producerObj->getRabbitMQServerConnected()){     //flow with rabbitmq
+                        $msgdata = FormatNotification::formatLogData($dataSet,'','NOTIFICATION_OPENED_TRACKING_API');
+                        //echo "rabbitmq flow";
+                        //print_r($msgdata);
+                        $producerObj->sendMessage($msgdata);
+                    }
+                    else{  
+                        //echo "without rabbitmq";                        //flow without rabbitmq
+                        NotificationFunctions::logNotificationOpened($dataSet);
+                    }
+	            }
+	        }
+	        catch(Exception $e){
+	        }
+    	}
 	}
         public function notificationCheck($request)
         {

@@ -914,7 +914,14 @@ class ProfileCacheLib
             $arrFields = ProfileCacheConstants::$arrNativePlaceColumns;
         } else if(false !== stristr($storeName, "ASTRO")) {
             $arrFields = ProfileCacheConstants::$arrAstroDetailsColumns;
+        } elseif (false !== stristr($storeName, "Contact")) {
+            $arrFields = ProfileCacheConstants::$arrJProfileContact;
+        } else if(false !== stristr($storeName, "HOBBY")) {
+            $arrFields = ProfileCacheConstants::$arrJHobbyColumns;
         }
+        else if(false !== stristr($storeName, "Alerts")) {
+            $arrFields = ProfileCacheConstants::$arrJProfileAlertsColumn;
+       }
         return $arrFields;
     }
     

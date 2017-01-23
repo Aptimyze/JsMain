@@ -364,7 +364,7 @@ class csvGenerationHandler
 			$mainAdminPoolObj = new incentive_MAIN_ADMIN_POOL('newjs_masterRep');
 			$AgentAllocDetailsObj = new AgentAllocationDetails();
 			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
-			$jprofileAlertsObj = new newjs_JPROFILE_ALERTS('newjs_masterRep');
+			$jprofileAlertsObj = new JprofileAlertsCache('newjs_masterRep');
 			// fetch all registrations done 2 days ago.
 			$greaterThanArray['ENTRY_DT'] = "'".date("Y-m-d",time() - 3 * 60 * 60 * 24)." 00:00:00"."'";
 			$lessThanArray['ENTRY_DT'] = "'".date("Y-m-d",time() - 3 * 60 * 60 * 24)." 23:59:59"."'";
@@ -595,7 +595,7 @@ class csvGenerationHandler
 			}
 			if($processName=='upsellProcessInDialer' || $processName=='renewalProcessInDialer' || $processName=='paidCampaignProcess'){
 				if(count($profileArr)>0){
-					$obj =new newjs_JPROFILE_ALERTS('newjs_masterRep');
+					$obj =new JprofileAlertsCache('newjs_masterRep');
 		                        $profilesUnsubscribed =$obj->getUnsubscribedProfiles($profileArr);
 					if(is_array($profilesUnsubscribed)){
 		        	                $profileArr =array_diff($profileArr,$profilesUnsubscribed);
@@ -993,7 +993,7 @@ class csvGenerationHandler
 			if($processName=="FTA_REGULAR"||$processName=="FTA_ONE_TIME")
 			{
 			$ftaDataObj=new incentive_FTA_CSV_DATA();
-			$jprofileContactObj=new NEWJS_JPROFILE_CONTACT();
+			$jprofileContactObj= new ProfileContact();
 			$viewContactsLogObj=new jsadmin_VIEW_CONTACTS_LOG();
 			$jpViewsObj=new NEWJS_JP_NTIMES();
 			$in_dialerObj=new incentive_FTA_IN_DIALER();
@@ -1710,6 +1710,7 @@ class csvGenerationHandler
 	}
 	public function premiumIncomeBasedCheck($income,$familyIncome,$regEntryDt)
 	{
+		return true;
 		$premiumIncome  =crmParams::$premiumIncome;
 		$today		=date('Y-m-d',time());
 		$regEntryDtArr	=@explode(" ",$regEntryDt);
@@ -1819,7 +1820,7 @@ class csvGenerationHandler
 	}
 	public function profileAlertsCheck($profileid,$username)
 	{
-		$jprofileAlertsObj =new newjs_JPROFILE_ALERTS('newjs_masterRep');
+		$jprofileAlertsObj =new JprofileAlertsCache('newjs_masterRep');
 		$alerts 	=$jprofileAlertsObj->fetchMembershipStatus($profileid);
 		$memCall 	=$alerts['MEMB_CALLS'];
 		$offerCall 	=$alerts['OFFER_CALLS'];
@@ -2034,7 +2035,7 @@ class csvGenerationHandler
 				$headers .= "Reply-To: ".$to."\r\n";
 				
 				// Only send email to manoj and vibhor is count is below 300	
-				if($lastCount < 1000){
+				if($lastCount < 2000){
 					$headers .= "CC: manoj.rana@naukri.com,vibhor.garg@jeevansathi.com\r\n";
 				}
 

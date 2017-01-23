@@ -134,7 +134,7 @@
               <div class="f15 fontlig color11">        
                 <!--start:Basic Details-->
                 <div class="prfbr3">
-                  <div class="prfp5" id="section-basic">
+                  <div class="prfp5 noMultiSelect" id="section-basic">
                     <div class="clearfix"> <i class="sprite2 fl edpic6"></i>
                       <div class="fl colr5 pl8 f17 pt2" >Basic Details</div>
                         <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections" data-section-id="basic">Edit</a> </div>
@@ -271,7 +271,7 @@
           <!--start:right div-->
           <div class="fr fontlig prfwid12"> 
             <!--start:contact details-->
-            <div class="bg-white fullwid fontlig" id="section-contact">
+            <div class="bg-white fullwid fontlig noMultiSelect" id="section-contact">
               <div class="edpp3 prfbr2">
                 <ul class="hor_list clearfix  fullwid">
                   <li class="edpwid2 clearfix"> <i class="fl vicons edpic4"></i>
@@ -285,15 +285,23 @@
                   <li>
                     <p class="color12" id="emailLabelParent">
                       Email id <span class="ml5 ~if ($editApiResponse.Contact.EMAIL.value|count_characters:true) eq 0 || $editApiResponse.Contact.EMAIL.screenBit neq 1` disp-none ~/if` js-undSecMsg">
-                          <span class="disp_ib color5 f13" > Under Screening</span>
+                      <span class="disp_ib color5 f13" > Under Screening</span>
+                    </span>
+                  </p>
+                  <div class="clearfix pos-rel">
+                  <div class="fl wid70p">
+                      <p class="color11">
+                        <span id='my_emailView' ~if $arrOutDisplay.contact.my_email eq $notFilledInText` class="color5"  ~/if`>
+                          ~$arrOutDisplay['contact']['my_email']`
                         </span>
-                    </p>
-                    <p class="color11">
-                      <span id='my_emailView' ~if $arrOutDisplay.contact.my_email eq $notFilledInText` class="color5"  ~/if`>
-                        ~$arrOutDisplay['contact']['my_email']`
-                      </span>
-                    </p>  
-                  </li>
+                      </p>
+                    </div>
+                    <div class="fr wid25p pos-abs right0">
+                      <div ~if $arrOutDisplay['contact']['email_status'] eq Verified` class="color12" ~else` class="cursp color5" ~/if` id="email_statusView" >~$arrOutDisplay['contact']['email_status']`</div>
+                    </div> 
+                  </div>
+
+                </li>
                   <!-- added alt email -->
                   <li>
                     <p class="color12" id="emailLabelParent">
@@ -518,7 +526,7 @@
             
             <!--end:Horoscope Details--> 
             <!--start:verifcation id-->
-            <div class="bg-white fullwid fontlig mt15" id="section-verification">
+            <div class="bg-white fullwid fontlig mt15 noMultiSelect" id="section-verification">
               <div class="edpp3 prfbr2">
                 <ul class="hor_list clearfix  fullwid">
                   <li class="edpwid2 clearfix"> <i class="fl vicons edpic4"></i>

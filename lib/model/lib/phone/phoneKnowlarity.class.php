@@ -32,7 +32,7 @@ public function __construct($profileObject,$phoneType)
 					break;
 					
 					case 'A':
-					$contactArray=(new newjs_JPROFILE_CONTACT())->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_MOBILE");
+					$contactArray= (new ProfileContact())->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_MOBILE");
 					$this->phone=$profileObject->getISD().$contactArray['0']['ALT_MOBILE'];
 					break;
 				}

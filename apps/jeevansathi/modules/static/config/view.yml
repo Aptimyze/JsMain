@@ -44,7 +44,7 @@ settingsSuccess:
 newMobLoginSuccess:
   metas:
     title: Jeevansathi login
-  stylesheets: [-*,jsms/login/newMobLogin_css]
+  stylesheets: [-*]
   javascripts: [-*,jsms/login/newMobLogin_js,jsms/hamburger/ham_js@bottom]
   layout: jsmsLoginLayout
 
