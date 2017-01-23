@@ -246,6 +246,8 @@ class phoneActions extends sfActions
 			{  
 				$sendingObject = new RequestUserToDelete();
 				$sendingObject->deleteRequestedByOther($profileid);
+				$loggingObj = new MIS_REQUEST_DELETIONS_LOG();
+                $loggingObj->logThis(LoggedInProfile::getInstance()->getUSERNAME(),$profileid,'Other');
 			}
 
 
