@@ -6516,9 +6516,9 @@ $('.js-previewAlbum').click(function(){
     fieldName = getUrlParameter('fieldName');
     if ( typeof section !== 'undefined' && $("[data-section-id="+desktopSectionArray[section]+"]").length)
     {
-      $("[data-section-id="+section+"]").click();
+      $("[data-section-id="+desktopSectionArray[section]+"]").click();
       $('html, body').animate({
-           scrollTop: ($('#section-'+section).offset().top)
+           scrollTop: ($('#section-'+desktopSectionArray[section]).offset().top)
         },'slow'); 
     }
 
