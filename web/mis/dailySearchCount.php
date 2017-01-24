@@ -225,7 +225,7 @@ $searchKeyArray=array('L'=>'View similar from home page','V'=>'View Similar Prof
 							$initiated[$s]+=1;
 						}
 
-						if($s=="Ba" || $s=="Bb" || $s=="Bc" || $s=="Bd" || $s=="Be" || $s=="Bf" || $s=="Bg" || $s=="Bh" || $s=="Bi" || $s=="Bj" || $s=="Bk" || $s=="Bl" || $s=="Bm" || $s=="Bn" || $s=="Bo" || $s=="Bp" || $s=="Bq" || $s=="Br" || $s=="Bs" || $s=="Bt" || $s=="Bu" || $s=="Bv" || $s=="B1" || $s=="B2" || $s=="B3" || $s=="B4" || $s=="B5" || $s=="B6" || $s=="B7" || $s=="B8" || $s=="BN1" || $s=="BN2" || $s=="BN3")
+						if($s=="Ba" || $s=="Bb" || $s=="Bc" || $s=="Bd" || $s=="Be" || $s=="Bf" || $s=="Bg" || $s=="Bh" || $s=="Bi" || $s=="Bj" || $s=="Bk" || $s=="Bl" || $s=="Bm" || $s=="Bn" || $s=="Bo" || $s=="Bp" || $s=="Bq" || $s=="Br" || $s=="Bs" || $s=="Bt" || $s=="Bu" || $s=="Bv" || $s=="B1" || $s=="B2" || $s=="B3" || $s=="B4" || $s=="B5" || $s=="B6" || $s=="B7" || $s=="B8" || $s=="BN1" || $s=="BN2" || $s=="BN3" || $s=="BN4" || $s=="BN5")
 						{
 							$dataArraynew["B"][$d][$t]+=1;
 						}
@@ -278,7 +278,7 @@ $searchKeyArray=array('L'=>'View similar from home page','V'=>'View Similar Prof
 						$initiated[$s]+=$myrownew2["CNT"];
 					}
 					
-					if($s=="Ba" || $s=="Bb" || $s=="Bc" || $s=="Bd" || $s=="Be" || $s=="Bf" || $s=="Bg" || $s=="Bh" || $s=="Bi" || $s=="Bj" || $s=="Bk" || $s=="Bl" || $s=="Bm" || $s=="Bn" || $s=="Bo" || $s=="Bp" || $s=="Bq" || $s=="Br" || $s=="Bs" || $s=="Bt" || $s=="Bu" || $s=="Bv" || $s=="B1" || $s=="B2" || $s=="B3" || $s=="B4" || $s=="B5" || $s=="B6" || $s=="B7" || $s=="B8" || $s=="BN1" || $s=="BN2" || $s=="BN3")
+					if($s=="Ba" || $s=="Bb" || $s=="Bc" || $s=="Bd" || $s=="Be" || $s=="Bf" || $s=="Bg" || $s=="Bh" || $s=="Bi" || $s=="Bj" || $s=="Bk" || $s=="Bl" || $s=="Bm" || $s=="Bn" || $s=="Bo" || $s=="Bp" || $s=="Bq" || $s=="Br" || $s=="Bs" || $s=="Bt" || $s=="Bu" || $s=="Bv" || $s=="B1" || $s=="B2" || $s=="B3" || $s=="B4" || $s=="B5" || $s=="B6" || $s=="B7" || $s=="B8" || $s=="BN1" || $s=="BN2" || $s=="BN3" || $s=="BN4" || $s=="BN5")
 					{
 						$dataArraynew["B"][$d][$t]+=$myrownew2["CNT"];
 					}
