@@ -157,7 +157,13 @@ class myjsActions extends sfActions
 				$profileInfo["PHOTO"] = NULL;
 				if(MobileCommon::isApp() != "I"||$loggedInProfileObj->getHAVEPHOTO()!="U")
 					$profileInfo["PHOTO"] = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
-									$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj,$profileInfo); 
+				$myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid);
+									$appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+				if(!$appV1DisplayJson)
+				{
+				$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj,$profileInfo);
+				JsMemcache::getInstance()->set($myjsCacheKey,$appV1DisplayJson);
+				}
 			}
 			$appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
 
