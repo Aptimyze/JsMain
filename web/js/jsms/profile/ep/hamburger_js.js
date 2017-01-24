@@ -628,8 +628,10 @@ var hamHtml="",slider1,slider2;
 			}
 			if($("#suggestBox").length == 0 || $("#suggestBox").attr("suggest-click") == 1) {
 				$("#suggestBox").removeAttr("suggest-click");
-				var typeDataArray = [],type;
-				type = $(target).next().attr("name").split("p_")[1].split("[]")[0].toUpperCase();
+				var typeDataArray = [],type = "";
+				if($(target).next().attr("name").indexOf("p_") != -1) {
+					type = $(target).next().attr("name").split("p_")[1].split("[]")[0].toUpperCase();
+				}
 				
 				if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
 					$("#HAM_OPTION_1 li input:checked").each(function(){
@@ -1135,9 +1137,10 @@ var hamHtml="",slider1,slider2;
 			}
 			searchHamburger(this.type,this.ulOption,this.tapid);
 			if($("#HAM_OPTION_1 li input:checked").length !=0) {
-				var typeDataArray = [],type;
-				type = $($("#HAM_OPTION_1").find("input")[0]).attr("name").split("p_")[1].split("[]")[0].toUpperCase();
-				
+				var typeDataArray = [],type = "";
+				if($($("#HAM_OPTION_1").find("input")[0]).attr("name").indexOf("p_") != -1) {
+					type = $($("#HAM_OPTION_1").find("input")[0]).attr("name").split("p_")[1].split("[]")[0].toUpperCase();
+				}
 				if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
 					$("#HAM_OPTION_1 li input:checked").each(function(){
 						typeDataArray.push($(this).val());
@@ -1327,7 +1330,7 @@ function appendSuggestionList(response) {
 			 		});
 			 		if(dataPresent == false) {
 			 			if($("#suggestBox").length == 0)
-			 				$("<div class='pad10p0p brdr13 suggestBox' id='suggestBox'><div class='suggestTitle color14 f14 fontlig'>Suggestions</div></div>").insertBefore($(".hpad5")[0]);
+			 				$("<div class='pad10p0p brdr13 suggestBox dispnone' id='suggestBox'><div class='suggestTitle color14 f14 fontlig'>Suggestions</div></div>").insertBefore($(".hpad5")[0]);
 			 			if($("#HAM_OPTION_1 li[value='"+elem+"']").length != 0) {
 				 			$("#suggestBox").append("<div style='width: 100px;overflow: hidden;height: 27px;text-overflow: ellipsis;position: relative;white-space: nowrap;' value='"+elem+"' class='suggestOption pad5 f14 color14 brdr_new fontlig mar10p10p0p dispibl'>"+$($("#HAM_OPTION_1 li[value='"+elem+"'] div")[0]).html()+"</div>");
 				 			if($("#suggestBox").hasClass("dispnone")) {
