@@ -247,6 +247,8 @@ class InformationTypeAdapter
                                         }
                                         unset($profilesArray);
                                         $profilesArray = $profilesArray1;
+                                }else{
+                                    $profilesArray = array();
                                 }
                         }
                         JsMemcache::getInstance()->set("MATCHOFTHEDAY_".$this->profileId,  serialize($profilesArray));

@@ -1052,7 +1052,7 @@ class SearchUtility
                 JsMemcache::getInstance()->set("cachedLSMS$pid","");
                 JsMemcache::getInstance()->set("cachedDMR$pid","");
                 JsMemcache::getInstance()->set("cachedLSMR$pid","");
-                JsMemcache::getInstance()->set("MATCHOFTHEDAY_".$pid,"");
+                JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$pid);
 			}	
                 }
                 return 0;
