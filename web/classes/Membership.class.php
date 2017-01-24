@@ -537,7 +537,12 @@ class Membership
             if ($row['EXPIRY_DT']) {
                 if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
                     //confirm whether to handle upgrade for unlimited or not ankita
-                    return array(5, $row["EXPIRY_DT"], $row['SERVICEID']);
+                    if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]){
+                        return array(memUserType::UPGRADE_ELIGIBLE, $row["EXPIRY_DT"], $row["SERVICEID"]);
+                    }
+                    else{
+                        return array(5, $row["EXPIRY_DT"], $row['SERVICEID']);
+                    }
                 } 
                 else {
                     if ($row['DIFF'] >= - 10 && $row['DIFF'] < 30) {
@@ -549,12 +554,12 @@ class Membership
                         
                         if ($row['DIFF'] < 0) return array(4, $expiry_date_plus_10, $row["SERVICEID"]);
                         else{
-                            /*if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]){
+                            if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]){
                                 return array(memUserType::UPGRADE_ELIGIBLE, $expiry_date, $row["SERVICEID"]);
                             }
-                            else{*/
+                            else{
                                 return array(6, $expiry_date, $row['SERVICEID']);
-                            //}
+                            }
                         }
                     } 
                     else if ($row['DIFF'] < - 10) {

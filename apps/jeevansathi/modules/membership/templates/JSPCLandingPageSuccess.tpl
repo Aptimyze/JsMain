@@ -633,9 +633,11 @@
                         <div id="payNowBtn" class="fullwid txtc lh50">
                             <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
                         </div>
+                        ~if $data.upgradeMembership`
                         <div id="upgradeBtn" class="fullwid txtc lh50 cursp">
                             <span class="colrw">Upgrade</span>
                         </div>
+                        ~/if`
                     </div>
                     <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
                 </div>
@@ -910,7 +912,7 @@
             createCookie('mainMemTab', 'C');
             createCookie('mainMem', 'C');
             createCookie('mainMemDur', '3');
-            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':'C', 'mainMemDur':'3', 'device':'desktop' , 'upgradeMem':'MAIN'});
+            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':"~$data.upgradeMembership.upgradeMainMem`", 'mainMemDur':"~$data.upgradeMembership.upgradeMainMemDur`", 'device':'desktop' , 'upgradeMem':"~$data.upgradeMembership.type`"});
         });
         updateVasPageCart();
         var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
