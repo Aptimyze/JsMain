@@ -1270,6 +1270,7 @@ class Membership
         $purDetRow = $billingPurObj->fetchAllDataForBillid($billid);
         $smarty->assign("eAdvantageService", substr($purDetRow['SERVICEID'],0,3));
         $smarty->assign("eAdvantageServiceName", VariableParams::$mainMembershipNamesArr[substr($purDetRow['SERVICEID'],0,3)]);
+        $smarty->assign("excludeInPrintBill", VariableParams::$excludeInPrintBill);
         unset($purDetRow);
 
         foreach ($printBillDataArr as $key=>$myrow) {

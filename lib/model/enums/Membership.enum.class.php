@@ -632,6 +632,8 @@ class VariableParams
     public static $skipVasPageMembershipBased = array('X','ESP');
     
     public static $jsExclusiveComboAddon = array('J');
+    
+    public static $excludeInPrintBill = array('e-Value Pack','JS Boost');
 }
 class discountType
 {
