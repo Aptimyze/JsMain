@@ -141,41 +141,50 @@ class WriteMessageConsumer
 			$timeDiff = floor( (time() - $data['time'])/60 );
 			$senderid=$body['senderid'];
 			$receiverid=$body['receiverid'];
-			$senderObj = new Profile('',$senderid);   
-			$senderObj->getDetail("","","*");
-			$receiverObj = new Profile('',$receiverid);
-			$receiverObj->getDetail("","","*");
 			
 			if($timeDiff >= MQ::DELAY_MINUTE)
 			{
-				// todo: delete key data
+				// delete key data
 				JsMemcache::getInstance()->delete($key);
+				// Sender Receiver objects
+				$senderObj = new Profile('',$senderid);   
+				$senderObj->getDetail("","","*");
+				$receiverObj = new Profile('',$receiverid);
+				$receiverObj->getDetail("","","*");
 				// send mail
 				$conversation = $data['message'];
 				if($data['sendToBoth'])
 				{
 					// send this mail both to sender and receiver
-					$search = $senderObj->getUSERNAME().',';
+					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
 					$senderEmailMsg = str_replace($search, 'You,', $conversation);
+					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
+					$senderEmailMsg = str_replace($search, $receiverObj->getUSERNAME().',', $conversation);
+
 					$this->sendMail($receiverObj, $senderObj, $senderEmailMsg, $type);
-					$search = $receiverObj->getUSERNAME().',';
+					
+					// $search = $receiverObj->getUSERNAME().',';
+					// $receiverEmailMsg = str_replace($search, 'You,', $conversation);
+					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
+					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $conversation);
+
 					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
 				}
 				else
 				{
 					// send only to receiver
-					$search = $receiverObj->getUSERNAME().',';
+					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
+					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $conversation);
+
 					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
 				}
-				var_dump($data);
-				var_dump($senderEmailMsg);
-				var_dump($receiverEmailMsg);
-				die;
 			}
 			break;
-	  }     
+	  }
 	}
 	catch (Exception $exception) 
 	{
@@ -214,7 +223,7 @@ class WriteMessageConsumer
    * Function for sending e-mail
    * 
    * @access public
-   * @param $type,$body
+   * @param $senderObj,$receiverObj,$message,$type
    */
 	public function sendMail($senderObj, $receiverObj, $message, $type)
 	{
