@@ -244,7 +244,7 @@ mysql_query($sql,$dbDDL) or die("18".mysql_error1($dbDDL));
 
 $currentTime = date("H");
 
-if(in_array($currentTime,array(1,2,9,10,18,19)))
+if(in_array($currentTime,array(1,6,19)))
         callDeleteCronBasedOnId('EXPORT','N');
 else
         callDeleteCronBasedOnId('DELTA','N');
