@@ -13,9 +13,9 @@ var PageSrc = 0;
 *
 */
 
-var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1&caching=1","DAILYMATCHES":"/api/v1/search/perform?searchBasedParam=matchalerts&caching=1&myjs=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&matchedOrAll=A&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1 ","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","EXPIRINGINTEREST":"/api/v2/inbox/perform?infoTypeId=23&pageNo=1&myjs=1&caching=1","LASTSEARCH":"/api/v1/search/perform?lastSearchResults=1&results_orAnd_cluster=onlyResults&myjs=1&caching=1&lastsearch=1"};
+var urlArray = {"JUSTJOINED":"/api/v1/search/perform?searchBasedParam=justJoinedMatches&justJoinedMatches=1&myjs=1&caching=1","DESIREDPARTNERMATCHES":"/api/v1/search/perform?partnermatches=1&myjs=1&caching=1","DAILYMATCHES":"/api/v1/search/perform?searchBasedParam=matchalerts&caching=1&myjs=1","VISITORS":"/api/v2/inbox/perform?infoTypeId=5&pageNo=1&matchedOrAll=A&myjs=1&caching=1","SHORTLIST":"/api/v2/inbox/perform?infoTypeId=8&pageNo=1&myjs=1&caching=1",'INTERESTRECEIVED':"/api/v2/inbox/perform?infoTypeId=1&pageNo=1&myjs=1","MESSAGES":"/api/v2/inbox/perform?infoTypeId=4&pageNo=1&myjs=1","ACCEPTANCE":"/api/v2/inbox/perform?infoTypeId=2&pageNo=1&myjs=1 ","PHOTOREQUEST":"/api/v2/inbox/perform?infoTypeId=9&pageNo=1&myjs=1","COUNTS":"/api/v2/common/engagementcount","VERIFIEDMATCHES":"/api/v1/search/perform?verifiedMatches=1&myjs=1&caching=1","FILTEREDINTEREST":"/api/v2/inbox/perform?infoTypeId=12&caching=1&myjs=1","EXPIRINGINTEREST":"/api/v2/inbox/perform?infoTypeId=23&pageNo=1&myjs=1&caching=1","LASTSEARCH":"/api/v1/search/perform?lastSearchResults=1&results_orAnd_cluster=onlyResults&myjs=1&caching=1&lastsearch=1", "MATCHOFTHEDAY":"/api/v2/inbox/perform?infoTypeId=24&pageNo=1&myjs=1"};
 
-var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20, "LASTSEARCH":20, 'EXPIRINGINTEREST':20,};
+var maxCountArray = {"JUSTJOINED":20,"DESIREDPARTNERMATCHES":20,"DAILYMATCHES":20,"VISITORS":5,"SHORTLIST":5,'INTERESTRECEIVED':20,'FILTEREDINTEREST':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":5,"COUNTS":5,"VERIFIEDMATCHES":20, "LASTSEARCH":20, 'EXPIRINGINTEREST':20, "MATCHOFTHEDAY" : 7};
 
 var noResultMessagesArray={
 	"JUSTJOINED":"People matching your desired partner profile who have joined in last one week will appear here","DESIREDPARTNERMATCHES":"We are finding the matches who recently joined us. It might take a while","DAILYMATCHES":"We are finding the best recommendations for you. It may take a while.","VISITORS":"People who visited your profile will appear here","SHORTLIST":"People you shortlist will appear here",'INTERESTRECEIVED':20,"MESSAGES":20,"ACCEPTANCE":20,"PHOTOREQUEST":"People who have requested your photo will appear here.","COUNTS":5,"VERIFIEDMATCHES":"People matching your desired partner profile and are <a href='/static/agentinfo' class='fontreg colr5'>verified by visit</a> will appear here", "LASTSEARCH":"No result message here"
@@ -79,6 +79,10 @@ else if(this.name=="VERIFIEDMATCHES"){
 else if(this.name=="LASTSEARCH"){
   var containerBarObj = new LastSearchBar('dailyMatchesTab');
   seeAllTrackingLink = "trackJsEventGA('My JS JSPC', 'DPP Matches/Last Search Section - See All',loggedInJspcGender,'')";
+}
+else if(this.name == "MATCHOFTHEDAY")
+{
+  var containerBarObj = new MatchOfDayBar();
 }
 this.containerHtml=containerBarObj.getContainerHtml();
 this.viewAllInnerHtml=containerBarObj.getViewAllInnerHtml();
@@ -240,6 +244,12 @@ $( document ).ajaxSend(function( event,request, settings ) {
     };
     LastSearchBar.prototype = new container();
 
+    var MatchOfDayBar = function(name) {
+      this.ContainerHtml = $("#prfDay").html();
+      this.innerHtml = $("#matchOfDaySection").html();
+    };
+    MatchOfDayBar.prototype = new container();
+
     var verifiedMatchesBar = function(name) {
       this.ContainerHtml = $("#largeContainer").html();
       this.innerHtml= $("#faceCard").html();
@@ -361,6 +371,25 @@ $( document ).ajaxSend(function( event,request, settings ) {
         var desiredPartnersObj = new desiredPartnerMatches();
         desiredPartnersObj.pre();
         desiredPartnersObj.request();
+    }
+
+    var matchOfDayMatches = function() {
+      this.name = "MATCHOFTHEDAY";
+      this.containerName = this.name+"_Container";
+      this.heading = "";
+      this.headingId = this.name+"_head";
+      this.list = this.name+"_List";
+      this.error=0;
+      this.displayed = 0;
+      this.countingValId = this.name+"_resultCount";
+      component.apply(this, arguments);
+    };
+    matchOfDayMatches.prototype = Object.create(component.prototype);
+    matchOfDayMatches.prototype.constructor = matchOfDayMatches;
+    matchOfDayMatches.prototype.post = function() {
+          showMatchOfTheDayCards();
+    }
+    matchOfDayMatches.prototype.noResultCase = function() {
     }
 
 	    //VERIFIED MATCHES
@@ -766,7 +795,13 @@ else {
                           }
    }
 
-  showMatchOfTheDayCards();
+   if(showMatchOfTheDay)
+   {
+    var matchOfDay = new matchOfDayMatches();
+    matchOfDay.pre();
+    matchOfDay.post();
+   }
+  // showMatchOfTheDayCards();
    $('#videoCloseID').bind('click', function(e)
   {
     videoLinkRequest(profileid);

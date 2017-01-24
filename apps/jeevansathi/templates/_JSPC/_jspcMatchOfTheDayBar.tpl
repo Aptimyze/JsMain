@@ -21,7 +21,7 @@
                             <div class="disp-cell f18 mod_p1 gunascore"></div>
                         </div>
                         <ul class="listnone f14 fontlig modli clearfix  pt7">
-                            <li class="textTru age_height">27 yr,  5 ft 3 in</li>
+                            <li class="textTru age_height"></li>
                             <li class="textTru edu_level_new"></li>
                             <li class="textTru caste"></li>
                             <li class="textTru religion"></li>
