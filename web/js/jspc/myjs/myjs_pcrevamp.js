@@ -387,7 +387,7 @@ $( document ).ajaxSend(function( event,request, settings ) {
     matchOfDayMatches.prototype = Object.create(component.prototype);
     matchOfDayMatches.prototype.constructor = matchOfDayMatches;
     matchOfDayMatches.prototype.post = function() {
-          showMatchOfTheDayCards();
+          showMatchOfTheDayCards(this);
     }
     matchOfDayMatches.prototype.noResultCase = function() {
     }
@@ -797,11 +797,11 @@ else {
 
    if(showMatchOfTheDay)
    {
-    var matchOfDay = new matchOfDayMatches();
-    matchOfDay.pre();
-    matchOfDay.post();
+      var matchOfDay = new matchOfDayMatches();
+      matchOfDay.pre();
+      matchOfDay.request();
    }
-  // showMatchOfTheDayCards();
+
    $('#videoCloseID').bind('click', function(e)
   {
     videoLinkRequest(profileid);
@@ -1049,24 +1049,12 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 	}
 }
 
-    function showMatchOfTheDayCards()
-    { 
-      $.ajax({
-        url: '/api/v2/inbox/perform?infoTypeId=24&pageNo=1&myjs=1',
-        timeout: 5000,
-        success: function(response, data)
-          {
-            var modCards=JSON.parse(response);
-            if(modCards.profiles.length)
-            {
-            fillMatchOfTheDayCards(modCards);
-            }
-            else
-            {
-            var flagForMatchOfTheDayCards = 0;
-            }
-          }
-      });
+    function showMatchOfTheDayCards(Object)
+    {
+      if(Object.data.profiles)
+      {
+        fillMatchOfTheDayCards(Object.data);
+      }
     }
 
     function fillMatchOfTheDayCards(responseObject)
