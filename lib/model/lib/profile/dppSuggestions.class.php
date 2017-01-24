@@ -61,7 +61,7 @@ class dppSuggestions
 		{
 			$valueArr["range"] = 0;
 		}
-		if(MobileCommon::isApp())
+		if(MobileCommon::isApp() || MobileCommon::isNewMobileSite())
 		{
 			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
 		}	
@@ -421,8 +421,9 @@ class dppSuggestions
 	//Mapping of income needs to be changed.
 	public function getSuggestionForIncome($type,$valArr,$calLayer="")
 	{	
-		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr);			
 		
+		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr);			
+
 		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);		
 		if($calLayer)
@@ -442,6 +443,11 @@ class dppSuggestions
 					$valArr[$key] = $hIncomeDol[$val];	
 				}
 			}
+		}
+		if(!is_array($valArr)) // in case the value in income is not set , we put no income in LDS and LRS and then suggest noIncome to an above
+		{
+			$valArr["LDS"] = TopSearchBandConfig::$noIncomeLabel;
+			$valArr["LRS"] = TopSearchBandConfig::$noIncomeLabel;
 		}
 		if($this->gender == "M")
 		{

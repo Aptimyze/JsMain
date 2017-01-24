@@ -21,7 +21,7 @@ class dppSuggestionsCALV1Action extends sfActions
 		
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-		$source = $request->getParameter("source");
+		$source = $request->getParameter("source"); //change source to something else if needed
 		$calLayer = 1;
 		$incmoeStr="";
 		$i=0;
@@ -54,10 +54,12 @@ class dppSuggestionsCALV1Action extends sfActions
 				}					
 			}
 		}
+
+		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;
+
 		if(MobileCommon::isApp())
 		{
-			$finalArr = $this->getFormattedArrForApp($finalArr);			
-			$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;			
+			$finalArr = $this->getFormattedArrForApp($finalArr);						
 		}
 		if(is_array($finalArr))
 		{
