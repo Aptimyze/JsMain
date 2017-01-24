@@ -383,17 +383,17 @@ var hamHtml="",slider1,slider2;
 			}
 				})(ham_i,type);
 			}
-			if($("#TAPNAME_1").html() == "Age") {
+			if(type == "p_age") {
 				setTimeout(function(){
 					typeDataArray = [$("#ham_p_lage:checked").val(),$("#ham_p_hage:checked").val()];
 					changeSuggestion("AGE", typeDataArray);
 				},50);	
-			} else if ($("#TAPNAME_1").html() == "Income Rs") {
+			} else if (type == "p_income_rs") {
 				setTimeout(function(){
 					typeDataArray = [$("#ham_p_lrs:checked").prev().html(),$("#ham_p_hrs:checked").prev().html(),"No Income","and above"];
 					changeSuggestion("INCOME",typeDataArray);
 				},50);	
-			} else if($("#TAPNAME_1").html() == "Income $") {
+			} else if(type == "p_income_dol") {
 				setTimeout(function(){
 					typeDataArray = ["No Income","and above",$("#ham_p_lds:checked").prev().html(),$("#ham_p_hds:checked").prev().html()];
 					changeSuggestion("INCOME",typeDataArray);
@@ -445,20 +445,23 @@ var hamHtml="",slider1,slider2;
 
 			//State Living in
 			$("#TAPNAME_"+this.tapid).html(this.TapName());	
-			if($("#TAPNAME_1").html() != "City" && $("#TAPNAME_1").html() != "Country Living in" && $("#TAPNAME_1").html() != "State Living in" && $("#HEAD_Ethnicity").length == 0 && $("#HEAD_Appearance").length == 0 && $("#HEAD_SpecialCases").length == 0 && $("#HEAD_HoroscopeMustforMarriage").length == 0 && $("#HEAD_Rashi").length == 0 && $("#HEAD_Nakshatra").length == 0 && $("#HEAD_Manglik").length ==0 && $("#HEAD_CollegeDetails").length == 0 && $("#HEAD_CarrerDetails").length == 0 && $("#HEAD_Family").length == 0 && $("#HEAD_Parent").length == 0 && $("#HEAD_Siblings").length == 0) {
-				$('<span id="clearBtn" class="white fontthin f17 pt4 fr pr9 vAlignSub">Clear</span>').insertAfter("#TAPNAME_1");
-				$("#clearBtn").off("click").on("click",function(){
-					$("#HAM_OPTION_1 li input:checked").each(function(){
-						$(this).parent().click()
-					});
-				});	
-			}
+			
 			
 			
 					
 			//selected value
 			var selArr=new Array();
 			var curJson=this.json.OnClick[this.indexPos];
+			
+		if(curJson.callBack == "updateLifestyle" || curJson.key.indexOf("P_") != -1) {
+			$('<span id="clearBtn" class="white fontthin f17 pt4 fr pr9 vAlignSub">Clear</span>').insertAfter("#TAPNAME_1");
+				$("#clearBtn").off("click").on("click",function(){
+					$("#HAM_OPTION_1 li input:checked").each(function(){
+						$(this).parent().click()
+				});
+			});	
+		}
+		
 		//	console.log(curJson);
 			if(curJson.value)
 			{
@@ -623,22 +626,11 @@ var hamHtml="",slider1,slider2;
 			{
 				this.OutputUpdate(this.type,label,value);	
 			}
-			console.log("heading",$("#TAPNAME_1").html(),$("#TAPNAME_1").html() != "Highest Degree")
 			if($("#suggestBox").length == 0 || $("#suggestBox").attr("suggest-click") == 1) {
 				$("#suggestBox").removeAttr("suggest-click");
 				var typeDataArray = [],type;
-				if($("#TAPNAME_1").html() == "State/City") {
-					type = "CITY";
-				} else if($("#TAPNAME_1").html() == "Sect") {
-					type = "CASTE";
-				} else if($("#TAPNAME_1").html() == "Mother Tongue") {
-					type = "MTONGUE";
-				} else if($("#TAPNAME_1").html() == "Highest Degree" && $("#HEAD_CollegeDetails").length == 0) {
-					type = "EDUCATION";
-				}
-				else if($("#TAPNAME_1").html() != "City") {
-					type = $("#TAPNAME_1").html().toUpperCase()
-				}
+				type = $(target).next().attr("name").split("p_")[1].split("[]")[0].toUpperCase();
+				
 				if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
 					$("#HAM_OPTION_1 li input:checked").each(function(){
 						typeDataArray.push($(this).val());
@@ -1142,29 +1134,17 @@ var hamHtml="",slider1,slider2;
 				}
 			}
 			searchHamburger(this.type,this.ulOption,this.tapid);
-			console.log("heading",$("#TAPNAME_1").html())
-			var typeDataArray = [],type;
-			if($("#TAPNAME_1").html() == "State/City") {
-				type = "CITY";
-			} else if($("#TAPNAME_1").html() == "Sect") {
-				type = "CASTE";
-			} else if($("#TAPNAME_1").html() == "Mother Tongue" && $("#HEAD_Ethnicity").length == 0) {
-				type = "MTONGUE";
-			} else if($("#TAPNAME_1").html() == "Highest Degree" && $("#HEAD_CollegeDetails").length == 0) {
-				type = "EDUCATION";
+			if($("#HAM_OPTION_1 li input:checked").length !=0) {
+				var typeDataArray = [],type;
+				type = $($("#HAM_OPTION_1").find("input")[0]).attr("name").split("p_")[1].split("[]")[0].toUpperCase();
+				
+				if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
+					$("#HAM_OPTION_1 li input:checked").each(function(){
+						typeDataArray.push($(this).val());
+					});
+					changeSuggestion(type,typeDataArray);
+				} 
 			}
-			//Highest Degree
-			else if($("#TAPNAME_1").html() != "City") {
-				type = $("#TAPNAME_1").html().toUpperCase()
-			}
-			if(type == "CITY" || type == "CASTE" || type == "MTONGUE" || type == "EDUCATION" || type == "OCCUPATION") {
-				$("#HAM_OPTION_1 li input:checked").each(function(){
-					typeDataArray.push($(this).val());
-				});
-				changeSuggestion(type,typeDataArray);
-			} 
-
-
 		}
                 eHamburger.prototype.AppendLoader=function()
                 {

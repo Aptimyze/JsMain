@@ -191,20 +191,19 @@ e.preventDefault();
 				else
 					goto=goto-4;
 			}	
-
 			//code appended for DPP suggestion
-			var typeDataArray = [];
-			if($("#TAPNAME_1").html() == "Age") {
+			var type = $(clickedDiv).find("input").attr("name"),typeDataArray = [];
+			if(type == "p_lage" || type == "p_hage" ) {
 				setTimeout(function(){
 					typeDataArray = [$("#ham_p_lage:checked").val(),$("#ham_p_hage:checked").val()];
 					changeSuggestion("AGE", typeDataArray);
 				},50);	
-			} else if ($("#TAPNAME_1").html() == "Income Rs") {
+			} else if (type == "p_lrs" || type == "p_hrs") {
 				setTimeout(function(){
 					typeDataArray = [$("#ham_p_lrs:checked").prev().html(),$("#ham_p_hrs:checked").prev().html(),"No Income","and above"];
 					changeSuggestion("INCOME",typeDataArray);
 				},50);	
-			} else if($("#TAPNAME_1").html() == "Income $") {
+			} else if(type == "p_lds" || type == "p_hds") {
 				setTimeout(function(){
 					typeDataArray = ["No Income","and above",$("#ham_p_lds:checked").prev().html(),$("#ham_p_hds:checked").prev().html()];
 					changeSuggestion("INCOME",typeDataArray);
