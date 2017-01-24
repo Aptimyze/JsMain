@@ -261,19 +261,42 @@ function SingleTonNextPage(data,nottostore,url,transition)
    });
    cancelUrl[random]=1;
    
-   xhrReq[random]=$.ajax({url: url}).done(function(data){
-       
-                    if(cancelUrl[random]==1)
-			ShowNextPageTrue(data,nottostore,url,transition);
+   //Before hitting AJAX call for HTML, we will check the URL with MYJS URL and 
+   //check timestamp in session storage and if it is less than 1 minute, 
+   //we will use HTML from session storage and not hit Ajax
+   var arrAllowedUrls = ["IMG_URL/#mham","IMG_URL","IMG_URL/?mobile_view=Y#mham","IMG_URL/?mobile_view=Y","IMG_URL/profile/mainmenu.php","IMG_URL/profile/mainmenu.php#mham"];
+   if(arrAllowedUrls.indexOf(url) != -1 && 
+     sessionStorage.getItem("myjsTime") != undefined && 
+     new Date().getTime() - sessionStorage.getItem("myjsTime") < myJsCacheTime) 
+   {
+   		var data = sessionStorage.getItem("myjsHtml");
+   		
+      if(cancelUrl[random]==1) {
+        ShowNextPageTrue(data,nottostore,url,transition);  
+      }
+			
+      startTouchEvents(timer);
+   } else  {
+      xhrReq[random]=$.ajax({url: url}).done(function(data){
+      if(url == "IMG_URL/#mham") {
+        sessionStorage.setItem("myjsTime",new Date().getTime());
+        sessionStorage.setItem("myjsHtml",data);	
+      }
+      
+      if(cancelUrl[random]==1) {
+        ShowNextPageTrue(data,nottostore,url,transition);
+      }
+        
+      startTouchEvents(timer);
+
+      })
+      .fail(function(){
+                      if(cancelUrl[random]==1)
+        StopNextPage();
         startTouchEvents(timer);
-                    
-		})
-		.fail(function(){
-                    if(cancelUrl[random]==1)
-			StopNextPage();
-		startTouchEvents(timer);
-		});
-   
+      });
+    }
+    
 }
 function StopNextPage(transition)
 {
