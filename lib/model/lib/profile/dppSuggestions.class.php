@@ -405,6 +405,7 @@ class dppSuggestions
 	{	
 		
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr);			
+		
 		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);		
 		if($calLayer)
