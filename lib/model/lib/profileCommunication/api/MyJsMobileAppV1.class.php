@@ -57,9 +57,12 @@ $className = get_class($this);
 				{
 					continue;
 				}
-				if($key == "MATCH_OF_THE_DAY" && LoggedInProfile::getInstance()->getACTIVATED() == 'U' && !(MobileCommon::isApp()))
+				if($key == "MATCH_OF_THE_DAY")
 				{
-					continue;					
+					if(MobileCommon::isApp())
+						continue;
+					else if (LoggedInProfile::getInstance()->getACTIVATED() == 'U') 
+						continue;					
 				}
 				foreach($value as $k=>$v)
                                 {
