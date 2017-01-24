@@ -909,10 +909,12 @@
         });
         $("#upgradeBtn").click(function(e){
             console.log("clicked on upgrade button");
-            createCookie('mainMemTab', 'C');
-            createCookie('mainMem', 'C');
-            createCookie('mainMemDur', '3');
-            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':"~$data.upgradeMembership.upgradeMainMem`", 'mainMemDur':"~$data.upgradeMembership.upgradeMainMemDur`", 'device':'desktop' , 'upgradeMem':"~$data.upgradeMembership.type`"});
+            var upgradeType = "~$data.upgradeMembership.type`",mainMem = "~$data.upgradeMembership.upgradeMainMem`",mainMemDur = "~$data.upgradeMembership.upgardeMainMemDur`";
+            createCookie('mainMemTab', mainMem);
+            createCookie('mainMem', mainMem);
+            createCookie('mainMemDur', mainMemDur);
+            console.log("ankita",mainMem,mainMemDur,upgradeType);
+            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMem, 'mainMemDur':mainMemDur, 'device':'desktop' , 'upgradeMem':upgradeType});
         });
         updateVasPageCart();
         var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
