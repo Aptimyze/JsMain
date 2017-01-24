@@ -96,35 +96,41 @@ class ResponseHandlerConfig
 	public static $DISPLAY_PHONE_SCREEN = array("message" => "Display phone screen", "statusCode" => '8');
 	public static $PHONE_JUNK = array("message" => "Phone number banned due to terms of use violation", "statusCode" => "1");
 	//incomplete
-	public static $INCOMPLETE_USER = array("message" => "incomplete Profile", "statusCode" => '7');
-	public static $APP_DOWN = array("message" => "Site temporarily down", "statusCode" => '45');
+	public static $INCOMPLETE_USER =  array("message"=>"incomplete Profile","statusCode"=>'7');
+	public static $APP_DOWN =  array("message"=>"Site temporarily down","statusCode"=>'45');
+	
+        public static $USER_ALREADY_REGISTERED =  array("message"=>"User exist with same email and password. Redirecting to home page","statusCode"=>'0');
+        
+    //Browser Notification
+    public static $BROWSER_ID_INSERT_SUCCESS = array("message"=>"Browser Id Inserted Successfully","statusCode"=>'1');
+    public static $BROWSER_ID_INSERT_FAILURE = array("message"=>"Browser Id Not Inserted","statusCode"=>'0');
+    public static $BROWSER_ID_INVALID_PARAM = array("message"=>"Missing Input Parameters","statusCode"=>'0');
+    public static $BROWSER_NOTIFICATION_SUCCESS = array("message"=>"Success","statusCode"=>'1');
+    public static $BROWSER_NOTIFICATION_FAILURE = array("message"=>"No Message Available","statusCode"=>'1');
+    public static $BROWSER_NOTIFICATION_INVALID_PARAM = array("message" => "Invalid parameter","statusCode"=>'1');
+    public static $BROWSER_NOTIFICATION_INVALID_CHANNEL = array("message" => "Invalid Channel", "statusCode" => '1');
+    //profileChecksum not provided for verification documents
+    public static $PROVIDE_PROFILECHECKSUM = array("message"=>"profileChecksum not provided","statusCode"=>'0');
 
-	public static $USER_ALREADY_REGISTERED = array("message" => "User exist with same email and password. Redirecting to home page", "statusCode" => '0');
+    //Guna Score
+    public static $ZERO_GUNA_MATCHES = array("message"=>"No Guna Score Matches","statusCode"=>'1');
+    public static $NO_COMMUNICATION_HISTORY = array("message"=>"No Communication History","statusCode"=>'1');
 
-	//Browser Notification
-	public static $BROWSER_ID_INSERT_SUCCESS = array("message" => "Browser Id Inserted Successfully", "statusCode" => '1');
-	public static $BROWSER_ID_INSERT_FAILURE = array("message" => "Browser Id Not Inserted", "statusCode" => '0');
-	public static $BROWSER_ID_INVALID_PARAM = array("message" => "Missing Input Parameters", "statusCode" => '0');
-	public static $BROWSER_NOTIFICATION_SUCCESS = array("message" => "Success", "statusCode" => '1');
-	public static $BROWSER_NOTIFICATION_FAILURE = array("message" => "No Message Available", "statusCode" => '1');
-	public static $BROWSER_NOTIFICATION_INVALID_PARAM = array("message" => "Invalid parameter", "statusCode" => '1');
-	public static $BROWSER_NOTIFICATION_INVALID_CHANNEL = array("message" => "Invalid Channel", "statusCode" => '1');
-	//profileChecksum not provided for verification documents
-	public static $PROVIDE_PROFILECHECKSUM = array("message" => "profileChecksum not provided", "statusCode" => '0');
+    // Captcha Not verified
+	public static $CAPTCHA_UNVERIFIED = array("message"=>"Please click the box 'I'm not a robot'","statusCode"=>'1');
+	public static $PHONE_INVALID_SUCCESS = array("message"=>"Successfull","statusCode"=>'0');
+	public static $PHONE_INVALID_NO_OPTION_SELECTED = array("message"=>"Please provide a valid reason","statusCode"=>'1');
+        
+    public static $NO_EMAILTYPE=  array("message"=>"No Email Type Passed","statusCode"=>'1');
+  	public static $ALTERNATE_EMAIL_SUCCESS=  array("message"=>"A link has been sent to your email id {email}, click on the link to verify email.","statusCode"=>'0');
+  	public static $ALTERNATE_EMAIL_ID_NOT_FOUND=  array("message"=>"No email ID found for the given user.","statusCode"=>'0');
+	public static $PEAK_LOAD_FAILURE = array("message"=>"This operation cannot be done at site peak load","statusCode"=>'0');
 
-	//Guna Score
-	public static $ZERO_GUNA_MATCHES = array("message" => "No Guna Score Matches", "statusCode" => '1');
-	public static $NO_COMMUNICATION_HISTORY = array("message" => "No Communication History", "statusCode" => '1');
+	// Report Abuse
+	public static $ABUSE_ATTEMPTS_OVER = array("message"=>"You cannot report abuse against the same person more than twice.","statusCode"=>'1');
 
-	// Captcha Not verified
-	public static $CAPTCHA_UNVERIFIED = array("message" => "Please click the box 'I'm not a robot'", "statusCode" => '1');
-	public static $PHONE_INVALID_SUCCESS = array("message" => "Successfull", "statusCode" => '0');
-	public static $PHONE_INVALID_NO_OPTION_SELECTED = array("message" => "Please provide a valid reason", "statusCode" => '1');
-
-	public static $NO_EMAILTYPE = array("message" => "No Email Type Passed", "statusCode" => '1');
-	public static $ALTERNATE_EMAIL_SUCCESS = array("message" => "A link has been sent to your email id {email}, click on the link to verify email.", "statusCode" => '0');
-	public static $ALTERNATE_EMAIL_ID_NOT_FOUND = array("message" => "No email ID found for the given user.", "statusCode" => '0');
-	public static $PEAK_LOAD_FAILURE = array("message" => "This operation cannot be done at site peak load", "statusCode" => '0');
 }
 
 ?>
+
+

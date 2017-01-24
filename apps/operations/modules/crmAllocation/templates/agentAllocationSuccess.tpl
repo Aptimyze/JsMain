@@ -93,6 +93,10 @@
 						<td class=label align="left" width=30%> Email</td>
 						<td class=fieldsnew width=70%> ~$details.EMAIL` </a></td>
 					</tr>
+                                        <tr>
+                                                <td class=label align="left" width=30%> ISD No.</td>
+                                                <td class=fieldsnew> ~$details.ISD` </td>
+                                        </tr>
 					<tr>
 						<td class=label align="left" width=30%> Phone No. (Residence)</td>
 						<td class=fieldsnew> ~$details.PHONE_WITH_STD` </td>

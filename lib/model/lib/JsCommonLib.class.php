@@ -407,7 +407,7 @@ public static function insertConsentMessageFlag($profileid) {
 			}
 				$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_MANGLIK()));
 			if(is_array($ARR))
-			if(in_array($profile->getMANGLIK(),$ARR))
+			if(in_array($profile->getMANGLIK(),$ARR) || ($profile->getMANGLIK() == '' && in_array('N',$ARR)))
 			{
 				$CODE["MANGLIK"]='gnf';
 				$CODE["Manglik/Chevvai Dosham"]='gnf';
@@ -1116,7 +1116,17 @@ public static function insertConsentMessageFlag($profileid) {
 
             JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
         }
-
-
+        public static function setAutoScreenFlag($screenVal,$editArr)
+        {
+                $autoScreenArr = array("PHONE_MOB","PHONE_RES","PROFILE_HANDLER_NAME","LINKEDIN_URL","FB_URL","BLACKBERRY","ALT_MESSENGER_ID");
+                foreach($editArr as $k=>$v)
+                {
+                        if(in_array($v,$autoScreenArr))
+                        {
+				$screenVal = Flag::setFlag(strtolower($v),$screenVal);
+                        }
+                }
+		return $screenVal;
+        }
 }
 ?>
