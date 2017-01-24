@@ -556,7 +556,7 @@ class SolrRequest implements RequestHandleInterface
 
 			$sortstringArr[] = $exp." ".$asc_or_descArr[$k];
 		}
-
+                $sortstringArr[] = 'id desc';
 		if($sortstringArr)
 			$this->filters[]="&sort=".implode(",",$sortstringArr);
 		if($this->searchParamtersObj->getFL_ATTRIBUTE())
