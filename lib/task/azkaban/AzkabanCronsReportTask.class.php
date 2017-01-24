@@ -10,7 +10,7 @@ class AzkabanCronsReportTask extends sfBaseTask
 {
  	protected function configure()
   	{
-		$this->serverDb= array(167=>"azkaban",153=>"azkaban2");
+		$this->serverDb= array(167=>"azkaban",153=>"azkaban2",72=>"azkaban72");
 		$this->reportType = array(1=>"failed",2=>"longPreparing",3=>"executing");
 		$this->addArguments(array(
         		new sfCommandArgument('server', sfCommandArgument::REQUIRED, 'My argument'),
@@ -62,7 +62,7 @@ EOF;
 				}
 				if($reportName==1)
 				{
-					SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,nikhil.dhiman@jeevansathi.com,vikas.jayna@jeevansathi.com,tanu.gupta@jeevansathi.com,vibhor.garg@jeevansathi.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'),'reshu.rajput@jeevansathi.com');
+					SendMail::send_email("reshu.rajput@jeevansathi.com,lavesh.rawat@jeevansathi.com,tanu.gupta@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com",$mailContent,"Azkaban Crons Report ".date('y-m-d h:i:s'),'reshu.rajput@jeevansathi.com');
 				}
 				elseif($reportName==2)
 				{

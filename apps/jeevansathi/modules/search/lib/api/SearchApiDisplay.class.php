@@ -371,6 +371,7 @@ class SearchApiDisplay
 				$this->finalResultsArray[$pid]['HAVEPHOTO']=$this->searchResultsData[$key]['HAVEPHOTO'];
 				$this->finalResultsArray[$pid]['PRIVACY']=$this->searchResultsData[$key]['PRIVACY'];
 				$this->finalResultsArray[$pid]['PHOTO_DISPLAY']=$this->searchResultsData[$key]['PHOTO_DISPLAY'];
+				$this->finalResultsArray[$pid]['GENDER']=$this->searchResultsData[$key]['GENDER'];
 				$this->finalResultsArray[$pid]['MSTATUS']=FieldMap::getFieldLabel("mstatus",$this->searchResultsData[$key]['MSTATUS']);
 
 				if($ignProfArr[$pid] == 1)

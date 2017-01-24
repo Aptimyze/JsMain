@@ -94,16 +94,14 @@ class Inbox implements Module
 						$keyNew = "ACC_ME_NEW";
 						break;
 					case "MY_MESSAGE":
+                                   
 						$keyNew = "MESSAGE_NEW";
 						$key = "MESSAGE_ALL";
 						break;
 					case "MESSAGE_RECEIVED":
-					case "MY_MESSAGE_RECEIVED":
+                    case "MY_MESSAGE_RECEIVED":
 						$keyNew = "MESSAGE_NEW";
 						$key = "MESSAGE";
-						if($infoTypenav["NUMBER"] == 1 && $fromGetDisplayFunction==''){
-							$memcacheServiceObj->unsetKey("MESSAGE_ALL");
-						}
 						break;
 					case "VISITORS":
 						$key = "VISITOR_ALERT";

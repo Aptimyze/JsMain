@@ -70,7 +70,7 @@
 							};
 						*/    
 						</script>
-						<img src="~$uploadUrl`~$photoArr['profilePic']['OriginalProfilePicUrl']`" alt="Picture" id="cropperPic">
+						<img src="~$uploadUrl`~$photoArr['profilePic']['MainPicUrl']`" alt="Picture" id="cropperPic">
 					</div>
 					<!--lavesh-->
 				</div>                

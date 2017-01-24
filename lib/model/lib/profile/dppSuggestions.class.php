@@ -19,11 +19,15 @@ class dppSuggestions
 			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS;
 		}
 
+		if($type == "CITY")
+		{
+			$valueArr["data"] = $this->getDelhiMumbaiSuggestions($valArr);						
+		}
 		if(is_array($trendsArr))
 		{
 			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 			$trendVal = $this->getTrendsValues($percentileArr);	
-			$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);			
+			$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr,$valueArr);			
 		}
 		if($type == "AGE")
 		{
@@ -50,7 +54,6 @@ class dppSuggestions
 					$valueArr = $this->getRemainingSuggestionValues($suggestedValueArr,$type,count($valueArr["data"]),$valueArr,$valArr);	
 				}
 			}
-										
 		} 
 		$valueArr["type"] = $type;
 		if($type == "AGE" || $type == "INCOME")
@@ -87,11 +90,9 @@ class dppSuggestions
 	}
 
 	//This function takes the trendsArr for each $type and gets the trends data to be sent as apiResponse
-	public function getDppSuggestionsFromTrends($trendsArr=array(),$type,$valArr=array())
+	public function getDppSuggestionsFromTrends($trendsArr=array(),$type,$valArr=array(),$valueArr=array())
 	{
-		$count = 0;
-		$delhiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$delhiNCRCities));
-		$mumbaiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$mumbaiRegion));
+		$count = count($valueArr["data"]);
 		
 		foreach($trendsArr as $k1=>$v1)
 		{
@@ -103,29 +104,10 @@ class dppSuggestions
 					$count++;
 				}
 				elseif(!in_array($k1,$valArr))
-				{	
-					foreach($valArr as $key=>$value)
-					{	
-						//if Delhi NCR or Mumbai Region is already not in value arr or in the selected arr then add the value and increment count
-						if($delhiCityCount < count(DppAutoSuggestEnum::$delhiNCRCities))
-						{
-							if(!in_array(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valArr) && in_array($value, DppAutoSuggestEnum::$delhiNCRCities) && !array_key_exists(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valueArr["data"]))
-							{
-								$valueArr["data"][DppAutoSuggestEnum::$delhiNCRCitiesStr] = TopSearchBandConfig::$ncrLabel;
-								$count++;
-							}
-						}
-						if($mumbaiCityCount < count(DppAutoSuggestEnum::$mumbaiRegion))
-						{
-							if(!in_array(DppAutoSuggestEnum::$mumbaiRegionStr,$valArr) && in_array($value, DppAutoSuggestEnum::$mumbaiRegion)  && !array_key_exists(DppAutoSuggestEnum::$mumbaiRegionStr,$valueArr["data"]))
-							{
-								$valueArr["data"][DppAutoSuggestEnum::$mumbaiRegionStr] = TopSearchBandConfig::$mumbaiRegionLabel;
-								$count++;
-							}
-						}
-					}
+				{						
 					$this->stateIndiaArr = $this->getFieldMapLabels("state_india",'',1);
 					$this->cityIndiaArr = $this->getFieldMapLabels("city_india",'',1);
+					
 					//if Delhi NCR or Mumbai Region is selected, then Mumbai region cities and Delhi NCR cities should not be shown
 					if(array_key_exists($k1, $this->stateIndiaArr) || array_key_exists($k1, $this->cityIndiaArr))
 					{
@@ -423,7 +405,6 @@ class dppSuggestions
 	{	
 		
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr);			
-
 		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);		
 		if($calLayer)
@@ -449,24 +430,29 @@ class dppSuggestions
 			$valArr["LDS"] = TopSearchBandConfig::$noIncomeLabel;
 			$valArr["LRS"] = TopSearchBandConfig::$noIncomeLabel;
 		}
+
+		$incomeLevel = $this->getFieldMapLabels("income_level",'',1);
+		$annualIncome = $incomeLevel[$this->income];
+		$mappedIncome = DppAutoSuggestEnum::$incomeMappingArr[$this->income];
+
 		if($this->gender == "M")
 		{
-			if(in_array($this->income,DppAutoSuggestEnum::$dollarArr))
+			if(!in_array($annualIncome,DppAutoSuggestEnum::$rupeeIncomeArr))
 			{
 				$key = array_search($valArr["HDS"],$hIncomeDol);				
-				if($this->income > $key && $key!="19")
-				{				
+				if($mappedIncome > $key && $key!="19")
+				{	
 					$valueArr["data"]["LDS"] = $valArr["LDS"];
-					$valueArr["data"]["HDS"] = $hIncomeDol[$this->income];
+					$valueArr["data"]["HDS"] = $hIncomeDol[$mappedIncome];
 				}
 			}
 			else
 			{
-				$key = array_search($valArr["HRS"],$hIncomeRs);
-				if($this->income > $key && $key!="19")
+				$key = array_search($valArr["HRS"],$hIncomeRs);				
+				if($mappedIncome > $key && $key!="19")
 				{
 					$valueArr["data"]["LRS"] = $valArr["LRS"];
-					$valueArr["data"]["HRS"] = $hIncomeRs[$this->income];					
+					$valueArr["data"]["HRS"] = $hIncomeRs[$mappedIncome];					
 				}
 			}		
 		}
@@ -484,6 +470,31 @@ class dppSuggestions
 			}
 		}
 		return $valueArr;
+	}
+
+	public function getDelhiMumbaiSuggestions($valArr)
+	{
+		$delhiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$delhiNCRCities));
+		$mumbaiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$mumbaiRegion));		
+		foreach($valArr as $key=>$val)
+		{
+			if($delhiCityCount < count(DppAutoSuggestEnum::$delhiNCRCities))
+			{
+				if(in_array($val,DppAutoSuggestEnum::$delhiNCRCities) && !in_array(TopSearchBandConfig::$ncrLabel,$valueArr["data"]) && !in_array(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valArr))
+				{
+					$arr[DppAutoSuggestEnum::$delhiNCRCitiesStr] = TopSearchBandConfig::$ncrLabel;
+				}
+			}
+			
+			if($mumbaiCityCount < count(DppAutoSuggestEnum::$mumbaiRegion))
+			{
+				if(in_array($val,DppAutoSuggestEnum::$mumbaiRegion) && !in_array(TopSearchBandConfig::$mumbaiRegionLabel,$valueArr["data"])  && !in_array(DppAutoSuggestEnum::$mumbaiRegionStr,$valArr))
+				{
+					$arr[DppAutoSuggestEnum::$mumbaiRegionStr] = TopSearchBandConfig::$mumbaiRegionLabel;
+				}
+			}			
+		}
+		return $arr;
 	}
 }
 ?>
