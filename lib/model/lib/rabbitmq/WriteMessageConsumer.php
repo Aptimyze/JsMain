@@ -155,17 +155,17 @@ class WriteMessageConsumer
 				if($data['sendToBoth'])
 				{
 					// send this mail both to sender and receiver
-					$search = $receiverObj->getUSERNAME().',';
+					$search = $senderObj->getUSERNAME().',';
 					$senderEmailMsg = str_replace($search, 'You,', $conversation);
 					$this->sendMail($receiverObj, $senderObj, $senderEmailMsg, $type);
-					$search = $senderObj->getUSERNAME().',';
+					$search = $receiverObj->getUSERNAME().',';
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
 					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
 				}
 				else
 				{
 					// send only to receiver
-					$search = $senderObj->getUSERNAME().',';
+					$search = $receiverObj->getUSERNAME().',';
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
 					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
 				}
