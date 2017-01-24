@@ -165,7 +165,14 @@ class SolrRequest implements RequestHandleInterface
 	*/	
 	public function sendCurlPostRequest($urlToHit,$postParams)
 	{
+		$start = strtotime("now");
 		$this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+                $end= strtotime("now");
+                $diff = $end - $start;
+                if($diff > 2){
+                        //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold".date('Y-m-d').".txt";
+                        //file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
+                }
 	}
 
         /**
