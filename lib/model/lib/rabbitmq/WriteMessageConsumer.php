@@ -159,17 +159,13 @@ class WriteMessageConsumer
 					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
 					$senderEmailMsg = str_replace($search, 'You,', $conversation);
 					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
-					$senderEmailMsg = str_replace($search, $receiverObj->getUSERNAME().',', $conversation);
-
+					$senderEmailMsg = str_replace($search, $receiverObj->getUSERNAME().',', $senderEmailMsg);
 					$this->sendMail($receiverObj, $senderObj, $senderEmailMsg, $type);
 					
-					// $search = $receiverObj->getUSERNAME().',';
-					// $receiverEmailMsg = str_replace($search, 'You,', $conversation);
 					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
 					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $conversation);
-
+					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
 					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
 				}
 				else
@@ -178,10 +174,10 @@ class WriteMessageConsumer
 					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
 					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
 					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $conversation);
-
+					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
 					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
 				}
+
 			}
 			break;
 	  }
