@@ -6502,7 +6502,10 @@ $('.js-previewAlbum').click(function(){
 		$("#showText").html(text);
 	}
 
-
+  /**
+   * function opens a field when a parameter is passed in url 
+   * 
+   */
   function getFieldsOnCal()
   {
     desktopSectionArray = {"education":"career","basic":"basic","about":"about",
@@ -6537,6 +6540,11 @@ $('.js-previewAlbum').click(function(){
     }, timeoutFieldCheck);
   }
 
+  /**
+   * opens a field
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldId   the id which should be clicked
+   */
   function openFieldsOnCal(fieldType='',fieldId='') 
   {
     if ( fieldType == 'dropdown')
@@ -6549,6 +6557,10 @@ $('.js-previewAlbum').click(function(){
     }
   }
 
+  /**
+   * function is used to get url get parameters
+   * @return {String}      get parameter
+   */
   var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),

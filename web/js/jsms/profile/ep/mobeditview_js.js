@@ -572,7 +572,9 @@ function bindEmailButtons(){
     });
 }
 
-
+   /**
+    * function is called when a field needs to be opened
+    */
   function getFieldsOnCal()
   {
     fieldIdMappingArray = {
@@ -605,6 +607,13 @@ function bindEmailButtons(){
     
   }
 
+  /**
+   * opens a field
+   * @param  {String} section the section which must be clicked
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldDivId   the parent id
+   */
   function openFieldsOnCal(section='',fieldType='',fieldId='',fieldDivId='') 
   {
   	var timeoutFieldCheck = 100;
@@ -639,8 +648,10 @@ function bindEmailButtons(){
   	}
   }
 
-
-
+  /**
+   * function is used to get url get parameters
+   * @return {String}      get parameter
+   */
 	var getUrlParameter = function getUrlParameter(sParam) {
 	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 	    sURLVariables = sPageURL.split('&'),
