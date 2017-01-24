@@ -157,8 +157,10 @@ class myjsActions extends sfActions
 				$profileInfo["PHOTO"] = NULL;
 				if(MobileCommon::isApp() != "I"||$loggedInProfileObj->getHAVEPHOTO()!="U")
 					$profileInfo["PHOTO"] = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
-				$myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid);
-									$appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+				$appOrMob = MobileCommon::isApp()? MobileCommon::isApp():'M'; 				
+				$myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid)."_".$appOrMob;
+				$appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+
 				if(!$appV1DisplayJson)
 				{
 				$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj,$profileInfo);
