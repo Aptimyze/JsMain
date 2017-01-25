@@ -1123,6 +1123,14 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             jObject.find('.location').html(profiles[i].location);
             jObject.find('.income').html(profiles[i].income);
             jObject.find('.mstatus').html(profiles[i].mstatus);
+            if (loggedInJspcGender == 'F')
+            {
+              jObject.find('.liketext').html('Like his profile?');
+            }
+            else
+            {
+              jObject.find('.liketext').html('Like her profile?'); 
+            }
         }
 
         //on click close button setStack is call'd

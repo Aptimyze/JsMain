@@ -36,7 +36,7 @@
                     <!--end:info-->
                     <!--start:btn-->
                     <div class="fr fontreg wid144 pr20 pt20">
-                        <p class="f16 opa50 txtc mb20">Like her profile?</p>                
+                        <p class="f16 opa50 txtc mb20 textTru liketext"></p>
                         <a class="sendInterest"><button class="bg_pink colrw f17 brdr-0 fullwid lh40 cursp">Send Interest</button></a>
                     </div>            
                     <!--end:btn-->
