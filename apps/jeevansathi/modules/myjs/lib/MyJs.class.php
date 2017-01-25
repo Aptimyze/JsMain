@@ -423,6 +423,11 @@ class MyJs implements Module
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 				break;
+                        case 'MATCH_OF_THE_DAY':
+				$skipConditionArray = SkipArrayCondition::$MATCHOFTHEDAY;
+				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+				$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				break;
 			default:
 				$skipConditionArray = SkipArrayCondition::$default;
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
