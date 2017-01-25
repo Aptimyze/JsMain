@@ -14,7 +14,7 @@ class MatchAlerts
 	*/
 	public function getMatchAlertCount($profileId, $skipProfile='',$days='')
 	{
-		$matchProfilesArray                              = SearchCommonFunctions::getMatchAlertsMatches('100','',$profileId);
+		$matchProfilesArray                              = SearchCommonFunctions::getMatchAlertsMatches('','',$profileId);
 		$output["TOTAL"] = $matchProfilesArray["CNT"];
 		$output["NEW"] = $matchProfilesArray["CNT_NEW"];
 		return $output;
