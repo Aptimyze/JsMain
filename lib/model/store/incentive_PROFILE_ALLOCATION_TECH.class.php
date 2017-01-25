@@ -75,7 +75,7 @@ class incentive_PROFILE_ALLOCATION_TECH extends TABLE
 			if(!$lastLoginDt)
 				$lastLoginDt='';	
                         $date=date('Y-m-d',time());
-                        $sql = "INSERT INTO incentive.PRE_ALLOCATION_LOG (PROFILEID, ALLOTED_TO , ALLOT_DT, LEVEL, SCORE, LAST_LOGIN_DT) VALUES(:PROFILEID,:ALLOTED_TO,:DATE,:LEVEL,:SCORE,DATE(:LAST_LOGIN_DT))";
+                        $sql = "INSERT INTO incentive.PRE_ALLOCATION_LOG (PROFILEID, ALLOTED_TO , ALLOT_DT, LEVEL, SCORE, LAST_LOGIN_DT) VALUES(:PROFILEID,:ALLOTED_TO,:DATE,:LEVEL,:SCORE,:LAST_LOGIN_DT)";
                         $prep = $this->db->prepare($sql);
                         $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_STR);
                         $prep->bindValue(":ALLOTED_TO",$user_value,PDO::PARAM_STR);
