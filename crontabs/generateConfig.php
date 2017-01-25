@@ -1,14 +1,22 @@
 <?php
-$env = $argv[1];
-/*$urlInput = $argv[2];
-$branch = $argv[3];
-$rootDir = $argv[4];*/
+/*
+First argument env
+Second argument json of dynamic variables
+*/
+$env = $argv[1];//Env
+$input = $argv[2];//json of dynamic variables
 
-$urlInput = $argv[2];
+$inputArr = get_object_vars(json_decode($input));
+
+//Dynamic variables
+$urlInput = $inputArr["url_input"];
+$devIp = $inputArr["dev_ip"];
+$testIp = $inputArr["test_ip"];
+//Ends
+
 $rootDir = realpath(dirname(__FILE__)."/..");
 $branchStrArr = explode("/",$rootDir);
 $branch = end($branchStrArr);
-
 include $rootDir."/commonConfig/JsConstantsConfig.class.php";
 
 //echo $branch." ".$rootDir;die;
@@ -45,22 +53,32 @@ foreach ($configArr as $k=>$v){
 	}
 	else{*/
 		//echo $k." ".$v."\n\n";
-		if(strstr($v,'%SSL_URL_INPUT%')){
-			fwrite($file, "\tpublic static $".$k." = '".str_replace("%SSL_URL_INPUT%","https://".$urlInput,$v)."';\n");
-		}
-		elseif(strstr($v,'%URL_INPUT%')){
-			fwrite($file, "\tpublic static $".$k." = '".str_replace("%URL_INPUT%","http://".$urlInput,$v)."';\n");
-		}
-		elseif(strstr($v,'%ROOT_DIR%')){
-			fwrite($file, "\tpublic static $".$k." = '".str_replace("%ROOT_DIR%",$rootDir,$v)."';\n");
-		}
-		else{
-			if(strtolower(substr($v,0,5))=="array" || strtolower(substr($v,0,1)) == "[")
-				fwrite($file, "\tpublic static $".$k." = ".$v.";\n");
+		{
+			if(strtolower(substr($v,0,5))=="array" || strtolower(substr($v,0,1)) == "["){
+				$str =  "$".$k." = ".$v;
+			}
 			else{
-				fwrite($file, "\tpublic static $".$k." = '".$v."';\n");
+				$str = "$".$k." = '".$v."'";
 			}
 		}
+//echo $str."";
+		if(strstr($str,'%SSL_URL_INPUT%')){
+			$str = str_replace("%SSL_URL_INPUT%","https://".$urlInput,$str);
+		}
+		elseif(strstr($str,'%URL_INPUT%')){
+			$str = str_replace("%URL_INPUT%","http://".$urlInput,$str);
+		}
+		if(strstr($str,'%DEV_IP%')){
+			$str = str_replace("%DEV_IP%","http://".$devIp,$str);
+		}
+		if(strstr($str,'%TEST_IP%')){
+			$str = str_replace("%TEST_IP%","http://".$testIp,$str);
+		}
+		if(strstr($str,'%ROOT_DIR%')){
+			$str = str_replace("%ROOT_DIR%",$rootDir,$str);
+		}
+//		echo $str;
+		fwrite($file, "\tpublic static $str;\n");
 	//}
 }
 fwrite ($file, "}");

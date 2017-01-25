@@ -26,10 +26,10 @@ public static $dev =
 	"docRoot"            => '%ROOT_DIR%/web',
 	"cronDocRoot"	  => '%ROOT_DIR%',
 	"smartyDir"          => '%ROOT_DIR%/lib/vendor/smarty/libs/Smarty.class.php',
-	"chatIp"             => '172.16.3.185',
+	"chatIp"             => '%DEV_IP%',
 	"regImg"             => '%URL_INPUT%/profile/images/reg',
-	"memcache"            => 'array("HOST"=>"172.16.3.185", "PORT"=>"11211")',
-	"bmsMemcache"        => 'array("HOST"=>"172.16.3.185", "PORT"=>"11211")',
+	"memcache"            => 'array("HOST"=>"%DEV_IP%", "PORT"=>"11211")',
+	"bmsMemcache"        => 'array("HOST"=>"%DEV_IP%", "PORT"=>"11211")',
         "appDown"            => false,
         "enableAllPasswordCombinations" => true,
         "passwordHashingRollback" => false,
@@ -41,7 +41,7 @@ public static $dev =
 	"screenedPhotoDir"   => '%ROOT_DIR%/web/uploads',
 	"ftpUsername"        => 'ftp_user',
 	"ftpPassword"        => 'prinka',
-	"ftpHost"            => '172.16.3.185',
+	"ftpHost"            => '%DEV_IP%',
 
 	/*Search*/
         "solrServerUrl"      => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
@@ -66,7 +66,7 @@ public static $dev =
         "hideUnimportantFeatureAtPeakLoad"     => 0,
 
 	/* Send Mail */
-	"mailHost"           => '172.16.3.185',
+	"mailHost"           => '%DEV_IP%',
 	"mailPort"           => '25',
 
 	/* mmmjs */
@@ -113,14 +113,11 @@ public static $dev =
         "iosApnsUrl" =>'ssl://gateway.push.apple.com:2195',
 
 /****Rabbitmq Configurations****/
-        "rabbitmqConfig" => "array(
-                                'FIRST_SERVER'=>array('HOST'=>'172.16.3.185','PORT'=>'5672','USER'=>'admin','PASS'=>'admin','VHOST'=>'/'),
-                                'SECOND_SERVER'=>array('HOST'=>'192.168.120.154','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/')
-                                             )",
+        "rabbitmqConfig" => "array('FIRST_SERVER'=>array('HOST'=>'%DEV_IP%','PORT'=>'5672','USER'=>'admin','PASS'=>'admin','VHOST'=>'/'),'SECOND_SERVER'=>array('HOST'=>'192.168.120.154','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'))",
         "rabbitmqManagementPort" => '15672',
 
         "shortUrlDomain" => 'http://js1.in',
-        "newMailHost" => '172.16.3.185',
+        "newMailHost" => '%DEV_IP%',
         "mailAllowedArray" => 'array("eshajain88@outlook.com")',
         "hindiTranslateURL" => "http://hindi.jeevansathi.com",//Doubt
         "contactUrl" => "http://contact.jeevansathi.com/",//Doubt
@@ -172,7 +169,7 @@ public static $dev =
 public static $test = 
 	[
 
-	"whichMachine"       => 'prod',
+	"whichMachine"       => 'test',
 	"siteUrl"            => '%URL_INPUT%',
 	"ser6Url"            => 'http://ser6.jeevansathi.com',
 	"ser2Url"            => 'http://ser2.jeevansathi.com',
@@ -184,10 +181,10 @@ public static $test =
 	"docRoot"            => '%ROOT_DIR%/web',
 	"cronDocRoot"	  => '%ROOT_DIR%',
 	"smartyDir"          => '%ROOT_DIR%/lib/vendor/smarty/libs/Smarty.class.php',
-	"chatIp"             => '172.16.3.203',
+	"chatIp"             => '%TEST_IP%',
 	"regImg"             => 'http://static.jeevansathi.com/profile/images/reg',
-	"memcache"            => 'array("HOST"=>"172.16.3.203", "PORT"=>"11211")',
-	"bmsMemcache"        => 'array("HOST"=>"172.16.3.203", "PORT"=>"11211")',
+	"memcache"            => 'array("HOST"=>"%TEST_IP%", "PORT"=>"11211")',
+	"bmsMemcache"        => 'array("HOST"=>"%TEST_IP%", "PORT"=>"11211")',
         "ssl_siteUrl"        => '%SSL_URL_INPUT%',
         "crmUrl"             => 'http://crm.jeevansathi.com',
 
@@ -197,7 +194,7 @@ public static $test =
 	"screenedPhotoDir"   => '%ROOT_DIR%/web/uploads',
 	"ftpUsername"        => 'mike',
 	"ftpPassword"        => 'mike123',
-	"ftpHost"            => '172.16.3.203',
+	"ftpHost"            => '%TEST_IP%',
          /* facebook */
         "fbId"=>'140798849327439',
         "fbSecret"=>'6a686b1d23bf9a5e3dad7eb7ecf7a32d',
@@ -207,11 +204,11 @@ public static $test =
 	/****Photos*****/
 
 	/*Search*/
-        "solrServerUrl"      => 'http://172.16.3.203:8080/solr/',
-        "solrServerUrl1"     => 'http://172.16.3.203:8080/solr/',
-        "solrServerUrl2"     => 'http://172.16.3.203:8080/solr/',
-        "solrServerProxyUrl"     => 'http://172.16.3.203:8080/solr/',
-        "solrServerProxyUrl1"     => 'http://172.16.3.203:8080/solr/',
+        "solrServerUrl"      => 'http://%TEST_IP%:8080/solr/',
+        "solrServerUrl1"     => 'http://%TEST_IP%:8080/solr/',
+        "solrServerUrl2"     => 'http://%TEST_IP%:8080/solr/',
+        "solrServerProxyUrl"     => 'http://%TEST_IP%:8080/solr/',
+        "solrServerProxyUrl1"     => 'http://%TEST_IP%:8080/solr/',
 
 
 
@@ -291,7 +288,7 @@ public static $test =
        "rabbitmqConfig" => "array('FIRST_SERVER'=>array('HOST'=>'localhost','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'), 'SECOND_SERVER'=>array('HOST'=>'192.168.120.154','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'))",
        "rabbitmqManagementPort" => 15672,
 /****mailhost***/
-"newMailHost" => '172.16.3.185', 
+"newMailHost" => '%DEV_IP%', 
 "mailAllowedArray" => 'array("eshajain88@outlook.com")',
 "hindiTranslateURL" => "http://hindi.jeevansathi.com",
 "contactUrl" => "http://contacttest.infoedge.com/",
@@ -311,7 +308,7 @@ public static $test =
         "redisCachingUrl" => 'apitoCaching',
         "redisCluster" => "['tcp://172.10.18.61:7000','tcp://172.10.18.62:7000','tcp://172.10.18.63:7000','tcp://172.10.18.64:7000','tcp://172.10.18.65:7000','tcp://172.10.18.64:7005']",
         "redisSentinel" => "['tcp://172.10.18.65:26379', 'tcp://172.10.18.64:26379','tcp://172.10.18.70:26379']",
-        "ifSingleRedis" => 'tcp://172.16.3.203:6380',
+        "ifSingleRedis" => 'tcp://%TEST_IP%:6380',
         "usePhotoDistributed" => 0,
         "communicationRep" => 1,
         "jsChatFlag"  => '0',
@@ -340,7 +337,7 @@ public static $test =
     "openfireConfig" => "array('HOST'=>'localhost','WSPORT'=>'7070','SERVER_NAME'=>'localhost')",
     "openfireConfigInternal" => "array('HOST'=>'localhost','PORT'=>'9090','SERVER_NAME'=>'localhost')",
     "openfireRestAPIKey" => "MhXPRu3f4Aw07EbR",
-    "communicationServiceUrl" => "http://172.16.3.203:8390",
+    "communicationServiceUrl" => "http://%TEST_IP%:8390",
 "multiUserPhotoUrl" =>"http://staging.jeevansathi.com/api/v1/social/getMultiUserPhoto" 
 
 	];
