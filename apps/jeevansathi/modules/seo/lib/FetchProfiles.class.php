@@ -191,8 +191,7 @@ class FetchProfiles
 		$paramArr["PHOTO_DISPLAY"]=$PHOTO_DISPLAY;
 		$paramArr["PRIVACY"]=$PRIVACY;
 		$paramArr["IGNORE_PROFILES"]=$notInProfileStr;
-		
-		
+                
 		if($tableName == 'SEARCH_FEMALE')
 			$paramArr["GENDER"] = 'F';
 		elseif($tableName == 'SEARCH_MALE')
@@ -206,7 +205,10 @@ class FetchProfiles
 		// handling of special case static array profiles
 		if($type1 == 'PROFILEID')
 			$paramArr["SHOW_PROFILES"]=$value1In;
-			
+                
+                //format solr inputs from seo
+                $paramArr = $this->formatSeoSolrInputs($paramArr);
+                
 		$SearchParametersObj = new SearchBasedOnParameters;
 		$SearchParametersObj->getSearchCriteria($paramArr);
 		$SearchParametersObj->setNoOfResults($noOfResult);
@@ -215,7 +217,7 @@ class FetchProfiles
 		$SearchServiceObj = new SearchService;
 		if($sort && !$cluster)
 			$SearchServiceObj->callSortEngine($SearchParametersObj,'S');
-
+                
 		if($cluster)
 		{	
 			//suggested		
@@ -260,8 +262,31 @@ class FetchProfiles
 		}
 	}
 	
-	
-	
+	/*function - formatSeoSolrInputs
+         * formats solr inputs from seo
+         * @params: $paramArr
+         * @return : $paramArr
+         */
+	function formatSeoSolrInputs($paramArr){
+            if($paramArr["CITY_RES"]){
+                $mappedCityValue = FieldMap::getFieldLabel('city_india',$paramArr["CITY_RES"]);
+                //var_dump($mappedCityValue."--".strlen($paramArr["CITY_RES"]));
+                //if city/state is in India
+                if($mappedCityValue!=null && strlen($paramArr["CITY_RES"])>0){
+                    $paramArr["COUNTRY_RES"] = FetchProfiles::COUNTRY_INDIA;
+                    if(strlen($paramArr["CITY_RES"]) > 2){  //City case
+                        $paramArr["CITY_INDIA"] = $paramArr["CITY_RES"];
+                    }
+                    else{
+                        $paramArr["STATE"] = $paramArr["CITY_RES"];  //state case
+                        unset($paramArr["CITY_RES"]);
+                    }
+                }
+            } 
+            //print_r($paramArr);
+            return $paramArr;
+        }
+        
 	function ArrayMerge($array1,$array2)
 	{
 		$returnArray=@array_merge($array1,$array2);

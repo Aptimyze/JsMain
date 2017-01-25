@@ -134,7 +134,7 @@
               <div class="f15 fontlig color11">        
                 <!--start:Basic Details-->
                 <div class="prfbr3">
-                  <div class="prfp5" id="section-basic">
+                  <div class="prfp5 noMultiSelect" id="section-basic">
                     <div class="clearfix"> <i class="sprite2 fl edpic6"></i>
                       <div class="fl colr5 pl8 f17 pt2" >Basic Details</div>
                         <div class="fr pt4"><a class="cursp color5 fontreg f15 js-editBtn editableSections" data-section-id="basic">Edit</a> </div>
