@@ -67,7 +67,7 @@ class MOBILE_API_MATCH_OF_DAY extends TABLE{
     public function getMatchForProfileForListing($paramsArr,$ignoreArray = array()){
         if($paramsArr){
             try{
-                $sql = "SELECT MATCH_PROFILEID FROM MOBILE_API.MATCH_OF_DAY_LOG where PROFILEID = :PROFILEID AND ENTRY_DT > :ENTRY_DT";
+                $sql = "SELECT MATCH_PROFILEID FROM MOBILE_API.MATCH_OF_DAY_LOG where PROFILEID = :PROFILEID AND ENTRY_DT >= :ENTRY_DT";
                 if(isset($paramsArr["IGNORED"])){
                         $sql .= " AND IGNORED = :IGNORED";
                 }
