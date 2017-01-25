@@ -122,7 +122,7 @@ class FAQFeedBack
 				} catch (Exception $e) {
 					throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
 				}
-
+				
 				//End
 				JsMemcache::getInstance()->remove($loginProfile->getPROFILEID());
 				JsMemcache::getInstance()->remove($otherProfileId);
