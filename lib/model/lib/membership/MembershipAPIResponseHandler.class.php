@@ -159,7 +159,8 @@ class MembershipAPIResponseHandler {
         else{
             $ignoreShowOnlineCheck = false;
         }
-        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck);
+       
+        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck,$this->upgradeMem);
         $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {
@@ -578,7 +579,7 @@ class MembershipAPIResponseHandler {
         if (isset($this->mainMem) && !empty($this->mainMem)){
             $this->memApiFuncs->getMainMembershipDetails($this, $id);
         }
-        
+        //print_r($this->mainServices);die;
         $this->memApiFuncs->customizeVASDataForAPI($this->validation, 0, $this);
         $vas_text = NULL;
         $skip_text = "Continue";

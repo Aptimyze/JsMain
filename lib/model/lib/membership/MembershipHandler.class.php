@@ -195,7 +195,7 @@ class MembershipHandler
         }
     }
 
-    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop')
+    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop',$upgradeMem="NA")
     {
         if (!$discountType) {
             $discountTypeArr = $this->getDiscountInfo($user);
@@ -203,7 +203,15 @@ class MembershipHandler
         }
 
         $renewalPercent = $this->getVariableRenewalDiscount($user->getProfileid());
-
+        
+        //get upgrade discount for this user
+        if(in_array($upgradeMem,VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+            $upgradePercentArr = $this->getUpgradeMembershipDiscount($user, $upgradeMem);
+        }
+        else{
+            $upgradePercentArr = array();
+        }
+        
         foreach ($allMainMem as $mainMem => $subMem) {
             foreach ($subMem as $key => $value) {
                 $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['PRICE'], 2);
@@ -219,6 +227,9 @@ class MembershipHandler
                             $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['DISCOUNT_PRICE'], 2);
                         }
                     }
+                }
+                if($upgradePercentArr[$mainMem] && $upgradePercentArr[$mainMem][$key]){
+                    $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round(($allMainMem[$mainMem][$key]['OFFER_PRICE'] - ceil($allMainMem[$mainMem][$key]['OFFER_PRICE'] * $upgradePercentArr[$mainMem][$key]) / 100), 2);
                 }
             }
         }
@@ -1037,11 +1048,9 @@ class MembershipHandler
         return $subStatus;
     }
 
-    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false)
+    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$upgradeMem="NA")
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
-        //var_dump("in getMembershipDurationsAndPrices...");
-        //var_dump($allMainMem);
         
         if ($displayPage == 1) {
             if (isset($allMainMem['P']['P1'])) {
@@ -1052,6 +1061,7 @@ class MembershipHandler
         if (strpos(discountType::SPECIAL_DISCOUNT, $discountType) !== false && strpos(",", $discountType) === false) {
             $discountArr = $this->getSpecialDiscountForAllDurations($userObj->getProfileid());
         }
+        
         foreach ($allMainMem as $mainMem => $subMem) {
             $discount = $discountArr[$mainMem];
             if ($userObj->profileid != '') {
@@ -1066,7 +1076,9 @@ class MembershipHandler
                 }
             }
         }
-        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device);
+        
+        //ankita use previous membership details used in getOfferprice for landing page display and return from it
+        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device,$upgradeMem);
         $minPriceArr = $this->fetchLowestActivePrices($userObj, $allMainMem, $device);
 
         return array(
@@ -1075,6 +1087,21 @@ class MembershipHandler
         );
     }
 
+    /*function - getUpgradeMembershipDiscount
+     * get discount details for upgrade membership based on user and membership plan
+     * @params: $userObj,$upgradeMem
+     * @return : $discountArr
+     */
+    public function getUpgradeMembershipDiscount($userObj,$upgradeMem="NA"){
+        //ankita apply logic to calculate discount based on previous discount only
+        $discountArr = array();
+        if($upgradeMem == "MAIN" && $userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+            //ankita fetch current membership id and duration and set discount accordingly 
+            $discountArr["C"]["C3"] = 40;
+        }
+        return $discountArr;
+    }
+    
     public function getAllVASData($userObj, $device = 'desktop')
     {
         $addonInfo = $this->fetchMembershipDetails("ADDON", $userObj, $device);

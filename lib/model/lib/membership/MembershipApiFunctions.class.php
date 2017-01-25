@@ -896,6 +896,7 @@ class MembershipApiFunctions
                 $addonMonths = $apiObj->festDurBanner[$apiObj->mainMem][$apiObj->mainMemDur];
             }
         }
+        
         if ($apiObj->mainMemDur == "L") {
             $monthsPrependVal = "Unlimited";
         } 
