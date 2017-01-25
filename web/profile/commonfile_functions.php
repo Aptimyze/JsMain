@@ -441,7 +441,7 @@ $js_arr[]=array("jsms/search/relaxCriteria_v1"  => "1");
 $js_arr[]=array("jsms/photo/mobPhotoAlbum_v1"   => "2");
 $js_arr[]=array("jsms/photo/mobPhotoUploadCommon_js"  => "1");
 $js_arr[]=array("jsms/common/urlParamHandling"  => "1");
-$js_arr[]=array("jsms/common/CommonFunctions"                        => "26");
+$js_arr[]=array("jsms/common/CommonFunctions"                         => "27");
 $js_arr[]=array("jsms/common/touchswipe_js"   => "3");
 $js_arr[]=array("jsms/common/history_js"        => "7");
 $js_arr[]=array("jsms/photo/photoRequestCommon_js"  => "2");
