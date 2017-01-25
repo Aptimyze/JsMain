@@ -494,7 +494,7 @@ class MembershipAPIResponseHandler {
             if ($this->mainMem == 'ESP') {
                 $arr = VariableParams::$eSathiAddOns;
             }
-            elseif($apiObj->mainMem == 'NCP'){
+            elseif($this->mainMem == 'NCP'){
                 $arr = VariableParams::$jsExclusiveComboAddon;
             }
             else {
