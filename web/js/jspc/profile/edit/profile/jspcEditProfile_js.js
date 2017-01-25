@@ -6545,7 +6545,7 @@ $('.js-previewAlbum').click(function(){
    * @param  {String} fieldType dropdown or text
    * @param  {String} fieldId   the id which should be clicked
    */
-  function openFieldsOnCal(fieldType='',fieldId='') 
+  function openFieldsOnCal(fieldType,fieldId) 
   {
     if ( fieldType == 'dropdown')
     {
