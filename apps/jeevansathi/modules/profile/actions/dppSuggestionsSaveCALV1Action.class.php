@@ -6,7 +6,7 @@
  * @package    jeevansathi
  * @subpackage profile
  * @author     Sanyam Chopra
- * @date	   15th September 2016
+ * @date	   24th Jan 2017
  */
 
 class dppSuggestionsSaveCALV1Action extends sfActions 
@@ -20,7 +20,6 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 	{		
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');	
-		$source = $request->getParameter("source");		
 		$this->hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$this->hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
 		$calLayer = 1;
@@ -36,8 +35,10 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		
 		$decodedData = json_decode($output);
 		$dppSaveData = json_decode($request->getParameter("dppSaveData"));			
-		$dppDataArr = $this->getDppFilledData($decodedData,$source);				
+		
+		$dppDataArr = $this->getDppFilledData($decodedData);				
 		$finalArr = $this->getFinalSubmitData($dppSaveData,$dppDataArr);		
+
 		ob_start();
 		//$request->setParameter('sectionFlag','dpp');
 		$request->setParameter("fromBackend",false);
@@ -51,47 +52,50 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 
 	//This function appends the values of the dpp selected from the CAL to the already set values in the dpp
 	public function getFinalSubmitData($dppSaveData,$dppDataArr)
-	{
-		foreach($dppSaveData as $key=>$value)
+	{		
+		if(is_array($dppSaveData))
 		{
-			if(array_key_exists($value->type, $dppDataArr))
+			foreach($dppSaveData as $key=>$value)
 			{
-				if($dppDataArr[$value->type] == "DM")
+				if(array_key_exists($value->type, $dppDataArr))
 				{
-					$finalDppArr["P_".$value->type] = implode(",",$value->data);
-				}
-				elseif($value->type == "AGE")
-				{
-					foreach($value->data as $k=>$v)
+					if($dppDataArr[$value->type] == "DM")
 					{
-						$finalDppArr["P_".$k] = $v;
+						$finalDppArr["P_".$value->type] = implode(",",$value->data);
 					}
-				}
-				elseif ($value->type == "INCOME")
-				{
-					foreach($value->data as $k=>$v)
+					elseif($value->type == "AGE")
 					{
-						if($k == "LRS" ||$k == "HRS")
+						foreach($value->data as $k=>$v)
 						{
-							$finalDppArr["P_".$k] = array_search($v,$this->hIncomeRs);
-						}
-						else
-						{
-							$finalDppArr["P_".$k] = array_search($v,$this->hIncomeDol);
-						}						
-					}
-				}
-				else
-				{
-					foreach($value->data as $k=>$v)
-					{
-						if(strpos($dppDataArr[$value->type],$v) === false && strpos($appendValues,$v) === false)
-						{
-							$appendValues.= ",".$v;
+							$finalDppArr["P_".$k] = $v;
 						}
 					}
-					$finalDppArr["P_".$value->type] = $dppDataArr[$value->type].$appendValues;
-					unset($appendValues);
+					elseif ($value->type == "INCOME")
+					{
+						foreach($value->data as $k=>$v)
+						{
+							if($k == "LRS" ||$k == "HRS")
+							{
+								$finalDppArr["P_".$k] = array_search($v,$this->hIncomeRs);
+							}
+							else
+							{
+								$finalDppArr["P_".$k] = array_search($v,$this->hIncomeDol);
+							}						
+						}
+					}
+					else
+					{
+						foreach($value->data as $k=>$v)
+						{
+							if(strpos($dppDataArr[$value->type],$v) === false && strpos($appendValues,$v) === false)
+							{
+								$appendValues.= ",".$v;
+							}
+						}
+						$finalDppArr["P_".$value->type] = $dppDataArr[$value->type].$appendValues;
+						unset($appendValues);
+					}
 				}
 			}
 		}
@@ -103,45 +107,57 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		return FieldMap::getFieldlabel($label,$value,$returnArr);
 	}
 
-	public function getDppFilledData($decodedData,$source="")
+	public function getDppFilledData($decodedData)
 	{
-		if($source == "jsms")
+		if(MobileCommon::isNewMobileSite())
 		{
-			foreach($decodedData as $key=>$value)
+			if(is_object($decodedData))
 			{
-				foreach($value as $k1=>$v1)
+				foreach($decodedData as $key=>$value)
 				{
-					if($k1 == "OnClick")
+					if(is_object($value))
 					{
-						foreach($v1 as $k2=>$v2)
+						foreach($value as $k1=>$v1)
 						{
-							if(in_array($v2->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
+							if($k1 == DppAutoSuggestEnum::$OnClickLabel)
 							{
-								if(in_array($v2->key,DppAutoSuggestEnum::$incomeFieldJSMS))
-								{									
-									$incomeStr .= $v2->value.",";
-								}
-								else
+								if(is_array($v1))
 								{
-									$dppDataArr[substr($v2->key,2)] = $v2->value;
-								}								
+									foreach($v1 as $k2=>$v2)
+									{
+										if(in_array($v2->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
+										{
+											if(in_array($v2->key,DppAutoSuggestEnum::$incomeFieldJSMS))
+											{									
+												$incomeArr[] = $v2->value;
+											}
+											else
+											{
+												$dppDataArr[substr($v2->key,2)] = $v2->value;
+											}								
+										}
+									}
+								}										
 							}
-						}				
-					}
+						}
+					}						
 				}
-			}
-			$incomeStr = trim($incomeStr,",");
+			}			
+			$incomeStr = implode(",",$incomeArr);
 			$dppDataArr["INCOME"] = $incomeStr;
 		}
 		else
 		{
-			foreach($decodedData as $key=>$value)
+			if(is_object($decodedData))
 			{
-				if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
-				{				
-					$dppDataArr[substr($value->key,2)] = $value->value;
+				foreach($decodedData as $key=>$value)
+				{
+					if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
+					{				
+						$dppDataArr[substr($value->key,2)] = $value->value;
+					}
 				}
-			}
+			}			
 		}	
 		return $dppDataArr;
 	}
