@@ -71,6 +71,7 @@ class MOBILE_API_MATCH_OF_DAY extends TABLE{
                 if(isset($paramsArr["IGNORED"])){
                         $sql .= " AND IGNORED = :IGNORED";
                 }
+                $ignoreArray = array_filter($ignoreArray);
                 if(!empty($ignoreArray) && $ignoreArray[0] != ''){
                         $sql .= " AND MATCH_PROFILEID NOT IN (".implode(',',$ignoreArray).")";
                 }
