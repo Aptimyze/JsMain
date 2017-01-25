@@ -931,7 +931,7 @@ return $edu;
         public function sortUsersListBySubscription($userList, $subscription)
 	{
 		if(!is_array($userList))
-			throw  new jsException("No userList in sortUsersListByPhoto() function in RegularMatchAlerts.class.php");
+			throw  new jsException("No userList in sortUsersListBySubscription() function in RegularMatchAlerts.class.php");
 
 		foreach($userList as $k=>$v)
 		{
