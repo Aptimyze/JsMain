@@ -345,7 +345,7 @@ Class ButtonResponseApi
 				case ContactHandler::REMINDER:
 					$button                        = $this->getSendReminderButton();
 					$responseArray["button"]      = $button;
-					$responseArray["infomsglabel"]=null;
+					$responseArray["infomsglabel"] = "Reminder of interest Sent";
 					//echo "NOCONTACT";
 					break;
 				case ContactHandler::INITIATED:
@@ -354,7 +354,7 @@ Class ButtonResponseApi
 						$button                        = $this->getSendReminderButton(3);
 						$responseArray["button"]      = $button;
 						if($privilageArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y" &&  $this->contactObj->getCOUNT() < ErrorHandler::REMINDER_COUNT)
-							$responseArray["infomsglabel"] = null;
+							$responseArray["infomsglabel"] = "Reminder of interest Sent";
 					}
 					else
 					{

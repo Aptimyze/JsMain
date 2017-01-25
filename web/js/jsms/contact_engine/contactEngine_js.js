@@ -134,12 +134,12 @@ $.ajax({
 		type: "POST",
 		data: ajaxData,
 		//crossDomain: true,
-		success: function(result){
+		success: function(result){  
 					$("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
 					//$("#loaderOverlay").hide();
 					//$("#reportAbuseContainer").hide();
-                    if(CommonErrorHandling(result,'?regMsg=Y')) 
-                    {
+                    if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y') ) 
+                    {  
 					ShowTopDownError([result.message],5000);
 					$("#commonOverlayTop").show();
                     }	

@@ -611,10 +611,17 @@ ajaxConfig.success=function(response){
 	          	hideCommonLoader();
 	          	
 		var jObject=$("#reportAbuseConfirmLayer");
+    if(response.responseStatusCode == '1'){
+      $('#hiphenForConfirm').html('');
+      $('#reportAbuseConfirmHeading').html('');
+    }
+      
 	jObject.find('.js-username').html(otherUser);
 	jObject.find('.js-otherProfilePic').attr('src',$("#profilePicScrollBar").attr('src'));
 
-		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){$('#reportAbuseConfirmLayer').fadeIn(300,"linear",function(){})}); 
+		$('.js-overlay').eq(0).fadeIn(200,"linear",function(){
+      $('#messageForReportAbuse').html(response.message);
+      $('#reportAbuseConfirmLayer').fadeIn(300,"linear",function(){})}); 
 
 closeAbuseConfirmLayer=function() {
 

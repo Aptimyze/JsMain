@@ -60,6 +60,21 @@ class ApiEditSubmitV1Action extends sfActions
 			$this->incomplete=EditProfileEnum::$INCOMPLETE_YES;
 		else
 			$this->incomplete=EditProfileEnum::$INCOMPLETE_NO;
+                
+                if(($this->editFieldNameArr['EMAIL'] && (strpos($_SERVER['HTTP_REFERER'],JsConstants::$siteUrl)!=0) && (MobileCommon::isDesktop() || MobileCommon::isNewMobileSite()))){
+                    $http_msg=print_r($_SERVER,true);
+                    mail("ankitshukla125@gmail.com,lavesh.rawat@gmail.com","referrer not jeevansathi","details :$http_msg");
+                    $errorArr["ERROR"]="Field Array is not valid";
+                    $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
+                    $apiResponseHandlerObj->setResponseBody($errorArr);
+                    ValidationHandler::getValidationHandler("","EditField Array is not valid");
+                    $apiResponseHandlerObj->generateResponse();
+
+                    if($request->getParameter('internally'))
+                        return sfView::NONE;
+                    die;
+                }
+                
 		if(is_array($this->editFieldNameArr))
 		{
 			$this->form = new FieldForm($this->editFieldNameArr,$this->loginProfile,$this->incomplete);
@@ -86,6 +101,7 @@ class ApiEditSubmitV1Action extends sfActions
 				$this->form->updateData();				
 				if($this->incomplete==EditProfileEnum::$INCOMPLETE_YES)
 				{
+					$this->redisQueueJunkIncompleteProfile($this->loginProfile->getPROFILEID());
 					//Channel tracking for Incomplete SMS to track incomplete to complete )
 					if($request->getParameter('channel')=='INCOM_SMS')
 					{	
@@ -215,5 +231,24 @@ class ApiEditSubmitV1Action extends sfActions
     $editFamilyData = json_decode(ob_get_contents(), true);
     ob_end_clean();
     return $editFamilyData;
+  }
+
+  public function redisQueueJunkIncompleteProfile($profileId)
+  {
+    $memcacheObj = JsMemcache::getInstance();
+
+    $minute = date("i");
+
+
+    $key = JunkCharacterEnums::JUNK_CHARACTER_KEY;
+
+
+    $redisQueueInterval = JunkCharacterEnums::REDIS_QUEUE_INTERVAL;
+
+    $startIndex = floor($minute/$redisQueueInterval);
+
+    $key = $key.(($startIndex) * $redisQueueInterval)."_".(($startIndex + 1) * $redisQueueInterval);
+
+    $memcacheObj->lpush($key,$profileId);
   }
 }
