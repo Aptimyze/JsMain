@@ -493,7 +493,10 @@ class MembershipAPIResponseHandler {
         if (($this->mainMem == 'ESP' || $this->mainMem == 'NCP') && !empty($this->mainMemDur)) {
             if ($this->mainMem == 'ESP') {
                 $arr = VariableParams::$eSathiAddOns;
-            } 
+            }
+            elseif($apiObj->mainMem == 'NCP'){
+                $arr = VariableParams::$jsExclusiveComboAddon;
+            }
             else {
                 $arr = VariableParams::$eValuePlusAddOns;
             }
@@ -851,7 +854,7 @@ class MembershipAPIResponseHandler {
             }
             unset($addons);
             if ($this->mainMem == "NCP") {
-                foreach (VariableParams::$eValuePlusAddOns as $addons) {
+                foreach (VariableParams::$jsExclusiveComboAddon as $addons) {
                     $this->selectedVas[] = $addons.$dur;
                 }
             }
