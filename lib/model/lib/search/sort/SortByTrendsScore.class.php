@@ -25,6 +25,7 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
                 $this->SearchParamtersObj = $SearchParamtersObj;
                 $this->loggedInProfileObj = $loggedInProfileObj;
                 parent::setReverseDppSorting($loggedInProfileObj, 0);
+                parent::isJsBoostSorting($loggedInProfileObj);
         }
         /**
          * get trends data if not set
@@ -140,10 +141,11 @@ class SortByTrendsScore extends SearchSort implements SortStrategyInterface {
 
         public function getSortString() {
                 $counter = 0;
-                
-                $sortString[$counter] =  "if(tf(SUBSCRIPTION,".SearchConfig::$jsBoostSubscription."),1,0)";
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
-                $counter++;
+                if(parent::getJsBoostSorting()){
+                        $sortString[$counter] =  parent::getJsBoostSorting();
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }
                 
                 $sortString[$counter] = parent::getReverseDppSort();
                 $sortAscOrDesc[$counter] = $this->sortByDesc;

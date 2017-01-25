@@ -17,6 +17,7 @@ class SortByLoginWithReverseDpp extends SearchSort implements SortStrategyInterf
         public function __construct($SearchParamtersObj, $loggedInProfileObj = '') {
                 $this->SearchParamtersObj = $SearchParamtersObj;
                 parent::setReverseDppSorting($loggedInProfileObj, 0);
+                parent::isJsBoostSorting($loggedInProfileObj);
         }
 
         /**
@@ -25,6 +26,12 @@ class SortByLoginWithReverseDpp extends SearchSort implements SortStrategyInterf
          */
         public function getSortString() {
                 $counter = 0;
+                
+                if(parent::getJsBoostSorting()){
+                        $sortString[$counter] =  parent::getJsBoostSorting();
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }
                 
                 $sortString[$counter] =  "if(tf(SUBSCRIPTION,".SearchConfig::$jsBoostSubscription."),1,0)";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
