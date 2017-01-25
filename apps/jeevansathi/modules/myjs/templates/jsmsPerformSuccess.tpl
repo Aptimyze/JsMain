@@ -1,7 +1,10 @@
 <script type="text/javascript">
-    var userGender="~$apiData.gender`",siteUrl="~$SITE_URL`";
+    var userGender="~$apiData.gender`",siteUrl="~sfConfig::get('app_site_url')`";
     var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
     var hamJs= '~$hamJs`';
+    var showExpiring=~$showExpiring`;
+    
+    var myJsCacheTime = 60000;//in microseconds
 </script>
 <!--start:div-->
 <div class="perspective" id="perspective">
@@ -108,7 +111,7 @@
                 </a>
                   <a href="~$SITE_URL`/profile/contacts_made_received.php?page=decline&filter=R">	<div class="fullwid fontthin f14 color3 pad18 brdr1">
 		<div class="fl wid92p">
-			<div class="fullwid txtc">Declined</div>
+			<div class="fullwid txtc">Declined/Cancelled</div>
 		</div>
 		~if $apiData.BELL_COUNT.DEC_ME_NEW>0`
 		<div class="fr wid8p">
@@ -275,6 +278,11 @@
 		<div class="clr"></div>
 	</div>
 </div>
+
+<!-- Interest Expiring section -->
+~if $apiData.interest_expiring.view_all_count > 0`
+	~include_partial("myjs/jsmsInterestExpiringSection",[expiringData=>$apiData.interest_expiring])`
+~/if`
 <!--end:div-->
 <!--eoi section-->
 <span class="setWidth" id="awaitingResponsePresent" style="display:block;background-color: #e4e4e4; margin-top:15px;">

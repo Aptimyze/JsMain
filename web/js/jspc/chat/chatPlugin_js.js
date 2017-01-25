@@ -869,10 +869,11 @@ JsChat.prototype = {
                     //console.log("true",addIndex);
                     if(addIndex == 0 || listCount == 0){
                         $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
+                        //console.log("here out",groupID,addIndex,-1);
                     }
                     else{
                         var insertAfterPos = elem.getNodeInsertPos(addIndex,groupID,status);
-                        //console.log("here out",insertAfterPos);
+                        //console.log("here out",groupID,addIndex,insertAfterPos);
                         if(insertAfterPos == -1){
                             $('div.' + groupID + ' ul.' + status).prepend(contactHTML);
                         }
@@ -2415,6 +2416,9 @@ JsChat.prototype = {
                     //console.log("checking",$(".profileIcon[id^='" + userId + "']"));
                     if($(".profileIcon[id^='" + userId + "']").length == 1){
                         $(".profileIcon[id^='" + userId + "']")[0].click();
+                        if(appendMsg == false){
+                            playChatNotificationSound();
+                        }
                         setTimeout(function(){
                             if ($(".js-minpanel").length != 0) {
                                 appendMsg = true;
@@ -2440,6 +2444,7 @@ JsChat.prototype = {
                 
 
             }
+
             if(typeof msg_type != "undefined" && msg_type == "accept"){
                 curEle._enableChatAfterPaidInitiates(userId);
             }
@@ -2525,7 +2530,11 @@ JsChat.prototype = {
                     curEle._scrollToBottom(userId);
                     //this.storeMessagesInLocalHistory(selfJID, userId, newMsg, 'receive');
                 },500);
+            //play sound on receiving the message
+            if(appendMsg == true){
+                playChatNotificationSound();
             }
+        }
             
 
     },

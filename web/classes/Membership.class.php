@@ -6,6 +6,7 @@ if (JsConstants::$whichMachine != 'matchAlert') {
 }
 
 include_once (JsConstants::$docRoot . "/classes/Services.class.php");
+include_once (JsConstants::$cronDocRoot . "/lib/model/lib/FieldMapLib.class.php");
 
 class Membership
 {
@@ -113,6 +114,14 @@ class Membership
 
     function setProfileid($profileid) {
         $this->profileid = $profileid;
+    }
+    
+    function setCurtype($curtype) {
+        $this->curtype = $curtype;
+    }
+    
+    function getCurtype() {
+        return $this->curtype;
     }
 
     public function __get($property) {
@@ -769,6 +778,12 @@ class Membership
             $valuesStr .= ",'$this->DOL_CONV_RATE'";
         }
         $this->receiptid = $billingPaymentDetObj->genericPaymentInsert($paramsStr, $valuesStr);
+        if($this->status != 'REFUND'){
+            $paramsStr = "RECEIPTID, ".$paramsStr;
+            $valuesStr = "'$this->receiptid', ".$valuesStr;
+            $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+            $negTransactionObj->insertRecord($paramsStr,$valuesStr);
+        }
     }
     
     function setServiceActivation() {
@@ -1193,6 +1208,7 @@ class Membership
         $billingServObj = new billing_SERVICES();
         $jsadminPswrdsObj = new jsadmin_PSWRDS();
         $newjsContactUsObj = new NEWJS_CONTACT_US();
+        $jProfileObj =new JPROFILE('newjs_slave');
 
         if ($this->billid) {
             $billid = $this->billid;
@@ -1242,6 +1258,8 @@ class Membership
         $i = 0;
 
         $printBillDataArr = $billingPurObj->fetchPrintBillDataForBillid($billid);
+	$this->profileid =$printBillDataArr[0]['PROFILEID'];
+	$jProfileArr = $jProfileObj->get($this->profileid,'PROFILEID','COUNTRY_RES,CITY_RES');
 
         $purDetRow = $billingPurObj->fetchAllDataForBillid($billid);
         $smarty->assign("eAdvantageService", substr($purDetRow['SERVICEID'],0,3));
@@ -1264,8 +1282,17 @@ class Membership
             $tax_rate = $myrow['TAX_RATE'];
             $cur_type = $myrow['CUR_TYPE'];
 	    $entryBy =$myrow['ENTRYBY'];
-	    if($entryBy!='ONLINE')
-		$country =$myrow['COUNTRY'];
+
+	    if($entryBy=='ONLINE')
+		$ipCountry =$myrow['COUNTRY'];
+	    $resCountryVal =$jProfileArr['COUNTRY_RES'];
+	    $resCity =$jProfileArr['CITY_RES'];
+	    $resCountry =FieldMap::getFieldLabel('country',$resCountryVal);	
+	    if($resCountryVal==51 && $resCity){	
+		$stateRes =substr($resCity,0,2);
+	    	$stateRes =FieldMap::getFieldLabel('state_india',$stateRes);
+                $resCountry =$stateRes." , ".$resCountry;
+	    }
 	
             if(stristr($myrow['SERVICE_TAX_CONTENT'],'swachh') && stristr($myrow['SERVICE_TAX_CONTENT'],'krishi')){ // this will occur only for billings occurring with swachh tax applied or krishi kalyan tax is applied
                 $otherTaxes = billingVariables::SWACHH_TAX_RATE + billingVariables::KRISHI_KALYAN_TAX_RATE;
@@ -1443,7 +1470,8 @@ class Membership
         $smarty->assign("phone_br", $phone_br);
         $smarty->assign("mobile_br", $mobile_br);
         $smarty->assign("feevalue", $feevalue);
-	$smarty->assign("country", $country);
+	$smarty->assign("ipCountry", $ipCountry);
+        $smarty->assign("resCountry", $resCountry);
         
         // Cost value from payment without tax
         $feevalue_exTax = round(($feevalue * 100 / ($tax_rate + 100)), 2);

@@ -1,4 +1,4 @@
-var clickEventType="click", cssBrowserAnimProperty=null,sliderNav={'VERIFIEDMATCHES_List':1,'DAILYMATCHES_List':1,'JUSTJOINED_List':1,'LASTSEARCH_List':1,'DESIREDPARTNERMATCHES_List':1};
+var clickEventType="click", cssBrowserAnimProperty=null,sliderNav={'VERIFIEDMATCHES_List':1,'DAILYMATCHES_List':1,'JUSTJOINED_List':1,'LASTSEARCH_List':1,'DESIREDPARTNERMATCHES_List':1,'INTERESTRECEIVED_List':1,'FILTEREDINTEREST_List':1,'EXPIRINGINTEREST_List':1 };
 
 function topSliderInt(param){
 	if(param=="init")
@@ -269,18 +269,57 @@ function postActionMyjs(profileChecksum,URL,div,type,tracking,filtered)
 	        
                 }
 	            	else if(type=="accept")
-	            	{
+	            	{ 
+              
+                  updateExpiringCount(div);
+                  field = div.split('_');
+                  comingFrom = field[1];
+                  if(comingFrom == 'INTERESTRECEIVED')
+                  countLeft = $('#totalInterestReceived').text();
+                if(comingFrom == 'FILTEREDINTEREST')
+                  countLeft = $('#totalFilteredInterestReceived').text();
+                if(comingFrom == 'EXPIRINGINTEREST')
+                  countLeft = $('#totalExpiringInterestReceived').text();
+                if(comingFrom != 'EXPIRINGINTEREST')
+                {
+                  --countLeft;
+                }
 	            		$("#"+div).find("div.intdisp").html("Accepted");
                   $("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
 	            		$("#"+div).find("div.intdisp").removeClass("intdisp");
+                  if(comingFrom == 'INTERESTRECEIVED')
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalInterestReceived','INTERESTRECEIVED');}); 
+                  else if(comingFrom == 'FILTEREDINTEREST')
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalFilteredInterestReceived','FILTEREDINTEREST');});
+                  else if(comingFrom == 'EXPIRINGINTEREST')
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalExpiringInterestReceived','EXPIRINGINTEREST');});
+
                                 
 	            	}
 	            	else if(type=="decline")
-	            	{
+	            	{ 
+                  updateExpiringCount(div);
+                  field = div.split('_');
+                  comingFrom = field[1];
+                    if(comingFrom == 'INTERESTRECEIVED')
+                  countLeft = $('#totalInterestReceived').text();
+                if(comingFrom == 'FILTEREDINTEREST')
+                  countLeft = $('#totalFilteredInterestReceived').text();
+                if(comingFrom == 'EXPIRINGINTEREST')
+                  countLeft = $('#totalExpiringInterestReceived').text();
+                if(comingFrom != 'EXPIRINGINTEREST')
+                {
+                  --countLeft;
+                }
 	            		$("#"+div).find("div.intdisp").html("Declined");
 	            		$("#"+div).find("div.intdisp").removeClass("myjs-block sendintr").addClass("myjs-block-after lh50");
                   $("#"+div).find("div.intdisp").removeClass("intdisp");
-
+                  if(comingFrom == 'INTERESTRECEIVED')
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalInterestReceived','INTERESTRECEIVED');}); 
+                  else if(comingFrom == 'FILTEREDINTEREST')
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalFilteredInterestReceived','FILTEREDINTEREST');});
+                  else if(comingFrom == 'EXPIRINGINTEREST')
+                  $('#'+div).delay(1500).fadeOut('slow',function(){ $(this).remove();reArrangeDivsAfterDissapear(countLeft,'totalExpiringInterestReceived','EXPIRINGINTEREST');});
 	            	}
                 else if(type=="message")
                 {
@@ -369,7 +408,17 @@ catch(e){}
     }
 
 
-	
+	function updateExpiringCount(div)
+  {
+      if(div.indexOf("EXPIRINGINTEREST") >= 0)
+      {
+        expiringCount = $("#totalExpiringInterestReceived").html();
+        expiringCount = parseInt(expiringCount) - 1;
+        $("#totalExpiringInterestReceived").html(expiringCount);
+        $("#seeAllExpiringCount").html(expiringCount);
+        $("#expiringCount").html(expiringCount);
+      }
+  }
 
 //Completion Bar 
 function start1() {
@@ -956,26 +1005,64 @@ catch (e){
 function reArrangeDivsAfterDissapear(value,position,id)
 { 
   if(value <= 4)
-  {  
+  { 
+    if(id == 'INTERESTRECEIVED')
+    { 
+      $('#seeAllId_'+id).hide();
+    }
+    else if (id == 'FILTEREDINTEREST' || id == 'EXPIRINGINTEREST')
+    {
+     $('#seeAll_'+id+'_List').hide(); 
+    }
+    else
+    {
     $('#seeAll'+id+'_Container').hide();
+    }
   }
+
+  if(value == 0 && id == 'EXPIRINGINTEREST')
+  {
+    $('#ExpiringAction').hide();
+  }
+  
   var currentBox = getCurrentBox(id);
   topSliderInt("init");
   var totalBoxes = getTotalBoxes(id);
   var numberOfProfiles = getNumberOfProfiles(id);
+
+    if(currentBox <= totalBoxes && numberOfProfiles%4 == 0 && value < 20 && id == 'INTERESTRECEIVED')
+    {
+      shortBigCard(id);
+    }
+
+  if(id == 'FILTEREDINTEREST' || id == 'INTERESTRECEIVED' || id == 'EXPIRINGINTEREST')
+  { 
+    $('#slideTotal'+id+'_List').text(totalBoxes);
+    $('#slideCurrent'+id+'_List').text(currentBox);
+  }
+  
+  if(value == 0 && id == 'INTERESTRECEIVED')
+  {
+       var IntRecSec = new interestReceived();
+          $("#"+id+"_Container").html('');
+          IntRecSec.pre();
+          IntRecSec.request();
+          return;    
+  }
+  
   var noCardPresentState = noCardPresent(currentBox,totalBoxes);
+
   if(onlyViewAllCardPresent(currentBox,totalBoxes,id,numberOfProfiles) || noCardPresentState)
   {
     if(!isFirstBox(currentBox)){
           $("#prv-"+id+"_List").click();
-          if(noCardPresentState)
+          if(noCardPresentState && id != 'INTERESTRECEIVED' && id != 'FILTEREDINTEREST' && id != 'EXPIRINGINTEREST')
           $("#nxt-"+id+"_List").hide();  
         }
     else
       {
-    
       $("#"+id+"_Container").css('height',$("#"+id+"_Container").height());
-      if(value ==0)
+      if(value ==0 && id != 'INTERESTRECEIVED' && id != 'FILTEREDINTEREST' && id != 'EXPIRINGINTEREST')
       $("#"+id+"_Container").css('height','');
 
         if(id == 'DAILYMATCHES')
@@ -1019,8 +1106,28 @@ function reArrangeDivsAfterDissapear(value,position,id)
           desiredMatchObj.pre();
           desiredMatchObj.request();
         }
-
-
+         if(id == 'FILTEREDINTEREST')
+       { 
+        var filterSec = new filteredInterest();
+        $("#"+id+"_Container").html('');
+          filterSec.pre();
+          filterSec.request();
+        }
+        if(id == 'EXPIRINGINTEREST')
+       { 
+        var expSec = new expiringInterest();
+        $("#"+id+"_Container").html('');
+          expSec.pre();
+          expSec.request();
+        }
+         if(id == 'INTERESTRECEIVED')
+     {
+       var IntRecSec = new interestReceived();
+          $("#"+id+"_Container").html('');
+          IntRecSec.pre();
+          IntRecSec.request(); 
+     }
+       
       }        
   }
   if(viewCardInList(currentBox,totalBoxes,id,numberOfProfiles))
@@ -1039,8 +1146,9 @@ function reArrangeDivsAfterDissapear(value,position,id)
 
 
     function getTotalBoxes(id)
-    {
-
+    {       
+            if(id == "MESSAGES" || id =="ACCEPTANCE")
+            return Math.ceil(getNumberOfProfiles(id)/2);
             return Math.ceil(getNumberOfProfiles(id)/4);
 
     }
@@ -1067,8 +1175,11 @@ function reArrangeDivsAfterDissapear(value,position,id)
 
     function getNumberOfProfiles(id)
     {
-      var listItems = $("#js-"+id+"_List li");
-      return listItems.length;
+      var count = 0;
+    $("#js-"+id+"_List > li").each(function( index ) {
+  count++;
+      });
+    return count;
     }
 
     function onlyViewAllCardPresent(currentBox ,totalBoxes,id,numberOfProfiles)
@@ -1092,4 +1203,39 @@ function reArrangeDivsAfterDissapear(value,position,id)
           return 1;
       }
       return 0;
+    }
+
+    function shortBigCard(id)
+    { 
+      var toBeReplaced = $('ul#js-'+id+'_List li:nth-last-child(1)').find('#infoCardDouble');
+       
+        if(toBeReplaced.length == 1)
+        { 
+          var toBeReplacedWith = $('#infoCardSingle').clone().css('display','block');
+          toBeReplaced.parent().css('width','');
+          toBeReplaced.replaceWith(toBeReplacedWith); 
+        }
+
+    }
+
+    function lastCardIsShortedOne(id)
+    { 
+      var lastCard = $('ul#js-'+id+'_List li:nth-last-child(1)').find('#infoCardSingle');
+       
+        if(lastCard.length == 1)
+        { 
+         return 1;
+        }
+        return 0;
+    }
+
+    function lastCardIsDoubleOne(id)
+    { 
+      var lastCard = $('ul#js-'+id+'_List li:nth-last-child(1)').find('#infoCardDouble');
+       
+        if(lastCard.length == 1)
+        { 
+         return 1;
+        }
+        return 0;
     }

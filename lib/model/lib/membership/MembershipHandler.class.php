@@ -812,8 +812,13 @@ class MembershipHandler
                 $currencyType = VariableParams::$indianCurrency;
             }
         }
-
-        if ($profileid == 12970375) {
+        
+        $testDol = false;
+        if (JsConstants::$whichMachine == 'test') {
+            $dolBillingForTest = new billing_DOL_BILLING_USERS_FOR_TEST();
+            $testDol = $dolBillingForTest->checkUserForDol($profileid);
+        }
+        if ($profileid == 12970375 || $testDol == true) {
             $currency = 'DOL';
         }
 
@@ -2058,5 +2063,64 @@ class MembershipHandler
         // End - Logic to change renewal based on previous discount
         unset($discount_calc, $currency, $prevServPur, $prevDiscAmt, $prevTotAmt, $prevDisc);
         return $discount;
+    }
+    
+    public function handleNegativeTransaction($receiptidArr,$source=''){
+        if(is_array($receiptidArr)){
+            $payDetObj = new BILLING_PAYMENT_DETAIL();
+            foreach($receiptidArr['RECEIPTIDS'] as $key => $receiptid){
+                $payDetData = $payDetObj->fetchAllDataForReceiptId($receiptid);
+                $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
+                if(!($source == 'CANCEL' && in_array($receiptid, $receiptidArr['REFUND']))){
+                    $payDetData['AMOUNT'] = $payDetData['AMOUNT']*(-1);
+                }
+                $this->negativeTransaction($payDetData);
+                unset($payDetData);
+            }
+            unset($payDetObj);
+        }
+    }
+    
+
+    public function negativeTransaction($params){
+        foreach($params as $key => $val){
+            $paramsStr.= "$key, ";
+            $valuesStr.= "'$val', ";
+        }
+        $paramsStr = rtrim($paramsStr,", ");
+        $valuesStr = rtrim($valuesStr,", ");
+        $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+        $negTransactionObj->insertRecord($paramsStr,$valuesStr);
+    }
+
+    public function addUserForDollarPayment($profileid){
+        $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
+        $dolBillingUsersObj->addUserForDol($profileid);
+    }
+    
+    public function removeUserForDollarPayment($profileid){
+        $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
+        $dolBillingUsersObj->removeUserForDol($profileid);
+
+    }
+    
+    public function getReceiptids($billid){
+        $payDetObj = new BILLING_PAYMENT_DETAIL();
+        $data = $payDetObj->getStatusTransactions($billid,array("'DONE'","'REFUND'"));
+        foreach($data as $key => $val){
+            if($val['STATUS'] == 'REFUND'){
+                $result['REFUND'][] = $val['RECEIPTID'];
+            }
+            $result['RECEIPTIDS'][] = $val['RECEIPTID'];
+        }
+        unset($payDetObj,$data);
+        return $result;
+    }
+    
+    public function getCancelledDate($billid){
+        $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+        $row = $negTransactionObj->getCancelledBillIdDetails($billid);
+        $dt = $row["ENTRY_DT"];
+        return $dt;
     }
 }

@@ -134,6 +134,8 @@ class Contacts {
 	const FILTER_ERROR = "Filter value in not correct in contacts obj";
 	const SEEN_ERROR = "Seen value is not correct in contacts obj";
 	const CONTACT_TYPE_CACHE_EXPIRY = 86400; //seconds
+	const EXPIRING_INTEREST_UPPER_LIMIT = 90;
+	const EXPIRING_INTEREST_LOWER_LIMIT = 84;
 	/**
 	 *
 	 * Constructor for initializing object of Contacts class

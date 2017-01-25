@@ -6,7 +6,7 @@ indexSuccess:
   javascripts:    [albumLayer_js@bottom]
 jsmsPerformSuccess:
   stylesheets: [-*,jsms/myjs/jsmsMyjs_css,jsms/hamburger/ham_css,jsms/common/disableRightClick_css]
-  javascripts: [-*,jsms/myjs/myjs_js,jsms/contact_engine/contactEngine_js,jsms/myjs/touchswipemyjs_js,jsms/hamburger/ham_js@bottom]
+  javascripts: [-*,jsms/myjs/myjs_js,jsms/contact_engine/contactEngine_js,jsms/myjs/touchswipemyjs_js]
   layout: jsmsMobLayout
 jspcPerformSuccess:
   metas:

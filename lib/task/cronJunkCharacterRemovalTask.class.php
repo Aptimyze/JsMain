@@ -51,6 +51,7 @@ EOF;
         {
             foreach ($profileLists as $profileId) 
             {
+		unset($paramArr);
                 $jProfileObj = new Jprofile;
                 $profileData = $jProfileObj->getArray(array("PROFILEID" => $profileId), "", "", "YOURINFO,FAMILYINFO,EDUCATION,JOB_INFO,SPOUSE,INCOMPLETE,ACTIVATED");
 

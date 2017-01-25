@@ -1,0 +1,7 @@
+use PROFILE;
+CREATE TABLE `VIEW_SIMILAR_PROFILE_LOAD` (
+  `viewer` int(11) NOT NULL DEFAULT '0',
+  `viewed` int(11) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE = MyISAM ;
+        
