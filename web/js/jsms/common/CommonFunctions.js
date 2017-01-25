@@ -264,7 +264,7 @@ function SingleTonNextPage(data,nottostore,url,transition)
    //Before hitting AJAX call for HTML, we will check the URL with MYJS URL and 
    //check timestamp in session storage and if it is less than 1 minute, 
    //we will use HTML from session storage and not hit Ajax
-   var arrAllowedUrls = [SITE_URL + "/#mham",SITE_URL,SITE_URL+"/?mobile_view=Y#mham",SITE_URL+"/?mobile_view=Y",SITE_URL+"/profile/mainmenu.php",SITE_URL+"/profile/mainmenu.php#mham"];
+   var arrAllowedUrls = ["/#mham","","/?mobile_view=Y#mham","/?mobile_view=Y","/profile/mainmenu.php","/profile/mainmenu.php#mham"];
    if(arrAllowedUrls.indexOf(url) != -1 && 
      sessionStorage.getItem("myjsTime") != undefined && 
      new Date().getTime() - sessionStorage.getItem("myjsTime") < 60000) 
