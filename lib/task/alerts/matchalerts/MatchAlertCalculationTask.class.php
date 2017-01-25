@@ -12,7 +12,9 @@ class MatchAlertCalculationTask extends sfBaseTask
 	private $LowDppLimit = 10;
         private $limitCommunityRec = 10;
 	const clusterRecordLimit = 10;
-        const _communityModelToggle=1;
+        const _communityModelToggle=0;
+        const limitNtWhenCommunity = 10;
+  	const limitNtNoCommunity = 16;
         
 	protected function configure()
   	{
@@ -88,18 +90,18 @@ EOF;
 							*/
 
                                                         $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
-							$totalResults = $StrategyReceiversNT->getMatches('',1,array(),$matchesSetting);
-                                                        if($totalResults["CNT"] == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
+							$totalResults = $StrategyReceiversNT->getMatches('',1,array(),$matchesSetting,$matchLogic);
+                                                        if(($totalResults["CNT"] == 0 || $totalResults["actualDppCount"] == 0) && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
                                                         if($totalResults["CNT"] == 0)
                                                         {
-                                                            $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$strategyReceiversTVsNT);
+                                                            $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$relaxedDpp);
                                                         }
                                                         // Set Low Dpp flag
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);                                       
                                                         if($totalResults["LOGIN_SCORE"] > self::clusterRecordLimit){
                                                                 $StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitTRec,MailerConfigVariables::$strategyReceiversTVsNT,MailerConfigVariables::$DppLoggedinWithTrendsScoreSort);
-                                                                $totalResults = $StrategyReceiversNT->getMatches('',0,array(),$matchesSetting); 
+                                                                $totalResults = $StrategyReceiversNT->getMatches('',0,array(),$matchesSetting,$matchLogic); 
                                                                 if($totalResults["profiles"])
                                                                         $profiles = array_merge($profiles,$totalResults["profiles"]);
                                                         }
@@ -137,20 +139,27 @@ EOF;
                                                     
                                                         if($this->checkForCommunityModel($loggedInProfileObj->getPROFILEID(),$matchLogic)){
                                                             $communityModelNT = new CommunityModelMatchAlertsStrategy($loggedInProfileObj,$this->limitCommunityRec,MailerConfigVariables::$communityModelNT);
-                                                            $communityModelNT->getMatches($matchesSetting);
-                                                            $this->limitNtRec=10;
+                                                            $profilesArray = $communityModelNT->getMatches($matchesSetting);                                                                                                                
+                                                            if($profilesArray[0] == '')
+                                                            {
+                                                                $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$communityModelNT);
+                                                            }
+                                                            
+                                                            $this->limitNtRec=self::limitNtWhenCommunity;
                                                         }
+                                                        else
+                                                            $this->limitNtRec=self::limitNtNoCommunity;
 							/**
 							* Matches : Trends are not set, Only one mailer will be sent. 
 							*/
                                                    $includeDppCnt = 1;
 							$StrategyReceiversNT = new DppBasedMatchAlertsStrategy($loggedInProfileObj,$this->limitNtRec,MailerConfigVariables::$strategyReceiversNT,MailerConfigVariables::$DppLoggedinWithReverseDppSort);
-							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$returnTotalCountWithCluster,array(),$matchesSetting);
-                                                        if($totalResults["CNT"] == 0 && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
+							$totalResults = $StrategyReceiversNT->getMatches($includeDppCnt,$returnTotalCountWithCluster,array(),$matchesSetting,$matchLogic);
+                                                        if(($totalResults["CNT"] == 0 || $totalResults["actualDppCount"] == 0) && !in_array($loggedInProfileObj->getPROFILEID(), $profilesWithLimitReached))
                                                                $lowMatchesCheckObj->insertForProfile($loggedInProfileObj->getPROFILEID());
                                                         if($totalResults["CNT"] == 0)
                                                         {
-                                                            $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$strategyReceiversNT);
+                                                            $lowTrendsObj->insertForProfile($profileid,$todayDate,MailerConfigVariables::$relaxedDpp);
                                                         }
                                                         // Set Low Dpp flag
                                                         $this->setLowDppFlag($memObject,$profileid,$totalResults["CNT"]);

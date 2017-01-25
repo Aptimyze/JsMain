@@ -889,6 +889,10 @@ var hamHtml="";
       }
 	if(keyName=="city_res")
 		keyName="reg_city_jspc";
+	if(keyName=="p_caste")
+		keyName="p_caste_jsms";
+	if(keyName=="p_sect")
+		keyName="p_sect_jsms";
 			staticTables.getData(keyName,function(data){ele.UpdateUlOption(selArr,data)});
 			
 			

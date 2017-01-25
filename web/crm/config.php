@@ -66,6 +66,11 @@ function connect_dnc()
 	$db_dnc =mysql_connect(MysqlDbConstants::$dnc[HOST].":".MysqlDbConstants::$dnc[PORT],MysqlDbConstants::$dnc[USER],MysqlDbConstants::$dnc[PASS]) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Unable to connect to dnc server"));
         return $db_dnc;
 }
+function connect_crmSlave()
+{
+        $crm_slave =mysql_connect(MysqlDbConstants::$crmSlave[HOST].":".MysqlDbConstants::$crmSlave[PORT],MysqlDbConstants::$crmSlave[USER],MysqlDbConstants::$crmSlave[PASS]) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Unable to connect to crmSlave server"));
+        return $crm_slave;
+}
 
 if(!$symfonyVar){
 	include(JsConstants::$smartyDir);

@@ -20,9 +20,12 @@ class MembershipAPIResponseHandler {
             $this->profileid = $this->userProfile;
         }
         
-        $this->mainMem = $request->getParameter("mainMem");
-        $this->mainMemDur = $request->getParameter("mainMemDur");
-        $this->selectedVas = $request->getParameter("selectedVas");
+        //$this->mainMem = $request->getParameter("mainMem");
+	$this->mainMem = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("mainMem"));
+        //$this->mainMemDur = $request->getParameter("mainMemDur");
+	$this->mainMemDur = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("mainMemDur"));
+        //$this->selectedVas = $request->getParameter("selectedVas");
+	$this->selectedVas = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("selectedVas"));
         $this->displayPage = $request->getParameter("displayPage");
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;
@@ -106,6 +109,7 @@ class MembershipAPIResponseHandler {
         $this->generateNewIosOrder = $request->getParameter('generateNewIosOrder');
         $this->AppleOrderProcess = $request->getParameter('AppleOrderProcess');
         $this->testBilling = $request->getParameter('testBilling');
+        $this->userForDolPayment = $request->getParameter('userForDolPayment');
         
         $this->memHandlerObj = new MembershipHandler();
         $this->userObj = new memUser($this->profileid);
@@ -144,8 +148,14 @@ class MembershipAPIResponseHandler {
             $this->memID = $this->memApiFuncs->retrieveCorrectMemID($this->memID, $this);
             $this->activeServiceName = $this->memHandlerObj->getUserServiceName($this->memID);
         }
-        
-        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device);
+        //var_dump($this->backendRedirect);
+        if($fromBackend == "discount_link"){
+            $ignoreShowOnlineCheck = true;
+        }
+        else{
+            $ignoreShowOnlineCheck = false;
+        }
+        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck);
         $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {
@@ -273,6 +283,9 @@ class MembershipAPIResponseHandler {
         } 
         elseif ($this->testBilling == 1) {
             $output = $this->doTestBilling($request);
+        }
+        elseif ($this->userForDolPayment == 1) {
+            $output = $this->addRemoveUserForDolPayment($request);
         }
         else {
             if ($this->displayPage == 1) {
@@ -782,7 +795,8 @@ class MembershipAPIResponseHandler {
             }
             $mainServices['service_contacts'] = $this->allMainMem[$id][$subId]['CALL'] . ' Contacts To View';
             $mainServices['standard_price'] = $this->allMainMem[$id][$subId]['PRICE'];
-            
+            //echo "abc........";
+            //print_r($this->allMainMem);
             $mainServices['orig_price'] = $mainServices['standard_price'];
             $mainServices['orig_price_formatted'] = number_format($mainServices['standard_price'], 2, '.', ',');
             
@@ -2264,6 +2278,34 @@ class MembershipAPIResponseHandler {
     	else {
     		$output = array('orderId' => 'invalid order',
 	            'processingStatus' => 'invalid access',
+	            'incomingIp' => $this->ipAddress);
+    	}
+    	return $output;
+    }
+    
+    public function addRemoveUserForDolPayment($request) {
+    	if(JsConstants::$whichMachine == 'test'){
+            if($this->profileid){
+                if($request->getParameter('add') == 1){
+                    $this->memHandlerObj->addUserForDollarPayment($this->profileid);
+                    $status = "successfully added $this->profileid";
+                }
+                elseif($request->getParameter('remove') == 1){
+                    $this->memHandlerObj->removeUserForDollarPayment($this->profileid);
+                    $status = "successfully removed $this->profileid";
+                }
+                else{
+                    $status = "Parameter missing";
+                }
+            }
+            else{
+                $status = "Please login";
+            }
+            $output = array('processingStatus' => $status,
+                    'incomingIp' => $this->ipAddress);
+    	} 
+    	else {
+    		$output = array('processingStatus' => 'invalid access',
 	            'incomingIp' => $this->ipAddress);
     	}
     	return $output;

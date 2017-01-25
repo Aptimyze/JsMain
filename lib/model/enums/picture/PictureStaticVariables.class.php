@@ -15,8 +15,8 @@ class PictureStaticVariablesEnum
 	const maxPhotoSize = 6291456;//6*1024*1024
 	const maxNumberOfPhotos = 20;
 	const profilePicOrdering = 0;
-        const photoLoggingMod=11;
-        const photoLoggingRem=2;
+        const photoLoggingMod=1;
+        const photoLoggingRem=0;
 	public static $photoFormats = array("jpeg", "gif", "jpg");
 	public static $orientationToAngle= array("6"=>"-90","3"=>"180","8"=>"90");
 	public static $PICTURE_ALLOWED_FORMATS = array("image/gif","image/jpg","image/jpeg");

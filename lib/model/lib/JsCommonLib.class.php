@@ -121,7 +121,7 @@ public static function insertConsentMessageFlag($profileid) {
         		if (!CommonConstants::SHOW_CONSENT_MSG) return false; //check if the global constant flag is set to true
         
         //check whether it is subscribed to both offerCalls and membershipCalls
-        		$dbObj=new newjs_JPROFILE_ALERTS();	
+        		$dbObj=new JprofileAlertsCache();	
         		$res=$dbObj->fetchMembershipStatus($profileid);  
         		if (($res['MEMB_CALLS']!='S')||($res['OFFER_CALLS']!='S')) return false;
 
@@ -138,7 +138,7 @@ public static function insertConsentMessageFlag($profileid) {
                 	}
 
 
-                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $contactNumOb= new ProfileContact();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileid),'','',"ALT_MOBILE");
                 if($numArray['0']['ALT_MOBILE']){
                 	$resultArray=$dncOb->DncStatus(array($numArray['0']['ALT_MOBILE']));
@@ -407,7 +407,7 @@ public static function insertConsentMessageFlag($profileid) {
 			}
 				$ARR=explode(",",JsCommon::remove_quot($jpartnerObj->getPARTNER_MANGLIK()));
 			if(is_array($ARR))
-			if(in_array($profile->getMANGLIK(),$ARR))
+			if(in_array($profile->getMANGLIK(),$ARR) || ($profile->getMANGLIK() == '' && in_array('N',$ARR)))
 			{
 				$CODE["MANGLIK"]='gnf';
 				$CODE["Manglik/Chevvai Dosham"]='gnf';
@@ -1116,7 +1116,17 @@ public static function insertConsentMessageFlag($profileid) {
 
             JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
         }
-
-
+        public static function setAutoScreenFlag($screenVal,$editArr)
+        {
+                $autoScreenArr = array("PHONE_MOB","PHONE_RES","PROFILE_HANDLER_NAME","LINKEDIN_URL","FB_URL","BLACKBERRY","ALT_MESSENGER_ID");
+                foreach($editArr as $k=>$v)
+                {
+                        if(in_array($v,$autoScreenArr))
+                        {
+				$screenVal = Flag::setFlag(strtolower($v),$screenVal);
+                        }
+                }
+		return $screenVal;
+        }
 }
 ?>

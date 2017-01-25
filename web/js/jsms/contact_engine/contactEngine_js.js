@@ -134,12 +134,12 @@ $.ajax({
 		type: "POST",
 		data: ajaxData,
 		//crossDomain: true,
-		success: function(result){
+		success: function(result){  
 					$("#contactLoader,#loaderOverlay,#reportAbuseContainer").hide();
 					//$("#loaderOverlay").hide();
 					//$("#reportAbuseContainer").hide();
-                    if(CommonErrorHandling(result,'?regMsg=Y')) 
-                    {
+                    if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y') ) 
+                    {  
 					ShowTopDownError([result.message],5000);
 					$("#commonOverlayTop").show();
                     }	
@@ -1383,8 +1383,9 @@ function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
 		var button ='<div class="fullwid ';
 		if(page=="viewSimilar"){
 			 button+='brdrsp1 ';
+                         var tempButtonParams = primeButtonParams[0] ? primeButtonParams[0] :""; 
 		 	 if(typeof stypeKey!='undefined')
-				primeButtonParams="&stype="+stypeKey;
+				primeButtonParams[0]=tempButtonParams + "&stype="+stypeKey;
 		
 		}
     if(buttonNumber==1)
@@ -1429,8 +1430,9 @@ function buttonStructure(profileNoId, jsmsButtons, profilechecksum,page)
 		var button ='<div class="fullwid ';
 		if(page=="viewSimilar"){
 			 button+='brdrsp1 ';
+                         var tempButtonParams = primeButtonParams[0] ? primeButtonParams[0] :""; 
 			 if(typeof stypeKey!='undefined')
-				primeButtonParams[0]="&stype="+stypeKey;
+				primeButtonParams[0]=tempButtonParams+"&stype="+stypeKey;
 		}
 		 button+='srp_bg1" id="PrimeColor_'+profileNoId+'"  style="display:block; position:relative;"><div class="txtc ';
 		if(page=="viewSimilar"){

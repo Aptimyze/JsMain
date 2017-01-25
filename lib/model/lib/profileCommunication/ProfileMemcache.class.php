@@ -205,7 +205,7 @@ class ProfileMemcache
     private $HOROSCOPE_REQUEST_BY_ME;
     //private $HOROSCOPE_NEW;
     private $contactedProfile;
-    
+    private $INTEREST_EXPIRING;
     
     
     /**
@@ -332,7 +332,9 @@ class ProfileMemcache
         $this->PEOPLE_WHO_VIEWED_MY_CONTACTS            = $this->_memcache["PEOPLE_WHO_VIEWED_MY_CONTACTS"] ? $this->_memcache["PEOPLE_WHO_VIEWED_MY_CONTACTS"] : 0;
          $this->CONTACTED_BY_ME            = $this->_memcache["CONTACTED_BY_ME"] ? $this->_memcache["CONTACTED_BY_ME"] : "";
         $this->CONTACTED_ME            = $this->_memcache["CONTACTED_ME"] ? $this->_memcache["CONTACTED_ME"] : "";
+        $this->INTEREST_ARCHIVED           = $this->_memcache["INTEREST_ARCHIVED"] ? $this->_memcache["INTEREST_ARCHIVED"] : "";
         $this->IGNORED           = $this->_memcache["IGNORED"] ? $this->_memcache["IGNORED"] : "";
+        $this->INTEREST_EXPIRING                = $this->_memcache["INTEREST_EXPIRING"] ? $this->_memcache["INTEREST_EXPIRING"] : 0;
     
     
     }
@@ -726,6 +728,16 @@ class ProfileMemcache
         $this->PHOTO_REQUEST = $current;
         
     }
+
+    public function getINTEREST_ARCHIVED()
+    {
+        return $this->INTEREST_ARCHIVED ? $this->INTEREST_ARCHIVED : 0;
+    }
+    public function setINTEREST_ARCHIVED($current = 0)
+    {
+        $this->INTEREST_ARCHIVED = $current;
+    }
+
 
     public function getPHOTO_REQUEST_BY_ME()
     {
@@ -1233,8 +1245,7 @@ class ProfileMemcache
      * @return integer
      */
     public function getNOT_REP()
-    {
-        
+    { 
         return $this->NOT_REP ? $this->NOT_REP : 0;
         
     }
@@ -1288,6 +1299,23 @@ class ProfileMemcache
     public function setOPEN_CONTACTS($current = 0)
     {
         $this->OPEN_CONTACTS = $current;
+        
+    }
+
+    /**
+     * 
+     * Set count of INTEREST EXPIRING 
+     * 
+     * <p>
+     * This function sets the number of interest expiring values.
+     * </p>
+     * 
+     * @access public
+     * @param $current integer
+     */
+    public function setINTEREST_EXPIRING($current = 0)
+    {
+        $this->INTEREST_EXPIRING = $current;
         
     }
     
@@ -1530,7 +1558,15 @@ class ProfileMemcache
             "IGNORED" => call_user_func(array(
                 $this,
                 getIGNORED
-            ))
+            )),
+             "INTEREST_ARCHIVED" => call_user_func(array(
+                $this,
+                getINTEREST_ARCHIVED
+	    )),
+            "INTEREST_EXPIRING" => call_user_func(array(
+                $this,
+                getINTEREST_EXPIRING
+            )),
         );
         
         $this->_updateMemcacheVariables(serialize($data_variables));
@@ -1686,6 +1722,22 @@ class ProfileMemcache
         
         return $this->IGNORED;
         
+    }
+
+    /**
+     * 
+     * Get interest expiring profiles count.
+     * 
+     * <p>
+     * This function returns the interest expiring profiles count.
+     * </p>
+     * 
+     * @access public
+     * @return count
+     */
+    public function getINTEREST_EXPIRING()
+    {
+        return $this->INTEREST_EXPIRING;
     }
     
     

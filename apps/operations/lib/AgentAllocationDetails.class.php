@@ -148,7 +148,7 @@ class AgentAllocationDetails
 		elseif($method=="WEBMASTER_LEADS" || $subMethod=='WEBMASTER_LEADS')
 		{
             		if($subMethod == 'WEBMASTER_LEADS_EXCLUSIVE'){
-                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcPrm%");
+                		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExPmWL%");
             		}
             		else{
                 		$agents=$jsAdminPSWRDSObj->fetchAgentsWithPriviliges("%ExcWL%");
@@ -650,7 +650,7 @@ public function filterProfilesForAllocation($profiles,$method,$processObj='')
 	unset($noLoop);
 	if($method!='NEW_FAILED_PAYMENT' && $method!='FIELD_SALES' && $method!="WEBMASTER_LEADS"){
 		$mainAdminPoolObj	=new incentive_MAIN_ADMIN_POOL('newjs_slave');
-		$alertsObj		=new newjs_JPROFILE_ALERTS('newjs_slave');
+		$alertsObj		=new JprofileAlertsCache('newjs_slave');
 		$profilesStr		="'".implode("','",$profiles)."'";
 		$valueArray['PROFILEID']=$profilesStr;
 		$profiles		=$mainAdminPoolObj->getArray($valueArray,"","","PROFILEID");
@@ -758,8 +758,8 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 {
 	$jprofileObj		=new JPROFILE('newjs_slave');
 	$historyObj		=new incentive_HISTORY('newjs_slave');		
-	$jprofileAlertsObj	=new newjs_JPROFILE_ALERTS('newjs_slave');		
-	$jprofileContactObj	=new NEWJS_JPROFILE_CONTACT('newjs_slave');		
+	$jprofileAlertsObj	=new JprofileAlertsCache ('newjs_slave');		
+	$jprofileContactObj	= new ProfileContact('newjs_slave');
 	$vdObj 			=new billing_VARIABLE_DISCOUNT('newjs_slave');
 	$consentDncObj  	=new NEWJS_CONSENTMSG('newjs_slave');
 	
@@ -852,7 +852,7 @@ public function filterProfilesForPreAllocation($profiles,$level,$profilesRequire
 			$mtongue=$profileData[0]['MTONGUE'];
 			$income=$profileData[0]['INCOME'];
 			$familyIncome=$profileData[0]['FAMILY_INCOME'];
-			$premiumIncome=array(13,14,16,17,18,19,20,21,22,23);
+			$premiumIncome=array(13,14,17,18,19,20,21,22,23,24,25,26,27);
 			if($level==-2)
 				array_push($premiumIncome,12,16);
 			$exclude_mtongue=array(1,3,16,17,31);
@@ -1289,6 +1289,7 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 			$setProfileArr[$pid]["HAVEPHOTO"]       =$val['HAVEPHOTO'];
 			$setProfileArr[$pid]["ADDRESS"]       	=trim($val['CONTACT']);
 			$setProfileArr[$pid]["PINCODE"]       	=$val['PINCODE'];
+			$setProfileArr[$pid]["ISD"]         	=$isdNo;
 
 		        if($subMethod=='NEW_PROFILES' || $subMethod=='ONLINE_NEW_PROFILES' || $subMethod=='FOLLOWUP' || $subMethod=='FFOLLOWUP'){
         		        if($setProfileArr[$pid]["MOB_NO"] && $isdNo)
@@ -1357,7 +1358,7 @@ public function fetchJprofileContact($profileidArr=array(),$profileDetailsArr=ar
 	if(count($profileidArr)==0)
 		return;
 
-	$jprofileContactObj    =new NEWJS_JPROFILE_CONTACT();
+	$jprofileContactObj    = new ProfileContact();
 	$valueArr['PROFILEID']  =@implode(",",$profileidArr);;
 	$result                 =$jprofileContactObj->getArray($valueArr,'','','PROFILEID,ALT_MOBILE,ALT_MOB_STATUS,ALT_MOBILE_ISD');
 	if($result){

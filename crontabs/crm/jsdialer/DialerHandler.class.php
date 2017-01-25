@@ -8,6 +8,21 @@ class DialerHandler
 		$this->db_dialer 	=$db_dialer;
 		$this->db_master 	=$db_master;
         }
+        public function getEST($time='')
+        {
+                $sql = "SELECT now() as time";
+                $res = mysql_query($sql,$this->db_js) or die("$sql".mysql_error($this->db_js));;
+		if($row = mysql_fetch_array($res)){
+                        $dateTime = $row['time'];
+		}
+		if($time){
+			return $dateTime;
+		}
+		else{
+			$dateArr =@explode(" ",$dateTime);
+			return $dateArr[0];
+		}
+        }
         public function getCampaignEligibilityStatus($campaign_name,$eligibleType='')
         {
 		$entryDt =date("Y-m-d",time()-10.5*60*60);
@@ -24,9 +39,11 @@ class DialerHandler
 		}
                 return $dataArr;
         }
-        public function updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i)
+        public function updateCampaignEligibilityStatus($campaign_name,$eligibleType, $i, $dateSet='')
         {
-                $sql = "REPLACE INTO js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS(`CAMPAIGN`,`ELIGIBLE_TYPE`,`STEP_COMPLETED`,`ENTRY_DT`) VALUES('$campaign_name','$eligibleType','$i',now())";
+		if(!$dateSet)
+			$dateSet =$this->getEST();
+                $sql = "REPLACE INTO js_crm.CAMPAIGN_ELIGIBLITY_UPDATE_STATUS(`CAMPAIGN`,`ELIGIBLE_TYPE`,`STEP_COMPLETED`,`ENTRY_DT`) VALUES('$campaign_name','$eligibleType','$i','$dateSet')";
                 $res = mysql_query($sql,$this->db_js_111) or die("$sql".mysql_error($this->db_js_111));
         }
         public function getInDialerEligibleProfiles($x,$campaign_name='')
@@ -173,11 +190,11 @@ class DialerHandler
 
 			if(in_array($proid,$ignore_array)){
 				if($renewal){
-					if($dialStatus!='0' && $dialStatus!='9')
+					if($dialStatus!='9')
 						$updateArr[] ="Dial_Status=0";
 				}
 				else{
-					if($dialStatus!='0' && $dialStatus!='9' && $dialStatus!='3')
+					if($dialStatus!='9' && $dialStatus!='3')
 						$updateArr[] ="Dial_Status=0";
 				}
 				if(array_key_exists($proid,$discount_profiles))

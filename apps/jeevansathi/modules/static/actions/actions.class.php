@@ -479,7 +479,22 @@ public function executeCALRedirection($request){
             'jsms/common/mediaquery',
             'jsms/common/jsmsApp_promo_css',
             'rippleEffectCommon_css'));
-
+          $request->setAttribute('JSArray',getCommaSeparatedJSFileNames(array(
+              'modernizr_p_js',
+              'tracking_js',
+              'jsms/common/CommonFunctions',
+              'jsms/common/scrollTo',
+              'jsms/common/urlParamHandling',
+              'app_promo_js',
+              'commonMob',
+              'jsms/common/touchswipe_js',
+              'jsms/common/disableScroll_js',
+              'jsms/common/history_js',
+              'commonExpiration_js',
+              'rippleEffectCommon_js',
+              'common_comscore_js')));
+            $request->setAttribute('singleJs',getCommaSeparatedJSFileNames(array('jsms/login/newMobLogin_js')));
+              
             $request->setAttribute('mobLogoutPage','Y');
             $this->setTemplate("newMobLogin");
             if ($request->getParameter('regMsg')=='Y')   
@@ -616,8 +631,12 @@ public function executeCALRedirection($request){
 	public function executeRedirectToOldJsms(sfWebRequest $request)
 	{
 		$this->getResponse()->setCookie('TO_OLD_JSMS',1,time()+60*60*24*150,"/");
-		$rUrl=$request->getParameter("rUrl");	
-		$this->redirect($rUrl);
+		$rUrl=$request->getParameter("rUrl");
+		if(!$rUrl){
+				$this->redirect(JsConstants::$siteUrl);
+			}
+		else
+			$this->redirect($rUrl);
 		die;
 	}
 public function executeAppredirect(sfWebRequest $request)
@@ -763,6 +782,36 @@ public function executeAppredirect(sfWebRequest $request)
     }
   } 
 
+
+
+  public function executeVerifyAlternateEmail($request)
+  {
+
+  $loggedInProfile=LoggedInProfile::getInstance();
+  $profileid=$loggedInProfile->getPROFILEID();
+  $UIDParam=$request->getParameter('EmailUID');
+  $changeLog=new NEWJS_ALTERNATE_EMAIL_LOG();
+  $row=$changeLog->getLastEntry($profileid);
+  $emailUID=$row['ID'];
+  if($emailUID!=$UIDParam){
+  header("Location: $SITE_URL/static/logoutPage?fromSignout=1");
+  die;
+  }
+
+  else if($row['STATUS']!='Y')
+    {   
+        $paramArr=array('ALT_EMAIL_STATUS'=>'Y');
+        $contactObj=new ProfileContact();
+        $contactObj->update($profileid,$paramArr);
+        $changeLog->markAsVerified($profileid);
+  
+    }
+    if(MobileCommon::isMobile())
+      $this->setTemplate('jsmsEmailVerified');
+    else{
+       $this->setTemplate('jspcEmailVerified'); 
+    }
+  } 
 
 
 
@@ -1036,6 +1085,8 @@ public function executeAppredirect(sfWebRequest $request)
 		$output=$this->getJspcSect();
 		if($k=="p_caste" || $k=="p_sect")
 		$output=$this->getCaste(1);
+		if($k=="p_caste_jsms" || $k=="p_sect_jsms")
+		$output=$this->getNonOtherCaste();
 
 		if($k=="mtongue")
 			$output=$this->getMtongue();
@@ -1214,6 +1265,32 @@ if($k=="state_res")
 	  }
 	  
 		return $Arr;
+  }
+  private function getNonOtherCaste()
+  {
+          $arr=FieldMap::getFieldLabel("religion_caste",'',1);
+          $casteArr=FieldMap::getFieldLabel("caste",'',1);
+	  foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v) 
+	  {
+		unset($casteArr[$v]);
+	  }
+          foreach($arr as $key=>$val)
+          {
+		$val = $this->unsetOtherCaste($val);
+		$Arr[$key][0]=$this->getCasteArr(explode(",",$val),$casteArr);
+
+          }
+	return $Arr;
+  }
+  private function unsetOtherCaste($val)
+  {
+	$valArr = explode(",",$val);
+	$flipArr = array_flip($valArr);
+	foreach(DPPConstants::$removeCasteFromDppArr as $k=>$v) 
+	{
+		unset($valArr[$flipArr[$v]]);
+	}
+	return implode(",",$valArr);
   }
   private function getCasteArr($needleArr,$searchArr)
   {

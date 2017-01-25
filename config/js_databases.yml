@@ -142,9 +142,16 @@ shard3_slaveDDL:
 matchalerts_slave:
   factory:        jsPdoDatabase
   param:
-    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$alertsSlave['HOST'].';dbname='.MysqlDbConstants::$alertsSlave['DEFAULT_DB']?>"
-    username:     "<?php echo MysqlDbConstants::$alertsSlave['USER']?>"
-    password:     "<?php echo MysqlDbConstants::$alertsSlave['PASS']?>"
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$matchalertsSlave['HOST'].';dbname='.MysqlDbConstants::$matchalertsSlave['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$matchalertsSlave['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$matchalertsSlave['PASS']?>"
+
+crm_slave:
+  factory:        jsPdoDatabase
+  param:
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$matchalertsSlave['HOST'].';dbname='.MysqlDbConstants::$matchalertsSlave['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$matchalertsSlave['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$matchalertsSlave['PASS']?>"
 
 dnc_con:
   factory:        jsPdoDatabase

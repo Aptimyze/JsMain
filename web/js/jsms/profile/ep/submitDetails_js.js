@@ -91,11 +91,14 @@ var saveDetail=(function(){
 					//startTouchEvents();
 					
 					return true;
+
 				}
 				else
 				{
 			
 				}
+                                
+
 			},
 		  error: function() {
 			hideLoader();

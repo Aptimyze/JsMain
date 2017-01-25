@@ -166,6 +166,7 @@ class FieldForm extends sfForm
 				  }
 		  }
 	  }
+          
 		//Native Place Update
     if(count($nativePlaceArr)){
 			$nativePlaceArr[PROFILEID]=$this->loggedInObj->getPROFILEID();
@@ -296,6 +297,7 @@ class FieldForm extends sfForm
 					}
 				}
 			  }
+				$screen_flag = JsCommon::setAutoScreenFlag($screen_flag,array_keys($this->formValues));
                                 if($bSet_NativePlaceBit)
                                 {
                                         $jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL
@@ -329,7 +331,34 @@ class FieldForm extends sfForm
 				$jprofileFieldArr['SCREENING']=$screen_flag;
 
 			//Logging array for edit profiles
-				$editLogArr=array();
+                        				$editLogArr=array();
+                          
+                          $hasJEducation = 1;
+                          if(isset($jprofileFieldArr["EDU_LEVEL_NEW"])){
+                                        $degreeGroup = FieldMap::getFieldLabel('degree_grouping_reg','',true);
+                                        $jprofArrObj                = ProfileEducation::getInstance("newjs_masterRep");
+                                        $profileDetailsArray = $jprofArrObj->getProfileEducation(array($this->loggedInObj->getPROFILEID()),'mailer');
+                                        foreach($degreeGroup as $dg=>$dgArr){
+                                                $degreeGroup[$dg] = $dgArr = explode(",",$dgArr);
+                                                foreach($dgArr as $d=>$dgValue){
+                                                     $degreeGroup[$dg][$d] = trim($dgValue);
+                                                }
+                                        }
+                                        if(in_array($jprofileFieldArr["EDU_LEVEL_NEW"],$degreeGroup["ug"])){
+                                               $jprofileEducationArr[UG_DEGREE] =  '';
+                                               $jprofileEducationArr[PG_DEGREE] =  '';
+                                               if(!$profileDetailsArray[0]['SCHOOL'])
+                                                 $hasJEducation = 0;
+                                        }elseif(in_array($jprofileFieldArr["EDU_LEVEL_NEW"],$degreeGroup["g"])){
+                                                if(!$profileDetailsArray[0]['UG_DEGREE'] || $profileDetailsArray[0]['UG_DEGREE'] == '')
+                                                        $jprofileEducationArr[UG_DEGREE] =  $jprofileFieldArr["EDU_LEVEL_NEW"];
+                                                
+                                                $jprofileEducationArr[PG_DEGREE] =  '';
+                                        }elseif(in_array($jprofileFieldArr["EDU_LEVEL_NEW"],$degreeGroup["pg"])){
+                                                if(!$profileDetailsArray[0]['PG_DEGREE'] || $profileDetailsArray[0]['PG_DEGREE'] == '')
+                                                        $jprofileEducationArr[PG_DEGREE] =  $jprofileFieldArr["EDU_LEVEL_NEW"];
+                                        }
+                          }
 			if(count($jprofileEducationArr)){
 				if (isset($jprofileEducationArr[UG_DEGREE]) && 
           (is_null($jprofileEducationArr[UG_DEGREE]) || !strlen($jprofileEducationArr[UG_DEGREE]))
@@ -345,9 +374,14 @@ class FieldForm extends sfForm
           $jprofileEducationArr[PG_COLLEGE] = NULL;
           $jprofileEducationArr[OTHER_PG_DEGREE] = NULL; 
         }
+        
 				$this->checkForChange($jprofileEducationArr,"Education");
 				$this->loggedInObj->editEducation($jprofileEducationArr);
 				$jprofileFieldArr['HAVE_JEDUCATION']="Y";
+                                
+                                if($hasJEducation == 0)
+                                        $jprofileFieldArr['HAVE_JEDUCATION']="N";
+                                
 				$editLogArr=array_merge($editLogArr,$jprofileEducationArr);
 			}
 			
@@ -378,6 +412,10 @@ class FieldForm extends sfForm
 					$jprofileFieldArr['HAVE_JCONTACT']="Y";
 				}
         else if(count($jprofileContactArr)){
+        	if(array_key_exists("ALT_EMAIL", $jprofileContactArr))
+        	{
+        		$jprofileContactArr["ALT_EMAIL_STATUS"] = "N";
+        	}
           $this->checkForChange($jprofileContactArr,"Contact");
 					$this->loggedInObj->editCONTACT($jprofileContactArr);
           $jprofileFieldArr['HAVE_JCONTACT']="Y";
@@ -564,7 +602,7 @@ class FieldForm extends sfForm
 					//bot EMAIL ENTRY
 					bot_email_entry($profileid, $jprofileFieldArr[EMAIL]);
 					//Insert into autoexpiry table, to expire all autologin url coming before date
-					$autoExObj=new jsadmin_AUTO_EXPIRY();
+					$autoExObj=new ProfileAUTO_EXPIRY();
 					$autoExObj->replace($profileid,'E',date("Y-m-d H:i:s"));
 					//end
 					insert_in_old_email($profileid, $this->loggedInObj->getEMAIL());

@@ -1,4 +1,4 @@
-~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename])`
+~include_partial("global/gtm",['groupname'=>$groupname,'sourcename'=>$sourcename,'age'=>$loginProfile->getAGE(),'mtongue'=>$loginProfile->getMTONGUE(),'city'=>$loginProfile->getCITY_RES()])`
 ~if isset($fromReg)`
 <!--start:overlay-->
   <div class="hpoverlay z2 js-regOverlay disp-none"></div>

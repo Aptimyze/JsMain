@@ -235,6 +235,12 @@ class page1Action extends sfAction {
 
 						//Insert in NAMES and INCOMPLETE_PROFILE table and also update MIS_REG_COUNT data
 						RegistrationMisc::insertInIncompleteProfileAndNames($this->loginProfile);
+                                                
+                                                if(isset($customReg) && $customReg == 1){
+                                                    $partnerField = new PartnerField();
+                                                    RegistrationFunctions::UpdateFilter($partnerField);
+                                                }
+                                                
 						//cookie deleted by Nitesh Sethi after registration
 						$this->unsetCampaignCookies();
 						// Mailer on Registration

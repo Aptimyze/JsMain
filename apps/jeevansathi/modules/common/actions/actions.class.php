@@ -245,7 +245,7 @@ class commonActions extends sfActions
                 if ($password && $this->validatePassword($password, $emailStr) == true) {
                     $this->done = PasswordUpdate::change($profileid, $password);
                     $marked     = ResetPasswordAuthentication::disableProfileidLinks($profileid);
-                    $dbObj      = new jsadmin_AUTO_EXPIRY;
+                    $dbObj      = new ProfileAUTO_EXPIRY;
                     $expireDt   = date("Y-m-d H:i:s");
                     $dbObj->replace($profileid, "P", $expireDt);
                 } else {
@@ -373,7 +373,9 @@ class commonActions extends sfActions
                 $finalresponseArray["actiondetails"] = null;
                 $finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
                 $this->contactObj                    = new Contacts($this->loginProfile, $this->Profile);
-                if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
+                
+                //commented as shortlist list is through webservice not openfire
+                /*if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
                     //Entry in Chat Roster
                     try {
                         $producerObj = new Producer();
@@ -386,7 +388,7 @@ class commonActions extends sfActions
                         throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
                     }
                     //End
-                }
+                }*/
             } else {
                 $bookmarkObj->addBookmark($bookmarker, $bookmarkee);
                 $bookmarkerMemcacheObject->update("BOOKMARK", 1);
@@ -401,7 +403,8 @@ class commonActions extends sfActions
                 $finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
                 //Entry in Chat Roster
                 $this->contactObj = new Contacts($this->loginProfile, $this->Profile);
-                if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
+                //commented as shortlist rosters are now via webservice not openfire
+                /*if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
                     try {
                         $producerObj = new Producer();
                         if ($producerObj->getRabbitMQServerConnected()) {
@@ -413,7 +416,7 @@ class commonActions extends sfActions
                         throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
                     }
                     //End
-                }
+                }*/
             }
 
             $bookmarkerMemcacheObject->updateMemcache();
@@ -641,6 +644,7 @@ class commonActions extends sfActions
         
         if($layerToShow==9 && $button=='B1'){
             
+            
             $namePrivacy=$request->getParameter('namePrivacy');
             $newName=$request->getParameter('newNameOfUser');
             
@@ -677,13 +681,29 @@ class commonActions extends sfActions
                                        $nameOfUserObj->updateName($profileid,$nameArr);
                                }
                                else
-                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);
+                                       $nameOfUserObj->insertName($profileid,$newName,$namePrivacy);               
                     
             }
             
         }
- 		CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button);
-}
+        
+        if($layerToShow==15)
+        {
+            $namePrivacy = $button=='B1' ? 'Y' : 'N';
+            
+            
+            $nameArr=array('DISPLAY'=>$namePrivacy);
+            $name_pdo = new incentive_NAME_OF_USER();
+            $name_pdo->updateNameInfo($loginData['PROFILEID'],$nameArr);
+            
+        }        
+                if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
+                {
+ 		if(CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button))
+                   JsMemcache::getInstance()->set($loginData['PROFILEID'].'_CAL_DAY_FLAG',1,86400);
+                }
+                
+        }
 
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);

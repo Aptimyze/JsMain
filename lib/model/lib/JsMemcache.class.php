@@ -672,6 +672,7 @@ class JsMemcache extends sfMemcacheCache{
   }
 
   //This function uses pipeline to save all values in arr corresponding to the given key in the redis
+  //Pipleline was removed since we could add data in an array directly using a single sadd
   public function storeDataInCacheByPipeline($key,$arr,$expiryTime=3600)
   {
   	if(self::isRedis())
@@ -679,15 +680,9 @@ class JsMemcache extends sfMemcacheCache{
   		if($this->client)
   		{
   			try
-  			{
-  				$pipe = $this->client->pipeline();
-
-  				foreach($arr as $k=>$value) {
-  					$pipe->sadd($key,$value); //adds $value to $key
-  					$pipe->expire($key, $expiryTime);
-  				}
-  				$resultArr = $pipe->execute();
-  				return $resultArr;
+  			{ 	$returnVal = $this->client->sadd($key,$arr);  				
+  				$this->client->expire($key, $expiryTime);
+  				return $returnVal;
   			}
   			catch (Exception $e)
   			{
@@ -821,5 +816,25 @@ class JsMemcache extends sfMemcacheCache{
   		}
   	}
   }
+  public function addKeyToSet($setName,$key)
+  {
+  	if(self::isRedis())
+  	{
+  		if($this->client)
+  		{
+  			try
+  			{
+  				$pipe = $this->client->pipeline();
+                                $pipe->sAdd($setName,$key);
+                                $pipe->execute();	
+  			}
+  			catch (Exception $e)
+  			{
+  				jsException::log("HG-redisClusters".$e->getMessage());
+  			}
+  		}
+  	}
+  }
+  
 }
 ?>

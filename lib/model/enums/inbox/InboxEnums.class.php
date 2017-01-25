@@ -26,7 +26,9 @@ class InboxEnums {
             18 => array("page" => "horoscope", "filter" => "R"),
             19 => array("page" => "intro_call", "filter" => "R"),
             20 => array("page" => "ignore", "filter" => "M"),
-            21 => array("page" => "intro_call_complete", "filter" => "R")
+            21 => array("page" => "intro_call_complete", "filter" => "R"),
+            23 => array("page" => "eeoi", "filter" => "R")
+
         );
         //fromPage to be passed as viewProfilePage param
         static public $fromPage = "contacts";

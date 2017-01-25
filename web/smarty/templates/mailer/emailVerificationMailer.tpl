@@ -20,19 +20,13 @@
                         <td width="373" height="52" style="padding-left:10px;">
                             <div><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="~$IMG_URL`/images/jspc/commonimg/logo1.png"> </div>
                         </td>
-                        <td width="189" valign="middle" style="padding-right:10px;">
-                            <table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
-                                <tr>
-                                    <td align="right" valign="middle" height="50" style="vertical-align:middle;"><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)OWN_PROFILE:profileid=~$profileid`(/LINK)">My Profile</a> | <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)">My Matches</a> </td>
-                                </tr>
-                            </table>
-                        </td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr>
             <td>
+                ~if $emailType eq 1`
                 <table style="border-spacing:0px 10px; max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
                     <tr>
                         <td width="20"></td>
@@ -50,12 +44,12 @@
                 
                 <tr>
                         <td>
-                         <td height="27"><a href="(LINK)EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
+                         <td height="27"><a href="(LINK)EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
                         </td>
+                        
 
                         <td width="20" height="25"></td>
                 </tr>
-                
                 <tr>
                         <td width="20"></td>
                         <td>
@@ -63,7 +57,6 @@
                         </td>
                         <td width="20" height="25"></td>
                 </tr>
-                
                 <tr>
                         <td width="20"></td>
                         <td>
@@ -73,6 +66,42 @@
                 </tr>
 
                 </table>
+                ~/if`
+                ~if $emailType eq 2`
+                <table style="border-spacing:0px 10px; max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="20"></td>
+                        <td valign="middle" height="35"> Hi, </td>
+                        <td width="20" height="25"></td>
+                    </tr>
+                    <tr>
+                        <td width="20"></td>
+                        <td>
+                Jeevansathi User <var>{{NAME_PROFILE:profileid=~$profileid`}}</var> has added your Email so that you can also start receiving updates on his profile at Jeevansathi. Please be sure that you know this person and this was not done in error before verifying.
+                        </td>
+
+                        <td width="20"></td>
+                    </tr>
+                
+                <tr>
+                        <td>
+                         <td height="27"><a href="(LINK)ALTERNATE_EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Please verify your Email here.</a></td>   
+                        </td>
+                        
+
+                        <td width="20" height="25"></td>
+                </tr>
+                <tr>
+                        <td width="20"></td>
+                        <td>
+                If ever you want to stop receiving these Emails, kindly ask the profile holder to remove/delete your Email. Its as simple as that.
+                        </td>
+                        <td width="20"></td>
+                </tr>
+
+                </table>   
+                    
+             ~/if`
             </td>
         </tr>
         <tr>

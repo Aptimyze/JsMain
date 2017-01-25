@@ -931,5 +931,18 @@ die;
 		$result = array("day" => $day, "month" => $month, "year" => $year);
 		return $result;
 	}
+
+	public static function hideFeaturesForUptime(){
+		
+		if(JsConstants::$hideUnimportantFeatureAtPeakLoad)
+			return 1;
+		if(date("D")=="Sun" || date("D")=="Sat" || in_array(date('H'),array("10","11","12","13")))
+		{
+			return 1;
+		}
+		return 0;
+
+	}
+			
 }
 ?>

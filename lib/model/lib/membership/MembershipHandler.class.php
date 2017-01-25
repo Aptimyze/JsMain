@@ -23,37 +23,96 @@ class MembershipHandler
         $this->jprofileObj = new JPROFILE();
     }
 
-    public function fetchMembershipDetails($membership, $userObj, $device = 'desktop')
+    public function fetchMembershipDetails($membership, $userObj, $device = 'desktop',$ignoreShowOnlineCheck= false)
     {
-
+        //var_dump($ignoreShowOnlineCheck);
         $memCacheObject = JsMemcache::getInstance();
 
         $servicesObj = new billing_SERVICES('newjs_master');
 
         if ($membership == "MAIN") {
-            $key_main = $device . "_MAIN_MEMBERSHIP";
+            $key_main = $device . "_".$membership."_MEMBERSHIP";
             $key_main .= "_" . $userObj->getCurrency();
-
-            if ($memCacheObject->get($key_main)) {
+            $key_main_hidden = $device . "_".$membership."_HIDDEN_MEMBERSHIP";
+            $key_main_hidden .= "_" . $userObj->getCurrency();
+            $fetchOnline = true;
+            $fetchOffline = $ignoreShowOnlineCheck;
+            $allMainMemHidden = array();
+            $allMainMem = array();
+            if ($fetchOffline == true && $memCacheObject->get($key_main_hidden)) {
+                $allMainMemHidden = unserialize($memCacheObject->get($key_main_hidden));
+                //echo "memcache hidden...".count($allMainMemHidden);
+                //print_r($allMainMemHidden);
+                $fetchOffline = false;
+            } 
+            if ($fetchOnline == true && $memCacheObject->get($key_main)) {
                 $allMainMem = unserialize($memCacheObject->get($key_main));
-            } else {
+                //echo "memcache main...".count($allMainMem);
+                //print_r($allMainMem);
+                $fetchOnline = false;
+            }
+            if($fetchOnline == true || $fetchOffline == true){
                 $serviceArr = VariableParams::$mainMembershipsArr;
+                //print_r($serviceArr);
                 if ($userObj) {
                     $currencyType = $userObj->getCurrency();
                 }
-                $serviceInfoAggregateData = $this->serviceObj->getServiceInfo($serviceArr, $currencyType, "", $renew, $userObj->getProfileid(), $device, $userObj);
+                //var_dump($fetchOnline);
+                //var_dump($fetchOffline);
+                $serviceInfoAggregateData = $this->serviceObj->getServiceInfo($serviceArr, $currencyType, "", $renew, $userObj->getProfileid(), $device, $userObj,$fetchOnline,$fetchOffline);
+                
+                //echo "all services.........".count($serviceInfoAggregateData);
+                //print_r($serviceInfoAggregateData);die;
                 foreach ($serviceArr as $key => $value) {
                     foreach ($serviceInfoAggregateData as $kk => $vv) {
                         if ($value == substr($kk, 0, strlen($value))) {
-                            $allMainMem[$value][$kk] = $vv;
+                            if($fetchOffline == true && $vv['SHOW_ONLINE'] == 'N'){
+                                $allMainMemHidden[$value][$kk] = $vv;
+                            }
+                            if($fetchOnline == true && ($vv['SHOW_ONLINE'] == 'Y' || $vv['SHOW_ONLINE'] == 'S')){
+                                $allMainMem[$value][$kk] = $vv;
+                            }
                         }
+                        
                     }
                 }
-
-                $memCacheObject->set($key_main, serialize($allMainMem), 3600);
+                if($fetchOffline == true){
+                   $memCacheObject->set($key_main_hidden, serialize($allMainMemHidden), 3600); 
+                }
+                if($fetchOnline == true){
+                    $memCacheObject->set($key_main, serialize($allMainMem), 3600);
+                }
             }
-
-            return $allMainMem;
+            //echo "all main services.........".count($allMainMem);
+            //print_r($allMainMem);
+            //echo "all hidden services.........".count($allMainMemHidden);
+            //print_r($allMainMemHidden);
+            if(is_array($allMainMem) && is_array($allMainMemHidden)){
+                foreach ($allMainMem as $key => $value) {
+                    $allMainMemCombined[$key] = $value;
+                }
+                foreach ($allMainMemHidden as $key => $value) {
+                    if($allMainMemCombined[$key]){
+                        foreach ($value as $durationId => $durationWiseServices) {
+                            $allMainMemCombined[$key][$durationId] = $durationWiseServices;
+                        }
+                    }
+                    else{
+                        $allMainMemCombined[$key] = $value;
+                    }
+                }
+            }
+            else if(is_array($allMainMem)){
+                $allMainMemCombined = $allMainMem;
+            }
+            else if(is_array($allMainMemHidden)){
+                $allMainMemCombined = $allMainMemHidden;
+            }
+            else{
+                $allMainMemCombined = array();
+            }
+            //print_r($allMainMemCombined);
+            return $allMainMemCombined;
         } elseif ($membership == "ADDON") {
             $key = $device . "_ADDON_MEMBERSHIP";
             $key .= "_" . $userObj->getCurrency();
@@ -753,8 +812,13 @@ class MembershipHandler
                 $currencyType = VariableParams::$indianCurrency;
             }
         }
-
-        if ($profileid == 12970375) {
+        
+        $testDol = false;
+        if (JsConstants::$whichMachine == 'test') {
+            $dolBillingForTest = new billing_DOL_BILLING_USERS_FOR_TEST();
+            $testDol = $dolBillingForTest->checkUserForDol($profileid);
+        }
+        if ($profileid == 12970375 || $testDol == true) {
             $currency = 'DOL';
         }
 
@@ -773,7 +837,8 @@ class MembershipHandler
                 $activatedStatus = $profileObj->getACTIVATED();
                 $screeningStatus = $activatedStatus;
             }
-            if ($screeningStatus == "Y") {
+            if ($screeningStatus == "Y") 
+            {
                 $discountTypeArr = $this->getDiscountInfo($userObj);
                 $discountType    = $discountTypeArr['TYPE'];
             }
@@ -985,10 +1050,12 @@ class MembershipHandler
         return $subStatus;
     }
 
-    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop')
+    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false)
     {
-        $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device);
-
+        $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
+        //var_dump("in getMembershipDurationsAndPrices...");
+        //var_dump($allMainMem);
+        
         if ($displayPage == 1) {
             if (isset($allMainMem['P']['P1'])) {
                 unset($allMainMem['P']['P1']);
@@ -1012,13 +1079,12 @@ class MembershipHandler
                 }
             }
         }
-
         $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device);
         $minPriceArr = $this->fetchLowestActivePrices($userObj, $allMainMem, $device);
 
         return array(
             $allMainMem,
-            $minPriceArr,
+            $minPriceArr
         );
     }
 
@@ -1997,5 +2063,64 @@ class MembershipHandler
         // End - Logic to change renewal based on previous discount
         unset($discount_calc, $currency, $prevServPur, $prevDiscAmt, $prevTotAmt, $prevDisc);
         return $discount;
+    }
+    
+    public function handleNegativeTransaction($receiptidArr,$source=''){
+        if(is_array($receiptidArr)){
+            $payDetObj = new BILLING_PAYMENT_DETAIL();
+            foreach($receiptidArr['RECEIPTIDS'] as $key => $receiptid){
+                $payDetData = $payDetObj->fetchAllDataForReceiptId($receiptid);
+                $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
+                if(!($source == 'CANCEL' && in_array($receiptid, $receiptidArr['REFUND']))){
+                    $payDetData['AMOUNT'] = $payDetData['AMOUNT']*(-1);
+                }
+                $this->negativeTransaction($payDetData);
+                unset($payDetData);
+            }
+            unset($payDetObj);
+        }
+    }
+    
+
+    public function negativeTransaction($params){
+        foreach($params as $key => $val){
+            $paramsStr.= "$key, ";
+            $valuesStr.= "'$val', ";
+        }
+        $paramsStr = rtrim($paramsStr,", ");
+        $valuesStr = rtrim($valuesStr,", ");
+        $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+        $negTransactionObj->insertRecord($paramsStr,$valuesStr);
+    }
+
+    public function addUserForDollarPayment($profileid){
+        $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
+        $dolBillingUsersObj->addUserForDol($profileid);
+    }
+    
+    public function removeUserForDollarPayment($profileid){
+        $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
+        $dolBillingUsersObj->removeUserForDol($profileid);
+
+    }
+    
+    public function getReceiptids($billid){
+        $payDetObj = new BILLING_PAYMENT_DETAIL();
+        $data = $payDetObj->getStatusTransactions($billid,array("'DONE'","'REFUND'"));
+        foreach($data as $key => $val){
+            if($val['STATUS'] == 'REFUND'){
+                $result['REFUND'][] = $val['RECEIPTID'];
+            }
+            $result['RECEIPTIDS'][] = $val['RECEIPTID'];
+        }
+        unset($payDetObj,$data);
+        return $result;
+    }
+    
+    public function getCancelledDate($billid){
+        $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+        $row = $negTransactionObj->getCancelledBillIdDetails($billid);
+        $dt = $row["ENTRY_DT"];
+        return $dt;
     }
 }
