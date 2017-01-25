@@ -110,7 +110,7 @@ class postEOIv1Action extends sfAction
 				$param = "&messageid=".$this->contactEngineObj->messageId."&type=I&contactId=".$contactId;
 				$responseArray["writemsgbutton"] = ButtonResponse::getCustomButton("Send","","SEND_MESSAGE",$param,"");
 				$responseArray['lastsent'] = LastSentMessage::getLastSentMessage($this->loginProfile->getPROFILEID(),"I");
-                                if($request->getParameter('API_APP_VERSION')>=80)
+                                if($request->getParameter('API_APP_VERSION')>=80 && $this->getParameter($request,"page_source") != "chat")
 					$responseArray['errmsglabel'] = "Write a personalized message to ".$this->Profile->getUSERNAME()." along with your interest";
 		                        $responseArray["headerthumbnailurl"] = $thumbNail;
                         		$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
