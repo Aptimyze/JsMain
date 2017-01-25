@@ -614,7 +614,7 @@ function bindEmailButtons(){
    * @param  {String} fieldType dropdown or text
    * @param  {String} fieldDivId   the parent id
    */
-  function openFieldsOnCal(section='',fieldType='',fieldId='',fieldDivId='') 
+  function openFieldsOnCal(section,fieldType,fieldId,fieldDivId) 
   {
   	var timeoutFieldCheck = 100;
   	var timeoutDropdown = 100;
@@ -631,7 +631,9 @@ function bindEmailButtons(){
                 $("#"+fieldDivId).click();
                 if ( fieldType == 'text' && $("#"+fieldId).length )
                 {
-                	$("#"+fieldId).focus();
+                	setTimeout(function() {   
+    	            	$("#"+fieldId).focus();
+					}, timeoutDropdown);
                 }
                 else if ( fieldType == 'dropdown' && $("#"+fieldId).length )
                 {
@@ -652,7 +654,7 @@ function bindEmailButtons(){
    * function is used to get url get parameters
    * @return {String}      get parameter
    */
-	var getUrlParameter = function getUrlParameter(sParam) {
+	function getUrlParameter(sParam) {
 	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
 	    sURLVariables = sPageURL.split('&'),
 	    sParameterName,
