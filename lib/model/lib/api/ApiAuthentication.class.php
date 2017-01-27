@@ -2,7 +2,7 @@
 Abstract class ApiAuthentication
 {
 	public static $loginTracking="LOGIN_TRACKING";	
-        public static $logTrackingThroughQueue=true;
+        public static $logTrackingThroughQueue=false;
     private $request;
 	protected $encryptSeprator="______";
 	protected $_KEY = "Radhe Shaam";
