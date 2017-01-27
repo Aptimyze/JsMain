@@ -34,6 +34,8 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                                 $this->logicLevel = MailerConfigVariables::$strategyReceiversTVsT;
                         }
                 }else{
+                        if($this->logicLevel == MailerConfigVariables::$strategyReceiversNT)
+                            $this->clusterToShow = array("LAST_LOGIN_SCORE");
                         $this->sort = SearchSortTypesEnums::FullDppWithReverseFlag;
                         $this->logProfile = 1;
                 }
@@ -43,12 +45,12 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
          * This function will fetch the matches to be send in matchalerts
          * @return array 
          */
-        public function getMatches($returnTotalCount = '',$returnTotalCountWithCluster = 0,$notInProfiles = array(),$matchesSetting='') {
+        public function getMatches($returnTotalCount = '',$returnTotalCountWithCluster = 0,$notInProfiles = array(),$matchesSetting='',$matchLogic='') {
                 $this->searchObj = new MatchAlertsDppProfiles($this->loggedInProfileObj);
                 $this->searchObj->getSearchCriteria($this->limit,$this->sort);
                 $SearchServiceObj = new SearchService($this->searchEngine, $this->outputFormat, 0);
                 $SearchUtilityObj = new SearchUtility;
-                $arr = $this->getSearchResult($SearchServiceObj, $SearchUtilityObj, 1,$this->clusterToShow,implode(' ',$notInProfiles));
+                $arr = $this->getSearchResult($SearchServiceObj, $SearchUtilityObj, 1,$this->clusterToShow,implode(' ',$notInProfiles),$matchLogic);
                 if (is_array($arr["PIDS"])){
                         if($this->logProfile == 0){
                                 if(count($arr["PIDS"]) >= $this->limit){
@@ -68,10 +70,10 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                 }
 
                 if($returnTotalCountWithCluster == 1){
-                        return array("CNT"=>count($arr["PIDS"]),"LOGIN_SCORE"=>$this->clusterLoginScore,"profiles"=>$arr["PIDS"]);
+                        return array("CNT"=>count($arr["PIDS"]),"LOGIN_SCORE"=>$this->clusterLoginScore,"profiles"=>$arr["PIDS"],"actualDppCount"=>$arr["actualDppCount"]);
                 }
                 
-                return array("CNT"=>count($arr["PIDS"]),"profiles"=>$arr["PIDS"]);
+                return array("CNT"=>count($arr["PIDS"]),"profiles"=>$arr["PIDS"],"actualDppCount"=>$arr["actualDppCount"]);
         }
         /**
          * 
@@ -79,7 +81,7 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
          * @param type $SearchUtilityObj object of Search Utility Class
          * @return type array, array of user profile Ids 
          */
-        private function getSearchResult($SearchServiceObj, $SearchUtilityObj, $returnTotalCount = '',$clustersToShow = array(),$notInProfiles = '') {
+        private function getSearchResult($SearchServiceObj, $SearchUtilityObj, $returnTotalCount = '',$clustersToShow = array(),$notInProfiles = '',$matchLogic='') {
                 $SearchServiceObj->setSearchSortLogic($this->searchObj, $this->loggedInProfileObj, "", "");
                 $SearchUtilityObj->removeProfileFromSearch($this->searchObj, 'spaceSeperator', $this->loggedInProfileObj, '', 1, $this->removeMatchAlerts,$notInProfiles,'',1);
                 $responseObj = $SearchServiceObj->performSearch($this->searchObj, "", $clustersToShow, "", '', $this->loggedInProfileObj);
@@ -87,6 +89,15 @@ class DppBasedMatchAlertsStrategy extends MatchAlertsStrategy {
                 if(!empty($clustersToShow)){
                         $lastLoginCluster = $responseObj->getClustersResults();
                         $this->clusterLoginScore = isset($lastLoginCluster['LAST_LOGIN_SCORE'][100])?$lastLoginCluster['LAST_LOGIN_SCORE'][100]:0;
+                        if($this->clusterLoginScore==0 && ($this->logicLevel==MailerConfigVariables::$strategyReceiversTVsNT || $this->logicLevel==MailerConfigVariables::$strategyReceiversNT) && $matchLogic!='O'){
+                            $PidsAndCount['actualDppCount']=0;
+                            $this->searchObj->getRelaxedSearchCriteria($this->limit,$this->sort);
+                            $SearchUtilityObj->removeProfileFromSearch($this->searchObj, 'spaceSeperator', $this->loggedInProfileObj, '', 1, $this->removeMatchAlerts,$notInProfiles,'',1);
+                            $responseObj = $SearchServiceObj->performSearch($this->searchObj, "", $clustersToShow, "", '', $this->loggedInProfileObj);
+                            $PIDS = $responseObj->getsearchResultsPidArr();
+                            $this->logicLevel = MailerConfigVariables::$relaxedDpp;
+                        }
+                            
                 }
                 if ($returnTotalCount) {
                         $PidsAndCount['PIDS'] = $PIDS;

@@ -107,8 +107,24 @@ class MessageLog
 	public function getMessageListing($loginProfile,$condition,$skipArray)
 	{
 		$dbName = JsDbSharding::getShardNo($loginProfile);
-		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
-		$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
+
+		$pid = $loginProfile;
+		$memccKey = $pid."_cc_myMessage";
+		$profileArray = JsMemcache::getInstance()->get($memccKey);
+		if($profileArray)
+		{
+			//JsMemcache::getInstance()->set($memccKey,'',0);
+			JsMemcache::getInstance()->delete($memccKey);
+		}
+		else
+		{
+			$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
+			$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
+			JsMemcache::getInstance()->set($memccKey,$profileArray);
+		}
+
+
+
                 $chatLogObj = new NEWJS_CHAT_LOG($dbName);
                 $profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
                 $profileArray = $this->mergeChatsAndMessages($profileArray,$profileChatArray,$condition['LIMIT']);

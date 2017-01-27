@@ -38,7 +38,7 @@ Username/Email<br />
 
 Password<br />
 
-<input type="password" name="password"/></div>
+<input type="password" autocomplete="off" name="password"/></div>
 
 <div class="quick1"><input type="checkbox" name="rememberme" value='Y' checked/> Remember me</div>
 
