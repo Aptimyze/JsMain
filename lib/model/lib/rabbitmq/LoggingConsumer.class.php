@@ -133,7 +133,7 @@ class LoggingConsumer
     catch (Exception $exception) 
     {
       $str="\nRabbitMQ Error in consumer, Unable to process message: " .$exception->getMessage()."\tLine:".__LINE__;
-      RabbitmqHelper::sendAlert($str,"default");
+      RabbitmqHelper::sendAlert($str,"loggingQueue");
       //$msg->delivery_info['channel']->basic_nack($msg->delivery_info['delivery_tag'], MQ::MULTIPLE_TAG,MQ::REQUEUE);
       /*
        * The message due to which error is caused is reframed into a new message and the original message is dropped.
