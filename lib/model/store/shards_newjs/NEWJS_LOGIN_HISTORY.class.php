@@ -48,13 +48,14 @@ class NEWJS_LOGIN_HISTORY extends TABLE
 		return null;
 	}
 	
-	public function insertIntoLoginHistory($pid)
+	public function insertIntoLoginHistory($pid,$currentTime='')
     {
 		if(!$pid)
 			throw new jsException("","VALUE OR TYPE IS BLANK IN insertIntoLoginHistory() of NEWJS_LOG_LOGIN_HISTORY.class.php");
 		try 
 		{
-				$sql="insert ignore into LOGIN_HISTORY(PROFILEID,LOGIN_DT) values (:profileid,now())";
+                                $now = $currentTime ? $currentTime : date("Y-m-d H:i:s");
+				$sql="insert ignore into LOGIN_HISTORY(PROFILEID,LOGIN_DT) values (:profileid,'".$now."')";
 				$prep=$this->db->prepare($sql);
 				$prep->bindValue(":profileid",$pid,PDO::PARAM_INT);
 				$prep->execute();
