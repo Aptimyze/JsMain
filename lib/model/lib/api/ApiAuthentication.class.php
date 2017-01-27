@@ -134,6 +134,8 @@ Abstract class ApiAuthentication
 		$this->recentLogTracking=true;
 		$this->removeLoginCookies();
 		$this->logLogoutTracking=true;
+                if(MobileCommon::isMobile())
+                    $this->browserNotificationLogout= true;
 		$this->CommonLoginTracking();
 	}
 
@@ -360,12 +362,16 @@ Abstract class ApiAuthentication
 		if($this->logLogoutTracking){
 			$queueArr['logLogoutTracking']=true;
 		}
-
-		if($this->recentUserTracking)
+		if($this->browserNotificationLogout){
+			$queueArr['browserNotificationLogout']=true;
+		}
+                
+                if($this->recentUserTracking)
 			$this->RecentUserEntry();
 		
 		if($this->recentLogTracking)
 			$this->removeRecentLog();
+                
         if($queueArr['logLoginHistoryTracking'] || $queueArr['misLoginTracking'] || $queueArr['appLoginProfileTracking'] || $queueArr['logLogoutTracking'])
         {
         if(!($this->sendLoggingDataQueue(self::$loginTracking, $queueArr)))
@@ -821,6 +827,11 @@ Abstract class ApiAuthentication
 		{
 			$dbObj = new LOG_LOGOUT_HISTORY(JsDbSharding::getShardNo($profileId));
 			$dbObj->insert($profileId,$ip,$currentTime);
+		}
+		if($trackingData["browserNotificationLogout"])
+		{
+			    $registrationIdObj = new MOBILE_API_BROWSER_NOTIFICATION_REGISTRATION();
+			    $registrationIdObj->updateNotificationDisableStatus($profileId,'M','Y'); 
 		}
 
 	}
