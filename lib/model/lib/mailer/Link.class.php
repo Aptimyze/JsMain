@@ -151,6 +151,11 @@ class LinkClass {
 			$append=strpos($url,'?')?"&":"?";
 			$url.=$append.$this->_other_get_params;
 		}
+                $site_url=sfConfig::get('app_site_url');
+                $loc=$site_url."/".$url;
+                $append=strpos($loc,'?')?"&":"?";
+                $loc.=$append.'from_mailer=1';
+
 		if($this->_link_auto_login=='Y'){
 			$append=strpos($url,'?')?"&":"?";
 			$stypeNew =$request->getParameter('stype');
@@ -171,10 +176,6 @@ class LinkClass {
 				}
 			}
 		}
-		$site_url=sfConfig::get('app_site_url');
-	    $loc=$site_url."/".$url;
-	    $append=strpos($loc,'?')?"&":"?";
-	    $loc.=$append.'from_mailer=1';
 	    
 	    
 		

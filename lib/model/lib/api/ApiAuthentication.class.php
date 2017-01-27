@@ -33,15 +33,15 @@ Abstract class ApiAuthentication
 	private $expiryTime = 2592000;
 	public $mailerProfileId;
 
-	private $logLoginHistoryTracking=false;
-	private $recentUserTracking=false;
-	private $misLoginTracking=false;
-	private $appLoginProfileTracking=false;
-	private $logLogoutTracking=false;
-	private $recentLogTracking=false;
-	private $channel='R';
-	private $loc="";
-	private $loggedInPId;
+	protected $logLoginHistoryTracking=false;
+	protected $recentUserTracking=false;
+	protected $misLoginTracking=false;
+	protected $appLoginProfileTracking=false;
+	protected $logLogoutTracking=false;
+	protected $recentLogTracking=false;
+	protected $channel='R';
+	protected $loc="";
+	protected $loggedInPId;
 
 	public function __construct($request)
 	{
@@ -296,13 +296,12 @@ Abstract class ApiAuthentication
 		$ip=CommonFunction::getIP();
 		$queueArr['ip']=$ip;
 		$queueArr['currentTime'] = date("Y-m-d H:i:s");
-
 		if($this->misLoginTracking){
 			$websiteVersion=MobileCommon::isApp();
 	        if(!$websiteVersion)
 			{
 				if($this->isNotApp){
-					if($this->isNewMobileSite){
+					if(MobileCommon::isNewMobileSite()){
 						$websiteVersion="N";
 						if(MobileCommon::isAppWebView()){
 							$websiteVersion="A";
