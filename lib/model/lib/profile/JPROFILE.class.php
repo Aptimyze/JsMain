@@ -278,7 +278,7 @@ class JPROFILE
      */
     public function updateLoginSortDate($pid,$currentTime = '')
     {
-        $now = $currentTime ? $currentTime : $date('Y-m-d H:i:s');
+        $now = $currentTime ? $currentTime : date('Y-m-d H:i:s');
         $arrData = $this->get($pid,'PROFILEID','SORT_DT');
 
         $time = new DateTime();
