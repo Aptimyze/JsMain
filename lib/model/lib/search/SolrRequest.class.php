@@ -24,7 +24,8 @@ class SolrRequest implements RequestHandleInterface
                         $profileObj = LoggedInProfile::getInstance('newjs_master');
                         if($profileObj->getPROFILEID())
                 	{ 
-                        	if($profileObj->getPROFILEID()%7>2)
+                        	//if($profileObj->getPROFILEID()%7>2)
+				if($profileObj->getPROFILEID()%2==0)
 	                                $this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
         	                else
                 	                $this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
@@ -34,7 +35,7 @@ class SolrRequest implements RequestHandleInterface
 				if(JsConstants::$whichMachine=='matchAlert') /* new matches load on one server */
 	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
 				else
-	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
+	                        	$this->solrServerUrl = JsConstants::$solrServerLoggedOut."/select";
 	                }
               		$this->profilesPerPage = SearchCommonFunctions::getProfilesPerPageOnSearch($searchParamtersObj);
 			/*
