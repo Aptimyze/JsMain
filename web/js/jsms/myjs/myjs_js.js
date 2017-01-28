@@ -133,7 +133,7 @@ function closeHam()
     
     //Saving HTML of MYJS page on first time load along with current time stamp in session storage
     if(sessionStorage.getItem("myjsTime") == undefined ||
-      new Date().getTime() - sessionStorage.getItem("myjsTime") < myJsCacheTime)
+      new Date().getTime() - sessionStorage.getItem("myjsTime") < 60000)
     {
       sessionStorage.setItem("myjsTime",new Date().getTime());
       sessionStorage.setItem("myjsHtml",document.documentElement.outerHTML);	
