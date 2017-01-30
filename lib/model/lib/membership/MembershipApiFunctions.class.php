@@ -639,7 +639,7 @@ class MembershipApiFunctions
     
     public function setDiscountDetails($apiObj) {
         $memHandlerObj = new MembershipHandler();
-        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L");
+        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj->discountTypeInfo);
         $apiObj->discountType = $discountType;
         $apiObj->discountActive = $discountActive;
         $apiObj->discount_expiry = $discount_expiry;

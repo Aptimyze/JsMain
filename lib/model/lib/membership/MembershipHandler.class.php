@@ -208,10 +208,16 @@ class MembershipHandler
         }
     }
 
-    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop')
+    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop',$discountTypeInfo = "")
     {
         if (!$discountType) {
-            $discountTypeArr = $this->getDiscountInfo($user);
+           
+            if($discountTypeInfo!=""){
+                $discountTypeArr = $discountTypeInfo;
+            }
+            else{
+                $discountTypeArr = $this->getDiscountInfo($user);
+            }
             $discountType    = $discountTypeArr['TYPE'];
         }
 
@@ -828,7 +834,7 @@ class MembershipHandler
         );
     }
 
-    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3)
+    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$discountTypeInfo="")
     {
         if ($userObj->getProfileid()) {
             $profileObj = LoggedInProfile::getInstance('newjs_slave', $userObj->getProfileid());
@@ -839,7 +845,12 @@ class MembershipHandler
             }
             if ($screeningStatus == "Y") 
             {
-                $discountTypeArr = $this->getDiscountInfo($userObj);
+                if($discountTypeInfo!=""){
+                    $discountTypeArr = $discountTypeInfo;
+                }
+                else{
+                    $discountTypeArr = $this->getDiscountInfo($userObj);
+                }
                 $discountType    = $discountTypeArr['TYPE'];
             }
         }
@@ -1050,7 +1061,7 @@ class MembershipHandler
         return $subStatus;
     }
 
-    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false)
+    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$discountTypeInfo="")
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
         //var_dump("in getMembershipDurationsAndPrices...");
@@ -1079,7 +1090,7 @@ class MembershipHandler
                 }
             }
         }
-        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device);
+        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device,$discountTypeInfo);
         $minPriceArr = $this->fetchLowestActivePrices($userObj, $allMainMem, $device);
 
         return array(
