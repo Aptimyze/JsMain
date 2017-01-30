@@ -1181,7 +1181,18 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
                 var ele = $('.stk').eq(i);
                 toggleStackClass(ele);
             }
-        }                             
+        }
+        
+        $('.card').each(function(index){
+            
+            if($(this).hasClass('card-card-out'))
+            {
+              $(this).css('z-index','-1');
+            }
+            
+            
+          });
+
     }
 
     function onCloseMatchOfDay(MatchProfileChecksum) 
