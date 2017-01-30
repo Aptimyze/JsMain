@@ -67,7 +67,7 @@ class MOBILE_API_MATCH_OF_DAY extends TABLE{
     public function getMatchForProfileForListing($paramsArr,$ignoreArray = array()){
         if($paramsArr){
             try{
-                $sql = "SELECT MATCH_PROFILEID FROM MOBILE_API.MATCH_OF_DAY_LOG where PROFILEID = :PROFILEID AND ENTRY_DT >= :ENTRY_DT ORDER BY ENTRY_DT DESC";
+                $sql = "SELECT MATCH_PROFILEID FROM MOBILE_API.MATCH_OF_DAY_LOG where PROFILEID = :PROFILEID AND ENTRY_DT >= :ENTRY_DT ";
                 if(isset($paramsArr["IGNORED"])){
                         $sql .= " AND IGNORED = :IGNORED";
                 }
@@ -75,6 +75,7 @@ class MOBILE_API_MATCH_OF_DAY extends TABLE{
                 if(!empty($ignoreArray) && $ignoreArray[0] != ''){
                         $sql .= " AND MATCH_PROFILEID NOT IN (".implode(',',$ignoreArray).")";
                 }
+		$sql.="  ORDER BY ENTRY_DT DESC";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID",$paramsArr["PROFILEID"],PDO::PARAM_INT);
                 $prep->bindValue(":ENTRY_DT",$paramsArr["ENTRY_DT"],PDO::PARAM_STR);
