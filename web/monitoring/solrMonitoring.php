@@ -22,7 +22,7 @@ $url[161] = $solr2.'/select?q=*:*&fq=GENDER:(M)'.$daily;
 foreach($url as $k=>$v)
 {
         $url1=$v."&wt=phps";
-        $res = CommonUtility::sendCurlPostRequest($url1,'nouse=1');
+        $res = CommonUtility::sendCurlPostRequest($url1,'nouse=1',"100");
         $res = unserialize($res);
         $totalResults = $res['response']['numFound'];
         if($totalResults < $k)
@@ -44,7 +44,7 @@ $msgDpp = '';
 foreach($urlDpp as $k=>$v)
 {
         $url1=$v."&wt=phps";
-        $res = CommonUtility::sendCurlPostRequest($url1,'nouse=1');
+        $res = CommonUtility::sendCurlPostRequest($url1,'nouse=1',"100");
         $res = unserialize($res);
         $totalResults = $res['response']['numFound'];
         if($totalResults < $k)
