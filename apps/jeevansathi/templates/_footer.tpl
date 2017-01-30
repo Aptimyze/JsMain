@@ -197,7 +197,7 @@
           <p>&nbsp;</p>
           <a target="_blank" href="http://www.meritnation.com/">Meritnation.com - <br />Online Educational<br /> Assessment</a>            </p>
           <p>&nbsp;</p>
-          <p><a target="_blank" href="http://www.zomato.com/">Zomato - <br />Restaurant Directory</a>            </p>
+          <p><a target="_blank" href="https://www.zomato.com/">Zomato - <br />Restaurant Directory</a>            </p>
           <p>&nbsp;</p>
           <p><a target="_blank" href="http://www.mydala.com/" title="Online Shopping in India - Best Deals">mydala - Best deals in India</a></p>
         </div></div>
