@@ -4,7 +4,7 @@ class dppSuggestions
 {
 	//This function fetches dppSuggestion values to be shown and returns it to the calling function
 	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="")
-	{
+	{				
 		$loggedInProfileObj = LoggedInProfile::getInstance();
 		$this->age = $loggedInProfileObj->getAGE();
 		$this->gender = $loggedInProfileObj->getGENDER();
@@ -22,6 +22,10 @@ class dppSuggestions
 		if($type == "CITY")
 		{
 			$valueArr["data"] = $this->getDelhiMumbaiSuggestions($valArr);						
+		}
+		if($type == "MTONGUE")
+		{
+			$valueArr["data"] = $this->getHindiAllSuggestions($valArr);
 		}
 		if(is_array($trendsArr))
 		{
@@ -54,9 +58,17 @@ class dppSuggestions
 					$valueArr = $this->getRemainingSuggestionValues($suggestedValueArr,$type,count($valueArr["data"]),$valueArr,$valArr);	
 				}
 			}
-										
 		}
+			
 		$valueArr["type"] = $type;
+		if($type == "AGE" || $type == "INCOME")
+		{
+			$valueArr["range"] = 1;
+		}
+		else
+		{
+			$valueArr["range"] = 0;
+		}
 		return $valueArr;
 	}
 
@@ -87,12 +99,12 @@ class dppSuggestions
 		{
 			if($count < $this->countForComparison)
 			{
-				if(!in_array($k1,$valArr) && $type != "CITY")
+				if(!in_array($k1,$valArr) && !in_array($type,DppAutoSuggestEnum::$typeArr))//($type != "CITY" || $type != "MTONGUE"))
 				{
 					$valueArr["data"][$k1] = $this->getFieldMapValueForTrends($k1,$type);
 					$count++;
 				}
-				elseif(!in_array($k1,$valArr))
+				elseif(!in_array($k1,$valArr) && $type == "CITY")
 				{						
 					$this->stateIndiaArr = $this->getFieldMapLabels("state_india",'',1);
 					$this->cityIndiaArr = $this->getFieldMapLabels("city_india",'',1);
@@ -114,6 +126,23 @@ class dppSuggestions
 							$count++;
 						}
 						
+					}
+				}
+				elseif(!in_array($k1,$valArr) && $type == "MTONGUE")
+				{
+					//not to show subset value if Hindi-All is selected
+					if(in_array(implode(FieldMap::getFieldLabel("allHindiMtongues","",1),","),$valArr))
+					{
+						if(!in_array($k1, FieldMap::getFieldLabel("allHindiMtongues","",1)))
+						{
+							$valueArr["data"][$k1] = $this->getFieldMapValueForTrends($k1,$type);
+							$count++;
+						}
+					}
+					else
+					{
+						$valueArr["data"][$k1] = $this->getFieldMapValueForTrends($k1,$type);
+						$count++;
 					}
 				}
 			}
@@ -459,6 +488,29 @@ class dppSuggestions
 			}			
 		}
 		return $arr;
+	}
+
+	public function getHindiAllSuggestions($valArr)
+	{
+		$hindiAllVal = implode(FieldMap::getFieldLabel("allHindiMtongues","",1),",");
+		$allHindiMtongues = FieldMap::getFieldLabel("allHindiMtongues","",1);		
+		$hindiMtongueCount = count(array_intersect($valArr, $allHindiMtongues));
+		$mtongueArr = array();
+
+		//add Hindi-All if it doesnt already exist in the selected array and if all the individual fields are not selected
+		if(!in_array($hindiAllVal, $valArr) && $hindiMtongueCount < count($allHindiMtongues))
+		{
+			foreach($valArr as $key=>$val)
+			{
+				if(in_array($val, $allHindiMtongues))
+				{
+					$mtongueArr[$hindiAllVal] = DppAutoSuggestEnum::$hindiAllLabel;
+					break;
+				}
+			}
+		}
+
+		return $mtongueArr;
 	}
 }
 ?>
