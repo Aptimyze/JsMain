@@ -135,9 +135,33 @@ public function updateAsVerified($submittee){
                         while($row=$res->fetch(PDO::FETCH_ASSOC))   
                             $output[]=$row;
                         return $output;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    }
 
-                       
+        public function getReportInvalidCountMIS($profileId,$startDate,$endDate)
+    {
+       try     
+        {   
 
+
+                        if(!($profileId))
+                            throw new jsException("","profileId IS not passed or blank");
+
+                    $sql = 'SELECT count( * ) AS CNT
+                        FROM jsadmin.REPORT_INVALID_PHONE
+                        WHERE DATE( `SUBMIT_DATE` ) <= DATE("'.$startDate.'")
+                        AND DATE( `SUBMIT_DATE` ) >= DATE( "'.$endDate.'" )
+                        AND SUBMITTEE ='.$profileId;
+                        $prep = $this->db->prepare($sql);
+                        $prep->execute();
+
+                        if($row=$prep->fetch(PDO::FETCH_ASSOC))   
+                            $output=$row['CNT'];
+                        return $output;
         }
         catch(Exception $e)
         {
@@ -146,6 +170,45 @@ public function updateAsVerified($submittee){
     
     }
 
+    public function getReportInvalidForUser($profileid)
+    {
+        try     
+        {   
+            $sql = "SELECT SUBMITTER,SUBMIT_DATE,REASON,OTHER_REASON from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFID";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFID",$profileid,PDO::PARAM_INT);
+            $prep->execute();
+            while($row=$prep->fetch(PDO::FETCH_ASSOC))
+            $result[]=$row;
+        return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
+
+
+    public function getReportInvalidInterval($profileId, $interval)
+    {
+        try     
+        {   
+            $sql = "SELECT * from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFILEID AND TIMESTAMPDIFF(DAY , `SUBMIT_DATE`, NOW()) <= :INTERVAL ORDER BY `SUBMIT_DATE` DESC";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_STR);
+            $prep->bindValue(":INTERVAL",$interval,PDO::PARAM_INT);
+            $prep->execute();
+            while($row=$prep->fetch(PDO::FETCH_ASSOC))
+                $result[]=$row;
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
 
 }
 ?>    

@@ -27,7 +27,7 @@ class SearchInputValidation
                                 else
                                         $flag = 1;
 			}
-			elseif($label == "CASTE" || $label == "MTONGUE" || $label == "OCCUPATION" || $label == "BTYPE" || $label == "COMPLEXION" || $label == "RELATION" || $label == "COUNTRY_RES" || $label == "RELIGION" || $label == "EDU_LEVEL_NEW" || $label == "SAMPRADAY" || $label == "MATHTHAB" || $label == "NATURE_HANDICAP" || $label == "INCOME" || $label == "EDUCATION_GROUPING" || $label == "LAST_ACTIVITY" || $label == "OCCUPATION_GROUPING" || $label == "INDIA_NRI" || $label == "CASTE_GROUP" || $label == "CASTE_DISPLAY" || $label == "WORK_STATUS" || $label == "PROFILE_ADDED" || $label == "EDU_LEVEL")
+			elseif($label == "CASTE" || $label == "MTONGUE" || $label == "OCCUPATION" || $label == "OCCUPATION_IGNORE"|| $label == "BTYPE" || $label == "COMPLEXION" || $label == "RELATION" || $label == "COUNTRY_RES" || $label == "RELIGION" || $label == "EDU_LEVEL_NEW" || $label == "SAMPRADAY" || $label == "MATHTHAB" || $label == "NATURE_HANDICAP" || $label == "INCOME" || $label == "EDUCATION_GROUPING" || $label == "LAST_ACTIVITY" || $label == "OCCUPATION_GROUPING" || $label == "INDIA_NRI" || $label == "CASTE_GROUP" || $label == "CASTE_DISPLAY" || $label == "WORK_STATUS" || $label == "PROFILE_ADDED" || $label == "EDU_LEVEL")
 			{
 				if(!preg_match($pattern3,$value) && !in_array($value,$keyword_allowed_array))
                                         $flag = 0;

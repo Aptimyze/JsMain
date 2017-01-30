@@ -94,6 +94,7 @@ class notificationActions extends sfActions
         $notificationKey = $request->getParameter('notificationKey');
 	$notificationType = $request->getParameter('notificationType');
 	$messageId = $request->getParameter('messageId');	
+
 	if($notificationType=="pull")
 		$status = NotificationEnums::$LOCAL;
 	else
@@ -109,12 +110,17 @@ class notificationActions extends sfActions
                         $msgdata = FormatNotification::formatLogData($dataSet,'','DELIVERY_TRACKING_API');
                         $producerObj->sendMessage($msgdata);
                 }
-		else{
-			NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
-		}
+        		else{
+        			NotificationFunctions::deliveryTrackingHandling($profileid,$notificationKey,$messageId,$status,$osType);
+        		}
                 // temporary_logging    
                 //$fileName ="manoj_".$notificationKey.".txt";
                 //passthru("echo ' $profileid $status ' >>/tmp/$fileName");
+
+                //log the notification click event only for IOS app
+                if($osType == "I"){
+                    NotificationFunctions::handleNotificationClickEvent(array("profileid"=>$profileid,"messageId"=>$messageId,"notificationKey"=>$notificationKey),$osType);
+                }
 	}
 	$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         $respObj->generateResponse();
