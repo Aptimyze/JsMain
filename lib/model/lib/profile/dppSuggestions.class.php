@@ -492,6 +492,7 @@ class dppSuggestions
 
 	public function getHindiAllSuggestions($valArr)
 	{
+		$valArr = array_unique($valArr);
 		$hindiAllVal = implode(FieldMap::getFieldLabel("allHindiMtongues","",1),",");
 		$allHindiMtongues = FieldMap::getFieldLabel("allHindiMtongues","",1);		
 		$hindiMtongueCount = count(array_intersect($valArr, $allHindiMtongues));
