@@ -1,6 +1,6 @@
 <?php 
 /**
- * This file updates the caste for gujjar and gurjar to a single caste value
+ * This file updates the occupation values to another value
  * Author: Ankit Shukla 8th Aug 2016
  */
 $flag_using_php5 = 1;
@@ -10,6 +10,7 @@ include("connect.inc");
 include_once(JsConstants::$docRoot."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once(JsConstants::$docRoot."/classes/globalVariables.Class.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 global $updateTypeArray;
 
@@ -108,12 +109,17 @@ $connMaster = $mysqlObjM->connect("master") or logError("Unable to connect to ma
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$connMaster);
 
 $mysqlObjS = new Mysql;
-$connSlave = $mysqlObjS->connect("slave") or logError("Unable to connect to master","ShowErrTemplate");
+$connSlave = $mysqlObjS->connect("slave") or logError("Unable to connect to slave","ShowErrTemplate");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$connSlave);
 
+$jprofileUpdateObj = JProfileUpdateLib::getInstance();
+$jprofileSlaveObj = new JPROFILE('newjs_slave');
 foreach($columnToUpdate as $columnData){
         foreach($tableArray as $tableArr){
-                if($tableArr["conn_type"] == "master"){
+                if($tableArr['table_name'] == 'newjs.JPROFILE'){
+                                updateOccupationInJprofile($jprofileUpdateObj,$jprofileSlaveObj,$columnData,$tableArr);
+                }
+                elseif($tableArr["conn_type"] == "master"){
                         updateCasteInTables($tableArr["table_name"],$columnData[$tableArr["column"]],$columnData["old_value"],$columnData["new_value"],$connSlave,$connMaster,$tableArr["update_type"],false,$tableArr["unique_key"]);
                 }else{
                         for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
@@ -234,4 +240,15 @@ In case you want to change this, you are most welcome to login and edit your pro
 Warm regards\n
 Team Jeevansathi","Kindly note the following changes that have been made to your profile","info@jeevansathi.com",'','','','','','','','',"Jeevansathi Info");
 }
+
+function updateOccupationInJprofile($jprofileUpdateObj,$jprofileSlaveObj,$columnToUpdate,$tableArr){
+    $exrtaWhereCond[$columnToUpdate[$tableArr['column']]]=$columnToUpdate['old_value'];
+    $profiles = $jprofileSlaveObj->getArray($exrtaWhereCond,'','','PROFILEID');
+    $arrFields = array($columnToUpdate[$tableArr['column']]=>$columnToUpdate['new_value']);
+    foreach ($profiles as $key=>$value){
+        $res = $jprofileUpdateObj->editJPROFILE($arrFields,$value['PROFILEID'],'PROFILEID');
+    }
+}
+
+
 ?>
