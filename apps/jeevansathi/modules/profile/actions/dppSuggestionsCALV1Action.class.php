@@ -35,7 +35,6 @@ class dppSuggestionsCALV1Action extends sfActions
 
 		//getDppDataArr is used to format the data in the required format.
 		$dppDataArr = $this->getDppDataArr($decodedData);		
-
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
 		$profileId = $this->loggedInProfileObj->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
@@ -63,11 +62,11 @@ class dppSuggestionsCALV1Action extends sfActions
 		}
 
 		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;
-
+		
 		if(MobileCommon::isApp())
 		{
 			$finalArr = $this->getFormattedArrForApp($finalArr);						
-		}
+		}		
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -84,7 +83,7 @@ class dppSuggestionsCALV1Action extends sfActions
 	}
 
 	public function getFormattedArrForApp($finalArr)
-	{		
+	{
 		$i=0;
 		foreach($finalArr as $key => $value)
 		{
@@ -120,7 +119,7 @@ class dppSuggestionsCALV1Action extends sfActions
 	}
 
 	public function getDppDataArr($decodedData)
-	{
+	{		
 		$incomeStr= "";
 		if(MobileCommon::isNewMobileSite())
 		{
@@ -165,7 +164,7 @@ class dppSuggestionsCALV1Action extends sfActions
 		}
 		else
 		{
-			if(is_object($decodedData))
+			if(is_array($decodedData))
 			{
 				foreach($decodedData as $key=>$value)
 				{	
