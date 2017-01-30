@@ -28,6 +28,7 @@ class ProfileMemcacheService
     const SAVED_SEARCH=41;
     const INTRO_CALLS= 43;
     const SKIP_PROFILES = 47;
+    const MESSAGE_ALL = 53;
     private $groups = array(
 						ProfileMemcacheService::CONTACTS => array(
 							'ACC_BY_ME', 
@@ -67,8 +68,8 @@ class ProfileMemcacheService
                             'PHOTO_REQUEST_BY_ME'), 
 						ProfileMemcacheService::CUSTOM_MESSAGE => array(
 							'MESSAGE', 
-							'MESSAGE_NEW',
-							'MESSAGE_ALL'), 
+							'MESSAGE_NEW'), 
+                                                ProfileMemcacheService::MESSAGE_ALL => array('MESSAGE_ALL'),
 						ProfileMemcacheService::MATCHALERT => array('MATCHALERT','MATCHALERT_TOTAL'),
 						ProfileMemcacheService::JUST_JOINED_MATCHES => array('JUST_JOINED_MATCHES','JUST_JOINED_MATCHES_NEW'), 
 						ProfileMemcacheService::CONTACTS_VIEWED => array('CONTACTS_VIEWED'), 
@@ -281,6 +282,9 @@ public function unsett()
             case ProfileMemcacheService::BOOKMARK:
                 $this->unsetBookmarkData();
                 break;
+            case ProfileMemcacheService::MESSAGE_ALL:
+                $this->unsetMessageAllData();
+                break;
             case ProfileMemcacheService::JUST_JOINED_MATCHES:
                 $this->unsetJustJoinedMatchesData();
                 break;
@@ -355,6 +359,9 @@ public function unsett()
                 break;
             case ProfileMemcacheService::BOOKMARK:
                 $this->setBookmarkData();
+                break;
+            case ProfileMemcacheService::MESSAGE_ALL:
+                $this->setMessageAllData();
                 break;
             case ProfileMemcacheService::JUST_JOINED_MATCHES:
                 $this->setJustJoinedMatchesData();
@@ -476,18 +483,25 @@ public function unsett()
                 'E',
                 'C'
             )
-        ), $group, 1,$skipProfile);
+        ), $group, 1,$skipProfile,1);
 
         if (is_array($contactsCount)) {
             foreach ($contactsCount as $key => $value) {
                 switch ($value["TYPE"]) {
                     case 'A':
-                        $ACC_BY_ME = $ACC_BY_ME + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            $ACC_BY_ME = $ACC_BY_ME + $value["COUNT"];
+                        }
                         break;
                     case 'D':
-                        $DEC_BY_ME = $DEC_BY_ME + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            $DEC_BY_ME = $DEC_BY_ME + $value["COUNT"];
+                        }
                         break;
                     case 'I':
+                        
                         if ($value["FILTERED"] == 'Y'){
                                     if ($value['TIME1']=='0'){
                                     if ($value["SEEN"] != 'Y')
@@ -495,7 +509,8 @@ public function unsett()
                                 	$FILTERED = $FILTERED + $value["COUNT"];
                                 }
                         }
-                        else {
+                        else 
+                        {
 							if($value["TIME1"] == 0)
 							{
 	                            if ($value["SEEN"] != 'Y')
@@ -508,20 +523,22 @@ public function unsett()
                             {
                                $INTEREST_ARCHIVED = $INTEREST_ARCHIVED + $value["COUNT"];                                
                             }
-
                             if ( $value["TIME1"] == 2 )
                             {
-                                $INTEREST_EXPIRING = $INTEREST_EXPIRING + $value["COUNT"];                                
+                                $INTEREST_EXPIRING = $INTEREST_EXPIRING + $value["COUNT"];
                             }
 
                         }
                         break;
                     case 'C':
                     case 'E':
-                        if ($value["SEEN"] != 'Y') {
-                            $DEC_ME_NEW = $DEC_ME_NEW + $value["COUNT"];
+                        if ($value['TIME1']!='2')
+                        {
+                            if ($value["SEEN"] != 'Y') {
+                                $DEC_ME_NEW = $DEC_ME_NEW + $value["COUNT"];
+                            }
+                            $DEC_ME = $DEC_ME + $value["COUNT"];
                         }
-                        $DEC_ME = $DEC_ME + $value["COUNT"];
                         break;
 
                     default:
@@ -735,15 +752,9 @@ public function unsett()
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
        // print_r($skipProfile);
         $msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile);
-        $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
-        $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
-        $condition["WHERE"]["IN"]["TYPE"]     = "R";
 //        $configObj            = new ProfileInformationModuleMap();
 //        $configurations = $configObj->getConfiguration("ContactCenterDesktop");
 //        $condition["LIMIT"]    = $configurations["MY_MESSAGE"]["COUNT"]+1;
-        $profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
-        if(is_array($profilesArray))
-					$MESSAGE_ALL = count($profilesArray);
         
         
         
@@ -764,7 +775,6 @@ public function unsett()
 		$MESSAGE_SENT =  $msgCount[0]["COUNT"]; */
 		$this->memcache->setMESSAGE($MESSAGE ? $MESSAGE : 0);
         $this->memcache->setMESSAGE_NEW($MESSAGE_NEW ? $MESSAGE_NEW : 0);
-        $this->memcache->setMESSAGE_ALL($MESSAGE_ALL?$MESSAGE_ALL:0);
        
     }
     public function unsetCustomMessageData()
@@ -839,6 +849,25 @@ public function unsett()
     public function unsetBookmarkData()
     {
         $this->memcache->setBOOKMARK($count=0);
+    }
+    public function setMessageAllData()
+    {
+        $skipContactedType = SkipArrayCondition::$MESSAGE;
+        $message           = new MessageLog;
+        $skipProfileObj    = SkipProfile::getInstance($this->profileid);
+        $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
+       // print_r($skipProfile);
+        $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
+        $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
+        $condition["WHERE"]["IN"]["TYPE"]     = "R";
+        $profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
+        if(is_array($profilesArray))
+		$MESSAGE_ALL = count($profilesArray);
+        $this->memcache->setMESSAGE_ALL($MESSAGE_ALL?$MESSAGE_ALL:0);
+    }
+    public function unsetMessageAllData()
+    {
+        $this->memcache->setMESSAGE_ALL($MESSAGE_ALL=0);
     }
     /**
      * fucntion setJustJoinedMatchesData()

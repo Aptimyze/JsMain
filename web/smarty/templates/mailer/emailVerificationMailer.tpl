@@ -26,6 +26,7 @@
         </tr>
         <tr>
             <td>
+                ~if $emailType eq 1`
                 <table style="border-spacing:0px 10px; max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
                     <tr>
                         <td width="20"></td>
@@ -43,17 +44,12 @@
                 
                 <tr>
                         <td>
-                        ~if $emailType eq 1`
                          <td height="27"><a href="(LINK)EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
-                        ~else`
-                         <td height="27"><a href="(LINK)ALTERNATE_EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Click here to verify your email address</a></td>   
-                        ~/if`
                         </td>
                         
 
                         <td width="20" height="25"></td>
                 </tr>
-                ~if $emailType eq 1`
                 <tr>
                         <td width="20"></td>
                         <td>
@@ -61,7 +57,6 @@
                         </td>
                         <td width="20" height="25"></td>
                 </tr>
-                ~/if`
                 <tr>
                         <td width="20"></td>
                         <td>
@@ -71,6 +66,42 @@
                 </tr>
 
                 </table>
+                ~/if`
+                ~if $emailType eq 2`
+                <table style="border-spacing:0px 10px; max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="20"></td>
+                        <td valign="middle" height="35"> Hi, </td>
+                        <td width="20" height="25"></td>
+                    </tr>
+                    <tr>
+                        <td width="20"></td>
+                        <td>
+                Jeevansathi User <var>{{NAME_PROFILE:profileid=~$profileid`}}</var> has added your Email so that you can also start receiving updates on his profile at Jeevansathi. Please be sure that you know this person and this was not done in error before verifying.
+                        </td>
+
+                        <td width="20"></td>
+                    </tr>
+                
+                <tr>
+                        <td>
+                         <td height="27"><a href="(LINK)ALTERNATE_EMAIL_VER_SUCCESS:profileid=~$profileid`,EmailUID=~$uniqueId`,emailType=~$emailType`(/LINK)" target="_blank" style="font-size:12px; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;">Please verify your Email here.</a></td>   
+                        </td>
+                        
+
+                        <td width="20" height="25"></td>
+                </tr>
+                <tr>
+                        <td width="20"></td>
+                        <td>
+                If ever you want to stop receiving these Emails, kindly ask the profile holder to remove/delete your Email. Its as simple as that.
+                        </td>
+                        <td width="20"></td>
+                </tr>
+
+                </table>   
+                    
+             ~/if`
             </td>
         </tr>
         <tr>

@@ -75,9 +75,10 @@
         var self_subcription = "~$subscription`";
         var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
-        var dppListingWebServiceUrl = "~JsConstants::$chatListingWebServiceUrl['dpp']`";
-        var nonRosterRefreshUpdate = "~JsConstants::$nonRosterRefreshUpdate`";
+        var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`"};
+        var nonRosterRefreshUpdate = {"dpp":"~JsConstants::$nonRosterRefreshUpdate['dpp']`","shortlist":"~JsConstants::$nonRosterRefreshUpdate['shortlist']`"};
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
+        var profileServiceUrl = "~JsConstants::$profileServiceUrl`";
         //console.log("dppLiveForAll",dppLiveForAll);
         var betaDppExpression = "",specialDppProfiles="";
         if(dppLiveForAll == "0"){
@@ -86,9 +87,7 @@
         }
         
         //console.log("betaDppExpression",betaDppExpression);
-        //console.log("ank",dppListingWebServiceUrl);
         var selfUserChatName = "~$selfUserChatName`";
-        //console.log("ank",selfUserChatName);
         localStorage.removeItem("self_subcription");
         localStorage.setItem("self_subcription","~$subscription`");
         //console.log("ankita_localstorage",localStorage.getItem("self_subcription"));

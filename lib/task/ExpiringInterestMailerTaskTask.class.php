@@ -19,6 +19,9 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
+		ini_set('memory_limit','912M');
+        ini_set('max_execution_time', 0);
+		
 		if(!sfContext::hasInstance())
 			sfContext::createInstance($this->configuration);
 
@@ -33,25 +36,19 @@ EOF;
 
 	public function skipProfiles($arranged)
 	{
-		$skipConditionArray = SkipArrayCondition::$default;
+            $skipProfileObj     = new newjs_IGNORE_PROFILE('newjs_slave');
+
 		foreach ($arranged as $key => $value) 
 		{
-			$skipProfileObj = SkipProfile::getInstance($key);
-			$skipProfiles = $skipProfileObj->getSkipProfiles($skipConditionArray);
-			$value = explode(',',$value);       
+        	$skipProfiles       = $skipProfileObj->listIgnoredProfile($key);
 			if(is_array($skipProfiles))
-			{
 				$temp=array_diff($value,$skipProfiles); 
-			}	
 			else
-			{
 				$temp=$value;
-			}
 			if(count($temp)>0)
-			{
 				$result[$key]=$temp;
-			}	
-			$skipProfileObj::unsetInstance($key);
+            $arranged[$key] = null;
+            $skipProfiles = null;
 		}
 		return $result;
 	}
@@ -79,7 +76,7 @@ EOF;
 					foreach ($ArrayRow as $key => $row)
 					{
 						$contactResult = array();
-						$contactResult[$row['RECEIVER']] = $row['SENDER'];
+						$contactResult[$row['RECEIVER']] = explode(',',$row['SENDER']);
 						$contactResult = $this->skipProfiles($contactResult);
 						$this->InsertMailer($contactResult, $mailerEIObj);
 					}

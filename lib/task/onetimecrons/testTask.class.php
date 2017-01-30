@@ -28,6 +28,13 @@ EOF;
 	{
 	    // SET BASIC CONFIGURATION
 	   //send instant JSPC/JSMS notification
+
+    /*$instantNotificationObj = new InstantAppNotification("BUY_MEMB");
+    $instantNotificationObj->sendNotification(939764339,'',"upgrade");*/
+        $instantNotificationObj = new InstantAppNotification("EOI");
+        $instantNotificationObj->sendNotification(939764339,7194662);
+        die;
+
           $producerObj = new Producer();
           if($producerObj->getRabbitMQServerConnected())
           {

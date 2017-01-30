@@ -15,7 +15,7 @@ class NEWJS_ASTRO extends TABLE {
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
                 $prep->execute();
-                JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+                //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
                 if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
                     return $result;
                 }
@@ -42,7 +42,7 @@ class NEWJS_ASTRO extends TABLE {
             foreach ($paramArr as $key => $val) $resEditHobby->bindValue(":" . $key, $val);
             $resEditHobby->bindValue(":PROFILEID", $pid);
             $resEditHobby->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
             return true;
         }
         catch(PDOException $e) {
@@ -60,7 +60,7 @@ class NEWJS_ASTRO extends TABLE {
             $res = $this->db->prepare($sql);
             $res->bindValue(":PROFILEID", $profileid,PDO::PARAM_INT);
             $res->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
             return true;
         }
         catch(PDOException $e) {
@@ -87,7 +87,7 @@ class NEWJS_ASTRO extends TABLE {
             	$res->bindValue(":PROFILEID" . $key, $pid, PDO::PARAM_INT);
         	}
         	$res->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
         	while ($result = $res->fetch(PDO::FETCH_ASSOC)) {
 	   	if(!$setWithProfileId)
             		$astroArr[] = $result;
@@ -109,7 +109,7 @@ class NEWJS_ASTRO extends TABLE {
         $res = $this->db->prepare($sql);
         $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
         $res->execute();
-        JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+        //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
         if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
             return $result['COUNT'];
         }
@@ -123,7 +123,7 @@ class NEWJS_ASTRO extends TABLE {
         $res = $this->db->prepare($sql);
         $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
         $res->execute();
-        JsCommon::logFunctionCalling('newjs_HOROSCOPE', __FUNCTION__);
+        //JsCommon::logFunctionCalling('newjs_HOROSCOPE', __FUNCTION__);
         if ($result = $res->fetch(PDO::FETCH_ASSOC)) {
             if ($result['COUNT']) $horo_present = true;
         }
@@ -133,7 +133,7 @@ class NEWJS_ASTRO extends TABLE {
             $res = $this->db->prepare($sql);
             $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
             $res->execute();
-            JsCommon::logFunctionCalling('NEWJS_HOROSCOPE_FOR_SCREEN', __FUNCTION__);
+            //JsCommon::logFunctionCalling('NEWJS_HOROSCOPE_FOR_SCREEN', __FUNCTION__);
             if ($result = $res->fetch(PDO::FETCH_ASSOC)) if ($result['COUNT']) $horo_present = true;
         }
         return $horo_present;
@@ -155,7 +155,7 @@ class NEWJS_ASTRO extends TABLE {
 				$res = $this->db->prepare($sql);
 		                $res->bindValue(":pid", $pid, PDO::PARAM_INT);
 				$res->execute();
-                JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+                //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
                 return true;
 			}
 		}
@@ -207,7 +207,7 @@ class NEWJS_ASTRO extends TABLE {
             $pdoStatement->bindValue($count,$iProfileID);
 
             $pdoStatement->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
             return true;
         }
         catch(Exception $e)
@@ -242,7 +242,7 @@ class NEWJS_ASTRO extends TABLE {
 
 			$res->bindValue(":PROFILEID", $iProfileID);
 			$res->execute();
-            JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return true;
 		}
 		catch(PDOException $e) {

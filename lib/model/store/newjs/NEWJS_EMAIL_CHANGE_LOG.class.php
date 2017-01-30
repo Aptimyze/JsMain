@@ -48,7 +48,7 @@ class NEWJS_EMAIL_CHANGE_LOG extends TABLE {
         {
                 try{
                         
-                                $sql = "SELECT ID FROM newjs.EMAIL_CHANGE_LOG WHERE PROFILEID = :PROFILEID ORDER BY ID DESC LIMIT 1";
+                                $sql = "SELECT ID,EMAIL FROM newjs.EMAIL_CHANGE_LOG WHERE PROFILEID = :PROFILEID ORDER BY ID DESC LIMIT 1";
                                 $res=$this->db->prepare($sql);
                                 $res->bindValue(":PROFILEID", $profileid, PDO::PARAM_INT);
                                 $res->execute();
