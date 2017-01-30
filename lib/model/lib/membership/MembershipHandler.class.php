@@ -208,20 +208,24 @@ class MembershipHandler
         }
     }
 
-    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop',$discountTypeInfo = "")
+    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop',$apiObj = "")
     {
         if (!$discountType) {
            
-            if($discountTypeInfo!=""){
-                $discountTypeArr = $discountTypeInfo;
+            if($apiObj != "" && $apiObj->discountTypeInfo){
+                $discountTypeArr = $apiObj->discountTypeInfo;
             }
             else{
                 $discountTypeArr = $this->getDiscountInfo($user);
             }
             $discountType    = $discountTypeArr['TYPE'];
         }
-
-        $renewalPercent = $this->getVariableRenewalDiscount($user->getProfileid());
+        if($apiObj!="" && $apiObj->userRenewalPercent){
+            $renewalPercent = $apiObj->userRenewalPercent;
+        }
+        else{
+            $renewalPercent = $this->getVariableRenewalDiscount($user->getProfileid());
+        }
 
         foreach ($allMainMem as $mainMem => $subMem) {
             foreach ($subMem as $key => $value) {
@@ -834,7 +838,7 @@ class MembershipHandler
         );
     }
 
-    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$discountTypeInfo="")
+    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$apiObj="")
     {
         if ($userObj->getProfileid()) {
             $profileObj = LoggedInProfile::getInstance('newjs_slave', $userObj->getProfileid());
@@ -845,8 +849,8 @@ class MembershipHandler
             }
             if ($screeningStatus == "Y") 
             {
-                if($discountTypeInfo!=""){
-                    $discountTypeArr = $discountTypeInfo;
+                if($apiObj!="" && $apiObj->discountTypeInfo){
+                    $discountTypeArr = $apiObj->discountTypeInfo;
                 }
                 else{
                     $discountTypeArr = $this->getDiscountInfo($userObj);
@@ -879,7 +883,12 @@ class MembershipHandler
             $festDurBanner       = $memActFunc->getFestDurBanner($type, $discountType, $userObj->getProfileid(), $apiVersion);
             unset($festiveLogRevampObj);
         }
-        $renewalPercent = $this->getVariableRenewalDiscount($userObj->getProfileid());
+        if($apiObj!="" && $apiObj->userRenewalPercent){
+            $renewalPercent = $apiObj->userRenewalPercent;
+        }
+        else{
+            $renewalPercent = $this->getVariableRenewalDiscount($userObj->getProfileid());
+        }
         if ($userObj->userType == 4 || $userObj->userType == 6 || $specialActive == 1 || $discountActive == 1 || $fest == 1) {
             if ($userObj->userType == 4 || $userObj->userType == 6) {
                 $expiry_date   = $userObj->expiryDate;
@@ -1061,7 +1070,7 @@ class MembershipHandler
         return $subStatus;
     }
 
-    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$discountTypeInfo="")
+    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$apiObj="")
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
         //var_dump("in getMembershipDurationsAndPrices...");
@@ -1090,7 +1099,7 @@ class MembershipHandler
                 }
             }
         }
-        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device,$discountTypeInfo);
+        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device,$apiObj);
         $minPriceArr = $this->fetchLowestActivePrices($userObj, $allMainMem, $device);
 
         return array(
