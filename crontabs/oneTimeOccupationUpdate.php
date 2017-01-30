@@ -14,6 +14,8 @@ include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
 global $updateTypeArray;
 
+$lastLoginDate = $argv[1];
+
 $fieldsOccupation = array(
 "44"=>"Looking for a job",
 "36"=>"Not working",
@@ -117,7 +119,7 @@ $jprofileSlaveObj = new JPROFILE('newjs_slave');
 foreach($columnToUpdate as $columnData){
         foreach($tableArray as $tableArr){
                 if($tableArr['table_name'] == 'newjs.JPROFILE'){
-                                updateOccupationInJprofile($jprofileUpdateObj,$jprofileSlaveObj,$columnData,$tableArr);
+                                updateOccupationInJprofile($jprofileUpdateObj,$jprofileSlaveObj,$columnData,$tableArr,$lastLoginDate);
                 }
                 elseif($tableArr["conn_type"] == "master"){
                         updateCasteInTables($tableArr["table_name"],$columnData[$tableArr["column"]],$columnData["old_value"],$columnData["new_value"],$connSlave,$connMaster,$tableArr["update_type"],false,$tableArr["unique_key"]);
@@ -241,9 +243,10 @@ Warm regards\n
 Team Jeevansathi","Kindly note the following changes that have been made to your profile","info@jeevansathi.com",'','','','','','','','',"Jeevansathi Info");
 }
 
-function updateOccupationInJprofile($jprofileUpdateObj,$jprofileSlaveObj,$columnToUpdate,$tableArr){
+function updateOccupationInJprofile($jprofileUpdateObj,$jprofileSlaveObj,$columnToUpdate,$tableArr,$dateVal){
     $exrtaWhereCond[$columnToUpdate[$tableArr['column']]]=$columnToUpdate['old_value'];
-    $profiles = $jprofileSlaveObj->getArray($exrtaWhereCond,'','','PROFILEID');
+    $greaterThanCondition['LAST_LOGIN_DT']=$dateVal;
+    $profiles = $jprofileSlaveObj->getArray($exrtaWhereCond,'',$greaterThanCondition,'PROFILEID');
     $arrFields = array($columnToUpdate[$tableArr['column']]=>$columnToUpdate['new_value']);
     foreach ($profiles as $key=>$value){
         $res = $jprofileUpdateObj->editJPROFILE($arrFields,$value['PROFILEID'],'PROFILEID');
