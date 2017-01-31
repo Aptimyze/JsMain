@@ -45,10 +45,8 @@ EOF;
            {
                 foreach ($profiles as $key => $profile) 
                 {
-                    $visitors = new Visitors($profile['PROFILEID']);
-                    $infoTypenav["matchedOrAll"] = VisitorAlertEnums::MATCHED_OR_ALL;
                     $profileVisitors = array();
-                    $profileVisitors = $visitors->getVisitorProfile('',VisitorAlertEnums::NUMBER_OF_PROFILE,$infoTypenav,'',$fromMailer=1);
+                    $profileVisitors = $this->getVisitorProfile($profile['PROFILEID']);
                     $profileVisitorsArray = array();
                     if ( is_array($profileVisitors) )
                     {
@@ -70,4 +68,22 @@ EOF;
             throw new jsException($e);
         }
     }
+    
+    
+    
+    private function getVisitorProfile($profileId){
+		$searchEngine = 'solr';
+		$sort = SearchSortTypesEnums::SortByVisitorsTimestamp;
+		$loggedInProfileObj = LoggedInProfile::getInstance('',$profileId);
+		$SearchParamtersObj = new VisitorsSearch($loggedInProfileObj);
+		$SearchParamtersObj->getSearchCriteria(VisitorAlertEnums::MATCHED_OR_ALL);
+		$SearchParamtersObj->setToSortByPhotoVisitors(1);
+		$SearchServiceObj = new SearchService($searchEngine);
+		$SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
+		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,'','','','',$loggedInProfileObj);
+		$arr['PIDS'] = $responseObj->getsearchResultsPidArr();
+
+		return $arr['PIDS'];
+		
+	}
 }
