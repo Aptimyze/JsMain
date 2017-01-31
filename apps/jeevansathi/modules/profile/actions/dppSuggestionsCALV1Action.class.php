@@ -61,12 +61,13 @@ class dppSuggestionsCALV1Action extends sfActions
 			}
 		}
 
-		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;
+		
 		
 		if(MobileCommon::isApp())
 		{
 			$finalArr = $this->getFormattedArrForApp($finalArr);						
-		}		
+		}
+		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;	
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
