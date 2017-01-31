@@ -128,6 +128,7 @@ class Producer
 			$this->channel->queue_declare(MQ::PROFILE_CACHE_Q_DELETE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
                         $this->channel->queue_declare(MQ::VIEW_LOG, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::SCREENING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+			$this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
 			$this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
 			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeRightNow, 'direct');
@@ -240,10 +241,13 @@ class Producer
                 case MQ::SCREENING_Q_EOI:
                 	$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::SCREENING_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
                 	break;
-
 				case MQ::WRITE_MSG_Q:
 					$this->channel->basic_publish($msg, MQ::WRITE_MSG_exchangeDelayed5min);
 					break;
+                case 'LOGGING_TRACKING':
+                	$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::LOGGING_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+                	break;
+
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;

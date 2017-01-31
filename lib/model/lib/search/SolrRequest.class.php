@@ -24,7 +24,8 @@ class SolrRequest implements RequestHandleInterface
                         $profileObj = LoggedInProfile::getInstance('newjs_master');
                         if($profileObj->getPROFILEID())
                 	{ 
-                        	if($profileObj->getPROFILEID()%7>2)
+                        	//if($profileObj->getPROFILEID()%7>2)
+				if($profileObj->getPROFILEID()%2==0)
 	                                $this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
         	                else
                 	                $this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
@@ -34,7 +35,7 @@ class SolrRequest implements RequestHandleInterface
 				if(JsConstants::$whichMachine=='matchAlert') /* new matches load on one server */
 	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
 				else
-	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
+	                        	$this->solrServerUrl = JsConstants::$solrServerLoggedOut."/select";
 	                }
               		$this->profilesPerPage = SearchCommonFunctions::getProfilesPerPageOnSearch($searchParamtersObj);
 			/*
@@ -165,7 +166,14 @@ class SolrRequest implements RequestHandleInterface
 	*/	
 	public function sendCurlPostRequest($urlToHit,$postParams)
 	{
+		$start = strtotime("now");
 		$this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+                $end= strtotime("now");
+                $diff = $end - $start;
+                if($diff > 2){
+                        //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold".date('Y-m-d').".txt";
+                        //file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
+                }
 	}
 
         /**
@@ -333,6 +341,8 @@ class SolrRequest implements RequestHandleInterface
                                         $solrFormatValueCityIndia = str_replace(","," ",$setOrCond["CITY_INDIA"]);
                                         $solrFormatValueCityIndia = str_replace("','"," ",$solrFormatValueCityIndia);
                                         $solrFormatValueCityIndia='"'.implode('","',explode(" ",$solrFormatValueCityIndia)).'"';
+                                }else{
+                                    $solrFormatValueCityIndia = $solrFormatValueCity;
                                 }
                                 $solrFormatValueStateIndia = '';
                                 if(isset($setOrCond["STATE"])){
@@ -396,6 +406,16 @@ class SolrRequest implements RequestHandleInterface
                                 $setWhereParams[]="STATE";
                                 $this->clusters[]="&facet.field={!ex=city_res,city_india,state}STATE";
                                 $this->filters[]="&fq={!tag=city_res,city_india,state}STATE:($solrFormatValueStateIndia)";
+                        }elseif($setOrCond['CITY_RES'] && is_numeric($setOrCond['CITY_RES'])){
+                            //added for seo solr for countries other than india
+                                $this->clusters[]="&facet.field={!ex=country_res,city_res,state}COUNTRY_RES";
+                                $this->clusters[]="&facet.field={!ex=city_india}CITY_INDIA";
+                                $this->clusters[]="&facet.field={!ex=state}STATE";
+                                $setWhereParams[]="CITY_RES";
+                                $solrFormatValueCity = str_replace(","," ",$setOrCond["CITY_RES"]);
+                                $solrFormatValueCity = str_replace("','"," ",$solrFormatValueCity);
+                                $solrFormatValueCity='"'.implode('","',explode(" ",$solrFormatValueCity)).'"';
+                                $this->filters[]="&fq={!tag=country_res,city_res,city_india,state}CITY_RES:($solrFormatValueCity)";
                         }
                 }
 		
@@ -473,6 +493,8 @@ class SolrRequest implements RequestHandleInterface
 			$this->filters[]="&fq=-MSTATUS:(".str_replace(","," ",$this->searchParamtersObj->getMSTATUS_IGNORE()).")";
 		if($this->searchParamtersObj->getHANDICAPPED_IGNORE())
 			$this->filters[]="&fq=-HANDICAPPED:(".str_replace(","," ",$this->searchParamtersObj->getHANDICAPPED_IGNORE()).")";
+                if($this->searchParamtersObj->getOCCUPATION_IGNORE())
+			$this->filters[]="&fq=-OCCUPATION:(".str_replace(","," ",$this->searchParamtersObj->getOCCUPATION_IGNORE()).")";
 		//HIV ignore, MANGLIK ignore, MSTATUS ignore, HANDICAPPED ignore
 
                 //Fso Verified Dpp Matches
@@ -542,7 +564,7 @@ class SolrRequest implements RequestHandleInterface
 
 			$sortstringArr[] = $exp." ".$asc_or_descArr[$k];
 		}
-
+                $sortstringArr[] = 'id desc';
 		if($sortstringArr)
 			$this->filters[]="&sort=".implode(",",$sortstringArr);
 		if($this->searchParamtersObj->getFL_ATTRIBUTE())
