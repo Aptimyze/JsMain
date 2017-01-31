@@ -385,19 +385,19 @@ var hamHtml="",slider1,slider2;
 			}
 			if(type == "p_age") {
 				setTimeout(function(){
-					typeDataArray = [$("#ham_p_lage:checked").val(),$("#ham_p_hage:checked").val()];
+					typeDataArray = [$("#HAM_OPTION_1 li input:checked").val(),$("#HAM_OPTION_2 li input:checked").val()];
 					changeSuggestion("AGE", typeDataArray);
-				},50);	
+				},100);	
 			} else if (type == "p_income_rs") {
 				setTimeout(function(){
-					typeDataArray = [$("#ham_p_lrs:checked").prev().html(),$("#ham_p_hrs:checked").prev().html(),"No Income","and above"];
+					typeDataArray = [$("#HAM_OPTION_1 li input:checked").prev().html(),$("#HAM_OPTION_2 li input:checked").prev().html(),"No Income","and above"];
 					changeSuggestion("INCOME",typeDataArray);
-				},50);	
+				},100);	
 			} else if(type == "p_income_dol") {
 				setTimeout(function(){
-					typeDataArray = ["No Income","and above",$("#ham_p_lds:checked").prev().html(),$("#ham_p_hds:checked").prev().html()];
+					typeDataArray = ["No Income","and above",$("#HAM_OPTION_1 li input:checked").prev().html(),$("#HAM_OPTION_2 li input:checked").prev().html()];
 					changeSuggestion("INCOME",typeDataArray);
-				},50);	
+				},100);	
 			}
 			BindHamWindow(this);
 			
@@ -1246,6 +1246,7 @@ function changeSuggestion(type, param1) {
                 "type": type,
                 "data": param1      
              },response, str = JSON.stringify(obj).split('"').join('%22'), url = "/api/v1/profile/dppSuggestions?Param=["+str+"]";
+    //alert("url: "+url);
     $.ajax({
         type: "POST",
         url: url,
