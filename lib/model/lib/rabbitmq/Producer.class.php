@@ -129,6 +129,7 @@ class Producer
                         $this->channel->queue_declare(MQ::VIEW_LOG, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::SCREENING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+            $this->channel->queue_declare(MQ::DISC_HIST.date('Y-m-d'), MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
@@ -233,6 +234,9 @@ class Producer
                 case 'LOGGING_TRACKING':
                 	$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::LOGGING_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
                 	break;
+                case 'DISCOUNT_HISTORY':
+                    $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DISC_HIST.date('Y-m-d'), MQ::MANDATORY, MQ::IMMEDIATE);
+                    break;
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;
