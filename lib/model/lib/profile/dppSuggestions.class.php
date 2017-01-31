@@ -501,14 +501,17 @@ class dppSuggestions
 		//add Hindi-All if it doesnt already exist in the selected array and if all the individual fields are not selected
 		if(!in_array($hindiAllVal, $valArr) && $hindiMtongueCount < count($allHindiMtongues))
 		{
-			foreach($valArr as $key=>$val)
+			if(is_array($valArr))
 			{
-				if(in_array($val, $allHindiMtongues))
+				foreach($valArr as $key=>$val)
 				{
-					$mtongueArr[$hindiAllVal] = DppAutoSuggestEnum::$hindiAllLabel;
-					break;
+					if(in_array($val, $allHindiMtongues))
+					{
+						$mtongueArr[$hindiAllVal] = DppAutoSuggestEnum::$hindiAllLabel;
+						break;
+					}
 				}
-			}
+			}			
 		}
 
 		return $mtongueArr;
