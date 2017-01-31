@@ -72,6 +72,7 @@ class IgnoredProfiles
         	$this->addDataToFile("new");
         	$returnVal = $this->ifProfilesIgnored('0',$profileid,1);
         	IgnoredProfileCacheLib::getInstance()->addDataToCache($profileid,$ignoredProfileid);
+                Contacts::setContactsTypeCache($profileid, $ignoredProfileid, 'B');
         }
 
 	public function undoIgnoreProfile($profileid, $ignoredProfileid)
@@ -82,6 +83,7 @@ class IgnoredProfiles
 		$this->addDataToFile("new");
 		$returnVal = $this->ifProfilesIgnored('0',$profileid,1);
 		IgnoredProfileCacheLib::getInstance()->deleteDataFromCache($profileid,$ignoredProfileid);
+                Contacts::unSetContactsTypeCache($profileid, $ignoredProfileid);
 	}
 
 	public function ifProfilesIgnored($profileIdStr, $viewer, $key='')

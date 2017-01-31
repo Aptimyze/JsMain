@@ -125,6 +125,7 @@ class LoggingConsumer
     $redeliveryCount=$msgdata['redeliveryCount'];
     $type=$msgdata['data']['type'];
     $body=$msgdata['data']['body'];
+    $body['profileId'] = intval($body['profileId']);
     try
     {
         ApiAuthentication::completeLoginTracking($body);
