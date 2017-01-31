@@ -10,7 +10,7 @@
                              <div style="overflow-x:hidden; height:100%;">
                         <div style="white-space: nowrap; word-wrap:normal; width:100%;" class="overflowWrap">
                          <div class="fl"> <img class="tuple_image" style="height:110px; width:110px;" src=~if $gender eq 'M'`'/images/picture/120x120_f.png'~else`'/images/picture/120x120_m.png'~/if` data-src="~$profileTuple.photo.url`" border="0"/> </div>
-                         <div class="fl pl_a" style="width:54%">
+                         <div class="fl pl_a" style="width:48%">
                              <div class="f14 color7"> <span class="username">~$profileTuple.username`</span></div>
                             <div class="attr">
                               <ul>
