@@ -1289,6 +1289,7 @@ function fetchProfileDetails($profilesArr,$subMethod='',$fields='')
 			$setProfileArr[$pid]["HAVEPHOTO"]       =$val['HAVEPHOTO'];
 			$setProfileArr[$pid]["ADDRESS"]       	=trim($val['CONTACT']);
 			$setProfileArr[$pid]["PINCODE"]       	=$val['PINCODE'];
+			$setProfileArr[$pid]["ISD"]         	=$isdNo;
 
 		        if($subMethod=='NEW_PROFILES' || $subMethod=='ONLINE_NEW_PROFILES' || $subMethod=='FOLLOWUP' || $subMethod=='FFOLLOWUP'){
         		        if($setProfileArr[$pid]["MOB_NO"] && $isdNo)

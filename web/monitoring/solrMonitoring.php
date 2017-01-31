@@ -22,7 +22,7 @@ $url[161] = $solr2.'/select?q=*:*&fq=GENDER:(M)'.$daily;
 foreach($url as $k=>$v)
 {
         $url1=$v."&wt=phps";
-        $res = CommonUtility::sendCurlPostRequest($url1,'nouse=1');
+        $res = CommonUtility::sendCurlPostRequest($url1,'nouse=1',"100");
         $res = unserialize($res);
         $totalResults = $res['response']['numFound'];
         if($totalResults < $k)
@@ -44,7 +44,7 @@ $msgDpp = '';
 foreach($urlDpp as $k=>$v)
 {
         $url1=$v."&wt=phps";
-        $res = CommonUtility::sendCurlPostRequest($url1,'nouse=1');
+        $res = CommonUtility::sendCurlPostRequest($url1,'nouse=1',"100");
         $res = unserialize($res);
         $totalResults = $res['response']['numFound'];
         if($totalResults < $k)
@@ -73,6 +73,18 @@ if($msg || $msgDpp)
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
 
                 $mobile         = "9650350387";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                
+                $mobile         = "9711818214";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                
+                $mobile         = "8376883735";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                
+                $mobile         = "9810300513";
+                $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
+                
+                $mobile         = "9953457479";
                 $smsState = send_sms($message,$from,$mobile,$profileid,'','Y');
         }
         if($msgDpp && $dppError >=2){
