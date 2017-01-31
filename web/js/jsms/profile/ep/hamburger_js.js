@@ -515,59 +515,61 @@ var hamHtml="",slider1,slider2;
 		eHamburger.prototype.HamElementClick=function(ev,ele)
 		{
 			ev.stopPropagation();
-			var value=this.UpdateOutput(ele);
-      if(this.type == "native_state" && value== "NI"){
-        this.type="native_country";
-        this.UpdateHamburgerHTML();
-        return;
-      }
+			if(ele.hasClass("suggestTitle") == false && ele.attr("id") != "suggestBox") {
+				var value=this.UpdateOutput(ele);
+		        if(this.type == "native_state" && value== "NI"){
+			        this.type="native_country";
+			        this.UpdateHamburgerHTML();
+			        return;
+		        }
       
-      if(this.type == "native_country" && value== "FI"){
-        this.type="native_country";
-        this.type="native_state";
-        this.UpdateHamburgerHTML();
-        return;
-      }
+		        if(this.type == "native_country" && value== "FI"){
+			        this.type="native_country";
+			        this.type="native_state";
+			        this.UpdateHamburgerHTML();
+			        return;
+		        }
       
-			var thisObj=this;
-			if(value===false && (this.whenHide=="multiple" && this.type==this.dependant))
-				return;
-			
-			if(this.whenHide=="multiple")
-			{
+				var thisObj=this;
+				if(value===false && (this.whenHide=="multiple" && this.type==this.dependant))
+					return;
 				
-			}
-			else if(this.dependant && this.type!=this.dependant && this.AnySpecialCheck(value)&& !(this.type == "native_state" && value==0) && !(this.type == "native_country" && value==0))
-			{
-				stopTouchEvents(1);
-				this.type=this.dependant;
-				$(this.hamoverid).html(this.ham_htm);
-				this.ulOption=this.ulOption_second;
-				this.tapid=2;
-				$("#search_ham_"+this.tapid).parent().parent().addClass('dn');
-				var height=$(window).height();
-                                this.AppendLoader();
-				$("#hamoverlay").removeClass("ltransform").addClass("rham").addClass("show");
-				
-				setTimeout(function(){thisObj.UpdateHamburgerHTML();startTouchEvents(animationtimer);},animationtimer);
-				
-				
-				//this.type=dependant;
-				
+				if(this.whenHide=="multiple")
+				{
 					
+				}
+				else if(this.dependant && this.type!=this.dependant && this.AnySpecialCheck(value)&& !(this.type == "native_state" && value==0) && !(this.type == "native_country" && value==0))
+				{
+					stopTouchEvents(1);
+					this.type=this.dependant;
+					$(this.hamoverid).html(this.ham_htm);
+					this.ulOption=this.ulOption_second;
+					this.tapid=2;
+					$("#search_ham_"+this.tapid).parent().parent().addClass('dn');
+					var height=$(window).height();
+	                                this.AppendLoader();
+					$("#hamoverlay").removeClass("ltransform").addClass("rham").addClass("show");
+					
+					setTimeout(function(){thisObj.UpdateHamburgerHTML();startTouchEvents(animationtimer);},animationtimer);
+					
+					
+					//this.type=dependant;
+					
+						
+				}
+				else
+				{
+					stopTouchEvents(1);
+					popBrowserStack();
+					this.callBack.call(this.calledElement,this.output,this.json,this.indexPos);
+					//console.log(this.output);
+				}
 			}
-			else
-			{
-				stopTouchEvents(1);
-				popBrowserStack();
-				this.callBack.call(this.calledElement,this.output,this.json,this.indexPos);
-				//console.log(this.output);
-			}
+			
 			
 		};
 		eHamburger.prototype.UpdateOutput=function(target,add,remove)
 		{
-			
 			
 			var label=$(target).text();
 			
