@@ -110,6 +110,9 @@ $mysqlObjM = new Mysql;
 $connMaster = $mysqlObjM->connect("master") or logError("Unable to connect to master","ShowErrTemplate");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$connMaster);
 
+$sql="SET @DONT_UPDATE_TRIGGER=1";
+mysql_query($sql,$connMaster) or die(mysql_error().$sql);
+
 $mysqlObjS = new Mysql;
 $connSlave = $mysqlObjS->connect("slave") or logError("Unable to connect to slave","ShowErrTemplate");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$connSlave);
@@ -147,6 +150,8 @@ function getShardConnection($activeServerId){
         $myDbName=getActiveServerName($activeServerId,'master',$mysqlObjM);
         $shardConnMaster=$mysqlObjM->connect("$myDbName");
         mysql_query('set session wait_timeout=86400,interactive_timeout=86400,net_read_timeout=86400',$shardConnMaster);
+        $sql="SET @DONT_UPDATE_TRIGGER=1";
+        mysql_query($sql,$shardConnMaster) or die(mysql_error().$sql);
 
         $myDbName=getActiveServerName($activeServerId,'slave',$mysqlObjS);
         $shardConnSlave=$mysqlObjS->connect("$myDbName");
