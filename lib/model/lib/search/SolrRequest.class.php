@@ -172,12 +172,12 @@ class SolrRequest implements RequestHandleInterface
                 $end= strtotime("now");
                 $diff = $end - $start;
                 if($diff > 2 ){
-                        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold".date('Y-m-d').".txt";
-                        file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
+                        //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold".date('Y-m-d-h').".txt";
+                        //file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
                 }
                 
                 if(!$this->searchResults){
-                        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d').".txt";
+                        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d-h').".txt";
                         file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
                 }
 	}
