@@ -51,7 +51,7 @@ EOF;
                     if ( is_array($profileVisitors) )
                     {
                         foreach ($profileVisitors as $key => $value) {
-                            $profileVisitorsArray[] = $key;
+                            $profileVisitorsArray[] = $value;
                         }
                         $count = count($profileVisitorsArray);
                         $profileVisitorsArrayMixed[$profile['PROFILEID']] =   $profileVisitorsArray;
