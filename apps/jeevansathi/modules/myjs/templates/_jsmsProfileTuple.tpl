@@ -18,7 +18,7 @@
                                   <li><span class="tuple_age">~$profileTuple.age`</span> Years  <span class="tuple_height"> ~$profileTuple.height`</span> </li>
                                   <li><span class="tuple_caste" style="white-space: nowrap;">~$profileTuple.caste`</span></li>
                                   <li><span class="tuple_mtongue">~$profileTuple.mtongue`</span> </li> 
-                                  ~if $gender eq 'M'`<li><span class="tuple_education">~$profileTuple.education`</span></li>~else`
+                                  ~if $gender eq 'M'`<li class="textTru jsmsEllipsis"><span class="tuple_education">~$profileTuple.education`</span></li>~else`
                                   <li><span class="tuple_income">~$profileTuple.income`</span></li>~/if`
                               </ul>
                             </div>
