@@ -146,7 +146,6 @@ class MembershipHandler
 
     public function getDiscountInfo($user)
     {
-
         $userType = $user->userType;
         $fest     = $this->getFestiveFlag();
         $user->setFestInfo($fest);
@@ -212,7 +211,7 @@ class MembershipHandler
     {
         if (!$discountType) {
            
-            if($apiObj != "" && $apiObj->discountTypeInfo){
+            if($apiObj != "" && is_array($apiObj->discountTypeInfo)){
                 $discountTypeArr = $apiObj->discountTypeInfo;
             }
             else{
@@ -849,7 +848,7 @@ class MembershipHandler
             }
             if ($screeningStatus == "Y") 
             {
-                if($apiObj!="" && $apiObj->discountTypeInfo){
+                if($apiObj!="" && is_array($apiObj->discountTypeInfo)){
                     $discountTypeArr = $apiObj->discountTypeInfo;
                 }
                 else{
