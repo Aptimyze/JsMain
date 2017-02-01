@@ -202,13 +202,14 @@ class WriteMessage extends ContactEvent{
 
   public function processMessage($sender, $receiver, $message)
   {
+    $key = "_d_mg_";
     if($sender->getPROFILEID() < $receiver->getPROFILEID())
     {
-      $key = $sender->getPROFILEID().'-'.$receiver->getPROFILEID();
+      $key .= $sender->getPROFILEID().'-'.$receiver->getPROFILEID();
     }
     else
     {
-      $key = $receiver->getPROFILEID().'-'.$sender->getPROFILEID();
+      $key .= $receiver->getPROFILEID().'-'.$sender->getPROFILEID();
     }
 
     $time = time();
