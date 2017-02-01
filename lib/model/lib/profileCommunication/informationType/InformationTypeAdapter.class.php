@@ -241,12 +241,17 @@ class InformationTypeAdapter
                         if(!empty($profilesArray)){
                                 $data = $searchObj->getArray(array("PROFILEID"=>implode(',',$profilesArray)));
                                 $profilesArray1 = array();
+                                $profilesArraySorted = array();
                                 if(!empty($data)){
                                         foreach($data as $profiles){
-                                                $profilesArray1[$profiles["PROFILEID"]]["PROFILEID"] = $profiles["PROFILEID"];
+                                                $profilesArray1[] = $profiles["PROFILEID"];
+                                        }
+                                        foreach($profilesArray as $profileid){
+                                                if(in_array($profileid, $profilesArray1))
+                                                        $profilesArraySorted[$profileid]["PROFILEID"] =  $profileid;
                                         }
                                         unset($profilesArray);
-                                        $profilesArray = $profilesArray1;
+                                        $profilesArray = $profilesArraySorted;
                                 }else{
                                     $profilesArray = array();
                                 }
