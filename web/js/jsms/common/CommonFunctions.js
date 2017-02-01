@@ -270,8 +270,9 @@ function SingleTonNextPage(data,nottostore,url,transition)
      sessionStorage.getItem("myjsTime") != undefined && 
      new Date().getTime() - sessionStorage.getItem("myjsTime") < 60000) 
    {
-   		var data = sessionStorage.getItem("myjsHtml");
-   		
+      var data = sessionStorage.getItem("myjsHtml");
+      
+      trackJsEventGA("jsms","fetchLocalHtml", "", "");
       if(cancelUrl[random]==1) {
         ShowNextPageTrue(data,nottostore,url,transition);  
       }
@@ -589,7 +590,7 @@ function hostReachable() {
                     ShowTopDownError(["You are now online."]);
                     localStorage.removeItem("offline");
                     // localStorage.removeItem("offline_timestamp");
-                    setTimeout(function(){ 
+      /*              setTimeout(function(){ 
                         var startTime, endTime, download = new Image();
                         var currentLocation = window.location.href;
                         download.onload = function () {
@@ -609,6 +610,7 @@ function hostReachable() {
                         startTime = (new Date()).getTime();
                         download.src = "http://www.jeevansathi.com/images/mrevamp/logo.png?v="+new Date().getTime(); 
                     }, 2000);
+	*/
                     // if(totalTime <= 1800){
                         // trackJsEventGA("jsms","offline_to_online", offlineData, totalTime);
                         // alert("logging user : "+offlineData+", totalTime : "+totalTime);
@@ -639,7 +641,7 @@ function hostReachable() {
           // var totalTime = (onlineTime-offlineTime);
           if(offlineData != null) {
               localStorage.removeItem("offline");
-              setTimeout(function(){ 
+          /*    setTimeout(function(){ 
                   var startTime, endTime, download = new Image();
                   var currentLocation = window.location.href;
                   download.onload = function () {
@@ -658,7 +660,7 @@ function hostReachable() {
                   }
                   startTime = (new Date()).getTime();
                   download.src = "http://www.jeevansathi.com/images/mrevamp/logo.png?v="+new Date().getTime(); 
-              }, 2000);
+              }, 2000); */
               // localStorage.removeItem("offline_timestamp");
               // if(totalTime <= 1800){
                   // trackJsEventGA("jsms","offline_to_online", offlineData, totalTime);
