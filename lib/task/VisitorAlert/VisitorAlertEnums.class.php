@@ -9,6 +9,7 @@
 		const MATCHED_OR_ALL = "A";
 		const NUMBER_OF_PROFILE = 10;
 		const ONE_DAY_LIMIT = 86400;
+                const NO_OF_DAYS_BEFORE_MAILER = 1; 
 	}
 
  ?>

@@ -46,7 +46,7 @@ class VIEW_LOG_TRIGGER extends TABLE{
 				throw new jsException($e);
 			}
 		}
-		public function getViewLogData($viewed,$skipProfile,$fromMailers = '',$limit='')
+		public function getViewLogData($viewed,$skipProfile,$days = '',$limit='')
         {
 			try 
 			{
@@ -65,10 +65,10 @@ class VIEW_LOG_TRIGGER extends TABLE{
 					$str = substr($str, 0, -1);
 					$str = $str.")";
 				}
-                                if($fromMailers)
-                                    $yday=mktime(0,0,0,date("m"),date("d")-self::MailerDaysCheck,date("Y"));     //for mailers
+                                if($days)
+                                    $yday=mktime(0,0,0,date("m"),date("d")-$days,date("Y"));     //for mailers
                                 else
-                                    $yday=mktime(0,0,0,date("m"),date("d")-self::VisitorsDaysCheck,date("Y"));    // To get the time for before 15 days to get visitors
+                                    $yday=mktime(0,0,0,date("m"),date("d")-15,date("Y"));    // To get the time for before 15 days to get visitors
 				$date=date("Y-m-d",$yday)." 00:00:00";
                 $limitVisitors="";
                 if($limit)         

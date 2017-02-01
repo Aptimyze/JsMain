@@ -20,7 +20,7 @@ class VisitorsSearch extends SearchParamters
         */
 		private $m_sz_callType;
 		
-		const VISITORS_LIMIT = 10;
+		const VISITORS_LIMIT = 500;
 
 
         public function __construct($loggedInProfileObj)
@@ -35,13 +35,13 @@ class VisitorsSearch extends SearchParamters
         }
         
         
-        public function getSearchCriteria($sz_callType='',$fromMailer=''){
+        public function getSearchCriteria($sz_callType='',$daysBefore=''){
 			$this->m_sz_callType = $sz_callType;
 			$skipContactedType = SkipArrayCondition::$VISITOR;
 			$skipProfileObj    = SkipProfile::getInstance($this->pid);
 			$skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
 			$viewLogObj        = new VIEW_LOG_TRIGGER();
-			$visitorsProfile   = $viewLogObj->getViewLogData($this->pid, $skipProfile,$fromMailer,self::VISITORS_LIMIT);
+			$visitorsProfile   = $viewLogObj->getViewLogData($this->pid, $skipProfile,$daysBefore,self::VISITORS_LIMIT);
 			if (is_array($visitorsProfile)){
 				$profileIdArr = array_map(array($this,"extractProfileId"), $visitorsProfile);
 				 $this->setProfilesToShow(implode(" ",$profileIdArr));
@@ -51,7 +51,6 @@ class VisitorsSearch extends SearchParamters
 			}
 			
 			$this->getForwardFiltersCriteria($fromMailer);
-			$this->setToSortByPhotoVisitors(1);
 		
 		}
 		

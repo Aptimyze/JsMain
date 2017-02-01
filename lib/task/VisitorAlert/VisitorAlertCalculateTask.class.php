@@ -5,6 +5,7 @@
 class VisitorAlertCalculateTask extends sfBaseTask
 {
 
+    const VISITORS_MAILER_LIMIT = 10;
   protected function configure()
     {
         $this->addArguments(array(
@@ -75,9 +76,11 @@ EOF;
 		$searchEngine = 'solr';
 		$sort = SearchSortTypesEnums::SortByVisitorsTimestamp;
 		$loggedInProfileObj = LoggedInProfile::getInstance('',$profileId);
+                $loggedInProfileObj->getDetail('','','*');
 		$SearchParamtersObj = new VisitorsSearch($loggedInProfileObj);
-		$SearchParamtersObj->getSearchCriteria(VisitorAlertEnums::MATCHED_OR_ALL);
+		$SearchParamtersObj->getSearchCriteria(VisitorAlertEnums::MATCHED_OR_ALL,  VisitorAlertEnums::NO_OF_DAYS_BEFORE_MAILER);
 		$SearchParamtersObj->setToSortByPhotoVisitors(1);
+                $SearchParamtersObj->setNoOfResults(self::VISITORS_MAILER_LIMIT);
 		$SearchServiceObj = new SearchService($searchEngine);
 		$SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
 		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,'','','','',$loggedInProfileObj);
