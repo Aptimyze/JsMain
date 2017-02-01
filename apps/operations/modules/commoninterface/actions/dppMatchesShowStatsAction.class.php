@@ -11,7 +11,7 @@
 */
 class dppMatchesShowStatsAction extends sfActions
 {
-	
+	private $limit = 20;
 	/**
      * Executes index action
      *
@@ -21,19 +21,18 @@ class dppMatchesShowStatsAction extends sfActions
 	{
 		$this->profileid = $request->getParameter('pid');
         $this->cid       = $request->getParameter('cid');
-        $limit = 20;
 		$removeFilteredProfiles = false;
 		$compeleteResponse = true;
         $profileObj = LoggedInProfile::getInstance('',$this->profileid);        
 		$profileObj->getDetail('','','*');
 		$partnerObj = new SearchCommonFunctions();
 		$matchesObj = $partnerObj->getMyDppMatches('',$profileObj,$limit,'','','',$removeFilteredProfiles,'','','','',$compeleteResponse);	
-		$resultArr = $matchesObj->getResultsArr(); //getResultsArr
+		$resultArr = $matchesObj->getResultsArr();
 		$this->totalCount = $matchesObj->getTotalResults();				
 		foreach($resultArr as $key=>$value)
 		{
 			$usernameArr[] = $value["USERNAME"];
 		}
-		$this->usernameArr = $usernameArr;		
+		$this->usernameArr = $usernameArr;
 	}
 }
