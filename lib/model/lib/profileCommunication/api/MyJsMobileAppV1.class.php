@@ -59,7 +59,7 @@ $className = get_class($this);
 				}
 				if($key == "MATCH_OF_THE_DAY")
 				{
-					if(MobileCommon::isApp())
+					if(MobileCommon::isIOSApp())
 						continue;
 					else if (LoggedInProfile::getInstance()->getACTIVATED() == 'U') 
 						continue;					
@@ -185,7 +185,7 @@ $className = get_class($this);
 		$displayV1['membership_message'] = $this->getBannerMessage($profileInfo);     
 			
 
-
+//print_r($displayV1);die;
 		return $displayV1;
         }
 
