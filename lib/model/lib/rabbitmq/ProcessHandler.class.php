@@ -169,7 +169,7 @@ class ProcessHandler
  }
  public function updateSeen($type,$body)
  {
-        $currentTime = date('Y-m-j H:i:s');
+        $currentTime = $body['time'];
 	if($body['contactType']==ContactHandler::FILTERED)
         {
                 $contactRObj=new EoiViewLog();
