@@ -2,6 +2,7 @@
 /*
 First argument env
 Second argument json of dynamic variables
+php crontabs/generateConfig.php test '{"url_input":"con.jeevansathi.com","dev_ip":"172.16.3.185","test_ip":"172.16.3.203"}'
 */
 $env = $argv[1];//Env
 $input = $argv[2];//json of dynamic variables

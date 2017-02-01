@@ -204,11 +204,11 @@ public static $test =
 	/****Photos*****/
 
 	/*Search*/
-        "solrServerUrl"      => 'http://%TEST_IP%:8080/solr/',
-        "solrServerUrl1"     => 'http://%TEST_IP%:8080/solr/',
-        "solrServerUrl2"     => 'http://%TEST_IP%:8080/solr/',
-        "solrServerProxyUrl"     => 'http://%TEST_IP%:8080/solr/',
-        "solrServerProxyUrl1"     => 'http://%TEST_IP%:8080/solr/',
+        "solrServerUrl"      => '%TEST_IP%:8080/solr/techproducts',
+        "solrServerUrl1"     => '%TEST_IP%:8080/solr/techproducts',
+        "solrServerUrl2"     => '%TEST_IP%:8080/solr/techproducts',
+        "solrServerProxyUrl"     => '%TEST_IP%:8080/solr/techproducts',
+        "solrServerProxyUrl1"     => '%TEST_IP%:8080/solr/techproducts',
 
 
 
@@ -285,10 +285,10 @@ public static $test =
 
 
 /****Rabbitmq Configurations****/
-       "rabbitmqConfig" => "array('FIRST_SERVER'=>array('HOST'=>'localhost','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'), 'SECOND_SERVER'=>array('HOST'=>'192.168.120.154','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'))",
+       "rabbitmqConfig" => "array('FIRST_SERVER'=>array('HOST'=>'172.16.3.187','PORT'=>'5672','USER'=>'admin','PASS'=>'admin','VHOST'=>'/'), 'SECOND_SERVER'=>array('HOST'=>'192.168.120.154','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'))",
        "rabbitmqManagementPort" => 15672,
 /****mailhost***/
-"newMailHost" => '%DEV_IP%', 
+"newMailHost" => '172.16.3.185', 
 "mailAllowedArray" => 'array("eshajain88@outlook.com")',
 "hindiTranslateURL" => "http://hindi.jeevansathi.com",
 "contactUrl" => "http://contacttest.infoedge.com/",
@@ -334,11 +334,20 @@ public static $test =
         "hideUnimportantFeatureAtPeakLoad"     => 0,
 
        /***openfire config for chat**/
-    "openfireConfig" => "array('HOST'=>'localhost','WSPORT'=>'7070','SERVER_NAME'=>'localhost')",
-    "openfireConfigInternal" => "array('HOST'=>'localhost','PORT'=>'9090','SERVER_NAME'=>'localhost')",
-    "openfireRestAPIKey" => "MhXPRu3f4Aw07EbR",
+    "openfireConfig" => "array('HOST'=>'%TEST_IP%','PORT'=>'9090','WSPORT'=>'7070','SERVER_NAME'=>'testjs-new')",
+    "openfireConfigInternal" => "array('HOST'=>'%TEST_IP%','PORT'=>'9090','WSPORT'=>'7070','SERVER_NAME'=>'testjs-new')",
+    "openfireRestAPIKey" => "kj8WbXpE8l52cdLg",
     "communicationServiceUrl" => "http://%TEST_IP%:8390",
-"multiUserPhotoUrl" =>"http://staging.jeevansathi.com/api/v1/social/getMultiUserPhoto" 
-
+"multiUserPhotoUrl" =>"http://staging.jeevansathi.com/api/v1/social/getMultiUserPhoto",
+"httpsApplicationPhotoUrl" => 'https://xmppdev1.jeevansathi.com',
+        "httpsCloudUrl" => 'https://mediacdn.jeevansathi.com',
+        "profileServiceUrl" => "http://172.16.3.187:8290",
+        "androidChat" => "array('flag' => 1)"
 	];
+
+public static $ipArr = [
+			"dev_ip"=>"172.16.3.185",
+			"test_ip1"=>"172.16.3.203",
+			"test_ip2"=>"172.16.3.156"
+			];
 }
