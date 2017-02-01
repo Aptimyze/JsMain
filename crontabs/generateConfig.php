@@ -2,7 +2,7 @@
 /*
 First argument env
 Second argument json of dynamic variables
-php crontabs/generateConfig.php test '{"url_input":"con.jeevansathi.com","dev_ip":"172.16.3.185","test_ip":"172.16.3.203"}'
+php crontabs/generateConfig.php test '{"url_input":"con.jeevansathi.com"}'
 */
 $env = $argv[1];//Env
 $input = $argv[2];//json of dynamic variables
@@ -12,7 +12,7 @@ $inputArr = get_object_vars(json_decode($input));
 //Dynamic variables
 $urlInput = $inputArr["url_input"];
 $devIp = $inputArr["dev_ip"];
-$testIp = $inputArr["test_ip"];
+//$testIp = $inputArr["test_ip"];
 //Ends
 
 $rootDir = realpath(dirname(__FILE__)."/..");
@@ -72,9 +72,9 @@ foreach ($configArr as $k=>$v){
 		if(strstr($str,'%DEV_IP%')){
 			$str = str_replace("%DEV_IP%","http://".$devIp,$str);
 		}
-		if(strstr($str,'%TEST_IP%')){
+		/*if(strstr($str,'%TEST_IP%')){
 			$str = str_replace("%TEST_IP%","http://".$testIp,$str);
-		}
+		}*/
 		if(strstr($str,'%ROOT_DIR%')){
 			$str = str_replace("%ROOT_DIR%",$rootDir,$str);
 		}
