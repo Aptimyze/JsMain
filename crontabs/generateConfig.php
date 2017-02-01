@@ -11,7 +11,7 @@ $inputArr = get_object_vars(json_decode($input));
 
 //Dynamic variables
 $urlInput = $inputArr["url_input"];
-$devIp = $inputArr["dev_ip"];
+//$devIp = $inputArr["dev_ip"];
 //$testIp = $inputArr["test_ip"];
 //Ends
 
@@ -69,9 +69,9 @@ foreach ($configArr as $k=>$v){
 		elseif(strstr($str,'%URL_INPUT%')){
 			$str = str_replace("%URL_INPUT%","http://".$urlInput,$str);
 		}
-		if(strstr($str,'%DEV_IP%')){
+		/*if(strstr($str,'%DEV_IP%')){
 			$str = str_replace("%DEV_IP%","http://".$devIp,$str);
-		}
+		}*/
 		/*if(strstr($str,'%TEST_IP%')){
 			$str = str_replace("%TEST_IP%","http://".$testIp,$str);
 		}*/

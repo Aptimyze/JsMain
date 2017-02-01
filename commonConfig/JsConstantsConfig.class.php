@@ -26,10 +26,10 @@ public static $dev =
 		"docRoot"            => '%ROOT_DIR%/web',
 		"cronDocRoot"	  => '%ROOT_DIR%',
 		"smartyDir"          => '%ROOT_DIR%/lib/vendor/smarty/libs/Smarty.class.php',
-		"chatIp"             => '%DEV_IP%',
+		"chatIp"             => '172.16.3.185',
 		"regImg"             => '%URL_INPUT%/profile/images/reg',
-		"memcache"            => 'array("HOST"=>"%DEV_IP%", "PORT"=>"11211")',
-		"bmsMemcache"        => 'array("HOST"=>"%DEV_IP%", "PORT"=>"11211")',
+		"memcache"            => 'array("HOST"=>"172.16.3.185", "PORT"=>"11211")',
+		"bmsMemcache"        => 'array("HOST"=>"172.16.3.185", "PORT"=>"11211")',
 		"appDown"            => false,
 		"enableAllPasswordCombinations" => true,
 		"passwordHashingRollback" => false,
@@ -41,7 +41,7 @@ public static $dev =
 		"screenedPhotoDir"   => '%ROOT_DIR%/web/uploads',
 		"ftpUsername"        => 'ftp_user',
 		"ftpPassword"        => 'prinka',
-		"ftpHost"            => '%DEV_IP%',
+		"ftpHost"            => '172.16.3.185',
 
 		/*Search*/
 		"solrServerUrl"      => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
@@ -109,11 +109,11 @@ public static $dev =
 		"iosApnsUrl" =>'ssl://gateway.push.apple.com:2195',
 
 		/****Rabbitmq Configurations****/
-		"rabbitmqConfig" => "array('FIRST_SERVER'=>array('HOST'=>'%DEV_IP%','PORT'=>'5672','USER'=>'admin','PASS'=>'admin','VHOST'=>'/'),'SECOND_SERVER'=>array('HOST'=>'192.168.120.154','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'))",
+		"rabbitmqConfig" => "array('FIRST_SERVER'=>array('HOST'=>'172.16.3.185','PORT'=>'5672','USER'=>'admin','PASS'=>'admin','VHOST'=>'/'),'SECOND_SERVER'=>array('HOST'=>'192.168.120.154','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'))",
 		"rabbitmqManagementPort" => '15672',
 
 		"shortUrlDomain" => 'http://js1.in',
-		"newMailHost" => '%DEV_IP%',
+		"newMailHost" => '172.16.3.185',
 		"mailAllowedArray" => 'array("eshajain88@outlook.com")',
 		"hindiTranslateURL" => "http://hindi.jeevansathi.com",//Doubt
 		"contactUrl" => "http://contact.jeevansathi.com/",//Doubt
