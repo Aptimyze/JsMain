@@ -628,6 +628,15 @@ class InboxMobileAppV1
 		$finalResponse["total"]="$temp";
 		$finalResponse["tracking"] = $displayObj[$infoKey]["TRACKING"];	
 		$finalResponse = array_change_key_case($finalResponse,CASE_LOWER);
+    //Request Call Back Communication
+    $arrAllowedRcbCommunication = array("ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT");
+    if (in_array($infoKey, $arrAllowedRcbCommunication)) {
+      $loggedInProfileObject = LoggedInProfile::getInstance();
+      $rcbObj = new RequestCallBack($loggedInProfileObject);
+      $finalResponse['display_rcb_comm'] = ($rcbObj->getRCBStatus())?'true':'false';
+	$finalResponse['display_rcb_comm_message']="To reach out to your accepted members, you may consider upgrading your membership. Would you like us to call you to explain the benefits of our membership plans?";
+      unset($rcbObj);
+    }
         return $finalResponse;
 	}
 	private function getDisplaylayerText($gender,$infokey,$count,$contactType='')
