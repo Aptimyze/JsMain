@@ -153,7 +153,7 @@ class myjsActions extends sfActions
 				$completionObj=  ProfileCompletionFactory::getInstance("API",$loggedInProfileObj,null);
 				$profileInfo["COMPLETION"]=$completionObj->getProfileCompletionScore();
 				$profileInfo["INCOMPLETE"]=$completionObj->GetAPIResponse("MYJS");
-				$displayObj= $profileCommunication->getDisplay($module,$loggedInProfileObj);
+				
 				$profileInfo["PHOTO"] = NULL;
 				if(MobileCommon::isApp() != "I"||$loggedInProfileObj->getHAVEPHOTO()!="U")
 					$profileInfo["PHOTO"] = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
@@ -163,6 +163,7 @@ class myjsActions extends sfActions
 
 				if(!$appV1DisplayJson)
 				{
+                    $displayObj= $profileCommunication->getDisplay($module,$loggedInProfileObj);
 				$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj,$profileInfo);
 				JsMemcache::getInstance()->set($myjsCacheKey,$appV1DisplayJson);
 				}

@@ -20,20 +20,14 @@
                         <td width="373" height="52" style="padding-left:10px;">
                             <div><img border="0" align="left" vspace="0" hspace="0" style="max-width:204px; width:inherit;" alt="Jeevansathi.com" src="~$IMG_URL`/images/jspc/commonimg/logo1.png"> </div>
                         </td>
-                        <td width="189" valign="middle" style="padding-right:10px;">
-                            <table cellspacing="0" cellpadding="0" border="0" align="right" width="189">
-                                <tr>
-                                    <td align="right" valign="middle" height="50" style="vertical-align:middle;"><a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)OWN_PROFILE:profileid=~$profileid`(/LINK)">My Profile</a> | <a style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;text-decoration: none;" target="_blank" href="(LINK)SUGGESTED_MATCHES:profileid=~$profileid`(/LINK)">My Matches</a> </td>
-                                </tr>
-                            </table>
-                        </td>
                     </tr>
                 </table>
             </td>
         </tr>
         <tr>
             <td>
-                <table style="max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
+                ~if $emailType eq 1`
+                <table style="border-spacing:0px 10px; max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
                     <tr>
                         <td width="20"></td>
                         <td valign="middle" height="35"> Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>, </td>
@@ -42,17 +36,85 @@
                     <tr>
                         <td width="20"></td>
                         <td>
-                <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you some personalized message(s) just a while ago. Shown below are the recent messages received from and sent to <var>{{USERNAME:profileid=~$otherProfileId`}}</var>.
-            </td>
+                It looks like we have received a request from you to delete your profile on Jeevansathi. As the request was made over call, we want to be double sure. Hence, we request you to delete your profile on your own:
+                        </td>
+
                         <td width="20"></td>
                     </tr>
+                
+                <tr>
+       <td></td>
+    <td colspan="2">
+        <table border="0" width="130" align="left" cellspacing="0" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px;">
+            <tr>
+                <td bgcolor="#ad160d" height="27" align="center" width="167"><a href="(LINK)REQUEST_USER_TO_DELETE:profileid=~$profileid`(/LINK)" target="_blank" style="font-size:12px; color:#fff; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;text-decoration: none;"><strong>Delete Profile</strong></a></td>
+            </tr>
+        </table>
+    </td>
+            
+                </tr>
+                <tr>
+                        <td width="20"></td>
+                        <td>
+                Deletion of profiles who have already found a match or have postponed their partner search helps create a better experience for our members. Hence, please try to delete your profile as early as possible.
+                        </td>
+                        <td width="20" height="25"></td>
+                </tr>
+                <tr>
+                        <td width="20"></td>
+                        <td>
+                In case you have found a match, congratulations! If not, we are willing to listen to you and try to change your mind to be a member again. Please get in touch with us if you think we can be of any help.
+                        </td>
+                        <td width="20"></td>
+                </tr>
+
                 </table>
+                ~/if`
+                ~if $emailType eq 2`
+                <table style="border-spacing:0px 10px; max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="20"></td>
+                        <td valign="middle" height="35"> Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>, </td>
+                        <td width="20" height="25"></td>
+                    </tr>
+                    <tr>
+                        <td width="20"></td>
+                        <td>
+                Someone on Jeevansathi has indicated that you are already married/engaged. But we want to be double sure. Hence, we request you to delete your profile on your own if you indeed are engaged/married:
+                        </td>
+
+                        <td width="20"></td>
+                    </tr>
+                
+                <tr>
+      <td></td>
+    <td colspan="2">
+        <table border="0" width="130" align="left" cellspacing="0" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px;">
+            <tr>
+                <td bgcolor="#ad160d" height="27" align="center" width="167"><a href="(LINK)REQUEST_USER_TO_DELETE:profileid=~$profileid`(/LINK)" target="_blank" style="font-size:12px; color:#fff; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;text-decoration: none;"><strong>Delete Profile</strong></a></td>
+            </tr>
+        </table>
+    </td>
+                </tr>
+                <tr>
+                        <td width="20"></td>
+                        <td>
+Deletion of profiles who have already found a match helps create a better experience for our members. Hence, please try to delete your profile as early as possible.
+                        </td>
+                        <td width="20"></td>
+                </tr>
+                <tr>
+                        <td width="20"></td>
+                        <td>
+If you have already found a match, congratulations! If not, please excuse us for the inconvenience. Someone could have incorrectly reported that you are already married/engaged.
+                        </td>
+                        <td width="20"></td>
+                </tr>
+
+                </table>   
+                    
+             ~/if`
             </td>
-        </tr>
-        <tr>
-            <td width="600" valign="top" align="left">
-        ~$messageMailerTuple`
-                </td>
         </tr>
         <tr>
             <td width="600">
@@ -73,72 +135,10 @@
                             </table>
                         </td>
                     </tr>
-                    ~if $RECEIVER_IS_PAID neq "1"`
-                    <tr>
-                        <td>
-                            <table align="left" style="max-width:340px; min-width:240px;" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td>
-                                        <table cellspacing="0" cellpadding="0" border="0" align="left" style="font-family:Arial; font-size:12px; color:#000000; max-width:340px;">
-                                            <tr>
-                                                <td width="20"></td>
-                                                <td width="340" height="24" colspan="2"><font color="#000000" face="Arial" style="line-height:20px;"><strong>Contact Who you want, When you want - Upgrade Now.</strong></font> </td>
-                                            </tr>
-                                            <tr>
-                                                <td width="20"></td>
-                                                <td width="20" valign="top"><img border="0" align="left" width="16" vspace="4" hspace="0" height="17" alt="1" src="~$IMG_URL`/images/mailer/ADRM/bull1.gif"> </td>
-                                                <td height="24">Instantly see Phone/Email of people you like</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="20"></td>
-                                                <td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="2" src="~$IMG_URL`/images/mailer/ADRM/bull2.gif"> </td>
-                                                <td height="24">Initiate Email, Message, Chat with them</td>
-                                            </tr>
-                                            <tr>
-                                                <td width="20"></td>
-                                                <td valign="top"><img border="0" align="left" width="16" vspace="3" hspace="0" height="17" alt="3" src="~$IMG_URL`/images/mailer/ADRM/bull3.gif"> </td>
-                                                <td height="24">Get more Interests and faster Responses</td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                            <table cellspacing="0" cellpadding="0" border="0" align="left" width="" style=" margin:0px">
-                                <tr>
-                                    <td width="20"> </td>
-                                    <td width="20"></td>
-                                    <td height="28"></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td bgcolor="#003a7e" align="center" height="27" style="border:1px solid #003a7e;"><a style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)MEMBERSHIP_COMPARISON:profileid=~$profileid`,source=~$BottomSource`(/LINK)"><strong>~if $variableDiscount`Get ~$vdDisplayText` ~$variableDiscount`% OFF ~if $VD_END_DAY neq ''`till ~$VD_END_DAY` ~$VD_END_MONTH` ~/if`~else`Upgrade Membership~/if`</strong></a> </td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        <table cellspacing="0" cellpadding="0" border="0" align="left" width="198">
-                                            <tr>
-                                                <td width="24" height="29"><img align="right" width="20" vspace="0" hspace="0" height="24" src="~$IMG_URL`/images/mailer/ADRM/lockIC.gif"> </td>
-                                                <td><font color="#575656" face="Arial" style="font-size:11px;"><em>Easy and Secure Payment Options</em></font> </td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td height="10"></td>
-                    </tr>
-                    <tr>
-                        <td height="10" style="border-bottom:1px solid #eae9e9"></td>
-                    </tr>
-                    ~/if`
+                    
                     
                     <tr>
-                        <tr>
-                            <td height="20"></td>
-                        </tr>
+                       
                         <tr>
                             <td valign="top" height="30">
                                 <table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">

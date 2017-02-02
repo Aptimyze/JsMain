@@ -898,6 +898,8 @@ die;
 		}
 	}
 
+
+
 	public static function validateEmail($email){
 		$regExEmail = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/";
 		if (preg_match($regExEmail, $email)) {
