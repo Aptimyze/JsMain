@@ -141,6 +141,7 @@ class MembershipAPIResponseHandler {
         if ($this->userObj->userType == 4 || $this->userObj->userType == 6) {
             $this->renewCheckFlag = 1;
         }
+        
         //set discount info so that it can be used as common variable
         $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj);
         if($this->discountTypeInfo == null){
@@ -154,7 +155,7 @@ class MembershipAPIResponseHandler {
             }
         }
         
-        $this->memApiFuncs->setDiscountDetails($this);
+        $this->memApiFuncs->setDiscountDetails($this,true);
         
         if ($this->memID != "FREE" && $this->memID != "ESJA") {
             $this->memID = $this->memApiFuncs->retrieveCorrectMemID($this->memID, $this);
