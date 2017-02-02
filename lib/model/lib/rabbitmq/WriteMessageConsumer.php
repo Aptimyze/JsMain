@@ -137,6 +137,9 @@ class WriteMessageConsumer
 			$key = $body['key'];
 			$data = JsMemcache::getInstance()->getHashAllValue($key);
 			
+            $orgTZ = date_default_timezone_get();
+            date_default_timezone_set("Asia/Calcutta");
+
 			// print_r($data);die;
 			$timeDiff = floor( (time() - $data['time'])/60 );
 			$senderid=$body['senderid'];
@@ -179,6 +182,7 @@ class WriteMessageConsumer
 				}
 
 			}
+            date_default_timezone_set($orgTZ);
 			break;
 	  }
 	}
