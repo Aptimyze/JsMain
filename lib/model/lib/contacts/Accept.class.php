@@ -182,10 +182,18 @@ class Accept extends ContactEvent
           $profileMemcacheServiceViewerObj->update("INTEREST_EXPIRING",-1);
         }
         if ($filtered!='Y'){
-        $profileMemcacheServiceViewerObj->update("OPEN_CONTACTS",-1);
-        $profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE",-1);
-        if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
-		$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+          if ( $daysDiff > CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT )
+          {
+            $profileMemcacheServiceViewerObj->update("INTEREST_ARCHIVED",-1);
+          }
+          else
+          {
+            $profileMemcacheServiceViewerObj->update("OPEN_CONTACTS",-1);
+            $profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE",-1);
+            if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
+    		$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
+            
+          }
                 }
         else $profileMemcacheServiceViewerObj->update("FILTERED",-1);
 

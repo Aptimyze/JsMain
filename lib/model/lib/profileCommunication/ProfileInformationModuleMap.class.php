@@ -757,7 +757,7 @@ class ProfileInformationModuleMap
 				"SUBTITLE"=> "",
 				"ICONS"=> "",
 				"BUTTONS"=> "ACCEPT|DECLINE",
-				"TRACKING"=> "responseTracking=56",
+				"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_ANDROID,
 		  		"CONTACT_ID"=>"",
 		),
 
@@ -945,7 +945,7 @@ self::$ContactCenterMYJS=Array(
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=54",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
       		"CONTACT_ID"=>"",
 		),
 		"ACCEPTANCES_RECEIVED"=>Array( 
@@ -1308,11 +1308,11 @@ self::$ContactCenterMYJS=Array(
 			"AJAX_FLAG"=> "N",
 			"CALLOUT_MESSAGES"=> "",
 			"VIEW_ALL_LINK"=> "",
-			"TITLE"=> "Interests Archive",
+			"TITLE"=> "Interests Archived",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=53",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED,
       		"CONTACT_ID"=>"",
 		),
 		);
