@@ -705,12 +705,14 @@ class Contacts {
 		else
 			return '';
 	}
-        
+        // profileId1 is sender and profileid2 receiver of interest
         public static function setContactsTypeCache($profileId1,$profileId2,$type){
             if(!$profileId1 || !$profileId2 || !$type)return false;
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
-            JsMemcache::getInstance()->set($sortedArray[0].'_'.$sortedArray[1].'_contactType',$type,self::CONTACT_TYPE_CACHE_EXPIRY);
-            return true;
+            $smallIsWho = $sortedArray[0] == $profileId1 ? 'S' : 'R';
+            $result = $type."_".$smallIsWho;
+            JsMemcache::getInstance()->set($sortedArray[0].'_'.$sortedArray[1].'_contactType',$result,self::CONTACT_TYPE_CACHE_EXPIRY);
+            return $result;
             
         }
         public static function unSetContactsTypeCache($profileId1,$profileId2){
@@ -731,20 +733,24 @@ class Contacts {
 				$ignoreObj = new IgnoredProfiles();
 				if($ignoreObj->ifIgnored($profileId1,$profileId2) || $ignoreObj->ifIgnored($profileId2,$profileId1))
                                 {
-                                       $result='B';
-                                       self::setContactsTypeCache($profileId1, $profileId2, $result);
+                                       $type='B';
+                                       $result = self::setContactsTypeCache($profileId1, $profileId2, $type);
                                 }                
 				else
 				{	 
                                 $shardNo = JsDbSharding::getShardNo($profileId1);
                                 $dbObj = new newjs_CONTACTS($shardNo);
                                 $resArray = $dbObj->getContactRecord($profileId1, $profileId2);
-                                $result = $resArray['TYPE'] ? $resArray['TYPE'] : 'N' ;
-                                self::setContactsTypeCache($profileId1, $profileId2, $result);
+                                $type = $resArray['TYPE'] ? $resArray['TYPE'] : 'N' ;
+                                if($resArray)
+                                    $result = self::setContactsTypeCache($resArray['SENDER'], $resArray['RECEIVER'], $type);
+                                else
+                                    $result = self::setContactsTypeCache($profileId1, $profileId2, $type);
+
                                 }
             
                 }
-
+     return $result;
         
     }
 
