@@ -10,10 +10,11 @@ class InboxMobileAppV1
 	static public $informationTypeFields;
 	static public $myProfileIncompleteFields;
 	static public $tupleTitleField;
-	static public $noresultArray = Array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MATCH_ALERT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED","IGNORED_PROFILES","INTEREST_EXPIRING");
+	static public $noresultArray = Array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MATCH_ALERT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED","IGNORED_PROFILES","INTEREST_EXPIRING","INTEREST_ARCHIVED");
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
 	const INTEREST_EXPIRING = "You have no interests left to respond to";
+	const INTEREST_ARCHIVED = "You have no interests left to respond to";
 	const ACCEPTANCES_RECEIVED = "No one has yet accepted your interest";
 	const ACCEPTANCES_SENT = "You haven't yet accepted any interests sent to you";
 	const INTEREST_SENT = "You haven't sent any interests yet";
@@ -131,6 +132,34 @@ class InboxMobileAppV1
                                 "NAME_OF_USER",
 				),
 	"INTEREST_EXPIRING"=>Array(
+		"PROFILECHECKSUM",
+	                    "USERNAME",
+	                    "GENDER",
+	                    "OCCUPATION",
+	                    "LOCATION",
+	                    "AGE",
+	                    "HEIGHT",
+	                    "RELIGION",
+	                    "CASTE",
+	                    "MTONGUE",
+	                    "INCOME",
+	                    "subscription_icon",
+	                    "subscription_text",
+	                    "TIME",
+	                    "SEEN",
+	                    "edu_level_new",
+	                    "userloginstatus",
+	                    "ProfilePic120Url",
+	                    "ProfilePic450Url",
+	                    "MSTATUS",
+	                    "VERIFICATION_SEAL",
+	                    "VERIFICATION_STATUS",
+	                    "NATIVE_CITY",
+	                    "NATIVE_STATE",
+	                    "ANCESTRAL_ORIGIN",
+	                    "NAME_OF_USER",
+	                    ),
+		"INTEREST_ARCHIVED"=>Array(
 		"PROFILECHECKSUM",
 	                    "USERNAME",
 	                    "GENDER",
@@ -647,6 +676,7 @@ class InboxMobileAppV1
 		switch($infokey){
 			case "INTEREST_RECEIVED":
 			case "INTEREST_EXPIRING":
+			case "INTEREST_ARCHIVED":
 			case "FILTERED_INTEREST":
 				if($count>1)
 				{
