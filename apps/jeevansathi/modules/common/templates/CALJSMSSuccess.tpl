@@ -4,8 +4,36 @@
 
 <input type="hidden" id="CriticalActionlayerId" value="~$calObject.LAYERID`">
 
-~if $calObject.LAYERID !=9`
-<div style="background-color: #09090b;">
+~if $calObject.LAYERID == '11' && $calObject.dppCALGeneric == 0`
+
+        <div id="overlayHead" class="bg1">
+            <div class="txtc pad15">
+                <div class="posrel">
+                    <div class="fontthin f19 white">Desired Partner Profile</div>
+                    <i id="closeFromDesiredPartnerProfile" class=" posabs mainsp srch_id_cross " style="right:0; top:0px;"></i>
+                </div>
+            </div>
+
+        </div>
+ 
+        <div id="overlayMid" class="bg4 pad3 ">
+            <div id="mainHeading" class="color8 fontreg f18 txtc pb10">Relax Your Criteria</div>
+            <div id="dppDescription" class="txtc color8 fontlig f17"></div>
+            <div id="dppSuggestions" class="mb30"></div>
+        </div>
+
+
+        <div id="foot" class="posfix fullwid bg7 btmo">
+            <div class="scrollhid posrel">
+                <input type="submit" id="upgradeSuggestion" class="fullwid dispbl lh50 txtc f16 pinkRipple white" value="Upgrade Desired Partner Profile">
+            </div>
+        </div>
+    
+    
+    
+  
+  ~elseif $calObject.LAYERID !=9`
+      <div style="background-color: #09090b;">
   <div  class="posrel pad18Incomplete">
 
 	<div class="br50p txtc" style='height:80px;'>

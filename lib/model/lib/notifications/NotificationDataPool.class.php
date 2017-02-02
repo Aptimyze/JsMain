@@ -421,7 +421,7 @@ class NotificationDataPool
             $counter = 0;
             $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY("newjs_slave");
             $curDate = date('Y-m-d');
-            $paramsArr["ENTRY_DT"] = date('Y-m-d', strtotime('-7 day',  strtotime($curDate)));
+            $paramsArr["ENTRY_DT"] = date('Y-m-d', strtotime('-30 day',  strtotime($curDate)));
             $matchCount = $matchOfDayObj->getCountForMatchProfile();
             foreach($applicableProfiles as $profileid => $details){
                 $searchResult = SearchCommonFunctions::getMatchofTheDay($profileid);
@@ -469,6 +469,7 @@ class NotificationDataPool
             if(is_array($otherProfiles))
             {
                 $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="JPROFILE","newjs_masterRep");
+                /*
                 $profileStr = implode(",",$nameOfUserProfiles);
                 $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
                 $queryParam["PROFILEID"] = $profileStr;
@@ -476,6 +477,7 @@ class NotificationDataPool
                 foreach ($nameOfUserDetails as $key => $val){
                     $nameDetails[$val["PROFILEID"]] = $val;
                 }
+                */
             }
             unset($otherProfiles);
             unset($nameOfUserProfiles);
@@ -489,9 +491,26 @@ class NotificationDataPool
                     if($getOtherProfilesData[$v1]){
                         $dataAccumulated[$counter]['OTHER'][]=$getOtherProfilesData[$v1];
                         $dataAccumulated[$counter]['ICON_PROFILEID']=$getOtherProfilesData[$v1]["PROFILEID"];
+                        
+                        unset($selfProfileObj);
+                        unset($otherProfileObj);
+                        $selfProfileObj = Profile::getInstance('crm_slave',$k1);
+                        $selfProfileObj->setDetail($applicableProfiles[$k1]);
+
+                        $otherProfileObj = Profile::getInstance('crm_slave',$v1);
+                        $otherProfileObj->setDetail($getOtherProfilesData[$v1]);
+
+                        $nameOfUserClassObj = new NameOfUser();
+                        $res = $nameOfUserClassObj->showNameToProfiles($selfProfileObj, array($otherProfileObj));
+                        
+                        if($res[$v1]["SHOW"] == "1" && $res[$v1]["NAME"] != ""){
+                            $dataAccumulated[$counter]['NAME_OF_USER']= $res[$v1]["NAME"];
+                        }
+                        /*
                         if($nameDetails[$k1]["DISPLAY"] == "Y" && $nameDetails[$v1]["DISPLAY"] == "Y"){
                             $dataAccumulated[$counter]['NAME_OF_USER']= $nameDetails[$v1]["NAME"];
                         }
+                        */
                     }
                     $dataAccumulated[$counter]['COUNT'] = "SINGLE";
                     $counter++;
@@ -501,6 +520,18 @@ class NotificationDataPool
             unset($matchOfDayMasterObj);
             unset($matchedProfiles);
             return $dataAccumulated;
+        }
+    }
+    
+    public function notificationLogging($logArr,$logPoint){
+        if (JsConstants::$whichMachine == 'test' && NotificationEnums::$enableNotificationLogging == true) {
+            print_r($logPoint);
+            print_r("\n");
+            foreach($logArr as $key => $val){
+                print_r($key);
+                print_r($val);
+                print_r("\n");
+            }
         }
     }
 }

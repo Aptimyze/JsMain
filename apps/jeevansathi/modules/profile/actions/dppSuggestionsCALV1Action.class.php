@@ -6,7 +6,7 @@
  * @package    jeevansathi
  * @subpackage profile
  * @author     Sanyam Chopra
- * @date	   15th September 2016
+ * @date	   24th Jan 2017
  */
 
 class dppSuggestionsCALV1Action extends sfActions 
@@ -22,6 +22,8 @@ class dppSuggestionsCALV1Action extends sfActions
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		$this->loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 		$calLayer = 1;
+
+		//Call to fetch already filled data in dpp
 		ob_start();
 		$request->setParameter('sectionFlag','dpp');
 		$request->setParameter("internal","1");
@@ -30,14 +32,9 @@ class dppSuggestionsCALV1Action extends sfActions
 		$output = ob_get_contents();
 		ob_end_clean();
 		$decodedData = json_decode($output);
-		foreach($decodedData as $key=>$value)
-		{			
-			if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($value->value,"DM") === false)
-			{
-				$dppDataArr[$key]["type"] = substr($value->key,2);
-				$dppDataArr[$key]["data"] = explode(",",$value->value);
-			}
-		}		
+
+		//getDppDataArr is used to format the data in the required format.
+		$dppDataArr = $this->getDppDataArr($decodedData);		
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
 		$profileId = $this->loggedInProfileObj->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
@@ -46,22 +43,31 @@ class dppSuggestionsCALV1Action extends sfActions
 		//Trends arr is fetched from twoWayMatches.Trends table
 		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields,$trendsObj);
 		unset($trendsObj);
-		foreach($dppDataArr as $key=>$val)
+		if(is_array($dppDataArr))
 		{
-			foreach($val as $key1=>$val1)
-			{									
-				$type = $val["type"];				
-				if($key1 == "data")
-				{	
-					$finalArr[] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1,$calLayer);
-				}					
+			foreach($dppDataArr as $key=>$val) 
+			{
+				if(is_array($val))
+				{
+					foreach($val as $key1=>$val1)
+					{									
+						$type = $val["type"];				
+						if($key1 == "data")
+						{	
+							$finalArr[] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1,$calLayer);
+						}					
+					}
+				}			
 			}
 		}
+
+		
+		
 		if(MobileCommon::isApp())
 		{
-			$finalArr = $this->getFormattedArrForApp($finalArr);			
-			$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;			
+			$finalArr = $this->getFormattedArrForApp($finalArr);						
 		}
+		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;	
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -78,7 +84,7 @@ class dppSuggestionsCALV1Action extends sfActions
 	}
 
 	public function getFormattedArrForApp($finalArr)
-	{		
+	{
 		$i=0;
 		foreach($finalArr as $key => $value)
 		{
@@ -111,6 +117,68 @@ class dppSuggestionsCALV1Action extends sfActions
 			}
 		}
 		return $finalArrApp;
+	}
+
+	public function getDppDataArr($decodedData)
+	{		
+		$incomeStr= "";
+		if(MobileCommon::isNewMobileSite())
+		{
+			if(is_object($decodedData)) //Is array checks have been added before loops
+			{
+				foreach($decodedData as $key=>$value) 
+				{
+					if(is_object($value))
+					{
+						foreach($value as $k1=>$v1)
+						{
+							if($k1 == DppAutoSuggestEnum::$OnClickLabel) 
+							{
+								if(is_array($v1))
+								{
+									foreach($v1 as $k2=>$v2)
+									{
+										if(in_array($v2->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($v2->value,"DM") === false)
+										{
+											if(in_array($v2->key,DppAutoSuggestEnum::$incomeFieldJSMS))
+											{						
+												$incomeArr[] = $v2->value;
+											}
+											else
+											{
+												$dppDataArr[$i]["type"] = substr($v2->key,2);
+												$dppDataArr[$i]["data"] = explode(",",$v2->value);
+												$i++;
+											}																
+										}
+									}
+								}																				
+							}
+						}
+					}
+				}
+			}
+			
+			$incomeStr = implode(",",$incomeArr);
+			$dppDataArr[$i]["type"] = "INCOME";
+			$dppDataArr[$i]["data"] = explode(",",$incomeStr);
+		}
+		else
+		{
+			if(is_array($decodedData))
+			{
+				foreach($decodedData as $key=>$value)
+				{	
+					if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($value->value,"DM") === false)
+					{
+						$dppDataArr[$key]["type"] = substr($value->key,2);
+						$dppDataArr[$key]["data"] = explode(",",$value->value);
+					}
+				}
+			}			
+		}
+
+		return $dppDataArr;
 	}
 }
 ?>

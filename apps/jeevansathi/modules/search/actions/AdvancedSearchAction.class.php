@@ -27,6 +27,9 @@ class AdvancedSearchAction extends sfActions
 		else
 		{
 			$this->loggedIn=1;
+                        $pid = $loggedInProfileObj->getPROFILEID();
+                        JsMemcache::getInstance()->set("cachedLSMS$pid","");
+                        JsMemcache::getInstance()->set("cachedLSMR$pid","");
 		}
 		if($request->getParameter("searchId"))
 			$parameters["SEARCHID"] = $request->getParameter("searchId");

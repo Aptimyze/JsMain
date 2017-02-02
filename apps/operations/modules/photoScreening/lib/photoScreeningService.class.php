@@ -1414,13 +1414,17 @@ class photoScreeningService
                                         if ($paramArr["interface"] == $interfaceArr["2"])
                                         {
                                                 if(strstr($picObj->getOriginalPicUrl(),"uploads"))
+                                                {
                                                        $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getOriginalPicUrl();
+                                                       $pictureToBeScreenedArr["profilePic"]["MainPicUrl"] = $picObj->getMainPicUrl()."?time=".time();
+                                                }
                                                 else
                                                 {
                                                         if($picObj->getOriginalPicUrl()==$picObj->getMainPicUrl())
-                                                                $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getMainPicUrl();
+                                                            $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getMainPicUrl();
                                                         else
 															$pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getOriginalPicUrl();
+														 $pictureToBeScreenedArr["profilePic"]["MainPicUrl"] = $picObj->getMainPicUrl()."?time=".time();
                                                
                                                       // $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = str_replace("mediacdn.jeevansathi.com","jeevansathi.s3.amazonaws.com",$picObj->getOriginalPicUrl()); commented because image not displaying
                                                 }

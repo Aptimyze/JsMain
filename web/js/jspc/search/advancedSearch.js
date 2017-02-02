@@ -451,7 +451,7 @@ function OnScrollChange(event){
    if (checkVisible($('#moreVisArea'))) {
        $('#srchscroll').removeClass( "advsti" );
     } else {
-        $('#srchscroll').addClass( "advsti" );
+       $('#srchscroll').addClass( "advsti" );
     }
 }
 function checkVisible( elm, eval ) {
@@ -606,7 +606,7 @@ $(function(){
   
   
 //script for fixing the search btn at the bottom
-   $(document).on("scroll", OnScrollChange);  
+   //$(document).on("scroll", OnScrollChange);  
   
   $('.js-fielddd').click(function(ev){
     
