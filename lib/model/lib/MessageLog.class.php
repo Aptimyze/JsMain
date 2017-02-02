@@ -77,18 +77,92 @@ class MessageLog
 		return $count;
 	}
 	public function getEOIMessages($loginProfile,$profileArray)
-	{
-		
+	{    
+		$request = sfContext::getInstance()->getRequest();
+		$infoTypeId = $request->getParameter('infoTypeId');
 		$dbName = JsDbSharding::getShardNo($loginProfile);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getEOIMessages(array($loginProfile),$profileArray);
+		$profileObj = new Profile('',$loginProfile);
+
 		foreach($messageArray as $key=>$value)
-		{
+		{	
+			$receiverObj = new Profile('',$value['RECEIVER']);
 			$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
 			$value["MESSAGE"] = str_ireplace($breaks,"\r\n",$value["MESSAGE"]);
 			$message[$key] = $value;
+		}		
+
+		foreach ($messageArray as $key => $value) {
+			$messagedProfileArray[] += $value['RECEIVER'];
 		}
+
+		if($messageArray != NULL){ 
+ 		$noMessageArray = array_diff($profileArray, $messagedProfileArray);
+ 		}
+ 		else
+ 		{  
+ 			$noMessageArray = $profileArray;
+ 		}
+
+          if(is_array($noMessageArray))
+          {
+ 			$databaseName = JsDbSharding::getShardNo($loginProfile);
+			$messageLogObj = new NEWJS_MESSAGE_LOG($databaseName);
+ 			$noMessageDetailArray = $messageLogObj->fetchDetailsForNoMessage($loginProfile,$noMessageArray,$infoTypeId);
+
+ 		foreach ($noMessageDetailArray as $key => $value) { 		
+ 			
+ 			if($infoTypeId == 1 || $infoTypeId == 12 )
+ 			{
+ 				$loginProfile = $value['SENDER'];
+ 			}
+
+			if($value['TYPE']=='I' && $this->EOIFromRB($loginProfile,$value['RECEIVER']))
+			{ 
+
+				if($this->isJsDummyMember($value['SENDER']))
+				{  
+					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
+							$messageForRB=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
+					else
+					{
+							$draftsObj = new ProfileDrafts($profileObj);
+							$messageForRB=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
+							unset($draftsObj);
+					}
+				}
+				else
+					$messageForRB= Messages::getMessage(Messages::AP_MESSAGE,array('USERNAME'=>$profileObj->getUSERNAME()));
+ 				
+					$RBMessageDetailArray[$value['RECEIVER']] = $messageForRB;
+					
+			}
+         }
+       
+       	foreach ($noMessageDetailArray as $key => $value) {
+
+       		if($RBMessageDetailArray[$value['RECEIVER']] != NULL)
+       		{
+       			$noMessageDetailArray[$key]['MESSAGE']=$RBMessageDetailArray[$value['RECEIVER']];
+       		}
+			else
+			{
+				unset($noMessageDetailArray[$key]);
+			}
+       	}
+       }
+       if($message!= NULL)
+       {   
+       $message = array_merge($noMessageDetailArray,$message);
+   	   }
+   	   else
+   	   {
+   	   	  $message = $noMessageDetailArray;
+   	   }
+
 		return $message;
+       		
 	}
 	public function getEOIMessagesForChat($loginProfile,$profileArray)
 	{
@@ -168,10 +242,36 @@ class MessageLog
 	
 	public function getCommunicationHistory($viewer,$viewed)
 	{
-		
+
 		$dbName = JsDbSharding::getShardNo($viewer);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed);
+		$receiverObj = new Profile('',$viewed);
+		$profileObj = new Profile('',$viewer);
+		//if($messageArray['MESSAGE'] == '' && )
+
+		foreach ($messageArray as $key => $value) {
+
+			if($value['TYPE']=='I' && $value['MESSAGE'] == NULL && $this->EOIFromRB($value['SENDER'],$value['RECEIVER']))
+			{ 
+				if($this->isJsDummyMember($viewer))
+				{
+					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
+							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
+					else
+					{
+							$draftsObj = new ProfileDrafts($profileObj);
+							$message=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
+							unset($draftsObj);
+					}
+				}
+				else
+					$message= Messages::getMessage(Messages::AP_MESSAGE,array('USERNAME'=>$profileObj->getUSERNAME()));
+
+					$messageArray[$key]['MESSAGE'] = $message;
+				
+			}
+		}
 		return $messageArray;
 	}
 
@@ -278,5 +378,35 @@ if($limit == 1000000)
             }
             return $finalInnerArr;
         }
+
+      private function isJsDummyMember($profileid)
+	{
+		if($this->isDummy[0]==$profileid)
+			return $this->isDummy[1];
+
+		$dbObj=new jsadmin_PremiumUsers;
+		$this->isDummy[0]=$profileid;
+		if($dbObj->isDummy($profileid))
+		{
+			$this->isDummy[1]=true;
+			return true;
+		}
+		$this->isDummy[1]=false;
+		return false;
+	}
+
+	public function EOIFromRB($sender,$receiver)
+	{
+
+       $dbName = JsDbSharding::getShardNo($sender,'');
+	   $dbObj = new newjs_CONTACTS($dbName);
+	   $isRB = $dbObj->isRBContact($sender,$receiver);
+
+	   if($isRB == 1)
+	   {  
+	   		return 1;
+	   }
+	   return 0;
+	}
 }
 ?>

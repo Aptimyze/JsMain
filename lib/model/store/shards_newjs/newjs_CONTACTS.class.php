@@ -1231,6 +1231,29 @@ public function getSendersPending($chunkStr)
     		{
     			throw new jsException($e);	
     		}
-    	}	
+    	}
+
+    public function isRBContact($sender,$receiver)
+	{
+                if(!$sender || !$receiver)
+                        throw new jsException("","PROFILEID IS BLANK IN newjs_CONTACTS.class.php");
+		try
+		{
+			$sql = "SELECT count(*) as CNT from newjs.CONTACTS WHERE SENDER =:SENDER AND RECEIVER = :RECEIVER and MSG_DEL =:MSG_DEL";
+			$res=$this->db->prepare($sql);
+			$res->bindValue(":RECEIVER",$receiver,PDO::PARAM_INT);
+			$res->bindValue(":SENDER",$sender,PDO::PARAM_INT);
+			$res->bindValue(":MSG_DEL","Y",PDO::PARAM_STR);
+			$res->execute();
+			$row = $res->fetch(PDO::FETCH_ASSOC);
+			$val = $row['CNT'];
+			return $val;
+		}
+		catch (PDOException $e)
+                {
+                        throw new jsException($e);
+                }
+
+	}	
 }
 ?>
