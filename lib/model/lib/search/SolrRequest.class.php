@@ -24,7 +24,8 @@ class SolrRequest implements RequestHandleInterface
                         $profileObj = LoggedInProfile::getInstance('newjs_master');
                         if($profileObj->getPROFILEID())
                 	{ 
-                        	if($profileObj->getPROFILEID()%7>2)
+                        	//if($profileObj->getPROFILEID()%7>2)
+				if($profileObj->getPROFILEID()%2==0)
 	                                $this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
         	                else
                 	                $this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
@@ -34,7 +35,7 @@ class SolrRequest implements RequestHandleInterface
 				if(JsConstants::$whichMachine=='matchAlert') /* new matches load on one server */
 	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
 				else
-	                        	$this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
+	                        	$this->solrServerUrl = JsConstants::$solrServerLoggedOut."/select";
 	                }
               		$this->profilesPerPage = SearchCommonFunctions::getProfilesPerPageOnSearch($searchParamtersObj);
 			/*
@@ -165,7 +166,14 @@ class SolrRequest implements RequestHandleInterface
 	*/	
 	public function sendCurlPostRequest($urlToHit,$postParams)
 	{
+		$start = strtotime("now");
 		$this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+                $end= strtotime("now");
+                $diff = $end - $start;
+                if($diff > 2){
+                        //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold".date('Y-m-d').".txt";
+                        //file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
+                }
 	}
 
         /**
@@ -556,7 +564,7 @@ class SolrRequest implements RequestHandleInterface
 
 			$sortstringArr[] = $exp." ".$asc_or_descArr[$k];
 		}
-
+                $sortstringArr[] = 'id desc';
 		if($sortstringArr)
 			$this->filters[]="&sort=".implode(",",$sortstringArr);
 		if($this->searchParamtersObj->getFL_ATTRIBUTE())

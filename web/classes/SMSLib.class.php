@@ -612,6 +612,9 @@ class SMSLib
             case "CRM_SMS_APP_URL":
                 $appStoreUrl = $this->SITE_URL . "/SMS-Download-Android-App";
                 return $this->getShortURL($appStoreUrl, '', '', $withoutLogin = 1);
+            case "LINK_DEL":
+               $linkToDel = $this->SITE_URL . "/settings/jspcSettings?hideDelete=1";
+                return $this->getShortURL($linkToDel, '', '', $withoutLogin = 0);
             default:
                 return "";
         }

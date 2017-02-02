@@ -2049,6 +2049,9 @@ class MembershipHandler
                 }
             }
             $prevDisc = round(($prevDiscAmt/$prevTotAmt)*100, 2);
+	    if($prevDisc>=100){
+		$prevDisc =0;
+	    }	
         } else {
             $prevDisc = 0;
         }

@@ -13,6 +13,14 @@ class MyJsMobileAppV1
 	static public $noTupleText;
 	static public $tupleTitleField ;
 
+
+    public static function getCacheKey($pid)
+        {
+
+        return $pid."_MYJS_CACHED_DATA";
+
+    	}
+
 	public function getProfilePicAppV1($profileObj)
 	{
 		$pictureService = new PictureService($profileObj);
