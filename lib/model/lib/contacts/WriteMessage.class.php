@@ -212,7 +212,10 @@ class WriteMessage extends ContactEvent{
       $key .= $receiver->getPROFILEID().'-'.$sender->getPROFILEID();
     }
 
-    $time = time();
+    $orgTZ = date_default_timezone_get();
+    date_default_timezone_set("Asia/Calcutta");
+    $time = time();   
+
     $msgTime = date("g:i a",$time);
     $formattedMsg = '<strong><TAG>'.$sender->getUSERNAME()."</TAG>, $msgTime: ".'</strong>'.$message;
     $arrValue = array("time"=>time(),"message"=>$formattedMsg,"Receivers"=>$receiver->getPROFILEID(), "sendToBoth" => 0);
@@ -230,8 +233,10 @@ class WriteMessage extends ContactEvent{
         $arrValue['sendToBoth'] = 1;  
       }
     }
-    // var_dump($arrValue);die;
+    
     JsMemcache::getInstance()->setHashObject($key,$arrValue);
+
+    date_default_timezone_set($orgTZ);
     return $key;
   }
 
