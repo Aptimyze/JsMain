@@ -18,25 +18,23 @@ class dppSuggestionsCALV1Action extends sfActions
 	*/
 	public function execute($request)
 	{
-		
-		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
-		$this->loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
 		$calLayer = 1;
+		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
+		$this->loginProfile = LoggedInProfile::getInstance();			
+		$apiProfileSectionObj=  ApiProfileSections::getApiProfileSectionObj($this->loginProfile);		
+		
+		//created obj of EditDetails
+		$editDetailsObj = new EditDetails();
+		$jpartnerObj=$editDetailsObj->getJpartnerObj($this);
+		$this->loginProfile->setJpartner($jpartnerObj);
 
-		//Call to fetch already filled data in dpp
-		ob_start();
-		$request->setParameter('sectionFlag','dpp');
-		$request->setParameter("internal","1");
-		$jsonData = sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditV1");
-
-		$output = ob_get_contents();
-		ob_end_clean();
-		$decodedData = json_decode($output);
-
+		//This decoded data is an array and not an object. Therefore, is_array checks need to be applied and forloops need to be altered
+		$decodedData =  $editDetailsObj->getDppValuesArr($apiProfileSectionObj,'1');				
+			
 		//getDppDataArr is used to format the data in the required format.
 		$dppDataArr = $this->getDppDataArr($decodedData);		
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
-		$profileId = $this->loggedInProfileObj->getPROFILEID();
+		$profileId = $this->loginProfile->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
 		$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
 
@@ -67,7 +65,7 @@ class dppSuggestionsCALV1Action extends sfActions
 		{
 			$finalArr = $this->getFormattedArrForApp($finalArr);						
 		}
-		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;	
+		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;		
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -124,11 +122,11 @@ class dppSuggestionsCALV1Action extends sfActions
 		$incomeStr= "";
 		if(MobileCommon::isNewMobileSite())
 		{
-			if(is_object($decodedData)) //Is array checks have been added before loops
+			if(is_array($decodedData)) //Is array checks have been added before loops
 			{
 				foreach($decodedData as $key=>$value) 
 				{
-					if(is_object($value))
+					if(is_array($value))
 					{
 						foreach($value as $k1=>$v1)
 						{
@@ -138,16 +136,16 @@ class dppSuggestionsCALV1Action extends sfActions
 								{
 									foreach($v1 as $k2=>$v2)
 									{
-										if(in_array($v2->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($v2->value,"DM") === false)
+										if(in_array($v2["key"],DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($v2["value"],"DM") === false)
 										{
-											if(in_array($v2->key,DppAutoSuggestEnum::$incomeFieldJSMS))
+											if(in_array($v2["key"],DppAutoSuggestEnum::$incomeFieldJSMS))
 											{						
-												$incomeArr[] = $v2->value;
+												$incomeArr[] = $v2["value"];
 											}
 											else
 											{
-												$dppDataArr[$i]["type"] = substr($v2->key,2);
-												$dppDataArr[$i]["data"] = explode(",",$v2->value);
+												$dppDataArr[$i]["type"] = substr($v2["key"],2);
+												$dppDataArr[$i]["data"] = explode(",",$v2["value"]);
 												$i++;
 											}																
 										}
@@ -169,10 +167,10 @@ class dppSuggestionsCALV1Action extends sfActions
 			{
 				foreach($decodedData as $key=>$value)
 				{	
-					if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($value->value,"DM") === false)
+					if(in_array($value["key"],DppAutoSuggestEnum::$SUGGESTION_FIELDS) && strpos($value->value,"DM") === false)
 					{
-						$dppDataArr[$key]["type"] = substr($value->key,2);
-						$dppDataArr[$key]["data"] = explode(",",$value->value);
+						$dppDataArr[$key]["type"] = substr($value["key"],2);
+						$dppDataArr[$key]["data"] = explode(",",$value["value"]);
 					}
 				}
 			}			

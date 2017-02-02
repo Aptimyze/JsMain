@@ -19,26 +19,25 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 	public function execute($request)
 	{		
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
-		$this->loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');	
+		$this->loginProfile = LoggedInProfile::getInstance('newjs_master');	
 		$this->hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
 		$this->hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
 		$calLayer = 1;
 
-		//Call to get the data filled in dpp
-		ob_start();
-		$request->setParameter('sectionFlag','dpp');
-		$request->setParameter("internal","1");
-		$jsonData = sfContext::getInstance()->getController()->getPresentationFor("profile", "ApiEditV1");
+		$apiProfileSectionObj=  ApiProfileSections::getApiProfileSectionObj($this->loginProfile);		
+		
+		//created obj of EditDetails
+		$editDetailsObj = new EditDetails();
+		$jpartnerObj=$editDetailsObj->getJpartnerObj($this);
+		$this->loginProfile->setJpartner($jpartnerObj);
 
-		$output = ob_get_contents();
-		ob_end_clean();
-		
-		$decodedData = json_decode($output);
-		$dppSaveData = json_decode($request->getParameter("dppSaveData"));			
-		
-		$dppDataArr = $this->getDppFilledData($decodedData);				
+		//This decoded data is an array and not an object. Therefore, is_array checks need to be applied and forloops need to be altered
+		$decodedData =  $editDetailsObj->getDppValuesArr($apiProfileSectionObj,'1');
+				
+		$dppSaveData = json_decode($request->getParameter("dppSaveData"));					
+		$dppDataArr = $this->getDppFilledData($decodedData);
+
 		$finalArr = $this->getFinalSubmitData($dppSaveData,$dppDataArr);		
-
 		ob_start();
 		//$request->setParameter('sectionFlag','dpp');
 		$request->setParameter("fromBackend",false);
@@ -52,7 +51,7 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 
 	//This function appends the values of the dpp selected from the CAL to the already set values in the dpp
 	public function getFinalSubmitData($dppSaveData,$dppDataArr)
-	{		
+	{	
 		if(is_array($dppSaveData))
 		{
 			foreach($dppSaveData as $key=>$value)
@@ -111,11 +110,11 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 	{
 		if(MobileCommon::isNewMobileSite())
 		{
-			if(is_object($decodedData))
+			if(is_array($decodedData))
 			{
 				foreach($decodedData as $key=>$value)
 				{
-					if(is_object($value))
+					if(is_array($value))
 					{
 						foreach($value as $k1=>$v1)
 						{
@@ -125,15 +124,15 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 								{
 									foreach($v1 as $k2=>$v2)
 									{
-										if(in_array($v2->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
+										if(in_array($v2["key"],DppAutoSuggestEnum::$SUGGESTION_FIELDS))
 										{
-											if(in_array($v2->key,DppAutoSuggestEnum::$incomeFieldJSMS))
+											if(in_array($v2["key"],DppAutoSuggestEnum::$incomeFieldJSMS))
 											{									
-												$incomeArr[] = $v2->value;
+												$incomeArr[] = $v2["value"];
 											}
 											else
 											{
-												$dppDataArr[substr($v2->key,2)] = $v2->value;
+												$dppDataArr[substr($v2["key"],2)] = $v2["value"];
 											}								
 										}
 									}
@@ -148,13 +147,13 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		}
 		else
 		{
-			if(is_object($decodedData))
+			if(is_array($decodedData))
 			{
 				foreach($decodedData as $key=>$value)
 				{
-					if(in_array($value->key,DppAutoSuggestEnum::$SUGGESTION_FIELDS))
+					if(in_array($value["key"],DppAutoSuggestEnum::$SUGGESTION_FIELDS))
 					{				
-						$dppDataArr[substr($value->key,2)] = $value->value;
+						$dppDataArr[substr($value["key"],2)] = $value["value"];
 					}
 				}
 			}			
