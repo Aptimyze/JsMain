@@ -163,6 +163,11 @@ class RequestHandlerConfig
 			"notificationSubscriptionStatus" => array("v1" => "N", "v3" => "N")
 		),
 		"profile" => array("gunascore" => array("v1" => "N", "v2" => "N", "v3" => "N"),
+		),		
+ 		"register" => array("staticTablesData" => array("v1" => "N", "v2" => "N", "v3" => "N"),
+ 		),
+ 		"api" => array("versionupgrade" => array("v1" => "N", "v2" => "N", "v3" => "N"),
+ 			"hamburgerDetails" => array("v1" => "N", "v2" => "N", "v3" => "N"),
 		),
 	);
 
