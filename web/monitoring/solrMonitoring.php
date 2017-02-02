@@ -3,6 +3,7 @@ include_once(JsConstants::$docRoot."/profile/SymfonySearchFunctions.class.php");
 $solr1 = JsConstants::$solrServerUrl;
 $solr1 = JsConstants::$solrServerUrl;
 $solr2 = JsConstants::$solrServerUrl1;
+$solr3 = JsConstants::$solrServerUrl3;
 $today    = date("Y-m-d");
 $yesterday = date("Y-m-d",strtotime("-3 day",strtotime($today)));
 $daily = "&fq=ENTRY_DT:[".$yesterday."T00:00:00Z%20".$today."T00:00:00Z]";
@@ -13,12 +14,20 @@ $url[470000] = $solr1.'/select?q=*:*&fq=GENDER:(M)';
 $url[500] = $solr1.'/select?q=*:*'.$daily;
 $url[150] = $solr1.'/select?q=*:*&fq=GENDER:(F)'.$daily;
 $url[160] = $solr1.'/select?q=*:*&fq=GENDER:(M)'.$daily;
+
 $url[670001] = $solr2.'/select?q=*:*';
 $url[200001] = $solr2.'/select?q=*:*&fq=GENDER:(F)';
 $url[470001] = $solr2.'/select?q=*:*&fq=GENDER:(M)';
 $url[501] = $solr2.'/select?q=*:*'.$daily;
 $url[151] = $solr2.'/select?q=*:*&fq=GENDER:(F)'.$daily;
 $url[161] = $solr2.'/select?q=*:*&fq=GENDER:(M)'.$daily;
+
+$url[670002] = $solr3.'/select?q=*:*';
+$url[200002] = $solr3.'/select?q=*:*&fq=GENDER:(F)';
+$url[470002] = $solr3.'/select?q=*:*&fq=GENDER:(M)';
+$url[502] = $solr3.'/select?q=*:*'.$daily;
+$url[152] = $solr3.'/select?q=*:*&fq=GENDER:(F)'.$daily;
+$url[162] = $solr3.'/select?q=*:*&fq=GENDER:(M)'.$daily;
 foreach($url as $k=>$v)
 {
         $url1=$v."&wt=phps";
@@ -27,10 +36,13 @@ foreach($url as $k=>$v)
         $totalResults = $res['response']['numFound'];
         if($totalResults < $k)
         {
-			if($k%2==0)
+			if($k%3==0)
 				$fromServer[0]="from server 1";
-			else
+			elseif($k%3==1)
 				$fromServer[1]="from server 2";
+                        else
+                                $fromServer[1]="from server 4";
+                        
             $msg="TotalResults:$totalResults , Expected:More than $k        ";
         }
 } 
