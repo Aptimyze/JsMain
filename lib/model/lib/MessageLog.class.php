@@ -84,7 +84,7 @@ class MessageLog
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getEOIMessages(array($loginProfile),$profileArray);
 
-	
+	//print_r($arrayForRB); die('aasasdasd');
 		foreach($messageArray as $key=>$value)
 		{	
 			$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
@@ -103,6 +103,7 @@ class MessageLog
  		{  
  			$noMessageArray = $profileArray;
  		}
+
  /*Getting Messages for all the profileIds which are RB*/
           if(is_array($noMessageArray))
           {
@@ -112,7 +113,7 @@ class MessageLog
 
 		
 			if($infoTypeId == 1 || $infoTypeId == 12 )
-			{
+			{  
  			foreach ($noMessageDetailArray as $key => $value) {
  				$noMessageDetailArray[$key]['MSG_DEL'] = $arrayForRB[$value['SENDER']]['MSG_DEL'];
  			}
@@ -125,6 +126,7 @@ class MessageLog
 	
  			}
 
+   // print_r($noMessageDetailArray); die;
  		foreach ($noMessageDetailArray as $key => $value) { 		
 
 			if($value['TYPE']=='I' && $value['MSG_DEL'] == 'Y')
@@ -143,27 +145,35 @@ class MessageLog
 					$viewerProfile = $loginProfile; 			
 				}	
 				
-				$messageForRB = $this->getRBMessage($viewerProfile,$receiverObj,$profileObj);	
+				$messageForRB = $this->getRBMessage($viewerProfile,$receiverObj,$profileObj);
+				if($infoTypeId == 6)	
 				$RBMessageDetailArray[$value['RECEIVER']] = $messageForRB;	
+				else if($infoTypeId == 1 || $infoTypeId == 12 )
+				$RBMessageDetailArray[$value['SENDER']] = $messageForRB;
 				unset($profileObj);
 				unset($receiverObj);	
 			}
 
          }
-       
+         //print_r($RBMessageDetailArray); die;
+       //  print_r($noMessageDetailArray); die;
+         if($infoTypeId == 1 || $infoTypeId == 12 )
+         	$toLook = 'SENDER';
+         else
+         	$toLook = 'RECEIVER';
        	foreach ($noMessageDetailArray as $key => $value) {
 
-       		if($RBMessageDetailArray[$value['RECEIVER']] != NULL)
+       		if($RBMessageDetailArray[$value[$toLook]] != NULL)
        		{
-       			$noMessageDetailArray[$key]['MESSAGE']=$RBMessageDetailArray[$value['RECEIVER']];
+       			$noMessageDetailArray[$key]['MESSAGE']=$RBMessageDetailArray[$value[$toLook]];
        		}
 			else
 			{
 				unset($noMessageDetailArray[$key]);
 			}
        	}
-       }
 
+       }
 
        if($message!= NULL)
        {   
