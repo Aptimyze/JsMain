@@ -169,7 +169,7 @@ class NotificationFunctions
                         return;
         }
         
-        public function stopNotificationInPeakHours(){
+        public static function stopNotificationInPeakHours(){
             $currentHr = date('H');
             $peakHours = array("10","11","12","13"); //In EST;
             if(in_array($currentHr, $peakHours)){

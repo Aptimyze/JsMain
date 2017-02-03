@@ -20,6 +20,9 @@ class InstantAppNotification
   }
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='')
   {
+    if(NotificationFunctions::stopNotificationInPeakHours()){
+        return;
+    }
 	$notificationSentCount = $this->getNotificationSentCount($selfProfile);
 	$notificationlimit = $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey];
 	if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) || $notificationlimit>$notificationSentCount)
