@@ -94,7 +94,9 @@ class VariableDiscountHandler
                 $activationDt           =$lastVdGivenDetails['ENTRY_DT'];
 
                 $todayDate              = date("Y-m-d");
-                if(strtotime($startDate) != strtotime($todayDate))
+		$timeVal		=date('H');
+		$timeArr		=array("18","19","20","21","22","23");
+                if((strtotime($startDate) != strtotime($todayDate)) && (!in_array($timeVal, $timeArr)))
 			return;
 
                 $sql1 ="select * from billing.VARIABLE_DISCOUNT_POOL_TECH";
