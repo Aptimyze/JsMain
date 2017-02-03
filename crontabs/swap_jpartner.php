@@ -22,6 +22,9 @@ include_once(JsConstants::$docRoot."/commonFiles/RevampJsDbFunctions.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect_functions.inc");
 
+if(CommonUtility::hideFeaturesForUptime())
+	successfullDie();
+
 
 $mysqlObj=new Mysql;
 //$db2 = connect_slave();
