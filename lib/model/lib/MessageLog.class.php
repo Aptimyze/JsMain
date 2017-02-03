@@ -91,6 +91,9 @@ class MessageLog
 			$message[$key] = $value;
 		}
 
+		if(!is_array($message)){
+		$message = array();
+		}
 		if(is_array($arrayForRB))
 		{	
 		foreach ($arrayForRB as $key => $value) {
