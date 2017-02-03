@@ -2582,6 +2582,16 @@ public function fetchPincodesOfCities($cities)
 		return $profilesArr;
         }
 	
+    public function mailForLowDiscount($username,$agentName,$discountNegVal){
+        $to = "anamika.singh@jeevansathi.com,rajeev.joshi@jeevansathi.com,amit.malhotra@jeevansathi.com,princy.gulati@jeevansathi.com,shubhda.sinha@jeevansathi.com";
+        //$to = "nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com";
+        $cc = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
+        //$cc = "nitish.sharma@jeevansathi.com,vibhor.garg@jeevansathi.com";
+        $from = "js-sums@jeevansathi.com";
+        $subject = "Low Capped Discount by executive";
+        $msgBody = "Username: $username<br>Discount Capped Value: $discountNegVal<br>CRM ID: $agentName";
+        SendMail::send_email($to, $msgBody, $subject, $from, $cc);
+    }
 
 }
 ?>

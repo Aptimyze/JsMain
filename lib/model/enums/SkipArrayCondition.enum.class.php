@@ -65,5 +65,13 @@ class SkipArrayCondition {
 									ContactHandler::ACCEPT,
 									ContactHandler::CANCEL_CONTACT),
 						"IGNORE");
+        public static $MATCHOFTHEDAY = array(
+						"CONTACT"=>array(
+									ContactHandler::DECLINE,
+									ContactHandler::CANCEL,
+									ContactHandler::INITIATED,
+									ContactHandler::ACCEPT,
+									ContactHandler::CANCEL_CONTACT),
+						"IGNORE");
 									
 }

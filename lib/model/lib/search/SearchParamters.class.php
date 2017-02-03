@@ -1137,6 +1137,11 @@ class SearchParamters
         public function getKUNDLI_DATE_CLUSTER(){return $this->KUNDLI_DATE_CLUSTER;}
         public function getAttemptConditionArr(){return $this->attemptConditionArr;}
 	public function setAttemptConditionArr($x){$this->attemptConditionArr = $x;}
+        public function getVisitorsDateConditionArr(){return $this->visitorsDateConditionArr;}
+	public function setVisitorsDateConditionArr($x){$this->visitorsDateConditionArr = $x;}
+        
+        public function getToSortByPhotoVisitors(){return $this->sortByPhotoVisitors;}
+	public function setToSortByPhotoVisitors($x){$this->sortByPhotoVisitors = $x;}
 
         public function getDisplayCity(){return $this->displayCity;}
         public function getDisplayState(){return $this->displayState;}

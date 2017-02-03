@@ -153,11 +153,20 @@ class myjsActions extends sfActions
 				$completionObj=  ProfileCompletionFactory::getInstance("API",$loggedInProfileObj,null);
 				$profileInfo["COMPLETION"]=$completionObj->getProfileCompletionScore();
 				$profileInfo["INCOMPLETE"]=$completionObj->GetAPIResponse("MYJS");
-				$displayObj= $profileCommunication->getDisplay($module,$loggedInProfileObj);
+				
 				$profileInfo["PHOTO"] = NULL;
 				if(MobileCommon::isApp() != "I"||$loggedInProfileObj->getHAVEPHOTO()!="U")
 					$profileInfo["PHOTO"] = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
-									$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj,$profileInfo); 
+				$appOrMob = MobileCommon::isApp()? MobileCommon::isApp():'M'; 				
+				$myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid)."_".$appOrMob;
+				$appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+
+				if(!$appV1DisplayJson)
+				{
+                    $displayObj= $profileCommunication->getDisplay($module,$loggedInProfileObj);
+				$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj,$profileInfo);
+				JsMemcache::getInstance()->set($myjsCacheKey,$appV1DisplayJson);
+				}
 			}
 			$appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
 
@@ -206,6 +215,12 @@ class myjsActions extends sfActions
 					$this->showExpiring = 1;
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
+
+				$this->showMatchOfTheDay = 1;
+				if($this->loginProfile->getACTIVATED() == 'U')
+				{
+					$this->showMatchOfTheDay = 0;
+				}
           //      $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
                 ob_start();
                 $jsonData = sfContext::getInstance()->getController()->getPresentationFor("myjs", "performV1");
@@ -334,6 +349,12 @@ class myjsActions extends sfActions
 			$this->showExpiring = 1;
 		}
 
+		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
+		$this->showMatchOfTheDay = 1;
+		if($loggedInProfileObj->getACTIVATED() == 'U')
+		{
+			$this->showMatchOfTheDay = 0;
+		}
 		$this->engagementCount=array();
 
 //Flag to compute data for important section for FTU page
@@ -513,5 +534,17 @@ return $staticCardArr;
 
 
 	} 
+
+	public function executeClosematchOfDayV1(sfWebRequest $request)
+	{
+		$matchObj= new MOBILE_API_MATCH_OF_DAY();
+		$profileId = LoggedInProfile::getInstance()->getPROFILEID();
+		$matchProfileId = JsCommon::getProfileFromChecksum($request->getParameter("MatchProfileChecksum"));
+		$matchObj->updateMatchProfile($profileId, $matchProfileId);
+		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileId);
+		$respObj = ApiResponseHandler::getInstance();
+		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$respObj->generateResponse();
+		die;
+	}
 }
- 

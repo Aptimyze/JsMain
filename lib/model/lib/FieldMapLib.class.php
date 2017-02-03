@@ -2337,10 +2337,9 @@ case "city_usa":
 case "impcountry":
 
         $arr=array(
+"51"=>"India",
 "7"=>"Australia",
 "22"=>"Canada",
-"51"=>"India",
-"88"=>"Pakistan",
 "125"=>"United Arab Emirates",
 "126"=>"United Kingdom",
 "128"=>"United States",
