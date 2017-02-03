@@ -57,6 +57,10 @@ class JsConstants
 	public static $solrServerProxyUrl1 = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
 	
 	public static $solrServerLoggedOut     = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
+        
+        public static $solrServerForVSP = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
+        public static $solrServerForKundali = 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/';
+        
 	/* bms */
 	public static $bmsUrl = 'http://milestoneconfig.jeevansathi.com';
 	public static $bmsDocRoot = '/var/www/htmlrevamp/ser6/branches/milestoneConfig/web';
