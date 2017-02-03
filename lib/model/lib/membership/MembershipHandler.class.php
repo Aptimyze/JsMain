@@ -2135,7 +2135,7 @@ class MembershipHandler
                         $nonZero = true;
                         $per = ($disc/$details["PRICE"])*100;
                         if($per>$servDisc[$service]){
-                            $servDisc[$service] = $per;
+                            $servDisc[$service] = intval($per);
                         }
                     }
                 }
