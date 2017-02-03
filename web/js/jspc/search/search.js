@@ -1111,7 +1111,7 @@ function getGunaScore(response)
 	}
 	else
 	{	
-            if(typeof(hideUnimportantFeatureAtPeakLoad) !="undefined" && hideUnimportantFeatureAtPeakLoad < 4){
+            if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4){
 		$.myObj.ajax({
 			showError: false, 
 			method: "POST",

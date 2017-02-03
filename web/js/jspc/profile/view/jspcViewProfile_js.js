@@ -144,7 +144,7 @@ $(function(){
           $(".js-hobbySection").hide();
       	if(selfUsername)
       	{
-            if(typeof(hideUnimportantFeatureAtPeakLoad) !="undefined" && hideUnimportantFeatureAtPeakLoad < 4)
+            if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4)
         	gunaScore = getGunnaScore();
       	}
         if($(".js-checkMatch").length ==0)
@@ -290,7 +290,7 @@ function OnScrollChange(event){
         }
       });
         if(scrollPos>vspScrollLevel && !alreadyShown){
-            if(typeof(hideUnimportantFeatureAtPeakLoad) !="undefined" && hideUnimportantFeatureAtPeakLoad < 3)
+            if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 3)
                displayViewSimilarProfiles();
         }
 	 
