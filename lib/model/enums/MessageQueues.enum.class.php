@@ -20,6 +20,7 @@ class MessageQueues
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
   CONST NOTIFICATION_LOG_CONSUMER_COUNT = 1; //count of notification log consumer instances
+  CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST INVALIDATECACHE = "invalidateCache";
   CONST CHAT_MESSAGE = "chatMessage";
   CONST VIEW_LOG = "ViewLogQueue";
@@ -48,6 +49,7 @@ class MessageQueues
   CONST CRONCONSUMER_STARTCOMMAND = "symfony cron:cronConsumeQueueMessage"; //Command to start cron:cronConsumeQueueMessageTask
   CONST CRONCHAT_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeChatMessage"; //Command to start cron:cronConsumeChatMessage
   CONST CRONNOTIFICATION_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsQueueMessage"; //Command to start cron:cronConsumeNotificationsQueueMessageTask
+  CONST CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeDiscountTrackingQueueMessage"; //Command to start cron:cronConsumeDiscountTrackingQueueMessage
   CONST CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeScreeningQueueTask"; //Command to start cron:cronConsumeScreeningQueueTask
   CONST CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsLogQueueMessage";
   CONST FALLBACK_STATUS= true;   //If true, second server is used to handle fallback otherwise only one server is in use.
@@ -59,7 +61,7 @@ class MessageQueues
   CONST SCREENING_QUEUE = "ScreeningQueue"; //Queue that contains profileId's for those profiles that are screened.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
   CONST LOGGING_QUEUE = "loginTrackingQueue";
-  CONST DISC_HIST = "DISC_HIST_";
+  CONST DISC_HISTORY_QUEUE = "DISC_HISTORY_QUEUE";
   CONST UPDATE_FEATURED_PROFILE_QUEUE = "updateFeaturedProfileQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage

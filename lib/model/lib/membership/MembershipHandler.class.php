@@ -2123,4 +2123,29 @@ class MembershipHandler
         $dt = $row["ENTRY_DT"];
         return $dt;
     }
+    
+    public function computeMaximumDiscount($memPriceArr){
+        if(is_array($memPriceArr)){
+            $nonZero = false;
+            foreach($memPriceArr as $service => $val){
+                $servDisc[$service] = 0;
+                foreach($val as $servDur => $details){
+                    $disc = $details["PRICE"] - $details["OFFER_PRICE"];
+                    if($disc > 0){
+                        $nonZero = true;
+                        $per = ($disc/$details["PRICE"])*100;
+                        if($per>$servDisc[$service]){
+                            $servDisc[$service] = $per;
+                        }
+                    }
+                }
+            }
+        }
+        $servDisc["PROFILEID"] = $memPriceArr["PROFILEID"];
+        if($nonZero){
+            $disHistObj = new billing_DISCOUNT_HISTORY();
+            $disHistObj->insertDiscountHistory($servDisc);
+        }
+        unset($nonZero);
+    }
 }

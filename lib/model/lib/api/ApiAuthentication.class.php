@@ -382,10 +382,10 @@ Abstract class ApiAuthentication
             $prodObj=new Producer();
             if($prodObj->getRabbitMQServerConnected())
             {
-                $body = array("PROFILEID"=>$queueArr['profileId']);
+                $body = array("PROFILEID"=>$queueArr['profileId'],"DATE"=>$curDat);
                 $type = "DISCOUNT_LOG";
                 $queueData = array('process' =>'DISCOUNT_HISTORY',
-                                    'data'=>array('body'=>$body,'type'=>$type,'redeliveryCount'=>0 )
+                                    'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
                                   );
                 $prodObj->sendMessage($queueData);
                 JsMemcache::getInstance()->set("DISC_HIST_".$curDat."_".$queueArr['profileId'],"Y",(strtotime('tomorrow') - time()));
