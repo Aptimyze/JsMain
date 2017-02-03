@@ -13,7 +13,7 @@ class billing_DISCOUNT_HISTORY extends TABLE{
     public function insertDiscountHistory($paramsArr){
         if(is_array($paramsArr)){
             try{
-                $sql = "INSERT INTO billing.DISCOUNT_HISTORY (PROFILEID, DATE, P, C, NCP, X) VALUES (:PROFILEID, :DATE, :P, :C, :NCP, :X)";
+                $sql = "INSERT INTO billing.DISCOUNT_HISTORY (PROFILEID, DATE, P, C, NCP, X) VALUES (:PROFILEID, :DATE, :P, :C, :NCP, :X) ON DUPLICATE KEY UPDATE P=:P, C=:C, NCP=:NCP, X=:X";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":PROFILEID",$paramsArr["PROFILEID"],PDO::PARAM_STR);
                 $prep->bindValue(":DATE",date('Y-m-d'),PDO::PARAM_STR);
