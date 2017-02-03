@@ -300,7 +300,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "",
-			"TRACKING"=> "",
+			"TRACKING"=> "stype=AMD",
             "CONTACT_ID"=>""
                 ),
 		);
