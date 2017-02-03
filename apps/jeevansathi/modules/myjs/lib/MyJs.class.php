@@ -269,6 +269,8 @@ class MyJs implements Module
                                                 $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
                                             }
                                             else $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
+                                            
+                                            
                                         }
                                         //Cache the data
                                         $arrAllowedType = array('INTEREST_RECEIVED','VISITORS','MATCH_ALERT');
@@ -304,6 +306,11 @@ class MyJs implements Module
                         $tupleService->setProfileInfo($infoTypeObj, array_unique($fields));
 			
                 	$countObj     = $this->getCount(MyJs::$getTotal,$infoTypeNav);
+                        if(JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID())){
+                                $countObj["MATCH_OF_THE_DAY"] = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
+                                $countObj["MATCH_OF_THE_DAY_ALL"] = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
+                        }
+                        
                         foreach ($this->configurations as $infoType => $config) 
 			{
 				if(is_null($infoTypeNav) || (is_array($infoTypeNav) && array_key_exists($infoType, $infoTypeNav)))
