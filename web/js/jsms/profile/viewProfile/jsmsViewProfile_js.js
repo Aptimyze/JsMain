@@ -573,7 +573,7 @@ initGunnaScore = function()
         return ;
     if(typeof isGunnaCallRequires == "function" && isGunnaCallRequires() == "1")
     {
-        if(hideUnimportantFeatureAtPeakLoad < 4){
+        if(typeof(hideUnimportantFeatureAtPeakLoad) !="undefined" && hideUnimportantFeatureAtPeakLoad < 4){
         getGunnaScore().success(function(data,textStatus,jqXHR){
         //Show Guna Score String
         if(data.responseStatusCode==0 && data.SCORE)
