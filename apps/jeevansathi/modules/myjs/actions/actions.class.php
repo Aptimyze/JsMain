@@ -269,7 +269,8 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
-
+        
+        $this->loadLevel = JsConstants::$stopOnPeakLoad;
 
 	
 		if (empty($this->profilePic))
