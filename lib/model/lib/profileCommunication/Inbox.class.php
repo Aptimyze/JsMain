@@ -298,8 +298,10 @@ class Inbox implements Module
 							$page = $nav;
 						}
 						$conditionArray = $this->getCondition($infoType, $page); 
-                                                if($infoType == "MY_MESSAGE")
+                                                if($infoType == "MY_MESSAGE"){
                                                     $conditionArray['LIMIT']++;
+                                                    $conditionArray["pageNo"]=$nav;
+                                                }
                                                 if($infoTypeNav["matchedOrAll"])
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());

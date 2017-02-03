@@ -13,6 +13,14 @@ class MyJsMobileAppV1
 	static public $noTupleText;
 	static public $tupleTitleField ;
 
+
+    public static function getCacheKey($pid)
+        {
+
+        return $pid."_MYJS_CACHED_DATA";
+
+    	}
+
 	public function getProfilePicAppV1($profileObj)
 	{
 		$pictureService = new PictureService($profileObj);
@@ -59,7 +67,7 @@ $className = get_class($this);
 				}
 				if($key == "MATCH_OF_THE_DAY")
 				{
-					if(MobileCommon::isIOSApp())
+					if(MobileCommon::isApp())
 						continue;
 					else if (LoggedInProfile::getInstance()->getACTIVATED() == 'U') 
 						continue;					

@@ -1,10 +1,10 @@
 <script type="text/javascript">
-    var userGender="~$apiData.gender`",siteUrl="~$SITE_URL`";
+    var userGender="~$apiData.gender`",siteUrl="~sfConfig::get('app_site_url')`";
     var responseTrackingno="~JSTrackingPageType::MYJS_EOI_JSMS`",awaitingResponseNext=~if $apiData.interest_received.show_next eq ''`null~else`~$apiData.interest_received.show_next`~/if`, completionScore="~$apiData.my_profile.completion`";
     var hamJs= '~$hamJs`';
     var showExpiring=~$showExpiring`;
-    var showMatchOfTheDay=~$showMatchOfTheDay`;
-   
+    var showMatchOfTheDay=~$showMatchOfTheDay`;   
+    var myJsCacheTime = 60000;//in microseconds
 </script>
 <!--start:div-->
 <div class="perspective" id="perspective">

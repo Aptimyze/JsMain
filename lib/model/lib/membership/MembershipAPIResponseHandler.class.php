@@ -142,7 +142,20 @@ class MembershipAPIResponseHandler {
             $this->renewCheckFlag = 1;
         }
         
-        $this->memApiFuncs->setDiscountDetails($this);
+        //set discount info so that it can be used as common variable
+        $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj);
+        if($this->discountTypeInfo == null){
+            $this->discountTypeInfo = array();
+        }
+        //set renewal percent for common use
+        if ($this->profileid){
+            $this->userRenewalPercent = $this->memHandlerObj->getVariableRenewalDiscount($this->profileid);
+            if($this->userRenewalPercent == null){
+                $this->userRenewalPercent = "0";
+            }
+        }
+        
+        $this->memApiFuncs->setDiscountDetails($this,true);
         
         if ($this->memID != "FREE" && $this->memID != "ESJA") {
             $this->memID = $this->memApiFuncs->retrieveCorrectMemID($this->memID, $this);
@@ -155,7 +168,7 @@ class MembershipAPIResponseHandler {
         else{
             $ignoreShowOnlineCheck = false;
         }
-        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck);
+        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck,$this);
         $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {

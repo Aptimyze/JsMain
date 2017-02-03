@@ -898,6 +898,8 @@ die;
 		}
 	}
 
+
+
 	public static function validateEmail($email){
 		$regExEmail = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/";
 		if (preg_match($regExEmail, $email)) {
@@ -906,6 +908,19 @@ die;
 			return false;
 		}
 	}
+
+	public static function hideFeaturesForUptime(){
+		
+		if(JsConstants::$hideUnimportantFeatureAtPeakLoad)
+			return 1;
+		if(date("D")=="Sun" || date("D")=="Sat" || in_array(date('H'),array("10","11","12","13")))
+		{
+			return 1;
+		}
+		return 0;
+
+	}
+			
 
 }
 ?>
