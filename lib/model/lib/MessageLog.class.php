@@ -91,7 +91,8 @@ class MessageLog
 			$message[$key] = $value;
 		}
 
-
+		if(is_array($arrayForRB))
+		{	
 		foreach ($arrayForRB as $key => $value) {
 			if($value['MSG_DEL'] == 'Y')
 			{
@@ -119,7 +120,7 @@ class MessageLog
 			}
 
 		}
-
+ }
 		return $message;
        		
 	}
