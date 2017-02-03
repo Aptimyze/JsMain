@@ -76,7 +76,7 @@ class MessageLog
 		$count = $messageLogObj->markMessageSeen($viewer,$viewed);
 		return $count;
 	}
-	public function getEOIMessages($loginProfile,$profileArray,$arrayForRB)
+	public function getEOIMessages($loginProfile,$profileArray,$arrayForRB = '')
 	{  
 		$request = sfContext::getInstance()->getRequest();
 		$infoTypeId = $request->getParameter('infoTypeId');
