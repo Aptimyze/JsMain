@@ -20,7 +20,7 @@ class InstantAppNotification
   }
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='')
   {
-    if(NotificationFunctions::stopNotificationInPeakHours()){
+    if(CommonUtility::hideFeaturesForUptime()){
         return;
     }
 	$notificationSentCount = $this->getNotificationSentCount($selfProfile);
