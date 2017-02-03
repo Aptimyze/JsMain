@@ -1673,31 +1673,5 @@ return $result;
 			}
 			return $output;
 		}
-
-		public function fetchDetailsForNoMessage($profileid,$profileArr,$infoTypeId)
-		{
-			if(!$profileid || !is_array($profileArr))
-			{
-				throw new jsException("","profileID  or Profile Array does not exists for extracting RB Messages");
-			}
-			$idStr=implode(",",$profileArr);
-			if($infoTypeId == 1 || $infoTypeId == 12)
-			{
-				$sql = "SELECT SENDER,RECEIVER,DATE,TYPE,ID from `MESSAGE_LOG` where RECEIVER =:SENDER and SENDER IN (".$idStr.")";
-			}
-			else
-			{	
-			$sql ="SELECT SENDER,RECEIVER,DATE,TYPE,ID from `MESSAGE_LOG` where SENDER =:SENDER and RECEIVER IN (".$idStr.")"; 
-			}
- 			$prep=$this->db->prepare($sql);
- 			$prep->bindValue(":SENDER",$profileid,PDO::PARAM_INT);
-
- 			$prep->execute();
- 			while($row = $prep->fetch(PDO::FETCH_ASSOC))
-					{
-						$output[] = $row;
-					}
-			return $output;
-		}
 }
 	?>
