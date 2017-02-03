@@ -739,7 +739,7 @@ public function getSendersPending($chunkStr)
 	}
 	public function getContactedProfileArray($condition,$skipArray)
 	{
-		$string = array('TYPE','SEEN','FILTER','TIME','MSG_DEL');
+		$string = array('TYPE','SEEN','FILTER','TIME','MSG_DEL','SENDER','RECEIVER');
 		try{
 			if(!$condition)
 			{
@@ -903,7 +903,7 @@ public function getSendersPending($chunkStr)
 				else
 					$skipProfile = "AND ".$skipProfile;
 			}
-			$sql = "SELECT ".$select." as PROFILEID,TIME,COUNT,SEEN,FILTERED,MSG_DEL FROM newjs.CONTACTS ".$where." ".$skipProfile." ".$order." ".$limit;
+			$sql = "SELECT ".$select." as PROFILEID,TIME,COUNT,SEEN,FILTERED,MSG_DEL,TYPE,SENDER,RECEIVER FROM newjs.CONTACTS ".$where." ".$skipProfile." ".$order." ".$limit;
 			$res=$this->db->prepare($sql);
 			if(is_array($bindArr))
 				foreach($bindArr as $k=>$v)
@@ -925,6 +925,9 @@ public function getSendersPending($chunkStr)
 				$output[$row["PROFILEID"]]["SEEN"] = $row["SEEN"];
 				$output[$row["PROFILEID"]]["FILTERED"] = $row["FILTERED"];
 				$output[$row["PROFILEID"]]["MSG_DEL"] = $row["MSG_DEL"];
+				$output[$row["PROFILEID"]]["TYPE"] = $row["TYPE"];
+				$output[$row["PROFILEID"]]["SENDER"] = $row["SENDER"];
+				$output[$row["PROFILEID"]]["RECEIVER"] = $row["RECEIVER"];
 			}
 		}
 		catch(PDOException $e)

@@ -79,6 +79,9 @@ class Tuple {
         public $EMAIL;
         public $GUNA;
         public $MSG_DEL;
+        public $TYPE;
+        public $SENDER;
+        public $RECEIVER;
     //Getters and setter of all the base class as well as child class fields
         
         public function getprofileObject() {
@@ -689,6 +692,30 @@ public function getPIC_ID($x="") {
         public function getMSG_DEL()
         {
             return $this->MSG_DEL;
+        }
+         public function setTYPE($string)
+        {
+            $this->TYPE = $string;
+        }
+        public function getTYPE()
+        {
+            return $this->TYPE;
+        }
+         public function setSENDER($string)
+        {
+            $this->SENDER = $string;
+        }
+        public function getSENDER()
+        {
+            return $this->SENDER;
+        }
+         public function setRECEIVER($string)
+        {
+            $this->RECEIVER = $string;
+        }
+        public function getRECEIVER()
+        {
+            return $this->RECEIVER;
         }
 }
 ?>
