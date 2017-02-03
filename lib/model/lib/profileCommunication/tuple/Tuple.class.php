@@ -78,6 +78,7 @@ class Tuple {
 		public $NATIVE_STATE;
         public $EMAIL;
         public $GUNA;
+        public $MSG_DEL;
     //Getters and setter of all the base class as well as child class fields
         
         public function getprofileObject() {
@@ -680,6 +681,14 @@ public function getPIC_ID($x="") {
         public function setINTEREST_VIEWED_DATE($string)
         {
             $this->INTEREST_VIEWED_DATE = $string;
+        }
+         public function setMSG_DEL($string)
+        {
+            $this->MSG_DEL = $string;
+        }
+        public function getMSG_DEL()
+        {
+            return $this->MSG_DEL;
         }
 }
 ?>

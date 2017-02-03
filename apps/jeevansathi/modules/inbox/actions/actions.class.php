@@ -336,8 +336,6 @@ public function executePerformV2(sfWebRequest $request)
 		$inputValidateObj->validateRequestInboxData($request);
 		$output = $inputValidateObj->getResponse();
 
-
-
 		if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
 		{
 			/** caching **/

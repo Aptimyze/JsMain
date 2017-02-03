@@ -76,18 +76,17 @@ class MessageLog
 		$count = $messageLogObj->markMessageSeen($viewer,$viewed);
 		return $count;
 	}
-	public function getEOIMessages($loginProfile,$profileArray)
-	{    
+	public function getEOIMessages($loginProfile,$profileArray,$arrayForRB)
+	{  
 		$request = sfContext::getInstance()->getRequest();
 		$infoTypeId = $request->getParameter('infoTypeId');
 		$dbName = JsDbSharding::getShardNo($loginProfile);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getEOIMessages(array($loginProfile),$profileArray);
-		$profileObj = new Profile('',$loginProfile);
 
+	
 		foreach($messageArray as $key=>$value)
 		{	
-			$receiverObj = new Profile('',$value['RECEIVER']);
 			$breaks = array("&lt;br&gt;","<br>","</br>","<br/>");
 			$value["MESSAGE"] = str_ireplace($breaks,"\r\n",$value["MESSAGE"]);
 			$message[$key] = $value;
@@ -104,40 +103,52 @@ class MessageLog
  		{  
  			$noMessageArray = $profileArray;
  		}
-
+ /*Getting Messages for all the profileIds which are RB*/
           if(is_array($noMessageArray))
           {
  			$databaseName = JsDbSharding::getShardNo($loginProfile);
 			$messageLogObj = new NEWJS_MESSAGE_LOG($databaseName);
  			$noMessageDetailArray = $messageLogObj->fetchDetailsForNoMessage($loginProfile,$noMessageArray,$infoTypeId);
 
- 		foreach ($noMessageDetailArray as $key => $value) { 		
- 			
- 			if($infoTypeId == 1 || $infoTypeId == 12 )
+		
+			if($infoTypeId == 1 || $infoTypeId == 12 )
+			{
+ 			foreach ($noMessageDetailArray as $key => $value) {
+ 				$noMessageDetailArray[$key]['MSG_DEL'] = $arrayForRB[$value['SENDER']]['MSG_DEL'];
+ 			}
+ 			}
+ 			else
  			{
- 				$loginProfile = $value['SENDER'];
+ 				foreach ($noMessageDetailArray as $key => $value) {
+ 				$noMessageDetailArray[$key]['MSG_DEL'] = $arrayForRB[$value['RECEIVER']]['MSG_DEL'];
+ 			}
+	
  			}
 
-			if($value['TYPE']=='I' && $this->EOIFromRB($loginProfile,$value['RECEIVER']))
-			{ 
+ 		foreach ($noMessageDetailArray as $key => $value) { 		
 
-				if($this->isJsDummyMember($value['SENDER']))
-				{  
-					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
-							$messageForRB=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
-					else
-					{
-							$draftsObj = new ProfileDrafts($profileObj);
-							$messageForRB=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
-							unset($draftsObj);
-					}
-				}
-				else
-					$messageForRB= Messages::getMessage(Messages::AP_MESSAGE,array('USERNAME'=>$profileObj->getUSERNAME()));
- 				
-					$RBMessageDetailArray[$value['RECEIVER']] = $messageForRB;
+			if($value['TYPE']=='I' && $value['MSG_DEL'] == 'Y')
+			{   
+				if($infoTypeId == 1 || $infoTypeId == 12 )
+				{
+					$profileObj = new Profile('',$value['SENDER']);
+					$receiverObj = new Profile('',$loginProfile);
+					$viewerProfile = $value['SENDER']; 
 					
+				}
+				else if($infoTypeId == 6)
+				{
+					$profileObj = new Profile('',$loginProfile);
+					$receiverObj = new Profile('',$value['SENDER']);
+					$viewerProfile = $loginProfile; 			
+				}	
+				
+				$messageForRB = $this->getRBMessage($viewerProfile,$receiverObj,$profileObj);	
+				$RBMessageDetailArray[$value['RECEIVER']] = $messageForRB;	
+				unset($profileObj);
+				unset($receiverObj);	
 			}
+
          }
        
        	foreach ($noMessageDetailArray as $key => $value) {
@@ -152,6 +163,8 @@ class MessageLog
 			}
        	}
        }
+
+
        if($message!= NULL)
        {   
        $message = array_merge($noMessageDetailArray,$message);
@@ -248,30 +261,17 @@ class MessageLog
 		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed);
 		$receiverObj = new Profile('',$viewed);
 		$profileObj = new Profile('',$viewer);
-		//if($messageArray['MESSAGE'] == '' && )
 
 		foreach ($messageArray as $key => $value) {
 
 			if($value['TYPE']=='I' && $value['MESSAGE'] == NULL && $this->EOIFromRB($value['SENDER'],$value['RECEIVER']))
 			{ 
-				if($this->isJsDummyMember($viewer))
-				{
-					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
-							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
-					else
-					{
-							$draftsObj = new ProfileDrafts($profileObj);
-							$message=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
-							unset($draftsObj);
-					}
-				}
-				else
-					$message= Messages::getMessage(Messages::AP_MESSAGE,array('USERNAME'=>$profileObj->getUSERNAME()));
-
-					$messageArray[$key]['MESSAGE'] = $message;
-				
+			  $message =$this->getRBMessage($viewer,$receiverObj,$profileObj);	
+			  $messageArray[$key]['MESSAGE'] = $message;	
 			}
 		}
+		unset($receiverObj);
+		unset($profileObj);
 		return $messageArray;
 	}
 
@@ -407,6 +407,27 @@ if($limit == 1000000)
 	   		return 1;
 	   }
 	   return 0;
+	}
+
+	public function getRBMessage($viewer,$receiverObj,$profileObj)
+	{
+
+		if($this->isJsDummyMember($viewer))
+				{
+					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
+							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
+					else
+					{
+							$draftsObj = new ProfileDrafts($profileObj);
+							$message=ProfileDrafts::getMessage($draftsObj->getEoiDrafts(),'');
+							unset($draftsObj);
+					}
+				}
+				else{
+					$message= Messages::getMessage(Messages::AP_MESSAGE,array('USERNAME'=>$profileObj->getUSERNAME()));
+				}
+
+		return $message;		
 	}
 }
 ?>

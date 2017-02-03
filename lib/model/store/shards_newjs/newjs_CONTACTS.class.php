@@ -739,7 +739,7 @@ public function getSendersPending($chunkStr)
 	}
 	public function getContactedProfileArray($condition,$skipArray)
 	{
-		$string = array('TYPE','SEEN','FILTER','TIME');
+		$string = array('TYPE','SEEN','FILTER','TIME','MSG_DEL');
 		try{
 			if(!$condition)
 			{
@@ -903,7 +903,7 @@ public function getSendersPending($chunkStr)
 				else
 					$skipProfile = "AND ".$skipProfile;
 			}
-			$sql = "SELECT ".$select." as PROFILEID,TIME,COUNT,SEEN,FILTERED FROM newjs.CONTACTS ".$where." ".$skipProfile." ".$order." ".$limit;
+			$sql = "SELECT ".$select." as PROFILEID,TIME,COUNT,SEEN,FILTERED,MSG_DEL FROM newjs.CONTACTS ".$where." ".$skipProfile." ".$order." ".$limit;
 			$res=$this->db->prepare($sql);
 			if(is_array($bindArr))
 				foreach($bindArr as $k=>$v)
@@ -924,12 +924,14 @@ public function getSendersPending($chunkStr)
 				$output[$row["PROFILEID"]]["COUNT"] = $row["COUNT"];
 				$output[$row["PROFILEID"]]["SEEN"] = $row["SEEN"];
 				$output[$row["PROFILEID"]]["FILTERED"] = $row["FILTERED"];
+				$output[$row["PROFILEID"]]["MSG_DEL"] = $row["MSG_DEL"];
 			}
 		}
 		catch(PDOException $e)
 		{
 			throw new jsException($e);
 		}
+
 		return $output;
 	}
 
