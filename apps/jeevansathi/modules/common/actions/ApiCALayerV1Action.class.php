@@ -37,7 +37,13 @@ class ApiCALayerV1Action extends sfActions
 		{	
 		$this->loginProfile=LoggedInProfile::getInstance();
 		$totalAwaiting=(new ProfileMemcacheService($this->loginProfile))->get('AWAITING_RESPONSE');
-		$layerToShow = CriticalActionLayerTracking::getCALayerToShow($this->loginProfile,$totalAwaiting);
+        
+        $layerToShow = false;
+        //As Per Peek Level Unset Some Listing Across Channels
+        if(JsConstants::$stopOnPeakLoad <=4) {
+            $layerToShow = CriticalActionLayerTracking::getCALayerToShow($this->loginProfile,$totalAwaiting);
+        }
+		
 		//print_r($layerToShow); die;
 		if(!$layerToShow) {
 			$apiResponseHandlerObj = ApiResponseHandler::getInstance();
