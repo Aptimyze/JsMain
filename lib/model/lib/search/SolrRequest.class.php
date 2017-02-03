@@ -168,7 +168,10 @@ class SolrRequest implements RequestHandleInterface
 	public function sendCurlPostRequest($urlToHit,$postParams)
 	{
 		$start = strtotime("now");
-		$this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout);
+                if(php_sapi_name() === 'cli')
+                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+                else
+                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout);
                 $end= strtotime("now");
                 $diff = $end - $start;
                 if($diff > 2 ){
