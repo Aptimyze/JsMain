@@ -49,10 +49,11 @@ class dppSuggestions
 				{
 					$suggestedValueArr[$v2] = $this->getDppSuggestionsForFilledValues($type,$v2);
 				}
+
 				if(is_array($suggestedValueArr))
 				{
 					$valueArr = $this->getRemainingSuggestionValues($suggestedValueArr,$type,count($valueArr["data"]),$valueArr,$valArr);	
-				}
+				}				
 			}
 		} 
 		$valueArr["type"] = $type;
@@ -141,7 +142,7 @@ class dppSuggestions
 	//This function gets the value for the $key specified for the given $type
 	public function getFieldMapValueForTrends($key,$type)
 	{
-		$type = $this->getType($type);
+		$type = $this->getType($type);		
 		if($type == "community")
 		{
 			$type = $type."_small";
@@ -183,6 +184,10 @@ class dppSuggestions
 	public function getRemainingSuggestionValues($suggestedValueArr,$type,$valueArrDataCount,$valueArr,$valArr)
 	{
 		$type = $this->getType($type);
+		if($type == "community")
+		{
+			$type = $type."_small";
+		}
 		//frequency distribution calculation
 		$suggestedValueCountArr = $this->getFrequencyDistributedArrForCasteMtongue($suggestedValueArr);
 		$suggestedValueCountArr = $this->getSortedSuggestionArr($suggestedValueCountArr);
