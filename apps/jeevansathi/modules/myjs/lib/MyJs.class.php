@@ -35,10 +35,10 @@ class MyJs implements Module
                 	$this->configurations = $configObj->getConfiguration($module);
         
             //As Per Peek Level Unset Some Listing Across Channels
-            if(JsConstants::$stopOnPeakLoad >=2) {
+            if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=2) {
                 unset($this->configurations["INTEREST_EXPIRING"]);
             }
-            if(JsConstants::$stopOnPeakLoad >=3) {
+            if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=3) {
                 unset($this->configurations["SHORTLIST"]);
             }
         }
