@@ -142,6 +142,10 @@ class dppSuggestions
 	public function getFieldMapValueForTrends($key,$type)
 	{
 		$type = $this->getType($type);
+		if($type == "community")
+		{
+			$type = $type."_small";
+		}
 		if($type != "city")
 		{
 			$returnValue = $this->getFieldMapLabels($type,$key,'');//FieldMap::getFieldlabel($type,$key,'');
