@@ -21,50 +21,12 @@ class AuthFilter extends sfFilter {
 	$context = $this->getContext();
 		$request = $context->getRequest();
 
-		// Code added to switch to hindi.jeevansathi.com if cookie set !
-		if($request->getcookie('JS_MOBILE'))
-		{
-            $loginData = $request->getAttribute("loginData");
-            if ($loginData["PROFILEID"]==11238186){
-                /*error_log("ankita hindi_site cookie..".$request->getcookie("jeevansathi_hindi_site"));
-                error_log("ankita newDirect..".$request->getParameter('newRedirect')."--".$request->getcookie("redirected_hindi"));*/
+		// Code added to switch to hindi.jeevansathi.com for mobile site if cookie set !
+		if($request->getcookie('JS_MOBILE')){
+            $redirectUrl = CommonUtility::translateSiteLanguage($request);
+            if($redirectUrl != ""){
+            	$context->getController()->redirect($redirectUrl, array('request' => $request));
             }
-            $authchecksum = $request->getcookie('AUTHCHECKSUM');
-			if($request->getcookie("jeevansathi_hindi_site")=='Y'){
-				if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi")!='Y'){
-					if($loginData["PROFILEID"]==11238186){
-						error_log("ankita redirected to jeevansathi hindi site1-referrer ".$_SERVER['HTTP_REFERER']." +requestUrl- ".$_SERVER['REQUEST_URI']." -redirect ".$request->getParameter('newRedirect'));
-						@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/","jeevansathi.com");
-					}
-					else{
-						@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/");	
-					}
-					$context->getController()->redirect('http://hindi.jeevansathi.com?AUTHCHECKSUM='.$authchecksum."&newRedirect=1", array('request' => $request));
-				}
-                else if($loginData["PROFILEID"] == 11238186 && $request->getcookie("redirected_hindi")=='Y'){
-					error_log("ankita redirected to jeevansathi hindi site2-referred by ".$_SERVER['HTTP_REFERER']." /requestUrl ".$_SERVER['REQUEST_URI']." -redirect ".$request->getParameter('newRedirect'));
-					@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/","jeevansathi.com");
-                    //redirect to hindi site if referer is blank and newRedirect is not set
-                    if(!isset($_SERVER['HTTP_REFERER']) && $request->getParameter('newRedirect') != 1){
-						$context->getController()->redirect('http://hindi.jeevansathi.com?AUTHCHECKSUM='.$authchecksum."&newRedirect=1", array('request' => $request));
-                    }
-                }
-			} else {
-				if($loginData["PROFILEID"]==11238186){
-					if($request->getcookie("redirected_hindi")=='Y'){
-						error_log("ankita redirected to jeevansathi english site1-".$_SERVER['HTTP_REFERER']);
-						@setcookie('redirected_hindi', 'N', 0, "/","jeevansathi.com");
-						$context->getController()->redirect('http://www.jeevansathi.com?AUTHCHECKSUM='.$authchecksum, array('request' => $request));	
-					}
-					else{
-						error_log("ankita redirected to current site1-".$_SERVER['HTTP_REFERER']);
-						@setcookie('redirected_hindi', 'N', 0, "/","jeevansathi.com");
-					}
-				}
-				else{
-					@setcookie('redirected_hindi', 'N', 0, "/");
-				}
-			}
 		}
 		// End hindi switch code !
 		
