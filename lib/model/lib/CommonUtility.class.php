@@ -940,7 +940,7 @@ die;
 						else{
 							$newRedirectUrl = $newRedirectUrl."?";
 						}
-						$newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum;
+						$newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
 						error_log("ankita redirected to specific jeevansathi hindi site1,1-referrer ".$_SERVER['HTTP_REFERER']." +requestUrl- ".$_SERVER['REQUEST_URI']." -redirect ".$request->getParameter('newRedirect'));
 						return $newRedirectUrl;
 					}
