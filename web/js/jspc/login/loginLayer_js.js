@@ -272,8 +272,6 @@ if(window.addEventListener)
 		window.onload = onFrameLoginResponseReceived;
 	}
 
-if (window.location.protocol == "https:")
-	    window.location.href = "http:" + window.location.href.substring(window.location.protocol.length);
 
 
     $(document).ready(function(){ 
