@@ -24,6 +24,10 @@ class AuthFilter extends sfFilter {
 		// Code added to switch to hindi.jeevansathi.com for mobile site if cookie set !
 		if($request->getcookie('JS_MOBILE')){
             $redirectUrl = CommonUtility::translateSiteLanguage($request);
+            $loginData = $request->getAttribute("loginData");
+            if($loginData["PROFILEID"]==11238186){
+				error_log("ankita finally redirected to request url-".$_SERVER['REQUEST_URI']." and end at- ".$loginData["PROFILEID"]);
+			}
             if($redirectUrl != ""){
             	$context->getController()->redirect($redirectUrl, array('request' => $request));
             }

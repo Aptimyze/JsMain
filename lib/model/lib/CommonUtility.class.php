@@ -931,14 +931,25 @@ die;
 		if($request->getcookie("jeevansathi_hindi_site")=='Y'){
 			if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi")!='Y'){
 				if($loginData["PROFILEID"]==11238186){
-					error_log("ankita redirected to jeevansathi hindi site1-referrer ".$_SERVER['HTTP_REFERER']." +requestUrl- ".$_SERVER['REQUEST_URI']." -redirect ".$request->getParameter('newRedirect'));
-					if(isset($_SERVER["REQUEST_URI"])){
-						error_log("ankita redirect to specific hindi site 1");
-					}
 					@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/","jeevansathi.com");
+					if(isset($_SERVER["REQUEST_URI"])){
+						$newRedirectUrl = JsConstants::$hindiTranslateURL.$_SERVER["REQUEST_URI"];
+						if(strpos($newRedirectUrl,"?") != false){
+							$newRedirectUrl = $newRedirectUrl."&";
+						}
+						else{
+							$newRedirectUrl = $newRedirectUrl."?";
+						}
+						$newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum;
+						error_log("ankita redirected to specific jeevansathi hindi site1,1-referrer ".$_SERVER['HTTP_REFERER']." +requestUrl- ".$_SERVER['REQUEST_URI']." -redirect ".$request->getParameter('newRedirect'));
+						return $newRedirectUrl;
+					}
 				}
 				else{
 					@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/");	
+				}
+				if($loginData["PROFILEID"]==11238186){
+					error_log("ankita redirected to hindi site1,2-referrer ".$_SERVER['HTTP_REFERER']." +requestUrl- ".$_SERVER['REQUEST_URI']." -redirect ".$request->getParameter('newRedirect'));
 				}
 				return (JsConstants::$hindiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
 			}
