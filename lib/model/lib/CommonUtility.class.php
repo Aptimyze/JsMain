@@ -980,15 +980,8 @@ die;
 					return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);	
 				}
 				else{
-					error_log("ankita redirected to current site1-".$_SERVER['HTTP_REFERER']."--requested by-".$_SERVER["REQUEST_URI"]);
+					error_log("ankita redirected to current site1-".$_SERVER['HTTP_REFERER']."--requested by-".$_SERVER["REQUEST_URI"]."-host-".$_SERVER["QUERY_STRING"]);
 					@setcookie('redirected_hindi', 'N', 0, "/","jeevansathi.com");
-					if(!isset($_SERVER["HTTP_REFERER"])){
-						$newRedirectUrl = JsConstants::$siteUrl;
-	                	if(isset($_SERVER["REQUEST_URI"])){
-							$newRedirectUrl = $newRedirectUrl.$_SERVER["REQUEST_URI"];
-						}
-						return $newRedirectUrl;
-					}
 				}
 			}
 			else{
