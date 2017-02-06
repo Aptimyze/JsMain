@@ -40,7 +40,7 @@ class ApiCALayerV1Action extends sfActions
         
         $layerToShow = false;
         //As Per Peek Level Unset Some Listing Across Channels
-        if(JsConstants::$stopOnPeakLoad <=4) {
+        if(JsConstants::$hideUnimportantFeatureAtPeakLoad <=4) {
             $layerToShow = CriticalActionLayerTracking::getCALayerToShow($this->loginProfile,$totalAwaiting);
         }
 		
