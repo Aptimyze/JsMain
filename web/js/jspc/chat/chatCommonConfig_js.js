@@ -107,7 +107,7 @@ chatConfig.Params = {
     },
     pc: {
         updateRosterFromFrontend: true,
-        bosh_service_url: 'ws://' + openfireUrl + '/ws/', //connection manager for openfire
+        bosh_service_url: 'wss://' + openfireUrl + '/ws/', //connection manager for openfire
         hide_offline_users: false, //hide offline users from list
         //tab id to tab names mapping
         listingTabs: {
