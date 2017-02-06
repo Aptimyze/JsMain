@@ -186,7 +186,7 @@ function updateCasteInTables($tableName,$columnName,$oldValue,$newValue,$slaveCo
         }elseif($updateType == "single"){
                 $where = "$columnName = $oldValue ";  
         }elseif($updateType == "pipehash"){
-                $where = " POSITION( '|$oldValue#' IN CASTE_VALUE_PERCENTILE ) <>0";  
+                $where = " POSITION( '|$oldValue#' IN OCCUPATION_VALUE_PERCENTILE ) <>0 limit 3";  
         }
         if($tableName == "newjs.JPROFILE")
             $selectSql="SELECT $pKey,$columnName,email FROM $tableName WHERE $where";
