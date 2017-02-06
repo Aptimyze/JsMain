@@ -571,20 +571,22 @@ public function getSendersPending($chunkStr)
 			foreach($idArr as $k=>$v)
 				$idSqlArr[]=":v$k";
 			$idSql="(".(implode(",",$idSqlArr)).")";
-			$sql = "SELECT CONTACTID , TYPE FROM newjs.CONTACTS WHERE CONTACTID IN $idSql";
+			$sql = "SELECT CONTACTID , TYPE,MSG_DEL FROM newjs.CONTACTS WHERE CONTACTID IN $idSql";
 			$res=$this->db->prepare($sql);
 			foreach($idArr as $k=>$v)
 				$res->bindValue(":v$k", $v, PDO::PARAM_INT);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
-			{
-				$output[$row["CONTACTID"]] = $row["TYPE"];
+			{  // print_r($row); die;
+				$output[$row["CONTACTID"]]['TYP'] = $row["TYPE"];
+				$output[$row["CONTACTID"]]['MSG_DEL'] = $row["MSG_DEL"];
 			}
 		}
 		catch(PDOException $e)
         {
            throw new jsException($e);
         }
+        //print_r($output);
         return $output;
 	}
    /*
