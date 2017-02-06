@@ -44,7 +44,7 @@ EOF;
 		// dayAfterRegistration array maps "DAY" => "MAILID"
 		$dayAfterRegistration = array(6=>1785,9=>1784,13=>1786,20=>1786,29=>1784,59=>1784,89=>1784,119=>1784,149=>1784,179=>1784,239=>1784,299=>1784,359=>1784);  
 		$checkDay =JSstrToTime(date("Y-m-d",time()-14*24*60*60));
-		$registerCheckArr =array(89,119,149);
+		$registerCheckArr =array(29,59,89,119,149,179,239,299,359);
 
 		foreach($dayAfterRegistration as $dd => $mailid) {
 			$d = date('Y-m-d', strtotime('-'.$dd.' day'));

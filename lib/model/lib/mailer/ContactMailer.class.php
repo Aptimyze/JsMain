@@ -281,7 +281,7 @@ class ContactMailer
 
 	$partialObj = new PartialList();
 	$profileChecksum=JsAuthentication::jsEncryptProfilechecksum($sender->getPROFILEID());
-	if(strlen($message)>260){$showReadMore=1;$message=substr($message,0,260);}else $showReadMore=0;
+	if(strlen($message)>1000){$showReadMore=1;$message=substr($message,0,1000);}else $showReadMore=0;
         $partialObj->addPartial("messageMailerTuple", "messageMailerTuple",  array('profileArray'=>array($sender->getPROFILEID()=>$message),'showReadMore'=>$showReadMore));
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
