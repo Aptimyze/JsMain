@@ -454,12 +454,15 @@ var hamHtml="",slider1,slider2;
 			var curJson=this.json.OnClick[this.indexPos];
 			
 		if(curJson.callBack == "updateLifestyle" || curJson.key.indexOf("P_") != -1) {
-			$('<span id="clearBtn" class="white fontthin f17 pt4 fr pr9 vAlignSub">Clear</span>').insertAfter("#TAPNAME_1");
-				$("#clearBtn").off("click").on("click",function(){
-					$("#HAM_OPTION_1 li input:checked").each(function(){
-						$(this).parent().click()
-				});
-			});	
+			setTimeout(function(){
+				$('<span id="clearBtn" class="white fontthin f17 pt4 fr pr9 vAlignSub">Clear</span>').insertAfter("#TAPNAME_1");
+					$("#clearBtn").off("click").on("click",function(){
+						$("#HAM_OPTION_1 li input:checked").each(function(){
+							$(this).parent().click()
+					});
+				});	
+			},1000);
+					
 		}
 		
 		//	console.log(curJson);

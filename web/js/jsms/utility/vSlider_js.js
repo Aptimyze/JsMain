@@ -191,8 +191,9 @@ e.preventDefault();
 				else
 					goto=goto-4;
 			}	
+		
 			//code appended for DPP suggestion
-			var type = $(clickedDiv).find("input").attr("name"),typeDataArray = [];
+			var type = slider.parent.find("input").attr("name"),typeDataArray = [];
 			if(type == "p_lage" || type == "p_hage" ) {
 				setTimeout(function(){
 					typeDataArray = [$("#HAM_OPTION_1 li input:checked").val(),$("#HAM_OPTION_2 li input:checked").val()];
