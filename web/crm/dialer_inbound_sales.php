@@ -10,7 +10,7 @@
 		if($name!='')
 		{
 			if($name==$agent_name){
-                                if($campaign_name=='ct_OB_Sales'){
+                                if($campaign_name=='OB_Sales'){
                                 	$phone  = validatePhoneNo($phone);
                                         if($phone){
                                                 $db = connect_crmSlave();
