@@ -67,6 +67,7 @@ $className = get_class($this);
 				}
 				if($key == "MATCH_OF_THE_DAY")
 				{
+
 					if(MobileCommon::isIOSApp())
 						continue;
 					else if (LoggedInProfile::getInstance()->getACTIVATED() == 'U') 
