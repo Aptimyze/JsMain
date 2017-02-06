@@ -243,12 +243,15 @@ $sql="truncate table SWAP_JPARTNER1";
 mysql_query($sql,$dbDDL) or die("18".mysql_error1($dbDDL));
 
 $currentTime = date("H");
-
-if(in_array($currentTime,array(1,2,9,10,18,19)))
-        callDeleteCronBasedOnId('EXPORT','N');
-else
-        callDeleteCronBasedOnId('DELTA','N');
-
+$currentDay = date("D");
+if((($currentDay=="Sun" && $currentDay=="Sat") && $currentTime > 16) || 
+        (($currentDay!="Sun" && $currentDay!="Sat") && !in_array($currentTime,array("10","11","12","13")))){
+        
+        if(in_array($currentTime,array(1,2,9,10,18,19)))
+                callDeleteCronBasedOnId('EXPORT','N');
+        else
+                callDeleteCronBasedOnId('DELTA','N');
+}
 
 function mysql_error1($db)
 {

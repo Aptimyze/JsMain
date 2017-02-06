@@ -183,12 +183,18 @@ class QuickSearchBand extends SearchParamters
                         }
                 }
                 $searchParamsSetter['MSTATUS'] = implode(",",$mstatus);
+                $doesntMAtterArray = array('DONT_MATTER');
 		if(!MobileCommon::isDesktop())
 		{
 			foreach($searchParamsSetter as $k=>$v)
 			{
-                        	if($v=='DONT_MATTER')
+                        	if($v=='DONT_MATTER'){
                                 	$searchParamsSetter[$k] = '';
+                                }else{
+                                        if(strstr($v,'DONT_MATTER')){
+                                                $searchParamsSetter[$k] = implode(',',array_diff(explode(",",$searchParamsSetter[$k]),$doesntMAtterArray));
+                                        }
+                                }
 			}
                 }
                

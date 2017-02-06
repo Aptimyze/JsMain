@@ -151,6 +151,7 @@ class LinkClass {
 			$append=strpos($url,'?')?"&":"?";
 			$url.=$append.$this->_other_get_params;
 		}
+
 		if($this->_link_auto_login=='Y'){
 			$append=strpos($url,'?')?"&":"?";
 			$stypeNew =$request->getParameter('stype');
@@ -163,7 +164,7 @@ class LinkClass {
 				$authenticationLoginObj= AuthenticationFactory::getAuthenicationObj(null);
 				if($authenticationLoginObj->decrypt($echecksum,"Y")==$checksum)
 				{
-					$authenticationLoginObj->setAutologinAuthchecksum($checksum,$loc);
+					$authenticationLoginObj->setAutologinAuthchecksum($checksum,$url);
 				}
 				else
 				{
@@ -171,12 +172,12 @@ class LinkClass {
 				}
 			}
 		}
-		$site_url=sfConfig::get('app_site_url');
-	    $loc=$site_url."/".$url;
-	    $append=strpos($loc,'?')?"&":"?";
-	    $loc.=$append.'from_mailer=1';
 	    
-	    
+	        $site_url=sfConfig::get('app_site_url');
+                $loc=$site_url."/".$url;
+                $append=strpos($loc,'?')?"&":"?";
+                $loc.=$append.'from_mailer=1';
+
 		
 		
 	//	echo "<script>document.location='$loc';</script>";

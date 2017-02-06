@@ -241,6 +241,16 @@ class phoneActions extends sfActions
    		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
 		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
    		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);
+
+		if($reasonNumber == 3)
+			{  
+				$sendingObject = new RequestUserToDelete();
+				$sendingObject->deleteRequestedByOther($profileid);
+				$loggingObj = new MIS_REQUEST_DELETIONS_LOG();
+                $loggingObj->logThis(LoggedInProfile::getInstance()->getUSERNAME(),$profileid,'Other');
+			}
+
+
     $result['message']='Thank you for helping us . If our team finds this number invalid we will remove this number and credit you with a contact as compensation.';	
     $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_SUCCESS);
 	$respObj->setResponseBody($result);
