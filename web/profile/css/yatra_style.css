@@ -72,7 +72,7 @@ body {background:#e0eff1; font:12px Arial, Helvetica, sans-serif; margin:0px; pa
 
 /* footer str */
 .f11 {font-size:11px}
-.ftr { background:#FFF url(http://static.jeevansathi.com/profile/images/hdr_bg.png) repeat-x 0 -392px; padding:20px 14px 5px; }
+.ftr { background:#FFF url(https://static.jeevansathi.com/profile/images/hdr_bg.png) repeat-x 0 -392px; padding:20px 14px 5px; }
 .ftr .ftr_cont { margin:auto; width:750px; }
 .ftr_links { float:left; width:749px; }
 .ftr_links .r9 {width:99%;float:left;}
@@ -81,7 +81,7 @@ ul.foot { margin:0; padding:0; }
 ul.foot li { float:left; margin:0 5px; color:#9a9999; list-style:none; }
 ul.foot li a:hover { text-decoration:underline; }
 ul.foot li a, ul.foot li a:visited { color:#117daa; text-decoration:none; }
-.naukri_btn {width:130px; height:37px; background:url(http://static.jeevansathi.com/profile/images/hdr_bg.png) -89px -223px; margin:10px auto; border:0;}
+.naukri_btn {width:130px; height:37px; background:url(https://static.jeevansathi.com/profile/images/hdr_bg.png) -89px -223px; margin:10px auto; border:0;}
 .mar_top_15 {margin-top:15px;}
 .mt_10 {margin-top:10px;}
 /* footer end */
