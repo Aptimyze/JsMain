@@ -153,7 +153,7 @@
     <!--Google Analytics Code-->
 </div>
 </body>
-~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
+~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~get_slot('optionaljsb9Key')`")`
 </html>
 <script>var SSL_SITE_URL='~JsConstants::$ssl_siteUrl`';
 //if (window.location.protocol == "https:")

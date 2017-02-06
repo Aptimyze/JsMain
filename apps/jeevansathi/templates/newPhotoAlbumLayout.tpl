@@ -109,7 +109,7 @@ var domainCode={};
   </body>
  ~if get_slot('optionaljsb9Key')|count_characters neq 0`
     ~assign var="jsb9Key" value=get_slot('optionaljsb9Key')`
-	~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif","~$jsb9Key|replace:'JSMOB':'JSNEWMOB'`")`
+	~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif","~$jsb9Key|replace:'JSMOB':'JSNEWMOB'`")`
  ~/if`
   ~if JsConstants::$boomerjs eq 1`
 					<script type="text/javascript" src="~sfconfig::get("app_img_url")`/min/?f=/js/modernizr_js.js"></script>

@@ -401,7 +401,7 @@ function common_assign($data)
 		
 		
 	$smarty->assign("TRACK_HEAD",BrijjTrackingHelper::getHeadTrackJs());
-	$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif"));
+	$smarty->assign("TRACK_FOOT",BrijjTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif"));
 	$smarty->assign("TRACK_JSFLAG",BrijjTrackingHelper::setJsLoadFlag(0));
 	$smarty->assign("TRACK_JSFLAGTRACK",BrijjTrackingHelper::setJsLoadFlag(1));
         //Assigning variable that will be called by thickbox class when window is reloaded by login layer

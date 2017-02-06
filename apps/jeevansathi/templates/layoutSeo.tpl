@@ -53,6 +53,6 @@ var domainCode={};
     <!--Google Analytics Code-->
 
   </body>
-~JsTrackingHelper::getTailTrackJs(0,true,2,"http://track.99acres.com/images/zero.gif")`
+~JsTrackingHelper::getTailTrackJs(0,true,2,"https://track.99acres.com/images/zero.gif")`
 
 </html>
