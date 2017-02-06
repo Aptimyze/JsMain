@@ -633,9 +633,10 @@ console.log(stateField.userDecision);
 		{
 			Gui.updateGuiFields($scope.screenName,indexPos,output);
       
-      if($scope.screenName=='s4' && indexPos==2)
+			if($scope.screenName=='s4' && indexPos==2)
 			{
-        $scope.initHoroscope();
+				$scope.initHoroscope();
+				$scope.initCasteNoBar();
 			}
 			$scope.hamOn = false;
 			$scope.enableNextBtn();
@@ -662,7 +663,7 @@ console.log(stateField.userDecision);
     {
       var allowedReligion = ['1','4','7','9'];
       var religionFieldIndex= 2;
-      var horoscopeFieldIndex = 3;
+      var horoscopeFieldIndex = 4;
       
       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') {
         $scope.fields[horoscopeFieldIndex].show = true;
@@ -671,8 +672,25 @@ console.log(stateField.userDecision);
         Gui.resetField('s4','dindex',horoscopeFieldIndex);
       }
     }
-    $scope.initHoroscope();
-		$scope.enableNextBtn();
+	$scope.initCasteNoBar = function()    
+	{
+	        var allowedReligion = ['1','2','3','4','9'];
+		var religionFieldIndex= 2;
+		var casteNoBarFieldIndex = 3;
+
+	       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = true;
+		} 
+		else 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = false;
+		       Gui.resetField('s4','dindex',casteNoBarFieldIndex);
+		}     
+	 }
+	$scope.initHoroscope();
+	$scope.initCasteNoBar();
+	$scope.enableNextBtn();
         //TrackParams.trackClientInfo($scope.screenName);
 	});
 
