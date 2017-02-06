@@ -66,6 +66,9 @@ foreach ($configArr as $k=>$v){
 		if(strstr($str,'%SSL_URL_INPUT%')){
 			$str = str_replace("%SSL_URL_INPUT%","https://".$urlInput,$str);
 		}
+		elseif(strstr($str,'%STATIC_URL_INPUT%')){
+			$str = str_replace("%STATIC_URL_INPUT%","http://static.".$urlInput,$str);
+		}
 		elseif(strstr($str,'%URL_INPUT%')){
 			$str = str_replace("%URL_INPUT%","http://".$urlInput,$str);
 		}
