@@ -975,12 +975,12 @@ die;
 		} else {
 			if($loginData["PROFILEID"]==11238186){
 				if($request->getcookie("redirected_hindi")=='Y'){
-					error_log("ankita redirected to jeevansathi english site1-".$_SERVER['HTTP_REFERER']);
+					error_log("ankita redirected to jeevansathi english site1-".$_SERVER['HTTP_REFERER']."--requested by-".$_SERVER["REQUEST_URI"]);
 					@setcookie('redirected_hindi', 'N', 0, "/","jeevansathi.com");
 					return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);	
 				}
 				else{
-					error_log("ankita redirected to current site1-".$_SERVER['HTTP_REFERER']);
+					error_log("ankita redirected to current site1-".$_SERVER['HTTP_REFERER']."--requested by-".$_SERVER["REQUEST_URI"]."-host-".$_SERVER["QUERY_STRING"]);
 					@setcookie('redirected_hindi', 'N', 0, "/","jeevansathi.com");
 				}
 			}
