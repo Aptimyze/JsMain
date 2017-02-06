@@ -79,7 +79,7 @@ $(function(){
             setTimeout(function(){ 
                 $("#mainContent").append("<div class='icons1 uicon dn'></div> <div class='mainsp baricon dn'></div>");
                 loadCSS("IMG_URL/min/?f="+logoutCssFiles);
-                loadCSS("http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700");
+                loadCSS("https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700");
             }, 5000);
             $("#hamburgerIcon").bind("click", function() {
                 if($("#hamburger").length == 0){
