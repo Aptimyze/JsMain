@@ -26,7 +26,7 @@ class AuthFilter extends sfFilter {
             $redirectUrl = CommonUtility::translateSiteLanguage($request);
             $loginData = $request->getAttribute("loginData");
             if($loginData["PROFILEID"]==11238186){
-				error_log("ankita finally redirected to request url-".$_SERVER['REQUEST_URI']." and end at- ".$loginData["PROFILEID"]);
+				error_log("ankita finally to request url-".$_SERVER['REQUEST_URI']." ,end at- ".$redirectUrl);
 			}
             if($redirectUrl != ""){
             	$context->getController()->redirect($redirectUrl, array('request' => $request));
