@@ -162,24 +162,26 @@ EOF;
     //print_r($consumerToCountMapping);
     foreach ($this->consumerToCountMapping as $command => $count) 
     {
-      exec("ps aux | grep \"".$command."\" | grep -v grep | awk '{ print $2 }'", $output);
-      //echo "\n".$command."-";
-      //print_r($output);
-      if(!empty($output) && is_array($output))
-      {
-        foreach ($output as $key => $value) 
-        {
-          $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
-          if($count1 >0)
-            exec("kill -9 ".$value);
+        if($this->checkRestart($command)){
+            exec("ps aux | grep \"".$command."\" | grep -v grep | awk '{ print $2 }'", $output);
+            //echo "\n".$command."-";
+            //print_r($output);
+            if(!empty($output) && is_array($output))
+            {
+              foreach ($output as $key => $value) 
+              {
+                $count1 = shell_exec("ps -p ".$value." | wc -l") -1;
+                if($count1 >0)
+                  exec("kill -9 ".$value);
+              }
+            }
+            unset($output);
+            for($i=1;$i<=$count ;$i++)
+            { 
+              //var_dump(JsConstants::$php5path." ".$command." > /dev/null &");
+              passthru(JsConstants::$php5path." ".$command." > /dev/null &"); 
+            }
         }
-      }
-      unset($output);
-      for($i=1;$i<=$count ;$i++)
-      { 
-        //var_dump(JsConstants::$php5path." ".$command." > /dev/null &");
-        passthru(JsConstants::$php5path." ".$command." > /dev/null &"); 
-      }
     }
     //echo "flag set";
     $this->consumerRestarted = 1;
@@ -207,6 +209,22 @@ EOF;
     }
 
   }
+  
+  private function checkRestart($command){
+    if($command == MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND){
+      $inactiveHours = array("00","01","02","10","11","12","13","14");
+      $currentHr = date("H");
+      if(in_array($currentHr, $inactiveHours)){
+          return false;
+      }
+      else{
+          return true;
+      }
+    }
+    else{
+        return true;
+    }
+  }
   /**
    * 
    * Function for executing cron- checks status of rabbitmq server, checks memory consumption, no of messages pending in queues,
@@ -232,6 +250,7 @@ EOF;
                                   MessageQueues::CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::SCREENINGCONSUMERCOUNT,
                                   MessageQueues::UPDATE_FEATURED_PROFILE_STARTCOMMAND=>MessageQueues::FEATURED_PROFILE_CONSUMER_COUNT,
                                   MessageQueues::CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND=>MessageQueues::LOGGING_QUEUE_CONSUMER_COUNT,
+                                  MessageQueues::CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND=>MessageQueues::DISCOUNT_TRACKING_CONSUMER_COUNT
                                     );
     $this->callRabbitmqServerApi("FIRST_SERVER");
    
@@ -244,7 +263,9 @@ EOF;
         //echo "restartInactiveConsumer ..";
         //restart inactive default consumer for queues bound to default exchange
         foreach ($this->consumerToCountMapping as $command => $count) {
-            $this->restartInactiveConsumer($count,$command);
+            if($this->checkRestart($command)){
+                $this->restartInactiveConsumer($count,$command);
+            }
         }
     }
 

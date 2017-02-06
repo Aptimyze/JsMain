@@ -1,6 +1,6 @@
 <?php
 /*
-This php script is run to create object of rabbitmq ConsuDiscountTrackingConsumermer class and call the receiveMessage function to let the consumer receive messages on first server.
+This php script is run to create object of rabbitmq ConsumeDiscountTrackingConsumer class and call the receiveMessage function to let the consumer receive messages on first server.
 */
 
 class cronConsumeDiscountTrackingQueueMessageTask extends sfBaseTask
