@@ -35,11 +35,11 @@ EOF;
         if (!sfContext::hasInstance())
             sfContext::createInstance($this->configuration);
          //open rate tracking by nitesh as per vibhor        
-         //   $cronDocRoot = JsConstants::$cronDocRoot;
-         //   $php5 = JsConstants::$php5path;
-         //   passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring EOI_MAILER#INSERT");
-	   // $countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
-        //    $instanceID = $countObj->getID('EOI_MAILER');
+            $cronDocRoot = JsConstants::$cronDocRoot;
+            $php5 = JsConstants::$php5path;
+            passthru("$php5 $cronDocRoot/symfony mailer:dailyMailerMonitoring EOI_MAILER#INSERT");
+	    $countObj = new jeevansathi_mailer_DAILY_MAILER_COUNT_LOG();
+            $instanceID = $countObj->getID('EOI_MAILER');
         
           $contactOnceObj   = new NEWJS_CONTACTS_ONCE;
 	$memcacheObj = JsMemcache::getInstance();

@@ -118,6 +118,8 @@ class MessageLog
 				}	
 				
 				$messageForRB = $this->getRBMessage($viewerProfile,$receiverObj,$profileObj);
+				unset($profileObj);
+				unset($receiverObj);
 				$RBmessage['MESSAGE'] = $messageForRB;
 				array_push($message, $RBmessage);
 			}
