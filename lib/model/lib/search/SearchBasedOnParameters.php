@@ -181,6 +181,10 @@ class SearchBasedOnParameters extends SearchParamters
                 {
                        	$this->setHENTRY_DT($paramArr["HENTRY_DT"]);
                 }
+		if($paramArr["IS_VSP"])
+                {
+                       	$this->setIS_VSP(1);
+                }
 	}
 }
 ?>

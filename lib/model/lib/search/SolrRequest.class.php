@@ -38,6 +38,13 @@ class SolrRequest implements RequestHandleInterface
 				else
 	                        	$this->solrServerUrl = JsConstants::$solrServerLoggedOut."/select";
 	                }
+                        
+                        if($this->searchParamtersObj->getIS_VSP() && $this->searchParamtersObj->getIS_VSP() == 1){
+                                $this->solrServerUrl = JsConstants::$solrServerForVSP."/select";
+                        }
+                        if($this->searchParamtersObj->getSHOW_RESULT_FOR_SELF()=='ISKUNDLIMATCHES'){
+                                $this->solrServerUrl = JsConstants::$solrServerForKundali."/select"; 
+                        }
               		$this->profilesPerPage = SearchCommonFunctions::getProfilesPerPageOnSearch($searchParamtersObj);
 			/*
 			if($this->responseObj->getShowAllClustersOptions())
