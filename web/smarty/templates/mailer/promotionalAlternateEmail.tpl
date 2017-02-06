@@ -67,7 +67,7 @@
                         <tr>
 
                         <td width="20"></td>
-                        <td height="27" align="center" width="110" bgcolor="#ad160d"><a href="(LINK)COMPLETE_PROFILE:profileid=~$profileid`(/LINK)" style="color:#ffffff;text-decoration:none;font-size:12px" target="_blank"><strong>ADD NOW</strong></a></td>
+                        <td height="27" align="center" width="110" bgcolor="#ad160d"><a href="(LINK)ALTERNATE_EMAIL_PROMOTION:profileid=~$profileid`(/LINK)" style="color:#ffffff;text-decoration:none;font-size:12px" target="_blank"><strong>ADD NOW</strong></a></td>
                         </tr>
                     </tbody>
                 </table>

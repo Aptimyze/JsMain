@@ -341,7 +341,7 @@ chatConfig.Params = {
         setLastReadMsgStorage:true,
 	    loginSessionTimeout:30, // session will expire after 30 days in case of no activity
         //autoChatLogin:false,
-        autoChatLogin:((hideUnimportantFeatureAtPeakLoad == "1") ? false : true),  //auto-login to chat on site login
+        autoChatLogin:((hideUnimportantFeatureAtPeakLoad != undefined && hideUnimportantFeatureAtPeakLoad >= 3) ? false : true),  //auto-login to chat on site login
         rosterDeleteChatBoxMsg:"You can no longer chat, as either you or the other user blocked/declined interest",
         clearListingCacheTimeout:86400000, //Time in milliseconds(1 day)
         //listingRefreshTimeout:600000, //Time in milliseconds (10 min)

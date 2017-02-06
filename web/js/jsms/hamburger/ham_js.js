@@ -239,7 +239,7 @@ function readCookie(name) {
     return null;
 }
 
-function createCookie(name, value, days) {
+function createCookie(name, value, days,specificDomain) {
     var expires;
     if (days) {
         var date = new Date();
@@ -248,17 +248,34 @@ function createCookie(name, value, days) {
     } else {
         expires = "";
     }
-    document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    if(specificDomain == undefined || specificDomain == ""){
+    	document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+    else{
+    	document.cookie = escape(name) + "=" + escape(value) + expires + ";domain="+specificDomain+";path=/";
+    }
 }
 
 function translateSite(translateURL){
-  newHref = translateURL+"?AUTHCHECKSUM="+readCookie("AUTHCHECKSUM");
-  if(translateURL.indexOf('hindi')){
-    createCookie("jeevansathi_hindi_site","Y",100);
-  } else {
-    createCookie("jeevansathi_hindi_site","N",100);
-  }
-  window.location.href = newHref;
+	newHref = translateURL+"?AUTHCHECKSUM="+readCookie("AUTHCHECKSUM");
+	if(trackingProfile == "11238186"){
+		console.log("translateURL and newHref and current url",translateURL,newHref,window.location.href);
+		if(translateURL.indexOf('hindi')!=-1){
+			createCookie("jeevansathi_hindi_site","Y",100,".jeevansathi.com");
+			console.log("setting hindi",readCookie("jeevansathi_hindi_site"));
+		} else {
+			createCookie("jeevansathi_hindi_site","N",100,".jeevansathi.com");
+			console.log("unsetting hindi",readCookie("jeevansathi_hindi_site"));
+		}
+	}
+	else{
+		if(translateURL.indexOf('hindi')){
+			createCookie("jeevansathi_hindi_site","Y",100);
+		} else {
+			createCookie("jeevansathi_hindi_site","N",100);
+		}
+	}
+ 	window.location.href = newHref;
 }
 
 $("[hamburgermenu]").each(function(){

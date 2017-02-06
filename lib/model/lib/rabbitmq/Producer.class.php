@@ -128,6 +128,18 @@ class Producer
 			$this->channel->queue_declare(MQ::PROFILE_CACHE_Q_DELETE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
                         $this->channel->queue_declare(MQ::VIEW_LOG, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 			$this->channel->queue_declare(MQ::SCREENING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+			$this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
+			$this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
+			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeRightNow, 'direct');
+			$this->channel->queue_bind(MQ::WRITE_MSG_queueRightNow, MQ::WRITE_MSG_exchangeRightNow);
+			$this->channel->queue_declare(MQ::WRITE_MSG_queueDelayed5min, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
+					array(
+						"x-dead-letter-exchange" => array("S", MQ::WRITE_MSG_exchangeRightNow),
+						"x-message-ttl" => array("I", MQ::DELAY_WRITEMSG*1000))
+					);
+			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeDelayed5min, 'direct');
+			$this->channel->queue_bind(MQ::WRITE_MSG_queueDelayed5min, MQ::WRITE_MSG_exchangeDelayed5min);
 
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to" . " declare queues : " . $exception->getMessage() . "\tLine:" . __LINE__;
@@ -229,6 +241,13 @@ class Producer
                 case MQ::SCREENING_Q_EOI:
                 	$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::SCREENING_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
                 	break;
+				case MQ::WRITE_MSG_Q:
+					$this->channel->basic_publish($msg, MQ::WRITE_MSG_exchangeDelayed5min);
+					break;
+                case 'LOGGING_TRACKING':
+                	$this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::LOGGING_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
+                	break;
+
 			}
 		} catch (Exception $exception) {
 			$str = "\nRabbitMQ Error in producer, Unable to publish message : " . $exception->getMessage() . "\tLine:" . __LINE__;

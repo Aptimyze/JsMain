@@ -333,7 +333,12 @@
                     </div><i class="pos-abs sprite2 myjs-ic2 myjs-pos3 scntrl cursp" id="prv-slide2"></i> <i class="pos-abs sprite2 myjs-ic3 myjs-pos4 scntrl cursp" id="nxt-slide2"></i> </div>
             </div>
         </article>
+      ~if $loadLevel >= 3`
+        <article id="VERIFIEDMATCHES_HIDE" class="disp-none">
+      ~else`
         <article id="VERIFIEDMATCHES">
+      ~/if`
+        
             <div class="pt30 clearfix fontlig">
                 <div class="fl f22 color11">Verified Matches <span class="fontreg colr5"></span></div>
                 <div class="fr f16 pt8"><a href="#" class="color12 icons myjs-ic11 pr15">View All</a> </div>
@@ -386,7 +391,12 @@
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Recent Profile Visitors - +x',loggedInJspcGender,'')"></li>
                 </ul>
             </div>
+          ~if $loadLevel >=3`
+            <div id="SHORTLIST_HIDE" class="myjs-wid11 fr disp-none">
+          ~else`
             <div id="SHORTLIST" class="myjs-wid11 fr">
+          ~/if`
+            
                 <p class="fontlig f22 color11">Shortlisted Profiles</p>
                 <ul class="hor_list clearfix mysj-btmwid pt30 pl20">
                     <li class="myjs-bg3" style="width:72px; height:72px; border-radius:50%" onclick="trackJsEventGA('My JS JSPC', 'Shortlisted Profiles - Photo',loggedInJspcGender,'')"></li>
