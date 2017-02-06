@@ -954,11 +954,22 @@ die;
 				return (JsConstants::$hindiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
 			}
             else if($loginData["PROFILEID"] == 11238186 && $request->getcookie("redirected_hindi")=='Y'){
-				error_log("ankita redirected to jeevansathi hindi site2-referred by ".$_SERVER['HTTP_REFERER']." /requestUrl ".$_SERVER['REQUEST_URI']." -redirect ".$request->getParameter('newRedirect'));
+				error_log("ankita redirected to jeevansathi hindi site2-referred by- ".$_SERVER['HTTP_REFERER']." /requestUrl- ".$_SERVER['REQUEST_URI']." -redirect ".$request->getParameter('newRedirect'));
 				@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/","jeevansathi.com");
                 //redirect to hindi site if referer is blank and newRedirect is not set
                 if(!isset($_SERVER['HTTP_REFERER']) && $request->getParameter('newRedirect') != 1){
-                	return (JsConstants::$hindiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
+                	$newRedirectUrl = JsConstants::$hindiTranslateURL;
+                	if(isset($_SERVER["REQUEST_URI"])){
+						$newRedirectUrl = $newRedirectUrl.$_SERVER["REQUEST_URI"];
+					}
+					if(strpos($newRedirectUrl,"?") != false){
+						$newRedirectUrl = $newRedirectUrl."&";
+					}
+					else{
+						$newRedirectUrl = $newRedirectUrl."?";
+					}
+					$newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+					return $newRedirectUrl;
                 }
             }
 		} else {
