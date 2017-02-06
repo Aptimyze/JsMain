@@ -84,7 +84,8 @@ echo "\n".count($this->receiver);
 
                if($toSend && ($val["MESSAGE"] == "" || $val["MESSAGE"] == NULL) && $contactType[$val["CONTACTID"]]["MSG_DEL"] == "Y")
                {
-                $userName = (new NEWJS_JPROFILE())->getUsername($val['SENDER']);
+                $jprofObj = NEWJS_JPROFILE::getInstance();
+                $userName = $jprofObj->getUsername($val['SENDER']);
                 $this->contacts[$key]["MESSAGE"] = Messages::getMessage(Messages::AP_MESSAGE,array('USERNAME'=>$userName));
                }
             }
