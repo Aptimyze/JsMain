@@ -580,7 +580,6 @@ class Initiate extends ContactEvent{
         return true;
       }
       else{
-          if($this->_sendMail=='N')
                 $this->_contactsOnceObj->insert(
                 $this->contactHandler->getContactObj()->getCONTACTID(),
                 $this->viewer->getPROFILEID(),
