@@ -17,7 +17,8 @@ class RabbitmqHelper
                           "queueSmsGcm"=>"",
                           "browserNotification"=>"nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com",
 			  "UpdateSeen"=>"eshajain88@gmail.com,lavesh.rawat@gmail.com",
-                          "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com"
+                          "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com",
+                          "loggingQueue"=>"palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com"
                           );            
     
     $emailTo=$emailAlertArray[$to];

@@ -42,7 +42,7 @@
                     <tr>
                         <td width="20"></td>
                         <td>
-                <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you a personal message, you want to reply her.
+                <var>{{USERNAME:profileid=~$otherProfileId`}}</var> has sent you some personalized message(s) just a while ago. Shown below are the recent messages received from and sent to <var>{{USERNAME:profileid=~$otherProfileId`}}</var>.
             </td>
                         <td width="20"></td>
                     </tr>

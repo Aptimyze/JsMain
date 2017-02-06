@@ -20,6 +20,7 @@
 			var AndroidPromotion= ~JsConstants::$AndroidPromotion`;
       var trackingProfile = "~$sf_request->getAttribute('profileid')`";
                         var webView= "~$webView`";
+                        var hideUnimportantFeatureAtPeakLoad = "~JsConstants::$hideUnimportantFeatureAtPeakLoad`";
 	</script>
 	<meta name="verify-v1" content="y8P0QEbZI8rd6ckhDc6mIedNE4mlDMVDFD2MuWjjW9M=" />
 	<meta http-equiv="content-language" content="en" />
