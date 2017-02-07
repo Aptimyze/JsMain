@@ -567,11 +567,7 @@ $js_arr[]=array("jspc/success_story/imagefit"  => "1");
 $js_arr[]=array("jspc/contactus/contactus_js"  => "1");
 $js_arr[]=array("jspc/success_story/successScroll"  => "1");
 $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                                                                      => "84");
-<<<<<<< HEAD
-$js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                                => "43");
-=======
 $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                                   => "46");
->>>>>>> 67c2b0552e077f02c60f07b3f80547202b9748d6
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"                          => "36");
