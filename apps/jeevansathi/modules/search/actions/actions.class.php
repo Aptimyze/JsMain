@@ -1603,11 +1603,19 @@ class searchActions extends sfActions
 					
 					if($noRelaxation!=1 && $responseObj->getTotalResults() < $searchResultsCountForAutoRelaxation)
 					{ 
-						$this->relaxedResults = 1;
+                                                $keyAuto = "autoRelaxedCount";
+                                                if(JsMemcache::getInstance()->get($keyAuto))
+                                                {
+                                                    $countVal = JsMemcache::getInstance()->get($keyAuto) + 1;
+                                                }else{
+                                                        $countVal = 1;
+                                                }
+                                                JsMemcache::getInstance()->set($keyAuto,$countVal);
+						/*$this->relaxedResults = 1;
                                                 $AutoRelaxationObj = new AutoRelaxation($SearchParamtersObj);
 						$relaxCriteria = $AutoRelaxationObj->autoRelax($loggedInProfileObj);
 						unset($responseObj);
-						$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);
+						$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);*/
 
 					}
 					
