@@ -139,8 +139,8 @@ class SearchTitleAndTextEnums
                 self::$MESSAGE_0RESULT_MAPPING["V1"]["JSMS"]["verifiedMatches"] = "People who match your Desired Partner Profile and are Verified By Visit will appear here";
                self::$MESSAGE_0RESULT_MAPPING["V1"]["JSMS"]["matchalerts"] = "Daily Recommendations will appear here"; 
                self::$MESSAGE_0RESULT_MAPPING["V1"]["JSMS"]["kundlialerts"] = array(
-																			"withoutHoro"=>"Please create your horoscope to see your Kundli matches",
-																			"withHoro"=>"Kindly relax the criteria present in your Desired Partner Profile",
+																			"withoutHoro"=>"<a href='/profile/mobhoroscope'>Please create your horoscope to see your Kundli matches</a>",
+																			"withHoro"=>"<a href='/profile/viewprofile.php?ownview=1&section=dpp'>Kindly relax the criteria present in your Desired Partner Profile</a>",
 																		);
                 self::$DEFAULT_PIC_SIZE["V1"]["PC"]["DEFAULT"] = "ProfilePic450Url";
                 self::$DEFAULT_PIC_SIZE["V1"]["JSMS"]["DEFAULT"] = "MobileAppPicUrl";
