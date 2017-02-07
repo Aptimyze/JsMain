@@ -27,10 +27,10 @@ class MyJsMobileAppV1
 	        $profilePicObj = $pictureService->getProfilePic();
 		if($profilePicObj)
 			$myPic = $profilePicObj->getThumbailUrl();
-                if(!$myPic)
+        if(!$myPic)
 		{
 			 if($pictureService->isProfilePhotoUnderScreening() =="Y")
-				$myPic = PictureService::getRequestOrNoPhotoUrl('underScreeningPhoto','ThumbailUrl',$profileObj->getGENDER());
+				$myPic = $profilePicObj->getThumbail96Url();
 			else
 				$myPic = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
 		}
