@@ -303,7 +303,6 @@
 			var countryField = $scope.fields[3];
 			var stateField = $scope.fields[4];
 			var cityField = $scope.fields[5];
-console.log(stateField.userDecision);
                         if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
                         {
                                 cityField.show=true;
@@ -674,7 +673,7 @@ console.log(stateField.userDecision);
     }
 	$scope.initCasteNoBar = function()    
 	{
-	        var allowedReligion = ['1','2','3','4','9'];
+	        var allowedReligion = ['1','4','9'];
 		var religionFieldIndex= 2;
 		var casteNoBarFieldIndex = 3;
 
