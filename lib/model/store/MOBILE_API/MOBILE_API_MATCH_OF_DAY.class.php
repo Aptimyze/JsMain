@@ -41,7 +41,7 @@ class MOBILE_API_MATCH_OF_DAY extends TABLE{
     
     public function insert($profileid,$matchProfileid){
         try{
-            $sql = "INSERT INTO MOBILE_API.MATCH_OF_DAY_LOG VALUES (NULL,:PROFILEID,:MATCH_PROFILEID,:ENTRY_DT)";
+            $sql = "INSERT INTO MOBILE_API.MATCH_OF_DAY_LOG(ID,PROFILEID,MATCH_PROFILEID,ENTRY_DT) VALUES (NULL,:PROFILEID,:MATCH_PROFILEID,:ENTRY_DT)";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileid,PDO::PARAM_INT);
             $prep->bindValue(":MATCH_PROFILEID",$matchProfileid,PDO::PARAM_INT);
