@@ -431,6 +431,11 @@ class MyJs implements Module
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 				break;
+                        case 'MATCH_OF_THE_DAY':
+				$skipConditionArray = SkipArrayCondition::$MATCHOFTHEDAY;
+				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+				$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				break;
 			default:
 				$skipConditionArray = SkipArrayCondition::$default;
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
@@ -508,6 +513,13 @@ class MyJs implements Module
 			$condition["LIMIT"]= $this->configurations[$infoType]["COUNT"];
 			$condition["NEW"] = 1;
       $condition["LOGIC"] = MatchAlertLogicEnum::MATCHES_LAST_SENT;
+		}
+		if ($infoType == "MATCH_OF_THE_DAY")
+		{
+			$condition["GENDER"] = $this->profileObj->getGENDER();
+            $condition['PROFILEID'] = $this->profileObj->getPROFILEID();
+            $condition['ENTRY_DT'] = date("Y-m-d 00:00:00", strtotime('now') - 7*24*3600);
+            $condition['IGNORED'] = 'N';
 		}
 		
                 $condition["ORDER"] = $this->configurations[$infoType]["TUPLE_ORDER"];

@@ -65,6 +65,13 @@ $className = get_class($this);
 				{
 					continue;
 				}
+				if($key == "MATCH_OF_THE_DAY")
+				{
+					if(MobileCommon::isApp())
+						continue;
+					else if (LoggedInProfile::getInstance()->getACTIVATED() == 'U') 
+						continue;					
+				}
 				foreach($value as $k=>$v)
                                 {
 					if($v == "TUPLES")
@@ -186,7 +193,7 @@ $className = get_class($this);
 		$displayV1['membership_message'] = $this->getBannerMessage($profileInfo);     
 			
 
-
+//print_r($displayV1);die;
 		return $displayV1;
         }
 
