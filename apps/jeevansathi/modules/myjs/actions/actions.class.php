@@ -215,6 +215,12 @@ class myjsActions extends sfActions
 					$this->showExpiring = 1;
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
+
+				$this->showMatchOfTheDay = 0;
+				if($this->loginProfile->getACTIVATED() == 'U')
+				{
+					$this->showMatchOfTheDay = 0;
+				}
           //      $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
                 ob_start();
                 $jsonData = sfContext::getInstance()->getController()->getPresentationFor("myjs", "performV1");
@@ -272,7 +278,8 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
-
+        
+        $this->loadLevel = JsConstants::$hideUnimportantFeatureAtPeakLoad;
 
 	
 		if (empty($this->profilePic))
@@ -341,11 +348,17 @@ class myjsActions extends sfActions
 		$registrationTime = strtotime($entryDate);
 
 		$this->showExpiring = 0;
-		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		if($this->loadLevel < 2 && ($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 		{
 			$this->showExpiring = 1;
 		}
 
+		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
+		$this->showMatchOfTheDay = 0;
+		if($loggedInProfileObj->getACTIVATED() == 'U')
+		{
+			$this->showMatchOfTheDay = 0;
+		}
 		$this->engagementCount=array();
 
 //Flag to compute data for important section for FTU page
@@ -525,5 +538,17 @@ return $staticCardArr;
 
 
 	} 
+
+	public function executeClosematchOfDayV1(sfWebRequest $request)
+	{
+		$matchObj= new MOBILE_API_MATCH_OF_DAY();
+		$profileId = LoggedInProfile::getInstance()->getPROFILEID();
+		$matchProfileId = JsCommon::getProfileFromChecksum($request->getParameter("MatchProfileChecksum"));
+		$matchObj->updateMatchProfile($profileId, $matchProfileId);
+		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileId);
+		$respObj = ApiResponseHandler::getInstance();
+		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$respObj->generateResponse();
+		die;
+	}
 }
- 

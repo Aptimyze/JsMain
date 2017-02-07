@@ -1148,3 +1148,12 @@ transform:  translateX(100%) rotateY(0deg) !important;
 .whitewid200p{white-space: nowrap; word-wrap:normal; width:200%;}
 .hgtwid110{height: 110px; width:110px;}
 .whtSpaceNo{white-space: nowrap;}
+.textTru {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.jsmsEllipsis
+{
+	margin: 0;
+}
