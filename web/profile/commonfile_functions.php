@@ -602,11 +602,7 @@ $js_arr[]=array("jsms/utility/offlineTracking_js"   => "1");
 $js_arr[]=array("jsms/common/disableRightClick_js"    => "2");
 $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
-<<<<<<< HEAD
-$js_arr[]=array("jspc/chat/chatCommonConfig_js"                                              => "81");
-=======
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                                                => "83");
->>>>>>> 67c2b0552e077f02c60f07b3f80547202b9748d6
 $js_arr[]=array("jspc/chat/chatPCHelper_js"                                                => "123");
 $js_arr[]=array("jspc/chat/chatPlugin_js"                                                             => "93");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"                                           => "51");
