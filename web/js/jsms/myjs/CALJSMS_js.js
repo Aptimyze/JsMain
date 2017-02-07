@@ -4,34 +4,7 @@ $(document).ready(function() {
 
           
         if($("#CriticalActionlayerId").val()=='11'){
-            
-                        stopTouchEvents(1, 1, 1);
-            $.ajax({
-                url: '/api/v1/profile/dppSuggestionsCAL?sectionFlag=dpp',
-                type: 'GET',
-				timeout:3000,
-                success: function(response) {
-					console.log(jQuery.type(response));
-					var obj;
-					if(jQuery.type(response) == "string") {
-					obj = JSON.parse(response);
-					} else {
-						obj = response;
-					}
-                    if (obj.responseStatusCode == 0) {
-                        appendData(obj);
-                    } else {
-                        startTouchEvents(1);
-                        ShowTopDownError(["Something went wrong."]);
-                        $("#mainHeading").html("No suggestions to show");
-                    }
-                },
-                error: function(response) {
-                    startTouchEvents(1);
-                    ShowTopDownError(["Something went wrong."]);
-					$("#mainHeading").html("No suggestions to show");
-                }
-            });
+        appendData(suggestions);            
         }  
 else {
     
@@ -116,7 +89,7 @@ else {
             if (obj.Description != null || obj.Description != undefined) {
                 $("#dppDescription").append(obj.Description);
             }
-            $.each(obj, function(index, elem) {
+            $.each(obj.suggestions, function(index, elem) {
                 if (elem) {
                     if (elem.heading && elem.data) {
              

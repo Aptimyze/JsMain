@@ -252,13 +252,23 @@ return 0;
 
                       case '11':                      
                       
-                     
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
-                                  $show=1;
-                            
-                      
-                    
+                          {        
+                            $show=1;
+                            if(MobileCommon::isNewMobileSite() || MobileCommon::isApp())
+                            {
+                              ob_start();
+                              sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
+                              $layerData = ob_get_contents();
+                              ob_end_clean();
+                              $dppSugg=json_decode($layerData,true);
+                              $request->setParameter('dppCALGeneric',0);
+                              if(is_array($dppSugg) && is_array($dppSugg['suggestions'])) 
+                                $request->setParameter('dppSugg',$dppSugg);
+
+                            }                          
+                          } 
                     break;
 
                       case '12':               
