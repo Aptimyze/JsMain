@@ -50,6 +50,27 @@ class YOUR_INFO_OLD extends TABLE{
 				throw new jsException($e);
 			}
 		}
+
+	public function getAboutMeOld($profileId)
+	{
+		try
+		{   
+			$sql = "SELECT YOUR_INFO_OLD FROM newjs.YOUR_INFO_OLD WHERE PROFILEID = :PFID" ;
+			$prep=$this->db->prepare($sql);
+							
+			$prep->bindValue(":PFID", $profileId, PDO::PARAM_INT);			
+			$prep->execute();
+
+			$rowSelectDetail = $prep->fetch(PDO::FETCH_ASSOC);
+			return $rowSelectDetail['YOUR_INFO_OLD'];
+			
+		}
+		catch(PDOException $e)
+		{
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+	}
 		
 	
 
