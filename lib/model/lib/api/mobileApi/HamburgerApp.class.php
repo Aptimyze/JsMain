@@ -23,7 +23,7 @@ class HamburgerApp
 			else
 				$picUrl = $profilePicObj->getProfilePic120Url();
 			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$profileObj->getGENDER());
-            $thumbNail =$photoArray['url'];
+            $thumbNail =$photoArray;
 			}
 			
 		}
