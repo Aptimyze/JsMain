@@ -1,4 +1,4 @@
-var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2, matchAlertNext=0, full_loaded = 0;
+var awaitingResponseCount, visitorCount, matchalertCount, limit = 0,tupleObject,tupleObject2,tupleObject3,index = 0,pc_temp1 = 0,pc_temp2 = 0,t1 = null,profileCompletionCount = 0,start = 0,m,windowWidth=$(window).width(),tupleObject,tupleObject2,tupleObject3, matchAlertNext=0, full_loaded = 0,matchOfDayNext=0;
 
 
 
@@ -48,18 +48,19 @@ function profile_completion(lim) {
 
 function jsmsMyjsReady() {
     
-    var arr=["awaitingResponse","visitor","matchalert"];
+    var arr=["awaitingResponse","visitor","matchalert","matchOfDay"];
     if(document.getElementById("awaitingResponseCount") == null) {
         return ;
     }
 	awaitingResponseCount = document.getElementById("awaitingResponseCount").value;
 	visitorCount = document.getElementById("visitorCount").value;
 	matchalertCount = document.getElementById("matchalertCount").value;
+	matchOfDayCount = document.getElementById("matchOfDayCount").value;
         
         for (i=0;i<arr.length;i++)
 	setBlock(arr[i]);
-       
-    
+      
+     
     setBrowseBand();
         
         $("#hamburger").width($(window).width());
@@ -76,8 +77,15 @@ function jsmsMyjsReady() {
            tupleObject2 =   slider2.Slider(9,slider2,parseInt(matchalertCount),"match_alert",matchAlertNext);
           tupleObject2._defaultInit();
                   bindSlider();
-
         }
+
+        if (parseInt(matchOfDayCount)) {
+        	var slider3 = $("#matchOfDayPresent #matchOfDay_tuples");
+        	tupleObject3 = slider3.Slider(9,slider3,parseInt(matchOfDayCount),"matchOfDay",matchOfDayNext);
+        	tupleObject3._defaultInit();
+                  bindSlider();
+        }
+
                 $(".contactLoader").css("left",((windowWidth/2)-$(".contactLoader").width()/2)-20+"px");
 
         bindSlider();
@@ -93,7 +101,6 @@ function jsmsMyjsReady() {
         	$(this).height(circleDim-2);
         	$(this).width(circleDim-2);
         });
-        
 }
 
 
@@ -107,14 +114,13 @@ function setBrowseBand() {
 
 function setBlock(blockName) {
     
-	var count = eval(blockName + "Count");    
+	var count = eval(blockName + "Count");   
     if (count > 0) {
-            
-		document.getElementById(blockName + "Present").style.display = "block";
-		document.getElementById(blockName + "Absent").style.display = "none";
+           $("#"+blockName+"Present").css('display','block');
+           $("#"+blockName+"Absent").css('display','none');
 	} else {
-		document.getElementById(blockName + "Present").style.display = "none";
-		document.getElementById(blockName + "Absent").style.display = "block";
+		$("#"+blockName+"Present").css('display','none');
+        $("#"+blockName+"Absent").css('display','block');
 	}
 }
 	$(window).load(function() {

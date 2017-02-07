@@ -119,7 +119,7 @@ $css_arr[]=array("jsms/myjs/jsmsMyjs_css"               => "17");
 $css_arr[]=array("jsms/phone/phoneVerification_css"  => "2");
 $css_arr[]=array("jsms/photo/photoswipe"    => "1");
 $css_arr[]=array("jsms/common/fonts"     => "2");
-$css_arr[]=array("jsms/common/commoncss"                               => "28");
+$css_arr[]=array("jsms/common/commoncss"                                  => "31");
 $css_arr[]=array("jsms/common/mediaquery"      => "3");
 $css_arr[]=array("jsms/search/srpcss"       => "4");
 $css_arr[]=array("jsms/photo/photoup"    => "1");
@@ -155,7 +155,7 @@ $css_arr[]=array("jsms/search/savesearchcss"      => "5");
 $css_arr[]=array("iosprmo"  => "2");
 $css_arr[]=array("jspc/common/commonJspc_css"                           => "30");
 $css_arr[]=array("jspc/registration/registrationJspc_css"              => "13");
-$css_arr[]=array("jspc/myjs/myjs"                => "20");
+$css_arr[]=array("jspc/myjs/myjs"                => "22");
 $css_arr[]=array("jspc/common/fontsJspc_css"   => "1");
 $css_arr[]=array("jspc/common/headerFooterJspc_css"          => "9");
 $css_arr[]=array("jspc/search/scrollbar"      => "1");
@@ -459,8 +459,8 @@ $js_arr[]=array("jsms/angular/registration/scripts/services"    => "3");
 $js_arr[]=array("jsms/angular/registration/scripts/directives"                => "19");
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                               => "34");
 $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"            => "13");
+$js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                        => "61");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"             => "18");
-$js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                      => "59");
 $js_arr[]=array("jsms/search/inview"   => "2");
 $js_arr[]=array("jsms/login/newMobLogin_js"                              => "30");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
@@ -504,9 +504,9 @@ $js_arr[]=array("registration_pg2"     => "3");
 $js_arr[]=array("registration_pg1"     => "3");
 $js_arr[]=array("jsms/contactus/contactus_js"     => "1");
 $js_arr[]=array("jsms/common/sly"      => "2");
-$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                                           => "60");
-$js_arr[]=array("jspc/myjs/myjs_js"                                                                         => "78");
-$js_arr[]=array("jspc/myjs/engBarJs_js"                               => "31");
+$js_arr[]=array("jspc/myjs/myjs_pcrevamp"                                                                             => "78");
+$js_arr[]=array("jspc/myjs/myjs_js"                                                                        => "78");
+$js_arr[]=array("jspc/myjs/engBarJs_js"                             => "31");
 $js_arr[]=array("jspc/common/nano"     => "2");
 $js_arr[]=array("jspc/common/commonJspc_js"                                     => "40");
 $js_arr[]=array("jspc/registration/registrationJspc_js"                   => "27");
@@ -567,7 +567,11 @@ $js_arr[]=array("jspc/success_story/imagefit"  => "1");
 $js_arr[]=array("jspc/contactus/contactus_js"  => "1");
 $js_arr[]=array("jspc/success_story/successScroll"  => "1");
 $js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"                                                                      => "84");
+<<<<<<< HEAD
+$js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                                => "43");
+=======
 $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                                   => "46");
+>>>>>>> 67c2b0552e077f02c60f07b3f80547202b9748d6
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
 $js_arr[]=array("jspc/contactEngine/contactEngine"                          => "36");
@@ -602,7 +606,11 @@ $js_arr[]=array("jsms/utility/offlineTracking_js"   => "1");
 $js_arr[]=array("jsms/common/disableRightClick_js"    => "2");
 $js_arr[]=array("jsms/profile/horoscope/horoscope_js"  => "1");
 $js_arr[]=array("common_comscore_js"   => "2");
+<<<<<<< HEAD
+$js_arr[]=array("jspc/chat/chatCommonConfig_js"                                              => "81");
+=======
 $js_arr[]=array("jspc/chat/chatCommonConfig_js"                                                => "83");
+>>>>>>> 67c2b0552e077f02c60f07b3f80547202b9748d6
 $js_arr[]=array("jspc/chat/chatPCHelper_js"                                                => "123");
 $js_arr[]=array("jspc/chat/chatPlugin_js"                                                             => "93");
 $js_arr[]=array("jspc/chat/strophieWrapper_js"                                           => "51");

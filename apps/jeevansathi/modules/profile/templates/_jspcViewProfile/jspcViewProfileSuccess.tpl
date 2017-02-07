@@ -208,7 +208,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
     </div>
   </div>
   <!--end:top part-->
-~if $SHOW_NEXT_PREV`
+~if $SHOW_NEXT_PREV && $STYPE !='MOD'`
   <!--start:next/previous button-->
   ~if $SHOW_PREV`
   	<!--start:prv-->

@@ -48,6 +48,7 @@ class ProfileInformationModuleMap
                 }
                 else
                         $arrayName = self::$defaultArray[$module];
+                
                 if(isset(self::${$arrayName}))
                 {
                         foreach(self::${$arrayName} as $k=>$v)
@@ -285,6 +286,23 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
       "KUNAL"=>"1",
 		),
+		"MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Match Of the day",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+            "CONTACT_ID"=>""
+                ),
 		);
 		self::$MYJSAPP_IOS_1=Array(
 		"INTEREST_RECEIVED"=>Array( 
@@ -464,6 +482,24 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS,
       "KUNAL"=>"1",
 		),
+
+		"MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Match Of the day",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+            "CONTACT_ID"=>""
+                ),
 		);
 		self::$ContactCenterAPP=Array(
 		"INTEREST_RECEIVED"=>Array( 
@@ -757,9 +793,26 @@ class ProfileInformationModuleMap
 				"SUBTITLE"=> "",
 				"ICONS"=> "",
 				"BUTTONS"=> "ACCEPT|DECLINE",
-				"TRACKING"=> "responseTracking=56",
+				"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_ANDROID,
 		  		"CONTACT_ID"=>"",
 		),
+                "MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Match Of the day",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+                        "CONTACT_ID"=>""
+                )
 
 		); 
 self::$ContactCenterMYJS=Array(
@@ -911,7 +964,24 @@ self::$ContactCenterMYJS=Array(
 			"BUTTONS"=> "ACCEPT|DECLINE",
 			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
       "KUNAL"=>"1",
-		)
+		),
+                "MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Match Of the day",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+                        "CONTACT_ID"=>""
+                )
 		); 
     self::$ContactCenterDesktop=Array(
 		"INTEREST_RECEIVED"=>Array( 
@@ -945,7 +1015,7 @@ self::$ContactCenterMYJS=Array(
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=54",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
       		"CONTACT_ID"=>"",
 		),
 		"ACCEPTANCES_RECEIVED"=>Array( 
@@ -1308,13 +1378,30 @@ self::$ContactCenterMYJS=Array(
 			"AJAX_FLAG"=> "N",
 			"CALLOUT_MESSAGES"=> "",
 			"VIEW_ALL_LINK"=> "",
-			"TITLE"=> "Interests Archive",
+			"TITLE"=> "Interests Archived",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=53",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED,
       		"CONTACT_ID"=>"",
 		),
+                "MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Match Of the day",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+                        "CONTACT_ID"=>""
+                )
 		);
 	}
 }

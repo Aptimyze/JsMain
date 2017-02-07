@@ -204,6 +204,7 @@ function closeWeTalkForYou(){
           async:true,
           timeout:20000,
           success:function(response){
+            response = response.replace(/(\r\n|\n|\r)/,"");
           		hideCommonLoader();
               if(response == "true"){
               	$(".js-reqHoro").unbind("click");
