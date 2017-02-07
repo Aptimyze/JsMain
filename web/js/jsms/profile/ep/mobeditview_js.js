@@ -7,7 +7,7 @@ var filterJson="";
 var albumPresent=0;
 var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','FocusDpp':'7'};
 var bCallCreateHoroscope = false;
-var editSectionArr = new Array("Album","Details","Kundli","Education","Career","Family","Lifestyle","Contact","Dpp");
+var editSectionArr = new Array("Album","Details","Kundli","Education","Career","Family","Lifestyle","Contact","Dpp","FILTER");
 var editInArr = {};
 editInArr['Details'] = new Array("YOURINFO","basic","Ethnicity","Appearance","SpecialCases");
 editInArr['Kundli'] = new Array("HOROSCOPE_MATCH","RASHI","NAKSHATRA","MANGLIK");
@@ -525,6 +525,13 @@ function formatJsonOutput(result)
         delete(result.cache_interval);
         delete(result.resetCache);
         delete(result.flagForAppRatingControl);
+	$.each(result, function(key, value)
+	{
+		if($.inArray(key,editSectionArr)<=-1)
+		{
+			delete(result[key]);
+		}
+	});
 	return result;
 }
 
