@@ -94,14 +94,14 @@ $columnToUpdate = array(0=>array("column_name"=>"OCCUPATION","column_name_rev"=>
  */
 $tableArray = array(
   "0"=>array("table_name"=>"newjs.JPROFILE","update_type"=>"single","conn_type"=>"master","column"=>"column_name","unique_key"=>"PROFILEID"),
-  "1"=>array("table_name"=>"newjs.SEARCH_FEMALE","update_type"=>"single","conn_type"=>"master","column"=>"column_name","unique_key"=>"PROFILEID"),
-  "2"=>array("table_name"=>"newjs.SEARCH_MALE","update_type"=>"single","conn_type"=>"master","column"=>"column_name","unique_key"=>"PROFILEID"),
-  "3"=>array("table_name"=>"newjs.SEARCH_FEMALE_REV","update_type"=>"comma","conn_type"=>"master","column"=>"column_name_rev","unique_key"=>"PROFILEID"),
-  "4"=>array("table_name"=>"newjs.SEARCH_MALE_REV","update_type"=>"comma","conn_type"=>"master","column"=>"column_name_rev","unique_key"=>"PROFILEID"),
-  "5"=>array("table_name"=>"newjs.JPARTNER","update_type"=>"comma","conn_type"=>"slave","column"=>"column_name_rev","unique_key"=>"PROFILEID"),
-  "6"=>array("table_name"=>"search.LATEST_SEARCHQUERY","update_type"=>"comma","conn_type"=>"master","column"=>"column_name","unique_key"=>"ID"),
-  "7"=>array("table_name"=>"newjs.SEARCH_AGENT","update_type"=>"comma","conn_type"=>"master","column"=>"column_name","unique_key"=>"ID"),
-  "8"=>array("table_name"=>"twowaymatch.TRENDS","update_type"=>"pipehash","conn_type"=>"master","column"=>"column_trends","unique_key"=>"PROFILEID"),
+//  "1"=>array("table_name"=>"newjs.SEARCH_FEMALE","update_type"=>"single","conn_type"=>"master","column"=>"column_name","unique_key"=>"PROFILEID"),
+//  "2"=>array("table_name"=>"newjs.SEARCH_MALE","update_type"=>"single","conn_type"=>"master","column"=>"column_name","unique_key"=>"PROFILEID"),
+//  "3"=>array("table_name"=>"newjs.SEARCH_FEMALE_REV","update_type"=>"comma","conn_type"=>"master","column"=>"column_name_rev","unique_key"=>"PROFILEID"),
+//  "4"=>array("table_name"=>"newjs.SEARCH_MALE_REV","update_type"=>"comma","conn_type"=>"master","column"=>"column_name_rev","unique_key"=>"PROFILEID"),
+//  "5"=>array("table_name"=>"newjs.JPARTNER","update_type"=>"comma","conn_type"=>"slave","column"=>"column_name_rev","unique_key"=>"PROFILEID"),
+//  "6"=>array("table_name"=>"search.LATEST_SEARCHQUERY","update_type"=>"comma","conn_type"=>"master","column"=>"column_name","unique_key"=>"ID"),
+//  "7"=>array("table_name"=>"newjs.SEARCH_AGENT","update_type"=>"comma","conn_type"=>"master","column"=>"column_name","unique_key"=>"ID"),
+//  "8"=>array("table_name"=>"twowaymatch.TRENDS","update_type"=>"pipehash","conn_type"=>"master","column"=>"column_trends","unique_key"=>"PROFILEID"),
 );
 // Master and slave connection object
 global $mysqlObjS , $mysqlObjM;
@@ -188,17 +188,12 @@ function updateCasteInTables($tableName,$columnName,$oldValue,$newValue,$slaveCo
         }elseif($updateType == "pipehash"){
                 $where = " POSITION( '|$oldValue#' IN OCCUPATION_VALUE_PERCENTILE ) <>0";  
         }
-        if($tableName == "newjs.JPROFILE")
-            $selectSql="SELECT $pKey,$columnName,email FROM $tableName WHERE $where";
-        else
             $selectSql="SELECT $pKey,$columnName FROM $tableName WHERE $where";
         $result = $mysqlObjS->executeQuery($selectSql,$slaveConn) or $mysqlObjS->logError($selectSql);
         
         while($row = $mysqlObjS->fetchAssoc($result))
         { 
                 if($row[$pKey] != ''){
-                        if($tableName == "newjs.JPROFILE")
-                            sendMailToUser($row['email'],$oldValue,$newValue);
                         if($updateType == "single"){
                                 $updateSql = "UPDATE $tableName SET $columnName = $newValue WHERE $pKey = ".$row[$pKey]." AND $columnName = $oldValue" ;
                         }elseif($updateType == "comma"){
@@ -255,6 +250,7 @@ function updateOccupationInJprofile($jprofileUpdateObj,$jprofileSlaveObj,$column
     $arrFields = array($columnToUpdate[$tableArr['column']]=>$columnToUpdate['new_value']);
     foreach ($profiles as $key=>$value){
         $res = $jprofileUpdateObj->editJPROFILE($arrFields,$value['PROFILEID'],'PROFILEID');
+        sendMailToUser($value['EMAIL'],$columnToUpdate['old_value'],$columnToUpdate['new_value']);
     }
 }
 
