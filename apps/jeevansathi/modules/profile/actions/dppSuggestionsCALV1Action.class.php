@@ -60,12 +60,15 @@ class dppSuggestionsCALV1Action extends sfActions
 		}
 
 		
-		
 		if(MobileCommon::isApp())
 		{
 			$finalArr = $this->getFormattedArrForApp($finalArr);						
 		}
-		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;		
+		else
+		{
+			$finalArr = $this->getFormattedArrForMobileSite($finalArr);
+		}
+		$finalArr["Description"] = DppAutoSuggestEnum::$descriptionText;				
 		if(is_array($finalArr))
 		{
 			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -177,6 +180,12 @@ class dppSuggestionsCALV1Action extends sfActions
 		}
 
 		return $dppDataArr;
+	}
+
+	public function getFormattedArrForMobileSite($dppSuggestionArr)
+	{
+		$finalArr["dppData"] = $dppSuggestionArr;
+		return $finalArr;
 	}
 }
 ?>
