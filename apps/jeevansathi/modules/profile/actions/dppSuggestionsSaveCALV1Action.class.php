@@ -34,10 +34,11 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 		//This decoded data is an array and not an object. Therefore, is_array checks need to be applied and forloops need to be altered
 		$decodedData =  $editDetailsObj->getDppValuesArr($apiProfileSectionObj,'1');
 				
-		$dppSaveData = json_decode($request->getParameter("dppSaveData"));					
+		$dppSaveData = json_decode($request->getParameter("dppSaveData"));		
 		$dppDataArr = $this->getDppFilledData($decodedData);
-
-		$finalArr = $this->getFinalSubmitData($dppSaveData,$dppDataArr);		
+		$this->incomeDppArr = explode(",",$dppDataArr["INCOME"]);		
+		$finalArr = $this->getFinalSubmitData($dppSaveData,$dppDataArr);
+		
 		ob_start();
 		//$request->setParameter('sectionFlag','dpp');
 		$request->setParameter("fromBackend",false);
@@ -73,9 +74,9 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 					{
 						foreach($value->data as $k=>$v)
 						{
-							if($k == "LRS" ||$k == "HRS")
+							if($k == "LRS" || $k == "HRS")
 							{
-								$finalDppArr["P_".$k] = array_search($v,$this->hIncomeRs);
+								$finalDppArr["P_".$k] = array_search($v,$this->hIncomeRs);								
 							}
 							else
 							{
@@ -98,6 +99,16 @@ class dppSuggestionsSaveCALV1Action extends sfActions
 				}
 			}
 		}
+		if(!array_key_exists("P_LRS", $finalDppArr) && array_key_exists("P_LDS", $finalDppArr))
+		{
+			$finalDppArr["P_LRS"] = $this->incomeDppArr[0];
+			$finalDppArr["P_HRS"] = $this->incomeDppArr[1];
+		}
+		else if (!array_key_exists("P_LDS", $finalDppArr) && array_key_exists("P_LRS", $finalDppArr))
+		{
+			$finalDppArr["P_LDS"] = $this->incomeDppArr[2];
+			$finalDppArr["P_HDS"] = $this->incomeDppArr[3];
+		}		
 		return $finalDppArr;
 	}
 	//This function gets labels from FieldMapLib depending on $labels,$value,$returnArr
