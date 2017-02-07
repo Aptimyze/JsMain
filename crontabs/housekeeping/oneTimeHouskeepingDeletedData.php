@@ -1,5 +1,4 @@
 <?php
-	successfullDie("stopped due to slave lag");die;
 $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 chdir(dirname(__FILE__));

@@ -1138,6 +1138,7 @@ transform:  translateX(100%) rotateY(0deg) !important;
 .mt2{margin-top:2px}
 
 .pad015{padding:0px 15px 15px 15px}
+
 .pad10p0p {
 padding: 10px 0px
 }
@@ -1153,3 +1154,13 @@ border-radius: 32px;
 .vAlignSub{vertical-align: sub;}
 .wid65p{width: 65%;}
 .pt4{    padding-top: 4px;}
+
+.textTru {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.jsmsEllipsis
+{
+	margin: 0;
+}
