@@ -94,16 +94,14 @@ class Inbox implements Module
 						$keyNew = "ACC_ME_NEW";
 						break;
 					case "MY_MESSAGE":
+                                   
 						$keyNew = "MESSAGE_NEW";
 						$key = "MESSAGE_ALL";
 						break;
 					case "MESSAGE_RECEIVED":
-					case "MY_MESSAGE_RECEIVED":
+                    case "MY_MESSAGE_RECEIVED":
 						$keyNew = "MESSAGE_NEW";
 						$key = "MESSAGE";
-						if($infoTypenav["NUMBER"] == 1 && $fromGetDisplayFunction==''){
-							$memcacheServiceObj->unsetKey("MESSAGE_ALL");
-						}
 						break;
 					case "VISITORS":
 						$key = "VISITOR_ALERT";
@@ -171,23 +169,15 @@ class Inbox implements Module
 						break;
 					case "INTEREST_ARCHIVED":
 						$key = "INTEREST_ARCHIVED";
-						$memKeyNotExists=1;
 						break;
-				} 
+					case "INTEREST_EXPIRING":
+						$key = "INTEREST_EXPIRING";
+						break;
+					case "MATCH_OF_THE_DAY":
+						$key = "MATCH_OF_THE_DAY";
+                                                $memKeyNotExists=1;
+						break;
 
-				/*
-					added this check for getting count data for interest archive data.
-				 */
-				
-				if ( $key == "INTEREST_ARCHIVED")
-				{
-					$where['TYPE']="I";
-					$where["RECEIVER"]=$this->profileObj->getPROFILEID();
-					$dbName = JsDbSharding::getShardNo($this->profileObj->getPROFILEID());
-					$contactsObj = new newjs_CONTACTS($dbName);
-					$group             = '';
-					$contactsCount = $contactsObj->getArchivedContactsCount($where,$group,1,$this->getSkipProfiles($infoType));
-					$countObj[$infoTypenav["PAGE"]] = $contactsCount[0]["COUNT"];
 				}
 
 				if($key == "IGNORED_PROFILES")
@@ -308,8 +298,10 @@ class Inbox implements Module
 							$page = $nav;
 						}
 						$conditionArray = $this->getCondition($infoType, $page); 
-                                                if($infoType == "MY_MESSAGE")
+                                                if($infoType == "MY_MESSAGE"){
                                                     $conditionArray['LIMIT']++;
+                                                    $conditionArray["pageNo"]=$nav;
+                                                }
                                                 if($infoTypeNav["matchedOrAll"])
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
@@ -489,6 +481,11 @@ class Inbox implements Module
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 				break;
+			case 'MATCH_OF_THE_DAY':
+				$skipConditionArray = SkipArrayCondition::$MATCHOFTHEDAY;
+				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				break;
 			case 'IGNORED_PROFILES': $this->skipProfiles = array();
 			  break;
 			default:
@@ -541,6 +538,17 @@ class Inbox implements Module
 				}	
 
 			}
+			if ($infoType == "INTEREST_EXPIRING") {
+				$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
+				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+				$bday                                             = mktime(0, 0, 0, date("m"), date("d") - 83, date("Y"));
+				$back_90_days                                     = date("Y-m-d", $yday);
+				$back_83_days                                     = date("Y-m-d", $bday);
+				$condition["WHERE"]["LESS_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_90_days 00:00:00";
+				$condition["WHERE"]["GREATER_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_83_days 00:00:00";
+			}
+
+
 		if ($infoType == "FILTERED_INTEREST") {
 				$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
 				$back_90_days                                     = date("Y-m-d", $yday);
@@ -569,6 +577,13 @@ class Inbox implements Module
 		if ($infoType == "MATCH_ALERT")
 		{
 			$condition["NEW"] = 0;
+		}
+		if ($infoType == "MATCH_OF_THE_DAY")
+		{
+			$condition["GENDER"] = $this->profileObj->getGENDER();
+                        $condition['PROFILEID'] = $this->profileObj->getPROFILEID();
+                        $condition['ENTRY_DT'] = date("Y-m-d 00:00:00", strtotime('now') - 7*24*3600);
+                        $condition['IGNORED'] = 'N';
 		}
 		return $condition;
 	}

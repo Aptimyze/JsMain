@@ -33,6 +33,14 @@ class MyJs implements Module
 			$this->configurations = $configObj->getConfiguration($module,'',"IOS");
 		else 
                 	$this->configurations = $configObj->getConfiguration($module);
+        
+            //As Per Peek Level Unset Some Listing Across Channels
+            if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=2) {
+                unset($this->configurations["INTEREST_EXPIRING"]);
+            }
+            if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=3) {
+                unset($this->configurations["SHORTLIST"]);
+            }
         }
         
         
@@ -127,6 +135,9 @@ class MyJs implements Module
 								break;
 							case "VISITORS":
 								$key = "VISITOR_ALERT";
+								break;
+							case "INTEREST_EXPIRING":
+								$key = "INTEREST_EXPIRING";
 								break;
 							case "ACCEPTANCES_SENT":
 								$key = "ACC_BY_ME";
@@ -245,10 +256,22 @@ class MyJs implements Module
 					if($nav > 1 && !is_array($pids))
 						$infoTypeObj[$infoType] = null;
 					else{
-                                            if($infoType == "VISITORS" && MobileCommon::isNewMobileSite())
-                                            {
-                                            	$conditionArray["matchedOrAll"] = 'A';
-                                            }
+		                    if($infoType == "VISITORS")
+		                    {
+		                        if(MobileCommon::isNewMobileSite())
+		                        {
+									$conditionArray["matchedOrAll"] = 'A';
+		                        }
+		                        elseif (MobileCommon::isApp()=='I' || MobileCommon::isApp()=='A')
+		                        {
+									$request = sfContext::getInstance()->getRequest();
+									$conditionArray["matchedOrAll"] = $request->getParameter("matchedOrAll");
+									if($request->getParameter("matchedOrAll")!='M')
+									{
+										$conditionArray["matchedOrAll"] = 'A';
+									}
+		                        }
+							}
                                             if(($infoType == "MATCH_ALERT")&&((MobileCommon::isNewMobileSite())||(MobileCommon::isApp()=='I'))) {
 //                                                $conditionArray['LIMIT']=$matchAlertCount['NEW'];
                                                 $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
@@ -408,6 +431,11 @@ class MyJs implements Module
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 				break;
+                        case 'MATCH_OF_THE_DAY':
+				$skipConditionArray = SkipArrayCondition::$MATCHOFTHEDAY;
+				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+				$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				break;
 			default:
 				$skipConditionArray = SkipArrayCondition::$default;
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
@@ -459,6 +487,16 @@ class MyJs implements Module
                                 $condition["WHERE"]["IN"]["IS_MSG"] = "Y";
                                 $condition["WHERE"]["IN"]["TYPE"]   = "R";
                         }
+                        if ($infoType == "INTEREST_EXPIRING")
+                        {
+							$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
+							$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+							$bday                                             = mktime(0, 0, 0, date("m"), date("d") - 83, date("Y"));
+							$back_90_days                                     = date("Y-m-d", $yday);
+							$back_83_days                                     = date("Y-m-d", $bday);
+							$condition["WHERE"]["LESS_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_90_days 00:00:00";
+							$condition["WHERE"]["GREATER_THAN_EQUAL_EXPIRING"]["TIME"] = "$back_83_days 00:00:00";
+						}
 
 			$condition["LIMIT"] = $this->getLimit($infoType,$nav);
 		}
@@ -475,6 +513,13 @@ class MyJs implements Module
 			$condition["LIMIT"]= $this->configurations[$infoType]["COUNT"];
 			$condition["NEW"] = 1;
       $condition["LOGIC"] = MatchAlertLogicEnum::MATCHES_LAST_SENT;
+		}
+		if ($infoType == "MATCH_OF_THE_DAY")
+		{
+			$condition["GENDER"] = $this->profileObj->getGENDER();
+            $condition['PROFILEID'] = $this->profileObj->getPROFILEID();
+            $condition['ENTRY_DT'] = date("Y-m-d 00:00:00", strtotime('now') - 7*24*3600);
+            $condition['IGNORED'] = 'N';
 		}
 		
                 $condition["ORDER"] = $this->configurations[$infoType]["TUPLE_ORDER"];
@@ -595,7 +640,7 @@ class MyJs implements Module
                                 "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_JSMS,
                                 "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_JSMS,
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_JSMS,
-                                
+                                "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS
                                );
 		}
 		elseif(MobileCommon::isApp()=='I')

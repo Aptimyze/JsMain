@@ -169,17 +169,17 @@ class ProcessHandler
  }
  public function updateSeen($type,$body)
  {
-
+        $currentTime = $body['time'];
 	if($body['contactType']==ContactHandler::FILTERED)
         {
                 $contactRObj=new EoiViewLog();
-                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'Y');
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'Y',$currentTime);
         }
 
         if($body['contactType']==ContactHandler::INITIATED)
         {
                 $contactRObj=new EoiViewLog();
-                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'N');
+                $contactRObj->setEoiViewedForAReceiver($body['profileid'],'N',$currentTime);
         }
 
 	switch($type)

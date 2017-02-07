@@ -11,6 +11,7 @@ class TupleService
 	private $IGNORED_PROFILES = Array();
 
 	private $INTEREST_RECEIVED = Array();
+	private $INTEREST_EXPIRING = Array();
 	private $INTEREST_ARCHIVED = Array();
 	private $FILTERED_INTEREST = Array();
 	private $INTEREST_SENT = Array();
@@ -29,6 +30,7 @@ class TupleService
 	private $CONTACTS_VIEWED = Array();
 	private $VISITORS = Array();
 	private $MATCH_ALERT = Array();
+	private $MATCH_OF_THE_DAY = Array();
 	private $VIEW_SIMILAR = Array();
 	private $MY_MESSAGE = Array();
 	private $MY_MESSAGE_RECEIVED = array();
@@ -246,6 +248,10 @@ class TupleService
 		return $this->INTEREST_RECEIVED;
 	}
 
+	public function getINTEREST_EXPIRING()
+	{
+		return $this->INTEREST_EXPIRING;
+	}
 	public function getINTEREST_ARCHIVED()
 	{
 		return $this->INTEREST_ARCHIVED;
@@ -297,6 +303,10 @@ class TupleService
 	public function getMATCH_ALERT()
 	{
 		return $this->MATCH_ALERT;
+	}
+	public function getMATCH_OF_THE_DAY()
+	{
+		return $this->MATCH_OF_THE_DAY;
 	}
 	public function getVIEW_SIMILAR()
 	{
@@ -362,6 +372,7 @@ class TupleService
 	 */
 	public function getTupleObject($infoType, $profileId)
 	{
+                
 		eval('$tupleObject = $this->' . $infoType . '["' . $profileId . '"];');
 		return $tupleObject;
 	}

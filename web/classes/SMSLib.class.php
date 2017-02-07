@@ -338,7 +338,7 @@ class SMSLib
                 $longURL           = $this->SITE_URL . "/common/resetPassword?" . $forgotPasswordStr;
                 return $this->getShortURL($longURL, $messageValue["RECEIVER"]["PROFILEID"], $messageValue["RECEIVER"]["EMAIL"], $withoutLogin = 1);
             case "APP_STORE_URL":
-                $appStoreUrl = "https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dsms%26utm_content%3Dverify_sms%26utm_campaign%3DJSAA";
+                $appStoreUrl = $this->SITE_URL . "/SMS-Download-Android-App";
                 return $this->getShortURL($appStoreUrl, '', '', $withoutLogin = 1);
             case "MEMB_PAGE_URL":
                 $longURL = $this->SITE_URL . "/profile/mem_comparison.php?from_source=memSms";
@@ -612,6 +612,9 @@ class SMSLib
             case "CRM_SMS_APP_URL":
                 $appStoreUrl = $this->SITE_URL . "/SMS-Download-Android-App";
                 return $this->getShortURL($appStoreUrl, '', '', $withoutLogin = 1);
+            case "LINK_DEL":
+               $linkToDel = $this->SITE_URL . "/settings/jspcSettings?hideDelete=1";
+                return $this->getShortURL($linkToDel, '', '', $withoutLogin = 0);
             default:
                 return "";
         }

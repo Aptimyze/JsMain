@@ -1408,6 +1408,7 @@ class searchActions extends sfActions
 	*/
 	public function executePerformV1(sfWebRequest $request)
 	{
+		
 		//sleep(10);
 		$showAllClustersOptions=1;
 		$inputValidateObj = ValidateInputFactory::getModuleObject($request->getParameter("moduleName"));
@@ -1591,7 +1592,11 @@ class searchActions extends sfActions
 						$noRelaxation = 1;
 						$noCasteMapping = 1;
 					}
-					
+					if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=5)
+					{
+						$noRelaxation = 1;
+						$noCasteMapping = 1;
+					}
 					/** Auto Relaxation Section
 					* increasing search results by changing some search paramters
 					*/
@@ -1643,8 +1648,14 @@ class searchActions extends sfActions
        
 				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("matchalerts")==1 || $request->getParameter("verifiedMatches")==1 || $request->getParameter("kundlialerts")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("matchofday")==1 || in_array($request->getParameter("searchBasedParam"),array('justJoinedMatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches','matchofday')))
 				;
-				else
-					$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
+				else{
+					if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=7)
+					{
+						$request->setParameter("showFeaturedProfiles",0);
+					}
+					else
+						$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
+				}
 				
 				if(!$cachedSearch && !$request->getParameter("myjs"))
 				{

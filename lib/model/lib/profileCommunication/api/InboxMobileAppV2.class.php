@@ -11,8 +11,9 @@ class InboxMobileAppV2
 	static public $myProfileIncompleteFields;
 	static public $tupleTitleField;
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
-	static public $noresultArray = Array("INTEREST_RECEIVED","INTEREST_ARCHIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MY_MESSAGE_RECEIVED","MATCH_ALERT","PHOTO_REQUEST_RECEIVED","PHOTO_REQUEST_SENT","HOROSCOPE_REQUEST_RECEIVED","HOROSCOPE_REQUEST_SENT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","CONTACTS_VIEWED","PEOPLE_WHO_VIEWED_MY_CONTACTS","IGNORED_PROFILES","INTRO_CALLS","INTRO_CALLS_COMPLETE");
+	static public $noresultArray = Array("INTEREST_RECEIVED","INTEREST_EXPIRING","INTEREST_ARCHIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MY_MESSAGE_RECEIVED","MATCH_ALERT","PHOTO_REQUEST_RECEIVED","PHOTO_REQUEST_SENT","HOROSCOPE_REQUEST_RECEIVED","HOROSCOPE_REQUEST_SENT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","CONTACTS_VIEWED","PEOPLE_WHO_VIEWED_MY_CONTACTS","IGNORED_PROFILES","INTRO_CALLS","INTRO_CALLS_COMPLETE");
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
+	const INTEREST_EXPIRING = "You have no interests left to respond to";
 	const ACCEPTANCES_RECEIVED = "No one has yet accepted your interest";
 	const ACCEPTANCES_SENT = "You haven't yet accepted any interests sent to you";
 	const INTEREST_SENT = "You haven't sent any interests yet";
@@ -38,6 +39,7 @@ class InboxMobileAppV2
 	const CONTACTS_VIEWED_PAID = "Contacts viewed by you would be shown here";
 	const CONTACTS_VIEWED_UNPAID_V2 = "<span style='color:#666'> Upgrade membership to view contact details and connect to your match instantly.</span>";
 	const CONTACTS_VIEWED_UNPAID_V2_IOS = "Upgrade membership to view contact details and connect to your match instantly.";
+	const INTEREST_ARCHIVED = "You have no interests left to respond to";
 
 	static public function init()
 	{
@@ -71,6 +73,35 @@ class InboxMobileAppV2
                                 "ANCESTRAL_ORIGIN",
 				"NAME_OF_USER",
 				),
+			
+				"INTEREST_EXPIRING"=>Array(
+				"PROFILECHECKSUM",
+                                "USERNAME",
+                                "GENDER",
+                                "OCCUPATION",
+                                "LOCATION",
+                                "AGE",
+                                "HEIGHT",
+                                "RELIGION",
+                                "CASTE",
+                                "MTONGUE",
+                                "INCOME",
+                                "subscription_icon",
+                                "subscription_text",
+                                "TIME",
+                                "SEEN",
+                                "edu_level_new",
+                                "userloginstatus",
+                                "ProfilePic120Url",
+                                "ProfilePic450Url",
+                                "MSTATUS",
+                                "VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+                                ),
 			"INTEREST_ARCHIVED"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -86,7 +117,6 @@ class InboxMobileAppV2
 				"subscription_icon",
 				"subscription_text",
 				"TIME",
-				"MESSAGE",
 				"SEEN",
 				"edu_level_new",
 				"userloginstatus",
@@ -688,6 +718,35 @@ class InboxMobileAppV2
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",
+				),
+                    "MATCH_OF_THE_DAY"=>Array(
+				"PROFILECHECKSUM",
+				"USERNAME",
+				"OCCUPATION",
+				"LOCATION",
+				"AGE",
+				"HEIGHT",
+				"RELIGION",
+				"CASTE",
+				"MTONGUE",
+				"INCOME",
+				"subscription_icon",
+				"subscription_text",
+				"TIME",
+				"MESSAGE",
+				"SEEN",
+				"edu_level_new",
+				"userloginstatus",
+				"FILTERED",
+				"ProfilePic120Url",
+				"ProfilePic450Url",
+				"MSTATUS",
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
 				)
 			);
 		self::$informationTypeFields     = Array(
@@ -1162,6 +1221,7 @@ class InboxMobileAppV2
                                 "SHORTLIST"=>"stype=".SearchTypesEnums::MYJS_SHORTLIST_PC."&responseTracking=".JSTrackingPageType::MYJS_SHORTLIST_PC,
                                 "PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
                                 "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_MYJS_JSPC,
+                                "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSPC_MYJS,
                                 //"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_PHOTOREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
                                 //"HOROSCOPE_REQUEST_SENT"=>"stype=".SearchTypesEnums::MYJS_HOROSCOPEREQUEST_PC,
@@ -1175,13 +1235,15 @@ class InboxMobileAppV2
                         else
                             $visitorsStype = SearchTypesEnums::VISITORS_JSPC;
 			$trackingMap=array("INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::CONTACT_AWAITING,
-				"VISITORS"=>"stype=".$visitorsStype."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
-				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::ARCHIVED_INTEREST,
+				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED,
+				           "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
+					   "VISITORS"=>"stype=".$visitorsStype."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_JSPC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"PHOTO_REQUEST_SENT"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_SENT_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"HOROSCOPE_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::HOROSCOPE_REQUEST_RECEIVED_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"HOROSCOPE_REQUEST_SENT"=>"stype=".SearchTypesEnums::HOROSCOPE_REQUEST_SENT_CC_PC."&responseTracking=".JSTrackingPageType::CONTACT_OTHER,
+				"NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_PC."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_PC,
 				"FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::CONTACT_OTHER,
 				"INTRO_CALLS"=>"responseTracking=".JSTrackingPageType::CONTACT_OTHER,
                 "INTRO_CALLS_COMPLETE"=>"responseTracking=".JSTrackingPageType::CONTACT_OTHER,
@@ -1202,8 +1264,9 @@ class InboxMobileAppV2
                                 "PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_IOS,
                                 "CONTACTS_VIEWED"=>"stype=".SearchTypesEnums::PHONEBOOK_IOS,"responseTracking=".JSTrackingPageType::PHONEBOOK_IOS,
                                 "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_IOS,
-                                "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_IOS,"responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_IOS
-                                );
+                                "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_IOS,"responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_IOS,
+                                "NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_IOS."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_IOS,
+				);
                 }
 		else{
                     if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")!="A")
@@ -1212,13 +1275,17 @@ class InboxMobileAppV2
                         $visitorsStype = SearchTypesEnums::VISITORS_JSMS;
 			$trackingMap=array(
 				"INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MOBILE_AWAITING,
+				"INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS,
 				"VISITORS"=>"stype=".$visitorsStype,
 				"MATCH_ALERT"=>"stype=".SearchTypesEnums::WapMatchAlertsCC,
 				"SHORTLIST"=>"stype=".SearchTypesEnums::SHORTLIST_JSMS."&responseTracking=".JSTrackingPageType::SHORTLIST_JSMS,
 				"PHOTO_REQUEST_RECEIVED"=>"stype=".SearchTypesEnums::PHOTO_REQUEST_RECEIVED_JSMS,
 				"CONTACTS_VIEWED"=>"stype=".SearchTypesEnums::PHONEBOOK_JSMS."&responseTracking=".JSTrackingPageType::PHONEBOOK_JSMS,
 				"FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_JSMS,
-				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_JSMS."&responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_JSMS
+				"PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_JSMS."&responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_JSMS,
+                                "NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_MS."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_MS,
+				
+				"INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_JSMS,
 				);
                 }
 		return $trackingMap[$infoType]?$trackingMap[$infoType]:false;

@@ -735,7 +735,7 @@ class crmInterfaceActions extends sfActions
         $this->name = $request->getParameter('name');
         $field      = 'ENTRY_DT';
 
-        $slaveNamesArr = array('newjs_master', 'newjs_slave', 'newjs_local111');
+        $slaveNamesArr = array('newjs_master', 'newjs_slave', 'newjs_local111','crm_slave','newjs_masterRep');
         foreach ($slaveNamesArr as $key => $name) {
             $jprofileObj = new JPROFILE($name);
             $dataArr     = $jprofileObj->getLatestValue($field);
@@ -753,7 +753,8 @@ class crmInterfaceActions extends sfActions
         $this->masterTime = $masterTime;
         $this->misSlave   = $dateTimeArr['newjs_slave'];
         $this->slave111   = $dateTimeArr['newjs_local111'];
-
+	$this->crmSlave   = $dateTimeArr['newjs_masterRep'];
+	$this->masterRep  = $dateTimeArr['newjs_masterRep'];
     }
 
     public function executeHelpBackend(sfWebRequest $request)
@@ -913,6 +914,7 @@ class crmInterfaceActions extends sfActions
                 $this->error    = 1;
                 $this->errorMsg = "Invalid Date Selected";
             } else {
+
                 $billingPurDetObj->updateActivationDates($this->billid, $this->serviceid, $start_date, $end_date);
                 $billingServStatObj->updateActivationDates($this->billid, $this->serviceid, $start_date, $end_date);
                 $this->profileid = $billingServStatObj->getProfileidForBillid($this->billid);
@@ -925,6 +927,13 @@ class crmInterfaceActions extends sfActions
                 }
                 $this->purDet       = $billingPurDetObj->getAllDetailsForBillidArr(array($this->billid));
                 $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+
+            	// Logging
+            	$serviceActivationLog = new billing_SERVICE_ACTIVATION_LOG();
+            	foreach($this->serStatDet as $key=>$dataArr){
+            	    if(in_array("$this->serviceid", $dataArr))
+			$serviceActivationLog->addLog('ACTIVE_DATES',$this->name, $dataArr['PROFILEID'], $dataArr['BILLID'],$this->serviceid,'','',$dataArr['ACTIVATED_ON'], $dataArr['ACTIVATE_ON'],$dataArr['EXPIRY_DT']);	
+            	}
                 $this->detailedView = 1;
             }
         }
@@ -955,6 +964,7 @@ class crmInterfaceActions extends sfActions
         if ($request->getParameter("submitServiceid")) //If form is submitted
         {
             $serviceStatus = $request->getParameter('serviceStatus');
+
             $billingServStatObj->updateActiveStatusForBillidAndServiceid($this->billid, $this->serviceid, $serviceStatus);
             $this->profileid = $billingServStatObj->getProfileidForBillid($this->billid);
             $subscription    = $billingServStatObj->getActiveServeFor($this->profileid);
@@ -971,6 +981,13 @@ class crmInterfaceActions extends sfActions
             }
             $this->jprofileDet  = $jprofileObj->get($this->profileid, 'PROFILEID', 'USERNAME, PROFILEID, SUBSCRIPTION');
             $this->serStatDet   = $billingServStatObj->fetchAllServiceDetailsForBillid($this->billid);
+
+            // Logging
+            $serviceActivationLog = new billing_SERVICE_ACTIVATION_LOG();
+	    foreach($this->serStatDet as $key=>$dataArr){
+		if(in_array("$this->serviceid", $dataArr))
+            		$serviceActivationLog->addLog('ACTIVE_STATUS',$this->name, $dataArr['PROFILEID'], $dataArr['BILLID'],$this->serviceid, $dataArr['ACTIVATED'], $dataArr['ACTIVE']);
+	    }	
             $this->detailedView = 1;
         }
     }

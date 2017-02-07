@@ -113,6 +113,9 @@ class inboxActions extends sfActions
       
                         if ($infoType == "VISITORS") {
                             $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
+                            if($infoTypenav["matchedOrAll"]=='')
+                                $infoTypenav["matchedOrAll"]='A';
+
                         }
       
 			if(PROFILE_COMMUNICATION_ENUM_INFO::ifModuleExists($module))
@@ -146,7 +149,8 @@ class inboxActions extends sfActions
 							$producerObj=new Producer();
 							if($producerObj->getRabbitMQServerConnected())
 							{
-								$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED)), 'redeliveryCount'=>0 );
+                                                                $currentTime = date('Y-m-j H:i:s');
+								$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED,'time'=>$currentTime)), 'redeliveryCount'=>0 );
 								$producerObj->sendMessage($updateSeenData);
 							}
 							else
@@ -225,7 +229,8 @@ class inboxActions extends sfActions
                                                         $producerObj=new Producer();
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED)), 'redeliveryCount'=>0 );
+                                                                $currentTime = date('Y-m-j H:i:s');
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED,'time'=>$currentTime)), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                         }
                                                         else
@@ -388,7 +393,7 @@ public function executePerformV2(sfWebRequest $request)
         }
                                 if ($infoType == "VISITORS") {
                                     $infoTypenav["matchedOrAll"] = $request->getParameter("matchedOrAll");
-                                    if(MobileCommon::isIOSApp())
+                                    if(MobileCommon::isIOSApp() && $infoTypenav["matchedOrAll"]=='')
                                     {
                                            $infoTypenav["matchedOrAll"] = "A";
                                     }
@@ -453,6 +458,12 @@ public function executePerformV2(sfWebRequest $request)
                                 if ($infoType == "MATCH_ALERT") {
                                         $response2["dppLinkAtEnd"] = 'Go To Desired Partner Matches.';
                                 }
+                $response2["archivedInterestLinkAtEnd"] = null;
+                if ( $infoType == "INTEREST_RECEIVED")
+                {
+                	$response2["archivedInterestLinkAtEnd"] = 'Archived Interests'; 
+                }
+
 				$response2["sorting"]=0;
 				$response2["sortType"]=null;
 				$response2["stype"]=null;
@@ -561,7 +572,8 @@ public function executePerformV2(sfWebRequest $request)
                                                         $producerObj=new Producer();
                                                         if($producerObj->getRabbitMQServerConnected())
                                                         {
-                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED)), 'redeliveryCount'=>0 );
+                                                                $currentTime = date('Y-m-j H:i:s');
+                                                                $updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::INITIATED,'time'=>$currentTime)), 'redeliveryCount'=>0 );
                                                                 $producerObj->sendMessage($updateSeenData);
                                                         }
                                                         else
@@ -764,7 +776,8 @@ public function executePerformV2(sfWebRequest $request)
 								$producerObj=new Producer();
 								if($producerObj->getRabbitMQServerConnected())
 								{
-									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED)), 'redeliveryCount'=>0 );
+                                                                        $currentTime = date('Y-m-j H:i:s');
+									$updateSeenData = array('process' =>'UPDATE_SEEN','data'=>array('type' => 'ALL_CONTACTS','body'=>array('profileid'=>$pid,'contactType'=>ContactHandler::FILTERED,'time'=>$currentTime)), 'redeliveryCount'=>0 );
 									$producerObj->sendMessage($updateSeenData);
 								}
 								else

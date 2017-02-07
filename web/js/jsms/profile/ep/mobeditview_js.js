@@ -9,7 +9,7 @@ var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','Foc
 var bCallCreateHoroscope = false;
  $("document").ready(function() {
 
-
+ 	getFieldsOnCal();
     setTimeout(function() {
 		if($('#listShow').val()==1)
          $("#AlbumMainTab").click(); 
@@ -103,7 +103,16 @@ var mobEditPage=(function(){
                         });
 			PhotoUpload();
                         privacybind();
-                        setTimeout(function(){stopLoader()},200);
+                        // check for showing email verification link sent confirmation
+                        if(typeof editFieldArr != 'undefined')
+                        {
+                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.Contact.ALT_EMAIL.outerSectionValue) && editFieldArr.ALT_EMAIL) 
+                                    showAlternateConfirmLayerMS(editFieldArr.ALT_EMAIL);
+                        if(Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.Contact.EMAIL.outerSectionValue) && editFieldArr.EMAIL) 
+                                    showAlternateConfirmLayerMS(editFieldArr.EMAIL);
+                        }
+                        
+                            setTimeout(function(){stopLoader()},200);
 		}
 		else{
 			//setTimeout(function(){stopLoader()},200);
@@ -268,22 +277,22 @@ var mobEditPage=(function(){
 						var jsonCnt=0;
 					var sectionStr="";					
 					
-					/*//Email (Verify link or Verified text)
+					//Email (Verify link or Verified text)
 					if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==0 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
 					{
 						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerify' class='padl10 dispibl color2'>Verify</div>");
-                                                //bindAlternateEmailButton();
+                                                bindEmailButtons();
 					}
 					else if(v.outerSectionKey=='EmailId' && v.OnClick[1].verifyStatus==1 && v.OnClick[1].label_val!="" && v.OnClick[1].label_val!=null)
 					{
 						$( "#"+v.outerSectionKey+'_name' ).append("<div id='EmailVerified' class='padl10 dispibl color4'>Verified</div>");                                              
-					}*/
+					}
 					
 					//alternateEmail (Verify link or Verified text)
 					if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==0 && v.OnClick[2].label_val!="" && v.OnClick[2].label_val!=null)
 					{
 						$( "#"+v.outerSectionKey+'_name' ).append("<div id='altEmailVerify' class='padl10 dispibl color2'>Verify</div>");
-                                                bindAlternateEmailButton();
+                                                bindEmailButtons();
 					}
 					else if(v.outerSectionKey=='AlternateEmailId' && v.OnClick[2].verifyStatus==1 && v.OnClick[2].label_val!="" && v.OnClick[2].label_val!=null)
 					{
@@ -470,6 +479,7 @@ function formatJsonOutput(result)
         delete(result.cache_interval);
         delete(result.resetCache);
         delete(result.flagForAppRatingControl);
+	delete(result.xmppLoginOn);
 	return result;
 }
 
@@ -528,13 +538,26 @@ function showAlternateConfirmLayerMS(email){
     
 }
 
-function bindAlternateEmailButton(){
-    $("#altEmailVerify").unbind();
-    $("#altEmailVerify").click(function(event)
+function bindEmailButtons(){
+    $("#altEmailVerify,#EmailVerify").unbind();
+    $("#altEmailVerify,#EmailVerify").click(function(event)
     {
       event.stopPropagation();
       $("#newLoader").show();
-      var ajaxData={'emailType':'2'};
+      
+      var this_id = $(this).attr('id'),emailType='',email='';
+      if(this_id == 'altEmailVerify')
+      {
+          emailType=2;
+          email=$("#AlternateEmailId_value").eq(0).text().trim();
+      }
+      else 
+      {
+          emailType=1;
+          email=$("#EmailId_value").eq(0).text().trim();
+          
+      }
+      var ajaxData={'emailType':emailType};
       $.ajax({
                                 url:'/api/v1/profile/sendEmailVerLink',
                                 dataType: 'json',
@@ -543,9 +566,106 @@ function bindAlternateEmailButton(){
                                 success: function(response) 
                                 {
                                     $("#newLoader").hide();
-                                    showAlternateConfirmLayerMS();
+                                    showAlternateConfirmLayerMS(email);
                                 }
     
             });
     });
 }
+
+   /**
+    * function is called when a field needs to be opened
+    */
+  function getFieldsOnCal()
+  {
+    fieldIdMappingArray = {
+      "name" : { "type": "text","mobileDivFieldId":"BasicDetails_name","mobileFieldId":"NAME"},
+    	// contact section
+      "EMAIL" : { "type": "text","mobileDivFieldId":"EmailId_name","mobileFieldId":"EMAIL"},
+      "ALT_EMAIL" : { "type": "text","mobileDivFieldId":"AlternateEmailId_name","mobileFieldId":"ALT_EMAIL"},
+    };
+
+
+    mobileSectionArray = {"education":"Education","basic":"Details",
+    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family"
+    }
+
+    section = getUrlParameter('section');
+    fieldName = getUrlParameter('fieldName');
+    if ( typeof section !== 'undefined' && mobileSectionArray.hasOwnProperty(section))
+    {
+      fieldType = '';
+      mobileDivFieldId = '';
+      mobileFieldId = '';
+      if ( typeof fieldName !== 'undefined' && fieldIdMappingArray.hasOwnProperty(fieldName) )
+      {
+        fieldType = fieldIdMappingArray[fieldName].type;
+        mobileDivFieldId = fieldIdMappingArray[fieldName].mobileDivFieldId;
+        mobileFieldId = fieldIdMappingArray[fieldName].mobileFieldId;
+      }
+      openFieldsOnCal(mobileSectionArray[section],fieldType,mobileFieldId,mobileDivFieldId);        
+    }
+    
+  }
+
+  /**
+   * opens a field
+   * @param  {String} section the section which must be clicked
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldDivId   the parent id
+   */
+  function openFieldsOnCal(section,fieldType,fieldId,fieldDivId) 
+  {
+  	var timeoutFieldCheck = 100;
+  	var timeoutDropdown = 100;
+    if ( fieldDivId === '')
+    {
+    	window.location.replace(window.location.href+"#"+section);
+  	}
+  	else
+  	{
+  		var checkExist = setInterval(function() 
+        {
+            if ($('#'+fieldDivId).length) 
+            {
+                $("#"+fieldDivId).click();
+                if ( fieldType == 'text' && $("#"+fieldId).length )
+                {
+                	setTimeout(function() {   
+    	            	$("#"+fieldId).focus();
+					}, timeoutDropdown);
+                }
+                else if ( fieldType == 'dropdown' && $("#"+fieldId).length )
+                {
+                	setTimeout(function() {   
+    	            	$("#"+fieldId).click();
+					}, timeoutDropdown);
+
+                }
+                clearInterval(checkExist);
+            }
+
+
+        }, timeoutFieldCheck);
+  	}
+  }
+
+  /**
+   * function is used to get url get parameters
+   * @return {String}      get parameter
+   */
+	function getUrlParameter(sParam) {
+	var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+	    sURLVariables = sPageURL.split('&'),
+	    sParameterName,
+	    i;
+
+	for (i = 0; i < sURLVariables.length; i++) {
+	    sParameterName = sURLVariables[i].split('=');
+
+	    if (sParameterName[0] === sParam) {
+	        return sParameterName[1] === undefined ? true : sParameterName[1];
+	    }
+	}
+};

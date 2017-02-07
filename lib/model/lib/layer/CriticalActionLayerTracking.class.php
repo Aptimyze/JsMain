@@ -56,7 +56,7 @@ class CriticalActionLayerTracking
   public static function insertLayerType($profileId,$layerId,$button)
   {
     $layerButtonTrack= new MIS_CA_LAYER_TRACK();
-    $layerButtonTrack->insert($profileId, $layerId,$button);
+    return $layerButtonTrack->insert($profileId, $layerId,$button);
   }
   /* this function will update button type entry on a 
    * particular profile id
@@ -75,6 +75,9 @@ class CriticalActionLayerTracking
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
     $profileId = $profileObj->getPROFILEID();
+    if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1)
+              return 0;
+
     $fetchLayerList = new MIS_CA_LAYER_TRACK();
     $getTotalLayers = $fetchLayerList->getCountLayerDisplay($profileId);
     $maxEntryDt = 0;
@@ -272,7 +275,7 @@ return 0;
                       if(!$isApp)
                       { 
                         $profileObject = LoggedInProfile::getInstance('newjs_master');
-                        $contactNumOb=new newjs_JPROFILE_CONTACT();
+                        $contactNumOb=new ProfileContact();
                         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL");
                         if(!$numArray['0']['ALT_EMAIL'] || $numArray['0']['ALT_EMAIL'] == NULL)
                         {
@@ -287,13 +290,19 @@ return 0;
                       if(!$isApp)
                       { 
                         $profileObject = LoggedInProfile::getInstance('newjs_master');
-                        $contactNumOb=new newjs_JPROFILE_CONTACT();
+                        $contactNumOb=new ProfileContact();
                         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_EMAIL, ALT_EMAIL_STATUS");
                         if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL'] != NULL && $numArray['0']['ALT_EMAIL_STATUS'] != 'Y')
                           $show = 1; 
                       }
                     
                     break; 
+                    case '15': 
+                      $screening=$profileObj->getSCREENING();
+                      $nameArr=(new NameOfUser())->getNameData($profileid);
+                      if(!$nameArr[$profileid]['DISPLAY'] && $nameArr[$profileid]['NAME'] && jsValidatorNameOfUser::validateNameOfUser($nameArr[$profileid]['NAME']) && Flag::isFlagSet("name", $screening))
+                          $show=1;
+                    break;  
 
           default : return false;
         }

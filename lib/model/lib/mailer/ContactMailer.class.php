@@ -84,7 +84,7 @@ class ContactMailer
                 
                 if(CommonConstants::contactMailersCC)
                 {    
-                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $contactNumOb=new ProfileContact();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
                 if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
                 {
@@ -165,7 +165,7 @@ class ContactMailer
                 
                 if(CommonConstants::contactMailersCC)
                 {
-                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $contactNumOb=new ProfileContact();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
                 if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
                 {
@@ -202,7 +202,15 @@ class ContactMailer
 		$photoCount = $picture->getNoOfPics($profileArr);
 		if($photoCount[$receiver->getPROFILEID()]>0)
 		{
-			$photo = 1;
+			// Photo is visible on accept
+			if($receiver->getPHOTO_DISPLAY() == 'C')
+			{
+				$photo = 2;
+			}
+			else
+			{
+				$photo = 1;
+			}
 		}
 		else
 		{
@@ -222,7 +230,7 @@ class ContactMailer
                 
                 if(CommonConstants::contactMailersCC)
                 {                
-                $contactNumOb=new newjs_JPROFILE_CONTACT();
+                $contactNumOb=new ProfileContact();
                 $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
                 if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
                 {
@@ -273,7 +281,7 @@ class ContactMailer
 
 	$partialObj = new PartialList();
 	$profileChecksum=JsAuthentication::jsEncryptProfilechecksum($sender->getPROFILEID());
-	if(strlen($message)>260){$showReadMore=1;$message=substr($message,0,260);}else $showReadMore=0;
+	if(strlen($message)>1000){$showReadMore=1;$message=substr($message,0,1000);}else $showReadMore=0;
         $partialObj->addPartial("messageMailerTuple", "messageMailerTuple",  array('profileArray'=>array($sender->getPROFILEID()=>$message),'showReadMore'=>$showReadMore));
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
@@ -281,7 +289,7 @@ class ContactMailer
         if(CommonConstants::contactMailersCC)
         {                
 
-        $contactNumOb=new newjs_JPROFILE_CONTACT();
+        $contactNumOb=new ProfileContact();
         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$receiver->getPROFILEID()),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
         if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
         {
@@ -342,7 +350,7 @@ class ContactMailer
     
         if(CommonConstants::contactMailersCC)
         {                
-        $contactNumOb=new newjs_JPROFILE_CONTACT();
+        $contactNumOb=new ProfileContact();
         $numArray=$contactNumOb->getArray(array('PROFILEID'=>$viewedProfileId),'','',"ALT_EMAIL,ALT_EMAIL_STATUS");
         if($numArray['0']['ALT_EMAIL'] && $numArray['0']['ALT_EMAIL_STATUS']=='Y')
         {
@@ -374,10 +382,12 @@ class ContactMailer
     $tpl = $emailSender->setProfileId($viewedProfileId);
     $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId);
     $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
+  	$viewerProfileId = new Profile('',$viewerProfileId);
     if($viewerProfileId->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='EVALUE')
 		$paidStatus = "eValue";
 	else if($viewerProfileId->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 		$paidStatus = "eRishta";
+	$smartyObj = $tpl->getSmarty();
 	$smartyObj->assign("paidStatus",$paidStatus);
 	$profileMemcacheServiceObj = new ProfileMemcacheService($viewedProfileId);
 	$totalCount = $profileMemcacheServiceObj->get("AWAITING_RESPONSE");

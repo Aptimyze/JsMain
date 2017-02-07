@@ -48,6 +48,7 @@ class ProfileInformationModuleMap
                 }
                 else
                         $arrayName = self::$defaultArray[$module];
+                
                 if(isset(self::${$arrayName}))
                 {
                         foreach(self::${$arrayName} as $k=>$v)
@@ -268,6 +269,40 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
+		"INTEREST_EXPIRING"=>Array( 
+			"ID"=> "23",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "10",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Interests Expiring this week",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
+      "KUNAL"=>"1",
+		),
+		"MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Match Of the day",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+            "CONTACT_ID"=>""
+                ),
 		);
 		self::$MYJSAPP_IOS_1=Array(
 		"INTEREST_RECEIVED"=>Array( 
@@ -430,6 +465,41 @@ class ProfileInformationModuleMap
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
 		),
+		"INTEREST_EXPIRING"=>Array( 
+			"ID"=> "23",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "10",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Interests Expiring this week",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_JSMS,
+      "KUNAL"=>"1",
+		),
+
+		"MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Match Of the day",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+            "CONTACT_ID"=>""
+                ),
 		);
 		self::$ContactCenterAPP=Array(
 		"INTEREST_RECEIVED"=>Array( 
@@ -447,6 +517,23 @@ class ProfileInformationModuleMap
 			"ICONS"=> "",
 			"BUTTONS"=> "ACCEPT|DECLINE",
 			"TRACKING"=> "responseTracking=11",
+      "KUNAL"=>"1",
+		),
+		"INTEREST_EXPIRING"=>Array( 
+			"ID"=> "23",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "10",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Expiring Interests",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID,
       "KUNAL"=>"1",
 		),
 		"ACCEPTANCES_RECEIVED"=>Array( 
@@ -623,7 +710,7 @@ class ProfileInformationModuleMap
                         "SUBTITLE"=> "I Declined",
                         "ICONS"=> "",
                         "BUTTONS"=> "",
-                        "TRACKING"=> ""
+                        "TRACKING"=> "stype=".SearchTypesEnums::CANCELLED_LISTING_PC."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_PC
                 ),
                 "FILTERED_INTEREST"=>Array( 
 			"ID"=> "12",
@@ -691,7 +778,41 @@ class ProfileInformationModuleMap
                        "ICONS"=> "",
                        "BUTTONS"=> "UNBLOCK",
                        "TRACKING"=> "",
-               )
+               ),
+             "INTEREST_ARCHIVED"=>Array( 
+				"ID"=> "22",
+				"SORT_ORDER"=> "",
+				"COUNT"=> "10",
+				"TUPLE"=> "INBOX_APP",
+				"TUPLE_ORDER"=> "TIME",
+				"ACTIVE_FLAG"=> "Y",
+				"AJAX_FLAG"=> "N",
+				"CALLOUT_MESSAGES"=> "",
+				"VIEW_ALL_LINK"=> "",
+				"TITLE"=> "Archived Interests",
+				"SUBTITLE"=> "",
+				"ICONS"=> "",
+				"BUTTONS"=> "ACCEPT|DECLINE",
+				"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_ANDROID,
+		  		"CONTACT_ID"=>"",
+		),
+                "MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Match Of the day",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+                        "CONTACT_ID"=>""
+                )
 
 		); 
 self::$ContactCenterMYJS=Array(
@@ -826,8 +947,41 @@ self::$ContactCenterMYJS=Array(
 			"ICONS"=> "",
 			"BUTTONS"=> "",
 			"TRACKING"=> "responseTracking=52",
-		)
-
+		),
+        "INTEREST_EXPIRING"=>Array( 
+			"ID"=> "23",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "25",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Expiring Interests",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_ANDROID_MYJS,
+      "KUNAL"=>"1",
+		),
+                "MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
+			"TUPLE"=> "INBOX_EOI_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Match Of the day",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+                        "CONTACT_ID"=>""
+                )
 		); 
     self::$ContactCenterDesktop=Array(
 		"INTEREST_RECEIVED"=>Array( 
@@ -846,6 +1000,23 @@ self::$ContactCenterMYJS=Array(
 			"BUTTONS"=> "ACCEPT|DECLINE",
 			"TRACKING"=> "",
       "CONTACT_ID"=>"",
+		),
+		"INTEREST_EXPIRING"=>Array( 
+			"ID"=> "23",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "25",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Interests Expiring",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_EXPIRING,
+      		"CONTACT_ID"=>"",
 		),
 		"ACCEPTANCES_RECEIVED"=>Array( 
 			"ID"=> "2",
@@ -1201,19 +1372,36 @@ self::$ContactCenterMYJS=Array(
 			"ID"=> "22",
 			"SORT_ORDER"=> "",
 			"COUNT"=> "25",
+			"TUPLE"=> "INBOX_APP",
+			"TUPLE_ORDER"=> "TIME",
+			"ACTIVE_FLAG"=> "Y",
+			"AJAX_FLAG"=> "N",
+			"CALLOUT_MESSAGES"=> "",
+			"VIEW_ALL_LINK"=> "",
+			"TITLE"=> "Interests Archived",
+			"SUBTITLE"=> "",
+			"ICONS"=> "",
+			"BUTTONS"=> "ACCEPT|DECLINE",
+			"TRACKING"=> "responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED,
+      		"CONTACT_ID"=>"",
+		),
+                "MATCH_OF_THE_DAY"=>Array( 
+			"ID"=> "24",
+			"SORT_ORDER"=> "",
+			"COUNT"=> "7",
 			"TUPLE"=> "INBOX_EOI_APP",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
 			"AJAX_FLAG"=> "N",
 			"CALLOUT_MESSAGES"=> "",
 			"VIEW_ALL_LINK"=> "",
-			"TITLE"=> "Interests Archive",
+			"TITLE"=> "Match Of the day",
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
-			"BUTTONS"=> "ACCEPT|DECLINE",
-			"TRACKING"=> "responseTracking=53",
-      		"CONTACT_ID"=>"",
-		),
+			"BUTTONS"=> "",
+			"TRACKING"=> "",
+                        "CONTACT_ID"=>""
+                )
 		);
 	}
 }

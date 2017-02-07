@@ -146,7 +146,6 @@ class MembershipHandler
 
     public function getDiscountInfo($user)
     {
-
         $userType = $user->userType;
         $fest     = $this->getFestiveFlag();
         $user->setFestInfo($fest);
@@ -208,14 +207,24 @@ class MembershipHandler
         }
     }
 
-    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop')
+    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop',$apiObj = "")
     {
         if (!$discountType) {
-            $discountTypeArr = $this->getDiscountInfo($user);
+           
+            if($apiObj != "" && is_array($apiObj->discountTypeInfo)){
+                $discountTypeArr = $apiObj->discountTypeInfo;
+            }
+            else{
+                $discountTypeArr = $this->getDiscountInfo($user);
+            }
             $discountType    = $discountTypeArr['TYPE'];
         }
-
-        $renewalPercent = $this->getVariableRenewalDiscount($user->getProfileid());
+        if($apiObj!="" && $apiObj->userRenewalPercent){
+            $renewalPercent = $apiObj->userRenewalPercent;
+        }
+        else{
+            $renewalPercent = $this->getVariableRenewalDiscount($user->getProfileid());
+        }
 
         foreach ($allMainMem as $mainMem => $subMem) {
             foreach ($subMem as $key => $value) {
@@ -812,8 +821,13 @@ class MembershipHandler
                 $currencyType = VariableParams::$indianCurrency;
             }
         }
-
-        if ($profileid == 12970375) {
+        
+        $testDol = false;
+        if (JsConstants::$whichMachine == 'test') {
+            $dolBillingForTest = new billing_DOL_BILLING_USERS_FOR_TEST();
+            $testDol = $dolBillingForTest->checkUserForDol($profileid);
+        }
+        if ($profileid == 12970375 || $testDol == true) {
             $currency = 'DOL';
         }
 
@@ -823,7 +837,7 @@ class MembershipHandler
         );
     }
 
-    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3)
+    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$apiObj="")
     {
         if ($userObj->getProfileid()) {
             $profileObj = LoggedInProfile::getInstance('newjs_slave', $userObj->getProfileid());
@@ -834,7 +848,12 @@ class MembershipHandler
             }
             if ($screeningStatus == "Y") 
             {
-                $discountTypeArr = $this->getDiscountInfo($userObj);
+                if($apiObj!="" && is_array($apiObj->discountTypeInfo)){
+                    $discountTypeArr = $apiObj->discountTypeInfo;
+                }
+                else{
+                    $discountTypeArr = $this->getDiscountInfo($userObj);
+                }
                 $discountType    = $discountTypeArr['TYPE'];
             }
         }
@@ -863,7 +882,12 @@ class MembershipHandler
             $festDurBanner       = $memActFunc->getFestDurBanner($type, $discountType, $userObj->getProfileid(), $apiVersion);
             unset($festiveLogRevampObj);
         }
-        $renewalPercent = $this->getVariableRenewalDiscount($userObj->getProfileid());
+        if($apiObj!="" && $apiObj->userRenewalPercent){
+            $renewalPercent = $apiObj->userRenewalPercent;
+        }
+        else{
+            $renewalPercent = $this->getVariableRenewalDiscount($userObj->getProfileid());
+        }
         if ($userObj->userType == 4 || $userObj->userType == 6 || $specialActive == 1 || $discountActive == 1 || $fest == 1) {
             if ($userObj->userType == 4 || $userObj->userType == 6) {
                 $expiry_date   = $userObj->expiryDate;
@@ -1045,7 +1069,7 @@ class MembershipHandler
         return $subStatus;
     }
 
-    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false)
+    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$apiObj="")
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
         //var_dump("in getMembershipDurationsAndPrices...");
@@ -1074,7 +1098,7 @@ class MembershipHandler
                 }
             }
         }
-        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device);
+        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device,$apiObj);
         $minPriceArr = $this->fetchLowestActivePrices($userObj, $allMainMem, $device);
 
         return array(
@@ -2044,6 +2068,9 @@ class MembershipHandler
                 }
             }
             $prevDisc = round(($prevDiscAmt/$prevTotAmt)*100, 2);
+	    if($prevDisc>=100){
+		$prevDisc =0;
+	    }	
         } else {
             $prevDisc = 0;
         }
@@ -2058,5 +2085,64 @@ class MembershipHandler
         // End - Logic to change renewal based on previous discount
         unset($discount_calc, $currency, $prevServPur, $prevDiscAmt, $prevTotAmt, $prevDisc);
         return $discount;
+    }
+    
+    public function handleNegativeTransaction($receiptidArr,$source=''){
+        if(is_array($receiptidArr)){
+            $payDetObj = new BILLING_PAYMENT_DETAIL();
+            foreach($receiptidArr['RECEIPTIDS'] as $key => $receiptid){
+                $payDetData = $payDetObj->fetchAllDataForReceiptId($receiptid);
+                $payDetData['ENTRY_DT'] = date('Y-m-d H:i:s');
+                if(!($source == 'CANCEL' && in_array($receiptid, $receiptidArr['REFUND']))){
+                    $payDetData['AMOUNT'] = $payDetData['AMOUNT']*(-1);
+                }
+                $this->negativeTransaction($payDetData);
+                unset($payDetData);
+            }
+            unset($payDetObj);
+        }
+    }
+    
+
+    public function negativeTransaction($params){
+        foreach($params as $key => $val){
+            $paramsStr.= "$key, ";
+            $valuesStr.= "'$val', ";
+        }
+        $paramsStr = rtrim($paramsStr,", ");
+        $valuesStr = rtrim($valuesStr,", ");
+        $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+        $negTransactionObj->insertRecord($paramsStr,$valuesStr);
+    }
+
+    public function addUserForDollarPayment($profileid){
+        $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
+        $dolBillingUsersObj->addUserForDol($profileid);
+    }
+    
+    public function removeUserForDollarPayment($profileid){
+        $dolBillingUsersObj = new billing_DOL_BILLING_USERS_FOR_TEST();
+        $dolBillingUsersObj->removeUserForDol($profileid);
+
+    }
+    
+    public function getReceiptids($billid){
+        $payDetObj = new BILLING_PAYMENT_DETAIL();
+        $data = $payDetObj->getStatusTransactions($billid,array("'DONE'","'REFUND'"));
+        foreach($data as $key => $val){
+            if($val['STATUS'] == 'REFUND'){
+                $result['REFUND'][] = $val['RECEIPTID'];
+            }
+            $result['RECEIPTIDS'][] = $val['RECEIPTID'];
+        }
+        unset($payDetObj,$data);
+        return $result;
+    }
+    
+    public function getCancelledDate($billid){
+        $negTransactionObj = new billing_PAYMENT_DETAIL_NEW();
+        $row = $negTransactionObj->getCancelledBillIdDetails($billid);
+        $dt = $row["ENTRY_DT"];
+        return $dt;
     }
 }

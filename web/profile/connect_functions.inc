@@ -3112,12 +3112,15 @@ function show_navigation($navigator,$show_all,$navig_id)
 		$TYPE["IGN"]="/profile/contacts_made_received.php";
 		$TYPE["DEC_R"]="/profile/contacts_made_received.php";
 		$TYPE["DEC_S"]="/profile/contacts_made_received.php";
+		$TYPE["EEOI"]="/profile/contacts_made_received.php";
 		$TYPE["EOI"]="/profile/contacts_made_received.php";
 		$TYPE["REM"]="/profile/contacts_made_received.php";
 		$TYPE["MES"]="/profile/contacts_made_received.php";
 		$TYPE["FIL"]="/profile/contacts_made_received.php";
 		$TYPE["VCB"]="/profile/contacts_made_received.php";
 		$TYPE["HOR_M"]="/profile/contacts_made_received.php";
+		$TYPE["AEOI"]="/profile/contacts_made_received.php";
+
 	}
 	$TYPE["FAV"]="/profile/contacts_made_received.php";
 	$TYPE["PHO"]="/profile/contacts_made_received.php";
@@ -9297,7 +9300,7 @@ function helpWidget($loginData){
                 $phoneNumber = $loggedInProfileObj->getPHONE_WITH_STD();
             }
             else{//Check Alternate Phone numbmer
-                $objAlternate = new NEWJS_JPROFILE_CONTACT;
+                $objAlternate = new ProfileContact();
                 $arrResult = $objAlternate->getProfileContacts($iProfileId);
                 if($arrResult["ALT_MOB_STATUS"] == "Y"){
                     if(trim($arrResult["ALT_MOBILE_ISD"]))

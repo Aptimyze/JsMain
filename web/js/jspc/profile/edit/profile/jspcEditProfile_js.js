@@ -152,10 +152,10 @@ EditApp = function(){
     
     var requiredArray             = {};
     var previousSectionValue      = {};
-    var updateViewColor12Map      = ["fav_book","fav_movie","fav_food","phone_res_status","phone_mob_status","alt_mob_status","alt_email_status"]
+    var updateViewColor12Map      = ["fav_book","fav_movie","fav_food","phone_res_status","phone_mob_status","alt_mob_status","alt_email_status","email_status"]
     var multiFieldViewMap         = ["appearance","habbits","assets","religious_beliefs","special_cases","open_to_pets","living","plan_to_work","abroad","horo_match"];
     
-    var phoneStatusMap            = ["phone_res_status","phone_mob_status","alt_mob_status","alt_email_status"];
+    var phoneStatusMap            = ["phone_res_status","phone_mob_status","alt_mob_status","alt_email_status","email_status"];
     var phoneDescriptionMap       = ["landline_desc","alt_mobile_desc","mobile_desc"];
     
     var autoSuggestRequest        = {}; 
@@ -3369,8 +3369,10 @@ EditApp = function(){
             var validationCheck = '#'+sectionId +'EditForm' +' .js-errorLabel:not(.disp-none)'
             $(document).scrollTop($(validationCheck).offset().top);
           }
-          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email)) 
-              showAlternateConfirmLayer();
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.ALT_EMAIL == result.viewApi.contact.my_alt_email) && editFieldArr.ALT_EMAIL) 
+              showAlternateConfirmLayer($("#my_alt_emailView"));
+          if(sectionId != 'verification' && Object.keys(editFieldArr).length==1 && (editFieldArr.EMAIL == result.viewApi.contact.my_email) && editFieldArr.EMAIL) 
+              showAlternateConfirmLayer($("#my_emailView"));
               
         },
         error:function(result){
@@ -6242,7 +6244,22 @@ $(document).ready(function() {
                 ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
                 ajaxConfig.success=function(resp)
                 {
-                    showAlternateConfirmLayer();   
+                    showAlternateConfirmLayer($("#my_alt_emailView"));   
+                    hideCommonLoader();
+                }
+                jQuery.myObj.ajax(ajaxConfig);
+	});
+    $("body").on('click','#email_statusView',function () {
+		if($("#email_statusView").html()!='Verify') return;
+                showCommonLoader();
+                var ajaxData={'emailType':'1'};
+                var ajaxConfig={};
+                ajaxConfig.data=ajaxData;
+                ajaxConfig.type='POST';
+                ajaxConfig.url='/api/v1/profile/sendEmailVerLink';
+                ajaxConfig.success=function(resp)
+                {
+                    showAlternateConfirmLayer($("#my_emailView"));   
                     hideCommonLoader();
                 }
                 jQuery.myObj.ajax(ajaxConfig);
@@ -6256,6 +6273,8 @@ $(document).ready(function() {
         var newUrl=document.location.href.replace('fromCALAlternate','');
         history.pushState('', '', newUrl);
     }
+
+    getFieldsOnCal();
 
 });
 
@@ -6349,9 +6368,9 @@ $('#validateSenderEmail').click(function(e){
   return false;
 });
 }
-function showAlternateConfirmLayer(){
+function showAlternateConfirmLayer(jObject){
     var obj = $("#js-alternateEmailConfirmLayer");
-    var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,$("#my_alt_emailView").eq(0).text().trim());
+    var msg = obj.find("#altEmailDefaultText").eq(0).val().replace(/\{email\}/g,jObject.eq(0).text().trim());
     obj.find("#altEmailConfirmText").eq(0).text(msg);
     showLayerCommon("js-alternateEmailConfirmLayer");
     obj.find('.closeCommLayer').eq(0).bind('click',function(){
@@ -6482,4 +6501,77 @@ $('.js-previewAlbum').click(function(){
 		$(show).addClass("selected");
 		$("#showText").html(text);
 	}
- 
+
+  /**
+   * function opens a field when a parameter is passed in url 
+   * 
+   */
+  function getFieldsOnCal()
+  {
+    desktopSectionArray = {"education":"career","basic":"basic","about":"about",
+      "career":"career","lifestyle":"lifestyle","contact":"contact","family":"family"
+    }
+    timeoutFieldCheck = 1000;
+    section = getUrlParameter('section');
+    fieldName = getUrlParameter('fieldName');
+    if ( typeof section !== 'undefined' && $("[data-section-id="+desktopSectionArray[section]+"]").length)
+    {
+      $("[data-section-id="+desktopSectionArray[section]+"]").click();
+      $('html, body').animate({
+           scrollTop: ($('#section-'+desktopSectionArray[section]).offset().top)
+        },'slow'); 
+    }
+
+    setTimeout(function() {
+      if ( EditApp.getEditAppFields(section,fieldName) != false )
+      {
+        if ( EditApp.getEditAppFields(section,fieldName).type == "M" || EditApp.getEditAppFields(section,fieldName).type == "S" )
+        {
+          desktopFieldId = EditApp.getEditAppFields(section,fieldName).key.toLowerCase() + "_chosen";
+          fieldType = "dropdown"; 
+        }
+        else
+        {
+          desktopFieldId = EditApp.getEditAppFields(section,fieldName).key.toLowerCase();
+          fieldType = "text"; 
+        }
+        openFieldsOnCal(fieldType,desktopFieldId); 
+      }                           
+    }, timeoutFieldCheck);
+  }
+
+  /**
+   * opens a field
+   * @param  {String} fieldType dropdown or text
+   * @param  {String} fieldId   the id which should be clicked
+   */
+  function openFieldsOnCal(fieldType,fieldId) 
+  {
+    if ( fieldType == 'dropdown')
+    {
+        $("#"+fieldId).trigger('mousedown');
+    }
+    else
+    {
+        $("#"+fieldId).focus();
+    }
+  }
+
+  /**
+   * function is used to get url get parameters
+   * @return {String}      get parameter
+   */
+  var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};

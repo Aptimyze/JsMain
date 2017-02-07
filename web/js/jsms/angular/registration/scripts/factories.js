@@ -212,7 +212,7 @@
 			{"screenName":"s5","storeKey":"displayname","dindex":4
 			}
 			],
-		"s6": [	{"label":"Email ID","value":"","show":"true","screenName":"s6","storeKey":"yourinfo",'errorLabel':"","hint":"Introduce yourself. Write about your values, beliefs/goals, aspirations/interests and hobbies.","userDecision":""}],
+		"s6": [	{"label":"Email ID","value":"","show":"true","screenName":"s6","storeKey":"yourinfo",'errorLabel':"","hint":"Introduce yourself (Don't mention your name). Write about your values, beliefs/goals, aspirations/interests and hobbies.\n\n\n This text will be screened by our team.","userDecision":""}],
         "s9": [
 			{"label":"Family Type","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"family_type","userDecision":"","dindex":"0","storeKey":"family_type","tapName":"Family Type"},
 			{"label":"Family Values","value":notFilled,"show":"true","screenName":"s9","hamburgermenu":"1","dmove":"right","dhide":"single","dselect":"radio","dependant":"","dshow":"family_values","userDecision":"","dindex":"1","storeKey":"family_values","tapName":"Family Values"},
