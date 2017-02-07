@@ -52,7 +52,7 @@ class dppSuggestionsCALV1Action extends sfActions
 						$type = $val["type"];				
 						if($key1 == "data")
 						{	
-							$finalArr['suggestions'][] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1,$calLayer);
+							$finalArr[] = $dppSuggestionsObj->getDppSuggestions($trendsArr,$type,$val1,$calLayer);
 						}					
 					}
 				}			

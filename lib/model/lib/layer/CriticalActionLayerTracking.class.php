@@ -263,10 +263,20 @@ return 0;
                               $layerData = ob_get_contents();
                               ob_end_clean();
                               $dppSugg=json_decode($layerData,true);
-                              $request->setParameter('dppCALGeneric',0);
-                              if(is_array($dppSugg) && is_array($dppSugg['suggestions'])) 
-                                $request->setParameter('dppSugg',$dppSugg);
-
+                              if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
+                              { 
+                                $flag = 0;
+                                foreach ($dppSugg['dppData'] as $key => $value) 
+                                {
+                                  if(is_array($value['data']))                                  
+                                      $flag = 1;
+                                }
+                                if($flag==1)
+                                  {
+                                  $request->setParameter('dppSugg',$dppSugg);
+                                  $request->setParameter('dppCALGeneric',0);
+                                  }
+                              }
                             }                          
                           } 
                     break;
