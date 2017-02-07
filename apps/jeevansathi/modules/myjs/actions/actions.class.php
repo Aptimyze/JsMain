@@ -289,8 +289,11 @@ class myjsActions extends sfActions
 			$pictureServiceObj=new PictureService($this->loginProfile);
 			$profilePicObj = $pictureServiceObj->getProfilePic();
 			if($profilePicObj){
-
-			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$this->gender);
+			if($this->profilePic=='U')	
+				$picUrl = $profilePicObj->getThumbail96Url();
+			else
+				$picUrl = $profilePicObj->getProfilePic120Url();
+			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$this->gender);
             if($photoArray[label] != '')
                    $this->photoUrl = PictureFunctions::getNoPhotoJSMS($this->gender,'ProfilePic120Url');
             else
