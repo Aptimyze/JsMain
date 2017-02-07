@@ -38,6 +38,13 @@ class SolrRequest implements RequestHandleInterface
 				else
 	                        	$this->solrServerUrl = JsConstants::$solrServerLoggedOut."/select";
 	                }
+                        
+                        if($this->searchParamtersObj->getIS_VSP() && $this->searchParamtersObj->getIS_VSP() == 1){
+                                $this->solrServerUrl = JsConstants::$solrServerForVSP."/select";
+                        }
+                        if($this->searchParamtersObj->getSHOW_RESULT_FOR_SELF()=='ISKUNDLIMATCHES'){
+                                $this->solrServerUrl = JsConstants::$solrServerForKundali."/select"; 
+                        }
               		$this->profilesPerPage = SearchCommonFunctions::getProfilesPerPageOnSearch($searchParamtersObj);
 			/*
 			if($this->responseObj->getShowAllClustersOptions())
@@ -168,7 +175,10 @@ class SolrRequest implements RequestHandleInterface
 	public function sendCurlPostRequest($urlToHit,$postParams)
 	{
 		$start = strtotime("now");
-		$this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout);
+                if(php_sapi_name() === 'cli')
+                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+                else
+                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout);
                 $end= strtotime("now");
                 $diff = $end - $start;
                 if($diff > 2 ){
