@@ -61,7 +61,7 @@ class ApiCALayerV1Action extends sfActions
         {
         	if($suggestions = $request->getParameter('dppSugg'))
         	{
-        		$layerData['dppSuggArray'] = $suggestions;
+        		$layerData['dppSuggObject'] = $suggestions;
         		$layerData['dppCALGeneric'] = 0;
         	}
 	    }

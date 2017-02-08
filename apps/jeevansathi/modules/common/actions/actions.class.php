@@ -718,7 +718,7 @@ class commonActions extends sfActions
         $calObject=$request->getAttribute('calObject');
         if (!$calObject) sfContext::getInstance()->getController()->redirect('/');
         $this->calObject=$calObject;
-        $this->dppSuggestions = json_encode($calObject['dppSuggArray']);
+        $this->dppSuggestions = json_encode($calObject['dppSuggObject']);
         $this->gender=$request->getAttribute('gender');
         if($calObject['LAYERID']==9)
         {
