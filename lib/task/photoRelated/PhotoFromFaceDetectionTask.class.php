@@ -37,8 +37,8 @@ EOF;
 		$totalScripts = $arguments["totalScripts"]; // total no of scripts
 	        $currentScript = $arguments["currentScript"]; // current script number
 
-if(CommonUtility::hideFeaturesForUptime())
-        successfullDie();
+		if(CommonUtility::hideFeaturesForUptime())
+		        successfullDie();
 
                 /* locking */
                 $LockingService = new LockingService;
