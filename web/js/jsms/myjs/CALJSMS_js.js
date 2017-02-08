@@ -3,7 +3,8 @@ $(document).ready(function() {
 	$('body').css('background-color','#09090b');
 
           
-        if($("#CriticalActionlayerId").val()=='11'){
+        if($("#CriticalActionlayerId").val()=='11' && suggestions!=''){
+
         appendData(suggestions);            
         }  
 else {
@@ -89,7 +90,7 @@ else {
             if (obj.Description != null || obj.Description != undefined) {
                 $("#dppDescription").append(obj.Description);
             }
-            $.each(obj.suggestions, function(index, elem) {
+            $.each(obj.dppData, function(index, elem) {
                 if (elem) {
                     if (elem.heading && elem.data) {
              
@@ -161,10 +162,9 @@ else {
 							url: '/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData='+url,
 							type: 'POST',
 							success: function(response) {
-								console.log("success",response);
+								criticalLayerButtonsAction('','B1');
 							},
 							error: function(response) {
-								console.log("error",response);
 							}
 						});
 					}

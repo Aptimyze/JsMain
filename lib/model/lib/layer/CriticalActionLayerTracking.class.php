@@ -256,28 +256,6 @@ return 0;
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
                           {        
                             $show=1;
-                            if(MobileCommon::isNewMobileSite() || MobileCommon::isApp())
-                            {
-                              ob_start();
-                              sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
-                              $layerData = ob_get_contents();
-                              ob_end_clean();
-                              $dppSugg=json_decode($layerData,true);
-                              if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
-                              { 
-                                $flag = 0;
-                                foreach ($dppSugg['dppData'] as $key => $value) 
-                                {
-                                  if(is_array($value['data']))                                  
-                                      $flag = 1;
-                                }
-                                if($flag==1)
-                                  {
-                                  $request->setParameter('dppSugg',$dppSugg);
-                                  $request->setParameter('dppCALGeneric',0);
-                                  }
-                              }
-                            }                          
                           } 
                     break;
 
@@ -323,6 +301,33 @@ return 0;
                       if(!$nameArr[$profileid]['DISPLAY'] && $nameArr[$profileid]['NAME'] && jsValidatorNameOfUser::validateNameOfUser($nameArr[$profileid]['NAME']) && Flag::isFlagSet("name", $screening))
                           $show=1;
                     break;  
+
+                    case '16':                      
+                          $memObject=  JsMemcache::getInstance();
+                          if((MobileCommon::isNewMobileSite() || MobileCommon::isApp()) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                          {        
+                            
+                              ob_start();
+                              sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
+                              $layerData = ob_get_contents();
+                              ob_end_clean();
+                              $dppSugg=json_decode($layerData,true);
+                              if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
+                              {
+                                foreach ($dppSugg['dppData'] as $key => $value) 
+                                {
+                                  if(is_array($value['data']))                                  
+                                  {      
+                                    $show = 1;
+                                    $request->setParameter('dppSugg',$dppSugg);
+                                    break;
+                                  }
+                                }
+                              }
+                                                     
+                          } 
+                    break;
+
 
           default : return false;
         }

@@ -1,16 +1,17 @@
 <script>
     var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
+    var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
 </script>
 
 <input type="hidden" id="CriticalActionlayerId" value="~$calObject.LAYERID`">
 
-~if $calObject.LAYERID == '11' && $calObject.dppCALGeneric == 0`
+~if $calObject.LAYERID == '16'`
 
         <div id="overlayHead" class="bg1">
             <div class="txtc pad15">
                 <div class="posrel">
                     <div class="fontthin f19 white">Desired Partner Profile</div>
-                    <i id="closeFromDesiredPartnerProfile" class=" posabs mainsp srch_id_cross " style="right:0; top:0px;"></i>
+                    <i id="closeFromDesiredPartnerProfile" class=" posabs mainsp srch_id_cross " style="right:0; top:0px;" onclick="criticalLayerButtonsAction('','B2');"></i>
                 </div>
             </div>
 
