@@ -504,7 +504,7 @@ Class ButtonResponseApi
 	
 	public static function buttonDetailsMerge($buttonDetails)
 	{
-		$responseSet["buttons"]       = array();
+		$responseSet["buttons"]       = null;
 		$responseSet["button"]       = null;
 		$responseSet["infomsgiconid"] = null;
 		$responseSet["infomsglabel"]  = null;
