@@ -14,6 +14,19 @@ class MyJsMobileAppV1
 	static public $tupleTitleField ;
 
 
+
+	public static function deleteMyJsCache(){
+
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewerObj->getPROFILEID()).'_I');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewedObj->getPROFILEID()).'_I');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewerObj->getPROFILEID()).'_A');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewedObj->getPROFILEID()).'_A');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewerObj->getPROFILEID()).'_M');
+					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewedObj->getPROFILEID()).'_M');
+
+		
+	}
+
     public static function getCacheKey($pid)
         {
 

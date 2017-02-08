@@ -92,6 +92,7 @@ class SetProfilePic extends PictureService
 				break;
 
 		}
+			MyJsMobileAppV1::deleteMyJsCache();
 		return array(0=>true,1=>$case);
         }
         /*
