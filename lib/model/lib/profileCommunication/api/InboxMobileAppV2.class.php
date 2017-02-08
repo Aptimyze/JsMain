@@ -722,7 +722,7 @@ class InboxMobileAppV2
                     "MATCH_OF_THE_DAY"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
-				"tuple_title_field",
+				"OCCUPATION",
 				"LOCATION",
 				"AGE",
 				"HEIGHT",
