@@ -28,6 +28,7 @@ public static $all =
 		"knowlarityUrlHit"    => "www.smartivr.in",
 
 		"jquery"             => 'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
+		"hindiTranslateURL" => "http://hindi.jeevansathi.com",//Doubt
 	];
 
 public static $dev = 
@@ -140,15 +141,14 @@ public static $dev =
 				"HOROSCOPE_REQUEST"=>true
 				)',
 
-		"hindiTranslateURL" => "http://hindi.jeevansathi.com",//Doubt
 		"contactUrl" => "http://contact.jeevansathi.com/",//Doubt
 		"webServiceFlag" => true,
 		"realTimeIndex" => 1,
 		"usePhotoDistributed" => 0,
 		"communicationRep" => true,
 		"jsChatFlag" => 1, //1=>enable chat, 0=>disable chat
-		"multiUserPhotoUrl" => "http://www.jeevansathi.com/api/v1/social/getMultiUserPhoto", //Api from staging for multi user photo being used in chat listing and self photo.
-		"chatListingWebServiceUrl" => 'array("dpp"=>"http://www.jeevansathi.com:8190/listings/v1/discover")',
+		"multiUserPhotoUrl" => "%URL_INPUT%/api/v1/social/getMultiUserPhoto", //Api from staging for multi user photo being used in chat listing and self photo.
+		"chatListingWebServiceUrl" => 'array("dpp"=>"%URL_INPUT%:8190/listings/v1/discover")',
 		"profilesEligibleForDpp" => "array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>'5616315|9061321')",
 		"nonRosterRefreshUpdate" => 300000,
 		"stopOnPeakLoad"     => 1,
@@ -171,6 +171,10 @@ public static $dev =
 		"solrServerUrl2"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerProxyUrl"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerProxyUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerForVisitorAlert"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerForVSP"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerForKundali"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		
 
 		/***openfire config for chat**/
 		"openfireConfig" => "array('HOST'=>'localhost','WSPORT'=>'7070','SERVER_NAME'=>'localhost')",
@@ -308,15 +312,14 @@ public static $test =
 				"HOROSCOPE_REQUEST"=>true
 				)',
 
-		"hindiTranslateURL" => "http://hindi.jeevansathi.com",
 		"contactUrl" => "http://contacttest.infoedge.com/",
 		"webServiceFlag" => 0,
 		"realTimeIndex" => 0,
 		"usePhotoDistributed" => 0,
 		"communicationRep" => 1,
 		"jsChatFlag"  => '0',
-		"multiUserPhotoUrl" => "http://www.jeevansathi.com/api/v1/social/getMultiUserPhoto", //Api from staging for multi user photo being used in chat listing and self photo.
-		"chatListingWebServiceUrl" => 'array("dpp"=>"http://www.jeevansathi.com:8190/listings/v1/discover")',
+		"multiUserPhotoUrl" => "%URL_INPUT%/api/v1/social/getMultiUserPhoto", //Api from staging for multi user photo being used in chat listing and self photo.
+		"chatListingWebServiceUrl" => 'array("dpp"=>"%URL_INPUT%:8190/listings/v1/discover")',
 		"profilesEligibleForDpp" => "array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>'5616315|9061321')",
 		"nonRosterRefreshUpdate" => 300000,
 		"stopOnPeakLoad"     => 1,
@@ -339,6 +342,9 @@ public static $test =
 		"solrServerUrl2"     => '172.16.3.203:8080/solr/techproducts',
 		"solrServerProxyUrl"     => '172.16.3.203:8080/solr/techproducts',
 		"solrServerProxyUrl1"     => '172.16.3.203:8080/solr/techproducts',
+		"solrServerForVisitorAlert"	=> '172.16.3.203:8080/solr/techproducts',
+		"solrServerForVSP"	=> '172.16.3.203:8080/solr/techproducts',
+		"solrServerForKundali"	=> '172.16.3.203:8080/solr/techproducts',
 
 		/***openfire config for chat**/
 		"openfireConfig" => "array('HOST'=>'172.16.3.203','PORT'=>'9090','WSPORT'=>'7070','SERVER_NAME'=>'testjs-new')",

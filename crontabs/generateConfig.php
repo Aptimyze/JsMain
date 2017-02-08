@@ -1,8 +1,8 @@
 <?php
 /*
-First argument env
-Second argument json of dynamic variables
-php crontabs/generateConfig.php test '{"url_input":"con.jeevansathi.com"}'
+First argument: env
+Second argument: json of dynamic variables
+Command: php crontabs/generateConfig.php test '{"url_input":"xmpp.jeevansathi.com"}'
 */
 $env = $argv[1];//Env
 $input = $argv[2];//json of dynamic variables
@@ -21,19 +21,34 @@ $branch = end($branchStrArr);
 include $rootDir."/commonConfig/JsConstantsConfig.class.php";
 
 //echo $branch." ".$rootDir;die;
+
+$allConfigArr = JsConstantsConfig::$all;
+$devConfigArr = JsConstantsConfig::$dev;
+$allDevConfigArr = array_merge($allConfigArr,$devConfigArr);
+$testConfigArr = JsConstantsConfig::$test;
+$allTestConfigArr = array_merge($allConfigArr,$testConfigArr);
+
+/****Capture Error****/
+$error = "";
+$diffDev = array_diff_key($allDevConfigArr, $allTestConfigArr);
+if($diffDev)
+	$error.="Please add ".implode(",",array_keys($diffDev))." in test environment. ";
+$diffTest = array_diff_key($allTestConfigArr, $allDevConfigArr);
+if($diffTest)
+	$error.="Please add ".implode(",",array_keys($diffTest))." in dev environment";
+if($error)
+	Throw new Exception ($error);
+/****Ends here****/
+
 switch ($env){
 	case "dev":
 	{
-		$allConfigArr = JsConstantsConfig::$all;
-		$testConfigArr = JsConstantsConfig::$dev;
-		$configArr = array_merge($allConfigArr,$testConfigArr);
+		$configArr = $allDevConfigArr;
 		break;
 	}
 	case "test":
 	{
-		$allConfigArr = JsConstantsConfig::$all;
-		$testConfigArr = JsConstantsConfig::$test;
-		$configArr = array_merge($allConfigArr,$testConfigArr);
+		$configArr = $allTestConfigArr;
 		break;
 	}
 }
@@ -44,7 +59,7 @@ if (!file_exists("/usr/local/scripts/config/".$branch)) {
 $file=fopen("/usr/local/scripts/config/".$branch."/JsConstants.class.php","w");
 $now=date("Y-m-d");
 fwrite($file,"<?php\n /*
-This class lists all the configuration except mysql configuration.\n
+This class lists all the Jeevansathi dev and test configurations except mysql.\n
 Created on $now\n
  */
 class JsConstants{\n");
