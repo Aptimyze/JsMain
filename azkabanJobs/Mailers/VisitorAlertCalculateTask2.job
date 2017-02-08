@@ -1,4 +1,0 @@
-type=command
-command=${php5} ${docRoot}/symfony VisitorAlert:VisitorAlertCalculate 3 2 
-retries=3
-retry.backoff=50000
