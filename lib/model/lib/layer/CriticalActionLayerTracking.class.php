@@ -256,6 +256,23 @@ return 0;
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
                           {        
                             $show=1;
+                            ob_start();
+                            sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
+                            $layerData = ob_get_contents();
+                            ob_end_clean();
+                            $dppSugg=json_decode($layerData,true);
+                            if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
+                            {
+                              foreach ($dppSugg['dppData'] as $key => $value) 
+                              {
+                                if(is_array($value['data']))                                  
+                                {      
+                                  $show = 0;
+                                  break;
+                                }
+                              }
+                            }
+
                           } 
                     break;
 
