@@ -227,7 +227,10 @@ class myjsActions extends sfActions
 
                 $output = ob_get_contents();
                 ob_end_clean();
+                
            	    $this->apiData=json_decode($output,true);
+                $this->jsonData = $output;                
+                
            	    // redirection to cal layers if calObject is not null
            	    if ($this->apiData['calObject'])
            	    {

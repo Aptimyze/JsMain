@@ -1139,6 +1139,15 @@ transform:  translateX(100%) rotateY(0deg) !important;
 
 .pad015{padding:0px 15px 15px 15px}
 
+.mr10{margin-right:10px }
+.ml0{margin-left:0px }
+.wid300{width: 300px}
+.top65{top: 65px}
+.overXHidden{overflow-x: hidden}
+.hgt140{height: 140px}
+.whitewid200p{white-space: nowrap; word-wrap:normal; width:200%;}
+.hgtwid110{height: 110px; width:110px;}
+.whtSpaceNo{white-space: nowrap;}
 .textTru {
     white-space: nowrap;
     overflow: hidden;
