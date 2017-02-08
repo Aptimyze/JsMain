@@ -1,14 +1,14 @@
 
 $(document).ready(function() {
-	$('body').css('background-color','#09090b');
+	
 
           
-        if($("#CriticalActionlayerId").val()=='11' && suggestions!=''){
-
+        if($("#CriticalActionlayerId").val()=='16'){
+        $('body').css('background-color','#fff');
         appendData(suggestions);            
         }  
 else {
-    
+        $('body').css('background-color','#09090b');
         if($("#submitName").length && $("#submitName").offset().top-$("#skipBtn").offset().top-70 >0)
         {
               $("#skipBtn").css("margin-top",$("#submitName").offset().top-$("#skipBtn").offset().top-70);

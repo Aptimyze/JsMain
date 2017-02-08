@@ -57,7 +57,7 @@ class ApiCALayerV1Action extends sfActions
                     $nameOfUser=$nameData[$profileId]['NAME'];
                     $namePrivacy=$nameData[$profileId]['DISPLAY'];
                 }
-        if($layerToShow==11)
+        if($layerToShow==16)
         {
         	if($suggestions = $request->getParameter('dppSugg'))
         	{

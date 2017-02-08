@@ -5,7 +5,7 @@
 
 <input type="hidden" id="CriticalActionlayerId" value="~$calObject.LAYERID`">
 
-~if $calObject.LAYERID == '16'`
+~if $calObject.LAYERID eq '16'`
 
         <div id="overlayHead" class="bg1">
             <div class="txtc pad15">
