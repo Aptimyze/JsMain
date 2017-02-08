@@ -275,7 +275,8 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
-
+        
+        $this->loadLevel = JsConstants::$hideUnimportantFeatureAtPeakLoad;
 
 	
 		if (empty($this->profilePic))
@@ -344,7 +345,7 @@ class myjsActions extends sfActions
 		$registrationTime = strtotime($entryDate);
 
 		$this->showExpiring = 0;
-		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		if($this->loadLevel < 2 && ($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 		{
 			$this->showExpiring = 1;
 		}
