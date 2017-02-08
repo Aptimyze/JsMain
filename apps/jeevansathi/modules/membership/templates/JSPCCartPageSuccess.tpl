@@ -683,6 +683,7 @@
         
         $("#payNowBtn").click(function(e){
             var upgradeMem = "~$data.upgradeMem`";
+            console.log("clicked on pay now",upgradeMem);
             if($("#cashPickUp").hasClass("active")){
                 var isValid=validateCashPickupForm();
                 if(isValid){

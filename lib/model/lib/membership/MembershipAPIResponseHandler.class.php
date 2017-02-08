@@ -31,6 +31,7 @@ class MembershipAPIResponseHandler {
         if(!$this->upgradeMem || !in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
            $this->upgradeMem = "NA"; 
         }
+        error_log("ankita upgradeMem in initialize api-".$this->upgradeMem."---".$this->displayPage);
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;
         }
@@ -323,9 +324,11 @@ class MembershipAPIResponseHandler {
                 $output = $this->generateChequePickupSuccessResponse($request);
             } 
             elseif ($this->displayPage == 8 && !empty($this->orderID)) {
+                error_log("ankita start of transaction success page");
                 $output = $this->generateSuccessPageResponse();
             } 
             elseif ($this->displayPage == 9) {
+                error_log("ankita start of transaction failure page");
                 $output = $this->generateFailurePageResponse();
             } 
             elseif ($this->displayPage == 10) {
@@ -381,7 +384,7 @@ class MembershipAPIResponseHandler {
         //tracking of mem page visits only for free user to autocollapse learning cartoon
         if(in_array($this->userObj->userType,array(2,4,6)))
 		  $openedCount = $this->memHandlerObj->trackAndGetOpenedCount($this->profileid);
-        //var_dump($this->userObj->userType);die;
+        
         if (($this->userObj->userType == 4 || $this->userObj->userType == 6) && $this->device != "iOS_app") {
             if ($this->contactsRemaining == 0) {
                 $renewText = "Renew your membership to continue current benefits";
@@ -401,7 +404,7 @@ class MembershipAPIResponseHandler {
         else {
             $renewText = NULL;
         }
-        //var_dump($this->userObj->userType);die;
+       
         if (($this->userObj->userType == 5 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE) && $this->device != "iOS_app" && $this->contactsRemaining != 0) {
             $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
 
@@ -456,6 +459,7 @@ class MembershipAPIResponseHandler {
         );
         
         if($this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+            //ankita set upgrade information based on last membership
             $output["upgradeMembership"]["type"] = "MAIN";
             $output["upgradeMembership"]["upgradeMainMem"] = "C";
             $output["upgradeMembership"]["upgardeMainMemDur"] = "3";
@@ -579,7 +583,7 @@ class MembershipAPIResponseHandler {
         if (isset($this->mainMem) && !empty($this->mainMem)){
             $this->memApiFuncs->getMainMembershipDetails($this, $id);
         }
-        //print_r($this->mainServices);die;
+        
         $this->memApiFuncs->customizeVASDataForAPI($this->validation, 0, $this);
         $vas_text = NULL;
         $skip_text = "Continue";
@@ -806,8 +810,7 @@ class MembershipAPIResponseHandler {
             }
             $mainServices['service_contacts'] = $this->allMainMem[$id][$subId]['CALL'] . ' Contacts To View';
             $mainServices['standard_price'] = $this->allMainMem[$id][$subId]['PRICE'];
-            //echo "abc........";
-            //print_r($this->allMainMem);
+          
             $mainServices['orig_price'] = $mainServices['standard_price'];
             $mainServices['orig_price_formatted'] = number_format($mainServices['standard_price'], 2, '.', ',');
             
@@ -1091,8 +1094,9 @@ class MembershipAPIResponseHandler {
         if (!isset($this->vasImpression) || $this->device == 'desktop') {
         	$this->vasImpression = $this->selectedVas;
         }
+       
         list($totalCartPrice, $totalCartDiscount) = $this->memApiFuncs->calculateCartPrice($request, $this);
-        
+    
         $creditCardIconMapping = paymentOption::$creditCardIconMapping;
         $debitCardIconMapping = paymentOption::$debitCardIconMapping;
         $walletCardIconMapping = paymentOption::$walletCardIconMapping;
@@ -2115,7 +2119,8 @@ class MembershipAPIResponseHandler {
     
     public function processPaymentAndRedirect($request,$apiObj) {
         list($apiObj->totalCartPrice, $apiObj->discountCartPrice) = $apiObj->memApiFuncs->calculateCartPrice($request, $apiObj);
-        
+        //print_r($apiObj);die;
+       
         $userData = $apiObj->memHandlerObj->getUserData($apiObj->profileid);
         $USERNAME = $userData['USERNAME'];
         $EMAIL = $userData['EMAIL'];

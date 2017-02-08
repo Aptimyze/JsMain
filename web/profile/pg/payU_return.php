@@ -79,6 +79,7 @@ if ($hash == $reverseHash && $AuthDesc == "Y") {
     if (!$dup && $ret) {
         error_log("ankita in startServiceOrder payu_return...".$Order_Id);
         $membershipObj->startServiceOrder($Order_Id);
+        error_log("ankita end of startserviceorder..");
     }
     //if ($ret) $membershipObj->startServiceOrder($Order_Id);
     

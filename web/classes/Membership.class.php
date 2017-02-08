@@ -2110,8 +2110,9 @@ class Membership
         return $PRICE;
     }
 
-    public function forOnline($allMemberships, $type, $mainServiceId, $link_discount = NULL, $paymentOptionSel = NULL, $device = 'desktop', $couponCodeVal = NULL)
+    public function forOnline($allMemberships, $type, $mainServiceId, $link_discount = NULL, $paymentOptionSel = NULL, $device = 'desktop', $couponCodeVal = NULL,$upgradeMem="NA")
     {
+        error_log("ankita forOnline upgradeMem-"+$upgradeMem);
         $profileid = $this->profileid;
         $userObj = new memUser($profileid);
         $userObj->setMemStatus();
@@ -2131,7 +2132,7 @@ class Membership
             $discount = 0;
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
-        }else if ($screeningStatus == "N") {
+        }else if ($screeningStatus == "N") { //ankita confirm no discount for unscreened profiles
             $main_service = $mainServiceId;
             $allMembershipsNew = $allMemberships;
             $service_str_off = $allMemberships;
@@ -2139,7 +2140,7 @@ class Membership
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
         }else {
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L");
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$upgradeMem);
         
             // Existing codes for setting discount type in billing.ORDERS
             // 10 - Backend Discount Link
@@ -2174,6 +2175,8 @@ class Membership
                 if ($fest) {
                     $discount_type = 9;
                 }
+            } else if($upgradeActive == "1"){
+                $discount_type = 15;
             } else {
                 $discount_type = 12;
             }
@@ -2189,8 +2192,8 @@ class Membership
             }
 
             $allMembershipsNew = rtrim($allMembershipsNew, ",");
-            
-            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid);
+            var_dump($upgradeMem);
+            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid,false,$upgradeMem);
         }
 
         if ($couponCodeVal && $mainServiceId) {

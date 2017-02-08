@@ -131,27 +131,30 @@ class MembershipHandler
         return $options;
     }
 
-    public function getDiscountInfo($user)
+    public function getDiscountInfo($user,$upgradeMem="NA")
     {
-
         $userType = $user->userType;
         $fest     = $this->getFestiveFlag();
         $user->setFestInfo($fest);
-
-        if ($userType == memUserType::PAID_WITHIN_RENEW || $userType == memUserType::EXPIRED_WITHIN_LIMIT) {
-            $discountInfo["TYPE"] = discountType::RENEWAL_DISCOUNT;
-        } else {
-            if ($user->getProfileid() != '') {
-                $varDiscount       = $this->memObj->getSpecialDiscount($user->getProfileid());
-                $this->varDiscount = $varDiscount;
-            }
-            if ($varDiscount) {
-                $discountInfo["TYPE"] = discountType::SPECIAL_DISCOUNT;
+        
+        if($userType == memUserType::UPGRADE_ELIGIBLE && in_array($upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+            $discountInfo["TYPE"] = discountType::UPGRADE_DISCOUNT;
+        } else{
+            if($userType == memUserType::PAID_WITHIN_RENEW || $userType == memUserType::EXPIRED_WITHIN_LIMIT) {
+                $discountInfo["TYPE"] = discountType::RENEWAL_DISCOUNT;
             } else {
-                if ($fest) {
-                    $discountInfo["TYPE"] = discountType::FESTIVE_DISCOUNT;
-                } elseif ($this->isDiscountOfferActive()) {
-                    $discountInfo["TYPE"] = discountType::OFFER_DISCOUNT;
+                if ($user->getProfileid() != '') {
+                    $varDiscount       = $this->memObj->getSpecialDiscount($user->getProfileid());
+                    $this->varDiscount = $varDiscount;
+                }
+                if ($varDiscount) {
+                    $discountInfo["TYPE"] = discountType::SPECIAL_DISCOUNT;
+                } else {
+                    if ($fest) {
+                        $discountInfo["TYPE"] = discountType::FESTIVE_DISCOUNT;
+                    } elseif ($this->isDiscountOfferActive()) {
+                        $discountInfo["TYPE"] = discountType::OFFER_DISCOUNT;
+                    }
                 }
             }
         }
@@ -198,7 +201,7 @@ class MembershipHandler
     public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop',$upgradeMem="NA")
     {
         if (!$discountType) {
-            $discountTypeArr = $this->getDiscountInfo($user);
+            $discountTypeArr = $this->getDiscountInfo($user,$upgradeMem);
             $discountType    = $discountTypeArr['TYPE'];
         }
 
@@ -211,25 +214,26 @@ class MembershipHandler
         else{
             $upgradePercentArr = array();
         }
-        
+        //print_r($upgradePercentArr);die;
         foreach ($allMainMem as $mainMem => $subMem) {
             foreach ($subMem as $key => $value) {
                 $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['PRICE'], 2);
-                if (strpos(discountType::RENEWAL_DISCOUNT, $discountType) !== false) {
-                    $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round(($allMainMem[$mainMem][$key]['PRICE'] - ceil($allMainMem[$mainMem][$key]['PRICE'] * $renewalPercent) / 100), 2);
-                } else {
-                    if (strpos(discountType::SPECIAL_DISCOUNT, $discountType) !== false && strpos(",", $discountType) === false) {
-                        $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['SPECIAL_DISCOUNT_PRICE'], 2);
+                if (strpos(discountType::UPGRADE_DISCOUNT, $discountType) !== false) {
+                    $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round(($allMainMem[$mainMem][$key]['PRICE'] - ceil($allMainMem[$mainMem][$key]['PRICE'] * $upgradePercentArr[$key]) / 100), 2);
+                } else{
+                    if (strpos(discountType::RENEWAL_DISCOUNT, $discountType) !== false) {
+                        $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round(($allMainMem[$mainMem][$key]['PRICE'] - ceil($allMainMem[$mainMem][$key]['PRICE'] * $renewalPercent) / 100), 2);
                     } else {
-                        if (strpos(discountType::FESTIVE_DISCOUNT, $discountType) !== false && !strpos(",", $discountType)) {
-                            $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['FESTIVE_PRICE'], 2);
-                        } else if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false && strpos(",", $discountType) === false) {
-                            $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['DISCOUNT_PRICE'], 2);
+                        if (strpos(discountType::SPECIAL_DISCOUNT, $discountType) !== false && strpos(",", $discountType) === false) {
+                            $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['SPECIAL_DISCOUNT_PRICE'], 2);
+                        } else {
+                            if (strpos(discountType::FESTIVE_DISCOUNT, $discountType) !== false && !strpos(",", $discountType)) {
+                                $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['FESTIVE_PRICE'], 2);
+                            } else if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false && strpos(",", $discountType) === false) {
+                                $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['DISCOUNT_PRICE'], 2);
+                            }
                         }
                     }
-                }
-                if($upgradePercentArr[$mainMem] && $upgradePercentArr[$mainMem][$key]){
-                    $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round(($allMainMem[$mainMem][$key]['OFFER_PRICE'] - ceil($allMainMem[$mainMem][$key]['OFFER_PRICE'] * $upgradePercentArr[$mainMem][$key]) / 100), 2);
                 }
             }
         }
@@ -826,8 +830,10 @@ class MembershipHandler
         );
     }
 
-    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3)
+    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$upgardeMem="NA")
     {
+        error_log("ankita1 upgradeMem in getUserDiscount-".$upgardeMem);
+       
         if ($userObj->getProfileid()) {
             $profileObj = LoggedInProfile::getInstance('newjs_slave', $userObj->getProfileid());
             $profileObj->getDetail();
@@ -837,10 +843,24 @@ class MembershipHandler
             }
             if ($screeningStatus == "Y") 
             {
-                $discountTypeArr = $this->getDiscountInfo($userObj);
+                $discountTypeArr = $this->getDiscountInfo($userObj,$upgardeMem);
                 $discountType    = $discountTypeArr['TYPE'];
             }
         }
+        if (strpos(discountType::UPGRADE_DISCOUNT, $discountType) !== false) {
+            $upgradeActive  = '1';
+            //ankita set discount expiry if required
+            //$discount_expiry = $this->getDiscountExpiry($discntId);
+            //get upgrade discount for this user
+            
+            if(in_array($upgardeMem,VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                $upgradePercentArr = $this->getUpgradeMembershipDiscount($userObj, $upgardeMem);
+            }
+            else{
+                $upgradePercentArr = array();
+            }
+        }
+        
         if (strpos(discountType::OFFER_DISCOUNT, $discountType) !== false) {
             $discountActive  = '1';
             $discntId        = $this->discountOfferID;
@@ -867,6 +887,7 @@ class MembershipHandler
             unset($festiveLogRevampObj);
         }
         $renewalPercent = $this->getVariableRenewalDiscount($userObj->getProfileid());
+        
         if ($userObj->userType == 4 || $userObj->userType == 6 || $specialActive == 1 || $discountActive == 1 || $fest == 1) {
             if ($userObj->userType == 4 || $userObj->userType == 6) {
                 $expiry_date   = $userObj->expiryDate;
@@ -929,6 +950,8 @@ class MembershipHandler
             $expiry_date,
             $discPerc,
             $code,
+            $upgradePercentArr,
+            $upgradeActive
         );
     }
 
@@ -1051,7 +1074,7 @@ class MembershipHandler
     public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$upgradeMem="NA")
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
-        
+       
         if ($displayPage == 1) {
             if (isset($allMainMem['P']['P1'])) {
                 unset($allMainMem['P']['P1']);
@@ -1097,8 +1120,10 @@ class MembershipHandler
         $discountArr = array();
         if($upgradeMem == "MAIN" && $userObj->userType == memUserType::UPGRADE_ELIGIBLE){
             //ankita fetch current membership id and duration and set discount accordingly 
-            $discountArr["C"]["C3"] = 40;
+            $lastDiscountPercent = 10;
+            $discountArr["C3"] = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
         }
+        error_log("ankita discount for upgrade=".$discountArr["C3"]);
         return $discountArr;
     }
     
@@ -1228,7 +1253,7 @@ class MembershipHandler
         );
     }
 
-    public function trackMembershipProgress($userObj, $source = '', $tab = '', $pgNo = '', $device = '', $userAgent = '', $allMemberships = '', $mainMembership = '', $vasImpression = '', $discount = 0, $total = 0, $paymentTab = '', $trackType = '', $specialActive = '', $discPerc = '', $discountActive = '')
+    public function trackMembershipProgress($userObj, $source = '', $tab = '', $pgNo = '', $device = '', $userAgent = '', $allMemberships = '', $mainMembership = '', $vasImpression = '', $discount = 0, $total = 0, $paymentTab = '', $trackType = '', $specialActive = '', $discPerc = '', $discountActive = '',$upgradeMem="NA")
     {
         $profileid = $userObj->getProfileid();
         $this->addHitsTracking($profileid, $pgNo, $tab, $device, $userAgent);
@@ -1250,7 +1275,7 @@ class MembershipHandler
         }
     }
 
-    public function setTrackingPriceAndDiscount($userObj, $profileid, $mainMembership, $allMemberships, $currency, $device = 'desktop', $couponCode, $backendRedirect = null, $profileCheckSum = null, $reqid = null, $previousCheck = false)
+    public function setTrackingPriceAndDiscount($userObj, $profileid, $mainMembership, $allMemberships, $currency, $device = 'desktop', $couponCode, $backendRedirect = null, $profileCheckSum = null, $reqid = null, $previousCheck = false,$upgradeMem="NA")
     {
         $servObj = new billing_SERVICES();
         // Get vasImpression from diff of allMemberships and mainMembership
@@ -1268,7 +1293,7 @@ class MembershipHandler
             } else {
                 $mainMemDur = $tempMem[1];
             }
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $this->getUserDiscountDetailsArray($userObj, "L");
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $this->getUserDiscountDetailsArray($userObj, "L",3,$upgradeMem);
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {
@@ -1458,7 +1483,12 @@ class MembershipHandler
                 $discountCartPrice += $additionalDiscount;
             }
         }
-
+         //add additional discount for upgrade membership if applicable
+        if((empty($backendRedirect) || $backendRedirect != 1) && $upgradeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$mainMembership]){
+            $additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$mainMembership] / 100) , 2);
+            $totalCartPrice-= $additionalUpgradeDiscount;
+            $discountCartPrice+= $additionalUpgradeDiscount;
+        }
         return array(
             $totalCartPrice,
             $discountCartPrice,
