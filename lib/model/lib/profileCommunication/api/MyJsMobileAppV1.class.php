@@ -15,14 +15,15 @@ class MyJsMobileAppV1
 
 
 
-	public static function deleteMyJsCache(){
+	public static function deleteMyJsCache($profileIdArray){
 
-					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewerObj->getPROFILEID()).'_I');
-					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewedObj->getPROFILEID()).'_I');
-					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewerObj->getPROFILEID()).'_A');
-					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewedObj->getPROFILEID()).'_A');
-					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewerObj->getPROFILEID()).'_M');
-					$memObject->delete(MyJsMobileAppV1::getCacheKey($viewedObj->getPROFILEID()).'_M');
+            foreach ($profileIdArray as $key => $value) {
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_I');
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_A');
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_M');
+
+                
+            }    
 
 		
 	}
