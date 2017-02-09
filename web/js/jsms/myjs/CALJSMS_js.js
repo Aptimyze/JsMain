@@ -109,6 +109,10 @@ else {
                             }
                             if (elem.data.LRS != undefined && elem.data.LRS != null && elem.data.HRS != undefined && elem.data.HRS != null) {
                                 $("#suggest_" + elem.type).removeClass("dispnone").append('<div id="LRS_HRS" class="suggestOption suggestOptionRange2 brdr18 fontreg color8 f16 txtc" value="'+elem.data.LRS+'_'+elem.data.HRS+'">' + elem.data.LRS + ' - ' + elem.data.HRS + '</div>');
+                            };
+                            if(elem.data.LRS == "No Income" && elem.data.LDS == "No Income" && elem.data.HRS == "and above" && elem.data.HDS == "and above") {
+                                $("#LDS_HDS").remove();
+                                $("#LRS_HRS").addClass("bothData");
                             }
                         }
 
@@ -138,8 +142,13 @@ else {
 									LDS = $("#LDS_HDS").attr("value").split("_")[0],HDS = $("#LDS_HDS").attr("value").split("_")[1];
 									dataArr = {"LDS":LDS,"HDS":HDS};
 								} else if($("#LRS_HRS").hasClass("suggestSelected") && $("#LDS_HDS").hasClass("suggestSelected") == false){
-									LRS = $("#LRS_HRS").attr("value").split("_")[0],HRS = $("#LRS_HRS").attr("value").split("_")[1];
-									dataArr = {"LRS":LRS,"HRS":HRS};
+									if($("#LRS_HRS").hasClass("bothData")) {
+                                        dataArr = {"LRS":"No Income","HRS":"and above","LDS":"No Income","HDS":"and above"};
+                                    }
+                                    else {
+                                        LRS = $("#LRS_HRS").attr("value").split("_")[0],HRS = $("#LRS_HRS").attr("value").split("_")[1];
+                                        dataArr = {"LRS":LRS,"HRS":HRS};    
+                                    }
 								} else if($("#LRS_HRS").hasClass("suggestSelected") && $("#LDS_HDS").hasClass("suggestSelected")) {
 									LDS = $("#LDS_HDS").attr("value").split("_")[0],HDS = $("#LDS_HDS").attr("value").split("_")[1],LRS = $("#LRS_HRS").attr("value").split("_")[0],HRS = $("#LRS_HRS").attr("value").split("_")[1];
 									dataArr = {"LRS":LRS,"HRS":HRS,"LDS":LDS,"HDS":HDS};
@@ -157,7 +166,7 @@ else {
 								}
 							}
                         });
-						var url = JSON.stringify(sendObj).split('"').join("%22");
+                        var url = JSON.stringify(sendObj).split('"').join("%22");
 						 $.ajax({
 							url: '/api/v1/profile/dppSuggestionsSaveCAL?dppSaveData='+url,
 							type: 'POST',
