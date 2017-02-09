@@ -16,7 +16,7 @@ class MyJsMobileAppV1
 
 
 	public static function deleteMyJsCache($profileIdArray){
-
+            $memObject = JsMemcache::getInstance();
             foreach ($profileIdArray as $key => $value) {
                 $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_I');
                 $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_A');
