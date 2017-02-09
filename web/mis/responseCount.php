@@ -238,6 +238,9 @@ function formatTrackingString($trackingString)
 			case JSTrackingPageType::INTEREST_EXPIRING_JSMS:
 				$formattedString.="INTEREST_EXPIRING_JSMS";
 				break;
+			case JSTrackingPageType::INTEREST_ARCHIVED_ANDROID:
+				$formattedString.="INTEREST_ARCHIVED_ANDROID";
+				break;
 		}
 	}
 	return $formattedString;

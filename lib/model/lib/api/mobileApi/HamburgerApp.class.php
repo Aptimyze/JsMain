@@ -38,12 +38,15 @@ class HamburgerApp
 					$hamburgerDetails["FILTERED_NEW"] = 0;
 				}
 			$hamburgerDetails['ACC_ME_NEW']=$profileMemcacheObj->get("ACC_ME_NEW");
-			if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1)
 				$hamburgerDetails['MESSAGE_NEW']=0;
 			else
 	                $hamburgerDetails['MESSAGE_NEW']= $isNewMobileSite ? $profileMemcacheObj->get("MESSAGE_NEW") : 0;
-	                //;
-			$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");
+	                
+	        if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
+				$hamburgerDetails['MATCHALERT']=0;
+			else
+				$hamburgerDetails['MATCHALERT']=$profileMemcacheObj->get("MATCHALERT_TOTAL");
 			if(MobileCommon::isIOSApp() || MobileCommon::isAndroidApp())
 			{
 				$hamburgerDetails['VISITOR_ALERT']=0;
@@ -57,10 +60,16 @@ class HamburgerApp
 			
 			$hamburgerDetails['VISITORS_ALL']=0;
 			//$hamburgerDetails['VISITOR_ALERT']=$profileMemcacheObj->get("VISITORS_ALL");
-			
-			$hamburgerDetails['BOOKMARK']=$profileMemcacheObj->get("BOOKMARK");
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+				$hamburgerDetails['BOOKMARK']=0;
+				$hamburgerDetails['JUST_JOINED_COUNT'] = 0;
+				$hamburgerDetails['JUST_JOINED_NEW'] = 0;
+			}
+			else{
+				$hamburgerDetails['BOOKMARK']=$profileMemcacheObj->get("BOOKMARK");
 				$hamburgerDetails['JUST_JOINED_COUNT'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES');
 				$hamburgerDetails['JUST_JOINED_NEW'] = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+			}
 				$hamburgerDetails['INTEREST_PENDING'] = $profileMemcacheObj->get('AWAITING_RESPONSE')+$profileMemcacheObj->get('NOT_REP');
 				$hamburgerDetails['ACCEPTED_MEMBERS'] = $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME');
 				if(MobileCommon::isApp() == "I" || $isNewMobileSite)

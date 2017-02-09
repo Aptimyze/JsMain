@@ -479,6 +479,7 @@ function formatJsonOutput(result)
         delete(result.cache_interval);
         delete(result.resetCache);
         delete(result.flagForAppRatingControl);
+	delete(result.xmppLoginOn);
 	return result;
 }
 

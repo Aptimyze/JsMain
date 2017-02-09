@@ -44,7 +44,7 @@ EOF;
 		// dayAfterRegistration array maps "DAY" => "MAILID"
 		$dayAfterRegistration = array(6=>1785,9=>1784,13=>1786,20=>1786,29=>1784,59=>1784,89=>1784,119=>1784,149=>1784,179=>1784,239=>1784,299=>1784,359=>1784);  
 		$checkDay =JSstrToTime(date("Y-m-d",time()-14*24*60*60));
-		$registerCheckArr =array(89,119,149);
+		$registerCheckArr =array(29,59,89,119,149,179,239,299,359);
 
 		foreach($dayAfterRegistration as $dd => $mailid) {
 			$d = date('Y-m-d', strtotime('-'.$dd.' day'));
@@ -112,8 +112,8 @@ EOF;
         $purchase_dtMin120 = date('Y-m-d', strtotime('-119 day'));
         $profileArrMin120 = $ssObj->getMaxExpiryProfilesForDates($purchase_dtMin120,$purchase_dtMin120);
         $profileArr =array_merge($profileArr,$profileArrPlus30,$profileArrMin9,$profileArrMin30,$profileArrMin60,$profileArrMin120);	
-        $c = count($profileArr);
-        mail("nitish.sharma@jeevansathi.com,manoj.rana@naukri.com","Membership mailer","Count of JSExclusive Mailer:$c");
+        //$c = count($profileArr);
+        //mail("nitish.sharma@jeevansathi.com,manoj.rana@naukri.com","Membership mailer","Count of JSExclusive Mailer:$c");
 		if(count($profileArr)>0) {
 			foreach($profileArr as $profileid) {
 				if($mmObj->isExclusive($profileid)) 
