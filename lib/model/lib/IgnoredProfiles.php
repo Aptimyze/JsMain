@@ -66,6 +66,8 @@ class IgnoredProfiles
 
         public function ignoreProfile($profileid, $ignoredProfileid)
         {
+        	JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileid);
+        	JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$ignoredProfileid);
         	$this->addDataToFile("old");
         	$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
         	$ignObj->ignoreProfile($profileid,$ignoredProfileid);
