@@ -647,6 +647,7 @@ class MyJs implements Module
                                 "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_IOS,
                                 "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_IOS,
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_IOS,
+                                "MATCH_OF_THE_DAY"=>"stype=".SearchTypesEnums::MATCH_OF_THE_DAY_MYJS_IOS,
                                 );
 
 		return $trackingMap[$listing];
