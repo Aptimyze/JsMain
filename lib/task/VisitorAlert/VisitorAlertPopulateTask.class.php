@@ -61,7 +61,7 @@ EOF;
                 $visitoralert_VISITOR_ALERT_OPTION = new visitoralert_VISITOR_ALERT_OPTION('shard1_slave');
                 $arrayReceivers = ($visitoralert_VISITOR_ALERT_OPTION->fetchReceivers($chunkReceiver)); 
 
-                if ( is_array($arrayReceivers))
+                if ( count($arrayReceivers) > 0) 
                 {
                     $arrayReceiversCommaSeparated = implode(', ', $arrayReceivers);
 
