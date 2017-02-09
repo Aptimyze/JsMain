@@ -48,6 +48,8 @@ EOF;
                 {
                     $profileVisitors = array();
                     $profileVisitors = $this->getVisitorProfile($profile['PROFILEID']);
+
+		            unset($profileVisitorsArrayMixed);
                     $profileVisitorsArray = array();
                     if ( is_array($profileVisitors) )
                     {
@@ -57,9 +59,14 @@ EOF;
                         $count = count($profileVisitorsArray);
                         $profileVisitorsArrayMixed[$profile['PROFILEID']] =   $profileVisitorsArray;
                     }
+
                     if ( is_array($profileVisitorsArrayMixed))
                     {
                         $visitoralertMailerVisitors->updateReceiverData($profileVisitorsArrayMixed,$count);
+                    }
+		            else
+                    {
+                        $visitoralertMailerVisitors->updateReceiverDataSetX($profile['PROFILEID']);
                     }
                 }
             }
