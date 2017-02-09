@@ -33,6 +33,14 @@ class MyJs implements Module
 			$this->configurations = $configObj->getConfiguration($module,'',"IOS");
 		else 
                 	$this->configurations = $configObj->getConfiguration($module);
+        
+            //As Per Peek Level Unset Some Listing Across Channels
+            if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=2) {
+                unset($this->configurations["INTEREST_EXPIRING"]);
+            }
+            if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=3) {
+                unset($this->configurations["SHORTLIST"]);
+            }
         }
         
         
@@ -647,6 +655,7 @@ class MyJs implements Module
                                 "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_IOS,
                                 "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_IOS,
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_IOS,
+                                "MATCH_OF_THE_DAY"=>SearchTypesEnums::MATCH_OF_THE_DAY_MYJS_IOS,
                                 );
 
 		return $trackingMap[$listing];
