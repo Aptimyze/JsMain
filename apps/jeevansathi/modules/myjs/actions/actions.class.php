@@ -216,7 +216,7 @@ class myjsActions extends sfActions
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
 
-				$this->showMatchOfTheDay = 1;
+				$this->showMatchOfTheDay = 0;
 				if($this->loginProfile->getACTIVATED() == 'U')
 				{
 					$this->showMatchOfTheDay = 0;
@@ -227,7 +227,10 @@ class myjsActions extends sfActions
 
                 $output = ob_get_contents();
                 ob_end_clean();
+                
            	    $this->apiData=json_decode($output,true);
+                $this->jsonData = $output;                
+                
            	    // redirection to cal layers if calObject is not null
            	    if ($this->apiData['calObject'])
            	    {
@@ -275,7 +278,8 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
-
+        
+        $this->loadLevel = JsConstants::$hideUnimportantFeatureAtPeakLoad;
 
 	
 		if (empty($this->profilePic))
@@ -344,13 +348,13 @@ class myjsActions extends sfActions
 		$registrationTime = strtotime($entryDate);
 
 		$this->showExpiring = 0;
-		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		if($this->loadLevel < 2 && ($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 		{
 			$this->showExpiring = 1;
 		}
 
 		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-		$this->showMatchOfTheDay = 1;
+		$this->showMatchOfTheDay = 0;
 		if($loggedInProfileObj->getACTIVATED() == 'U')
 		{
 			$this->showMatchOfTheDay = 0;
