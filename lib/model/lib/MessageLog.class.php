@@ -97,7 +97,7 @@ class MessageLog
 		if(is_array($arrayForRB))
 		{	
 		foreach ($arrayForRB as $key => $value) {
-			if($value['MSG_DEL'] == 'Y')
+			if($value['MSG_DEL'] == 'Y' && $this->toUpdateRB($message,$value['SENDER'],$value['RECEIVER']))
 			{
 				$RBmessage['SENDER'] = $value['SENDER'];
 				$RBmessage['RECEIVER'] = $value['RECEIVER'];
@@ -380,6 +380,18 @@ if($limit == 1000000)
 				}
 
 		return $message;		
+	}
+
+	public function toUpdateRB($messageArr,$sender,$receiver)
+	{    
+		
+		foreach ($messageArr as $key => $value) {
+			# code...
+			if($value['SENDER'] == $sender && $value['RECEIVER'] == $receiver && ($value['MESSAGE']!=''|| $value['MESSAGE'] != NULL) )
+				return 0;
+		}
+
+		return 1;
 	}
 }
 ?>
