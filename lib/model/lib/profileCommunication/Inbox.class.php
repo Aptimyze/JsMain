@@ -305,6 +305,9 @@ class Inbox implements Module
                                                 if($infoTypeNav["matchedOrAll"])
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
+                                                if($infoType == "MATCH_OF_THE_DAY" && JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID())){
+                                                        $this->totalCount = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
+                                                }
                                                 if($infoType == "MY_MESSAGE"){
                                                     	if(count($profilesArray)==$conditionArray['LIMIT'])
                                                         	array_pop($profilesArray);
