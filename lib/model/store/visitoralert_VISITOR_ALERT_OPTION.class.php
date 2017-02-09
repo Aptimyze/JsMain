@@ -50,7 +50,7 @@ class visitoralert_VISITOR_ALERT_OPTION extends TABLE
         {
             if(is_array($receiverData))
             {
-                $sql="SELECT PROFILEID FROM visitoralert.VISITOR_ALERT_OPTION WHERE ALERT_OPTION != 'U' AND PROFILEID IN ( ";
+                $sql="SELECT PROFILEID FROM visitoralert.VISITOR_ALERT_OPTION WHERE ALERT_OPTION = 'U' AND PROFILEID IN ( ";
 
                 foreach($receiverData as $key=>$value)
                 {

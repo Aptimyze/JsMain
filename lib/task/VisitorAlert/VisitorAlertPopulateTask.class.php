@@ -59,7 +59,13 @@ EOF;
             {
                 $arrayReceivers = array();
                 $visitoralert_VISITOR_ALERT_OPTION = new visitoralert_VISITOR_ALERT_OPTION('shard1_slave');
-                $arrayReceivers = ($visitoralert_VISITOR_ALERT_OPTION->fetchReceivers($chunkReceiver)); 
+                // $arrayReceivers = ($visitoralert_VISITOR_ALERT_OPTION->fetchReceivers($chunkReceiver));
+
+                $arrayReceiversNegate = ($visitoralert_VISITOR_ALERT_OPTION->fetchReceivers($chunkReceiver));
+                foreach($chunkReceiver as $k=>$rec){
+                        if(!is_array($arrayReceiversNegate) || !in_array($rec["VIEWED"], $arrayReceiversNegate))
+                                $arrayReceivers[] = $rec["VIEWED"];
+                }  
 
                 if ( count($arrayReceivers) > 0) 
                 {
@@ -68,7 +74,7 @@ EOF;
                     $valueArray = array("PROFILEID"=>$arrayReceiversCommaSeparated,"activatedKey"=>1,'ACTIVATED'=>"Y");
                     $greaterThanArray = array("LAST_LOGIN_DT"=>$lastLoginDate);
                     $detailArr = array();
-                   
+                    $excludeArray = array("PRIVACY"=>"C");
                     $detailArr = $jprofileObj->getArray($valueArray,$excludeArray,$greaterThanArray,'PROFILEID','','','','','','','','');
                     if ( is_array($detailArr))
                     {
