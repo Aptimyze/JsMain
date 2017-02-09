@@ -10,20 +10,41 @@ class ApiRequestCallbackV1Action extends sfActions
 { 
     //Member Variables
     public function execute($request)
-    {
+    {   
         $apiResponseHandlerObj = ApiResponseHandler::getInstance();
         $loginData=$request->getAttribute("loginData");
         $iProfileId = isset($loginData['PROFILEID']) ? $loginData['PROFILEID'] : '';
         $userName = " "; 
+        $callBackResponse = $request->getParameter("rcbResponse");
+        $internal = $request->getParameter('INTERNAL');
+
         // Query options
         $query_options = array("N"=>"Not filled in",
-        	"P"=>'Questions or feedback regarding jeevansathi profile',
+            "P"=>'Questions or feedback regarding jeevansathi profile',
             "M"=>'Query regarding jeevansathi membership plans');    
         if($iProfileId){
             // Assign defaults if user is logged in
             $userName = $loginData["USERNAME"];
             $phone = $loginData["PHONE_MOB"];
             $email = $loginData["EMAIL"];
+        }
+
+        //This part is used when the rcb Response is "N". In this case, the table gets updated and response is sent.
+        if($callBackResponse == "N")
+        {
+            $this->insertRCBResponse($callBackResponse);
+            $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+            $responseData['status'] = 'success';
+            $responseData['successMsg'] = 'Never mind. You still can reach out to us later whenever you want. We will remind you about this after two weeks.';       
+            $responseData['rcbResponse'] = $callBackResponse;
+            // Sending API Response
+            $apiResponseHandlerObj->setResponseBody($responseData);
+            $apiResponseHandlerObj->generateResponse();
+            if($internal == 1){
+                return sfView::NONE;
+            } else {
+                die;
+            }
         }
         $dayDropDown = CommonFunction::getRCBDayDropDown();
         $startTimeDropDown = CommonFunction::getRCBStartTimeDropDown();
@@ -44,7 +65,7 @@ class ApiRequestCallbackV1Action extends sfActions
                 'submit_placeholder'=>"Submit Request");
         // Request Parameter Holder
         $arrRequest = $request->getParameterHolder()->getAll();
-        $internal = $arrRequest['INTERNAL'];
+        //$internal = $arrRequest['INTERNAL'];
         // Request Processing
         if ($arrRequest['processQuery'] == 1) {
             // Parsing Request Parameters
@@ -163,7 +184,7 @@ class ApiRequestCallbackV1Action extends sfActions
                     }
                     //Update RCB Status if form is submit(optional)
                     if (isset($rcbResponse) && $rcbResponse) {
-                      $this->updateRCBResponse($rcbResponse);
+                      $this->insertRCBResponse($rcbResponse);
                     }
                     $apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
                     $responseData['status'] = 'success';
@@ -190,5 +211,17 @@ class ApiRequestCallbackV1Action extends sfActions
         } else {
 			die;
         }
+    }
+
+    /**
+     * insertRCBResponse
+     * @param type $bStatus
+     */
+    private function insertRCBResponse($bStatus)
+    {
+        $loggedInProfileObj = LoggedInProfile::getInstance();
+        $rcbObject          = new RequestCallBack($loggedInProfileObj);
+        $rcbObject->updateThis($bStatus);
+        unset($rcbObject);
     }
 }

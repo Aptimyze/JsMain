@@ -116,6 +116,7 @@ class SearchParamters
         protected $SHOW_RESULT_FOR_SELF;
         protected $LAST_LOGIN_SCORE;
         protected $TRENDS_DATA;
+        protected $IS_VSP; // check for VSP Search
         
         public function __construct()
 	{
@@ -1137,6 +1138,11 @@ class SearchParamters
         public function getKUNDLI_DATE_CLUSTER(){return $this->KUNDLI_DATE_CLUSTER;}
         public function getAttemptConditionArr(){return $this->attemptConditionArr;}
 	public function setAttemptConditionArr($x){$this->attemptConditionArr = $x;}
+        public function getVisitorsDateConditionArr(){return $this->visitorsDateConditionArr;}
+	public function setVisitorsDateConditionArr($x){$this->visitorsDateConditionArr = $x;}
+        
+        public function getToSortByPhotoVisitors(){return $this->sortByPhotoVisitors;}
+	public function setToSortByPhotoVisitors($x){$this->sortByPhotoVisitors = $x;}
 
         public function getDisplayCity(){return $this->displayCity;}
         public function getDisplayState(){return $this->displayState;}
@@ -1220,4 +1226,6 @@ class SearchParamters
                 $this->TRENDS_DATA = $TRENDS_DATA; 
         }
         public function getTRENDS_DATA() { return $this->TRENDS_DATA; }
+        public function setIS_VSP($IS_VSP=0) {$this->IS_VSP = $IS_VSP;}
+        public function getIS_VSP() { return $this->IS_VSP; }
 }

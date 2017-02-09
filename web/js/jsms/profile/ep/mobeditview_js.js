@@ -479,6 +479,7 @@ function formatJsonOutput(result)
         delete(result.cache_interval);
         delete(result.resetCache);
         delete(result.flagForAppRatingControl);
+	delete(result.xmppLoginOn);
 	return result;
 }
 
@@ -586,7 +587,7 @@ function bindEmailButtons(){
 
 
     mobileSectionArray = {"education":"Education","basic":"Details",
-    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family"
+    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family","dpp":"Dpp"
     }
 
     section = getUrlParameter('section');
