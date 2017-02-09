@@ -234,9 +234,9 @@ class InformationTypeAdapter
                         $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY('newjs_master');
                         $profilesArray = $matchOfDayObj->getMatchForProfileForListing($condition, $skipArray);
                         if($condition["GENDER"] == 'F'){
-                                $searchObj = new NEWJS_SEARCH_MALE('newjs_slave');
+                                $searchObj = new NEWJS_SEARCH_MALE();
                         }else{
-                                $searchObj = new NEWJS_SEARCH_FEMALE('newjs_slave');
+                                $searchObj = new NEWJS_SEARCH_FEMALE();
                         }
                         if(!empty($profilesArray)){
                                 $data = $searchObj->getArray(array("PROFILEID"=>implode(',',$profilesArray)));

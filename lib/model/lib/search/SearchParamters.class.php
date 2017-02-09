@@ -116,6 +116,7 @@ class SearchParamters
         protected $SHOW_RESULT_FOR_SELF;
         protected $LAST_LOGIN_SCORE;
         protected $TRENDS_DATA;
+        protected $IS_VSP; // check for VSP Search
         
         public function __construct()
 	{
@@ -1225,4 +1226,6 @@ class SearchParamters
                 $this->TRENDS_DATA = $TRENDS_DATA; 
         }
         public function getTRENDS_DATA() { return $this->TRENDS_DATA; }
+        public function setIS_VSP($IS_VSP=0) {$this->IS_VSP = $IS_VSP;}
+        public function getIS_VSP() { return $this->IS_VSP; }
 }
