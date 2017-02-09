@@ -743,8 +743,9 @@ class PictureService
 			elseif($value==$this->noPhoto)
 			{
 				$this->profileObj->edit(array("HAVEPHOTO"=>"N","PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosScreenedFlag));
-			}
-                    MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));    
+                                MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
+                        }
+                        
 		}
 		else
 		{
