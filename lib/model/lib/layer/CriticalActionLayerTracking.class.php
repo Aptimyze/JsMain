@@ -321,8 +321,8 @@ return 0;
 
                     case '16':                      
                           $memObject=  JsMemcache::getInstance();
-                          if((MobileCommon::isNewMobileSite() || MobileCommon::isApp()) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
-                          {        
+                          if((MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && $this->CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION')))) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                          {
                             
                               ob_start();
                               sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
@@ -400,5 +400,26 @@ break;
 
 
 
+  }
+  
+  
+  public function CALAppVersionCheck($calID,$appVersion){
+      
+      $isApp = MobileCommon::isApp();
+      if(!$isApp)return true;
+      $versionArray = array(
+          
+                '16' => array(
+                    
+                    'A' => '84',
+                    'I' => '4.4'
+                    
+                        )
+          );
+      if($appVersion >= $versionArray[$calID][$isApp])
+          return true;
+       return false;
+      
+      
   }
 }
