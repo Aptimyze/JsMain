@@ -497,7 +497,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "",
-			"TRACKING"=> "IMDN",
+			"TRACKING"=> "IMD",
             "CONTACT_ID"=>""
                 ),
 		);
