@@ -454,7 +454,7 @@ $js_arr[]=array("jsms/angular/registration/lib/angular-resource_min"  => "1");
 $js_arr[]=array("jsms/angular/registration/lib/angular-route_min"  => "1");
 $js_arr[]=array("jsms/angular/registration/lib/angular-touch_min"  => "1");
 $js_arr[]=array("jsms/angular/registration/scripts/app"     => "4");
-$js_arr[]=array("jsms/angular/registration/scripts/controllers"                     => "21");
+$js_arr[]=array("jsms/angular/registration/scripts/controllers"                      => "22");
 $js_arr[]=array("jsms/angular/registration/scripts/services"    => "3");
 $js_arr[]=array("jsms/angular/registration/scripts/directives"                => "19");
 $js_arr[]=array("jsms/angular/registration/scripts/factories"                               => "34");
