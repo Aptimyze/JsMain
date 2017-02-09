@@ -252,13 +252,28 @@ return 0;
 
                       case '11':                      
                       
-                     
                           $memObject=  JsMemcache::getInstance();
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
-                                  $show=1;
-                            
-                      
-                    
+                          {        
+                            $show=1;
+                            ob_start();
+                            sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
+                            $layerData = ob_get_contents();
+                            ob_end_clean();
+                            $dppSugg=json_decode($layerData,true);
+                            if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
+                            {
+                              foreach ($dppSugg['dppData'] as $key => $value) 
+                              {
+                                if(is_array($value['data']))                                  
+                                {      
+                                  $show = 0;
+                                  break;
+                                }
+                              }
+                            }
+
+                          } 
                     break;
 
                       case '12':               
@@ -303,6 +318,33 @@ return 0;
                       if(!$nameArr[$profileid]['DISPLAY'] && $nameArr[$profileid]['NAME'] && jsValidatorNameOfUser::validateNameOfUser($nameArr[$profileid]['NAME']) && Flag::isFlagSet("name", $screening))
                           $show=1;
                     break;  
+
+                    case '16':                      
+                          $memObject=  JsMemcache::getInstance();
+                          if((MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && $this->CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION')))) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                          {
+                            
+                              ob_start();
+                              sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
+                              $layerData = ob_get_contents();
+                              ob_end_clean();
+                              $dppSugg=json_decode($layerData,true);
+                              if(is_array($dppSugg) && is_array($dppSugg['dppData'])) 
+                              {
+                                foreach ($dppSugg['dppData'] as $key => $value) 
+                                {
+                                  if(is_array($value['data']))                                  
+                                  {      
+                                    $show = 1;
+                                    $request->setParameter('dppSugg',$dppSugg);
+                                    break;
+                                  }
+                                }
+                              }
+                                                     
+                          } 
+                    break;
+
 
           default : return false;
         }
@@ -358,5 +400,26 @@ break;
 
 
 
+  }
+  
+  
+  public function CALAppVersionCheck($calID,$appVersion){
+      
+      $isApp = MobileCommon::isApp();
+      if(!$isApp)return true;
+      $versionArray = array(
+          
+                '16' => array(
+                    
+                    'A' => '84',
+                    'I' => '4.4'
+                    
+                        )
+          );
+      if($appVersion >= $versionArray[$calID][$isApp])
+          return true;
+       return false;
+      
+      
   }
 }
