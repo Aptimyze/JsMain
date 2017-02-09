@@ -727,11 +727,15 @@ class PictureService
 			if($havePhoto['HAVEPHOTO']==$this->neverAddedPhoto ||$havePhoto['HAVEPHOTO']==$this->noPhoto)
 			{
 				$this->profileObj->edit(array("HAVEPHOTO"=>"U","PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosToBeScreenedFlag));
-			}
+                                MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
+                                $memCacheObject = JsMemcache::getInstance();
+                                $memCacheObject->remove($this->profileObj->getPROFILEID(). "_THUMBNAIL_PHOTO");
+
+                        }
 			else
 				$this->profileObj->edit(array("PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosToBeScreenedFlag));
 		
-                        MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
+                        
                 }
 		elseif($method=='del')
 		{
@@ -744,6 +748,8 @@ class PictureService
 			{
 				$this->profileObj->edit(array("HAVEPHOTO"=>"N","PHOTODATE"=>date("Y-m-d H:i:s"),"PHOTOSCREEN"=>$this->photosScreenedFlag));
                                 MyJsMobileAppV1::deleteMyJsCache(array($this->profileObj->getPROFILEID()));
+                                $memCacheObject = JsMemcache::getInstance();
+                                $memCacheObject->remove($this->profileObj->getPROFILEID(). "_THUMBNAIL_PHOTO");
                         }
                         
 		}
