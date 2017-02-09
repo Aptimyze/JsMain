@@ -194,7 +194,6 @@ class Accept extends ContactEvent
     		$profileMemcacheServiceViewerObj->update("AWAITING_RESPONSE_NEW",-1);
             
           }
-
                 }
         else $profileMemcacheServiceViewerObj->update("FILTERED",-1);
 

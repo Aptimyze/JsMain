@@ -159,6 +159,34 @@ class InboxMobileAppV1
 	                    "ANCESTRAL_ORIGIN",
 	                    "NAME_OF_USER",
 	                    ),
+		"INTEREST_ARCHIVED"=>Array(
+		"PROFILECHECKSUM",
+	                    "USERNAME",
+	                    "GENDER",
+	                    "OCCUPATION",
+	                    "LOCATION",
+	                    "AGE",
+	                    "HEIGHT",
+	                    "RELIGION",
+	                    "CASTE",
+	                    "MTONGUE",
+	                    "INCOME",
+	                    "subscription_icon",
+	                    "subscription_text",
+	                    "TIME",
+	                    "SEEN",
+	                    "edu_level_new",
+	                    "userloginstatus",
+	                    "ProfilePic120Url",
+	                    "ProfilePic450Url",
+	                    "MSTATUS",
+	                    "VERIFICATION_SEAL",
+	                    "VERIFICATION_STATUS",
+	                    "NATIVE_CITY",
+	                    "NATIVE_STATE",
+	                    "ANCESTRAL_ORIGIN",
+	                    "NAME_OF_USER",
+	                    ),
 			"MATCH_ALERT"=>Array(
 				"PROFILECHECKSUM",
 				"USERNAME",
@@ -629,6 +657,15 @@ class InboxMobileAppV1
 		$finalResponse["total"]="$temp";
 		$finalResponse["tracking"] = $displayObj[$infoKey]["TRACKING"];	
 		$finalResponse = array_change_key_case($finalResponse,CASE_LOWER);
+    //Request Call Back Communication
+    $arrAllowedRcbCommunication = array("ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT");
+    if (in_array($infoKey, $arrAllowedRcbCommunication)) {
+      $loggedInProfileObject = LoggedInProfile::getInstance();
+      $rcbObj = new RequestCallBack($loggedInProfileObject);
+      $finalResponse['display_rcb_comm'] = ($rcbObj->getRCBStatus())?'true':'false';
+	$finalResponse['display_rcb_comm_message']="To reach out to your accepted members, you may consider upgrading your membership. Would you like us to call you to explain the benefits of our membership plans?";
+      unset($rcbObj);
+    }
         return $finalResponse;
 	}
 	private function getDisplaylayerText($gender,$infokey,$count,$contactType='')
@@ -639,6 +676,7 @@ class InboxMobileAppV1
 		switch($infokey){
 			case "INTEREST_RECEIVED":
 			case "INTEREST_EXPIRING":
+			case "INTEREST_ARCHIVED":
 			case "FILTERED_INTEREST":
 				if($count>1)
 				{

@@ -413,11 +413,19 @@ class searchActions extends sfActions
 
 	                if($noRelaxation!=1 && $responseObj->getTotalResults() < $searchResultsCountForAutoRelaxation)
         	        {
-				$this->relaxedResults = 1;
+                                $keyAuto = "autoRelaxedCount";
+                                if(JsMemcache::getInstance()->get($keyAuto))
+                                {
+                                    $countVal = JsMemcache::getInstance()->get($keyAuto) + 1;
+                                }else{
+                                        $countVal = 1;
+                                }
+                                JsMemcache::getInstance()->set($keyAuto,$countVal);
+				/*$this->relaxedResults = 1;
 				$AutoRelaxationObj = new AutoRelaxation($SearchParamtersObj);
 				$relaxCriteria = $AutoRelaxationObj->autoRelax($loggedInProfileObj);
 				unset($responseObj);
-                		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);
+                		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);*/
 
 	                }
 
@@ -1592,18 +1600,30 @@ class searchActions extends sfActions
 						$noRelaxation = 1;
 						$noCasteMapping = 1;
 					}
-					
+					if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=5)
+					{
+						$noRelaxation = 1;
+						$noCasteMapping = 1;
+					}
 					/** Auto Relaxation Section
 					* increasing search results by changing some search paramters
 					*/
 					
 					if($noRelaxation!=1 && $responseObj->getTotalResults() < $searchResultsCountForAutoRelaxation)
 					{ 
-						$this->relaxedResults = 1;
+                                                $keyAuto = "autoRelaxedCount";
+                                                if(JsMemcache::getInstance()->get($keyAuto))
+                                                {
+                                                    $countVal = JsMemcache::getInstance()->get($keyAuto) + 1;
+                                                }else{
+                                                        $countVal = 1;
+                                                }
+                                                JsMemcache::getInstance()->set($keyAuto,$countVal);
+						/*$this->relaxedResults = 1;
                                                 $AutoRelaxationObj = new AutoRelaxation($SearchParamtersObj);
 						$relaxCriteria = $AutoRelaxationObj->autoRelax($loggedInProfileObj);
 						unset($responseObj);
-						$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);
+						$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,$results_orAnd_cluster,$clustersToShow,'','',$loggedInProfileObj);*/
 
 					}
 					
@@ -1644,8 +1664,14 @@ class searchActions extends sfActions
        
 				if($request->getParameter("justJoinedMatches")==1 || $request->getParameter("matchalerts")==1 || $request->getParameter("verifiedMatches")==1 || $request->getParameter("kundlialerts")==1 || $request->getParameter("contactViewAttempts")==1 || $request->getParameter("matchofday")==1 || in_array($request->getParameter("searchBasedParam"),array('justJoinedMatches','matchalerts','kundlialerts','contactViewAttempts','verifiedMatches','matchofday')))
 				;
-				else
-					$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
+				else{
+					if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=7)
+					{
+						$request->setParameter("showFeaturedProfiles",0);
+					}
+					else
+						$request->setParameter("showFeaturedProfiles",$this->SearchChannelObj->getFeaturedProfilesCount());
+				}
 				
 				if(!$cachedSearch && !$request->getParameter("myjs"))
 				{

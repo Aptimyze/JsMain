@@ -241,6 +241,9 @@ function formatTrackingString($trackingString)
 			case JSTrackingPageType::INTEREST_ARCHIVED_IOS:
 				$formattedString.="INTEREST_ARCHIVED_IOS";
 				break;
+			case JSTrackingPageType::INTEREST_ARCHIVED_ANDROID:
+				$formattedString.="INTEREST_ARCHIVED_ANDROID";
+				break;
 		}
 	}
 	return $formattedString;

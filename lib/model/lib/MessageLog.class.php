@@ -111,7 +111,7 @@ class MessageLog
 		$pid = $loginProfile;
 		$memccKey = $pid."_cc_myMessage";
 		$profileArray = JsMemcache::getInstance()->get($memccKey);
-		if($profileArray)
+		if($profileArray && array_key_exists("pageNo", $condition) && $condition["pageNo"]==1)
 		{
 			//JsMemcache::getInstance()->set($memccKey,'',0);
 			JsMemcache::getInstance()->delete($memccKey);
@@ -120,11 +120,12 @@ class MessageLog
 		{
 			$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 			$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
-			JsMemcache::getInstance()->set($memccKey,$profileArray);
+                        if(!array_key_exists("pageNo", $condition))
+                            JsMemcache::getInstance()->set($memccKey,$profileArray);
 		}
 
 
-
+                
                 $chatLogObj = new NEWJS_CHAT_LOG($dbName);
                 $profileChatArray =  $chatLogObj->getMessageListing($condition,$skipArray);
                 $profileArray = $this->mergeChatsAndMessages($profileArray,$profileChatArray,$condition['LIMIT']);
