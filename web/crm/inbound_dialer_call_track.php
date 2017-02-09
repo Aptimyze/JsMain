@@ -67,6 +67,7 @@ else
 		while($row_on = mysql_fetch_array($res_db))
 		{
 			$subscription =$row_on["SUBSCRIPTION"];
+			$profileid =$row_on['PROFILEID'];
 			if((strstr($subscription,"F")!="")||(strstr($subscription,"D")!="")){
 				$paidCampaign ='yes';
 				break;
@@ -77,7 +78,6 @@ else
 				echo $str;	
 				exit;
 			}*/
-			$profileid =$row_on['PROFILEID'];
 		}
 	}
 	else{
