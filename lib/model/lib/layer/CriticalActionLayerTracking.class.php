@@ -321,7 +321,7 @@ return 0;
 
                     case '16':                      
                           $memObject=  JsMemcache::getInstance();
-                          if((MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && $this->CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION')))) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
+                          if((MobileCommon::isNewMobileSite() || (MobileCommon::isApp() && self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION')))) && $memObject->get('MA_LOWDPP_FLAG_'.$profileid))
                           {
                             
                               ob_start();
@@ -403,7 +403,7 @@ break;
   }
   
   
-  public function CALAppVersionCheck($calID,$appVersion){
+  public static function CALAppVersionCheck($calID,$appVersion){
       
       $isApp = MobileCommon::isApp();
       if(!$isApp)return true;
