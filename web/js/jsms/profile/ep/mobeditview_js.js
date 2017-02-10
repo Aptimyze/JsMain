@@ -587,7 +587,7 @@ function bindEmailButtons(){
 
 
     mobileSectionArray = {"education":"Education","basic":"Details",
-    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family"
+    	"career":"Career","lifestyle":"Lifestyle","contact":"Contact","family":"Family","dpp":"Dpp"
     }
 
     section = getUrlParameter('section');

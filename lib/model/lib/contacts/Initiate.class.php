@@ -348,6 +348,9 @@ class Initiate extends ContactEvent{
       throw new jsException($e);
     }
 
+    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->viewed->getPROFILEID());
+    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->contactHandler->getViewer()->getPROFILEID()); 
+
   }
 
   public function sendMail() {
