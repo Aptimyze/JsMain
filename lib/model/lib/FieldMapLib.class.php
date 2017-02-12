@@ -1217,7 +1217,30 @@ case "occupation_grouping_mapping_to_occupation":
 );
 
 	break;
+case "newoccupation_mapping_for_dpp":
 
+        $arr=array(
+                "1"=>"11,59,23,19,48,50,38,47,28,2,10,49,64,68,69,66",//Management Professionals
+                "2"=>"54,9",//Media Professionals
+                "3"=>"13,52,18",//Businessperson
+                "4"=>"13,52,18,65",//Finance Professionals
+                "5"=>"60,58,31",//Teachers/Lecturers
+                "6"=>"60,58,31",//Healthcare Professionals
+                "7"=>"24,70",//Healthcare Professionals
+                "8"=>"34",//Defence
+                "9"=>"30,20,26",//Software/IT Professionals
+                "10"=>"61,62",//Research Professionals
+                "11"=>"44,36,41,37",//Not working
+                "12"=>"22",//Lawyer/Legal Professionals
+                "13"=>"17,15,51,6",//Architecture/ Design
+                "14"=>"57",//Doctor
+                "15"=>"27",//Engineering
+                "16"=>"12,8",//BPO/Customer Services
+                "17"=>"45",//Pilot
+                "18"=>"33",//Civil Services ( IAS,IFS,IPS,IRS )
+                "19"=>"39,5,16,67,32,4,63,29,3,55,40,14,46,25",//Other Occupations
+        );
+        break;
 case "height":
 
 	$arr=array(
