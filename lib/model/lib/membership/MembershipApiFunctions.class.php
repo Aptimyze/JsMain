@@ -898,6 +898,25 @@ class MembershipApiFunctions
         $apiObj->topBlockMessage = $topBlockMessage;
     }
     
+    /*generateUpgradeMemDisplayContent
+    * sets the display content for upgrade membership section in apiObj
+    * @inputs : $apiObj
+    */
+    public function generateUpgradeMemDisplayContent($apiObj){
+        $upgradeMembershipContent = array();
+        if($apiObj && $apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+            $upgradeMembershipContent["type"] = "MAIN";
+            $upgradeMembershipContent["upgradeMainMem"] = "C";
+            $upgradeMembershipContent["upgardeMainMemDur"] = "3";
+            $upgradeMembershipContent["upgradeOfferExpiry"] = date('M d Y',strtotime($apiObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+            $apiObj->upgradeMembershipContent = $upgradeMembershipContent;
+            unset($upgradeMembershipContent);
+            $currentMembershipContent["currentMemName"] = $apiObj->activeServiceName;
+            $apiObj->currentMembershipContent = $currentMembershipContent;
+            unset($currentMembershipContent);
+        }
+    }
+
     public function getMainMembershipDetails($apiObj, $id){
         $apiObj->mainServices['sideTitle'] = "Main Membership";
         $apiObj->mainServices['service_name'] = $apiObj->memHandlerObj->getUserServiceName($id);

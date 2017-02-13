@@ -174,7 +174,7 @@ class MembershipAPIResponseHandler {
             $ignoreShowOnlineCheck = false;
         }
         list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
-      
+
         $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {
@@ -447,6 +447,7 @@ class MembershipAPIResponseHandler {
             $userId = $this->profileid;
         }
         $vasFiltering = json_encode(VariableParams::$mainMemBasedVasFiltering);
+
         $output = array(
             'title' => $title,
             'topBlockMessage' => $this->topBlockMessage,
@@ -471,12 +472,10 @@ class MembershipAPIResponseHandler {
             'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
         );
         
-        if($this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-            //ankita set upgrade information based on last membership
-            $output["upgradeMembership"]["type"] = "MAIN";
-            $output["upgradeMembership"]["upgradeMainMem"] = "C";
-            $output["upgradeMembership"]["upgardeMainMemDur"] = "3";
-        }
+        //fetch the upgrade membership content based on eligibilty
+        $this->memApiFuncs->generateUpgradeMemDisplayContent($this);
+        $output["upgradeMembershipContent"] = $this->upgradeMembershipContent;
+        $output["currentMembershipContent"] = $this->currentMembershipContent;
         
         if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '601', '61', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
@@ -487,7 +486,7 @@ class MembershipAPIResponseHandler {
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '501', '51', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
         }
-        //print_r($output);die;
+        print_r($output);die;
         return $output;
     }
     

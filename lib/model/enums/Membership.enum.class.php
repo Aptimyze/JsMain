@@ -66,7 +66,7 @@ class VariableParams
         public static $memUpgradeConfig = array(
                                             "deactivationCurlTimeout"=>120000,
                                             "allowedUpgradeMembershipAllowed"=>array("MAIN"),
-                                            "mainMemUpgradeLimit"=>-7,
+                                            "mainMemUpgradeLimit"=>7,
                                             "upgradeMainMemAdditionalPercent"=>40
                                             );
     

@@ -536,9 +536,10 @@ class Membership
         if ($count) {
             $row = $billingServStatObj->getLastActiveServiceDetails($profileid);
             if ($row['EXPIRY_DT']) {
+                $memUpgradeOffset = intval("-".VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]);
                 if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
                     //confirm whether to handle upgrade for unlimited or not ankita
-                    if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]){
+                    if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset){
                         return array(memUserType::UPGRADE_ELIGIBLE, $row["EXPIRY_DT"], $row["SERVICEID"]);
                     }
                     else{
@@ -555,7 +556,7 @@ class Membership
                         
                         if ($row['DIFF'] < 0) return array(4, $expiry_date_plus_10, $row["SERVICEID"]);
                         else{
-                            if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]){
+                            if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset){
                                 return array(memUserType::UPGRADE_ELIGIBLE, $expiry_date, $row["SERVICEID"]);
                             }
                             else{
@@ -567,7 +568,7 @@ class Membership
                         return array(3, 0, $row["SERVICEID"]);
                     } 
                     else {
-                        if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]){
+                        if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset){
                             return array(memUserType::UPGRADE_ELIGIBLE, 0, $row["SERVICEID"]);
                         }
                         else{
