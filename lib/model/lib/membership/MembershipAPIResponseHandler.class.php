@@ -148,7 +148,7 @@ class MembershipAPIResponseHandler {
         }
         
         //set discount info so that it can be used as common variable
-        $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj);
+        $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj,$this->upgradeMem);
         if($this->discountTypeInfo == null){
             $this->discountTypeInfo = array();
         }
@@ -174,6 +174,7 @@ class MembershipAPIResponseHandler {
             $ignoreShowOnlineCheck = false;
         }
         list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
+      
         $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {

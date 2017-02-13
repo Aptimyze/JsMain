@@ -201,10 +201,12 @@ class MembershipHandler
     public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop',$apiObj = "",$upgradeMem="NA")
     {
         if (!$discountType) {
+
             if($apiObj != "" && is_array($apiObj->discountTypeInfo)){
                 $discountTypeArr = $apiObj->discountTypeInfo;
             }
             else{
+
                 $discountTypeArr = $this->getDiscountInfo($user,$upgradeMem);
             }
             $discountType    = $discountTypeArr['TYPE'];
@@ -1310,7 +1312,7 @@ class MembershipHandler
             } else {
                 $mainMemDur = $tempMem[1];
             }
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $this->getUserDiscountDetailsArray($userObj, "L",3,$upgradeMem);
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $this->getUserDiscountDetailsArray($userObj, "L",3,"",$upgradeMem);
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {

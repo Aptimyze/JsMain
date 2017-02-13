@@ -114,7 +114,7 @@ class MembershipApiFunctions
             }
             error_log("ankita upgradeMem in calculateCartPrice-".$apiObj->upgradeMem);
             
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgardeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj->upgradeMem);
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgardeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,"",$apiObj->upgradeMem);
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($apiObj->userObj->userType == 4 || $apiObj->userObj->userType == 6) {
                     $discPerc = $renewalPercent;
