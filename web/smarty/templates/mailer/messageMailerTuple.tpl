@@ -68,7 +68,7 @@
                                 </tr>
                                 <tr>
                                     <td width="20"></td>
-                                    <td style="color:#4a4a4a; font-family: Arial, Helvetica, sans-serif; font-size:12px;"><strong>Message:</strong> ~$message` ~if $showReadMore eq '1'`<a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfileId`(/LINK)" target="_blank" style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;text-decoration: none;"> Read more</a>~/if`</td>
+                                    <td style="color:#4a4a4a; font-family: Arial, Helvetica, sans-serif; font-size:12px;">~$message` ~if $showReadMore eq 1` <a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfileId`(/LINK)" target="_blank" style="font-size:12px; color:#14428e; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;text-decoration: none;"> Read more</a>~/if`</td>
                                 </tr>
 
                              </table>

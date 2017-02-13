@@ -6,6 +6,7 @@ class MessageQueues
   CONST CONSUMERCOUNT = 3;  //Number of instances of Consumer class run at a time.
   CONST NOTIFICATIONCONSUMERCOUNT = 3;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST SCREENINGCONSUMERCOUNT = 1;  //Number of instances of ScreeningConsumer class run at a time.
+  CONST WRITEMESSAGECONSUMERCOUNT = 1;  //Number of instances of Write message queue consumers run at a time.
   CONST MAILQUEUE = "MailQueue";  //Queue for storing mails
   CONST SMSQUEUE = "SmsGcmQueue"; //Queue for storing sms
   CONST CONTACTCACHEINITIATE = "ContactCacheInitiate"; //Queue for sending data to webservice to create cache
@@ -14,19 +15,20 @@ class MessageQueues
   CONST USERCREATION = "USER_CREATION"; //Queue for chat user creation
   CONST CONSUMER_COUNT_SINGLE = 1; //This is to ensure that only 1 consumer instance runs at a time.
   CONST UPDATE_SEEN_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
+  CONST LOGGING_QUEUE_CONSUMER_COUNT = 2; //variable to store cosumers to be executed for update seen
   CONST FEATURED_PROFILE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST PROFILE_CACHE_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for update seen
   CONST CHAT_CONSUMER_COUNT = 1; //variable to store cosumers to be executed for chat messages
   CONST UPDATE_VIEW_LOG_CONSUMER_COUNT = 1;
   CONST NOTIFICATION_LOG_CONSUMER_COUNT = 1; //count of notification log consumer instances
+  CONST DISCOUNT_TRACKING_CONSUMER_COUNT = 1; //count of discount tracking consumer count
   CONST INVALIDATECACHE = "invalidateCache";
   CONST CHAT_MESSAGE = "chatMessage";
   CONST VIEW_LOG = "ViewLogQueue";
-  CONST FALLBACK_SERVER_MSGPICK_COUNT = 10;
-  
+  CONST FALLBACK_SERVER_MSGPICK_COUNT = 10; 
   //per queue msg limit mapping
   public static $upperMessageLimitPerQueue = array("default"=>1000,"INSTANT_NOTIFICATION_QUEUE"=>10000);
-  public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6","profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat","delayed_profile_delete_queue"); //queues not to be considered for msg upper limit alert
+  public static $queuesWithoutMsgCountLimit = array("SCHEDULED_NOTIFICATION_QUEUE1","SCHEDULED_NOTIFICATION_QUEUE2", "SCHEDULED_NOTIFICATION_QUEUE3", "SCHEDULED_NOTIFICATION_QUEUE4","SCHEDULED_NOTIFICATION_QUEUE5","SCHEDULED_NOTIFICATION_QUEUE6","profile-created-queue","profile-deleted-queue","roster-created-acceptance","roster-created-acceptance_sent","roster-created-intrec","roster-created-intsent","roster-created-shortlist","roster-updated-queue","roster-created-dpp","chat","delayed_profile_delete_queue","DISC_HISTORY_QUEUE"); //queues not to be considered for msg upper limit alert
   CONST SAFE_LIMIT = 200000000;     //Limit in MB's for the difference between memory allowed and memory used by rabbitmq.
   CONST MSGBODYLIMIT = NULL;  //to prevent truncation of message. NULL specify that a message of any length can be sent over the queue.
   CONST DELIVERYMODE = 2;     //for persistent messages. 2 is the default value to make messages persistent and the other allowed value is 1 which corresponds to non-persistent messages.
@@ -48,7 +50,9 @@ class MessageQueues
   CONST CRONCONSUMER_STARTCOMMAND = "symfony cron:cronConsumeQueueMessage"; //Command to start cron:cronConsumeQueueMessageTask
   CONST CRONCHAT_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeChatMessage"; //Command to start cron:cronConsumeChatMessage
   CONST CRONNOTIFICATION_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsQueueMessage"; //Command to start cron:cronConsumeNotificationsQueueMessageTask
+  CONST CRON_DISCOUNT_TRACKING_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeDiscountTrackingQueueMessage"; //Command to start cron:cronConsumeDiscountTrackingQueueMessage
   CONST CRONSCREENINGQUEUE_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeScreeningQueueTask"; //Command to start cron:cronConsumeScreeningQueueTask
+  CONST CRONWRITEMESSAGEQUEUE_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeWriteMessageQUEUE"; //Command to start cron:cronConsumeWriteMessageQUEUE write message queue
   CONST CRONNOTIFICATION_LOG_CONSUMER_STARTCOMMAND = "symfony cron:cronConsumeNotificationsLogQueueMessage";
   CONST FALLBACK_STATUS= true;   //If true, second server is used to handle fallback otherwise only one server is in use.
   CONST REDELIVERY_LIMIT = 3; //This limit is used to set the redelivery limit of messages at the consumer end.
@@ -58,12 +62,16 @@ class MessageQueues
   CONST DELETE_RETRIEVE_QUEUE = "DeleteRetrieveQueue"; //Queue that contains profileId's for those profiles that are deleted.
   CONST SCREENING_QUEUE = "ScreeningQueue"; //Queue that contains profileId's for those profiles that are screened.
   CONST UPDATE_SEEN_QUEUE = "updateSeenQueue";
+  CONST LOGGING_QUEUE = "loginTrackingQueue";
+  CONST DISC_HISTORY_QUEUE = "DISC_HISTORY_QUEUE";
   CONST UPDATE_FEATURED_PROFILE_QUEUE = "updateFeaturedProfileQueue";
   CONST CRONDELETERETRIEVE_STARTCOMMAND = "symfony cron:cronConsumeDeleteRetrieveQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATESEEN_STARTCOMMAND = "symfony cron:cronConsumeUpdateSeenQueueMessage"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST UPDATE_FEATURED_PROFILE_STARTCOMMAND = "symfony cron:cronConsumeUpdateFeaturedProfileQueue"; //Command to start cron:cronConsumeDeleteRetrieveQueueMessage
   CONST PROFILE_CACHE_STARTCOMMAND = "symfony ProfileCache:ConsumeQueue"; //Command to start profile cache queue consuming cron
   CONST UPDATE_VIEW_LOG_STARTCOMMAND = "symfony cron:cronConsumeUpdateViewLogQueue"; //Command to start VIEW LOG consuming cron
+  CONST  CRON_LOGGING_QUEUE_CONSUMER_STARTCOMMAND= "symfony cron:cronConsumeLoggingQueue"; //Command to start cron:cronConsumeQueueMessageTask
+
   /*----------------JS notification(scheduled/instant) queues configuration details--------------------------*/
 
   public static $SCHEDULED_NOTIFICATION_QUEUE1 = "SCHEDULED_NOTIFICATION_QUEUE1"; //Queue for sending scheduled notification data from notification queue 1 to GCM
@@ -100,6 +108,15 @@ class MessageQueues
   const PROFILE_CACHE_Q_DELETE = "ProfileCacheDeleteQueue";
   const PROCESS_PROFILE_CACHE_DELETE = "PROFILE_CACHE_DELETE";
   const SCREENING_Q_EOI = "SCREENING_SEND_EOI";
+  const DELAY_MINUTE = 15;
+  const DELAY_WRITEMSG = 900 ;//60;
+
+  // queue/exchange names
+  const WRITE_MSG_queueRightNow = 'WriteMsgActiveQueue';//WriteMsgQueue
+  const WRITE_MSG_exchangeRightNow = 'WriteMsgActiveExchange';
+  const WRITE_MSG_queueDelayed5min = 'WriteMsgDelayedQueue';
+  const WRITE_MSG_exchangeDelayed5min = 'WriteMsgDelayedExchange';
+  const WRITE_MSG_Q = "WRITE_MSG_Queue";
 }
 
 ?>

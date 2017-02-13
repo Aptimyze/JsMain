@@ -573,6 +573,7 @@ initGunnaScore = function()
         return ;
     if(typeof isGunnaCallRequires == "function" && isGunnaCallRequires() == "1")
     {
+        if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4){
         getGunnaScore().success(function(data,textStatus,jqXHR){
         //Show Guna Score String
         if(data.responseStatusCode==0 && data.SCORE)
@@ -595,6 +596,7 @@ initGunnaScore = function()
         }).error(function(jqXHR,textStatus,errorThrown){
         //Something went wrong
         });
+    }
     }
 }
 initContactCenter = function()

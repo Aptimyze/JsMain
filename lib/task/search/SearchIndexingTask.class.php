@@ -53,6 +53,10 @@ EOF;
                                 $url = JsConstants::$solrServerUrl2."/dataimport?command=full-import";
                                 CommonUtility::sendCurlGetRequest($url);   
                         }
+                        if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl3){
+                                $url = JsConstants::$solrServerUrl3."/dataimport?command=full-import";
+                                CommonUtility::sendCurlGetRequest($url);   
+                        }
 		}
                 else if($type=='DELTA')
 		{
@@ -65,6 +69,10 @@ EOF;
                         }
                         if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl2){
                                 $url = JsConstants::$solrServerUrl2."/dataimport?command=delta-import";
+                                CommonUtility::sendCurlGetRequest($url);   
+                        }
+                        if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl3){
+                                $url = JsConstants::$solrServerUrl3."/dataimport?command=delta-import";
                                 CommonUtility::sendCurlGetRequest($url);   
                         }
                             

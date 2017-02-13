@@ -1041,6 +1041,8 @@ class ApiProfileSectionsMobile extends ApiProfileSections{
 		if((!$COUNTRY_RES) ||($COUNTRY_RES==51 && (!$CITY_RES)))
 		{
 			$incompleteArr[]=$this->getApiIncompleteFormatArray("COUNTRY_RES","Country living in",$COUNTRY_RES,"Y");
+                        $stateValue = substr($this->profile->getCITY_RES(),0,2);
+                        $incompleteArr[] =$this->getApiIncompleteFormatArray("STATE_RES","State Living in" ,$stateValue,"Y");
 			$incompleteArr[]=$this->getApiIncompleteFormatArray("CITY_RES","City living in",$CITY_RES,"Y");
 		}		
 		//---Mstatus and Have Child Section Religion Caste			

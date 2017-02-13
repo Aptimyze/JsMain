@@ -39,7 +39,7 @@ class dppSuggestions
 		}
 		if($type == "INCOME")
 		{
-			$valueArr = $this->getSuggestionForIncome($type,$valArr);
+			$valueArr = $this->getSuggestionForIncome($type,$valArr,$calLayer);
 		}		
 		if(count($valueArr["data"])< $this->countForComparison)
 		{
@@ -53,13 +53,13 @@ class dppSuggestions
 				{
 					$suggestedValueArr[$v2] = $this->getDppSuggestionsForFilledValues($type,$v2);
 				}
+
 				if(is_array($suggestedValueArr))
 				{
 					$valueArr = $this->getRemainingSuggestionValues($suggestedValueArr,$type,count($valueArr["data"]),$valueArr,$valArr);	
-				}
+				}				
 			}
 		}
-			
 		$valueArr["type"] = $type;
 		if($type == "AGE" || $type == "INCOME")
 		{
@@ -69,6 +69,10 @@ class dppSuggestions
 		{
 			$valueArr["range"] = 0;
 		}
+		if(MobileCommon::isApp() || MobileCommon::isNewMobileSite())
+		{
+			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
+		}	
 		return $valueArr;
 	}
 
@@ -159,7 +163,11 @@ class dppSuggestions
 	//This function gets the value for the $key specified for the given $type
 	public function getFieldMapValueForTrends($key,$type)
 	{
-		$type = $this->getType($type);
+		$type = $this->getType($type);		
+		if($type == "community")
+		{
+			$type = $type."_small";
+		}
 		if($type != "city")
 		{
 			$returnValue = $this->getFieldMapLabels($type,$key,'');//FieldMap::getFieldlabel($type,$key,'');
@@ -197,6 +205,10 @@ class dppSuggestions
 	public function getRemainingSuggestionValues($suggestedValueArr,$type,$valueArrDataCount,$valueArr,$valArr)
 	{
 		$type = $this->getType($type);
+		if($type == "community")
+		{
+			$type = $type."_small";
+		}
 		//frequency distribution calculation
 		$suggestedValueCountArr = $this->getFrequencyDistributedArrForCasteMtongue($suggestedValueArr);
 		$suggestedValueCountArr = $this->getSortedSuggestionArr($suggestedValueCountArr);
@@ -399,7 +411,6 @@ class dppSuggestions
 	public function getSuggestionForAge($type,$valArr)
 	{		
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceAgeArr,$valArr);
-		
 		if($this->gender == "F")
 		{
 			$minAge = min($valArr["LAGE"],$this->age);
@@ -420,14 +431,41 @@ class dppSuggestions
 	}
 
 	//Mapping of income needs to be changed.
-	public function getSuggestionForIncome($type,$valArr)
+	public function getSuggestionForIncome($type,$valArr,$calLayer="")
 	{	
+		
 		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr);			
+		
 		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
-		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);
+		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);		
+		if($calLayer)
+		{
+			foreach($valArr as $key=>$val)
+			{
+				if($val == 0)
+				{
+					$valArr[$key] = TopSearchBandConfig::$noIncomeLabel;
+				}
+				elseif(array_key_exists($val, $hIncomeRs))
+				{					
+						$valArr[$key] = $hIncomeRs[$val];
+				}
+				elseif(array_key_exists($val, $hIncomeDol))
+				{
+					$valArr[$key] = $hIncomeDol[$val];	
+				}
+			}
+		}
+		if(!is_array($valArr)) // in case the value in income is not set , we put no income in LDS and LRS and then suggest noIncome to an above
+		{
+			$valArr["LDS"] = TopSearchBandConfig::$noIncomeLabel;
+			$valArr["LRS"] = TopSearchBandConfig::$noIncomeLabel;
+		}
+
 		$incomeLevel = $this->getFieldMapLabels("income_level",'',1);
 		$annualIncome = $incomeLevel[$this->income];
 		$mappedIncome = DppAutoSuggestEnum::$incomeMappingArr[$this->income];
+
 		if($this->gender == "M")
 		{
 			if(!in_array($annualIncome,DppAutoSuggestEnum::$rupeeIncomeArr))

@@ -167,6 +167,10 @@ class FAQFeedBack
 		$this->webRequest=$request;
 		$this->m_objForm = new FeedBackForm($this->api);
 		$arrDeafults = array('name'=>$this->m_szName,'username'=>$this->m_szUserName,'email'=>$this->m_szEmail);
+		$dataArray = $this->webRequest->getParameter('feed');
+
+	if($dataArray['category'] == FeedbackEnum::CAT_ABUSE)
+	{
 		if($this->webRequest->getParameter('fromCRM')){  
 			$reporteeId=$this->webRequest->getParameter('reporteePFID');
 			$profileObj = NEWJS_JPROFILE::getInstance();
@@ -211,7 +215,7 @@ class FAQFeedBack
 			$apiResponseHandlerObj->generateResponse();
 			die;
 		}
-
+	}	
 
 		$this->m_objForm->setDefaults($arrDeafults);  
 		if($request->isMethod('POST') && $request->getParameter('CMDSubmit'))
