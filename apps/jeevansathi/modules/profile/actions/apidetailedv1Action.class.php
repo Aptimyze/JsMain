@@ -278,6 +278,13 @@ class apidetailedv1Action extends sfAction
 				$out["buttonDetails"] = $buttonObj->getButtonArray(array('IGNORED'=>$this->IGNORED));
 
 		}
+                if(MobileCommon::isAndroidApp()){
+                    $out["checkonline"] = false;
+                    if(!in_array($out["buttonDetails"]["contactType"],array('C','D'))){
+                            $out["checkonline"] = true;
+                    }
+                }
+
 		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
 		if (JsConstants::$hideUnimportantFeatureAtPeakLoad == 1) {
 			$out['show_gunascore'] = "n";

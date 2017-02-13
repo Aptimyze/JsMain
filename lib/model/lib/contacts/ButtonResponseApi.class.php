@@ -165,6 +165,7 @@ Class ButtonResponseApi
 		}
 		
 		$finalResponse = self::buttonDetailsMerge($responseArray);
+                $finalResponse["contactType"] = $this->contactObj->getTYPE();
 		return $finalResponse;
 	}
 	public function getLogoutButtonArray()

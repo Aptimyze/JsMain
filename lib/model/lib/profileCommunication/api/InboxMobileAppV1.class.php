@@ -564,9 +564,16 @@ class InboxMobileAppV1
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"];
 			$finalResponse["subtitle"] = $displayObj[$infoKey]["SUBTITLE"];
 
-			$finalResponse["checkOnline"] = false;
+			$finalResponse["checkonline"] = false;
                         if(in_array($infoKey,array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MATCH_ALERT","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED"))){
-                                $finalResponse["checkOnline"] = true;
+                                $finalResponse["checkonline"] = true;
+                        }
+                        if(MobileCommon::isAndroidApp()){
+                            $this->output['thumbnailPic'] = null;
+                            if($tupleObj->getThumbailUrl()) {
+                                $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED())['url'];
+                                $finalResponse['thumbnailPic'] = $thumbNail;
+                            }
                         }
 			if($infoKey=="PHOTO_REQUEST_RECEIVED")
 			{
