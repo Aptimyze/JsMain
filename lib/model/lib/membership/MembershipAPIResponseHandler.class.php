@@ -32,9 +32,11 @@ class MembershipAPIResponseHandler {
            $this->upgradeMem = "NA"; 
         }
         error_log("ankita upgradeMem in initialize api-".$this->upgradeMem."---".$this->displayPage);
+
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;
         }
+
         $this->getAppData = $request->getParameter("getAppData");
         $this->user_agent = $_SERVER['HTTP_USER_AGENT'];
         
@@ -146,7 +148,12 @@ class MembershipAPIResponseHandler {
         if ($this->userObj->userType == 4 || $this->userObj->userType == 6) {
             $this->renewCheckFlag = 1;
         }
-        
+
+        //set to fetch main membership offer prices for upgrade display section
+        if(intval($this->displayPage) == 1 && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+            $this->upgradeMem = "MAIN";
+        }
+
         //set discount info so that it can be used as common variable
         $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj,$this->upgradeMem);
         if($this->discountTypeInfo == null){
@@ -173,7 +180,8 @@ class MembershipAPIResponseHandler {
         else{
             $ignoreShowOnlineCheck = false;
         }
-        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
+     
+        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage , $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
 
         $this->curActServices = array_keys($this->allMainMem);
         
@@ -473,7 +481,7 @@ class MembershipAPIResponseHandler {
         );
         
         //fetch the upgrade membership content based on eligibilty
-        $this->memApiFuncs->generateUpgradeMemDisplayContent($this);
+        $this->memApiFuncs->generateUpgradeMemDisplayContent($this,$request);
         $output["upgradeMembershipContent"] = $this->upgradeMembershipContent;
         $output["currentMembershipContent"] = $this->currentMembershipContent;
         
@@ -486,7 +494,7 @@ class MembershipAPIResponseHandler {
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '501', '51', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
         }
-        print_r($output);die;
+        //print_r($output);die;
         return $output;
     }
     

@@ -224,7 +224,7 @@ class MembershipHandler
         else{
             $upgradePercentArr = array();
         }
-        //print_r($upgradePercentArr);die;
+     
         foreach ($allMainMem as $mainMem => $subMem) {
             foreach ($subMem as $key => $value) {
                 $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['PRICE'], 2);
