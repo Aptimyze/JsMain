@@ -903,17 +903,30 @@ class MembershipApiFunctions
     * @inputs : $apiObj
     */
     public function generateUpgradeMemDisplayContent($apiObj){
-        $upgradeMembershipContent = array();
         if($apiObj && $apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-            $upgradeMembershipContent["type"] = "MAIN";
-            $upgradeMembershipContent["upgradeMainMem"] = "C";
-            $upgradeMembershipContent["upgardeMainMemDur"] = "3";
-            $upgradeMembershipContent["upgradeOfferExpiry"] = date('M d Y',strtotime($apiObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
-            $apiObj->upgradeMembershipContent = $upgradeMembershipContent;
-            unset($upgradeMembershipContent);
-            $currentMembershipContent["currentMemName"] = $apiObj->activeServiceName;
-            $apiObj->currentMembershipContent = $currentMembershipContent;
-            unset($currentMembershipContent);
+            $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $apiObj->subStatus[0]['SERVICEID']);
+            switch($memID[0]){
+                case "P":
+                        $upgradeMem = "C";
+                        break;
+                case "C":
+                        $upgradeMem = "NCP";
+                        break;
+                case "NCP":
+                        $upgradeMem = "X";
+                        break;
+            }
+            if($upgradeMem){
+                $upgradeMembershipContent["type"] = "MAIN";
+                $upgradeMembershipContent["upgradeMainMem"] = $upgradeMem;
+                $upgradeMembershipContent["upgradeMainMemDur"] = $memID[1];
+                $upgradeMembershipContent["upgradeOfferExpiry"] = date('M d Y',strtotime($apiObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                $apiObj->upgradeMembershipContent = $upgradeMembershipContent;
+                unset($upgradeMembershipContent);
+                $currentMembershipContent["currentMemName"] = $apiObj->activeServiceName;
+                $apiObj->currentMembershipContent = $currentMembershipContent;
+                unset($currentMembershipContent);
+            }
         }
     }
 

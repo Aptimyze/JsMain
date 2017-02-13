@@ -633,7 +633,7 @@
                         <div id="payNowBtn" class="fullwid txtc lh50">
                             <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
                         </div>
-                        ~if $data.upgradeMembership`
+                        ~if $data.upgradeMembershipContent`
                         <div id="upgradeBtn" class="fullwid txtc lh50 cursp">
                             <span class="colrw">Upgrade</span>
                         </div>
@@ -909,7 +909,7 @@
         });
         $("#upgradeBtn").click(function(e){
             console.log("clicked on upgrade button");
-            var upgradeType = "~$data.upgradeMembership.type`",mainMem = "~$data.upgradeMembership.upgradeMainMem`",mainMemDur = "~$data.upgradeMembership.upgardeMainMemDur`";
+            var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
             createCookie('mainMemTab', mainMem);
             createCookie('mainMem', mainMem);
             createCookie('mainMemDur', mainMemDur);
