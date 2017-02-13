@@ -378,7 +378,7 @@ class ContactMailer
    * @return boolean
    */
   public static function InstantReminderMailer($viewedProfileId, $viewerProfileId, $draft, $subscriptionStatus) {
-    $emailSender = new EmailSender(MailerGroup::EOI, 1756);
+$emailSender = new EmailSender(MailerGroup::EOI, 1756);
     $tpl = $emailSender->setProfileId($viewedProfileId);
     $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId);
     $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
@@ -389,6 +389,7 @@ class ContactMailer
 		$paidStatus = "eRishta";
 	$smartyObj = $tpl->getSmarty();
 	$smartyObj->assign("paidStatus",$paidStatus);
+	$smartyObj->->assign("count", 1);
 	$profileMemcacheServiceObj = new ProfileMemcacheService($viewedProfileId);
 	$totalCount = $profileMemcacheServiceObj->get("AWAITING_RESPONSE");
 	$smartyObj->assign("totalCount",$totalCount);
