@@ -232,6 +232,11 @@ deleteOptionSuccess:
    javascripts: []
    layout: jsmsMobLayout 
 
+hideOptionSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: []
+   layout: jsmsMobLayout 
+
 deleteReasonSuccess:
    stylesheets: [-*,jsms/settings/settings_css]
    javascripts: [jsms/settings/mobDeleteProfile_js]
