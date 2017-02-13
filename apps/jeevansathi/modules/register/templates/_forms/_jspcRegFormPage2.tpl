@@ -70,7 +70,7 @@
           <div class="disp_ib">
             <input type="checkbox" id="caste_no_bar"/>
           </div>
-          <div class="disp_ib colr4 opa80">
+          <div class="disp_ib colr4 opa80 fontreg">
             I am open to marry people of all castes(Caste no bar)
           </div>
         </div>
