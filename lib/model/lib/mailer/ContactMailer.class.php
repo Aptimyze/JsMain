@@ -378,14 +378,15 @@ class ContactMailer
    * @return boolean
    */
   public static function InstantReminderMailer($viewedProfileId, $viewerProfileId, $draft, $subscriptionStatus) {
+
 $emailSender = new EmailSender(MailerGroup::EOI, 1756);
     $tpl = $emailSender->setProfileId($viewedProfileId);
     $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId);
     $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
-  	$viewerProfileId = new Profile('',$viewerProfileId);
-    if($viewerProfileId->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='EVALUE')
+  	$viewerProfileIdObj = new Profile('',$viewerProfileId);
+    if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='EVALUE')
 		$paidStatus = "eValue";
-	else if($viewerProfileId->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
+	else if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 		$paidStatus = "eRishta";
 	$smartyObj = $tpl->getSmarty();
 	$smartyObj->assign("paidStatus",$paidStatus);
