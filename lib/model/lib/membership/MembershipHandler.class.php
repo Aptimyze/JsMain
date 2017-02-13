@@ -838,7 +838,7 @@ class MembershipHandler
         );
     }
 
-    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$apiObj="",upgardeMem="NA")
+    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$apiObj="",$upgardeMem="NA")
     {
         error_log("ankita1 upgradeMem in getUserDiscount-".$upgardeMem);
        
