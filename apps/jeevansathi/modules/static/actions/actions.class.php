@@ -304,6 +304,12 @@ class staticActions extends sfActions
             $pObj = LoggedInProfile::getInstance();
         }
 
+        public function executeHideCheckPassword(sfWebRequest $request)
+        {
+            $loginData = $request->getAttribute("loginData");
+            $pObj = LoggedInProfile::getInstance();
+            $this->hideOption = $request->getParameter("hide_option");
+        }
         public function executeHideDuration(sfWebRequest $request)
         {
             $loginData = $request->getAttribute("loginData");
