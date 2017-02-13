@@ -537,9 +537,11 @@ class Membership
             $row = $billingServStatObj->getLastActiveServiceDetails($profileid);
             if ($row['EXPIRY_DT']) {
                 $memUpgradeOffset = intval("-".VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]);
+                $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $row['SERVICEID']);
+                
                 if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
                     //confirm whether to handle upgrade for unlimited or not ankita
-                    if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset){
+                    if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset && $memID[0]!="X"){
                         return array(memUserType::UPGRADE_ELIGIBLE, $row["EXPIRY_DT"], $row["SERVICEID"]);
                     }
                     else{
@@ -556,7 +558,7 @@ class Membership
                         
                         if ($row['DIFF'] < 0) return array(4, $expiry_date_plus_10, $row["SERVICEID"]);
                         else{
-                            if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset){
+                            if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset && $memID[0]!="X"){
                                 return array(memUserType::UPGRADE_ELIGIBLE, $expiry_date, $row["SERVICEID"]);
                             }
                             else{
@@ -568,7 +570,7 @@ class Membership
                         return array(3, 0, $row["SERVICEID"]);
                     } 
                     else {
-                        if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset){
+                        if($row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset && $memID[0]!="X"){
                             return array(memUserType::UPGRADE_ELIGIBLE, 0, $row["SERVICEID"]);
                         }
                         else{
