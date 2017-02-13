@@ -112,7 +112,9 @@ class MembershipApiFunctions
             else {
                 $mainMemDur = $tempMem[1];
             }
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L");
+            error_log("ankita upgradeMem in calculateCartPrice-".$apiObj->upgradeMem);
+            
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgardeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj->upgradeMem);
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($apiObj->userObj->userType == 4 || $apiObj->userObj->userType == 6) {
                     $discPerc = $renewalPercent;
@@ -222,6 +224,7 @@ class MembershipApiFunctions
                 	$servDetails = $servObj->fetchServiceDetailForRupeesTrxn($mems, $apiObj->device);
                     foreach ($mems as $key => $val) {
                         $price = $servDetails[$val]['PRICE'];
+                        
                         if ($discountActive == 1 && $apiObj->backendRedirect != 1) {
                             if ($memHandlerObj->getDiscountOffer($apiObj->mainMembership)) {
                                 $discPerc = $memHandlerObj->getDiscountOffer($val);
@@ -304,6 +307,14 @@ class MembershipApiFunctions
                     $discountCartPrice+= $additionalDiscount;
                 }
             }
+        }
+     
+        //add additional discount for upgrade membership if applicable
+        if((empty($apiObj->backendRedirect) || $apiObj->backendRedirect != 1) && $upgardeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$apiObj->mainMembership]){
+            
+            $additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$apiObj->mainMembership] / 100) , 2);
+            $totalCartPrice-= $additionalUpgradeDiscount;
+            $discountCartPrice+= $additionalUpgradeDiscount;
         }
         
         return array(
@@ -644,8 +655,7 @@ class MembershipApiFunctions
         else{
             $memHandlerObj = new MembershipHandler();
         }
-       
-        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj);
+        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
         $apiObj->discountType = $discountType;
         $apiObj->discountActive = $discountActive;
         $apiObj->discount_expiry = $discount_expiry;
@@ -661,6 +671,8 @@ class MembershipApiFunctions
         $apiObj->expiry_date = $expiry_date;
         $apiObj->discPerc = $discPerc;
         $apiObj->code = $code;
+        $apiObj->upgradePercentArr = $upgradePercentArr;
+        $apiObj->upgradeActive = $upgradeActive;
     }
     
     public function getDurationAndPrices($mainMem, $mostPopular, $apiObj) {
@@ -806,7 +818,7 @@ class MembershipApiFunctions
             }
             $topBlockMessage["contactsLeftText"] = "Contacts Left To View";
             $topBlockMessage["contactsLeftNumber"] = $apiObj->contactsRemaining;
-            if ($apiObj->userObj->userType == 5 || $apiObj->userObj->userType == 6) {
+            if ($apiObj->userObj->userType == 5 || $apiObj->userObj->userType == 6 || $apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE) {
                 $benefits = $this->getServiceWiseBenefits($apiObj->memID, $apiObj);
                 $benefits = $benefits[0];
             }
@@ -902,6 +914,7 @@ class MembershipApiFunctions
                 $addonMonths = $apiObj->festDurBanner[$apiObj->mainMem][$apiObj->mainMemDur];
             }
         }
+        
         if ($apiObj->mainMemDur == "L") {
             $monthsPrependVal = "Unlimited";
         } 

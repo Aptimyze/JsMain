@@ -27,6 +27,11 @@ class MembershipAPIResponseHandler {
         //$this->selectedVas = $request->getParameter("selectedVas");
 	$this->selectedVas = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("selectedVas"));
         $this->displayPage = $request->getParameter("displayPage");
+        $this->upgradeMem = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("upgradeMem"));
+        if(!$this->upgradeMem || !in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+           $this->upgradeMem = "NA"; 
+        }
+        error_log("ankita upgradeMem in initialize api-".$this->upgradeMem."---".$this->displayPage);
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;
         }
@@ -168,7 +173,7 @@ class MembershipAPIResponseHandler {
         else{
             $ignoreShowOnlineCheck = false;
         }
-        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck,$this);
+        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
         $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {
@@ -231,7 +236,7 @@ class MembershipAPIResponseHandler {
         $dataArr = $this->generateHamburgerMessageResponse();
         $this->topDiscountBanner = $dataArr['hamburger_message'];
 
-        if(!empty($this->profileid) && $this->userObj->userType != 5 && $this->userObj->userType != 6){
+        if(!empty($this->profileid) && $this->userObj->userType != 5 && $this->userObj->userType != memUserType::UPGRADE_ELIGIBLE && $this->userObj->userType != 6){
 	        // VAS Logic data required
 	        $profileObj = LoggedInProfile::getInstance('newjs_master');
 	        $horoscopeObj = new Horoscope();
@@ -331,9 +336,11 @@ class MembershipAPIResponseHandler {
                 $output = $this->generateChequePickupSuccessResponse($request);
             } 
             elseif ($this->displayPage == 8 && !empty($this->orderID)) {
+                error_log("ankita start of transaction success page");
                 $output = $this->generateSuccessPageResponse();
             } 
             elseif ($this->displayPage == 9) {
+                error_log("ankita start of transaction failure page");
                 $output = $this->generateFailurePageResponse();
             } 
             elseif ($this->displayPage == 10) {
@@ -386,7 +393,6 @@ class MembershipAPIResponseHandler {
         
         $bottomHelp = $topHelp;
         $bottomHelp['title'] = 'I need help in buying Membership';
-
         //tracking of mem page visits only for free user to autocollapse learning cartoon
         if(in_array($this->userObj->userType,array(2,4,6)))
 		  $openedCount = $this->memHandlerObj->trackAndGetOpenedCount($this->profileid);
@@ -399,7 +405,7 @@ class MembershipAPIResponseHandler {
                 $renewText = "Renew before {$this->expiry_date} & get " . substr($this->topDiscountBanner['top'], 0, strpos($this->topDiscountBanner['top'], "till", 0));;
             }
         } 
-        else if ($this->userObj->userType == 5) {
+        else if ($this->userObj->userType == 5 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE) {
             $renewText = "You may choose from Value Added Services below that best fit your needs";
         }
         
@@ -410,8 +416,8 @@ class MembershipAPIResponseHandler {
         else {
             $renewText = NULL;
         }
-        
-        if ($this->userObj->userType == 5 && $this->device != "iOS_app" && $this->contactsRemaining != 0) {
+       
+        if (($this->userObj->userType == 5 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE) && $this->device != "iOS_app" && $this->contactsRemaining != 0) {
             $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);
 
             //filter out vas services from vas content based on main membership if vas content is there
@@ -464,6 +470,13 @@ class MembershipAPIResponseHandler {
             'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
         );
         
+        if($this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+            //ankita set upgrade information based on last membership
+            $output["upgradeMembership"]["type"] = "MAIN";
+            $output["upgradeMembership"]["upgradeMainMem"] = "C";
+            $output["upgradeMembership"]["upgardeMainMemDur"] = "3";
+        }
+        
         if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '601', '61', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
         } 
@@ -473,7 +486,7 @@ class MembershipAPIResponseHandler {
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '501', '51', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
         }
-        
+        //print_r($output);die;
         return $output;
     }
     
@@ -703,7 +716,8 @@ class MembershipAPIResponseHandler {
             'tracking_params' => $tracking_params,
             'proceed_text' => $skip_text,
             'username' => $userName,
-            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased)
+            'skipVasPageMembershipBased'=>json_encode(VariableParams::$skipVasPageMembershipBased),
+            'upgradeMem'=>$this->upgradeMem
         );
         
         if ($this->device == 'desktop') {
@@ -732,7 +746,7 @@ class MembershipAPIResponseHandler {
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != 'Android_app') {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '503', '53', '3', $this->device, $this->user_agent, $allMemberships, $mainMembership, $vasImpression);
         }
-        
+        //print_r($output);die;
         return $output;
     }
     
@@ -808,8 +822,7 @@ class MembershipAPIResponseHandler {
             }
             $mainServices['service_contacts'] = $this->allMainMem[$id][$subId]['CALL'] . ' Contacts To View';
             $mainServices['standard_price'] = $this->allMainMem[$id][$subId]['PRICE'];
-            //echo "abc........";
-            //print_r($this->allMainMem);
+          
             $mainServices['orig_price'] = $mainServices['standard_price'];
             $mainServices['orig_price_formatted'] = number_format($mainServices['standard_price'], 2, '.', ',');
             
@@ -1093,8 +1106,9 @@ class MembershipAPIResponseHandler {
         if (!isset($this->vasImpression) || $this->device == 'desktop') {
         	$this->vasImpression = $this->selectedVas;
         }
+       
         list($totalCartPrice, $totalCartDiscount) = $this->memApiFuncs->calculateCartPrice($request, $this);
-        
+    
         $creditCardIconMapping = paymentOption::$creditCardIconMapping;
         $debitCardIconMapping = paymentOption::$debitCardIconMapping;
         $walletCardIconMapping = paymentOption::$walletCardIconMapping;
@@ -2059,6 +2073,7 @@ class MembershipAPIResponseHandler {
         if ($AuthDesc=="Y") {
             $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
             if (!$dup && $ret) {
+                error_log("ankita in startServiceOrder generateAppleOrderProcessingResponse");
                 $membershipObj->startServiceOrder($Order_Id);
                 $output = array('orderId' => $Order_Id,
                     'processingStatus' => $status,
@@ -2116,7 +2131,8 @@ class MembershipAPIResponseHandler {
     
     public function processPaymentAndRedirect($request,$apiObj) {
         list($apiObj->totalCartPrice, $apiObj->discountCartPrice) = $apiObj->memApiFuncs->calculateCartPrice($request, $apiObj);
-        
+        //print_r($apiObj);die;
+       
         $userData = $apiObj->memHandlerObj->getUserData($apiObj->profileid);
         $USERNAME = $userData['USERNAME'];
         $EMAIL = $userData['EMAIL'];
@@ -2282,6 +2298,7 @@ class MembershipAPIResponseHandler {
             $dup = false;
             $ret = $memObj->updtOrder($Order_Id, $dup, "Y");
             if (!$dup && $ret) {
+                error_log("ankita in startServiceOrder doTestBilling");
                 $memObj->startServiceOrder($Order_Id);
                 $output = array('orderId' => $Order_Id,
                     'processingStatus' => 'successful',

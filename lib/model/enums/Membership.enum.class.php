@@ -8,6 +8,7 @@ class memUserType
     const PAID_BEYOND_RENEW = "5";
     const PAID_WITHIN_RENEW = "6";
     const ONLY_VAS = "7";
+    const UPGRADE_ELIGIBLE = "8";
 }
 class userDiscounts
 {
@@ -43,7 +44,8 @@ class memDiscountTypes
         10 => 'Backend Discount Link',
         11 => 'Cash Discount',
         12 => 'No Discount',
-        14 => 'Coupon Code Discount'
+        14 => 'Coupon Code Discount',
+        15 => 'Main Membership Upgrade Discount'
     );
 }
 
@@ -59,6 +61,15 @@ class VariableParams
 		'1835' => 'NEW_MEMBERSHIP_PAYMENT',
 		'1836' => 'MEM_EXPIRY_CONTACTS_VIEWED'
 	);
+        
+        //config for membership upgrade
+        public static $memUpgradeConfig = array(
+                                            "deactivationCurlTimeout"=>120000,
+                                            "allowedUpgradeMembershipAllowed"=>array("MAIN"),
+                                            "mainMemUpgradeLimit"=>-7,
+                                            "upgradeMainMemAdditionalPercent"=>40
+                                            );
+    
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(
         "P",
@@ -619,6 +630,7 @@ class VariableParams
 }
 class discountType
 {
+    const UPGRADE_DISCOUNT = "UPGRADE";
     const RENEWAL_DISCOUNT = "RENEWAL";
     const SPECIAL_DISCOUNT = "SPECIAL";
     const FESTIVE_DISCOUNT = "FESTIVE";

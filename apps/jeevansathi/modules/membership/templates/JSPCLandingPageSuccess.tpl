@@ -633,6 +633,11 @@
                         <div id="payNowBtn" class="fullwid txtc lh50">
                             <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
                         </div>
+                        ~if $data.upgradeMembership`
+                        <div id="upgradeBtn" class="fullwid txtc lh50 cursp">
+                            <span class="colrw">Upgrade</span>
+                        </div>
+                        ~/if`
                     </div>
                     <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
                 </div>
@@ -901,6 +906,15 @@
                 e.preventDefault();
                 //sweetAlert("Hi !", "Please select atleast one item to continue", "error");
             }
+        });
+        $("#upgradeBtn").click(function(e){
+            console.log("clicked on upgrade button");
+            var upgradeType = "~$data.upgradeMembership.type`",mainMem = "~$data.upgradeMembership.upgradeMainMem`",mainMemDur = "~$data.upgradeMembership.upgardeMainMemDur`";
+            createCookie('mainMemTab', mainMem);
+            createCookie('mainMem', mainMem);
+            createCookie('mainMemDur', mainMemDur);
+            console.log("ankita",mainMem,mainMemDur,upgradeType);
+            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMem, 'mainMemDur':mainMemDur, 'device':'desktop' , 'upgradeMem':upgradeType});
         });
         updateVasPageCart();
         var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
