@@ -389,7 +389,7 @@ $emailSender = new EmailSender(MailerGroup::EOI, 1756);
 		$paidStatus = "eRishta";
 	$smartyObj = $tpl->getSmarty();
 	$smartyObj->assign("paidStatus",$paidStatus);
-	$smartyObj->->assign("count", 1);
+	$smartyObj->assign("count", 1);
 	$profileMemcacheServiceObj = new ProfileMemcacheService($viewedProfileId);
 	$totalCount = $profileMemcacheServiceObj->get("AWAITING_RESPONSE");
 	$smartyObj->assign("totalCount",$totalCount);
