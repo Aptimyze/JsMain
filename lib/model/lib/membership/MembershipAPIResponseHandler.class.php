@@ -150,7 +150,7 @@ class MembershipAPIResponseHandler {
         }
 
         //set to fetch main membership offer prices for upgrade display section
-        if(intval($this->displayPage) == 1 && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+        if(intval($this->displayPage) == 1 && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE && $this->device == "desktop" && $this->fromBackend != 1){
             $this->upgradeMem = "MAIN";
         }
 
@@ -481,9 +481,9 @@ class MembershipAPIResponseHandler {
         );
         
         //fetch the upgrade membership content based on eligibilty
-        $this->memApiFuncs->generateUpgradeMemDisplayContent($this,$request);
-        $output["upgradeMembershipContent"] = $this->upgradeMembershipContent;
-        $output["currentMembershipContent"] = $this->currentMembershipContent;
+        $upgradeMemResponse = $this->generateUpgradeMemResponse($request);
+        $output["upgradeMembershipContent"] = $upgradeMemResponse["upgradeMembershipContent"];
+        $output["currentMembershipContent"] = $upgradeMemResponse["currentMembershipContent"];
         
         if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '601', '61', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
@@ -498,6 +498,37 @@ class MembershipAPIResponseHandler {
         return $output;
     }
     
+    /*generateUpgradeMemDisplayPageResponse
+    * sets the display content for upgrade membership section in apiObj
+    * @inputs : $request
+    */
+    public function generateUpgradeMemResponse($request){
+        if($this && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+            $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $this->subStatus[0]['SERVICEID']);
+            switch($memID[0]){
+                case "P":
+                        $upgradeMem = "C";
+                        break;
+                case "C":
+                        $upgradeMem = "NCP";
+                        break;
+                case "NCP":
+                        $upgradeMem = "X";
+                        break;
+            }
+            if($upgradeMem && $this->allMainMem[$upgradeMem] && $this->allMainMem[$upgradeMem][$upgradeMem.$memID[1]]){
+                $output["upgradeMembershipContent"]["type"] = "MAIN";
+                $output["upgradeMembershipContent"]["upgradeMainMem"] = $upgradeMem;
+                $output["upgradeMembershipContent"]["upgradeMainMemDur"] = $memID[1];
+                $output["upgradeMembershipContent"]["upgradeOfferExpiry"] = date('M d Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                $output["upgradeMembershipContent"]["upgradeExtraPay"] = $this->allMainMem[$upgradeMem][$upgradeMem.$memID[1]]["OFFER_PRICE"];
+                $output["currentMembershipContent"]["currentMemName"] = $this->activeServiceName;
+                $output["currentMembershipContent"]["currentMemDur"] = $memID[1];
+            }
+        }
+        return $output;
+    }
+
     public function generateVasPageResponse($request) {
         $this->memApiFuncs->getTopBlockContent($this);
         $this->memApiFuncs->customizeVASDataForAPI(0, 0, $this);

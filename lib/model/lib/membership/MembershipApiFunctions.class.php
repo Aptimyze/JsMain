@@ -898,39 +898,6 @@ class MembershipApiFunctions
         $apiObj->topBlockMessage = $topBlockMessage;
     }
     
-    /*generateUpgradeMemDisplayContent
-    * sets the display content for upgrade membership section in apiObj
-    * @inputs : $apiObj
-    */
-    public function generateUpgradeMemDisplayContent($apiObj,$request){
-        if($apiObj && $apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-            $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $apiObj->subStatus[0]['SERVICEID']);
-            switch($memID[0]){
-                case "P":
-                        $upgradeMem = "C";
-                        break;
-                case "C":
-                        $upgradeMem = "NCP";
-                        break;
-                case "NCP":
-                        $upgradeMem = "X";
-                        break;
-            }
-            if($upgradeMem && $apiObj->allMainMem[$upgradeMem] && $apiObj->allMainMem[$upgradeMem][$upgradeMem.$memID[1]]){
-                $upgradeMembershipContent["type"] = "MAIN";
-                $upgradeMembershipContent["upgradeMainMem"] = $upgradeMem;
-                $upgradeMembershipContent["upgradeMainMemDur"] = $memID[1];
-                $upgradeMembershipContent["upgradeOfferExpiry"] = date('M d Y',strtotime($apiObj->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
-                $upgradeMembershipContent["upgradeExtraPay"] = $apiObj->allMainMem[$upgradeMem][$upgradeMem.$memID[1]]["OFFER_PRICE"];
-                $apiObj->upgradeMembershipContent = $upgradeMembershipContent;
-                unset($upgradeMembershipContent);
-                $currentMembershipContent["currentMemName"] = $apiObj->activeServiceName;
-                $apiObj->currentMembershipContent = $currentMembershipContent;
-                unset($currentMembershipContent);
-            }
-        }
-    }
-
     public function getMainMembershipDetails($apiObj, $id){
         $apiObj->mainServices['sideTitle'] = "Main Membership";
         $apiObj->mainServices['service_name'] = $apiObj->memHandlerObj->getUserServiceName($id);
