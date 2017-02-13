@@ -231,7 +231,7 @@ class dppSuggestions
 		if($trendsArr == "noKey" || $trendsArr == false)
 		{			
 			$trendsArr = $trendsObj->getTrendsScore($profileId,$percentileFields);
-			dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
+			//dppSuggestionsCacheLib::getInstance()->storeHashValueForKey($pidKey,$trendsArr);
 			return $trendsArr;
 		}
 		else
