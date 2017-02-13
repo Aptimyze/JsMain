@@ -198,15 +198,23 @@ class MembershipHandler
         }
     }
 
-    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop',$upgradeMem="NA")
+    public function getOfferPrice($allMainMem, $user, $discountType = "", $device = 'desktop',$apiObj = "",$upgradeMem="NA")
     {
         if (!$discountType) {
-            $discountTypeArr = $this->getDiscountInfo($user,$upgradeMem);
+            if($apiObj != "" && is_array($apiObj->discountTypeInfo)){
+                $discountTypeArr = $apiObj->discountTypeInfo;
+            }
+            else{
+                $discountTypeArr = $this->getDiscountInfo($user,$upgradeMem);
+            }
             $discountType    = $discountTypeArr['TYPE'];
         }
-
-        $renewalPercent = $this->getVariableRenewalDiscount($user->getProfileid());
-        
+        if($apiObj!="" && $apiObj->userRenewalPercent){
+            $renewalPercent = $apiObj->userRenewalPercent;
+        }
+        else{
+            $renewalPercent = $this->getVariableRenewalDiscount($user->getProfileid());
+        }
         //get upgrade discount for this user
         if(in_array($upgradeMem,VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
             $upgradePercentArr = $this->getUpgradeMembershipDiscount($user, $upgradeMem);
@@ -830,7 +838,7 @@ class MembershipHandler
         );
     }
 
-    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$upgardeMem="NA")
+    public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$apiObj="",upgardeMem="NA")
     {
         error_log("ankita1 upgradeMem in getUserDiscount-".$upgardeMem);
        
@@ -843,7 +851,12 @@ class MembershipHandler
             }
             if ($screeningStatus == "Y") 
             {
-                $discountTypeArr = $this->getDiscountInfo($userObj,$upgardeMem);
+                if($apiObj!="" && is_array($apiObj->discountTypeInfo)){
+                    $discountTypeArr = $apiObj->discountTypeInfo;
+                }
+                else{
+                    $discountTypeArr = $this->getDiscountInfo($userObj,$upgardeMem);
+                }
                 $discountType    = $discountTypeArr['TYPE'];
             }
         }
@@ -886,8 +899,12 @@ class MembershipHandler
             $festDurBanner       = $memActFunc->getFestDurBanner($type, $discountType, $userObj->getProfileid(), $apiVersion);
             unset($festiveLogRevampObj);
         }
-        $renewalPercent = $this->getVariableRenewalDiscount($userObj->getProfileid());
-        
+        if($apiObj!="" && $apiObj->userRenewalPercent){
+            $renewalPercent = $apiObj->userRenewalPercent;
+        }
+        else{
+            $renewalPercent = $this->getVariableRenewalDiscount($userObj->getProfileid());
+        }
         if ($userObj->userType == 4 || $userObj->userType == 6 || $specialActive == 1 || $discountActive == 1 || $fest == 1) {
             if ($userObj->userType == 4 || $userObj->userType == 6) {
                 $expiry_date   = $userObj->expiryDate;
@@ -1071,7 +1088,7 @@ class MembershipHandler
         return $subStatus;
     }
 
-    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$upgradeMem="NA")
+    public function getMembershipDurationsAndPrices($userObj, $discountType = "", $displayPage = null, $device = 'desktop',$ignoreShowOnlineCheck = false,$apiObj="",$upgradeMem="NA")
     {
         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $device,$ignoreShowOnlineCheck);
        
@@ -1101,7 +1118,7 @@ class MembershipHandler
         }
         
         //ankita use previous membership details used in getOfferprice for landing page display and return from it
-        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device,$upgradeMem);
+        $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device,$apiObj,$upgradeMem);
         $minPriceArr = $this->fetchLowestActivePrices($userObj, $allMainMem, $device);
 
         return array(
@@ -2093,6 +2110,9 @@ class MembershipHandler
                 }
             }
             $prevDisc = round(($prevDiscAmt/$prevTotAmt)*100, 2);
+	    if($prevDisc>=100){
+		$prevDisc =0;
+	    }	
         } else {
             $prevDisc = 0;
         }
@@ -2255,5 +2275,30 @@ class MembershipHandler
         unset($upgradeOrdersObj);
         $memCacheObject = JsMemcache::getInstance();
         $memCacheObject->remove($profileid.'_MEM_UPGRADE_'.$orderid);
+    }
+    
+    public function computeMaximumDiscount($memPriceArr){
+        if(is_array($memPriceArr)){
+            $nonZero = false;
+            foreach($memPriceArr as $service => $val){
+                $servDisc[$service] = 0;
+                foreach($val as $servDur => $details){
+                    $disc = $details["PRICE"] - $details["OFFER_PRICE"];
+                    if($disc > 0){
+                        $nonZero = true;
+                        $per = ($disc/$details["PRICE"])*100;
+                        if($per>$servDisc[$service]){
+                            $servDisc[$service] = intval($per);
+                        }
+                    }
+                }
+            }
+        }
+        $servDisc["PROFILEID"] = $memPriceArr["PROFILEID"];
+        if($nonZero){
+            $disHistObj = new billing_DISCOUNT_HISTORY();
+            $disHistObj->insertDiscountHistory($servDisc);
+        }
+        unset($nonZero);
     }
 }

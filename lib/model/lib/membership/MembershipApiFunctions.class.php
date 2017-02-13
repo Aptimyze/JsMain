@@ -648,10 +648,14 @@ class MembershipApiFunctions
         return $service_data;
     }
     
-    public function setDiscountDetails($apiObj) {
-        
-        $memHandlerObj = new MembershipHandler();
-        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj->upgradeMem);
+    public function setDiscountDetails($apiObj,$fromApi=false) {
+        if($fromApi == true && $apiObj->memHandlerObj){
+            $memHandlerObj = $apiObj->memHandlerObj;
+        }
+        else{
+            $memHandlerObj = new MembershipHandler();
+        }
+        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
         $apiObj->discountType = $discountType;
         $apiObj->discountActive = $discountActive;
         $apiObj->discount_expiry = $discount_expiry;
