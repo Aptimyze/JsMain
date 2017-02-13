@@ -309,13 +309,13 @@ class staticActions extends sfActions
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
             $this->hideOption = $request->getParameter("hide_option");
+            $this->profileChecksum = JsAuthentication::jsEncryptProfilechecksum($pObj->getPROFILEID());
         }
         public function executeHideDuration(sfWebRequest $request)
         {
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
             $this->hideOption = $request->getParameter("hide_option");
-
             if($this->hideOption=="1")
             {
               $this->hideText = "Your profile is now temporarily hidden for 7 days";
