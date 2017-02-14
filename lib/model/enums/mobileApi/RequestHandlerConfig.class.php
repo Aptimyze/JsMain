@@ -59,7 +59,7 @@ class RequestHandlerConfig
 		"settings" => array(
 			"alertManager" => array("v1" => "AlertManagerV1", "v2" => "", "v3" => "AlertManagerV1"),
 			"deleteProfile" => array("v1" => "DeleteProfileV1", "v2" => "", "v3" => "DeleteProfileV1"),
-			"hideProfile" => array("v1" => "HideProfileV1"),
+			"hideUnhideProfile" => array("v1" => "HideUnhideProfileV1"),
 			),
 		"api" => array(
 			"appReg" => array("v1" => "AppRegV1", "v2" => "AppRegV1", "v3" => "AppRegV1"),

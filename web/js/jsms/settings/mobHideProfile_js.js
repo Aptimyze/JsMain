@@ -3,42 +3,70 @@ $(document).ready(function(){
 	$("#hidePasswordCheck").bind('click',function()
 	{
 		var pswrd = $('#passValueID').val();
-		ajaxPassword(checksum,pswrd);
+		// hide
+		action = 1;
+		ajaxPassword(checksum,pswrd,action);
 	});
 
+	$("#unHidePasswordCheck").bind('click',function()
+	{
+		var pswrd = $('#passValueID').val();
+		// Unhide
+		action = 0;
+		ajaxPassword(checksum,pswrd,action);
+	});
 });
 
-function ajaxPassword(checksum,pswrd)
+function ajaxPassword(checksum, pswrd, action)
 {
-  $.ajax({                 
+	$.ajax({                 
 	url: '/profile/password_check.php?',
 	data: "checksum="+checksum+"&pswrd="+pswrd,
 	success: function(response) 
 	{
-		if(response=="true")
-	  	{
-	  		hideAction();
-	  	}
-	  	else
+		if(response !== "true")
+		{
+			hideUnhideAction(action);
+		}
+		else
 		{
 			// parent.location.href= "/static/hideDuration?hide_option="+hideOption;
 			setTimeout(function(){ShowTopDownError(["<center>Invalid Password</center>"]);},animationtimer);
-	  	}
+		}
 	}
   });
 }
 
-function hideAction()
+function hideUnhideAction(action)
 {
+
+	if(action)
+	{
+		// to hide the user
+		data = "hide_option=" + hideOption + "action=" + action;
+	}
+	else
+	{
+		// to UnHide the user
+		data = "action=" + action;
+	}
+
 	$.ajax({
-		url : '/api/v1/settings/hideProfile',
-		data : "hide_option="+hideOption,
+		url : '/api/v1/settings/hideUnhideProfile',
+		data : data,
 		success: function(response)
 		{
 			console.log(response);
 			if(response == "true")
 			{
-				parent.location.href= "/static/hideDuration?hide_option="+hideOption;
+				if(action)
+				{
+					parent.location.href= "/static/hideDuration?hide_option="+hideOption;
+				}
+				else
+				{
+					parent.location.href= "/static/unHideResult";	
+				}
 			}
 			else
 			{

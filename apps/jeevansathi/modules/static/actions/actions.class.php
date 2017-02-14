@@ -311,6 +311,12 @@ class staticActions extends sfActions
             $this->profileChecksum = JsAuthentication::jsEncryptProfilechecksum($pObj->getPROFILEID());
         }
 
+        public function executeUnHideResult(sfWebRequest $request)
+        {
+            $loginData = $request->getAttribute("loginData");
+            $pObj = LoggedInProfile::getInstance();
+        }
+
         public function executeHideCheckPassword(sfWebRequest $request)
         {
             $loginData = $request->getAttribute("loginData");
