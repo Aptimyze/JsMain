@@ -2,15 +2,16 @@
 /*
 First argument: env
 Second argument: json of dynamic variables
-Command: php crontabs/generateConfig.php test '{"url_input":"xmpp.jeevansathi.com"}'
+Command: php crontabs/generateConfig.php test xmpp.jeevansathi.com
 */
 $env = $argv[1];//Env
-$input = $argv[2];//json of dynamic variables
+$input = $argv[2];//Branch domain
 
-$inputArr = get_object_vars(json_decode($input));
+//$inputArr = get_object_vars(json_decode($input));
 
 //Dynamic variables
-$urlInput = $inputArr["url_input"];
+//$urlInput = $inputArr["url_input"];
+$urlInput = $input;
 //$devIp = $inputArr["dev_ip"];
 //$testIp = $inputArr["test_ip"];
 //Ends
@@ -18,7 +19,7 @@ $urlInput = $inputArr["url_input"];
 $rootDir = realpath(dirname(__FILE__)."/..");
 $branchStrArr = explode("/",$rootDir);
 $branch = end($branchStrArr);
-include $rootDir."/commonConfig/JsConstantsConfig.class.php";
+include $rootDir."/commonConfig/JsConstants.class.php";
 
 //echo $branch." ".$rootDir;die;
 

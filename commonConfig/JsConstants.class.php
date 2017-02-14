@@ -1,4 +1,14 @@
 <?php
+
+/**
+i. Configurations have to be added for both dev/test environment
+ii. key-value pair must be string
+iii. Dynamic variables to be defined as:
+%URL_INPUT%: Domain of the branch
+%SSL_URL_INPUT%: Secure domain of the branch
+%STATIC_URL_INPUT%: Static domain of the branch 
+%ROOT_DIR%: Root directory of the branch
+**/
 class JsConstantsConfig
 {
 public static $all =
@@ -33,7 +43,7 @@ public static $all =
 
 public static $dev = 
 	[
-		"whichMachine"       => 'dev',
+		"whichMachine"       => 'local',
 		"php5path"           => 'php',
 		"java"               => 'java',
 		"vspServer" => 'local',
