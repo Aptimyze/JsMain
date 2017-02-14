@@ -20,17 +20,16 @@ $(document).ready(function(){
 function ajaxPassword(checksum, pswrd, action)
 {
 	$.ajax({                 
-	url: '/profile/password_check.php?',
-	data: "checksum="+checksum+"&pswrd="+pswrd,
+	url: '/api/v1/common/checkPassword',
+	data: "&pswrd="+pswrd,
 	success: function(response) 
 	{
-		if(response !== "true")
+		if(response.success == 1)
 		{
 			hideUnhideAction(action);
 		}
-		else
+		else if(response.success == 0)
 		{
-			// parent.location.href= "/static/hideDuration?hide_option="+hideOption;
 			setTimeout(function(){ShowTopDownError(["<center>Invalid Password</center>"]);},animationtimer);
 		}
 	}
@@ -57,7 +56,7 @@ function hideUnhideAction(action)
 		success: function(response)
 		{
 			console.log(response);
-			if(response == "true")
+			if(response.success == 1)
 			{
 				if(action)
 				{
