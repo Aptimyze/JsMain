@@ -53,7 +53,6 @@ class dppSuggestions
 				{
 					$suggestedValueArr[$v2] = $this->getDppSuggestionsForFilledValues($type,$v2);
 				}
-
 				if(is_array($suggestedValueArr))
 				{
 					$valueArr = $this->getRemainingSuggestionValues($suggestedValueArr,$type,count($valueArr["data"]),$valueArr,$valArr);	
@@ -73,6 +72,7 @@ class dppSuggestions
 		{
 			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
 		}	
+
 		return $valueArr;
 	}
 
@@ -154,7 +154,7 @@ class dppSuggestions
 			{
 				break; //check 
 			}
-		}		
+		}
 		return $valueArr;
 
 
@@ -204,14 +204,26 @@ class dppSuggestions
 	//For the suggestedValueArr formed, frequency distribution is calculated and sorted array is then picked to fill in the remaining values.
 	public function getRemainingSuggestionValues($suggestedValueArr,$type,$valueArrDataCount,$valueArr,$valArr)
 	{
-		$type = $this->getType($type);
+		$type = $this->getType($type);		
 		if($type == "community")
 		{
 			$type = $type."_small";
 		}
+
+		$allHindiMtongues = FieldMap::getFieldLabel("allHindiMtongues","",1);
+		$hindiAllVal = implode($allHindiMtongues,",");
+		$hindiMtongueCount = count(array_intersect($valArr, $allHindiMtongues));
 		//frequency distribution calculation
 		$suggestedValueCountArr = $this->getFrequencyDistributedArrForCasteMtongue($suggestedValueArr);
 		$suggestedValueCountArr = $this->getSortedSuggestionArr($suggestedValueCountArr);
+		
+		if(in_array($hindiAllVal,$valArr) || $hindiMtongueCount >= count($allHindiMtongues))
+		{
+			foreach($allHindiMtongues as $k=>$v)
+			{
+				unset($suggestedValueCountArr[$v]);
+			}
+		}		
 		$remainingCount = $this->countForComparison - $valueArrDataCount;
 		foreach($suggestedValueCountArr as $fieldId=>$freqDistribution)
 		{
@@ -528,11 +540,12 @@ class dppSuggestions
 	}
 
 	public function getHindiAllSuggestions($valArr)
-	{
+	{		
 		$valArr = array_unique($valArr);
-		$hindiAllVal = implode(FieldMap::getFieldLabel("allHindiMtongues","",1),",");
-		$allHindiMtongues = FieldMap::getFieldLabel("allHindiMtongues","",1);		
+		$allHindiMtongues = FieldMap::getFieldLabel("allHindiMtongues","",1);
+		$hindiAllVal = implode($allHindiMtongues,",");
 		$hindiMtongueCount = count(array_intersect($valArr, $allHindiMtongues));
+		
 		$mtongueArr = array();
 
 		//add Hindi-All if it doesnt already exist in the selected array and if all the individual fields are not selected
@@ -550,7 +563,6 @@ class dppSuggestions
 				}
 			}			
 		}
-
 		return $mtongueArr;
 	}
 }
