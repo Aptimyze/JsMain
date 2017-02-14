@@ -219,7 +219,7 @@ class MembershipHandler
         }
         //get upgrade discount for this user
         if(in_array($upgradeMem,VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
-            $upgradePercentArr = $this->getUpgradeMembershipDiscount($user, $upgradeMem);
+            $upgradePercentArr = $this->getUpgradeMembershipDiscount($user, $upgradeMem,$apiObj);
         }
         else{
             $upgradePercentArr = array();
@@ -869,7 +869,7 @@ class MembershipHandler
             //get upgrade discount for this user
             
             if(in_array($upgardeMem,VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
-                $upgradePercentArr = $this->getUpgradeMembershipDiscount($userObj, $upgardeMem);
+                $upgradePercentArr = $this->getUpgradeMembershipDiscount($userObj, $upgardeMem,$apiObj);
             }
             else{
                 $upgradePercentArr = array();
@@ -1129,20 +1129,49 @@ class MembershipHandler
         );
     }
 
+    public function setUpgradableMemberships($currentServiceId=""){
+        $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $currentServiceId);
+        if($memID != "" && is_array($memID)){
+            switch($memID[0]){
+                case "P":
+                        $upgradeMem = "C";
+                        break;
+                case "C":
+                        $upgradeMem = "NCP";
+                        break;
+                case "NCP":
+                        $upgradeMem = "X";
+                        break;
+            }
+        }
+        if($upgradeMem){
+            return array("upgradeMem"=>$upgradeMem,"upgradeMemDur"=>$memID[1]);
+        }
+        else{
+            return array();
+        }
+    }
+
     /*function - getUpgradeMembershipDiscount
      * get discount details for upgrade membership based on user and membership plan
      * @params: $userObj,$upgradeMem
      * @return : $discountArr
      */
-    public function getUpgradeMembershipDiscount($userObj,$upgradeMem="NA"){
+    public function getUpgradeMembershipDiscount($userObj,$upgradeMem="NA",$apiObj=""){
         //ankita apply logic to calculate discount based on previous discount only
         $discountArr = array();
         if($upgradeMem == "MAIN" && $userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-            //ankita fetch current membership id and duration and set discount accordingly 
-            $lastDiscountPercent = 10;
-            $discountArr["C3"] = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
+            if($apiObj != ""){
+                $upgradableMemArr = $this->setUpgradableMemberships($apiObj->subStatus[0]['SERVICEID']);
+            }
+            $discountArr = array();
+            if(is_array($upgradableMemArr) && count($upgradableMemArr) > 0){
+                //ankita fetch current membership id and duration and set discount accordingly 
+                $lastDiscountPercent = 10;
+                $upgradeTotalDiscount = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
+                $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = $upgradeTotalDiscount;
+            }
         }
-        error_log("ankita discount for upgrade=".$discountArr["C3"]);
         return $discountArr;
     }
     

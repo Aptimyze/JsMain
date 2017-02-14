@@ -507,23 +507,13 @@ class MembershipAPIResponseHandler {
     public function generateUpgradeMemResponse($request){
         if($this && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
             $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $this->subStatus[0]['SERVICEID']);
-            switch($memID[0]){
-                case "P":
-                        $upgradeMem = "C";
-                        break;
-                case "C":
-                        $upgradeMem = "NCP";
-                        break;
-                case "NCP":
-                        $upgradeMem = "X";
-                        break;
-            }
-            if($upgradeMem && $this->allMainMem[$upgradeMem] && $this->allMainMem[$upgradeMem][$upgradeMem.$memID[1]]){
+            $upgradableMemArr = $this->memHandlerObj->setUpgradableMemberships($this->subStatus[0]['SERVICEID']);
+            if(is_array($upgradableMemArr) && $upgradableMemArr["upgradeMem"] && $this->allMainMem[$upgradableMemArr["upgradeMem"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]]){
                 $output["upgradeMembershipContent"]["type"] = "MAIN";
-                $output["upgradeMembershipContent"]["upgradeMainMem"] = $upgradeMem;
-                $output["upgradeMembershipContent"]["upgradeMainMemDur"] = $memID[1];
+                $output["upgradeMembershipContent"]["upgradeMainMem"] = $upgradableMemArr["upgradeMem"];
+                $output["upgradeMembershipContent"]["upgradeMainMemDur"] = $upgradableMemArr["upgradeMemDur"];
                 $output["upgradeMembershipContent"]["upgradeOfferExpiry"] = date('M d Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
-                $output["upgradeMembershipContent"]["upgradeExtraPay"] = $this->allMainMem[$upgradeMem][$upgradeMem.$memID[1]]["OFFER_PRICE"];
+                $output["upgradeMembershipContent"]["upgradeExtraPay"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"];
                 $output["currentMembershipContent"]["currentMemName"] = $this->activeServiceName;
                 $output["currentMembershipContent"]["currentMemDur"] = $memID[1];
             }
