@@ -2209,7 +2209,7 @@ class Membership
             }
 
             $allMembershipsNew = rtrim($allMembershipsNew, ",");
-            var_dump($upgradeMem);
+            
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid,false,$upgradeMem);
         }
 
