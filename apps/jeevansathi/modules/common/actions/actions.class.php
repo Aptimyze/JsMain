@@ -953,6 +953,6 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
         $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         $respObj->setResponseBody($response);
         $respObj->generateResponse();
-        die;        
+        die;
     }
 }
