@@ -61,7 +61,10 @@ class HideUnhideProfileV1Action extends sfActions
             $sendMailData = array('process' =>'USER_DELETE','data' => ($profileid), 'redeliveryCount'=>0 );
             $producerObj->sendMessage($sendMailData);
         }
-        print_r("HIDE SUCCESS");die;
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->generateResponse();
+        die;
     }
 
     private function unHideAction($request)
@@ -78,7 +81,10 @@ class HideUnhideProfileV1Action extends sfActions
         $webAuthObj->loginFromReg();
     
         $this->unhideProfile($profileid);
-        print_r("SHOW SUCCESS");die;
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->generateResponse();
+        die;
     }
 
     private function unhideProfile($iProfileID)
