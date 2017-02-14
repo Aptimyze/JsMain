@@ -67,7 +67,8 @@ class VariableParams
                                             "deactivationCurlTimeout"=>120000,
                                             "allowedUpgradeMembershipAllowed"=>array("MAIN"),
                                             "mainMemUpgradeLimit"=>7,
-                                            "upgradeMainMemAdditionalPercent"=>40
+                                            "upgradeMainMemAdditionalPercent"=>40,
+                                            "channelsAllowed"=>array("desktop")
                                             );
     
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");

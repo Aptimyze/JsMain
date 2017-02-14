@@ -150,7 +150,7 @@ class MembershipAPIResponseHandler {
         }
 
         //set to fetch main membership offer prices for upgrade display section
-        if(intval($this->displayPage) == 1 && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE && $this->device == "desktop" && $this->fromBackend != 1){
+        if(intval($this->displayPage) == 1 && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE && in_array($apiObj->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $this->fromBackend != 1){
             $this->upgradeMem = "MAIN";
         }
 
@@ -508,6 +508,7 @@ class MembershipAPIResponseHandler {
             if(is_array($upgradableMemArr) && $upgradableMemArr["upgradeMem"] && $this->allMainMem[$upgradableMemArr["upgradeMem"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]]){
                 $output["type"] = "MAIN";
                 $output["upgradeMainMem"] = $upgradableMemArr["upgradeMem"];
+                $output["upgradeMainMemName"] = $this->memHandlerObj->getUserServiceName($output["upgradeMainMem"]);
                 $output["upgradeMainMemDur"] = $upgradableMemArr["upgradeMemDur"];
                 $output["upgradeOfferExpiry"] = date('M d Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
                 $output["upgradeExtraPay"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"];
