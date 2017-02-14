@@ -378,7 +378,7 @@ class staticActions extends sfActions
 			{
 				$this->loggedIn=1;
                 // show hide profile
-                $this->hide = 1;
+                $this->hide = 0;
                 if($loginData['ACTIVATED'] == 'H')
                 {
                     $this->hide = 0;
