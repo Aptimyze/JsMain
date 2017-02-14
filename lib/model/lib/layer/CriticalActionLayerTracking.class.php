@@ -256,7 +256,7 @@ return 0;
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
                           {        
                             $show=1;
-                            if(!MobileCommon::isDesktop())
+                            if(!MobileCommon::isDesktop() && (!MobileCommon::isApp() || self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))))
                             {    
                             ob_start();
                             sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
