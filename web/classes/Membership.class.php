@@ -1219,6 +1219,7 @@ class Membership
         if((!empty($this->checkCoupon) && $this->checkCoupon != '') || $festCondition){
             // Dont handle coupon code and when extra duration is offered in festive extra duration case
         } else {
+            //confirm to add inputs extra ankita
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $this->device, $this->checkCoupon, null, null, null, true);
             if ($total > $this->amount) {
                 $iniAmt = $servObj->getTotalPrice($this->serviceid, $this->curtype);
@@ -2127,8 +2128,14 @@ class Membership
         return $PRICE;
     }
 
-    public function forOnline($allMemberships, $type, $mainServiceId, $link_discount = NULL, $paymentOptionSel = NULL, $device = 'desktop', $couponCodeVal = NULL,$upgradeMem="NA")
+    public function forOnline($allMemberships, $type, $mainServiceId, $link_discount = NULL, $paymentOptionSel = NULL, $device = 'desktop', $couponCodeVal = NULL,$apiResHandlerObj="")
     {
+        if($apiResHandlerObj == "" || !($apiResHandlerObj->upgradeMem)){
+            $upgradeMem = "NA";
+        }
+        else{
+            $upgradeMem = $apiResHandlerObj->upgradeMem;
+        }
         error_log("ankita forOnline upgradeMem-"+$upgradeMem);
         $profileid = $this->profileid;
         $userObj = new memUser($profileid);
@@ -2157,7 +2164,7 @@ class Membership
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
         }else {
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$upgradeMem);
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($userObj, "L",3,$apiResHandlerObj,$upgradeMem);
         
             // Existing codes for setting discount type in billing.ORDERS
             // 10 - Backend Discount Link
@@ -2210,7 +2217,7 @@ class Membership
 
             $allMembershipsNew = rtrim($allMembershipsNew, ",");
             
-            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid,false,$upgradeMem);
+            list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $profileid, $mainServiceId, $allMemberships, $type, $device, $couponCode, $backendRedirect, $profileCheckSum, $reqid,false,$upgradeMem,$apiResHandlerObj);
         }
 
         if ($couponCodeVal && $mainServiceId) {

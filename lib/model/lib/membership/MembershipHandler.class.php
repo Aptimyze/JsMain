@@ -1323,7 +1323,7 @@ class MembershipHandler
         }
     }
 
-    public function setTrackingPriceAndDiscount($userObj, $profileid, $mainMembership, $allMemberships, $currency, $device = 'desktop', $couponCode, $backendRedirect = null, $profileCheckSum = null, $reqid = null, $previousCheck = false,$upgradeMem="NA")
+    public function setTrackingPriceAndDiscount($userObj, $profileid, $mainMembership, $allMemberships, $currency, $device = 'desktop', $couponCode, $backendRedirect = null, $profileCheckSum = null, $reqid = null, $previousCheck = false,$upgradeMem="NA",$apiObj="")
     {
         $servObj = new billing_SERVICES();
         // Get vasImpression from diff of allMemberships and mainMembership
@@ -1341,7 +1341,7 @@ class MembershipHandler
             } else {
                 $mainMemDur = $tempMem[1];
             }
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $this->getUserDiscountDetailsArray($userObj, "L",3,"",$upgradeMem);
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $this->getUserDiscountDetailsArray($userObj, "L",3,$apiObj,$upgradeMem);
             $expThreshold = (strtotime(date("Y-m-d", time())) - 86400); // Previous Day
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($userObj->userType == 4 || $userObj->userType == 6) {

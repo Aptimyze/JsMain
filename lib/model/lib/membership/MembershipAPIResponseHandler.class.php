@@ -2289,6 +2289,7 @@ class MembershipAPIResponseHandler {
     }
 
     public function doTestBilling($request) {
+
     	if(JsConstants::$whichMachine == 'test'){
     		include_once (JsConstants::$docRoot . "/commonFiles/connect_dd.inc");
 	        include_once ($_SERVER['DOCUMENT_ROOT'] . "/profile/pg/functions.php");
@@ -2313,6 +2314,7 @@ class MembershipAPIResponseHandler {
 	        } elseif (!empty($this->mainMembership) && empty($this->vasImpression)) {
 	        	$allMemberships = $this->mainMembership;
 	        }
+            //confirm to add upgrademem inputs or not ankita
 	        $payment = $memObj->forOnline($allMemberships, $this->currency, $this->mainMembership, $this->discSel, 'card2', $this->device, $this->couponCode);
 	        $total = $payment['total'];
 	        $service_main = $payment['service_str'];

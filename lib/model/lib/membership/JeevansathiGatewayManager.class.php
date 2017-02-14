@@ -35,7 +35,7 @@ class JeevansathiGatewayManager
         $memHandlerObj = new MembershipHandler();
         $memObj->setProfileid($apiParams->profileid);
         $apiParams->track_memberships = trim($apiParams->track_memberships, ",");
-        $payment                      = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode,$apiParams->upgradeMem);
+        $payment                      = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode,$apiParams);
         $total                        = $payment['total'];
         $service_main                 = $payment['service_str'];
         $discount                     = $payment['discount'];
@@ -150,7 +150,7 @@ class JeevansathiGatewayManager
         $memObj        = new Membership;
         $memHandlerObj = new MembershipHandler();
         $memObj->setProfileid($apiParams->profileid);
-        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiObj->paymode, $apiParams->device, $apiParams->couponCode,$apiParams->upgradeMem);
+        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiObj->paymode, $apiParams->device, $apiParams->couponCode,$apiParams);
         $total         = $payment['total'];
         $service_main  = $payment['service_str'];
         $discount      = $payment['discount'];
@@ -240,7 +240,7 @@ class JeevansathiGatewayManager
 
         $memObj = new Membership;
         $memObj->setProfileid($apiParams->profileid);
-        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode,$apiParams->upgradeMem);
+        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode,$apiParams);
         $total         = $payment['total'];
         $service_main  = $payment['service_str'];
         $discount      = $payment['discount'];
@@ -306,7 +306,7 @@ class JeevansathiGatewayManager
 
         $memObj = new Membership;
         $memObj->setProfileid($apiParams->profileid);
-        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode,$apiParams->upgradeMem);
+        $payment       = $memObj->forOnline($apiParams->track_memberships, $apiParams->type, $apiParams->service, $apiParams->discSel, $apiParams->paymode, $apiParams->device, $apiParams->couponCode,$apiParams);
         $total         = $payment['total'];
         $service_main  = $payment['service_str'];
         $discount      = $payment['discount'];
