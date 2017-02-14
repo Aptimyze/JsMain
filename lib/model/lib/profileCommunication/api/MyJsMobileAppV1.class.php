@@ -13,6 +13,14 @@ class MyJsMobileAppV1
 	static public $noTupleText;
 	static public $tupleTitleField ;
 
+
+    public static function getCacheKey($pid)
+        {
+
+        return $pid."_MYJS_CACHED_DATA";
+
+    	}
+
 	public function getProfilePicAppV1($profileObj)
 	{
 		$pictureService = new PictureService($profileObj);
@@ -42,15 +50,27 @@ $className = get_class($this);
 			$className::init();
 			
 		$displayV1= Array();
-		$request = sfContext::getInstance()->getRequest();
-		$showExpiring = $request->getParameter('showExpiring');
+		$showExpiring = $this->getExpiring();
 		foreach(self::$informationTypeFields as $key=>$value)
 		{
 			if(array_key_exists($key,$displayObj))
 			{
-				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isApp()))
+				$isApp = MobileCommon::isApp();
+				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isIOSApp()))
 				{
 					continue;
+				}
+				if($key == "INTEREST_EXPIRING" && $isApp == "A" && $appVersion  && $appVersion < 81)
+				{
+					continue;
+				}
+				if($key == "MATCH_OF_THE_DAY")
+				{
+					if(MobileCommon::isApp())
+						continue;
+					else if (LoggedInProfile::getInstance()->getACTIVATED() == 'U') 
+						continue;					
 				}
 				foreach($value as $k=>$v)
                                 {
@@ -173,7 +193,7 @@ $className = get_class($this);
 		$displayV1['membership_message'] = $this->getBannerMessage($profileInfo);     
 			
 
-
+//print_r($displayV1);die;
 		return $displayV1;
         }
 
@@ -233,6 +253,21 @@ private function getBannerMessage($profileInfo) {
      		return $mapArray[$key];
 
      	}
+
+    public function getExpiring()
+    {
+		$this->profile=Profile::getInstance();
+        $this->loginProfile=LoggedInProfile::getInstance();
+        $entryDate = $this->loginProfile->getENTRY_DT();
+		$currentTime=time();
+		$registrationTime = strtotime($entryDate);
+        $showExpiring = 0;
+		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		{
+			$showExpiring = 1;
+		}
+		return $showExpiring;
+    }
 
 
 }

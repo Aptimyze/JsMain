@@ -298,6 +298,15 @@ if(authenticated($cid))
 			
 			$membershipObj->startServiceBackend($membership_details);
 			$membershipObj->generateReceipt();
+            
+            //**START - Entry for negative transactions
+            if($val=="refund"){
+                $memHandlerObject = new MembershipHandler();
+                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())));
+                unset($memHandlerObject);
+            }
+            //**END - Entry for negative transactions
+            
 			$smarty->display("refund_paypart.htm");
 		}
 		else

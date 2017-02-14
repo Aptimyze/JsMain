@@ -1724,7 +1724,6 @@ SQL;
             throw new jsException($e);
         }
     }
-    
 }
 
 ?>

@@ -53,6 +53,7 @@ class SearchService
 		}
 		$SearchRequestObj = RequestHandleFactory::getRequestEngine($SearchResponseObj,$SearchParamtersObj);
 		$SearchRequestObj->getResults($results_cluster,$clustersToShow,$currentPage,$cachedSearch,$loggedInProfileObj);
+		
 		if($SearchParamtersObj->getSHOW_RESULT_FOR_SELF()=='ISKUNDLIMATCHES')
 		{
 			$SearchResponseObj = $SearchParamtersObj->getGunaMatches($SearchResponseObj);
