@@ -481,10 +481,12 @@ class MembershipAPIResponseHandler {
         );
         
         //fetch the upgrade membership content based on eligibilty
-        $upgradeMemResponse = $this->generateUpgradeMemResponse($request);
-        $output["upgradeMembershipContent"] = $upgradeMemResponse["upgradeMembershipContent"];
-        $output["currentMembershipContent"] = $upgradeMemResponse["currentMembershipContent"];
-        
+        if($this->device == "desktop"){
+            $upgradeMemResponse = $this->generateUpgradeMemResponse($request);
+            $output["upgradeMembershipContent"] = $upgradeMemResponse["upgradeMembershipContent"];
+            $output["currentMembershipContent"] = $upgradeMemResponse["currentMembershipContent"];
+        }
+            
         if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '601', '61', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
         } 
