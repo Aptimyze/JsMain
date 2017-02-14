@@ -299,6 +299,11 @@ class ProfileCacheLib
      */
     private function storeInLocalCache($key)
     {
+        if($this->isCommandLineScript()) {
+                unset($this->arrRecords);
+                $this->arrRecords = array();
+        }
+
         $stTime = $this->createNewTime();
         $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
         $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
@@ -919,6 +924,9 @@ class ProfileCacheLib
         } else if(false !== stristr($storeName, "HOBBY")) {
             $arrFields = ProfileCacheConstants::$arrJHobbyColumns;
         }
+        else if(false !== stristr($storeName, "Alerts")) {
+            $arrFields = ProfileCacheConstants::$arrJProfileAlertsColumn;
+       }
         return $arrFields;
     }
     

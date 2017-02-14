@@ -120,7 +120,7 @@
               <div class="r9 mar_top_15">
                 <label class="l1 b">Our partners</label>
                 <ul class="foot">
-                  <li><a target="_blank" href="http://www.policybazaar.com/">Online Insurance</a></li>
+                  <li><a target="_blank" href="https://www.policybazaar.com/">Online Insurance</a></li>
                   <li>I</li>
                   <li><a target="_blank" href="http://www.meritnation.com/">Online Educational Assessment</a></li>
                 </ul>

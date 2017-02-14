@@ -117,6 +117,12 @@ class settingsActions extends sfActions
     			list($year,$month,$day)=explode("-",$date);
     			$unhide_date=my_format_date($day,$month,$year,4);
     			$DeleteProfileObj->callDeleteCronBasedOnId($profileid);
+			    $producerObj=new Producer();
+			    if($producerObj->getRabbitMQServerConnected())
+			    {
+				    $sendMailData = array('process' =>'USER_DELETE','data' => ($profileid), 'redeliveryCount'=>0 );
+				    $producerObj->sendMessage($sendMailData);
+			    }
     			print_r("HIDE SUCCESS");die;
     		}
 

@@ -37,7 +37,7 @@ function sendPresenceRequest($url)
 
 function sendLoginRequest()
 {
-    $url = JsConstants::$siteUrl."/api/v1/api/login?&captcha=0&fromPc=1&rememberme=1&email=nitishpost@gmail.com&password=qwerty*123&remember=1";
+    $url = JsConstants::$siteUrl."/api/v1/api/login?&captcha=0&fromPc=1&rememberme=1&email=vibhor_grg@yahoo.com&password=vibhor1234&remember=1";
     $res = sendCurlPostRequest($url,'','');
     $result = preg_split("/\n/",$res);
     foreach($result as $val) {

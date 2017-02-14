@@ -266,6 +266,7 @@ class EmailSender{
       if($partialList instanceOf PartialList) {
         $this->email_tpl->setPartials($partialList);
       }
+     // print_r($this->email_tpl); die('lets try');
 //Do not send mail to deleted profiles except success story mailers whose group is success_story_photo or success_story_mailer.
 	  if($this->profile->getACTIVATED()=='D' && ($this->mail_group!=MailerGroup::SUCCESS_STORY_PHOTO && $this->mail_group!=MailerGroup::SUCCESS_STORY_DELETE))
 		  return false;

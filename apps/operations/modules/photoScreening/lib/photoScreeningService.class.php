@@ -1414,13 +1414,17 @@ class photoScreeningService
                                         if ($paramArr["interface"] == $interfaceArr["2"])
                                         {
                                                 if(strstr($picObj->getOriginalPicUrl(),"uploads"))
+                                                {
                                                        $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getOriginalPicUrl();
+                                                       $pictureToBeScreenedArr["profilePic"]["MainPicUrl"] = $picObj->getMainPicUrl()."?time=".time();
+                                                }
                                                 else
                                                 {
                                                         if($picObj->getOriginalPicUrl()==$picObj->getMainPicUrl())
-                                                                $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getMainPicUrl();
+                                                            $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getMainPicUrl();
                                                         else
 															$pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = $picObj->getOriginalPicUrl();
+														 $pictureToBeScreenedArr["profilePic"]["MainPicUrl"] = $picObj->getMainPicUrl()."?time=".time();
                                                
                                                       // $pictureToBeScreenedArr["profilePic"]["OriginalProfilePicUrl"] = str_replace("mediacdn.jeevansathi.com","jeevansathi.s3.amazonaws.com",$picObj->getOriginalPicUrl()); commented because image not displaying
                                                 }
@@ -1466,6 +1470,7 @@ class photoScreeningService
 	{
           
            $albumList = explode(",", $formArr['pictureIDs']);
+          
            
                 if(stristr($formArr["set_profile_pic"],"screened")){
                         $profilePic = str_replace("screened", "", $formArr["set_profile_pic"]);
@@ -1586,7 +1591,7 @@ class photoScreeningService
                         $finalPictureArr["DELETE_REASON"] = array();
                 else
                         $finalPictureArr["DELETE_REASON"] = implode(",", $formArr["deleteReason"]);
-								
+				
                 return $finalPictureArr;
         }
         
@@ -1749,16 +1754,17 @@ class photoScreeningService
                                 $picProfileDetail = array("PICTUREID" => $paramArr["profilePic"], "PROFILEID" => $paramArr["profileId"]);
                                 $pictureServiceObj = new PictureService($paramArr["profileObj"],"SCREENING");
                                 $picObj = $pictureServiceObj->getPicDetails($picProfileDetail);
-                                
+                               
                                 if($picObj[0] && $picObj[0]->getORDERING()!=0)
                                 {
                                         $previousOrdering = $picObj[0]->getORDERING();
-                                        $paramArr["FINAL"][$paramArr["profilePic"]]["bit"]=  ProfilePicturesTypeEnum::$SCREEN_BITS["FACE"].implode("",array_fill(0,(count(array_merge(ProfilePicturesTypeEnum::$SCREEN_BIT_POSITION,  array_keys(ProfilePicturesTypeEnum::$PICTURE_SIZES)))-1),ProfilePicturesTypeEnum::$SCREEN_BITS["EDIT"]));
+                                        $paramArr["FINAL"][$paramArr["profilePic"]]["bit"]=  ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"].ProfilePicturesTypeEnum::$SCREEN_BITS["RESIZE"].implode("",array_fill(0,(count(array_merge(ProfilePicturesTypeEnum::$SCREEN_BIT_POSITION,  array_keys(ProfilePicturesTypeEnum::$PICTURE_SIZES)))-2),ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"]));
                                         $paramArr["EDIT"]++;
                                 }
 				
                                 $result = $pictureServiceObj->setProfilePic($picObj[0]);
                         }
+                        
                         // UPDATE table entries with title
                         $photoUpdateObj = new PICTURE_FOR_SCREEN_NEW();
                         $pictureUpdate = $photoUpdateObj->updateScreeningDecision($paramArr);

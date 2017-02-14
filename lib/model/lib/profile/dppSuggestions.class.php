@@ -3,45 +3,72 @@
 class dppSuggestions
 {
 	//This function fetches dppSuggestion values to be shown and returns it to the calling function
-	public function getDppSuggestions($trendsArr,$type,$valArr)
+	public function getDppSuggestions($trendsArr,$type,$valArr,$calLayer="")
 	{
+		$loggedInProfileObj = LoggedInProfile::getInstance();
+		$this->age = $loggedInProfileObj->getAGE();
+		$this->gender = $loggedInProfileObj->getGENDER();
+		$this->income = $loggedInProfileObj->getINCOME();
+		$this->calLayer = $calLayer;
+		if($this->calLayer)
+		{
+			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS_CAL;
+		}
+		else
+		{
+			$this->countForComparison = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS;
+		}
+
+		if($type == "CITY")
+		{
+			$valueArr["data"] = $this->getDelhiMumbaiSuggestions($valArr);						
+		}
 		if(is_array($trendsArr))
 		{
 			$percentileArr = $trendsArr[$type."_VALUE_PERCENTILE"];
 			$trendVal = $this->getTrendsValues($percentileArr);	
-			$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr);
+			$valueArr = $this->getDppSuggestionsFromTrends($trendVal,$type,$valArr,$valueArr);			
 		}
-		if(count($valueArr["data"])< DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
+		if($type == "AGE")
 		{
-			if($type == "CITY")
-			{	
-				foreach($valArr as $key=>$value)
-				{
-					$cityData = $this->getNCRMumbaiCity($value);
-					if($cityData)
-					{
-						$valueArr['data'][$cityData['KEY']]=$cityData['VALUE'];
-					}					
-				}
-			}
-			elseif ($type == "EDUCATION" || $type == "OCCUPATION")
+			$valueArr = $this->getSuggestionForAge($type,$valArr);
+		}
+		if($type == "INCOME")
+		{
+			$valueArr = $this->getSuggestionForIncome($type,$valArr,$calLayer);
+		}		
+		if(count($valueArr["data"])< $this->countForComparison)
+		{
+			if ($type == "EDUCATION" || $type == "OCCUPATION")
 			{
 				$valueArr = $this->getSuggestionsFromGroupings($valueArr,$type,$valArr);
-			}
+			}			
 			else
 			{
 				foreach($valArr as $k2=>$v2)
 				{
 					$suggestedValueArr[$v2] = $this->getDppSuggestionsForFilledValues($type,$v2);
 				}
+
 				if(is_array($suggestedValueArr))
 				{
 					$valueArr = $this->getRemainingSuggestionValues($suggestedValueArr,$type,count($valueArr["data"]),$valueArr,$valArr);	
-				}
+				}				
 			}
-										
-		}
+		} 
 		$valueArr["type"] = $type;
+		if($type == "AGE" || $type == "INCOME")
+		{
+			$valueArr["range"] = 1;
+		}
+		else
+		{
+			$valueArr["range"] = 0;
+		}
+		if(MobileCommon::isApp() || MobileCommon::isNewMobileSite())
+		{
+			$valueArr["heading"] = DppAutoSuggestEnum::$headingForApp[$type];
+		}	
 		return $valueArr;
 	}
 
@@ -56,21 +83,21 @@ class dppSuggestions
 		{
 			foreach($tempArray as $value)
 			{
-				list($value,$trend)=explode("#",$value);
+				list($value,$trend)=explode("#",$value);				
 				$resultTrend[$value]=$trend;
-
 			}
 		}
 		return $resultTrend;
 	}
 
 	//This function takes the trendsArr for each $type and gets the trends data to be sent as apiResponse
-	public function getDppSuggestionsFromTrends($trendsArr,$type,$valArr)
+	public function getDppSuggestionsFromTrends($trendsArr=array(),$type,$valArr=array(),$valueArr=array())
 	{
-		$count = 0;
+		$count = count($valueArr["data"]);
+		
 		foreach($trendsArr as $k1=>$v1)
 		{
-			if($count < DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS)
+			if($count < $this->countForComparison)
 			{
 				if(!in_array($k1,$valArr) && $type != "CITY")
 				{
@@ -78,13 +105,27 @@ class dppSuggestions
 					$count++;
 				}
 				elseif(!in_array($k1,$valArr))
-				{
-					$this->stateIndiaArr = $this->getFieldMapLabels("state_india",'',1);//FieldMap::getFieldLabel("state_india",'',1);
-					$this->cityIndiaArr = $this->getFieldMapLabels("city_india",'',1);//FieldMap::getFieldLabel("city_india",'',1);
+				{						
+					$this->stateIndiaArr = $this->getFieldMapLabels("state_india",'',1);
+					$this->cityIndiaArr = $this->getFieldMapLabels("city_india",'',1);
+					
+					//if Delhi NCR or Mumbai Region is selected, then Mumbai region cities and Delhi NCR cities should not be shown
 					if(array_key_exists($k1, $this->stateIndiaArr) || array_key_exists($k1, $this->cityIndiaArr))
 					{
-						$valueArr["data"][$k1] = $this->getFieldMapValueForTrends($k1,$type);
-						$count++;
+						if(in_array(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valArr) || in_array(DppAutoSuggestEnum::$mumbaiRegionStr,$valArr))
+						{
+							if(!in_array($k1, DppAutoSuggestEnum::$delhiNCRCities) && !in_array($k1, DppAutoSuggestEnum::$mumbaiRegion))
+							{
+								$valueArr["data"][$k1] = $this->getFieldMapValueForTrends($k1,$type);
+								$count++;
+							}
+						}
+						else
+						{
+							$valueArr["data"][$k1] = $this->getFieldMapValueForTrends($k1,$type);
+							$count++;
+						}
+						
 					}
 				}
 			}
@@ -92,7 +133,7 @@ class dppSuggestions
 			{
 				break; //check 
 			}
-		}
+		}		
 		return $valueArr;
 
 
@@ -101,7 +142,11 @@ class dppSuggestions
 	//This function gets the value for the $key specified for the given $type
 	public function getFieldMapValueForTrends($key,$type)
 	{
-		$type = $this->getType($type);
+		$type = $this->getType($type);		
+		if($type == "community")
+		{
+			$type = $type."_small";
+		}
 		if($type != "city")
 		{
 			$returnValue = $this->getFieldMapLabels($type,$key,'');//FieldMap::getFieldlabel($type,$key,'');
@@ -139,10 +184,14 @@ class dppSuggestions
 	public function getRemainingSuggestionValues($suggestedValueArr,$type,$valueArrDataCount,$valueArr,$valArr)
 	{
 		$type = $this->getType($type);
+		if($type == "community")
+		{
+			$type = $type."_small";
+		}
 		//frequency distribution calculation
 		$suggestedValueCountArr = $this->getFrequencyDistributedArrForCasteMtongue($suggestedValueArr);
 		$suggestedValueCountArr = $this->getSortedSuggestionArr($suggestedValueCountArr);
-		$remainingCount = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS - $valueArrDataCount;
+		$remainingCount = $this->countForComparison - $valueArrDataCount;
 		foreach($suggestedValueCountArr as $fieldId=>$freqDistribution)
 		{
 			if($remainingCount != 0)
@@ -169,7 +218,7 @@ class dppSuggestions
 		//to find the frequency distribution of grouping array based on the input values sent
 		$suggestionArr = $this->getFrequencyDistributedArr($valArr,$GroupingArr);
 		$suggestionArr = $this->getSortedSuggestionArr($suggestionArr);
-		$remainingCount = DppAutoSuggestEnum::$NO_OF_DPP_SUGGESTIONS - count($valueArr["data"]);
+		$remainingCount = $this->countForComparison - count($valueArr["data"]);
 		$valueArr = $this->fillRemainingValuesInEduOccValueArr($remainingCount,$suggestionArr,$valueArr,$valArr,$GroupingArr,$type);	
 		return $valueArr;
 	}
@@ -336,6 +385,126 @@ class dppSuggestions
 		}
 
 		return $GroupingArr;
+	}
+
+	public function getSuggestionForAge($type,$valArr)
+	{		
+		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceAgeArr,$valArr);
+		if($this->gender == "F")
+		{
+			$minAge = min($valArr["LAGE"],$this->age);
+			$maxAge = max($valArr["HAGE"],$this->age+DppAutoSuggestEnum::$ageDiffNo);
+		}
+		elseif($this->gender == "M")
+		{		
+			$minAge = min($valArr["LAGE"],$this->age - DppAutoSuggestEnum::$ageDiffNo);
+			$maxAge = max($valArr["HAGE"],$this->age);
+		}
+
+		if($minAge < $valArr["LAGE"] || $maxAge > $valArr["HAGE"])
+		{
+			$valueArr["data"]["LAGE"] = $minAge;
+			$valueArr["data"]["HAGE"] = $maxAge;
+		}
+		return $valueArr;
+	}
+
+	//Mapping of income needs to be changed.
+	public function getSuggestionForIncome($type,$valArr,$calLayer="")
+	{	
+		
+		$valArr = array_combine(DppAutoSuggestEnum::$keyReplaceIncomeArr,$valArr);			
+		
+		$hIncomeDol = $this->getFieldMapLabels("hincome_dol",'',1);
+		$hIncomeRs = $this->getFieldMapLabels("hincome",'',1);		
+		if($calLayer)
+		{
+			foreach($valArr as $key=>$val)
+			{
+				if($val == 0)
+				{
+					$valArr[$key] = TopSearchBandConfig::$noIncomeLabel;
+				}
+				elseif(array_key_exists($val, $hIncomeRs))
+				{					
+						$valArr[$key] = $hIncomeRs[$val];
+				}
+				elseif(array_key_exists($val, $hIncomeDol))
+				{
+					$valArr[$key] = $hIncomeDol[$val];	
+				}
+			}
+		}
+		if(!is_array($valArr)) // in case the value in income is not set , we put no income in LDS and LRS and then suggest noIncome to an above
+		{
+			$valArr["LDS"] = TopSearchBandConfig::$noIncomeLabel;
+			$valArr["LRS"] = TopSearchBandConfig::$noIncomeLabel;
+		}
+
+		$incomeLevel = $this->getFieldMapLabels("income_level",'',1);
+		$annualIncome = $incomeLevel[$this->income];
+		$mappedIncome = DppAutoSuggestEnum::$incomeMappingArr[$this->income];
+
+		if($this->gender == "M")
+		{
+			if(!in_array($annualIncome,DppAutoSuggestEnum::$rupeeIncomeArr))
+			{
+				$key = array_search($valArr["HDS"],$hIncomeDol);				
+				if($mappedIncome > $key && $key!="19")
+				{	
+					$valueArr["data"]["LDS"] = $valArr["LDS"];
+					$valueArr["data"]["HDS"] = $hIncomeDol[$mappedIncome];
+				}
+			}
+			else
+			{
+				$key = array_search($valArr["HRS"],$hIncomeRs);				
+				if($mappedIncome > $key && $key!="19")
+				{
+					$valueArr["data"]["LRS"] = $valArr["LRS"];
+					$valueArr["data"]["HRS"] = $hIncomeRs[$mappedIncome];					
+				}
+			}		
+		}
+		elseif($this->gender == "F")
+		{
+			if($valArr["HRS"] != "and above")
+			{
+				$valueArr["data"]["LRS"] = $valArr["LRS"];
+				$valueArr["data"]["HRS"] = "and above";				
+			}
+			if($valArr["HDS"] !="and above")
+			{
+				$valueArr["data"]["LDS"] = $valArr["LDS"];
+				$valueArr["data"]["HDS"] = "and above";				
+			}
+		}
+		return $valueArr;
+	}
+
+	public function getDelhiMumbaiSuggestions($valArr)
+	{
+		$delhiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$delhiNCRCities));
+		$mumbaiCityCount = count(array_intersect($valArr, DppAutoSuggestEnum::$mumbaiRegion));		
+		foreach($valArr as $key=>$val)
+		{
+			if($delhiCityCount < count(DppAutoSuggestEnum::$delhiNCRCities))
+			{
+				if(in_array($val,DppAutoSuggestEnum::$delhiNCRCities) && !in_array(TopSearchBandConfig::$ncrLabel,$valueArr["data"]) && !in_array(DppAutoSuggestEnum::$delhiNCRCitiesStr,$valArr))
+				{
+					$arr[DppAutoSuggestEnum::$delhiNCRCitiesStr] = TopSearchBandConfig::$ncrLabel;
+				}
+			}
+			
+			if($mumbaiCityCount < count(DppAutoSuggestEnum::$mumbaiRegion))
+			{
+				if(in_array($val,DppAutoSuggestEnum::$mumbaiRegion) && !in_array(TopSearchBandConfig::$mumbaiRegionLabel,$valueArr["data"])  && !in_array(DppAutoSuggestEnum::$mumbaiRegionStr,$valArr))
+				{
+					$arr[DppAutoSuggestEnum::$mumbaiRegionStr] = TopSearchBandConfig::$mumbaiRegionLabel;
+				}
+			}			
+		}
+		return $arr;
 	}
 }
 ?>

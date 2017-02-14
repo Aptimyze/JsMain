@@ -932,7 +932,6 @@ class NEWJS_JPROFILE extends TABLE
             throw new jsException($e);
         }
     }
-
     /**
      * Function to fetch profiles(registered after given date)
      *
@@ -1677,7 +1676,7 @@ SQL;
      *  //Function to log Select Query Count
      */
     private function logSelectCount()
-    {
+    {return;
         $key = 'selCount_'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
@@ -1689,7 +1688,7 @@ SQL;
      *  //Function to log Select Query Count
      */
     private function logGetArrayCount()
-    {
+    {return;
         $key = 'getArrayCount_'.date('Y-m-d');
         JsMemcache::getInstance()->incrCount($key);
 
@@ -1711,7 +1710,20 @@ SQL;
             throw new jsException($ex);
         }
     }
-    
+
+   public function getProfileIdFromUsername($username)
+    {
+        try {
+            $sql = "SELECT PROFILEID FROM newjs.JPROFILE WHERE USERNAME=:USERNAME";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":USERNAME", $username, PDO::PARAM_STR);
+            $prep->execute();
+            $row = $prep->fetch(PDO::FETCH_ASSOC);
+            return $row['PROFILEID'];
+        } catch (PDOException $e) {
+            throw new jsException($e);
+        }
+    }
 }
 
 ?>

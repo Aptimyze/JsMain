@@ -139,10 +139,12 @@ public function phoneUpdateProcess($message)
 
 
 
-
+			if($message=='OPS')
+			{
 			$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
 			$reportInvalidObj->updateAsVerified($profileid);
-
+			}
+				
 			$incentiveObj=new incentive_MAIN_ADMIN_POOL();
 			$incentiveObj->setTimesTriedZero($profileid);
 
@@ -255,7 +257,7 @@ public function sendMembershipOffers(){
 				
 			if($appRegProfile)
 			{
-		    $loginTrackingObj=new MIS_LOGIN_TRACKING('newjs_slave');
+		    $loginTrackingObj=new MIS_LOGIN_TRACKING('crm_slave');
             $profileArr      =$loginTrackingObj->getLast7DaysLoginProfiles($profileid);
 			}
 			

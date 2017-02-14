@@ -479,7 +479,22 @@ public function executeCALRedirection($request){
             'jsms/common/mediaquery',
             'jsms/common/jsmsApp_promo_css',
             'rippleEffectCommon_css'));
-
+          $request->setAttribute('JSArray',getCommaSeparatedJSFileNames(array(
+              'modernizr_p_js',
+              'tracking_js',
+              'jsms/common/CommonFunctions',
+              'jsms/common/scrollTo',
+              'jsms/common/urlParamHandling',
+              'app_promo_js',
+              'commonMob',
+              'jsms/common/touchswipe_js',
+              'jsms/common/disableScroll_js',
+              'jsms/common/history_js',
+              'commonExpiration_js',
+              'rippleEffectCommon_js',
+              'common_comscore_js')));
+            $request->setAttribute('singleJs',getCommaSeparatedJSFileNames(array('jsms/login/newMobLogin_js')));
+              
             $request->setAttribute('mobLogoutPage','Y');
             $this->setTemplate("newMobLogin");
             if ($request->getParameter('regMsg')=='Y')   
@@ -1750,12 +1765,16 @@ if($k=="state_res")
                 {
                         if(strlen($key)===2)
                         {
-				asort($arrFinalOut[$currentKey]);
-                                $currentKey = $key;
-                                $arrFinalOut[$currentKey] = array();
+				if(array_key_exists($currentKey, $arrFinalOut))
+				{
+					asort($arrFinalOut[$currentKey]);
+				}
+				else
+					$arrFinalOut[$currentKey] = array();
                         }
                         else
                         {
+				$currentKey = substr($key,0,2);
                                 $arrFinalOut[$currentKey][$key] = $val;
                         }
                 }

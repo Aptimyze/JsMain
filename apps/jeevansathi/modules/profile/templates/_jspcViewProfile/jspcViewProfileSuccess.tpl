@@ -125,12 +125,14 @@
 <div class="clearfix reportInv2">
 <div class="prfrad prfdim8 prfbr6 fl"> <img src="" border="0" class="js-otherProfilePic prfdim13 prfrad prfm2"> </div>
 <div class=" fl ml10 prfbr7 pb10 f13 color11 wid80p pt16">
-<span class="js-username"></span><span class="pl10 pr10">-</span><span class="colr2">Profile reported for Abuse</span>
+<span class="js-username"></span><span id ="hiphenForConfirm" class="pl10 pr10">-</span><span id = "reportAbuseConfirmHeading"class="colr2">Profile reported for Abuse</span>
 </div>
 </div>
 
 <div class="f13 reportInv1 txtc">
-<p class="color11 f13 txtl" style="padding-left:70px;">Thank you for helping us. This profile will be removed if the content or behaviour is found to be inappropriate.</p>
+<p id ="messageForReportAbuse" class="color11 f13 txtl" style="padding-left:70px;">
+  Thank you for helping us. This profile will be removed if the content or behaviour is found to be inappropriate.
+</p>
 </div>
 </div>
 </div>
@@ -206,7 +208,7 @@ style="height:387px; background-image: url('~$arrOutDisplay["about"]["coverPhoto
     </div>
   </div>
   <!--end:top part-->
-~if $SHOW_NEXT_PREV`
+~if $SHOW_NEXT_PREV && $STYPE !='MOD'`
   <!--start:next/previous button-->
   ~if $SHOW_PREV`
   	<!--start:prv-->
