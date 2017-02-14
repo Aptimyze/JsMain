@@ -14,6 +14,6 @@
     </div>
 
     <div class="txtc set_btmlink pt15">
-    <div><a href="/static/page/disclaimer">Terms of use</a><span class="f14 set_color1">•</span><a href="/static/page/fraudalert">Fraud Alert</a></div>
+      <div><a href="/">Go To Home</a></div>
     </div>
 </div>

@@ -17,13 +17,33 @@ function ajaxPassword(checksum,pswrd)
 	{
 		if(response=="true")
 	  	{
-	  		parent.location.href= "/static/hideDuration?hide_option="+hideOption;
+	  		hideAction();
 	  	}
 	  	else
 		{
-			parent.location.href= "/static/hideDuration?hide_option="+hideOption;
+			// parent.location.href= "/static/hideDuration?hide_option="+hideOption;
 			setTimeout(function(){ShowTopDownError(["<center>Invalid Password</center>"]);},animationtimer);
 	  	}
 	}
   });
+}
+
+function hideAction()
+{
+	$.ajax({
+		url : '/api/v1/settings/hideProfile',
+		data : "hide_option="+hideOption,
+		success: function(response)
+		{
+			console.log(response);
+			if(response == "true")
+			{
+				parent.location.href= "/static/hideDuration?hide_option="+hideOption;
+			}
+			else
+			{
+				setTimeout(function(){ShowTopDownError(["<center>Something went wrong</center>"]);},animationtimer);
+			}
+		}
+	});
 }
