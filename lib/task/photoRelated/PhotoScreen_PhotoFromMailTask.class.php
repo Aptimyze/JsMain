@@ -31,6 +31,9 @@ EOF;
   	{
 		if(!sfContext::hasInstance())
                         sfContext::createInstance($this->configuration);
+          if(CommonUtility::hideFeaturesForUptime())
+                        successfullDie();
+
 		$paramArr["LIMIT"] = $this->limit;
 		$screenPhotosFromMailObj = new SCREEN_PHOTOS_FROM_MAIL();
                 $picturesForLogic = $screenPhotosFromMailObj->getAllUnallottedProfiles($paramArr);
