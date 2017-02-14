@@ -1,7 +1,7 @@
 <?php
 /*
 First argument: env
-Second argument: json of dynamic variables
+Second argument: Domain name of the branch
 Command: php crontabs/generateConfig.php test xmpp.jeevansathi.com
 */
 $env = $argv[1];//Env
