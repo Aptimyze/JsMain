@@ -1131,6 +1131,7 @@ class MembershipHandler
     }
 
     public function setUpgradableMemberships($currentServiceId=""){
+        //check for preg_split for serviceid with "L" ankita
         $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $currentServiceId);
         if($memID != "" && is_array($memID) && in_array($memID[0], VariableParams::$memUpgradeConfig["excludeMainMembershipUpgrade"]) == false){
             switch($memID[0]){
