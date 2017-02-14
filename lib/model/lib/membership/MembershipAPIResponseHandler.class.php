@@ -496,7 +496,7 @@ class MembershipAPIResponseHandler {
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '501', '51', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
         }
-        print_r($output);die;
+        //print_r($output);die;
         return $output;
     }
     
