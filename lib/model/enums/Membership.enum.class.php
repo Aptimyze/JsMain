@@ -68,7 +68,8 @@ class VariableParams
                                             "allowedUpgradeMembershipAllowed"=>array("MAIN"),
                                             "mainMemUpgradeLimit"=>7,
                                             "upgradeMainMemAdditionalPercent"=>40,
-                                            "channelsAllowed"=>array("desktop")
+                                            "channelsAllowed"=>array("desktop"),
+                                            "excludeMainMembershipUpgrade"=>array("X","ESP")
                                             );
     
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");

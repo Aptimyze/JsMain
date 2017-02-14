@@ -773,6 +773,27 @@ class MembershipApiFunctions
         }
     }
     
+    /*getAdditionalUpgradeBenefits
+    * get additional upgrade benefits list
+    * @inputs:$currentMem,$upgradeMem
+    * @return : $additionalBenefits
+    */
+    public function getAdditionalUpgradeBenefits($currentMem,$upgradeMem) {
+        $benefitMsg = VariableParams::$newApiPageOneBenefits;
+        $upgradebenefitsArr = VariableParams::$newApiPageOneBenefitsVisibility[$upgradeMem];
+        $currentbenefitsArr = VariableParams::$newApiPageOneBenefitsVisibility[$currentMem];
+        if ($currentMem == "X") {
+            $additionalBenefits = VariableParams::$newApiPageOneBenefitsJSX;
+        } else {
+            $counter = 0;
+            foreach ($upgradebenefitsArr as $key => $value) {
+                if ($value == 1 && $currentbenefitsArr[$key] != 1) {
+                    $additionalBenefits[$counter++] = $benefitMsg[$key];
+                }
+            }
+        }
+        return $additionalBenefits;
+    }
     public function getCurrentlyActiveVasNames($apiObj) {
         $memHandlerObj = new MembershipHandler();
         $serviceArr = $apiObj->rawSubStatusArray;
@@ -808,9 +829,9 @@ class MembershipApiFunctions
             if ($difference->y < 1) {
                 if($upgradeMemCase == true){
                     $topBlockMessage["monthsText"] = "Month";
-                    $topBlockMessage["monthsValue"] = $difference->m;
+                    $topBlockMessage["monthsValue"] = "".$difference->m;
                     $topBlockMessage["daysText"] = "Days";
-                    $topBlockMessage["daysValue"] = $difference->d;
+                    $topBlockMessage["daysValue"] = "".$difference->d;
                 }
                 else{
                     $topBlockMessage["monthsText"] = "MONTHS";
@@ -839,13 +860,14 @@ class MembershipApiFunctions
             $topBlockMessage["contactsLeftText"] = "Contacts Left To View";
             $topBlockMessage["contactsLeftNumber"] = $apiObj->contactsRemaining;
             if ($apiObj->userObj->userType == 5 || $apiObj->userObj->userType == 6 || $apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE) {
-                $benefits = $this->getServiceWiseBenefits($apiObj->memID, $apiObj);
+                $benefits = $this->getServiceWiseBenefits($apiObj->memID,0,$apiObj);
                 $benefits = $benefits[0];
             }
             $topBlockMessage["currentBenefitsTitle"] = "Your Current Benefits";
             
             $vasNames = $this->getCurrentlyActiveVasNames($apiObj);
-            
+            //print_r($benefits);
+            //print_r($vasNames);die;
             if ($apiObj->memID == "ESP" || $apiObj->memID == "NCP") {
                if ($vasNames != NULL) 
                 {
@@ -885,7 +907,7 @@ class MembershipApiFunctions
             //set additional required keys in api response for mem upgrade
             if($upgradeMemCase == true){
                 $topBlockMessage["currentMemName"] = $apiObj->activeServiceName;
-                $topBlockMessage["totalContactsAllotted"] = $apiObj->totalContactsAllotted;
+                $topBlockMessage["totalContactsAllotted"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['CALL'];
             }
         } 
         elseif ($apiObj->userObj->userType == 4 && $apiObj->memID != "ESJA") {

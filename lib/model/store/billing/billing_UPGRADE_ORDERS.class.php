@@ -8,7 +8,6 @@ class billing_UPGRADE_ORDERS extends TABLE
     $this->PROFILEID_BIND_TYPE = "INT";
     $this->ORDERID_BIND_TYPE = "STR";
     $this->BILLID_BIND_TYPE = "INT";
-    $this->OLD_SERVICEID_BIND_TYPE = "STR";
     $this->OLD_BILLID_BIND_TYPE = "INT";
     $this->DEACTIVATED_STATUS_BIND_TYPE = "STR";
     $this->UPGRADE_STATUS_BIND_TYPE = "STR";

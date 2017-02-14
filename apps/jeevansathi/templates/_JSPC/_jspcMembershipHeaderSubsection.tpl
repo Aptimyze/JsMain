@@ -378,7 +378,7 @@ $(document).ready(function() {
     }
     
     if(topBlockMonths && topBlockMonths != "Unlimited"){
-        if(topBlockMonths == "00" && topBlockDays == "00"){ 
+        if((topBlockMonths == "00" && topBlockDays == "00") || (topBlockMonths == "0" && topBlockDays == "0")){ 
             var today = new Date();
             var dd = today.getDate();
             var mm = today.getMonth()+1; //January is 0!

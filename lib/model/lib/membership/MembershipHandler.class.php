@@ -1048,6 +1048,7 @@ class MembershipHandler
                             }
 
                             $value['SERVICE_NAME'] = $this->getUserServiceName($memID);
+                            $value['SERVICEID_WITHOUT_DURATION'] = $memID;
                             if (filter_var($value['SERVICEID'], FILTER_SANITIZE_NUMBER_INT)) {
                                 $value['SERVICE_DURATION'] = filter_var($value['SERVICEID'], FILTER_SANITIZE_NUMBER_INT);
                             } else {
@@ -1131,7 +1132,7 @@ class MembershipHandler
 
     public function setUpgradableMemberships($currentServiceId=""){
         $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $currentServiceId);
-        if($memID != "" && is_array($memID)){
+        if($memID != "" && is_array($memID) && in_array($memID[0], VariableParams::$memUpgradeConfig["excludeMainMembershipUpgrade"]) == false){
             switch($memID[0]){
                 case "P":
                         $upgradeMem = "C";
@@ -2267,7 +2268,7 @@ class MembershipHandler
                         if($params["NEW_ORDERID"] && $params["NEW_ORDERID"]!=""){
                             error_log("ankita updating deactivate success entry");
                             $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
-                            $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"OLD_SERVICEID"=>$serStatDet[$params["PROFILEID"]]["SERVICEID"],"DEACTIVATED_STATUS"=>"DONE"));
+                            $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"DEACTIVATED_STATUS"=>"DONE"));
                             unset($upgradeOrdersObj);
                         }
                     }
