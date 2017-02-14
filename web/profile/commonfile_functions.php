@@ -383,7 +383,7 @@ $js_arr[]=array("verticaltabs_pack_js"  => "2");
 $js_arr[]=array("memJS"        => "16");
 $js_arr[]=array("memCommonJS"       => "10");
 $js_arr[]=array("valueAddedJS"            => "16");
-$js_arr[]=array("paymentOptions"              => "21");
+$js_arr[]=array("paymentOptions"               => "22");
 $js_arr[]=array("jquery_cookie"    => "2");
 $js_arr[]=array("mobHamburger_js"     => "8");
 $js_arr[]=array("jquery_touch"   => "2");
