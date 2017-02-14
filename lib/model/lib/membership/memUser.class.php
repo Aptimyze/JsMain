@@ -104,8 +104,8 @@ class memUser
         return $this->festFlag;
     }
 
-    public function getRemainingContacts() {
-        $contacts = $this->memObj->getRemainingContactsForUser($this->profileid);
+    public function getRemainingContacts($profileid,$extraFields="") {
+        $contacts = $this->memObj->getRemainingContactsForUser($this->profileid,$extraFields);
         return $contacts;
     }
 

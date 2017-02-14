@@ -799,18 +799,38 @@ class MembershipApiFunctions
             $datetime1 = new DateTime($subscriptionExp);
             $datetime2 = new DateTime(date("Y-m-d"));
             $difference = $datetime1->diff($datetime2);
+            if($apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE && in_array($apiObj->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $apiObj->displayPage == '1'){
+                $upgradeMemCase = true;
+            }
+            else{
+                $upgradeMemCase = false;
+            }
             if ($difference->y < 1) {
-                $topBlockMessage["monthsText"] = "MONTHS";
-                $topBlockMessage["monthsValue"] = "" . str_pad($difference->m, 2, 0, STR_PAD_LEFT);
-                $topBlockMessage["daysText"] = "DAYS";
-                $topBlockMessage["daysValue"] = "" . str_pad($difference->d, 2, 0, STR_PAD_LEFT);
+                if($upgradeMemCase == true){
+                    $topBlockMessage["monthsText"] = "Month";
+                    $topBlockMessage["monthsValue"] = $difference->m;
+                    $topBlockMessage["daysText"] = "Days";
+                    $topBlockMessage["daysValue"] = $difference->d;
+                }
+                else{
+                    $topBlockMessage["monthsText"] = "MONTHS";
+                    $topBlockMessage["monthsValue"] = "" . str_pad($difference->m, 2, 0, STR_PAD_LEFT);
+                    $topBlockMessage["daysText"] = "DAYS";
+                    $topBlockMessage["daysValue"] = "" . str_pad($difference->d, 2, 0, STR_PAD_LEFT);
+                }
+                
                 if($difference->y == 0 && $difference->m == 0 && $difference->d <=30) {
                     //$topBlockMessage["JSPCHeaderRenewMessage"] = "Your {$apiObj->activeServiceName} plan is due for renewal by {$datetime1->format('d M Y')}";
                 	$topBlockMessage["JSPCHeaderRenewMessage"] = "Benefits of your membership";
                 }
             } 
             else {
-                $topBlockMessage["monthsText"] = "MONTHS";
+                if($upgradeMemCase == true){
+                    $topBlockMessage["monthsText"] = "Month";
+                }
+                else{
+                    $topBlockMessage["monthsText"] = "MONTHS";
+                }
                 $topBlockMessage["monthsValue"] = "Unlimited";
                 $topBlockMessage["daysText"] = NULL;
                 $topBlockMessage["daysValue"] = NULL;
@@ -863,8 +883,9 @@ class MembershipApiFunctions
                 $topBlockMessage["JSPCnextMembershipMessage"] = NULL;
             }
             //set additional required keys in api response for mem upgrade
-            if($apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE && $apiObj->device == "desktop" && $apiObj->displayPage == '1'){
+            if($upgradeMemCase == true){
                 $topBlockMessage["currentMemName"] = $apiObj->activeServiceName;
+                $topBlockMessage["totalContactsAllotted"] = $apiObj->totalContactsAllotted;
             }
         } 
         elseif ($apiObj->userObj->userType == 4 && $apiObj->memID != "ESJA") {

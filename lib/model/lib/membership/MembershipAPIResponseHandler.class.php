@@ -138,7 +138,9 @@ class MembershipAPIResponseHandler {
             else {
                 $this->countActiveServices = 0;
             }
-            $this->contactsRemaining = $this->userObj->getRemainingContacts($this->profileid);
+            $contactsArr = $this->userObj->getRemainingContacts($this->profileid,"ALLOTED");
+            $this->contactsRemaining = $contactsArr['REMAINING'];
+            $this->totalContactsAllotted = $contactsArr['ALLOTED'];
             $this->userDetails = $this->memHandlerObj->getUserData($this->profileid);
         } 
         else {
