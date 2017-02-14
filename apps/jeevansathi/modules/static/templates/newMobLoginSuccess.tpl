@@ -138,6 +138,7 @@ You need to be a Registered Member<br />to connect with this user</div>
 					<div class="clr"></div>
 				</div>       
 				<!--end:reg/srch-->
+				<div class="txtc pad2"><a href="#" onclick=translateSite("http://hindi.jeevansathi.com"); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></div>
 			   <!--start:div-->
 			   <div id="appLinkAndroid" class="txtc pad2" style="display: none">
 				<a href="/static/appredirect?type=androidMobFooter" class="f15 white fontlig">Download App</a>
