@@ -205,7 +205,7 @@ class MessageLog
 			{ 
                           $receiverObj = new Profile('',$value['RECEIVER']);
                           $profileObj = new Profile('',$value['SENDER']);
-			  $message =$this->getRBMessage($viewer,$receiverObj,$profileObj);	
+			  $message =$this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);	
 			  $messageArray[$key]['MESSAGE'] = $message;	
 			}
 		}
