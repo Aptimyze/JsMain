@@ -283,6 +283,31 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
                         throw new jsException($e);
                 }
         }
-
+	public function selectRecord($sdate,$edate)
+        {
+                $sql = "SELECT * FROM MOBILE_API.NOTIFICATION_LOG WHERE SEND_DATE>:ST_DATE AND SEND_DATE<:END_DATE";
+                $res = $this->db->prepare($sql);
+                $res->bindValue(":ST_DATE",$sdate,PDO::PARAM_STR);
+                $res->bindValue(":END_DATE",$edate,PDO::PARAM_STR);
+                $res->execute();
+		while($row = $res->fetch(PDO::FETCH_ASSOC)){
+                	$rowArr[] =$row;
+                }
+                return $rowArr;
+ 	}
+	public function deleteRecordDateWise($sdate,$edate)
+        {
+                try{
+                        $sql = "delete FROM MOBILE_API.NOTIFICATION_LOG WHERE SEND_DATE>:ST_DATE AND SEND_DATE<:END_DATE";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":ST_DATE",$sdate,PDO::PARAM_STR);
+	                $res->bindValue(":END_DATE",$edate,PDO::PARAM_STR);
+                        $res->execute();
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+                return NULL;
+        }
 }
 ?>
