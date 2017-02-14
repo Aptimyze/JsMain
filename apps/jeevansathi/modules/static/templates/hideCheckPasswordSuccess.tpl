@@ -18,6 +18,5 @@
 </div>
 
 <script>
-var checksum = '~$profileChecksum`';
 var hideOption = '~$hideOption`';
 </script>

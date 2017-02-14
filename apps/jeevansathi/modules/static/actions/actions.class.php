@@ -308,7 +308,6 @@ class staticActions extends sfActions
         {
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
-            $this->profileChecksum = JsAuthentication::jsEncryptProfilechecksum($pObj->getPROFILEID());
         }
 
         public function executeUnHideResult(sfWebRequest $request)
@@ -322,7 +321,6 @@ class staticActions extends sfActions
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
             $this->hideOption = $request->getParameter("hide_option");
-            $this->profileChecksum = JsAuthentication::jsEncryptProfilechecksum($pObj->getPROFILEID());
         }
         public function executeHideDuration(sfWebRequest $request)
         {

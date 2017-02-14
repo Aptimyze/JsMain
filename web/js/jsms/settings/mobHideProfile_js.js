@@ -5,7 +5,7 @@ $(document).ready(function(){
 		var pswrd = $('#passValueID').val();
 		// hide
 		action = 1;
-		ajaxPassword(checksum,pswrd,action);
+		ajaxPassword(pswrd,action);
 	});
 
 	$("#unHidePasswordCheck").bind('click',function()
@@ -13,11 +13,11 @@ $(document).ready(function(){
 		var pswrd = $('#passValueID').val();
 		// Unhide
 		action = 0;
-		ajaxPassword(checksum,pswrd,action);
+		ajaxPassword(pswrd,action);
 	});
 });
 
-function ajaxPassword(checksum, pswrd, action)
+function ajaxPassword(pswrd, action)
 {
 	$.ajax({                 
 	url: '/api/v1/common/checkPassword',
@@ -42,20 +42,24 @@ function hideUnhideAction(action)
 	if(action)
 	{
 		// to hide the user
-		data = "hide_option=" + hideOption + "action=" + action;
+		var dataObject = JSON.stringify({
+							'hide_option' : hideOption,
+							'action' : action
+						});
 	}
 	else
 	{
 		// to UnHide the user
-		data = "action=" + action;
+		var dataObject = JSON.stringify({
+							'action' : action
+						});
 	}
 
 	$.ajax({
 		url : '/api/v1/settings/hideUnhideProfile',
-		data : data,
+		data : dataObject,
 		success: function(response)
 		{
-			console.log(response);
 			if(response.success == 1)
 			{
 				if(action)
