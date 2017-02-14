@@ -223,12 +223,12 @@ class Inbox implements Module
 	 *@return moduleDisplayObj : complete object of all the information requested by the module
 	 */
 	public function getDisplay($infoTypeNav = null,$params=null)
-	{
+	{  
 		$fields       = Array("profilechecksum");
 		$profiles     = Array();
 		$fromGetDisplayFunction=1;
 		$countObj     = $this->getCount('',$infoTypeNav,$fromGetDisplayFunction);
-		$tupleService = new TupleService();
+		$tupleService = new TupleService(); 
 		$tupleService->setLoginProfile($this->profileObj->getPROFILEID());
 		$tupleService->setLoginProfileObj($this->profileObj);
 		$key = $this->profileObj->getPROFILEID()."_".$infoTypeNav["PAGE"];
@@ -305,10 +305,14 @@ class Inbox implements Module
                                                 if($infoTypeNav["matchedOrAll"])
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
 						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
+                                                if($infoType == "MATCH_OF_THE_DAY" && JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID())){
+                                                        $this->totalCount = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
+                                                }
                                                 if($infoType == "MY_MESSAGE"){
                                                     	if(count($profilesArray)==$conditionArray['LIMIT'])
                                                         	array_pop($profilesArray);
                                                 }
+        
 					 	if(!empty($memdata) && is_array($data) && is_array($profilesArray)){
 					//		print_r(count($data));
 							$data = $data+$profilesArray;
@@ -346,8 +350,8 @@ class Inbox implements Module
 		unset($skipArray);
 		//Creating Final object including infotype based all the information
 		if (is_array($infoTypeObj)) {
-			// Calling tuple service to retrieve complete information of all the profiles in one go
-			$tupleService->setProfileInfo($infoTypeObj, array_unique($fields));
+			// Calling tuple service to retrieve complete information of all the profiles in one go  
+			$tupleService->setProfileInfo($infoTypeObj, array_unique($fields),$profilesArray);
 
 			if ($config) {
 				unset($tuplesValues);

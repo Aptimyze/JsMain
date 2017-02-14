@@ -129,6 +129,50 @@ var jsonObj = myjsdata,hrefStr,htmlStr,tupleLength,contact_id,tracking,elemArray
 			}
 		});	
 	}
+
+		if(jsonObj.match_of_the_day.tuples != null && showMatchOfTheDay){
+		tupleLength = jsonObj.match_of_the_day.tuples.length,contact_id = jsonObj.match_of_the_day.contact_id,tracking = jsonObj.match_of_the_day.tracking.split("responseTracking=")[1];
+		$.each(jsonObj.match_of_the_day.tuples,function(index,elem) {
+			$.each(elemArray,function(index2,elem2){
+				if(elem[elem2] == undefined || elem[elem2] == null){
+					elem[elem2] = "";
+				}
+			});
+			if(elem.photo.url == undefined || elem.photo.url == null) {
+				if(userGender == "M") {
+					elem.photo.url = "IMG_URL/images/picture/120x120_f.png?noPhoto";
+				} else if(userGender == "F") {
+					elem.photo.url = "IMG_URL/images/picture/120x120_m.png?noPhoto";
+				}
+			}
+		});
+		$.each(jsonObj.match_of_the_day.tuples,function(index,elem) {
+			hrefStr = "/profile/viewprofile.php?profilechecksum="+elem.profilechecksum+"&responseTracking="+tracking+"&total_rec="+tupleLength+"&actual_offset="+(index+1)+"&contact_id="+contact_id;
+			htmlStr = '<div class="mr10 dispibl ml0 posrel wid300" id="matchOfTheDaytuple_'+index+'" index="'+index+'"><input class="proChecksum" type="hidden" value="'+elem.profilechecksum+'"><img class="srp_box2 contactLoader posabs dispnone top65" src="IMG_URL/images/jsms/commonImg/loader.gif"><div class="bg4 overXHidden" id="hideOnAction"><a id="detailedProfileRedirect" href="'+hrefStr+'"><div class="pad16 scrollhid hgt140"><div class="overXHidden fullheight"><div class="whitewid200p overflowWrap"><div class="fl"><img class="tuple_image hgtwid110" src="'+elem.photo.url+'" border="0"> </div><div class="fl pl_a"><div class="f14 color7"> <span class="username">'+elem.username+'</span></div><div class="attr"><ul><li><span class="tuple_title">'+elem.tuple_title_field+'</span> </li><li><span class="tuple_age">'+elem.age+'</span> Years  <span class="tuple_height"> '+elem.height+' </span> </li><li><span class="tuple_caste whtSpaceNo">'+elem.caste+'</span></li><li><span class="tuple_mtongue">'+elem.mtongue+'</span></li>';
+            if(userGender == "F") {
+                htmlStr = htmlStr +'<li><span class="tuple_income">'+elem.income+'</span></li>';
+            } else {
+                htmlStr = htmlStr +'<li><span class="tuple_education">'+elem.education+'</span></li>';    
+            }
+            htmlStr = htmlStr +'</ul></div></div><div class="clr"></div></div></div></div> </a><div class="brdr8 fullwid hgt60"><div class="txtc fullwid fl matchOfDayBtn brdr7 pad2" index="'+index+'"><input class="inputProChecksum" type="hidden" value="'+elem.profilechecksum+'"><a class="f15 color2 fontreg">Send Interest</a></div><div class="clr"></div></div></div></div>';
+			$("#matchOfDay_tuples").append(htmlStr);
+			if(index == (tupleLength-1)){
+				for(var i=0;i<10;i++) {
+	            	$("#matchOfDay_tuples").append('<div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;"></div>');
+	            }
+				if (parseInt(matchOfDayCount)) {
+	            	var slider3=$("#matchOfDayPresent #matchOfDay_tuples");
+	           		tupleObject3 = slider3.Slider(10,slider3,tupleLength,"match_of_the_day",0);
+	          		tupleObject3._defaultInit();
+	                bindSlider();
+	                $(".contactLoader").css("left",((windowWidth/2)-$(".contactLoader").width()/2)-20+"px");
+	        		$("#matchLoader").remove();
+	        		$("#match_alert_tuples").removeClass("dispnone");
+	        	}
+			}
+		});	
+	}
+
 	
 }
 function jsmsMyjsReady() {
