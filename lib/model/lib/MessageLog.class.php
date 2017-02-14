@@ -115,7 +115,11 @@ class MessageLog
 					$profileObj = new Profile('',$loginProfile);
 					$receiverObj = new Profile('',$value['SENDER']);
 					$viewerProfile = $loginProfile; 			
-				}	
+				}
+
+				if(!$profileObj || is_null($profileObj)){
+				continue;	
+				}
 				
 				$messageForRB = $this->getRBMessage($viewerProfile,$receiverObj,$profileObj);
 				unset($profileObj);
