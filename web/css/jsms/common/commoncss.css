@@ -1139,6 +1139,22 @@ transform:  translateX(100%) rotateY(0deg) !important;
 
 .pad015{padding:0px 15px 15px 15px}
 
+.pad10p0p {
+padding: 10px 0px
+}
+.mar10p10p0p{
+margin: 5px 10px 5px 0px
+}
+.brdr_new{border: 1px solid #cbc9c9;
+border-radius: 32px;
+}
+.pad5{padding: 5px}
+
+
+.vAlignSub{vertical-align: sub;}
+.wid65p{width: 65%;}
+.pt4{    padding-top: 4px;}
+
 .mr10{margin-right:10px }
 .ml0{margin-left:0px }
 .wid300{width: 300px}

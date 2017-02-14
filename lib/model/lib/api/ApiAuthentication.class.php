@@ -376,7 +376,22 @@ Abstract class ApiAuthentication
         {
         if(!($this->sendLoggingDataQueue(self::$loginTracking, $queueArr)))
         	self::completeLoginTracking($queueArr);
-        }	
+        }
+        $curDat = date('Y-m-d');
+        if($queueArr['profileId'] && JsMemcache::getInstance()->get("DISC_HIST_".$curDat."_".$queueArr['profileId']) != "Y"){
+            $prodObj=new Producer();
+            if($prodObj->getRabbitMQServerConnected())
+            {
+                $body = array("PROFILEID"=>$queueArr['profileId'],"DATE"=>$curDat);
+                $type = "DISCOUNT_LOG";
+                $queueData = array('process' =>'DISCOUNT_HISTORY',
+                                    'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
+                                  );
+                $prodObj->sendMessage($queueData);
+                JsMemcache::getInstance()->set("DISC_HIST_".$curDat."_".$queueArr['profileId'],"Y",(strtotime('tomorrow') - time()));
+            }
+            unset($prodObj,$queueData,$body);
+        }
 	}
 	
 	

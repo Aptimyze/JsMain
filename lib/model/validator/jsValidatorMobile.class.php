@@ -14,6 +14,7 @@ class jsValidatorMobile extends sfValidatorBase
   protected function doClean($value)
   {
     $mobileNumberExceptionArr = array("9643102628");
+    
     $source = $_SERVER['HTTP_REFERER'];
     if(strpos($source,"viewprofile") !== false)
     {
