@@ -862,6 +862,10 @@ class MembershipApiFunctions
                 $topBlockMessage["nextMembershipMessage"] = NULL;
                 $topBlockMessage["JSPCnextMembershipMessage"] = NULL;
             }
+            //set additional required keys in api response for mem upgrade
+            if($apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE && $apiObj->device == "desktop" && $apiObj->displayPage == '1'){
+                $topBlockMessage["currentMemName"] = $apiObj->activeServiceName;
+            }
         } 
         elseif ($apiObj->userObj->userType == 4 && $apiObj->memID != "ESJA") {
             $serviceStatusObj = new BILLING_SERVICE_STATUS();

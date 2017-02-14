@@ -482,9 +482,7 @@ class MembershipAPIResponseHandler {
         
         //fetch the upgrade membership content based on eligibilty
         if($this->device == "desktop"){
-            $upgradeMemResponse = $this->generateUpgradeMemResponse($request);
-            $output["upgradeMembershipContent"] = $upgradeMemResponse["upgradeMembershipContent"];
-            $output["currentMembershipContent"] = $upgradeMemResponse["currentMembershipContent"];
+            $output["upgradeMembershipContent"] = $this->generateUpgradeMemResponse($request);
         }
             
         if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
@@ -496,7 +494,7 @@ class MembershipAPIResponseHandler {
         else if (empty($this->getAppData) && empty($this->trackAppData) && $this->device != "Android_app") {
             $this->memHandlerObj->trackMembershipProgress($this->userObj, '501', '51', '1', $this->device, $this->user_agent, implode(",", $this->curActServices));
         }
-        //print_r($output);die;
+        print_r($output);die;
         return $output;
     }
     
@@ -506,16 +504,13 @@ class MembershipAPIResponseHandler {
     */
     public function generateUpgradeMemResponse($request){
         if($this && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-            $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $this->subStatus[0]['SERVICEID']);
             $upgradableMemArr = $this->memHandlerObj->setUpgradableMemberships($this->subStatus[0]['SERVICEID']);
             if(is_array($upgradableMemArr) && $upgradableMemArr["upgradeMem"] && $this->allMainMem[$upgradableMemArr["upgradeMem"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]]){
-                $output["upgradeMembershipContent"]["type"] = "MAIN";
-                $output["upgradeMembershipContent"]["upgradeMainMem"] = $upgradableMemArr["upgradeMem"];
-                $output["upgradeMembershipContent"]["upgradeMainMemDur"] = $upgradableMemArr["upgradeMemDur"];
-                $output["upgradeMembershipContent"]["upgradeOfferExpiry"] = date('M d Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
-                $output["upgradeMembershipContent"]["upgradeExtraPay"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"];
-                $output["currentMembershipContent"]["currentMemName"] = $this->activeServiceName;
-                $output["currentMembershipContent"]["currentMemDur"] = $memID[1];
+                $output["type"] = "MAIN";
+                $output["upgradeMainMem"] = $upgradableMemArr["upgradeMem"];
+                $output["upgradeMainMemDur"] = $upgradableMemArr["upgradeMemDur"];
+                $output["upgradeOfferExpiry"] = date('M d Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                $output["upgradeExtraPay"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"];
             }
         }
         return $output;
