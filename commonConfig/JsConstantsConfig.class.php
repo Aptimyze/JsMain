@@ -15,7 +15,7 @@ public static $all =
 
 		/***Static***/
 		"imgUrl"             => '%STATIC_URL_INPUT%',
-		"imgUrl2v"            => '%STATIC_URL_INPUT%',
+		"imgUrl2"            => '%STATIC_URL_INPUT%',
 		"regImg"             => '%STATIC_URL_INPUT%/profile/images/reg',
 
 		/**SMS**/
@@ -169,8 +169,10 @@ public static $dev =
 		"solrServerUrl"      => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerUrl2"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerUrl3"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerProxyUrl"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerProxyUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerLoggedOut"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerForVisitorAlert"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerForVSP"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerForKundali"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
@@ -340,8 +342,10 @@ public static $test =
 		"solrServerUrl"      => '172.16.3.203:8080/solr/techproducts',
 		"solrServerUrl1"     => '172.16.3.203:8080/solr/techproducts',
 		"solrServerUrl2"     => '172.16.3.203:8080/solr/techproducts',
+		"solrServerUrl3"     => '172.16.3.203:8080/solr/techproducts',
 		"solrServerProxyUrl"     => '172.16.3.203:8080/solr/techproducts',
 		"solrServerProxyUrl1"     => '172.16.3.203:8080/solr/techproducts',
+		"solrServerLoggedOut"     => '172.16.3.203:8080/solr/techproducts',
 		"solrServerForVisitorAlert"	=> '172.16.3.203:8080/solr/techproducts',
 		"solrServerForVSP"	=> '172.16.3.203:8080/solr/techproducts',
 		"solrServerForKundali"	=> '172.16.3.203:8080/solr/techproducts',
