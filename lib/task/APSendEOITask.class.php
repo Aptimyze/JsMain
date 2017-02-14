@@ -59,7 +59,7 @@ EOF;
                 if(!$this->isOneTime)
                     $whereCondition = date('Y-m-d',strtotime('-'.($this->lastLoginDays).' days'));
 		$profileArr = $profileInfoObj->getAPProfilesResumed($whereCondition);
-		//$profileArr=array(1=>array("PROFILEID"=>144111,"LAST_LOGIN_DT"=>"2016-07-04 00:00:00"));
+		//$profileArr=array(1=>array("PROFILEID"=>1,"LAST_LOGIN_DT"=>"2017-01-27 00:00:00"));
 		$totalContactsMade = 0;
 		$totalSenders = 0;
                 $date = date("Y-m-d");
@@ -251,7 +251,7 @@ EOF;
 				
 				$contactHandlerObj = new ContactHandler($profileObj,$receiverObj,"EOI",$contactObj,'I',ContactHandler::POST);
 				$contactHandlerObj->setPageSource("AP");
-				 
+/*				 STOPPING THIS MESSAGE AS CHAT REQUIRED FOR RB
 				if($this->isJsDummyMember($profileObj->getPROFILEID()))
 				{
 					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
@@ -265,8 +265,9 @@ EOF;
 				}
 				else
 					$message= Messages::getMessage(Messages::AP_MESSAGE,array('USERNAME'=>$profileObj->getUSERNAME()));
-					
-				$contactHandlerObj->setElement("MESSAGE",$message);
+*/					
+		// This message is kept null such that it is not logged in Chat Communication History. This is being done to handle the case of a paid member sending Interest to Free Member.			
+				$contactHandlerObj->setElement("MESSAGE",'');
 				$contactHandlerObj->setElement("STATUS","I");
 				$contactHandlerObj->setElement("PROFILECHECKSUM",JsCommon::createChecksumForProfile($profileObj->getPROFILEID()));
 				$contactHandlerObj->setElement("STYPE",3);

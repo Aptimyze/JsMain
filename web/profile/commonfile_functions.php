@@ -412,7 +412,7 @@ $js_arr[]=array("jsms/profile/ep/mobeditview_js"                                
 $js_arr[]=array("jsms/profile/ep/mobShow_name_js"              => "5");
 $js_arr[]=array("jsms/common/disableScroll_js"  => "1");
 $js_arr[]=array("jsms/utility/sessionStorage_js"    => "3");
-$js_arr[]=array("jsms/myjs/touchswipemyjs_js"               => "16");
+$js_arr[]=array("jsms/myjs/touchswipemyjs_js"               => "17");
 $js_arr[]=array("jsms/myjs/myjs_js"                                        => "43");
 $js_arr[]=array("showHide_js"     => "2");
 $js_arr[]=array("showHideReg_js"      => "2");
@@ -566,7 +566,7 @@ $js_arr[]=array("jspc/common/urlHandling"              => "13");
 $js_arr[]=array("jspc/success_story/imagefit"  => "1");
 $js_arr[]=array("jspc/contactus/contactus_js"  => "1");
 $js_arr[]=array("jspc/success_story/successScroll"  => "1");
-$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"  => "86");
+$js_arr[]=array("jspc/profile/edit/profile/jspcEditProfile_js"  => "87");
 $js_arr[]=array("jspc/profile/view/jspcViewProfile_js"                                        => "51");
 $js_arr[]=array("jspc/success_story/foggy"  => "1");
 $js_arr[]=array("jspc/success_story/resizeIe"  => "1");
