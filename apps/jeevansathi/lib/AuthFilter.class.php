@@ -11,22 +11,22 @@
  */
 class AuthFilter extends sfFilter {
 	public function execute($filterChain) {
-		
+
+	if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll/repeatAlarm"))
+	{
+		$notifCheck =NotificationFunctions::notificationCheck();
+        	if($notifCheck){echo $notifCheck;die;}
+	}
+
 	$context = $this->getContext();
 		$request = $context->getRequest();
 
-		// Code added to switch to hindi.jeevansathi.com if cookie set !
-		if($request->getcookie('JS_MOBILE'))
-		{
-			if($request->getcookie("jeevansathi_hindi_site")=='Y'){
-				$authchecksum = $request->getcookie('AUTHCHECKSUM');
-				if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi")!='Y'){
-					@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/");
-					$context->getController()->redirect('http://hindi.jeevansathi.com?AUTHCHECKSUM='.$authchecksum."&newRedirect=1", array('request' => $request));
-				}
-			} else {
-				@setcookie('redirected_hindi', 'N', 0, "/");
-			}
+		// Code added to switch to hindi.jeevansathi.com for mobile site if cookie set !
+		if($request->getcookie('JS_MOBILE')=='Y'){
+            $redirectUrl = CommonUtility::translateSiteLanguage($request);
+            if($redirectUrl != ""){
+            	$context->getController()->redirect($redirectUrl, array('request' => $request));
+            }
 		}
 		// End hindi switch code !
 		
@@ -66,20 +66,24 @@ class AuthFilter extends sfFilter {
 		else {
 			
 			global $protect_obj;
-			if($request->getParameter('module')=="homepage" && $request->getParameter('action')=="index" && !$request->getParameter("fromHomepage") || $request->getParameter("blockOldConnection500")){
+			if(($request->getParameter('module')=="homepage" && $request->getParameter('action')=="index" )|| ($request->getParameter('module')=="myjs" && $request->getParameter('action')=="jspcPerform" ) || $request->getParameter("blockOldConnection500")){
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				JsCommon::oldIncludes(true);
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll"))
+					JsCommon::oldIncludes(false);
+				else
+					JsCommon::oldIncludes(true);
 			}
 				$protect_obj = new protect;
 				$request->setAttribute("protect_obj",$protect_obj);
-				
+				if(strpos($_SERVER['REQUEST_URI'],"search")!==false)
+					$request->setParameter('searchRepConn', 1);
+					
 			if ($this->isFirstCall() && !$request->getAttribute('FirstCall')) {
 				$request->setAttribute('FirstCall', 1);
 				
 				// Code to execute after the action execution, before the rendering
-				
 				$fromRegister="";
 				if($request->getParameter('module')=="register")
 					$fromRegister="y";
@@ -87,10 +91,13 @@ class AuthFilter extends sfFilter {
 				if($request->getParameter("FROM_GCM")==1)
 						$gcm=1;
 				
-				if($request->getParameter("crmback")=="admin")
+				if($request->getParameter("crmback")=="admin" || $request->getParameter("allowLoginfromBackend")==1)
 				{
 					$authenticationLoginObj->setTrackLogin(false);
-					$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"));					
+					if($request->getParameter("allowLoginfromBackend"))
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"Y");	
+					else
+						$data=$authenticationLoginObj->setCrmAdminAuthchecksum($request->getParameter("profileChecksum"),"N");
 				}
 				else
 					$data=$authenticationLoginObj->authenticate(null,$gcm);
@@ -154,7 +161,7 @@ class AuthFilter extends sfFilter {
 						{
 							$request->setParameter("incompleteUser",1);
 							if(MobileCommon::isNewMobileSite()){
-								$context->getController()->forward("register","newJsmsReg");
+								$context->getController()->forward("register","newJsmsReg",0);
                                                                 die;
                                                         }
                                                         elseif(MobileCommon::isDesktop()){
@@ -186,13 +193,13 @@ class AuthFilter extends sfFilter {
 									die;
 								}
 								elseif(MobileCommon::isNewMobileSite()){
-									$context->getController()->forward("phone","jsmsDisplay");
+									$context->getController()->forward("phone","jsmsDisplay",0);
 									die;
 								}
 								else{
 									if($_GET["crmback"]!="admin"){
 
-										$context->getController()->forward("phone","phoneVerificationPcDisplay");
+										$context->getController()->forward("phone","phoneVerificationPcDisplay",0);
 									}
 									die;
 								}
@@ -200,7 +207,7 @@ class AuthFilter extends sfFilter {
 							
 							if($showConsentMsg=="Y" && MobileCommon::isNewMobileSite())
 							{
-								$context->getController()->forward("phone","consentMessage");
+								$context->getController()->forward("phone","consentMessage",0);
 								die;
 							}
 
@@ -229,7 +236,7 @@ class AuthFilter extends sfFilter {
                                         }
 					else
 					{
-						$naObj = new NEWJS_ASTRO;
+						$naObj = ProfileAstro::getInstance();
                                                 if($naObj->getIfAstroDetailsPresent($data["PROFILEID"]))
 						{
 							if(JsConstants::$alertServerEnable) {
@@ -261,6 +268,7 @@ class AuthFilter extends sfFilter {
 				else
 					$request->setAttribute('subscriptionHeader',"1");
 				
+				//$request->setAttribute('subscription',$data[SUBSCRIPTION]);
 				$request->setAttribute('checksum', $data[CHECKSUM]);
 				$request->setAttribute('profilechecksum', (md5($data["PROFILEID"]) . "i" . $data["PROFILEID"]));
 				$request->setAttribute('username', $data[USERNAME]);
@@ -281,12 +289,35 @@ class AuthFilter extends sfFilter {
 				if ($enable_login !== 'off') {
 					if (!$data[PROFILEID] && $context->getResponse()->getStatusCode() == '200') {
 						//$protect_obj->TimedOut(); //Displays timeout page
-						if (sfConfig::get('mod_' . $request->getParameter('module') . '_' . $request->getParameter('action') . '_enable_login_layer') == 'on') $context->getController()->forward("static", "loginLayer"); //Login layer
-						else $context->getController()->forward("static", "logoutPage"); //Logout page
+						if (sfConfig::get('mod_' . $request->getParameter('module') . '_' . $request->getParameter('action') . '_enable_login_layer') == 'on') $context->getController()->forward("static", "loginLayer",0); //Login layer
+						else $context->getController()->forward("static", "logoutPage",0); //Logout page
 					//	throw new sfStopException();
 					die;
 					}
 				}
+            
+            
+
+               		//$request->setAttribute('UNIQUE_REQUEST_SUB_ID',uniqid());
+
+            
+               $headers = getallheaders();
+            
+	            
+	            if (false === isset($headers[LoggingEnums::RAJX])) {
+	            	$out = LoggingManager::getInstance()->getUniqueId();
+	            	$request->setAttribute(LoggingEnums::RIFT,$out); 
+
+	            }
+	            else
+	            {   	            	
+	            	LoggingManager::getInstance()->setUniqueId($headers[LoggingEnums::RAJX]);
+	            	$request->setAttribute(LoggingEnums::RIFT,$headers[LoggingEnums::RAJX]);
+	            	$request->setAttribute(LoggingEnums::AJXRSI,uniqid());
+
+	            	
+	            }
+	          	                        
 			}
 			else
 			{
@@ -315,11 +346,13 @@ class AuthFilter extends sfFilter {
 		}
 		if($data[PROFILEID])
 		{
-			$profileObj= LoggedInProfile::getInstance();
-			if($profileObj->getPROFILEID()!='')
-			{
-				if(in_array($profileObj->getRELIGION(), array('1','4','7','9')))
-				$request->setParameter('showKundliList', 1);
+			if(!strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
+				$profileObj= LoggedInProfile::getInstance();
+				if($profileObj->getPROFILEID()!='')
+				{
+					if(in_array($profileObj->getRELIGION(), array('1','4','7','9')))
+					$request->setParameter('showKundliList', 1);
+				}
 			}
 		}
 		//code to fetch the revision number to clear local storage

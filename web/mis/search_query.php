@@ -5,7 +5,6 @@ include("../profile/arrays.php");
 //search_query.php
 //MADE BY PUNEET MAKKAR TO KNOW THE NO OF USERS doing different type of searches 
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid) || $JSIndicator==1)
 {

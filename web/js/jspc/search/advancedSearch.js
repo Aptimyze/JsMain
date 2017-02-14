@@ -5,18 +5,25 @@ var config = {
       '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
       '.chosen-select-width'     : {width:"100%"},
       '.chosen-select-no-search' : {disable_search:true,width:"100%"}
-	  
+    
     }
     for (var selector in config) {
       $(selector).chosen(config[selector]);
     }
 
 function fillValuesInChosen(ele){
+
   
     valueToFill = parseValueForChosen($(ele).attr("data"));
     if(valueToFill != "" && valueToFill != null){
       $(ele).val(valueToFill);
       $(ele).trigger("chosen:updated");
+
+
+      var getID =  $(ele).attr('id');
+
+      $('#'+getID+'-rem').css('visibility','visible');
+
     }
     else
     {
@@ -53,12 +60,12 @@ if(typeof(fieldValue) == "string" && fieldValue=="DM"){
 }
     
 function fillValuesInRange(ele){
-		
-		valueToFill = JSON.parse($(ele).attr("data"));
-		var id = valueToFill['VALUE'];
-		$(ele).find('span').html(valueToFill['LABEL']);
-		$(ele).find('ul #'+id).addClass('js-selected');
-	
+    
+    valueToFill = JSON.parse($(ele).attr("data"));
+    var id = valueToFill['VALUE'];
+    $(ele).find('span').html(valueToFill['LABEL']);
+    $(ele).find('ul #'+id).addClass('js-selected');
+  
 }
 
 function disableRangeOption(fieldName,minValue){
@@ -118,8 +125,8 @@ function disableRangeOption(fieldName,minValue){
   }
 
 function disableFieldsOption(fieldId,value){
-	
-		if(fieldId == "Gender"){
+  
+    if(fieldId == "Gender"){
       disableRangeOption("Min_Age",value);
     }
     if(fieldId == "Min_Age"){
@@ -137,7 +144,7 @@ function disableFieldsOption(fieldId,value){
 }
 
 function updateCastOption(religionValArray){
-	var casteField = $('#partner_caste_arr');
+  var casteField = $('#partner_caste_arr');
   if(false === religionValArray instanceof Array && typeof(religionValArray) == "string" && religionValArray.length ){
     var temp = religionValArray;
     religionValArray = [temp];
@@ -153,43 +160,45 @@ function updateCastOption(religionValArray){
   var isCasteVisible = false;
   $(casteField).html("");
   if(religionValArray != null){
-		var labelCheckArray = [];
-		
-	  for(var i=0;i<religionValArray.length;i++){
-	  
-	    if(casteData.hasOwnProperty(religionValArray[i]) === false)
-	      continue;
-	    labelCheckArray.push(religionValArray[i]);
-	    isCasteVisible = true; 
-	    var casteArray = casteData[religionValArray[i]];
-	    for(var j=0;j<casteArray.length;j++){
-	      var key = casteArray[j]['VALUE'];
-	      var valueLabel = casteArray[j]['LABEL'];
-	      
-	      $(casteField).append('<option class="textTru chosenDropWid" value= \"' + key+ '\">' + valueLabel + '</option>');
-	      
-	    }
-	  }
-	  if(!loggedIn)
-	  {
-			var sectArr = ["2","3"];
-			var casteLabel="Caste";
-			
-			if(labelCheckArray.length==1 && $.inArray(labelCheckArray[0],sectArr)>-1)
-			{
-				casteLabel="Sect";
-			}
-			else if(labelCheckArray.length==2 && ($.inArray(labelCheckArray[0],sectArr)>-1 && $.inArray(labelCheckArray[1],sectArr)>-1))
-			{
-				casteLabel="Sect";
-			}
-			$("#partner_caste_arrParent").find("label").html(casteLabel);
-		}
+    var labelCheckArray = [];
+    
+    for(var i=0;i<religionValArray.length;i++){
+    
+      if(casteData.hasOwnProperty(religionValArray[i]) === false)
+        continue;
+      labelCheckArray.push(religionValArray[i]);
+      isCasteVisible = true; 
+      var casteArray = casteData[religionValArray[i]];
+      for(var j=0;j<casteArray.length;j++){
+        var key = casteArray[j]['VALUE'];
+        var valueLabel = casteArray[j]['LABEL'];
+        
+        $(casteField).append('<option class="textTru chosenDropWid" value= \"' + key+ '\">' + valueLabel + '</option>');
+        
+      }
+    }
+    if(!loggedIn)
+    {
+      var sectArr = ["2","3"];
+      var casteLabel="Caste";
+      
+      if(labelCheckArray.length==1 && $.inArray(labelCheckArray[0],sectArr)>-1)
+      {
+        casteLabel="Sect";
+      }
+      else if(labelCheckArray.length==2 && ($.inArray(labelCheckArray[0],sectArr)>-1 && $.inArray(labelCheckArray[1],sectArr)>-1))
+      {
+        casteLabel="Sect";
+      }
+      $("#partner_caste_arrParent").find("label").html(casteLabel);
+    }
   }
   $(casteField).trigger("chosen:updated");
+  var getRemId =$(casteField).attr('id');
+  $('#'+getRemId+'-rem').css('visibility','hidden');
   
   if(isCasteVisible === false){
-		showHideField('#partner_caste_arr',false,true);
+    showHideField('#partner_caste_arr',false,true);
   }
   else{
     showHideField('#partner_caste_arr',true);
@@ -198,13 +207,13 @@ function updateCastOption(religionValArray){
 
 function prePopulateDependant(childId,parentId)
 {
-	var dependantValueToFill = $('#'+childId).attr("data");
-	$('#'+parentId).trigger("change");
-	if(dependantValueToFill)
-	{
-		$('#'+childId).attr("data",dependantValueToFill);
-		fillValuesInChosen($('#'+childId));
-	}
+  var dependantValueToFill = $('#'+childId).attr("data");
+  $('#'+parentId).trigger("change");
+  if(dependantValueToFill)
+  {
+    $('#'+childId).attr("data",dependantValueToFill);
+    fillValuesInChosen($('#'+childId));
+  }
 }
 
 function showHideField(fieldSelector,bShow,clearField){
@@ -217,6 +226,7 @@ function showHideField(fieldSelector,bShow,clearField){
   }
   else{
     $(parentField).hide();
+    $(fieldSelector+'-rem').css('visibility','hidden');
   }
   
   //IF Chosen then empty  all selected value and update the list
@@ -232,11 +242,32 @@ function showHideField(fieldSelector,bShow,clearField){
   }
 }
 
+function showHideRem2(param)
+{
+  
+
+  var remID = param.attr('id');
+  
+  if(param.val()!=null)
+  {
+    $('#'+remID+'-rem').css('visibility','visible');
+  }
+  else
+  {
+     $('#'+remID+'-rem').css('visibility','hidden');
+  }
+}
+
+
+
+
 
 $('#partner_country_arr').on("change",function (){
+
     var values =$(this).val();
     var cityField = '#partner_city_arr';
-	  if(values instanceof Array !== false && values.indexOf("51") !== -1 && values.length<2 ){
+
+	  if(values instanceof Array !== false && values.indexOf("51") !== -1 ){
 	    showHideField(cityField,true);
 	  }
 	  else if(typeof values == "string" && values.indexOf("51") !== -1) 
@@ -248,89 +279,95 @@ $('#partner_country_arr').on("change",function (){
 	    showHideField(cityField,false,true);
 	  }
   });
-  $('#partner_mstatus_arr').on("change",function(){
+$('#partner_mstatus_arr').on("change",function(){
     var values = $(this).val();
     var hasChildrenField='#partner_hchild_arr';
     if(values instanceof Array !== false && (values.length > 1 || values.indexOf("N") === -1)){
-	    showHideField(hasChildrenField,true);
-	  }
-	  else
-	    showHideField(hasChildrenField,false,true);
+      showHideField(hasChildrenField,true);
+    }
+    else
+      showHideField(hasChildrenField,false,true);
   });
 
   //Binding Religion Section
   $('#partner_religion_arr').on("change",function(){
-			updateCastOption($(this).val());
-      
+   updateCastOption($(this).val());     
+  });
+
+  $('.js-torem').on("change",function(){
+      showHideRem2($(this));
+  });
+
+ 
+
+
+  $('.js-selfSelect').on("click",function(){
+    $(this).toggleClass("activeopt");
   });
   
-  $('.js-selfSelect').on("click",function(){
-		$(this).toggleClass("activeopt");
-	});
-	
-	$('#Submit').on("click",function(){
-		$form = $("<form action='/search/advanceSearch' name='searchForm' method='post' style='display:none;'></form>");
-		
-		$('.js-frmfld').each(function(){
-			$value="";
-			if($(this).is('select'))
-			{
-				if($(this).val())
-					$value= $(this).val();
-			}
-			else if($(this).hasClass("js-fielddd"))
-			{
-				$value =  JSON.parse($(this).attr('data'))["VALUE"];
-			}
-			else if($(this).is('input'))
-				$value = $(this).val();
-			else if($(this).hasClass("js-selfSelect"))
-			{
-				if($(this).hasClass("activeopt"))
-					$value= $(this).attr("data");
-			}
-			else
-				$value= $(this).attr("data");
-			$form.append('<input name="'+$(this).attr("id")+'" value="'+$value+'">');
-			
-		});
-		
-		$form.append('<input name="json" value="jspc">');
-		
-		$('#advSearch_form').html($form);
-		document.forms['searchForm'].submit();
-	});
-	
-	
+  $('#Submit').on("click",function(){
+    $form = $("<form action='/search/advanceSearch' name='searchForm' method='post' style='display:none;'></form>");
+    
+    $('.js-frmfld').each(function(){
+      $value="";
+      if($(this).is('select'))
+      {
+        if($(this).val())
+          $value= $(this).val();
+      }
+      else if($(this).hasClass("js-fielddd"))
+      {
+        $value =  JSON.parse($(this).attr('data'))["VALUE"];
+      }
+      else if($(this).is('input'))
+        $value = $(this).val();
+      else if($(this).hasClass("js-selfSelect"))
+      {
+        if($(this).hasClass("activeopt"))
+          $value= $(this).attr("data");
+      }
+      else
+        $value= $(this).attr("data");
+      $form.append('<input name="'+$(this).attr("id")+'" value="'+$value+'">');
+      
+    });
+    
+    $form.append('<input name="json" value="jspc">');
+    
+    $('#advSearch_form').html($form);
+    document.forms['searchForm'].submit();
+  });
+  
+  
 
-	$('.js-toggle ul li').on("click",function(){
-		var parent = $(this).parents(".js-toggle");
-		if(!$(this).hasClass("activeopt"))
-		{
-				$(this).addClass("activeopt");
-				$(this).siblings().removeClass("activeopt");
-				$(parent).attr("data",$(this).attr("data"));
-				if($(parent).attr("id")=="Gender")
-				{
-					if($(parent).attr("data")=="M") // for groom hide work after marriage and settle abroad 
-					{
-							showHideField('#partner_wstatus_arr',false,true);
-							showHideField('#partner_settle_abroad_arr',false,true);
-							disableFieldsOption('Gender',21); // Min Age for Groom LATER
-					}
-					else
-					{
-							showHideField('#partner_wstatus_arr',true);
-							showHideField('#partner_settle_abroad_arr',true);
-							disableFieldsOption('Gender',18);
-						
-					}
-					
-					disableFieldsOption('Min_Age',JSON.parse($('#Min_Age').attr('data'))["VALUE"]);
-					
-				}
-		}
-	});
+  $('.js-toggle ul li').on("click",function(){
+    var parent = $(this).parents(".js-toggle");
+    if(!$(this).hasClass("activeopt"))
+    {
+        $(this).addClass("activeopt");
+        $(this).siblings().removeClass("activeopt");
+        $(parent).attr("data",$(this).attr("data"));
+        if($(parent).attr("id")=="Gender")
+        {
+          if($(parent).attr("data")=="M") // for groom hide work after marriage and settle abroad 
+          {
+              showHideField('#partner_wstatus_arr',false,true);
+              showHideField('#partner_settle_abroad_arr',false,true);
+              disableFieldsOption('Gender',21); // Min Age for Groom LATER
+          }
+          else
+          {
+              showHideField('#partner_wstatus_arr',true);
+              showHideField('#partner_settle_abroad_arr',true);
+              disableFieldsOption('Gender',18);
+            
+          }
+          
+          disableFieldsOption('Min_Age',JSON.parse($('#Min_Age').attr('data'))["VALUE"]);
+          
+        }
+    }
+  });
 function populateAdvanceSearchForm(){
   $(".chosen-container").on('keyup',function(e) {
       $(".chosen-container .chosen-results li").css('float','none');
@@ -397,34 +434,34 @@ var getBottomMoreOpt;
 
 $(document).mousedown(function (e)
 {
-		$(".js-fielddd").each(function(){
-			
-			if($(this).has(e.target).length==0)
-			{
-				
-				if(!$(this).find(".hide1").hasClass("disp-none"))
-					$(this).find(".hide1").addClass("disp-none");
-			}
-		});
+    $(".js-fielddd").each(function(){
+      
+      if($(this).has(e.target).length==0)
+      {
+        
+        if(!$(this).find(".hide1").hasClass("disp-none"))
+          $(this).find(".hide1").addClass("disp-none");
+      }
+    });
     
 });
 
 
 function OnScrollChange(event){
-	 if (checkVisible($('#moreVisArea'))) {
+   if (checkVisible($('#moreVisArea'))) {
        $('#srchscroll').removeClass( "advsti" );
     } else {
-        $('#srchscroll').addClass( "advsti" );
+       $('#srchscroll').addClass( "advsti" );
     }
 }
 function checkVisible( elm, eval ) {
     eval = eval || "visible";
-		var vpH = $(window).height(),  st = $(window).scrollTop(), y = $(elm).offset().top, elementHeight = $(elm).height();
-		if(st>y)
-		{
-				 return true
-		}
-		else if (eval == "visible") return ((y < (vpH + st)) && (y > (st - elementHeight)));
+    var vpH = $(window).height(),  st = $(window).scrollTop(), y = $(elm).offset().top, elementHeight = $(elm).height();
+    if(st>y)
+    {
+         return true
+    }
+    else if (eval == "visible") return ((y < (vpH + st)) && (y > (st - elementHeight)));
 }
 //function to make an ajax for search by profile id
 function callApiForProfileSearched(){
@@ -456,23 +493,23 @@ function callApiForProfileSearched(){
 
 function openSection(ele)
 {
-			var getVal = $(ele).attr('id');	
-			var getEle = $(ele);		
-			if($(ele).parent().hasClass("bg-white"))
-			{
-				$('.'+getVal+'form').slideUp( "slow", function(){ 
-				$(getEle).parent().removeClass('bg-white');
-				$(getEle).children().removeClass('advsub');    });
-								
-			}
-			else
-			{
-				$(ele).parent().addClass('bg-white');
-				$(ele).children().addClass('advsub');
-				$('.'+getVal+'form').slideDown( "slow");
-			}
-			
-	
+      var getVal = $(ele).attr('id'); 
+      var getEle = $(ele);    
+      if($(ele).parent().hasClass("bg-white"))
+      {
+        $('.'+getVal+'form').slideUp( "slow", function(){ 
+        $(getEle).parent().removeClass('bg-white');
+        $(getEle).children().removeClass('advsub');    });
+                
+      }
+      else
+      {
+        $(ele).parent().addClass('bg-white');
+        $(ele).children().addClass('advsub');
+        $('.'+getVal+'form').slideDown( "slow");
+      }
+      
+  
 }
 function setSavedSearchListing(searchData) {
   $("#bottomThinBar").css("left","33.3%");
@@ -507,15 +544,15 @@ $(function(){
   $(document).on('click', '#redirectSearch', function(){
      window.location.href = "/search/AdvancedSearch";
   });
-	//script for the top tab with 2 options
-	$('.srcopt1').click(function(){
-		
-		var currentTab = $(this).attr('id');
-		$('.hide').fadeOut(500,function(){ $('#'+currentTab+'form').fadeIn(500)});
-		
-		
-		
-	});
+  //script for the top tab with 2 options
+  $('.srcopt1').click(function(){
+    
+    var currentTab = $(this).attr('id');
+    $('.hide').fadeOut(500,function(){ $('#'+currentTab+'form').fadeIn(500)});
+    
+    
+    
+  });
         
         //click on top div
         $("#searchByIdSection").click(function(){
@@ -560,53 +597,79 @@ $(function(){
           else
             callApiForProfileSearched();
         });
-	
-	//script for opening the closed tabs on advance search form
-	$('.advopt').click(function(){
-			openSection(this);
-	});
-	
-	
-	
+  
+  //script for opening the closed tabs on advance search form
+  $('.advopt').click(function(){
+      openSection(this);
+  });
+  
+  
+  
 //script for fixing the search btn at the bottom
-	 $(document).on("scroll", OnScrollChange);	
-	
-	$('.js-fielddd').click(function(ev){
-		
-		var dd = $(this).find(".js-dd");
-	
-		if($(dd).hasClass("disp-none"))
-		{
-			
-			$(dd).removeClass("disp-none");
-		}
-		else{
-			
-			$(dd).addClass("disp-none");
-		}
-		var selectedOption = $(this).find('li.js-selected');
-		
-	  if(selectedOption.length == 1 && (parseInt($(selectedOption).position().top) >= 160 || parseInt($(selectedOption).position().top) < 0)){
+   //$(document).on("scroll", OnScrollChange);  
+  
+  $('.js-fielddd').click(function(ev){
+    
+    var dd = $(this).find(".js-dd");
+  
+    if($(dd).hasClass("disp-none"))
+    {
+      
+      $(dd).removeClass("disp-none");
+    }
+    else{
+      
+      $(dd).addClass("disp-none");
+    }
+    var selectedOption = $(this).find('li.js-selected');
+    
+    if(selectedOption.length == 1 && (parseInt($(selectedOption).position().top) >= 160 || parseInt($(selectedOption).position().top) < 0)){
     
       $(selectedOption).parent().parent().scrollTop($(selectedOption).position().top);
     }
     ev.stopPropagation();
-	});
-	
-	$('.js-fielddd').find("li").click(function(ev){
-		
-		if($(this).hasClass('color12') === true){
+  });
+  
+  $('.js-fielddd').find("li").click(function(ev){
+    
+    if($(this).hasClass('color12') === true){
             return false;
           }
-		var val ='{"VALUE":"'+$(this).attr('id')+'","LABEL":'+JSON.stringify($(this).attr('data'))+'}';
-		var myele = $(this).parents(".js-fielddd");
-		$(myele).find('ul .js-selected').removeClass('js-selected');
-		$(myele).attr('data',val);
-		fillValuesInRange(myele);
-		disableFieldsOption($(myele).attr("id"),$(this).attr('id'));
-		$(myele).find(".js-dd").addClass("disp-none");
-		ev.stopPropagation();
-	});
-	
-});
+    var val ='{"VALUE":"'+$(this).attr('id')+'","LABEL":'+JSON.stringify($(this).attr('data'))+'}';
+    var myele = $(this).parents(".js-fielddd");
+    $(myele).find('ul .js-selected').removeClass('js-selected');
+    $(myele).attr('data',val);
+    fillValuesInRange(myele);
+    disableFieldsOption($(myele).attr("id"),$(this).attr('id'));
+    $(myele).find(".js-dd").addClass("disp-none");
+    ev.stopPropagation();
+  });
 
+  $('.js-remall').click(function(){
+
+    var getID = $(this).attr('id').split('-')[0];  
+   
+    $('#'+getID).val([" "]).trigger('chosen:updated'); 
+    if(getID == 'partner_religion_arr')
+    {
+       updateCastOption($('#partner_religion_arr').val());
+       $('#partner_caste_arr-rem').css('visibility','hidden');
+    }
+    else if(getID=='partner_country_arr')
+    {
+      $('#partner_country_arr').trigger('change');
+      $('#partner_city_arr-rem').css('visibility','hidden');
+      
+
+    }
+    else if(getID=='partner_mstatus_arr')
+    {
+       $('#partner_mstatus_arr').trigger('change');
+       $('#partner_hchild_arr-rem').css('visibility','hidden');
+    }
+
+    $('#'+getID+'-rem').css('visibility','hidden');
+
+ });
+  
+});

@@ -7,7 +7,6 @@
 **/
 include("connect.inc");
 $db=connect_misdb();
-$db2=connect_master();
 $data=authenticated($checksum);                                                                                                
 if(isset($data))
 {

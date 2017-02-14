@@ -13,6 +13,11 @@
 ~$PREHEADER`
 </td>
 </tr>
+    <tr>
+<td colspan="4" style="font-size: 11px !important; font-family: Arial; color: black; padding-top: 10px;">
+This Email contains links which let you to directly login to your account. So forward this Email only to people you can completely trust.
+</td>
+</tr>
         <tr>
             <td style="border-bottom:1px solid #ededed">
                 <table cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -134,7 +139,7 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td bgcolor="#003a7e" align="center" height="27" style="border:1px solid #003a7e;"><a style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)MEMBERSHIP_COMPARISON:profileid=~$profileid`,source=~$BottomSource`(/LINK)"><strong>~if $variableDiscount`Get ~$vdDisplayText` ~$variableDiscount`% OFF ~else`Upgrade Membership~/if`</strong></a> </td>
+                                    <td bgcolor="#003a7e" align="center" height="27" style="border:1px solid #003a7e;"><a style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)MEMBERSHIP_COMPARISON:profileid=~$profileid`,source=~$BottomSource`(/LINK)"><strong>~if $variableDiscount`Get ~$vdDisplayText` ~$variableDiscount`% OFF ~if $VD_END_DAY neq ''`till ~$VD_END_DAY` ~$VD_END_MONTH` ~/if`~else`Upgrade Membership~/if`</strong></a> </td>
                                 </tr>
                                 <tr>
                                     <td></td>

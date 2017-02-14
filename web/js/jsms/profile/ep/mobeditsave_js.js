@@ -59,17 +59,21 @@ function dppCountry(json,realJson,indexPos)
 	var ele=$(this).find("div[data=1]");
 	var arr=new Array();;
 	var i=0;
-	
+	var retainCity = 0;
 		$("#P_CITY_TOP").addClass("dn");
 	$.each(json['p_country'],function(key,value){
 		arr[i]=value;
-		
+
 		if(parseInt(value)==51 || parseInt(value)==128)
 		{
 				$("#P_CITY_TOP").removeClass("dn");
+                                if(parseInt(value)==51)
+                                    retainCity = 1;
 		}
 		i++;	
 	});
+        if(!retainCity)
+           CommonOverlayEditUpdate("","P_CITY");
 	storeJson['p_city']=arr.join(",");
 	UpdateSection.call(this,json,realJson,indexPos);
 }
@@ -151,6 +155,23 @@ function dppCaste(json,realJson,indexPos)
 	$("#P_CASTE").addClass("color3o").removeClass("color2");
 	UpdateSection.call(this,json,realJson,indexPos);
 }
+function dppMstatus(json,realJson,indexPos)
+{
+        showHaveChild=0;
+        var arr=new Array();
+        $.each(json["p_mstatus"],function(key,value){
+		arr[i]=value;
+		if(arr[i]!='N')
+                    showHaveChild=1;
+	});
+        if(showHaveChild)
+            $("#P_HAVECHILD_TOP").removeClass('dn');
+        else{
+            $("#P_HAVECHILD_TOP").addClass('dn');
+            CommonOverlayEditUpdate("","p_havechild");
+        }
+	UpdateSection.call(this,json,realJson,indexPos);
+}
 function updateTimeToCall(json,realJson,indexPos)
 {
 	//console.log("time to call");
@@ -202,6 +223,7 @@ function updateEducation(json,realJson,indexPos)
 		var val=-1;
 		var findpg=0;
 		var findug=0;
+                var showPgDegree = 0;
 		$.each(json["edu_level_new"],function(key,value){
 		val=value;	
 		});
@@ -212,6 +234,10 @@ function updateEducation(json,realJson,indexPos)
 					$.each(v1,function(key,value){	
 						if(parseInt(key)==parseInt(val))
 						{
+                                                        if(parseInt(val) == 42 || parseInt(val) == 21)
+                                                             showPgDegree = 1;
+                                                        else
+                                                            CommonOverlayEditUpdate(val,"degree_pg");
 							findpg=1;
 							findug=1;
 						}
@@ -235,6 +261,10 @@ function updateEducation(json,realJson,indexPos)
 			if(findpg)
 			{
 				$("#DEGREE_PG_TOP").removeClass("dn");
+                                if(showPgDegree)
+                                    $("#DEGREE_PG_TOP").removeClass("dn");
+                                else
+                                    $("#DEGREE_PG_TOP").addClass("dn");
 				$("#PG_COLLEGE_TOP").removeClass("dn");
 				if(realJson.OnClick[1].label_val =="N_B")
 				{
@@ -392,33 +422,113 @@ function UpdateSection(json,realJson,indexPos)
 	CommonJsonUpdate(ele,realJson,indexPos,valueArr.join(","),labelArr.join(joinStr));
 
 }
-function UpdateCountryCitySection(json,realJson,indexPos)
+function UpdateCountrySection(json,realJson,indexPos)
 {
-	var ele=$(this).find("div[data=1]");
-	var valueStr="";
-	var i=0;
-	var cityPresent=0;
-	$.each(json,function(k,v)
+var removeState = false;
+var removeCity = false;
+  if (json.hasOwnProperty('country_res'))
+  {
+	if(json['country_res'].hasOwnProperty("United States"))
 	{
-		$.each(v,function(key,value){
-			if(i==0){
-				keyStr=key;
-				ValueStr=value;
-			}
-			else{
-				keyStr= keyStr+" - "+key;
-				ValueStr=ValueStr+","+value;
-			}
-			i++;
-			CommonOverlayEditUpdate(value,k.toUpperCase());
-			if(k=="city_res")
-				cityPresent=1;
-		});
-		
-	});
-	if(!cityPresent)
+	    removeState = true;
+	}
+	if(!json['country_res'].hasOwnProperty("India") && !json['country_res'].hasOwnProperty("United States"))
+	{
+	    removeState = true;
+	    removeCity = true;
+	}
+	if(json['country_res'].hasOwnProperty("India")&& (realJson.OnClick[2].label_val=='Not filled in'||realJson.OnClick[2].value==''))
+	{
+		removeCity=true;
+	}
+	if(removeState)
+	{
+	    $('#STATE_RES_TOP').addClass('dn');
+		var pos = $('#STATE_RES_TOP').attr('dindexpos');
+		CommonOverlayEditUpdate("","STATE_RES");
+		UpdateSection.call($('#STATE_RES_TOP'),{'state_res':''},realJson,pos);
+                $("#STATE_RES").html(NOT_FILLED_IN).attr("value","");
+		$("#STATE_RES").addClass("color2").removeClass("color3o color3");
+		$("#STATE_RESlabel").addClass("color2").removeClass("color3");
+	}
+	else
+	{
+	    $('#STATE_RES_TOP').removeClass('dn');
+	    var stateVal =realJson.OnClick[2].value;
+	    if(stateVal)
+		CommonOverlayEditUpdate(stateVal,"STATE_RES");
+	}
+	if(removeCity)
+	{
+		var pos = $('#CITY_RES_TOP').attr('dindexpos');
 		CommonOverlayEditUpdate("","CITY_RES");
-	CommonJsonUpdate(ele,realJson,indexPos,ValueStr,keyStr);
+		UpdateSection.call($('#CITY_RES_TOP'),{'city_res':''},realJson,pos);
+		$("#CITY_RES").html(NOT_FILLED_IN).attr("value","");
+	    $('#CITY_RES_TOP').addClass('dn');
+	}
+	else
+	{
+	    $('#CITY_RES_TOP').removeClass('dn');
+	if(!json['country_res'].hasOwnProperty(realJson.OnClick[1].label_val))
+	{
+		CommonOverlayEditUpdate('',"CITY_RES");
+		UpdateSection.call($('#CITY_RES_TOP'),{'city_res':''},realJson,pos);
+		$("#CITY_RES").html(NOT_FILLED_IN).attr("value","");
+		$("#CITY_RES").addClass("color2").removeClass("color3o");
+		$("#CITY_RESlabel").addClass("color2").removeClass("color3");
+	}
+	}
+	
+  }
+	UpdateSection.call(this,json,realJson,indexPos);
+	return;
+}
+function UpdateStateSection(json,realJson,indexPos)
+{
+  var countryVal = realJson.OnClick[1].value;
+  if(countryVal)
+  {
+	CommonOverlayEditUpdate(countryVal,"COUNTRY_RES");
+	$("#STATE_RES").addClass("color3o").removeClass("color2");
+	$("#STATE_RESlabel").addClass("color3").removeClass("color2");
+  }
+  if (realJson.OnClick[1].value=="51" && json.hasOwnProperty('state_res'))
+  {
+	$('#CITY_RES_TOP').removeClass('dn');
+	if(!json['state_res'].hasOwnProperty(realJson.OnClick[2].label_val))
+	{
+		CommonOverlayEditUpdate("","CITY_RES");
+		var pos = $('#CITY_RES_TOP').attr('dindexpos');
+		UpdateSection.call($('#CITY_RES_TOP'),{'city_res':''},realJson,pos);
+		$("#CITY_RES").html(NOT_FILLED_IN).attr("value","");
+		$("#CITY_RES_TOP").find("wid94p").addClass("notfilled");
+		$("#CITY_RES").addClass("color2").removeClass("color3o color3");
+		$("#CITY_RESlabel").addClass("color2").removeClass("color3");
+	}
+  }
+  else
+  {
+	$('#CITY_RES_TOP').addClass('dn');
+	    var cityVal =realJson.OnClick[3].value;
+	    if(cityVal)
+		CommonOverlayEditUpdate(cityVal,"CITY_RES");
+  }
+  UpdateSection.call(this,json,realJson,indexPos);
+	return;
+}
+function UpdateCitySection(json,realJson,indexPos)
+{
+  var countryVal = realJson.OnClick[1].value;
+  if(countryVal)
+        CommonOverlayEditUpdate(countryVal,"COUNTRY_RES");
+    var stateVal =realJson.OnClick[2].value;
+    if(stateVal && countryVal=="51")
+	CommonOverlayEditUpdate(stateVal,"STATE_RES");
+  UpdateSection.call(this,json,realJson,indexPos);
+	$("#CITY_RES").addClass("color3o").removeClass("color2");
+	$("#CITY_RESlabel").addClass("color3").removeClass("color2");
+	return;
+
 }
 function CommonJsonUpdate(ele,realJson,indexPos,value,label)
 {
@@ -442,7 +552,7 @@ function UpdateCommonOverlay(ele)
 	$(ele).parent().removeClass("notfilled");
 }
 function updateSectionContact(obj)
-{
+{	
 	var tabId=obj.id;
 	var tabValue=obj.value;
 	var oriValue=tabValue;
@@ -498,6 +608,12 @@ function updateSectionContact(obj)
 			newJson["EMAIL"]=$("#EMAIL").val();
 		else
 			submitObj.pop('EMAIL');
+	}
+	else if(tabId=="ALT_EMAIL"){
+		if(pageJson.Contact.ALT_EMAIL.OnClick[2].label_val!=$("#ALT_EMAIL").val())
+			newJson["ALT_EMAIL"]=$("#ALT_EMAIL").val();
+		else
+			submitObj.pop('ALT_EMAIL');
 	}
 	else if(tabId=="PROFILE_HANDLER_NAME")
 		newJson["PROFILE_HANDLER_NAME"]=$("#PROFILE_HANDLER_NAME").val();

@@ -41,7 +41,7 @@ class postSendReminderv2Action extends sfAction
 						$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'R',ContactHandler::POST);
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile,$this->contactHandlerObj->getToBeType()));
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");
 					$this->contactHandlerObj->setElement("STATUS","R");
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
@@ -149,6 +149,13 @@ class postSendReminderv2Action extends sfAction
 				$responseArray["errmsglabel"] = "This profile is Hidden";
 				$responseArray["errmsgiconid"] = "13";
 				$responseArray["headerlabel"] = "Hidden Profile";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
+			elseif($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
 			elseif($errorArr["REMINDER_LIMIT"] == 2)

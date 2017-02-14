@@ -43,4 +43,11 @@ class MailerGroup{
   const SHORTLISTED = 42;
   const DPP_REVIEW = 27;
   const HOROSCOPE_REQUEST = 35;
+  const PHONE_UNVERIFY=43;
+  const REMINDER_MAILER=44;
+  const ASTRO_COMPATIBILTY = 27;
+  const JUNK_REMOVAL = 45;
+  const DELETE_PROFILE = 27;
+
+  const PROMOTIONAL_ALTERNATE_EMAIL = 46;
 }

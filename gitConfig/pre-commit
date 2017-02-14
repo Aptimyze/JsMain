@@ -31,3 +31,17 @@ git diff --cached --name-only |
                 echo "" > /tmp/jsCssFilelog.txt
         fi
 }
+git diff --cached --name-only |
+{
+       while read FILE; do
+				if [[ -f $FILE ]]; then
+           echo "/$FILE" >> /tmp/capistranochangelog.txt
+				fi
+       done
+
+       echo "check for Committing /capistrano/localStorageRevision.txt";
+       php capistrano/sessionStorageCheckFileChange.php
+       echo "" > /tmp/capistranochangelog.txt
+       
+}
+

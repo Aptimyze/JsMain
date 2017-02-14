@@ -1,0 +1,6 @@
+reportAbuseForUserSuccess:
+  metas:
+    title:        Jeevansathi.com
+  javascripts: [reportAbuseForUser_js]
+  stylesheets: []
+                                             

@@ -11,7 +11,7 @@ $includePath=substr($path,0,$position-1);
 include($includePath."/profile/connect.inc");
 include($includePath."/sugarcrm/config.php");
 
-$db=connect_db();
+$db=connect_slave();
 mysql_query("set session wait_timeout=10000",$db);
 
 $sql="SELECT last_name,id FROM sugarcrm.leads join sugarcrm.leads_cstm ON id=id_c WHERE status='46' AND disposition_c='22' AND deleted<>'1'";

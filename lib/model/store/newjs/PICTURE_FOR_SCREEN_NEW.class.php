@@ -17,6 +17,7 @@ class PICTURE_FOR_SCREEN_NEW extends TABLE
         **/
         public function get($paramArr=array())
         {
+					
                 foreach($paramArr as $key=>$val)
                         ${$key} = $val;
 
@@ -53,9 +54,13 @@ class PICTURE_FOR_SCREEN_NEW extends TABLE
 				$sql.=" AND COALESCE(OriginalPicUrl, '') != ''";
 			else if($OriginalPicUrl == 2)
 				$sql.=" AND COALESCE(OriginalPicUrl, '') = ''";
-
+			if($MainPicUrl)
+				$sql.= " AND MainPicUrl ".$MainPicUrl." ";
+			if($specialCond)
+				$sql.= " AND $specialCond";
 			if($LIMIT)
 				$sql.=" LIMIT :LIMIT ";
+				
                         $res = $this->db->prepare($sql);
                         if($PROFILEID)
                                 $res->bindValue(":PROFILEID", $PROFILEID, PDO::PARAM_INT);
@@ -63,6 +68,8 @@ class PICTURE_FOR_SCREEN_NEW extends TABLE
                                 $res->bindValue(":PICTUREID", $PICTUREID, PDO::PARAM_INT);
                         if($ORDERING || $ORDERING=='0')
                                 $res->bindValue(":ORDERING", $ORDERING, PDO::PARAM_INT);
+                    
+													
 			if($SCREEN_BIT)
 			{
 			 	if(is_array($SCREEN_BIT))
@@ -80,6 +87,7 @@ class PICTURE_FOR_SCREEN_NEW extends TABLE
 			}
                         if($LIMIT)
 				 $res->bindValue(":LIMIT", $LIMIT, PDO::PARAM_INT);
+				
                         $res->execute();
                         while($row = $res->fetch(PDO::FETCH_ASSOC))
                         {
@@ -495,5 +503,83 @@ class PICTURE_FOR_SCREEN_NEW extends TABLE
           $res->bindValue(':SCREENBIT',$params['screen_bit'],PDO::PARAM_STR);
           $res->execute();
         }
+        
+        
+        /*This functio is used for distributed photo servers and retrieve data when no cron is executed*/
+         public function getPreProcessData($paramArr){
+                                                                
+                 if(array_key_exists("MainPicUrl",$paramArr))
+                {                                                    
+	                try
+	                {
+	                        $sql = "SELECT DISTINCT(A.PROFILEID) FROM PICTURE_FOR_SCREEN_NEW A, PICTURE_FOR_SCREEN_NEW B WHERE A.PROFILEID=B.PROFILEID AND A.MainPicUrl LIKE :MainPicURl AND B.MainPicUrl NOT LIKE :MainPicURl AND (B.OriginalPicUrl= '' OR A.OriginalPicUrl = '')";
+	                        $res = $this->db->prepare($sql);
+	                        $res->bindValue(":MainPicURl", $paramArr["MainPicUrl"], PDO::PARAM_STR);
+	
+	                        $res->execute();
+	                        while($row = $res->fetch(PDO::FETCH_ASSOC))
+	                        {
+	                                $detailArr[] = $row["PROFILEID"];
+	                        }
+	                        return $detailArr;
+	                }
+	
+	                catch(PDOException $e)
+	                {
+	                        throw new jsException($e);
+	                }
+	               }	
+                return NULL;
+        }
+        
+        
+        /*This functio is used for distributed photo servers and set all the pictures to default server enum*/
+         public function getPreDistributedData($params){
+            if(is_array($params))
+            {   
+							foreach($params as $key=>$val)
+                        ${$key} = $val;                                      
+						try
+						{
+									
+										$sql = "SELECT * FROM PICTURE_FOR_SCREEN_NEW where ";
+										foreach(ProfilePicturesTypeEnum::$PICTURE_NONSCREENED_SIZES_FIELDS as $k=>$v)
+										{
+											$cond[]= $v." NOT LIKE :JSPIC ";
+										}
+										$sql .= implode(" OR ",$cond);
+										if($CURRENTSCRIPT>='0' && $TOTALSCRIPT)
+										{
+												$sql.=" AND PICTUREID%:TOTALSCRIPT=:CURRENTSCRIPT";
+											
+										}
+										if($LIMIT)
+											$sql.=" LIMIT :LIMIT ";
+										$res = $this->db->prepare($sql);
+										$res->bindValue(':JSPIC',$DISTRIBUTEDCONST,PDO::PARAM_STR);
+										if($CURRENTSCRIPT>='0' && $TOTALSCRIPT)
+										{
+												$res->bindValue(":TOTALSCRIPT", $TOTALSCRIPT, PDO::PARAM_INT);
+	                      $res->bindValue(":CURRENTSCRIPT", $CURRENTSCRIPT, PDO::PARAM_INT);
+	                   }
+	                  if($LIMIT)
+											$res->bindValue(":LIMIT", $LIMIT, PDO::PARAM_INT);
+				
+										$res->execute();
+										while($row = $res->fetch(PDO::FETCH_ASSOC))
+										{
+														$detailArr[] = $row;
+										}
+										return $detailArr;
+						}
+
+						catch(PDOException $e)
+						{
+										throw new jsException($e);
+						}
+					 }    
+                return NULL;
+        }
+
 }
 ?>

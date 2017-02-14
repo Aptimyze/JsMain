@@ -606,7 +606,7 @@ return $returnArray;
 	}
 	// function update the phone status for the profile depending upon the verification status
 	// for landline phone = [std+landline]
-	function phoneUpdateProcess($profileid,$phone_num='',$phoneType='',$actionStatus="",$message="",$username='')
+	function phoneUpdateProcess($profileid,$phone_num='',$phoneType='',$actionStatus="",$message="",$username='',$isd='')
 	{
 		if(!trim($profileid))
 			return false;
@@ -660,7 +660,7 @@ return $returnArray;
 			}
 			// Check app login in last 7 days:
 			if($appRegProfile){
-		                $loginTrackingObj=new MIS_LOGIN_TRACKING('newjs_slave');
+		                $loginTrackingObj=new MIS_LOGIN_TRACKING('crm_slave');
                 		$profileArr      =$loginTrackingObj->getLast7DaysLoginProfiles($profileid);
 			}
 			if($appRegProfile && count($profileArr)>0){
@@ -778,10 +778,19 @@ return $returnArray;
 			}
 			$action = FTOStateUpdateReason::NUMBER_UNVERIFY;
 			SymfonyFTOFunctions::updateFTOState($profileid,$action);
-                        include_once "../profile/InstantSMS.php";
-                        $sms= new InstantSMS("PHONE_UNVERIFY",$profileid);
-                        $sms->send();
-		
+			if($phoneType!='L')
+			{
+			        include_once "../profile/InstantSMS.php";
+			        $arr=array('PHONE_MOB'=>$phone_num, 'ISD'=>$isd);
+					$smsViewer = new InstantSMS("PHONE_UNVERIFY",$profileid,$arr,'');
+					$smsViewer->send();
+			}
+			$emailSender = new EmailSender(MailerGroup::PHONE_UNVERIFY, 1838);
+			$tpl = $emailSender->setProfileId($profileid);
+			$tpl->getSmarty()->assign("phone_num", '+'.$isd.$phone_num);
+			$subject = "We were unable to reach you. Kindly authenticate your contact details.";
+			$tpl->setSubject($subject);
+			$emailSender->send();
 			//$sql ="insert into jsadmin.PHONE_UNVERIFIED_LOG (`PROFILEID`,`ENTRY_DT`) VALUES('$profileid',now())";
 			//mysql_query_decide($sql) or logError("Could not insert profile details in PHONE_UNVERIFIED_LOG in deleted case",$sql);
 
@@ -1112,7 +1121,85 @@ function getIsdInFormat($isd)
 	return false;
 }
 
+function UnverifyNum($profileId, $phoneType, $number)
+{
+	// Profile Id of Submittee, its phone type and the reported number
+	$interval = 10;
+	$ReportObj = new JSADMIN_REPORT_INVALID_PHONE();
+	$result = $ReportObj->getReportInvalidInterval($profileId,$interval);
+	// array of profile ids of Submitters
+	$arrSubmitter = array();
+	$ReportedDate = array();
+	$arrUpdatedProfiles = array();
+	if($result)
+	{
+		foreach ($result as $row)
+		{
+			if($phoneType == 'L' && $row['PHONE'] == 'Y')
+			{
+				array_push($arrSubmitter, $row['SUBMITTER']);
+				$ReportedDate[$row['SUBMITTER']] = $row['SUBMIT_DATE'];
+			}
+			elseif ($phoneType == 'M' && $row['MOBILE'] == 'Y')
+			{
+				array_push($arrSubmitter, $row['SUBMITTER']);
+				$ReportedDate[$row['SUBMITTER']] = $row['SUBMIT_DATE'];
+			}
+		}
+		if(count($arrSubmitter) == 0)
+		{
+			return ;
+		}
+		$arrSubmitter = array_unique($arrSubmitter);
+		$jobj = new Jprofile;
+		$contactAllotedObj = new jsadmin_CONTACTS_ALLOTED();
+		$jsCommonObj =new JsCommon();
+		$ProfileIds = array('PROFILEID' => implode(",", $arrSubmitter));
+		$arrSubscription = $jobj->getArray($ProfileIds,"","",'PROFILEID, SUBSCRIPTION');
+    	foreach ($arrSubscription as $key => $value)
+		{
+			if($jsCommonObj->isPaid($value['SUBSCRIPTION']))
+			{
+				// Paid User
+				if($contactAllotedObj->updateAllotedContacts($value['PROFILEID'],1))
+				{
+					// contacts allocated increased
+					array_push($arrUpdatedProfiles, $value['PROFILEID']);
+				}
+			}
+		}
+
+		if(count($arrUpdatedProfiles) == 0)
+		{
+			return ;
+		}
+		//Todo: get allocated contacts quota for all profiles
+		$arrContactQuota = $contactAllotedObj->getAllotedContactsForProfiles($arrUpdatedProfiles);
+
+		foreach ($arrUpdatedProfiles as $value)
+		{
+			// send mail to user about increase in contact quota
+			$top8Mailer = new EmailSender(MailerGroup::TOP8,1845);
+			
+			$tpl = $top8Mailer->setProfileId($value);
+			$date = date('d-m-Y');
+			$reportedDate = date('d-m-Y', strtotime($ReportedDate[$value]));
+			$subject = "A contact has been added to your quota of contacts | $date";
+			$quota = $arrContactQuota[$value];
+			$tpl->setSubject($subject);
+			// PogId is profile id of submittee
+			$tpl->getSmarty()->assign("otherProfile", $profileId);
+			$tpl->getSmarty()->assign("number", $number);
+			$tpl->getSmarty()->assign("date", $reportedDate);
+			$tpl->getSmarty()->assign("quota", $quota);
+			$top8Mailer->send();
+		}		
+	}
+	
+}
+
 function deleteCachedJprofile_Contact($profileid){
+  return;
   $memObject=JsMemcache::getInstance();
   $memObject->delete("JPROFILE_CONTACT_".$profileid);
 }

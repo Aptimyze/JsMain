@@ -151,10 +151,7 @@ class viewAction extends sfAction
 		
 		//var_dump(sfConfig::get);die;
 		$SITE_URL=sfConfig::get("app_site_url");
-		if(MobileCommon::isMobile())
-			$url=$SITE_URL."/".$request_uri;
-		else
-		$url="$SITE_URL/profile/intermediate.php?parentUrl=$request_uri";
+		$url=$SITE_URL."/".$request_uri;
 		$this->redirect($url);
 		
 	}
@@ -218,14 +215,14 @@ class viewAction extends sfAction
 				$username=$username_temp;
 				
 			//Change this later
-			$profile = Profile::getInstance("newjs_bmsSlave");
+			$profile = Profile::getInstance("newjs_masterRep");
 			$profile->getDetail($username,'USERNAME',"","RAW");
 			//$profileid=JSCOMMON::getProfileFromUsername($username);	
 					
 		}
 		if($profileid)
 		{
-			$profile = Profile::getInstance("newjs_bmsSlave");
+			$profile = Profile::getInstance("newjs_masterRep");
 			$profile->getDetail($profileid,'PROFILEID',"","RAW");
 		}			
 				

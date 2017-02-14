@@ -6,8 +6,8 @@
 	<script type="text/javascript">
     $(function () {
         var count = 0;
-        $('#date1').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2014", yearEnd: "~$rangeYear`"});
-        $('#date2').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2014", yearEnd: "~$rangeYear`"});
+        $('#date1').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2015", yearEnd: "~$rangeYear`"});
+        $('#date2').dateDropDowns({ dateFormat: 'DD-mm-yy',yearStart: "2015", yearEnd: "~$rangeYear`"});
         $('#date1_dateLists_day_list option:selected').prop('selected', false);
         $('#date1_dateLists_day_list').on('click', function(){
         	count = 1;
@@ -26,7 +26,11 @@
 	        <td valign="top" width="40%" align="center"><img src="~sfConfig::get('app_img_url')`/profile/images/logo_1.gif" width="209" height="63" usemap="#Map" border="0"></td>
 	</tr>
 </table>
-        <form name="form1" action="~sfConfig::get('app_site_url')`/operations.php/registerMis/qualityRegistration?cid=~$cid`" method="post">
+		~if $communitywiseRegistration`
+        	<form name="form1" action="~sfConfig::get('app_site_url')`/operations.php/registerMis/communitywiseRegistration?cid=~$cid`" method="post">
+        ~else`
+        	<form name="form1" action="~sfConfig::get('app_site_url')`/operations.php/registerMis/qualityRegistration?cid=~$cid`" method="post">
+		~/if`
         <input type="hidden" name="cid" value="~$cid`">
 
 	<table border="0" align="center" width="60%" cellpadding="4" cellspacing="4" border="0">
@@ -37,7 +41,11 @@
 	</tr>
 	<tr></tr>
 	<tr class="formhead" align="center">
+	~if $communitywiseRegistration`
+		<td colspan="2" style="background-color:lightblue"><font size=3>City/Community/Source wise Quality Registration</font></td>
+	~else`
 		<td colspan="2" style="background-color:lightblue"><font size=3>Registration Quality MIS</font></td>
+	~/if`
 	</tr>
 	<tr></tr>
 	</table>
@@ -77,6 +85,10 @@
 				<input id="date2" type="text" value="">
 			</td>
 		</tr>
+
+
+~if !$communitywiseRegistration`
+
 		<tr align="center">
 			<td class="label">
 				<input type="radio" name="range_format" value="Y" />
@@ -95,7 +107,7 @@
 			       Select SourceGroup
 			</font></td>
 			<td class="fieldsnew">
-        <select multiple name ='source_names[]' size=15>
+        <select multiple name ='source_names[]' size=15 style='min-width: 255px'>
           ~foreach from=$sources item=src`
             <option value="~$src.GROUPNAME`">~$src.GROUPNAME`</option>
           ~/foreach`
@@ -103,6 +115,20 @@
 			</td>
 		</tr>
 		<tr></tr>
+		<tr align="center">
+			<td class="label"><font size=2>
+			       Select Cities
+			</font></td>
+			<td class="fieldsnew">
+        <select multiple name ='source_cities[]' size=15 style='min-width: 255px'>
+          ~foreach from=$source_cities key=k item=src_city`
+            <option value="~$k`">~$src_city`</option>
+          ~/foreach`
+        </select>
+			</td>
+		</tr>
+		<tr></tr>
+	~/if`
 		<tr align="center">
 			<td class="label"><font size=2>
 			       Select Report Format

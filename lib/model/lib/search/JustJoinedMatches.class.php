@@ -89,7 +89,7 @@ class JustJoinedMatches extends PartnerProfile
 		$this->newTagJustJoinDate = $this->lastUsedJustJoinedSearch();
                 if(!$this->newTagJustJoinDate)
                         $this->newTagJustJoinDate="0000:00:00";
-		$search_JUST_JOINED_LAST_USED = new search_JUST_JOINED_LAST_USED;
+		$search_JUST_JOINED_LAST_USED = new search_JUST_JOINED_LAST_USED(SearchConfig::getSearchDb());
 		$dt = $search_JUST_JOINED_LAST_USED->ins($this->loggedInProfileObj->getPROFILEID());
 	}
 
@@ -123,7 +123,7 @@ class JustJoinedMatches extends PartnerProfile
 	*/
 	public function lastUsedJustJoinedSearch()
 	{
-		$search_JUST_JOINED_LAST_USED = new search_JUST_JOINED_LAST_USED;
+		$search_JUST_JOINED_LAST_USED = new search_JUST_JOINED_LAST_USED(SearchConfig::getSearchDb());
 		$dt = $search_JUST_JOINED_LAST_USED->getDt($this->loggedInProfileObj->getPROFILEID());
 		return $dt;
 	}

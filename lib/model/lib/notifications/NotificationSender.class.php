@@ -43,6 +43,14 @@ class NotificationSender
 					$engineObject->sendNotification($regIds[$profileid]['IOS'], $details,$profileid);
                                 }
 			}
+			// logging of Notification Messages 
+			$key            =$details['NOTIFICATION_KEY'];
+			$msgId          =$details['MSG_ID'];
+			$message        =$details['MESSAGE'];
+			$title          =$details['TITLE'];
+			$notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
+			$notificationMsgLog->insert($key,$msgId,$message,$title);
+			// end
 		}
 	}
 
@@ -58,7 +66,7 @@ class NotificationSender
        	$appVersionAnd =$appVersion['AND'];
        	$appVersionIos =$appVersion['IOS'];
 
-	$registrationIdObj = new MOBILE_API_REGISTRATION_ID('newjs_slave');
+	$registrationIdObj = new MOBILE_API_REGISTRATION_ID('newjs_masterRep');
 	$registrationIdData = $registrationIdObj->getArray($valArr,'','','*');
 	if(is_array($registrationIdData))
 	{
@@ -78,6 +86,7 @@ class NotificationSender
     	$profileidArr = array_keys($profiledetailsArr);
 	$profileidStr = implode(",",$profileidArr);
     	$countObj = new MOBILE_API_SENT_NOTIFICATIONS_COUNT();
+	$scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS();
 	$count_arr =  $countObj->getCountGroupByProfile($profileidStr);
     	$idArr = array();
     	foreach($profileidArr as $key=>$profileid)
@@ -89,21 +98,49 @@ class NotificationSender
     		}
     		else if($count==NotificationEnums::$scheduledNotificationsLimit)
     		{
-    			$idArr[] = $profiledetailsArr[$profileid]['ID'];
-    			unset($profiledetailsArr[$profileid]);
+                        $scheduledAppNotificationObj->updateSuccessSent(NotificationEnums::$CANCELLED,$profiledetailsArr[$profileid]['MSG_ID']);
+			unset($profiledetailsArr[$profileid]);
     		}
     	}
 	unset($count_arr);
     	unset($profileidArr);
     	unset($countObj);
-    	
-    	if(is_array($idArr) && $idArr)
-	  	{
-	  		$scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS();
-	  		$scheduledAppNotificationObj->updateNotificationStatus($idArr,$notificationKey,NotificationEnums::$CANCELLED);
-	  		unset($scheduledAppNotificationObj);
-	  	}
-	  	return $profiledetailsArr;
-	}
+	unset($scheduledAppNotificationObj);
+
+	return $profiledetailsArr;
+     }
+    public function filterProfilesBasedOnNotificationCountNew($profiledetailsArr,$notificationKey)
+    {
+        $profileidArr = array_keys($profiledetailsArr);
+        $profileidStr = implode(",",$profileidArr);
+        $countObj = new MOBILE_API_SENT_NOTIFICATIONS_COUNT();
+        $count_arr =  $countObj->getCountGroupByProfile($profileidStr);
+        $idArr = array();
+        foreach($profileidArr as $key=>$profileid)
+        {
+                $count = $count_arr[$profileid];
+                if($count>=0 && $count<NotificationEnums::$scheduledNotificationsLimit)
+                {
+                        $countObj->incrementNotificationsCountForProfile($profileid,$count+1);
+                }
+                else if($count==NotificationEnums::$scheduledNotificationsLimit)
+                {
+                        $idArr[] = $profiledetailsArr[$profileid]['ID'];
+                        unset($profiledetailsArr[$profileid]);
+                }
+        }
+        unset($count_arr);
+        unset($profileidArr);
+        unset($countObj);
+
+        if(is_array($idArr) && $idArr)
+                {
+                        $scheduledAppNotificationObj = new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS();
+                        $scheduledAppNotificationObj->updateNotificationStatus($idArr,$notificationKey,NotificationEnums::$CANCELLED);
+                        unset($scheduledAppNotificationObj);
+                }
+                return $profiledetailsArr;
+        }
+
 }
 ?>

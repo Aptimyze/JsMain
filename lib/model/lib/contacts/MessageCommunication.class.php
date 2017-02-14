@@ -206,10 +206,10 @@ class MessageCommunication
 		else
 		{
 			$this->SENDER = $profileid;
-			$messagePostParameters = sfContext::getInstance()->getRequest()->getPostParameters()?sfContext::getInstance()->getRequest()->getPostParameters():sfContext::getInstance()->getRequest()->getGetParameters();			
+			$messagePostParameters = sfContext::getInstance()->getRequest()->getPostParameters()?sfContext::getInstance()->getRequest()->getPostParameters():sfContext::getInstance()->getRequest()->getGetParameters();
 			$this->ID = $messagePostParameters["messageid"]?$messagePostParameters["messageid"]:$_GET["messageid"];
 			$this->setValue();
-			$this->MESSAGE = htmlentities($messagePostParameters["draft"]);
+			$this->MESSAGE = htmlentities($messagePostParameters["draft"])?htmlentities($messagePostParameters["draft"]):htmlentities($_GET["chatMessage"]);
 			$this->IS_MSG = MessageCommunication::YES;	
 			$this->UPDATE = true;
 		}
@@ -649,9 +649,9 @@ class MessageCommunication
 			
 			// logic for generated id
 			$dbObj = new newjs_MESSAGE_LOG_GET_ID();
-			$generatedId = $dbObj->generateID();
+			$generatedId = $dbObj->getAutoIncrementMessageId();
 			$this->setID($generatedId);
-			$dbObj->deleteGenerateID();
+			//$dbObj->deleteGenerateID();
 			$this->setIS_MSG(MessageCommunication::NO) ;
 			$this->setOBSCENE(MessageCommunication::NO);
 			$this->setOBS_MSG_ID(MessageCommunication::ZERO);

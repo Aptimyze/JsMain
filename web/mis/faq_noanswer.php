@@ -1,13 +1,12 @@
 <?php
 include("connect.inc");
 
-$db2=connect_master();
 $db=connect_misdb();
 
 if(authenticated($cid))
 {
 	$sql="SELECT COUNT(*) as cnt,left(ENTRY_DT,10) as dd FROM feedback.TICKET_MESSAGES WHERE REPLY_DT=0 GROUP BY dd";
-	$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js($db2));
+	$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js($db));
 	while($row=mysql_fetch_array($res))
 	{
 		$ddarr[]=$row['dd'];

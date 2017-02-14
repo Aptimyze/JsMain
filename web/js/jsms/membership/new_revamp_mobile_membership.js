@@ -86,9 +86,11 @@ function changeMemCookie(mainMem, mainMemDur) {
                 createCookie('mainMem', mainMem, 0);
                 createCookie('mainMemDur', mainMemDur, 0);
             } else {
-                // when same duration is selected again
-                eraseCookie('mainMem');
-                eraseCookie('mainMemDur');
+                if(readCookie('backState') != "changePlan"){
+                    // when same duration is selected again
+                    eraseCookie('mainMem');
+                    eraseCookie('mainMemDur');
+                }
             }
         }
     } else {

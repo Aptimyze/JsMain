@@ -40,6 +40,8 @@ include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 
 //print_r($_POST);
 
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+
 if(strstr($_SERVER['HTTP_USER_AGENT'],'MSIE 5.5'))
 	$smarty->assign("class","hand");
 else
@@ -191,12 +193,21 @@ include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
        
        if($reason)
                 {
-			$sql="UPDATE newjs.HOROSCOPE_FOR_SCREEN SET UPLOADED='D' where PROFILEID='$profileid'";
-			mysql_query_decide($sql) or die("$sql".mysql_error_js());
+					$objUpdate = JProfileUpdateLib::getInstance();
+					$result = $objUpdate->updateHOROSCOPE_FOR_SCREEN($profileid,array('UPLOADED'=>'D'));
+					if(false === $result) {
+						die('Issue while updating horoscope at line 199');
+					}
+			/*$sql="UPDATE newjs.HOROSCOPE_FOR_SCREEN SET UPLOADED='D' where PROFILEID='$profileid'";
+			mysql_query_decide($sql) or die("$sql".mysql_error_js());*/
 
-			//to update ASTRO_DETAILS table to set TYPE='S' 
-			$sql_update="update newjs.ASTRO_DETAILS set TYPE='S' where PROFILEID='$profileid'";
-			mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());
+			//to update ASTRO_DETAILS table to set TYPE='S'
+					$result = $objUpdate->updateASTRO_DETAILS($profileid,array('TYPE'=>'S'));
+					if(false === $result) {
+						die('Issue while updating horoscope at line 207');
+					}
+			/*$sql_update="update newjs.ASTRO_DETAILS set TYPE='S' where PROFILEID='$profileid'";
+			mysql_query_decide($sql_update) or die("$sql_update".mysql_error_js());*/
 
 			$sqlget="SELECT EMAIL FROM newjs.JPROFILE WHERE PROFILEID='$profileid'";
 			$result=mysql_query_decide($sqlget) or die("$sqlget".mysql_error_js());

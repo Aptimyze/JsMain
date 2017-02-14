@@ -1,7 +1,6 @@
 <?
 include("connect.inc");
 $db=connect_misdb();
-$db2=connect_master();
 mysql_select_db("newjs");
 //$mon="3";
 //$year="2007";

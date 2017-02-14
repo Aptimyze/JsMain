@@ -459,26 +459,28 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
      *
      */	 
 	function update_about_yourself($about_yourself,$profileid,$db,$record_id="",$partitionLeads="sugarcrm.leads",$partitionLeadsCstm="sugarcrm.leads_cstm",$process='1'){
-				//adding mailing to gmail account to check if file is being used
-				include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
-               $cc='eshajain88@gmail.com';
-               $to='sanyam1204@gmail.com';
-               $msg1='registration_functions is being hit. We can wrap this to JProfileUpdateLib';
-               $subject="registration_functions";
-               $msg=$msg1.print_r($_SERVER,true);
-               send_email($to,$msg,$subject,"",$cc);
- 				//ending mail part
+			include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+			$jprofileUpdateObj = JProfileUpdateLib::getInstance();
 			$length=strlen($about_yourself);
 			$now = date("Y-m-d G:i:s");
 				if($length <= '99')
 				{
-					$sql_page2="UPDATE newjs.JPROFILE SET YOURINFO='$about_yourself',INCOMPLETE='Y',MOD_DT='$now' WHERE PROFILEID=$profileid";
-					mysql_query_decide($sql_page2) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_page2,"ShowErrTemplate");
+					$arrFields['YOURINFO']=$about_yourself;
+					$arrFields['INCOMPLETE']='Y';
+					$arrFields['MOD_DT']=$now;
+//					$sql_page2="UPDATE newjs.JPROFILE SET YOURINFO='$about_yourself',INCOMPLETE='Y',MOD_DT='$now' WHERE PROFILEID=$profileid";
+//					mysql_query_decide($sql_page2) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_page2,"ShowErrTemplate");
+					$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID");
 				}
 				elseif($length >= '100')
 				{
-					$sql_page2="UPDATE newjs.JPROFILE SET YOURINFO='$about_yourself',INCOMPLETE='N',ENTRY_DT='$now',MOD_DT='$now' WHERE PROFILEID=$profileid";
-					mysql_query_decide($sql_page2) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_page2,"ShowErrTemplate");
+					$arrFields['YOURINFO']=$about_yourself;
+					$arrFields['INCOMPLETE']='N';
+					$arrFields['ENTRY_DT']=$now;
+					$arrFields['MOD_DT']=$now;
+//					$sql_page2="UPDATE newjs.JPROFILE SET YOURINFO='$about_yourself',INCOMPLETE='N',ENTRY_DT='$now',MOD_DT='$now' WHERE PROFILEID=$profileid";
+//					mysql_query_decide($sql_page2) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_page2,"ShowErrTemplate");
+					$jprofileUpdateObj->editJPROFILE($arrFields,$profileid,"PROFILEID");
 
 					//Fto state change after completion of page2
 					$sql_incomp="SELECT count(*) CNT FROM MIS.INCOMPLETE_SCREENING where PROFILEID=$profileid";
@@ -486,11 +488,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 					$row=mysql_fetch_row($res);
 					$incomp=$row[0];
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
-  					if($incomp)
-						$fto_action = FTOStateUpdateReason::INCOMPLETE_TO_COMPLETE;
-					else
-						$fto_action = FTOStateUpdateReason::REGISTER;
-					SymfonyFTOFunctions::updateFTOState($profileid,$fto_action);
 				/* Tracking Query for the Reg Count */
 				$sql = "UPDATE MIS.REG_COUNT SET PAGE2='Y' WHERE PROFILEID='$profileid'";
 				mysql_query_decide($sql) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql,"ShowErrTemplate");

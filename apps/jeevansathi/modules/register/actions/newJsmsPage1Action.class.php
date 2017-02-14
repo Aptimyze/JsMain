@@ -25,6 +25,12 @@ class newJsmsPage1Action extends sfAction
 		$tieup_source           = $trackParams['tieup_source'];
 		$this->domain		= $trackParams['domain'];
 		$newsource		= $trackParams['newsource'];
+		if($reg_params['city_res']=='0' && $reg_params['country_res']==51)
+		{
+			$reg_params['city_res']=$reg_params['state_res']."OT";
+		}
+		unset($reg_params['state_res']);
+		$request->setParameter('reg',$reg_params);
 
 		$apiObj=ApiResponseHandler::getInstance();
 			
@@ -34,8 +40,7 @@ class newJsmsPage1Action extends sfAction
 		
 		if(!$this->source)
 			$this->source=$reg_params['source'];
-		
-		if($reg_params['country_res']!=51){
+		if($reg_params['country_res']!=51 && $reg_params['country_res']!=128){
 				unset($this->form['city_res']);
 		}
 		$this->form->bind($reg_params);
@@ -140,6 +145,12 @@ class newJsmsPage1Action extends sfAction
 			if('C' == $this->secondary_source) 
                         	RegistrationCommunicate::sendEmailAfterRegistrationIncomplete($this->loginProfile);
 
+            // email for verification
+						$emailUID=(new NEWJS_EMAIL_CHANGE_LOG())->insertEmailChange($this->loginProfile->getPROFILEID(),$this->loginProfile->getEMAIL());
+					
+						(new emailVerification())->sendVerificationMail($this->loginProfile->getPROFILEID(),$emailUID);
+					////////
+                                
 			//$registrationid=$request->getParameter("registrationid");
 			//$done = NotificationFunctions::manageGcmRegistrationid($registrationid,$id)?"1":"0";
 			//$loginData=array("GENDER"=>$result[GENDER],"USERNAME"=>$result[USERNAME],"LANDINGPAGE"=>'1',"GCM_REGISTER"=>$done);

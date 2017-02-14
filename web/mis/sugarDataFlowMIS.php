@@ -20,7 +20,7 @@ unset($mainDb);
 
 global $partitionsArray;
 
-$db=connect_misdb();
+$db=connect_misdb(); // Same as connect_slave check web/mis/config.php for function definition 
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 
 if(isset($data))

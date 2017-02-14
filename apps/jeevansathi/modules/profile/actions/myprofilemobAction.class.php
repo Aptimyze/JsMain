@@ -15,7 +15,12 @@ class myprofilemobAction extends sfAction
 	//~ public $smarty;
 	
 	public function execute($request)
-	{
+	{ 
+		if($request->getParameter('fromCALHoro') == 1)
+			$this->fromCALHoro = 1;
+		if($request->getParameter('fromCALphoto') == 1)
+			$this->fromCALphoto = 1;
+
 		$this->groupname = $request->getParameter("groupname");
 		//Testing Variables:
 		$request->setParameter("sectionFlag","all");
@@ -44,7 +49,13 @@ class myprofilemobAction extends sfAction
 		
 		//Action Templates Variables
 		$this->GENDER = $this->loginProfile->getGENDER();
-		$this->USERNAME = $this->loginProfile->getUSERNAME();		
+		$this->USERNAME = $this->loginProfile->getUSERNAME();
+                $newjsMatchLogicObj = new newjs_MATCH_LOGIC();
+                $cnt_logic = $newjsMatchLogicObj->getPresentLogic($this->loginProfile->getPROFILEID(),MailerConfigVariables::$oldMatchAlertLogic);
+                if($cnt_logic>0)
+                        $this->toggleMatchalerts = "dpp";
+                else
+                        $this->toggleMatchalerts = "new";
 		
 		$this->output=$output;
 		//print_r($this->output);die;
@@ -105,7 +116,6 @@ class myprofilemobAction extends sfAction
     
 		$horoscope = new Horoscope();  
 		$this->horoExist = $horoscope->isHoroscopeExist($this->loginProfile);
-		
 		$this->setTemplate("_mobedit/myprofilemob");
     
 	}

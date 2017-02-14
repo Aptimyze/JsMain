@@ -10,11 +10,18 @@ class EditDppBasicInfo extends EditDppComponent {
 		$this->action->minheight = create_dd($this->jpartner->getLHEIGHT(), "Height");
 		$this->action->partner_mstatus_str = $this->jpartner->getPARTNER_MSTATUS();
 		include_once (sfConfig::get("sf_web_dir") . "/profile/advance_search_functions.php");
-		fill_MSgadget("Country_Residence", $this->jpartner->getPARTNER_COUNTRYRES(), '', 1);
+		fill_MSgadget("Country_ResidenceState", $this->jpartner->getPARTNER_COUNTRYRES(), '', 1);
 		$this->action->MSTATUS = FieldMap::getFieldLabel('mstatus', '', 1);
 		//Trac 482. Give Married option only to muslinm women
 		if (!($this->action->loginProfile->getRELIGION() == 2 && $this->action->loginProfile->getGENDER() == 'F')) unset($this->action->MSTATUS[M]);
-		$this->action->checked_city = $this->jpartner->getPARTNER_CITYRES();
+                $checkedCityStr = '';
+                if($this->jpartner->getPARTNER_CITYRES() && $this->jpartner->getState())
+                    $checkedCityStr = $this->jpartner->getPARTNER_CITYRES().",".$this->jpartner->getState();
+                else if($this->jpartner->getPARTNER_CITYRES())
+                    $checkedCityStr = $this->jpartner->getPARTNER_CITYRES();
+                else if($this->jpartner->getState())
+                    $checkedCityStr = $this->jpartner->getState();
+		$this->action->checked_city = $checkedCityStr;
 		$this->action->partner_children = $this->jpartner->getCHILDREN();
 		$this->action->setTemplate("profile_edit_partner_basic");
 	}
@@ -51,8 +58,33 @@ class EditDppBasicInfo extends EditDppComponent {
                         if(!($key1===false))
                                 unset($this->partner_city_arr[$key1]);
 
-			$cistr = implode("','", $this->partner_city_arr);
-			$this->cistr = "'" . $cistr . "'";
+			$cistr = implode(",", $this->partner_city_arr);
+                        $cityStateArr = explode(",",$cistr);
+                        $stateIndiaArr = FieldMap::getFieldLabel("state_india",'',1);
+                        foreach($cityStateArr as $k=>$v)
+                        {
+                                if(array_key_exists($v, $stateIndiaArr))
+                                {
+                                        $stateArr[] =$v;
+                                }
+                                else
+                                {
+                                        $cityArr[]= $v;
+                                }
+
+                        }
+                        if(is_array($cityArr))
+                        foreach($cityArr as $key=>$value)
+                        {	
+                                if(!in_array(substr($value,0,2),$stateArr))
+                                {
+                                        $cityString .= $value."','";
+                                }
+                        }
+                        if($cityString)
+                            $this->cistr = "'".rtrim($cityString,"','")."'";
+                        if($stateArr)
+                            $this->state = "'".implode("','",$stateArr)."'";
 		}
 	}
 	public function getEditedValues() {
@@ -67,10 +99,11 @@ class EditDppBasicInfo extends EditDppComponent {
 		$ColumnArray["PARTNER_COUNTRYRES"] = $this->costr;
 		$ColumnArray["PARTNER_MSTATUS"] = $this->mstr;
 		$ColumnArray["ACTED_ON_ID"] = $this->APeditID;
+                $ColumnArray["STATE"] = $this->state;
 		return $ColumnArray;
 	}
 	public function createUpdateQuery() {
-		$scase = "LAGE='$this->Min_Age',HAGE='$this->Max_Age',LHEIGHT='$this->Min_Height',HHEIGHT='$this->Max_Height',PARTNER_MSTATUS=\"$this->mstr\",PARTNER_COUNTRYRES=\"$this->costr\",   PARTNER_CITYRES=\"$this->cistr\",CHILDREN='$this->partner_children'";
+		$scase = "LAGE='$this->Min_Age',HAGE='$this->Max_Age',LHEIGHT='$this->Min_Height',HHEIGHT='$this->Max_Height',PARTNER_MSTATUS=\"$this->mstr\",PARTNER_COUNTRYRES=\"$this->costr\",   PARTNER_CITYRES=\"$this->cistr\",STATE=\"$this->state\",CHILDREN='$this->partner_children'";
 		return $scase;
 	}
 	public function getTemplateName() {
@@ -84,12 +117,13 @@ class EditDppBasicInfo extends EditDppComponent {
 	}
 	public function validateInputs()
 	{
-			
+            
 		if(ValidationHandler::validateAge($this->Min_Age))
 		if(ValidationHandler::validateAge($this->Max_Age))
 		if(ValidationHandler::validateDropdown($this->Max_Height,"height"))
 		if(ValidationHandler::validateDropdown($this->Min_Height,"height"))
 		if(ValidationHandler::validateDropdown($this->cistr,"city"))
+                if(ValidationHandler::validateDropdown($this->state,"state_india"))  
 		if(ValidationHandler::validateDropdown($this->costr,"country"))
 		if(ValidationHandler::validateDropdown($this->mstr,"mstatus"))
 			return true;

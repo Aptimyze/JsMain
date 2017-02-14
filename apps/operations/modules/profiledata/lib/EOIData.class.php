@@ -37,9 +37,9 @@ class EOIData
 				$val['TYPE'] = "Message Sent";
 			$val['IP'] = self::inet_ntoa($val['IP']);
                         if($key1 == $profileID){
-                                $extraFieldsArray = array('PHONE_MOB'=>$val['RECEIVER_PHONE_MOB'],'PHONE_RES'=>$val['RECEIVER_PHONE_RES'],"PHONE_ALT"=>$val['RECEIVER_PHONE_ALT'],'CONTACT'=>$val['RECEIVER_CONTACT']);
+                                $extraFieldsArray = array('EMAIL'=>$val['RECEIVER_EMAIL'],'PHONE_MOB'=>$val['RECEIVER_PHONE_MOB'],'PHONE_RES'=>$val['RECEIVER_PHONE_RES'],"PHONE_ALT"=>$val['RECEIVER_PHONE_ALT'],'CONTACT'=>$val['RECEIVER_CONTACT']);
                         }else{
-                                $extraFieldsArray = array('PHONE_MOB'=>$val['SENDER_PHONE_MOB'],'PHONE_RES'=>$val['SENDER_PHONE_RES'],"PHONE_ALT"=>$val['SENDER_PHONE_ALT'],'CONTACT'=>$val['SENDER_CONTACT']);
+                                $extraFieldsArray = array('EMAIL'=>$val['SENDER_EMAIL'],'PHONE_RES'=>$val['SENDER_PHONE_RES'],"PHONE_ALT"=>$val['SENDER_PHONE_ALT'],'CONTACT'=>$val['SENDER_CONTACT']);
                         }
 			if($flag[$key1] != $key2)
 			{
@@ -125,8 +125,8 @@ class EOIData
 		
 		
 		$multipleProfileObj = new ProfileArray();
-		$this->profileDetail =$multipleProfileObj->getResultsBasedOnJprofileFields($pid,'','',"PROFILEID,USERNAME,PHONE_RES,PHONE_MOB,CONTACT","JPROFILE","newjs_master");
-		$contactNumOb=new newjs_JPROFILE_CONTACT('newjs_bmsSlave');
+		$this->profileDetail =$multipleProfileObj->getResultsBasedOnJprofileFields($pid,'','',"PROFILEID,USERNAME,EMAIL,PHONE_RES,PHONE_MOB,CONTACT","JPROFILE","newjs_master");
+		$contactNumOb= new ProfileContact('newjs_masterRep');
                 $altNumArray=$contactNumOb->getArray(array('PROFILEID'=>implode(",",$pidArr)),'','',"PROFILEID,ALT_MOBILE",1);
                 
 		foreach($this->profileDetail as $key =>$profileObj)
@@ -134,6 +134,11 @@ class EOIData
 			$username = $profileObj->getUSERNAME();
 			$profileid=$profileObj->getPROFILEID();
 			$PHONE_MOB=$profileObj->getPHONE_MOB();
+			$EMAIL=$profileObj->getEMAIL();
+			if(strpos($EMAIL,"_deleted") !== false)
+			{
+				$EMAIL = substr($EMAIL,0,strpos($EMAIL,"_deleted"));
+			}
 			$PHONE_RES=$profileObj->getPHONE_RES();
 			$CONTACT=$profileObj->getCONTACT();
 			foreach($result as $key=>$val)
@@ -143,14 +148,16 @@ class EOIData
 					$result[$key]['SENDER_PHONE_MOB']=$PHONE_MOB;	
 					$result[$key]['SENDER_PHONE_RES']=$PHONE_RES;	
 					$result[$key]['SENDER_PHONE_ALT']=$altNumArray[$val['SENDER']]['ALT_MOBILE'];	
-					$result[$key]['SENDER_CONTACT']=$CONTACT;	
+					$result[$key]['SENDER_CONTACT']=$CONTACT;
+					$result[$key]['SENDER_EMAIL']=$EMAIL;	
                                 }
 				if($val['RECEIVER']==$profileid){
 					$result[$key]['RECEIVER_USERNAME']=$username;	
 					$result[$key]['RECEIVER_PHONE_MOB']=$PHONE_MOB;	
 					$result[$key]['RECEIVER_PHONE_RES']=$PHONE_RES;	
                                         $result[$key]['RECEIVER_PHONE_ALT']=$altNumArray[$val['RECEIVER']]['ALT_MOBILE'];
-					$result[$key]['RECEIVER_CONTACT']=$CONTACT;	
+					$result[$key]['RECEIVER_CONTACT']=$CONTACT;
+					$result[$key]['RECEIVER_EMAIL']=$EMAIL;	
                                 }
 			}
 		}

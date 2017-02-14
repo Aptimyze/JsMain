@@ -16,7 +16,7 @@ $data=authenticated($cid);
 if($data)
 {
 $name=getname($cid);
-$db=connect_db();
+$db=connect_ddl();
 if($send)
 {
 	$cnt++;
@@ -122,6 +122,8 @@ elseif($confirm)
 				{
 					$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profile)), 'redeliveryCount'=>0 );
 					$producerObj->sendMessage($sendMailData);
+					$sendMailData = array('process' =>'USER_DELETE','data' => ($profile), 'redeliveryCount'=>0 );
+					$producerObj->sendMessage($sendMailData);
 				}
 				else
 				{
@@ -200,7 +202,7 @@ elseif($confirm)
 		if(!$res1)
 		{
 			$sql2= "CREATE TABLE jsadmin.T_EMAILS (EMAIL varchar(100))";
-			$res2= mysql_query_decide($sql2) or die(mysql_error_js());
+			$res2= mysql_query_decide($sql2,$db) or die(mysql_error_js());
 			$sql1="INSERT INTO jsadmin.T_EMAILS (EMAIL) SELECT EMAIL FROM newjs.JPROFILE WHERE PROFILEID IN ($profiles_n) ";
 			$res1= mysql_query_decide($sql1) or die(mysql_error_js());	
 		}

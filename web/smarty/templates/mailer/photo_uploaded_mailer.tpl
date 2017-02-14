@@ -1,115 +1,88 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Jeevansathi.com</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, user-scalable=no">
+<title>jeevansathi.com</title>
+<style>
+@media screen and (max-width: 384px) {
+    #logoTd {
+        padding:0px !important;
+    }
+}
+</style>
 </head>
 
 <body>
-<table border="0" cellspacing="0" cellpadding="0" align="center" style="max-width:600px; min-width:320px; border:1px solid #dcdcdc; -webkit-text-size-adjust: none;" ~if $GENDER eq 'M'`bgcolor="#0c4e78"~elseif $GENDER eq 'F'`bgcolor="#58011c"~/if`>
-  <tr bgcolor="#ffffff">
-    <td width="19"></td>
-    <td><table border="0" cellpadding="0" cellspacing="0" align="left">
-          <tr>
-            <td height="49" width="191"><img src="~$IMG_URL`/images/mailer/header_footer/jsLogo2.gif" alt="Jeevansathi.com" align="left" border="0" height="49" vspace="0" width="191" hspace="0"></td>
-            </tr>
-            </table>
-            <table border="0" cellpadding="0" cellspacing="0" align="right">
-          <tr>
-            <td width="161" height="49"><img src="~$IMG_URL`/images/mailer/header_footer/ventureTxt.gif" width="161" height="24" vspace="0" hspace="0" align="right" /></td>
-          </tr>
-      </table>
-    </td>
-    <td width="18"></td>
+<table border="0" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF" style="border:1px solid #dcdcdc; max-width:575px; text-align:left" align="center">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0" height="52">
+        <tr>
+          <td width="30%" id="logoTd" style="padding-left:10px; padding-right:10px;" height="52"><div><a href='~$SITE_URL`' target="_blank"><img src="~$IMG_URL`/images/jspc/commonimg/logo1.png" alt="Jeevansathi.com" align="left" border="0" vspace="0" hspace="0" style="max-width:204px; width:inherit;max-height:52px;"></a></div></td>
+          <td width="70%" height="52" style="padding-right:10px;"><table width="120" border="0" cellspacing="0" cellpadding="0" align="right">
+              <tr>
+                <td width="24"><img src="~$IMG_URL`/images/mailer/revampMailer/iconTop.gif" align="left" border="0" vspace="0" hspace="0" width="24" height="23"></td>
+                <td align="left"><font face="Tahoma, Geneva, sans-serif" color="#555555" style="font-size:12px;"><var>{{TOLLNO}}</var></font></td>
+              </tr>
+            </table></td>
+        </tr>
+      </table></td>
   </tr>
   <tr>
-    <td colspan="3" ~if $GENDER eq 'M'`background="~$IMG_URL`/images/mailer/photoUpload/img1.jpg"~elseif $GENDER eq 'F'`background="~$IMG_URL`/images/mailer/photoUpload/img1_f.jpg"~/if` height="130" valign="top" align="center">
-    	<table width="90%" border="0" cellspacing="0" cellpadding="0" style="-webkit-text-size-adjust: none; font-family:Arial; font-size:18px; color:#ffffff;">
-          <tr>
-            <td colspan="3" height="36"></td>
-          </tr>
-          <tr>
-            <td width="85"><img ~if $GENDER eq 'M'`src="~$IMG_URL`/images/mailer/photoUpload/img2.jpg"~elseif $GENDER eq 'F'`src="~$IMG_URL`/images/mailer/photoUpload/img2_f.jpg"~/if` width="85" height="67" vspace="0" hspace="0" align="right" /></td>
-            <td>Congratulations!&nbsp;
-		~if $PHOTOS_SCREENED eq $PHOTOS_UPLOADED && $PHOTOS_SCREENED eq 1`
-			Your photo has been
-		~else`
-			~$PHOTOS_SCREENED` of ~$PHOTOS_UPLOADED` photos have been
-		~/if`
-		<br /><font face="Tahoma" style="font-size:22px;" color="#fad672"><strong>SUCCESSFULLY UPLOADED</strong></font></td>
-          </tr>
-          <tr>
-            <td colspan="2"><font face="Georgia" style="font-size:13px;" color="#ffe9f0"><em>With this photo on your profile you are all set to make your impression!</em></font></td>
-          </tr>
-        </table>
-	</td>
-  </tr>
-  <tr>
-    <td></td>
-    <td>
-	~$self_tuple`
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-		<tr>
-                      <td height="13"></td>
-                    </tr>
-            <tr>
-              <td height="93" ~if $GENDER eq 'M'`style="padding-left:20px; border-bottom:1px solid #1d5e8e;-webkit-text-size-adjust: none;"~elseif $GENDER eq 'F'`style="padding-left:20px; border-bottom:1px solid #8e1138;-webkit-text-size-adjust: none;"~/if` valign="top"><font face="Arial" style="font-size:13px;" color="#FFFFFF">Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>,<br /><br />
-A lot of members are looking for their perfect life partner on Jeevansathi<span style="font-size:1px;"> </span>.com!<br />
-Now with a photo on your profile you can take things forward by <font color="#fad672">EXPRESSING INTEREST</font> in <br />members you like.</font>
-</td>
-            </tr>
-		~if $SEARCH_COUNT`
-            <tr>
-              <td height="43" ~if $GENDER eq 'M'`style="border-bottom:1px solid #1d5e8e;"~elseif $GENDER eq 'F'`style="border-bottom:1px solid #8e1138;"~/if`>
-              		<table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial; font-size:13px; color:#ffffff;-webkit-text-size-adjust: none;">
+    <td width="575"><table width="100%" border="0" cellspacing="0" cellpadding="0" style="">
+       
+        <tr>
+          <td colspan="3" height="14"></td>
+        </tr>
+        <tr>
+          <td width="22"><img src="~$IMG_URL`/images/mailer/revampMailer/spacer.gif" width="6" height="1" vspace="0" hspace="0" align="left" /></td>
+          <td width="531"><table width="100%" border="0" cellspacing="0" cellpadding="0" style="font-family:Arial, Times New Roman, Times, serif; font-size:12px; color:#000000; text-align:left;">
+              <tr>
+                <td valign="top">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="text-align:left; font-family:Tahoma; font-size:15px; color:#000000; text-size-adjust: none; -webkit-text-size-adjust: none; line-height:18px;">
+                                  <tr>
+                                    <td colspan="2" height="12"></td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="2" height="15"></td>
+                                  </tr>
+                                  <tr>
+                                    <td style="font-size:15px; color:#000000;text-align:left; font-family:Tahoma;text-size-adjust: none; -webkit-text-size-adjust: none; line-height:18px;" height="15" colspan="2">
+Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>,<br /><br />
+Your photo has been uploaded successfully!<br />
+Please <a target="_blank" href="(LINK)HOME_PAGE_MYJS:profileid=~$profileid`(/LINK)">Login</a> to Jeevansathi and start sending interests.
+					</td>
+                                  </tr>
+                                </table>
+                </td>
+              </tr>
+             
+              <tr>
+                <td valign="top" height="22"></td>
+              </tr>
+            </table></td>
+          <td width="22"><img src="~$IMG_URL`/images/mailer/revampMailer/spacer.gif" width="6" height="1" vspace="0" hspace="0" align="left" /></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><table style="font-size:15px;text-align:left; font-family:Tahoma;text-size-adjust: none; -webkit-text-size-adjust: none; line-height:18px;" border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td><table style="font-family:Tahoma;font-size:15px;line-height:17px; color:#000000; -webkit-text-size-adjust: none;" width="100%" border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
                       <tr>
-                        <td width="5.5%"><img ~if $GENDER eq 'M'`src="~$IMG_URL`/images/mailer/photoUpload/img3.gif"~elseif $GENDER eq 'F'`src="~$IMG_URL`/images/mailer/photoUpload/img3_f.gif"~/if` width="33" height="42" vspace="0" hspace="0" align="left" /></td>
-                        <td ~if $GENDER eq 'M'`background="~$IMG_URL`/images/mailer/photoUpload/img5.gif"~elseif $GENDER eq 'F'`background="~$IMG_URL`/images/mailer/photoUpload/img5_f.gif"~/if` bgcolor="#1769A1"><strong>~$SEARCH_COUNT` people are looking for profile just like yours! Here are a few of them:</strong></td>
-                        <td width="26"><img ~if $GENDER eq 'M'`src="~$IMG_URL`/images/mailer/photoUpload/img4.gif"~elseif $GENDER eq 'F'`src="~$IMG_URL`/images/mailer/photoUpload/img4_f.gif"~/if` width="26" height="42" vspace="0" hspace="0" align="right" /></td>
+                        <td style=" padding-bottom:10px;" valign="top">Warm Regards,<br>
+                          <b style="color:#c4161c;">Jeevansathi<span style="font-size:1px;"> </span><font color="#00000">.com Team</font></b></td>
                       </tr>
-                    </table>
-
-              </td>
-            </tr>
-		~/if`
-            <tr>
-              <td height="14"></td>
-            </tr>
-	</table>
-		~$dpp_matches`
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-            <tr>
-              <td height="10"></td>
-            </tr>
-            <tr>
-              <td><table style="font-family:Arial" border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tr>
-                      <td colspan="2"><table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#ffffff; margin-left:10px;-webkit-text-size-adjust: none;" align="left" border="0" cellpadding="0" cellspacing="0">
-                          <tbody>
-                            <tr>
-                              <td style="font-size:12px" valign="top">Warm Regards,<br>
-                                <b>Jeevansathi<span style="font-size:1px;"> </span>.com Team</b></td>
-                              <td style="font-size:12px" valign="top" width="10">&nbsp;</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                        <table style="font-family:Arial,Times New Roman,Times,serif;font-size:11px;line-height:17px; color:#ffffff;" border="0" cellpadding="0" cellspacing="0" align="right">
-                            <tr>
-                              <td valign="top"><img ~if $GENDER eq 'M'`src="~$IMG_URL`/images/mailer/header_footer/icon1.gif"~elseif $GENDER eq 'F'`src="~$IMG_URL`/images/mailer/header_footer/icon3.gif"~/if` align="absmiddle" height="24" width="24"> </td>
-                              <td style="font-family:Arial;font-size:12px;-webkit-text-size-adjust: none;" valign="top" width="206" align="right"><span style="font-size:13px"><b>Call us at:</b></span><var>{{TOLLNO}}</var> (Toll free),<br /><var>{{NOIDALANDL}}</var> </span></td>
-                            </tr>
-                        </table></td>
-                    </tr>
-                </table></td>
-            </tr>
-        </table></td>
-    <td></td>
+                    </tbody>
+                  </table></td>
+              </tr>
+            </table></td>
+          <td></td>
+        </tr>
+      </td>
+ </tr>
   </tr>
-  <tr>
-    <td colspan="3" height="35"></td>
-  </tr>
-  <tr>
-    <td colspan="3" height="22" valign="top" align="center"><font face="Arial" style="font-size:11px;" ~if $GENDER eq 'M'`color="#2795df"~elseif $GENDER eq 'F'`color="#cd1556"~/if`>If you do not wish to receive such service mailers further, click here to <a href="(LINK)UNSUBSCRIBE:profileid=~$profileid`(/LINK)" target="_blank" ~if $GENDER eq 'M'`style="text-decoration:underline; color:#2795df;"~elseif $GENDER eq 'F'`style="text-decoration:underline; color:#cd1556;"~/if`>UNSUBSCRIBE</a>.</font></td>
-  </tr>
+  ~$FOOTER`
 </table>
 </body>
 </html>

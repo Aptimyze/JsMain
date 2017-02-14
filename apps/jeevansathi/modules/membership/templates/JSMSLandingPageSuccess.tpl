@@ -378,16 +378,20 @@
 			});
 			if(checkEmptyOrNull(readCookie('device'))){
 				if($(this).hasClass(readCookie('device')+'_selected_d')){
-					$(this).removeClass(readCookie('device')+'_selected_d')
-					$("#continueBtn").hide();
+					if(readCookie('backState') != "changePlan") {
+						$(this).removeClass(readCookie('device')+'_selected_d')
+						$("#continueBtn").hide();
+					}
 				} else {
 					$(this).addClass(readCookie('device')+'_selected_d')
 					$("#continueBtn").show();
 				}
 			} else {
 				if($(this).hasClass('selected_d')){
-					$(this).removeClass('selected_d')
-					$("#continueBtn").hide();
+					if(readCookie('backState') != "changePlan") {
+						$(this).removeClass('selected_d')
+						$("#continueBtn").hide();
+					}
 				} else {
 					$(this).addClass('selected_d')
 					$("#continueBtn").show();
@@ -623,6 +627,9 @@
 				~/if`
 			}
 		});
+		if(readCookie('backState') == "changePlan"){
+			$("#pageBack").hide();	
+		}
 		$("#pageBack").click(function(e){
 			if(readCookie('backState') != "changePlan"){
 				eraseCookie('mainMem');
@@ -646,6 +653,6 @@
   		},100);
 		setTimeout(function(){
 			autoPopupFreshdesk(username,email);
-		}, 60000);
+		}, 90000);
 	});
 </script>

@@ -1,7 +1,6 @@
 <?php
 include("connect.inc");
-$db=connect_737();
-$db2=connect_master();
+$db=connect_misdb();
 
 $data=authenticated($checksum);
 

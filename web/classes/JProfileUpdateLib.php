@@ -64,6 +64,17 @@ class JProfileUpdateLib
   private $objProfileAstroDetailsStore = null;
 
   /**
+   * HOROSCOPE_FOR_SCREEN Store Object
+   * @var Object
+   */
+  private $objProfileHoroscopeForScreenStore = null;
+
+  /**
+   * HOROSCOPE_FOR_SCREEN Store Object
+   * @var Object
+   */
+  private $objProfileAlertStore = null;
+  /**
    *
    * @var String 
    */
@@ -76,12 +87,15 @@ class JProfileUpdateLib
   {
     $this->currentDBName = $dbname;
     $this->objJProfileStore = new JPROFILE($dbname);
-    $this->objProfileEducationStore = new NEWJS_JPROFILE_EDUCATION($dbname);
-    $this->objProfileContactStore = new NEWJS_JPROFILE_CONTACT($dbname);
-    $this->objProfileHobbyStore = new NEWJS_HOBBIES($dbname);
+    $this->objProfileEducationStore = ProfileEducation::getInstance($dbname);
+    $this->objProfileContactStore = new ProfileContact($dbname);
+    $this->objProfileHobbyStore = new JHOBBYCacheLib($dbname);
     $this->objProfileNTimesStore = new NEWJS_JP_NTIMES($dbname);
     $this->objProfileChristianStore = new NEWJS_JP_CHRISTIAN($dbname);
-    $this->objProfileAstroDetailsStore = new NEWJS_ASTRO($dbname);
+    $this->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
+    $this->objProfileHoroscopeForScreenStore = new NEWJS_HOROSCOPE_FOR_SCREEN($dbname);
+    $this->objProfileAlertStore = new JprofileAlertsCache($dbname);
+
   }
   /**
    * __destruct
@@ -94,6 +108,8 @@ class JProfileUpdateLib
     unset($this->objProfileNTimesStore);
     unset($this->objProfileChristianStore);
     unset($this->objProfileAstroDetailsStore);
+    unset($this->objProfileHoroscopeForScreenStore);
+    unset($this->objProfileAlertStore);
     self::$instance = null;
   }
   /**
@@ -130,12 +146,15 @@ class JProfileUpdateLib
     if(self::$instance->currentDBName !== $dbname) {
       self::$instance->currentDBName = $dbname;
       self::$instance->objJProfileStore->setConnection($dbname);
-      self::$instance->objProfileEducationStore->setConnection($dbname);
+      self::$instance->objProfileEducationStore = ProfileEducation::getInstance($dbname);
       self::$instance->objProfileContactStore->setConnection($dbname);
       self::$instance->objProfileHobbyStore->setConnection($dbname);
       self::$instance->objProfileNTimesStore->setConnection($dbname);
       self::$instance->objProfileChristianStore->setConnection($dbname);
-      self::$instance->objProfileAstroDetailsStore->setConnection($dbname);
+      self::$instance->objProfileAstroDetailsStore = ProfileAstro::getInstance($dbname);
+      self::$instance->objProfileHoroscopeForScreenStore->setConnection($dbname);
+      unset(self::$instance->objProfileAlertStore);
+      self::$instance->objProfileAlertStore = new JprofileAlertsCache($dbname);
     }
     
     return self::$instance;
@@ -357,6 +376,15 @@ class JProfileUpdateLib
       return false;
     }
   }
+  public function deactivateProfiles($profileArr)
+  {
+    try {
+      return $this->objJProfileStore->DeactiveProfiles($profileArr);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
 
   /**
    * update sort date in Jprofile
@@ -367,6 +395,98 @@ class JProfileUpdateLib
   {
     try {
       return $this->objProfileAstroDetailsStore->updateRecord($profileId,$paramArr);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * @param $iProfileID
+   * @param $arrRecordData
+   * @return bool|void
+   */
+  public function updateHOROSCOPE_FOR_SCREEN($iProfileID,$arrRecordData)
+  {
+    try {
+      return $this->objProfileHoroscopeForScreenStore->updateRecord($iProfileID,$arrRecordData);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * updateJPROFILE_ALERTS
+   * @param $iProfileID
+   * @param $szKey
+   * @param $szValue
+   * @return bool
+   */
+  public function updateJPROFILE_ALERTS($iProfileID,$szKey,$szValue)
+  {
+    try {
+      return $this->objProfileAlertStore->update($iProfileID,$szKey,$szValue);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * Function to remove Cache of specified profileid or array of profileid
+   * @param $Var
+   * @return bool
+   */
+  public function removeCache($Var)
+  {
+    try {
+      ProfileCacheLib::getInstance()->removeCache($Var);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**	
+   * @param $iProfileID
+   * @return bool|void
+   */
+  public function deactiveSingleProfile($iProfileID)
+  {
+    try {
+      return $this->objJProfileStore->Deactive($iProfileID);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * @param $privacy
+   * @param $profileid
+   * @param $dayinterval
+   * @return bool|void
+   */
+  public function updateHideJPROFILE($privacy, $profileid, $dayinterval)
+  {
+    try {
+      return $this->objJProfileStore->updateHide($privacy, $profileid, $dayinterval);
+    } catch (Exception $ex) {
+      jsCacheWrapperException::logThis($ex);
+      return false;
+    }
+  }
+
+  /**
+   * @param $privacy
+   * @param $profileid
+   * @return bool|void
+   */
+  public function updateUnHideJPROFILE($privacy, $profileid)
+  {
+    try {
+      return $this->objJProfileStore->updateUnHide($privacy, $profileid);
     } catch (Exception $ex) {
       jsCacheWrapperException::logThis($ex);
       return false;

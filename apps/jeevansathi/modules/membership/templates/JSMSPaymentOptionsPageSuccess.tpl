@@ -279,6 +279,14 @@
   },100);
   setTimeout(function(){
     autoPopupFreshdesk(username,email);
-  }, 60000);
+  }, 90000);
+  // function to make sure window is resized properly on table view 
+  $(window).load(function(){
+    var h = $(window).height();
+    var b = $('body').height();
+    if (h-53 > b) {
+      $(".rv2_pad5").css({'height':h-53});
+    }
+  });
 </script>
 ~/if`

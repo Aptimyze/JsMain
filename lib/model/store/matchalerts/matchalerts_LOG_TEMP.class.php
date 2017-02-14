@@ -60,6 +60,132 @@ class matchalerts_LOG_TEMP extends TABLE
           }
           $res->execute();
         }
+        /*
+	This function is used to get the profile count on the basis of logic level
+	@param - receiver profileid
+	@return - array of matches
+	*/
+	public function getProfilesCountOfLogicLevel($profileId,$logicLevel)
+	{
+		if(JsConstants::$alertServerEnable &&  $this->db)
+                {
+			if(!$profileId)
+				throw new jsException("","PROFILEID IS BLANK IN getProfilesSentInMatchAlerts() of matchalerts_LOG.class.php");
+
+			try
+			{
+				$sql = "SELECT count(*) as CNT FROM matchalerts.LOG_TEMP WHERE RECEIVER = :RECEIVER AND LOGICLEVEL = :LOGICLEVEL";
+				$prep = $this->db->prepare($sql);
+                                $prep->bindValue(":RECEIVER",$profileId,PDO::PARAM_INT);
+                                $prep->bindValue(":LOGICLEVEL",$logicLevel,PDO::PARAM_INT);
+				$prep->execute();
+                                $row = $prep->fetch(PDO::FETCH_ASSOC);
+                                if($row){
+                                        return $row['CNT'];
+                                }
+                                return 0;
+			}
+			catch (PDOException $e)
+                        {
+				jsException::log("getProfilesSentInMatchAlerts-->.$sql".$e);
+				return 0;
+                        }
+			return $result;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+  public function getCountGroupedByLogic()
+  {
+    try
+    {
+      $sql = "SELECT count( DISTINCT (RECEIVER) ) as CNT, LOGICLEVEL FROM matchalerts.`LOG_TEMP` GROUP BY LOGICLEVEL; "; 
+               $prep = $this->db->prepare($sql);
+               $prep->execute();               
+               while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+              {
+                $resultArr[] = $row;          
+              }              
+               return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
+
+  public function getCountGroupedByLogicAndRecommendation()
+  {
+    try
+    {
+      $sql = "SELECT COUNT(DISTINCT(RECEIVER)) as PeopleCount , LOGICLEVEL, RecCount
+      FROM (
+
+        SELECT COUNT( * ) AS RecCount, LOGICLEVEL, RECEIVER
+        FROM  matchalerts.`LOG_TEMP` 
+        GROUP BY LOGICLEVEL, RECEIVER
+      ) AS tablename
+GROUP BY LOGICLEVEL, RecCount"; 
+               $prep = $this->db->prepare($sql);
+               $prep->execute();               
+               while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+               {
+                $resultArr[] = $row;          
+              }              
+              return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
+
+  public function getDate()
+  {
+    try
+    {
+      $sql = "SELECT DATE from matchalerts.`LOG_TEMP` ORDER BY DATE LIMIT 1";
+      $prep = $this->db->prepare($sql);
+      $prep->execute();
+      while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+      {
+        $resultArr = $row;          
+      }              
+      return $resultArr["DATE"]; 
+
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
+  public function getTotalCountGroupedByLogicAndReceiver()
+  {
+    try
+    {
+      $sql = "SELECT COUNT(RECEIVER) as TOTALCOUNT, RECOMMENDCOUNT FROM (SELECT DISTINCT (RECEIVER), COUNT( * ) AS RECOMMENDCOUNT FROM matchalerts.`LOG_TEMP` 
+              GROUP BY RECEIVER) as a GROUP BY RECOMMENDCOUNT";
+      $prep = $this->db->prepare($sql);
+      $prep->execute();
+      while ($row = $prep->fetch(PDO::FETCH_ASSOC))
+      {
+        $resultArr[] = $row;          
+      }
+
+      return $resultArr;
+    }
+    catch (PDOException $e)
+    {
+                        //add mail/sms
+      jsException::nonCriticalError($e);
+    }
+  }
 }
 ?>
 

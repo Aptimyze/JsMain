@@ -1,3 +1,11 @@
+<script>
+  ~if $noIndexNoFollow`
+  var m = document.createElement('meta'); 
+  m.name = 'ROBOTS'; 
+  m.content = 'NOINDEX, NOFOLLOW'; 
+  document.head.appendChild(m);
+  ~/if`
+</script>
 <div class="pos-rel fullwid">   
   <!--start:top part-->
   <div class="prf-coverNoPro" style="height:387px">
@@ -37,9 +45,9 @@
   <!--start:next/previous button-->
   ~if $SHOW_PREV`
   	<!--start:prv-->
-    <a ~if isset($prevLink)`href ="/profile/viewprofile.php?~$prevLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=prev&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$preTupleId`"~/if`>
+    <a id="show_prevListingProfile" ~if isset($prevLink)`href ="/profile/viewprofile.php?~$prevLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=prev&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$preTupleId`"~/if`>
     <div class="pos-abs prfpos5 cursp z1">
-    	<div class="disp-tbl prfdim6 prfbg5 txtc">
+    	<div class="disp-tbl prfdim6 prfb10 txtc">
     		<div class="disp-cell vmid"><i class="sprite2 prfic33"></i></div>
         </div>
     </div>    
@@ -49,9 +57,9 @@
   ~if $SHOW_NEXT`
     <!--start:next-->
 
-    <a ~if isset($nextLink)`href ="/profile/viewprofile.php?~$nextLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=next&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$nextTupleId`"~/if`>
+    <a id="show_nextListingProfile" ~if isset($nextLink)`href ="/profile/viewprofile.php?~$nextLink|decodevar`&stype=~$STYPE`&responseTracking=~$responseTracking`~$other_params|decodevar`&~$NAVIGATOR`"~else`href ="/profile/viewprofile.php?show_profile=next&total_rec=~$total_rec`&actual_offset=~$actual_offset`&j=~$j`&responseTracking=~$responseTracking`&searchid=~$searchid`~$other_params|decodevar`&~$NAVIGATOR`&tupleId=~$nextTupleId`"~/if`>
     <div class="pos-abs prfpos6 cursp z1">
-    	<div class="disp-tbl prfdim6 prfbg5 txtc">
+    	<div class="disp-tbl prfdim6 prfb10 txtc">
     		<div class="disp-cell vmid"><i class="sprite2 prfic34"></i></div>
         </div>
     </div>    

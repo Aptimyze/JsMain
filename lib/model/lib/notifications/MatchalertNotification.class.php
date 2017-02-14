@@ -8,9 +8,30 @@ public static function getCount($profileid)
 	$skipContactedType = SkipArrayCondition::$MATCHALERT;
 	$skipProfileObj    = SkipProfile::getInstance($profileid);
 	$skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
-	$logDate = ceil(self::getLogDateFromLogicalDate()-1);
-	$matchalertLogObj = new matchalerts_LOG;
-	return $count = $matchalertLogObj->getMatchAlertProfileCount($profileid, $skipProfile,$logDate);
+	$logDate 	   = ceil(self::getLogDateFromLogicalDate()-1);
+	$matchalertLogObj  = new matchalerts_LOG();
+	//return $count = $matchalertLogObj->getMatchAlertProfileCount($profileid, $skipProfile,$logDate);
+	$matchalertArr 	   = $matchalertLogObj->getMatchAlertProfileForNotification($profileid, $skipProfile,$logDate);
+	//print_r($matchalertArr);
+	$photoUrl 	   = self::getProfileHavingPhoto($matchalertArr);
+	$dataPool['COUNT'] = count($matchalertArr);
+	$dataPool['PHOTO'] = $photoUrl;
+	return $dataPool;
+}
+public static function getProfileHavingPhoto($matchalertArr='')
+{
+	if(is_array){
+		$photoIcon ='P';
+		foreach($matchalertArr as $key=>$profileid){
+			if($profileid){
+				$notificationDataPoolObj = new NotificationDataPool();
+				$photoUrl =$notificationDataPoolObj->getNotificationImage($photoIcon,$profileid);
+				if($photoUrl && $photoUrl!='D')
+					return $photoUrl;
+			}
+		}
+		return $photoUrl; 
+	}
 }
 public static function getLogDateFromLogicalDate($inputDate='')
         {

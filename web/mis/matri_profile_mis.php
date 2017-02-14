@@ -8,7 +8,6 @@ CREATED BY		: Sriram Viswanathan.
 include('connect.inc');
 
 $db = connect_misdb();
-$db2 = connect_master();
 if(authenticated($cid))
 {
 	if($outside=="Y")

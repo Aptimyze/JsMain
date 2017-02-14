@@ -20,9 +20,12 @@ class MembershipAPIResponseHandler {
             $this->profileid = $this->userProfile;
         }
         
-        $this->mainMem = $request->getParameter("mainMem");
-        $this->mainMemDur = $request->getParameter("mainMemDur");
-        $this->selectedVas = $request->getParameter("selectedVas");
+        //$this->mainMem = $request->getParameter("mainMem");
+	$this->mainMem = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("mainMem"));
+        //$this->mainMemDur = $request->getParameter("mainMemDur");
+	$this->mainMemDur = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("mainMemDur"));
+        //$this->selectedVas = $request->getParameter("selectedVas");
+	$this->selectedVas = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter("selectedVas"));
         $this->displayPage = $request->getParameter("displayPage");
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;
@@ -54,8 +57,10 @@ class MembershipAPIResponseHandler {
         }
         
         $this->allMemberships = $request->getParameter('allMemberships');
-        $this->mainMembership = $request->getParameter('mainMembership');
-        $this->vasImpression = $request->getParameter('vasImpression');
+	$this->mainMembership = preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter('mainMembership'));
+        //$this->mainMembership = $request->getParameter('mainMembership');
+	$this->vasImpression =  preg_replace('/[^A-Za-z0-9\. -_,]/', '', $request->getParameter('vasImpression'));
+        //$this->vasImpression = $request->getParameter('vasImpression');
         $this->backDisc = $request->getParameter('backDisc');
         $this->backTot = $request->getParameter('backTot');
         $this->processPayment = $request->getParameter('processPayment');
@@ -103,6 +108,8 @@ class MembershipAPIResponseHandler {
         // $this->PayUOrderProcess = $request->getParameter('PayUOrderProcess');
         $this->generateNewIosOrder = $request->getParameter('generateNewIosOrder');
         $this->AppleOrderProcess = $request->getParameter('AppleOrderProcess');
+        $this->testBilling = $request->getParameter('testBilling');
+        $this->userForDolPayment = $request->getParameter('userForDolPayment');
         
         $this->memHandlerObj = new MembershipHandler();
         $this->userObj = new memUser($this->profileid);
@@ -135,15 +142,34 @@ class MembershipAPIResponseHandler {
             $this->renewCheckFlag = 1;
         }
         
-        $this->memApiFuncs->setDiscountDetails($this);
+        //set discount info so that it can be used as common variable
+        $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj);
+        if($this->discountTypeInfo == null){
+            $this->discountTypeInfo = array();
+        }
+        //set renewal percent for common use
+        if ($this->profileid){
+            $this->userRenewalPercent = $this->memHandlerObj->getVariableRenewalDiscount($this->profileid);
+            if($this->userRenewalPercent == null){
+                $this->userRenewalPercent = "0";
+            }
+        }
+        
+        $this->memApiFuncs->setDiscountDetails($this,true);
         
         if ($this->memID != "FREE" && $this->memID != "ESJA") {
             $this->memID = $this->memApiFuncs->retrieveCorrectMemID($this->memID, $this);
             $this->activeServiceName = $this->memHandlerObj->getUserServiceName($this->memID);
         }
-        
-        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device);
-        $this->curActServices = $this->memHandlerObj->getActiveServices();
+        //var_dump($this->backendRedirect);
+        if($fromBackend == "discount_link"){
+            $ignoreShowOnlineCheck = true;
+        }
+        else{
+            $ignoreShowOnlineCheck = false;
+        }
+        list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage, $this->device,$ignoreShowOnlineCheck,$this);
+        $this->curActServices = array_keys($this->allMainMem);
         
         if ($this->device == "iOS_app") {
             if (($key = array_search("ESP", $this->curActServices)) !== false) {
@@ -156,10 +182,10 @@ class MembershipAPIResponseHandler {
                 unset($this->curActServices[$key]);
             }
             if (($key = array_search("P", $this->curActServices)) !== false) {
-		unset($this->allMainMem['P']['P2']);
+		        unset($this->allMainMem['P']['P2']);
             }
             if (($key = array_search("C", $this->curActServices)) !== false) {
-		unset($this->allMainMem['C']['C2']);
+		        unset($this->allMainMem['C']['C2']);
             }
         }
 
@@ -268,6 +294,12 @@ class MembershipAPIResponseHandler {
         elseif ($this->AppleOrderProcess == 1) {
             $output = $this->generateAppleOrderProcessingResponse($request);
         } 
+        elseif ($this->testBilling == 1) {
+            $output = $this->doTestBilling($request);
+        }
+        elseif ($this->userForDolPayment == 1) {
+            $output = $this->addRemoveUserForDolPayment($request);
+        }
         else {
             if ($this->displayPage == 1) {
                 $output = $this->generateLandingPageResponse($request);
@@ -482,7 +514,7 @@ class MembershipAPIResponseHandler {
                 $arr = VariableParams::$eValuePlusAddOns;
             }
             foreach ($arr as $key => $val) {
-                if ($this->mainMemDur == '1188') {
+                if ($this->mainMemDur == '1188' || $this->mainMemDur == 'L') {
                     $dur = '12';
                 } 
                 else {
@@ -568,7 +600,7 @@ class MembershipAPIResponseHandler {
         if (count($this->vasServices) == 1 && empty($this->mainMem))
             $this->vasServices[0]['remove_text'] = NULL;
         
-        if (isset($this->mainServices) && ! empty($this->mainServices)) {
+        if (isset($this->mainServices) && !empty($this->mainServices)) {
             $finalCartPrice = $this->mainServices['price'] + $this->totalVASPrice;
             $finalCartDiscount = $this->mainServices['discount_given'] + $this->totalVASDiscount;
             $this->mainServices['price'] = $this->mainServices['display_price'];
@@ -776,7 +808,8 @@ class MembershipAPIResponseHandler {
             }
             $mainServices['service_contacts'] = $this->allMainMem[$id][$subId]['CALL'] . ' Contacts To View';
             $mainServices['standard_price'] = $this->allMainMem[$id][$subId]['PRICE'];
-            
+            //echo "abc........";
+            //print_r($this->allMainMem);
             $mainServices['orig_price'] = $mainServices['standard_price'];
             $mainServices['orig_price_formatted'] = number_format($mainServices['standard_price'], 2, '.', ',');
             
@@ -819,6 +852,27 @@ class MembershipAPIResponseHandler {
             else {
                 $this->selectedVas = implode(',', array_values($this->backendVAS));
             }
+        } else if (empty($this->backendVAS) && ($this->mainMem == "NCP" || $this->mainMem == "ESP")) {
+            $this->selectedVas = array();
+            if ($this->mainMemDur == "L") {
+                $dur = '12';
+            } 
+            else {
+                $dur = $this->mainMemDur;
+            }
+            if ($this->mainMem == "ESP") {
+                foreach (VariableParams::$eSathiAddOns as $addons) {
+                    $this->selectedVas[] = $addons.$dur;
+                }
+            }
+            unset($addons);
+            if ($this->mainMem == "NCP") {
+                foreach (VariableParams::$eValuePlusAddOns as $addons) {
+                    $this->selectedVas[] = $addons.$dur;
+                }
+            }
+            unset($addons);
+            $this->selectedVas = implode(',', array_values($this->selectedVas));
         }
         //Here refracting
         if (isset($this->selectedVas) && !empty($this->selectedVas)) {
@@ -840,14 +894,25 @@ class MembershipAPIResponseHandler {
                         if ($vv['vas_key'] == $vasID[0]) {
                             foreach ($vv['vas_options'] as $x => $z) {
                                 if ($z['id'] == $val) {
-                                    $v['vas_id'] = $z['id'];
-                                    $v['price'] = $z['price'];
-                                    $v['orig_price'] = $z['orig_price'];
-                                    $v['orig_price_formatted'] = $z['orig_price_formatted'];
-                                    $v['discount_given'] = number_format($z['discount_given'], 2, '.', ',');
-                                    $price = @preg_split('/\\D/', $v['price'], -1, PREG_SPLIT_NO_EMPTY);
-                                    $v['vas_price'] = "" . number_format($price[0], 2, '.', ',');
-                                    $v['vas_price_strike'] = $z['vas_price_strike'];
+                                    if ($this->mainMem == "NCP" || $this->mainMem == "ESP") {
+                                        $v['vas_id'] = $z['id'];
+                                        $v['price'] = 0;
+                                        $v['orig_price'] = 0;
+                                        $v['orig_price_formatted'] = 0;
+                                        $v['discount_given'] = 0;
+                                        $price = 0;
+                                        $v['vas_price'] = 0;
+                                        $v['vas_price_strike'] = 0;
+                                    } else {
+                                        $v['vas_id'] = $z['id'];
+                                        $v['price'] = $z['price'];
+                                        $v['orig_price'] = $z['orig_price'];
+                                        $v['orig_price_formatted'] = $z['orig_price_formatted'];
+                                        $v['discount_given'] = number_format($z['discount_given'], 2, '.', ',');
+                                        $price = @preg_split('/\\D/', $v['price'], -1, PREG_SPLIT_NO_EMPTY);
+                                        $v['vas_price'] = "" . number_format($price[0], 2, '.', ',');
+                                        $v['vas_price_strike'] = $z['vas_price_strike'];
+                                    }
                                     $v['remove_text'] = NULL;
                                     $v['change_text'] = NULL;
                                 }
@@ -1254,7 +1319,7 @@ class MembershipAPIResponseHandler {
     
     public function generateChequePickupResponse($request) {
         $payHandlerObj = new PaymentHandler();
-        $prefCities = $payHandlerObj->getNearByCities();
+        $prefCities = $payHandlerObj->getNearByCities('Y');
         $pickupParams = VariableParams::$apiPageSixParams;
         
         $startDate = date('Y-m-d', time() + 1 * 86400);
@@ -2088,7 +2153,13 @@ class MembershipAPIResponseHandler {
         $paymentRedirectPageArr = paymentOption::$paymentRedirectPage;
         $apiObj->card_option = '';
         $apiObj->pageRedirectTo = '';
-        
+        $defaultGatewayRedirection = JsMemcache::getInstance()->get('JS_PAYMENT_GATEWAY');
+        $gatewayOption = SelectGatewayRedirect::$gatewayOptions;
+        if(!in_array($defaultGatewayRedirection,$gatewayOption) || $defaultGatewayRedirection == ''){
+            $billingSelectedGateway = new billing_CURRENT_GATEWAY();
+            $defaultGatewayRedirection = $billingSelectedGateway->fetchCurrentGateway();
+            JsMemcache::getInstance()->set('JS_PAYMENT_GATEWAY',$defaultGatewayRedirection);
+        }
         if ($apiObj->paymentMode == 'CSH' && array_key_exists("$apiObj->cardType", $walletTypeArr)) {
             $apiObj->walletSelected = 1;
             $apiObj->card_option = 'CCRD';
@@ -2115,10 +2186,12 @@ class MembershipAPIResponseHandler {
             $redirectTo = 'r4';
         } 
         else if (($apiObj->paymentMode == "CR" && ($apiObj->cardType == 'card2' || $apiObj->cardType == 'card3')) || ($apiObj->paymentMode == "DR" && ($apiObj->cardType == 'card2' || $apiObj->cardType == 'card3' || $apiObj->cardType == 'card4'))) {
-            if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
+			//if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){            
+			if($defaultGatewayRedirection == "payu"){
                 $redirectTo = 'payu';
             }
-            else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
+			//else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
+            else if($defaultGatewayRedirection == "ccavenue"){
                 $redirectTo = 'ccavenue';
             }
             else{
@@ -2127,10 +2200,12 @@ class MembershipAPIResponseHandler {
         } 
         else if ($apiObj->paymentMode == "CR" || $apiObj->paymentMode == "DR") {
         	if ($apiObj->currency == "DOL") {
-                if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
+				//if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
+                if($defaultGatewayRedirection == "payu"){
                     $redirectTo = 'payu';
                 }
-                else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
+				//else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
+                else if($defaultGatewayRedirection == "ccavenue"){
                     $redirectTo = 'ccavenue';
                 }
                 else{
@@ -2141,10 +2216,12 @@ class MembershipAPIResponseHandler {
                     //Redirection for AMEX irrespective of the option selected
                     $redirectTo = 'ccavenue';
                 }
-                else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
+				//else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "payu"){
+                else if($defaultGatewayRedirection == "payu"){
                     $redirectTo = 'payu';
                 }
-                else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
+				//else if(SelectGatewayRedirect::setDefaultGatewayRedirect == "ccavenue"){
+                else if($defaultGatewayRedirection == "ccavenue"){
                     $redirectTo = 'ccavenue';
                 }
                 else{
@@ -2162,6 +2239,89 @@ class MembershipAPIResponseHandler {
             $apiObj->memHandlerObj->trackMembershipProgress($apiObj->userObj, '504', '54', '4', 'backend_link', $apiObj->user_agent, $apiObj->allMemberships, $apiObj->mainMembership, $apiObj->vasImpression, $apiObj->totalCartPrice, $apiObj->discountCartPrice, 53, "F");
         }
 	return $apiObj;
+    }
+
+    public function doTestBilling($request) {
+    	if(JsConstants::$whichMachine == 'test'){
+    		include_once (JsConstants::$docRoot . "/commonFiles/connect_dd.inc");
+	        include_once ($_SERVER['DOCUMENT_ROOT'] . "/profile/pg/functions.php");
+	        include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Services.class.php");
+	        include_once ($_SERVER['DOCUMENT_ROOT'] . "/classes/Membership.class.php");
+	        
+	        $pCur = $request->getParameter('pCur');
+	        
+	        if ($pCur == "DOL") {
+	            $this->currency = 'DOL';
+	        } 
+	        else {
+	            $this->currency = 'RS';
+	        }
+	        
+	        $memObj = new Membership;
+	        $memObj->setProfileid($this->profileid);
+	        if (!empty($this->mainMembership) && !empty($this->vasImpression)) {
+	        	$allMemberships = $this->mainMembership.",".$this->vasImpression;
+	        } elseif (empty($this->mainMembership) && !empty($this->vasImpression)) {
+	        	$allMemberships = $this->vasImpression;
+	        } elseif (!empty($this->mainMembership) && empty($this->vasImpression)) {
+	        	$allMemberships = $this->mainMembership;
+	        }
+	        $payment = $memObj->forOnline($allMemberships, $this->currency, $this->mainMembership, $this->discSel, 'card2', $this->device, $this->couponCode);
+	        $total = $payment['total'];
+	        $service_main = $payment['service_str'];
+	        $service_str = "";
+	        $discount = $payment['discount'];
+	        $discount_type = $payment['discount_type'];
+	        $ORDER = newOrder($this->profileid, 'card2', $this->currency, $total, $service_str, $service_main, $discount, $setactivate, 'TEST', $discount_type, $this->device, $this->couponCode);
+	        $nameOfUserObj = new incentive_NAME_OF_USER();
+	        $userName = $nameOfUserObj->getName($this->profileid);
+	        $Order_Id = $ORDER['ORDERID'];
+	        $memHandlerObj = new MembershipHandler();
+	        $billingPaymentStatusLogObj = new billing_PAYMENT_STATUS_LOG();
+	       	$memObj->log_payment_status($Order_Id, "S", 'TEST', 'billing done on test server');
+            $dup = false;
+            $ret = $memObj->updtOrder($Order_Id, $dup, "Y");
+            if (!$dup && $ret) {
+                $memObj->startServiceOrder($Order_Id);
+                $output = array('orderId' => $Order_Id,
+                    'processingStatus' => 'successful',
+                    'incomingIp' => $this->ipAddress);
+            } 
+    	} 
+    	else {
+    		$output = array('orderId' => 'invalid order',
+	            'processingStatus' => 'invalid access',
+	            'incomingIp' => $this->ipAddress);
+    	}
+    	return $output;
+    }
+    
+    public function addRemoveUserForDolPayment($request) {
+    	if(JsConstants::$whichMachine == 'test'){
+            if($this->profileid){
+                if($request->getParameter('add') == 1){
+                    $this->memHandlerObj->addUserForDollarPayment($this->profileid);
+                    $status = "successfully added $this->profileid";
+                }
+                elseif($request->getParameter('remove') == 1){
+                    $this->memHandlerObj->removeUserForDollarPayment($this->profileid);
+                    $status = "successfully removed $this->profileid";
+                }
+                else{
+                    $status = "Parameter missing";
+                }
+            }
+            else{
+                $status = "Please login";
+            }
+            $output = array('processingStatus' => $status,
+                    'incomingIp' => $this->ipAddress);
+    	} 
+    	else {
+    		$output = array('processingStatus' => 'invalid access',
+	            'incomingIp' => $this->ipAddress);
+    	}
+    	return $output;
     }
     
 }

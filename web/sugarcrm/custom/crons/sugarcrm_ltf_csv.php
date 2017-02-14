@@ -8,7 +8,7 @@
 	include($_SERVER['DOCUMENT_ROOT']."/profile/connect.inc");
 
 	$SITE_URL=JsConstants::$ser6Url;
-	$db = connect_db();
+	$dbSlave = connect_slave();
 	$db_dnc = mysql_connect(MysqlDbConstants::$dnc[HOST].":".MysqlDbConstants::$dnc[PORT],MysqlDbConstants::$dnc[USER],MysqlDbConstants::$dnc[PASS]) or die("Unable to connect to dnc server");
 	//Marathi+Konkani
 	$mt_arr1 = array(20,34);
@@ -84,7 +84,7 @@
         $quartile4 = '';
 
 	$sqlq="SELECT max(score_c) as max,min(score_c) as min FROM sugarcrm.leads_cstm";
-	$resq=mysql_query($sqlq,$db) or die(mysql_error());
+	$resq=mysql_query($sqlq,$dbSlave) or die(mysql_error());
         while($rowq = mysql_fetch_array($resq))
         {
                 $diff_limit = ($rowq['max']-$rowq['min'])/4;
@@ -102,7 +102,7 @@
 
 	// Mobile leads registered in sugarcrm
         $sqlM="SELECT l.date_entered,l.id,l.phone_home,l.phone_mobile,c.enquirer_mobile_no_c,c.enquirer_landline_c FROM sugarcrm.leads as l JOIN sugarcrm.leads_cstm as c ON l.id=c.id_c WHERE l.assigned_user_id='' AND l.date_entered<='$todayEndTime' AND l.deleted=0 and l.status IN ('13','24') and c.source_c='12'";
-        $resM=mysql_query($sqlM,$db) or die(mysql_error());
+        $resM=mysql_query($sqlM,$dbSlave) or die(mysql_error());
         while($rowM = mysql_fetch_array($resM))
         {
                 $date_entered =JSstrToTime($rowM['date_entered']);
@@ -118,7 +118,7 @@
 	// Other leads registered in sugarcrm
 	$dt_6day=date("Y-m-d",time()-6*86400);
         $sqlj="SELECT l.id,l.phone_home,l.phone_mobile,c.enquirer_mobile_no_c,c.enquirer_landline_c FROM sugarcrm.leads as l JOIN sugarcrm.leads_cstm as c ON l.id=c.id_c WHERE l.assigned_user_id='' AND l.date_entered<='$dt_6day 23:59:59' AND l.deleted=0 and l.status IN ('13','24') and c.source_c!='12'";
-        $resj=mysql_query($sqlj,$db) or die(mysql_error());
+        $resj=mysql_query($sqlj,$dbSlave) or die(mysql_error());
         while($rowj = mysql_fetch_array($resj))
         {
                 if($rowj['phone_home'] || $rowj['phone_mobile'] || $rowj['enquirer_mobile_no_c'] || $rowj['enquirer_landline_c'])
@@ -188,7 +188,7 @@
 		$phone_no2='';
 
 		$sql1 = "SELECT age_c,date_birth_c,gender_c,height_c,marital_status_c,religion_c,mother_tongue_c,caste_c,education_c,occupation_c,income_c,manglik_c,source_c,enquirer_mobile_no_c,enquirer_landline_c,score_c,std_c,std_enquirer_c,jsprofileid_c FROM sugarcrm.leads_cstm WHERE id_c ='$leadid'";
-                $res1 = mysql_query($sql1,$db) or logError($sql1,$db);
+                $res1 = mysql_query($sql1,$dbSlave) or logError($sql1,$dbSlave);
                 if ($row1 = mysql_fetch_array($res1))
                 {
 			$age = $row1['age_c'];
@@ -228,7 +228,7 @@
 			$score = $row1['score_c'];
 			$username = $row1['jsprofileid_c'];
                         $sql11 = "SELECT LABEL from newjs.HEIGHT WHERE VALUE='$height_val'";
-                        $res11 = mysql_query($sql11,$db) or logError($sql11,$db);
+                        $res11 = mysql_query($sql11,$dbSlave) or logError($sql11,$dbSlave);
                         if($row11 = mysql_fetch_array($res11))
                                 $height = $row11['LABEL'];
 			/* Commented Code
@@ -262,18 +262,18 @@
 		}
 	
 		$sql2 = "SELECT email_address_id FROM sugarcrm.email_addr_bean_rel where bean_id='$leadid'";
-                $res2 = mysql_query($sql2,$db) or logError($sql2,$db);
+                $res2 = mysql_query($sql2,$dbSlave) or logError($sql2,$dbSlave);
                 if ($row2 = mysql_fetch_array($res2))
                 {
                         $email_address_id = $row2['email_address_id'];
 			$sql21 = "SELECT email_address FROM sugarcrm.email_addresses where id='$email_address_id'";
-                	$res21 = mysql_query($sql21,$db) or logError($sql21,$db);
+                	$res21 = mysql_query($sql21,$dbSlave) or logError($sql21,$dbSlave);
 	                if ($row21 = mysql_fetch_array($res21))
                 	        $email = $row21['email_address'];
                 }
 	
 		$sql3 = "SELECT assistant,campaign_id,last_name,lead_source,phone_home,phone_mobile,date_entered,status FROM sugarcrm.leads WHERE id ='$leadid'";
-                $res3 = mysql_query($sql3,$db) or logError($sql3,$db);
+                $res3 = mysql_query($sql3,$dbSlave) or logError($sql3,$dbSlave);
                 if ($row3 = mysql_fetch_array($res3))
 		{
 			$lead_mobile=$row3['phone_mobile'];
@@ -288,7 +288,7 @@
 		}
 
 		$sql4 = "SELECT name,content FROM sugarcrm.campaigns WHERE id ='$campaign_id'";
-                $res4 = mysql_query($sql4,$db) or logError($sql4,$db);
+                $res4 = mysql_query($sql4,$dbSlave) or logError($sql4,$dbSlave);
                 if ($row4 = mysql_fetch_array($res4))
                 {
                         $campaign_username = $row4['name'];
@@ -296,7 +296,7 @@
                 }
 	
 		$sql5 = "SELECT newspaper_c,edition_c,newspaper_edition_c,email_id_c,mobile_no_c FROM sugarcrm.campaigns_cstm WHERE id_c ='$campaign_id'";	
-                $res5 = mysql_query($sql5,$db) or logError($sql5,$db);
+                $res5 = mysql_query($sql5,$dbSlave) or logError($sql5,$dbSlave);
                 if ($row5 = mysql_fetch_array($res5))
                 {
                         $campaign_newspaper_val = $row5['newspaper_c'];

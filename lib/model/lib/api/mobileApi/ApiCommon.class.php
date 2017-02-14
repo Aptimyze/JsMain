@@ -17,7 +17,7 @@ class ApiCommon
 	*/
 	public function getStaticTablesData($param)
 	{
-		$tableMapping =array("religion"=>"RELIGION","caste"=>"CASTE","country"=>"COUNTRY_NEW","city"=>"CITY_NEW","mtongue"=>"MTONGUE","education"=>"EDUCATION_LEVEL_NEW","education_grouping"=>"EDUCATION_GROUPING","occupation"=>"OCCUPATION","occupation_grouping"=>"OCCUPATION_GROUPING","height"=>"HEIGHT","income"=>"INCOME","hobby"=>"HOBBIES","sect"=>"SECT");
+		$tableMapping =array("religion"=>"RELIGION","caste"=>"CASTE","country"=>"COUNTRY_NEW","city"=>"CITY_NEW","mtongue"=>"MTONGUE","education"=>"EDUCATION_LEVEL_NEW","education_grouping"=>"EDUCATION_GROUPING","occupation"=>"OCCUPATION","occupation_grouping"=>"OCCUPATION_GROUPING","height"=>"HEIGHT","income"=>"INCOME","hobby"=>"HOBBIES","sect"=>"SECT","state"=>"STATE_NEW","topCityIndia"=>"TOP_CITY_INDIA_NEW");
 		$gsObj = new GeneralStore;
 		$tableInfo = $gsObj->getTablesInformation("newjs",$tableMapping,1);
 		unset($gsObj);
@@ -157,11 +157,14 @@ class ApiCommon
 			}
 			elseif($k=="state")		//Not needed at present
 			{
-				/*
 				if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
 				{
 					$output[$k]["result"] = "yes";
 					$output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
+					$newjsStateObj = new newjs_STATE_NEW;
+					$output[$k]["data"] = $newjsStateObj->getStatesIndia();
+
+
 				}
 				else
 				{
@@ -169,7 +172,7 @@ class ApiCommon
 					$output[$k]["uptime"] = $v;
 					$output[$k]["data"] = null;
 				}
-				*/
+				
 			}
 			elseif($k=="city")
 			{
@@ -391,7 +394,7 @@ class ApiCommon
                                 {
 					$output[$k]["result"] = "yes";
                                         $output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
-                                        $nhObj = new NEWJS_HOBBIES;
+                                        $nhObj = new JHOBBYCacheLib;
                                         $hobbyArr = $nhObj->getHobbiesAndInterestAndSpokenLanguage();
                                         unset($nhObj);
                                         $i=0;
@@ -444,6 +447,23 @@ class ApiCommon
                                         $output[$k]["data"] = null;
                                 }
                         }
+
+            elseif($k="topCityIndia")
+            {
+            	if($v==$this->noTime || strtotime($v)<strtotime($tableInfo[$tableMapping[$k]]))
+            	{
+            		$output[$k]["result"] = "yes";
+					$output[$k]["uptime"] = $tableInfo[$tableMapping[$k]];
+					$topCityIndiaObj = new newjs_TOP_CITY_INDIA_NEW;
+					$output[$k]["data"] = $topCityIndiaObj->getTopCitiesIndia();
+				}
+            	else
+            	{
+            		$output[$k]["result"] = "no";
+					$output[$k]["uptime"] = $v;
+					$output[$k]["data"] = null;
+            	}
+            }
 			else
 			{
 				return null;
@@ -452,6 +472,7 @@ class ApiCommon
 
 		foreach($output as $k=>$v)
 		{
+			
 			foreach($v as $kk=>$vv)
 			{
 				if($kk=="data")
@@ -510,9 +531,13 @@ class ApiCommon
                                         	$output[$k]["uptime"] = $tableInfo[$maxTimeField];
 					$parameters["forClusters"] = $forClusters;
 					$topSearchBandObj = new TopSearchBandPopulate($parameters);
-					if($needMobileFormat)
-						$dataArray = $topSearchBandObj->generateDataArrayMobile();
-					else
+					if($needMobileFormat){
+                                                if(MobileCommon::isDesktop()){
+                                                        $dataArray = $topSearchBandObj->generateDataArrayPC();
+                                                }else{
+                                                        $dataArray = $topSearchBandObj->generateDataArrayMobile();
+                                                }
+                                        }else
 						$dataArray = $topSearchBandObj->generateDataArrayApp();
 					unset($topSearchBandObj);
 					$output[$k]["data"] = $dataArray;

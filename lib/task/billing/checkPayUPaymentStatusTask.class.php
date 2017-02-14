@@ -44,8 +44,8 @@ EOF;
         connect_db();
 
         $serObj = new Services();
-        $membershipObj = new Membership();
-        $memHandlerObj = new MembershipHandler();
+        //$membershipObj = new Membership();
+        //$memHandlerObj = new MembershipHandler();
 
         $billingOrdersObj = new BILLING_ORDERS('newjs_masterRep');
         //$billingPaymentStatusLogObj = new billing_PAYMENT_STATUS_LOG();
@@ -58,6 +58,10 @@ EOF;
             
             foreach ($ordersArray as $key => $value) {
 
+		$membershipObj = new Membership();
+		$memHandlerObj = new MembershipHandler();
+
+                $profileid = $value['PROFILEID'];
                 $currency = $value['CURTYPE'];
                 $Order_Id = $value['ORDERID']."-".$value['ID'];
 
@@ -108,6 +112,11 @@ EOF;
                     continue; 
                 }
 
+                $gatewayRespObj = new billing_GATEWAY_RESPONSE_LOG();
+                list($order_str, $order_num) = explode("-", $Order_Id);
+                $responseMsg = serialize($response);
+                $gatewayRespObj->insertResponseMessage($profileid, $order_num, $order_str, 'PAYU_POLLING', $responseMsg);
+
                 $orderDetails = $response->transaction_details->$Order_Id;
                 $status = $orderDetails->status;
 
@@ -137,7 +146,8 @@ EOF;
                     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
                 }
 
-                unset($AuthDesc);
+                unset($AuthDesc, $profileid, $Order_Id, $currency);
+		unset($membershipObj,$memHandlerObj);
             }
         }
     }

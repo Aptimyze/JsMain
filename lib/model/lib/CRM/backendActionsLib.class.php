@@ -347,7 +347,7 @@ class backendActionsLib
 	**/
 	public function setCrmMemcacheData($key="CRM_MEMCACHED_DATA",$value)
 	{
-		$this->memcacheObj->set($key,$value); //confirm array or serialized array--------------
+		$this->memcacheObj->set($key,$value,86400); //confirm array or serialized array--------------
 	}
 
 	/**

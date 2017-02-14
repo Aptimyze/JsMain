@@ -20,14 +20,14 @@ class FieldSalesFollowUpStatusMis
 
 	// Function to get all alloted profiles for a particular agent from beginning of time
 	public function getAllotedProfiles($agent){
-		$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+		$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 		$profileArray = $mainAdminObj->getFieldSalesAllotedProfilesForAgent($agent);
 		return $profileArray;
 	}
 
 	// Function to get followup profiles for date range
 	public function getFollowUpProfilesForRange($agent, $start_date, $end_date=""){
-		$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+		$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 		$profileArray = $mainAdminObj->getFollowUpProfilesForRange($agent, $start_date, $end_date);
 		return $profileArray;
 	}
@@ -35,7 +35,7 @@ class FieldSalesFollowUpStatusMis
 	// Function to get Usernames of all Profiles
 	public function getProfileUsernames($profileArray){
 		$profileUsername = array();
-		$jprofileObj = new JPROFILE('newjs_slave');
+		$jprofileObj = new JPROFILE('newjs_masterRep');
 		foreach($profileArray as $key=>$value){
 			if(is_array($value)){
 				$profileArray[$key]['USERNAME'] = $jprofileObj->getUsername($value['PROFILEID']);
@@ -46,7 +46,7 @@ class FieldSalesFollowUpStatusMis
 
 	// Filter profiles list acquired from above to select only free (non-paid) profiles
 	public function getFreeProfilesFromAllotedProfiles($profileArray){
-		$jprofileObj = new JPROFILE('newjs_slave');
+		$jprofileObj = new JPROFILE('newjs_masterRep');
 		foreach($profileArray as $key=>$value){
 			if(is_array($value)){
 				$subscriptions = $jprofileObj->getProfileSubscription($value['PROFILEID']);
@@ -61,7 +61,7 @@ class FieldSalesFollowUpStatusMis
 
 	// Get de-allocation dates for all free profiles from CRM_DAILY_ALLOT table
 	public function getDeallocationDateForProfiles($profileArray){
-		$crmDailyAllotObj = new CRM_DAILY_ALLOT('newjs_slave');
+		$crmDailyAllotObj = new CRM_DAILY_ALLOT('newjs_masterRep');
 		foreach($profileArray as $key=>$value){
 			if(is_array($value)){
 				$deallocationDate = $crmDailyAllotObj->getDeallocationDateForProfile($value['PROFILEID'], $value['ALLOT_TIME']);
@@ -73,7 +73,7 @@ class FieldSalesFollowUpStatusMis
 
 	// Get last handled date i.e. last processed date for all profiles from HISTORY table
 	public function getLastHandledDateForProfiles($profileArray, $agent){
-		$historyObj = new incentive_HISTORY('newjs_slave');
+		$historyObj = new incentive_HISTORY('newjs_masterRep');
 		foreach($profileArray as $key=>$value){
 			if(is_array($value)){
 				$lastHandledDate = $historyObj->getLastHandledDateForProfile($value['PROFILEID'], $agent);
@@ -106,7 +106,7 @@ class FieldSalesFollowUpStatusMis
 	// Function to filter future followUps from i.e. from tomorrow onwards
 	public function getFutureFollowUps($agent){
 		$profileArray = array();
-		$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+		$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 		$profileArray = $mainAdminObj->getFutureFollowUpProfileDetails($agent);
 		$profileArray = $this->getProfileUsernames($profileArray);
 		$profileArray = $this->getDeallocationDateForProfiles($profileArray);
@@ -173,7 +173,7 @@ class FieldSalesFollowUpStatusMis
 	// Function to count alloted (non-paid) profiles for a set of agents(i.e $reporters)
 	public function fetchAllocationBucketCount($reporters){
 		foreach($reporters as $agent){
-			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 			$bucket = $mainAdminObj->getFieldSalesAllotedProfilesForAgent($agent);
 			$freeProfiles = $this->getFreeProfilesFromAllotedProfiles($bucket);
 			$all[$agent] =  count($bucket);
@@ -188,7 +188,7 @@ class FieldSalesFollowUpStatusMis
 		foreach($reporters as $agent){
 			$start_dt =date("Y-m-d 00:00:00");
 			$end_dt =date("Y-m-d 23:59:59");
-			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 			$cnt = $mainAdminObj->countFollowUpProfiles($agent, $start_dt, $end_dt);
 			$res[$agent] =  $cnt;
 		}
@@ -201,7 +201,7 @@ class FieldSalesFollowUpStatusMis
 			$day =date('Y-m-d', strtotime('-1 day'));
 			$start_dt =$day." 00:00:00";
 			$end_dt =$day." 23:59:59";
-			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 			$cnt = $mainAdminObj->countFollowUpProfiles($agent, $start_dt, $end_dt);
 			$res[$agent] =  $cnt;
 		}
@@ -214,7 +214,7 @@ class FieldSalesFollowUpStatusMis
 			$day =date('Y-m-d', strtotime('-2 day'));
 			$start_dt =$day." 00:00:00";
 			$end_dt =$day." 23:59:59";
-			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 			$cnt = $mainAdminObj->countFollowUpProfiles($agent, $start_dt, $end_dt);
 			$res[$agent] =  $cnt;
 		}
@@ -226,7 +226,7 @@ class FieldSalesFollowUpStatusMis
 		foreach($reporters as $agent){
 			$day =date('Y-m-d', strtotime('-2 day'));
 			$start_dt =$day." 00:00:00";
-			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 			$cnt = $mainAdminObj->countFollowUpProfilesBeforeDate($agent, $start_dt);
 			$res[$agent] =  $cnt;
 		}
@@ -243,7 +243,7 @@ class FieldSalesFollowUpStatusMis
 	// Function to count future followups (non-paid and paid both) for a set of agents(i.e $reporters)
 	public function fetchFutureFollowUpsCount($reporters){
 		foreach($reporters as $agent){
-			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_slave');
+			$mainAdminObj = new incentive_MAIN_ADMIN('newjs_masterRep');
 			$profiles = $mainAdminObj->getFutureFollowUpProfiles($agent);
 			$res[$agent] =  count($profiles);
 		}
@@ -254,7 +254,7 @@ class FieldSalesFollowUpStatusMis
 	public function getBackgroundColor($reporters){
 		foreach($reporters as $agent){
 			$misObj = new misGenerationhandler();
-			$jsObj = new jsadmin_PSWRDS();
+			$jsObj = new jsadmin_PSWRDS('newjs_masterRep');
 			$priv = $jsObj->getPrivilegeForAgent($agent);
 			$color = $misObj->getRowColour($priv);
 			$res[$agent] =  $color;

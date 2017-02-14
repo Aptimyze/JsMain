@@ -27,6 +27,7 @@ include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
                $subject="page1_complete";
                $msg=$msg1.print_r($_SERVER,true);
                send_email($to,$msg,$subject,"",$cc);
+		header("Location:".$SITE_URL);
  //ending mail part
 // authenticate only if this file has not been included in login.php because in that case authenticated function will fail as the cookie will not be available in the same script. $data already comes from login.php
 if($logindone!="Y")
@@ -306,6 +307,8 @@ if($data)
 			if($_SERVER['REQUEST_METHOD']=="POST")	
 			{
 				mysql_query_decide($sql_up) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$sql_up,"ShowErrTemplate");
+				include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+				JProfileUpdateLib::getInstance()->removeCache($profileid);
 			}
 
 			//to check partner profile is filled by the user or not //

@@ -108,7 +108,7 @@ class LoggedInProfile extends Profile{
 		 * */
 		public function editHobby($paramArr)
 		{
-			$hobbyObj=new NEWJS_HOBBIES();
+			$hobbyObj=new JHOBBYCacheLib();
 			$hobbyObj->update($this->PROFILEID,$paramArr);
 		}
 		/**
@@ -116,7 +116,7 @@ class LoggedInProfile extends Profile{
 		 * */
 		public function editEducation($paramArr)
 		{
-			$eduObj=new NEWJS_JPROFILE_EDUCATION();
+			$eduObj=  ProfileEducation::getInstance();
 			$eduObj->update($this->PROFILEID,$paramArr);
 		}
 		/**
@@ -124,7 +124,7 @@ class LoggedInProfile extends Profile{
 		 * */
 		public function editCONTACT($paramArr)
 		{
-			$contactObj=new NEWJS_JPROFILE_CONTACT();
+			$contactObj= new ProfileContact();
 			$contactObj->update($this->PROFILEID,$paramArr);
 		}
 

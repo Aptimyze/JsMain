@@ -38,6 +38,7 @@ class JPartnerDecorated extends JPartner{
 					"LINCOME"=>"lincome",
 					"HINCOME"=>"hincome",
 					"PARTNER_INCOME"=>"partner_income",
+					"STATE"=>"state_india",
 				);
 				//Add  Fields to this array if want to show Does Not matter in value instead of hyphen
 				$this->dosntMatterArr=array(

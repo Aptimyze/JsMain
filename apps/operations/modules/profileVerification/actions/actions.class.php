@@ -527,4 +527,100 @@ class profileVerificationActions extends sfActions
 		    $url="/operations.php/$module/$action";
 		    $this->redirect($url);
 		}
+                
+        public function executeInappropriateUsersReport(sfWebRequest $request)
+  {  
+
+      $endDate=$request->getParameter('RAStartDate');
+      $resultArr=(new MIS_INAPPROPRIATE_USERS_REPORT())->getReportForADate($endDate,10);
+      ob_end_clean();
+      if(sizeof($resultArr) == 0 )
+          die;
+      $i=0;
+
+      echo json_encode($resultArr);
+     // print_r($resultArr);
+      return sfView::NONE;
+      die;
+
+  }
+    public function executeInappropriateUsers(sfWebRequest $request)
+    {
+            $this->setTemplate('inappropriateUsers');
+
+    }   
+
+    public function executeFetchAbuseInvalidData(sfWebRequest $request)
+    {
+            $this->setTemplate('fetchAbuseInvalidData');
+    } 
+
+
+    public function executeFetchAbuseInvalidDataReport(sfWebRequest $request)
+  {
+      $Uname=$request->getParameter('inputUser');
+
+      $obj = NEWJS_JPROFILE::getInstance();
+      $profileID =  $obj->getProfileIdFromUsername($Uname);
+
+      if($profileID == NULL)
+      { 
+      ob_end_clean();
+      $resultArr = "No User With this name";  
+      echo json_encode($resultArr);
+      return sfView::NONE;
+      die;
+      }
+
+      $resultAbuseArr=(new REPORT_ABUSE_LOG())->getReportAbuseHistoryOfUser($profileID);
+      if($resultAbuseArr != NULL && is_array($resultAbuseArr))
+      {  
+      foreach ($resultAbuseArr as $key => $value) {
+        $resultAbuseArr[$key]['TYPE'] = 'ABUSE';  
+        $reporterName = $obj->getUsername($value['REPORTER']);
+        $resultAbuseArr[$key]['REPORTER'] = $reporterName;
+      }
+      }
+      $resultInvalidArr = (new JSADMIN_REPORT_INVALID_PHONE())->getReportInvalidForUser($profileID);
+      if($resultInvalidArr != NULL && is_array($resultInvalidArr))
+      {
+      foreach ($resultInvalidArr as $key => $value) {
+        $resultInvalidArr[$key]['DATE'] = $value['SUBMIT_DATE'];
+        $resultInvalidArr[$key]['TYPE'] = 'INVALID';
+        $reporterName = $obj->getUsername($value['SUBMITTER']);
+        unset($resultInvalidArr[$key]['SUBMIT_DATE']);
+        unset($resultInvalidArr[$key]['SUBMITTER']);
+        $resultInvalidArr[$key]['REPORTER'] = $reporterName;
+      }
+    }
+
+    if(is_array($resultAbuseArr) && is_array($resultInvalidArr)){
+     $resultArr = array_merge($resultAbuseArr,$resultInvalidArr);
+    }
+    else if(is_array($resultAbuseArr) && !is_array($resultInvalidArr))
+    {
+      $resultArr = $resultAbuseArr;
+    }
+    else
+    {
+      $resultArr = $resultInvalidArr;
+    }
+
+
+     foreach ($resultArr as $key => $value) {
+       $sortingArray[$key] = $value['DATE'];
+     }
+
+     array_multisort($sortingArray,SORT_DESC,$resultArr);
+
+      ob_end_clean();
+      if(sizeof($resultArr) == 0 )
+          die;
+      $i=0;
+      echo json_encode($resultArr);
+      return sfView::NONE;
+      die;
+
+  }      
+                
 }

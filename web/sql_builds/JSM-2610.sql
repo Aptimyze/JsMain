@@ -1,0 +1,2 @@
+USE newjs;
+DELETE FROM `CASTE` WHERE ID = 433;

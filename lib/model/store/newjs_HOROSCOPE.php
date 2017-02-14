@@ -12,6 +12,7 @@ class newjs_HOROSCOPE extends TABLE
                 $res=$this->db->prepare($sql);
 		$res->bindValue(":pid", $pid, PDO::PARAM_INT);
 		$res->execute();
+        //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 		$row = $res->fetch(PDO::FETCH_ASSOC);
 		return $row["C"];
 	}
@@ -41,6 +42,7 @@ class newjs_HOROSCOPE extends TABLE
 
 			$res->bindValue(":PROFILEID", $pid);
 			$res->execute();
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return true;
 		}
 		catch(PDOException $e) {
@@ -58,9 +60,28 @@ class newjs_HOROSCOPE extends TABLE
 			$sql = "REPLACE into newjs.HOROSCOPE (PROFILEID,HOROSCOPE) select PROFILEID,HOROSCOPE from newjs.HOROSCOPE_FOR_SCREEN where UPLOADED='Y'";
 			$res = $this->db->prepare($sql);
 			$res->execute();
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
 			return true;
 		} catch (PDOException $ex) {
 			throw new jsException($e);
+		}
+	}
+
+	/**
+	 * @param $iID
+	 * @return bool
+	 */
+	public function deleteRecord($iProfileID)
+	{
+		try{
+			$sql = 'DELETE FROM newjs.HOROSCOPE WHERE PROFILEID = :PID';
+			$pdoStatement = $this->db->prepare($sql);
+			$pdoStatement->bindValue(':PID',$iProfileID,PDO::PARAM_INT);
+			$pdoStatement->execute();
+            //JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
+			return true;
+		} catch (PDOException $ex) {
+			throw new jsException($ex);
 		}
 	}
 }

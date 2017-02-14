@@ -15,8 +15,9 @@ public function __construct($profileObject,$phoneType)
 		{
 
 			
-			if (!$profileObject || !$phoneType)
-				throw new Exception("No phoneType or profileObject", 1);
+			if (!$profileObject || !$phoneType){
+				throw new jsException('',"No phoneType or profileObject", 1);
+			}
 				$this->profileObject=$profileObject;
 				$this->phoneType=$phoneType;
 				switch($phoneType)
@@ -31,13 +32,13 @@ public function __construct($profileObject,$phoneType)
 					break;
 					
 					case 'A':
-					$contactArray=(new newjs_JPROFILE_CONTACT())->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_MOBILE");
+					$contactArray= (new ProfileContact())->getArray(array('PROFILEID'=>$profileObject->getPROFILEID()),'','',"ALT_MOBILE");
 					$this->phone=$profileObject->getISD().$contactArray['0']['ALT_MOBILE'];
 					break;
 				}
 
 	
-
+			
 		}
 		catch(Exception $e)
 		{

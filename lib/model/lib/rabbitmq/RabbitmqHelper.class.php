@@ -16,7 +16,9 @@ class RabbitmqHelper
     $emailAlertArray=array("queueMail"=>"",
                           "queueSmsGcm"=>"",
                           "browserNotification"=>"nitish.sharma@jeevansathi.com,ankita.g@jeevansathi.com",
-                          "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com"
+			  "UpdateSeen"=>"eshajain88@gmail.com,lavesh.rawat@gmail.com",
+                          "default"=>"pankaj.khandelwal@jeevansathi.com,tanu.gupta@brijj.com,ankita.g@jeevansathi.com,sanyam.chopra@jeevansathi.com,nitish.sharma@jeevansathi.com",
+                          "loggingQueue"=>"palash.chordia@jeevansathi.com,nitesh.s@jeevansathi.com"
                           );            
     
     $emailTo=$emailAlertArray[$to];
@@ -29,6 +31,14 @@ class RabbitmqHelper
       exec("touch"." ".$errorLogPath,$output);
     error_log($message,3,$errorLogPath);
     //SendMail::send_email($emailTo,$message,$subject);           
+  }
+
+  public static function sendChatConsumerAlert($message)
+  {    
+    $emailTo="nitishpost@gmail.com,nsitankita@gmail.com,lavesh.rawat@gmail.com,pankaj139@gmail.com,maxspeed83@gmail.com";
+    $subject="Rabbitmq Chat php consumer error @".JsConstants::$whichMachine;
+    $message=$message.".....site->".JsConstants::$siteUrl."...@".date('d-m-Y H:i:s');
+    SendMail::send_email($emailTo,$message,$subject);           
   }
 
   /**
@@ -73,6 +83,7 @@ class RabbitmqHelper
       $channel->exchange_declare(MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"], MQ::$DELAYED_NOTIFICATION_EXCHANGE["TYPE"], MQ::PASSIVE, MQ::$DELAYED_NOTIFICATION_EXCHANGE["DURABLE"], MQ::AUTO_DELETE);
       $channel->exchange_declare(MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"], MQ::$INSTANT_NOTIFICATION_EXCHANGE["TYPE"] , MQ::PASSIVE, MQ::$INSTANT_NOTIFICATION_EXCHANGE["DURABLE"], MQ::AUTO_DELETE);
       $channel->queue_declare(MQ::$INSTANT_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+
       //create queues and bind to delayed exchange for scheduled notifications
       foreach (MQ::$scheduledNotificationBindingKeyArr as $key => $value) 
       {
@@ -84,8 +95,15 @@ class RabbitmqHelper
         $channel->queue_bind(MQ::${$key}, MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],$value);
       }
       $channel->queue_bind(MQ::$INSTANT_NOTIFICATION_QUEUE, MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"]);
+
       return $channel;
     }
+    elseif($key=='notificationLog'){
+       $channel->exchange_declare(MQ::$NOTIFICATION_LOG_EXCHANGE["NAME"], MQ::$NOTIFICATION_LOG_EXCHANGE["TYPE"] , MQ::PASSIVE, MQ::$NOTIFICATION_LOG_EXCHANGE["DURABLE"], MQ::AUTO_DELETE);
+       $channel->queue_declare(MQ::$NOTIFICATION_LOG_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
+       $channel->queue_bind(MQ::$NOTIFICATION_LOG_QUEUE, MQ::$NOTIFICATION_LOG_EXCHANGE["NAME"]);	
+       return $channel;	
+    }		
     else
       return null;
     

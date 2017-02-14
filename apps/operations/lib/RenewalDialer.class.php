@@ -13,7 +13,7 @@ class RenewalDialer {
     //Create Temp Pool
     public function createTempPoolForRenewalDialer()
     {
-        $inRenewalDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL();
+        $inRenewalDialerTempPool = new incentive_RENEWAL_IN_DIALER_TEMP_POOL('newjs_masterDDL');
         $inRenewalDialerTempPool->truncate();
         $profiles = $this->inRenewalDialerInsObj->fetchRenewalDialerProfiles();
         if($profiles)
@@ -73,7 +73,7 @@ class RenewalDialer {
         $method =$processObj->getMethod();
         if($method=='IN_RENEWAL_DIALER_ELIGIBILITY')
         {
-            $inRenewDialerObj = new incentive_RENEWAL_IN_DIALER_TEMP_POOL('newjs_slave');
+            $inRenewDialerObj = new incentive_RENEWAL_IN_DIALER_TEMP_POOL();
             $profiles = $inRenewDialerObj->fetchProfiles();
         }
         return $profiles;
@@ -92,7 +92,7 @@ class RenewalDialer {
                     $eligibleProfilesArr[] = $val["PROFILEID"];
                 }
             }
-            $alertsObj = new newjs_JPROFILE_ALERTS('newjs_slave');
+            $alertsObj = new JprofileAlertsCache('newjs_slave');
             $historyObj = new incentive_HISTORY('newjs_slave');
             $jprofileObj = new JPROFILE('newjs_slave');
             
@@ -149,6 +149,14 @@ class RenewalDialer {
                         $this->inRenewalDialerInsObj->updateRenewalDialerEligibility($profileid, "N");
                         continue;
                     }
+		    if($disposition=='NI'){
+			$todayDate 	=date("Y-m-d");
+			$prev2Days    	=date('Y-m-d', strtotime('-1 days',strtotime($todayDate)));
+			if(strtotime($dispEntryDt)>=strtotime($prev2Days)){
+				$this->inRenewalDialerInsObj->updateRenewalDialerEligibility($profileid, "N");	
+				continue;	
+			}
+		    }	
                 }
                 $this->inRenewalDialerInsObj->updateRenewalDialerEligibility($profileid, "Y");
                 unset($jProfileArr);

@@ -45,3 +45,41 @@ helpBackendSuccess:
         title:    Jeevansathi Help Module
     stylesheets:  [operations/help_module]
     javascripts:  []
+
+financeDataInterfaceSuccess:
+  metas:
+    title:        Finance Data Interface
+
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]
+
+billingManagementInterfaceSuccess:
+  metas:
+    title:        Billing Management Interface
+  stylesheets:    []
+  javascripts:    [] 
+
+serviceDateChangeInterfaceSuccess:
+  metas:
+    title:        Service Date Change Interface
+  stylesheets:    [jquery_dateLists]
+  javascripts:    [jquery_dateLists] 
+
+serviceActivationChangeInterfaceSuccess:
+  metas:
+    title:        Service Activation Change Interface
+  stylesheets:    []
+  javascripts:    [] 
+
+changeActiveServicesInterfaceSuccess:
+  metas:
+    title:        Change Active Service Interface
+  stylesheets:    []
+  javascripts:    [] 
+
+crmSmsFunctionalityInterfaceSuccess:
+  metas:
+    title:        CRM SMS Interface
+  stylesheets:    []
+  javascripts:    []

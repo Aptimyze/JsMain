@@ -43,8 +43,8 @@ class postCancelInterestv1Action extends sfAction
 							$this->tobetype = ContactHandler::CANCEL_CONTACT;
 					}
 					$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,$this->tobetype,ContactHandler::POST);
-					$this->contactHandlerObj->setElement("STATUS","E");
-					$this->contactHandlerObj->setElement("MESSAGE",PresetMessage::getPresentMessage($this->loginProfile));
+					$this->contactHandlerObj->setElement("STATUS",$this->tobetype);
+					$this->contactHandlerObj->setElement("MESSAGE","");
 					$this->contactHandlerObj->setElement("DRAFT_NAME","preset");		
 					$this->contactEngineObj=ContactFactory::event($this->contactHandlerObj);
 					$responseArray           = $this->getContactArray();
@@ -52,8 +52,10 @@ class postCancelInterestv1Action extends sfAction
 			}
 		}
 		if (is_array($responseArray)) {
+			//CommonFunction::removeCanChat($this->loginProfile->getPROFILEID(),$this->Profile->getPROFILEID());
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$apiObj->setResponseBody($responseArray);
+			$apiObj->setResetCache(true);
 			$apiObj->generateResponse();
 		}
 		else
@@ -75,14 +77,26 @@ class postCancelInterestv1Action extends sfAction
 		$responseButtonArray = array();
 		if($this->contactEngineObj->messageId)
 		{
-			$responseButtonArray = $buttonObj->getAfterActionButton(ContactHandler::CANCEL_CONTACT);
+			$responseButtonArray = $buttonObj->getAfterActionButton($this->tobetype);
 		}
 		else
 		{
-			$responseArray["errmsglabel"]= "You cannot perform this action";
-			$responseArray["errmsgiconid"] = "16";
-			$responseArray["headerlabel"] = "Unsupported action";
-			$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			$errorArr = $this->contactEngineObj->errorHandlerObj->getErrorType();
+			if($errorArr["PROFILE_VIEWED_HIDDEN"] == 2)
+			{
+				$responseArray["errmsglabel"]= $this->contactEngineObj->errorHandlerObj->getErrorMessage();
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+                                $responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+
+			}
+			else
+			{
+				$responseArray["errmsglabel"]= "You cannot perform this action";
+				$responseArray["errmsgiconid"] = "16";
+				$responseArray["headerlabel"] = "Unsupported action";
+				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
+			}
 		}
 		if(is_array($responseArray))
 			$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);

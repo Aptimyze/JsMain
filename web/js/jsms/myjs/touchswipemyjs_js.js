@@ -17,8 +17,6 @@
             if (el.length == 0)
                 return;
             if (next){
-                if (ob._objId==7)
-            loadnew(2, ob);
     } else ob.page=-1;
                         CssFix();
             WrapParent();
@@ -34,7 +32,7 @@
             ob._maxindex=ob._tupleIndex-ob._lmHidden;
             el.css("width", (transformX * (ob._tupleIndex+1) + 10) + "px");
             addIndex();
-if (ob._objId==7) bindSlider();
+            bindSlider();
         }
 
 
@@ -253,7 +251,7 @@ if (ob._objId==7) bindSlider();
         }
 
         
-        var ob = {_isRequested:0,_tupleCount: no_of_tuples, _tupleIndex:no_of_tuples, page: 2, _performFix: initOnNewTuples, _objId: ID, _defaultInit: init, indexFix: addIndex, _parent: el,_goTo:gotoSlide,_index:0,_maxindex:0,_lmHidden:1,_mapString:mapString};
+        var ob = {_isRequested:0,_tupleCount: no_of_tuples, _tupleIndex:no_of_tuples, page: 1, _performFix: initOnNewTuples, _objId: ID, _defaultInit: init, indexFix: addIndex, _parent: el,_goTo:gotoSlide,_index:0,_maxindex:0,_lmHidden:1,_mapString:mapString};
         var childElement = el.children();
         var thresholdWidth = 5;
         var transformX_corr = ((tuple_ratio * 3 - 100) * windowWidth) / 200 + 10+el.offset().left;
@@ -339,7 +337,7 @@ function loadnew(page_no, eleObj) {
                         y.find(".tuple_education").html(rsp[eleObj._mapString]['tuples'][i]["education"]);
                         y.find(".tuple_income").html(rsp[eleObj._mapString]['tuples'][i]["income"]);
                         y.find(".proChecksum").val(rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]);
-                        y.find("#detailedProfileRedirect").attr('href','/profile/viewprofile.php?profilechecksum='+rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]+'&'+rsp[eleObj._mapString]['tracking']);
+                        y.find("#detailedProfileRedirect").attr('href','/profile/viewprofile.php?profilechecksum='+rsp[eleObj._mapString]['tuples'][i]["profilechecksum"]+'&'+rsp[eleObj._mapString]['tracking']+"&total_rec="+rsp[eleObj._mapString]['view_all_count']+"&actual_offset="+(i+1)+"&contact_id="+rsp[eleObj._mapString]['contact_id']);
                         
                        //
                     }

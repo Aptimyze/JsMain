@@ -64,6 +64,7 @@ class ObjectiveEditFieldMap
         'ID_PROOF_TYP'=>'id_proof_typ',
         'P_HHEIGHT'=>'height',
         'P_LHEIGHT'=>'height',
+        'P_STATE'=>'state_india',
 			);
 		if($from_whr=="MR")
 			$objectiveFieldMap["RELATIONSHIP"]="relationship_minireg";

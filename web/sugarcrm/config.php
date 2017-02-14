@@ -30,10 +30,10 @@ $sugar_config = array (
   'datef' => 'm/d/Y',
   'dbconfig' => 
   array (
-    'db_host_name' => MysqlDbConstants::$master[HOST].":".MysqlDbConstants::$master[PORT],
+    'db_host_name' => MysqlDbConstants::$masterDDL[HOST].":".MysqlDbConstants::$masterDDL[PORT],
     'db_host_instance' => 'SQLEXPRESS',
-    'db_user_name' => MysqlDbConstants::$master[USER],
-    'db_password' => MysqlDbConstants::$master[PASS],
+    'db_user_name' => MysqlDbConstants::$masterDDL[USER],
+    'db_password' => MysqlDbConstants::$masterDDL[PASS],
     'db_name' => 'sugarcrm',
     'db_type' => 'mysql',
   ),

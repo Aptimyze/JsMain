@@ -271,7 +271,7 @@ if(authenticated($cid))
 				if($marked_for_deletion)
 				{
 					$sql_act = "SELECT ACTIVATED,PREACTIVATED FROM newjs.JPROFILE WHERE PROFILEID = '$profileid'";
-					$res_act = mysql_query_decide($sql_act) or die($sql_act);
+					$res_act = mysql_query_decide($sql_act) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception($sql_act));
 					$row_act = mysql_fetch_array($res_act);
 					if($row_act['ACTIVATED']!='D' && !$offline_billing)
 					{
@@ -298,6 +298,15 @@ if(authenticated($cid))
 			
 			$membershipObj->startServiceBackend($membership_details);
 			$membershipObj->generateReceipt();
+            
+            //**START - Entry for negative transactions
+            if($val=="refund"){
+                $memHandlerObject = new MembershipHandler();
+                $memHandlerObject->handleNegativeTransaction(array('RECEIPTIDS'=>array($membershipObj->getReceiptid())));
+                unset($memHandlerObject);
+            }
+            //**END - Entry for negative transactions
+            
 			$smarty->display("refund_paypart.htm");
 		}
 		else

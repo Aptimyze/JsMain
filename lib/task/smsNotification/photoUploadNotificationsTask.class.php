@@ -48,8 +48,18 @@ $this->addOptions(array(
                         //$profiles = array('658'=>658);
 			// send Instant Notification
 			foreach($profiles as $key=>$pid){
-				$instantNotifObj->sendNotification($key,$profileid);
-                                requestedPhotoUploadedMail::sendUploadPhotoMail($key,$profileid);
+                                $profileObj1 = Profile::getInstance('', $key);
+                                $profileObj2 = Profile::getInstance('', $profileid);
+                                $contactsObj = new Contacts($profileObj1,$profileObj2);
+                                $ignore=new IgnoredProfiles("newjs_master");
+                                
+                                $type = $contactsObj->getTYPE();
+                                if($type != 'C' && $type != 'D' && $type != 'E'){
+                                    if(!$ignore->ifIgnored($profileid,$key) && !$ignore->ifIgnored($key,$profileid)){
+                                        $instantNotifObj->sendNotification($key,$profileid);
+                                        requestedPhotoUploadedMail::sendUploadPhotoMail($key,$profileid);
+                                    }
+                                }
 			}
 			unset($profiles);
 		}

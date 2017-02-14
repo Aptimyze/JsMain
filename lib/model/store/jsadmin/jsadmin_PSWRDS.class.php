@@ -666,7 +666,7 @@ class jsadmin_PSWRDS extends TABLE
     {
         try
         {
-            $sql="SELECT EMAIL AS SUB_CENTER from jsadmin.PSWRDS where USERNAME=:USERNAME";
+            $sql="SELECT EMAIL from jsadmin.PSWRDS where USERNAME=:USERNAME";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":USERNAME",$username,PDO::PARAM_STR);
             $prep->execute();
@@ -798,5 +798,61 @@ class jsadmin_PSWRDS extends TABLE
         }
         return NULL;
     }
+
+    public function fetchAgentSupervisor($username)
+    {
+        try
+        {
+            $sql="SELECT HEAD_ID FROM jsadmin.PSWRDS WHERE USERNAME=:USERNAME";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":USERNAME",$username,PDO::PARAM_STR);
+            $prep->execute();
+            if ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+                if($result['HEAD_ID'] != 0) {
+                    $sql2="SELECT USERNAME FROM jsadmin.PSWRDS WHERE EMP_ID=:EMP_ID";
+                    $prep2 = $this->db->prepare($sql2);
+                    $prep2->bindValue(":EMP_ID",$result['HEAD_ID'],PDO::PARAM_INT);
+                    $prep2->execute();
+                    if ($result2 = $prep2->fetch(PDO::FETCH_ASSOC)) {
+                        return $result2['USERNAME'];
+                    } else {
+                        return NULL;
+                    }
+                } else {
+                    return NULL;
+                }
+            }
+            else {
+                return NULL;
+            }
+        }
+        catch(Exception $e){
+            throw new jsException($e);
+        }
+    }
+    
+    public function getPrivilegesForSalesTargetWithLastLogin()
+    {
+        try
+        {
+            $sql="SELECT USERNAME, PRIVILAGE, LAST_LOGIN_DT FROM jsadmin.PSWRDS WHERE ACTIVE='Y'";
+            $prep = $this->db->prepare($sql);
+            $prep->execute();
+
+            while($result=$prep->fetch(PDO::FETCH_ASSOC))
+            {
+                $res[$result['USERNAME']]['USERNAME'] = $result['USERNAME'];
+                $res[$result['USERNAME']]['PRIVILAGE'] = $result['PRIVILAGE'];
+                $res[$result['USERNAME']]['LAST_LOGIN_DT'] = $result['LAST_LOGIN_DT'];
+            }
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+        return $res;
+    }
+    
+    
 }
 ?>

@@ -16,10 +16,13 @@ class InstantAppNotification
 	$valueArray['STATUS']="Y";
 	$valueArray['NOTIFICATION_KEY']=$this->notificationKey;
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
-	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD');
+	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING');
   }
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='')
   {
+    if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4){
+        return;
+    }
 	$notificationSentCount = $this->getNotificationSentCount($selfProfile);
 	$notificationlimit = $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey];
 	if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) || $notificationlimit>$notificationSentCount)
@@ -27,6 +30,7 @@ class InstantAppNotification
 		if($selfProfile)
 		{
 			$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey, $message);
+			// print_r($notificationDetails[0]);
 			$notificationData = $notificationDetails[0];
 			if(is_array($notificationData))
 			{
@@ -56,7 +60,9 @@ class InstantAppNotification
                           	}
                           	if($thumbNail)
 					$profileDetails[$selfProfile]['PHOTO_URL']=$thumbNail;
-                          	else  
+                          	elseif($notificationData['PHOTO_URL']!='')
+					$profileDetails[$selfProfile]['PHOTO_URL'] =$notificationData['PHOTO_URL'];
+				else  
 					$profileDetails[$selfProfile]['PHOTO_URL']="D";
 
 				if($notificationData['OTHER_PROFILE_CHECKSUM'])

@@ -13,6 +13,11 @@
 ~$PREHEADER`
 </td>
 </tr>
+    <tr>
+<td colspan="4" style="font-size: 11px !important; font-family: Arial; color: black; padding-top: 10px;">
+This Email contains links which let you to directly login to your account. So forward this Email only to people you can completely trust.
+</td>
+</tr>
         <tr>
             <td style="border-bottom:1px solid #ededed">
                 <table cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -47,6 +52,7 @@
                             ~else`
                                 Here is the weekly summary of ~$countLimit` members who are still awaiting your response.You may accept or decline the interest based on your preference.
                             ~/if`
+                            <a style="font-family:Arial; font-size:12px; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)EOI_RECEIVIED:profileid=~$profileid`(/LINK)">View all pending interests</a>
                         </td>
                         <td width="20"></td>
                     </tr>
@@ -61,42 +67,7 @@
         <tr>
             <td width="600">
                 <table style=" font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0" width="100%">
-                    <tr>
-                        <td width="20px" height="10"></td>
-                        <td style="color:#4a4a4a;"> </td>
-                    </tr>
-                    <tr>
-                        <td width="600"> </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" width="600">
-                            <table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td> </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                    ~if $count gt 1`
-                    <tr>
-                        <td valign="top" height="20" colspan="2">
-                            <table style="max-width:600px; min-width:240px" border="0" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td width="20"></td>
-                                    <td style="font-size:12px; font-family: Arial, Helvetica, sans-serif;"><span color="#0f529d"><a href="(LINK)EOI_RECEIVIED:profileid=~$profileid`(/LINK)" style="color:#14428e; text-decoration:underline;">~$count` people</a></span> have sent you an interest, and would like to receive your response.</td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
                     
-                    <tr>
-                        <td height="10"></td>
-                    </tr>
-                    <tr>
-                        <td height="10" style="border-top:1px solid #eae9e9"><img align="left" width="6" vspace="0" hspace="0" height="10" src="~$IMG_URL`/images/mailer/ADRM/spacer.gif"> </td>
-                    </tr>
-                    ~/if`
-                   
                      ~if $RECEIVER_IS_PAID neq "1"`
                     <tr>
                         <td>
@@ -135,7 +106,7 @@
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td bgcolor="#003a7e" align="center" height="27" style="border:1px solid #003a7e;"><a style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)MEMBERSHIP_COMPARISON:profileid=~$profileid`,source=~$BottomSource`(/LINK)"><strong>~if $variableDiscount`Get upto ~$variableDiscount`% OFF ~else`Upgrade Membership~/if`</strong></a> </td>
+                                    <td bgcolor="#003a7e" align="center" height="27" style="border:1px solid #003a7e;"><a style="font-family:Arial; font-size:13px; color:#ffffff; text-decoration:none; line-height:25px; width:100%; float:left" target="_blank" href="(LINK)MEMBERSHIP_COMPARISON:profileid=~$profileid`,source=~$BottomSource`(/LINK)"><strong>~if $variableDiscount`Get upto ~$variableDiscount`% OFF ~if $VD_END_DAY neq ''`till ~$VD_END_DAY` ~$VD_END_MONTH` ~/if`~else`Upgrade Membership~/if`</strong></a> </td>
                                 </tr>
                                 <tr>
                                     <td></td>

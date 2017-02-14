@@ -28,6 +28,25 @@ class billingVariables
     //const NET_OFF_TAX_RATE = "0.12664";
     const SERVICE_TAX_CONTENT = "(Inclusive of Swachh Bharat Cess and Krishi Kalyan Cess)";
 }
+
+class memDiscountTypes 
+{
+    public static $discountArr = array('1' => 'Renewal Discount',
+        2 => 'General Discount',
+        3 => 'Complementary Discount',
+        4 => 'Referral Discount',
+        5 => 'Variable Discount',
+        6 => 'Festive Discount',
+        7 => 'Renewal + Festive Discount',
+        8 => 'Voucher Code Discount',
+        9 => 'Variable + Festive Discount',
+        10 => 'Backend Discount Link',
+        11 => 'Cash Discount',
+        12 => 'No Discount',
+        14 => 'Coupon Code Discount'
+    );
+}
+
 class VariableParams
 {
 	public static $membershipMailerArr =array(
@@ -37,7 +56,8 @@ class VariableParams
 		'1804' => 'VD',
 		'1797' => 'JS_EXCLUSIVE_FEEDBACK',
 		'1795' => 'MEMBERSHIP_PROMOTIONAL',
-		'1835' => 'NEW_MEMBERSHIP_PAYMENT'
+		'1835' => 'NEW_MEMBERSHIP_PAYMENT',
+		'1836' => 'MEM_EXPIRY_CONTACTS_VIEWED'
 	);
 	public static $discountLimitText =array("flatCap"=>"Flat","flatSmall"=>"flat","uptoCap"=>"Upto","uptoSmall"=>"upto");
     public static $mainMembershipsArr = array(
@@ -119,6 +139,18 @@ class VariableParams
 		"JSAA_mobile_website_ADDON_MEMBERSHIP_DOL",
 		"Android_app_ADDON_MEMBERSHIP_DOL",
 		"old_mobile_website_ADDON_MEMBERSHIP_DOL",
+        "desktop_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "iOS_app_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "mobile_website_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "JSAA_mobile_website_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "Android_app_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "old_mobile_website_MAIN_HIDDEN_MEMBERSHIP_RS",
+        "desktop_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "iOS_app_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "mobile_website_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "JSAA_mobile_website_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "Android_app_MAIN_HIDDEN_MEMBERSHIP_DOL",
+        "old_mobile_website_MAIN_HIDDEN_MEMBERSHIP_DOL"
     );
     public static $vasOrder = array(
         'T',
@@ -627,25 +659,26 @@ class paymentOption
         "card3" => array(
             "ic_id" => "",
             "name" => "VISA"
-        ) ,
-        "card4" => array(
-            "ic_id" => "",
-            "name" => "Diners Club"
-        ) ,
-        "card5" => array(
-            "ic_id" => "",
-            "name" => "UCB"
-        ) ,
-        "card6" => array(
-            "ic_id" => "",
-            "name" => "RuPay"
-        )
+        ) 
+        // ,
+        // "card4" => array(
+        //     "ic_id" => "",
+        //     "name" => "Diners Club"
+        // ) ,
+        // "card5" => array(
+        //     "ic_id" => "",
+        //     "name" => "UCB"
+        // ) ,
+        // "card6" => array(
+        //     "ic_id" => "",
+        //     "name" => "RuPay"
+        // )
     );
     public static $dbCardType = array(
-        "card1" => array(
-            "ic_id" => "",
-            "name" => "American Express"
-        ) ,
+        // "card1" => array(
+        //     "ic_id" => "",
+        //     "name" => "American Express"
+        // ) ,
         "card2" => array(
             "ic_id" => "",
             "name" => "MasterCard"
@@ -744,17 +777,19 @@ class paymentOption
 
 class gatewayConstants
 {
-    public static $CCAvenueLiveDolMerchantId = "jsdollar5615";
-    public static $CCAvenueLiveDolSalt = "6cwghcvrmo2091w2uxnxeerde9xj7nle";
-    public static $CCAvenueLiveDolURL = 'https://world.ccavenue.com/servlet/ccw.CCAvenueController';
+    public static $CCAvenueLiveDolMerchantId = "63430";
+    public static $CCAvenueLiveDolSalt = "7C1F2325E7B5E8B39C36C2D3BF6D25E3";
+    public static $CCAvenueLiveDolURL = 'https://secure.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
+    public static $CCAvenueLiveDolAccessCode = "AVDD04CD91AO78DDOA";
     
     public static $CCAvenueLiveRsMerchantId = "M_anyana_1395";
     public static $CCAvenueLiveRsSalt = "a5qdxwe59g5af94qphru8hjubw1t9o6u";
     public static $CCAvenueLiveRsURL = "https://www.ccavenue.com/shopzone/cc_details.jsp";
     
-    public static $CCAvenueTestDolMerchantId = "jsdollar5615";
-    public static $CCAvenueTestDolSalt = "6cwghcvrmo2091w2uxnxeerde9xj7nle";
-    public static $CCAvenueTestDolURL = 'https://world.ccavenue.com/servlet/ccw.CCAvenueController';
+    public static $CCAvenueTestDolMerchantId = "63430";
+    public static $CCAvenueTestDolSalt = "7C1F2325E7B5E8B39C36C2D3BF6D25E3";
+    public static $CCAvenueTestDolURL = 'https://test.ccavenue.com/transaction/transaction.do?command=initiateTransaction';
+    public static $CCAvenueTestDolAccessCode = "AVDD04CD91AO78DDOA";
     
     public static $CCAvenueTestRsMerchantId = "M_anyana_1395";
     public static $CCAvenueTestRsSalt = "a5qdxwe59g5af94qphru8hjubw1t9o6u";
@@ -771,8 +806,8 @@ class gatewayConstants
     public static $PayUTestDolMerchantId = "U0TVwL";
     public static $PayUTestDolSalt = "pvDO157G";
     
-    public static $PayUTestRsMerchantId = "dCBTMi";
-    public static $PayUTestRsSalt = "j2lZUnbX";
+    public static $PayUTestRsMerchantId = "gtKFFx";
+    public static $PayUTestRsSalt = "eCwWELxi";
     
     public static $PayUTestGatewayURL = 'https://test.payu.in/_payment';
     public static $PayULiveGatewayURL = 'https://secure.payu.in/_payment';
@@ -827,5 +862,9 @@ class gatewayConstants
 class franchiseeCommission
 {
     const FRANCHISEE = 40;
+}
+
+class SelectGatewayRedirect{
+    public static $gatewayOptions = array('default','payu','ccavenue');
 }
 ?>

@@ -4,7 +4,8 @@ include_once("../jsadmin/handleCrmLogin.php");
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
 $jsb9_track_stime=microtime(true);
 
-
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 
 function login ($id, $pass)
 {
@@ -12,7 +13,7 @@ function login ($id, $pass)
 	$mycond = 0;
 	$pass = md5($pass);
 	$sql = "select RESID,LAST_LOGIN_DT,MOD_DT from jsadmin.PSWRDS where USERNAME= binary '$id' and PASSWORD= binary '$pass' AND ACTIVE='Y'";
-	$res = mysql_query_decide($sql) or die("Could not Execute query pwdError");
+	$res = mysql_query_decide($sql) or LoggingWrapper::getInstance()->sendLogAndDie(LoggingEnums::LOG_ERROR, new Exception("Could not Execute query pwdError"));
 	$count = mysql_num_rows($res);
 	
 	if ($count > 0)
@@ -260,7 +261,7 @@ function getcenter_for_walkin($walkin)
 { 
         $sql_usr = "select center from jsadmin.PSWRDS where USERNAME='$walkin' ";
                                                                                                                              
-        $res_usr = mysql_query_decide($sql_usr) or die("Could not return data from executive.".mysql_error_js());
+        $res_usr = mysql_query_decide($sql_usr) or die("Could not return data from executive.");
                                                                                                                              
         $count = mysql_num_rows($res_usr);
                                                                                                                              
@@ -464,6 +465,7 @@ function logError($message,$query="",$critical="exit", $sendmailto="NO")
 	error_log($errorstring,3,JsConstants::$docRoot . "/jsadmin/temp/logerror.txt");
 
         $errorstring.="\n#Details : $ret_val";
+		LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorstring));
         if($sendmailto!="NO" && $sendmailto!="YES")
                 $b=mail($sendmailto,"ERROR in new resman connect", $errorstring);
 

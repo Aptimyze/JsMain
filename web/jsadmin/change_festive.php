@@ -5,7 +5,7 @@ if(authenticated($cid))
 {
 	$name = getname($cid);
 	$date=date('Y-m-d');
-	$festiveServices ="P1,P3,P4,P6,P12,PL,C3,C4,C6,C12,CL,NCP3,NCP4,NCP6,NCP12,ESP3,ESP4,ESP6,ESP12,ESPL,D3,D4,D6,D12,DL,X3,X4,X6,X12";
+	$festiveServices ="P1,P3,P4,P6,P12,PL,C3,C4,C6,C12,CL,NCP3,NCP4,NCP6,NCP12,NCPL,ESP3,ESP4,ESP6,ESP12,ESPL,D3,D4,D6,D12,DL,X3,X4,X6,X12";
 
 	// get festival id
 	$festivalId =trim($festivalId);
@@ -53,6 +53,13 @@ if(authenticated($cid))
 
 		// function to flush memcache
 		flush_memcache_ForMembership();	
+		$memCacheObject = JsMemcache::getInstance();
+		$membershipKeyArray = VariableParams::$membershipKeyArray;
+		$keys_removed = "";
+		foreach ($membershipKeyArray as $key => $keyVal) {
+		    $memCacheObject->remove($keyVal);
+		    $keys_removed .= $keyVal.",\n"; 
+		}
 	}
 
 	// Normal execution code	

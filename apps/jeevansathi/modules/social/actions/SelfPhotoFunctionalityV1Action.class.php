@@ -123,7 +123,7 @@ class SelfPhotoFunctionalityV1Action extends sfActions
 				
 				$whereArr["PICTUREID"] = $request->getParameter("pictureId");
                 		$whereArr["PROFILEID"] = $profileObj->getPROFILEID();
-                		$currentPicObj = $pictureServiceObj->getPicDetails($whereArr);
+                		$currentPicObj = $pictureServiceObj->getPicDetails($whereArr,1);
 
                 		$output=$pictureServiceObj->setProfilePic($currentPicObj[0]);
 				if($output)

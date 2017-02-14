@@ -2,7 +2,6 @@
 include("connect.inc");
 
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid))
 {
@@ -284,6 +283,7 @@ if(authenticated($cid))
 		if(in_array('ACCU',$privilege))
                 {
                         $branch_sel=strtoupper($center);
+			$branch = array();
                         $sql="SELECT NAME FROM billing.BRANCHES where REGION_ACC='$branch_sel'";
                         $res=mysql_query_decide($sql,$db) or die(mysql_error_js($db));
                         while($row=mysql_fetch_array($res))

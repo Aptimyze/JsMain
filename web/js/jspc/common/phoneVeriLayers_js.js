@@ -137,12 +137,13 @@ valid=validateNum(mobileNum,isdNew);
 	}
 
 if (updatedIsd==isdNew && updatedNum==mobileNum){
+	//showVerifyLayer();return;
+
 	if(landLineFlag) 
 	{
 	showVerifyLayer();
 	return;
 	}
-
 $("#phoneVerifyErr").hide();
 var ajaxData={'phoneType':phoneType,'PCLayer':'Y'};
 var ajaxConfig={};
@@ -158,12 +159,7 @@ else {
 
 }
 
- 	
-
-
 }
-
-
 
 function showVerifyLayer(){
 NProgress.configure({ parent: '#forNProgress',trickle:false,minimum:0});

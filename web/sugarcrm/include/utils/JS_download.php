@@ -3,7 +3,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/profile/connect.inc");
 if (!trim($_GET['file_id'])) {
   die("Please specify file name for download.");
 }
-$db=connect_db();
+$db=connect_slave();
 $lead_id=trim($_GET['lead_id']);
 $file_id=trim($_GET['file_id']);
 $fileFetchQuery="SELECT * FROM sugarcrm.lead_files WHERE ";

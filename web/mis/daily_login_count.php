@@ -3,7 +3,6 @@ include_once("connect.inc");
 
 $db=connect_misdb();
 mysql_query("set session wait_timeout=1000",$db);
-$db2=connect_master();
 
 if(authenticated($cid) || $JSIndicator)
 {

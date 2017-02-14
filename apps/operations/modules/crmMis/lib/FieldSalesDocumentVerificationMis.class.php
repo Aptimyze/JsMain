@@ -52,7 +52,7 @@ class FieldSalesDocumentVerificationMis
 
 	public function fetchVerifiedDocumentsCount($allReporters)
 	{
-		$pvdObj = new PROFILE_VERIFICATION_DOCUMENTS();
+		$pvdObj = new PROFILE_VERIFICATION_DOCUMENTS('newjs_slave');
 
 		foreach($allReporters as $uploaded_by)
 		{

@@ -7,7 +7,6 @@
 ***********************************************************************************************************************/
 include_once("connect.inc");
 $db=connect_misdb();
-$db2=connect_master();
 
 $search_type_big_label=array("J" => "Cluster Search",
                 "Z" => "Community Search",

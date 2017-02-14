@@ -3,13 +3,13 @@
 */
 var loadImageId = "idd1"; // First image id to load
 var loadFeaturedImageId = "iddf1"; // first featured profile image id
+var profChecksumCheckArr = new Array();
 /**
 * Document ready function to populate first response
 */
 var listType;
 
 $(document).ready(function() {
-
 	showSearchLoader('Show');
 
 	/**
@@ -40,6 +40,8 @@ $(document).ready(function() {
 	$('#paginationNext').bind('click', function() {
 		currentPage = $('#paginationLiDiv').find('.active').attr("data");
 		loadPage(parseInt(currentPage) + 1);
+                if(response.infotype == "VISITORS")
+                    updateHistory("",parseInt(currentPage) + 1);
 	});
 
 	/**
@@ -48,6 +50,8 @@ $(document).ready(function() {
 	$('#paginationPrev').bind('click', function() {
 		currentPage = $('#paginationLiDiv').find('.active').attr("data");
 		loadPage(parseInt(currentPage) - 1);
+                if(response.infotype == "VISITORS")
+                    updateHistory("",parseInt(currentPage) + 1);
 
 	});
 
@@ -84,6 +88,25 @@ $(document).ready(function() {
                 infoArr["action"] = "stayOnPage";
                 infoArr["searchID"] = "skip";
 		sendProcessSearchRequest(postParams,infoArr);	
+            }
+	});
+        
+        $(".js-visitors").bind('click', function() {
+            if($(this).hasClass("cursp")){
+                var value=$(this).attr('value');
+                var sort = value=="M"?"M":"A";
+                var oppo = value=="M"?"A":"M"; 
+                $(".js-visType"+oppo).removeClass("js-sort-grey").removeClass("cursd").addClass("cursp");
+                $(".js-visType"+sort).addClass("js-sort-grey").removeClass("cursp").addClass("cursd");
+		var postParams;
+		postParams = "matchedOrAll="+value+"&pageNo=1";
+                matchedOrAll=value;
+            	var infoArr = {};
+                infoArr["action"] = "stayOnPage";
+                infoArr["searchID"] = "skip";
+                infoArr["listType"] = "cc";
+		sendProcessSearchRequest(postParams,infoArr);	
+                updateHistory("visitors?matchedOrAll="+value,1);
             }
 	});
 
@@ -127,7 +150,9 @@ $(document).ready(function() {
             $("#"+clickOn).removeClass("cursp").addClass("cursd");
         }
 
+
 });
+
 /**
 * Function which will be used for the action of search Listing
 */
@@ -180,8 +205,9 @@ function searchListingAction(thisElement){
 				listType="cc";
                                 break;
                         case 'js-visitors':
-                                postParams = "searchId=5&currentPage=1";
+                                postParams = "searchId=5&currentPage=1&matchedOrAll=A";
                                 postParams1 = "visitors=1";
+                                matchedOrAll='A';
 				listType="cc";
                                 break;
                         case 'js-fsoVerified':
@@ -193,7 +219,9 @@ function searchListingAction(thisElement){
 				listType="search";
                                 break;
                 }
-                if(postParams1)
+                if(thisElement.id=="js-visitors")
+                    updateHistory("visitors?matchedOrAll=A",1);
+                else if(postParams1)
 	                updateHistory(postParams1.split("=")[0],1);
                 else if(postParams)
 	                updateHistory(postParams.split("=")[0],1);
@@ -204,13 +232,15 @@ function searchListingAction(thisElement){
 		if(0)
                 infoArr["pageOfResult"] = window.location.href.split("/")[6]>0?window.location.href.split("/")[6]:"1";
                 lastSearchBasedParam = '';
-                sendProcessSearchRequest(postParams,infoArr,'noSearchId');	
+                sendProcessSearchRequest(postParams,infoArr,'noSearchId');
+                resetVisitorTabs(response);
             }
 }
 /**
 * Function which will use api response and populate tuples and clusters
 */
 function pageResponsePopulate(response) {
+	
 		/** call to get guna score **/
 		if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser!=""){
 				getGunaScore(response);
@@ -238,7 +268,7 @@ function pageResponsePopulate(response) {
 			*/
 
 			/**
-			* show clusters section is replace by title on left in case of shortlisted section / visitors
+			* show clusters section is replaced by title on left in case of shortlisted section / visitors
 			*/
 			if(response.listType=='cc' || response.listType=='noClusSearch')
 			{
@@ -247,6 +277,7 @@ function pageResponsePopulate(response) {
 		                infoArr1["heading"] = response.heading;
                 		infoArr1["totalCount"] = response.total;
 		                infoArr1["message"] = response.ccmessage;
+		                infoArr1["searchBasedParam"] = response.searchBasedParam;
 				loadClusters(val,infoArr1);
 			}
 			else
@@ -271,7 +302,7 @@ function pageResponsePopulate(response) {
 	*/
 	if($('#pageSubHeading').length)
 	{
-        	if(typeof response.pageSubHeading!="undefined")
+        	if(typeof response.pageSubHeading!="undefined" && response.pageSubHeading!=null)
 		{
 			$("#pageSubHeadingTop").show();
 			$("#pageSubHeading").html(response.pageSubHeading);
@@ -305,6 +336,15 @@ function pageResponsePopulate(response) {
 	                $("#heightRight").addClass('srpHeightRightcc').removeClass('srpHeightRight');
 		else
 	                $("#heightRight").addClass('srpHeightRight').removeClass('srpHeightRightcc');
+                    
+                if(response.infotype == "VISITORS"){
+                        $("#heightRightVisitors").addClass('srpHeightRight').removeClass('disp-none');
+                        $("#ClusterTupleStructure").addClass('srppt28');
+                }
+                else{
+	                $("#heightRightVisitors").addClass('disp-none').removeClass('srpHeightRight');
+                        $("#ClusterTupleStructure").removeClass('srppt28');
+                }
 	}
 	else
 	{
@@ -483,7 +523,7 @@ function sorting(sort,listType){
 /**Remove profile binding */
 $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', function() {
 	var srpTuple = $(this).attr("id").replace("idRemove","").replace("undoRemove","");
-	 var profileCheckSum = $(this).attr("data");
+	 var profileCheckSum = $(this).attr("data"),chatData = $(this).attr("data-chat");
 	 var usernameOfProfile = $("#idd"+srpTuple+" .usernameOfTuple").text();
 	var url = '/api/v1/common/ignoreprofile';
 	if($("#idd"+srpTuple+"removed:visible").length>0){
@@ -491,7 +531,7 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
 	}else
 	     var blockOrUnblock = 1;
        
-	if((blockOrUnblock==1 && $(this).text().indexOf("Block")!=-1) || blockOrUnblock==0){
+	if((blockOrUnblock==1 && $(this).text().indexOf("Ignore")!=-1) || blockOrUnblock==0){
 	    var postParams = {'blockArr[profilechecksum]':profileCheckSum,'blockArr[action]':blockOrUnblock};
 	    $.myObj.ajax({
 		    url: url,
@@ -503,8 +543,22 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
                            showCommonLoader();
                     },
 		    success: function(response) {
+                        if(response.responseStatusCode==1)
+                        {
+                        hideCommonLoader();
+			showCustomCommonError(response.responseMessage,5000);
+                        return;
+                        }
+			callAfterContact();
                         hideCommonLoader();
 			if(response.status==1 && blockOrUnblock==1){
+				//console.log("ignore from search module");
+				if(updateNonRosterListOnCEAction && typeof updateNonRosterListOnCEAction == "function"){
+					if(chatData != undefined){
+						var details = chatData.split(",");
+						updateNonRosterListOnCEAction({"user_id":details[0],"action":details[1]});
+					}
+				}
 			    blockProfileOnSRP(srpTuple,profileCheckSum,usernameOfProfile);
 			}
 			else if(response.status==0 && blockOrUnblock==0){
@@ -512,13 +566,13 @@ $("body").delegate('.js-removeProfile, .js-search-undoRemoveProfile','click', fu
 			 }
 			 else{
 			     //alert(response.responseMessage);
-				console.log("error2");// LATER
+				//console.log("error2");// LATER
 			 }
 
 		    },
 		    error: function(xhr) {
 		      //alert("error");
-			console.log("error3");// LATER
+			//console.log("error3");// LATER
 		    }
 		  });
 	}
@@ -544,7 +598,7 @@ function blockProfileOnSRP(srpTuple,profileCheckSum,usernameOfProfile){
                                 </div>\
                                 <div class='fl pl10 pt10'>\
                                         <div class='color11'>"+usernameOfProfile+"</div>\
-                                    <div class='colr2 pt3'>This profile has been moved to your blocked members list and will not be able to contact you.</div>\
+                                    <div class='colr2 pt3'>This profile has been moved to Blocked/Ignored list. It will not appear again in future searches or in other listings.</div>\
                                 </div>\
                                 <div class='fr pt25 colr5 js-search-undoRemoveProfile cursp' id='undoRemove"+srpTuple+"' data='"+profileCheckSum+"'>\
                                         Undo\
@@ -644,6 +698,7 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
 	var titleOfFilter = typeof infoArr["titleOfFilter"] !== 'undefined' ? infoArr["titleOfFilter"] : '';
         var pageOfResult = typeof infoArr["pageOfResult"] !== 'undefined' ? infoArr["pageOfResult"] : '1';
         var listType = typeof infoArr["listType"] !== 'undefined' ? infoArr["listType"] : '';
+
 	/**
 	* Params to be used for calling pagination
 	*/
@@ -662,6 +717,10 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
 		postParams = postParams+="&newTagJustJoinDate="+newTagJustJoinDate;
 	if(listType=='cc')
 		postParams = postParams+"&ContactCenterDesktop=1";
+
+	//alert(postParams.indexOf('partnermatches'));
+	if(postParams.indexOf('partnermatches')!='-1' || postParams.indexOf('matchalerts')!='-1' || postParams.indexOf('justJoined')!='-1' || postParams.indexOf('kundlialerts')!='-1' || postParams.indexOf('twowaymatch')!='-1' || postParams.indexOf('reverseDpp')!='-1' || postParams.indexOf('verifiedMatches')!='-1' || postParams.indexOf('reverseDpp')!='-1')
+		url =  getUrlForHeaderCaching(url);
 	/*
         if(postParams.search("sort_logic")==-1 && postParams.search("currentPage")==-1 && pageOfResult!==null)
                 postParams = postParams+"&currentPage="+pageOfResult;
@@ -671,8 +730,10 @@ function sendProcessSearchRequest(requestParams,infoArr,noSearchId)
                 url: url,
 		dataType: 'json',
 		type: 'GET',
+                cache: true,
 		data: postParams,
 		timeout: 60000,
+		updateChatList:(infoArr["action"] == "pagination") ? true : false,
 		beforeSend: function( xhr ) {
 			//if(action=="moreCluster")
 			if(action=='pagination' || action =='stayOnPage')
@@ -879,6 +940,11 @@ function resetTopTab(){
             $(".sortOrderOnline").removeClass("js-sort-grey").removeClass("cursd").addClass("cursp");
 }
 
+function resetVisitorTabs(response){
+    $(".js-visTypeM").removeClass("js-sort-grey").removeClass("cursd").addClass("cursp");
+    $(".js-visTypeA").addClass("js-sort-grey").removeClass("cursp").addClass("cursd");
+}
+
 /**Change Listing Logic */
 $("body").delegate('.changeListingLogic','click', function() {
             var url = "/api/v1/search/matchAlertToggleLogic";
@@ -898,6 +964,7 @@ $("body").delegate('.changeListingLogic','click', function() {
                           
                     },
 		    success: function(response) {
+												callAfterDppChange();
                         $(".changeListingLogic"+response.successMessage.matchAlertLogic).attr("checked","checked");
                         if(response.successMessage.matchAlertLogic==Coded){
                             var idOfElement = "listingLogic"+Coded;
@@ -910,7 +977,7 @@ $("body").delegate('.changeListingLogic','click', function() {
                         setTimeout(function(){ $(".popsrp2").css("display",""); }, 3000);
 		    },
 		    error: function(xhr) {
-			console.log("error5");// LATER
+			//console.log("error5");// LATER
 		      //alert("error");
 		    }
 		  });	
@@ -973,13 +1040,34 @@ for (i = mid; i < end; i++) {
 function getGunaScore(response)
 {	var diffGender = response.diffGenderSearch;
 	var profilechecksumArr = new Array();
+	var deleteChecksumArr = new Array();
+	var searchBasedParam = response.searchBasedParam;
+	var searchResponse = response;
+	var profileLength = 0;
+	var featureProfileLength = 0;
+	var gunaScoreArr = new Array();
+	//Length of profiles array in response
+	if('profiles' in searchResponse && Array.isArray(searchResponse.profiles))
+	{
+		profileLength = searchResponse.profiles.length;
+	}
+
+	//Length of feature profiles array in response
+	if('featuredProfiles' in searchResponse)
+	{
+		featureProfileLength = searchResponse.featuredProfiles.length;
+	}
+
 	//loop to fetch profilchecksums for normal and featured profiles and club them in an array
-	
 	$.each(response, function(key, val) {
 		if (key == 'profiles' && val!==null) {
 			$.each(val, function(key1, val1)
 			{
 				profilechecksumArr.push(val1.profilechecksum);
+				var obj = {};
+				obj[val1.profilechecksum] = val1.gunascore;
+				gunaScoreArr.push(obj);
+			
 			});
 		}
 		if(key  == 'featuredProfiles' && val!==null){
@@ -989,25 +1077,69 @@ function getGunaScore(response)
 			});
 		}
 	});
+	profChecksumCheckArr = profilechecksumArr;
+	//The profileChecksumArr contains profilechecksum of both profiles and featured profiles on a particular page
 	profilechecksumArr = profilechecksumArr.join(",");
-	$.myObj.ajax({
-		showError: false, 
-		method: "POST",
-		url : '/api/v1/search/gunaScore?profilechecksumArr='+profilechecksumArr+'&diffGender='+diffGender,
-		data : ({dataType:"json"}),
-		async:true,
-		timeout:20000,
-		success:function(response){
-			gunaScoreArr = response.gunaScores;
-			if(Array.isArray(gunaScoreArr)){
-				$.each(gunaScoreArr, function(key,val){	
-					$.each(val, function(profchecksum,gunaScore){
-						$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
-					});	
-				});
+	if(searchBasedParam == 'kundlialerts')
+	{		
+		if(profileLength == 0)
+		{
+			if(typeof searchResponse.paginationArray ==="undefined")
+			{
+				// Do nothing
+			}
+			else if(typeof searchResponse.paginationArray !=="undefined" && searchResponse.page_index < searchResponse.paginationArray[searchResponse.paginationArray.length -1 ])
+			{
+					loadPage(parseInt(searchResponse.page_index) + 1);
+			}
+			else
+			{
+					setTimeout(function(){
+					$("#zeroPageHeading").html(searchResponse.result_count);
+					$("#zeroPageMsg").html(searchResponse.DefaultZeroMsg);
+					$("#js-searchContainer").hide();
+					$("#zeroResultSection").show();
+				}, 0.1);
 			}
 		}
-	});
+		else
+		{
+			setTimeout(function(){
+						setGunaScoreOnListing(gunaScoreArr);
+					}, 100);
+		}
+	}
+	else
+	{	
+            if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4){
+		$.myObj.ajax({
+			showError: false, 
+			method: "POST",
+			url : '/api/v1/search/gunaScore?profilechecksumArr='+profilechecksumArr+'&diffGender='+diffGender,
+			data : ({dataType:"json"}),
+			async: true,
+			timeout:20000,
+			success:function(response){
+				gunaScoreArr=null;
+				gunaScoreArr = response.gunaScores;
+				setGunaScoreOnListing(gunaScoreArr);
+			}
+		});
+            }
+	}
+}
 
+
+//This function sets the Guna score on search tuples corresponnding to their id's
+function setGunaScoreOnListing(gunaScoreArr)
+{
+	if(Array.isArray(gunaScoreArr))
+	{
+			$.each(gunaScoreArr, function(key,val){	
+				$.each(val, function(profchecksum,gunaScore){
+					$(".gunaScore-"+profchecksum).html("Guna "+gunaScore+"/36");
+				});	
+			});
+	}
 }
 

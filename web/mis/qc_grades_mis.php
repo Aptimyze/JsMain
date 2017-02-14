@@ -2,7 +2,6 @@
 /**Script written by Aman Sharma for Qc-Screening Module**/
 include("connect.inc");
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($checksum))
 {

@@ -34,7 +34,7 @@ class jsCacheWrapperException extends RuntimeException
     $fileResource = fopen($filePath,"a");
     fwrite($fileResource,$errorString);
     fclose($fileResource);
-    die;
+    
   }
   
  

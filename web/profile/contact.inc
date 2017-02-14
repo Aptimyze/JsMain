@@ -812,15 +812,22 @@ function calc_last_30_90_open_contacts($profileid)
 			$type='R';
 		if($obscene=='')
 			$obscene='N';
-		$mysql=new Mysql;
-        	$myDbName1=getProfileDatabaseConnectionName($sender_profileid,'',$mysql);
-		$myDbName2=getProfileDatabaseConnectionName($receiver_profileid,'',$mysql);
-		if($myDbName1==$myDbName2)
-			$myDb=$mysql->connect("$myDbName1");
+		//$mysql=new Mysql;
+		
+		$senderShard=JsDbSharding::getShardNo($sender_profileid);
+		$receiverShard=JsDbSharding::getShardNo($receiver_profileid);
+        //	$myDbName1=getProfileDatabaseConnectionName($sender_profileid,'',$mysql);
+		//$myDbName2=getProfileDatabaseConnectionName($receiver_profileid,'',$mysql);
+		if($senderShard==$receiverShard){
+			//$myDb=$mysql->connect("$myDbName1");
+			$dbMessageLogObj1=new NEWJS_MESSAGE_LOG($senderShard);
+		}
 		else
 		{
-			$myDb1=$mysql->connect("$myDbName1");
-			$myDb2=$mysql->connect("$myDbName2");
+			$dbMessageLogObj1=new NEWJS_MESSAGE_LOG($senderShard);
+			$dbMessageLogObj2=new NEWJS_MESSAGE_LOG($receiverShard);
+		//	$myDb1=$mysql->connect("$myDbName1");
+		//	$myDb2=$mysql->connect("$myDbName2");
 		}
 		//To synchronize time on both the sharded servers we are setting date through php instead of using now()
 		$date=date("Y-m-d H:i:s");
@@ -832,23 +839,29 @@ function calc_last_30_90_open_contacts($profileid)
 			$ip = $ip_new[1];
 		}
 		//added by sriram
-		$generated_msg_log_id = generate_id_from_table("MESSAGE_LOG");
+		
+		//$generated_msg_log_id = generate_id_from_table("MESSAGE_LOG");
+		$dbObj = new newjs_MESSAGE_LOG_GET_ID();
+		$generated_msg_log_id = $dbObj->getAutoIncrementMessageId();
 
-		$sql="insert into MESSAGE_LOG (ID,SENDER,RECEIVER,DATE,IP,IS_MSG,OBSCENE,MSG_OBS_ID,TYPE) values ('$generated_msg_log_id','$sender_profileid','$receiver_profileid','$date',INET_ATON('$ip'),'$is_msg','$obscene','$id_obscene','$type')";
-		if($myDbName1==$myDbName2)
+		//$sql="insert into MESSAGE_LOG (ID,SENDER,RECEIVER,DATE,IP,IS_MSG,OBSCENE,MSG_OBS_ID,TYPE) values ('$generated_msg_log_id','$sender_profileid','$receiver_profileid','$date',INET_ATON('$ip'),'$is_msg','$obscene','$id_obscene','$type')";
+		if($senderShard==$receiverShard)
 		{
-			$mysql->ExecuteQuery($sql,$myDb);
+			$dbMessageLogObj1->insertIntoMessageLog($generated_msg_log_id,$sender_profileid,$receiver_profileid,$is_msg,$obscene,$id_obscene,$type);
+			//$mysql->ExecuteQuery($sql,$myDb);
 			if($is_msg=='Y')
-				insert_into_messages($generated_msg_log_id,$custmessage,$myDb);
+				insert_into_messages($generated_msg_log_id,$custmessage,$senderShard);
 		}
 		else
 		{
-			$mysql->ExecuteQuery($sql,$myDb1);
-			$mysql->ExecuteQuery($sql,$myDb2);
+			$dbMessageLogObj1->insertIntoMessageLog($generated_msg_log_id,$sender_profileid,$receiver_profileid,$is_msg,$obscene,$id_obscene,$type);
+			$dbMessageLogObj2->insertIntoMessageLog($generated_msg_log_id,$sender_profileid,$receiver_profileid,$is_msg,$obscene,$id_obscene,$type);
+			//$mysql->ExecuteQuery($sql,$myDb1);
+			//$mysql->ExecuteQuery($sql,$myDb2);
 			if($is_msg=='Y')
                         {
-			        insert_into_messages($generated_msg_log_id,$custmessage,$myDb1);
-				insert_into_messages($generated_msg_log_id,$custmessage,$myDb2);
+			        insert_into_messages($generated_msg_log_id,$custmessage,$senderShard);
+				insert_into_messages($generated_msg_log_id,$custmessage,$receiverShard);
 			}
 		}
 		//mysql_query_decide($sql,"",1);
@@ -864,10 +877,11 @@ function calc_last_30_90_open_contacts($profileid)
 
 	function insert_into_messages($msg_id,$custmessage,$myDb)
 	{
-		$mysql=new Mysql;
-		
-		$sql="insert into MESSAGES (ID,MESSAGE) values ('$msg_id','" . addslashes(stripslashes($custmessage)) . "')";
-		$mysql->ExecuteQuery($sql,$myDb) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		//$mysql=new Mysql;
+		$dbMessageObj=new NEWJS_MESSAGES($myDb);
+			$dbMessageObj->insertSingleMessage($msg_id,addslashes(stripslashes($custmessage)));
+		//$sql="insert into MESSAGES (ID,MESSAGE) values ('$msg_id','" . addslashes(stripslashes($custmessage)) . "')";
+		//$mysql->ExecuteQuery($sql,$myDb) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 
 		//mysql_query_decide($sql,'',1) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 	}	
@@ -3208,7 +3222,7 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 	function generate_id_from_table($tablename)
 	{
 		$tablename .= "_GET_ID";
-		$sql_ins_id = "INSERT INTO newjs.$tablename VALUES('')";
+		$sql_ins_id = "REPLACE INTO  newjs.$tablename (ID,NO_USE_VARIABLE) VALUES('','X')";
 		mysql_query_decide($sql_ins_id) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ins_id,"ShowErrTemplate");
 
 		$generated_id = mysql_insert_id_js();
@@ -3218,8 +3232,6 @@ include(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 
 		$generated_id = $row_get_id['ID'];*/
 
-		$sql_del = "DELETE FROM newjs.$tablename WHERE 1";
-		mysql_query_decide($sql_del) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_del,"ShowErrTemplate");
 
 		return $generated_id;
 	}

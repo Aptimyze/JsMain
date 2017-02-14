@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Userfilter class handles the filtered condition of a user against Multiple Users.
  * It checks whether he/she is passing filters of multiple users.
@@ -105,9 +105,9 @@ class MultipleUserFilter
 	  * @return - $filter_parameters - array of filters for the profileids passed
 	**/
 
-	public static function getFilterParameters($profileIdArr)
+	public static function getFilterParameters($profileIdArr,$dbname="")
 	{
-		$filterObj=new NEWJS_FILTER();
+		$filterObj=new NEWJS_FILTER($dbname);
 		$results = $filterObj->fetchFilterDetailsForMultipleProfiles($profileIdArr);
 		if(is_array($results))
 		{

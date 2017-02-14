@@ -8,7 +8,7 @@
 class viewSimilar_CONTACTS_CACHE_LEVEL extends TABLE {
         /* This will connect to matchalert slave by default */
 
-        public function __construct($dbname = "newjs_bmsSlave") {
+        public function __construct($dbname = "newjs_masterRep") {
                 parent::__construct($dbname);
         }
 

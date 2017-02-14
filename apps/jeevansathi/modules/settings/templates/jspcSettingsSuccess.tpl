@@ -52,7 +52,7 @@
 	~elseif $page eq 'changePassword'`
 		~include_partial('jspcChangePassword',['emailStr'=>$emailStr])`
 	~else if $page eq hideDelete`
-	~include_partial('jspcHideDelete',['UNHIDE'=>$UNHIDE,UNHIDE_DATE=>$UNHIDE_DATE])`
+	~include_partial('jspcHideDelete',['UNHIDE'=>$UNHIDE,UNHIDE_DATE=>$UNHIDE_DATE,'showOTP'=>$showOTP])`
 		~/if`
 </div>
         </div>

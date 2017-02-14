@@ -34,6 +34,9 @@ class ApiCrmAuthenticateV1Action extends sfActions
 				}
 				else	
 				{
+                    
+                    $loginLogObj = new jsadmin_AGENTS_LOGIN_LOG();
+                    $loginLogObj->insert($loginCredentials['USERNAME']);
 					if($result[AUTHCHECKSUM])
 						$apiObj->setAuthChecksum($result[AUTHCHECKSUM]);
 					//register for fso app notifications if android app
@@ -42,7 +45,9 @@ class ApiCrmAuthenticateV1Action extends sfActions
 						$registrationid = $request->getParameter("REGISTRATION_ID");
 						$appVersion = $request->getParameter("APP_VERSION");
 						$notificationObj = new BrowserNotification();
-						$notificationObj->manageRegistrationid($registrationid,'',$result["agentid"],"CRM_AND",$appVersion);
+						if(!empty($registrationid) && isset($registrationid)){
+							$notificationObj->manageRegistrationid($registrationid,'',$result["agentid"],"CRM_AND",$appVersion);
+						}
 						unset($notificationObj);
 					}
 					$apiObj->setHttpArray(CrmResponseHandlerConfig::$AGENT_LOGIN_SUCCESS); 

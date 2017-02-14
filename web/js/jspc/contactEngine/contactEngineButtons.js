@@ -2,6 +2,7 @@ var messageKeyName="";
 var viewerImage = "";
 var messageCount = "";
 var Button= function(elementObj) {
+  this.pagination=false;
   this.elementObj=elementObj;
   this.divName=this.elementObj.attr('id');
   this.layerDiv=this.elementObj.closest('#contactEngineLayerDiv');
@@ -26,10 +27,17 @@ var Button= function(elementObj) {
 	}
 	else
   		this.pageName=this.displayObj.name;
+        
 }
 
 
 Button.prototype.request= function() {
+if(this.name=='WRITE_MESSAGE_LIST')
+    {
+        this.params+=('&pagination=1');
+        if(typeof this.MSGID != 'undefined')this.params+=('&MSGID='+this.MSGID);
+        if(typeof this.CHATID != 'undefined')this.params+=('&CHATID='+this.CHATID);
+    }
 
 if(!this.url){prePostResponse(this.name,this.parent); return;}
 if (!this.profileChecksum) return;
@@ -65,6 +73,14 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
           data:ajaxData,
           context: this,
           success: function(response,data) {
+                if(data.name=='INITIATE')
+			callAfterContact();
+		if(data.name=="ACCEPT")
+		{
+			$('.js-showDetail'+data.profileChecksum).find(".showText").each(function(index, element) {
+				$(this).next().show(),$(this).remove();
+			});
+		}
           	if(data.name =="MESSAGE_WRITE")
 			{
 				var messageKeyName="MESSAGE_WRITE-"+data.profileChecksum+"-"+data.pageSource;
@@ -79,7 +95,7 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
 					messageCount = messageCount+1;
 					$("#list-"+data.profileChecksum).html($("#list-"+data.profileChecksum).html()+mymessage);
 				}
-				$(".cEcontent").mCustomScrollbar("scrollTo","bottom");
+				$("#msgListScroller-"+data.profileChecksum).mCustomScrollbar("scrollTo","bottom");
 				$( "#"+messageKeyName+"-cEMessageText" ).css('height', 'auto')
 				$( "#"+messageKeyName+"-cEMessageText" ).val("")
 				$("#"+messageKeyName).html("Send Message")
@@ -104,6 +120,24 @@ ajaxData=this.makePostDataForAjax(this.profileChecksum);
            {
 				data.data = response;
 				data.post();
+				if(data.name=="DECLINE" && data.pageName=="VDP")
+				{
+					var address_url=window.location.href;
+					 if(address_url.indexOf("?") >= 0){
+						var hash;
+						var pageSource='';
+						var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+						for(var i = 0; i < hashes.length; i++)
+						{
+							hash = hashes[i].split('=');
+							if(hash[0]=="contact_id")
+								pageSource=hash[1];
+						}
+						if(pageSource!='' && (pageSource.indexOf("INTEREST_RECEIVED") >= 0 ||pageSource.indexOf("FILTERED_INTEREST") >= 0) && $("#show_nextListingProfile").length && $("#show_nextListingProfile")[0]!=undefined)
+							$("#show_nextListingProfile")[0].click();
+					}
+					
+				}
 			}
           },
           error: function(response,data){
@@ -266,7 +300,12 @@ else if(this.buttonDetails.button!=null){
 //Bottom Ignore layer on VDP 
 if(this.name=="IGNORE" && this.pageName=="VDP" )
 {
-	
+    
+        if(this.data.responseStatusCode==1)
+        {
+            showCustomCommonError(this.data.responseMessage,5000);return;
+        }
+            callAfterContact();
 	if(ignoreLayerOpened==1){
 		
 		if(this.data.message!=undefined && this.data.message!=null)
@@ -384,7 +423,7 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 	var mytuple = $('#mymessagetuple').html();
 	var othertuple = $('#othermessagetuple').html();
 	var message = "";
-	
+	if(typeof this.totalIndex=='undefined')this.totalIndex=1;
 	$.each(messages,function( index, val ){	
 		if(val.mymessage == "true")
 		{
@@ -392,7 +431,7 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 			mymessage = mytuple.replace(/\{time\}/g,removeNull(val.timeTxt));
 			mymessage = mymessage.replace(/\{myimage\}/g,removeNull(data.viewer));
 			mymessage = mymessage.replace(/\{message\}/g,removeNull(val.message.split('\n').join("</br>")));
-			mymessage = mymessage.replace(/\{id\}/g,removeNull(index+1));
+			mymessage = mymessage.replace(/\{id\}/g,removeNull(this.totalIndex++));
 			message = message+mymessage;
 		}
 		else
@@ -401,13 +440,36 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 			mymessage = othertuple.replace(/\{time\}/g,removeNull(val.timeTxt));
 			mymessage = mymessage.replace(/\{otherimage\}/g,removeNull(data.viewed));
 			mymessage = mymessage.replace(/\{message\}/g,removeNull(val.message.split('\n').join("</br>").replace(/(<([^>]+)>)/ig,"")));
-			mymessage = mymessage.replace(/\{id\}/g,removeNull(index+1));
+			mymessage = mymessage.replace(/\{id\}/g,removeNull(this.totalIndex++));
 			message = message+mymessage;
 		}
 		messageCount = index+1;
 	});
-	innerHtml=innerHtml.replace(/\{messages\}/g,removeNull(message));
-	$("#messageWindow").html(innerHtml);
+        var tempJObj=$(innerHtml);
+        
+        if(this.pagination){
+            tempObj=$("#messageWindow").find('#list-'+profile.profilechecksum);
+            tempLiObj=tempObj.find('li').eq(0);
+            tempObj.prepend(removeNull(message));
+            $("#msgListScroller-"+profile.profilechecksum).mCustomScrollbar('scrollTo',tempLiObj,{scrollInertia:0});
+            $("#msgHistoryLoader").css('visibility','hidden');
+
+        }
+        else 
+        {
+        tempJObj.find('#list-'+profile.profilechecksum).prepend(removeNull(message));
+	innerHtml=$('<div>').append(tempJObj.clone()).html();
+	
+        $("#messageWindow").html(innerHtml);
+    }
+        
+        if(data.hasNext!=true)this.allMessageLoaded=true;
+        this.MSGID=data.MSGID;        
+        this.CHATID=data.CHATID;
+
+        if(this.pagination==false){
+            var requestObj =this;
+            this.pagination=true;
 	if(data.cansend=="true")
 	{
 		$("#WriteArea").show();
@@ -448,8 +510,15 @@ if(this.name == "WRITE_MESSAGE_LIST" && this.pageName=="CC")
 	
     //$(".cEcontent").mCustomScrollbar("scrollTo","bottom");
     $( "#"+messageKeyName+"-cEMessageText" ).focus();
-    $(".cEcontent").mCustomScrollbar({setTop:height});
-}
+    var tempScroller=$("#msgListScroller-"+profile.profilechecksum);
+    tempScroller.mCustomScrollbar({callbacks:{
+                                                                onTotalScrollBackOffset:100,
+								onTotalScrollBack:function(){if(requestObj.allMessageLoaded)return;$("#msgHistoryLoader").css('visibility','visible');requestObj.request();}
+							}});
+    tempScroller.mCustomScrollbar('scrollTo','bottom',{scrollInertia:0});                                                
+    }
+    
+    }
 $( "#backToMessage" ).click(function() {
 	$("#messageWindow").addClass('disp-none');
 	$("#messageWindow").html("");
@@ -460,6 +529,8 @@ $( "#backToMessage" ).click(function() {
 });
   cECommonBinding();
   cECloseBinding(); 
+  
+  
 }
   
 Button.prototype.makePostDataForAjax= function(profileChecksum) {

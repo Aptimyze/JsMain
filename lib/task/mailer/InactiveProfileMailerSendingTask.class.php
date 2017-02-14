@@ -50,7 +50,7 @@ EOF;
 		 foreach ($profilemail as $key => $value) {
 		 	//$value=45;
 		 		//echo $value;die;
-		 		if($value==90)
+		 		if($value==85)
 				{
 					$instanceID = $countObj->getID('INCOMPLETE_90');
 					$email_sender = new EmailSender(MailerGroup::INCOMPLETE_90, 1827);
@@ -88,7 +88,7 @@ EOF;
 				elseif($value==75)
 				{
 					$instanceID = $countObj->getID('INCOMPLETE_75');
-					$email_sender = new EmailSender(MailerGroup::INACTIVE_75, 1826);
+					$email_sender = new EmailSender(MailerGroup::INCOMPLETE_120, 1828);
 				}
 				
 				$emailTpl = $email_sender->setProfileId($key);

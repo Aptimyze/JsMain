@@ -136,7 +136,7 @@ class EditReligionEthnicity extends EditProfileComponent {
 			$bIsNative_PlaceUpdated=false;
 			if(count($nativePlaceArr)){
 				$bIsNative_PlaceUpdated=true;
-				$nativePlaceStoreObj = new NEWJS_NATIVE_PLACE;
+				$nativePlaceStoreObj = ProfileNativePlace::getInstance();
 				if($nativePlaceObj->IsRecordExist())
 					$nativePlaceStoreObj->UpdateRecord($this->loginProfile->getPROFILEID(),$nativePlaceArr);
 				else

@@ -15,8 +15,9 @@ class InformationTypeAdapter
     }
     
     public function getProfiles($condition, $skipArray,$subscription="")
-    {//print_r($skipArray); die;
+    {
 		$profilesArray = array();
+       
 		switch ($this->infoType) {
             case "INTEREST_RECEIVED":
                 $contactsObj                          = new ContactsRecords();
@@ -24,7 +25,19 @@ class InformationTypeAdapter
                 $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
                 $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
                 break;
+             case "INTEREST_ARCHIVED":
+                $contactsObj                          = new ContactsRecords();
+                $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+                $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
+                $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
+                break;
             case "INTEREST_RECEIVED_FILTER":
+                $contactsObj                          = new ContactsRecords();
+                $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
+                $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
+                $profilesArray                        = $contactsObj->getContactedProfileArray($this->profileId, $condition, $skipArray);
+                break;
+            case "INTEREST_EXPIRING":
                 $contactsObj                          = new ContactsRecords();
                 $condition["WHERE"]["IN"]["TYPE"]     = ContactHandler::INITIATED;
                 $condition["WHERE"]["IN"]["RECEIVER"] = $this->profileId;
@@ -106,8 +119,8 @@ class InformationTypeAdapter
                 $profilesArray                                 = $introCallObj->getHistoryOfIntroCallsComplete($this->profileId, $condition, $skipArray);
                 break;
 	    case "VISITORS":
-	        $visitorObj                              = new Visitors($this->profileId);
-                $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"]);
+	        $visitorObj                              = new Visitors(LoggedInProfile::getInstance('newjs_master'));
+                $profilesArray                           = $visitorObj->getVisitorProfile($condition["PAGE"],$condition["PROFILE_COUNT"],array("matchedOrAll"=>$condition["matchedOrAll"]));
 			break;
 	    case "MY_MATCHES":
 		$SearchCommonFunctions = new SearchCommonFunctions;
@@ -216,11 +229,43 @@ class InformationTypeAdapter
 	                uasort($profilesArray,array($this,"cmp"));
 								$profilesArray = array_slice($profilesArray,0,$limit,true);
                 break;
-
+            case "MATCH_OF_THE_DAY":
+                if(!JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId)){
+                        $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY('newjs_master');
+                        $profilesArray = $matchOfDayObj->getMatchForProfileForListing($condition, $skipArray);
+                        if($condition["GENDER"] == 'F'){
+                                $searchObj = new NEWJS_SEARCH_MALE();
+                        }else{
+                                $searchObj = new NEWJS_SEARCH_FEMALE();
+                        }
+                        if(!empty($profilesArray)){
+                                $data = $searchObj->getArray(array("PROFILEID"=>implode(',',$profilesArray)));
+                                $profilesArray1 = array();
+                                $profilesArraySorted = array();
+                                if(!empty($data)){
+                                        foreach($data as $profiles){
+                                                $profilesArray1[] = $profiles["PROFILEID"];
+                                        }
+                                        foreach($profilesArray as $profileid){
+                                                if(in_array($profileid, $profilesArray1))
+                                                        $profilesArraySorted[$profileid]["PROFILEID"] =  $profileid;
+                                        }
+                                        unset($profilesArray);
+                                        $profilesArray = $profilesArraySorted;
+                                }else{
+                                    $profilesArray = array();
+                                }
+                        }
+                        JsMemcache::getInstance()->set("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileId,  count($profilesArray));
+                        JsMemcache::getInstance()->set("MATCHOFTHEDAY_".$this->profileId,  serialize($profilesArray));
+                }else{
+                        $profilesArray = unserialize(JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId));
+                }
+                break;
+        
             default:
 				throw new JsException("","Wrong infoType is given in InformationTypeAdapter.class.php");
         }
-
         return $profilesArray;
         
     }

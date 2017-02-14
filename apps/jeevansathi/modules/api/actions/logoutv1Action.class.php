@@ -28,6 +28,19 @@ class logoutv1Action extends sfActions
 			$dbObj=new userplane_recentusers;
                         $dbObj->DeleteRecord($loginData[PROFILEID]);
 
+                        // Remove Online-User
+		        $dateTime1 ='11';
+        		$dateTime2 ='22';
+                	$dateTime =date("H");
+                	$redisOnline =true;
+                	if(($dateTime>=$dateTime1) && ($dateTime<$dateTime2))
+                	        $redisOnline =false;
+			if($redisOnline){	
+				$pid =$loginData['PROFILEID'];
+	                        $jsCommonObj =new JsCommon();
+	                        $jsCommonObj->removeOnlineUser($pid);
+			}
+
 			$apiObj=ApiResponseHandler::getInstance();
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$done = NotificationFunctions::manageGcmRegistrationid($registrationid)?"1":"0";

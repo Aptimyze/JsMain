@@ -423,6 +423,10 @@ input:focus {
     width: 67px;
 }
 
+.wid97{
+    width: 97px;
+}
+
 .wid100 {
     width: 100px;
 }
@@ -848,6 +852,11 @@ input:focus {
 .pt25 {
     padding-top: 25px
 }
+.ptm25 {
+    padding-top: 25px;
+    padding-right: 48px;
+    padding-left: 48px;
+}
 
 .pt26 {
     padding-top: 26px
@@ -1077,6 +1086,9 @@ input:focus {
 }
 .pl40 {
     padding-left: 40px;
+}
+.pl47 {
+    padding-left: 47px;
 }
 
 .pl55 {
@@ -2174,7 +2186,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1f2f3', end
 }
 .custom-checkbox-login.selected{background-position:-39px -33px}
 .navBarZ{
-    z-index: 5;
+    z-index: 6;
 }
 .overlayZ{
     z-index: 8;
@@ -2344,3 +2356,14 @@ line-height:25px;
 .vertM {
     vertical-align: middle;
 }
+
+.reportInv1{padding:0px 21px 30px 21px}
+.reportInv2{padding:31px 21px 0px 21px}
+.fontlig {
+    font-family: "Roboto", "sans-serif";
+    font-weight: 300
+}
+.engBarInfoMsg{
+    position: absolute;
+    padding: 14px 27px;
+    width: 100%;}

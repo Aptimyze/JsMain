@@ -17,6 +17,10 @@ class MobilePhotoUploadAction extends sfActions {
 		$this->privacy =$loggedInProfile->getPHOTO_DISPLAY();
 		$this->upload = true;
 		$this->gender=$loggedInProfile->getGENDER();
+		if(PictureFunctions::IfUsePhotoDistributed($loggedInProfile->getPROFILEID()))
+				$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($loggedInProfile->getPROFILEID(),'1');
+		
+		
 		$picServiceObj = new PictureService($loggedInProfile);
                 if($picServiceObj->getProfilePic())
                 {

@@ -1,3 +1,13 @@
+$("#js-cropperOpsClose").on('click',function(){
+        closeCropper();
+    });
+
+        function  closeCropper()
+        {
+                $("#commonOverlay").hide();
+                $(".js-cropper").hide();
+        }
+	var cordinatesArray = {};
 $(function () {
 
 	'use strict';
@@ -6,7 +16,6 @@ $(function () {
 	var $body = $('body');
 
 	/** LAVESH **/
-	var cordinatesArray = {};
 	$('#js-cropperSave').bind('click', function() {
 	
 	var imageSource = $('.cropper-canvas').find('img').attr('src');
@@ -17,8 +26,6 @@ $(function () {
 	sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr);
 	});
 	/** LAVESH **/
-
-
 
 	// Tooltip
 	$('[data-toggle="tooltip"]').tooltip();
@@ -262,6 +269,12 @@ $(function () {
 function sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr)
 {
 	var url = '/social/processCropper';
+	
+    if (typeof imageCopyServer === 'undefined' || imageCopyServer == '')
+        url = "/social/processCropper";
+    else
+        url = "/"+imageCopyServer+"/social/processCropper";
+    //alert(url);
 	var postSendData = {'cropBoxDimensionsArr':cordinatesArray,'imageSource':imageSource,'imgPreviewTypeArr':imgPreviewTypeArr};
 	
 	$.myObj.ajax({
@@ -279,8 +292,14 @@ function sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr
 		success: function(response) 
 		{
 			hideCommonLoader();
+			var url = '/social/addPhotos?showConf=1';
+	
+			if (typeof imageCopyServer === 'undefined' || imageCopyServer == '')
+        url = "/social/addPhotos?showConf=1";
+			else
+        url = "/"+imageCopyServer+"/social/addPhotos?showConf=1";
 			//console.log("cropped image successfully"); 
-			window.location="/social/addPhotos?showConf=1";
+			window.location=url;
 		},
 		error: function(xhr) 
 		{
@@ -290,3 +309,16 @@ function sendProcessCropperRequest(cordinatesArray,imageSource,imgPreviewTypeArr
 	});
 	return false;
 }
+
+function sendOpsProcessCropperRequest()
+{
+        var imageSource = $('.cropper-canvas').find('img').attr('src');
+        var imgPreviewTypeArr = ["imgPreviewLG","imgPreviewMD","imgPreviewSM","imgPreviewSS","imgPreviewXS"];
+	imgPreviewTypeArrStr = JSON.stringify(imgPreviewTypeArr, null, 2);
+	cordinatesArrayStr = JSON.stringify(cordinatesArray, null, 2);
+	$("#cropBoxDimensionsArr").val(cordinatesArrayStr);
+	$("#imageSource").val(imageSource);
+	$("#imgPreviewTypeArr").val(imgPreviewTypeArrStr);
+	$("#ops").val(true);
+}
+

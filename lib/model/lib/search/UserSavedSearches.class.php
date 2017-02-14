@@ -16,7 +16,7 @@ class UserSavedSearches extends SearchParamters
 	{
 		parent::__construct();
 		$this->possibleSearchParamters = SearchConfig::$possibleSearchParamters;
-
+		$this->loggedInProfileObj = $loggedInProfileObj;
 		/* Save Search is only relevant in logged in case, else show timedout page. */
 		if($loggedInProfileObj->getPROFILEID())
 			$this->pid =  $loggedInProfileObj->getPROFILEID();
@@ -32,7 +32,7 @@ class UserSavedSearches extends SearchParamters
 	* Sets SearchParamtersObj corresponding to id(primary key of teh SEARCH_AGENT table.
 	* @param $id the unique id 
 	*/
-	public function getSearchCriteria($id)
+	public function getSearchCriteria($id,$fromMailer= '')
 	{
  		$paramArr['ID'] = $id;
 		$paramArr['PROFILEID'] = $this->pid;
@@ -60,12 +60,18 @@ class UserSavedSearches extends SearchParamters
 		}
 		else
 		{
-			//Log an entry : still perform a search with gender=oppisite gender. 
+			if($fromMailer == 1)
+			{
+				throw new jsException('',"Error Processing Request in SavedSearchCalculationTask");	
+			}
+			else
+			{
+				//Log an entry : still perform a search with gender=oppisite gender. 
 	                if($this->loggedInProfileObj->getGENDER()=='F')
 				$this->setGENDER('M');
 	                else
 				$this->setGENDER('F');
-
+			}
 		}
 	}
 
@@ -136,8 +142,7 @@ class UserSavedSearches extends SearchParamters
 		{
 			$key = "ID";
 			$updateArr[$key] = "'".$replaceId."'";
-		}
-
+		}			
                 $saveId = $SEARCH_AGENTObj->addRecords($updateArr);
 		$SearchParamtersObj->setID($saveId);
                 return $saveId;
@@ -178,7 +183,7 @@ class UserSavedSearches extends SearchParamters
 		$fields = "SQL_CACHE SEARCH_NAME,ID";
 		if($getAllData)
 			$fields.=",".$this->possibleSearchParamters;
-                $SEARCH_AGENTObj = new SEARCH_AGENT;
+                $SEARCH_AGENTObj = new SEARCH_AGENT(SearchConfig::getSearchDb());
 		$arr = $SEARCH_AGENTObj->get($paramArr,$fields);
 		if($arr)
 		{

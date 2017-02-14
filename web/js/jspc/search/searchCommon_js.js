@@ -16,6 +16,7 @@ function showSearchLoader(type)
 
 function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, featuredCount, profileOffset,key,resp) {
   var searchDefault = val1.photo.url;
+  var orig_username = removeNull(val1.username);
   if(resp.listType=="cc")
     searchDefault = val1.profilepic450url;
   var loaderPicDisplay = 'none';
@@ -50,7 +51,7 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
     removeThisProfile = "";
   }
   
-  if(resp.searchBasedParam=="justJoinedMatches" || resp.searchBasedParam=='matchalerts' ||  resp.searchBasedParam=='kundlialerts' || resp.searchBasedParam=='contactViewAttempts'){
+  if(resp.searchBasedParam=="justJoinedMatches" || resp.searchBasedParam=='matchalerts' || resp.searchBasedParam=='contactViewAttempts'){
         joinedOnMsg = val1.timetext.replace("She j","J").replace("He j","J");
         removeThisProfile = "disp-none";
     }
@@ -60,13 +61,14 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
     }
     else
         joinedOnMsg = "";
-  
+ 
   /** 
    * Filtered Profiles
    */
   if(resp.listType != "undefined" && resp.listType == "vsp")
   {
     removeThisProfile = "disp-none";
+    orig_username = removeNull(val1.orig_username);
   }
   else
   {
@@ -104,10 +106,16 @@ function searchResultMaping(val, noPhotoDiv, val1, profileNoId, defaultImage, fe
 var verificationDocumentsList;
   if (val1.verification_seal) {
     verificationSeal = ""; //val1.verification_seal;
-    if(val1.verification_seal instanceof Array)
-      verificationDocumentsList = 'Documents provided: ' + val1.verification_seal.join(", ");
+    verificationSealDoc = "";
+    if(val1.verification_seal instanceof Array){
+      verificationDocumentsList = val1.verification_seal.join(",</li><li>");
+      verificationDocumentsList = "<li>"+verificationDocumentsList+"</li>";
+    }else{
+        verificationSealDoc = "disp-none";    
+    }
   } else {
     verificationSeal = "disp-none";
+    verificationSealDoc = "disp-none";
     verificationDocumentsList = null;
   }
 
@@ -115,6 +123,15 @@ var verificationDocumentsList;
   else val1.photo.label = 0;
   if (typeof val1.religion == 'undefined') val1.religion = '';
 
+  //adding code for caste
+  if(val1.caste == val1.religion)
+  {
+    val1.caste = "";
+  }
+  else
+  {
+    val1.caste = ", "+val1.caste;
+  }
   var isNewProfile = (val1.seen == "N") ? " new" : "";
   if(val1.filter_reason!="")
       var toShowFilterReason = "";
@@ -148,7 +165,33 @@ var verificationDocumentsList;
                 val1.username = val1.username.substring(0, val1.username.length - 4);
                 val1.username += "****";
         }
+	else
+	{
+		if(val1.name_of_user!='' && val1.name_of_user!=null)
+			val1.username = val1.name_of_user;
+	}
+  var collegeTxt = "";
+  var a = [];
+  var pgCol = '';
+  if(typeof val1.pg_college != 'undefined' && val1.pg_college != '' && val1.pg_college != null){
+          a.push(val1.pg_college);
+          pgCol = '';
+  }
+  if(typeof val1.college != 'undefined' && val1.college != '' && val1.college != null){
+        if(pgCol.toLowerCase() != val1.college.toLowerCase()){
+             a.push(val1.college);
+        }
+  }
+  var s = a.join(', ');
+  if(s){
+        collegeTxt =  "Studied at "+s;
+  }
+  if(val1.company_name){
+          val1.company_name = "Works at "+val1.company_name;
+  }
   var mapping = {
+    '{StudiedAtDiv}': removeNull(collegeTxt),
+    '{WorksAtDiv}': removeNull(val1.company_name),
     '{noPhotoDiv}': removeNull(noPhotoDiv),
     '{searchTupleImage}': removeNull(searchTupleImage),
     '{photoLabel}': removeNull(val1.photo.label),
@@ -157,6 +200,7 @@ var verificationDocumentsList;
     '{album_count}': removeNull(val1.album_count),
     '{countDisplay}': countDisplay,
     '{username}': removeNull(val1.username),
+    '{orig_username}':orig_username,
     '{userloginstatus}': removeNull(val1.userloginstatus),
     '{isNewProfile}': isNewProfile,
     '{age}': removeNull(val1.age),
@@ -176,6 +220,7 @@ var verificationDocumentsList;
     '{profileNoId}': profileNoId,
     '{profilechecksum}': removeNull(val1.profilechecksum),
     '{verificationSeal}': removeNull(verificationSeal),
+    '{verificationSealDoc}': removeNull(verificationSealDoc),
     '{verificationDocumentsList}': removeNull(verificationDocumentsList),
     '{featuredProfile}': removeNull(featuredProfile),
     '{featureProfileCount}': removeNull(featureProfileCount),
@@ -184,7 +229,9 @@ var verificationDocumentsList;
     '{highlightedProfile}': removeNull(highlightedProfile),
     '{filterReason}': removeNull(val1.filter_reason),
     '{showFilterReason}': toShowFilterReason,
-    '{mstatus}': removeNull(val1.mstatus)
+    '{mstatus}': removeNull(val1.mstatus),
+    '{userId}':removeNull(val1.profileid),
+    '{gender}':removeNull(val1.gender)
   };
   return mapping;
 }
@@ -352,3 +399,11 @@ function setImageSrc(ele,next) {
    }
 
 }
+$('body').on('click','.js-verificationPage', function(e) {
+        if(typeof(loggedInJspcUser)!="undefined" && loggedInJspcUser=="" ){
+        }else{
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = "/static/agentinfo";
+        }
+});

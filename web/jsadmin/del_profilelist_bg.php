@@ -12,6 +12,8 @@
 		{
 			$sendMailData = array('process' =>'DELETE_RETRIEVE','data'=>array('type' => 'DELETING','body'=>array('profileId'=>$profile)), 'redeliveryCount'=>0 );
 			$producerObj->sendMessage($sendMailData);
+			$sendMailData = array('process' =>'USER_DELETE','data' => ($profile), 'redeliveryCount'=>0 );
+			$producerObj->sendMessage($sendMailData);
 		}
 		else
 		{

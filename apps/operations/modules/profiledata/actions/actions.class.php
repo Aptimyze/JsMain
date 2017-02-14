@@ -85,7 +85,7 @@ class ProfileDataActions extends sfActions
                     "'Logout'" => array(array("Logout Data"),array("IP Address","Time")),
                     'Login' => array(array("Login Data"),array("IP Address","Time")),
                     "EditLog" => array(array("Modification Log : MOD_INDEXVAL"),array("MOD_INDEXVAL","Mod_Date","IP")),
-                    "EOILog" => array(array("Contact History"),array("Sender","Receiver","Date (IST)","TYPE","IP","MESSAGE","Phone Mobile","Phone Res","Phone Alternate","Contact")),
+                    "EOILog" => array(array("Contact History"),array("Sender","Receiver","Sender_ProfileId","Receiver_ProfileId","EmailId","Date (IST)","TYPE","IP","MESSAGE","Phone Mobile","Phone Res","Phone Alternate","Contact")),
                     "PaymentLog" => array(array("Payment Data"),array("Bill Id","Payment Mode","Cheque No","Cheque Date(EST)","Cheque City","Bank","IP","Status","Entry Date(EST)*","Service Names","Gateway*","TXN Ref No*","RRN*")),
                 );
                 
@@ -138,19 +138,23 @@ class ProfileDataActions extends sfActions
                                 $csvData .= "No Record(s) Found";   
                        }
                 }elseif($actionName == 'EOILog'){
-                        $pageResponse = (array)$pageResponse;
+                        $pageResponse = (array)$pageResponse; 
                         foreach($headerArray[$actionName] as $header){
                             $csvData .= implode(',',$header)."\n";
                         }
                         if(!empty($pageResponse)){
-                                foreach($pageResponse as $indexVal => $pageModData){
+                                foreach($pageResponse as $indexVal1 => $pageModData){
                                         $pageModData = (array)$pageModData;
-                                        foreach($pageModData as $indexVal => $pageData){
+                                        foreach($pageModData as $indexVal2 => $pageData){
                                                 $pageData = (array)$pageData;
-                                                foreach($pageData as $indexVal => $messageDetails){
+                                                foreach($pageData as $indexVal3 => $messageDetails){
                                                    $messageDetails = (array)$messageDetails;
                                                    $csvData .= $messageDetails['SENDER'].",";
+
                                                    $csvData .= $messageDetails['RECEIVER'].",";
+                                                   $csvData .= $indexVal1.",";
+                                                   $csvData .= $indexVal2.",";
+                                                   $csvData .= $messageDetails['EMAIL'].",";
                                                    $csvData .= $messageDetails['DATE'].",";
                                                    $csvData .= $messageDetails['TYPE'].",";
                                                    $csvData .= $messageDetails['IP'].",";
@@ -193,14 +197,7 @@ class ProfileDataActions extends sfActions
 		if($this->username)
 		{
 			$profObj=Operator::getInstance();
-			if(strpos($this->username,"@"))
-			{
-				$profObj->getDetail($this->username,"EMAIL","PROFILEID,ACTIVATED,INCOMPLETE");
-			}
-			else
-			{
-				$profObj->getDetail($this->username,"USERNAME","PROFILEID,ACTIVATED,INCOMPLETE");
-			}
+			$profObj->getDetail($this->username,"USERNAME","PROFILEID,ACTIVATED,INCOMPLETE");
 			$this->profileid = $profObj->getPROFILEID();
 			$this->activated=$profileStatus[$profObj->getACTIVATED()];
 			if($profObj->getINCOMPLETE()=='Y')
@@ -221,7 +218,7 @@ class ProfileDataActions extends sfActions
 		}
 		else
 		{
-			$this->error = "Please enter a valid username or email !";
+			$this->error = "Please enter a valid username!";
 			$this->setTemplate("index");
 		}
 		
@@ -252,12 +249,12 @@ class ProfileDataActions extends sfActions
 	
 	public function executeProfileLog(sfWebRequest $request)
 	{
+
 		// Get Profile Data
 		$nameObj = new incentive_NAME_OF_USER();
 		$this->nameofuser = $nameObj->getName($this->profileid);	
 		$this->profile=Operator::getInstance();
-		$this->profileDetailArr = $this->profile->getDetail($this->profileid,"PROFILEID","PROFILEID,USERNAME,PASSWORD,GENDER,RELIGION,CASTE,SECT,MANGLIK,MTONGUE,MSTATUS,DTOFBIRTH,OCCUPATION,COUNTRY_RES,CITY_RES,HEIGHT,EDU_LEVEL,EMAIL,IPADD,MOD_DT,RELATION,COUNTRY_BIRTH,SOURCE,INCOMPLETE,PROMO,DRINK,SMOKE,HAVECHILD,RES_STATUS,BTYPE,COMPLEXION,DIET,HEARD,INCOME,CITY_BIRTH,BTIME,HANDICAPPED,NTIMES,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,ACTIVATED,ACTIVATE_ON,AGE,GOTHRA,GOTHRA_MATERNAL,NAKSHATRA,MESSENGER_ID,MESSENGER_CHANNEL,PHONE_RES,PHONE_MOB,FAMILY_BACK,SCREENING,CONTACT,SUBCASTE,YOURINFO,FAMILYINFO,SPOUSE,EDUCATION,LAST_LOGIN_DT,SHOWPHONE_RES,SHOWPHONE_MOB,HAVEPHOTO,PHOTO_DISPLAY,PHOTOSCREEN,PREACTIVATED,KEYWORDS,PHOTODATE,PHOTOGRADE,TIMESTAMP,PROMO_MAILS,SERVICE_MESSAGES,PERSONAL_MATCHES,SHOWADDRESS,UDATE,SHOWMESSENGER,PINCODE,PARENT_PINCODE,PRIVACY,EDU_LEVEL_NEW,FATHER_INFO,SIBLING_INFO,WIFE_WORKING,JOB_INFO,MARRIED_WORKING,PARENT_CITY_SAME,PARENTS_CONTACT,SHOW_PARENTS_CONTACT,FAMILY_VALUES,SORT_DT,VERIFY_EMAIL,SHOW_HOROSCOPE,GET_SMS,STD,ISD,MOTHER_OCC,T_BROTHER,T_SISTER,M_BROTHER,M_SISTER,FAMILY_TYPE,FAMILY_STATUS,FAMILY_INCOME,CITIZENSHIP,BLOOD_GROUP,HIV,THALASSEMIA,WEIGHT,NATURE_HANDICAP,ORKUT_USERNAME,WORK_STATUS,ANCESTRAL_ORIGIN,HOROSCOPE_MATCH,SPEAK_URDU,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,RASHI,TIME_TO_CALL_START,TIME_TO_CALL_END,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,PHONE_FLAG,CRM_TEAM,activatedKey,PROFILE_HANDLER_NAME,GOING_ABROAD,OPEN_TO_PET,HAVE_CAR,OWN_HOUSE,COMPANY_NAME,HAVE_JCONTACT,HAVE_JEDUCATION,SUNSIGN,CONVERT_TZ(ENTRY_DT,'SYSTEM','right/Asia/Calcutta') as ENTRY_DT");
-		
+		$this->profileDetailArr = $this->profile->getDetail($this->profileid,"PROFILEID","PROFILEID,USERNAME,PASSWORD,GENDER,RELIGION,CASTE,SECT,MANGLIK,MTONGUE,MSTATUS,DTOFBIRTH,OCCUPATION,COUNTRY_RES,CITY_RES,HEIGHT,EDU_LEVEL,EMAIL,IPADD,CONVERT_TZ(MOD_DT,'SYSTEM','right/Asia/Calcutta') as MOD_DT,RELATION,COUNTRY_BIRTH,SOURCE,INCOMPLETE,PROMO,DRINK,SMOKE,HAVECHILD,RES_STATUS,BTYPE,COMPLEXION,DIET,HEARD,INCOME,CITY_BIRTH,BTIME,HANDICAPPED,NTIMES,SUBSCRIPTION,CONVERT_TZ(SUBSCRIPTION_EXPIRY_DT,'SYSTEM','right/Asia/Calcutta') as SUBSCRIPTION_EXPIRY_DT,ACTIVATED,ACTIVATE_ON,AGE,GOTHRA,GOTHRA_MATERNAL,NAKSHATRA,MESSENGER_ID,MESSENGER_CHANNEL,PHONE_RES,PHONE_MOB,FAMILY_BACK,SCREENING,CONTACT,SUBCASTE,YOURINFO,FAMILYINFO,SPOUSE,EDUCATION,CONVERT_TZ(LAST_LOGIN_DT,'SYSTEM','right/Asia/Calcutta') as LAST_LOGIN_DT,SHOWPHONE_RES,SHOWPHONE_MOB,HAVEPHOTO,PHOTO_DISPLAY,PHOTOSCREEN,PREACTIVATED,KEYWORDS,PHOTODATE,PHOTOGRADE,TIMESTAMP,PROMO_MAILS,SERVICE_MESSAGES,PERSONAL_MATCHES,SHOWADDRESS,UDATE,SHOWMESSENGER,PINCODE,PARENT_PINCODE,PRIVACY,EDU_LEVEL_NEW,FATHER_INFO,SIBLING_INFO,WIFE_WORKING,JOB_INFO,MARRIED_WORKING,PARENT_CITY_SAME,PARENTS_CONTACT,SHOW_PARENTS_CONTACT,FAMILY_VALUES,CONVERT_TZ(SORT_DT,'SYSTEM','right/Asia/Calcutta') as SORT_DT,VERIFY_EMAIL,SHOW_HOROSCOPE,GET_SMS,STD,ISD,MOTHER_OCC,T_BROTHER,T_SISTER,M_BROTHER,M_SISTER,FAMILY_TYPE,FAMILY_STATUS,FAMILY_INCOME,CITIZENSHIP,BLOOD_GROUP,HIV,THALASSEMIA,WEIGHT,NATURE_HANDICAP,ORKUT_USERNAME,WORK_STATUS,ANCESTRAL_ORIGIN,HOROSCOPE_MATCH,SPEAK_URDU,PHONE_NUMBER_OWNER,PHONE_OWNER_NAME,MOBILE_NUMBER_OWNER,MOBILE_OWNER_NAME,RASHI,TIME_TO_CALL_START,TIME_TO_CALL_END,PHONE_WITH_STD,MOB_STATUS,LANDL_STATUS,PHONE_FLAG,CRM_TEAM,activatedKey,PROFILE_HANDLER_NAME,GOING_ABROAD,OPEN_TO_PET,HAVE_CAR,OWN_HOUSE,COMPANY_NAME,HAVE_JCONTACT,HAVE_JEDUCATION,SUNSIGN,CONVERT_TZ(ENTRY_DT,'SYSTEM','right/Asia/Calcutta') as ENTRY_DT");		
 		
 		foreach($this->profileDetailArr as $key=>$val)
 		{
@@ -265,11 +262,18 @@ class ProfileDataActions extends sfActions
 				$val=FieldMap::getFieldLabel("city_india", $val);
 			else if($key == 'COUNTRY_RES')
 				$val=FieldMap::getFieldLabel("country", $val);
+			else if($key == "EMAIL")
+			{
+					if(strpos($val,"_deleted") !== false)
+					{
+						$val = substr($val,0,strpos($val,"_deleted"));
+					}
+					$deleteRemovedEmail = $val;
+			}
 			if(!$val)
 				$val="Not present";
 			$this->profileDetailArr[$key] = $val;
 		}
-		
 		$profObj1 = new ProfileInfo1();
 		$deletedProfileArr = $profObj1->profileDelete($this->profileid);
 		$this->deletedArr = $deletedProfileArr[0];
@@ -278,19 +282,19 @@ class ProfileDataActions extends sfActions
 		//Get Duplicate profiles
 		$dupObj = new ProfileDuplicates($this->profile);
 		$this->duplicateArr = $dupObj->duplicateProfiles();
+
 //		var_dump($this->profile->getJpartner());die;
 		$profObj1->setPageInformation($this,$this->profile);
-		
+		$this->EMAIL=$deleteRemovedEmail;
 		//Getting partner details of viewer
 		$jpartnerObj=$profObj1->getDpp($this->profile->getPROFILEID());
-		$dbObj = new NEWJS_JPROFILE_CONTACT("newjs_slave");
+		$dbObj = new ProfileContact("newjs_slave");
 		$mobArr = $dbObj->getProfileContacts($this->profileid);
 		$this->AltMob = $mobArr['ALT_MOBILE'];
 		
 		//Getting loginned profile desired partner data and setting object as well.
 		$this->profile->setJpartner($jpartnerObj);
 		//var_dump($this->profile->getJpartner()->getDecoratedLAGE());die;
-	
 	}
 	
 	public function executeEOILog(sfWebRequest $request)

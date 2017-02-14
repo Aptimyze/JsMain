@@ -7,6 +7,8 @@ include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/dropdowns.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/arrays.php");
 
+$db_ddl = connect_ddl();
+
 $mysqlObj = new Mysql;
 $dbM = $mysqlObj->connect("master") or logError("Unable to connect to master","ShowErrTemplate");
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$dbM);
@@ -155,7 +157,7 @@ foreach($gender as $k=>$v)
 	
 		$truncate_statement = "TRUNCATE TABLE twowaymatch.".$update_category[$kk]."_".$v."_PERCENT";
 
-		$mysqlObj->executeQuery($truncate_statement,$dbM) or $mysqlObj->logError($truncate_statement);
+		$mysqlObj->executeQuery($truncate_statement,$db_ddl) or $mysqlObj->logError($truncate_statement);
 		$mysqlObj->executeQuery($insert_statement,$dbM) or $mysqlObj->logError($insert_statement);
 	}
 }

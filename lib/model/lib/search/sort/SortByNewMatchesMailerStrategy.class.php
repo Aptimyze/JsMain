@@ -23,6 +23,7 @@ class SortByNewMatchesMailerStrategy extends SearchSort implements SortStrategyI
                 $this->SearchParamtersObj = $SearchParamtersObj;
 		parent::isPhotoSorting($SearchParamtersObj,$loggedInProfileObj);
 		parent::isFilterSorting($loggedInProfileObj);
+                parent::setReverseDppSorting($loggedInProfileObj, 1);
 		if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
 			$this->pid = $loggedInProfileObj->getPROFILEID();
         }
@@ -62,12 +63,18 @@ class SortByNewMatchesMailerStrategy extends SearchSort implements SortStrategyI
                         $sortAscOrDesc[$counter] = $this->sortByDesc;
                         $counter++;
 		}
-
+                
+                if(parent::getReverseDppSort()){
+                        $sortString[$counter] = parent::getReverseDppSort();
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }
+                
 		/* new profiles / new photo profile will be given more prefernce. */
-		$sortString[$counter] = "ENTRY_DT";
+		$sortString[$counter] = "VERIFY_ACTIVATED_DT";
 		$sortAscOrDesc[$counter] = $this->sortByDesc;
 		$counter++;
-
+                
 		$this->SearchParamtersObj->setSORTING_CRITERIA($sortString);
 		$this->SearchParamtersObj->setSORTING_CRITERIA_ASC_OR_DESC($sortAscOrDesc);
 	}

@@ -181,7 +181,7 @@ function limitExceeded()
 var sel=~sfConfig::get("app_max_no_of_photos") - $importLimit`;
 if(~$limit` <= 0 && (sel == ~$limit`))
 {
-	window.location = "~sfConfig::get('app_site_url')`/profile/intermediate.php?parentUrl=/social/addPhotos";
+	window.location = "~sfConfig::get('app_site_url')`/social/addPhotos";
 }
 }
 function checkLimit(limit,index)
@@ -360,7 +360,7 @@ function numPicsSelected()
 var importFileCounter=0;
 function callSaveImage(total)
 {
-	window.location ="~sfConfig::get('app_site_url')`/profile/intermediate.php?parentUrl=/social/saveImage?successCount="+total+"&importSite=~$importSite`";
+	window.location ="~sfConfig::get('app_site_url')`/social/saveImage?successCount="+total+"&importSite=~$importSite`";
 }
 function updateFileCounter(totalImagesImported)
 {

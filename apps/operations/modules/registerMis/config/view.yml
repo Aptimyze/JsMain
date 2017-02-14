@@ -5,3 +5,7 @@ qualityRegistrationSuccess:
   stylesheets:    [jquery_dateLists]
 
   javascripts:    [jquery_dateLists]
+ScreeningCountMisSuccess:
+  stylesheets:    [jquery_dateLists]
+
+  javascripts:    [jquery_dateLists]

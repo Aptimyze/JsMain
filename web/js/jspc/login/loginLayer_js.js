@@ -12,7 +12,7 @@ function LoginValidation()
 		{				
 			if(validateEmail(email) && validateCaptcha())
 			{
-				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val();
+				loginUrl=SSL_SITE_URL+"/api/v1/api/login?&captcha="+captchaShow+"&fromPc=1&rememberme="+$("#remember").val()+"&g_recaptcha_response="+$("#g-recaptcha-response").val();
 				$("#homePageLogin").attr('action',loginUrl);
 				if(typeof(LoggedoutPage)!="undefined")
 				{ 	
@@ -89,20 +89,66 @@ function LoginValidation()
 		}
 }
 function validateEmail(email) {
-    var x = email;
+    var x = $.trim(email);
     var re = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
-    return re.test(email);
+    return re.test(x);
     }
     
+function validateMobile(mobile) {
+	var str = $.trim(mobile);
+	// removes leading zeros
+	str = str.replace(/^0+/, '');
+	if(str.indexOf('-') > -1)
+	{
+		var result = str.split("-");
+		// remove leading zeros from number
+		result[1] = result[1].replace(/^0+/, '');
+		str = result.join("-");
+	}
+
+	if(str.indexOf('+') > -1)
+	{
+		var result = str.split("+");
+		// remove leading zeros from isd
+		result[1] = result[1].replace(/^0+/, '');
+		str = result.join("+");
+	}
+	var re = /^((\+)?[0-9]*(-)?)?[0-9]{7,}$/i;
+	var isd = '';
+	var phone = '';
+	var data = new Array();
+	if(re.test(str))
+	{
+		str = str.split('+').join('');
+		if(str.indexOf('-') > -1)
+		{
+			isd = str.slice(0, str.indexOf('-'));
+			phone = str.slice(str.indexOf('-')+1, str.length);
+		}
+		else
+		{
+			isd = '';
+			phone = str;
+		}
+		data['flag'] = 1;
+		data['phone'] = phone;
+		data['isd'] = isd;
+	}
+	else
+	{
+		data['flag'] = 0;
+	}
+	return data;
+}
 function validateCaptcha()
 {
-	 if($("#blueText").html()=="Slide to Verify" &&  $('#captchaDiv').is(':visible'))
-    {
-      $("#LoginMessage").hide();
-      $("#LoginErrMessage").addClass("disp-none");
-      $("#LoginErrMessage2").removeClass("disp-none");
-      return false;
-    }
+	 // if($("#blueText").html()=="Slide to Verify" &&  $('#captchaDiv').is(':visible'))
+  //   {
+  //     $("#LoginMessage").hide();
+  //     $("#LoginErrMessage").addClass("disp-none");
+  //     $("#LoginErrMessage2").removeClass("disp-none");
+  //     return false;
+  //   }
     return true;
 }
 
@@ -113,9 +159,9 @@ function after_login(response)
 			address_url=window.location.href.substr(window.location.href.indexOf("redirectUri=")+12);
 		if(response==0)
 		if( window.top.location.pathname=="/static/logoutPage" || window.top.location.pathname=="/jsmb/login_home.php")
-			window.top.location.href = "/profile/intermediate.php?parentUrl=/myjs/jspcPerform";
+			window.top.location.href = "/myjs/jspcPerform";
 		else
-			window.top.location.href = "/profile/intermediate.php?parentUrl="+address_url;
+			window.top.location.href = address_url;
 	}
 
 function onFrameLoginResponseReceived(message)
@@ -136,7 +182,8 @@ function onFrameLoginResponseReceived(message)
 				hideCommonLoader();
 				$("#LoginMessage").addClass("disp-none");
 				$("#LoginErrMessage").addClass("disp-none");
-			  $("#LoginErrMessage2").removeClass("disp-none");
+				$("#CaptchaErrMessage").removeClass("disp-none");
+			  // $("#LoginErrMessage2").removeClass("disp-none");
 			  hideCommonLoader();
 				removeCaptcha();
 				if($("#commonOverlay").is(':visible')){
@@ -162,7 +209,29 @@ function onFrameLoginResponseReceived(message)
         hideCommonLoader();
   			$("#LoginErrMessage").removeClass("disp-none");
   			$("#LoginMessage").addClass("disp-none");
-  			$("#LoginErrMessage2").addClass("disp-none");
+			$("#CaptchaErrMessage").addClass("disp-none");
+  			// $("#LoginErrMessage2").addClass("disp-none");
+  			$("#EmailContainer").addClass("brderred");
+  			$("#PasswordContainer").addClass("brderred");
+			if(captchaShow == 1)
+			{
+				createCaptcha();
+			}
+  			setTimeout(function(){
+  				$("#emailErr").removeClass("visb");
+  				$("#EmailContainer").removeClass("brderred");
+  				$("#passwordErr").removeClass("visb");
+  				$("#PasswordContainer").removeClass("brderred");
+  				},3000);
+      }
+		}
+		else if(response == 2)
+		{
+			hideCommonLoader();
+			$("#CaptchaErrMessage").removeClass("disp-none");
+  			$("#LoginErrMessage").addClass("disp-none");
+  			$("#LoginMessage").addClass("disp-none");
+  			// $("#LoginErrMessage2").addClass("disp-none");
   			$("#EmailContainer").addClass("brderred");
   			$("#PasswordContainer").addClass("brderred");
   			setTimeout(function(){
@@ -171,7 +240,6 @@ function onFrameLoginResponseReceived(message)
   				$("#passwordErr").removeClass("visb");
   				$("#PasswordContainer").removeClass("brderred");
   				},3000);
-      }
 		}
 		else
 		{
@@ -274,7 +342,7 @@ function LoginBinding()
                           if(typeof(LoggedoutPage)!="undefined")
                       {  
                         if(LoggedoutPage){
-                        removeCaptcha();
+                        // removeCaptcha();
                         createCaptcha("logoutPage");
                         }
                       }
@@ -386,7 +454,7 @@ function forgotPasswordBinding(fromLayer)
 	
 	$('#forgotPasswordLoginLayer').click(function() {
 		
-		$("#ForgotPasswordMessage").html("Enter your registered email of Jeevansathi to receive an Email and SMS with the link to reset your password.");
+		$("#ForgotPasswordMessage").html("Enter your registered email or phone number of Jeevansathi to receive an Email and SMS with the link to reset your password.");
 		$("#forgotPasswordForm").removeClass("disp-none");
 		
 		$('#closeForgotLogin').unbind();
@@ -403,6 +471,7 @@ function forgotBindings(fromLayer)
                          $('#forgotPasswordLayer').removeClass("disp-none");
                     });
                     $('.js-overlay').bind("click",function(){
+                    	$("#sendLinkForgot").unbind('click');
 					 $('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
 						$('#forgotPasswordLayer').remove();
@@ -415,6 +484,7 @@ function forgotBindings(fromLayer)
 			 $('.js-overlay').fadeIn(200, "linear");
 			 $('#forgotPasswordLayer').removeClass("disp-none").attr("style","block");
 			 $('.js-overlay').bind("click",function(){
+			 		$("#sendLinkForgot").unbind('click');
 					 $('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 						$('.js-overlay').fadeOut(300, "linear");
 					});
@@ -426,6 +496,7 @@ function forgotBindings(fromLayer)
 		if(fromLayer==1)
 		{
 			$('#closeForgotLogin').click(function() {
+				$("#sendLinkForgot").unbind('click');
 				$('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 					$('.js-overlay').fadeOut(300, "linear");
 					$('#forgotPasswordLayer').remove();
@@ -436,6 +507,7 @@ function forgotBindings(fromLayer)
 		else
 		{
 			$('#closeForgotLogin').click(function() {
+				$("#sendLinkForgot").unbind('click');
 				$('#forgotPasswordLayer').fadeOut(200, "linear", function() {
 					$('.js-overlay').fadeOut(300, "linear");
 					$('#forgotPasswordLayer').addClass("disp-none");
@@ -457,11 +529,21 @@ function postForgotEmailLayer()
 		   }
 		});
 		$("#sendLinkForgot").click(function(){
-			$("#sendLinkForgot").unbind();
+			
 			var email=$("#userEmail").val();
 			if(email)
 			{
-				if(validateEmail(email))
+				var flag = validateEmail(email)?'E':false;
+				var phone = null;
+				var isd = null;
+				if(!flag)
+				{
+					var data = validateMobile(email);
+					flag = data['flag']?'M':false;
+					phone = data['phone'];
+					isd = data['isd'];
+				}
+				if(flag)
 				{       
 					showCommonLoader("#forgotPasswordContainer");
 					 $.ajax({
@@ -470,12 +552,13 @@ function postForgotEmailLayer()
 						 datatype:'json',
 						 cache: true,
 						 async:false,
-						 data:{email:email.trim()},
+						 data:{'email':email.trim(), 'flag':flag, 'phone':phone, 'isd':isd},
 						 success: function(result){
 							 if(result.responseStatusCode==0)
 							 {
-								 $("#ForgotPasswordMessage").html("Link to reset your password has been sent to your registered Email Id and Mobile Number. The link will be valid for next 24 hours.");
+								 $("#ForgotPasswordMessage").html(result.responseMessage);
 								 $("#forgotPasswordForm").addClass("disp-none");
+								 $("#sendLinkForgot").unbind('click');
 							 }
 							 else
 							 {
@@ -484,7 +567,7 @@ function postForgotEmailLayer()
 								 setTimeout(function(){
 									 $("#forgotPasswordErr").removeClass("visb");
 									$("#userEmailBox").removeClass("brderred");
-								},3000);
+								},10000);
 							 }
 							 hideCommonLoader();
 							  return;
@@ -492,7 +575,7 @@ function postForgotEmailLayer()
 					});
 				}
 				else{
-					$("#forgotPasswordErr").html("Provide a valid email address").addClass("visb");
+					$("#forgotPasswordErr").html("Provide a valid email address or phone number").addClass("visb");
 					$("#userEmailBox").addClass("brderred");
 					 setTimeout(function(){
 						 $("#forgotPasswordErr").removeClass("visb");
@@ -502,7 +585,7 @@ function postForgotEmailLayer()
 			}
 			else
 			{
-				$("#forgotPasswordErr").html("Provide your email address").addClass("visb");
+				$("#forgotPasswordErr").html("Provide your email address or phone number").addClass("visb");
 				$("#userEmailBox").addClass("brderred");
 				 setTimeout(function(){
 					 $("#forgotPasswordErr").removeClass("visb");
@@ -513,136 +596,20 @@ function postForgotEmailLayer()
 }
 
 function createCaptcha(fromLoggedOut){
-	
-	var captchaDiv='<div id="captchaDiv" class="captcha" style=" width: 434px;">                                    <div class="slideCap" id="slideCap">                                        <div class="blueTxt" id="blueText">Slide to Verify</div>                                    </div>                                    <div id="textSlide" style="color: #888;z-index:9999; text-align:center; padding-top: 18px;">Slide to Verify</div>                                    <div class="handle" style="background-position: 10px 10px;background-image:url(/images/jsms/commonImg/nextIcon.png);background-repeat: no-repeat;"></div>                                </div>';
-	if(fromLoggedOut)
-	{
-		if(typeof(parent.LoggedoutPage)!==undefined)
-		{
-			 parent.$('#afterCaptcha').before(captchaDiv);
-			  parent.$("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
-		}
-		else
-		{
-		   $('#afterCaptcha').before(captchaDiv);
-		  $("#loggedout").find('.captcha').slideToCAPTCHA('captcha');
-		}
-	}
-	else
-	{
-		$('#afterCaptcha').before(captchaDiv);
-		$("#newLoginLayerJspc").find('.captcha').slideToCAPTCHA('captcha');
-	}
-	
-	
+	var captchaDiv = '<div class="captchaDiv pad3"><img class="loaderSmallIcon2" src="http://static.jeevansathi.com/images/jsms/commonImg/loader.gif"><script src="https://www.google.com/recaptcha/api.js"></script><div class="g-recaptcha dn" data-sitekey='+site_key+'></div></div>';
+	if($(".g-recaptcha").length !=0){
+            removeCaptcha();
+    }
+    $("#afterCaptcha").before(captchaDiv).promise().done(function() {
+            setTimeout(function() {
+                $(".loaderSmallIcon2").remove();
+                $(".g-recaptcha").removeClass("dn");
+            }, 1000);               
+    });
 }
 
 function removeCaptcha()
 {
-  $('.captcha').each(function(index, element) {
+  $('.captchaDiv').each(function(index, element) {
       $(element).remove();});
 }
-
-(function($) {
-    $.fn.slideToCAPTCHA = function(options) {
-        options = $.extend({
-            handle: '.handle',
-            cursor: 'move',
-            direction: 'x', //x or y
-            customValidation: false,
-            completedText: 'Done!'
-        }, options);
-        var $handle = this.find(options.handle),
-            $slide = this,
-            handleOWidth,
-            xPos,
-            yPos,
-            slideXPos,
-            slideWidth,
-            slideOWidth,
-            $activeHandle,
-			slipStart,
-            mousePressed = false,
-            sliderCompleted = false;
-			startSlider();
-			$handle.css('cursor', options.cursor).on('mousedown', function(e) {
-                slideOn(e);
-            }).on('mouseup', function(e) {
-				resetSlider();
-            }).on('mouseleave', function(e) {
-				if(mousePressed == true) {
-					resetSlider();  
-				}
-            });
-        function startSlider() {
-            $slide.addClass('slide-to-captcha');
-            $handle.addClass('slide-to-captcha-handle');
-            handleOWidth = $handle.outerWidth();
-            slideWidth = $slide.width();
-            slideOWidth = $slide.outerWidth();
-        }
-        function slideOn(e) {
-            mousePressed = true;
-            $activeHandle = $handle.addClass('active-handle');
-            xPos = $handle.offset().left + handleOWidth - e.pageX;
-            slideXPos = $slide.offset().left + ((slideOWidth - slideWidth) / 2);
-			slipStart = $handle.offset().left;
-            $activeHandle.on('mousemove', function(e) {
-                if (mousePressed == true) {
-                    slideMove(e);
-                }
-            });
-            e.preventDefault();
-        }
-        function slideMove(e) {
-            var handleXPos = e.pageX + xPos - handleOWidth;
-			var width = $handle.offset().left - slipStart;
-            if (handleXPos > slideXPos && handleXPos < slideXPos + slideWidth - handleOWidth) {
-                if ($handle.hasClass('active-handle')) {
-					$handle.offset({
-                        left: handleXPos
-                    });
-				$slide.find("#slideCap").css("width",width);
-				if(width >= 151) {
-					$slide.find("#blueText").show();  
-				}
-				else if(handleXPos < 151) {
-					$slide.find("#blueText").hide();
-					}
-                }
-            } else {
-                if (handleXPos <= slideXPos === false) {
-                    sliderComplete();
-                }
-                $activeHandle.mouseup();
-            }
-        }
-        function sliderComplete() {
-            sliderCompleted = true;
-			$handle.css("background-image","url('/images/jsms/commonImg/completed.png')");
-			$handle.css("background-position","0px -2px");
-			$handle.css("margin","0px");
-			$handle.css("border","1px solid #c0c0c0");
-            $activeHandle.offset({
-                left: slideXPos + slideWidth - handleOWidth
-            });
-            $activeHandle.off();
-            resetSlider();
-            $slide.addClass('valid');
-			$slide.find('#blueText').html('Verified');
-			$('LoginErrMessage2').hide();
-			$slide.find("#slideCap").css("width","377px");
-        }
-        function resetSlider() {
-            mousePressed = false;
-            if (sliderCompleted == false) {
-                $activeHandle.offset({
-                    left: slideXPos+1
-                });
-			$slide.find("#blueText").hide();
-            $activeHandle.removeClass('active-handle');
-			$slide.find("#slideCap").css("width","0");
-            }
-        }
-    }
-})(jQuery);

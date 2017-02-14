@@ -62,7 +62,7 @@ edit_dpp_from_filterSuccess:
   javascripts:    [search_similar_js,registration_js,gadget_as_js,advance_search_js]
 dppSuccess:
   metas:
-    title:        My Desired Partner - Jeevansathi.com
+    title:        Desired Partner - Jeevansathi.com
   http_metas:
     X-UA-Compatible:    IE=8
     #description:  symfony project
@@ -96,7 +96,7 @@ myprofilemobSuccess:
   metas:
     title:      My Profile
   stylesheets: [-*,jsms/hamburger/ham_css,jsms/profile/ep/mp_css,jsms/profile/ep/revamp_edit_profile_css,jsms/common/commoncss,jsms/common/mediaquery,jsms/photo/photoup,jsms/common/errorBar,jsms/common/disableRightClick_css]
-  javascripts: [-*,jquery_validate_js,jsms/profile/ep/mobedit_validator_js,jsms/utility/sessionStorage_js,jsms/profile/ep/submitDetails_js,jsms/profile/ep/mobedit_js,jsms/profile/ep/mobeditview_js,jsms/profile/ep/hamburger_js,jsms/utility/hamSearch_js,jsms/utility/vSlider_js,jsms/profile/ep/mobeditsave_js,jsms/photo/mobPhotoUpload_v1@bottom,jsms/photo/mobPhotoUploadCommon_js,jsms/photo/photo_upload_js,jsms/photo/photo_privacy_js,jsms/hamburger/ham_js@bottom,jsms/common/disableRightClick_js]
+  javascripts: [-*,jquery_validate_js,jsms/profile/ep/mobedit_validator_js,jsms/utility/sessionStorage_js,jsms/profile/ep/submitDetails_js,jsms/profile/ep/mobedit_js,jsms/profile/ep/mobShow_name_js,jsms/profile/ep/mobeditview_js,jsms/profile/ep/hamburger_js,jsms/utility/hamSearch_js,jsms/utility/vSlider_js,jsms/profile/ep/mobeditsave_js,jsms/photo/mobPhotoUpload_v1@bottom,jsms/photo/mobPhotoUploadCommon_js,jsms/photo/photo_upload_js,jsms/photo/photo_privacy_js,jsms/hamburger/ham_js@bottom,jsms/common/disableRightClick_js]
   layout: jsmsMobLayout
  
 #jsms/search/mobSearchDropDown_js added by tanu to prevet error. has to be removed
@@ -114,7 +114,7 @@ jsmsViewProfileSuccess:
 #dpp Success For JSPC 
 jspcDppSuccess:
   metas:
-    title:        My Desired Partner - Jeevansathi.com
+    title:        Desired Partner - Jeevansathi.com
   http_metas:
     X-UA-Compatible:    IE=edge
   stylesheets:    [jspc/profile/edit/dpp/dppEdit_css,jspc/utility/chosen/chosen_css]
@@ -141,7 +141,7 @@ jspcEditProfileSuccess:
     #language:     en
     #robots:       index, follow
   stylesheets: [jspc/utility/chosen/chosen_css,jspc/profile/view/jspcViewProfile_css,jspc/profile/edit/dpp/dppEdit_css,jspc/profile/edit/profile/jspcEditProfile_css,jspc/profile/edit/profile/jspcCoverPhoto_css,jspc/profile/edit/profile/jspcEditProfileCompletion_css,jspc/phone/phoneVerification_css]
-  javascripts: [jspc/search/hslider@bottom,jspc/utility/chosen/chosen_jquery@bottom,jspc/utility/chosen/docsupport/prism@bottom,jsms/utility/sessionStorage_js@bottom,jspc/profile/edit/profile/jspcEditProfile_js@bottom,jspc/profile/edit/profile/jspcCoverPhoto_js@bottom,jspc/profile/edit/profile/jspcEditProfileCompletion_js@bottom,jspc/profile/edit/profile/jspcPhoneVerifyBinding_js@bottom,jspc/common/phoneVeriLayers_js@bottom,jspc/common/nano@bottom]
+  javascripts: [jspc/search/hslider@bottom,jspc/utility/chosen/chosen_jquery@bottom,jspc/utility/chosen/docsupport/prism@bottom,jsms/utility/sessionStorage_js@bottom,jspc/profile/edit/profile/jspcEditProfile_js@bottom,jspc/profile/edit/profile/jspcCoverPhoto_js@bottom,jspc/profile/edit/profile/jspcEditProfileCompletion_js@bottom,jspc/profile/edit/profile/jspcPhoneVerifyBinding_js@bottom,jspc/common/phoneVeriLayers_js@bottom,jspc/common/nano@bottom,jspc/common/photoAlbum@bottom]
   layout: jspcLayout
   
 jspcNoProfileSuccess:

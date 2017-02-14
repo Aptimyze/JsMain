@@ -43,16 +43,11 @@ class HandleFtoDuplicate
 					{
 						if($v->getPROFILEID()==$id)
 						{
-                                                    try {
-                                                      //send mail to the second profile marked as duplicate
-                                                      duplicateProfilesMail::sendEmailToDuplicateProfiles($id);
-                                                    } 
-                                                    catch (Exception $ex) {
-                                                    }
+                                                    
 							if(!strstr($v->getSUBSCRIPTION(),"F"))
 							{
 								$IntlObj =  new INCENTIVE_NEGATIVE_TREATMENT_LIST;
-								$IntlObj->addRecord($fto_duplicate_arr,1);
+								$lastInsertedId=$IntlObj->addRecord($fto_duplicate_arr,1);
 
 								if($fto_duplicate_arr["FLAG_VIEWABLE"]=="N")	//Delete entry from search tables
 								{
@@ -64,6 +59,14 @@ class HandleFtoDuplicate
 									unset($NsfObj);
 								}
 							}
+                                                        
+                                                        try {
+                                                      //send mail to the second profile marked as duplicate
+                                                      if($lastInsertedId)
+                                                            duplicateProfilesMail::sendEmailToDuplicateProfiles($id);
+                                                    } 
+                                                    catch (Exception $ex) {
+                                                    }
 							break;
 						}
 					}
@@ -90,29 +93,15 @@ class HandleFtoDuplicate
 	*/
 	private function compareDates($entry_dt1,$entry_dt2,$profileid1,$profileid2)
 	{
-		$fto_live_date = FTOLiveFlags::FTO_LIVE_DATE;
-		$fto_timestamp = JSstrToTime($fto_live_date);
 		$timestamp1 = JSstrToTime($entry_dt1);
 		$timestamp2 = JSstrToTime($entry_dt2);
-		if($timestamp1>=$fto_timestamp && $timestamp2>=$fto_timestamp)		//BOTH PROFILES AFTER FTO LIVE DATE
-		{
+		
 			if($timestamp1>=$timestamp2)
 				return $profileid1;
 			else
 				return $profileid2;
-		}
-		elseif($timestamp1>=$fto_timestamp && $timestamp2<$fto_timestamp)		//FIRST PROFILE AFTER AND SECOND PROFILE BEFORE FTO LIVE DATE
-		{
-			return $profileid1;
-		}
-		elseif($timestamp1<$fto_timestamp && $timestamp2>=$fto_timestamp)		//FIRST PROFILE BEFORE AND SECOND PROFILE AFTER FTPO LIVE DATE
-		{
-			return $profileid2;
-		}
-		else									//BOTH PROFILES BEFORE FTO LIVE DATE
-		{
-			return null;
-		}
+		
+		
 	}
 }
 ?>

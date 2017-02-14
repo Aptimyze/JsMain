@@ -13,14 +13,14 @@
 ~include_partial("social/addPhotos/_import",[])`
 ~include_partial("social/addPhotos/_cropper",[])`
 <!--start:middle part-->
-<div class="pubg1 fontlig">
+<div  class="pubg1 fontlig">
   <div class="container mainwid">
     <p class="txtr color11 f13  txtu pt7">
 	<a href="/" class="color11" ~if $fromReg eq ''`style="visibility:hidden;"~/if`>I will do this later</a>
 </p>
     <p class="txtc color11 f22 opa80">Profile with photos get 8 times more responses</p>
     <!--start:div-->
-    <div class="mt23 pubg2 clearfix"> 
+    <div  class="mt23 pubg2 clearfix"> 
       <!--start:left-->
 ~include_partial("social/addPhotos/_uploadLeft",['havePhoto'=>$havePhoto,'ProfilePicUrl'=>$ProfilePicUrl])`
       <!--end:left--> 
@@ -85,6 +85,8 @@
 $(document).ready(function() {
 	slider();
 });
+var fromCALphoto=~if $fromCALphoto == 1`'1'~else`'0'~/if`;
+var imageCopyServer = "~$imageCopyServer`";
 var profileId = ~$loggedInProfileId`;
 var photoDisplay = "~$PHOTODISPLAY|decodevar`";
 var photosDetails =jQuery.makeArray(~$urlsJson|decodevar`);

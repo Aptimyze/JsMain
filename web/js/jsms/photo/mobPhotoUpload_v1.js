@@ -160,8 +160,15 @@ function sendAjaxRequest(count) {
     currentEvent = count;
     dataToBeSent = formDataArray[count];
     statusArr[completed + 1] = 2;
+    var purl;
+    
+    if (typeof imageCopyServer === 'undefined' || imageCopyServer == '')
+        purl = SITE_URL + "/social/MobPhoto";
+    else
+				purl = imageCopyServer+"/social/MobPhoto";
+				//alert(purl);
     ajaxCurrentRequest = $.ajax({
-        url: SITE_URL + "/social/MobPhoto", // Url to which the request is send
+        url: purl, // Url to which the request is send
         type: "POST", // Type of request to be send, called as method
         timeout: 300000,
         data: dataToBeSent, // Data sent to server, a set of key/value pairs representing form fields and values 

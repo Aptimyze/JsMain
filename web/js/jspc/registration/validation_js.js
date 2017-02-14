@@ -31,12 +31,13 @@ var arrErors = {
         "SECT_REQUIRED":"Please provide a Sect",
 	"COUNTRY_REQUIRED":"Please mention the Country you are living in",
   "COUNTRYREG_REQUIRED":"Please mention the Country you are living in",
+  "STATEREG_REQUIRED":"Please mention the State you are living in",
 	"MTONGUE_REQUIRED":"Please provide a Mother Tongue",
 	"ABOUTME_ERROR":"To appear in search results, please write about yourself in atleast 100 letters",
 	"HDEGREE_REQUIRED":"Please provide a degree",
 	"OCCUPATION_REQUIRED":"Please provide an occupation",
 	"INCOME_REQUIRED":"Please provide an income range",
-	"ABOUTME_REQUIRED":"Please write about yourself",
+	"ABOUTME_REQUIRED":"Please write about yourself (Don't mention your name)",
 	"NAME_ERROR":"Name should have alphabets only"
 };
 //regular expressions for validations
@@ -691,6 +692,30 @@ return pincodeValidator;
    })();
    this.countryRegValidator=countryRegValidator;
  }).call(this);
+  // inherted class from validator for state
+(function() {
+    var stateRegValidator = (function () {
+      //inheriting form base class
+      inheritsFrom(stateRegValidator,validator);
+      //constructor
+      function stateRegValidator(fieldElement) {
+      stateRegValidator.prototype.parent.constructor.call(this,fieldElement);
+      }
+      stateRegValidator.prototype.validate = function()
+      {
+        var state = this.getValue("stateReg");
+        stateRegValidator.prototype.parent.validate.call(this,state);
+        if(this.error)
+        {
+            this.error=arrErors["STATEREG_REQUIRED"];
+            return false;
+        }
+        return true;
+      }
+   return stateRegValidator;
+   })();
+   this.stateRegValidator=stateRegValidator;
+ }).call(this);
  
   // inherted class from validator for country
 (function() {
@@ -958,12 +983,24 @@ return pincodeValidator;
       {
         var name = this.getValue("name").replace(/\s{2,}/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');
 	inputData[this.inputFieldElement[0].formKey]=name;
-        nameValidator.prototype.parent.validate.call(this,name);
-        if(this.error)
-                return false;
-//check if the name entered has only alphabetic characters in it
-	if(name.length!=0 && !name_regex.test(name))
-		this.error=arrErors['NAME_ERROR'];
+        name_of_user = name.replace(/\./gi, " ");
+        name_of_user = name_of_user.replace(/dr|ms|mr|miss/gi, "");
+        name_of_user = name_of_user.replace(/\,|\'/gi, "");
+        name_of_user = $.trim(name_of_user.replace(/\s+/gi, " "));
+        var allowed_chars = /^[a-zA-Z\s]+([a-zA-Z\s]+)*$/i;
+        if($.trim(name_of_user)== "" || !allowed_chars.test($.trim(name_of_user)))
+	{
+                this.error = "Please provide a valid Full Name";
+		return false;
+        }
+	else
+	{
+                var nameArr = name_of_user.split(" ");
+                if(nameArr.length<2){
+                        this.error = "Please provide your first name along with surname, not just the first name";
+			return false;
+                }
+        }
         return true;
       }
    return nameValidator;

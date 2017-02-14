@@ -37,15 +37,14 @@ class JsPhotoScreen_NotifySms
 	 * @param $szMsgType : Message Type(Either Accepted or Rejected)
 	 * @return void
 	 */
-	public function __construct($iProfileID,$szMsgType)
-	{
+	public function __construct($iProfileID,$szMsgType,$photoRejectReason="")
+	{		
 		if(!$iProfileID || !strlen($szMsgType))
 		{
-			throw new jsException("","ProfileID is null or msgtype is null in JsPhotoScreen_NotifySms");
-		}
-		
+			//throw new jsException("","ProfileID is null or msgtype is null in JsPhotoScreen_NotifySms");
+		}	
 		$this->m_objSms = new SendSms;
-		$this->m_objSms->send_sms($iProfileID,$szMsgType);
+		$this->m_objSms->send_sms($iProfileID,$szMsgType,'',$photoRejectReason);
 	}
 }
 ?>

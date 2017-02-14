@@ -4,6 +4,7 @@ function getOpsPhoneNumber()
 {
 	return "+91-9560885794";
 }
+
 function hideNumbers($profileid,$flag)
 {
 	if(!in_array($flag,array("N","C","Y")))
@@ -122,8 +123,11 @@ function contact_archive($profileid,$field="",$val="")
 }
 function offerCallSettingsChange($profileid,$flag)
 {
-	$sql="UPDATE newjs.JPROFILE_ALERTS SET OFFER_CALLS='".$flag."' WHERE `PROFILEID` = '".$profileid."'";
-	$res=mysql_query_decide($sql);
+	$objUpdate = JProfileUpdateLib::getInstance();
+	$objUpdate->updateJPROFILE_ALERTS($profileid,'OFFER_CALLS',$flag);
+
+	/*$sql="UPDATE newjs.JPROFILE_ALERTS SET OFFER_CALLS='".$flag."' WHERE `PROFILEID` = '".$profileid."'";
+	$res=mysql_query_decide($sql);*/
 }
 function checkIfDuplicate($profileid)
 {
@@ -331,6 +335,7 @@ function getProfilePhoneDetails($profileid)
 }
 
 function deleteCachedJprofile_ContactDetails($profileid){
+  return;
   $memObject=JsMemcache::getInstance();
   $memObject->delete("JPROFILE_CONTACT_".$profileid);
 }

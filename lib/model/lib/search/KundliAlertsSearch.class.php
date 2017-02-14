@@ -36,7 +36,7 @@ class KundliAlertsSearch extends SearchParamters
 	public function getSearchCriteria()
 	{
 		$this->setSEARCH_TYPE(SearchTypesEnums::KundliAlerts);
-		$KundliAlerts = new KundliAlerts;
+		$KundliAlerts = new KundliAlerts();
 		$arr = $KundliAlerts->getProfilesWithOutSorting($this->pid);
 		$this->alertsDateConditionArr = $arr;
 		$str = implode(" ",array_keys($arr));

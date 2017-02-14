@@ -20,7 +20,7 @@
      <td ><img src="/P/imagesnew/zero.gif" width="8" height="20"></td>
      <td class="mediumblack"><span class= "blacklinku">~if $company`<a href="~$SITE_URL`/infovision/contacts_made_received.php?self_profileid=~$profileid`&flag=I&type=R&company=~$company`&cid=~$cid`" target="_blank">~else`<a href="~$SITE_URL`/crm/contacts_made_received.php?checksum=~$CHECKSUM`&flag=I&type=R&company=~$company`" target="_blank">~/if` Awaiting Response </a></span><BR>&nbsp;<img src="/P/imagesnew/open.gif" alt="Contact Member">~if $details["CONTACTS"]["AWAITING_RESPONSE_NEW"]`<span class="mediumred">&nbsp;(~$details["CONTACTS"]["AWAITING_RESPONSE_NEW"]`) new</span>~/if` <BR> Awaiting Response (Filtered)
      </td>
-     <td class="mediumblackb">~$details["CONTACTS"]["<AW></AW>AITING_RESPONSE"]` <BR>~$details["CONTACTS"]["AWAITING_RESPONSE_NEW"]` <BR> ~$details["CONTACTS"]["FILTERED"]`</td>
+     <td class="mediumblackb">~$details["CONTACTS"]["AWAITING_RESPONSE"]` <BR>~$details["CONTACTS"]["AWAITING_RESPONSE_NEW"]` <BR> ~$details["CONTACTS"]["FILTERED"]`</td>
      <td>&nbsp;</td>
      <td class="mediumblack"><span class= "blacklinku">~if $company`<a href="~$SITE_URL`/infovision/contacts_made_received.php?self_profileid=~$profileid`&flag=I&type=M&company=~$company`&cid=~$cid`" target="_blank">~else`<a href="~$SITE_URL`/crm/contacts_made_received.php?checksum=~$CHECKSUM`&flag=I&type=M&company=~$company`" target="_blank">~/if`Of which no response </a></span>&nbsp;<img src="/P/imagesnew/open.gif" alt="Contact Member"><BR><BR> Viewed: ~$details["CONTACTS"]["VIEWED"]` &nbsp;&nbsp;&nbsp; Not viewed:~$details["CONTACTS"]["NOT_OPEN"]` </td>
      <td class="mediumblackb">~$details["CONTACTS"]["NOT_REP"]` </td>

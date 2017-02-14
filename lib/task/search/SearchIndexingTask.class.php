@@ -50,7 +50,11 @@ EOF;
                                 CommonUtility::sendCurlGetRequest($url);   
                         }
                         if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl2){
-                                $url = JsConstants::$solrServerUrl1."/dataimport?command=full-import";
+                                $url = JsConstants::$solrServerUrl2."/dataimport?command=full-import";
+                                CommonUtility::sendCurlGetRequest($url);   
+                        }
+                        if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl3){
+                                $url = JsConstants::$solrServerUrl3."/dataimport?command=full-import";
                                 CommonUtility::sendCurlGetRequest($url);   
                         }
 		}
@@ -64,11 +68,15 @@ EOF;
                                 CommonUtility::sendCurlGetRequest($url);   
                         }
                         if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl2){
-                                $url = JsConstants::$solrServerUrl1."/dataimport?command=delta-import";
+                                $url = JsConstants::$solrServerUrl2."/dataimport?command=delta-import";
+                                CommonUtility::sendCurlGetRequest($url);   
+                        }
+                        if(JsConstants::$solrServerUrl!=JsConstants::$solrServerUrl3){
+                                $url = JsConstants::$solrServerUrl3."/dataimport?command=delta-import";
                                 CommonUtility::sendCurlGetRequest($url);   
                         }
                             
-			$deletedHiddenProfilesObj = new newjs_HIDDEN_DELETED_PROFILES();
+			$deletedHiddenProfilesObj = new newjs_HIDDEN_DELETED_PROFILES('newjs_masterDDL');
                         $profilesArr = $deletedHiddenProfilesObj->getProfiles();
                         if($profilesArr)
 			{

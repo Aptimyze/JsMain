@@ -145,7 +145,7 @@ class AdvanceSearch extends SearchParamters
                                 $city_arr_temp = $city_arr;
                                 
                                 //Auto State and city selection
-                                foreach ($state_arr as $k=>$stateVal){
+                                /*foreach ($state_arr as $k=>$stateVal){
                                         if(FieldMap::getFieldLabel("state_CITY","",1)[$stateVal]){
                                                 $city_from_state =  $this->cityStateConversion("",$stateVal); 
                                                 $city_arr = array_merge($city_arr,$city_from_state);
@@ -160,7 +160,7 @@ class AdvanceSearch extends SearchParamters
                                                 $state_arr = array_merge($state_arr,$state_from_city);
                                                 $state_arr = array_unique($state_arr);
                                         }
-                                }
+                                }*/
                                 
                                 //Setting Keys
                                 $this->setCITY_RES(implode(",",$city_arr));
@@ -345,6 +345,7 @@ class AdvanceSearch extends SearchParamters
 									$city_arr[] = $v;
 				     	
 							}
+                                                        /*
 							if($state_arr)
 							{
 								foreach ($state_arr as $k=>$stateVal){
@@ -371,7 +372,7 @@ class AdvanceSearch extends SearchParamters
 								
 								
 							}
-							
+                                                        */
 							if(is_array($state_arr))
 								$this->setSTATE(implode(",",$state_arr));
 							else

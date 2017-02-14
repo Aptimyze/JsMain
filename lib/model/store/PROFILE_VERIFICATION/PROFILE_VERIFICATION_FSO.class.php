@@ -21,6 +21,7 @@ class PROFILE_VERIFICATION_FSO extends TABLE {
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":profileid", $profileid, PDO::PARAM_INT);
                         $res->execute();
+                        $this->logFunctionCalling(__FUNCTION__);
                         if (($res->fetchColumn()) > 0)
                                 return 1;
                         else
@@ -40,6 +41,7 @@ class PROFILE_VERIFICATION_FSO extends TABLE {
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":profileid", $profileid, PDO::PARAM_INT);
                         $res->execute();
+                        $this->logFunctionCalling(__FUNCTION__);
                 } catch (PDOException $e) {
                         throw new jsException($e);
                 }
@@ -55,9 +57,18 @@ class PROFILE_VERIFICATION_FSO extends TABLE {
                         $res = $this->db->prepare($sql);
                         $res->bindValue(":profileid", $profileid, PDO::PARAM_INT);
                         $res->execute();
+                        $this->logFunctionCalling(__FUNCTION__);
                 } catch (PDOException $e) {
                         throw new jsException($e);
                 }
+        }
+        
+        private function logFunctionCalling($funName)
+        {return;
+          $key = __CLASS__.'_'.date('Y-m-d');
+          JsMemcache::getInstance()->hIncrBy($key, $funName);
+
+          JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
         }
 
 }

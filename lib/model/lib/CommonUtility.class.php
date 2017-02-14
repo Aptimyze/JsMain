@@ -747,10 +747,14 @@ die;
   }
 
   //send instant sms with tracking
-  public static function sendPlusTrackInstantSMS($key,$profileid)
+  public static function sendPlusTrackInstantSMS($key,$profileid,$tokenArr=null)
   {
   	include_once(sfConfig::get("sf_web_dir")."/P/InstantSMS.php");
-	$sms=new InstantSMS($key,$profileid);
+	if (!empty($tokenArr) && is_array($tokenArr)) {
+		$sms=new InstantSMS($key,$profileid, $tokenArr);
+	} else {
+		$sms=new InstantSMS($key,$profileid);
+	}
 	$sms->send();
   }
 
@@ -776,6 +780,48 @@ die;
 		return $result;
 	}
 
+	/*checkChatPanelCondition
+	* check whether to show chat panel or not acc to module
+	* @inputs: $loggedIn,$module
+	* @return: $showChat
+	*/
+	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
+		$chatNotAvailModuleArr = ["membership","register","phone","social","settings"];
+        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp"];
+		$showChat = 1;
+		if(!$loggedIn){
+			$showChat = 0;
+        }
+		else if(in_array($module, $chatNotAvailModuleArr) || in_array($action, $chatNotAvailActioneArr) || $activated != 'Y'){
+			$showChat = 0;
+		}
+		return $showChat;
+	}
+
+	/*fetchSelfUserName
+	* fetch user self name for chat header
+	* @inputs: $loggedIn,$loggedInProfile,$module, $action,$showChat
+	* @return: $userName
+	*/
+	public static function fetchSelfUserName($loggedIn,$loggedInProfile,$module, $action,$showChat){
+		$excludeModuleArr = ["profile","myjs","homepage"];
+        $excludeActionArr = ["edit","jspcPerform"];
+        $getName = 1;
+        $userName = "";
+        if(!$loggedIn || !$loggedInProfile || $showChat == 0){
+			$getName = 0;
+        }
+		else if(in_array($module, $excludeModuleArr) || in_array($action, $excludeActionArr)){
+			$getName = 0;
+		}
+		if($getName){
+			$nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+			$userName = $nameOfUserObj->getName($loggedInProfile);
+		}
+		//error_log("ankita-".$getName);
+		return $userName;
+	}
+
 
 
 
@@ -787,7 +833,7 @@ die;
 		if(!$timeout)
 			$timeout = 5;
 		$result = null;
-		if($type!="POST")
+		if($type=="GET")
 		{
 			$response = CommonUtility::sendCurlGetRequest($url,$timeout);
 		}
@@ -841,5 +887,91 @@ die;
 		return;
 	}
 
+	public static function validatePhoneNo($phone){
+		$regExIndian = "/^((\+){0,1}91(\s){0,1}(\-){0,1}(\s){0,1})?([0-9]{10})$/";
+        $regExIndianLandline = "/^[0-9]\d{2,4}[-. ]?\d{6,8}$/";
+        $regExInternational = "/^\+(?:[0-9][-. ]? ?){7,14}[0-9]$/";
+		if (preg_match($regExIndian, $phone) || preg_match($regExInternational, $phone) || preg_match($regExIndianLandline, $phone)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+
+	public static function validateEmail($email){
+		$regExEmail = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/";
+		if (preg_match($regExEmail, $email)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static function hideFeaturesForUptime(){
+		
+		if(in_array(date('H'),array("10","11","12","13")))
+		{
+			return 1;
+		}
+		return 0;
+
+	}
+	
+	/*function to redirect site to appropriate language based on cookie
+	* @inputs: $request
+	* @return : $redirectUrl
+	*/	
+	public static function translateSiteLanguage($request){
+		$redirectUrl = "";
+		$loginData = $request->getAttribute("loginData");
+        $authchecksum = $request->getcookie('AUTHCHECKSUM');
+        
+		if($request->getcookie("jeevansathi_hindi_site")=='Y'){
+			if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi")!='Y'){
+				@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/","jeevansathi.com");
+				if(isset($_SERVER["REQUEST_URI"])){
+					$newRedirectUrl = JsConstants::$hindiTranslateURL.$_SERVER["REQUEST_URI"];
+					if(strpos($newRedirectUrl,"?") != false){
+						$newRedirectUrl = $newRedirectUrl."&";
+					}
+					else{
+						$newRedirectUrl = $newRedirectUrl."?";
+					}
+					$newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+					return $newRedirectUrl;
+				}
+				return (JsConstants::$hindiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
+			}
+            else if($request->getcookie("redirected_hindi")=='Y'){
+				@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/","jeevansathi.com");
+                //redirect to hindi site if referer is blank and newRedirect is not set
+                if(!isset($_SERVER['HTTP_REFERER']) && $request->getParameter('newRedirect') != 1){
+                	$newRedirectUrl = JsConstants::$hindiTranslateURL;
+                	if(isset($_SERVER["REQUEST_URI"])){
+						$newRedirectUrl = $newRedirectUrl.$_SERVER["REQUEST_URI"];
+					}
+					if(strpos($newRedirectUrl,"?") != false){
+						$newRedirectUrl = $newRedirectUrl."&";
+					}
+					else{
+						$newRedirectUrl = $newRedirectUrl."?";
+					}
+					$newRedirectUrl = $newRedirectUrl."AUTHCHECKSUM=".$authchecksum."&newRedirect=1";
+					return $newRedirectUrl;
+                }
+            }
+		} else {
+			if($request->getcookie("redirected_hindi")=='Y'){
+				@setcookie('redirected_hindi', 'N', 0, "/","jeevansathi.com");
+				return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);	
+			}
+			else{
+				@setcookie('redirected_hindi', 'N', 0, "/","jeevansathi.com");
+			}
+		}
+		return $redirectUrl;
+	}
 }
 ?>

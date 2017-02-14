@@ -2,6 +2,9 @@
 //class Utility
 //{
 	include_once "config/config.php";
+        // include wrapper for logging
+        include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
+
 	/***********log error function**********************/
         function logError($message,$query="",$critical="exit", $sendmailto="NO")
         {
@@ -19,6 +22,7 @@
                 //$errorstring.="\" >> /usr/local/apache/sites/site2/manager/logs/resmgr.err
                 passthru($errorstring);
                 $errorstring.="\n#Details : $ret_val";
+                LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorstring));
                 if($sendmailto!="NO")
                         $b=mail($sendmailto,"ERROR in new resman connect", $errorstring);
 

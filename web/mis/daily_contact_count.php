@@ -4,7 +4,6 @@ include_once("connect.inc");
 //include("../profile/connect.inc");	//done by Shakti for JSIndicator 24 Nov, 2005
 
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid) || $JSIndicator)
 {

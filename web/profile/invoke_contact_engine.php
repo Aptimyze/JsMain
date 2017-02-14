@@ -231,7 +231,7 @@ end trac 886 and 990*/
 					$landl_num=substr($landl_num,0,3).substr($landl_num,4);
 				$smarty->assign("MOB_NUM",$mob_num);
 				$smarty->assign("LANDL_NUM",$landl_num);
-			    $mob_cookie_arr=explode(",",$_COOKIE['JS_MOBILE']);
+			    $mob_cookie_arr=explode(",",preg_replace('/[^A-Za-z0-9\. -]/', '', $_COOKIE['JS_MOBILE']));
 				$smarty->assign("phoneBook_support",$mob_cookie_arr[1]);
 				$smarty->assign("call_support",$mob_cookie_arr[2]);
 				$smarty->assign("NAV_TYPE",$nav_type);

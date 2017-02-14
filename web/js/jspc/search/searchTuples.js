@@ -14,11 +14,17 @@ function loadPage(pageNo) {
   /**
    * Params to be used for calling pagination
    */
-  var postParams = "results_orAnd_cluster=onlyResults&currentPage=" + pageNo;
+  if(response.infotype == "VISITORS")
+      var postParams = "results_orAnd_cluster=onlyResults&matchedOrAll="+matchedOrAll+"&currentPage=" + pageNo;
+  else
+      var postParams = "results_orAnd_cluster=onlyResults&currentPage=" + pageNo;
   var infoArr = {};
   infoArr["action"] = "pagination";
   infoArr["listType"] = listType;
-  updateHistory("",pageNo);   //added to update url on click of next and prev button
+  if(response.infotype == "VISITORS")
+      updateHistory("visitors?matchedOrAll="+matchedOrAll,pageNo);
+  else
+      updateHistory("",pageNo);   //added to update url on click of next and prev button
   sendProcessSearchRequest(postParams,infoArr);
   return false;
 
@@ -89,7 +95,7 @@ function dataForSearchTuple(val,keyOfProfileType,resp) {
   
   if(resp.page_index!=1){
       $("#featuredListing").hide();
-        var featuredCount = val.length;
+        
   }else{
       $("#featuredListing").show();
   }

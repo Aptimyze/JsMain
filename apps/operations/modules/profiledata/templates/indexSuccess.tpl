@@ -36,7 +36,7 @@ function loadForm()
 
     
           <tr>
-            <td width="28%" class="label" bgcolor="#F9F9F9" style="font-size:14px" align="right">Enter User Name/Email:
+            <td width="28%" class="label" bgcolor="#F9F9F9" style="font-size:14px" align="right">Enter User Name:
 </td>
 
             <td width="30%" bgcolor="#F9F9F9">

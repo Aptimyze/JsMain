@@ -4,11 +4,17 @@ $curFilePath = dirname(__FILE__)."/";
 include_once("/usr/local/scripts/DocRoot.php");
 
 include("$docRoot/crontabs/connect.inc");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
+ini_set('max_execution_time',0);
 
 $db=connect_db();
-$db_slave=connect_slave();
+//$db_slave=connect_slave();
+$db_slave =connect_slave111();
 $mysqlObj=new Mysql;
+mysql_query("set session wait_timeout=2000",$db);
 	//************************************    Condition after submit state  ***************************************
+	
+	
 		$todayDate      =date("Y-m-d H:i:s");
 		$duration1	=$todayDate;
 		$lastDuration   =date("Y-m-d",strtotime("$todayDate -3 days"));
@@ -96,12 +102,15 @@ $mysqlObj=new Mysql;
                         $exec_name 	=trim($row['EXECUTIVE']);
 			$regDate 	=$row['DATE'];
 			$regDurDate 	=date("Y-m-d",strtotime("$regDate +15 days"));
-
+			$regDurDateSql=$regDurDate.' 00:00:00';
                         $myDbName=getProfileDatabaseConnectionName($pid,'slave',$mysqlObj);
                         $myDb=$mysqlObj->connect("$myDbName");
-			$sqlEoi ="select DATE from newjs.MESSAGE_LOG WHERE SENDER='$pid' AND TYPE='I' AND DATE>='$regDate' AND DATE<'$regDurDate 00:00:00' ORDER BY DATE ASC LIMIT 1";
-			$resEoi =mysql_query_decide($sqlEoi,$myDb) or die("$sqlEoi".mysql_error_js());
-			if($rowEoi=mysql_fetch_array($resEoi)){
+                        $pidShard=JsDbSharding::getShardNo($pid,'slave');
+                        $dbMessageLogObj=new NEWJS_MESSAGE_LOG($pidShard);
+                        $rowEoi=$dbMessageLogObj->sugarcrmCronSelectSender($pid,$regDate,$regDurDateSql);
+			//$sqlEoi ="select DATE from newjs.MESSAGE_LOG WHERE SENDER='$pid' AND TYPE='I' AND DATE>='$regDate' AND DATE<'$regDurDate 00:00:00' ORDER BY DATE ASC LIMIT 1";
+			//$resEoi =mysql_query_decide($sqlEoi,$myDb) or die("$sqlEoi".mysql_error_js());
+			if($rowEoi){
 				$eoiSendDate =$rowEoi['DATE'];
                                 $sql_ins ="INSERT IGNORE INTO MIS.LTF (`PROFILEID`,`EXECUTIVE`,`TYPE`,`DATE`,`ENTRY_DT`) VALUES('$pid','$exec_name','$typeArr[6]','$eoiSendDate',now())";
                                 mysql_query_decide($sql_ins,$db) or die("$sql_ins".mysql_error_js());

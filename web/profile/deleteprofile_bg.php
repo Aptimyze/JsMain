@@ -10,6 +10,7 @@ chdir($dirname);
 include('connect.inc');
 include("../sugarcrm/custom/crons/housekeepingConfig.php");
 include("../sugarcrm/include/utils/systemProcessUsersConfig.php");
+include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 global $partitionsArray;
 global $process_user_mapping;
 
@@ -34,7 +35,9 @@ else
 	if(!is_numeric($profileid))
 		$logError=3;
 }
+
 $mainDb = connect_db();
+$slaveDb = connect_slave();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
 if($logError)
 {
@@ -67,14 +70,55 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
         $myDbarr[$myDbName]=$mysqlObj->connect("$myDbName");
 	mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$myDbarr[$myDbName]);
 }
+ $messageShardCount=0;
+ $dbMessageLogObj1=new NEWJS_MESSAGE_LOG("shard1_master");
+ $dbMessageLogObj2=new NEWJS_MESSAGE_LOG("shard2_master");
+ $dbMessageLogObj3=new NEWJS_MESSAGE_LOG("shard3_master");
+ $dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES("shard1_master");
+ $dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES("shard2_master");
+ $dbDeletedMessagesObj3=new NEWJS_DELETED_MESSAGES("shard3_master");
+ $dbMessageObj1=new NEWJS_MESSAGES("shard1_master");
+ $dbMessageObj2=new NEWJS_MESSAGES("shard2_master");
+ $dbMessageObj3=new NEWJS_MESSAGES("shard3_master");
+ $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG("shard1_master");
+ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG("shard2_master");
+ $dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG("shard3_master");
+
+
+
+
 
 /****  Transaction for all 3 shards started here. We will commit all three shards together. ****/
 if(count($myDbarr))
 {
+	$i=1;
 	foreach($myDbarr as $key=>$value)
 	{
 		$myDb=$myDbarr[$key];
 		
+		if($i==1)
+		{
+			$dbMessageLogObj=$dbMessageLogObj1;
+			$dbDeletedMessagesObj=$dbDeletedMessagesObj1;
+			$dbMessageObj=$dbMessageObj1;
+			$dbDeletedMessageLogObj=$dbDeletedMessageLogObj1;
+		}
+		if($i==2)
+		{
+			$dbMessageLogObj=$dbMessageLogObj2;
+			$dbDeletedMessagesObj=$dbDeletedMessagesObj2;
+			$dbMessageObj=$dbMessageObj2;
+			$dbDeletedMessageLogObj=$dbDeletedMessageLogObj2;
+		}
+		if($i==3)
+		{
+			$dbMessageLogObj=$dbMessageLogObj3;
+			$dbDeletedMessagesObj=$dbDeletedMessagesObj3;
+			$dbMessageObj=$dbMessageObj3;
+			$dbDeletedMessageLogObj=$dbDeletedMessageLogObj3;
+		}
+		
+		$dbMessageLogObj->startTransaction();
 		$sql="BEGIN"; 
 		mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 
@@ -84,14 +128,15 @@ if(count($myDbarr))
 		delFromTables('DELETED_PHOTO_REQUEST','PHOTO_REQUEST',$myDb,$profileid,"PROFILEID");
 		delFromTables('DELETED_PHOTO_REQUEST','PHOTO_REQUEST',$myDb,$profileid,"PROFILEID_REQ_BY");
 
-		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"RECEIVER");
-		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"SENDER");
+		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"RECEIVER",'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
+		delFromTables('DELETED_MESSAGE_LOG','MESSAGE_LOG',$myDb,$profileid,"SENDER",'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
 
 		delFromTables('DELETED_EOI_VIEWED_LOG','EOI_VIEWED_LOG',$myDb,$profileid,"VIEWER");
 		delFromTables('DELETED_EOI_VIEWED_LOG','EOI_VIEWED_LOG',$myDb,$profileid,"VIEWED");
 
 		delFromTables('DELETED_PROFILE_CONTACTS','CONTACTS',$myDb,$profileid,"SENDER");
 		delFromTables('DELETED_PROFILE_CONTACTS','CONTACTS',$myDb,$profileid,"RECEIVER");
+		$i++;
 	}
 }
 /****  Transaction for all 3 shards started here.We will commit all three shards together. ****/
@@ -101,6 +146,8 @@ if(count($myDbarr))
 $mainDb = connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
 $sql="BEGIN"; 
+$dupLogObj=new DUPLICATE_PROFILE_LOG();
+$dupLogObj->startTransaction();
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 delFromTables('DELETED_BOOKMARKS','BOOKMARKS',$mainDb,$profileid,"BOOKMARKER");
 delFromTables('DELETED_BOOKMARKS','BOOKMARKS',$mainDb,$profileid,"BOOKMARKEE");
@@ -113,6 +160,12 @@ delFromTables('DELETED_OFFLINE_MATCHES','OFFLINE_MATCHES',$mainDb,$profileid,"PR
 
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"SENDER",'jsadmin');
 delFromTables('DELETED_OFFLINE_NUDGE_LOG','OFFLINE_NUDGE_LOG',$mainDb,$profileid,"RECEIVER",'jsadmin');
+
+delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWER",'jsadmin');
+delFromTables('DELETED_VIEW_CONTACTS_LOG','VIEW_CONTACTS_LOG',$mainDb,$profileid,"VIEWED",'jsadmin');
+
+markProfilesAsNonDuplicate($profileid,$dupLogObj);
+
 /****  Transaction for master tables started here . ****/
 
 
@@ -124,6 +177,14 @@ $iii=1;
 foreach($myDbarr as $key=>$value)
 {
 	$myDb=$myDbarr[$key];
+	if($iii==1)
+		$dbMessageLogObj=$dbMessageLogObj1;
+	if($iii==2)
+		$dbMessageLogObj=$dbMessageLogObj2;
+	if($iii==3)
+		$dbMessageLogObj=$dbMessageLogObj3;
+		
+	$dbMessageLogObj->commitTransaction();
 	$sql="COMMIT";
 	mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 
@@ -136,6 +197,7 @@ foreach($myDbarr as $key=>$value)
 /** mainDb committed **/
 $sql="COMMIT";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
+$dupLogObj->commitTransaction();
 
 $sql_del = "DELETE FROM newjs.CONTACTS_STATUS WHERE PROFILEID='$profileid'";
 mysql_query($sql_del,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql_del);
@@ -146,12 +208,18 @@ mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 
 //Added by Amit Jaiswal to Mark deleted in sugarcrm if a lead is there for current user mentioned in sugarcrm enhancement 2 PRD
 $username_query="select USERNAME from newjs.JPROFILE where PROFILEID='".$profileid."'";
-$username_result=mysql_query($username_query,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$username_query);
+$username_result=mysql_query($username_query,$slaveDb) or mysql_error_with_mail(mysql_error($mainDb).$username_query);
 $row=mysql_fetch_assoc($username_result);
 $username=$row['USERNAME'];
 
+if(0 === strlen($username)) {
+        $username_result=mysql_query($username_query,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$username_query);
+        $row=mysql_fetch_assoc($username_result);
+        $username=$row['USERNAME'];
+}
+
 $sugar_sql="select id_c from sugarcrm.leads_cstm where jsprofileid_c='".$username."'";
-$sugar_res=mysql_query($sugar_sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sugar_sql);
+$sugar_res=mysql_query($sugar_sql,$slaveDb) or mysql_error_with_mail(mysql_error($mainDb).$sugar_sql);
 if(mysql_num_rows($sugar_res)>0)
 {
 	while($sugar_row=mysql_fetch_array($sugar_res))
@@ -213,6 +281,7 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 
 /*** For CONATCT_STATUS TABLE numbers. ***/
 $affectedId=array();
+$k=1;
 foreach($myDbarr as $key=>$value)
 {
 	$myDb=$myDbarr[$key];
@@ -332,9 +401,18 @@ foreach($myDbarr as $key=>$value)
 			
 		}
 	}
-	$sql = "SELECT RECEIVER, SEEN FROM DELETED_MESSAGE_LOG WHERE SENDER = '$profileid' AND TYPE = 'R' AND IS_MSG = 'Y'";
-	$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
-	while($myrow=mysql_fetch_array($result))
+	if($k==1)
+		$dbDeletedMessagesObj=$dbDeletedMessagesObj1;
+	if($k==2)
+		$dbDeletedMessagesObj=$dbDeletedMessagesObj2;
+	if($k==3)
+		$dbDeletedMessagesObj=$dbDeletedMessagesObj3;
+	
+	$result=$dbDeletedMessagesObj->getSenderMessages($profileid);
+	$k++;
+	//$sql = "SELECT RECEIVER, SEEN FROM DELETED_MESSAGE_LOG WHERE SENDER = '$profileid' AND TYPE = 'R' AND IS_MSG = 'Y'";
+	//$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
+	foreach($result as $key=>$myrow)
 	{
 		if($myrow["SEEN"]!= 'Y')
 			$CONTACT_STATUS_FIELD['MESSAGE_NEW']=-1;
@@ -374,47 +452,76 @@ if(JsConstants::$webServiceFlag == 1)
 * @param string whereStrLabel is where-condition on which profileid is checked.
 * @param string $databaseName optinal field for specifying the database name. @default is 'newjs'
 */
-function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databaseName='')
+function delFromTables($delTable,$selTable,$db,$profileid,$whereStrLabel,$databaseName='',$dbMessageLogObj='',$dbDeletedMessagesObj='',$dbMessageObj='',$dbDeletedMessageLogObj='')
 {
 	if(!$databaseName)
 		$databaseName='newjs';
 
 	if($selTable=='MESSAGE_LOG')
 	{
-	        $sql="select ID FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+		
+		/*$sql="select ID FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
         	$result=mysql_query($sql,$db) or mysql_error_with_mail(mysql_error($db).$sql);
 	        while($myrow=mysql_fetch_array($result))
 		{
 			$idsArr[]=$myrow["ID"];
-		}	
-		if($idsArr)
+		}*/
+		$idsArr=$dbMessageLogObj->getAllMessageIdLog($profileid,$whereStrLabel);
+		
+		if(is_array($idsArr))
 		{
-			$idStr=implode(",",$idsArr);
-			$sql="INSERT IGNORE INTO $databaseName.DELETED_MESSAGES SELECT * FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
-			mysql_query($sql,$db) or ($skip=1);
-			if(!$skip)
+			//$idStr=implode(",",$idsArr);
+			$result=$dbDeletedMessagesObj->insertIntoDeletedMessages($idsArr);
+		
+			//$sql="INSERT IGNORE INTO $databaseName.DELETED_MESSAGES SELECT * FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
+			//mysql_query($sql,$db) or ($skip=1);
+			
+			if($result)
 			{
-				$sql="DELETE FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
-				mysql_query($sql,$db) or ($skip=1);
+		
+				$res=$dbMessageObj->deleteMessages($idsArr);
+				
+		
+				if(!$res)
+						mysql_error_with_mail(mysql_error($db)."deleteMessages");
+				//$sql="DELETE FROM $databaseName.MESSAGES WHERE ID IN ($idStr)";
+				//mysql_query($sql,$db) or ($skip=1);
 			}
-			if($skip)
+			else
 			{
-				mysql_error_with_mail(mysql_error($db).$sql);
+				mysql_error_with_mail(mysql_error($db)."insertIntoDeletedMessages");
 				/* no need to rollback as it is defaulted*/
 			}
 
 		}
-	}
-	$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
-	mysql_query($sql,$db) or ($skip=1);
-	if (!$skip) {
-		if ($selTable == "CONTACTS" && JsConstants::$webServiceFlag == 1) {
-			$url = JsConstants::$contactUrl."/v1/contacts/".$profileid."?TYPE=".$whereStrLabel;
-			sendCurlDeleteRequest($url);
-
+		
+		$res=$dbDeletedMessageLogObj->insert($profileid,$whereStrLabel);
+		
+		//$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+		//mysql_query($sql,$db) or ($skip=1);
+		if ($res) {
+			
+		
+				$response=$dbMessageLogObj->deleteMessageLog($profileid,$whereStrLabel);
+		
+				if(!$response)
+					$skip=1;
+				//$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+				//mysql_query($sql, $db) or ($skip = 1);			
 		}
-		$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
-		mysql_query($sql, $db) or ($skip = 1);
+	}
+	else{
+		$sql="INSERT IGNORE INTO $databaseName.$delTable SELECT * FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+		mysql_query($sql,$db) or ($skip=1);
+		if (!$skip) {
+			if ($selTable == "CONTACTS" && JsConstants::$webServiceFlag == 1) {
+				$url = JsConstants::$contactUrl."/v1/contacts/".$profileid."?TYPE=".$whereStrLabel;
+				sendCurlDeleteRequest($url);
+
+			} 
+				$sql = "DELETE FROM $databaseName.$selTable WHERE $whereStrLabel='$profileid'";
+				mysql_query($sql, $db) or ($skip = 1);
+		}
 	}
 	
 	
@@ -453,4 +560,103 @@ function sendCurlDeleteRequest($url)
 	curl_close($ch);
 
 	return $result;
+}
+
+function markProfilesAsNonDuplicate($profileid,$dupLogObj){
+    
+    $dupArray = $dupLogObj->fetchLogForAProfile($profileid);
+    foreach ($dupArray as $key => $value) 
+    {
+        if($value['PROFILE1']==$profileid) $profile2=$value['PROFILE2'];
+        else $profile2=$value['PROFILE1'];
+        
+        if(!$profileArray[$profile2]['ENTRY_DATE'])
+        {
+                $profileArray[$profile2]['ENTRY_DATE']=$value['ENTRY_DATE'];
+                $profileArray[$profile2]['FLAG']=$value['IS_DUPLICATE'];
+        }
+            if(JSstrToTime($profileArray[$profile2]['ENTRY_DATE']) < JSstrToTime($value['ENTRY_DATE']))
+        {
+                $profileArray[$profile2]['ENTRY_DATE']=$value['ENTRY_DATE'];
+                $profileArray[$profile2]['FLAG']=$value['IS_DUPLICATE'];
+        }
+
+        
+    }
+    
+    $rawDuplicateObj=new RawDuplicate();
+    $rawDuplicateObj->setReason(REASON::NONE); 
+    $rawDuplicateObj->setIsDuplicate(IS_DUPLICATE::NO); 
+    $rawDuplicateObj->addExtension('MARKED_BY','SYSTEM');
+    $rawDuplicateObj->setScreenAction(SCREEN_ACTION::NONE);
+    $rawDuplicateObj->addExtension('IDENTIFIED_ON',date('Y-m-d H:i:s'));
+    $rawDuplicateObj->setComments("Profile Deleted");
+    $rawDuplicateObj->setProfileid1($profileid);
+    $negativeObj=new INCENTIVE_NEGATIVE_TREATMENT_LIST();
+            
+    foreach($profileArray as $key => $value)
+    {
+        
+        if($value['FLAG']=='YES')
+        {
+              $rawDuplicateObj->setProfileid2($key);
+              DuplicateHandler::DuplicateProfilelog($rawDuplicateObj); 
+              
+              $tempArray=$dupLogObj->fetchLogForAProfile($key);
+              foreach($tempArray as $key1 => $value1)   
+              {
+
+              		  if($value1['PROFILE2']==$profileid || $value1['PROFILE1']==$profileid) continue;
+                      	
+                      if($value1['PROFILE1']==$key) $tempProfile2=$value1['PROFILE2'];
+                      else $tempProfile2=$value1['PROFILE1'];
+
+                      if(!$tempProfileArray[$tempProfile2]['ENTRY_DATE'])
+                      {
+                              $tempProfileArray[$tempProfile2]['ENTRY_DATE']=$value1['ENTRY_DATE'];
+                              $tempProfileArray[$tempProfile2]['FLAG']=$value1['IS_DUPLICATE'];
+                      }
+                      if(JSstrToTime($tempProfileArray[$tempProfile2]['ENTRY_DATE']) < JSstrToTime($value1['ENTRY_DATE']))
+                      {
+                              $tempProfileArray[$tempProfile2]['ENTRY_DATE']=$value1['ENTRY_DATE'];
+                              $tempProfileArray[$tempProfile2]['FLAG']=$value1['IS_DUPLICATE'];
+                      }
+                  
+                      
+                  
+              }
+              
+              $tempFlag=0;
+              foreach($tempProfileArray as $key3 => $value3)
+              {
+                  
+                        if($value3['FLAG']=='YES')
+                        {
+                           $tempFlag=1;
+                           break;
+                        }  
+              }    
+
+              if($tempFlag==0)
+              {
+              
+                  $negativeObj->deleteRecord($key);
+                  (new NEWJS_SWAP_JPROFILE())->insert($key);
+                  $dp=new DUPLICATES_PROFILES();
+				  $dp->removeProfileAsDuplicate($key);
+                  
+              }
+              unset($tempArray);
+              unset($tempProfileArray);
+              
+              
+              
+            
+        }
+        
+        
+    }
+    
+    
+    
 }

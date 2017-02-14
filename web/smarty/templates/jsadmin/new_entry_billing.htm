@@ -1,322 +1,287 @@
 <html>
-~include file="head_billing.htm"`
-<head>
-        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-        <link rel="stylesheet" href="jeevansathi1.css" type="text/css">
-        <link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
-	<title>Jeevansathi - Billing</title>
-	<script language="JavaSript1.2" src="billing.js" type="text/javascript"></script>	
-	<script language="javascript">
-
-	// Get an XMLHttpRequest object in a portable way.
-	function disableMembershipSelection(selectId, disableId)
-	{
-		var selected =document.getElementById(selectId).checked;
-		if(selected==true){
-			document.getElementById(disableId).disabled=true;
-		}
-		else{
-			document.getElementById(disableId).disabled=false;	
-		
-		}
-	}
-	function newRequest()
-	{
-		req = false;
-		// For Safari, Firefox, and other non-MS browsers
-		if(window.XMLHttpRequest)
+	~include file="head_billing.htm"`
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link rel="stylesheet" href="jeevansathi1.css" type="text/css">
+		<link rel="stylesheet" href="../profile/images/styles.css" type="text/css">
+		<title>Jeevansathi - Billing</title>
+		<script language="JavaSript1.2" src="billing.js" type="text/javascript"></script>
+		<script language="javascript">
+		// Get an XMLHttpRequest object in a portable way.
+		function disableMembershipSelection(selectId, disableId)
 		{
-			try
-			{
-				req = new XMLHttpRequest();
+			var selected =document.getElementById(selectId).checked;
+			if(selected==true){
+				document.getElementById(disableId).disabled=true;
 			}
-			catch (e)
-			{
-				req = false;
+			else{
+				document.getElementById(disableId).disabled=false;
 			}
 		}
-		else if(window.ActiveXObject)
+		function newRequest()
 		{
-			// For Internet Explorer on Windows
-			try
-			{
-				req = new ActiveXObject("Msxml2.XMLHTTP");
-			}
-			catch (e)
+			req = false;
+			// For Safari, Firefox, and other non-MS browsers
+			if(window.XMLHttpRequest)
 			{
 				try
 				{
-					req = new ActiveXObject("Microsoft.XMLHTTP");
+					req = new XMLHttpRequest();
 				}
 				catch (e)
 				{
 					req = false;
 				}
 			}
-		}
-		return req;
-	}
-	function check_voucher_discount_code()
-	{
-		var docF=document.pg1_frm;
-		var req = newRequest();
-		var voucher_discount_code = docF.voucher_discount_code.value;
-		var encoded = "voucher_discount_code=" + escape(voucher_discount_code);
-
-		req.open("POST", "~$SITE_URL`/billing/check_voucher_discount_code.php", true);
-		req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-		req.send(encoded);
-		req.onreadystatechange = check_status;
-	}
-	function check_status()
-	{
-		//var req = newRequest();
-		if (req.readyState != 4)
-		{
-			// We're not ready yet.
-			document.getElementById('code_status').innerHTML = "Checking..";
-			return;
-		}
-		if (req.status == 200)
-		{
-			// The good stuff happens here!
-			var got_response = req.responseText;
-			var message_index = got_response.indexOf("|#|");
-			var message_part = got_response.split("|#|");
-			document.getElementById('code_status').innerHTML = message_part[0];
-			var docF = document.pg1_frm;
-			if(message_part[1] && message_part[1] != 0)
+			else if(window.ActiveXObject)
 			{
-				docF.disc_perc.value = message_part[1];
-				validate_discount_perc();
-			}
-			if(message_index == -1)
-			{
-				docF.disc_perc.value = 0;
-				validate_discount_perc();
-			}
-		}
-		else
-		{
-			// The web server gave us an error
-			document.getElementById('code_status').innerHTML = "Error:";
-			return;
-		}
-	}
-	
-	var required_id;
-	var services_array = new Array("membership_service","boldlisting_service","astro_service","matriprofile_service","display_service","assistance_service","introcalls_service","featuredprofile_service","JSExclusive_service");
-	function get_service_price(obj,calculate_for_all)
-	{
-		var curtype = document.getElementById("curtype").value;                       
-		for(var i=0;i<services_array.length;i++)
-		{
-			required_id = services_array[i];
-			if(document.getElementById("chk_" + required_id).checked)
-			{
-				var ind1= document.getElementById(required_id).value;
-				var ind2= document.getElementById(required_id + "_duration").value;
-				if(curtype=='RS')
+				// For Internet Explorer on Windows
+				try
 				{
-					~foreach from=$rupee_arr key=k item=v`
-					if(ind1=='~$k`')
+					req = new ActiveXObject("Msxml2.XMLHTTP");
+				}
+				catch (e)
+				{
+					try
 					{
-						~foreach from=$v key=k1 item=v1`
-						if(ind2=='~$k1`')
+						req = new ActiveXObject("Microsoft.XMLHTTP");
+					}
+					catch (e)
+					{
+						req = false;
+					}
+				}
+			}
+			return req;
+		}
+		function check_voucher_discount_code()
+		{
+			var docF=document.pg1_frm;
+			var req = newRequest();
+			var voucher_discount_code = docF.voucher_discount_code.value;
+			var encoded = "voucher_discount_code=" + escape(voucher_discount_code);
+			req.open("POST", "~$SITE_URL`/billing/check_voucher_discount_code.php", true);
+			req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+			req.send(encoded);
+			req.onreadystatechange = check_status;
+		}
+		function check_status()
+		{
+			//var req = newRequest();
+			if (req.readyState != 4)
+			{
+				// We're not ready yet.
+				document.getElementById('code_status').innerHTML = "Checking..";
+				return;
+			}
+			if (req.status == 200)
+			{
+				// The good stuff happens here!
+				var got_response = req.responseText;
+				var message_index = got_response.indexOf("|#|");
+				var message_part = got_response.split("|#|");
+				document.getElementById('code_status').innerHTML = message_part[0];
+				var docF = document.pg1_frm;
+				if(message_part[1] && message_part[1] != 0)
+				{
+					docF.disc_perc.value = message_part[1];
+					validate_discount_perc();
+				}
+				if(message_index == -1)
+				{
+					docF.disc_perc.value = 0;
+					validate_discount_perc();
+				}
+			}
+			else
+			{
+				// The web server gave us an error
+				document.getElementById('code_status').innerHTML = "Error:";
+				return;
+			}
+		}
+		
+		var required_id;
+		var services_array = new Array("membership_service","boldlisting_service","astro_service","matriprofile_service","display_service","assistance_service","introcalls_service","featuredprofile_service","JSExclusive_service");
+		function get_service_price(obj,calculate_for_all)
+		{
+			var curtype = document.getElementById("curtype").value;
+			for(var i=0;i<services_array.length;i++)
+			{
+				required_id = services_array[i];
+				if(document.getElementById("chk_" + required_id).checked)
+				{
+					var ind1= document.getElementById(required_id).value;
+					var ind2= document.getElementById(required_id + "_duration").value;
+					if(curtype=='RS')
+					{
+						~foreach from=$rupee_arr key=k item=v`
+						if(ind1=='~$k`')
 						{
-							document.getElementById(required_id + "_price").value='~$v1`';
+							~foreach from=$v key=k1 item=v1`
+							if(ind2=='~$k1`')
+							{
+								document.getElementById(required_id + "_price").value='~$v1`';
+							}
+							~/foreach`
 						}
 						~/foreach`
 					}
-					~/foreach`
+					else
+					{
+						~foreach from=$dollar_arr key=k item=v`
+						if(ind1=='~$k`')
+						{
+							~foreach from=$v key=k1 item=v1`
+							if(ind2=='~$k1`')
+							{
+								document.getElementById(required_id + "_price").value='~$v1`';
+							}
+							~/foreach`
+						}
+						~/foreach`
+					}
 				}
 				else
 				{
-					~foreach from=$dollar_arr key=k item=v`
-					if(ind1=='~$k`')
-					{
-						~foreach from=$v key=k1 item=v1`
-						if(ind2=='~$k1`')
-						{
-							document.getElementById(required_id + "_price").value='~$v1`';
-						}
-						~/foreach`
-					}
-					~/foreach`
+					document.getElementById(required_id + "_price").value='';
 				}
 			}
+		calculate_total();
+		}
+		
+		function write_service_price()
+		{
+			if (req.readyState != 4)
+			{
+				// We're not ready yet.
+				return;
+			}
+			if (req.status == 200)
+			{
+				// The good stuff happens here!
+				document.getElementById(required_id + "_price").value = req.responseText;
+				calculate_total();
+			}
 			else
 			{
-				document.getElementById(required_id + "_price").value='';
+				// The web server gave us an error
+				return;
 			}
 		}
-                calculate_total();
-	}
-	
-	function write_service_price()
-	{
-		if (req.readyState != 4)
+		
+		function calculate_total()
 		{
-			// We're not ready yet.
-			return;
-		}
-		if (req.status == 200)
-		{
-			// The good stuff happens here!
-			document.getElementById(required_id + "_price").value = req.responseText;
-			calculate_total();
-		}
-		else
-		{
-			// The web server gave us an error
-			return;
-		}
-	}
-	
-	function calculate_total()
-	{
-		var total_price = 0;
-		var id;
-		for(var i=0;i<services_array.length;i++)
-		{
-			id = services_array[i];
-			if(document.getElementById("chk_" + id).checked)
-				total_price += parseInt(document.getElementById(id + "_price").value);
-		}
-		document.getElementById("total_price").value = total_price;
-	}
-	function verify_page()
-	{
-		~if !$renew`
-			if(document.pg1_frm.custname.value.length=="0")
+			var total_price = 0;
+			var id;
+			for(var i=0;i<services_array.length;i++)
 			{
-				alert('Please fill the Name field');
+				id = services_array[i];
+				if(document.getElementById("chk_" + id).checked)
+					total_price += parseInt(document.getElementById(id + "_price").value);
+			}
+			document.getElementById("total_price").value = total_price;
+		}
+		function verify_page()
+		{
+			~if !$renew`
+				if(document.pg1_frm.custname.value.length=="0")
+				{
+					alert('Please fill the Name field');
+					return false;
+				}
+				var curtype = document.getElementById("curtype").value;
+				if(document.pg1_frm.address.value.length=="0")
+				{
+					alert('Please fill the Address field');
+					return false;
+				}
+				if(!document.pg1_frm.chk_membership_service.checked && !document.pg1_frm.chk_boldlisting_service.checked && !document.pg1_frm.chk_astro_service.checked && !document.pg1_frm.chk_matriprofile_service.checked && !document.pg1_frm.chk_display_service.checked && !document.pg1_frm.chk_assistance_service.checked && !document.pg1_frm.chk_introcalls_service.checked && !document.pg1_frm.chk_featuredprofile_service.checked && !document.pg1_frm.chk_JSExclusive_service.checked)
+				{
+					alert('Please select a Membership');
+					return false;
+				}
+			
+				if(isNaN(document.pg1_frm.pin.value))
+				{
+					alert('Please enter a valid pin');
+					document.pg1_frm.pin.value = "";
+					return false;
+				}
+			~/if`
+			if(isNaN(document.pg1_frm.discount.value))
+			{
+				alert('Please enter a valid discount value');
+				document.pg1_frm.discount.value = "";
 				return false;
 			}
-			if(!document.pg1_frm.chk_membership_service.checked && !document.pg1_frm.chk_boldlisting_service.checked && !document.pg1_frm.chk_astro_service.checked && !document.pg1_frm.chk_matriprofile_service.checked && !document.pg1_frm.chk_display_service.checked && !document.pg1_frm.chk_assistance_service.checked && !document.pg1_frm.chk_introcalls_service.checked && !document.pg1_frm.chk_featuredprofile_service.checked && !document.pg1_frm.chk_JSExclusive_service.checked)
+			if(document.pg1_frm.walkin.value.length=="0")
 			{
-				alert('Please select a Membership');
+				alert('Please select Walkin by');
 				return false;
 			}
-
-		 
-			if(isNaN(document.pg1_frm.pin.value))
+			if(document.pg1_frm.curtype.value.length=="0")
 			{
-				alert('Please enter a valid pin');
-				document.pg1_frm.pin.value = "";
+				alert('Please select Currency Type');
 				return false;
 			}
-		~/if`
-		if(isNaN(document.pg1_frm.discount.value))
-		{
-			alert('Please enter a valid discount value');
-			document.pg1_frm.discount.value = "";
-			return false;
-		}
-		if(document.pg1_frm.walkin.value.length=="0")
-		{
-			alert('Please select Walkin by');
-			return false;
-		}
-		if(document.pg1_frm.curtype.value.length=="0")
-		{
-			alert('Please select Currency Type');
-			return false;
-		}
-		if(document.pg1_frm.discount.value > "0")
-		{
-			if(document.pg1_frm.discount_type1.value.length=="0")
+			if(document.pg1_frm.discount.value > "0")
 			{
-				alert('Please select the discount type');
-				return false;
+				if(document.pg1_frm.discount_type1.value.length=="0")
+				{
+					alert('Please select the discount type');
+					return false;
+				}
+				if(document.pg1_frm.reason.value.length=="0")
+				{
+					alert('Please fill the discount reason field');
+					return false;
+				}
 			}
-			if(document.pg1_frm.reason.value.length=="0")
-			{
-				alert('Please fill the discount reason field');
-				return false;
-			}
-		}
-		if(document.pg1_frm.curtype.value=="0")
-                        var len=3;
-                else
-                        var len=6;
-                                                                                                                             
-                var disc = document.pg1_frm.discount.value;
-                var subs = document.pg1_frm.total_price.value.substring(len);
-                if(parseInt(disc) > parseInt(subs))
-                {
-                        alert('Discount cannot be greater than total Service(s) amount');
-                        document.pg1_frm.discount.value = 0;
-                        document.pg1_frm.disc_perc.value = 0;
-                        return false;
-                }
-	}
-	function MM_openBrWindow(theURL,winName,features)
-	{
-        	window.open(theURL,winName,features);
-	}
-	function validate_matri_serv()
-	{
-		~$myArray`
-		~$myArray_dol`
-		var total_pr;
-
-		var ser_t = document.pg1_frm.service_type.value;
-
-		if(document.pg1_frm.service_type.value=="M")
-		{
 			if(document.pg1_frm.curtype.value=="0")
-			{
-				document.pg1_frm.calculate_price.value = 'Rs ' + myArray[ser_t];
-				total_pr = myArray[ser_t];
-			}
-			else
-			{
-				document.pg1_frm.calculate_price.value = '(US)$ ' + myArray_dol[ser_t];
-				total_pr = myArray_dol[ser_t];
-			}
-
-
-			document.pg1_frm.duration_sel.disabled=true;
-
-			document.pg1_frm.blist.checked=false;
-			document.pg1_frm.horoscope.checked=false;
-			document.pg1_frm.kundali.checked=false;
-			document.pg1_frm.matrip.checked=false;
-			document.pg1_frm.astro_compatibility.checked=false;
-	
-			document.pg1_frm.blist.disabled=true;
-			document.pg1_frm.horoscope.disabled=true;
-			document.pg1_frm.kundali.disabled=true;
-			document.pg1_frm.matrip.disabled=true;
-			document.pg1_frm.astro_compatibility.disabled=true;
-		}
+		var len=3;
 		else
+		var len=6;
+		
+		var disc = document.pg1_frm.discount.value;
+		var subs = document.pg1_frm.total_price.value.substring(len);
+		if(parseInt(disc) > parseInt(subs))
 		{
-			var dur_s = document.pg1_frm.duration_sel.value;
-			var ser_id = ser_t + dur_s;
-
-			if(document.pg1_frm.curtype.value=="0")
+		alert('Discount cannot be greater than total Service(s) amount');
+		document.pg1_frm.discount.value = 0;
+		document.pg1_frm.disc_perc.value = 0;
+		return false;
+		}
+		}
+		function MM_openBrWindow(theURL,winName,features)
+		{
+		window.open(theURL,winName,features);
+		}
+		function validate_matri_serv()
+		{
+			~$myArray`
+			~$myArray_dol`
+			var total_pr;
+			var ser_t = document.pg1_frm.service_type.value;
+			if(document.pg1_frm.service_type.value=="M")
 			{
-				document.pg1_frm.calculate_price.value = 'Rs ' + myArray[ser_id];
-				total_pr = myArray[ser_id];
-			}
-			else
-			{
-				document.pg1_frm.calculate_price.value = '(US)$ ' + myArray_dol[ser_id];
-				total_pr = myArray_dol[ser_id];
-			}
-
-			document.pg1_frm.duration_sel.disabled=false;
-
-			if(document.pg1_frm.service_type.value == "SC" || document.pg1_frm.service_type.value == "HDO" || document.pg1_frm.service_type.value == "ES" || document.pg1_frm.service_type.value == "ESP")
-			{
+				if(document.pg1_frm.curtype.value=="0")
+				{
+					document.pg1_frm.calculate_price.value = 'Rs ' + myArray[ser_t];
+					total_pr = myArray[ser_t];
+				}
+				else
+				{
+					document.pg1_frm.calculate_price.value = '(US)$ ' + myArray_dol[ser_t];
+					total_pr = myArray_dol[ser_t];
+				}
+				document.pg1_frm.duration_sel.disabled=true;
 				document.pg1_frm.blist.checked=false;
 				document.pg1_frm.horoscope.checked=false;
 				document.pg1_frm.kundali.checked=false;
 				document.pg1_frm.matrip.checked=false;
 				document.pg1_frm.astro_compatibility.checked=false;
-
+		
 				document.pg1_frm.blist.disabled=true;
 				document.pg1_frm.horoscope.disabled=true;
 				document.pg1_frm.kundali.disabled=true;
@@ -325,804 +290,838 @@
 			}
 			else
 			{
-				document.pg1_frm.blist.disabled=false;
-				document.pg1_frm.horoscope.disabled=false;
-				document.pg1_frm.kundali.disabled=false;
-				document.pg1_frm.matrip.disabled=false;
-				document.pg1_frm.astro_compatibility.disabled=false;
+				var dur_s = document.pg1_frm.duration_sel.value;
+				var ser_id = ser_t + dur_s;
+				if(document.pg1_frm.curtype.value=="0")
+				{
+					document.pg1_frm.calculate_price.value = 'Rs ' + myArray[ser_id];
+					total_pr = myArray[ser_id];
+				}
+				else
+				{
+					document.pg1_frm.calculate_price.value = '(US)$ ' + myArray_dol[ser_id];
+					total_pr = myArray_dol[ser_id];
+				}
+				document.pg1_frm.duration_sel.disabled=false;
+				if(document.pg1_frm.service_type.value == "SC" || document.pg1_frm.service_type.value == "HDO" || document.pg1_frm.service_type.value == "ES" || document.pg1_frm.service_type.value == "ESP")
+				{
+					document.pg1_frm.blist.checked=false;
+					document.pg1_frm.horoscope.checked=false;
+					document.pg1_frm.kundali.checked=false;
+					document.pg1_frm.matrip.checked=false;
+					document.pg1_frm.astro_compatibility.checked=false;
+					document.pg1_frm.blist.disabled=true;
+					document.pg1_frm.horoscope.disabled=true;
+					document.pg1_frm.kundali.disabled=true;
+					document.pg1_frm.matrip.disabled=true;
+					document.pg1_frm.astro_compatibility.disabled=true;
+				}
+				else
+				{
+					document.pg1_frm.blist.disabled=false;
+					document.pg1_frm.horoscope.disabled=false;
+					document.pg1_frm.kundali.disabled=false;
+					document.pg1_frm.matrip.disabled=false;
+					document.pg1_frm.astro_compatibility.disabled=false;
+				}
 			}
+			if(document.pg1_frm.curtype.value=="0")
+			{
+				~if $source eq "A"`
+					~if $BOLD_LISTING_SELECTED eq "Y"`
+						var serv_idb = document.pg1_frm.blist.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.bprice.value = 'Rs ' + myArray[serv_idb];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idb]);
+					~else`
+						document.pg1_frm.bprice.value = "";
+					~/if`
+					~if $HOROSCOPE_SELECTED eq "Y"`
+						var serv_idh = document.pg1_frm.horoscope.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.hprice.value = 'Rs ' + myArray[serv_idh];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idh]);
+					~else`
+						document.pg1_frm.hprice.value = "";
+					~/if`
+					~if $KUNDLI_SELECTED eq "Y"`
+						var serv_idk = document.pg1_frm.kundali.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.kprice.value = 'Rs ' + myArray[serv_idk];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idk]);
+					~else`
+						document.pg1_frm.kprice.value = "";
+					~/if`
+					~if $MATRI_PROFILE_SELECTED eq "Y"`
+						var serv_idm = document.pg1_frm.matrip.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.mprice.value = 'Rs ' + myArray[serv_idm];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
+					~else`
+						document.pg1_frm.mprice.value = "";
+					~/if`
+					~if $ASTRO_COMPATIBILITY_SELECTED eq "Y"`
+						var serv_idm = document.pg1_frm.astro_compatibility.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.astro_price.value = 'Rs ' + myArray[serv_idm];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
+					~else`
+						document.pg1_frm.astro_price.value = "";
+					~/if`
+					document.pg1_frm.total_price.value = 'Rs ' + total_pr;
+				~else`
+					if(document.pg1_frm.blist.checked==true)
+					{
+						var serv_idb = document.pg1_frm.blist.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.bprice.value = 'Rs ' + myArray[serv_idb];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idb]);
+					}
+					else
+					{
+						document.pg1_frm.bprice.value = "";
+					}
+					if(document.pg1_frm.horoscope.checked==true)
+					{
+						var serv_idh = document.pg1_frm.horoscope.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.hprice.value = 'Rs ' + myArray[serv_idh];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idh]);
+					}
+					else
+					{
+						document.pg1_frm.hprice.value = "";
+					}
+					if(document.pg1_frm.kundali.checked==true)
+					{
+						var serv_idk = document.pg1_frm.kundali.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.kprice.value = 'Rs ' + myArray[serv_idk];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idk]);
+					}
+					else
+					{
+						document.pg1_frm.kprice.value = "";
+					}
+					if(document.pg1_frm.matrip.checked==true)
+					{
+						var serv_idm = document.pg1_frm.matrip.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.mprice.value = 'Rs ' + myArray[serv_idm];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
+					}
+					else
+					{
+						document.pg1_frm.mprice.value = "";
+					}
+					if(document.pg1_frm.astro_compatibility.checked==true)
+					{
+						var serv_idm = document.pg1_frm.astro_compatibility.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.astro_price.value = 'Rs ' + myArray[serv_idm];
+						total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
+					}
+					else
+					{
+						document.pg1_frm.astro_price.value = "";
+					}
+					document.pg1_frm.total_price.value = 'Rs ' + total_pr;
+				~/if`
+			}
+			else
+			{
+				~if $source eq "A"`
+					~if $BOLD_LISTING_SELECTED eq "Y"`
+						var serv_idb = document.pg1_frm.blist.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.bprice.value = 'US($) ' + myArray_dol[serv_idb];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idb]);
+					~else`
+						document.pg1_frm.bprice.value = "";
+					~/if`
+					~if HOROSCOPE_SELECTED eq "Y"`
+						var serv_idh = document.pg1_frm.horoscope.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.hprice.value = 'US($) ' + myArray_dol[serv_idh];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idh]);
+					~else`
+						document.pg1_frm.hprice.value = "";
+					~/if`
+					~if $KUNDLI_SELECTED eq "Y"`
+						var serv_idk = document.pg1_frm.kundali.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.kprice.value = 'US($) ' + myArray_dol[serv_idk];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idk]);
+					~else`
+						document.pg1_frm.kprice.value = "";
+					~/if`
+					~if $MATRI_PROFILE_SELECTED eq "Y"`
+						var serv_idm = document.pg1_frm.matrip.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.mprice.value = 'US($) ' + myArray_dol[serv_idm];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
+					~else`
+						document.pg1_frm.mprice.value = "";
+					~/if`
+					~if $ASTRO_COMPATIBILITY_SELECTED eq "Y"`
+						var serv_idm = document.pg1_frm.astro_compatibility.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.astro_price.value = 'US($) ' + myArray_dol[serv_idm];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
+					~else`
+						document.pg1_frm.astro_price.value = "";
+					~/if`
+					document.pg1_frm.total_price.value = 'US($) ' + total_pr;
+				~else`
+					if(document.pg1_frm.blist.checked==true)
+					{
+						var serv_idb = document.pg1_frm.blist.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.bprice.value = 'US($) ' + myArray_dol[serv_idb];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idb]);
+					}
+					else
+					{
+						document.pg1_frm.bprice.value = "";
+					}
+					if(document.pg1_frm.horoscope.checked==true)
+					{
+						var serv_idh = document.pg1_frm.horoscope.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.hprice.value = 'US($) ' + myArray_dol[serv_idh];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idh]);
+					}
+					else
+					{
+						document.pg1_frm.hprice.value = "";
+					}
+					if(document.pg1_frm.kundali.checked==true)
+					{
+						var serv_idk = document.pg1_frm.kundali.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.kprice.value = 'US($) ' + myArray_dol[serv_idk];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idk]);
+					}
+					else
+					{
+						document.pg1_frm.kprice.value = "";
+					}
+					if(document.pg1_frm.matrip.checked==true)
+					{
+						var serv_idm = document.pg1_frm.matrip.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.mprice.value = 'US($) ' + myArray_dol[serv_idm];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
+					}
+					else
+					{
+						document.pg1_frm.mprice.value = "";
+					}
+					if(document.pg1_frm.astro_compatibility.checked==true)
+					{
+						var serv_idm = document.pg1_frm.astro_compatibility.value + document.pg1_frm.duration_sel.value;
+						document.pg1_frm.astro_price.value = 'US($) ' + myArray_dol[serv_idm];
+						total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
+					}
+					else
+					{
+						document.pg1_frm.astro_price.value = "";
+					}
+					document.pg1_frm.total_price.value = 'US($) ' + total_pr;
+				~/if`
+			}
+			total_amount_topay(~$TAX_RATE`);
 		}
-		if(document.pg1_frm.curtype.value=="0")
+		function validate_discount()
 		{
-			~if $source eq "A"`
-				~if $BOLD_LISTING_SELECTED eq "Y"`
-					var serv_idb = document.pg1_frm.blist.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.bprice.value = 'Rs ' + myArray[serv_idb];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idb]);
-				~else`
-					document.pg1_frm.bprice.value = "";
-				~/if`
-				~if $HOROSCOPE_SELECTED eq "Y"`
-					var serv_idh = document.pg1_frm.horoscope.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.hprice.value = 'Rs ' + myArray[serv_idh];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idh]);
-				~else`
-					document.pg1_frm.hprice.value = "";
-				~/if`
-				~if $KUNDLI_SELECTED eq "Y"`
-					var serv_idk = document.pg1_frm.kundali.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.kprice.value = 'Rs ' + myArray[serv_idk];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idk]);
-				~else`
-					document.pg1_frm.kprice.value = "";
-				~/if`
-				~if $MATRI_PROFILE_SELECTED eq "Y"`
-					var serv_idm = document.pg1_frm.matrip.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.mprice.value = 'Rs ' + myArray[serv_idm];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
-				~else`
-					document.pg1_frm.mprice.value = "";
-				~/if`
-				~if $ASTRO_COMPATIBILITY_SELECTED eq "Y"`
-					var serv_idm = document.pg1_frm.astro_compatibility.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.astro_price.value = 'Rs ' + myArray[serv_idm];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
-				~else`
-					document.pg1_frm.astro_price.value = "";
-				~/if`
-				document.pg1_frm.total_price.value = 'Rs ' + total_pr;
-			~else`
-				if(document.pg1_frm.blist.checked==true)
-				{
-					var serv_idb = document.pg1_frm.blist.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.bprice.value = 'Rs ' + myArray[serv_idb];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idb]);
-				}
-				else
-				{
-					document.pg1_frm.bprice.value = "";
-				}
-				if(document.pg1_frm.horoscope.checked==true)
-				{
-					var serv_idh = document.pg1_frm.horoscope.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.hprice.value = 'Rs ' + myArray[serv_idh];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idh]);
-				}
-				else
-				{
-					document.pg1_frm.hprice.value = "";
-				}
-				if(document.pg1_frm.kundali.checked==true)
-				{
-					var serv_idk = document.pg1_frm.kundali.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.kprice.value = 'Rs ' + myArray[serv_idk];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idk]);
-				}
-				else
-				{
-					document.pg1_frm.kprice.value = "";
-				}
-				if(document.pg1_frm.matrip.checked==true)
-				{
-					var serv_idm = document.pg1_frm.matrip.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.mprice.value = 'Rs ' + myArray[serv_idm];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
-				}
-				else
-				{
-					document.pg1_frm.mprice.value = "";
-				}
-				if(document.pg1_frm.astro_compatibility.checked==true)
-				{
-					var serv_idm = document.pg1_frm.astro_compatibility.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.astro_price.value = 'Rs ' + myArray[serv_idm];
-					total_pr = parseInt(total_pr) + parseInt(myArray[serv_idm]);
-				}
-				else
-				{
-					document.pg1_frm.astro_price.value = "";
-				}
-				document.pg1_frm.total_price.value = 'Rs ' + total_pr;
-			~/if`
-		}
-		else
-		{
-			~if $source eq "A"`
-				~if $BOLD_LISTING_SELECTED eq "Y"`
-					var serv_idb = document.pg1_frm.blist.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.bprice.value = 'US($) ' + myArray_dol[serv_idb];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idb]);
-				~else`
-					document.pg1_frm.bprice.value = "";
-				~/if`
-				~if HOROSCOPE_SELECTED eq "Y"`
-					var serv_idh = document.pg1_frm.horoscope.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.hprice.value = 'US($) ' + myArray_dol[serv_idh];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idh]);
-				~else`
-					document.pg1_frm.hprice.value = "";
-				~/if`
-				~if $KUNDLI_SELECTED eq "Y"`
-					var serv_idk = document.pg1_frm.kundali.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.kprice.value = 'US($) ' + myArray_dol[serv_idk];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idk]);
-				~else`
-					document.pg1_frm.kprice.value = "";
-				~/if`
-				~if $MATRI_PROFILE_SELECTED eq "Y"`
-					var serv_idm = document.pg1_frm.matrip.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.mprice.value = 'US($) ' + myArray_dol[serv_idm];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
-				~else`
-					document.pg1_frm.mprice.value = "";
-				~/if`
-				~if $ASTRO_COMPATIBILITY_SELECTED eq "Y"`
-					var serv_idm = document.pg1_frm.astro_compatibility.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.astro_price.value = 'US($) ' + myArray_dol[serv_idm];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
-				~else`
-					document.pg1_frm.astro_price.value = "";
-				~/if`
-				document.pg1_frm.total_price.value = 'US($) ' + total_pr;
-			~else`
-				if(document.pg1_frm.blist.checked==true)
-				{
-					var serv_idb = document.pg1_frm.blist.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.bprice.value = 'US($) ' + myArray_dol[serv_idb];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idb]);
-				}
-				else
-				{
-					document.pg1_frm.bprice.value = "";
-				}
-				if(document.pg1_frm.horoscope.checked==true)
-				{
-					var serv_idh = document.pg1_frm.horoscope.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.hprice.value = 'US($) ' + myArray_dol[serv_idh];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idh]);
-				}
-				else
-				{
-					document.pg1_frm.hprice.value = "";
-				}
-				if(document.pg1_frm.kundali.checked==true)
-				{
-					var serv_idk = document.pg1_frm.kundali.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.kprice.value = 'US($) ' + myArray_dol[serv_idk];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idk]);
-				}
-				else
-				{
-					document.pg1_frm.kprice.value = "";
-				}
-				if(document.pg1_frm.matrip.checked==true)
-				{
-					var serv_idm = document.pg1_frm.matrip.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.mprice.value = 'US($) ' + myArray_dol[serv_idm];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
-				}
-				else
-				{
-					document.pg1_frm.mprice.value = "";
-				}
-				if(document.pg1_frm.astro_compatibility.checked==true)
-				{
-					var serv_idm = document.pg1_frm.astro_compatibility.value + document.pg1_frm.duration_sel.value;
-					document.pg1_frm.astro_price.value = 'US($) ' + myArray_dol[serv_idm];
-					total_pr = parseInt(total_pr) + parseInt(myArray_dol[serv_idm]);
-				}
-				else
-				{
-					document.pg1_frm.astro_price.value = "";
-				}
-				document.pg1_frm.total_price.value = 'US($) ' + total_pr;
-			~/if`
-		}
-		total_amount_topay(~$TAX_RATE`);
-	}
-	function validate_discount()
-	{
+			var disc = document.pg1_frm.discount.value;
+			var subs = document.pg1_frm.total_price.value;
+			
+			if(parseInt(disc) > parseInt(subs))
+			{
+				alert('Discount cannot be greater than total Service(s) amount');
+				document.pg1_frm.discount.value = 0;
+				document.pg1_frm.disc_perc.value = 0;
+				return false;
+			}
+			if(disc < 0)
+			{
+				alert('Please enter a valid discount amount');
+				document.pg1_frm.discount.value = 0;
+				return false;
+			}
+			var total = document.pg1_frm.total_price.value;
 		var disc = document.pg1_frm.discount.value;
-		var subs = document.pg1_frm.total_price.value;
-		
-		if(parseInt(disc) > parseInt(subs))
-		{
-			alert('Discount cannot be greater than total Service(s) amount');
-			document.pg1_frm.discount.value = 0;
-			document.pg1_frm.disc_perc.value = 0;
-			return false;
+		var per_dis = (disc * 100)/total;
+		document.pg1_frm.disc_perc.value=per_dis;
+		document.pg1_frm.disc_perc.value=document.pg1_frm.disc_perc.value.substring(0,5);
+			total_amount_topay(~$TAX_RATE`);
 		}
-		if(disc < 0)
+		function validate_discount_perc()
 		{
-			alert('Please enter a valid discount amount');
-			document.pg1_frm.discount.value = 0;
-			return false;
+		if(document.pg1_frm.disc_perc.value > 100)
+		{
+		alert('Discount Percentage cannot be greater than 100');
+		document.pg1_frm.discount.value = 0;
+		document.pg1_frm.disc_perc.value = 0;
+		return false;
 		}
 		var total = document.pg1_frm.total_price.value;
-                var disc = document.pg1_frm.discount.value;
-                var per_dis = (disc * 100)/total;
-                document.pg1_frm.disc_perc.value=per_dis;
-                document.pg1_frm.disc_perc.value=document.pg1_frm.disc_perc.value.substring(0,5);
-		total_amount_topay(~$TAX_RATE`);
-	}
-	function validate_discount_perc()
-        {
-                if(document.pg1_frm.disc_perc.value > 100)
-                {
-                        alert('Discount Percentage cannot be greater than 100');
-                        document.pg1_frm.discount.value = 0;
-                        document.pg1_frm.disc_perc.value = 0;
-                        return false;
-                }
-                var total = document.pg1_frm.total_price.value;
-                var total_len = document.pg1_frm.total_price.value.length;
-                var disc = document.pg1_frm.disc_perc.value;
-                var per_dis = (disc/100)*total;
-                document.pg1_frm.discount.value=per_dis;
-                document.pg1_frm.discount.value=document.pg1_frm.discount.value.substring(0,total_len+1);
-		total_amount_topay(~$TAX_RATE`);
-        }
-	function check_city()
-	{
-		if(document.pg1_frm.City_India.value=="Other")
-			document.pg1_frm.ocity.disabled=false;
-		else
-			document.pg1_frm.ocity.disabled=true;
-			document.pg1_frm.ocity.value="";
-	}
-	function filter_dropdown()
-	{
-		var docF = document.pg1_frm;
-		var dur_val = new Array, dur_txt = new Array;
-
-		~section name=next loop=$service_duration`
-			dur_val[~$smarty.section.next.index`] = '~$service_duration[next].value`';
-			dur_txt[~$smarty.section.next.index`] = '~$service_duration[next].duration`';
-		~/section`
-
-		var j=0;
-		if(docF.service_type.value=="SC")
+		var total_len = document.pg1_frm.total_price.value.length;
+		var disc = document.pg1_frm.disc_perc.value;
+		var per_dis = (disc/100)*total;
+		document.pg1_frm.discount.value=per_dis;
+		document.pg1_frm.discount.value=document.pg1_frm.discount.value.substring(0,total_len+1);
+			total_amount_topay(~$TAX_RATE`);
+		}
+		function check_city()
 		{
-			for(var i=0; i<dur_val.length; i++)
+			if(document.pg1_frm.City_India.value=="Other")
+				document.pg1_frm.ocity.disabled=false;
+			else
+				document.pg1_frm.ocity.disabled=true;
+				document.pg1_frm.ocity.value="";
+		}
+		function filter_dropdown()
+		{
+			var docF = document.pg1_frm;
+			var dur_val = new Array, dur_txt = new Array;
+			~section name=next loop=$service_duration`
+				dur_val[~$smarty.section.next.index`] = '~$service_duration[next].value`';
+				dur_txt[~$smarty.section.next.index`] = '~$service_duration[next].duration`';
+			~/section`
+			var j=0;
+			if(docF.service_type.value=="SC")
 			{
-				if(dur_val[i] != 1 && dur_val[i] != 2)
+				for(var i=0; i<dur_val.length; i++)
+				{
+					if(dur_val[i] != 1 && dur_val[i] != 2)
+					{
+						var dur_opt = new Option(dur_txt[i], dur_val[i]);
+						docF.duration_sel.options[j] = dur_opt;
+						j++;
+					}
+					else
+						docF.duration_sel.options[j] = null;
+				}
+			}
+			else if(docF.service_type.value == "HDO")
+			{
+				for(var i=0; i<dur_val.length; i++)
+				{
+					if(dur_val[i] == 6)
+					{
+						var dur_opt = new Option(dur_txt[i], dur_val[i]);
+						docF.duration_sel.options[j] = dur_opt;
+						j++;
+					}
+					else
+						docF.duration_sel.options[j] = null;
+				}
+			}
+			else
+			{
+				for(var i=0; i<dur_val.length; i++)
 				{
 					var dur_opt = new Option(dur_txt[i], dur_val[i]);
-					docF.duration_sel.options[j] = dur_opt;
-					j++;
+					docF.duration_sel.options[i] = dur_opt;
 				}
-				else
-					docF.duration_sel.options[j] = null;
 			}
 		}
-		else if(docF.service_type.value == "HDO")
-		{
-			for(var i=0; i<dur_val.length; i++)
-			{
-				if(dur_val[i] == 6)
-				{
-					var dur_opt = new Option(dur_txt[i], dur_val[i]);
-					docF.duration_sel.options[j] = dur_opt;
-					j++;
-				}
-				else
-					docF.duration_sel.options[j] = null;
-			}
-		}
-		else
-		{
-			for(var i=0; i<dur_val.length; i++)
-			{
-				var dur_opt = new Option(dur_txt[i], dur_val[i]);
-				docF.duration_sel.options[i] = dur_opt;
-			}
-		}
-	}
-	</script>
-</head>
-<body>
-
-<form method="post" name="pg1_frm" action="new_entry_billing.php">
-~if $renew`
-<table cellpadding="4" cellspacing="4" width="80%" align="center">
-        <tr>
-                <td align="center" colspan="2" class="formhead">User Details</td>
-        </tr>
-        <tr>
-                <td class="label">
-			Username*
-                </td>
-                <td class="fieldsnew">~$username`</td>
-        </tr>
-        <tr>
-                <td class="label">
-                        Email
-                </td>
-                <td class="fieldsnew">~$email`</td>
-        </tr>
-        <tr>
-                <td class="label">
-                        Current Membership
-                </td>
-                <td class="fieldsnew">~$sname`</td>
-        </tr>
-        <tr>
-                <td class="label">
-                        Addon Service(s)
-                </td>
-                <td class="fieldsnew">~$addon_services_lastbill`</td>
-        </tr>
-        <tr>
-                <td class="label">
-                        Expiry Date
-                </td>
-	</td>
-                <td class="fieldsnew">~$expiry_dt`</td>
-        </tr>
-</table>
-~else`
-<table cellpadding="4" cellspacing="4" width="80%" align="center">
-	<tr>
-		<td align="center" colspan="2" class="formhead">Enter User Details</td>
-	</tr>
-	<tr>
-		<td align="center" colspan="2" class="formhead">(Fields Marked * are copulsory)</td>
-	</tr>
-	<tr>
-		<td class="label">
-			~if $CHECK_USERNAME eq "Y"`
-				<font color=red>Username*</font>
-			~elseif $MSG_USERNAME neq ''`
-				<font color=red>Username* (~$MSG_USERNAME`)</font>
-			~else`
-				Username*
+		</script>
+	</head>
+	<body>
+		<form method="post" name="pg1_frm" action="new_entry_billing.php">
+			~if $renew`
+			<table cellpadding="4" cellspacing="4" width="80%" align="center">
+				<tr>
+					<td align="center" colspan="2" class="formhead">User Details</td>
+				</tr>
+				<tr>
+					<td class="label">
+						Username*
+					</td>
+					<td class="fieldsnew">~$username`</td>
+				</tr>
+				<tr>
+					<td class="label">
+						Email
+					</td>
+					<td class="fieldsnew">~$email`</td>
+				</tr>
+				<tr>
+					<td class="label">
+						Current Membership
+					</td>
+					<td class="fieldsnew">~$sname`</td>
+				</tr>
+				<tr>
+					<td class="label">
+						Addon Service(s)
+					</td>
+					<td class="fieldsnew">~$addon_services_lastbill`</td>
+				</tr>
+				<tr>
+					<td class="label">
+						Expiry Date
+					</td>
+				</td>
+				<td class="fieldsnew">~$expiry_dt`</td>
+			</tr>
+		</table>
+		~else`
+		<table cellpadding="4" cellspacing="4" width="80%" align="center">
+			<tr>
+				<td align="center" colspan="2" class="formhead">Enter User Details</td>
+			</tr>
+			<tr>
+				<td align="center" colspan="2" class="formhead">(Fields Marked * are copulsory)</td>
+			</tr>
+			<tr>
+				<td class="label">
+					~if $CHECK_USERNAME eq "Y"`
+					<font color=red>Username*</font>
+					~elseif $MSG_USERNAME neq ''`
+					<font color=red>Username* (~$MSG_USERNAME`)</font>
+					~else`
+					Username*
+					~/if`
+				</td>
+				<td class="fieldsnew">~$username`</td>
+			</tr>
+			<tr>
+				<td class="label">
+					~if $CHECK_CUSTNAME eq "Y"`
+					<font color="red">Name*</font>
+					~else`
+					Name*
+					~/if`
+				</td>
+				<td class="fieldsnew"><input type="text" name="custname" value="~$custname`" /></td>
+			</tr>
+			<tr>
+				<td class="label">
+					~if $CHECK_GENDER eq "Y"`
+					<font color="red">Gender*</font>
+					~else`
+					Gender*
+					~/if`
+				</td>
+				<td class="fieldsnew">
+					<select name="gender" disabled>
+						<option value="">Select</option>
+						<option value="M" ~if $gender eq 'M'` selected ~/if`>Male</option>
+						<option value="F" ~if $gender eq 'F'` selected ~/if`>Female</option>
+					</select>
+				</td>
+				<input type="hidden" name="genderval" value="~$gender`">
+			</tr>
+			<tr>
+				<td class="label">
+					~if $CHECK_ADDRESS eq "Y"`
+					<font color="red">Mailing Address*</font>
+					~else`
+					Mailing Address*
+					~/if`
+				</td>
+				<td class="fieldsnew" colspan="3"><textarea name="address" value="" rows="4" cols="50">~$address`</textarea></td>
+			</tr>
+			<tr>
+				<td class="label">
+					Email
+				</td>
+				<td class="fieldsnew"><input type="text" name="email" value="~$email`" size="30"/></td>
+			</tr>
+			<tr>
+				<td class="label">
+					~if $CHECK_CITY eq "Y"`
+					<font color="red">City*</font>
+					~else`
+					City
+					~/if`
+				</td>
+				<td class="fieldsnew">
+					<select name="City_India" onchange="return check_city();">
+						<option value="">Select</option>
+						~$city_india_arr`
+						<option value="Other">Other</option>
+					</select>
+					If "Others"
+					<input type="text" name="ocity" value="~$ocity`" />
+				</tr>
+				<tr>
+					<td class="label">Pincode</td>
+					<td class="fieldsnew"><input type="text" name="pin" value="~$pin`" /></td>
+				</tr>
+				<tr>
+					<td class="label">Phone(Res)</td>
+					<td class="fieldsnew"><input type="text" name="rphone" value="~$rphone`" /></td>
+				</tr>
+				<tr>
+					<td class="label">Phone(Off)</td>
+					<td class="fieldsnew"><input type="text" name="ophone" value="~$ophone`" /></td>
+				</tr>
+				<tr>
+					<td class="label">Phone(Mob)</td>
+					<td class="fieldsnew"><input type="text" name="mphone" value="~$mphone`" maxlength="15" /></td>
+				</tr>
+			</table>
 			~/if`
-		</td>
-		<td class="fieldsnew">~$username`</td>
-	</tr>
-	<tr>
-		<td class="label">
-			~if $CHECK_CUSTNAME eq "Y"`
-				<font color="red">Name*</font>
-			~else`
-				Name*
-			~/if`
-		</td>
-		<td class="fieldsnew"><input type="text" name="custname" value="~$custname`" /></td>
-	</tr>
-	<tr>
-		<td class="label">
-			~if $CHECK_GENDER eq "Y"`
-				<font color="red">Gender*</font>
-			~else`
-				Gender*
-			~/if`
-		</td>
-		<td class="fieldsnew">
-			<select name="gender" disabled>
-				<option value="">Select</option>
-				<option value="M" ~if $gender eq 'M'` selected ~/if`>Male</option>
-				<option value="F" ~if $gender eq 'F'` selected ~/if`>Female</option>
-			</select>
-		</td>
-		<input type="hidden" name="genderval" value="~$gender`">
-	</tr>
-	<tr>
-		<td class="label">
-			~if $CHECK_ADDRESS eq "Y"`
-				<font color="red">Mailing Address*</font>
-			~else`
-				Mailing Address
-			~/if`
-		</td>
-		<td class="fieldsnew" colspan="3"><textarea name="address" value="" rows="4" cols="50">~$address`</textarea></td>
-	</tr>
-	<tr>
-		<td class="label">
-			Email
-		</td>
-		<td class="fieldsnew"><input type="text" name="email" value="~$email`" size="30"/></td>
-	</tr>
-	<tr>
-		<td class="label">
-			~if $CHECK_CITY eq "Y"`
-				<font color="red">City*</font>
-			~else`
-				City
-			~/if`
-		</td>
-		<td class="fieldsnew">
-			<select name="City_India" onchange="return check_city();">
-				<option value="">Select</option>
-				~$city_india_arr`
-				<option value="Other">Other</option>
-			</select>
-			If "Others"
-			<input type="text" name="ocity" value="~$ocity`" />
-	</tr>
-	<tr>
-		<td class="label">Pincode</td>
-		<td class="fieldsnew"><input type="text" name="pin" value="~$pin`" /></td>
-	</tr>
-	<tr>
-		<td class="label">Phone(Res)</td>
-		<td class="fieldsnew"><input type="text" name="rphone" value="~$rphone`" /></td>
-	</tr>
-	<tr>
-		<td class="label">Phone(Off)</td>
-		<td class="fieldsnew"><input type="text" name="ophone" value="~$ophone`" /></td>
-	</tr>
-	<tr>
-		<td class="label">Phone(Mob)</td>
-		<td class="fieldsnew"><input type="text" name="mphone" value="~$mphone`" maxlength="15" /></td>
-	</tr>
-</table>
-~/if`
-<br>
-<table cellpadding="4" cellspacing="4" width="80%" align="center">
-	<tr>
-		<td class="formhead" align="center" colspan="100%">Service Details</td>
-	</tr>
-	<tr>
-		<td class="formhead" align="center" colspan="100%">(One month duration is valid only for e-Rishta without any addon-service.)
-	</tr>
-	<tr>
-                <td class="label" colspan="2">
-                        ~if $CHECK_CURTYPE eq "Y"`
-                                <font color=red>Currency Type*</font>
-                        ~else`
-                                Currency Type*
-                        ~/if`
-                </td>
-                <td class="fieldsnew" colspan="2">
-                        <select name="curtype" id="curtype" onchange="get_service_price('',1)">
-                                <option value="RS">Rupees</option>
-                                <option value="DOL">US($)</option>
-                        </select>
-                </td>
-        </tr>
-	<tr>
-	<td class="fieldsnew" colspan="4" align="center"><font color="red">~$msg`</font></td>
-	</tr>
-        <tr class="formhead">
-        	<td>Check to select</td>
-        	<td> ~if $CHECK_SERVICE`<font color="red">Service*</font>~else` Service* ~/if`</td>
-        	<td>Duration</td>
-        	<td>Price(Including Tax)</td>
-        </tr>
-	<!-- Main Membership selection -->
-	<tr>
-		<td class="label" width="5%">
-			<input type="checkbox" id="chk_membership_service" name="chk_membership_service" value="Y" onchange="get_service_price(this);" onclick="disableMembershipSelection('chk_membership_service','chk_JSExclusive_service');">
-		</td>
-                <td class="fieldsnew">
-                        <select name="membership_service" id="membership_service" onchange="get_service_price(this);">
-				~section name=next loop=$service_type_arr`
-                                <option value="~$service_type_arr[next].value`" ~if $service_type eq $service_type_arr[next].value` selected ~/if`>~$service_type_arr[next].name`</option>
-				~/section`
-                        </select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="membership_service_duration" id="membership_service_duration" onchange="get_service_price(this);">
-			~section name=next loop=$service_duration`
-                                <option value="~$service_duration[next].value`" ~if $duration_sel eq $service_duration[next].value` selected ~/if`>~$service_duration[next].duration`</option>
-			~/section`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="membership_service_price" id="membership_service_price" disabled size="8"></td>
-	</tr>
-	<tr>
-                <td class="label">
-                        <input type="checkbox" name="chk_assistance_service" id="chk_assistance_service" value="Y" onchange="get_service_price(this);">
-                </td>
-                <td class="fieldsnew">
-                        <select name="assistance_service" id="assistance_service" onchange="get_service_price(this);">
-                                <option value="T">Auto-apply</option>
-                        </select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="assistance_service_duration" id="assistance_service_duration" onchange="get_service_price(this);">
-			~foreach from=$duration_arr key=k1 item=v1`
-				~if $k1 eq 'T'`
-				~foreach from=$v1 key=k item=v`
-                                <option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
-				~/foreach`
+			<br>
+			<table cellpadding="4" cellspacing="4" width="80%" align="center">
+				<tr>
+					<td class="formhead" align="center" colspan="100%">Service Details</td>
+				</tr>
+				<tr>
+					<td class="formhead" align="center" colspan="100%">(One month duration is valid only for e-Rishta without any addon-service.)
+					</tr>
+					<tr>
+						<td class="label" colspan="2">
+							~if $CHECK_CURTYPE eq "Y"`
+							<font color=red>Currency Type*</font>
+							~else`
+							Currency Type*
+							~/if`
+						</td>
+						<td class="fieldsnew" colspan="2">
+							<select name="curtype" id="curtype" onchange="get_service_price('',1)">
+								<option value="RS">Rupees</option>
+								<option value="DOL">US($)</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="fieldsnew" colspan="4" align="center"><font color="red">~$msg`</font></td>
+					</tr>
+					<tr class="formhead">
+						<td>Check to select</td>
+						<td> ~if $CHECK_SERVICE`<font color="red">Service*</font>~else` Service* ~/if`</td>
+						<td>Duration</td>
+						<td>Price(Including Tax)</td>
+					</tr>
+					<!-- Main Membership selection -->
+					<tr>
+						<td class="label" width="5%">
+							<input type="checkbox" id="chk_membership_service" name="chk_membership_service" value="Y" onchange="get_service_price(this);" onclick="disableMembershipSelection('chk_membership_service','chk_JSExclusive_service');">
+						</td>
+						<td class="fieldsnew">
+							<select name="membership_service" id="membership_service" onchange="get_service_price(this);">
+								~section name=next loop=$service_type_arr`
+								<option value="~$service_type_arr[next].value`" ~if $service_type eq $service_type_arr[next].value` selected ~/if`>~$service_type_arr[next].name`</option>
+								~/section`
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="membership_service_duration" id="membership_service_duration" onchange="get_service_price(this);">
+								~section name=next loop=$service_duration`
+								<option value="~$service_duration[next].value`" ~if $duration_sel eq $service_duration[next].value` selected ~/if`>~$service_duration[next].duration`</option>
+								~/section`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="membership_service_price" id="membership_service_price" disabled size="8"></td>
+					</tr>
+					<tr>
+						<td class="label">
+							<input type="checkbox" name="chk_assistance_service" id="chk_assistance_service" value="Y" onchange="get_service_price(this);">
+						</td>
+						<td class="fieldsnew">
+							<select name="assistance_service" id="assistance_service" onchange="get_service_price(this);">
+								<option value="T">Auto-apply</option>
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="assistance_service_duration" id="assistance_service_duration" onchange="get_service_price(this);">
+								~foreach from=$duration_arr key=k1 item=v1`
+								~if $k1 eq 'T'`
+								~foreach from=$v1 key=k item=v`
+								<option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
+								~/foreach`
+								~/if`
+								~/foreach`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="assistance_service_price" id="assistance_service_price" disabled size="8"></td>
+					</tr>
+					<!-- Profile home delivery service stopped
+					<tr>
+						<td class="label">
+							<input type="checkbox" name="chk_courier_service" id="chk_courier_service" value="Y" onchange="get_service_price(this);">
+						</td>
+						<td class="fieldsnew">
+							<select name="courier_service" id="courier_service" onchange="get_service_price(this);">
+								<option value="L">Profile home delivery</option>
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="courier_service_duration" id="courier_service_duration" onchange="get_service_price(this);">
+										~foreach from=$duration_arr key=k1 item=v1`
+								~if $k1 eq 'L'`
+								~foreach from=$v1 key=k item=v`
+								<option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
+								~/foreach`
+								~/if`
+								~/foreach`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="courier_service_price" id="courier_service_price" disabled size="8"></td>
+					</tr>
+					-->
+					<tr>
+						<td class="label">
+							<input type="checkbox" name="chk_boldlisting_service" id="chk_boldlisting_service" value="Y" onchange="get_service_price(this);">
+						</td>
+						<td class="fieldsnew">
+							<select name="boldlisting_service" id="boldlisting_service" onchange="get_service_price(this);">
+								<option value="B">Profile Highlighting</option>
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="boldlisting_service_duration" id="boldlisting_service_duration" onchange="get_service_price(this);">
+								~foreach from=$duration_arr key=k1 item=v1`
+								~if $k1 eq 'B'`
+								~foreach from=$v1 key=k item=v`
+								<option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
+								~/foreach`
+								~/if`
+								~/foreach`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="boldlisting_service_price" id="boldlisting_service_price" disabled size="8"></td>
+					</tr>
+					<tr>
+						<td class="label">
+							<input type="checkbox" name="chk_astro_service" id="chk_astro_service" value="Y" onchange="get_service_price(this);">
+						</td>
+						<td class="fieldsnew">
+							<select name="astro_service" id="astro_service" onchange="get_service_price(this);">
+								<option value="A">Astro</option>
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="astro_service_duration" id="astro_service_duration" onchange="get_service_price(this);">
+								~foreach from=$duration_arr key=k1 item=v1`
+								~if $k1 eq 'A'`
+								~foreach from=$v1 key=k item=v`
+								<option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
+								~/foreach`
+								~/if`
+								~/foreach`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="astro_service_price" id="astro_service_price" disabled size="8"></td>
+					</tr>
+					<tr>
+						<td class="label">
+							<input type="checkbox" name="chk_matriprofile_service" id="chk_matriprofile_service" value="Y" onchange="get_service_price(this);">
+						</td>
+						<td class="fieldsnew">
+							<select name="matriprofile_service" id="matriprofile_service" onchange="get_service_price(this);">
+								<option value="M">Matriprofile</option>
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="matriprofile_service_duration" id="matriprofile_service_duration" onchange="get_service_price(this);">
+								~section name=next loop=$service_duration`
+								<option value="~$service_duration[next].value`" ~if $duration_sel eq $service_duration[next].value` selected ~/if`>~$service_duration[next].duration`</option>
+								~/section`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="matriprofile_service_price" id="matriprofile_service_price" disabled size="8"></td>
+					</tr>
+					<tr>
+						<td class="label">
+							<input type="checkbox" name="chk_display_service" id="chk_display_service" value="Y" onchange="get_service_price(this);">
+						</td>
+						<td class="fieldsnew">
+							<select name="display_service" id="display_service" onchange="get_service_price(this);">
+								<option value="D">Display</option>
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="display_service_duration" id="display_service_duration" onchange="get_service_price(this);">
+								~section name=next loop=$service_duration`
+								<option value="~$service_duration[next].value`" ~if $duration_sel eq $service_duration[next].value` selected ~/if`>~$service_duration[next].duration`</option>
+								~/section`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="display_service_price" id="display_service_price" disabled size="8"></td>
+					</tr>
+					<tr>
+						<td class="label">
+							<input type="checkbox" name="chk_introcalls_service" id="chk_introcalls_service" value="Y" onchange="get_service_price(this);">
+						</td>
+						<td class="fieldsnew">
+							<select name="introcalls_service" id="introcalls_service" onchange="get_service_price(this);">
+								<option value="I">Intro-calls</option>
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="introcalls_service_duration" id="introcalls_service_duration" onchange="get_service_price(this);">
+								~foreach from=$count_arr key=k item=v`
+								<option value="~$k`" ~if $duration_sel eq $k` selected ~/if`>~$v`</option>
+								~/foreach`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="introcalls_service_price" id="introcalls_service_price" disabled size="8"></td>
+					</tr>
+					<tr>
+						<td class="label">
+							<input type="checkbox" name="chk_featuredprofile_service" id="chk_featuredprofile_service" value="Y" onchange="get_service_price(this);">
+						</td>
+						<td class="fieldsnew">
+							<select name="featuredprofile_service" id="featuredprofile_service" onchange="get_service_price(this);">
+								<option value="R">Featured Profile</option>
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="featuredprofile_service_duration" id="featuredprofile_service_duration" onchange="get_service_price(this);">
+								~foreach from=$duration_arr key=k1 item=v1`
+								~if $k1 eq 'R'`
+								~foreach from=$v1 key=k item=v`
+								<option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
+								~/foreach`
+								~/if`
+								~/foreach`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="featuredprofile_service_price" id="featuredprofile_service_price" disabled size="8"></td>
+					</tr>
+					<!-- New JS Exclusive service added -->
+					<tr>
+						<td class="label">
+							<input type="checkbox" name="chk_JSExclusive_service" id="chk_JSExclusive_service" value="Y" onchange="get_service_price(this);" onclick="disableMembershipSelection('chk_JSExclusive_service','chk_membership_service');">
+						</td>
+						<td class="fieldsnew">
+							<select name="JSExclusive_service" id="JSExclusive_service" onchange="get_service_price(this);">
+								<option value="X">JS Exclusive</option>
+							</select>
+						</td>
+						<td class="fieldsnew">
+							<select name="JSExclusive_service_duration" id="JSExclusive_service_duration" onchange="get_service_price(this);">
+								~foreach from=$duration_arr key=k1 item=v1`
+								~if $k1 eq 'X'`
+								~foreach from=$v1 key=k item=v`
+								<option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
+								~/foreach`
+								~/if`
+								~/foreach`
+							</select>
+						</td>
+						<td class="fieldsnew"><input type="text" name="JSExclusive_service_price" id="JSExclusive_service_price" disabled size="8"></td>
+					</tr>
+					<!--  New service added Ends -->
+					<tr>
+						<td class="label" colspan="2">Total (Including tax, if currency type is Rupees)</td>
+						<td class="fieldsnew">&nbsp;</td>
+						<td class="fieldsnew"><input type="text" name="total_price" id="total_price" value="" size="8" disabled></td>
+					</tr>
+				</table>
+				<br>
+				<table cellpadding="4" cellspacing="4" width="80%" align="center">
+					<tr>
+						<td colspan="2" align="center" class="formhead"><b>Sale Details</b></td>
+					</tr>
+					<tr>
+						<td class="label">
+							~if $CHECK_WALKIN eq "Y"`
+							<font color="red">Walk In*</font>
+							~else`
+							Walk In*
+							~/if`
+						</td>
+						<td class="fieldsnew">
+							<select name="walkin">
+								<option value="">Select</option>
+								<option value="ONLINE" ~if $walkin eq "ONLINE"` selected ~/if`>ONLINE</option>
+								<option value="OFFLINE" ~if $walkin eq "OFFLINE"` selected ~/if`>OFFLINE</option>
+								<option value="ARAMEX" ~if $walkin eq "ARAMEX"` selected ~/if`>ARAMEX</option>
+								~$walkin_arr`
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="label">
+							~if $CHECK_DISCOUNT eq "Y"`
+							<font color=red>Discount</font>
+							~else`
+							Discount
+							~/if`
+						</td>
+						<td class="fieldsnew">
+							<input type="text" name="discount" value="~$discount`" onkeyup="return validate_discount();"/>
+							&nbsp;OR
+							<input type="text" name="disc_perc" value="" size="6" onkeyup="return validate_discount_perc();" />
+							&nbsp;<b>%</b>
+						</td>
+					</tr>
+					~if !$renew`
+					<tr>
+						<td class="label">
+							~if $CHECK_VOUCHER_DISCOUNT eq "Y"`
+							<font color=red>Voucher Discount Code(if any)</font>
+							~else`
+							Voucher Discount Code(if any)
+							~/if`
+							<div id="code_status" class="fieldsnew"></div>
+						</td>
+						<td class="fieldsnew">
+							<input type="text" name="voucher_discount_code" value="~$voucher_discount_code`">
+							&nbsp;&nbsp;<input type="button" name="check_voucher_discount" value="Check Code" class="buttons1" onClick="check_voucher_discount_code();">
+						</td>
+					</tr>
+					~/if`
+					<tr>
+						<td class="label">
+							~if $CHECK_DISCOUNT_TYPE eq "Y"`
+							<font color=red>Discount Type</font>
+							~else`
+							Discount Type
+							~/if`
+						</td>
+						<td class="fieldsnew">
+							<select name="discount_type1">
+								<option value="">Select</option>
+								~section name=next loop=$discount_type`
+								<option value="~$discount_type[next].value`" ~if $discount_type1 eq $discount_type[next].value` selected ~/if`>~$discount_type[next].dtype`</option>
+								~/section`
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="label">
+							~if $CHECK_REASON eq "Y"`
+							<font color=red>Reason</font>
+							~else`
+							Reason
+							~/if`
+						</td>
+						<td class="fieldsnew">
+							<input type="text" name="reason" value="~$reason`" />
+						</td>
+					</tr>
+					<tr>
+						<td class="label">Total Payable amount(after discount, if any)</td>
+						<td class="fieldsnew">
+							<input type="text" size="10" name="tobepaid" value="" disabled />
+						</td>
+					</tr>
+					<tr>
+						<td align="center" colspan="2"><input type="submit" name="pg1_submit" value="Next >>" class="buttons1" onclick="return verify_page();"/></td>
+					</tr>
+				</table>
+				<input type="hidden" name="username" value="~$username`">
+				<input type="hidden" name="profileid" value="~$pid`">
+				<input type="hidden" name="cid" value="~$cid`">
+				<input type="hidden" name="user" value="~$user`">
+				<input type="hidden" name="source" value="~$source`">
+				<input type="hidden" name="crm_id" value="~$crm_id`">
+				<input type="hidden" name="array1" value="~$myArray`">
+				<input type="hidden" name="array2" value="~$myArray_dol`">
+				<input type="hidden" name="criteria" value="~$criteria`">
+				<input type="hidden" name="phrase" value="~$phrase`">
+				<input type="hidden" name="offline_billing" value="~$offline_billing`">
+				~if $renew`
+				<input type="hidden" name="renew" value="~$renew`">
+				<input type="hidden" name="email" value="~$email`">
+				<input type="hidden" name="sname" value="~$sname`">
+				<input type="hidden" name="addon_services_lastbill" value="~$addon_services_lastbill`">
+				<input type="hidden" name="expiry_dt" value="~$expiry_dt`">
+				<input type="hidden" name="BOLD_LISTING_SELECTED" value="~$BOLD_LISTING_SELECTED`">
+				<input type="hidden" name="HOROSCOPE_SELECTED" value="~$HOROSCOPE_SELECTED`">
+				<input type="hidden" name="KUNDALI_SELECTED" value="~$KUNDALI_SELECTED`">
+				<input type="hidden" name="MATRI_PROFILE_SELECTED" value="~$MATRI_PROFILE_SELECTED`">
+				<input type="hidden" name="ASTRO_COMPATIBILITY_SELECTED" value="~$ASTRO_COMPATIBILITY_SELECTED`">
 				~/if`
-                        ~/foreach`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="assistance_service_price" id="assistance_service_price" disabled size="8"></td>
-        </tr>
-	<!-- Profile home delivery service stopped 
-	<tr>
-                <td class="label">
-                        <input type="checkbox" name="chk_courier_service" id="chk_courier_service" value="Y" onchange="get_service_price(this);">
-                </td>
-                <td class="fieldsnew">
-                        <select name="courier_service" id="courier_service" onchange="get_service_price(this);">
-                                <option value="L">Profile home delivery</option>
-                        </select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="courier_service_duration" id="courier_service_duration" onchange="get_service_price(this);">
-			 ~foreach from=$duration_arr key=k1 item=v1`
-                                ~if $k1 eq 'L'`
-                                ~foreach from=$v1 key=k item=v`
-                                <option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
-                                ~/foreach`
-                                ~/if`
-                        ~/foreach`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="courier_service_price" id="courier_service_price" disabled size="8"></td>
-        </tr>
-	-->
-	<tr>
-		<td class="label">
-			<input type="checkbox" name="chk_boldlisting_service" id="chk_boldlisting_service" value="Y" onchange="get_service_price(this);">
-		</td>
-                <td class="fieldsnew">
-                	<select name="boldlisting_service" id="boldlisting_service" onchange="get_service_price(this);">
-                		<option value="B">Profile Highlighting</option>
-                	</select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="boldlisting_service_duration" id="boldlisting_service_duration" onchange="get_service_price(this);">
-			 ~foreach from=$duration_arr key=k1 item=v1`
-                                ~if $k1 eq 'B'`
-                                ~foreach from=$v1 key=k item=v`
-                                <option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
-                                ~/foreach`
-                                ~/if`
-                        ~/foreach`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="boldlisting_service_price" id="boldlisting_service_price" disabled size="8"></td>
-	</tr>
-	<tr>
-		<td class="label">
-			<input type="checkbox" name="chk_astro_service" id="chk_astro_service" value="Y" onchange="get_service_price(this);">
-		</td>
-                <td class="fieldsnew">
-                	<select name="astro_service" id="astro_service" onchange="get_service_price(this);">
-                		<option value="A">Astro</option>
-                	</select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="astro_service_duration" id="astro_service_duration" onchange="get_service_price(this);">
-			 ~foreach from=$duration_arr key=k1 item=v1`
-                                ~if $k1 eq 'A'`
-                                ~foreach from=$v1 key=k item=v`
-                                <option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
-                                ~/foreach`
-                                ~/if`
-                        ~/foreach`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="astro_service_price" id="astro_service_price" disabled size="8"></td>
-	</tr>
-	<tr>
-		<td class="label">
-			<input type="checkbox" name="chk_matriprofile_service" id="chk_matriprofile_service" value="Y" onchange="get_service_price(this);">
-		</td>
-                <td class="fieldsnew">
-                	<select name="matriprofile_service" id="matriprofile_service" onchange="get_service_price(this);">
-                		<option value="M">Matriprofile</option>
-                	</select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="matriprofile_service_duration" id="matriprofile_service_duration" onchange="get_service_price(this);">
-			~section name=next loop=$service_duration`
-                                <option value="~$service_duration[next].value`" ~if $duration_sel eq $service_duration[next].value` selected ~/if`>~$service_duration[next].duration`</option>
-			~/section`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="matriprofile_service_price" id="matriprofile_service_price" disabled size="8"></td>
-	</tr>
-	<tr>
-		<td class="label">
-			<input type="checkbox" name="chk_display_service" id="chk_display_service" value="Y" onchange="get_service_price(this);">
-		</td>
-                <td class="fieldsnew">
-                	<select name="display_service" id="display_service" onchange="get_service_price(this);">
-                		<option value="D">Display</option>
-                	</select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="display_service_duration" id="display_service_duration" onchange="get_service_price(this);">
-			~section name=next loop=$service_duration`
-                                <option value="~$service_duration[next].value`" ~if $duration_sel eq $service_duration[next].value` selected ~/if`>~$service_duration[next].duration`</option>
-			~/section`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="display_service_price" id="display_service_price" disabled size="8"></td>
-	</tr>
-	<tr>
-                <td class="label">
-                        <input type="checkbox" name="chk_introcalls_service" id="chk_introcalls_service" value="Y" onchange="get_service_price(this);">
-                </td>
-                <td class="fieldsnew">
-                        <select name="introcalls_service" id="introcalls_service" onchange="get_service_price(this);">
-                                <option value="I">Intro-calls</option>
-                        </select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="introcalls_service_duration" id="introcalls_service_duration" onchange="get_service_price(this);">
-                        ~foreach from=$count_arr key=k item=v`
-                                <option value="~$k`" ~if $duration_sel eq $k` selected ~/if`>~$v`</option>
-                        ~/foreach`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="introcalls_service_price" id="introcalls_service_price" disabled size="8"></td>
-        </tr>
-	<tr>
-		<td class="label">
-			<input type="checkbox" name="chk_featuredprofile_service" id="chk_featuredprofile_service" value="Y" onchange="get_service_price(this);">
-		</td>
-                <td class="fieldsnew">
-                	<select name="featuredprofile_service" id="featuredprofile_service" onchange="get_service_price(this);">
-                		<option value="R">Featured Profile</option>
-                	</select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="featuredprofile_service_duration" id="featuredprofile_service_duration" onchange="get_service_price(this);">
-			 ~foreach from=$duration_arr key=k1 item=v1`
-                                ~if $k1 eq 'R'`
-	                                ~foreach from=$v1 key=k item=v`
-        	        	                <option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
-                	                ~/foreach`
-                                ~/if`
-                        ~/foreach`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="featuredprofile_service_price" id="featuredprofile_service_price" disabled size="8"></td>
-	</tr>	
-	<!-- New JS Exclusive service added -->
-        <tr>
-                <td class="label">
-                        <input type="checkbox" name="chk_JSExclusive_service" id="chk_JSExclusive_service" value="Y" onchange="get_service_price(this);" onclick="disableMembershipSelection('chk_JSExclusive_service','chk_membership_service');">
-                </td>
-                <td class="fieldsnew">
-                        <select name="JSExclusive_service" id="JSExclusive_service" onchange="get_service_price(this);">
-                                <option value="X">JS Exclusive</option>
-                        </select>
-                </td>
-                <td class="fieldsnew">
-                        <select name="JSExclusive_service_duration" id="JSExclusive_service_duration" onchange="get_service_price(this);">
-                         ~foreach from=$duration_arr key=k1 item=v1`
-                                ~if $k1 eq 'X'`
-                                        ~foreach from=$v1 key=k item=v`
-                                                <option value="~$k`" ~if $duration_sel eq $v` selected ~/if`>~$v`</option>
-                                        ~/foreach`
-                                ~/if`
-                        ~/foreach`
-                        </select>
-                </td>
-                <td class="fieldsnew"><input type="text" name="JSExclusive_service_price" id="JSExclusive_service_price" disabled size="8"></td>
-        </tr>   
-	<!--  New service added Ends -->
-	<tr>
-		<td class="label" colspan="2">Total (Including tax, if currency type is Rupees)</td>
-		<td class="fieldsnew">&nbsp;</td>
-		<td class="fieldsnew"><input type="text" name="total_price" id="total_price" value="" size="8" disabled></td>
-	</tr>
-</table>
-<br>
-<table cellpadding="4" cellspacing="4" width="80%" align="center">
-	<tr>
-                <td colspan="2" align="center" class="formhead"><b>Sale Details</b></td>
-        </tr>
-        <tr>
-                <td class="label">
-			~if $CHECK_WALKIN eq "Y"`
-				<font color="red">Walk In*</font>
-			~else`
-				Walk In*
-			~/if`
-		</td>
-                <td class="fieldsnew">
-                        <select name="walkin">
-                                <option value="">Select</option>
-				<option value="ONLINE" ~if $walkin eq "ONLINE"` selected ~/if`>ONLINE</option>
-            			<option value="OFFLINE" ~if $walkin eq "OFFLINE"` selected ~/if`>OFFLINE</option>
-				<option value="ARAMEX" ~if $walkin eq "ARAMEX"` selected ~/if`>ARAMEX</option>
-		                ~$walkin_arr`
-                        </select>
-                </td>
-	</tr>
-	<tr>
-                <td class="label">
-			~if $CHECK_DISCOUNT eq "Y"`
-				<font color=red>Discount</font>
-			~else`
-				Discount
-			~/if`
-		</td>
-                <td class="fieldsnew">
-			<input type="text" name="discount" value="~$discount`" onkeyup="return validate_discount();"/>
-			&nbsp;OR
-                        <input type="text" name="disc_perc" value="" size="6" onkeyup="return validate_discount_perc();" />
-                        &nbsp;<b>%</b>
-		</td>
-        </tr>
-	~if !$renew`
-		<tr>
-			<td class="label">
-				~if $CHECK_VOUCHER_DISCOUNT eq "Y"`
-					<font color=red>Voucher Discount Code(if any)</font>
-				~else`
-					Voucher Discount Code(if any)
-				~/if`
-				<div id="code_status" class="fieldsnew"></div>
-			</td>
-			<td class="fieldsnew">
-				<input type="text" name="voucher_discount_code" value="~$voucher_discount_code`">
-				&nbsp;&nbsp;<input type="button" name="check_voucher_discount" value="Check Code" class="buttons1" onClick="check_voucher_discount_code();">
-			</td>
-		</tr>
-	~/if`
-        <tr>
-                <td class="label">
-			~if $CHECK_DISCOUNT_TYPE eq "Y"`
-				<font color=red>Discount Type</font>
-			~else`
-				Discount Type
-			~/if`
-		</td>
-                <td class="fieldsnew">
-                        <select name="discount_type1">
-				<option value="">Select</option>
-				~section name=next loop=$discount_type`
-                                <option value="~$discount_type[next].value`" ~if $discount_type1 eq $discount_type[next].value` selected ~/if`>~$discount_type[next].dtype`</option>
-				~/section`
-                        </select>
-                </td>
-	</tr>
-	<tr>
-                <td class="label">
-			~if $CHECK_REASON eq "Y"`
-				<font color=red>Reason</font>
-			~else`
-				Reason
-			~/if`
-		</td>
-                <td class="fieldsnew">
-			<input type="text" name="reason" value="~$reason`" />
-		</td>
-        </tr>
-	<tr>
-                <td class="label">Total Payable amount(after discount, if any)</td>
-                <td class="fieldsnew">
-                        <input type="text" size="10" name="tobepaid" value="" disabled />
-                </td>
-        </tr>
-	<tr>
-                <td align="center" colspan="2"><input type="submit" name="pg1_submit" value="Next >>" class="buttons1" onclick="return verify_page();"/></td>
-	</tr>
-</table>
-<input type="hidden" name="username" value="~$username`">
-<input type="hidden" name="profileid" value="~$pid`">
-<input type="hidden" name="cid" value="~$cid`">
-<input type="hidden" name="user" value="~$user`">
-<input type="hidden" name="source" value="~$source`">
-<input type="hidden" name="crm_id" value="~$crm_id`">
-<input type="hidden" name="array1" value="~$myArray`">
-<input type="hidden" name="array2" value="~$myArray_dol`">
-<input type="hidden" name="criteria" value="~$criteria`">
-<input type="hidden" name="phrase" value="~$phrase`">
-<input type="hidden" name="offline_billing" value="~$offline_billing`">
-~if $renew`
-<input type="hidden" name="renew" value="~$renew`">
-<input type="hidden" name="email" value="~$email`">
-<input type="hidden" name="sname" value="~$sname`">
-<input type="hidden" name="addon_services_lastbill" value="~$addon_services_lastbill`">
-<input type="hidden" name="expiry_dt" value="~$expiry_dt`">
-<input type="hidden" name="BOLD_LISTING_SELECTED" value="~$BOLD_LISTING_SELECTED`">
-<input type="hidden" name="HOROSCOPE_SELECTED" value="~$HOROSCOPE_SELECTED`">
-<input type="hidden" name="KUNDALI_SELECTED" value="~$KUNDALI_SELECTED`">
-<input type="hidden" name="MATRI_PROFILE_SELECTED" value="~$MATRI_PROFILE_SELECTED`">
-<input type="hidden" name="ASTRO_COMPATIBILITY_SELECTED" value="~$ASTRO_COMPATIBILITY_SELECTED`">
-~/if`
-</form>
-</body>
-</html>
+			</form>
+		</body>
+		<script type="text/javascript" language="Javascript" src="~JsConstants::$jquery`"></script>
+		<script type="text/javascript">
+			function disableF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); };
+			// To disable f5
+			/* jQuery < 1.7 */
+			$(document).bind("keydown", disableF5);
+			/* OR jQuery >= 1.7 */
+			$(document).on("keydown", disableF5);
+		</script>
+	</html>

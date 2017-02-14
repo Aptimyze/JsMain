@@ -1,3 +1,5 @@
+
+~assign var=showKundliList value= $sf_request->getParameter('showKundliList')`
 <div >
 	<div id="outerHamDiv" class="fullwid outerdiv" >
     	
@@ -7,8 +9,9 @@
 			
 		<div id="mainHamDiv" class="wid76p" style="float:left;">
 		
+
 			
-			<div id="newHamlist"class="hamlist hampad1" > 
+			<div id="newHamlist" class="hamlist hampad1" > 
                 		 <!--start:top header hamburger-->
           <div id="HamMenu" class="fontlig padHamburger">
             <div class="fl fullwid pt7">
@@ -81,7 +84,7 @@
                 <div class="brdr9_ham pt20">
                   <ul class="fontlig">
                   <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li>
-                    <li><a href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px;">Home</a></li>
+                    <li><a href="/" bind-slide=1 onclick='trackJsEventGA("jsms","homeClick", "", "");' class="white" style="font-size: 17px;">Home</a></li>
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
                     <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li>
                     <li><a href="/search/MobSaveSearch" bind-slide=1 class="white">Saved Searches <span class="dispibl padl10 opa70 f12">~$savedSearchCount`</span></a></li>
@@ -94,17 +97,22 @@
                     <li class="white fb1 ham_opa fontrobbold">My Matches</li>
                     
                     <li><a href="/search/perform?justJoinedMatches=1" bind-slide=1 class="white">Just Joined Matches ~if $profileMemcacheObj->get('JUST_JOINED_MATCHES')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('JUST_JOINED_MATCHES')`</span> ~/if`</a></li>
-                    <li><a href="/search/verifiedMatches" bind-slide=1 class="white">Matches verified by Visit </a></li>
+                    <li><a href="/search/verifiedMatches" bind-slide=1 class="white">Verified Matches </a></li>
                     
-                    <li><a href="/profile/contacts_made_received.php?page=matches&filter=R" bind-slide=1 class="white">Match Alerts ~if $profileMemcacheObj->get('MATCHALERT_TOTAL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MATCHALERT_TOTAL')`</span> ~/if`</a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=matches&filter=R" bind-slide=1 class="white">Daily Recommendations ~if $profileMemcacheObj->get('MATCHALERT_TOTAL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MATCHALERT_TOTAL')`</span> ~/if`</a></li>
                     
-                    <li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">My Matches </a></li>
+                    <li><a href="/search/perform?partnermatches=1" bind-slide=1 class="white">Desired Partner Matches </a></li>
+                    
+                     ~if $showKundliList eq '1'`
+                    <li><a href="/search/perform?kundlialerts=1" bind-slide=1 class="white">Kundli Matches <span class ="dispibl padl10 f12 white opa50">New</span></a></li>             
+                    ~/if`
                     
                     <li><a href="/search/perform?twowaymatch=1" bind-slide=1 class="white">Mutual Matches</a></li>
                     
                     <li><a href="/search/perform?reverseDpp=1" bind-slide=1 class="white">Members Looking For Me</a></li>
+                   
                     
-                    <li><a href="/profile/contacts_made_received.php?page=visitors&filter=R" bind-slide=1 class="white">Profile Visitors ~if $profileMemcacheObj->get('VISITOR_ALERT')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('VISITOR_ALERT')`</span> ~/if`</a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=visitors&filter=R&matchedOrAll=A" bind-slide=1 class="white">Profile Visitors ~if $profileMemcacheObj->get('VISITORS_ALL')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('VISITORS_ALL')`</span> ~/if`</a></li>
                     
                    <!-- <li><a href="#" bind-slide=1 class="white">Kundli Matches</a></li>-->
                     
@@ -117,7 +125,7 @@
                   <ul class="fontlig">
                     <li class="white fb1 ham_opa fontrobbold">My Contacts</li>
                     
-                    <li><a href="/profile/contacts_made_received.php?page=eoi&filter=R" bind-slide=1 class="white">Interests Pending ~if $profileMemcacheObj->get('AWAITING_RESPONSE')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('AWAITING_RESPONSE')`</span> ~/if`</a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=eoi&filter=R" bind-slide=1 class="white">Interests Received ~if $profileMemcacheObj->get('AWAITING_RESPONSE')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('AWAITING_RESPONSE')`</span> ~/if`</a></li>
                     
                    <!-- <li><a href="#" bind-slide=1 class="white">Filtered Interests </a></li>-->
                     <li><a href="/profile/contacts_made_received.php?page=filtered_eoi&filter=R" bind-slide=1 class="white">Filtered Interests ~if $profileMemcacheObj->get('FILTERED')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('FILTERED')`</span> ~/if`</a></li>
@@ -126,13 +134,13 @@
                     <li><a href="/profile/contacts_made_received.php?page=accept&filter=R" bind-slide=1 class="white">All Acceptances ~if $profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('ACC_ME')+$profileMemcacheObj->get('ACC_BY_ME')`</span> ~/if`</a></li>
                     
                    <!-- <li><a href="#" bind-slide=1 class="white">Contacts Viewed</a></li>-->
-                    <li><a href="/profile/contacts_made_received.php?page=phonebook_contacts_viewed&filter=M" bind-slide=1 class="white">Phonebook  <span class ="dispibl padl10 f12 white opa50">New</span></a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=phonebook_contacts_viewed&filter=M" bind-slide=1 class="white">Phonebook</a></li>
                     
-                    <li><a href="/profile/contacts_made_received.php?page=contact_viewers" bind-slide=1 class="white">Who Viewed My Contacts  <span class ="dispibl padl10 f12 white opa50">New</span></a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=contact_viewers" bind-slide=1 class="white">Who Viewed My Contacts</a></li>
                     
 
 
-                    <li><a href="/profile/contacts_made_received.php?page=favorite" bind-slide=1 class="white">Shortlisted Members ~if $profileMemcacheObj->get('BOOKMARK')` <span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('BOOKMARK')`</span>~/if`</a></li>
+                    <li><a href="/profile/contacts_made_received.php?page=favorite" bind-slide=1 class="white">Shortlisted Profiles ~if $profileMemcacheObj->get('BOOKMARK')` <span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('BOOKMARK')`</span>~/if`</a></li>
                     
                     <li><a href="/profile/contacts_made_received.php?page=messages" bind-slide=1 class="white">Messages</a></li>
                     <!--~if $profileMemcacheObj->get('MESSAGE_NEW')`<span class="dispibl padl10 opa70 f12">~$profileMemcacheObj->get('MESSAGE_NEW')`</span> ~/if`</a></li>-->
@@ -217,7 +225,7 @@
                 <div class=" pt20  hampad1">
                   <ul class="fontlig">
                   <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px">हिंदी में</a></li>
-                    <li><a href="/profile/mainmenu.php" bind-slide=1 class="white" style="font-size: 17px">Home</a></li>
+                    <li><a href="/" bind-slide=1 class="white" style="font-size: 17px">Home</a></li>
                     <li><a href="/search/topSearchBand?isMobile=Y" bind-slide=1 class="white">Search</a></li>
                     <li><a href="/search/searchByProfileId" bind-slide=1 class="white">Search by Profile ID</a></li>
                      <li><a href="/browse-matrimony-profiles-by-community-jeevansathi" bind-slide=1 class="white">Browse by Community</a></li>

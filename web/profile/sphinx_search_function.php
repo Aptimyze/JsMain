@@ -487,6 +487,7 @@ echo "<br><br>";
 	}
 	// do this in logged out case also
 	//if(mysql_num_rows($result)>0)
+		$resultprofiles = implode(",",array_diff(explode(",",$resultprofiles), [0]));
 	if($resultprofiles)
 	{
 		$sql_astro="SELECT PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL FROM newjs.ASTRO_DETAILS WHERE PROFILEID IN ($resultprofiles)";

@@ -99,7 +99,7 @@ class AlertManager
                    	$this->objVars['settingArray']["PM"][2] = $row['PROMO_MAILS'];
                     $this->objVars['settingArray']["MA"][2] = $row['PERSONAL_MATCHES'];
                     
-                    $jprofileAlertObj = new newjs_JPROFILE_ALERTS();
+                    $jprofileAlertObj = new JprofileAlertsCache();
                     $row2 = $jprofileAlertObj->getAllSubscriptions($this->profileid);
                     if(empty($row2)){
                     	$jprofileAlertObj->insertNewRow($this->profileid);
@@ -140,7 +140,7 @@ class AlertManager
                     TrackEditUnsubscribe($data["PROFILEID"], 'E');
                 }
                 $jprofileObj = new JPROFILE();
-                $jprofileAlertObj = new newjs_JPROFILE_ALERTS();
+                $jprofileAlertObj = new JprofileAlertsCache();
                 $jprofileAlertLogObj = new newjs_JPROFILE_ALERTS_LOG();
                 $visitAlertOptObj = new visitoralert_VISITOR_ALERT_OPTION('shard1_master');
                 $today = date("Y-m-d");
@@ -354,7 +354,7 @@ class AlertManager
                                 $dup_fields[] = "email";
                                 duplication_fields_insertion($dup_fields, $this->profileid);
                                 $expireDt = date("Y-m-d H:i:s");
-                                $jsadminAutoExpObj = new jsadmin_AUTO_EXPIRY();
+                                $jsadminAutoExpObj = new ProfileAUTO_EXPIRY();
                                 $jsadminAutoExpObj->replace($this->profileid, 'E', $expireDt);
                                 $newjsContactArchiveObj = new NEWJS_CONTACT_ARCHIVE();
                                 $newjsContactArchiveInfoObj = new CONTACT_ARCHIVE_INFO();
@@ -371,7 +371,7 @@ class AlertManager
                                     
                                     // Chat Code here
                                     $userData = $jprofileObj->get($this->profileid, 'PROFILEID', "USERNAME");
-                                    send_chat_request_email($this->profileid, $this->objVars['emailadd'], $userData['USERNAME']);
+                                    //send_chat_request_email($this->profileid, $this->objVars['emailadd'], $userData['USERNAME']);
                                     $botUserInfoObj = new bot_jeevansathi_user_info();
                                     $botUserOnlineObj = new bot_jeevansathi_user_online();
                                     $botGmailObj = new bot_jeevansathi_gmail_invites();

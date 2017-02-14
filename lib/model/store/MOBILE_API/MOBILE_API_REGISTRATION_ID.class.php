@@ -63,13 +63,12 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 		$resDelete->bindValue(":REG_ID",$regid,constant('PDO::PARAM_'.$this->{'REG_ID_BIND_TYPE'}));
 		$resDelete->execute();
 	}
-        public function updateNotificationStatus($RegistrationId,$profileid,$notificationStatus)
+        public function updateNotificationStatus($profileid,$notificationStatus)
         {
                 if(!in_array($notificationStatus,array("Y","N")))
-		     throw new jsException("","VALUE provided for notification status is wrong for update");
-                $sqlUpdate = "UPDATE  MOBILE_API.REGISTRATION_ID SET NOTIFICATION_STATUS =:NOTIFICATION_STATUS,`TIME`=now() WHERE CONVERT(`REG_ID` USING utf8 )=:REG_ID AND PROFILEID=:PROFILEID";
+		     throw new jsException("","Error in value for update in notification status");
+		$sqlUpdate = "UPDATE  MOBILE_API.REGISTRATION_ID SET NOTIFICATION_STATUS =:NOTIFICATION_STATUS,`TIME`=now() WHERE PROFILEID=:PROFILEID";
                 $resUpdate = $this->db->prepare($sqlUpdate);
-                $resUpdate->bindValue(":REG_ID",$RegistrationId,constant('PDO::PARAM_'.$this->{'REG_ID_BIND_TYPE'}));
                 $resUpdate->bindValue(":PROFILEID",$profileid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
                 $resUpdate->bindValue(":NOTIFICATION_STATUS",$notificationStatus,constant('PDO::PARAM_'.$this->{'NOTIFICATION_STATUS_BIND_TYPE'}));
                 $resUpdate->execute();
@@ -209,6 +208,25 @@ class MOBILE_API_REGISTRATION_ID extends TABLE{
 			$pid =$rowSelectDetail['PROFILEID'];
                 return $pid;
         }
+        
+        public function checkNotificationSubscriptionStatus($profileid){
+        	try{
+        		if($profileid){
+        			$sql = "SELECT * from MOBILE_API.REGISTRATION_ID WHERE PROFILEID = :PROFILEID ORDER BY TIME DESC LIMIT 1";
+	        		$res = $this->db->prepare($sql);
+        			$res->bindValue(":PROFILEID",$profileid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
+	        		$res->execute();
+	        		while($row = $res->fetch(PDO::FETCH_ASSOC)){
+	        			$result["notificationStatus"]=$row['NOTIFICATION_STATUS'];
+	        		}
+	        		return $result;
+	        	}
+			}
+			catch(PDOException $e)
+			{
+				throw new jsException($e);
+			}
+		}
 
 }
 ?>

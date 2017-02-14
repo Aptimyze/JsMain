@@ -9,11 +9,7 @@
 
 ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
     <!--start:help widget-->
-    ~if $module eq 'help'`
-        ~include_component('common', 'helpWidget', ['hideHelpMenu'=>'true'])`
-    ~else`
-        ~include_component('common', 'helpWidget')`
-    ~/if`
+    ~include_component('common', 'helpWidget', ['hideHelpMenu'=>'true'])`
     <!--end:help widget-->
 ~/if`
 <!--start:banner-->
@@ -51,8 +47,8 @@
             </div>
             <div class="fr socialicons">
                 <ul class="mt8">
-                    <li><a itemprop="sameAs" href="http://www.facebook.com/jeevansathi" target="_blank" class="disp_b headfootsprtie facebooksmall"></a></li>
-                    <li><a itemprop="sameAs" href="http://www.twitter.com/jeevansathi_com" target="_blank" class="disp_b headfootsprtie twittersmall"></a></li>
+                    <li><a itemprop="sameAs" href="https://www.facebook.com/jeevansathi" target="_blank" class="disp_b headfootsprtie facebooksmall"></a></li>
+                    <li><a itemprop="sameAs" href="https://www.twitter.com/jeevansathi_com" target="_blank" class="disp_b headfootsprtie twittersmall"></a></li>
                     <li><a itemprop="sameAs" href="https://www.linkedin.com/company/info-edge-india-ltd" target="_blank" class="disp_b headfootsprtie linkedinsmall"></a></li>
                     <li><a itemprop="sameAs" href="https://plus.google.com/117800057348280296221" target="_blank" class="disp_b headfootsprtie gplussmall"></a></li>
                 </ul>
@@ -127,8 +123,8 @@
                 <!--start:follow us-->
                 <div class="fl wid265">
                     <div class="f16 fontreg pb10">Follow us </div>
-                    <a itemprop="sameAs" href="http://www.facebook.com/jeevansathi" target="_blank" class="footericon"><i class="headfootsprtie facebooksmall"></i></a>
-                    <a itemprop="sameAs" href="http://www.twitter.com/jeevansathi_com" target="_blank" class="footericon"><i class="headfootsprtie twittersmall"></i></a>
+                    <a itemprop="sameAs" href="https://www.facebook.com/jeevansathi" target="_blank" class="footericon"><i class="headfootsprtie facebooksmall"></i></a>
+                    <a itemprop="sameAs" href="https://www.twitter.com/jeevansathi_com" target="_blank" class="footericon"><i class="headfootsprtie twittersmall"></i></a>
                     <a itemprop="sameAs" href="https://www.linkedin.com/company/info-edge-india-ltd" target="_blank" class="footericon"><i class="headfootsprtie linkedinsmall"></i></a>
                     <a itemprop="sameAs" href="https://plus.google.com/117800057348280296221" target="_blank" class="footericon"><i class="headfootsprtie gplussmall"></i></a>
                 </div>
@@ -156,7 +152,7 @@
                             <div class="basic">
                                 <ul>
                                     <li class="pl17"><a href="http://www.99acres.com" target="_blank" title="99acres.com"><i class="headfootsprtie acre"></i></a></li>
-                                    <li class="pl17"><a href="http://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
+                                    <li class="pl17"><a href="https://www.naukri.com" target="_blank" title="naukri.com"><i class="headfootsprtie nc"></i></a></li>
                                     <li class="pl17"><a href="http://www.naukrigulf.com" target="_blank" title="naukrigulf"><i class="headfootsprtie ng"></i></a></li>
                                     <li class="pl30"><a href="http://www.shiksha.com" target="_blank" title="shiksha"><i class="headfootsprtie shiksha"></i></a></li>
                                 </ul>
@@ -165,8 +161,8 @@
                                 <div>
                                     <ul>
                                         <li class="pl17"><a href="http://www.mydala.com" target="_blank" title="mydala"><i class="headfootsprtie mydala"></i></a></li>
-                                        <li class="pl30"><a href="http://www.policybazar.com" target="_blank" title="policybazar"><i class="headfootsprtie pb"></i></a></li>
-                                        <li class="pl40"><a href="http://www.zomato.com" target="_blank" title="zomato"><i class="headfootsprtie zomato"></i></a></li>
+                                        <li class="pl30"><a href="https://www.policybazar.com" target="_blank" title="policybazar"><i class="headfootsprtie pb"></i></a></li>
+                                        <li class="pl40"><a href="https://www.zomato.com" target="_blank" title="zomato"><i class="headfootsprtie zomato"></i></a></li>
                                         <li class="pl20"><a href="http://www.meritnation.com" target="_blank" title="meritnation"><i class="headfootsprtie meritn"></i></a></li>
                                     </ul>
                                 </div>
@@ -192,7 +188,7 @@
 <!--end:footer-->
 <script type="text/javascript">
     $(window).load(function(){
-        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index')`
+        ~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
             ~if $profileid`
                 var udObj = '~CommonUtility::getFreshDeskDetails($profileid)`';
                 var userDetails = $.parseJSON(udObj);
@@ -212,7 +208,28 @@
         ~/if`
     });
 </script>
-~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index')`
+<!-- Begin Inspectlet Embed Code -->
+<script type="text/javascript" id="inspectletjs" > 
+window.__insp = window.__insp || [];
+__insp.push(['wid', 1937430883]);
+(function () {
+    function ldinsp() {
+        if (typeof window.__inspld != "undefined") return;
+        window.__inspld = 1;
+        var insp = document.createElement('script');
+        insp.type = 'text/javascript';
+        insp.async = true;
+        insp.id = "inspsync";
+        insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(insp, x);
+    };
+    setTimeout(ldinsp, 500);
+    document.readyState != "complete" ? (window.attachEvent ? window.attachEvent('onload', ldinsp) : window.addEventListener('load', ldinsp, false)) : ldinsp();
+})(); 
+</script>
+<!-- End Inspectlet Embed Code -->
+~if $module eq 'register' || $module eq 'membership' || $action eq 'phoneVerificationPcDisplay' || ($module eq 'contactus' && $action eq 'index') || ($module eq 'help' && $action eq 'index')`
     ~if !($profileid eq '8298074' || $profileid eq '13038359' || $profileid eq '12970375')`
         ~include_partial('global/freshDesk')`
     ~/if`

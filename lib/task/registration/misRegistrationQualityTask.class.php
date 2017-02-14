@@ -22,39 +22,84 @@ EOF;
 
   protected function execute($arguments = array(), $options = array()) {
     error_reporting(0);
-    $preDefArray = array('total_reg' => 0, 'F' => 0, 'FMV' => 0, 'FMVCC' => 0, 'M' => 0, 'MMV' => 0, 'MMVCC' => 0, 'screened_SIC' => 0);
-    
+    $preDefArray = array('total_reg' => 0, 'F' => 0, 'FMV' => 0, 'FMVCC' => 0, 'M' => 0, 'MMV' => 0, 'MMVCC' => 0, 'screened_SIC' => 0,'SCREENED_CC' => 0,'OTHERS_COMMUNITY' => 0);
+    $flag = 1;
     $jprofileObj = new JPROFILE('newjs_slave');
-    $registerDate = date('Y-m-d', strtotime('- ' . $this->screenDate . ' day')) . " 00:00:00";
-    $profiles = $jprofileObj->getProfileQualityRegistationData($registerDate);
-    
+    while($flag)
+    {
+      $entryDt = $jprofileObj->getLatestEntryDate();
+      if($entryDt["ENTRY_DT"] == date("Y-m-d"))
+      {
+        $flag = 0;
+      }
+      sleep(60);
+    }
+    $registerDate = date('Y-m-d', strtotime('- ' . $this->screenDate . ' day'));
+    $profiles = $jprofileObj->getProfileQualityRegistationData($registerDate," 00:00:00");
+   
+    $profile_ids = array();
+
     foreach ($profiles as $profile) {
+      $profiles_entry_date = date("Y-m-d",strtotime($profile["ENTRY_DT"]));
+      if ( $registerDate == $profiles_entry_date) 
+      {
+        $profile_ids[] = $profile["PROFILEID"];
+      }  
+      $is_other_community = true;
       $regKey = date('d', strtotime($profile['ENTRY_DT']));
       if (!$profile['SOURCE']) {
         $sourceGroupId = 'BlankSourceGroup';
       } else {
         $sourceGroupId = $profile["SOURCE"];
       }
-      if (!array_key_exists($sourceGroupId, $this->registrationArray[$regKey])) {
-        $this->registrationArray[$regKey][$sourceGroupId] = $preDefArray;
-        $this->registrationArray[$regKey][$sourceGroupId]['date'] = date('Y-m-d', strtotime($profile['ENTRY_DT']));
+      if ($profile['SOURCECITY'] == '' || is_null($profile['SOURCECITY'])) {
+        $cityRES = 'BlankCITY';
+      } else {
+        $cityRES = $profile["SOURCECITY"];
       }
       
-      $this->registrationArray[$regKey][$sourceGroupId]['total_reg'] ++;
-      if (in_array($profile['MTONGUE'], $this->SIC)){
-        $this->registrationArray[$regKey][$sourceGroupId]['screened_SIC'] ++;
+      if (!array_key_exists($sourceGroupId, $this->registrationArray[$regKey])) {
+              $this->registrationArray[$regKey][$sourceGroupId] =array();
       }
+      if (!array_key_exists($cityRES, $this->registrationArray[$regKey][$sourceGroupId])) {
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES] = $preDefArray;
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['date'] = date('Y-m-d', strtotime($profile['ENTRY_DT']));
+      }
+      
+      
+      $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['total_reg'] ++;
+      if (in_array($profile['MTONGUE'], $this->SIC)){
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['screened_SIC'] ++;
+        $is_other_community = false;
+      }
+      $ccStatus = $this->verifyCC($profile['MTONGUE']);
+
       if (($profile['GENDER'] == 'F' && $profile['AGE'] >= 22) || ($profile['GENDER'] == 'M' && $profile['AGE'] >= 26)) {
-        $this->registrationArray[$regKey][$sourceGroupId][$profile['GENDER']] ++;
+        $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER']] ++;
         $mobVerified = $this->verifyMobile($profile['MV']);
         if($mobVerified == 1){
-          $this->registrationArray[$regKey][$sourceGroupId][$profile['GENDER'].'MV'] ++;
-          $this->registrationArray[$regKey][$sourceGroupId][$profile['GENDER'].'MVCC'] += $this->verifyCC($profile['MTONGUE']);
+          $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER'].'MV'] ++;
+          $this->registrationArray[$regKey][$sourceGroupId][$cityRES][$profile['GENDER'].'MVCC'] += $ccStatus;
         }
       }
-    }
+      if($ccStatus == 1){
+            $is_other_community = false;
+            $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['SCREENED_CC'] += $ccStatus;
+      }
+      
+      if ( $is_other_community )
+      {
+          $this->registrationArray[$regKey][$sourceGroupId][$cityRES]['OTHERS_COMMUNITY'] ++;
+      }
+      }
+      //print_r($this->registrationArray);die;
     $regQualityObj = new REGISTRATION_QUALITY();
     $regQualityObj->insertQualityRegistration($this->registrationArray);
+
+    $regQualityActivated = new REGISTER_REG_QUALITY_ACTIVATED();
+   
+    $regQualityActivated->insert($profile_ids,$registerDate); 
+
     $this->logSection('data inserted');
   }
   function verifyMobile($MV) {

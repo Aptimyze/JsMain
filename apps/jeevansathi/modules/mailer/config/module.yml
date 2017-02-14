@@ -1,3 +1,6 @@
 all:
   openrate:
     enable_login:  off
+  feedbackMatchAlertMailer:
+    enable_login:  off
+    

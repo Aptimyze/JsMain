@@ -31,7 +31,13 @@ class viewSimilarConfig
     													"religion"=>"DECORATED_RELIGION",
     													"featured"=>"FEATURED",
     													"verification_seal"=>"VERIFICATION_SEAL",
-    													"mstatus"=>"MSTATUS"
+    													"mstatus"=>"MSTATUS",
+    													"college"=>"COLLEGE",
+    													"pg_college"=>"PG_COLLEGE",
+    													"company_name"=>"COMPANY_NAME",
+    													"name_of_user"=>"NAME_OF_USER",
+    													"orig_username"=>"USERNAME",
+    													"gender"=>"GENDER"
     													); 
 
         public static function getFieldLabel($label,$value,$returnArr=''){

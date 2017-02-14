@@ -10,7 +10,6 @@ include("../crm/functions_inbound.php");
 include("../billing/comfunc_sums.php");
 
 $db = connect_misdb();
-$db2 = connect_master();
 
 //array for call source
 $call_source_arr = populate_call_source();

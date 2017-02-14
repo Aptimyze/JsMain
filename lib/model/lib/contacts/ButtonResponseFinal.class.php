@@ -73,6 +73,7 @@ Class ButtonResponseFinal
 				if($this->contactObj->getCount()>1)
 					$type="R";
 			}
+			$this->page["CHAT_GROUP"] = $type;
 			//echo "source=>".$source." channel=> ".$this->channel." viewer=> ".$viewer." type=>".$type;die;
 			$buttonsResponse = self::getButtons($source,$this->channel,$viewer,$type);
 			//print_r($buttonsResponse);die;
@@ -84,6 +85,7 @@ Class ButtonResponseFinal
 					$buttons[] = $this->getButtonsFinalResponse($val,$this->page,$this->loginProfile, $this->otherProfile);
 			}
 			$responseArray['buttons'] = $buttons;
+                        $responseArray['contactType'] = $type;
 			//print_r($responseArray);die;
 
 		}
@@ -365,7 +367,7 @@ Class ButtonResponseFinal
 		$buttons["secondary"] 	= $button->secondary;
 		$buttons['enable']		= $button->active=="true"?true:false;
 		$buttons['id'] 			= $button->TYPE;
-		$buttons["params"]		= $params['USERNAME'].",".$params["OTHER_PROFILEID"];
+		$buttons["params"]		= $params['USERNAME'].",".$params["OTHER_PROFILEID"].",".$params["PHOTO"]["url"].",".$params["CHAT_GROUP"];
 		$button = self::buttonMerge($buttons);
 		return $buttons;
 	}
@@ -616,6 +618,15 @@ Class ButtonResponseFinal
 		{
 			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
 			$button["label"]  = "Interest Sent";
+			$button["enable"]  = false;
+			$button['id'] 			= "INITIATE";
+			$buttons = self::buttonMerge($button);
+			return $buttons;
+		}
+		else if($this->contactObj->getTYPE() == ContactHandler::NOCONTACT && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
+		{
+			$button["iconid"] = IdToAppImagesMapping::UNDERSCREENING;
+			$button["label"]  = "Interest Saved";
 			$button["enable"]  = false;
 			$button['id'] 			= "INITIATE";
 			$buttons = self::buttonMerge($button);

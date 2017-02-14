@@ -84,5 +84,41 @@ class USERPLANE_USERS extends TABLE{
                         return '';
                 }
 	}
+
+	public function getNew($profileIdStr,$giveResultsInKey='0',$SearchParamtersObj='')
+	{
+		try 
+		{
+			if($SearchParamtersObj && $SearchParamtersObj->getGENDER()=='M' && $giveResultsInKey='spaceSeperator')
+			{
+				$table = "newjs.SEARCH_MALE";
+			}
+			elseif($SearchParamtersObj && $SearchParamtersObj->getGENDER()=='F' && $giveResultsInKey='spaceSeperator')
+			{
+				$table = "newjs.SEARCH_FEMALE";
+			}
+			if($table)
+			{
+				$sql = "select PROFILEID FROM $table where ";
+				$sql.="PROFILEID IN ($profileIdStr)";
+				$res = $this->db->prepare($sql);
+				$res->execute();
+				while($row = $res->fetch(PDO::FETCH_ASSOC))
+				{
+					$resultArr.=$row['PROFILEID']." ";
+				}
+			}
+			else
+			{
+				//LAVESH : return space seperator.
+			}
+			return $resultArr;
+		}
+		catch(PDOException $e)
+                {
+                        jsException::nonCriticalError("lib/model/store/userplane_USERS.class.php(2)-->.$sql".$e);
+                        return '';
+                }
+	}
 }
 ?>

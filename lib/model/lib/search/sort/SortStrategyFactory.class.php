@@ -39,6 +39,14 @@ class SortStrategyFactory
 			return new SortByKundliAlert($SearchParamtersObj,$loggedInProfileObj);
                 if($slogic == SearchSortTypesEnums::viewAttemptFlag) 
 			return new SortByViewAttempt($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::FullDppWithReverseFlag) 
+			return new SortByLoginWithReverseDpp($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByTrendsScore) 
+			return new SortByTrendsScore($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByLoginDate) 
+			return new SortByLoginDate($SearchParamtersObj,$loggedInProfileObj);
+                if($slogic == SearchSortTypesEnums::SortByVisitorsTimestamp) 
+			return new SortByVisitors($SearchParamtersObj,$loggedInProfileObj);
                 return new SortByDateStrategy($SearchParamtersObj,$loggedInProfileObj);
 	}
 }

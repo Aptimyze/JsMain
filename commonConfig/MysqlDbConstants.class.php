@@ -25,7 +25,7 @@ class MysqlDbConstants
 
 	/*dnc*/
 	public static $dnc         = array('HOST'=>'172.16.3.185', 'USER'=>'localSlave', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs');
-
+        public static $crmSlave    = array('HOST'=>'172.16.3.185', 'USER'=>'localSlave', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs');
 	/* view log */
 	public static $viewLog     = array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3308' , 'DEFAULT_DB'=>'newjs');
 	public static $viewLogSlave= array('HOST'=>'172.16.3.185', 'USER'=>'localSlave', 'PASS'=>'Km7Iv80l', 'PORT'=>'3308' , 'DEFAULT_DB'=>'newjs');
@@ -49,7 +49,6 @@ class MysqlDbConstants
 
 	/* alerts(match-alerts/mmm/kundli)*/
 	public static $alerts         = array('HOST'=>'172.16.3.185', 'USER'=>'alerts', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs','SOCKET'=>'');
-	public static $alertsMMM      = array('HOST'=>'172.16.3.185', 'USER'=>'alerts', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs','SOCKET'=>'');
 	
 	/* 99 Acres*/
 	public static $BMS_99      = array('HOST'=>'10.208.65.98', 'USER'=>'user', 'PASS'=>'CLDLRTa9', 'PORT'=>'3306' , 'DEFAULT_DB'=>'');
@@ -68,4 +67,17 @@ class MysqlDbConstants
 	public static $shard3Rep = array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3309' , 'DEFAULT_DB'=>'newjs');
   	public static $viewLogRep = array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3308' , 'DEFAULT_DB'=>'newjs');
 	
+	/*Restricting db privileges*/
+        public static $masterDDL=array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs');
+        public static $shard1DDL=array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3309' , 'DEFAULT_DB'=>'newjs');
+        public static $shard2DDL=array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs');
+        public static $shard3DDL=array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3307' , 'DEFAULT_DB'=>'newjs');              public static $viewSimilarDDL=array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3307' , 'DEFAULT_DB'=>'newjs');
+        public static $viewLogDDL=array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3307' , 'DEFAULT_DB'=>'newjs');
+        public static $alertsDDL=array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3307' , 'DEFAULT_DB'=>'newjs');
+	public static $shard1SlaveDDL=array('HOST'=>'172.16.3.185','USER'=>'localuser','PASS'=>'Km7Iv80l','PORT'=>'3309','DEFAULT_DB'=>'newjs');
+        public static $shard2SlaveDDL=array('HOST'=>'172.16.3.185','USER'=>'localuser','PASS'=>'Km7Iv80l','PORT'=>'3306','DEFAULT_DB'=>'newjs');
+        public static $shard3SlaveDDL=array('HOST'=>'172.16.3.185','USER'=>'localuser','PASS'=>'Km7Iv80l','PORT'=>'3307','DEFAULT_DB'=>'newjs');
+	/*end*/
+        public static $matchalertsSlave = array('HOST'=>'172.16.3.185', 'USER'=>'localuser', 'PASS'=>'Km7Iv80l', 'PORT'=>'3306' , 'DEFAULT_DB'=>'newjs');
+
 }

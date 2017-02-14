@@ -55,5 +55,23 @@ class MOBILE_API_BROWSER_NOTIFICATION_BACKUP extends TABLE
 		}
 	}
 
+        public function getDataCountForRange($startDate, $endDate)
+        {
+                try{
+                        $sql ="SELECT count(b.REG_ID) count, b.NOTIFICATION_KEY, b.SENT_TO_QUEUE, b.SENT_TO_CHANNEL,b_reg.CHANNEL FROM MOBILE_API.`BROWSER_NOTIFICATION_BACKUP` b, MOBILE_API.BROWSER_NOTIFICATION_REGISTRATION b_reg WHERE b.REG_ID=b_reg.REG_ID AND b.ENTRY_DT>=:START_DATE AND b.ENTRY_DT<=:END_DATE GROUP BY b.NOTIFICATION_KEY, b.SENT_TO_QUEUE, b.SENT_TO_CHANNEL,b_reg.CHANNEL";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":START_DATE",$startDate, PDO::PARAM_STR);
+                        $res->bindValue(":END_DATE",$endDate, PDO::PARAM_STR);
+                        $res->execute();
+                        while($row = $res->fetch(PDO::FETCH_ASSOC)){
+                                $rowArr[$row['NOTIFICATION_KEY']][$row['CHANNEL']][$row['SENT_TO_CHANNEL']][$row['SENT_TO_QUEUE']] =$row['count'];
+                        }
+                        return $rowArr;
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+        }
+
 }
 ?>

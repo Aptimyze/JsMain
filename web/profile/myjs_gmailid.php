@@ -3,7 +3,8 @@ include("connect.inc");
 include("registration_functions.inc");
 connect_db();
 $data=authenticated();
-
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
+include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 if($email || $submit)
 {
 	if($data["PROFILEID"])
@@ -87,10 +88,13 @@ $activated='X';
 				$res_add= mysql_query_decide($sql_add) or die(mysql_error_js());
 			 }
 			//Insert into autoexpiry table, to expire all autologin url coming before date
-			$expireDt=date("Y-m-d H:i:s");
-			$sqlExpire="replace into jsadmin.AUTO_EXPIRY set PROFILEID='$profileid',TYPE='E',DATE='$expireDt'";
-			mysql_query_decide($sqlExpire) or logError($errorMsg,"$sqlExpire","ShowErrTemplate");
-			//end
+                $expireDt=date("Y-m-d H:i:s");
+                $bRes = ProfileReplaceLib::getInstance()->replaceAUTOEXPIRY($profileid, 'E', $expireDt);
+                if(false === $bRes) {
+                    $sqlExpire="replace into jsadmin.AUTO_EXPIRY set PROFILEID='$profileid',TYPE='E',DATE='$expireDt'";
+                    logError($errorMsg,"$sqlExpire","ShowErrTemplate");
+                }
+                         //end
 
 		}
 		if(strstr($email,"@gmail"))
@@ -113,11 +117,14 @@ $activated='X';
 			$sql_bot_entry="insert ignore into bot_jeevansathi.user_info(`gmail_ID`,`on_off_flag`,`show_in_search`,`profileID`,`jeevansathi_ID`) values('$Email',0,1,'$profileid','$username')";
 			mysql_query_decide($sql_bot_entry) or logError($sql);
 
-			send_chat_request_email($profileid,$Email,$username);
+			//send_chat_request_email($profileid,$Email,$username);
 
 		}
+		$msg = print_r($_SERVER,true);
+		mail("kunal.test02@gmail.com","web/profile/myjs_gmailid.php in USE",$msg);
 		$sql="UPDATE JPROFILE SET EMAIL='$email',MOD_DT=NOW() WHERE PROFILEID='$data[PROFILEID]'  AND activatedKey=1";
 		mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
+		JProfileUpdateLib::getInstance()->removeCache($data[PROFILEID]);
 		echo "1";
 	}
 	else

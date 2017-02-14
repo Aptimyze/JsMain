@@ -49,7 +49,7 @@ class MembersLookingForMe extends SearchParamters
 		if($searchId)
 		{
 	                $paramArr['ID'] = $searchId;
-                	$SEARCHQUERYobj = new SEARCHQUERY;
+                	$SEARCHQUERYobj = new SEARCHQUERY(SearchConfig::getSearchDb());
 	                $arr = $SEARCHQUERYobj->get($paramArr,SearchConfig::$possibleSearchParamters);
 
         	        if(is_array($arr[0]))
@@ -76,13 +76,33 @@ class MembersLookingForMe extends SearchParamters
 					$value = $this->loggedInProfileObj->getCOMPLEXION();
 				elseif($v=="PARTNER_OCC")
 					$value = $this->loggedInProfileObj->getOCCUPATION();
-				elseif($v=="PARTNER_ELEVEL_NEW")
+				elseif($v=="PARTNER_MANGLIK"){
+                                        if(!$this->loggedInProfileObj->getMANGLIK()){
+                                                $value = 'N';
+                                        }else{
+                                                $value = $this->loggedInProfileObj->getMANGLIK();
+                                        }
+                                }elseif($v=="PARTNER_ELEVEL_NEW"){
 					$value = $this->loggedInProfileObj->getEDU_LEVEL_NEW();
-				elseif($v=="PARTNER_LAGE" || $v=="PARTNER_HAGE")
+                                        $ugPg = $this->loggedInProfileObj->getEducationDetail(1,SearchConfig::getSearchDb());
+                                        if(!empty($ugPg)){
+                                                if($ugPg["PG_DEGREE"])
+                                                      $value .= " "  .$ugPg["PG_DEGREE"];
+                                                if($ugPg["UG_DEGREE"])
+                                                      $value .= " "  .$ugPg["UG_DEGREE"];
+                                        }
+                                }elseif($v=="PARTNER_LAGE" || $v=="PARTNER_HAGE")
 					$value = $this->loggedInProfileObj->getAGE();
 				elseif($v=="PARTNER_LHEIGHT" || $v=="PARTNER_HHEIGHT")
 					$value = $this->loggedInProfileObj->getHEIGHT();
-				else
+				elseif($v=="PARTNER_INCOME"){
+                                        eval('$value = $this->loggedInProfileObj->get'.substr($v,8).'();');
+                                        $imObj = new IncomeMapping;
+                                        $incomeArray = $imObj->getLowerIncomes($value);
+                                        $incomeArray = $imObj->removeNoIncome($incomeArray);
+                                        unset($imObj);
+                                        $value = implode(" ",$incomeArray);
+                                }else
 					eval('$value = $this->loggedInProfileObj->get'.substr($v,8).'();');
 			
 				if($value)

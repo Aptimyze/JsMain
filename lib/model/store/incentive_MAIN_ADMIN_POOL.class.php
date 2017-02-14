@@ -28,6 +28,27 @@ class incentive_MAIN_ADMIN_POOL extends TABLE
                         throw new jsException($e);
                 }
         }
+        function getEligibileProfile($profileid,$scoreMin,$scoreMax)
+        {
+                try
+                {
+                        $sql="select PROFILEID FROM incentive.MAIN_ADMIN_POOL where PROFILEID=:PROFILEID AND ANALYTIC_SCORE>=:ANALYTIC_SCORE1 AND ANALYTIC_SCORE<=:ANALYTIC_SCORE2";
+                        $prep=$this->db->prepare($sql);
+                        $prep->bindValue(":PROFILEID", $profileid, PDO::PARAM_STR);
+			$prep->bindValue(":ANALYTIC_SCORE1", $scoreMin, PDO::PARAM_INT);
+			$prep->bindValue(":ANALYTIC_SCORE2", $scoreMax, PDO::PARAM_INT);
+                        $prep->execute();
+                        $res=$prep->fetch(PDO::FETCH_ASSOC);
+                        if($res)
+                        	return 1;
+			return;
+                }
+                catch(PDOException $e)
+                        {
+                                /*** echo the sql statement and error message ***/
+                                throw new jsException($e);
+                        }
+        }
 	 public function getArray($valueArray="",$excludeArray="",$greaterThanArray="",$fields="PROFILEID")
         {
                 if(!$valueArray && !$excludeArray  && !$greaterThanArray)

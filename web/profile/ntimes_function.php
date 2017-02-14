@@ -1,9 +1,11 @@
 <?php
 	function ntimes_insert($jprofile_profileid, $affiliate_id)
-	{//function not in use
-	         mail("kunal.test02@gmail.com","ntimes_insert() in USE",print_r($_SERVER,true));
-		$sql_ntimes_insert = "INSERT IGNORE INTO newjs.JP_NTIMES(PROFILEID,NTIMES) SELECT $jprofile_profileid, NTIMES FROM newjs.JPROFILE_AFFILIATE WHERE ID='$affiliate_id'";
-		mysql_query_decide($sql_ntimes_insert) or logError("Due to some temporary problem your request could not be processed. Please try after some time.".mysql_error_js(),$sql_ntimes_insert,"ShowErrTemplate");
+	{
+		//function not in use
+		mail("kunal.test02@gmail.com","ntimes_insert() in USE",print_r($_SERVER,true));
+
+		/*$sql_ntimes_insert = "INSERT IGNORE INTO newjs.JP_NTIMES(PROFILEID,NTIMES) SELECT $jprofile_profileid, NTIMES FROM newjs.JPROFILE_AFFILIATE WHERE ID='$affiliate_id'";
+		mysql_query_decide($sql_ntimes_insert) or logError("Due to some temporary problem your request could not be processed. Please try after some time.".mysql_error_js(),$sql_ntimes_insert,"ShowErrTemplate");*/
 	}
 
 	function ntimes_count($profileid,$string)
@@ -45,8 +47,11 @@
 				$row = mysql_fetch_array($res);
 				$new_ntimes = $row['NTIMES'];
 
-				$sql_i = "INSERT IGNORE INTO newjs.JP_NTIMES(PROFILEID,NTIMES) VALUES('$profileid','$new_ntimes')";
-				mysql_query_decide($sql_i) or die or error_opt($sql_i);
+				include_once(JsConstants::$docRoot."/classes/ProfileInsertLib.php");
+				$objInsert = ProfileInsertLib::getInstance();
+				$objInsert->insertNTimeCount($profileid, $new_ntimes);
+//				$sql_i = "INSERT IGNORE INTO newjs.JP_NTIMES(PROFILEID,NTIMES) VALUES('$profileid','$new_ntimes')";
+//				mysql_query_decide($sql_i) or die or error_opt($sql_i);
 
 				return $new_ntimes;
 			}

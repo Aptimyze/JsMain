@@ -11,7 +11,7 @@ class NotificationDataPool
         {
             $varArray['PROFILEID'] = implode(",",$profiles);
             $smsTempTableObj = new $className($db);
-            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="PROFILEID,USERNAME,SUBSCRIPTION,GENDER");
+            $profiledetails = $smsTempTableObj->getArray($varArray,'',"",$fields="*");
         }
         if(is_array($profiledetails))
         {
@@ -49,7 +49,7 @@ class NotificationDataPool
     public function getAgentInstantNotificationsPool($browserProfilesArr)
     {
 		$profileDetails = $this->getProfilesData(array($browserProfilesArr["OTHER"]),"JPROFILE"); 
-		$agentDetails = $this->getAgentsData(array($browserProfilesArr["SELF"]),"jsadmin_PSWRDS","newjs_slave");
+		$agentDetails = $this->getAgentsData(array($browserProfilesArr["SELF"]),"jsadmin_PSWRDS","newjs_masterRep");
 
 		if($profileDetails && $agentDetails)
 		{
@@ -98,7 +98,7 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_slave");
+            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
         }
         unset($otherProfiles);
         $counter = 0;
@@ -149,6 +149,7 @@ class NotificationDataPool
             $condition["WHERE"]["IN"]["COUNT"]    = 1;
             $condition["WHERE"]["NOT_IN"]["FILTERED"]    = 'Y';
             $condition["LIMIT"] = "0,10";//safe in case if some of the profiles are not valid and their data is not present in sms_temp_table
+	    $condition["ORDER"]			  ='TIME';			
             $cntArr = $contactRecordsObj->getContactsCount(array("RECEIVER"=>$profileid,"TYPE"=>ContactHandler::INITIATED,"COUNT"=>1),"FILTERED",1);
             if(is_array($cntArr))
             {
@@ -177,7 +178,7 @@ class NotificationDataPool
         }
         if(is_array($otherProfiles))
                         {
-            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_slave");
+            $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="newjs_SMS_TEMP_TABLE","newjs_masterRep");
                         }
         unset($otherProfiles);
         $counter = 0;
@@ -329,7 +330,7 @@ class NotificationDataPool
         // filter last 7days logged-in app profiles
         if(is_array($profilesNewArr))
         {
-            $loginTrackingObj = new MIS_LOGIN_TRACKING('newjs_slave');
+            $loginTrackingObj = new MIS_LOGIN_TRACKING('newjs_local111');
             $profilesNewStr   = @implode(",",$profilesNewArr);
             $profilesArr      = $loginTrackingObj->getLast7DaysLoginProfiles($profilesNewStr);
         }
@@ -370,12 +371,11 @@ class NotificationDataPool
                 $pictureServiceObj=new PictureService($profile);
                 $profilePicObj = $pictureServiceObj->getProfilePic();
                 if($profilePicObj){
-                    $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$this->gender);
-                    if($photoArray[label] != '')
+                    $photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ProfilePic120Url','',$this->gender,true);
+                    if($photoArray[label] != '' || $photoArray["url"] == null)
                        $icon = 'D';
                     else
                        $icon = $photoArray['url'];
-                    //$this->ThumbailUrl=$profilePicObj->getThumbailUrl();
                 }
                 else{
                     $icon = 'D';
@@ -389,6 +389,152 @@ class NotificationDataPool
             $icon = 'D';
         }
         return $icon;
+    }
+    
+    public function getInterestReceivedForDuration($profileid, $stDate, $endDate){
+        $loggedInDb = JsDbSharding::getShardNo($profileid,'');
+		$contactsLoggedInObj = new newjs_CONTACTS($loggedInDb);
+        $data = $contactsLoggedInObj->getInterestReceivedDataForDuration($profileid, $stDate, $endDate);
+        //Remove blocked profiles. Those that have been blocked by the sender
+        $ignoreProfileObj = new newjs_IGNORE_PROFILE("newjs_slave");
+		$ignoredProfiles = $ignoreProfileObj->getIgnoredProfiles($data["IGNORED_STRING"],$data['SELF']);
+        if($ignoredProfiles){
+            foreach($ignoredProfiles as $key => $val){
+                unset($data['SENDER'][$val]);
+            }
+        }
+        if($data['SENDER']){
+            $tempArray = $data['SENDER'];
+            end($tempArray);
+            $data['OTHER_PROFILEID'] = key($tempArray);
+        }
+        $data['COUNT'] = count($data['SENDER']);
+        unset($tempArray);
+        return $data;
+    }
+    
+    public function getMatchOfDayData($applicableProfiles){
+        if($applicableProfiles){
+            $date = date("Y-m-d", strtotime("-30 days",strtotime(date('Y-m-d'))));
+            $matchOfDayMasterObj = new MOBILE_API_MATCH_OF_DAY();
+            $matchOfDayMasterObj->deleteLessthanDays($date);
+            $counter = 0;
+            $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY("newjs_slave");
+            $curDate = date('Y-m-d');
+            $paramsArr["ENTRY_DT"] = date('Y-m-d', strtotime('-30 day',  strtotime($curDate)));
+            $matchCount = $matchOfDayObj->getCountForMatchProfile();
+            foreach($applicableProfiles as $profileid => $details){
+                $searchResult = SearchCommonFunctions::getMatchofTheDay($profileid);
+                $resultSet = $searchResult["PIDS"];
+                $paramsArr["PROFILEID"] = $profileid;
+                $nameOfUserProfiles[] = $profileid;
+                if($searchResult["CNT"] > 0){
+                    unset($resultToFilter);
+                    $resultToFilter = $matchOfDayObj->getMatchForProfileTillDays($paramsArr);
+                    if($resultToFilter){
+                        $resultSet = array_diff($resultSet, $resultToFilter);
+                    }
+                    $copyResultSet = $resultSet;
+                    unset($firstResult);
+                    unset($minResult);
+                    foreach($resultSet as $key => $value){
+                        if($matchCount[$value]){
+                            if(!$minResult){
+                                $minResult["MATCH_PROFILEID"] = $value;
+                                $minResult["MATCH_COUNT"] = $matchCount[$value];
+                            }
+                            if($minResult && ($matchCount[$value] < $minResult["MATCH_COUNT"])){
+                                $minResult["MATCH_PROFILEID"] = $value;
+                                $minResult["MATCH_COUNT"] = $matchCount[$value];
+                            }
+                            unset($copyResultSet[$key]);
+                        }
+                    }
+                    if($copyResultSet){
+                        reset($copyResultSet);
+                        $resultMatchProfileid = current($copyResultSet);
+                    }
+                    else{
+                        $resultMatchProfileid = $minResult["MATCH_PROFILEID"];
+                    }
+                    if($resultMatchProfileid){
+                        $matchedProfiles[$profileid] = $resultMatchProfileid;
+                        $otherProfiles[] = $resultMatchProfileid;
+                        $nameOfUserProfiles[] = $resultMatchProfileid;
+                        //$dataAccumulated[$counter];
+                        //print_r($resultMatchProfileid."\n");
+                    }
+                }
+            }
+            if(is_array($otherProfiles))
+            {
+                $getOtherProfilesData = $this->getProfilesData($otherProfiles,$className="JPROFILE","newjs_masterRep");
+                /*
+                $profileStr = implode(",",$nameOfUserProfiles);
+                $nameOfUserObj = new incentive_NAME_OF_USER("newjs_slave");
+                $queryParam["PROFILEID"] = $profileStr;
+                $nameOfUserDetails = $nameOfUserObj->getArray($queryParam,'',"",$fields="*");
+                foreach ($nameOfUserDetails as $key => $val){
+                    $nameDetails[$val["PROFILEID"]] = $val;
+                }
+                */
+            }
+            unset($otherProfiles);
+            unset($nameOfUserProfiles);
+            $counter = 0;
+            if(is_array($matchedProfiles))
+            {
+                foreach($matchedProfiles as $k1=>$v1)
+                {
+                    
+                    $dataAccumulated[$counter]['SELF']=$applicableProfiles[$k1];
+                    if($getOtherProfilesData[$v1]){
+                        $dataAccumulated[$counter]['OTHER'][]=$getOtherProfilesData[$v1];
+                        $dataAccumulated[$counter]['ICON_PROFILEID']=$getOtherProfilesData[$v1]["PROFILEID"];
+                        
+                        unset($selfProfileObj);
+                        unset($otherProfileObj);
+                        $selfProfileObj = Profile::getInstance('crm_slave',$k1);
+                        $selfProfileObj->setDetail($applicableProfiles[$k1]);
+
+                        $otherProfileObj = Profile::getInstance('crm_slave',$v1);
+                        $otherProfileObj->setDetail($getOtherProfilesData[$v1]);
+
+                        $nameOfUserClassObj = new NameOfUser();
+                        $res = $nameOfUserClassObj->showNameToProfiles($selfProfileObj, array($otherProfileObj));
+                        
+                        if($res[$v1]["SHOW"] == "1" && $res[$v1]["NAME"] != ""){
+                            $dataAccumulated[$counter]['NAME_OF_USER']= $res[$v1]["NAME"];
+                        }
+                        /*
+                        if($nameDetails[$k1]["DISPLAY"] == "Y" && $nameDetails[$v1]["DISPLAY"] == "Y"){
+                            $dataAccumulated[$counter]['NAME_OF_USER']= $nameDetails[$v1]["NAME"];
+                        }
+                        */
+                    }
+                    $dataAccumulated[$counter]['COUNT'] = "SINGLE";
+                    $counter++;
+                    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$k1);
+                    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$k1);
+                    $matchOfDayMasterObj->insert($k1,$v1);
+                }
+            }
+            unset($matchOfDayMasterObj);
+            unset($matchedProfiles);
+            return $dataAccumulated;
+        }
+    }
+    
+    public function notificationLogging($logArr,$logPoint){
+        if (JsConstants::$whichMachine == 'test' && NotificationEnums::$enableNotificationLogging == true) {
+            print_r($logPoint);
+            print_r("\n");
+            foreach($logArr as $key => $val){
+                print_r($key);
+                print_r($val);
+                print_r("\n");
+            }
+        }
     }
 }
 ?>

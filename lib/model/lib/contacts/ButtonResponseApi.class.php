@@ -52,6 +52,7 @@ Class ButtonResponseApi
 							$button[]                 = self::getInitiateButton($this->page);
 							$button[]                 = self::getShortListButton($this->loginProfile, $this->otherProfile);
 							$button[]                 = self::getContactDetailsButton();
+							
 							$responseArray["buttons"] = $button;
 							//echo "NOCONTACT";
 							break;
@@ -99,7 +100,9 @@ Class ButtonResponseApi
 							$responseArray["infobtnlabel"] = "They declined your interest on " . $date;
 							break;
 						case ContactHandler::CANCEL:
+							$button[] = self::getAcceptButton("Accept Again");
 							$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
+							$responseArray["buttons"] = $button;
 							break;
 					}
 				} else {
@@ -149,6 +152,7 @@ Class ButtonResponseApi
 						case ContactHandler::CANCEL:
 							//echo "CANCEL";
 							$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+							$responseArray["buttons"] = $button;
 							break;
 					}
 				}
@@ -242,11 +246,11 @@ Class ButtonResponseApi
 		$button = self::buttonMerge($button);
 		return $button;
 	}
-	public static function getIgnoreButton($loginProfile='', $otherProfile='',$isIgnored=null,$enable=true)
+	public static function getIgnoreButton($loginProfile='', $otherProfile='',$isIgnored=null,$enable=true,$label)
     {
     	
 		if ($isIgnored) {
-           $button["label"]  = "Unblock";
+           $button["label"]  = $label ? $label : "Unblock";
 		if(MobileCommon::isApp()=="I")
 		{
 			$button["iconid"] = IdToAppImagesMapping::UNDO_IGNORE;
@@ -261,7 +265,7 @@ Class ButtonResponseApi
             }
             else{
                     $button["iconid"] = IdToAppImagesMapping::A_IGNORE;
-                    $button["label"]  = "Block";
+                    $button["label"]  = $label? $label:"Block";
                     $button["action"] = "IGNORE";
                     $button["params"]  = "&ignore=1";
             }
@@ -302,6 +306,12 @@ Class ButtonResponseApi
 		{
 			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
 			$button["label"]  = "Interest Sent";
+		}
+		else if(($this->contactObj->getTYPE() == ContactHandler::NOCONTACT) && ($this->contactHandlerObj->getViewer()->getPROFILE_STATE()->getActivationState()->getUNDERSCREENED() == "Y"))
+		{
+			$button["iconid"] = IdToAppImagesMapping::TICK_CONTACT;
+			$button["label"]  = "Interest Saved";
+			$button["enable"]  = false;
 		}
 		else
 		{
@@ -363,7 +373,34 @@ Class ButtonResponseApi
 					break;
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
+					$button[] = self::getAcceptButton("Accept Again");
 					$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
+					$responseArray["buttons"] = $button;
+					break;
+
+				case ContactHandler::ACCEPT:
+					if ($privilageArray["0"]["COMMUNICATION"]["MESSAGE"] == "Y") {
+						$button[]                      = $this->getSendMessageButton();
+						$button[]                      = self::getContactDetailsButton();
+						$button[]                 	   = self::getCancelInterestButton();
+						$responseArray["buttons"]      = $button;
+						$responseArray["infomsglabel"] = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
+						$responseArray["infomsgiconid"] = '023';
+					} else {
+						if(strpos(sfContext::getInstance()->getRequest()->getParameter("newActions"), "MEMBERSHIP")!== false )
+						{
+							$responseArray["infobtnlabel"]  = "Buy paid membership to Write messages or view contact details";
+							$responseArray["infobtnvalue"]  = "";
+							$responseArray["infobtnaction"] = "MEMBERSHIP";
+						}
+						else{
+							$responseArray["infobtnlabel"]  = "Call us to Buy paid membership to Write messages or view contact details";
+							$responseArray["infobtnvalue"]  = "18004196299";
+							$responseArray["infobtnaction"] = "CALL";		
+						}
+						$responseArray["infomsglabel"]  = "You are now connected with " . $this->contactHandlerObj->getViewed()->getUSERNAME();
+						$responseArray["infomsgiconid"] = '023';
+					}
 					break;
 			}
 		} else {
@@ -402,6 +439,7 @@ Class ButtonResponseApi
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
 					$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+					$responseArray["buttons"] = $button;
 					break;
 			}
 		}
@@ -552,7 +590,9 @@ Class ButtonResponseApi
 					$responseArray["infobtnlabel"] = "They declined interest on " . $date;
 					break;
 				case ContactHandler::CANCEL:
+					$button[]                      = self::getAcceptButton("Accept Again");
 					$responseArray["infobtnlabel"] = "You cancelled your interest on " . $date;
+					$responseArray["buttons"] = $button;
 					break;
 			}
 		}
@@ -585,6 +625,7 @@ Class ButtonResponseApi
 				case ContactHandler::CANCEL:
 					//echo "CANCEL";
 					$responseArray["infobtnlabel"] = "They cancelled interest on " . $date;
+					$responseArray["buttons"] = $button;	
 					break;
 			}
 		}

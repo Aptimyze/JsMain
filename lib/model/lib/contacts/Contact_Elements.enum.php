@@ -55,7 +55,7 @@ class CONTACT_ELEMENTS
 	const PCS_CHECK_VALUE=60;
 	//new constant for shoing contacts Alloted Message
 	const MIN_CONTACT_ALLOTED=10000;
-	
+	const PAGINATION_LIMIT=21;
 	
   /**
    * 

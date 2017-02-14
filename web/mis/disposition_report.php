@@ -3,9 +3,7 @@
 
 include("connect.inc");
 include_once("user_hierarchy.php");
-$db2=connect_master();
 $data=authenticated($cid);
-mysql_close($db2);
 $db=connect_misdb();
 
 $data = authenticated($cid);

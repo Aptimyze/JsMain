@@ -39,6 +39,8 @@ class NEWJS_JPROFILE_EDUCATION extends TABLE{
 					foreach($idArr as $k=>$v)
 					$prep->bindValue(":v$k", $v, PDO::PARAM_INT);
 					$prep->execute();
+          
+          $this->logFunctionCalling(__FUNCTION__.$from);
 
 					if (is_array($pid)){
 						$resultArray=array();
@@ -111,6 +113,7 @@ class NEWJS_JPROFILE_EDUCATION extends TABLE{
 						$resEditEducation->execute();
 					}
 				}
+        $this->logFunctionCalling(__FUNCTION__);
 				return true;
 			}catch(PDOException $e)
 				{
@@ -216,6 +219,7 @@ d in the result
 			{
 				$detailArr[] = $rowSelectDetail;
 			}
+      $this->logFunctionCalling(__FUNCTION__);
 			return $detailArr;
 		}
 		catch(PDOException $e)
@@ -246,6 +250,7 @@ d in the result
                                         {
                                                 $res[] = $result[PROFILEID];
                                         }
+                                        $this->logFunctionCalling(__FUNCTION__);
                                         return $res;
                                 }
                         }
@@ -299,7 +304,9 @@ d in the result
                 		while($res=$prep->fetch(PDO::FETCH_ASSOC)){
                 			$profilesArr[$res["PROFILEID"]] =$res;
                 		}
-                
+                    
+                    $this->logFunctionCalling(__FUNCTION__);
+                    
                 		return $profilesArr;
                 	}
                 	catch(PDOException $e)
@@ -308,6 +315,12 @@ d in the result
                 		throw new jsException($e);
                 	}
                 }
-		
+		private function logFunctionCalling($funName)
+    {return;
+      $key = __CLASS__.'_'.date('Y-m-d');
+      JsMemcache::getInstance()->hIncrBy($key, $funName);
+      
+      JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+    }
 }
 ?>

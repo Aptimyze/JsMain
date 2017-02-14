@@ -237,9 +237,9 @@ if($submit_pg2c){
 			/* IVR - code ends */
 			/* SMS Code for sending sms to users */
 			
-			include_once "$root_path1/profile/InstantSMS.php";
-			 $sms = new InstantSMS("REGISTER_CONFIRM", $profileid);
-			 $sms->send();
+		//	include_once "$root_path1/profile/InstantSMS.php";
+		//	 $sms = new InstantSMS("REGISTER_CONFIRM", $profileid);
+		//	 $sms->send();
     
 			/* Ends Here of SMS code */
 		if(count($jprofile_update) > 0)

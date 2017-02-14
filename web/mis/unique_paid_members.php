@@ -1,8 +1,7 @@
 <?
 include("connect.inc");
 
-$db=connect_misdb();
-$db2=connect_master();
+$db=connect_ddl();
 
 if(authenticated($cid))
 {

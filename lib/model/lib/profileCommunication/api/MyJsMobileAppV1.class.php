@@ -13,6 +13,14 @@ class MyJsMobileAppV1
 	static public $noTupleText;
 	static public $tupleTitleField ;
 
+
+    public static function getCacheKey($pid)
+        {
+
+        return $pid."_MYJS_CACHED_DATA";
+
+    	}
+
 	public function getProfilePicAppV1($profileObj)
 	{
 		$pictureService = new PictureService($profileObj);
@@ -36,15 +44,38 @@ class MyJsMobileAppV1
 
         public function getJsonAppV1($displayObj,$profileInfo='')
 	{
+
+		LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "class MyJsMobileAppV1 getJsonAppV1 hit");
 $className = get_class($this);
 			$className::init();
 			
 		$displayV1= Array();
+		$showExpiring = $this->getExpiring();
 		foreach(self::$informationTypeFields as $key=>$value)
 		{
-			
 			if(array_key_exists($key,$displayObj))
 			{
+				$isApp = MobileCommon::isApp();
+				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
+				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isIOSApp()))
+				{
+					continue;
+				}
+				if($key == "INTEREST_EXPIRING" && $isApp == "A" && $appVersion  && $appVersion < 81)
+				{
+					continue;
+				}
+				if($key == "MATCH_OF_THE_DAY")
+				{
+					if(MobileCommon::isApp())
+					{  
+				// Version Check For ANDROID		
+					//&& ($isApp == "A" && $appVersion  && $appVersion < 84)	
+						continue;
+					}	
+					/*else*/ if (LoggedInProfile::getInstance()->getACTIVATED() == 'U')
+						continue;					
+				}
 				foreach($value as $k=>$v)
                                 {
 					if($v == "TUPLES")
@@ -166,7 +197,7 @@ $className = get_class($this);
 		$displayV1['membership_message'] = $this->getBannerMessage($profileInfo);     
 			
 
-
+//print_r($displayV1);die;
 		return $displayV1;
         }
 
@@ -226,6 +257,21 @@ private function getBannerMessage($profileInfo) {
      		return $mapArray[$key];
 
      	}
+
+    public function getExpiring()
+    {
+		$this->profile=Profile::getInstance();
+        $this->loginProfile=LoggedInProfile::getInstance();
+        $entryDate = $this->loginProfile->getENTRY_DT();
+		$currentTime=time();
+		$registrationTime = strtotime($entryDate);
+        $showExpiring = 0;
+		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		{
+			$showExpiring = 1;
+		}
+		return $showExpiring;
+    }
 
 
 }

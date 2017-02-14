@@ -133,7 +133,7 @@ class JProfile_NativePlace
 		
 		if($this->m_iProfileID && is_numeric($this->m_iProfileID))
 		{
-			$storeObj = new NEWJS_NATIVE_PLACE;
+			$storeObj = ProfileNativePlace::getInstance();
 			$arrResult = $storeObj->getRecord($this->m_iProfileID);
 
 			if($arrResult === null)
@@ -199,10 +199,10 @@ class JProfile_NativePlace
 		if(is_array($arrInfo))
 		{
 			$this->m_szNativeCity		= $arrInfo[NATIVE_CITY];
-			$this->m_szNativeState 		= $arrInfo[NATIVE_STATE]==null?'':$arrInfo[NATIVE_STATE];
-			$this->m_szNativeCountry 	= $arrInfo[NATIVE_COUNTRY]==null?'':$arrInfo[NATIVE_COUNTRY];
+			$this->m_szNativeState 		= ($arrInfo[NATIVE_STATE]==null||$arrInfo[NATIVE_STATE]=='0')?'':$arrInfo[NATIVE_STATE];
+			$this->m_szNativeCountry 	= ($arrInfo[NATIVE_COUNTRY]==null||$arrInfo['NATIVE_COUNTRY']=='0')?'':$arrInfo[NATIVE_COUNTRY];
 			
-			$this->m_szDecorate_NativeCity 		= ($this->m_szNativeCity != '0') ?$this->getLabel($this->m_szNativeCity,'city_india') : ("Other");
+			$this->m_szDecorate_NativeCity 		= ($this->m_szNativeCity != '0') ?$this->getLabel($this->m_szNativeCity,'city_india') : ("Others");
 			$this->m_szDecorate_NativeCountry 	= $this->getLabel($this->m_szNativeCountry,'country');
 			$this->m_szDecorate_NativeState 	= $this->getLabel($this->m_szNativeState,'state_india');
 		}	
@@ -218,6 +218,11 @@ class JProfile_NativePlace
 	 */
 	private function BakeDecoratedNativePlace()
 	{
+                // if(MobileCommon::isApp()=="I")
+                // {
+                //         $this->m_szDecoratedViewField = $this->m_szDecorate_OpenTextValue;
+                //         return;
+                // }
 		$szSuffixText = null;
 		$szPrefixText = null;
 		
@@ -449,7 +454,7 @@ class JProfile_NativePlace
 		}
 		
 		$nativePlaceArr = array('PROFILEID'=>$iProfileID,'NATIVE_COUNTRY'=>$szCountry,'NATIVE_STATE'=>$szState,'NATIVE_CITY'=>$szCity );
-		$nativePlaceObj = new NEWJS_NATIVE_PLACE;
+		$nativePlaceObj = ProfileNativePlace::getInstance();
 		
 		if($nativePlaceObj->InsertRecord($nativePlaceArr) === 0)
 		{

@@ -27,6 +27,10 @@ $profilecode 	= $_GET["$var_profilecode"];
 $phone 		= $_GET["$var_msisdn"];
 $validity 	= $_GET["$var_validity"];
 
+
+
+if(!(is_numeric($profilecode) && is_numeric($phone) && is_numeric($validity) ))
+	die('one of the params profilecode, phone and validity non numeric.');
 // log the JS hit from third-party(Cellcast)
 $ivrJsProfileObj = new jsProfileVerify;
 $reqType         ="phone verification";

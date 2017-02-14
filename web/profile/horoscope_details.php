@@ -43,8 +43,14 @@ include_once(JsConstants::$docRoot."/classes/ProfileReplaceLib.php");
 		//section to update TYPE in newjs.ASTRO_DETAILS when the user has switched from System generated horoscope to uploaded horoscope or the other way round
 		if($type)	
 		{
-			$sql_update = "update newjs.ASTRO_DETAILS set TYPE='$type' WHERE PROFILEID='$profileid'";
-			mysql_query_decide($sql_update) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_update,"ShowErrTemplate");
+			$objUpdate = JProfileUpdateLib::getInstance();
+			$result = $objUpdate->updateASTRO_DETAILS($profileid, array('TYPE'=>$type));
+			if(false === $result) {
+				$sql_update = "update newjs.ASTRO_DETAILS set TYPE='$type' WHERE PROFILEID='$profileid'";
+				logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_update,"ShowErrTemplate");
+			}
+//			$sql_update = "update newjs.ASTRO_DETAILS set TYPE='$type' WHERE PROFILEID='$profileid'";
+//			mysql_query_decide($sql_update) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_update,"ShowErrTemplate");
 		}
 		//end of section to update TYPE in newjs.ASTRO_DETAILS when the user has switched from System generated horoscope to uploaded horoscope or the other way round
 

@@ -4,7 +4,10 @@ if ($smarty_flag != 'n')
 
 include_once("handleCrmLogin.php");
 include_once(JsConstants::$docRoot."/commonFiles/crmLoginFunctions.php");
+include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 
+// include wrapper for logging
+include_once(JsConstants::$docRoot."/classes/LoggingWrapper.class.php");
 $TOUT = 14400;
 
 if($_SERVER['DOCUMENT_ROOT'])
@@ -15,7 +18,7 @@ if($_SERVER['DOCUMENT_ROOT'])
 	include_once($_SERVER['DOCUMENT_ROOT']."/classes/Memcache.class.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/classes/authentication.class.php");
 	include_once($_SERVER['DOCUMENT_ROOT']."/ivr/jsivrFunctions.php");
-	include_once($_SERVER['DOCUMENT_ROOT']."/../lib/model/enums/Membership.enum.class.php");
+	include_once(JsConstants::$cronDocRoot."/lib/model/enums/Membership.enum.class.php");
 }
 else
 {
@@ -28,7 +31,7 @@ else
 	include_once("$path/classes/authentication.class.php");
 	include_once("$path/ivr/jsivrFunctions.php");	
 	include_once("$path/ivr/jsivrFunctions.php");
-	include_once("$path"."../lib/model/enums/Membership.enum.class.php");	
+	include_once(JsConstants::$cronDocRoot."/lib/model/enums/Membership.enum.class.php");	
 }
 
 $TAX_RATE = billingVariables::TAX_RATE;
@@ -190,7 +193,8 @@ function login ($id, $pass)
                         $ret["USER"]=$myrow["USER"];
                                 
 			//$ret = TRUE;
-			setLoginCookies($ret["ID"],$_COOKIE["CRM_NOTIFICATION_AGENT"]);
+			$cna = preg_replace('/[^A-Za-z0-9\. -_]/', '', $_COOKIE["CRM_NOTIFICATION_AGENT"]);
+			setLoginCookies($ret["ID"],$cna);
 		}
 		else
 		{
@@ -1133,6 +1137,7 @@ function logError($message,$query="",$critical="exit", $sendmailto="NO")
         $errorstring="\n" . date("Y-m-d G:i:s",time() + 37800) . "\nErrorMsg: $message\nMysql Error: " . addslashes(mysql_error_js()) ."\nMysql Error Number:". mysql_errno_js()."\nSQL: $query\n#User Agent : " . $_SERVER['HTTP_USER_AGENT'] . "\n #Referer : " . $_SERVER['HTTP_REFERER'] . " \n #Self :  ".$_SERVER['PHP_SELF']."\n #Uri : ".$_SERVER['REQUEST_URI']."\n #Method : ".$_SERVER['REQUEST_METHOD']."\n";
 
         error_log($errorstring,3,JsConstants::$docRoot . "/jsadmin/temp/logerror.txt");
+	LoggingWrapper::getInstance()->sendLog(LoggingEnums::LOG_ERROR, new Exception($errorstring));
 
         if($critical=="exit")
         {
@@ -1712,11 +1717,16 @@ if(!function_exists("populate_day_month_year"))
 
 function update_astro_dob($pid,$mod_dob)
 {
-        $sql_ast_upd = "UPDATE newjs.ASTRO_DETAILS SET DTOFBIRTH='$mod_dob' WHERE PROFILEID='$pid'";
-        mysql_query_decide($sql_ast_upd) or die($sql_ast_upd.mysql_error_js());
+        $objUpdate = JProfileUpdateLib::getInstance();
+        $result = $objUpdate->updateASTRO_DETAILS($pid, array('DTOFBIRTH' => $mod_dob));
+        if(false === $result) {
+            die('Issue while updating updating Astro Details at line 1718.');
+        }
+//        $sql_ast_upd = "UPDATE newjs.ASTRO_DETAILS SET DTOFBIRTH='$mod_dob' WHERE PROFILEID='$pid'";
+//        mysql_query_decide($sql_ast_upd) or die($sql_ast_upd.mysql_error_js());
 
-        if(mysql_affected_rows_js() > 0)
-                mail("sriram.viswanathan@jeevansathi.com","Astro DOB changed","Dob of $pid changed to $mod_dob");
+       // if(mysql_affected_rows_js() > 0)
+               // mail("kunal.verma@jeevansathi.com","Astro DOB changed through connect.inc","Dob of $pid changed to $mod_dob");
 }
 function comp_info($profile,$redirect=1)
 {

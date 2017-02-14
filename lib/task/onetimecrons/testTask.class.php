@@ -27,13 +27,35 @@ EOF;
 	protected function execute($arguments = array(), $options = array())
 	{
 	    // SET BASIC CONFIGURATION
-	    	
+	   //send instant JSPC/JSMS notification
+
+    /*$instantNotificationObj = new InstantAppNotification("BUY_MEMB");
+    $instantNotificationObj->sendNotification(939764339,'',"upgrade");*/
+        $instantNotificationObj = new InstantAppNotification("EOI");
+        $instantNotificationObj->sendNotification(939764339,7194662);
+        die;
+
+          $producerObj = new Producer();
+          if($producerObj->getRabbitMQServerConnected())
+          {
+            $notificationData = array("notificationKey"=>"EOI","selfUserId" => 99401121,"otherUserId" => 1); 
+            $producerObj->sendMessage(formatCRMNotification::mapBufferInstantNotification($notificationData));
+          }
+          unset($producerObj);
+          die; 	
 		if(!sfContext::hasInstance())
 		{
 			sfContext::createInstance($this->configuration);
 		}
-    
-   
+    	$profileid = 99400941;
+   		$memCacheObject = JsMemcache::getInstance();
+        if ($memCacheObject->get($profileid . "_MEM_NAME")) {
+            $output = unserialize($memCacheObject->get($profileid . "_MEM_NAME"));
+            $output = json_encode($output);
+            $output = str_replace('"','', $output);
+        } 
+        print_r($output);die;
+
 		//send eoi reminder notification with default reminder message
     $instantNotificationObj =new InstantAppNotification("EOI_REMINDER");
     $instantNotificationObj->sendReminderInstantAppNotification("bassi",1,702,"testing script"); 

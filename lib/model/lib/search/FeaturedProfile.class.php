@@ -9,7 +9,9 @@ class FeaturedProfile extends MembersLookingForMe
 	private $avoidRevereseCriteria;
 	private $logoutScore = 1;
 	private $loginScore = 5;
-
+        private $lastLoginForFeatured = 15;
+	private $updateByRabbitMq = true;
+        private $dbname;
 	public function getFEATURE_PROFILE(){return $this->FEATURE_PROFILE;}
         public function setFEATURE_PROFILE($x){$this->FEATURE_PROFILE = $x;}
 
@@ -21,6 +23,7 @@ class FeaturedProfile extends MembersLookingForMe
 		if($loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
 			$this->loggedInProfileObj = $loggedInProfileObj;
 		parent::__construct($this->loggedInProfileObj);
+                $this->dbname = searchConfig::getSearchDb();
 	}
 
 	/**
@@ -54,6 +57,10 @@ class FeaturedProfile extends MembersLookingForMe
 			$this->setIgnoreProfiles($SearchParamtersObj->getIgnoreProfiles());
 		if($SearchParamtersObj->getProfilesToShow())
 			$this->setProfilesToShow($SearchParamtersObj->getProfilesToShow());
+                
+                $this->setLLAST_LOGIN_DT(date('Y-m-d h:m:s',  strtotime('-'.$this->lastLoginForFeatured.' days')));
+                $this->setHLAST_LOGIN_DT(date('Y-m-d h:m:s'));
+                $this->setRangeParams(SearchConfig::$searchRangeParameters.",".SearchConfig::$membersLookingForMeRangeParameters.",".SearchConfig::$featuredProfileParams);
 
 		if($this->loggedInProfileObj)
 		{
@@ -73,36 +80,54 @@ class FeaturedProfile extends MembersLookingForMe
 	{
 		if($idArr && is_array($idArr))
 		{
-			if(SearchConfig::$featureProfileCache)
+                        if(SearchConfig::$featureProfileCache)
+                        {
+                                $key = $sid."_FEATUREPROFILE";
+                                JsMemcache::getInstance()->set($key,implode(",",$idArr),3600);
+                        }
+                        else
+                        {
+                                $fpcObj = new NEWJS_FEATURED_PROFILE_CACHE($this->dbname);
+                                $fpcObj->insert($sid,$idArr);
+                                unset($fpcObj);
+                        }
+			if($this->updateByRabbitMq)
 			{
-				$key = $sid."_FEATUREPROFILE";
-				JsMemcache::getInstance()->set($key,implode(",",$idArr),3600);
+				$producerObj=new Producer();
+				if($producerObj->getRabbitMQServerConnected())
+				{
+					if($this->loggedInProfileObj instanceof LoggedInProfile)
+						$profileid = $this->loggedInProfileObj->getPROFILEID();
+					$updateFeaturedData = array('process' =>'UPDATE_FEATURED_PROFILE','data'=>array('type' => '','body'=>array("profileid"=>$profileid,"id"=>$idArr[0])), 'redeliveryCount'=>0 );
+					$producerObj->sendMessage($updateFeaturedData);
+				}
+				else
+				{
+					//sendMail
+				}
 			}
 			else
-			{
-				$fpcObj = new NEWJS_FEATURED_PROFILE_CACHE;
-				$fpcObj->insert($sid,$idArr);
-				unset($fpcObj);
-			}
-
-			$fplObj = new NEWJS_FEATURED_PROFILE_LIST;
-			if($this->loggedInProfileObj)
-				$score = $this->loginScore;
-			else
-				$score = $this->logoutScore;
-			$fplObj->insertRecord($idArr[0],$score);
-			unset($fplObj);
-
-			if($this->loggedInProfileObj)
-			{
-				$fplObj = new NEWJS_FEATURED_PROFILE_LOG;
-				$fplObj->insertRecord($this->loggedInProfileObj->getPROFILEID(),$idArr[0]);
-				unset($fplObj);
-			}
+				$this->performDbActionFunction($idArr[0]);
 			return $idArr[0];
 		}
 		else
 			return null;
+	}
+	public function performDbActionFunction($id)
+	{
+			$fplObj = new NEWJS_FEATURED_PROFILE_LIST($this->dbname);
+			if($this->loggedInProfileObj)
+				$score = $this->loginScore;
+			else
+				$score = $this->logoutScore;
+			$fplObj->insertRecord($id,$score);
+			unset($fplObj);
+			if($this->loggedInProfileObj)
+			{
+				$fplObj = new NEWJS_FEATURED_PROFILE_LOG($this->dbname);
+				$fplObj->insertRecord($this->loggedInProfileObj->getPROFILEID(),$id);
+				unset($fplObj);
+			}
 	}
 
 	public function getProfile($action="",$profileId="",$searchId)
@@ -116,7 +141,7 @@ class FeaturedProfile extends MembersLookingForMe
                         }
                         else
 			{
-				$fpcObj = new NEWJS_FEATURED_PROFILE_CACHE;
+				$fpcObj = new NEWJS_FEATURED_PROFILE_CACHE($this->dbname);
 				$profiles = $fpcObj->fetch($searchId);
 				unset($fpcObj);
 			}
@@ -164,19 +189,23 @@ class FeaturedProfile extends MembersLookingForMe
 
 				if($outputId)
 				{
-					$fplObj = new NEWJS_FEATURED_PROFILE_LIST;
-					if($this->loggedInProfileObj)
-						$fplObj->insertRecord($outputId,$this->loginScore);
-					else
-						$fplObj->insertRecord($outputId,$this->logoutScore);
-					unset($fplObj);
-
-					if($this->loggedInProfileObj)
+					if($this->updateByRabbitMq)
 					{
-						$fplObj = new NEWJS_FEATURED_PROFILE_LOG;
-						$fplObj->insertRecord($this->loggedInProfileObj->getPROFILEID(),$outputId);
-						unset($fplObj);
+						$producerObj=new Producer();
+						if($producerObj->getRabbitMQServerConnected())
+						{
+							if($this->loggedInProfileObj instanceof LoggedInProfile)
+								$profileid = $this->loggedInProfileObj->getPROFILEID();
+							$updateFeaturedData = array('process' =>'UPDATE_FEATURED_PROFILE','data'=>array('type' => '','body'=>array("profileid"=>$profileid,"id"=>$outputId)), 'redeliveryCount'=>0 );
+							$producerObj->sendMessage($updateFeaturedData);
+						}
+						else
+						{
+							//sendMail
+						}
 					}
+					else
+						$this->performDbActionFunction($outputId);
 				}
 				$profiles = str_replace(","," ",$profiles);
 				$output["All"] = $profiles;

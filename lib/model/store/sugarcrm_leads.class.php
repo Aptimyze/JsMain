@@ -118,7 +118,6 @@ class sugarcrm_leads extends TABLE{
                 {
 					$now = date("Y-m-d G:i:s");
 					$sql = "SELECT user_name FROM sugarcrm.leads l, sugarcrm.users as u where l.assigned_user_id=u.id  and l.id=:lead";
-					
 					$prep = $this->db->prepare($sql);
 					
 				  	$prep->bindValue(":lead", $lead, PDO::PARAM_STR);	
@@ -140,7 +139,6 @@ class sugarcrm_leads extends TABLE{
                 try
                 {
 					$sql_cstm = "SELECT * FROM sugarcrm.leads_cstm l where l.id_c=:leadid";
-					
 					$prep = $this->db->prepare($sql_cstm);
 					
 				  	$prep->bindValue(":leadid", $leadid, PDO::PARAM_STR);	
@@ -162,7 +160,6 @@ class sugarcrm_leads extends TABLE{
                 try
                 {
 					$sql = "SELECT * FROM sugarcrm.leads l where l.id=:leadid";
-					
 					$prep = $this->db->prepare($sql);
 					
 				  	$prep->bindValue(":leadid", $leadid, PDO::PARAM_STR);	
@@ -243,6 +240,52 @@ class sugarcrm_leads extends TABLE{
         	}
         	return $profiles;
 	}
+	public function getLeadsWithPhone($phoneStr)
+	{
+                try
+                {
+                        $phoneArr = explode(",",$phoneStr);
+                        foreach($phoneArr as $k=>$v)
+                                $qArr[]=":PHONE".$k;
+                        $qStr = implode(",",$qArr);
+                        $sql = "SELECT phone_mobile FROM sugarcrm.leads where phone_mobile IN (".$qStr.");";
+                        $prep = $this->db->prepare($sql);
+                        foreach($phoneArr as $k=>$v)
+                                $prep->bindValue(":PHONE".$k,$v,PDO::PARAM_STR);
+                        $prep->execute();
+                        while($res=$prep->fetch(PDO::FETCH_ASSOC))
+                        {
+                                        $matchPhoneArr[] =$res['phone_mobile'];
+                        }
+                }
+                catch(Exception $e)
+                {
+                    throw new jsException($e);
+                }
+                return $matchPhoneArr;
+	}
+	public function updateLeadCampaign($leadIdArr,$campaign_id)
+	{
+                try
+                {
+			foreach($leadIdArr as $k=>$v)
+			{
+				$queryArr[]=":LEAD_ID".$k;
+			}
+			$queryStr = implode(",",$queryArr);
+			$sql = "UPDATE sugarcrm.leads l set campaign_id =:campaign_id where l.id IN (".$queryStr.")";
+			$res = $this->db->prepare($sql);
+			$res->bindValue(":campaign_id", $campaign_id, PDO::PARAM_STR);
+			foreach($leadIdArr as $k=>$v)
+				$res->bindValue(":LEAD_ID".$k, $v, PDO::PARAM_STR);
+			$res->execute();
+		}
+		catch(PDOException $e)
+		{
+			/*** echo the sql statement and error message ***/
+			throw new jsException($e);
+		}
+}
 
 }
 ?>

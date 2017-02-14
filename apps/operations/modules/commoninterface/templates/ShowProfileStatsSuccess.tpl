@@ -28,7 +28,7 @@
 
 ~if $curlReq eq ''`
 	<!-- Botom Link section  Start -->
-	~include_partial('global/profileStats/_crmFooterLink',[linkArr=>$linkArr,profileid=>$profileid,username=>$username,cid=>$cid,checksum=>$checksum,isAlloted=>$isAlloted])`
+	~include_partial('global/profileStats/_crmFooterLink',[linkArr=>$linkArr,profileid=>$profileid,username=>$username,cid=>$cid,checksum=>$checksum,isAlloted=>$isAlloted,online_payment=>$online_payment,set_filter=>$set_filter])`
 	<!-- Botom Link section section  End -->
 
 	~include_partial('global/footer')`

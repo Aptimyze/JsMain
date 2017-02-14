@@ -40,8 +40,12 @@ class jsValidatorWhiteList extends sfValidatorBase
 		{
 			if(!array_key_exists($val,$arrMap))
 			{	
-				$szFieldName = $this->getOption('FieldName');
-				throw new sfValidatorError($this,ErrorHelp::getDPP_ERROR($szFieldName), array('value' => $val));
+                                $szFieldName = $this->getOption('FieldName');
+                                if($val == '431' && $szFieldName == "P_CASTE"){ // Check added to prevent caste "Gurjar" submit from IOS Will be removed once changed in ios app
+                                        throw new sfValidatorError($this,'One of the selected caste is no longer present in system, please select an alternative caste.', array('value' => $val));
+                                }else{
+                                        throw new sfValidatorError($this,ErrorHelp::getDPP_ERROR($szFieldName), array('value' => $val));
+                                }
 			}
 		}
 		return $value;

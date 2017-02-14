@@ -377,8 +377,8 @@ $result=mysql_query($sql);
 $i=0;
 while($myrow=mysql_fetch_array($result))
 {
-	
-	
+    
+    
     if($state != $myrow["STATE"] && $state!=""){
     	$cityStr=implode(',',array_values($city));
 	fwrite($fp,"\"" . $state . "\"=>\"" . $cityStr . "\",\n");
@@ -393,6 +393,8 @@ else{
 	$state=$myrow["STATE"];
 }
 }
+$cityStr=implode(',',array_values($city));
+	fwrite($fp,"\"" . $state . "\"=>\"" . $cityStr . "\",\n");
 fwrite($fp,");\n
 	break;\n
 

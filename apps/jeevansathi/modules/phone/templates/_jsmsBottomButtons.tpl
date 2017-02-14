@@ -13,7 +13,7 @@
                 <p class="pt10"><strong>missed call</strong> to <strong><a id='call3' class="color2"></a></strong></p>
             </div>
             <div class="fr otpp3" onClick='checkVerificationStatus()'>
-            	<a id='dialOnly'><img src="/images/jsms/commonImg/OTPphnicon.png"></a>
+            	<a id='dialOnly'><img id='js-dialOnlyImage' src="/images/jsms/commonImg/OTPphnicon.png"></a>
             </div>
             </div>    
     </div>

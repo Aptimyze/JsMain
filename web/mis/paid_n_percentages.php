@@ -4,9 +4,8 @@
 include_once("connect.inc");
 include_once("../profile/pg/functions.php");
 include("../profile/arrays.php");
-
+ini_set("max_execution_time","0");
 $db=connect_misdb();
-$db2=connect_master();
 
 if(authenticated($cid) || $JSIndicator)
 {
@@ -80,7 +79,7 @@ if(authenticated($cid) || $JSIndicator)
 			if($amt)
 			{
 			$totcnt++;
-			$sqljap="SELECT COUNTRY_RES,GENDER,RELATION,MTONGUE from newjs.JPROFILE WHERE PROFILEID='$pid'";
+			$sqljap="SELECT COUNTRY_RES,GENDER,RELATION,MTONGUE from newjs.JPROFILE WHERE PROFILEID='$pid' and activatedKey=1";
 			$resjap=mysql_query_decide($sqljap,$db) or die(mysql_error_js());
                         if($rowjap=mysql_fetch_array($resjap))
 			{

@@ -34,7 +34,7 @@
 	
 				</ul>
 				<div class="fullwid clearfix">
-					<div class="fr txtl ccnb1 pt10 pb17 f12 lh22 {personalizedmessageClass}" >
+					<div class="fr txtl ccnb1 pt10 pb17 f12 lh22 {personalizedmessageClass} js-hideDetail js-showDetail{profilechecksum}" >
 							<p class="pt10 ccww">{personalizedmessage}</p>
 					</div>                    
 	       </div> 
@@ -52,7 +52,7 @@
 <!--Start:Inner cc tuple Details Structure-->
 <div id="innerTupleDetailsContent" class="disp-none">
 	<div id="innerTupleDetailsContent{ccTupleIDNo}" class="hgt60">
-	 <p class="pt13 textTru">{age},  {height},  {location},  {religion},  {casteStr},  {mtongue}</p>
+	 <p class="pt13 textTru">{age},  {height},  {location},  {religion}{casteStr},  {mtongue}</p>
 	 <p class="pt10 textTru">{edu_level_new},  {income},  {occupation},	{mstatus}</p>
 	 <div class="color5 fontreg pt10 js-viewSimilarLink ccopt2 {handleVsp}" data="{profilechecksum},{username},{stype},{showContactedUsernameDetails}" id="jsCcVSP-{profilechecksum}">View Similar Profiles</div>
 	</div>

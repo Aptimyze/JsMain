@@ -378,6 +378,11 @@ END;';
      */
     public function dropTable($name)
     {
+        $to = "nitesh.s@jeevansathi.com";
+        $from = "info@jeevansathi.com";
+        $subject = "Drop table";
+        $msgBody = "Drop table in lib/vendor/symfony/lib/plugins/sfDoctrinePlugin/lib/vendor/doctrine/Doctrine/Export/Oracle.php";
+        SendMail::send_email($to,$msgBody,$subject,$from);
         //$this->conn->beginNestedTransaction();
         $result = $this->dropAutoincrement($name);
         $result = parent::dropTable($name);

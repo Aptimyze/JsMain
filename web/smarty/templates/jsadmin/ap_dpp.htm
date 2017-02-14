@@ -176,7 +176,7 @@ function apply_thickbox_class()
 	    ~/if`
             <p>Country</p>
             <label>: ~$displayDPP[$k].COUNTRYRES` ~if $EDIT eq 1 && $displayDPP[$k].LAST eq 1 && $displayDPP[$k].SHOW_COUNTRYRES_FILTER`<a ~if $displayDPP[$k].COUNTRY_RES_FILTER eq 'Y'` href="ap_dpp.php?cid=~$cid`&filter=COUNTRY_RES&editID=~$EDIT_DPP_ID`&value=N&new=~$new`&editedProfile=~$editedProfile`" ~else` href="ap_dpp.php?cid=~$cid`&filter=COUNTRY_RES&editID=~$EDIT_DPP_ID`&value=Y&new=~$new`&editedProfile=~$editedProfile`" ~/if`>~if $displayDPP[$k].COUNTRY_RES_FILTER eq 'Y'`Remove~else`Set as~/if` filter</a>~/if`</label>
-            <p>City</p>
+            <p>City/State</p>
             <label>: ~$displayDPP[$k].CITYRES` ~if $EDIT eq 1 && $displayDPP[$k].LAST eq 1 && $displayDPP[$k].SHOW_CITYRES_FILTER`<a ~if $displayDPP[$k].CITY_RES_FILTER eq 'Y'` href="ap_dpp.php?cid=~$cid`&filter=CITY_RES&editID=~$EDIT_DPP_ID`&value=N&new=~$new`&editedProfile=~$editedProfile`" ~else` href="ap_dpp.php?cid=~$cid`&filter=CITY_RES&editID=~$EDIT_DPP_ID`&value=Y&new=~$new`&editedProfile=~$editedProfile`" ~/if`>~if $displayDPP[$k].CITY_RES_FILTER eq 'Y'`Remove~else`Set as~/if` filter</a>~/if`</label>
           </div>
           <div class="info fr drk_gry"> <b class="fl">Religion and Ethnicity </b> ~if $EDIT eq 1 && $displayDPP[$k].LAST eq 1`<b class="fl ml_8 mb_5"><a href="~$SITE_URL`/profile/edit_dpp.php?width=700&FLAG=partner&flag=PPRE&gli=~$GENDER`&~$matchPointString`&editID=~$EDIT_DPP_ID`&edited=~$DPP_EDITED`" class="thickbox" style="color:#117DAA;">Edit</a></b>~/if`

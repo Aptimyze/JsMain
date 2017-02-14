@@ -7,8 +7,7 @@
 * CREATED BY    : Sadaf Alam
 ************************************************************************************************************************/
 include_once("connect.inc");
-$db=connect_misdb();
-$db2=connect_master();
+$db=connect_rep();
 
 if(authenticated($cid) || $JSIndicator==1)
 {

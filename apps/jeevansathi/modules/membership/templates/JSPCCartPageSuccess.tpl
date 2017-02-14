@@ -73,7 +73,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li id="CR-4">
+                                                    <!-- <li id="CR-4">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -99,7 +99,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </li>
+                                                    </li> -->
                                                 </ul>
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@
                                             <div class="fullwid acc_list_box">
                                                 <p class="txtc fontlig f12 pt15">Top Debit Cards</p>
                                                 <ul class="memul clearfix memnp1 txtc">
-                                                    <li id="DR-1">
+                                                    <!-- <li id="DR-1">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -117,8 +117,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </li>
-                                                    <li id="DR-2">
+                                                    </li> -->
+                                                    <li id="DR-1">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -127,7 +127,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li id="DR-3">
+                                                    <li id="DR-2">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -136,7 +136,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li id="DR-4">
+                                                    <li id="DR-3">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -145,7 +145,7 @@
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    <li id="DR-5">
+                                                    <li id="DR-4">
                                                         <div class="memn-nosel cursp">
                                                             <div class="mem-boxdim mem-bdr13 disp-tbl">
                                                                 <div class="disp-cell vmid">
@@ -558,7 +558,9 @@
             createCookie('mainMemDur', '~$data.subscription_duration`', 0);
             ~/if`
             ~if $data.paymentOptionsData.tracking_params.vasImpression`
-            createCookie('selectedVas', '~$data.paymentOptionsData.tracking_params.vasImpression`', 0);
+                ~if $data.subscription_id neq 'ESP' and $data.subscription_id neq 'NCP'`
+                    createCookie('selectedVas', '~$data.paymentOptionsData.tracking_params.vasImpression`', 0);
+                ~/if`
             ~/if`
             if(window.top.location.href != window.location.href){
                 window.top.location.href = window.location.href;

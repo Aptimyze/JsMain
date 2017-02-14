@@ -1,6 +1,6 @@
  <!--start:Family Details-->
               <div class="prfbr3">
-              <div class="prfp6" id="section-family"> 
+              <div class="prfp6 noMultiSelect" id="section-family"> 
                 <div class="clearfix"> <i class="sprite2 fl prfic14"></i>
                   <div class="fl colr5 pl12 f17 pt2">Family Details</div>
                   ~if $bEditView`
@@ -8,21 +8,6 @@
                   ~/if`
                 </div>
                 <div class="pl31 prflist1 js-familyView">
-                  ~if $bEditView` 
-                  <p class="f24 pt25" id="profile_handler_nameLabelParent"><span class="edpcolr2" >Profile Handler Name</span> - 
-                    ~if isset($apiData.family.profile_handler_name) and $apiData.family.profile_handler_name neq $notFilledInText`
-                      <span class="color11" id='profile_handler_nameView'>
-                        ~$apiData.family.profile_handler_name`
-                      </span>
-                      ~else`
-                      <span class="color5" id='profile_handler_nameView'>
-                        ~$notFilledInText`
-                      </span>
-                    ~/if` 
-                    <span class="~if ($editApi.Contact.PROFILE_HANDLER_NAME.value|count_characters:true) eq 0 || $editApi.Contact.PROFILE_HANDLER_NAME.screenBit neq 1` disp-none ~/if` js-undSecMsg"> 
-                      <span class="disp_ib color5 f13" > Under Screening</span></span>
-                  </p>
-                  ~/if`
                     <ul class="clearfix">
                     <li>
                       <p class="fontlig color12 pt15">Mother is</p>
@@ -125,20 +110,6 @@
                         <span id="gothra_maternalView" ~if $bEditView && $apiData["family"]["gothra_maternal"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["gothra_maternal"] eq null` class="notFilledInColor" ~/if` >
                           ~if $apiData["family"]["gothra_maternal"] neq null  || $bEditView`
                             ~$apiData["family"]["gothra_maternal"]`
-                          ~else`
-                            Not filled in
-                          ~/if`
-                        </span>
-                      </p>
-                    </li>
-                    ~/if`
-                    ~if !$bEditView`
-                    <li>
-                      <p class="fontlig color12 pt15">Profile managed by</p>
-                      <p class="pt2 pr20">
-                        <span id="profile_posted_byView" ~if $bEditView && $apiData["family"]["profile_posted_by"] eq $notFilledInText`  class="color5" ~else if $apiData["family"]["profile_posted_by"] eq null` class="notFilledInColor" ~/if` >
-                          ~if $apiData["family"]["profile_posted_by"] neq null  || $bEditView`
-                            ~$apiData["family"]["profile_posted_by"]`
                           ~else`
                             Not filled in
                           ~/if`

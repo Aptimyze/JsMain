@@ -302,15 +302,8 @@ function register_lead($leadid){
 include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 			$parameters = array("KEY"=>"SI_WELCOME","PROFILEID"=>$profileid,"DATA"=>$profileid);
 			sendSingleInstantSms($parameters);
-    
-			/* Ends Here of SMS code */
-		}
 
-		//update hobbies of the user
-		if(count($hobbies)!=0)
-		{
-			$hobbiesString=implode(",",$hobbies);
-			$sql="insert into newjs.JHOBBY set PROFILEID='$profileid',HOBBY='$hobbiesString'";
+			/* Ends Here of SMS code */
 		}
 		return true;
 

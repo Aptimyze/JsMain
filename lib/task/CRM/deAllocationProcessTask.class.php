@@ -48,6 +48,10 @@ EOF;
                 $processObj->setSubMethod("LIMIT_EXCEED");
                 $msg.=$agentBucketHandlerObj->deallocate($processObj);
 
+		/* Removed
+                $processObj->setSubMethod("LIMIT_EXCEED_RENEWAL");
+                $msg.=$agentBucketHandlerObj->deallocate($processObj);*/
+
                 //Based on FTA 
                 $processObj->setMethod("FTA_FTO");
                 $processObj->setSubMethod("FTA");

@@ -1,6 +1,22 @@
 var hideDays = 7,deleteReasonSelected=0, offerConsent=0;
+
 $(document).ready(function() {
 bindOfferConsentBox();
+
+
+ $( "#otpProfileDeletion").bind('click',function() {
+
+    if(!deleteReasonSelected)
+    {
+      $("#deleteReasonPrompt").show();
+      $("#deleteReasonBox").addClass("errbrd");
+      return;
+    }
+    showCommonOtpLayer();
+
+ });
+
+ 
 
   $( "#sevenDayHide").bind('click',function() {
   hideDays = 7;
@@ -228,21 +244,8 @@ function ajaxPassword(checksum,pswrd,hideAction)
                         }
                         else
                             {
-                             
-                              var optionVal=$('#delOptionSetID').html();
-                              if(optionVal=="I am unhappy about services")
-                                specifyReason=$('#specifyOtherReasonID').val();
-                              else if(optionVal=="I found my match from other website")
-                                specifyReason=$('#specifyLinkID').val();
-                              else if(optionVal=="I found my match elsewhere")
-                                specifyReason=$('#specifyReasonID').val();
-                              else if(optionVal=="Other reasons")
-                                specifyReason=$('#specifyOtherReason2ID').val();
-                              else
-                                specifyReason="";
-                              //console.log(optionVal);
-                              //console.log(specifyReason);
-                              ajaxDelete(optionVal,specifyReason);
+							showLayerCommon('deleteConfirmation-layer');
+                              
                             }
                           }
                           else
@@ -291,3 +294,114 @@ function ajaxDelete(optionVal,specifyReason)
                         
                       });
 }
+
+function deleteConfirmation(action)
+{
+		if(action=="Y"){
+		var optionVal=$('#delOptionSetID').html();
+                              if(optionVal=="I am unhappy about services")
+                                specifyReason=$('#specifyOtherReasonID').val();
+                              else if(optionVal=="I found my match from other website")
+                                specifyReason=$('#specifyLinkID').val();
+                              else if(optionVal=="I found my match elsewhere")
+                                specifyReason=$('#specifyReasonID').val();
+                              else if(optionVal=="Other reasons")
+                                specifyReason=$('#specifyOtherReason2ID').val();
+                              else
+                                specifyReason="";
+                              //console.log(optionVal);
+                              //console.log(specifyReason);
+                              closeCurrentLayerCommon();
+                              ajaxDelete(optionVal,specifyReason);
+		}
+		else
+			closeCurrentLayerCommon();
+}
+
+
+
+
+function showCommonOtpLayer(){
+
+var ajaxData={'phoneType':'M','PCLayer':'Y'};
+var ajaxConfig={};
+ajaxConfig.data=ajaxData;
+ajaxConfig.type='POST';
+ajaxConfig.url='/common/SendOtpSMS';
+sendAjaxHtmlDisplay(ajaxConfig,afterOtpLayer);
+
+
+}
+
+function afterOtpLayer() {
+$("#closeButtonOtp").prependTo('body');
+$("#closeButtonOtp").show().unbind().bind('click',function(){closeCurrentLayerCommon(closeButtonClick);$(this).hide(); });
+$("#matchOtpButton").bind('click',function (){
+sendMatchOtpAjax();
+});
+}
+
+
+var closeButtonClick=function() 
+{
+$("#closeButtonOtp").hide();
+}
+
+
+
+function sendMatchOtpAjax() {
+
+var currentLayer=$("#"+currentlyDisplayedLayer);
+var OTP=$("#matchOtpText").val();
+if(!OTP){shakeOTPInput(); return;}
+var ajaxData={'enteredOtp':OTP,'phoneType':phoneType};
+var ajaxConfig={};
+ajaxConfig.data=ajaxData;
+ajaxConfig.type='POST';
+ajaxConfig.success=function(response) {
+  hideCommonLoader();
+  if(response.matched=='true')
+showLayerCommon('deleteConfirmation-layer');
+  else if(response.matched=='false'){
+    if(response.trialsOver=='N'){
+      shakeOTPInput();
+      currentLayer.find('#matchOtpText').css('width','83%');
+      currentLayer.find("#OTPOuterInput").removeClass('phnvbdr1').addClass('brdr-1');
+    }
+    else if(response.trialsOver=='Y') showOTPFailedLayer();
+  }
+}
+ajaxConfig.url='/common/matchOtp';
+jQuery.myObj.ajax(ajaxConfig);
+showCommonLoader();
+
+
+}
+
+
+
+function shakeOTPInput() {
+   var l = 10;  
+   var temp=$( "#OTPOuterInput");
+   if(!temp) return;
+    var brdr=temp.css('border-color');
+    temp.css('border-color','#d9475c');
+   for( var i = 0; i < 10; i++ )   
+     $( "#OTPOuterInput").animate( { 
+         'margin-left': "+=" + ( l = -l ) + 'px',
+         'margin-right': "-=" + l + 'px'
+      }, 30);  
+   $("#OTPIncorrectSpan").hide();
+   $("#OTPIncorrectSpan").fadeIn(1000);
+   
+     }
+
+function showOTPFailedLayer(){
+$("#closeButtonOtp").show().unbind().bind('click',function(){closeCurrentLayerCommon(closeButtonClick); });
+var ajaxConfig={};
+ajaxConfig.type='POST';
+ajaxConfig.url='/common/desktopOtpFailedLayer';
+sendAjaxHtmlDisplay(ajaxConfig);
+}
+
+

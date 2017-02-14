@@ -16,6 +16,8 @@ class changePhotoPrivacyV1Action extends sfActions
 		$profileid = $loggedInProfileObj->getPROFILEID();
 		$json = $request->getParameter("json");
 		$photoDisplay = $request->getParameter("photo_display");		
+		if(!in_array($photoDisplay,array("A","C")))
+			$photoDisplay = "A";
 		if($json == 1)
 		{
 			if($profileid){
@@ -47,6 +49,9 @@ class changePhotoPrivacyV1Action extends sfActions
 		$PhotoPrivacyObj = new JPROFILE();
 		$editJprofileArray = array("PHOTO_DISPLAY"=>$photoDisplay,"MOD_DT"=>date("Y-m-d G:i:s"));
 		$PhotoPrivacyObj->edit($editJprofileArray,$profileid);
+                if($photoDisplay == 'C'){
+                        PictureFunctions::photoUrlCachingForChat($profileid, array(), "ProfilePic120Url",'', "remove");
+                }
 		$now = date("Y-m-d H:i:s");
 		$editArray = array("PHOTO_DISPLAY"=>$photoDisplay,"PROFILEID"=>$profileid,"MOD_DT"=>$now);
 		$editLogObj = new EDIT_LOG();

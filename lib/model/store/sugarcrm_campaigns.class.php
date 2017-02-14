@@ -11,7 +11,6 @@ class sugarcrm_campaigns extends TABLE
     	try{
 
 			$sql = "SELECT name,content FROM sugarcrm.campaigns WHERE id =:CAMPAIGN_ID";
-		
 		    $prep = $this->db->prepare($sql);
 		    $prep->bindValue(":CAMPAIGN_ID",$campaign_id,PDO::PARAM_STR);
 		    $prep->execute();

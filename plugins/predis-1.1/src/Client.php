@@ -220,7 +220,7 @@ class Client implements ClientInterface, \IteratorAggregate
      */
     public function disconnect()
     {
-        $this->connection->disconnect();
+        //$this->connection->disconnect();
     }
 
     /**
