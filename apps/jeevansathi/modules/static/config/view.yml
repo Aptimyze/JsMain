@@ -237,6 +237,11 @@ hideOptionSuccess:
    javascripts: []
    layout: jsmsMobLayout 
 
+unHideOptionSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: []
+   layout: jsmsMobLayout
+
 hideCheckPasswordSuccess:
    stylesheets: [-*,jsms/settings/settings_css]
    javascripts: [jsms/settings/mobHideProfile_js]

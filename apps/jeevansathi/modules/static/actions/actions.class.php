@@ -304,6 +304,13 @@ class staticActions extends sfActions
             $pObj = LoggedInProfile::getInstance();
         }
 
+        public function executeUnHideOption(sfWebRequest $request)
+        {
+            $loginData = $request->getAttribute("loginData");
+            $pObj = LoggedInProfile::getInstance();
+            $this->profileChecksum = JsAuthentication::jsEncryptProfilechecksum($pObj->getPROFILEID());
+        }
+
         public function executeHideCheckPassword(sfWebRequest $request)
         {
             $loginData = $request->getAttribute("loginData");
@@ -364,6 +371,12 @@ class staticActions extends sfActions
 			if($loginData['PROFILEID'])
 			{
 				$this->loggedIn=1;
+                // show hide profile
+                $this->hide = 1;
+                if($loginData['ACTIVATED'] == 'H')
+                {
+                    $this->hide = 0;
+                }
         $notificationObj = new NotificationConfigurationFunc();
         $toggleOutput = $notificationObj->showNotificationToggleLayer($loginData['PROFILEID']);
         $this->showNotificationBox = $toggleOutput["showToggleLayer"];
