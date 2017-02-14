@@ -103,21 +103,9 @@ class MessageLog
 				$RBmessage['RECEIVER'] = $value['RECEIVER'];
 				$RBmessage['TYPE'] = $value['TYPE'];
  				$RBmessage['DATE'] = $value['TIME'];
- 				if($infoTypeId == 1 || $infoTypeId == 12 )
-				{
-					$profileObj = new Profile('',$value['SENDER']);
-					$receiverObj = new Profile('',$loginProfile);
-					$viewerProfile = $value['SENDER']; 
-					
-				}
-				else if($infoTypeId == 6)
-				{
-					$profileObj = new Profile('',$loginProfile);
-					$receiverObj = new Profile('',$value['SENDER']);
-					$viewerProfile = $loginProfile; 			
-				}	
-				
-				$messageForRB = $this->getRBMessage($viewerProfile,$receiverObj,$profileObj);
+                                $profileObj = new Profile('',$value['SENDER']);
+                                $receiverObj = new Profile('',$value['RECEIVER']);
+				$messageForRB = $this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);
 				unset($profileObj);
 				unset($receiverObj);
 				$RBmessage['MESSAGE'] = $messageForRB;
@@ -211,13 +199,12 @@ class MessageLog
 		$dbName = JsDbSharding::getShardNo($viewer);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed);
-		$receiverObj = new Profile('',$viewed);
-		$profileObj = new Profile('',$viewer);
-
 		foreach ($messageArray as $key => $value) {
 
-			if($value['TYPE']=='I' && $value['MESSAGE'] == NULL && $this->EOIFromRB($value['SENDER'],$value['RECEIVER']))
+			if( $key=='0' && $value['TYPE']=='I' && $value['MESSAGE'] == NULL && $this->EOIFromRB($value['SENDER'],$value['RECEIVER']))
 			{ 
+                          $receiverObj = new Profile('',$value['RECEIVER']);
+                          $profileObj = new Profile('',$value['SENDER']);
 			  $message =$this->getRBMessage($viewer,$receiverObj,$profileObj);	
 			  $messageArray[$key]['MESSAGE'] = $message;	
 			}
@@ -350,7 +337,7 @@ if($limit == 1000000)
 	public function EOIFromRB($sender,$receiver)
 	{
 
-       $dbName = JsDbSharding::getShardNo($sender,'');
+           $dbName = JsDbSharding::getShardNo($sender,'');
 	   $dbObj = new newjs_CONTACTS($dbName);
 	   $isRB = $dbObj->isRBContact($sender,$receiver);
 
@@ -361,10 +348,10 @@ if($limit == 1000000)
 	   return 0;
 	}
 
-	public function getRBMessage($viewer,$receiverObj,$profileObj)
+	public function getRBMessage($sender,$receiverObj,$profileObj)
 	{
 
-		if($this->isJsDummyMember($viewer))
+		if($this->isJsDummyMember($sender))
 				{
 					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
 							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));
