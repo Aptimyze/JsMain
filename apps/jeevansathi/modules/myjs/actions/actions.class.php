@@ -216,7 +216,7 @@ class myjsActions extends sfActions
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
 
-				$this->showMatchOfTheDay = 0;
+				$this->showMatchOfTheDay = 1;
 				if($this->loginProfile->getACTIVATED() == 'U')
 				{
 					$this->showMatchOfTheDay = 0;
@@ -354,7 +354,7 @@ class myjsActions extends sfActions
 		}
 
 		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-		$this->showMatchOfTheDay = 0;
+		$this->showMatchOfTheDay = 1;
 		if($loggedInProfileObj->getACTIVATED() == 'U')
 		{
 			$this->showMatchOfTheDay = 0;
