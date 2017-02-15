@@ -677,7 +677,7 @@ class Membership
         $this->checkIfDiscountExceeds($userObjTemp);
         if($memUpgrade != "NA"){
             $memHandlerObj = new MembershipHandler(false);
-            $memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE"));
+            $memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid));
             unset($memHandlerObj);
         }
     }
