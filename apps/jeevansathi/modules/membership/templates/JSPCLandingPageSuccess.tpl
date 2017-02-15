@@ -515,146 +515,114 @@
 </div>
 <!-- end: membership benefits block-->
 ~/if`
+
 <!--start:upgrade membership eligible user section-->
 ~if $data.upgradeMembershipContent`
     ~if $data.vasContent`
+   <!--start:plan-->
     <div class="bg-4">
-        <div class="container mainwid pt40">
-            <!--start:title-->
-            <div class="fullwid mem-brd3"> <span class="f28 color11 fontrobbold disp_ib mem-brd4 mem_pad3 pb10"> Select Value Added Services </span> </div>
-            <!--end:title-->
-            <!--start:div-->
-            <div class="clearfix pt23">
-                <!--start:VAS-->
-                <div class="fl mr20 mem-widp1">
-                    <div class="fullwid" id="VASdiv">
-                        <ul class="clearfix">
-                            ~foreach from=$data.vasContent key=k item=v name=vasLoop`
-                            <!--start:VAS div-->
-                            <li id="~$v.vas_key`" class="bg-white mem-widp3 pos-rel">
-                                <!--start:overlay-->
-                                <div id="~$v.vas_key`_overlay" class="disp-none">
-                                    <div class="vasoverlay"></div>
-                                    <div class="vasoverlay2 fullwid">
-                                        <div class="mem_pad18">
-                                            <div class="txtc mem-brd7 pb23"> <i class="mem-sprite vasselicon"></i> </div>
-                                            <div class="pt16 txtc colrw">
-                                                <div class="fontmed f20">~$v.vas_name` Added</div>
-                                                ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
-                                                <div id="~$vv.id`_overlay" class="pt10 fontlig opa80 disp-none">~$vv.duration` ~$vv.text`&nbsp;/&nbsp;<span>~$data.currency`</span>~$vv.vas_price`</div>
-                                                ~/foreach`
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mem_pad17">
-                                    <!--start:icon-->
-                                    <div class="disp-tbl txtc fullwid">
-                                        <div class="disp-cell vmid mem-hgt2"> <i class="mem-sprite mem-~$v.vas_key`"></i> </div>
-                                    </div>
-                                    <!--end:icon-->
-                                    <!--start:VAS name-->
-                                    <div id="~$v.vas_key`_name" class="colr5 fontmed f20 txtc pt30">~$v.vas_name`</div>
-                                    <!--end:VAS name-->
-                                    <!--start:VAS desc-->
-                                    <div class="fontlig f15 colr2 lh20 txtc pt5">~$v.vas_description`</div>
-                                    <!--end:VAS desc-->
-                                    <!--start:VAS Plan-->
-                                    <div class="pt35">
-                                        <div class="mem-brd5 disp-tbl fullwid fontlig f15 lh20">
-                                            ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
-                                            ~if not $smarty.foreach.vasDurLoop.last`
-                                            <div id="~$vv.id`" class="disp-cell vmid mem-brd6 mem-widp4 txtc vascell" vasKey="~$v.vas_key`">
-                                                <div id="~$vv.id`_duration">~$vv.duration` ~$vv.text`</div>
-                                                ~if $vv.vas_price_strike`
-                                                <div id="~$vv.id`_price_strike"><span>~$data.currency`</span><span class="f13 fontlig txtstr prc">~$vv.vas_price_strike`</span></div>
-                                                ~/if`
-                                                <div id="~$vv.id`_price"><span>~$data.currency`</span><span class="prc">~$vv.vas_price`</span></div>
-                                            </div>
-                                            ~/if`
-                                            ~if $smarty.foreach.vasDurLoop.last`
-                                            <div id="~$vv.id`" class="disp-cell vmid mem-widp4 txtc vascell" vasKey="~$v.vas_key`">
-                                                <div id="~$vv.id`_duration">~$vv.duration` ~$vv.text`</div>
-                                                ~if $vv.vas_price_strike`
-                                                <div id="~$vv.id`_price_strike"><span>~$data.currency`</span><span class="f13 fontlig txtstr prc">~$vv.vas_price_strike`</span></div>
-                                                ~/if`
-                                                <div id="~$vv.id`_price"><span>~$data.currency`</span><span class="prc">~$vv.vas_price`</span></div>
-                                            </div>
-                                            ~/if`
-                                            ~/foreach`
-                                        </div>
-                                    </div>
-                                    <!--end:VAS Plan-->
-                                </div>
-                            </li>
-                            <!--end:VAS div-->
-                            ~/foreach`
-                        </ul>
-                    </div>
+        <div class="container mainwid">        
+            <div class="clearfix color11 pt30 pb30">
+                <div class="fl">
+                    <p class="fontmed f24">Make your contacts visible to others' by just paying Rs 800</p>
+                    <p class="f16 pt5 fontreg">Upgrade from eRishta to eValue membership... <span class="color5">Exclusive offer for you vaild till 15th Jan, 2017</span></p>
                 </div>
-                <!--end:VAS-->
-                <!--start:cart-->
-                <div class="fr mem-wid6 mem-widp2 mem_bg1">
-                    <div class="mem_pad19 colrw mem-hgt3">
-                        <div class="fontthin f20 opa60">You are getting</div>
-                        <!--start:sel VAS-->
-                        <div class="">
-                            ~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
-                            ~if $v.subscription_id eq $data.selectedMainServKey`
-                            ~foreach from=$v.durations key=kd item=vd name=servDurationsLoop`
-                            ~if $vd.duration_id eq $data.selectedMainServDur`
-                            <div id="mainPlan">
-                                <div class="disp-tbl fullwid">
-                                    <div id="mainPlanName" class="disp-cell f15 fontreg wid80p pos-rel">~$v.subscription_name`<span id="changeMainPlan" class="vsup opa60 cursp">CHANGE PLAN</span></div>
-                                    <div id="mainPlanStrikePrice" class="disp-cell f13 fontlig opa60 txtr strike wid20p">~$vd.price_strike`</div>
-                                </div>
-                                <div class="disp-tbl fullwid">
-                                    <div id="mainPlanDurAndCont" class="disp-cell vbtm fontlig f13">~$vd.duration` ~$vd.duration_text` | ~$vd.contacts`</div>
-                                    <div id="mainPlanPrice" class="disp-cell fontreg f15 txtr">~$vd.price`</div>
-                                </div>
-                            </div>
-                            ~/if`
-                            ~/foreach`
-                            ~/if`
-                            ~/foreach`
-                            <div id="vasServices"></div>
-                        </div>
-                        <!--end:sel VAS-->
+                <div class="fr txtl">
+                    <div class="fontmed f15">OFFER EXPIRES IN</div>
+                    <div class="Newtimecolor">
+                        <ul class="pt5 fontreg"><li>12<span>H</span></li><li>48<span>M</span></li><li>26<span>S</span></li></ul>
                     </div>
-                    <!--start:seprator-->
-                    <div class="pos-rel fullwid mem-hgt4">
-                        <div class="pos-ab mem-pos3"> <i class="mem-sprite mem-leftcirlce"></i> </div>
-                        <div class="pos-abs mem-pos1"> <i class="mem-sprite mem-rightcirlce"></i> </div>
-                        <div class="pos-abs fullwid mem-pos4 mem-brd8"></div>
-                    </div>
-                    <!--end:seprator-->
-                    <!--start:total-->
-                    <div class="mem_pad23 colrw fontlig">
-                        <div id="savingsBlock" class="txtc f15 pb10 disp-none">
-                            <span>Your Savings &nbsp;</span><span>~$data.currency`</span><span id="totalSavings"></span>
-                        </div>
-                        <div style="overflow:hidden;position: relative;">
-                            <div id="payNowBtn" class="fullwid txtc lh50">
-                                <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
+                    
+                    
+                </div>        
+            </div>        
+            <!--start:block1-->        
+            <div class="clearfix pb30 color11">         
+                <div class="fl upwid1 upgrd_bg1 fontlig">               
+                        <!--start:head-->   
+                        <div class="upgrd_p1 upb1">                
+                            <div class="f14">Special upgrade offer for you </div>
+                             <ul class="listnone f14 uoul pt15">
+                                <li class="f20"><strong>eRistha</strong></li>
+                                <li>6 Month</li>
+                                <li>50 Contacts To View</li>                        
+                            </ul>
+                         </div>
+                         <!--end:head-->
+                         <div class="upgrd_p1">
+                            <p class="upcolr1 f14 fontmed">Benefit</p>
+                            <ul class="uplino f14 pt10 lh22">
+                                <li>Send Personalized Messages & Chat</li>
+                                <li>View contacts of members you like</li>
+                                <li>Priority Customer service</li>
+                            </ul>
+                         </div>
+                </div>            
+                <div class="fr wid55p upgrd_bg1 fontreg">               
+                        <!--start:head-->   
+                        <div class="upgrd_p1 upb1">                
+                            <div class="f14">Special upgrade offer for you </div>
+                             <ul class="listnone f14 uoul pt15">
+                                <li class="f20"><strong>eValue</strong></li>
+                                <li>6 Month</li>
+                                <li>50 Contacts To View</li>                        
+                            </ul>                    
+                         </div>
+                         <!--end:head-->
+                         <div class="upgrd_p1">
+                            <p class="f14 fontmed">Additional Benefit</p>
+                            <ul class="uplino f14 pt10 lh22">
+                                <li>Make your contacts visible to others</li>
+                            </ul>
+                           <p class="upcolr1 f14 fontmed pt20">Did you know?</p>
+                            <ul class="uplino f14 pt5 lh22">
+                                <li>- Evalue members are contacted 2.5 times more than E rishta</li>
+                                <li>- Evalue members get 3 times more screen views </li>
+                            </ul>
+                            <div class="pt30 txtc">
+                                <button class="upb">Rs. 800 &nbsp;|&nbsp;Pay Now</button>
                             </div>
-                            ~if $data.upgradeMembershipContent`
-                            <div id="upgradeBtn" class="fullwid txtc lh50 cursp">
-                                <span class="colrw">Upgrade</span>
-                            </div>
-                            ~/if`
-                        </div>
-                        <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
+                         </div>
+                </div>        
+            </div>        
+            <!--end:block1-->
+            <!--start:block 2-->
+            <div style="border-top:1px solid #c2c2c2; margin-top:30px;padding-top:40px; padding-bottom:40px">
+            
+                <div class="clearfix fontlig">
+                    <div class="fl pl35 color11">
+                        <p class="fontrobbold f24">Astro compatability</p>
+                        <p class="f13 pt5">Get detailed Kundli matching reports with profiles you like</p>
+                        <div class="pt30">
+                            <ul class="uplino">
+                                <li class="clearfix disp_ib">
+                                    <div class="fl"><input type="radio"  value="3M" name="MONTH[]"></div>
+                                    <div class="fl pl10">3 months for Rs 150  <span class="txtstr upcolr1">850</span> </div>
+                                </li>
+                                <li class="clearfix disp_ib pl30">
+                                    <div class="fl"><input type="radio" checked="" value="6M" name="MONTH[]"></div>
+                                    <div class="fl pl10">3 months for Rs 150  <span class="txtstr upcolr1">850</span> </div>
+                                </li>
+                             </ul>
+                                
+                        
+                        </div>                
                     </div>
-                    <!--end:total-->
-                </div>
-                <!--end:cart-->
+                    <div class="fl upgrd_p2">
+                     <div class="pt30 txtc">
+                                <button class="upb">Rs. 150 &nbsp;|&nbsp;Pay Now</button>
+                            </div>                    
+                    </div>                
+                </div>            
             </div>
-            <!--end:div-->
+            <!--end:block 2-->        
         </div>
     </div>
+<!--end:plan--> 
     <!--end:plan-->
     ~/if`
 <!--end:upgrade membership eligible user section-->
+
 ~else if $data.vasContent`
 <!--start:plan-->
 <div class="bg-4">
@@ -1062,6 +1030,9 @@
         updateVasPageCart();
         var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
         $('#cmpplan').css('left', leftval);
+    ~/if`
+    ~if $data.upgradeMembershipContent`
+        memUpgradeCheckbox("MONTH[]");
     ~/if`
     });
 </script>

@@ -18,6 +18,7 @@ function dropdown() {
     });
 }
 
+
 function jsMemExpandAnimate(closeView) {
     $('.js-expand').animate({
         height: "toggle"
