@@ -1,0 +1,13 @@
+<?php 
+
+/**
+* 
+*/
+class HideUnhideEnums
+{
+	// options for Hide Duration
+	const OPTION1 = 7;
+	const OPTION2 = 10;
+	const OPTION3 = 30;
+}
+?>

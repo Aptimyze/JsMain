@@ -37,15 +37,15 @@ class HideUnhideProfileV1Action extends sfActions
         
         if($hideOption == 1)
         {
-            $hideDays = 7;
+            $hideDays = HideUnhideEnums::OPTION1;
         }
         elseif ($hideOption == 2)
         {
-            $hideDays = 10;
+            $hideDays = HideUnhideEnums::OPTION2;
         }
         elseif ($hideOption == 3)
         {
-            $hideDays = 30;
+            $hideDays = HideUnhideEnums::OPTION3;
         }
         
         $hideObj->UpdateHide($privacy, $profileid, $hideDays);
