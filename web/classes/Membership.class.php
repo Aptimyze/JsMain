@@ -201,6 +201,7 @@ class Membership
                     error_log("setting failed payment ankita..".$updateStatus);
                     //check whether user was eligible for membership upgrade or not
                     $memCacheObject = JsMemcache::getInstance();
+                    error_log("check for failed upgrade-".$ORDERID);
                     $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
                     if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                         $memHandlerObj = new MembershipHandler(false);

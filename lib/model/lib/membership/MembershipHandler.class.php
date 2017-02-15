@@ -2303,7 +2303,7 @@ class MembershipHandler
     * @outputs: none
     */
     function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array()){
-        error_log("ankita updating upgrade success/failed entry");
+        error_log("ankita updating upgrade success/failed entry-".$orderid);
         $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
         $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
         unset($upgradeOrdersObj);
