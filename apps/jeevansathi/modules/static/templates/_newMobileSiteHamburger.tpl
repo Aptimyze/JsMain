@@ -86,7 +86,7 @@
                   <li><a href="#" onclick=translateSite('~$translateURL`'); bind-slide=1 class="white" style="font-size: 19px;">हिंदी में</a></li>
                   <li>                  <!--start:listing6-->
                 <div id='appDownloadLink1' style='display:none'>       
-                    <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';" bind-slide=1 class="white">Download  Android App </a>
+                    <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';" bind-slide=1 class="white">Download  Android App | 3MB </a>
                 </div>
                 <!--end:listing6--> 
                  <!--start:listing7-->
@@ -235,7 +235,7 @@
                   <ul class="fontlig">
                                  <li>  <div id='appDownloadLink2' style='display:none'>
                     
-              <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';"  bind-slide=1 class="white">Download  Android App </a>
+              <a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';"  bind-slide=1 class="white">Download  Android App | 3MB </a>
                 </div>
                 <!--end:listing6--> 
                 <!--start:listing7-->
