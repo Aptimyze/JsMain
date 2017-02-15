@@ -4,7 +4,7 @@
     <!--start:top-->
     <div class="bg1 txtc pad15">
       <div class="posrel">
-        <div class="fontthin f20 white">Profile UnHidden</div>
+        <div class="fontthin f20 white">Profile Visible</div>
         <a href="/static/settings"><i class="mainsp posabs set_arow1 set_pos1"></i></a> </div>
     </div>
     <!--end:top--> 
