@@ -29,9 +29,11 @@ $this->addOptions(array(
                 sfContext::createInstance($this->configuration);
 
 		ini_set("memory_limit","-1");		
-		$sdate = date('Y-m-d', time()-7*86400);
-		$edate = date('Y-m-d', time()-6*86400);
+		$sdate = date('Y-m-d', time()-5*86400);
+		$edate = date('Y-m-d', time()-4*86400);
 		$notificationLogObj =new MOBILE_API_NOTIFICATION_LOG;
 		$notificationLogObj->deleteRecordDateWise($sdate,$edate);		
+		$notificationLogObj =new MOBILE_API_NOTIFICATION_MESSAGE_LOG;
+                $notificationLogObj->deleteRecordDateWise($sdate,$edate);
   }
 }
