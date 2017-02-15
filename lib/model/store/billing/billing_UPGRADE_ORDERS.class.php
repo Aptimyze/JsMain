@@ -62,11 +62,12 @@ class billing_UPGRADE_ORDERS extends TABLE
                   $updateStr .= "".$key."=:".$key.",";
                 }
                 $updateStr = substr($updateStr, 0,-1);
-                $sql = "UPDATE billing.UPGRADE_ORDERS SET ".$updateStr;
+                $sql = "UPDATE billing.UPGRADE_ORDERS SET ".$updateStr." WHERE ORDERID=:ORDERID";
                 $res=$this->db->prepare($sql);
                 foreach ($params as $k => $v) {
                   $res->bindValue(":".$k,$v,constant('PDO::PARAM_'.$this->{$k.'_BIND_TYPE'}));
                 }
+                $res->bindValue(":ORDERID",$orderid,PDO::PARAM_STR);
                 $res->execute();
             }
         }
