@@ -25,6 +25,25 @@ class NW_SCHOOLLIST extends TABLE implements AutoSuggestor {
             throw new jsException($e);
 		}
 	}
+        public function match ($school)
+        {
+		try 
+		{
+
+			$sql = "Select School from newjs.NW_SCHOOLLIST where SCHOOL=:SCHOOL";
+			$prep = $this->db->prepare($sql);
+			$prep->bindValue(":SCHOOL",$school, PDO::PARAM_STR);
+			$prep->execute();
+			if($result = $prep->fetch(PDO::FETCH_NUM)) 
+			{
+				$records[]=$result[0];
+			}
+			return $records;
+		}
+		catch (Exception $e) {
+			throw new jsException($e);
+		}
+	}
 } 	
 
 ?>

@@ -30,6 +30,7 @@ class TupleService
 	private $CONTACTS_VIEWED = Array();
 	private $VISITORS = Array();
 	private $MATCH_ALERT = Array();
+	private $MATCH_OF_THE_DAY = Array();
 	private $VIEW_SIMILAR = Array();
 	private $MY_MESSAGE = Array();
 	private $MY_MESSAGE_RECEIVED = array();
@@ -303,6 +304,10 @@ class TupleService
 	{
 		return $this->MATCH_ALERT;
 	}
+	public function getMATCH_OF_THE_DAY()
+	{
+		return $this->MATCH_OF_THE_DAY;
+	}
 	public function getVIEW_SIMILAR()
 	{
 		return $this->VIEW_SIMILAR;
@@ -367,6 +372,7 @@ class TupleService
 	 */
 	public function getTupleObject($infoType, $profileId)
 	{
+                
 		eval('$tupleObject = $this->' . $infoType . '["' . $profileId . '"];');
 		return $tupleObject;
 	}

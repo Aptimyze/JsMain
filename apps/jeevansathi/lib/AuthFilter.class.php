@@ -21,18 +21,12 @@ class AuthFilter extends sfFilter {
 	$context = $this->getContext();
 		$request = $context->getRequest();
 
-		// Code added to switch to hindi.jeevansathi.com if cookie set !
-		if($request->getcookie('JS_MOBILE'))
-		{
-			if($request->getcookie("jeevansathi_hindi_site")=='Y'){
-				$authchecksum = $request->getcookie('AUTHCHECKSUM');
-				if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi")!='Y'){
-					@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/");
-					$context->getController()->redirect('http://hindi.jeevansathi.com?AUTHCHECKSUM='.$authchecksum."&newRedirect=1", array('request' => $request));
-				}
-			} else {
-				@setcookie('redirected_hindi', 'N', 0, "/");
-			}
+		// Code added to switch to hindi.jeevansathi.com for mobile site if cookie set !
+		if($request->getcookie('JS_MOBILE')=='Y'){
+            $redirectUrl = CommonUtility::translateSiteLanguage($request);
+            if($redirectUrl != ""){
+            	$context->getController()->redirect($redirectUrl, array('request' => $request));
+            }
 		}
 		// End hindi switch code !
 		

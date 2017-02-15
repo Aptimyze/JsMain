@@ -660,7 +660,7 @@ return $returnArray;
 			}
 			// Check app login in last 7 days:
 			if($appRegProfile){
-		                $loginTrackingObj=new MIS_LOGIN_TRACKING('newjs_slave');
+		                $loginTrackingObj=new MIS_LOGIN_TRACKING('crm_slave');
                 		$profileArr      =$loginTrackingObj->getLast7DaysLoginProfiles($profileid);
 			}
 			if($appRegProfile && count($profileArr)>0){
