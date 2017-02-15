@@ -1167,6 +1167,11 @@ class MembershipHandler
                 $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? intval($apiObj->lastPurchaseDiscount):0);
                 error_log("ankita lastDiscountPercent=".$lastDiscountPercent);
                 $upgradeTotalDiscount = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
+                if($upgradeTotalDiscount >= 100){
+                    error_log("ankita check total upgradeTotalDiscount > 100");
+                    CRMAlertManager::sendMailAlert("Upgrade discount value exceeded 100=".$upgradeTotalDiscount." for profileid=".$userObj->getProfileid());
+                    $upgradeTotalDiscount = 0;
+                }
                 $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = $upgradeTotalDiscount;
             }
         }
