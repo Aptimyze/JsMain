@@ -1,15 +1,10 @@
 $(document).ready(function(){
-	ajaxrequestSent = 0;
 	$("#hidePasswordCheck").bind('click',function()
 	{
 		var pswrd = $('#passValueID').val();
 		// hide
 		action = 1;
-		if(ajaxrequestSent == 0)
-		{
-			ajaxrequestSent = 1;
-			ajaxPassword(pswrd,action);
-		}
+		ajaxPassword(pswrd,action);
 	});
 
 	$("#unHidePasswordCheck").bind('click',function()
@@ -17,16 +12,13 @@ $(document).ready(function(){
 		var pswrd = $('#passValueID').val();
 		// Unhide
 		action = 0;
-		if(ajaxrequestSent == 0)
-		{
-			ajaxrequestSent = 1;
-			ajaxPassword(pswrd,action);
-		}
+		ajaxPassword(pswrd,action);
 	});
 });
 
 function ajaxPassword(pswrd, action)
 {
+	stopTouchEvents(1,1,1);
 	$.ajax({                 
 	url: '/api/v1/common/checkPassword',
 	data: "data=" + JSON.stringify({'pswrd' : pswrd}),
@@ -38,9 +30,8 @@ function ajaxPassword(pswrd, action)
 		}
 		else if(response.success == 0)
 		{
-			setTimeout(function(){ShowTopDownError(["<center>Invalid Password</center>"]);},animationtimer);
+			setTimeout(function(){ startTouchEvents(10); ShowTopDownError(["<center>Invalid Password</center>"]);},animationtimer);
 		}
-		ajaxrequestSent = 0;
 	}
   });
 }
@@ -69,16 +60,17 @@ function hideUnhideAction(action)
 			{
 				if(action)
 				{
-					parent.location.href = "/static/hideDuration?hide_option="+hideOption;
+					url = "/static/hideDuration?hide_option="+hideOption;
 				}
 				else
 				{
-					parent.location.href = "/static/unHideResult";
+					url = "/static/unHideResult";
 				}
+				ShowNextPage(url,0);
 			}
 			else
 			{
-				setTimeout(function(){ShowTopDownError(["<center>Something went wrong</center>"]);},animationtimer);
+				setTimeout(function(){ startTouchEvents(10); ShowTopDownError(["<center>Something went wrong</center>"]);},animationtimer);
 			}
 		}
 	});

@@ -9,7 +9,7 @@
 	
 	<div class="bg4 f16 fontlig color13">
 		<div style="padding:20%">
-			<input id="passValueID" type="password" placeholder="Enter Password" class="f20 fontthin color11 fullwid txtc">
+			<input id="passValueID" type="password" placeholder="Enter Password" autocomplete="off" class="f20 fontthin color11 fullwid txtc">
 		</div>
 	</div>
 	<div id="foot" class="posfix fullwid bg7 btmo">
