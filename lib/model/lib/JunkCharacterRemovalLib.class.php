@@ -20,7 +20,9 @@
 		{
 			switch ($fieldName) {
 				case 'about':
-					return $this->removeJunkAbout($fieldValue);			
+					return $this->removeJunkAbout($fieldValue);
+				case 'familyInfo':
+					return $this->removeJunkFamilyInfo($fieldValue);			
 				case 'openFields':
 					return $this->removeJunkOpenFields($fieldValue);
 				default:
@@ -49,15 +51,31 @@
 	        	}
 	        }
 	        // calling function to check whether about me had junk character.
-	        $isGibberish = $this->test($about,$this->file_path);
-	        if ( $isGibberish !== -1 )
-	        {
-	        	if ( $isGibberish )
-	        	{
-	        		return "";
-	        	}
-	        }
-	        return $about;
+	       return $this->checkGibberish($about);
+	    }
+
+
+	    /**
+	     * removes junk from family info
+	     * @param  string $familyInfo 
+	     * @return boolean             returns 0 or 1 
+	     */
+	    private function removeJunkFamilyInfo($familyInfo)
+	    {
+	    	foreach ( JunkCharacterEnums::$FAMILY_INFO_WEBSITE_TEXT as $family_info_text) {
+	    		if ( stristr($familyInfo,$family_info_text) !== FALSE)
+	    		{
+	    			return 0;
+	    		}
+	    	}
+	    	if ( $this->checkGibberish($familyInfo) !== "" )
+	    	{
+	    		return $this->removeJunkOpenFields($familyInfo);
+	    	}
+	    	else
+	    	{
+	    		return 0;
+	    	}
 	    }
 
 	    /**
@@ -75,6 +93,24 @@
 		        $space_vowels = preg_match('/(?=.*\s+)(?=.*[aeiou]+)/i',$text); 
 	        }
 	        return $five_unique && $space_vowels;
+	    }
+
+	    /**
+	     * function is written to check whether the text is gibberish or not?
+	     * @param  string $text 
+	     * @return string empty string or original string, depending upon the fact whether text is spammy or not?
+	     */
+	    private function checkGibberish($text='')
+	    {
+	    	$isGibberish = $this->test($text,$this->file_path);
+	        if ( $isGibberish !== -1 )
+	        {
+	        	if ( $isGibberish )
+	        	{
+	        		return "";
+	        	}
+	        }
+	        return $text;
 	    }
 
 	    private function test($text, $lib_path, $raw=false)

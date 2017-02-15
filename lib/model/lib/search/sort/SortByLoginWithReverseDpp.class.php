@@ -33,10 +33,6 @@ class SortByLoginWithReverseDpp extends SearchSort implements SortStrategyInterf
                         $counter++;
                 }
                 
-                $sortString[$counter] =  "if(tf(SUBSCRIPTION,".SearchConfig::$jsBoostSubscription."),1,0)";
-                $sortAscOrDesc[$counter] = $this->sortByDesc;
-                $counter++;
-                
                 $sortString[$counter] = "LAST_LOGIN_SCORE";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
                 $counter++;

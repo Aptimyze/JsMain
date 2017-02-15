@@ -297,6 +297,9 @@ class FieldForm extends sfForm
 					}
 				}
 			  }
+				$screen_flag = JsCommon::setAutoScreenFlag($screen_flag,array_keys($this->formValues));
+				$screen_flag = $this->autoScreenAutoSuggest($screen_flag,$this->formValues);
+//				$screen_flag = $this->autoScreenMinorDiff($screen_flag,$this->formValues);
                                 if($bSet_NativePlaceBit)
                                 {
                                         $jprofileFieldArr["ANCESTRAL_ORIGIN"]="";//Set ANCESTRAL_ORIGIN to NULL
@@ -766,6 +769,10 @@ class FieldForm extends sfForm
 		{
 			foreach($incompleteArr as $key=>$val)
 			{
+                                if($val["key"] == "STATE_RES"){
+                                    unset($incompleteArr[$key]);
+                                    continue;
+                                }
 				if($val[incomplete]=="Y")
 				{
 					$incompKeyArr[]=$val[key];
@@ -929,6 +936,63 @@ class FieldForm extends sfForm
 	}
 
 
-
+        public function autoScreenAutoSuggest($screenVal,$editArr)
+        {
+                $autoScreenAutoSuggestArr = array("SCHOOL"=>"school","COLLEGE"=>"collg","COMPANY_NAME"=>"org","PG_COLLEGE"=>"PGcollg","GOTHRA"=>"gothra","DIOCESE"=>"dioceses","SUBCASTE"=>"subcaste");
+		$fields = array_keys($autoScreenAutoSuggestArr);
+                foreach($editArr as $k=>$v)
+                {
+			unset($data);
+                        if(in_array($k,$fields))
+                        {
+                                $obj = ImportAutoSugFactory::getAutoSugAgent($autoScreenAutoSuggestArr[$k]);
+				if($k!="SUBCASTE")
+					$data = $obj->match($v);
+				else
+				{
+					if(in_array("CASTE",array_keys($editArr)))
+						$caste = $editArr['CASTE'];
+					else
+						$caste  = $this->loggedInObj->getCASTE();
+					$data = $obj->match($v,$caste);
+				}
+				if(is_array($data))
+				{
+					$screenVal = Flag::setFlag(strtolower($k),$screenVal);
+				}
+                        }
+                }
+		return $screenVal;
+        }
+	public function autoScreenMinorDiff($screenVal,$editArr)
+	{
+		$autoScreenMinorDiffArr = array("YOURINFO","FAMILYINFO","JOB_INFO","EDUCATION");
+		foreach($editArr as $k=>$v)
+		{
+			if(in_array($k,$autoScreenMinorDiffArr))
+			{
+				if(Flag::isFlagSet("YOURINFO",$this->loggedInObj->getSCREENING()))
+				{
+					$originalVal = call_user_func(array($this->loggedInObj,"get".$k));
+					$ignorable = $this->checkIgnorableDiff($v,$originalVal);
+					if($ignorable===true)
+					{
+						$screenVal = Flag::setFlag(strtolower($k),$screenVal);
+					}
+				}
+			}
+		}
+		return $screenVal;
+	}
+	public function checkIgnorableDiff($s1,$s2)
+	{
+	        $s1 = preg_replace('/[ .]+/', '', trim($s1));
+	        $s2 = preg_replace('/[ .]+/', '', trim($s2));
+		if (strcasecmp($s1, $s2) == 0)
+		{
+			return true;
+		}
+		return false;
+	}
 }
 ?>

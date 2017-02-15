@@ -9,12 +9,24 @@ class BellCounts
 			$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 			$bellCounts['AWAITING_RESPONSE_NEW']=JsCommon::convert99($profileMemcacheObj->get("AWAITING_RESPONSE_NEW"));
 			$bellCounts['ACC_ME_NEW']=JsCommon::convert99($profileMemcacheObj->get("ACC_ME_NEW"));
-			if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1)
 	            $bellCounts['MESSAGE_NEW']=0;
 	        else
 				$bellCounts['MESSAGE_NEW']=JsCommon::convert99($profileMemcacheObj->get("MESSAGE_NEW"));
-	                $bellCounts['PHOTO_REQUEST_NEW']=JsCommon::convert99($profileMemcacheObj->get("PHOTO_REQUEST_NEW"));
-	        $justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+	                
+			if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){ 
+	         	$bellCounts['PHOTO_REQUEST_NEW']=0;
+	     	}
+	     	else
+	     		$bellCounts['PHOTO_REQUEST_NEW']=JsCommon::convert99($profileMemcacheObj->get("PHOTO_REQUEST_NEW"));
+
+	        if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){       
+	    	    $justJoinedMemcacheCount=0;
+			}
+			else
+			{
+				$justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+			}
 			$bellCounts['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
 
 			 $declinedMeNewMemcacheCount=$profileMemcacheObj->get('DEC_ME_NEW');
@@ -61,28 +73,58 @@ class BellCounts
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
 				$countDetails["INTEREST_RECEIVED"] = $profileMemcacheObj->get("AWAITING_RESPONSE");
 				$countDetails["ACCEPTED"] = $profileMemcacheObj->get("ACC_ME");
-				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1)
 					$countDetails["MESSAGE"] = 0;
 				else
 					$countDetails["MESSAGE"] = $profileMemcacheObj->get("MESSAGE");
-				$countDetails["PHOTO_REQUEST"] = $profileMemcacheObj->get("PHOTO_REQUEST");
+
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$countDetails["PHOTO_REQUEST"] = 0;
+				}
+				else
+					$countDetails["PHOTO_REQUEST"] = $profileMemcacheObj->get("PHOTO_REQUEST");
+
 				$countDetails["TOTAL"] = 0;
 				foreach ($countDetails as $key => $value) {
 					$countDetails["TOTAL"]  = $countDetails["TOTAL"]+$value;
 				}
-				$justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$justJoinedMemcacheCount=0;
+				}
+				else
+					$justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+
 				if($justJoinedMemcacheCount)
 					$countDetails['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
 				else
 					$countDetails['NEW_MATCHES']=0;
-				$countDetails['JUST_JOINED_MATCHES']=$profileMemcacheObj->get('JUST_JOINED_MATCHES');
+
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$countDetails['JUST_JOINED_MATCHES']=0;
+				}
+				else
+					$countDetails['JUST_JOINED_MATCHES']=$profileMemcacheObj->get('JUST_JOINED_MATCHES');
+
 				if(!$countDetails['JUST_JOINED_MATCHES'])
 					$countDetails['JUST_JOINED_MATCHES']=0;
-				$dailyMatchesMemcacheCount=$profileMemcacheObj->get('MATCHALERT');
-				$countDetails['DAILY_MATCHES_NEW']=JsCommon::convert99($dailyMatchesMemcacheCount);
+				
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$countDetails['DAILY_MATCHES_NEW']=0;
+				}	
+				else{
+					$dailyMatchesMemcacheCount=$profileMemcacheObj->get('MATCHALERT');
+					$countDetails['DAILY_MATCHES_NEW']=JsCommon::convert99($dailyMatchesMemcacheCount);
+				}
+						
 				if(!$countDetails['DAILY_MATCHES_NEW'])
 					$countDetails['DAILY_MATCHES_NEW']=0;
-				$countDetails['DAILY_MATCHES']=$profileMemcacheObj->get('MATCHALERT_TOTAL');
+
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$countDetails['DAILY_MATCHES']=0;
+				}
+				else
+					$countDetails['DAILY_MATCHES']=$profileMemcacheObj->get('MATCHALERT_TOTAL');
 				if(!$countDetails['DAILY_MATCHES'])
 					$countDetails['DAILY_MATCHES']=0;
 				
@@ -99,7 +141,7 @@ class BellCounts
 				$countDetails["AWAITING_RESPONSE_NEW"] = $profileMemcacheObj->get("AWAITING_RESPONSE_NEW");
 				$countDetails["INTEREST_EXPIRING"] = $profileMemcacheObj->get("INTEREST_EXPIRING");
 				$countDetails["ACC_ME_NEW"] = $profileMemcacheObj->get("ACC_ME_NEW");
-				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1){
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1){
 					$countDetails["MESSAGE_NEW"] = 0;
 					$countDetails["MESSAGE"] = 0;
 				}
@@ -107,11 +149,11 @@ class BellCounts
 					$countDetails["MESSAGE_NEW"] = $profileMemcacheObj->get("MESSAGE_NEW");
 					$countDetails["MESSAGE"] = $profileMemcacheObj->get("MESSAGE");
 				}
-				$countDetails["PHOTO_REQUEST_NEW"] = $profileMemcacheObj->get("PHOTO_REQUEST_NEW");
+
 				$countDetails["AWAITING_RESPONSE"] = $profileMemcacheObj->get("AWAITING_RESPONSE");
 				$countDetails["ACC_ME"] = $profileMemcacheObj->get("ACC_ME");
 				
-				$countDetails["PHOTO_REQUEST"] = $profileMemcacheObj->get("PHOTO_REQUEST");
+				
 				$countDetails["FILTERED_NEW"] = $profileMemcacheObj->get("FILTERED_NEW");
 				if(!$countDetails["FILTERED_NEW"]){
 					$countDetails["FILTERED_NEW"] = 0;
@@ -121,18 +163,36 @@ class BellCounts
 				if(!$countDetails["FILTERED"]){
 					$countDetails["FILTERED"] = 0;
 				}
-				$justJoinedMemcacheCount = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$countDetails["PHOTO_REQUEST_NEW"] =0;
+					$countDetails["PHOTO_REQUEST"] =0;
+				
+					$justJoinedMemcacheCount = 0;
+				}
+				else{
+					$countDetails["PHOTO_REQUEST_NEW"] = $profileMemcacheObj->get("PHOTO_REQUEST_NEW");
+					$countDetails["PHOTO_REQUEST"] = $profileMemcacheObj->get("PHOTO_REQUEST");
+				
+					$justJoinedMemcacheCount = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+				}
 				if($justJoinedMemcacheCount){
 					$countDetails['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
 				}
 				else{
 					$countDetails['NEW_MATCHES']=0;
 				}
-				$dailyMatchesMemcacheCount=$profileMemcacheObj->get('MATCHALERT');
+
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$dailyMatchesMemcacheCount=0;
+				}
+				else
+					$dailyMatchesMemcacheCount=$profileMemcacheObj->get('MATCHALERT');
 				$countDetails['DAILY_MATCHES_NEW']=JsCommon::convert99($dailyMatchesMemcacheCount);
 				if(!$countDetails['DAILY_MATCHES_NEW']){
 					$countDetails['DAILY_MATCHES_NEW']=0;
 				}
+
 				$declinedMeNewMemcacheCount = $profileMemcacheObj->get('DEC_ME_NEW');
 				if($declinedMeNewMemcacheCount){
 					$countDetails['DEC_ME_NEW']=JsCommon::convert99($declinedMeNewMemcacheCount);
@@ -151,12 +211,20 @@ class BellCounts
 			{
 				$profileObj=LoggedInProfile::getInstance('newjs_master');
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
-				$justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$justJoinedMemcacheCount=0;
+				}
+				else
+					$justJoinedMemcacheCount=$profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');	
 				if($justJoinedMemcacheCount)
 					$countDetails['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
 				else
 					$countDetails['NEW_MATCHES']=0;
-				$dailyMatchesMemcacheCount=$profileMemcacheObj->get('MATCHALERT');
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$dailyMatchesMemcacheCount=0;
+				}
+				else
+					$dailyMatchesMemcacheCount=$profileMemcacheObj->get('MATCHALERT');
 				$countDetails['DAILY_MATCHES_NEW']=JsCommon::convert99($dailyMatchesMemcacheCount);
 				if(!$countDetails['DAILY_MATCHES_NEW'])
 					$countDetails['DAILY_MATCHES_NEW']=0;
@@ -170,14 +238,22 @@ class BellCounts
 			{
 				$profileObj = LoggedInProfile::getInstance('newjs_master');
 				$profileMemcacheObj = new ProfileMemcacheService($profileObj);
-				$justJoinedMemcacheCount = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$justJoinedMemcacheCount = 0;
+				}
+				else
+					$justJoinedMemcacheCount = $profileMemcacheObj->get('JUST_JOINED_MATCHES_NEW');
 				if($justJoinedMemcacheCount){
 					$countDetails['NEW_MATCHES']=JsCommon::convert99($justJoinedMemcacheCount);
 				}
 				else{
 					$countDetails['NEW_MATCHES']=0;
 				}
-				$dailyMatchesMemcacheCount=$profileMemcacheObj->get('MATCHALERT');
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$dailyMatchesMemcacheCount=0;
+				}
+				else
+					$dailyMatchesMemcacheCount=$profileMemcacheObj->get('MATCHALERT');
 				$countDetails['DAILY_MATCHES_NEW']=JsCommon::convert99($dailyMatchesMemcacheCount);
 				if(!$countDetails['DAILY_MATCHES_NEW']){
 					$countDetails['DAILY_MATCHES_NEW']=0;
@@ -190,7 +266,7 @@ class BellCounts
 				if(!$countDetails["ACC_ME_NEW"]){
 					$countDetails["ACC_ME_NEW"] = 0;
 				}
-				if(JsConstants::$hideUnimportantFeatureAtPeakLoad == 1)
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 1)
 					$countDetails["MESSAGE_NEW"] = 0;
 				else{
 					$countDetails["MESSAGE_NEW"] = $profileMemcacheObj->get("MESSAGE_NEW");
@@ -198,7 +274,11 @@ class BellCounts
 						$countDetails["MESSAGE_NEW"] = 0;
 					}
 				}
-				$countDetails["PHOTO_REQUEST_NEW"] = $profileMemcacheObj->get("PHOTO_REQUEST_NEW");
+				if(JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2){
+					$countDetails["PHOTO_REQUEST_NEW"] = 0;
+				}
+				else
+					$countDetails["PHOTO_REQUEST_NEW"] = $profileMemcacheObj->get("PHOTO_REQUEST_NEW");
 				if(!$countDetails["PHOTO_REQUEST_NEW"]){
 					$countDetails["PHOTO_REQUEST_NEW"] = 0;
 				}

@@ -616,7 +616,7 @@ public function updateMessageLogDetails($msgCommObj)
 				$str = substr($str, 0, -1);
 				$str = $str.")";
 				$strS = " RECEIVER ".$str." AND SENDER ".$str;
-				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE, MESSAGE,MESSAGES.ID FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
+				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE,MESSAGE,MESSAGES.ID FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
 				$prep=$this->db->prepare($sql);
 				foreach($bindArr as $k=>$v)
 					$prep->bindValue($k,$v);
@@ -808,7 +808,7 @@ public function updateMessageLogDetails($msgCommObj)
 				}
 				else
 				{
-					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
+					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE,RECEIVER FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
@@ -1277,8 +1277,10 @@ return $result;
 					$prep->execute();
 					while($row = $prep->fetch(PDO::FETCH_ASSOC))
 					{
-                                                if(strpos($row['IP'],'.')===false)
-                                                        $row['IP']=long2ip($row['IP']);
+                        if(false === inet_pton($row['IP'])) {
+                            $row['IP']=long2ip($row['IP']);
+                        }
+                                                        
 						$output[] = $row;
 					}
 				

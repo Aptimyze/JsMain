@@ -26,6 +26,12 @@ include_once($_SERVER['DOCUMENT_ROOT']."/ivr/jsivrFunctions.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/commonFiles/incomeCommonFunctions.inc");
 include_once($_SERVER['DOCUMENT_ROOT']."/commonFiles/SymfonyPictureFunctions.inc");
 include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
+
+if(CommonUtility::hideFeaturesForUptime())
+	successfullDie();
+	
+	
+
 $mysqlObj=new Mysql;
 //$db2 = connect_slave();
 $LOG_PRO=array();

@@ -80,7 +80,7 @@ class SearchConfig
          * Db to be called in all search requests
          */
         public static $searchDbName = "newjs_masterRep";
-        public static $jsBoostSubscription = "J"; // JsBoost subscription value
+        public static $jsBoostSubscription = "N"; // JsBoost subscription value
         
 	/*
 	* List The Array name corresponding to SEARCH_MALE/FEMALE fields used in cluster
