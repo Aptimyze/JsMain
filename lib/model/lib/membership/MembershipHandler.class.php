@@ -864,10 +864,7 @@ class MembershipHandler
         }
         if (strpos(discountType::UPGRADE_DISCOUNT, $discountType) !== false) {
             $upgradeActive  = '1';
-            //ankita set discount expiry if required
-            //$discount_expiry = $this->getDiscountExpiry($discntId);
             //get upgrade discount for this user
-            
             if(in_array($upgardeMem,VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                 $upgradePercentArr = $this->getUpgradeMembershipDiscount($userObj, $upgardeMem,$apiObj);
             }
@@ -1120,7 +1117,6 @@ class MembershipHandler
             }
         }
         
-        //ankita use previous membership details used in getOfferprice for landing page display and return from it
         $allMainMem  = $this->getOfferPrice($allMainMem, $userObj, $discountType, $device,$apiObj,$upgradeMem);
         $minPriceArr = $this->fetchLowestActivePrices($userObj, $allMainMem, $device);
 
@@ -1156,11 +1152,10 @@ class MembershipHandler
 
     /*function - getUpgradeMembershipDiscount
      * get discount details for upgrade membership based on user and membership plan
-     * @params: $userObj,$upgradeMem
+     * @params: $userObj,$upgradeMem="NA",$apiObj=""
      * @return : $discountArr
      */
     public function getUpgradeMembershipDiscount($userObj,$upgradeMem="NA",$apiObj=""){
-        //ankita apply logic to calculate discount based on previous discount only
         $discountArr = array();
         if($upgradeMem == "MAIN" && $userObj->userType == memUserType::UPGRADE_ELIGIBLE){
             if($apiObj != ""){
@@ -1169,7 +1164,8 @@ class MembershipHandler
             $discountArr = array();
             if(is_array($upgradableMemArr) && count($upgradableMemArr) > 0){
                 //ankita fetch current membership id and duration and set discount accordingly 
-                $lastDiscountPercent = 10;
+                $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? intval($apiObj->lastPurchaseDiscount):0);
+                error_log("ankita lastDiscountPercent=".$lastDiscountPercent);
                 $upgradeTotalDiscount = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
                 $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = $upgradeTotalDiscount;
             }

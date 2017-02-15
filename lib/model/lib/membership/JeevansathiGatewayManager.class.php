@@ -40,7 +40,7 @@ class JeevansathiGatewayManager
         $service_main                 = $payment['service_str'];
         $discount                     = $payment['discount'];
         $discount_type                = $payment['discount_type'];
-        //use ankita mainMemUpgrade from api set param and pass in neworder for all gateways and apple
+        //use ankita mainMemUpgrade from api set param and pass in neworder for all gateways and not apple
         $membershipUpgrade = $apiParams->upgradeMem;
         $ORDER                        = newOrder($apiParams->profileid, $apiParams->paymode, $apiParams->type, $total, $service_str, $service_main, $discount, $setactivate, 'PAYU', $discount_type, $apiParams->device, $apiParams->couponCode,$membershipUpgrade);
         if ($service_main != $apiParams->track_memberships && JsConstants::$whichMachine == 'prod') {

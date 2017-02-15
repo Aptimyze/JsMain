@@ -127,9 +127,16 @@ class MembershipAPIResponseHandler {
         $this->userObj->setIpAddress($this->ipAddress);
         $this->userObj->setCurrency($this->currency);
         if (!empty($this->profileid)) {
-            $this->userObj->setMemStatus();
+            $this->userObj->setMemStatus($fromBackend);
             $this->userType = $this->userObj->userType;
-            $this->memID = @strtoupper($purchasesObj->getCurrentlyActiveService($this->profileid));
+            $purchaseDetails = $purchasesObj->getCurrentlyActiveService($this->profileid,"PU.DISCOUNT");
+            if(is_array($purchaseDetails) && $purchaseDetails['SERVICEID']){
+                $this->memID = @strtoupper($purchaseDetails['SERVICEID']);
+                $this->lastPurchaseDiscount = $purchaseDetails['DISCOUNT'];
+            }
+            else{
+                $this->memID = @strtoupper($purchaseDetails);
+            }
             $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj);
             
             if (is_array($this->subStatus) && !empty($this->subStatus)) {
@@ -150,12 +157,11 @@ class MembershipAPIResponseHandler {
         if ($this->userObj->userType == 4 || $this->userObj->userType == 6) {
             $this->renewCheckFlag = 1;
         }
-
+       
         //set to fetch main membership offer prices for upgrade display section
-        if(intval($this->displayPage) == 1 && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE && in_array($apiObj->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $this->fromBackend != 1){
+        if($this->displayPage == '1' && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE && in_array($this->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $this->fromBackend != 1){
             $this->upgradeMem = "MAIN";
         }
-
         //set discount info so that it can be used as common variable
         $this->discountTypeInfo = $this->memHandlerObj->getDiscountInfo($this->userObj,$this->upgradeMem);
         if($this->discountTypeInfo == null){
@@ -182,7 +188,6 @@ class MembershipAPIResponseHandler {
         else{
             $ignoreShowOnlineCheck = false;
         }
-     
         list($this->allMainMem, $this->minPriceArr) = $this->memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $this->discountType, $this->displayPage , $this->device,$ignoreShowOnlineCheck,$this,$this->upgradeMem);
 
         $this->curActServices = array_keys($this->allMainMem);
@@ -508,23 +513,29 @@ class MembershipAPIResponseHandler {
         if($this && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
             $upgradableMemArr = $this->memHandlerObj->setUpgradableMemberships($this->subStatus[0]['SERVICEID']);
             if(is_array($upgradableMemArr) && $upgradableMemArr["upgradeMem"] && $this->allMainMem[$upgradableMemArr["upgradeMem"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]){
-                
+                //type of upgrade
                 $output["type"] = "MAIN";
+                //serviceid of upgrade mem without duration
                 $output["upgradeMainMem"] = $upgradableMemArr["upgradeMem"];
+                //name of upgrade service
                 $output["upgradeMainMemName"] = $this->memHandlerObj->getUserServiceName($output["upgradeMainMem"]);
+                //duration of upgrade service
                 $output["upgradeMainMemDur"] = $upgradableMemArr["upgradeMemDur"];
-                
+                //total contacts to view for upgarde mem
                 $output["upgradeTotalContacts"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['CALL'];
-                
+                //additional benefits with upgrade compared to current mem
                 $output["upgradeAdditionalBenefits"] = $this->memApiFuncs->getAdditionalUpgradeBenefits($this->subStatus[0]['SERVICEID_WITHOUT_DURATION'],$upgradableMemArr["upgradeMem"]);
 
                 $formattedUpgradeMemName = ($output["upgradeMainMem"] != "X" ? ucfirst(strtolower($output["upgradeMainMemName"])) : $output["upgradeMainMemName"]);
-                $formattedCurrentMemName = ($this->subStatus[0]['SERVICEID_WITHOUT_DURATION'] != "X" ? ucfirst(strtolower($this->activeServiceName)) : $this->activeServiceName);;
-                $output["upgardeComparedBenefits"] = array(
+                $formattedCurrentMemName = ($this->subStatus[0]['SERVICEID_WITHOUT_DURATION'] != "X" ? ucfirst(strtolower($this->activeServiceName)) : $this->activeServiceName);
+                //extra compared facts for upgarde
+                $output["upgardeComparedFacts"] = array(
                                 $formattedUpgradeMemName." members are contacted 2.5 times more than ".$formattedCurrentMemName,
                                 $formattedUpgradeMemName." members get 3 times more screen reviews",
                                 );
+                //expiry date for upgarde discount
                 $output["upgradeOfferExpiry"] = date('M d Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
+                //extra amount to be paid for upgrade
                 $output["upgradeExtraPay"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]["OFFER_PRICE"];
             }
         }

@@ -37,8 +37,8 @@ class memUser
         }
     }
 
-    public function setMemStatus() {
-        list($userType, $expiryDate, $memStatus) = $this->memObj->getMemUserType($this->profileid);
+    public function setMemStatus($fromBackend="") {
+        list($userType, $expiryDate, $memStatus) = $this->memObj->getMemUserType($this->profileid,$fromBackend);
         if ($userType == 2) {
             $this->userType = memUserType::FREE;
         } 

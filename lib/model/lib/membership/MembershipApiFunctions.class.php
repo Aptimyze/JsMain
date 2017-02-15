@@ -656,6 +656,7 @@ class MembershipApiFunctions
             $memHandlerObj = new MembershipHandler();
         }
         list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
+    
         $apiObj->discountType = $discountType;
         $apiObj->discountActive = $discountActive;
         $apiObj->discount_expiry = $discount_expiry;
@@ -779,12 +780,16 @@ class MembershipApiFunctions
     * @return : $additionalBenefits
     */
     public function getAdditionalUpgradeBenefits($currentMem,$upgradeMem) {
-        $benefitMsg = VariableParams::$newApiPageOneBenefits;
-        $upgradebenefitsArr = VariableParams::$newApiPageOneBenefitsVisibility[$upgradeMem];
-        $currentbenefitsArr = VariableParams::$newApiPageOneBenefitsVisibility[$currentMem];
-        if ($currentMem == "X") {
+        if ($upgradeMem == "X") {
             $additionalBenefits = VariableParams::$newApiPageOneBenefitsJSX;
+            $lastIndex = count($additionalBenefits)-1;
+            if($additionalBenefits[$lastIndex] == "Priority Customer service"){
+                unset($additionalBenefits[$lastIndex]);
+            }
         } else {
+            $benefitMsg = VariableParams::$newApiPageOneBenefits;
+            $upgradebenefitsArr = VariableParams::$newApiPageOneBenefitsVisibility[$upgradeMem];
+            $currentbenefitsArr = VariableParams::$newApiPageOneBenefitsVisibility[$currentMem];
             $counter = 0;
             foreach ($upgradebenefitsArr as $key => $value) {
                 if ($value == 1 && $currentbenefitsArr[$key] != 1) {
@@ -828,17 +833,15 @@ class MembershipApiFunctions
             }
             if ($difference->y < 1) {
                 if($upgradeMemCase == true){
-                    $topBlockMessage["monthsText"] = "Month";
-                    $topBlockMessage["monthsValue"] = "".$difference->m;
-                    $topBlockMessage["daysText"] = "Days";
-                    $topBlockMessage["daysValue"] = "".$difference->d;
+                    $topBlockMessage["uMonthsText"] = "Month";
+                    $topBlockMessage["uMonthsValue"] = "".$difference->m;
+                    $topBlockMessage["uDaysText"] = "Days";
+                    $topBlockMessage["uDaysValue"] = "".$difference->d;
                 }
-                else{
-                    $topBlockMessage["monthsText"] = "MONTHS";
-                    $topBlockMessage["monthsValue"] = "" . str_pad($difference->m, 2, 0, STR_PAD_LEFT);
-                    $topBlockMessage["daysText"] = "DAYS";
-                    $topBlockMessage["daysValue"] = "" . str_pad($difference->d, 2, 0, STR_PAD_LEFT);
-                }
+                $topBlockMessage["monthsText"] = "MONTHS";
+                $topBlockMessage["monthsValue"] = "" . str_pad($difference->m, 2, 0, STR_PAD_LEFT);
+                $topBlockMessage["daysText"] = "DAYS";
+                $topBlockMessage["daysValue"] = "" . str_pad($difference->d, 2, 0, STR_PAD_LEFT);
                 
                 if($difference->y == 0 && $difference->m == 0 && $difference->d <=30) {
                     //$topBlockMessage["JSPCHeaderRenewMessage"] = "Your {$apiObj->activeServiceName} plan is due for renewal by {$datetime1->format('d M Y')}";
@@ -847,11 +850,9 @@ class MembershipApiFunctions
             } 
             else {
                 if($upgradeMemCase == true){
-                    $topBlockMessage["monthsText"] = "Month";
+                    $topBlockMessage["uMonthsText"] = "Month";
                 }
-                else{
-                    $topBlockMessage["monthsText"] = "MONTHS";
-                }
+                $topBlockMessage["monthsText"] = "MONTHS";
                 $topBlockMessage["monthsValue"] = "Unlimited";
                 $topBlockMessage["daysText"] = NULL;
                 $topBlockMessage["daysValue"] = NULL;
