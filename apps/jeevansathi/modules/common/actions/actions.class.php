@@ -938,9 +938,8 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
         }
     public function executeCheckPasswordV1(sfWebRequest $request)
     {
-
         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
-        $password =  rawurldecode($request->getParameter('pswrd'));
+        $password =  rawurldecode( json_decode($request->getParameter('data') , true)['pswrd'] );
         if(PasswordHashFunctions::validatePassword($password, $loggedInProfileObj->getPassword()))
         {
             $response = array('success' => 1);

@@ -13,23 +13,22 @@ class HideUnhideProfileV1Action extends sfActions
         *   1 is for Hide  
         *   0 is for UnHide 
         */
-        $action = $request->getParameter("actionHide");
-        if($action == 1)
+        $data = json_decode($request->getParameter("data"), true);
+        if($data["actionHide"] == 1)
         {
-            $this->hideAction($request);
+            $this->hideAction($data["hide_option"]);
         }
-        else if($action == 0)
+        else if($data["actionHide"] == 0)
         {
-            $this->unHideAction($request);
+            $this->unHideAction();
         }
 
     }
 
-    private function hideAction($request)
+    private function hideAction($hideOption)
     {
         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
         $profileid = $loggedInProfileObj->getPROFILEID();
-        $hideOption = $request->getParameter("hide_option");
         $privacy = "H";
 
         $hideObj = new JPROFILE;
@@ -69,7 +68,7 @@ class HideUnhideProfileV1Action extends sfActions
         die;
     }
 
-    private function unHideAction($request)
+    private function unHideAction()
     {
         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
         $profileid = $loggedInProfileObj->getPROFILEID();

@@ -21,7 +21,7 @@ function ajaxPassword(pswrd, action)
 {
 	$.ajax({                 
 	url: '/api/v1/common/checkPassword',
-	data: "&pswrd="+pswrd,
+	data: "data=" + JSON.stringify({'pswrd' : pswrd});
 	success: function(response) 
 	{
 		if(response.success == 1)
@@ -42,18 +42,18 @@ function hideUnhideAction(action)
 	if(action)
 	{
 		// to hide the user
-		var dataObject = {'hide_option' : hideOption, 'actionHide' : action};
+		var dataObject = JSON.stringify({'hide_option' : hideOption, 'actionHide' : action});
 	}
 	else
 	{
 		// to UnHide the user
-		var dataObject = {'actionHide' : action};
+		var dataObject = JSON.stringify({'actionHide' : action});
 	}
 
 	$.ajax({
 		url : '/api/v1/settings/hideUnhideProfile',
 		dataType: 'json',
-		data : dataObject,
+		data : 'data='+dataObject,
 		success: function(response)
 		{
 			if(response.success == 1)
