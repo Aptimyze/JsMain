@@ -33,6 +33,14 @@ class MyJs implements Module
 			$this->configurations = $configObj->getConfiguration($module,'',"IOS");
 		else 
                 	$this->configurations = $configObj->getConfiguration($module);
+        
+            //As Per Peek Level Unset Some Listing Across Channels
+            if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=2) {
+                unset($this->configurations["INTEREST_EXPIRING"]);
+            }
+            if(JsConstants::$hideUnimportantFeatureAtPeakLoad >=3) {
+                unset($this->configurations["SHORTLIST"]);
+            }
         }
         
         
@@ -269,6 +277,8 @@ class MyJs implements Module
                                                 $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
                                             }
                                             else $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
+                                            
+                                            
                                         }
                                         //Cache the data
                                         $arrAllowedType = array('INTEREST_RECEIVED','VISITORS','MATCH_ALERT');
@@ -304,6 +314,11 @@ class MyJs implements Module
                         $tupleService->setProfileInfo($infoTypeObj, array_unique($fields));
 			
                 	$countObj     = $this->getCount(MyJs::$getTotal,$infoTypeNav);
+                        if(JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID())){
+                                $countObj["MATCH_OF_THE_DAY"] = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
+                                $countObj["MATCH_OF_THE_DAY_ALL"] = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
+                        }
+                        
                         foreach ($this->configurations as $infoType => $config) 
 			{
 				if(is_null($infoTypeNav) || (is_array($infoTypeNav) && array_key_exists($infoType, $infoTypeNav)))
@@ -423,6 +438,11 @@ class MyJs implements Module
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
 				break;
+                        case 'MATCH_OF_THE_DAY':
+				$skipConditionArray = SkipArrayCondition::$MATCHOFTHEDAY;
+				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
+				$skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				break;
 			default:
 				$skipConditionArray = SkipArrayCondition::$default;
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
@@ -500,6 +520,13 @@ class MyJs implements Module
 			$condition["LIMIT"]= $this->configurations[$infoType]["COUNT"];
 			$condition["NEW"] = 1;
       $condition["LOGIC"] = MatchAlertLogicEnum::MATCHES_LAST_SENT;
+		}
+		if ($infoType == "MATCH_OF_THE_DAY")
+		{
+			$condition["GENDER"] = $this->profileObj->getGENDER();
+            $condition['PROFILEID'] = $this->profileObj->getPROFILEID();
+            $condition['ENTRY_DT'] = date("Y-m-d 00:00:00", strtotime('now') - 7*24*3600);
+            $condition['IGNORED'] = 'N';
 		}
 		
                 $condition["ORDER"] = $this->configurations[$infoType]["TUPLE_ORDER"];
@@ -628,6 +655,7 @@ class MyJs implements Module
                                 "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_IOS,
                                 "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_IOS,
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_IOS,
+                                "MATCH_OF_THE_DAY"=>SearchTypesEnums::MATCH_OF_THE_DAY_MYJS_IOS,
                                 );
 
 		return $trackingMap[$listing];

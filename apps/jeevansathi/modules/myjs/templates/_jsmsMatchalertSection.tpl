@@ -10,19 +10,14 @@
     ~/if`
   </div>
 ~if $matchalertData.tuples neq ''`
+
+<img id="matchLoader" src="~sfConfig::get('app_img_url')`/images/jsms/commonImg/loader.gif" style=" position: relative;margin: 0px auto;display: block;">
+
     <div class="swrapper" id="swrapper">
         <div class="wrap-box" id="wrapbox">
  <div id="match_alert_tuples"  style="white-space: nowrap; margin-left:10px; font-size:0px; overflow-x:hidden; width:200%; ">
    
-        ~foreach from=$matchalertData.tuples item=tupleInfo key=id`
-                        ~include_partial("myjs/jsmsProfileTuple",[profileTuple=>$tupleInfo,section=>"matchAlert",index=>$id,gender=>$gender,total=>$matchalertData.view_all_count,contactId=>$matchalertData.contact_id])`
-                
-        ~/foreach`
-
-         ~for $i=1 to 10`
-     <div style="margin-right:10px; display: inline-block;margin-left:0px; position:relative;"></div>
-         ~/for`
-         
+     
         <div class="clr"></div>
  </div>
     </div>

@@ -28,11 +28,26 @@ $this->addOptions(array(
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 		
-		$dateSel =date('Y-m-d H:i:s',time()-30*86400);
-                $notificationLogArchiveObj = new MOBILE_API_NOTIFICATION_LOG_ARCHIVE;
-                $notificationLogArchiveObj->insertRecord($dateSel);
+		$sdate = '2017-01-01';
+		$edate = '2017-01-02';
+		$notificationLogObj =new MOBILE_API_NOTIFICATION_LOG("crm_slave");
+                $rowArr = $notificationLogObj->selectRecord($sdate,$edate);         
+		$cnt = count($rowArr);
 
+		$notificationLogArchiveObj = new MOBILE_API_NOTIFICATION_LOG_ARCHIVE;
+		for($i=0;$i<$cnt;$i++)
+		{
+			$pid = $rowArr[$i]['PROFILEID'];
+			$nk = $rowArr[$i]['NOTIFICATION_KEY'];
+			$mi = $rowArr[$i]['MESSAGE_ID'];
+			$sdate = $rowArr[$i]['SEND_DATE'];
+			$udate = $rowArr[$i]['UPDATE_DATE'];
+			$sent = $rowArr[$i]['SENT'];
+			$ot = $rowArr[$i]['OS_TYPE'];
+			$notificationLogArchiveObj->insertRecord($pid,$nk,$mi,$sdate,$udate,$sent,$ot);	
+		}
+	
 		$notificationLogObj =new MOBILE_API_NOTIFICATION_LOG;
-		$notificationLogObj->deleteRecord($dateSel);			
+		$notificationLogObj->deleteRecordDateWise($sdate,$edate);		
   }
 }

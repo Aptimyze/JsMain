@@ -32,13 +32,13 @@ class NEWJS_LOG_LOGIN_HISTORY extends TABLE{
 			}
 		}
 		
-		public function insertIntoLogLoginHistory($pid,$ip)
+		public function insertIntoLogLoginHistory($pid,$ip,$currentTime='')
         {
 			if(!$pid)
 				throw new jsException("","VALUE OR TYPE IS BLANK IN insertIntoLoginHistory() of NEWJS_LOG_LOGIN_HISTORY.class.php");
 			try 
 			{
-					$logTime=date("Y-m-d H:i:s");
+					$logTime=$currentTime ? $currentTime : date("Y-m-d H:i:s");
 					$sql="INSERT INTO LOG_LOGIN_HISTORY(PROFILEID,IPADDR,TIME) values (:profileid,:ip,:logTime)";
 					
 					$prep=$this->db->prepare($sql);
