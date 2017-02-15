@@ -1053,6 +1053,7 @@ class SearchUtility
                 JsMemcache::getInstance()->set("cachedDMR$pid","");
                 JsMemcache::getInstance()->set("cachedLSMR$pid","");
                 JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$pid);
+				JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$pid);
 			}	
                 }
                 return 0;
