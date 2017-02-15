@@ -624,7 +624,7 @@ $js_arr[]=array("/web/converse"    => "3");
 $js_arr[]=array("reportAbuseForUser_js"                => "14");
 $js_arr[]=array(" /web/billing/billing_v2"       => "5");
 $js_arr[]=array(" /web/billing/billing"      => "4");
-$js_arr[]=array("jsms/settings/mobHideProfile_js"               => "10");
+$js_arr[]=array("jsms/settings/mobHideProfile_js"                => "11");
 return $js_arr;
 }
 function getJavascript(){
