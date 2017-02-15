@@ -1,6 +1,6 @@
 <?php
 
-class ProfileYourInfoOld extends TABLE
+class ProfileYourInfoOld
 {
 
     /**
@@ -58,13 +58,11 @@ class ProfileYourInfoOld extends TABLE
             if ($result && is_array($result) &&
                 (in_array(ProfileCacheConstants::NOT_FILLED, $result) || in_array('N', $result))
             ) {
-                    $this->logCacheConsumeCount(__CLASS__);
                     return NULL; 
               }
         }
 
          if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
-            $this->logCacheConsumeCount(__CLASS__);
             return $result;
         }
     
@@ -87,18 +85,5 @@ class ProfileYourInfoOld extends TABLE
         }
   
   }
-
-   /**
-     * 
-     * @param type $funName
-     */
-    private function logCacheConsumeCount($funName)
-    {
-        $key = 'cacheConsumption' . '_' . date('Y-m-d');
-        JsMemcache::getInstance()->hIncrBy($key, $funName);
-
-        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
-    }
-
 }
 ?>
