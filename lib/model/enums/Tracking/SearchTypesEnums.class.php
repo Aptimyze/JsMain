@@ -134,6 +134,15 @@ class SearchTypesEnums
 	const PHOTO_UPLOAD_ANDROID ='PU';
         const PHOTO_REQUEST_IOS ='PRI';
         const PHOTO_UPLOAD_IOS ='PUI';
+        const MATCHALERT_ANDROID ='MAA';
+	const MATCHALERT_IOS ='MAI';
+        const JUST_JOIN_ANDROID ='JJA';
+	const JUST_JOIN_IOS ='JJI';
+        const PENDING_EOI_ANDROID ='PIA';
+	const PENDING_EOI_IOS ='PII';
+        const FILTERED_EOI_ANDROID ='FIA';
+	const FILTERED_EOI_IOS ='FII';
+
         const APPLY_ONLY_CLUSTER = 'XX';
         const SaveSearchMailer = 'SSM';
         const PC_CHAT_NEW = 'PCN';
