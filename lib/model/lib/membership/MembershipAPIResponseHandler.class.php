@@ -129,13 +129,14 @@ class MembershipAPIResponseHandler {
         if (!empty($this->profileid)) {
             $this->userObj->setMemStatus($fromBackend);
             $this->userType = $this->userObj->userType;
-            $purchaseDetails = $purchasesObj->getCurrentlyActiveService($this->profileid,"PU.DISCOUNT");
+            $purchaseDetails = $purchasesObj->getCurrentlyActiveService($this->profileid,"PU.DISCOUNT_PERCENT");
             if(is_array($purchaseDetails) && $purchaseDetails['SERVICEID']){
                 $this->memID = @strtoupper($purchaseDetails['SERVICEID']);
-                $this->lastPurchaseDiscount = $purchaseDetails['DISCOUNT'];
+                $this->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
             }
             else{
                 $this->memID = @strtoupper($purchaseDetails);
+                $this->lastPurchaseDiscount = 0;
             }
             $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj);
             
