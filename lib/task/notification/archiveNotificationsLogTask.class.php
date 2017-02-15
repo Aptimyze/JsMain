@@ -10,7 +10,7 @@ class archiveNotificationLog extends sfBaseTask
   protected function configure()
   {
     $this->namespace        = 'notification';
-    $this->name             = 'archiveNotificationLog';
+    $this->name             = 'archiveNotificationsLog';
     $this->briefDescription = 'cleanup of Notification Log Table in MOBILE_API';
     $this->detailedDescription = <<<EOF
       The [KnwlarityvnoTableCleanup|INFO] task gets all the profiles with last loggin date before the date passed and remove all such profiles from the knwlarityvno table.
@@ -27,7 +27,8 @@ $this->addOptions(array(
   {
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
-		
+
+		ini_set("memory_limit","-1");		
 		$sdate = date('Y-m-d', time()-7*86400);
 		$edate = date('Y-m-d', time()-6*86400);
 		$notificationLogObj =new MOBILE_API_NOTIFICATION_LOG;
