@@ -1,7 +1,7 @@
 <?php 
 
 /**
-* 
+* Enums for Hide Unhide Action in settings
 */
 class HideUnhideEnums
 {
