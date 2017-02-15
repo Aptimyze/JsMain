@@ -1,2 +1,2 @@
 type=command
-command=${php5} ${docRoot}/symfony notification:archiveNotificationLog
+command=${php5} ${docRoot}/symfony notification:archiveNotificationsLog
