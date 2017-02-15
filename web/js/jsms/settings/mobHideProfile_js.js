@@ -64,11 +64,11 @@ function hideUnhideAction(action)
 			{
 				if(action)
 				{
-					parent.location.href= "/static/hideDuration?hide_option="+hideOption;
+					parent.location.href = "/static/hideDuration?hide_option="+hideOption;
 				}
 				else
 				{
-					parent.location.href= "/static/unHideResult";	
+					parent.location.href = "/static/unHideResult";
 				}
 			}
 			else

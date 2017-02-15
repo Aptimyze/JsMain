@@ -22,8 +22,8 @@ class HideUnhideProfileV1Action extends sfActions
         {
             unHideAction($request);
         }
-		
-	}
+
+    }
 
     private function hideAction($request)
     {
@@ -48,7 +48,7 @@ class HideUnhideProfileV1Action extends sfActions
             $hideDays = 30;
         }
         
-        $hideDeleteObj->UpdateHide($privacy,$profileid,$hideDays);
+        $hideDeleteObj->UpdateHide($privacy, $profileid, $hideDays);
         $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
         
         //code cookie
@@ -73,7 +73,7 @@ class HideUnhideProfileV1Action extends sfActions
     {
         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
         $profileid = $loggedInProfileObj->getPROFILEID();
-        $privacy="Y";
+        $privacy = "Y";
         $hideDeleteObj = new JPROFILE;
         $hideUpdate = $hideDeleteObj->UpdateUnHide($privacy,$profileid);
         $hideUpdate = $hideDeleteObj->SelectActicated($profileid);
@@ -81,7 +81,7 @@ class HideUnhideProfileV1Action extends sfActions
         //code cookie
         $webAuthObj = new WebAuthentication;
         $webAuthObj->loginFromReg();
-    
+
         $this->unhideProfile($profileid);
         $response = array('success' => 1);
         $respObj = ApiResponseHandler::getInstance();
