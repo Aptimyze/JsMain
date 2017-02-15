@@ -13,14 +13,14 @@ class HideUnhideProfileV1Action extends sfActions
         *   1 is for Hide  
         *   0 is for UnHide 
         */
-        $action = $request->getParameter("action");
+        $action = $request->getParameter("actionHide");
         if($action == 1)
         {
-            hideAction($request);
+            $this->hideAction($request);
         }
         else if($action == 0)
         {
-            unHideAction($request);
+            $this->unHideAction($request);
         }
 
     }
@@ -32,7 +32,7 @@ class HideUnhideProfileV1Action extends sfActions
         $hideOption = $request->getParameter("hide_option");
         $privacy = "H";
 
-        $hideDeleteObj = new JPROFILE;
+        $hideObj = new JPROFILE;
         $DeleteProfileObj = new DeleteProfile;
         
         if($hideOption == 1)
@@ -48,7 +48,7 @@ class HideUnhideProfileV1Action extends sfActions
             $hideDays = 30;
         }
         
-        $hideDeleteObj->UpdateHide($privacy, $profileid, $hideDays);
+        $hideObj->UpdateHide($privacy, $profileid, $hideDays);
         $DeleteProfileObj->callDeleteCronBasedOnId($profileid);
         
         //code cookie
@@ -74,9 +74,9 @@ class HideUnhideProfileV1Action extends sfActions
         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
         $profileid = $loggedInProfileObj->getPROFILEID();
         $privacy = "Y";
-        $hideDeleteObj = new JPROFILE;
-        $hideUpdate = $hideDeleteObj->UpdateUnHide($privacy,$profileid);
-        $hideUpdate = $hideDeleteObj->SelectActicated($profileid);
+        $hideObj = new JPROFILE;
+        $hideUpdate = $hideObj->UpdateUnHide($privacy,$profileid);
+        $hideUpdate = $hideObj->SelectActicated($profileid);
         
         //code cookie
         $webAuthObj = new WebAuthentication;

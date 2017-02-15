@@ -42,21 +42,17 @@ function hideUnhideAction(action)
 	if(action)
 	{
 		// to hide the user
-		var dataObject = JSON.stringify({
-							'hide_option' : hideOption,
-							'action' : action
-						});
+		var dataObject = {'hide_option' : hideOption, 'actionHide' : action};
 	}
 	else
 	{
 		// to UnHide the user
-		var dataObject = JSON.stringify({
-							'action' : action
-						});
+		var dataObject = {'actionHide' : action};
 	}
 
 	$.ajax({
 		url : '/api/v1/settings/hideUnhideProfile',
+		dataType: 'json',
 		data : dataObject,
 		success: function(response)
 		{
