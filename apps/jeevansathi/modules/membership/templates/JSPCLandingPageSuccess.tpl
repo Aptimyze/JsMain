@@ -34,6 +34,9 @@
             paidBenefits["~$k`"] = "~$v`";
         ~/foreach`
     ~/if`
+    ~if $data.upgradeMembershipContent` 
+            var pageType = 'upgradeMembershipPage';
+    ~/if`
     ~if $data.topBlockMessage.monthsValue neq 'Unlimited' && $data.topBlockMessage.JSPCnextMembershipMessage`
         var message = "~$data.topBlockMessage.JSPCnextMembershipMessage`";
         var pageType = 'ConditionsBasedHeader';
@@ -512,7 +515,147 @@
 </div>
 <!-- end: membership benefits block-->
 ~/if`
-~if $data.vasContent`
+<!--start:upgrade membership eligible user section-->
+~if $data.upgradeMembershipContent`
+    ~if $data.vasContent`
+    <div class="bg-4">
+        <div class="container mainwid pt40">
+            <!--start:title-->
+            <div class="fullwid mem-brd3"> <span class="f28 color11 fontrobbold disp_ib mem-brd4 mem_pad3 pb10"> Select Value Added Services </span> </div>
+            <!--end:title-->
+            <!--start:div-->
+            <div class="clearfix pt23">
+                <!--start:VAS-->
+                <div class="fl mr20 mem-widp1">
+                    <div class="fullwid" id="VASdiv">
+                        <ul class="clearfix">
+                            ~foreach from=$data.vasContent key=k item=v name=vasLoop`
+                            <!--start:VAS div-->
+                            <li id="~$v.vas_key`" class="bg-white mem-widp3 pos-rel">
+                                <!--start:overlay-->
+                                <div id="~$v.vas_key`_overlay" class="disp-none">
+                                    <div class="vasoverlay"></div>
+                                    <div class="vasoverlay2 fullwid">
+                                        <div class="mem_pad18">
+                                            <div class="txtc mem-brd7 pb23"> <i class="mem-sprite vasselicon"></i> </div>
+                                            <div class="pt16 txtc colrw">
+                                                <div class="fontmed f20">~$v.vas_name` Added</div>
+                                                ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
+                                                <div id="~$vv.id`_overlay" class="pt10 fontlig opa80 disp-none">~$vv.duration` ~$vv.text`&nbsp;/&nbsp;<span>~$data.currency`</span>~$vv.vas_price`</div>
+                                                ~/foreach`
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mem_pad17">
+                                    <!--start:icon-->
+                                    <div class="disp-tbl txtc fullwid">
+                                        <div class="disp-cell vmid mem-hgt2"> <i class="mem-sprite mem-~$v.vas_key`"></i> </div>
+                                    </div>
+                                    <!--end:icon-->
+                                    <!--start:VAS name-->
+                                    <div id="~$v.vas_key`_name" class="colr5 fontmed f20 txtc pt30">~$v.vas_name`</div>
+                                    <!--end:VAS name-->
+                                    <!--start:VAS desc-->
+                                    <div class="fontlig f15 colr2 lh20 txtc pt5">~$v.vas_description`</div>
+                                    <!--end:VAS desc-->
+                                    <!--start:VAS Plan-->
+                                    <div class="pt35">
+                                        <div class="mem-brd5 disp-tbl fullwid fontlig f15 lh20">
+                                            ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
+                                            ~if not $smarty.foreach.vasDurLoop.last`
+                                            <div id="~$vv.id`" class="disp-cell vmid mem-brd6 mem-widp4 txtc vascell" vasKey="~$v.vas_key`">
+                                                <div id="~$vv.id`_duration">~$vv.duration` ~$vv.text`</div>
+                                                ~if $vv.vas_price_strike`
+                                                <div id="~$vv.id`_price_strike"><span>~$data.currency`</span><span class="f13 fontlig txtstr prc">~$vv.vas_price_strike`</span></div>
+                                                ~/if`
+                                                <div id="~$vv.id`_price"><span>~$data.currency`</span><span class="prc">~$vv.vas_price`</span></div>
+                                            </div>
+                                            ~/if`
+                                            ~if $smarty.foreach.vasDurLoop.last`
+                                            <div id="~$vv.id`" class="disp-cell vmid mem-widp4 txtc vascell" vasKey="~$v.vas_key`">
+                                                <div id="~$vv.id`_duration">~$vv.duration` ~$vv.text`</div>
+                                                ~if $vv.vas_price_strike`
+                                                <div id="~$vv.id`_price_strike"><span>~$data.currency`</span><span class="f13 fontlig txtstr prc">~$vv.vas_price_strike`</span></div>
+                                                ~/if`
+                                                <div id="~$vv.id`_price"><span>~$data.currency`</span><span class="prc">~$vv.vas_price`</span></div>
+                                            </div>
+                                            ~/if`
+                                            ~/foreach`
+                                        </div>
+                                    </div>
+                                    <!--end:VAS Plan-->
+                                </div>
+                            </li>
+                            <!--end:VAS div-->
+                            ~/foreach`
+                        </ul>
+                    </div>
+                </div>
+                <!--end:VAS-->
+                <!--start:cart-->
+                <div class="fr mem-wid6 mem-widp2 mem_bg1">
+                    <div class="mem_pad19 colrw mem-hgt3">
+                        <div class="fontthin f20 opa60">You are getting</div>
+                        <!--start:sel VAS-->
+                        <div class="">
+                            ~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
+                            ~if $v.subscription_id eq $data.selectedMainServKey`
+                            ~foreach from=$v.durations key=kd item=vd name=servDurationsLoop`
+                            ~if $vd.duration_id eq $data.selectedMainServDur`
+                            <div id="mainPlan">
+                                <div class="disp-tbl fullwid">
+                                    <div id="mainPlanName" class="disp-cell f15 fontreg wid80p pos-rel">~$v.subscription_name`<span id="changeMainPlan" class="vsup opa60 cursp">CHANGE PLAN</span></div>
+                                    <div id="mainPlanStrikePrice" class="disp-cell f13 fontlig opa60 txtr strike wid20p">~$vd.price_strike`</div>
+                                </div>
+                                <div class="disp-tbl fullwid">
+                                    <div id="mainPlanDurAndCont" class="disp-cell vbtm fontlig f13">~$vd.duration` ~$vd.duration_text` | ~$vd.contacts`</div>
+                                    <div id="mainPlanPrice" class="disp-cell fontreg f15 txtr">~$vd.price`</div>
+                                </div>
+                            </div>
+                            ~/if`
+                            ~/foreach`
+                            ~/if`
+                            ~/foreach`
+                            <div id="vasServices"></div>
+                        </div>
+                        <!--end:sel VAS-->
+                    </div>
+                    <!--start:seprator-->
+                    <div class="pos-rel fullwid mem-hgt4">
+                        <div class="pos-ab mem-pos3"> <i class="mem-sprite mem-leftcirlce"></i> </div>
+                        <div class="pos-abs mem-pos1"> <i class="mem-sprite mem-rightcirlce"></i> </div>
+                        <div class="pos-abs fullwid mem-pos4 mem-brd8"></div>
+                    </div>
+                    <!--end:seprator-->
+                    <!--start:total-->
+                    <div class="mem_pad23 colrw fontlig">
+                        <div id="savingsBlock" class="txtc f15 pb10 disp-none">
+                            <span>Your Savings &nbsp;</span><span>~$data.currency`</span><span id="totalSavings"></span>
+                        </div>
+                        <div style="overflow:hidden;position: relative;">
+                            <div id="payNowBtn" class="fullwid txtc lh50">
+                                <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
+                            </div>
+                            ~if $data.upgradeMembershipContent`
+                            <div id="upgradeBtn" class="fullwid txtc lh50 cursp">
+                                <span class="colrw">Upgrade</span>
+                            </div>
+                            ~/if`
+                        </div>
+                        <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
+                    </div>
+                    <!--end:total-->
+                </div>
+                <!--end:cart-->
+            </div>
+            <!--end:div-->
+        </div>
+    </div>
+    <!--end:plan-->
+    ~/if`
+<!--end:upgrade membership eligible user section-->
+~else if $data.vasContent`
 <!--start:plan-->
 <div class="bg-4">
     <div class="container mainwid pt40">

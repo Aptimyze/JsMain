@@ -2204,6 +2204,7 @@ class Membership
                     $discount_type = 9;
                 }
             } else if($upgradeActive == "1"){
+                error_log("ankita setting discount type for upgrade");
                 $discount_type = 15;
             } else {
                 $discount_type = 12;
