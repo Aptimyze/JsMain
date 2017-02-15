@@ -878,7 +878,7 @@ public function unsett()
     {
 		$justJoinMatchArr = SearchCommonFunctions::getJustJoinedMatches($this->loginProfile,"countAll"); 
 		$justJoinedMatches=$justJoinMatchArr['CNT'];
-		$justJoinMatchArrNew = SearchCommonFunctions::getJustJoinedMatches($this->loginProfile); 
+		$justJoinMatchArrNew = SearchCommonFunctions::getJustJoinedMatches($this->loginProfile,"CountOnly","havePhoto"); 
 		$justJoinedMatchesNew=$justJoinMatchArrNew['CNT'];
 		$this->memcache->setJUST_JOINED_MATCHES($justJoinedMatches ? $justJoinedMatches : 0);
 	        $this->memcache->setJUST_JOINED_MATCHES_NEW($justJoinedMatchesNew ? $justJoinedMatchesNew : 0);

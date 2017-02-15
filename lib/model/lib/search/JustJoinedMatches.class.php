@@ -19,7 +19,7 @@ class JustJoinedMatches extends PartnerProfile
         /**
         * @const DAY_GAP [No. of days in which we consider for justjoined matches]
         */
-	const DAY_GAP = 6; 
+	const DAY_GAP = 10; // this has to be changed to 10 days 
 
 
 	/**
@@ -104,13 +104,13 @@ class JustJoinedMatches extends PartnerProfile
 		/** 
 		* stareDate will be calcualted as "profiles which have Registered(VERIFY_ACTIVATED_DT) from the midnight of the day 6 days before current day to current time minus 6(SAFE_TIME) hours. For instance, if now is 2nd July 2014 11:34:59, all "Just Joined Matches" would be profiles which have registered from 26th June 2014 00:00:00 to 2nd July 2014 5:34:59. All timestamps should be considered in IST. 
 		*/
-		$endDate = date("Y-m-d H:i:s", strtotime("now") - self::SAFE_TIME * 3600);
+		$endDate = date("Y-m-d H:i:s", strtotime("now")); //Safe time was removed as per JIRA (JSM-3062)
 		$startDate = date("Y-m-d 00:00:00", strtotime($endDate) - self::DAY_GAP*24*3600); 
 
 		if($this->m_sz_callType=='CountOnly')
 		{
 			$dt = $this->lastUsedJustJoinedSearch();
-			$dt = date("Y-m-d H:i:s", strtotime($dt) - self::SAFE_TIME * 3600);
+			$dt = date("Y-m-d H:i:s", strtotime($dt));  // - self::SAFE_TIME * 3600);
 			$startDate = (CommonUtility::dateDiff($startDate,$dt)>1)?$dt:$startDate;
 		}
 		$this->setLVERIFY_ACTIVATED_DT($startDate);
