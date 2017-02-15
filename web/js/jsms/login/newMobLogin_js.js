@@ -330,3 +330,37 @@ function loadCSS(href) {
        href: href
      });
 }
+
+function translateSiteHomePage(translateURL){
+  newHref = translateURL+"?AUTHCHECKSUM="+readCookieHomePage("AUTHCHECKSUM");
+  if(translateURL.indexOf('hindi')!=-1){
+    createCookieHomePage("jeevansathi_hindi_site","Y",100,".jeevansathi.com");
+  } else {
+    createCookieHomePage("jeevansathi_hindi_site","N",100,".jeevansathi.com");
+  }
+  window.location.href = newHref;
+}
+
+function readCookieHomePage(name) {
+    var nameEQ = escape(name) + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return unescape(c.substring(nameEQ.length, c.length));
+    }
+    return null;
+}
+
+function createCookieHomePage(name, value, days) {
+    var expires;
+
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    } else {
+        expires = "";
+    }
+    document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+}
