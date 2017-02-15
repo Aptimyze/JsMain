@@ -1,11 +1,15 @@
 $(document).ready(function(){
-	
+	ajaxrequestSent = 0;
 	$("#hidePasswordCheck").bind('click',function()
 	{
 		var pswrd = $('#passValueID').val();
 		// hide
 		action = 1;
-		ajaxPassword(pswrd,action);
+		if(ajaxrequestSent == 0)
+		{
+			ajaxrequestSent = 1;
+			ajaxPassword(pswrd,action);
+		}
 	});
 
 	$("#unHidePasswordCheck").bind('click',function()
@@ -13,7 +17,11 @@ $(document).ready(function(){
 		var pswrd = $('#passValueID').val();
 		// Unhide
 		action = 0;
-		ajaxPassword(pswrd,action);
+		if(ajaxrequestSent == 0)
+		{
+			ajaxrequestSent = 1;
+			ajaxPassword(pswrd,action);
+		}
 	});
 });
 
@@ -21,7 +29,7 @@ function ajaxPassword(pswrd, action)
 {
 	$.ajax({                 
 	url: '/api/v1/common/checkPassword',
-	data: "data=" + JSON.stringify({'pswrd' : pswrd});
+	data: "data=" + JSON.stringify({'pswrd' : pswrd}),
 	success: function(response) 
 	{
 		if(response.success == 1)
@@ -32,6 +40,7 @@ function ajaxPassword(pswrd, action)
 		{
 			setTimeout(function(){ShowTopDownError(["<center>Invalid Password</center>"]);},animationtimer);
 		}
+		ajaxrequestSent = 0;
 	}
   });
 }

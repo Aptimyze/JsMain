@@ -298,46 +298,33 @@ class staticActions extends sfActions
             $pObj = LoggedInProfile::getInstance();
         }
 
-        public function executeHideOption(sfWebRequest $request)
-        {
-            $loginData = $request->getAttribute("loginData");
-            $pObj = LoggedInProfile::getInstance();
-        }
+        public function executeHideOption(sfWebRequest $request) {}
 
-        public function executeUnHideOption(sfWebRequest $request)
-        {
-            $loginData = $request->getAttribute("loginData");
-            $pObj = LoggedInProfile::getInstance();
-        }
+        public function executeUnHideOption(sfWebRequest $request) {}
 
-        public function executeUnHideResult(sfWebRequest $request)
-        {
-            $loginData = $request->getAttribute("loginData");
-            $pObj = LoggedInProfile::getInstance();
-        }
+        public function executeUnHideResult(sfWebRequest $request) {}
 
         public function executeHideCheckPassword(sfWebRequest $request)
         {
-            $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
             $this->hideOption = $request->getParameter("hide_option");
         }
+
         public function executeHideDuration(sfWebRequest $request)
         {
-            $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
             $this->hideOption = $request->getParameter("hide_option");
             if($this->hideOption=="1")
             {
-              $this->hideText = "Your profile is now temporarily hidden for 7 days";
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION1." days";
             }
             elseif ($this->hideOption=="2")
             {
-              $this->hideText = "Your profile is now temporarily hidden for 10 days";
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION2." days";
             }
             elseif ($this->hideOption=="3")
             {
-              $this->hideText = "Your profile is now temporarily hidden for 30 days";
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION3." days";
             }
         }
 
