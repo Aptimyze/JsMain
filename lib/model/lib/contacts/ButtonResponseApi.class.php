@@ -223,7 +223,7 @@ Class ButtonResponseApi
 			$button["params"] = "&responseTracking=" . $page["responseTracking"];
 		if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
  		{
-			$button["params"] = "responseTracking=".$rtype;
+			$button["params"] = "&responseTracking=".$rtype;
  		}
 		
 		$button = self::buttonMerge($button);
@@ -250,7 +250,7 @@ Class ButtonResponseApi
 			$button["params"] = "&responseTracking=" . $page["responseTracking"];
                 if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
                 {
-                        $button["params"] = "responseTracking=".$rtype;
+                        $button["params"] = "&responseTracking=".$rtype;
                 }
 		$button = self::buttonMerge($button);
 		return $button;
