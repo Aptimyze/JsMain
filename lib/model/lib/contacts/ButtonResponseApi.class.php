@@ -221,6 +221,11 @@ Class ButtonResponseApi
 		$button["action"] = "ACCEPT";
 		if (isset($page["responseTracking"]) && $str == "Accept")
 			$button["params"] = "&responseTracking=" . $page["responseTracking"];
+		if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
+ 		{
+			$button["params"] = "responseTracking=".$rtype;
+ 		}
+		
 		$button = self::buttonMerge($button);
 		return $button;
 	}
@@ -243,6 +248,10 @@ Class ButtonResponseApi
 		$button["action"] = "DECLINE";
 		if (isset($page["responseTracking"]))
 			$button["params"] = "&responseTracking=" . $page["responseTracking"];
+                if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
+                {
+                        $button["params"] = "responseTracking=".$rtype;
+                }
 		$button = self::buttonMerge($button);
 		return $button;
 	}
