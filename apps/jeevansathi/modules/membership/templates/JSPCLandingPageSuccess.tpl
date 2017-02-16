@@ -611,7 +611,7 @@
                                     </div>                
                                 </div>
                                 <div class="fr upgrd_p2">
-                                <div class="pt30 txtc vasPayBtn">
+                                <div class="pt30 txtc vasPayBtn" vasKey="~$v.vas_key`">
                                     <button class="upb cursp" id="selectedVasPrice_~$v.vas_key`"><span class="price">~$data.currency` ~$vv.vas_price`</span> &nbsp;|&nbsp;Pay Now</button>
                                 </div>
                                 </div>

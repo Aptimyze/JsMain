@@ -14,10 +14,9 @@ function memUpgradeVasCheckbox(checkboxName) {
         $(this).parent().addClass("selected");
         var selectedAddon = $(this).attr("id");
         var vasKey=$("#"+selectedAddon).attr("vasKey");
-        console.log(selectedAddon,vasKey);
+    
         if(checkEmptyOrNull(selectedAddon)){
             var vasPrice = $("#"+selectedAddon+"_duration").attr("data-price");
-            console.log(vasPrice);
             $("#selectedVasPrice_"+vasKey+" span").html(vasPrice);
             createCookie('selectedVas',selectedAddon);
         }
@@ -42,6 +41,21 @@ function initializeUpgradePage(){
 
     //preselect first vas
     preSelectVasForUpgradePage();
+
+    bindVasPayBtnClick();
+}
+
+function bindVasPayBtnClick(){
+    $(".vasPayBtn").click(function(e){
+        var selectedVasCookie = readCookie('selectedVas'),selectedVasKey=$(this).attr("vasKey");
+        var price = $("#selectedVasPrice_"+selectedVasKey+" span").html();
+       
+        if(price!=undefined && checkEmptyOrNull(selectedVasCookie)){
+            $.redirectPost('/membership/jspc', {'displayPage':3, 'selectedVas':selectedVasCookie, 'device':'desktop'});
+        } else {
+            e.preventDefault();
+        }
+    });
 }
 
 function bindMainMemUpgradeBtnClick(){
