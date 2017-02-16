@@ -970,6 +970,16 @@
     ~if $data.upgradeMembershipContent`
         //initilize upgrade page
         initializeUpgradePage();
+        $("#upgradeMainMemBtn").click(function(e){
+            //flush vas selection when upgrade button clicked
+            eraseCookie('selectedVas');
+            //console.log("clicked on upgrade button");
+            var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
+            createCookie('mainMemTab', mainMem);
+            createCookie('mainMem', mainMem);
+            createCookie('mainMemDur', mainMemDur);
+            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMem, 'mainMemDur':mainMemDur, 'device':'desktop' , 'upgradeMem':upgradeType});
+        }); 
     ~/if`
     ~if $data.vasContent`
         eraseCookie('paymentMode');

@@ -35,9 +35,6 @@ function initializeUpgradePage(){
     
     //set the input duration checkbox for vas
     memUpgradeVasCheckbox("MONTH[]");
-    
-    //binding on click on upgrade main membership button
-    bindMainMemUpgradeBtnClick();
 
     //preselect first vas
     preSelectVasForUpgradePage();
@@ -55,20 +52,6 @@ function bindVasPayBtnClick(){
         } else {
             e.preventDefault();
         }
-    });
-}
-
-function bindMainMemUpgradeBtnClick(){
-    $("#upgradeMainMemBtn").click(function(e){
-        //flush vas selection when upgrade button clicked
-        eraseCookie('selectedVas');
-        //console.log("clicked on upgrade button");
-        var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
-        createCookie('mainMemTab', mainMem);
-        createCookie('mainMem', mainMem);
-        createCookie('mainMemDur', mainMemDur);
-        //console.log("ankita",mainMem,mainMemDur,upgradeType);
-        $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMem, 'mainMemDur':mainMemDur, 'device':'desktop' , 'upgradeMem':upgradeType});
     });
 }
 
