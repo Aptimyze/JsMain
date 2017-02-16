@@ -131,7 +131,13 @@ class ApiResponseHandler
 		$output["phoneDetails"]=$this->phoneDetails;
 		$loggedIn=LoggedInProfile::getInstance();
 		if(MobileCommon::isApp() && $loggedIn && $loggedIn->getPROFILEID())
+		{
+
 			$output["userReligion"] = $loggedIn->getRELIGION();
+			$output["userActivation"] = $loggedIn->getACTIVATED();
+		}
+
+
 		// set the content type
 		header('Content-type: ' . $this->responseContentType);
 
