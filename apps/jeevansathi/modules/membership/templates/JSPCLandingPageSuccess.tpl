@@ -981,19 +981,19 @@
         var selectedVasCookie = readCookie('selectedVas');
         if(pageType != 'upgradeMembershipPage'){
             if(selectedVasCookie && checkEmptyOrNull(selectedVasCookie)){
-                updateAlreadySelectedVas(pageType);
+                updateAlreadySelectedVas();
             }
             $(".vascell").click(function(e){
-                var that = this,vasClass='mem-vas-active';
+                var that = this;
                 $(this).parent().find('.vascell').each(function(){
-                    if($(this).hasClass(vasClass) && this!=that){
-                        $(this).removeClass(vasClass);
+                    if($(this).hasClass('mem-vas-active') && this!=that){
+                        $(this).removeClass('mem-vas-active');
                     }
                 });
-                if($(that).hasClass(vasClass)){
-                    $(that).removeClass(vasClass);
+                if($(that).hasClass('mem-vas-active')){
+                    $(that).removeClass('mem-vas-active');
                 } else {
-                    $(that).addClass(vasClass);
+                    $(that).addClass('mem-vas-active');
                 }
                 trackVasCookie($(that).attr("vasKey"), $(that).attr("id"));
                 manageVasOverlay($(that).attr("vasKey"));
