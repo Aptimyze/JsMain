@@ -90,14 +90,14 @@
                 <div class="fontlig" id="altEmailDiv">
                     <div class="f16 color11 fontreg bordrBtmGrey" style="padding: 22px 31px;">~$titleText`  <span id="skipBtnAltEmail" class="fr dispibl f15 fontlig" style="cursor: pointer;" onclick="closeAltEmailCALLayer()">Skip</span></div>
                     <div class="padWidget bordrBtmGrey">
-                         <div class="txtc fontreg colrGrey f13" style="margin-bottom: -4%">~$contentText`</div>
+                         <div class="txtc fontreg colrGrey f13" style="margin-bottom: -4%">~$contentTextNEW`</div>
                         <div style='margin-top:25px; margin-left: 2%;margin-right: 5%'>
                          <div class="wid500 txtl color5 f12 disp-none" style="position: absolute;top: 86px;" id="CALNameErr">Please provide a valid email address.</div>
                         <input type="text" id="altEmailInpCAL" class="f15 wid90p pa2 txtc" value='~$nameOfUser`' placeholder="Your alternate email" style="">
                         </div>
                         <div class="f11 colrGrey mt5 txtc">This field will be screened</div>
                         <div class="f15 pt20 colrGrey mt5 txtc wid80p" style="margin: 0px auto;">~$subtitle`</div>
-                        <button id='CALButtonB3'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink">~$button1Text`</button>
+                        <button id='CALButtonB3'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink">~$button1TextNEW`</button>
                     </div>
             </div> 
         <div id="alternateEmailCnfLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white modal3" style="padding-top: 13%;margin-top: 40px">
@@ -114,7 +114,7 @@
         </div>
         <!--end:layer 1-->
         </div> 
-
+</div>
 
 ~elseif $layerId != '9'`
 <div id='criticalAction-layer' class="layerMidset setshare layersZ pos_fix calwid1 disp-none">
