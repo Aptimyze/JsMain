@@ -1,11 +1,43 @@
 <script>
     var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
+    var primaryEmail = primaryEmail;
 </script>
 
 <input type="hidden" id="CriticalActionlayerId" value="~$calObject.LAYERID`">
 
-~if $calObject.LAYERID eq '16'`
+~if $calObject.LAYERID eq '13'`
+  
+        <div class="txtc pad12 white fullwid f13 posabs dispnone" id="validation_error"  style="top: 0px;background-color: rgba(102, 102, 102, 0.5);z-index:104;">Please provide a valid email address.</div>
+
+      <div class="darkBackgrnd" id="altEmailCAL">
+  <div class="fontlig">
+      <div style="padding: 100px 20px 0px 20px;" class="app_clrw f20 txtc">~$calObject.TEXT2`</div> 
+    <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
+    <input id='altEmailInpCAL' value='~$nameOfUser`' type="text" class="bg4 lh60 fontthin mt30 f24 fullwid txtc" placeholder="Your alternate email">
+        <div class="pt10 f15 fontlig fullwid txtc colr8A">This field will be screened</div>
+         <div class="pad_new app_clrw f14 txtc">~$calObject.SUBTITLE`</div>
+
+        <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw colr8A" style="padding-top: 135px">~$calObject.BUTTON2NEW`</div>
+        
+        <div onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1');" type="submit" id="submitAltEmail" class="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">~$calObject.BUTTON1NEW`</div>
+    </div>
+  
+</div>
+
+
+      <div id="confirmationSentAltEmail" class="darkBackgrnd dispnone">
+  <div class="fontlig">
+      <div class="pad_new app_clrw f20 txtc" style="padding-top: 170px">Email Verification</div> 
+    <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
+         <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 50px;padding-right: 50px"></div>    
+         <div id="okButtonAlt" style="padding-top: 200px" onclick="closeLayerCAL();"  class="pad_new app_clrw f16 txtc">OK</div>    
+    </div>
+  
+</div>
+
+
+~elseif $calObject.LAYERID eq '16'`
 
         <div id="overlayHead" class="bg1">
             <div class="txtc pad15">

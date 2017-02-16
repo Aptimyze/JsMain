@@ -374,11 +374,13 @@ class staticActions extends sfActions
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
-    $this->contentText = $layerData[TEXT];
-    $this->button1Text = $layerData[BUTTON1];
-    $this->button2Text = $layerData[BUTTON2];
+    $this->contentText = $layerData[TEXT2];
+    $this->button1Text = $layerData[BUTTON1NEW];
+    $this->button2Text = $layerData[BUTTON2NEW];
     $this->action1 = $layerData[ACTION1];
     $this->action2 = $layerData[ACTION2];
+    $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
+    $this->subtitle = $layerData[SUBTITLE];
     $this->setTemplate("criticalActionLayer");
   }
 

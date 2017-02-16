@@ -988,6 +988,37 @@ var buttonClicked=0;
                         namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
                         
                       }
+
+                 if(layerId==13 && button=='B1')
+                    {   
+                        var altEmailUser = ($("#altEmailInpCAL").val()).trim();
+                        var validation=validateAlternateEmail(altEmailUser,primaryEmail);
+                        if(validation.valid!==true)
+                        {  
+                            $("#CALNameErr").text(validation.errorMessage);
+                            $("#CALNameErr").show();
+                            buttonClicked=0;
+                            return;
+                        }
+
+                            else
+                             {
+                             // showLoader();
+                             $.ajax({
+                                url: '/api/v1/profile/editsubmit?editFieldArr[ALT_EMAIL]='+altEmailUser,
+                                type: 'POST',
+                                success: function(response) {
+                                    criticalLayerButtonsAction('','B1');
+                                }
+                            });
+                            $("#altEmailDiv").hide();
+                             msg =altEmailUser+' ,click on the link to verify your email';
+                             $("#altEmailConfirmText").text(msg);
+                             $("#alternateEmailCnfLayer").show();
+                               return;
+                            }
+                        
+                      }
                     Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
                     var URL="/common/criticalActionLayerTracking";
@@ -1207,3 +1238,4 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 				}
 			});
     }
+
