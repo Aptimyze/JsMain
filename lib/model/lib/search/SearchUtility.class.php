@@ -1052,6 +1052,11 @@ class SearchUtility
                 JsMemcache::getInstance()->set("cachedLSMS$pid","");
                 JsMemcache::getInstance()->set("cachedDMR$pid","");
                 JsMemcache::getInstance()->set("cachedLSMR$pid","");
+                // delete Myjs cached data
+			    $appOrMob = MobileCommon::isApp()? MobileCommon::isApp():'M';
+			    $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid)."_".$appOrMob;
+			    JsMemcache::getInstance()->delete($myjsCacheKey);
+			    // delete data Match of the day
                 JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$pid);
 				JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$pid);
 			}	
