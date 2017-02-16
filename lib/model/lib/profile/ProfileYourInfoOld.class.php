@@ -75,7 +75,7 @@ class ProfileYourInfoOld
                 $dummyResult['YOUR_INFO_OLD'] = ProfileCacheConstants::NOT_FILLED;
             }
             else {
-                $dummyResult = $result['YOUR_INFO_OLD'];
+                $dummyResult['YOUR_INFO_OLD'] = $result;
                 $dummyResult['PROFILEID'] = $pid;
             }
 
