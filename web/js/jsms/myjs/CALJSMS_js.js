@@ -82,7 +82,7 @@ else {
                             });
 
                              $("#altEmailCAL").hide();
-                             msg = "A link has been sent to your email Id "+altEmailUser+' ,click on the link to verify your email';
+                             msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
                              $("#altEmailMsg").text(msg);
                              $("#confirmationSentAltEmail").show();
                                return;
