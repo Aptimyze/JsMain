@@ -523,16 +523,9 @@
         <div class="container mainwid">        
             <div class="clearfix color11 pt30 pb30">
                 <div class="fl">
-
-                    <p class="fontmed f24">Make your contacts visible to others by just paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if` ~$data.upgradeMembershipContent.upgradeExtraPay`</p>
-                    <p class="f16 pt5 fontreg">Upgrade from ~$data.topBlockMessage.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership... <span class="color5">Exclusive offer for you vaild till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</span></p>
-                </div>
-                <div class="fr txtl">
-                    <div class="fontmed f15">OFFER EXPIRES IN</div>
-                    <div class="Newtimecolor">
-                        <ul class="pt5 fontreg"><li>12<span>H</span></li><li>48<span>M</span></li><li>26<span>S</span></li></ul>
-                    </div>      
-                </div>        
+                    <p class="fontmed f24 color5">Exclusive offer for you, valid till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</p>
+                    <p class="f16 pt5 fontreg">Upgrade your current ~$data.topBlockMessage.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership by paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if` ~$data.upgradeMembershipContent.upgradeExtraPay`</p>
+                </div>       
             </div>        
             <!--start:block1-->        
             <div class="clearfix pb30 color11">         
@@ -593,16 +586,16 @@
                 </div>        
             </div>        
             <!--end:block1-->
+            <!--start:block 2-->
             ~if $data.vasContent`
-                <!--start:block 2-->
-                <div style="border-top:1px solid #c2c2c2; margin-top:30px;padding-top:40px; padding-bottom:40px">
-                    ~foreach from=$data.vasContent key=k item=v name=vasLoop`
+                ~foreach from=$data.vasContent key=k item=v name=vasLoop`                    
+                    <div style="margin-top:30px;padding-top:40px; padding-bottom:40px" class="upgrd_bg1">
                         <div class="clearfix fontlig">
-                            <div class="fl pl35 color11">
+                            <div class="fl pl35 color11 upwid2">
                                 <p class="fontrobbold f24">~$v.vas_name`</p>
                                 <p class="f13 pt5">~$v.vas_description`</p>
                                 <div class="pt30">
-                                    <ul class="uplino">
+                                    <ul class="uplino optionsList">
                                         ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
                                             ~if $kk gt 0`
                                             <li class="clearfix disp_ib pl30">
@@ -613,19 +606,19 @@
                                                 <div class="fl pl10">~$vv.duration` months for ~$data.currency` ~$vv.vas_price`  ~if $vv.vas_price_strike`<span class="txtstr upcolr1">~$vv.vas_price_strike`</span> </div>~/if`
                                             </li>
                                         ~/foreach`
-                                    </ul>
+                                    </ul>                               
                                 </div>                
                             </div>
-                            <div class="fl upgrd_p2">
-                             <div class="pt30 txtc">
-                                        <button class="upb">Rs. 150 &nbsp;|&nbsp;Pay Now</button>
-                                    </div>                    
-                            </div>                
+                            <div class="fr upgrd_p2">
+                            <div class="pt30 txtc">
+                                <button class="upb">Rs. 150 &nbsp;|&nbsp;Pay Now</button>
+                            </div>
+                            </div>
                         </div>
-                    ~/foreach`            
-                </div>
-                <!--end:block 2-->  
-            ~/if`      
+                    </div>  
+                ~/foreach`         
+            ~/if`
+            <!--end:block 2-->      
         </div>
     </div>
     <!--end:plan-->
@@ -1026,10 +1019,11 @@
         $('#cmpplan').css('left', leftval);
     ~/if`
     ~if $data.upgradeMembershipContent`
-        //balance the heights of current and upgrade membership section heights
-        setLeftRightMemCompareEqualHeight();
         //set the input duration checkbox for vas
         memUpgradeCheckbox("MONTH[]");
+        //balance the heights of current and upgrade membership section heights
+        setLeftRightMemCompareEqualHeight();
+        //binding on click on upgrade main membership button
         $("#upgradeBtn").click(function(e){
             //console.log("clicked on upgrade button");
             var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
