@@ -588,35 +588,37 @@
             <!--end:block1-->
             <!--start:block 2-->
             ~if $data.vasContent`
-                ~foreach from=$data.vasContent key=k item=v name=vasLoop`                    
-                    <div style="margin-top:30px;padding-top:40px; padding-bottom:40px" class="upgrd_bg1" id="~$v.vas_key`">
-                        <div class="clearfix fontlig">
-                            <div class="fl pl35 color11 upwid2">
-                                <p class="fontrobbold f24">~$v.vas_name`</p>
-                                <p class="f13 pt5">~$v.vas_description`</p>
-                                <div class="pt30">
-                                    <ul class="uplino optionsList">
-                                        ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
-                                            ~if $kk gt 0`
-                                            <li id="~$vv.id`" class="clearfix disp_ib pl30 vascell" vasKey="~$v.vas_key`">
-                                            ~else`
-                                            <li id="~$vv.id`" class="clearfix disp_ib vascell" vasKey="~$v.vas_key`">
-                                            ~/if`
-                                                <div class="fl"><input type="radio"  value="~$vv.duration`M" name="MONTH[]"></div>
-                                                <div class="fl pl10" id="~$vv.id`_duration">~$vv.duration` months for ~$data.currency` ~$vv.vas_price`  ~if $vv.vas_price_strike`<span class="txtstr upcolr1" id="~$vv.id`_price_strike">~$vv.vas_price_strike`</span> </div>~/if`
-                                            </li>
-                                        ~/foreach`
-                                    </ul>                               
-                                </div>                
+                <div id="VASdiv">
+                    ~foreach from=$data.vasContent key=k item=v name=vasLoop`                    
+                        <div style="margin-top:30px;padding-top:40px; padding-bottom:40px" class="upgrd_bg1" id="~$v.vas_key`">
+                            <div class="clearfix fontlig">
+                                <div class="fl pl35 color11 upwid2">
+                                    <p class="fontrobbold f24">~$v.vas_name`</p>
+                                    <p class="f13 pt5">~$v.vas_description`</p>
+                                    <div class="pt30">
+                                        <ul class="uplino optionsList">
+                                            ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
+                                                ~if $kk gt 0`
+                                                <li id="~$vv.id`" class="clearfix disp_ib pl30" vasKey="~$v.vas_key`">
+                                                ~else`
+                                                <li id="~$vv.id`" class="clearfix disp_ib" vasKey="~$v.vas_key`">
+                                                ~/if`
+                                                    <div class="fl"><input type="radio"  value="~$vv.duration`M" name="MONTH[]" id="~$vv.id`"></div>
+                                                    <div class="fl pl10" id="~$vv.id`_duration">~$vv.duration` months for ~$data.currency` ~$vv.vas_price`  ~if $vv.vas_price_strike`<span class="txtstr upcolr1" id="~$vv.id`_price_strike">~$vv.vas_price_strike`</span> </div>~/if`
+                                                </li>
+                                            ~/foreach`
+                                        </ul>                               
+                                    </div>                
+                                </div>
+                                <div class="fr upgrd_p2">
+                                <div class="pt30 txtc" id="vasPrice_~$vv.id`">
+                                    <button class="upb cursp">~$data.currency` ~$vv.vas_price` &nbsp;|&nbsp;Pay Now</button>
+                                </div>
+                                </div>
                             </div>
-                            <div class="fr upgrd_p2">
-                            <div class="pt30 txtc" id="vasPrice_~$vv.id`">
-                                <button class="upb cursp">~$data.currency` ~$vv.vas_price` &nbsp;|&nbsp;Pay Now</button>
-                            </div>
-                            </div>
-                        </div>
-                    </div>  
-                ~/foreach`         
+                        </div>  
+                    ~/foreach` 
+                </div>        
             ~/if`
             <!--end:block 2-->      
         </div>
@@ -826,7 +828,6 @@
     });
 
     $(document).ready(function() {
-    console.log("pageType",pageType);
     ~if $data.serviceContent`
         eraseCookie('paymentMode');
         eraseCookie('cardType');
@@ -966,6 +967,10 @@
             }
         });
     ~/if`
+    ~if $data.upgradeMembershipContent`
+        //initilize upgrade page
+        initializeUpgradePage();
+    ~/if`
     ~if $data.vasContent`
         eraseCookie('paymentMode');
         eraseCookie('cardType');
@@ -974,31 +979,26 @@
         eraseCookie('mainMemDur');
         checkLogoutCase(profileid);
         var selectedVasCookie = readCookie('selectedVas');
-        if(selectedVasCookie && checkEmptyOrNull(selectedVasCookie) && pageType!='upgradeMembershipPage'){
-            updateAlreadySelectedVas();
-        }
-        $(".vascell").click(function(e){
-            var that = this,vasClass='mem-vas-active';
-            if(pageType == 'upgradeMembershipPage'){
-                vasClass = 'mem-vas-active-upgrade';
+        if(pageType != 'upgradeMembershipPage'){
+            if(selectedVasCookie && checkEmptyOrNull(selectedVasCookie)){
+                updateAlreadySelectedVas(pageType);
             }
-            $(this).parent().find('.vascell').each(function(){
-                if($(this).hasClass(vasClass) && this!=that){
-                    $(this).removeClass(vasClass);
+            $(".vascell").click(function(e){
+                var that = this,vasClass='mem-vas-active';
+                $(this).parent().find('.vascell').each(function(){
+                    if($(this).hasClass(vasClass) && this!=that){
+                        $(this).removeClass(vasClass);
+                    }
+                });
+                if($(that).hasClass(vasClass)){
+                    $(that).removeClass(vasClass);
+                } else {
+                    $(that).addClass(vasClass);
                 }
-            });
-            if($(that).hasClass(vasClass)){
-                $(that).removeClass(vasClass);
-            } else {
-                $(that).addClass(vasClass);
-            }
-            trackVasCookie($(that).attr("vasKey"), $(that).attr("id"),pageType);
-            if(pageType != 'upgradeMembershipPage'){
+                trackVasCookie($(that).attr("vasKey"), $(that).attr("id"));
                 manageVasOverlay($(that).attr("vasKey"));
                 updateVasPageCart();
-            }
-        });
-        if(pageType != 'upgradeMembershipPage'){
+            });
             $('.vasoverlay,.vasoverlay2').click(function(e){
                 var vasKey = $(this).parent().attr('id').replace('_overlay',''),vasId;
                 $("#"+vasKey+" .vascell").each(function(e){
@@ -1011,38 +1011,20 @@
                 trackVasCookie(vasKey,vasId);
                 updateVasPageCart();
             });
+            $("#payNowBtn").click(function(e){
+                var selectedVasCookie = readCookie('selectedVas');
+                
+                if(parseInt($("#totalPrice").html()) > 0 && checkEmptyOrNull(selectedVasCookie)){
+                    $.redirectPost('/membership/jspc', {'displayPage':3, 'selectedVas':selectedVasCookie, 'device':'desktop'});
+                } else {
+                    e.preventDefault();
+                    //sweetAlert("Hi !", "Please select atleast one item to continue", "error");
+                }
+            });
+            updateVasPageCart();
+            var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
+            $('#cmpplan').css('left', leftval);
         }
-        $("#payNowBtn").click(function(e){
-            var selectedVasCookie = readCookie('selectedVas');
-            
-            if(parseInt($("#totalPrice").html()) > 0 && checkEmptyOrNull(selectedVasCookie)){
-                $.redirectPost('/membership/jspc', {'displayPage':3, 'selectedVas':selectedVasCookie, 'device':'desktop'});
-            } else {
-                e.preventDefault();
-                //sweetAlert("Hi !", "Please select atleast one item to continue", "error");
-            }
-        });
-        updateVasPageCart();
-        var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
-        $('#cmpplan').css('left', leftval);
-    ~/if`
-    ~if $data.upgradeMembershipContent`
-        //set the input duration checkbox for vas
-        memUpgradeCheckbox("MONTH[]");
-        //balance the heights of current and upgrade membership section heights
-        setLeftRightMemCompareEqualHeight();
-        //binding on click on upgrade main membership button
-        $("#upgradeMainMemBtn").click(function(e){
-            //flush vas selection when upgrade button clicked
-            eraseCookie('selectedVas');
-            //console.log("clicked on upgrade button");
-            var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
-            createCookie('mainMemTab', mainMem);
-            createCookie('mainMem', mainMem);
-            createCookie('mainMemDur', mainMemDur);
-            //console.log("ankita",mainMem,mainMemDur,upgradeType);
-            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMem, 'mainMemDur':mainMemDur, 'device':'desktop' , 'upgradeMem':upgradeType});
-        });
     ~/if`
     });
 </script>
