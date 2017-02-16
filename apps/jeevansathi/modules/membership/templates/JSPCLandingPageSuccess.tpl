@@ -579,8 +579,8 @@
                                     ~/foreach`
                                 </ul>
                             ~/if`
-                            <div class="pt30 txtc" id="upgradeBtn">
-                                <button class="upb">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`  ~$data.upgradeMembershipContent.upgradeExtraPay` &nbsp;|&nbsp;Pay Now</button>
+                            <div class="pt30 txtc" id="upgradeMainMemBtn">
+                                <button class="upb cursp">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`  ~$data.upgradeMembershipContent.upgradeExtraPay` &nbsp;|&nbsp;Pay Now</button>
                             </div>
                          </div>
                 </div>        
@@ -611,7 +611,7 @@
                             </div>
                             <div class="fr upgrd_p2">
                             <div class="pt30 txtc">
-                                <button class="upb">Rs. 150 &nbsp;|&nbsp;Pay Now</button>
+                                <button class="upb cursp">Rs. 150 &nbsp;|&nbsp;Pay Now</button>
                             </div>
                             </div>
                         </div>
@@ -1024,7 +1024,7 @@
         //balance the heights of current and upgrade membership section heights
         setLeftRightMemCompareEqualHeight();
         //binding on click on upgrade main membership button
-        $("#upgradeBtn").click(function(e){
+        $("#upgradeMainMemBtn").click(function(e){
             //console.log("clicked on upgrade button");
             var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
             createCookie('mainMemTab', mainMem);
