@@ -39,7 +39,7 @@ class ASSISTED_PRODUCT_AP_PROFILE_INFO extends TABLE
          * already sent records in case of cron failure ordering them with last login date
 	@return an array of profileid 
 	*/
-    public function getAPProfilesResumed($whereLastLogin = '',$totalScripts,$currentScript)
+    public function getAPProfilesResumed($whereLastLogin = '',$totalScripts=1,$currentScript=0)
     {
       try {
         if($whereLastLogin)
