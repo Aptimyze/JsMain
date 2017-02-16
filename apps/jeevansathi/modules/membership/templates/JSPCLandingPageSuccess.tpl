@@ -589,7 +589,7 @@
             <!--start:block 2-->
             ~if $data.vasContent`
                 ~foreach from=$data.vasContent key=k item=v name=vasLoop`                    
-                    <div style="margin-top:30px;padding-top:40px; padding-bottom:40px" class="upgrd_bg1">
+                    <div style="margin-top:30px;padding-top:40px; padding-bottom:40px" class="upgrd_bg1" id="~$v.vas_key`">
                         <div class="clearfix fontlig">
                             <div class="fl pl35 color11 upwid2">
                                 <p class="fontrobbold f24">~$v.vas_name`</p>
@@ -598,20 +598,20 @@
                                     <ul class="uplino optionsList">
                                         ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
                                             ~if $kk gt 0`
-                                            <li class="clearfix disp_ib pl30">
+                                            <li id="~$vv.id`" class="clearfix disp_ib pl30 vascell" vasKey="~$v.vas_key`">
                                             ~else`
-                                            <li class="clearfix disp_ib">
+                                            <li id="~$vv.id`" class="clearfix disp_ib vascell" vasKey="~$v.vas_key`">
                                             ~/if`
                                                 <div class="fl"><input type="radio"  value="~$vv.duration`M" name="MONTH[]"></div>
-                                                <div class="fl pl10">~$vv.duration` months for ~$data.currency` ~$vv.vas_price`  ~if $vv.vas_price_strike`<span class="txtstr upcolr1">~$vv.vas_price_strike`</span> </div>~/if`
+                                                <div class="fl pl10" id="~$vv.id`_duration">~$vv.duration` months for ~$data.currency` ~$vv.vas_price`  ~if $vv.vas_price_strike`<span class="txtstr upcolr1" id="~$vv.id`_price_strike">~$vv.vas_price_strike`</span> </div>~/if`
                                             </li>
                                         ~/foreach`
                                     </ul>                               
                                 </div>                
                             </div>
                             <div class="fr upgrd_p2">
-                            <div class="pt30 txtc">
-                                <button class="upb cursp">Rs. 150 &nbsp;|&nbsp;Pay Now</button>
+                            <div class="pt30 txtc" id="vasPrice_~$vv.id`">
+                                <button class="upb cursp">~$data.currency` ~$vv.vas_price` &nbsp;|&nbsp;Pay Now</button>
                             </div>
                             </div>
                         </div>
