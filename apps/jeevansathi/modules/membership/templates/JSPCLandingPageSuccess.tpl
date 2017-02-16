@@ -523,7 +523,7 @@
         <div class="container mainwid">        
             <div class="clearfix color11 pt30 pb30">
                 <div class="fl">
-                    
+
                     <p class="fontmed f24">Make your contacts visible to others by just paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if` ~$data.upgradeMembershipContent.upgradeExtraPay`</p>
                     <p class="f16 pt5 fontreg">Upgrade from ~$data.topBlockMessage.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership... <span class="color5">Exclusive offer for you vaild till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</span></p>
                 </div>
@@ -536,7 +536,7 @@
             </div>        
             <!--start:block1-->        
             <div class="clearfix pb30 color11">         
-                <div class="fl upwid1 upgrd_bg1 fontlig">               
+                <div class="fl upwid1 upgrd_bg1 fontlig" id="currentMemSection">               
                         <!--start:head-->   
                         <div class="upgrd_p1 upb1">                
                             <div class="f14">Special upgrade offer for you </div>
@@ -558,7 +558,7 @@
                             ~/if`
                          </div>
                 </div>            
-                <div class="fr wid55p upgrd_bg1 fontreg">               
+                <div class="fr wid55p upgrd_bg1 fontreg" id="upgardeMemSection">               
                         <!--start:head-->   
                         <div class="upgrd_p1 upb1">                
                             <div class="f14">Special upgrade offer for you </div>
@@ -1026,6 +1026,9 @@
         $('#cmpplan').css('left', leftval);
     ~/if`
     ~if $data.upgradeMembershipContent`
+        //balance the heights of current and upgrade membership section heights
+        setLeftRightMemCompareEqualHeight();
+        //set the input duration checkbox for vas
         memUpgradeCheckbox("MONTH[]");
         $("#upgradeBtn").click(function(e){
             //console.log("clicked on upgrade button");

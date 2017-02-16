@@ -13,3 +13,15 @@ function memUpgradeCheckbox(checkboxName) {
         $(this).parent().addClass("selected");
     });
 }
+
+function setLeftRightMemCompareEqualHeight(){
+    var upgardeMemSectionHeight = $("#upgardeMemSection").height(),currentMemSectionHeight = $("#currentMemSection").height();
+    if(upgardeMemSectionHeight != currentMemSectionHeight){
+        if(upgardeMemSectionHeight > currentMemSectionHeight){
+            $("#currentMemSection").height(upgardeMemSectionHeight);
+        }
+        else{
+            $("#upgardeMemSection").height(currentMemSectionHeight);
+        }
+    }
+}
