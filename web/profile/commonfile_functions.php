@@ -414,7 +414,6 @@ $js_arr[]=array("jsms/common/disableScroll_js"  => "1");
 $js_arr[]=array("jsms/utility/sessionStorage_js"    => "3");
 $js_arr[]=array("jsms/myjs/myjs_js"                                          => "45");
 $js_arr[]=array("jsms/myjs/touchswipemyjs_js"               => "16");
-$js_arr[]=array("jsms/myjs/myjs_js"                                         => "45");
 $js_arr[]=array("showHide_js"     => "2");
 $js_arr[]=array("showHideReg_js"      => "2");
 $js_arr[]=array("operations_validate1"   => "1");
