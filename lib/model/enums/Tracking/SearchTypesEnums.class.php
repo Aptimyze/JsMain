@@ -89,7 +89,7 @@ class SearchTypesEnums
         //const HOROSCOPE_REQUEST_SENT_IOS = "30";		
 		
         const PHONEBOOK_IOS = "PCI";
-	    const CONTACT_VIEWERS_IOS = "CVI";
+	const CONTACT_VIEWERS_IOS = "CVI";
         const VISITORS_MYJS_IOS = "IMV";
         const MATCHALERT_MYJS_IOS = "IMM";
         const MYJS_VISITOR_PC = "11";
@@ -138,10 +138,6 @@ class SearchTypesEnums
 	const MATCHALERT_IOS ='MAI';
         const JUST_JOIN_ANDROID ='JJA';
 	const JUST_JOIN_IOS ='JJI';
-        const PENDING_EOI_ANDROID ='PIA';
-	const PENDING_EOI_IOS ='PII';
-        const FILTERED_EOI_ANDROID ='FIA';
-	const FILTERED_EOI_IOS ='FII';
 
         const APPLY_ONLY_CLUSTER = 'XX';
         const SaveSearchMailer = 'SSM';

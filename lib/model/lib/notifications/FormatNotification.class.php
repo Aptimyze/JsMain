@@ -32,9 +32,9 @@ class FormatNotification
         if($details['NOTIFICATION_KEY']=='JUST_JOIN')
                 $dataArray['STYPE'] =SearchTypesEnums::JUST_JOIN_ANDROID;
         if($details['NOTIFICATION_KEY']=='PENDING_EOI')
-                $dataArray['RTYPE'] =SearchTypesEnums::PENDING_EOI_ANDROID;
+                $dataArray['RTYPE'] =JSTrackingPageType::PENDING_EOI_ANDROID;
         if($details['NOTIFICATION_KEY']=='FILTERED_EOI')
-                $dataArray['RTYPE'] =SearchTypesEnums::FILTERED_EOI_ANDROID;
+                $dataArray['RTYPE'] =JSTrackingPageType::FILTERED_EOI_ANDROID;
 
 	return $dataArray;
     }
@@ -48,14 +48,16 @@ class FormatNotification
         if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
                 $dataArray['STYPE'] =SearchTypesEnums::IOSMatchOfDay;
 
+	/*
         if($details['NOTIFICATION_KEY']=='MATCHALERT')
                 $dataArray['STYPE'] =SearchTypesEnums::MATCHALERT_IOS;
         if($details['NOTIFICATION_KEY']=='JUST_JOIN')
                 $dataArray['STYPE'] =SearchTypesEnums::JUST_JOIN_IOS;
         if($details['NOTIFICATION_KEY']=='PENDING_EOI')
-                $dataArray['RTYPE'] =SearchTypesEnums::PENDING_EOI_IOS;
+                $dataArray['RTYPE'] =JSTrackingPageType::PENDING_EOI_IOS;
         if($details['NOTIFICATION_KEY']=='FILTERED_EOI')
-                $dataArray['RTYPE'] =SearchTypesEnums::FILTERED_EOI_IOS;
+                $dataArray['RTYPE'] =JSTrackingPageType::FILTERED_EOI_IOS;
+	*/
 
         return $dataArray;
     }
