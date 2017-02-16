@@ -832,12 +832,12 @@ class MembershipApiFunctions
                 $upgradeMemCase = false;
             }
             if ($difference->y < 1) {
-                if($upgradeMemCase == true){
+                /*if($upgradeMemCase == true){
                     $topBlockMessage["uMonthsText"] = "Month";
                     $topBlockMessage["uMonthsValue"] = "".$difference->m;
                     $topBlockMessage["uDaysText"] = "Days";
                     $topBlockMessage["uDaysValue"] = "".$difference->d;
-                }
+                }*/
                 $topBlockMessage["monthsText"] = "MONTHS";
                 $topBlockMessage["monthsValue"] = "" . str_pad($difference->m, 2, 0, STR_PAD_LEFT);
                 $topBlockMessage["daysText"] = "DAYS";
@@ -849,9 +849,9 @@ class MembershipApiFunctions
                 }
             } 
             else {
-                if($upgradeMemCase == true){
+                /*if($upgradeMemCase == true){
                     $topBlockMessage["uMonthsText"] = "Month";
-                }
+                }*/
                 $topBlockMessage["monthsText"] = "MONTHS";
                 $topBlockMessage["monthsValue"] = "Unlimited";
                 $topBlockMessage["daysText"] = NULL;
@@ -908,6 +908,7 @@ class MembershipApiFunctions
             //set additional required keys in api response for mem upgrade
             if($upgradeMemCase == true){
                 $topBlockMessage["currentMemName"] = $apiObj->activeServiceName;
+                $topBlockMessage["currentActualDuration"] = $apiObj->subStatus[0]['SERVICEID_WITHOUT_DURATION'];
                 $topBlockMessage["totalContactsAllotted"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['CALL'];
             }
         } 

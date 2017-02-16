@@ -540,7 +540,11 @@ class Membership
             if ($row['EXPIRY_DT']) {
                 $memUpgradeOffset = intval("-".VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]);
                 $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $row['SERVICEID']);
-                
+                //confirm ankita for 'L' membership
+                if(strpos($memID[0], 'L')!=false){
+                    $memID[0] = substr($memID[0],0,-1);
+                    $memID[1] = 'L';
+                }
                 if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
                     //confirm whether to handle upgrade for unlimited or not ankita
                     if($fromBackend != "discount_link" && $row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset && in_array($memID[0], VariableParams::$memUpgradeConfig["excludeMainMembershipUpgrade"])==false

@@ -532,7 +532,7 @@ class MembershipAPIResponseHandler {
                 //extra compared facts for upgarde
                 $output["upgardeComparedFacts"] = array(
                                 $formattedUpgradeMemName." members are contacted 2.5 times more than ".$formattedCurrentMemName,
-                                $formattedUpgradeMemName." members get 3 times more screen reviews",
+                                $formattedUpgradeMemName." members get 3 times more screen views",
                                 );
                 //expiry date for upgarde discount
                 $output["upgradeOfferExpiry"] = date('M d Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));

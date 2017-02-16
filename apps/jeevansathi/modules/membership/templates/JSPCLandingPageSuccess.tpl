@@ -518,22 +518,19 @@
 
 <!--start:upgrade membership eligible user section-->
 ~if $data.upgradeMembershipContent`
-    ~if $data.vasContent`
-   <!--start:plan-->
+    <!--start:plan-->
     <div class="bg-4">
         <div class="container mainwid">        
             <div class="clearfix color11 pt30 pb30">
                 <div class="fl">
-                    <p class="fontmed f24">Make your contacts visible to others' by just paying Rs 800</p>
-                    <p class="f16 pt5 fontreg">Upgrade from eRishta to eValue membership... <span class="color5">Exclusive offer for you vaild till 15th Jan, 2017</span></p>
+                    <p class="fontmed f24">Make your contacts visible to others by just paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if` ~$data.upgradeMembershipContent.upgradeExtraPay`</p>
+                    <p class="f16 pt5 fontreg">Upgrade from ~$data.upgradeMembershipContent.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership... <span class="color5">Exclusive offer for you vaild till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</span></p>
                 </div>
                 <div class="fr txtl">
                     <div class="fontmed f15">OFFER EXPIRES IN</div>
                     <div class="Newtimecolor">
                         <ul class="pt5 fontreg"><li>12<span>H</span></li><li>48<span>M</span></li><li>26<span>S</span></li></ul>
-                    </div>
-                    
-                    
+                    </div>      
                 </div>        
             </div>        
             <!--start:block1-->        
@@ -543,84 +540,94 @@
                         <div class="upgrd_p1 upb1">                
                             <div class="f14">Special upgrade offer for you </div>
                              <ul class="listnone f14 uoul pt15">
-                                <li class="f20"><strong>eRistha</strong></li>
-                                <li>6 Month</li>
-                                <li>50 Contacts To View</li>                        
+                                <li class="f20"><strong>~$data.upgradeMembershipContent.currentMemName`</strong></li>
+                                <li>~$data.upgradeMembershipContent.currentActualDuration` Month</li>
+                                <li>~$data.upgradeMembershipContent.totalContactsAllotted` Contacts To View</li>                        
                             </ul>
                          </div>
                          <!--end:head-->
                          <div class="upgrd_p1">
-                            <p class="upcolr1 f14 fontmed">Benefit</p>
-                            <ul class="uplino f14 pt10 lh22">
-                                <li>Send Personalized Messages & Chat</li>
-                                <li>View contacts of members you like</li>
-                                <li>Priority Customer service</li>
-                            </ul>
+                            ~if $data.topBlockMessage.currentBenefitsMessages`
+                                <p class="upcolr1 f14 fontmed">Benefit</p>
+                                <ul class="uplino f14 pt10 lh22">
+                                    ~foreach from=$data.topBlockMessage.currentBenefitsMessages key=k item=v name=benefitsCondLoop`
+                                        <li>~$v`</li>
+                                    ~/foreach`
+                                </ul>
+                            ~/if`
                          </div>
                 </div>            
                 <div class="fr wid55p upgrd_bg1 fontreg">               
                         <!--start:head-->   
                         <div class="upgrd_p1 upb1">                
                             <div class="f14">Special upgrade offer for you </div>
-                             <ul class="listnone f14 uoul pt15">
-                                <li class="f20"><strong>eValue</strong></li>
-                                <li>6 Month</li>
-                                <li>50 Contacts To View</li>                        
+                            <ul class="listnone f14 uoul pt15">
+                                <li class="f20"><strong>~$data.upgradeMembershipContent.upgradeMainMemName`</strong></li>
+                                <li>~if $data.upgradeMembershipContent.upgradeMainMemDur eq 'L'` Unlimited ~else` ~$data.upgradeMembershipContent.upgradeMainMemDur` ~/if` Month</li>
+                                <li>~$data.upgradeMembershipContent.upgradeTotalContacts` Contacts To View</li>                        
                             </ul>                    
-                         </div>
+                        </div>
                          <!--end:head-->
-                         <div class="upgrd_p1">
-                            <p class="f14 fontmed">Additional Benefit</p>
-                            <ul class="uplino f14 pt10 lh22">
-                                <li>Make your contacts visible to others</li>
-                            </ul>
-                           <p class="upcolr1 f14 fontmed pt20">Did you know?</p>
-                            <ul class="uplino f14 pt5 lh22">
-                                <li>- Evalue members are contacted 2.5 times more than E rishta</li>
-                                <li>- Evalue members get 3 times more screen views </li>
-                            </ul>
-                            <div class="pt30 txtc">
-                                <button class="upb">Rs. 800 &nbsp;|&nbsp;Pay Now</button>
+                        <div class="upgrd_p1">
+                            ~if $data.upgradeMembershipContent.upgradeAdditionalBenefits`
+                                <p class="f14 fontmed">Additional Benefit</p>
+                                <ul class="uplino f14 pt10 lh22">
+                                    ~foreach from=$data.upgradeMembershipContent.upgradeAdditionalBenefits key=k item=v name=additionalBenefitsCondLoop`
+                                        <li>~$v`</li>
+                                    ~/foreach`
+                                </ul>
+                            ~/if`
+                            ~if $data.upgradeMembershipContent.upgardeComparedFacts`
+                                <p class="upcolr1 f14 fontmed pt20">Did you know?</p>
+                                <ul class="uplino f14 pt5 lh22">
+                                    ~foreach from=$data.upgradeMembershipContent.upgardeComparedFacts key=k item=v name=comparedBenefitsCondLoop`
+                                        <li>- ~$v`</li>
+                                    ~/foreach`
+                                </ul>
+                            ~/if`
+                            <div class="pt30 txtc" id="upgradeBtn">
+                                <button class="upb">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`  ~$data.upgradeMembershipContent.upgradeOfferExpiry` &nbsp;|&nbsp;Pay Now</button>
                             </div>
                          </div>
                 </div>        
             </div>        
             <!--end:block1-->
-            <!--start:block 2-->
-            <div style="border-top:1px solid #c2c2c2; margin-top:30px;padding-top:40px; padding-bottom:40px">
-            
-                <div class="clearfix fontlig">
-                    <div class="fl pl35 color11">
-                        <p class="fontrobbold f24">Astro compatability</p>
-                        <p class="f13 pt5">Get detailed Kundli matching reports with profiles you like</p>
-                        <div class="pt30">
-                            <ul class="uplino">
-                                <li class="clearfix disp_ib">
-                                    <div class="fl"><input type="radio"  value="3M" name="MONTH[]"></div>
-                                    <div class="fl pl10">3 months for Rs 150  <span class="txtstr upcolr1">850</span> </div>
-                                </li>
-                                <li class="clearfix disp_ib pl30">
-                                    <div class="fl"><input type="radio" checked="" value="6M" name="MONTH[]"></div>
-                                    <div class="fl pl10">3 months for Rs 150  <span class="txtstr upcolr1">850</span> </div>
-                                </li>
-                             </ul>
-                                
-                        
-                        </div>                
-                    </div>
-                    <div class="fl upgrd_p2">
-                     <div class="pt30 txtc">
-                                <button class="upb">Rs. 150 &nbsp;|&nbsp;Pay Now</button>
-                            </div>                    
-                    </div>                
-                </div>            
-            </div>
-            <!--end:block 2-->        
+            ~if $data.vasContent`
+                <!--start:block 2-->
+                <div style="border-top:1px solid #c2c2c2; margin-top:30px;padding-top:40px; padding-bottom:40px">
+                    ~foreach from=$data.vasContent key=k item=v name=vasLoop`
+                        <div class="clearfix fontlig">
+                            <div class="fl pl35 color11">
+                                <p class="fontrobbold f24">~$v.vas_name`</p>
+                                <p class="f13 pt5">~$v.vas_description`</p>
+                                <div class="pt30">
+                                    <ul class="uplino">
+                                        ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
+                                            ~if $kk gt 0`
+                                            <li class="clearfix disp_ib pl30">
+                                            ~else`
+                                            <li class="clearfix disp_ib">
+                                            ~/if`
+                                                <div class="fl"><input type="radio"  value="~$vv.duration`M" name="MONTH[]"></div>
+                                                <div class="fl pl10">~$vv.duration` months for ~$data.currency` ~$vv.vas_price`  ~if $vv.vas_price_strike`<span class="txtstr upcolr1">~$vv.vas_price_strike`</span> </div>~/if`
+                                            </li>
+                                        ~/foreach`
+                                    </ul>
+                                </div>                
+                            </div>
+                            <div class="fl upgrd_p2">
+                             <div class="pt30 txtc">
+                                        <button class="upb">Rs. 150 &nbsp;|&nbsp;Pay Now</button>
+                                    </div>                    
+                            </div>                
+                        </div>
+                    ~/foreach`            
+                </div>
+                <!--end:block 2-->  
+            ~/if`      
         </div>
     </div>
-<!--end:plan--> 
     <!--end:plan-->
-    ~/if`
 <!--end:upgrade membership eligible user section-->
 
 ~else if $data.vasContent`
@@ -744,11 +751,6 @@
                         <div id="payNowBtn" class="fullwid txtc lh50">
                             <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>&nbsp;<span id="totalPrice"></span>&nbsp;|&nbsp;<span class="colrw">Pay Now</span>
                         </div>
-                        ~if $data.upgradeMembershipContent`
-                        <div id="upgradeBtn" class="fullwid txtc lh50 cursp">
-                            <span class="colrw">Upgrade</span>
-                        </div>
-                        ~/if`
                     </div>
                     <div class="pt10 f11 txtc">PRICE INCLUDES ~$data.taxRate`% SERVICE TAX</div>
                 </div>
@@ -1018,21 +1020,21 @@
                 //sweetAlert("Hi !", "Please select atleast one item to continue", "error");
             }
         });
-        $("#upgradeBtn").click(function(e){
-            console.log("clicked on upgrade button");
-            var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
-            createCookie('mainMemTab', mainMem);
-            createCookie('mainMem', mainMem);
-            createCookie('mainMemDur', mainMemDur);
-            console.log("ankita",mainMem,mainMemDur,upgradeType);
-            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMem, 'mainMemDur':mainMemDur, 'device':'desktop' , 'upgradeMem':upgradeType});
-        });
         updateVasPageCart();
         var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
         $('#cmpplan').css('left', leftval);
     ~/if`
     ~if $data.upgradeMembershipContent`
         memUpgradeCheckbox("MONTH[]");
+        $("#upgradeBtn").click(function(e){
+            //console.log("clicked on upgrade button");
+            var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
+            createCookie('mainMemTab', mainMem);
+            createCookie('mainMem', mainMem);
+            createCookie('mainMemDur', mainMemDur);
+            //console.log("ankita",mainMem,mainMemDur,upgradeType);
+            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMem, 'mainMemDur':mainMemDur, 'device':'desktop' , 'upgradeMem':upgradeType});
+        });
     ~/if`
     });
 </script>
