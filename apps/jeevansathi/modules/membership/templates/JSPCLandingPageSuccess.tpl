@@ -604,15 +604,15 @@
                                                 <li id="~$vv.id`" class="clearfix disp_ib" vasKey="~$v.vas_key`">
                                                 ~/if`
                                                     <div class="fl"><input type="radio"  value="~$vv.duration`M" name="MONTH[]" id="~$vv.id`"></div>
-                                                    <div class="fl pl10" id="~$vv.id`_duration">~$vv.duration` months for ~$data.currency` ~$vv.vas_price`  ~if $vv.vas_price_strike`<span class="txtstr upcolr1" id="~$vv.id`_price_strike">~$vv.vas_price_strike`</span> </div>~/if`
+                                                    <div class="fl pl10" id="~$vv.id`_duration" data-price=" ~$data.currency` ~$vv.vas_price`">~$vv.duration` months for ~$data.currency` ~$vv.vas_price`  ~if $vv.vas_price_strike`<span class="txtstr upcolr1" id="~$vv.id`_price_strike">~$vv.vas_price_strike`</span> </div>~/if`
                                                 </li>
                                             ~/foreach`
                                         </ul>                               
                                     </div>                
                                 </div>
                                 <div class="fr upgrd_p2">
-                                <div class="pt30 txtc" id="vasPrice_~$vv.id`">
-                                    <button class="upb cursp">~$data.currency` ~$vv.vas_price` &nbsp;|&nbsp;Pay Now</button>
+                                <div class="pt30 txtc vasPayBtn">
+                                    <button class="upb cursp" id="selectedVasPrice_~$v.vas_key`"><span class="price">~$data.currency` ~$vv.vas_price`</span> &nbsp;|&nbsp;Pay Now</button>
                                 </div>
                                 </div>
                             </div>

@@ -1,4 +1,4 @@
-function memUpgradeCheckbox(checkboxName) {
+function memUpgradeVasCheckbox(checkboxName) {
     var checkBox = $('input[name="' + checkboxName + '"]');
     $(checkBox).each(function() {           
         $(this).wrap("<span class='customMem-checkbox'></span>");
@@ -13,7 +13,12 @@ function memUpgradeCheckbox(checkboxName) {
         eraseCookie('selectedVas');
         $(this).parent().addClass("selected");
         var selectedAddon = $(this).attr("id");
+        var vasKey=$("#"+selectedAddon).attr("vasKey");
+        console.log(selectedAddon,vasKey);
         if(checkEmptyOrNull(selectedAddon)){
+            var vasPrice = $("#"+selectedAddon+"_duration").attr("data-price");
+            console.log(vasPrice);
+            $("#selectedVasPrice_"+vasKey+" span").html(vasPrice);
             createCookie('selectedVas',selectedAddon);
         }
     });
@@ -30,17 +35,13 @@ function initializeUpgradePage(){
     setLeftRightMemCompareEqualHeight();
     
     //set the input duration checkbox for vas
-    memUpgradeCheckbox("MONTH[]");
+    memUpgradeVasCheckbox("MONTH[]");
     
     //binding on click on upgrade main membership button
     bindMainMemUpgradeBtnClick();
 
     //preselect first vas
     preSelectVasForUpgradePage();
-
-    $(".vascell").hover(function(event) {
-        event.preventDefault();
-    });
 }
 
 function bindMainMemUpgradeBtnClick(){
@@ -76,7 +77,7 @@ function preSelectVasForUpgradePage(){
     }
     
     if(checkEmptyOrNull(firstPresentVas)){
-        console.log("firstPresentVas",firstPresentVas);
+
         $('input[id="' + firstPresentVas + '"]').click();
     }
 }
