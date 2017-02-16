@@ -755,7 +755,8 @@ public function unsett()
         $considerProfiles = array_diff($considerProfiles,$skipProfile);
 	unset($skipProfile);
        // print_r($skipProfile);
-	$msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile,$considerProfiles);
+	if(is_array($considerProfiles) && count($considerProfiles)>0)
+		$msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile,$considerProfiles);
 //        $configObj            = new ProfileInformationModuleMap();
 //        $configurations = $configObj->getConfiguration("ContactCenterDesktop");
 //        $condition["LIMIT"]    = $configurations["MY_MESSAGE"]["COUNT"]+1;
@@ -867,7 +868,8 @@ public function unsett()
         $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
         $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
         $condition["WHERE"]["IN"]["TYPE"]     = "R";
-        $profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile,$considerProfiles);
+	if(is_array($considerProfiles) && count($considerProfiles)>0)
+		$profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile,$considerProfiles);
         if(is_array($profilesArray))
 		$MESSAGE_ALL = count($profilesArray);
         $this->memcache->setMESSAGE_ALL($MESSAGE_ALL?$MESSAGE_ALL:0);
