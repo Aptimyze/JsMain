@@ -1295,8 +1295,7 @@ class Profile{
                 else
                 {
                     $profileYourInfoOld = new ProfileYourInfoOld();
-                    $oldYourInfo = $profileYourInfoOld->getAboutMeOld($this->PROFILEID);
-
+                    $oldYourInfo = $profileYourInfoOld->getAboutMeOld($this->PROFILEID)['YOUR_INFO_OLD'];
                     if($this->YOURINFO=="")
                     {
                         if(!in_array("YOURINFO",$this->fieldsArray))
