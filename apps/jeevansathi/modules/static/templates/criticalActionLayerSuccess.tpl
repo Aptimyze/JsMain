@@ -95,7 +95,7 @@
                          <div class="wid500 txtl color5 f12 disp-none" style="position: absolute;top: 86px;" id="CALNameErr">Please provide a valid email address.</div>
                         <input type="text" id="altEmailInpCAL" class="f15 wid90p pa2 txtc" value='~$nameOfUser`' placeholder="Your alternate email" style="">
                         </div>
-                        <div class="f11 colrGrey mt5 txtc">This field will be screened</div>
+                        <div class="f11 colrGrey mt5 txtc">~$textUnderInput`</div>
                         <div class="f15 pt20 colrGrey mt5 txtc wid80p" style="margin: 0px auto;">~$subtitle`</div>
                         <button id='CALButtonB3'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink">~$button1TextNEW`</button>
                     </div>
@@ -107,8 +107,7 @@
         <div class="color11">
         <!--start:div-->
         <div class="phnvwid3 mauto pt40 pb27 fontlig">
-        <p id='altEmailConfirmTextfixed' class="txtc lh26 f15">A link has been sent to your email Id</p>
-        <p id='altEmailConfirmText' class="lh26 textc"></p>
+        <p id='altEmailConfirmText' class="txtc lh26 f15" style="padding-left: 8%;padding-right: 8%"></p>
         </div>
         <button id='CALButtonB3'  onclick="closeAltEmailCALLayer()" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink" style="margin-left: 10%;margin-right: 10%;margin-bottom: 30px;width: 80%">OK</button>
         </div>

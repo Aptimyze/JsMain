@@ -1012,7 +1012,7 @@ var buttonClicked=0;
                                 }
                             });
                             $("#altEmailDiv").hide();
-                             msg =altEmailUser+' ,click on the link to verify your email';
+                             msg ="A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
                              $("#altEmailConfirmText").text(msg);
                              $("#alternateEmailCnfLayer").show();
                                return;

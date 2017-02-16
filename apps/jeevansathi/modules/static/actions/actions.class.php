@@ -385,6 +385,7 @@ class staticActions extends sfActions
     $this->action2 = $layerData[ACTION2];
     $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
     $this->subtitle = $layerData[SUBTITLE];
+    $this->textUnderInput = $layerData[TEXTUNDERINPUT];
     $this->setTemplate("criticalActionLayer");
   }
 

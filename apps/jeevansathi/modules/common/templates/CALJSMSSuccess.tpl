@@ -12,10 +12,10 @@
 
       <div class="darkBackgrnd" id="altEmailCAL">
   <div class="fontlig">
-      <div style="padding: 100px 20px 0px 20px;" class="app_clrw f20 txtc">~$calObject.TEXT2`</div> 
+      <div style="padding: 100px 20px 0px 20px;" class="app_clrw f20 txtc">~$calObject.TEXTNEW`</div> 
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
     <input id='altEmailInpCAL' value='~$nameOfUser`' type="text" class="bg4 lh60 fontthin mt30 f24 fullwid txtc" placeholder="Your alternate email">
-        <div class="pt10 f15 fontlig fullwid txtc colr8A">This field will be screened</div>
+        <div class="pt10 f15 fontlig fullwid txtc colr8A">~$calObject.TEXTUNDERINPUT`</div>
          <div class="pad_new app_clrw f14 txtc">~$calObject.SUBTITLE`</div>
 
         <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw colr8A" style="padding-top: 135px">~$calObject.BUTTON2NEW`</div>
