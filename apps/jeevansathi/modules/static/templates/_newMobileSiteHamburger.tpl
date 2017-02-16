@@ -192,25 +192,7 @@
                     
                   </ul>
                 </div>
-                <!--end:listing5--> 
-                  <!-- this listing has been closed to move download app link on
-                  <!--start:listing6-->
-           <!--     <div class="brdr9_ham pt20" id='appDownloadLink1' style='display:none'>
-                  <ul class="fontlig">
-                    <li><a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';" bind-slide=1 class="white">Download  Android App </a></li>
-                    
-                  </ul>
-                </div> -->
-                <!--end:listing6--> 
-                 <!--start:listing7-->
-            <!--     
-                <div class="brdr9_ham pt20" id='appleAppDownloadLink1' style='display:none'>
-                  <ul class="fontlig">
-                    <li><a onclick="window.location.href='/static/appredirect?type=jsmsHamburger&channel=iosLayer';" bind-slide=1 class="white">Download iOS App </a></li>
-                    
-                  </ul>
-                </div> -->
-                <!--end:listing6--> 
+<!--  Code moved Up to include Download App at top -->
               </div>
            	
 				<!--start:edit profile-->
@@ -254,29 +236,7 @@
                     <li><a href="/static/settings" bind-slide=1 class="white">Settings</a></li>
                   </ul>
                 </div>
-                
-                 <!--start:listing5-->
-                 <!-- Bringing Download Option up.
-                <div class="hampad1">
-                  <ul class=" brdr9_ham fontlig">
-                    
-                    <li class="pt20" ><a href="" onclick="window.location.href = 'tel:18004196299';" title="call" alt="call" class="white">1800-419-6299 <span class="dispibl padl10 opa70 f12">Toll Free</span></a></li>
-                    
-                  </ul>
-                </div>
-                <!--end:listing5--> 
-                  <!--start:listing6-->
-                  <!--
-                <div class="hampad1" id='appDownloadLink2' style='display:none'>
-                  <ul class=" brdr9_ham fontlig">
-                    
-                    <li class="pt20 white fb1 ham_opa fontrobbold">It's Free</li>
-                    <li class=""><a onclick="window.location.href='/static/appredirect?type=jsmsHamburger';"  bind-slide=1 class="white">Download  Android App </a></li>
-                    
-                  </ul>
-                </div>
-                <!--end:listing6--> 
-                <!--start:listing7-->
+<!--  Code moved Up to include Download App at top -->
                 <div class="hampad1" id='appleAppDownloadLink2' style='display:none'>
                   <ul class=" brdr9_ham fontlig">
                     
