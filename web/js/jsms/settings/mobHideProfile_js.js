@@ -58,14 +58,7 @@ function hideUnhideAction(action)
 		{
 			if(response.success == 1)
 			{
-				if(action)
-				{
-					url = "/static/hideDuration?hide_option="+hideOption;
-				}
-				else
-				{
-					url = "/static/unHideResult";
-				}
+				url = action ? "/static/hideDuration?hide_option="+hideOption : "/static/unHideResult";
 				ShowNextPage(url,0);
 			}
 			else
