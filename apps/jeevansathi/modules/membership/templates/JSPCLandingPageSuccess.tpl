@@ -523,8 +523,9 @@
         <div class="container mainwid">        
             <div class="clearfix color11 pt30 pb30">
                 <div class="fl">
+                    
                     <p class="fontmed f24">Make your contacts visible to others by just paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if` ~$data.upgradeMembershipContent.upgradeExtraPay`</p>
-                    <p class="f16 pt5 fontreg">Upgrade from ~$data.upgradeMembershipContent.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership... <span class="color5">Exclusive offer for you vaild till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</span></p>
+                    <p class="f16 pt5 fontreg">Upgrade from ~$data.topBlockMessage.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership... <span class="color5">Exclusive offer for you vaild till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</span></p>
                 </div>
                 <div class="fr txtl">
                     <div class="fontmed f15">OFFER EXPIRES IN</div>
@@ -540,9 +541,9 @@
                         <div class="upgrd_p1 upb1">                
                             <div class="f14">Special upgrade offer for you </div>
                              <ul class="listnone f14 uoul pt15">
-                                <li class="f20"><strong>~$data.upgradeMembershipContent.currentMemName`</strong></li>
-                                <li>~$data.upgradeMembershipContent.currentActualDuration` Month</li>
-                                <li>~$data.upgradeMembershipContent.totalContactsAllotted` Contacts To View</li>                        
+                                <li class="f20"><strong>~$data.topBlockMessage.currentMemName`</strong></li>
+                                <li>~$data.topBlockMessage.currentActualDuration` Month</li>
+                                <li>~$data.topBlockMessage.totalContactsAllotted` Contacts To View</li>                        
                             </ul>
                          </div>
                          <!--end:head-->
@@ -586,7 +587,7 @@
                                 </ul>
                             ~/if`
                             <div class="pt30 txtc" id="upgradeBtn">
-                                <button class="upb">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`  ~$data.upgradeMembershipContent.upgradeOfferExpiry` &nbsp;|&nbsp;Pay Now</button>
+                                <button class="upb">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`  ~$data.upgradeMembershipContent.upgradeExtraPay` &nbsp;|&nbsp;Pay Now</button>
                             </div>
                          </div>
                 </div>        

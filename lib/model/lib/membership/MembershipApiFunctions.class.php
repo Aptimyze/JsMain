@@ -908,8 +908,9 @@ class MembershipApiFunctions
             //set additional required keys in api response for mem upgrade
             if($upgradeMemCase == true){
                 $topBlockMessage["currentMemName"] = $apiObj->activeServiceName;
-                $topBlockMessage["currentActualDuration"] = $apiObj->subStatus[0]['SERVICEID_WITHOUT_DURATION'];
-                $topBlockMessage["totalContactsAllotted"] = $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['CALL'];
+                $topBlockMessage["currentActualDuration"] = $apiObj->subStatus[0]['SERVICE_DURATION'];
+                
+                $topBlockMessage["totalContactsAllotted"] = $apiObj->allMainMem[$apiObj->subStatus[0]['SERVICEID_WITHOUT_DURATION']][$apiObj->subStatus[0]['SERVICEID']]['CALL'];
             }
         } 
         elseif ($apiObj->userObj->userType == 4 && $apiObj->memID != "ESJA") {
