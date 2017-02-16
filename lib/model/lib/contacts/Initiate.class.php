@@ -350,7 +350,9 @@ class Initiate extends ContactEvent{
 
     // delete Myjs cached data
     $appOrMob = MobileCommon::isApp()? MobileCommon::isApp():'M';
-    $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid)."_".$appOrMob;
+    $myjsCacheKey = MyJsMobileAppV1::getCacheKey($this->viewed->getPROFILEID())."_".$appOrMob;
+    JsMemcache::getInstance()->delete($myjsCacheKey);
+    $myjsCacheKey = MyJsMobileAppV1::getCacheKey($this->contactHandler->getViewer()->getPROFILEID())."_".$appOrMob;
     JsMemcache::getInstance()->delete($myjsCacheKey);
     // delete data of Match of the day
     JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->viewed->getPROFILEID());
