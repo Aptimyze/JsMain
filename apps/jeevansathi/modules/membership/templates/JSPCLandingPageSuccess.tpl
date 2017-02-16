@@ -826,6 +826,7 @@
     });
 
     $(document).ready(function() {
+    console.log("pageType",pageType);
     ~if $data.serviceContent`
         eraseCookie('paymentMode');
         eraseCookie('cardType');
@@ -973,37 +974,44 @@
         eraseCookie('mainMemDur');
         checkLogoutCase(profileid);
         var selectedVasCookie = readCookie('selectedVas');
-        if(selectedVasCookie && checkEmptyOrNull(selectedVasCookie)){
+        if(selectedVasCookie && checkEmptyOrNull(selectedVasCookie) && pageType!='upgradeMembershipPage'){
             updateAlreadySelectedVas();
         }
         $(".vascell").click(function(e){
-            var that = this;
-            $(this).parent().find('.vascell').each(function(){
-                if($(this).hasClass('mem-vas-active') && this!=that){
-                    $(this).removeClass('mem-vas-active');
-                }
-            });
-            if($(that).hasClass('mem-vas-active')){
-                $(that).removeClass('mem-vas-active');
-            } else {
-                $(that).addClass('mem-vas-active');
+            var that = this,vasClass='mem-vas-active';
+            if(pageType == 'upgradeMembershipPage'){
+                vasClass = 'mem-vas-active-upgrade';
             }
-            trackVasCookie($(that).attr("vasKey"), $(that).attr("id"));
-            manageVasOverlay($(that).attr("vasKey"));
-            updateVasPageCart();
-        });
-        $('.vasoverlay,.vasoverlay2').click(function(e){
-            var vasKey = $(this).parent().attr('id').replace('_overlay',''),vasId;
-            $("#"+vasKey+" .vascell").each(function(e){
-                if($(this).hasClass('mem-vas-active')){
-                    vasId = $(this).attr('id');
-                    $(this).removeClass('mem-vas-active');
+            $(this).parent().find('.vascell').each(function(){
+                if($(this).hasClass(vasClass) && this!=that){
+                    $(this).removeClass(vasClass);
                 }
             });
-            manageVasOverlay(vasKey);
-            trackVasCookie(vasKey,vasId);
-            updateVasPageCart();
+            if($(that).hasClass(vasClass)){
+                $(that).removeClass(vasClass);
+            } else {
+                $(that).addClass(vasClass);
+            }
+            trackVasCookie($(that).attr("vasKey"), $(that).attr("id"),pageType);
+            if(pageType != 'upgradeMembershipPage'){
+                manageVasOverlay($(that).attr("vasKey"));
+                updateVasPageCart();
+            }
         });
+        if(pageType != 'upgradeMembershipPage'){
+            $('.vasoverlay,.vasoverlay2').click(function(e){
+                var vasKey = $(this).parent().attr('id').replace('_overlay',''),vasId;
+                $("#"+vasKey+" .vascell").each(function(e){
+                    if($(this).hasClass('mem-vas-active')){
+                        vasId = $(this).attr('id');
+                        $(this).removeClass('mem-vas-active');
+                    }
+                });
+                manageVasOverlay(vasKey);
+                trackVasCookie(vasKey,vasId);
+                updateVasPageCart();
+            });
+        }
         $("#payNowBtn").click(function(e){
             var selectedVasCookie = readCookie('selectedVas');
             
@@ -1025,6 +1033,8 @@
         setLeftRightMemCompareEqualHeight();
         //binding on click on upgrade main membership button
         $("#upgradeMainMemBtn").click(function(e){
+            //flush vas selection when upgrade button clicked
+            eraseCookie('selectedVas');
             //console.log("clicked on upgrade button");
             var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
             createCookie('mainMemTab', mainMem);

@@ -106,7 +106,11 @@ function changeMemCookie(mainMem, mainMemDur, mainMemContact) {
     }
 }
 
-function trackVasCookie(vasKey, vasId) {
+function trackVasCookie(vasKey, vasId,pageType) {
+    var vasActiveClass = 'mem-vas-active';
+    if(pageType != undefined && pageType == 'upgradeMembershipPage'){
+        vasActiveClass = 'mem-vas-active-upgrade';
+    }
     if (readCookie('selectedVas') && checkEmptyOrNull(readCookie('selectedVas'))) {
         var currentVas = readCookie('selectedVas');
         if (currentVas.indexOf(",") > -1) {
@@ -134,7 +138,7 @@ function trackVasCookie(vasKey, vasId) {
         currentVas = tempArr.join(",");
         createCookie('selectedVas', currentVas, 0);
     } else {
-        if ($("#" + vasId).hasClass('mem-vas-active')) {
+        if ($("#" + vasId).hasClass(vasActiveClass)) {
             // default case when no vas was selected
             createCookie('selectedVas', vasId);
         } else {
