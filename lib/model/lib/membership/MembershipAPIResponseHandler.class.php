@@ -138,8 +138,8 @@ class MembershipAPIResponseHandler {
                 $this->memID = @strtoupper($purchaseDetails);
                 $this->lastPurchaseDiscount = 0;
             }
-            $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj);
-            
+            $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj,null,null,$this->memID);
+          
             if (is_array($this->subStatus) && !empty($this->subStatus)) {
                 $this->countActiveServices = count($this->subStatus);
             } 
@@ -512,7 +512,7 @@ class MembershipAPIResponseHandler {
     */
     public function generateUpgradeMemResponse($request){
         if($this && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
-            $upgradableMemArr = $this->memHandlerObj->setUpgradableMemberships($this->subStatus[0]['SERVICEID']);
+            $upgradableMemArr = $this->memHandlerObj->setUpgradableMemberships($this->subStatus[0]['ORIG_SERVICEID']);
             if(is_array($upgradableMemArr) && $upgradableMemArr["upgradeMem"] && $this->allMainMem[$upgradableMemArr["upgradeMem"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]] && $this->allMainMem[$upgradableMemArr["upgradeMem"]][$upgradableMemArr["upgradeMem"]."".$upgradableMemArr["upgradeMemDur"]]['SHOW_ONLINE'] == 'Y'){
                 //type of upgrade
                 $output["type"] = "MAIN";

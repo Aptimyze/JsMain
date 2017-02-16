@@ -1009,7 +1009,7 @@ class MembershipHandler
         }
     }
 
-    public function getSubscriptionStatusArray($userObj, $subStatus = null, $module = null)
+    public function getSubscriptionStatusArray($userObj, $subStatus = null, $module = null,$actualService="")
     {
         $memCacheObject = JsMemcache::getInstance();
         $profileid      = $userObj->getProfileid();
@@ -1021,9 +1021,9 @@ class MembershipHandler
             if (empty($subStatus)) {
                 $subStatus = $this->getSubStatus($userObj->getProfileid(), $module);
             }
+
             if ($subStatus && is_array($subStatus)) {
                 foreach ($subStatus as $key => &$value) {
-
                     $vasCheck = @preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $value['SERVICEID']);
                     if (!in_array($vasCheck[0], VariableParams::$mainMembershipsArr) && !strpos($vasCheck[0], 'L')) {
                         unset($subStatus[$key]);
@@ -1051,6 +1051,7 @@ class MembershipHandler
                             } else {
                                 $value['SERVICE_DURATION'] = 'Unlimited';
                             }
+                            $value['ORIG_SERVICEID'] = $value['SERVICEID'];
                         }
                     }
                     $value['EXPIRY_DT'] = date("d M Y", strtotime($value['EXPIRY_DT']));
@@ -1082,6 +1083,22 @@ class MembershipHandler
             }
             if (is_array($subStatus)) {
                 $subStatus = array_values($subStatus);
+                if($actualService != "" && count($subStatus) > 0){
+                    $actualServiceArr = @preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $actualService);
+                    if(strpos($actualServiceArr[0], 'L') != false){
+                        $actualServiceArr[0] = substr($actualServiceArr[0],0,-1);
+                        $actualServiceArr[1] = 'L';
+                    }
+                    if($actualServiceArr[0]!= "" && $subStatus[0]['SERVICEID_WITHOUT_DURATION'] != $actualServiceArr[0]){
+                        $subStatus[0]['SERVICEID_WITHOUT_DURATION'] = $actualServiceArr[0];
+                        if($subStatus[0]['SERVICE_DURATION'] == "Unlimited"){
+                            $subStatus[0]['ORIG_SERVICEID'] = $subStatus[0]['SERVICEID_WITHOUT_DURATION'].'L';
+                        }
+                        else{
+                            $subStatus[0]['ORIG_SERVICEID'] = $subStatus[0]['SERVICEID_WITHOUT_DURATION'].$subStatus[0]['SERVICE_DURATION'];
+                        }
+                    }
+                }
             }
             $memCacheObject->set($profileid . '_MEM_SUBSTATUS_ARRAY', serialize($subStatus), 1800);
         }
@@ -1163,7 +1180,7 @@ class MembershipHandler
         $discountArr = array();
         if($upgradeMem == "MAIN" && $userObj->userType == memUserType::UPGRADE_ELIGIBLE){
             if($apiObj != ""){
-                $upgradableMemArr = $this->setUpgradableMemberships($apiObj->subStatus[0]['SERVICEID']);
+                $upgradableMemArr = $this->setUpgradableMemberships($apiObj->subStatus[0]['ORIG_SERVICEID']);
             }
             $discountArr = array();
             if(is_array($upgradableMemArr) && count($upgradableMemArr) > 0){

@@ -910,7 +910,7 @@ class MembershipApiFunctions
                 $topBlockMessage["currentMemName"] = $apiObj->activeServiceName;
                 $topBlockMessage["currentActualDuration"] = $apiObj->subStatus[0]['SERVICE_DURATION'];
                 
-                $topBlockMessage["totalContactsAllotted"] = $apiObj->allMainMem[$apiObj->subStatus[0]['SERVICEID_WITHOUT_DURATION']][$apiObj->subStatus[0]['SERVICEID']]['CALL'];
+                $topBlockMessage["totalContactsAllotted"] = $apiObj->allMainMem[$apiObj->subStatus[0]['SERVICEID_WITHOUT_DURATION']][$apiObj->subStatus[0]['ORIG_SERVICEID']]['CALL'];
             }
         } 
         elseif ($apiObj->userObj->userType == 4 && $apiObj->memID != "ESJA") {
