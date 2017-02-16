@@ -99,7 +99,7 @@ class AlertManager
                    	$this->objVars['settingArray']["PM"][2] = $row['PROMO_MAILS'];
                     $this->objVars['settingArray']["MA"][2] = $row['PERSONAL_MATCHES'];
                     
-                    $jprofileAlertObj = new newjs_JPROFILE_ALERTS();
+                    $jprofileAlertObj = new JprofileAlertsCache();
                     $row2 = $jprofileAlertObj->getAllSubscriptions($this->profileid);
                     if(empty($row2)){
                     	$jprofileAlertObj->insertNewRow($this->profileid);
@@ -140,7 +140,7 @@ class AlertManager
                     TrackEditUnsubscribe($data["PROFILEID"], 'E');
                 }
                 $jprofileObj = new JPROFILE();
-                $jprofileAlertObj = new newjs_JPROFILE_ALERTS();
+                $jprofileAlertObj = new JprofileAlertsCache();
                 $jprofileAlertLogObj = new newjs_JPROFILE_ALERTS_LOG();
                 $visitAlertOptObj = new visitoralert_VISITOR_ALERT_OPTION('shard1_master');
                 $today = date("Y-m-d");

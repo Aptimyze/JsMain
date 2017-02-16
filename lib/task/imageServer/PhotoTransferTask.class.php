@@ -158,7 +158,7 @@ EOF;
                                 }
 				elseif($serverOutput == "ERR_URL_BLANK")
 				{
-					//$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$invalid);
+					$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$invalid);
 					$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
 				}
                                 else

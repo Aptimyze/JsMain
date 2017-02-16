@@ -253,6 +253,7 @@ class LoggingManager
 		$uniqueSubId = $this->getLogUniqueSubId($logArray);
 		$statusCode = $this->getLogStatusCode($exception,$logArray);
 		$typeOfError = $this->getLogTypeOfError($exception,$logArray);
+		$mappingName = $this->getlogMappingName($moduleName);
 		//$headers = getallheaders();
 		$logData = array();
 
@@ -308,6 +309,11 @@ class LoggingManager
 		{
 			$logData[LoggingEnums::MESSAGE] = $message;
 		} 
+
+		if($mappingName != "")
+		{
+			$logData[LoggingEnums::MAPPING] = $mappingName;
+		}
 
 		if($this->canWriteTrace($this->moduleName))
 		{
@@ -664,5 +670,29 @@ class LoggingManager
 	private function canWriteTrace($moduleName)
 	{
 		return LoggingConfig::getInstance()->traceStatus($moduleName);
+	}
+
+	/**
+	 * @param $moduleName
+	 * @return Mapping name of a module
+	 */
+	private function getlogMappingName($moduleName)
+	{
+		if(in_array($moduleName, LoggingEnums::$ModuleMapping))
+		{
+			$mappingName = LoggingEnums::$MappingNames[ LoggingEnums::$ModuleMapping[$moduleName] ];
+		}
+		else
+		{
+			if(strpos($moduleName, '404') !== false)
+			{
+				$mappingName = LoggingEnums::$MappingNames[20];
+			}
+			else
+			{
+				$mappingName = LoggingEnums::$MappingNames[21];
+			}
+		}
+		return $mappingName;
 	}
 }

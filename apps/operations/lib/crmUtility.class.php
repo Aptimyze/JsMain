@@ -345,11 +345,12 @@ class crmUtility
 	public function getCurlData($profileid,$username='',$cid)
 	{	
 		$SITE_URL   =JsConstants::$crmUrl;
+		$actualUrl  =JsConstants::$siteUrl;	
 	       
 	       	$tuCurl = curl_init();
 		//$uname=urlencode($username);
         	//curl_setopt($tuCurl, CURLOPT_URL, "$SITE_URL/crm/show_profile.php?profileid=$profileid&username=$uname&cid=$cid");
-		curl_setopt($tuCurl, CURLOPT_URL,"$SITE_URL/operations.php/commoninterface/ShowProfileStats?cid=$cid&profileid=$profileid&curlReq=1");
+		curl_setopt($tuCurl, CURLOPT_URL,"$SITE_URL/operations.php/commoninterface/ShowProfileStats?cid=$cid&profileid=$profileid&curlReq=1&actualUrl=$actualUrl");
         	curl_setopt($tuCurl, CURLOPT_RETURNTRANSFER, 1);
         	$tuData = curl_exec($tuCurl);
         	curl_close($tuCurl);

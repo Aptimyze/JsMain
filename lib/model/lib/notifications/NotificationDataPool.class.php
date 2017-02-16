@@ -514,12 +514,26 @@ class NotificationDataPool
                     }
                     $dataAccumulated[$counter]['COUNT'] = "SINGLE";
                     $counter++;
+                    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$k1);
+                    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$k1);
                     $matchOfDayMasterObj->insert($k1,$v1);
                 }
             }
             unset($matchOfDayMasterObj);
             unset($matchedProfiles);
             return $dataAccumulated;
+        }
+    }
+    
+    public function notificationLogging($logArr,$logPoint){
+        if (JsConstants::$whichMachine == 'test' && NotificationEnums::$enableNotificationLogging == true) {
+            print_r($logPoint);
+            print_r("\n");
+            foreach($logArr as $key => $val){
+                print_r($key);
+                print_r($val);
+                print_r("\n");
+            }
         }
     }
 }

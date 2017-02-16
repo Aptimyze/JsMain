@@ -37,7 +37,7 @@ var arrErors = {
 	"HDEGREE_REQUIRED":"Please provide a degree",
 	"OCCUPATION_REQUIRED":"Please provide an occupation",
 	"INCOME_REQUIRED":"Please provide an income range",
-	"ABOUTME_REQUIRED":"Please write about yourself",
+	"ABOUTME_REQUIRED":"Please write about yourself (Don't mention your name)",
 	"NAME_ERROR":"Name should have alphabets only"
 };
 //regular expressions for validations
