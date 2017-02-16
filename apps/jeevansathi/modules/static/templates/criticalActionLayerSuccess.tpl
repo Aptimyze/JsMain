@@ -101,7 +101,7 @@
                     </div>
             </div> 
         <div id="alternateEmailCnfLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white modal3" style="padding-top: 13%;margin-top: 40px">
-        <div class="bordrBtmGrey">
+        <div class="bordrBtmGrey" style="height: 35px">
         <div class="phnvp4 f17 fontreg color11 phnvbdr4" style="margin-top: -38px;margin-left: 5%">Email Verification</div>
         </div>
         <div class="color11">
