@@ -140,11 +140,14 @@ You need to be a Registered Member<br />to connect with this user</div>
 				<!--end:reg/srch-->
 			   <!--start:div-->
 			   <div id="appLinkAndroid" class="txtc pad2" style="display: none">
-				<a href="/static/appredirect?type=androidMobFooter" class="f15 white fontlig">Download App</a>
-			   </div> 
+				<a href="/static/appredirect?type=androidMobFooter" class="f15 white fontlig">Download App | 3MB only</a>
+			   </div>
+
 			   <div id="appLinkIos" class="txtc pad2" style="display: none">
 				<a href="/static/appredirect?type=iosMobFooter" class="f15 white fontlig">Download App</a>
 			   </div>      
+
+			  <div class="txtc pad2"><a href="#" onclick=translateSiteHomePage("http://hindi.jeevansathi.com"); bind-slide=1 class="f16 white fontlig">हिंदी में</a></div>
 			   <!--end:div-->
 			</div>
 	   </form>

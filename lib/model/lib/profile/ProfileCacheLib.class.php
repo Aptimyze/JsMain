@@ -128,7 +128,6 @@ class ProfileCacheLib
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-
         //If Criteria is other then PROFILEID then return false
         if (false === $this->validateCriteria($szCriteria)) {
             return false;
@@ -151,6 +150,7 @@ class ProfileCacheLib
         if (false === $this->isCommandLineScript()) {
             $this->updateInLocalCache($key, $arrParams);
         }
+
         return true;
     }
 
@@ -927,6 +927,9 @@ class ProfileCacheLib
         else if(false !== stristr($storeName, "Alerts")) {
             $arrFields = ProfileCacheConstants::$arrJProfileAlertsColumn;
        }
+        else if (false !== stristr($storeName, "YOUR_INFO_OLD") ){
+            $arrFields = ProfileCacheConstants::$arrOldYourInfo;
+        }
         return $arrFields;
     }
     
