@@ -64,6 +64,7 @@ $this->addOptions(array(
 			$this->sendPushNotifications($filteredProfileDetails,$idArr);
 			unset($details);
 			unset($filteredProfileDetails);
+			unset($idArr);
 		}
 		if($this->doneTillId>=$this->maxId)
 		{
@@ -74,9 +75,13 @@ $this->addOptions(array(
   }
   private function sendPushNotifications($profileDetails,$idArr)
   {
+	$status =0;//CommonUtility::hideFeaturesForUptime();
+	if($status || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
+		successfullDie();
 	$this->notificationSenderObj->sendNotifications($profileDetails);
 	if(is_array($idArr))
 		$this->scheduledAppNotificationUpdateSentObj->updateSent($idArr,$this->notificationKey,NotificationEnums::$PENDING);
+	unset($status);
   }
   
   private function getDetails()

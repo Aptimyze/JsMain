@@ -101,13 +101,20 @@ public function microtime_float()
 			break;
 		  case "JUST_JOIN":
 			$applicableProfiles=array();
+            //$xx1 = count($appProfiles);
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+            //$xx2 = count($applicableProfiles);
             		$applicableProfilesArr = array_keys($applicableProfiles);
             		$applicableProfilesData = $this->getProfilesData($applicableProfilesArr,$className="newjs_SMS_TEMP_TABLE");
+            //$xx3 = count($applicableProfilesData);
 			unset($applicableProfilesArr);
             
             		$poolObj = new NotificationDataPool();
             		$dataAccumulated = $poolObj->getJustJoinData($applicableProfiles);
+            //$xx4 = count($dataAccumulated);
+            //$mailMsg  = "AppProfiles = $xx1<br>ApplicableProfiles = $xx2<br>AfterProfileData = $xx3<br>FinalData = $xx4";
+            //mail("nitish.sharma@jeevansathi.com","Just Join Data",$mailMsg);
+            //unset($xx1,$xx2,$xx3,$xx4,$mailMsg);
             		unset($poolObj);
 			break;
 
@@ -467,7 +474,7 @@ public function microtime_float()
 			break;
         case "MATCH_OF_DAY":
             $applicableProfiles=array();
-            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
+            $applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey,"JPROFILE");
             $notificationDataPoolObj = new NotificationDataPool();
             $dataAccumulated = $notificationDataPoolObj->getMatchOfDayData($applicableProfiles);
             //print_r($dataAccumulated);
@@ -581,7 +588,7 @@ public function microtime_float()
             $mess = $temp["A"]["A"][$count];
         return $mess;
   }   
-  public function getProfileApplicableForNotification($profiles,$notificationKey)
+  public function getProfileApplicableForNotification($profiles,$notificationKey,$className="")
   {
 
 	  unset($applicableProfiles);
@@ -589,7 +596,12 @@ public function microtime_float()
 	  foreach($notifications[$notificationKey] as $k=>$notificationKeyDetails)
 		$timeCriteria = $notificationKeyDetails['TIME_CRITERIA'];
 	  unset($notifications);
-	  $smsTempTableObj = new newjs_SMS_TEMP_TABLE;
+      if($className == "JPROFILE"){
+          $smsTempTableObj = new JPROFILE("crm_slave");
+      }
+      else{
+        $smsTempTableObj = new newjs_SMS_TEMP_TABLE("newjs_masterRep");
+      }
 	  $varArray['PROFILEID']=implode(",",array_filter($profiles));
 	  unset($profiles);
 	  if($timeCriteria!='')

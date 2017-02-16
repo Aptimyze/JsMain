@@ -571,20 +571,22 @@ public function getSendersPending($chunkStr)
 			foreach($idArr as $k=>$v)
 				$idSqlArr[]=":v$k";
 			$idSql="(".(implode(",",$idSqlArr)).")";
-			$sql = "SELECT CONTACTID , TYPE FROM newjs.CONTACTS WHERE CONTACTID IN $idSql";
+			$sql = "SELECT CONTACTID , TYPE,MSG_DEL FROM newjs.CONTACTS WHERE CONTACTID IN $idSql";
 			$res=$this->db->prepare($sql);
 			foreach($idArr as $k=>$v)
 				$res->bindValue(":v$k", $v, PDO::PARAM_INT);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
-			{
-				$output[$row["CONTACTID"]] = $row["TYPE"];
+			{  // print_r($row); die;
+				$output[$row["CONTACTID"]]['TYP'] = $row["TYPE"];
+				$output[$row["CONTACTID"]]['MSG_DEL'] = $row["MSG_DEL"];
 			}
 		}
 		catch(PDOException $e)
         {
            throw new jsException($e);
         }
+        //print_r($output);
         return $output;
 	}
    /*
@@ -739,7 +741,7 @@ public function getSendersPending($chunkStr)
 	}
 	public function getContactedProfileArray($condition,$skipArray)
 	{
-		$string = array('TYPE','SEEN','FILTER','TIME');
+		$string = array('TYPE','SEEN','FILTER','TIME','MSG_DEL','SENDER','RECEIVER');
 		try{
 			if(!$condition)
 			{
@@ -903,7 +905,7 @@ public function getSendersPending($chunkStr)
 				else
 					$skipProfile = "AND ".$skipProfile;
 			}
-			$sql = "SELECT ".$select." as PROFILEID,TIME,COUNT,SEEN,FILTERED FROM newjs.CONTACTS ".$where." ".$skipProfile." ".$order." ".$limit;
+			$sql = "SELECT ".$select." as PROFILEID,TIME,COUNT,SEEN,FILTERED,MSG_DEL,TYPE,SENDER,RECEIVER FROM newjs.CONTACTS ".$where." ".$skipProfile." ".$order." ".$limit;
 			$res=$this->db->prepare($sql);
 			if(is_array($bindArr))
 				foreach($bindArr as $k=>$v)
@@ -924,12 +926,17 @@ public function getSendersPending($chunkStr)
 				$output[$row["PROFILEID"]]["COUNT"] = $row["COUNT"];
 				$output[$row["PROFILEID"]]["SEEN"] = $row["SEEN"];
 				$output[$row["PROFILEID"]]["FILTERED"] = $row["FILTERED"];
+				$output[$row["PROFILEID"]]["MSG_DEL"] = $row["MSG_DEL"];
+				$output[$row["PROFILEID"]]["TYPE"] = $row["TYPE"];
+				$output[$row["PROFILEID"]]["SENDER"] = $row["SENDER"];
+				$output[$row["PROFILEID"]]["RECEIVER"] = $row["RECEIVER"];
 			}
 		}
 		catch(PDOException $e)
 		{
 			throw new jsException($e);
 		}
+
 		return $output;
 	}
 
@@ -1162,7 +1169,7 @@ public function getSendersPending($chunkStr)
         public function getInterestSentForDuration($stTime, $endTime,$remainderArray){
             try{
             	
-                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM AND `MSG_DEL`!='Y' ORDER BY `TIME` DESC  ";
+                $sql = "SELECT * from newjs.CONTACTS WHERE `COUNT`=1 AND MSG_DEL!='Y' AND TYPE = 'I' AND `TIME` >= :START_TIME AND `TIME` <= :END_TIME AND SENDER % :DIVISOR = :REMAINDER AND SENDER % 3 = :SHARDREM  ORDER BY `TIME` DESC  ";
                 $prep = $this->db->prepare($sql);
                 $prep->bindValue(":START_TIME",$stTime,PDO::PARAM_STR);
                 $prep->bindValue(":END_TIME",$endTime,PDO::PARAM_STR);
@@ -1231,6 +1238,29 @@ public function getSendersPending($chunkStr)
     		{
     			throw new jsException($e);	
     		}
-    	}	
+    	}
+
+    public function isRBContact($sender,$receiver)
+	{
+                if(!$sender || !$receiver)
+                        throw new jsException("","PROFILEID IS BLANK IN newjs_CONTACTS.class.php");
+		try
+		{
+			$sql = "SELECT count(*) as CNT from newjs.CONTACTS WHERE SENDER =:SENDER AND RECEIVER = :RECEIVER and MSG_DEL =:MSG_DEL";
+			$res=$this->db->prepare($sql);
+			$res->bindValue(":RECEIVER",$receiver,PDO::PARAM_INT);
+			$res->bindValue(":SENDER",$sender,PDO::PARAM_INT);
+			$res->bindValue(":MSG_DEL","Y",PDO::PARAM_STR);
+			$res->execute();
+			$row = $res->fetch(PDO::FETCH_ASSOC);
+			$val = $row['CNT'];
+			return $val;
+		}
+		catch (PDOException $e)
+                {
+                        throw new jsException($e);
+                }
+
+	}	
 }
 ?>

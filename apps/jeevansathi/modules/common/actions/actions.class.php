@@ -373,7 +373,9 @@ class commonActions extends sfActions
                 $finalresponseArray["actiondetails"] = null;
                 $finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
                 $this->contactObj                    = new Contacts($this->loginProfile, $this->Profile);
-                if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
+                
+                //commented as shortlist list is through webservice not openfire
+                /*if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
                     //Entry in Chat Roster
                     try {
                         $producerObj = new Producer();
@@ -386,7 +388,7 @@ class commonActions extends sfActions
                         throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
                     }
                     //End
-                }
+                }*/
             } else {
                 $bookmarkObj->addBookmark($bookmarker, $bookmarkee);
                 $bookmarkerMemcacheObject->update("BOOKMARK", 1);
@@ -401,7 +403,8 @@ class commonActions extends sfActions
                 $finalresponseArray["buttondetails"] = ButtonResponse::buttonDetailsMerge($array);
                 //Entry in Chat Roster
                 $this->contactObj = new Contacts($this->loginProfile, $this->Profile);
-                if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
+                //commented as shortlist rosters are now via webservice not openfire
+                /*if ($this->contactObj->getTYPE() == "N" && $this->loginProfile->getGENDER() != $this->Profile->getGENDER()) {
                     try {
                         $producerObj = new Producer();
                         if ($producerObj->getRabbitMQServerConnected()) {
@@ -413,7 +416,7 @@ class commonActions extends sfActions
                         throw new jsException("Something went wrong while sending in chat queue for remove bookmark -" . $e);
                     }
                     //End
-                }
+                }*/
             }
 
             $bookmarkerMemcacheObject->updateMemcache();
@@ -683,6 +686,17 @@ class commonActions extends sfActions
             }
             
         }
+        
+        if($layerToShow==15)
+        {
+            $namePrivacy = $button=='B1' ? 'Y' : 'N';
+            
+            
+            $nameArr=array('DISPLAY'=>$namePrivacy);
+            $name_pdo = new incentive_NAME_OF_USER();
+            $name_pdo->updateNameInfo($loginData['PROFILEID'],$nameArr);
+            
+        }        
                 if(JsMemcache::getInstance()->get($loginData['PROFILEID'].'_CAL_DAY_FLAG')!=1)
                 {
  		if(CriticalActionLayerTracking::insertLayerType($loginData['PROFILEID'],$layerToShow,$button))
@@ -704,6 +718,7 @@ class commonActions extends sfActions
         $calObject=$request->getAttribute('calObject');
         if (!$calObject) sfContext::getInstance()->getController()->redirect('/');
         $this->calObject=$calObject;
+        $this->dppSuggestions = json_encode($calObject['dppSuggObject']);
         $this->gender=$request->getAttribute('gender');
         if($calObject['LAYERID']==9)
         {

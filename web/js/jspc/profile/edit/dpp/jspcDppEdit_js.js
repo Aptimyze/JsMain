@@ -193,6 +193,25 @@ $(function(){
           afterLH = fieldName.split("_")[1];
           fieldVal = $(this).attr("data-dbVal");
 
+          //add suggestion on change age and income
+          var catogaryParent = parentDiv.closest(".pt20").attr("id").split("dpp-p_")[1].split("Parent")[0];
+          if(parentDiv.attr("id").indexOf("dol") != -1) {
+            catogaryParent = "incomeDol";
+          }
+          if(catogaryParent == "age" && $("#ageRange").attr("suggest-select") != 1 || catogaryParent == "income" && $("#incomeRangeRs").attr("suggest-select") != 1|| catogaryParent == "incomeDol"&& $("#incomeRangeDol").attr("suggest-select") != 1)
+            changeNonChosenSuggestion(catogaryParent)
+          else {
+            setTimeout(function() {
+              if(catogaryParent == "income"){
+                  $("#incomeRangeRs").removeAttr("suggest-select");
+              } else if(catogaryParent == "age") {
+                  $("#ageRange").removeAttr("suggest-select");
+              } else if(catogaryParent == "incomeDol") {
+                  $("#incomeRangeDol").removeAttr("suggest-select");
+              }
+            },100);
+          }
+
           if(afterLH == "income") {//Income 
             afterLH = divWithId.attr("data-income");//either Rs or Dol,but update rest 
             
@@ -546,6 +565,7 @@ function saveSectionsFields(sectionId){
             cache: true,
             async: true,
             updateChatListImmediate:true,
+            updateNonRosterChatGroups:["dpp"],
             data: {editFieldArr : editFieldArr,getData : "dpp",fromBackend:ifBackend},
             success: function(data) { 
               if(typeof data == "string")
@@ -1116,13 +1136,13 @@ function handleBack() {
 var _dppType = ["city", "caste", "mtongue", "education", "occupation"];
 var _parentCatogary = [{
   "parent": "basic",
-  "sub": ["city"]
+  "sub": ["city","age"]
 }, {
   "parent": "religion",
   "sub": ["caste", "mtongue"]
 }, {
   "parent": "education",
-  "sub": ["education", "occupation"]
+  "sub": ["education", "occupation","income"]
 }],queryInput = [];
 
     //change suggestion on adding or deleting chosen option
@@ -1166,14 +1186,14 @@ var _parentCatogary = [{
       }, 30);
 }
 
-        //has to changed with actual data + putting a lag of 500ms
         function getApiResponse() {
-          var finalObj = [],
+          var finalObj = [],len,
           temp, dataPresent, response = [],url="",str="";
       //time lag for multiple select
       setTimeout(function() {
         if (queryInput.length != 0) {
-          for (var i = 0; i <= queryInput.length; i++) {
+          len = queryInput.length;
+          for (var i = 0; i < len; i++) {
             temp = queryInput.pop();
             dataPresent = false;
             $.each(finalObj, function(index2, elem2) {
@@ -1212,7 +1232,96 @@ var _parentCatogary = [{
 }
     // append API response in suggestion
     function appendSuggestionList(response) {
+      
       var type = "",dataPresent;
+      //appending age and income suggestion
+      $.each(response, function(index, elem) {
+       if(elem.type == "INCOME") {
+        if(elem.data == undefined) {
+          $("#suggest_new_INCOME").remove();
+        }
+         if ($("#suggest_new_" + elem.type).length == 0 && elem.data) {
+           $('<div class="edwid2 fl ml193 pt10 suggestMain" id="suggest_new_' + elem.type + '"><div class="fontlig f12 wid134 disp_ib color11 mr10">Suggested (click to add)</div><div class="disp_ib suggestParentBox wid345 disp_none vtop"><div class="suggestBoxList"></div></div></div>').insertAfter("#incomeRangeDol");
+         } 
+         if(elem.data) {
+          if(elem.data.LRS && elem.data.HRS){
+           $("#suggestRs").remove();
+           $("#suggest_new_" + elem.type + " .suggestBoxList").append('<div id="suggestRs" class="fontlig f14 disp_ib color11 cursp suggestBoxNew"><span id="suggestLRS">'+elem.data.LRS+'</span>&nbsp;-&nbsp;<span id="suggestHRS">'+elem.data.HRS+'</span></div>');
+          }
+          if(elem.data.LDS && elem.data.HDS) {
+           $("#suggestDol").remove();
+           $("#suggest_new_" + elem.type + " .suggestBoxList").append('<div id="suggestDol" class="fontlig f14 disp_ib color11 cursp suggestBoxNew"><span id="suggestLDS">'+elem.data.LDS+'</span>&nbsp;-&nbsp;<span id="suggestHDS">'+elem.data.HDS+'</span></div>');   
+          } 
+         }
+         
+       }
+       if(elem.type == "AGE") {
+         if(elem.data == undefined) {
+          $("#suggest_new_AGE").remove();
+         }
+         if ($("#suggest_new_" + elem.type).length == 0 && elem.data) {
+           $('<div class="edwid2 fl ml193 pt10 suggestMain" id="suggest_new_' + elem.type + '"><div class="fontlig f12 wid134 disp_ib color11 mr10">Suggested (click to add)</div><div class="disp_ib suggestParentBox wid345 disp_none vtop"><div class="suggestBoxList"></div></div></div>').insertAfter("#ageRange");
+         } 
+         if(elem.data) {
+          if(elem.data.LAGE && elem.data.HAGE){
+           $("#suggestAge").remove();
+           $("#suggest_new_" + elem.type + " .suggestBoxList").append('<div id="suggestAge" class="fontlig f14 disp_ib color11 cursp suggestBoxNew"><span id="suggestLAGE">'+elem.data.LAGE+'</span>&nbsp;years&nbsp;-&nbsp;<span id="suggestHAGE">'+elem.data.HAGE+'</span>&nbsp;years</div>');
+          }
+         }
+         
+       }
+     });
+    //binding click on age and income suggestion
+     $(".suggestBoxNew").each(function(index, element) {
+         $(element).off("click").on("click", function() {
+            $("#ageRange").attr("suggest-select",1);
+            var range = $(this).attr("id").split("suggest")[1];
+            if($("#"+range+"Range")) {
+                $(".list-agemin li").each(function(){
+                  if($("#suggestLAGE").html() == $(this).html())
+                     $(this).click();
+               });
+               $(".list-agemax li").each(function(){
+                   if($("#suggestHAGE").html() == $(this).html())
+                     $(this).click();
+               });
+               $("#suggest_new_AGE").remove();  
+             }
+             if($("#incomeRange"+range)) {
+               if(range == "Rs") {
+                 $("#incomeRangeRs").attr("suggest-select",1);
+                 $(".list-incomemax li").each(function(){
+                   if($("#suggestHRS").html() == $(this).html())
+                     $(this).click();
+                 });
+                 $(".list-incomemin li").each(function(){
+                   if($("#suggestLRS").html() == $(this).html())
+                     $(this).click();
+                 });
+                 $("#suggestRs").remove();
+                 if($("#suggestDol").length == 0) {
+                   $("#suggest_new_INCOME").remove();  
+                 }
+               } else if(range == "Dol") {
+                 $("#incomeRangeDol").attr("suggest-select",1);
+                 $(".list-incomedolmin li").each(function(){
+                   if($("#suggestLDS").html() == $(this).html())
+                     $(this).click();
+                 });  
+                 $(".list-incomedolmax li").each(function(){
+                   if($("#suggestHDS").html() == $(this).html())
+                     $(this).click();
+                 });  
+                 $("#suggestDol").remove();
+                 if($("#suggestRs").length == 0) {
+                   $("#suggest_new_INCOME").remove();  
+                 }
+               }
+             }
+         });
+     });
+
+
       $.each(response, function(index, elem) {
         type = elem.type.toLowerCase();
         if(elem.data) {
@@ -1221,6 +1330,7 @@ var _parentCatogary = [{
               $('<div class="edwid2 fl ml193 pt10 suggestMain" id="suggest_' + type + '"><div class="fontlig f12 wid134 disp_ib color11 mr10 vtop">Suggested (click to add)</div><div class="disp_ib suggestParentBox wid345 disp_none vtop"><div id="loader_' + type + '"><img src="IMG_URL/images/jspc/commonimg/dppLoader.gif"></div><div class="suggestBoxList"></div></div></div>').insertAfter("#dpp-p_" + type + "Parent #multiselect");
             }
             $("#suggest_" + type + " .suggestBoxList").html("");
+
             $.each(Object.keys(elem.data), function(index2, elem2) {
               dataPresent = false;
               if($("#dpp-p_" + type).val() != null) {
@@ -1234,7 +1344,13 @@ var _parentCatogary = [{
                 $("#suggest_" + type + " .suggestBoxList").append('<div class="fontlig f14 disp_ib color11 cursp suggestBox" index-val="' + elem2 + '">' + $("#dpp-p_"+type+" option[value='"+elem2+"']").html() + '</div>');
               }
             });
-            
+            $("#suggest_" + type + " .suggestBox").each(function(){
+              if($(this).attr("index-val").indexOf(",") != -1) {
+                var data = $(this).html(),indexVal = $(this).attr("index-val");
+                $(this).remove();
+                $("#suggest_" + type + " .suggestBoxList").prepend('<div class="fontlig f14 disp_ib color11 cursp suggestBox" index-val="'+indexVal+'">'+data+'</div>');
+              }
+            });
             //binding click on each suggestion
             if($("#suggest_" + type + " .suggestBoxList div").length != 0) {
               $(".suggestBox").each(function(index, element) {
@@ -1260,6 +1376,7 @@ var _parentCatogary = [{
                  }
                 });
               });
+            
             } else if($("#suggest_" + type + " .suggestBoxList div").length == 0) {
               $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
             }
@@ -1281,6 +1398,18 @@ var _parentCatogary = [{
         $.each(_parentCatogary, function(index, elem) {
           if (elem.parent == type) {
             obj = [];
+            //creating object for age and income on edit
+            if(type == "basic") {
+             obj.push({
+               "type":"AGE",
+               "data":[$("#dpp1-p_age span").html(),$("#dpp2-p_age span").html()]
+             });
+           } else if(type == "education") {
+             obj.push({
+               "type":"INCOME",
+               "data":[$("#incomeRangeRs #dpp1-p_income span").html(),$("#incomeRangeRs #dpp2-p_income span").html(),$("#incomeRangeDol #dpp1-p_income span").html(),$("#incomeRangeDol #dpp2-p_income span").html()]
+             });
+           }
             $.each(elem.sub, function(index2, elem2) {
               typeDataArray = $("#dpp-p_" + elem2).val();
               if(typeDataArray != null) {
@@ -1300,4 +1429,30 @@ var _parentCatogary = [{
         });
       }, 30);
     }
+    //extra function to create object on age and income change
+    function changeNonChosenSuggestion(type) { 
+     var obj;
+     setTimeout(function() {
+       if(type ==  "age") {
+       obj = {
+                 "type":"AGE",
+                 "data":[$("#dpp1-p_age span").html(),$("#dpp2-p_age span").html()]
+             }; 
+       } else if(type == "income") {
+         obj = {
+                 "type":"INCOME",
+                 "data":[$("#incomeRangeRs #dpp1-p_income span").html(),$("#incomeRangeRs #dpp2-p_income span").html(),$("#incomeRangeDol #dpp1-p_income span").html(),$("#incomeRangeDol #dpp2-p_income span").html()]
+               };  
+       } else if(type == "incomeDol") {
+         obj = {
+                 "type":"INCOME",
+                 "data":[$("#incomeRangeRs #dpp1-p_income span").html(),$("#incomeRangeRs #dpp2-p_income span").html(),$("#incomeRangeDol #dpp1-p_income span").html(),$("#incomeRangeDol #dpp2-p_income span").html()]
+               }; 
+       }
+       if(obj){
+         queryInput.push(obj);
+         getApiResponse();  
+       }
+     }, 30);
+   }
 
