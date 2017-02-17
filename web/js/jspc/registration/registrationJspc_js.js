@@ -1530,13 +1530,17 @@ var padding = 31;
             }
           }
           if (ele1.name == "religion") {
+		$("#caste_no_bar").attr('checked', false);
+		inputData["casteNoBar"] = $("#caste_no_bar").is(':checked');  
             if (ele1.selected == "Muslim" || ele1.selected == "Christian") {
               $("#caste_label").html("Sect");
               $("#caste_error").html("Please provide a Sect");
+		$("#casteNoBarDiv").addClass("disp-none");
             }
             else {
               $("#caste_label").html("Caste");
               $("#caste_error").html("Please provide a Caste");
+		$("#casteNoBarDiv").removeClass("disp-none");
             }
             $("caste-inputBox_set").val("");
             if (ele1.selected == "Hindu" || ele1.selected == "Jain" || ele1.selected == "Sikh" || ele1.selected == "Buddhist") {
