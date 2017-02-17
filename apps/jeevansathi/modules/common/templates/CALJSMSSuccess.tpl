@@ -20,15 +20,13 @@
                     url: '/api/v1/profile/editsubmit?editFieldArr[ALT_EMAIL]='+altEmailUser,
                     type: 'POST',
                     success: function(response) {
-                        criticalLayerButtonsAction('~$calObject.ACTION1NEW`','B1');
-                    }
-                });
-
-                 $("#altEmailCAL").hide();
+                         $("#altEmailCAL").hide();
                  msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
                  $("#altEmailMsg").text(msg);
                  $("#confirmationSentAltEmail").show();
-                   return;
+                   return; 
+                    }
+                });              
 
                 }
 
@@ -146,7 +144,7 @@
       <div class="pad_new app_clrw f20 txtc" style="padding-top: 170px">Email Verification</div> 
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
          <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 50px;padding-right: 50px"></div>    
-         <div id="okButtonAlt" style="padding-top: 200px" onclick="closeLayerCAL();"  class="pad_new app_clrw f16 txtc">OK</div>    
+         <div id="CALButtonB3" style="padding-top: 200px" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','B1');"  class="pad_new app_clrw f16 txtc">OK</div>    
     </div>
   
 </div>

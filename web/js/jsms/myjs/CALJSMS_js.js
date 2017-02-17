@@ -60,8 +60,7 @@ else {
                         CALParams="&namePrivacy="+namePrivacy+"&newNameOfUser="+newNameOfUser;
                     }
 
-         
-                
+
         window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
         CALButtonClicked=0;
         
@@ -187,9 +186,3 @@ else {
 
         }
 
-     
-function closeLayerCAL()
-{  
-    $("#confirmationSentAltEmail").hide();
-     window.location = "/";
-}
