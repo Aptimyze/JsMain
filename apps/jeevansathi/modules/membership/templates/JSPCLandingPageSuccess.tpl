@@ -576,8 +576,8 @@
                          <!--end:head-->
                         <div class="upgrd_p1">
                             ~if $data.upgradeMembershipContent.upgradeAdditionalBenefits`
-                                <p class="f14 fontmed">Additional Benefit</p>
-                                <ul class="uplino f14 pt10 lh22">
+                                <p class="upcolr1 f14 fontmed">Additional Benefit</p>
+                                <ul class="uplino f14 pt10 lh22 fontlig">
                                     ~foreach from=$data.upgradeMembershipContent.upgradeAdditionalBenefits key=k item=v name=additionalBenefitsCondLoop`
                                         <li>~$v`</li>
                                     ~/foreach`
@@ -585,7 +585,7 @@
                             ~/if`
                             ~if $data.upgradeMembershipContent.upgardeComparedFacts`
                                 <p class="upcolr1 f14 fontmed pt20">Did you know?</p>
-                                <ul class="uplino f14 pt5 lh22">
+                                <ul class="uplino f14 pt10 lh22 fontlig">
                                     ~foreach from=$data.upgradeMembershipContent.upgardeComparedFacts key=k item=v name=comparedBenefitsCondLoop`
                                         <li>- ~$v`</li>
                                     ~/foreach`
