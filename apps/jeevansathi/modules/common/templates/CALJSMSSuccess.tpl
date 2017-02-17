@@ -18,7 +18,7 @@
         <div class="pt10 f15 fontlig fullwid txtc colr8A">~$calObject.TEXTUNDERINPUT`</div>
          <div class="pad_new app_clrw f14 txtc">~$calObject.SUBTITLE`</div>
 
-        <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw colr8A" style="padding-top: 135px">~$calObject.BUTTON2NEW`</div>
+        <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw colr8A" style="padding-top: 115px">~$calObject.BUTTON2NEW`</div>
         
         <div onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1');" type="submit" id="submitAltEmail" class="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">~$calObject.BUTTON1NEW`</div>
     </div>

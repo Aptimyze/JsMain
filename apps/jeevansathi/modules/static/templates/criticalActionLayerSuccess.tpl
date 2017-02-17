@@ -95,13 +95,13 @@
                          <div class="wid500 txtl color5 f12 disp-none" style="position: absolute;top: 86px;" id="CALNameErr">Please provide a valid email address.</div>
                         <input type="text" id="altEmailInpCAL" class="f15 wid90p pa2 txtc" value='~$nameOfUser`' placeholder="Your alternate email" style="">
                         </div>
-                        <div class="f11 colrGrey mt5 txtc">~$textUnderInput`</div>
+                        <div class="f11 colrGrey mt5 txtc" id = "errorMessage">~$textUnderInput`</div>
                         <div class="f15 pt20 colrGrey mt5 txtc wid80p" style="margin: 0px auto;">~$subtitle`</div>
-                        <button id='CALButtonB3'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink">~$button1TextNEW`</button>
+                        <button id='CALButtonB3'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0">~$button1TextNEW`</button>
                     </div>
             </div> 
         <div id="alternateEmailCnfLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white modal3" style="padding-top: 13%;margin-top: 40px">
-        <div class="bordrBtmGrey">
+        <div class="bordrBtmGrey" style="height: 35px">
         <div class="phnvp4 f17 fontreg color11 phnvbdr4" style="margin-top: -38px;margin-left: 5%">Email Verification</div>
         </div>
         <div class="color11">
@@ -109,7 +109,7 @@
         <div class="phnvwid3 mauto pt40 pb27 fontlig">
         <p id='altEmailConfirmText' class="txtc lh26 f15" style="padding-left: 8%;padding-right: 8%"></p>
         </div>
-        <button id='CALButtonB3'  onclick="closeAltEmailCALLayer()" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink" style="margin-left: 10%;margin-right: 10%;margin-bottom: 30px;width: 80%">OK</button>
+        <button id='CALButtonB3'  onclick="closeAltEmailCALLayer()" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0" style="margin-left: 10%;margin-right: 10%;margin-bottom: 30px;width: 80%">OK</button>
         </div>
         <!--end:layer 1-->
         </div> 

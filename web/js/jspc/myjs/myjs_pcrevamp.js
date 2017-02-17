@@ -995,8 +995,17 @@ var buttonClicked=0;
                         var validation=validateAlternateEmail(altEmailUser,primaryEmail);
                         if(validation.valid!==true)
                         {  
-                            $("#CALNameErr").text(validation.errorMessage);
-                            $("#CALNameErr").show();
+
+                            $("#errorMessage").addClass('errCL1').html(validation.errorMessage);
+                            $("#altEmailInpCAL").css('border','1px solid #d9475c');
+                            
+                            setTimeout(function(){ 
+                                
+                                $("#errorMessage").removeClass('errCL1').html("Match Emails will also be sent to this Email ID"); 
+                            $("#altEmailInpCAL").css('border','1px solid #848285');
+
+                            }, 3000);
+
                             buttonClicked=0;
                             return;
                         }
