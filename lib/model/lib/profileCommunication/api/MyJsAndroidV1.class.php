@@ -34,7 +34,9 @@ class MyJsAndroidV1 extends MyJsMobileAppV1
 		self::$myProfileIncompleteFields =Array("PHOTO","CAREER","FAMILY","SOCIAL","ASTRO","LIFESTYLE","HOBBY");
 		self::$tupleTitleField= Array(
 	                "INTEREST_RECEIVED"=>"OCCUPATION",
-                        "MATCH_ALERT"=>"OCCUPATION");
+                        "MATCH_ALERT"=>"OCCUPATION",
+                    "MATCH_OF_THE_DAY" => "OCCUPATION"
+                    );
 		self::$noTupleText= Array(
                         "INTEREST_RECEIVED"=>"There are no People to Respond to",
                         "VISITORS"=>"No one visited your profile recently",

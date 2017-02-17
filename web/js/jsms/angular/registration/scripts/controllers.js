@@ -1525,7 +1525,16 @@
 				Gui.showModalWindow($scope);
 				//$scope.showServerError("provide a valid date of birth");
 			}
-			
+                        if(indexPos == '3')/*Country*/
+			{
+				var countryField = $scope.fields2[3];
+				$scope.initIncompleteStateWidget();
+				$scope.initIncompleteCityWidget();
+			}
+                        if(indexPos=='4')
+			{
+				$scope.initIncompleteCityWidget();
+			}
 			if(checkValid)
 			{
 				$scope.validation();
@@ -1559,11 +1568,40 @@
 				setTimeout(function(){$(".errClass").remove();},300);
 			},2000);
 		}
+                $scope.initIncompleteStateWidget = function()
+		{
+			var countryField = $scope.fields2[3];
+			var stateField = $scope.fields2[4];
+			if(parseInt(countryField.userDecision)==51)
+			{
+				stateField.show=false;
+			}
+			else
+			{
+				stateField.show=true;
+			}
+		}
+		$scope.initIncompleteCityWidget = function()
+		{
+			var countryField = $scope.fields2[3];
+			var stateField = $scope.fields2[4];
+			var cityField = $scope.fields2[5];
+                        if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
+                        {
+                                cityField.show=false;
+                        }
+                        else
+                        {
+                                cityField.show=true;
+                        }
+		}
 		 $scope.showHamMsg = function(szMsg)
         {
             Gui.toastMsg($scope,szMsg);
         }
 		$scope.enableNextBtn();
+                $scope.initIncompleteStateWidget();
+               $scope.initIncompleteCityWidget();
 	});
     
     //Splash Controller

@@ -1111,6 +1111,7 @@ function getGunaScore(response)
 	}
 	else
 	{	
+            if(typeof(hideUnimportantFeatureAtPeakLoad) =="undefined" || hideUnimportantFeatureAtPeakLoad < 4){
 		$.myObj.ajax({
 			showError: false, 
 			method: "POST",
@@ -1124,6 +1125,7 @@ function getGunaScore(response)
 				setGunaScoreOnListing(gunaScoreArr);
 			}
 		});
+            }
 	}
 }
 
