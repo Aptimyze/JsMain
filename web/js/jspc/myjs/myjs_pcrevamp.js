@@ -963,7 +963,9 @@ var buttonClicked=0;
         }
        return true;
      
-    }    function criticalLayerButtonsAction(clickAction,button) {
+    }    
+    
+function criticalLayerButtonsAction(clickAction,button) {
 
 
                 if(buttonClicked)return;    
@@ -989,45 +991,7 @@ var buttonClicked=0;
                         
                       }
 
-                 if(layerId==13 && button=='B1')
-                    {   
-                        var altEmailUser = ($("#altEmailInpCAL").val()).trim();
-                        var validation=validateAlternateEmail(altEmailUser,primaryEmail);
-                        if(validation.valid!==true)
-                        {  
 
-                            $("#errorMessage").addClass('errCL1').html(validation.errorMessage);
-                            $("#altEmailInpCAL").css('border','1px solid #d9475c');
-                            
-                            setTimeout(function(){ 
-                                
-                                $("#errorMessage").removeClass('errCL1').html("Match Emails will also be sent to this Email ID"); 
-                            $("#altEmailInpCAL").css('border','1px solid #848285');
-
-                            }, 3000);
-
-                            buttonClicked=0;
-                            return;
-                        }
-
-                            else
-                             {
-                             // showLoader();
-                             $.ajax({
-                                url: '/api/v1/profile/editsubmit?editFieldArr[ALT_EMAIL]='+altEmailUser,
-                                type: 'POST',
-                                success: function(response) {
-                                    criticalLayerButtonsAction('','B1');
-                                }
-                            });
-                            $("#altEmailDiv").hide();
-                             msg ="A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
-                             $("#altEmailConfirmText").text(msg);
-                             $("#alternateEmailCnfLayer").show();
-                               return;
-                            }
-                        
-                      }
                     Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
                     var URL="/common/criticalActionLayerTracking";
@@ -1036,8 +1000,8 @@ var buttonClicked=0;
                         type: "POST",
                         data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
                     });
-
-                    closeCurrentLayerCommon();
+                    if(layerId!=13 || button!='B1')
+                        closeCurrentLayerCommon();
                     if(clickAction=='RCB')
                     {
                         toggleRequestCallBackOverlay(1, 'RCB_CAL');

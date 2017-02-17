@@ -1,6 +1,6 @@
 
 ~if $layerId == '13'`<script>
-    var primaryEmail = primaryEmail;
+    var primaryEmail = '~$primaryEmail`';
      function validateAlternateEmail(altEmail,primaryMail){        
     var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
     var email = altEmail.trim();
@@ -78,17 +78,50 @@
      
     }
 
-    function closeAltEmailCALLayer()
-    {
-        $("#criticalAction-layer").hide();
-        $(".js-overlay").hide();
-    }
+function validateAndSend(){
+    
+                        var altEmailUser = ($("#altEmailInpCAL").val()).trim();
+                        var validation=validateAlternateEmail(altEmailUser,primaryEmail);
+                        if(validation.valid!==true)
+                        {  
 
+                            $("#errorMessage").addClass('errCL1').html(validation.errorMessage);
+                            $("#altEmailInpCAL").css('border','1px solid #d9475c');
+                            
+                            setTimeout(function(){ 
+                                
+                                $("#errorMessage").removeClass('errCL1').html("Match Emails will also be sent to this Email ID"); 
+                            $("#altEmailInpCAL").css('border','1px solid #848285');
+
+                            }, 3000);
+
+                            buttonClicked=0;
+                            return;
+                        }
+
+                            else
+                             {
+                             // showLoader();
+                             $.ajax({
+                                url: '/api/v1/profile/editsubmit?editFieldArr[ALT_EMAIL]='+altEmailUser,
+                                type: 'POST',
+                                success: function(response) {
+                                    criticalLayerButtonsAction('close','B1');
+                                }
+                            });
+                            $("#altEmailDiv").hide();
+                             msg ="A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
+                             $("#altEmailConfirmText").text(msg);
+                             $("#alternateEmailCnfLayer").show();
+                               return;
+                            }
+                        
+                      }
 
 </script>
 <div id='criticalAction-layer' class="modal3 fontreg">
                 <div class="fontlig" id="altEmailDiv">
-                    <div class="f16 color11 fontreg bordrBtmGrey" style="padding: 22px 31px;">~$titleText`  <span id="skipBtnAltEmail" class="fr dispibl f15 fontlig" style="cursor: pointer;" onclick="closeAltEmailCALLayer()">Skip</span></div>
+                    <div class="f16 color11 fontreg bordrBtmGrey" style="padding: 22px 31px;">~$titleText`  <span id="CALButtonB2" class="fr dispibl f15 fontlig" style="cursor: pointer;" onclick="criticalLayerButtonsAction('~$action2`','B2');">Skip</span></div>
                     <div class="padWidget bordrBtmGrey">
                          <div class="txtc fontreg colrGrey f13" style="margin-bottom: -4%">~$contentTextNEW`</div>
                         <div style='margin-top:25px; margin-left: 2%;margin-right: 5%'>
@@ -97,7 +130,7 @@
                         </div>
                         <div class="f11 colrGrey mt5 txtc" id = "errorMessage">~$textUnderInput`</div>
                         <div class="f15 pt20 colrGrey mt5 txtc wid80p" style="margin: 0px auto;">~$subtitle`</div>
-                        <button id='CALButtonB3'  onclick="criticalLayerButtonsAction('~$action1`','B1');" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0">~$button1TextNEW`</button>
+                        <button id='CALButtonB1'  onclick="validateAndSend();" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0">~$button1TextNEW`</button>
                     </div>
             </div> 
         <div id="alternateEmailCnfLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white modal3" style="padding-top: 13%;margin-top: 40px">
@@ -109,7 +142,7 @@
         <div class="phnvwid3 mauto pt40 pb27 fontlig">
         <p id='altEmailConfirmText' class="txtc lh26 f15" style="padding-left: 8%;padding-right: 8%"></p>
         </div>
-        <button id='CALButtonB3'  onclick="closeAltEmailCALLayer()" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0" style="margin-left: 10%;margin-right: 10%;margin-bottom: 30px;width: 80%">OK</button>
+        <button id='CALButtonB3'  onclick="closeCurrentLayerCommon()" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0" style="margin-left: 10%;margin-right: 10%;margin-bottom: 30px;width: 80%">OK</button>
         </div>
         <!--end:layer 1-->
         </div> 
