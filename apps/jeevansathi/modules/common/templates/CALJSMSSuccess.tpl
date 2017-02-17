@@ -22,7 +22,7 @@
                     success: function(response) {
                       if(response.responseStatusCode == 1)
                       {
-                      showError("Something went Wrong");
+                      showError("Something went wrong");
                       CALButtonClicked=0;
                       return;   
                       }
@@ -107,7 +107,7 @@
             return emailVerified;
     }
     //return true;
-    if(email == primaryMail)
+    if(email.toLowerCase() == primaryMail.toLowerCase())
     {
             emailVerified.valid = false;
             emailVerified.errorMessage = "Alternate and Primary Emails cannot be same";

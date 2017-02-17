@@ -65,7 +65,7 @@
             return emailVerified;
     }
     //return true;
-    if(email == primaryMail)
+    if(email.toLowerCase() == primaryMail.toLowerCase())
     {
             emailVerified.valid = false;
             emailVerified.errorMessage = "Alternate and Primary Emails cannot be same";
