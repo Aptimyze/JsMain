@@ -174,6 +174,7 @@ class VariableParams
         'M',
         'J'
     );
+
     public static $serviceFeatues = array(
         "Send/Receive Interests",
         "Instantly see Phone/Email",
@@ -578,6 +579,12 @@ class VariableParams
         )
 
     );
+
+    public static $newApiPageOneBenefitsBoost = array("Get featured on top of search results.",
+                                                    "Be shown in profile of the day section.",
+                                                    "Your profile will be sent daily in app notifs.",
+                                                    "Appear on top of Daily Recommendations");
+
     public static $newApiPageOneBenefitsJSX = array(
         "Connect with our experienced advisor who works on your behalf",
         "Your advisor interacts with you to know your expectations",

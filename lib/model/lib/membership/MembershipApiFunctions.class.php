@@ -796,6 +796,20 @@ class MembershipApiFunctions
                     $additionalBenefits[$counter++] = $benefitMsg[$key];
                 }
             }
+            if($upgradeMem == "NCP"){
+                $defaultVas = VariableParams::$mainMemBasedVasFiltering;
+                if($defaultVas[$upgradeMem] && in_array("J", $defaultVas[$upgradeMem])){
+                    $boostBenefits = VariableParams::$newApiPageOneBenefitsBoost;
+                    if(is_array($boostBenefits)){
+                        if(is_array($additionalBenefits)){
+                            $additionalBenefits = array_merge($additionalBenefits,$boostBenefits);
+                        }
+                        else{
+                            $additionalBenefits = $boostBenefits;
+                        }
+                    }
+                }
+            }
         }
         return $additionalBenefits;
     }
