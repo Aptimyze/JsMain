@@ -1,7 +1,7 @@
 <script>
     var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
-    var primaryEmail = ~'primaryEmail'`;
+    var primaryEmail = '~$primaryEmail`';
 
     function validateAndSend()
     {
@@ -20,7 +20,13 @@
                     url: '/api/v1/profile/editsubmit?editFieldArr[ALT_EMAIL]='+altEmailUser,
                     type: 'POST',
                     success: function(response) {
-                         $("#altEmailCAL").hide();
+                      if(response.responseStatusCode == 1)
+                      {
+                      showError("Something went Wrong");
+                      CALButtonClicked=0;
+                      return;   
+                      }
+                 $("#altEmailCAL").hide();
                  msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
                  $("#altEmailMsg").text(msg);
                  $("#confirmationSentAltEmail").show();
@@ -143,7 +149,7 @@
   <div class="fontlig">
       <div class="pad_new app_clrw f20 txtc" style="padding-top: 170px">Email Verification</div> 
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
-         <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 50px;padding-right: 50px"></div>    
+         <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>    
          <div id="CALButtonB3" style="padding-top: 200px" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','B1');"  class="pad_new app_clrw f16 txtc">OK</div>    
     </div>
   
