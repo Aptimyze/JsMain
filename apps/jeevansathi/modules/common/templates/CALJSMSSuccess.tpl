@@ -1,8 +1,123 @@
 <script>
     var namePrivacy=~if $namePrivacy neq 'N'`'Y'~else`'N'~/if`;
     var suggestions =~if $calObject.LAYERID eq '16'`~$dppSuggestions|decodevar`~else`''~/if`;
-    var primaryEmail = primaryEmail;
+    var primaryEmail = ~'primaryEmail'`;
+
+    function validateAndSend()
+    {
+            var altEmailUser = ($("#altEmailInpCAL").val()).trim();
+            var validation=validateAlternateEmail(altEmailUser,primaryEmail);
+            if(validation.valid!==true)
+            {  
+                showError(validation.errorMessage);
+                CALButtonClicked=0;
+                return;
+            }
+
+                else
+                 {
+                 $.ajax({
+                    url: '/api/v1/profile/editsubmit?editFieldArr[ALT_EMAIL]='+altEmailUser,
+                    type: 'POST',
+                    success: function(response) {
+                        criticalLayerButtonsAction('~$calObject.ACTION1NEW`','B1');
+                    }
+                });
+
+                 $("#altEmailCAL").hide();
+                 msg = "A link has been sent to your email Id "+altEmailUser+', click on the link to verify your email';
+                 $("#altEmailMsg").text(msg);
+                 $("#confirmationSentAltEmail").show();
+                   return;
+
+                }
+
+    }
 </script>
+
+~if $calObject.LAYERID eq '13'`
+<script>
+  
+
+  function validateAlternateEmail(altEmail,primaryMail){        
+    var email_regex = /^([A-Za-z0-9._%+-]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i;
+    var email = altEmail.trim();
+    var invalidDomainArr = new Array("jeevansathi", "dontreg","mailinator","mailinator2","sogetthis","mailin8r","spamherelots","thisisnotmyrealemail","jsxyz","jndhnd");
+    var start = email.indexOf('@');
+    var end = email.lastIndexOf('.');
+    var diff = end-start-1;
+    var user = email.substr(0,start);
+    var len = user.length;
+    var domain = email.substr(start+1,diff).toLowerCase();
+    var emailVerified ={};
+    if(jQuery.inArray(domain.toLowerCase(),invalidDomainArr) !=  -1)
+        return false;
+    else if(domain == 'gmail')
+    {
+        if(!(len >= 6 && len <=30))
+        {
+            emailVerified.valid = false;
+            emailVerified.errorMessage = "Please provide a valid Alternate Email Id";
+            return emailVerified;
+        }
+    }
+    else if(domain == 'yahoo' || domain == 'ymail' || domain == 'rocketmail' )
+    {
+        if(!(len >= 4 && len <=32))
+        {   
+
+            emailVerified.valid = false;
+            emailVerified.errorMessage = "Please provide a valid Alternate Email Id";
+            return emailVerified;
+        }
+    }
+    else if(domain == 'rediff')
+    {
+        if(!(len >= 4 && len <=30))
+        {
+            emailVerified.valid = false;
+            emailVerified.errorMessage = "Please provide a valid Alternate Email Id";
+            return emailVerified;
+        }
+    }
+    else if(domain == 'sify')
+    {
+        if(!(len >= 3 && len <=16))
+        {
+            emailVerified.valid = false;
+            emailVerified.errorMessage = "Please provide a valid Alternate Email Id";
+            return emailVerified;
+        }
+    }
+    if(email=="")
+    {
+            emailVerified.valid = false;
+            emailVerified.errorMessage = "Please provide a valid Alternate Email Id";
+            return emailVerified;
+    }
+
+    if(!email_regex.test(email))
+    {
+            emailVerified.valid = false;
+            emailVerified.errorMessage = "Please provide a valid Alternate Email Id";
+            return emailVerified;
+    }
+    //return true;
+    if(email == primaryMail)
+    {
+            emailVerified.valid = false;
+            emailVerified.errorMessage = "Alternate and Primary Emails cannot be same";
+            return emailVerified;
+    }
+
+            emailVerified.valid = true;
+            emailVerified.errorMessage = "A link has been sent to your email id "+altEmail+" click on the link to verify your email.";
+            return emailVerified;
+     
+    }
+</script>
+
+~/if`
 
 <input type="hidden" id="CriticalActionlayerId" value="~$calObject.LAYERID`">
 
@@ -18,9 +133,9 @@
         <div class="pt10 f15 fontlig fullwid txtc colr8A">~$calObject.TEXTUNDERINPUT`</div>
          <div class="pad_new app_clrw f14 txtc">~$calObject.SUBTITLE`</div>
 
-        <div id="skipBtn" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw colr8A" style="padding-top: 115px">~$calObject.BUTTON2NEW`</div>
+        <div id="CALButtonB2" onclick="criticalLayerButtonsAction('~$calObject.ACTION2`','B2');"  class="f14 fontlig txtc app_clrw colr8A" style="padding-top: 115px">~$calObject.BUTTON2NEW`</div>
         
-        <div onclick="criticalLayerButtonsAction('~$calObject.ACTION1`','B1');" type="submit" id="submitAltEmail" class="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">~$calObject.BUTTON1NEW`</div>
+        <div onclick="validateAndSend();" type="submit" id="submitAltEmail" class="fullwid dispbl lh50 txtc f18 btmo posfix bg7 white">~$calObject.BUTTON1NEW`</div>
     </div>
   
 </div>
