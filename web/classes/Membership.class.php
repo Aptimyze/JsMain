@@ -664,7 +664,7 @@ class Membership
     }
     
     function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="") {
-        //error_log("ankita in makePaid...-".$memUpgrade);
+        error_log("ankita in makePaid...-".$memUpgrade);
         $userObjTemp = $this->getTempUserObj();
         if($skipBill == true){
             $this->setGenerateBillParams();
