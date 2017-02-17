@@ -63,6 +63,18 @@ function updtOrder($ORDERID, &$dup, $updateStatus = 'Y') {
             if (mysql_affected_rows_js()) $ret = true;
             else $ret = false;
             $dup = false;
+            
+            if($updateStatus == 'N' || $updateStatus == "N"){
+                //check whether user was eligible for membership upgrade or not
+                $memCacheObject = JsMemcache::getInstance();
+                $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
+                if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                    $memHandlerObj = new MembershipHandler(false);
+                    //$memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"),false);
+                    $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
+                    unset($memHandlerObj);
+                }
+            }
         } 
         else {
             SendMail::send_mail('vibhor.garg@jeevansathi.com', "PMTRECVD already populated for $ORDERID", "PMTRECVD already populated for $ORDERID", 'js-sums@jeevansathi.com', 'avneet.bindra@jeevansathi.com');
@@ -197,8 +209,8 @@ function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
  *    RETURNS       :    Returns true if record successfully entered
  ***********************************************************************/
 
-function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '') {
-    
+function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '',$memUpgrade="NA") {
+    error_log("ankita in newOrder..".$memUpgrade);
     //	echo $profileid."-".$paymode."-".$curtype."-".$amount."-".$service_str."-".$service_main."-".$discount."-".$setactivate;
     global $error_msg, $pay_arrayfull, $pay_arrayfull, $announce_to_email, $ip, $DOL_CONV_RATE, $tax_rate;
     
@@ -284,7 +296,27 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         $ordrDeviceObj = new billing_ORDERS_DEVICE();
         $ordrDeviceObj->insertOrderDetails($insert_id, $ORDERID, $device, $profileid, $couponCodeVal);
         unset($ordrDeviceObj);
+        if($memUpgrade == ""){
+            $memUpgrade = "NA";
+        }
         if ($insert_id) {
+            //set upgrade entry record for such user
+            if($memUpgrade != "NA" && in_array($memUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                error_log("ankita inserting new entry in upgrade_orders for ".$profileid."---".$data["ORDERID"]);
+                //set entry in upgrade_orders for membership upgrade for current user
+                $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
+                $insertedRowId = $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$profileid,"ORDERID"=>$data["ORDERID"],"ENTRY_DT"=>date("Y-m-d H:i:s"),"MEMBERSHIP"=>$memUpgrade));
+                unset($upgradeOrdersObj);
+                //set upgrade case in memcache for 1 hr for this user ankita
+                if($insertedRowId){
+                    $memCacheObject = JsMemcache::getInstance();
+                    $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],$memUpgrade,3600);
+                }
+            }
+            else{
+                $memCacheObject = JsMemcache::getInstance();
+                $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],"NA",3600);
+            }
         	return $data;
         }
         else {

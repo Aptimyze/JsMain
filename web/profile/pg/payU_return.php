@@ -76,7 +76,11 @@ if ($hash == $reverseHash && $AuthDesc == "Y") {
     $dup = false;
     $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
     $gatewayRespObj->updateDupRetStatus($profileid, $order_num, var_export($dup, 1), var_export($ret, 1));
-    if (!$dup && $ret) $membershipObj->startServiceOrder($Order_Id);
+    if (!$dup && $ret) {
+        error_log("ankita in startServiceOrder payu_return...".$Order_Id);
+        $membershipObj->startServiceOrder($Order_Id);
+        error_log("ankita end of startserviceorder..");
+    }
     //if ($ret) $membershipObj->startServiceOrder($Order_Id);
     
     list($part1, $part2) = explode("-", $Order_Id);
