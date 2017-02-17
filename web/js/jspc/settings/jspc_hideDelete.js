@@ -189,7 +189,8 @@ function ajaxHide(hideDelete)
     beforeSend : function(){
       $("#hidePartID").addClass("settings-blur");
     },
-    url: '/settings/jspcSettings?hideDelete=1',
+    url : '/api/v1/settings/hideUnhideProfile',
+    dataType: 'json',
     data: 'data='+dataObject,
     //timeout: 5000,
     success: function(response) 
