@@ -582,7 +582,7 @@ $js_arr[]=array("jspc/static/static_js"  => "1");
 $js_arr[]=array("jspc/login/changePassword_js"  => "1");
 $js_arr[]=array("jspc/settings/settings"  => "1");
 $js_arr[]=array("jspc/settings/jspc_visibility"  => "1");
-$js_arr[]=array("jspc/settings/jspc_hideDelete"              => "15");
+$js_arr[]=array("jspc/settings/jspc_hideDelete"               => "16");
 $js_arr[]=array("jspc/login/resetPassword_js"  => "1");
 $js_arr[]=array("jspc/registration/incompleteProfileJspc_js"       => "7");
 $js_arr[]=array("jspc/profile/edit/profile/jspcPhoneVerifyBinding_js"  => "2");
