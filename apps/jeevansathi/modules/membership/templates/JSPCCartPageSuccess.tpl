@@ -730,19 +730,19 @@
                 if (checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))) {
                     if($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)>-1) {
                         if (checkEmptyOrNull(readCookie('couponID'))) {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`"});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         } else {
                             $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         }
                     } else if (checkEmptyOrNull(readCookie('selectedVas'))) {
                         if (checkEmptyOrNull(readCookie('couponID'))) {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`"});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         } else {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`"});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':readCookie('selectedVas'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         }
                     } else {
                         if (checkEmptyOrNull(readCookie('couponID'))) {
-                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`"});
+                            $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'couponID':readCookie('couponID'), 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         } else {
                             $.redirectPost('/api/v3/membership/membershipDetails', {'processPayment':1, 'mainMembership':readCookie('mainMem')+readCookie('mainMemDur'), 'vasImpression':'', 'device':'desktop', 'paymentMode':readCookie('paymentMode'), 'cardType':readCookie('cardType'),'userProfile':"~$data.paymentOptionsData.userProfile`",'upgradeMem':upgradeMem});
                         }

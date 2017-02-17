@@ -198,13 +198,14 @@ class Membership
                 }
                 $dup = false;
                 if($updateStatus == 'N' || $updateStatus == "N"){
-                    error_log("setting failed payment ankita..".$updateStatus);
+                    //error_log("setting failed payment ankita..".$updateStatus);
                     //check whether user was eligible for membership upgrade or not
                     $memCacheObject = JsMemcache::getInstance();
-                    error_log("check for failed upgrade-".$ORDERID);
+                    //error_log("check for failed upgrade-".$ORDERID);
                     $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
                     if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                         $memHandlerObj = new MembershipHandler(false);
+                        //$memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"),false);
                         $memHandlerObj->updateMemUpgradeStatus($ORDERID,$myrow["PROFILEID"],array("UPGRADE_STATUS"=>"FAILED","DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Gateway payment failed"));
                         unset($memHandlerObj);
                     }
@@ -219,7 +220,7 @@ class Membership
     }
     
     function startServiceOrder($orderid, $skipBill = false) {
-        error_log("ankita inside function startServiceOrder...");
+        //error_log("ankita inside function startServiceOrder...");
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
@@ -308,7 +309,7 @@ class Membership
         $checkForMemUpgrade = $memCacheObject->get($this->profileid.'_MEM_UPGRADE_'.$orderid);
         
         if($checkForMemUpgrade == null || $checkForMemUpgrade == false){
-            error_log("ankita checking entry in mem upgrade for..".$orderid."---".$this->profileid."---===".$checkForMemUpgrade);
+            //error_log("ankita checking entry in mem upgrade for..".$orderid."---".$this->profileid."---===".$checkForMemUpgrade);
             $upgradeOrderObj = new billing_UPGRADE_ORDERS();
             $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$this->profileid);
             if(is_array($isUpgradeCaseEntry)){
@@ -540,7 +541,7 @@ class Membership
             if ($row['EXPIRY_DT']) {
                 $memUpgradeOffset = intval("-".VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]);
                 $memID     = preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $row['SERVICEID']);
-                //confirm ankita for 'L' membership
+                
                 if(strpos($memID[0], 'L')!=false){
                     $memID[0] = substr($memID[0],0,-1);
                     $memID[1] = 'L';
@@ -663,8 +664,7 @@ class Membership
     }
     
     function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="") {
-        //check for failed payment,tracking here in or not
-        error_log("ankita in makePaid...-".$memUpgrade);
+        //error_log("ankita in makePaid...-".$memUpgrade);
         $userObjTemp = $this->getTempUserObj();
         if($skipBill == true){
             $this->setGenerateBillParams();
@@ -682,6 +682,7 @@ class Membership
         $this->checkIfDiscountExceeds($userObjTemp);
         if($memUpgrade != "NA"){
             $memHandlerObj = new MembershipHandler(false);
+            //$memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid),false);
             $memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid));
             unset($memHandlerObj);
         }
@@ -766,8 +767,8 @@ class Membership
         }
 
         $this->discount_percent = round((($this->discount)/($this->amount+$this->discount)) * 100,2);
-        error_log("ankita amount=".$this->amount."--discount=".$this->discount);
-        error_log("ankita ---percecnt=".$this->discount_percent);
+        //error_log("ankita amount=".$this->amount."--discount=".$this->discount);
+        //error_log("ankita ---percecnt=".$this->discount_percent);
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();
         $paramsStr = "SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS, SERVEFOR, VERIFY_SERVICE, ORDERID, DEPOSIT_DT, DEPOSIT_BRANCH, IPADD, CUR_TYPE, ENTRY_FROM, MEMBERSHIP, DOL_CONV_BILL, SALES_TYPE, SERVICE_TAX_CONTENT, COUNTRY,DISCOUNT_PERCENT";
@@ -1228,7 +1229,6 @@ class Membership
         if((!empty($this->checkCoupon) && $this->checkCoupon != '') || $festCondition){
             // Dont handle coupon code and when extra duration is offered in festive extra duration case
         } else {
-            //confirm to add inputs extra ankita
             list($total, $discount) = $memHandlerObj->setTrackingPriceAndDiscount($userObj, $this->profileid, $mainMembership, $allMemberships, $this->curtype, $this->device, $this->checkCoupon, null, null, null, true);
             if ($total > $this->amount) {
                 $iniAmt = $servObj->getTotalPrice($this->serviceid, $this->curtype);
@@ -2145,7 +2145,7 @@ class Membership
         else{
             $upgradeMem = $apiResHandlerObj->upgradeMem;
         }
-        error_log("ankita forOnline upgradeMem-"+$upgradeMem);
+        //error_log("ankita forOnline upgradeMem-"+$upgradeMem);
         $profileid = $this->profileid;
         $userObj = new memUser($profileid);
         $userObj->setMemStatus();
@@ -2165,7 +2165,7 @@ class Membership
             $discount = 0;
             $discount_type = 12;
             $total = $servObj->getTotalPrice($allMemberships, $type, $device);
-        }else if ($screeningStatus == "N") { //ankita confirm no discount for unscreened profiles
+        }else if ($screeningStatus == "N") {
             $main_service = $mainServiceId;
             $allMembershipsNew = $allMemberships;
             $service_str_off = $allMemberships;
@@ -2209,7 +2209,6 @@ class Membership
                     $discount_type = 9;
                 }
             } else if($upgradeActive == "1"){
-                error_log("ankita setting discount type for upgrade");
                 $discount_type = 15;
             } else {
                 $discount_type = 12;
