@@ -40,6 +40,8 @@ class VisitorsSearch extends SearchParamters
 			$skipContactedType = SkipArrayCondition::$VISITOR;
 			$skipProfileObj    = SkipProfile::getInstance($this->pid);
 			$skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
+                        SkipProfile::unsetInstance($this->pid);
+                        unset($skipProfileObj);
 			$viewLogObj        = new VIEW_LOG_TRIGGER();
 			$visitorsProfile   = $viewLogObj->getViewLogData($this->pid, $skipProfile,$daysBefore,self::VISITORS_LIMIT);
 			if (is_array($visitorsProfile)){

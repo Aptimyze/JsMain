@@ -263,5 +263,34 @@ public function sendEOI($body, $type)
 	}
 }
 
+public function logDiscount($body,$type){
+    if($type == "DISCOUNT_LOG"){
+        $msgDate = $body["DATE"];
+        $currentHour = date('H');
+        $notAllowedHrs = array("00","01","02","03");
+        if(date('Y-m-d') == $msgDate && in_array($currentHour, $notAllowedHrs)){
+            $prodObj=new Producer();
+            $type = "DISCOUNT_LOG";
+            $queueData = array('process' =>'DISCOUNT_HISTORY',
+                                'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
+                              );
+            $prodObj->sendMessage($queueData);
+            unset($prodObj);
+        }
+        else{
+            $profileid = $body["PROFILEID"];
+            $displayPage = 1;$device = "desktop";$ignoreShowOnlineCheck = false;
+            $this->userObj = new memUser($profileid);
+            $this->userObj->setMemStatus();
+            $memHandlerObj = new MembershipHandler();
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($this->userObj, "L");
+            list($allMainMem, $minPriceArr) = $memHandlerObj->getMembershipDurationsAndPrices($this->userObj, $discountType, $displayPage, $device, $ignoreShowOnlineCheck);
+            $allMainMem["PROFILEID"] = $profileid;
+            $memHandlerObj->computeMaximumDiscount($allMainMem);
+            unset($memHandlerObj);
+        }
+    }
+}
+
  }
 ?>
