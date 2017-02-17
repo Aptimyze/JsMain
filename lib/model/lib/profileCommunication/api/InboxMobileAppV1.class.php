@@ -553,12 +553,20 @@ class InboxMobileAppV1
 				}
                     
 				$profile[$count]['edu_level_new']=$tupleObj->getedu_level_new();
+                                
+                                if(MobileCommon::isAndroidApp()){
+                                    $profile[$count]['thumbnail_pic'] = null;
+                                    if($tupleObj->getThumbailUrl()) {
+                                        $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED())['url'];
+                                        $profile[$count]["thumbnail_pic"] = $thumbNail;
+                                    }
+                                }
 			
 
 					$count++;
 				unset($button);
 				
-				
+                                
 			}			
 			$finalResponse["profiles"] = array_change_key_case($profile,CASE_LOWER);
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"];
@@ -568,13 +576,7 @@ class InboxMobileAppV1
                         if(in_array($infoKey,array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MATCH_ALERT","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED"))){
                                 $finalResponse["checkonline"] = true;
                         }
-                        if(MobileCommon::isAndroidApp()){
-                            $this->output['thumbnailPic'] = null;
-                            if($tupleObj->getThumbailUrl()) {
-                                $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($tupleObj->getThumbailUrl(),'ThumbailUrl',$tupleObj->getIS_PHOTO_REQUESTED())['url'];
-                                $finalResponse['thumbnailPic'] = $thumbNail;
-                            }
-                        }
+                        
 			if($infoKey=="PHOTO_REQUEST_RECEIVED")
 			{
 				//if($tupleObj->getHAVEPHOTO() == "" || $tupleObj->getHAVEPHOTO()=="N"){
