@@ -660,12 +660,19 @@ class Membership
         if(!$geoIpCountryName){
                 $geoIpCountryName ='India';
         }
-
+        
+        unset($modifiedServeFor);
+        if(strstr($this->servefor,'X') && !strstr($this->servefor,'J')){
+            $modifiedServeFor = $this->servefor.',J';
+        }
+        else{
+            $modifiedServeFor = $this->servefor;
+        }
         
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();
         $paramsStr = "SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS, SERVEFOR, VERIFY_SERVICE, ORDERID, DEPOSIT_DT, DEPOSIT_BRANCH, IPADD, CUR_TYPE, ENTRY_FROM, MEMBERSHIP, DOL_CONV_BILL, SALES_TYPE, SERVICE_TAX_CONTENT, COUNTRY";
-        $valuesStr = "'$this->serviceid','$this->profileid','" . addslashes($this->username) . "','$this->name','" . addslashes($this->address) . "','$this->gender','$this->city','$this->pin','$this->email','$this->rphone','$this->ophone','$this->mphone','$this->comment','$this->overseas','$this->discount','$this->discount_type','$this->discount_reason','$this->walkin','$this->center','$this->entryby','$this->dueamount','$this->duedate',now(),'$this->status','$this->servefor','$this->verify_service','$this->orderid','$this->deposit_dt','$this->deposit_branch','$this->ipadd','$this->curtype','$this->entry_from','$this->membership','$this->dol_conv_bill','$this->sales_type','$this->service_tax_content','$geoIpCountryName'";
+        $valuesStr = "'$this->serviceid','$this->profileid','" . addslashes($this->username) . "','$this->name','" . addslashes($this->address) . "','$this->gender','$this->city','$this->pin','$this->email','$this->rphone','$this->ophone','$this->mphone','$this->comment','$this->overseas','$this->discount','$this->discount_type','$this->discount_reason','$this->walkin','$this->center','$this->entryby','$this->dueamount','$this->duedate',now(),'$this->status','$modifiedServeFor','$this->verify_service','$this->orderid','$this->deposit_dt','$this->deposit_branch','$this->ipadd','$this->curtype','$this->entry_from','$this->membership','$this->dol_conv_bill','$this->sales_type','$this->service_tax_content','$geoIpCountryName'";
         
         // TAX FOR RS ONLY
         if ($this->curtype == 'RS') {
@@ -801,7 +808,17 @@ class Membership
             if (count($serviceid_arr1)) {
                 $serviceid_arr = array_merge($serviceid_arr, $serviceid_arr1);
             }
-        } 
+        }
+        elseif(strstr($this->serviceid, 'X')){
+            $mainServ = $this->serviceid;
+            $mainServDur = preg_replace("/[^0-9]/","",$mainServ);
+            $serviceArr = array();
+            foreach(VariableParams::$jsExclusiveComboAddon as $key => $val){
+                $serviceArr[] = $val.$mainServDur;
+            }
+            $serviceid_arr = @explode(",", $this->serviceid);
+            $serviceid_arr = array_merge($serviceid_arr, $serviceArr);
+        }
         else $serviceid_arr = @explode(",", $this->serviceid);
         for ($i = 0; $i < count($serviceid_arr); $i++) {
             unset($insert_query_str);
@@ -1264,6 +1281,7 @@ class Membership
         $purDetRow = $billingPurObj->fetchAllDataForBillid($billid);
         $smarty->assign("eAdvantageService", substr($purDetRow['SERVICEID'],0,3));
         $smarty->assign("eAdvantageServiceName", VariableParams::$mainMembershipNamesArr[substr($purDetRow['SERVICEID'],0,3)]);
+        $smarty->assign("excludeInPrintBill", VariableParams::$excludeInPrintBill);
         unset($purDetRow);
 
         foreach ($printBillDataArr as $key=>$myrow) {

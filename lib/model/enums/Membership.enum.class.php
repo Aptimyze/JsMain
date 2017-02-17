@@ -158,7 +158,8 @@ class VariableParams
         'I',
         'A',
         'B',
-        'M'
+        'M',
+        'J'
     );
     public static $serviceFeatues = array(
         "Send/Receive Interests",
@@ -270,6 +271,12 @@ class VariableParams
             "description" => "Get our experts to create comprehensive & well-written profile for you",
             "visibility" => 0,
             "vas_id" => 6
+        ),
+        "J" => array(
+            "name" => "Profile Boost",
+            "description" => "Get more response through Profile Boost. 1.Get featured on top of search results. 2.Be shown in profile of the day section. 3.Your profile will be sent daily in app notifs. 4.Appear on top of Daily Recommendations",
+            "visibility" => 0,
+            "vas_id" => 7
         )
     );
     public static $vasPerService = array(
@@ -483,6 +490,7 @@ class VariableParams
         "View contacts of members you like",
         "Priority Customer service",
         "Make your contacts visible to others",
+        "Profile Boost",
         "Response Booster",
         "Featured Profile",
         "Astro Compatibility",
@@ -497,6 +505,7 @@ class VariableParams
             0,
             0,
             0,
+            0,
             0
         ) ,
         "C" => array(
@@ -507,9 +516,11 @@ class VariableParams
             0,
             0,
             0,
+            0,
             0
         ) ,
         "ESP" => array(
+            1,
             1,
             1,
             1,
@@ -525,11 +536,13 @@ class VariableParams
             1,
             1,
             1,
-            1,
+            0,
+            0,
             0,
             0
         ) ,
         "D" => array(
+            1,
             1,
             1,
             1,
@@ -543,6 +556,7 @@ class VariableParams
             1,
             1,
             0,
+            1,
             1,
             0,
             0,
@@ -612,10 +626,14 @@ class VariableParams
     );
 
     //remove specified vas services from vas content based on main membership 
-    public static $mainMemBasedVasFiltering = array('NCP'=>array('R','T'));
+    public static $mainMemBasedVasFiltering = array('NCP'=>array('R','T','J'));
 
     //skip vas page for below main memberships
     public static $skipVasPageMembershipBased = array('X','ESP');
+    
+    public static $jsExclusiveComboAddon = array('J');
+    
+    public static $excludeInPrintBill = array('e-Value Pack','JS Boost');
 }
 class discountType
 {
