@@ -13,6 +13,6 @@
 		</div>
 	</div>
 	<div id="foot" class="posfix fullwid bg7 btmo">
-		<input type="submit" id="unHidePasswordCheck" class="fullwid dispbl lh50 txtc f16 white" value="UnHide Profile">
+		<input type="submit" id="unHidePasswordCheck" class="fullwid dispbl lh50 txtc f16 white" value="Unhide Profile">
 	</div>
 </div>

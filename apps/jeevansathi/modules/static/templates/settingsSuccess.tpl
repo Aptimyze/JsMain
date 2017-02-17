@@ -48,7 +48,7 @@
         </div>
       ~else`
         <div class="clearfix pad12">
-          <div class="fl wid94p"><a href="/static/unHideOption" bind-slide="1" class="color13">UnHide Profile</a></div>
+          <div class="fl wid94p"><a href="/static/unHideOption" bind-slide="1" class="color13">Unhide Profile</a></div>
           <div class="fr pt2"><a href="/static/unHideOption"><i class="mainsp set_arow2"></i></a></div>
         </div>
       ~/if`
