@@ -1902,7 +1902,6 @@ class MembershipAPIResponseHandler {
     
     public function processPickupRequestResponse($request) {
         list($this->totalCartPrice, $this->discountCartPrice) = $this->memApiFuncs->calculateCartPrice($request, $this);
-        
         $userData = $this->memHandlerObj->getUserData($this->profileid);
         
         if (!empty($this->couponCode)) {
@@ -1939,7 +1938,6 @@ class MembershipAPIResponseHandler {
         //$dataArr['CITY'] = html_entity_decode($this->city);
         $dataArr['PREF_TIME'] = date("Y-m-d", strtotime($this->date));
         $dataArr['COMMENTS'] = html_entity_decode($this->comment);
-        
         $paymentHandlerObj = new PaymentHandler();
         $paymentHandlerObj->submitPickupRequest($dataArr);
         $status = 1;
@@ -1948,7 +1946,7 @@ class MembershipAPIResponseHandler {
             "status" => $status,
             "error_id" => NULL,
             "error_text" => NULL,
-            "params" => "displayPage=7&mainMembership=" . $this->mainMembership . "&vasImpression=" . $this->vasImpression . "&profileid=" . $this->profileid
+            "params" => "displayPage=7&mainMembership=" . $this->mainMembership . "&vasImpression=" . $this->vasImpression . "&profileid=" . $this->profileid."&upgradeMem=".$this->upgradeMem
         );
         unset($dataArr);
         return $output;

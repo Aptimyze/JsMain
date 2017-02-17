@@ -702,16 +702,17 @@
                     //var match = date.match(/^(\d+)-(\d+)-(\d+) (\d+)\:(\d+)\:(\d+)$/);
                     //date = new Date(match[1], match[2] - 1, match[3], match[4], match[5], match[6]);
                     //date = date.getTime() / 1000;
-                    var paramStr = 'pickupRequest=1' + '&name=' + name + '&landline=' + landline + '&mobile=' + mobile + '&address=' + address + '&comment=' + comment + '&city=' + city + '&date=' + date + "&device=desktop" + "&mainMembership=" + mainMembership + "&vasImpression=" + vasImpression + "&couponID=" + readCookie('couponID');
+                    var paramStr = 'pickupRequest=1' + '&name=' + name + '&landline=' + landline + '&mobile=' + mobile + '&address=' + address + '&comment=' + comment + '&city=' + city + '&date=' + date + "&device=desktop" + "&mainMembership=" + mainMembership + "&vasImpression=" + vasImpression + "&couponID=" + readCookie('couponID') + "&upgradeMem="+upgradeMem;
                     paramStr = paramStr.replace(/amp;/g, '');
                     url = "/api/v3/membership/membershipDetails?" + paramStr;
                     $.myObj.ajax({
                         type: 'POST',
                         url: url,
                         success: function(data) {
+                            console.log("data",data);
                             response = data;
                             if (data.status == 1) {
-                                $.redirectPost('/membership/jspc', {'displayPage':7, 'mainMembership':mainMembership, 'vasImpression':readCookie('selectedVas'), 'profileid':"~$profileid`", 'device':'desktop'});
+                                $.redirectPost('/membership/jspc', {'displayPage':7, 'mainMembership':mainMembership, 'vasImpression':readCookie('selectedVas'), 'profileid':"~$profileid`", 'device':'desktop','upgradeMem':upgradeMem});
                             }
                         }
                     });
