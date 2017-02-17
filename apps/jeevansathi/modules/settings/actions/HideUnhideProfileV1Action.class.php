@@ -16,7 +16,7 @@ class HideUnhideProfileV1Action extends sfActions
         $data = json_decode($request->getParameter("data"), true);
         if($data["actionHide"] == 1)
         {
-            $this->hideAction($data["hide_option"]);
+            $this->hideAction($data);
         }
         else if($data["actionHide"] == 0)
         {
@@ -25,7 +25,7 @@ class HideUnhideProfileV1Action extends sfActions
 
     }
 
-    private function hideAction($hideOption)
+    private function hideAction($hideData)
     {
         $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
         $profileid = $loggedInProfileObj->getPROFILEID();
@@ -33,18 +33,25 @@ class HideUnhideProfileV1Action extends sfActions
 
         $hideObj = new JPROFILE;
         $DeleteProfileObj = new DeleteProfile;
-        
-        if($hideOption == 1)
+        if(isset($hideData['hideDays']))
         {
-            $hideDays = HideUnhideEnums::OPTION1;
+            $hideDays = $hideData['hideDays'];
         }
-        elseif ($hideOption == 2)
+        else
         {
-            $hideDays = HideUnhideEnums::OPTION2;
-        }
-        elseif ($hideOption == 3)
-        {
-            $hideDays = HideUnhideEnums::OPTION3;
+            $hideOption = $hideData['hide_option'];
+            if($hideOption == 1)
+            {
+                $hideDays = HideUnhideEnums::OPTION1;
+            }
+            elseif ($hideOption == 2)
+            {
+                $hideDays = HideUnhideEnums::OPTION2;
+            }
+            elseif ($hideOption == 3)
+            {
+                $hideDays = HideUnhideEnums::OPTION3;
+            }
         }
         
         $hideObj->UpdateHide($privacy, $profileid, $hideDays);
