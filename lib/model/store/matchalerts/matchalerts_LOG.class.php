@@ -184,7 +184,7 @@ class matchalerts_LOG extends TABLE
 	{
 		if (JsConstants::$alertServerEnable &&  $this->db) {
 			try {
-				$sql = "SELECT USER,DATE from matchalerts.LOG where RECEIVER = :RECEIVER";
+				$sql = "SELECT SQL_CACHE USER,DATE from matchalerts.LOG where RECEIVER = :RECEIVER";
 				if($dateGreaterThanCondition)
 					$sql.=" AND DATE>:DATE";
 				$prep = $this->db->prepare($sql);
