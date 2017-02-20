@@ -355,7 +355,7 @@ class chatActions extends sfActions
 					$response['sent'] = false;
 					$response["errorMsg"] = "You can't send Obscene Message";
 				}
-				if ($this->contactObj->getTYPE() == ContactHandler::INITIATED && $this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
+				else if ($this->contactObj->getTYPE() == ContactHandler::INITIATED && $this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
 					if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
 					{
 						$response["cansend"] = false;
