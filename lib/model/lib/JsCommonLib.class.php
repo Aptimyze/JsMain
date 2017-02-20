@@ -666,22 +666,24 @@ public static function insertConsentMessageFlag($profileid) {
 	 * @throws jsException of profileid not present
 	 * @return true/false
 	 */
-	public static function gtalkOnline($profile)
-	{
-		if($profile)
-		{
-			$onlineObj=new USER_ONLINE();
-			if($onlineObj->isOnline($profile)==true)
-			{
-				return true;
-			}
+
+	// public static function gtalkOnline($profile)   //COMMENTING THIS CODE SINCE IT IS NO LONGER USED
+	// {
+	// 	if($profile)
+	// 	{
+	// 		$onlineObj=new USER_ONLINE();
+	// 		if($onlineObj->isOnline($profile)==true)
+	// 		{
+	// 			return true;
+	// 		}
 			
-		}
-		else
-			throw new jsException("online status of user gtalk: Profileid missing.");
+	// 	}
+	// 	else
+	// 		throw new jsException("online status of user gtalk: Profileid missing.");
 		
-		return false;
-	}
+	// 	return false;
+	// }
+	
 	/**
 	 * returns online status of user on jeevansathi
 	 * @param $profile int profileid of user

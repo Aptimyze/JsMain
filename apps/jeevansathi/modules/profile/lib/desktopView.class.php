@@ -35,7 +35,7 @@ class desktopView extends DetailedViewApi
     $viewerProfile = $this->m_actionObject->loginProfile->getPROFILEID();
     $viewedProfile = $this->m_objProfile->getPROFILEID();
     parent::getDecorated_PrimaryInfo();
-    $this->m_arrOut['gtalkOnline'] = $this->m_actionObject->GTALK_ONLINE;
+    //$this->m_arrOut['gtalkOnline'] = $this->m_actionObject->GTALK_ONLINE;
     $this->m_arrOut['isOnline'] = $this->m_actionObject->ISONLINE;
     $this->m_arrOut['profile_posted'] = $this->m_objProfile->getDecoratedRelation();
     $this->m_arrOut['posted_name'] = $this->m_objProfile->getDecoratedPersonHandlingProfile();
