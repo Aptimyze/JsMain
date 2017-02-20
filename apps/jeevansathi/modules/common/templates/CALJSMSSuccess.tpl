@@ -133,7 +133,7 @@
   <div class="fontlig">
       <div style="padding: 60px 20px 0px 20px;" class="app_clrw f18 txtc">~$calObject.TEXTNEW`</div> 
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
-    <input id='altEmailInpCAL' value='~$nameOfUser`' type="text" class="bg4 lh60 fontthin mt30 f20 fullwid txtc" placeholder="Your alternate email">
+    <input id='altEmailInpCAL' type="text" class="bg4 lh60 fontthin mt30 f20 fullwid txtc" placeholder="Your alternate email">
         <div class="pt10 f15 fontlig fullwid txtc colr8A">~$calObject.TEXTUNDERINPUT`</div>
          <div class="pad_new app_clrw f14 txtc">~$calObject.SUBTITLE`</div>
 
@@ -147,10 +147,10 @@
 
       <div id="confirmationSentAltEmail" class="darkBackgrnd dispnone">
   <div class="fontlig">
-      <div class="pad_new app_clrw f20 txtc" style="padding-top: 170px">Email Verification</div> 
+      <div class="pad_new app_clrw f20 txtc" style="padding-top:12%">Email Verification</div> 
     <!--    <div class="pad_new2 app_clrw f14 txtc ">~$calObject.TEXT`</div> -->
          <div class="pad_new app_clrw f14 txtc" id="altEmailMsg" style="padding-left: 20px;padding-right: 20px"></div>    
-         <div id="CALButtonB3" style="padding-top: 200px" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','B1');"  class="pad_new app_clrw f16 txtc">OK</div>    
+         <div id="CALButtonB3" style="padding-top:55%" onclick="criticalLayerButtonsAction('~$calObject.ACTION1NEW`','B1');"  class="pad_new app_clrw f16 txtc">OK</div>    
     </div>
   
 </div>
