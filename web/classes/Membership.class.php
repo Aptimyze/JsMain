@@ -695,7 +695,7 @@ class Membership
         $deactivationResponse = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,VariableParams::$memUpgradeConfig["deactivationCurlTimeout"]);
         if($deactivationResponse){
             $finalOutput = json_decode($deactivationResponse,true);
-            error_log("end of deactivateMembership...".$finalOutput["responseStatusCode"]);
+            //error_log("end of deactivateMembership...".$finalOutput["responseStatusCode"]);
         }
         else{
             $finalOutput = array("responseStatusCode"=>"1");
