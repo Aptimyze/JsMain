@@ -1186,8 +1186,8 @@ class MembershipHandler
             $discountArr = array();
             if(is_array($upgradableMemArr) && count($upgradableMemArr) > 0){
                 //ankita fetch current membership id and duration and set discount accordingly 
-                $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? intval($apiObj->lastPurchaseDiscount):0);
                
+                $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? $apiObj->lastPurchaseDiscount:0);
                 error_log("ankita lastDiscountPercent=".$lastDiscountPercent);
                 //print_r($apiObj);
                 if($apiObj!=""){
@@ -1207,11 +1207,11 @@ class MembershipHandler
                 if($currentMemMRP && $currentMemMRP > 0 && $upgradeMemMRP && $upgradeMemMRP > 0 && $upgradeMemMRP >= $currentMemMRP){
                     //var_dump($currentMemMRP."----".$upgradeMemMRP);
                     //var_dump($lastDiscountPercent);
-                    $upsellMRP = ceil((((1-VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"]) * (100 - $lastDiscountPercent) * ($upgradeMemMRP - $currentMemMRP))/100));
+                    $upsellMRP = round((((1-VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"]) * (100 - $lastDiscountPercent) * ($upgradeMemMRP - $currentMemMRP))/100));
                     //$upgradeTotalDiscount = round((($upgradeMemMRP-$upsellMRP) * 100 /$upgradeMemMRP),2);
                 }
                 //$upgradeTotalDiscount = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
-                error_log("ankita upgradeTotalDiscount=".$upgradeTotalDiscount);
+                error_log("ankita upgradeTotalDiscount=".$upsellMRP);
                 if($upsellMRP <= 0 && $upsellMRP >= $upgradeMemMRP){
                     CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid());
                     //$upgradeTotalDiscount = 0;
