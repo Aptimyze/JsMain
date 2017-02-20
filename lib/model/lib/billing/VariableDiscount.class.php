@@ -300,7 +300,7 @@ class VariableDiscount
     
     public function generateVDImpactReport()
     {
-        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_masterRep");
+        $variableDiscountObj = new billing_VARIABLE_DISCOUNT("newjs_slave");
         $vdData = $variableDiscountObj->getVDProfilesEndingYesterday();
         //$vdData = $variableDiscountObj->getVariableDiscountProfilesEndingYesterday();
         if(count($vdData) > 150000)

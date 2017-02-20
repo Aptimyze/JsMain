@@ -10,7 +10,7 @@ class archiveNotificationLog extends sfBaseTask
   protected function configure()
   {
     $this->namespace        = 'notification';
-    $this->name             = 'archiveNotificationLog';
+    $this->name             = 'archiveNotificationsLog';
     $this->briefDescription = 'cleanup of Notification Log Table in MOBILE_API';
     $this->detailedDescription = <<<EOF
       The [KnwlarityvnoTableCleanup|INFO] task gets all the profiles with last loggin date before the date passed and remove all such profiles from the knwlarityvno table.
@@ -27,27 +27,17 @@ $this->addOptions(array(
   {
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
-		
-		$sdate = '2017-01-01';
-		$edate = '2017-01-02';
-		$notificationLogObj =new MOBILE_API_NOTIFICATION_LOG("crm_slave");
-                $rowArr = $notificationLogObj->selectRecord($sdate,$edate);         
-		$cnt = count($rowArr);
 
-		$notificationLogArchiveObj = new MOBILE_API_NOTIFICATION_LOG_ARCHIVE;
-		for($i=0;$i<$cnt;$i++)
-		{
-			$pid = $rowArr[$i]['PROFILEID'];
-			$nk = $rowArr[$i]['NOTIFICATION_KEY'];
-			$mi = $rowArr[$i]['MESSAGE_ID'];
-			$sdate = $rowArr[$i]['SEND_DATE'];
-			$udate = $rowArr[$i]['UPDATE_DATE'];
-			$sent = $rowArr[$i]['SENT'];
-			$ot = $rowArr[$i]['OS_TYPE'];
-			$notificationLogArchiveObj->insertRecord($pid,$nk,$mi,$sdate,$udate,$sent,$ot);	
-		}
-	
-		$notificationLogObj =new MOBILE_API_NOTIFICATION_LOG;
-		$notificationLogObj->deleteRecordDateWise($sdate,$edate);		
+		ini_set("memory_limit","-1");		
+		$sdate = date('Y-m-d', time()-4*86400);
+		$edate = date('Y-m-d', time()-3*86400);
+		$notificationLogObj1 =new MOBILE_API_NOTIFICATION_LOG;
+		$notificationLogObj1->deleteRecordDateWise($sdate,$edate);		
+		$notificationLogObj2 =new MOBILE_API_NOTIFICATION_MESSAGE_LOG;
+                $notificationLogObj2->deleteRecordDateWise($sdate,$edate);
+		$notificationLogObj3 =new MOBILE_API_GCM_RESPONSE_LOG;
+                $notificationLogObj3->deleteRecordDateWise($sdate,$edate);
+		$notificationLogObj3 =new MOBILE_API_LOCAL_NOTIFICATION_LOG;
+                $notificationLogObj3->deleteRecordDateWise($sdate,$edate);
   }
 }

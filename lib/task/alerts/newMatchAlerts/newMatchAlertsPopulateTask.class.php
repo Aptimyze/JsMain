@@ -49,8 +49,8 @@ EOF;
         $entryDate = date('Y-m-d H:i:s', strtotime('-15 days'));
         $loginDate = date('Y-m-d H:i:s', strtotime('-3 months'));
         $affectedCount = $newMatchAlertReceiver->insertValuesFromJprofileAndJprofileAlerts($sortDate,$entryDate,$loginDate);
-        $newMatchAlertReceiver->updateTrends();
-        $newMatchAlertReceiver->resetTrendsIfOldLogicSet();
+        //$newMatchAlertReceiver->updateTrends();
+        //$newMatchAlertReceiver->resetTrendsIfOldLogicSet();
         
         $newMatchAlertLog = new new_matches_emails_LOG();
         $newMatchAlertLog->insertFromLog_Temp();

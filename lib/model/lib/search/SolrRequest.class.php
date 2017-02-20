@@ -26,7 +26,7 @@ class SolrRequest implements RequestHandleInterface
                         if($profileObj->getPROFILEID())
                 	{ 
                         	//if($profileObj->getPROFILEID()%7>2)
-				if($profileObj->getPROFILEID()%2==0)
+				if($profileObj->getPROFILEID()%4==0 || $profileObj->getPROFILEID()%4==1)
 	                                $this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
         	                else
                 	                $this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
