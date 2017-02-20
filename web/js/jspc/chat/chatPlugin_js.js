@@ -2405,7 +2405,10 @@ JsChat.prototype = {
         //console.log("in _appendRecievedMessage");
         //append received message in chatbox
         
-        if (typeof message != "undefined" && message != "") {
+        if (message == chatConfig.Params[device].rejectObsceneMsg){
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p mt15">' + message + '</div>').addClass("restrictMessg2");
+        }
+        else if (typeof message != "undefined" && message != "") {
             var appendMsg = true;
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
