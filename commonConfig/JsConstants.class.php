@@ -176,16 +176,16 @@ public static $dev =
 		"hideUnimportantFeatureAtPeakLoad"     => 0,
 
 		/*Search*/
-		"solrServerUrl"      => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
-		"solrServerUrl1"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
-		"solrServerUrl2"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
-		"solrServerUrl3"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
-		"solrServerProxyUrl"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
-		"solrServerProxyUrl1"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
-		"solrServerLoggedOut"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
-		"solrServerForVisitorAlert"	=> 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
-		"solrServerForVSP"	=> 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
-		"solrServerForKundali"	=> 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerUrl"      => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerUrl2"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerUrl3"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerProxyUrl"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerProxyUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerLoggedOut"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerForVisitorAlert"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerForVSP"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerForKundali"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		
 
 		/***openfire config for chat**/
@@ -349,16 +349,16 @@ public static $test =
 		"hideUnimportantFeatureAtPeakLoad"     => 0,
 
 		/*Search*/
-		"solrServerUrl"      => '172.16.3.203:8080/solr/techproducts',
-		"solrServerUrl1"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerUrl2"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerUrl3"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerProxyUrl"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerProxyUrl1"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerLoggedOut"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerForVisitorAlert"	=> '172.16.3.203:8080/solr/techproducts',
-		"solrServerForVSP"	=> '172.16.3.203:8080/solr/techproducts',
-		"solrServerForKundali"	=> '172.16.3.203:8080/solr/techproducts',
+		"solrServerUrl"      => '172.16.3.203:8983/solr/techproducts',
+		"solrServerUrl1"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerUrl2"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerUrl3"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerProxyUrl"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerProxyUrl1"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerLoggedOut"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerForVisitorAlert"	=> '172.16.3.203:8983/solr/techproducts',
+		"solrServerForVSP"	=> '172.16.3.203:8983/solr/techproducts',
+		"solrServerForKundali"	=> '172.16.3.203:8983/solr/techproducts',
 
 		/***openfire config for chat**/
 		"openfireConfig" => "array('HOST'=>'172.16.3.203','PORT'=>'9090','WSPORT'=>'7070','SERVER_NAME'=>'testjs-new')",
