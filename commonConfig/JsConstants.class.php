@@ -176,16 +176,16 @@ public static $dev =
 		"hideUnimportantFeatureAtPeakLoad"     => 0,
 
 		/*Search*/
-		"solrServerUrl"      => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
-		"solrServerUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
-		"solrServerUrl2"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
-		"solrServerUrl3"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
-		"solrServerProxyUrl"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
-		"solrServerProxyUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
-		"solrServerLoggedOut"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
-		"solrServerForVisitorAlert"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
-		"solrServerForVSP"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
-		"solrServerForKundali"	=> 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
+		"solrServerUrl"      => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerUrl1"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerUrl2"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerUrl3"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerProxyUrl"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerProxyUrl1"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerLoggedOut"     => 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerForVisitorAlert"	=> 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerForVSP"	=> 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
+		"solrServerForKundali"	=> 'http://devjs.infoedge.com:8983/apache-solr-4.0.0-BETA/',
 		
 
 		/***openfire config for chat**/
