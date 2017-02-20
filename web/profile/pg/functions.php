@@ -210,7 +210,7 @@ function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
  ***********************************************************************/
 
 function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '',$memUpgrade="NA") {
-    error_log("ankita in newOrder..".$memUpgrade);
+    
     if(!$memUpgrade || $memUpgrade == ""){
         $memUpgrade = "NA";
     }
@@ -264,7 +264,7 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         }
         
         $price_tot = getTotalPriceAll($service_all, $curtype, $device);
-        //ankita confirm the check for upgrade amount too less
+        //confirm the check for upgrade amount too less
         if(!in_array($memUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
             if ($amount / $price_tot < 0.20) {
                 die("Some error has occured during request generation. Try again");
@@ -312,12 +312,12 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         if ($insert_id) {
             //set upgrade entry record for such user
             if($memUpgrade != "NA" && in_array($memUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
-                error_log("ankita inserting new entry in upgrade_orders for ".$profileid."---".$data["ORDERID"]);
+              
                 //set entry in upgrade_orders for membership upgrade for current user
                 $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
                 $insertedRowId = $upgradeOrdersObj->addOrderUpgradeEntry(array("PROFILEID"=>$profileid,"ORDERID"=>$data["ORDERID"],"ENTRY_DT"=>date("Y-m-d H:i:s"),"MEMBERSHIP"=>$memUpgrade));
                 unset($upgradeOrdersObj);
-                //set upgrade case in memcache for 1 hr for this user ankita
+                //set upgrade case in memcache for 1 hr for this user 
                 if($insertedRowId){
                     $memCacheObject = JsMemcache::getInstance();
                     $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],$memUpgrade,3600);

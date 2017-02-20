@@ -198,10 +198,8 @@ class Membership
                 }
                 $dup = false;
                 if($updateStatus == 'N' || $updateStatus == "N"){
-                    error_log("setting failed payment ankita..".$updateStatus);
                     //check whether user was eligible for membership upgrade or not
                     $memCacheObject = JsMemcache::getInstance();
-                    error_log("check for failed upgrade-".$ORDERID);
                     $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
                     if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                         $memHandlerObj = new MembershipHandler(false);
@@ -220,7 +218,6 @@ class Membership
     }
     
     function startServiceOrder($orderid, $skipBill = false) {
-        error_log("ankita inside function startServiceOrder...");
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
@@ -309,7 +306,6 @@ class Membership
         $checkForMemUpgrade = $memCacheObject->get($this->profileid.'_MEM_UPGRADE_'.$orderid);
         
         if($checkForMemUpgrade == null || $checkForMemUpgrade == false){
-            //error_log("ankita checking entry in mem upgrade for..".$orderid."---".$this->profileid."---===".$checkForMemUpgrade);
             $upgradeOrderObj = new billing_UPGRADE_ORDERS();
             $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$this->profileid);
             if(is_array($isUpgradeCaseEntry)){
@@ -547,7 +543,6 @@ class Membership
                     $memID[1] = 'L';
                 }
                 if ($row['SERVICEID'] == "PL" || $row['SERVICEID'] == "CL" || $row['SERVICEID'] == "DL" || $row['SERVICEID'] == "ESPL" || $row['SERVICEID'] == "NCPL") {
-                    //confirm whether to handle upgrade for unlimited or not ankita
                     if($fromBackend != "discount_link" && $row['ACTIVE_DIFF'] <=0 && $row['ACTIVE_DIFF'] >= $memUpgradeOffset && in_array($memID[0], VariableParams::$memUpgradeConfig["excludeMainMembershipUpgrade"])==false
                        ){
                         return array(memUserType::UPGRADE_ELIGIBLE, $row["EXPIRY_DT"], $row["SERVICEID"]);
@@ -664,7 +659,6 @@ class Membership
     }
     
     function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="") {
-        error_log("ankita in makePaid...-".$memUpgrade);
         $userObjTemp = $this->getTempUserObj();
         if($skipBill == true){
             $this->setGenerateBillParams();
@@ -776,8 +770,7 @@ class Membership
 
 
         $this->discount_percent = round((($this->discount)/($this->amount+$this->discount)) * 100,2);
-        error_log("ankita amount=".$this->amount."--discount=".$this->discount);
-        error_log("ankita ---percecnt=".$this->discount_percent);
+        
         
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();
@@ -2166,7 +2159,7 @@ class Membership
         else{
             $upgradeMem = $apiResHandlerObj->upgradeMem;
         }
-        //error_log("ankita forOnline upgradeMem-"+$upgradeMem);
+        
         $profileid = $this->profileid;
         $userObj = new memUser($profileid);
         $userObj->setMemStatus();

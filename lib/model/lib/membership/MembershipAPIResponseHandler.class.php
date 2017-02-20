@@ -31,7 +31,6 @@ class MembershipAPIResponseHandler {
         if(!$this->upgradeMem || !in_array($this->upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
            $this->upgradeMem = "NA"; 
         }
-        error_log("ankita upgradeMem in initialize api-".$this->upgradeMem."---".$this->displayPage);
 
         if(empty($this->displayPage)) {
         	$this->displayPage = 1;
@@ -353,11 +352,9 @@ class MembershipAPIResponseHandler {
                 $output = $this->generateChequePickupSuccessResponse($request);
             } 
             elseif ($this->displayPage == 8 && !empty($this->orderID)) {
-                //error_log("ankita start of transaction success page");
                 $output = $this->generateSuccessPageResponse();
             } 
             elseif ($this->displayPage == 9) {
-                //error_log("ankita start of transaction failure page");
                 $output = $this->generateFailurePageResponse();
             } 
             elseif ($this->displayPage == 10) {
@@ -1545,8 +1542,6 @@ class MembershipAPIResponseHandler {
     }
     
     public function generateSuccessPageResponse() {
-        error_log("ankita upgrade in generateSuccessPageResponse=".$this->upgradeMem);
-
         $vowelsArr=array('a','i','e','o','u');
         $this->memApiFuncs->getTopBlockContent($this);
         $profileObj = LoggedInProfile::getInstance();
@@ -1591,7 +1586,6 @@ class MembershipAPIResponseHandler {
     }
     
     public function generateFailurePageResponse() {
-        error_log("ankita upgarde in generateFailurePageResponse=".$this->upgradeMem);
         $profileObj = LoggedInProfile::getInstance();
         $this->userDetails = $this->memHandlerObj->getUserData($this->profileid);
         $this->username = $profileObj->getUSERNAME();
@@ -2144,7 +2138,6 @@ class MembershipAPIResponseHandler {
         if ($AuthDesc=="Y") {
             $ret = $membershipObj->updtOrder($Order_Id, $dup, $AuthDesc);
             if (!$dup && $ret) {
-                //error_log("ankita in startServiceOrder generateAppleOrderProcessingResponse");
                 $membershipObj->startServiceOrder($Order_Id);
                 $output = array('orderId' => $Order_Id,
                     'processingStatus' => $status,
@@ -2353,10 +2346,7 @@ class MembershipAPIResponseHandler {
 	        } elseif (!empty($this->mainMembership) && empty($this->vasImpression)) {
 	        	$allMemberships = $this->mainMembership;
 	        }
-
-            //confirm to add upgrademem inputs or not ankita
 	        $payment = $memObj->forOnline($allMemberships, $this->currency, $this->mainMembership, $this->discSel, 'card2', $this->device, $this->couponCode);
-             error_log("ankita check if comes here,payment=".$payment." for upgradeMem= ".$this->upgradeMem);
 	        $total = $payment['total'];
 	        $service_main = $payment['service_str'];
 	        $service_str = "";
@@ -2372,7 +2362,6 @@ class MembershipAPIResponseHandler {
             $dup = false;
             $ret = $memObj->updtOrder($Order_Id, $dup, "Y");
             if (!$dup && $ret) {
-                error_log("ankita in startServiceOrder doTestBilling");
                 $memObj->startServiceOrder($Order_Id);
                 $output = array('orderId' => $Order_Id,
                     'processingStatus' => 'successful',

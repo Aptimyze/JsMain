@@ -843,8 +843,6 @@ class MembershipHandler
 
     public function getUserDiscountDetailsArray($userObj, $type = "1188", $apiVersion = 3,$apiObj="",$upgardeMem="NA")
     {
-        //error_log("ankita1 upgradeMem in getUserDiscount-".$upgardeMem);
-       
         if ($userObj->getProfileid()) {
             $profileObj = LoggedInProfile::getInstance('newjs_slave', $userObj->getProfileid());
             $profileObj->getDetail();
@@ -1185,14 +1183,13 @@ class MembershipHandler
             }
             $discountArr = array();
             if(is_array($upgradableMemArr) && count($upgradableMemArr) > 0){
-                //ankita fetch current membership id and duration and set discount accordingly 
+                //fetch current membership id and duration and set discount accordingly 
                
                 $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? $apiObj->lastPurchaseDiscount:0);
-                error_log("ankita lastDiscountPercent=".$lastDiscountPercent);
+                
                 //print_r($apiObj);
                 if($apiObj!=""){
                     if(!is_array($apiObj->allMainMem)){
-                        error_log("ankita calculation for prices");
                         $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $apiObj->device,false);
                     }
                     else{
@@ -1201,9 +1198,7 @@ class MembershipHandler
                     $currentMemMRP = $allMainMem[$apiObj->subStatus[0]['SERVICEID_WITHOUT_DURATION']][$apiObj->subStatus[0]['ORIG_SERVICEID']]['PRICE'];
                     $upgradeMemMRP = $allMainMem[$upgradableMemArr['upgradeMem']][$upgradableMemArr['upgradeMem'].$upgradableMemArr['upgradeMemDur']]['PRICE'];
                 }
-                else{
-                    error_log("ankita check blank apiObj");
-                }
+                
                 if($currentMemMRP && $currentMemMRP > 0 && $upgradeMemMRP && $upgradeMemMRP > 0 && $upgradeMemMRP >= $currentMemMRP){
                     //var_dump($currentMemMRP."----".$upgradeMemMRP);
                     //var_dump($lastDiscountPercent);
@@ -1211,7 +1206,7 @@ class MembershipHandler
                     //$upgradeTotalDiscount = round((($upgradeMemMRP-$upsellMRP) * 100 /$upgradeMemMRP),2);
                 }
                 //$upgradeTotalDiscount = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
-                error_log("ankita upgradeTotalDiscount=".$upsellMRP);
+               
                 if($upsellMRP <= 0 && $upsellMRP >= $upgradeMemMRP){
                     CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid());
                     //$upgradeTotalDiscount = 0;
@@ -1360,7 +1355,7 @@ class MembershipHandler
             $trackType = "F";
             if ($device != 'discount_link') {
                 list($totalN, $discN) = $this->setTrackingPriceAndDiscount($userObj, $profileid, $mainMembership, $allMemberships, $currency, $device,null,null,null,null,false,$upgradeMem,$apiObj);
-                error_log("ankita tracking totalN =".$totalN." ,discN=".$discN);
+                //error_log("tracking totalN =".$totalN." ,discN=".$discN);
                 $totalN               = round($totalN, 2);
                 $discN                = round($discN, 2);
             } else {
@@ -1589,8 +1584,6 @@ class MembershipHandler
                 $discountCartPrice += $additionalDiscount;
             }
         }
-        
-        error_log("ankita final tracking totalCartPrice=".$totalCartPrice."----upgradeMem=".$upgradeMem);
         
         return array(
             $totalCartPrice,
@@ -2321,7 +2314,6 @@ class MembershipHandler
                         }
                         //update the success deactivate entry
                         if($params["NEW_ORDERID"] && $params["NEW_ORDERID"]!=""){
-                            //error_log("ankita updating deactivate success entry");
                             $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
                             $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("OLD_BILLID"=>$serStatDet[$params["PROFILEID"]]["BILLID"],"DEACTIVATED_STATUS"=>"DONE"));
                             unset($upgradeOrdersObj);
@@ -2332,7 +2324,6 @@ class MembershipHandler
                 return true;
             }
             else{
-                //error_log("ankita updating deactivate failed entry");
                 //log the failed deactivate entry
                 $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
                 $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("DEACTIVATED_STATUS"=>"FAILED","REASON"=>"Invalid inputs to deactivateCurrentMembership api"));
@@ -2341,7 +2332,6 @@ class MembershipHandler
             }
         }
         catch(Exception $e){
-            //error_log("ankita updating deactivate failed entry");
             //log the failed deactivate entry
             $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
             $upgradeOrdersObj->updateOrderUpgradeEntry($params["NEW_ORDERID"],array("DEACTIVATED_STATUS"=>"FAILED","REASON"=>"exception in deactivateCurrentMembership-".$e));
@@ -2356,7 +2346,6 @@ class MembershipHandler
     * @outputs: none
     */
     function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=true){
-        //error_log("ankita updating upgrade success/failed entry-".$orderid);
         $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
         $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
         unset($upgradeOrdersObj);
@@ -2373,7 +2362,6 @@ class MembershipHandler
         $memUpgrade = "NA";
 
         if($checkForMemUpgrade == null || $checkForMemUpgrade == false){
-            error_log("ankita checkMemUpgrade..".$orderid."---".$profileid."---===".$checkForMemUpgrade);
             $upgradeOrderObj = new billing_UPGRADE_ORDERS();
             $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$profileid);
             if(is_array($isUpgradeCaseEntry)){
