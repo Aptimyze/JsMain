@@ -685,7 +685,7 @@
         
         $("#payNowBtn").click(function(e){
             var upgradeMem = "~$data.upgradeMem`";
-            console.log("clicked on pay now",upgradeMem);
+    
             if($("#cashPickUp").hasClass("active")){
                 var isValid=validateCashPickupForm();
                 if(isValid){
@@ -709,7 +709,6 @@
                         type: 'POST',
                         url: url,
                         success: function(data) {
-                            console.log("data",data);
                             response = data;
                             if (data.status == 1) {
                                 $.redirectPost('/membership/jspc', {'displayPage':7, 'mainMembership':mainMembership, 'vasImpression':readCookie('selectedVas'), 'profileid':"~$profileid`", 'device':'desktop','upgradeMem':upgradeMem});

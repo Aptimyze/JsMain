@@ -985,7 +985,6 @@
         $("#upgradeMainMemBtn").click(function(e){
             //flush vas selection when upgrade button clicked
             eraseCookie('selectedVas');
-            //console.log("clicked on upgrade button");
             var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
             createCookie('mainMemTab', mainMem);
             createCookie('mainMem', mainMem);
