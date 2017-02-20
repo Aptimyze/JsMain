@@ -297,6 +297,15 @@ class MembershipApiFunctions
                 $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         }
+
+        //add additional discount for upgrade membership if applicable
+        if((empty($apiObj->backendRedirect) || $apiObj->backendRedirect != 1) && $upgardeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$apiObj->mainMembership]){
+            
+            //$additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$apiObj->mainMembership] / 100) , 2);
+            $temp = $totalCartPrice;
+            $totalCartPrice = $upgradePercentArr[$apiObj->mainMembership];
+            $discountCartPrice+= $temp - $upgradePercentArr[$apiObj->mainMembership];
+        }
         
         if (!empty($apiObj->couponCode)) {
             $couponResponse = $apiObj->validateCouponResponse($apiObj->mainMembership, $apiObj->couponCode);
@@ -310,13 +319,7 @@ class MembershipApiFunctions
             }
         }
      
-        //add additional discount for upgrade membership if applicable
-        if((empty($apiObj->backendRedirect) || $apiObj->backendRedirect != 1) && $upgardeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$apiObj->mainMembership]){
-            
-            $additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$apiObj->mainMembership] / 100) , 2);
-            $totalCartPrice-= $additionalUpgradeDiscount;
-            $discountCartPrice+= $additionalUpgradeDiscount;
-        }
+        
         return array(
             $totalCartPrice,
             $discountCartPrice

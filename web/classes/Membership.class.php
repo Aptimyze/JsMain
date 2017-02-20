@@ -198,10 +198,10 @@ class Membership
                 }
                 $dup = false;
                 if($updateStatus == 'N' || $updateStatus == "N"){
-                    //error_log("setting failed payment ankita..".$updateStatus);
+                    error_log("setting failed payment ankita..".$updateStatus);
                     //check whether user was eligible for membership upgrade or not
                     $memCacheObject = JsMemcache::getInstance();
-                    //error_log("check for failed upgrade-".$ORDERID);
+                    error_log("check for failed upgrade-".$ORDERID);
                     $checkForMemUpgrade = $memCacheObject->get($myrow["PROFILEID"].'_MEM_UPGRADE_'.$ORDERID);
                     if($checkForMemUpgrade != null && in_array($checkForMemUpgrade,  VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                         $memHandlerObj = new MembershipHandler(false);
@@ -220,7 +220,7 @@ class Membership
     }
     
     function startServiceOrder($orderid, $skipBill = false) {
-        //error_log("ankita inside function startServiceOrder...");
+        error_log("ankita inside function startServiceOrder...");
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
@@ -776,8 +776,8 @@ class Membership
 
 
         $this->discount_percent = round((($this->discount)/($this->amount+$this->discount)) * 100,2);
-        //error_log("ankita amount=".$this->amount."--discount=".$this->discount);
-        //error_log("ankita ---percecnt=".$this->discount_percent);
+        error_log("ankita amount=".$this->amount."--discount=".$this->discount);
+        error_log("ankita ---percecnt=".$this->discount_percent);
         
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();

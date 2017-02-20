@@ -224,12 +224,12 @@ class MembershipHandler
         else{
             $upgradePercentArr = array();
         }
-     
+
         foreach ($allMainMem as $mainMem => $subMem) {
             foreach ($subMem as $key => $value) {
                 $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['PRICE'], 2);
-                if (strpos(discountType::UPGRADE_DISCOUNT, $discountType) !== false) {
-                    $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round(($allMainMem[$mainMem][$key]['PRICE'] - ceil($allMainMem[$mainMem][$key]['PRICE'] * $upgradePercentArr[$key]) / 100), 2);
+                if (strpos(discountType::UPGRADE_DISCOUNT, $discountType) !== false && $upgradePercentArr[$key]) { 
+                    $allMainMem[$mainMem][$key]['OFFER_PRICE'] = $upgradePercentArr[$key];
                 } else{
                     if (strpos(discountType::RENEWAL_DISCOUNT, $discountType) !== false) {
                         $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round(($allMainMem[$mainMem][$key]['PRICE'] - ceil($allMainMem[$mainMem][$key]['PRICE'] * $renewalPercent) / 100), 2);
@@ -247,6 +247,7 @@ class MembershipHandler
                 }
             }
         }
+        //print_r($allMainMem);die;
         return $allMainMem;
     }
 
@@ -1186,16 +1187,38 @@ class MembershipHandler
             if(is_array($upgradableMemArr) && count($upgradableMemArr) > 0){
                 //ankita fetch current membership id and duration and set discount accordingly 
                 $lastDiscountPercent = ($apiObj != "" && $apiObj->lastPurchaseDiscount ? intval($apiObj->lastPurchaseDiscount):0);
-
+               
                 error_log("ankita lastDiscountPercent=".$lastDiscountPercent);
-                $upgradeTotalDiscount = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
-                 error_log("ankita upgradeTotalDiscount=".$upgradeTotalDiscount);
-                if($upgradeTotalDiscount >= 100){
-                    //error_log("ankita check total upgradeTotalDiscount > 100");
-                    CRMAlertManager::sendMailAlert("Upgrade discount value exceeded 100=".$upgradeTotalDiscount." for profileid=".$userObj->getProfileid());
-                    $upgradeTotalDiscount = 0;
+                //print_r($apiObj);
+                if($apiObj!=""){
+                    if(!is_array($apiObj->allMainMem)){
+                        error_log("ankita calculation for prices");
+                        $allMainMem = $this->fetchMembershipDetails("MAIN", $userObj, $apiObj->device,false);
+                    }
+                    else{
+                        $allMainMem = $apiObj->allMainMem;
+                    }
+                    $currentMemMRP = $allMainMem[$apiObj->subStatus[0]['SERVICEID_WITHOUT_DURATION']][$apiObj->subStatus[0]['ORIG_SERVICEID']]['PRICE'];
+                    $upgradeMemMRP = $allMainMem[$upgradableMemArr['upgradeMem']][$upgradableMemArr['upgradeMem'].$upgradableMemArr['upgradeMemDur']]['PRICE'];
                 }
-                $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = $upgradeTotalDiscount;
+                else{
+                    error_log("ankita check blank apiObj");
+                }
+                if($currentMemMRP && $currentMemMRP > 0 && $upgradeMemMRP && $upgradeMemMRP > 0 && $upgradeMemMRP >= $currentMemMRP){
+                    //var_dump($currentMemMRP."----".$upgradeMemMRP);
+                    //var_dump($lastDiscountPercent);
+                    $upsellMRP = ceil((((1-VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"]) * (100 - $lastDiscountPercent) * ($upgradeMemMRP - $currentMemMRP))/100));
+                    //$upgradeTotalDiscount = round((($upgradeMemMRP-$upsellMRP) * 100 /$upgradeMemMRP),2);
+                }
+                //$upgradeTotalDiscount = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
+                error_log("ankita upgradeTotalDiscount=".$upgradeTotalDiscount);
+                if($upsellMRP <= 0 && $upsellMRP >= $upgradeMemMRP){
+                    CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid());
+                    //$upgradeTotalDiscount = 0;
+                }
+                if($upsellMRP > 0){
+                    $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = $upsellMRP;
+                }
             }
         }
         return $discountArr;
@@ -1550,6 +1573,14 @@ class MembershipHandler
             }
         }
 
+         //add additional discount for upgrade membership if applicable
+        if((empty($backendRedirect) || $backendRedirect != 1) && $upgradeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$mainMembership]){
+            //$additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$mainMembership] / 100) , 2);
+            $temp = $totalCartPrice;
+            $totalCartPrice = $upgradePercentArr[$mainMembership];
+            $discountCartPrice+= $temp - $upgradePercentArr[$mainMembership];
+        }
+
         if (!empty($couponCode)) {
             $validation = $this->validateCouponCode($mainMembership, $couponCode);
             if (is_numeric($validation) && !empty($validation) && $validation > 0) {
@@ -1558,13 +1589,9 @@ class MembershipHandler
                 $discountCartPrice += $additionalDiscount;
             }
         }
-         //add additional discount for upgrade membership if applicable
-        if((empty($backendRedirect) || $backendRedirect != 1) && $upgradeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$mainMembership]){
-            $additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$mainMembership] / 100) , 2);
-            $totalCartPrice-= $additionalUpgradeDiscount;
-            $discountCartPrice+= $additionalUpgradeDiscount;
-        }
+        
         error_log("ankita final tracking totalCartPrice=".$totalCartPrice."----upgradeMem=".$upgradeMem);
+        
         return array(
             $totalCartPrice,
             $discountCartPrice,
@@ -1800,6 +1827,7 @@ class MembershipHandler
     {
         $rdObj = new billing_RENEWAL_DISCOUNT();
         $res   = $rdObj->getDiscount($profileid);
+        
         if ($res['DISCOUNT']) {
             return $res['DISCOUNT'];
         } else {

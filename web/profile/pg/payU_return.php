@@ -49,6 +49,7 @@ if($returnCurrency == "RS"){
 }
 
 $Order_Id = $txnid;
+error_log("ankita status in payu_return...".$status);
 
 if ($status == "success") {
     $AuthDesc = "Y";

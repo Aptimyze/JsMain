@@ -211,6 +211,9 @@ function getTotalPriceAll($serviceid, $curtype, $device = 'desktop') {
 
 function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $service_main, $discount, $setactivate, $gateway = '', $discount_type = '', $device = 'desktop', $couponCodeVal = '',$memUpgrade="NA") {
     error_log("ankita in newOrder..".$memUpgrade);
+    if(!$memUpgrade || $memUpgrade == ""){
+        $memUpgrade = "NA";
+    }
     //	echo $profileid."-".$paymode."-".$curtype."-".$amount."-".$service_str."-".$service_main."-".$discount."-".$setactivate;
     global $error_msg, $pay_arrayfull, $pay_arrayfull, $announce_to_email, $ip, $DOL_CONV_RATE, $tax_rate;
     
@@ -261,9 +264,16 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
         }
         
         $price_tot = getTotalPriceAll($service_all, $curtype, $device);
-        
-        if ($amount / $price_tot < 0.20) {
-            die("Some error has occured during request generation. Try again");
+        //ankita confirm the check for upgrade amount too less
+        if(!in_array($memUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+            if ($amount / $price_tot < 0.20) {
+                die("Some error has occured during request generation. Try again");
+            }
+        }
+        else{
+            if ($amount / $price_tot < 0.01) {
+                die("Some error has occured during request generation. Try again");
+            }
         }
         
         if ($setactivate == "Y") {

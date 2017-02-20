@@ -67,7 +67,7 @@ class VariableParams
                                             "deactivationCurlTimeout"=>120000,
                                             "allowedUpgradeMembershipAllowed"=>array("MAIN"),
                                             "mainMemUpgradeLimit"=>7,
-                                            "upgradeMainMemAdditionalPercent"=>40,
+                                            "upgradeMainMemAdditionalPercent"=>0.05,
                                             "channelsAllowed"=>array("desktop"),
                                             "excludeMainMembershipUpgrade"=>array("X","ESP")
                                             );
