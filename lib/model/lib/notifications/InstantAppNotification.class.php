@@ -23,6 +23,12 @@ class InstantAppNotification
     if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4){
         return;
     }
+    $notSendObj = new NotificationSender;
+    $regIds = $notSendObj->getRegistrationIds($selfProfile, "ALL");
+    unset($notSendObj);
+    if(!is_array($regIds))
+        return;
+    
 	$notificationSentCount = $this->getNotificationSentCount($selfProfile);
 	$notificationlimit = $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey];
 	if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) || $notificationlimit>$notificationSentCount)
