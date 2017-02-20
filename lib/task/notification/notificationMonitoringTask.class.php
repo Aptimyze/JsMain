@@ -36,6 +36,7 @@ EOF;
 
         foreach($urlArray as $kk => $vv){
             $status1 = $this->sendPresenceRequest($vv);
+            print_r($status1);
             if(!array_key_exists("notifications", $status1)){
                 foreach($mobileNumberArr as $k=>$v){
                     $this->sms($v);
