@@ -4,7 +4,8 @@
 include("connect.inc");
 include_once("user_hierarchy.php");
 $data=authenticated($cid);
-$db=connect_misdb();
+//$db=connect_misdb();
+$db = connect_crmSlave();
 
 $data = authenticated($cid);
 $name =trim(getname($cid));
