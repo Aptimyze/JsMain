@@ -750,10 +750,13 @@ public function unsett()
         $message           = new MessageLog;
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
-        $considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
-        $considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
-        $considerProfiles = array_diff($considerProfiles,$skipProfile);
-	unset($skipProfile);
+	if(InboxEnums::$messageLogInQuery)
+	{
+		$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
+		$considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+		$considerProfiles = array_diff($considerProfiles,$skipProfile);
+		unset($skipProfile);
+	}
        // print_r($skipProfile);
 	if(is_array($considerProfiles) && count($considerProfiles)>0)
 		$msgCount = $message->getMessageLogContactCount($where, $group, $select, $skipProfile,$considerProfiles);
@@ -861,15 +864,27 @@ public function unsett()
         $message           = new MessageLog;
         $skipProfileObj    = SkipProfile::getInstance($this->profileid);
         $skipProfile       = $skipProfileObj->getSkipProfiles($skipContactedType);
-	$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
-	$considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
-	$considerProfiles = array_diff($considerProfiles,$skipProfile);
+        if(InboxEnums::$messageLogInQuery)
+	{
+		$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
+		$considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+		$considerProfiles = array_diff($considerProfiles,$skipProfile);
+	}
        // print_r($skipProfile);
         $condition["WHERE"]["IN"]["PROFILE"] = $this->profileid;
         $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
         $condition["WHERE"]["IN"]["TYPE"]     = "R";
-	if(is_array($considerProfiles) && count($considerProfiles)>0)
-		$profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile,$considerProfiles);
+	if(InboxEnums::$messageLogInQuery)
+	{
+		if(is_array($considerProfiles) && count($considerProfiles)>0)
+		{
+			$profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile,$considerProfiles);
+		}
+	}
+	else
+	{
+		$profilesArray  = $message->getMessageListing($this->profileid, $condition, $skipProfile);
+	}
         if(is_array($profilesArray))
 		$MESSAGE_ALL = count($profilesArray);
         $this->memcache->setMESSAGE_ALL($MESSAGE_ALL?$MESSAGE_ALL:0);

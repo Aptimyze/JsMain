@@ -146,7 +146,10 @@ class MessageLog
 		else
 		{
 			$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
-			$profileArray = $messageLogObj->getMessageListing($condition,'',$inArray);
+			if(InboxEnums::$messageLogInQuery)
+				$profileArray = $messageLogObj->getMessageListing($condition,'',$inArray);
+			else
+				$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
                         if(!array_key_exists("pageNo", $condition))
                             JsMemcache::getInstance()->set($memccKey,$profileArray);
 		}

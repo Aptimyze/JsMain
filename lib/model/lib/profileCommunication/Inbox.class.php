@@ -298,7 +298,7 @@ class Inbox implements Module
 						{ 
 							$page = $nav;
 						}
-						if($infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED")
+						if(InboxEnums::$messageLogInQuery && ( $infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED"))
 						{
 							$this->considerProfiles = array_diff($this->considerProfiles,$skipArray);
 						}
@@ -309,7 +309,7 @@ class Inbox implements Module
                                                 }
                                                 if($infoTypeNav["matchedOrAll"])
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
-						if($infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED")
+						if(InboxEnums::$messageLogInQuery && ( $infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED" ))
 						{
 							if(is_array($this->considerProfiles) && count($this->considerProfiles)>0)
 								$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION(),$this->considerProfiles);
@@ -450,8 +450,11 @@ class Inbox implements Module
 				$skipConditionArray = SkipArrayCondition::$MESSAGE;
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
-				$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
-                                $this->considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+				if(InboxEnums::$messageLogInQuery)
+				{
+					$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
+					$this->considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+				}
 				break;
 			case 'PHOTO_REQUEST_RECEIVED':
 				$skipConditionArray = SkipArrayCondition::$PHOTO_REQUEST;
