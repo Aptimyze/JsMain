@@ -74,7 +74,7 @@ EOF;
                     $valueArray = array("PROFILEID"=>$arrayReceiversCommaSeparated,"activatedKey"=>1,'ACTIVATED'=>"Y");
                     $greaterThanArray = array("LAST_LOGIN_DT"=>$lastLoginDate);
                     $detailArr = array();
-                    $excludeArray = array("PRIVACY"=>"C");
+                    $excludeArray = array("PRIVACY"=>"'C'");
                     $detailArr = $jprofileObj->getArray($valueArray,$excludeArray,$greaterThanArray,'PROFILEID','','','','','','','','');
                     if ( is_array($detailArr))
                     {
