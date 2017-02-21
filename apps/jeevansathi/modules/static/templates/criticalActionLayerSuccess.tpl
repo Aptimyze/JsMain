@@ -90,7 +90,7 @@ function validateAndSend(){
                             
                             setTimeout(function(){ 
                                 
-                                $("#errorMessage").removeClass('errCL1').html("Match Emails will also be sent to this Email ID"); 
+                                $("#errorMessage").removeClass('errCL1').html("All Emails will also be sent to this Email ID"); 
                             $("#altEmailInpCAL").css('border','1px solid #848285');
 
                             }, 3000);
@@ -133,7 +133,7 @@ function validateAndSend(){
                         <button id='CALButtonB1'  onclick="validateAndSend();" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0">~$button1TextNEW`</button>
                     </div>
             </div> 
-        <div id="alternateEmailCnfLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white modal3" style="padding-top: 13%;margin-top: 40px">
+        <div id="alternateEmailCnfLayer" class="phnvwid4 mauto layersZ pos_fix setshare disp-none fullwid bg-white modal3" style="padding-top: 80px;margin-top: 40px">
         <div class="bordrBtmGrey" style="height: 35px">
         <div class="phnvp4 f17 fontreg color11 phnvbdr4" style="margin-top: -38px;margin-left: 5%">Email Verification</div>
         </div>
