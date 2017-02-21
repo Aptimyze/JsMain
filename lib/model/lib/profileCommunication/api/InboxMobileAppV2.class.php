@@ -1265,10 +1265,11 @@ class InboxMobileAppV2
                                 "CONTACTS_VIEWED"=>"stype=".SearchTypesEnums::PHONEBOOK_IOS,"responseTracking=".JSTrackingPageType::PHONEBOOK_IOS,
                                 "FILTERED_INTEREST"=>"responseTracking=".JSTrackingPageType::FILTERED_INTEREST_IOS,
                                 "PEOPLE_WHO_VIEWED_MY_CONTACTS"=>"stype=".SearchTypesEnums::CONTACT_VIEWERS_IOS,"responseTracking=".JSTrackingPageType::CONTACT_VIEWERS_IOS,
+                                "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_IOS,
+                                
                                 "NOT_INTERESTED_BY_ME"=>"stype=".SearchTypesEnums::CANCELLED_LISTING_IOS."&responseTracking=".JSTrackingPageType::CANCELLED_LISTING_IOS,
                                  "INTEREST_ARCHIVED"=>"responseTracking=".JSTrackingPageType::INTEREST_ARCHIVED_IOS
-
-				);
+					);
                 }
 		else{
                     if(sfContext::getInstance()->getRequest()->getParameter("matchedOrAll")!="A")
