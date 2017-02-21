@@ -26,7 +26,7 @@ abstract class MatchAlertsStrategy
                 $matchalertLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
                 $matchalertTempLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
                 
-                $mCache = new Match_alerts_LOG();
+                $mCache = new MatchAlertsLogCaching();
                 $mCache->setAddCacheKey($receiverId,$profileIds);
                 unset($mCache);
                 

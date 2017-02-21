@@ -1,6 +1,6 @@
 <?php
 /*This class is used to handle the matchalerts from cache*/
-class Match_alerts_LOG
+class MatchAlertsLogCaching
 {
         private $keyTimings = 18000;
 	public function __construct($dbname='')
@@ -42,29 +42,31 @@ class Match_alerts_LOG
                       $profileArray = $this->getMatchAlertProfilesFromTable($profileId,$dateGreaterThanCondition); 
                       return $profileArray;
                 }
-                if(!JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && JsMemcache::getInstance()->getSetsAllValue($profileId."_MATCHALERTS_LOG_ALL") != ""){
+                $keys = JsMemcache::getInstance()->getSetsAllValue($profileId."_MATCHALERTS_LOG_ALL");
+                if(!JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && $keys && $keys[0] != "0"){
                         $profileArray = $this->getMatchAlertProfilesFromTable($profileId,$dateGreaterThanCondition);
-                        $dateArray = array();
-                        foreach($profileArray as $mProfileId=>$intDate){
-                                $dateArray[$intDate][] = $mProfileId;
-                        }
                         $keyArr = array();
-                        foreach($dateArray as $date=>$pidArr){
-                                foreach($pidArr as $pid){
-                                        $keyArr[] = $pid."_".$date;
+                        if($profileArray){
+                                foreach($profileArray as $mProfileId=>$intDate){
+                                        $keyArr[] = $mProfileId."_".$intDate;
                                 }
+                        }else{
+                                $keyArr = 0;
                         }
                         JsMemcache::getInstance()->storeDataInCacheByPipeline($profileId."_MATCHALERTS_LOG_ALL",$keyArr,$this->keyTimings);
                 }else{
                         $profileArray= array();
-                        $keys = JsMemcache::getInstance()->getSetsAllValue($profileId."_MATCHALERTS_LOG_ALL");
-                        
-                        foreach($keys as $key){
-                                $profileIdDate = explode("_",$key);
-                                if(($dateGreaterThanCondition && $dateGreaterThanCondition > $profileIdDate[1]) || $dateGreaterThanCondition == ""){
-                                        $profileArray[$profileIdDate[0]]   = $profileIdDate[1];
+                        if($keys){
+                                foreach($keys as $key){
+                                        $profileIdDate = explode("_",$key);
+                                        if($profileIdDate[0] != "0"){
+                                                if(($dateGreaterThanCondition && $dateGreaterThanCondition > $profileIdDate[1]) || $dateGreaterThanCondition == ""){
+                                                        $profileArray[$profileIdDate[0]]   = $profileIdDate[1];
+                                                }
+                                        }
                                 }
                         }
+                        //echo '<pre>';print_r($profileArray);die;
                 }
                 return $profileArray;
         }

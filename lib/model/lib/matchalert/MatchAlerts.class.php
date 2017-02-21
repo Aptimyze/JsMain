@@ -27,7 +27,7 @@ class MatchAlerts
         */
 	public function getProfilesSentInMatchAlerts($profileId)
 	{
-		$matchAlertObj = new Match_alerts_LOG();
+		$matchAlertObj = new MatchAlertsLogCaching();
 		$output = $matchAlertObj->getProfilesSentInMatchAlerts($profileId);
 		unset($matchAlertObj);
                 return $output;
@@ -58,7 +58,7 @@ class MatchAlerts
 
         public function getProfilesWithOutSorting($profileId,$weekFlag="")
         {
-                $matchAlertObj = new Match_alerts_LOG();
+                $matchAlertObj = new MatchAlertsLogCaching();
 		if($weekFlag)
 			$dateGreaterThanCondition = self::getLogDateFromLogicalDate()-(7*$weekFlag);
                 $output = $matchAlertObj->getMatchAlertProfiles($profileId,$dateGreaterThanCondition);
