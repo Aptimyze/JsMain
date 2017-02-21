@@ -47,12 +47,17 @@ class MatchAlertsLogCaching
                 return $profileArray;
         }
         public function setAddCacheKey($profileId,$profiles){
-                $date=MailerConfigVariables::getNoOfDays();
-                $keyArr = array();
-                foreach($profiles as $pid){
-                        $keyArr[] = $pid."_".$date;
+                $keys = JsMemcache::getInstance()->getSetsAllValue($profileId."_MATCHALERTS_LOG_ALL");
+                if(JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && ($keys && $keys[0] == "0" && $keys[0] != "") ){
+                        $date=MailerConfigVariables::getNoOfDays();
+                        $keyArr = array();
+                        foreach($profiles as $pid){
+                                $keyArr[] = $pid."_".$date;
+                        }
+                        JsMemcache::getInstance()->addDataToCache($profileId."_MATCHALERTS_LOG_ALL",$keyArr,$this->keyTimings);
+                }else{
+                        JsMemcache::getInstance()->remove($profileId."_MATCHALERTS_LOG_ALL");
                 }
-                JsMemcache::getInstance()->addDataToCache($profileId."_MATCHALERTS_LOG_ALL",$keyArr,$this->keyTimings);
         }
 }
 ?>
