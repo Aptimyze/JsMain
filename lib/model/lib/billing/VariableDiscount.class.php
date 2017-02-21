@@ -444,7 +444,7 @@ class VariableDiscount
     }
     public function populateRemainingRecordsFromVDTemp($entryDate,$sendAlert=false)
     {
-        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP('newjs_masterRep');
+        $VDTempObj = new billing_VARIABLE_DISCOUNT_TEMP();
         $VDDuartionObj = new billing_VARIABLE_DISCOUNT_OFFER_DURATION();
         $VDObj = new billing_VARIABLE_DISCOUNT();
         $profileArr =array();
