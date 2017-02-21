@@ -9,7 +9,7 @@ class MatchAlertsLogCaching
 	}
         public function getProfilesSentInMatchAlerts($profileId,$seperator="")
 	{
-                if(JsConstants::$whichMachine == 'matchAlerts'){
+                if(JsConstants::$whichMachine == 'matchAlert'){
                       $profileArray = $this->getProfilesSentInMatchAlertsFromTable($profileId,$seperator); 
                       return $profileArray;
                 }
@@ -38,12 +38,12 @@ class MatchAlertsLogCaching
         }
         public function getMatchAlertProfiles($profileId,$dateGreaterThanCondition="")
 	{
-                if(JsConstants::$whichMachine == 'matchAlerts'){
+                if(JsConstants::$whichMachine == 'matchAlert'){
                       $profileArray = $this->getMatchAlertProfilesFromTable($profileId,$dateGreaterThanCondition); 
                       return $profileArray;
                 }
                 $keys = JsMemcache::getInstance()->getSetsAllValue($profileId."_MATCHALERTS_LOG_ALL");
-                if(!JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && $keys && $keys[0] != "0"){
+                if(!JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") || ($keys && ($keys[0] != "0" || $keys[0]=="")) ){
                         $profileArray = $this->getMatchAlertProfilesFromTable($profileId,$dateGreaterThanCondition);
                         $keyArr = array();
                         if($profileArray){
