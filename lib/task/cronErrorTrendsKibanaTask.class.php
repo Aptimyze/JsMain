@@ -1,23 +1,16 @@
 <?php
 
 /*
-This Cron is used to compress the data which is stored in the indices of Elastic Search. 
-
- * <code>
- * To execute : $ php symfony Kibana:indicesCompressor 24
- * The parameter passed in above query is the time in hours. 
- * example  $ php symfony Kibana:indicesCompressor 
- * By default the time (in hours) whose data is to be fetched 
- * </code>
+This Cron is used to get the error trends from data which is stored in the indices of Elastic Search. 
 */
 
-class cronCompressDeleteKibana extends sfBaseTask
+class cronErrorTrendsKibana extends sfBaseTask
 {
   protected function configure()
   {
 
     $this->namespace        = 'Kibana';
-    $this->name             = 'cronCompressDeleteKibana';
+    $this->name             = 'cronErrorTrendsKibana';
     //This is the path to ELK server
     $this->elkServer = 'http://10.10.18.66';
     //This is the port number where Elastic Search is running
@@ -37,12 +30,12 @@ class cronCompressDeleteKibana extends sfBaseTask
     $this->startDaysEnd = 1;
 
 
-    $this->briefDescription = 'This cron is used to compress data which is extracted from indices of the elastic search.';
+    $this->briefDescription = 'This cron is used to get error trends from indices of the elastic search.';
     $this->detailedDescription = <<<EOF
-The [kibanaCompressing|INFO] task does things.
+The [cronErrorTrendsKibana|INFO] task does things.
 Call it with:
 
-  [php symfony Kibana:cronCompressDeleteKibana]
+  [php symfony Kibana:cronErrorTrendsKibana]
 EOF;
   }
     // add your code here
