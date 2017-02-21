@@ -19,7 +19,7 @@ class MatchAlertsLogCaching
                       return $profileArray;
                 }
                 $keys = JsMemcache::getInstance()->getSetsAllValue($profileId."_MATCHALERTS_LOG_ALL");
-                if(JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && ($keys && $keys[0] == "0" && $keys[0] != "") ){
+                if(JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && ($keys && ($keys[0] == "0" || $keys[0] != "")) ){
                         $profileArray= array();
                         if($keys){
                                 foreach($keys as $key){
@@ -41,8 +41,10 @@ class MatchAlertsLogCaching
                         }else{
                                 $keyArr = 0;
                         }
-                        JsMemcache::getInstance()->remove($profileId."_MATCHALERTS_LOG_ALL"); // remove if cache contains "" at first value then set
-                        JsMemcache::getInstance()->storeDataInCacheByPipeline($profileId."_MATCHALERTS_LOG_ALL",$keyArr,$this->keyTimings);
+                        if($dateGreaterThanCondition==''){
+                                JsMemcache::getInstance()->remove($profileId."_MATCHALERTS_LOG_ALL"); // remove if cache contains "" at first value then set
+                                JsMemcache::getInstance()->storeDataInCacheByPipeline($profileId."_MATCHALERTS_LOG_ALL",$keyArr,$this->keyTimings);
+                        }
                 }
                 return $profileArray;
         }
