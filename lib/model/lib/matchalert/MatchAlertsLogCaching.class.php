@@ -60,7 +60,7 @@ class MatchAlertsLogCaching
                                 foreach($keys as $key){
                                         $profileIdDate = explode("_",$key);
                                         if($profileIdDate[0] != "0"){
-                                                if(($dateGreaterThanCondition && $dateGreaterThanCondition > $profileIdDate[1]) || $dateGreaterThanCondition == ""){
+                                                if(($dateGreaterThanCondition && $dateGreaterThanCondition < $profileIdDate[1]) || $dateGreaterThanCondition == ""){
                                                         $profileArray[$profileIdDate[0]]   = $profileIdDate[1];
                                                 }
                                         }
