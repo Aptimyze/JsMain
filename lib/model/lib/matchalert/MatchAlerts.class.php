@@ -27,7 +27,7 @@ class MatchAlerts
         */
 	public function getProfilesSentInMatchAlerts($profileId)
 	{
-		$matchAlertObj = new MatchAlertsLogCaching();
+		$matchAlertObj = new matchalerts_LOG();
 		$output = $matchAlertObj->getProfilesSentInMatchAlerts($profileId);
 		unset($matchAlertObj);
                 return $output;

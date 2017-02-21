@@ -7,30 +7,6 @@ class MatchAlertsLogCaching
 	{
 		$this->dbname = $dbname;
 	}
-        public function getProfilesSentInMatchAlerts($profileId,$seperator="")
-	{
-                if(JsConstants::$whichMachine == 'matchAlert'){
-                      $profileArray = $this->getProfilesSentInMatchAlertsFromTable($profileId,$seperator); 
-                      return $profileArray;
-                }
-                $profileArray = array();
-                $profiles = $this->getMatchAlertProfiles($profileId);
-                if($profiles){
-                        foreach($profiles as $pId=>$profile){
-                                $profileArray[] = $pId;
-                        }
-                }
-                if($seperator == 'spaceSeperator'){
-                        $profileArrayString = implode(" ",$profileArray)." ";
-                        return $profileArrayString;
-                }
-                return $profileArray;
-        }
-        public function getProfilesSentInMatchAlertsFromTable($profileId,$seperator=""){
-                $matchalerts_LOG = new matchalerts_LOG($this->dbname);
-                $profileArray = $matchalerts_LOG->getMatchAlertProfiles($profileId,$dateGreaterThanCondition);
-                return $profileArray;
-        }
         public function getMatchAlertProfilesFromTable($profileId,$dateGreaterThanCondition=""){
                 $matchalerts_LOG = new matchalerts_LOG($this->dbname);
                 $profileArray = $matchalerts_LOG->getMatchAlertProfiles($profileId,$dateGreaterThanCondition);
@@ -66,7 +42,6 @@ class MatchAlertsLogCaching
                                         }
                                 }
                         }
-                        //echo '<pre>';print_r($profileArray);die;
                 }
                 return $profileArray;
         }
