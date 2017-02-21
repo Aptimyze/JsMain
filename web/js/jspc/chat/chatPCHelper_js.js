@@ -2003,6 +2003,7 @@ $(document).ready(function () {
     	
         	                }); 
         			}
+                    //send the contact engine buttons check stanza
                     if(chatConfig.Params[device].enableLoadTestingStanza == true){
                         strophieWrapper.sendContactStatusRequest(username+"@"+openfireServerName,"check");
                     }
