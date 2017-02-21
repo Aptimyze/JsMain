@@ -768,8 +768,7 @@ class Membership
             $modifiedServeFor = $this->servefor;
         }
 
-        error_log("ankita discount in makepaid-".$this->discount);
-        error_log("ankita amount in makepaid-".$this->amount);
+        
         $this->discount_percent = round((($this->discount)/($this->amount+$this->discount)) * 100,2);
         
         
