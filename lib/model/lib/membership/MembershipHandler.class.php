@@ -1576,7 +1576,7 @@ class MembershipHandler
             $discountCartPrice+= $upgradePercentArr[$mainMembership]["actualUpsellMRP"] - $upgradePercentArr[$mainMembership]["discountedUpsellMRP"];
             /*if(is_array($apiObj->purchaseDetArr) && $apiObj->purchaseDetArr['NET_AMOUNT']){
                 $discountCartPrice = $discountCartPrice - $apiObj->purchaseDetArr['NET_AMOUNT'];
-                error_log("ankita purchaseDetArr in setTrackingPriceAndDiscount-".$apiObj->purchaseDetArr['NET_AMOUNT']);
+                error_log("purchaseDetArr in setTrackingPriceAndDiscount-".$apiObj->purchaseDetArr['NET_AMOUNT']);
             }*/
         }
 
