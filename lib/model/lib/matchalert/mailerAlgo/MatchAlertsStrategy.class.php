@@ -26,9 +26,10 @@ abstract class MatchAlertsStrategy
                 $matchalertLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
                 $matchalertTempLogObj->insertLogRecords($receiverId, $profileIds, $logicLevel);
                 
-                $mCache = new MatchAlertsLogCaching();
+                /*$mCache = new MatchAlertsLogCaching();
                 $mCache->setAddCacheKey($receiverId,$profileIds);
-                unset($mCache);
+                unset($mCache);*/
+                JsMemcache::getInstance()->remove($receiverId."_MATCHALERTS_LOG_ALL"); // unset log cache
                 
                 unset($matchalertLogObj);
                 unset($matchalertTempLogObj);

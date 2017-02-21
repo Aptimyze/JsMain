@@ -19,18 +19,7 @@ class MatchAlertsLogCaching
                       return $profileArray;
                 }
                 $keys = JsMemcache::getInstance()->getSetsAllValue($profileId."_MATCHALERTS_LOG_ALL");
-                if(!JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") || ($keys && ($keys[0] != "0" || $keys[0]=="")) ){
-                        $profileArray = $this->getMatchAlertProfilesFromTable($profileId,$dateGreaterThanCondition);
-                        $keyArr = array();
-                        if($profileArray){
-                                foreach($profileArray as $mProfileId=>$intDate){
-                                        $keyArr[] = $mProfileId."_".$intDate;
-                                }
-                        }else{
-                                $keyArr = 0;
-                        }
-                        JsMemcache::getInstance()->storeDataInCacheByPipeline($profileId."_MATCHALERTS_LOG_ALL",$keyArr,$this->keyTimings);
-                }else{
+                if(JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && ($keys && $keys[0] == "0" && $keys[0] != "") ){
                         $profileArray= array();
                         if($keys){
                                 foreach($keys as $key){
@@ -42,6 +31,18 @@ class MatchAlertsLogCaching
                                         }
                                 }
                         }
+                }else{
+                        $profileArray = $this->getMatchAlertProfilesFromTable($profileId,$dateGreaterThanCondition);
+                        $keyArr = array();
+                        if($profileArray){
+                                foreach($profileArray as $mProfileId=>$intDate){
+                                        $keyArr[] = $mProfileId."_".$intDate;
+                                }
+                        }else{
+                                $keyArr = 0;
+                        }
+                        JsMemcache::getInstance()->remove($profileId."_MATCHALERTS_LOG_ALL"); // remove if cache contains "" at first value then set
+                        JsMemcache::getInstance()->storeDataInCacheByPipeline($profileId."_MATCHALERTS_LOG_ALL",$keyArr,$this->keyTimings);
                 }
                 return $profileArray;
         }
