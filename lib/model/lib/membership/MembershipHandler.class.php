@@ -229,7 +229,7 @@ class MembershipHandler
             foreach ($subMem as $key => $value) {
                 $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round($allMainMem[$mainMem][$key]['PRICE'], 2);
                 if (strpos(discountType::UPGRADE_DISCOUNT, $discountType) !== false && $upgradePercentArr[$key]) { 
-                    $allMainMem[$mainMem][$key]['OFFER_PRICE'] = $upgradePercentArr[$key];
+                    $allMainMem[$mainMem][$key]['OFFER_PRICE'] = $upgradePercentArr[$key]["discountedUpsellMRP"];
                 } else{
                     if (strpos(discountType::RENEWAL_DISCOUNT, $discountType) !== false) {
                         $allMainMem[$mainMem][$key]['OFFER_PRICE'] = round(($allMainMem[$mainMem][$key]['PRICE'] - ceil($allMainMem[$mainMem][$key]['PRICE'] * $renewalPercent) / 100), 2);
@@ -1212,7 +1212,7 @@ class MembershipHandler
                     //$upgradeTotalDiscount = 0;
                 }
                 if($upsellMRP > 0){
-                    $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = $upsellMRP;
+                    $discountArr[$upgradableMemArr["upgradeMem"].$upgradableMemArr["upgradeMemDur"]] = array("discountedUpsellMRP"=>$upsellMRP,"actualUpsellMRP"=>$upgradeMemMRP-$currentMemMRP);
                 }
             }
         }
@@ -1571,9 +1571,13 @@ class MembershipHandler
          //add additional discount for upgrade membership if applicable
         if((empty($backendRedirect) || $backendRedirect != 1) && $upgradeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$mainMembership]){
             //$additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$mainMembership] / 100) , 2);
-            $temp = $totalCartPrice;
-            $totalCartPrice = $upgradePercentArr[$mainMembership];
-            $discountCartPrice+= $temp - $upgradePercentArr[$mainMembership];
+            //$temp = $totalCartPrice;
+            $totalCartPrice = $upgradePercentArr[$mainMembership]["discountedUpsellMRP"];
+            $discountCartPrice+= $upgradePercentArr[$mainMembership]["actualUpsellMRP"] - $upgradePercentArr[$mainMembership]["discountedUpsellMRP"];
+            /*if(is_array($apiObj->purchaseDetArr) && $apiObj->purchaseDetArr['NET_AMOUNT']){
+                $discountCartPrice = $discountCartPrice - $apiObj->purchaseDetArr['NET_AMOUNT'];
+                error_log("ankita purchaseDetArr in setTrackingPriceAndDiscount-".$apiObj->purchaseDetArr['NET_AMOUNT']);
+            }*/
         }
 
         if (!empty($couponCode)) {

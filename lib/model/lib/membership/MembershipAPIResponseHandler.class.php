@@ -132,13 +132,21 @@ class MembershipAPIResponseHandler {
             if(is_array($purchaseDetails) && $purchaseDetails['SERVICEID']){
                 $this->memID = @strtoupper($purchaseDetails['SERVICEID']);
                 $this->lastPurchaseDiscount = $purchaseDetails['DISCOUNT_PERCENT'];
+                //$this->lastPurchaseBillid = $purchaseDetails['BILLID'];
             }
             else{
                 $this->memID = @strtoupper($purchaseDetails);
                 $this->lastPurchaseDiscount = 0;
+                //$this->lastPurchaseBillid = null;
             }
+
             $this->subStatus = $this->memHandlerObj->getSubscriptionStatusArray($this->userObj,null,null,$this->memID);
-          
+
+            /*if($this->upgradeMem == "MAIN" && $this->lastPurchaseBillid != null && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
+                $purchaseDetObj = new billing_PURCHASE_DETAIL();
+                $this->purchaseDetArr = $purchaseDetObj->getDetailsOfTransaction($this->lastPurchaseBillid,$this->profileid,$this->memID);
+                //print_r($this->purchaseDetArr);die;
+            }*/
             if (is_array($this->subStatus) && !empty($this->subStatus)) {
                 $this->countActiveServices = count($this->subStatus);
             } 

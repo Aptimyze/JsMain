@@ -302,9 +302,13 @@ class MembershipApiFunctions
         if((empty($apiObj->backendRedirect) || $apiObj->backendRedirect != 1) && $upgardeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$apiObj->mainMembership]){
             
             //$additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$apiObj->mainMembership] / 100) , 2);
-            $temp = $totalCartPrice;
-            $totalCartPrice = $upgradePercentArr[$apiObj->mainMembership];
-            $discountCartPrice+= $temp - $upgradePercentArr[$apiObj->mainMembership];
+            //$temp = $totalCartPrice;
+            $totalCartPrice = $upgradePercentArr[$apiObj->mainMembership]["discountedUpsellMRP"];
+            $discountCartPrice+= $upgradePercentArr[$mainMembership]["actualUpsellMRP"] - $upgradePercentArr[$apiObj->mainMembership]["discountedUpsellMRP"];
+            /*if(is_array($apiObj->purchaseDetArr) && $apiObj->purchaseDetArr['NET_AMOUNT']){
+                error_log("ankita purchaseDetArr in calculateCartPrice-".$apiObj->purchaseDetArr['NET_AMOUNT']);
+                $discountCartPrice = $discountCartPrice - $apiObj->purchaseDetArr['NET_AMOUNT'];
+            }*/
         }
         
         if (!empty($apiObj->couponCode)) {
@@ -319,7 +323,6 @@ class MembershipApiFunctions
             }
         }
      
-        
         return array(
             $totalCartPrice,
             $discountCartPrice
