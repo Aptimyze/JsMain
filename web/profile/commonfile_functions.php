@@ -392,7 +392,7 @@ $js_arr[]=array("mobPhotoUpload" => "3");
 $js_arr[]=array("commonMob" => "2");
 $js_arr[]=array("mobBrowser_js" => "2");
 $js_arr[]=array("mobSearchBand"   => "4");
-$js_arr[]=array("app_promo_js"                                  => "42");
+$js_arr[]=array("app_promo_js"                                  => "43");
 $js_arr[]=array("selectType_Page3_js" => "2");
 $js_arr[]=array("editNativePlace_js"  => "7");
 $js_arr[]=array("mobNative_Place_selectType_js" => "2");
