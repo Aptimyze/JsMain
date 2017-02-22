@@ -50,7 +50,7 @@ class MatchAlertsLogCaching
         }
         public function setAddCacheKey($profileId,$profiles){
                 $keys = JsMemcache::getInstance()->getSetsAllValue($profileId."_MATCHALERTS_LOG_ALL");
-                if(JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && ($keys && $keys[0] == "0" && $keys[0] != "") ){
+                if(JsMemcache::getInstance()->keyExist($profileId."_MATCHALERTS_LOG_ALL") && ($keys && ($keys[0] == "0" || $keys[0] != "")) ){
                         $date=MailerConfigVariables::getNoOfDays();
                         $keyArr = array();
                         foreach($profiles as $pid){
