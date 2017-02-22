@@ -935,14 +935,14 @@ return $edu;
 
 		foreach($userList as $k=>$v)
 		{
-			if(strstr($subscription, $v->getSUBSCRIPTION()) && $v->getHAVEPHOTO()== $this->photoPresent)
-			{
+			if(in_array($subscription, explode(",",$v->getSUBSCRIPTION())) && $v->getHAVEPHOTO()== $this->photoPresent)
+                        {
                                 if($v->getPHOTO_DISPLAY()!= PhotoProfilePrivacy::photoVisibleIfContactAccepted)
 					$sortArr[$v->getPROFILEID()] = 1;
 				else
 					$sortArr[$v->getPROFILEID()] = 2;
 			}
-			elseif(strstr($subscription, $v->getSUBSCRIPTION())){
+			elseif(in_array($subscription, explode(",",$v->getSUBSCRIPTION()))){
 				$sortArr[$v->getPROFILEID()] = 3;
 			}elseif($v->getHAVEPHOTO()== $this->photoUnderScreening)
 			{
