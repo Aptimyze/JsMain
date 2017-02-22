@@ -185,7 +185,7 @@ function ajaxHide(hideDelete)
     var dataObject = JSON.stringify({'actionHide' : action});
   }
 
-  $.ajax({    
+  $.myObj.ajax({
     beforeSend : function(){
       $("#hidePartID").addClass("settings-blur");
     },
