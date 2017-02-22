@@ -260,6 +260,11 @@ class InformationTypeAdapter
                         JsMemcache::getInstance()->set("MATCHOFTHEDAY_".$this->profileId,  serialize($profilesArray));
                 }else{
                         $profilesArray = unserialize(JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId));
+                        foreach($profilesArray as $k=>$profiles){
+                                if(in_array($profiles, $skipArray)){
+                                        unset($profilesArray[$k]);
+                                }
+                        } 
                 }
                 break;
         

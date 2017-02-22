@@ -348,18 +348,11 @@ class Initiate extends ContactEvent{
       throw new jsException($e);
     }
 
-    // delete Myjs cached data
-    $appOrMob = MobileCommon::isApp()? MobileCommon::isApp():'M';
-    $myjsCacheKey = MyJsMobileAppV1::getCacheKey($this->viewed->getPROFILEID())."_".$appOrMob;
-    JsMemcache::getInstance()->delete($myjsCacheKey);
-    $myjsCacheKey = MyJsMobileAppV1::getCacheKey($this->contactHandler->getViewer()->getPROFILEID())."_".$appOrMob;
-    JsMemcache::getInstance()->delete($myjsCacheKey);
     // delete data of Match of the day
     JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->viewed->getPROFILEID());
     JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->viewed->getPROFILEID());
     JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->contactHandler->getViewer()->getPROFILEID()); 
     JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->contactHandler->getViewer()->getPROFILEID());
-
   }
 
   public function sendMail() {

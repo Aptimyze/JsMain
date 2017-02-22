@@ -66,13 +66,7 @@ class IgnoredProfiles
 
         public function ignoreProfile($profileid, $ignoredProfileid)
         {
-        	// delete Myjs cached data
-        	$appOrMob = MobileCommon::isApp()? MobileCommon::isApp():'M';
-			$myjsCacheKey = MyJsMobileAppV1::getCacheKey($profileid)."_".$appOrMob;
-			JsMemcache::getInstance()->delete($myjsCacheKey);
-			$myjsCacheKey = MyJsMobileAppV1::getCacheKey($ignoredProfileid)."_".$appOrMob;
-			JsMemcache::getInstance()->delete($myjsCacheKey);
-			// delete data of Match of the day
+        	// delete data of Match of the day
         	JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileid);
         	JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$profileid);
         	JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$ignoredProfileid);
