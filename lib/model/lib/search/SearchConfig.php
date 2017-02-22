@@ -14,7 +14,7 @@ class SearchConfig
 	public static $profilesPerPage = 25;
 	public static $matchMaxLimit = 5000;//overwriting limit set in matchalert
 	public static $profilesPerPageOnApp = 6;
-	public static $profilesPerPageOnWapSite = 10;
+	public static $profilesPerPageOnWapSite = 20;
 	public static $featuredProfilesCount = 5;
 	public static $suggestedAlgoCount = 15;
 	public static $ap_send_eoi_count = 100;
