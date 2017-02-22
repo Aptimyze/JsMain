@@ -722,4 +722,4 @@ class LoggingManager
 		}
 		return $scriptName;
 	}
-	}
+}
