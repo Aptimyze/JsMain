@@ -128,7 +128,13 @@ class detailedAction extends sfAction
     if (MobileCommon::isOldMobileSite()) {
       $this->horoscopeAvailable(); 
     }
-	 $this->showContactEngine();
+    
+        $ceAction = $request->getParameter('performAction');
+        if($ceAction=='accept')
+        {
+         ProfileCommon::performContactEngineAction($request,'VDP');
+        }
+         $this->showContactEngine();
 		//appPromotion
 		if($request->getParameter("from_mailer"))
 			$this->from_mailer=1;
