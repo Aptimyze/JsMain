@@ -128,7 +128,13 @@ class detailedAction extends sfAction
     if (MobileCommon::isOldMobileSite()) {
       $this->horoscopeAvailable(); 
     }
-	 $this->showContactEngine();
+    
+        $ceAction = $request->getParameter('performAction');
+        if($ceAction=='accept')
+        {
+         ProfileCommon::performContactEngineAction($request,'VDP');
+        }
+         $this->showContactEngine();
 		//appPromotion
 		if($request->getParameter("from_mailer"))
 			$this->from_mailer=1;
@@ -414,8 +420,8 @@ class detailedAction extends sfAction
 			$can_url.="-".$this->CASTE;
 			
 		//Title
-		
-		if($this->GOTHRA)
+		//strip tags check added to remove meta content in page title
+		if($this->GOTHRA && strip_tags($this->GOTHRA)!="")
 			$gotra=" - ".$this->GOTHRA;
 		if($this->CITY_RES || $this->COUNTRY_RES)
 		{

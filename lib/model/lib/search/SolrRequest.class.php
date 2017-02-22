@@ -26,7 +26,7 @@ class SolrRequest implements RequestHandleInterface
                         if($profileObj->getPROFILEID())
                 	{ 
                         	//if($profileObj->getPROFILEID()%7>2)
-				if($profileObj->getPROFILEID()%2==0)
+				if($profileObj->getPROFILEID()%4==0 || $profileObj->getPROFILEID()%4==1)
 	                                $this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
         	                else
                 	                $this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
@@ -307,7 +307,7 @@ class SolrRequest implements RequestHandleInterface
 							$valGroup = $this->searchParamtersObj->getOCCUPATION_GROUPING();
 							$solrFormatValueGroup = str_replace(","," ",$valGroup);
 							$solrFormatValueGroup = str_replace("','"," ",$solrFormatValueGroup);
-							$this->specialCases($field,$solrFormatValue,'occupation,occuapation_grouping','OCCUPATION','OCCUPATION_GROUPING',$solrFormatValueGroup);
+							$this->specialCases($field,$solrFormatValue,'occupation,occupation_grouping','OCCUPATION','OCCUPATION_GROUPING',$solrFormatValueGroup);
 						}
 						elseif(strstr($field,'EDU'))
 						{

@@ -11,6 +11,11 @@ class MOBILE_API_NOTIFICATION_LOG_ARCHIVE extends TABLE{
 		$resInsert->bindValue(":SEND_DATE",$date,PDO::PARAM_STR);
 		$resInsert->execute();
 	}
-
+	public function insertOneRecord($pid,$nk,$mi,$sdate,$udate,$sent,$ot)
+        {
+                $sqlInsert = "INSERT INTO  MOBILE_API.NOTIFICATION_LOG_ARCHIVE VALUES ('$pid','$nk','$mi','$sdate','$udate','$sent','$ot')";
+                $resInsert = $this->db->prepare($sqlInsert);
+                $resInsert->execute();
+        }
 }
 ?>

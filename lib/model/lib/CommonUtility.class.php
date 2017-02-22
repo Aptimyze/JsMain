@@ -909,6 +909,31 @@ die;
 		}
 	}
 
+	public static function makeTime($date, $format = 'YYYY-MM-DD')
+	{
+		$value = CommonUtility::datetotime($date, $format);
+		$time = mktime(date('H'), date('i'), date('s'), $value["month"], $value["day"], $value["year"]);
+		return date("Y-m-d H:i:s", $time);
+	}
+
+	public static function datetotime ($date, $format = 'YYYY-MM-DD')
+	{
+		if ($format == 'YYYY-MM-DD') list($year, $month, $day) = explode('-', $date);
+		if ($format == 'YYYY/MM/DD') list($year, $month, $day) = explode('/', $date);
+		if ($format == 'YYYY.MM.DD') list($year, $month, $day) = explode('.', $date);
+
+		if ($format == 'DD-MM-YYYY') list($day, $month, $year) = explode('-', $date);
+		if ($format == 'DD/MM/YYYY') list($day, $month, $year) = explode('/', $date);
+		if ($format == 'DD.MM.YYYY') list($day, $month, $year) = explode('.', $date);
+
+		if ($format == 'MM-DD-YYYY') list($month, $day, $year) = explode('-', $date);
+		if ($format == 'MM/DD/YYYY') list($month, $day, $year) = explode('/', $date);
+		if ($format == 'MM.DD.YYYY') list($month, $day, $year) = explode('.', $date);
+
+		$result = array("day" => $day, "month" => $month, "year" => $year);
+		return $result;
+	}
+
 	public static function hideFeaturesForUptime(){
 		
 		if(in_array(date('H'),array("10","11","12","13")))
