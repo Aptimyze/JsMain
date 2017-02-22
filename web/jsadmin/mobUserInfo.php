@@ -16,7 +16,7 @@ if(authenticated($cid))
 		$flag =true;
 
 	if($username && $flag){
-		$sql = "select PROFILEID, PHONE_MOB, PHONE_WITH_STD, EMAIL, ENTRY_DT, MOD_DT, LAST_LOGIN_DT from newjs.JPROFILE where USERNAME='$username'";
+		$sql = "select PROFILEID, PHONE_MOB, PHONE_WITH_STD, EMAIL, ENTRY_DT, MOD_DT, DATE(LAST_LOGIN_DT) LAST_LOGIN_DT from newjs.JPROFILE where USERNAME='$username'";
 		$result = mysql_query_decide($sql,$db) or die("$sql".mysql_error_js());
 		if($row=mysql_fetch_array($result))
 		{

@@ -107,7 +107,7 @@ if($camefrom=="page3")
 		$showMessenger="Y";
 
 
-	$today=date("Y-m-d");
+	$today=date("Y-m-d H:i:s");
 	
 	if((substr($tieup_source,0,2))=='af' || $email_validation=='Y')
 	{
