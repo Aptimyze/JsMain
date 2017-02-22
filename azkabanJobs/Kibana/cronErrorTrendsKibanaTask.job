@@ -1,0 +1,4 @@
+type=command
+command=${php5} ${docRoot}/symfony Kibana:cronErrorTrendsKibana
+retries=100
+retry.backoff=300000

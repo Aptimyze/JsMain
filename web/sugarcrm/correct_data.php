@@ -23,7 +23,7 @@ while($row=mysql_fetch_array($res))
 	if(!($email=='' && $mobile=='' && $landline==''))
 	{
 echo "(". $neha++.")";
-echo		$sql_sel="SELECT USERNAME FROM newjs.JPROFILE WHERE ACTIVATED='Y' AND LAST_LOGIN_DT > '$before_55_days'";
+echo		$sql_sel="SELECT USERNAME FROM newjs.JPROFILE WHERE ACTIVATED='Y' AND DATE(LAST_LOGIN_DT) > '$before_55_days'";
 		if($email!='')
 		{
 			$sql_sel1=$sql_sel." AND EMAIL='$email'";

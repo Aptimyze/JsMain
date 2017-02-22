@@ -118,7 +118,7 @@ class PROFILE_PROFILE_COMPLETION_SCORE extends TABLE {
             FROM  newjs.`JPROFILE` J
             LEFT JOIN PROFILE.`PROFILE_COMPLETION_SCORE` S
             ON J.PROFILEID=S.PROFILEID
-            WHERE J.LAST_LOGIN_DT  >=  :LAST_LOGIN_DT 
+            WHERE DATE(J.LAST_LOGIN_DT)  >=  :LAST_LOGIN_DT 
             AND J.activatedKey=1
             AND J.PROFILEID MOD :T_SCRIPT = :CUR_SCRIPT
             AND S.PROFILEID IS NULL
@@ -336,7 +336,7 @@ SQL;
         if($dateBefore)
         {
             try{
-                $sql = "SELECT P.PROFILEID FROM PROFILE.PROFILE_COMPLETION_SCORE P JOIN newjs.JPROFILE J ON J.PROFILEID = P.PROFILEID WHERE J.LAST_LOGIN_DT > :LOGIN_DATE AND P.PROFILEID MOD :T_SCRIPT = :CUR_SCRIPT";
+                $sql = "SELECT P.PROFILEID FROM PROFILE.PROFILE_COMPLETION_SCORE P JOIN newjs.JPROFILE J ON J.PROFILEID = P.PROFILEID WHERE DATE(J.LAST_LOGIN_DT) > :LOGIN_DATE AND P.PROFILEID MOD :T_SCRIPT = :CUR_SCRIPT";
                 $pdoStatement = $this->db->prepare($sql);
                 $pdoStatement->bindValue(":LOGIN_DATE",$dateBefore,PDO::PARAM_STR);
                 $pdoStatement->bindValue(":T_SCRIPT",$totalScript,PDO::PARAM_INT);

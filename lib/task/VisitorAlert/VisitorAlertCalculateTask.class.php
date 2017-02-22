@@ -4,7 +4,7 @@
  */
 class VisitorAlertCalculateTask extends sfBaseTask
 {
-
+private $limit = 1000;
     const VISITORS_MAILER_LIMIT = 10;
   protected function configure()
     {
@@ -34,35 +34,48 @@ EOF;
 
         $totalScripts = $arguments["totalScripts"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
-        
+	if(CommonUtility::hideFeaturesForUptime())
+                successfullDie();
         try 
         {
-           $visitoralertMailerVisitors = new visitorAlert_MAILER('shard1_master');
+		$flag = 1;
+                do{
+			//file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/bhavana_1".$currentScript.".txt","p1 ::::::::::".(memory_get_usage(false)/1024/1024)." MiB\n",FILE_APPEND);
+		   	$visitoralertMailerVisitors = new visitorAlert_MAILER('shard1_master');
+           		$profiles = $visitoralertMailerVisitors->getMailerProfiles($totalScripts,$currentScript,$this->limit,$sent='U');
+          		if ( is_array($profiles) )
+           		{
+                		foreach ($profiles as $key => $profile) 
+                		{
+					//file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/ba.txt",$c++."\n",FILE_APPEND);
+                    			$profileVisitors = $this->getVisitorProfile($profile['PROFILEID']);
+			                if ( is_array($profileVisitors) )
+                    			{
+			                        foreach ($profileVisitors as $key => $value) {
+                            				$profileVisitorsArray[] = $value;
+                        			}
+						unset($profileVisitors);
+			                        $count = count($profileVisitorsArray);
+			                        $profileVisitorsArrayMixed[$profile['PROFILEID']] =   $profileVisitorsArray;
+						unset($profileVisitorsArray);
+                    			}
+                    			if ( is_array($profileVisitorsArrayMixed))
+                    			{
+			                        $visitoralertMailerVisitors->updateReceiverData($profileVisitorsArrayMixed,$count);
+                    			}
+					else{		
+			                        $visitoralertMailerVisitors->updateReceiverDataSetX($profile['PROFILEID']);
+                    			}
+					unset($profileVisitorsArrayMixed);
+                		}
+            		}else{
+				$flag = 0;
+			}
+			//file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/bhavana_1".$currentScript.".txt","p2 ::::::::::".(memory_get_usage(false)/1024/1024)." MiB\n",FILE_APPEND);
 
-           $profiles = $visitoralertMailerVisitors->getMailerProfiles($totalScripts,$currentScript,"",$sent='U');
-
-           
-           if ( is_array($profiles) )
-           {
-                foreach ($profiles as $key => $profile) 
-                {
-                    $profileVisitors = array();
-                    $profileVisitors = $this->getVisitorProfile($profile['PROFILEID']);
-                    $profileVisitorsArray = array();
-                    if ( is_array($profileVisitors) )
-                    {
-                        foreach ($profileVisitors as $key => $value) {
-                            $profileVisitorsArray[] = $value;
-                        }
-                        $count = count($profileVisitorsArray);
-                        $profileVisitorsArrayMixed[$profile['PROFILEID']] =   $profileVisitorsArray;
-                    }
-                    if ( is_array($profileVisitorsArrayMixed))
-                    {
-                        $visitoralertMailerVisitors->updateReceiverData($profileVisitorsArrayMixed,$count);
-                    }
-                }
-            }
+			unset($visitoralertMailerVisitors);
+                        unset($profiles);
+		}while($flag);
         } 
         catch (PDOException $e)
         {
@@ -85,7 +98,10 @@ EOF;
 		$SearchServiceObj->setSearchSortLogic($SearchParamtersObj,$loggedInProfileObj,"",$sort);
 		$responseObj = $SearchServiceObj->performSearch($SearchParamtersObj,'','','','',$loggedInProfileObj);
 		$arr['PIDS'] = $responseObj->getsearchResultsPidArr();
-
+unset($loggedInProfileObj);
+unset($SearchParamtersObj);
+unset($SearchServiceObj);
+unset($responseObj);
 		return $arr['PIDS'];
 		
 	}

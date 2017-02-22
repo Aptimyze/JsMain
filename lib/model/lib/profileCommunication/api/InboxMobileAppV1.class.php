@@ -13,8 +13,7 @@ class InboxMobileAppV1
 	static public $noresultArray = Array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MATCH_ALERT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED","IGNORED_PROFILES","INTEREST_EXPIRING","INTEREST_ARCHIVED");
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
-	const INTEREST_EXPIRING = "You have no interests left to respond to";
-	const INTEREST_ARCHIVED = "You have no interests left to respond to";
+	const INTEREST_EXPIRING = "Interests which will expire within the next 7 days will appear here.";
 	const ACCEPTANCES_RECEIVED = "No one has yet accepted your interest";
 	const ACCEPTANCES_SENT = "You haven't yet accepted any interests sent to you";
 	const INTEREST_SENT = "You haven't sent any interests yet";
@@ -28,6 +27,7 @@ class InboxMobileAppV1
 	const NOT_INTERESTED_BY_ME = 'Interests you have declined/cancelled will appear here';
 	const FILTERED_INTEREST ="People who have expressed interest in you but don't meet your filter criteria will appear here";
 	const PEOPLE_WHO_VIEWED_MY_CONTACTS="People who viewed your contacts will appear here";
+	const INTEREST_ARCHIVED = "Interests received more than 90 days earlier will appear here.";
 	static public function init()
 	{
 		self::$informationTupleFields    = Array(
@@ -431,6 +431,35 @@ class InboxMobileAppV1
                                 "NATIVE_STATE",
                                 "ANCESTRAL_ORIGIN",
                                 "NAME_OF_USER",),
+                    "MATCH_OF_THE_DAY"=>Array(
+				"PROFILECHECKSUM",
+				"USERNAME",
+				"tuple_title_field",
+				"LOCATION",
+				"AGE",
+				"HEIGHT",
+				"RELIGION",
+				"CASTE",
+				"MTONGUE",
+				"INCOME",
+				"subscription_icon",
+				"subscription_text",
+				"TIME",
+				"MESSAGE",
+				"SEEN",
+				"edu_level_new",
+				"userloginstatus",
+				"FILTERED",
+				"ProfilePic120Url",
+				"ProfilePic450Url",
+				"MSTATUS",
+				"VERIFICATION_SEAL",
+                                "VERIFICATION_STATUS",
+                                "NATIVE_CITY",
+                                "NATIVE_STATE",
+                                "ANCESTRAL_ORIGIN",
+                                "NAME_OF_USER",
+				)
 			);
 		self::$informationTypeFields     = Array(
 				"NEW_COUNT",

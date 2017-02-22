@@ -43,7 +43,7 @@ class desktopRegister2 extends registrationBaseClass{
    */
   public function submit(){
     $now = date("Y-m-d G:i:s");
-    $today = date("Y-m-d");
+    $today = CommonUtility::makeTime(date("Y-m-d"));
     
     //update gender with stored value of gender
     $this->arrFormValues['gender'] = $this->loginProfile->getGENDER();

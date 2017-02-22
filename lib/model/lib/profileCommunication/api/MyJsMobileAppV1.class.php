@@ -56,8 +56,8 @@ $className = get_class($this);
 			if(array_key_exists($key,$displayObj))
 			{
 				$isApp = MobileCommon::isApp();
-				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
-				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isIOSApp()))
+				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;				
+				if($key == "INTEREST_EXPIRING" && !$showExpiring)
 				{
 					continue;
 				}
@@ -68,8 +68,12 @@ $className = get_class($this);
 				if($key == "MATCH_OF_THE_DAY")
 				{
 					if(MobileCommon::isApp())
+					{  
+				// Version Check For ANDROID		
+					//&& ($isApp == "A" && $appVersion  && $appVersion < 84)	
 						continue;
-					else if (LoggedInProfile::getInstance()->getACTIVATED() == 'U') 
+					}	
+					/*else*/ if (LoggedInProfile::getInstance()->getACTIVATED() == 'U')
 						continue;					
 				}
 				foreach($value as $k=>$v)
