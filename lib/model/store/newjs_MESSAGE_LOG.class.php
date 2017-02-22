@@ -288,7 +288,7 @@ class NEWJS_MESSAGE_LOG extends TABLE{
         return $output;
 	}
 
-		public function getMessageLogCount($where,$group='',$select='',$skippedProfile='')
+		public function getMessageLogCount($where,$group='',$select='',$skippedProfile='',$considerProfile='')
 		{
 			try{
 				if(!$where)
@@ -345,7 +345,19 @@ class NEWJS_MESSAGE_LOG extends TABLE{
 				$str = $str.")";
 				$sql = $sql.$str;
 			}
-			
+			if($considerProfile)
+			{
+				$sql.=" AND SENDER IN (";
+				foreach($considerProfile as $key1=>$value1)
+                                {
+                                        $str = $str.":VALUE".$count.",";
+                                        $bindArr["VALUE".$count] = $value1;
+                                        $count++;
+                                }
+                                $str = substr($str, 0, -1);
+                                $str = $str.")";
+                                $sql = $sql.$str;
+			}
 			if($group)
 			{
 				$sql = $sql." GROUP BY ".$group;				
@@ -616,7 +628,7 @@ public function updateMessageLogDetails($msgCommObj)
 				$str = substr($str, 0, -1);
 				$str = $str.")";
 				$strS = " RECEIVER ".$str." AND SENDER ".$str;
-				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE, MESSAGE,MESSAGES.ID FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
+				$sql = "SELECT SQL_CACHE SENDER,RECEIVER,DATE,MESSAGE,MESSAGES.ID FROM  newjs.`MESSAGE_LOG` JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ".$strS." AND IS_MSG='Y' AND TYPE = 'I' ORDER BY SENDER,DATE ASC";
 				$prep=$this->db->prepare($sql);
 				foreach($bindArr as $k=>$v)
 					$prep->bindValue($k,$v);
@@ -680,7 +692,7 @@ public function updateMessageLogDetails($msgCommObj)
 		return $output;
 	}
 		
-		public function getMessageListing($condition,$skipArray)
+		public function getMessageListing($condition,$skipArray='',$inArray='')
 		{
 			try{
 				if(!$condition["WHERE"]["IN"]["PROFILE"])
@@ -705,15 +717,57 @@ public function updateMessageLogDetails($msgCommObj)
 						}
 						$str = substr($str, 0, -1);
 						$str = $str.")";
-						$sender = " AND SENDER ".$str." ";
-						$receiver = "AND RECEIVER ".$str." ";
+						if($skipArray)
+						{
+							$sender = " AND SENDER ".$str." ";
+							$receiver = "AND RECEIVER ".$str." ";
+						}
 					}
-					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (RECEIVER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `RECEIVER` =:PROFILEID".$sender." AND  `TYPE` ='R' AND  `IS_MSG` ='Y' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (SENDER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `SENDER` =:PROFILEID ".$receiver." AND  `TYPE` ='R' AND  `IS_MSG` ='Y' ORDER BY DATE DESC";
+					if(count($inArray)<1000 && count($inArray)>0)
+						$inSql = 1;
+					else
+						$inSql = 0;
+					if($inSql)
+					{
+						
+                                                $str =  "  IN (";
+							$count = 0;
+                                                foreach($inArray as $key1=>$value1)
+                                                {
+                                                        $str = $str.":VALUE".$count.",";
+                                                        $bindInArr["VALUE".$count] = $value1;
+                                                        $count++;
+                                                }
+                                                $str = substr($str, 0, -1);
+                                                $str = $str.")";
+						if(is_array($inArray))
+						{
+							$sender1 = " AND SENDER ".$str." ";
+							$receiver1 = "AND RECEIVER ".$str." ";
+						}
+					}
+					$sql = "SELECT SQL_CACHE SENDER AS PROFILEID, MESSAGE,  'R' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (RECEIVER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `RECEIVER` =:PROFILEID";
+					if($sender)
+						$sql.= $sender;
+					if($sender1)
+						$sql.=$sender1;
+					$sql.=" AND  `TYPE` ='R' AND  `IS_MSG` ='Y' UNION ALL SELECT  RECEIVER AS PROFILEID, MESSAGE,  'S' AS SR,SEEN,DATE FROM  `MESSAGE_LOG` USE INDEX (SENDER) JOIN MESSAGES ON ( MESSAGE_LOG.ID = MESSAGES.ID ) WHERE  `SENDER` =:PROFILEID ";
+					if($receiver)
+						$sql.=$receiver;
+					if($receiver1)
+						$sql.=$receiver1;
+					$sql.=" AND  `TYPE` ='R' AND  `IS_MSG` ='Y' ORDER BY DATE DESC";
 					$res=$this->db->prepare($sql);
 					$res->bindValue(":PROFILEID",$condition["WHERE"]["IN"]["PROFILE"],PDO::PARAM_INT);
 					
 					if($skipSql){
 						foreach($bindArr as $k=>$v)
+						{	
+							$res->bindValue($k,$v,PDO::PARAM_INT);
+						}
+					}
+					if($inSql){
+						foreach($bindInArr as $k=>$v)
 						{	
 							$res->bindValue($k,$v,PDO::PARAM_INT);
 						}
@@ -808,7 +862,7 @@ public function updateMessageLogDetails($msgCommObj)
 				}
 				else
 				{
-					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
+					$sql = "SELECT MESSAGE_LOG.ID as ID, SENDER,TYPE,`DATE`,OBSCENE,MESSAGE,RECEIVER FROM  `MESSAGE_LOG` LEFT JOIN MESSAGES ON ( MESSAGES.ID = MESSAGE_LOG.ID ) WHERE ((`RECEIVER` =:VIEWER AND SENDER =:VIEWED ) OR (`RECEIVER` =:VIEWED AND SENDER =:VIEWER ))  ORDER BY DATE";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);

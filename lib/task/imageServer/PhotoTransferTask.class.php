@@ -44,6 +44,10 @@ EOF;
 
 		if($arguments["totalInstance"]<=$arguments["currentInstance"])
 			die("Invalid Arguments");
+			
+		 if(CommonUtility::hideFeaturesForUptime())
+             successfullDie();
+
 
 		$module = IMAGE_SERVER_MODULE_NAME_ENUM::getEnum($arguments["module"]);
 		if(!$module)
@@ -158,7 +162,7 @@ EOF;
                                 }
 				elseif($serverOutput == "ERR_URL_BLANK")
 				{
-					//$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$invalid);
+					$this->updateImageServerTable($id,IMAGE_SERVER_STATUS_ENUM::$invalid);
 					$this->errorArray[] = "AUTOID = ".$id." & ERROR = ".$serverOutput;
 				}
                                 else
