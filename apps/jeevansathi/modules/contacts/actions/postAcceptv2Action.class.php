@@ -62,6 +62,7 @@ class postAcceptv2Action extends sfAction
 				$apiObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiObj->generateResponse();
 		}
+                return sfView::NONE;
 		die;
 	}
 	

@@ -39,6 +39,10 @@ class PageForm extends sfForm
 	* */
 	public function updateData($profileid='',$values_that_are_not_in_form=array()){
 	  $this->formValues=$this->getValues();
+ 	  if(in_array("casteNoBar", array_keys($this->formValues)))
+ 	  {
+ 	  	unset($this->formValues['casteNoBar']);	  	
+ 	  }
 	  $haveJeduArr = array("SCHOOL","COLLEGE","OTHER_UG_DEGREE","OTHER_PG_DEGREE","PG_COLLEGE","PG_DEGREE","UG_DEGREE");
 	  foreach($this->formValues as $field_name=>$value){
 		  if($value!==null){

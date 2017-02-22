@@ -14,7 +14,7 @@ class InformationTypeAdapter
         $this->profileId = $profileId;
     }
     
-    public function getProfiles($condition, $skipArray,$subscription="")
+    public function getProfiles($condition, $skipArray,$subscription="",$considerProfiles = '')
     {
 		$profilesArray = array();
        
@@ -139,7 +139,7 @@ class InformationTypeAdapter
                 $condition["WHERE"]["IN"]["PROFILE"] = $this->profileId;
                 $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
                 $condition["WHERE"]["IN"]["TYPE"]     = "R";
-                $profilesArray                         = $messageLogObj->getMessageListing($this->profileId, $condition, $skipArray);
+                $profilesArray                         = $messageLogObj->getMessageListing($this->profileId, $condition, $skipArray,$considerProfiles);
                 break;
         case "MY_MESSAGE_RECEIVED":
                 $messageLogObj                        = new MessageLog();

@@ -36,10 +36,11 @@ EOF;
 
         foreach($urlArray as $kk => $vv){
             $status1 = $this->sendPresenceRequest($vv);
+            print_r($status1);
             if(!array_key_exists("notifications", $status1)){
+                mail ("vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitishpost@gmail.com","Error in notification api","Please check");
                 foreach($mobileNumberArr as $k=>$v){
                     $this->sms($v);
-                    mail ("vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitishpost@gmail.com","Error in notification api","Please check");
                     //mail ("nitishpost@gmail.com","Error in notification api","Please check");
                 }
             }

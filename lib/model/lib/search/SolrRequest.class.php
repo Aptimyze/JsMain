@@ -307,7 +307,7 @@ class SolrRequest implements RequestHandleInterface
 							$valGroup = $this->searchParamtersObj->getOCCUPATION_GROUPING();
 							$solrFormatValueGroup = str_replace(","," ",$valGroup);
 							$solrFormatValueGroup = str_replace("','"," ",$solrFormatValueGroup);
-							$this->specialCases($field,$solrFormatValue,'occupation,occuapation_grouping','OCCUPATION','OCCUPATION_GROUPING',$solrFormatValueGroup);
+							$this->specialCases($field,$solrFormatValue,'occupation,occupation_grouping','OCCUPATION','OCCUPATION_GROUPING',$solrFormatValueGroup);
 						}
 						elseif(strstr($field,'EDU'))
 						{

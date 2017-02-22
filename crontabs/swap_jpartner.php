@@ -247,8 +247,7 @@ mysql_query($sql,$dbDDL) or die("18".mysql_error1($dbDDL));
 
 $currentTime = date("H");
 $currentDay = date("D");
-if((($currentDay=="Sun" && $currentDay=="Sat") && $currentTime > 16) || 
-        (($currentDay!="Sun" && $currentDay!="Sat") && !in_array($currentTime,array("10","11","12","13")))){
+if(!in_array($currentTime,array("10","11","12","13"))){
         
         if(in_array($currentTime,array(1,2,9,10,18,19)))
                 callDeleteCronBasedOnId('EXPORT','N');

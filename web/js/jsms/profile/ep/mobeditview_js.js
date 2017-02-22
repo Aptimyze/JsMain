@@ -7,6 +7,44 @@ var filterJson="";
 var albumPresent=0;
 var editWhatsNew = {'FamilyDetails':'5','Edu':'3','Occ':'4','AstroData':'2','FocusDpp':'7'};
 var bCallCreateHoroscope = false;
+var editSectionArr = new Array("Album","Details","Kundli","Education","Career","Family","Lifestyle","Contact","Dpp","FILTER");
+var editInArr = {};
+editInArr['Details'] = new Array("YOURINFO","basic","Ethnicity","Appearance","SpecialCases");
+editInArr['Kundli'] = new Array("HOROSCOPE_MATCH","RASHI","NAKSHATRA","MANGLIK");
+editInArr['Education'] = new Array("EDUCATION","CollegeDetails");
+editInArr['Career']= new Array("JOB_INFO","CarrerDetails","FuturePlans");
+editInArr['Family']=new Array("FAMILYINFO","Family","Parents","Siblings");
+editInArr['Lifestyle']=new Array("Habits","Assets","Skills","hobbies","Interests","Favourite");
+editInArr['Contact']=new Array("PROFILE_HANDLER_NAME","EMAIL","ALT_EMAIL","PHONE_MOB","ALT_MOBILE","PHONE_RES","TIME_TO_CALL_START");
+editInArr['Dpp']=new Array("SPOUSE","BasicDetails","Religion","EduAndOcc","Lifestyle");
+var editValArr={};
+editValArr["YOURINFO"]=new Array("YOURINFO");
+editValArr["basic"] = new Array("NAME","COUNTRY_RES","STATE_RES","CITY_RES","GENDER","DTOFBIRTH","MSTATUS");
+editValArr["Ethnicity"]=new Array("RELIGION","CASTE","DIOCESE","SUBCASTE","SECT","MTONGUE","NATIVE_COUNTRY","NATIVE_STATE","ANCESTRAL_ORIGIN","GOTHRA");
+editValArr["BeliefSystem"]=new Array("BAPTISED","READ_BIBLE","OFFER_TITHE","SPREADING_GOSPEL","ZARATHUSHTRI","PARENTS_ZARATHUSHTRI","AMRITDHARI","CUT_HAIR","TRIM_BEARD","WEAR_TURBAN","CLEAN_SHAVEN","MATHTHAB","NAMAZ","ZAKAT","FASTING","UMRAH_HAJJ","QURAN","SUNNAH_BEARD","SUNNAH_CAP","HIJAB","HIJAB_MARRIAGE","WORKING_MARRIAGE");
+editValArr["Appearance"]=new Array("HEIGHT","COMPLEXION","BTYPE","WEIGHT");
+editValArr["SpecialCases"]=new Array("HANDICAPPED","NATURE_HANDICAP","THALASSEMIA","HIV");
+editValArr["EDUCATION"]=new Array("EDUCATION");
+editValArr["CollegeDetails"]=new Array("EDU_LEVEL_NEW","DEGREE_PG","PG_COLLEGE","DEGREE_UG","COLLEGE","SCHOOL");
+//editValArr["Kundli"]=new Array("HOROSCOPE_MATCH","RASHI","NAKSHATRA","MANGLIK");
+editValArr["JOB_INFO"]=new Array("JOB_INFO");
+editValArr["CarrerDetails"]=new Array("COMPANY_NAME","OCCUPATION","INCOME");
+editValArr["FuturePlans"]=new Array("MARRIED_WORKING","GOING_ABROAD");
+editValArr["FAMILYINFO"]=new Array("FAMILYINFO");
+editValArr["Family"]=new Array("FAMILY_VALUES","FAMILY_TYPE","FAMILY_STATUS","PARENT_CITY_SAME");
+editValArr["Parents"]=new Array("FAMILY_BACK","MOTHER_OCC","FAMILY_INCOME");
+editValArr["Siblings"]=new Array("T_BROTHER","T_SISTER");
+editValArr["Habits"]=new Array("DIET","SMOKE","DRINK","OPEN_TO_PET");
+editValArr["Assets"]=new Array("OWN_HOUSE","HAVE_CAR");
+editValArr["Skills"]=new Array("HOBBIES_LANGUAGE","FAV_FOOD");
+editValArr["hobbies"]=new Array("HOBBIES_HOBBY");
+editValArr["Interests"]=new Array("HOBBIES_INTEREST");
+editValArr["Favourite"]=new Array("HOBBIES_MUSIC","HOBBIES_BOOK","HOBBIES_DRESS","FAV_MOVIE","HOBBIES_SPORTS","HOBBIES_CUISINE","FAV_BOOK","FAV_TVSHOW","FAV_VAC_DEST");
+editValArr["SPOUSE"]=new Array("SPOUSE");
+editValArr["BasicDetails"]=new Array("P_HEIGHT","P_AGE","P_MSTATUS","P_HAVECHILD","P_COUNTRY","P_CITY","P_MATCHCOUNT");
+editValArr["Religion"]=new Array("P_RELIGION","P_CASTE","P_SECT","P_MTONGUE","P_MANGLIK");
+editValArr["EduAndOcc"]=new Array("P_EDUCATION","P_OCCUPATION","P_INCOME_RS","P_INCOME_DOL");
+editValArr["Lifestyle"]=new Array("P_DIET","P_SMOKE","P_DRINK","P_COMPLEXION","P_BTYPE","P_CHALLENGED","P_NCHALLENGED");
  $("document").ready(function() {
 
  	getFieldsOnCal();
@@ -81,7 +119,6 @@ var mobEditPage=(function(){
 
 			changingEditData=ele.pageJson=result;
 			originalEditData=JSON.parse(JSON.stringify(changingEditData));
-			//console.log(changingEditData);
 			ele.sliderDiv=$( "#sw" ).html();
 			ele.ed_sliderDiv=$( "#ed_slider" ).html();
 			underScreenStr=$("#under_screening").html();
@@ -199,6 +236,8 @@ var mobEditPage=(function(){
 		$("#albumPage").remove();
 		$.each(this.pageJson, function(key, value)
 		{
+			if($.inArray(key,editSectionArr)>-1)
+			{
 			st++;
 			var sliderDiv=$( "#"+key+"EditSection" ).html();
 			var originalDiv=sliderDiv;
@@ -260,6 +299,8 @@ var mobEditPage=(function(){
 				if(value!=null)
 				$.each(value, function(k ,v)
 				{
+					if($.inArray(k,editInArr[key])>-1)
+					{
 					if(v.outerSectionKey!="NameoftheProfileCreator")
 					{
 					
@@ -349,6 +390,8 @@ var mobEditPage=(function(){
 						
 						$.each(v.OnClick, function(k1 ,v1)
 						{
+						if($.inArray(v1.key,editValArr[k])>-1)
+						{
 							var sectionArr={};
 							if(v1.label_val!="N_B")
 							{
@@ -395,6 +438,7 @@ var mobEditPage=(function(){
 									}
 								}
 							}
+						}
 						});
 							
 							sectionStr = sectionStr.replace(/,\ +$/, '');
@@ -412,11 +456,13 @@ var mobEditPage=(function(){
 					i=2;
 					sliderDiv=originalDiv;
   				  }
+				}
 				});
 				
 				if(st==1)
 					options.offsetTop=$("#"+key+"EditSection").offset().top;
 				$("#"+key+"EditSection").OnlyVertical(options);
+			}
 			}
 		});
 		
@@ -480,6 +526,13 @@ function formatJsonOutput(result)
         delete(result.resetCache);
         delete(result.flagForAppRatingControl);
 	delete(result.xmppLoginOn);
+	$.each(result, function(key, value)
+	{
+		if($.inArray(key,editSectionArr)<=-1)
+		{
+			delete(result[key]);
+		}
+	});
 	return result;
 }
 
