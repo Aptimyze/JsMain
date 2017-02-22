@@ -732,6 +732,8 @@ class commonActions extends sfActions
 			$this->showPhoto='1';
 		else
 			$this->showPhoto='0';
+
+        $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
         $this->setTemplate('CALJSMS');
 
     }
