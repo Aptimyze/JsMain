@@ -370,7 +370,7 @@ foreach($myDbarr as $key=>$value)
 	while($myrow=mysql_fetch_array($result))
 	{
 		if($myrow["SEEN"]!= 'Y')
-			$CONTACT_STATUS_FIELD['HOROSCOPE_REQUEST_NEW']=-1;
+			$CONTACT_STATUS_FIELD['HOROSCOPE_NEW']=-1;
 		$CONTACT_STATUS_FIELD['HOROSCOPE_REQUEST']=-1;
 		if(!in_array($myrow["PROFILEID"],$affectedId))
 		{	
