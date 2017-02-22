@@ -44,6 +44,10 @@ EOF;
 
 		if($arguments["totalInstance"]<=$arguments["currentInstance"])
 			die("Invalid Arguments");
+			
+		 if(CommonUtility::hideFeaturesForUptime())
+             successfullDie();
+
 
 		$module = IMAGE_SERVER_MODULE_NAME_ENUM::getEnum($arguments["module"]);
 		if(!$module)

@@ -361,7 +361,7 @@ function register_user($post_values)	{
 	global $protect_obj;
 	$cookie=array();
 $now = date("Y-m-d G:i:s");
-$today=date("Y-m-d");
+$today=date("Y-m-d H:i:s");
 	                $date_of_birth = $post_values['year']."-".$post_values['month']."-".$post_values['day'];
                         $age = getAge($date_of_birth);
                         $religion_temp = explode("|X|",$post_values['religion']);
