@@ -154,19 +154,18 @@ class myjsActions extends sfActions
 				$profileInfo["COMPLETION"]=$completionObj->getProfileCompletionScore();
 				$profileInfo["INCOMPLETE"]=$completionObj->GetAPIResponse("MYJS");
 				
-				$profileInfo["PHOTO"] = NULL;
-				if(MobileCommon::isApp() != "I"||$loggedInProfileObj->getHAVEPHOTO()!="U")
-					$profileInfo["PHOTO"] = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
+				$selfPhoto = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
+				$profileInfo["PHOTO"] = $selfPhoto ? $selfPhoto : NULL;
 				$appOrMob = MobileCommon::isApp()? MobileCommon::isApp():'M'; 				
 				$myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid)."_".$appOrMob;
 				$appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
-
 				if(!$appV1DisplayJson)
 				{
                     $displayObj= $profileCommunication->getDisplay($module,$loggedInProfileObj);
-				$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj,$profileInfo);
-				JsMemcache::getInstance()->set($myjsCacheKey,$appV1DisplayJson);
+					$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj,$profileInfo);
+					JsMemcache::getInstance()->set($myjsCacheKey,$appV1DisplayJson);
 				}
+				
 			}
 			$appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
 
@@ -294,8 +293,11 @@ class myjsActions extends sfActions
 			$pictureServiceObj=new PictureService($this->loginProfile);
 			$profilePicObj = $pictureServiceObj->getProfilePic();
 			if($profilePicObj){
-
-			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$this->gender);
+			if($this->profilePic=='U')	
+				$picUrl = $profilePicObj->getThumbail96Url();
+			else
+				$picUrl = $profilePicObj->getProfilePic120Url();
+			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$this->gender);
             if($photoArray[label] != '')
                    $this->photoUrl = PictureFunctions::getNoPhotoJSMS($this->gender,'ProfilePic120Url');
             else
