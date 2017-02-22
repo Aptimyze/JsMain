@@ -129,7 +129,7 @@ class page1Action extends sfAction {
         $this->assignGroupName();
         $this->affiliateid=$request->getParameter('affiliateid');
         $now = date("Y-m-d G:i:s");
-        $today = date("Y-m-d");
+        $today = CommonUtility::makeTime(date("Y-m-d"));
         
         //Get CustomReg Param
         $customReg = $request->getParameter("customReg");

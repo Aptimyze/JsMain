@@ -241,6 +241,15 @@ function formatTrackingString($trackingString)
 			case JSTrackingPageType::INTEREST_EXPIRING_JSMS:
 				$formattedString.="INTEREST_EXPIRING_JSMS";
 				break;
+
+			case JSTrackingPageType::INTEREST_EXPIRING_IOS:
+				$formattedString.="INTEREST_EXPIRING_IOS";
+				break;
+
+			case JSTrackingPageType::INTEREST_EXPIRING_MYJS_IOS:
+				$formattedString.="INTEREST_EXPIRING_MYJS_IOS";
+				break;
+
 			case JSTrackingPageType::INTEREST_ARCHIVED_IOS:
 				$formattedString.="INTEREST_ARCHIVED_IOS";
 				break;
@@ -256,6 +265,12 @@ function formatTrackingString($trackingString)
 			case JSTrackingPageType::INTEREST_ARCHIVED_ANDROID:
 				$formattedString.="INTEREST_ARCHIVED_ANDROID";
 				break;
+                        case JSTrackingPageType::PENDING_EOI_ANDROID:
+                                $formattedString.="PENDING_EOI_ANDROID";
+                                break;
+                        case JSTrackingPageType::FILTERED_EOI_ANDROID:
+                                $formattedString.="FILTERED_EOI_ANDROID";
+                                break;
 		}
 	}
 	return $formattedString;

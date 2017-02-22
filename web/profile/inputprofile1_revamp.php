@@ -266,7 +266,7 @@ if($Submit)
 					$showMessenger="Y";
 
 		
-				$today=date("Y-m-d");
+				$today= CommonUtility::makeTime(date("Y-m-d"));
 				
 				if((substr($tieup_source,0,2))=='af' || $hit_source=='O' || $email_validation=='Y')
 				{

@@ -963,7 +963,9 @@ var buttonClicked=0;
         }
        return true;
      
-    }    function criticalLayerButtonsAction(clickAction,button) {
+    }    
+    
+function criticalLayerButtonsAction(clickAction,button) {
 
 
                 if(buttonClicked)return;    
@@ -988,6 +990,8 @@ var buttonClicked=0;
                         namePrivacy = $('input[ID="CALPrivacyShow"]').is(':checked') ? 'Y' : 'N';
                         
                       }
+
+
                     Set_Cookie('calShown', 1, 1200);
                     if(clickAction=="close" || clickAction=='RCB') {
                     var URL="/common/criticalActionLayerTracking";
@@ -996,8 +1000,8 @@ var buttonClicked=0;
                         type: "POST",
                         data: {"button":button,"layerId":layerId,"namePrivacy":namePrivacy,"newNameOfUser":newNameOfUser},
                     });
-
-                    closeCurrentLayerCommon();
+                    if(layerId!=13 || button!='B1')
+                        closeCurrentLayerCommon();
                     if(clickAction=='RCB')
                     {
                         toggleRequestCallBackOverlay(1, 'RCB_CAL');
@@ -1207,3 +1211,4 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
 				}
 			});
     }
+
