@@ -678,7 +678,7 @@ class LoggingManager
 	 */
 	private function getlogMappingName($moduleName)
 	{
-		if(in_array($moduleName, LoggingEnums::$ModuleMapping))
+		if(in_array($moduleName, LoggingEnums::$ModuleMapping, true))
 		{
 			$mappingName = LoggingEnums::$MappingNames[ LoggingEnums::$ModuleMapping[$moduleName] ];
 		}
