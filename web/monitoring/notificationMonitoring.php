@@ -11,18 +11,10 @@ while(1){
     foreach($urlArray as $kk => $vv){
         $status1 = sendPresenceRequest($vv);
         if(!array_key_exists("notifications", $status1)){
-            sleep(30);
-            $status2 = sendPresenceRequest($vv);
-            if(!array_key_exists("notifications", $status2)){
-                sleep(30);
-                $status3 = sendPresenceRequest($vv);
-                if(!array_key_exists("notifications", $status3)){
-                    foreach($mobileNumberArr as $k=>$v){
-                        sms($v);
-                        mail ("vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitishpost@gmail.com","Error in notification api","Please check");
-                        //mail ("nitishpost@gmail.com","Error in notification api","Please check");
-                    }
-                }
+            foreach($mobileNumberArr as $k=>$v){
+                sms($v);
+                mail ("vibhor.garg@jeevansathi.com,manoj.rana@naukri.com,nitishpost@gmail.com","Error in notification api","Please check");
+                //mail ("nitishpost@gmail.com","Error in notification api","Please check");
             }
         }
     }

@@ -268,7 +268,8 @@ class ProfileCacheConstants
                                         "FAV_TVSHOW",
                                         "FAV_FOOD",
                                         "FAV_BOOK",
-                                        "FAV_VAC_DEST"
+                                        "FAV_VAC_DEST",
+                                        "YOUR_INFO_OLD",
 
                                     );
     
@@ -552,5 +553,9 @@ class ProfileCacheConstants
                                         "FAV_VAC_DEST"
                                     );
 
+    public static $arrOldYourInfo = array(
+                                   'PROFILEID',
+                                   "YOUR_INFO_OLD",
+                                   );
 }
 ?>
