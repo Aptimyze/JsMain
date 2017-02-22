@@ -534,5 +534,24 @@ class NotificationDataPool
             }
         }
     }
+    
+    public function getNotificationServiceData(){
+        $notificationServiceUrl = "192.168.120.239:8490/communication/v1/notification";
+        $headerArr[] = "JB-Internal: true";
+        $response = CommonUtility::sendCurlPostRequest($notificationServiceUrl,'','',$headerArr);
+        $modifiedData = json_decode($response,true);
+        return $modifiedData;
+    }
+    
+    public function sendChatNotification($notificationData){
+        print_r($notificationData);
+        if(is_array($notificationData)){
+            $chatMsgInstantNotObj = new InstantAppNotification("CHAT_MSG");
+            foreach($notificationData as $key => $val){
+                
+            }
+            unset($chatMsgInstantNotObj);
+        }
+    }
 }
 ?>
