@@ -769,6 +769,10 @@ class FieldForm extends sfForm
 		{
 			foreach($incompleteArr as $key=>$val)
 			{
+                                if($val["key"] == "STATE_RES"){
+                                    unset($incompleteArr[$key]);
+                                    continue;
+                                }
 				if($val[incomplete]=="Y")
 				{
 					$incompKeyArr[]=$val[key];

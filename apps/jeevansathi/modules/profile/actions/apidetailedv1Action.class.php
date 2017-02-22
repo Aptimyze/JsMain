@@ -286,7 +286,7 @@ class apidetailedv1Action extends sfAction
                 }
 
 		$out['show_gunascore'] = is_null($out['page_info']['guna_api_parmas'])? "n" :"y";
-		if (JsConstants::$hideUnimportantFeatureAtPeakLoad == 1) {
+		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
 			$out['show_gunascore'] = "n";
 		}
 		return $out;

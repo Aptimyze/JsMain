@@ -78,9 +78,18 @@ if(!function_exists('connect_slave81'))
                 return $db;
         }
 }
+
 function connect_dnc()
 {
         $db_dnc = mysql_connect(MysqlDbConstants::$dnc[HOST].":".MysqlDbConstants::$dnc[PORT],MysqlDbConstants::$dnc[USER],MysqlDbConstants::$dnc[PASS]) or die("Unable to connect to dnc server");
         return $db_dnc;
 }
+
+// crmSlave server
+function connect_crmSlave()
+{
+	$crm_slave = mysql_connect(MysqlDbConstants::$crmSlave[HOST].":".MysqlDbConstants::$crmSlave[PORT],MysqlDbConstants::$crmSlave[USER],MysqlDbConstants::$crmSlave[PASS]) or die("Unable to connect to crmSlave server");
+        return $crm_slave;
+}
+
 ?>

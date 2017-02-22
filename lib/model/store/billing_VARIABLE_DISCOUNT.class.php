@@ -349,5 +349,19 @@ class billing_VARIABLE_DISCOUNT extends TABLE{
             throw new jsException($ex);
         }
     }
+    public function getVDProfilesExpiringToday($todayDate){
+        try{
+            $sql = "SELECT * FROM billing.VARIABLE_DISCOUNT WHERE EDATE=:EDATE";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":EDATE",$todayDate,PDO::PARAM_STR);
+            $prep->execute();
+            while($result = $prep->fetch(PDO::FETCH_ASSOC)){
+                $dataArr[] = $result;
+            }
+            return $dataArr;
+        } catch (Exception $ex) {
+            throw new jsException($ex);
+        }
+    }
 }
 ?>
