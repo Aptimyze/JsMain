@@ -830,7 +830,9 @@ class MembershipHandler
         if ($profileid == 12970375 || $testDol == true) {
             $currency = 'DOL';
         }
-
+        if($_COOKIE['jeevansathi_hindi_site'] == 'Y'){ 
+            $currency = 'RS';
+        }
         return array(
             $ipAddress,
             $currency,
