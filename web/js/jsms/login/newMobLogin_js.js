@@ -331,7 +331,7 @@ function loadCSS(href) {
      });
 }
 
-function translateSiteHomePage(translateURL){
+function convertIntoHomePage(translateURL){
   newHref = translateURL+"?AUTHCHECKSUM="+readCookieHomePage("AUTHCHECKSUM");
   if(translateURL.indexOf('hindi')!=-1){
     createCookieHomePage("jeevansathi_hindi_site","Y",100,".jeevansathi.com");
