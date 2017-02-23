@@ -24,7 +24,9 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
+		date_default_timezone_set('Asia/Calcutta');
+
+		// include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
 
 		$currdate = date('Y.m.d');
