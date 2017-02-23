@@ -830,15 +830,8 @@ class MembershipHandler
         if ($profileid == 12970375 || $testDol == true) {
             $currency = 'DOL';
         }
-        if ($profileid == 11238186){
-            error_log("ankita http_host- ".$_SERVER['HTTP_HOST']);
-            if($_SERVER['HTTP_HOST'] == "hindi.jeevansathi.com"){
-                error_log("ankita matched http_host...");  
-            }
-            if($_COOKIE['jeevansathi_hindi_site'] == 'Y'){
-                error_log("ankita matched cookie for hindi..."); 
-                $currency = 'RS';
-            }
+        if($_COOKIE['jeevansathi_hindi_site'] == 'Y'){ 
+            $currency = 'RS';
         }
         return array(
             $ipAddress,
