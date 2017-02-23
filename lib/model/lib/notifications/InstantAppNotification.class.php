@@ -16,7 +16,7 @@ class InstantAppNotification
 	$valueArray['STATUS']="Y";
 	$valueArray['NOTIFICATION_KEY']=$this->notificationKey;
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
-	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING');
+	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG');
   }
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='')
   {

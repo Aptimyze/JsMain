@@ -175,6 +175,7 @@ public function microtime_float()
 		  case "EOI":
 		  case "EOI_REMINDER":
 		  case "MESSAGE_RECEIVED":
+          case "CHAT_MSG":
 			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
 			$poolObj = new NotificationDataPool();
 			$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message);
@@ -524,7 +525,7 @@ public function microtime_float()
 			foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['VARIABLE'] as $k=>$tokenVariable)
 			$variableValues[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 		}
-	  if($notificationKey =='VD'){	
+	  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG"){	
           	foreach($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['VARIABLE'] as $k=>$tokenVariable)
                 	$variableValuesTitle[$tokenVariable] = $this->getVariableValue($tokenVariable, $dataPerNotification);
 	  }	
@@ -535,7 +536,7 @@ public function microtime_float()
 		  else
 			$finalNotificationMessage = $this->mergeNotification($variableValues, $notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP']['STATIC']);
 
-		  if($notificationKey =='VD'){	
+		  if($notificationKey =='VD' || $notificationKey == "CHAT_MSG"){	
                   	if($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['flagPosition']=="STATIC")
                         	$finalNotificationMessageTitle = $this->mergeNotification($notifications[$notificationKey][$notificationId]['NOTIFICATION_BREAKUP_TITLE']['STATIC'],$variableValuesTitle);
                   	else

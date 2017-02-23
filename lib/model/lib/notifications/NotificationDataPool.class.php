@@ -550,7 +550,7 @@ class NotificationDataPool
         if(is_array($notificationData)){
             $chatMsgInstantNotObj = new InstantAppNotification("CHAT_MSG");
             foreach($notificationData as $key => $val){
-                
+                $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"]);
             }
             unset($chatMsgInstantNotObj);
         }
