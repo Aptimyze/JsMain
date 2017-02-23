@@ -18,7 +18,7 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // Server at which ElasticSearch and kibana is running
-    // $elkServer = '10.10.18.66';
+    $elkServer = '10.10.18.66';
     $elkPort = '9200';
     $indexDate = date('Y.m.d', strtotime( '-32 days' ));
     $indexName = "filebeat-$indexDate";
