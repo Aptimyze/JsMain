@@ -171,8 +171,9 @@ class notificationActions extends sfActions
 		$alarmTime = $alarmTimeObj->getData($profileid);
 		$alarmDate = alarmTimeManager::getNextDate($alarmTime);*/
 	}
+	$alarmDate =$newTime ='2018-01-01 '.date("H:i:s");
 	$notificationData['notifications'] = $notifications;
-	$notificationData['alarmTime']='';
+	$notificationData['alarmTime']=$alarmDate;
 
 	$osType =MobileCommon::isApp();
 	$status ='D';
