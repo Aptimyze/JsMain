@@ -132,6 +132,7 @@ class detailedAction extends sfAction
         $ceAction = $request->getParameter('performAction');
         if($ceAction=='accept')
         {
+         $request->setParameter("internal", 1);   
          ProfileCommon::performContactEngineAction($request,'VDP');
         }
          $this->showContactEngine();

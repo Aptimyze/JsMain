@@ -62,6 +62,7 @@ class postAcceptv2Action extends sfAction
 				$apiObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
 			$apiObj->generateResponse();
 		}
+                if($request->getParameter("internal") == 1)
                 return sfView::NONE;
 		die;
 	}
