@@ -23,14 +23,16 @@ var lavesh, temp , bad=0;
 var listServers;
 var test; 
 function display(){
-	$('#err').html("");
-	$('#info').html("");
+	$('#sinfo').html("");
 	var html;
 	$.each(listServers, function (k,v) {
 		html = "<b>"+v.whoami+"</b><br>";
 		$.each(v, function (k1,v1) {
-			if(k1!='whoami'){
-				html = html+k1+" : "+v1+"<br>";
+			if(k1!='whoami' && k1!='isloadThres'){
+				var alert='>';
+				if(k1=="load" && v.isloadThres==true)
+					alert = " style=color:red;>";	
+				html = html+"<span"+alert+k1+" : "+v1+"</span><br>";
 			}
 		});
 		html = html+"<br>";
@@ -63,15 +65,18 @@ $('#button').click(function() {
 				if(whoami=='127.0.0.1')
 					whoami = "172.10.18.64";
 				data.whoami = whoami
+				data.isloadThres = false;
 			}
 			else if(i=='load' || i=='Memory_Physical' || i=="Memory_Swap" || i=="Memory_cached"){
 				temp='';
 				$.each(jsondata, function (k,v) {
 					temp = temp+k+"--"+v+" , ";	
+					if(i=='load' && serverInfo.loadThreshold < v){
+						console.log(serverInfo.loadThreshold+"---"+v);
+						data.isloadThres = true;	
+					}
 				});
 				data[i] = temp;
-console.log(serverInfo.loadThreshold);
-console.log(serverInfo.memoryThreshold);
 			}
 		});
 		listServers.push(data);
