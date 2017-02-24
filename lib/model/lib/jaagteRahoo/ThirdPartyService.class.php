@@ -31,11 +31,11 @@ class ThirdPartyService
 	
 	public static function checkGuna()
 	{
-		$startTime = microtime();
+		$startTime = microtime(true);
 		$url= ThirdPartyConfig::getValue("GUNA","URL");
 		$timeout = ThirdPartyConfig::getValue("THRESHHOLDS","TIMEOUT","GUNA");
 		$res =CommonUtility::sendCurlGetRequest($url,$timeout);
-		$timeConsumed = microtime()-$startTime;
+		$timeConsumed = microtime(true)-$startTime;
 		$guna["status"] = ($res!="")?"Success":"Fail";
 		$guna["responseTime"] = $timeConsumed;
 		return $guna;
@@ -43,11 +43,11 @@ class ThirdPartyService
 	
 	public static function checkRedis()
 	{
-		$startTime = microtime();
+		$startTime = microtime(true);
 		$cachObj = new JsMemcache();
 		$cachObj->set("JaagteRaho",array("25315231","dsdhdfjshf","yerwyrrw"));
 		$value = $cachObj->get("JaagteRaho");
-		$timeConsumed = microtime()-$startTime;
+		$timeConsumed = microtime(true)-$startTime;
 		$redis["status"] = (is_array($value))?"Success":"Fail";
 		$redis["responseTime"] = $timeConsumed;
 		return $redis;
@@ -55,10 +55,10 @@ class ThirdPartyService
 	
 	public static function checkRabbitMq()
 	{
-		$startTime = microtime();
+		$startTime = microtime(true);
 		$producerObj=new Producer();
 		$rabbitmq["status"] = ($producerObj->getRabbitMQServerConnected())?"Success":"Fail";
-		$timeConsumed = microtime()-$startTime;
+		$timeConsumed = microtime(true)-$startTime;
 		$rabbitmq["responseTime"] = $timeConsumed;
 		return $rabbitmq;
 	}
@@ -67,18 +67,19 @@ class ThirdPartyService
 	{
 		if($pid)
 		{
-	        $WebAuthentication = new WebAuthentication;
-	        $x = $WebAuthentication->setPaymentGatewayAuthchecksum($pid);
-	        $auth = $x["AUTHCHECKSUM"];
-	        $header = array("JB-Profile-Identifier:".$auth);
-	    }
-        $start_tm=microtime(true);
-        $response = CommonUtility::sendCurlPostRequest($url,"","",$header);
-        $timeConsumed=microtime(true)-$start_tm;
-        $data = (Array)json_decode($response);
-        $service["status"] = ($data["header"]->status==200)?"Success":"Fail";
-        $service["responseTime"] = $timeConsumed;
-        return $service;
+			$WebAuthentication = new WebAuthentication;
+			$x = $WebAuthentication->setPaymentGatewayAuthchecksum($pid);
+			$auth = $x["AUTHCHECKSUM"];
+			$header = array("JB-Profile-Identifier:".$auth);
+		}
+
+		$start_tm=microtime(true);
+		$response = CommonUtility::sendCurlPostRequest($url,"","",$header);
+		$timeConsumed=microtime(true)-$start_tm;
+		$data = (Array)json_decode($response);
+		$service["status"] = ($data["header"]->status==200)?"Success":"Fail";
+		$service["responseTime"] = $timeConsumed;
+		return $service;
 	}
 	
 	public static function callJavaServices()
@@ -97,6 +98,12 @@ class ThirdPartyService
 			$Services[$k] = self::javaService($v["url"],$pid);
 		}
 		return $Services;
+	}
+
+	function microtime_float()
+	{
+	    list($usec, $sec) = explode(" ", microtime());
+	    return ((float)$usec + (float)$sec);
 	}
 	
 }

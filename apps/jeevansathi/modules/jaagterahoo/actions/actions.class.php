@@ -22,10 +22,24 @@ class jaagterahooActions extends sfActions
   public function executeDuniyaWalo(sfWebRequest $request)
   {
 	$this->serverHealthConfig = json_encode(ServerHealthEnums::$config);
+
 	$HaProxy = new HaProxy();
 	$this->marGayeServers =  $HaProxy->validate();
 
 	$this->thirdPartyCheckSolr = ThirdPartyService::checkSolr();
+	$this->checkGuna = ThirdPartyService::checkGuna();
+	$this->checkRedis = ThirdPartyService::checkRedis();
+	$this->checkRabbit = ThirdPartyService::checkRabbitMq();
+
+	$url = JsConstants::$chatListingWebServiceUrl["dpp"]."?type=CHATDPP";
+	$this->checkDpp = ThirdPartyService::javaService($url,9061321);
+
+	$url = "http://10.10.18.67:8290/profile/v1/presence?pfids=9061321";
+	$this->checkPresence67 = ThirdPartyService::javaService($url);
+
+	$url = "http://10.10.18.72:8290/profile/v1/presence?pfids=9061321";
+	$this->checkPresence72 = ThirdPartyService::javaService($url);
+
 	$serverStatusObj = new ServerStatus;
 	$this->serverstatus = $serverStatusObj->getStatus();
 	$mysqlStatusObj = new MysqlStatus;

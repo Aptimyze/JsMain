@@ -7,7 +7,6 @@
 <body>
 <input type="button" id="button" value="send" />
 
-
 <div>=== Mysql Status === </div>
 ~foreach from=$mysqlStatus item=v key=k`
         <div ~if $v['FLAG'] eq 0`style="color:red;"~/if`>~$k` connections: ~$v['TOTAL_COUNT']`</div>
@@ -31,6 +30,13 @@
 		~/if`
 ~/foreach`
 
+<br><div ~if $checkGuna.status eq 'Fail'` style="color:red"~/if`>=== Guna Score Response Time === : ~$checkGuna.responseTime` Seconds</div>
+<br><div ~if $checkRedis.status eq 'Fail'` style="color:red"~/if`>=== Redis Response Time === : ~$checkRedis.responseTime` Seconds</div>
+<br><div ~if $checkRabbit.status eq 'Fail'` style="color:red"~/if`>=== Rabbit Response Time === : ~$checkRabbit.responseTime` Seconds</div>
+<br><div ~if $checkDpp.status eq 'Fail'` style="color:red"~/if`>=== Dpp Response Time === : ~$checkDpp.responseTime` Seconds</div>
+<br><div ~if $checkDpp.status eq 'Fail'` style="color:red"~/if`>=== Dpp Response Time === : ~$checkDpp.responseTime` Seconds</div>
+<br><div ~if $checkPresence67.status eq 'Fail'` style="color:red"~/if`>=== Presence67 Response Time === : ~$checkPresence67.responseTime` Seconds</div>
+<br><div ~if $checkPresence72.status eq 'Fail'` style="color:red"~/if`>=== Presence72 Response Time === : ~$checkPresence72.responseTime` Seconds</div>
 
 <br><div>=== Server Status === </div>
 ~foreach from=$serverstatus item=v key=k`
