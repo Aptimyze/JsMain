@@ -22,5 +22,7 @@ class jaagterahooActions extends sfActions
   public function executeDuniyaWalo(sfWebRequest $request)
   {
 	$this->serverHealthConfig = json_encode(ServerHealthEnums::$config);
+	$HaProxy = new HaProxy();
+	$this->marGayeServers =  $HaProxy->validate();
   }
 }

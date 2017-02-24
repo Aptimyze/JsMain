@@ -7,6 +7,11 @@
 <body>
 <input type="button" id="button" value="send" />
 
+<div>=== Ha Proxy Health === </div>
+~foreach from=$marGayeServers item=v key=k`
+	<div style="color:red;font-size:20px;">~$v` mar gaya</div>
+~/foreach`
+
 <br><br>
 <div>=== Server Info === </div><div id="sinfo"> </div><br>
 
