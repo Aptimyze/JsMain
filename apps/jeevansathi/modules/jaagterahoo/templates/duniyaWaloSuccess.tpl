@@ -12,6 +12,19 @@
 	<div style="color:red;font-size:20px;">~$v` mar gaya</div>
 ~/foreach`
 
+<br><div>=== Solr Health === </div>
+~foreach from=$thirdPartyCheckSolr item=v key=k`
+		~if $v['status'] eq 'Fail'`
+			<span style="color:red">
+		~/if`
+		~$k` Response Time : ~$v['responseTime']` ms.
+		<br>
+		~if $v['status'] eq 'Fail'`
+			</span>
+		~/if`
+~/foreach`
+
+
 <br><div>=== Server Status === </div>
 ~foreach from=$serverstatus item=v key=k`
 		<div>idle connection on server ~$k` are ~$v["idle"]` 

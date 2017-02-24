@@ -12,15 +12,19 @@ class ThirdPartyService
 	
 	public static function checkSolr()
 	{
+		$today    = date("Y-m-d");
+		$hh = date("h:m:s");
+		$yesterday = date("Y-m-d",strtotime("-3 day",strtotime($today)));
+		$daily = "&fq=ENTRY_DT:[".$yesterday."T00:00:00Z%20".$today."T".$hh."Z]";
 		$ips = ThirdPartyConfig::getValue("SOLR","IP");
 		$url= ThirdPartyConfig::getValue("SOLR","URL");
 		foreach($ips as $k=>$v){
-			$hitUrl=$v.$url;
+			$hitUrl=$v.$url.$daily;
 			$res = CommonUtility::sendCurlPostRequest($hitUrl,'nouse=1',"100");
 			$res = json_decode($res,true);
 			$status = $res["responseHeader"]["status"];
-	        $solr[$k]["status"]= ($status==0)?"Success":"Fail";
-	        $solr[$k]["responseTime"] = $res["responseHeader"]["QTime"];
+		        $solr[$k]["status"]= ($status===0)?"Success":"Fail";
+		        $solr[$k]["responseTime"] = $res["responseHeader"]["QTime"];
 		}
 		return $solr;
 	}
