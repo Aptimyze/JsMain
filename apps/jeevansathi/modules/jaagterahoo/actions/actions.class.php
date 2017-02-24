@@ -25,6 +25,7 @@ class jaagterahooActions extends sfActions
 	$HaProxy = new HaProxy();
 	$this->marGayeServers =  $HaProxy->validate();
 	$this->thirdPartyCheckSolr = ThirdPartyService::checkSolr();
-	
+	$serverStatusObj = new ServerStatus;
+	$this->serverstatus = $serverStatusObj->getStatus();
   }
 }
