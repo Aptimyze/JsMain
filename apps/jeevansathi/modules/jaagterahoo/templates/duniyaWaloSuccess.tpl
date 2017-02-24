@@ -7,6 +7,13 @@
 <body>
 <input type="button" id="button" value="send" />
 
+
+<div>=== Mysql Status === </div>
+~foreach from=$mysqlStatus item=v key=k`
+        <div ~if $v['FLAG'] eq 0`style="color:red;"~/if`>~$k` connections: ~$v['TOTAL_COUNT']`</div>
+~/foreach`
+<br>
+
 <div>=== Ha Proxy Health === </div>
 ~foreach from=$marGayeServers item=v key=k`
 	<div style="color:red;font-size:20px;">~$v` mar gaya</div>
@@ -41,6 +48,24 @@
 <br><br>
 <div>=== Server Info === </div><div id="sinfo"> </div><br>
 
+<br>
+<div>=== Mysql Status Detail=== </div>
+<br>
+~foreach from=$mysqlStatus item=v key=k`
+        <div ~if $v['FLAG'] eq 0`style="color:red;"~/if`>
+		<div><b>~$k`</b></div>
+<br>
+		<span>Total ~$v['TOTAL_COUNT']`</span>
+		<span> Sleep  ~$v['SLEEP_COUNT']`</span>
+		<div> Queries</div>
+		~foreach from=$v['QUERIES'] item=y key=x`
+			<span> ~$y`</span> 
+		~/foreach`	
+	 </div>
+<br>
+<br>
+~/foreach`
+<br>
 </body>
 
 <script>

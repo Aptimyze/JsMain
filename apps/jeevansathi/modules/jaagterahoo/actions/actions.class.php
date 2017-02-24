@@ -28,5 +28,7 @@ class jaagterahooActions extends sfActions
 	$this->thirdPartyCheckSolr = ThirdPartyService::checkSolr();
 	$serverStatusObj = new ServerStatus;
 	$this->serverstatus = $serverStatusObj->getStatus();
+	$mysqlStatusObj = new MysqlStatus;
+	$this->mysqlStatus = $mysqlStatusObj->getStatus();
   }
 }
