@@ -24,5 +24,7 @@ class jaagterahooActions extends sfActions
 	$this->serverHealthConfig = json_encode(ServerHealthEnums::$config);
 	$HaProxy = new HaProxy();
 	$this->marGayeServers =  $HaProxy->validate();
+	$this->thirdPartyCheckSolr = ThirdPartyService::checkSolr();
+	
   }
 }
