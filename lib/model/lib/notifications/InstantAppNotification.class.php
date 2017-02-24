@@ -16,10 +16,20 @@ class InstantAppNotification
 	$valueArray['STATUS']="Y";
 	$valueArray['NOTIFICATION_KEY']=$this->notificationKey;
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
-	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING');
+	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG');
   }
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='')
   {
+    if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4){
+        return;
+    }
+    $notSendObj = new NotificationSender;
+    $regIds = $notSendObj->getRegistrationIds($selfProfile, "ALL");
+    unset($notSendObj);
+    if(!is_array($regIds))
+        return;
+    unset($regIds);
+    
 	$notificationSentCount = $this->getNotificationSentCount($selfProfile);
 	$notificationlimit = $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey];
 	if(in_array($this->notificationKey, $this->unlimitedTimeCriteriaKeyArr) || $notificationlimit>$notificationSentCount)
@@ -38,7 +48,10 @@ class InstantAppNotification
 				$profileDetails[$selfProfile]['OS_TYPE']=$notificationData['OS_TYPE'];
 				$profileDetails[$selfProfile]['COLLAPSE_STATUS']=$notificationData['COLLAPSE_STATUS'];
 				$profileDetails[$selfProfile]['TTL']=$notificationData['TTL'];
-				$profileDetails[$selfProfile]['TITLE']=$notificationData['TITLE'];
+                if($notificationData['NOTIFICATION_KEY']=='CHAT_MSG')
+                    $profileDetails[$selfProfile]['TITLE']=$notificationData['NOTIFICATION_MESSAGE_TITLE'];
+                else
+                    $profileDetails[$selfProfile]['TITLE']=$notificationData['TITLE'];
 				$profileDetails[$selfProfile]['USERNAME']=$notificationData['SELF']['USERNAME'];
 				$profileDetails[$selfProfile]['MSG_ID']=$notificationData['MSG_ID'];
 

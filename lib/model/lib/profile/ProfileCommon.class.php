@@ -596,14 +596,16 @@ include_once(JsConstants::$docRoot."/commonFiles/jpartner_include.inc");
                                 if(MobileCommon::isDesktop())
 				{
 					$PHOTO = self::getProfilePhotoJspc($album[0]);
-          $szThumbnailURL = $album[0]->getThumbailUrl();
           
 				}
-				else if($mobile)
+				else if($mobile){
 					$PHOTO=$album[0]->getMobileAppPicUrl();
+                                }
 				else	
 					$PHOTO=$album[0]->getMobileAppPicUrl();
-					
+                                
+                                $szThumbnailURL = $album[0]->getThumbailUrl();
+                                
 				$ALBUM_CNT=count($album);
 			}		
 		}

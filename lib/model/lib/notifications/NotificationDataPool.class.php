@@ -514,6 +514,8 @@ class NotificationDataPool
                     }
                     $dataAccumulated[$counter]['COUNT'] = "SINGLE";
                     $counter++;
+                    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$k1);
+                    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$k1);
                     $matchOfDayMasterObj->insert($k1,$v1);
                 }
             }
@@ -532,6 +534,24 @@ class NotificationDataPool
                 print_r($val);
                 print_r("\n");
             }
+        }
+    }
+    
+    public function getNotificationServiceData(){
+        $notificationServiceUrl = "192.168.120.239:8490/communication/v1/notification";
+        $headerArr[] = "JB-Internal: true";
+        $response = CommonUtility::sendCurlPostRequest($notificationServiceUrl,'','',$headerArr);
+        $modifiedData = json_decode($response,true);
+        return $modifiedData;
+    }
+    
+    public function sendChatNotification($notificationData){
+        if(is_array($notificationData)){
+            $chatMsgInstantNotObj = new InstantAppNotification("CHAT_MSG");
+            foreach($notificationData as $key => $val){
+                    $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"]);
+            }
+            unset($chatMsgInstantNotObj);
         }
     }
 }

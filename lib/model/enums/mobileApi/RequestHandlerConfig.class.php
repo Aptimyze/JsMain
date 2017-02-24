@@ -27,7 +27,8 @@ class RequestHandlerConfig
 			"saveDpp" => array("v1" => "saveDppV1", "v2" => "", "v3" => "saveDppV1"),
 			"gunaScore" => array("v1" => "getGunaScoreV1", "v2" => "", "v3" => "getGunaScoreV1")),
 		"myjs" => array(
-			"perform" => array("v1" => "performV1", "v2" => "", "v3" => "performV1")),
+			"perform" => array("v1" => "performV1", "v2" => "", "v3" => "performV1"),
+                "closematchOfDay"=>array("v1"=>"closematchOfDayV1")),
 		"faq" => array(
 			"feedbackAbuse" => array("v1" => "ApiFeedbackV1", "v2" => "", "v3" => "ApiFeedbackV1")),
 		"contactus" => array(
@@ -162,14 +163,12 @@ class RequestHandlerConfig
 			"notificationSubscriptionStatus" => array("v1" => "N", "v3" => "N")
 		),
 		"profile" => array("gunascore" => array("v1" => "N", "v2" => "N", "v3" => "N"),
-		),
-		"register" => array("staticTablesData" => array("v1" => "N", "v2" => "N", "v3" => "N"),
-		),
-		"api" => array("versionupgrade" => array("v1" => "N", "v2" => "N", "v3" => "N"),
-			"hamburgerDetails" => array("v1" => "N", "v2" => "N", "v3" => "N"),
+		),		
+ 		"register" => array("staticTablesData" => array("v1" => "N", "v2" => "N", "v3" => "N"),
+ 		),
+ 		"api" => array("versionupgrade" => array("v1" => "N", "v2" => "N", "v3" => "N"),
+ 			"hamburgerDetails" => array("v1" => "N", "v2" => "N", "v3" => "N"),
 		),
 	);
 
 }
-
-?>

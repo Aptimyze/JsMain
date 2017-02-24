@@ -56,7 +56,7 @@
     ~if $loggedIn`
     <div class="pt50">
       <div>
-        <a href="/P/logout.php">
+        <a href="/P/logout.php" onclick="onLogout();">
           <i class="mainsp set_logout"></i>
           <div class="f14">Logout</div>
         </a>
@@ -68,5 +68,13 @@
 </div>
 <script>
     var status = "~$notificationStatus`";
+    function onLogout(){
+      try{
+        sessionStorage.removeItem('myjsTime');
+        sessionStorage.removeItem('myjsHtml');
+      } catch(e) {
+        //console.log(e.stack);
+      }
+    }
     //console.log(status);
 </script>
