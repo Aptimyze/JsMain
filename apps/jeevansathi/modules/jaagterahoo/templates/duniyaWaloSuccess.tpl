@@ -8,50 +8,44 @@
 <input type="button" id="button" value="send" />
 
 <br><br>
-<div>=== Error === </div><div id="err"> </div><br>
-<div>=== Info === </div><div id="info"> </div><br>
+<div>=== Server Info === </div><div id="sinfo"> </div><br>
 
 </body>
 
 <script>
 var lavesh, temp , bad=0;
-var loadGoodArray = {}, loadBadArray= {} , badServers = [] , loadServers = {} , memoryPhysical = {};
-
+var listServers;
+var test; 
 function display(){
 	$('#err').html("");
 	$('#info').html("");
-	$.each(loadServers, function (k,v) {
-		if($.inArray(k,badServers)){
-			$('#err').append("<div style='color:red'> Load on Server : "+k+" is "+v);
-		}
-		else{
-			$('#info').append("<div> Load on Server : "+k+" is "+v);
-		}
-	});
-	$.each(memoryPhysical, function (k,v) {
-		if($.inArray(k,badServers)){
-			$('#err').append("<div style='color:red'> Memory on Server : "+k+" is "+v);
-		}
-		else{
-			$('#info').append("<div> Memory on Server : "+k+" is "+v);
-		}
+	var html;
+	$.each(listServers, function (k,v) {
+		html = "<b>"+v.whoami+"</b><br>";
+		$.each(v, function (k1,v1) {
+			if(k1!='whoami'){
+				html = html+k1+" : "+v1+"<br>";
+			}
+		});
+		html = html+"<br>";
+		console.log(html);
+		$('#sinfo').append(html);
 	});
 }
 
 $('#button').click(function() {
-    loadGoodArray = {}, loadBadArray= {}; badServers = [] , loadServers = {} ; memoryPhysical = {};
+    listServers = [];
     var requestCallback = new MyRequestsCompleted({
         numRequest: 3,
         singleCallback: function(){
-            //alert( "I'm the callback");
         }
     });
 
-    for(i=0;i<2;i++)
-{
-	if(i==0)
+    for(ii=0;ii<2;ii++)
+    {
+	if(ii==0)
 		url = "http://ser2.jeevansathi.com/load.php";
-	else if(i==1)
+	else if(ii==1)
 		url = "http://staging.jeevansathi.com/load.php";
     $.ajax({
         url: url,
@@ -59,59 +53,32 @@ $('#button').click(function() {
             requestCallback.requestComplete(true);
 		var parsed = $.parseJSON(data);
 		var whoami;
+	        var data = {};
+
 		$.each(parsed, function (i, jsondata) {
-			//console.log(i+"-->>"+jsondata);
 			if(i=='whoami'){
 				whoami = jsondata;
 				if(whoami=='127.0.0.1')
 					whoami = "172.10.18.64";
+				data.whoami = whoami
 			}
-			else if(i=='load'){
+			else if(i=='load' || i=='Memory_Physical' || i=="Memory_Swap" || i=="Memory_cached"){
 				temp='';
-				bad = 0;
 				$.each(jsondata, function (k,v) {
-					temp = temp+k+"--"+v+" , ";		
-					if(v<11) //config	
-						bad=1;
+					temp = temp+k+"--"+v+" , ";	
 				});
-				loadServers[whoami] = temp;
-			 	if(bad==1)
-					badServers.push(whoami);
-			}
-			else if(i=='Memory'){
-				temp='';
-				bad = 0;
-				$.each(jsondata, function (k,v) {
-					$.each(v, function (k1,v1) {
-						temp = temp+k1+"--"+v1+" , ";	
-						
-					});
-				});
-				memoryPhysical[whoami] = temp;
+				data[i] = temp;
 			}
 		});
+		listServers.push(data);
+		lavesh = listServers;
         }
     });
 }
-
 	$(document).ajaxStop(function() {
 		display();
 	});
 
-	/*
-    $.ajax({
-        url: 'http://staging.jeevansathi.com/1.php',
-        success: function(data) {
-            requestCallback.requestComplete(true);
-        }
-    });
-    $.ajax({
-        url: 'http://ser2.jeevansathi.com/1.php',
-        success: function(data) {
-            requestCallback.requestComplete(true);
-        }
-    });
-*/
 });
 
 var MyRequestsCompleted = (function() {
