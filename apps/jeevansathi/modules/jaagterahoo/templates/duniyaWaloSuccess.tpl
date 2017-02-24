@@ -13,6 +13,7 @@
 </body>
 
 <script>
+var serverHealthConfig = ~$serverHealthConfig|decodevar`;
 var lavesh, temp , bad=0;
 var listServers;
 var test; 
@@ -41,12 +42,9 @@ $('#button').click(function() {
         }
     });
 
-    for(ii=0;ii<2;ii++)
+ $.each(serverHealthConfig,function(index,serverInfo)
     {
-	if(ii==0)
-		url = "http://ser2.jeevansathi.com/load.php";
-	else if(ii==1)
-		url = "http://staging.jeevansathi.com/load.php";
+	url = serverInfo.host;
     $.ajax({
         url: url,
         success: function(data) {
@@ -54,7 +52,6 @@ $('#button').click(function() {
 		var parsed = $.parseJSON(data);
 		var whoami;
 	        var data = {};
-
 		$.each(parsed, function (i, jsondata) {
 			if(i=='whoami'){
 				whoami = jsondata;
@@ -68,13 +65,15 @@ $('#button').click(function() {
 					temp = temp+k+"--"+v+" , ";	
 				});
 				data[i] = temp;
+console.log(serverInfo.loadThreshold);
+console.log(serverInfo.memoryThreshold);
 			}
 		});
 		listServers.push(data);
 		lavesh = listServers;
         }
     });
-}
+});
 	$(document).ajaxStop(function() {
 		display();
 	});

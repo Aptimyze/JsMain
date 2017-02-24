@@ -21,6 +21,6 @@ class jaagterahooActions extends sfActions
   }
   public function executeDuniyaWalo(sfWebRequest $request)
   {
-        echo "33";die;
+	$this->serverHealthConfig = json_encode(ServerHealthEnums::$config);
   }
 }
