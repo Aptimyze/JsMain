@@ -12,7 +12,7 @@ class ServerStatus
 					72=>"http://10.10.18.72/server-status");
 		$this->highThreshold = 0;
 		$this->midThreshold = 10;
-		$this->messages = array("high"=>"Khatam hai ye",
+		$this->messages = array("high"=>":-( Khatam hai ye",
 					"mid" => "Marne wala h",
 					"low" => "khush h");
 	}

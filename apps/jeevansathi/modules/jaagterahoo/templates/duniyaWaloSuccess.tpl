@@ -12,6 +12,79 @@
 	<div style="color:red;font-size:20px;">~$v` mar gaya</div>
 ~/foreach`
 
+<br><div>=== Server Status === </div>
+~foreach from=$serverstatus item=v key=k`
+		<div>idle connection on server ~$k` are ~$v["idle"]` 
+			~if $v["flag"] neq 2`
+			<span style="color:red">
+			~/if`
+			(~$v["message"]`)
+			~if $v["flag"] neq 2`
+			</span>
+			~/if`
+		</div>
+~/foreach`
+
+<br><br>
+<div>=== Server Info === </div><div id="sinfo"> </div><br>
+
+</body>
+
+<script>
+var serverHealthConfig = ~$serverHealthConfig|decodevar`;
+var lavesh, temp , bad=0;
+var listServers;
+var test; 
+function display(){
+	$('#sinfo').html("");
+	var html;
+	$.each(listServers, function (k,v) {
+		html = "<b>"+v.whoami+"</b><br>";
+		$.each(v, function (k1,v1) {
+			if(k1!='whoami' && k1!='isloadThres'){
+				var alert='>';
+				if(k1=="load" && v.isloadThres==true)
+					alert = " style=color:red;>";	
+				html = html+"<span"+alert+k1+" : "+v1+"</span><br>";
+			}
+		});
+		html = html+"<br>";
+		console.log(html);
+		$('#sinfo').append(html);
+	});
+}
+
+$('#button').click(function() {
+    listServers = [];
+    var requestCallback = new MyRequestsCompleted({
+        numRequest: 3,
+        singleCallback: function(){
+        }
+    });
+
+ $.each(serverHealthConfig,function(index,serverInfo)
+    {
+	url = serverInfo.host;
+    $.ajax({
+        url: url,
+        success: function(data) {
+            requestCallback.requestComplete(true);
+		var parsed = $.parseJSON(data);
+		var whoami;
+	        var data = {};
+		$.each(parsed, function (i, jsondata) {
+			if(i=='whoami'){
+				whoami = jsondata;
+				if(whoami=='127.0.0.1')
+					whoami = "172.10.18.64";
+				data.whoami = whoami
+				data.isloadThres = false;
+			}
+			else if(i=='load' || i=='Memory_Physical' || i=="Memory_Swap" || i=="Memory_cached"){
+				temp='';
+				$.each(jsondata, function (k,v) {
+					temp = temp+k+"--"+v+" , ";	
+					if(i=='load' && serverInfo.loadThreshold < v){
 <br><br>
 <div>=== Server Info === </div><div id="sinfo"> </div><br>
 
