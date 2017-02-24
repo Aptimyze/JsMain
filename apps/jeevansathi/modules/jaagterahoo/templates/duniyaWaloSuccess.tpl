@@ -5,9 +5,11 @@
 </head>
 
 <body>
-<input type="button" id="button" value="send" />
+<div>=== Server Info <input type="button" id="button" value="recheck" /> ====
+	<div id="sinfo"> </div>
+</div>
 
-<div>=== Mysql Status === </div>
+<br><div>=== Mysql Status === </div>
 ~foreach from=$mysqlStatus item=v key=k`
         <div ~if $v['FLAG'] eq 0`style="color:red;"~/if`>~$k` connections: ~$v['TOTAL_COUNT']`</div>
 ~/foreach`
@@ -52,7 +54,6 @@
 ~/foreach`
 
 <br><br>
-<div>=== Server Info === </div><div id="sinfo"> </div><br>
 
 <br>
 <div>=== Mysql Status Detail=== </div>
@@ -79,6 +80,10 @@ var serverHealthConfig = ~$serverHealthConfig|decodevar`;
 var lavesh, temp , bad=0;
 var listServers;
 var test; 
+$(document).ready(function() {
+	$('#button').trigger('click');
+});
+
 function display(){
 	$('#sinfo').html("");
 	var html;
@@ -146,6 +151,7 @@ $('#button').click(function() {
 	});
 
 });
+
 
 var MyRequestsCompleted = (function() {
     var numRequestToComplete, 
