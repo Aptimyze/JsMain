@@ -74,7 +74,7 @@ if (authenticated($cid))
 		if($allow)	
 		{
 			// query to find details of users who have registered one week back and whose profiles are active 
-			$sql = "SELECT ENTRY_DT, LAST_LOGIN_DT , USERNAME , PHONE_RES  , DTOFBIRTH  , PHONE_MOB , CITY_RES , COUNTRY_RES , MTONGUE , GENDER , RELATION , HAVEPHOTO , CASTE , YOURINFO , FAMILYINFO , SPOUSE , JOB_INFO , SIBLING_INFO  , FATHER_INFO FROM newjs.JPROFILE WHERE ACTIVATED IN ('Y','H') AND INCOMPLETE='N' AND PROFILEID ='$pid' AND SUBSCRIPTION='' AND ENTRY_DT < '$start_date' AND LAST_LOGIN_DT>=DATE_SUB(CURDATE(), INTERVAL 45 DAY)";
+			$sql = "SELECT ENTRY_DT, LAST_LOGIN_DT , USERNAME , PHONE_RES  , DTOFBIRTH  , PHONE_MOB , CITY_RES , COUNTRY_RES , MTONGUE , GENDER , RELATION , HAVEPHOTO , CASTE , YOURINFO , FAMILYINFO , SPOUSE , JOB_INFO , SIBLING_INFO  , FATHER_INFO FROM newjs.JPROFILE WHERE ACTIVATED IN ('Y','H') AND INCOMPLETE='N' AND PROFILEID ='$pid' AND SUBSCRIPTION='' AND ENTRY_DT < '$start_date' AND DATE(LAST_LOGIN_DT)>=DATE_SUB(CURDATE(), INTERVAL 45 DAY)";
 
 			$res = mysql_query_decide($sql) or logError($sql);//die("$sql".mysql_error_js());
 			if ($row = mysql_fetch_array($res))

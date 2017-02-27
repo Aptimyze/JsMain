@@ -61,10 +61,10 @@ public function __construct($phone,$virtualNo)
 
 
 public function phoneUpdateProcess() {
-
-if(parent::phoneUpdateProcess('KNW'))
+$verified = parent::phoneUpdateProcess('KNW');
+if($verified)
 $this->clearEntry();
-
+return $verified;
 }
 
 

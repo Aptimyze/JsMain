@@ -115,8 +115,14 @@ class AuthFilter extends sfFilter {
 		        	if($geoIpCountry == 'IN'){
 		        		$currency = 'RS';
 		         	} else {
-		        		$currency = 'DOL';
+			            if($_COOKIE['jeevansathi_hindi_site'] == 'Y'){
+			                $currency = 'RS';
+			            }
+        				else{
+		        			$currency = 'DOL';
+		        		}
 		        	}
+		        	
 		        } else {
 		        	//$countryIpAddressObj = new jsadmin_ip_country_live();
 	        		//$getCountry = $countryIpAddressObj->getUserCountry($ipAddress);
