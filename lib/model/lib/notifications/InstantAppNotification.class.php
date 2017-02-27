@@ -18,7 +18,7 @@ class InstantAppNotification
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
 	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG');
   }
-  public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='')
+  public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='',$otherParams='')
   {
     if(JsConstants::$notificationStop || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4){
         return;
@@ -36,7 +36,7 @@ class InstantAppNotification
 	{
 		if($selfProfile)
 		{
-			$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey, $message);
+			$notificationDetails = $this->notificationObj->getNotificationData(array("SELF"=>$selfProfile,"OTHER"=>$otherProfile),$this->notificationKey, $message,'',$otherParams);
 			// print_r($notificationDetails[0]);
 			$notificationData = $notificationDetails[0];
 			if(is_array($notificationData))
@@ -48,8 +48,11 @@ class InstantAppNotification
 				$profileDetails[$selfProfile]['OS_TYPE']=$notificationData['OS_TYPE'];
 				$profileDetails[$selfProfile]['COLLAPSE_STATUS']=$notificationData['COLLAPSE_STATUS'];
 				$profileDetails[$selfProfile]['TTL']=$notificationData['TTL'];
-                if($notificationData['NOTIFICATION_KEY']=='CHAT_MSG')
+                if($notificationData['NOTIFICATION_KEY']=='CHAT_MSG'){
                     $profileDetails[$selfProfile]['TITLE']=$notificationData['NOTIFICATION_MESSAGE_TITLE'];
+                    $profileDetails[$selfProfile]['CHAT_ID']=$otherParams['CHAT_ID'];
+                    $profileDetails[$selfProfile]['OTHER_PROFILEID']=$notificationData['OTHER_PROFILEID'];
+                }
                 else
                     $profileDetails[$selfProfile]['TITLE']=$notificationData['TITLE'];
 				$profileDetails[$selfProfile]['USERNAME']=$notificationData['SELF']['USERNAME'];
