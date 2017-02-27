@@ -197,14 +197,14 @@ class postSendReminderv1Action extends sfAction
 
 			elseif($errorArr["REMINDER_SENT_BEFORE_TIME"] == 2)
 			{
-				$responseArray["errmsglabel"] = "You can not send a reminder to this profile until 24 hours from interest sent";
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
 				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				//$responseArray["headerlabel"] = "Profile is Underscreening";
 				//$responseArray["redirect"] = true;
 			}
 			elseif($errorArr["SECOND_REMINDER_BEFORE_TIME"] == 2)
 			{
-				$responseArray["errmsglabel"] = "You can not send a reminder to this profile until 24 hours from reminder sent.";
+				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
 				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				//$responseArray["headerlabel"] = "Profile is Underscreening";
 				//$responseArray["redirect"] = true;
