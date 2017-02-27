@@ -17,7 +17,7 @@ class ThirdPartyConfig
 
         static private function initConfig()
         {
-				self::$JAVASERVICES["API"] = array("PRESENCE");//,"PROFILE","LISTINGS","AUTH","COMMUNICATION");
+				self::$JAVASERVICES["API"] = array("PRESENCE","PROFILE","LISTINGS","AUTH","COMMUNICATION");
                 self::$SOLR["IP"]["SOLR1"]= "http://10.10.18.70:8080/solr/select";
                 self::$SOLR["IP"]["SOLR3"]= "http://10.10.18.64:8080/solr/select";
                 self::$SOLR["IP"]["SOLR4"]= "http://10.10.18.73:8080/solr/select";
