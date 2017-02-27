@@ -29,9 +29,11 @@ class ApiEditSubmitV1Action extends sfActions
 		if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
 		{
 			$http_msg=print_r($_SERVER,true);
-            mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
+			$date = date('Y-m-d');
+
+            // mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
 			//writing in the file to keep track
-            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/csrf.txt",$http_msg,FILE_APPEND);
+            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/csrf.$date.txt",$http_msg,FILE_APPEND);
 		}
 		
 		$this->editFieldNameArr=$request->getParameter('editFieldArr');		

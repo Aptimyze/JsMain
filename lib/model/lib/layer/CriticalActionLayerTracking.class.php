@@ -74,7 +74,7 @@ class CriticalActionLayerTracking
    */
   public static function getCALayerToShow($profileObj,$interestsPending)
   {
-    return 14;
+
     $profileId = $profileObj->getPROFILEID();
     if(JsMemcache::getInstance()->get($profileId.'_CAL_DAY_FLAG')==1)
               return 0;
