@@ -14,6 +14,20 @@ class MyJsMobileAppV1
 	static public $tupleTitleField ;
 
 
+
+	public static function deleteMyJsCache($profileIdArray){
+            $memObject = JsMemcache::getInstance();
+            foreach ($profileIdArray as $key => $value) {
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_I');
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_A');
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_M');
+
+                
+            }    
+
+		
+	}
+
     public static function getCacheKey($pid)
         {
 
@@ -27,10 +41,10 @@ class MyJsMobileAppV1
 	        $profilePicObj = $pictureService->getProfilePic();
 		if($profilePicObj)
 			$myPic = $profilePicObj->getThumbailUrl();
-                if(!$myPic)
+        if(!$myPic)
 		{
 			 if($pictureService->isProfilePhotoUnderScreening() =="Y")
-				$myPic = PictureService::getRequestOrNoPhotoUrl('underScreeningPhoto','ThumbailUrl',$profileObj->getGENDER());
+				$myPic = $profilePicObj->getThumbail96Url();
 			else
 				$myPic = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
 		}

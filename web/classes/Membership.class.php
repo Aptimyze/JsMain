@@ -757,7 +757,19 @@ class Membership
 
         $geoIpCountryName = $_SERVER['GEOIP_COUNTRY_NAME'];
         if(!$geoIpCountryName){
-                $geoIpCountryName ='India';
+		$geoIpCountryId = $_SERVER['GEOIP_COUNTRY_CODE'];
+		if($geoIpCountryId){
+			if($geoIpCountryId=='IN')
+				$geoIpCountryName ='India';
+			else
+                		$geoIpCountryName =$geoIpCountryId;
+		}
+		else{
+			if($this->curtype == 'RS')
+				$geoIpCountryName ='India';
+			else
+				$geoIpCountryName ='Foreign';
+		}
         }
         
         unset($modifiedServeFor);
@@ -767,11 +779,9 @@ class Membership
         else{
             $modifiedServeFor = $this->servefor;
         }
-
         
         $this->discount_percent = round((($this->discount)/($this->amount+$this->discount)) * 100,2);
-        
-        
+
         //Generating Bill ID.
         $billingPurObj = new BILLING_PURCHASES();
         $paramsStr = "SERVICEID, PROFILEID, USERNAME, NAME, ADDRESS, GENDER, CITY, PIN, EMAIL, RPHONE, OPHONE, MPHONE, COMMENT, OVERSEAS, DISCOUNT, DISCOUNT_TYPE, DISCOUNT_REASON, WALKIN, CENTER, ENTRYBY, DUEAMOUNT, DUEDATE, ENTRY_DT, STATUS, SERVEFOR, VERIFY_SERVICE, ORDERID, DEPOSIT_DT, DEPOSIT_BRANCH, IPADD, CUR_TYPE, ENTRY_FROM, MEMBERSHIP, DOL_CONV_BILL, SALES_TYPE, SERVICE_TAX_CONTENT, COUNTRY,DISCOUNT_PERCENT";

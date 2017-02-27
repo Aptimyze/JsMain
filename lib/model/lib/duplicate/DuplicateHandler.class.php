@@ -398,7 +398,7 @@ public static function IsPermanentDuplicate(RawDuplicate $rawDuplicateObj){
 		$valueArray=array("PROFILEID"=>$rawDuplicateObj->getProfileid1().",".$rawDuplicateObj->getProfileid2());
 		$now=date("Y-m-d");
 		$noOfMonths = CrawlerConfig::$greaterThanConditions["LAST_LOGIN_DT"];
-		$dateValue = date("Y-m-d", JSstrToTime("- $noOfMonths months",JSstrToTime(date("Y-m-d"))));
+		$dateValue = CommonUtility::makeTime(date("Y-m-d", JSstrToTime("- $noOfMonths months",JSstrToTime(date("Y-m-d")))));
 		$greaterThanArray['LAST_LOGIN_DT'] = $dateValue;
 		if($result=$obj->getArray($valueArray,"excludeArray",$greaterThanArray,"PROFILEID,SOURCE"))
 		{
