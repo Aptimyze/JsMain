@@ -38,6 +38,7 @@ EOF;
             $lastActiveLogObj->updateLastActivePartition($lastPartitionName+1, $date);
         }
         
+        // Get least date range value of partition
         $lastValue = intval($matchAlertsObj->getLastPartitionRange());
         JsMemcache::getInstance()->set("MATCHALERTS_PARTITIONED_DT",$lastValue,864000);
   }
