@@ -37,6 +37,9 @@ EOF;
             //update new partition number
             $lastActiveLogObj->updateLastActivePartition($lastPartitionName+1, $date);
         }
+        
+        $lastValue = intval($matchAlertsObj->getLastPartitionRange());
+        JsMemcache::getInstance()->set("MATCHALERTS_PARTITIONED_DT",$lastValue,864000);
   }
   public function getNoOfDays()
     {

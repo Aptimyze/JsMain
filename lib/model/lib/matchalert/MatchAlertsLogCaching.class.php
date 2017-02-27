@@ -25,7 +25,7 @@ class MatchAlertsLogCaching
                                 foreach($keys as $key){
                                         $profileIdDate = explode("_",$key);
                                         if($profileIdDate[0] != "0"){
-                                                if(($dateGreaterThanCondition && $dateGreaterThanCondition < $profileIdDate[1]) || $dateGreaterThanCondition == ""){
+                                                if((($dateGreaterThanCondition && $dateGreaterThanCondition < $profileIdDate[1]) || $dateGreaterThanCondition == "") && ($profileIdDate[1] >= JsMemcache::getInstance()->get("MATCHALERTS_PARTITIONED_DT"))){
                                                         $profileArray[$profileIdDate[0]]   = $profileIdDate[1];
                                                 }
                                         }
