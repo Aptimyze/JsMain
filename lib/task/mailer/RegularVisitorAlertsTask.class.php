@@ -44,6 +44,8 @@ EOF;
   */
   protected function execute($arguments = array(), $options = array())
   {
+      if(CommonUtility::hideFeaturesForUptime())
+        successfullDie();
 	$totalScript = $arguments["totalScript"]; // total no of scripts
         $currentScript = $arguments["currentScript"]; // current script number
 	$mailerServiceObj = new MailerService();
@@ -69,6 +71,8 @@ EOF;
 		$widgetArray = Array("autoLogin"=>true,"nameFlag"=>true,"dppFlag"=>false,"membershipFlag"=>true,"openTrackingFlag"=>false,"filterGenderFlag"=>true,"sortPhotoFlag"=>true,"logicLevelFlag"=>false,"googleAppTrackingFlag"=>true,"alternateEmailSend"=>true);
 		foreach($receivers as $sno=>$values)
 		{
+                    if(CommonUtility::hideFeaturesForUptime())
+                        successfullDie();
 			$pid = $values["PROFILEID"];
                         $data = $mailerServiceObj->getRecieverDetails($pid,$values,$this->mailerName,$widgetArray);
                                 

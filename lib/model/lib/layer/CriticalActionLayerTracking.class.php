@@ -256,6 +256,8 @@ return 0;
                           if($memObject->get('MA_LOWDPP_FLAG_'.$profileid))
                           {        
                             $show=1;
+                            if(!MobileCommon::isDesktop() && (!MobileCommon::isApp() || self::CALAppVersionCheck('16',$request->getParameter('API_APP_VERSION'))))
+                            {    
                             ob_start();
                             sfContext::getInstance()->getController()->getPresentationFor("profile", "dppSuggestionsCALV1");
                             $layerData = ob_get_contents();
@@ -272,7 +274,7 @@ return 0;
                                 }
                               }
                             }
-
+                            }
                           } 
                     break;
 
@@ -412,7 +414,7 @@ break;
                 '16' => array(
                     
                     'A' => '84',
-                    'I' => '4.4'
+                    'I' => '4.5'
                     
                         )
           );

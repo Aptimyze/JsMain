@@ -10,8 +10,8 @@ class connectionThresholdTask extends sfBaseTask
   /**
     * @var const EMAIL_TO comma separated email ids
   */
-  const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com,vibhor.garg@jeevansathi.com,pankaj139@gmail.com,ankitshukla125@gmail.com";
-  private $SMS_TO = array('9650350387','9818424749','9711304800','9953178503','9810300513','9711818214','9953457479','9873639543');
+  const EMAIL_TO = "meow1991leo@gmail.com,lavesh.rawat@gmail.com,reshu.rajput@gmail.com,niteshsethi1987@gmail.com,vibhor.garg@jeevansathi.com,pankaj139@gmail.com,ankitshukla125@gmail.com,eshajain88@gmail.com,manojrana975@gmail.com";
+  private $SMS_TO = array('9650350387','9818424749','9711304800','9953178503','9810300513','9711818214','9953457479','9873639543','9999216910','9868673707');
   const FROM_ID = "JSSRVR";
   const PROFILE_ID = "144111";
   /**

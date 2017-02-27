@@ -1232,6 +1232,7 @@ var _parentCatogary = [{
 }
     // append API response in suggestion
     function appendSuggestionList(response) {
+      
       var type = "",dataPresent;
       //appending age and income suggestion
       $.each(response, function(index, elem) {
@@ -1329,6 +1330,7 @@ var _parentCatogary = [{
               $('<div class="edwid2 fl ml193 pt10 suggestMain" id="suggest_' + type + '"><div class="fontlig f12 wid134 disp_ib color11 mr10 vtop">Suggested (click to add)</div><div class="disp_ib suggestParentBox wid345 disp_none vtop"><div id="loader_' + type + '"><img src="IMG_URL/images/jspc/commonimg/dppLoader.gif"></div><div class="suggestBoxList"></div></div></div>').insertAfter("#dpp-p_" + type + "Parent #multiselect");
             }
             $("#suggest_" + type + " .suggestBoxList").html("");
+
             $.each(Object.keys(elem.data), function(index2, elem2) {
               dataPresent = false;
               if($("#dpp-p_" + type).val() != null) {
@@ -1342,7 +1344,13 @@ var _parentCatogary = [{
                 $("#suggest_" + type + " .suggestBoxList").append('<div class="fontlig f14 disp_ib color11 cursp suggestBox" index-val="' + elem2 + '">' + $("#dpp-p_"+type+" option[value='"+elem2+"']").html() + '</div>');
               }
             });
-            
+            $("#suggest_" + type + " .suggestBox").each(function(){
+              if($(this).attr("index-val").indexOf(",") != -1) {
+                var data = $(this).html(),indexVal = $(this).attr("index-val");
+                $(this).remove();
+                $("#suggest_" + type + " .suggestBoxList").prepend('<div class="fontlig f14 disp_ib color11 cursp suggestBox" index-val="'+indexVal+'">'+data+'</div>');
+              }
+            });
             //binding click on each suggestion
             if($("#suggest_" + type + " .suggestBoxList div").length != 0) {
               $(".suggestBox").each(function(index, element) {
@@ -1368,6 +1376,7 @@ var _parentCatogary = [{
                  }
                 });
               });
+            
             } else if($("#suggest_" + type + " .suggestBoxList div").length == 0) {
               $("#suggest_" + type+ " .suggestBoxList").html('<div class="f14 nc-color2 mlneg7">No suggestions found</div>');
             }

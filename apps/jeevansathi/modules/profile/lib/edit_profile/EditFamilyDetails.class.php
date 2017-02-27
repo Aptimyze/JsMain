@@ -3,7 +3,7 @@ class EditFamilyDetails extends EditProfileComponent {
 	public function submit() {
 		$this->request = $this->action->getRequest();
 		$now = date("Y-m-d H:i:s");
-		$today = date("Y-m-d");
+		$today = CommonUtility::makeTime(date("Y-m-d"));
 		$profile_handler = trim($this->request->getParameter('person_handling_profile'));
 		$curflag = $this->getScreeningFlag(array('PROFILE_HANDLER_NAME' => $profile_handler));
 		$paramArr = array('MOTHER_OCC' => $this->request->getParameter('mother_occ'), 'T_BROTHER' => $this->request->getParameter('tbrother'), 'M_BROTHER' => $this->request->getParameter('mbrother'), 'T_SISTER' => $this->request->getParameter('tsister'), 'M_SISTER' => $this->request->getParameter('msister'), 'FAMILY_TYPE' => $this->request->getParameter('ftype'), 'FAMILY_STATUS' => $this->request->getParameter('fstatus'), 'FAMILY_VALUES' => $this->request->getParameter('Family_Values'), 'FAMILY_BACK' => $this->request->getParameter('Family_Back'), 'FAMILY_INCOME' => $this->request->getParameter('Family_Income'), 'PARENT_CITY_SAME' => $this->request->getParameter('Parent_City_Same'), 'PROFILE_HANDLER_NAME' => $profile_handler, 'SCREENING' => $curflag, 'LAST_LOGIN_DT' => $today, 'MOD_DT' => $now,);
