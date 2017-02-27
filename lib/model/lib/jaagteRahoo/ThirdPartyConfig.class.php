@@ -17,7 +17,7 @@ class ThirdPartyConfig
 
         static private function initConfig()
         {
-				self::$JAVASERVICES["API"] = array("PRESENCE","PROFILE","LISTINGS","AUTH","COMMUNICATION");
+				self::$JAVASERVICES["API"] = array("PRESENCE","PROFILE","LISTINGS","AUTH");
                 self::$SOLR["IP"]["SOLR1"]= "http://10.10.18.70:8080/solr/select";
                 self::$SOLR["IP"]["SOLR3"]= "http://10.10.18.64:8080/solr/select";
                 self::$SOLR["IP"]["SOLR4"]= "http://10.10.18.73:8080/solr/select";
@@ -37,8 +37,8 @@ class ThirdPartyConfig
                 self::$LISTINGS["URL"]="/listings/v1/discover?type=CHATDPP";
                 self::$AUTH["IP"]["AUTH_73"]= "http://10.10.18.73:8390";
                 self::$AUTH["IP"]["AUHT_67"]= "http://10.10.18.67:8390";
-                self::$AUTH["URL"]="";
-                self::$COMMUNICATION["IP"]["COMMUNICATION"]= "http://10.10.18.73:8390";
+                self::$AUTH["URL"]="/auth/v1/validate";
+                self::$COMMUNICATION["IP"]["COMMUNICATION"]= "http://10.10.18.75:8390";
                 self::$COMMUNICATION["IP"]["COMMUNICATION"]= "http://10.10.18.67:8390";
                 self::$COMMUNICATION["URL"]="";
         }

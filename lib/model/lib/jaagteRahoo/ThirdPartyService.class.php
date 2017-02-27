@@ -63,7 +63,7 @@ class ThirdPartyService
 		return $rabbitmq;
 	}
 	
-	public static function javaService($url,$pid="")
+	public static function javaService($url,$pid="",$isAuth='')
 	{
 		if($pid)
 		{
@@ -71,6 +71,8 @@ class ThirdPartyService
 			$x = $WebAuthentication->setPaymentGatewayAuthchecksum($pid);
 			$auth = $x["AUTHCHECKSUM"];
 			$header = array("JB-Profile-Identifier:".$auth);
+			if($isAuth=='1')
+				$url.="?authchecksum=".$auth;
 		}
 		
 		$start_tm=microtime(true);
@@ -100,9 +102,10 @@ class ThirdPartyService
 					$pid = 9061321;
 				else
 					$pid ="";
-				
-				
-				$Services[$k] = self::javaService($hitUrl,$pid);
+				$isAuth="";
+				if($s=="AUTH")
+					$isAuth='1';
+				$Services[$k] = self::javaService($hitUrl,$pid,$isAuth);
 				
 			}
 		}
