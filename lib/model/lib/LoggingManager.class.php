@@ -254,6 +254,7 @@ class LoggingManager
 		$statusCode = $this->getLogStatusCode($exception,$logArray);
 		$typeOfError = $this->getLogTypeOfError($exception,$logArray);
 		$mappingName = $this->getlogMappingName($moduleName);
+		$scriptName = $this->getlogScriptName();
 		//$headers = getallheaders();
 		$logData = array();
 
@@ -313,6 +314,11 @@ class LoggingManager
 		if($mappingName != "")
 		{
 			$logData[LoggingEnums::MAPPING] = $mappingName;
+		}
+
+		if($scriptName != "")
+		{
+			$logData[LoggingEnums::SCRIPT] = $scriptName;
 		}
 
 		if($this->canWriteTrace($this->moduleName))
@@ -589,7 +595,10 @@ class LoggingManager
 		$fileResource = fopen($filePath,"a");
 		fwrite($fileResource,$szLogString."\n");
 		fclose($fileResource);
-		$this->setLogged();
+		if(json_decode($szLogString, true)[LoggingEnums::LOG_TYPE] == 'Error')
+		{
+			$this->setLogged();
+		}
 	}
 
 	/**
@@ -622,7 +631,7 @@ class LoggingManager
 	private function canLog($enLogType,$Var,$isSymfony,$logArray)
 	{
 		// A request should be logged only once.
-		if($this->getLogged())
+		if($enLogType == LoggingEnums::LOG_ERROR && $this->getLogged())
 		{
 			return false;
 		}
@@ -678,7 +687,7 @@ class LoggingManager
 	 */
 	private function getlogMappingName($moduleName)
 	{
-		if(in_array($moduleName, LoggingEnums::$ModuleMapping))
+		if(in_array($moduleName, LoggingEnums::$ModuleMapping, true))
 		{
 			$mappingName = LoggingEnums::$MappingNames[ LoggingEnums::$ModuleMapping[$moduleName] ];
 		}
@@ -694,5 +703,23 @@ class LoggingManager
 			}
 		}
 		return $mappingName;
+	}
+
+	// Get script name for failed cli scripts like RabbitMQ consumer crons.
+	private function getlogScriptName()
+	{
+		$scriptName = '';
+		if(php_sapi_name() === 'cli')
+		{
+			if(isset($_SERVER['argv'][1]))
+			{
+				$scriptName = $_SERVER['argv'][1];
+			}
+			else
+			{
+				$scriptName = $_SERVER['SCRIPT_FILENAME'];
+			}
+		}
+		return $scriptName;
 	}
 }

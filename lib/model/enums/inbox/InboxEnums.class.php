@@ -4,7 +4,7 @@
  */
 
 class InboxEnums {
-
+    public static $messageLogInQuery = true;
         //mapping of infotype id to page and filter
         static public $INBOX_ACTION_MAPPING = array(1 => array("page" => "eoi", "filter" => "R"),
             2 => array("page" => "accept", "filter" => "R"),

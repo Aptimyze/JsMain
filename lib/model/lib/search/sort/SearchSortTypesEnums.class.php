@@ -22,6 +22,7 @@ class SearchSortTypesEnums
         const viewAttemptFlag = 'VA'; 
         const SortByTrendsScore = 'DT'; 
         const FullDppWithReverseFlag = 'DR'; 
-        const SortByLoginDate = 'LT'; 
+        const SortByLoginDate = 'LT';
+        const SortByVisitorsTimestamp = 'VT';
 }
 ?>

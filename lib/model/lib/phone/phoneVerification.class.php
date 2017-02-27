@@ -257,7 +257,7 @@ public function sendMembershipOffers(){
 				
 			if($appRegProfile)
 			{
-		    $loginTrackingObj=new MIS_LOGIN_TRACKING('newjs_slave');
+		    $loginTrackingObj=new MIS_LOGIN_TRACKING('crm_slave');
             $profileArr      =$loginTrackingObj->getLast7DaysLoginProfiles($profileid);
 			}
 			

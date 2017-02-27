@@ -681,5 +681,41 @@ class CommonFunction
 			JsMemcache::getInstance()->set("can_chat_".$otherProfileId."_".$loginProfileId,false,'','',1);
 		}
 	}
+    
+    /*
+     * End script 
+     * To note statistic of memory and time usages
+     * @param : $st_Time [Start Time]
+     * @return void
+     */
+    public static function logResourceUtilization($st_Time, $msg, $moduleName=null)
+    {
+        $end_time = microtime(TRUE);
+        $var = memory_get_usage(true);
+
+//        if ($var < 1024)
+//            $mem =  $var." bytes";
+//        elseif ($var < 1048576)
+//            $mem =  round($var/1024,2)." kilobytes";
+//        else
+//            $mem = round($var/1048576,2)." megabytes"
+        
+        //In Mb only
+        $mem = round($var/1048576,2);
+        
+        $timeTaken = ($end_time - $st_Time);
+        $msg .= 'Memory usages : '.$mem;
+        $msg .= ' Time taken : '.$timeTaken;
+        //$arrData['requestId'] = LoggingManager::getInstance()->getUniqueId();
+        //LoggingManager::getInstance($moduleName)->logThis(LoggingEnums::LOG_INFO,$msg);    
+        return array('mem_usages'=>$mem,'time_elapse'=>$timeTaken,'msg'=>$msg,'requestId'=>LoggingManager::getInstance()->getUniqueId(),'channel'=>CommonFunction::getChannel(),'time_stamp'=>date('Y-m-d H:i:s'));
+    }
+    
+    public static function logIntoProfiler($szModuleName, $arrData) {
+      //Add into MQ
+      $producerObj = new Producer();
+      $queueData = array('process' =>MessageQueues::SCRIPT_PROFILER_PROCESS,'data'=>array('type' => 'elastic','body'=>$arrData), 'redeliveryCount'=>0 );
+      $producerObj->sendMessage($queueData);
+    }
 }
 ?>

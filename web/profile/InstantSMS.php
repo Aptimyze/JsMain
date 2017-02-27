@@ -9,11 +9,11 @@ class InstantSMS {
 	private $otherProfileDetails = array();
 	private $smsSettings = array();
 	private $varArray = array();
-	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP","MEM_REN_ACT_CRON","MEM_BACK_DISC_SMS","CRM_SMS_BRANCH","CRM_SMS_OFFER","CRM_SMS_NOT_REACH","CRM_SMS_APP_DOWNLOAD");
+	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP","MEM_REN_ACT_CRON","MEM_BACK_DISC_SMS","CRM_SMS_BRANCH","CRM_SMS_OFFER","CRM_SMS_NOT_REACH","CRM_SMS_APP_DOWNLOAD","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER");
 	private $errorMessage = "Due to a temporary problem your request could not be processed. Please try after a couple of minutes";
 	private $unverified_key = array("REGISTER_RESPONSE" ,"PHONE_UNVERIFY");
 	private $customCriteria=0;
-	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP", "PHONE_UNVERIFY","DEL_OTP");
+	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP", "PHONE_UNVERIFY","DEL_OTP","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER");
 	private $sendToInternational = array("FORGOT_PASSWORD");
 	private $eoiSMSLimit = 2;
 	private $otherProfileRequired = array("INSTANT_EOI","ACCEPTANCE_VIEWED","ACCEPTANCE_VIEWER","VIEWED_CONTACT_SMS","HOROSCOPE_REQUEST");
@@ -79,6 +79,9 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		if($this->smsKey=="CRM_SMS_APP_DOWNLOAD") return true;
 		if($this->smsKey=="CRM_SMS_NOT_REACH") return true;
 		if($this->smsKey=='PHONE_UNVERIFY') return true;
+		if($this->smsKey=='REQ_CRM_DEL_SELF') return true;
+		if($this->smsKey=='REQ_CRM_DEL_OTHER') return true;
+		
 		$sendToInt = in_array($this->smsKey, $this->sendToInternational);
 		if(!$sendToInt && !$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"], $sendToInt))
 			return false;
@@ -138,6 +141,12 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 
 				 //added case for sending sms to a user in case mail gets bounced
 				 case "BOUNCED_MAILS":
+				 	return true;
+
+				 case "REQ_CRM_DEL_SELF":
+				 	return true;
+
+				 case "REQ_CRM_DEL_OTHER":
 				 	return true;
 
 			default:

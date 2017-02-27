@@ -99,6 +99,11 @@ if (authenticated($cid)) {
                     $entryDt    = date("Y-m-d H:i:s");
                     $expiryDt   = date("Y-m-d H:i:s", (time() + 15 * 24 * 60 * 60));
                     $discNegObj->insert($name, $profileid, $discountNegVal, $entryDt, $expiryDt);
+                    if($discountNegVal <= 10){
+                        $agentAllocDetailsObj   =new AgentAllocationDetails();
+                        $agentAllocDetailsObj->mailForLowDiscount(stripslashes($USERNAME),$name,$discountNegVal);
+                        unset($agentAllocDetailsObj);
+                    }
                 }
                 $sql4 = "INSERT INTO incentive.HISTORY (PROFILEID,USERNAME,ENTRYBY,MODE,DISPOSITION,VALIDATION,COMMENT,ENTRY_DT) VALUES ('$profileid','" . addslashes($USERNAME) . "','$name','$mode','$WILL_PAY','$REASON','" . addslashes($COMMENTS) . "',now())";
                 mysql_query_decide($sql4) or die("4 $sql4" . mysql_error_js());

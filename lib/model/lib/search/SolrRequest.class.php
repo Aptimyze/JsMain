@@ -8,6 +8,7 @@ class SolrRequest implements RequestHandleInterface
 {
 	private $searchResults;
 	private $solrPagination;
+        private $solrCurlTimeout = 400;
 	/**
 	* constructor of solr Request class
 	* @param responseObj contains information about output type (array/xml/...) and engine used(solr/sphinx/mysql....)
@@ -25,7 +26,7 @@ class SolrRequest implements RequestHandleInterface
                         if($profileObj->getPROFILEID())
                 	{ 
                         	//if($profileObj->getPROFILEID()%7>2)
-				if($profileObj->getPROFILEID()%2==0)
+				if($profileObj->getPROFILEID()%4==0 || $profileObj->getPROFILEID()%4==1)
 	                                $this->solrServerUrl = JsConstants::$solrServerProxyUrl1."/select";
         	                else
                 	                $this->solrServerUrl = JsConstants::$solrServerProxyUrl."/select";
@@ -37,6 +38,16 @@ class SolrRequest implements RequestHandleInterface
 				else
 	                        	$this->solrServerUrl = JsConstants::$solrServerLoggedOut."/select";
 	                }
+                        
+                        if($this->searchParamtersObj->getIS_VSP() && $this->searchParamtersObj->getIS_VSP() == 1){
+                                $this->solrServerUrl = JsConstants::$solrServerForVSP."/select";
+                        }
+                        if($this->searchParamtersObj->getSHOW_RESULT_FOR_SELF()=='ISKUNDLIMATCHES'){
+                                $this->solrServerUrl = JsConstants::$solrServerForKundali."/select"; 
+                        }
+                        if($this->searchParamtersObj->getSORT_LOGIC()==SearchSortTypesEnums::SortByVisitorsTimestamp){
+								$this->solrServerUrl = JsConstants::$solrServerForVisitorAlert."/select"; 
+                        }
               		$this->profilesPerPage = SearchCommonFunctions::getProfilesPerPageOnSearch($searchParamtersObj);
 			/*
 			if($this->responseObj->getShowAllClustersOptions())
@@ -166,13 +177,21 @@ class SolrRequest implements RequestHandleInterface
 	*/	
 	public function sendCurlPostRequest($urlToHit,$postParams)
 	{
-		$start = strtotime("now");
-		$this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
-                $end= strtotime("now");
+		$start = microtime(TRUE);
+                if(php_sapi_name() === 'cli')
+                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
+                else
+                    $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout);
+                $end= microtime(TRUE);
                 $diff = $end - $start;
-                if($diff > 2){
-                        //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold".date('Y-m-d').".txt";
+                if($diff > 2 ){
+                        //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold".date('Y-m-d-h').".txt";
                         //file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
+                }
+                
+                if(!$this->searchResults){
+                        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d-h').".txt";
+                        file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
                 }
 	}
 

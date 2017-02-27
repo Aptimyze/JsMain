@@ -22,6 +22,9 @@ include_once(JsConstants::$docRoot."/commonFiles/RevampJsDbFunctions.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/profile/connect_functions.inc");
 
+if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'live')
+	successfullDie();
+
 
 $mysqlObj=new Mysql;
 //$db2 = connect_slave();
@@ -243,13 +246,15 @@ $sql="truncate table SWAP_JPARTNER1";
 mysql_query($sql,$dbDDL) or die("18".mysql_error1($dbDDL));
 
 $currentTime = date("H");
-if(!in_array(date('H'),array("10","11","12","13"))){
+$currentDay = date("D");
+if(!in_array($currentTime,array("10","11","12","13")) || JsConstants::$whichMachine != 'live'){
+   
+        
         if(in_array($currentTime,array(1,2,9,10,18,19)))
                 callDeleteCronBasedOnId('EXPORT','N');
         else
                 callDeleteCronBasedOnId('DELTA','N');
 }
-
 
 function mysql_error1($db)
 {

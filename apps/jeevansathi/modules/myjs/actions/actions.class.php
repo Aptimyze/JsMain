@@ -10,7 +10,9 @@
  */
 class myjsActions extends sfActions
 {
-
+  
+  private $arrProfiler = array();
+  private $bEnableProfiler = false;
 	/**
   	*this function is for jsms myjs page... to map the membership id to the proper link to which to redirect when clicked on the membership banner
   	*
@@ -97,109 +99,160 @@ class myjsActions extends sfActions
 
 
 	/**
-        * Mobile Api version 1.0 action class
-        */
-        public function executePerformV1(sfWebRequest $request)	
-        {          //for logging       
-        	LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
-          
-		$module= "MYJSAPP";
-		$inputValidateObj = ValidateInputFactory::getModuleObject("myjs");
-		$respObj = ApiResponseHandler::getInstance();
-		$inputValidateObj->validateRequestMyJsData($request);
-                $output = $inputValidateObj->getResponse();
-		if($output["statusCode"]==ResponseHandlerConfig::$SUCCESS["statusCode"])
-                {
-			$profileCommunication = new ProfileCommunication();
-                	$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-                	$pid= $loggedInProfileObj->getPROFILEID();
-            	//  	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
-			$infoTypeId = $request->getParameter("infoTypeId");
-                	$pageNo = $request->getParameter("pageNo");
-			$params["profileList"] = $request->getParameter("profileList");
-			$params["showExpiring"] = $request->getParameter("showExpiring");
-			if((MobileCommon::isApp() == "I")||MobileCommon::isNewMobileSite())
-			{  
-				$Apptype="IOS";
-				$appV1obj = new MyJsIOSV1();
+   * Mobile Api version 1.0 action class
+   */
+  public function executePerformV1(sfWebRequest $request) {    
+    //for logging       
+    //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
+    $moduleName = "MyJS Perform V1";
+    $stFirstTime = microtime(TRUE);
 
-                                
-			}
-			else{
-					
-                    $appV1obj = new MyJsAndroidV1();
-                            
-                }
-                        
-                        if($infoTypeId)
-                	{
-                        	$infoType = ProfileInformationModuleMap::getInfoTypeById($module,$infoTypeId,$Apptype);
-                        	$json=1;
-                        	$infoTypeNav = array($infoType=>$pageNo);
-							$displayObj= $profileCommunication->getDisplay($module,$loggedInProfileObj,$infoTypeNav,$params);
-                        	$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj);
-                        	unset($infoTypeId);
-                        	unset($infoType);
-                        	unset($pageNo);
-                	}
-			else
-			{
-				$pictureService = new PictureService($loggedInProfileObj);
-                		if($pictureService->isProfilePhotoPresent() == "Y")
-					$profileInfo["PHOTO_FLAG"]="Y";
-				else
-					$profileInfo["PHOTO_FLAG"]="N";
-				unset($pictureService);
-				$completionObj=  ProfileCompletionFactory::getInstance("API",$loggedInProfileObj,null);
-				$profileInfo["COMPLETION"]=$completionObj->getProfileCompletionScore();
-				$profileInfo["INCOMPLETE"]=$completionObj->GetAPIResponse("MYJS");
-				
-				$profileInfo["PHOTO"] = NULL;
-				if(MobileCommon::isApp() != "I"||$loggedInProfileObj->getHAVEPHOTO()!="U")
-					$profileInfo["PHOTO"] = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
-				$appOrMob = MobileCommon::isApp()? MobileCommon::isApp():'M'; 				
-				$myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid)."_".$appOrMob;
-				$appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+    $module = "MYJSAPP";
+    $stSecondTime = microtime(TRUE);
+    
+    $inputValidateObj = ValidateInputFactory::getModuleObject("myjs");
+    $respObj = ApiResponseHandler::getInstance();
+    $inputValidateObj->validateRequestMyJsData($request);
+    $output = $inputValidateObj->getResponse();
+    
+    if($this->bEnableProfiler) {
+      //Validation Time taken
+      $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stSecondTime, 'Request Validation Time Taken : ', $moduleName);
+    }
+        
+    if ($output["statusCode"] == ResponseHandlerConfig::$SUCCESS["statusCode"]) {
+      
+      $stThirdTime = microtime(TRUE);
+      
+      $profileCommunication = new ProfileCommunication();
+      $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+      $pid = $loggedInProfileObj->getPROFILEID();
+      //  	$loggedInProfileObj->getDetail("","","HAVEPHOTO");
+      $infoTypeId = $request->getParameter("infoTypeId");
+      $pageNo = $request->getParameter("pageNo");
+      $params["profileList"] = $request->getParameter("profileList");
+      $params["showExpiring"] = $request->getParameter("showExpiring");
+      
+      if($this->bEnableProfiler) {
+        //Basic Object Initalization
+        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stThirdTime, 'Basic Object Initalization Time Taken : ', $moduleName);
+      }
+      
+      $stFourthTime = microtime(TRUE);
+      if ((MobileCommon::isApp() == "I") || MobileCommon::isNewMobileSite()) {
+        $Apptype = "IOS";
+        $appV1obj = new MyJsIOSV1();
+      } else {
+        $appV1obj = new MyJsAndroidV1();
+      }
 
-				if(!$appV1DisplayJson)
-				{
-                    $displayObj= $profileCommunication->getDisplay($module,$loggedInProfileObj);
-				$appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj,$profileInfo);
-				JsMemcache::getInstance()->set($myjsCacheKey,$appV1DisplayJson);
-				}
-			}
-			$appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
+      if ($infoTypeId) {
+        if($this->bEnableProfiler) {
+          //MyJS Class Object Initalization
+          $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stFourthTime, "MyJS Class[$infoTypeId] Object Initalization  Time Taken : ", $moduleName);
+        }
+        $infoType = ProfileInformationModuleMap::getInfoTypeById($module, $infoTypeId, $Apptype);
+        $json = 1;
+        $infoTypeNav = array($infoType => $pageNo);
+        $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj, $infoTypeNav, $params);
+        $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj);
+        unset($infoTypeId);
+        unset($infoType);
+        unset($pageNo);
+      } else {
+        if($this->bEnableProfiler) {
+          //MyJS Class Object Initalization
+          $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stFourthTime, 'MyJS Class Object Initalization Time Taken : ', $moduleName);
+        }
+        $stFifthTime = microtime(TRUE);
+        $pictureService = new PictureService($loggedInProfileObj);
+        if ($pictureService->isProfilePhotoPresent() == "Y")
+          $profileInfo["PHOTO_FLAG"] = "Y";
+        else
+          $profileInfo["PHOTO_FLAG"] = "N";
+        unset($pictureService);
+        $completionObj = ProfileCompletionFactory::getInstance("API", $loggedInProfileObj, null);
+        $profileInfo["COMPLETION"] = $completionObj->getProfileCompletionScore();
+        $profileInfo["INCOMPLETE"] = $completionObj->GetAPIResponse("MYJS");
+        
+        $profileInfo["PHOTO"] = NULL;
+        if($this->bEnableProfiler) {
+          //Pic & PCS Call
+          $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stFifthTime, 'Pic & PCS Call Time Taken : ', $moduleName);
+        }
+        
+        $stSixthTime = microtime(TRUE);
+        if (MobileCommon::isApp() != "I" || $loggedInProfileObj->getHAVEPHOTO() != "U")
+          $profileInfo["PHOTO"] = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
+        $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
+        $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
+        $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
+        $bIsCached = true;
+        if (!$appV1DisplayJson) {
+          $bIsCached = false;
+          $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
+          $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
+          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson);
+        }
+        if($this->bEnableProfiler) {
+          //Display Call
+          $msg1 = "[Not-Cached]";
+          if($bIsCached) {
+            $msg1 = "[Cached]";
+          } 
+          $msg = "MyJS Display Call $msg1 Time Taken : ";
+          $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stSixthTime, $msg, $moduleName);
+        }
+      }
 
-                         if(MobileCommon::isApp() == "I"){
-                         	$appV1DisplayJson['membership_message'] = NULL;
-                         } 
+      //Bell Count
+      $stBELLTime = microtime(TRUE);
+      $appV1DisplayJson['BELL_COUNT'] = BellCounts::getDetails($pid);
+      
+      if($this->bEnableProfiler) {
+        //BELL Count Time taken
+        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stBELLTime, 'BELL Count Details Time Taken : ', $moduleName);
+      }
+      if (MobileCommon::isApp() == "I") {
+        $appV1DisplayJson['membership_message'] = NULL;
+      }
 
-				////cal layer added by palash                       
-			    ob_start();
-    			sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
-    			$layerData = ob_get_contents();
-    			ob_end_clean();
-    			$layerData=json_decode($layerData,true);
-        		$appV1DisplayJson['calObject']=$layerData['calObject']?$layerData['calObject']:null;
+      ////cal layer added by palash            
+      $stCALTime = microtime(TRUE);
+      ob_start();
+      sfContext::getInstance()->getController()->getPresentationFor("common", "ApiCALayerV1");
+      $layerData = ob_get_contents();
+      ob_end_clean();
+      if($this->bEnableProfiler) {
+        //CAL Time taken
+        $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stCALTime, 'CAL Time Taken : ', $moduleName);
+      }
+      $layerData = json_decode($layerData, true);
+      $appV1DisplayJson['calObject'] = $layerData['calObject'] ? $layerData['calObject'] : null;
 //////////////////////////////////
 
-        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+      $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 
-        $respObj->setResponseBody($appV1DisplayJson);
+      $respObj->setResponseBody($appV1DisplayJson);
+    } else {
+      $respObj->setHttpArray($output);
+    }
+    unset($output);
+    unset($inputValidateObj);
+    $respObj->generateResponse();
+    
+    if($this->bEnableProfiler) {
+      //Total Time taken
+      $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stFirstTime, 'Total Time taken : ', $moduleName);
+      CommonFunction::logIntoProfiler($moduleName, $this->arrProfiler);
+    }
+    
+    if (MobileCommon::isApp() == null)
+      return sfView::NONE;
+    die;
+  }
 
-		}
-                else
-                {
-                	$respObj->setHttpArray($output);
-                }
-                unset($output);
-		unset($inputValidateObj);
-		$respObj->generateResponse();
-		if(MobileCommon::isApp()==null)
-			return sfView::NONE;
-                die;
-	}
-	public function executeJsmsPerform(sfWebRequest $request)
+  public function executeJsmsPerform(sfWebRequest $request)
 	{			//myjs jsms action hit for logging  
 				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
             	$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
@@ -215,13 +268,22 @@ class myjsActions extends sfActions
 					$this->showExpiring = 1;
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
+
+				$this->showMatchOfTheDay = 0;
+				if($this->loginProfile->getACTIVATED() == 'U')
+				{
+					$this->showMatchOfTheDay = 0;
+				}
           //      $this->loginProfile->getDetail($request->getAttribute("profileid"),"PROFILEID","*");
                 ob_start();
                 $jsonData = sfContext::getInstance()->getController()->getPresentationFor("myjs", "performV1");
 
                 $output = ob_get_contents();
                 ob_end_clean();
+                
            	    $this->apiData=json_decode($output,true);
+                $this->jsonData = $output;                
+                
            	    // redirection to cal layers if calObject is not null
            	    if ($this->apiData['calObject'])
            	    {
@@ -269,7 +331,8 @@ class myjsActions extends sfActions
 		$entryDate = $this->loginProfile->getENTRY_DT();
 		$CITY_RES_pixel = $this->loginProfile->getCITY_RES();
 		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
-
+        
+        $this->loadLevel = JsConstants::$hideUnimportantFeatureAtPeakLoad;
 
 	
 		if (empty($this->profilePic))
@@ -338,11 +401,17 @@ class myjsActions extends sfActions
 		$registrationTime = strtotime($entryDate);
 
 		$this->showExpiring = 0;
-		if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
+		if($this->loadLevel < 2 && ($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 		{
 			$this->showExpiring = 1;
 		}
 
+		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
+		$this->showMatchOfTheDay = 0;
+		if($loggedInProfileObj->getACTIVATED() == 'U')
+		{
+			$this->showMatchOfTheDay = 0;
+		}
 		$this->engagementCount=array();
 
 //Flag to compute data for important section for FTU page
@@ -522,5 +591,18 @@ return $staticCardArr;
 
 
 	} 
+
+	public function executeClosematchOfDayV1(sfWebRequest $request)
+	{
+		$matchObj= new MOBILE_API_MATCH_OF_DAY();
+		$profileId = LoggedInProfile::getInstance()->getPROFILEID();
+		$matchProfileId = JsCommon::getProfileFromChecksum($request->getParameter("MatchProfileChecksum"));
+		$matchObj->updateMatchProfile($profileId, $matchProfileId);
+		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileId);
+		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$profileId);
+		$respObj = ApiResponseHandler::getInstance();
+		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+		$respObj->generateResponse();
+		die;
+	}
 }
- 
