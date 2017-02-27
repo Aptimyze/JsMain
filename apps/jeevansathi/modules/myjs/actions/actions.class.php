@@ -12,7 +12,7 @@ class myjsActions extends sfActions
 {
   
   private $arrProfiler = array();
-  private $bEnableProfiler = true;
+  private $bEnableProfiler = false;
 	/**
   	*this function is for jsms myjs page... to map the membership id to the proper link to which to redirect when clicked on the membership banner
   	*
