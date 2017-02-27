@@ -77,6 +77,7 @@ class ThirdPartyService
 		$response = CommonUtility::sendCurlPostRequest($url,"","",$header);
 		$timeConsumed=microtime(true)-$start_tm;
 		$data = (Array)json_decode($response);
+		
 		$service["status"] = ($data["header"]->status==200)?"Success":"Fail";
 		$service["responseTime"] = $timeConsumed;
 		return $service;
@@ -84,7 +85,7 @@ class ThirdPartyService
 	
 	public static function callJavaServices()
 	{
-		$NeedAuth = Array("LISTINGS","AUTH");
+		$NeedAuth = Array("LISTINGS","AUTH","PROFILE");
 		 $services = ThirdPartyConfig::getValue("JAVASERVICES","API");
         
         foreach($services as $a=>$s)
@@ -95,7 +96,7 @@ class ThirdPartyService
 			foreach($ips as $k=>$v)
 			{
 				$hitUrl = $v.$url;
-				if(in_array($NeedAuth,$k))
+				if(in_array($s,$NeedAuth))
 					$pid = 9061321;
 				else
 					$pid ="";
