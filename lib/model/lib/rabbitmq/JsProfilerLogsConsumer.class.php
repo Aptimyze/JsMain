@@ -146,7 +146,7 @@ class JsProfilerLogsConsumer
           $val['module'] = $moduleName;
           $val['date'] = date('Y-m-d H:i:s');
           
-          $storeObj->insertRecord(array('Request_Id'=>$val['requestId'],'ModuleName'=>$val['module'],'Memory_In_Mb'=>$val['mem_usages'],'Time'=>$val['time_elapse'],'Label'=>$val['msg'],'Channel'=>$val['channel']));
+          $storeObj->insertRecord(array('Request_Id'=>$val['requestId'],'ModuleName'=>$val['module'],'Memory_In_Mb'=>$val['mem_usages'],'TimeTaken_In_Sec'=>$val['time_elapse'],'Label'=>$val['msg'],'Channel'=>$val['channel'],'Time_Stamp'=>$val['time_stamp']));
         }
       }
     }

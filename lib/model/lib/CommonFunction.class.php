@@ -708,7 +708,7 @@ class CommonFunction
         $msg .= ' Time taken : '.$timeTaken;
         //$arrData['requestId'] = LoggingManager::getInstance()->getUniqueId();
         //LoggingManager::getInstance($moduleName)->logThis(LoggingEnums::LOG_INFO,$msg);    
-        return array('mem_usages'=>$mem,'time_elapse'=>$timeTaken,'msg'=>$msg,'requestId'=>LoggingManager::getInstance()->getUniqueId(),'channel'=>CommonFunction::getChannel());
+        return array('mem_usages'=>$mem,'time_elapse'=>$timeTaken,'msg'=>$msg,'requestId'=>LoggingManager::getInstance()->getUniqueId(),'channel'=>CommonFunction::getChannel(),'time_stamp'=>date('Y-m-d H:i:s'));
     }
     
     public static function logIntoProfiler($szModuleName, $arrData) {
