@@ -67,7 +67,7 @@
 		<span> Sleep  ~$v['SLEEP_COUNT']`</span>
 		<div> Queries</div>
 		~foreach from=$v['QUERIES'] item=y key=x`
-			<span> ~$y`</span> 
+			<span> ~$y`</span><br> 
 		~/foreach`	
 	 </div>
 <br>

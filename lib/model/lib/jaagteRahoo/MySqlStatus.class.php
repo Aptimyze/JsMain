@@ -22,7 +22,7 @@ class MysqlStatus
 		{
                         $serverName = $serverDetails[0];
 			$db = @mysql_connect($serverDetails[1] . ":" . $serverDetails[4],$serverDetails[2],$serverDetails[3]);
-                        $res=mysql_query("SELECT * FROM information_schema.processlist where command!='Sleep' ORDER BY TIME DESC",$db);
+                        $res=mysql_query("SELECT * FROM information_schema.processlist ORDER BY TIME DESC",$db);
 			if(!$res)
                         {
 				$serverData[$serverName]['TOTAL_COUNT']= "fail gaya" ;
