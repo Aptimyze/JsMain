@@ -26,6 +26,14 @@ class ApiEditSubmitV1Action extends sfActions
 		$this->loginProfile->setJpartner($jpartnerObj);
 		//Get symfony form object related to Edit Fields coming.
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
+		if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
+		{
+			$http_msg=print_r($_SERVER,true);
+            mail("ahmsjahan@gmail.com,lavesh.rawat@gmail.com","CSRF header is missing.","details :$http_msg");
+			//writing in the file to keep track
+            file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/csrf.txt",$http_msg,FILE_APPEND);
+		}
+		
 		$this->editFieldNameArr=$request->getParameter('editFieldArr');		
 		if($this->editFieldNameArr['STATE_RES'] && $this->editFieldNameArr['CITY_RES']=="0")
 		{

@@ -962,6 +962,7 @@
 						  url: "/api/v1/profile/editsubmit?incomplete=Y&channel="+channel,
 						  type: 'POST',
 						  datatype: 'json',
+						  headers: { 'X-Requested-By': 'jeevansathi' },
 						  cache: true,
 						  async: true,
 						  data: {editFieldArr : editFieldArr},
@@ -1442,6 +1443,8 @@
 						  url: "/api/v1/profile/editsubmit?incomplete=Y&AUTHCHECKSUM=&channel="+channel,
 						  type: 'POST',
 						  datatype: 'json',
+						  headers: { 'X-Requested-By': 'jeevansathi' },       
+
 						  cache: true,
 						  async: true,
 						  data: {editFieldArr : editFieldArr},
