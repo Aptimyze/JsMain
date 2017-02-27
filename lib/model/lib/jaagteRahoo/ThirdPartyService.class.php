@@ -72,7 +72,7 @@ class ThirdPartyService
 			$auth = $x["AUTHCHECKSUM"];
 			$header = array("JB-Profile-Identifier:".$auth);
 		}
-
+		
 		$start_tm=microtime(true);
 		$response = CommonUtility::sendCurlPostRequest($url,"","",$header);
 		$timeConsumed=microtime(true)-$start_tm;
@@ -84,18 +84,26 @@ class ThirdPartyService
 	
 	public static function callJavaServices()
 	{
-		$NeedAuth = Array("Listings","Auth");
-		$urls["JsPresence_67"]["url"]="http://10.10.18.67:8290/profile/v1/presence";
-		$urls[]="";
-		$urls[]="";
-		$urls[]="";
-		foreach($urls as $k=>$v)
-		{
-			if(in_array($NeedAuth,$k))
-				$pid = 9061321;
-			else
-				$pid ="";
-			$Services[$k] = self::javaService($v["url"],$pid);
+		$NeedAuth = Array("LISTINGS","AUTH");
+		 $services = ThirdPartyConfig::getValue("JAVASERVICES","API");
+        
+        foreach($services as $a=>$s)
+        {
+            $ips = ThirdPartyConfig::getValue($s,"IP");
+            $url= ThirdPartyConfig::getValue($s,"URL");
+			
+			foreach($ips as $k=>$v)
+			{
+				$hitUrl = $v.$url;
+				if(in_array($NeedAuth,$k))
+					$pid = 9061321;
+				else
+					$pid ="";
+				
+				
+				$Services[$k] = self::javaService($hitUrl,$pid);
+				
+			}
 		}
 		return $Services;
 	}

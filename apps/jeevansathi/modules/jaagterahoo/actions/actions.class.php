@@ -30,6 +30,8 @@ class jaagterahooActions extends sfActions
 	$this->checkGuna = ThirdPartyService::checkGuna();
 	$this->checkRedis = ThirdPartyService::checkRedis();
 	$this->checkRabbit = ThirdPartyService::checkRabbitMq();
+	$this->checkServices  = ThirdPartyService::callJavaServices();
+	print_r($this->checkServices); die;
 
 	$url = JsConstants::$chatListingWebServiceUrl["dpp"]."?type=CHATDPP";
 	$this->checkDpp = ThirdPartyService::javaService($url,9061321);
