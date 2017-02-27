@@ -54,7 +54,7 @@ if(isset($data))
 	
         if($Submit)
         {
-			$today=date("Y-m-d");
+			$today = CommonUtility::makeTime(date("Y-m-d"));
 
 			include_once(JsConstants::$docRoot."/classes/JProfileUpdateLib.php");
 			$objUpdate = JProfileUpdateLib::getInstance();

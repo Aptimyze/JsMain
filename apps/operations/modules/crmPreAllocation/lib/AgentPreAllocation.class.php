@@ -26,8 +26,8 @@ class AgentPreAllocation
                 $jprofileObj    =new JPROFILE('newjs_slave');
                 $preAllocationTempPoolObj =new incentive_PRE_ALLOCATION_TEMP_POOL();
 
-                $loginDtStart   =date("Y-m-d",time()-14*24*60*60);
-                $loginDtEnd     =date("Y-m-d");
+                $loginDtStart   =date("Y-m-d",time()-14*24*60*60)." 00:00:00";
+                $loginDtEnd     =date("Y-m-d H:i:s");
                 $profiles       =$jprofileObj->getLoggedInProfilesForPreAlloc($loginDtStart, $loginDtEnd);
 
 		// Add profile in temp pool
