@@ -540,7 +540,7 @@ class NotificationDataPool
     }
     
     public function getNotificationServiceData(){
-        $notificationServiceUrl = "192.168.120.239:8490/communication/v1/notification";
+        $notificationServiceUrl = JsConstants::$chatNotificationService."/communication/v1/notification";
         $headerArr[] = "JB-Internal: true";
         $response = CommonUtility::sendCurlPostRequest($notificationServiceUrl,'','',$headerArr);
         $modifiedData = json_decode($response,true);
@@ -548,7 +548,7 @@ class NotificationDataPool
     }
     
     public function sendChatNotification($notificationData){
-        if(is_array($notificationData)){
+        if(!empty($notificationData) && is_array($notificationData)){
             $chatMsgInstantNotObj = new InstantAppNotification("CHAT_MSG");
             foreach($notificationData as $key => $val){
                     $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"],'',array('CHAT_ID'=>$val["id"]));
