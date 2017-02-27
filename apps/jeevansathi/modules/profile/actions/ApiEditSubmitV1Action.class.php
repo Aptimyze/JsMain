@@ -26,6 +26,8 @@ class ApiEditSubmitV1Action extends sfActions
 		$this->loginProfile->setJpartner($jpartnerObj);
 		//Get symfony form object related to Edit Fields coming.
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
+
+		// added this to check whether request is originated from the same origin
 		if ( $_SERVER['HTTP_X_REQUESTED_BY'] === NULL && ( MobileCommon::isNewMobileSite() || MobileCommon:: isDesktop()))
 		{
 			$http_msg=print_r($_SERVER,true);
