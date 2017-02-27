@@ -256,6 +256,8 @@ class NotificationDataPool
             $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
 
         $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
+        if($notificationKey == 'CHAT_MSG')
+            $dataAccumulated[0]['OTHER_PROFILEID']=$profilesArr["OTHER"];
         unset($profilesArr);
         unset($details);
         return $dataAccumulated;
@@ -549,7 +551,7 @@ class NotificationDataPool
         if(is_array($notificationData)){
             $chatMsgInstantNotObj = new InstantAppNotification("CHAT_MSG");
             foreach($notificationData as $key => $val){
-                    $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"]);
+                    $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"],'',array('CHAT_ID'=>$val["id"]));
             }
             unset($chatMsgInstantNotObj);
         }

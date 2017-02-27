@@ -548,6 +548,7 @@ public function microtime_float()
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE'] = $finalNotificationMessage;
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE_TITLE'] = $finalNotificationMessageTitle;	
 		  $completeNotificationInfo['COUNT'] = $dataPerNotification['COUNT_BELL'];
+          $completeNotificationInfo['OTHER_PROFILEID'] = $dataPerNotification['OTHER_PROFILEID'];
 		  // print_r($completeNotificationInfo);
 		  return $completeNotificationInfo;
 	  }
