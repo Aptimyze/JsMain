@@ -23,7 +23,7 @@ class dppSuggestionsV1Action extends sfActions
 		$percentileFields = DppAutoSuggestEnum::$TRENDS_FIELDS;
 		$profileId = $this->loggedInProfileObj->getPROFILEID();
 		$dppSuggestionsObj = new dppSuggestions();
-		$trendsObj = new TWOWAYMATCH_TRENDS("newjs_slave");
+		$trendsObj = new TWOWAYMATCH_TRENDS("newjs_masterRep");
 		//Trends arr is fetched from twoWayMatches.Trends table
 		$trendsArr = $dppSuggestionsObj->getTrendsArr($profileId,$percentileFields,$trendsObj);
 		unset($trendsObj);

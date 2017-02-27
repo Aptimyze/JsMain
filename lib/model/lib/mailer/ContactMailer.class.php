@@ -281,7 +281,7 @@ class ContactMailer
 
 	$partialObj = new PartialList();
 	$profileChecksum=JsAuthentication::jsEncryptProfilechecksum($sender->getPROFILEID());
-	if(strlen($message)>260){$showReadMore=1;$message=substr($message,0,260);}else $showReadMore=0;
+	if(strlen($message)>1000){$showReadMore=1;$message=substr($message,0,1000);}else $showReadMore=0;
         $partialObj->addPartial("messageMailerTuple", "messageMailerTuple",  array('profileArray'=>array($sender->getPROFILEID()=>$message),'showReadMore'=>$showReadMore));
         $partialObj->addPartial("jeevansathi_contact_address", "jeevansathi_contact_address");
         $tpl->setPartials($partialObj);
@@ -378,17 +378,19 @@ class ContactMailer
    * @return boolean
    */
   public static function InstantReminderMailer($viewedProfileId, $viewerProfileId, $draft, $subscriptionStatus) {
-    $emailSender = new EmailSender(MailerGroup::EOI, 1756);
+
+$emailSender = new EmailSender(MailerGroup::EOI, 1756);
     $tpl = $emailSender->setProfileId($viewedProfileId);
     $tpl->getSmarty()->assign("otherProfileId", $viewerProfileId);
     $tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
-  	$viewerProfileId = new Profile('',$viewerProfileId);
-    if($viewerProfileId->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='EVALUE')
+  	$viewerProfileIdObj = new Profile('',$viewerProfileId);
+    if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='EVALUE')
 		$paidStatus = "eValue";
-	else if($viewerProfileId->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
+	else if($viewerProfileIdObj->getPROFILE_STATE()->getPaymentStates()->getPaymentStatus() =='ERISHTA')
 		$paidStatus = "eRishta";
 	$smartyObj = $tpl->getSmarty();
 	$smartyObj->assign("paidStatus",$paidStatus);
+	$smartyObj->assign("count", 1);
 	$profileMemcacheServiceObj = new ProfileMemcacheService($viewedProfileId);
 	$totalCount = $profileMemcacheServiceObj->get("AWAITING_RESPONSE");
 	$smartyObj->assign("totalCount",$totalCount);

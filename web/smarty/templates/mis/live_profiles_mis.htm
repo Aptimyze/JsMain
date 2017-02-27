@@ -82,7 +82,16 @@
 					</td>
 					<td align="center">&nbsp;~$total_screened[dd]`</td>
 					~section name=dd1 loop=$ddarr1`
-						<td align="center">&nbsp;~$total_screened_day[dd][dd1]`</td>
+						<td align="center">
+							<table>
+								<tr><td style="color:green;">
+									&nbsp;~$total_screened_day_approve[dd][dd1]`
+								</td></tr>
+								<tr><td style="color:red;">
+									&nbsp;~$total_screened_day_disapprove[dd][dd1]`
+								</td></tr>
+							</table>
+						</td>
 					~/section`
 				</tr>
 			~/section`

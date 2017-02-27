@@ -372,13 +372,20 @@ class staticActions extends sfActions
 
     }
     $layerData=CriticalActionLayerDataDisplay::getDataValue($layerToShow);
+    
     $this->layerId = $layerData[LAYERID];
     $this->titleText = $layerData[TITLE];
     $this->contentText = $layerData[TEXT];
     $this->button1Text = $layerData[BUTTON1];
     $this->button2Text = $layerData[BUTTON2];
+    $this->contentTextNEW = $layerData[TEXTNEW];
+    $this->button1TextNEW = $layerData[BUTTON1NEW];
+    $this->button2TextNEW = $layerData[BUTTON2NEW];
     $this->action1 = $layerData[ACTION1];
     $this->action2 = $layerData[ACTION2];
+    $this->primaryEmail = LoggedInProfile::getInstance()->getEMAIL();
+    $this->subtitle = $layerData[SUBTITLE];
+    $this->textUnderInput = $layerData[TEXTUNDERINPUT];
     $this->setTemplate("criticalActionLayer");
   }
 
@@ -1765,12 +1772,16 @@ if($k=="state_res")
                 {
                         if(strlen($key)===2)
                         {
-				asort($arrFinalOut[$currentKey]);
-                                $currentKey = $key;
-                                $arrFinalOut[$currentKey] = array();
+				if(array_key_exists($currentKey, $arrFinalOut))
+				{
+					asort($arrFinalOut[$currentKey]);
+				}
+				else
+					$arrFinalOut[$currentKey] = array();
                         }
                         else
                         {
+				$currentKey = substr($key,0,2);
                                 $arrFinalOut[$currentKey][$key] = $val;
                         }
                 }

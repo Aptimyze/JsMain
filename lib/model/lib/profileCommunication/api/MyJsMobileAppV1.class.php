@@ -14,6 +14,20 @@ class MyJsMobileAppV1
 	static public $tupleTitleField ;
 
 
+
+	public static function deleteMyJsCache($profileIdArray){
+            $memObject = JsMemcache::getInstance();
+            foreach ($profileIdArray as $key => $value) {
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_I');
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_A');
+                $memObject->delete(MyJsMobileAppV1::getCacheKey($value).'_M');
+
+                
+            }    
+
+		
+	}
+
     public static function getCacheKey($pid)
         {
 
@@ -27,10 +41,10 @@ class MyJsMobileAppV1
 	        $profilePicObj = $pictureService->getProfilePic();
 		if($profilePicObj)
 			$myPic = $profilePicObj->getThumbailUrl();
-                if(!$myPic)
+        if(!$myPic)
 		{
 			 if($pictureService->isProfilePhotoUnderScreening() =="Y")
-				$myPic = PictureService::getRequestOrNoPhotoUrl('underScreeningPhoto','ThumbailUrl',$profileObj->getGENDER());
+				$myPic = $profilePicObj->getThumbail96Url();
 			else
 				$myPic = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
 		}
@@ -56,14 +70,25 @@ $className = get_class($this);
 			if(array_key_exists($key,$displayObj))
 			{
 				$isApp = MobileCommon::isApp();
-				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;
-				if($key == "INTEREST_EXPIRING" && !$showExpiring && !(MobileCommon::isIOSApp()))
+				$appVersion=sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION")?sfContext::getInstance()->getRequest()->getParameter("API_APP_VERSION"):0;				
+				if($key == "INTEREST_EXPIRING" && !$showExpiring)
 				{
 					continue;
 				}
 				if($key == "INTEREST_EXPIRING" && $isApp == "A" && $appVersion  && $appVersion < 81)
 				{
 					continue;
+				}
+				if($key == "MATCH_OF_THE_DAY")
+				{
+					if(MobileCommon::isApp())
+					{  
+				// Version Check For ANDROID		
+					//&& ($isApp == "A" && $appVersion  && $appVersion < 84)	
+						continue;
+					}	
+					/*else*/ if (LoggedInProfile::getInstance()->getACTIVATED() == 'U')
+						continue;					
 				}
 				foreach($value as $k=>$v)
                                 {
@@ -186,7 +211,7 @@ $className = get_class($this);
 		$displayV1['membership_message'] = $this->getBannerMessage($profileInfo);     
 			
 
-
+//print_r($displayV1);die;
 		return $displayV1;
         }
 

@@ -422,5 +422,4 @@ function getname($cid)
         $username=$row['USERNAME'];
         return $username;
 }
-
 ?>

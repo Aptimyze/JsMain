@@ -299,6 +299,18 @@ params["profilechecksum"] =input.val();
     
     });
     
+    child=$(".matchOfDayBtn");
+    child.unbind("click");
+    child.bind("click",function(){
+        $(this).unbind("click");
+        var input=$(this).children(".inputProChecksum");
+params["profilechecksum"] =input.val();
+        params["actionName"] ="INITIATE_MYJS";
+        params["fromJSMS_MYJS"] ="1";
+        params['fromJSMS_MOD'] = "1";
+        performAction(params["actionName"], params,  $(this).attr("index"),false);
+    
+    });
     
     
     }   
@@ -455,8 +467,15 @@ function performAction(action, tempParams, index,isPrime,fromButton)
     {
                 tempParams["fromJSMS_MYJS"]='1';
                 tempParams["stype"]='WMM';
-        
-         $("#matchAlerttuple_"+index+" .contactLoader").css("display","block");
+        if(tempParams["fromJSMS_MOD"] == 1)
+        { 
+          tempParams["stype"]='MODJSMS';
+          $("#matchOfDaytuple_"+index+" .contactLoader").css("display","block");
+        }
+        else
+        {
+          $("#matchAlerttuple_"+index+" .contactLoader").css("display","block");
+        }
         
     }
       else
@@ -482,7 +501,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
     success: function(result){
                     if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS") || (action=="INITIATE_MYJS"))
                     {
-                    var tempSection = action=="INITIATE_MYJS" ? 'matchAlert' : 'eoi';
+                    var tempSection = (action=="INITIATE_MYJS") ? (tempParams["fromJSMS_MOD"] ? 'matchOfDay' : 'matchAlert') : 'eoi';
                     $("#"+tempSection+"tuple_"+index+" .contactLoader").hide();
                     
                     }
@@ -500,7 +519,7 @@ function performAction(action, tempParams, index,isPrime,fromButton)
                     if(CommonErrorHandling(result,'?regMsg=Y')) //CE means contact engine
       {                     
                             
-                            if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action); 
+                            if ((action=="ACCEPT_MYJS")||(action=="DECLINE_MYJS")||(action=="INITIATE_MYJS")) afterActionMyjs(index, action, tempParams); 
                             else afterAction(result,action,index);
       }
     }
@@ -511,9 +530,9 @@ function performAction(action, tempParams, index,isPrime,fromButton)
 
 
 
-function afterActionMyjs(index,action){
+function afterActionMyjs(index,action,Params){
     
-    var section= (action=='INITIATE_MYJS') ? 'matchAlert' : 'eoi';
+    var section= (action=='INITIATE_MYJS') ? (Params["fromJSMS_MOD"] ? 'matchOfDay' : 'matchAlert') : 'eoi';
         $("#"+section+"tuple_"+index+" #contactLoader").hide();
         $("#"+section+"tuple_"+index).fadeOut(1500);
         var x=parseInt($("#"+section+"_count").html());
@@ -525,10 +544,15 @@ function afterActionMyjs(index,action){
         { 
             $("#"+section+"Absent").show();
             if(section=='matchAlert')$("#matchAlertAbsentText").text('No more profiles for today');
+            if(section=='matchOfDay')
+            {
+              $("#matchOfDayPresent").hide();
+            }
+
         }
         $(".eoiAcceptBtn").attr("disabled",false);
         $(".eoiDeclineBtn").attr("disabled",false);
-        tempTupleObject = section=='matchAlert' ? tupleObject2 : tupleObject;
+        tempTupleObject = (section=='matchOfDay') ? tupleObject3 : (section=='matchAlert' ? tupleObject2 : tupleObject);
         tempTupleObject._tupleIndex--;
         tempTupleObject.indexFix();
         tempTupleObject._goTo(tempTupleObject._index);          
