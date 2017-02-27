@@ -21,6 +21,9 @@ class jaagterahooActions extends sfActions
   }
   public function executeDuniyaWalo(sfWebRequest $request)
   {
+        $pObj = LoggedInProfile::getInstance("newjs_master",'');
+        if($pObj->getPROFILEID()!="9061321")
+                die("wrong url");
 	$this->serverHealthConfig = json_encode(ServerHealthEnums::$config);
 
 	$HaProxy = new HaProxy();
@@ -31,19 +34,10 @@ class jaagterahooActions extends sfActions
 	$this->checkRedis = ThirdPartyService::checkRedis();
 	$this->checkRabbit = ThirdPartyService::checkRabbitMq();
 	$this->checkServices  = ThirdPartyService::callJavaServices();
-	print_r($this->checkServices); die;
-
-	$url = JsConstants::$chatListingWebServiceUrl["dpp"]."?type=CHATDPP";
-	$this->checkDpp = ThirdPartyService::javaService($url,9061321);
-
-	$url = "http://10.10.18.67:8290/profile/v1/presence?pfids=9061321";
-	$this->checkPresence67 = ThirdPartyService::javaService($url);
-
-	$url = "http://10.10.18.72:8290/profile/v1/presence?pfids=9061321";
-	$this->checkPresence72 = ThirdPartyService::javaService($url);
 
 	$serverStatusObj = new ServerStatus;
 	$this->serverstatus = $serverStatusObj->getStatus();
+
 	$mysqlStatusObj = new MysqlStatus;
 	$this->mysqlStatus = $mysqlStatusObj->getStatus();
   }
