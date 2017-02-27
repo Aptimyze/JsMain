@@ -1181,7 +1181,7 @@ if($k=="state_res")
 		}
     if($forDpp) //To remove Select from fields where it is not required
     {
-      if($output[0][0][0] == "Select" || $output[0][0][S0] == "Select")
+      if($output[0][0][0] == DPPConstants::$removeLabelFromDpp || $output[0][0][S0] == DPPConstants::$removeLabelFromDpp)
         unset($output[0][0]);
     }
     

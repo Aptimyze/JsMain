@@ -475,7 +475,7 @@
 
   const AP_SCREEN_MSG = 'Your desired partner profile will be vetted by our matchmaking expert before it is updated on your profile';
   public static $removeCasteFromDppArr = array("242","243","244","245","246");
- 
+  public static $removeLabelFromDpp = "Select";
  }
  
 ?>
