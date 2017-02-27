@@ -117,6 +117,10 @@ class MessageQueues
   const WRITE_MSG_queueDelayed5min = 'WriteMsgDelayedQueue';
   const WRITE_MSG_exchangeDelayed5min = 'WriteMsgDelayedExchange';
   const WRITE_MSG_Q = "WRITE_MSG_Queue";
+  
+  //Profiler Log Queue
+  const SCRIPT_PROFILER_Q = "JsProfilerQueue";
+  const SCRIPT_PROFILER_PROCESS = "JS_PROFILER_PROCESS";
 }
 
 ?>

@@ -147,7 +147,7 @@ You need to be a Registered Member<br />to connect with this user</div>
 				<a href="/static/appredirect?type=iosMobFooter" class="f15 white fontlig">Download App</a>
 			   </div>      
 
-			  <div class="txtc pad2"><a href="#" onclick=translateSiteHomePage("http://hindi.jeevansathi.com"); bind-slide=1 class="f16 white fontlig">हिंदी में</a></div>
+			  <div class="txtc pad2"><a href="#" onclick=convertIntoHomePage("http://hindi.jeevansathi.com"); bind-slide=1 class="f16 white fontlig">हिंदी में</a></div>
 			   <!--end:div-->
 			</div>
 	   </form>
