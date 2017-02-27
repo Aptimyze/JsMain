@@ -9061,6 +9061,7 @@ case "children_ascii_array":
 	case "manglik":
 
 		$arr=array(
+"S0"=>"Select",
 "D" => "Don't know",
 "M" => "Yes",
 "A" => "Angshik (partial manglik)",
@@ -9072,6 +9073,7 @@ case "children_ascii_array":
 	case "manglik_label":
 
 		$arr=array(
+"S0"=>"Select",		
 "M" => "Manglik",
 "N" => "Non Manglik",
 "D" => "Don't know",
