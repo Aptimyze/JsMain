@@ -536,7 +536,7 @@
             <div class="clearfix color11 pt30 pb30">
                 <div class="fl">
                     <p class="fontmed f24 color5">Exclusive offer for you, valid till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</p>
-                    <p class="f16 pt5 fontreg">Upgrade your current ~$data.topBlockMessage.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership by paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if` ~$data.upgradeMembershipContent.upgradeExtraPay`</p>
+                    <p class="f16 pt5 fontreg">Upgrade your current ~$data.topBlockMessage.currentMemName` membership to ~$data.upgradeMembershipContent.upgradeMainMemName` membership by paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if` ~$data.upgradeMembershipContent.upgradeExtraPay`</p>
                 </div>       
             </div>        
             <!--start:block1-->        
