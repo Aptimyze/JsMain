@@ -462,10 +462,10 @@ $js_arr[]=array("jsms/angular/registration/hamburger_reg_js"            => "13")
 $js_arr[]=array("jsms/contact_engine/contactEngine_js"                                                             => "68");
 $js_arr[]=array("jsms/profile/viewProfile/jsmsViewProfile_js"                  => "25");
 $js_arr[]=array("jsms/search/inview"   => "2");
-$js_arr[]=array("jsms/login/newMobLogin_js"                                    => "36");
+$js_arr[]=array("jsms/login/newMobLogin_js"                                     => "37");
 $js_arr[]=array("jsms/login/mobForgotPass_js"            => "13");
 $js_arr[]=array("jsms/login/resetPass_js"   => "2");
-$js_arr[]=array("jsms/hamburger/ham_js"                   => "41");
+$js_arr[]=array("jsms/hamburger/ham_js"                    => "42");
 $js_arr[]=array("jsms/settings/mobChangePass_js"   => "2");
 $js_arr[]=array("jsms/404/mob404_js"  => "1");
 $js_arr[]=array("jsms/search/searchByProfileId_js"      => "5");
