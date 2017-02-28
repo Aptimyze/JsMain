@@ -4,6 +4,17 @@
 */
 Class HandlingCommonReqDatabaseId
 {
+	public static $modulesWhereMasterMasterDone = array("search/matchalerts","/search/partnermatches","/search/justjoined","/api/v1/search/perform");
+
+	public static function isMasterMasterDone(){
+		foreach(self::$modulesWhereMasterMasterDone as $v){
+			if(strstr($_SERVER["REQUEST_URI"],$v))
+				return true;
+		}
+		return false;
+	}
+
+
 	/**
 	* This function will set the dbId which will be used across request
 	* @return $reqId int
@@ -69,8 +80,10 @@ Class HandlingCommonReqDatabaseId
 	public static function mapIdToServer($name="")
 	{
 		if(!strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") && !strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto"))
-			return $name;
-
+		{
+			if(self::isMasterMasterDone()===false)
+				return $name;
+		}
 		$id = self::getId();
 		switch($id)
 		{
