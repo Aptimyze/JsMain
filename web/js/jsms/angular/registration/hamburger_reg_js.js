@@ -172,6 +172,14 @@ var errorMsg = "Something went wrong!! Please try again later";
         }
 		Hamburger.prototype.hideHamburger=function()
 		{
+			var myScope = angular.element('#perspective').scope();
+			if(myScope.fields.length>=3 && localStorage.getItem("UD"))
+			{
+				if(myScope.fields[3].storeKey == "casteNoBar" && JSON.parse(localStorage.getItem("UD")).casteNoBar == "true") 
+				{
+					myScope.fields[3].value=true;
+				}
+			}
 			if(this.bHideStatus)
 				return;
 			var ele=this;	
@@ -230,7 +238,8 @@ var errorMsg = "Something went wrong!! Please try again later";
 				$("#TAPNAME_1").html("");
 				},animationtimer+250);
 			startScrolling();
-		};
+		
+};
 		Hamburger.prototype.UpdateHamburgerHTML=function()
 		{
 			var ele=this;
