@@ -4,6 +4,7 @@
         var iPCS = ~$iPCS`;
         var showFTU=~$showFtu`;
         var showExpiring=~$showExpiring`;
+        var showMatchOfTheDay=~$showMatchOfTheDay`;
         var profileid = '~$profileid`';
         var profilePic = '~$profilePic`';
         var PageSource = "MyjsPc";
@@ -28,10 +29,14 @@
             <a id="videoCloseID" class="pos-abs disp_b" style="width: 26px;height: 26px;right:24px; top:18px; background:url(/images/jspc/myjsImg/videocross.png) no-repeat"></a>
         </div>
     </div>
-    ~/if`
+    ~/if` 
     <div class="cover1">
         <div class="container mainwid pt35"> ~include_partial("global/JSPC/_jspcCommonTopNavBar",["stickyTopNavBar"=>1])`
-            <div class="pt30">
+            <div class="mt56 pos-rel">
+            <!-- start: match of the day --> 
+                ~if $showMatchOfTheDay eq 1`
+                    ~include_partial("global/JSPC/_jspcMatchOfTheDayBar")`
+                ~/if`
                 <div class="fullwid color-blockfour">
                     <div class="padall-15 clearfix">
                         <div class="fl" style="height:91px;width:91px;">

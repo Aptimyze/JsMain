@@ -23,6 +23,7 @@ class SortByMatchAlert extends SearchSort implements SortStrategyInterface
                 $this->SearchParamtersObj = $SearchParamtersObj;
 		parent::isPhotoSorting($SearchParamtersObj,$loggedInProfileObj,$this->usePhotoSorting);
 		parent::isFilterSorting($loggedInProfileObj);
+                parent::isJsBoostSorting($loggedInProfileObj);
         }
 
 	/**
@@ -61,7 +62,13 @@ class SortByMatchAlert extends SearchSort implements SortStrategyInterface
                 $sortString[$counter] .= ")";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
 		$counter++;
-		
+                
+		if(parent::getJsBoostSorting()){
+                        $sortString[$counter] =  parent::getJsBoostSorting();
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }
+                
                 /* Photo Sortng */
 		if($this->usePhotoSorting==1)
 		{

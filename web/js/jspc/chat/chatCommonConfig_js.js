@@ -115,8 +115,8 @@ chatConfig.Params = {
                 "tab_name": "Online Matches",
                 "groups": [
                     {
-                        "id": "dpp",
-                        "group_name": "Desired Partner Matches",
+                        "id": "intrec",
+                        "group_name": "Interest Received",
                         "show_group_name": true,
                         "hide_offline_users": true
                     },
@@ -125,17 +125,20 @@ chatConfig.Params = {
                         "group_name": "Interest Sent",
                         "show_group_name": true,
                         "hide_offline_users": true
-                    }, {
-                        "id": "intrec",
-                        "group_name": "Interest Received",
-                        "show_group_name": true,
-                        "hide_offline_users": true
-                    }, {
+                    }, 
+                    {
                         "id": "shortlist",
                         "group_name": "Shortlisted Members",
                         "show_group_name": true,
                         "hide_offline_users": true
-                    },{
+                    },
+                    {
+                        "id": "dpp",
+                        "group_name": "Desired Partner Matches",
+                        "show_group_name": true,
+                        "hide_offline_users": true
+                    },
+                    {
                         "id":"mysearch",
                         "group_name":"Search Results",
                         "show_group_name":false,
@@ -327,9 +330,9 @@ chatConfig.Params = {
         //max count of nodes limit per group
         groupWiseNodesLimit: {
             "dpp": 50,
-            "intrec": 50,
-            "shortlist": 50,
-            "intsent":50,
+            "intrec": 20,
+            "shortlist": 20,
+            "intsent":20,
             "acceptance":400
         },
         storeMsgInLocalStorage:false,
@@ -350,7 +353,9 @@ chatConfig.Params = {
         nameTrimmLength:14,
         logChatTimeout:true,
         autoDisplayLoginPanel: 30000, //time in ms
-        audioChatFilesLocation:'/audio/jspc/chat/'
+        audioChatFilesLocation:'/audio/jspc/chat/',
+        enableLoadTestingStanza:true,
+        rejectObsceneMsg: "Message not delivered, Please try later"
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];

@@ -9,26 +9,45 @@ class visitorAlert_MAILER extends TABLE
 	/* This will connect to matchalert slave by default*/
 	public function __construct($dbname="")
 	{	$dbname=$dbname?$dbname:"shard1_master";
-		//$dbname = $dbname?$dbname:"matchalerts_slave_localhost";
-			parent::__construct($dbname);
+		parent::__construct($dbname);
 	}
 	
+	/**
+	 * Truncate Mailer Visitors Data before populating
+	 */
+	public function truncateMailerVisitorsData()
+	{
+		try
+		{
+			$sql="TRUNCATE TABLE visitoralert.MAILER_VISITORS";
+			$res = $this->db->prepare($sql);
+			$res->execute();
+		}
+		catch (PDOException $e)
+		{
+			throw new jsException($e);
+		}
+	}
+
+	
+
 	/* This function is used to get all the profile which need to recieve matchalert ie having SENT<>Y  and atleat one profile in user.
-	* @param totalScript : number of script which can be executed
+	* 
 	* @param script : current script number
 	* @param limit : limit if required
 	* @return result : details of mailer to be sent 
 	*/
-	public function getMailerProfiles($totalScript="1",$script="0",$limit="")
+	public function getMailerProfiles($totalScript="1",$script="0",$limit="",$sent='N')
 	{
 		try 
 		{
 			
-			$sql = "SELECT * FROM visitoralert.MAILER_VISITORS where SENT='N' AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
+			$sql = "SELECT * FROM visitoralert.MAILER_VISITORS where SENT=:SENT AND  MOD(SNO,:TOTAL_SCRIPT)=:SCRIPT";
 			if($limit)
 				$sql.= " limit 0,:LIMIT";
 			$prep = $this->db->prepare($sql);
 			$prep->bindValue(":TOTAL_SCRIPT",$totalScript,PDO::PARAM_INT);
+			$prep->bindValue(":SENT",$sent,PDO::PARAM_STR);
 			$prep->bindValue(":SCRIPT",$script,PDO::PARAM_INT);
 			if($limit)
 				  $prep->bindValue(":LIMIT",$limit,PDO::PARAM_INT);
@@ -99,6 +118,130 @@ class visitorAlert_MAILER extends TABLE
                 }
                 return $output;
         }
+
+    /**
+     * Inserts data into MAILER_VISITORS
+     * @param  array $receiverData an array consisting profiles viewed.
+     */
+    public function insertReceiverData($receiverData)
+    {
+
+    	try
+    	{
+    
+    		if(is_array($receiverData))
+    		{
+    			$sql="INSERT IGNORE INTO visitoralert.MAILER_VISITORS (PROFILEID,SENT) VALUES ";
+
+    			foreach($receiverData as $key=>$value)
+    			{
+    				$sql .="(:PROFILEID".$key.",'U'),";
+    			}
+    			$sql = rtrim($sql,",");
+    			$res = $this->db->prepare($sql);
+    			foreach($receiverData as $key => $value)
+    			{
+    				$res->bindValue(":PROFILEID".$key, $value["PROFILEID"], PDO::PARAM_INT);
+    			}
+    			$res->execute();
+    		}
+
+    	}
+    	catch(PDOException $e)
+    	{
+                        //throw new jsException($e);
+    		jsException::nonCriticalError("VisitorAlert_MAILER_VISITORS.class.php".$e);
+    		return '';
+    	}
+    }
+
+
+    public function updateReceiverData($receiverData,$countOfProfiles)
+    {
+    	try
+        {
+        	if ( is_array($receiverData) )
+        	{
+        		foreach ($receiverData as $key => $value) {
+	            $sql = "";
+	            $sql .= "UPDATE visitoralert.MAILER_VISITORS SET ";
+	         
+	            $where = " WHERE PROFILEID = :PROFILEID";
+	            $setCondition = "";
+	            for ($i=1; $i <= sizeof($value); $i++) { 
+	            	$setCondition .= "VISITOR".$i."= :VISITOR".$i.",";
+	            }
+                    $setCondition = rtrim($setCondition,",");
+                    $setCondition.=',TOTAL=:COUNT';
+                    $setCondition.=",SENT='N'";
+	            $sql .= $setCondition;
+	            $sql .= $where;
+
+	            $pdoStatement = $this->db->prepare($sql);
+	            $pdoStatement->bindValue(":PROFILEID",$key,PDO::PARAM_INT);
+                    $pdoStatement->bindValue(":COUNT",$countOfProfiles,PDO::PARAM_INT);
+	            
+	            for ($i=1; $i <= sizeof($value); $i++) { 
+	            	$pdoStatement->bindValue(":VISITOR".$i,$value[$i - 1],PDO::PARAM_INT);	
+	            }
+
+	            $pdoStatement->execute();
+        	}
+        	}
+        }
+
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    	
+    }
+
+    public function countTotalSent()
+    {
+    	try 
+    	{
+    		$sql="SELECT sum(TOTAL),count(PROFILEID) FROM visitoralert.MAILER_VISITORS where SENT='Y'";
+
+	    	$pdoStatement = $this->db->prepare($sql);
+	    	$pdoStatement->execute();
+
+	    	while($row = $pdoStatement->fetch(PDO::FETCH_ASSOC))
+			{
+				$result["TOTAL"] = $row["sum(TOTAL)"];
+				$result["COUNT"] = $row["count(PROFILEID)"];
+			}
+			return $result;
+    	} 
+    	catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    }
+	public function updateReceiverDataSetX($profileID)
+    {
+    	try
+        {
+	            $sql = "";
+	            $sql .= "UPDATE visitoralert.MAILER_VISITORS SET ";
+                    $sql .= 'TOTAL=:COUNT';
+                    $sql .= ",SENT='X'";
+	            $sql .= " WHERE PROFILEID = :PROFILEID";
+
+	            $pdoStatement = $this->db->prepare($sql);
+	            $pdoStatement->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
+                    $pdoStatement->bindValue(":COUNT",0,PDO::PARAM_INT);
+	            
+
+	            $pdoStatement->execute();
+        }
+
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    	
+    }
 }
 
 ?>
