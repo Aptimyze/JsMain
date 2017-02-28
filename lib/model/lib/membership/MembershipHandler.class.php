@@ -793,7 +793,6 @@ class MembershipHandler
         $billid         = $servStatusObj->getArray($valueArray, '', '', '', 'BILLID');
         $purchaseDetail = $purchaseObj->getPurchaseDetails($billid[0]['BILLID']);
         $actualService  = $purchaseDetail['SERVICEID'];
-
         return $actualService;
     }
 
@@ -1020,7 +1019,6 @@ class MembershipHandler
             if (empty($subStatus)) {
                 $subStatus = $this->getSubStatus($userObj->getProfileid(), $module);
             }
-
             if ($subStatus && is_array($subStatus)) {
                 foreach ($subStatus as $key => &$value) {
                     $vasCheck = @preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $value['SERVICEID']);
@@ -1042,7 +1040,10 @@ class MembershipHandler
                                 $value['SERVICEID'] = $esathiCheck;
                                 $memID              = "NCP";
                             }
-
+                            if($actualService != "" && strpos($value['SERVICEID'],'NCP') !== false){
+                                $serviceIdArr = explode(",",$value['SERVICEID']);
+                                $value['SERVICEID'] = $serviceIdArr[0];
+                            }
                             $value['SERVICE_NAME'] = $this->getUserServiceName($memID);
                             $value['SERVICEID_WITHOUT_DURATION'] = $memID;
                             if (filter_var($value['SERVICEID'], FILTER_SANITIZE_NUMBER_INT)) {
@@ -1101,6 +1102,7 @@ class MembershipHandler
             }
             $memCacheObject->set($profileid . '_MEM_SUBSTATUS_ARRAY', serialize($subStatus), 1800);
         }
+        
         return $subStatus;
     }
 
