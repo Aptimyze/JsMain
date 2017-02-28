@@ -58,7 +58,7 @@ class LoginTracking
         //Function to track all logins happening through autologin
 		//channel can be Mailer(M),SMS(S)
 		//Webiste Version Desktop(D),Mobile(M)
-		public function loginTracking($requestURI="")
+		public function loginTracking($requestURI="",$currentTime='')
 		{
                 if (!strstr($_SERVER["REQUEST_URI"],'notification/poll') && !strstr($_SERVER["REQUEST_URI"],'notification/deliveryTracking'))
                 {
@@ -95,7 +95,9 @@ class LoginTracking
 				}
 				$pageStype=substr($pageStype,0,4);
 				$pageStype=addslashes($pageStype);
-				$sqlLog="INSERT INTO MIS.LOGIN_TRACKING ( `PROFILEID` , `URL` , `DATE`, `CHANNEL`, `WEBSITE_VERSION`, `STYPE`) VALUES ('".$this->profileId."', '".$pageName."', now(),'".$this->channel."','".$this->websiteVersion."','".$pageStype."')";
+				$pageName=addslashes($pageName);
+                                $time = $currentTime ? $currentTime : date("Y-m-d H:i:s");
+				$sqlLog="INSERT INTO MIS.LOGIN_TRACKING ( `PROFILEID` , `URL` , `DATE`, `CHANNEL`, `WEBSITE_VERSION`, `STYPE`) VALUES ('".$this->profileId."', '".$pageName."', '".$time."','".$this->channel."','".$this->websiteVersion."','".$pageStype."')";
 				$mysql->executeQuery($sqlLog,$db);
 			}
 		}

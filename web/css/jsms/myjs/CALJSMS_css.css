@@ -24,5 +24,29 @@
 #skipBtn{display: inline-block;position: relative;left: 50%;transform: translate(-50%,0);-Webkit-transform: translate(-50%,0);-Moz-transform: translate(-50%,0);-O-transform: translate(-50%,0); -ms-transform: translate(-50%,0);}
 
 
+ .suggestOption {
+            margin: 5px;
+            padding: 5px;
+            border-radius: 20px;
+            min-width: 60px;
+        }
+        
+        .suggestOptionRange {
+            margin: 6px auto;
+            width: 160px;
+        }
+        
+        .suggestOptionRange2 {
+            margin: 6px auto;
+            width: 200px;
+        }
+        
+        .mb30 {
+            margin-bottom: 30px
+        }
+        
+        .mb10 { margin-bottom:10px}
+		.suggestSelected {background-color:#d9475c;color:white;}
+
 
 

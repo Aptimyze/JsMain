@@ -435,7 +435,7 @@ return $returnArray;
 			$PHONE_STATUS 	='MOB_STATUS';
 			$phone 		=trim(substr($phone_num,-10,10));
 			if($phone){
-				$sql ="SELECT `PROFILEID`,`MOB_STATUS`,`LAST_LOGIN_DT` from newjs.JPROFILE WHERE `PHONE_MOB` IN ('$phone','0$phone') AND LAST_LOGIN_DT >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
+				$sql ="SELECT `PROFILEID`,`MOB_STATUS`,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT from newjs.JPROFILE WHERE `PHONE_MOB` IN ('$phone','0$phone') AND DATE(LAST_LOGIN_DT) >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
 				$execute =1;
 			}
 		}
@@ -455,7 +455,7 @@ return $returnArray;
 			}
 			$cnt_no =strlen($landline_std);
 			if($cnt_no >5){
-				$sql ="SELECT `PROFILEID`,`LANDL_STATUS`,`LAST_LOGIN_DT` from newjs.JPROFILE WHERE `PHONE_WITH_STD` IN ('$landline_std','0$landline_std') AND LAST_LOGIN_DT >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
+				$sql ="SELECT `PROFILEID`,`LANDL_STATUS`,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT  from newjs.JPROFILE WHERE `PHONE_WITH_STD` IN ('$landline_std','0$landline_std') AND DATE(LAST_LOGIN_DT) >='$date_1year' AND ACTIVATED IN('H','Y') AND activatedKey=1";
 				$execute =1;
 			}
 				
@@ -660,7 +660,7 @@ return $returnArray;
 			}
 			// Check app login in last 7 days:
 			if($appRegProfile){
-		                $loginTrackingObj=new MIS_LOGIN_TRACKING('newjs_slave');
+		                $loginTrackingObj=new MIS_LOGIN_TRACKING('crm_slave');
                 		$profileArr      =$loginTrackingObj->getLast7DaysLoginProfiles($profileid);
 			}
 			if($appRegProfile && count($profileArr)>0){

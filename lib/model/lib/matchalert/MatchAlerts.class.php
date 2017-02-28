@@ -14,7 +14,7 @@ class MatchAlerts
 	*/
 	public function getMatchAlertCount($profileId, $skipProfile='',$days='')
 	{
-		$matchProfilesArray                              = SearchCommonFunctions::getMatchAlertsMatches('','',$profileId);
+		$matchProfilesArray                              = SearchCommonFunctions::getMatchAlertsMatches('5000','',$profileId);
 		$output["TOTAL"] = $matchProfilesArray["CNT"];
 		$output["NEW"] = $matchProfilesArray["CNT_NEW"];
 		return $output;
@@ -58,7 +58,7 @@ class MatchAlerts
 
         public function getProfilesWithOutSorting($profileId,$weekFlag="")
         {
-                $matchAlertObj = new matchalerts_LOG();
+                $matchAlertObj = new MatchAlertsLogCaching();
 		if($weekFlag)
 			$dateGreaterThanCondition = self::getLogDateFromLogicalDate()-(7*$weekFlag);
                 $output = $matchAlertObj->getMatchAlertProfiles($profileId,$dateGreaterThanCondition);

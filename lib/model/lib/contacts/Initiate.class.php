@@ -348,6 +348,9 @@ class Initiate extends ContactEvent{
       throw new jsException($e);
     }
 
+    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->viewed->getPROFILEID());
+    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->contactHandler->getViewer()->getPROFILEID()); 
+
   }
 
   public function sendMail() {
@@ -580,7 +583,7 @@ class Initiate extends ContactEvent{
         return true;
       }
       else{
-          if($this->_sendMail=='N')
+                if($this->_sendMail=='N' || $this->contactHandler->getPageSource() == "AP" )
                 $this->_contactsOnceObj->insert(
                 $this->contactHandler->getContactObj()->getCONTACTID(),
                 $this->viewer->getPROFILEID(),

@@ -128,7 +128,6 @@ class ProfileCacheLib
         if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
             return false;
         }
-
         //If Criteria is other then PROFILEID then return false
         if (false === $this->validateCriteria($szCriteria)) {
             return false;
@@ -151,6 +150,7 @@ class ProfileCacheLib
         if (false === $this->isCommandLineScript()) {
             $this->updateInLocalCache($key, $arrParams);
         }
+
         return true;
     }
 
@@ -299,6 +299,11 @@ class ProfileCacheLib
      */
     private function storeInLocalCache($key)
     {
+        if($this->isCommandLineScript()) {
+                unset($this->arrRecords);
+                $this->arrRecords = array();
+        }
+
         $stTime = $this->createNewTime();
         $this->arrRecords[intval($key)] = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
         $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
@@ -922,6 +927,9 @@ class ProfileCacheLib
         else if(false !== stristr($storeName, "Alerts")) {
             $arrFields = ProfileCacheConstants::$arrJProfileAlertsColumn;
        }
+        else if (false !== stristr($storeName, "YOUR_INFO_OLD") ){
+            $arrFields = ProfileCacheConstants::$arrOldYourInfo;
+        }
         return $arrFields;
     }
     
