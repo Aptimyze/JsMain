@@ -226,8 +226,18 @@ class Initiate extends ContactEvent{
   
         try
         {
+            $msg = $this->contactHandler->getElements("MESSAGE");
+            $splitArr = explode("--",$msg);
+            $correctedSplit = CommonUtility::correctSplitOnBasisDate($splitArr,1);
+            if($msg && $correctedSplit){
+                $id = $splitArr[3];
+                $instantNotificationObj = new InstantAppNotification("CHAT_EOI_MSG");
+                $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID(),$splitArr[0],'',array('CHAT_ID'=>$id));
+            }
+            else{
                 $instantNotificationObj = new InstantAppNotification("EOI");
                 $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
+            }
         }
         catch(Exception $e)
         {

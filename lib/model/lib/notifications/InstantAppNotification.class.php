@@ -48,7 +48,7 @@ class InstantAppNotification
 				$profileDetails[$selfProfile]['OS_TYPE']=$notificationData['OS_TYPE'];
 				$profileDetails[$selfProfile]['COLLAPSE_STATUS']=$notificationData['COLLAPSE_STATUS'];
 				$profileDetails[$selfProfile]['TTL']=$notificationData['TTL'];
-                if($notificationData['NOTIFICATION_KEY']=='CHAT_MSG'){
+                if($notificationData['NOTIFICATION_KEY']=='CHAT_MSG' || $notificationData['NOTIFICATION_KEY'] == "CHAT_EOI_MSG"){
                     $profileDetails[$selfProfile]['TITLE']=$notificationData['NOTIFICATION_MESSAGE_TITLE'];
                     $profileDetails[$selfProfile]['CHAT_ID']=$otherParams['CHAT_ID'];
                     $profileDetails[$selfProfile]['OTHER_PROFILEID']=$notificationData['OTHER_PROFILEID'];
