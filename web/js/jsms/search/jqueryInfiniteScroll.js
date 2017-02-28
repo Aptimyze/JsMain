@@ -393,6 +393,21 @@ function tupleStructure(profilechecksum,count,idd,tupleStype,totalNoOfResults)
 	</div>\
 	<div class="clr bb2s tupleOuterSpacer" id="{tupleOuterSpacer}" style="display:none;"></div>';
 
+if(idd == 3){
+        if(getAndroidVersion() || getIosVersion()){
+                var mbtext = "";
+                if(getAndroidVersion()){
+                        var type = "apppromotionSRPAndroid";
+                        var lableText = "Android";
+                        var mbtext = "<div class='txtc fontlig f14 pt5'>(2.1 MB only)</div>";
+                }
+                if(getIosVersion()){
+                        var type = "apppromotionSRPIos";
+                        var lableText = "ios";
+                }                
+                tupleStructure += '<div class="srp_bgmsg padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and other 15 criteria.</div><a class="txtc color2 mt15 dispbl" onclick="window.location.href=\'/static/appredirect?type='+type+'\';">Download '+lableText+' APP</a>'+mbtext+'</div>';
+        }
+}
 	return tupleStructure;
 }
 
