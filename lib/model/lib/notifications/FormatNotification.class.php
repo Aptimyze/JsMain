@@ -29,6 +29,7 @@ class FormatNotification
     if($details['NOTIFICATION_KEY']=='CHAT_MSG'){
 		$dataArray['OTHER_PROFILEID'] =$details['OTHER_PROFILEID'];
         $dataArray['CHAT_ID'] =$details['CHAT_ID'];
+        $dataArray['OTHER_USERNAME'] =$details['OTHER_USERNAME'];
     }
     
 	return $dataArray;

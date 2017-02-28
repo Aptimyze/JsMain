@@ -256,8 +256,10 @@ class NotificationDataPool
             $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
 
         $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
-        if($notificationKey == 'CHAT_MSG')
+        if($notificationKey == 'CHAT_MSG' || $notificationKey == "CHAT_EOI_MSG"){
             $dataAccumulated[0]['OTHER_PROFILEID']=$profilesArr["OTHER"];
+            $dataAccumulated[0]['OTHER_USERNAME']=$details[$profilesArr["OTHER"]]["USERNAME"];
+        }
         unset($profilesArr);
         unset($details);
         return $dataAccumulated;

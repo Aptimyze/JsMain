@@ -176,6 +176,7 @@ public function microtime_float()
 		  case "EOI_REMINDER":
 		  case "MESSAGE_RECEIVED":
           case "CHAT_MSG":
+          case "CHAT_EOI_MSG":
 			$details = $this->getProfilesData($appProfiles,$className="JPROFILE");
 			$poolObj = new NotificationDataPool();
 			$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message);
@@ -548,7 +549,12 @@ public function microtime_float()
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE'] = $finalNotificationMessage;
 		  $completeNotificationInfo['NOTIFICATION_MESSAGE_TITLE'] = $finalNotificationMessageTitle;	
 		  $completeNotificationInfo['COUNT'] = $dataPerNotification['COUNT_BELL'];
-          $completeNotificationInfo['OTHER_PROFILEID'] = $dataPerNotification['OTHER_PROFILEID'];
+          if($dataPerNotification['OTHER_PROFILEID']){
+            $completeNotificationInfo['OTHER_PROFILEID'] = $dataPerNotification['OTHER_PROFILEID'];
+          }
+          if($dataPerNotification['OTHER_USERNAME']){
+            $completeNotificationInfo['OTHER_USERNAME'] = $dataPerNotification['OTHER_USERNAME'];
+          }
 		  // print_r($completeNotificationInfo);
 		  return $completeNotificationInfo;
 	  }

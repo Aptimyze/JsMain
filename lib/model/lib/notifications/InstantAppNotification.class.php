@@ -16,7 +16,7 @@ class InstantAppNotification
 	$valueArray['STATUS']="Y";
 	$valueArray['NOTIFICATION_KEY']=$this->notificationKey;
 	$this->notificationObj->setNotifications($this->notificationObj->getNotificationSettings($valueArray));
-	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG');
+	$this->unlimitedTimeCriteriaKeyArr = array('ACCEPTANCE','MESSAGE_RECEIVED', 'PROFILE_VISITOR','BUY_MEMB','CSV_UPLOAD','PHOTO_UPLOAD','INCOMPLETE_SCREENING','CHAT_MSG','CHAT_EOI_MSG');
   }
   public function sendNotification($selfProfile,$otherProfile='', $message='', $exUrl='',$otherParams='')
   {
@@ -52,6 +52,7 @@ class InstantAppNotification
                     $profileDetails[$selfProfile]['TITLE']=$notificationData['NOTIFICATION_MESSAGE_TITLE'];
                     $profileDetails[$selfProfile]['CHAT_ID']=$otherParams['CHAT_ID'];
                     $profileDetails[$selfProfile]['OTHER_PROFILEID']=$notificationData['OTHER_PROFILEID'];
+                    $profileDetails[$selfProfile]['OTHER_USERNAME']=$notificationData['OTHER_USERNAME'];
                 }
                 else
                     $profileDetails[$selfProfile]['TITLE']=$notificationData['TITLE'];
