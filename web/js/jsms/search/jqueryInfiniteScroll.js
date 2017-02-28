@@ -399,13 +399,13 @@ if(idd == 3){
                 if(getAndroidVersion()){
                         var type = "apppromotionSRPAndroid";
                         var lableText = "Android";
-                        var mbtext = "<div class='txtc fontlig f14 pt5'>(2.1 MB only)</div>";
+                        var mbtext = "<div class='txtc fontlig f14 pt5'>(3 MB only)</div>";
                 }
                 if(getIosVersion()){
                         var type = "apppromotionSRPIos";
-                        var lableText = "ios";
+                        var lableText = "iOS";
                 }                
-                tupleStructure += '<div class="srp_bgmsg padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and other 15 criteria.</div><a class="txtc color2 mt15 dispbl" onclick="window.location.href=\'/static/appredirect?type='+type+'\';">Download '+lableText+' APP</a>'+mbtext+'</div>';
+                tupleStructure += '<div class="srp_bgmsg padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and 15 other criteria.</div><a class="txtc color2 mt15 dispbl" onclick=trackJsEventGA(\"jsmsdownload\", \"'+lableText+'\",\"1\"); href="/static/appredirect?type='+type+'\">Download '+lableText+' App</a>'+mbtext+'</div>';
         }
 }
 	return tupleStructure;
