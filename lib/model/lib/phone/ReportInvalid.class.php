@@ -16,6 +16,8 @@ class ReportInvalid
 
 		if($countInvalids <= 10)
 		{
+			$contactsAllotedObj = new jsadmin_CONTACTS_ALLOTED();
+   			$contactsAllotedObj->updateAllotedContacts($selfProfileID,1);
 			return true;
 		}
 

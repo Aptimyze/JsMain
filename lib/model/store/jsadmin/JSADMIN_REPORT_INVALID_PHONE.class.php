@@ -216,7 +216,7 @@ public function updateAsVerified($submittee){
         {   
 
 
-                        if(!($profileId))
+                        if(!($profileId) || !($startDate) || !($endDate))
                             throw new jsException("","profileId IS not passed or blank, check for start and end dates as well ");
 
                     $sql = 'SELECT count( * ) AS CNT
