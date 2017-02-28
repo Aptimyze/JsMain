@@ -1043,6 +1043,7 @@ ajaxConfig.url='/phone/reportInvalid';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST';
 ajaxConfig.success=function(response){
+	$('#invalidConfirmMessage').html(response.message);
 	$('#reportInvalidReason-layer').fadeOut(300,"linear");
 	hideCommonLoader();
 	var jObject=$("#reportInvalidConfirmLayer");
