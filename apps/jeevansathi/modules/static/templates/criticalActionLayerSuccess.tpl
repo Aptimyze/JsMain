@@ -142,7 +142,7 @@ function validateAndSend(){
         <div class="phnvwid3 mauto pt40 pb27 fontlig">
         <p id='altEmailConfirmText' class="txtc lh26 f15" style="padding-left: 8%;padding-right: 8%"></p>
         </div>
-        <button id='CALButtonB3'  onclick="closeCurrentLayerCommon()" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0" style="margin-left: 10%;margin-right: 10%;margin-bottom: 30px;width: 80%">OK</button>
+        <button id='CALButtonB4'  onclick="closeCurrentLayerCommon()" class="lh63 f17 fontreg mt20 hlpcl1 cursp fullwid txtc hoverPink brdr-0" style="margin-left: 10%;margin-right: 10%;margin-bottom: 30px;width: 80%">OK</button>
         </div>
         <!--end:layer 1-->
         </div> 
