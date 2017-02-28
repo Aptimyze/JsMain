@@ -285,6 +285,7 @@ Abstract class ApiAuthentication
             $loginData["ACTIVATED"]=$loggedInProfileObj->getACTIVATED();
             $loginData["INCOMPLETE"]=$loggedInProfileObj->getINCOMPLETE();
             $loginData["DTOFBIRTH"]=$loggedInProfileObj->getDTOFBIRTH();
+            $loginData["LAST_LOGIN_DT"]=$loggedInProfileObj->getLAST_LOGIN_DT();
 			return $loginData;
 		}
                 
