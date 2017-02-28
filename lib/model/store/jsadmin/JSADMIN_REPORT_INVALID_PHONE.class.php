@@ -238,6 +238,30 @@ public function updateAsVerified($submittee){
             throw new jsException($e);
         }
     
+    }
+
+public function entryExistsForPair($submitter,$submittee)
+    {
+        try     
+        {  
+            $sql = "SELECT count(1) AS CNT from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :SUBMITTEE AND SUBMITTER = :SUBMITTER";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":SUBMITTEE",$submittee,PDO::PARAM_INT);
+            $prep->bindValue(":SUBMITTER",$submitter,PDO::PARAM_INT);
+            $prep->execute();
+
+            $result = 0;
+
+            if($row=$prep->fetch(PDO::FETCH_ASSOC))
+            $result = $row['CNT'];
+
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
     } 
 
 }

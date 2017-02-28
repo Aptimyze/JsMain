@@ -242,7 +242,7 @@ class phoneActions extends sfActions
 		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
    		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);
 
-   		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID);   		
+   		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);   		
 
 		if($reasonNumber == 3)
 			{  
