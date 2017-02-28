@@ -219,9 +219,9 @@ public function updateAsVerified($submittee){
                         if(!($profileId) || !($startDate) || !($endDate))
                             throw new jsException("","profileId IS not passed or blank, check for start and end dates as well ");
 
-                    $sql = 'SELECT count( * ) AS CNT
+                    $sql = 'SELECT count(1) AS CNT
                         FROM jsadmin.REPORT_INVALID_PHONE
-                        WHERE DATE( `SUBMIT_DATE` ) BETWEEN :STARTDATE and :ENDDATE 
+                        WHERE DATE( `SUBMIT_DATE` ) BETWEEN :ENDDATE and :STARTDATE 
                         AND SUBMITTER = :PROFILEID';
                         $prep = $this->db->prepare($sql);
                         
