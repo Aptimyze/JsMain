@@ -265,6 +265,12 @@ function formatTrackingString($trackingString)
 			case JSTrackingPageType::INTEREST_ARCHIVED_ANDROID:
 				$formattedString.="INTEREST_ARCHIVED_ANDROID";
 				break;
+                        case JSTrackingPageType::PENDING_EOI_ANDROID:
+                                $formattedString.="PENDING_EOI_ANDROID";
+                                break;
+                        case JSTrackingPageType::FILTERED_EOI_ANDROID:
+                                $formattedString.="FILTERED_EOI_ANDROID";
+                                break;
 		}
 	}
 	return $formattedString;
