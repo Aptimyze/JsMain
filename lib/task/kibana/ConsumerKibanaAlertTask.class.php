@@ -30,18 +30,18 @@ EOF;
 
 		$currdate = date('Y.m.d');
 		// Server at which ElasticSearch and kibana is running
-		$elkServer = '10.10.18.66';
-		$elkPort = '9200';
-		$kibanaPort = '5601';
-		$indexName = 'consumer-'.$currdate;
-		$query = '_search';
+		$elkServer = KibanaEnums::ELK_SERVER;
+		$elkPort = KibanaEnums::ELASTIC_PORT;
+		$kibanaPort = KibanaEnums::KIBANA_PORT;
+		$indexName = KibanaEnums::CONSUMER_INDEX.$currdate;
+		$query = KibanaEnums::KIBANA_SEARCH_QUERY;
 		// in hours
-		$interval = 1;
+		$interval = KibanaEnums::CONSUMER_ALERT_EMAIL_INTERVAL;
 		$intervalString = '-'.$interval.' hour';
 		$toInt = date('H:i:s');
 		$fromInt = date('H:i:s',strtotime($intervalString));
-		$threshold = 100;
-		$timeout = 5000;
+		$threshold = KibanaEnums::CONSUMER_ALERT_EMAIL_THRESHOLD;
+		$timeout = KibanaEnums::CONSUMER_REQUEST_THRESHOLD;
 		$dashboard = 'ConsumerDashBoard';
 		$msg = '';
 		$noError = 1;
@@ -82,6 +82,8 @@ EOF;
 		];
 		// send curl request
 		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
+
+		
 		if($response)
 		{
 			// Default timezone for Elastic is UTC

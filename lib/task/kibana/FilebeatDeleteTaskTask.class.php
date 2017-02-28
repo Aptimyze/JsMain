@@ -18,10 +18,10 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // Server at which ElasticSearch and kibana is running
-    $elkServer = '10.10.18.66';
-    $elkPort = '9200';
+    $elkServer = KibanaEnums::ELK_SERVER;
+    $elkPort = KibanaEnums::ELASTIC_PORT;
     $indexDate = date('Y.m.d', strtotime( '-32 days' ));
-    $indexName = "filebeat-$indexDate";
+    $indexName = KibanaEnums::FILEBEAT_INDEX."$indexDate";
     passthru("curl -XDELETE 'http://$elkServer:$elkPort/$indexName/'");
   }
 }

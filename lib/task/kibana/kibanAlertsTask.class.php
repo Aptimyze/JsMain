@@ -22,18 +22,18 @@ EOF;
 	{
 		$currdate = date('Y.m.d');
 		// Server at which ElasticSearch and kibana is running
-		$elkServer = '10.10.18.66';
-		$elkPort = '9200';
-		$kibanaPort = '5601';
-		$indexName = 'filebeat-'.$currdate;
-		$query = '_search';
+		$elkServer = KibanaEnums::ELK_SERVER;
+		$elkPort = KibanaEnums::ELASTIC_PORT;
+		$kibanaPort = KibanaEnums::KIBANA_PORT;
+		$indexName = KibanaEnums::FILEBEAT_INDEX.$currdate;
+		$query = KibanaEnums::KIBANA_SEARCH_QUERY;
 		// in hours
-		$interval = 1;
+		$interval = KibanaEnums::KIBANA_ALERT_EMAIL_INTERVAL;
 		$intervalString = '-'.$interval.' hour';
 		$toInt = date('H:i:s');
 		$fromInt = date('H:i:s',strtotime($intervalString));
-		$threshold = 50;
-		$timeout = 5000;
+		$threshold = KibanaEnums::KIBANA_ALERT_EMAIL_THRESHOLD;
+		$timeout = KibanaEnums::KIBANA_REQUEST_THRESHOLD;
 		$dashboard = 'Common-Dash';
 		$msg = '';
 		$from = "jsissues@jeevansathi.com";
