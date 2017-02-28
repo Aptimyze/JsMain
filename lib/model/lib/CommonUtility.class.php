@@ -998,5 +998,15 @@ die;
 		}
 		return $redirectUrl;
 	}
+    
+    public function correctSplitOnBasisDate($arr, $dataIndex){
+        if(is_array($arr)){
+            $date = $arr[$dataIndex];
+            if (DateTime::createFromFormat('Y-m-d G:i:s', $date) !== FALSE) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 ?>
