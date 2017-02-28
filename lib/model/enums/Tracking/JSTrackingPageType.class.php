@@ -67,6 +67,7 @@ class JSTrackingPageType
 	const INTEREST_EXPIRING_IOS = 68;
 	const INTEREST_ARCHIVED_IOS = 66;
 	const INTEREST_ARCHIVED_ANDROID = 65;
+	const ANDROID_CHAT_NEW = 70;
 }
 
 ?>
