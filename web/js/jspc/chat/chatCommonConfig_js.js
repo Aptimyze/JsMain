@@ -353,7 +353,8 @@ chatConfig.Params = {
         nameTrimmLength:14,
         logChatTimeout:true,
         autoDisplayLoginPanel: 30000, //time in ms
-        audioChatFilesLocation:'/audio/jspc/chat/'
+        audioChatFilesLocation:'/audio/jspc/chat/',
+        rejectObsceneMsg: "Message not delivered, Please try later"
     }
 };
 chatConfig.Params.pc.rosterGroups = [chatConfig.Params.categoryNames['Desired Partner Matches'], chatConfig.Params.categoryNames['Interest Sent'], chatConfig.Params.categoryNames['Interest Received'], chatConfig.Params.categoryNames['Acceptance'], chatConfig.Params.categoryNames['Shortlisted Members'],chatConfig.Params.categoryNames['Search Results']];
