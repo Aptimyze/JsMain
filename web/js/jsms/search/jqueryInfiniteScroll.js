@@ -405,7 +405,7 @@ if(idd == 3){
                         var type = "apppromotionSRPIos";
                         var lableText = "iOS";
                 }                
-                tupleStructure += '<div class="srp_bgmsg padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and 15 other criteria.</div><a class="txtc color2 mt15 dispbl" onclick=trackJsEventGA(\"jsmsdownload\", \"'+lableText+'\",\"1\"); href="/static/appredirect?type='+type+'\">Download '+lableText+' App</a>'+mbtext+'</div>';
+                tupleStructure += '<div class="srp_bgmsg padd3015"><div class="txtc fontlig f14">Refine search results by Caste,Community, Profession, Occupation, Income and 15 other criteria.</div><a class="txtc color2 mt15 dispbl" onclick=trackJsEventGA(\"Download App\",\"SRP\", \"'+lableText+'\",\"1\"); href="/static/appredirect?type='+type+'\">Download '+lableText+' App</a>'+mbtext+'</div>';
         }
 }
 	return tupleStructure;
