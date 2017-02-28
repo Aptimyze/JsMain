@@ -17,8 +17,8 @@ class versionupgrade_v1Action extends sfActions
 	*/
 	
 	private static $updateArray = array(
-            "feature profile on home screen",
-            "bug fixes & performance improvements"            
+            "Featured profile on home screen",
+			"Fixes & performance improvements"            
         );
 	public function execute($request)
 	{	
