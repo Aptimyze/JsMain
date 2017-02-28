@@ -136,7 +136,7 @@ class AuthFilter extends sfFilter {
 				///////// check for currency and ip address ends here
 
 				//App promotion need to be off for Login Profiles already have app installed
-				var_dump($AppLoggedInUser=$this->LoggedInAppPromo($data));die;
+				$AppLoggedInUser=$this->LoggedInAppPromo($data);
 				$request->setAttribute("AppLoggedInUser",$AppLoggedInUser);
 				//end of app promotion
 				
