@@ -210,5 +210,35 @@ public function updateAsVerified($submittee){
     
     }
 
+ public function getReportInvalidCountSubmitter($profileId,$startDate,$endDate)
+    {
+       try     
+        {   
+
+
+                        if(!($profileId))
+                            throw new jsException("","profileId IS not passed or blank, check for start and end dates as well ");
+
+                    $sql = 'SELECT count( * ) AS CNT
+                        FROM jsadmin.REPORT_INVALID_PHONE
+                        WHERE DATE( `SUBMIT_DATE` ) BETWEEN :STARTDATE and :ENDDATE 
+                        AND SUBMITTER = :PROFILEID';
+                        $prep = $this->db->prepare($sql);
+                        
+                        $prep->bindValue(":STARTDATE", $startDate, PDO::PARAM_STR);  
+                        $prep->bindValue(":ENDDATE", $endDate, PDO::PARAM_STR);
+                        $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_STR);
+                        $prep->execute();
+                        if($row=$prep->fetch(PDO::FETCH_ASSOC))   
+                            $output=$row['CNT'];
+                        return $output;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    } 
+
 }
 ?>    
