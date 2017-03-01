@@ -27,7 +27,7 @@
 
 		const SMS_ALERT_TIMEOUT = 5000;
 		const SMS_ALERT_THRESHOLD = 5;
-		const SMS_ERROR_THRESHOLD = 500;
+		const SMS_ERROR_THRESHOLD = 200;
 
 		const AURA_SERVER = 'es.aura.resdex.com';
 		const AURA_PORT = '9203';

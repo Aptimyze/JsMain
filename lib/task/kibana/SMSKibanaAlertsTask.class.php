@@ -66,6 +66,11 @@ EOF;
 		            ]
 		          ]
 		        ]
+		      ],
+		      "must_not" => [
+		      	"regexp" =>[
+		      		"LogMessage" => ".*Too many connections.*"
+		      	]
 		      ]
 		    ]
 		  ],
