@@ -16,11 +16,12 @@ class ViewSimilarProfilesV1Action extends sfActions {
                 $photoDisplayType = "ProfilePic120Url";
                 $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
                 $pid = $loggedInProfileObj->getPROFILEID();
+                $vspPage = $request->getParameter('vspPage');
                 if($pid){
                 $loggedInProfileObj->getDetail("", "", "USERNAME,AGE,GENDER,RELIGION,HEIGHT,CASTE,INCOME,MTONGUE,ENTRY_DT,HAVEPHOTO,SHOW_HOROSCOPE,COUNTRY_RES,BTYPE,COMPLEXION,EDU_LEVEL_NEW,OCCUPATION,MSTATUS,CITY_RES,DRINK,SMOKE,DIET,HANDICAPPED,MANGLIK,RELATION,HANDICAPPED,HIV,SUBSCRIPTION,BTIME,MOB_STATUS,LANDL_STATUS,ACTIVATED,INCOMPLETE");
                 $viewerGender = $loggedInProfileObj->getGENDER();
                 }
-                elseif(!MobileCommon::isDesktop()) {
+                elseif(!MobileCommon::isDesktop() && !(MobileCommon::isIOSApp() && $vspPage='PD')) {
                         $context = sfContext::getInstance();
                         $context->getController()->forward("static", "logoutPage"); //Logout page
                         throw new sfStopException();
@@ -109,8 +110,12 @@ class ViewSimilarProfilesV1Action extends sfActions {
                                     $paramArray["stype"]=  SearchTypesEnums::ViewSimilarDesktop;
                                 if(MobileCommon::isAndroidApp())
                                     $paramArray["stype"]=  SearchTypesEnums::VIEW_SIMILAR_ANDROID;
-                                if(MobileCommon::isIOSApp())
-                                    $paramArray["stype"]=  SearchTypesEnums::VIEW_SIMILAR_IOS;
+                                if(MobileCommon::isIOSApp()){
+                                    if($vspPage == 'PD')
+                                        $paramArray["stype"]=  SearchTypesEnums::VIEW_SIMILAR_IOS_ON_PD;
+                                    else
+                                        $paramArray["stype"]=  SearchTypesEnums::VIEW_SIMILAR_IOS;
+                                }
                                 if(is_array($resultsArray))
                                 {   
                                      foreach ($resultsArray as $k => $v) {

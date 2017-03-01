@@ -75,7 +75,7 @@ $this->addOptions(array(
   }
   private function sendPushNotifications($profileDetails,$idArr)
   {
-	$status =CommonUtility::hideFeaturesForUptime();
+	$status =0;//CommonUtility::hideFeaturesForUptime();
 	if($status || JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2)
 		successfullDie();
 	$this->notificationSenderObj->sendNotifications($profileDetails);

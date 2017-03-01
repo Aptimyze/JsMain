@@ -1530,13 +1530,17 @@ var padding = 31;
             }
           }
           if (ele1.name == "religion") {
+		$("#caste_no_bar").attr('checked', false);
+		inputData["casteNoBar"] = $("#caste_no_bar").is(':checked');  
             if (ele1.selected == "Muslim" || ele1.selected == "Christian") {
               $("#caste_label").html("Sect");
               $("#caste_error").html("Please provide a Sect");
+		$("#casteNoBarDiv").addClass("disp-none");
             }
             else {
               $("#caste_label").html("Caste");
               $("#caste_error").html("Please provide a Caste");
+		$("#casteNoBarDiv").removeClass("disp-none");
             }
             $("caste-inputBox_set").val("");
             if (ele1.selected == "Hindu" || ele1.selected == "Jain" || ele1.selected == "Sikh" || ele1.selected == "Buddhist") {
@@ -1999,6 +2003,10 @@ $(document).ready(function () {
       leadid = $("#leadid").val();
       inputData["source"] = $("#reg_source").val();
 //        inputData["record_id"]=$("#reg_record_id").val();
+      if(pageId=="JSPCR2")
+      {
+        inputData["casteNoBar"] = $("#caste_no_bar").is(':checked');  
+      }      
       inputData["_csrf_token"] = $("#registrationData__csrf_token").val();
       if(inputData.hasOwnProperty('state_res')){
           if(inputData['city_res'] == '0' && inputData['country_res']=='51')

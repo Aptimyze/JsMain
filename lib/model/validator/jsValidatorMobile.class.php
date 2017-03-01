@@ -14,6 +14,7 @@ class jsValidatorMobile extends sfValidatorBase
   protected function doClean($value)
   {
     $mobileNumberExceptionArr = array("9643102628");
+    
     $source = $_SERVER['HTTP_REFERER'];
     if(strpos($source,"viewprofile") !== false)
     {
@@ -128,7 +129,7 @@ class jsValidatorMobile extends sfValidatorBase
   public function getDetailArr($mobile,$isd)
   {
   	$jprofileObj = JPROFILE::getInstance('newjs_master');
-  	$lastLoginDate = date('Y-m-d', strtotime("-1 year"));
+  	$lastLoginDate = CommonUtility::makeTime(date('Y-m-d', strtotime("-1 year")));
   	$valueArray = array("activatedKey"=>1,"MOB_STATUS"=>"Y","INCOMPLETE"=>"N","PHONE_MOB"=>$mobile,"ISD"=>$isd);
   	$greaterThanArray = array("LAST_LOGIN_DT"=>$lastLoginDate);
   	if($this->profileId)

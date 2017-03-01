@@ -106,10 +106,10 @@ SQL;
 
 		//finding the count of those profiles which has been screened already.
 		if($type=="new") {
-			$sql = "SELECT DAYOFMONTH(RECEIVE_TIME) AS RDAY, MONTH(RECEIVE_TIME) AS RMONTH, DAYOFMONTH(SUBMITED_TIME) SDAY, MONTH(SUBMITED_TIME) AS SMONTH,PROFILEID  FROM jsadmin.MAIN_ADMIN_LOG WHERE SCREENING_TYPE='O' AND SCREENING_VAL='0' AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' ORDER BY RDAY";
+			$sql = "SELECT STATUS,DAYOFMONTH(RECEIVE_TIME) AS RDAY, MONTH(RECEIVE_TIME) AS RMONTH, DAYOFMONTH(SUBMITED_TIME) SDAY, MONTH(SUBMITED_TIME) AS SMONTH,PROFILEID  FROM jsadmin.MAIN_ADMIN_LOG WHERE SCREENING_TYPE='O' AND SCREENING_VAL='0' AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' ORDER BY RDAY";
     }
 		elseif($type=="edit"){
-			$sql="SELECT DAYOFMONTH(RECEIVE_TIME) AS RDAY, MONTH(RECEIVE_TIME) AS RMONTH, DAYOFMONTH(SUBMITED_TIME) AS SDAY, MONTH(SUBMITED_TIME) AS SMONTH,PROFILEID FROM jsadmin.MAIN_ADMIN_LOG WHERE SCREENING_TYPE='O' AND SCREENING_VAL > '0' AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' ORDER BY RDAY";
+			$sql="SELECT STATUS,DAYOFMONTH(RECEIVE_TIME) AS RDAY, MONTH(RECEIVE_TIME) AS RMONTH, DAYOFMONTH(SUBMITED_TIME) AS SDAY, MONTH(SUBMITED_TIME) AS SMONTH,PROFILEID FROM jsadmin.MAIN_ADMIN_LOG WHERE SCREENING_TYPE='O' AND SCREENING_VAL > '0' AND RECEIVE_TIME BETWEEN '$st_date' AND '$end_date' ORDER BY RDAY";
     }
 		$res=mysql_query_decide($sql,$db) or die("$sql".mysql_error_js($db));
 		while($row = mysql_fetch_array($res))
@@ -120,17 +120,16 @@ SQL;
 			$total_screened[$rday]++;
 			$sday = $row['SDAY'] - 1;				
 			if($row['RMONTH'] == $row['SMONTH'])
-				$total_screened_day[$rday][$sday]++;
+				$total_screened_day[$row['STATUS']][$rday][$sday]++;
 			//need to select values(1-5) from the end of table
 			else
-				$total_screened_day[$rday][$sday+31]++;
+				$total_screened_day[$row['STATUS']][$rday][$sday+31]++;
 		}
 		for($rday=0;$rday<31;$rday++)
 		{
 			$total_to_screen[$rday] = $total_to_screen_temp[$rday] + $total_screened[$rday];
-			$total_to_screen_perc[$rday] = round((($total_screened[$rday]/$total_to_screen[$rday]) * 100),2);
+			$total_to_screen_perc[$rday] = round(((($total_screened[$rday])/$total_to_screen[$rday]) * 100),2);
 		}
-    
 		//if no entry exists in MAIN_ADMIN_LOG satisfying the above condition.
 		if(!$no_entry_in_main_admin_log)
 			$total_to_screen = $total_to_screen_temp;
@@ -210,7 +209,8 @@ SQL;
                 }
 
 		$smarty->assign("total_screened",$total_screened);
-		$smarty->assign("total_screened_day",$total_screened_day);
+		$smarty->assign("total_screened_day_approve",$total_screened_day[APPROVED]);
+		$smarty->assign("total_screened_day_disapprove",$total_screened_day[DELETED]);
 		$smarty->assign("total_to_screen",$total_to_screen);
 		$smarty->assign("total_to_screen_perc",$total_to_screen_perc);
 		$smarty->assign("count",$count);

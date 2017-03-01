@@ -218,6 +218,30 @@ class visitorAlert_MAILER extends TABLE
             throw new jsException($e);
         }
     }
+	public function updateReceiverDataSetX($profileID)
+    {
+    	try
+        {
+	            $sql = "";
+	            $sql .= "UPDATE visitoralert.MAILER_VISITORS SET ";
+                    $sql .= 'TOTAL=:COUNT';
+                    $sql .= ",SENT='X'";
+	            $sql .= " WHERE PROFILEID = :PROFILEID";
+
+	            $pdoStatement = $this->db->prepare($sql);
+	            $pdoStatement->bindValue(":PROFILEID",$profileID,PDO::PARAM_INT);
+                    $pdoStatement->bindValue(":COUNT",0,PDO::PARAM_INT);
+	            
+
+	            $pdoStatement->execute();
+        }
+
+        catch (PDOException $e)
+        {
+            throw new jsException($e);
+        }
+    	
+    }
 }
 
 ?>

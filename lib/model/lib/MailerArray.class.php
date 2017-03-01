@@ -14,7 +14,7 @@
 '5'=>array('APP_SCREEN_ID'=>'a5','LINK_NAME'=>'shortlist','URL'=>'profile/contacts_made_received.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '6'=>array('APP_SCREEN_ID'=>'','LINK_NAME'=>'similarProfiles','URL'=>'profile/simprofile_search.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '7'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'clickOnPhoto','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
-'8'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'ACCEPT','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'CAME_FROM_CONTACT_MAIL=1&button=accept','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
+'8'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'ACCEPT','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'CAME_FROM_CONTACT_MAIL=1&button=accept&performAction=accept','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '9'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'DECLINE','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'CAME_FROM_CONTACT_MAIL=1&button=decline&search_decline=1','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '10'=>array('APP_SCREEN_ID'=>'a10','LINK_NAME'=>'Phone_Email_View Contact Details','URL'=>'profile/viewprofile.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
 '11'=>array('APP_SCREEN_ID'=>'a2','LINK_NAME'=>'HOME_PAGE','URL'=>'P/mainmenu.php','OTHER_GET_PARAMS'=>'','REQAUTOLOGIN'=>'Y','OUTER_LINK'=>'N'),
