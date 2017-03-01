@@ -454,7 +454,24 @@ class DetailActionLib
 		if($actionObject->loginProfile->getPROFILEID() && $actionObject->loginProfile->getPROFILEID()!=$actionObject->profile->getPROFILEID() && $actionObject->loginProfile->getGENDER()!=$actionObject->profile->getGENDER())
 		{
 			$mypid=$actionObject->loginProfile->getPROFILEID();
+			$randomNumber = rand(0,100);
+			if($randomNumber>=0)
+			{
 			include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
+			}
+			else
+			{
+				$producerObj = new Producer();
+				if($producerObj->getRabbitMQServerConnected())
+				{
+					$updateSeenProfileData = array("process"=>"UPDATE_SEEN_PROFILE",'data'=>array('body'=>array('fromSym'=>$fromSym,'type'=>$type,'mypid'=>$mypid,'updatecontact'=>$updatecontact,'profileid'=>$profileid)));
+					$producerObj->sendMessage($updateSeenProfileData);
+				}
+				else
+				{
+//					$this->sendMail();
+				}
+			}
 		}
 	}
 	
