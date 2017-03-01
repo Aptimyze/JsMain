@@ -952,11 +952,7 @@ die;
 		$redirectUrl = "";
 		$loginData = $request->getAttribute("loginData");
         $authchecksum = $request->getcookie('AUTHCHECKSUM');
-        if($loginData["PROFILEID"] == 13766629 || $loginData["PROFILEID"] == 11238186){
-        	error_log("ankita jeevansathi_hindi_site_new= ".$request->getcookie("jeevansathi_hindi_site_new"));
-        	error_log("ankita redirected_hindi_new= ".$request->getcookie("redirected_hindi_new"));
-        	//error_log("ankita redirect= ".$request->getParameter('newRedirect'));
-        }
+       
 		if($request->getcookie("jeevansathi_hindi_site_new")=='Y'){
 			if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi_new")!='Y'){
 				@setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
