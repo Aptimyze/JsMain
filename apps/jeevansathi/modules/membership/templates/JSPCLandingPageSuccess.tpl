@@ -544,7 +544,7 @@
                 <div class="fl upwid1 upgrd_bg1 fontlig" id="currentMemSection">               
                         <!--start:head-->   
                         <div class="upgrd_p1 upb1">                
-                            <div class="f14">Special upgrade offer for you </div>
+                            <div class="f14">Current Membership</div>
                              <ul class="listnone f14 uoul pt15">
                                 <li class="f20"><strong>~$data.topBlockMessage.currentMemName`</strong></li>
                                 <li>~$data.topBlockMessage.currentActualDuration` Month</li>

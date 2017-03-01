@@ -542,8 +542,8 @@ class MembershipAPIResponseHandler {
                 $formattedCurrentMemName = ($this->subStatus[0]['SERVICEID_WITHOUT_DURATION'] != "X" ? ucfirst(strtolower($this->activeServiceName)) : $this->activeServiceName);
                 //extra compared facts for upgarde
                 $output["upgardeComparedFacts"] = array(
-                                $formattedUpgradeMemName." members are contacted 2.5 times more than ".$formattedCurrentMemName,
-                                $formattedUpgradeMemName." members get 3 times more screen views",
+                                $formattedUpgradeMemName." members are contacted more than ".$formattedCurrentMemName,
+                                $formattedUpgradeMemName." members get more screen views",
                                 );
                 //expiry date for upgarde discount
                 $output["upgradeOfferExpiry"] = date('M d Y',strtotime($this->subStatus[0]['ACTIVATED_ON'] . VariableParams::$memUpgradeConfig["mainMemUpgradeLimit"]." day"));
