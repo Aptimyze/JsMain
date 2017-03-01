@@ -236,13 +236,14 @@ class phoneActions extends sfActions
 	die;
      	}
 
+
+
    		$profile2=new Profile();
 		$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
    		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
+   		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);
 		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
-   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);
-
-   		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);   		
+   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);   		
 
 		if($reasonNumber == 3)
 			{  
