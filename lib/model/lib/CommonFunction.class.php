@@ -563,7 +563,7 @@ class CommonFunction
                 $manglikArr = explode(",", $manglikVal);
                 $returnStr = "";
                 foreach ($manglikArr as $key=>$val){
-                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know")
+                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know" || $val == "'S0'" || $val == "S0" || $val == "Select")
                         continue;
                     else
                         $returnStr.=",".$val;
