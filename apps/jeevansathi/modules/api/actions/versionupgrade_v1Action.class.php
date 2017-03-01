@@ -17,10 +17,8 @@ class versionupgrade_v1Action extends sfActions
 	*/
 	
 	private static $updateArray = array(
-            "dpp suggestion cal",
-            "multi select search form",
-            "online chat"
-            
+            "Featured profile on home screen",
+			"Fixes & performance improvements"            
         );
 	public function execute($request)
 	{	
