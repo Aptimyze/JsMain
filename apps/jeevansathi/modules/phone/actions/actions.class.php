@@ -99,7 +99,9 @@ class phoneActions extends sfActions
 
 	$isd = phoneKnowlarity::removeAllSpecialChars($isd);
 	$number = phoneKnowlarity::removeAllSpecialChars($number);
-	
+        $profileObj = LoggedInProfile::getInstance('newjs_master');
+        $profileid = $profileObj->getPROFILEID();
+        
 	$phoneType=NULL;
 	if($type=="PHONE1")
 		$phoneType = "M";
@@ -132,7 +134,13 @@ class phoneActions extends sfActions
     if($data->responseStatusCode != 0)
     {
 	$data->responseMessage=$errorArr[$arrKeys[0]];
-	}
+        
+    }
+        $memObject=JsMemcache::getInstance();
+        $memObject->delete('showConsentMsg_'.$profileid);		
+        $memObject->delete($profileid.'_PHONE_VERIFIED');			  			
+        $knowlarityObj=new phoneKnowlarity($profileObj,$phoneType);
+        $data->DIAL_NUMBER =$knowlarityObj->getVirtualNumber();
 	$data = json_encode($data);
 	echo $data;
 	die;
@@ -152,13 +160,12 @@ class phoneActions extends sfActions
                          $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_JUNK);
 		else
 		{
-			$profileObj = LoggedInProfile::getInstance('newjs_master');
 			$phoneVerObject=new PhoneVerification($profileObj,$phoneType);
 			$phoneVerObject->savePhone($number,'',$isd);
-			
-			$memObject=JsMemcache::getInstance();
+                        $memObject=JsMemcache::getInstance();
 			$memObject->delete('showConsentMsg_'.$profileid);		
 			$memObject->delete($profileid.'_PHONE_VERIFIED');			  			
+ 			
 			$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			$knowlarityObj=new phoneKnowlarity($profileObj,$phoneType);
 			$response[DIAL_NUMBER] =$knowlarityObj->getVirtualNumber();
