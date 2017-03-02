@@ -3,7 +3,7 @@
 
 class MessageQueues
 {
-  CONST CONSUMERCOUNT = 3;  //Number of instances of Consumer class run at a time.
+  CONST CONSUMERCOUNT = 5;  //Number of instances of Consumer class run at a time.
   CONST NOTIFICATIONCONSUMERCOUNT = 3;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST SCREENINGCONSUMERCOUNT = 1;  //Number of instances of ScreeningConsumer class run at a time.
   CONST WRITEMESSAGECONSUMERCOUNT = 1;  //Number of instances of Write message queue consumers run at a time.
@@ -117,6 +117,10 @@ class MessageQueues
   const WRITE_MSG_queueDelayed5min = 'WriteMsgDelayedQueue';
   const WRITE_MSG_exchangeDelayed5min = 'WriteMsgDelayedExchange';
   const WRITE_MSG_Q = "WRITE_MSG_Queue";
+  
+  //Profiler Log Queue
+  const SCRIPT_PROFILER_Q = "JsProfilerQueue";
+  const SCRIPT_PROFILER_PROCESS = "JS_PROFILER_PROCESS";
 }
 
 ?>

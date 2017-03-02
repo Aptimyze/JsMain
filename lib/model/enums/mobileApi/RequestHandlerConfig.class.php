@@ -58,7 +58,9 @@ class RequestHandlerConfig
 
 		"settings" => array(
 			"alertManager" => array("v1" => "AlertManagerV1", "v2" => "", "v3" => "AlertManagerV1"),
-			"deleteProfile" => array("v1" => "DeleteProfileV1", "v2" => "", "v3" => "DeleteProfileV1")),
+			"deleteProfile" => array("v1" => "DeleteProfileV1", "v2" => "", "v3" => "DeleteProfileV1"),
+			"hideUnhideProfile" => array("v1" => "HideUnhideProfileV1"),
+			),
 		"api" => array(
 			"appReg" => array("v1" => "AppRegV1", "v2" => "AppRegV1", "v3" => "AppRegV1"),
 			"login" => array("v1" => "LoginV1", "v2" => "", "v3" => "LoginV1"),
@@ -101,7 +103,10 @@ class RequestHandlerConfig
 			"cancel" => array("v1" => "postCancelInterestv1", "v2" => "postCancelInterestv2", "v3" => "postCancelInterestv2"),
 			"preWriteMessage" => array("v2" => "PreWriteMessagev2"),
 			"profilesToBeRemoved" => array("v1" => "IgnoredContactedProfilesV1")),
-		"common" => array("AddBookmark" => array("v1" => "AddBookmarkv1", "v3" => "AddBookmarkv1"), "ignoreprofile" => array("v1" => "ApiIgnoreProfileV1", "v3" => "ApiIgnoreProfileV1"), "engagementcount" => array("v2" => "GetEngagementCountv1"), "caLayer" => array("v1" => "ApiCALayerV1", "v2" => "ApiCALayerV1", "v3" => "ApiCALayerV1"), "criticalActionLayerTracking" => array("v1" => "", "v2" => "", "v3" => "criticalActionLayerTracking"), "verificationData" => array("v1" => "ApiVerificationDataV1", "v2" => "", "v3" => "ApiVerificationDataV1"), "trackRCB" => array("v1" => "TrackRCBV1", "v3" => "TrackRCBV1"), "requestCallbackLayer" => array("v1" => "ApiRequestCallbackV1", "v2" => "ApiRequestCallbackV1", "v3" => "ApiRequestCallbackV1")),
+		"common" => array("AddBookmark" => array("v1" => "AddBookmarkv1", "v3" => "AddBookmarkv1"), "ignoreprofile" => array("v1" => "ApiIgnoreProfileV1", "v3" => "ApiIgnoreProfileV1"), "engagementcount" => array("v2" => "GetEngagementCountv1"), "caLayer" => array("v1" => "ApiCALayerV1", "v2" => "ApiCALayerV1", "v3" => "ApiCALayerV1"), "criticalActionLayerTracking" => array("v1" => "", "v2" => "", "v3" => "criticalActionLayerTracking"), "verificationData" => array("v1" => "ApiVerificationDataV1", "v2" => "", "v3" => "ApiVerificationDataV1"), "trackRCB" => array("v1" => "TrackRCBV1", "v3" => "TrackRCBV1"), "requestCallbackLayer" => array("v1" => "ApiRequestCallbackV1", "v2" => "ApiRequestCallbackV1", "v3" => "ApiRequestCallbackV1"),
+			"checkPassword" => array("v1" => "checkPasswordV1"),
+
+			),
 		"inbox" => array("perform" => array("v1" => "performV1", "v2" => "performV2", "v3" => "performV2")),
 		"phone" => array("display" => array("v1" => "displayV1", "v2" => "displayV1", "v3" => "displayV1"),
 			"save" => array("v1" => "saveV1", "v3" => "saveV1"),

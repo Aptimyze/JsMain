@@ -67,7 +67,7 @@ if($echecksum && $checksum && !$data[PROFILEID])
 			//tracking logins #2550 by nitesh
 			loginTracking($profileid,$request_uri,$channel);
 			
-			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,EMAIL FROM newjs.JPROFILE WHERE  PROFILEID=$profileid and  activatedKey=1";
+			$sql="select PROFILEID,PASSWORD,SUBSCRIPTION,SUBSCRIPTION_EXPIRY_DT,USERNAME,GENDER,ACTIVATED,SOURCE,DATE(LAST_LOGIN_DT) LAST_LOGIN_DT,CASTE,MTONGUE,INCOME,RELIGION,AGE,HEIGHT,HAVEPHOTO,INCOMPLETE,MOD_DT,COUNTRY_RES,EMAIL FROM newjs.JPROFILE WHERE  PROFILEID=$profileid and  activatedKey=1";
 			$res=mysql_query_decide($sql) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql,"ShowErrTemplate");
 			if(($row=mysql_fetch_assoc($res)))
 			{

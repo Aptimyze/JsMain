@@ -36,7 +36,7 @@ class matchalerts_MATCHALERTS_TO_BE_SENT extends TABLE
         {
                 try
                 {
-			$sql="INSERT IGNORE INTO matchalerts.MATCHALERTS_TO_BE_SENT(PROFILEID,PERSONAL_MATCHES) SELECT jp.PROFILEID,jp.PERSONAL_MATCHES FROM newjs.JPROFILE as jp LEFT JOIN newjs.JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid WHERE ".$conditionNew;
+			$sql="INSERT IGNORE INTO matchalerts.MATCHALERTS_TO_BE_SENT(PROFILEID,PERSONAL_MATCHES) SELECT jp.PROFILEID,jp.PERSONAL_MATCHES FROM newjs.JPROFILE as jp LEFT JOIN newjs.JPROFILE_CONTACT as jpc ON jpc.PROFILEID = jp.profileid WHERE ".$conditionNew." ORDER BY jp.LAST_LOGIN_DT DESC";
 			$res = $this->db->prepare($sql);
                         $res->execute();
                 }
