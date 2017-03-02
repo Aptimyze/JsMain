@@ -354,6 +354,7 @@ chatConfig.Params = {
         logChatTimeout:true,
         autoDisplayLoginPanel: 30000, //time in ms
         audioChatFilesLocation:'/audio/jspc/chat/',
+        enableLoadTestingStanza:true,
         rejectObsceneMsg: "Message not delivered, Please try later"
     }
 };
