@@ -83,10 +83,6 @@ public function getVirtualNumber()
 		if($vNoid=$this->searchExistingPid($completeNumber))
 		{
 			$vNo=self::findvno($vNoid);
-			if($this->isd=="91")
-				return "011".$vNo;
-			else
-				return "+9111".$vNo;
 		}
 		else
 		{
@@ -98,12 +94,16 @@ public function getVirtualNumber()
 			$id=$ar["id"];
 			$this->saveVNumber($id);
 			
-			if($isd=="91")
+		}
+		
+        JsMemcache::getInstance()->setHashObject('missLog_'.$this->phone,array('rVno'=>$vNo,'pId'=>$this->profileObject->getPROFILEID()));
+
+                            if($this->isd=="91")
 				return "011".$vNo;
 			else
 				return "+9111".$vNo;
-		}
-	
+
+                
 }
 /*********
 Name findvno
@@ -185,6 +185,8 @@ public function searchExistingPid($phoneno)
 
 private  function saveVNumber($vNoid)
 {
+        JsMemcache::getInstance()->setHashObject('missLog_'.$this->phone,array('vNosaved'=>$vNoid,'pId'=>$this->profileObject->getPROFILEID()));
+
 	$knowlarityObj=new newjs_KNWLARITYVNO();
     $knowlarityObj->insertNewVno($this->profileObject->getPROFILEID(),$this->phone,$vNoid);
 
