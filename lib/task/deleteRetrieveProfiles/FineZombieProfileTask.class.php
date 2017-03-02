@@ -5,7 +5,7 @@
  * but delete process has not been executed for them.
  * <code>
  * To execute : $ symfony Delete:FindZombieProfile  totalScripts currentScript [lastLoginWithIn]
- * example  $ php symfony Delete:FindZombieProfile Delete_After="2017-02-26" --Delete_Before="2017-02-
+ * example  $ php symfony Delete:FindZombieProfile "2017-02-26 00:00:00OPTIONAL" --Delete_Before="2017-02-
  
  * </code>
  * @author Kunal Verma
@@ -55,7 +55,7 @@ class FindZombieProfileTask extends sfBaseTask
     {
         //Command line arguements
         $this->addArguments(array(
-            new sfCommandArgument('Delete_After', sfCommandArgument::REQUIRED, 'Find Profiles which are deleted after date'),
+            new sfCommandArgument('Delete_After', sfCommandArgument::OPTIONAL, 'Find Profiles which are deleted after date'),
         ));
         $this->addOptions(array(
             new sfCommandOption('Delete_Before', null, sfCommandOption::PARAMETER_OPTIONAL, 'Find Profiles which are deleted after and deleted before date'),
@@ -132,8 +132,21 @@ EOF;
             $gtDate = $time->format('Y-m-d H:i:s');
         }
         
-        if(isset($options["Delete_Before"]) && strtotime($arguments["Delete_After"])) {
-            $ltDate = strtotime($arguments["Delete_After"]);
+        if($this->bDebugInfo) {
+            $this->logSection('Info: ', "Profile Greater then : $gtDate");
+        }
+
+        if(isset($options["Delete_Before"])) {
+            
+            $ltDate = DateTime::createFromFormat('Y-m-d H:i:s', $options["Delete_Before"]);
+            if(false === $ltDate) {
+                $time->sub(date_interval_create_from_date_string("2 days"));
+                $ltDate = $time->format('Y-m-d H:i:s');
+            }
+
+            if($this->bDebugInfo) {
+                $this->logSection('Info: ', "Profile Less then : $ltDate");
+            }
         }
 
         $this->arrProfiles = $this->objJProfileSlave->getZombieProfiles($gtDate, self::LIMIT_PROFILES, $ltDate);
