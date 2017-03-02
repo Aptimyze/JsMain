@@ -32,4 +32,5 @@ all:
    enable_login:  off
   SendOtpSMS:
    enable_login:  off
-
+  CheckPasswordV1:
+    enable_login: on

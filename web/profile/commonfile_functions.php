@@ -582,7 +582,7 @@ $js_arr[]=array("jspc/static/static_js"  => "1");
 $js_arr[]=array("jspc/login/changePassword_js"  => "1");
 $js_arr[]=array("jspc/settings/settings"  => "1");
 $js_arr[]=array("jspc/settings/jspc_visibility"  => "1");
-$js_arr[]=array("jspc/settings/jspc_hideDelete"             => "14");
+$js_arr[]=array("jspc/settings/jspc_hideDelete"                => "17");
 $js_arr[]=array("jspc/login/resetPassword_js"  => "1");
 $js_arr[]=array("jspc/registration/incompleteProfileJspc_js"       => "7");
 $js_arr[]=array("jspc/profile/edit/profile/jspcPhoneVerifyBinding_js"  => "2");
@@ -624,6 +624,7 @@ $js_arr[]=array("/web/converse"    => "3");
 $js_arr[]=array("reportAbuseForUser_js"                 => "15");
 $js_arr[]=array(" /web/billing/billing_v2"       => "5");
 $js_arr[]=array(" /web/billing/billing"      => "4");
+$js_arr[]=array("jsms/settings/mobHideProfile_js"                 => "12");
 return $js_arr;
 }
 function getJavascript(){
