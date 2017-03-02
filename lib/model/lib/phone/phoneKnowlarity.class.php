@@ -166,14 +166,12 @@ public static function checkDuplicatNumber($phone)
 
 public function searchExistingPid($phoneno)
 {
-    $phoneno=trim(ltrim($phoneno,'0'));
-	$digits=strlen($phoneno);
 	$knowlarityObj=new newjs_KNWLARITYVNO();
 	$row=$knowlarityObj->getDetailsFromProfileId($this->profileObject->getPROFILEID());
- if($row)
+     if($row)
 	{
 		$vNoid= $row["VIRTUALNO"];
-		$rowphn=substr($row["PHONENO"],-$digits);
+		$rowphn=$row["PHONENO"];
 		if($phoneno!=$rowphn)
 			$this->saveVNumber($vNoid);
 		return $vNoid;
