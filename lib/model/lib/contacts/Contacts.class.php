@@ -754,5 +754,25 @@ class Contacts {
         
     }
 
+    /**
+	 * checks if message is obscene
+	 * @return boolean
+	 */
+	public function isObscene($message)
+	{
+		$dbObj = new newjs_OBSCENE_WORDS();
+		$obscene = $dbObj->getObsceneWord();
+		$messageArr = explode(" ",$message);
+		foreach($obscene as $index=>$value)
+		{
+			foreach($messageArr as $k=>$messWord){
+				$messWord = preg_replace('/\s+/', '', $messWord);
+				if(strtolower($messWord) == strtolower($value))
+				{
+					return true;
+				}
+			}
+		}
+    }
 }
 ?>
