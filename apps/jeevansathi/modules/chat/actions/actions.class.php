@@ -349,7 +349,13 @@ class chatActions extends sfActions
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 				$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
 				$privilegeArray = $this->contactHandlerObj->getPrivilegeObj()->getPrivilegeArray();
-				if ($this->contactObj->getTYPE() == ContactHandler::INITIATED && $this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
+				if(!MobileCommon::isApp() && $request->getParameter('chatMessage') && CONTACTS::isObscene($request->getParameter('chatMessage')))
+				{
+					$response["cansend"] = true;
+					$response['sent'] = false;
+					$response["errorMsg"] = "Message not delivered, Please try later";
+				}
+				else if ($this->contactObj->getTYPE() == ContactHandler::INITIATED && $this->contactObj->getSenderObj()->getPROFILEID() == $this->loginProfile->getPROFILEID()) {
 					if($privilegeArray["0"]["SEND_REMINDER"]["MESSAGE"] != "Y")
 					{
 						$response["cansend"] = false;

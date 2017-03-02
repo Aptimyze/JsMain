@@ -79,7 +79,7 @@ function takes the profileid and phone number and find its virtual number if alr
 **************************/
 public function getVirtualNumber()
 {
-		$completeNumber = $this->profileObject->getISD().$this->phone;
+		$completeNumber = $this->phone;
 		if($vNoid=$this->searchExistingPid($completeNumber))
 		{
 			$vNo=self::findvno($vNoid);

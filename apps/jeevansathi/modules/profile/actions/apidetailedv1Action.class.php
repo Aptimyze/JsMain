@@ -282,6 +282,10 @@ class apidetailedv1Action extends sfAction
 		if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 4) {
 			$out['show_gunascore'] = "n";
 		}
+                $out['show_vsp'] = true;
+                if (JsConstants::$hideUnimportantFeatureAtPeakLoad >= 2) {
+			$out['show_vsp'] = false;
+		}
 		return $out;
 	}
 

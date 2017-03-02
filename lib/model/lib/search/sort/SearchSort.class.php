@@ -42,6 +42,12 @@ class SearchSort
          * @var type string
          */
         private $paidSortStr;
+        
+        /**
+         * JsBoost Member Sorting
+         * @var type string
+         */
+        private $jsBoostSortStr;
 	/**
 	* When Photos is searched , visible photos will be given more prefernce.
 	* @access public 
@@ -327,6 +333,15 @@ class SearchSort
         }
         public function getPaidSorting(){
                 return $this->paidSortStr;
+        }
+        
+        public function isJsBoostSorting($loggedInProfileObj){
+                if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
+                        $this->jsBoostSortStr = "if(tf(SUBSCRIPTION,".SearchConfig::$jsBoostSubscription."),1,0)";
+                }
+        }
+        public function getJsBoostSorting(){
+                return $this->jsBoostSortStr;
         }
 }
 ?>
