@@ -243,6 +243,42 @@ class JsMemcache extends sfMemcacheCache{
 			parent::remove($key);
 		}
 	}
+
+	/*function to delete keys with matched suffix
+	* @params:$key,$patternType="suffix",$throwException=false
+	*/
+	public function deleteKeysWithMatchedSuffix($key,$patternType="suffix",$throwException=false){
+		if(self::isRedis() && $key!="")
+		{
+			if($this->client)
+			{
+				try
+				{
+					$key = (string)$key;
+					if($patternType == "suffix"){
+						$key = "*".$key;
+					}
+					else{
+						$key = $key."*";
+					}
+					$value = $this->client->keys($key);
+					if(is_array($value)){
+						foreach ($value as $k => $v) {
+							$this->client->del($k);
+						}
+					}
+				}
+				catch (Exception $e)
+				{
+					if($throwException) {
+						throw $e;
+					}
+					jsException::log("D-redisClusters".$e->getMessage());
+				}
+			}
+		}
+	}
+
 	public function zAdd($key,$test1,$test2)
 	{
 		if(self::isRedis())
@@ -835,6 +871,31 @@ class JsMemcache extends sfMemcacheCache{
   		}
   	}
   }
+
+
+ 
+   /**
+    * 
+    * @param type $key
+    * @return type
+    */
+   public function ttl($key)
+ 	{
+ 		if(self::isRedis())
+ 		{
+ 			if($this->client)
+ 			{
+ 				try
+ 				{
+ 					return $this->client->ttl($key);
+ 				}
+ 				catch (Exception $e)
+ 				{
+ 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 				}
+ 			}
+ 		}
+	}
   
 }
 ?>
