@@ -562,7 +562,12 @@ class PictureFunctions
 					$pictureServiceObj = new PictureService($loginProfile);
 					$profilePicObj = $pictureServiceObj->getProfilePic();
 				   	if($profilePicObj){
-					   	$photoArray = self::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$gender);
+				   		if($profilePic=='U')	
+							$picUrl = $profilePicObj->getThumbail96Url();
+						else
+							$picUrl = $profilePicObj->getProfilePic120Url();
+
+					   	$photoArray = self::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$gender);
 					   	if($photoArray[label] != ''){
 	                    	$thumbnailUrl = self::getNoPhotoJSMS($gender,'ProfilePic120Url');
 					   	} else {

@@ -835,6 +835,31 @@ class JsMemcache extends sfMemcacheCache{
   		}
   	}
   }
+
+
+ 
+   /**
+    * 
+    * @param type $key
+    * @return type
+    */
+   public function ttl($key)
+ 	{
+ 		if(self::isRedis())
+ 		{
+ 			if($this->client)
+ 			{
+ 				try
+ 				{
+ 					return $this->client->ttl($key);
+ 				}
+ 				catch (Exception $e)
+ 				{
+ 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 				}
+ 			}
+ 		}
+	}
   
 }
 ?>
