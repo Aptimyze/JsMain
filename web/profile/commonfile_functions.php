@@ -121,7 +121,7 @@ $css_arr[]=array("jsms/photo/photoswipe"    => "1");
 $css_arr[]=array("jsms/common/fonts"     => "2");
 $css_arr[]=array("jsms/common/commoncss"                                         => "41");
 $css_arr[]=array("jsms/common/mediaquery"      => "3");
-$css_arr[]=array("jsms/search/srpcss"       => "4");
+$css_arr[]=array("jsms/search/srpcss"        => "5");
 $css_arr[]=array("jsms/photo/photoup"    => "1");
 $css_arr[]=array("jsms/membership/revamp_membership_css"   => "3");
 $css_arr[]=array("jsms/membership/new_revamp_membership_css"        => "6");
@@ -446,7 +446,7 @@ $js_arr[]=array("jsms/common/CommonFunctions"                             => "39
 $js_arr[]=array("jsms/common/touchswipe_js"   => "3");
 $js_arr[]=array("jsms/common/history_js"        => "7");
 $js_arr[]=array("jsms/photo/photoRequestCommon_js"  => "2");
-$js_arr[]=array("jsms/search/jqueryInfiniteScroll"                                             => "44");
+$js_arr[]=array("jsms/search/jqueryInfiniteScroll"                                                  => "49");
 $js_arr[]=array("jsms/search/JsmsSearch"   => "2");
 $js_arr[]=array("jsms/search/MobileSearchCommon"   => "2");
 $js_arr[]=array("jsms/angular/registration/lib/angular_min"  => "1");
