@@ -15,7 +15,7 @@ class ReportInvalid
 
 		$previousEntryExists = (new JSADMIN_REPORT_INVALID_PHONE)->entryExistsForPair($profileId,$submittee);
 
-		if($countInvalids <= 10 && !$previousEntryExists)
+		if($countInvalids < 10 && !$previousEntryExists)
 		{	
 			$contactsAllotedObj = new jsadmin_CONTACTS_ALLOTED();
    			$contactsAllotedObj->updateAllotedContacts($profileId,1);
