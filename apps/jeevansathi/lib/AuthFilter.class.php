@@ -115,7 +115,7 @@ class AuthFilter extends sfFilter {
 		        	if($geoIpCountry == 'IN'){
 		        		$currency = 'RS';
 		         	} else {
-			            if($_COOKIE['jeevansathi_hindi_site'] == 'Y'){
+			            if($_COOKIE['jeevansathi_hindi_site_new'] == 'Y'){
 			                $currency = 'RS';
 			            }
         				else{

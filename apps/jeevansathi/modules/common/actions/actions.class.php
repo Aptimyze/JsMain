@@ -938,4 +938,22 @@ public function executeDesktopOtpFailedLayer(sfWebRequest $request)
 
 
         }
+    public function executeCheckPasswordV1(sfWebRequest $request)
+    {
+        $loggedInProfileObj = LoggedInProfile::getInstance('newjs_master');
+        $password =  rawurldecode( json_decode($request->getParameter('data') , true)['pswrd'] );
+        if(PasswordHashFunctions::validatePassword($password, $loggedInProfileObj->getPassword()))
+        {
+            $response = array('success' => 1);
+        }
+        else
+        {
+            $response = array('success' => 0);
+        }
+        $respObj = ApiResponseHandler::getInstance();
+        $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+        $respObj->setResponseBody($response);
+        $respObj->generateResponse();
+        die;
+    }
 }
