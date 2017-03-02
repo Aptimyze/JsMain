@@ -349,10 +349,8 @@ class Initiate extends ContactEvent{
     }
 
     // delete data of Match of the day
-    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->viewed->getPROFILEID());
-    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->viewed->getPROFILEID());
-    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$this->contactHandler->getViewer()->getPROFILEID()); 
-    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->contactHandler->getViewer()->getPROFILEID());
+    JsMemcache::getInstance()->set("cachedMM24$this->viewed->getPROFILEID()","");
+    JsMemcache::getInstance()->set("cachedMM24$this->viewer->getPROFILEID()","");
   }
 
   public function sendMail() {
