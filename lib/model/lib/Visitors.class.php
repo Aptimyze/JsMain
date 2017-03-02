@@ -13,6 +13,9 @@ class Visitors
 	private $profile;
 	private $skipProfile;
 	private $visitorsProfile;
+        private $filteredPrivacy = 'F';
+        private $viewedPartnerProfilesRequiredDetails = "LAGE,HAGE,PARTNER_RELIGION,PARTNER_CASTE,PARTNER_MTONGUE,PARTNER_COUNTRYRES AS COUNTRY_RES,PARTNER_CITYRES AS CITY_RES,PARTNER_MSTATUS,PARTNER_INCOME,PROFILEID";
+        
 	public function __construct($profile)
 	{
 		if (!isset($profile))
@@ -52,7 +55,7 @@ class Visitors
                             
 			}
 			if ($infoTypenav["matchedOrAll"]=="A") 
-                            $this->filterCheck();
+                            $this->forwardFilterCheck();
                         
                         $this->reverseFilterCheck();
 		}
@@ -189,7 +192,7 @@ class Visitors
 			}
 		return 1;
 	}
-	public function filterCheck()
+        public function filterCheck()
 	{
                 if(is_array($this->visitorsProfile))
 		foreach ($this->visitorsProfile as $key=>$profile) {
@@ -198,18 +201,104 @@ class Visitors
 				unset($this->visitorsProfile[$key]);
 		}
         }
+        
+	public function forwardFilterCheck()
+	{
+            $profilesWithPrivacySet[]=$this->profile->getPROFILEID();
+            
+            $viewedProfilesWithShards = JsDbSharding::getShardNumberForMultipleProfiles($profilesWithPrivacySet);
+            
+            $viewedDppArr = $this->getViewedDpp($viewedProfilesWithShards);
+            
+            $viewedFilterParametersTemp = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet);
+            
+            $viewedFilterParameters[$this->profile->getPROFILEID()]['MSTATUS'] = $viewedFilterParametersTemp[$this->profile->getPROFILEID()]['MSTATUS'];
+            $viewedFilterParameters[$this->profile->getPROFILEID()]['RELIGION'] = $viewedFilterParametersTemp[$this->profile->getPROFILEID()]['RELIGION'];
+            
+            if(is_array($this->visitorsProfile))
+                foreach ($this->visitorsProfile as $key=>$profile) {
+                
+                    if($profile && $profilesWithPrivacySet && is_array($viewedDppArr))
+                    {
+                            $viewerParameters = $profile->getFilterParameters();
+                            $filterObj = new MultipleUserFilter($viewerParameters, $viewedFilterParameters, $viewedDppArr, $profile->getPROFILEID(), $profilesWithPrivacySet);
+                            $profilesPassingFilters = $filterObj->checkIfProfileMatchesDpp();
+                    }
+                    else if ($profile && $profilesWithPrivacySet)
+                    {
+                            foreach($profilesWithPrivacySet as $profile1)
+                                    $profilesPassingFilters[$profile1] = 1;
+                    }
+                    
+                    if($profilesPassingFilters[$this->profile->getPROFILEID()] != 1)
+                        unset($this->visitorsProfile[$key]);
+                }
+            
+        } 
+        
         public function reverseFilterCheck()
 	{
                 if(is_array($this->visitorsProfile))
                 foreach ($this->visitorsProfile as $key=>$profile) {
-                    if($profile->getPRIVACY()=='F'){
-			$filtercheck = UserFilterCheck::getInstance($this->profile,$profile);
-			if ($filtercheck->getFilteredContact($action = "VISIT"))
-				unset($this->visitorsProfile[$key]);
-                        }
+                    if($profile->getPRIVACY() == $this->filteredPrivacy)
+                    {
+                        $profilesWithPrivacySet[]=$profile->getPROFILEID();
                     }
-		}
-	
+                }
+                    
+                if(is_array($profilesWithPrivacySet))
+                            $viewedProfilesWithShards = JsDbSharding::getShardNumberForMultipleProfiles($profilesWithPrivacySet);
+                
+                $viewedDppArr = $this->getViewedDpp($viewedProfilesWithShards);
+                
+                if($this->profile && $profilesWithPrivacySet && is_array($viewedDppArr))
+                {
+                        $viewedFilterParameters = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet,$dbname);
+                        $viewerParameters = $this->profile->getFilterParameters();
+                        $filterObj = new MultipleUserFilter($viewerParameters, $viewedFilterParameters, $viewedDppArr, $this->profile->getPROFILEID(), $profilesWithPrivacySet);
+                        $profilesPassingFilters = $filterObj->checkIfProfileMatchesDpp();
+                }
+                else if ($this->profile && $profilesWithPrivacySet)
+                {
+                        foreach($profilesWithPrivacySet as $profile1)
+                                $profilesPassingFilters[$profile1] = 1;
+                }
+                
+                if(is_array($this->visitorsProfile))
+                foreach ($this->visitorsProfile as $key=>$profile) {
+                    if($profilesPassingFilters[$profile->getPROFILEID()] != 1 && in_array($profile->getPROFILEID(), $profilesWithPrivacySet))
+                        unset($this->visitorsProfile[$key]);
+                }
+        }
+        
+        private function getViewedDpp($viewedProfilesWithShards){
+            if(is_array($viewedProfilesWithShards))
+                {
+                        $jpartnerObj = new PartnerProfileArray();
+                        foreach($viewedProfilesWithShards as $shardDbName => $profileArr)
+                        {
+                                if(is_array($profileArr) && sizeof($profileArr)>0)
+                                {
+                                        $pidArr = array_keys($profileArr);
+                                        $dppArr = $jpartnerObj->getDppForMultipleProfiles($pidArr,$shardDbName,$this->viewedPartnerProfilesRequiredDetails);
+                                        if(is_array($dppArr))
+                                        {
+                                                foreach($dppArr as $profileid => $dpp)
+                                                {
+                                                        foreach($dpp as $key=>$dpp2)
+                                                        {
+                                                                if($key != 'PROFILEID')
+                                                                        $viewedDppArr[$profileid][str_replace("PARTNER_","",$key)]=explode(",",str_replace("'","",$dpp2));
+                                                        }
+                                                }
+                                        }
+                                }
+                        }
+                }
+                
+                return $viewedDppArr;
+        }
+        
 	public function sortArray($returnProfiles)
 	{
 		if(is_array($returnProfiles))
