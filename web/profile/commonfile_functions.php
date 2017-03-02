@@ -414,7 +414,7 @@ $js_arr[]=array("jsms/profile/ep/mobShow_name_js"              => "8");
 $js_arr[]=array("jsms/common/disableScroll_js"  => "4");
 $js_arr[]=array("jsms/utility/sessionStorage_js"    => "6");
 $js_arr[]=array("jsms/myjs/touchswipemyjs_js"               => "19");
-$js_arr[]=array("jsms/myjs/myjs_js"                                         => "49");
+$js_arr[]=array("jsms/myjs/myjs_js"                                         => "50");
 $js_arr[]=array("showHide_js"     => "2");
 $js_arr[]=array("showHideReg_js"      => "2");
 $js_arr[]=array("operations_validate1"   => "1");
