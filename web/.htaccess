@@ -211,4 +211,6 @@ RewriteCond %{REQUEST_URI} \/homepage\/ [NC]
 RewriteRule ^(.*)$ symfony_index.php [L]
 RewriteCond %{REQUEST_URI} \/help\/ [NC]
 RewriteRule ^(.*)$ symfony_index.php [L]
+RewriteCond %{REQUEST_URI} \/jaagteRahoo\/ [NC]
+RewriteRule ^(.*)$ symfony_index.php [L]
 </IfModule>
