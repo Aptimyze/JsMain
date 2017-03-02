@@ -13,7 +13,7 @@ class InboxUtility
 			}
 			if(!$pid)
 				return 0;
-                        if(in_array($request->getParameter("infoTypeId"),array(7,8,2)))
+                        if(in_array($request->getParameter("infoTypeId"),array(7,8,2,24)))
                         {      
 				$memcacheid =  "MM".$request->getParameter("infoTypeId"); 
                                 if($type=='set')
@@ -34,6 +34,7 @@ class InboxUtility
 				JsMemcache::getInstance()->set("cachedMM7$pid","");
 				JsMemcache::getInstance()->set("cachedMM8$pid","");
 				JsMemcache::getInstance()->set("cachedMM2$pid","");
+				JsMemcache::getInstance()->set("cachedMM24$pid","");
 			}	
                 }
                 return 0;
