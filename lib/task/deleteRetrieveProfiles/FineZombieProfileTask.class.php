@@ -4,8 +4,11 @@
  * Cron job for finding those profiles which are marked delete in JPROFILE 
  * but delete process has not been executed for them.
  * <code>
- * To execute : $ symfony Delete:FindZombieProfile  totalScripts currentScript [lastLoginWithIn]
- * example  $ php symfony Delete:FindZombieProfile "2017-02-26 00:00:00OPTIONAL" --Delete_Before="2017-02-
+ * To execute : $ [php symfony Delete:FindZombieProfile [--Delete_Before[="..."]] [--application[="..."]] Delete_After]
+ * example  
+ $php symfony Delete:FindZombieProfile "2016-02-26 00:00:00" 
+ $php symfony Delete:FindZombieProfile "2016-02-26 00:00:00" 
+ $php symfony Delete:FindZombieProfile "2016-02-26 00:00:00" --Delete_Before="2016-02-28 00:00:00"
  
  * </code>
  * @author Kunal Verma
@@ -133,19 +136,23 @@ EOF;
         }
         
         if($this->bDebugInfo) {
-            $this->logSection('Info: ', "Profile Greater then : $gtDate");
+            $this->logSection('Info: ', "Profile MOD_DT Greater then : $gtDate");
         }
 
         if(isset($options["Delete_Before"])) {
             
             $ltDate = DateTime::createFromFormat('Y-m-d H:i:s', $options["Delete_Before"]);
+
             if(false === $ltDate) {
-                $time->sub(date_interval_create_from_date_string("2 days"));
+                $time->add(date_interval_create_from_date_string("2 days"));
+                $ltDate = $time->format('Y-m-d H:i:s');
+            } else {
+                $time = new DateTime($options["Delete_Before"]);
                 $ltDate = $time->format('Y-m-d H:i:s');
             }
 
             if($this->bDebugInfo) {
-                $this->logSection('Info: ', "Profile Less then : $ltDate");
+                $this->logSection('Info: ', "Profile MOD_DT Less then : $ltDate");
             }
         }
 

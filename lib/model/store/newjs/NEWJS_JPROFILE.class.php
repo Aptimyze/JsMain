@@ -1742,7 +1742,7 @@ SQL;
 SQL;
         
             if($ltDate) {
-                $sql .= " AND P.MOD_DT > :LT_DATE";  
+                $sql .= " AND P.MOD_DT < :LT_DATE";  
             }
 
             if($limit) {
