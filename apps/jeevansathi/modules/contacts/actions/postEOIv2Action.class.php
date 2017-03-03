@@ -70,6 +70,8 @@ class postEOIv2Action extends sfAction
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 			if($request->getParameter("setFirstEoiMsgFlag") == true){
             	$responseArray["eoi_sent"] = true;
+            	$responseArray["sent"] = true;
+            	$responseArray["cansend"] = true;
             }
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
