@@ -137,11 +137,11 @@ function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 				$db=$mysqlObj->connect("slave");
 		}
 		//This saves a query
-		$myDbId=JsDbSharding::getShardNo($profileid);
-
+		$myDbId=JsDbSharding::getShardNumber($profileid);
+		
 		// $sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
 		// $result = $mysqlObj->executeQuery($sql,$db);
-  //               $myrow=$mysqlObj->fetchArray($result);
+  //               $myrow=$mysqlObj->fetchArray($result);                
   //               $myDbId=$myrow["SERVERID"];
 		if(!$matchalertServer)
 		{
@@ -160,11 +160,12 @@ function getProfileDatabaseId($profileid,$db="",$mysqlObj="",$optionalDb="")
 			$db=$mysqlObj->connect("master");
 	
 		//This saves a query
-		$myDbId=JsDbSharding::getShardNo($profileid);
+		$myDbId=JsDbSharding::getShardNumber($profileid);
 		// $sql="SELECT SERVERID FROM newjs.PROFILEID_SERVER_MAPPING WHERE PROFILEID =$profileid";
 		// $result = $mysqlObj->executeQuery($sql,$db);
 		// $myrow=$mysqlObj->fetchArray($result);
 		// $myDbId=$myrow["SERVERID"];
+
 		if(!$matchalertServer)
 		{
 			$memcacheObj->logServerProfileMapping($profileid,$myDbId);
