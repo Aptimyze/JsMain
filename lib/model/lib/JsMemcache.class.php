@@ -855,7 +855,7 @@ class JsMemcache extends sfMemcacheCache{
  				}
  				catch (Exception $e)
  				{
- 					jsException::log("S-redisClusters  ->".$key." -- ".$e->getMessage()."  ".$retryCount);
+ 					jsException::log("S-redisClusters TTL ->".$key." -- ".$e->getMessage()."  ".$retryCount);
  				}
  			}
  		}
