@@ -536,7 +536,8 @@ else if(perform=="delete")
     }
 else if(perform=="retain")
     {$(".depends").slideUp(200);
-        $(".deleteType").prop("checked", true);
+		
+     //   $(".deleteType").prop("checked", true);
        var screenedProfilePicId = document.getElementsByName("screenedProfilePicId")[0].value;
        $('input[name=set_profile_pic][value=screened'+screenedProfilePicId+']').prop("checked", true);
         

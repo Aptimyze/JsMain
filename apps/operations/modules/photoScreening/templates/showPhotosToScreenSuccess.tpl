@@ -271,7 +271,14 @@
 ~/if`
 <script>
     $(".formSubmitButton").click(function(event){
-        var count=~$tabIndex+$isProfilePic`;
+     var retainPic = $(":radio[value=RETAIN][id='profilePicRetain']:checked").size();
+     var count=~$tabIndex+$isProfilePic`;
+     if(retainPic==1)
+     {
+		var profilePicCount = $("td[id='profilephoto']").size();
+		count = count - profilePicCount; // no of different sizes of image
+	  }
+       
     if($(":radio:checked").size()<count) {
     alert("Some of the Photos are not marked");
     event.preventDefault();return false;}
