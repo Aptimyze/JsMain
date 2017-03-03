@@ -1387,12 +1387,13 @@ class photoScreeningService
                 //Getting Album and separating in 
                 $pictureServiceObj = new PictureService($this->profileObj,"SCREENING");
                 $album = $pictureServiceObj->getAlbum("album");
-                              
+                $haveProfilePicToScreen = false;     
                 //Preparing array for different interfaces 
                 foreach ($album as $key => $picObj) {
                         if (get_class($picObj) == "NonScreenedPicture") {
                                 $nonScreened[] = $picObj;
-                                if ($picObj->getORDERING() == 0) { 
+                                if ($picObj->getORDERING() == 0) {
+										$haveProfilePicToScreen = true;     
                                         $screenBit = $picObj->getSCREEN_BIT(); 
                                         $screenFlipBit = array_flip(array_keys($photoTypes));
                                         foreach ($photoTypes as $type => $size) {
@@ -1463,8 +1464,10 @@ class photoScreeningService
                 
                 $pictureToBeScreenedArr["pictureIDs"] = is_array($pictureID) ? implode(",", $pictureID) : "";
                 $pictureToBeScreenedArr["screenedPictureIDs"] = is_array($screenedPictureIDs) ? implode(",", $screenedPictureIDs) : "";
-				if(!array_key_exists("OldProfilePicPresent",$pictureToBeScreenedArr))
-					$pictureToBeScreenedArr["OldProfilePicPresent"] = false; 
+				if($haveProfilePicToScreen && array_key_exists("OldProfilePicPresent",$pictureToBeScreenedArr))
+					$pictureToBeScreenedArr["OldProfilePicPresent"] = '1';
+				else
+					$pictureToBeScreenedArr["OldProfilePicPresent"] = '0';
                 return $pictureToBeScreenedArr;
         }
 

@@ -224,9 +224,9 @@
 
 			<td align="left" id="photo~$picNumber`">
 				<span style="color:blue;font-size:15px"><b>Screened photo ~$picNumber`</b></span> <br><br>
-
+					~if $photoArr['OldProfilePicPresent'] neq '1'`
 					<input name="screenedPicDelete[]" class="profileMain" id="screenedPicDelete" value='~$pictureID`' type="checkbox" tabIndex="~$tabIndex`"> Delete<br/><br/><br/><br/>
-							
+					~/if`		
                                         ~if $photoArr['profilePic']['mainPicUrl']  || $source eq 'master'`
                                             ~assign var = "isProfilePic" value=1`
                                              ~if $photoArr['OldProfilePicPresent'] neq '1'`
