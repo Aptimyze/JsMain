@@ -386,16 +386,10 @@ class ErrorHandler
 		if($error)
 		{
 			$this->setErrorMessage($error);
+			if($error['ID'] == 1)
 			$this->setErrorType(ErrorHandler::REMINDER_SENT_BEFORE_TIME,ErrorHandler::ERROR_FOUND);
-			return false;
-		}
-
-		//12. Check if the second reminder was sent before 24hours from the last reminder or not
-		$error = $this->checkReminderSentBeforeDay();
-		if($error)
-		{
-			$this->setErrorMessage($error);
-			$this->setErrorType(ErrorHandler::SECOND_REMINDER_BEFORE_TIME,ErrorHandler::ERROR_FOUND);
+			else
+				$this->setErrorType(ErrorHandler::SECOND_REMINDER_BEFORE_TIME,ErrorHandler::ERROR_FOUND);
 			return false;
 		}
 
@@ -954,9 +948,9 @@ class ErrorHandler
 		$timeDayAgo = (time() - (3600*24));
 
 		if($timeDayAgo < $timeOfLastContact){
-		$error= Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
+		$error['MSG']= Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
 		}
-
+		$error['ID'] = 1;
 		}
 		else if($this->errorTypeArr[ErrorHandler::SECOND_REMINDER_BEFORE_TIME] &&
 $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
@@ -966,9 +960,9 @@ $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
 		$timeDayAgo = (time() - (3600*24));
 
 		if($timeDayAgo < $timeOfLastContact){
-		$error= Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
+		$error['MSG']= Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
 		}
-
+		$error['ID'] =2;
 		}
 		return $error;
 	}
