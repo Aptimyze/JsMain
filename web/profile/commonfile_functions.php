@@ -416,7 +416,7 @@ $js_arr[]=array("jsms/myjs/myjs_js"                                          => 
 $js_arr[]=array("jsms/myjs/touchswipemyjs_js"               => "16");
 $js_arr[]=array("showHide_js"     => "2");
 $js_arr[]=array("showHideReg_js"      => "2");
-$js_arr[]=array("operations_validate1"    => "2");
+$js_arr[]=array("operations_validate1"     => "3");
 $js_arr[]=array("jsms/photo/mobPhotoAlbum_photoswipe"       => "3");
 $js_arr[]=array("jsms/photo/mobPhotoAlbum_panzoom"     => "1");
 $js_arr[]=array("jsms/photo/mobPhotoAlbum_photoSwipeInheritence"     => "1");
@@ -624,7 +624,7 @@ $js_arr[]=array("/web/converse"    => "3");
 $js_arr[]=array("reportAbuseForUser_js"                 => "15");
 $js_arr[]=array(" /web/billing/billing_v2"       => "5");
 $js_arr[]=array(" /web/billing/billing"      => "4");
-$js_arr[]=array("operations_validate2"   => "1");
+$js_arr[]=array("operations_validate2"    => "2");
 return $js_arr;
 }
 function getJavascript(){
