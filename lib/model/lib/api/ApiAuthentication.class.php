@@ -293,6 +293,7 @@ Abstract class ApiAuthentication
      
     public function CommonLoginTracking()
 	{
+                if($this->loginData['ACTIVATED']=='D') return ;
 		$queueArr['profileId']=$this->loginData["PROFILEID"] ? $this->loginData["PROFILEID"] : $this->loggedInPId;
 		$profileId=$this->loginData["PROFILEID"];
 		$ip=CommonFunction::getIP();

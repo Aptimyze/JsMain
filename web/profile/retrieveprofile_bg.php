@@ -283,7 +283,7 @@ foreach($myDbarr as $key=>$value)
 	while($myrow=mysql_fetch_array($result))
 	{
 		if($myrow["SEEN"]!= 'Y')
-			$CONTACT_STATUS_FIELD['HOROSCOPE_REQUEST_NEW']=+1;
+			$CONTACT_STATUS_FIELD['HOROSCOPE_NEW']=+1;
 		$CONTACT_STATUS_FIELD['HOROSCOPE_REQUEST']=+1;
 		if(!in_array($myrow["SENDER"],$affectedId))
 		{	
@@ -515,7 +515,7 @@ function retreiveOnlyActiveProfiles($table,$whereStrLabel1,$whereStrLabel2,$myDb
 		if($arrForInactivityConsideation)
 		{
 			$strForInactivityConsideation="'".implode("','",$arrForInactivityConsideation)."'";
-			$whereArr[]="(PROFILEID IN ($strForInactivityConsideation) AND LAST_LOGIN_DT>'$inactivityDate')";
+			$whereArr[]="(PROFILEID IN ($strForInactivityConsideation) AND DATE(LAST_LOGIN_DT)>'$inactivityDate')";
 		}
 		$whereStr="(".implode(" OR " ,$whereArr).")";
 

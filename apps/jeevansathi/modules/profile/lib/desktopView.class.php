@@ -1114,6 +1114,10 @@ class desktopView extends DetailedViewApi
     return $out;
   }
   private function getCasteLabelForGrouping($casteArr){
+        $casteArr = trim(str_replace("'1'", '', $casteArr),',');
+        $casteArr = trim(str_replace("'153'", '', $casteArr),',');
+        $casteArr = trim(str_replace("'148'", '', $casteArr),',');
+        $casteArr = trim(str_replace("'496'", '', $casteArr),',');
         $casteGroupArr=FieldMap::getFieldLabel("caste_group_array",'',1);
         foreach(explode(",",$casteArr) as $v)
         {

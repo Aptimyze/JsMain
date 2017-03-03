@@ -70,7 +70,7 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll"))
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll") || HandlingCommonReqDatabaseId::isMasterMasterDone())
 					JsCommon::oldIncludes(false);
 				else
 					JsCommon::oldIncludes(true);
@@ -115,8 +115,14 @@ class AuthFilter extends sfFilter {
 		        	if($geoIpCountry == 'IN'){
 		        		$currency = 'RS';
 		         	} else {
-		        		$currency = 'DOL';
+			            if($_COOKIE['jeevansathi_hindi_site_new'] == 'Y'){
+			                $currency = 'RS';
+			            }
+        				else{
+		        			$currency = 'DOL';
+		        		}
 		        	}
+		        	
 		        } else {
 		        	//$countryIpAddressObj = new jsadmin_ip_country_live();
 	        		//$getCountry = $countryIpAddressObj->getUserCountry($ipAddress);

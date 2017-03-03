@@ -17,10 +17,17 @@ class SortByLoginDate extends SearchSort implements SortStrategyInterface {
         public function __construct($SearchParamtersObj, $loggedInProfileObj = '') {
                 $this->SearchParamtersObj = $SearchParamtersObj;
                 $this->loggedInProfileObj = $loggedInProfileObj;
+                parent::isJsBoostSorting($loggedInProfileObj);
         }
 
         public function getSortString() {
                 $counter = 0;
+                
+                if(parent::getJsBoostSorting()){
+                        $sortString[$counter] =  parent::getJsBoostSorting();
+                        $sortAscOrDesc[$counter] = $this->sortByDesc;
+                        $counter++;
+                }
                 
                 $sortString[$counter] = "LAST_LOGIN_DT";
                 $sortAscOrDesc[$counter] = $this->sortByDesc;
