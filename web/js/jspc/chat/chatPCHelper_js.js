@@ -1458,7 +1458,7 @@ function handlePreAcceptChat(apiParams,receivedJId) {
                 if (response["responseStatusCode"] == "0") {
                    // console.log(response);
                     if (response["actiondetails"]) {
-                            outputData["errorMsg"] = response["errorMsg"];
+                            outputData["errorMsg"] = (response["errorMsg"] == undefined ? response["actiondetails"]["errmsglabel"] : undefined);
                             outputData["cansend"] = (response["cansend"] != undefined ? response["cansend"] : true);
                             outputData["sent"] = (response["sent"] != undefined ? response["sent"] : false);
                             outputData["msg_id"] = apiParams["postParams"]["chat_id"];
