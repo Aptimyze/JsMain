@@ -393,10 +393,9 @@ class chatActions extends sfActions
 							$_GET["chatMessage"] = $msgText;
 							$messageCommunication = new MessageCommunication('', $this->loginProfile->getPROFILEID());
 							$messageCommunication->insertMessage();
-							JsMemcache::getInstance()->setHashObject("lastChatMsg",$chatNotification);
+							//JsMemcache::getInstance()->setHashObject("lastChatMsg",$chatNotification);
 							$count++;
 							if ($count < 3) {
-								JsMemcache::getInstance()->setHashObject("lastChatMsg",$chatNotification);
 								$response["cansend"] = true;
 								$responseArray['cansend']=true;
 								$responseArray['sent']=true;
