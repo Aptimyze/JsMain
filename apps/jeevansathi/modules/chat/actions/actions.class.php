@@ -445,6 +445,7 @@ class chatActions extends sfActions
 					ob_end_clean();
 					$response = json_decode($output, true);
 					$response["buttondetails"]["cansend"] = true;
+					$response["buttondetails"]["sent"] = true;
 					$response["cansend"] = true;
 					$response['sent'] = true;
 
