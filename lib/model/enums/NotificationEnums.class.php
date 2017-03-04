@@ -50,7 +50,8 @@ class NotificationEnums
                                           "FILTERED_EOI"=>array('AND'=>32,'IOS'=>'2.2'),
                                           "CONTACTS_VIEWED_BY"=>array('AND'=>32,'IOS'=>'2.2'),
                                           "CONTACT_VIEWS"=>array('AND'=>32,'IOS'=>'2.2'),
-                                          "CHAT_MSG"=>array('AND'=>50)
+                                          "CHAT_MSG"=>array('AND'=>50),
+                                          "CHAT_EOI_MSG"=>array('AND'=>50)
                                         ); //app version mapping for notifications
 
       //profile registration offset for notification schedule

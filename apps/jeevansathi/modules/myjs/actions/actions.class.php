@@ -98,9 +98,9 @@ class myjsActions extends sfActions
 	}
 
 
-	/**
-   * Mobile Api version 1.0 action class
-   */
+ /**
+  * Mobile Api version 1.0 action class
+  */
   public function executePerformV1(sfWebRequest $request) {    
     //for logging       
     //LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs api v1 hit"); 
@@ -175,15 +175,15 @@ class myjsActions extends sfActions
         $profileInfo["COMPLETION"] = $completionObj->getProfileCompletionScore();
         $profileInfo["INCOMPLETE"] = $completionObj->GetAPIResponse("MYJS");
         
-        $profileInfo["PHOTO"] = NULL;
         if($this->bEnableProfiler) {
           //Pic & PCS Call
           $this->arrProfiler[$moduleName][] = CommonFunction::logResourceUtilization($stFifthTime, 'Pic & PCS Call Time Taken : ', $moduleName);
         }
-        
+ 
+        $selfPhoto = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
+        $profileInfo["PHOTO"] = $selfPhoto ? $selfPhoto :  NULL;
+
         $stSixthTime = microtime(TRUE);
-        if (MobileCommon::isApp() != "I" || $loggedInProfileObj->getHAVEPHOTO() != "U")
-          $profileInfo["PHOTO"] = $appV1obj->getProfilePicAppV1($loggedInProfileObj);
         $appOrMob = MobileCommon::isApp() ? MobileCommon::isApp() : 'M';
         $myjsCacheKey = MyJsMobileAppV1::getCacheKey($pid) . "_" . $appOrMob;
         $appV1DisplayJson = JsMemcache::getInstance()->get($myjsCacheKey);
@@ -347,8 +347,11 @@ class myjsActions extends sfActions
 			$pictureServiceObj=new PictureService($this->loginProfile);
 			$profilePicObj = $pictureServiceObj->getProfilePic();
 			if($profilePicObj){
-
-			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($profilePicObj->getProfilePic120Url(),'ThumbailUrl','',$this->gender);
+			if($this->profilePic=='U')	
+				$picUrl = $profilePicObj->getThumbail96Url();
+			else
+				$picUrl = $profilePicObj->getProfilePic120Url();
+			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$this->gender);
             if($photoArray[label] != '')
                    $this->photoUrl = PictureFunctions::getNoPhotoJSMS($this->gender,'ProfilePic120Url');
             else
