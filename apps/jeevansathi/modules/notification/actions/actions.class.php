@@ -148,7 +148,7 @@ class notificationActions extends sfActions
                 $respObj->generateResponse();
                 die;
 	}
-	if($deviceUpgrade==true){
+	if($deviceUpgrade=='true'){
 		$upStatus =NotificationFunctions::deviceUpgradeDetails($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
 	}
 	$respObj = ApiResponseHandler::getInstance();
@@ -162,6 +162,8 @@ class notificationActions extends sfActions
 		$alarmDate = alarmTimeManager::getNextDate($alarmTime);*/
 	}
 	$alarmDate ='2020-01-01 00:00:00';
+	if(!is_array($notifications))
+		$notifications =array();	
 	$notificationData['notifications'] = $notifications;
 	$notificationData['alarmTime']=$alarmDate;
 	$notificationData['deviceUpgradeFlag']=$upStatus;

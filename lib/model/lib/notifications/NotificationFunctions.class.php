@@ -159,7 +159,7 @@ class NotificationFunctions
                         $notificationStop=1;
                 if($notificationStop)
                 {
-                        $notificationData['notifications'] = '';
+                        $notificationData['notifications'] = array();
 			$newTime ='2020-01-01 00:00:00';
                         $notificationData['alarmTime']= $newTime;
 			$notificationData['deviceUpgradeFlag']=false;
@@ -176,12 +176,14 @@ class NotificationFunctions
 			$dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion,"osVersion"=>$currentOSversion,"brand"=>$deviceBrand,"model"=>$deviceModel);
 			$msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
 			$producerObj->sendMessage($msgdata);
+			return true;
 		}
 		else{
                         $registationIdObj = new MOBILE_API_REGISTRATION_ID();
                         $registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
+			return true;
 		}
-		return true;
+		return false;
         }
 
 
