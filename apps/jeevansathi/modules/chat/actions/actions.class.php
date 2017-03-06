@@ -345,6 +345,9 @@ class chatActions extends sfActions
 				$ip = FetchClientIP();
 				$chatid = $request->getParameter('chat_id');
 				$chatMessage = $request->getParameter('chatMessage')."--".$date."--".$ip."--".$chatid;
+				
+				$chatNotification[$this->loginProfile->getPROFILEID()."_".$profileid]=json_encode(array("msg"=>$request->getParameter('chatMessage'),"ip"=>$ip,"from"=>$this->loginProfile->getPROFILEID(),"id"=>$chatid,"to"=>$profileid));
+
 				$this->Profile->getDetail($profileid, "PROFILEID");
 				$this->contactObj = new Contacts($this->loginProfile, $this->Profile);
 				$this->contactHandlerObj = new ContactHandler($this->loginProfile,$this->Profile,"EOI",$this->contactObj,'I',ContactHandler::POST);
@@ -373,6 +376,7 @@ class chatActions extends sfActions
 							$response['sent'] = false;
 							$response["errorMsg"] = "You can send more messages if user replies";
 							$responseArray['cansend']=false;
+							$responseArray['sent']=false;
 
 							$responseArray["infomsglabel"] = "You can send more messages if user replies";
 							$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
@@ -383,15 +387,18 @@ class chatActions extends sfActions
 							else {
 								$msgText = $chatMessage;
 							}
+
 							$_GET["messageid"] = $message[0]["ID"];
 							sfContext::getInstance()->getRequest()->setParameter("messageid", $message[0]["ID"]);
 							$_GET["chatMessage"] = $msgText;
 							$messageCommunication = new MessageCommunication('', $this->loginProfile->getPROFILEID());
 							$messageCommunication->insertMessage();
+							JsMemcache::getInstance()->setHashObject("lastChatMsg",$chatNotification);
 							$count++;
 							if ($count < 3) {
 								$response["cansend"] = true;
 								$responseArray['cansend']=true;
+								$responseArray['sent']=true;
 								if(sfContext::getInstance()->getRequest()->getParameter("page_source") == "chat" && sfContext::getInstance()->getRequest()->getParameter("channel") == "A") {
 									$androidText = true;
 								}
@@ -405,9 +412,10 @@ class chatActions extends sfActions
 
 							} else {
 								$response["cansend"] = false;
-								$response['sent'] = false;
+								$response['sent'] = true;
 								$response["errorMsg"] = "You can send more messages if user replies";
 								$responseArray['cansend']=false;
+								$responseArray['sent']=true;
 
 								$responseArray["infomsglabel"] = "You can send more messages if user replies";
 								$response["actiondetails"] = ButtonResponseApi::actionDetailsMerge(array());
@@ -436,6 +444,7 @@ class chatActions extends sfActions
 					ob_end_clean();
 					$response = json_decode($output, true);
 					$response["buttondetails"]["cansend"] = true;
+					$response["buttondetails"]["sent"] = true;
 					$response["cansend"] = true;
 					$response['sent'] = true;
 

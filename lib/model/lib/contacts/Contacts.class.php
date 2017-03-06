@@ -711,7 +711,7 @@ class Contacts {
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
             $smallIsWho = $sortedArray[0] == $profileId1 ? 'S' : 'R';
             $result = $type."_".$smallIsWho;
-            JsMemcache::getInstance()->set($sortedArray[0].'_'.$sortedArray[1].'_contactType',$result,self::CONTACT_TYPE_CACHE_EXPIRY);
+            JsMemcache::getInstance()->setRedisKey($sortedArray[0].'_'.$sortedArray[1].'_contactType',$result,self::CONTACT_TYPE_CACHE_EXPIRY);
             return $result;
             
         }
@@ -726,7 +726,7 @@ class Contacts {
         {
             if(!$profileId1 || !$profileId2)return false;
             $sortedArray = $profileId1 > $profileId2 ? array($profileId2,$profileId1) : array($profileId1,$profileId2); 
-            $result = JsMemcache::getInstance()->get($sortedArray[0].'_'.$sortedArray[1].'_contactType');
+            $result = JsMemcache::getInstance()->getRedisKey($sortedArray[0].'_'.$sortedArray[1].'_contactType');
             
             if(!$result)
                 {

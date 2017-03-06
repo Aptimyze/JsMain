@@ -20,6 +20,7 @@ class memUser
     public $contactsRemaining;
     public $memObj;
     public $festFlag;
+    public $memUpgradeEligible = false;
 
     function __construct($profileid) {
         if ($profileid != '') {
@@ -36,8 +37,8 @@ class memUser
         }
     }
 
-    public function setMemStatus() {
-        list($userType, $expiryDate, $memStatus) = $this->memObj->getMemUserType($this->profileid);
+    public function setMemStatus($fromBackend="") {
+        list($userType, $expiryDate, $memStatus) = $this->memObj->getMemUserType($this->profileid,$fromBackend);
         if ($userType == 2) {
             $this->userType = memUserType::FREE;
         } 
@@ -61,9 +62,14 @@ class memUser
         } 
         elseif ($userType == 7) {
             $this->userType = memUserType::ONLY_VAS;
-        } 
+        }
+        elseif ($userType == memUserType::UPGRADE_ELIGIBLE) {
+            $this->userType = memUserType::UPGRADE_ELIGIBLE;
+            $this->memStatus = $memStatus;
+        }
         else echo "blank";
         $this->expiryDate = date("jS F", strtotime($expiryDate));
+        $this->memUpgradeEligible = $memUpgradeEligible;
     }
 
     public function getIpAddress() {
@@ -98,8 +104,8 @@ class memUser
         return $this->festFlag;
     }
 
-    public function getRemainingContacts() {
-        $contacts = $this->memObj->getRemainingContactsForUser($this->profileid);
+    public function getRemainingContacts($profileid,$extraFields="") {
+        $contacts = $this->memObj->getRemainingContactsForUser($this->profileid,$extraFields);
         return $contacts;
     }
 

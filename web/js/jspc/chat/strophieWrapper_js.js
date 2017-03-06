@@ -838,9 +838,8 @@ strophieWrapper.sendPresence();
                     from: strophieWrapper.getSelfJID(),
                     to: to,
                     type: 'chat',
-                    id:messageId,
-                    fromUserName:self_username,
-                    }).c('msg_type',{xmlns:"http://www.jeevansathi.com/message_type",type:msg_type},msg_type).cnode(Strophe.xmlElement('body', message)).up().c('active', {
+                    id:messageId
+                    }).c('msg_type',{xmlns:"http://www.jeevansathi.com/message_type",type:msg_type,username:self_username},msg_type).cnode(Strophe.xmlElement('body', message)).up().c('active', {
                         xmlns: "http://jabber.org/protocol/chatstates"
                 });
                 //console.log(reply);

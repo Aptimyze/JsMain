@@ -103,6 +103,7 @@ class postEOIv1Action extends sfAction
 			$androidText = true;
 			$responseButtonArray["buttons"][] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 			$responseButtonArray["cansend"] = true;
+			$responseButtonArray["sent"] = true;
 		}
 		$responseButtonArray["button"] = $buttonObj->getInitiatedButton($androidText,$privilegeArray);
 		if($this->contactEngineObj->messageId)
