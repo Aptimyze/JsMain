@@ -3,7 +3,7 @@ class EditLifeStyle extends EditProfileComponent {
 	public function submit() {
 		$this->request = $this->action->getRequest();
 		$now = date("Y-m-d H:i:s");
-		$today = date("Y-m-d");
+		$today = CommonUtility::makeTime(date("Y-m-d"));
 		$profile_handler = trim($this->request->getParameter('person_handling_profile'));
 		$paramArr = array('DIET' => $this->request->getParameter('Diet'), 'SMOKE' => $this->request->getParameter('Smoke'), 'DRINK' => $this->request->getParameter('Drink'), 'COMPLEXION' => $this->request->getParameter('Complexion'), 'BTYPE' => $this->request->getParameter('Body_Type'), 'BLOOD_GROUP' => $this->request->getParameter('blood_group'), 'WEIGHT' => $this->request->getParameter('weight'), 'HIV' => $this->request->getParameter('hiv'), 'HANDICAPPED' => $this->request->getParameter('handicapped'), 'NATURE_HANDICAP' => $this->request->getParameter('nature_of_handicap'), 'THALASSEMIA' => $this->request->getParameter('thalassemia'), 'OWN_HOUSE' => $this->request->getParameter('own_house'), 'HAVE_CAR' => $this->request->getParameter('have_car'), 'OPEN_TO_PET' => $this->request->getParameter('open_to_pet'), 'RES_STATUS' => $this->request->getParameter('rstatus'), 'LAST_LOGIN_DT' => $today, 'MOD_DT' => $now,);
     

@@ -42,6 +42,12 @@ class SearchSort
          * @var type string
          */
         private $paidSortStr;
+        
+        /**
+         * JsBoost Member Sorting
+         * @var type string
+         */
+        private $jsBoostSortStr;
 	/**
 	* When Photos is searched , visible photos will be given more prefernce.
 	* @access public 
@@ -270,14 +276,11 @@ class SearchSort
                         if ($loggedInProfileObj->getMTONGUE()) {
                                 $sortArray[] = "or(tf(PARTNER_MTONGUE," . $loggedInProfileObj->getMTONGUE() . "),tf(PARTNER_MTONGUE," . $doesntMatterValue . "))";
                         }
-                        if ($loggedInProfileObj->getGENDER() == 'F') {
-                                if ($loggedInProfileObj->getEDU_LEVEL_NEW()) {
+                        if ($loggedInProfileObj->getEDU_LEVEL_NEW()) {
                                         $sortArray[] = "or(tf(PARTNER_ELEVEL_NEW," . $loggedInProfileObj->getEDU_LEVEL_NEW() . "),tf(PARTNER_ELEVEL_NEW," . $doesntMatterValue . "))";
-                                }
-                        } else {
-                                if ($loggedInProfileObj->getINCOME()) {
+                        } 
+                        if ($loggedInProfileObj->getINCOME()) {
                                         $sortArray[] = "or(tf(PARTNER_INCOME_FILTER," . $loggedInProfileObj->getINCOME() . "),tf(PARTNER_INCOME_FILTER," . $doesntMatterValue . "))";
-                                }
                         }
                 }
                 if (!empty($sortArray)) {
@@ -327,6 +330,15 @@ class SearchSort
         }
         public function getPaidSorting(){
                 return $this->paidSortStr;
+        }
+        
+        public function isJsBoostSorting($loggedInProfileObj){
+                if ($loggedInProfileObj && $loggedInProfileObj->getPROFILEID() != '') {
+                        $this->jsBoostSortStr = "if(tf(SUBSCRIPTION,".SearchConfig::$jsBoostSubscription."),1,0)";
+                }
+        }
+        public function getJsBoostSorting(){
+                return $this->jsBoostSortStr;
         }
 }
 ?>

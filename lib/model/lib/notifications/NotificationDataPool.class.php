@@ -515,6 +515,7 @@ class NotificationDataPool
                     $dataAccumulated[$counter]['COUNT'] = "SINGLE";
                     $counter++;
                     JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$k1);
+                    JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$k1);
                     $matchOfDayMasterObj->insert($k1,$v1);
                 }
             }

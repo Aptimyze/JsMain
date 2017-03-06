@@ -303,7 +303,6 @@
 			var countryField = $scope.fields[3];
 			var stateField = $scope.fields[4];
 			var cityField = $scope.fields[5];
-console.log(stateField.userDecision);
                         if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
                         {
                                 cityField.show=true;
@@ -633,9 +632,10 @@ console.log(stateField.userDecision);
 		{
 			Gui.updateGuiFields($scope.screenName,indexPos,output);
       
-      if($scope.screenName=='s4' && indexPos==2)
+			if($scope.screenName=='s4' && indexPos==2)
 			{
-        $scope.initHoroscope();
+				$scope.initHoroscope();
+				$scope.initCasteNoBar();
 			}
 			$scope.hamOn = false;
 			$scope.enableNextBtn();
@@ -662,7 +662,7 @@ console.log(stateField.userDecision);
     {
       var allowedReligion = ['1','4','7','9'];
       var religionFieldIndex= 2;
-      var horoscopeFieldIndex = 3;
+      var horoscopeFieldIndex = 4;
       
       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') {
         $scope.fields[horoscopeFieldIndex].show = true;
@@ -671,8 +671,25 @@ console.log(stateField.userDecision);
         Gui.resetField('s4','dindex',horoscopeFieldIndex);
       }
     }
-    $scope.initHoroscope();
-		$scope.enableNextBtn();
+	$scope.initCasteNoBar = function()    
+	{
+	        var allowedReligion = ['1','4','9'];
+		var religionFieldIndex= 2;
+		var casteNoBarFieldIndex = 3;
+
+	       if(allowedReligion.indexOf($scope.fields[religionFieldIndex].userDecision) != '-1') 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = true;
+		} 
+		else 
+		{
+		       $scope.fields[casteNoBarFieldIndex].show = false;
+		       Gui.resetField('s4','dindex',casteNoBarFieldIndex);
+		}     
+	 }
+	$scope.initHoroscope();
+	$scope.initCasteNoBar();
+	$scope.enableNextBtn();
         //TrackParams.trackClientInfo($scope.screenName);
 	});
 
@@ -1508,7 +1525,16 @@ console.log(stateField.userDecision);
 				Gui.showModalWindow($scope);
 				//$scope.showServerError("provide a valid date of birth");
 			}
-			
+                        if(indexPos == '3')/*Country*/
+			{
+				var countryField = $scope.fields2[3];
+				$scope.initIncompleteStateWidget();
+				$scope.initIncompleteCityWidget();
+			}
+                        if(indexPos=='4')
+			{
+				$scope.initIncompleteCityWidget();
+			}
 			if(checkValid)
 			{
 				$scope.validation();
@@ -1542,11 +1568,40 @@ console.log(stateField.userDecision);
 				setTimeout(function(){$(".errClass").remove();},300);
 			},2000);
 		}
+                $scope.initIncompleteStateWidget = function()
+		{
+			var countryField = $scope.fields2[3];
+			var stateField = $scope.fields2[4];
+			if(parseInt(countryField.userDecision)==51)
+			{
+				stateField.show=false;
+			}
+			else
+			{
+				stateField.show=true;
+			}
+		}
+		$scope.initIncompleteCityWidget = function()
+		{
+			var countryField = $scope.fields2[3];
+			var stateField = $scope.fields2[4];
+			var cityField = $scope.fields2[5];
+                        if((stateField.userDecision && parseInt(countryField.userDecision)==51)||parseInt(countryField.userDecision)==128)
+                        {
+                                cityField.show=false;
+                        }
+                        else
+                        {
+                                cityField.show=true;
+                        }
+		}
 		 $scope.showHamMsg = function(szMsg)
         {
             Gui.toastMsg($scope,szMsg);
         }
 		$scope.enableNextBtn();
+                $scope.initIncompleteStateWidget();
+               $scope.initIncompleteCityWidget();
 	});
     
     //Splash Controller

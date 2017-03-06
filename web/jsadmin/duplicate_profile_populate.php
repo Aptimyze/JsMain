@@ -22,7 +22,7 @@ mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_t
 $yest_dt=time()-24*60*60*90;  		        // Time of 90 Days Back
 $last_login_dt= date("Y-m-d",$yest_dt);         // Date of 90 Days Back
 
-$sql="SELECT COUNT(*) AS C,PHONE_MOB FROM newjs.JPROFILE WHERE ACTIVATED ='Y' AND LAST_LOGIN_DT>='$last_login_dt' GROUP BY PHONE_MOB HAVING C>1 ORDER BY PHONE_MOB DESC";
+$sql="SELECT COUNT(*) AS C,PHONE_MOB FROM newjs.JPROFILE WHERE ACTIVATED ='Y' AND DATE(LAST_LOGIN_DT)>='$last_login_dt' GROUP BY PHONE_MOB HAVING C>1 ORDER BY PHONE_MOB DESC";
 $res= mysql_query($sql,$db_slave) or die(mysql_error1($db_slave));
 while($row=mysql_fetch_array($res))
 {
@@ -60,7 +60,7 @@ while($row=mysql_fetch_array($res))
 	}
 }
 
-$sql_2="SELECT COUNT(*) AS C,PHONE_RES FROM newjs.JPROFILE WHERE ACTIVATED ='Y' AND LAST_LOGIN_DT>='$last_login_dt' GROUP BY PHONE_RES HAVING C>1 ORDER BY PHONE_RES DESC";
+$sql_2="SELECT COUNT(*) AS C,PHONE_RES FROM newjs.JPROFILE WHERE ACTIVATED ='Y' AND DATE(LAST_LOGIN_DT)>='$last_login_dt' GROUP BY PHONE_RES HAVING C>1 ORDER BY PHONE_RES DESC";
 $res_2=mysql_query($sql_2,$db_slave) or die(mysql_error1($db_slave));
 while($row_2=mysql_fetch_array($res_2))
 {

@@ -277,6 +277,8 @@ class MyJs implements Module
                                                 $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
                                             }
                                             else $infoTypeObj[$infoType] = $infoTypeAdapter->getProfiles($conditionArray, $skipArray);
+                                            
+                                            
                                         }
                                         //Cache the data
                                         $arrAllowedType = array('INTEREST_RECEIVED','VISITORS','MATCH_ALERT');
@@ -312,6 +314,11 @@ class MyJs implements Module
                         $tupleService->setProfileInfo($infoTypeObj, array_unique($fields));
 			
                 	$countObj     = $this->getCount(MyJs::$getTotal,$infoTypeNav);
+                        if(JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID())){
+                                $countObj["MATCH_OF_THE_DAY"] = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
+                                $countObj["MATCH_OF_THE_DAY_ALL"] = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
+                        }
+                        
                         foreach ($this->configurations as $infoType => $config) 
 			{
 				if(is_null($infoTypeNav) || (is_array($infoTypeNav) && array_key_exists($infoType, $infoTypeNav)))
@@ -646,8 +653,10 @@ class MyJs implements Module
 		elseif(MobileCommon::isApp()=='I')
                         $trackingMap=array(
                                 "INTEREST_RECEIVED"=>"responseTracking=".JSTrackingPageType::MYJS_EOI_IOS,
+                                "INTEREST_EXPIRING"=>"responseTracking=".JSTrackingPageType::INTEREST_EXPIRING_MYJS_IOS,
                                 "VISITORS"=>"stype=".SearchTypesEnums::VISITORS_MYJS_IOS,
                                 "MATCH_ALERT"=>"stype=".SearchTypesEnums::MATCHALERT_MYJS_IOS,
+                                "MATCH_OF_THE_DAY"=>SearchTypesEnums::MATCH_OF_THE_DAY_MYJS_IOS,
                                 );
 
 		return $trackingMap[$listing];

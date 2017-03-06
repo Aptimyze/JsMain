@@ -1,0 +1,5 @@
+type=command
+dependencies=VisitorAlertPopulateTask
+command=${php5} ${docRoot}/symfony VisitorAlert:VisitorAlertCalculate 5 4 
+retries=3
+retry.backoff=50000

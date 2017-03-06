@@ -10,5 +10,10 @@ foreach ($membershipKeyArray as $key => $keyVal) {
     $memCacheObject->remove($keyVal);
     $keys_removed .= $keyVal.",\n"; 
 }
+//flush membership subscription if this extra param is set
+if($_GET["memSub"] == '1'){
+    $output = $memCacheObject->deleteKeysWithMatchedSuffix("_MEM_SUBSTATUS_ARRAY","suffix");
+    $keys_removed .= $keys_removed."\n"."KEYS WITH SUFFIX as _MEM_SUBSTATUS_ARRAY";
+}
 echo $keys_removed;
 ?>
