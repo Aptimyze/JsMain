@@ -47,9 +47,23 @@ class FindZombieProfileTask extends sfBaseTask
      * @var Boolean
      */
     private $bDebugInfo = true;
+    
     /**
-	 * Definition of Member functions
-	 */ 
+     *
+     * @access private
+     * @var DeleteProfile class obhect
+     */
+    private $objDeleteProfile = null;
+    
+    /**
+     *
+     * @access private
+     * @var DeleteProfile class object
+     */
+    private $objProfileDeleteLogs = null;
+    /**
+    * Definition of Member functions
+    */ 
     
     /*
      * Configure function 
@@ -89,6 +103,10 @@ EOF;
     {
         //NewJs_Slave Connection
         $this->objJProfileSlave  =  JPROFILE::getInstance('newjs_slave');
+        
+        $this->objDeleteProfile = new DeleteProfile;
+        
+        $this->objProfileDeleteLogs = new PROFILE_DELETE_LOGS("newjs_slave");
     }
     
     
@@ -97,6 +115,10 @@ EOF;
      */
     protected function execute($arguments = array(), $options = array())
     {  
+        if(!sfContext::hasInstance()){
+          sfContext::createInstance($this->configuration);
+        }
+        
         $st_Time = microtime(TRUE);
         
         //Init Connection        
@@ -105,9 +127,6 @@ EOF;
         //GetProfiles
         $this->getProfiles($arguments, $options);
         
-        //Check For Tables
-        $this->checkTables();
-
         //Enqueue in DeleteRetrieveCron
         $this->enqueue();
 
@@ -214,7 +233,15 @@ EOF;
         }
 
         foreach($this->arrProfiles as $profiles) {
-            $pid = $$profiles['PROFILEID'];
+            $pid = $profiles['PROFILEID'];
+            
+            //Run Delete Process
+            $result = $this->runDeleteProcess($pid);
+            
+            if($result) {
+              //As rest process has been taken care in Class DeleteProfile.class.php
+              continue ;
+            }
             
             //Remove From Search
             $this->callDeleteCronBasedOnId($pid);
@@ -235,8 +262,13 @@ EOF;
 
         }
     }
-
-    public function callDeleteCronBasedOnId($profileid,$background='Y')
+    
+    /**
+     * 
+     * @param type $profileid
+     * @param type $background
+     */
+    private function callDeleteCronBasedOnId($profileid,$background='Y')
     {
         if($profileid=='EXPORT')
             $command = JsConstants::$php5path." ".JsConstants::$cronDocRoot."/symfony cron:SearchIndexing EXPORT";
@@ -250,6 +282,42 @@ EOF;
         //echo  $command;echo "\n\n";
         exec($command);
         
+    }
+    
+    /**
+     * 
+     * @param type $iProfileID
+     */
+    private function runDeleteProcess($iProfileID)
+    {
+      $arrData = $this->objProfileDeleteLogs->findRecord($iProfileID);
+
+      if(false === $arrData) {
+        return false;
+      }
+      
+      $arrData = $arrData[0];
+      
+      $delete_reason = $arrData['DELETE_REASON'];
+      $specify_reason = $arrData['SPECIFY_REASON'];
+      $username = $arrData['USERNAME'];
+      $startTime = $arrData['START_TIME'];
+      
+      try{
+        $this->objDeleteProfile->delete_profile($iProfileID, $delete_reason, $specify_reason, $username, $startTime);
+        return true;
+      } catch (Exception $ex) {
+        if($this->bDebugInfo) {
+          $this->logSection("Exception : ", $ex->getTrace() );
+          return ;
+        }
+        $subject = "Find Zombie Profile Task: Error while rerunning delete process";
+        $szMailBody = "Profileid of user is : ".$iProfileID;
+        $szMailBody .= "\n\n'".print_r($ex->getTrace(),true)."'";
+            
+        SendMail::send_email("kunal.test02@gmail.com",$szMailBody,$subject);
+        return false;
+      }
     }
 }
 ?>
