@@ -68,9 +68,6 @@ class postEOIv2Action extends sfAction
 		}
 		if (is_array($responseArray)) {
 			$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-			if($request->getParameter("setFirstEoiMsgFlag") == true){
-            	$responseArray["eoi_sent"] = true;
-            }
            
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
@@ -301,12 +298,19 @@ class postEOIv2Action extends sfAction
 
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = ButtonResponse::buttondetailsMerge($responseButtonArray);
-		 if($request->getParameter("pageSource") == "chat" && $request->getParameter("channel") == "pc" && $this->contactEngineObj->messageId)
-                {
-
-                        $finalresponseArray["cansend"] = true;
-                        $finalresponseArray["sent"] = true;
-                }
+		 if($request->getParameter("pageSource") == "chat" && $request->getParameter("channel") == "pc" && $request->getParameter("setFirstEoiMsgFlag") == true)
+        {
+        	if($this->contactEngineObj->messageId){
+				$responseArray["eoi_sent"] = true;
+				$finalresponseArray["cansend"] = true;
+            	$finalresponseArray["sent"] = true;
+			}
+			else{
+				$responseArray["eoi_sent"] = false;
+				$finalresponseArray["cansend"] = false;
+            	$finalresponseArray["sent"] = false;    
+        	}	
+		}
 		if(MobileCommon::isNewMobileSite())
 		{
 			
