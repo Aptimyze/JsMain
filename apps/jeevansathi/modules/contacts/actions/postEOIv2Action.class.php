@@ -298,15 +298,15 @@ class postEOIv2Action extends sfAction
 
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = ButtonResponse::buttondetailsMerge($responseButtonArray);
-		 if($request->getParameter("pageSource") == "chat" && $request->getParameter("channel") == "pc" && $request->getParameter("setFirstEoiMsgFlag") == true)
+		if($request->getParameter("pageSource") == "chat" && $request->getParameter("channel") == "pc" && $request->getParameter("setFirstEoiMsgFlag") == true)
         {
         	if($this->contactEngineObj->messageId){
-				$responseArray["eoi_sent"] = true;
+				$finalresponseArray["eoi_sent"] = true;
 				$finalresponseArray["cansend"] = true;
             	$finalresponseArray["sent"] = true;
 			}
 			else{
-				$responseArray["eoi_sent"] = false;
+				$finalresponseArray["eoi_sent"] = false;
 				$finalresponseArray["cansend"] = false;
             	$finalresponseArray["sent"] = false;    
         	}	
