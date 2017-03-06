@@ -202,16 +202,28 @@ class Visitors
 		}
         }
         
+        
+        /**
+        * function checks the forward filters and removes those profiles who do not match with users filters
+        * @access Public
+        * @return Void
+        * <p>
+        * </p>
+        */
 	public function forwardFilterCheck()
 	{
+            //get profile of logged in user
             $profilesWithPrivacySet[]=$this->profile->getPROFILEID();
             
             $viewedProfilesWithShards = JsDbSharding::getShardNumberForMultipleProfiles($profilesWithPrivacySet);
             
+            //get logged in profile's DPP
             $viewedDppArr = $this->getViewedDpp($viewedProfilesWithShards);
             
+            //get filters for Logged In profile
             $viewedFilterParametersTemp = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet);
             
+            //only two filters to be applied for now
             $viewedFilterParameters[$this->profile->getPROFILEID()]['MSTATUS'] = $viewedFilterParametersTemp[$this->profile->getPROFILEID()]['MSTATUS'];
             $viewedFilterParameters[$this->profile->getPROFILEID()]['RELIGION'] = $viewedFilterParametersTemp[$this->profile->getPROFILEID()]['RELIGION'];
             
@@ -220,8 +232,11 @@ class Visitors
                 
                     if($profile && $profilesWithPrivacySet && is_array($viewedDppArr))
                     {
+                            //Viewer profile's dpp values for user's filter set values
                             $viewerParameters = $profile->getFilterParameters();
+                            
                             $filterObj = new MultipleUserFilter($viewerParameters, $viewedFilterParameters, $viewedDppArr, $profile->getPROFILEID(), $profilesWithPrivacySet);
+                            //check if filters are satisfied
                             $profilesPassingFilters = $filterObj->checkIfProfileMatchesDpp();
                     }
                     else if ($profile && $profilesWithPrivacySet)
@@ -230,14 +245,23 @@ class Visitors
                                     $profilesPassingFilters[$profile1] = 1;
                     }
                     
+                    //unset those profiles which do not satisfy forward filters
                     if($profilesPassingFilters[$this->profile->getPROFILEID()] != 1)
                         unset($this->visitorsProfile[$key]);
                 }
             
         } 
         
+        /**
+        * function checks the revers filters and removes those viewer profiles where user's profile does not match their filters
+        * @access Public
+        * @return Void
+        * <p>
+        * </p>
+        */
         public function reverseFilterCheck()
 	{
+                //get those viewer profiles who have set privacy as F
                 if(is_array($this->visitorsProfile))
                 foreach ($this->visitorsProfile as $key=>$profile) {
                     if($profile->getPRIVACY() == $this->filteredPrivacy)
@@ -249,11 +273,13 @@ class Visitors
                 if(is_array($profilesWithPrivacySet))
                             $viewedProfilesWithShards = JsDbSharding::getShardNumberForMultipleProfiles($profilesWithPrivacySet);
                 
+                //get their DPP in a single In query
                 $viewedDppArr = $this->getViewedDpp($viewedProfilesWithShards);
                 
                 if($this->profile && $profilesWithPrivacySet && is_array($viewedDppArr))
                 {
                         $viewedFilterParameters = MultipleUserFilter::getFilterParameters($profilesWithPrivacySet,$dbname);
+                        // Get logged In user's filters dpp criteria
                         $viewerParameters = $this->profile->getFilterParameters();
                         $filterObj = new MultipleUserFilter($viewerParameters, $viewedFilterParameters, $viewedDppArr, $this->profile->getPROFILEID(), $profilesWithPrivacySet);
                         $profilesPassingFilters = $filterObj->checkIfProfileMatchesDpp();
@@ -266,11 +292,20 @@ class Visitors
                 
                 if(is_array($this->visitorsProfile))
                 foreach ($this->visitorsProfile as $key=>$profile) {
+                    //unset those profiles for which logged in user's criteria do not match filter criteria and they have privacy as F
                     if($profilesPassingFilters[$profile->getPROFILEID()] != 1 && in_array($profile->getPROFILEID(), $profilesWithPrivacySet))
                         unset($this->visitorsProfile[$key]);
                 }
         }
         
+        /**
+        * function checks the forward filters and removes those profiles who do not match with users filters
+        * @access Public
+        * @arguments array of viewer profiles with shards
+        * @return array of dpp of viewer profiles
+        * <p>
+        * </p>
+        */
         private function getViewedDpp($viewedProfilesWithShards){
             if(is_array($viewedProfilesWithShards))
                 {
