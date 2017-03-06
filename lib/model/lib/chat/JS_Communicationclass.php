@@ -55,7 +55,7 @@ class JS_Communication
 		//$type="A";
 		$dbName1 = JsDbSharding::getShardNo($this->loginProfile);
 		$dbName2 = JsDbSharding::getShardNo($this->otherProfile);
-		$lastChatSeenId=JsMemcache::getInstance()->get($this->loginProfile."_".$this->otherProfile."_lastChatSeen");
+		$lastChatSeenId=JsMemcache::getInstance()->getRedisKey($this->loginProfile."_".$this->otherProfile."_lastChatSeen");
 		if(!$lastChatSeenId)
 			$lastChatSeenId=0;
 		
@@ -69,7 +69,7 @@ class JS_Communication
 			if(!$newChatSeenId)
 				$newChatSeenId=0;
 			if($newChatSeenId>$lastChatSeenId)
-				JsMemcache::getInstance()->set($this->loginProfile."_".$this->otherProfile."_lastChatSeen",$newChatSeenId);
+				JsMemcache::getInstance()->setRedisKey($this->loginProfile."_".$this->otherProfile."_lastChatSeen",$newChatSeenId);
 			if(count($result)<20)
 			{
 				$msgDbObj= new NEWJS_MESSAGE_LOG($dbName1);
