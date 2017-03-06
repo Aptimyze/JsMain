@@ -80,6 +80,7 @@ class postEOIv2Action extends sfAction
             		$responseArray["cansend"] = true;
             	}
             }
+           
 			$apiObj->setResponseBody($responseArray);
 			$apiObj->generateResponse();
 		}
@@ -133,6 +134,7 @@ class postEOIv2Action extends sfAction
 		{
 			$responseButtonArray["button"] = $buttonObj->getInitiatedButton();
 		}
+		
 
 		if($this->contactEngineObj->messageId)
 		{ 
@@ -174,6 +176,7 @@ class postEOIv2Action extends sfAction
 				}
 			}
 			$responseArray["redirect"] = true;
+			
 		}
 		else
 		{
@@ -304,8 +307,15 @@ class postEOIv2Action extends sfAction
 				$responseButtonArray["button"]["iconid"] = IdToAppImagesMapping::DISABLE_CONTACT;
 			}
 		}
+
 		$finalresponseArray["actiondetails"] = ButtonResponse::actiondetailsMerge($responseArray);
 		$finalresponseArray["buttondetails"] = ButtonResponse::buttondetailsMerge($responseButtonArray);
+		 if($request->getParameter("pageSource") == "chat" && $request->getParameter("channel") == "pc" && $this->contactEngineObj->messageId)
+                {
+
+                        $finalresponseArray["cansend"] = true;
+                        $finalresponseArray["sent"] = true;
+                }
 		if(MobileCommon::isNewMobileSite())
 		{
 			
