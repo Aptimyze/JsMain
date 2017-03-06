@@ -209,7 +209,7 @@ class postSendReminderv2Action extends sfAction
 				//This is a junk Id which is not in use for IOS but just to make sure that existing architecture is not disturbed, We are sending it. As without this, The output was not visible on IOS.
 				$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				$responseArray["headerlabel"] = "Reminder cannot be sent";
-				$responseArray["redirect"] = true;
+				//$responseArray["redirect"] = true;
 			}
 			elseif($errorArr["SECOND_REMINDER_BEFORE_TIME"] == 2)
 			{  
