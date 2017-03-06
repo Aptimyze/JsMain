@@ -172,7 +172,7 @@ class PartnerProfile extends SearchParamters
                                                 }
                                         }
                                 }
-                                if($this->getOCCUPATION()){
+                                if($this->getOCCUPATION() && $source != 'AP'){
                                         $occpationArray = explode(",",$this->getOCCUPATION());
                                         $occupationNewWithGrouping = SearchCommonFunctions::getOccupationMappingData($occpationArray);
                                         if($occupationNewWithGrouping){

@@ -112,7 +112,10 @@ class MembershipApiFunctions
             else {
                 $mainMemDur = $tempMem[1];
             }
-            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L");
+            //error_log("ankita upgradeMem in calculateCartPrice-".$apiObj->upgradeMem);
+            
+            list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgardeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
+
             if ($specialActive == 1 || $discountActive == 1 || $renewalActive == 1 || $fest == 1) {
                 if ($apiObj->userObj->userType == 4 || $apiObj->userObj->userType == 6) {
                     $discPerc = $renewalPercent;
@@ -222,6 +225,7 @@ class MembershipApiFunctions
                 	$servDetails = $servObj->fetchServiceDetailForRupeesTrxn($mems, $apiObj->device);
                     foreach ($mems as $key => $val) {
                         $price = $servDetails[$val]['PRICE'];
+                        
                         if ($discountActive == 1 && $apiObj->backendRedirect != 1) {
                             if ($memHandlerObj->getDiscountOffer($apiObj->mainMembership)) {
                                 $discPerc = $memHandlerObj->getDiscountOffer($val);
@@ -293,6 +297,19 @@ class MembershipApiFunctions
                 $totalCartPrice+= $price - round($price * ($discPerc / 100), 2);
             }
         }
+
+        //add additional discount for upgrade membership if applicable
+        if((empty($apiObj->backendRedirect) || $apiObj->backendRedirect != 1) && $upgardeActive == '1' && count($upgradePercentArr) > 0 && $upgradePercentArr[$apiObj->mainMembership]){
+            
+            //$additionalUpgradeDiscount = round($totalCartPrice * ($upgradePercentArr[$apiObj->mainMembership] / 100) , 2);
+            //$temp = $totalCartPrice;
+            $totalCartPrice = $upgradePercentArr[$apiObj->mainMembership]["discountedUpsellMRP"];
+            $discountCartPrice+= $upgradePercentArr[$mainMembership]["actualUpsellMRP"] - $upgradePercentArr[$apiObj->mainMembership]["discountedUpsellMRP"];
+            /*if(is_array($apiObj->purchaseDetArr) && $apiObj->purchaseDetArr['NET_AMOUNT']){
+                error_log("purchaseDetArr in calculateCartPrice-".$apiObj->purchaseDetArr['NET_AMOUNT']);
+                $discountCartPrice = $discountCartPrice - $apiObj->purchaseDetArr['NET_AMOUNT'];
+            }*/
+        }
         
         if (!empty($apiObj->couponCode)) {
             $couponResponse = $apiObj->validateCouponResponse($apiObj->mainMembership, $apiObj->couponCode);
@@ -305,7 +322,7 @@ class MembershipApiFunctions
                 }
             }
         }
-        
+     
         return array(
             $totalCartPrice,
             $discountCartPrice
@@ -644,8 +661,8 @@ class MembershipApiFunctions
         else{
             $memHandlerObj = new MembershipHandler();
         }
-       
-        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj);
+        list($discountType, $discountActive, $discount_expiry, $discountPercent, $specialActive, $variable_discount_expiry, $discountSpecial, $fest, $festEndDt, $festDurBanner, $renewalPercent, $renewalActive, $expiry_date, $discPerc, $code,$upgradePercentArr,$upgradeActive) = $memHandlerObj->getUserDiscountDetailsArray($apiObj->userObj, "L",3,$apiObj,$apiObj->upgradeMem);
+    
         $apiObj->discountType = $discountType;
         $apiObj->discountActive = $discountActive;
         $apiObj->discount_expiry = $discount_expiry;
@@ -661,6 +678,8 @@ class MembershipApiFunctions
         $apiObj->expiry_date = $expiry_date;
         $apiObj->discPerc = $discPerc;
         $apiObj->code = $code;
+        $apiObj->upgradePercentArr = $upgradePercentArr;
+        $apiObj->upgradeActive = $upgradeActive;
     }
     
     public function getDurationAndPrices($mainMem, $mostPopular, $apiObj) {
@@ -761,6 +780,45 @@ class MembershipApiFunctions
         }
     }
     
+    /*getAdditionalUpgradeBenefits
+    * get additional upgrade benefits list
+    * @inputs:$currentMem,$upgradeMem
+    * @return : $additionalBenefits
+    */
+    public function getAdditionalUpgradeBenefits($currentMem,$upgradeMem) {
+        if ($upgradeMem == "X") {
+            $additionalBenefits = VariableParams::$newApiPageOneBenefitsJSX;
+            $lastIndex = count($additionalBenefits)-1;
+            if($additionalBenefits[$lastIndex] == "Priority Customer service"){
+                unset($additionalBenefits[$lastIndex]);
+            }
+        } else {
+            $benefitMsg = VariableParams::$newApiPageOneBenefits;
+            $upgradebenefitsArr = VariableParams::$newApiPageOneBenefitsVisibility[$upgradeMem];
+            $currentbenefitsArr = VariableParams::$newApiPageOneBenefitsVisibility[$currentMem];
+            $counter = 0;
+            foreach ($upgradebenefitsArr as $key => $value) {
+                if ($value == 1 && $currentbenefitsArr[$key] != 1) {
+                    $additionalBenefits[$counter++] = $benefitMsg[$key];
+                }
+            }
+            if($upgradeMem == "NCP"){
+                $defaultVas = VariableParams::$mainMemBasedVasFiltering;
+                if($defaultVas[$upgradeMem] && in_array("J", $defaultVas[$upgradeMem])){
+                    $boostBenefits = VariableParams::$newApiPageOneBenefitsBoost;
+                    if(is_array($boostBenefits)){
+                        if(is_array($additionalBenefits)){
+                            $additionalBenefits = array_merge($additionalBenefits,$boostBenefits);
+                        }
+                        else{
+                            $additionalBenefits = $boostBenefits;
+                        }
+                    }
+                }
+            }
+        }
+        return $additionalBenefits;
+    }
     public function getCurrentlyActiveVasNames($apiObj) {
         $memHandlerObj = new MembershipHandler();
         $serviceArr = $apiObj->rawSubStatusArray;
@@ -787,17 +845,33 @@ class MembershipApiFunctions
             $datetime1 = new DateTime($subscriptionExp);
             $datetime2 = new DateTime(date("Y-m-d"));
             $difference = $datetime1->diff($datetime2);
+            if($apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE && in_array($apiObj->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $apiObj->displayPage == '1'){
+                $upgradeMemCase = true;
+            }
+            else{
+                $upgradeMemCase = false;
+            }
             if ($difference->y < 1) {
+                /*if($upgradeMemCase == true){
+                    $topBlockMessage["uMonthsText"] = "Month";
+                    $topBlockMessage["uMonthsValue"] = "".$difference->m;
+                    $topBlockMessage["uDaysText"] = "Days";
+                    $topBlockMessage["uDaysValue"] = "".$difference->d;
+                }*/
                 $topBlockMessage["monthsText"] = "MONTHS";
                 $topBlockMessage["monthsValue"] = "" . str_pad($difference->m, 2, 0, STR_PAD_LEFT);
                 $topBlockMessage["daysText"] = "DAYS";
                 $topBlockMessage["daysValue"] = "" . str_pad($difference->d, 2, 0, STR_PAD_LEFT);
+                
                 if($difference->y == 0 && $difference->m == 0 && $difference->d <=30) {
                     //$topBlockMessage["JSPCHeaderRenewMessage"] = "Your {$apiObj->activeServiceName} plan is due for renewal by {$datetime1->format('d M Y')}";
                 	$topBlockMessage["JSPCHeaderRenewMessage"] = "Benefits of your membership";
                 }
             } 
             else {
+                /*if($upgradeMemCase == true){
+                    $topBlockMessage["uMonthsText"] = "Month";
+                }*/
                 $topBlockMessage["monthsText"] = "MONTHS";
                 $topBlockMessage["monthsValue"] = "Unlimited";
                 $topBlockMessage["daysText"] = NULL;
@@ -806,14 +880,15 @@ class MembershipApiFunctions
             }
             $topBlockMessage["contactsLeftText"] = "Contacts Left To View";
             $topBlockMessage["contactsLeftNumber"] = $apiObj->contactsRemaining;
-            if ($apiObj->userObj->userType == 5 || $apiObj->userObj->userType == 6) {
-                $benefits = $this->getServiceWiseBenefits($apiObj->memID, $apiObj);
+            if ($apiObj->userObj->userType == 5 || $apiObj->userObj->userType == 6 || $apiObj->userObj->userType == memUserType::UPGRADE_ELIGIBLE) {
+                $benefits = $this->getServiceWiseBenefits($apiObj->memID,0,$apiObj);
                 $benefits = $benefits[0];
             }
             $topBlockMessage["currentBenefitsTitle"] = "Your Current Benefits";
             
             $vasNames = $this->getCurrentlyActiveVasNames($apiObj);
-            
+            //print_r($benefits);
+            //print_r($vasNames);die;
             if ($apiObj->memID == "ESP" || $apiObj->memID == "NCP") {
                if ($vasNames != NULL) 
                 {
@@ -849,6 +924,13 @@ class MembershipApiFunctions
             else {
                 $topBlockMessage["nextMembershipMessage"] = NULL;
                 $topBlockMessage["JSPCnextMembershipMessage"] = NULL;
+            }
+            //set additional required keys in api response for mem upgrade
+            if($upgradeMemCase == true){
+                $topBlockMessage["currentMemName"] = $apiObj->activeServiceName;
+                $topBlockMessage["currentActualDuration"] = $apiObj->subStatus[0]['SERVICE_DURATION'];
+                
+                $topBlockMessage["totalContactsAllotted"] = $apiObj->allMainMem[$apiObj->subStatus[0]['SERVICEID_WITHOUT_DURATION']][$apiObj->subStatus[0]['ORIG_SERVICEID']]['CALL'];
             }
         } 
         elseif ($apiObj->userObj->userType == 4 && $apiObj->memID != "ESJA") {
@@ -902,6 +984,7 @@ class MembershipApiFunctions
                 $addonMonths = $apiObj->festDurBanner[$apiObj->mainMem][$apiObj->mainMemDur];
             }
         }
+        
         if ($apiObj->mainMemDur == "L") {
             $monthsPrependVal = "Unlimited";
         } 
@@ -971,7 +1054,10 @@ class MembershipApiFunctions
         {
             if ($apiObj->mainMem == 'ESP') {
                 $arr = VariableParams::$eSathiAddOns;
-            } 
+            }
+            elseif($apiObj->mainMem == 'NCP'){
+                $arr = VariableParams::$jsExclusiveComboAddon;
+            }
             else {
                 $arr = VariableParams::$eValuePlusAddOns;
             }

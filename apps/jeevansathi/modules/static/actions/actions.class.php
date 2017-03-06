@@ -297,6 +297,37 @@ class staticActions extends sfActions
             $loginData = $request->getAttribute("loginData");
             $pObj = LoggedInProfile::getInstance();
         }
+
+        public function executeHideOption(sfWebRequest $request) {}
+
+        public function executeUnHideOption(sfWebRequest $request) {}
+
+        public function executeUnHideResult(sfWebRequest $request) {}
+
+        public function executeHideCheckPassword(sfWebRequest $request)
+        {
+            $pObj = LoggedInProfile::getInstance();
+            $this->hideOption = $request->getParameter("hide_option");
+        }
+
+        public function executeHideDuration(sfWebRequest $request)
+        {
+            $pObj = LoggedInProfile::getInstance();
+            $this->hideOption = $request->getParameter("hide_option");
+            if($this->hideOption=="1")
+            {
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION1." days";
+            }
+            elseif ($this->hideOption=="2")
+            {
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION2." days";
+            }
+            elseif ($this->hideOption=="3")
+            {
+              $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION3." days";
+            }
+        }
+
         public function executeDeleteReason(sfWebRequest $request) {
         	//echo "string";die;
             $loginData = $request->getAttribute("loginData");
@@ -331,6 +362,12 @@ class staticActions extends sfActions
 			if($loginData['PROFILEID'])
 			{
 				$this->loggedIn=1;
+                // show hide profile
+                $this->hide = 1;
+                if($loginData['ACTIVATED'] == 'H')
+                {
+                    $this->hide = 0;
+                }
         $notificationObj = new NotificationConfigurationFunc();
         $toggleOutput = $notificationObj->showNotificationToggleLayer($loginData['PROFILEID']);
         $this->showNotificationBox = $toggleOutput["showToggleLayer"];
@@ -729,7 +766,12 @@ public function executeAppredirect(sfWebRequest $request)
 	{
 		$this->redirect("https://click.google-analytics.com/redirect?tid=UA-179986-3&url=https%3A%2F%2Fitunes.apple.com%2Fin%2Fapp%2Fjeevansathi%2Fid969994186%3Fmt%3D8&aid=com.infoedge.jeevansathi&idfa=%{idfa}&cs=organic&cm=JSMS&cn=JSIA&cc=hamburger");
 	}	
-	else{
+	elseif($playstore=="apppromotionSRPAndroid")
+	{
+                $this->redirect("https://play.google.com/store/apps/details?id=com.jeevansathi.android&referrer=utm_source%3Dorganic%26utm_medium%3Dmobile%26utm_content%3DSRP_M%26utm_campaign%3DJSAA");
+        }elseif($playstore=="apppromotionSRPIos"){
+                $this->redirect("https://itunes.apple.com/in/app/jeevansathi/id969994186?mt=8");
+        }else{
 
 		$ua = $_SERVER['HTTP_USER_AGENT']; 
         if(JsCommon::checkIOSPromoValid($ua)) 

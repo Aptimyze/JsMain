@@ -113,7 +113,7 @@ $className = get_class($this);
 							{
 								foreach(self::$informationTupleFields[$key] as $i=>$field)
 								{
-									$photoType=$this->getPhotoTypeFromId($key);
+ 									$photoType=$this->getPhotoTypeFromId($key);
                                                                         $tupleObj= $displayObj[$key][$v][$pid];
 									eval('$fieldValue =$tupleObj->get' . $field . '();'); 
 									$fieldLabel = strpos($field,"Url")>0?"PHOTO":$field;

@@ -243,11 +243,14 @@ class phoneActions extends sfActions
 	die;
      	}
 
+
+
    		$profile2=new Profile();
 		$profileid = JsCommon::getProfileFromChecksum($request->getParameter('profilechecksum'));
    		$selfProfileID=LoggedInProfile::getInstance()->getPROFILEID();
+   		$increaseQuotaImmediate = ReportInvalid::increaseQuotaImmediately($selfProfileID,$profileid);
 		$reportInvalidObj=new JSADMIN_REPORT_INVALID_PHONE();
-   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);
+   		$reportInvalidObj->insertReport($selfProfileID,$profileid,$phone,$mobile,'',$reason,$otherReason);   		
 
 		if($reasonNumber == 3)
 			{  
@@ -256,9 +259,14 @@ class phoneActions extends sfActions
 				$loggingObj = new MIS_REQUEST_DELETIONS_LOG();
                 $loggingObj->logThis(LoggedInProfile::getInstance()->getUSERNAME(),$profileid,'Other');
 			}
+	if($increaseQuotaImmediate == true)
+	{
+		$result['message']='Thanks for helping us make Jeevansathi better matchmaking platform. We have credited one contact to your quota, and will investigate this further';
+	}
+	else { 
 
-
-    $result['message']='Thank you for helping us . If our team finds this number invalid we will remove this number and credit you with a contact as compensation.';	
+    	$result['message']='Thank you for helping us . If our team finds this number invalid we will remove this number and credit you with a contact as compensation.';
+	}
     $respObj->setHttpArray(ResponseHandlerConfig::$PHONE_INVALID_SUCCESS);
 	$respObj->setResponseBody($result);
 	$respObj->generateResponse();

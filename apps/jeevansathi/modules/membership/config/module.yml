@@ -23,3 +23,5 @@ all:
     enable_login: off
   jsexclusiveDetail:
     enable_login: off
+  DeactivateCurrentMembershipV1:
+    enable_login: off

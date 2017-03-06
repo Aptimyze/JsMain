@@ -23,11 +23,6 @@ public static $all =
 		"ser2Url"            => 'http://ser2.jeevansathi.com',
 		"crmUrl"             => 'http://crm.jeevansathi.com',
 
-		/***Static***/
-		"imgUrl"             => '%STATIC_URL_INPUT%',
-		"imgUrl2"            => '%STATIC_URL_INPUT%',
-		"regImg"             => '%STATIC_URL_INPUT%/profile/images/reg',
-
 		/**SMS**/
 		"shortUrlDomain" => 'http://js1.in',
 		"airToWebTransaction" =>  "array('accId' =>'506980', 'pin' => 'nauk123', 'url'=>'http://luna.a2wi.co.in:7501/failsafe/HttpData_MM')",
@@ -48,6 +43,11 @@ public static $dev =
 		"java"               => 'java',
 		"vspServer" => 'local',
 		"localImageUrl"      => "http://crawlerjs.infoedge.com/",
+
+		/***Static***/
+		"imgUrl"             => '%STATIC_URL_INPUT%',
+		"imgUrl2"            => '%STATIC_URL_INPUT%',
+		"regImg"             => '%STATIC_URL_INPUT%/profile/images/reg',
 
 		/*Photos*/
 		"unscreenedPhotoUrl" => '%URL_INPUT%',
@@ -222,6 +222,11 @@ public static $test =
 		"vspServer" => 'local',
 		"localImageUrl"      => "http://crawlerjs.infoedge.com/",
 
+		/***Static***/
+		"imgUrl"             => '%URL_INPUT%',
+		"imgUrl2"            => '%URL_INPUT%',
+		"regImg"             => '%URL_INPUT%/profile/images/reg',
+
 		/****Photos*****/
 		"unscreenedPhotoUrl" => '%URL_INPUT%',
 		"screenedPhotosUrl"  => 'http://testphotos.jeevansathi.com',
@@ -350,16 +355,16 @@ public static $test =
 		"hideUnimportantFeatureAtPeakLoad"     => 0,
 
 		/*Search*/
-		"solrServerUrl"      => '172.16.3.203:8080/solr/techproducts',
-		"solrServerUrl1"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerUrl2"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerUrl3"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerProxyUrl"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerProxyUrl1"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerLoggedOut"     => '172.16.3.203:8080/solr/techproducts',
-		"solrServerForVisitorAlert"	=> '172.16.3.203:8080/solr/techproducts',
-		"solrServerForVSP"	=> '172.16.3.203:8080/solr/techproducts',
-		"solrServerForKundali"	=> '172.16.3.203:8080/solr/techproducts',
+		"solrServerUrl"      => '172.16.3.203:8983/solr/techproducts',
+		"solrServerUrl1"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerUrl2"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerUrl3"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerProxyUrl"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerProxyUrl1"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerLoggedOut"     => '172.16.3.203:8983/solr/techproducts',
+		"solrServerForVisitorAlert"	=> '172.16.3.203:8983/solr/techproducts',
+		"solrServerForVSP"	=> '172.16.3.203:8983/solr/techproducts',
+		"solrServerForKundali"	=> '172.16.3.203:8983/solr/techproducts',
 
 		/***openfire config for chat**/
 		"openfireConfig" => "array('HOST'=>'172.16.3.203','PORT'=>'9090','WSPORT'=>'7070','SERVER_NAME'=>'testjs-new')",
@@ -374,7 +379,7 @@ public static $test =
 		"ifSingleRedis" => 'tcp://172.16.3.203:6380',
 
 		/****Rabbitmq Configurations****/
-		"rabbitmqConfig" => "array('FIRST_SERVER'=>array('HOST'=>'172.16.3.187','PORT'=>'5672','USER'=>'admin','PASS'=>'admin','VHOST'=>'/'), 'SECOND_SERVER'=>array('HOST'=>'192.168.120.154','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'))",
+		"rabbitmqConfig" => "array('FIRST_SERVER'=>array('HOST'=>'172.16.3.203','PORT'=>'5672','USER'=>'guest1','PASS'=>'guest','VHOST'=>'/'), 'SECOND_SERVER'=>array('HOST'=>'192.168.120.154','PORT'=>'5672','USER'=>'guest','PASS'=>'guest','VHOST'=>'/'))",
 		"rabbitmqManagementPort" => 15672,
 
 		/**Misc IP Configurations**/
