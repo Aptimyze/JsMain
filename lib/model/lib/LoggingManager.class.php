@@ -708,14 +708,7 @@ class LoggingManager
 		$scriptName = '';
 		if(php_sapi_name() === 'cli')
 		{
-			if(isset($_SERVER['argv'][1]))
-			{
-				$scriptName = $_SERVER['argv'][1];
-			}
-			else
-			{
-				$scriptName = $_SERVER['SCRIPT_FILENAME'];
-			}
+			$scriptName = json_encode($_SERVER['argv']) . $_SERVER['SCRIPT_FILENAME'];
 		}
 		return $scriptName;
 	}
