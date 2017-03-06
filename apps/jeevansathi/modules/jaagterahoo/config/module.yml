@@ -1,0 +1,3 @@
+all:
+  duniyaWalo:
+    enable_login: on
