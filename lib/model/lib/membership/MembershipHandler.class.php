@@ -1211,8 +1211,8 @@ class MembershipHandler
                 }
                 //$upgradeTotalDiscount = round(100 - ((100 - VariableParams::$memUpgradeConfig["upgradeMainMemAdditionalPercent"])*(100-$lastDiscountPercent))/100,2);
                
-                if($upsellMRP <= 0 && $upsellMRP >= $upgradeMemMRP){
-                    CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid());
+                if($upsellMRP <= 0 && $upsellMRP >= $upgradeMemMRP && JsConstants::$whichMachine == 'prod'){
+                    CRMAlertManager::sendMailAlert("Wrong upsellMRP calculated=".$upsellMRP." for profileid=".$userObj->getProfileid()." at machine: ".JsConstants::$whichMachine." with url-".JsConstants::$siteUrl);
                     //$upgradeTotalDiscount = 0;
                 }
                 if($upsellMRP > 0){
