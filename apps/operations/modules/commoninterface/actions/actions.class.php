@@ -69,6 +69,7 @@ class commoninterfaceActions extends sfActions
 		}
 		else //if valid username was entered and profileid is obtained
 		{
+			$this->profileid = $this->profile->getPROFILEID();
 			//global $protect;
 			//JsCommon::oldIncludes();
 			//$protect = new protect();
