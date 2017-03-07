@@ -81,14 +81,16 @@ $className = get_class($this);
 				}
 				if($key == "MATCH_OF_THE_DAY")
 				{
-					if(MobileCommon::isApp())
+					if (LoggedInProfile::getInstance()->getACTIVATED() == 'U')
+					{
+						continue;
+					}
+
+					if(MobileCommon::isApp() && ($isApp == "A" && $appVersion  && $appVersion < 84))
 					{  
-				// Version Check For ANDROID		
-					//&& ($isApp == "A" && $appVersion  && $appVersion < 84)	
+						// Version Check For ANDROID
 						continue;
 					}	
-					/*else*/ if (LoggedInProfile::getInstance()->getACTIVATED() == 'U')
-						continue;					
 				}
 				foreach($value as $k=>$v)
                                 {
