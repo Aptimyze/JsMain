@@ -687,20 +687,17 @@ class LoggingManager
 	 */
 	private function getlogMappingName($moduleName)
 	{
-		if(in_array($moduleName, LoggingEnums::$ModuleMapping, true))
+		if(in_array($moduleName, array_keys(LoggingEnums::$ModuleMapping)))
 		{
 			$mappingName = LoggingEnums::$MappingNames[ LoggingEnums::$ModuleMapping[$moduleName] ];
 		}
+		else if(strpos($moduleName, '404') !== false)
+		{
+			$mappingName = LoggingEnums::$MappingNames[20];
+		}
 		else
 		{
-			if(strpos($moduleName, '404') !== false)
-			{
-				$mappingName = LoggingEnums::$MappingNames[20];
-			}
-			else
-			{
-				$mappingName = LoggingEnums::$MappingNames[21];
-			}
+			$mappingName = LoggingEnums::$MappingNames[21];
 		}
 		return $mappingName;
 	}
@@ -711,14 +708,7 @@ class LoggingManager
 		$scriptName = '';
 		if(php_sapi_name() === 'cli')
 		{
-			if(isset($_SERVER['argv'][1]))
-			{
-				$scriptName = $_SERVER['argv'][1];
-			}
-			else
-			{
-				$scriptName = $_SERVER['SCRIPT_FILENAME'];
-			}
+			$scriptName = json_encode($_SERVER['argv']) . $_SERVER['SCRIPT_FILENAME'];
 		}
 		return $scriptName;
 	}

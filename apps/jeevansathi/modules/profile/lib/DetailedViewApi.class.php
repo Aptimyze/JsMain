@@ -1152,6 +1152,14 @@ class DetailedViewApi
 		}
 
 		$this->m_arrOut['dpp_special_case'] = $szSpecialCaseOut;;
+
+                if(!MobileCommon::isDesktop())
+                {
+			if($this->m_arrOut['dpp_state'] && $this->m_arrOut['dpp_city'])
+				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'].','.$this->m_arrOut['dpp_city'];
+			elseif($this->m_arrOut['dpp_state'])
+				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'];
+                }
 	}
 	/**
 	 * getDecorated_Photo
@@ -1286,9 +1294,9 @@ class DetailedViewApi
 		
 		//Response Tracking
 		$this->m_arrOut['responseTracking'] = $actObj->responseTracking;
-		$gtalkOnline = $this->m_actionObject->GTALK_ONLINE;
+		//$gtalkOnline = $this->m_actionObject->GTALK_ONLINE;
     	$isOnline = $this->m_actionObject->ISONLINE;
-    	if($gtalkOnline || $isOnline)
+    	if($isOnline) // this part was removed -> $gtalkOnline || 
     		$this->m_arrOut["userloginstatus"] = "Online now";
     
     

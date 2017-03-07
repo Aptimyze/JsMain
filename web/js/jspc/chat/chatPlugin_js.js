@@ -2405,7 +2405,11 @@ JsChat.prototype = {
         //console.log("in _appendRecievedMessage");
         //append received message in chatbox
         
-        if (typeof message != "undefined" && message != "") {
+        if (message == chatConfig.Params[device].rejectObsceneMsg){
+            $('chat-box[user-id="' + userId + '"] .chatMessage').append('<div id="restrictMessgTxt" class="color5 pos-rel fr txtc wid90p mt15">' + message + '</div>').addClass("restrictMessg2");
+            $("#text_"+userId+"_"+uniqueId).next().attr('obscene',true);
+        }
+        else if (typeof message != "undefined" && message != "") {
             var appendMsg = true;
             //if chat box is not opened
             if ($('chat-box[user-id="' + userId + '"]').length == 0) {
@@ -2676,7 +2680,9 @@ JsChat.prototype = {
     _handlePreUnreadMessages:function(userId){
         if($('chat-box[user-id="' + userId + '"]').length != 0){
             $('chat-box[user-id="' + userId + '"]').find(".nchatic_10").each(function () {
-                $(this).removeClass("nchatic_10").addClass("nchatic_9");
+                if($(this).attr("obscene") != "true"){
+                    $(this).removeClass("nchatic_10").addClass("nchatic_9");
+                }
             });
         }
     },

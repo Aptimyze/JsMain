@@ -160,7 +160,7 @@ class NotificationFunctions
                 if($notificationStop)
                 {
                         $notificationData['notifications'] = '';
-			$newTime =date('Y-m-d H:i:s',time()+86400);
+			$newTime ='2018-01-01 '.date("H:i:s");
                         $notificationData['alarmTime']= $newTime;
                         $data =json_encode($notificationData);
                         return $data;
