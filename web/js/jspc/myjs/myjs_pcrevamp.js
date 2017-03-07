@@ -1115,7 +1115,7 @@ function scrolling(justJoined, lastSearch, verifedMatchObj, recentvisitors, shor
             jObject.find('.gunascore').html(profiles[i].gunascore);
             
             // set image url
-            jObject.find('.mod_img').html(profiles[i].profilepic120url);
+            jObject.find('.mod_img').attr("src",profiles[i].profilepic120url);
             // set age height
             jObject.find('.age_height').html(profiles[i].age + ' yr,  ' + profiles[i].height);
             
