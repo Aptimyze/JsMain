@@ -184,7 +184,7 @@ class matchalerts_LOG extends TABLE
 	{
 		if (JsConstants::$alertServerEnable &&  $this->db) {
 			try {
-				$sql = "SELECT USER,DATE from matchalerts.LOG where RECEIVER = :RECEIVER";
+				$sql = "SELECT SQL_CACHE USER,DATE from matchalerts.LOG where RECEIVER = :RECEIVER";
 				if($dateGreaterThanCondition)
 					$sql.=" AND DATE>:DATE";
 				$prep = $this->db->prepare($sql);
@@ -327,6 +327,23 @@ echo $sql."\n";
 		/*
                 $prep->bindValue(":lastPartition", $lastPartitionName, PDO::PARAM_STR);
 		*/
+                $prep->execute();
+                $row = $prep->fetch(PDO::FETCH_ASSOC);
+                $lastPartitionRange = $row['PARTITION_DESCRIPTION'];  
+                return $lastPartitionRange;
+            }
+            catch (PDOException $ex) {
+                throw new jsException($ex);
+            }
+        }
+        /*
+         * Get minimum partition Value
+         */
+        public function getLastPartitionRange(){
+            //get the range of the latest partition
+            try{
+		$sql = "SELECT MIN(PARTITION_DESCRIPTION) AS PARTITION_DESCRIPTION FROM information_schema.PARTITIONS WHERE TABLE_SCHEMA = 'matchalerts' AND TABLE_NAME = 'LOG'";
+                $prep = $this->db->prepare($sql);
                 $prep->execute();
                 $row = $prep->fetch(PDO::FETCH_ASSOC);
                 $lastPartitionRange = $row['PARTITION_DESCRIPTION'];  

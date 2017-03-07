@@ -148,7 +148,7 @@ class notificationActions extends sfActions
 	}
 
 	/* Rabbit MQ */
-	$producerObj = new JsNotificationProduce();
+	/*$producerObj = new JsNotificationProduce();
 	if($producerObj->getRabbitMQServerConnected()){
 		$producerObjSet =true;
 		$dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion,"osVersion"=>$currentOSversion,"brand"=>$deviceBrand,"model"=>$deviceModel);
@@ -159,7 +159,7 @@ class notificationActions extends sfActions
 		$producerObjSet =false;
 		$registationIdObj = new MOBILE_API_REGISTRATION_ID();
 		$registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
-        }
+        }*/
 
 	$respObj = ApiResponseHandler::getInstance();
         if($profileid)
@@ -167,16 +167,20 @@ class notificationActions extends sfActions
 		$localNotificationObj=new LocalNotificationList();
 		$failedDecorator=new FailedNotification($localNotificationObj,$profileid);
 		$notifications = $failedDecorator->getNotifications();
-		$alarmTimeObj = new MOBILE_API_ALARM_TIME('newjs_slave');
+		/*$alarmTimeObj = new MOBILE_API_ALARM_TIME('newjs_slave');
 		$alarmTime = $alarmTimeObj->getData($profileid);
-		$alarmDate = alarmTimeManager::getNextDate($alarmTime);
+		$alarmDate = alarmTimeManager::getNextDate($alarmTime);*/
 	}
+	$alarmDate ='2018-01-01 '.date("H:i:s");
 	$notificationData['notifications'] = $notifications;
 	$notificationData['alarmTime']=$alarmDate;
 
 	$osType =MobileCommon::isApp();
 	$status ='D';
 	if(count($notifications)>0){
+		$producerObj = new JsNotificationProduce();
+		if($producerObj->getRabbitMQServerConnected())
+			$producerObjSet =true;
                 if($producerObjSet){
                         foreach($notifications as $key=>$val){
                                 $notificationKey =$val['NOTIFICATION_KEY'];
@@ -194,6 +198,7 @@ class notificationActions extends sfActions
 				$localLogObj->insert($profileid,$notificationKey,$messageId,$status,$alarmDate,$osType);
 			}
 		}
+	unset($producerObjSet);
 	}
 	echo json_encode($notificationData);die;
   }

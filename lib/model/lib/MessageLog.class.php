@@ -31,7 +31,7 @@ class MessageLog
         return $messageCount;
     }
     
-    public function getMessageLogContactCount($where, $group = '', $select = '', $skipProfile = '')
+    public function getMessageLogContactCount($where, $group = '', $select = '', $skipProfile = '',$considerProfile='')
     {
         if (!$where["RECEIVER"] && !$where["SENDER"]) {
             throw new jsException("", "No Sender or reciever is specified in funcion getContactsCount OF Contacts.class.php");
@@ -43,7 +43,7 @@ class MessageLog
         }
         $dbName        = JsDbSharding::getShardNo($profileid);
         $messageLogObj = new newjs_MESSAGE_LOG($dbName);
-        $count         = $messageLogObj->getMessageLogCount($where, $group, $select, $skipProfile);
+        $count         = $messageLogObj->getMessageLogCount($where, $group, $select, $skipProfile,$considerProfile);
         
         return $count;
     }
@@ -103,21 +103,9 @@ class MessageLog
 				$RBmessage['RECEIVER'] = $value['RECEIVER'];
 				$RBmessage['TYPE'] = $value['TYPE'];
  				$RBmessage['DATE'] = $value['TIME'];
- 				if($infoTypeId == 1 || $infoTypeId == 12 )
-				{
-					$profileObj = new Profile('',$value['SENDER']);
-					$receiverObj = new Profile('',$loginProfile);
-					$viewerProfile = $value['SENDER']; 
-					
-				}
-				else if($infoTypeId == 6)
-				{
-					$profileObj = new Profile('',$loginProfile);
-					$receiverObj = new Profile('',$value['SENDER']);
-					$viewerProfile = $loginProfile; 			
-				}	
-				
-				$messageForRB = $this->getRBMessage($viewerProfile,$receiverObj,$profileObj);
+                                $profileObj = new Profile('',$value['SENDER']);
+                                $receiverObj = new Profile('',$value['RECEIVER']);
+				$messageForRB = $this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);
 				unset($profileObj);
 				unset($receiverObj);
 				$RBmessage['MESSAGE'] = $messageForRB;
@@ -143,7 +131,7 @@ class MessageLog
 		}
 		return $message;
 	}
-	public function getMessageListing($loginProfile,$condition,$skipArray)
+	public function getMessageListing($loginProfile,$condition,$skipArray='',$inArray='')
 	{
 		$dbName = JsDbSharding::getShardNo($loginProfile);
 
@@ -158,7 +146,10 @@ class MessageLog
 		else
 		{
 			$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
-			$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
+			if(InboxEnums::$messageLogInQuery)
+				$profileArray = $messageLogObj->getMessageListing($condition,'',$inArray);
+			else
+				$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
                         if(!array_key_exists("pageNo", $condition))
                             JsMemcache::getInstance()->set($memccKey,$profileArray);
 		}
@@ -212,14 +203,13 @@ class MessageLog
 		$dbName = JsDbSharding::getShardNo($viewer);
 		$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
 		$messageArray = $messageLogObj->getCommunicationHistory($viewer,$viewed);
-		$receiverObj = new Profile('',$viewed);
-		$profileObj = new Profile('',$viewer);
-
 		foreach ($messageArray as $key => $value) {
 
-			if($value['TYPE']=='I' && $value['MESSAGE'] == NULL && $this->EOIFromRB($value['SENDER'],$value['RECEIVER']))
+			if( $key=='0' && $value['TYPE']=='I' && $value['MESSAGE'] == NULL && $this->EOIFromRB($value['SENDER'],$value['RECEIVER']))
 			{ 
-			  $message =$this->getRBMessage($viewer,$receiverObj,$profileObj);	
+                          $receiverObj = new Profile('',$value['RECEIVER']);
+                          $profileObj = new Profile('',$value['SENDER']);
+			  $message =$this->getRBMessage($value['SENDER'],$receiverObj,$profileObj);	
 			  $messageArray[$key]['MESSAGE'] = $message;	
 			}
 		}
@@ -351,7 +341,7 @@ if($limit == 1000000)
 	public function EOIFromRB($sender,$receiver)
 	{
 
-       $dbName = JsDbSharding::getShardNo($sender,'');
+           $dbName = JsDbSharding::getShardNo($sender,'');
 	   $dbObj = new newjs_CONTACTS($dbName);
 	   $isRB = $dbObj->isRBContact($sender,$receiver);
 
@@ -362,10 +352,10 @@ if($limit == 1000000)
 	   return 0;
 	}
 
-	public function getRBMessage($viewer,$receiverObj,$profileObj)
+	public function getRBMessage($sender,$receiverObj,$profileObj)
 	{
 
-		if($this->isJsDummyMember($viewer))
+		if($this->isJsDummyMember($sender))
 				{
 					if($receiverObj->getHAVEPHOTO()=="N" || $receiverObj->getHAVEPHOTO()=="")
 							$message=Messages::getMessage(Messages::JSExNoPhoMes,array("EMAIL"=>$profileObj->getEMAIL()));

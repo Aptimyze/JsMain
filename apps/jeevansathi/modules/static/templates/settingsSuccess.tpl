@@ -39,6 +39,21 @@
       <div class="fl wid94p"><a href="/?desktop=Y" class="color13">Switch to Desktop Site</a></div>
       <div class="fr pt2"><a href="/?desktop=Y"><i class="mainsp set_arow2"></i></a></div>
     </div>
+    
+    ~if $loggedIn`
+      ~if $hide`
+        <div class="clearfix pad12">
+          <div class="fl wid94p"><a href="/static/hideOption" bind-slide="1" class="color13">Hide Profile</a></div>
+          <div class="fr pt2"><a href="/static/hideOption"><i class="mainsp set_arow2"></i></a></div>
+        </div>
+      ~else`
+        <div class="clearfix pad12">
+          <div class="fl wid94p"><a href="/static/unHideOption" bind-slide="1" class="color13">Unhide Profile</a></div>
+          <div class="fr pt2"><a href="/static/unHideOption"><i class="mainsp set_arow2"></i></a></div>
+        </div>
+      ~/if`
+    ~/if`
+    
     <!--end:div-->
     ~if $loggedIn`
     <!--start:div-->
@@ -56,7 +71,7 @@
     ~if $loggedIn`
     <div class="pt50">
       <div>
-        <a href="/P/logout.php">
+        <a href="/P/logout.php" onclick="onLogout();">
           <i class="mainsp set_logout"></i>
           <div class="f14">Logout</div>
         </a>
@@ -68,5 +83,13 @@
 </div>
 <script>
     var status = "~$notificationStatus`";
+    function onLogout(){
+      try{
+        sessionStorage.removeItem('myjsTime');
+        sessionStorage.removeItem('myjsHtml');
+      } catch(e) {
+        //console.log(e.stack);
+      }
+    }
     //console.log(status);
 </script>

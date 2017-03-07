@@ -19,11 +19,12 @@ class billing_VARIABLE_DISCOUNT_BACKUP_1DAY extends TABLE {
             throw new jsException($e);
         }
     }
-    public function insertDataFromVariableDiscount()
+    public function insertDataFromVariableDiscount($todayDate)
     {
         try{
-            $sql ="INSERT INTO billing.VARIABLE_DISCOUNT_BACKUP_1DAY SELECT * FROM billing.VARIABLE_DISCOUNT";
+            $sql ="INSERT INTO billing.VARIABLE_DISCOUNT_BACKUP_1DAY SELECT PROFILEID,EDATE FROM billing.VARIABLE_DISCOUNT WHERE EDATE<:EDATE";
             $prep = $this->db->prepare($sql);
+            $prep->bindValue(":EDATE",$todayDate,PDO::PARAM_STR);
             $prep->execute();
         }
         catch(Exception $e)

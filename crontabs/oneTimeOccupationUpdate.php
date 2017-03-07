@@ -246,8 +246,12 @@ Team Jeevansathi","Kindly note the following changes that have been made to your
 function updateOccupationInJprofile($jprofileUpdateObj,$jprofileSlaveObj,$columnToUpdate,$tableArr,$dateVal){
     $exrtaWhereCond[$columnToUpdate[$tableArr['column']]]=$columnToUpdate['old_value'];
     $greaterThanCondition['LAST_LOGIN_DT']=$dateVal;
+    $jprofileUpdateObj->__destruct();
+    $jprofileSlaveObj = new JPROFILE('newjs_slave');
     $profiles = $jprofileSlaveObj->getArray($exrtaWhereCond,'',$greaterThanCondition,'PROFILEID,EMAIL');
     $arrFields = array($columnToUpdate[$tableArr['column']]=>$columnToUpdate['new_value']);
+    $jprofileUpdateObj->__destruct();
+    $jprofileUpdateObj = JProfileUpdateLib::getInstance('newjs_master');
     foreach ($profiles as $key=>$value){
         $res = $jprofileUpdateObj->editJPROFILE($arrFields,$value['PROFILEID'],'PROFILEID');
         sendMailToUser($value['EMAIL'],$columnToUpdate['old_value'],$columnToUpdate['new_value']);

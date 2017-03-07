@@ -271,7 +271,7 @@ class registerActions extends sfActions
 					}
 					
 					$now = date("Y-m-d G:i:s");
-					$today = date("Y-m-d");
+					$today = CommonUtility::makeTime(date("Y-m-d"));
 					//required keyword variables
 					$keywords=RegistrationMisc::getKeywords(array('height'=>$lead_info[HEIGHT],'gender'=>$lead_info[GENDER],'caste'=>$this->form->getValue('caste'),'dtofbirth'=>$lead_info[DTOFBIRTH]));
 					//There are some variables that are to be set to some default and not part of form so then need to send as an array 
@@ -465,7 +465,7 @@ class registerActions extends sfActions
 			 if ($this->form->isValid())
 			 {
 				$now = date("Y-m-d G:i:s");
-				$today = date("Y-m-d");
+				$today = CommonUtility::makeTime(date("Y-m-d"));
 				$alertArr = RegistrationMisc::getLegalVariables($request);
 				
 				if($alertArr[SERVICE_EMAIL] == 'S') 

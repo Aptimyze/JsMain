@@ -53,7 +53,7 @@ class desktopRegister3 extends registrationBaseClass {
 
   public function submit() {
 	$now = date("Y-m-d G:i:s");
-	$today = date("Y-m-d");
+	$today = CommonUtility::makeTime(date("Y-m-d"));
 	$values_that_are_not_in_form = array('INCOMPLETE' => 'N','ENTRY_DT' => $now, 'MOD_DT' => $now, 'LAST_LOGIN_DT' => $today);
   $this->form->updateData($this->loginProfile->getPROFILEID(),$values_that_are_not_in_form);
   $this->redisQueueJunkIncompleteProfile($this->loginProfile->getPROFILEID());

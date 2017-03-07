@@ -14,7 +14,7 @@ class InformationTypeAdapter
         $this->profileId = $profileId;
     }
     
-    public function getProfiles($condition, $skipArray,$subscription="")
+    public function getProfiles($condition, $skipArray,$subscription="",$considerProfiles = '')
     {
 		$profilesArray = array();
        
@@ -139,7 +139,7 @@ class InformationTypeAdapter
                 $condition["WHERE"]["IN"]["PROFILE"] = $this->profileId;
                 $condition["WHERE"]["IN"]["IS_MSG"]   = "Y";
                 $condition["WHERE"]["IN"]["TYPE"]     = "R";
-                $profilesArray                         = $messageLogObj->getMessageListing($this->profileId, $condition, $skipArray);
+                $profilesArray                         = $messageLogObj->getMessageListing($this->profileId, $condition, $skipArray,$considerProfiles);
                 break;
         case "MY_MESSAGE_RECEIVED":
                 $messageLogObj                        = new MessageLog();
@@ -230,7 +230,6 @@ class InformationTypeAdapter
 								$profilesArray = array_slice($profilesArray,0,$limit,true);
                 break;
             case "MATCH_OF_THE_DAY":
-                if(!JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId)){
                         $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY('newjs_master');
                         $profilesArray = $matchOfDayObj->getMatchForProfileForListing($condition, $skipArray);
                         if($condition["GENDER"] == 'F'){
@@ -255,12 +254,10 @@ class InformationTypeAdapter
                                 }else{
                                     $profilesArray = array();
                                 }
+                        }else{
+                                $profilesArray = array();
                         }
                         JsMemcache::getInstance()->set("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileId,  count($profilesArray));
-                        JsMemcache::getInstance()->set("MATCHOFTHEDAY_".$this->profileId,  serialize($profilesArray));
-                }else{
-                        $profilesArray = unserialize(JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId));
-                }
                 break;
         
             default:

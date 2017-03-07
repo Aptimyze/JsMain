@@ -11,7 +11,7 @@
         
              <div class="card pos-abs stk mod_shd" data-matchID="" id="matchOfDaySubSection">
                 <div class="padall-10 clearfix" id = "cardsForMatchOfDay"> 
-                    <a href="DETAILED_PROFILE_LINK" class="profileLink"><img src="srch_image1.jpg" class="mod_dim1 vtop fl mod_img"/></a>
+                    <a href="DETAILED_PROFILE_LINK" class="profileLink"><img class="mod_dim1 vtop fl mod_img"/></a>
                     <!--start:info-->
                     <a href="DETAILED_PROFILE_LINK" class="profileLink colrb">
                     <div  class="fl mod_wid1 mod_p2 pt5 fontlig" >            

@@ -1241,5 +1241,18 @@ public static function getAnnulled($profileid,$mstatus)
         }
         return $result;
     }
+    
+    
+    //performs actions as received from mailer and outputs the button array.
+    public static function performContactEngineAction($request,$pageSource=''){
+        
+        $request->setParameter("actionName","postAccept");
+        $request->setParameter("moduleName",'contacts');
+        $request->setParameter("pageSource",$pageSource);
+        ob_start();
+        sfContext::getInstance()->getController()->getPresentationFor("contacts", "postAcceptv2");
+        ob_end_clean();
+       
+    }
 }
 ?>

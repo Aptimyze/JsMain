@@ -10,6 +10,7 @@ class Inbox implements Module
 	private $configurations;
 	private $completeProfilesInfo;
 	private $skipProfiles;
+	private $considerProfiles;
 	private $totalCount;
 	private static $getTotal = "T";
 	public static $profileCount = 10;
@@ -297,6 +298,10 @@ class Inbox implements Module
 						{ 
 							$page = $nav;
 						}
+						if(InboxEnums::$messageLogInQuery && ( $infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED"))
+						{
+							$this->considerProfiles = array_diff($this->considerProfiles,$skipArray);
+						}
 						$conditionArray = $this->getCondition($infoType, $page); 
                                                 if($infoType == "MY_MESSAGE"){
                                                     $conditionArray['LIMIT']++;
@@ -304,7 +309,13 @@ class Inbox implements Module
                                                 }
                                                 if($infoTypeNav["matchedOrAll"])
                                                     $conditionArray["matchedOrAll"] = $infoTypeNav["matchedOrAll"];
-						$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
+						if(InboxEnums::$messageLogInQuery && ( $infoType=="MY_MESSAGE" || $infoType=="MESSAGE_RECEIVED" || $infoType=="MY_MESSAGE_RECEIVED" ))
+						{
+							if(is_array($this->considerProfiles) && count($this->considerProfiles)>0)
+								$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION(),$this->considerProfiles);
+						}
+						else
+							$profilesArray = $infoTypeAdapter->getProfiles($conditionArray, $skipArray,$this->profileObj->getSUBSCRIPTION());
                                                 if($infoType == "MATCH_OF_THE_DAY" && JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID())){
                                                         $this->totalCount = JsMemcache::getInstance()->get("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileObj->getPROFILEID());
                                                 }
@@ -439,6 +450,11 @@ class Inbox implements Module
 				$skipConditionArray = SkipArrayCondition::$MESSAGE;
 				$skipProfileObj     = SkipProfile::getInstance($this->profileObj->getPROFILEID());
 				$this->skipProfiles       = $skipProfileObj->getSkipProfiles($skipConditionArray);
+				if(InboxEnums::$messageLogInQuery)
+				{
+					$considerArray = SkipArrayCondition::$MESSAGE_CONSIDER;
+					$this->considerProfiles =  $skipProfileObj->getSkipProfiles($considerArray);
+				}
 				break;
 			case 'PHOTO_REQUEST_RECEIVED':
 				$skipConditionArray = SkipArrayCondition::$PHOTO_REQUEST;

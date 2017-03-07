@@ -107,5 +107,19 @@ class MOBILE_API_LOCAL_NOTIFICATION_LOG extends TABLE{
                 throw new jsException($e);
             }
         }
+	public function deleteRecordDateWise($sdate,$edate)
+        {
+                try{
+                        $sql = "delete FROM MOBILE_API.LOCAL_NOTIFICATION_LOG WHERE ENTRY_DATE>:ST_DATE AND ENTRY_DATE<:END_DATE";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":ST_DATE",$sdate,PDO::PARAM_STR);
+                        $res->bindValue(":END_DATE",$edate,PDO::PARAM_STR);
+                        $res->execute();
+                }
+                catch(PDOException $e){
+                        throw new jsException($e);
+                }
+                return NULL;
+        }
 }
 ?>

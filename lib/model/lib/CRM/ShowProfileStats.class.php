@@ -554,7 +554,7 @@ class ShowProfileStats
 	private function getMobileUsage()
 	{
 		$lastMonth = date('Y-m-d', strtotime('-30 days'));
-		$loginTrackingobj = new MIS_LOGIN_TRACKING('newjs_slave');
+		$loginTrackingobj = new MIS_LOGIN_TRACKING('crm_slave');
 			$data = $loginTrackingobj->getLoginChannel($this->profileid,$lastMonth);
 		if(is_array($data) && (in_array('A',$data) || in_array('I',$data)))
 			$mobile_usage = "Uses Mobile App";

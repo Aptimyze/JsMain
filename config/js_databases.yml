@@ -149,9 +149,9 @@ matchalerts_slave:
 crm_slave:
   factory:        jsPdoDatabase
   param:
-    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$matchalertsSlave['HOST'].';dbname='.MysqlDbConstants::$matchalertsSlave['DEFAULT_DB']?>"
-    username:     "<?php echo MysqlDbConstants::$matchalertsSlave['USER']?>"
-    password:     "<?php echo MysqlDbConstants::$matchalertsSlave['PASS']?>"
+    dsn:          "<?php echo 'mysql:host='.MysqlDbConstants::$crmSlave['HOST'].';dbname='.MysqlDbConstants::$crmSlave['DEFAULT_DB']?>"
+    username:     "<?php echo MysqlDbConstants::$crmSlave['USER']?>"
+    password:     "<?php echo MysqlDbConstants::$crmSlave['PASS']?>"
 
 dnc_con:
   factory:        jsPdoDatabase

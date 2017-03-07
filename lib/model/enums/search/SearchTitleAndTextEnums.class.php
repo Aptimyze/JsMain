@@ -142,6 +142,14 @@ class SearchTitleAndTextEnums
 																			"withoutHoro"=>"Please <a href='/profile/mobhoroscope' class='color2'>create your horoscope </a>  to see your Kundli matches",
 																			"withHoro"=>"Kindly relax the criteria present in your <a href='/profile/viewprofile.php?ownview=1&section=dpp' class='color2'>Desired Partner Profile</a>",
 																		);
+               self::$MESSAGE_0RESULT_MAPPING["V1"]["IOS"]["kundlialerts"] = array(
+
+         "withoutHoro"=>"Please create your horoscope to see your Kundli matches",
+
+         "withHoro"=>"Kindly relax the criteria present in your Desired Partner Profile",
+
+ );
+
                 self::$DEFAULT_PIC_SIZE["V1"]["PC"]["DEFAULT"] = "ProfilePic450Url";
                 self::$DEFAULT_PIC_SIZE["V1"]["JSMS"]["DEFAULT"] = "MobileAppPicUrl";
                 self::$DEFAULT_PIC_SIZE["V1"]["APP"]["DEFAULT"] = "MobileAppPicUrl";
@@ -251,8 +259,14 @@ class SearchTitleAndTextEnums
 			if($params["SearchType"] == 'kundlialerts')
 			{
 				$horoscope = $params["horoscope"];
-				
-				return self::$MESSAGE_0RESULT_MAPPING["V1"][$params["Channel"]]["kundlialerts"][$horoscope];
+				if(MobileCommon::isApp()=="I")
+				{
+					return self::$MESSAGE_0RESULT_MAPPING["V1"]["IOS"]["kundlialerts"][$horoscope];
+				}
+				else
+				{
+					return self::$MESSAGE_0RESULT_MAPPING["V1"][$params["Channel"]]["kundlialerts"][$horoscope];
+				}
 			}
 			return self::getValue("MESSAGE_0RESULT_MAPPING",$params);
 		}

@@ -35,7 +35,7 @@ $last_week=floor(($curdate-$last_week)/(60*60*24));
 
 //$last_week=mktime(0, 0, 0, date("m")-12  , date("d"), date("Y"));
 
-$sql="select PROFILEID,EMAIL,USERNAME,datediff(now(),LAST_LOGIN_DT) as dd,SUBSCRIPTION  from newjs.JPROFILE where LAST_LOGIN_DT < DATE_SUB(CURDATE(), INTERVAL 10 MONTH) and activatedKey=1 and ACTIVATED<>'D' limit 1";
+$sql="select PROFILEID,EMAIL,USERNAME,datediff(now(),LAST_LOGIN_DT) as dd,SUBSCRIPTION  from newjs.JPROFILE where DATE(LAST_LOGIN_DT) < DATE_SUB(CURDATE(), INTERVAL 10 MONTH) and activatedKey=1 and ACTIVATED<>'D' limit 1";
 //$sql="select PROFILEID,EMAIL,USERNAME,datediff(now(),LAST_LOGIN_DT) as dd,SUBSCRIPTION  from newjs.JPROFILE where datediff(now(),LAST_LOGIN_DT) >=$month_10 and activatedKey=1 and ACTIVATED<>'D' and PROFILEID=618185";
 //$sql="select PROFILEID,EMAIL,USERNAME,datediff(now(),LAST_LOGIN_DT) as dd from newjs.JPROFILE where PROFILEID=136580";
 $res=mysql_query($sql,$dbSlave) or die(mysql_error1(mysql_error($dbSlave).$sql));

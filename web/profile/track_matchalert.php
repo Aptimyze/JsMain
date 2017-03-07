@@ -22,14 +22,14 @@ function TrackEditDpp_MA($profile,$status,$logic=0)
 //To track matches viewed
 function TrackMatchViewed_MA($profile,$n=0,$logic=0)
 {
-        $date=date('Y-m-d');
-        $sql_up="UPDATE MATCHALERT_TRACKING.TRACK_MATCHES_VIEWED SET COUNT=COUNT+1 WHERE DATE='$date' AND POSITION='$n' AND LOGIC='$logic'";
-	mysql_query_decide($sql_up) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_up,"ShowErrTemplate");
-        if(mysql_affected_rows_js()==0)
-        {
-                $sql_ins="INSERT INTO MATCHALERT_TRACKING.TRACK_MATCHES_VIEWED (DATE,POSITION,LOGIC,COUNT) VALUES (NOW(),'$n','$logic','1')";
-		mysql_query_decide($sql_ins) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ins,"ShowErrTemplate");
-        }
+ //        $date=date('Y-m-d');
+ //        $sql_up="UPDATE MATCHALERT_TRACKING.TRACK_MATCHES_VIEWED SET COUNT=COUNT+1 WHERE DATE='$date' AND POSITION='$n' AND LOGIC='$logic'";
+	// mysql_query_decide($sql_up) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_up,"ShowErrTemplate");
+ //        if(mysql_affected_rows_js()==0)
+ //        {
+ //                $sql_ins="INSERT INTO MATCHALERT_TRACKING.TRACK_MATCHES_VIEWED (DATE,POSITION,LOGIC,COUNT) VALUES (NOW(),'$n','$logic','1')";
+	// 	mysql_query_decide($sql_ins) or logError("Due to a temporary problem your request could not be processed. Please try after a couple of minutes",$sql_ins,"ShowErrTemplate");
+ //        }
 }
 
 function MatchLikedOrNor($MatchAlertlike='',$receiver='',$match='')
