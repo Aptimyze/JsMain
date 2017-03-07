@@ -276,7 +276,7 @@ class ApiMembershipDetailsV2Action extends sfAction
 		}
 
 		list($message,$offer_msg) = $this->getMessageFromCode($this->code);
-		if($this->userObj->userType == 5 || $this->userObj->userType == 6){
+		if($this->userObj->userType == 5 || $this->userObj->userType == 6 || $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
 			$benefitMsg = VariableParams::$apiPageOnePerMembershipBenefits ;
 			$benefitArr = VariableParams::$apiPageOnePerMembershipBenefitsVisibility;
 			foreach($benefitArr as $key=>$value){

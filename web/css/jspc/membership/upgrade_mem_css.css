@@ -1,0 +1,33 @@
+.Newtimecolor ul{list-style-type:none}
+.Newtimecolor ul li {color: #34495e;font-size: 18px;display: inline-block;padding-left: 8px;}
+.Newtimecolor ul li:nth-child(1){padding-left:0}
+.upgrd_bg1{background-color:#f9f9f9;}
+.upgrd_p1{padding:20px}
+.upgrd_p2{padding-right:144px}
+.upwid2{width: 559px}
+.upwid1{width:43%}
+.upb1{border-bottom:1px solid #fff}
+.upcolr1{color:#7c7c7c}
+ul.uoul li{ display:inline-block;}
+ul.uoul li:nth-child(1){padding-right:8px}
+ul.uoul li:nth-child(2){padding:0px 8px; border-right:1px solid #999;border-left:1px solid #999}
+ul.uoul li:nth-last-child(1){padding-left:6px}
+.uplino{list-style-type:none}
+ul.optionsList li{width:43%;}
+
+.upb{background-color:#d9475c;font-size:16px;color:#fff; border:0; line-height:50px;padding:0 50px;}
+.customMem-checkbox {width: 15px;height: 14px;display: inline-block;position: relative;z-index: 1;top: 2px;background:url(IMG_URL/images/jspc/membership_img/chk-Nsp.png) no-repeat 1px 1px;}
+.customMem-checkbox input[type="radio"] {
+    margin: 0;
+    position: absolute;
+    z-index: 2;
+    cursor: pointer;
+    outline: none;
+    opacity: 0;
+    _noFocusLine: expression(this.hideFocus=true);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    -khtml-opacity: 0;
+    -moz-opacity: 0;
+}
+.customMem-checkbox.selected {background-position:1px -12px;}
