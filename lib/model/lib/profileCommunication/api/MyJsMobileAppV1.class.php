@@ -86,7 +86,7 @@ $className = get_class($this);
 						continue;
 					}
 
-					if(MobileCommon::isApp() && ($isApp == "A" && $appVersion  && $appVersion < 84))
+					if(MobileCommon::isApp() && ($isApp == "A" && $appVersion  && $appVersion < 88))
 					{  
 						// Version Check For ANDROID
 						continue;
