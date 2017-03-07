@@ -34,6 +34,9 @@
             paidBenefits["~$k`"] = "~$v`";
         ~/foreach`
     ~/if`
+    ~if $data.upgradeMembershipContent` 
+            var pageType = 'upgradeMembershipPage';
+    ~/if`
     ~if $data.topBlockMessage.monthsValue neq 'Unlimited' && $data.topBlockMessage.JSPCnextMembershipMessage`
         var message = "~$data.topBlockMessage.JSPCnextMembershipMessage`";
         var pageType = 'ConditionsBasedHeader';
@@ -87,13 +90,13 @@
                             </tr>
                             ~/if`
                         ~else`
-                            ~if $smarty.foreach.allBenefitsLoop.index lt (($smarty.foreach.allBenefitsLoop.total)-2)`
-                            ~if $smarty.foreach.allBenefitsLoop.index gt 2 && $smarty.foreach.allBenefitsLoop.index lt (($smarty.foreach.allBenefitsLoop.total)-2)`
+                            ~if $smarty.foreach.allBenefitsLoop.index lt (($smarty.foreach.allBenefitsLoop.total)-4)`
+                            ~if $smarty.foreach.allBenefitsLoop.index gt 2 && $smarty.foreach.allBenefitsLoop.index lt (($smarty.foreach.allBenefitsLoop.total)-4)`
                             <tr>
                                 <td class="bdrb cmp-lh1 pl20">~$v`</td>
                             </tr>
                             ~/if`
-                            ~if $smarty.foreach.allBenefitsLoop.index eq (($smarty.foreach.allBenefitsLoop.total)-2)`
+                            ~if $smarty.foreach.allBenefitsLoop.index eq (($smarty.foreach.allBenefitsLoop.total)-4)`
                             <tr>
                                 <td class="bdrb cmp-lh2 pl20">~$v`</td>
                             </tr>
@@ -120,7 +123,7 @@
                                     <td class="bg5 colrw cmp-lh1 vmid fontreg f17 txtc">~$v.subscription_name`</td>
                                 </tr>
                                 ~foreach from=$v.benefits key=kk item=vv name=benefitsLoop`
-                                ~if $smarty.foreach.benefitsLoop.index eq 5`
+                                ~if $smarty.foreach.benefitsLoop.index eq 4`
                                 <tr>
                                     <td class="bdrb1 bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-chk3"></i></td>
                                 </tr>
@@ -142,8 +145,8 @@
                                     </tr>
                                     ~/if`
                                 ~else`
-                                    ~if $smarty.foreach.benefitsExcludedLoop.index lt (($smarty.foreach.benefitsExcludedLoop.total)-2)`
-                                    ~if $smarty.foreach.benefitsExcludedLoop.index eq (($smarty.foreach.benefitsExcludedLoop.total)-3)`
+                                    ~if $smarty.foreach.benefitsExcludedLoop.index lt (($smarty.foreach.benefitsExcludedLoop.total)-4)`
+                                    ~if $smarty.foreach.benefitsExcludedLoop.index eq (($smarty.foreach.benefitsExcludedLoop.total)-5)`
                                     <tr>
                                         <td class="bdrb1 bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
                                     </tr>
@@ -183,9 +186,6 @@
                                 </tr> -->
                                 <tr>
                                     <td class="bg5 colrw cmp-lh1 vmid fontreg f17 txtc">Free</td>
-                                </tr>
-                                <tr>
-                                    <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
                                 </tr>
                                 <tr>
                                     <td class="bdrb2 vmid txtc cmp-lh2"><i class="mem-sprite mem-cross1"></i></td>
@@ -320,7 +320,12 @@
                                 ~foreach from=$v.servMessage key=kkk item=vvv name=servMessageLoop`
                                     ~if $vv eq $kkk`
                                         ~assign var=continue value=1`
-                                        <li class="check">~$vv`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20 txtc">~$vvv`<br> FREE with eAdvantage package</div></i></li>
+                                        <li class="check ~if $vv eq 'Profile Boost'`fontmed~/if`">~$vv`~if $vv eq 'Profile Boost'`<span class="colr5"> new</span>~/if`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20" style="width:267px; top:48px; right:11px">
+                                                    ~assign var=helpText value=". "|explode:$vvv`
+                                                    ~foreach from=$helpText key=helpKey item=helpVal name=helpLoop`
+                                                        ~$helpVal`<br>
+                                                    ~/foreach`
+                                                    <div class="colr5">FREE with eAdvantage package</div></div></i></li>
                                     ~/if`
                                 ~/foreach`
                                 ~if $continue eq 0`
@@ -333,10 +338,20 @@
                                     ~if $vv eq $kkk`
                                         ~assign var=continueExc value=1`
                                         ~if $eSathiCheck eq 1`
-                                            <li class="cross txtstr color12">~$vv`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20 txtc">~$vvv`<br> FREE with eAdvantage package</div></i></li>
+                                            <li class="cross txtstr color12 ~if $vv eq 'Profile Boost'`fontmed~/if`">~$vv`~if $vv eq 'Profile Boost'`<span class="colr5"> new</span>~/if`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20" style="width:267px; top:48px; right:11px">
+                                                        ~assign var=helpText value=". "|explode:$vvv`
+                                                        ~foreach from=$helpText key=helpKey item=helpVal name=helpLoop`
+                                                            ~$helpVal`<br>
+                                                        ~/foreach`
+                                                        <div class="colr5">FREE with eAdvantage package</div></div></i></li>
                                         ~else`
-                                            ~if $smarty.foreach.benefitsExcludedListingLoop.index lt (($smarty.foreach.benefitsExcludedListingLoop.total)-2)`
-                                                <li class="cross txtstr color12">~$vv`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20 txtc">~$vvv`<br> FREE with eAdvantage package</div></i></li>
+                                            ~if $smarty.foreach.benefitsExcludedListingLoop.index lt (($smarty.foreach.benefitsExcludedListingLoop.total)-4)`
+                                                <li class="cross txtstr color12 ~if $vv eq 'Profile Boost'`fontmed~/if`">~$vv`~if $vv eq 'Profile Boost'`<span class="colr5"> new</span>~/if`<i class="newSprt cursp newSprt_6 pl10"><div class="bg-white pos-abs ~if $vv eq 'Featured Profile'`hoverDiv2~/if` hoverDiv color11 f14 fontlig lh20" style="width:267px; top:48px; right:11px">
+                                                            ~assign var=helpText value=". "|explode:$vvv`
+                                                            ~foreach from=$helpText key=helpKey item=helpVal name=helpLoop`
+                                                                ~$helpVal`<br>
+                                                            ~/foreach`
+                                                            <div class="colr5">FREE with eAdvantage package</div></div></i></li>
                                             ~/if`
                                         ~/if`
                                     ~/if`
@@ -345,7 +360,7 @@
                                     ~if $eSathiCheck eq 1`
                                         <li class="cross txtstr color12">~$vv`</li>
                                     ~else`
-                                        ~if $smarty.foreach.benefitsExcludedListingLoop.index lt (($smarty.foreach.benefitsExcludedListingLoop.total)-2)`
+                                        ~if $smarty.foreach.benefitsExcludedListingLoop.index lt (($smarty.foreach.benefitsExcludedListingLoop.total)-4)`
                                             <li class="cross txtstr color12">~$vv`</li>
                                         ~/if`
                                     ~/if`
@@ -512,7 +527,118 @@
 </div>
 <!-- end: membership benefits block-->
 ~/if`
-~if $data.vasContent`
+
+<!--start:upgrade membership eligible user section-->
+~if $data.upgradeMembershipContent`
+    <!--start:plan-->
+    <div class="bg-4">
+        <div class="container mainwid">        
+            <div class="clearfix color11 pt30 pb30">
+                <div class="fl">
+                    <p class="fontmed f24 color5">Exclusive offer for you, valid till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</p>
+                    <p class="f16 pt5 fontreg">Upgrade your current ~$data.topBlockMessage.currentMemName` membership to ~$data.upgradeMembershipContent.upgradeMainMemName` membership by paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if` ~$data.upgradeMembershipContent.upgradeExtraPay`</p>
+                </div>       
+            </div>        
+            <!--start:block1-->        
+            <div class="clearfix pb30 color11">         
+                <div class="fl upwid1 upgrd_bg1 fontlig" id="currentMemSection">               
+                        <!--start:head-->   
+                        <div class="upgrd_p1 upb1">                
+                            <div class="f14">Current Membership</div>
+                             <ul class="listnone f14 uoul pt15">
+                                <li class="f20"><strong>~$data.topBlockMessage.currentMemName`</strong></li>
+                                <li>~$data.topBlockMessage.currentActualDuration` Month</li>
+                                <li>~$data.topBlockMessage.totalContactsAllotted` Contacts To View</li>                        
+                            </ul>
+                         </div>
+                         <!--end:head-->
+                         <div class="upgrd_p1">
+                            ~if $data.topBlockMessage.currentBenefitsMessages`
+                                <p class="upcolr1 f14 fontmed">Benefit</p>
+                                <ul class="uplino f14 pt10 lh22">
+                                    ~foreach from=$data.topBlockMessage.currentBenefitsMessages key=k item=v name=benefitsCondLoop`
+                                        <li>~$v`</li>
+                                    ~/foreach`
+                                </ul>
+                            ~/if`
+                         </div>
+                </div>            
+                <div class="fr wid55p upgrd_bg1 fontreg" id="upgardeMemSection">               
+                        <!--start:head-->   
+                        <div class="upgrd_p1 upb1">                
+                            <div class="f14">Special upgrade offer for you </div>
+                            <ul class="listnone f14 uoul pt15">
+                                <li class="f20"><strong>~$data.upgradeMembershipContent.upgradeMainMemName`</strong></li>
+                                <li>~if $data.upgradeMembershipContent.upgradeMainMemDur eq 'L'` Unlimited ~else` ~$data.upgradeMembershipContent.upgradeMainMemDur` ~/if` Month</li>
+                                <li>~$data.upgradeMembershipContent.upgradeTotalContacts` Contacts To View</li>                        
+                            </ul>                    
+                        </div>
+                         <!--end:head-->
+                        <div class="upgrd_p1">
+                            ~if $data.upgradeMembershipContent.upgradeAdditionalBenefits`
+                                <p class="upcolr1 f14 fontmed">Additional Benefit</p>
+                                <ul class="uplino f14 pt10 lh22 fontlig">
+                                    ~foreach from=$data.upgradeMembershipContent.upgradeAdditionalBenefits key=k item=v name=additionalBenefitsCondLoop`
+                                        <li>~$v`</li>
+                                    ~/foreach`
+                                </ul>
+                            ~/if`
+                            ~if $data.upgradeMembershipContent.upgardeComparedFacts`
+                                <p class="upcolr1 f14 fontmed pt20">Did you know?</p>
+                                <ul class="uplino f14 pt10 lh22 fontlig">
+                                    ~foreach from=$data.upgradeMembershipContent.upgardeComparedFacts key=k item=v name=comparedBenefitsCondLoop`
+                                        <li>- ~$v`</li>
+                                    ~/foreach`
+                                </ul>
+                            ~/if`
+                            <div class="pt30 txtc" id="upgradeMainMemBtn">
+                                <button class="upb cursp">~if $data.currency eq '$'`USD~else`~$data.currency`~/if`  ~$data.upgradeMembershipContent.upgradeExtraPay` &nbsp;|&nbsp;Pay Now</button>
+                            </div>
+                         </div>
+                </div>        
+            </div>        
+            <!--end:block1-->
+            <!--start:block 2-->
+            ~if $data.vasContent`
+                <div id="VASdiv">
+                    ~foreach from=$data.vasContent key=k item=v name=vasLoop`                    
+                        <div style="margin-top:30px;padding-top:40px; padding-bottom:40px" class="upgrd_bg1" id="~$v.vas_key`">
+                            <div class="clearfix fontlig">
+                                <div class="fl pl35 color11 upwid2">
+                                    <p class="fontrobbold f24">~$v.vas_name`</p>
+                                    <p class="f13 pt5">~$v.vas_description`</p>
+                                    <div class="pt30">
+                                        <ul class="uplino optionsList">
+                                            ~foreach from=$v.vas_options key=kk item=vv name=vasDurLoop`
+                                                ~if $kk gt 0`
+                                                <li id="~$vv.id`" class="clearfix disp_ib pl30" vasKey="~$v.vas_key`">
+                                                ~else`
+                                                <li id="~$vv.id`" class="clearfix disp_ib" vasKey="~$v.vas_key`">
+                                                ~/if`
+                                                    <div class="fl"><input type="radio"  value="~$vv.duration`M" name="MONTH[]" id="~$vv.id`"></div>
+                                                    <div class="fl pl10" id="~$vv.id`_duration" data-price=" ~$data.currency` ~$vv.vas_price`">~$vv.duration` months for ~$data.currency` ~$vv.vas_price`  ~if $vv.vas_price_strike`<span class="txtstr upcolr1" id="~$vv.id`_price_strike">~$vv.vas_price_strike`</span> </div>~/if`
+                                                </li>
+                                            ~/foreach`
+                                        </ul>                               
+                                    </div>                
+                                </div>
+                                <div class="fr upgrd_p2">
+                                <div class="pt30 txtc vasPayBtn" vasKey="~$v.vas_key`">
+                                    <button class="upb cursp" id="selectedVasPrice_~$v.vas_key`"><span class="price">~$data.currency` ~$vv.vas_price`</span> &nbsp;|&nbsp;Pay Now</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>  
+                    ~/foreach` 
+                </div>        
+            ~/if`
+            <!--end:block 2-->      
+        </div>
+    </div>
+    <!--end:plan-->
+<!--end:upgrade membership eligible user section-->
+
+~else if $data.vasContent`
 <!--start:plan-->
 <div class="bg-4">
     <div class="container mainwid pt40">
@@ -853,6 +979,19 @@
             }
         });
     ~/if`
+    ~if $data.upgradeMembershipContent`
+        //initilize upgrade page
+        initializeUpgradePage();
+        $("#upgradeMainMemBtn").click(function(e){
+            //flush vas selection when upgrade button clicked
+            eraseCookie('selectedVas');
+            var upgradeType = "~$data.upgradeMembershipContent.type`",mainMem = "~$data.upgradeMembershipContent.upgradeMainMem`",mainMemDur = "~$data.upgradeMembershipContent.upgradeMainMemDur`";
+            createCookie('mainMemTab', mainMem);
+            createCookie('mainMem', mainMem);
+            createCookie('mainMemDur', mainMemDur);
+            $.redirectPost('/membership/jspc', {'displayPage':3, 'mainMem':mainMem, 'mainMemDur':mainMemDur, 'device':'desktop' , 'upgradeMem':upgradeType});
+        }); 
+    ~/if`
     ~if $data.vasContent`
         eraseCookie('paymentMode');
         eraseCookie('cardType');
@@ -861,50 +1000,52 @@
         eraseCookie('mainMemDur');
         checkLogoutCase(profileid);
         var selectedVasCookie = readCookie('selectedVas');
-        if(selectedVasCookie && checkEmptyOrNull(selectedVasCookie)){
-            updateAlreadySelectedVas();
+        if(pageType != 'upgradeMembershipPage'){
+            if(selectedVasCookie && checkEmptyOrNull(selectedVasCookie)){
+                updateAlreadySelectedVas();
+            }
+            $(".vascell").click(function(e){
+                var that = this;
+                $(this).parent().find('.vascell').each(function(){
+                    if($(this).hasClass('mem-vas-active') && this!=that){
+                        $(this).removeClass('mem-vas-active');
+                    }
+                });
+                if($(that).hasClass('mem-vas-active')){
+                    $(that).removeClass('mem-vas-active');
+                } else {
+                    $(that).addClass('mem-vas-active');
+                }
+                trackVasCookie($(that).attr("vasKey"), $(that).attr("id"));
+                manageVasOverlay($(that).attr("vasKey"));
+                updateVasPageCart();
+            });
+            $('.vasoverlay,.vasoverlay2').click(function(e){
+                var vasKey = $(this).parent().attr('id').replace('_overlay',''),vasId;
+                $("#"+vasKey+" .vascell").each(function(e){
+                    if($(this).hasClass('mem-vas-active')){
+                        vasId = $(this).attr('id');
+                        $(this).removeClass('mem-vas-active');
+                    }
+                });
+                manageVasOverlay(vasKey);
+                trackVasCookie(vasKey,vasId);
+                updateVasPageCart();
+            });
+            $("#payNowBtn").click(function(e){
+                var selectedVasCookie = readCookie('selectedVas');
+                
+                if(parseInt($("#totalPrice").html()) > 0 && checkEmptyOrNull(selectedVasCookie)){
+                    $.redirectPost('/membership/jspc', {'displayPage':3, 'selectedVas':selectedVasCookie, 'device':'desktop'});
+                } else {
+                    e.preventDefault();
+                    //sweetAlert("Hi !", "Please select atleast one item to continue", "error");
+                }
+            });
+            updateVasPageCart();
+            var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
+            $('#cmpplan').css('left', leftval);
         }
-        $(".vascell").click(function(e){
-            var that = this;
-            $(this).parent().find('.vascell').each(function(){
-                if($(this).hasClass('mem-vas-active') && this!=that){
-                    $(this).removeClass('mem-vas-active');
-                }
-            });
-            if($(that).hasClass('mem-vas-active')){
-                $(that).removeClass('mem-vas-active');
-            } else {
-                $(that).addClass('mem-vas-active');
-            }
-            trackVasCookie($(that).attr("vasKey"), $(that).attr("id"));
-            manageVasOverlay($(that).attr("vasKey"));
-            updateVasPageCart();
-        });
-        $('.vasoverlay,.vasoverlay2').click(function(e){
-            var vasKey = $(this).parent().attr('id').replace('_overlay',''),vasId;
-            $("#"+vasKey+" .vascell").each(function(e){
-                if($(this).hasClass('mem-vas-active')){
-                    vasId = $(this).attr('id');
-                    $(this).removeClass('mem-vas-active');
-                }
-            });
-            manageVasOverlay(vasKey);
-            trackVasCookie(vasKey,vasId);
-            updateVasPageCart();
-        });
-        $("#payNowBtn").click(function(e){
-            var selectedVasCookie = readCookie('selectedVas');
-            
-            if(parseInt($("#totalPrice").html()) > 0 && checkEmptyOrNull(selectedVasCookie)){
-                $.redirectPost('/membership/jspc', {'displayPage':3, 'selectedVas':selectedVasCookie, 'device':'desktop'});
-            } else {
-                e.preventDefault();
-                //sweetAlert("Hi !", "Please select atleast one item to continue", "error");
-            }
-        });
-        updateVasPageCart();
-        var ScreenHgt = $(window).height(),ScreenWid = $(window).width(),leftval = (ScreenWid / 2) - 450;
-        $('#cmpplan').css('left', leftval);
     ~/if`
     });
 </script>

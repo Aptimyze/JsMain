@@ -115,6 +115,19 @@
                 </div>
             </div>
         </div>
+        <div class="fl mem-widp12 disp-none" id="UpgradeMembershipDiv">
+            <!--div class="f19 color12 pb15" id ="messageDiv"></div>
+            <ul id="paidBenefits" class="clearfix hor_list memfealist colrw fontlig f15">
+            </ul>
+            <div class="mem_pad22">
+                <div class="pt5 colrw mem-brd10 clearfix">
+                    <div class="fl">
+                        <div id="bannerTextVas" class="mt10 f20"></div>
+                        <div class="pt17 f20" id="bannerTimerVas"></div>
+                    </div>
+                </div>
+            </div-->
+        </div>
         <div class="fl mem-widp12 disp-none" id="ConditionsBasedDivVasPaid">
             <div class="f19 color12 pb15">Benefits of your membership; for more benefits choose from value added services</div>
             <ul id="paidBenefitsVasPaid" class="clearfix hor_list memfealist colrw fontlig f15">
@@ -143,7 +156,7 @@
         </div>
         <!--end:left-->
         <!--start:right-->
-        <div class="fr fontlig mem-widp5 colrw">
+        <div class="fr fontlig mem-widp5 colrw" id="memExpiryContent">
             <div id="topBlockTitleMsg" class="txtc fontlig f15"></div>
             <!--start:timer-->
             <div id="unlimitedTimer" class="mauto wid89p pt16 disp-none">
@@ -290,6 +303,11 @@ $(document).ready(function() {
     else if(pageType == 'ConditionsBasedHeader'){
         $("#messageDiv").html(message);
         $("#ConditionsBasedDiv,#vasPagePaidMemberContent").show();
+    }
+
+    else if(pageType == 'upgradeMembershipPage'){
+        $("#UpgradeMembershipDiv,#vasPagePaidMemberContent").show();
+        $("#memExpiryContent").hide();
     }
 
     else if (pageType == 'vasPage'){
