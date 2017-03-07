@@ -34,7 +34,14 @@ class jaagterahooActions extends sfActions
 	$this->checkRedis = ThirdPartyService::checkRedis();
 	$this->checkRabbit = ThirdPartyService::checkRabbitMq();
 	$this->checkServices  = ThirdPartyService::callJavaServices();
-
+	$this->checkServices['Guna'] = $this->checkGuna;
+	$this->checkServices['Redis'] = $this->checkRedis;
+	$this->checkServices['Rabbit'] = $this->checkRabbit;
+	
+	foreach($this->checkServices as $k=>$v)
+	{
+		$this->checkServices[$k]['responseTime']=round($this->checkServices[$k]['responseTime'],3);
+	}
 	$serverStatusObj = new ServerStatus;
 	$this->serverstatus = $serverStatusObj->getStatus();
 

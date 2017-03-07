@@ -243,6 +243,42 @@ class JsMemcache extends sfMemcacheCache{
 			parent::remove($key);
 		}
 	}
+
+	/*function to delete keys with matched suffix
+	* @params:$key,$patternType="suffix",$throwException=false
+	*/
+	public function deleteKeysWithMatchedSuffix($key,$patternType="suffix",$throwException=false){
+		if(self::isRedis() && $key!="")
+		{
+			if($this->client)
+			{
+				try
+				{
+					$key = (string)$key;
+					if($patternType == "suffix"){
+						$key = "*".$key;
+					}
+					else{
+						$key = $key."*";
+					}
+					$value = $this->client->keys($key);
+					if(is_array($value)){
+						foreach ($value as $k => $v) {
+							$this->client->del($k);
+						}
+					}
+				}
+				catch (Exception $e)
+				{
+					if($throwException) {
+						throw $e;
+					}
+					jsException::log("D-redisClusters".$e->getMessage());
+				}
+			}
+		}
+	}
+
 	public function zAdd($key,$test1,$test2)
 	{
 		if(self::isRedis())
