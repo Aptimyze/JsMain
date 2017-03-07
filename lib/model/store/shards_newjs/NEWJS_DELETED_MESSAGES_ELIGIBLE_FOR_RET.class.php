@@ -75,7 +75,7 @@ class NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET extends TABLE
         try {
             if (is_array($idsArr)) {
                 $idStr = implode(",", $idsArr);
-                $sql = "DELETE FROM newjs.DELETED_MESSAGES WHERE ID IN (" . $idStr . ")";
+                $sql = "DELETE FROM newjs.DELETED_MESSAGES_ELIGIBLE_FOR_RET WHERE ID IN (" . $idStr . ")";
                 $prep = $this->db->prepare($sql);
                 $prep->execute();
                 return true;

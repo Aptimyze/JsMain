@@ -394,7 +394,7 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
 			{
 				//$idStr=implode(",",$idsArr);
 				mysql_query($sql,$db);
-				$result=$dbMessageObj->insertIntoMessagesEligibleForRet($idsArr);
+				$result=$dbMessageObj->insertIntoFromMessagesEligibleForRet($idsArr);
 				//$sql="INSERT IGNORE INTO $database.MESSAGES SELECT * FROM $database.DELETED_MESSAGES WHERE ID IN ($idStr)";
 				//mysql_query($sql,$db) or ($skip=1);
 //echo $sql."\n";

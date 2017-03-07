@@ -186,7 +186,7 @@ class NEWJS_MESSAGES extends TABLE{
          * @param type $idsArr
          * @return boolean
          */
-        public function insertIntoMessagesEligibleForRet($idsArr)
+        public function insertIntoFromMessagesEligibleForRet($idsArr)
         {
 			try 
 			{
