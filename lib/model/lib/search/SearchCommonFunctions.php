@@ -191,7 +191,7 @@ class SearchCommonFunctions
 	/**
 	* This section will show the dpp matches.
 	*/
-	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '',$removeShortlisted='',$showOnlineOnly='')
+	public static function getMyDppMatches($sort="",$loggedInProfileObj='',$limit='',$currentPage="",$paramArr='',$removeMatchAlerts="",$dontShowFilteredProfiles="",$twoWayMatches='',$clustersToShow='',$results_orAnd_cluster='',$notInProfiles='',$completeResponse = '', $verifiedProfilesDate = '',$removeShortlisted='',$showOnlineOnly='',$source='')
 	{
                 $searchEngine = 'solr';
                 $outputFormat = 'array';
@@ -209,7 +209,7 @@ class SearchCommonFunctions
                 if($twoWayMatches)
                     $SearchParamtersObj->getSearchCriteria();
                 else
-                    $SearchParamtersObj->getDppCriteria();
+                    $SearchParamtersObj->getDppCriteria('',$source);
                 if($verifiedProfilesDate){
                     $SearchParamtersObj->setHVERIFY_ACTIVATED_DT($verifiedProfilesDate);
                     $SearchParamtersObj->setLVERIFY_ACTIVATED_DT('2001-01-01 00:00:00');

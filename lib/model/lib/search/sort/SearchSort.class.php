@@ -276,14 +276,11 @@ class SearchSort
                         if ($loggedInProfileObj->getMTONGUE()) {
                                 $sortArray[] = "or(tf(PARTNER_MTONGUE," . $loggedInProfileObj->getMTONGUE() . "),tf(PARTNER_MTONGUE," . $doesntMatterValue . "))";
                         }
-                        if ($loggedInProfileObj->getGENDER() == 'F') {
-                                if ($loggedInProfileObj->getEDU_LEVEL_NEW()) {
+                        if ($loggedInProfileObj->getEDU_LEVEL_NEW()) {
                                         $sortArray[] = "or(tf(PARTNER_ELEVEL_NEW," . $loggedInProfileObj->getEDU_LEVEL_NEW() . "),tf(PARTNER_ELEVEL_NEW," . $doesntMatterValue . "))";
-                                }
-                        } else {
-                                if ($loggedInProfileObj->getINCOME()) {
+                        } 
+                        if ($loggedInProfileObj->getINCOME()) {
                                         $sortArray[] = "or(tf(PARTNER_INCOME_FILTER," . $loggedInProfileObj->getINCOME() . "),tf(PARTNER_INCOME_FILTER," . $doesntMatterValue . "))";
-                                }
                         }
                 }
                 if (!empty($sortArray)) {

@@ -1152,6 +1152,14 @@ class DetailedViewApi
 		}
 
 		$this->m_arrOut['dpp_special_case'] = $szSpecialCaseOut;;
+
+                if(!MobileCommon::isDesktop())
+                {
+			if($this->m_arrOut['dpp_state'] && $this->m_arrOut['dpp_city'])
+				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'].','.$this->m_arrOut['dpp_city'];
+			elseif($this->m_arrOut['dpp_state'])
+				$this->m_arrOut['dpp_city'] = $this->m_arrOut['dpp_state'];
+                }
 	}
 	/**
 	 * getDecorated_Photo

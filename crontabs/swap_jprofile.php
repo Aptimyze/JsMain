@@ -27,7 +27,7 @@ include_once($_SERVER['DOCUMENT_ROOT']."/commonFiles/incomeCommonFunctions.inc")
 include_once($_SERVER['DOCUMENT_ROOT']."/commonFiles/SymfonyPictureFunctions.inc");
 include_once(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
-if(CommonUtility::hideFeaturesForUptime())
+if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'live')
 	successfullDie();
 	
 	

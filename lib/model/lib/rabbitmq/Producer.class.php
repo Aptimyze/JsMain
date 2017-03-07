@@ -131,6 +131,7 @@ class Producer
 			$this->channel->queue_declare(MQ::LOGGING_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
             $this->channel->queue_declare(MQ::DISC_HISTORY_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);
 
+      $this->channel->queue_declare(MQ::SCRIPT_PROFILER_Q, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE);    
 			$this->channel->queue_declare(MQ::WRITE_MSG_queueRightNow);
 			$this->channel->exchange_declare(MQ::WRITE_MSG_exchangeRightNow, 'direct');
 			$this->channel->queue_bind(MQ::WRITE_MSG_queueRightNow, MQ::WRITE_MSG_exchangeRightNow);
@@ -252,6 +253,9 @@ class Producer
                 case 'DISCOUNT_HISTORY':
                     $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::DISC_HISTORY_QUEUE, MQ::MANDATORY, MQ::IMMEDIATE);
                     break;
+        case MQ::SCRIPT_PROFILER_PROCESS:
+            $this->channel->basic_publish($msg, MQ::EXCHANGE, MQ::SCRIPT_PROFILER_Q,MQ::MANDATORY,MQ::IMMEDIATE);
+          break;
 
 			}
 		} catch (Exception $exception) {

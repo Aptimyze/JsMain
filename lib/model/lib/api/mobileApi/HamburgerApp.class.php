@@ -13,22 +13,26 @@ class HamburgerApp
 		$profilePic = $profileObj->getHAVEPHOTO();
 		if (empty($profilePic))
 			$profilePic="N";
-		if($profilePic!="N")
+		if($profilePic  && $profilePic!="N")
 		{
 			$pictureServiceObj=new PictureService($profileObj);
 			$profilePicObj = $pictureServiceObj->getProfilePic();
-			if($profilePicObj){
+			if($profilePicObj)
+                        {
 			if($profilePic=='U')	
 				$picUrl = $profilePicObj->getThumbail96Url();
 			else
 				$picUrl = $profilePicObj->getProfilePic120Url();
 			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$profileObj->getGENDER());
-            $thumbNail =$photoArray;
+                        $thumbNail =$photoArray;
 			}
 			
 		}
-			else
-				$thumbNail = NULL;
+                else
+                {
+                        $thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
+                        $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl');
+                }
 
 			$hamburgerDetails['THUMBNAIL']=$thumbNail;
 			$request = sfContext::getInstance()->getRequest();
