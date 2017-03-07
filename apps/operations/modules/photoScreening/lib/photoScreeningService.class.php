@@ -12,7 +12,7 @@ class photoScreeningService
 	private $associateUploadedPhotoWithScreenedPictureId;
 	const SCREENING_TYPE= "P";
 	const PROCESS_INTERFACE_STATUS = "E";	
-        
+        const AUTO_REMINDER_MAIL_MAX_COUNT = 2;
         public function __construct($profileObj='')
         {
                 if($profileObj)
@@ -1839,6 +1839,7 @@ class photoScreeningService
 	{
 		$picture_new = new ScreenedPicture;
                 $countScreened = $picture_new->getMaxOrdering($paramArr["profileId"]);		//Get count of already existing screened pics
+                $this->screenedCount = $countScreened;
                 $countApproved = count($paramArr["APPROVE"]);
                 if(($countScreened-$paramArr["SCREENED_DELETED"])+$countApproved>(PictureStaticVariablesEnum::MAX_PICTURE_COUNT+1))
                         return 0;
@@ -1994,12 +1995,36 @@ class photoScreeningService
                 //Deleting Pics from PICTURE_NEW
                 $this->deleteScreenedPhotoEntries($paramArr['PICTUREID']);
                 $this->updateScreenedPhotosOrdering($paramArr["PROFILEID"]);
-
+                
+                $this->triggerAutoReminderMail($paramArr);
+                
                 // Flush memcache for header picture
                 $memCacheObject = JsMemcache::getInstance();
 				$memCacheObject->remove($this->profileObj->getPROFILEID() . "_THUMBNAIL_PHOTO");                  
         }
 
+        
+        public function triggerAutoReminderMail($paramArr){
+
+        if(!isset($this->screenedCount))
+        {
+            $picture_new = new ScreenedPicture;
+            $countScreened = $picture_new->getMaxOrdering($paramArr["profileId"]);		//Get count of already existing screened pics
+            $this->screenedCount = $countScreened;
+        }
+        if(($this->screenedCount > self::AUTO_REMINDER_MAIL_MAX_COUNT) || count($paramArr["APPROVE"]) < 1)return false;    
+        $producerObj=new Producer();
+        if($producerObj->getRabbitMQServerConnected())
+        {
+            $sender = $this->contactHandler->getViewer();
+            $receiver = $this->contactHandler->getViewed();
+            $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'PHOTO_SCREENED','body'=>array('senderid'=>$sender->getPROFILEID() ), 'redeliveryCount'=>0 ));
+            $producerObj->sendMessage($sendMailData);
+            return true;
+        }
+            
+            
+        }
         /*This function is used upload pictures from Process Interface
 	*@param formArr : form array
 	*@return output : either error message or array of count and success message
