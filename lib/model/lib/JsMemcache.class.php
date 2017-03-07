@@ -108,7 +108,7 @@ class JsMemcache extends sfMemcacheCache{
 		/* removed the function defination as file locking does not make any sense here */
 	}
 	public function set($key,$value,$lifetime = NULL,$retryCount=0,$jsonEncode='')
-	{
+	{  
 		if(self::isRedis())
 		{
 			if($this->client)
@@ -837,6 +837,58 @@ class JsMemcache extends sfMemcacheCache{
   }
 
 
+
+  	/**
+	 * @param $key
+	 * @param $value
+	 * @param int $expiryTime
+	 * @param bool $throwException
+	 * @return value
+	 * @throws Exception
+	 */
+    public function setRedisKey($key,$value,$expiryTime=3600,$throwException = false)
+    {
+        if(self::isRedis())
+        {
+            if($this->client)
+            {
+                try
+                {  
+                    $result = $this->client->set($key, $value);
+                    $this->client->expire($key, $expiryTime);
+					return true;
+                }
+                catch (Exception $e)
+                {
+					if ($throwException) {
+						throw $e;
+					}
+                    jsException::log("Redis Set Key".$e->getMessage());
+                }
+            }
+        }
+    }
+
+
+    public function getRedisKey($key,$default = NULL,$retryCount=0)
+	{
+		if(self::isRedis())
+		{
+			if($this->client)
+			{
+				try
+				{
+					$value = $this->client->get($key);
+					return $value;
+				}
+				catch (Exception $e)
+				{
+					jsException::log("G-redisKey".$e->getMessage());
+				}
+			}
+		}
+	}
+
  
    /**
     * 
@@ -859,6 +911,7 @@ class JsMemcache extends sfMemcacheCache{
  				}
  			}
  		}
+
 	}
   
 }

@@ -697,6 +697,11 @@ class JPROFILE
     {
         return self::$objProfileMysql->getLatestEntryDate();
     }
+
+    public function getZombieProfiles($gtDate,$limit=0,$ltDate=null) 
+    {
+        return self::$objProfileMysql->getZombieProfiles($gtDate,$limit,$ltDate);
+    }
 }
 
 ?>
