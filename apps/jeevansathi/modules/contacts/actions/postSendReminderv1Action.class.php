@@ -199,7 +199,8 @@ class postSendReminderv1Action extends sfAction
 			{
 				$responseArray["errmsglabel"] = Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
 				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
-				//$responseArray["headerlabel"] = "Profile is Underscreening";
+				$responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+				$responseArray["headerthumbnailurl"] = $thumbNail;
 				//$responseArray["redirect"] = true;
 			}
 			elseif($errorArr["SECOND_REMINDER_BEFORE_TIME"] == 2)
@@ -208,6 +209,8 @@ class postSendReminderv1Action extends sfAction
 				//$responseArray["errmsgiconid"] = IdToAppImagesMapping::UNDERSCREENING;
 				//$responseArray["headerlabel"] = "Profile is Underscreening";
 				//$responseArray["redirect"] = true;
+				 $responseArray["headerlabel"] = $this->Profile->getUSERNAME();
+                                $responseArray["headerthumbnailurl"] = $thumbNail;
 			}
 
 			else
