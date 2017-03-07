@@ -5,6 +5,7 @@ alter table `NEW_DELETED_PROFILE_LOG` drop primary key, add primary key(`PROFILE
 
 alter table `RETRIEVE_PROFILE_LOG` drop primary key, add primary key(`PROFILEID`,`DATE`);
 
+ALTER TABLE  `NEW_DELETED_PROFILE_LOG` ADD  `HOUSKEEPING_DONE` ENUM(  'Y',  'N' ) DEFAULT  'Y' NOT NULL ; 
 -- Step - 2 => Create New Tables, which will contain data of those users who were deleted in last 3 months
 
 -- For Main Sql Instance
