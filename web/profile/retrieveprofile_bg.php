@@ -149,7 +149,7 @@ if(count($myDbarr))
 		retreiveFromTables('DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET','PHOTO_REQUEST',"PROFILEID","PROFILEID_REQ_BY",$myDb,$profileid,$photoStr);
 		retreiveFromTables('DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET','MESSAGE_LOG',"RECEIVER","SENDER",$myDb,$profileid,$messagelogStr,'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
 		retreiveFromTables('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET','CONTACTS',"SENDER","RECEIVER",$myDb,$profileid,$contactsStr);
-		retreiveFromTables('DELETED_EOI_VIEWED_LOG_REQUEST_ELIGIBLE_FOR_RET','EOI_VIEWED_LOG',"VIEWER","VIEWED",$myDb,$profileid,$eoiviewlogStr);
+		retreiveFromTables('DELETED_EOI_VIEWED_LOG_ELIGIBLE_FOR_RET','EOI_VIEWED_LOG',"VIEWER","VIEWED",$myDb,$profileid,$eoiviewlogStr);
         }
 }
 /****  Transaction for all 3 shards started here.We will commit all three shards together. ****/
