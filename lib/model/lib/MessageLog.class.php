@@ -31,7 +31,7 @@ class MessageLog
         return $messageCount;
     }
     
-    public function getMessageLogContactCount($where, $group = '', $select = '', $skipProfile = '')
+    public function getMessageLogContactCount($where, $group = '', $select = '', $skipProfile = '',$considerProfile='')
     {
         if (!$where["RECEIVER"] && !$where["SENDER"]) {
             throw new jsException("", "No Sender or reciever is specified in funcion getContactsCount OF Contacts.class.php");
@@ -43,7 +43,7 @@ class MessageLog
         }
         $dbName        = JsDbSharding::getShardNo($profileid);
         $messageLogObj = new newjs_MESSAGE_LOG($dbName);
-        $count         = $messageLogObj->getMessageLogCount($where, $group, $select, $skipProfile);
+        $count         = $messageLogObj->getMessageLogCount($where, $group, $select, $skipProfile,$considerProfile);
         
         return $count;
     }
@@ -131,7 +131,7 @@ class MessageLog
 		}
 		return $message;
 	}
-	public function getMessageListing($loginProfile,$condition,$skipArray)
+	public function getMessageListing($loginProfile,$condition,$skipArray='',$inArray='')
 	{
 		$dbName = JsDbSharding::getShardNo($loginProfile);
 
@@ -146,7 +146,10 @@ class MessageLog
 		else
 		{
 			$messageLogObj = new NEWJS_MESSAGE_LOG($dbName);
-			$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
+			if(InboxEnums::$messageLogInQuery)
+				$profileArray = $messageLogObj->getMessageListing($condition,'',$inArray);
+			else
+				$profileArray = $messageLogObj->getMessageListing($condition,$skipArray);
                         if(!array_key_exists("pageNo", $condition))
                             JsMemcache::getInstance()->set($memccKey,$profileArray);
 		}

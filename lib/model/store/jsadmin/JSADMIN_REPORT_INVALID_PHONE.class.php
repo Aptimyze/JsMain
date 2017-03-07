@@ -210,5 +210,59 @@ public function updateAsVerified($submittee){
     
     }
 
+ public function getReportInvalidCountSubmitter($profileId,$startDate,$endDate)
+    {
+       try     
+        {   
+
+
+                        if(!($profileId) || !($startDate) || !($endDate))
+                            throw new jsException("","profileId IS not passed or blank, check for start and end dates as well ");
+
+                    $sql = 'SELECT count(1) AS CNT
+                        FROM jsadmin.REPORT_INVALID_PHONE
+                        WHERE DATE( `SUBMIT_DATE` ) BETWEEN :ENDDATE and :STARTDATE 
+                        AND SUBMITTER = :PROFILEID';
+                        $prep = $this->db->prepare($sql);
+                        
+                        $prep->bindValue(":STARTDATE", $startDate, PDO::PARAM_STR);  
+                        $prep->bindValue(":ENDDATE", $endDate, PDO::PARAM_STR);
+                        $prep->bindValue(":PROFILEID", $profileId, PDO::PARAM_STR);
+                        $prep->execute();
+                        if($row=$prep->fetch(PDO::FETCH_ASSOC))   
+                            $output=$row['CNT'];
+                        return $output;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
+
+public function entryExistsForPair($submitter,$submittee)
+    {
+        try     
+        {  
+            $sql = "SELECT count(1) AS CNT from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :SUBMITTEE AND SUBMITTER = :SUBMITTER";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":SUBMITTEE",$submittee,PDO::PARAM_INT);
+            $prep->bindValue(":SUBMITTER",$submitter,PDO::PARAM_INT);
+            $prep->execute();
+
+            $result = 0;
+
+            if($row=$prep->fetch(PDO::FETCH_ASSOC))
+            $result = $row['CNT'];
+
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    } 
+
 }
 ?>    

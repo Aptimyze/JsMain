@@ -22,7 +22,7 @@ $sql="TRUNCATE TABLE test.$inactiveRecordTable";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
 
-$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE LAST_LOGIN_DT BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate'";
+$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate'";
 //$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE LAST_LOGIN_DT < '$inactivityDate'";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);

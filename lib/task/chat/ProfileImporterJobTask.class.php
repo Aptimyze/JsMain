@@ -110,7 +110,7 @@ EOF;
         $time = new DateTime();
         $time->sub(date_interval_create_from_date_string($lastLoginWithIn));
         
-        $whereCndArray= array('LAST_LOGIN_DT'=>$time->format('Y-m-d'));
+        $whereCndArray= array('LAST_LOGIN_DT'=> CommonUtility::makeTime($time->format('Y-m-d')));
         if($this->m_bDebugInfo)
         {
             $this->logSection('DebugInfo: Where Cond on last login date', $whereCndArray['LAST_LOGIN_DT']);

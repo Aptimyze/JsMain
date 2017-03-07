@@ -63,8 +63,22 @@
             </div>
           </div>
         </div>
+        <!-- Start: Caste No Bar -->
+     
+      <div class="mt10 clearfix f14 fontlig" id="casteNoBarDiv">
+        <div class="reg-wid3 fr">
+          <div class="disp_ib">
+            <input type="checkbox" id="caste_no_bar"/>
+          </div>
+          <div class="disp_ib colr4 opa80 fontreg">
+            I am open to marry people of all castes(Caste no bar)
+          </div>
+        </div>
+      </div>
+      <!-- End: Caste No Bar -->
       </div>
       <!--end:Caste--> 
+      
       <!--start:subCaste-->
       <div class="mt7 disp-none" id="subcaste_selector">
         <!--start:error div-->

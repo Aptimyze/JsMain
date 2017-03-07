@@ -787,7 +787,7 @@ die;
 	*/
 	public static function checkChatPanelCondition($loggedIn,$module, $action,$activated){
 		$chatNotAvailModuleArr = ["membership","register","phone","social","settings"];
-        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp"];
+        $chatNotAvailActioneArr = ["phoneVerificationPcDisplay","page500","404","dpp","ApiMembershipDetailsV3"];
 		$showChat = 1;
 		if(!$loggedIn){
 			$showChat = 0;
@@ -909,6 +909,31 @@ die;
 		}
 	}
 
+	public static function makeTime($date, $format = 'YYYY-MM-DD')
+	{
+		$value = CommonUtility::datetotime($date, $format);
+		$time = mktime(date('H'), date('i'), date('s'), $value["month"], $value["day"], $value["year"]);
+		return date("Y-m-d H:i:s", $time);
+	}
+
+	public static function datetotime ($date, $format = 'YYYY-MM-DD')
+	{
+		if ($format == 'YYYY-MM-DD') list($year, $month, $day) = explode('-', $date);
+		if ($format == 'YYYY/MM/DD') list($year, $month, $day) = explode('/', $date);
+		if ($format == 'YYYY.MM.DD') list($year, $month, $day) = explode('.', $date);
+
+		if ($format == 'DD-MM-YYYY') list($day, $month, $year) = explode('-', $date);
+		if ($format == 'DD/MM/YYYY') list($day, $month, $year) = explode('/', $date);
+		if ($format == 'DD.MM.YYYY') list($day, $month, $year) = explode('.', $date);
+
+		if ($format == 'MM-DD-YYYY') list($month, $day, $year) = explode('-', $date);
+		if ($format == 'MM/DD/YYYY') list($month, $day, $year) = explode('/', $date);
+		if ($format == 'MM.DD.YYYY') list($month, $day, $year) = explode('.', $date);
+
+		$result = array("day" => $day, "month" => $month, "year" => $year);
+		return $result;
+	}
+
 	public static function hideFeaturesForUptime(){
 		
 		if(in_array(date('H'),array("10","11","12","13")))
@@ -927,10 +952,10 @@ die;
 		$redirectUrl = "";
 		$loginData = $request->getAttribute("loginData");
         $authchecksum = $request->getcookie('AUTHCHECKSUM');
-        
-		if($request->getcookie("jeevansathi_hindi_site")=='Y'){
-			if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi")!='Y'){
-				@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/","jeevansathi.com");
+       
+		if($request->getcookie("jeevansathi_hindi_site_new")=='Y'){
+			if($request->getParameter('newRedirect') != 1 && $request->getcookie("redirected_hindi_new")!='Y'){
+				@setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
 				if(isset($_SERVER["REQUEST_URI"])){
 					$newRedirectUrl = JsConstants::$hindiTranslateURL.$_SERVER["REQUEST_URI"];
 					if(strpos($newRedirectUrl,"?") != false){
@@ -944,8 +969,8 @@ die;
 				}
 				return (JsConstants::$hindiTranslateURL."?AUTHCHECKSUM=".$authchecksum."&newRedirect=1");
 			}
-            else if($request->getcookie("redirected_hindi")=='Y'){
-				@setcookie('redirected_hindi', 'Y',time() + 10000000000, "/","jeevansathi.com");
+            else if($request->getcookie("redirected_hindi_new")=='Y'){
+				@setcookie('redirected_hindi_new', 'Y',time() + 10000000000, "/","jeevansathi.com");
                 //redirect to hindi site if referer is blank and newRedirect is not set
                 if(!isset($_SERVER['HTTP_REFERER']) && $request->getParameter('newRedirect') != 1){
                 	$newRedirectUrl = JsConstants::$hindiTranslateURL;
@@ -963,12 +988,12 @@ die;
                 }
             }
 		} else {
-			if($request->getcookie("redirected_hindi")=='Y'){
-				@setcookie('redirected_hindi', 'N', 0, "/","jeevansathi.com");
+			if($request->getcookie("redirected_hindi_new")=='Y'){
+				@setcookie('redirected_hindi_new', 'N', 0, "/","jeevansathi.com");
 				return (JsConstants::$siteUrl.'?AUTHCHECKSUM='.$authchecksum);	
 			}
 			else{
-				@setcookie('redirected_hindi', 'N', 0, "/","jeevansathi.com");
+				@setcookie('redirected_hindi_new', 'N', 0, "/","jeevansathi.com");
 			}
 		}
 		return $redirectUrl;

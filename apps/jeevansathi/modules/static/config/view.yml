@@ -232,6 +232,31 @@ deleteOptionSuccess:
    javascripts: []
    layout: jsmsMobLayout 
 
+hideOptionSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: []
+   layout: jsmsMobLayout 
+
+unHideOptionSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: [jsms/settings/mobHideProfile_js]
+   layout: jsmsMobLayout
+
+unHideResultSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: []
+   layout: jsmsMobLayout 
+
+hideCheckPasswordSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: [jsms/settings/mobHideProfile_js]
+   layout: jsmsMobLayout 
+
+hideDurationSuccess:
+   stylesheets: [-*,jsms/settings/settings_css]
+   javascripts: []
+   layout: jsmsMobLayout
+
 deleteReasonSuccess:
    stylesheets: [-*,jsms/settings/settings_css]
    javascripts: [jsms/settings/mobDeleteProfile_js]

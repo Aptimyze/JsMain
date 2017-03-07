@@ -24,9 +24,18 @@ class FormatNotification
 		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_REQUEST_ANDROID;
 	if($details['NOTIFICATION_KEY']=='PHOTO_UPLOAD')
 		$dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_ANDROID;
-    if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
+    	if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
 		$dataArray['STYPE'] =SearchTypesEnums::AndroidMatchOfDay;
-    
+
+        if($details['NOTIFICATION_KEY']=='MATCHALERT')
+                $dataArray['STYPE'] =SearchTypesEnums::MATCHALERT_ANDROID;
+        if($details['NOTIFICATION_KEY']=='JUST_JOIN')
+                $dataArray['STYPE'] =SearchTypesEnums::JUST_JOIN_ANDROID;
+        if($details['NOTIFICATION_KEY']=='PENDING_EOI')
+                $dataArray['RTYPE'] =JSTrackingPageType::PENDING_EOI_ANDROID;
+        if($details['NOTIFICATION_KEY']=='FILTERED_EOI')
+                $dataArray['RTYPE'] =JSTrackingPageType::FILTERED_EOI_ANDROID;
+
 	return $dataArray;
     }
     public static function formaterForIos($details)
@@ -38,6 +47,18 @@ class FormatNotification
                 $dataArray['STYPE'] =SearchTypesEnums::PHOTO_UPLOAD_IOS;
         if($details['NOTIFICATION_KEY']=='MATCH_OF_DAY')
                 $dataArray['STYPE'] =SearchTypesEnums::IOSMatchOfDay;
+
+	/*
+        if($details['NOTIFICATION_KEY']=='MATCHALERT')
+                $dataArray['STYPE'] =SearchTypesEnums::MATCHALERT_IOS;
+        if($details['NOTIFICATION_KEY']=='JUST_JOIN')
+                $dataArray['STYPE'] =SearchTypesEnums::JUST_JOIN_IOS;
+        if($details['NOTIFICATION_KEY']=='PENDING_EOI')
+                $dataArray['RTYPE'] =JSTrackingPageType::PENDING_EOI_IOS;
+        if($details['NOTIFICATION_KEY']=='FILTERED_EOI')
+                $dataArray['RTYPE'] =JSTrackingPageType::FILTERED_EOI_IOS;
+	*/
+
         return $dataArray;
     }
 

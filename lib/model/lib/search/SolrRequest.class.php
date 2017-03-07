@@ -177,12 +177,12 @@ class SolrRequest implements RequestHandleInterface
 	*/	
 	public function sendCurlPostRequest($urlToHit,$postParams)
 	{
-		$start = strtotime("now");
+		$start = microtime(TRUE);
                 if(php_sapi_name() === 'cli')
                     $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams);
                 else
                     $this->searchResults = CommonUtility::sendCurlPostRequest($urlToHit,$postParams,$this->solrCurlTimeout);
-                $end= strtotime("now");
+                $end= microtime(TRUE);
                 $diff = $end - $start;
                 if($diff > 2 ){
                         //$fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold".date('Y-m-d-h').".txt";
@@ -307,7 +307,7 @@ class SolrRequest implements RequestHandleInterface
 							$valGroup = $this->searchParamtersObj->getOCCUPATION_GROUPING();
 							$solrFormatValueGroup = str_replace(","," ",$valGroup);
 							$solrFormatValueGroup = str_replace("','"," ",$solrFormatValueGroup);
-							$this->specialCases($field,$solrFormatValue,'occupation,occuapation_grouping','OCCUPATION','OCCUPATION_GROUPING',$solrFormatValueGroup);
+							$this->specialCases($field,$solrFormatValue,'occupation,occupation_grouping','OCCUPATION','OCCUPATION_GROUPING',$solrFormatValueGroup);
 						}
 						elseif(strstr($field,'EDU'))
 						{

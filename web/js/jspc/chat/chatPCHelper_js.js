@@ -1980,7 +1980,7 @@ $(document).ready(function () {
                 
 		 
 		        if(response.header.status == 200) { 
-			         for(var i=0;i<response.data.items.length;i++) {
+                                for(var i=0;i<response.data.items.length;i++) {
     				    var data = response.data.items[i];
     		
     				    data.jid = data.profileid;
@@ -2003,7 +2003,11 @@ $(document).ready(function () {
     	
         	                }); 
         			}
-		        } else {
+                    //send the contact engine buttons check stanza
+                    if(chatConfig.Params[device].enableLoadTestingStanza == true){
+                        strophieWrapper.sendContactStatusRequest(username+"@"+openfireServerName,"check");
+                    }
+                } else {
 			         checkForSiteLoggedOutMode({"responseStatusCode":9});
 		        }
             }

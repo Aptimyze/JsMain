@@ -883,6 +883,28 @@ strophieWrapper.sendPresence();
         }
         return outputObj;
     },
+
+    //send websocket stanza to check contact status between logged in user and viewed user
+    sendContactStatusRequest:function(to,msg_type){
+        try {
+            if (to && strophieWrapper.getCurrentConnStatus()) {
+                var checkStanza;
+                checkStanza = $msg({
+                    from: strophieWrapper.getSelfJID(),
+                    to: to,
+                    type: 'chat',
+                    id:strophieWrapper.getUniqueId()
+                    }).c('msg_type',{xmlns:"http://www.jeevansathi.com/message_type",type:msg_type},msg_type).c('active', {
+                        xmlns: "http://jabber.org/protocol/chatstates"
+                });
+                //console.log(checkStanza);
+                strophieWrapper.connectionObj.send(checkStanza);
+            }
+        } catch (e) {
+            console.log("exception-"+e);
+        }
+    },
+
     getUniqueId: function (suffix) {
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0,

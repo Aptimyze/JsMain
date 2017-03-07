@@ -696,7 +696,7 @@ if($Submit)
 		if($tieup_source=="")
 			$tieup_source="IP";
 			
-		$today=date("Y-m-d");
+		$today=date("Y-m-d H:i:s");
 
 
 		if($Country_Residence==51)

@@ -9,7 +9,7 @@ $db2=connect_slave81();
 $ts=time();
 $ts-=24*60*60;
 $today=date("Y-m-d",$ts);
-$sql="SELECT COUNT(*) as cnt FROM newjs.JPROFILE WHERE LAST_LOGIN_DT='$today'";
+$sql="SELECT COUNT(*) as cnt FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT)='$today'";
 $res=mysql_query($sql,$db2) or logError($sql,$db2);
 $row=mysql_fetch_array($res);
 $cnt=$row['cnt'];

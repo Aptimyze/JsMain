@@ -73,5 +73,10 @@ class SkipArrayCondition {
 									ContactHandler::ACCEPT,
 									ContactHandler::CANCEL_CONTACT),
 						"IGNORE");
+	public static $MESSAGE_CONSIDER = array (
+							"CONTACT"=>array(
+										ContactHandler::ACCEPT
+									)
+						);
 									
 }

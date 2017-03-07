@@ -1212,6 +1212,10 @@ class InboxMobileAppV2
          
            
 	private function getTracking($infoType){
+		if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
+		{
+		return "responseTracking=".$rtype;
+		}
 		if(sfContext::getInstance()->getRequest()->getParameter("myjs"))
 		{
 			$trackingMap=array(

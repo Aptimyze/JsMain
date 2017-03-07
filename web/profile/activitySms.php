@@ -47,7 +47,7 @@ if($count){
 	$activityCount = 0;
 	$totalChunks=ceil($count/$chunk);
 }else{
-	$sql_a = "SELECT PROFILEID, USERNAME, PHONE_MOB, SUBSCRIPTION, LAST_LOGIN_DT FROM JPROFILE WHERE LAST_LOGIN_DT>='$back_90_days' AND ACTIVATED='Y' AND COUNTRY_RES='51' AND SERVICE_MESSAGES!='U' AND GET_SMS!='N' AND PHONE_MOB!='' AND MOB_STATUS='Y' and   activatedKey=1 ";
+	$sql_a = "SELECT PROFILEID, USERNAME, PHONE_MOB, SUBSCRIPTION, DATE(LAST_LOGIN_DT) LAST_LOGIN_DT FROM JPROFILE WHERE DATE(LAST_LOGIN_DT)>='$back_90_days' AND ACTIVATED='Y' AND COUNTRY_RES='51' AND SERVICE_MESSAGES!='U' AND GET_SMS!='N' AND PHONE_MOB!='' AND MOB_STATUS='Y' and   activatedKey=1 ";
 	$res_a=mysql_query($sql_a,$db_slave) or die(trackSmsError($sql_a, $db_slave, "AS_LOGIN"));
 	$count_a = mysql_num_rows($res_a);
 	$totalChunks_a=ceil($count_a/$chunk);

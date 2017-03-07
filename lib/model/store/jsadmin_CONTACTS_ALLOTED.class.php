@@ -47,19 +47,34 @@ class jsadmin_CONTACTS_ALLOTED extends TABLE {
             throw new jsException($e);
         }
     }
-    public function getRemainingContactsForProfile($profileId)
+    public function getRemainingContactsForProfile($profileId,$extraFields="")
     {
         try
         {
-            $sql = "SELECT ALLOTED-VIEWED AS REMAINING FROM jsadmin.CONTACTS_ALLOTED WHERE PROFILEID=:PROFILEID AND ALLOTED>=VIEWED";
+            $sql = "SELECT ALLOTED-VIEWED AS REMAINING";
+            if($extraFields != ""){
+                $sql = $sql.",".$extraFields;
+            }
+            $sql = $sql." FROM jsadmin.CONTACTS_ALLOTED WHERE PROFILEID=:PROFILEID AND ALLOTED>=VIEWED";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFILEID",$profileId,PDO::PARAM_INT);
             $prep->execute();
             if($result = $prep->fetch(PDO::FETCH_ASSOC))
             {
+                if($extraFields != ""){
+                    return $result;
+                }
                 return ($result['REMAINING']);
             }
-            else return 0;
+            else{
+                if($extraFields != ""){
+                    return array("REMAINING"=>0,"ALLOTED"=>0);
+                }
+                else{
+                    return 0;
+                }
+               
+            }
         }
         catch (PDOException $e)
         {
