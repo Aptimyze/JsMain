@@ -197,12 +197,14 @@ EOF;
 								$this->setExceptionError($ex);
 							}
 						}
+                                                ProfileMemcache::unsetInstance($receiverId);
 						$contactEngineObj=null;
 						if($limit <= $limitCounter)
 							break;
                                             }
                                         }
 				}
+			ProfileMemcache::unsetInstance($senderId);
 			catch(Exception $ex)
 			{
 				$this->setExceptionError($ex);
