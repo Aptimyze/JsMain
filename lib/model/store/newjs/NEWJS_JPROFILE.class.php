@@ -1724,6 +1724,48 @@ SQL;
             throw new jsException($e);
         }
     }
+
+    public function getZombieProfiles($gtDate,$limit=0,$ltDate=null) 
+    {
+        try{
+            $sql =  <<<SQL
+        
+            SELECT P.PROFILEID
+            FROM  newjs.`JPROFILE` P
+            LEFT JOIN newjs.`NEW_DELETED_PROFILE_LOG` D
+            ON P.PROFILEID=D.PROFILEID
+            WHERE  
+            P.ACTIVATED = 'D'
+            AND P.activatedKey = 0
+            AND P.MOD_DT > :GT_DATE
+            AND D.PROFILEID IS NULL
+SQL;
+        
+            if($ltDate) {
+                $sql .= " AND P.MOD_DT < :LT_DATE";  
+            }
+
+            if($limit) {
+                $sql .= " LIMIT :LIMIT";      
+            }
+
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":GT_DATE", $gtDate, PDO::PARAM_STR);
+            
+            if($ltDate) {
+                $prep->bindValue(":LT_DATE", $ltDate, PDO::PARAM_STR);
+            }
+
+            if($limit) {
+                $prep->bindValue(":LIMIT", $limit, PDO::PARAM_INT);   
+            }
+
+            $prep->execute();
+            return $prep->fetchAll(PDO::FETCH_ASSOC);
+        }catch(Exception $ex) {
+            throw new jsException($e);   
+        }
+    }
 }
 
 ?>

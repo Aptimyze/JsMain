@@ -1294,9 +1294,9 @@ class DetailedViewApi
 		
 		//Response Tracking
 		$this->m_arrOut['responseTracking'] = $actObj->responseTracking;
-		$gtalkOnline = $this->m_actionObject->GTALK_ONLINE;
+		//$gtalkOnline = $this->m_actionObject->GTALK_ONLINE;
     	$isOnline = $this->m_actionObject->ISONLINE;
-    	if($gtalkOnline || $isOnline)
+    	if($isOnline) // this part was removed -> $gtalkOnline || 
     		$this->m_arrOut["userloginstatus"] = "Online now";
     
     

@@ -17,7 +17,7 @@ EOF;
 
   protected function execute($arguments = array(), $options = array())
   {
-    $currdate = date('Y.m.d', strtotime( '-8 days' ));
+    $currdate = date('Y-m-d', strtotime( '-8 days' ));
     // Server at which ElasticSearch and kibana is running
     $elkServer = KibanaEnums::ELK_SERVER;
     $elkPort = KibanaEnums::ELASTIC_PORT;

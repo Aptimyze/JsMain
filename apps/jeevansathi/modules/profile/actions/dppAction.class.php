@@ -277,10 +277,10 @@ class dppAction extends sfAction {
 		}
 		$this->staticFields["age"] = $this->alterAgeArray();
 		$this->staticFields["height_json"] = $this->orderHeightValues();
-                $this->staticFields["p_mstatus"] = $this->updateMStatus($this->staticFields["p_mstatus"]);
+                $this->staticFields["p_mstatus"] = $this->updateMStatus($this->staticFields["p_mstatus"]);		
 		foreach($this->staticFields as $k=>$v)
 		{
-			if($v[0][0][0]=="Select")
+			if($v[0][0][0]=="Select" || $v[0][0]["S0"]=="Select")
 			{
 				unset($this->staticFields[$k][0][0]);
 			}

@@ -448,8 +448,8 @@ public function fetchProfiles($processObj)
                                 else{
                                         $screeningLogObj =new jsadmin_SCREENING_LOG('newjs_masterRep');
 					$screenedTimeEnd =$screeningLogObj->getScreenedMaxDate();
-					$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($screenedTimeEnd)));
-					$processObj->setEndDate($screenedTimeEndSet);
+					//$screenedTimeEndSet =date('Y-m-d H:i:s', strtotime('-3 hours',strtotime($screenedTimeEnd)));
+					$processObj->setEndDate($screenedTimeEnd);
 					$profiles =$screeningLogObj->getLastHourScreenedProfiles($screenedTimeStart,$screenedTimeEnd);
 				}
 				if(count($profiles)>0){
