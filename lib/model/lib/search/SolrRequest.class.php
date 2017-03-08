@@ -74,10 +74,15 @@ class SolrRequest implements RequestHandleInterface
 			$pid = str_replace(' ','',$pid);
 			$pid = str_replace(',',' ',$pid);
 		}
-		$url = JsConstants::$solrServerUrl."update";
-		$post = "stream.body=<delete><query>id:(".$pid.")</query></delete>&commit=true";
-		$this->sendCurlPostRequest($url,$post);
-		//print_r($this->searchResults);
+                $post = "stream.body=<delete><query>id:(".$pid.")</query></delete>&commit=true";
+                foreach(JsConstants::$solrServerUrls as $key=>$solrUrl){
+                        $index = array_search($solrUrl, JsConstants::$solrServerUrls);
+                        if($index == $key && $solrUrl == JsConstants::$solrServerUrls[$index]){
+                                $url = $solrUrl."/update";
+                                $this->sendCurlPostRequest($url,$post);
+                        }
+                }
+		//print_r($this->searchResults);die;
 		$this->responseObj->getFormatedResults($this->searchResults); // ????????
 	}
 	
