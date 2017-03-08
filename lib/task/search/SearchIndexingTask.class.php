@@ -43,6 +43,8 @@ EOF;
 
                 if($type=='EXPORT' || $type == 'DELTA')
                 {
+                        $php5 = JsConstants::$php5path;
+                        $cronDocRoot = JsConstants::$cronDocRoot;
                         if($type=='EXPORT'){
                                 $import = "full-import";
                                 if($this->isPost == 1){
