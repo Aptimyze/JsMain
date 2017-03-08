@@ -36,11 +36,13 @@ class MyJsMobileAppV1
     	}
 
 	public function getProfilePicAppV1($profileObj)
-	{
+	{   
 		$pictureService = new PictureService($profileObj);
 	        $profilePicObj = $pictureService->getProfilePic();
+
 		if($profilePicObj)
 			$myPic = $profilePicObj->getThumbailUrl();
+		//die('hjhj');
         if(!$myPic)
 		{
 			 if($pictureService->isProfilePhotoUnderScreening() =="Y")
@@ -48,7 +50,7 @@ class MyJsMobileAppV1
 			else
 				$myPic = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
 		}
-
+   		
 		if (MobileCommon::isApp()=='A') 
 			$myPic=PictureFunctions::mapUrlToMessageInfoArr($myPic,"ThumbailUrl","",$profileObj->getGENDER());
 		if (MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I') 
@@ -218,19 +220,65 @@ $className = get_class($this);
         }
 
 
-private function getBannerMessage($profileInfo) {    
+private function getBannerMessage($profileInfo) {   
+   		//die('there');
 				$MESSAGE=NULL;
+				$profileObj=LoggedInProfile::getInstance('newjs_master');
 				$request = sfContext::getInstance()->getRequest();
 				$memHandlerObj = new MembershipHandler();
         	  	$apiAppVersion = $request->getParameter('API_APP_VERSION');
         			if(!empty($apiAppVersion) && is_numeric($apiAppVersion)){
         				$memMessage = $memHandlerObj->fetchMembershipMessage($request,$apiAppVersion);
         				if ($apiAppVersion<21) return $memMessage['membership_message']; // for backward compatibility of Android App
-        			} else {
+        			} else {  
+        				$memCacheObject = JsMemcache::getInstance();
+        				$profileId = $profileObj->getPROFILEID();
+        				$redisKeyBanner = $memCacheObject->keyExist($profileId.'_MESSAGE_BANNER');
+
+        				if($redisKeyBanner)
+        				{  	
+        					$top = $memCacheObject->getHashOneValue($profileId.'_MESSAGE_BANNER','top');
+        					$bottom = $memCacheObject->getHashOneValue($profileId.'_MESSAGE_BANNER','bottom');
+        					$pgId = $memCacheObject->getHashOneValue($profileId.'_MESSAGE_BANNER','pageId');
+        					// print_r($profileId.'_MESSAGE_BANNER');
+        					// print_r($top); die('aaa');
+        					$memMessage = '';
+
+        					if($top){
+        					$memMessage['membership_message']['top'] = $top;
+        					}
+        					if($bottom)
+        					{	
+        					$memMessage['membership_message']['bottom'] = $bottom;
+        					}
+        					if($pgId)
+        					{	
+        					$memMessage['membership_message']['pageId'] = $pgId;
+        					}
+
+        				}
+        				else
+        				{  
         				$memMessage = $memHandlerObj->fetchMembershipMessage($request);
+
+        					$arr['top'] = '';
+        					$arr['bottom'] = '';
+        					$arr['pageId'] = '';
+
+        				if(is_array($memMessage['membership_message'])){
+        					foreach ($memMessage['membership_message'] as $key => $value) {
+        						$arr[$key] = $value;
+        					}
+        				}
+
+        				$memCacheObject->setHashObject($profileId.'_MESSAGE_BANNER',$arr);
+        				}
+
+        				
         			}
-			
-	$profileObj=LoggedInProfile::getInstance('newjs_master');
+
+			 print_r($memMessage); die('hahahah');
+
 
 	switch(true){
 
@@ -260,7 +308,10 @@ private function getBannerMessage($profileInfo) {
 				$MESSAGE['pageId'] = '3';
         	 break;
 						}
+  // print_r($MESSAGE);
+  // die('here');			
 	return $MESSAGE;					
+
 
 
         		}        
