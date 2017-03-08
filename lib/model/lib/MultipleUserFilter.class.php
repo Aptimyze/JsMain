@@ -90,7 +90,7 @@ class MultipleUserFilter
 		}
                 
                 elseif($fieldName == "CITY_RES"){
-                        if($this->viewedDppArr[$viewedId]['STATE'] != ""){
+                        if($this->viewedDppArr[$viewedId]['STATE'] != "" && $this->viewerParameters['COUNTRY_RES']=='51'){
                             $citiesOfState = CommonFunction::getCitiesForStates($this->viewedDppArr[$viewedId]['STATE']);
                         }
                         if($this->viewedFilterParameters[$viewedId][$fieldName] == 'N' || $this->viewedFilterParameters[$viewedId][$fieldName] == '' || (!is_array($this->viewedDppArr[$viewedId][$fieldName]) && !$citiesOfState) || ($this->viewedFilterParameters[$viewedId][$fieldName] == 'Y'  && is_array($this->viewedDppArr[$viewedId][$fieldName])  && (in_array($this->viewerParameters[$fieldName],$this->viewedDppArr[$viewedId][$fieldName]) || ($citiesOfState && in_array($this->viewerParameters[$fieldName],$citiesOfState)))) || ($this->viewedFilterParameters[$viewedId][$fieldName] == 'Y' && $this->viewedDppArr[$viewedId][$fieldName][0] == '' && !$citiesOfState))
