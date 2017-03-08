@@ -4,7 +4,7 @@
 	*/
 	class KibanaEnums
 	{
-		const ELK_SERVER = 'elkjs.infoedge.com';
+		const ELK_SERVER = 'elkjs.js.jsb9.net';
 		const ELASTIC_PORT = '9200';
 		const KIBANA_PORT = '5601';
 		const FILEBEAT_INDEX = 'filebeat-';
