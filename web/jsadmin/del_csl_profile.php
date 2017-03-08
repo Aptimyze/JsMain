@@ -82,7 +82,22 @@ if(authenticated($cid))
 				$details=explode(":",$users_arr[$count]);
 				$profile=$details[0];
 				$username=$details[1];
-				/*$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
+
+				$profileDeleteObj = new PROFILE_DELETE_LOGS();
+				$startTime = date('Y-m-d H:i:s');
+		      	$arrDeleteLogs = array(
+		          'PROFILEID' => $profile,
+		          'DELETE_REASON' => $reason,
+		          'SPECIFY_REASON' => $comments,
+		          'USERNAME'  => $username,
+		          'CHANNEL' => 'back(del_csl)',
+		          'START_TIME' => $startTime,
+		          'INTERFACE' => 'B',
+		      );
+
+		      $profileDeleteObj->insertRecord($arrDeleteLogs);
+		      
+						/*$sql2="UPDATE newjs.JPROFILE set PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0 where PROFILEID=$profile";
 				mysql_query_decide($sql2) or die(logError($sql2,$db));*/
 	                        $extraStr ="PREACTIVATED=IF(ACTIVATED<>'H',if(ACTIVATED<>'D',ACTIVATED,PREACTIVATED),PREACTIVATED), ACTIVATED='D',activatedKey=0";
         	                $jprofileObj->updateJProfileForBilling('',$profile,'PROFILEID',$extraStr);
@@ -102,6 +117,12 @@ if(authenticated($cid))
                         //$cmd = "php -q ".$path;
                         passthru($cmd);
 			$err="Selected profile(s) have been deleted";
+
+			$arrDeleteLogs = array(
+        'END_TIME' => date('Y-m-d H:i:s'),
+        'COMPLETE_STATUS' => 'Y',
+    );
+    $profileDeleteObj->updateRecord($profile, $startTime, $arrDeleteLogs);
 			
 		}
 		else
