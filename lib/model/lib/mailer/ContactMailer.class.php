@@ -318,6 +318,10 @@ class ContactMailer
 	$tpl->getSmarty()->assign("RECEIVER_IS_PAID", $subscriptionStatus);
 	$tpl->getSmarty()->assign("profileid", $receiver->getPROFILEID());
 	$tpl->getSmarty()->assign("otherProfileId", $sender->getPROFILEID());
+        $name = (new NameOfUser())->getNameData($sender->getPROFILEID());
+        $nameOfUser = is_array($name[$sender->getPROFILEID()]) ? $name[$sender->getPROFILEID()]['NAME'] : $sender->getUSERNAME(); 
+        $tpl->setSubject($nameOfUser." who had sent interest has uploaded a new photo");
+        
 
 	if(!empty($variableDiscount))
 	{
