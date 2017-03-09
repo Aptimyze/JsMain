@@ -709,7 +709,7 @@ class ProfileCacheLib
      * @param type $fields
      * @param type $storeName
      */
-    public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="")
+    public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="", $setForMultipleKeys)
     {
       if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
            return false;
@@ -727,10 +727,26 @@ class ProfileCacheLib
         
         //Get Records from Cache
         $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
-        
         //Check data
-        if(false === $this->checkMulipleDataAvailability($arrResponse, $arrFields)) {
-          return false;
+        if(false === $this->checkMulipleDataAvailability($arrResponse, $arrFields))
+        {
+          if($setForMultipleKeys)
+          {
+            $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
+            $cachedPids = array_diff($arrKey, $arrPids);
+            $cachedResult = $this->getForMultipleKeys($criteria, $cachedPids, $fields, $storeName);
+
+            // call mysql for arrPids get result
+            $valueArray['PROFILEID'] = $arrPids;
+            $storeResult = $this->cacheMultipleFromMysql($criteria, $valueArray, $fields);
+            // merge this result with the available results
+            var_dump($arrPids);
+            return $arrPids;
+          }
+          else
+          {
+            return false;
+          }
         }
         
         //Remove Duplicate Suffix
@@ -771,6 +787,7 @@ class ProfileCacheLib
     { 
       foreach($arrData as $key=>$value)
       {
+        var_dump($key);
         if(in_array(ProfileCacheConstants::NOT_FILLED, $value)) {
             unset($arrData[$key]);
             continue;
@@ -993,6 +1010,59 @@ class ProfileCacheLib
         $this->calculateResourceUsages($stTime,'HDEL : '," for key {$key}");
         
         return $bSuccess;
+    }
+
+    /**
+     * Returns an array of keys (profile ids) whose $arrFields(atleast one field) is 
+     * null.
+     * @param type $arrData
+     * @param type $arrFields
+     * @return array
+     */
+    private function getMulipleDataNotAvailabilityKeys(&$arrData, $arrFields)
+    { 
+      $arrPids = array();
+      foreach($arrData as $key=>$value)
+      {
+        if(in_array(ProfileCacheConstants::NOT_FILLED, $value)) {
+            unset($arrData[$key]);
+            continue;
+        }
+        if(false === $this->isDataExistInCache($value)) {
+          $profileId = $this->getPROFILEID($key);
+          array_push($arrPids, $profileId);
+        }
+      }
+      return $arrPids;
+    }
+
+    /**
+     * @param $decoratedKey
+     * @return string profile id
+     */
+    private function getPROFILEID($decoratedKey)
+    {
+      $prefix = self::KEY_PREFIX;
+      if (substr($decoratedKey, 0, strlen($prefix)) == $prefix)
+      {
+        $profileId = substr($decoratedKey, strlen($prefix));
+      }
+      return $profileId;
+    }
+
+    /**
+     * @param $szCriteria
+     * @param $key
+     * @param null $extraWhereCnd
+     * @return bool
+     */
+    private function cacheMultipleFromMysql($szCriteria, $valueArray, $fields)
+    {
+        $storeObj = NEWJS_JPROFILE::getInstance();
+        $arrData = $storeObj->getArray($valueArray, "", "", $fields);
+        var_dump($arrData);
+        // cache the result from store
+        return ;
     }
 }
 ?>

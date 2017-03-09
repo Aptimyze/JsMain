@@ -212,8 +212,11 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
-        if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID'])
+        $bServedFromCache = false;
+        if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID'] && $excludeArray == "" && $greaterThanArray == "")
         {
+            $valueArray['PROFILEID'] = '6773712, 6999918';
+            $setForMultipleKeys = 1;
             $arrPid = explode(',', $valueArray['PROFILEID']);
             if(count($arrPid) < 50)
             {
@@ -228,6 +231,25 @@ class JPROFILE
                 $countPid = 'gt100';
             }
             JsCommon::logFunctionCalling('Jprofile', 'getArray-'.$countPid);
+            $result = ProfileCacheLib::getInstance()->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__, $setForMultipleKeys);
+
+            // For a limit only
+            if(count($arrPid) < 50)
+            {
+                if($result && false !== $result)
+                {
+                    $bServedFromCache = true;
+                    $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                }
+                var_dump($result);
+                if($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE)
+                {
+                    return $result;
+                }
+
+                var_dump(self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText));
+            }
+            die(x);
         }
         return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
     }
