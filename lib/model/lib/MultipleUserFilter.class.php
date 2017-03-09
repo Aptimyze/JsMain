@@ -90,10 +90,11 @@ class MultipleUserFilter
 		}
                 
                 elseif($fieldName == "CITY_RES"){
-                        if($this->viewedDppArr[$viewedId]['STATE'] != "" && $this->viewerParameters['COUNTRY_RES']=='51'){
+                        if($this->viewedDppArr[$viewedId]['STATE'][0] != "" && $this->viewerParameters['COUNTRY_RES']=='51'){
                             $citiesOfState = CommonFunction::getCitiesForStates($this->viewedDppArr[$viewedId]['STATE']);
                         }
-                        if($this->viewedFilterParameters[$viewedId][$fieldName] == 'N' || $this->viewedFilterParameters[$viewedId][$fieldName] == '' || (!is_array($this->viewedDppArr[$viewedId][$fieldName]) && !$citiesOfState) || ($this->viewedFilterParameters[$viewedId][$fieldName] == 'Y'  && is_array($this->viewedDppArr[$viewedId][$fieldName])  && (in_array($this->viewerParameters[$fieldName],$this->viewedDppArr[$viewedId][$fieldName]) || ($citiesOfState && in_array($this->viewerParameters[$fieldName],$citiesOfState)))) || ($this->viewedFilterParameters[$viewedId][$fieldName] == 'Y' && $this->viewedDppArr[$viewedId][$fieldName][0] == '' && !$citiesOfState))
+                        $countryOtherThanIndia = $this->checkIfCountryOtherThanIndia($this->viewedDppArr[$viewedId]['COUNTRY_RES']);
+                        if($this->viewedFilterParameters[$viewedId][$fieldName] == 'N' || $this->viewedFilterParameters[$viewedId][$fieldName] == '' || (!is_array($this->viewedDppArr[$viewedId][$fieldName]) && !$citiesOfState) || ($this->viewedFilterParameters[$viewedId][$fieldName] == 'Y'  && is_array($this->viewedDppArr[$viewedId][$fieldName])  && (in_array($this->viewerParameters[$fieldName],$this->viewedDppArr[$viewedId][$fieldName]) || ($citiesOfState && in_array($this->viewerParameters[$fieldName],$citiesOfState)))) || ($this->viewedFilterParameters[$viewedId][$fieldName] == 'Y' && $this->viewedDppArr[$viewedId][$fieldName][0] == '' && !$citiesOfState) || $countryOtherThanIndia)
                           return 1;
                 }
 		else
@@ -186,5 +187,13 @@ class MultipleUserFilter
 			return array_unique($incomeArr);
 		
 	}
+        
+        private function checkIfCountryOtherThanIndia($countryArr) {
+            foreach ($countryArr as $key=>$val){
+                if($val != 51)
+                    return true;
+            }
+            return false;
+        }
 }
 ?>
