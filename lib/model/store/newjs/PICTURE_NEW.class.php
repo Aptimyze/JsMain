@@ -662,5 +662,36 @@ class PICTURE_NEW extends TABLE
 			 throw new jsException($e);
 		}
 	}
+
+	public function getMultiProfilesData($paramArr=array())
+	{
+
+                if(!is_array($paramArr['PROFILEID']))
+                        throw new jsException("","PROFILEID IS BLANK IN getMulti() of PICTURE_NEW.class.php");
+                try
+		{
+			foreach($paramArr['PROFILEID'] as $k=>$v)
+			{
+				$profileStr.="PROFILEID".$k;
+			}
+                        $sql = "SELECT * FROM newjs.PICTURE_NEW WHERE PROFILEID IN (.$profileStr.)";
+
+                        $res = $this->db->prepare($sql);
+			foreach($paramArr['PROFILEID'] as $k=>$v)
+                        	$res->bindValue(":PROFILEID", $v, PDO::PARAM_INT);
+                        $res->execute();
+                        while($row = $res->fetch(PDO::FETCH_ASSOC))
+                        {
+                                $detailArr[$row['PROFILEID']][$row['ORDERING']] = $row;
+                        }
+                        return $detailArr;
+                }
+                catch(PDOException $e)
+		{
+                        throw new jsException($e);
+                }
+                return NULL;
+	}
+	
 }
 ?>
