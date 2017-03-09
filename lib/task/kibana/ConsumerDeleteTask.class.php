@@ -8,7 +8,7 @@ class ConsumerDeleteTask extends sfBaseTask
     $this->name             = 'ConsumerIndexDelete';
     $this->briefDescription = 'Delete data from the consumer index';
     $this->detailedDescription = <<<EOF
-The [ConsumerDelete|INFO] task does things.
+The [kibana:ConsumerIndexDelete|INFO] task does things.
 Call it with:
 
   [php symfony kibana:ConsumerIndexDelete|INFO]
@@ -19,9 +19,9 @@ EOF;
   {
     $currdate = date('Y-m-d', strtotime( '-8 days' ));
     // Server at which ElasticSearch and kibana is running
-    $elkServer = '10.10.18.66';
-    $elkPort = '9200';
-    $indexName = "consumer-$currdate";
+    $elkServer = JsConstants::$kibana['ELK_SERVER'];
+    $elkPort = JsConstants::$kibana['ELASTIC_PORT'];
+    $indexName = KibanaEnums::$CONSUMER_INDEX.$currdate;
     passthru("curl -XDELETE 'http://$elkServer:$elkPort/$indexName/'");
   }
 }
