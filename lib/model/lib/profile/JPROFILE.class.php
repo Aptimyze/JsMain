@@ -216,7 +216,7 @@ class JPROFILE
         if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID'] && $excludeArray == "" && $greaterThanArray == "")
         {
             // todo: testing
-            $valueArray['PROFILEID'] = '6773712, 6999918, 658';
+            // $valueArray['PROFILEID'] = '6773712, 6999918, 658';
             $getForPartialkeys = true;
             $arrPid = explode(',', $valueArray['PROFILEID']);
             if(count($arrPid) < 50)
