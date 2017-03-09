@@ -20,7 +20,7 @@
                 <td><var>{{AGE:profileid=~$userProfileId`}}</var> yrs; <var>{{HEIGHT:profileid=~$userProfileId`}}</var></td>
             </tr>
             <tr>
-                <td><var>{{RELIGION_CASTE_VALUE_TEMPLATE_2:profileid=~$userProfileId`}}</var></td>
+                <td><var>{{RELIGION_CASTE_VALUE_TEMPLATE:profileid=~$userProfileId`}}</var></td>
             </tr>
             <tr>
                 <td><var>{{MTONGUE_SMALL:profileid=~$userProfileId`}}</var></td>
