@@ -212,9 +212,23 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
-      if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID']) {      
-       // $this->logProfileIDs($valueArray['PROFILEID']);
-      }
+        if(is_array($valueArray) && count($valueArray) && $valueArray['PROFILEID'])
+        {
+            $arrPid = explode(',', $valueArray['PROFILEID']);
+            if(count($arrPid) < 50)
+            {
+                $countPid = 'lt50';
+            }
+            elseif (count($arrPid) < 100)
+            {
+                $countPid = 'lt100';
+            }
+            else
+            {
+                $countPid = 'gt100';
+            }
+            JsCommon::logFunctionCalling('Jprofile', 'getArray-'.$countPid);
+        }
         return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
     }
 
