@@ -233,26 +233,26 @@ class JPROFILE
             }
             JsCommon::logFunctionCalling('Jprofile', 'getArray-'.$countPid);
 
-            // For a limit only
-            if(count($arrPid) < 50)
+            $result = ProfileCacheLib::getInstance()->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__, $getForPartialkeys);
+
+            if($result && false !== $result)
             {
-                $result = ProfileCacheLib::getInstance()->getForMultipleKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__, $getForPartialkeys);
-                if($result && false !== $result)
+                // For a limit only
+                $bServedFromCache = true;
+                if(isset($result['getForPartialkeys']) && $result['getForPartialkeys'] && count($arrPid) < 50)
                 {
-                    $bServedFromCache = true;
                     // case - partial data served from cache for some  profile ids
-                    if(isset($result['getForPartialkeys']) && $result['getForPartialkeys'])
-                    {
-                        $valueArray['PROFILEID'] = $result['notCachedPids'];
-                        $result = $result['cachedResult'];
-                        // get result from store for remaining pids
-                        $storeResult = self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
-                        $result = array_merge($result, $storeResult);
-                    }
-                    $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                    $valueArray['PROFILEID'] = $result['notCachedPids'];
+                    $result = $result['cachedResult'];
+                    // get result from store for remaining pids
+                    $storeResult = self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+                    $result = array_merge($result, $storeResult);
                 }
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
                 if($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE)
                 {
+                    var_dump($result);
+                    die;
                     return $result;
                 }
             }
