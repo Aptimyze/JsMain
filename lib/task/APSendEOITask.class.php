@@ -204,11 +204,11 @@ EOF;
                                             }
                                         }
 				}
-			ProfileMemcache::unsetInstance($senderId);
 			catch(Exception $ex)
 			{
 				$this->setExceptionError($ex);
 			}
+			ProfileMemcache::unsetInstance($senderId);
                         $tempProfileRecords->insert($senderId);
 		
 		}

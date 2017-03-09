@@ -174,7 +174,7 @@ public static $dev =
 
 		//if set to 1, hides unimportant features at time of peak load on site
 		"hideUnimportantFeatureAtPeakLoad"     => 0,
-
+                "solrServerUrls"      => "array(0=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',1=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',2=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',3=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',4=>'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/')",
 		/*Search*/
 		"solrServerUrl"      => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
 		"solrServerUrl1"     => 'http://devjs.infoedge.com:8080/apache-solr-4.0.0-BETA/',
@@ -354,6 +354,7 @@ public static $test =
 		"hideUnimportantFeatureAtPeakLoad"     => 0,
 
 		/*Search*/
+                "solrServerUrls"      => "array(0=>'172.16.3.203:8983/solr/techproducts',1=>'172.16.3.203:8983/solr/techproducts',2=>'172.16.3.203:8983/solr/techproducts',3=>'172.16.3.203:8983/solr/techproducts',4=>'172.16.3.203:8983/solr/techproducts')",
 		"solrServerUrl"      => '172.16.3.203:8983/solr/techproducts',
 		"solrServerUrl1"     => '172.16.3.203:8983/solr/techproducts',
 		"solrServerUrl2"     => '172.16.3.203:8983/solr/techproducts',
