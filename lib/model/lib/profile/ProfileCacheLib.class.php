@@ -709,7 +709,7 @@ class ProfileCacheLib
      * @param type $fields
      * @param type $storeName
      */
-    public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="", $setForMultipleKeys)
+    public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="", $getForPartialkeys=false)
     {
       if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
            return false;
@@ -727,21 +727,23 @@ class ProfileCacheLib
         
         //Get Records from Cache
         $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
+        // Get array of profile ids for which data doesnt exist in cache
+        $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
+        // Array of profile ids which exist in cache
+        $cachedPids = array_diff($arrKey, $arrPids);
+
         //Check data
         if(false === $this->checkMulipleDataAvailability($arrResponse, $arrFields))
         {
-          if($setForMultipleKeys)
+          if($getForPartialkeys && count($cachedPids) > 0)
           {
-            $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
-            $cachedPids = array_diff($arrKey, $arrPids);
             $cachedResult = $this->getForMultipleKeys($criteria, $cachedPids, $fields, $storeName);
-
-            // call mysql for arrPids get result
-            $valueArray['PROFILEID'] = $arrPids;
-            $storeResult = $this->cacheMultipleFromMysql($criteria, $valueArray, $fields);
-            // merge this result with the available results
-            var_dump($arrPids);
-            return $arrPids;
+            $result = array(
+                'getForPartialkeys' => $getForPartialkeys,
+                'cachedResult' => $cachedResult,
+                'notCachedPids' => implode(',', $arrPids),
+            );
+            return $result;
           }
           else
           {
@@ -787,7 +789,6 @@ class ProfileCacheLib
     { 
       foreach($arrData as $key=>$value)
       {
-        var_dump($key);
         if(in_array(ProfileCacheConstants::NOT_FILLED, $value)) {
             unset($arrData[$key]);
             continue;
@@ -1050,19 +1051,5 @@ class ProfileCacheLib
       return $profileId;
     }
 
-    /**
-     * @param $szCriteria
-     * @param $key
-     * @param null $extraWhereCnd
-     * @return bool
-     */
-    private function cacheMultipleFromMysql($szCriteria, $valueArray, $fields)
-    {
-        $storeObj = NEWJS_JPROFILE::getInstance();
-        $arrData = $storeObj->getArray($valueArray, "", "", $fields);
-        var_dump($arrData);
-        // cache the result from store
-        return ;
-    }
 }
 ?>
