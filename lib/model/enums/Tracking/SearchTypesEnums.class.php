@@ -156,6 +156,6 @@ class SearchTypesEnums
 	const CANCELLED_LISTING_IOS = CLIOS;
 	const CANCELLED_LISTING_APP = CLAA;
     const MATCH_OF_THE_DAY_MYJS_IOS = "IMD";
-
+    const ANDROID_MATCHOFDAY = "AMOD";
 }
 ?>
