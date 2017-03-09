@@ -1397,7 +1397,8 @@ class NEWJS_JPROFILE extends TABLE
                     $resSelectDetail->bindValue(":$key", $val);
             $resSelectDetail->execute();
             $rowSelectDetail = $resSelectDetail->fetch(PDO::FETCH_ASSOC);
-            $this->logSelectCount();
+            //$this->logSelectCount();
+     	    JsCommon::logFunctionCalling(__CLASS__, __FUNCTION__);
             return $rowSelectDetail;
         } catch (PDOException $e) {
             throw new jsException($e);

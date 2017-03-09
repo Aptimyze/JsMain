@@ -197,6 +197,7 @@ EOF;
 								$this->setExceptionError($ex);
 							}
 						}
+                                                ProfileMemcache::unsetInstance($receiverId);
 						$contactEngineObj=null;
 						if($limit <= $limitCounter)
 							break;
@@ -207,6 +208,7 @@ EOF;
 			{
 				$this->setExceptionError($ex);
 			}
+			ProfileMemcache::unsetInstance($senderId);
                         $tempProfileRecords->insert($senderId);
 		
 		}
