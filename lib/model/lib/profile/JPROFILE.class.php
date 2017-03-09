@@ -107,7 +107,8 @@ class JPROFILE
     {
         $fields = $this->getRelevantFields($fields);
         $bServedFromCache = false;
-        $this->totalQueryCount();
+	// $this->totalQueryCount();
+
         if (ProfileCacheLib::getInstance()->isCached($criteria, $value, $fields, __CLASS__)) {
             $result = ProfileCacheLib::getInstance()->get($criteria, $value, $fields, __CLASS__, $extraWhereClause);
             //When processing extraWhereClause results could be false,
@@ -120,7 +121,8 @@ class JPROFILE
 
         if ($bServedFromCache && ProfileCacheConstants::CONSUME_PROFILE_CACHE) {
             // LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO,"Consuming from cache for criteria: {$criteria} : {$value}");
-            $this->logCacheConsumption();
+            //$this->logCacheConsumption();
+            $this->logCacheConsumeCount(__CLASS__);
             return $result;
         }
 
@@ -715,6 +717,14 @@ class JPROFILE
     public function getZombieProfiles($gtDate,$limit=0,$ltDate=null) 
     {
         return self::$objProfileMysql->getZombieProfiles($gtDate,$limit,$ltDate);
+    }
+
+    private function logCacheConsumeCount($funName)
+    {
+        $key = 'cacheConsumption' . '_' . date('Y-m-d');
+        JsMemcache::getInstance()->hIncrBy($key, $funName);
+
+        JsMemcache::getInstance()->hIncrBy($key, $funName . '::' . date('H'));
     }
 }
 
