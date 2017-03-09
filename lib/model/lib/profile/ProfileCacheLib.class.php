@@ -1051,5 +1051,43 @@ class ProfileCacheLib
       return $profileId;
     }
 
+    /**
+     * getForPartialKeys
+     * @param type $criteria
+     * @param type $key
+     * @param type $fields
+     * @param type $storeName
+     */
+    
+    public function getForPartialKeys($criteria, $arrKey, $fields, $storeName="")
+    {
+      if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+        return false;
+      }
+   
+      if(false === $this->validateCriteria($criteria)) {
+          return false;
+      }
+        
+      //Get Relevant Fields
+      $arrFields = $this->getRelevantFields($fields, $storeName);
+      
+      //Get Decorated keys
+      $arrDecoratedKeys = array_map(array("ProfileCacheLib","getDecoratedKey"), $arrKey);
+      
+      //Get Records from Cache
+      $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
+      
+      // Get array of profile ids for which data doesnt exist in cache
+      $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
+      // Array of profile ids which exist in cache
+      $cachedPids = array_diff($arrKey, $arrPids);
+      $cachedResult = empty($cachedPids) ? false : $this->getForMultipleKeys($criteria, $cachedPids, $fields, $storeName);
+      $result = array(
+        'cachedResult' => $cachedResult,
+        'notCachedPids' => implode(',', $arrPids),
+      );
+      return $result;
+    }
 }
 ?>
