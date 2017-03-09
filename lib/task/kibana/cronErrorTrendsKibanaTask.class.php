@@ -26,20 +26,20 @@ EOF;
     protected function execute($arguments = array(), $options = array())
     {
        //This is the path to ELK server
-      $this->elkServer = KibanaEnums::ELK_SERVER;
+      $this->elkServer = JsConstants::$kibana['ELK_SERVER'];
       //This is the port number where Elastic Search is running
-      $this->elkPort = KibanaEnums::ELASTIC_PORT;
+      $this->elkPort = JsConstants::$kibana['ELASTIC_PORT'];
       //This is the index name which will be searched for getting the records.
-      $this->fetchIndexName = KibanaEnums::FILEBEAT_INDEX.'*';
+      $this->fetchIndexName = KibanaEnums::$FILEBEAT_INDEX.'*';
       //This is the type of query which will be used to query elastic search.
-      $this->query = KibanaEnums::KIBANA_SEARCH_QUERY;
+      $this->query = KibanaEnums::$KIBANA_SEARCH_QUERY;
       //this is used as a pushed index
-      $this->pushIndexName = KibanaEnums::ERROR_TREND_INDEX;
+      $this->pushIndexName = KibanaEnums::$ERROR_TREND_INDEX;
 
       //start date compression
-      $this->startDaysBefore = KibanaEnums::STARTING_DAYS_BEFORE;
+      $this->startDaysBefore = KibanaEnums::$STARTING_DAYS_BEFORE;
       //end date compression
-      $this->startDaysEnd = KibanaEnums::STARTING_DAYS_END;
+      $this->startDaysEnd = KibanaEnums::$STARTING_DAYS_END;
 
       try 
       {

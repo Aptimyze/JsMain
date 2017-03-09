@@ -14,7 +14,7 @@ class kibanAlertsTask extends sfBaseTask
 The [kibanAlerts|INFO] task does things.
 Call it with:
 
-	[php symfony kibanAlerts|INFO]
+	[php symfony Alerter:kibanAlerts|INFO]
 EOF;
 	}
 
@@ -22,18 +22,18 @@ EOF;
 	{
 		$currdate = date('Y.m.d');
 		// Server at which ElasticSearch and kibana is running
-		$elkServer = KibanaEnums::ELK_SERVER;
-		$elkPort = KibanaEnums::ELASTIC_PORT;
-		$kibanaPort = KibanaEnums::KIBANA_PORT;
-		$indexName = KibanaEnums::FILEBEAT_INDEX.$currdate;
-		$query = KibanaEnums::KIBANA_SEARCH_QUERY;
+		$elkServer = JsConstants::$kibana['ELK_SERVER'];
+		$elkPort = JsConstants::$kibana['ELASTIC_PORT'];
+		$kibanaPort = JsConstants::$kibana['KIBANA_PORT'];
+		$indexName = KibanaEnums::$FILEBEAT_INDEX.$currdate;
+		$query = KibanaEnums::$KIBANA_SEARCH_QUERY;
 		// in hours
-		$interval = KibanaEnums::KIBANA_ALERT_EMAIL_INTERVAL;
+		$interval = KibanaEnums::$KIBANA_ALERT_EMAIL_INTERVAL;
 		$intervalString = '-'.$interval.' hour';
 		$toInt = date('H:i:s');
 		$fromInt = date('H:i:s',strtotime($intervalString));
-		$threshold = KibanaEnums::KIBANA_ALERT_EMAIL_THRESHOLD;
-		$timeout = KibanaEnums::KIBANA_REQUEST_THRESHOLD;
+		$threshold = KibanaEnums::$KIBANA_ALERT_EMAIL_THRESHOLD;
+		$timeout = KibanaEnums::$KIBANA_REQUEST_THRESHOLD;
 		$dashboard = 'Common-Dash';
 		$msg = '';
 		$from = "jsissues@jeevansathi.com";

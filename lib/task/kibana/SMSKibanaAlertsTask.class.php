@@ -25,20 +25,20 @@ EOF;
 	{
 		date_default_timezone_set('Asia/Calcutta');
 
-		$this->thresholdSMS = KibanaEnums::SMS_ERROR_THRESHOLD;
+		$this->thresholdSMS = KibanaEnums::$SMS_ERROR_THRESHOLD;
 		// include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
 
 		$currdate = date('Y.m.d');
 		// Server at which ElasticSearch and kibana is running
-		$elkServer = KibanaEnums::ELK_SERVER;
-		$elkPort = KibanaEnums::ELASTIC_PORT;
-		$kibanaPort = KibanaEnums::KIBANA_PORT;
-		$indexName = KibanaEnums::FILEBEAT_INDEX.'*';
-		$query = KibanaEnums::KIBANA_SEARCH_QUERY;
-		$timeout = KibanaEnums::SMS_ALERT_TIMEOUT;
+		$elkServer = JsConstants::$kibana['ELK_SERVER'];
+		$elkPort = JsConstants::$kibana['ELASTIC_PORT'];
+		$kibanaPort = JsConstants::$kibana['KIBANA_PORT'];
+		$indexName = KibanaEnums::$FILEBEAT_INDEX.'*';
+		$query = KibanaEnums::$KIBANA_SEARCH_QUERY;
+		$timeout = KibanaEnums::$SMS_ALERT_TIMEOUT;
 		// in minutes
-		$interval = KibanaEnums::SMS_ALERT_THRESHOLD;
+		$interval = KibanaEnums::$SMS_ALERT_THRESHOLD;
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 
 	

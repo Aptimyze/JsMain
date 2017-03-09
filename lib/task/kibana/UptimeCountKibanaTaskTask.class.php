@@ -20,18 +20,18 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		$elkServer = KibanaEnums::AURA_SERVER;
-		$elkPort = KibanaEnums::AURA_PORT;
-		$indexName = KibanaEnums::AURA_INDEX;
-		$query = KibanaEnums::KIBANA_SEARCH_QUERY;
-		$timeout = KibanaEnums::KIBANA_REQUEST_THRESHOLD;
-		$interval = KibanaEnums::UPTIME_HOUR;
-		$day = KibanaEnums::UPTIME_DAY;
+		$elkServer = JsConstants::$kibana['AURA_SERVER'];
+		$elkPort = JsConstants::$kibana['AURA_PORT'];
+		$indexName = KibanaEnums::$AURA_INDEX;
+		$query = KibanaEnums::$KIBANA_SEARCH_QUERY;
+		$timeout = KibanaEnums::$KIBANA_REQUEST_THRESHOLD;
+		$interval = KibanaEnums::$UPTIME_HOUR;
+		$day = KibanaEnums::$UPTIME_DAY;
 		// server at which data will be pushed
-		$indexElkServer = KibanaEnums::ELK_SERVER;
-		$indexElkPort = KibanaEnums::ELASTIC_PORT;
-		$pushIndexName = KibanaEnums::UPTIME_INDEX;
-		$appIndexName = KibanaEnums::FILEBEAT_INDEX.'*';
+		$indexElkServer = JsConstants::$kibana['ELK_SERVER'];
+		$indexElkPort = JsConstants::$kibana['ELASTIC_PORT'];
+		$pushIndexName = KibanaEnums::$UPTIME_INDEX;
+		$appIndexName = KibanaEnums::$FILEBEAT_INDEX.'*';
 		$date = date('Y-m-d', strtotime("-$day day"));
 		$auraUrl = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 		$elkAppUrl = $indexElkServer.':'.$indexElkPort.'/'.$appIndexName.'/'.$query;

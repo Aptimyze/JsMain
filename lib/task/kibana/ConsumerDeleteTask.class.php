@@ -19,9 +19,9 @@ EOF;
   {
     $currdate = date('Y-m-d', strtotime( '-8 days' ));
     // Server at which ElasticSearch and kibana is running
-    $elkServer = KibanaEnums::ELK_SERVER;
-    $elkPort = KibanaEnums::ELASTIC_PORT;
-    $indexName = KibanaEnums::CONSUMER_INDEX.$currdate;
+    $elkServer = JsConstants::$kibana['ELK_SERVER'];
+    $elkPort = JsConstants::$kibana['ELASTIC_PORT'];
+    $indexName = KibanaEnums::$CONSUMER_INDEX.$currdate;
     passthru("curl -XDELETE 'http://$elkServer:$elkPort/$indexName/'");
   }
 }

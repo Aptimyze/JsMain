@@ -30,18 +30,18 @@ EOF;
 
 		$currdate = date('Y.m.d');
 		// Server at which ElasticSearch and kibana is running
-		$elkServer = KibanaEnums::ELK_SERVER;
-		$elkPort = KibanaEnums::ELASTIC_PORT;
-		$kibanaPort = KibanaEnums::KIBANA_PORT;
-		$indexName = KibanaEnums::CONSUMER_INDEX.$currdate;
-		$query = KibanaEnums::KIBANA_SEARCH_QUERY;
+		$elkServer = JsConstants::$kibana['ELK_SERVER'];
+		$elkPort = JsConstants::$kibana['ELASTIC_PORT'];
+		$kibanaPort = JsConstants::$kibana['KIBANA_PORT'];
+		$indexName = KibanaEnums::$CONSUMER_INDEX.$currdate;
+		$query = KibanaEnums::$KIBANA_SEARCH_QUERY;
 		// in hours
-		$interval = KibanaEnums::CONSUMER_ALERT_EMAIL_INTERVAL;
+		$interval = KibanaEnums::$CONSUMER_ALERT_EMAIL_INTERVAL;
 		$intervalString = '-'.$interval.' hour';
 		$toInt = date('H:i:s');
 		$fromInt = date('H:i:s',strtotime($intervalString));
-		$threshold = KibanaEnums::CONSUMER_ALERT_EMAIL_THRESHOLD;
-		$timeout = KibanaEnums::CONSUMER_REQUEST_THRESHOLD;
+		$threshold = KibanaEnums::$CONSUMER_ALERT_EMAIL_THRESHOLD;
+		$timeout = KibanaEnums::$CONSUMER_REQUEST_THRESHOLD;
 		$dashboard = 'ConsumerDashBoard';
 		$msg = '';
 		$noError = 1;
