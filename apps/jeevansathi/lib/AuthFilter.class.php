@@ -376,7 +376,7 @@ class AuthFilter extends sfFilter {
 			$ContactTime = strtotime($lastLoginDt);
       		$time = time();
       		$daysDiff  = floor(($time - $ContactTime)/(3600*24));
-      		if($daysDiff>7)
+      		if($daysDiff>6)
       			$lastDayFlag=true;
       		else
       			$lastDayFlag=false;
