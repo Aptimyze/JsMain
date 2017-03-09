@@ -18,11 +18,13 @@ class ProcessHandler
     $senderid=$body['senderid'];
     $receiverid=$body['receiverid'];
     $message = $body['message'];
-    $senderObj = new Profile('',$senderid);   
-    $senderObj->getDetail("","","*");
-    $receiverObj = new Profile('',$receiverid);
-    $receiverObj->getDetail("","","*");
-
+    if($type!='INITIATECONTACT')
+    {
+        $senderObj = new Profile('',$senderid);   
+        $senderObj->getDetail("","","*");
+        $receiverObj = new Profile('',$receiverid);
+        $receiverObj->getDetail("","","*");
+    }    
     switch($type)
     {
       case 'CANCELCONTACT' :  ContactMailer::sendCancelledMailer($receiverObj,$senderObj);
@@ -35,6 +37,16 @@ class ProcessHandler
                               ContactMailer::InstantEOIMailer($receiverid, $senderid, $message, $viewedSubscriptionStatus); 
                               break;
       case 'MESSAGE'       :  ContactMailer::sendMessageMailer($receiverObj, $senderObj,$message);
+                              break;
+      case 'PHOTO_SCREENED':  
+                              $memObj = new ProfileMemcacheService($senderid);
+                              $receiverArray =   $memObj->get('CONTACTED_BY_ME');
+                              if(is_array($receiverArray['I'])){
+                                  foreach ($receiverArray['I'] as $key => $value) {
+                                  ContactMailer::sendAutoReminderMailer($value,$senderid);
+                                  }    
+                              
+                              }
                               break;
     }
 	}
