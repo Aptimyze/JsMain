@@ -17,13 +17,7 @@ class AuthFilter extends sfFilter {
 		$notifCheck =NotificationFunctions::notificationCheck();
         	if($notifCheck){echo $notifCheck;die;}
 	}
-        
-                $senderObj = new Profile('',1);   
-        $senderObj->getDetail("","","*");
-        $receiverObj = new Profile('',56491);
-        $receiverObj->getDetail("","","*");
 
-        ContactMailer::sendAutoReminderMailer($receiverObj, $senderObj);die('palash');
 	$context = $this->getContext();
 		$request = $context->getRequest();
 
@@ -72,7 +66,7 @@ class AuthFilter extends sfFilter {
 		else {
 			
 			global $protect_obj;
-			if(true ){
+			if(($request->getParameter('module')=="homepage" && $request->getParameter('action')=="index" )|| ($request->getParameter('module')=="myjs" && $request->getParameter('action')=="jspcPerform" ) || $request->getParameter("blockOldConnection500")){
 				JsCommon::oldIncludes(false);
 			}
 			else{

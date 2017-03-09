@@ -338,6 +338,9 @@ class ContactMailer
 	{
 		$tpl->getSmarty()->assign("BottomSource","VDMSG2");
 	}
+	$partialObj = new PartialList();
+        $partialObj->addPartial("autoReminderMailerTuple", "autoReminderMailerTuple", array($sender->getPROFILEID()));
+        $tpl->setPartials($partialObj);
     
         if(CommonConstants::contactMailersCC)
         {                

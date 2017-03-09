@@ -39,19 +39,31 @@ This Email contains links which let you to directly login to your account. So fo
         <tr>
             <td>
                 <table style="max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+            <td>
+                <table style="max-width:600px; min-width:240px; font-family:Arial, Helvetica, sans-serif; font-size:12px" border="0" cellspacing="0" cellpadding="0">
                     <tr>
                         <td width="20"></td>
-                        <td valign="middle" height="35">Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>, </td>
+                        <td valign="middle" height="35"> Dear <var>{{NAME_PROFILE:profileid=~$profileid`}}</var>, </td>
                         <td width="20" height="25"></td>
                     </tr>
                     <tr>
                         <td width="20"></td>
                         <td>
-                                    
-                            <a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$otherProfileId`,receiver_id=~$profileid`,source=~JSTrackingPageType::AUTO_REMINDER_PHOTO_UPLOAD_MAILER`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><var>{{NAME_PROFILE:profileid=~$otherProfileId`}}</var></a> who had sent you an interest earlier, has uploaded a photo, please respond to the interest.                       
-			</td>
+								<a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$otherProfileId`,source=~JSTrackingPageType::AUTO_REMINDER_PHOTO_UPLOAD_MAILER`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><var>{{USERNAME:profileid=~$otherProfileId`}}</var></a> who had sent you an interest earlier, has uploaded a photo, please respond to the interest.
+						</td>
                         <td width="20"></td>
                     </tr>
+                </table>
+            </td>
+        </tr>
+                              
+                    <tr>
+            <td width="600" valign="top" align="left">
+				~$autoReminderMailerTuple`
+                </td>
+        </tr>
+
                 </table>
             </td>
         </tr>
