@@ -221,7 +221,7 @@ $className = get_class($this);
 
 
 private function getBannerMessage($profileInfo) {   
-   		//die('there');
+
 				$MESSAGE=NULL;
 				$profileObj=LoggedInProfile::getInstance('newjs_master');
 				$request = sfContext::getInstance()->getRequest();
@@ -240,8 +240,7 @@ private function getBannerMessage($profileInfo) {
         					$top = $memCacheObject->getHashOneValue($profileId.'_MESSAGE_BANNER','top');
         					$bottom = $memCacheObject->getHashOneValue($profileId.'_MESSAGE_BANNER','bottom');
         					$pgId = $memCacheObject->getHashOneValue($profileId.'_MESSAGE_BANNER','pageId');
-        					// print_r($profileId.'_MESSAGE_BANNER');
-        					// print_r($top); die('aaa');
+
         					$memMessage = '';
 
         					if($top){
@@ -277,7 +276,6 @@ private function getBannerMessage($profileInfo) {
         				
         			}
 
-			 print_r($memMessage); die('hahahah');
 
 
 	switch(true){
