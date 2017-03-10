@@ -1062,9 +1062,11 @@ class ProfileCacheLib
       
       // Get array of profile ids for which data doesnt exist in cache
       $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
+
       // Array of profile ids which exist in cache
       $cachedPids = array_diff($arrKey, $arrPids);
       $cachedResult = empty($cachedPids) ? false : $this->getForMultipleKeys($criteria, $cachedPids, $fields, $storeName);
+
       $result = array(
         'cachedResult' => $cachedResult,
         'notCachedPids' => implode(',', $arrPids),

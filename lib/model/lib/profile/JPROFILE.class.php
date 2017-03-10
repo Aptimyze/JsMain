@@ -265,12 +265,16 @@ class JPROFILE
                 // case - partial data served from cache for some  profile ids
                 $valueArray['PROFILEID'] = $result['notCachedPids'];
                 $result = $result['cachedResult'];
+
                 // get result from store for remaining pids
                 $storeResult = self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+
                 if($result && $result !== false)
                 {
+                    // merge the cache result and the store result if there exists data in cache
                     $storeResult = array_merge($result, $storeResult);
                 }
+
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $storeResult);
                 
                 if(ProfileCacheConstants::CONSUME_PROFILE_CACHE)
