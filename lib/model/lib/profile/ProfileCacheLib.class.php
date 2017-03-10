@@ -709,7 +709,8 @@ class ProfileCacheLib
      * @param type $fields
      * @param type $storeName
      */
-    public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="", $getForPartialkeys=false)
+
+    public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="")
     {
       if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
            return false;
@@ -727,28 +728,10 @@ class ProfileCacheLib
         
         //Get Records from Cache
         $arrResponse = JsMemcache::getInstance()->getMultipleHashFieldsByPipleline($arrDecoratedKeys ,$arrFields);
-        // Get array of profile ids for which data doesnt exist in cache
-        $arrPids = $this->getMulipleDataNotAvailabilityKeys($arrResponse, $arrFields);
-        // Array of profile ids which exist in cache
-        $cachedPids = array_diff($arrKey, $arrPids);
-
+        
         //Check data
-        if(false === $this->checkMulipleDataAvailability($arrResponse, $arrFields))
-        {
-          if($getForPartialkeys && count($cachedPids) > 0)
-          {
-            $cachedResult = $this->getForMultipleKeys($criteria, $cachedPids, $fields, $storeName);
-            $result = array(
-                'getForPartialkeys' => $getForPartialkeys,
-                'cachedResult' => $cachedResult,
-                'notCachedPids' => implode(',', $arrPids),
-            );
-            return $result;
-          }
-          else
-          {
-            return false;
-          }
+        if(false === $this->checkMulipleDataAvailability($arrResponse, $arrFields)) {
+          return false;
         }
         
         //Remove Duplicate Suffix
