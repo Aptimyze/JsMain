@@ -97,18 +97,22 @@ class RegistrationMisc{
 	}
 	/* It sets jpartner default values
 	 * */
-	public static function setJpartnerAfterRegistration($profile,$fields=null){
+	public static function setJpartnerAfterRegistration($profile,$fields=null,$casteNoBar=""){
 	//DPP Auto Suggestor implemenation :
 		$dppObj=new DppAutoSuggest($profile);
-		$jpartnerObj=$dppObj->getJpartnerObj();
+		$jpartnerObj=$dppObj->getJpartnerObj();		
 		if($fields)
 			$profileFieldArr=$fields;
 		else if(!MobileCommon::isMobile())
 			$profileFieldArr=array("MSTATUS","MTONGUE","CASTE","COUNTRY_RES","CITY_RES","AGE","RELIGION","HEIGHT");
 		else
 			$profileFieldArr=array("MSTATUS","MTONGUE","CASTE","COUNTRY_RES","AGE","RELIGION","HEIGHT");
-		
-              
+        
+        if(in_array("CASTE",$profileFieldArr) && $casteNoBar == "true")
+        {
+        	$key = array_search("CASTE", $profileFieldArr);
+        	unset($profileFieldArr[$key]);
+        }        
 		  $gender=$profile->getGENDER();
 		  $mstatus=$profile->getMSTATUS();		
 
@@ -117,7 +121,7 @@ class RegistrationMisc{
 		  else
 		    $jpartnerObj->setGENDER('M');
 		  $jpartnerObj->setDPP('R');
- 		
+
 		$dppObj->insertJpartnerDPP($profileFieldArr);
 	}
 	public static function setFilterReligion($rel,$mtongue){

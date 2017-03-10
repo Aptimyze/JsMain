@@ -42,7 +42,7 @@ else {
      
     }
     function criticalLayerButtonsAction(clickAction,button) {
-        if(CALButtonClicked===1)return;
+        if(CALButtonClicked===1)return;  
         CALButtonClicked=1;
         var CALParams='';
         var layerId= $("#CriticalActionlayerId").val();
@@ -59,8 +59,11 @@ else {
                         }
                         CALParams="&namePrivacy="+namePrivacy+"&newNameOfUser="+newNameOfUser;
                     }
+
+
         window.location = "/static/CALRedirection?layerR="+layerId+"&button="+button+CALParams; 
         CALButtonClicked=0;
+        
         
     }
 
@@ -72,7 +75,7 @@ else {
         }
         function showError(msg)
         {
-                
+
               $( "#validation_error" ).text(msg);
               $( "#validation_error" ).slideDown( "slow", function() {}).delay( 3000 );
               $( "#validation_error" ).slideUp( "slow", function() {});

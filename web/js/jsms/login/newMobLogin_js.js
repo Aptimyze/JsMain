@@ -334,9 +334,9 @@ function loadCSS(href) {
 function convertIntoHomePage(translateURL){
   newHref = translateURL+"?AUTHCHECKSUM="+readCookieHomePage("AUTHCHECKSUM");
   if(translateURL.indexOf('hindi')!=-1){
-    createCookieHomePage("jeevansathi_hindi_site","Y",100,".jeevansathi.com");
+    createCookieHomePage("jeevansathi_hindi_site_new","Y",100,".jeevansathi.com");
   } else {
-    createCookieHomePage("jeevansathi_hindi_site","N",100,".jeevansathi.com");
+    createCookieHomePage("jeevansathi_hindi_site_new","N",100,".jeevansathi.com");
   }
   window.location.href = newHref;
 }
@@ -352,9 +352,8 @@ function readCookieHomePage(name) {
     return null;
 }
 
-function createCookieHomePage(name, value, days) {
+function createCookieHomePage(name, value, days,specificDomain) {
     var expires;
-
     if (days) {
         var date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -362,5 +361,10 @@ function createCookieHomePage(name, value, days) {
     } else {
         expires = "";
     }
-    document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    if(specificDomain == undefined || specificDomain == ""){
+      document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+    }
+    else{
+      document.cookie = escape(name) + "=" + escape(value) + expires + ";domain="+specificDomain+";path=/";
+    }
 }

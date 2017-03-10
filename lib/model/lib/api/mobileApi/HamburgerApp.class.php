@@ -8,20 +8,32 @@ class HamburgerApp
 		if($profileid && RequestHandlerConfig::$moduleActionHamburgerArray[$moduleName][$actionName])
 		{
                         $isNewMobileSite = MobileCommon::isNewMobileSite();
-			$profileObj=LoggedInProfile::getInstance('newjs_master');
-			$profileObj->getDetail("","","HAVEPHOTO,PHOTO_DISPLAY");
+		$profileObj=LoggedInProfile::getInstance('newjs_master');
+		$profileObj->getDetail("","","*");
+		$profilePic = $profileObj->getHAVEPHOTO();
+		if (empty($profilePic))
+			$profilePic="N";
+		if($profilePic  && $profilePic!="N")
+		{
 			$pictureServiceObj=new PictureService($profileObj);
-			if($profileObj->getHAVEPHOTO()!="U"||MobileCommon::isApp() != "I")
-			{
-				$profilePicObj = $pictureServiceObj->getProfilePic();
-				if($profilePicObj)
-					$thumbNail = $profilePicObj->getThumbailUrl();
-				if(!$thumbNail)
-					$thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
-				$thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl');
-			}
+			$profilePicObj = $pictureServiceObj->getProfilePic();
+			if($profilePicObj)
+                        {
+			if($profilePic=='U')	
+				$picUrl = $profilePicObj->getThumbail96Url();
 			else
-				$thumbNail = NULL;
+				$picUrl = $profilePicObj->getProfilePic120Url();
+			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$profileObj->getGENDER());
+                        $thumbNail =$photoArray;
+			}
+			
+		}
+                else
+                {
+                        $thumbNail = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
+                        $thumbNail = PictureFunctions::mapUrlToMessageInfoArr($thumbNail,'ThumbailUrl');
+                }
+
 			$hamburgerDetails['THUMBNAIL']=$thumbNail;
 			$request = sfContext::getInstance()->getRequest();
 			$memHandlerObj = new MembershipHandler();

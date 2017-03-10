@@ -177,7 +177,13 @@
 							<div id="~$v.subscription_id`_serviceBenefits" class="rv2_list1">
 								<ul>
 									~foreach from=$v.benefits key=kk item=vv name=servBenefitsLoop`
-									<li>~$vv`~if $v.servMessage`~foreach from=$v.servMessage key=kkk item=vvv name=servMessageLoop`~if $vv eq $kkk` <span class="rv2_colr2">(~$vvv`)</span>~/if`~/foreach`~/if`</li>
+                                    <li><span ~if $vv eq 'Profile Boost'`class="fontmed"~/if`>~$vv`</span>~if $v.servMessage`~foreach from=$v.servMessage key=kkk item=vvv name=servMessageLoop`~if $vv eq $kkk` 
+                                    <span class="color2"> FREE with eAdvantage</span><br>
+                                    ~assign var=helpText value=". "|explode:$vvv`
+                                    ~foreach from=$helpText key=helpKey item=helpVal name=helpLoop`
+                                        ~$helpVal`<br>
+                                    ~/foreach`    
+                                    ~/if`~/foreach`~/if`</li>
 									~/foreach`
 								</ul>
 							</div>
@@ -335,6 +341,10 @@
 	var source = "~$passedKey`";
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
+        if(!checkEmptyOrNull(readCookie('expCheck'))){
+            eraseCookie('selectedVas');
+            createCookie('expCheck', '1');
+        }
 		~if $data.device eq 'Android_app'`
 		createCookie('device',"~$data.device`");
 		~/if`

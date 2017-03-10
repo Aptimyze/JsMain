@@ -137,14 +137,25 @@ class staticComponents extends sfComponents{
 		{
 			$this->loginProfile=LoggedInProfile::getInstance();
 			$this->loginProfile->getDetail($this->loginProfile->getPROFILEID(),"PROFILEID","*");
-			$pictureServiceObj = new PictureService($this->loginProfile);
-			$profilePicObject = $pictureServiceObj->getProfilePic();
 			$justJoinedMemcacheCount=$this->profileMemcacheObj->get('JUST_JOINED_MATCHES');
 			$this->justJoinedCount=$justJoinedMemcacheCount;
 			
-			$noOfPhotos=$pictureServiceObj->getUserUploadedPictureCount();
-			if ($profilePicObject != NULL && $noOfPhotos && $profilePicObject->getThumbailUrl())
-				 $this->ProfilePicUrl=$profilePicObject->getThumbailUrl();
+		$this->profilePic = $this->loginProfile->getHAVEPHOTO();
+		if (empty($this->profilePic))
+			$this->profilePic="N";
+		if($this->profilePic!="N"){
+			$pictureServiceObj=new PictureService($this->loginProfile);
+			$profilePicObj = $pictureServiceObj->getProfilePic();
+			if($profilePicObj){
+			if($this->profilePic=='U')	
+				$picUrl = $profilePicObj->getThumbail96Url();
+			else
+				$picUrl = $profilePicObj->getProfilePic120Url();
+			$photoArray = PictureFunctions::mapUrlToMessageInfoArr($picUrl,'ThumbailUrl','',$this->gender);
+            $this->ProfilePicUrl = $photoArray['url'];
+			}
+			
+		}
 			else
 			{
 				if($this->loginProfile->getGENDER()=="F")

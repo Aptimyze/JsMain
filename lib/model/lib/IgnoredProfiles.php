@@ -66,8 +66,9 @@ class IgnoredProfiles
 
         public function ignoreProfile($profileid, $ignoredProfileid)
         {
-        	JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileid);
-        	JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$ignoredProfileid);
+        	// delete data of Match of the day
+		    JsMemcache::getInstance()->set("cachedMM24".$profileid,"");
+    		JsMemcache::getInstance()->set("cachedMM24".$ignoredProfileid,"");
         	$this->addDataToFile("old");
         	$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
         	$ignObj->ignoreProfile($profileid,$ignoredProfileid);
@@ -79,8 +80,9 @@ class IgnoredProfiles
 
 	public function undoIgnoreProfile($profileid, $ignoredProfileid)
 	{
-		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileid);
-        JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$ignoredProfileid);
+		// delete data of Match of the day
+		JsMemcache::getInstance()->set("cachedMM24".$profileid,"");
+    	JsMemcache::getInstance()->set("cachedMM24".$ignoredProfileid,"");
 		$this->addDataToFile("old");
 		$ignObj = new newjs_IGNORE_PROFILE($this->dbname);
 		$ignObj->undoIgnoreProfile($profileid,$ignoredProfileid);

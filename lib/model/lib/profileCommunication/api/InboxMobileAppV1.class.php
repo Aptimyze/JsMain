@@ -692,6 +692,10 @@ class InboxMobileAppV1
 		$temp= $displayObj[$infoKey]['VIEW_ALL_COUNT']?$displayObj[$infoKey]['VIEW_ALL_COUNT']:"0";	
 		$finalResponse["total"]="$temp";
 		$finalResponse["tracking"] = $displayObj[$infoKey]["TRACKING"];	
+		if($rtype = sfContext::getInstance()->getRequest()->getParameter("retainResponseType"))
+		{
+			$finalResponse["tracking"] = "responseTracking=".$rtype;
+		}
 		$finalResponse = array_change_key_case($finalResponse,CASE_LOWER);
     //Request Call Back Communication
     $arrAllowedRcbCommunication = array("ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT");

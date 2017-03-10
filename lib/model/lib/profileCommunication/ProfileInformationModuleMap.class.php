@@ -300,7 +300,7 @@ class ProfileInformationModuleMap
 			"SUBTITLE"=> "",
 			"ICONS"=> "",
 			"BUTTONS"=> "",
-			"TRACKING"=> "stype=AMD",
+			"TRACKING"=> "stype=AMOD",
             "CONTACT_ID"=>""
                 ),
 		);
@@ -505,7 +505,7 @@ class ProfileInformationModuleMap
 		"INTEREST_RECEIVED"=>Array( 
 			"ID"=> "1",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_EOI_APP",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
@@ -522,7 +522,7 @@ class ProfileInformationModuleMap
 		"INTEREST_EXPIRING"=>Array( 
 			"ID"=> "23",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
@@ -539,7 +539,7 @@ class ProfileInformationModuleMap
 		"ACCEPTANCES_RECEIVED"=>Array( 
 			"ID"=> "2",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -555,7 +555,7 @@ class ProfileInformationModuleMap
 		"ACCEPTANCES_SENT"=>Array( 
 			"ID"=> "3",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -571,7 +571,7 @@ class ProfileInformationModuleMap
 		"MY_MESSAGE"=>Array( 
 			"ID"=> "4",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "MYJS_MESSAGE_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -587,7 +587,7 @@ class ProfileInformationModuleMap
 		"VISITORS"=>Array( 
 			"ID"=> "5",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -603,7 +603,7 @@ class ProfileInformationModuleMap
 		"INTEREST_SENT"=>Array( 
 			"ID"=> "6",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_VIEWED_DATE_NO_MESSAGE",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -619,7 +619,7 @@ class ProfileInformationModuleMap
 		"MATCH_ALERT"=>Array( 
 			"ID"=> "7",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -635,7 +635,7 @@ class ProfileInformationModuleMap
 		"SHORTLIST"=>Array( 
 			"ID"=> "8",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "SHORTLIST_APP",
 			"TUPLE_ORDER"=> "TIME",
 			"ACTIVE_FLAG"=> "Y",
@@ -667,7 +667,7 @@ class ProfileInformationModuleMap
 		"ACCEPTANCES_ALL"=>Array( 
 			"ID"=> "13",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -683,7 +683,7 @@ class ProfileInformationModuleMap
 		"NOT_INTERESTED"=>Array(
 			"ID" => "10",
                         "SORT_ORDER"=> "",
-                        "COUNT"=> "10",
+                        "COUNT"=> "20",
                         "TUPLE"=> "SHORTLIST_APP",
                         "TUPLE_ORDER"=> "",
                         "ACTIVE_FLAG"=> "Y",
@@ -699,7 +699,7 @@ class ProfileInformationModuleMap
                 "NOT_INTERESTED_BY_ME"=>Array(
                         "ID" => "11",
                         "SORT_ORDER"=> "",
-                        "COUNT"=> "10",
+                        "COUNT"=> "20",
                         "TUPLE"=> "SHORTLIST_APP",
                         "TUPLE_ORDER"=> "",
                         "ACTIVE_FLAG"=> "Y",
@@ -715,7 +715,7 @@ class ProfileInformationModuleMap
                 "FILTERED_INTEREST"=>Array( 
 			"ID"=> "12",
 			"SORT_ORDER"=> "",
-			"COUNT"=> "10",
+			"COUNT"=> "20",
 			"TUPLE"=> "INBOX_EOI_APP",
 			"TUPLE_ORDER"=> "",
 			"ACTIVE_FLAG"=> "Y",
@@ -732,7 +732,7 @@ class ProfileInformationModuleMap
                 "CONTACTS_VIEWED"=>Array( 
                        "ID"=> "16",
                        "SORT_ORDER"=> "",
-                       "COUNT"=> "10",
+                       "COUNT"=> "20",
                        "TUPLE"=> "INBOX_EOI_APP",
                        "TUPLE_ORDER"=> "",
                        "ACTIVE_FLAG"=> "Y",
@@ -766,7 +766,7 @@ class ProfileInformationModuleMap
             "IGNORED_PROFILES"=>Array( 
                        "ID"=> "20",
                        "SORT_ORDER"=> "",
-                       "COUNT"=> "10",
+                       "COUNT"=> "20",
                        "TUPLE"=> "INBOX_EOI_APP",
                        "TUPLE_ORDER"=> "",
                        "ACTIVE_FLAG"=> "Y",
@@ -782,7 +782,7 @@ class ProfileInformationModuleMap
              "INTEREST_ARCHIVED"=>Array( 
 				"ID"=> "22",
 				"SORT_ORDER"=> "",
-				"COUNT"=> "10",
+				"COUNT"=> "20",
 				"TUPLE"=> "INBOX_APP",
 				"TUPLE_ORDER"=> "TIME",
 				"ACTIVE_FLAG"=> "Y",

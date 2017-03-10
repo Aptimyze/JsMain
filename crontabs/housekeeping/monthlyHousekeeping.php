@@ -7,6 +7,17 @@ include_once("housekeepingConfig.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
+if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'live')
+        successfullDie();
+
+$monthDiff = 24;
+$timeDiff = $monthDiff + 6 ;
+$timestamp=mktime(0, 0, 0, date("m") - $monthDiff , date("d"), date("Y"));
+$inactivityDate=date("Y-m-d",$timestamp);
+
+$timestamp=mktime(0, 0, 0, date("m")- $timeDiff  , date("d"), date("Y"));
+$inactivityDate_plus_onemonth=date("Y-m-d",$timestamp);
+
 $db=connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 $dbSlave=connect_slave();
@@ -252,11 +263,11 @@ echo "\n\n\n";
 
 
 		if($i==0)
-			$sql="SELECT SENDER,RECEIVER FROM newjs.CONTACTS WHERE TIME<'$inactivityDate' AND TYPE='I' ";
+			$sql="SELECT SENDER,RECEIVER FROM newjs.CONTACTS WHERE TIME<'$inactivityDate' ";
 		elseif($i==1)
-			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND TYPE<>'I' AND A.SENDER=B.PROFILEID";
+			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.SENDER=B.PROFILEID";
 		elseif($i==2)
-			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND TYPE<>'I' AND A.RECEIVER=B.PROFILEID";
+			$sql="SELECT A.SENDER,A.RECEIVER FROM newjs.CONTACTS A , test.$inactiveRecordTable B WHERE TIME<'$inactivityDate' AND A.RECEIVER=B.PROFILEID";
 echo $sql."\n\n";
 		$res=mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
 		while($row=mysql_fetch_array($res))
