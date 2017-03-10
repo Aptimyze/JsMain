@@ -17,6 +17,8 @@ include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 	$ownProfileChecksum = createChecksumForSearch($data['PROFILEID']);
 	$smarty->assign("selfProfilechecksum",$ownProfileChecksum);
 	$smarty->assign("showDownload",$showDownload);
+	$smarty->assign("viewedUsername",$view_username);
+	$smarty->assign("otherProfileChecksum",$profilechecksum);
 	if($SHOW_WHAT=='payment')
 	{
 		$smarty->display("astro_payment.htm");
