@@ -270,7 +270,8 @@ private function getBannerMessage($profileInfo) {
         					}
         				}
 
-        				$memCacheObject->setHashObject($profileId.'_MESSAGE_BANNER',$arr);
+        				$timeForCache = 1800;
+        				$memCacheObject->setHashObject($profileId.'_MESSAGE_BANNER',$arr,$timeForCache);
         				}
 
         				
