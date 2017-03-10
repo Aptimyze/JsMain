@@ -709,7 +709,6 @@ class ProfileCacheLib
      * @param type $fields
      * @param type $storeName
      */
-
     public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="")
     {
       if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
