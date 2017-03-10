@@ -237,7 +237,6 @@ class JPROFILE
              $addWhereText == ""
             )
         {
-            // $valueArray['PROFILEID'] = '6773712, 6999918, 658';
             $arrPid = explode(',', $valueArray['PROFILEID']);
             if(count($arrPid) < 50)
             {
@@ -253,13 +252,13 @@ class JPROFILE
             }
             JsCommon::logFunctionCalling('Jprofile', 'getArray-'.$countPid);
 
-            // limit
-            if(count($arrPid) > 50)
+            // check limit of profile ids
+            if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT)
             {
                return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
             }
             $fields = $this->getRelevantFields($fields);
-            $result = ProfileCacheLib::getInstance()->getForPartialKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__, $getForPartialkeys);
+            $result = ProfileCacheLib::getInstance()->getForPartialKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__);
 
             if(is_array($result) && false !== $result)
             {                       
