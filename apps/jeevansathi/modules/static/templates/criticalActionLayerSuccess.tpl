@@ -104,6 +104,7 @@ function validateAndSend(){
                              // showLoader();
                              $.ajax({
                                 url: '/api/v1/profile/editsubmit?editFieldArr[ALT_EMAIL]='+altEmailUser,
+                                headers: { 'X-Requested-By': 'jeevansathi' },       
                                 type: 'POST',
                                 success: function(response) {
                                     criticalLayerButtonsAction('close','B1');
