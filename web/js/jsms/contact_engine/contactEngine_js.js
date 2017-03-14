@@ -1665,7 +1665,6 @@ $.ajax({
     data: ajaxData,
     //crossDomain: true,
     success: function(result){
-      console.log(result);
          $("#contactLoader,#loaderOverlay,#reportInvalidContainer").hide();
          $("#js-otherInvalidReasonsLayer").val('');
                     if(result.responseStatusCode=='0'||result.responseStatusCode=='1'||CommonErrorHandling(result,'?regMsg=Y')) 
