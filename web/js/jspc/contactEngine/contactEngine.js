@@ -1043,6 +1043,13 @@ ajaxConfig.url='/phone/reportInvalid';
 ajaxConfig.data=ajaxData;
 ajaxConfig.type='POST';
 ajaxConfig.success=function(response){
+
+	if(response.responseStatusCode == '1')
+	{	
+		if(typeof response.heading != 'undefined'){
+		$('#headingReportInvalid').html(response.heading);
+		}
+	}
 	$('#invalidConfirmMessage').html(response.message);
 	$('#reportInvalidReason-layer').fadeOut(300,"linear");
 	hideCommonLoader();

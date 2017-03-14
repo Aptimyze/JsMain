@@ -174,7 +174,7 @@ public function updateAsVerified($submittee){
     {
         try     
         {   
-            $sql = "SELECT SUBMITTER,SUBMIT_DATE,REASON,OTHER_REASON from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFID";
+            $sql = "SELECT SUBMITTER,SUBMIT_DATE,REASON,OTHER_REASON,PHONE,MOBILE from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFID",$profileid,PDO::PARAM_INT);
             $prep->execute();
@@ -255,6 +255,27 @@ public function entryExistsForPair($submitter,$submittee)
             if($row=$prep->fetch(PDO::FETCH_ASSOC))
             $result = $row['CNT'];
 
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
+    }
+
+       public function getEntryForPair($submitter, $submittee)
+    {
+        try     
+        {   
+            $sql = "SELECT MOBILE,PHONE from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :SUBMITTEE AND SUBMITTER = :SUBMITTER";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":SUBMITTEE",$submittee,PDO::PARAM_STR);
+            $prep->bindValue(":SUBMITTER",$submitter,PDO::PARAM_STR);
+            $prep->execute();
+            $result = '';
+            if($row=$prep->fetch(PDO::FETCH_ASSOC))
+                $result=$row;
             return $result;
         }
         catch(Exception $e)
