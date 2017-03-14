@@ -65,7 +65,7 @@ class apieditdppv1Action extends sfAction
                                     $this->dppData = ob_get_contents();
                                     ob_end_clean();
                                     $apiResponseHandlerObj->setResponseBody(json_decode($this->dppData,true));
-                                    
+				    JsMemcache::getInstance()->delete('dppIdsCaching_'.$this->loginData["PROFILEID"]);
                                 }
 			}
 			else
