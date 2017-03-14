@@ -27,10 +27,10 @@ while ($row = mysql_fetch_array($res)) {
     $servefor_str      = $row['SERVEFOR'];
     if($servefor_str != '' && $pid != ''){
         $sql1 = "UPDATE billing.SERVICE_STATUS SET ACTIVE='Y' WHERE ID IN($id)";
-        echo "$sql1"."\n";
+        echo "$sql1"." , ".$pid."\n";
         $res1 = mysql_query_decide($sql1, $db) or die($sql . mysql_error_js());
         $paramArr    = array("SUBSCRIPTION" => $servefor_str);
-        $jprofileObj->editJPROFILE($paramArr, $profile, 'PROFILEID');
+        $jprofileObj->editJPROFILE($paramArr, $pid, 'PROFILEID');
         ++$count_rollback;
 
         if ($memCacheObject) {
