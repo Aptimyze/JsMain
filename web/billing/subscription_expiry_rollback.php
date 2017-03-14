@@ -15,7 +15,7 @@ $db = connect_db();
 $curdate = date("Y-m-d");
 
 
-$sql = "SELECT GROUP_CONCAT(ID) AS ID,PROFILEID,GROUP_CONCAT(SERVEFOR) AS SERVEFOR FROM billing.SERVICE_STATUS WHERE EXPIRY_DT = '$curdate' AND ACTIVE='Y' GROUP BY PROFILEID";
+$sql = "SELECT GROUP_CONCAT(ID) AS ID,PROFILEID,GROUP_CONCAT(SERVEFOR) AS SERVEFOR FROM billing.SERVICE_STATUS WHERE EXPIRY_DT = '$curdate' AND ACTIVE='E' GROUP BY PROFILEID";
 $res = mysql_query_decide($sql, $db) or die($sql . mysql_error_js());
 $count_rollback = 0;
 $jprofileObj = JProfileUpdateLib::getInstance('newjs_master');
