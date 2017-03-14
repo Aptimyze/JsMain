@@ -27,7 +27,8 @@ class InboxMobileAppV1
 	const NOT_INTERESTED_BY_ME = 'Interests you have declined/cancelled will appear here';
 	const FILTERED_INTEREST ="People who have expressed interest in you but don't meet your filter criteria will appear here";
 	const PEOPLE_WHO_VIEWED_MY_CONTACTS="People who viewed your contacts will appear here";
-	const INTEREST_ARCHIVED = "Interests received more than ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." days earlier will appear here.";
+	// todo: need to be changed 
+	const INTEREST_ARCHIVED = "Interests received more than 45 days earlier will appear here.";
 	static public function init()
 	{
 		self::$informationTupleFields    = Array(
