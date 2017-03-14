@@ -122,7 +122,7 @@ class gunaScore
         {	
 					$gunaData = array();
         	$compstring = implode(",",$compstring);
-        	$url = "http://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?".$logged_astro_details."&".$compstring;
+        	$url = "https://vendors.vedic-astrology.net/cgi-bin/JeevanSathi_FindCompatibility_Matchstro.dll?SearchCompatiblityMultipleFull?".$logged_astro_details."&".$compstring;
         	$fresult = CommonUtility::sendCurlGetRequest($url,4000);
 		if($fresult)
 		{
