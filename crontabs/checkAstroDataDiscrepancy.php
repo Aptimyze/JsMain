@@ -10,6 +10,7 @@ include_once(JsConstants::$docRoot."/classes/globalVariables.Class.php");
 
 
 global $mysqlObjS;
+global $mysqlObjM;
 
 $mysqlObjM = new Mysql;
 $connMaster = $mysqlObjM->connect("master") or logError("Unable to connect to master","ShowErrTemplate");
@@ -45,7 +46,7 @@ foreach($searchTables as $key=>$val){
                 $noOfProfiles++;
                 
                 $sqlJprofile = "UPDATE JPROFILE SET BTIME='',COUNTRY_BIRTH='',CITY_BIRTH='' WHERE PROFILEID =".$newRow['PROFILEID'];
-		$mysqlObjS->executeQuery($sqlJprofile,$connMaster) or $mysqlObjS->logError($sqlJprofile);
+		$mysqlObjM->executeQuery($sqlJprofile,$connMaster) or $mysqlObjS->logError($sqlJprofile);
             }
         }
     
