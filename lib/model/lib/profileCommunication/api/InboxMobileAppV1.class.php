@@ -11,6 +11,7 @@ class InboxMobileAppV1
 	static public $myProfileIncompleteFields;
 	static public $tupleTitleField;
 	static public $noresultArray = Array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MATCH_ALERT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED","IGNORED_PROFILES","INTEREST_EXPIRING","INTEREST_ARCHIVED");
+	static public $noChatOnlineArray = array("PEOPLE_WHO_VIEWED_MY_CONTACTS", "CONTACTS_VIEWED", "IGNORED_PROFILES", "NOT_INTERESTED_BY_ME", "ACCEPTANCES_SENT", "FILTERED_INTEREST");
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
 	const INTEREST_EXPIRING = "Interests which will expire within the next 7 days will appear here.";
@@ -630,10 +631,10 @@ class InboxMobileAppV1
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"];
 			$finalResponse["subtitle"] = $displayObj[$infoKey]["SUBTITLE"];
 
-			$finalResponse["checkonline"] = false;
-                        if(in_array($infoKey,array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MATCH_ALERT","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED"))){
-                                $finalResponse["checkonline"] = true;
-                        }
+			// $finalResponse["checkonline"] = false;
+   //                      if(in_array($infoKey,array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MATCH_ALERT","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED"))){
+   //                              $finalResponse["checkonline"] = true;
+   //                      }
                         
 			if($infoKey=="PHOTO_REQUEST_RECEIVED")
 			{
@@ -713,6 +714,15 @@ class InboxMobileAppV1
 	$finalResponse['display_rcb_comm_message']="To reach out to your accepted members, you may consider upgrading your membership. Would you like us to call you to explain the benefits of our membership plans?";
       unset($rcbObj);
     }
+    	// added check for chat option in listing.
+    	$finalResponse["checkonline"]=false;
+    	if ( !in_array($infoKey,self::$noChatOnlineArray))
+    	{
+    		if ( JsConstants::$chatOnlineFlag['contact'] )
+			{
+	    		$finalResponse["checkonline"]=true;
+			}
+    	}
         return $finalResponse;
 	}
 	private function getDisplaylayerText($gender,$infokey,$count,$contactType='')

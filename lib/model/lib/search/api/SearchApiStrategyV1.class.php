@@ -227,7 +227,11 @@ class SearchApiStrategyV1
 		$this->output["relaxation"] = null;
 		$this->output["relaxationHead"]=null;
 		$this->output["relaxationType"]=null;
-		$this->output["checkonline"]=true;
+		$this->output["checkonline"]=false;
+		if ( JsConstants::$chatOnlineFlag['search'] )
+		{
+			$this->output["checkonline"]=true;
+		}
 
 		
 		if($relaxedResults && $this->output["result_count"]>0 && MobileCommon::isApp()=='A')

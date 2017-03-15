@@ -280,8 +280,11 @@ class apidetailedv1Action extends sfAction
 		}
                 if(MobileCommon::isAndroidApp()){
                     $out["checkonline"] = false;
-                    if(!in_array($out["buttonDetails"]["contactType"],array('C','D'))){
+                    if(!in_array($out["buttonDetails"]["contactType"],array('C','D')) && !$this->IGNORED && !$this->filter_prof ){
+                    	if ( JsConstants::$chatOnlineFlag['profile'] )
+						{
                             $out["checkonline"] = true;
+						}
                     }
                 }
 
