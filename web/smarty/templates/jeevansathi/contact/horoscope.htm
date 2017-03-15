@@ -1,12 +1,45 @@
 <div style="clear:both"></div> 
 
-<div class="t12" style="border:1px #cad890; padding:10px 0px 0px 20px;border-left-style:solid;border-right-style:solid; background-color:#f3fbd1;width:auto">
+<div class="t12">
+<style type="text/css">
+  /* this is the new css to be added for horoscope: 26/8/16*/
+  #smplH{width:950px; height:70%;z-index:9; background-color:#e8e6e6}
+  .smplHp20{padding:20px}
+  #smplH .p50{padding:30px 50px}
+  #smplH .closeHoroSam {top: -19px;right: -74px;}
+  .content{
+  overflow: auto;
+  position: relative; 
+  -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;
+}
 
- 
-
-   
-
-   <div class="scrollbox4 t12" id="set_scroll">
+</style>
+<!--start:horoscope sample layer-->
+~if $showDownload`
+<div class="setshare pos_fix smplHp20" id="smplH">
+  <div class="pos-rel">     
+      <!--start:top row-->
+      <div class="clearfix p50">
+        <!--start:left-->
+        <div class="fl color11 fontlig wid64p">
+            <p class="f28">Download Horoscope</p>        
+            <p class="f15 pt15 lh22">Now you can download this Horoscope.</p>
+        </div>    
+        <!--end:left-->
+        <!--start:right-->
+        <div class="fr">
+            <div class="lh63 wid280 txtc bg_pink mt15">
+                <a href="~$SITE_URL`/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=~$viewedUsername`&SIM_USERNAME=~$viewedUsername`&type=Horoscope&checksum=&otherprofilechecksum=~$otherProfileChecksum`&randValue=890&GENDERSAME=~$GENDERSAME`&selfprofilechecksum=~$selfProfilechecksum`" class="fontreg f18 colrw cursp">Download Horoscope</a>
+            </div>
+        </div>    
+        <!--end:right-->
+      </div>
+      <!--end:top row-->
+           
+      <!--start:sample report-->
+      <div class="bg-white content" id="sampleHrep" style="height:295px">
+         <div class="scrollbox4 t12" id="set_scroll">
+          ~/if`
 ~if $MESSAGE`
 <div class="">
    
@@ -16,9 +49,9 @@
   </div>
 ~else`
  <div style="padding: 4px 4px;width:98%">
-<div class="lf" style="width:850px;">
+<div class="lf" style="width:850px;margin:0 auto">
 
-<table width="98%" border="0" cellspacing="4" cellpadding="3" bgcolor="#ece8e7">
+<table width="100%" border="0" cellspacing="4" cellpadding="3" bgcolor="#ece8e7">
 
   <tr>
 
@@ -90,7 +123,7 @@
 
 </div>
   
-~if !$NO_ASTRO AND $COMPATIBILITY_SUBSCRIPTION neq 'N' AND $FROM_JSPC_EDIT neq 1 AND $GENDERSAME neq 1`
+~if !$NO_ASTRO AND $COMPATIBILITY_SUBSCRIPTION neq 'N' AND $FROM_JSPC_EDIT neq 1 AND $GENDERSAME neq 1 AND $showDownload eq 1`
   <div style="border:1px #dbdbdb;border-bottom-style:solid;width:98%">&nbsp;</div>
 <div style="width:98%; padding-top: 4px; height: 33px;" class="lf">
 <div style="float: left; width: 50%; margin-top: 5px; margin-left: 215px; display:inline;text-align:center;margin-bottom: 10px;">
@@ -116,3 +149,12 @@
 ~/if`
 
 <!-- End -->
+      </div>    
+      <!--end:sample report-->
+   </div>
+</div>
+<!--end:horoscope sample layer-->
+
+   
+
+  
