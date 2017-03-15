@@ -49,7 +49,7 @@ class ApiResponseHandler
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
 	public function getAndroidChatFlag(){
-		$this->androidChatflag = JsConstants::$androidChat["flag"];
+		$this->androidChatflag = JsConstants::$androidChat["chatOn"];
 		return $this->androidChatflag;
 	}
 
@@ -70,8 +70,8 @@ class ApiResponseHandler
 		return $this->webserviceCachingCap;
 	}
 
-	//getter for membershipSubscription of logged in user for android app
-	public function getSelfSubscription(){
+	//setter for membershipSubscription of logged in user for android app
+	public function setSelfSubscription(){
 		$this->membershipSubscription = "Free";
 		$profileObj=LoggedInProfile::getInstance('newjs_master');
 		$pid=$profileObj->getPROFILEID();
@@ -85,7 +85,6 @@ class ApiResponseHandler
 		        $this->membershipSubscription = "Free";
 		    }
 		}
-		return $this->membershipSubscription;
 	}
 
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
@@ -157,13 +156,16 @@ class ApiResponseHandler
 		$output["cache_flag"]=$this->cache_flag;
 		$output["cache_interval"]=$this->cache_interval;
 		$output["resetCache"]=$this->resetCache;
+
 		//android chat on/off flag
 		$output["xmppLoginOn"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
 
+		//flag for android chat localstorage flushing
 		$output["androidChatLocalStorage"] = $this->getAndroidChatLocalStorageFlag();
+
 		//set membershipSubscription
-		$output["membershipSubscription"] = $this->getSelfSubscription();
+		$this->setSelfSubscription();
 
 		//set webservice caching flag for android
 		$output["webserviceCachingCap"] = $this->getWebserviceCachingCap($this->membershipSubscription);
