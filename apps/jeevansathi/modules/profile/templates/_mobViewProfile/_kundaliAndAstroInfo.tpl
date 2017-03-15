@@ -24,7 +24,18 @@
                 <div class="clearfix">
                     <div class="fontlig fl vpro_wordwrap2" id="vpro_more_astro_nakshatra" >~$arrData.more_astro.nakshatra`</div>
                 </div>
-                ~/if`	
+                ~/if`
+
+                <!--start:button-->
+                <div class="clearfix pb20 pt20">
+                ~if ($arrData.othersHoroscope eq 'Y' && ($arrData.toShowHoroscope eq 'Y' || $arrData.toShowHoroscope eq '') )`
+                <button class="fontlig lh40 astroBtn1 js-downloadHoro" style="width:49%">Download Horoscope</button>
+                ~/if`
+                 <button class="fontlig lh40 astroBtn1 fr" style="width:48%">Get Astro Report</button>
+
+
+             </div>
+             <!--end:button-->
                 ~if isset($arrData.more_astro.horo_match)`
                 <div class="clearfix pt10">
                     <div class="fl"><i class="vpro_sprite vpro_pin"></i></div>
@@ -67,3 +78,9 @@
 ~/if`
 
 
+<script>
+
+var username = "~$arrData.username`";
+var otherProfilechecksum = "~$otherProfilechecksum`";
+var gender = "~$arrData.gender`";
+</script>

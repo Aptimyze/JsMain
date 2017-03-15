@@ -19,6 +19,7 @@ include_once(JsConstants::$docRoot."/commonFiles/flag.php");
 	$smarty->assign("showDownload",$showDownload);
 	$smarty->assign("viewedUsername",$view_username);
 	$smarty->assign("otherProfileChecksum",$profilechecksum);
+	$smarty->assign("gender",$data["GENDER"]);
 	if($SHOW_WHAT=='payment')
 	{
 		$smarty->display("astro_payment.htm");

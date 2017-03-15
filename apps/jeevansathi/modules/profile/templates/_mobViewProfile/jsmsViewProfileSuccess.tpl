@@ -12,7 +12,7 @@
 		<div id="aboutContent">
 			~include_partial("profile/mobViewProfile/_basicInfo",['arrData'=>$arrOutDisplay.about])`
 			~include_partial("profile/mobViewProfile/_educationAndCareerInfo",['arrData'=>$arrOutDisplay.about])`
-			~include_partial("profile/mobViewProfile/_kundaliAndAstroInfo",['arrData'=>$arrOutDisplay.about])`
+			~include_partial("profile/mobViewProfile/_kundaliAndAstroInfo",['arrData'=>$arrOutDisplay.about,'otherProfilechecksum'=>$arrOutDisplay.page_info.profilechecksum])`
 			~include_partial("profile/mobViewProfile/_lifestyleInfo",['arrData'=>$arrOutDisplay.lifestyle,'posted_by'=>$arrOutDisplay.about.posted_by])`
 <div class="space70" >&nbsp;</div>
 		</div>

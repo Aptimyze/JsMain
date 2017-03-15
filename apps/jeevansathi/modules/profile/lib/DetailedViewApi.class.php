@@ -296,6 +296,28 @@ class DetailedViewApi
 		$this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();
                 if( $objProfile->getMSTATUS() != "N")
                     $this->m_arrOut['have_child']  = ApiViewConstants::$hasChildren[$objProfile->getHAVECHILD()];
+		$bHoroScope = $this->m_objProfile->getSHOW_HOROSCOPE();
+    if($bHoroScope === 'D'){
+      $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
+    }
+    else{
+        $astroArr = (array)$this->m_arrAstro;
+        $this->m_arrOut['astro_date'] = $astroArr['dateOfBirth'];
+        $this->m_arrOut['astro_time'] = $astroArr['birthTimeHour']." hrs:".$astroArr['birthTimeMin']." mins";
+        $this->m_arrOut['astro_sunsign'] = $astroArr['sunsign'];
+        $this->m_arrOut['astro_time_check'] = $astroArr['birthTimeHour'];
+        $this->m_arrOut['rashi'] = $astroArr['rashi'];
+        $cManglik = CommonFunction::setManglikWithoutDontKnow($this->m_objProfile->getMANGLIK());
+        $szManglik = ApiViewConstants::getManglikLabel($cManglik);
+        $this->m_arrOut['astro_manglik'] = $szManglik;
+        $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
+        $horoscope = new Horoscope;
+        if($viewerProfile){
+          $this->m_arrOut['myHoroscope'] = $horoscope->ifHoroscopePresent($viewerProfile);
+          $this->m_arrOut['requestedHoroscope'] = $horoscope->ifHoroscopeRequested((array)$viewerProfile,$viewedProfile,1)[$viewerProfile];
+        }
+        $this->m_arrOut['othersHoroscope'] = $this->getHoroscopeExist();
+    }
 	}
 	
 	/**

@@ -538,7 +538,9 @@ $(document).ready(function()
 	
     handleBackButton();
     handlePreviousNext();	
-    initGunnaScore();    
+    initGunnaScore();
+
+    downloadHoroscope();
     
     setTimeout(function(){lastScrollPos = -2; onResize()},200);
 	if($(errorContent).length)
@@ -636,4 +638,22 @@ getViewProfileBackLocation = function()
     return viewBackLocation;
 }
 
+downloadHoroscope = function()
+{
+	$('body').on('touchstart', '.js-downloadHoro', function()
+    {
+    	$.ajax({
+    		method: "POST",
+    		url : "/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+username+"&SIM_USERNAME="+username+"&type=Horoscope&checksum=&otherprofilechecksum="+otherProfilechecksum+"&randValue=890&GENDER="+gender,
+    		async:true,
+    		timeout:20000,
+    		success:function(response){          		
+    			$("#putHoroscope").html(response);
+    			$('.js-overlay').fadeIn(200,"linear",function(){ $('#kundli-layer').fadeIn(200,"linear")});
+    		}
+    	});  
+    });
+}
+
 setTimeout(enableLoader,50);
+

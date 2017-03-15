@@ -16,17 +16,37 @@ class downloadHoroscopeV1Action extends sfActions
 	*/
 	public function execute($request)
 	{				
-		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
-		if(!$request->getParameter('selfprofilechecksum'))
+		$this->loginData = $request->getAttribute("loginData");
+		$profileId = $this->loginData["PROFILEID"];
+		$gender = $request->getParameter("GENDER");
+		
+		if(strlen($gender) > 1)
 		{
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$FAILURE);
-			$apiResponseHandlerObj->generateResponse();
-			die;
+			$gender = $gender[0];
 		}
 		
-		$url = JsConstants::$siteUrl."/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=".$request->getParameter("view_username")."&SIM_USERNAME=".$request->getParameter("SIM_USERNAME")."&type=Horoscope&checksum=&profilechecksum=".$request->getParameter("otherprofilechecksum")."&randValue=890&GENDERSAME=".$request->getParameter("GENDERSAME");				
+		if(!$profileId)
+		{
+			$sameGender = 0;
+		}
+		elseif($this->loginData["GENDER"] != $gender)
+		{
+			$sameGender = 0;
+		}
+		else
+		{
+			$sameGender = 1;
+		}
+		//$apiResponseHandlerObj=ApiResponseHandler::getInstance();
+		/*if(!$profileId)
+		{
+			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
+			$apiResponseHandlerObj->generateResponse();
+			die;
+		}*/
 		
-		$file=PdfCreation::PdfFile($url);
+		$url = JsConstants::$siteUrl."/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=".$request->getParameter("view_username")."&SIM_USERNAME=".$request->getParameter("SIM_USERNAME")."&type=Horoscope&checksum=&profilechecksum=".$request->getParameter("otherprofilechecksum")."&randValue=890&GENDERSAME=".$sameGender;		
+		$file=PdfCreation::PdfFile($url);		
 		PdfCreation::setResponse("horoscope_".$request->getParameter("view_username").".pdf",$file);
 
 		return sfView::NONE;
