@@ -18,6 +18,8 @@ class ApiResponseHandler
 	private $resetCache=false;
 	private $androidFlagForRatingLogic=true;
 	private $androidChatflag ;
+	private $membershipSubscription;
+	private $webserviceCachingCap;
 	//Constructor
 	private function __construct()
 	{
@@ -51,6 +53,40 @@ class ApiResponseHandler
 	public function setAndroidChatFlag(){
 		$this->androidChatflag = JsConstants::$androidChat["flag"];
 	}
+	
+	//getter for webserviceCachingGap
+	public function getWebserviceCachingCap(){
+		return $this->webserviceCachingCap;
+	}
+
+	//setter for webserviceCachingGap based on subscription of logged in user
+	public function setWebserviceCachingCap($subscription="Free"){
+		$this->webserviceCachingCap = array("dpp"=>300000,"shortlist"=>300000);
+		if(is_array(JsConstants::$nonRosterRefreshUpdateNew)){
+			foreach (JsConstants::$nonRosterRefreshUpdateNew as $groupId => $cachingDetails) {
+				$this->webserviceCachingCap[$groupId] = $cachingDetails[$subscription];
+			}
+		}
+	}
+
+	//getter for membershipSubscription of logged in user for android app
+	public function getSelfSubscription(){
+		$this->membershipSubscription = "Free";
+		$profileObj=LoggedInProfile::getInstance('newjs_master');
+		$pid=$profileObj->getPROFILEID();
+		unset($profileObj);
+		if($pid && !empty($pid)){
+			$this->membershipSubscription = CommonFunction::getMembershipName($pid);
+			if($this->membershipSubscription && $this->membershipSubscription!= "Free"){
+		        $this->membershipSubscription = "Paid";
+		    }
+		    else{
+		        $this->membershipSubscription = "Free";
+		    }
+		}
+		return $this->membershipSubscription;
+	}
+
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
 	public function getResetCache(){return $this->resetCache;}
 	public function setHttpArray($httpArray)
@@ -122,6 +158,10 @@ class ApiResponseHandler
 		$output["resetCache"]=$this->resetCache;
 		$output["xmppLoginOn"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
+		$output["membershipSubscription"] = $this->getSelfSubscription();
+		//set webservice caching flag for android
+		$this->setWebserviceCachingCap($this->membershipSubscription);
+		$output["webserviceCachingCap"] = $this->webserviceCachingCap;
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
 			if(isset($this->upgradeDetails[forceupgrade_message]))
@@ -132,7 +172,6 @@ class ApiResponseHandler
 		$loggedIn=LoggedInProfile::getInstance();
 		if(MobileCommon::isApp() && $loggedIn && $loggedIn->getPROFILEID())
 		{
-
 			$output["userReligion"] = $loggedIn->getRELIGION();
 			$output["userActivation"] = $loggedIn->getACTIVATED();
 		}
