@@ -233,28 +233,26 @@ private function getBannerMessage($profileInfo) {
         			} else {  
         				$memCacheObject = JsMemcache::getInstance();
         				$profileId = $profileObj->getPROFILEID();
-        				$redisKeyBanner = $memCacheObject->keyExist($profileId.'_MESSAGE_BANNER');
+        				$redisKeyBanner = $memCacheObject->keyExist('OCB_'.$profileId.'_MESSAGE_BANNER');
 
         				if($redisKeyBanner)
         				{  	
-        					$top = $memCacheObject->getHashOneValue($profileId.'_MESSAGE_BANNER','top');
-        					$bottom = $memCacheObject->getHashOneValue($profileId.'_MESSAGE_BANNER','bottom');
-        					$pgId = $memCacheObject->getHashOneValue($profileId.'_MESSAGE_BANNER','pageId');
+
+        					$valArr = $memCacheObject->getHashAllValue('OCB_'.$profileId.'_MESSAGE_BANNER'); 
 
         					$memMessage = '';
 
-        					if($top){
-        					$memMessage['membership_message']['top'] = $top;
+        					if($valArr['top']){
+        					$memMessage['membership_message']['top'] = $valArr['top'];
         					}
-        					if($bottom)
+        					if($valArr['bottom'])
         					{	
-        					$memMessage['membership_message']['bottom'] = $bottom;
+        					$memMessage['membership_message']['bottom'] = $valArr['bottom'];
         					}
-        					if($pgId)
+        					if($valArr['pgId'])
         					{	
-        					$memMessage['membership_message']['pageId'] = $pgId;
+        					$memMessage['membership_message']['pageId'] = $valArr['pgId'];
         					}
-
         				}
         				else
         				{  
@@ -271,7 +269,7 @@ private function getBannerMessage($profileInfo) {
         				}
 
         				$timeForCache = 1800;
-        				$memCacheObject->setHashObject($profileId.'_MESSAGE_BANNER',$arr,$timeForCache);
+        				$memCacheObject->setHashObject('OCB_'.$profileId.'_MESSAGE_BANNER',$arr,$timeForCache);
         				}
 
         				
