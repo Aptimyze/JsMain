@@ -62,7 +62,7 @@ class dialerInboundCallIvrAction extends sfActions
                 $phone = substr($phone,-10);
                 $phoneNumeric = is_numeric($phone);
 		if(!$phoneNumeric)
-			return false;
+			return;
 		return $phone;
 	}
 	public function generateResponse()
