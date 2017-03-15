@@ -222,20 +222,21 @@ class JPROFILE
         if(
             JPROFILE::$canSetForPartialKeys &&
             !ProfileCacheLib::getInstance()->isCommandLineScript() &&
-             is_array($valueArray) &&
-             count($valueArray) &&
-             $valueArray['PROFILEID'] &&
-             $excludeArray == "" &&
-             $greaterThanArray == "" &&
-             $lessThanArray == "" &&
-             $orderby == "" &&
-             $limit == "" &&
-             $greaterThanEqualArrayWithoutQuote == "" &&
-             $lessThanEqualArrayWithoutQuote == "" &&
-             $like == "" &&
-             $nolike == "" &&
-             $addWhereText == ""
-            )
+            is_array($valueArray) &&
+            count($valueArray) == 1 &&
+            $valueArray['PROFILEID'] &&
+            $excludeArray == "" &&
+            $greaterThanArray == "" &&
+            $lessThanArray == "" &&
+            $orderby == "" &&
+            $limit == "" &&
+            $greaterThanEqualArrayWithoutQuote == "" &&
+            $lessThanEqualArrayWithoutQuote == "" &&
+            $like == "" &&
+            $nolike == "" &&
+            $addWhereText == "" &&
+            ProfileCacheConstants::CONSUME_PROFILE_CACHE
+        )
         {
             $arrPid = explode(',', $valueArray['PROFILEID']);
             if(count($arrPid) < 50)
@@ -260,7 +261,7 @@ class JPROFILE
             $fields = $this->getRelevantFields($fields);
             $result = ProfileCacheLib::getInstance()->getForPartialKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__);
 
-            if(is_array($result) && false !== $result)
+            if($result && false !== $result['cachedResult'] && is_array($result['cachedResult']))
             {                       
                 // case - partial data served from cache for some  profile ids
                 $valueArray['PROFILEID'] = $result['notCachedPids'];
@@ -269,18 +270,11 @@ class JPROFILE
                 // get result from store for remaining pids
                 $storeResult = self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
 
-                if($result && $result !== false)
-                {
-                    // merge the cache result and the store result if there exists data in cache
-                    $storeResult = array_merge($result, $storeResult);
-                }
+                // merge the cache result and the store result if there exists data in cache
+                $storeResult = array_merge($result, $storeResult);
 
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $storeResult);
-                
-                if(ProfileCacheConstants::CONSUME_PROFILE_CACHE)
-                {
-                    return $result;
-                }
+                return $result;
             }
         }
         return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);

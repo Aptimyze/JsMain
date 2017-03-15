@@ -1012,7 +1012,7 @@ class ProfileCacheLib
             continue;
         }
         if(false === $this->isDataExistInCache($value)) {
-          $profileId = $this->getPROFILEID($key);
+          $profileId = $this->getRawKey($key);
           array_push($arrPids, $profileId);
         }
       }
@@ -1023,7 +1023,7 @@ class ProfileCacheLib
      * @param $decoratedKey
      * @return string profile id
      */
-    private function getPROFILEID($decoratedKey)
+    private function getRawKey($decoratedKey)
     {
       $prefix = self::KEY_PREFIX;
       if (substr($decoratedKey, 0, strlen($prefix)) == $prefix)
@@ -1065,7 +1065,17 @@ class ProfileCacheLib
 
       // Array of profile ids which exist in cache
       $cachedPids = array_diff($arrKey, $arrPids);
-      $cachedResult = empty($cachedPids) ? false : $this->getForMultipleKeys($criteria, $cachedPids, $fields, $storeName);
+
+      $cachedResult = False;
+      if(!empty($cachedPids))
+      {
+        $cachedResult = array();
+        foreach ($cachedPids as $key)
+        {
+          $val = $arrResponse[$this->getDecoratedKey($key)];
+          $cachedResult[] = $this->removeDuplicateSuffix($val, $storeName);
+        }
+      }
 
       $result = array(
         'cachedResult' => $cachedResult,
