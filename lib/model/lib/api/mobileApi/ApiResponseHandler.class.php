@@ -48,7 +48,8 @@ class ApiResponseHandler
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
 	public function getAndroidChatFlag(){
-		return JsConstants::$androidChat["flag"];
+		$this->androidChatflag = JsConstants::$androidChat["flag"];
+		return $this->androidChatflag;
 	}
 	public function setAndroidChatFlag(){
 		$this->androidChatflag = JsConstants::$androidChat["flag"];
@@ -62,7 +63,7 @@ class ApiResponseHandler
 	//setter for webserviceCachingGap based on subscription of logged in user
 	public function setWebserviceCachingCap($subscription="Free"){
 		$this->webserviceCachingCap = array("dpp"=>600000,"shortlist"=>600000);
-		if(is_array(JsConstants::$nonRosterRefreshUpdateNew) && $subscription!=""){
+		if($this->androidChatflag != 0 && is_array(JsConstants::$nonRosterRefreshUpdateNew) && $subscription!=""){
 			foreach (JsConstants::$nonRosterRefreshUpdateNew as $groupId => $cachingDetails) {
 				$this->webserviceCachingCap[$groupId] = $cachingDetails[$subscription];
 			}
