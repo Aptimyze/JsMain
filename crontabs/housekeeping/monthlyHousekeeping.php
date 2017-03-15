@@ -7,8 +7,11 @@ include_once("housekeepingConfig.php");
 include_once($_SERVER['DOCUMENT_ROOT']."/classes/Mysql.class.php");
 include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.php");
 
-if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'live')
+
+checkForEndTime();
+if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'prod')
         successfullDie();
+
 
 $monthDiff = 24;
 $timeDiff = $monthDiff + 6 ;
@@ -33,7 +36,7 @@ $sql="TRUNCATE TABLE test.$inactiveRecordTable";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
 
-$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate'";
+$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate' ";
 //$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE LAST_LOGIN_DT < '$inactivityDate'";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
@@ -47,10 +50,9 @@ for($activeServerId=0;$activeServerId<$noOfActiveServers;$activeServerId++)
         mysql_select_db("test",$dbS);
 
 	$sql="TRUNCATE TABLE test.$inactiveRecordTable";
-echo $sql."\n\n";
+echo "Query on slave",$activeServerId,": ",$sql."\n\n";
 	mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
 }
-
 $s1=getDumpCommandConnectionDetails('S',"$inactiveRecordTable",'test','source');//slave
 
 $t1=getDumpCommandConnectionDetails('SS1','','test','target');//shardslave1
@@ -60,16 +62,14 @@ passthru($p);
 echo "Dump1";
 
 $t2=getDumpCommandConnectionDetails('SS2','','test','target');//shardslave2
-$p=$s1." | ".$t2;
+echo $p=$s1." | ".$t2;
 passthru($p);
 echo "Dump2";
-
 $t3=getDumpCommandConnectionDetails('SS3','','test','target');//shardslave3
 $p=$s1." | ".$t3;
 passthru($p);
 echo "Dump3";
 //dumping INACTIVE_RECORDS_6_MONTHS_FOR_CRON to all slaves as they are needed for joins
-
 //BOOKMARKS
 for($i=0;$i<2;$i++)
 {
@@ -82,7 +82,7 @@ echo $sql."\n\n";
 	$res=mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
 	while($row=mysql_fetch_array($res))
 	{
-
+	checkForEndTime();
 if($laveshBookmark++%1000==0)
 	echo $laveshBookmark." - ";
 
@@ -148,6 +148,7 @@ echo $sql."\n\n";
 		$res=mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
 		while($row=mysql_fetch_array($res))
 		{
+	checkForEndTime();
 if($laveshPhoto++%1000==0)
 	echo $laveshPhoto." - ";
 			$col1=$row["PID"];
@@ -204,6 +205,7 @@ echo $sql."\n\n\n";
 		$res=mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
 		while($row=mysql_fetch_array($res))
 		{
+	checkForEndTime();
 if($laveshHoro++%1000==0)
 	echo $laveshHoro." - ";
 			$col1=$row["PID"];
@@ -272,6 +274,7 @@ echo $sql."\n\n";
 		$res=mysql_query($sql,$dbS) or die(mysql_error($dbS).$sql);
 		while($row=mysql_fetch_array($res))
 		{
+checkForEndTime();
 if($laveshC++%1000==0)
 	echo $laveshC." - ";
 			$col1=$row["SENDER"];
@@ -381,6 +384,7 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
                                         $sql_1="COMMIT";
                                         $dbMessageLogObj->commitTransaction();
                                         mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
+					checkForEndTime();
                                 }
 			}
 		}	
@@ -403,6 +407,7 @@ echo "\n\n";
 $res=mysql_query($sql,$db_211_slave) or die(mysql_error($db_211_slave).$sql);
 while($row=mysql_fetch_assoc($res))
 {
+	checkForEndTime();
 if($laveshrawat++%10000==0)
 {
         echo $laveshrawat."-";
@@ -452,8 +457,12 @@ function getDumpCommandConnectionDetails($case,$table='',$dbname='',$dump)
 			$sipArr[0]=$x[0];
 			$s=$x[1];
 		}
-		else
-			$sipArr=explode(":",MysqlDbConstants::$shard1Slave[HOST]);
+		else{
+			
+			$sipArr[0]=MysqlDbConstants::$shard1Slave[HOST];
+			$sipArr[1]=MysqlDbConstants::$shard1Slave[PORT];
+			
+		}
 	}
         elseif($case=='SS2')
         {
@@ -467,8 +476,13 @@ function getDumpCommandConnectionDetails($case,$table='',$dbname='',$dump)
 			$s=$x[1];
 		}
 		else
-	                $sipArr=explode(":",MysqlDbConstants::$shard2Slave[HOST]);
-        }
+		{
+
+                        $sipArr[0]=MysqlDbConstants::$shard2Slave[HOST];
+                        $sipArr[1]=MysqlDbConstants::$shard2Slave[PORT];
+
+                }
+	}
         elseif($case=='SS3')
         {
                 $h=MysqlDbConstants::$shard3Slave[HOST];
@@ -480,8 +494,13 @@ function getDumpCommandConnectionDetails($case,$table='',$dbname='',$dump)
 			$sipArr[0]=$x[0];
 			$s=$x[1];
 		}
-		else
-                	$sipArr=explode(":",MysqlDbConstants::$shard3Slave[HOST]);
+		else{
+
+                        $sipArr[0]=MysqlDbConstants::$shard3Slave[HOST];
+                        $sipArr[1]=MysqlDbConstants::$shard3Slave[PORT];
+
+                }
+
         }
 
 	
@@ -501,4 +520,21 @@ function getDumpCommandConnectionDetails($case,$table='',$dbname='',$dump)
 		$str.=' '.$table;
 	return $str;
 }
+
+function checkForEndTime()
+{
+	$orgTZ = date_default_timezone_get();
+        date_default_timezone_set("Asia/Calcutta");
+
+	 if(in_array(date('H'),array("06","07","08","09")))
+	 {
+		date_default_timezone_set($orgTZ);
+		successfullDie();		
+            return 1;
+         }
+		
+
+	date_default_timezone_set($orgTZ);
+}
+
 ?>
