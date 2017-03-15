@@ -15,8 +15,7 @@ class downloadHoroscopeV1Action extends sfActions
 	* @param sfRequest $request A request object
 	*/
 	public function execute($request)
-	{
-		
+	{				
 		$apiResponseHandlerObj=ApiResponseHandler::getInstance();
 		if(!$request->getParameter('selfprofilechecksum'))
 		{
@@ -28,7 +27,7 @@ class downloadHoroscopeV1Action extends sfActions
 		$url = JsConstants::$siteUrl."/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=".$request->getParameter("view_username")."&SIM_USERNAME=".$request->getParameter("SIM_USERNAME")."&type=Horoscope&checksum=&profilechecksum=".$request->getParameter("otherprofilechecksum")."&randValue=890&GENDERSAME=".$request->getParameter("GENDERSAME");				
 		
 		$file=PdfCreation::PdfFile($url);
-		PdfCreation::setResponse("myfile.pdf",$file);
+		PdfCreation::setResponse("horoscope_".$request->getParameter("view_username").".pdf",$file);
 
 		return sfView::NONE;
 	}
