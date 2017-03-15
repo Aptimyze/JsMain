@@ -20,7 +20,7 @@ $connSlave = $mysqlObjS->connect("slave") or logError("Unable to connect to slav
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$connSlave);
 
 
-$searchTables = array(0=>array("type"=>"MALE","number"=>"555000"),1=>array("type"=>"FEMALE","number"=>"266000"));
+$searchTables = array(0=>array("type"=>"MALE","number"=>"560000"),1=>array("type"=>"FEMALE","number"=>"270000"));
 
 $file = fopen(sfConfig::get("sf_upload_dir")."/SearchLogs/astroCron".$date.".txt","a");
 
@@ -45,7 +45,7 @@ foreach($searchTables as $key=>$val){
                 $noOfProfiles++;
                 
                 $sqlJprofile = "UPDATE JPROFILE SET BTIME='',COUNTRY_BIRTH='',CITY_BIRTH='' WHERE PROFILEID =".$newRow['PROFILEID'];
-				$result = $mysqlObjS->executeQuery($sqlJprofile,$connMaster) or $mysqlObjS->logError($sqlJprofile);
+		$mysqlObjS->executeQuery($sqlJprofile,$connMaster) or $mysqlObjS->logError($sqlJprofile);
             }
         }
     
