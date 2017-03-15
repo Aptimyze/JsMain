@@ -17,7 +17,7 @@ class ApiResponseHandler
 	private $cache_interval=120000; //in milisecond should be integer always 
 	private $resetCache=false;
 	private $androidFlagForRatingLogic=true;
-	private $androidChatflag ;
+	private $androidChat;
 	private $membershipSubscription;
 	private $webserviceCachingCap;
 	private $androidChatLocalStorage;
@@ -49,23 +49,21 @@ class ApiResponseHandler
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
 	public function getAndroidChatFlag(){
-		$this->androidChatflag = JsConstants::$androidChat["chatOn"];
-		return $this->androidChatflag;
+		$this->androidChat = JsConstants::$androidChatNew["chatOn"];
+		return $this->androidChat;
 	}
 
 	//getter for androidChatLocalStorage flag
 	public function getAndroidChatLocalStorageFlag(){
-		$this->androidChatLocalStorage = JsConstants::$androidChat["flushLocalStorage"];
+		$this->androidChatLocalStorage = JsConstants::$androidChatNew["flushLocalStorage"];
 		return $this->androidChatLocalStorage;
 	}
 
 	//getter for webserviceCachingGap based on subscription of logged in user
 	public function getWebserviceCachingCap($subscription="Free"){
-		$this->webserviceCachingCap = array("dpp"=>600000,"shortlist"=>600000);
+		$this->webserviceCachingCap = 600000;
 		if(is_array(JsConstants::$nonRosterRefreshUpdateNew) && $subscription!=""){
-			foreach (JsConstants::$nonRosterRefreshUpdateNew as $groupId => $cachingDetails) {
-				$this->webserviceCachingCap[$groupId] = $cachingDetails[$subscription];
-			}
+			$this->webserviceCachingCap = JsConstants::$nonRosterRefreshUpdateNew["dpp"][$subscription];
 		}
 		return $this->webserviceCachingCap;
 	}
@@ -158,7 +156,7 @@ class ApiResponseHandler
 		$output["resetCache"]=$this->resetCache;
 
 		//android chat on/off flag
-		$output["xmppLoginOn"] = $this->getAndroidChatFlag();
+		$output["androidChat"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
 
 		//flag for android chat localstorage flushing
