@@ -20,6 +20,7 @@ class ApiResponseHandler
 	private $androidChatflag ;
 	private $membershipSubscription;
 	private $webserviceCachingCap;
+	private $androidChatLocalStorage;
 	//Constructor
 	private function __construct()
 	{
@@ -51,23 +52,22 @@ class ApiResponseHandler
 		$this->androidChatflag = JsConstants::$androidChat["flag"];
 		return $this->androidChatflag;
 	}
-	public function setAndroidChatFlag(){
-		$this->androidChatflag = JsConstants::$androidChat["flag"];
-	}
-	
-	//getter for webserviceCachingGap
-	public function getWebserviceCachingCap(){
-		return $this->webserviceCachingCap;
+
+	//getter for androidChatLocalStorage flag
+	public function getAndroidChatLocalStorageFlag(){
+		$this->androidChatLocalStorage = JsConstants::$androidChat["flushLocalStorage"];
+		return $this->androidChatLocalStorage;
 	}
 
-	//setter for webserviceCachingGap based on subscription of logged in user
-	public function setWebserviceCachingCap($subscription="Free"){
+	//getter for webserviceCachingGap based on subscription of logged in user
+	public function getWebserviceCachingCap($subscription="Free"){
 		$this->webserviceCachingCap = array("dpp"=>600000,"shortlist"=>600000);
-		if($this->androidChatflag != 0 && is_array(JsConstants::$nonRosterRefreshUpdateNew) && $subscription!=""){
+		if(is_array(JsConstants::$nonRosterRefreshUpdateNew) && $subscription!=""){
 			foreach (JsConstants::$nonRosterRefreshUpdateNew as $groupId => $cachingDetails) {
 				$this->webserviceCachingCap[$groupId] = $cachingDetails[$subscription];
 			}
 		}
+		return $this->webserviceCachingCap;
 	}
 
 	//getter for membershipSubscription of logged in user for android app
@@ -161,10 +161,12 @@ class ApiResponseHandler
 		$output["xmppLoginOn"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
 
+		$output["androidChatLocalStorage"] = $this->getAndroidChatLocalStorageFlag();
+		//set membershipSubscription
 		$output["membershipSubscription"] = $this->getSelfSubscription();
+
 		//set webservice caching flag for android
-		$this->setWebserviceCachingCap($this->membershipSubscription);
-		$output["webserviceCachingCap"] = $this->webserviceCachingCap;
+		$output["webserviceCachingCap"] = $this->getWebserviceCachingCap($this->membershipSubscription);
 
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
