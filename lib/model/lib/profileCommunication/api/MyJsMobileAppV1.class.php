@@ -249,9 +249,9 @@ private function getBannerMessage($profileInfo) {
         					{	
         					$memMessage['membership_message']['bottom'] = $valArr['bottom'];
         					}
-        					if($valArr['pgId'])
+        					if($valArr['pageId'])
         					{	
-        					$memMessage['membership_message']['pageId'] = $valArr['pgId'];
+        					$memMessage['membership_message']['pageId'] = $valArr['pageId'];
         					}
         				}
         				else
