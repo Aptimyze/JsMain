@@ -61,8 +61,8 @@ class ApiResponseHandler
 
 	//setter for webserviceCachingGap based on subscription of logged in user
 	public function setWebserviceCachingCap($subscription="Free"){
-		$this->webserviceCachingCap = array("dpp"=>300000,"shortlist"=>300000);
-		if(is_array(JsConstants::$nonRosterRefreshUpdateNew)){
+		$this->webserviceCachingCap = array("dpp"=>600000,"shortlist"=>600000);
+		if(is_array(JsConstants::$nonRosterRefreshUpdateNew) && $subscription!=""){
 			foreach (JsConstants::$nonRosterRefreshUpdateNew as $groupId => $cachingDetails) {
 				$this->webserviceCachingCap[$groupId] = $cachingDetails[$subscription];
 			}
@@ -156,12 +156,15 @@ class ApiResponseHandler
 		$output["cache_flag"]=$this->cache_flag;
 		$output["cache_interval"]=$this->cache_interval;
 		$output["resetCache"]=$this->resetCache;
+		//android chat on/off flag
 		$output["xmppLoginOn"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
+
 		$output["membershipSubscription"] = $this->getSelfSubscription();
 		//set webservice caching flag for android
 		$this->setWebserviceCachingCap($this->membershipSubscription);
 		$output["webserviceCachingCap"] = $this->webserviceCachingCap;
+
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
 			if(isset($this->upgradeDetails[forceupgrade_message]))
