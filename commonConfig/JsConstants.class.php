@@ -34,6 +34,8 @@ public static $all =
 
 		"jquery"             => 'https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
 		"hindiTranslateURL" => "http://hindi.jeevansathi.com",//Doubt
+		"nonRosterRefreshUpdateNew" => 'array("dpp"=>array("Free"=>600000,"Paid"=>300000),"shortlist"=>array("Free"=>600000,"Paid"=>300000))',
+    	"androidChatNew"=>'array("chatOn"=>true,"flushLocalStorage"=>false)',
 	];
 
 public static $dev = 
