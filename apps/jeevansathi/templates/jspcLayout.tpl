@@ -76,7 +76,7 @@
         var hideUnimportantFeatureAtPeakLoad = ~JsConstants::$hideUnimportantFeatureAtPeakLoad`;
         var multiUserPhotoUrl = "~JsConstants::$multiUserPhotoUrl`";
         var listingWebServiceUrl = {"dpp":"~JsConstants::$chatListingWebServiceUrl['dpp']`","shortlist":"~JsConstants::$chatListingWebServiceUrl['shortlist']`"};
-        var nonRosterRefreshUpdate = {"dpp":"~JsConstants::$nonRosterRefreshUpdate['dpp']`","shortlist":"~JsConstants::$nonRosterRefreshUpdate['shortlist']`"};
+        var nonRosterRefreshUpdate = {"dpp":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['dpp']['Paid']`"},"shortlist":{"Free":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Free']`","Paid":"~JsConstants::$nonRosterRefreshUpdateNew['shortlist']['Paid']`"}};
         var dppLiveForAll = "~JsConstants::$profilesEligibleForDpp['allProfiles']`";
         var profileServiceUrl = "~JsConstants::$profileServiceUrl`";
         //console.log("dppLiveForAll",dppLiveForAll);

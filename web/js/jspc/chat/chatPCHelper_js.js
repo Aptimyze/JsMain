@@ -79,11 +79,14 @@ function to check whether request to non roster webservice is valid or not
 */
 function checkForValidNonRosterRequest(groupId){
     //return true;
+    var selfSub = getMembershipStatus();
+    //console.log("ankita",selfSub);
+    //console.log("ankita1",chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]);
     var lastUpdated = JSON.parse(localStorage.getItem("nonRosterCLUpdated")),d = new Date(),valid = true;
     var data = strophieWrapper.getRosterStorage("non-roster");
     if(lastUpdated && lastUpdated[groupId]){
         var currentTime = d.getTime(),timeDiff = (currentTime - lastUpdated[groupId]); //Time diff in milliseconds
-        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId]){
+        if(timeDiff <= chatConfig.Params[device].nonRosterListingRefreshCap[groupId][selfSub]){
             valid = false;
         }
     }

@@ -18,6 +18,9 @@ class ApiResponseHandler
 	private $resetCache=false;
 	private $androidFlagForRatingLogic=true;
 	private $androidChatflag ;
+	private $membershipSubscription;
+	private $webserviceCachingCap;
+	private $androidChatLocalStorage;
 	//Constructor
 	private function __construct()
 	{
@@ -46,11 +49,44 @@ class ApiResponseHandler
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
 	public function getAndroidChatFlag(){
-		return JsConstants::$androidChat["flag"];
+		$this->androidChatflag = JsConstants::$androidChat["chatOn"];
+		return $this->androidChatflag;
 	}
-	public function setAndroidChatFlag(){
-		$this->androidChatflag = JsConstants::$androidChat["flag"];
+
+	//getter for androidChatLocalStorage flag
+	public function getAndroidChatLocalStorageFlag(){
+		$this->androidChatLocalStorage = JsConstants::$androidChat["flushLocalStorage"];
+		return $this->androidChatLocalStorage;
 	}
+
+	//getter for webserviceCachingGap based on subscription of logged in user
+	public function getWebserviceCachingCap($subscription="Free"){
+		$this->webserviceCachingCap = array("dpp"=>600000,"shortlist"=>600000);
+		if(is_array(JsConstants::$nonRosterRefreshUpdateNew) && $subscription!=""){
+			foreach (JsConstants::$nonRosterRefreshUpdateNew as $groupId => $cachingDetails) {
+				$this->webserviceCachingCap[$groupId] = $cachingDetails[$subscription];
+			}
+		}
+		return $this->webserviceCachingCap;
+	}
+
+	//setter for membershipSubscription of logged in user for android app
+	public function setSelfSubscription(){
+		$this->membershipSubscription = "Free";
+		$profileObj=LoggedInProfile::getInstance('newjs_master');
+		$pid=$profileObj->getPROFILEID();
+		unset($profileObj);
+		if($pid && !empty($pid)){
+			$this->membershipSubscription = CommonFunction::getMembershipName($pid);
+			if($this->membershipSubscription && $this->membershipSubscription!= "Free"){
+		        $this->membershipSubscription = "Paid";
+		    }
+		    else{
+		        $this->membershipSubscription = "Free";
+		    }
+		}
+	}
+
 	public function setResetCache($resetCache){$this->resetCache = $resetCache;}
 	public function getResetCache(){return $this->resetCache;}
 	public function setHttpArray($httpArray)
@@ -120,8 +156,20 @@ class ApiResponseHandler
 		$output["cache_flag"]=$this->cache_flag;
 		$output["cache_interval"]=$this->cache_interval;
 		$output["resetCache"]=$this->resetCache;
+
+		//android chat on/off flag
 		$output["xmppLoginOn"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
+
+		//flag for android chat localstorage flushing
+		$output["androidChatLocalStorage"] = $this->getAndroidChatLocalStorageFlag();
+
+		//set membershipSubscription
+		$this->setSelfSubscription();
+
+		//set webservice caching flag for android
+		$output["webserviceCachingCap"] = $this->getWebserviceCachingCap($this->membershipSubscription);
+
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
 			if(isset($this->upgradeDetails[forceupgrade_message]))
@@ -132,7 +180,6 @@ class ApiResponseHandler
 		$loggedIn=LoggedInProfile::getInstance();
 		if(MobileCommon::isApp() && $loggedIn && $loggedIn->getPROFILEID())
 		{
-
 			$output["userReligion"] = $loggedIn->getRELIGION();
 			$output["userActivation"] = $loggedIn->getACTIVATED();
 		}

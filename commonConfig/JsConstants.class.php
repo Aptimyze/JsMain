@@ -160,6 +160,7 @@ public static $dev =
 		"multiUserPhotoUrl" => "%URL_INPUT%/api/v1/social/getMultiUserPhoto", //Api from staging for multi user photo being used in chat listing and self photo.
 		"chatListingWebServiceUrl" => 'array("dpp"=>"%URL_INPUT%:8190/listings/v1/discover")',
 		"profilesEligibleForDpp" => "array('allProfiles'=>1,'modulusDivisor'=>100,'modulusRemainder'=>1,'privilegedProfiles'=>'5616315|9061321')",
+		"nonRosterRefreshUpdateNew" => 'array("dpp"=>array("Free"=>600000,"Paid"=>300000),"shortlist"=>array("Free"=>600000,"Paid"=>300000))',
 		"nonRosterRefreshUpdate" => 300000,
 		"stopOnPeakLoad"     => 1,
 		"useMongoDb" => false,
