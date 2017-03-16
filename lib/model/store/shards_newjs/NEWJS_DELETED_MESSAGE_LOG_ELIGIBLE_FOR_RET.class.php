@@ -44,7 +44,7 @@ class NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET extends TABLE
     public function selectActiveDeletedData($pid, $listOfActiveProfile, $whereStrLabel1 = 'RECEIVER', $whereStrLabel2 = 'SENDER')
     {
         if (!$pid || !$listOfActiveProfile)
-            throw new jsException("", "VALUE OR TYPE IS BLANK IN selectActiveDeletedData() of NEWJS_DELETED_MESSAGE_LOG.class.php");
+            throw new jsException("", "VALUE OR TYPE IS BLANK IN selectActiveDeletedData() of NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET.class.php");
         try {
             $sql = "select ID FROM newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET WHERE (" . $whereStrLabel1 . "=:PROFILEID OR " . $whereStrLabel2 . "=:PROFILEID) AND (" . $whereStrLabel1 . " IN (" . $listOfActiveProfile . ") OR " . $whereStrLabel2 . " IN (" . $listOfActiveProfile . "))";
             $prep = $this->db->prepare($sql);

@@ -102,7 +102,7 @@ class NEWJS_DELETED_MESSAGES extends TABLE{
 				}
 				else
 				{
-					throw new jsException("","profile id array is not specified in function deleteMessages of newjs_MESSAGES.class.php");
+					throw new jsException("","profile id array is not specified in function deleteMessages of newjs_DELETED_MESSAGES.class.php");
 				}
 			}
 			catch(PDOException $e)

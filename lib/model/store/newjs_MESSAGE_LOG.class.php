@@ -126,7 +126,7 @@ class NEWJS_MESSAGE_LOG extends TABLE{
                         {
                                 if($pid)
                                 {
-                                        $sql="SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  ORDER by DATE ASC  ";
+                                        $sql="SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  ORDER by DATE ASC  ";
                                         $prep=$this->db->prepare($sql);
                                         $prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
                                         $prep->execute();
