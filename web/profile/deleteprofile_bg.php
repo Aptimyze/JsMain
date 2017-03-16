@@ -14,6 +14,9 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 global $partitionsArray;
 global $process_user_mapping;
 
+if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'live')
+        successfullDie();
+
 $processUserId=$process_user_mapping["delete_profile"];
 if(!$processUserId)
         $processUserId=1;

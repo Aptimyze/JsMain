@@ -89,6 +89,10 @@ class Scoring
         $this->newmodel[SHOW_HOROSCOPE]     = $this->SHOW_HOROSCOPE;
         $this->newmodel[MTONGUE]            = $this->MTONGUE;
         $this->newmodel[DOB]                = $this->DTOFBIRTH;
+	if($this->LAST_LOGIN_DT){
+		$lastLoginDt =explode(" ", $this->LAST_LOGIN_DT);
+		$this->LAST_LOGIN_DT =$lastLoginDt[0];
+	}
         $this->newmodel[LAST_LOGIN_DT]      = $this->LAST_LOGIN_DT;
         $this->newmodel[ENTRY_DT]           = $this->ENTRY_DT;
 

@@ -310,6 +310,10 @@ abstract class ContactEvent {
 		$viewerProfile = $this->contactHandler->getViewer()->getPROFILEID();
 		$memcacheServiceObj = new ProfileMemcacheService($viewerProfile);
 		$memcacheServiceObj->unsetSKIP_PROFILES();
+
+    $viewedProfile = $this->contactHandler->getViewed()->getPROFILEID();
+    $memcacheServiceViewedObj = new ProfileMemcacheService($viewedProfile);
+    $memcacheServiceViewedObj->unsetSKIP_PROFILES();
 	}
 }
 ?>

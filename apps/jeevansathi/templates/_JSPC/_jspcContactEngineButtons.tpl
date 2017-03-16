@@ -401,7 +401,7 @@
 </div>
 
 <div class="f13 reportInv1 txtc">
-<p class="color11 f13 txtl" style="padding-left:70px;">Thank you for helping us.If our team finds this number invalid we will remove this number and credit you with a contact as compensation. </p>
+<p id = "invalidConfirmMessage"class="color11 f13 txtl" style="padding-left:70px;">Thank you for helping us.If our team finds this number invalid we will remove this number and credit you with a contact as compensation. </p>
 </div>
 </div>
 </div>

@@ -107,11 +107,11 @@ class dppSuggestionsCALV1Action extends sfActions
 								$finalArrApp["dppData"][$key][$k1][$i]["value"] = $v2;	
 								$i++;
 							}
-							else
-							{
-								$mailBody = self::MAILBODY."on: ".$value["type"]." with key: ".$k2."\n ".print_r($_SERVER,true);
-								SendMail::send_email(self::RECEIVER,$mailBody,self::SUBJECT,self::SENDER);								
-							}
+							// else
+							// {
+							// 	$mailBody = self::MAILBODY."on: ".$value["type"]." with key: ".$k2."\n ".print_r($_SERVER,true);
+							// 	SendMail::send_email(self::RECEIVER,$mailBody,self::SUBJECT,self::SENDER);								
+							// }
 						}
 						else
 						{

@@ -81,14 +81,16 @@ $className = get_class($this);
 				}
 				if($key == "MATCH_OF_THE_DAY")
 				{
-					if(MobileCommon::isApp())
+					if (LoggedInProfile::getInstance()->getACTIVATED() == 'U')
+					{
+						continue;
+					}
+
+					if(MobileCommon::isApp() && ($isApp == "A" && $appVersion  && $appVersion < 88))
 					{  
-				// Version Check For ANDROID		
-					//&& ($isApp == "A" && $appVersion  && $appVersion < 84)	
+						// Version Check For ANDROID
 						continue;
 					}	
-					/*else*/ if (LoggedInProfile::getInstance()->getACTIVATED() == 'U')
-						continue;					
 				}
 				foreach($value as $k=>$v)
                                 {
@@ -113,7 +115,7 @@ $className = get_class($this);
 							{
 								foreach(self::$informationTupleFields[$key] as $i=>$field)
 								{
-									$photoType=$this->getPhotoTypeFromId($key);
+ 									$photoType=$this->getPhotoTypeFromId($key);
                                                                         $tupleObj= $displayObj[$key][$v][$pid];
 									eval('$fieldValue =$tupleObj->get' . $field . '();'); 
 									$fieldLabel = strpos($field,"Url")>0?"PHOTO":$field;
