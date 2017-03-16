@@ -539,9 +539,8 @@ $(document).ready(function()
     handleBackButton();
     handlePreviousNext();	
     initGunnaScore();
-
-    downloadHoroscope();
-    
+	
+	astroCompatibility();    
     setTimeout(function(){lastScrollPos = -2; onResize()},200);
 	if($(errorContent).length)
 	{
@@ -638,22 +637,39 @@ getViewProfileBackLocation = function()
     return viewBackLocation;
 }
 
-downloadHoroscope = function()
+astroCompatibility = function()
 {
-	$('.js-downloadHoro').click(function()
-    {
-    	$.ajax({
-    		method: "POST",
-    		url : "/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username="+username+"&SIM_USERNAME="+username+"&type=Horoscope&checksum=&otherprofilechecksum="+otherProfilechecksum+"&randValue=890&GENDER="+gender,
-    		async:true,
-    		timeout:20000,
-    		success:function(response){          		
-    			$("#putHoroscope").html(response);
-    			$('.js-overlay').fadeIn(200,"linear",function(){ $('#kundli-layer').fadeIn(200,"linear")});
-    		}
-    	});  
-    });
+	$(".js-astroCompMem,.js-freeAstroComp").click(function(){		
+		$.ajax({
+			method: "POST",
+			url : "/profile/check_horoscope_compatibility.php?profilechecksum="+otherProfilechecksum+"&sendMail=1&sampleReport=1",
+			async:true,
+			timeout:20000,
+			success:function(response){
+			}
+		});
+		if($(this).hasClass('js-astroCompMem')){
+			$("#buttonMem").html("Get Astro Compatibility");
+			$("#textMem").html("A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.");
+			$("#buttonMem").attr("href","/membership/jspc");
+		}
+		else{
+			$("#buttonMem").html("Upgrade Membership");
+			$("#textMem").html("A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.");
+			$("#buttonMem").attr("href","/membership/jspc");
+		}
+		$('.js-overlay').fadeIn(200,"linear",function(){ $('#astroComp').fadeIn(200,"linear")});  
+	});
+	$(".js-astroMem").click(function(){
+		$.ajax({
+			method: "POST",
+			url : "/profile/check_horoscope_compatibility.php?profilechecksum="+otherProfilechecksum+"&sendMail=1",
+			async:true,
+			timeout:20000,
+			success:function(response){
+			}
+		});
+	});
 }
-
 setTimeout(enableLoader,50);
 

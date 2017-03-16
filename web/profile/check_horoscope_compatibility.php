@@ -45,6 +45,13 @@
 		login_relogin_auth($data);
 		$smarty->assign("CHECKSUM",$checksum);
 
+		if($sampleReport)
+		{
+			$url = JsConstants::$imgUrl."/images/jspc/viewProfileImg/horoscope-sample_2.jpg";
+			$file=PdfCreation::PdfFile($url);
+			PdfCreation::setResponse("astroCompatibility.pdf",$file);
+			die;
+		}
 		$chkprofilechecksum=explode("i",$profilechecksum);
 		//Added by Vibhor for Astro Service of Offline Module
                 if(!$via_ofm)

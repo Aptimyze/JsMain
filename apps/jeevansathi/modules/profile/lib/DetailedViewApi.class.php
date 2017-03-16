@@ -239,7 +239,8 @@ class DetailedViewApi
 	protected function getDecorated_PrimaryInfo()
 	{
 		$objProfile = $this->m_objProfile;
-		
+		$viewerProfile = $this->m_actionObject->loginProfile->getPROFILEID();
+		$viewedProfile = $this->m_objProfile->getPROFILEID();
 		$this->m_arrOut['username'] = $objProfile->getUSERNAME();
 		$this->m_arrOut['age'] = $objProfile->getAGE();
 		$this->m_arrOut['height'] = html_entity_decode($objProfile->getDecoratedHeight());
@@ -318,6 +319,21 @@ class DetailedViewApi
         }
         $this->m_arrOut['othersHoroscope'] = $this->getHoroscopeExist();
     }
+     $subscriptionData = $this->m_actionObject->loginProfile->getSUBSCRIPTION();
+        if(!strstr($subscriptionData,'A'))
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='N';
+        else
+            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='Y';
+        
+        if($subscriptionData)
+            $this->m_arrOut['paidMem']='Y';
+        else
+            $this->m_arrOut['paidMem']='N';
+        
+        if ($this->m_arrOut['myHoroscope']=='Y' && $this->m_arrOut['othersHoroscope']=='Y')
+                $this->m_arrOut['NO_ASTRO']=0;
+            else
+                $this->m_arrOut['NO_ASTRO']=1;
 	}
 	
 	/**

@@ -363,6 +363,7 @@ class detailedAction extends sfAction
 		$this->profile->setNullValueMarker("");
 		$this->arrOutDisplay = $arrOutDisplay;
 		$this->selfUsername=LoggedInProfile::getInstance()->getPROFILEID() ? LoggedInProfile::getInstance()->getUSERNAME() : "";
+		//print_R($this->arrOutDisplay);die;
 		//Call CommunicationHistory And GunaScore Api
 		$this->showComHistory = null;
 		$this->gunaCallRequires = null;
@@ -1336,7 +1337,7 @@ class detailedAction extends sfAction
 		$this->finalResponse=json_encode($this->arrOutDisplay);
                 $this->myProfileChecksum = JSCOMMON::createChecksumForProfile($this->loginProfile->getPROFILEID());
                 $this->arrOutDisplay["other_profileid"] = $arrPass["OTHER_PROFILEID"];
-        //print_r($this->arrOutDisplay);
+        //print_r($this->arrOutDisplay);die;
         $this->setTemplate("_jspcViewProfile/jspcViewProfile");
       }
     }
