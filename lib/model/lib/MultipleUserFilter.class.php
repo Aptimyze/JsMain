@@ -170,7 +170,12 @@ class MultipleUserFilter
 				}
 			}
 		}
-			if($minRupee)
+                        if($minRupee && $minDollar){
+                                $rsArray=array('minIR'=>$minRupee,'maxIR'=>19);
+                                $doArray=array('minID'=>$minDollar,'maxID'=>19);
+				$incomeMapping= new IncomeMapping($rsArray,$doArray);
+                        }
+			else if($minRupee)
 			{
 				$rsArray=array('minIR'=>$minRupee,'maxIR'=>19);
 				$incomeMapping= new IncomeMapping($rsArray);
