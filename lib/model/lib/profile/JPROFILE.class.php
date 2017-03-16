@@ -234,8 +234,7 @@ class JPROFILE
             $lessThanEqualArrayWithoutQuote == "" &&
             $like == "" &&
             $nolike == "" &&
-            $addWhereText == "" &&
-            ProfileCacheConstants::CONSUME_PROFILE_CACHE
+            $addWhereText == ""
         )
         {
             $arrPid = explode(',', $valueArray['PROFILEID']);
@@ -261,20 +260,23 @@ class JPROFILE
             $fields = $this->getRelevantFields($fields);
             $result = ProfileCacheLib::getInstance()->getForPartialKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__);
 
-            if($result && false !== $result['cachedResult'] && is_array($result['cachedResult']))
+            if(false !== $result && false !== $result['cachedResult'] && is_array($result['cachedResult']))
             {                       
                 // case - partial data served from cache for some  profile ids
                 $valueArray['PROFILEID'] = $result['notCachedPids'];
                 $result = $result['cachedResult'];
-
+                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
+                
                 // get result from store for remaining pids
                 $storeResult = self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
-
+               
                 // merge the cache result and the store result if there exists data in cache
-                $storeResult = array_merge($result, $storeResult);
-
-                $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $storeResult);
-                return $result;
+                $result = array_merge($result, $storeResult);
+                
+                if(ProfileCacheConstants::CONSUME_PROFILE_CACHE){
+                  $this->logCacheConsumption();
+                  return $result;
+                }
             }
         }
         return self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
