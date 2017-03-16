@@ -844,7 +844,10 @@
         eraseCookie('paymentMode');
         eraseCookie('cardType');
         eraseCookie('couponID');
-        
+        if(!checkEmptyOrNull(readCookie('expCheck'))){
+            eraseCookie('selectedVas');
+            createCookie('expCheck', '1');
+        }
         initializeMembershipPage();
 
         var containerWidth = ~$data.serviceContent|count`-1;

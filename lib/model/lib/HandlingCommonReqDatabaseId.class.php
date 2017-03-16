@@ -50,6 +50,7 @@ Class HandlingCommonReqDatabaseId
 			}
 			if(!$reqId)
 				$reqId = rand(1,2);
+			$reqId=2;
 		}
 		$request->setAttribute('CommonReqDatabaseId',$reqId);
 		return $reqId;
