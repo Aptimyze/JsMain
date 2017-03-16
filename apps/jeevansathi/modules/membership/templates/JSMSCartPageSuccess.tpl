@@ -416,15 +416,16 @@
 			}
 		});
 		$("#continueBtn").click(function(){
+			var upgradeMem = "~$data.upgradeMem`";
 			eraseCookie('backState');
 			~if $data.backendLink`
 				paramStr = "displayPage=5&backendRedirect=1&checksum=~$data.backendLink.checksum`&profilechecksum=~$data.backendLink.profilechecksum`&reqid=~$data.backendLink.reqid`";
 			~else`
 			if(checkEmptyOrNull(readCookie('mainMem')) && checkEmptyOrNull(readCookie('mainMemDur'))){
 				if(checkEmptyOrNull(readCookie('selectedVas')) && $.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1){
-					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas');  
+					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+readCookie('selectedVas')+"&upgradeMem="+upgradeMem;  
 			    } else {
-					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression=";
+					paramStr = "displayPage=5&mainMembership="+readCookie("mainMem")+readCookie("mainMemDur")+"&vasImpression="+"&upgradeMem="+upgradeMem;
 			    }	
 			} else {
 				if(checkEmptyOrNull(readCookie('selectedVas'))){
