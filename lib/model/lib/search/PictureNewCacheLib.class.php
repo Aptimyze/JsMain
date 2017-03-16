@@ -295,15 +295,15 @@ class PictureNewCacheLib
      */
     private function logThis($enLogType,$Var)
     {
-        if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE_LOGS) {
+        if (false === PictureNewCacheConstants::ENABLE_PROFILE_CACHE_LOGS) {
             return false;
         }
 
-        if($enLogType > ProfileCacheConstants::LOG_LEVEL) {
+        if($enLogType > PictureNewCacheConstants::LOG_LEVEL) {
             return false;
         }
 
-        $logManager = LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH);
+        $logManager = LoggingManager::getInstance(PictureNewCacheConstants::PROFILE_LOG_PATH);
         switch ($enLogType) {
             case LoggingEnums::LOG_INFO:
                     $logManager->logThis(LoggingEnums::LOG_INFO,$Var);
@@ -355,7 +355,7 @@ class PictureNewCacheLib
      */
     public function isCommandLineScript()
     {
-        return (php_sapi_name() === ProfileCacheConstants::COMMAND_LINE);
+        return (php_sapi_name() === PictureNewCacheConstants::COMMAND_LINE);
     }
 
     /**
@@ -371,7 +371,7 @@ class PictureNewCacheLib
         $iTryCount = 0;
         do {
             try{
-                JsMemcache::getInstance()->setHashObject($szKey, $arrParams, ProfileCacheConstants::CACHE_EXPIRE_TIME,true);
+                JsMemcache::getInstance()->setHashObject($szKey, $arrParams, PictureNewCacheConstants::CACHE_EXPIRE_TIME,true);
                 $bSuccess = true;
             } catch (Exception $ex) {
                 $bSuccess = false;
@@ -379,16 +379,12 @@ class PictureNewCacheLib
                 $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache failed while setting up in cache,Retrying again and its count : {$iTryCount}");
             }
             //If Attempt Count Reached to Max Attempt Count
-            if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
-                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Update failed, Adding in MQ for key : {$szKey}");
+            if ($iTryCount === PictureNewCacheConstants::CACHE_MAX_ATTEMPT_COUNT) 
+	    {
+                $this->logThis(LoggingEnums::LOG_INFO, "Picture Cache Update failed, Adding in MQ for key : {$szKey}");
 
-                //Add into MQ
-                $producerObj = new Producer();
-                $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
-                $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
-                $producerObj->sendMessage($queueData);
             }
-        } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
+        } while ($bSuccess === false && $iTryCount < PictureNewCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
         $this->calculateResourceUsages($stTime,'Set : '," for key {$key}");
 
         return $bSuccess;
@@ -436,7 +432,7 @@ class PictureNewCacheLib
                 $this->logThis(LoggingEnums::LOG_INFO, "Picture new Cache Purge Failed,Retrying again and its count : {$iTryCount}");
             }
             //If Attempt Count Reached to Max Attempt Count
-            if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
+            if ($iTryCount === PictureNewCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
                 $this->logThis(LoggingEnums::LOG_INFO, "Picture new Cache Purge Failed, Adding in MQ for key : {$szKey}");
             }
         } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
@@ -554,28 +550,6 @@ class PictureNewCacheLib
     }
     
     /**
-     * 
-     * @param type $arrData
-     * @param type $arrFields
-     * @return boolean
-     */
-    private function checkMulipleDataAvailability(&$arrData, $arrFields)
-    { 
-      foreach($arrData as $key=>$value)
-      {
-        if(in_array(ProfileCacheConstants::NOT_FILLED, $value)) {
-            unset($arrData[$key]);
-            continue;
-        }
-        if(false === $this->isDataExistInCache($value)) {
-          $this->logThis(LoggingEnums::LOG_INFO, "Cache does not exist for {$key}");
-          return false;
-        }
-      }
-      return true;
-    }
-    
-    /**
      * isDataExistInCache
      * @param type $arr
      * @return boolean
@@ -609,17 +583,6 @@ class PictureNewCacheLib
                 $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache failed while setting up in cache,Retrying again and its count : {$iTryCount}");
             }
             //If Attempt Count Reached to Max Attempt Count
-            if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
-                $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Update failed, Adding in MQ for key : {$szKey}");
-
-                //Add into MQ
-                $producerObj = new Producer();
-                foreach($arrData as $szKey=>$value) {
-                    $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
-                    $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
-                    $producerObj->sendMessage($queueData);
-                }
-            }
         } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
         $this->calculateResourceUsages($stTime,'MUlti-Set : '," for key {$key}");
 
@@ -773,13 +736,6 @@ class PictureNewCacheLib
             //If Attempt Count Reached to Max Attempt Count
             if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
                 $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache HDEL failed, Adding in MQ for key : {$szKey}");
-
-                //Add into MQ
-                $producerObj = new Producer();
-                
-                $iProfileID = substr($szKey, strlen(ProfileCacheConstants::PROFILE_CACHE_PREFIX));
-                $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$iProfileID)), 'redeliveryCount'=>0 );
-                $producerObj->sendMessage($queueData);
             }
         } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
         $this->calculateResourceUsages($stTime,'HDEL : '," for key {$key}");
