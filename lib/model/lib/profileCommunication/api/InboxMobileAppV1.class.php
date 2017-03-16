@@ -621,6 +621,13 @@ class InboxMobileAppV1
 			$finalResponse["profiles"] = array_change_key_case($profile,CASE_LOWER);
 			$finalResponse["title"] = $displayObj[$infoKey]["TITLE"];
 			$finalResponse["subtitle"] = $displayObj[$infoKey]["SUBTITLE"];
+
+			$finalResponse["checkOnline"] = false;
+                        if(in_array($infoKey,array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MATCH_ALERT","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED"))){
+                                $finalResponse["checkOnline"] = true;
+                        }
+
+
 			if($infoKey=="PHOTO_REQUEST_RECEIVED")
 			{
 				//if($tupleObj->getHAVEPHOTO() == "" || $tupleObj->getHAVEPHOTO()=="N"){

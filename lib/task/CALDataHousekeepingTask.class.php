@@ -39,9 +39,9 @@ EOF;
  if($layer)
  { 
  if($layer['UNLIMITED'] == 'Y')
- $beforeDate = date('Y-m-d',strtotime('-11 months'));
+ $beforeDate = date('Y-m-d',strtotime('-9 months'));
  else
- $beforeDate = date('Y-m-d',strtotime('-11 months'));
+ $beforeDate = date('Y-m-d',strtotime('-9 months'));
  $CALHousekeepingObject->truncateForUserAndLayer('',$i,$beforeDate);
  }
  else break;

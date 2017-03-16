@@ -717,5 +717,14 @@ class CommonFunction
       $queueData = array('process' =>MessageQueues::SCRIPT_PROFILER_PROCESS,'data'=>array('type' => 'elastic','body'=>$arrData), 'redeliveryCount'=>0 );
       $producerObj->sendMessage($queueData);
     }
+    
+    public static function getCitiesForStates($stateArr){
+        $cityList = "";
+        foreach($stateArr as $key=>$val){
+            $cityList .= ",".FieldMap::getFieldLabel("state_CITY", $val);
+        }
+        $cityList=explode(",",trim($cityList,","));
+        return $cityList;
+    }
 }
 ?>
