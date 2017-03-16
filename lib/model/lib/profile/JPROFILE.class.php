@@ -31,7 +31,7 @@ class JPROFILE
      * and rest from store.
      * @var static
      */
-    private static $canSetForPartialKeys = true;
+    private static $canSetForPartialKeys = false;
 
     var $activatedKey; //archiving
 
@@ -221,7 +221,7 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
-        if( 0 && 
+        if(
             JPROFILE::$canSetForPartialKeys &&
             !ProfileCacheLib::getInstance()->isCommandLineScript() &&
             is_array($valueArray) &&
@@ -255,11 +255,13 @@ class JPROFILE
                 $result = $result['cachedResult'];
                 $result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
                 
-                // get result from store for remaining pids
-                $storeResult = self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
-               
-                // merge the cache result and the store result if there exists data in cache
-                $result = array_merge($result, $storeResult);
+                if(strlen($valueArray['PROFILEID']) !== 0)
+                {
+                    // get result from store for remaining pids
+                    $storeResult = self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
+                    // merge the cache result and the store result if there exists data in cache
+                    $result = array_merge($result, $storeResult);
+                }
                 
                 if(ProfileCacheConstants::CONSUME_PROFILE_CACHE){
                   $this->logCacheConsumption();
