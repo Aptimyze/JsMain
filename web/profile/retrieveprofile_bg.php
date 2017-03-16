@@ -41,17 +41,25 @@ if($logError)
 }
 /** invalid or no profileid is passed **/
 
-//Check If Profile was deleted within last 3 months, if yes then retrieve else not
+//Check If Profile was deleted within last 3 months, if yes then profile is eligible for retrieval process.
 $eligibleDate=date("Y-m-d",mktime(0, 0, 0, date("m") - 3  , date("d"), date("Y")));
-$sql="SELECT COUNT(*) as IS_ELIGIBLE FROM newjs.NEW_DELETED_PROFILE_LOG where PROFILEID = '$profileid' and DATE >= '$eligibleDate'";
+$sql="SELECT * newjs.NEW_DELETED_PROFILE_LOG where PROFILEID = '$profileid' and DATE >= '$eligibleDate' ORDER BY DATE DESC";
 $result=mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 
-$row = mysql_fetch_array($result);
-$bIsEligible = intval($row["IS_ELIGIBLE"]) ? true : false;
+
+$bIsEligible = mysql_num_rows($result) ? true : false;
 
 if(false === $bIsEligible) {
     //TODO : Add a debug msg or mail
     exit;
+}
+$row = mysql_fetch_array($result);
+//Check for Tables
+//If Housekeeping is not executed for this profile
+$liveDate = "2017-03-20 00:00:00";
+$bInHouseKeeping = false;
+if( $liveDate < $row["DATE"] || $row["HOUSEKEEPING_DONE"] == 'Y') {
+  $bInHouseKeeping = true;
 }
 /* duplication_fields_insertion() call inserted by Reshu Rajput, here "invalid_dup_fields" is any dummy string
 * to be passed to use the older version of the function with least modifications
@@ -90,22 +98,37 @@ $messageShardCount=0;
 $dbMessageLogObj1=new NEWJS_MESSAGE_LOG("shard1_master");
 $dbMessageLogObj2=new NEWJS_MESSAGE_LOG("shard2_master");
 $dbMessageLogObj3=new NEWJS_MESSAGE_LOG("shard3_master");
-$dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET("shard1_master");
-$dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET("shard2_master");
-$dbDeletedMessagesObj3=new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET("shard3_master");
+
+if($bInHouseKeeping) {
+  $dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES("shard1_master");
+  $dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES("shard2_master");
+  $dbDeletedMessagesObj3=new NEWJS_DELETED_MESSAGES("shard3_master");
+} else {
+  $dbDeletedMessagesObj1=new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET("shard1_master");
+  $dbDeletedMessagesObj2=new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET("shard2_master");
+  $dbDeletedMessagesObj3=new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET("shard3_master");
+}
+
 $dbMessageObj1=new NEWJS_MESSAGES("shard1_master");
 $dbMessageObj2=new NEWJS_MESSAGES("shard2_master");
 $dbMessageObj3=new NEWJS_MESSAGES("shard3_master");
-$dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard1_master");
-$dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard2_master");
-$dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard3_master");
+
+if($bInHouseKeeping) {
+  $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG("shard1_master");
+  $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG("shard2_master");
+  $dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG("shard3_master");
+} else {
+  $dbDeletedMessageLogObj1=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard1_master");
+  $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard2_master");
+  $dbDeletedMessageLogObj3=new NEWJS_DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET("shard3_master");
+}
 
 
 /*** executing quries on associated shards of user to make sure only active profile is retreived ***/
 $myDbname=getProfileDatabaseConnectionName($profileid,'',$mysqlObj);
-$horoscopeStr=retreiveOnlyActiveProfiles('DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET',"PROFILEID","PROFILEID_REQUEST_BY",$myDbarr[$myDbname],$mainDb,$profileid);
-$photoStr=retreiveOnlyActiveProfiles('DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET',"PROFILEID","PROFILEID_REQ_BY",$myDbarr[$myDbname],$mainDb,$profileid);
-$contactsStr=retreiveOnlyActiveProfiles('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET',"SENDER","RECEIVER",$myDbarr[$myDbname],$mainDb,$profileid);
+$horoscopeStr=retreiveOnlyActiveProfiles('DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET',"PROFILEID","PROFILEID_REQUEST_BY",$myDbarr[$myDbname],$mainDb,$profileid,"newjs",$bInHouseKeeping);
+$photoStr=retreiveOnlyActiveProfiles('DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET',"PROFILEID","PROFILEID_REQ_BY",$myDbarr[$myDbname],$mainDb,$profileid,"newjs",$bInHouseKeeping);
+$contactsStr=retreiveOnlyActiveProfiles('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET',"SENDER","RECEIVER",$myDbarr[$myDbname],$mainDb,$profileid,"newjs",$bInHouseKeeping);
 //$messagelogStr=retreiveOnlyActiveProfiles('DELETED_MESSAGE_LOG',"SENDER","RECEIVER",$myDbarr[$myDbname],$mainDb,$profileid);
 $messagelogStr=$contactsStr;
 $eoiviewlogStr=$contactsStr;
@@ -144,35 +167,35 @@ if(count($myDbarr))
 				$i++;
                 $sql="BEGIN";
                 mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
-
-		retreiveFromTables('DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET','HOROSCOPE_REQUEST',"PROFILEID","PROFILEID_REQUEST_BY",$myDb,$profileid,$horoscopeStr);
-		retreiveFromTables('DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET','PHOTO_REQUEST',"PROFILEID","PROFILEID_REQ_BY",$myDb,$profileid,$photoStr);
-		retreiveFromTables('DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET','MESSAGE_LOG',"RECEIVER","SENDER",$myDb,$profileid,$messagelogStr,'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj);
-		retreiveFromTables('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET','CONTACTS',"SENDER","RECEIVER",$myDb,$profileid,$contactsStr);
-		retreiveFromTables('DELETED_EOI_VIEWED_LOG_ELIGIBLE_FOR_RET','EOI_VIEWED_LOG',"VIEWER","VIEWED",$myDb,$profileid,$eoiviewlogStr);
-        }
-}
+    
+		retreiveFromTables('DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET','HOROSCOPE_REQUEST',"PROFILEID","PROFILEID_REQUEST_BY",$myDb,$profileid,$horoscopeStr,"newjs","","","","",$bInHouseKeeping);
+		retreiveFromTables('DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET','PHOTO_REQUEST',"PROFILEID","PROFILEID_REQ_BY",$myDb,$profileid,$photoStr,"newjs","","","","",$bInHouseKeeping);
+		retreiveFromTables('DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET','MESSAGE_LOG',"RECEIVER","SENDER",$myDb,$profileid,$messagelogStr,'',$dbMessageLogObj,$dbDeletedMessagesObj,$dbMessageObj,$dbDeletedMessageLogObj,$bInHouseKeeping);
+		retreiveFromTables('DELETED_PROFILE_CONTACTS_ELIGIBLE_FOR_RET','CONTACTS',"SENDER","RECEIVER",$myDb,$profileid,$contactsStr,"newjs","","","","",$bInHouseKeeping);
+		retreiveFromTables('DELETED_EOI_VIEWED_LOG_ELIGIBLE_FOR_RET','EOI_VIEWED_LOG',"VIEWER","VIEWED",$myDb,$profileid,$eoiviewlogStr,"newjs","","","","",$bInHouseKeeping);
+    }
+    }
 /****  Transaction for all 3 shards started here.We will commit all three shards together. ****/
 
 $mainDb = connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$mainDb);
 
 /*** executing quries on masterdb to make sure only active profile is retreived ***/
-$bookmarkStr=retreiveOnlyActiveProfiles('DELETED_BOOKMARKS_ELIGIBLE_FOR_RET',"BOOKMARKER","BOOKMARKEE",$mainDb,$mainDb,$profileid);
-$ignoreStr=retreiveOnlyActiveProfiles('DELETED_IGNORE_PROFILE_ELIGIBLE_FOR_RET',"PROFILEID","IGNORED_PROFILEID",$mainDb,$mainDb,$profileid);
-$matcheStr=retreiveOnlyActiveProfiles('DELETED_OFFLINE_MATCHES_ELIGIBLE_FOR_RET',"MATCH_ID","PROFILEID",$mainDb,$mainDb,$profileid,'jsadmin');
-$nudgeStr=retreiveOnlyActiveProfiles('DELETED_OFFLINE_NUDGE_LOG_ELIGIBLE_FOR_RET',"SENDER","RECEIVER",$mainDb,$mainDb,$profileid,'jsadmin');
-$viewContactStr=retreiveOnlyActiveProfiles('DELETED_VIEW_CONTACTS_LOG_ELIGIBLE_FOR_RET',"VIEWER","VIEWED",$mainDb,$mainDb,$profileid,'jsadmin');
+$bookmarkStr=retreiveOnlyActiveProfiles('DELETED_BOOKMARKS_ELIGIBLE_FOR_RET',"BOOKMARKER","BOOKMARKEE",$mainDb,$mainDb,$profileid,"",$bInHouseKeeping);
+$ignoreStr=retreiveOnlyActiveProfiles('DELETED_IGNORE_PROFILE_ELIGIBLE_FOR_RET',"PROFILEID","IGNORED_PROFILEID",$mainDb,$mainDb,$profileid,"",$bInHouseKeeping);
+$matcheStr=retreiveOnlyActiveProfiles('DELETED_OFFLINE_MATCHES_ELIGIBLE_FOR_RET',"MATCH_ID","PROFILEID",$mainDb,$mainDb,$profileid,'jsadmin',$bInHouseKeeping);
+$nudgeStr=retreiveOnlyActiveProfiles('DELETED_OFFLINE_NUDGE_LOG_ELIGIBLE_FOR_RET',"SENDER","RECEIVER",$mainDb,$mainDb,$profileid,'jsadmin',$bInHouseKeeping);
+$viewContactStr=retreiveOnlyActiveProfiles('DELETED_VIEW_CONTACTS_LOG_ELIGIBLE_FOR_RET',"VIEWER","VIEWED",$mainDb,$mainDb,$profileid,'jsadmin',$bInHouseKeeping);
 /*** executing quries on masterdb to make sure only active profile is retreived ***/
 
 /****  Transaction for master tables(innodb ones only) started here . ****/
 $sql="BEGIN";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
-retreiveFromTables('DELETED_BOOKMARKS_ELIGIBLE_FOR_RET','BOOKMARKS',"BOOKMARKER","BOOKMARKEE",$mainDb,$profileid,$bookmarkStr);
-retreiveFromTables('DELETED_IGNORE_PROFILE_ELIGIBLE_FOR_RET','IGNORE_PROFILE',"PROFILEID","IGNORED_PROFILEID",$mainDb,$profileid,$ignoreStr);
-retreiveFromTables('DELETED_OFFLINE_MATCHES_ELIGIBLE_FOR_RET','OFFLINE_MATCHES',"MATCH_ID","PROFILEID",$mainDb,$profileid,$matcheStr,'jsadmin');
-retreiveFromTables('DELETED_OFFLINE_NUDGE_LOG_ELIGIBLE_FOR_RET','OFFLINE_NUDGE_LOG',"SENDER","RECEIVER",$mainDb,$profileid,$nudgeStr,'jsadmin');
-retreiveFromTables('DELETED_VIEW_CONTACTS_LOG_ELIGIBLE_FOR_RET','VIEW_CONTACTS_LOG',"VIEWER","VIEWED",$mainDb,$profileid,$viewContactStr,'jsadmin');
+retreiveFromTables('DELETED_BOOKMARKS_ELIGIBLE_FOR_RET','BOOKMARKS',"BOOKMARKER","BOOKMARKEE",$mainDb,$profileid,$bookmarkStr,"newjs","","","","",$bInHouseKeeping);
+retreiveFromTables('DELETED_IGNORE_PROFILE_ELIGIBLE_FOR_RET','IGNORE_PROFILE',"PROFILEID","IGNORED_PROFILEID",$mainDb,$profileid,$ignoreStr,"newjs","","","","",$bInHouseKeeping);
+retreiveFromTables('DELETED_OFFLINE_MATCHES_ELIGIBLE_FOR_RET','OFFLINE_MATCHES',"MATCH_ID","PROFILEID",$mainDb,$profileid,$matcheStr,'jsadmin',"","","","",$bInHouseKeeping);
+retreiveFromTables('DELETED_OFFLINE_NUDGE_LOG_ELIGIBLE_FOR_RET','OFFLINE_NUDGE_LOG',"SENDER","RECEIVER",$mainDb,$profileid,$nudgeStr,'jsadmin',"","","","",$bInHouseKeeping);
+retreiveFromTables('DELETED_VIEW_CONTACTS_LOG_ELIGIBLE_FOR_RET','VIEW_CONTACTS_LOG',"VIEWER","VIEWED",$mainDb,$profileid,$viewContactStr,'jsadmin',"","","","",$bInHouseKeeping);
 /****  Transaction for master tables(innodb ones only) started here . ****/
 
 /****** Commit Starts here ******/
@@ -291,7 +314,11 @@ foreach($myDbarr as $key=>$value)
                         }
                 }
         }
-        $sql="select PROFILEID, SEEN from DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET where PROFILEID_REQUEST_BY='$profileid'";
+        $tableName = "DELETED_HOROSCOPE_REQUEST_ELIGIBLE_FOR_RET";
+        if($bInHouseKeeping) {
+          $tableName = "DELETED_HOROSCOPE_REQUEST";
+        }
+        $sql="select PROFILEID, SEEN from $tableName where PROFILEID_REQUEST_BY='$profileid'";
 	$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 	while($myrow=mysql_fetch_array($result))
 	{
@@ -309,7 +336,11 @@ foreach($myDbarr as $key=>$value)
 			
 		}
 	}
-	$sql="select PROFILEID, SEEN from DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET where PROFILEID_REQ_BY='$profileid'";
+  $tableName = "DELETED_PHOTO_REQUEST_ELIGIBLE_FOR_RET";
+  if($bInHouseKeeping) {
+    $tableName = "DELETED_PHOTO_REQUEST";
+  }
+	$sql="select PROFILEID, SEEN from $tableName where PROFILEID_REQ_BY='$profileid'";
 	$result=mysql_query($sql,$myDb) or mysql_error_with_mail(mysql_error($myDb).$sql);
 	while($myrow=mysql_fetch_array($result))
 	{
@@ -363,15 +394,20 @@ foreach($myDbarr as $key=>$value)
 * This function is used to move records from 'deleted user table' to 'active user table'.
 * @param string $delTable is name of table used to keep deleted user records
 * @param string $selTable is name of table used to keep active user records
-* @param string whereStrLabel1 is where-condition1 on which profileid is checked.
-* @param string whereStrLabel2 is where-condition2 on which profileid is checked.
-* @param resource-id $db is database connection
+* @param string $whereStrLabel1 is where-condition1 on which profileid is checked.
+* @param string $whereStrLabel2 is where-condition2 on which profileid is checked.
+* @param resource $db is database connection
 * @param int $profileid is unique id of a user.Here its is profileid of retreive record.
 * @param string $listOfActiveProfile comma seperatad values of active profiles. 
-* @param string $database optinal field for specifying the database name. @default is 'newjs'
+* @param string $database optinal field for specifying the database name. @default is 'newjs
+* @param object $dbMessageLogObj @default is ''
+* @param object $dbDeletedMessagesObj @default is ''
+* @param object $dbMessageObj @default is ''
+* @param object $dbDeletedMessageLogObj @default is ''
+* @param boolean $bInHouskeeping @default is false
 */
 
-function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,$db,$profileid,$listOfActiveProfile,$database="",$dbMessageLogObj='',$dbDeletedMessagesObj='',$dbMessageObj='',$dbDeletedMessageLogObj='')
+function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,$db,$profileid,$listOfActiveProfile,$database="",$dbMessageLogObj='',$dbDeletedMessagesObj='',$dbMessageObj='',$dbDeletedMessageLogObj='',$bInHouskeeping=false)
 {
 	if($listOfActiveProfile)
 	{
@@ -394,7 +430,13 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
 			{
 				//$idStr=implode(",",$idsArr);
 				mysql_query($sql,$db);
-				$result=$dbMessageObj->insertIntoFromMessagesEligibleForRet($idsArr);
+        //If profile is in housekeeping then
+        if($bInHouskeeping) {
+          $result=$dbMessageObj->insertIntoMessages($idsArr);
+        } else {
+          $result=$dbMessageObj->insertIntoFromMessagesEligibleForRet($idsArr);
+        }
+				        
 				//$sql="INSERT IGNORE INTO $database.MESSAGES SELECT * FROM $database.DELETED_MESSAGES WHERE ID IN ($idStr)";
 				//mysql_query($sql,$db) or ($skip=1);
 //echo $sql."\n";
@@ -414,7 +456,13 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
 				}
 
 			}
-			$res=$dbMessageLogObj->insertMessageLogDataFromEligibleForRet($profileid,$listOfActiveProfile,$whereStrLabel1,$whereStrLabel2);
+      //If profile exist in housekeeping then
+      if($bInHouskeeping) {
+        $res=$dbMessageLogObj->insertMessageLogData($profileid,$listOfActiveProfile,$whereStrLabel1,$whereStrLabel2);
+      } else {
+        $res=$dbMessageLogObj->insertMessageLogDataFromEligibleForRet($profileid,$listOfActiveProfile,$whereStrLabel1,$whereStrLabel2);
+      }
+			
 			//$sql="INSERT IGNORE INTO $database.$selTable SELECT * FROM $database.$delTable WHERE ($whereStrLabel1='$profileid' OR $whereStrLabel2='$profileid') AND ($whereStrLabel1 IN ($listOfActiveProfile) OR $whereStrLabel2 IN ($listOfActiveProfile))";
         	//mysql_query($sql,$db) or ($skip=1);
 //echo $sql."\n";
@@ -433,6 +481,9 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
 		}
 		else
 		{
+      if($bInHouskeeping) {
+        $delTable = substr($delTable, 0, stripos($delTable, "_ELIGIBLE_FOR_RET"));
+      }
 	        $sql="INSERT IGNORE INTO $database.$selTable SELECT * FROM $database.$delTable WHERE ($whereStrLabel1='$profileid' OR $whereStrLabel2='$profileid') AND ($whereStrLabel1 IN ($listOfActiveProfile) OR $whereStrLabel2 IN ($listOfActiveProfile))";
         	mysql_query($sql,$db) or ($skip=1);
 //echo $sql."\n";
@@ -458,7 +509,7 @@ function retreiveFromTables($delTable,$selTable,$whereStrLabel1,$whereStrLabel2,
 * @param int $profileid is unique id of a user.Here its is profileid of retreive record.
 * @param string $database optinal field for specifying the database name. @default is 'newjs'
 */
-function retreiveOnlyActiveProfiles($table,$whereStrLabel1,$whereStrLabel2,$myDb,$mainDb,$profileid,$database="")
+function retreiveOnlyActiveProfiles($table,$whereStrLabel1,$whereStrLabel2,$myDb,$mainDb,$profileid,$database="",$bInHouseKeepingTable=false)
 {
 	if(!$database)
 		$database='newjs';
@@ -479,6 +530,10 @@ function retreiveOnlyActiveProfiles($table,$whereStrLabel1,$whereStrLabel2,$myDb
 		$specialWhereCondition=" AND ($dateTimeColumnName>='$inactivityDate' OR TYPE<>'I')";
 	}
 	
+  if($bInHouseKeepingTable) {
+    $table = substr($table, 0, stripos($table, "_ELIGIBLE_FOR_RET"));
+  }
+  
 	//dateTimeColumnName if will be removed
 	if($dateTimeColumnName)
 		$sql="SELECT $whereStrLabel2 as PIDS , $dateTimeColumnName as DATE FROM $database.$table WHERE $whereStrLabel1='$profileid'";
