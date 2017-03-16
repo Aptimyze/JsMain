@@ -233,12 +233,10 @@ private function getBannerMessage($profileInfo) {
         			} else {  
         				$memCacheObject = JsMemcache::getInstance();
         				$profileId = $profileObj->getPROFILEID();
-        				$redisKeyBanner = $memCacheObject->keyExist(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER');
+        				$valArr = $memCacheObject->getHashAllValue(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER'); 
 
-        				if($redisKeyBanner)
+        				if($valArr != NULL && is_array($valArr))
         				{  	
-
-        					$valArr = $memCacheObject->getHashAllValue(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER'); 
 
         					$memMessage = '';
 
