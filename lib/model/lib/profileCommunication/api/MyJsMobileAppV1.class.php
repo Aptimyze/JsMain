@@ -225,7 +225,6 @@ private function getBannerMessage($profileInfo) {
 				$MESSAGE=NULL;
 				$profileObj=LoggedInProfile::getInstance('newjs_master');
 				$request = sfContext::getInstance()->getRequest();
-				$memHandlerObj = new MembershipHandler();
         	  	$apiAppVersion = $request->getParameter('API_APP_VERSION');
         			if(!empty($apiAppVersion) && is_numeric($apiAppVersion)){
         				$memMessage = $this->setAndGetOCBCache($request,$apiAppVersion,$profileObj);
@@ -295,7 +294,7 @@ private function getBannerMessage($profileInfo) {
 
     public function setAndGetOCBCache($request,$appVersion='',$profileObj)
     {
-				$memHandlerObj = new MembershipHandler();
+				
     	$memCacheObject = JsMemcache::getInstance();
         				$profileId = $profileObj->getPROFILEID();
         				$valArr = $memCacheObject->getHashAllValue(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER'); 
@@ -318,7 +317,8 @@ private function getBannerMessage($profileInfo) {
         					}
         				}
         				else
-        				{  
+        				{
+        				$memHandlerObj = new MembershipHandler();  
         				$memMessage = $memHandlerObj->fetchMembershipMessage($request,$appVersion);
 
         					$arr[myjsCachingEnums::TOP_PART] = '';
