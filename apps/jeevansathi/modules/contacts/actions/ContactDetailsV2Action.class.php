@@ -409,6 +409,30 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["contact4"]["action"]     = null;
 				$responseArray["headerThumbnailURL"]     = $thumbNail;
 				$responseArray["headerLabel"]            = $this->contactHandlerObj->getViewed()->getUSERNAME();
+
+				$responseArray["newerrmsglabel"] = "As a Free Member you can only send an interest for free";
+				$responseArray["newcontactdetailmsg"] = "As a Free Member you can only send an interest for free";
+				$responseArray["membershipmsgheading"] = "BUY PAID MEMBERSHIP TO";
+				$responseArray["membershipmsg"]["subheading1"] = "View Contact details of the members";
+				$responseArray["membershipmsg"]["subheading2"] = "Send personalized messages to members you like";
+				$responseArray["membershipmsg"]["subheading3"] = "Show your contact details to other members";
+
+				$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
+				$responseArray["footerbutton"]["newvalue"] = "";
+				$responseArray["footerbutton"]["newaction"] = "MEMBERSHIP";
+				if($MembershipMessage)
+				{
+					$responseArray["offer"]["membershipOfferMsg1"] = "Exclusive Offer For You!";
+					$responseArray["offer"]["membershipOfferMsg2"] = $MembershipMessage;
+					$responseArray["offer"]["strikedPrice"] = "3500";
+					$responseArray["offer"]["discountedPrice"] = "2000";
+				}
+				else
+				{
+					// in case of no offer
+					$responseArray["lowestOffer"] = "Lowest Membership plan starts @ Rs.2800";
+				}
+
 				VCDTracking::insertTracking($this->contactHandlerObj);
 
 			}

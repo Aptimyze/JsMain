@@ -542,6 +542,31 @@ ContactEngineCard.prototype.postCommonDisplayLayer=function(Obj,profileChecksum)
 		FinalHtml=FinalHtml.replace(/\{\{paramData\}\}/g,null);
 		FinalHtml=FinalHtml.replace(/\{\{ACTION_ID\}\}/g,'ActionButton'+profileChecksum+"-"+this.name);
 	}
+
+	if(typeof(Obj.actiondetails.newerrmsglabel) != undefined && Obj.actiondetails.newerrmsglabel != null)
+	{
+		$("#OtherCase").removeClass("disp-none");
+		$("#freeMemberCase").removeClass("disp-none");
+
+		FinalHtml = FinalHtml.replace(/\{\{ErrorMsglabel\}\}/g,Obj.actiondetails.newerrmsglabel);
+		FinalHtml = FinalHtml.replace(/\{\{MembershipMsgHeader\}\}/g,Obj.actiondetails.membershipmsgheading);
+		if(typeof(Obj.actiondetails.offer) != undefined && Obj.actiondetails.offer != null)
+		{
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOffer\}\}/g,Obj.actiondetails.offer.membershipOfferMsg1 + " " + Obj.actiondetails.offer.membershipOfferMsg2);
+			$("#oldPrice").html(Obj.actiondetails.offer.strikedPrice);
+			$("#newPrice").html(Obj.actiondetails.offer.discountedPrice);
+			$("#MembershipOfferExists").removeClass("disp-none");
+		}
+		else
+		{
+			FinalHtml = FinalHtml.replace(/\{\{LowestOffer\}\}/g,Obj.actiondetails.lowestoffer);
+			$("#noMembershipOffer").removeClass("disp-none");
+		}
+	}
+	else
+	{
+		// $("#noMembershipOffertherCase").removeClass("disp-none");
+	}
 	
 	
 	
