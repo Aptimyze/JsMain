@@ -110,7 +110,7 @@
 								<span id="membershipRemoveButton" class="dispibl cursp removeCall">~$v.remove_text`</span>
 								<span class="dispibl rv2_pad11">|</span>
 								~/if`
-								~if $v.change_text`
+								~if $v.change_text && $data.upgradeMem neq "MAIN"`
 								<span id="memnbershipChangeButton" class="dispibl cursp changeCall">~$v.change_text`</span>
 								~/if`
 							</div>
