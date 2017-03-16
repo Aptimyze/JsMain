@@ -640,7 +640,7 @@ getViewProfileBackLocation = function()
 
 downloadHoroscope = function()
 {
-	$('body').on('touchstart', '.js-downloadHoro', function()
+	$('.js-downloadHoro').click(function()
     {
     	$.ajax({
     		method: "POST",
