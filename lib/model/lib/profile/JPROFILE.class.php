@@ -31,7 +31,7 @@ class JPROFILE
      * and rest from store.
      * @var static
      */
-    private static $canSetForPartialKeys = false;
+    private static $canSetForPartialKeys = true;
 
     var $activatedKey; //archiving
 
