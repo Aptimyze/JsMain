@@ -38,6 +38,10 @@ EOF;
   {
     if (!sfContext::hasInstance())
       sfContext::createInstance($this->configuration);
+
+    if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'live')
+        	successfullDie();
+
     $delRetrieveConsumerObj=new deleteRetrieveConsumer('FIRST_SERVER',0);  //If $serverid='FIRST_SERVER', then 2nd param in Consumer constructor is not taken into account.
     $delRetrieveConsumerObj->receiveMessage(); 
   }

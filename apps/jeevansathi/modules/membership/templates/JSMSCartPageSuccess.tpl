@@ -124,11 +124,13 @@
 			~/foreach`
 			~/if`
 			~if $data.cart_items.vas_memberships`
+            ~if !($data.totalVasCount eq "1" and $data.cart_items.vas_memberships[0].service_name eq "Profile Boost")`
 			<!--start:div-->
 			<div id="vasCard" class="pt10">
 				<div class="rv2_boxshadow">
 					<div class="bg4 rv2_pad3">
 						~foreach from=$data.cart_items.vas_memberships key=k item=v name=vasServLoop`
+                        ~if $v.service_name neq "Profile Boost"`
 						<!--start:VAS plan-->
 						<!--start:strike through-->
 						~if $v.vas_price_strike`
@@ -168,14 +170,18 @@
 							<!--end:div-->
 						</div>
 						<!--end:VAS plan-->
-						~if not $smarty.foreach.vasServLoop.last`
-						<div class="pad9"><div class="rv2_top2"></div></div>
-						~/if`
+                        ~if $data.subscription_id neq 'NCP'`
+                            ~if not $smarty.foreach.vasServLoop.last`
+                            <div class="pad9"><div class="rv2_top2"></div></div>
+                            ~/if`
+                        ~/if`
+                        ~/if`
 						~/foreach`
 					</div>
 				</div>
 			</div>
 			<!--end:div-->
+            ~/if`
 			~/if`
 			<!--start:div-->
 			<div class="rv2_pad3">

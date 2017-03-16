@@ -6,7 +6,8 @@
 class VisitorsSearch extends SearchParamters
 {
     
-        private $filteredParams = array('LAGE','HAGE','MSTATUS','COUNTRY_RES','CITY_RES','RELIGION','MTONGUE','CASTE','INCOME');
+        //private $filteredParams = array('LAGE','HAGE','MSTATUS','COUNTRY_RES','CITY_RES','RELIGION','MTONGUE','CASTE','INCOME');
+        private $filteredParams = array('MSTATUS','RELIGION');
         
         /**
 		* @const SHOW_FILTERED_PROFILES we dont show filtered profiles at all.

@@ -3,6 +3,7 @@ include("/home/developer/jsdialer/MysqlDbConstants.class.php");
 include("Scoring.class.php");
 
 //Sent mail for daily tracking
+$date =date("Y-m-d");
 $msg="\nPopulate Score # Start Time=".date("Y-m-d H:i:s");
 $to="vibhor.garg@jeevansathi.com,manoj.rana@naukri.com";
 $sub="Scoring Algorithm Score Computation Shard-1_3";
@@ -74,7 +75,7 @@ for($t=0;$t<count($modelType_arr);$t++)
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
                                                 $hit_log1 =$profileid."#".$newmodelJson;
-                                                $fileName1 ="score_hit_log_for_nullResponse".$date.".txt";
+                                                $fileName1 ="score_hit_log_for_nullResponse_".$date.".txt";
                                                 passthru("echo '$hit_log1' >>/tmp/$fileName1");
                                         }
                                         else{
@@ -82,7 +83,7 @@ for($t=0;$t<count($modelType_arr);$t++)
                                         }
 					// temporary_logging   
                                         $hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
-                                        $fileName ="score_hit_log".$date.".txt";
+                                        $fileName ="score_hit_log_".$date.".txt";
                                         passthru("echo '$hit_log' >>/tmp/$fileName");
                                 }
                                 if(isset($score))

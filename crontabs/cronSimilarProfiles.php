@@ -24,7 +24,7 @@ $db=connect_ddl();
 $debug = 0;
 mysql_select_db("viewSimilar",$db);
 
-mysql_query("set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000",$db);
+mysql_query("set session wait_timeout=30000,interactive_timeout=30000,net_read_timeout=30000",$db);
 
 $minimum_no_of_results_required_for_rename = 1500000;
 

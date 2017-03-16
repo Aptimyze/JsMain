@@ -1062,11 +1062,11 @@ class detailedAction extends sfAction
 	 */
 	public function onlineStatus()
 	{
-		$this->gtalkOnline();
+		//$this->gtalkOnline();
 		$this->userOnline();
 	}
 	/**
-	 * Whether user online on gtalk or not.
+	 * Whether user online on gtalk or not. //NOT BEING USED ANYMORE. Therefore, commented the call above
 	 */
 	public function gtalkOnline()
 	{

@@ -20,18 +20,18 @@ EOF;
 
 	protected function execute($arguments = array(), $options = array())
 	{
-		$elkServer = 'es.aura.resdex.com';
-		$elkPort = '9203';
-		$indexName = 'jeevansathiactivity';
-		$query = '_search';
-		$timeout = 5000;
-		$interval = 24;
-		$day = 1;
+		$elkServer = JsConstants::$kibana['AURA_SERVER'];
+		$elkPort = JsConstants::$kibana['AURA_PORT'];
+		$indexName = KibanaEnums::$AURA_INDEX;
+		$query = KibanaEnums::$KIBANA_SEARCH_QUERY;
+		$timeout = KibanaEnums::$KIBANA_REQUEST_THRESHOLD;
+		$interval = KibanaEnums::$UPTIME_HOUR;
+		$day = KibanaEnums::$UPTIME_DAY;
 		// server at which data will be pushed
-		$indexElkServer = '10.10.18.66';
-		$indexElkPort = '9200';
-		$pushIndexName = 'uptime';
-		$appIndexName = 'filebeat-*';
+		$indexElkServer = JsConstants::$kibana['ELK_SERVER'];
+		$indexElkPort = JsConstants::$kibana['ELASTIC_PORT'];
+		$pushIndexName = KibanaEnums::$UPTIME_INDEX;
+		$appIndexName = KibanaEnums::$FILEBEAT_INDEX.'*';
 		$date = date('Y-m-d', strtotime("-$day day"));
 		$auraUrl = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 		$elkAppUrl = $indexElkServer.':'.$indexElkPort.'/'.$appIndexName.'/'.$query;
@@ -68,6 +68,7 @@ EOF;
 			"aggs"=> ["modules"=>["terms"=> [ 
 				"field" => "moduleName" ,  "size" => 1000 ]]]]]
 		];
+
 		// send curl request
 		$AuraResponse =  CommonUtility::sendCurlPostRequest($auraUrl, json_encode($params), $timeout);
 		$ElkResponse =  CommonUtility::sendCurlPostRequest($elkAppUrl, json_encode($params2), $timeout);
