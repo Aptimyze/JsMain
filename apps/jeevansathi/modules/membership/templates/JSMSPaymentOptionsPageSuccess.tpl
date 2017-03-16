@@ -267,6 +267,10 @@
   });
   $("#payAtBranch").click(function(e){
     var url = "~sfConfig::get('app_site_url')`/membership/jsms?displayPage=10";
+    var upgradeMem = $('[name=upgradeMem]').val();
+    if(checkEmptyOrNull(upgradeMem)){
+      url += "&upgradeMem="+upgradeMem;
+    }
     if(checkEmptyOrNull(readCookie('device'))){
       url += '&device=' + readCookie('device');
     }
