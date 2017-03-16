@@ -6,7 +6,7 @@
 <meta name="format-detection" content="telephone=no">
 <div class="fullwid">
 	<!--start:header-->
-	<div class="bg1">
+	<div class="bg1" id="jsmsLandingPageHeader">
 		<div class="rv2_pad1 txtc">
 			<div class="posrel white">
 				<div id="pageTitle" class="fontthin f19">~$data.title`</div>
@@ -75,7 +75,7 @@
 	</div>
 	<!--end:overlay2-->
 	<!--end:header-->
-	<div class="rv2_bg1">
+	<div class="rv2_bg1" id="jsmsLandingContent">
 		~if $data.dividerText`
 		<!--start:offer div-->
 		<div class="rv2_pad5" style="padding-top:10px;">
@@ -726,7 +726,7 @@
 		});
 		~if $data.upgradeMembershipContent`
 	        //initialize upgrade page
-	        //initializeUpgradePage();
+	        initializeJSMSUpgradePage();
 
 	        //binding on click of membership upgrade button
 	        $("#upgradeMainMemBtn").click(function(e){
