@@ -446,9 +446,13 @@
 		    window.location.href = url;
 		});
 		$("#enterCouponBtn").click(function(e){
+			var upgradeMem = "~$data.upgradeMem`";
 			url = "/membership/jsms?displayPage=4";
 			if(checkEmptyOrNull(readCookie('device'))){
 				url += '&device=' + readCookie('device');
+			}
+			if(checkEmptyOrNull(upgradeMem)){
+				url += "&upgradeMem="+upgradeMem;
 			}
 		    ShowNextPage(url,0,0);
 		});

@@ -7,6 +7,15 @@ class MembershipActionFunctions
         if (!$displayPage) {
             $displayPage = 1;
         }
+        if($displayPage == 4){
+            $upgradeMem = $request->getParameter('upgradeMem');
+            if(!in_array($upgradeMem, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
+                $upgradeMem = 'NA';
+            }
+        }
+        else{
+            $upgradeMem = 'NA';
+        }
         $pageURL = "displayPage=" . $displayPage . "&JSX=1";
         $mainMem = "&mainMem=" . $request->getParameter('mainMem');
         $mainMemDur = "&mainMemDur=" . $request->getParameter('mainMemDur');
@@ -37,7 +46,7 @@ class MembershipActionFunctions
                 $pageURL = "displayPage=" . $displayPage . "&checksum=" . $checksum . "&profilechecksum=" . $profilechecksum . "&reqid=" . $reqid . "&from_source=discount_link&userProfile=" . $userProfile;
             }
         }
-        
+
         $fromGCM = $request->getParameter('FROM_GCM');
         if ($fromGCM) {
             $pageURL.= "&FROM_GCM=" . $fromGCM;
@@ -62,7 +71,8 @@ class MembershipActionFunctions
             $reqid,
             $mainMembership,
             $vasImpression,
-            $authchecksum
+            $authchecksum,
+            $upgradeMem
         );
     }
     
