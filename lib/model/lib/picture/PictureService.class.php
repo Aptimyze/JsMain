@@ -1234,7 +1234,7 @@ class PictureService
                         $finalUpdateArr["pictureId"] = $picId;
                         
                         if($ordering == 0 && $task=="FACE")
-                               $finalUpdateArr["bit"] = str_replace(ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"], ProfilePicturesTypeEnum::$SCREEN_BITS["EDIT"], implode("", $currentBit));
+                               $finalUpdateArr["bit"] = str_replace(ProfilePicturesTypeEnum::$SCREEN_BITS["DEFAULT"], ProfilePicturesTypeEnum::$SCREEN_BITS["RESIZE"], implode("", $currentBit));
                         elseif($ordering==0)
                                $finalUpdateArr["bit"] = implode("", $currentBit);
                         else

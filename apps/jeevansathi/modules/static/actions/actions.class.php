@@ -1003,6 +1003,10 @@ public function executeAppredirect(sfWebRequest $request)
 	private function getFieldMapData($szKey)
 	{
 		$k = $szKey;
+    if(strpos($k, 'p_') !== false)
+    {
+      $forDpp = 1; //This has been added so as to remove Select from the output where not required
+    }
 		$output = "";
 		if($k=="relationship")
 		{
@@ -1051,12 +1055,11 @@ public function executeAppredirect(sfWebRequest $request)
 		if($k=="p_manglik")
 		$k="manglik";
 		if($k=="manglik")
-                $output=  $this->removeDontKnowManglik();
+                $output=  $this->removeDontKnowManglik();              
 		if($k=="p_height" || $k=="height")
 		$k="height_without_meters";
 		if($k=="p_age")
 		$k="age";
-
 		if($k=="p_diet" || $k=="diet")
 		$output=$this->getField("diet");
 		if($k=="p_smoke" || $k=="smoke")
@@ -1218,6 +1221,12 @@ if($k=="state_res")
 		{
 			$output = $this->getJsmsNativeCountry();
 		}
+    if($forDpp) //To remove Select from fields where it is not required
+    {
+      if($output[0][0][0] == DPPConstants::$removeLabelFromDpp || $output[0][0][S0] == DPPConstants::$removeLabelFromDpp)
+        unset($output[0][0]);
+    }
+    
 		return $output;
 	}
   

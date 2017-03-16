@@ -135,9 +135,8 @@ class AuthFilter extends sfFilter {
 				$request->setAttribute('currency', $currency);
 				///////// check for currency and ip address ends here
 
-
 				//App promotion need to be off for Login Profiles already have app installed
-				$AppLoggedInUser=$this->LoggedInAppPromo($data[PROFILEID]);
+				$AppLoggedInUser=$this->LoggedInAppPromo($data);
 				$request->setAttribute("AppLoggedInUser",$AppLoggedInUser);
 				//end of app promotion
 				
@@ -369,15 +368,37 @@ class AuthFilter extends sfFilter {
 		$filterChain->execute();
 	}
 	
-	public function LoggedInAppPromo($profileid){
+	public function LoggedInAppPromo($data){
+		$profileid=$data[PROFILEID];
+		$lastLoginDt=$data['LAST_LOGIN_DT'];
+		if($lastLoginDt)
+		{
+			$ContactTime = strtotime($lastLoginDt);
+      		$time = time();
+      		$daysDiff  = floor(($time - $ContactTime)/(3600*24));
+      		if($daysDiff>6)
+      			$lastDayFlag=true;
+      		else
+      			$lastDayFlag=false;
+      	}
+      	else
+      		$lastDayFlag=false;
+
 		if($profileid){
-			if(JsMemcache::getInstance()->get($profileid."_appPromo")===null)
+			if(JsMemcache::getInstance()->get($profileid."_appPromo")===null || JsMemcache::getInstance()->get($profileid."_appPromo")===false)
 			{
 				$dbAppLoginProfiles=new MOBILE_API_APP_LOGIN_PROFILES();
 				$appProfileIdFlag=$dbAppLoginProfiles->getAppLoginProfile($profileid);
 				if($appProfileIdFlag){
-					JsMemcache::getInstance()->set($profileid."_appPromo",0);
-					return 0;
+
+					if(!$lastDayFlag){
+						JsMemcache::getInstance()->set($profileid."_appPromo",0);
+						return 0;
+					}
+					else{
+						JsMemcache::getInstance()->set($profileid."_appPromo",1);
+						return 1;
+					}
 				}
 				else{
 					JsMemcache::getInstance()->set($profileid."_appPromo",1);
