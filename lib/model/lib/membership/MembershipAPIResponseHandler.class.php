@@ -492,6 +492,9 @@ class MembershipAPIResponseHandler {
         //fetch the upgrade membership content based on eligibilty and channel
         if(in_array($this->device, VariableParams::$memUpgradeConfig["channelsAllowed"]) && $this->userObj->userType == memUserType::UPGRADE_ELIGIBLE){
             $output["upgradeMembershipContent"] = $this->generateUpgradeMemResponse($request);
+            if(is_array($output["upgradeMembershipContent"]) && is_array($output)){
+                $output["title"] = "Upgrade to ".$output["upgradeMembershipContent"]["upgradeMainMemName"];
+            }
         }
         error_log("ankita device in generateLandingPageResponse= ".$this->device);    
         if (empty($this->getAppData) && empty($this->trackAppData) && $this->device == "Android_app") {
