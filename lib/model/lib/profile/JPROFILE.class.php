@@ -240,20 +240,6 @@ class JPROFILE
         )
         {
             $arrPid = explode(',', $valueArray['PROFILEID']);
-            if(count($arrPid) < 50)
-            {
-                $countPid = 'lt50';
-            }
-            elseif (count($arrPid) < 100)
-            {
-                $countPid = 'lt100';
-            }
-            else
-            {
-                $countPid = 'gt100';
-            }
-            JsCommon::logFunctionCalling('Jprofile', 'getArray-'.$countPid);
-
             // check limit of profile ids
             if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT)
             {
