@@ -1998,6 +1998,7 @@ class photoScreeningService
                 // Flush memcache for header picture
                 $memCacheObject = JsMemcache::getInstance();
 				$memCacheObject->remove($this->profileObj->getPROFILEID() . "_THUMBNAIL_PHOTO");                  
+		PictureNewCacheLib::getInstance()->removeCache($this->profileObj->getPROFILEID());
         }
 
         /*This function is used upload pictures from Process Interface

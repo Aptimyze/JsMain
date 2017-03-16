@@ -581,7 +581,6 @@ class photoScreeningActions extends sfActions {
                                         foreach($picture["screenedPicToDelete"] as $key=>$pictureId){
                                                 $pictureServiceObj->deletePhoto($pictureId,$this->profileid);
                                         }
-                                        //$pictureDelete = $photoUpdateObj->deleteRowsBasedOnPicId();
                                         
                                 }
 	                        //TRACKING

@@ -271,7 +271,7 @@ class ScreenedPicture extends Picture
 	{
 		$photoObj=new PICTURE_NEW;
                 $status=$photoObj->ins($paramArr);
-		if(array_key_exist("PROFILEID",$paramArr))
+		if(array_key_exists("PROFILEID",$paramArr))
 			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
 		return $status;
 	}
@@ -331,7 +331,7 @@ class ScreenedPicture extends Picture
         {
     		$photoObj=new PICTURE_NEW;
                 $count=$photoObj->del($paramArr);
-		if(array_key_exist("PROFILEID",$paramArr))
+		if(array_key_exists("PROFILEID",$paramArr))
 			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
                 return $count;
 
@@ -341,7 +341,7 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $photoObj->updateOrdering($paramArr);
-		if(array_key_exist("PROFILEID",$paramArr))
+		if(array_key_exists("PROFILEID",$paramArr))
 			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
 	}
 	
@@ -369,7 +369,7 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $photoObj->updateScreenedPhotosOrdering($profileid);
-		if(array_key_exist("PROFILEID",$paramArr))
+		if(array_key_exists("PROFILEID",$paramArr))
 			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
 	}
 
@@ -400,9 +400,18 @@ class ScreenedPicture extends Picture
                 $status=$photoObj->hasUnscreenedTitle($profileId);
                 return $status;
 	}
-	
 	public function getMultipleUserProfilePics($whereCondition)
+	{
+		$allPics = $this->getMultipleUserPics($whereCondition);
+		foreach($allPics as $profileid=>$pic)
+		{
+			$final[$profileid]=$pic[0];
+		}
+		return $final;
+	}
+	public function getMultipleUserPics($whereCondition)
         {
+		$final = array();
 		if(array_key_exists("PROFILEID",$whereCondition))
 		{
 			$paramArr = $whereCondition;
@@ -410,7 +419,6 @@ class ScreenedPicture extends Picture
 			{
 				unset($paramArr['PROFILEID']);
 				$paramArr['PROFILEID']=current($whereCondition['PROFILEID']);
-			
 				if ( PictureNewCacheLib::getInstance()->isCacheable($paramArr, __CLASS__))
 				{
 					foreach($whereCondition['PROFILEID'] as $k=>$pid)
@@ -422,36 +430,39 @@ class ScreenedPicture extends Picture
 							if (false !== $result)
 							{
 								$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-								$result = PictureNewCacheLib::getInstance()->processWhere($result,$paramArr);
 							}							
 						}
 						else
 						{
 							$queryProfiles[]=$pid;
-/*
-							$photoObj=new PICTURE_NEW;
-							$result=$photoObj->get(array("PROFILEID"=>$pid));
-							foreach($result  as $k=>$v)
-								$encodedData[$v['ORDERING']] = json_encode($v);
-
-							PictureNewCacheLib::getInstance()->cacheThis($paramArr['PROFILEID'],$encodedData);
-*/
 						}
 						if(is_array($result))
-							$final[$pid]=$result[0];
+							$final[$pid]=$result;
 						unset($result);
 					}
 					if(is_array($queryProfiles))
 					{
 						$photoObj=new PICTURE_NEW();
 						$data  = $photoObj->getMultiProfilesData($queryProfiles);
+						foreach($data  as $cProfileid=>$cData)
+						{
+							//$final[$cProfileid] = $cData;
+							unset($encodedData);
+							foreach($cData as $cOrdering=>$cPicArr)
+								$encodedData[$cOrdering] = json_encode($cPicArr);
+							PictureNewCacheLib::getInstance()->cacheThis($cProfileid,$encodedData);
+							$paramArr['PROFILEID'] = $cProfileid;
+							if(is_array($cData))
+								$final[$cProfileid]=$cData;
+							unset($result);
+						}
 					}
 					return $final;
 				}
 				else
 				{
 					$photoObj=new PICTURE_NEW("newjs_masterRep");
-					$profilePicsArr=$photoObj->getMultipleUserProfilePics($whereCondition);
+					$profilePicsArr=$photoObj->getMultiProfilesData($whereCondition['PROFILEID']);
 					return $profilePicsArr;
 				}
 			}
@@ -463,8 +474,19 @@ class ScreenedPicture extends Picture
 	}
 	public function getMultipleUserPicsCount($whereCondition)
         {
-                $photoObj=new PICTURE_NEW("newjs_masterRep");
-                $profilePicsCountArr=$photoObj->getMultipleUserPicsCount($whereCondition);
+		if( is_array($whereCondition) && array_key_exists("PROFILEID",$whereCondition) && count($whereCondition)==1)
+		{
+			$profilesData = $this->getMultipleUserPics($whereCondition);
+			foreach($profilesData as $profileid=>$pics)
+			{
+				$profilePicsCountArr[$profileid]=count($pics);
+			}
+		}
+		else
+		{
+			$photoObj=new PICTURE_NEW("newjs_masterRep");
+			$profilePicsCountArr=$photoObj->getMultipleUserPicsCount($whereCondition);
+		}
                 return $profilePicsCountArr;
         }
 

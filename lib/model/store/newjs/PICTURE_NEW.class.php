@@ -663,22 +663,23 @@ class PICTURE_NEW extends TABLE
 		}
 	}
 
-	public function getMultiProfilesData($paramArr=array())
+	public function getMultiProfilesData($profiles)
 	{
 
-                if(!is_array($paramArr['PROFILEID']))
+                if(!is_array($profiles))
                         throw new jsException("","PROFILEID IS BLANK IN getMulti() of PICTURE_NEW.class.php");
                 try
 		{
-			foreach($paramArr['PROFILEID'] as $k=>$v)
+			foreach($profiles as $k=>$v)
 			{
-				$profileStr.="PROFILEID".$k;
+				$profileStrArr[]=":PROFILEID".$k;
 			}
-                        $sql = "SELECT * FROM newjs.PICTURE_NEW WHERE PROFILEID IN (.$profileStr.)";
+			$profileStr = implode(",",$profileStrArr);
+                        $sql = "SELECT * FROM newjs.PICTURE_NEW WHERE PROFILEID IN (".$profileStr.")";
 
                         $res = $this->db->prepare($sql);
-			foreach($paramArr['PROFILEID'] as $k=>$v)
-                        	$res->bindValue(":PROFILEID", $v, PDO::PARAM_INT);
+			foreach($profiles as $k=>$v)
+                        	$res->bindValue(":PROFILEID".$k, $v, PDO::PARAM_INT);
                         $res->execute();
                         while($row = $res->fetch(PDO::FETCH_ASSOC))
                         {

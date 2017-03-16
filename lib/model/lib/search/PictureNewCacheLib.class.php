@@ -79,7 +79,7 @@ class PictureNewCacheLib
                 return false;
         }
         $this->logThis(LoggingEnums::LOG_INFO,"Cache Criteria Check : ".var_export($paramArr,true)." for class". $storeName);
-        if ($this->isCommandLineScript() && false === $fromUpdate)
+        if ($this->isCommandLineScript())
         {
             return false;
         }
@@ -208,7 +208,7 @@ class PictureNewCacheLib
 	unset($paramArr['PROFILEID']);
 
         if(!is_array($paramArr) || 0 === count($paramArr))
-            return ;
+            return $arrData;
 
         if(array_key_exists("ORDERING",$paramArr))
 	{
@@ -378,7 +378,6 @@ class PictureNewCacheLib
                 ++$iTryCount;
                 $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache failed while setting up in cache,Retrying again and its count : {$iTryCount}");
             }
-die;
             //If Attempt Count Reached to Max Attempt Count
             if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
                 $this->logThis(LoggingEnums::LOG_INFO, "Profile Cache Update failed, Adding in MQ for key : {$szKey}");
@@ -421,7 +420,7 @@ die;
             unset($this->arrRecords[intval($key)]);
         }
 
-        $szKey = ProfileCacheConstants::PROFILE_CACHE_PREFIX.$key;
+        $szKey = $this->getDecoratedKey($key);
 
         $stTime = $this->createNewTime();
         $bSuccess = false;
@@ -439,12 +438,6 @@ die;
             //If Attempt Count Reached to Max Attempt Count
             if ($iTryCount === ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT) {
                 $this->logThis(LoggingEnums::LOG_INFO, "Picture new Cache Purge Failed, Adding in MQ for key : {$szKey}");
-
-                //Add into MQ
-                $producerObj = new Producer();
-                $queueData = array('process' =>MessageQueues::PROCESS_PROFILE_CACHE_DELETE,'data'=>array('type' => '','body'=>array('PROFILEID'=>$key)), 'redeliveryCount'=>0 );
-                $producerObj->sendMessage($queueData);
-
             }
         } while ($bSuccess === false && $iTryCount < ProfileCacheConstants::CACHE_MAX_ATTEMPT_COUNT);
         $this->calculateResourceUsages($stTime,'Delete : '," for key {$key}");
