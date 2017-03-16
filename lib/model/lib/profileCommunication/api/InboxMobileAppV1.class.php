@@ -11,7 +11,7 @@ class InboxMobileAppV1
 	static public $myProfileIncompleteFields;
 	static public $tupleTitleField;
 	static public $noresultArray = Array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MATCH_ALERT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED","IGNORED_PROFILES","INTEREST_EXPIRING","INTEREST_ARCHIVED");
-	static public $noChatOnlineArray = array("PEOPLE_WHO_VIEWED_MY_CONTACTS", "CONTACTS_VIEWED", "IGNORED_PROFILES", "NOT_INTERESTED_BY_ME", "ACCEPTANCES_SENT");
+	static public $noChatOnlineArray = array("CONTACTS_VIEWED", "IGNORED_PROFILES", "NOT_INTERESTED_BY_ME");
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
 	const INTEREST_EXPIRING = "Interests which will expire within the next 7 days will appear here.";
