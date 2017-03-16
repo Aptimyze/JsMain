@@ -36,11 +36,13 @@ class MyJsMobileAppV1
     	}
 
 	public function getProfilePicAppV1($profileObj)
-	{
+	{   
 		$pictureService = new PictureService($profileObj);
 	        $profilePicObj = $pictureService->getProfilePic();
+
 		if($profilePicObj)
 			$myPic = $profilePicObj->getThumbailUrl();
+		//die('hjhj');
         if(!$myPic)
 		{
 			 if($pictureService->isProfilePhotoUnderScreening() =="Y")
@@ -48,7 +50,7 @@ class MyJsMobileAppV1
 			else
 				$myPic = PictureService::getRequestOrNoPhotoUrl('noPhoto','ThumbailUrl',$profileObj->getGENDER());
 		}
-
+   		
 		if (MobileCommon::isApp()=='A') 
 			$myPic=PictureFunctions::mapUrlToMessageInfoArr($myPic,"ThumbailUrl","",$profileObj->getGENDER());
 		if (MobileCommon::isNewMobileSite() || MobileCommon::isApp()=='I') 
@@ -218,19 +220,18 @@ $className = get_class($this);
         }
 
 
-private function getBannerMessage($profileInfo) {    
+private function getBannerMessage($profileInfo) {   
+
 				$MESSAGE=NULL;
+				$profileObj=LoggedInProfile::getInstance('newjs_master');
 				$request = sfContext::getInstance()->getRequest();
-				$memHandlerObj = new MembershipHandler();
         	  	$apiAppVersion = $request->getParameter('API_APP_VERSION');
         			if(!empty($apiAppVersion) && is_numeric($apiAppVersion)){
-        				$memMessage = $memHandlerObj->fetchMembershipMessage($request,$apiAppVersion);
+        				$memMessage = $this->setAndGetOCBCache($request,$apiAppVersion,$profileObj);
         				if ($apiAppVersion<21) return $memMessage['membership_message']; // for backward compatibility of Android App
-        			} else {
-        				$memMessage = $memHandlerObj->fetchMembershipMessage($request);
+        			} else {  		
+        				$memMessage = $this->setAndGetOCBCache($request,'',$profileObj);
         			}
-			
-	$profileObj=LoggedInProfile::getInstance('newjs_master');
 
 	switch(true){
 
@@ -239,9 +240,9 @@ private function getBannerMessage($profileInfo) {
         	break;
 
         	case (!$profileObj->getFAMILYINFO()):
-        	  $MESSAGE['top']='Add About Family';
-          	  $MESSAGE['bottom']='Get more interests & responses';
-          	  $MESSAGE['pageId'] = '4';
+        	  $MESSAGE[myjsCachingEnums::TOP_PART]='Add About Family';
+          	  $MESSAGE[myjsCachingEnums::BOTTOM_PART]='Get more interests & responses';
+          	  $MESSAGE[myjsCachingEnums::PAGEID] = '4';
         	break;
 
         	case ($memMessage['membership_message']):
@@ -249,18 +250,20 @@ private function getBannerMessage($profileInfo) {
         	break;
 
         	case (!$profileObj->getEDUCATION()):
-        		$MESSAGE['top']='Add About Education';
-          		$MESSAGE['bottom']='Get more interests & responses';
-          		$MESSAGE['pageId'] = '2';
+        		$MESSAGE[myjsCachingEnums::TOP_PART]='Add About Education';
+          		$MESSAGE[myjsCachingEnums::BOTTOM_PART]='Get more interests & responses';
+          		$MESSAGE[myjsCachingEnums::PAGEID] = '2';
         	break;
 
         	case (!$profileObj->getJOB_INFO()):
-        		$MESSAGE['top']='Add About Work';	
-				$MESSAGE['bottom']='Get more interests & responses';
-				$MESSAGE['pageId'] = '3';
+        		$MESSAGE[myjsCachingEnums::TOP_PART]='Add About Work';	
+				$MESSAGE[myjsCachingEnums::BOTTOM_PART]='Get more interests & responses';
+				$MESSAGE[myjsCachingEnums::PAGEID] = '3';
         	 break;
 						}
+			
 	return $MESSAGE;					
+
 
 
         		}        
@@ -289,6 +292,53 @@ private function getBannerMessage($profileInfo) {
 		return $showExpiring;
     }
 
+    public function setAndGetOCBCache($request,$appVersion='',$profileObj)
+    {
+				
+    	$memCacheObject = JsMemcache::getInstance();
+        				$profileId = $profileObj->getPROFILEID();
+        				$valArr = $memCacheObject->getHashAllValue(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER'); 
+
+        				if($valArr != NULL && is_array($valArr))
+        				{  	
+
+        					$memMessage = '';
+
+        					if($valArr['top']){
+        					$memMessage['membership_message'][myjsCachingEnums::TOP_PART] = $valArr['top'];
+        					}
+        					if($valArr['bottom'])
+        					{	
+        					$memMessage['membership_message'][myjsCachingEnums::BOTTOM_PART] = $valArr['bottom'];
+        					}
+        					if($valArr['pageId'])
+        					{	
+        					$memMessage['membership_message'][myjsCachingEnums::PAGEID] = $valArr['pageId'];
+        					}
+        				}
+        				else
+        				{
+        				$memHandlerObj = new MembershipHandler();  
+        				$memMessage = $memHandlerObj->fetchMembershipMessage($request,$appVersion);
+
+        					$arr[myjsCachingEnums::TOP_PART] = '';
+        					$arr[myjsCachingEnums::BOTTOM_PART] = '';
+        					$arr[myjsCachingEnums::PAGEID] = '';
+
+        				if(is_array($memMessage['membership_message'])){
+        					foreach ($memMessage['membership_message'] as $key => $value) {
+        						$arr[$key] = $value;
+        					}
+        				}
+
+        				$timeForCache = myjsCachingEnums::TIME;
+        				$memCacheObject->setHashObject(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER',$arr,$timeForCache);
+        				}
+
+
+        				return $memMessage;
+
+    }
 
 }
 ?>

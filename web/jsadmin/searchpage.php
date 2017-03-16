@@ -231,30 +231,6 @@ if(authenticated($cid))
 		$smarty->display("search_page.tpl");
 		//echo $date1."kush".$date2."kush".$username."kush".$email;
 	}
-	elseif($Delete)
-	{
-                $c=0;
-                foreach( $_POST as $key => $value )
-                {
-                        if( substr($key, 0, 2) == "cb" )
-                        {
-                                $c=$c+1;
-                                $proid[]=ltrim($key, "cb");
-                        }
-                }
-		if(count($proid)>0)
-			$pid=implode($proid,",");
-			
-		$smarty->assign("profiles",$pid);
-		$smarty->assign("c",$c);
-		$smarty->assign("submit","Y");
-		$smarty->assign("count",1);
-		$smarty->assign("cid",$cid);
-	        $smarty->assign("name",$user);
-		$smarty->assign("Handicapped","All");
-
-		$smarty->display("del_profile_bulk.htm");
-	}
 	else
 	{
 		$year=date('Y');
