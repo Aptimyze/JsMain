@@ -295,7 +295,7 @@ private function getBannerMessage($profileInfo) {
 
     public function setAndGetOCBCache($request,$appVersion='',$profileObj)
     {
-
+				$memHandlerObj = new MembershipHandler();
     	$memCacheObject = JsMemcache::getInstance();
         				$profileId = $profileObj->getPROFILEID();
         				$valArr = $memCacheObject->getHashAllValue(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER'); 
