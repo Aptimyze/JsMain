@@ -305,8 +305,7 @@ private function getBannerMessage($profileInfo) {
 				$MESSAGE[myjsCachingEnums::PAGEID] = '3';
         	 break;
 						}
-  // print_r($MESSAGE);
-  // die('here');			
+			
 	return $MESSAGE;					
 
 
