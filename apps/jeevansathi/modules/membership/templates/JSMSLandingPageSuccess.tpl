@@ -135,6 +135,17 @@
 				  </div>
 				</div>
 				<!--end:upgrade offer level3 div--> 
+				~if $data.bottomHelp`
+					<!--start:help-->
+					<div class="pt40 pb30 cursp">
+						<div class="rv2_pad4">
+							<div id="callButtonBottom" class="rv2_brdr1 txtc pad2 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_brrad1">
+								~$data.bottomHelp.title`
+							</div>
+						</div>
+					</div>
+					<!--end:help-->
+				~/if`
 			~else`
 				~if $data.topBlockMessage`
 				<!--start:expire info-->
