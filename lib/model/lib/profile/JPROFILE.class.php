@@ -221,7 +221,7 @@ class JPROFILE
 
     public function getArray($valueArray = "", $excludeArray = "", $greaterThanArray = "", $fields = "PROFILEID", $lessThanArray = "", $orderby = "", $limit = "", $greaterThanEqualArrayWithoutQuote = "", $lessThanEqualArrayWithoutQuote = "", $like = "", $nolike = "", $addWhereText = "")
     {
-        if(
+        if( 0 && 
             JPROFILE::$canSetForPartialKeys &&
             !ProfileCacheLib::getInstance()->isCommandLineScript() &&
             is_array($valueArray) &&
