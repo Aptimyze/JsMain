@@ -62,7 +62,7 @@ callDeleteCronBasedOnId($profileid);
 
 /*** Logging deleted profiles to run check in the night to delete any left over contacts **/
 $today = date('Y-m-d');
-$sql="INSERT IGNORE INTO newjs.NEW_DELETED_PROFILE_LOG(PROFILEID,DATE,HOUSEKEEPING_DONE) VALUES('$profileid','$today','N')";
+$sql="INSERT IGNORE INTO newjs.NEW_DELETED_PROFILE_LOG(PROFILEID,DATE,HOUSKEEPING_DONE) VALUES('$profileid','$today','N')";
 mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
 /*** Logging deleted profiles to run check in the night to delete any left over contacts **/
 

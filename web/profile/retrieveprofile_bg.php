@@ -43,9 +43,8 @@ if($logError)
 
 //Check If Profile was deleted within last 3 months, if yes then profile is eligible for retrieval process.
 $eligibleDate=date("Y-m-d",mktime(0, 0, 0, date("m") - 3  , date("d"), date("Y")));
-$sql="SELECT * newjs.NEW_DELETED_PROFILE_LOG where PROFILEID = '$profileid' and DATE >= '$eligibleDate' ORDER BY DATE DESC";
+$sql="SELECT * from newjs.NEW_DELETED_PROFILE_LOG where PROFILEID = '$profileid' and DATE >= '$eligibleDate' ORDER BY DATE DESC LIMIT 1";
 $result=mysql_query($sql,$mainDb) or mysql_error_with_mail(mysql_error($mainDb).$sql);
-
 
 $bIsEligible = mysql_num_rows($result) ? true : false;
 
@@ -56,9 +55,12 @@ if(false === $bIsEligible) {
 $row = mysql_fetch_array($result);
 //Check for Tables
 //If Housekeeping is not executed for this profile
-$liveDate = "2017-03-20 00:00:00";
+$liveDate = "2017-03-16";
 $bInHouseKeeping = false;
-if( $liveDate < $row["DATE"] || $row["HOUSEKEEPING_DONE"] == 'Y') {
+$livedate = new DateTime($liveDate);
+$profileDeleteDate = new DateTime($row["DATE"]);
+
+if( $livedate >=  $profileDeleteDate  && $row["HOUSKEEPING_DONE"] == 'Y') {
   $bInHouseKeeping = true;
 }
 /* duplication_fields_insertion() call inserted by Reshu Rajput, here "invalid_dup_fields" is any dummy string
