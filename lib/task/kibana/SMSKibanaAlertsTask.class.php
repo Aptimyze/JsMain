@@ -19,26 +19,26 @@ Call it with:
 
 	[php symfony SMSkibanaAlerts|INFO]
 EOF;
-		$this->thresholdSMS = 500;
 	}
 
 	protected function execute($arguments = array(), $options = array())
 	{
 		date_default_timezone_set('Asia/Calcutta');
 
+		$this->thresholdSMS = KibanaEnums::$SMS_ERROR_THRESHOLD;
 		// include(JsConstants::$docRoot."/commonFiles/sms_inc.php");
 
 
 		$currdate = date('Y.m.d');
 		// Server at which ElasticSearch and kibana is running
-		$elkServer = '10.10.18.66';
-		$elkPort = '9200';
-		$kibanaPort = '5601';
-		$indexName = 'filebeat-*';
-		$query = '_search';
-		$timeout = 5000;
+		$elkServer = JsConstants::$kibana['ELK_SERVER'];
+		$elkPort = JsConstants::$kibana['ELASTIC_PORT'];
+		$kibanaPort = JsConstants::$kibana['KIBANA_PORT'];
+		$indexName = KibanaEnums::$FILEBEAT_INDEX.'*';
+		$query = KibanaEnums::$KIBANA_SEARCH_QUERY;
+		$timeout = KibanaEnums::$SMS_ALERT_TIMEOUT;
 		// in minutes
-		$interval = 5;
+		$interval = KibanaEnums::$SMS_ALERT_THRESHOLD;
 		$urlToHit = $elkServer.':'.$elkPort.'/'.$indexName.'/'.$query;
 
 	
@@ -66,6 +66,11 @@ EOF;
 		            ]
 		          ]
 		        ]
+		      ],
+		      "must_not" => [
+		      	"regexp" =>[
+		      		"LogMessage" => ".*Too many connections.*"
+		      	]
 		      ]
 		    ]
 		  ],
@@ -81,7 +86,6 @@ EOF;
 		];
 		// send curl request
 		$response =  CommonUtility::sendCurlPostRequest($urlToHit, json_encode($params), $timeout);
-
 
 		if($response)
 		{
