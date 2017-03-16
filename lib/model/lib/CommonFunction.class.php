@@ -563,7 +563,7 @@ class CommonFunction
                 $manglikArr = explode(",", $manglikVal);
                 $returnStr = "";
                 foreach ($manglikArr as $key=>$val){
-                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know")
+                    if($val == "'D'" || $val=="D" || $val == "Don't know" || $val == " Don't know" || $val == "'S0'" || $val == "S0" || $val == "Select")
                         continue;
                     else
                         $returnStr.=",".$val;
@@ -716,6 +716,15 @@ class CommonFunction
       $producerObj = new Producer();
       $queueData = array('process' =>MessageQueues::SCRIPT_PROFILER_PROCESS,'data'=>array('type' => 'elastic','body'=>$arrData), 'redeliveryCount'=>0 );
       $producerObj->sendMessage($queueData);
+    }
+    
+    public static function getCitiesForStates($stateArr){
+        $cityList = "";
+        foreach($stateArr as $key=>$val){
+            $cityList .= ",".FieldMap::getFieldLabel("state_CITY", $val);
+        }
+        $cityList=explode(",",trim($cityList,","));
+        return $cityList;
     }
 }
 ?>
