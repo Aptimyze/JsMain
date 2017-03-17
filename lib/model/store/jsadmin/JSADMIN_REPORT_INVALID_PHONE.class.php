@@ -174,7 +174,7 @@ public function updateAsVerified($submittee){
     {
         try     
         {   
-            $sql = "SELECT SUBMITTER,SUBMIT_DATE,REASON,OTHER_REASON,PHONE,MOBILE from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFID";
+            $sql = "SELECT SUBMITTER,SUBMIT_DATE,REASON,OTHER_REASON from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :PROFID";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":PROFID",$profileid,PDO::PARAM_INT);
             $prep->execute();
