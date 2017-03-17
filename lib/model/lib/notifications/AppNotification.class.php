@@ -298,20 +298,8 @@ public function microtime_float()
                   case "MEM_EXPIRE_B5":
                         $applicableProfiles=array();
                         $poolObj = new NotificationDataPool();
-                        $applicableProfiles = $poolObj->getMembershipProfilesForNotification($appProfiles, $notificationKey);
+                        $applicableProfiles = $poolObj->getMembershipProfilesForNotification($appProfiles);
                         $dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
-                        /*
-                        $applicableProfiles = $this->getMembershipProfilesForNotification($appProfiles, $notificationKey);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-                                $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-                        unset($applicableProfiles);
-                        */
                         break;
 		case "PHOTO_UPLOAD":
 			$applicableProfiles=array();

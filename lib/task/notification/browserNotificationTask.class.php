@@ -92,7 +92,7 @@ EOF;
             $browserNotificationObj->addNotification($processObj);
             echo "After MEM_EXPIRE_A5 \n";
             
-            echo "before MEM_EXPIRE_A10 \n";
+            /*echo "before MEM_EXPIRE_A10 \n";
             $processObj->setnotificationKey("MEM_EXPIRE_A10");
             $browserNotificationObj->addNotification($processObj);
             echo "After MEM_EXPIRE_A10 \n";
@@ -110,7 +110,7 @@ EOF;
             echo "before MEM_EXPIRE_B5 \n";
             $processObj->setnotificationKey("MEM_EXPIRE_B5");
             $browserNotificationObj->addNotification($processObj);
-            echo "After MEM_EXPIRE_B5 \n";
+            echo "After MEM_EXPIRE_B5 \n";*/
             /*
             //Notification for Renewal Reminder
             foreach (BrowserNotificationEnums::$renewalReminderNotification as $key => $val)
