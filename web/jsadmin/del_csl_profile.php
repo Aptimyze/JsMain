@@ -9,7 +9,7 @@ Created On  : 13 May 2009
 include("connect.inc");
 $db=connect_db();
 if(authenticated($cid))
-{
+{	$delLogObj = new PROFILE_LOG_DELETION_FLOW();
 	$smarty->assign("user",$name);
 	$smarty->assign("cid",$cid);
 	$smarty->assign("criteria",$criteria);
@@ -43,6 +43,8 @@ if(authenticated($cid))
 				}
 				$new_list=$list;
 			}
+
+			
 
 			$sql="SELECT PROFILEID,USERNAME FROM newjs.JPROFILE WHERE ACTIVATED<>'D' AND $criteria IN ($new_list) ";
 			$res=mysql_query_decide($sql) or die($sql.mysql_error()); 
@@ -90,12 +92,18 @@ if(authenticated($cid))
 				$tm = date("Y-M-d");
 				$sql = "INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME)  values($profile,'$username','$reason','$comments','$name','$tm')";
 				mysql_query_decide($sql) or die(logError($sql,$db));
+				if(LoggingEnums::LOG_DELETION){
+				$delLogObj->insertEntry($profile,'JSADMIN_DELETED_PROFILES_BCKND');
+			}
 				if($ins_str)
 					$ins_str.=",(".$profile.")";
 				else
 					$ins_str="(".$profile.")";
 			}
 			$sql_ins="REPLACE INTO jsadmin.DEL_STATUS (PROFILEID) VALUES $ins_str";
+				if(LoggingEnums::LOG_DELETION){
+				$delLogObj->insertEntry($profile,'JSADMIN_DEL_STATUS_BCKND');
+			}
 			mysql_query_decide($sql_ins) or die(logError($sql_ins,$db));
 			$path = $_SERVER['DOCUMENT_ROOT']."/jsadmin/del_profilelist_bg.php > /dev/null &";
                         $cmd = JsConstants::$php5path." -q ".$path;

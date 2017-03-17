@@ -107,7 +107,6 @@ function loadForm()
       <td class="label" width=10% height="21"><b>Show Stats</b></td>
       <td class="label" width=10% height="21"><b>&nbsp;</b></td>
       <td class="label" width=12% height="21"><b>Mark for Email Verification</b></td>
-      <td class="label" width=11% height="21"><b>Delete</b></td>
       <td class="label" width=10% height="21"><b>Change Request</b></td>
       <td class="label" width=10% height="21"><b>Verify Email</b></td>
       <td class="label" width=10% height="21"><b>Email Manager</b></td>
@@ -183,13 +182,7 @@ function loadForm()
 
     ~/section`
    
-    <tr>
-      <td colspan="7" height="21" align="CENTER">&nbsp;</td>
-      <td height="21" align="CENTER">~if $SHOW eq "Y"`
-	<input type="submit" name="Delete" value="Delete">		
-	~/if`
-      </td>
-   </tr>
+
   </table>
                                                                                                  
 ~else`

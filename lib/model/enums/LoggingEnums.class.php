@@ -77,6 +77,7 @@ class LoggingEnums
     const JPC = 'Jprofile_Contact';
     const MAPPING = 'Parent';
     const SCRIPT = 'Script';
+    const LOG_DELETION = 1;
 
     public static $MappingNames = array(
         // JSC module names

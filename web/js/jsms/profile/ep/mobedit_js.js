@@ -324,7 +324,7 @@ function UpdateOverlayLayer(attr)
 		var labelval=key[i]["label_val"];
 		
 		
-		if(!labelval || labelval===null || labelval===undefined || labelval==="-")
+		if(!labelval || labelval===null || labelval===undefined || labelval==="-" || labelval==="Select")
 		{
 			
 			key[i]["label_val"]=labelval="";

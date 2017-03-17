@@ -139,6 +139,8 @@ class notificationActions extends sfActions
         $registrationid 	=$request->getParameter('registrationid');
 	$loginData 		=$request->getAttribute("loginData");
 	$profileid 		=$loginData['PROFILEID'];
+	$deviceUpgrade		=$request->getParameter('deviceUpgrade');
+	$upStatus		=false;
 
 	if(!$profileid){
                 $respObj = ApiResponseHandler::getInstance();
@@ -146,21 +148,9 @@ class notificationActions extends sfActions
                 $respObj->generateResponse();
                 die;
 	}
-
-	/* Rabbit MQ */
-	/*$producerObj = new JsNotificationProduce();
-	if($producerObj->getRabbitMQServerConnected()){
-		$producerObjSet =true;
-		$dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion,"osVersion"=>$currentOSversion,"brand"=>$deviceBrand,"model"=>$deviceModel);
-		$msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
-		$producerObj->sendMessage($msgdata);
+	if($deviceUpgrade=='true'){
+		$upStatus =NotificationFunctions::deviceUpgradeDetails($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
 	}
-        else{
-		$producerObjSet =false;
-		$registationIdObj = new MOBILE_API_REGISTRATION_ID();
-		$registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
-        }*/
-
 	$respObj = ApiResponseHandler::getInstance();
         if($profileid)
         {
@@ -171,9 +161,12 @@ class notificationActions extends sfActions
 		$alarmTime = $alarmTimeObj->getData($profileid);
 		$alarmDate = alarmTimeManager::getNextDate($alarmTime);*/
 	}
-	$alarmDate ='2018-01-01 '.date("H:i:s");
+	$alarmDate ='2020-01-01 00:00:00';
+	if(!is_array($notifications))
+		$notifications =array();	
 	$notificationData['notifications'] = $notifications;
 	$notificationData['alarmTime']=$alarmDate;
+	$notificationData['deviceUpgradeFlag']=$upStatus;
 
 	$osType =MobileCommon::isApp();
 	$status ='D';

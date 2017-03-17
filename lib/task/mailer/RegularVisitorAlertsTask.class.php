@@ -84,8 +84,10 @@ EOF;
                                 $subject = $this->getSubject($data["USERS"][0],$data["COUNT"]);
                                 $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,"",$data["RECEIVER"]["ALTERNATEEMAILID"]);
 				$otherUserId = $data["USERS"][0]->getPROFILEID();
-				$this->recentProfileVisitorNotification($pid,$subject,$otherUserId);
-                		$this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);
+				if($pid && $subject){
+					$this->recentProfileVisitorNotification($pid,$subject,$otherUserId);
+	                		$this->recentProfileVisitorsBrowserNotification($pid, $subject,$otherUserId);
+				}
 			}
 			else
 				$flag = "I"; // Invalid users given in database

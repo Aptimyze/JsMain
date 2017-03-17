@@ -159,13 +159,33 @@ class NotificationFunctions
                         $notificationStop=1;
                 if($notificationStop)
                 {
-                        $notificationData['notifications'] = '';
-			$newTime ='2018-01-01 '.date("H:i:s");
+                        $notificationData['notifications'] = array();
+			$newTime ='2020-01-01 00:00:00';
                         $notificationData['alarmTime']= $newTime;
+			$notificationData['deviceUpgradeFlag']=false;
                         $data =json_encode($notificationData);
                         return $data;
                 }
                 else
                         return;
         }
-            }
+        public function deviceUpgradeDetails($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel)
+        {
+		$producerObj = new JsNotificationProduce();
+		if($producerObj->getRabbitMQServerConnected()){
+			$dataSet =array("regid"=>$registrationid,"appVersion"=>$apiappVersion,"osVersion"=>$currentOSversion,"brand"=>$deviceBrand,"model"=>$deviceModel);
+			$msgdata = FormatNotification::formatLogData($dataSet,'REGISTRATION_ID');
+			$producerObj->sendMessage($msgdata);
+			return true;
+		}
+		else{
+                        $registationIdObj = new MOBILE_API_REGISTRATION_ID();
+                        $registationIdObj->updateVersion($registrationid,$apiappVersion,$currentOSversion,$deviceBrand,$deviceModel);
+			return true;
+		}
+		return false;
+        }
+
+
+
+}

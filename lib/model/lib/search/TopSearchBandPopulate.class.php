@@ -1203,14 +1203,16 @@ class TopSearchBandPopulate
                 }
 	}
         public function populateManglik(){
-                $i=0;
+                $i=0;               
 		foreach(FieldMap::getFieldLabel("manglik_label",'',1) as $k=>$v)
                 {
-                        if($k !== 'D'){
-                                $output[$i]["VALUE"] = $k;
+                        if($k == "D" || $k == "S0"){} // Do not add Don't Know and Select in the dropdown
+                        	else
+                        	{
+                        		$output[$i]["VALUE"] = $k;
                                 $output[$i]["LABEL"] = $v;
                                 $i++;
-                        }
+                        	}
 		}
                 return $output;
         }
