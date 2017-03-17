@@ -48,13 +48,20 @@ class ApiResponseHandler
 	{
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
-	public function getAndroidChatFlag(){
-		if(!is_array(JsConstants::$androidChatNew) || JsConstants::$androidChatNew["chatOn"]==true){
-			$this->androidChat = 1;
+	public function getAndroidChatFlag($key="new"){
+		if($key == "new"){
+			$this->androidChat = JsConstants::$androidChatNew["chatOn"];
+			
 		}
 		else{
-			$this->androidChat = 2;
+			if(!is_array(JsConstants::$androidChatNew) || JsConstants::$androidChatNew["chatOn"]==true){
+				$this->androidChat = 1;
+			}
+			else{
+				$this->androidChat = 2;
+			}
 		}
+		
 		return $this->androidChat;
 	}
 
@@ -161,6 +168,7 @@ class ApiResponseHandler
 		$output["resetCache"]=$this->resetCache;
 
 		//android chat on/off flag
+		$output["xmppLoginState"] = $this->getAndroidChatFlag("old");
 		$output["androidChat"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
 
