@@ -55,7 +55,7 @@ $writeStr=substr($writeStr,0,$len-1);
 
 $SQL3="INSERT INTO  MIS.SMS_TRIGGER_LOG (  `SMS_KEY` ,  `DATE` ,  `TOTAL_FIRED` ,  `TOTAL_SENT` ) 
 VALUES ".$writeStr.";";
-mysql_query($SQL3,$db) or logError("Due to some temporary problem your request could not be processed. Please try after some time.",$SQL3,"ShowErrTemplate");
+mysql_query($SQL3,$db) or errorEmail($SQL3 ,$to);
 
 ///////////////////////////////
 

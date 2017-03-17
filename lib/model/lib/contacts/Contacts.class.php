@@ -731,11 +731,12 @@ class Contacts {
             if(!$result)
                 {
 				$ignoreObj = new IgnoredProfiles();
-				if($ignoreObj->ifIgnored($profileId1,$profileId2) || $ignoreObj->ifIgnored($profileId2,$profileId1))
+                                $whoignored = $ignoreObj->ifIgnored($profileId1,$profileId2)? 1 :($ignoreObj->ifIgnored($profileId2,$profileId1) ? 2 : 0);
+				if($whoignored)
                                 {
                                        $type='B';
-                                       $result = self::setContactsTypeCache($profileId1, $profileId2, $type);
-                                }                
+                                       $result = ($whoIgnored == 1) ? self::setContactsTypeCache($profileId1, $profileId2, $type) : self::setContactsTypeCache($profileId1, $profileId2, $type);
+                                }
 				else
 				{	 
                                 $shardNo = JsDbSharding::getShardNo($profileId1);

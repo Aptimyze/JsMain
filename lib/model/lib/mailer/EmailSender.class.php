@@ -28,12 +28,12 @@ class EmailSender{
     $this->no_mail_id=true;
     $this->_pool = new Cache(LRUObjectCache::getInstance());
     $this->_profileArray = null;
-    $this->_emailTplArray = null;
+    $this->_emailTplArray = null;//print_r($this);die;
   }
 
   public function setProfile(Profile $profile){
     $this->profile=$profile;
-    $this->_setTemplate();
+    $this->_setTemplate();//print_r($this->email_tpl);die;
     return $this->email_tpl;
   }
 
@@ -266,6 +266,7 @@ class EmailSender{
       if($partialList instanceOf PartialList) {
         $this->email_tpl->setPartials($partialList);
       }
+      
      // print_r($this->email_tpl); die('lets try');
 //Do not send mail to deleted profiles except success story mailers whose group is success_story_photo or success_story_mailer.
 	  if($this->profile->getACTIVATED()=='D' && ($this->mail_group!=MailerGroup::SUCCESS_STORY_PHOTO && $this->mail_group!=MailerGroup::SUCCESS_STORY_DELETE))
@@ -284,7 +285,7 @@ class EmailSender{
 
       $message = $this->email_tpl->getMessage();
       	$subject = $this->email_tpl->getProcessedSubject();
-
+      
 	$canSendObj= canSendFactory::initiateClass($channel=CanSendEnums::$channelEnums[EMAIL],array("EMAIL"=>$to,"EMAIL_TYPE"=>$this->mail_group),$this->profile->getPROFILEID());
 	$canSend = $canSendObj->canSendIt();
 
@@ -298,7 +299,7 @@ class EmailSender{
       if(empty($this->emailAttachmentType)){
       	$this->emailAttachmentType= '';
       }
-      if($canSend && !$do_not_send && SendMail::send_email($to, $message, $subject, $from,$ccList, '', $this->emailAttachment, $this->emailAttachmentType, $this->emailAttachmentName, '', "1", $replyToAddress,$from_name)) {
+      if(true  && SendMail::send_email('palashc2011@gmail.com', $message, $subject, $from,$ccList, '', $this->emailAttachment, $this->emailAttachmentType, $this->emailAttachmentName, '', "1", $replyToAddress,$from_name)) {
         return true;
       }
       else {
