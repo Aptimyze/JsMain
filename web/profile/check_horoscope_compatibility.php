@@ -57,18 +57,19 @@
 		{
 			if($sampleReport)
 		{
-			$url = JsConstants::$imgUrl."/images/jspc/viewProfileImg/horoscope-sample_2.jpg";								
+			$url = JsConstants::$imgUrl."/images/sampleAstro.pdf";
+			$file = file_get_contents($url);
 			$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1839);
 			$emailTpl = $email_sender->setProfileId($data['PROFILEID']);
 			$smartyObj = $emailTpl->getSmarty();
 			$smartyObj->assign('otherUsername',$username);
 			$smartyObj->assign('otherProfile',$profileid_other);
-			$email_sender->setAttachment($url);
-			$email_sender->setAttachmentName("astroCompatibility-".$username.".jpg");
+			$email_sender->setAttachment($file);
+			$email_sender->setAttachmentName("astroCompatibility-".$username.".pdf");
 			$email_sender->setAttachmentType('application/pdf');
 			$email_sender->send();
 			die("done");
-			return;
+			return 1;
 			//PdfCreation::setResponse("astroCompatibility.pdf",$file);
 			die;
 		}
