@@ -734,6 +734,29 @@ function bindFooterButtons(result){
 	    $("#closeLayer").show();
 }
 
+function bindFooterButtonswithId(result, id){
+  $("#"+id).html(result.actiondetails.footerbutton.label).show().bind( "click", {
+    action: result.actiondetails.footerbutton.action
+  }, function( event ) {
+  historyStoreObj.push(browserBackCommonOverlay,"#pushcf");
+    window.location=actionUrl[event.data.action];
+    return false;
+  });
+  if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
+    $("#neverMindLayer").show();
+  else if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
+  {
+      $( "#"+id ).bind( "click", function(){
+      
+        contactDetailMessage(result);
+        $("#closeLayer").show();
+      });
+  }
+  else
+      $("#closeLayer").show();
+}
+
+
 function acceptInterest(result,action,index)
 {
         /*if(result.buttondetails.infobtnaction=="MEMBERSHIP"){
@@ -1239,7 +1262,31 @@ if(result.actiondetails.bottommsg2){
       $("#ViewContactPreLayerText").html(result.actiondetails.infomsglabel);
       $("#ViewContactPreLayer").show();
     }
-    if(result.actiondetails.errmsglabel)
+    if(result.actiondetails.newerrmsglabel)
+    {
+      $("#newErrMsg").html(result.actiondetails.newerrmsglabel);
+      $("#membershipheading").html(result.actiondetails.membershipmsgheading);
+      $("#subheading1").html(result.actiondetails.membershipmsg.subheading1);
+      $("#subheading2").html(result.actiondetails.membershipmsg.subheading2);
+      $("#subheading3").html(result.actiondetails.membershipmsg.subheading3);
+      
+      if(typeof(result.actiondetails.offer) != undefined && result.actiondetails.offer != null)
+      {
+        $("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1);
+        $("#membershipOfferMsg2").html(result.actiondetails.offer.membershipOfferMsg2);
+        $("#oldPrice").html(result.actiondetails.offer.strikedPrice);
+        $("#newPrice").html(result.actiondetails.offer.discountedPrice);
+      }
+      else
+      {
+        $("#LowestOffer").html(result.actiondetails.lowestoffer);
+      }
+
+      bindFooterButtonswithId(result,'footerButtonNew');
+      $("#membershipOverlay").show();
+
+    }
+    else if(result.actiondetails.errmsglabel)
     {
       $("#topMsg2,#landline").hide();
       //$("#landline").hide();

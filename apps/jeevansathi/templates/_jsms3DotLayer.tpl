@@ -273,7 +273,7 @@
 	</div>
 <img src="/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset"/>
 </div>
-<div class="posrel fullwid fullheight overlayPos forHide" id="membershipOverlay">
+<div class="posrel fullwid fullheight overlayPos forHide" id="membershipOverlay" style="display:none;">
     <img src="http://www.jeevansathi.com/images/jsms/membership_img/revamp_bg1.jpg" class="posfix classimg1 bgset">
     <div class="fullheight fullwid layerOpa">
         <div class="memOverlay app_clrw">
@@ -282,18 +282,19 @@
 
                 <img id="profilePhoto" class="srp_box2 mr6" src="http://mediacdn.jeevansathi.com/1255/13/25113359-1411734648.jpeg">
                 </div>
-                <div class="pad2 f16 fontlig">As a Free Member you can only send an interest for free</div>
-                <div class="pad20 f16 fontlig mt15">BUY PAID MEMBERSHIP TO</div>
+                <div class="pad2 f16 fontlig" id="newErrMsg">As a Free Member you can only send an interest for free</div>
+                <div class="pad20 f16 fontlig mt15" id="membershipheading">BUY PAID MEMBERSHIP TO</div>
                 <ul class=" memList f13 fontlig">
-                    <li class="tick pad21">View contact details of the member</li>
-                    <li class="tick pad21">Send personalized message to members you like</li>
-                    <li class="tick pad21">Show your contact details to other members</li>
+                    <li class="tick pad21" id="subheading1">View contact details of the member</li>
+                    <li class="tick pad21" id="subheading2">Send personalized message to members you like</li>
+                    <li class="tick pad21" id="subheading3">Show your contact details to other members</li>
                 </ul>
-                <div class="pad45_0 f16 fontlig">SPECIAL OFFER FOR YOU</div>
+                <div id="MembershipOfferExists" style="display: none">
+                    <div class="pad45_0 f16 fontlig" id="membershipOfferMsg1">SPECIAL OFFER FOR YOU</div>
+                    <div class="f16 pad20 fontmed" id="membershipOfferMsg2"></div>
+                </div>
 
-            <div class="f16 pad20 fontmed"><span id="percentDis">30%</span> off on all memberships till <span id="lastData">19th Jan</span></div>
-
-            <div class="f16 fontlig">Lowest Membership starts @<del class="oldPrice">3500</del> Rs.<span id="newPrice">2800</span></div>
+            <div class="f16 fontlig" id="LowestOffer">Lowest Membership starts @<del class="oldPrice">3500</del> Rs.<span id="newPrice">2800</span></div>
             </div>
  
         </div>
@@ -301,7 +302,7 @@
             <div class="f14 fontlig app_clrw txtc mb20">Skip</div>
             <div class="bg7">
 
-            <input type="submit" id="explorePlan" class="fullwid dispbl lh50 txtc f17 fontlig white" value="Explore Plan">
+            <input type="submit" id="footerButtonNew" class="fullwid dispbl lh50 txtc f17 fontlig white">
             </div>
         </div>
  
