@@ -49,7 +49,12 @@ class ApiResponseHandler
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
 	public function getAndroidChatFlag(){
-		$this->androidChat = JsConstants::$androidChatNew["chatOn"];
+		if(!is_array(JsConstants::$androidChatNew) || JsConstants::$androidChatNew["chatOn"]==true){
+			$this->androidChat = 1;
+		}
+		else{
+			$this->androidChat = 2;
+		}
 		return $this->androidChat;
 	}
 
