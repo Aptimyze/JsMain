@@ -174,6 +174,64 @@
 								</div>
 							</div>
 							<!--end:timer-->
+						</div>
+						<!--end:timer-->
+						~/if`
+						~if $data.topBlockMessage.contactsLeftText`
+						<!--start:div-->
+						<div class="rv2_brdrtop1 pad12 txtc">
+							<div id="topBlockContactsLeftText" class="f16 fontmed color7">~$data.topBlockMessage.contactsLeftText`</div>
+							<div id="topBlockContactsLeftValue" class="f40 fontrobbold rv2_colr1 pt10">~$data.topBlockMessage.contactsLeftNumber`</div>
+						</div>
+						~/if`
+						<!--end:div-->
+						<!--start:div-->
+						~if $data.topBlockMessage.currentBenefitsTitle`
+						<div class="rv2_brdrtop1 pad12 txtc rv2_list2">
+							<div id="topBlockCurrentBenefitsBlock" class="f17 fontmed color7">~$data.topBlockMessage.currentBenefitsTitle`</div>
+							<ul>
+								~foreach from=$data.topBlockMessage.currentBenefitsMessages key=k item=v name=benefitsLoop`
+								<li>~$v`</li>
+								~/foreach`
+							</ul>
+						</div>
+						~/if`
+						<!--end:div-->
+						~if $data.topBlockMessage.nextMembershipMessage`
+						<!--start:div-->
+						<div class="rv2_brdrtop1 pad12 txtc">
+							<div id="topBlockNextMembershipText" class="f16 fontmed color7">~$data.topBlockMessage.nextMembershipMessage`</div>
+						</div>
+						~/if`
+						<!--end:div-->
+					</div>
+				</div>
+				<!--end:expire div-->
+			</div>
+			~/if`
+			~if $data.backgroundText`
+			<!--start:offer div-->
+			<div class="pt10">
+				<div id="backgroundText" class="posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad16"> ~$data.backgroundText`</div>
+			</div>
+			<!--end:offer div-->
+			~/if`
+			<!--start:option div-->
+			~if $data.serviceContent`
+			~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
+			<div class="pt10">
+				<div id="~$v.subscription_id`_serviceBlock" class="rv2_boxshadow card_duration_click" CardClickid="~$v.subscription_id`">
+					<!--start:description-->
+					~if $v.subscription_id eq 'X'`
+					<div class="linearBg2 rv2_pad3 card_duration_click " CardClickid="~$v.subscription_id`">
+						~else`
+						<div class="bg4 rv2_pad3">
+							~/if`
+							<!--start:strike through-->
+							~if $v.starting_strikeout`
+							<p id="~$v.subscription_id`_startingPriceStrike" class="strike rv2_colr1 txtr f14">~$data.currency`~$v.starting_strikeout`</p>
+							<!--end:strike through-->
+>>>>>>> c0bfc4f4d78ce7270e515b3f1470d1d61f0b66d5
 							~/if`
 							~if $data.topBlockMessage.contactsLeftText`
 							<!--start:div-->
@@ -441,11 +499,18 @@
 			}, 1000);
 			$("#continueBtn").show();
 		}
+        /*
 		$(".duration_click").click(function(e){
 			$(this).parent().addClass('dispnone');
 			var clickedID = $(this).attr('clickid');
 			$(this).parent().parent().find("div[clickdur='"+clickedID+"']").removeClass('dispnone').slideDown('slow');
 		});
+        */
+        $(".card_duration_click").click(function(e){
+           $(this).find(".dur_click").addClass('dispnone');
+           var CardClickedID = $(this).attr('CardClickid');
+           $(this).find("div[clickdur='"+CardClickedID+"']").removeClass('dispnone').slideDown('slow');
+        });
 		$(".durSel").click(function(e){
 			var that = this;
 			$(".durSel").each(function(){
