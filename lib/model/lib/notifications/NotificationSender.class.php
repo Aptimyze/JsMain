@@ -14,7 +14,7 @@ class NotificationSender
     /**
      * Sending Push Notification
      */
-    public function sendNotifications($profileDetails) 
+    public function sendNotifications($profileDetails,$regIds='') 
     {
 	if(is_array($profileDetails))
 	{
@@ -24,7 +24,9 @@ class NotificationSender
 			$osType = "";
 			if(!isset($details))
 				continue;
-			$regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE']);
+			if(!is_array($regIds)){
+				$regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE']);
+			}
 			if(is_array($regIds))
 			{
 				if(is_array($regIds[$profileid]["AND"]))
