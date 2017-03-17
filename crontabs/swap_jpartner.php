@@ -247,9 +247,11 @@ mysql_query($sql,$dbDDL) or die("18".mysql_error1($dbDDL));
 
 $currentTime = date("H");
 $currentDay = date("D");
+
 if(!in_array($currentTime,array("10","11","12","13")) || JsConstants::$whichMachine != 'prod'){
-   
-        
+	$lastTimeSolrRun = date("YmdHis");
+	JsMemcache::getInstance()->set('lastTimeSolrRun',$lastTimeSolrRun,1800000,'','X'); 
+
         if(in_array($currentTime,array(1,2,9,10,18,19)))
                 callDeleteCronBasedOnId('EXPORT','N');
         else
