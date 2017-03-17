@@ -1,3 +1,4 @@
+<div id="astroReportLayer" class="overlayAstro dispnone js-astroReportLayer"></div>  
 <div id="loadingOverlay" class="loadingOverlay"></div>
 ~if !isset($errorMsg)`
     <div id="comHistoryOverlay" class="vpro_dn" >

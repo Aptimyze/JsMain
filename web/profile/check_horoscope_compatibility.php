@@ -44,20 +44,35 @@
 
 		login_relogin_auth($data);
 		$smarty->assign("CHECKSUM",$checksum);
-
-		if($sampleReport)
-		{
-			$url = JsConstants::$imgUrl."/images/jspc/viewProfileImg/horoscope-sample_2.jpg";
-			$file=PdfCreation::PdfFile($url);
-			PdfCreation::setResponse("astroCompatibility.pdf",$file);
-			die;
-		}
+		
 		$chkprofilechecksum=explode("i",$profilechecksum);
 		//Added by Vibhor for Astro Service of Offline Module
                 if(!$via_ofm)
 			$profileid=$data['PROFILEID'];
 		//end
 		$profileid_other=$chkprofilechecksum[1]; //profileid of other person with whom logged in person is checking compatibility
+		
+		//if sample report is to be sent
+		if($sampleReport)
+		{
+			if($sampleReport)
+		{
+			$url = JsConstants::$imgUrl."/images/jspc/viewProfileImg/horoscope-sample_2.jpg";								
+			$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1839);
+			$emailTpl = $email_sender->setProfileId($data['PROFILEID']);
+			$smartyObj = $emailTpl->getSmarty();
+			$smartyObj->assign('otherUsername',$username);
+			$smartyObj->assign('otherProfile',$profileid_other);
+			$email_sender->setAttachment($url);
+			$email_sender->setAttachmentName("astroCompatibility-".$username.".jpg");
+			$email_sender->setAttachmentType('application/pdf');
+			$email_sender->send();
+			die("done");
+			return;
+			//PdfCreation::setResponse("astroCompatibility.pdf",$file);
+			die;
+		}
+		}
 		if(strstr($data['SUBSCRIPTION'],'A'))
 			$sample="";
 		

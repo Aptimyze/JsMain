@@ -78,7 +78,15 @@
 </div>    
 ~/if`
 
-
+<!--start:later for astro download-->
+      
+    
+    <div class="setcenter fontlig f18 dispnone js-astroTextButton">
+        <div class="astrob1 js-textAstro">            
+        </div>
+        <button class="f18 fontlig astrob2 js-buttonAstro"></button>
+    </div>
+    <!--end:later for astro download-->
 <script>
 
 var username = "~$arrData.username`";

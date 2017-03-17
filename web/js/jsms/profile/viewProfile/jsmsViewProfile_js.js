@@ -642,23 +642,25 @@ astroCompatibility = function()
 	$(".js-astroCompMem,.js-freeAstroComp").click(function(){		
 		$.ajax({
 			method: "POST",
-			url : "/profile/check_horoscope_compatibility.php?profilechecksum="+otherProfilechecksum+"&sendMail=1&sampleReport=1",
+			url : "/profile/check_horoscope_compatibility.php?profilechecksum="+otherProfilechecksum+"&sendMail=1&sampleReport=1&username="+username,
 			async:true,
 			timeout:20000,
 			success:function(response){
 			}
 		});
 		if($(this).hasClass('js-astroCompMem')){
-			$("#buttonMem").html("Get Astro Compatibility");
-			$("#textMem").html("A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.");
-			$("#buttonMem").attr("href","/membership/jspc");
+			$(".js-buttonAstro").html("Get Astro Compatibility");
+			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.");
+			$(".js-buttonAstro").attr("href","/profile/mem_comparison.php");
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");				
 		}
 		else{
-			$("#buttonMem").html("Upgrade Membership");
-			$("#textMem").html("A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.");
-			$("#buttonMem").attr("href","/membership/jspc");
+			$(".js-buttonAstro").html("Upgrade Membership");
+			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.");
+			$(".js-buttonAstro").attr("href","/membership/jspc");
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");		
 		}
-		$('.js-overlay').fadeIn(200,"linear",function(){ $('#astroComp').fadeIn(200,"linear")});  
+		
 	});
 	$(".js-astroMem").click(function(){
 		$.ajax({
@@ -670,6 +672,17 @@ astroCompatibility = function()
 			}
 		});
 	});
+}
+
+$(document).on('click',function(event){    closeAstroLayer(event) });
+
+closeAstroLayer = function(event)
+{
+	var target = $(event.target).first();
+	if(target.attr('id') == "astroReportLayer")
+	{
+		$(".js-astroReportLayer,.js-astroTextButton").addClass("dispnone");		
+	}
 }
 setTimeout(enableLoader,50);
 
