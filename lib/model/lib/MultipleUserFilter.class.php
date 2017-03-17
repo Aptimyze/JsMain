@@ -155,8 +155,8 @@ class MultipleUserFilter
 							$minRupee=$v["MIN_VALUE"];
 							$i++;
 						}
-						if($val<$minRupee)
-							$minRupee=$v["MIN_VALUE"];
+						if($income_data[$val]["MIN_VALUE"]<$minRupee)
+                                                        $minRupee=$v["MIN_VALUE"];
 					}
 					else
 					{
@@ -164,7 +164,7 @@ class MultipleUserFilter
 							$minDollar=$v["MIN_VALUE"];
 							$j++;
 						}
-						if($val<$minDollar)
+						if($income_data[$val]["MIN_VALUE"]<$minDollar)
 							$minDollar=$v["MIN_VALUE"];
 					}
 				}
