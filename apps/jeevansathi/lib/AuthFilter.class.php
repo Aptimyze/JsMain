@@ -23,7 +23,7 @@ class AuthFilter extends sfFilter {
                 $pollReq =true;
         if($pollReq || $repeatAlarm){
                 $notifCheck =NotificationFunctions::notificationCheck($request,$pollReq);
-                if($pollReq){
+                if($pollReq && $notifCheck){
                         echo $notifCheck;die;
                 }
                 elseif($repeatAlarm && $notifCheck){
