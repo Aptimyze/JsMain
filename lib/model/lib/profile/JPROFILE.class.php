@@ -31,7 +31,7 @@ class JPROFILE
      * and rest from store.
      * @var static
      */
-    private static $canSetForPartialKeys = true;
+    private static $canSetForPartialKeys = false;
 
     var $activatedKey; //archiving
 
@@ -236,7 +236,8 @@ class JPROFILE
             $lessThanEqualArrayWithoutQuote == "" &&
             $like == "" &&
             $nolike == "" &&
-            $addWhereText == ""
+            $addWhereText == "" &&
+            ProfileCacheLib::getInstance()->isRelevantFields($fields, __CLASS__)
         )
         {
             $arrPid = explode(',', $valueArray['PROFILEID']);

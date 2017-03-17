@@ -1083,5 +1083,39 @@ class ProfileCacheLib
       );
       return $result;
     }
+
+    /**
+     * This function returns whether the fields provided for a store can be present in cache.
+     * @param $arrFields
+     * @param $storeName
+     * @return bool
+     */
+    public function isRelevantFields($arrFields, $storeName="")
+    {
+        $bStoreNameExist = strlen($storeName) ? true : false;
+        $storeSuffix = $this->getStoreSuffix($storeName);
+
+        if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM && strlen($storeName)) {
+          $arrFields = $this->getColumnArr($storeName);
+        } else if(is_string($arrFields) && $arrFields == ProfileCacheConstants::ALL_FIELDS_SYM) {
+            $arrFields = ProfileCacheConstants::$arrHashSubKeys;
+        } else if (is_string($arrFields) && $arrFields != ProfileCacheConstants::ALL_FIELDS_SYM) {
+            $arrFields = explode(',',$arrFields);
+            foreach($arrFields as $k=>$v)
+                $arrFields[$k] = trim($v);
+        }
+
+        //TODO: If $arrFields is not an array, handle this case
+        $array = array_intersect(ProfileCacheConstants::$arrHashSubKeys, $arrFields);
+        $array = array_unique($array);
+
+        if(count(array_diff(array_unique($arrFields),$array)))
+        {
+          // relevant fields not present in cache
+          return false;
+        }
+
+        return true;
+    }
 }
 ?>
