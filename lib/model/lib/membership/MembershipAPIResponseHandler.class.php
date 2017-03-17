@@ -337,6 +337,7 @@ class MembershipAPIResponseHandler {
             } 
             elseif ($this->displayPage == 3 && $this->fromBackend != 1) {
                 $output = $this->generateCartPageResponse($request);
+                //print_r($output);die;
             } 
             elseif ($this->displayPage == 3 && $this->fromBackend == 1) {
                 $output = $this->generateBackendDiscountPageResponse($request);
@@ -692,7 +693,7 @@ class MembershipAPIResponseHandler {
         
         if (count($this->vasServices) == 1 && empty($this->mainMem))
             $this->vasServices[0]['remove_text'] = NULL;
-        
+      
         if (isset($this->mainServices) && !empty($this->mainServices)) {
             $finalCartPrice = $this->mainServices['price'] + $this->totalVASPrice;
             $finalCartDiscount = $this->mainServices['discount_given'] + $this->totalVASDiscount;
@@ -763,8 +764,13 @@ class MembershipAPIResponseHandler {
         else
             $continueText = "Continue";
         
-        if ($discount == 0)
+        $couponDiscount = 0;
+        if ($discount == 0){
             $discount = NULL;
+        }
+        else if($discount > 0 && is_array($this->mainServices) && $this->mainServices['actual_upgrade_price']){
+            $couponDiscount = $this->mainServices['actual_upgrade_price']-$finalCartPrice;
+        }
         
         $nameOfUserObj = new incentive_NAME_OF_USER();
         $userName = $nameOfUserObj->getName($apiObj->profileid);
@@ -787,6 +793,7 @@ class MembershipAPIResponseHandler {
             'actual_total_text' => "Total",
             'actual_total_price' => $actualTotalPrice,
             'cart_discount' => $discount,
+            'coupon_discount' => $couponDiscount,
             'preSelectedESathiVas' => $preSelectedESathiVas,
             'preSelectedEValuePlusVas' => $this->preSelectedEValuePlusVas,
             'continueText' => $continueText,

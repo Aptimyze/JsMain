@@ -193,7 +193,7 @@
 				</div>
 				<div class="disptbl fullwid rv2_brdrbtm3 pb10">
 					<div id="couponPriceText" class="dispcell f16 color7 wid60p">~$data.coupon_discount_text`</div>
-					<div id="couponDiscount" class="dispcell txtr f16 wid70p padr10"><span>~$data.currency`</span>~$data.cart_discount`</div>
+					<div id="couponDiscount" class="dispcell txtr f16 wid70p padr10"><span>~$data.currency`</span>~if $data.upgradeMem &&  $data.upgradeMem neq 'NA'`  ~$data.coupon_discount` ~else` ~$data.cart_discount` ~/if`</div>
 				</div>
 				~/if`
 				<div class="disptbl fullwid rv2_brdrbtm3 pt10 pb10">
@@ -238,6 +238,7 @@
 		~/if`
 	~/if`
 	$(document).ready(function(){
+		var upgradeMem = "~$data.upgradeMem`";
 		$('html').addClass('rv2_bg1');
 		$("#continueBtn").show();
 		~if $data.coupon_success`
@@ -394,13 +395,18 @@
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "couponVas") {
-				url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
+				if(upgradeMem == 'MAIN'){
+					url = "/membership/jsms?displayPage=1";
+				}
+				else{
+					url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
+				}
 				if(checkEmptyOrNull(readCookie('device'))){
 					url += '&device=' + readCookie('device');
 				}
 		    	window.location.href = url
 			} else if(readCookie('backState') == "failurePage") {
-				if(checkEmptyOrNull(readCookie('mainMem')) && ($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1))
+				if(upgradeMem != "MAIN" && checkEmptyOrNull(readCookie('mainMem')) && ($.inArray(readCookie('mainMem'),skipVasPageMembershipBased)==-1))
 				{
 					url = "/membership/jsms?displayPage=2&mainMem="+readCookie('mainMem')+"&mainMemDur="+readCookie('mainMemDur');
 				} else {
@@ -416,7 +422,6 @@
 			}
 		});
 		$("#continueBtn").click(function(){
-			var upgradeMem = "~$data.upgradeMem`";
 			eraseCookie('backState');
 			~if $data.backendLink`
 				paramStr = "displayPage=5&backendRedirect=1&checksum=~$data.backendLink.checksum`&profilechecksum=~$data.backendLink.profilechecksum`&reqid=~$data.backendLink.reqid`";
