@@ -290,11 +290,8 @@ class ScreenedPicture extends Picture
 				if (false !== $result) 
 				{
 					$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
-//					$this->logCacheConsumption();
 				}
-				$redisKey = 'picNewFromCache' . '_' . date('Y-m-d');
-				JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
-				JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
+				$this->logCacheConsumed();
 			}
 			else
 			{
@@ -303,9 +300,7 @@ class ScreenedPicture extends Picture
 				foreach($result  as $k=>$v)
 					$encodedData[$v['ORDERING']] = json_encode($v);
 				PictureNewCacheLib::getInstance()->cacheThis($paramArr['PROFILEID'],$encodedData);
-				$redisKey = 'picNewFromCache' . '_' . date('Y-m-d');
-				JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
-				JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
+				$this->logTableConsumed();
 			}
 			$result = PictureNewCacheLib::getInstance()->processWhere($result,$paramArr);
 		}
@@ -318,6 +313,20 @@ class ScreenedPicture extends Picture
 			$result=$photoObj->get($paramArr);
 		}
 		return $result;
+	}
+	public function logCacheConsumed()
+	{
+		$redisKey = 'picNewFromCache' . '_' . date('Y-m-d');
+		$funName  = "PIC_NEW";
+		JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
+		JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
+	}
+	public function logTableConsumed()
+	{
+		$redisKey = 'picNewFromTable' . '_' . date('Y-m-d');
+		$funName  = "PIC_NEW";
+		JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
+		JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
 	}
 	 /**
          Wrapper for PICTURE_NEW->edit()
@@ -408,7 +417,7 @@ class ScreenedPicture extends Picture
 	}
 	public function getMultipleUserProfilePics($whereCondition)
 	{
-		if(array_key_exists("PROFILEID",$whereCondition))
+		if( array_key_exists("PROFILEID",$whereCondition))
 		{
 			$allPics = $this->getMultipleUserPics($whereCondition);
 			foreach($allPics as $profileid=>$pic)
@@ -446,6 +455,7 @@ class ScreenedPicture extends Picture
 							{
 								$result = FormatResponse::getInstance()->generate(FormatResponseEnums::REDIS_TO_MYSQL, $result);
 							}							
+							$this->logCacheConsumed();
 						}
 						else
 						{
@@ -454,9 +464,6 @@ class ScreenedPicture extends Picture
 						if(is_array($result))
 							$final[$pid]=$result;
 						unset($result);
-						$redisKey = 'picNewFromCache' . '_' . date('Y-m-d');
-						JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
-						JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
 					}
 					if(is_array($queryProfiles))
 					{
@@ -474,9 +481,7 @@ class ScreenedPicture extends Picture
 								$final[$cProfileid]=$cData;
 							unset($result);
 						}
-                                                $redisKey = 'picNewFromTable' . '_' . date('Y-m-d');
-                                                JsMemcache::getInstance()->hIncrBy($redisKey, $funName);
-                                                JsMemcache::getInstance()->hIncrBy($redisKey, $funName . '::' . date('H'));
+						$this->logTableConsumed();
 					}
 					return $final;
 				}

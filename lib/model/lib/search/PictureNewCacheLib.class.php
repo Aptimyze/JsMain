@@ -121,16 +121,11 @@ class PictureNewCacheLib
     public function cacheThis($key, $arrParams)
     {
         $szKey = $this->getDecoratedKey($key);
-
-        if (count($arrParams) === 0) 
-	{
-            return false;
-        }
-        
+        if(count($arrParams) === 0 || $arrParams=='')
+		$arrParams[0] = PictureNewCacheConstants::NO_PHOTO;
         //Store in Cache
         $this->storeInCache($szKey, $arrParams);
-        
-	$this->updateInLocalCache($key, $arrParams);
+        $this->storeInLocalCache($key,$arrParams);
         return true;
     }
 
@@ -144,9 +139,8 @@ class PictureNewCacheLib
     public function get($paramArr, $storeName="")
     {
         $arrData = $this->getFromLocalCache($paramArr['PROFILEID']);
-
         //If data is false then return false
-        if(false === $arrData) {
+        if(false === $arrData || $arrData[0]==PictureNewCacheConstants::NO_PHOTO) {
             return false;
         }
 	return $arrData;
@@ -175,7 +169,7 @@ class PictureNewCacheLib
     /**
      * @param $key
      */
-    private function storeInLocalCache($key)
+    private function storeInLocalCache($key,$data='')
     {
         if($this->isCommandLineScript()) {
                 unset($this->arrRecords);
@@ -183,9 +177,17 @@ class PictureNewCacheLib
         }
 
         $stTime = $this->createNewTime();
-	$data = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
-	foreach($data as $k=>$v)
-		$cachedData[$k]=json_decode($v,true);
+	if($data=='')
+		$data = JsMemcache::getInstance()->getHashAllValue($this->getDecoratedKey($key));
+	if(is_array($data) && $data[0]!=PictureNewCacheConstants::NO_PHOTO)
+	{
+		foreach($data as $k=>$v)
+			$cachedData[$k]=json_decode($v,true);
+	}
+	elseif($data)
+	{
+		$cachedData = $data;
+	}
         $this->arrRecords[intval($key)] = $cachedData;
         $this->calculateResourceUsages($stTime,'Get : '," for key {$key}");
     }
