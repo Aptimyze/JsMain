@@ -21,6 +21,8 @@ class ApiResponseHandler
 	private $membershipSubscription;
 	private $webserviceCachingCap;
 	private $androidChatLocalStorage;
+	private $xmppBackgroundConnectionTimeout;
+
 	//Constructor
 	private function __construct()
 	{
@@ -63,6 +65,12 @@ class ApiResponseHandler
 		}
 		
 		return $this->androidChat;
+	}
+
+	//getter for xmppBackgroundConnectionTimeout flag
+	public function getXmppBackgroundConnectionTimeout(){
+		$this->xmppBackgroundConnectionTimeout = JsConstants::$androidChatNew["xmppBackgroundConnectionTimeout"];
+		return $this->xmppBackgroundConnectionTimeout;
 	}
 
 	//getter for androidChatLocalStorage flag
@@ -180,6 +188,9 @@ class ApiResponseHandler
 
 		//set webservice caching flag for android
 		$output["webserviceCachingCap"] = $this->getWebserviceCachingCap($this->membershipSubscription);
+
+		//set flag for android xmppBackgroundConnectionTimeout
+		$output["xmppBackgroundConnectionTimeout"] = $this->getXmppBackgroundConnectionTimeout();
 
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];
