@@ -295,7 +295,7 @@ class PictureNewCacheLib
      */
     private function logThis($enLogType,$Var)
     {
-        if (false === PictureNewCacheConstants::ENABLE_PROFILE_CACHE_LOGS) {
+        if (false === PictureNewCacheConstants::ENABLE_CACHE_LOGS) {
             return false;
         }
 
@@ -499,7 +499,7 @@ class PictureNewCacheLib
      */
     public function getForMultipleKeys($criteria, $arrKey, $fields, $storeName="")
     {
-      if (false === ProfileCacheConstants::ENABLE_PROFILE_CACHE) {
+      if (false === PictureNewCacheConstants::ENABLE_CACHE) {
            return false;
         }
    

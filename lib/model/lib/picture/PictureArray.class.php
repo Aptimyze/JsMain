@@ -584,8 +584,9 @@ class PictureArray
 
 		if($profilesWithScreenedPhoto)	
 		{
-			$PICTURE_NEW = new PICTURE_NEW("newjs_masterRep");
-			$arr = $PICTURE_NEW->getScreendPictureCountByPid($profilesWithScreenedPhoto);
+			$pictureNew = new ScreenedPicture;
+			$qArr = array("PROFILEID"=>$profilesWithScreenedPhoto);
+			$arr = $pictureNew->getMultipleUserPicsCount($qArr);
 		}
 		return $arr;
 	}	
