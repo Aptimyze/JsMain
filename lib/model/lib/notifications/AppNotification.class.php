@@ -640,17 +640,21 @@ public function microtime_float()
 	// filter check for already sent ATN/ETN notification	
 	  $varArray['NOTIFICATION_KEY'] =$notificationKey;
 	  $varArray['SENT'] 		='Y';
-	  $notificationLogObj 		=new MOBILE_API_NOTIFICATION_LOG("newjs_local111");          		           	  	  	
-	  $profilesNew			=$notificationLogObj->getNotificationProfiles($notificationKey);
-	  if(is_array($profilesNew))
-		  $profilesArr 		=array_diff($profiles, $profilesNew);
+	  if($notificationKey=='ATN')
+	  	$notificationLogObj	=new MOBILE_API_NOTIFICATION_LOG_ATN("newjs_local111");          		           	  	  		else if($notificationKey=='ETN')
+		$notificationLogObj     =new MOBILE_API_NOTIFICATION_LOG_ETN("newjs_local111");
+	  else
+		$notificationLogObj     =new MOBILE_API_NOTIFICATION_LOG("newjs_local111");
+	  $profilesOld			=$notificationLogObj->getNotificationProfiles();
+	  if(is_array($profilesOld))
+		  $profilesArr 		=array_diff($profiles, $profilesOld);
 	  else
 		  $profilesArr		=$profiles;
 	  $profilesArr =array_values($profilesArr);			
           unset($varArray);
 
 	// filter check in ETN notification, CASE: if profile is already considered for ATN  on the same day. 
-	  if($notificationKey=='ETN'){	
+	  /*if($notificationKey=='ETN'){	
 	  	$scheduledAppNotificationObj  =new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS();					
           	$varArray['NOTIFICATION_KEY'] ='ATN';
           	$profilesAtn                  =$scheduledAppNotificationObj->getArray($varArray);
@@ -663,7 +667,7 @@ public function microtime_float()
 			$profilesArr =$profilesNew;
 		}
 		unset($varArray);
-	  }
+	  }*/
 
 	// get PROFILE data
           if(is_array($profilesArr)){
