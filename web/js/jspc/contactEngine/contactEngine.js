@@ -545,34 +545,40 @@ ContactEngineCard.prototype.postCommonDisplayLayer=function(Obj,profileChecksum)
 
 	if(typeof(Obj.actiondetails.newerrmsglabel) != undefined && Obj.actiondetails.newerrmsglabel != null)
 	{
-		$("#OtherCase").addClass("disp-none");
-		$("#freeMemberCase").removeClass("disp-none");
-
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_freeMember\}\}/g,'');
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_Othercase\}\}/g,'disp-none');
+		
 		FinalHtml = FinalHtml.replace(/\{\{ErrorMsglabel\}\}/g,Obj.actiondetails.newerrmsglabel);
 		FinalHtml = FinalHtml.replace(/\{\{MembershipMsgHeader\}\}/g,Obj.actiondetails.membershipmsgheading);
+
+		FinalHtml = FinalHtml.replace(/\{\{subheading1\}\}/g,Obj.actiondetails.membershipmsg.subheading1);
+		FinalHtml = FinalHtml.replace(/\{\{subheading2\}\}/g,Obj.actiondetails.membershipmsg.subheading2);
+		FinalHtml = FinalHtml.replace(/\{\{subheading3\}\}/g,Obj.actiondetails.membershipmsg.subheading3);
+
 		if(typeof(Obj.actiondetails.offer) != undefined && Obj.actiondetails.offer != null)
 		{
 			FinalHtml = FinalHtml.replace(/\{\{MembershipOffer\}\}/g,Obj.actiondetails.offer.membershipOfferMsg1 + " " + Obj.actiondetails.offer.membershipOfferMsg2);
-			$("#oldPrice").html(Obj.actiondetails.offer.strikedPrice);
-			$("#newPrice").html(Obj.actiondetails.offer.discountedPrice);
-			$("#MembershipOfferExists").removeClass("disp-none");
+			FinalHtml = FinalHtml.replace(/\{\{oldPrice\}\}/g,Obj.actiondetails.offer.strikedPrice);
+			FinalHtml = FinalHtml.replace(/\{\{newPrice\}\}/g,Obj.actiondetails.offer.discountedPrice);
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'');
+			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'disp-none');
 		}
 		else
 		{
 			FinalHtml = FinalHtml.replace(/\{\{LowestOffer\}\}/g,Obj.actiondetails.lowestoffer);
-			$("#noMembershipOffer").removeClass("disp-none");
+			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'disp-none');
+			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'');
 		}
 		FinalHtml=FinalHtml.replace(/\{\{MEM_ACTION_ID\}\}/g,Obj.actiondetails.footerbutton.newaction+"-"+profileChecksum+"-"+this.name);
 		FinalHtml=FinalHtml.replace(/\{\{ButtonLabelNew\}\}/g,Obj.actiondetails.footerbutton.newlabel);
 	}
 	else
 	{
-		// $("#noMembershipOffertherCase").removeClass("disp-none");
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_freeMember\}\}/g,'disp-none');
+		FinalHtml = FinalHtml.replace(/\{\{VisibilityClass_Othercase\}\}/g,'');
 	}
 	
-	
-	
-	
+
 	return FinalHtml;
 
 }

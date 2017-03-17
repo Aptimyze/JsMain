@@ -123,7 +123,7 @@
 </div>
 <div id="postCommonDisplayLayer">
   <div id="contactEngineLayerDiv" class="pos-abs fullwid celyr1 z3 fontlig cepos1 cehgt1">
-  <div id="freeMemberCase" class="disp-none">
+  <div id="freeMemberCase" class="{{VisibilityClass_freeMember}}">
     
     <i class=" closeContactDetailLayer sprite2 sendcross1 cursp pos-abs cepos2"></i>
     <div class="dispbl mauto fullwid">
@@ -132,24 +132,20 @@
             <div class="color11 mt15 f13">{{MembershipMsgHeader}}</div>
             <ul class="color11 mt3 f13 disp_ib">
                 <li class="disp_ib">
-                    <div class="color11 disp_ib" style="font-size:6px;padding: 2px;position: relative;padding-bottom: 3px;">●</div> View contact details
+                    <div class="color11 disp_ib" style="font-size:6px;padding: 2px;position: relative;padding-bottom: 3px;">●</div> {{subheading1}}
                 </li>
                 <li class="disp_ib">
                     <div style="font-size:6px;padding: 0px 3px;" class="color11 disp_ib">●</div>
-                    Send personalized message
+                    {{subheading2}}
                 </li>
                 <li class="disp_ib">
                     <div style="font-size:6px;padding: 0px 3px;" class="color11 disp_ib">●</div>
-                    Chat
-                </li>
-                <li class="disp_ib">
-                    <div style="font-size:6px;padding: 0px 3px;" class="color11 disp_ib">●</div>
-                    Send your contact details to other members
+                    {{subheading3}}
                 </li>
             </ul>
-            <div id="noMembershipOffer" class="color5 mt15 f13 disp-none">{{LowestOffer}}</div>
-            <div id="MembershipOfferExists" class="color5 mt15 f13 disp-none">
-              {{MembershipOffer}}, starts @ <del id="oldPrice"></del>&nbsp;<span id="newPrice"></span>
+            <div id="noMembershipOffer" class="color5 mt15 f13 {{LowestOfferDisp}}">{{LowestOffer}}</div>
+            <div id="MembershipOfferExists" class="color5 mt15 f13 {{MembershipOfferDisp}}">
+              {{MembershipOffer}}, starts @ <del id="oldPrice">{{oldPrice}}</del>&nbsp;<span id="newPrice">{{newPrice}}</span>
             </div>
             <button id={{MEM_ACTION_ID}} class="cursp bg_pink colrw fontreg f15 mt20 brdr-0 cep2 contactEngineIcon" style="width:250px">{{ButtonLabelNew}}</button>
               <div class="colr5 pt10 "></div>
@@ -157,7 +153,7 @@
   </div>
   </div>
 
-    <div id="OtherCase"> 
+    <div id="OtherCase" class="{{VisibilityClass_Othercase}}"> 
      <!-- class="disp-none"> -->
       <div class="clearfix cebrd1" style="height:50px">
       <p class="txtc color11 f13 {{VisibilityClass_header}}">{{header}}<span class="color5 pl5 ">{{ViewSimiarProfile}}</span></p>
@@ -265,22 +261,22 @@
 
                      <!--start:layer 1-->
   <div id="contactEngineLayerDiv" class="pos-abs ccdimn4 ccbg1 z3 cErightZero">
-    <div id="freeUserShowMembership" class="disp-none">
+    <div id="freeMemberCaseCC" class="{{VisibilityClass_freeMember}}">
       <div class="disp-tbl fullwid cch2n">
         <span class="disp_ib closeContactDetailLayer pos-abs cepos3 icons cursp cmn_close">
         </span>
         <div class="wid70p txtc mauto rcb_colr2" style="padding: 15px 0px;">
-          <div id="noMembershipOffer" class="disp-none">{{LowestOffer}}</div>
-          <div id="MembershipOfferExists" class="disp-none">
-            <div class="f13">{{MembershipOffer}}, starts @ <del id="oldPrice"></del>&nbsp;<span id="newPrice"></span>
+          <div id="noMembershipOfferCC" class="{{LowestOfferDisp}}">{{LowestOffer}}</div>
+          <div id="MembershipOfferExistsCC" class="{{MembershipOfferDisp}}">
+            <div class="f13">{{MembershipOffer}}, starts @ <del id="oldPrice">{{oldPrice}}</del>&nbsp;<span id="newPrice">{{newPrice}}</span>
             </div>
           </div>
-          <div class="colrw rcb_bg1 cursp mauto txtc mt10 wid100" id="{{MEM_ACTION_ID}}" style="padding: 7px 37px;">{{ButtonLabelNew}}</div>
+          <div class="colrw rcb_bg1 cursp mauto txtc mt10 wid100 contactEngineIcon" id="{{MEM_ACTION_ID}}" style="padding: 7px 37px;">{{ButtonLabelNew}}</div>
         </div>
       </div>
     </div>
 
-                    <div id="OtherCase">
+                    <div id="OtherCaseCC" class="{{VisibilityClass_Othercase}}">
                       <div class="disp-tbl fullwid cch2n">
                       <span class="disp_ib closeContactDetailLayer pos-abs cepos3 icons cursp cmn_close"></span>
                         <div class="disp-cell vmid {{ButtonLabelShiftClass}}">
