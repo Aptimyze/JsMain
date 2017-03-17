@@ -151,7 +151,7 @@
             <div id="MembershipOfferExists" class="color5 mt15 f13 disp-none">
               {{MembershipOffer}}, starts @ <del id="oldPrice"></del>&nbsp;<span id="newPrice"></span>
             </div>
-            <button id="explorePlan" class="cursp bg_pink colrw fontreg f15 mt20 brdr-0 cep2 contactEngineIcon" style="width:250px">Explore Plans</button>
+            <button id={{MEM_ACTION_ID}} class="cursp bg_pink colrw fontreg f15 mt20 brdr-0 cep2 contactEngineIcon" style="width:250px">{{ButtonLabelNew}}</button>
               <div class="colr5 pt10 "></div>
     </div>
   </div>
@@ -265,23 +265,22 @@
 
                      <!--start:layer 1-->
   <div id="contactEngineLayerDiv" class="pos-abs ccdimn4 ccbg1 z3 cErightZero">
-    <div id="freeUserShowMembership">
+    <div id="freeUserShowMembership" class="disp-none">
       <div class="disp-tbl fullwid cch2n">
         <span class="disp_ib closeContactDetailLayer pos-abs cepos3 icons cursp cmn_close">
         </span>
         <div class="wid70p txtc mauto rcb_colr2" style="padding: 15px 0px;">
-          <div class="f13">Special offer for you! <span id="percentDis">30%</span> OFF on all Membership Plans till <span id="lastDate">19th Jan</span>,
+          <div id="noMembershipOffer" class="disp-none">{{LowestOffer}}</div>
+          <div id="MembershipOfferExists" class="disp-none">
+            <div class="f13">{{MembershipOffer}}, starts @ <del id="oldPrice"></del>&nbsp;<span id="newPrice"></span>
+            </div>
           </div>
-          <div class="f13">starts @ <del id="oldPrice">3500</del>&nbsp;<span id="newPrice">2800</span>
-          </div>
-          <div class="colrw rcb_bg1 cursp mauto txtc mt10 wid100" id="exploreBtn" style="padding: 7px 37px;"> Explore Plans</div>
+          <div class="colrw rcb_bg1 cursp mauto txtc mt10 wid100" id="{{MEM_ACTION_ID}}" style="padding: 7px 37px;">{{ButtonLabelNew}}</div>
         </div>
       </div>
     </div>
-  </div>
 
-
-                    <!-- <div id ="contactEngineLayerDiv" class="pos-abs ccdimn4 ccbg1 z3 cErightZero">
+                    <div id="OtherCase">
                       <div class="disp-tbl fullwid cch2n">
                       <span class="disp_ib closeContactDetailLayer pos-abs cepos3 icons cursp cmn_close"></span>
                         <div class="disp-cell vmid {{ButtonLabelShiftClass}}">
@@ -299,7 +298,8 @@
                            
                         </div>
                       </div>
-                    </div> -->
+                    </div>
+                  </div>
                     <!--end:layer 1--> 
 
 

@@ -545,7 +545,7 @@ ContactEngineCard.prototype.postCommonDisplayLayer=function(Obj,profileChecksum)
 
 	if(typeof(Obj.actiondetails.newerrmsglabel) != undefined && Obj.actiondetails.newerrmsglabel != null)
 	{
-		$("#OtherCase").removeClass("disp-none");
+		$("#OtherCase").addClass("disp-none");
 		$("#freeMemberCase").removeClass("disp-none");
 
 		FinalHtml = FinalHtml.replace(/\{\{ErrorMsglabel\}\}/g,Obj.actiondetails.newerrmsglabel);
@@ -562,6 +562,8 @@ ContactEngineCard.prototype.postCommonDisplayLayer=function(Obj,profileChecksum)
 			FinalHtml = FinalHtml.replace(/\{\{LowestOffer\}\}/g,Obj.actiondetails.lowestoffer);
 			$("#noMembershipOffer").removeClass("disp-none");
 		}
+		FinalHtml=FinalHtml.replace(/\{\{MEM_ACTION_ID\}\}/g,Obj.actiondetails.footerbutton.newaction+"-"+profileChecksum+"-"+this.name);
+		FinalHtml=FinalHtml.replace(/\{\{ButtonLabelNew\}\}/g,Obj.actiondetails.footerbutton.newlabel);
 	}
 	else
 	{
