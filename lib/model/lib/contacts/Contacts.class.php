@@ -419,9 +419,12 @@ class Contacts {
 			else
 				$this->setSEEN(Contacts::NOTSEEN);
 		}
-		else
+		else    
 			$this->setTYPE(Contacts::TYPEDEFAULT);
+                        
+                self::setContactsTypeCache($this->getSenderObj()->getPROFILEID(), $this->getReceiverObj()->getPROFILEID(), $this->getTYPE());
 
+                        
 	}
 
 	/****************************************************************************************************/
