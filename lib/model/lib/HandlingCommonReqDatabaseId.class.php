@@ -4,7 +4,7 @@
 */
 Class HandlingCommonReqDatabaseId
 {
-	public static $modulesWhereMasterMasterDone = array("search/matchalerts","/search/partnermatches","/search/justjoined","/api/v1/search/perform");
+	public static $modulesWhereMasterMasterDone = array("search/matchalerts","/search/partnermatches","/search/justjoined","/api/v1/search/perform","/api/v1/notification","/api/v3/notification");
 
 	public static function isMasterMasterDone(){
 		foreach(self::$modulesWhereMasterMasterDone as $v){
@@ -50,6 +50,7 @@ Class HandlingCommonReqDatabaseId
 			}
 			if(!$reqId)
 				$reqId = rand(1,2);
+			$reqId=2;
 		}
 		$request->setAttribute('CommonReqDatabaseId',$reqId);
 		return $reqId;

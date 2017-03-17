@@ -233,7 +233,6 @@ class SearchApiStrategyV1
 			$this->output["checkonline"]=true;
 		}
 
-		
 		if($relaxedResults && $this->output["result_count"]>0 && MobileCommon::isApp()=='A')
 		{
 			$this->output["relaxation_text1"] = self::search_relaxation_text1;

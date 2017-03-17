@@ -11,7 +11,7 @@ include("connect.inc");
 include_once(JsConstants::$docRoot."/commonFiles/comfunc.inc");
 $db=connect_db();
 $slave=connect_slave();
-$to='tanu.gupta@jeevansathi.com, nitesh.s@jeevansathi.com';
+$to='palash.chordia@jeevansathi.com, nitesh.s@jeevansathi.com';
 $subject="SMS_DETAIL and MOB_VERIFY cleanup report";
 
 $SMS_DAYS=15;
@@ -33,7 +33,8 @@ $back_mob_days=date("Y-m-d",$days_mob1);
 
 $dateYesterday=date("Y-m-d", time() - 60 * 60 * 24);
 $SQL2="SELECT SENT, COUNT( * ) AS CNT, SMS_KEY FROM  `SMS_DETAIL` WHERE DATE(  `ADD_DATE` ) =  '$dateYesterday' GROUP BY  `SENT` ,  `SMS_KEY`";
-$RES=mysql_query($SQL2,$slave) or logError($SQL2,$slave);
+$RES=mysql_query($SQL2,$slave) or errorEmail($SQL2 ,$to);
+
 while($ROWA=mysql_fetch_assoc($RES)){
 
 $RESA[]=$ROWA;
@@ -86,6 +87,8 @@ function errorEmail($sql,$to)
 $subject="SMS_DETAIL cleanup error";
 $msg='Error while executing query :'.$sql.'.<br> '.mysql_errno() . ": " . mysql_error().'<br><br>Regards,<br> JS'; 
 send_email($to,$msg,$subject);
+die;
+
 }
 
 ?>
