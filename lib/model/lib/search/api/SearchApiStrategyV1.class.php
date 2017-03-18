@@ -228,7 +228,7 @@ class SearchApiStrategyV1
 		$this->output["relaxationHead"]=null;
 		$this->output["relaxationType"]=null;
 		$this->output["checkonline"]=false;
-		if ( JsConstants::$chatOnlineFlag['search'] )
+		if (JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj)
 		{
 			$this->output["checkonline"]=true;
 		}
