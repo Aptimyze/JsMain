@@ -20,7 +20,7 @@ class DialerInbound
 		$phoneArr =array("$phone","0$phone");
 		
 		$jprofileObj = NEWJS_JPROFILE::getInstance('newjs_slave');		
-		$fields = 'PROFILEID,MTONGUE,SUBSCRIPTION,GENDER,RELIGION,DTOFBIRTH,MSTATUS';
+		$fields = 'PROFILEID,USERNAME,MTONGUE,SUBSCRIPTION,GENDER,RELIGION,DTOFBIRTH,MSTATUS';
 		$profileArr = $jprofileObj->getDetailsForPhone($phoneArr,$fields);
 		$totProfiles = count($profileArr);
 		if($totProfiles==0)

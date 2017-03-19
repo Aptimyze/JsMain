@@ -12,12 +12,15 @@ class dialerInboundCallIvrAction extends sfActions
 	**/
 	function execute($request){
 
-		$phone ='9999216910';
+		$phone =$request->getParameter('phone');
 		$phone =$this->phoneValidation($phone);
 		$this->callDivertToOnlineSales 	='Y';
 		$this->callForwardToCenter 	='N';
 		$this->registered 		='N';
 		$this->abusiveStatus 		='Y';
+                /*$general_message_filename_val ='general_info_1';
+                $profile_specific_filename_val  ='transfer_agent';*/
+
 		
 		if(!$phone){
 			$response =$this->generateResponse();
@@ -67,11 +70,12 @@ class dialerInboundCallIvrAction extends sfActions
 	}
 	public function generateResponse()
 	{
-                $responseData['call_divert_to_sales']		=$this->callDivertToOnlineSales;
-		$responseData['call_forward_to_center']		=$this->callForwardToCenter;
+                $responseData['call_divert_to_online_sales_team']      	=$this->callDivertToOnlineSales;
+               	$responseData['call_forward_to_center']                 =$this->callForwardToCenter;
 
 		$responseData['ABUSIVE']	=$this->abusiveStatus;
 		$responseData['PROFILEID'] 	=$this->dataArr['PROFILEID'];
+		$responseData['USERNAME']       =$this->dataArr['USERNAME'];
 		$responseData['MTONGUE'] 	=$this->dataArr['MTONGUE'];
 		$responseData['REGISTERED'] 	=$this->registered;
 		$responseData['MULTI_PROFILE']	=$this->multipleProfile;
