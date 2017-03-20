@@ -128,7 +128,7 @@ class InstantEoiNotifyConsumer
       $handlerObj=new ProcessHandler();
       switch($process)
       {
-        case MQ::INSTANT_EOI_PROCESS : $handlerObj->sendEOI($body, $type);
+        case MQ::INSTANT_EOI_PROCESS : $handlerObj->sendInstantEOINotification($body, $type);
             break;
       }     
     }

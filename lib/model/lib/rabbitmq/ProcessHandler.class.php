@@ -301,5 +301,17 @@ public function logDiscount($body,$type){
     }
 }
 
+  /*
+   * Send instant eoi notification
+   */
+  public function sendInstantEOINotification($body, $type)
+  {
+    if($type == "INSTANT_EOI")
+    {
+      $instantNotificationObj = new InstantAppNotification("EOI");
+      $instantNotificationObj->sendNotification($body['selfUserId'], $body['otherUserId']);
+    }
+  }
+
  }
 ?>

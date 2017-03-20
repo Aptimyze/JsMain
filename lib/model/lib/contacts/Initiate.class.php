@@ -226,8 +226,19 @@ class Initiate extends ContactEvent{
   
         try
         {
-                $instantNotificationObj = new InstantAppNotification("EOI");
-                $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
+          $producerObj = new Producer();
+          if($producerObj->getRabbitMQServerConnected())
+          {
+            $instantNotificationData = array("process"=>MQ::INSTANT_EOI_PROCESS, 'data' => array('type' => 'INSTANT_EOI', 'body' => array("selfUserId" => $this->contactHandler->getViewed()->getPROFILEID(),"otherUserId" => $this->contactHandler->getViewer()->getPROFILEID())), 'redeliveryCount' => 0);
+            $producerObj->sendMessage($instantNotificationData);
+          }
+          else
+          {
+            $instantNotificationObj = new InstantAppNotification("EOI");
+            $instantNotificationObj->sendNotification($this->contactHandler->getViewed()->getPROFILEID(),$this->contactHandler->getViewer()->getPROFILEID());
+          }
+          unset($producerObj);
+
         }
         catch(Exception $e)
         {
