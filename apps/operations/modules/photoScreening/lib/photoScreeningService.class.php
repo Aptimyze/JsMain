@@ -2016,9 +2016,8 @@ class photoScreeningService
         $producerObj=new Producer();
         if($producerObj->getRabbitMQServerConnected())
         {
-            $sender = $this->contactHandler->getViewer();
-            $receiver = $this->contactHandler->getViewed();
-            $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'PHOTO_SCREENED','body'=>array('senderid'=>$sender->getPROFILEID() ), 'redeliveryCount'=>0 ));
+            $sender = $paramArr["profileId"];
+            $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'PHOTO_SCREENED','body'=>array('senderid'=>$sender ), 'redeliveryCount'=>0 ));
             $producerObj->sendMessage($sendMailData);
             return true;
         }
