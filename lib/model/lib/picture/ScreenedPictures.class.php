@@ -338,7 +338,7 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $status=$photoObj->edit($paramArr,$pictureId,$profileId);
-		PictureNewCacheLib::getInstance()->removeCache($profileid);
+		PictureNewCacheLib::getInstance()->removeCache($profileId);
                 return $status;
 	}
 	
@@ -384,14 +384,14 @@ class ScreenedPicture extends Picture
         {
 		$photoObj=new PICTURE_NEW;
                 $photoObj->updateScreenedPhotosOrdering($profileid);
-		if(array_key_exists("PROFILEID",$paramArr))
-			   PictureNewCacheLib::getInstance()->removeCache($paramArr['PROFILEID']);
+		PictureNewCacheLib::getInstance()->removeCache($profileid);
 	}
 
 	public function insertBulkScreen($profileId,$picId,$title,$keywords,$ins_ordering,$MainPicUrl,$ProfilePicUrl,$ThumbailUrl,$Thumbail96Url,$MobileAppPicUrl='',$ProfilePic120Url='',$ProfilePic235Url='',$ProfilePic450Url='',$OriginalPicUrl='',$SearchPicUrl,$PicFormat)
         {
 		$photoObj=new PICTURE_NEW;
                 $status=$photoObj->insertBulkScreen($profileId,$picId,$title,$keywords,$ins_ordering,$MainPicUrl,$ProfilePicUrl,$ThumbailUrl,$Thumbail96Url,$MobileAppPicUrl,$ProfilePic120Url,$ProfilePic235Url,$ProfilePic450Url,$OriginalPicUrl,$SearchPicUrl,$PicFormat);
+		PictureNewCacheLib::getInstance()->removeCache($profileId);
                 return $status;
 	}
 
