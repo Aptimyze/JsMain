@@ -243,7 +243,8 @@ EOF;
           $producerObj->sendMessage($queueData);
       }
       $cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate;
-      JsMemcache::getInstance()->set($cacheKey,$cacheVal);
+      $cacheTimeout = MessageQueues::$scheduledNotificationDelayMappingArr["MatchAlertNotification"]*MessageQueues::$notificationDelayMultiplier*12;
+      JsMemcache::getInstance()->set($cacheKey,$cacheVal,$cacheTimeout);
   }
   
   public function getValidImage($url){
