@@ -80,7 +80,7 @@ class dialerInboundCallIvrAction extends sfActions
 		$responseData['REGISTERED'] 	=$this->registered;
 		$responseData['MULTI_PROFILE']	=$this->multipleProfile;
 		$responseData['PAID']		=$this->dataArr['SUBSCRIPTION'];
-		$responseData['INFO_DTOFBIRTH ']=$this->dataArr['DTOFBIRTH'];
+		$responseData['INFO_DTOFBIRTH']=$this->dataArr['DTOFBIRTH'];
 		$responseData['INFO_GENDER'] 	=$this->dataArr['GENDER'];
 		$responseData['INFO_MSTATUS'] 	=$this->dataArr['MSTATUS'];
 		$responseData['INFO_RELIGION'] 	=$this->dataArr['RELIGION'];
@@ -94,8 +94,8 @@ class dialerInboundCallIvrAction extends sfActions
 
         	$responseData['MEMBERSHIP']	=$this->memData['MEMBERSHIP'];		
 		$response =json_encode($responseData);
-		print_r($responseData);
-		echo $response;
+		//print_r($responseData);
+		//echo $response;
 		return $response;
 	}
         public function cachProfileInfo($profileid,$phone){

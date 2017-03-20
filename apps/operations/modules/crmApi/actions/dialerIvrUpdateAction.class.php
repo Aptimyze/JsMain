@@ -29,25 +29,28 @@ class dialerIvrUpdateAction extends sfActions
 					 "INFO_RELIGION"=>"Religion",
 					 "DELETE"=>"Profile Deleted"
 					);
-		if(!in_array("$fieldName",$fieldNameMapping) && !$fieldValue)
-			die('successfulDie');
+		if(!array_key_exists("$fieldName",$fieldNameMapping) || !$fieldValue)
+			die('Invalid Requiest');
 
 		$field =$fieldNameMapping[$fieldName];
 
 		$subject ="Update Info for User: $username";
-		$msg	="\nPlease find the details below to update:";
+		$msg	.="\nPlease find the details below to update:";
 		$msg	.="\n $field : $fieldValue";	
 
 		if($subject && $msg)
 			$this->sendMail($subject,$msg);
 
+		echo "Success";
+		die();
 	}
 	public function sendMail($subject,$msg)
 	{
-		$to 		="sales@jeevansathi.com";
+		$to 		="help@jeevansathi.com";
 		$from		="info@jeevansathi.com";
 		$cc		="manoj.rana@naukri.com";
 		SendMail::send_email($to,$msg,$subject,$from,$cc);
+		
 	}
 }
 ?>
