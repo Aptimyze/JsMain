@@ -1358,7 +1358,7 @@ return $result;
 			{
 				if(!is_array($profileArray))
 				{
-					throw new jsException("","profile id is not specified in function getMessageLogHousekeeping of newjs_MESSAGE_LOG.class.php");
+					throw new jsException("","profile id is not specified in function deleteMultipleLogForSingleProfile of newjs_MESSAGE_LOG.class.php");
 				}
 				else
 				{
