@@ -75,7 +75,8 @@ class EOIData
 	
 		$this->dbObj1= new NEWJS_MESSAGES($this->dbName);
 		$this->dbObj2= new NEWJS_DELETED_MESSAGES($this->dbName);
-			
+		$this->dbObj3= new NEWJS_DELETED_MESSAGES_ELIGIBLE_FOR_RET($this->dbName);
+    
 		for($i=0;$i<count($result);$i++)
 		{
 			$ids[]=$result[$i]["ID"];
@@ -85,13 +86,15 @@ class EOIData
 			$idstr=implode("','",$ids);	
 			$res1 = $this->dbObj1->Messages($idstr);
 			$res2 = $this->dbObj2->Messages($idstr);
-			
+			$res3 = $this->dbObj3->Messages($idstr);
 			
 			for($i=0;$i<count($result);$i++)
 			{
 				$result[$i]["MESSAGE"] = $res1[$result[$i][ID]];
 				if(!$result[$i]["MESSAGE"])
 					$result[$i]["MESSAGE"] = $res2[$result[$i][ID]];
+        if(!$result[$i]["MESSAGE"])
+					$result[$i]["MESSAGE"] = $res3[$result[$i][ID]];
 			}
 			
 		}
