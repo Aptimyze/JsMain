@@ -221,7 +221,7 @@ EOF;
       $count = $data["COUNT"];
       $receiverLastLoginDate = $data["RECEIVER"]["PROFILE"]->getLAST_LOGIN_DT();
       $otherProfileid = $data["USERS"][$data["MAX_PROFILEID"]["INDEX"]]->getPROFILEID();
-      $otherPicUrl = $data["USERS"][$data["MAX_PROFILEID"]["INDEX"]]->getProfilePic120Url();
+      $otherPicUrl = $this->getValidImage($data["USERS"][$data["MAX_PROFILEID"]["INDEX"]]->getProfilePic120Url());
       $cacheKey = "MA_NOTIFICATION_".$receiver;
       $seperator = "#";
       $preSetCache = JsMemcache::getInstance()->get($cacheKey);
@@ -247,7 +247,10 @@ EOF;
   }
   
   public function getValidImage($url){
-      return $url;
+    $photo = "D";
+    if(! (strstr($url, '_vis_') || strstr($url, 'photocomming') || strstr($url, 'filtered') || strstr($url, 'request')) )
+        $photo = $url;
+    return $photo;
   }
 
 }
