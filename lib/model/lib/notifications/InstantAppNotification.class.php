@@ -28,7 +28,7 @@ class InstantAppNotification
     unset($notSendObj);
     if(!is_array($regIds))
         return;
-    unset($regIds);
+    /*unset($regIds);*/
     
 	$notificationSentCount = $this->getNotificationSentCount($selfProfile);
 	$notificationlimit = $this->notificationObj->notifications['TIME_CRITERIA'][$this->notificationKey];
@@ -90,7 +90,7 @@ class InstantAppNotification
 				if($notificationData['NOTIFICATION_KEY']=='CSV_UPLOAD'){
 					$profileDetails[$selfProfile]['IMG_URL']=$exUrl;
 				}
-				$notificationSenderObj->sendNotifications($profileDetails);
+				$notificationSenderObj->sendNotifications($profileDetails,$regIds);
 			}
 		}
 	}
