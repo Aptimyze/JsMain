@@ -2009,19 +2009,19 @@ class photoScreeningService
         if(!isset($this->screenedCount))
         {
             $picture_new = new ScreenedPicture;
-            $countScreened = $picture_new->getMaxOrdering($paramArr["profileId"]);		//Get count of already existing screened pics
+            $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);		//Get count of already existing screened pics
             $this->screenedCount = $countScreened;
         }
-        if(($this->screenedCount > self::AUTO_REMINDER_MAIL_MAX_COUNT) || count($paramArr["APPROVE"]) < 1)return false;    
+        $approved = count($paramArr['PICTUREID']);
+        if(($this->screenedCount > self::AUTO_REMINDER_MAIL_MAX_COUNT) || $approved < 1)return false;    
         $producerObj=new Producer();
         if($producerObj->getRabbitMQServerConnected())
         {
-            $sender = $paramArr["profileId"];
+            $sender = $paramArr["PROFILEID"];
             $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'PHOTO_SCREENED','body'=>array('senderid'=>$sender ), 'redeliveryCount'=>0 ));
             $producerObj->sendMessage($sendMailData);
             return true;
         }
-            
             
         }
         /*This function is used upload pictures from Process Interface

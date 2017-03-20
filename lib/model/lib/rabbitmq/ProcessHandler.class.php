@@ -20,10 +20,17 @@ class ProcessHandler
     $message = $body['message'];
     if($type!='INITIATECONTACT')
     {
-        $senderObj = new Profile('',$senderid);   
-        $senderObj->getDetail("","","*");
-        $receiverObj = new Profile('',$receiverid);
-        $receiverObj->getDetail("","","*");
+        if($senderid)
+        {
+          $senderObj = new Profile('',$senderid);   
+          $senderObj->getDetail("","","*");
+        }
+         
+        if($receiverid)
+        {
+          $receiverObj = new Profile('',$receiverid);
+          $receiverObj->getDetail("","","*");
+        }
     }    
     switch($type)
     {
