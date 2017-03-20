@@ -55,7 +55,7 @@ if(false === $bIsEligible) {
 $row = mysql_fetch_array($result);
 //Check for Tables
 //If Housekeeping is not executed for this profile
-$liveDate = "2017-03-16";
+$liveDate = "2017-03-20";
 $bInHouseKeeping = false;
 $livedate = new DateTime($liveDate);
 $profileDeleteDate = new DateTime($row["DATE"]);
