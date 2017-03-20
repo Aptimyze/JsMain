@@ -411,6 +411,9 @@ class SearchApiStrategyV1
 
 
                                                 }
+                                                elseif($fieldName=='availforchat'){
+                                                        $this->output[$profileKey][$i][$fieldName] = $value;
+						}
                                                 elseif($fieldName=='photo')
                                                         $this->output[$profileKey][$i][$fieldName] = $value;
                                                 elseif($fieldName=='size'){
@@ -553,6 +556,8 @@ class SearchApiStrategyV1
                 //echo $key."\n\n";
 		switch($key) 
 		{
+			case "availforchat":
+				return $value;
 			 case "gender":
                                 $value = $SearchParamtersObj->getGENDER();
                                 break;
