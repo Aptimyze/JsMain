@@ -301,7 +301,7 @@ class NotificationDataPool
         return $dataAccumulated;
   }
   
-  public function getMembershipProfilesForNotification($profiles, $channelArr)
+  public function getMembershipProfilesForNotification($profiles, $channelArr=array())
   {
     unset($applicableProfiles);
     unset($profilesArr);
