@@ -299,13 +299,12 @@
  
         </div>
         <div id="footerDiv" class="posfix fullwid btmo">
-            <div class="f14 fontlig app_clrw txtc mb20">Skip</div>
+            <a href="#" id="skipLayer" class="f14 fontlig app_clrw txtc posSkip" onClick="popBrowserStack();return false;">Skip</a>
             <div class="bg7">
 
-            <input type="submit" id="footerButtonNew" class="fullwid dispbl lh50 txtc f17 fontlig white">
+            <a href="#" id="footerButtonNew" class="fullwid dispbl lh50 txtc f17 fontlig white"></a>
             </div>
-        </div>
- 
+        </div> 
 
     </div>
 

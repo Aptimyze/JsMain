@@ -418,8 +418,6 @@ class ContactDetailsV2Action extends sfAction
 				$responseArray["membershipmsg"]["subheading3"] = "Show your contact details to other members";
 
 				$responseArray["footerbutton"]["newlabel"]  = "Explore Plans";
-				$responseArray["footerbutton"]["newvalue"] = "";
-				$responseArray["footerbutton"]["newaction"] = "MEMBERSHIP";
 				if($MembershipMessage)
 				{
 					$responseArray["offer"]["membershipOfferMsg1"] = "Exclusive Offer For You!";
