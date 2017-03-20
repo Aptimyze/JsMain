@@ -86,7 +86,7 @@
 		~if $data.upgradeMembershipContent`
 			<!--start:upgrade offer level1 div-->
 			<div class="rv2_pad5" style="padding-top:10px;">
-				<div id="dividerText" class="bg3 posrel txtc fontlig f18 color2 rv2_pad19"> 
+				<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad19"> 
 				'Make your contacts visible to others' by just paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if`~$data.upgradeMembershipContent.upgradeExtraPay` 
 					<i class="posabs rv2_sprtie1 rv2_offb_left" style="transform:translateY(-50%);left:0"></i> 
 					<i class="posabs rv2_sprtie1 rv2_offb_right" style="transform:translateY(-50%);right:0"></i> 
@@ -398,7 +398,7 @@
 	~if $data.upgradeMembershipContent`
 		<!--start:upgrade pay button-->
 		<div style="overflow:hidden;position: fixed;height: 61px;" class="fullwid disp_b btmo">
-			<div id="upgradeMainMemBtn" class="fullwid bg7 txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>~$data.upgradeMembershipContent.upgradeExtraPay` | PAY NOW 
+			<div id="upgradeMainMemBtn" class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>~$data.upgradeMembershipContent.upgradeExtraPay` | PAY NOW 
 			</div>
 		</div>
 		<!--end:upgrade pay button-->
