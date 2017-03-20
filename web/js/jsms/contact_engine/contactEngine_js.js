@@ -568,7 +568,7 @@ function afterAction(result,action, index){
 			scrollOff();
 	}
         $("#ce_photo").attr("src", photo[index]);
-        
+        $("#profilePhoto").attr("src", photo[index]);
     if(window.location.hash.length===0)
         historyStoreObj.push(browserBackCommonOverlay,"#pushce");    
 	if($.inArray(action,["MESSAGE","WRITE_MESSAGE","SHORTLIST","IGNORE","CONTACT_DETAIL"])<0)
@@ -735,25 +735,18 @@ function bindFooterButtons(result){
 }
 
 function bindFooterButtonswithId(result, id){
-  $("#"+id).html(result.actiondetails.footerbutton.label).show().bind( "click", {
+  $("#"+id).html(result.actiondetails.footerbutton.newlabel).show().bind( "click", {
     action: result.actiondetails.footerbutton.action
   }, function( event ) {
   historyStoreObj.push(browserBackCommonOverlay,"#pushcf");
     window.location=actionUrl[event.data.action];
     return false;
   });
+  // if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
   if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
-    $("#neverMindLayer").show();
-  else if(result.actiondetails.footerbutton.action=="MEMBERSHIP")
   {
-      $( "#"+id ).bind( "click", function(){
-      
-        contactDetailMessage(result);
-        $("#closeLayer").show();
-      });
+      $("#skipLayer").show();
   }
-  else
-      $("#closeLayer").show();
 }
 
 
@@ -1126,7 +1119,7 @@ function contactDetailMessage(result,action,index)
     data: params,
     //crossDomain: true,
     success: function(response){
-      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer").hide();
+      $("#contactLoader,#footerButton,#ViewContactPreLayer,#ViewContactPreLayerNoNumber,#neverMindLayer,#footerButtonNew,#skipLayer").hide();
       //$("#footerButton").hide();
       //$("#ViewContactPreLayer").hide();
       //$("#ViewContactPreLayerNoNumber").hide();
@@ -1264,6 +1257,7 @@ if(result.actiondetails.bottommsg2){
     }
     if(result.actiondetails.newerrmsglabel)
     {
+      $("#commonOverlay").hide();
       $("#newErrMsg").html(result.actiondetails.newerrmsglabel);
       $("#membershipheading").html(result.actiondetails.membershipmsgheading);
       $("#subheading1").html(result.actiondetails.membershipmsg.subheading1);
@@ -1272,6 +1266,7 @@ if(result.actiondetails.bottommsg2){
       
       if(typeof(result.actiondetails.offer) != undefined && result.actiondetails.offer != null)
       {
+        $("#MembershipOfferExists").show();
         $("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1);
         $("#membershipOfferMsg2").html(result.actiondetails.offer.membershipOfferMsg2);
         $("#oldPrice").html(result.actiondetails.offer.strikedPrice);
@@ -1280,6 +1275,7 @@ if(result.actiondetails.bottommsg2){
       else
       {
         $("#LowestOffer").html(result.actiondetails.lowestoffer);
+        $("#LowestOffer").addClass("mt60");
       }
 
       bindFooterButtonswithId(result,'footerButtonNew');
@@ -1583,7 +1579,7 @@ function resetLayerButtons()
 }
   
 function browserBackCommonOverlay() {
-  if($("#commonOverlay").is(':visible') || $("#writeMessageOverlay").is(':visible')) {
+  if($("#commonOverlay").is(':visible') || $("#writeMessageOverlay").is(':visible') || $("#membershipOverlay").is(':visible')) {
     hideForHide();
     layerClose();
     return true;
