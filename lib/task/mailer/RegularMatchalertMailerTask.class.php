@@ -97,7 +97,7 @@ EOF;
 				$this->smarty->assign('data',$data);
 				$msg = $this->smarty->fetch(MAILER_COMMON_ENUM::getTemplate($this->mailerName).".tpl");
         $flag = $mailerServiceObj->sendAndVerifyMail($data["RECEIVER"]["EMAILID"],$msg,$subject,$this->mailerName,$pid,$data["RECEIVER"]["ALTERNATEEMAILID"]);
-				
+                $this->setMatchAlertNotificationCache($data);
 			}
 			else
 				$flag = "I"; // Invalid users given in database
@@ -214,6 +214,40 @@ EOF;
         }
         $subject="Shown below are $outOf added to your account today, based on your Desired Partner Profile. You may send interest to them.";
         return $subject;
+  }
+  
+  public function setMatchAlertNotificationCache($data){
+      $receiver = $data["RECEIVER"]["PROFILE"]->getPROFILEID();
+      $count = $data["COUNT"];
+      $receiverLastLoginDate = $data["RECEIVER"]["PROFILE"]->getLAST_LOGIN_DT();
+      $otherProfileid = $data["USERS"][$data["MAX_PROFILEID"]["INDEX"]]->getPROFILEID();
+      $otherPicUrl = $data["USERS"][$data["MAX_PROFILEID"]["INDEX"]]->getProfilePic120Url();
+      $cacheKey = "MA_NOTIFICATION_".$receiver;
+      $seperator = "#";
+      $preSetCache = JsMemcache::getInstance()->get($cacheKey);
+      if($preSetCache){
+          $explodedVal = explode($seperator,$preSetCache);
+          $count = $count+$explodedVal[0];
+          if($this->getValidImage($otherPicUrl) == "D"){
+              $otherPicUrl = $explodedVal[2];
+              $otherProfileid = $explodedVal[1];
+          }
+      }
+      else{
+          $body = array("PROFILEID"=>$receiver,"DATE"=>date('Y-m-d'));
+          $type = "MA_NOTIFICATION";
+          $queueData = array('process' =>'MA_NOTIFICATION',
+                            'data'=>array('body'=>$body,'type'=>$type),'redeliveryCount'=>0
+                          );
+          $producerObj = new JsNotificationProduce();
+          $producerObj->sendMessage($queueData);
+      }
+      $cacheVal = $count.$seperator.$otherProfileid.$seperator.$otherPicUrl.$seperator.$receiverLastLoginDate;
+      JsMemcache::getInstance()->set($cacheKey,$cacheVal);
+  }
+  
+  public function getValidImage($url){
+      return $url;
   }
 
 }

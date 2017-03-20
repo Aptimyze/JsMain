@@ -45,7 +45,7 @@ class NotificationEnums
       public static $CANCELLED = "C";
       public static $scheduledNotificationsLimit = 3;
       public static $scheduledNotificationPriorityArr = array('CONTACT_VIEWS','PENDING_EOI','CONTACTS_VIEWED_BY','PROFILE_VISITOR','JUST_JOIN','MATCHALERT','FILTERED_EOI');
-      public static $staticContentNotification = array("FILTERED_EOI", "INCOMPLETE_SCREENING");  //notifications with static content
+      public static $staticContentNotification = array("FILTERED_EOI", "INCOMPLETE_SCREENING","MATCHALERT");  //notifications with static content
       public static $appVersionCheck = array("DEFAULT"=>array('AND'=>23,'IOS'=>1),
                                           "FILTERED_EOI"=>array('AND'=>32,'IOS'=>'2.2'),
                                           "CONTACTS_VIEWED_BY"=>array('AND'=>32,'IOS'=>'2.2'),

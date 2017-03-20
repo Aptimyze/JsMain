@@ -173,7 +173,7 @@ class MailerService
 	{
 		if(!$loggedInProfileObj)
 			throw  new jsException("No logged in object in getRecieverInfoWithName() function in RegularMatchAlerts.class.php");
-                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION"); 
+                $loggedInProfileObj->getDetail("","","HAVEPHOTO,GENDER,USERNAME,EMAIL,SUBSCRIPTION,RELIGION,LAST_LOGIN_DT"); 
 		if($nameFlag)
 		{
 			$incentiveNameOfUserObj = new incentive_NAME_OF_USER();
@@ -802,13 +802,20 @@ return $edu;
                         $this->loadPartials();
 			$data["USERS"] = $users;
 			$data["COUNT"] = $usersCount;
-                        
+            $maxProfileid = 0;
+            $index = -1;
                         foreach($users as $profileID=>$ProfileData){
+                                $pid = $ProfileData->getPROFILEID();
+                                if($pid > $maxProfileid){
+                                    $maxProfileid = $pid;
+                                    $index = $profileID;
+                                }
                                 $Education = $ProfileData->getedu_level_new();
                                 if($Education!="")
                                         $ProfileData->setEDUCATION($Education);
                         }
-          
+            $data["MAX_PROFILEID"]["ID"] = $maxProfileid;
+            $data["MAX_PROFILEID"]["INDEX"] = $index;
 			if($widgetArray["googleAppTrackingFlag"])
 			{
 				

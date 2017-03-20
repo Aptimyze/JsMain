@@ -95,7 +95,13 @@ class RabbitmqHelper
         $channel->queue_bind(MQ::${$key}, MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],$value);
       }
       $channel->queue_bind(MQ::$INSTANT_NOTIFICATION_QUEUE, MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"]);
-
+      $channel->queue_declare(MQ::$MA_NOTIFICATION_QUEUE, MQ::PASSIVE, MQ::DURABLE, MQ::EXCLUSIVE, MQ::AUTO_DELETE, true, 
+					array(
+						"x-dead-letter-exchange" => array("S", MQ::$INSTANT_NOTIFICATION_EXCHANGE["NAME"]),
+    "x-message-ttl" => array("I", MQ::$scheduledNotificationDelayMappingArr[MQ::$MA_NOTIFICATION_QUEUE]*MQ::$notificationDelayMultiplier*1000),
+                        "x-dead-letter-routing-key"=>array("S",MQ::$INSTANT_NOTIFICATION_QUEUE)
+					));
+      $channel->queue_bind(MQ::$MA_NOTIFICATION_QUEUE, MQ::$DELAYED_NOTIFICATION_EXCHANGE["NAME"],MQ::$MA_NOTIFICATION_QUEUE);
       return $channel;
     }
     elseif($key=='notificationLog'){
