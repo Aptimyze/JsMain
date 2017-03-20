@@ -23,6 +23,7 @@ class SolrRequest implements RequestHandleInterface
 	                $this->searchParamtersObj = $searchParamtersObj;
 
                         //$this->logSearch();
+                        //JsMemcache::getInstance()->incrCount("TOTAL_SEARCH_COUNT_".date("d"));
                         $profileObj = LoggedInProfile::getInstance('newjs_master');
                         if($profileObj->getPROFILEID())
                 	{ 
