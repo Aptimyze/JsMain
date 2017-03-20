@@ -264,14 +264,16 @@ public function entryExistsForPair($submitter,$submittee)
     
     }
 
-       public function getEntryForPair($submitter, $submittee)
+       public function getEntryForPair($submitter, $submittee,$phone,$mobile)
     {
         try     
         {   
-            $sql = "SELECT MOBILE,PHONE from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :SUBMITTEE AND SUBMITTER = :SUBMITTER";
+            $sql = "SELECT MOBILE,PHONE from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :SUBMITTEE AND SUBMITTER = :SUBMITTER AND PHONE = : PHONE AND MOBILE = : MOBILE";
             $prep = $this->db->prepare($sql);
             $prep->bindValue(":SUBMITTEE",$submittee,PDO::PARAM_STR);
             $prep->bindValue(":SUBMITTER",$submitter,PDO::PARAM_STR);
+            $prep->bindValue(":PHONE",$phone,PDO::PARAM_STR);
+            $prep->bindValue(":MOBILE",$mobile,PDO::PARAM_STR);
             $prep->execute();
             $result = '';
             if($row=$prep->fetch(PDO::FETCH_ASSOC))

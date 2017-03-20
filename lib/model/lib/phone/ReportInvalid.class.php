@@ -30,16 +30,11 @@ class ReportInvalid
 		
 		$reportInvalidObj = new JSADMIN_REPORT_INVALID_PHONE();
 
-		$entryArr = $reportInvalidObj->getEntryForPair($submitter,$submittee);
+		$entryArr = $reportInvalidObj->getEntryForPair($submitter,$submittee,$phoneStatus,$mobileStatus);
 
 		if(is_array($entryArr))
 		{	
-			if(($entryArr['PHONE'] == $phoneStatus  && $phoneStatus == 'Y') ||($entryArr['MOBILE'] == $mobileStatus && $mobileStatus == 'Y'))
-			{	
-				
-				return true;
-			}
-			return false;
+			return true;	
 		}
 		return false;
 	}
