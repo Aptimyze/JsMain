@@ -657,7 +657,7 @@ astroCompatibility = function()
 		else{
 			$(".js-buttonAstro").html("Upgrade Membership");
 			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Upgrade to a Paid membership and buy Astro Compatibility add-on to access these reports for your matches.");
-			$(".js-buttonAstro").attr("href","/membership/jspc");
+			$(".js-buttonAstro").attr("href","/profile/mem_comparison.php");
 			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");		
 		}
 		
@@ -671,6 +671,12 @@ astroCompatibility = function()
 			success:function(response){
 			}
 		});
+		$(".js-buttonAstro").html("OK");
+			$(".js-textAstro").html("Astro compatibility report with this member has been sent to your registered Email ID");
+			$(".js-buttonAstro").click(function(){
+				$(".js-astroReportLayer,.js-astroTextButton").addClass("dispnone");
+			});
+			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");		
 	});
 }
 

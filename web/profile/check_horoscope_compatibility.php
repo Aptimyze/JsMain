@@ -67,11 +67,8 @@
 			$email_sender->setAttachment($file);
 			$email_sender->setAttachmentName("astroCompatibility-".$username.".pdf");
 			$email_sender->setAttachmentType('application/pdf');
-			$email_sender->send();
-			die("done");
-			return 1;
-			//PdfCreation::setResponse("astroCompatibility.pdf",$file);
-			die;
+			$email_sender->send();			
+			return;
 		}
 		}
 		if(strstr($data['SUBSCRIPTION'],'A'))
