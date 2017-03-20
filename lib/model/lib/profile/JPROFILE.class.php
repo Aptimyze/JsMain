@@ -236,8 +236,7 @@ class JPROFILE
             $lessThanEqualArrayWithoutQuote == "" &&
             $like == "" &&
             $nolike == "" &&
-            $addWhereText == "" &&
-            ProfileCacheLib::getInstance()->isRelevantFields($fields, __CLASS__)
+            $addWhereText == ""
         )
         {
             $arrPid = explode(',', $valueArray['PROFILEID']);
