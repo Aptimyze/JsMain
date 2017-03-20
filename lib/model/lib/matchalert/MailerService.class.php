@@ -802,20 +802,13 @@ return $edu;
                         $this->loadPartials();
 			$data["USERS"] = $users;
 			$data["COUNT"] = $usersCount;
-            $maxProfileid = 0;
-            $index = -1;
+                        
                         foreach($users as $profileID=>$ProfileData){
-                                $pid = $ProfileData->getPROFILEID();
-                                if($pid > $maxProfileid){
-                                    $maxProfileid = $pid;
-                                    $index = $profileID;
-                                }
                                 $Education = $ProfileData->getedu_level_new();
                                 if($Education!="")
                                         $ProfileData->setEDUCATION($Education);
                         }
-            $data["MAX_PROFILEID"]["ID"] = $maxProfileid;
-            $data["MAX_PROFILEID"]["INDEX"] = $index;
+          
 			if($widgetArray["googleAppTrackingFlag"])
 			{
 				
