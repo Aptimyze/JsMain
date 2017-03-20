@@ -180,5 +180,32 @@ class NEWJS_MESSAGES extends TABLE{
 				throw new jsException($e);
 			}
 		}
+        
+        /**
+         * Insert From Eligible For Retrieve Tables
+         * @param type $idsArr
+         * @return boolean
+         */
+        public function insertIntoFromMessagesEligibleForRet($idsArr)
+        {
+			try 
+			{
+				if(is_array($idsArr))
+				{ 
+					$idStr=implode(",",$idsArr);
+					$sql="INSERT IGNORE INTO newjs.MESSAGES SELECT * FROM newjs.DELETED_MESSAGES_ELIGIBLE_FOR_RET WHERE ID IN (".$idStr.")";
+					$prep=$this->db->prepare($sql);
+					$prep->execute();
+					return true;
+				}	
+			}
+			catch(PDOException $e)
+			{
+				jsCacheWrapperException::logThis($e);
+				return false;
+				/*** echo the sql statement and error message ***/
+				//throw new jsException($e);
+			}
+		}
 }
 ?>
