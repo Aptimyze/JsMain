@@ -63,6 +63,7 @@ class NotificationSender
 			$notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
 			$notificationMsgLog->insert($key,$msgId,$message,$title);
 			// end
+			unset($regIds);
 		}
 	}
 
