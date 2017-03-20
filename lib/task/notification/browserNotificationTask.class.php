@@ -87,10 +87,10 @@ EOF;
             $browserNotificationObj->addNotification($processObj);
             echo "After PENDING_EOI \n";
             
-            echo "before MEM_EXPIRE_A5 \n";
-            $processObj->setnotificationKey("MEM_EXPIRE_A5");
+            echo "before MEM_EXPIRE \n";
+            $processObj->setnotificationKey("MEM_EXPIRE");
             $browserNotificationObj->addNotification($processObj);
-            echo "After MEM_EXPIRE_A5 \n";
+            echo "After MEM_EXPIRE \n";
             
             /*echo "before MEM_EXPIRE_A10 \n";
             $processObj->setnotificationKey("MEM_EXPIRE_A10");

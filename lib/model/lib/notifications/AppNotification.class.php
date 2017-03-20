@@ -235,29 +235,15 @@ public function microtime_float()
                         break;
 		  case "ATN":
                     	$applicableProfiles=array();
+                        $poolObj = new NotificationDataPool();
                         $applicableProfiles = $this->getProfilesApplicableForTriggeredNotification($appProfiles,$notificationKey);
-			$counter =0;	
-                        if(is_array($applicableProfiles)){
-				foreach($applicableProfiles as $profileid=>$value){
-					$dataAccumulated[$counter]['SELF']=$value;
-					$counter++;
-				}
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-			}
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
                   case "ETN":
                         $applicableProfiles=array();
+                        $poolObj = new NotificationDataPool();
                         $applicableProfiles = $this->getProfilesApplicableForTriggeredNotification($appProfiles,$notificationKey);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
                   case "VD":
                         $applicableProfiles=array();
@@ -291,11 +277,7 @@ public function microtime_float()
 			}
 			unset($applicableProfiles);
 			break;
-		  case "MEM_EXPIRE_A5":
-		  case "MEM_EXPIRE_A10":
-		  case "MEM_EXPIRE_A15":
-		  case "MEM_EXPIRE_B1":	 
-                  case "MEM_EXPIRE_B5":
+		  case "MEM_EXPIRE":
                         $applicableProfiles=array();
                         $poolObj = new NotificationDataPool();
                         $applicableProfiles = $poolObj->getMembershipProfilesForNotification($appProfiles);
