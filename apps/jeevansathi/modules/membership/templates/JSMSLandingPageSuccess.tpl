@@ -98,7 +98,7 @@
 				<div>
 					<div class="posrel txtc fontlig f15 rv2_pad18 color7">
 					<div>Upgrade from ~$data.topBlockMessage.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership...</div>
-					<div class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">Valid till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</div>
+					<div class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">Valid till ~$data.upgradeMembershipContent.jsmsupgradeOfferExpiry`</div>
 					</div>
 				</div>
 			<!--end:upgrade offer level2 div-->
