@@ -86,7 +86,7 @@
 		~if $data.upgradeMembershipContent`
 			<!--start:upgrade offer level1 div-->
 			<div class="rv2_pad5" style="padding-top:10px;">
-				<div id="dividerText" class="bg3 posrel txtc fontlig f18 color2 rv2_pad16"> 
+				<div id="dividerText" class="bg3 posrel txtc fontlig f18 color2 rv2_pad19"> 
 				'Make your contacts visible to others' by just paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if`~$data.upgradeMembershipContent.upgradeExtraPay` 
 					<i class="posabs rv2_sprtie1 rv2_offb_left" style="transform:translateY(-50%);left:0"></i> 
 					<i class="posabs rv2_sprtie1 rv2_offb_right" style="transform:translateY(-50%);right:0"></i> 
@@ -96,7 +96,7 @@
 
 			<!--start:upgrade offer level2 div-->
 				<div>
-					<div class="posrel txtc fontlig f16 rv2_pad18 color7">
+					<div class="posrel txtc fontlig f15 rv2_pad18 color7">
 					<div>Upgrade from ~$data.topBlockMessage.currentMemName` to ~$data.upgradeMembershipContent.upgradeMainMemName` membership...</div>
 					<div class="~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if`">Valid till ~$data.upgradeMembershipContent.upgradeOfferExpiry`</div>
 					</div>
@@ -113,13 +113,13 @@
 				    <div class="bg4 rv2_pad3"> 
 				      <!--start:plan-->
 				      <div class="disptbl fullwid color7 rv2_brdrbtm1 pb10">
-				        <div id="P_name" class="dispcell wid60p"><span class="f24">~$data.upgradeMembershipContent.upgradeMainMemName` Upgrade</span></div>
-				        <div id="P_startingPrice" class="dispcell wid40p txtr f18"><span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>~$data.upgradeMembershipContent.upgradeExtraPay`</div>
+				        <div id="P_name" class="dispcell wid70p"><span class="f24">~$data.upgradeMembershipContent.upgradeMainMemName` Upgrade</span></div>
+				        <div id="P_startingPrice" class="dispcell txtr f18"><span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>~$data.upgradeMembershipContent.upgradeExtraPay`</div>
 				      </div>
 				      <!--end:plan--> 
-				      <div class="color13 fontlig f15 pt16">~if $data.upgradeMembershipContent.upgradeMainMemDur eq 'L'` Unlimited ~else` ~$data.upgradeMembershipContent.upgradeMainMemDur` ~/if` Months   |   ~$data.upgradeMembershipContent.upgradeTotalContacts` Contacts To View</div>
+				      <div class="color13 fontlig f15 pt16">~if $data.upgradeMembershipContent.upgradeMainMemDur eq 'L'` Unlimited ~else` ~$data.upgradeMembershipContent.upgradeMainMemDur` ~/if` Months &nbsp;&nbsp;   |&nbsp;&nbsp;   ~$data.upgradeMembershipContent.upgradeTotalContacts` Contacts To View</div>
 				      <!--start:features list -->
-				      <div id="P_serviceBenefits" class="rv2_list1">
+				      <div id="P_serviceBenefits" class="rv2_list1 pad2">
 				      	~if $data.upgradeMembershipContent.upgradeAdditionalBenefits`
 				      	<div class="fontreg f14 color7 pt20">Addition Benefits</div>
 				        <ul style="padding:5px 0 0 12px">
