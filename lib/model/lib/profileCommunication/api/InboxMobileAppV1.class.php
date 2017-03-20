@@ -612,6 +612,7 @@ class InboxMobileAppV1
 				}
 				if($profile[$count]['message']!=null && $profile[$count]['message']!="")
 				{
+					$profileObject=$tupleObj->getprofileObject();
 					if($infoKey=="INTEREST_RECEIVED" || $infoKey=="FILTERED_INTEREST")
 						$profile[$count]['message'] =$this->getPersonalizedMessageOnly($profileObject,$profile[$count]['message']);
 					elseif($infoKey=="INTEREST_SENT")
