@@ -254,7 +254,7 @@ class phoneActions extends sfActions
      	{
      		$respObj->setHttpArray(ResponseHandlerConfig::$SAME_NUMBER_INVALID_TWICE);
      		$result['message'] = ResponseHandlerConfig::$SAME_NUMBER_INVALID_TWICE['message'];
-     		$result['heading'] = "Cannot report Invalid";
+     		$result['heading'] = "Cannot report invalid";
 			$respObj->setResponseBody($result);
 			$respObj->generateResponse();
 			die;

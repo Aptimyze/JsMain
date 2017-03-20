@@ -1050,6 +1050,10 @@ ajaxConfig.success=function(response){
 		$('#headingReportInvalid').html(response.heading);
 		}
 	}
+	else if(response.responseStatusCode == '0')
+	{	
+		$('#headingReportInvalid').html('Phone no. reported as invalid');
+	}
 	$('#invalidConfirmMessage').html(response.message);
 	$('#reportInvalidReason-layer').fadeOut(300,"linear");
 	hideCommonLoader();
