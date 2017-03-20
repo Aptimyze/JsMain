@@ -21,6 +21,9 @@ $inactivityDate=date("Y-m-d",$timestamp);
 $timestamp=mktime(0, 0, 0, date("m")- $timeDiff  , date("d"), date("Y"));
 $inactivityDate_plus_onemonth=date("Y-m-d",$timestamp);
 
+$delArchivePrefix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_PREFIX;
+$delArchiveSuffix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_SUFFIX;
+
 $db=connect_db();
 mysql_query('set session wait_timeout=10000,interactive_timeout=10000,net_read_timeout=10000',$db);
 $dbSlave=connect_slave();
@@ -95,7 +98,7 @@ if($laveshBookmark++%1000==0)
 		$sql_1="BEGIN";
 		mysql_query($sql_1,$db) or die(mysql_error($db).$sql_1);
 		
-		$sql_i="REPLACE INTO newjs.DELETED_BOOKMARKS SELECT * FROM newjs.BOOKMARKS WHERE BKDATE<'$oldActivityOneYear'";
+		$sql_i="REPLACE INTO newjs.{$delArchivePrefix}DELETED_BOOKMARKS{$delArchiveSuffix} SELECT * FROM newjs.BOOKMARKS WHERE BKDATE<'$oldActivityOneYear'";
 		$sql_i.=$whereCondition;
 		mysql_query($sql_i,$db) or die(mysql_error($db).$sql_i);
 
@@ -176,7 +179,7 @@ if($laveshPhoto++%1000==0)
 				$sql_1="BEGIN";
 				mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
-				$sql_i="REPLACE INTO newjs.DELETED_PHOTO_REQUEST SELECT * FROM newjs.PHOTO_REQUEST WHERE DATE<'$oldActivityOneYear'";
+				$sql_i="REPLACE INTO newjs.{$delArchivePrefix}DELETED_PHOTO_REQUEST{$delArchiveSuffix} SELECT * FROM newjs.PHOTO_REQUEST WHERE DATE<'$oldActivityOneYear'";
 				$sql_i.=$whereCondition;
 				mysql_query($sql_i,$dbM) or die(mysql_error($dbM).$sql_i);
 		
@@ -233,7 +236,7 @@ if($laveshHoro++%1000==0)
                         	$sql_1="BEGIN";
 	                        mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
-				$sql_i="REPLACE INTO newjs.DELETED_HOROSCOPE_REQUEST SELECT * FROM newjs.HOROSCOPE_REQUEST WHERE DATE<'$oldActivityOneYear'";
+				$sql_i="REPLACE INTO newjs.{$delArchivePrefix}DELETED_HOROSCOPE_REQUEST{$delArchiveSuffix} SELECT * FROM newjs.HOROSCOPE_REQUEST WHERE DATE<'$oldActivityOneYear'";
 				$sql_i.=$whereCondition;
 				mysql_query($sql_i,$dbM) or die(mysql_error($dbM).$sql_i);
 	
@@ -346,26 +349,26 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 					if(is_array($col_id))
 					{
 						$col_str=implode("','",$col_id);
-						$dbDeletedMessageLogObj->insertMessageLogHousekeeping($col_id);
+						$dbDeletedMessageLogObj->insertMessageLogHousekeeping($col_id, $delArchivePrefix, $delArchiveSuffix);
 						//$sql_1="REPLACE INTO newjs.DELETED_MESSAGE_LOG SELECT * FROM newjs.MESSAGE_LOG WHERE ID IN ('$col_str')";
 						//mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 						$dbMessageLogObj->deleteMultipleLogForSingleProfile($col_id);
 						//$sql_1="DELETE FROM newjs.MESSAGE_LOG WHERE ID IN ('$col_str')"; 
 						//mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
-						$dbDeletedMessagesObj->insertMessageLogHousekeeping($col_id);
+						$dbDeletedMessagesObj->insertMessageLogHousekeeping($col_id, $delArchivePrefix, $delArchiveSuffix);
 						//$sql_1="REPLACE INTO newjs.DELETED_MESSAGES SELECT * FROM newjs.MESSAGES WHERE ID IN ('$col_str')";
 						//mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 						$dbMessageObj->deleteMessages($col_id);
 						//$sql_1="DELETE FROM newjs.MESSAGES WHERE ID IN ('$col_str')"; 
 						//mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 					}
-					$sql_1="REPLACE INTO newjs.DELETED_PROFILE_CONTACTS SELECT * FROM newjs.CONTACTS WHERE SENDER='$col1' and RECEIVER='$col2'";
+					$sql_1="REPLACE INTO newjs.{$delArchivePrefix}DELETED_PROFILE_CONTACTS{$delArchiveSuffix} SELECT * FROM newjs.CONTACTS WHERE SENDER='$col1' and RECEIVER='$col2'";
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
 					$sql_1="DELETE FROM newjs.CONTACTS WHERE SENDER='$col1' and RECEIVER='$col2'";
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
-					$sql_1="REPLACE INTO newjs.DELETED_EOI_VIEWED_LOG SELECT * FROM newjs.EOI_VIEWED_LOG WHERE VIEWER IN ('$col1','$col2') AND VIEWED IN  ('$col1','$col2')";
+					$sql_1="REPLACE INTO newjs.{$delArchivePrefix}DELETED_EOI_VIEWED_LOG{$delArchiveSuffix} SELECT * FROM newjs.EOI_VIEWED_LOG WHERE VIEWER IN ('$col1','$col2') AND VIEWED IN  ('$col1','$col2')";
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 			
 					$sql_1="DELETE FROM newjs.EOI_VIEWED_LOG WHERE VIEWER IN ('$col1','$col2') AND VIEWED IN  ('$col1','$col2')";
@@ -417,8 +420,8 @@ if($laveshrawat++%10000==0)
 
         $viewer=$row["VIEWER"];
         $viewed=$row["VIEWED"];
-
-        $sqlI="REPLACE INTO newjs.DELETED_VIEW_LOG SELECT * FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
+//TODO
+        $sqlI="REPLACE INTO newjs.{$delArchivePrefix}DELETED_VIEW_LOG{$delArchiveSuffix} SELECT * FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
         mysql_query($sqlI,$db_211) or die(mysql_error($db_211).$sqlI);
 
 
