@@ -569,7 +569,7 @@ ContactEngineCard.prototype.postCommonDisplayLayer=function(Obj,profileChecksum)
 			FinalHtml = FinalHtml.replace(/\{\{MembershipOfferDisp\}\}/g,'disp-none');
 			FinalHtml = FinalHtml.replace(/\{\{LowestOfferDisp\}\}/g,'');
 		}
-		FinalHtml=FinalHtml.replace(/\{\{MEM_ACTION_ID\}\}/g,Obj.actiondetails.footerbutton.newaction+"-"+profileChecksum+"-"+this.name);
+		FinalHtml=FinalHtml.replace(/\{\{MEM_ACTION_ID\}\}/g,Obj.actiondetails.footerbutton.action+"-"+profileChecksum+"-"+this.name);
 		FinalHtml=FinalHtml.replace(/\{\{ButtonLabelNew\}\}/g,Obj.actiondetails.footerbutton.newlabel);
 	}
 	else
