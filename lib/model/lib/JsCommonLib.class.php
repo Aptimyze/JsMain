@@ -1116,7 +1116,7 @@ public static function insertConsentMessageFlag($profileid) {
             $key = $className.'_'.date('Y-m-d');
             JsMemcache::getInstance()->hIncrBy($key, $funName);
 
-            JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
+            //JsMemcache::getInstance()->hIncrBy($key, $funName.'::'.date('H'));
         }
         public static function setAutoScreenFlag($screenVal,$editArr)
         {
