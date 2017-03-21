@@ -35,7 +35,7 @@ class communicationSyncAction extends sfAction
                 }
                 else
                         $responseArray=array();
-                
+                JsMemcache::getInstance()->delete($redisKey);
                 $apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
                 $apiObj->setResponseBody($responseArray);
                 $apiObj->generateResponse();
