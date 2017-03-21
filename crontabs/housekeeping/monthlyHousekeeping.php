@@ -13,7 +13,7 @@ if(CommonUtility::hideFeaturesForUptime() && JsConstants::$whichMachine == 'prod
         successfullDie();
 
 
-$monthDiff = 24;
+$monthDiff = 30;
 $timeDiff = $monthDiff + 6 ;
 $timestamp=mktime(0, 0, 0, date("m") - $monthDiff , date("d"), date("Y"));
 $inactivityDate=date("Y-m-d",$timestamp);
@@ -39,7 +39,7 @@ $sql="TRUNCATE TABLE test.$inactiveRecordTable";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
 
-$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate' ";
+$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE DATE(LAST_LOGIN_DT) BETWEEN '$inactivityDate_plus_onemonth' AND '$inactivityDate'  ";
 //$sql="INSERT INTO test.$inactiveRecordTable(PROFILEID) SELECT PROFILEID FROM newjs.JPROFILE WHERE LAST_LOGIN_DT < '$inactivityDate'";
 echo $sql."\n\n";
 mysql_query($sql,$dbSlave) or die(mysql_error($dbSlave).$sql);
@@ -62,16 +62,16 @@ $t1=getDumpCommandConnectionDetails('SS1','','test','target');//shardslave1
 $p=$s1." | ".$t1;
 passthru($p);
 
-echo "Dump1";
+echo "Dump1","\n\n";
 
 $t2=getDumpCommandConnectionDetails('SS2','','test','target');//shardslave2
 echo $p=$s1." | ".$t2;
 passthru($p);
-echo "Dump2";
+echo "Dump2","\n\n";
 $t3=getDumpCommandConnectionDetails('SS3','','test','target');//shardslave3
 $p=$s1." | ".$t3;
 passthru($p);
-echo "Dump3";
+echo "Dump3","\n\n";
 //dumping INACTIVE_RECORDS_6_MONTHS_FOR_CRON to all slaves as they are needed for joins
 //BOOKMARKS
 for($i=0;$i<2;$i++)
@@ -100,6 +100,7 @@ if($laveshBookmark++%1000==0)
 		
 		$sql_i="REPLACE INTO newjs.{$delArchivePrefix}DELETED_BOOKMARKS{$delArchiveSuffix} SELECT * FROM newjs.BOOKMARKS WHERE BKDATE<'$oldActivityOneYear'";
 		$sql_i.=$whereCondition;
+		//echo $sql_i,"\n\n";
 		mysql_query($sql_i,$db) or die(mysql_error($db).$sql_i);
 
 		$sql_d="DELETE FROM newjs.BOOKMARKS WHERE BKDATE<'$oldActivityOneYear'";
@@ -181,6 +182,7 @@ if($laveshPhoto++%1000==0)
 
 				$sql_i="REPLACE INTO newjs.{$delArchivePrefix}DELETED_PHOTO_REQUEST{$delArchiveSuffix} SELECT * FROM newjs.PHOTO_REQUEST WHERE DATE<'$oldActivityOneYear'";
 				$sql_i.=$whereCondition;
+				//echo $sql_i,"\n\n";
 				mysql_query($sql_i,$dbM) or die(mysql_error($dbM).$sql_i);
 		
 				$sql_d="DELETE FROM newjs.PHOTO_REQUEST WHERE DATE<'$oldActivityOneYear'";
@@ -196,7 +198,7 @@ if($laveshPhoto++%1000==0)
 		}
 	}
 	//PHOTO REQUEST
-
+//die(X);
 	//HOROSCOPE REQUEST
 	for($i=0;$i<2;$i++)
 	{
@@ -238,6 +240,7 @@ if($laveshHoro++%1000==0)
 
 				$sql_i="REPLACE INTO newjs.{$delArchivePrefix}DELETED_HOROSCOPE_REQUEST{$delArchiveSuffix} SELECT * FROM newjs.HOROSCOPE_REQUEST WHERE DATE<'$oldActivityOneYear'";
 				$sql_i.=$whereCondition;
+				//echo $sql_i,"\n\n";
 				mysql_query($sql_i,$dbM) or die(mysql_error($dbM).$sql_i);
 	
 				$sql_d="DELETE FROM newjs.HOROSCOPE_REQUEST WHERE DATE<'$oldActivityOneYear'";
@@ -363,12 +366,14 @@ $dbDeletedMessageLogObj2=new NEWJS_DELETED_MESSAGE_LOG($ProfileId2shard);
 						//mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 					}
 					$sql_1="REPLACE INTO newjs.{$delArchivePrefix}DELETED_PROFILE_CONTACTS{$delArchiveSuffix} SELECT * FROM newjs.CONTACTS WHERE SENDER='$col1' and RECEIVER='$col2'";
+					//echo $sql_1,"\n\n";
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
 					$sql_1="DELETE FROM newjs.CONTACTS WHERE SENDER='$col1' and RECEIVER='$col2'";
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 
 					$sql_1="REPLACE INTO newjs.{$delArchivePrefix}DELETED_EOI_VIEWED_LOG{$delArchiveSuffix} SELECT * FROM newjs.EOI_VIEWED_LOG WHERE VIEWER IN ('$col1','$col2') AND VIEWED IN  ('$col1','$col2')";
+					//echo $sql_1,"\n\n";
 					mysql_query($sql_1,$dbM) or die(mysql_error($dbM).$sql_1);
 			
 					$sql_1="DELETE FROM newjs.EOI_VIEWED_LOG WHERE VIEWER IN ('$col1','$col2') AND VIEWED IN  ('$col1','$col2')";
@@ -422,6 +427,7 @@ if($laveshrawat++%10000==0)
         $viewed=$row["VIEWED"];
 //TODO
         $sqlI="REPLACE INTO newjs.{$delArchivePrefix}DELETED_VIEW_LOG{$delArchiveSuffix} SELECT * FROM newjs.VIEW_LOG WHERE VIEWER='$viewer' and VIEWED='$viewed'";
+	//echo $sqlI,"\n\n";
         mysql_query($sqlI,$db_211) or die(mysql_error($db_211).$sqlI);
 
 
