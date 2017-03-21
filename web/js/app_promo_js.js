@@ -29,7 +29,7 @@ $( document ).ready(function() {
 			}
 			if($("#mainContent").length){
 
-				if(pageMyJs!=1)
+				if(typeof pageMyJs != 'undefined' && pageMyJs!=1)
 				{
 					$("#mainContent").addClass("ham_b100");
 					var showAppClass = 'ham_b20';
@@ -177,7 +177,7 @@ function writeCookie (key, value, hours) {
 	  document.getElementById("appPromo").style.height=AppPromoHgt+"px";
 	 
 		$("#appPromo").removeClass("ham_minu20");
-		if(pageMyJs!=1)
+		if(typeof pageMyJs != 'undefined' && pageMyJs!=1)
 		{
 			$("#mainContent").addClass("ham_plus20");
 		}
