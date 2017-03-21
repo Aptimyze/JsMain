@@ -230,7 +230,7 @@ class SearchApiStrategyV1
 		$this->output["checkonline"]=false;
 		if (JsConstants::$chatOnlineFlag['search'] && $loggedInProfileObj && $loggedInProfileObj->getPROFILEID())
 		{
-			$this->output["checkonline"]=true;
+			//$this->output["checkonline"]=true;
 		}
 
 		if($relaxedResults && $this->output["result_count"]>0 && MobileCommon::isApp()=='A')
