@@ -298,9 +298,19 @@ class staticActions extends sfActions
             $pObj = LoggedInProfile::getInstance();
         }
 
-        public function executeHideOption(sfWebRequest $request) {}
+        public function executeHideOption(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
 
-        public function executeUnHideOption(sfWebRequest $request) {}
+        public function executeUnHideOption(sfWebRequest $request) 
+        {
+          if(MobileCommon::isAppWebView()) {
+              $this->webView = 1;
+          }
+        }
 
         public function executeUnHideResult(sfWebRequest $request) {}
 
