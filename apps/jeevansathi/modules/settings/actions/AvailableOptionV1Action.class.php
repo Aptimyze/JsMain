@@ -29,9 +29,9 @@ class AvailableOptionV1Action extends sfActions
     
     $activated = $this->m_objLoginProfile->getACTIVATED();
     
-    $options["hide_unhide"] = array("label"=> "Hide Profile","url"=>"");
+    $options["hide_unhide"] = array("label"=> "Hide Profile","url"=>"/static/hideOption");
     if($activated == ProfileEnums::PROFILE_HIDDEN) {
-      $options["hide_unhide"] = array("label"=> "Unhide Profile","url"=>"");
+      $options["hide_unhide"] = array("label"=> "Unhide Profile","url"=>"/static/unHideOption");
     }
     $arrOut = array("options"=>$options);
     
