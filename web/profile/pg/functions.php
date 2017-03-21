@@ -320,12 +320,12 @@ function newOrder($profileid, $paymode, $curtype, $amount, $service_str, $servic
                 //set upgrade case in memcache for 1 hr for this user 
                 if($insertedRowId){
                     $memCacheObject = JsMemcache::getInstance();
-                    $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],$memUpgrade,3600);
+                    $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],$memUpgrade,10800);
                 }
             }
             else{
                 $memCacheObject = JsMemcache::getInstance();
-                $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],"NA",3600);
+                $memCacheObject->set($profileid.'_MEM_UPGRADE_'.$data["ORDERID"],"NA",10800);
             }
         	return $data;
         }
