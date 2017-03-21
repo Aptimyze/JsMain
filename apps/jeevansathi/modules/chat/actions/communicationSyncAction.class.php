@@ -24,8 +24,20 @@ class communicationSyncAction extends sfAction
                 $redisKey=$pid."_lastCommunicationId";
                 $arr=JsMemcache::getInstance()->getHashAllValue($redisKey);
                 $responseArray=array();
+                $responseArray["syncAll"]=false;
+                $responseArray["syncRecords"]=array();
+                if($this->loginData['LAST_LOGIN_DT'])
+                {
+                	$ContactTime = strtotime($this->loginData['LAST_LOGIN_DT']);
+	      			$time = time();
+	      			if(($time - $ContactTime)>(3600*24))
+	   					$responseArray["syncAll"]=true;   				
+	      		}
+
+                
+
                 $i=0;
-                if(is_array($arr)){
+                if(is_array($arr) && $responseArray["syncAll"]==false){
                         foreach ($arr as $key => $value) {
                                 $responseArray["syncRecords"][$i]["profileId"]= (string)$key;
                                 $responseArray["syncRecords"][$i]["profileCheckSum"]=md5($key) . "i" . $key;
@@ -33,8 +45,7 @@ class communicationSyncAction extends sfAction
                                 $i++;
                         }
                 }
-                else
-                        $responseArray=array();
+
                 JsMemcache::getInstance()->delete($redisKey);
                 $apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
                 $apiObj->setResponseBody($responseArray);
