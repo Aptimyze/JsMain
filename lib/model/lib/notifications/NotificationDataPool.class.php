@@ -351,7 +351,7 @@ class NotificationDataPool
             unset($dataArr);
         }
         //update sms send status
-        $tempSmsObj->updateSentForNotification($profilesStr, "MEM_EXPIRE_A5,MEM_EXPIRE_A10,MEM_EXPIRE_A15,MEM_EXPIRE_B1,MEM_EXPIRE_B5");
+        $tempSmsObj->updateSentForNotification($profilesStr, "'MEM_EXPIRE_A5','MEM_EXPIRE_A10','MEM_EXPIRE_A15','MEM_EXPIRE_B1','MEM_EXPIRE_B5'");
     }
     // return eligible profiles
     if($applicableProfiles)
