@@ -257,7 +257,8 @@ class DetailedViewApi
                         $this->m_arrOut['name_of_user'] = null;
                 }
                 unset($nameOfUserObj);
-                
+        if($objProfile->getGender() == $this->m_actionObject->loginProfile->getGender())
+        	$this->m_arrOut['sameGender']=1;
 		$szInc_Lvl = $objProfile->getDecoratedIncomeLevel();
 		$this->m_arrOut['income'] = (strtolower($szInc_Lvl) == "no income") ?$szInc_Lvl :($szInc_Lvl." per Annum") ;
 		if($objProfile->getDecoratedCountry()=="India" || ($objProfile->getDecoratedCountry()=="United States" && $objProfile->getDecoratedCity()!=""))
@@ -297,7 +298,7 @@ class DetailedViewApi
 		$this->m_arrOut['m_status']  = $objProfile->getDecoratedMaritalStatus();
                 if( $objProfile->getMSTATUS() != "N")
                     $this->m_arrOut['have_child']  = ApiViewConstants::$hasChildren[$objProfile->getHAVECHILD()];
-		$bHoroScope = $this->m_objProfile->getSHOW_HOROSCOPE();
+		$bHoroScope = $objProfile->getSHOW_HOROSCOPE();
     if($bHoroScope === 'D'){
       $this->m_arrOut['toShowHoroscope']  = $bHoroScope;
     }

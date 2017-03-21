@@ -25,7 +25,7 @@
                     <div class="fontlig fl vpro_wordwrap2" id="vpro_more_astro_nakshatra" >~$arrData.more_astro.nakshatra`</div>
                 </div>
                 ~/if`
-
+                ~if $arrData.sameGender neq 1`
                 <!--start:button-->
                 <div class="clearfix pb20 pt20">
                 ~if ($arrData.othersHoroscope eq 'Y' && ($arrData.toShowHoroscope eq 'Y' || $arrData.toShowHoroscope eq '') )`
@@ -34,7 +34,7 @@
                 ~if (!$arrData.NO_ASTRO && $arrData.sameGender neq 1)`
                  <button class="fontlig lh40 astroBtn1 fr ~if $arrData.COMPATIBILITY_SUBSCRIPTION eq 'N' AND $arrData.paidMem eq 'Y'` js-astroCompMem ~elseif $arrData.COMPATIBILITY_SUBSCRIPTION eq 'N'` js-freeAstroComp ~elseif $arrData.COMPATIBILITY_SUBSCRIPTION neq 'N'` js-astroMem ~/if`" style="width:48%">Get Astro Report</button>
                  ~/if`
-
+                 ~/if`
              </div>
              <!--end:button-->
                 ~if isset($arrData.more_astro.horo_match)`
