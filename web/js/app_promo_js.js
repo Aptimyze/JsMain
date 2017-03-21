@@ -15,9 +15,8 @@ if(typeof(AndroidPromotion)=="undefined"){
 	var AndroidPromotion=0;
 }
 $( document ).ready(function() {
-	
       if((getAndroidVersion() || getIosVersion()) && AndroidPromotion && (typeof webView ==='undefined' || webView =="")){
-      if(!getCookieData("appPromo") && (typeof appPromo === 'undefined') && AppLoggedInUser )
+      if(!getCookieData("appPromo") && (typeof appPromo === 'undefined'))
       {
 		   writeCookie("appPromo","jeevansathi",3);
 			if($("#main").length)
@@ -28,18 +27,17 @@ $( document ).ready(function() {
 					$( "#main" ).before("<div id=\"appPromo\" class =\"app_posr app_txtc\" style =\"background-color:#721108;\"><img id= \"appPromoImg\" src=\"IMG_URL/images/mobilejs/wap_promotion3.jpg\" border=\"0\"/><div class=\"app_posa app_pos1\"><div class=\"napp_pad1\"><div class=\"app_fnt38 nfamily2 app_txtl ncolr1 app_txtl\" style=\"font-size:25px\">What our users say</div><div class=\"app_txtl app_fntb ncolr2 napp_pt1 nfamily2\">\"Amazing app. Very handy and lightning fast access to all the profiles with great picture clarity and neat fonts. Truly satisfying….\" </div><div class=\"clearfix napp_pt1\"><div class=\"pull-left\"> <div class=\"napp_rat5\"></div>                          </div><div class=\"pull-right app_fntb ncolr2 app_txtr\">Rahulkumar<br/><span class=\"app_fnta\">16th June 2014</span></div></div>  <div class=\"napp_pt20 ncolr2 app_fntb\">Get the best experience with the</br><div class =\"app_f20\"> Jeevansathi Apple App</div></div>  <div class=\"app_pt30\"><div class=\"app_btn app_f40\"><a href=\"/static/appredirect?type=iosLayer\" style=\"color: #fff; text-decoration:none\">Download for Free</a></div><div class=\"napp_pt_abc app_clr1 app_f16\" onclick=\"showPromo(0);\">Skip to mobile site</div></div>    </div></div><img style=\"width:0px;height:0px;\" src=\"/static/trackinterstitial?rand="+ap_randNumber+"&randUser="+ap_assignRandom+"\"/></div><div id=\"appPromoHide\" class=\"appPromoHide\" style=\"opacity:1; height:100%; width:100%; z-index:11;margin-top:0px; position:absolute;\"></div>");
 			}
 			if($("#mainContent").length){
+				
 
-				if(typeof pageMyJs != 'undefined' && pageMyJs!=1)
+				if(typeof pageMyJs != 'undefined' && pageMyJs==1)
+				{
+					var showAppClass = 'ham_b20_n';
+				}
+				else
 				{
 					$("#mainContent").addClass("ham_b100");
 					var showAppClass = 'ham_b20';
 				}
-				else
-				{
-					var showAppClass = 'ham_b20_n';
-				}
-				
-
 				
 				perspective=1;
 				//isLoaderSearch=1;
@@ -177,11 +175,10 @@ function writeCookie (key, value, hours) {
 	  document.getElementById("appPromo").style.height=AppPromoHgt+"px";
 	 
 		$("#appPromo").removeClass("ham_minu20");
-		if(typeof pageMyJs != 'undefined' && pageMyJs!=1)
+		if(typeof pageMyJs == 'undefined')
 		{
-			$("#mainContent").addClass("ham_plus20");
+		$("#mainContent").addClass("ham_plus20");
 		}
-		
 		startTouchEvents(100);
 		setTimeout(function(){$(document).unbind('touchmove');},2000);
  }
