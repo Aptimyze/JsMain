@@ -581,6 +581,17 @@ $screeningValMainAdmin = 0;
 						$sms->send();
 						$sms=new InstantSMS("MTONGUE_CONFIRM",$pid);
 						$sms->send();
+						$producerObj=new Producer();
+						if($producerObj->getRabbitMQServerConnected())
+						{
+							$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
+							$producerObj->sendMessage($sendMailData);
+							// production logging
+							$currdate = date('Y-m-d');
+							$file = fopen(JsConstants::$docRoot."/uploads/SearchLogs/ScreenQProduce-$currdate", "a+");
+							fwrite($file, "$pid\n");
+							fclose($file);
+						}
 					//	$parameters = array("KEY" => "SI_APPROVE", "PROFILEID" => $pid, "DATA" => $pid);
 					//	sendSingleInstantSms($parameters);
 					}
@@ -733,12 +744,6 @@ $screeningValMainAdmin = 0;
 				{
 					if ($to && $verify_mail != 'Y') 
 					{
-						$producerObj=new Producer();
-						if($producerObj->getRabbitMQServerConnected())
-						{
-							$sendMailData = array('process' => MQ::SCREENING_Q_EOI, 'data' => array('type' => 'SCREENING','body' => array('profileId' => $pid)), 'redeliveryCount' => 0);
-							$producerObj->sendMessage($sendMailData);
-						}
 						CommonFunction::sendWelcomeMailer($pid);
 					}
 						//send_email($to, $MESSAGE);
