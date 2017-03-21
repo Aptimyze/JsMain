@@ -114,5 +114,29 @@ class billing_UPGRADE_ORDERS extends TABLE
         throw new jsException($e);
     }
   }
+  /**
+     * Function to check whether entry with given order id exists or not
+     *
+     * @param   $orderid,$profileid(optional)
+     * @return  $details
+     */ 
+  public function getAllEntries()
+  {
+    try
+    { 
+        $sql = "SELECT * FROM billing.UPGRADE_ORDERS WHERE UPGRADE_STATUS = 'DONE'";
+        $res=$this->db->prepare($sql);
+        $res->execute();
+        $output = array();
+        while($row=$res->fetch(PDO::FETCH_ASSOC)){
+          $output[$row['PROFILEID']] = $row;
+        }
+        return $output;
+    }
+    catch(PDOException $e)
+    {
+        throw new jsException($e);
+    }
+  }
 }
 ?>
