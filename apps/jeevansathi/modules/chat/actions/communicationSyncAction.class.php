@@ -28,7 +28,7 @@ class communicationSyncAction extends sfAction
                 if(is_array($arr)){
                         foreach ($arr as $key => $value) {
                                 $responseArray["syncRecords"][$i]["profileId"]= (string)$key;
-                                $responseArray["syncRecords"][$i]["profileCheckSum"]=md5($pid) . "i" . $pid;
+                                $responseArray["syncRecords"][$i]["profileCheckSum"]=md5($key) . "i" . $key;
                                 $responseArray["syncRecords"][$i]["lastMessageTimeStamp"]=strtotime($value) * 1000;
                                 $i++;
                         }
