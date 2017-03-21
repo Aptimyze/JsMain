@@ -3,7 +3,7 @@
 <div class="t12">
 <style type="text/css">
   /* this is the new css to be added for horoscope: 26/8/16*/
-  #smplH{width:950px; height:70%;z-index:9; background-color:#e8e6e6}
+  #smplH{width:950px; z-index:9; background-color:#e8e6e6}
   .smplHp20{padding:20px}
   #smplH .p50{padding:30px 50px}
   #smplH .closeHoroSam {top: -19px;right: -74px;}
@@ -16,7 +16,7 @@
 </style>
 <!--start:horoscope sample layer-->
 ~if $showDownload`
-<div class="setshare pos_fix smplHp20" id="smplH">
+<div class="smplHp20" id="smplH">
   <div class="pos-rel">     
       <!--start:top row-->
       <div class="clearfix p50">
@@ -35,11 +35,10 @@
         <!--end:right-->
       </div>
       <!--end:top row-->
-           
+          ~/if` 
       <!--start:sample report-->
       <div class="bg-white content" id="sampleHrep" style="height:295px">
          <div class="scrollbox4 t12" id="set_scroll">
-          ~/if`
 ~if $MESSAGE`
 <div class="">
    
