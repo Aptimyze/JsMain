@@ -30,7 +30,7 @@ function loaderTop()
 function getDim()
 {
   var hgt = $(window).height();
-  hgt = hgt+"px";
+  hgt = (hgt+50)+"px";
   var wid = $(window).width();
   wid = wid+"px";
   var dim={hgt:hgt,wid:wid};
