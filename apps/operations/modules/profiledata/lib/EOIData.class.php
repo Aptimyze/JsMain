@@ -87,7 +87,10 @@ class EOIData
 			$res1 = $this->dbObj1->Messages($idstr);
 			$res2 = $this->dbObj2->Messages($idstr);
 			$res3 = $this->dbObj3->Messages($idstr);
-			
+      //Get Data from Archive Table also 
+      
+			$res4 = $this->dbObj1->MessagesFromArchive($Id, HouseKeepingEnum::DELETE_ARCHIVE_TABLE_PREFIX, HouseKeepingEnum::DELETE_ARCHIVE_TABLE_SUFFIX);
+      
 			for($i=0;$i<count($result);$i++)
 			{
 				$result[$i]["MESSAGE"] = $res1[$result[$i][ID]];
@@ -95,6 +98,8 @@ class EOIData
 					$result[$i]["MESSAGE"] = $res2[$result[$i][ID]];
         if(!$result[$i]["MESSAGE"])
 					$result[$i]["MESSAGE"] = $res3[$result[$i][ID]];
+        if(!$result[$i]["MESSAGE"])
+					$result[$i]["MESSAGE"] = $res4[$result[$i][ID]];
 			}
 			
 		}
