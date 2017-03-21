@@ -22,6 +22,8 @@
  * @author Ankit Garg <ankit.garg@jeevansathi.com>
  * @extends ContactEvent
  */
+use MessageQueues as MQ; //MessageQueues-having values defined for constants used in this class.
+
 class Initiate extends ContactEvent{
 
   /**#@+
@@ -82,6 +84,14 @@ class Initiate extends ContactEvent{
    * @var string
    */
   private $stype;
+
+  /**
+   * This variable holds if RabbitMQ needs to be used or not
+   * @var bool
+   */
+  private $tasksThruQueue;
+
+  private $producerObj;
   /**#@-*/
 
   /**
@@ -107,6 +117,13 @@ class Initiate extends ContactEvent{
     $this->viewerMemcacheObject = new ProfileMemcacheService($this->viewer->getPROFILEID());
     $this->viewedMemcacheObject = new ProfileMemcacheService($this->viewed->getPROFILEID());
     $this->_sendMail=null;
+    $this->tasksThruQueue = true;
+
+    if($this->tasksThruQueue)
+    {
+		$this->producerObj = new Producer();
+    }
+
         if ($this->contactHandler->getPageSource() == "AP")
     $this->optionalFlag = true;
     }
@@ -226,19 +243,15 @@ class Initiate extends ContactEvent{
   
         try
         {
-          $producerObj = new Producer();
-          if($producerObj->getRabbitMQServerConnected())
-          {
-            $instantNotificationData = array("process"=>MQ::INSTANT_EOI_PROCESS, 'data' => array('type' => 'INSTANT_EOI', 'body' => array("selfUserId" => $this->viewed->getPROFILEID(),"otherUserId" => $this->viewer->getPROFILEID())), 'redeliveryCount' => 0);
-            $producerObj->sendMessage($instantNotificationData);
-          }
-          else
-          {
-            $instantNotificationObj = new InstantAppNotification("EOI");
-            $instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID());
-          }
-          unset($producerObj);
-
+			if(!$this->sendDataOfQueue(
+					MQ::INSTANT_EOI_PROCESS,
+					'INSTANT_EOI',
+					array("selfUserId" => $this->viewed->getPROFILEID(),"otherUserId" => $this->viewer->getPROFILEID()))
+			)
+			{
+				$instantNotificationObj = new InstantAppNotification("EOI");
+				$instantNotificationObj->sendNotification($this->viewed->getPROFILEID(),$this->viewer->getPROFILEID());
+			}
         }
         catch(Exception $e)
         {
@@ -328,13 +341,9 @@ class Initiate extends ContactEvent{
 
       try {
         //send instant JSPC/JSMS notification
-        $producerObj = new Producer();
-        if ($producerObj->getRabbitMQServerConnected()) {
-          //Add for contact roster
-          $chatData = array('process' => 'CHATROSTERS', 'data' => array('type' => 'INITIATE', 'body' => array('sender' => array('profileid'=>$this->viewer->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewer->getPROFILEID()),'username'=>$this->viewer->getUSERNAME()), 'receiver' => array('profileid'=>$this->viewed->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewed->getPROFILEID()),"username"=>$this->viewed->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED()=="Y"?"Y":"N")), 'redeliveryCount' => 0);
-          $producerObj->sendMessage($chatData);
-        }
-        unset($producerObj);
+		$this->sendDataOfQueue(
+				'CHATROSTERS', 'INITIATE',
+				array('sender' => array('profileid'=>$this->viewer->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewer->getPROFILEID()),'username'=>$this->viewer->getUSERNAME()), 'receiver' => array('profileid'=>$this->viewed->getPROFILEID(),'checksum'=>JsAuthentication::jsEncryptProfilechecksum($this->viewed->getPROFILEID()),"username"=>$this->viewed->getUSERNAME()),"filter"=>$this->contactHandler->getContactObj()->getFILTERED()=="Y"?"Y":"N"));
       } catch (Exception $e) {
         throw new jsException("Something went wrong while sending instant EOI notification-" . $e);
       }
@@ -363,34 +372,28 @@ class Initiate extends ContactEvent{
     JsMemcache::getInstance()->set("cachedMM24".$this->viewer->getPROFILEID(),"");
   }
 
-  public function sendMail() {
+	public function sendMail()
+	{
+		$sender = $this->viewer;
+		$receiver = $this->viewed;
+		$viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
 
-    $viewedSubscriptionStatus = $this->viewed->getPROFILE_STATE()->getPaymentStates()->isPaid();
-    $producerObj=new Producer();
-    if($producerObj->getRabbitMQServerConnected())
-      {
-        $sender = $this->viewer;
-        $receiver = $this->viewed;
-        $sendMailData = array('process' =>'MAIL','data'=>array('type' => 'INITIATECONTACT','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus ) ), 'redeliveryCount'=>0 );
-        $producerObj->sendMessage($sendMailData);
-    }
-    else
-    {
+		if(! $this->sendDataOfQueue(
+				'MAIL', 'INITIATECONTACT',
+				array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$this->_getEOIMailerDraft(),'viewedSubscriptionStatus'=>$viewedSubscriptionStatus ))
+		)
+		{
+			ContactMailer::InstantEOIMailer($receiver->getPROFILEID(), $sender->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
+		}
 
-    ContactMailer::InstantEOIMailer($this->viewed->getPROFILEID(), $this->viewer->getPROFILEID(), $this->_getEOIMailerDraft(), $viewedSubscriptionStatus);
-    }
-    //Update in CONTACTS_ONCE
-    
-             $this->_contactsOnceObj->insert(
-                $this->contactHandler->getContactObj()->getCONTACTID(),
-                $this->viewer->getPROFILEID(),
-                $this->viewed->getPROFILEID(),
-                $this->_getEOIMailerDraft(),
-                "Y");
-
-        
-        
-  }
+		//Update in CONTACTS_ONCE
+		$this->_contactsOnceObj->insert(
+			$this->contactHandler->getContactObj()->getCONTACTID(),
+			$this->viewer->getPROFILEID(),
+			$this->viewed->getPROFILEID(),
+			$this->_getEOIMailerDraft(),
+			"Y");
+	}
 
   /**#@+
    * @access private
@@ -696,5 +699,25 @@ public function getNegativeScoreForUser()
         
     }
     }
+
+    public function sendDataOfQueue($process, $type, $body)
+    {
+	    if($this->tasksThruQueue)
+        {
+            if($this->producerObj->getRabbitMQServerConnected())
+            {
+                    $trackingData = array('process' =>$process,
+                                            'data'=>
+                                            array(
+                                            'body'=>$body,
+                                             'type'=>$type,
+                                            'redeliveryCount'=>0 )
+                                            );
+                    $this->producerObj->sendMessage($trackingData);
+                    return true;
+            }
+		}
+        return false;
+	}
 
 } // end of Initiate Class.
