@@ -9,25 +9,41 @@
  */
 class communicationSyncAction extends sfAction
 {
-	/**
-	 * Executes index action
-	 *
-	 * @param sfRequest $request A	 request object
-	 */
-	
-	function execute($request)
-	{
-		$this->loginData = $request->getAttribute("loginData");
-		$this->loginProfile = LoggedInProfile::getInstance();
-		$arr=JsMemcache::getInstance()->getHashOneValue("lastCommunicationId",$this->loginProfile->getPROFILIED());
-		$responseArray=json_decode($arr);
-	
-		$apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
-		$apiObj->setResponseBody($responseArray);
-		$apiObj->generateResponse();
-	
-		die;
-	}
+        /**
+         * Executes index action
+         *
+         * @param sfRequest $request A   request object
+         */
+
+         function execute($request)
+        {
+              $apiObj = ApiResponseHandler::getInstance();
+                $this->loginData = $request->getAttribute("loginData");
+                $this->loginProfile = LoggedInProfile::getInstance();
+                $pid=$this->loginProfile->getPROFILEID();
+                $redisKey=$pid."_lastCommunicationId";
+                $arr=JsMemcache::getInstance()->getHashAllValue($redisKey);
+                $responseArray=array();
+                $i=0;
+                if(is_array($arr)){
+                        foreach ($arr as $key => $value) {
+                                $responseArray["syncRecords"][$i]["profileId"]= (string)$key;
+                                $responseArray["syncRecords"][$i]["profileCheckSum"]=md5($pid) . "i" . $pid;
+                                $responseArray["syncRecords"][$i]["lastMessageTimeStamp"]=strtotime($value) * 1000;
+                                $i++;
+                        }
+                }
+                else
+                        $responseArray=array();
+                
+                $apiObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
+                $apiObj->setResponseBody($responseArray);
+                $apiObj->generateResponse();
+
+                die;
+
+        }
+
 
 
 
