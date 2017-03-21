@@ -95,7 +95,7 @@ try{
             $contactHandlerObj->setElement("MESSAGE","");
             $contactHandlerObj->setElement("DRAFT_NAME","preset");
             $contactHandlerObj->setElement("STATUS","R");
-            $this->contactHandler->setElement("MAIL_AND_NOT","N");
+            $contactHandlerObj->setElement("MAIL_AND_NOT","N");
             $contactEngineObj=ContactFactory::event($contactHandlerObj);
     }
     catch(jsException $e){
