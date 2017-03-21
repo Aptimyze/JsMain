@@ -706,12 +706,12 @@ public function getNegativeScoreForUser()
         {
             if($this->producerObj->getRabbitMQServerConnected())
             {
-                    $trackingData = array('process' =>$process,
-                                            'data'=>
+                    $trackingData = array('process' => $process,
+                                            'data' =>
                                             array(
-                                            'body'=>$body,
-                                             'type'=>$type,
-                                            'redeliveryCount'=>0 )
+                                            'body' => $body,
+                                            'type' => $type,
+                                            'redeliveryCount' => 0)
                                             );
                     $this->producerObj->sendMessage($trackingData);
                     return true;
