@@ -1765,6 +1765,10 @@ class ProfileMemcache
     {
         $this->MESSAGE_ALL = $current;
     }
+    public static function unsetInstance($profileid)
+    {
+            unset(self::$_instance[$profileid]);
+    }
     
    
 }

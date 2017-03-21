@@ -11,7 +11,7 @@ class InboxMobileAppV1
 	static public $myProfileIncompleteFields;
 	static public $tupleTitleField;
 	static public $noresultArray = Array("INTEREST_RECEIVED","ACCEPTANCES_RECEIVED","ACCEPTANCES_SENT","INTEREST_SENT","VISITORS","SHORTLIST","MY_MESSAGE","MATCH_ALERT","NOT_INTERESTED","NOT_INTERESTED_BY_ME","FILTERED_INTEREST","PEOPLE_WHO_VIEWED_MY_CONTACTS","CONTACTS_VIEWED","IGNORED_PROFILES","INTEREST_EXPIRING","INTEREST_ARCHIVED");
-	static public $noChatOnlineArray = array("PEOPLE_WHO_VIEWED_MY_CONTACTS", "CONTACTS_VIEWED", "IGNORED_PROFILES", "NOT_INTERESTED_BY_ME", "ACCEPTANCES_SENT");
+	static public $noChatOnlineArray = array("CONTACTS_VIEWED", "IGNORED_PROFILES", "NOT_INTERESTED_BY_ME","FILTERED_INTEREST");
 	const IGNORED_PROFILES = "Members blocked by you will appear here";
 	const INTEREST_RECEIVED = "You have no interests left to respond to";
 	const INTEREST_EXPIRING = "Interests which will expire within the next 7 days will appear here.";
@@ -610,6 +610,15 @@ class InboxMobileAppV1
 					$profile[$count]["buttonDetails"] = ButtonResponse::buttonDetailsMerge($buttonDetails);
 					
 				}
+				if($profile[$count]['message']!=null && $profile[$count]['message']!="")
+				{
+					$profileObject=$tupleObj->getprofileObject();
+					if($infoKey=="INTEREST_RECEIVED" || $infoKey=="FILTERED_INTEREST")
+						$profile[$count]['message'] =$this->getPersonalizedMessageOnly($profileObject,$profile[$count]['message']);
+					elseif($infoKey=="INTEREST_SENT")
+						$profile[$count]['message'] = $this->getPersonalizedMessageOnly(LoggedInProfile::getInstance('newjs_master'),$profile[$count]['sent_message']);
+				}
+					
                     
 				$profile[$count]['edu_level_new']=$tupleObj->getedu_level_new();
                                 
@@ -785,6 +794,46 @@ class InboxMobileAppV1
 				break;
 			}
 			return $text;
+		}
+		
+		
+		/* This function is used to check if message is personalized or not*/
+    private function getPersonalizedMessageOnly($profileObj,$message)
+    {
+			
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$profileObj->getUSERNAME(),Messages::EOI_PRESET_PAID_SELF);
+			$presetMessage[] = str_ireplace("{{USERNAME}}",$profileObj->getUSERNAME(),Messages::EOI_PRESET_FREE);
+			
+			$messageCmp = trim(html_entity_decode($message,ENT_QUOTES));
+			if(!in_array($messageCmp,$presetMessage))
+			{
+				if(strpos($message,"||")!==false || strpos($message,"--")!==false)
+				{
+					$messageArr=explode("||",$message);
+					$eoiMsgCount = count($messageArr);
+					$i=0;
+					
+					for($j=0;$j<$eoiMsgCount;$j++)
+					{
+						$splitmessage = explode("--",$messageArr[$j]);
+						if($i==0)
+							$eoiMessages=$splitmessage[0];
+						else
+							$eoiMessages.="\n".$splitmessage[0];
+						$i++;							
+					}
+					if($eoiMessages)
+						$message=$eoiMessages;
+					else
+						$message="";
+				}
+				$message= nl2br($message);
+				$message =addslashes(htmlspecialchars_decode($message));
+			}
+			else
+				$message = null;
+		
+			return $message;
 		}
                 
 }

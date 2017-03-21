@@ -192,7 +192,7 @@ class myjsActions extends sfActions
           $bIsCached = false;
           $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
           $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
-          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson);
+          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
         }
         if($this->bEnableProfiler) {
           //Display Call
@@ -269,7 +269,7 @@ class myjsActions extends sfActions
 				}
 				$request->setParameter("showExpiring", $this->showExpiring);
 
-				$this->showMatchOfTheDay = 0;
+				$this->showMatchOfTheDay = 1;
 				if($this->loginProfile->getACTIVATED() == 'U')
 				{
 					$this->showMatchOfTheDay = 0;
@@ -410,7 +410,7 @@ class myjsActions extends sfActions
 		}
 
 		$loggedInProfileObj=LoggedInProfile::getInstance('newjs_master');
-		$this->showMatchOfTheDay = 0;
+		$this->showMatchOfTheDay = 1;
 		if($loggedInProfileObj->getACTIVATED() == 'U')
 		{
 			$this->showMatchOfTheDay = 0;
@@ -601,8 +601,7 @@ return $staticCardArr;
 		$profileId = LoggedInProfile::getInstance()->getPROFILEID();
 		$matchProfileId = JsCommon::getProfileFromChecksum($request->getParameter("MatchProfileChecksum"));
 		$matchObj->updateMatchProfile($profileId, $matchProfileId);
-		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_".$profileId);
-		JsMemcache::getInstance()->delete("MATCHOFTHEDAY_VIEWALLCOUNT_".$profileId);
+		JsMemcache::getInstance()->set("cachedMM24$profileId","");
 		$respObj = ApiResponseHandler::getInstance();
 		$respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
 		$respObj->generateResponse();

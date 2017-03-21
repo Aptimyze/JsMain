@@ -11,6 +11,10 @@
 
 class dppSuggestionsCALV1Action extends sfActions 
 {
+	const MAILBODY = "Dpp Suggestions CAL VALUE NUll";
+	const RECEIVER = "sanyam1204@gmail.com";    
+    const SENDER = "info@jeevansathi.com";
+    const SUBJECT = "dpp suggestion CAL null value";
 	/**
 	* Executes index action
 	*
@@ -62,7 +66,7 @@ class dppSuggestionsCALV1Action extends sfActions
 		
 		if(MobileCommon::isApp())
 		{
-			$finalArr = $this->getFormattedArrForApp($finalArr);						
+			$finalArr = $this->getFormattedArrForApp($finalArr);									
 		}
 		else
 		{
@@ -85,7 +89,7 @@ class dppSuggestionsCALV1Action extends sfActions
 	}
 
 	public function getFormattedArrForApp($finalArr)
-	{
+	{		
 		$i=0;
 		foreach($finalArr as $key => $value)
 		{
@@ -95,9 +99,27 @@ class dppSuggestionsCALV1Action extends sfActions
 				{
 					foreach($v1 as $k2=>$v2)
 					{
-						$finalArrApp["dppData"][$key][$k1][$i]["id"] = $k2;
-						$finalArrApp["dppData"][$key][$k1][$i]["value"] = $v2;	
-						$i++;
+						if(MobileCommon::isApp()=="A")
+						{
+							if($v2 != null && $v2 != "")
+							{
+								$finalArrApp["dppData"][$key][$k1][$i]["id"] = $k2;
+								$finalArrApp["dppData"][$key][$k1][$i]["value"] = $v2;	
+								$i++;
+							}
+							// else
+							// {
+							// 	$mailBody = self::MAILBODY."on: ".$value["type"]." with key: ".$k2."\n ".print_r($_SERVER,true);
+							// 	SendMail::send_email(self::RECEIVER,$mailBody,self::SUBJECT,self::SENDER);								
+							// }
+						}
+						else
+						{
+							$finalArrApp["dppData"][$key][$k1][$i]["id"] = $k2;
+							$finalArrApp["dppData"][$key][$k1][$i]["value"] = $v2;	
+							$i++;
+						}
+											
 					}
 					
 					$i=0;

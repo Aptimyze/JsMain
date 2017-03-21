@@ -11,23 +11,7 @@ class cronErrorTrendsKibana extends sfBaseTask
 
     $this->namespace        = 'Kibana';
     $this->name             = 'cronErrorTrendsKibana';
-    //This is the path to ELK server
-    $this->elkServer = 'http://10.10.18.66';
-    //This is the port number where Elastic Search is running
-    $this->elkPort = '9200';
-    //This is the index name which will be searched for getting the records.
-    $this->fetchIndexName = 'filebeat-*';
-    //This is the type of query which will be used to query elastic search.
-    $this->query = '_search';
-    //this is used as a pushed index
-    $this->pushIndexName = 'errortrends';
-
-    // in days
-    $this->interval = 1;
-    //start date compression
-    $this->startDaysBefore = 1;
-    //end date compression
-    $this->startDaysEnd = 1;
+   
 
 
     $this->briefDescription = 'This cron is used to get error trends from indices of the elastic search.';
@@ -41,11 +25,28 @@ EOF;
     // add your code here
     protected function execute($arguments = array(), $options = array())
     {
+       //This is the path to ELK server
+      $this->elkServer = JsConstants::$kibana['ELK_SERVER'];
+      //This is the port number where Elastic Search is running
+      $this->elkPort = JsConstants::$kibana['ELASTIC_PORT'];
+      //This is the index name which will be searched for getting the records.
+      $this->fetchIndexName = KibanaEnums::$FILEBEAT_INDEX.'*';
+      //This is the type of query which will be used to query elastic search.
+      $this->query = KibanaEnums::$KIBANA_SEARCH_QUERY;
+      //this is used as a pushed index
+      $this->pushIndexName = KibanaEnums::$ERROR_TREND_INDEX;
+
+      //start date compression
+      $this->startDaysBefore = KibanaEnums::$STARTING_DAYS_BEFORE;
+      //end date compression
+      $this->startDaysEnd = KibanaEnums::$STARTING_DAYS_END;
+
       try 
       {
         for ($i=$this->startDaysEnd; $i <= $this->startDaysBefore ; $i++) 
         { 
           $urlToHit = $this->elkServer.':'.$this->elkPort.'/'.$this->fetchIndexName.'/'.$this->query;
+
           $date = date('Y-m-d',strtotime('-'.$i.' day'));
 
             $params = [

@@ -21,6 +21,8 @@ class ApiResponseHandler
 	private $membershipSubscription;
 	private $webserviceCachingCap;
 	private $androidChatLocalStorage;
+	private $xmppBackgroundConnectionTimeout;
+
 	//Constructor
 	private function __construct()
 	{
@@ -48,9 +50,27 @@ class ApiResponseHandler
 	{
 		$this->imageCopyServer = IMAGE_SERVER_ENUM::getImageServerEnum($pid);
 	}
-	public function getAndroidChatFlag(){
-		$this->androidChat = JsConstants::$androidChatNew["chatOn"];
+	public function getAndroidChatFlag($key="new"){
+		if($key == "new"){
+			$this->androidChat = JsConstants::$androidChatNew["chatOn"];
+			
+		}
+		else{
+			if(!is_array(JsConstants::$androidChatNew) || JsConstants::$androidChatNew["chatOn"]==true){
+				$this->androidChat = 1;
+			}
+			else{
+				$this->androidChat = 2;
+			}
+		}
+		
 		return $this->androidChat;
+	}
+
+	//getter for xmppBackgroundConnectionTimeout flag
+	public function getXmppBackgroundConnectionTimeout(){
+		$this->xmppBackgroundConnectionTimeout = JsConstants::$androidChatNew["xmppBackgroundConnectionTimeout"];
+		return $this->xmppBackgroundConnectionTimeout;
 	}
 
 	//getter for androidChatLocalStorage flag
@@ -156,6 +176,7 @@ class ApiResponseHandler
 		$output["resetCache"]=$this->resetCache;
 
 		//android chat on/off flag
+		$output["xmppLoginState"] = $this->getAndroidChatFlag("old");
 		$output["androidChat"] = $this->getAndroidChatFlag();
 		$output["flagForAppRatingControl"]=$this->androidFlagForRatingLogic;
 
@@ -167,6 +188,9 @@ class ApiResponseHandler
 
 		//set webservice caching flag for android
 		$output["webserviceCachingCap"] = $this->getWebserviceCachingCap($this->membershipSubscription);
+
+		//set flag for android xmppBackgroundConnectionTimeout
+		$output["xmppBackgroundConnectionTimeout"] = $this->getXmppBackgroundConnectionTimeout();
 
 		if(isset($this->upgradeDetails)){
 			$output["FORCEUPGRADE"]=$this->upgradeDetails[FORCEUPGRADE];

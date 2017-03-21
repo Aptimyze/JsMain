@@ -524,6 +524,7 @@ function performChecks(param)
 }
 
 function ProfileMainAction(perform){
+
 if(perform=="approve")
     {$(".depends").slideDown(200);
         $(".deleteType").prop("checked", false);
@@ -531,6 +532,13 @@ if(perform=="approve")
 else if(perform=="delete")
     {$(".depends").slideUp(200);
         $(".deleteType").prop("checked", true);
+        
+    }
+else if(perform=="retain")
+ {$(".depends").slideUp(200);
+        //$(".deleteType").prop("checked", true);
+       var screenedProfilePicId = document.getElementsByName("screenedProfilePicId")[0].value;
+       $('input[name=set_profile_pic][value=screened'+screenedProfilePicId+']').prop("checked", true);
         
     }
 };

@@ -201,6 +201,15 @@ class ProcessHandler
 	}
         
  }
+ public function updateSeenProfile($typeInfo,$body)
+ {
+	$fromSym=$body['fromSym'];
+	$type = $body['type'];
+	$mypid = $body['mypid'];
+	$updatecontact = $body['updatecontact'];
+	$profileid = $body['profileid']; 
+	include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
+ }
  public function updateFeaturedProfile($type,$body)
  {
 	if($body['profileid']!=null|| $body['profileid']!='')

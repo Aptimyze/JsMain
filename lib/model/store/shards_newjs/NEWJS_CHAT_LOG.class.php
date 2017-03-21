@@ -219,7 +219,7 @@ class NEWJS_CHAT_LOG extends TABLE{
 			}
 		}
 		
-		public function markChatSeen($viewer,$viewed,$id)
+		public function markChatSeen($viewer,$viewed)
 		{
 			try{
 				if(!$viewer && !$viewed)
@@ -228,11 +228,11 @@ class NEWJS_CHAT_LOG extends TABLE{
 				}
 				else
 				{
-					$sql = "UPDATE newjs.CHAT_LOG SET `SEEN`='Y' WHERE SENDER = :VIEWED AND RECEIVER = :VIEWER AND TYPE = 'A' AND ID=:ID ";
+					$sql = "UPDATE newjs.CHAT_LOG SET `SEEN`='Y' WHERE SENDER = :VIEWED AND RECEIVER = :VIEWER AND TYPE = 'A' AND SEEN='N'";
 					$prep=$this->db->prepare($sql);
 					$prep->bindValue(":VIEWER",$viewer,PDO::PARAM_INT);
 					$prep->bindValue(":VIEWED",$viewed,PDO::PARAM_INT);
-					$prep->bindValue(":ID",$id,PDO::PARAM_INT);
+					//$prep->bindValue(":ID",$id,PDO::PARAM_INT);
 
 					$prep->execute();
 

@@ -62,6 +62,8 @@ class ErrorHandler
 	const LIMIT = 'LIMIT';
 	const PAID_FILTERED_INTEREST_NOT_SENT = 'PAID_FILTERED_INTEREST_NOT_SENT';
 	const PAID_FILTERED_INTEREST_SENT = 'PAID_FILTERED_INTEREST_SENT';
+	const REMINDER_SENT_BEFORE_TIME = 'REMINDER_SENT_BEFORE_TIME';
+	const SECOND_REMINDER_BEFORE_TIME ='SECOND_REMINDER_BEFORE_TIME';
 	/**
 	 * 
 	 * Used to initialize object of ErrorHandler class.
@@ -75,7 +77,7 @@ class ErrorHandler
 		Messages::setViewerChecksum(CommonFunction::createChecksumForProfile($contactHandlerObj->getviewer()->getPROFILEID()));
 		Messages::setViewedChecksum(CommonFunction::createChecksumForProfile($contactHandlerObj->getviewed()->getPROFILEID()));
 		$this->contactHandlerObj = $contactHandlerObj;
-		$this->errorTypeArr = array(ErrorHandler::SAMEGENDER=>0,ErrorHandler::FILTERED=>0,ErrorHandler::EOI_CONTACT_LIMIT=>0,ErrorHandler::INCOMPLETE=>1,ErrorHandler::UNDERSCREENING=>1,ErrorHandler::PHONE_NOT_VERIFIED=>0,ErrorHandler::DECLINED=>0,ErrorHandler::DELETED=>0,ErrorHandler::PRIVILEGE=>1,ErrorHandler::POST=>0,ErrorHandler::PRE=>0,ErrorHandler::PROFILE_HIDDEN=>0,ErrorHandler::CONT_VIEW_LIMIT=>0,ErrorHandler::REMINDER_LIMIT=>0,ErrorHandler::ALREADY_CONTACTED_IU=>0,ErrorHandler::LIMIT=>0,ErrorHandler::PROFILE_IGNORE=>0); 
+		$this->errorTypeArr = array(ErrorHandler::SAMEGENDER=>0,ErrorHandler::FILTERED=>0,ErrorHandler::EOI_CONTACT_LIMIT=>0,ErrorHandler::INCOMPLETE=>1,ErrorHandler::UNDERSCREENING=>1,ErrorHandler::PHONE_NOT_VERIFIED=>0,ErrorHandler::DECLINED=>0,ErrorHandler::DELETED=>0,ErrorHandler::PRIVILEGE=>1,ErrorHandler::POST=>0,ErrorHandler::PRE=>0,ErrorHandler::PROFILE_HIDDEN=>0,ErrorHandler::CONT_VIEW_LIMIT=>0,ErrorHandler::REMINDER_LIMIT=>0,ErrorHandler::ALREADY_CONTACTED_IU=>0,ErrorHandler::LIMIT=>0,ErrorHandler::PROFILE_IGNORE=>0,ErrorHandler::REMINDER_SENT_BEFORE_TIME=>1,ErrorHandler::SECOND_REMINDER_BEFORE_TIME=>1); 
 		$this->updateErrorBits();
 		
 	}
@@ -376,6 +378,18 @@ class ErrorHandler
 		{
 			$this->setErrorMessage($error);
 			$this->setErrorType(ErrorHandler::PHONE_NOT_VERIFIED,ErrorHandler::ERROR_FOUND);
+			return false;
+		}
+
+		//11. Check if the reminder was sent before 24 hours or not.
+		$error = $this->checkReminderSentBeforeDay();
+		if($error)
+		{
+			$this->setErrorMessage($error);
+			if($error['ID'] == 1)
+			$this->setErrorType(ErrorHandler::REMINDER_SENT_BEFORE_TIME,ErrorHandler::ERROR_FOUND);
+			else
+				$this->setErrorType(ErrorHandler::SECOND_REMINDER_BEFORE_TIME,ErrorHandler::ERROR_FOUND);
 			return false;
 		}
 
@@ -921,6 +935,39 @@ class ErrorHandler
 	}	
 
 
+	private function checkReminderSentBeforeDay()
+	{  
+		$error = '';
+
+		$contactObj = $this->contactHandlerObj->getContactObj();
+
+		if($this->errorTypeArr[ErrorHandler::REMINDER_SENT_BEFORE_TIME] && $this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 1 )
+		{		
+ 		
+		$timeOfLastContact = strtotime($contactObj->getTIME());
+		$timeDayAgo = (time() - (3600*24));
+
+		if($timeDayAgo < $timeOfLastContact){
+		$error['MSG']= Messages::getReminderSentBeforeTimeMessage(Messages::REMINDER_SENT_BEFORE_TIME);
+		$error['ID'] = 1;
+		}
+		
+		}
+		else if($this->errorTypeArr[ErrorHandler::SECOND_REMINDER_BEFORE_TIME] &&
+$this->contactHandlerObj->getToBeType()=="R" && $contactObj->getCOUNT() == 2)
+		{	
+
+		$timeOfLastContact = strtotime($contactObj->getTIME());
+		$timeDayAgo = (time() - (3600*24));
+
+		if($timeDayAgo < $timeOfLastContact){
+		$error['MSG']= Messages::getReminderSentBeforeTimeMessage(Messages::SECOND_REMINDER_BEFORE_TIME);
+		$error['ID'] =2;
+		}
+		
+		}
+		return $error;
+	}
 
 
 }

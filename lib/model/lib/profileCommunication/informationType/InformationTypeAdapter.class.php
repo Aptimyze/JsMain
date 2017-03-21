@@ -230,7 +230,6 @@ class InformationTypeAdapter
 								$profilesArray = array_slice($profilesArray,0,$limit,true);
                 break;
             case "MATCH_OF_THE_DAY":
-                if(!JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId)){
                         $matchOfDayObj = new MOBILE_API_MATCH_OF_DAY('newjs_master');
                         $profilesArray = $matchOfDayObj->getMatchForProfileForListing($condition, $skipArray);
                         if($condition["GENDER"] == 'F'){
@@ -255,12 +254,10 @@ class InformationTypeAdapter
                                 }else{
                                     $profilesArray = array();
                                 }
+                        }else{
+                                $profilesArray = array();
                         }
                         JsMemcache::getInstance()->set("MATCHOFTHEDAY_VIEWALLCOUNT_".$this->profileId,  count($profilesArray));
-                        JsMemcache::getInstance()->set("MATCHOFTHEDAY_".$this->profileId,  serialize($profilesArray));
-                }else{
-                        $profilesArray = unserialize(JsMemcache::getInstance()->get("MATCHOFTHEDAY_".$this->profileId));
-                }
                 break;
         
             default:
