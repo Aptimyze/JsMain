@@ -80,16 +80,16 @@ if ($file = fopen($fileName, "r")) {
     }
 
     //For Creating Hotfix Versions
-    //createRelease($hotFix,"HO");
+    createRelease($hotFix,"HO");
 
 	//For Creating regulat Release Versions
-    //createRelease($release,"RC");
+    createRelease($release,"RC");
 
     //For marking HotFix Versions
     markVersion($hotFixJira,"HO");
 
 	//For marking regular release Versions
-	//markVersion($releaseJira,"RC");    
+	markVersion($releaseJira,"RC");    
 
     //print_r(array($hotFix,$release,$hotFixJira,$releaseJira));
     fclose($file);
