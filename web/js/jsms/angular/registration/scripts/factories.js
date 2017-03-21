@@ -271,6 +271,13 @@
 		}
 		factory.showModalWindow = function($scope)
 		{
+			var errorStr = "";
+                        angular.forEach($scope.fields, function(field,key) {
+                                if(field.errorLabel.length !== 0) {
+                                        errorStr = errorStr + field.errorLabel + "  ";
+                                }
+                        });
+			trackJsEventGA("jsms","regErrorTracking"+$scope.screenName, errorStr);
 			$scope.bModalWindow =true;
 			$timeout(function(){if($scope.bModalWindow)factory.hideModalWidow($scope);},Constants.getMsgTimeOut());
 		}

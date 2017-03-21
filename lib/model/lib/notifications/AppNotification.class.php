@@ -235,29 +235,15 @@ public function microtime_float()
                         break;
 		  case "ATN":
                     	$applicableProfiles=array();
+                        $poolObj = new NotificationDataPool();
                         $applicableProfiles = $this->getProfilesApplicableForTriggeredNotification($appProfiles,$notificationKey);
-			$counter =0;	
-                        if(is_array($applicableProfiles)){
-				foreach($applicableProfiles as $profileid=>$value){
-					$dataAccumulated[$counter]['SELF']=$value;
-					$counter++;
-				}
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-			}
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
                   case "ETN":
                         $applicableProfiles=array();
+                        $poolObj = new NotificationDataPool();
                         $applicableProfiles = $this->getProfilesApplicableForTriggeredNotification($appProfiles,$notificationKey);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
                   case "VD":
                         $applicableProfiles=array();
@@ -291,27 +277,11 @@ public function microtime_float()
 			}
 			unset($applicableProfiles);
 			break;
-		  case "MEM_EXPIRE_A5":
-		  case "MEM_EXPIRE_A10":
-		  case "MEM_EXPIRE_A15":
-		  case "MEM_EXPIRE_B1":	 
-                  case "MEM_EXPIRE_B5":
+		  case "MEM_EXPIRE":
                         $applicableProfiles=array();
                         $poolObj = new NotificationDataPool();
-                        $applicableProfiles = $poolObj->getMembershipProfilesForNotification($appProfiles, $notificationKey);
+                        $applicableProfiles = $poolObj->getMembershipProfilesForNotification($appProfiles);
                         $dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
-                        /*
-                        $applicableProfiles = $this->getMembershipProfilesForNotification($appProfiles, $notificationKey);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-                                $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-                        unset($applicableProfiles);
-                        */
                         break;
 		case "PHOTO_UPLOAD":
 			$applicableProfiles=array();
@@ -640,17 +610,21 @@ public function microtime_float()
 	// filter check for already sent ATN/ETN notification	
 	  $varArray['NOTIFICATION_KEY'] =$notificationKey;
 	  $varArray['SENT'] 		='Y';
-	  $notificationLogObj 		=new MOBILE_API_NOTIFICATION_LOG("newjs_local111");          		           	  	  	
-	  $profilesNew			=$notificationLogObj->getNotificationProfiles($notificationKey);
-	  if(is_array($profilesNew))
-		  $profilesArr 		=array_diff($profiles, $profilesNew);
+	  if($notificationKey=='ATN')
+	  	$notificationLogObj	=new MOBILE_API_NOTIFICATION_LOG_ATN("newjs_local111");          		           	  	  		else if($notificationKey=='ETN')
+		$notificationLogObj     =new MOBILE_API_NOTIFICATION_LOG_ETN("newjs_local111");
+	  else
+		$notificationLogObj     =new MOBILE_API_NOTIFICATION_LOG("newjs_local111");
+	  $profilesOld			=$notificationLogObj->getNotificationProfiles();
+	  if(is_array($profilesOld))
+		  $profilesArr 		=array_diff($profiles, $profilesOld);
 	  else
 		  $profilesArr		=$profiles;
 	  $profilesArr =array_values($profilesArr);			
           unset($varArray);
 
 	// filter check in ETN notification, CASE: if profile is already considered for ATN  on the same day. 
-	  if($notificationKey=='ETN'){	
+	  /*if($notificationKey=='ETN'){	
 	  	$scheduledAppNotificationObj  =new MOBILE_API_SCHEDULED_APP_NOTIFICATIONS();					
           	$varArray['NOTIFICATION_KEY'] ='ATN';
           	$profilesAtn                  =$scheduledAppNotificationObj->getArray($varArray);
@@ -663,7 +637,7 @@ public function microtime_float()
 			$profilesArr =$profilesNew;
 		}
 		unset($varArray);
-	  }
+	  }*/
 
 	// get PROFILE data
           if(is_array($profilesArr)){

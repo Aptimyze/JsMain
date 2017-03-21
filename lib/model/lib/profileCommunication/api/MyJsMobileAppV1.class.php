@@ -220,18 +220,20 @@ $className = get_class($this);
         }
 
 
-private function getBannerMessage($profileInfo) {   
 
+private function getBannerMessage($profileInfo) {    
 				$MESSAGE=NULL;
-				$profileObj=LoggedInProfile::getInstance('newjs_master');
 				$request = sfContext::getInstance()->getRequest();
+				$memHandlerObj = new MembershipHandler();
         	  	$apiAppVersion = $request->getParameter('API_APP_VERSION');
         			if(!empty($apiAppVersion) && is_numeric($apiAppVersion)){
-        				$memMessage = $this->setAndGetOCBCache($request,$apiAppVersion,$profileObj);
+        				$memMessage = $memHandlerObj->fetchMembershipMessage($request,$apiAppVersion);
         				if ($apiAppVersion<21) return $memMessage['membership_message']; // for backward compatibility of Android App
-        			} else {  		
-        				$memMessage = $this->setAndGetOCBCache($request,'',$profileObj);
+        			} else {
+        				$memMessage = $memHandlerObj->fetchMembershipMessage($request);
         			}
+			
+	$profileObj=LoggedInProfile::getInstance('newjs_master');
 
 	switch(true){
 
@@ -240,9 +242,9 @@ private function getBannerMessage($profileInfo) {
         	break;
 
         	case (!$profileObj->getFAMILYINFO()):
-        	  $MESSAGE[myjsCachingEnums::TOP_PART]='Add About Family';
-          	  $MESSAGE[myjsCachingEnums::BOTTOM_PART]='Get more interests & responses';
-          	  $MESSAGE[myjsCachingEnums::PAGEID] = '4';
+        	  $MESSAGE['top']='Add About Family';
+          	  $MESSAGE['bottom']='Get more interests & responses';
+          	  $MESSAGE['pageId'] = '4';
         	break;
 
         	case ($memMessage['membership_message']):
@@ -250,23 +252,21 @@ private function getBannerMessage($profileInfo) {
         	break;
 
         	case (!$profileObj->getEDUCATION()):
-        		$MESSAGE[myjsCachingEnums::TOP_PART]='Add About Education';
-          		$MESSAGE[myjsCachingEnums::BOTTOM_PART]='Get more interests & responses';
-          		$MESSAGE[myjsCachingEnums::PAGEID] = '2';
+        		$MESSAGE['top']='Add About Education';
+          		$MESSAGE['bottom']='Get more interests & responses';
+          		$MESSAGE['pageId'] = '2';
         	break;
 
         	case (!$profileObj->getJOB_INFO()):
-        		$MESSAGE[myjsCachingEnums::TOP_PART]='Add About Work';	
-				$MESSAGE[myjsCachingEnums::BOTTOM_PART]='Get more interests & responses';
-				$MESSAGE[myjsCachingEnums::PAGEID] = '3';
+        		$MESSAGE['top']='Add About Work';	
+				$MESSAGE['bottom']='Get more interests & responses';
+				$MESSAGE['pageId'] = '3';
         	 break;
 						}
-			
 	return $MESSAGE;					
 
 
-
-        		}        
+        		}         
 
 
 
@@ -299,7 +299,7 @@ private function getBannerMessage($profileInfo) {
         				$profileId = $profileObj->getPROFILEID();
         				$valArr = $memCacheObject->getHashAllValue(myjsCachingEnums::PREFIX.$profileId.'_MESSAGE_BANNER'); 
 
-        				if($valArr != NULL && is_array($valArr))
+        				if( 0 && $valArr != NULL && is_array($valArr))
         				{  	
 
         					$memMessage = '';

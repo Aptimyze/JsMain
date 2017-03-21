@@ -301,7 +301,7 @@ class NotificationDataPool
         return $dataAccumulated;
   }
   
-  public function getMembershipProfilesForNotification($profiles, $notificationKey, $channelArr)
+  public function getMembershipProfilesForNotification($profiles, $channelArr=array())
   {
     unset($applicableProfiles);
     unset($profilesArr);
@@ -314,16 +314,16 @@ class NotificationDataPool
     {
         $tempSmsObj            = new newjs_TEMP_SMS_DETAIL();
         $valueArr['PROFILEID'] = @implode(",",$profiles);
-        $valueArr['SMS_KEY']   = $notificationKey;
+	$valueArr['SMS_KEY']   = "MEM_EXPIRE_A5,MEM_EXPIRE_A10,MEM_EXPIRE_A15,MEM_EXPIRE_B1,MEM_EXPIRE_B5";
         $profilesSmsArr        = $tempSmsObj->getArray($valueArr,'','','PROFILEID,MESSAGE');
         if(count($profilesSmsArr)>0)
         {
             foreach($profilesSmsArr as $key=>$val)
             {
-				$pid =$val['PROFILEID'];
+		$pid =$val['PROFILEID'];
                 $profilesNewArr[] =$pid;
-				$profileMsgArr[$pid] =$val['MESSAGE'];
-			}
+		$profileMsgArr[$pid] =$val['MESSAGE'];
+	    }
         }
     }
     if(!(in_array("M", $channelArr))){
@@ -351,7 +351,7 @@ class NotificationDataPool
             unset($dataArr);
         }
         //update sms send status
-        $tempSmsObj->updateSentForNotification($profilesStr, $notificationKey);
+        $tempSmsObj->updateSentForNotification($profilesStr, "MEM_EXPIRE_A5,MEM_EXPIRE_A10,MEM_EXPIRE_A15,MEM_EXPIRE_B1,MEM_EXPIRE_B5");
     }
     // return eligible profiles
     if($applicableProfiles)
