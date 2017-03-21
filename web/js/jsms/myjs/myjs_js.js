@@ -263,7 +263,7 @@ function closeHam()
     var cacheMin = 2;
     var ttl = 60000 * cacheMin;
     //Saving HTML of MYJS page on first time load along with current time stamp in session storage
-    if(isStorageExist()) {
+    if(isSessionStorageExist()) {
     	if(sessionStorage.getItem("myjsTime") == undefined ||
       new Date().getTime() - sessionStorage.getItem("myjsTime") < ttl)
 		    {
