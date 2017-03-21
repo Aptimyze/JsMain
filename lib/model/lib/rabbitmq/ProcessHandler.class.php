@@ -47,10 +47,11 @@ class ProcessHandler
                               break;
       case 'PHOTO_SCREENED':  
                               $memObj = new ProfileMemcacheService($senderid);
-                              $receiverArray =   $memObj->get('CONTACTED_BY_ME');
+                              $receiverArray =   unserialize($memObj->get('CONTACTED_BY_ME'));
                               if(is_array($receiverArray['I'])){
                                   foreach ($receiverArray['I'] as $key => $value) {
                                   ContactMailer::sendAutoReminderMailer($value,$senderid);
+                                  $this->sendAutoReminder($value,$senderid);
                                   }    
                               
                               }
@@ -81,7 +82,29 @@ class ProcessHandler
                                  break; 
     }
   }
+public function sendAutoReminder($receiver,$sender){
 
+try{            
+            $receiverObj = new Profile();
+            $receiverObj->getDetail($receiver, "PROFILEID");
+
+            $senderObj = new Profile();
+            $senderObj->getDetail($sender, "PROFILEID");
+            $contactObj = new Contacts($senderObj, $receiverObj);
+            $contactHandlerObj = new ContactHandler($senderObj,$receiverObj,"EOI",$contactObj,'R',ContactHandler::POST);
+            $contactHandlerObj->setElement("MESSAGE","");
+            $contactHandlerObj->setElement("DRAFT_NAME","preset");
+            $contactHandlerObj->setElement("STATUS","R");
+            $this->contactHandler->setElement("MAIL_AND_NOT","N");
+            $contactEngineObj=ContactFactory::event($contactHandlerObj);
+    }
+    catch(jsException $e){
+        
+        return;
+    }          
+
+
+}
   /**
    * 
    * Function for sending notifications.
