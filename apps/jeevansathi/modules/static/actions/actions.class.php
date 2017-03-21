@@ -300,7 +300,6 @@ class staticActions extends sfActions
 
         public function executeHideOption(sfWebRequest $request) 
         {
-          $this->webView = 0;
           if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
           }
@@ -308,7 +307,6 @@ class staticActions extends sfActions
 
         public function executeUnHideOption(sfWebRequest $request) 
         {
-          $this->webView = 0;
           if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
           }
@@ -316,7 +314,6 @@ class staticActions extends sfActions
 
         public function executeUnHideResult(sfWebRequest $request) 
         {
-          $this->webView = 0;
           if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
           }
@@ -345,7 +342,6 @@ class staticActions extends sfActions
               $this->hideText = "Your profile is now temporarily hidden for ".HideUnhideEnums::OPTION3." days";
             }
             
-            $this->webView = 0;
             if(MobileCommon::isAppWebView()) {
               $this->webView = 1;
             }
