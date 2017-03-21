@@ -14,6 +14,15 @@
     </div>
 
     <div class="txtc set_btmlink pt15">
-      <div><a href="/">Go To Home</a></div>
+      ~if $webView eq 1`  
+        <div><a href="/static/settings">Go To Home</a></div>
+      ~else`
+        <div><a href="/">Go To Home</a></div>
+      ~/if`
+      
+      
     </div>
 </div>
+<script>
+    var webView = '~$webView`';
+</script>
