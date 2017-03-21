@@ -92,7 +92,7 @@ EOF;
                         if($checkForMemUpgrade == null || $checkForMemUpgrade == false || $checkForMemUpgrade != "NA"){
                             echo "\n"."upgrade entry not updated-".$key;
                             $memHandlerObj = new MembershipHandler(false);
-                            $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']));
+                            $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']),true);
                             unset($memHandlerObj);
                         }
 
@@ -104,9 +104,9 @@ EOF;
                         if($checkForMemUpgrade == null || $checkForMemUpgrade == false || in_array($checkForMemUpgrade, VariableParams::$memUpgradeConfig["allowedUpgradeMembershipAllowed"])){
                             $upgradeOrderObj = new billing_UPGRADE_ORDERS();
                             $isUpgradeCaseEntry = $upgradeOrderObj->isUpgradeEntryExists($orderid,$orderDet[$val['BILLID']]['PROFILEID']);
-                            if(is_array($isUpgradeCaseEntry) && $isUpgradeCaseEntry["UPGRADE_STATUS"] != "DONE"){
+                            if(is_array($isUpgradeCaseEntry) && $isUpgradeCaseEntry["UPGRADE_STATUS"] == "PENDING"){
                                 $memHandlerObj = new MembershipHandler(false);
-                                $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']));
+                                $memHandlerObj->updateMemUpgradeStatus($orderid,$orderDet[$val['BILLID']]['PROFILEID'],array("UPGRADE_STATUS"=>"DONE","BILLID"=>$val['BILLID']),true);
                                 unset($memHandlerObj);
                             }
                             unset($upgradeOrderObj);

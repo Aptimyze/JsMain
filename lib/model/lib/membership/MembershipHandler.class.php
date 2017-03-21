@@ -2353,17 +2353,17 @@ class MembershipHandler
     * @inputs: $orderid
     * @outputs: none
     */
-    function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=true){
+    function updateMemUpgradeStatus($orderid,$profileid,$updateArr=array(),$flushCache=false){
         $upgradeOrdersObj = new billing_UPGRADE_ORDERS();
         $upgradeOrdersObj->updateOrderUpgradeEntry($orderid,$updateArr);
         unset($upgradeOrdersObj);
-        /*if($flushCache == true){
+        if($flushCache == true){
             $memCacheObject = JsMemcache::getInstance();
             $memCacheObject->remove($profileid.'_MEM_UPGRADE_'.$orderid);
-        }*/
+        }
     }
 
-    function checkMemUpgrade($orderid,$profileid,$flushCache=true){
+    function checkMemUpgrade($orderid,$profileid,$flushCache=false){
         //check whether user is eligible for membership upgrade or not
         $memCacheObject = JsMemcache::getInstance();
         $checkForMemUpgrade = $memCacheObject->get($profileid.'_MEM_UPGRADE_'.$orderid);
@@ -2388,9 +2388,9 @@ class MembershipHandler
             }
         }
         
-        /*if($flushCache == true){
+        if($flushCache == true){
             $memCacheObject->remove($profileid.'_MEM_UPGRADE_'.$orderid);
-        }*/
+        }
         return $memUpgrade;
     }
     
