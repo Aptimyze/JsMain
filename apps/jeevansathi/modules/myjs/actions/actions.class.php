@@ -253,7 +253,9 @@ class myjsActions extends sfActions
   }
 
   public function executeJsmsPerform(sfWebRequest $request)
-	{			//myjs jsms action hit for logging  
+	{			//myjs jsms action hit for logging
+        $this->pageMyJs = 1; 
+        
 				LoggingManager::getInstance()->logThis(LoggingEnums::LOG_INFO, "myjs jsms action"); 
             	$this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMYJSUrl);
                 $this->loginData=$request->getAttribute("loginData");

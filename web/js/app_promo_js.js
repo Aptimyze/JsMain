@@ -17,7 +17,7 @@ if(typeof(AndroidPromotion)=="undefined"){
 $( document ).ready(function() {
 	
       if((getAndroidVersion() || getIosVersion()) && AndroidPromotion && (typeof webView ==='undefined' || webView =="")){
-      if(!getCookieData("appPromo") && (typeof appPromo === 'undefined') /*&& AppLoggedInUser*/ )
+      if(!getCookieData("appPromo") && (typeof appPromo === 'undefined') && AppLoggedInUser )
       {
 		   writeCookie("appPromo","jeevansathi",3);
 			if($("#main").length)
@@ -29,7 +29,7 @@ $( document ).ready(function() {
 			}
 			if($("#mainContent").length){
 
-				if(showMatchOfTheDay!=1)
+				if(pageMyJs!=1)
 				{
 					$("#mainContent").addClass("ham_b100");
 					var showAppClass = 'ham_b20';
@@ -177,7 +177,7 @@ function writeCookie (key, value, hours) {
 	  document.getElementById("appPromo").style.height=AppPromoHgt+"px";
 	 
 		$("#appPromo").removeClass("ham_minu20");
-		if(showMatchOfTheDay!=1)
+		if(pageMyJs!=1)
 		{
 			$("#mainContent").addClass("ham_plus20");
 		}
