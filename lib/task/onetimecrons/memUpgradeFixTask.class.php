@@ -61,13 +61,14 @@ EOF;
             $defaultAddonCase = false;
             $serviceidArr = array_keys($billWisepurchaseDetails);
             $serviceStr = implode(",", $serviceidArr);
-            if(strpos($serviceStr, "J") != false){
+            if(strpos($serviceStr, "J") !== false){
                 $defaultAddonCase = true;
             }
             echo "defaultAddonCase--";
             var_dump($defaultAddonCase);
             foreach ($billWisepurchaseDetails as $serviceid => $serviceWiseDetails) {
-                if(is_array($serviceWiseDetails) && !empty($serviceid) && strpos($serviceid, "J") == false){
+                if(is_array($serviceWiseDetails) && !empty($serviceid) && strpos($serviceid, "J") ===false){
+                    
                     $tempMem = @preg_split('/(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)/i', $serviceid);
                     $upgradeMem = $tempMem[0];
                     if (strpos($upgradeMem, "L")) {
@@ -79,6 +80,7 @@ EOF;
                     if($defaultAddonCase == true && $upgradeMem == "C"){
                         $upgradeMem = "NCP";
                     }
+                    var_dump($upgradeMem);
                     $previousMemDetails = $this->getReverseUpgradeMapping($upgradeMem,$upgradeMemDur);
                     var_dump($serviceid);
                     print_r($previousMemDetails);
@@ -97,6 +99,9 @@ EOF;
                         }
 
                     }
+                }
+                else{
+                    echo "filtered-".$serviceid."\n";
                 }
             }
         }
