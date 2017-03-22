@@ -29,7 +29,7 @@
                 <!--start:button-->
                 <div class="clearfix pb20 pt20">
                 ~if ($arrData.othersHoroscope eq 'Y' && ($arrData.toShowHoroscope eq 'Y' || $arrData.toShowHoroscope eq '') )`
-                <a href = "~$SITE_URL`/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=~$arrData.username`&SIM_USERNAME=~$arrData.username`&type=Horoscope&checksum=&otherprofilechecksum=~$otherProfileChecksum`&randValue=890&GENDER=~$arrData.gender`"><button class="fontlig lh40 astroBtn1" style="width:49%">Download Horoscope</button></a>
+                <a href = "~$SITE_URL`/api/v1/profile/downloadHoroscope?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=~$arrData.username`&SIM_USERNAME=~$arrData.username`&type=Horoscope&checksum=&otherprofilechecksum=~$otherProfilechecksum`&randValue=890&GENDER=~$arrData.gender`"><button class="fontlig lh40 astroBtn1" style="width:49%">Download Horoscope</button></a>
                 ~/if`
                 ~if (!$arrData.NO_ASTRO && $arrData.sameGender neq 1)`
                  <button class="fontlig lh40 astroBtn1 fr ~if $arrData.COMPATIBILITY_SUBSCRIPTION eq 'N' AND $arrData.paidMem eq 'Y'` js-astroCompMem ~elseif $arrData.COMPATIBILITY_SUBSCRIPTION eq 'N'` js-freeAstroComp ~elseif $arrData.COMPATIBILITY_SUBSCRIPTION neq 'N'` js-astroMem ~/if`" style="width:48%">Get Astro Report</button>
