@@ -130,24 +130,24 @@
         <div class="ptm25 txtc f14" style="height:144px">
             <div class="color11">{{ErrorMsglabel}}</div>
             <div class="color11 mt15 f13">{{MembershipMsgHeader}}</div>
-            <ul class="color11 mt3 f13 disp_ib">
+            <ul class="color11 mt3 f13 disp_ib mt10">
                 <li class="disp_ib">
-                    <div class="color11 disp_ib" style="font-size:6px;padding: 2px;position: relative;padding-bottom: 3px;">●</div> {{subheading1}}
+                    <div class="color11 disp_ib" style="font-size:6px;padding: 2px;position: relative;padding-bottom: 8px; vertical-align: middle;">●</div> {{subheading1}}
                 </li>
                 <li class="disp_ib">
-                    <div style="font-size:6px;padding: 0px 3px;" class="color11 disp_ib">●</div>
+                    <div  style="font-size:6px;padding: 2px;position: relative;padding-bottom: 8px; vertical-align: middle;" class="color11 disp_ib">●</div>
                     {{subheading2}}
                 </li>
                 <li class="disp_ib">
-                    <div style="font-size:6px;padding: 0px 3px;" class="color11 disp_ib">●</div>
+                    <div style="font-size:6px;padding: 2px;position: relative;padding-bottom: 8px; vertical-align: middle;" class="color11 disp_ib">●</div>
                     {{subheading3}}
                 </li>
             </ul>
-            <div id="noMembershipOffer" class="color5 mt15 f13 {{LowestOfferDisp}}">{{LowestOffer}}</div>
-            <div id="MembershipOfferExists" class="color5 mt15 f13 {{MembershipOfferDisp}}">
+            <div id="noMembershipOffer" class="color5 mt20 f13 {{LowestOfferDisp}}">{{LowestOffer}}</div>
+            <div id="MembershipOfferExists" class="color5 mt20 f13 {{MembershipOfferDisp}}">
               {{MembershipOffer}}, starts @ <del id="oldPrice">{{oldPrice}}</del>&nbsp;<span id="newPrice">{{newPrice}}</span>
             </div>
-            <button id={{MEM_ACTION_ID}} class="cursp bg_pink colrw fontreg f15 mt20 brdr-0 cep2 contactEngineIcon" style="width:250px">{{ButtonLabelNew}}</button>
+            <button id={{MEM_ACTION_ID}} class="cursp bg_pink colrw fontreg f15 mt10 brdr-0 cep2 contactEngineIcon" style="width:250px">{{ButtonLabelNew}}</button>
               <div class="colr5 pt10 "></div>
     </div>
   </div>
