@@ -161,9 +161,12 @@ class PictureNewCacheLib
      */
     private function validateCriteria($paramArr)
     {
-	$keys = array_keys($paramArr);
-	if(in_array(PictureNewCacheConstants::CACHE_CRITERIA,$keys) &&count(array_diff($keys,PictureNewCacheConstants::$POSSIBLE_CRITERIA))<=0)
+	$val = null;
+	if(array_key_exists(PictureNewCacheConstants::CACHE_CRITERIA,$paramArr))
+		$val = trim($paramArr[PictureNewCacheConstants::CACHE_CRITERIA]);
+	if($val!=null && $val!='' && count($paramArr)==1)
 		return true;
+	return false;
     }
 
     /**
