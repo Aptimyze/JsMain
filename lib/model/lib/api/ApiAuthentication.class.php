@@ -175,7 +175,7 @@ Abstract class ApiAuthentication
 		}		
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
-			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
+			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification") || strstr($_SERVER["REQUEST_URI"],"api/v3/notification")){
 				$this->loginData =$loginData;
 				$this->loginData[AUTHCHECKSUM]=$authChecksum;
 				return $this->loginData;
