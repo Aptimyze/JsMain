@@ -63,7 +63,7 @@
 			$smartyObj->assign('otherUsername',$username);
 			$smartyObj->assign('otherProfile',$profileid_other);
 			$email_sender->setAttachment($file);
-			$email_sender->setAttachmentName("astroCompatibility-".$username.".pdf");
+			$email_sender->setAttachmentName("SampleAstroReport.pdf");
 			$email_sender->setAttachmentType('application/pdf');
 			$email_sender->send();			
 			return;

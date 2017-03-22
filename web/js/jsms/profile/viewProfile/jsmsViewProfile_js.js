@@ -649,7 +649,7 @@ astroCompatibility = function()
 			}
 		});
 		if($(this).hasClass('js-astroCompMem')){
-			$(".js-buttonAstro").html("Get Astro Compatibility");
+			$(".js-buttonAstro").html("Buy Astro Compatibility");
 			$(".js-textAstro").html("A sample astro compatibility report has been sent to your Email ID. Buy Astro Compatibility add-on to access these reports for your matches.");
 			$(".js-buttonAstro").attr("href","/profile/mem_comparison.php");
 			$(".js-astroReportLayer,.js-astroTextButton").removeClass("dispnone");				
