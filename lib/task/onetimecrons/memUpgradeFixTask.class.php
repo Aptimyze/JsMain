@@ -96,6 +96,7 @@ EOF;
                             echo "\n"."new prices are"."\n";
                             var_dump($actualAmount."-".$netAmount);
                             $purchaseDetailObj->updateEntriesForBillid($serviceWiseDetails["BILLID"],$netAmount,$actualAmount);
+                            ++$updateCount;
                         }
 
                     }
