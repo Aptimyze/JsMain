@@ -239,6 +239,8 @@ class JPROFILE
             $addWhereText == ""
         )
         {
+            $loggingArr = array();
+            $loggingArr['originalValueArr'] = $valueArray;
             $arrPid = explode(',', $valueArray['PROFILEID']);
             // check limit of profile ids
             if(count($arrPid) > ProfileCacheConstants::GETARRAY_PROFILEID_LIMIT)
@@ -247,6 +249,8 @@ class JPROFILE
             }
             $fields = $this->getRelevantFields($fields);
             $result = ProfileCacheLib::getInstance()->getForPartialKeys(ProfileCacheConstants::CACHE_CRITERIA, $arrPid, $fields, __CLASS__);
+
+            $loggingArr['getForPartialKeysResult'] = $result;
 
             if(false !== $result && false !== $result['cachedResult'] && is_array($result['cachedResult']))
             {                       
@@ -261,9 +265,14 @@ class JPROFILE
                     $storeResult = self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
                     // merge the cache result and the store result if there exists data in cache
                     $result = array_merge($result, $storeResult);
+                    $loggingArr['mergedResult'] = $result;
                 }
-                
-                if(ProfileCacheConstants::CONSUME_PROFILE_CACHE){
+                if($result == "" || empty($result))
+                {
+                    LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO, json_encode($loggingArr));
+                }
+
+                if(0 && ProfileCacheConstants::CONSUME_PROFILE_CACHE){
                   $this->logCacheConsumption();
                   return $result;
                 }
