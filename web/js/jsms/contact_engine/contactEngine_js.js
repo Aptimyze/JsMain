@@ -1267,7 +1267,7 @@ if(result.actiondetails.bottommsg2){
       if(typeof(result.actiondetails.offer) != undefined && result.actiondetails.offer != null)
       {
         $("#MembershipOfferExists").show();
-        $("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1);
+        $("#membershipOfferMsg1").html(result.actiondetails.offer.membershipOfferMsg1.toUpperCase());
         $("#membershipOfferMsg2").html(result.actiondetails.offer.membershipOfferMsg2);
         $("#oldPrice").html(result.actiondetails.offer.strikedPrice);
         $("#newPrice").html(result.actiondetails.offer.discountedPrice);
