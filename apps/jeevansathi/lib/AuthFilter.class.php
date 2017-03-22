@@ -12,14 +12,24 @@
 class AuthFilter extends sfFilter {
 	public function execute($filterChain) {
 
-	if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll/repeatAlarm"))
-	{
-		$notifCheck =NotificationFunctions::notificationCheck();
-        	if($notifCheck){echo $notifCheck;die;}
-	}
-
 	$context = $this->getContext();
-		$request = $context->getRequest();
+	$request = $context->getRequest();
+
+        // Notification filter
+	$requestUri =$_SERVER["REQUEST_URI"];
+        if(strstr($requestUri,"api/v1/notification/poll/repeatAlarm"))
+                $repeatAlarm =true;
+        elseif(strstr($requestUri,"api/v1/notification/poll"))
+                $pollReq =true;
+        if($pollReq || $repeatAlarm){
+                $notifCheck =NotificationFunctions::notificationCheck($request,$pollReq);
+                if($pollReq && $notifCheck){
+                        echo $notifCheck;die;
+                }
+                elseif($repeatAlarm && $notifCheck){
+                        echo $notifCheck;die;
+                }
+        }
 
 		// Code added to switch to hindi.jeevansathi.com for mobile site if cookie set !
 		if($request->getcookie('JS_MOBILE')=='Y'){
@@ -70,7 +80,7 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll") || HandlingCommonReqDatabaseId::isMasterMasterDone())
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || HandlingCommonReqDatabaseId::isMasterMasterDone())
 					JsCommon::oldIncludes(false);
 				else
 					JsCommon::oldIncludes(true);
@@ -351,7 +361,7 @@ class AuthFilter extends sfFilter {
 		}
 		if($data[PROFILEID])
 		{
-			if(!strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
+			if(!strstr($requestUri,"api/v1/notification/poll")){
 				$profileObj= LoggedInProfile::getInstance();
 				if($profileObj->getPROFILEID()!='')
 				{

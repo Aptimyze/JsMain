@@ -416,6 +416,10 @@
 	var source = "~$passedKey`";
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
+        if(!checkEmptyOrNull(readCookie('expCheck'))){
+            eraseCookie('selectedVas');
+            createCookie('expCheck', '1');
+        }
 		~if $data.device eq 'Android_app'`
 		createCookie('device',"~$data.device`");
 		~/if`
