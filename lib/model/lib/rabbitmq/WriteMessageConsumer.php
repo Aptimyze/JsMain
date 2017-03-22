@@ -130,60 +130,61 @@ class WriteMessageConsumer
 	$body=$msgdata['data']['body'];
 	try
 	{
-	  $handlerObj=new ProcessHandler();
+
 	  switch($process)
 	  {
 		case MQ::WRITE_MSG_Q :
 			$key = $body['key'];
 			$data = JsMemcache::getInstance()->getHashAllValue($key);
-			
-            $orgTZ = date_default_timezone_get();
-            date_default_timezone_set("Asia/Calcutta");
-
-			// print_r($data);die;
-			$timeDiff = floor( (time() - $data['time'])/60 );
-			$senderid=$body['senderid'];
-			$receiverid=$body['receiverid'];
-			
-			if($timeDiff >= MQ::DELAY_MINUTE)
+			if(!empty($data))
 			{
-				// delete key data
-				JsMemcache::getInstance()->delete($key);
-				// Sender Receiver objects
-				$senderObj = new Profile('',$senderid);   
-				$senderObj->getDetail("","","*");
-				$receiverObj = new Profile('',$receiverid);
-				$receiverObj->getDetail("","","*");
-				// send mail
-				$conversation = $data['message'];
-				if($data['sendToBoth'])
-				{
-					// send this mail both to sender and receiver
-					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
-					$senderEmailMsg = str_replace($search, 'You,', $conversation);
-					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
-					$senderEmailMsg = str_replace($search, $receiverObj->getUSERNAME().',', $senderEmailMsg);
-					$this->sendMail($receiverObj, $senderObj, $senderEmailMsg, $type);
-					
-					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
-					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
-					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
-				}
-				else
-				{
-					// send only to receiver
-					$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, 'You,', $conversation);
-					$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
-					$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
-					$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
-				}
+	            $orgTZ = date_default_timezone_get();
+	            date_default_timezone_set("Asia/Calcutta");
 
+				$timeDiff = floor( (time() - $data['time'])/60 );
+				$senderid=$body['senderid'];
+				$receiverid=$body['receiverid'];
+				
+				if($timeDiff >= MQ::DELAY_MINUTE)
+				{
+					// delete key data
+					JsMemcache::getInstance()->delete($key);
+					// Sender Receiver objects
+					$senderObj = new Profile('',$senderid);   
+					$senderObj->getDetail("","","*");
+					$receiverObj = new Profile('',$receiverid);
+					$receiverObj->getDetail("","","*");
+					// send mail
+					$conversation = $data['message'];
+					if($data['sendToBoth'])
+					{
+						// send this mail both to sender and receiver
+						$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
+						$senderEmailMsg = str_replace($search, 'You,', $conversation);
+						$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
+						$senderEmailMsg = str_replace($search, $receiverObj->getUSERNAME().',', $senderEmailMsg);
+						$this->sendMail($receiverObj, $senderObj, $senderEmailMsg, $type);
+
+						$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
+						$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+						$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
+						$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
+						$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
+					}
+					else
+					{
+						// send only to receiver
+						$search = "<TAG>".$receiverObj->getUSERNAME()."</TAG>,";
+						$receiverEmailMsg = str_replace($search, 'You,', $conversation);
+						$search = "<TAG>".$senderObj->getUSERNAME()."</TAG>,";
+						$receiverEmailMsg = str_replace($search, $senderObj->getUSERNAME().',', $receiverEmailMsg);
+						$this->sendMail($senderObj, $receiverObj, $receiverEmailMsg, $type);
+					}
+
+				}
+	            date_default_timezone_set($orgTZ);
 			}
-            date_default_timezone_set($orgTZ);
-			break;
+		break;
 	  }
 	}
 	catch (Exception $exception) 
