@@ -50,8 +50,11 @@ class ProcessHandler
                               $receiverArray =   unserialize($memObj->get('CONTACTED_BY_ME'));
                               if(is_array($receiverArray['I'])){
                                   foreach ($receiverArray['I'] as $key => $value) {
-                                  ContactMailer::sendAutoReminderMailer($value,$senderid);
-                                  $this->sendAutoReminder($value,$senderid);
+                                $receiverObj = new Profile();
+                                $receiverObj->getDetail($value, "PROFILEID");
+   
+                                ContactMailer::sendAutoReminderMailer($receiverObj,$senderObj);
+                               //   $this->sendAutoReminder($value,$senderid);
                                   }    
                               
                               }
