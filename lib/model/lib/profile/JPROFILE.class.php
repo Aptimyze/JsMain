@@ -265,9 +265,8 @@ class JPROFILE
                     $storeResult = self::$objProfileMysql->getArray($valueArray, $excludeArray, $greaterThanArray, $fields, $lessThanArray, $orderby, $limit, $greaterThanEqualArrayWithoutQuote, $lessThanEqualArrayWithoutQuote, $like, $nolike, $addWhereText);
                     // merge the cache result and the store result if there exists data in cache
                     $result = array_merge($result, $storeResult);
-                    $loggingArr['mergedResult'] = $result;
                 }
-                if($result == "" || empty($result))
+                if($result === "" || empty($result) || $result === null || $result === false)
                 {
                     LoggingManager::getInstance(ProfileCacheConstants::PROFILE_LOG_PATH)->logThis(LoggingEnums::LOG_INFO, json_encode($loggingArr));
                 }
