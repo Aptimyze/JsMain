@@ -3,7 +3,7 @@
 <table align="left" border="0" cellspacing="0" cellpadding="0" ~if $index % 2 eq 1` style="margin-right:1px;max-width:298px; border-left:1px solid #eae9e9;" ~else` style="margin-right:1px; max-width:298px;" ~/if`>
 <tr>
     <td></td>
-    <td height="28" style="padding-left:5px;"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$userProfileId`,source=~JSTrackingPageType::EOI_MAILER`(/LINK)"><var>{{USERNAME:profileid=~$userProfileId`}}</var></a> <var>{{PAIDSTATUS:profileid=~$userProfileId`}}</var></td>
+    <td height="28" style="padding-left:5px;"><a style="font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#14428e; text-decoration:none;" target="_blank" href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$userProfileId`,source=~JSTrackingPageType::AUTO_REMINDER_PHOTO_UPLOAD_MAILER`(/LINK)"><var>{{USERNAME:profileid=~$userProfileId`}}</var></a> <var>{{PAIDSTATUS:profileid=~$userProfileId`}}</var></td>
     <td></td>
 </tr>
 <tr>
@@ -12,7 +12,7 @@
     </td>
     <td width="125" height="140" valign="top">
        
-        <a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$userProfileId`,source=~JSTrackingPageType::EOI_MAILER`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img border="0" align="left" width="100" vspace="0" hspace="0" height="133" src="(PHOTO)PROFILE_PIC:receiver_id=~$profileid`,profileid=~$userProfileId`,photo_type=search(/PHOTO)" style="border:1px solid #e6e6e6;"></a>
+        <a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$userProfileId`,source=~JSTrackingPageType::AUTO_REMINDER_PHOTO_UPLOAD_MAILER`(/LINK)" style="text-decoration:none; color:#0f529d;" target="_blank"><img border="0" align="left" width="100" vspace="0" hspace="0" height="133" src="(PHOTO)PROFILE_PIC:receiver_id=~$profileid`,profileid=~$userProfileId`,photo_type=search(/PHOTO)" style="border:1px solid #e6e6e6;"></a>
     </td>
     <td width="188" valign="top">
         <table border="0" cellspacing="2" align="left" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px; color:#000000;-webkit-text-size-adjust: none; text-align:left;">
@@ -45,7 +45,7 @@
     <td colspan="2">
         <table border="0" width="130" align="left" cellspacing="0" cellpadding="0" style="font-family:Arial, Verdana; font-size:12px;">
             <tr>
-                <td bgcolor="#ad160d" height="27" align="center" width="167"><a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$userProfileId`,source=~JSTrackingPageType::EOI_MAILER`(/LINK)" target="_blank" style="font-size:12px; color:#fff; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;text-decoration: none;"><strong>View Profile</strong></a></td>
+                <td bgcolor="#ad160d" height="27" align="center" width="167"><a href="(LINK)DETAILED_PROFILE_HOME:profileid=~$profileid`,receiver_id=~$userProfileId`,source=~JSTrackingPageType::AUTO_REMINDER_PHOTO_UPLOAD_MAILER`(/LINK)" target="_blank" style="font-size:12px; color:#fff; font-family:Arial, Helvetica, sans-serif;word-break: keep-all;text-decoration: none;"><strong>View Profile</strong></a></td>
             </tr>
         </table>
     </td>
