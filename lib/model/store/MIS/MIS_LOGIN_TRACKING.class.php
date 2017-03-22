@@ -101,6 +101,25 @@ class MIS_LOGIN_TRACKING extends TABLE{
                 }
         }
 
+        public function insert($profileid,$date,$url,$channel,$websiteVersion,$stype)
+        {
+                if (!$profileid)
+                        throw new jsException("", "Profile id not passed");
+                try {
+			$sql ="INSERT INTO MIS.LOGIN_TRACKING ( `PROFILEID` , `URL` , `DATE`, `CHANNEL`, `WEBSITE_VERSION`, `STYPE`) VALUES (:PROFILEID , :URL , :DATE, :CHANNEL, :WEBSITE_VERSION, :STYPE)";
+                        $res = $this->db->prepare($sql);
+                        $res->bindValue(":PROFILEID",$profileid, PDO::PARAM_STR);
+                        $res->bindValue(":URL",$url, PDO::PARAM_STR);
+                        $res->bindValue(":DATE",$date, PDO::PARAM_STR);
+                        $res->bindValue(":CHANNEL",$channel, PDO::PARAM_STR);
+                        $res->bindValue(":WEBSITE_VERSION",$websiteVersion, PDO::PARAM_STR);
+                        $res->bindValue(":STYPE",$stype, PDO::PARAM_STR);
+                        $res->execute();
+                        return true;
+                } catch (PDOException $e) {
+                        throw new jsException($e);
+                }
+        }
 
 }
 ?>

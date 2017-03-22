@@ -192,7 +192,7 @@ class myjsActions extends sfActions
           $bIsCached = false;
           $displayObj = $profileCommunication->getDisplay($module, $loggedInProfileObj);
           $appV1DisplayJson = $appV1obj->getJsonAppV1($displayObj, $profileInfo);
-          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson);
+          JsMemcache::getInstance()->set($myjsCacheKey, $appV1DisplayJson,myjsCachingEnums::TIME);
         }
         if($this->bEnableProfiler) {
           //Display Call
