@@ -54,9 +54,7 @@
 		
 		//if sample report is to be sent
 		if($sampleReport)
-		{
-			if($sampleReport)
-		{
+		{			
 			$url = JsConstants::$imgUrl."/images/sampleAstro.pdf";
 			$file = file_get_contents($url);
 			$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1848);
@@ -69,7 +67,6 @@
 			$email_sender->setAttachmentType('application/pdf');
 			$email_sender->send();			
 			return;
-		}
 		}
 		if(strstr($data['SUBSCRIPTION'],'A'))
 			$sample="";
