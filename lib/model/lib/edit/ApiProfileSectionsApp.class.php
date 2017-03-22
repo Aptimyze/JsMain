@@ -312,9 +312,10 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 			$time_to_call_value="";
 		}
                 
-                if(MobileCommon::isApp()!="I"){
                 //Mobile Privacy Settings
                 $contactArr[]=$this->getApiFormatArray("SHOWPHONE_MOB","" ,$this->profile->getSHOWPHONE_MOB(),$this->profile->getSHOWPHONE_MOB(),$this->getApiScreeningField("SHOWPHONE_MOB"));
+                
+                if(MobileCommon::isApp()!="I"){
 
                 //Landline Privacy Settings
                 $contactArr[]=$this->getApiFormatArray("SHOWPHONE_RES","" ,$this->profile->getSHOWPHONE_RES(),$this->profile->getSHOWPHONE_RES(),$this->getApiScreeningField("SHOWPHONE_RES"));
