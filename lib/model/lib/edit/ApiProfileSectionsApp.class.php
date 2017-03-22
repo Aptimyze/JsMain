@@ -128,16 +128,25 @@ class ApiProfileSectionsApp extends ApiProfileSections {
 		
 		$astro[]=$this->getApiFormatArray("HOROSCOPE_MATCH","Horoscope match is must?" , $this->profile->getDecoratedHoroscopeMatch(),$this->profile->getHOROSCOPE_MATCH(),$this->getApiScreeningField("HOROSCOPE_MATCH"));
                 $horoscope = new Horoscope();
-		$horoExists = $horoscope->isHoroscopeExist($this->profile);
+		$horoExists = $horoscope->isHoroscopeExist($this->profile);	
 		if($horoExists=="Y")
 		{
-			$astro[0][HORO_BUTTON_LABEL] ="Update Horoscope"; 
+			$horoLabel = "Update Horoscope";			
 		}
 		elseif($horoExists=="N")
-		{
-			$astro[0][HORO_BUTTON_LABEL] ="Create Horoscope"; 
+		{			
+			$horoLabel = "Create Horoscope";			
 		}
-		
+
+		if(MobileCommon::isApp() == "A" && $horoLabel)
+		{
+			$astro[0][HORO_BUTTON_LABEL] = $horoLabel;
+		}
+		elseif(MobileCommon::isApp() == "I" && $horoLabel)
+		{
+			$astro[]=$this->getApiFormatArray("HORO_BUTTON_LABEL",$horoLabel , $horoLabel);
+		}
+
     $this->addSunSign($astro,$AstroKundali);
     
 		$astro[]=$this->getApiFormatArray("RASHI","Rashi/Moon Sign" , $AstroKundali->rashi,$this->profile->getRASHI(),$this->getApiScreeningField("RASHI"));
