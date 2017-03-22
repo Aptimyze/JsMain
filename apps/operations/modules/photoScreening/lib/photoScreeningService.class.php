@@ -1964,15 +1964,16 @@ class photoScreeningService
                                 }
                         }
                 }
-                if(!isset($this->screenedCount))
-                {
-                        $picture_new = new ScreenedPicture;
-                        $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);		//Get count of already existing screened pics
-                        $this->screenedCount = $countScreened;
-                }
-                $this->countBeforeScreening =  $this->screenedCount;
                 //Transaction   
                 if ($dbEntryPicId) {
+                        if(!isset($this->screenedCount))
+                        {
+                                $picture_new = new ScreenedPicture;
+                                $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);		//Get count of already existing screened pics
+                                $this->screenedCount = $countScreened;
+                        }
+                        $this->countBeforeScreening =  $this->screenedCount + 1;
+
                         $pictureNew = new ScreenedPicture;
                         $pictureNew->startTransaction();
                         $dbActionOutput = $this->performDbAction($this->profileObj->getPROFILEID(), $dbEntryPicId, $dbEntryTitle, $dbEntryKeywords, $pictureNew, $MainPicUrl, $ProfilePicUrl, $ThumbailUrl, $Thumbail96Url, $MobileAppPicUrl, $ProfilePic120Url, $ProfilePic235Url, $ProfilePic450Url, $OriginalPicUrl, $PicFormat, $SearchPicUrl);  //Perform insert queries on PICTURE_NEW
@@ -2001,8 +2002,8 @@ class photoScreeningService
                 //Deleting Pics from PICTURE_NEW
                 $this->deleteScreenedPhotoEntries($paramArr['PICTUREID']);
                 $this->updateScreenedPhotosOrdering($paramArr["PROFILEID"]);
-                
-                $this->triggerAutoReminderMail($paramArr);
+                if($dbEntryPicId)
+                    $this->triggerAutoReminderMail($paramArr);
                 
                 // Flush memcache for header picture
                 $memCacheObject = JsMemcache::getInstance();
@@ -2013,7 +2014,7 @@ class photoScreeningService
         public function triggerAutoReminderMail($paramArr){
         if($this->countBeforeScreening > self::AUTO_REMINDER_MAIL_MAX_COUNT) return false;
         $picture_new = new ScreenedPicture;
-        $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);		//Get count of already existing screened pics
+        $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]) + 1 ;		//Get count of already existing screened pics
 
         if($countScreened <= $this->countBeforeScreening)return false;    
         $producerObj=new Producer();
