@@ -671,7 +671,7 @@ class Membership
             $this->deactivateMembership($memUpgrade,$orderid);
         }
         $this->setServiceActivation();
-        $this->populatePurchaseDetail();
+        $this->populatePurchaseDetail($memUpgrade);
         $this->updateJprofileSubscription();
         $this->checkIfDiscountExceeds($userObjTemp);
         if($memUpgrade != "NA"){
@@ -990,7 +990,7 @@ class Membership
         $this->sendServiceBasedMailer($serviceid_arr);
     }
     
-    function populatePurchaseDetail() {
+    function populatePurchaseDetail($upgradeMem="NA") {
         $serviceObj = new Services;
         if (strstr($this->serviceid, 'ES') || strstr($this->serviceid, 'NCP')) {
             $serarr = explode(",", $this->serviceid);
@@ -1078,10 +1078,21 @@ class Membership
             else {
                 $deferrable = 'Y';
             }
-            
+            //error_log("ankita1 price-".$this->amount."---discount=".$this->discount);
+            //error_log("ankita price=".$price."--discount=".$discount."---net_price=".$net_price);
 
             $paramsPDStr = "BILLID,SERVICEID,CUR_TYPE,PRICE,DISCOUNT,NET_AMOUNT,START_DATE,END_DATE,SUBSCRIPTION_START_DATE,SUBSCRIPTION_END_DATE,SHARE,PROFILEID,STATUS,DEFERRABLE";
-            $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
+
+            //handling for main membership upgrade
+            /*if($price != 0 && $upgradeMem == 'MAIN'){
+                error_log("ankita here in upgrade case");
+                $actualAmount = $this->amount + $this->discount;
+                $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$actualAmount','$this->discount','$this->amount','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
+            }
+            else{
+                error_log("ankita here in normal case");*/
+                $valuesPDStr = "$this->billid,'" . $row['SERVICEID'] . "','$this->curtype','$price','$discount','$net_price','$start_date','$end_date','$actual_start_date','$actual_end_date','$share','" . $row['PROFILEID'] . "','$this->status','$deferrable'";
+            //}
             $billingPurDetObj->genericPurchaseDetailInsert($paramsPDStr, $valuesPDStr);
             unset($paramsPDStr);
             unset($valuesPDStr);

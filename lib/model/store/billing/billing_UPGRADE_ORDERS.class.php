@@ -124,14 +124,13 @@ class billing_UPGRADE_ORDERS extends TABLE
   {
     try
     { 
-        $sql = "SELECT * FROM billing.UPGRADE_ORDERS WHERE UPGRADE_STATUS = 'DONE'";
+        $sql = "SELECT GROUP_CONCAT(BILLID) AS BILLIDSTR FROM billing.UPGRADE_ORDERS WHERE UPGRADE_STATUS = 'DONE' AND BILLID <> 0";
         $res=$this->db->prepare($sql);
         $res->execute();
-        $output = array();
-        while($row=$res->fetch(PDO::FETCH_ASSOC)){
-          $output[$row['PROFILEID']] = $row;
+        if($row=$res->fetch(PDO::FETCH_ASSOC)){
+          return $row["BILLIDSTR"];
         }
-        return $output;
+        return null;
     }
     catch(PDOException $e)
     {
