@@ -127,7 +127,7 @@ class WriteMessage extends ContactEvent{
       $syncRecords[$this->contactHandler->getViewer()->getPROFILEID()]=round(microtime(true) * 1000);
       JsMemcache::getInstance()->setHashObject($this->contactHandler->getViewed()->getPROFILEID()."_lastCommunicationId",$syncRecords,24*60*60);
 
-      $chatNotification[$this->contactHandler->getViewer()->getPROFILEID()."_".$this->contactHandler->getViewed()->getPROFILEID()]=json_encode(array("msg"=>$message,"ip"=>FetchClientIP(),"from"=>$this->contactHandler->getViewer()->getPROFILEID(),"id"=>$this->messageId,"to"=>$this->contactHandler->getViewed()->getPROFILEID()));
+      $chatNotification[$this->contactHandler->getViewer()->getPROFILEID()."_".$this->contactHandler->getViewed()->getPROFILEID()]=json_encode(array("msg"=>$message,"ip"=>FetchClientIP(),"from"=>$this->contactHandler->getViewer()->getPROFILEID(),"id"=>"","to"=>$this->contactHandler->getViewed()->getPROFILEID()));
       JsMemcache::getInstance()->setHashObject("lastChatMsg",$chatNotification);
     }
     catch (Exception $e) {
