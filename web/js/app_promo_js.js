@@ -15,9 +15,11 @@ if(typeof(AndroidPromotion)=="undefined"){
 	var AndroidPromotion=0;
 }
 $( document ).ready(function() {
+	//
+
       if((getAndroidVersion() || getIosVersion()) && AndroidPromotion && (typeof webView ==='undefined' || webView =="")){
       if(!getCookieData("appPromo") && (typeof appPromo === 'undefined'))
-      {
+      {  
 		   writeCookie("appPromo","jeevansathi",3);
 			if($("#main").length)
 			{
@@ -47,8 +49,8 @@ $( document ).ready(function() {
 					AppPromoHgt=$("#appPromo").height();
 				}
 				if(getIosVersion())
-				{
-					$("#mainContent").before("    <div id=\"appPromo\" class=\"ham_b20 ham_minu20  newocbbg1 fullwid\">    	<div class=\"padAppPromo clearfix\">        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=iosLayer\"  class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt20 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App</div>                </div>            </div>        </div>    </div>");
+				{  
+					$("#mainContent").before('<div id=\'appPromo\' class=\''+showAppClass+' ham_minu20  newocbbg1 fullwid\'>    	<div class=\"padAppPromo clearfix\">        	<div onclick=\"showPromo(4);\" class=\"fl pt20\">            	<div class=\"ocbnewimg ocbclose\"></div>            </div>        	<div class=\"fl padl5\">            	<div class=\"ocbnewimg logoocb\"></div>            </div>            <div class=\"fr pt10\">            	<div class=\"newocbbg2 ocbbr1 ocbp1\">                	<a href=\"/static/appredirect?type=iosLayer\"  class=\"white fontmed f13\">Install</a>                </div>            </div>             <div class=\"fr pt20 padr10\">            	<div class=\"f14 fontmed\">Jeevansathi App</div>                </div>            </div>        </div>    </div>');
 					AppPromoHgt=$("#appPromo").height();
 				}
 			if($("#outerDivAppPromo")){
