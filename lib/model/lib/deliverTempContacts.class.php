@@ -121,6 +121,11 @@
 		
 		public function deliverContactsTemp($profileId)
 		{
+			// consumption logging
+			$currdate = date('Y-m-d');
+			$file = fopen(JsConstants::$docRoot."/uploads/SearchLogs/ScreenQConsume-$currdate", "a+");
+			fwrite($file, "$profileId\n");
+			fclose($file);
 			$contactTempObj = new NEWJS_CONTACTS_TEMP;
 			$tempContact = $contactTempObj->getTempAllContacts(array($profileId));
 			if ($tempContact)

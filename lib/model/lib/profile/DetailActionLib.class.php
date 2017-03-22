@@ -455,12 +455,13 @@ class DetailActionLib
 		{
 			$mypid=$actionObject->loginProfile->getPROFILEID();
 			$randomNumber = rand(0,100);
-			if($randomNumber>=0)
+			if($randomNumber>=1)
 			{
 			include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
 			}
 			else
 			{
+                                file_put_contents(sfConfig::get("sf_upload_dir")."/SearchLogs/profileSeen.txt",$profileid."\n",FILE_APPEND);
 				$producerObj = new Producer();
 				if($producerObj->getRabbitMQServerConnected())
 				{
