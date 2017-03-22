@@ -1964,7 +1964,13 @@ class photoScreeningService
                                 }
                         }
                 }
-
+                if(!isset($this->screenedCount))
+                {
+                        $picture_new = new ScreenedPicture;
+                        $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);		//Get count of already existing screened pics
+                        $this->screenedCount = $countScreened;
+                }
+                $this->countBeforeScreening =  $this->screenedCount;
                 //Transaction   
                 if ($dbEntryPicId) {
                         $pictureNew = new ScreenedPicture;
@@ -2005,15 +2011,11 @@ class photoScreeningService
 
         
         public function triggerAutoReminderMail($paramArr){
+        if($this->countBeforeScreening > self::AUTO_REMINDER_MAIL_MAX_COUNT) return false;
+        $picture_new = new ScreenedPicture;
+        $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);		//Get count of already existing screened pics
 
-        if(!isset($this->screenedCount))
-        {
-            $picture_new = new ScreenedPicture;
-            $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);		//Get count of already existing screened pics
-            $this->screenedCount = $countScreened;
-        }
-        $approved = count($paramArr['PICTUREID']);
-        if(($this->screenedCount > self::AUTO_REMINDER_MAIL_MAX_COUNT) || $approved < 1)return false;    
+        if($countScreened <= $this->countBeforeScreening)return false;    
         $producerObj=new Producer();
         if($producerObj->getRabbitMQServerConnected())
         {
