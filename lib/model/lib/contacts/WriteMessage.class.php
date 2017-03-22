@@ -122,7 +122,7 @@ class WriteMessage extends ContactEvent{
 	$profileMemcacheServiceViewedObj->updateMemcache();
 
     //update redisc memcache for new notifications
-      $message = trim($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE))."--".$date."--".$ip."--".$chatid;
+      $message = trim($this->contactHandler->getElements(CONTACT_ELEMENTS::MESSAGE));
 
       $syncRecords[$this->contactHandler->getViewer()->getPROFILEID()]=round(microtime(true) * 1000);
       JsMemcache::getInstance()->setHashObject($this->contactHandler->getViewed()->getPROFILEID()."_lastCommunicationId",$syncRecords,24*60*60);
@@ -176,7 +176,7 @@ class WriteMessage extends ContactEvent{
         $sendMailData = array('process' => MQ::WRITE_MSG_Q ,'data'=>array('type' => 'MESSAGE','body'=>array('senderid'=>$sender->getPROFILEID(),'receiverid'=>$receiver->getPROFILEID(),'message'=>$message, 'key'=>$key) ), 'redeliveryCount'=>0 );
         $producerObj->sendMessage($sendMailData);
         $gcmData=array('process'=>'GCM','data'=>array('type'=>'MESSAGE','body'=>array('receiverid'=>$receiver->getPROFILEID(),'senderid'=>$sender->getPROFILEID(),'message'=>$message ) ), 'redeliveryCount'=>0 );
-        $producerObj->sendMessage($gcmData);
+        //$producerObj->sendMessage($gcmData); //Commenting due to notifications being sent through service
         try
         {
           //send instant JSPC/JSMS notification
@@ -200,7 +200,7 @@ class WriteMessage extends ContactEvent{
       $instantNotificationObj = new InstantAppNotification("MESSAGE_RECEIVED");
       $senderProfileid = $this->contactHandler->getViewer()->getPROFILEID();
       $receiverProfileid = $this->contactHandler->getViewed()->getPROFILEID();
-      $instantNotificationObj->sendNotification($receiverProfileid, $senderProfileid, $message);
+      //$instantNotificationObj->sendNotification($receiverProfileid, $senderProfileid, $message); //Commenting due to notifications being sent through service
       // send instant app notification - end
     }
 	}
