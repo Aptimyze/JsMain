@@ -5,3 +5,5 @@ all:
     enable_login:  off
   deleteTestingContacts:
     enable_login:  off
+  flushMatchAlertLogV1:
+    enable_login:  off
