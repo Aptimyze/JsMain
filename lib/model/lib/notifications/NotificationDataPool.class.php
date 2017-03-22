@@ -550,7 +550,7 @@ class NotificationDataPool
     
     public function sendChatNotification($notificationData){
         if(!empty($notificationData) && is_array($notificationData)){
-            $chatMsgInstantNotObj = new InstantAppNotification("CHAT_MSG");
+            $chatMsgInstantNotObj = new InstantAppNotification("MESSAGE_RECEIVED");
             foreach($notificationData as $key => $valOld){
                     $val = json_decode($valOld, true);
                     $chatMsgInstantNotObj->sendNotification($val["to"], $val["from"], $val["msg"],'',array('CHAT_ID'=>$val["id"]));
