@@ -119,6 +119,9 @@ class deleteRetrieveConsumer
    */
   public function processMessage(AMQPMessage $msg)
   {
+    if(0 === CommonUtility::runFeatureAtNonPeak() && JsConstants::$whichMachine == 'prod')
+        	successfullDie();
+    
     $msgdata=json_decode($msg->body,true);
     $process=$msgdata['process'];
     $redeliveryCount=$msgdata['redeliveryCount'];

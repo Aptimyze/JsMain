@@ -207,5 +207,35 @@ class NEWJS_MESSAGES extends TABLE{
 				//throw new jsException($e);
 			}
 		}
+  
+   /**
+    * 
+    * @param type $Id
+    * @param type $tablePrefix
+    * @param type $tableSuffix
+    * @return type
+    * @throws jsException
+    */
+    public function MessagesFromArchive($Id,$tablePrefix="", $tableSuffix="")
+    {
+      
+      try {
+        if ($Id) {
+          $sql = "SELECT ID,MESSAGE FROM newjs.{$tablePrefix}DELETED_MESSAGES{$tableSuffix} WHERE ID IN('$Id')";
+          $prep = $this->db->prepare($sql);
+          $prep->bindValue(":ID", $Id, PDO::PARAM_INT);
+          $prep->execute();
+          while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+            $res[$result[ID]] = $result[MESSAGE];
+          }
+          return $res;
+        }
+      } catch (PDOException $e) {
+        jsCacheWrapperException::logThis($e);
+        /*       * * echo the sql statement and error message ** */
+        throw new jsException($e);
+      }
+    }
+
 }
 ?>
