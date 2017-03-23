@@ -281,6 +281,13 @@ class MembershipActionFunctions
         elseif ($data['currency'] == 'DOL') {
             $data['currency'] = '$';
         }
+        if(is_array($data)){
+            $temp = $data["continueText"];
+        }
+        else{
+            $temp = "";
+        }
+        
         array_walk_recursive($data, function (&$val, $key){
             $number = preg_replace('/[^\d.]/', '', $val);
             $fnumber = floatval(preg_replace('/[^\d.]/', '', $val));
@@ -288,6 +295,9 @@ class MembershipActionFunctions
                 $val = number_format($fnumber, 0, '.', ',');
             }
         });
+        if($data["upgradeMem"] == 'MAIN' && $displayPage=='3' && $data['currency'] == '$'){
+            $data["continueText"] = $temp;
+        }
         return $data;
     }
 
