@@ -281,11 +281,13 @@ class MembershipActionFunctions
         elseif ($data['currency'] == 'DOL') {
             $data['currency'] = '$';
         }
-        if(is_array($data)){
-            $temp = $data["continueText"];
+        if(is_array($data) && ($displayPage=='3' || $displayPage=='5')){
+            $continueText = $data["continueText"];
+            $proceed_text = $data["proceed_text"];
         }
         else{
-            $temp = "";
+            $continueText = "";
+            $proceed_text = "";
         }
         
         array_walk_recursive($data, function (&$val, $key){
@@ -295,9 +297,15 @@ class MembershipActionFunctions
                 $val = number_format($fnumber, 0, '.', ',');
             }
         });
-        if($data["upgradeMem"] == 'MAIN' && $displayPage=='3' && $data['currency'] == '$'){
-            $data["continueText"] = $temp;
+        if($data["upgradeMem"] == 'MAIN' && ($displayPage=='3' || $displayPage=='5') && $data['currency'] == '$'){
+            if($displayPage == '3'){
+                $data["continueText"] = $continueText;
+            }
+            else{
+                $data["proceed_text"] = $proceed_text;
+            }
         }
+        
         return $data;
     }
 
