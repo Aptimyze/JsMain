@@ -23,10 +23,10 @@ $this->addOptions(array(
         if(!sfContext::hasInstance())
                 sfContext::createInstance($this->configuration);
 
-		$startDate 	=date('Y-m-d',time()-86400)." 19.30:00:00";
-		$endDate 	=date("Y-m-d")." 19.30:00:00";
+		$startDate 	=date('Y-m-d',time()-86400)." 00:00:00";
+		$endDate 	=date("Y-m-d",time()-86400)." 23:59:59";
 		$datePrev6day	=date("Y-m-d",time()-6*24*60*60)." 00:00:00";
-		$entryDate	=date('Y-m-d');
+		$entryDate	=date('Y-m-d',time()-86400);
 
 		// get data from Notification Log
                 $notificationsLogObj = new MOBILE_API_NOTIFICATION_LOG('newjs_slave'); 

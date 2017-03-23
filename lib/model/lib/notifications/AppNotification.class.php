@@ -254,28 +254,12 @@ public function microtime_float()
                                 $applicableProfilesNri = $this->getVDNriProfilesApplicable($appProfiles,$applicableProfilesNonNri);
                         }
                         $applicableProfiles =array_merge($applicableProfilesNonNri,$applicableProfilesNri);
-                        $counter =0;
-                        if(is_array($applicableProfiles)){
-                                foreach($applicableProfiles as $profileid=>$value){
-                                        $dataAccumulated[$counter]['SELF']=$value;
-                                        $counter++;
-                                }
-                                $dataAccumulated[0]['COUNT'] = "SINGLE";
-                        }
-                        unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
                         break;
 		  case "MEM_DISCOUNT":
 			$applicableProfiles=array();			
 			$applicableProfiles =$this->getMembershipDiscountProfilesApplicable($appProfiles);
-			$counter =0;
-			if(is_array($applicableProfiles)){
-				foreach($applicableProfiles as $profileid=>$value){
-					$dataAccumulated[$counter]['SELF']=$value;
-					$counter++;	
-				}
-				$dataAccumulated[0]['COUNT'] = "SINGLE";
-			}
-			unset($applicableProfiles);
+			$dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
 			break;
 		  case "MEM_EXPIRE":
                         $applicableProfiles=array();
