@@ -22,6 +22,8 @@ class SolrRequest implements RequestHandleInterface
 		{
 	                $this->searchParamtersObj = $searchParamtersObj;
 
+                        //$this->logSearch();
+                        JsMemcache::getInstance()->incrCount("TOTAL_SEARCH_COUNT_".date("d"));
                         $profileObj = LoggedInProfile::getInstance('newjs_master');
                         if($profileObj->getPROFILEID())
                 	{ 
@@ -195,7 +197,7 @@ class SolrRequest implements RequestHandleInterface
                 }
                 
                 if(!$this->searchResults){
-                        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d-h').".txt";
+                        $fileName = sfConfig::get("sf_upload_dir")."/SearchLogs/search_threshold_empty_".date('Y-m-d').".txt";
                         file_put_contents($fileName, $diff." :::: ".$urlToHit."?".$postParams."\n\n", FILE_APPEND);
                 }
 	}
@@ -667,4 +669,29 @@ class SolrRequest implements RequestHandleInterface
 		echo $zzz;		echo "<br><br>";
 		}
 	}
+
+        public function logSearch(){
+                $Keytime = 3600000;
+                $keyAuto = "COUNTER_SEARCH_TYPE_KEYS";
+                $searchKey = "COUNTER_SEARCH_TYPE_";
+                $Rurl = explode("/",trim($_SERVER["REQUEST_URI"],"/"));
+                $searchKey .= $Rurl[0]."_";
+                $app = MobileCommon::isApp();
+                if(!$app){
+                        if(MobileCommon::isDesktop()){
+                                $app = "D";
+                        }elseif(MobileCommon::isNewMobileSite()){
+                                $app = "J";
+                        }else{
+                                $app = "O";
+                        }
+                }
+                $searchKey .= $app."_";
+                if(php_sapi_name() === 'cli'){
+                        $searchKey .= "CLI_";
+                }
+                $searchKey .= $this->searchParamtersObj->getSEARCH_TYPE();
+                JsMemcache::getInstance()->storeDataInCacheByPipeline($keyAuto,array($searchKey),$Keytime);
+                JsMemcache::getInstance()->incrCount($searchKey);
+        }
 }

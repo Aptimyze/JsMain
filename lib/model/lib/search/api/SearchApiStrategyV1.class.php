@@ -227,6 +227,7 @@ class SearchApiStrategyV1
 		$this->output["relaxation"] = null;
 		$this->output["relaxationHead"]=null;
 		$this->output["relaxationType"]=null;
+                $this->output['checkOnline'] = true;
 		
 		if($relaxedResults && $this->output["result_count"]>0 && MobileCommon::isApp()=='A')
 		{

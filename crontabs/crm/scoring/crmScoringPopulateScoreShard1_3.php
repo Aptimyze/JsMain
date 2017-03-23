@@ -74,17 +74,17 @@ for($t=0;$t<count($modelType_arr);$t++)
                                         $score1 = json_decode($response,true);
                                         if(!is_numeric($score1)){
                                                 $score1 ='NULL';
-                                                $hit_log1 =$profileid."#".$newmodelJson;
+                                                /*$hit_log1 =$profileid."#".$newmodelJson;
                                                 $fileName1 ="score_hit_log_for_nullResponse_".$date.".txt";
-                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");
+                                                passthru("echo '$hit_log1' >>/tmp/$fileName1");*/
                                         }
                                         else{
                                                 $score1 =round($score1,0);
                                         }
 					// temporary_logging   
-                                        $hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
+                                        /*$hit_log = $flag."#".$profileid."#".$score1."#".$newmodelJson;
                                         $fileName ="score_hit_log_".$date.".txt";
-                                        passthru("echo '$hit_log' >>/tmp/$fileName");
+                                        passthru("echo '$hit_log' >>/tmp/$fileName");*/
                                 }
                                 if(isset($score))
                                 {

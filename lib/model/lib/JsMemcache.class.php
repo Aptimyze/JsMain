@@ -132,7 +132,9 @@ class JsMemcache extends sfMemcacheCache{
 					if(!$lifetime)
 						$lifetime= 3600;
 					$key = (string)$key;
-					if($jsonEncode=='1')
+					if($jsonEncode=='X')
+						;
+					elseif($jsonEncode=='1')
 						$value = json_encode($value);
 					else
 						$value = serialize($value);

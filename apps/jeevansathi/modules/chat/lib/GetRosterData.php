@@ -97,7 +97,7 @@ class GetRosterData
 	{
 		if ($type == "INTEREST_RECEIVED") {
 			$condition["WHERE"]["NOT_IN"]["FILTERED"]         = "Y";
-			$yday                                             = mktime(0, 0, 0, date("m"), date("d") - 90, date("Y"));
+			$yday                                             = mktime(0, 0, 0, date("m"), date("d") - CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT, date("Y"));
 			$back_90_days                                     = date("Y-m-d", $yday);
 			$condition["WHERE"]["GREATER_THAN_EQUAL"]["TIME"] = "$back_90_days 00:00:00";
 		}

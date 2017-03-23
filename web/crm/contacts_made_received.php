@@ -83,13 +83,13 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		{
 			if($type == "R" && $flag == "I")
 			{
-				$contactResult = getResultSet("SENDER,MSG_DEL,TIME,COUNT","","","$self_profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL 90 DAY) AND NOW()","","TIME DESC","","","$j,$PAGELEN","","$table_name","","","","'Y'");
-				$count_contactResult = getResultSet("COUNT(*) AS CNT","","","$self_profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL 90 DAY) AND NOW()","","","","","","","$table_name","","","","'Y'");
+				$contactResult = getResultSet("SENDER,MSG_DEL,TIME,COUNT","","","$self_profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND NOW()","","TIME DESC","","","$j,$PAGELEN","","$table_name","","","","'Y'");
+				$count_contactResult = getResultSet("COUNT(*) AS CNT","","","$self_profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND NOW()","","","","","","","$table_name","","","","'Y'");
 			}
 			elseif($type == "RC" && $flag=="I")
 			{
-				$contactResult = getResultSet("SENDER,MSG_DEL,TIME,COUNT","","","$self_profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL 90 DAY) AND DATE_SUB(NOW(),INTERVAL 30 DAY)","","TIME DESC","","","$j,$PAGELEN","","$table_name");
-				$count_contactResult = getResultSet("COUNT(*) AS CNT","","","$self_profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL 90 DAY) AND DATE_SUB(NOW(),INTERVAL 30 DAY)","","","","","","","$table_name");
+				$contactResult = getResultSet("SENDER,MSG_DEL,TIME,COUNT","","","$self_profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND DATE_SUB(NOW(),INTERVAL 30 DAY)","","TIME DESC","","","$j,$PAGELEN","","$table_name");
+				$count_contactResult = getResultSet("COUNT(*) AS CNT","","","$self_profileid","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND DATE_SUB(NOW(),INTERVAL 30 DAY)","","","","","","","$table_name");
 			}
 			else
 			{
@@ -106,8 +106,8 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 			}
 			elseif($type == "RC" && $flag=="I")
 			{
-				$contactResult = getResultSet("SENDER,MSG_DEL,TIME,COUNT","$self_profileid","","","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL 90 DAY) AND DATE_SUB(NOW(),INTERVAL 30 DAY)","","TIME DESC","","","$j,$PAGELEN","$table_name");
-				$count_contactResult = getResultSet("COUNT(*) AS CNT","$self_profileid","","","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL 90 DAY) AND DATE_SUB(NOW(),INTERVAL 30 DAY)","","","","","","","$table_name");
+				$contactResult = getResultSet("SENDER,MSG_DEL,TIME,COUNT","$self_profileid","","","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND DATE_SUB(NOW(),INTERVAL 30 DAY)","","TIME DESC","","","$j,$PAGELEN","$table_name");
+				$count_contactResult = getResultSet("COUNT(*) AS CNT","$self_profileid","","","","'I'","","TIME BETWEEN DATE_SUB(NOW(),INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND DATE_SUB(NOW(),INTERVAL 30 DAY)","","","","","","","$table_name");
 			}
 			else
 			{
