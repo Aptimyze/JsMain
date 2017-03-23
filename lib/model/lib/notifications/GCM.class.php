@@ -76,7 +76,7 @@ class GCM {
 					if($oldRegistrationId && ($v['error']=='InvalidRegistration' || $v['error']=='NotRegistered')){
 						$registrationIdObj->deleteRegId($oldRegistrationId);
                                                 //Changed below to insert entry in APP_UNINSTALL to send mailer 
-                                                $appUninstallObj = new MOBILE_API_APP_UNINSTALL();
+                                                $appUninstallObj = new NOTIFICATION_APP_UNINSTALL();
                                                 $appUninstallObj->insertUninstalledProfiles($profileid,$oldRegistrationId);
                                         }
 				}
