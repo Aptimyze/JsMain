@@ -238,10 +238,10 @@ class NotificationDataPool
   }
 
     /*function to get notification data pool for instant JSPC/JSMS notifications
-    @inputs: $notificationKey,$profilesArr,$details,$message
+    @inputs: $notificationKey,$profilesArr,$details,$message,$count
     @output : $dataAccumulated
     */
-    public function getProfileInstantNotificationData($notificationKey,$profilesArr,$details,$message="")
+    public function getProfileInstantNotificationData($notificationKey,$profilesArr,$details,$message="",$count="")
     {
         foreach($profilesArr as $k=>$v)
         {
@@ -250,10 +250,18 @@ class NotificationDataPool
             else
                 $dataAccumulated[0][$k] = $details[$v]; 
         }
-        $dataAccumulated[0]['COUNT'] = "SINGLE";           
-        
+        if($count == "" || $count == 1){
+            $dataAccumulated[0]['COUNT'] = "SINGLE";  
+        }
+        else if($count > 1){
+            $dataAccumulated[0]['COUNT'] = "MUL";
+        }
         if($message)
             $dataAccumulated[0]['MESSAGE_RECEIVED'] = $message;
+        
+        if($notificationKey == "MATCHALERT" && $count != "" && $count >1){
+            $dataAccumulated[0]['MATCHALERT_COUNT'] = $count;
+        }
 
         $dataAccumulated[0]['ICON_PROFILEID']=$profilesArr["OTHER"];
         unset($profilesArr);

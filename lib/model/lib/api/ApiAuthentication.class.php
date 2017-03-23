@@ -175,7 +175,7 @@ Abstract class ApiAuthentication
 		}		
 		if( $loginData[CHECKSUM] && $this->js_decrypt($loginData[CHECKSUM]))
 		{
-			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification/poll")){
+			if(strstr($_SERVER["REQUEST_URI"],"api/v1/notification") || strstr($_SERVER["REQUEST_URI"],"api/v3/notification")){
 				$this->loginData =$loginData;
 				$this->loginData[AUTHCHECKSUM]=$authChecksum;
 				return $this->loginData;
@@ -221,9 +221,9 @@ Abstract class ApiAuthentication
 		//need to check the DOB,GENDER,ACTIVATION,INCOMPLETE fields
 		//Get the Login Data from JProfile -->call Store
 		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_masterRep");
+			$loggedInProfileObj=LoggedInProfile::getInstance();
 		else
-			$loggedInProfileObj=LoggedInProfile::getInstance("newjs_master");
+			$loggedInProfileObj=LoggedInProfile::getInstance();
 		$loggedInProfileObj->getDetail($loginData[PROFILEID],"","*");
 		//If any changes Found then logout user
 		if($loggedInProfileObj->getACTIVATED()=="D" || $loggedInProfileObj->getACTIVATED()=="")
@@ -247,9 +247,9 @@ Abstract class ApiAuthentication
 
 		$difftime = date("Y-m-d H:i:s",$loginData[TIME]);
 		if(sfContext::getInstance()->getRequest()->getParameter('searchRepConn'))
-			$dbObj=new ProfileAUTO_EXPIRY("newjs_masterRep");
+			$dbObj=new ProfileAUTO_EXPIRY();
 		else
-			$dbObj=new ProfileAUTO_EXPIRY("newjs_master");
+			$dbObj=new ProfileAUTO_EXPIRY();
 		
 		
 		if($dbObj->IsAlive($loginData[PROFILEID],$difftime))
