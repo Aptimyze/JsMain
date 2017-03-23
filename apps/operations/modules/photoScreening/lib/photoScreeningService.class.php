@@ -1972,7 +1972,7 @@ class photoScreeningService
                                 $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);		//Get count of already existing screened pics
                                 $this->screenedCount = $countScreened;
                         }
-                        $this->countBeforeScreening =  $this->screenedCount + 1;
+                        $this->countBeforeScreening =  ($this->screenedCount===NULL) ? 0 : ($this->screenedCount + 1);
 
                         $pictureNew = new ScreenedPicture;
                         $pictureNew->startTransaction();
@@ -2014,7 +2014,8 @@ class photoScreeningService
         public function triggerAutoReminderMail($paramArr){
         if($this->countBeforeScreening > self::AUTO_REMINDER_MAIL_MAX_COUNT) return false;
         $picture_new = new ScreenedPicture;
-        $countScreened = $picture_new->getMaxOrdering($paramArr["PROFILEID"]) + 1 ;		//Get count of already existing screened pics
+        $countScreenedTemp = $picture_new->getMaxOrdering($paramArr["PROFILEID"]);
+        $countScreened = ($countScreenedTemp===NULL) ? 0 : ($countScreenedTemp + 1)  ;		//Get count of already existing screened pics
 
         if($countScreened <= $this->countBeforeScreening)return false;    
         $producerObj=new Producer();
