@@ -87,7 +87,7 @@
 			<!--start:upgrade offer level1 div-->
 			<div class="rv2_pad5" style="padding-top:10px;">
 				<div id="dividerText" class="bg3 posrel txtc fontlig f18 ~if $data.device eq 'Android_app'`~$data.device`_color2~else`color2~/if` rv2_pad19"> 
-				'Make your contacts visible to others' by just paying ~if $data.currency eq '$'`USD~else`~$data.currency`~/if`~$data.upgradeMembershipContent.upgradeExtraPay` 
+				'Make your contacts visible to others' by just paying ~if $data.currency eq '$'`USD&nbsp;~else`~$data.currency`~/if`~$data.upgradeMembershipContent.upgradeExtraPay` 
 					<i class="posabs rv2_sprtie1 rv2_offb_left" style="transform:translateY(-50%);left:0"></i> 
 					<i class="posabs rv2_sprtie1 rv2_offb_right" style="transform:translateY(-50%);right:0"></i> 
 				</div>
@@ -114,7 +114,7 @@
 				      <!--start:plan-->
 				      <div class="disptbl fullwid color7 rv2_brdrbtm1 pb10">
 				        <div id="~$data.upgradeMembershipContent.upgradeMainMem`_name" class="dispcell"><span class="f24">~$data.upgradeMembershipContent.upgradeMainMemName` Upgrade</span></div>
-				        <div id="~$data.upgradeMembershipContent.upgradeMainMem`_startingPrice" class="dispcell txtr f18"><span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>~$data.upgradeMembershipContent.upgradeExtraPay`</div>
+				        <div id="~$data.upgradeMembershipContent.upgradeMainMem`_startingPrice" class="dispcell txtr f18"><span>~$data.currency`</span>~$data.upgradeMembershipContent.upgradeExtraPay`</div>
 				      </div>
 				      <!--end:plan--> 
 				      <div class="color13 fontlig f15 pt16">~if $data.upgradeMembershipContent.upgradeMainMemDur eq 'L'` Unlimited ~else` ~$data.upgradeMembershipContent.upgradeMainMemDur` ~/if` Months &nbsp;&nbsp;   |&nbsp;&nbsp;   ~$data.upgradeMembershipContent.upgradeTotalContacts` Contacts To View</div>
@@ -398,7 +398,7 @@
 	~if $data.upgradeMembershipContent`
 		<!--start:upgrade pay button-->
 		<div style="overflow:hidden;position: fixed;height: 61px;" class="fullwid disp_b btmo">
-			<div id="upgradeMainMemBtn" class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> <span>~if $data.currency eq '$'`USD~else`~$data.currency`~/if`</span>~$data.upgradeMembershipContent.upgradeExtraPay` | PAY NOW 
+			<div id="upgradeMainMemBtn" class="fullwid ~if $data.device eq 'Android_app'`~$data.device`_bg7~else`bg7~/if` txtc white f16 rv2_pad9 cursp posfix btmo pinkRipple"> <span>~if $data.currency eq '$'`USD&nbsp;~else`~$data.currency`~/if`</span>~$data.upgradeMembershipContent.upgradeExtraPay` | PAY NOW 
 			</div>
 		</div>
 		<!--end:upgrade pay button-->
