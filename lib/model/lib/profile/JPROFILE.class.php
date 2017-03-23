@@ -253,7 +253,7 @@ class JPROFILE
             $loggingArr['getForPartialKeysResult'] = $result;
 
             if(false !== $result && false !== $result['cachedResult'] && is_array($result['cachedResult']))
-            {                       
+            {
                 // case - partial data served from cache for some  profile ids
                 $tempValueArray['PROFILEID'] = $result['notCachedPids'];
                 $result = $result['cachedResult'];
