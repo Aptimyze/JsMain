@@ -1635,8 +1635,7 @@ class MembershipAPIResponseHandler {
         $connect_message = "Meanwhile, you could ...";
         
         $order_content = $this->memApiFuncs->getOrderContent($this);
-
-        //$checkMemUpgrade = $this->memHandlerObj->checkMemUpgrade($this->orderID,$profileObj->getPROFILEID(),true);
+        $checkMemUpgrade = $this->memHandlerObj->checkMemUpgrade($this->orderID,$profileObj->getPROFILEID(),false);
         if ($this->currency == "RS") {
             $output = array(
                 'title' => $title,
@@ -1653,7 +1652,8 @@ class MembershipAPIResponseHandler {
                     'number_label' => '1800-419-6299'
                 ) ,
                 'proceed_text' => 'Go To Home',
-                'device' => $this->device
+                'device' => $this->device,
+                'checkMemUpgrade'=>$checkMemUpgrade
             );
         } 
         else {
@@ -1673,7 +1673,8 @@ class MembershipAPIResponseHandler {
                 ) ,
                 'userDetails' => $this->userDetails,
                 'proceed_text' => 'Go To Home',
-                'device' => $this->device
+                'device' => $this->device,
+                'checkMemUpgrade'=>$checkMemUpgrade
             );
         }
         unset($profileObj);
