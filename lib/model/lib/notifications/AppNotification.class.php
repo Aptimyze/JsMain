@@ -119,7 +119,8 @@ public function microtime_float()
 			break;
 
 
-
+        /*commented to move matchalert notification from scheduled concept to instant mailer triggered notification*/
+        /*
 		  case "MATCHALERT":
 			$applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
@@ -163,6 +164,7 @@ public function microtime_float()
 				unset($matchCount);
 			}
 			break;
+         */
 		  case "PENDING_EOI":
 		    $applicableProfiles=array();
 			$applicableProfiles = $this->getProfileApplicableForNotification($appProfiles,$notificationKey);
@@ -170,6 +172,17 @@ public function microtime_float()
             		$dataAccumulated = $poolObj->getPendingInterestData($applicableProfiles);
             		unset($poolObj);
 			break;
+          case "MATCHALERT":
+ 				if($count > 0){
+ 					$details = $this->getProfilesData($appProfiles,"JPROFILE");
+ 					$poolObj = new NotificationDataPool();
+ 					$dataAccumulated = $poolObj->getProfileInstantNotificationData($notificationKey,$appProfiles,$details,$message,$count);
+ 					unset($poolObj);
+ 				}
+ 				else{
+ 					$dataAccumulated = null;
+ 				}
+ 				break;
 		  case "ACCEPTANCE":
 		  case "PHOTO_REQUEST":
 		  case "EOI":
@@ -455,7 +468,7 @@ public function microtime_float()
 				  // print_r($completeNotificationInfo); die;
 				  $notificationDataPoolObj = new NotificationDataPool();
 				  if($notificationKey=='MATCHALERT')	
-				  	$completeNotificationInfo[$counter]["PHOTO_URL"] =$dataPerNotification['PHOTO_URL'];
+				  	$completeNotificationInfo[$counter]["PHOTO_URL"] ="D";//$dataPerNotification['PHOTO_URL'];
 				  else
 			                $completeNotificationInfo[$counter]["PHOTO_URL"] = $notificationDataPoolObj->getNotificationImage($completeNotificationInfo[$counter]["PHOTO_URL"],$dataPerNotification['ICON_PROFILEID']);
 				  $completeNotificationInfo[$counter]['SELF'] = $dataPerNotification['SELF'];
@@ -898,6 +911,35 @@ public function microtime_float()
       unset($validPicArray);
       unset($validExtensionArr);
       unset($ext);
+  }
+  
+  public function checkNotificationOnLastLogin($notificationKey, $lastLoginDate){
+	  $notifications = $this->getNotifications();
+      $timeCriteria = $notifications["TIME_CRITERIA"][$notificationKey];
+	  unset($notifications);
+	  if($timeCriteria!='')
+	  {
+		  $timeCriteriaArr = explode("|",$timeCriteria);
+		  if($timeCriteriaArr[0]!='')
+		  {
+			  $dateformatGreaterThan = $this->getDate($timeCriteriaArr[0]);
+			  $greaterThan['LAST_LOGIN_DT']=$dateformatGreaterThan;
+		  }
+		  if($timeCriteriaArr[1]!='')
+		  {
+			  $dateformatLessThan = $this->getDate($timeCriteriaArr[1]);
+			  $lessThan['LAST_LOGIN_DT']=$dateformatLessThan;
+		  }
+	  }
+      if($greaterThan["LAST_LOGIN_DT"]){
+          if(strtotime($lastLoginDate) >= strtotime($greaterThan["LAST_LOGIN_DT"])){
+              return true;
+          }
+          else{
+              return false;
+          }
+      }
+	  return true;
   }
 }
 ?>
