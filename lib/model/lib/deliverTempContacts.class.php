@@ -125,11 +125,11 @@
 			$currdate = date('Y-m-d');
 			$file = fopen(JsConstants::$docRoot."/uploads/SearchLogs/ScreenQConsume-$currdate", "a+");
 			fwrite($file, "$profileId\n");
-			fclose($file);
 			$contactTempObj = new NEWJS_CONTACTS_TEMP;
 			$tempContact = $contactTempObj->getTempAllContacts(array($profileId));
 			if ($tempContact)
 			{
+				fwrite($file, "tempContact found for $profileId\n");
 				foreach ($tempContact as $key => $val)
 				{
 					$senderProfileid        = $val["SENDER"];
@@ -146,6 +146,7 @@
 					unset($receiverProfile);
 				}
 			}
+			fclose($file);
 			// $this->cleanUpSentContacts($contactTempObj);
 		}
 	}
