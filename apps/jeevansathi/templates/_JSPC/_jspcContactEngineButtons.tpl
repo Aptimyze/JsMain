@@ -261,22 +261,7 @@
 
                      <!--start:layer 1-->
   <div id="contactEngineLayerDiv" class="pos-abs ccdimn4 ccbg1 z3 cErightZero">
-    <div id="freeMemberCaseCC" class="{{VisibilityClass_freeMember}}">
-      <div class="disp-tbl fullwid cch2n">
-        <span class="disp_ib closeContactDetailLayer pos-abs cepos3 icons cursp cmn_close">
-        </span>
-        <div class="wid70p txtc mauto rcb_colr2" style="padding: 15px 0px;">
-          <div id="noMembershipOfferCC" class="{{LowestOfferDisp}}">{{LowestOffer}}</div>
-          <div id="MembershipOfferExistsCC" class="{{MembershipOfferDisp}}">
-            <div class="f13">{{MembershipOffer}}, starts @ <del id="oldPrice">{{oldPrice}}</del>&nbsp;<span id="newPrice">{{newPrice}}</span>
-            </div>
-          </div>
-          <div class="colrw rcb_bg1 cursp mauto txtc mt10 wid100 contactEngineIcon" id="{{MEM_ACTION_ID}}" style="padding: 7px 37px;">{{ButtonLabelNew}}</div>
-        </div>
-      </div>
-    </div>
 
-                    <div id="OtherCaseCC" class="{{VisibilityClass_Othercase}}">
                       <div class="disp-tbl fullwid cch2n">
                       <span class="disp_ib closeContactDetailLayer pos-abs cepos3 icons cursp cmn_close"></span>
                         <div class="disp-cell vmid {{ButtonLabelShiftClass}}">
@@ -294,7 +279,6 @@
                            
                         </div>
                       </div>
-                    </div>
                   </div>
                     <!--end:layer 1--> 
 
