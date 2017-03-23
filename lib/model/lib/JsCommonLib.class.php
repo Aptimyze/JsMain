@@ -983,8 +983,7 @@ public static function insertConsentMessageFlag($profileid) {
 		$isPhoneVerified = JsMemcache::getInstance()->get($profileid."_PHONE_VERIFIED");
 		if(!$isPhoneVerified)
 		{
-			include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
-			$isPhoneVerified = hidePhoneLayer($profileid);
+			$isPhoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
 			JsMemcache::getInstance()->set($profileid."_PHONE_VERIFIED",$isPhoneVerified);
 		}
                 if($profileid && $isPhoneVerified!='Y'&& $moduleName!="register" && $moduleName!="static" && $moduleName!="phone")

@@ -80,7 +80,7 @@ class AuthFilter extends sfFilter {
 				JsCommon::oldIncludes(false);
 			}
 			else{
-				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || HandlingCommonReqDatabaseId::isMasterMasterDone())
+				if(strstr($_SERVER["REQUEST_URI"],"api/v1/social/getAlbum") || strstr($_SERVER["REQUEST_URI"],"api/v1/social/getMultiUserPhoto") || strstr($requestUri,"api/v1/notification/poll") || strstr($requestUri,"api/v1/search/gunaScore") || HandlingCommonReqDatabaseId::isMasterMasterDone())
 					JsCommon::oldIncludes(false);
 				else
 					JsCommon::oldIncludes(true);
@@ -192,7 +192,6 @@ class AuthFilter extends sfFilter {
 							
 							if(!$phoneVerified)
 							{
-								include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
 								$phoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
 								JsMemcache::getInstance()->set($data['PROFILEID']."_PHONE_VERIFIED",$phoneVerified);
 							}
@@ -229,7 +228,7 @@ class AuthFilter extends sfFilter {
 						}
 					}
 				}
-					
+                                
 					
 				if ($_COOKIE['SULEKHACO'] == "yes") $request->setAttribute("SULEKHACO", 1);
 				$mob_cookie_arr = explode(",", $_COOKIE['JS_MOBILE']);
