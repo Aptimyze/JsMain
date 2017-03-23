@@ -18,8 +18,8 @@ class downloadHoroscopeV1Action extends sfActions
 	{				
 		$this->loginData = $request->getAttribute("loginData");
 		$profileId = $this->loginData["PROFILEID"];
-		$gender = $request->getParameter("GENDER");
-		
+		$username = $this->loginData["USERNAME"];
+		$gender = $request->getParameter("GENDER");		
 		if(strlen($gender) > 1)
 		{
 			$gender = $gender[0];
@@ -37,18 +37,13 @@ class downloadHoroscopeV1Action extends sfActions
 		{
 			$sameGender = 1;
 		}
-		//$apiResponseHandlerObj=ApiResponseHandler::getInstance();
-		/*if(!$profileId)
-		{
-			$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$LOGOUT_PROFILE);
-			$apiResponseHandlerObj->generateResponse();
-			die;
-		}*/
-		
+		$channel = MobileCommon::getChannel();		
+		$today = date("Y-m-d H:i:s");
 		$url = JsConstants::$siteUrl."/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=".$request->getParameter("view_username")."&SIM_USERNAME=".$request->getParameter("SIM_USERNAME")."&type=Horoscope&checksum=&profilechecksum=".$request->getParameter("otherprofilechecksum")."&randValue=890&GENDERSAME=".$sameGender;		
 		$file=PdfCreation::PdfFile($url);		
 		PdfCreation::setResponse("horoscope_".$request->getParameter("view_username").".pdf",$file);
-
+		$horoscopeDownloadTrackingObj = new NEWJS_HOROSCOPE_DOWNLOAD_TRACKING("newjs_master");
+		$horoscopeDownloadTrackingObj->insertDownloadTracking($today,$channel,$username,$request->getParameter("view_username"));
 		return sfView::NONE;
 	}
 }
