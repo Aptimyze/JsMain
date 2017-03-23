@@ -262,7 +262,7 @@ class myjsActions extends sfActions
                 $entryDate = $this->loginProfile->getENTRY_DT();
 				$currentTime=time();
 				$registrationTime = strtotime($entryDate);
-                $this->showExpiring = 0;
+        $this->showExpiring = 0;
 				if(($currentTime - $registrationTime)/(3600*24) >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT)
 				{
 					$this->showExpiring = 1;

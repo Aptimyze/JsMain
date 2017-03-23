@@ -1132,19 +1132,27 @@ case"photo_display_logic":
 case "occupation":
 
 	$arr=array(
+"72"=>"Fitness Professional",
+"74"=>"Private Security",
+"75"=>"Physiotherapist",
+"76"=>"Cyber / Network Security",
+"77"=>"Film Professional",
 "44"=>"Looking for a job",
 "36"=>"Not working",
 "5"=>"Actor/Model",
-"63"=>"Admin",
+// "63"=>"Admin",
+"63"=>"Office Admin",
 "2"=>"Advertising Professional",
 "3"=>"Agent",
-"32"=>"Agriculture/Dairy",
+// "32"=>"Agriculture/Dairy",
+"32"=>"Farming",
 "46"=>"Air Hostess",
 "64"=>"Analyst",
 "6"=>"Architect",
 "7"=>"Banking Professional",
 "40"=>"Beautician",
-"8"=>"BPO/Customer service",
+// "8"=>"BPO/Customer service",
+"8"=>"BPO/ITeS",
 "13"=>"Businessperson",
 "65"=>"Chartered accountant",
 "33"=>"Civil Services (IAS/ IFS/ IPS/ IRS)",
@@ -1202,32 +1210,28 @@ case "occupation":
 
 case "occupation_grouping_mapping_to_occupation":
 
+// 	$arr=array(
+// "11"=>"44,36,63,32,46,6,40,47,51,42,38,67,45,55,41,48,43",
+// "5"=>"5,2,8,50,10,11,15,9,49,54,68,28",
+// "8"=>"3,12,19,22,23,66,56,16,29",
+// "7"=>"7,65,1",
+// "1"=>"13,52",
+// "10"=>"33,35",
+// "4"=>"34",
+// "3"=>"57,24,53,70",
+// "6"=>"60,58,31",
+// "9"=>"27,61,62",
+// "2"=>"64,21,69,30,59,20,71,17",          
+// );
 	$arr=array(
-"11"=>"44,36,63,32,46,6,40,47,51,42,38,67,45,55,41,48,43",
-"5"=>"5,2,8,50,10,11,15,9,49,54,68,28",
-"8"=>"3,12,19,22,23,66,56,16,29",
-"7"=>"7,65,1",
-"1"=>"13,52",
-"10"=>"33,35",
-"4"=>"34",
-"3"=>"57,24,53,70",
-"6"=>"60,58,31",
-"9"=>"27,61,62",
-"2"=>"64,21,69,30,59,20,71,17",          
-);
-
-	break;
-case "newoccupation_mapping_for_dpp":
-
-        $arr=array(
                 "1"=>"11,59,23,19,48,50,38,47,28,2,10,49,64,68,69,66",//Management Professionals
                 "2"=>"54,9",//Media Professionals
-                "3"=>"13,52,18",//Businessperson
+                "3"=>"13,52,3,18",//Businessperson
                 "4"=>"7,1,65",//Finance Professionals
                 "5"=>"60,58,31",//Teachers/Lecturers
-                "6"=>"24,70",//Healthcare Professionals
+                "6"=>"24,70,75",//Healthcare Professionals
                 "7"=>"34",//Defence
-                "8"=>"30,20,26",//Software/IT Professionals
+                "8"=>"30,20,76,26",//Software/IT Professionals
                 "9"=>"61,62",//Research Professionals
                 "10"=>"44,36,41,37",//Not working
                 "11"=>"22",//Lawyer/Legal Professionals
@@ -1238,9 +1242,40 @@ case "newoccupation_mapping_for_dpp":
                 "16"=>"45",//Pilot
                 "17"=>"35,56",//Govt
                 "18"=>"33",//Civil Services ( IAS,IFS,IPS,IRS )
-                "19"=>"39,5,16,67,32,4,63,29,3,55,40,14,46,25",//Other Occupations
+                "19"=>"29,43,39,4,14,25",//Other Occupations
+                "20" => "46",//Air Hostess
+                "21" => "32",//farming
+                "22" => "42",//Merchant Navy
+                "23" => "55",//Sportsperson
+                "24" => "5",//Actor/Film Professional
+                "25" => "40,72",//Beautician/Fitness Professional
+                "26" => "63,67,16,74",//Admin/Technician
         );
-        break;
+	break;
+// case "newoccupation_mapping_for_dpp":
+
+//         $arr=array(
+//                 "1"=>"11,59,23,19,48,50,38,47,28,2,10,49,64,68,69,66",//Management Professionals
+//                 "2"=>"54,9",//Media Professionals
+//                 "3"=>"13,52,18",//Businessperson
+//                 "4"=>"7,1,65",//Finance Professionals
+//                 "5"=>"60,58,31",//Teachers/Lecturers
+//                 "6"=>"24,70",//Healthcare Professionals
+//                 "7"=>"34",//Defence
+//                 "8"=>"30,20,26",//Software/IT Professionals
+//                 "9"=>"61,62",//Research Professionals
+//                 "10"=>"44,36,41,37",//Not working
+//                 "11"=>"22",//Lawyer/Legal Professionals
+//                 "12"=>"17,15,51,6",//Architecture/ Design
+//                 "13"=>"57",//Doctor
+//                 "14"=>"27",//Engineering
+//                 "15"=>"12,8",//BPO/Customer Services
+//                 "16"=>"45",//Pilot
+//                 "17"=>"35,56",//Govt
+//                 "18"=>"33",//Civil Services ( IAS,IFS,IPS,IRS )
+//                 "19"=>"39,5,16,67,32,4,63,29,3,55,40,14,46,25",//Other Occupations
+//         );
+//         break;
 case "height":
 
 	$arr=array(
@@ -8281,19 +8316,47 @@ case "education_grouping":
 
 case "occupation_grouping":
 
-        $arr=array(
-"8"=>"Administration",
-"1"=>"Businessmen",
-"4"=>"Defence",
-"7"=>"Finance (CA, CS)",
-"10"=>"Government",
-"5"=>"Marketing/Sales/Adv",
-"3"=>"Medical Professional",
-"9"=>"Production/Maintenance",
-"2"=>"Software",
-"6"=>"Teaching",
-"11"=>"Others",
-);
+//         $arr=array(
+// "8"=>"Administration",
+// "1"=>"Businessmen",
+// "4"=>"Defence",
+// "7"=>"Finance (CA, CS)",
+// "10"=>"Government",
+// "5"=>"Marketing/Sales/Adv",
+// "3"=>"Medical Professional",
+// "9"=>"Production/Maintenance",
+// "2"=>"Software",
+// "6"=>"Teaching",
+// "11"=>"Others",
+// );
+		$arr3=array(
+                "1"=>"Management Professionals",
+                "2"=>"Media Professionals",
+                "3"=>"Businessperson",
+                "4"=>"Finance Professionals",
+                "5"=>"Teachers/Lecturers",
+                "6"=>"Healthcare Professionals",
+                "7"=>"Defence",
+                "8"=>"Software/IT Professionals",
+                "9"=>"Research Professionals",
+                "10"=>"Not working",
+                "11"=>"Lawyer/Legal Professionals",
+                "12"=>"Architecture/ Design",
+                "13"=>"Doctor",
+                "14"=>"Engineering",
+                "15"=>"BPO/Customer Services",
+                "16"=>"Pilot",
+                "17"=>"Govt",
+                "18"=>"Civil Services ( IAS,IFS,IPS,IRS )",
+                "19"=>"Other Occupations",
+                "20"=>"Air Hostess",
+                "21"=>"farming",
+                "22"=>"Merchant Navy",
+                "23"=>"Sportsperson",
+                "24"=>"Actor/Film Professional",
+                "25"=>"Beautician/Fitness Professional",
+                "26"=>"Admin/Technician",
+        );
 
         break;
 
