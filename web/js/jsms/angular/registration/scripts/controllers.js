@@ -18,6 +18,9 @@
         
 		$scope.MaxHeight = Constants.getWindowHeight();
 		$scope.fieldsHeight = Constants.getWindowHeight() - Constants.getHeaderHeight() - /*Top Header Height*/72;
+
+		localStorage.setItem($scope.screenName,new Date().getTime());
+
 		$scope.hideModalWidow = function(){Gui.hideModalWidow($scope)};
 		$scope.myNext = function()
 		{
@@ -140,6 +143,15 @@
 		$scope.dob	  = $scope.fields[1];
         
 		$scope.hamOn = false;
+
+		var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -395,6 +407,14 @@
 		
     $scope.degreeGroupMap = {};
 		$scope.hamOn = false;
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -585,6 +605,14 @@
 		$scope.fieldsHeight = Constants.getWindowHeight() - Constants.getNextBtnHeight() - Constants.getHeaderHeight();
 		
 		$scope.hamOn = false;
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+                        localStorage.setItem($scope.screenName,new Date().getTime());
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hamTrigger = function(value,refHamObj)
 		{
 			$scope.hamOn = value;
@@ -720,6 +748,13 @@
 		$scope.field_phone = $scope.fields[3];
     $scope.field_name = $scope.fields[0];
 		
+                var prevTime = localStorage.getItem($scope.previousScreenName);
+                if(prevTime) {
+                        localStorage.removeItem($scope.previousScreenName);
+                        var timeDiff = (new Date().getTime() - prevTime)/1000;
+			trackJsEventGA("jsms","regPageNavigation"+$scope.previousScreenName+"_"+$scope.screenName,"time_"+timeDiff);	
+                }
+
 		$scope.hideModalWidow = function(){Gui.hideModalWidow($scope)};
 		$scope.myBack = function()
 		{

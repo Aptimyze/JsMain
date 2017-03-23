@@ -2,7 +2,7 @@
 /*
  * Class gunaScore 
  * This class verifies conditions and calls the third party api to fetch guna scores 
- * and accordingly returns the gunaScoreArr with key as profilechecksum and value as * guna score
+ * and accordingly returns the gunaScoreArr with key as profilechecksum and value as guna score
  */
 
 class gunaScore
@@ -12,7 +12,8 @@ class gunaScore
 		 */
 
         public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender,$haveProfileArr='')
-        {	$parentValueArr = gunaScoreConstants::$parentValues;
+        {	
+            $parentValueArr = gunaScoreConstants::$parentValues;
         	$searchIdArr = array();
         	$profilechecksumArr = explode(",",$profilechecksumArr);
         	//To convert profilechecksum to profileId array
@@ -72,12 +73,12 @@ class gunaScore
                                         if(sizeof($compstring)>=gunaScoreConstants::BATCH_NO)
                                         {
                                                $compstringAlteredArr = array_chunk($compstring, gunaScoreConstants::BATCH_NO);
-                                        }
+                                        }                                        
                                         if(!empty($compstringAlteredArr))
                                         {
                                                 $gunaData_1 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[0]);
                                                 $gunaData_2 = $this->thirdPartyVendorCall($logged_astro_details,$compstringAlteredArr[1]);
-                                                $gunaData = array_merge($gunaData_1,$gunaData_2);
+                                                $gunaData = array_merge($gunaData_1,$gunaData_2);                                                                                            
                                                 return $gunaData;
                                         }
                                         else
@@ -128,6 +129,7 @@ class gunaScore
 		{
 	        	$fresult = explode(",",substr($fresult,(strpos($fresult,"<br/>")+5)));
 		}
+
 		if(is_array($fresult))
 		{
 			foreach($fresult as $key=>$val)
@@ -139,7 +141,7 @@ class gunaScore
 				$matches[1][0]=intval($matches[1][0]);
 				foreach($this->flippedSearchIdArr as $pid=>$profchecksum)
 				{
-					if($guna_pid == $pid)
+					if($guna_pid == $pid && $matches[1][0] != "0")
 					{
 						$gunaData[$key][$profchecksum]=$matches[1][0];
 					}

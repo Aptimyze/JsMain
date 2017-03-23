@@ -188,7 +188,7 @@ function closeWeTalkForYou(){
           success:function(response){
             //hideCommonLoader();
             gunaScore = response.SCORE;
-            if(gunaScore != null){
+            if(gunaScore != null && gunaScore != 0){
               $(".js-showGuna").html(gunaScore);
               $(".js-hideGuna").show();
               $(".js-changeText").html("Guna Match");
