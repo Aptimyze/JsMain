@@ -1635,6 +1635,7 @@ class MembershipAPIResponseHandler {
         $connect_message = "Meanwhile, you could ...";
         
         $order_content = $this->memApiFuncs->getOrderContent($this);
+       
         $checkMemUpgrade = $this->memHandlerObj->checkMemUpgrade($this->orderID,$profileObj->getPROFILEID(),false);
         if ($this->currency == "RS") {
             $output = array(
