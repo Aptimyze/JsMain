@@ -455,7 +455,7 @@ class DetailActionLib
 		{
 			$mypid=$actionObject->loginProfile->getPROFILEID();
 			$randomNumber = rand(0,100);
-			if($randomNumber>=0)
+			if($randomNumber>=1)
 			{
 			include(sfConfig::get("sf_web_dir")."/profile/alter_seen_table.php");
 			}

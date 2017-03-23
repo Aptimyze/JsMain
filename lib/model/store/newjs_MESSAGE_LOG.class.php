@@ -120,31 +120,54 @@ class NEWJS_MESSAGE_LOG extends TABLE{
                                 throw new jsException($e);
                         }
 		}
-		 public function MessageLogAndDeletedLog($pid)
-		{
-                        try
-                        {
-                                if($pid)
-                                {
-                                        $sql="SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.DELETED_MESSAGE_LOG WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  ORDER by DATE ASC  ";
-                                        $prep=$this->db->prepare($sql);
-                                        $prep->bindValue(":PROFILEID",$pid,PDO::PARAM_INT);
-                                        $prep->execute();
-                                        while($result = $prep->fetch(PDO::FETCH_ASSOC))
-                                        {
-                                                $res[]= $result;
-                                        }
+  
+    /**
+     * 
+     * @param type $pid
+     * @return type
+     * @throws jsException
+     */
+    public function MessageLogAndDeletedLog($pid)
+    {
+      try {
+        if ($pid) {
+          
+          $archiveSuffix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_SUFFIX;
+          $archivePrefix = HouseKeepingEnum::DELETE_ARCHIVE_TABLE_PREFIX;
+          
+          $archiveTableSql = " UNION SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID FROM newjs.{$archivePrefix}DELETED_MESSAGE_LOG{$archiveSuffix} WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID";
+          
+          $sql =  <<<SQL
+          SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'SYSTEM','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID 
+          FROM newjs.MESSAGE_LOG 
+          WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID  
+          UNION 
+          SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID 
+          FROM newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET 
+          WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID 
+          UNION 
+          SELECT SENDER,RECEIVER,CONVERT_TZ(DATE,'EST','right/Asia/Calcutta') as DATE,TYPE,IP as IP,ID 
+          FROM newjs.DELETED_MESSAGE_LOG 
+          WHERE SENDER = :PROFILEID OR RECEIVER = :PROFILEID
+          {$archiveTableSql} 
+          ORDER by DATE ASC
+SQL;
+          $prep = $this->db->prepare($sql);
+          $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+          $prep->execute();
+          while ($result = $prep->fetch(PDO::FETCH_ASSOC)) {
+            $res[] = $result;
+          }
 
-                                        return $res;
-                                }
-                        }
-                        catch(PDOException $e)
-                        {
-                                /*** echo the sql statement and error message ***/
-                                throw new jsException($e);
-                        }
-                }
-    public function getMessageLogProfile($condition,$skipArray)
+          return $res;
+        }
+      } catch (PDOException $e) {
+        /*       * * echo the sql statement and error message ** */
+        throw new jsException($e);
+      }
+    }
+
+  public function getMessageLogProfile($condition,$skipArray)
 		{
 			$string = array('TYPE','SEEN','IS_MSG','DATE');
 		try{
@@ -1358,7 +1381,7 @@ return $result;
 			{
 				if(!is_array($profileArray))
 				{
-					throw new jsException("","profile id is not specified in function getMessageLogHousekeeping of newjs_MESSAGE_LOG.class.php");
+					throw new jsException("","profile id is not specified in function deleteMultipleLogForSingleProfile of newjs_MESSAGE_LOG.class.php");
 				}
 				else
 				{
@@ -1727,5 +1750,33 @@ return $result;
 			}
 			return $output;
 		}
+        
+        /**
+         * 
+         * @param type $pid
+         * @param type $listOfActiveProfile
+         * @param type $whereStrLabel1
+         * @param type $whereStrLabel2
+         * @return boolean
+         * @throws jsException
+         */
+        public function insertMessageLogDataFromEligibleForRet($pid, $listOfActiveProfile, $whereStrLabel1 = 'RECEIVER', $whereStrLabel2 = 'SENDER')
+        {
+            if (!$pid || !$listOfActiveProfile)
+                throw new jsException("", "VALUE OR TYPE IS BLANK IN selectActiveDeletedData() of NEWJS_MESSAGES.class.php");
+            try {
+                $sql = "INSERT IGNORE INTO newjs.MESSAGE_LOG SELECT * FROM newjs.DELETED_MESSAGE_LOG_ELIGIBLE_FOR_RET WHERE (" . $whereStrLabel1 . "=:PROFILEID OR " . $whereStrLabel2 . "=:PROFILEID) AND (" . $whereStrLabel1 . " IN (" . $listOfActiveProfile . ") OR " . $whereStrLabel2 . " IN (" . $listOfActiveProfile . "))";
+                $prep = $this->db->prepare($sql);
+                $prep->bindValue(":PROFILEID", $pid, PDO::PARAM_INT);
+                $prep->execute();
+                return true;
+            }
+            catch (PDOException $e) {
+                jsCacheWrapperException::logThis($e);
+                return false;
+                throw new jsException($e);
+            }
+        }
+
 }
 	?>

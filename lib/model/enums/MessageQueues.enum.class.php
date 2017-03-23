@@ -4,7 +4,7 @@
 class MessageQueues
 {
   CONST CONSUMERCOUNT = 5;  //Number of instances of Consumer class run at a time.
-  CONST NOTIFICATIONCONSUMERCOUNT = 3;  //Number of instances of JsNotificationsConsume class run at a time.
+  CONST NOTIFICATIONCONSUMERCOUNT = 5;  //Number of instances of JsNotificationsConsume class run at a time.
   CONST SCREENINGCONSUMERCOUNT = 1;  //Number of instances of ScreeningConsumer class run at a time.
   CONST WRITEMESSAGECONSUMERCOUNT = 1;  //Number of instances of Write message queue consumers run at a time.
   CONST MAILQUEUE = "MailQueue";  //Queue for storing mails
@@ -83,6 +83,7 @@ class MessageQueues
   public static $SCHEDULED_NOTIFICATION_QUEUE4 = "SCHEDULED_NOTIFICATION_QUEUE4"; //Queue for sending scheduled notification data from notification queue 4 to GCM
   public static $SCHEDULED_NOTIFICATION_QUEUE5 = "SCHEDULED_NOTIFICATION_QUEUE5"; //Queue for sending scheduled notification data from notification queue 5 to GCM
   public static $SCHEDULED_NOTIFICATION_QUEUE6 = "SCHEDULED_NOTIFICATION_QUEUE6"; //Queue for sending scheduled notification data from notification queue 6 to GCM
+  public static $MA_NOTIFICATION_QUEUE         = "MatchAlertNotification";
   public static $DELAYED_NOTIFICATION_EXCHANGE = array("NAME"=>"DelayedNotificationExchange","TYPE"=>"direct","DURABLE"=>true);
   public static $INSTANT_NOTIFICATION_EXCHANGE = array("NAME"=>"InstantNotificationExchange","TYPE"=>"fanout","DURABLE"=>true);
   public static $NOTIFICATION_LOG_EXCHANGE     = array("NAME"=>"NotificationLogExchange","TYPE"=>"direct","DURABLE"=>true);
@@ -91,21 +92,22 @@ class MessageQueues
       "SCHEDULED_NOTIFICATION_QUEUE3" => "JS_NOTIFICATION3",
       "SCHEDULED_NOTIFICATION_QUEUE4" => "JS_NOTIFICATION4",
       "SCHEDULED_NOTIFICATION_QUEUE5" => "JS_NOTIFICATION5",
-      "SCHEDULED_NOTIFICATION_QUEUE6" => "JS_NOTIFICATION6"	
+      "SCHEDULED_NOTIFICATION_QUEUE6" => "JS_NOTIFICATION6"
   ); //queue name to exchange binding key mapping
   public static $scheduledNotificationDelayMappingArr =  array("SCHEDULED_NOTIFICATION_QUEUE1" => 8,
       "SCHEDULED_NOTIFICATION_QUEUE2" => 8,
       "SCHEDULED_NOTIFICATION_QUEUE3" => 2,
       "SCHEDULED_NOTIFICATION_QUEUE4" => 0.5,
       "SCHEDULED_NOTIFICATION_QUEUE5" => 10,
-      "SCHEDULED_NOTIFICATION_QUEUE6" => 1
+      "SCHEDULED_NOTIFICATION_QUEUE6" => 1,
+      "MatchAlertNotification"        => 1
   );  //queue name to delay time(unit) mapping(configurable after queue deletion using x-expire field in queue declaration)
   public static $notificationDelayMultiplier = 3600; //1 hr multiple delay
   public static $notificationQueueExpiryTime = 7; //queue will expire if unused for 7 hrs,not used currently
   public static $INSTANT_NOTIFICATION_QUEUE = "INSTANT_NOTIFICATION_QUEUE"; //Queue for sending instant notification data from notification queue to GCM
   public static $NOTIFICATION_LOG_QUEUE = "NOTIFICATION_LOG_QUEUE";	
   
-  public static $notificationArr = array("JUST_JOIN" => "JS_NOTIFICATION1", "PENDING_EOI" => "JS_NOTIFICATION2", "MEM_EXPIRE_A5" => "JS_NOTIFICATION3", "MEM_EXPIRE_A10" => "JS_NOTIFICATION3", "MEM_EXPIRE_A15" => "JS_NOTIFICATION3", "MEM_EXPIRE_B1" => "JS_NOTIFICATION3", "MEM_EXPIRE_B5" => "JS_NOTIFICATION3",  "AGENT_ONLINE_PROFILE"=>"JS_INSTANT_NOTIFICATION","AGENT_FP_PROFILE"=>"JS_INSTANT_NOTIFICATION", "PROFILE_VISITOR" => "JS_INSTANT_NOTIFICATION","EOI"=>"JS_INSTANT_NOTIFICATION","MESSAGE_RECEIVED"=>"JS_INSTANT_NOTIFICATION","EOI_REMINDER"=>"JS_INSTANT_NOTIFICATION","MATCHALERT"=>"JS_NOTIFICATION4","MEM_DISCOUNT"=>"JS_NOTIFICATION4","FILTERED_EOI"=>"JS_NOTIFICATION5","ATN"=>"JS_NOTIFICATION3","ETN"=>"JS_NOTIFICATION3","CONTACT_VIEWS"=>"JS_NOTIFICATION3","CONTACTS_VIEWED_BY"=>"JS_NOTIFICATION2","VD"=>"JS_NOTIFICATION2","MEM_DISCOUNT"=>"JS_NOTIFICATION6");
+  public static $notificationArr = array("JUST_JOIN" => "JS_NOTIFICATION1", "PENDING_EOI" => "JS_NOTIFICATION2", "MEM_EXPIRE" => "JS_NOTIFICATION3", "AGENT_ONLINE_PROFILE"=>"JS_INSTANT_NOTIFICATION","AGENT_FP_PROFILE"=>"JS_INSTANT_NOTIFICATION", "PROFILE_VISITOR" => "JS_INSTANT_NOTIFICATION","EOI"=>"JS_INSTANT_NOTIFICATION","MESSAGE_RECEIVED"=>"JS_INSTANT_NOTIFICATION","EOI_REMINDER"=>"JS_INSTANT_NOTIFICATION","MATCHALERT"=>"JS_NOTIFICATION4","MEM_DISCOUNT"=>"JS_NOTIFICATION4","FILTERED_EOI"=>"JS_NOTIFICATION5","ATN"=>"JS_NOTIFICATION3","ETN"=>"JS_NOTIFICATION3","CONTACT_VIEWS"=>"JS_NOTIFICATION3","CONTACTS_VIEWED_BY"=>"JS_NOTIFICATION2","VD"=>"JS_NOTIFICATION2","MEM_DISCOUNT"=>"JS_NOTIFICATION6");
 
   /*----------------JS notification(scheduled/instant) queues configuration details-------------------------*/
   const PROFILE_CACHE_Q_DELETE = "ProfileCacheDeleteQueue";

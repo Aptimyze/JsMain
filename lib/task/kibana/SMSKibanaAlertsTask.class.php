@@ -69,7 +69,7 @@ EOF;
 		      ],
 		      "must_not" => [
 		      	"regexp" =>[
-		      		"LogMessage" => ".*Too many connections.*"
+		      		"LogMessage" => ".*no conn.*|.*Too many connections.*|^.{0,0}$"
 		      	]
 		      ]
 		    ]
