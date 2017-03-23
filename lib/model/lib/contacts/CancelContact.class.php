@@ -143,23 +143,24 @@ class CancelContact extends ContactEvent{
         $profileMemcacheServiceViewerObj->update("TOTAL_CONTACTS_MADE",-1);
         $profileMemcacheServiceViewerObj->update("DEC_BY_ME",1);
         $profileMemcacheServiceViewerObj->update("NOT_REP",-1);
-        if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
-        {
-          $profileMemcacheServiceViewedObj->update("INTEREST_EXPIRING",-1);
-        }
         if($this->contactHandler->getContactObj()->getFILTERED() === Contacts::FILTERED)
-			$profileMemcacheServiceViewedObj->update("FILTERED_NEW",-1);
+			     $profileMemcacheServiceViewedObj->update("FILTERED_NEW",-1);
         else
         {
+
           if ( $daysDiff > CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT )
           {
             $profileMemcacheServiceViewedObj->update("INTEREST_ARCHIVED",-1);              
           }
           else
           {
-			        $profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE",-1);
-              if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
-      		$profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE_NEW",-1);
+            if($daysDiff >= CONTACTS::EXPIRING_INTEREST_LOWER_LIMIT && $daysDiff <= CONTACTS::EXPIRING_INTEREST_UPPER_LIMIT)
+            {
+              $profileMemcacheServiceViewedObj->update("INTEREST_EXPIRING",-1);
+            }
+		        $profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE",-1);
+            if($this->contactHandler->getContactObj()->getSEEN() == Contacts::NOTSEEN)
+      		    $profileMemcacheServiceViewedObj->update("AWAITING_RESPONSE_NEW",-1);
           }
         }        
         $profileMemcacheServiceViewedObj->update("DEC_ME",1);
