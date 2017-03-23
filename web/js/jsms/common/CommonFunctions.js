@@ -294,6 +294,8 @@ function SingleTonNextPage(data,nottostore,url,transition)
       
       trackJsEventGA("jsms","fetchLocalHtml", "", "");
       if(cancelUrl[random]==1) {
+      	if(typeof pageMyJs != 'undefined' && pageMyJs == 1)
+      		pageMyJs = 0;
         ShowNextPageTrue(data,nottostore,url,transition);  
       }
 			
@@ -306,6 +308,8 @@ function SingleTonNextPage(data,nottostore,url,transition)
       }
       
       if(cancelUrl[random]==1) {
+      	if(typeof pageMyJs != 'undefined' && pageMyJs == 1)
+      		pageMyJs = 0;
         ShowNextPageTrue(data,nottostore,url,transition);
       }
         
