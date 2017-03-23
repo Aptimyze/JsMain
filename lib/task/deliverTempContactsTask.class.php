@@ -209,6 +209,9 @@ EOF;
         $this->errorMsg .= " " . $ex->getMessage();
     }
     
+    /*
+     * Those temporary contacts are deleted whose DELIVER_TIME is before 30 days
+     */
     private function cleanUpSentContacts($contactTempObj)
     {
         $time = date('Y-m-d', JSstrToTime('-30 days')) . " 00:00:00";

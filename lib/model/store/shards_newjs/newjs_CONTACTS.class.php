@@ -76,7 +76,7 @@ public function getContactsPending($serverId)
 	{
 		try
 		{
-			$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' and FILTERED<>'Y' and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND RECEIVER=PROFILEID AND SERVERID= :SERVERID group by RECEIVER";
+			$sql = "SELECT RECEIVER,count(*) as count from newjs.CONTACTS,newjs.PROFILEID_SERVER_MAPPING where TYPE='I' and FILTERED<>'Y' and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) AND RECEIVER=PROFILEID AND SERVERID= :SERVERID group by RECEIVER";
 			$res = $this->db->prepare($sql);
 			$res->bindValue(":SERVERID",$serverId,PDO::PARAM_INT);
 			$res->execute();
@@ -100,7 +100,7 @@ public function getSendersPending($chunkStr)
 	{
 		try
 		{
-        		$sql = "SELECT RECEIVER, SENDER   FROM newjs.CONTACTS WHERE TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) $chunkStr ORDER BY TIME DESC";
+        		$sql = "SELECT RECEIVER, SENDER   FROM newjs.CONTACTS WHERE TYPE IN ('I') AND FILTERED NOT IN('Y') and TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) $chunkStr ORDER BY TIME DESC";
 			$res = $this->db->prepare($sql);
 			$res->execute();
 			while($row = $res->fetch(PDO::FETCH_ASSOC))
@@ -123,7 +123,7 @@ public function getSendersPending($chunkStr)
 	{
 		try
 		{
-			$sql = "SELECT count(*) as count, RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM  `CONTACTS` WHERE ".$chunkStr." AND `FILTERED` =  'Y' AND `TYPE` =  'I' AND TIME >= DATE_SUB(CURDATE(), INTERVAL 90 DAY) GROUP BY  `RECEIVER`";
+			$sql = "SELECT count(*) as count, RECEIVER, GROUP_CONCAT( SENDER ORDER BY TIME DESC SEPARATOR ',' ) AS SENDER FROM  `CONTACTS` WHERE ".$chunkStr." AND `FILTERED` =  'Y' AND `TYPE` =  'I' AND TIME >= DATE_SUB(CURDATE(), INTERVAL ".CONTACTS::INTEREST_RECEIVED_UPPER_LIMIT." DAY) GROUP BY  `RECEIVER`";
 			$res = $this->db->prepare($sql);
 			//$res->bindValue(":RECEIVER",$profileId,PDO::PARAM_INT);
 			$res->execute();

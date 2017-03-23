@@ -60,7 +60,8 @@ The JS Team</div></td>
 	{
     //Start Log
     $profileDeleteObj = new PROFILE_DELETE_LOGS();
-    
+    $delLogObj = new PROFILE_LOG_DELETION_FLOW();
+		// $delLogObj->insertEntry(1,'hello world');    
     if(is_null($startTimeForLogs)) {
       $startTime = date('Y-m-d H:i:s');
       $arrDeleteLogs = array(
@@ -95,8 +96,15 @@ The JS Team</div></td>
 		if(!$delete_reason)
         		$delete_reason="I found my match on Jeevansathi.com";
 		$ProfileDelReasonObj->Replace($username,$delete_reason,$specify_reason,$profileid);
+		if(LoggingEnums::LOG_DELETION){
+		 $delLogObj->insertEntry($profileid,'NEWJS_PROFILE_DEL_REASON');    
+		}
 
 		$jprofileObj->updateDeleteData($profileid);
+		if(LoggingEnums::LOG_DELETION){
+		 $delLogObj->insertEntry($profileid,'NEWJS_JPROFILE');    
+		}
+
 		if($delete_reason=="I found my match on Jeevansathi.com")
 		{
 			$successSToryData = $successStoryObj->getId($username);
@@ -112,7 +120,11 @@ The JS Team</div></td>
 		}
 		}
 		$markDelObj->Update($profileid);
+		if(LoggingEnums::LOG_DELETION){
+		 $delLogObj->insertEntry($profileid,'JSADMIN_MARK_DELETE');    
+		}
 		$AP_ProfileInfo->Delete($profileid);
+
 		$AP_MissedServiceLog->Update($profileid);
 		$AP_CallHistory->UpdateDeleteProfile($profileid);
 		//$newDeletedProfileObj->Insert($profileid);
