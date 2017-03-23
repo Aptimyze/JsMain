@@ -19,31 +19,32 @@ class downloadHoroscopeV1Action extends sfActions
 		$this->loginData = $request->getAttribute("loginData");
 		$profileId = $this->loginData["PROFILEID"];
 		$username = $this->loginData["USERNAME"];
-		$gender = $request->getParameter("GENDER");		
+		$gender = $request->getParameter("GENDER");
+		$viewUsername = $request->getParameter("view_username");
 		if(strlen($gender) > 1)
 		{
 			$gender = $gender[0];
 		}
 		
-		if(!$profileId)
+		if(!$profileId || ($this->loginData["GENDER"] != $gender))
 		{
 			$sameGender = 0;
-		}
-		elseif($this->loginData["GENDER"] != $gender)
-		{
-			$sameGender = 0;
-		}
+		}		
 		else
 		{
 			$sameGender = 1;
 		}
 		$channel = MobileCommon::getChannel();		
 		$today = date("Y-m-d H:i:s");
-		$url = JsConstants::$siteUrl."/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=".$request->getParameter("view_username")."&SIM_USERNAME=".$request->getParameter("SIM_USERNAME")."&type=Horoscope&checksum=&profilechecksum=".$request->getParameter("otherprofilechecksum")."&randValue=890&GENDERSAME=".$sameGender;		
-		$file=PdfCreation::PdfFile($url);		
-		PdfCreation::setResponse("horoscope_".$request->getParameter("view_username").".pdf",$file);
-		$horoscopeDownloadTrackingObj = new NEWJS_HOROSCOPE_DOWNLOAD_TRACKING("newjs_master");
-		$horoscopeDownloadTrackingObj->insertDownloadTracking($today,$channel,$username,$request->getParameter("view_username"));
+		if($viewUsername)
+		{
+			$url = JsConstants::$siteUrl."/profile/horoscope_astro.php?SAMEGENDER=&FILTER=&ERROR_MES=&view_username=".$viewUsername."&SIM_USERNAME=".$request->getParameter("SIM_USERNAME")."&type=Horoscope&checksum=&profilechecksum=".$request->getParameter("otherprofilechecksum")."&randValue=890&GENDERSAME=".$sameGender;		
+			$file=PdfCreation::PdfFile($url);		
+			PdfCreation::setResponse("horoscope_".$viewUsername.".pdf",$file);
+			$horoscopeDownloadTrackingObj = new NEWJS_HOROSCOPE_DOWNLOAD_TRACKING("newjs_master");
+			$horoscopeDownloadTrackingObj->insertDownloadTracking($today,$channel,$username,$viewUsername);
+		}
+		
 		return sfView::NONE;
 	}
 }

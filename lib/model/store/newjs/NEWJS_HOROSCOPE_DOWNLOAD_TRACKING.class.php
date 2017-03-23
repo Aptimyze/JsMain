@@ -19,7 +19,7 @@ class NEWJS_HOROSCOPE_DOWNLOAD_TRACKING extends TABLE{
     	}
     	catch(Exception $e)
     	{
-                throw new jsException($e);
+                jsException::nonCriticalError($e);
         }
     }
 }

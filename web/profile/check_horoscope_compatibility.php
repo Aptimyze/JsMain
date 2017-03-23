@@ -57,7 +57,7 @@
 		{			
 			$url = JsConstants::$imgUrl."/images/sampleAstro.pdf";
 			$file = file_get_contents($url);
-			$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1848);
+			$email_sender = new EmailSender(MailerGroup::ASTRO_COMPATIBILTY,1848); //1848 is the  mail id
 			$emailTpl = $email_sender->setProfileId($data['PROFILEID']);
 			$smartyObj = $emailTpl->getSmarty();
 			$smartyObj->assign('otherUsername',$username);

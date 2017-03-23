@@ -48,23 +48,7 @@ class desktopView extends DetailedViewApi
     $mydateArr = explode("-", $mod_date);
     $this->m_arrOut['last_mod'] = my_format_date($mydateArr[2], $mydateArr[1], $mydateArr[0], 1);
     if($this->m_objProfile->getGender() == $this->m_actionObject->loginProfile->getGender())
-        $this->m_arrOut['sameGender']=1;
-       /* $subscriptionData = $this->m_actionObject->loginProfile->getSUBSCRIPTION();
-        if(!strstr($subscriptionData,'A'))
-            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='N';
-        else
-            $this->m_arrOut['COMPATIBILITY_SUBSCRIPTION']='Y';
-        
-        if($subscriptionData)
-            $this->m_arrOut['paidMem']='Y';
-        else
-            $this->m_arrOut['paidMem']='N';
-        
-        if ($this->m_arrOut['myHoroscope']=='Y' && $this->m_arrOut['othersHoroscope']=='Y')
-                $this->m_arrOut['NO_ASTRO']=0;
-            else
-                $this->m_arrOut['NO_ASTRO']=1;*/
-            
+        $this->m_arrOut['sameGender']=1;            
     $havePhoto=$this->m_objProfile->getHAVEPHOTO();
         if($havePhoto=='Y'){
             if($this->m_actionObject->THUMB_URL) {
