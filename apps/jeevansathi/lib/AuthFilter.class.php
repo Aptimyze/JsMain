@@ -192,7 +192,6 @@ class AuthFilter extends sfFilter {
 							
 							if(!$phoneVerified)
 							{
-								include_once(sfConfig::get("sf_web_dir")."/ivr/jsivrFunctions.php");
 								$phoneVerified = phoneVerification::hidePhoneVerLayer(LoggedInProfile::getInstance());
 								JsMemcache::getInstance()->set($data['PROFILEID']."_PHONE_VERIFIED",$phoneVerified);
 							}
