@@ -680,6 +680,11 @@ class Membership
             $memHandlerObj->updateMemUpgradeStatus($orderid,$this->profileid,array("UPGRADE_STATUS"=>"DONE","BILLID"=>$this->billid));
             unset($memHandlerObj);
         }
+
+        //flush myjs cache after success payment
+        if($this->profileid && !empty($this->profileid)){
+            MyJsMobileAppV1::deleteMyJsCache(array($this->profileid));
+        }
     }
 
 

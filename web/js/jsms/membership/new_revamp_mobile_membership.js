@@ -10,7 +10,7 @@ function clearOverlay() {
         'height': 'auto'
     });
     $("#callButton").show();
-    e.preventDefault();
+    //e.preventDefault();
 }
 
 function createCookie(name, value, days) {

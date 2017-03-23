@@ -189,7 +189,7 @@ class membershipActions extends sfActions
         $memActFunc = new MembershipActionFunctions();
 
         //parse request params for module
-        list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum) = $memActFunc->getReqParamsForRevMobMem($request);
+        list($displayPage, $pageURL, $mainMem, $mainMemDur, $orderID, $device, $fromBackend, $checksum, $profilechecksum, $reqid, $mainMembership, $vasImpression, $authChecksum,$upgradeMem) = $memActFunc->getReqParamsForRevMobMem($request);
         if ($device == "Android_app") {
 
             $_SERVER[HTTP_USER_AGENT] = "Chrome/39 JsAndWeb";
@@ -228,6 +228,7 @@ class membershipActions extends sfActions
 
             case '4':
                 $this->skipVasPageMembershipBased = json_encode(VariableParams::$skipVasPageMembershipBased);
+                $this->upgradeMem = $upgradeMem;
                 $template                         = 'JSMSCouponPage';
 
                 $this->getResponse()->setSlot("optionaljsb9Key", Jsb9Enum::jsMobMemPage4Url);
