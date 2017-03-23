@@ -11,16 +11,19 @@ class MOBILE_API_NOTIFICATION_LOG extends TABLE{
 			$this->SENT_BIND_TYPE = "STR";
 			$this->OS_TYPE_BIND_TYPE = "STR";
 			$this->MESSAGE_ID_BIND_TYPE = "INT";
+            $this->SEND_DATE_BIND_TYPE = "STR";
         }
 	public function insert($profileid,$key,$messageId,$sent,$osType)
 	{
-		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.NOTIFICATION_LOG (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE_ID`,`SEND_DATE`,`SENT`,`OS_TYPE`) VALUES (:PROFILEID,:NOTIFICATION_KEY,:MESSAGE_ID,now(),:SENT,:OS_TYPE)";
+        $istTime = date("Y-m-d H:i:s", strtotime('+9 hour 30 minutes'));
+		$sqlInsert = "INSERT IGNORE INTO  MOBILE_API.NOTIFICATION_LOG (`PROFILEID`,`NOTIFICATION_KEY`,`MESSAGE_ID`,`SEND_DATE`,`SENT`,`OS_TYPE`) VALUES (:PROFILEID,:NOTIFICATION_KEY,:MESSAGE_ID,:IST_TIME,:SENT,:OS_TYPE)";
 		$resInsert = $this->db->prepare($sqlInsert);
 		$resInsert->bindValue(":PROFILEID",$profileid,constant('PDO::PARAM_'.$this->{'PROFILEID_BIND_TYPE'}));
 		$resInsert->bindValue(":NOTIFICATION_KEY",$key,constant('PDO::PARAM_'.$this->{'NOTIFICATION_KEY_BIND_TYPE'}));
 		$resInsert->bindValue(":MESSAGE_ID",$messageId,constant('PDO::PARAM_'.$this->{'MESSAGE_ID_BIND_TYPE'}));
 		$resInsert->bindValue(":SENT",$sent,constant('PDO::PARAM_'.$this->{'SENT_BIND_TYPE'}));
 		$resInsert->bindValue(":OS_TYPE",$osType,constant('PDO::PARAM_'.$this->{'OS_TYPE_BIND_TYPE'}));
+        $resInsert->bindValue(":IST_TIME",$istTime,constant('PDO::PARAM_'.$this->{'SEND_DATE_BIND_TYPE'}));
 		$resInsert->execute();
 	}
         public function updateSentPrev($pid,$notificationKey,$status)
