@@ -345,7 +345,7 @@ class LoggingManager
 			$logData[LoggingEnums::REFERER] = $_SERVER['HTTP_REFERER'];
 		}
 
-		if($exception instanceof Exception && $exception->getCode() == LoggingEnums::ERR_STATUS_CODE)
+		if($exception instanceof Exception)
 		{
 			$logData[LoggingEnums::TRACE_STRING] = $exception->getTraceAsString();
 		}
