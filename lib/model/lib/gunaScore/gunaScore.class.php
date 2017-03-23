@@ -11,7 +11,7 @@ class gunaScore
 		 * and accordingly fetches and returns the gunaScoreArr  
 		 */
 
-        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender,$haveProfileArr='')
+        public function getGunaScore($profileId,$caste,$profilechecksumArr,$gender,$haveProfileArr='',$shutDownConnections='')
         {	$parentValueArr = gunaScoreConstants::$parentValues;
         	$searchIdArr = array();
         	$profilechecksumArr = explode(",",$profilechecksumArr);
@@ -28,7 +28,7 @@ class gunaScore
         	$parent = $this->getParent($caste);
         	if(in_array($parent, $parentValueArr))
         	{
-        			$astroDetails = $this->getAstroDetailsForIds($profileId,$searchIdArr);
+        			$astroDetails = $this->getAstroDetailsForIds($profileId,$searchIdArr,$shutDownConnections);
         			//uses $artroDetails data to compile $logged_astro_details and compstring[]
         			if(is_array($astroDetails))
         			{
@@ -108,11 +108,11 @@ class gunaScore
         }
 
         //This function uses loggedin user profileId and $searchIdArr to call NEWJS_ASTRO to fetch astroDetails
-        public function getAstroDetailsForIds($profileId,$searchIdArr)
+        public function getAstroDetailsForIds($profileId,$searchIdArr,$shutDownConnections='')
         {
         	$searchIdArr[]=$profileId;
         	$newjsAstroObj = ProfileAstro::getInstance();
-			$astroData=$newjsAstroObj->getAstroDetails($searchIdArr,"PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL",1,1);
+			$astroData=$newjsAstroObj->getAstroDetails($searchIdArr,"PROFILEID,LAGNA_DEGREES_FULL,SUN_DEGREES_FULL,MOON_DEGREES_FULL,MARS_DEGREES_FULL,MERCURY_DEGREES_FULL,JUPITER_DEGREES_FULL,VENUS_DEGREES_FULL,SATURN_DEGREES_FULL",1,$shutDownConnections);
 			unset($newjsAstroObj);
 			return $astroData;
         }
