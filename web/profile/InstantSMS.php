@@ -9,15 +9,15 @@ class InstantSMS {
 	private $otherProfileDetails = array();
 	private $smsSettings = array();
 	private $varArray = array();
-	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP","MEM_REN_ACT_CRON","MEM_BACK_DISC_SMS","CRM_SMS_BRANCH","CRM_SMS_OFFER","CRM_SMS_NOT_REACH","CRM_SMS_APP_DOWNLOAD","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER","REPORT_INVALID","REPORT_INVALID_NONUM"
+	private $smsTypeIgnoreTimeRange = array("DETAIL_CONFIRM","FORGOT_PASSWORD","PAYMENT_MEMBERSHIP","VIEWED_CONTACT_SMS","FIELD_VISIT_SCHEDULE","OTP","DEL_OTP","MEM_REN_ACT_CRON","MEM_BACK_DISC_SMS","CRM_SMS_BRANCH","CRM_SMS_OFFER","CRM_SMS_NOT_REACH","CRM_SMS_APP_DOWNLOAD","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER","REPORT_INVALID"
 		);
 	private $errorMessage = "Due to a temporary problem your request could not be processed. Please try after a couple of minutes";
 	private $unverified_key = array("REGISTER_RESPONSE" ,"PHONE_UNVERIFY");
 	private $customCriteria=0;
-	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP", "PHONE_UNVERIFY","DEL_OTP","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER","REPORT_INVALID","REPORT_INVALID_NONUM");
+	private $settingIndependent = array("FORGOT_PASSWORD","VIEWED_CONTACT_SMS","OTP", "PHONE_UNVERIFY","DEL_OTP","REQ_CRM_DEL_SELF","REQ_CRM_DEL_OTHER");
 	private $sendToInternational = array("FORGOT_PASSWORD");
 	private $eoiSMSLimit = 2;
-	private $otherProfileRequired = array("INSTANT_EOI","ACCEPTANCE_VIEWED","ACCEPTANCE_VIEWER","VIEWED_CONTACT_SMS","HOROSCOPE_REQUEST","REPORT_INVALID","REPORT_INVALID_NONUM");
+	private $otherProfileRequired = array("INSTANT_EOI","ACCEPTANCE_VIEWED","ACCEPTANCE_VIEWER","VIEWED_CONTACT_SMS","HOROSCOPE_REQUEST","REPORT_INVALID" );
 	private $kycCity = array("DE00", "UP25", "UP06", "RA07", "UP47", "UP12");
 	private $kycLocality = "";//Comma separated
 	
@@ -82,8 +82,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		if($this->smsKey=='PHONE_UNVERIFY') return true;
 		if($this->smsKey=='REQ_CRM_DEL_SELF') return true;
 		if($this->smsKey=='REQ_CRM_DEL_OTHER') return true;
-		if($this->smsKey == 'REPORT_INVALID') return true;
-		if($this->smsKey == 'REPORT_INVALID_NONUM') return true;
+
 		
 		$sendToInt = in_array($this->smsKey, $this->sendToInternational);
 		if(!$sendToInt && !$this->SMSLib->getMobileCorrectFormat($this->profileDetails["PHONE_MOB"],$this->profileDetails["ISD"], $sendToInt))
@@ -153,9 +152,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 				 	return true;
 
 				 case "REPORT_INVALID":
-				 	return true;
-
-				 case "REPORT_INVALID_NONUM":	
+				 if($this->profileDetails["MOB_STATUS"] != 'Y')
 				 	return true;
 
 			default:
@@ -229,10 +226,6 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
                     }
                 }
 
-                if($this->smsKey == "REPORT_INVALID")
-                {	
-                	$row["ISD_PHONE_MOB"] = "+".$row["ISD"].$row["PHONE_MOB"];
-                }
 
                 $this->otherProfileDetails["DATA"] = $row;		
 				
@@ -284,6 +277,7 @@ include_once(JsConstants::$docRoot."/commonFiles/SymfonyPictureFunctions.class.p
 		if ($this->isWhitelistedProfile()) { 
 			$message = $this->getMessage();
 			$message = $this->getActualMessage($message);
+
 		}
 		return $message;
 		

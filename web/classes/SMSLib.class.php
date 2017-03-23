@@ -615,6 +615,18 @@ class SMSLib
             case "LINK_DEL":
                $linkToDel = $this->SITE_URL . "/settings/jspcSettings?hideDelete=1";
                 return $this->getShortURL($linkToDel, '', '', $withoutLogin = 0);
+
+            case "REPORT_INVALID_PHONE_ISD_COMMA":
+                if (($messageValue["SHOWPHONE_MOB"] == 'Y') && ($messageValue["PHONE_MOB"])) {
+                    $mob     = $messageValue["ISD"] . $messageValue["PHONE_MOB"];
+                    $mob_len = $this->getVariables("PHONE_ISD_COMMA");
+                    $mob     = strlen($mob) <= $mob_len["maxlength"] ? $mob : substr($mob, 0, $mob_len["maxlength"] - 2) . "..";
+                    $mob     = '+' . $mob . ' , ';
+                } else {
+                    $mob = '';
+                }
+                return $mob;
+
             default:
                 return "";
         }

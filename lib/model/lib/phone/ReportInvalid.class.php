@@ -48,18 +48,8 @@ class ReportInvalid
 	{	
 		if($reasonMap == 1|| $reasonMap ==4 ){
 		include_once(sfConfig::get("sf_web_dir")."/profile/InstantSMS.php");
-		$loginProfile = LoggedInProfile::getInstance();
-		$showPhoneStatus = $loginProfile->getDetail($selfProfileId,'PROFILEID','SHOWPHONE_MOB')['SHOWPHONE_MOB'];
-		if($showPhoneStatus == "Y")
-		{	
 		$sendSMS = new InstantSMS('REPORT_INVALID',$profileId,array(),$selfProfileId);
 		$sendSMS->send();
-		}
-		else
-		{  
-		$sendSMS = new InstantSMS('REPORT_INVALID_NONUM',$profileId,array(),$selfProfileId);
-		$sendSMS->send();
-		}
 			}
 	}
 	 
