@@ -155,10 +155,10 @@
 			~if $data.serviceContent`
 			~foreach from=$data.serviceContent key=k item=v name=servicesLoop`
 			<div class="pt10">
-				<div id="~$v.subscription_id`_serviceBlock" class="rv2_boxshadow ">
+				<div id="~$v.subscription_id`_serviceBlock" class="rv2_boxshadow card_duration_click" CardClickid="~$v.subscription_id`">
 					<!--start:description-->
 					~if $v.subscription_id eq 'X'`
-					<div class="linearBg2 rv2_pad3 ">
+					<div class="linearBg2 rv2_pad3 card_duration_click " CardClickid="~$v.subscription_id`">
 						~else`
 						<div class="bg4 rv2_pad3">
 							~/if`
@@ -341,6 +341,10 @@
 	var source = "~$passedKey`";
 	var filteredVasServices = "~$data.filteredVasServices`",skipVasPageMembershipBased = JSON.parse("~$data.skipVasPageMembershipBased`".replace(/&quot;/g,'"'));
 	$(document).ready(function(){
+        if(!checkEmptyOrNull(readCookie('expCheck'))){
+            eraseCookie('selectedVas');
+            createCookie('expCheck', '1');
+        }
 		~if $data.device eq 'Android_app'`
 		createCookie('device',"~$data.device`");
 		~/if`
@@ -366,11 +370,18 @@
 			}, 1000);
 			$("#continueBtn").show();
 		}
+        /*
 		$(".duration_click").click(function(e){
 			$(this).parent().addClass('dispnone');
 			var clickedID = $(this).attr('clickid');
 			$(this).parent().parent().find("div[clickdur='"+clickedID+"']").removeClass('dispnone').slideDown('slow');
 		});
+        */
+        $(".card_duration_click").click(function(e){
+           $(this).find(".dur_click").addClass('dispnone');
+           var CardClickedID = $(this).attr('CardClickid');
+           $(this).find("div[clickdur='"+CardClickedID+"']").removeClass('dispnone').slideDown('slow');
+        });
 		$(".durSel").click(function(e){
 			var that = this;
 			$(".durSel").each(function(){
