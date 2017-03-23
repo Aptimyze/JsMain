@@ -932,17 +932,18 @@ return $edu;
 	{
 		if(!is_array($userList))
 			throw  new jsException("No userList in sortUsersListBySubscription() function in RegularMatchAlerts.class.php");
-
+                
 		foreach($userList as $k=>$v)
 		{
-			if(in_array($subscription, explode(",",$v->getSUBSCRIPTION())) && $v->getHAVEPHOTO()== $this->photoPresent)
+                        $subsCount = count(array_intersect($subscription,explode(",",$v->getSUBSCRIPTION())));
+			if($subsCount>0 && $v->getHAVEPHOTO()== $this->photoPresent)
                         {
                                 if($v->getPHOTO_DISPLAY()!= PhotoProfilePrivacy::photoVisibleIfContactAccepted)
 					$sortArr[$v->getPROFILEID()] = 1;
 				else
 					$sortArr[$v->getPROFILEID()] = 2;
 			}
-			elseif(in_array($subscription, explode(",",$v->getSUBSCRIPTION()))){
+			elseif($subsCount>0){
 				$sortArr[$v->getPROFILEID()] = 3;
 			}elseif($v->getHAVEPHOTO()== $this->photoUnderScreening)
 			{

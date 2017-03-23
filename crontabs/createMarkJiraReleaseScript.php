@@ -18,8 +18,10 @@ $hotFix      : Array containg keys of distinct groups for which the release is t
 $release     : Array containign keys of distinct groups for which the release is to be made for regular release
 $hotFixJira  : Array of all JIRA ids for hotfix
 $releaseJira : Array of all JIRA ids for regular release
+Three params:
+hotfix / release/ all
 */
-
+$parameter = $argv[1];
 $missingFromQASanityPattern  = "MISSING FROM QASanityReleaseNew";
 $missingFromCIReleasePattern = "MISSING FROM CIRelease";
 $breakDelimieter = "---------------------------------------------------------------------";
@@ -80,16 +82,20 @@ if ($file = fopen($fileName, "r")) {
     }
 
     //For Creating Hotfix Versions
-    createRelease($hotFix,"HF");
+    if($parameter == "hotfix" || $parameter == "all")
+        createRelease($hotFix,"HF");
 
 	//For Creating regulat Release Versions
-    createRelease($release,"RC");
+    if($parameter == "release" || $parameter == "all")
+        createRelease($release,"RC");
 
     //For marking HotFix Versions
-    markVersion($hotFixJira,"HF");
+    if($parameter == "hotfix" || $parameter == "all")
+        markVersion($hotFixJira,"HF");
 
 	//For marking regular release Versions
-	markVersion($releaseJira,"RC");    
+    if($parameter == "release" || $parameter == "all")
+        markVersion($releaseJira,"RC");    
 
     //print_r(array($hotFix,$release,$hotFixJira,$releaseJira));
     fclose($file);

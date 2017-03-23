@@ -570,8 +570,8 @@ EditApp = function(){
       //Privacy Type Field 
       if(fieldObject.type === PRIVACY_TYPE && fieldObject.value.length){ 
         var fieldIdParent = '#'+fieldObject.key.toLowerCase()+'Parent';
-        //Added this check to remove show no to all option in SHOWPHONE_MOB
-        if ( !(fieldObject.key == "SHOWPHONE_MOB" && fieldObject.value == "N"))
+        //Added this check to remove show no to all option in mobile case.
+        if ( !(fieldObject.value == "N"))
         {
           fieldDOM.find(fieldIdParent).find(' ul li[value="'+ fieldObject.value +'"]').addClass('activeopt');
         }
@@ -1258,10 +1258,8 @@ EditApp = function(){
       
       var privacyParentAttr   = {class:"fl mt8 pos-rel showset cursp",id:'show'+fieldObject.key.toLowerCase()+'Parent'};
       var privacyImgAttr      = {class:"vicons edpic9 ",id:'show'+fieldObject.key.toLowerCase()};
-      var privacyDivString    = '<div class="pos-abs bg-white z2 msg1box epdpos9 edpwid12 js-privacySetting disp-none"> <div class="pos-rel fullwid"> <i class="pos_abs reg-sprtie reg-droparrow edppos8 edp-zi100"></i> <ul class="listnone  f13 edplist2 brdr-1 mt10 edpbrad1"><li value="Y">Show to All Paid Members</li> <li value="C">Show to only Members I Accept / Express Interest In</li><li value="N">Don\'t show to anybody</li> </ul> </div></div>';
-
       // this string doesn't contain don't show to anybody
-      var privacyDivStringPhoneMob    = '<div class="pos-abs bg-white z2 msg1box epdpos9 edpwid12 js-privacySetting disp-none"> <div class="pos-rel fullwid"> <i class="pos_abs reg-sprtie reg-droparrow edppos8 edp-zi100"></i> <ul class="listnone  f13 edplist2 brdr-1 mt10 edpbrad1"><li value="Y">Show to All Paid Members</li> <li value="C">Show to only Members I Accept / Express Interest In</li></ul> </div></div>';
+      var privacyDivString    = '<div class="pos-abs bg-white z2 msg1box epdpos9 edpwid12 js-privacySetting disp-none"> <div class="pos-rel fullwid"> <i class="pos_abs reg-sprtie reg-droparrow edppos8 edp-zi100"></i> <ul class="listnone  f13 edplist2 brdr-1 mt10 edpbrad1"><li value="Y">Show to All Paid Members</li> <li value="C">Show to only Members I Accept / Express Interest In</li></ul> </div></div>';
       
       if(typeof configObject != "undefined"){
         /*Loop and replace in default One*/
@@ -1299,13 +1297,7 @@ EditApp = function(){
       //Add Privacy Button
       var privacyParentDOM = $("<div />",privacyParentAttr);
       privacyParentDOM.append($("<i />",privacyImgAttr));
-      if(fieldObject.key == "PHONE_MOB"){
-        privacyParentDOM.append(privacyDivStringPhoneMob);
-      }
-      else
-      {
-        privacyParentDOM.append(privacyDivString);
-      }
+      privacyParentDOM.append(privacyDivString);
       fieldDivDom.append(privacyParentDOM);
          
       //Add Field in Parent
