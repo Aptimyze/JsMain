@@ -924,7 +924,22 @@ if (isset($data) || $JSIndicator) {
             $qyearp1 = $qyear + 1;
 
             // All Sales
-            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt, sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt, QUARTER(a.ENTRY_DT) AS qtr, sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax, sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax, SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple, SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee, sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount FROM billing.$tableName a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00' AND '$qyearp1-03-31 23:59:59' AND a.STATUS $condition GROUP BY qtr";
+            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt,"
+                    . " QUARTER(a.ENTRY_DT) AS qtr,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax,"
+                    . " sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax,"
+                    . " SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple,"
+                    . " SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee,"
+                    . " sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount"
+                    . " FROM billing.$tableName a, billing.PURCHASES b"
+                    . " WHERE a.BILLID = b.BILLID"
+                    . " AND a.ENTRY_DT BETWEEN '$qyear-04-01 00:00:00'"
+                    . " AND '$qyearp1-03-31 23:59:59'"
+                    . " AND a.STATUS $condition"
+                    . " AND AMOUNT != '0'"      //condition added to remove 100% discount cases 
+                    . " GROUP BY qtr";
+            echo "$sql";
             $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
             while ($row = mysql_fetch_array($res)) {
                 $qtr = $row['qtr'] - 1;
@@ -1007,7 +1022,22 @@ if (isset($data) || $JSIndicator) {
             $mflag = 1;
             $myearp1 = $myear + 1;
 
-            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt, sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt, MONTH(a.ENTRY_DT) AS month, sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax, sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax, SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple, SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee, sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount FROM billing.$tableName a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$myear-04-01 00:00:00' AND '$myearp1-03-31 23:59:59' AND a.STATUS $condition GROUP BY month";
+            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt,"
+                    . " MONTH(a.ENTRY_DT) AS month,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax,"
+                    . " sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax,"
+                    . " SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple,"
+                    . " SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee,"
+                    . " sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount"
+                    . " FROM billing.$tableName a, billing.PURCHASES b"
+                    . " WHERE a.BILLID = b.BILLID"
+                    . " AND a.ENTRY_DT BETWEEN '$myear-04-01 00:00:00'"
+                    . " AND '$myearp1-03-31 23:59:59'"
+                    . " AND AMOUNT != '0'"          //condition added to remove 100% discount cases 
+                    . " AND a.STATUS $condition"
+                    . " GROUP BY month";
+            echo "$sql";
             $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
             while ($row = mysql_fetch_array($res)) {
                 $mm = $row['month'];
@@ -1091,7 +1121,21 @@ if (isset($data) || $JSIndicator) {
                 $ddarr[$i] = $i + 1;
             }
             
-            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt, sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt, DAYOFMONTH(a.ENTRY_DT) AS day, sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax, sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax, SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple, SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee, sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount FROM billing.$tableName a, billing.PURCHASES b WHERE a.BILLID = b.BILLID AND a.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00' AND '$dyear-$dmonth-31 23:59:59' AND a.STATUS $condition GROUP BY day";
+            $sql = "SELECT sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE,0)) AS dol_amt,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT)) AS inr_amt,"
+                    . " DAYOFMONTH(a.ENTRY_DT) AS day,"
+                    . " sum(IF(TYPE='DOL',0,AMOUNT/(1+TAX_RATE/100))) AS inr_tax,"
+                    . " sum(IF(TYPE='DOL',AMOUNT*DOL_CONV_RATE/(1+TAX_RATE/100),0)) AS dol_tax,"
+                    . " SUM(IF(TYPE='DOL',a.APPLE_COMMISSION*DOL_CONV_RATE,a.APPLE_COMMISSION)) AS apple,"
+                    . " SUM(IF(TYPE='DOL',a.FRANCHISEE_COMMISSION*DOL_CONV_RATE,a.FRANCHISEE_COMMISSION)) AS franchisee,"
+                    . " sum(IF(TYPE='DOL',b.DISCOUNT*DOL_CONV_RATE,b.DISCOUNT)) AS discount"
+                    . " FROM billing.$tableName a, billing.PURCHASES b"
+                    . " WHERE a.BILLID = b.BILLID"
+                    . " AND a.ENTRY_DT BETWEEN '$dyear-$dmonth-01 00:00:00'"
+                    . " AND '$dyear-$dmonth-31 23:59:59'"
+                    . " AND a.STATUS $condition"
+                    . " AND AMOUNT != '0'"          //condition added to remove 100% discount cases 
+                    . " GROUP BY day";
             $res = mysql_query_decide($sql, $db) or die("$sql" . mysql_error_js($db));
             while ($row = mysql_fetch_array($res)) {
                 $dd = $row['day'] - 1;

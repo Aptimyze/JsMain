@@ -998,5 +998,15 @@ die;
 		}
 		return $redirectUrl;
 	}
+  
+  public static function runFeatureAtNonPeak(){
+		
+		if(in_array(date('H'),array("17","18","19","20","21")))
+		{
+			return 1;
+		}
+		return 0;
+
+	}
 }
 ?>

@@ -222,14 +222,10 @@ class BrowserNotification{
             
             break;
            
-        case "MEM_EXPIRE_A5":
-        case "MEM_EXPIRE_A10":
-        case "MEM_EXPIRE_A15":
-        case "MEM_EXPIRE_B1":	 
-        case "MEM_EXPIRE_B5":
+        case "MEM_EXPIRE":
             $applicableProfiles=array();
             $poolObj = new NotificationDataPool();
-            $applicableProfiles = $poolObj->getMembershipProfilesForNotification($browserProfilesArr, $notificationKey, $processObj->getchannel());
+            $applicableProfiles = $poolObj->getMembershipProfilesForNotification($browserProfilesArr, $processObj->getchannel());
             $dataAccumulated = $poolObj->getRenewalReminderData($applicableProfiles);
             unset($applicableProfiles);
             break;

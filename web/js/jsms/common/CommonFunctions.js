@@ -39,6 +39,23 @@ function removeNull(msg)
         return '';
 }
 
+function isSessionStorageExist()
+    {
+        var bVal = true;
+        if(typeof(Storage)=='undefined')
+            bVal = false;
+        
+        try{
+            sessionStorage.setItem('testLS',"true");
+            sessionStorage.getItem('testLS');
+            sessionStorage.removeItem('testLS');
+        }catch(e)
+        {
+            bVal = false;
+        }
+        return bVal;
+    }
+
 /**
 * This function will show slider with validation message {e} at a particular height {divhgt}
 * @param className {string} 
@@ -269,7 +286,7 @@ function SingleTonNextPage(data,nottostore,url,transition)
    var cacheMin = 2;
    var ttl = 60000 * cacheMin;
     
-   if(arrAllowedUrls.indexOf(url) != -1 && 
+   if(isSessionStorageExist() && arrAllowedUrls.indexOf(url) != -1 && 
      sessionStorage.getItem("myjsTime") != undefined && 
      new Date().getTime() - sessionStorage.getItem("myjsTime") < ttl) 
    {
@@ -285,8 +302,8 @@ function SingleTonNextPage(data,nottostore,url,transition)
       startTouchEvents(timer);
    } else  {
       xhrReq[random]=$.ajax({url: url}).done(function(data){
-      if(arrAllowedUrls.indexOf(url) != -1) {
-        sessionStorage.setItem("myjsTime",new Date().getTime());
+      if(arrAllowedUrls.indexOf(url) != -1 && isSessionStorageExist()) {
+      	sessionStorage.setItem("myjsTime",new Date().getTime());
         sessionStorage.setItem("myjsHtml",data);	
       }
       

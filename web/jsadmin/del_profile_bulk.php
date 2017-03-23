@@ -115,6 +115,23 @@ elseif($confirm)
 	        	$res1=mysql_query_decide($sql1) or die(logError($sql1,$db));
 	        	$row1=mysql_fetch_assoc($res1);
 	        	$username=$row1['USERNAME'];
+
+	        	$profileDeleteObj = new PROFILE_DELETE_LOGS();
+				$startTime = date('Y-m-d H:i:s');
+		      	$arrDeleteLogs = array(
+		          'PROFILEID' => $profile,
+		          'DELETE_REASON' => 'Immediate deletion',
+		          'SPECIFY_REASON' => $comments,
+		          'USERNAME'  => $username,
+		          'CHANNEL' => 'back(searchpg)',
+		          'START_TIME' => $startTime,
+		          'INTERFACE' => 'B',
+		      );
+
+		      $profileDeleteObj->insertRecord($arrDeleteLogs);
+
+
+
 	        	$sql = "INSERT into jsadmin.DELETED_PROFILES(PROFILEID,USERNAME,REASON,COMMENTS,USER,TIME)  values($profile,'$username','Immediate deletion','$comments','$name','$tm')";
 	        	mysql_query_decide($sql) or die(logError($sql,$db));
 	        	$producerObj=new Producer();
@@ -131,7 +148,13 @@ elseif($confirm)
 	        		$cmd = JsConstants::$php5path." -q ".$path;
 	        		passthru($cmd);
 				}
-	        	
+				
+	      $arrDeleteLogs = array(
+        'END_TIME' => date('Y-m-d H:i:s'),
+        'COMPLETE_STATUS' => 'Y',
+    );
+    $profileDeleteObj->updateRecord($profile, $startTime, $arrDeleteLogs);
+	
 			$j++;
 		}
 		$msg="Selected Profiles are deleted Immediately.<br>";

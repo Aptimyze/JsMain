@@ -262,6 +262,28 @@ public function entryExistsForPair($submitter,$submittee)
             throw new jsException($e);
         }
     
+    }
+
+       public function getEntryForPair($submitter, $submittee,$phone,$mobile)
+    {    
+        try     
+        {   
+            $sql = "SELECT MOBILE,PHONE from jsadmin.REPORT_INVALID_PHONE WHERE SUBMITTEE = :SUBMITTEE AND SUBMITTER = :SUBMITTER AND PHONE = '".$phone."' AND MOBILE = '".$mobile."'";
+            $prep = $this->db->prepare($sql);
+            $prep->bindValue(":SUBMITTEE",$submittee,PDO::PARAM_STR);
+            $prep->bindValue(":SUBMITTER",$submitter,PDO::PARAM_STR);
+
+            $prep->execute();
+            $result = '';
+            if($row=$prep->fetch(PDO::FETCH_ASSOC))
+                $result=$row;
+            return $result;
+        }
+        catch(Exception $e)
+        {
+            throw new jsException($e);
+        }
+    
     } 
 
 }

@@ -9,19 +9,34 @@ class ReportInvalid
 		
 		$timeNow = date('Y-m-d H:i:s');
 		$timeDaysAgo = date('Y-m-d H:i:s', strtotime('-'.self::$reportInvalidCountDuration.' days'));
+		$loginProfile = LoggedInProfile::getInstance();
 		$reportInvalidObj = new JSADMIN_REPORT_INVALID_PHONE();
 
 		$countInvalids = $reportInvalidObj->getReportInvalidCountSubmitter($profileId , $timeNow , $timeDaysAgo);
 
 		$previousEntryExists = (new JSADMIN_REPORT_INVALID_PHONE)->entryExistsForPair($profileId,$submittee);
-
-		if($countInvalids < 10 && !$previousEntryExists)
+ 
+		if($countInvalids < 10 && !$previousEntryExists && $loginProfile->getPROFILE_STATE()->getPaymentStates()->isPAID())
 		{	
 			$contactsAllotedObj = new jsadmin_CONTACTS_ALLOTED();
    			$contactsAllotedObj->updateAllotedContacts($profileId,1);
 			return true;
 		}
 
+		return false;
+	}
+
+		public static function entryAlreadyExists($submitter,$submittee,$phoneStatus,$mobileStatus)
+	{  
+		
+		$reportInvalidObj = new JSADMIN_REPORT_INVALID_PHONE();
+
+		$entryArr = $reportInvalidObj->getEntryForPair($submitter,$submittee,$phoneStatus,$mobileStatus);
+
+		if(is_array($entryArr))
+		{	
+			return true;	
+		}
 		return false;
 	}
 	 
