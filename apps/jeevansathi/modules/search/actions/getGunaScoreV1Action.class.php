@@ -35,7 +35,7 @@ class getGunaScoreV1Action extends sfActions
 		$diffGender = $request->getParameter('diffGender');
 		if($diffGender)
 		{
-			$gunaData = $this->getGunaScoreForSearch($profileId,$caste,$profilechecksumArr,$gender);
+			$gunaData = $this->getGunaScoreForSearch($profileId,$caste,$profilechecksumArr,$gender,1);
 			if(is_array($gunaData))
 			{
 				$apiResponseHandlerObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
@@ -60,10 +60,10 @@ class getGunaScoreV1Action extends sfActions
 	}
 
 	//This function calls the gunsScore.class.php and returns $gunaData
-	public function getGunaScoreForSearch($profileId,$caste,$profilechecksumArr,$gender)
+	public function getGunaScoreForSearch($profileId,$caste,$profilechecksumArr,$gender,$shutDownConnections='')
 	{
 		$gunaScoreObj = new gunaScore();
-		$gunaData = $gunaScoreObj->getGunaScore($profileId,$caste,$profilechecksumArr,$gender);
+		$gunaData = $gunaScoreObj->getGunaScore($profileId,$caste,$profilechecksumArr,$gender,'',$shutDownConnections);
 		unset($gunaScoreObj);
 		return($gunaData);
 	}
