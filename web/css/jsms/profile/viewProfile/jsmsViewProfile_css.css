@@ -1,4 +1,6 @@
-.vpro_sprite{background-image:url(IMG_URL/images/jsms/profile/viewProfile/viewpro_sprite.png); background-repeat:no-repeat}
+.vpro_sprite{background-image:url(IMG_URL/images/jsms/profile/viewProfile/viewpro_sprite_new.png); background-repeat:no-repeat}
+.vpro_correct{background-position: -195px -202px;width: 28px;height: 27px;}
+
 .vpro_comHisIcon{background-position: -5px -4px;width: 28px;height: 27px;}
 .vpro_pos1{right:0; top:0}
 .vpro_pos2{bottom:3px}
