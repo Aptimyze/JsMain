@@ -142,7 +142,7 @@ class NotificationFunctions
                     }
                     else{  
                         //echo "without rabbitmq";                        //flow without rabbitmq
-                        NotificationFunctions::logNotificationOpened($dataSet);
+                        //NotificationFunctions::logNotificationOpened($dataSet);
                     }
 	            }
 	        }

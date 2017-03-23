@@ -361,7 +361,7 @@ class AuthFilter extends sfFilter {
 		}
 		if($data[PROFILEID])
 		{
-			if(!strstr($requestUri,"api/v1/notification/poll")){
+			if(!strstr($requestUri,"api/v1/notification") && !strstr($requestUri,"api/v3/notification")){
 				$profileObj= LoggedInProfile::getInstance();
 				if($profileObj->getPROFILEID()!='')
 				{

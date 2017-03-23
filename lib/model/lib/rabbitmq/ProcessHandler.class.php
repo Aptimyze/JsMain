@@ -301,5 +301,27 @@ public function logDiscount($body,$type){
     }
 }
 
+    public function processMatchAlertNotification($type,$body){
+        $instantNotificationObj =new InstantAppNotification("MATCHALERT");
+        $notificationParams["RECEIVER"] = $body["PROFILEID"];
+        $cacheKey = "MA_NOTIFICATION_".$notificationParams["RECEIVER"];
+        $seperator = "#";
+        $preSetCache = JsMemcache::getInstance()->get($cacheKey);
+        if($preSetCache){
+            $explodedVal = explode($seperator,$preSetCache);
+            $notificationParams["COUNT"] = $explodedVal[0];
+            $notificationParams["OTHER_PROFILE"] = $explodedVal[1];
+            $notificationParams["OTHER_PROFILE_URL"] = $explodedVal[2];
+            $lastLoginDt = $explodedVal[3];
+            $notificationKey = "MATCHALERT";
+            $condition = $instantNotificationObj->notificationObj->checkNotificationOnLastLogin($notificationKey,$lastLoginDt);
+            if($condition){
+                $instantNotificationObj->sendMatchAlertNotification($notificationParams);
+            }
+            unset($notificationParams,$instantNotificationObj);
+            JsMemcache::getInstance()->remove($cacheKey);
+        }        
+    }
+
  }
 ?>
