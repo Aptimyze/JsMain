@@ -14,22 +14,30 @@ class NotificationSender
     /**
      * Sending Push Notification
      */
-    public function sendNotifications($profileDetails) 
+    public function sendNotifications($profileDetails,$regIds='') 
     {
 	if(is_array($profileDetails))
 	{
 		$notificationLogObj = new MOBILE_API_NOTIFICATION_LOG;
+		$notificationLogAtnObj = new MOBILE_API_NOTIFICATION_LOG_ATN;
+		$notificationLogEtnObj = new MOBILE_API_NOTIFICATION_LOG_ETN;
 		foreach($profileDetails as $profileid=>$details)
 		{
 			$osType = "";
 			if(!isset($details))
 				continue;
-			$regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE']);
+			if(!is_array($regIds)){
+				$regIds = $this->getRegistrationIds($profileid,$profileDetails[$profileid]['OS_TYPE']);
+			}
 			if(is_array($regIds))
 			{
 				if(is_array($regIds[$profileid]["AND"]))
 				{
 					$osType = "AND";
+					if($details['NOTIFICATION_KEY']=='ATN')
+						$notificationLogAtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
+					if($details['NOTIFICATION_KEY']=='ETN')
+						$notificationLogEtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
 					$notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
 					$engineObject =NotificationEngineFactory::geNotificationEngineObject('GCM');
 					$result = $engineObject->sendNotification($regIds[$profileid]["AND"], $details,$profileid);
@@ -37,7 +45,11 @@ class NotificationSender
 				if(is_array($regIds[$profileid]["IOS"]))
                                 {
 					$osType = "IOS";
-                    $details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
+			                $details['PHOTO_URL'] = 'D'; //Added here so that any image url generated is sent to android and not to IOS
+					if($details['NOTIFICATION_KEY']=='ATN')
+						$notificationLogAtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
+					if($details['NOTIFICATION_KEY']=='ETN')
+						$notificationLogEtnObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
 					$notificationLogObj->insert($profileid,$details['NOTIFICATION_KEY'],$details['MSG_ID'],NotificationEnums::$PENDING,$osType);
 					$engineObject =NotificationEngineFactory::geNotificationEngineObject($osType);
 					$engineObject->sendNotification($regIds[$profileid]['IOS'], $details,$profileid);
@@ -51,6 +63,7 @@ class NotificationSender
 			$notificationMsgLog =new MOBILE_API_NOTIFICATION_MESSAGE_LOG();
 			$notificationMsgLog->insert($key,$msgId,$message,$title);
 			// end
+			unset($regIds);
 		}
 	}
 
