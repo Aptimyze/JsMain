@@ -216,7 +216,7 @@ class Membership
         return $ret;
     }
     
-    function startServiceOrder($orderid, $skipBill = false) {
+    function startServiceOrder($orderid, $skipBill = false,$doneUpto="") {
         global $smarty;
         
         list($part1, $part2) = explode('-', $orderid);
@@ -322,7 +322,7 @@ class Membership
                 $memUpgrade = "NA";
             }
         }
-        $this->makePaid($skipBill,$memUpgrade,$orderid);
+        $this->makePaid($skipBill,$memUpgrade,$orderid,$doneUpto);
 
         include_once (JsConstants::$docRoot . "/profile/suspected_ip.php");
         $suspected_check = doubtfull_ip("$ip");
@@ -657,16 +657,23 @@ class Membership
         $billingPayStatLog->insertEntry($orderid,$status,$gateway,$msg);
     }
     
-    function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="") {
+    function makePaid($skipBill = false,$memUpgrade = "NA",$orderid="",$doneUpto="") {
         $userObjTemp = $this->getTempUserObj();
         if($skipBill == true){
+            error_log("ankita doneupto generatebill in makePaid");
             $this->setGenerateBillParams();
         } else {
             $this->generateBill();
         }
-
-        $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
-        $this->generateReceipt();
+        //die("123");
+        if($doneUpto == "PAYMENT_DETAILS"){
+            error_log("ankita doneupto PAYMENT_DETAILS in makePaid");
+            $this->setGenerateReceiptParams();
+        }
+        else{
+            $this->getDeviceAndCheckCouponCodeAndDropoffTracking();
+            $this->generateReceipt();
+        }
         if($memUpgrade != "NA"){
             $this->deactivateMembership($memUpgrade,$orderid);
         }
@@ -717,6 +724,14 @@ class Membership
         $userObj->setCurrency($currency1);
         $userObj->setMemStatus();
         return $userObj;
+    }
+
+    function setGenerateReceiptParams(){
+        $billingPaymentDetObj = new BILLING_PAYMENT_DETAIL();
+        $paymentDetailArr = $billingPaymentDetObj->getDetails($this->billid);
+        if(is_array($paymentDetailArr)){
+            $this->receiptid = $paymentDetailArr["RECEIPTID"];
+        }
     }
 
     function setGenerateBillParams(){
