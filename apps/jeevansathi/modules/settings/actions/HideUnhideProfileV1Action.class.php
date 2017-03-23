@@ -88,20 +88,12 @@ class HideUnhideProfileV1Action extends sfActions
         $webAuthObj = new WebAuthentication;
         $webAuthObj->loginFromReg();
 
-        $this->unhideProfile($profileid);
         $response = array('success' => 1);
         $respObj = ApiResponseHandler::getInstance();
         $respObj->setHttpArray(ResponseHandlerConfig::$SUCCESS);
         $respObj->setResponseBody($response);
         $respObj->generateResponse();
         die;
-    }
-
-    private function unhideProfile($iProfileID)
-    {
-        global $noOfActiveServers;
-        $argv[1] = $iProfileID;
-        include(JsConstants::$docRoot."/profile/retrieveprofile_bg.php");
     }
 }
 
